@@ -1,0 +1,18 @@
+{
+  "name": "client-android",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node node_modules/react-native/local-cli/cli.js start",
+    "packager": "adb reverse tcp:8081 tcp:8081; node node_modules/react-native/local-cli/cli.js start",
+    "bundle": "react-native bundle --platform android --dev false --entry-file index.android.js --bundle-output app/src/main/assets/index.android.bundle --assets-dest app/src/main/res/",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Yi Siqi <yisiqi@inspur.com> (http://blog.example.com)",
+  "license": "ISC",
+  "dependencies": {
+    "react": "^15.4.2",
+    "react-native": "^0.41.2"
+  }
+}
