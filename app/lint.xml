@@ -3,4 +3,7 @@
     <issue id="InvalidPackage">
         <ignore regexp="okio\-(\d+\.){3}jar" />
     </issue>
+    <issue id="InvalidPackage">
+        <ignore regexp="fastjson\-(\d+\.){3}jar" />
+    </issue>
 </lint>

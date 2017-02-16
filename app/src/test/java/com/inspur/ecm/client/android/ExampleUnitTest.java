@@ -1,4 +1,4 @@
-package com.inspur.ecm.client_android;
+package com.inspur.ecm.client.android;
 
 import org.junit.Test;
 

@@ -1,4 +1,4 @@
-package com.inspur.ecm.client_android;
+package com.inspur.ecm.client.android;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("com.inspur.ecm.client_android", appContext.getPackageName());
+        assertEquals("com.inspur.ecm.client.android", appContext.getPackageName());
     }
 }
