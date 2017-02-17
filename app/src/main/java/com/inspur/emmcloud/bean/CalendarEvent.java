@@ -22,9 +22,9 @@ public class CalendarEvent implements Serializable,Comparator{
 	private Calendar endDate;
 	private MyCalendar calendar;
 	private long creationDateLong;
-	
+
 	public CalendarEvent(){
-		
+
 	}
 	public CalendarEvent(JSONObject obj){
 		try {
@@ -41,7 +41,7 @@ public class CalendarEvent implements Serializable,Comparator{
 					Long creatDateLong = obj.getLong("creationDate");
 					creationDate = TimeUtils.timeLong2UTCCalendar(creatDateLong);
 				}
-				
+
 			}
 			if (obj.has("lastUpdate")) {
 				String lastUpdateStr = obj.getString("lastUpdate");
@@ -56,7 +56,7 @@ public class CalendarEvent implements Serializable,Comparator{
 					Long startDateLong = obj.getLong("startDate");
 					startDate = TimeUtils.timeLong2UTCCalendar(startDateLong);
 				}
-				
+
 			}
 			if (obj.has("endDate")) {
 				String endDateStr = obj.getString("endDate");
@@ -80,41 +80,41 @@ public class CalendarEvent implements Serializable,Comparator{
 			if (obj.has("id")) {
 				id = obj.getString("id");
 			}
-			
+
 			if (obj.has("calendar")) {
 				JSONObject calendarObj = obj.getJSONObject("calendar");
 				calendar = new MyCalendar(calendarObj);
 			}
-			
-			
+
+
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void setCalendar(MyCalendar calendar){
 		this.calendar = calendar;
 	}
-	
+
 	public MyCalendar getCalendar(){
 		return calendar;
 	}
 	public String getId(){
 		return id;
 	}
-	
+
 	public void setId(String id){
 		this.id = id;
 	}
-	
+
 	public String getState(){
 		return state;
 	}
 	public void setState(String state){
 		this.state = state;
 	}
-	
+
 	public String getOwner(){
 		return owner;
 	}
@@ -122,42 +122,42 @@ public class CalendarEvent implements Serializable,Comparator{
 	public Calendar getLocalCreationDate(){
 		return TimeUtils.UTCCalendar2LocalCalendar(creationDate);
 	}
-	
+
 	public Calendar getCreationDate(){
 		return creationDate;
 	}
 	public void setCreationDate(Calendar creationDate){
 		this.creationDate = creationDate;
 	}
-	
+
 	@JSONField(serialize = false)
 	public Calendar getLocalLastUpdate(){
 		return TimeUtils.UTCCalendar2LocalCalendar(lastUpdate);
 	}
-	
+
 	public void setLastUpdate(Calendar lastUpdate){
 		this.lastUpdate = lastUpdate;
 	}
-	
+
 	public Calendar getLastUpdate(){
 		return lastUpdate;
 	}
-	
+
 	public String getTitle(){
 		return title;
 	}
 	public void setTitle(String title){
 		this.title = title;
 	}
-	
+
 	public String getLocation(){
 		return location;
 	}
-	
+
 	public void setLocation(String location){
 		this.location = location;
 	}
-	
+
 	public boolean getAllday(){
 		return allday;
 	}
@@ -174,12 +174,12 @@ public class CalendarEvent implements Serializable,Comparator{
 	public void setStartDate(Calendar startDate){
 		this.startDate = startDate;
 	}
-	
+
 	@JSONField(serialize = false)
 	public Calendar getLocalEndDate(){
 		return TimeUtils.UTCCalendar2LocalCalendar(endDate);
 	}
-	
+
 	@JSONField(serialize = false)
 	public long getCreationDateLong(){
 		return creationDateLong;
@@ -187,11 +187,11 @@ public class CalendarEvent implements Serializable,Comparator{
 	public Calendar getEndDate(){
 		return endDate;
 	}
-	
+
 	public void setEndDate(Calendar endDate){
 		this.endDate = endDate;
 	}
-	
+
 	@Override
 	public int compare(Object lhs, Object rhs) {
 		CalendarEvent calEventA = (CalendarEvent) lhs;
@@ -204,13 +204,13 @@ public class CalendarEvent implements Serializable,Comparator{
 			return 0;
 		}
 	}
-	
-	/**
-	 * ÖØĞ´equals·½·¨ĞŞÊÎ·û±ØĞëÊÇpublic,ÒòÎªÊÇÖØĞ´µÄObjectµÄ·½·¨. 2.²ÎÊıÀàĞÍ±ØĞëÊÇObject.
-	 */
-	public boolean equals(Object other) { // ÖØĞ´equals·½·¨£¬ºóÃæ×îºÃÖØĞ´hashCode·½·¨
 
-		if (this == other) // ÏÈ¼ì²éÊÇ·ñÆä×Ô·´ĞÔ£¬ºó±È½ÏotherÊÇ·ñÎª¿Õ¡£ÕâÑùĞ§ÂÊ¸ß
+	/**
+	 * é‡å†™equalsæ–¹æ³•ä¿®é¥°ç¬¦å¿…é¡»æ˜¯public,å› ä¸ºæ˜¯é‡å†™çš„Objectçš„æ–¹æ³•. 2.å‚æ•°ç±»å‹å¿…é¡»æ˜¯Object.
+	 */
+	public boolean equals(Object other) { // é‡å†™equalsæ–¹æ³•ï¼Œåé¢æœ€å¥½é‡å†™hashCodeæ–¹æ³•
+
+		if (this == other) // å…ˆæ£€æŸ¥æ˜¯å¦å…¶è‡ªåæ€§ï¼Œåæ¯”è¾ƒotheræ˜¯å¦ä¸ºç©ºã€‚è¿™æ ·æ•ˆç‡é«˜
 			return true;
 		if (other == null)
 			return false;
