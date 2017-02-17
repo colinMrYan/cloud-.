@@ -24,6 +24,11 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
+import com.facebook.react.BuildConfig;
+import com.facebook.react.ReactInstanceManager;
+import com.facebook.react.ReactRootView;
+import com.facebook.react.common.LifecycleState;
+import com.facebook.react.shell.MainReactPackage;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
@@ -68,31 +73,51 @@ public class FindFragment extends Fragment implements OnRefreshListener {
 	private BroadcastReceiver refreshReceiver;
 	private int deletePosition;
 
+//	@Override
+//	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+//			Bundle savedInstanceState) {
+//		if (rootView == null) {
+//			rootView = inflater.inflate(R.layout.fragment_find, container,
+//					false);
+//		}
+//
+//		ViewGroup parent = (ViewGroup) rootView.getParent();
+//		if (parent != null) {
+//			parent.removeView(rootView);
+//		}
+//		return rootView;
+//	}
+
+
+	private ReactRootView mReactRootView;
+	private ReactInstanceManager mReactInstanceManager;
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
-		if (rootView == null) {
-			rootView = inflater.inflate(R.layout.fragment_find, container,
-					false);
-		}
-
-		ViewGroup parent = (ViewGroup) rootView.getParent();
-		if (parent != null) {
-			parent.removeView(rootView);
-		}
-		return rootView;
+							 Bundle savedInstanceState) {
+		mReactRootView = new ReactRootView(getActivity());
+		mReactInstanceManager = ReactInstanceManager.builder()
+				.setApplication(getActivity().getApplication())
+				.setBundleAssetName("index.android.bundle")
+				.setJSMainModuleName("index.android")
+				.addPackage(new MainReactPackage())
+				.setUseDeveloperSupport(BuildConfig.DEBUG)
+				.setInitialLifecycleState(LifecycleState.RESUMED)
+				.build();
+		mReactRootView.startReactApplication(mReactInstanceManager, "XXXReactNativeProject", null);
+		return mReactRootView;
 	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		LayoutInflater inflater = (LayoutInflater) getActivity()
-				.getSystemService(getActivity().LAYOUT_INFLATER_SERVICE);
-		rootView = inflater.inflate(R.layout.fragment_find, null);
-		initView();
-		getTripList();
-		getLastUploadTicketInfo();
-		setReportContent();
+//		LayoutInflater inflater = (LayoutInflater) getActivity()
+//				.getSystemService(getActivity().LAYOUT_INFLATER_SERVICE);
+//		rootView = inflater.inflate(R.layout.fragment_find, null);
+//		initView();
+//		getTripList();
+//		getLastUploadTicketInfo();
+//		setReportContent();
 	}
 	
 
