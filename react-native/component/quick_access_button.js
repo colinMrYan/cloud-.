@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import {
+  Alert,
   Image,
   Linking,
   StyleSheet,
@@ -14,12 +15,14 @@ export default class QuickAccessButton extends Component {
     // alert(url);
     Linking.canOpenURL(url).then(supported => {
       if (!supported) {
-        alert(`不支持的URL: ${url}`);
+        // alert(`不支持的URL: ${url}`);
+        Alert.alert('暂时无法使用此功能', '\n没有找到要打开的功能\n\n请尝试升级到更高版本的云+');
       } else {
         return Linking.openURL(url);
       }
     }).catch(err => {
-      alert(`打开URL(${url})时发生异常！`);
+      // alert(`打开URL(${url})时发生异常！`);
+      Alert.alert('糟糕', '\n灭霸阻止了功能开启请求！')
     })
   }
   render() {

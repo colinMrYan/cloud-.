@@ -7,7 +7,8 @@ import {
   TouchableOpacity,
   View
 } from 'react-native';
-import QuickAccessButton from './QuickAccessButton';
+import QuickAccessButton from './quick_access_button';
+import TripsHome from './trips_home';
 
 export default class TestViewA extends Component {
   render() {
@@ -42,8 +43,7 @@ export default class TestViewA extends Component {
 
         </View>
 
-        <View style={styles.reportCard}>
-        </View>
+        <TripsHome></TripsHome>
       </View>
     );
   }
@@ -78,13 +78,4 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
   },
 
-  reportCard: {
-    marginTop: 11,
-    height: 85,
-    backgroundColor: '#FFFFFF',
-    borderBottomWidth: 0.5,
-    borderBottomColor: '#CDCDCD',
-    borderTopWidth: 0.5,
-    borderTopColor: '#CDCDCD',
-  },
 });

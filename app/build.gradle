@@ -87,36 +87,39 @@ dependencies {
 
     // 3rd parts
     compile 'org.apache.commons:commons-lang3:3.5'
-    compile 'cn.jpush.api:jpush-client:3.2.16'
+//    compile 'cn.jpush.api:jpush-client:3.2.16'
     compile 'com.amap.api:location:3.3.0'
+    compile 'com.baidu.mapapi:location:6.13'
     compile 'com.google.code.gson:gson:2.8.0'
     compile 'com.alibaba:fastjson:1.2.24'
-//    compile 'io.socket:engine.io-client:0.6.1'
-//    compile 'io.socket:socket.io-client:0.6.1'
+    compile 'io.socket:engine.io-client:0.6.1'
+    compile 'io.socket:socket.io-client:0.6.1'
     compile 'com.belerweb:pinyin4j:2.5.1'
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
     //    compile 'org.xutils:xutils:3.3.40'
     compile 'com.google.zxing:core:3.3.0'
-    //    compile 'com.mani:ThinDownloadManager:1.3.0'
+    compile 'com.mani:ThinDownloadManager:1.3.0'
     compile('com.github.chrisbanes:PhotoView:1.3.1') {
         exclude module: 'support-compat'
         exclude module: 'support-core-utils'
     }
     compile 'com.readystatesoftware.systembartint:systembartint:1.0.3'
+
+
+    // React Naive Components
+    compile project(':react-native-smart-swipe-refresh-layout')
+
+
     testCompile 'junit:junit:4.12'
+
+
     androidTestCompile('com.android.support.test:runner:0.5') {
         exclude module: 'support-annotations'
     }
     androidTestCompile('com.android.support.test:rules:0.5') {
         exclude module: 'support-annotations'
     }
-    compile files('src/libs/imp-locSDK_4.2.jar')
     compile files('src/libs/xutils-2.6.15_db.jar')
     compile files('src/libs/xutils-3.3.36.jar')
-    compile files('src/libs/thindownloadmanager-1.0.1.jar')
     compile files('src/libs/jpush-android-2.1.7.jar')
-    compile files('src/libs/okhttp-2.4.0.jar')
-    compile files('src/libs/okhttp-ws-2.4.0.jar')
-    compile files('src/libs/engine.io-client-0.6.1.jar')
-    compile files('src/libs/socket.io-client-0.6.1.jar')
 }

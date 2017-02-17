@@ -6,7 +6,6 @@ import android.util.Log;
 
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
-import com.baidu.location.GeofenceClient;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
 import com.inspur.emmcloud.util.LogUtils;
@@ -40,7 +39,6 @@ public class MapService extends ImpPlugin {
 
 	String res = "";
 	public LocationClient mLocationClient;
-	public GeofenceClient mGeofenceClient;
 	public MyLocationListener mMyLocationListener;
 	LocationClientOption option = new LocationClientOption();
 
@@ -62,7 +60,6 @@ public class MapService extends ImpPlugin {
 			option.setIsNeedAddress(true);
 			option.setCoorType("bd09ll");
 			mLocationClient.setLocOption(option);
-			mGeofenceClient = new GeofenceClient(this.context);
 			mLocationClient.start();
 		} else if (action.equals("openByMapApp")) {
 			String jindu = "";
