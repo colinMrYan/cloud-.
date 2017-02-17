@@ -1,0 +1,88 @@
+package com.inspur.emmcloud.ui.find.trip;
+
+import java.io.Serializable;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.TextView;
+
+import com.inspur.emmcloud.BaseActivity;
+import com.inspur.emmcloud.MyApplication;
+import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.bean.Trip;
+import com.inspur.emmcloud.util.StringUtils;
+import com.inspur.emmcloud.util.TimeUtils;
+
+public class TripInfoActivity extends BaseActivity{
+
+	private static final int EDIT_TRIP_INFO = 1;
+	private Trip trip;
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
+		super.onCreate(savedInstanceState);
+		((MyApplication) getApplicationContext()).addActivity(this);
+		setContentView(R.layout.activity_trip_info);
+		trip = (Trip) getIntent().getExtras().getSerializable("tripInfo");
+		disPlayTripInfo();
+	}
+	
+	private void disPlayTripInfo() {
+		// TODO Auto-generated method stub
+		String startTime = TimeUtils.calendar2FormatString(getApplicationContext(),trip.getStart(),TimeUtils.FORMAT_HOUR_MINUTE);
+		String orderID = trip.getOrderID();
+		String from = trip.getFrom();
+		String destination = trip.getDestination();
+		String seatLeve = trip.getLevel();
+		String tripNum = trip.getNumber();
+		float cost = trip.getCost();
+		String costStr = "";
+		if (cost == -1) {
+			costStr = "";
+		}else {
+			costStr = cost+"";
+		}
+		if (StringUtils.isBlank(destination)) {
+			destination = "?";
+		}
+		String tripUserName = trip.getSourceuname();
+		((TextView)findViewById(R.id.trip_time_text)).setText(startTime);
+		((TextView)findViewById(R.id.trip_order_num_text)).setText(getString(R.string.order_num)+" "+orderID);
+		((TextView)findViewById(R.id.trip_from)).setText(from);
+		((TextView)findViewById(R.id.trip_destination)).setText(destination);
+		((TextView)findViewById(R.id.seat_level_text)).setText(seatLeve);
+		((TextView)findViewById(R.id.trip_user_text)).setText(tripUserName);
+		((TextView)findViewById(R.id.trip_cost_text)).setText(costStr);
+		((TextView)findViewById(R.id.trip_number_text)).setText(tripNum);
+	}
+
+	public void onClick(View v){
+		switch (v.getId()) {
+		case R.id.back_layout:
+			finish();
+			break;
+		case R.id.edit_text:
+			Intent intent = new Intent(getApplicationContext(),TripDetailActivity.class);
+			intent.putExtra("trip", (Serializable)trip);
+			startActivityForResult(intent, EDIT_TRIP_INFO);
+			break;
+
+		default:
+			break;
+		}
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		// TODO Auto-generated method stub
+		super.onActivityResult(requestCode, resultCode, data);
+		if (resultCode == RESULT_OK && requestCode == EDIT_TRIP_INFO) {
+			trip = (Trip) data.getSerializableExtra("newTrip");
+			disPlayTripInfo();
+		}
+	}
+
+	
+}

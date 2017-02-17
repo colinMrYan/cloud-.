@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:layout_width="129dp"
+        android:layout_height="82dp"
+        android:layout_marginRight="9dp"
+        android:background="@drawable/pop_window_view"
+        android:orientation="vertical" >
+
+        <RelativeLayout 
+            android:id="@+id/app_change_layout"
+            android:layout_width="match_parent"
+            android:layout_height="37dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp"
+            >
+            
+            <Button
+            android:id="@+id/app_change_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:textColor="#ffffff"
+            android:clickable="false"
+            android:layout_centerVertical="true"
+            android:text="@string/edit"
+            android:background="@color/transparent"
+            android:textSize="14sp" />
+        </RelativeLayout>
+        
+        <RelativeLayout 
+            android:id="@+id/app_hide_layout"
+            android:layout_width="match_parent"
+            android:layout_height="37dp"
+            android:layout_marginLeft="10dp"
+            android:layout_below="@id/app_change_layout"
+            android:orientation="horizontal">
+            <Button
+            android:id="@+id/app_hide_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:textColor="#ffffff"
+            android:clickable="false"
+            android:layout_centerVertical="true"
+            android:text="@string/app_commonly_use"
+            android:background="@color/transparent"
+            android:textSize="14sp" />
+            <com.inspur.emmcloud.widget.SwitchView
+                android:id="@+id/app_hide_switch"
+                android:layout_width="40dp"
+                android:layout_height="24dp"
+                android:layout_marginRight="10dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"/>
+        </RelativeLayout>
+        
+    </RelativeLayout>
+
+</LinearLayout>

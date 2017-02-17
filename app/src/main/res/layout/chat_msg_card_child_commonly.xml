@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/root_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/shape_chat_msg_card_other"
+    android:padding="5dp" >
+
+    <TextView
+        android:id="@+id/chat_msg_card_commonly_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/shape_chat_msg_card_other" />
+
+    <LinearLayout
+        android:id="@+id/chat_msg_card_commonly_layout"
+        android:layout_width="match_parent"
+        android:layout_height="34dp"
+        android:orientation="horizontal" >
+
+        <Button
+            android:id="@+id/chat_msg_card_commonly_btn1"
+            android:layout_width="0.0dp"
+            android:layout_height="34dp"
+            android:layout_weight="1.0"
+            android:background="@drawable/shape_chat_msg_card_other" />
+
+        <Button
+            android:id="@+id/chat_msg_card_commonly_btn2"
+            android:layout_width="0.0dp"
+            android:layout_height="34dp"
+            android:layout_weight="1.0"
+            android:background="@drawable/shape_chat_msg_card_other" />
+
+        <Button
+            android:id="@+id/chat_msg_card_commonly_btn3"
+            android:layout_width="0.0dp"
+            android:layout_height="34dp"
+            android:layout_weight="1.0"
+            android:background="@drawable/shape_chat_msg_card_other" />
+    </LinearLayout>
+
+</RelativeLayout>

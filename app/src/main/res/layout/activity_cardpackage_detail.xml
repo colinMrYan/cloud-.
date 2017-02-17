@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res/com.inspur.emmcloud"
+    android:id="@+id/main_layout"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:fitsSystemWindows="true" >
+
+    <RelativeLayout
+        android:id="@+id/header_layout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/header_height"
+        android:background="@color/header_bg" >
+
+        <RelativeLayout
+            android:id="@+id/back_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:onClick="onClick"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp" >
+
+            <ImageView
+                android:id="@+id/back_btn"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_centerVertical="true"
+                android:background="@null"
+                android:paddingRight="5dp"
+                android:scaleType="centerInside"
+                android:src="@drawable/selector_back_btn" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/header_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:textColor="@color/header_text"
+            android:textSize="@dimen/header_textsize" />
+    </RelativeLayout>
+    <TextView
+        android:id="@+id/card_packagelist_detailtxt"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:paddingLeft="12dp"
+        android:textColor="#929292"
+        android:layout_below="@id/header_layout"
+        android:text="@string/tax_ticket_info"/>"
+
+    <ListView 
+        android:id="@+id/card_packagelist_detail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#ffffff"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_below="@id/card_packagelist_detailtxt"
+        android:scrollbars="none"/>
+
+</RelativeLayout>

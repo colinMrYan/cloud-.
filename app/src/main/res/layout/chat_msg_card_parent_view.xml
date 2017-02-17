@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingBottom="10dp"
+    android:paddingRight="17dp"
+    android:paddingTop="10dp" >
+
+    <TextView
+        android:id="@+id/send_time_text"
+        android:layout_width="wrap_content"
+        android:layout_height="20dp"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:gravity="center"
+        android:background="@drawable/shape_chat_msg_time"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="16dp"
+        android:layout_marginTop="16dp"
+        android:singleLine="true"
+        android:textColor="#ffffff"
+        android:textSize="@dimen/content_smaller_textsize" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/send_time_text" >
+
+        <com.inspur.emmcloud.widget.CircleImageView
+            android:id="@+id/sender_photo_img"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+             />
+         <ImageView
+        android:id="@+id/msg_superscript_img"
+        android:layout_width="13dp"
+        android:layout_height="13dp"
+        android:layout_marginLeft="36dp"
+        android:layout_marginTop="27dp"
+        android:src="@drawable/icon_robot_superscript"
+        android:visibility="gone" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/sender_photo_img" >
+
+            <TextView
+                android:id="@+id/news_comment_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:singleLine="true"
+                android:text="@string/comment"
+                android:textColor="#1596d2"
+                android:textSize="@dimen/content_normal_textsize"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/sender_name_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="8dp"
+                android:layout_marginBottom="6dp"
+                android:singleLine="true"
+                android:textColor="#666666"
+                android:textSize="@dimen/content_normal_textsize" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/sender_name_text" >
+
+                <ImageView
+                    android:id="@+id/left_arrow_img"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/icon_msg_card_arrow_other"
+                    android:layout_width="8dp"
+                    android:layout_height="13dp" />
+                <ImageView
+                    android:id="@+id/right_arrow_img"
+                    android:layout_alignParentRight="true"
+                      android:scaleType="fitXY"
+                    android:src="@drawable/icon_msg_card_arrow_my"
+                    android:layout_alignBottom="@+id/card_layout"
+                    android:layout_width="8dp"
+                    android:layout_height="13dp" />
+
+                <RelativeLayout
+                    android:id="@+id/card_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toLeftOf="@id/right_arrow_img"
+                    android:layout_toRightOf="@id/left_arrow_img" >
+                </RelativeLayout>
+            </RelativeLayout>
+        </RelativeLayout>
+    </RelativeLayout>
+
+</RelativeLayout>
