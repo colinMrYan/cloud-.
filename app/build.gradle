@@ -104,7 +104,15 @@ dependencies {
         exclude module: 'support-core-utils'
     }
     compile 'com.readystatesoftware.systembartint:systembartint:1.0.3'
+
+
+    // React Naive Components
+    compile project(':react-native-smart-swipe-refresh-layout')
+
+
     testCompile 'junit:junit:4.12'
+
+
     androidTestCompile('com.android.support.test:runner:0.5') {
         exclude module: 'support-annotations'
     }

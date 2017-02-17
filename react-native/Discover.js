@@ -9,7 +9,7 @@ import {
   StyleSheet,
   Navigator,
 } from 'react-native';
-import DiscoverHome from './component/DiscoverHome';
+import DiscoverHome from './component/discover_home';
 
 export default class Discover extends Component {
   render() {
