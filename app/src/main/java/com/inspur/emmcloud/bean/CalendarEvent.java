@@ -206,11 +206,11 @@ public class CalendarEvent implements Serializable,Comparator{
 	}
 	
 	/**
-	 * ÖØĞ´equals·½·¨ĞŞÊÎ·û±ØĞëÊÇpublic,ÒòÎªÊÇÖØĞ´µÄObjectµÄ·½·¨. 2.²ÎÊıÀàĞÍ±ØĞëÊÇObject.
+	 * é‡å†™equalsæ–¹æ³•ä¿®é¥°ç¬¦å¿…é¡»æ˜¯public,å› ä¸ºæ˜¯é‡å†™çš„Objectçš„æ–¹æ³•. 2.å‚æ•°ç±»å‹å¿…é¡»æ˜¯Object.
 	 */
-	public boolean equals(Object other) { // ÖØĞ´equals·½·¨£¬ºóÃæ×îºÃÖØĞ´hashCode·½·¨
+	public boolean equals(Object other) { // é‡å†™equalsæ–¹æ³•ï¼Œåé¢æœ€å¥½é‡å†™hashCodeæ–¹æ³•
 
-		if (this == other) // ÏÈ¼ì²éÊÇ·ñÆä×Ô·´ĞÔ£¬ºó±È½ÏotherÊÇ·ñÎª¿Õ¡£ÕâÑùĞ§ÂÊ¸ß
+		if (this == other) // å…ˆæ£€æŸ¥æ˜¯å¦å…¶è‡ªåæ€§ï¼Œåæ¯”è¾ƒotheræ˜¯å¦ä¸ºç©ºã€‚è¿™æ ·æ•ˆç‡é«˜
 			return true;
 		if (other == null)
 			return false;
