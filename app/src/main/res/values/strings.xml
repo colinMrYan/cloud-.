@@ -50,6 +50,8 @@
     <string name="more_work_place">更多办公点...</string>
     <string name="cancel_filter">取消过滤</string>
     <string name="only_free">仅显示空闲</string>
+    <string name="file_no_identifiable">不能识别的文件类型</string>
+    <string name="login_code_login_text">验证码登录</string>
 
     <!-- 公共部分 -->
     <string name="year">年</string>
@@ -164,6 +166,7 @@
     <!-- 新用户注册 -->
     <string name="new_user">新用户</string>
     <string name="new_user_input_phonenum">请输入手机号码</string>
+    <string name="newuser_title">新用户</string>
     <string name="new_user_agree">点击“下一步”按钮即表示您同意浪潮的</string>
     <string name="newuser_protocal_text">《用户协议》</string>
     <string name="perfect_text">完善信息</string>
@@ -184,6 +187,7 @@
     <string name="resend">重新发送（  ） </string>
     <string name="captchas">验证码</string>
     <string name="fill_captchas"> 填写验证码</string>
+    <string name="resent">当前（  ） </string>
     <string name="captchas_sent"> 验证码已发送到手机：</string>
     <string name="please_input_captchas">请输入验证码</string>
     <string name="please_input_phone_num">请输入手机号码</string>
@@ -291,6 +295,7 @@
     <string name="please_input_trip_start_city">请输入出发城市</string>
     <string name="please_input_trip_from">请输入始发站</string>
     <string name="please_input_trip_arrive_city">请输入到达城市</string>
+    <string name="please_input_trip_start">请输入始发站</string>
     <string name="please_input_trip_end">请输入终点站</string>
     <string name="please_input_trip_start_time">请输入出发时间</string>
     <string name="please_input_trip_arrive_date">请输入到达日期</string>
@@ -537,6 +542,7 @@
     <string name="expired_booking_history_immutable">过期的会议室预定不可更改</string>
     <string name="user_profile_missing">用户信息缺失</string>
     <string name="department_booking_times_over_run">用户所在部门预定次数超过规定</string>
+    <string name="meeting_end">结束</string>
 
     <!-- 日历 -->
     <string name="calendar_detail">日历详情</string>
@@ -704,6 +710,7 @@
     <string name="turn_off_light">关灯</string>
 
     <string name="function_not_implemented">内测期间，暂不开放</string>
+    <string name="msg_default_time">时间</string>
 
 
     <!-- 打点 -->
@@ -712,6 +719,7 @@
     <string name="msg_default_meta">元数据</string>
     <string name="contents_text">纯文本</string>
     <string name="msg_intent_failed">抱歉，无法打开所需软件，条码内容可能无效</string>
+    <string name="button_ok">确定</string>
     <string name="button_cancel">取消</string>
     <string name="result_text">找到纯文本</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>

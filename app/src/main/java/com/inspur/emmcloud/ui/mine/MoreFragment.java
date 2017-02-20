@@ -172,9 +172,9 @@ public class MoreFragment extends Fragment {
                     startActivity(intent);
                     break;
                 case R.id.more_help_layout:
-//				String feedbackUrl ="http://uservoices.inspur.com/feedback/";
-//				intent.setClass(getActivity(), FeedBackActivity.class);
-//				startActivity(intent);
+				String feedbackUrl ="http://uservoices.inspur.com/feedback/";
+				intent.setClass(getActivity(), FeedBackActivity.class);
+				startActivity(intent);
 
 //				ComponentName componentName = new ComponentName(
 //			            "com.myprojectone",
@@ -186,7 +186,7 @@ public class MoreFragment extends Fragment {
 //			        intentOpen.putExtras(bundle);
 //			        intentOpen.setComponent(componentName);
 //			        startActivity(intentOpen);
-                    in(v);
+//                    in(v);
 
 //				UriUtils.open(getActivity(), feedbackUrl, 3, "", getString(R.string.more_help));
                     break;

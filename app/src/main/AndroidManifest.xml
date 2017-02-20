@@ -237,7 +237,9 @@
         <activity
             android:name=".ui.app.groupnews.NewsWebDetailActivity"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait" >
+
+        </activity>
         <activity
             android:name=".ui.find.ScanResultActivity"
             android:launchMode="singleTask"
@@ -298,7 +300,15 @@
         <activity
             android:name=".ui.find.AnalysisActivity"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait" >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="ecc-component" android:host="stastistics" />
+            </intent-filter>
+            </activity>
         <activity
             android:name=".ui.find.trip.TripInfoActivity"
             android:screenOrientation="portrait" />
@@ -328,7 +338,15 @@
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
             android:name=".ui.app.groupnews.GroupNewsActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait" >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="ecc-component" android:host="news.ecc" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".ui.work.task.MessionListActivity"
             android:screenOrientation="portrait"
@@ -370,11 +388,21 @@
         <activity
             android:name=".ui.find.DocumentActivity"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait" >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="ecc-component" android:host="document" />
+            </intent-filter>
+            </activity>
         <activity
             android:name=".ui.find.KnowledgeActivity"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait" >
+
+            </activity>
         <activity
             android:name=".ui.work.meeting.MyCommonOfficeActivity"
             android:screenOrientation="portrait" />

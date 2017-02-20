@@ -13,6 +13,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -90,6 +91,12 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 	private static final int RERESH_GROUP_ICON = 2;
 	private View rootView;
 	private LayoutInflater inflater;
+
+//	@Override
+//	public void onAttach(Activity activity) {
+//		super.onAttach(activity);
+//	}
+
 	private PullableListView msgListView;
 	private ChatAPIService apiService;
 	private List<Channel> displayChannelList = new ArrayList<Channel>();

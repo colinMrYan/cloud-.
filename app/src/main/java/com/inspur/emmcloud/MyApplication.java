@@ -43,6 +43,7 @@ import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.UriUtils;
 
 import com.inspur.mdm.utils.MDMResUtils;
+import com.inspur.reactnative.AuthorizationManagerPackage;
 import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiskCache;
 import com.nostra13.universalimageloader.cache.disc.naming.HashCodeFileNameGenerator;
 import com.nostra13.universalimageloader.cache.memory.impl.UsingFreqLimitedMemoryCache;
@@ -85,7 +86,8 @@ public class MyApplication extends Application implements  ReactApplication{
 		@Override
 		protected List<ReactPackage> getPackages() {
 			return Arrays.<ReactPackage>asList(
-					new MainReactPackage()
+					new MainReactPackage(),
+					new AuthorizationManagerPackage()
 			);
 		}
 	};
