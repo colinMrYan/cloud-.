@@ -17,7 +17,7 @@ public class AuthorizationManagerPackage  implements ReactPackage {
     @Override
     public List<NativeModule> createNativeModules(ReactApplicationContext reactContext) {
         List<NativeModule> modules = new ArrayList<>();
-        modules.add(new AuthorizationManager(reactContext));
+        modules.add(new NativeBridge(reactContext));
         return modules;
     }
 
