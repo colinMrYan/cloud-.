@@ -1,4 +1,747 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">client-android</string>
-    <string name="action_settings">Settings</string>
+
+    <string name="app_name">浪潮云+</string>
+    <string name="reclick_to_desktop">再按一次退出程序</string>
+    <string name="Network_Mobile">已经连接到到移动网络</string>
+    <string name="Network_WIFI">已经连接到WIFI</string>
+    <string name="ok">确定</string>
+    <string name="cancel">取消</string>
+    <string name="resolution_warning">您的设备分辨率小于800*480，无法运行此程序</string>
+    <string name="retry">重试</string>
+    <string name="software_service_term">浪潮服务协议</string>
+    <string name="update_fail">更新失败</string>
+    <string name="downloading_package">下载中，请稍后....</string>
+    <string name="service_term">浪潮服务协议</string>
+    <string name="prompt">提示</string>
+    <string name="nothing">无 </string>
+    <string name="function_intr">功能介绍 </string>
+    <string name="enter_app">进入应用</string>
+    <string name="sweep">扫一扫</string>
+    <string name="send">发送</string>
+    <string name="picture">图片</string>
+    <string name="album">相册</string>
+    <string name="take_photo">拍照</string>
+    <string name="file">文件</string>
+    <string name="next_step">下一步</string>
+    <string name="pull_down_load_history">下拉加载历史消息</string>
+    <string name="if_confirm_signout">确定退出当前账号？</string>
+    <string name="exit">退出</string>
+    <string name="open">打开</string>
+    <string name="add">添加</string>
+    <string name="update">更新</string>
+    <string name="download">下载</string>
+    <string name="confirm_modify_language">确定修改语言</string>
+    <string name="resolution_valiad">您的设备分辨率小于800*480无法运行此程序</string>
+    <string name="file_type_not_recognize">不可识别的文件类型</string>
+    <string name="return_app">返回应用</string>
+    <string name="modify_success">修改成功</string>
+    <string name="save_success">保存成功</string>
+    <string name="save_fail">保存失败</string>
+    <string name="picture_cannot_show">图片无法显示</string>
+    <string name="cannot_download_for_network_exception">网络有问题，无法下载</string>
+    <string name="cannot_show_for_too_big">图片太大无法显示</string>
+    <string name="unknown_error">未知的错误</string>
+    <string name="check_update_text">检查新版本</string>
+    <string name="app_is_lastest_version">当前已是最新版本</string>
+    <string name="check_update_fail">检查新版本失败</string>
+    <string name="upgrade">升级</string>
+    <string name="not_upgrade">暂不升级</string>
+    <string name="more_work_place">更多办公点...</string>
+    <string name="cancel_filter">取消过滤</string>
+    <string name="only_free">仅显示空闲</string>
+    <string name="file_no_identifiable">不能识别的文件类型</string>
+    <string name="login_code_login_text">验证码登录</string>
+
+    <!-- 公共部分 -->
+    <string name="year">年</string>
+    <string name="month">月</string>
+    <string name="day">日</string>
+    <string name="monday">星期一</string>
+    <string name="tuesday">星期二</string>
+    <string name="wednesday">星期三</string>
+    <string name="thursday">星期四</string>
+    <string name="friday">星期五</string>
+    <string name="saturday">星期六</string>
+    <string name="sunday">星期日</string>
+    <string name="today">今天</string>
+    <string name="tomorrow">明天</string>
+    <string name="after">后天</string>
+    <string name="no_more_data">无更多加载项</string>
+    <string name="tips">提示</string>
+    <string name="confirm">确定</string>
+    <string name="begin">开始</string>
+    <string name="end">结束</string>
+    <string name="yesterday">昨天</string>
+    <string name="format_default">yyyy-MM-dd HH:mm:ss</string>
+    <string name="format_date_group_by">yyyy-MM-dd</string>
+    <string name="format_year_month_day">yyyy\'年\'MM\'月\'dd\'日\'</string>
+    <string name="format_hour_minute">HH:mm</string>
+    <string name="format_utc">yyyy-MM-dd\'T\'HH:mm:ss\'.\'SSS\'Z\'</string>
+    <string name="not_support_upload">不支持没有后缀名的文件上传</string>
+    <string name="format_month_day">MM\'月\'dd\'日\'</string>
+    <string name="format_task_month_day">MM.dd</string>
+    <string name="format_year_month_day_hour_minute">yyyy\'年\'MM\'月\'dd\'日\' HH:mm</string>
+    <string name="format_year_month">yyyy\'年\'MM\'月\'</string>
+    <string name="time_null">无</string>
+    <string name="cutdown_now">今天</string>
+    <string name="cutdown_tomorrow">明天</string>
+    <string name="cutdown_day">天</string>
+    <string name="cutdown_month">月</string>
+    <string name="notice">通知</string>
+    <string name="close">关闭</string>
+    <string name="commoly_use_app">常用</string>
+    <string name="app_init">正在初始化中...</string>
+
+    <!-- 新添加部分 -->
+    <string name="alert">提醒</string>
+    <string name="analysis">分析</string>
+    <string name="please_input_remark">请输入备注信息</string>
+    <string name="alert_cycle">提醒周期</string>
+    <string name="cycle">周期</string>
+    <string name="divide_into_groups">分组</string>
+    <string name="quarter">季度</string>
+    <string name="monthly_a">月度</string>
+    <string name="repeat">重复</string>
+    <string name="add_event">添加事件</string>
+    <string name="calendar">日历</string>
+    <string name="all_day">全天</string>
+    <string name="delete_group_member"> 删除群成员</string>
+    <string name="tax_ticket_info"> 增值税专用发票开票信息</string>
+    <string name="channel_group_info">群信息</string>
+    <string name="channel_group_name">群组名称</string>
+    <string name="channel_group_image"> 群聊天图片</string>
+    <string name="channel_group_file"> 群聊天文件</string>
+    <string name="channel_set_top"> 置顶聊天</string>
+    <string name="message_without_interruption">消息免打扰</string>
+    <string name="login_hint_text">用户名/邮箱/手机号</string>
+    <string name="modify_group_name">更改群名称</string>
+    <string name="choose_common_office">添加常用办公地点</string>
+    <string name="please_click_choosing_time">请点击选择时间</string>
+    <string name="meeting_room">会议室</string>
+    <string name="building">建筑</string>
+    <string name="am">上午</string>
+    <string name="please_input_change">请输入修改</string>
+    <string name="my_stroke">我的行程</string>
+    <string name="title">标题</string>
+    <string name="channel_hide_chat">隐藏聊天</string>
+    <string name="upload_at">上传于</string>
+    <string name="confirm_checkin">确认参加</string>
+    <string name="name">名字</string>
+    <string name="size">大小</string>
+    <string name="use_map">使用地图导航</string>
+    <string name="use_gaode_map">使用高德地图导航</string>
+    <string name="choose_begin_end_time">选择开始结束时间</string>
+    <string name="add_new_task">新增待办</string>
+    <string name="picture_path_null">图片路径为空</string>
+    <string name="trip_detail">行程详情</string>
+    <string name="trip_date">行程日期</string>
+    <string name="ticket_cost">票价</string>
+    <string name="triper"> 乘车人</string>
+    <string name="seat_num"> 座次</string>
+    <string name="train_num"> 车次</string>
+    <string name="arrive_time"> 到达时间</string>
+    <string name="arrive_date">到达日期</string>
+    <string name="arrive_city"> 到达城市 </string>
+    <string name="terminus">终点站 </string>
+    <string name="start_city">出发城市</string>
+    <string name="start_station">始发站</string>
+    <string name="trip">行程</string>
+    <string name="news">新闻</string>
+    <string name="back">返回</string>
+    <string name="preview">预览</string>
+    <string name="photo">照片</string>
+    <string name="heading">名称</string>
+    <string name="taxpayer_identification_number">纳税人识别号</string>
+    <string name="address">地址</string>
+    <string name="phone_number">电话</string>
+    <string name="bank">开户行</string>
+    <string name="account_number">账号</string>
+    <string name="feed_back_success">反馈成功</string>
+    <string name="begin_cannot_later_than_end">开始时间不能晚于结束时间</string>
+    <string name="no_this_knowledge">暂无这条知识</string>
+    <string name="comment">评论</string>
+    <string name="find_your_friends">寻找你的伙伴</string>
+
+    <!-- 新用户注册 -->
+    <string name="new_user">新用户</string>
+    <string name="new_user_input_phonenum">请输入手机号码</string>
+    <string name="newuser_title">新用户</string>
+    <string name="new_user_agree">点击“下一步”按钮即表示您同意浪潮的</string>
+    <string name="newuser_protocal_text">《用户协议》</string>
+    <string name="perfect_text">完善信息</string>
+    <string name="perfect_nickname_text">昵称</string>
+    <string name="perfect_gender_text">男</string>
+
+    <!-- 登录部分 -->
+    <string name="invaliad_account_or_pwd">用户名或密码错误</string>
+    <string name="captchas_input_error">验证码错误</string>
+    <string name="pw_modified"> 密码已修改</string>
+    <string name="phonenum_has_beeb_resgistered">手机号已经注册，您可以选择直接登录，或者更换注册手机号</string>
+    <string name="login_direct">直接登录</string>
+    <string name="change_phone_num">更换号码</string>
+    <string name="captchas_login">验证码登录 </string>
+    <string name="get_captchas">获取验证码 </string>
+    <string name="send_captchas">发送验证码 </string>
+    <string name="set_pwd">设置密码 </string>
+    <string name="resend">重新发送（  ） </string>
+    <string name="captchas">验证码</string>
+    <string name="fill_captchas"> 填写验证码</string>
+    <string name="resent">当前（  ） </string>
+    <string name="captchas_sent"> 验证码已发送到手机：</string>
+    <string name="please_input_captchas">请输入验证码</string>
+    <string name="please_input_phone_num">请输入手机号码</string>
+    <string name="phone_num_illegal_format">手机号码格式不正确</string>
+    <string name="no_phone_num">手机号不存在</string>
+    <string name="login_loading_text">登录中...</string>
+    <string name="please_input_username">请输入用户名</string>
+    <string name="please_input_password"> 请输入密码</string>
+    <string name="password">密码</string>
+    <string name="login">登录</string>
+    <string name="login_newuser_text">新用户注册</string>
+    <string name="captchas_getcode_success">验证码发送成功</string>
+    <string name="reverification">重新验证</string>
+    <string name="recover">重新获取</string>
+    <string name="more">更多</string>
+    <string name="no_search_term">没有更多的搜索结果</string>
+    <string name="code_verification_failure">验证码校验失败</string>
+    <string name="sms_login">短信登录</string>
+    <string name="cost_report"> 费用报告</string>
+    <string name="your_contact"> 您的联系方式</string>
+    <string name="group_album"> 群相册</string>
+    <string name="group_file">群文件</string>
+    <string name="authorization_expired">授权过期，请重新登录</string>
+
+    <!-- 消息部分 -->
+    <string name="msgcontent_cannot_null">请输入消息内容</string>
+    <string name="comment_type">   的图片</string>
+    <string name="comment_filetype">   的文件</string>
+    <string name="comment_news_type">   的新闻</string>
+    <string name="published_in">发于</string>
+    <string name="all_channel_mem">全部频道成员</string>
+    <string name="message_text">消息：</string>
+    <string name="channel">频道</string>
+    <string name="communicate">沟通</string>
+    <string name="group_info">浪潮资讯</string>
+    <string name="send_a_picture">[图片]</string>
+    <string name="send_a_comment">[评论]</string>
+    <string name="send_a_file">[文件]</string>
+    <string name="share_a_link">[新闻链接]</string>
+    <string name="send_a_meeting_invitation">[会议邀请]</string>
+    <string name="cancel_a_meeting">[会议取消通知]</string>
+    <string name="send_a_meeting_request">[会议审批]</string>
+    <string name="send_a_message_of_unknown_type">[未知类型]</string>
+    <string name="direct_no_message">暂无新消息</string>
+    <string name="group_no_message">已经进入群组，打个招呼吧</string>
+    <string name="welcome_to_attention">欢迎关注</string>
+    <string name="not_support_open_channel"> 暂不支持此类型</string>
+    <string name="top"> 置顶</string>
+    <string name="cancel_top"> 取消置顶</string>
+    <string name="creat_group">创建群组</string>
+    <string name="creat_group_fail">群组创建失败</string>
+    <string name="all_group_member">全部群成员</string>
+    <string name="add_group_member">添加群成员 </string>
+    <string name="channel_group">群组</string>
+    <string name="group_member">群成员 </string>
+    <string name="group_name_cannot_null">请输入群组名称 </string>
+    <string name="channel_unknown_text">未知的消息类型</string>
+    <string name="comment_hallcomment_text">评论了:</string>
+    <string name="channel_info">频道详情</string>
+    <string name="comment_text">评论：</string>
+    <string name="administrators_of_channel">(管理员)</string>
+    <string name="long_img">长图</string>
+
+
+    <!-- 会议卡片 -->
+    <string name="meeting_has_confirmed">已确认</string>
+    <string name="meeting_has_refused">已拒绝</string>
+    <string name="meeting_canceled_topic">取消了主题为</string>
+    <string name="meeting_tail">的会议</string>
+    <string name="meeting_organizer">您是会议的组织者</string>
+    <string name="meeting_state_modification">会议状态修改</string>
+    <string name="meeting_refused">委婉拒绝</string>
+    <string name="meeting_cancel_confirm">取消确认</string>
+    <string name="meeting_cancel_reject">取消拒绝</string>
+
+    <!-- 工作页面部分 -->
+    <string name="work">工作</string>
+    <string name="work_new_year_day">距元旦</string>
+    <string name="work_spring_festival">距春节</string>
+    <string name="work_qingming_festival">距清明节</string>
+    <string name="work_international_labour_day">距劳动节</string>
+    <string name="work_dragon_boat_festival">距端午节</string>
+    <string name="work_national_day">距国庆节</string>
+    <string name="work_moon_festival">距中秋节</string>
+    <string name="work_day">天</string>
+    <string name="work_date_text">9月20日</string>
+    <string name="work_lunar">农历八月初八 · 星期日</string>
+    <string name="work_festval_date">距元旦 · 10天</string>
+    <string name="work_nomeeting_text">暂无会议</string>
+    <string name="work_notask_text">暂无待办</string>
+    <string name="work_nocal_text">暂无日程</string>
+    <string name="time">时间</string>
+    <string name="work_meeting_text">会议</string>
+    <string name="work_calendar_text">企业日历</string>
+    <string name="work_task_text">待办事项</string>
+
+    <!-- 发现部分 -->
+    <string name="find">发现</string>
+    <string name="travel_analysis">差旅分析</string>
+    <string name="knowledge">知识</string>
+    <string name="docunment">文档</string>
+    <string name="order_num">订单号</string>
+    <string name="choose_rider">请选择乘车人</string>
+    <string name="please_input_trip_date">请输入行程日期</string>
+    <string name="please_input_trip_start_city">请输入出发城市</string>
+    <string name="please_input_trip_from">请输入始发站</string>
+    <string name="please_input_trip_arrive_city">请输入到达城市</string>
+    <string name="please_input_trip_start">请输入始发站</string>
+    <string name="please_input_trip_end">请输入终点站</string>
+    <string name="please_input_trip_start_time">请输入出发时间</string>
+    <string name="please_input_trip_arrive_date">请输入到达日期</string>
+    <string name="please_input_trip_arrive_time">请输入到达时间</string>
+    <string name="please_input_train_num">请输入车次</string>
+    <string name="please_input_seat_num">请输入座次</string>
+    <string name="please_input_rider">请输入乘车人</string>
+    <string name="please_input_order_num">请输入订单号</string>
+    <string name="please_input_ticket_cost">请输入票价</string>
+    <string name="trip_date_or_time_error">行程日期或时间填写不正确</string>
+    <string name="station_name_not_exist">您填写的站名不存在，请核对站名</string>
+    <string name="found_q2_q2">Q2费用报告</string>
+    <string name="find_search_contacts">联系人</string>
+    <string name="find_search_chat_history">聊天记录</string>
+    <string name="find_search_news">新闻</string>
+
+    <!-- 应用部分 -->
+    <string name="not_support_app_type">不支持打开此类型应用</string>
+    <string name="application">应用</string>
+    <string name="adding"> 添加中</string>
+    <string name="add_app"> 添加应用</string>
+    <string name="search_null"> 未搜索到任何应用</string>
+    <string name="input_search_key"> 请输入搜索关键字</string>
+    <string name="delete">删除</string>
+    <string name="must_be_app_cannot_edit">当前应用皆为必装，不可编辑</string>
+    <string name="app_center">应用中心</string>
+    <string name="detail">详情</string>
+    <string name="search">搜索</string>
+    <string name="app_commonly_use">常用应用</string>
+    <string name="app_center_more_apps">更多应用</string>
+
+    <!-- 我的页面部分 -->
+    <string name="data_clear_success">清除成功</string>
+    <string name="not_set">未设置</string>
+    <string name="mine">我的</string>
+    <string name="take_camera">相机拍摄</string>
+    <string name="gallery">手机相册</string>
+    <string name="quit_check">退出登录</string>
+    <string name="check_security">账号保护</string>
+    <string name="follow_system">跟随系统</string>
+    <string name="more_message">消息通知</string>
+    <string name="more_allApps">所有应用</string>
+    <string name="more_help">意见反馈</string>
+    <string name="more_pushlist_text">推送列表</string>
+    <string name="more_invitefriend_text">邀请好友使用Cloud</string>
+    <string name="account_security_head">账号与安全</string>
+    <string name="account_security_device">当前登录设备</string>
+    <string name="account_security_mail">当前绑定邮箱</string>
+    <string name="account_security_mobile">当前绑定手机</string>
+    <string name="account_security_sign_record">账户登录记录</string>
+    <string name="about_text">关于</string>
+    <string name="about_welcome_text">欢迎页面</string>
+    <string name="about_newfun_text">新功能介绍</string>
+    <string name="about_protocol_text">浪潮服务协议</string>
+    <string name="cloud_version">Cloud 版本</string>
+    <string name="feed_back_no_empty">请输入反馈意见</string>
+    <string name="feed_back_out_of_length">您输入的字数已经超过了限制</string>
+    <string name="feed_back_advice">您的意见和建议</string>
+    <string name="feed_back_welcom">欢迎提出宝贵的建议和意见！我们会用心倾听并持续改进产品，把更好的体验带给您</string>
+    <string name="feed_back_input_phone">输入电话或邮箱</string>
+    <string name="feed_back_upload">提交</string>
+    <string name="feed_back_without_name">匿名提交</string>
+    <string name="invite_friend_invite_text">邀请好友使用</string>
+    <string name="invite_friend_code">直接扫描二维码邀请好友安装Cloud</string>
+    <string name="invite_friend_recommend">推荐【Cloud】给好友</string>
+    <string name="settings">设置</string>
+    <string name="settings_protect">已保护</string>
+    <string name="settings_clear_cache">清除缓存</string>
+    <string name="settings_aboutIMP">关于 浪潮云+</string>
+    <string name="settings_clean_imgae_attachment">清理图片及附件缓存</string>
+    <string name="settings_clean_web">清理Web应用缓存</string>
+    <string name="settings_clean_all">清理应用所有缓存数据</string>
+    <string name="settings_language">语言切换</string>
+    <string name="settings_message_alert">消息提醒</string>
+    <string name="settings_open_msg">已开启</string>
+    <string name="settings_conbine_weibo">绑定微博</string>
+    <string name="settings_conbined">已绑定</string>
+    <string name="language_set_text">语言切换</string>
+    <string name="language_simple">简体中文</string>
+    <string name="language_traditionalTW">繁體中文</string>
+    <string name="language_traditionalHK">繁體中文（香港）</string>
+    <string name="language_english">English</string>
+    <string name="card_package_listtext">卡包</string>
+    <string name="my_setting_tips_quit">确定清除应用内所有缓存数据？清除后将退出应用</string>
+    <string name="get_language_error">未获取到可用的语言包，请联系管理员</string>
+
+
+    <!-- 修改密码部分 -->
+    <string name="modify_input_user_new_password">请输入新密码</string>
+    <string name="modify_input_confirm_passord">请输入确认密码</string>
+    <string name="modify_new_old_same">新密码不能和原密码相同</string>
+    <string name="modify_not_same">新密码和确认密码不一致</string>
+    <string name="modify_input_password">请输入6~64位密码</string>
+    <string name="modify_password_not_correct">密码填写不正确，请确认</string>
+    <string name="modify_password_fail">修改密码失败</string>
+    <string name="modify_password">修改密码</string>
+    <string name="modify_reset_password">重置密码</string>
+    <string name="modify_old_password">原密码</string>
+    <string name="modify_input_old_password">输入原密码</string>
+    <string name="modify_new_password">新密码</string>
+    <string name="modify_input_code">输入新密码</string>
+    <string name="modify_input_again">再次输入</string>
+    <string name="confirm_password">确认密码</string>
+    <string name="modify_user_password">请确认密码不为空，且两次输入密码一致</string>
+    <string name="modify_user_password_success">通行证密码修改成功，请使用新密码登录</string>
+    <string name="modify_user_password_fail">设置密码失败，您是否继续设置</string>
+    <string name="modify_jump">跳过</string>
+    <string name="modify_welcom_user_cloud">欢迎使用浪潮云+</string>
+    <string name="modify_first_use">这是您第一次使用浪潮云+，是否设置浪潮通行证密码，以方便下次登录</string>
+
+    <!-- 用户信息页面部分 -->
+    <string name="user_info_text">个人信息</string>
+    <string name="user_info_head">头像</string>
+    <string name="user_info_name">姓名</string>
+    <string name="depart">部门</string>
+    <string name="function_introduction">功能简介</string>
+    <string name="service_and_support">服务与支持</string>
+    <string name="user_info_sex">性别</string>
+    <string name="user_qr_code">我的二维码</string>
+    <string name="user_company_info">企业信息</string>
+    <string name="sms_moidify_password">通过手机号码验证码修改</string>
+    <string name="resend_code">重新发送(51)</string>
+    <string name="modify_user_info">修改信息</string>
+    <string name="modify_modify">修改</string>
+    <string name="user_info_my_info">我的个人信息</string>
+    <string name="user_info_organ">浪潮国际</string>
+    <string name="user_info_phone_number">联系方式</string>
+    <string name="user_no_storage">没有存储设备</string>
+
+    <!-- 集团新闻 部分 -->
+    <string name="group_news">集团新闻</string>
+    <string name="group_news_detail">新闻详情</string>
+    <string name="news_share">分享到</string>
+    <string name="news_share_success">分享成功</string>
+    <string name="news_share_fail">分享失败</string>
+    <!-- 审批页面 -->
+    <string name="onekey_approval_text">审批</string>
+
+    <!-- 通讯录部分 -->
+    <string name="recent">最近</string>
+    <string name="adress_list">通讯录</string>
+    <string name="address_servicenum_text">服务号</string>
+    <string name="org_struct_text">组织/架构  </string>
+    <string name="please_select_app_of_mail">请选择邮件类应用</string>
+    <string name="recently_used">最近常用</string>
+    <string name="all">全部</string>
+    <string name="seach_blank">搜索...                   </string>
+    <string name="origanization_struct">公司/团队 组织架构</string>
+    <string name="cannot_view_info">无法查看相关信息</string>
+    <string name="do_not_select_yourself">不能选择自己</string>
+    <string name="contact_exception">数据异常,无法打开</string>
+
+
+    <!-- 会议室部分 -->
+    <string name="meeting_room_booking_detail">会议室详情</string>
+    <string name="room_booking_topic">请输入会议主题</string>
+    <string name="room_booking_choosing_room">请选择会议室</string>
+    <string name="room_booking_members_edit">请添加参会人员</string>
+    <string name="room_booking_log_edit">请添加会务人员</string>
+    <string name="please_choosing_date">请选择日期</string>
+    <string name="from">从</string>
+    <string name="to">到</string>
+    <string name="start_time">开始时间</string>
+    <string name="end_time">结束时间</string>
+    <string name="room_booking_notice_edit">请填写备注信息</string>
+    <string name="room_booking_detail">会议详情</string>
+    <string name="meeting_booking_no_time">时间段为空，请先选择时间段</string>
+    <string name="meeting_booking_success">会议室预定成功</string>
+    <string name="meeting_update_success">会议室更新成功</string>
+    <string name="file_upload_tips">请选择一个要上传的文件</string>
+    <string name="viewpager_indicator">%1$d/%2$d</string>
+    <string name="meeting_booking_title">会议室预订</string>
+    <string name="meeting_choose_time">时间为空，请先选时间段</string>
+    <string name="meeting_no_booking_time">没有可预订时间</string>
+    <string name="meeting_invating_members">邀请参会人员</string>
+    <string name="meeting_choose_log_members">选择会务人员</string>
+    <string name="meeting_begin_or_date_time">请选择会议时间</string>
+    <string name="meeting_end_time_no_empty">请选择结束时间</string>
+    <string name="meeting_topic_too_long">主题不能超过128个字符！</string>
+    <string name="meeting_notice_too_long">备注不能超过128个字符！</string>
+    <string name="meeting_booking_error">预订出错</string>
+    <string name="meeting_time_is_word">时间是字符</string>
+    <string name="meeting_room_number">S206</string>
+    <string name="meetting_members_num">16</string>
+    <string name="meeting_topic_title">主题</string>
+    <string name="meeting_members">参会人员</string>
+    <string name="meeting_log">会务</string>
+    <string name="meeting_ageda">议程</string>
+    <string name="meeting_summary">纪要</string>
+    <string name="place">地点</string>
+    <string name="meeting_list_title">会议室列表</string>
+    <string name="meeting">会议</string>
+    <string name="meeting_history">历史会议</string>
+    <string name="meeting_history_search">历史会议搜索</string>
+    <string name="meeting_list_cancel_success">会议取消成功</string>
+    <string name="meeting_list_cirform">您确定取消会议？</string>
+    <string name="meeting_list_no_self">非本人创建的会议不可删除</string>
+    <string name="meeting_list_topic">ECM-Cloud 需求评审会</string>
+    <string name="meeting_add_meeting">添加会议</string>
+    <string name="meeting_booking">预订</string>
+    <string name="meeting_memebers">参与成员</string>
+    <string name="noon">正午</string>
+    <string name="office_create_fail">创建常用工作地点失败</string>
+    <string name="office_create_success">创建常用工作地点成功</string>
+    <string name="office_delete_position">您确定删除常用办公地点吗</string>
+    <string name="office_head">我的办公地点</string>
+    <string name="building_head">选择建筑</string>
+    <string name="click_to_book">点击预订</string>
+    <string name="free">空闲</string>
+    <string name="day_before">前一天</string>
+    <string name="day_after">后一天</string>
+    <string name="meeting_change">变更会议</string>
+    <string name="meeting_cancel">取消会议</string>
+    <string name="meeting_detail_save">保存修改</string>
+    <string name="meeting_detail_change">修改详情</string>
+    <string name="meeting_detail_has_finished">会议已结束不可修改</string>
+    <string name="meeting_detail_has_began">会议已开始不可修改</string>
+    <string name="meeting_detail_not_organizer">您不是会议组织者不能变更会议</string>
+    <string name="meeting_add_work_place">添加办公地点</string>
+    <string name="meeting_click_add_work_place">点击添加办公地点</string>
+    <string name="meeting_common_place">常用地点</string>
+    <string name="meeting_time">会议时间</string>
+    <string name="reset">重置</string>
+    <string name="more_than_max_day">超过最大可预订天数</string>
+    <string name="more_than_max_time">超过最长可预订时间</string>
+    <string name="meeting_search_to">至</string>
+    <string name="meeting_date_default">--/--/--/--/--</string>
+    <string name="meeting_room_booked">时间已被预订，请重新选择</string>
+    <string name="meeting_room_ilegal_time">时间非法，请检查</string>
+    <string name="meeting_room_time_late">开始时间不能早于当前时间</string>
+
+    <!-- 会议预定错误提示 -->
+    <string name="user_profile_broken">部门信息缺失</string>
+    <string name="time_earlier_than_permission">预定时间早于规定时间（现在）</string>
+    <string name="time_later_than_permission">预定时间晚于规定时间</string>
+    <string name="time_span_over_limit">预定时间跨越多天</string>
+    <string name="duration_over_limit">预定会议室时长超过限制</string>
+    <string name="time_conflict">预定时间与已有记录冲突</string>
+    <string name="invalid_booking_time">预定会议室时长小于限制</string>
+    <string name="room_not_exists">会议室不存在</string>
+    <string name="room_locked_by_admin">会议室被管理员锁定，不可预定</string>
+    <string name="room_for_special_use">VIP会议室，非管理员不可预定</string>
+    <string name="book_history_not_exist">会议室预定记录不存在</string>
+    <string name="expired_booking_history_immutable">过期的会议室预定不可更改</string>
+    <string name="user_profile_missing">用户信息缺失</string>
+    <string name="department_booking_times_over_run">用户所在部门预定次数超过规定</string>
+    <string name="meeting_end">结束</string>
+
+    <!-- 日历 -->
+    <string name="calendar_detail">日历详情</string>
+    <string name="adjust">调整</string>
+    <string name="save">保存</string>
+    <string name="please_input_title">请输入标题</string>
+    <string name="start_or_end_time_illegal">结束时间不能小于开始时间</string>
+    <string name="tilte_cannot_exceed_64">标题不能超过64个字符</string>
+    <string name="select_calendar">请选择日历</string>
+    <string name="add_success">添加成功</string>
+    <string name="never">永不</string>
+    <string name="every_year">每年</string>
+    <string name="monthly">每月</string>
+    <string name="weekly">每周</string>
+    <string name="every_day">每日</string>
+    <string name="when_event_occurs">事件发生时</string>
+    <string name="five_minite_ago">5分钟前</string>
+    <string name="fifteen_minite_ago">15分钟前</string>
+    <string name="thirty_minite_ago">30分钟前</string>
+    <string name="one_hour_ago">1小时前</string>
+    <string name="two_hours_ago">2小时前</string>
+    <string name="one_day_ago">1天前</string>
+    <string name="two_days_ago">2天前</string>
+    <string name="a_week_ago">1周前</string>
+
+    <!-- 待办任务部分 -->
+    <string name="mession_detial_doing">进行中</string>
+    <string name="mession_detial_finish">已完成</string>
+    <string name="mession_no_person_charge">暂无负责人</string>
+    <string name="mession_upload_attachment">您不是任务的所有人，不能上传附件</string>
+    <string name="mession_delete_attachment">您不是任务的所有人，不能删除附件</string>
+    <string name="mession_change_charge_person">确定将修改此任务的负责人？</string>
+    <string name="mession_delete_atachment">您确定要删除附件吗？</string>
+    <string name="mession_not_change_charge_person">任务的所有人不是您本人，不能修改负责人</string>
+    <string name="mession_choose_charge_person">选择任务负责人</string>
+    <string name="mession_invate_members">邀请参加任务人员</string>
+    <string name="mession_saving_success">保存成功！</string>
+    <string name="mession_upload_attachment_success">上传文件成功</string>
+    <string name="mession_upload_attachment_fail">上传文件失败</string>
+    <string name="mession_detail">任务详情</string>
+    <string name="mession_name">任务名称</string>
+    <string name="mession_priority">优先级</string>
+    <string name="mession_type">类别</string>
+    <string name="mession_level">高|中|低</string>
+    <string name="mession_charge_person">负责人</string>
+    <string name="mession_members_person">参与人</string>
+    <string name="mession_ending_time">截止时间</string>
+    <string name="mession_state">状态</string>
+    <string name="mession_link">链接</string>
+    <string name="mession_attachment">附件</string>
+    <string name="mession_finish_recover">您确定恢复任务吗？</string>
+    <string name="mession_finish_history">历史任务</string>
+    <string name="mession_list_name">请为任务输入名称</string>
+    <string name="mession_no_more">任务名称不能超过64个字符</string>
+    <string name="mession_set_finish">您确定将任务置为完成状态吗？</string>
+    <string name="mession_list">任务列表</string>
+    <string name="mession_types">我的|我参与的|我关注的</string>
+    <string name="mession_reset">重置过滤条件</string>
+    <string name="mession_cancel">取消过滤条件</string>
+    <string name="mession_add_mession">快速添加任务</string>
+    <string name="mession_set_level">按优先级</string>
+    <string name="mession_set_time">按时间</string>
+    <string name="mession_set_asc">正序</string>
+    <string name="mession_set_desc">倒序</string>
+    <string name="finish">完成</string>
+    <string name="mession_set_order">排序</string>
+    <string name="mession_set_filter">过滤</string>
+    <string name="mession_set_has_finished">已经完成任务管理</string>
+    <string name="mession_delete_tag">您确定要删除标签吗？</string>
+    <string name="mession_delete_red">红色</string>
+    <string name="mession_delete_orange">橙色</string>
+    <string name="mession_delete_yellow">黄色</string>
+    <string name="mession_delete_green">绿色</string>
+    <string name="mession_delete_blue">蓝色</string>
+    <string name="mession_delete_purple">紫色</string>
+    <string name="mession_delete_exist">请勿重复创建标签</string>
+    <string name="mession_delete_no_empty">标题不可为空</string>
+    <string name="mession_add_tag">标签</string>
+    <string name="mession_full_tag">请填写标签名称</string>
+    <string name="mession_color_tag">颜色</string>
+    <string name="mession_delete_the_tag">删除标签</string>
+    <string name="mession_manage_tag">管理标签</string>
+
+    <!-- ListView自定义控件部分 -->
+    <string name="xlistview_header_last_time">上次更新时间:</string>
+    <string name="release_to_refresh">释放立即刷新</string>
+    <string name="pull_down_refresh">下拉刷新</string>
+    <string name="refreshing">正在刷新...</string>
+    <string name="refresh_succeed">刷新成功</string>
+    <string name="refresh_fail">刷新失败</string>
+    <string name="pullup_to_load">上拉加载更多</string>
+    <string name="pull_loading">正在加载...</string>
+    <string name="release_to_load">释放立即加载</string>
+    <string name="load_succeed">加载成功</string>
+    <string name="load_fail">加载失败</string>
+    <string name="see_more">查看更多</string>
+    <string name="pull_down_loading_history">下拉加载历史消息</string>
+    <string name="license_agreement">1、本协议是用户 (自然人、法人或社会团体)与浪潮通用软件有限公司之间关于“浪潮云+”软件产品（以下
+
+简称“本软件产品”）的法律协议。一旦安装、复制或以其他方式使用本软件产品，即表示同意接受协议各项条件的约束。如果用户
+
+不同意协议的条件，请不要使用本软件产品。\n\n
+
+2、软件产品保护条款\n
+\t\t1）本软件产品之著作权及其它知识产权等相关权利或利益（包括但不限于现已取得或未来可取得之著作权、专利权、商标权、
+
+营业秘密等）皆为浪潮通用软件有限公司所有。本软件产品受中华人民共和国版权法及通用软件版权条约和其他知识产权法及条约的保护
+
+。用户仅获得本软件产品的非排他性使用权。\n
+\t\t2）用户不得：删除本软件及其他副本上一切关于版权的信息；对本软件进行反向工程，如反汇编、反编译等。 \n
+\t\t3）本软件产品以现状方式提供，浪潮通用软件有限公司不保证本软件产品能够或不能够完全满足用户需求，在用户手册、帮助
+
+文件、使用说明书等软件文档中的介绍性内容仅供用户参考，不得理解为对用户所做的任何承诺。浪潮通用软件有限公司保留对软件
+
+版本进行升级，对功能、内容、结构、界面、运行方式等进行修改或自动更新的权利。\n
+\t\t4）为了更好地服务于用户，或为了向用户提供具有个性的信息内容的需要，本软件产品可能会根据需要对设备信息、产品使用情况等数据进行收集，以持续不断地提升产品体验，改善产品功能设计。这些信息绝不涉及用户的个人隐私数据或企业业务数据，浪潮通用软件有限公司承诺不向未经授权的第三方提供此类信息，以保护用户隐私及企业商业秘密。\n
+\t\t5）使用本软件产品由用户自己承担风险，在适用法律允许的最大范围内，浪潮通用软件有限公司在任何情况下不就因使用或不
+
+能使用本软件产品所发生的特殊的、意外的、非直接或间接的损失承担赔偿责任。即使已事先被告知该损害发生的可能性。\n 
+\t\t6）浪潮通用软件有限公司定义的信息内容包括：文字、软件、声音；本公司为用户提供的商业信息，所有这些内容受版权、商
+
+标权、和其它知识产权和所有权法律的保护。所以，用户只能在本公司授权下才能使用这些内容，而不能擅自复制、修改、编撰这些
+
+内容、或创造与内容有关的衍生产品。\n
+\t\t7）如果您未遵守本协议的任何一项条款，浪潮通用软件有限公司有权立即终止本协议，并保留通过法律手段追究责任。\n
+
+\n3、浪潮通用软件有限公司具有对以上各项条款内容的最终解释权和修改权。如用户对浪潮通用软件有限公司的解释或修改有异议，
+
+应当立即停止使用本软件产品。用户继续使用本软件产品的行为将被视为对浪潮通用软件有限公司的解释或修改的接受。\n
+
+\n4、因本协议所发生的纠纷，双方同意按照中华人民共和国法律，由浪潮通用软件有限公司所在地的有管辖权的法院管辖。\n\n
+浪潮通用软件有限公司</string>
+
+    <!-- IMP相关 -->
+    <string name="title_activity_begin">BeginActivity</string>
+    <string name="title_activity_image_file">图片文件夹</string>
+    <string name="title_activity_show_all_photo">显示某一个文件夹的所有图片</string>
+    <string name="title_activity_gallery">图片浏览界面</string>
+    <string name="title_activity_upload_photo">上传图片activity</string>
+    <string name="title_activity_look_photo">拍照后浏览一下图片</string>
+    <string name="title_activity_playvideo">视频播放界面</string>
+    <string name="xml_parser_exception"> 解析config.xml出现异常！</string>
+    <string name="msg_title">消息提示</string>
+    <string name="msg_makesure">消息确认</string>
+    <string name="edit">编辑</string>
+    <string name="device_api_not_support">设备api不支持：</string>
+    <string name="dialogtitle"> 温馨提示</string>
+    <string name="assemble_json_exception">组装Json对象出现异常！</string>
+    <string name="inputpwd">请输入手势密码</string>
+    <string name="forgetpwd">忘记密码</string>
+    <string name="forgetpwd_error">加载忘记密码界面出错 </string>
+    <string name="download_fail">下载失败</string>
+    <string name="download_success">下载成功</string>
+    <string name="file_downloading">文件下载中，请稍候...</string>
+    <string name="file_download_success">文件已下载成功，是否打开？</string>
+    <string name="has_downloaded">已下载</string>
+    <string name="imp_content">内容</string>
+    <string name="file_ok">确定</string>
+    <string name="file_cancel">取消</string>
+    <string name="file_error">文件错误</string>
+    <string name="can_not_pause">当前状态不能暂停</string>
+    <string name="can_not_replay">当前状态不能重置播放</string>
+    <string name="can_not_stop">当前状态不能停止</string>
+    <string name="turn_on_light">开灯</string>
+    <string name="turn_off_light">关灯</string>
+
+    <string name="function_not_implemented">内测期间，暂不开放</string>
+    <string name="msg_default_time">时间</string>
+
+
+    <!-- 打点 -->
+    <string name="msg_default_format">格式</string>
+    <string name="msg_default_type">类型</string>
+    <string name="msg_default_meta">元数据</string>
+    <string name="contents_text">纯文本</string>
+    <string name="msg_intent_failed">抱歉，无法打开所需软件，条码内容可能无效</string>
+    <string name="button_ok">确定</string>
+    <string name="button_cancel">取消</string>
+    <string name="result_text">找到纯文本</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="dummy_button">Dummy Button</string>
+
+
+    <!-- 拖动listview -->
+    <string name="select_remove_mode">Remove modes</string>
+    <string-array name="remove_mode_labels">
+        <item>Click remove</item>
+        <item>Fling remove</item>
+    </string-array>
+    <string-array name="drag_init_mode_labels">
+        <item>On down</item>
+        <item>On drag</item>
+        <item>On long press</item>
+    </string-array>
+    <string-array name="enables_labels">
+        <item>Enable drag</item>
+        <item>Enable sort</item>
+        <item>Enable remove</item>
+    </string-array>
+
+
 </resources>

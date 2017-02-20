@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" 
+    android:background="@color/albumback"
+    >
+
+    <RelativeLayout
+        android:id="@+id/headview"
+        android:layout_width="fill_parent"
+        android:layout_height="45dp"
+        android:background="@drawable/imp_title_bar"
+        android:gravity="center_vertical"
+        >
+        <Button
+            android:textSize="14sp"
+            android:textColor="#fff"
+            android:id="@+id/gallery_back"
+            android:text="@string/back"
+            android:background="@drawable/imp_title_btn_back"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            />
+    </RelativeLayout>
+    
+     <RelativeLayout
+        android:id="@+id/bottom_layout"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/imp_bottom_bar" >
+ 		
+        <Button
+            android:id="@+id/send_button"
+            android:layout_width="90dp"
+            android:layout_height="30dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:text="@string/finish"
+            android:background="@drawable/imp_ok_btn_state"
+            />
+
+    </RelativeLayout>
+    
+   <com.inspur.imp.plugin.camera.SimpleGallery 
+      android:id="@+id/gallery01" 
+      android:layout_width="fill_parent" 
+      android:layout_height="wrap_content"
+      android:layout_above="@id/bottom_layout"
+      android:layout_below="@id/headview"
+      android:layout_centerHorizontal="true"
+      android:unselectedAlpha="1"
+   />
+   
+   
+</RelativeLayout>
+  

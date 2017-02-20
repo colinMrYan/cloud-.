@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/selector_list"
+        android:focusable="false"
+        android:focusableInTouchMode="false" >
+
+        <com.inspur.emmcloud.widget.CircleImageView
+            android:id="@+id/photo_img"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_centerVertical="true"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="5dp"
+            android:src="@drawable/icon_org_structure" />
+
+        <TextView
+            android:id="@+id/name_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/selected_img"
+            android:layout_toRightOf="@id/photo_img"
+            android:ellipsize="end"
+            android:paddingBottom="13dp"
+            android:paddingTop="13dp"
+            android:singleLine="true"
+            android:textColor="#030303"
+            android:textSize="@dimen/content_title_textsize" />
+
+        <ImageView
+            android:id="@+id/arrow_img"
+            android:layout_width="48dp"
+            android:layout_height="50dp"
+            android:layout_alignParentRight="true"
+            android:paddingBottom="19dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:paddingTop="19dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/icon_contact_right_arrow"
+            android:visibility="gone" />
+"
+
+        <ImageView
+            android:id="@+id/selected_img"
+            android:layout_width="53dp"
+            android:layout_height="50dp"
+            android:layout_alignParentRight="true"
+            android:paddingBottom="20dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:paddingTop="20dp"
+            android:src="@drawable/icon_contact_selected"
+            android:visibility="invisible" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="60dp"
+            android:background="#dadadd" />
+    </RelativeLayout>
+
+</LinearLayout>

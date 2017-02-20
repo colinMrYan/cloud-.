@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/selector_list"
+    android:focusable="false"
+    android:focusableInTouchMode="false"
+    android:orientation="horizontal"
+    android:paddingLeft="16dp" >
+
+    <com.inspur.emmcloud.widget.CircleImageView
+        android:id="@+id/msg_img"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:focusable="false"
+        android:layout_marginBottom="10dp"
+        android:layout_marginRight="12dp"
+        android:layout_marginTop="10dp"
+         />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <RelativeLayout
+            android:id="@+id/content_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_toLeftOf="@+id/commentdetail_time_text" >
+
+            <TextView
+                android:id="@+id/name_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:textColor="@color/header_bg"
+                android:textSize="@dimen/content_normal_textsize" />
+
+            <TextView
+                android:id="@+id/comment_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/name_text"
+                android:layout_marginTop="3dp"
+                android:textColor="#6a7d84"
+                android:textSize="@dimen/content_normal_textsize" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/commentdetail_time_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginLeft="12dp"
+            android:layout_marginTop="16dp"
+            android:paddingRight="16dp"
+            android:textColor="@color/text_grey"
+            android:textSize="15sp" />
+
+    </RelativeLayout>
+
+</LinearLayout>

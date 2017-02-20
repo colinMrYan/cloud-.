@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res/com.inspur.emmcloud"
+    android:id="@+id/root_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_centerInParent="true"
+    android:background="@drawable/shape_chat_msg_card_other"
+    android:padding="1dp" >
+
+    <com.inspur.emmcloud.widget.CircleImageView
+        android:id="@+id/channel_unknown_img"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:src="@drawable/icon_photo_default" />
+
+    <TextView
+        android:id="@+id/channel_unknown_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:layout_below="@id/channel_unknown_img"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+         android:paddingBottom="20dp"
+        android:text="@string/channel_unknown_text"
+        android:textColor="#8f8e94"
+        android:textSize="@dimen/content_title_textsize" />
+
+</RelativeLayout>

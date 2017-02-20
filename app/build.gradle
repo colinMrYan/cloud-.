@@ -25,7 +25,7 @@ android {
     compileSdkVersion 23
     buildToolsVersion "23.0.3"
     defaultConfig {
-        applicationId "com.inspur.ecm.client.android"
+        applicationId "com.inspur.emmcloud"
         minSdkVersion 16
         targetSdkVersion 22
         versionCode 1
@@ -76,39 +76,50 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     compile 'com.android.support:appcompat-v7:23.4.0'
     compile 'com.android.support:design:23.4.0'
-    compile 'com.facebook.react:react-native:+' // From node_modules
+    compile 'com.facebook.react:react-native:+'
+    // From node_modules
 
     // 3rd parts
     compile 'org.apache.commons:commons-lang3:3.5'
-    compile 'cn.jpush.api:jpush-client:3.2.16'
+//    compile 'cn.jpush.api:jpush-client:3.2.16'
     compile 'com.amap.api:location:3.3.0'
+    compile 'com.baidu.mapapi:location:6.13'
     compile 'com.google.code.gson:gson:2.8.0'
     compile 'com.alibaba:fastjson:1.2.24'
-    compile 'io.socket:engine.io-client:0.8.3'
-    compile 'io.socket:socket.io-client:0.8.3'
+    compile 'io.socket:engine.io-client:0.6.1'
+    compile 'io.socket:socket.io-client:0.6.1'
     compile 'com.belerweb:pinyin4j:2.5.1'
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
-    compile 'org.xutils:xutils:3.3.40'
+    //    compile 'org.xutils:xutils:3.3.40'
     compile 'com.google.zxing:core:3.3.0'
-//    compile 'com.mani:ThinDownloadManager:1.3.0'
-    compile ('com.github.chrisbanes:PhotoView:1.3.1') {
+    compile 'com.mani:ThinDownloadManager:1.3.0'
+    compile('com.github.chrisbanes:PhotoView:1.3.1') {
         exclude module: 'support-compat'
         exclude module: 'support-core-utils'
     }
     compile 'com.readystatesoftware.systembartint:systembartint:1.0.3'
 
+
+    // React Naive Components
+    compile project(':react-native-smart-swipe-refresh-layout')
+
+
     testCompile 'junit:junit:4.12'
 
-    androidTestCompile ('com.android.support.test:runner:0.5') {
+
+    androidTestCompile('com.android.support.test:runner:0.5') {
         exclude module: 'support-annotations'
     }
-    androidTestCompile ('com.android.support.test:rules:0.5') {
+    androidTestCompile('com.android.support.test:rules:0.5') {
         exclude module: 'support-annotations'
     }
+    compile files('src/libs/xutils-2.6.15_db.jar')
+    compile files('src/libs/xutils-3.3.36.jar')
+    compile files('src/libs/jpush-android-2.1.7.jar')
 }

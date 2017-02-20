@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/channel_background_color"
+    android:paddingBottom="18dp"
+    android:paddingLeft="12dp"
+    android:paddingRight="33dp"
+     >
+
+    <com.inspur.emmcloud.widget.CircleImageView
+        android:id="@+id/sender_photo_img"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginRight="15dp" />
+
+    <RelativeLayout
+        android:id="@+id/name_time_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/sender_photo_img" >
+
+        <TextView
+            android:id="@+id/send_time_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@+id/sender_name_text"
+            android:singleLine="true"
+            android:textColor="#8f8e94"
+            android:textSize="@dimen/content_smaller_textsize" />
+
+        <TextView
+            android:id="@+id/sender_name_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:textColor="#383838"
+            android:textSize="@dimen/content_smaller_textsize" />
+        <TextView
+            android:id="@+id/news_comment_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:ellipsize="end"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:singleLine="true"
+            android:textColor="#1596d2"
+            android:text="@string/comment"
+            android:visibility="gone"
+            android:textSize="@dimen/content_small_textsize" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/card_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/name_time_layout"
+        android:layout_marginTop="8dp"
+        android:layout_toRightOf="@id/sender_photo_img"
+         >
+    </RelativeLayout>
+
+</RelativeLayout>

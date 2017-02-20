@@ -1,1 +1,5 @@
 include ':app'
+
+// React Native Components
+include ':react-native-smart-swipe-refresh-layout'
+project(':react-native-smart-swipe-refresh-layout').projectDir = new File(rootProject.projectDir, './node_modules/react-native-smart-pull-to-refresh-listview/android')

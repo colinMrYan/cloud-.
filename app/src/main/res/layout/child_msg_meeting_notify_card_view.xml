@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res/com.inspur.emmcloud"
+    android:id="@+id/card_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/shape_fileupround_layout"
+    android:orientation="vertical"
+    android:paddingBottom="14dp"
+    android:paddingLeft="10dp"
+    android:paddingRight="5dp"
+    android:paddingTop="10dp" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:id="@+id/time_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/time"
+            android:textColor="#999999"
+            android:textSize="@dimen/content_small_textsize" />
+
+        <TextView
+            android:id="@+id/location_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.2"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="@string/place"
+            android:textColor="#999999"
+            android:textSize="@dimen/content_small_textsize" />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <ImageView
+            android:id="@+id/flag_img"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="8dp"
+            android:scaleType="fitXY" />
+
+        <TextView
+            android:id="@+id/topic_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:textStyle="bold"
+            android:textSize="@dimen/content_normal_textsize"
+            android:textColor="#999999"
+            android:singleLine="true"
+            android:ellipsize="end"
+            android:layout_toRightOf="@id/flag_img" />
+    </RelativeLayout>
+	 <TextView
+	     android:id="@+id/notice_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingRight="7dp"
+            android:textSize="@dimen/content_moresmaller_textsize"
+            android:textColor="#999999"
+            android:singleLine="true"
+            android:ellipsize="end"
+            android:layout_toRightOf="@id/flag_img" />
+</LinearLayout>
