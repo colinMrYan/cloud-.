@@ -1,12 +1,5 @@
 package com.inspur.emmcloud.ui;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
@@ -61,6 +54,13 @@ import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.MyFragmentTabHost;
 import com.inspur.emmcloud.widget.tipsview.TipsView;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 主页面
@@ -427,7 +427,7 @@ public class IndexActivity extends BaseFragmentActivity implements
         if (event.getAction() == MotionEvent.ACTION_DOWN
                 && v.equals(mTabHost.getCurrentTabView())) {
             Fragment currentFragment = getCurrentFragment();
-            addFragment(currentFragment);
+//            addFragment(currentFragment);
             if (currentFragment != null
                     && currentFragment instanceof OnTabReselectListener) {
                 OnTabReselectListener listener = (OnTabReselectListener) currentFragment;

@@ -303,7 +303,6 @@
             android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
-
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
                 <data android:scheme="ecc-component" android:host="stastistics" />
@@ -335,7 +334,14 @@
             android:name=".ui.find.trip.TripDetailActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Holo.Light.NoActionBar"
-            android:windowSoftInputMode="adjustResize|stateHidden" />
+            android:windowSoftInputMode="adjustResize|stateHidden" >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="ecc-component" android:host="trips.ecc" />
+            </intent-filter>
+            </activity>
         <activity
             android:name=".ui.app.groupnews.GroupNewsActivity"
             android:screenOrientation="portrait" >
@@ -401,7 +407,13 @@
             android:name=".ui.find.KnowledgeActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
 
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="ecc-component" android:host="knowledge" />
+            </intent-filter>
             </activity>
         <activity
             android:name=".ui.work.meeting.MyCommonOfficeActivity"
