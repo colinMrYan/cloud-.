@@ -7,11 +7,6 @@
  */
 package com.inspur.emmcloud.api.apiservice;
 
-import org.json.JSONObject;
-import org.xutils.x;
-import org.xutils.http.HttpMethod;
-import org.xutils.http.RequestParams;
-
 import android.content.Context;
 
 import com.inspur.emmcloud.MyApplication;
@@ -25,6 +20,11 @@ import com.inspur.emmcloud.util.AppUtils;
 import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.OauthCallBack;
 import com.inspur.emmcloud.util.OauthUtils;
+
+import org.json.JSONObject;
+import org.xutils.http.HttpMethod;
+import org.xutils.http.RequestParams;
+import org.xutils.x;
 
 /**
  * com.inspur.emmcloud.api.apiservice.MyAppAPIService create at 2016年11月8日
@@ -47,7 +47,6 @@ public class AppAPIService {
 	/**
 	 * 获取版本更新信息
 	 * 
-	 * @param clientVersion
 	 */
 	public void checkUpgrade() {
 		String completeUrl = APIUri.checkUpgrade();
