@@ -12,10 +12,9 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 
+import com.inspur.emmcloud.R;
 import com.lzy.imagepicker.bean.ImageFolder;
 import com.lzy.imagepicker.bean.ImageItem;
-import com.inspur.emmcloud.R;
-
 
 /**
  * 

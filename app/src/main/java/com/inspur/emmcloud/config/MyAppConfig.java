@@ -21,6 +21,8 @@ import android.os.Environment;
  * @author Jason Chen; create at 2016年8月23日 上午10:00:28
  */
 public class MyAppConfig {
+	public static final String LOCAL_IMG_CREATE_PATH = Environment
+			.getExternalStorageDirectory() + "/IMP-Cloud/cache/img_create/";
 	public static final String LOCAL_CACHE_PATH = Environment
 			.getExternalStorageDirectory() + "/IMP-Cloud/cache/";
 	public static final String LOCAL_DOWNLOAD_PATH = Environment

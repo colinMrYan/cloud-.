@@ -1,12 +1,5 @@
 package com.lzy.imagepicker.view;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
@@ -32,6 +25,14 @@ import android.view.MotionEvent;
 import android.widget.ImageView;
 
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.util.LogUtils;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 
 public class CropImageView extends ImageView {
@@ -44,10 +45,10 @@ public class CropImageView extends ImageView {
     private Style[] styles = {Style.RECTANGLE, Style.CIRCLE};
 
     private int mMaskColor = 0xAF000000;   //暗色
-    private int mBorderColor = 0xAA808080; //焦点框的边框颜色
-    private int mBorderWidth = 1;         //焦点边框的宽度（画笔宽度）
-    private int mFocusWidth = 250;         //焦点框的宽度
-    private int mFocusHeight = 250;        //焦点框的高度
+    private int mBorderColor = 0xAAffffff; //焦点框的边框颜色
+    private int mBorderWidth = 2;         //焦点边框的宽度（画笔宽度）
+    private int mFocusWidth = -1;         //焦点框的宽度
+    private int mFocusHeight = -1;        //焦点框的高度
     private int mDefaultStyleIndex = 0;    //默认焦点框的形状
 
     private Style mStyle = styles[mDefaultStyleIndex];
@@ -85,6 +86,7 @@ public class CropImageView extends ImageView {
     private float mMaxScale = MAX_SCALE;//程序根据不同图片的大小，动态得到的最大缩放比
     private boolean isInited = false;   //是否经过了 onSizeChanged 初始化
     private boolean mSaving = false;    //是否正在保存
+    private boolean isSetFocusSize = false;//是否设置了剪切框的大小
     private static Handler mHandler = new InnerHandler();
 
     public CropImageView(Context context) {
@@ -101,13 +103,13 @@ public class CropImageView extends ImageView {
         mFocusHeight = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, mFocusHeight, getResources().getDisplayMetrics());
         mBorderWidth = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, mBorderWidth, getResources().getDisplayMetrics());
 
-        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.CropImageView);
-        mMaskColor = a.getColor(R.styleable.CropImageView_cropMaskColor, mMaskColor);
-        mBorderColor = a.getColor(R.styleable.CropImageView_cropBorderColor, mBorderColor);
-        mBorderWidth = a.getDimensionPixelSize(R.styleable.CropImageView_cropBorderWidth, mBorderWidth);
-        mFocusWidth = a.getDimensionPixelSize(R.styleable.CropImageView_cropFocusWidth, mFocusWidth);
-        mFocusHeight = a.getDimensionPixelSize(R.styleable.CropImageView_cropFocusHeight, mFocusHeight);
-        mDefaultStyleIndex = a.getInteger(R.styleable.CropImageView_cropStyle, mDefaultStyleIndex);
+        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.imagepicker_cropImageView);
+        mMaskColor = a.getColor(R.styleable.imagepicker_cropImageView_cropMaskColor, mMaskColor);
+        mBorderColor = a.getColor(R.styleable.imagepicker_cropImageView_cropBorderColor, mBorderColor);
+        mBorderWidth = a.getDimensionPixelSize(R.styleable.imagepicker_cropImageView_cropBorderWidth, mBorderWidth);
+        mFocusWidth = a.getDimensionPixelSize(R.styleable.imagepicker_cropImageView_cropFocusWidth, mFocusWidth);
+        mFocusHeight = a.getDimensionPixelSize(R.styleable.imagepicker_cropImageView_cropFocusHeight, mFocusHeight);
+        mDefaultStyleIndex = a.getInteger(R.styleable.imagepicker_cropImageView_cropStyle, mDefaultStyleIndex);
         mStyle = styles[mDefaultStyleIndex];
         a.recycle();
 
@@ -153,7 +155,6 @@ public class CropImageView extends ImageView {
 
         mode = NONE;
         matrix = getImageMatrix();
-        
         mImageWidth = mRotatedImageWidth = d.getIntrinsicWidth();
         mImageHeight = mRotatedImageHeight = d.getIntrinsicHeight();
         //计算出焦点框的中点的坐标和上、下、左、右边的x或y的值
@@ -163,6 +164,21 @@ public class CropImageView extends ImageView {
         float midPointY = viewHeight / 2;
         mFocusMidPoint = new PointF(midPointX, midPointY);
 
+
+        //适配焦点框的缩放比例（图片的最小边不小于焦点框的最小边）
+//        float fitFocusScale = getScale(mImageWidth, mImageHeight, mFocusWidth, mFocusHeight, true);
+        //适配显示图片的ImageView的缩放比例（图片至少有一边是铺满屏幕的显示的情形）
+        float fitViewScale = getScale(mImageWidth, mImageHeight, viewWidth, viewHeight, false);
+        if (!isSetFocusSize) {
+        	 mFocusWidth = (int)(fitViewScale*mImageWidth);
+             mFocusHeight =(int)(fitViewScale*mImageHeight);
+		}else{
+			//适配焦点框的缩放比例（图片的最小边不小于焦点框的最小边）
+			float fitFocusScale = getScale(mImageWidth, mImageHeight, mFocusWidth, mFocusHeight, true);
+			if(fitFocusScale>fitViewScale){
+				fitViewScale = fitFocusScale;
+			}
+		}
         if (mStyle == Style.CIRCLE) {
             int focusSize = Math.min(mFocusWidth, mFocusHeight);
             mFocusWidth = focusSize;
@@ -172,16 +188,14 @@ public class CropImageView extends ImageView {
         mFocusRect.right = mFocusMidPoint.x + mFocusWidth / 2;
         mFocusRect.top = mFocusMidPoint.y - mFocusHeight / 2;
         mFocusRect.bottom = mFocusMidPoint.y + mFocusHeight / 2;
-
-        //适配焦点框的缩放比例（图片的最小边不小于焦点框的最小边）
-        float fitFocusScale = getScale(mImageWidth, mImageHeight, mFocusWidth, mFocusHeight, true);
-        mMaxScale = fitFocusScale * MAX_SCALE;
-        //适配显示图片的ImageView的缩放比例（图片至少有一边是铺满屏幕的显示的情形）
-        float fitViewScale = getScale(mImageWidth, mImageHeight, viewWidth, viewHeight, false);
+        LogUtils.JasonDebug("mFocusWidth="+mFocusWidth);
+        LogUtils.JasonDebug("mFocusHeight="+mFocusHeight);
+        
+        mMaxScale = fitViewScale * MAX_SCALE;
         //确定最终的缩放比例,在适配焦点框的前提下适配显示图片的ImageView，
         //方案：首先满足适配焦点框，如果还能适配显示图片的ImageView，则适配它，即取缩放比例的最大值。
         //采取这种方案的原因：有可能图片很长或者很高，适配了ImageView的时候可能会宽/高已经小于焦点框的宽/高
-        float scale = fitViewScale > fitFocusScale ? fitViewScale : fitFocusScale;
+        float scale = fitViewScale ;
         //图像中点为中心进行缩放
         matrix.setScale(scale, scale, mImageWidth / 2, mImageHeight / 2);
         float[] mImageMatrixValues = new float[9];
@@ -289,25 +303,25 @@ public class CropImageView extends ImageView {
                         }
                     }
                 } else if (mode == ROTATE) {
-                    PointF pC = new PointF(event.getX(1) - event.getX(0) + pA.x, event.getY(1) - event.getY(0) + pA.y);
-                    double a = spacing(pB.x, pB.y, pC.x, pC.y);
-                    double b = spacing(pA.x, pA.y, pC.x, pC.y);
-                    double c = spacing(pA.x, pA.y, pB.x, pB.y);
-                    if (b > 10) {
-                        double cosA = (b * b + c * c - a * a) / (2 * b * c);
-                        double angleA = Math.acos(cosA);
-                        double ta = pB.y - pA.y;
-                        double tb = pA.x - pB.x;
-                        double tc = pB.x * pA.y - pA.x * pB.y;
-                        double td = ta * pC.x + tb * pC.y + tc;
-                        if (td > 0) {
-                            angleA = 2 * Math.PI - angleA;
-                        }
-                        rotation = angleA;
-                        matrix.set(savedMatrix);
-                        matrix.postRotate((float) (rotation * 180 / Math.PI), midPoint.x, midPoint.y);
-                        setImageMatrix(matrix);
-                    }
+//                    PointF pC = new PointF(event.getX(1) - event.getX(0) + pA.x, event.getY(1) - event.getY(0) + pA.y);
+//                    double a = spacing(pB.x, pB.y, pC.x, pC.y);
+//                    double b = spacing(pA.x, pA.y, pC.x, pC.y);
+//                    double c = spacing(pA.x, pA.y, pB.x, pB.y);
+//                    if (b > 10) {
+//                        double cosA = (b * b + c * c - a * a) / (2 * b * c);
+//                        double angleA = Math.acos(cosA);
+//                        double ta = pB.y - pA.y;
+//                        double tb = pA.x - pB.x;
+//                        double tc = pB.x * pA.y - pA.x * pB.y;
+//                        double td = ta * pC.x + tb * pC.y + tc;
+//                        if (td > 0) {
+//                            angleA = 2 * Math.PI - angleA;
+//                        }
+//                        rotation = angleA;
+//                        matrix.set(savedMatrix);
+//                        matrix.postRotate((float) (rotation * 180 / Math.PI), midPoint.x, midPoint.y);
+//                        setImageMatrix(matrix);
+//                    }
                 }
                 break;
             case MotionEvent.ACTION_UP:
@@ -323,19 +337,19 @@ public class CropImageView extends ImageView {
                         doubleClickTime = now;
                     }
                 } else if (mode == ROTATE) {
-                    int rotateLevel = (int) Math.floor((rotation + Math.PI / 4) / (Math.PI / 2));
-                    if (rotateLevel == 4) rotateLevel = 0;
-                    matrix.set(savedMatrix);
-                    matrix.postRotate(90 * rotateLevel, midPoint.x, midPoint.y);
-                    if (rotateLevel == 1 || rotateLevel == 3) {
-                        int tmp = mRotatedImageWidth;
-                        mRotatedImageWidth = mRotatedImageHeight;
-                        mRotatedImageHeight = tmp;
-                    }
-                    fixScale();
-                    fixTranslation();
-                    setImageMatrix(matrix);
-                    sumRotateLevel += rotateLevel;
+//                    int rotateLevel = (int) Math.floor((rotation + Math.PI / 4) / (Math.PI / 2));
+//                    if (rotateLevel == 4) rotateLevel = 0;
+//                    matrix.set(savedMatrix);
+//                    matrix.postRotate(90 * rotateLevel, midPoint.x, midPoint.y);
+//                    if (rotateLevel == 1 || rotateLevel == 3) {
+//                        int tmp = mRotatedImageWidth;
+//                        mRotatedImageWidth = mRotatedImageHeight;
+//                        mRotatedImageHeight = tmp;
+//                    }
+//                    fixScale();
+//                    fixTranslation();
+//                    setImageMatrix(matrix);
+//                    sumRotateLevel += rotateLevel;
                 }
                 mode = NONE;
                 break;
@@ -426,7 +440,6 @@ public class CropImageView extends ImageView {
      * @return 裁剪后的Bitmap
      */
     public Bitmap getCropBitmap(int expectWidth, int exceptHeight, boolean isSaveRectangle) {
-        if (expectWidth <= 0 || exceptHeight < 0) return null;
         Bitmap srcBitmap = ((BitmapDrawable) getDrawable()).getBitmap();
         srcBitmap = rotate(srcBitmap, sumRotateLevel * 90);  //最好用level，因为角度可能不是90的整数
         return makeCropBitmap(srcBitmap, mFocusRect, getImageMatrixRect(), expectWidth, exceptHeight, isSaveRectangle);
@@ -436,6 +449,7 @@ public class CropImageView extends ImageView {
      * 旋转图片
      */
     public void RotateImage(){
+    	LogUtils.JasonDebug("RotateImage---------");
     	Bitmap srcBitmap = ((BitmapDrawable) getDrawable()).getBitmap();
     	if(sumRotateLevel == 0){
     		srcBitmap = rotate(srcBitmap, 90);
@@ -499,11 +513,21 @@ public class CropImageView extends ImageView {
         if (left + width > bitmap.getWidth()) width = bitmap.getWidth() - left;
         if (top + height > bitmap.getHeight()) height = bitmap.getHeight() - top;
 
+        if (expectWidth <= 0 || exceptHeight < 0) {
+        	int maxSize = height>width?height:width;
+        	float exceptScale = 1.0f;
+        	if (maxSize>1080) {
+        		exceptScale = (float) (1080.0/maxSize);
+			}
+        	expectWidth = (int) (width*exceptScale);
+        	exceptHeight = (int) (height*exceptScale);
+        }
+        
         try {
             bitmap = Bitmap.createBitmap(bitmap, left, top, width, height);
             if (expectWidth != width || exceptHeight != height) {
                 bitmap = Bitmap.createScaledBitmap(bitmap, expectWidth, exceptHeight, true);
-                if (mStyle == Style.CIRCLE && !isSaveRectangle) {
+                if (mStyle == CropImageView.Style.CIRCLE && !isSaveRectangle) {
                     //如果是圆形，就将图片裁剪成圆的
                     int length = Math.min(expectWidth, exceptHeight);
                     int radius = length / 2;
@@ -534,7 +558,7 @@ public class CropImageView extends ImageView {
         final Bitmap croppedImage = getCropBitmap(expectWidth, exceptHeight, isSaveRectangle);
         Bitmap.CompressFormat outputFormat = Bitmap.CompressFormat.JPEG;
         File saveFile = createFile(folder, "IMG_", ".jpg");
-        if (mStyle == Style.CIRCLE && !isSaveRectangle) {
+        if (mStyle == CropImageView.Style.CIRCLE && !isSaveRectangle) {
             outputFormat = Bitmap.CompressFormat.PNG;
             saveFile = createFile(folder, "IMG_", ".png");
         }
@@ -624,6 +648,9 @@ public class CropImageView extends ImageView {
 
     /** 设置焦点框的宽度 */
     public void setFocusWidth(int width) {
+    	if (width != -1) {
+    		isSetFocusSize = true;
+		}
         mFocusWidth = width;
         initImage();
     }
@@ -635,6 +662,9 @@ public class CropImageView extends ImageView {
 
     /** 设置焦点框的高度 */
     public void setFocusHeight(int height) {
+    	if (height != -1) {
+    		isSetFocusSize = true;
+		}
         mFocusHeight = height;
         initImage();
     }

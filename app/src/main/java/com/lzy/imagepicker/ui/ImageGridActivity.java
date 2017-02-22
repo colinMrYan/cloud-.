@@ -1,12 +1,12 @@
 package com.lzy.imagepicker.ui;
 
-import java.util.List;
-
-import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -15,17 +15,29 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
+import android.widget.Toast;
 
+import com.im4j.picturebeautify.editimage.EditImageActivity;
+import com.im4j.picturebeautify.editimage.utils.BitmapUtils;
+import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.config.MyAppConfig;
+import com.inspur.emmcloud.widget.LoadingDialog;
+import com.inspur.imp.plugin.photo.PhotoNameUtils;
+import com.inspur.imp.plugin.photo.UploadPhoto;
+import com.inspur.imp.plugin.photo.UploadPhoto.OnUploadPhotoListener;
 import com.lzy.imagepicker.ImageDataSource;
 import com.lzy.imagepicker.ImagePicker;
-import com.lzy.imagepicker.Utils;
 import com.lzy.imagepicker.adapter.ImageFolderAdapter;
 import com.lzy.imagepicker.adapter.ImageGridAdapter;
 import com.lzy.imagepicker.bean.ImageFolder;
 import com.lzy.imagepicker.bean.ImageItem;
+import com.lzy.imagepicker.util.Utils;
 import com.lzy.imagepicker.view.FolderPopUpWindow;
-import com.inspur.emmcloud.R;
 
+import org.json.JSONObject;
+
+import java.io.File;
+import java.util.List;
 
 public class ImageGridActivity extends ImageBaseActivity implements
 		ImageDataSource.OnImagesLoadedListener,
@@ -34,6 +46,13 @@ public class ImageGridActivity extends ImageBaseActivity implements
 
 	public static final int REQUEST_PERMISSION_STORAGE = 0x01;
 	public static final int REQUEST_PERMISSION_CAMERA = 0x02;
+	protected static final int CUT_IMG_SUCCESS = 1;
+	
+	private int parm_resolution = 1080;
+	private int parm_qualtity = 100;
+	private int parm_encodingType;
+	private String parm_context;
+	private String parm_uploadUrl;
 
 	private ImagePicker imagePicker;
 
@@ -42,22 +61,22 @@ public class ImageGridActivity extends ImageBaseActivity implements
 	private View mFooterBar; // 底部栏
 	private Button mBtnOk; // 确定按钮
 	private Button mBtnDir; // 文件夹切换按钮
-	private Button mBtnPre; // 预览按钮
+	// private Button mBtnPre; // 预览按钮
+	private Button mBtnEdit;
 	private ImageFolderAdapter mImageFolderAdapter; // 图片文件夹的适配器
 	private FolderPopUpWindow mFolderPopupWindow; // ImageSet的PopupWindow
 	private List<ImageFolder> mImageFolders; // 所有的图片文件夹
 	private ImageGridAdapter mImageGridAdapter; // 图片九宫格展示的适配器
+	private String paramObjJson;
+	private Handler handler;
+	private LoadingDialog loadingDlg;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-//		hideStatusBar();
-//		toggleHideyBar();
-//		hideStatusBar(false);
-//		hideNavigationBar();
 		requestWindowFeature(Window.FEATURE_NO_TITLE);//
 		setContentView(R.layout.activity_image_grid);
-//		hideBars();
+		// hideBars();
 		imagePicker = ImagePicker.getInstance();
 		imagePicker.clear();
 		imagePicker.addOnImageSelectedListener(this);
@@ -67,36 +86,70 @@ public class ImageGridActivity extends ImageBaseActivity implements
 		mBtnOk.setOnClickListener(this);
 		mBtnDir = (Button) findViewById(R.id.btn_dir);
 		mBtnDir.setOnClickListener(this);
-		mBtnPre = (Button) findViewById(R.id.btn_preview);
-		mBtnPre.setOnClickListener(this);
+		mBtnEdit = (Button) findViewById(R.id.btn_edit);
+		mBtnEdit.setOnClickListener(this);
 		mGridView = (GridView) findViewById(R.id.gridview);
 		mFooterBar = findViewById(R.id.footer_bar);
+		loadingDlg = new LoadingDialog(this);
 		if (imagePicker.isMultiMode()) {
 			mBtnOk.setVisibility(View.VISIBLE);
-			mBtnPre.setVisibility(View.VISIBLE);
+			mBtnEdit.setVisibility(View.VISIBLE);
 		} else {
 			mBtnOk.setVisibility(View.GONE);
-			mBtnPre.setVisibility(View.GONE);
+			mBtnEdit.setVisibility(View.GONE);
 		}
 
 		mImageGridAdapter = new ImageGridAdapter(this, null);
 		mImageFolderAdapter = new ImageFolderAdapter(this, null);
-
+		handMessage();
 		onImageSelected(0, null, false);
 
 		if (Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN) {
 			new ImageDataSource(this, null, this);
-			
-//			
-//			if (checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-//				new ImageDataSource(this, null, this);
-//			} else {
-//				ActivityCompat
-//						.requestPermissions(
-//								this,
-//								new String[] { Manifest.permission.WRITE_EXTERNAL_STORAGE },
-//								REQUEST_PERMISSION_STORAGE);
-//			}
+
+			//
+			// if (checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE))
+			// {
+			// new ImageDataSource(this, null, this);
+			// } else {
+			// ActivityCompat
+			// .requestPermissions(
+			// this,
+			// new String[] { Manifest.permission.WRITE_EXTERNAL_STORAGE },
+			// REQUEST_PERMISSION_STORAGE);
+			// }
+		}
+		
+		if (getIntent().hasExtra("paramsObject")) {
+			paramObjJson = getIntent().getExtras().getString("paramsObject");
+			try {
+				JSONObject paramObj = new JSONObject(paramObjJson);
+				if (!paramObj.isNull("options")) {
+					JSONObject obj = paramObj.getJSONObject("options");
+					if (obj.has("resolution")) {
+						this.parm_resolution = obj.getInt(
+								"resolution");
+					}
+					if (obj.has("quality")) {
+						this.parm_qualtity = obj.getInt(
+								"quality");
+					}
+					if (obj.has("encodingType")) {
+						this.parm_encodingType = obj.getInt(
+								"encodingType");
+					}
+					if (obj.has("context")) {
+						this.parm_context = obj.getString(
+								"context");
+					}
+				}
+				if (!paramObj.isNull("uploadUrl")) {
+					this.parm_uploadUrl = paramObj.getString("uploadUrl");
+				}
+			} catch (Exception e) {
+				// TODO: handle exception
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -118,26 +171,24 @@ public class ImageGridActivity extends ImageBaseActivity implements
 	// }
 	// }
 	// }
-	
-	private void hideStatusBar(boolean isHide)  
-    {  
-        if (isHide)  
-        {  
-            WindowManager.LayoutParams lp = getWindow().getAttributes();  
-            lp.flags |= WindowManager.LayoutParams.FLAG_FULLSCREEN;  
-            getWindow().setAttributes(lp);  
-            getWindow().addFlags(  
-                    WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);  
-        } else  
-        {  
-            WindowManager.LayoutParams attr = getWindow().getAttributes();  
-            attr.flags &= (~WindowManager.LayoutParams.FLAG_FULLSCREEN);  
-            getWindow().setAttributes(attr);  
-            //如果不注释下面这句话，状态栏将把界面挤下去  
-            getWindow().clearFlags( 
-                    WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
-        }  
-    } 
+
+
+	private void hideStatusBar(boolean isHide) {
+		if (isHide) {
+			WindowManager.LayoutParams lp = getWindow().getAttributes();
+			lp.flags |= WindowManager.LayoutParams.FLAG_FULLSCREEN;
+			getWindow().setAttributes(lp);
+			getWindow().addFlags(
+					WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+		} else {
+			WindowManager.LayoutParams attr = getWindow().getAttributes();
+			attr.flags &= (~WindowManager.LayoutParams.FLAG_FULLSCREEN);
+			getWindow().setAttributes(attr);
+			// 如果不注释下面这句话，状态栏将把界面挤下去
+			getWindow().clearFlags(
+					WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+		}
+	}
 
 	/**
 	 * 隐藏navigationbar
@@ -175,53 +226,57 @@ public class ImageGridActivity extends ImageBaseActivity implements
 		ActionBar actionBar = getActionBar();
 		actionBar.hide();
 	}
-	
+
 	/**
 	 * 隐藏状态栏
 	 */
-	 public void toggleHideyBar() {
+	public void toggleHideyBar() {
 
-	        // BEGIN_INCLUDE (get_current_ui_flags)
-	        // The UI options currently enabled are represented by a bitfield.
-	        // getSystemUiVisibility() gives us that bitfield.
-	        int uiOptions = getWindow().getDecorView().getSystemUiVisibility();
-	        int newUiOptions = uiOptions;
-	        // END_INCLUDE (get_current_ui_flags)
-	        // BEGIN_INCLUDE (toggle_ui_flags)
-	        boolean isImmersiveModeEnabled =
-	                ((uiOptions | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY) == uiOptions);
-	        if (isImmersiveModeEnabled) {
-	            Log.i("123", "Turning immersive mode mode off. ");
-	        } else {
-	            Log.i("123", "Turning immersive mode mode on.");
-	        }
+		// BEGIN_INCLUDE (get_current_ui_flags)
+		// The UI options currently enabled are represented by a bitfield.
+		// getSystemUiVisibility() gives us that bitfield.
+		int uiOptions = getWindow().getDecorView().getSystemUiVisibility();
+		int newUiOptions = uiOptions;
+		// END_INCLUDE (get_current_ui_flags)
+		// BEGIN_INCLUDE (toggle_ui_flags)
+		boolean isImmersiveModeEnabled = ((uiOptions | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY) == uiOptions);
+		if (isImmersiveModeEnabled) {
+			Log.i("123", "Turning immersive mode mode off. ");
+		} else {
+			Log.i("123", "Turning immersive mode mode on.");
+		}
 
-	        // Navigation bar hiding:  Backwards compatible to ICS.
-	        if (Build.VERSION.SDK_INT >= 14) {
-	            newUiOptions ^= View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
-	        }
+		// Navigation bar hiding: Backwards compatible to ICS.
+		if (Build.VERSION.SDK_INT >= 14) {
+			newUiOptions ^= View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
+		}
 
-	        // Status bar hiding: Backwards compatible to Jellybean
-	        if (Build.VERSION.SDK_INT >= 16) {
-	            newUiOptions ^= View.SYSTEM_UI_FLAG_FULLSCREEN;
-	        }
+		// Status bar hiding: Backwards compatible to Jellybean
+		if (Build.VERSION.SDK_INT >= 16) {
+			newUiOptions ^= View.SYSTEM_UI_FLAG_FULLSCREEN;
+		}
 
-	        // Immersive mode: Backward compatible to KitKat.
-	        // Note that this flag doesn't do anything by itself, it only augments the behavior
-	        // of HIDE_NAVIGATION and FLAG_FULLSCREEN.  For the purposes of this sample
-	        // all three flags are being toggled together.
-	        // Note that there are two immersive mode UI flags, one of which is referred to as "sticky".
-	        // Sticky immersive mode differs in that it makes the navigation and status bars
-	        // semi-transparent, and the UI flag does not get cleared when the user interacts with
-	        // the screen.
-	        if (Build.VERSION.SDK_INT >= 18) {
-	            newUiOptions ^= View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
-	        }
-	      
-//	       getWindow().getDecorView().setSystemUiVisibility(newUiOptions);//上边状态栏和底部状态栏滑动都可以调出状态栏
-	        getWindow().getDecorView().setSystemUiVisibility(4108);//这里的4108可防止从底部滑动调出底部导航栏
-	        //END_INCLUDE (set_ui_flags)
-	    }
+		// Immersive mode: Backward compatible to KitKat.
+		// Note that this flag doesn't do anything by itself, it only augments
+		// the behavior
+		// of HIDE_NAVIGATION and FLAG_FULLSCREEN. For the purposes of this
+		// sample
+		// all three flags are being toggled together.
+		// Note that there are two immersive mode UI flags, one of which is
+		// referred to as "sticky".
+		// Sticky immersive mode differs in that it makes the navigation and
+		// status bars
+		// semi-transparent, and the UI flag does not get cleared when the user
+		// interacts with
+		// the screen.
+		if (Build.VERSION.SDK_INT >= 18) {
+			newUiOptions ^= View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
+		}
+
+		// getWindow().getDecorView().setSystemUiVisibility(newUiOptions);//上边状态栏和底部状态栏滑动都可以调出状态栏
+		getWindow().getDecorView().setSystemUiVisibility(4108);// 这里的4108可防止从底部滑动调出底部导航栏
+		// END_INCLUDE (set_ui_flags)
+	}
 
 	@Override
 	protected void onDestroy() {
@@ -233,11 +288,13 @@ public class ImageGridActivity extends ImageBaseActivity implements
 	public void onClick(View v) {
 		int id = v.getId();
 		if (id == R.id.btn_ok) {
-			Intent intent = new Intent();
-			intent.putExtra(ImagePicker.EXTRA_RESULT_ITEMS,
-					imagePicker.getSelectedImages());
-			setResult(ImagePicker.RESULT_CODE_ITEMS, intent); // 多选不允许裁剪裁剪，返回数据
-			finish();
+			if (paramObjJson != null) {
+				loadingDlg.show();
+				cutImg();
+			}else {
+				returnDataAndClose(null);
+			}
+			
 		} else if (id == R.id.btn_dir) {
 			if (mImageFolders == null) {
 				Log.i("ImageGridActivity", "您的手机没有图片");
@@ -256,18 +313,98 @@ public class ImageGridActivity extends ImageBaseActivity implements
 				index = index == 0 ? index : index - 1;
 				mFolderPopupWindow.setSelection(index);
 			}
-		} else if (id == R.id.btn_preview) {
-			Intent intent = new Intent(ImageGridActivity.this,
-					ImagePreviewActivity.class);
-			intent.putExtra(ImagePicker.EXTRA_SELECTED_IMAGE_POSITION, 0);
-			intent.putExtra(ImagePicker.EXTRA_IMAGE_ITEMS,
-					imagePicker.getSelectedImages());
-			intent.putExtra(ImagePreviewActivity.ISORIGIN, isOrigin);
-			startActivityForResult(intent, ImagePicker.REQUEST_CODE_PREVIEW);
+		} else if (id == R.id.btn_edit) {
+			if (paramObjJson == null) {
+				EditImageActivity.start(this, imagePicker.getSelectedImages()
+						.get(0).path, MyAppConfig.LOCAL_IMG_CREATE_PATH);
+			}else {
+				EditImageActivity.start(this, imagePicker.getSelectedImages()
+						.get(0).path, MyAppConfig.LOCAL_IMG_CREATE_PATH, true, paramObjJson.toString());
+			}
 		} else if (id == R.id.btn_back) {
 			// 点击返回按钮
 			finish();
 		}
+	}
+	
+	private void uploadImg(){
+		new UploadPhoto(ImageGridActivity.this, new OnUploadPhotoListener() {
+			
+			@Override
+			public void uploadPhotoSuccess(String result) {
+				// TODO Auto-generated method stub
+				if (loadingDlg != null && loadingDlg.isShowing()) {
+					loadingDlg.dismiss();
+				}
+				returnDataAndClose(result);
+			}
+			
+			@Override
+			public void uploadPhotoFail() {
+				// TODO Auto-generated method stub
+				if (loadingDlg != null && loadingDlg.isShowing()) {
+					loadingDlg.dismiss();
+				}
+				Toast.makeText(getApplicationContext(), "图片上传失败！", Toast.LENGTH_SHORT).show();
+			}
+		}).upload(parm_uploadUrl, imagePicker.getSelectedImages(), parm_encodingType, parm_context);
+	}
+	
+	private void returnDataAndClose(String uploadResult){
+		Intent intent = new Intent();
+		if (uploadResult != null) {
+			intent.putExtra("uploadResult", uploadResult);
+		}
+		intent.putExtra(ImagePicker.EXTRA_RESULT_ITEMS,
+				imagePicker.getSelectedImages());
+		setResult(ImagePicker.RESULT_CODE_ITEMS, intent); // 多选不允许裁剪裁剪，返回数据
+		finish();
+	}
+
+	private void handMessage() {
+		// TODO Auto-generated method stub
+		handler = new Handler(){
+
+			@Override
+			public void handleMessage(Message msg) {
+				// TODO Auto-generated method stub
+				switch (msg.what) {
+				case CUT_IMG_SUCCESS:
+					uploadImg();
+					break;
+
+				default:
+					break;
+				}
+			}
+			
+		};
+	}
+	
+	private void cutImg(){
+		// TODO Auto-generated method stub
+		new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				File file = new File(MyAppConfig.LOCAL_IMG_CREATE_PATH);
+				if (!file.exists()) {
+					file.mkdirs();
+				}
+				long time = System.currentTimeMillis();
+				for (int i = 0; i < imagePicker.getSelectedImages().size(); i++) {
+					String newPath = MyAppConfig.LOCAL_IMG_CREATE_PATH+PhotoNameUtils.getListFileName(getApplicationContext(),time,i);
+					ImageItem imageItem = imagePicker.getSelectedImages().get(i);
+					String path = imageItem.path;
+					Bitmap bitmap = BitmapUtils.getImageCompress(path, parm_resolution, parm_qualtity);
+					BitmapUtils.saveBitmap(bitmap, newPath);
+					imageItem.path = newPath;
+				}
+				handler.sendEmptyMessage(CUT_IMG_SUCCESS);
+			}
+		}).start();
+		
 	}
 
 	/** 创建弹出的ListView */
@@ -310,16 +447,18 @@ public class ImageGridActivity extends ImageBaseActivity implements
 	public void onImageItemClick(View view, ImageItem imageItem, int position) {
 		// 根据是否有相机按钮确定位置
 		position = imagePicker.isShowCamera() ? position - 1 : position;
-//		imagePicker.setMultiMode(false);
-//		imagePicker.setStyle(CropImageView.Style.CIRCLE);
+		// imagePicker.setMultiMode(false);
+		// imagePicker.setStyle(CropImageView.Style.CIRCLE);
 		if (imagePicker.isMultiMode()) {
-			Intent intent = new Intent(ImageGridActivity.this,
-					ImagePreviewActivity.class);
-			intent.putExtra(ImagePicker.EXTRA_SELECTED_IMAGE_POSITION, position);
-			intent.putExtra(ImagePicker.EXTRA_IMAGE_ITEMS,
-					imagePicker.getCurrentImageFolderItems());
-			intent.putExtra(ImagePreviewActivity.ISORIGIN, isOrigin);
-			startActivityForResult(intent, ImagePicker.REQUEST_CODE_PREVIEW); // 如果是多选，点击图片进入预览界面
+			// Intent intent = new Intent(ImageGridActivity.this,
+			// ImagePreviewActivity.class);
+			// intent.putExtra(ImagePicker.EXTRA_SELECTED_IMAGE_POSITION,
+			// position);
+			// intent.putExtra(ImagePicker.EXTRA_IMAGE_ITEMS,
+			// imagePicker.getCurrentImageFolderItems());
+			// intent.putExtra(ImagePreviewActivity.ISORIGIN, isOrigin);
+			// startActivityForResult(intent, ImagePicker.REQUEST_CODE_PREVIEW);
+			// // 如果是多选，点击图片进入预览界面
 		} else {
 			imagePicker.clearSelectedImages();
 			imagePicker.addSelectedImageItem(position, imagePicker
@@ -329,66 +468,81 @@ public class ImageGridActivity extends ImageBaseActivity implements
 						ImageCropActivity.class);
 				startActivityForResult(intent, ImagePicker.REQUEST_CODE_CROP); // 单选需要裁剪，进入裁剪界面
 			} else {
-				Intent intent = new Intent();
-				intent.putExtra(ImagePicker.EXTRA_RESULT_ITEMS,
-						imagePicker.getSelectedImages());
-				setResult(ImagePicker.RESULT_CODE_ITEMS, intent); // 单选不需要裁剪，返回数据
-				finish();
+				if (paramObjJson == null) {
+					EditImageActivity.start(this, imagePicker.getSelectedImages()
+							.get(0).path, MyAppConfig.LOCAL_IMG_CREATE_PATH);
+				}else {
+					EditImageActivity.start(this, imagePicker.getSelectedImages()
+							.get(0).path, MyAppConfig.LOCAL_IMG_CREATE_PATH, true, paramObjJson);
+				}
+				
 			}
 		}
 	}
 
-	@SuppressLint("StringFormatMatches")
 	@Override
 	public void onImageSelected(int position, ImageItem item, boolean isAdd) {
 		if (imagePicker.getSelectImageCount() > 0) {
-//			mBtnOk.setText(getString(R.string.select_complete,
-//					imagePicker.getSelectImageCount(),
-//					imagePicker.getSelectLimit()));
-			//此处有改动
 			mBtnOk.setText(getString(R.string.select_complete,
 					imagePicker.getSelectImageCount(),
 					imagePicker.getSelectLimit()));
 			mBtnOk.setEnabled(true);
-			mBtnPre.setEnabled(true);
 		} else {
 			mBtnOk.setText(getString(R.string.complete));
 			mBtnOk.setEnabled(false);
-			mBtnPre.setEnabled(false);
 		}
-		//此处迁移AS时有改动
-		mBtnPre.setText(getResources().getString(R.string.preview_count));
+
+		if (imagePicker.getSelectImageCount() == 1 && imagePicker.isMultiMode()) {
+			mBtnEdit.setVisibility(View.VISIBLE);
+		} else {
+			mBtnEdit.setVisibility(View.GONE);
+		}
 		mImageGridAdapter.notifyDataSetChanged();
 	}
 
-	
-	
+	@Override
+	public void onImageSelectedRelace(int position, ImageItem imageItem) {
+		// TODO Auto-generated method stub
+		mImageGridAdapter.replaceData(position, imageItem);
+	}
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		Log.d("yfcLog", "resultCode:"+resultCode);
-		Log.d("yfcLog", "requestCode:"+requestCode);
 		if (data != null) {
-			if (resultCode == ImagePicker.RESULT_CODE_BACK) {
-				isOrigin = data.getBooleanExtra(ImagePreviewActivity.ISORIGIN,
-						false);
-			} else {
-				// 从拍照界面返回
-				// 点击 X , 没有选择照片
-				if (data.getSerializableExtra(ImagePicker.EXTRA_RESULT_ITEMS) == null) {
-					// 什么都不做
-				} else {
-					// 说明是从裁剪页面过来的数据，直接返回就可以
-					setResult(ImagePicker.RESULT_CODE_ITEMS, data);
+			if (requestCode == ImagePicker.REQUEST_CODE_EDIT) {// 说明是从裁剪页面过来的数据，直接返回就可以
+				if (resultCode == RESULT_OK) {
+					String newPath = data.getStringExtra(
+							"save_file_path");
+					imagePicker.getSelectedImages().get(0).path = newPath;
+					Intent intent = new Intent();
+					intent.putExtra(ImagePicker.EXTRA_RESULT_ITEMS,
+							imagePicker.getSelectedImages());
+					intent.putExtra("uploadResult", data.getStringExtra("uploadResult"));
+					setResult(ImagePicker.RESULT_CODE_ITEMS, intent);
 					finish();
+				}
+			} else {
+				if (resultCode == ImagePicker.RESULT_CODE_BACK) {
+					isOrigin = data.getBooleanExtra(
+							ImagePreviewActivity.ISORIGIN, false);
+				} else {
+					// 从拍照界面返回
+					// 点击 X , 没有选择照片
+					if (data.getSerializableExtra(ImagePicker.EXTRA_RESULT_ITEMS) == null) {
+						// 什么都不做
+					} else {
+						// 说明是从裁剪页面过来的数据，直接返回就可以
+						setResult(ImagePicker.RESULT_CODE_ITEMS, data);
+						finish();
+					}
 				}
 			}
 		} else {
 			// 如果是裁剪，因为裁剪指定了存储的Uri，所以返回的data一定为null
 			if (resultCode == RESULT_OK
 					&& requestCode == ImagePicker.REQUEST_CODE_TAKE) {
-				
+
 				ImageItem imageItem = new ImageItem();
 				imageItem.path = imagePicker.getTakeImageFile()
 						.getAbsolutePath();
@@ -417,4 +571,5 @@ public class ImageGridActivity extends ImageBaseActivity implements
 			}
 		}
 	}
+
 }

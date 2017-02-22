@@ -209,7 +209,10 @@ public class ImpActivity extends ImpBaseActivity {
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (PublicWay.photoService != null) {
 			PublicWay.photoService.onActivityResult(requestCode, -2, data);
-			PublicWay.photoService = null;
+			return;
+		}
+		if (PublicWay.uploadPhotoService != null) {
+			PublicWay.uploadPhotoService.onActivityResult(requestCode, resultCode, data);
 			return;
 		}
 		// 获取选择的文件

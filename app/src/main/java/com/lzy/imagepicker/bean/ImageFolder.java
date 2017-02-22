@@ -2,6 +2,7 @@ package com.lzy.imagepicker.bean;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class ImageFolder implements Serializable {

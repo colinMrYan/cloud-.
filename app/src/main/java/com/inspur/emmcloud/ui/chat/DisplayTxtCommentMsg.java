@@ -22,6 +22,7 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.bean.Msg;
+import com.inspur.emmcloud.util.DensityUtil;
 import com.inspur.emmcloud.util.IntentUtils;
 import com.inspur.emmcloud.util.JSONUtils;
 import com.inspur.emmcloud.util.MentionsAndUrlShowUtils;
@@ -40,14 +41,11 @@ public class DisplayTxtCommentMsg {
 
 	/**
 	 * 评论卡片
-	 * 
 	 * @param context
 	 * @param convertView
 	 * @param msg
-	 * @param imageDisplayUtils
 	 * @param apiService
-	 * @param channelType
-	 */
+     */
 	public static void displayCommentMsg(final Activity context,
 			View convertView, final Msg msg, ChatAPIService apiService) {
 		String msgBody = msg.getBody();
@@ -85,9 +83,11 @@ public class DisplayTxtCommentMsg {
 					.getInstance());
 		}
 		commentContentText.setText(spannableString);
-		TransHtmlToTextUtils.stripUnderlines(commentContentText,
+		TransHtmlToTextUtils.stripUnderlines(
+				commentContentText,
 				context.getResources().getColor(
-						isMyMsg ? R.color.hightlight_in_blue_bg : R.color.header_bg));
+						isMyMsg ? R.color.hightlight_in_blue_bg
+								: R.color.header_bg));
 		// 取出评论消息的id
 		Msg commentedMsg = MsgCacheUtil.getCacheMsg(context,
 				msg.getCommentMid());
@@ -99,13 +99,23 @@ public class DisplayTxtCommentMsg {
 			apiService.getMsg(msg.getCommentMid());
 		}
 
-		((RelativeLayout) convertView.findViewById(R.id.root_layout))
-				.setBackgroundResource(isMyMsg ? R.drawable.shape_chat_msg_card_my
-						: R.drawable.shape_chat_msg_card_other);
+		RelativeLayout rootLayout = (RelativeLayout) convertView
+				.findViewById(R.id.root_layout);
+		rootLayout.setBackgroundColor(context.getResources().getColor(
+				isMyMsg ? R.color.header_bg : R.color.white));
 		commentContentText.setTextColor(context.getResources().getColor(
 				isMyMsg ? R.color.white : R.color.black));
 		commentTitleText.setTextColor(context.getResources().getColor(
 				isMyMsg ? R.color.white : R.color.black));
+		int normalPadding = DensityUtil.dip2px(context, 10);
+		int arrowPadding = DensityUtil.dip2px(context, 8);
+		if (isMyMsg) {
+			rootLayout.setPadding(normalPadding, normalPadding, normalPadding
+					+ arrowPadding, normalPadding);
+		} else {
+			rootLayout.setPadding(normalPadding + arrowPadding, normalPadding,
+					normalPadding, normalPadding);
+		}
 
 	}
 

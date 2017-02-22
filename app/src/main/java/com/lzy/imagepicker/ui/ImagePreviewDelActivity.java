@@ -12,12 +12,10 @@ import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 
-import com.lzy.imagepicker.ImagePicker;
 import com.inspur.emmcloud.R;
-
+import com.lzy.imagepicker.ImagePicker;
 
 public class ImagePreviewDelActivity extends ImagePreviewBaseActivity implements View.OnClickListener {
-    @SuppressLint("StringFormatMatches")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,7 +57,6 @@ public class ImagePreviewDelActivity extends ImagePreviewBaseActivity implements
         builder.setMessage("要删除这张照片吗？");
         builder.setNegativeButton("取消", null);
         builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
-            @SuppressLint("StringFormatMatches")
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 //移除当前图片刷新界面

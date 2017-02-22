@@ -5,6 +5,7 @@ import android.graphics.Bitmap.Config;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.PorterDuff;
 import android.graphics.PorterDuff.Mode;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
@@ -58,7 +59,7 @@ public class RoundImage {
        Drawable imageDrawable = new BitmapDrawable(image);
 
        // 新建一个新的输出图片
-       Bitmap output = Bitmap.createBitmap(x, y, Config.ARGB_8888);
+       Bitmap output = Bitmap.createBitmap(x, y, Bitmap.Config.ARGB_8888);
        Canvas canvas = new Canvas(output);
 
        // 新建一个矩形
@@ -70,7 +71,7 @@ public class RoundImage {
        canvas.drawRoundRect(outerRect, outerRadiusRat, outerRadiusRat, paint);
 
        // 将源图片绘制到这个圆角矩形上
-       paint.setXfermode(new PorterDuffXfermode(Mode.SRC_IN));
+       paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
        imageDrawable.setBounds(0, 0, x, y);
        canvas.saveLayer(outerRect, paint, Canvas.ALL_SAVE_FLAG);
        imageDrawable.draw(canvas);

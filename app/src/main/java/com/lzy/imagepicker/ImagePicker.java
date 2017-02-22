@@ -8,10 +8,10 @@ import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
 
-
 import com.lzy.imagepicker.bean.ImageFolder;
 import com.lzy.imagepicker.bean.ImageItem;
 import com.lzy.imagepicker.loader.ImagePickerLoader;
+import com.lzy.imagepicker.util.Utils;
 import com.lzy.imagepicker.view.CropImageView;
 
 import java.io.File;
@@ -33,6 +33,7 @@ public class ImagePicker {
     public static final int REQUEST_CODE_PREVIEW = 1003;
     public static final int RESULT_CODE_ITEMS = 1004;
     public static final int RESULT_CODE_BACK = 1005;
+    public static final int REQUEST_CODE_EDIT = 224;
 
     public static final String EXTRA_RESULT_ITEMS = "extra_result_items";
     public static final String EXTRA_SELECTED_IMAGE_POSITION = "selected_image_position";
@@ -47,6 +48,7 @@ public class ImagePicker {
     private int outPutY = 800;           //裁剪保存高度
     private int focusWidth = 280;         //焦点框的宽度
     private int focusHeight = 280;        //焦点框的高度
+    private boolean isNeedUpload = false;
     private ImagePickerLoader imageLoader;     //图片加载器
     private CropImageView.Style style = CropImageView.Style.RECTANGLE; //裁剪框的形状
     private File cropCacheFolder;
@@ -92,6 +94,14 @@ public class ImagePicker {
 
     public boolean isCrop() {
         return crop;
+    }
+    
+    public boolean getNeedUpload(){
+    	return isNeedUpload;
+    }
+    
+    public void setNeedUpload(boolean isNeedUpload){
+    	this.isNeedUpload = isNeedUpload;
     }
 
     public void setCrop(boolean crop) {
@@ -270,6 +280,7 @@ public class ImagePicker {
     /** 图片选中的监听 */
     public interface OnImageSelectedListener {
         void onImageSelected(int position, ImageItem item, boolean isAdd);
+        void onImageSelectedRelace(int position, ImageItem item);
     }
 
     public void addOnImageSelectedListener(OnImageSelectedListener l) {
@@ -287,11 +298,24 @@ public class ImagePicker {
         else mSelectedImages.remove(item);
         notifyImageSelectedChanged(position, item, isAdd);
     }
+    
+    public void replaceSelectedImageItem(int position, ImageItem item){
+    	mSelectedImages.remove(position);
+    	mSelectedImages.add(position, item);
+    	notifyImageSelectedRelace(position, item);
+    }
 
     private void notifyImageSelectedChanged(int position, ImageItem item, boolean isAdd) {
         if (mImageSelectedListeners == null) return;
         for (OnImageSelectedListener l : mImageSelectedListeners) {
             l.onImageSelected(position, item, isAdd);
+        }
+    }
+    
+    private void notifyImageSelectedRelace(int position, ImageItem item) {
+        if (mImageSelectedListeners == null) return;
+        for (OnImageSelectedListener l : mImageSelectedListeners) {
+            l.onImageSelectedRelace(position, item);
         }
     }
 }

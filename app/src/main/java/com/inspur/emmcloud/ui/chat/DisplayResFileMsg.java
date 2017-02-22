@@ -1,11 +1,6 @@
 package com.inspur.emmcloud.ui.chat;
 
-import java.io.File;
-
-import org.xutils.common.Callback.ProgressCallback;
-
 import android.content.Context;
-import android.graphics.Color;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
@@ -17,14 +12,18 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.Msg;
 import com.inspur.emmcloud.config.MyAppConfig;
+import com.inspur.emmcloud.util.DensityUtil;
 import com.inspur.emmcloud.util.DownLoaderUtils;
 import com.inspur.emmcloud.util.FileUtils;
-import com.inspur.emmcloud.util.ImageDisplayUtils;
 import com.inspur.emmcloud.util.JSONUtils;
 import com.inspur.emmcloud.util.ToastUtils;
 import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.emmcloud.widget.HorizontalProgressBarWithNumber;
 import com.inspur.emmcloud.widget.RoundAngleImageView;
+
+import org.xutils.common.Callback.ProgressCallback;
+
+import java.io.File;
 
 /**
  * DisplayResFileMsg
@@ -38,10 +37,6 @@ public class DisplayResFileMsg {
 	 * @param context
 	 * @param convertView
 	 * @param msg
-	 * @param imageDisplayUtils
-	 * @param position
-	 * @param msgList
-	 * @param channelId
 	 */
 	public static void displayResFileMsg(final Context context,
 			View convertView, final Msg msg) {
@@ -51,17 +46,27 @@ public class DisplayResFileMsg {
 				.findViewById(R.id.file_size_text);
 		boolean isMyMsg = msg.getUid().equals(
 				((MyApplication) context.getApplicationContext()).getUid());
-		((LinearLayout) convertView.findViewById(R.id.root_layout))
-				.setBackgroundResource(isMyMsg ? R.drawable.shape_chat_msg_card_my
-						: R.drawable.shape_chat_msg_card_other);
-		((View) convertView.findViewById(R.id.line_view))
-				.setBackgroundColor(context.getResources().getColor(
-						isMyMsg ? R.color.white : R.color.content_bg));
-		fileTitleText.setTextColor(context.getResources().getColor(
-				isMyMsg ? R.color.white : R.color.text_grey));
-		fileSizeText.setTextColor(context.getResources().getColor(
-				isMyMsg ? R.color.white : R.color.text_grey));
-
+//		((LinearLayout) convertView.findViewById(R.id.root_layout))
+//				.setBackgroundColor(context.getResources().getColor(
+//				isMyMsg ? R.color.header_bg : R.color.white));
+//		((View) convertView.findViewById(R.id.line_view))
+//				.setBackgroundColor(context.getResources().getColor(
+//						isMyMsg ? R.color.white : R.color.content_bg));
+//		fileTitleText.setTextColor(context.getResources().getColor(
+//				isMyMsg ? R.color.white : R.color.text_grey));
+//		fileSizeText.setTextColor(context.getResources().getColor(
+//				isMyMsg ? R.color.white : R.color.text_grey));
+		if (context instanceof ChannelActivity) {
+			int arrowPadding = DensityUtil.dip2px(context, 7);
+			if (isMyMsg) {
+				((LinearLayout) convertView.findViewById(R.id.root_layout)).setPadding(0, 0, arrowPadding, 0);
+			} else {
+				((LinearLayout) convertView.findViewById(R.id.root_layout)).setPadding(arrowPadding, 0,
+						0, 0);
+			}
+		}
+		
+		
 		final ImageView fileDownLoadImg = (ImageView) convertView
 				.findViewById(R.id.filecard_download_img);
 		String msgBody = msg.getBody();
@@ -70,9 +75,7 @@ public class DisplayResFileMsg {
 		final String downloadUri = JSONUtils.getString(msgBody, "key", "");
 		RoundAngleImageView roundAngleImageView = (RoundAngleImageView) convertView
 				.findViewById(R.id.file_type_img);
-		ImageDisplayUtils imageDisplayUtils = new ImageDisplayUtils(context,
-				R.drawable.icon_photo_default);
-		ShowFileIconUtils.showFileIcon(imageDisplayUtils, downloadUri,
+		ShowFileIconUtils.showFileIcon(context,downloadUri,
 				roundAngleImageView);
 		fileTitleText.setText(fileName);
 		fileSizeText.setText(FileUtils.formatFileSize(fileSize));
@@ -174,14 +177,12 @@ public class DisplayResFileMsg {
 
 	/**
 	 * 展示或下载文件
-	 * 
 	 * @param context
 	 * @param downloadUri
-	 * @param downLoadDst
-	 * @param downLaodSource
+	 * @param target
 	 * @param fileDownLoadImg
-	 * @param callback
-	 */
+	 * @param fileProgressBar
+     */
 	protected static void showOrDownLoadFile(Context context,
 			String downloadUri, String target, ImageView fileDownLoadImg,
 			ProgressCallback<File> fileProgressBar) {

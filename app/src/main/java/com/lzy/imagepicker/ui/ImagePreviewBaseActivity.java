@@ -1,8 +1,5 @@
 package com.lzy.imagepicker.ui;
 
-import java.util.ArrayList;
-
-import android.annotation.SuppressLint;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
@@ -10,13 +7,14 @@ import android.view.Window;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.inspur.emmcloud.R;
 import com.lzy.imagepicker.ImagePicker;
-import com.lzy.imagepicker.Utils;
 import com.lzy.imagepicker.adapter.ImagePageAdapter;
 import com.lzy.imagepicker.bean.ImageItem;
+import com.lzy.imagepicker.util.Utils;
 import com.lzy.imagepicker.view.ViewPagerFixed;
-import com.inspur.emmcloud.R;
 
+import java.util.ArrayList;
 
 public abstract class ImagePreviewBaseActivity extends ImageBaseActivity {
 
@@ -31,7 +29,6 @@ public abstract class ImagePreviewBaseActivity extends ImageBaseActivity {
     protected ImagePageAdapter mAdapter;
     protected boolean isCanDelete = true;//是否显示删除按钮
 
-    @SuppressLint("StringFormatMatches")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

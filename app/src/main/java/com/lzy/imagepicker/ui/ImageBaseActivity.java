@@ -1,7 +1,10 @@
 package com.lzy.imagepicker.ui;
 
 import android.annotation.TargetApi;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.view.Window;
 import android.view.WindowManager;

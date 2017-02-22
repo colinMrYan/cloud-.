@@ -3,9 +3,8 @@
     android:id="@+id/root_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/shape_chat_msg_card_other"
     android:padding="5dp" >
-
+<!-- 
     <TextView
         android:id="@+id/chat_msg_card_commonly_text"
         android:layout_width="match_parent"
@@ -39,5 +38,5 @@
             android:layout_weight="1.0"
             android:background="@drawable/shape_chat_msg_card_other" />
     </LinearLayout>
-
+ -->
 </RelativeLayout>

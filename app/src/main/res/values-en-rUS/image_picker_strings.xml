@@ -11,4 +11,5 @@
     <string name="origin_size">Original image(%1$s)</string>
     <string name="select_images">Select images</string>
     <string name="select">Select</string>
+    <string name="img_upload_fail">Picture upload failed, please try again</string>
 </resources>

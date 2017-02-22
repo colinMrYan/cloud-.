@@ -2,7 +2,6 @@ package com.lzy.imagepicker.adapter;
 
 import java.util.ArrayList;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.graphics.Color;
 import android.view.LayoutInflater;
@@ -13,12 +12,11 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.lzy.imagepicker.ImagePicker;
-import com.lzy.imagepicker.Utils;
-import com.lzy.imagepicker.bean.ImageItem;
-import com.lzy.imagepicker.view.SuperCheckBox;
 import com.inspur.emmcloud.R;
-
+import com.lzy.imagepicker.ImagePicker;
+import com.lzy.imagepicker.bean.ImageItem;
+import com.lzy.imagepicker.util.Utils;
+import com.lzy.imagepicker.view.SuperCheckBox;
 public class ImageGridAdapter extends BaseAdapter {
 
     private static final int ITEM_TYPE_CAMERA = 0;  //第一个条目是相机
@@ -47,6 +45,12 @@ public class ImageGridAdapter extends BaseAdapter {
         if (images == null || images.size() == 0) this.images = new ArrayList<ImageItem>();
         else this.images = images;
         notifyDataSetChanged();
+    }
+    
+    public void replaceData(int position,ImageItem imageItem){
+    	this.images.remove(position);
+    	this.images.add(position, imageItem);
+    	 notifyDataSetChanged();
     }
 
     @Override
@@ -116,7 +120,6 @@ public class ImageGridAdapter extends BaseAdapter {
                 }
             });
             holder.cbCheck.setOnClickListener(new View.OnClickListener() {
-                @SuppressLint("StringFormatMatches")
                 @Override
                 public void onClick(View v) {
                     int selectLimit = imagePicker.getSelectLimit();

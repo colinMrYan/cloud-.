@@ -118,6 +118,7 @@
                 android:layout_width="12dp"
                 android:layout_height="12dp"
                 android:scaleType="fitXY"
+                android:src="@drawable/icon_mdm_device_register_must_fill"
                  android:visibility="gone"
                />
         </RelativeLayout>
@@ -146,6 +147,7 @@
                 android:layout_height="12dp"
                 android:scaleType="fitXY"
                  android:visibility="gone"
+                 android:src="@drawable/icon_mdm_device_register_must_fill"
                  />
         </RelativeLayout>
 

@@ -1,9 +1,9 @@
 
 package com.inspur.imp.plugin.camera;
 
-import android.media.ExifInterface;
-
 import java.io.IOException;
+
+import android.media.ExifInterface;
 
 public class ExifHelper {
     private String aperture = null;

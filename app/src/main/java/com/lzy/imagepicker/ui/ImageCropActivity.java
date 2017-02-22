@@ -1,8 +1,5 @@
 package com.lzy.imagepicker.ui;
 
-import java.io.File;
-import java.util.ArrayList;
-
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -13,13 +10,15 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.inspur.emmcloud.R;
 import com.lzy.imagepicker.ImagePicker;
 import com.lzy.imagepicker.bean.ImageItem;
 import com.lzy.imagepicker.view.CropImageView;
-import com.inspur.emmcloud.R;
 
+import java.io.File;
+import java.util.ArrayList;
 
-public class ImageCropActivity extends ImageBaseActivity implements OnClickListener, CropImageView.OnBitmapSaveCompleteListener {
+public class ImageCropActivity extends ImageBaseActivity implements View.OnClickListener, CropImageView.OnBitmapSaveCompleteListener {
 
     private CropImageView mCropImageView;
     private Bitmap mBitmap;
@@ -68,6 +67,7 @@ public class ImageCropActivity extends ImageBaseActivity implements OnClickListe
         mBitmap = BitmapFactory.decodeFile(imagePath, options);
         mCropImageView.setImageBitmap(mBitmap);
         rotateButton = (Button) findViewById(R.id.cv_rotate_btn);
+        rotateButton.setVisibility(View.GONE);
         rotateButton.setOnClickListener(new OnClickListener() {
 			
 			@Override

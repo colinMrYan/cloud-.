@@ -12,11 +12,10 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.lzy.imagepicker.ImagePicker;
-import com.lzy.imagepicker.Utils;
-import com.lzy.imagepicker.bean.ImageFolder;
 import com.inspur.emmcloud.R;
-
+import com.lzy.imagepicker.ImagePicker;
+import com.lzy.imagepicker.bean.ImageFolder;
+import com.lzy.imagepicker.util.Utils;
 
 public class ImageFolderAdapter extends BaseAdapter {
 
