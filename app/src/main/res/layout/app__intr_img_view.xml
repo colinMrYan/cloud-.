@@ -9,7 +9,6 @@
         android:layout_width="231dp"
          android:layout_height="match_parent"
          android:paddingRight="18dp"
-        android:src="@drawable/test"
         android:scaleType="fitXY"
         />
 
