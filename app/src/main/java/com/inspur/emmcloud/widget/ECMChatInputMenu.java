@@ -7,11 +7,6 @@
  */
 package com.inspur.emmcloud.widget;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -41,9 +36,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
-import com.lzy.imagepicker.ImagePicker;
-import com.lzy.imagepicker.ui.ImageGridActivity;
-import com.lzy.imagepicker.view.CropImageView;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.MsgAddItemAdapter;
 import com.inspur.emmcloud.ui.chat.MembersActivity;
@@ -55,6 +47,13 @@ import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.ToastUtils;
 import com.inspur.emmcloud.widget.spans.ForeColorSpan;
+import com.lzy.imagepicker.ImagePicker;
+import com.lzy.imagepicker.ui.ImageGridActivity;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 
 /**
@@ -288,7 +287,6 @@ public class ECMChatInputMenu extends LinearLayout {
 //		((Activity) context).startActivityForResult(i, GELLARY_RESULT);
 	}
 
-	
 	/**
 	 * 初始化图片选择控件
 	 */
@@ -296,14 +294,15 @@ public class ECMChatInputMenu extends LinearLayout {
 		ImagePicker imagePicker = ImagePicker.getInstance();
 		imagePicker.setImageLoader(new ImageDisplayUtils()); // 设置图片加载器
 		imagePicker.setShowCamera(false); // 显示拍照按钮
-		imagePicker.setCrop(true); // 允许裁剪（单选才有效）
-		imagePicker.setSaveRectangle(true); // 是否按矩形区域保存
+		imagePicker.setCrop(false); // 允许裁剪（单选才有效）
+		imagePicker.setSelectLimit(1);
+//		imagePicker.setSaveRectangle(true); // 是否按矩形区域保存
 		imagePicker.setMultiMode(false);
-		imagePicker.setStyle(CropImageView.Style.RECTANGLE); // 裁剪框的形状
-		imagePicker.setFocusWidth(1000); // 裁剪框的宽度。单位像素（圆形自动取宽高最小值）
-		imagePicker.setFocusHeight(1000); // 裁剪框的高度。单位像素（圆形自动取宽高最小值）
-		imagePicker.setOutPutX(1000); // 保存文件的宽度。单位像素
-		imagePicker.setOutPutY(1000); // 保存文件的高度。单位像素
+//		imagePicker.setStyle(CropImageView.Style.RECTANGLE); // 裁剪框的形状
+//		imagePicker.setFocusWidth(1000); // 裁剪框的宽度。单位像素（圆形自动取宽高最小值）
+//		imagePicker.setFocusHeight(1000); // 裁剪框的高度。单位像素（圆形自动取宽高最小值）
+//		imagePicker.setOutPutX(1000); // 保存文件的宽度。单位像素
+//		imagePicker.setOutPutY(1000); // 保存文件的高度。单位像素
 	}
 
 	
