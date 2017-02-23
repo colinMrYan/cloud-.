@@ -25,7 +25,7 @@ import android.widget.Toast;
 import com.inspur.emmcloud.bean.GetCreateSingleChannelResult;
 import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.ToastUtils;
-import com.lzy.imagepicker.bean.ImageItem;
+import com.inspur.imp.plugin.camera.imagepicker.bean.ImageItem;
 
 public class UploadPhoto {
 	private Context mcontext;

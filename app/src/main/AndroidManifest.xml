@@ -457,24 +457,24 @@
         <!-- ImagePicker -->
 
         <activity
-            android:name="com.lzy.imagepicker.ui.ImageGridActivity"
+            android:name="com.inspur.imp.plugin.camera.imagepicker.ui.ImageGridActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"></activity>
         <activity
-            android:name="com.lzy.imagepicker.ui.ImagePreviewActivity"
+            android:name="com.inspur.imp.plugin.camera.imagepicker.ui.ImagePreviewActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"></activity>
         <activity
-            android:name="com.lzy.imagepicker.ui.ImageCropActivity"
+            android:name="com.inspur.imp.plugin.camera.imagepicker.ui.ImageCropActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"></activity>
         <activity
-            android:name="com.lzy.imagepicker.ui.ImagePreviewDelActivity"
+            android:name="com.inspur.imp.plugin.camera.imagepicker.ui.ImagePreviewDelActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name="com.im4j.picturebeautify.editimage.EditImageActivity"
+            android:name="com.inspur.imp.plugin.camera.editimage.EditImageActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait" >
         </activity>

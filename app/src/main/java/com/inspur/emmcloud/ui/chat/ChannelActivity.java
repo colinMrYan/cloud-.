@@ -34,7 +34,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.im4j.picturebeautify.editimage.EditImageActivity;
+import com.inspur.imp.plugin.camera.editimage.EditImageActivity;
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
@@ -79,7 +79,7 @@ import com.inspur.emmcloud.widget.ECMChatInputMenu.ChatInputMenuListener;
 import com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout;
 import com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout.OnRefreshListener;
 import com.inspur.emmcloud.widget.pullableview.PullableListView;
-import com.lzy.imagepicker.ImagePicker;
+import com.inspur.imp.plugin.camera.imagepicker.ImagePicker;
 
 /**
  * com.inspur.emmcloud.ui.ChannelActivity

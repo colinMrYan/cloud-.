@@ -17,7 +17,7 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.widget.Toast;
 
-import com.im4j.picturebeautify.editimage.EditImageActivity;
+import com.inspur.imp.plugin.camera.editimage.EditImageActivity;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.util.DataCleanManager;
@@ -29,9 +29,9 @@ import com.inspur.imp.api.Res;
 import com.inspur.imp.plugin.ImpPlugin;
 import com.inspur.imp.plugin.camera.Bimp;
 import com.inspur.imp.plugin.camera.PublicWay;
-import com.lzy.imagepicker.ImagePicker;
-import com.lzy.imagepicker.bean.ImageItem;
-import com.lzy.imagepicker.ui.ImageGridActivity;
+import com.inspur.imp.plugin.camera.imagepicker.ImagePicker;
+import com.inspur.imp.plugin.camera.imagepicker.bean.ImageItem;
+import com.inspur.imp.plugin.camera.imagepicker.ui.ImageGridActivity;
 
 public class PhotoService extends ImpPlugin {
 
