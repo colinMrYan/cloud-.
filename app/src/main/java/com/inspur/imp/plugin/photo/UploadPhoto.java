@@ -69,13 +69,13 @@ public class UploadPhoto {
 			@Override
 			public void onError(Throwable arg0, boolean arg1) {
 				// TODO Auto-generated method stub
-				LogUtils.JasonDebug("fail---------");
+				LogUtils.jasonDebug("fail---------");
 				if (arg0 instanceof HttpException) {
 					HttpException httpEx = (HttpException) arg0;
 					String error = httpEx.getResult();
 					int responseCode = httpEx.getCode();
-					LogUtils.JasonDebug("error="+error);
-					LogUtils.JasonDebug("responseCode="+responseCode);
+					LogUtils.jasonDebug("error="+error);
+					LogUtils.jasonDebug("responseCode="+responseCode);
 				}
 				onUploadPhotoListener.uploadPhotoFail();
 				
@@ -90,7 +90,7 @@ public class UploadPhoto {
 			@Override
 			public void onSuccess(String arg0) {
 				// TODO Auto-generated method stub
-				LogUtils.JasonDebug("success="+arg0);
+				LogUtils.jasonDebug("success="+arg0);
 				onUploadPhotoListener.uploadPhotoSuccess(arg0);
 			}
 		});

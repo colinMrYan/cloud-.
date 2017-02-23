@@ -90,7 +90,7 @@ public class LoginUtils extends APIInterfaceInstance {
 		String myInfo = PreferencesUtils.getString(activity, "myInfo", "");
 		GetMyInfoResult myInfoObj = new GetMyInfoResult(myInfo);
 		String tanentId = myInfoObj.getEnterpriseId();
-		LogUtils.JasonDebug("tanentId=" + tanentId);
+		LogUtils.jasonDebug("tanentId=" + tanentId);
 		String userCode = ((MyApplication) activity.getApplicationContext())
 				.getUid();
 		MDM mdm = new MDM(activity, tanentId, userCode, userName);

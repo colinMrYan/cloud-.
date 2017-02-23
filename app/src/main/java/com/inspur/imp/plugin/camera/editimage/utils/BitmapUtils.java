@@ -16,13 +16,11 @@
 
 package com.inspur.imp.plugin.camera.editimage.utils;
 
-import android.R.integer;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
 import android.graphics.BitmapFactory;
 import android.graphics.BitmapFactory.Options;
 import android.graphics.Matrix;
-import android.util.Log;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -30,8 +28,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-
-import com.inspur.emmcloud.util.LogUtils;
 
 /**
  * BitmapUtils
@@ -48,10 +44,10 @@ public class BitmapUtils {
 			int reqHeight,int maxSize,int qualtity) {
 //		File file = new File(imagePath);
 //		if (file.length() < MAX_SZIE) {
-//			LogUtils.JasonDebug("小于--------------");
+//			LogUtils.jasonDebug("小于--------------");
 //			return getSampledBitmap(imagePath, reqWidth, reqHeight);
 //		} else {// 压缩图片
-//			LogUtils.JasonDebug("大于--------------");
+//			LogUtils.jasonDebug("大于--------------");
 			return getImageCompress(imagePath,maxSize,qualtity);
 //		}
 	}
@@ -122,7 +118,7 @@ public class BitmapUtils {
 //			Log.d("jason","baos.toByteArray().length / 1024="+baos.toByteArray().length / 1024);
 //			baos.reset();// 重置baos即清空baos
 //			options = options- 10;// 每次都减少10
-//			LogUtils.JasonDebug("options="+options);
+//			LogUtils.jasonDebug("options="+options);
 //			image.compress(CompressFormat.JPEG, options, baos);// 这里压缩options%，把压缩后的数据存放到baos中
 //			System.out.println("options--->" + options + "    "
 //					+ (baos.toByteArray().length / 1024));

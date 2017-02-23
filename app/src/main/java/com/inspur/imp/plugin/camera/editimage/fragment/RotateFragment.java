@@ -83,7 +83,7 @@ public class RotateFragment extends Fragment {
 		@Override
 		public void onProgressChanged(SeekBar seekBar, int angle,
 				boolean fromUser) {
-			LogUtils.JasonDebug("angle="+angle);
+			LogUtils.jasonDebug("angle="+angle);
 			// System.out.println("progress--->" + progress);
 			mRotatePanel.rotateImage(angle*90);
 		}
@@ -173,21 +173,21 @@ public class RotateFragment extends Fragment {
 			Bitmap originBit = params[0];
 //			Bitmap result = Bitmap.createBitmap((int) imageRect.width(),
 //					(int) imageRect.height(), Bitmap.Config.ARGB_4444);
-//			LogUtils.JasonDebug("imageRect.width()="+imageRect.width());
-//			LogUtils.JasonDebug("imageRect.height()="+imageRect.height());
-//			LogUtils.JasonDebug("mRotatePanel.getScale()="+mRotatePanel.getScale());
+//			LogUtils.jasonDebug("imageRect.width()="+imageRect.width());
+//			LogUtils.jasonDebug("imageRect.height()="+imageRect.height());
+//			LogUtils.jasonDebug("mRotatePanel.getScale()="+mRotatePanel.getScale());
 //			Canvas canvas = new Canvas(result);
 //			int w = originBit.getWidth() >> 1;
 //			int h = originBit.getHeight() >> 1;
-//			LogUtils.JasonDebug("w="+w);
-//			LogUtils.JasonDebug("h="+h);
+//			LogUtils.jasonDebug("w="+w);
+//			LogUtils.jasonDebug("h="+h);
 //			float centerX = imageRect.width() / 2;
 //			float centerY = imageRect.height() / 2;
 //
 //			float left = centerX - w;
 //			float top = centerY - h;
-//			LogUtils.JasonDebug("left"+left);
-//			LogUtils.JasonDebug("top"+top);
+//			LogUtils.jasonDebug("left"+left);
+//			LogUtils.jasonDebug("top"+top);
 //			RectF dst = new RectF(left, top, left + originBit.getWidth(), top
 //					+ originBit.getHeight());
 //			canvas.save();

@@ -38,5 +38,9 @@
     <string name="origin_size">Original image(%1$s)</string>
     <string name="select_images">Select images</string>
     <string name="select">Select</string>
+    <string name="edit_img">Edit picture</string>
+    <string name="crop">Crop</string>
+    <string name="rotate">Rotate</string>
     <string name="img_upload_fail">Picture upload failed, please try again</string>
+    <string name="img_decode_fail">Picture decoded fail</string>
 </resources>

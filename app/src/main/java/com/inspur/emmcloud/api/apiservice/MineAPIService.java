@@ -7,15 +7,6 @@
  */
 package com.inspur.emmcloud.api.apiservice;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
-
-import org.xutils.x;
-import org.xutils.http.RequestParams;
-
 import android.content.Context;
 
 import com.inspur.emmcloud.MyApplication;
@@ -31,6 +22,11 @@ import com.inspur.emmcloud.util.OauthCallBack;
 import com.inspur.emmcloud.util.OauthUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.UriUtils;
+
+import org.xutils.http.RequestParams;
+import org.xutils.x;
+
+import java.io.File;
 
 
 /**
@@ -61,7 +57,7 @@ public class MineAPIService {
 		final String completeUrl = baseUrl + "module=" + module + "&method="
 				+ method;
 
-		LogUtils.JasonDebug("filePath="+filePath);
+		LogUtils.jasonDebug("filePath="+filePath);
 		RequestParams params = ((MyApplication) context.getApplicationContext())
 				.getHttpRequestParams(completeUrl);
 		File file = new File(filePath);

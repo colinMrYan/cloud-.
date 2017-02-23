@@ -163,7 +163,7 @@ final class CameraConfigurationManager {
 			Log.w(TAG,
 					"Device returned no supported preview sizes; using default");
 			Camera.Size defaultSize = parameters.getPreviewSize();
-			LogUtils.JasonDebug("1111100000000");
+			LogUtils.jasonDebug("1111100000000");
 			return new Point(defaultSize.width, defaultSize.height);
 		}
 
@@ -184,7 +184,7 @@ final class CameraConfigurationManager {
 				return 0;
 			}
 		});
-		LogUtils.JasonDebug("1111100000000");
+		LogUtils.jasonDebug("1111100000000");
 //		if (Log.isLoggable(TAG, Log.INFO)) {
 			StringBuilder previewSizesString = new StringBuilder();
 			for (Camera.Size supportedPreviewSize : supportedPreviewSizes) {
@@ -194,7 +194,7 @@ final class CameraConfigurationManager {
 			}
 			Log.i(TAG, "Supported preview sizes: " + previewSizesString);
 //		}
-		LogUtils.JasonDebug("1111100000000");
+		LogUtils.jasonDebug("1111100000000");
 		Point bestSize = null;
 		float screenAspectRatio = (float) screenResolution.x
 				/ (float) screenResolution.y;
@@ -227,13 +227,13 @@ final class CameraConfigurationManager {
 				diff = newDiff;
 			}
 		}
-		LogUtils.JasonDebug("1111100000000");
+		LogUtils.jasonDebug("1111100000000");
 		if (bestSize == null) {
 			Camera.Size defaultSize = parameters.getPreviewSize();
 			bestSize = new Point(defaultSize.width, defaultSize.height);
 			Log.i(TAG, "No suitable preview sizes, using default: " + bestSize);
 		}
-		LogUtils.JasonDebug("1111100000000="+bestSize);
+		LogUtils.jasonDebug("1111100000000="+bestSize);
 		Log.i(TAG, "Found best approximate preview size: " + bestSize);
 		return bestSize;
 	}
