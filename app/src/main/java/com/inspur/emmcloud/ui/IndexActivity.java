@@ -67,6 +67,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.facebook.react.common.ApplicationHolder.getApplication;
 import static com.inspur.emmcloud.util.FileUtils.readFile;
 import static com.inspur.reactnative.ReactNativeFlow.moveFolder;
 
@@ -80,7 +81,6 @@ public class IndexActivity extends BaseFragmentActivity implements
         OnTabChangeListener, OnTouchListener {
     private static final int SYNC_ALL_BASE_DATA_SUCCESS = 0;
     private static final int SYNC_CONTACT_SUCCESS = 1;
-    private static final int READ_ERROR_SUCCESS = 3;
     private long lastBackTime;
     public MyFragmentTabHost mTabHost;
     private static TextView newMessageTipsText;
@@ -90,17 +90,6 @@ public class IndexActivity extends BaseFragmentActivity implements
     private boolean isHasCacheContact = false;
     private TipsView tipsView;
     private String reactNativeDicPath = "";
-		OnTabChangeListener, OnTouchListener {
-	private static final int SYNC_ALL_BASE_DATA_SUCCESS = 0;
-	private static final int SYNC_CONTACT_SUCCESS = 1;
-	private long lastBackTime;
-	public MyFragmentTabHost mTabHost;
-	private static TextView newMessageTipsText;
-	private static RelativeLayout newMessageTipsLayout;
-	private OnWorkFragmentDataChanged workFragmentListener;
-	private Handler handler;
-	private boolean isHasCacheContact = false;
-	private TipsView tipsView;
 	private LoadingDialog loadingDlg;
 
 	@Override
@@ -175,7 +164,6 @@ public class IndexActivity extends BaseFragmentActivity implements
         }
     }
 
-	}
 
     /***
      * 打开app应用行为分析上传的Service;
