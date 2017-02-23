@@ -1,8 +1,5 @@
 package com.inspur.emmcloud.ui.app;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
@@ -18,6 +15,9 @@ import android.widget.LinearLayout;
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 应用详情中图片放大显示页面
@@ -47,7 +47,7 @@ public class AppImgDisPlayActivity extends BaseActivity {
 		for (int i = 0; i < pageNum; i++) {
 			View view = layoutInflater.inflate(R.layout.guide_page1, null);
 			((ImageView)view.findViewById(R.id.skip_btn)).setVisibility(View.GONE);
-			((ImageView)view.findViewById(R.id.intr_img)).setImageResource(R.drawable.test);
+
 			((ImageView)view.findViewById(R.id.intr_img)).setOnClickListener(new OnClickListener() {
 				
 				@Override

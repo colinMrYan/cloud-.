@@ -13,7 +13,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -22,7 +21,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
-import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -36,6 +34,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
@@ -61,7 +60,6 @@ import com.inspur.emmcloud.util.ChatCreateUtils.OnCreateGroupChannelListener;
 import com.inspur.emmcloud.util.DirectChannelUtils;
 import com.inspur.emmcloud.util.ImageDisplayUtils;
 import com.inspur.emmcloud.util.IntentUtils;
-import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.MsgCacheUtil;
 import com.inspur.emmcloud.util.MsgMatheSetCacheUtils;
 import com.inspur.emmcloud.util.MsgReadIDCacheUtils;
@@ -91,12 +89,6 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 	private static final int RERESH_GROUP_ICON = 2;
 	private View rootView;
 	private LayoutInflater inflater;
-
-//	@Override
-//	public void onAttach(Activity activity) {
-//		super.onAttach(activity);
-//	}
-
 	private PullableListView msgListView;
 	private ChatAPIService apiService;
 	private List<Channel> displayChannelList = new ArrayList<Channel>();
@@ -106,7 +98,6 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 	private String channelIdInOpen = ""; // 当前正在查看的频道的id,为了标示各频道未读消息条数
 	private PullToRefreshLayout pullToRefreshLayout;
 	private MessageFragmentReceiver messageFragmentReceiver;
-	private MyReceiver contactReceiver;
 	private TipsView TipsView;
 
 	@Override
@@ -164,7 +155,6 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 				.setOnClickListener(onViewClickListener);
 		((Button) rootView.findViewById(R.id.find_friends_btn))
 				.setOnClickListener(onViewClickListener);
-		LogUtils.debug("jason", "initView---------");
 		TipsView = (TipsView) rootView.findViewById(R.id.tip);
 	}
 
@@ -210,28 +200,6 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 
 	}
 
-	/**
-	 * 注册通讯录广播
-	 */
-	private void registeContactReceiver() {
-		// TODO Auto-generated method stub
-		contactReceiver = new MyReceiver();
-		IntentFilter intentFilter = new IntentFilter();
-		intentFilter.addAction("contact_ready");
-		getActivity().registerReceiver(contactReceiver, intentFilter);
-	}
-
-	private class MyReceiver extends BroadcastReceiver {
-
-		@Override
-		public void onReceive(Context context, Intent intent) {
-			// TODO Auto-generated method stub
-			creatGroupIcon();// 创建群组的头像
-			if (adapter != null) {
-				adapter.notifyDataSetChanged();
-			}
-		}
-	}
 
 	/**
 	 * 获取消息会话列表和最新消息
@@ -365,7 +333,7 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 	 */
 	private void creatGroupIcon() {
 		// TODO Auto-generated method stub
-		if (displayChannelList.size() > 0) {
+		if (displayChannelList.size() > 0 && ((MyApplication)getActivity().getApplicationContext()).getIsContactReady()) {
 			new ChannelGroupIconUtils(getActivity(), displayChannelList,
 					handler).creat();
 		}
@@ -700,7 +668,7 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 			}
 			Channel channel = displayChannelList.get(position);
 			setChannelBg(channel, holder.mainLayout);
-			setChannelIcon(channel, holder.channelImg);
+			setChannelIcon(channel);
 			setChannelTitle(channel, holder.channelTitleText);
 			holder.channelTimeText.setText(TimeUtils.getDisplayTime(
 					getActivity(), channel.getLastUpdate()));
@@ -752,9 +720,8 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 		 * 设置Channel的Icon
 		 * 
 		 * @param channel
-		 * @param channelImg
 		 */
-		private void setChannelIcon(Channel channel, CircleImageView channelImg) {
+		private void setChannelIcon(Channel channel) {
 			// TODO Auto-generated method stub
 			Integer defaultIcon = -1; // 默认显示图标
 			String iconUrl = "";// Channel头像的uri
@@ -777,18 +744,8 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 				iconUrl = channel.getIcon();
 			}
 
-			//去掉会话列表机器人角标
-//			if (channel.getType().equals("SERVICE")) {
-//				holder.robotSuperscriptImg.setVisibility(View.VISIBLE);
-//			} else {
-//				holder.robotSuperscriptImg.setVisibility(View.GONE);
-//			}
-			// if ((holder.channelImg.getTag() == null) ||
-			// (!holder.channelImg.getTag().equals(iconUrl))) {
 			new ImageDisplayUtils(getActivity(), defaultIcon).display(
 					holder.channelImg, iconUrl);
-			// holder.channelImg.setTag(iconUrl);
-			// }
 
 		}
 
@@ -947,7 +904,6 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 				pullToRefreshLayout.refreshFinish(PullToRefreshLayout.SUCCEED);
 				cacheNewMsgs(getNewMsgsResult);
 				handData();
-				registeContactReceiver();
 			}
 
 		}
@@ -978,6 +934,7 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 			// TODO Auto-generated method stub
 			String command = intent.getExtras().getString("command");
 			if (command.equals("creat_group_icon")) {
+				adapter.notifyDataSetChanged();
 				creatGroupIcon();
 			} else if (command.equals("refresh_session_list")) {
 				getChannelContent();
@@ -1039,18 +996,6 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 		apiService.getChannelGroupList(cidArray);
 	}
 
-	/**
-	 * 
-	 * 将频道的消息置为已读
-	 * 
-	 * @param channel
-	 */
-	private void setChannelMsgRead(Channel channel) {
-		MsgReadIDCacheUtils.saveReadedMsg(getActivity(), channel.getCid(),
-				channel.getNewestMid());
-		adapter.notifyDataSetChanged();
-		refreshIndexNotify();
-	}
 
 	private class SortComparator implements Comparator {
 
@@ -1081,10 +1026,6 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 		if (messageFragmentReceiver != null) {
 			getActivity().unregisterReceiver(messageFragmentReceiver);
 			messageFragmentReceiver = null;
-		}
-		if (contactReceiver != null) {
-			getActivity().unregisterReceiver(contactReceiver);
-			contactReceiver = null;
 		}
 
 		if (handler != null) {

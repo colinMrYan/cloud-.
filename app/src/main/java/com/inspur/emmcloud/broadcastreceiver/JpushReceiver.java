@@ -1,11 +1,5 @@
 package com.inspur.emmcloud.broadcastreceiver;
 
-import java.util.Iterator;
-import java.util.List;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningTaskInfo;
 import android.content.BroadcastReceiver;
@@ -17,7 +11,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
-import cn.jpush.android.api.JPushInterface;
 
 import com.inspur.emmcloud.bean.CalendarEvent;
 import com.inspur.emmcloud.ui.IndexActivity;
@@ -25,6 +18,14 @@ import com.inspur.emmcloud.ui.login.LoginActivity;
 import com.inspur.emmcloud.ui.work.calendar.CalEventAddActivity;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.StringUtils;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.Iterator;
+import java.util.List;
+
+import cn.jpush.android.api.JPushInterface;
 
 /**
  * 自定义接收器
@@ -126,9 +127,9 @@ public class JpushReceiver extends BroadcastReceiver {
 
 	/**
 	 * 打开
-	 * 
-	 * @param calEventJson
-	 */
+	 * @param context
+	 * @param jsonObject
+     */
 	private void openCalEvent(Context context, JSONObject jsonObject) {
 		// TODO Auto-generated method stub
 		CalendarEvent calendarEvent = new CalendarEvent(jsonObject);

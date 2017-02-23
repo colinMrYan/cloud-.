@@ -5,14 +5,13 @@ import android.net.Uri;
 import android.os.Build;
 import android.webkit.MimeTypeMap;
 
-import com.inspur.imp.api.iLog;
-import com.inspur.imp.plugin.ImpPlugin;
-
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Locale;
 
+import com.inspur.imp.api.iLog;
+import com.inspur.imp.plugin.ImpPlugin;
 
 public class FileHelper {
     private static final String LOG_TAG = "FileUtils";
@@ -23,13 +22,12 @@ public class FileHelper {
      * If the given URI string represents a content:// URI, the real path is retrieved from the media store.
      *
      * @param uriString the URI string of the audio/image/video
-     * @param
+     * @param cordova the current application context
      * @return the full path to the file
      */
     @SuppressWarnings("deprecation")
     public static String getRealPath(String uriString, ImpPlugin impPlugin) {
         String realPath = null;
-
         if (uriString.startsWith("content://")) {
             String[] proj = { _DATA };
             Cursor cursor = impPlugin.getActivity().managedQuery(Uri.parse(uriString), proj, null, null, null);
@@ -69,7 +67,6 @@ public class FileHelper {
      * If the given URI is a content:// URI, the real path is retrieved from the media store.
      *
      * @param uri the URI of the audio/image/video
-     * @param
      * @return the full path to the file
      */
     public static String getRealPath(Uri uri, ImpPlugin impPlugin) {
@@ -80,7 +77,6 @@ public class FileHelper {
      * Returns an input stream based on given URI string.
      *
      * @param uriString the URI string from which to obtain the input stream
-     * @param
      * @return an input stream into the data at the given URI or null if given an invalid URI string
      * @throws IOException
      */

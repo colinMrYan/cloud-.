@@ -1,18 +1,5 @@
 package com.inspur.emmcloud.push;
 
-import io.socket.client.IO;
-import io.socket.client.Manager;
-import io.socket.client.Socket;
-import io.socket.emitter.Emitter;
-import io.socket.engineio.client.Transport;
-import io.socket.parseqs.ParseQS;
-
-import java.net.URISyntaxException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
@@ -22,6 +9,19 @@ import com.inspur.emmcloud.bean.GetMyInfoResult;
 import com.inspur.emmcloud.util.AppUtils;
 import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
+
+import java.net.URISyntaxException;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import io.socket.client.IO;
+import io.socket.client.Manager;
+import io.socket.client.Socket;
+import io.socket.emitter.Emitter;
+import io.socket.engineio.client.Transport;
+import io.socket.parseqs.ParseQS;
 
 public class WebSocketPush {
 

@@ -1,49 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#000"
-    android:orientation="vertical" >
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="#000"
+              android:orientation="vertical">
 
-    <include layout="@layout/include_top_bar" />
+    <include layout="@layout/include_top_bar"/>
 
-    <!--
-        <com.lzy.imagepicker.view.CropImageView
+   <!-- <com.inspur.imp.plugin.camera.imagepicker.view.CropImageView
         android:id="@+id/cv_crop_image"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
-    -->
+        android:layout_height="match_parent"/>-->
 
-    <com.lzy.imagepicker.view.CropImageView
+    <com.inspur.imp.plugin.camera.imagepicker.view.CropImageView
         android:id="@+id/cv_crop_image"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="4dp"
-        android:layout_above="@+id/rotate_layout"
-        android:layout_marginTop="52dp"
-        android:scaleType="fitXY" />
-
-    <RelativeLayout
-        android:id="@+id/rotate_layout"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:layout_alignParentBottom="true"
-        android:background="#cc22292c" >
-          <Button
+        android:layout_marginTop="48dp"
+        android:scaleType="fitXY"/>
+    <Button 
         android:id="@+id/cv_rotate_btn"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:background="@null"
-        android:textColor="#ffffff"
-        android:paddingLeft="30dp"
-        android:paddingRight="30dp"
-        android:gravity= "center"
-        android:textSize="16sp"
-        android:layout_centerInParent="true"
-        android:text="旋转" />
-    </RelativeLayout>
-    <!--
-         <com.lzy.imagepicker.view.crop.CropImageView2
+        android:layout_height="wrap_content"
+        android:layout_marginTop="500dp"
+        android:layout_centerHorizontal="true"
+        android:text="@string/rotate"/>
+
+    <!-- <com.inspur.imp.plugin.camera.imagepicker.view.crop.CropImageView2
          android:id="@+id/cv_crop_image"
          android:layout_width="match_parent"
          android:layout_height="match_parent"
@@ -60,7 +43,6 @@
          custom:handleSize="8dp"
          custom:minFrameSize="50dp"
          custom:overlayColor="#AA1C1C1C"
-         custom:touchPadding="8dp"/>
-    -->
+         custom:touchPadding="8dp"/>-->
 
 </RelativeLayout>

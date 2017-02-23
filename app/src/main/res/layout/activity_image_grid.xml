@@ -5,7 +5,6 @@
     android:layout_height="match_parent"
     android:background="#000"
     android:orientation="vertical">
-
     <include
         android:id="@+id/top_bar"
         layout="@layout/include_top_bar"/>
@@ -55,14 +54,14 @@
                 android:textSize="16sp"/>
 
             <Button
-                android:id="@+id/btn_preview"
+                android:id="@+id/btn_edit"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_alignParentRight="true"
                 android:background="@null"
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp"
-                android:text="@string/preview_count"
+                android:text="@string/edit"
                 android:textAllCaps="false"
                 android:textColor="#FFFFFF"
                 android:textSize="16sp"/>
@@ -72,7 +71,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginBottom="12dp"
                 android:layout_marginTop="12dp"
-                android:layout_toLeftOf="@id/btn_preview"
+                android:layout_toLeftOf="@id/btn_edit"
                 android:background="#cc111111"/>
         </RelativeLayout>
     </RelativeLayout>

@@ -1,18 +1,14 @@
 package com.inspur.emmcloud.bean;
 
-import java.io.Serializable;
-import java.util.Date;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.content.Context;
 
 import com.alibaba.fastjson.annotation.JSONField;
-import com.google.gson.jpush.annotations.c;
-import com.inspur.emmcloud.util.AppUtils;
-import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.TimeUtils;
+
+import org.json.JSONObject;
+
+import java.io.Serializable;
+import java.util.Date;
 
 /**
  * [{"cost":184.5, "destination":"济南西", "from":"北京南", "level":"二等座",

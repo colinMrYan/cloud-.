@@ -76,16 +76,16 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="15dp"
                     android:layout_marginTop="15dp"
-                    android:background="@drawable/icon_textfield_background"
+                    android:background="@drawable/bg_corner"
                     android:orientation="vertical" >
 
                     <RelativeLayout
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:paddingBottom="8dp"
+                        android:paddingBottom="10dp"
                         android:paddingLeft="12dp"
                         android:paddingRight="12dp"
-                        android:paddingTop="5dp" >
+                        android:paddingTop="10dp" >
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -133,16 +133,16 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="18dp"
-                    android:background="@drawable/icon_textfield_background"
+                    android:background="@drawable/bg_corner"
                     android:orientation="vertical" >
 
                     <TextView
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:paddingBottom="8dp"
+                        android:paddingBottom="10dp"
                         android:paddingLeft="12dp"
                         android:paddingRight="12dp"
-                        android:paddingTop="5dp"
+                        android:paddingTop="10dp"
                         android:text="@string/your_contact"
                         android:textColor="@color/text_black"
                         android:textSize="@dimen/content_normal_textsize" />
@@ -159,11 +159,11 @@
                         android:background="@null"
                         android:hint="@string/feed_back_input_phone"
                         android:maxLength="70"
-                        android:paddingBottom="8dp"
+                        android:paddingBottom="10dp"
                         android:paddingLeft="12dp"
                         android:paddingRight="12dp"
-                        android:paddingTop="8dp"
-                        android:singleLine="true"
+                        android:paddingTop="10dp"
+                        android:maxLines="1"
                         android:textColor="@color/text_black"
                         android:textSize="@dimen/content_normal_textsize" />
                 </LinearLayout>

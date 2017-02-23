@@ -4,7 +4,6 @@ import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.content.Context;
-import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -54,11 +53,11 @@ public class CircularProgress extends View {
         super(context, attrs, defStyleAttr);
 
         float density = context.getResources().getDisplayMetrics().density;
-        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.MDMCircularProgress, defStyleAttr, 0);
+ //       TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.MDMCircularProgress, defStyleAttr, 0);
 //        mBorderWidth = a.getDimension(R.styleable.MDMCircularProgress_borderWidth,
 //                DEFAULT_BORDER_WIDTH * density);
         mBorderWidth = 10f;
-        a.recycle();
+//        a.recycle();
         mColors = new int[1];
         mColors[0] = context.getResources().getColor(R.color.progress_grey);
         mCurrentColorIndex = 0;

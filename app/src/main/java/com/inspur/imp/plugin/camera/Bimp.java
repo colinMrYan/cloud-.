@@ -1,13 +1,15 @@
 package com.inspur.imp.plugin.camera;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-
 import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Base64;
 
 public class Bimp {
 	
@@ -38,5 +40,40 @@ public class Bimp {
 			i += 1;
 		}
 		return bitmap;
+	}
+	
+	/**
+	 * bitmap转为base64
+	 * @param bitmap
+	 * @return
+	 */
+	public static String bitmapToBase64(Bitmap bitmap) {
+
+		String result = null;
+		ByteArrayOutputStream baos = null;
+		try {
+			if (bitmap != null) {
+				baos = new ByteArrayOutputStream();
+				bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+
+				baos.flush();
+				baos.close();
+
+				byte[] bitmapBytes = baos.toByteArray();
+				result = Base64.encodeToString(bitmapBytes, Base64.NO_WRAP);
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (baos != null) {
+					baos.flush();
+					baos.close();
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		return result;
 	}
 }

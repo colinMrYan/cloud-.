@@ -1,9 +1,9 @@
 package com.inspur.imp.plugin.camera;
 
-import android.graphics.Bitmap;
-
 import java.io.IOException;
 import java.io.Serializable;
+
+import android.graphics.Bitmap;
 
 
 public class ImageItem implements Serializable {
@@ -12,8 +12,7 @@ public class ImageItem implements Serializable {
 	public String imagePath;
 	private Bitmap bitmap;
 	public boolean isSelected = false;
-
-
+	
 	public String getImageId() {
 		return imageId;
 	}

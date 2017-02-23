@@ -1,5 +1,6 @@
 package com.inspur.emmcloud.ui.chat;
 
+import android.content.Context;
 import android.widget.ImageView;
 
 import com.inspur.emmcloud.R;
@@ -9,11 +10,11 @@ public class ShowFileIconUtils {
 
 	/**
 	 * 展示文件卡片上的图标
-	 * @param imageDisplayUtils
+	 * @param context
 	 * @param fileName
-	 * @param convertView
-	 */
-	public static void showFileIcon(ImageDisplayUtils imageDisplayUtils,String fileName,ImageView iconImageView) {
+	 * @param iconImageView
+     */
+	public static void showFileIcon(Context context,String fileName,ImageView iconImageView) {
 		int imageName = 0;
 		if (fileName.endsWith("doc") || fileName.endsWith("docx")) {
 			imageName = R.drawable.icon_file_word;
@@ -34,6 +35,8 @@ public class ShowFileIconUtils {
 		} else {
 			imageName = R.drawable.icon_file_unknown;
 		}
+		ImageDisplayUtils imageDisplayUtils = new ImageDisplayUtils(context,
+				R.drawable.icon_file_unknown);
 		imageDisplayUtils.display(iconImageView, "drawable://"+imageName);
 	}
 }

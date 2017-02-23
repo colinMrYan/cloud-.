@@ -90,37 +90,35 @@ public class LoginUtils extends APIInterfaceInstance {
 		String myInfo = PreferencesUtils.getString(activity, "myInfo", "");
 		GetMyInfoResult myInfoObj = new GetMyInfoResult(myInfo);
 		String tanentId = myInfoObj.getEnterpriseId();
-		LogUtils.JasonDebug("tanentId=" + tanentId);
+		LogUtils.jasonDebug("tanentId=" + tanentId);
 		String userCode = ((MyApplication) activity.getApplicationContext())
 				.getUid();
-		saveLoginInfo();
-		loginUtilsHandler.sendEmptyMessage(LOGIN_SUCCESS);
-//		MDM mdm = new MDM(activity, tanentId, userCode, userName);
-//		mdm.addOnMDMListener(new MDMListener() {
-//
-//			@Override
-//			public void MDMStatusPass() {
-//				// TODO Auto-generated method stub
-//				saveLoginInfo();
-//				loginUtilsHandler.sendEmptyMessage(LOGIN_SUCCESS);
-//			}
-//
-//			@Override
-//			public void MDMStatusNoPass() {
-//				// TODO Auto-generated method stub
-//				clearLoginInfo();
-//				loginUtilsHandler.sendEmptyMessage(LOGIN_FAIL);
-//			}
-//
-//			@Override
-//			public void dimissExternalLoadingDlg() {
-//				// TODO Auto-generated method stub
-//				if (loadingDialog != null && loadingDialog.isShowing()) {
-//					loadingDialog.dismiss();
-//				}
-//			}
-//		});
-//		mdm.deviceCheck();
+		MDM mdm = new MDM(activity, tanentId, userCode, userName);
+		mdm.addOnMDMListener(new MDMListener() {
+
+			@Override
+			public void MDMStatusPass() {
+				// TODO Auto-generated method stub
+				saveLoginInfo();
+				loginUtilsHandler.sendEmptyMessage(LOGIN_SUCCESS);
+			}
+
+			@Override
+			public void MDMStatusNoPass() {
+				// TODO Auto-generated method stub
+				clearLoginInfo();
+				loginUtilsHandler.sendEmptyMessage(LOGIN_FAIL);
+			}
+
+			@Override
+			public void dimissExternalLoadingDlg() {
+				// TODO Auto-generated method stub
+				if (loadingDialog != null && loadingDialog.isShowing()) {
+					loadingDialog.dismiss();
+				}
+			}
+		});
+		mdm.deviceCheck();
 	}
 
 	// 登录

@@ -265,7 +265,7 @@ public class UserInfoActivity extends BaseActivity {
 								getCreateSingleChannelResult.getType());
 						bundle.putString("title", getCreateSingleChannelResult
 								.getName(getApplicationContext()));
-						LogUtils.JasonDebug("title="+getCreateSingleChannelResult
+						LogUtils.jasonDebug("title="+getCreateSingleChannelResult
 								.getName(getApplicationContext()));
 						IntentUtils.startActivity(UserInfoActivity.this,
 								ChannelActivity.class, bundle);

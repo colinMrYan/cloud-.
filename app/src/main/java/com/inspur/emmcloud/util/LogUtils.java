@@ -16,7 +16,7 @@ public class LogUtils {
 		}
 	}
 	
-	public static void JasonDebug(String message){
+	public static void jasonDebug(String message){
 		if (isDebug) {
 			Log.d("jason", getTraceInfo() + message);
 		}

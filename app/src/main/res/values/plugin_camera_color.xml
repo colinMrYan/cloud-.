@@ -8,7 +8,9 @@
     <color name="albumback">#E1E0DE</color>
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
-    
-   
+
+    <color name="theme_body">#cc22292c</color>
+    <color name="status_bar">#303135</color>
+    <color name="top_bar">#9f556061</color>
 
 </resources>
