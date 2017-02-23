@@ -163,7 +163,7 @@ public class CropImageView extends View {
 		switch (action & MotionEvent.ACTION_MASK) {
 		case MotionEvent.ACTION_DOWN:
 			int selectCircle = isSeletedControllerCircle(x, y);
-			LogUtils.JasonDebug("selectCircle="+selectCircle);
+			LogUtils.jasonDebug("selectCircle="+selectCircle);
 			if (selectCircle > 0) {// 选择控制点
 				ret = true;
 				selectedControllerCicle = selectCircle;// 记录选中控制点编号

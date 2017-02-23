@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.GridView;
 import android.widget.Toast;
 
+import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.imp.plugin.camera.editimage.EditImageActivity;
 import com.inspur.imp.plugin.camera.editimage.utils.BitmapUtils;
 import com.inspur.emmcloud.R;
@@ -432,12 +433,14 @@ public class ImageGridActivity extends ImageBaseActivity implements
 
 	@Override
 	public void onImagesLoaded(List<ImageFolder> imageFolders) {
+		LogUtils.jasonDebug("onImagesLoaded-----------");
 		this.mImageFolders = imageFolders;
 		imagePicker.setImageFolders(imageFolders);
 		if (imageFolders.size() == 0)
 			mImageGridAdapter.refreshData(null);
 		else
 			mImageGridAdapter.refreshData(imageFolders.get(0).images);
+		LogUtils.jasonDebug("src==========="+imageFolders.get(0).images.get(1).path);
 		mImageGridAdapter.setOnImageItemClickListener(this);
 		mGridView.setAdapter(mImageGridAdapter);
 		mImageFolderAdapter.refreshData(imageFolders);

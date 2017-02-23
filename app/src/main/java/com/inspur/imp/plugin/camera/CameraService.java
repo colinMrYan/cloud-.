@@ -374,11 +374,11 @@ public class CameraService extends ImpPlugin {
 		}
 		// 从相册取图片
 		else if (requestCode  ==REQUEST_GELLEY_IMG_SELECT ) {
-			LogUtils.JasonDebug("resultCode="+resultCode);
+			LogUtils.jasonDebug("resultCode="+resultCode);
 			if (resultCode == -2) {
 				if (intent == null) {
 					//解决HCM放弃选择图片时弹出error的问题
-//					LogUtils.JasonDebug("00000000");
+//					LogUtils.jasonDebug("00000000");
 //					this.failPicture(Res.getString("cancel_select"));
 				}else {
 					ArrayList<ImageItem> selectedList = (ArrayList<ImageItem>) intent

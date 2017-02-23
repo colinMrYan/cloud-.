@@ -68,14 +68,14 @@ public class ImagePreviewActivity extends com.inspur.imp.plugin.camera.imagepick
 		boolean isSelected = imagePicker.isSelect(item);
 		mTitleCount.setText(getString(R.string.preview_image_count,
 				mCurrentPosition + 1, mImageItems.size()));
-		LogUtils.JasonDebug("isSelected1=" + isSelected);
+		LogUtils.jasonDebug("isSelected1=" + isSelected);
 		mCbCheck.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView,
 					boolean isChecked) {
 				// TODO Auto-generated method stub
-				LogUtils.JasonDebug("mCbCheck.setOnCheckedChangeListener="
+				LogUtils.jasonDebug("mCbCheck.setOnCheckedChangeListener="
 						+ isChecked);
 			}
 		});
@@ -107,7 +107,7 @@ public class ImagePreviewActivity extends com.inspur.imp.plugin.camera.imagepick
 			public void onClick(View v) {
 				ImageItem imageItem = mImageItems.get(mCurrentPosition);
 				int selectLimit = imagePicker.getSelectLimit();
-				LogUtils.JasonDebug("mCbCheck.isChecked()="
+				LogUtils.jasonDebug("mCbCheck.isChecked()="
 						+ mCbCheck.isChecked());
 				if (mCbCheck.isChecked()) {
 					// Toast.makeText(ImagePreviewActivity.this,

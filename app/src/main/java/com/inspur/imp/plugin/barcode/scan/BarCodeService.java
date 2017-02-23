@@ -71,7 +71,7 @@ public class BarCodeService extends ImpPlugin {
 		if ("generate".equals(action)) {
 			try {
 				if (!paramsObject.isNull("format")) {
-					LogUtils.JasonDebug("executeAndReturn---------22222221");
+					LogUtils.jasonDebug("executeAndReturn---------22222221");
 					String format = paramsObject.getString("format");
 					if (format.equals("QR")) {
 						return generateQrcode(paramsObject);
@@ -117,7 +117,7 @@ public class BarCodeService extends ImpPlugin {
 				int qrSize = dip2px(context, 300);
 				Bitmap bitmap = creatQrCode(content, qrSize);
 				if (bitmap != null) {
-					LogUtils.JasonDebug("11111111111111");
+					LogUtils.jasonDebug("11111111111111");
 					showResultDlg(bitmap);
 					result = "true";
 				}
@@ -157,11 +157,11 @@ public class BarCodeService extends ImpPlugin {
 		Rect rect = new Rect();
 		View view = getActivity().getWindow().getDecorView();// decorView是window中的最顶层view，可以从window中获取到decorView
 		view.getWindowVisibleDisplayFrame(rect);
-		LogUtils.JasonDebug("rect.top="+rect.top);
+		LogUtils.jasonDebug("rect.top="+rect.top);
 		lay.height = dm.heightPixels - rect.top;
 		lay.width = dm.widthPixels;
 		qrCodeDlg.show();
-		LogUtils.JasonDebug("2222222222");
+		LogUtils.jasonDebug("2222222222");
 	}
 
 

@@ -24,7 +24,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="500dp"
         android:layout_centerHorizontal="true"
-        android:text="旋转"/>
+        android:text="@string/rotate"/>
 
     <!-- <com.inspur.imp.plugin.camera.imagepicker.view.crop.CropImageView2
          android:id="@+id/cv_crop_image"

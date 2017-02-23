@@ -25,6 +25,7 @@ import android.widget.ViewFlipper;
 
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.util.LogUtils;
+import com.inspur.emmcloud.util.ToastUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.imp.plugin.camera.editimage.fragment.CropFragment;
 import com.inspur.imp.plugin.camera.editimage.fragment.MainMenuFragment;
@@ -43,6 +44,7 @@ import com.inspur.imp.plugin.photo.UploadPhoto.OnUploadPhotoListener;
 import org.json.JSONObject;
 
 import java.io.File;
+
 
 /**
  * 图片编辑 主页面
@@ -113,6 +115,7 @@ public class EditImageActivity extends FragmentActivity {
 			String targetPath) {
 		Intent intent = new Intent(activity, EditImageActivity.class);
 		intent.putExtra(EditImageActivity.FILE_PATH, srcPath);
+		LogUtils.jasonDebug("srcPath="+srcPath);
 		intent.putExtra(EditImageActivity.EXTRA_OUTPUT, targetPath);
 		activity.startActivityForResult(intent, ACTION_REQUEST_EDITIMAGE);
 	}
@@ -150,7 +153,7 @@ public class EditImageActivity extends FragmentActivity {
 		if (getIntent().hasExtra(EXTRA_NEED_UPLOAD)) {
 			isNeedUpload = getIntent().getBooleanExtra(EXTRA_NEED_UPLOAD, false);
 			String json = getIntent().getStringExtra(EXTRA_PARAM);
-			LogUtils.JasonDebug("json="+json);
+			LogUtils.jasonDebug("json="+json);
 			try {
 				JSONObject jsonObject = new JSONObject(json);
 				if (!jsonObject.isNull("options")) {
@@ -244,7 +247,7 @@ public class EditImageActivity extends FragmentActivity {
 
 		@Override
 		public Fragment getItem(int index) {
-			LogUtils.JasonDebug("index=" + index);
+			LogUtils.jasonDebug("index=" + index);
 			// System.out.println("createFragment-->"+index);
 			if (index == 0)
 				return mMainMenuFragment;// 主菜单
@@ -283,8 +286,15 @@ public class EditImageActivity extends FragmentActivity {
 	private final class LoadImageTask extends AsyncTask<String, Void, Bitmap> {
 		@Override
 		protected Bitmap doInBackground(String... params) {
-			return BitmapUtils.loadImageByPath(params[0], imageWidth,
-					imageHeight,parm_resolution,parm_qualtity);
+			Bitmap bitmap = null;
+			try {
+				bitmap = BitmapUtils.loadImageByPath(params[0], imageWidth,
+						imageHeight,parm_resolution,parm_qualtity);
+			}catch (Exception e){
+				e.printStackTrace();
+			}
+
+			return bitmap;
 		}
 
 		@Override
@@ -295,10 +305,16 @@ public class EditImageActivity extends FragmentActivity {
 				mainBitmap = null;
 				System.gc();
 			}
-			mainBitmap = result;
-			mainImage.setImageBitmap(result);
-			mainImage
-					.setDisplayType(ImageViewTouchBase.DisplayType.FIT_TO_SCREEN);
+			if (result == null){
+				ToastUtils.show(getApplicationContext(),getResources().getString(R.string.img_decode_fail));
+				finish();
+			}else {
+				mainBitmap = result;
+				mainImage.setImageBitmap(result);
+				mainImage
+						.setDisplayType(ImageViewTouchBase.DisplayType.FIT_TO_SCREEN);
+			}
+
 		}
 	}// end inner class
 

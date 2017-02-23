@@ -188,8 +188,8 @@ public class CropImageView extends ImageView {
         mFocusRect.right = mFocusMidPoint.x + mFocusWidth / 2;
         mFocusRect.top = mFocusMidPoint.y - mFocusHeight / 2;
         mFocusRect.bottom = mFocusMidPoint.y + mFocusHeight / 2;
-        LogUtils.JasonDebug("mFocusWidth="+mFocusWidth);
-        LogUtils.JasonDebug("mFocusHeight="+mFocusHeight);
+        LogUtils.jasonDebug("mFocusWidth="+mFocusWidth);
+        LogUtils.jasonDebug("mFocusHeight="+mFocusHeight);
         
         mMaxScale = fitViewScale * MAX_SCALE;
         //确定最终的缩放比例,在适配焦点框的前提下适配显示图片的ImageView，
@@ -449,7 +449,7 @@ public class CropImageView extends ImageView {
      * 旋转图片
      */
     public void RotateImage(){
-    	LogUtils.JasonDebug("RotateImage---------");
+    	LogUtils.jasonDebug("RotateImage---------");
     	Bitmap srcBitmap = ((BitmapDrawable) getDrawable()).getBitmap();
     	if(sumRotateLevel == 0){
     		srcBitmap = rotate(srcBitmap, 90);

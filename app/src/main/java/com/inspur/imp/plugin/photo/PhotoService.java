@@ -153,7 +153,7 @@ public class PhotoService extends ImpPlugin {
 					String bitmapBase64 = Bimp.bitmapToBase64(bitmap);
 					jsonObject.put("thumbnailData", bitmapBase64);
 					String returnData = jsonObject.toString();
-					// LogUtils.JasonDebug("returnData="+returnData);
+					// LogUtils.jasonDebug("returnData="+returnData);
 					this.jsCallback(successCb, returnData);
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
@@ -168,7 +168,7 @@ public class PhotoService extends ImpPlugin {
 				try {
 					JSONObject jsonObject = new JSONObject();
 					String uploadResult = intent.getStringExtra("uploadResult");
-					LogUtils.JasonDebug("uploadResult======="+uploadResult);
+					LogUtils.jasonDebug("uploadResult======="+uploadResult);
 					JSONObject contextObj = new JSONObject(uploadResult);
 					jsonObject.put("context", contextObj);
 					JSONArray dataArray = new JSONArray();
@@ -186,7 +186,7 @@ public class PhotoService extends ImpPlugin {
 					}
 					jsonObject.put("thumbnailData", dataArray);
 					String returnData = jsonObject.toString();
-					 LogUtils.JasonDebug("returnData="+returnData);
+					 LogUtils.jasonDebug("returnData="+returnData);
 					this.jsCallback(successCb, returnData);
 				} catch (Exception e) {
 					// TODO Auto-generated catch block

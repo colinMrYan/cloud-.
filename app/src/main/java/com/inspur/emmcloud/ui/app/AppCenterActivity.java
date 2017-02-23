@@ -113,7 +113,7 @@ public class AppCenterActivity extends BaseActivity {
 
 		@Override
 		public void onPageSelected(int arg0) {
-			LogUtils.JasonDebug("arg0=" + arg0);
+			LogUtils.jasonDebug("arg0=" + arg0);
 			int recommandTabTextColor = arg0 == 0 ? Color.parseColor("#4990E2")
 					: Color.parseColor("#999999");
 			int classTabTextColor = arg0 == 1 ? Color.parseColor("#4990E2")
