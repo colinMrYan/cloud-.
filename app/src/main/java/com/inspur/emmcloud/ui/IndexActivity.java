@@ -35,6 +35,7 @@ import com.inspur.emmcloud.bean.GetAllRobotsResult;
 import com.inspur.emmcloud.bean.GetAppTabsResult;
 import com.inspur.emmcloud.bean.GetExceptionResult;
 import com.inspur.emmcloud.bean.GetSearchChannelGroupResult;
+import com.inspur.emmcloud.bean.ReactNativeUpdateBean;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.interf.OnTabReselectListener;
 import com.inspur.emmcloud.interf.OnWorkFragmentDataChanged;
@@ -43,6 +44,7 @@ import com.inspur.emmcloud.util.AppUtils;
 import com.inspur.emmcloud.util.ChannelGroupCacheUtils;
 import com.inspur.emmcloud.util.ContactCacheUtils;
 import com.inspur.emmcloud.util.DbCacheUtils;
+import com.inspur.emmcloud.util.FileSafeCode;
 import com.inspur.emmcloud.util.FileUtils;
 import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.NetUtils;
@@ -55,13 +57,19 @@ import com.inspur.emmcloud.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.MyFragmentTabHost;
 import com.inspur.emmcloud.widget.tipsview.TipsView;
+import com.inspur.reactnative.ReactNativeFlow;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.facebook.react.common.ApplicationHolder.getApplication;
+import static com.inspur.emmcloud.util.FileUtils.readFile;
+import static com.inspur.reactnative.ReactNativeFlow.moveFolder;
 
 /**
  * 主页面
@@ -70,17 +78,18 @@ import java.util.List;
  *
  */
 public class IndexActivity extends BaseFragmentActivity implements
-		OnTabChangeListener, OnTouchListener {
-	private static final int SYNC_ALL_BASE_DATA_SUCCESS = 0;
-	private static final int SYNC_CONTACT_SUCCESS = 1;
-	private long lastBackTime;
-	public MyFragmentTabHost mTabHost;
-	private static TextView newMessageTipsText;
-	private static RelativeLayout newMessageTipsLayout;
-	private OnWorkFragmentDataChanged workFragmentListener;
-	private Handler handler;
-	private boolean isHasCacheContact = false;
-	private TipsView tipsView;
+        OnTabChangeListener, OnTouchListener {
+    private static final int SYNC_ALL_BASE_DATA_SUCCESS = 0;
+    private static final int SYNC_CONTACT_SUCCESS = 1;
+    private long lastBackTime;
+    public MyFragmentTabHost mTabHost;
+    private static TextView newMessageTipsText;
+    private static RelativeLayout newMessageTipsLayout;
+    private OnWorkFragmentDataChanged workFragmentListener;
+    private Handler handler;
+    private boolean isHasCacheContact = false;
+    private TipsView tipsView;
+    private String reactNativeDicPath = "";
 	private LoadingDialog loadingDlg;
 
 	@Override
@@ -98,7 +107,7 @@ public class IndexActivity extends BaseFragmentActivity implements
 			loadingDlg.show();
 		}
 		getAllContact();
-		
+
 		getAllRobots();
 		initTabView();
 		if (!AppUtils.isApkDebugable(IndexActivity.this)) {
@@ -107,7 +116,54 @@ public class IndexActivity extends BaseFragmentActivity implements
 		/**从服务端获取显示tab**/
 		getAppTabs();
 //		startUploadCollectService();
-	}
+        initReactNative();
+//        boolean moveSuccess = FileUtils.copyFolder(reactNativeDicPath+"/current",reactNativeDicPath+"/temp");
+//        boolean moveSuccess = ReactNativeFlow.moveFolder(reactNativeDicPath+"/current",reactNativeDicPath+"/temp");
+//        LogUtils.YfcDebug("移动是否成功："+moveSuccess);
+        File file = new File("/sdcard/IMP-Cloud/cache/cloud/default.zip");
+        try {
+            LogUtils.YfcDebug("获取zip文件的sha1"+ FileSafeCode.getSha1(file));
+            LogUtils.YfcDebug("获取zip文件的md5"+ FileSafeCode.getMD5(file));
+            LogUtils.YfcDebug("获取zip文件的crc"+ FileSafeCode.getCRC32(file));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 初始化ReactNative
+     */
+    private void initReactNative() {
+        reactNativeDicPath = getFilesDir().getPath();
+        if(!ReactNativeFlow.checkBundleFileIsExist(reactNativeDicPath+"/current/default/index.android.bundle")){
+            LogUtils.YfcDebug("IndexActivity没有检测到Bundle");
+            ReactNativeFlow.initReactNative(IndexActivity.this);
+        }else{
+            if(ReactNativeFlow.moreThanHalfHour("")){
+                updateReactNative();
+            }
+        }
+    }
+
+    /**
+     * 更新ReactNative
+     */
+    private void updateReactNative() {
+        LogUtils.YfcDebug("IndexActivity发起检查更新的请求");
+        AppAPIService appApiService = new AppAPIService(IndexActivity.this);
+        appApiService.setAPIInterface(new WebService());
+        //此处未写完读取json路径
+        StringBuilder describeVersionAndTime = FileUtils.readFile(reactNativeDicPath + "/current/xxx.json","UTF-8");
+        try {
+            JSONObject json = new JSONObject(String.valueOf(describeVersionAndTime));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        if(NetUtils.isNetworkConnected(IndexActivity.this)){
+            appApiService.getReactNativeUpdate(0,0L);
+        }
+    }
+
 
     /***
      * 打开app应用行为分析上传的Service;
@@ -172,7 +228,7 @@ public class IndexActivity extends BaseFragmentActivity implements
 					if (loadingDlg != null && loadingDlg.isShowing()) {
 						loadingDlg.dismiss();
 					}
-					
+
 					((MyApplication) getApplicationContext())
 							.setIsContactReady(true);
 					sendCreatChannelGroupIconBroadCaset();
@@ -647,6 +703,54 @@ public class IndexActivity extends BaseFragmentActivity implements
             WebServiceMiddleUtils.hand(IndexActivity.this, error);
         }
 
+
+        @Override
+        public void returnReactNativeUpdateSuccess(ReactNativeUpdateBean reactNativeUpdateBean) {
+            updateReactNativeWithOrder(reactNativeUpdateBean);
+        }
+
+        @Override
+        public void returnReactNativeUpdateFail(String error) {
+            WebServiceMiddleUtils.hand(IndexActivity.this,error);
+        }
+
+    }
+
+    /**
+     * 按照更新指令更新ReactNative
+     * @param reactNativeUpdateBean
+     */
+    private void updateReactNativeWithOrder(ReactNativeUpdateBean reactNativeUpdateBean) {
+        int state = ReactNativeFlow.checkReactNativeOperation(reactNativeUpdateBean.getState());
+        LogUtils.YfcDebug("返回请求结果state是："+state);
+        if(state == ReactNativeFlow.REACT_NATIVE_RESET){
+            //删除current和temp目录，重新解压assets下的zip
+            resetReactNative();
+            LogUtils.YfcDebug("重置操作");
+        }else if(state == ReactNativeFlow.REACT_NATIVE_REVERT){
+            //拷贝temp下的current到app内部current目录下
+            moveFolder(reactNativeDicPath+"/temp",reactNativeDicPath+"/current");
+            LogUtils.YfcDebug("回滚操作");
+        }else if(state == ReactNativeFlow.REACT_NATIVE_FORWORD){
+            //下载zip包并检查是否完整，完整则解压，不完整则重新下载,完整则把current移动到temp下，把新包解压到current
+            ReactNativeFlow.downLoadZipFile(IndexActivity.this,reactNativeUpdateBean.getUrl());
+            LogUtils.YfcDebug("更新版本操作");
+        }else if(state == ReactNativeFlow.REACT_NATIVE_UNKNOWN){
+            //发生了未知错误，下载state为0
+            //同Reset的情况，删除current和temp目录，重新解压assets下的zip
+            resetReactNative();
+            LogUtils.YfcDebug("未知错误重置操作");
+        }
+    }
+
+    /**
+     * 重新整理目录恢复状态
+     */
+    private void resetReactNative() {
+        FileUtils.deleteFile(reactNativeDicPath+"/temp");
+        FileUtils.deleteFile(reactNativeDicPath+"/current");
+        ReactNativeFlow.initReactNative(IndexActivity.this);
+//        FindFragment.reactNativeViewNeedToRefresh = true;
     }
 
 }
