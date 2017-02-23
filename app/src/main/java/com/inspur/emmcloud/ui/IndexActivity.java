@@ -1,12 +1,5 @@
 package com.inspur.emmcloud.ui;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
@@ -59,50 +52,62 @@ import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.ToastUtils;
 import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
+import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.MyFragmentTabHost;
 import com.inspur.emmcloud.widget.tipsview.TipsView;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 主页面
  *
  * @author Administrator
+ *
  */
 public class IndexActivity extends BaseFragmentActivity implements
-        OnTabChangeListener, OnTouchListener {
-    private static final int SYNC_ALL_BASE_DATA_SUCCESS = 0;
-    private static final int SYNC_CONTACT_SUCCESS = 1;
-    private static final int READ_ERROR_SUCCESS = 3;
-    private long lastBackTime;
-    public MyFragmentTabHost mTabHost;
-    private static TextView newMessageTipsText;
-    private static RelativeLayout newMessageTipsLayout;
-    private OnWorkFragmentDataChanged workFragmentListener;
-    private Handler handler;
-    private boolean isHasCacheContact = false;
-    private TipsView tipsView;
+		OnTabChangeListener, OnTouchListener {
+	private static final int SYNC_ALL_BASE_DATA_SUCCESS = 0;
+	private static final int SYNC_CONTACT_SUCCESS = 1;
+	private long lastBackTime;
+	public MyFragmentTabHost mTabHost;
+	private static TextView newMessageTipsText;
+	private static RelativeLayout newMessageTipsLayout;
+	private OnWorkFragmentDataChanged workFragmentListener;
+	private Handler handler;
+	private boolean isHasCacheContact = false;
+	private TipsView tipsView;
+	private LoadingDialog loadingDlg;
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_index);
-        ((MyApplication) getApplicationContext()).addActivity(this);
-        ((MyApplication) getApplicationContext()).setIndexActvityRunning(true);
-        ((MyApplication) getApplicationContext()).closeAllDb();
-        DbCacheUtils.initDb(getApplicationContext());
-        handMessage();
-        getIsHasCacheContact();
-        getAllContact();
-
-        getAllRobots();
-        initTabView();
-        if (!AppUtils.isApkDebugable(IndexActivity.this)) {
-            uploadLastTimeException();
-        }
-        /**从服务端获取显示tab**/
-        getAppTabs();
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_index);
+		((MyApplication) getApplicationContext()).addActivity(this);
+		((MyApplication) getApplicationContext()).setIndexActvityRunning(true);
+		((MyApplication) getApplicationContext()).closeAllDb();
+		DbCacheUtils.initDb(getApplicationContext());
+		loadingDlg = new LoadingDialog(IndexActivity.this,getString(R.string.app_init));
+		handMessage();
+		getIsHasCacheContact();
+		if (!isHasCacheContact) {
+			loadingDlg.show();
+		}
+		getAllContact();
+		
+		getAllRobots();
+		initTabView();
+		if (!AppUtils.isApkDebugable(IndexActivity.this)) {
+			uploadLastTimeException();
+		}
+		/**从服务端获取显示tab**/
+		getAppTabs();
 //		startUploadCollectService();
-        LogUtils.YfcDebug("IndexActivity启动");
-    }
+	}
 
     /***
      * 打开app应用行为分析上传的Service;
@@ -159,33 +164,39 @@ public class IndexActivity extends BaseFragmentActivity implements
         // TODO Auto-generated method stub
         handler = new Handler() {
 
-            @Override
-            public void handleMessage(Message msg) {
-                // TODO Auto-generated method stub
-                switch (msg.what) {
-                    case SYNC_ALL_BASE_DATA_SUCCESS:
-                        ((MyApplication) getApplicationContext())
-                                .setIsContactReady(true);
-                        sendContactReadyBroadCaset();
-                        break;
-                    case SYNC_CONTACT_SUCCESS:
-                        getAllChannelGroup();
-                        break;
-                    default:
-                        break;
-                }
-            }
+			@Override
+			public void handleMessage(Message msg) {
+				// TODO Auto-generated method stub
+				switch (msg.what) {
+				case SYNC_ALL_BASE_DATA_SUCCESS:
+					if (loadingDlg != null && loadingDlg.isShowing()) {
+						loadingDlg.dismiss();
+					}
+					
+					((MyApplication) getApplicationContext())
+							.setIsContactReady(true);
+					sendCreatChannelGroupIconBroadCaset();
+					break;
+				case SYNC_CONTACT_SUCCESS:
+					getAllChannelGroup();
+					break;
+				default:
+					break;
+				}
+			}
 
         };
     }
 
-    /**
-     * 通讯录完成时发送广播
-     */
-    private void sendContactReadyBroadCaset() {
-        // TODO Auto-generated method stub
-        Intent intnet = new Intent("contact_ready");
-        sendBroadcast(intnet);
+	/**
+	 * 通讯录完成时发送广播
+	 */
+	private void sendCreatChannelGroupIconBroadCaset() {
+		// TODO Auto-generated method stub
+		//当通讯录完成时需要刷新头像
+		Intent intent = new Intent("message_notify");
+		intent.putExtra("command", "creat_group_icon");
+		sendBroadcast(intent);
 
     }
 

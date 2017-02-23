@@ -934,6 +934,7 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 			// TODO Auto-generated method stub
 			String command = intent.getExtras().getString("command");
 			if (command.equals("creat_group_icon")) {
+				adapter.notifyDataSetChanged();
 				creatGroupIcon();
 			} else if (command.equals("refresh_session_list")) {
 				getChannelContent();

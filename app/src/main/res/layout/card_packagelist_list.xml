@@ -12,7 +12,7 @@
         android:layout_marginTop="10dp"
         
         android:layout_width="match_parent"
-        android:layout_height="@dimen/header_height" >
+        android:layout_height="46dp" >
 
         <TextView
             android:id="@+id/cardpackage_item_text"

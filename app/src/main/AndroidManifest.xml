@@ -526,7 +526,6 @@
         </receiver>
 
         <!-- 极光推送开始 -->
-
         <!-- Required SDK核心功能-->
         <activity
             android:name="cn.jpush.android.ui.PushActivity"

@@ -38,6 +38,10 @@ android {
         }
         multiDexEnabled true
     }
+
+    sourceSets.main{
+            jniLibs.srcDirs = ['src/libs']
+    }
     buildTypes {
         release {
             minifyEnabled enableProguardInReleaseBuilds
