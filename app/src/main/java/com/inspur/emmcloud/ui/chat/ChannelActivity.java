@@ -314,6 +314,10 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
                 Msg msg = msgList.get(position);
                 String msgType = msg.getType();
                 String mid = "";
+                //当消息处于发送中状态时无法点击
+                if (msg.getSending()){
+                    return;
+                }
                 if (msgType.equals("image") || msgType.equals("res_image")
                         || msgType.equals("res_file")) {
                     mid = msg.getMid();
