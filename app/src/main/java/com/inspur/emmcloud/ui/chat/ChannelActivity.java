@@ -27,13 +27,14 @@ import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.RelativeLayout.LayoutParams;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.lzy.imagepicker.ImagePicker;
+import com.inspur.imp.plugin.camera.editimage.EditImageActivity;
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
@@ -48,6 +49,8 @@ import com.inspur.emmcloud.bean.GetSendMsgResult;
 import com.inspur.emmcloud.bean.Msg;
 import com.inspur.emmcloud.bean.getMsgResult;
 import com.inspur.emmcloud.broadcastreceiver.MsgReceiver;
+import com.inspur.emmcloud.config.MyAppConfig;
+import com.inspur.emmcloud.ui.app.groupnews.NewsWebDetailActivity;
 import com.inspur.emmcloud.ui.contact.RobotInfoActivity;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
 import com.inspur.emmcloud.util.ChannelCacheUtils;
@@ -76,7 +79,7 @@ import com.inspur.emmcloud.widget.ECMChatInputMenu.ChatInputMenuListener;
 import com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout;
 import com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout.OnRefreshListener;
 import com.inspur.emmcloud.widget.pullableview.PullableListView;
-
+import com.inspur.imp.plugin.camera.imagepicker.ImagePicker;
 
 /**
  * com.inspur.emmcloud.ui.ChannelActivity
@@ -137,15 +140,17 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
 
 		channelType = getIntent().getExtras().getString("channelType");
 		msgList = MsgCacheUtil.getHistoryMsgList(getApplicationContext(),
-				channelId, "", 15);
+				channelId, "", 10);
 		title = getIntent().getExtras().getString("title");
 		LogUtils.JasonDebug("title=" + title);
 		if (channelType.equals("DIRECT")) {
 			title = DirectChannelUtils.getDirectChannelTitle(
 					getApplicationContext(), title);
-		}else if (channelType.equals("SERVICE")) {
-			uid = DirectChannelUtils.getRobotInfo(getApplicationContext(), title).getId();
-			title = DirectChannelUtils.getRobotInfo(getApplicationContext(), title).getName();
+		} else if (channelType.equals("SERVICE")) {
+			uid = DirectChannelUtils.getRobotInfo(getApplicationContext(),
+					title).getId();
+			title = DirectChannelUtils.getRobotInfo(getApplicationContext(),
+					title).getName();
 		}
 	}
 
@@ -199,7 +204,7 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
 	private void handleChatInputMenu() {
 		Channel channel = ChannelCacheUtils.getChannel(ChannelActivity.this,
 				channelId);
-		if ((channel!=null) && channel.getInputs().equals("0")) {
+		if ((channel != null) && channel.getInputs().equals("0")) {
 			// shareMsg();
 			chatInputMenu.setVisibility(View.GONE);
 		} else {
@@ -261,7 +266,7 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
 		Channel channel = ChannelCacheUtils.getChannel(ChannelActivity.this,
 				channelId);
 		String inputs = "";
-		if(channel != null){
+		if (channel != null) {
 			inputs = channel.getInputs();
 		}
 		if (!StringUtils.isBlank(inputs)) {
@@ -315,15 +320,30 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
 				if (msgType.equals("image") || msgType.equals("res_image")
 						|| msgType.equals("res_file")) {
 					mid = msg.getMid();
-				} else if (msgType.equals("comment")
-						|| msgType.equals("text_comment")) {
-					mid = msg.getCommentMid();
-				}
-				if (!StringUtils.isBlank(mid)) {
 					bundle.putString("mid", mid);
 					IntentUtils.startActivity(ChannelActivity.this,
 							ChannelMsgDetailActivity.class, bundle);
+				} else if (msgType.equals("comment")
+						|| msgType.equals("text_comment")) {
+					mid = msg.getCommentMid();
+					bundle.putString("mid", mid);
+					IntentUtils.startActivity(ChannelActivity.this,
+							ChannelMsgDetailActivity.class, bundle);
+				} else if (msgType.equals("res_link")) {
+					String msgBody = msg.getBody();
+					String linkTitle = JSONUtils.getString(msgBody, "title", "");
+					String linkDigest = JSONUtils.getString(msgBody, "digest", "");
+					String linkUrl = JSONUtils.getString(msgBody, "url", "");
+					String linkPoster = JSONUtils.getString(msgBody, "poster", "");
+					bundle.putString("url", linkUrl);
+					bundle.putString("title", linkTitle);
+					bundle.putString("digest", linkDigest);
+					bundle.putString("poster", linkPoster);
+					bundle.putBoolean("tran", true);
+					IntentUtils.startActivity(ChannelActivity.this,
+							NewsWebDetailActivity.class, bundle);
 				}
+				
 			}
 		});
 		/**
@@ -358,7 +378,7 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
 	 */
 	protected void openGallery() {
 		Intent i = new Intent(Intent.ACTION_PICK,
-				MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+				android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
 		startActivityForResult(i, GELLARY_RESULT);
 	}
 
@@ -370,7 +390,7 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
 		Intent intentFromCapture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 		// 判断存储卡是否可以用，可用进行存储
 		if (Environment.getExternalStorageState().equals(
-				Environment.MEDIA_MOUNTED)) {
+				android.os.Environment.MEDIA_MOUNTED)) {
 			File appDir = new File(Environment.getExternalStorageDirectory(),
 					"DCIM");
 			if (!appDir.exists()) {
@@ -413,10 +433,17 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
 
 			} else if (requestCode == CAMERA_RESULT
 					&& NetUtils.isNetworkConnected(getApplicationContext())) {
+				String cameraImgPath =  Environment.getExternalStorageDirectory()+"/DCIM/"+PreferencesUtils.getString(ChannelActivity.this, "capturekey");
+				EditImageActivity.start(ChannelActivity.this, cameraImgPath, MyAppConfig.LOCAL_IMG_CREATE_PATH);
+				
+			}else if (requestCode == EditImageActivity.ACTION_REQUEST_EDITIMAGE) {
+				
 				Msg localMsg = MsgRecourceUploadUtils.uploadMsgImg(
 						ChannelActivity.this, data, apiService);
 				addLocalMessage(localMsg);
 			}
+			
+			
 			// else if (requestCode == GELLARY_RESULT
 			// && NetUtils.isNetworkConnected(getApplicationContext())) {
 			// // 图库选择图片返回
@@ -427,8 +454,8 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
 			else if (requestCode == MENTIONS_RESULT) {
 				// @返回
 				chatInputMenu.setMentionData(data);
-			} 
-		}else if (resultCode == ImagePicker.RESULT_CODE_ITEMS) { // 图库选择图片返回
+			}
+		} else if (resultCode == ImagePicker.RESULT_CODE_ITEMS) { // 图库选择图片返回
 			if (data != null && requestCode == GELLARY_RESULT) {
 				Msg localMsg = MsgRecourceUploadUtils.uploadMsgImg(
 						ChannelActivity.this, data, apiService);
@@ -468,7 +495,7 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
 	/**
 	 * 发送消息
 	 * 
-	 * @param
+	 * @param newImg
 	 * @param fakeMessageId
 	 */
 	protected void sendMsg(String content, String type, String fakeMessageId) {
@@ -529,8 +556,8 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
 	private void showChannelInfo() {
 		Bundle bundle = new Bundle();
 		bundle.putString("cid", channelId);
-//		Channel channel = ChannelCacheUtils.getChannel(ChannelActivity.this,
-//				channelId);
+		// Channel channel = ChannelCacheUtils.getChannel(ChannelActivity.this,
+		// channelId);
 		// String inputs = channel.getInputs();
 		// if(StringUtils.isBlank(inputs) || Integer.parseInt(inputs) == 0){
 		//
@@ -597,10 +624,8 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
 		public View getView(int position, View convertView, ViewGroup parent) {
 			final Msg msg = msgList.get(position);
 			String type = msg.getType();
-//			LogUtils.YfcDebug("消息的body："+msg.getBody());
 			LayoutInflater vi = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
 			convertView = vi.inflate(R.layout.chat_msg_card_parent_view, null);
-			showCommonView(convertView, position);
 			RelativeLayout cardLayout = (RelativeLayout) convertView
 					.findViewById(R.id.card_layout);
 			View childView = null;
@@ -628,7 +653,7 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
 			} else if (type.equals("res_link")) {
 				TextView newsCommentText = (TextView) convertView
 						.findViewById(R.id.news_comment_text);
-//				newsCommentText.setVisibility(View.VISIBLE);
+				// newsCommentText.setVisibility(View.VISIBLE);
 				newsCommentText.setOnClickListener(new OnClickListener() {
 
 					@Override
@@ -660,25 +685,8 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
 				DisplayResUnknownMsg.displayResUnknownMsg(ChannelActivity.this,
 						childView, msg);
 			}
-			// else if (type.equals("act_meeting")) {
-			// childView = vi.inflate(R.layout.child_msg_meeting_card_view,
-			// null);
-			// DisplayActMeetingMsg.displayMeetingInviteMsg(
-			// ChannelActivity.this, apiService, childView, msg);
-			//
-			// } else if (type.equals("act_meeting_cancel")) {
-			// childView = vi.inflate(
-			// R.layout.child_msg_meeting_notify_card_view, null);
-			// DisplayActMeetingCancelMsg.displayCancelMeetingMsg(
-			// ChannelActivity.this, childView, msg);
-			// } else if (type.equals("act_meeting_approve")) {
-			// childView = vi.inflate(R.layout.child_msg_meeting_card_view,
-			// null);
-			// DisplayActMeetingApproveMsg.displayMeetingApproveMsg(
-			// ChannelActivity.this, apiService, childView, msg);
-			// }
-
 			cardLayout.addView(childView);
+			showCommonView(convertView, position, cardLayout);
 			return convertView;
 		}
 
@@ -686,36 +694,26 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
 		 * 显示公共的View
 		 * 
 		 * @param convertView
-		 * @param
+		 * @param msg
 		 */
-		private void showCommonView(View convertView, int position) {
+		private void showCommonView(View convertView, int position,
+				RelativeLayout cardLayout) {
 			final Msg msg = msgList.get(position);
 			showUserName(convertView, msg);
 			showMsgSendTime(convertView, msg, position);
 			showUserPhoto(convertView, msg);
-			showMsgCardArrow(convertView, msg);
+			showCardLayout(convertView, cardLayout, msg);
 		}
 
-		/**
-		 * 展示卡片左右两个角
-		 * 
-		 * @param convertView
-		 * @param msg
-		 */
-		private void showMsgCardArrow(View convertView, Msg msg) {
+		private void showCardLayout(View convertView,
+				RelativeLayout cardLayout, Msg msg) {
 			// TODO Auto-generated method stub
-			ImageView leftArrowImg = (ImageView) convertView
-					.findViewById(R.id.left_arrow_img);
-			ImageView rightArrowImg = (ImageView) convertView
-					.findViewById(R.id.right_arrow_img);
-			if (msg.getUid().equals(
-					((MyApplication) getApplicationContext()).getUid())) {
-				leftArrowImg.setVisibility(View.INVISIBLE);
-				rightArrowImg.setVisibility(View.VISIBLE);
-			} else {
-				leftArrowImg.setVisibility(View.VISIBLE);
-				rightArrowImg.setVisibility(View.INVISIBLE);
-			}
+			boolean isMyMsg = msg.getUid().equals(
+					((MyApplication) getApplicationContext()).getUid());
+			 ((View)convertView.findViewById(R.id.card_cover_view)).setBackgroundResource(isMyMsg?R.drawable.ic_chat_msg_img_cover_arrow_right:R.drawable.ic_chat_msg_img_cover_arrow_left);
+			 LayoutParams params = (LayoutParams) cardLayout.getLayoutParams();
+				params.addRule(isMyMsg?RelativeLayout.ALIGN_PARENT_RIGHT:RelativeLayout.ALIGN_LEFT);
+				cardLayout.setLayoutParams(params);
 		}
 
 		/**
@@ -764,7 +762,6 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
 			}
 		}
 
-
 		/**
 		 * 展示用户头像
 		 * 
@@ -775,15 +772,18 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
 			// TODO Auto-generated method stub
 			ImageView senderPhotoImg = (ImageView) convertView
 					.findViewById(R.id.sender_photo_img);
-			ImageView robotSuperscriptImg = (ImageView) convertView.findViewById(R.id.msg_superscript_img);
+			ImageView robotSuperscriptImg = (ImageView) convertView
+					.findViewById(R.id.msg_superscript_img);
 			if (msg.getUid().equals(
 					((MyApplication) getApplicationContext()).getUid())) {
 				senderPhotoImg.setVisibility(View.INVISIBLE);
 			} else {
 				senderPhotoImg.setVisibility(View.VISIBLE);
 				String iconUrl = UriUtils.getChannelImgUri(msg.getUid());
-				if(channelType.equals("SERVICE")){
-					iconUrl = UriUtils.getRobotIconUri(RobotCacheUtils.getRobotById(ChannelActivity.this, msg.getUid()).getAvatar());
+				if (channelType.equals("SERVICE")) {
+					iconUrl = UriUtils.getRobotIconUri(RobotCacheUtils
+							.getRobotById(ChannelActivity.this, msg.getUid())
+							.getAvatar());
 				}
 				new ImageDisplayUtils(ChannelActivity.this,
 						R.drawable.icon_person_default).display(senderPhotoImg,
@@ -803,13 +803,13 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
 						}
 					}
 				});
-				
-				//去掉机器人角标
-//				if (channelType.equals("SERVICE")&&!isMyMsg(msg)) {
-//					robotSuperscriptImg.setVisibility(View.VISIBLE);
-//				} else {
-//					robotSuperscriptImg.setVisibility(View.GONE);
-//				}
+
+				// 去掉机器人角标
+				// if (channelType.equals("SERVICE")&&!isMyMsg(msg)) {
+				// robotSuperscriptImg.setVisibility(View.VISIBLE);
+				// } else {
+				// robotSuperscriptImg.setVisibility(View.GONE);
+				// }
 			}
 		}
 
@@ -828,14 +828,15 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
 			return msgList.size();
 		}
 	};
-	
+
 	/**
 	 * 判断是否自己的消息
+	 * 
 	 * @param msg
 	 * @return
 	 */
-	private boolean isMyMsg(Msg msg){
-		String uid = ((MyApplication)getApplication()).getUid();
+	private boolean isMyMsg(Msg msg) {
+		String uid = ((MyApplication) getApplication()).getUid();
 		return msg.getUid().equals(uid);
 	}
 

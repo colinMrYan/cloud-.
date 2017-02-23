@@ -134,7 +134,9 @@ public class ChannelCacheUtils {
 	public static String getChannelType(Context context, String cid){
 		String type = "";
 		try {
-			type = DbCacheUtils.getDb(context).findById(Channel.class, cid).getType();
+			if (!StringUtils.isBlank(cid)){
+				type = DbCacheUtils.getDb(context).findById(Channel.class, cid).getType();
+			}
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();

@@ -3,7 +3,7 @@ package com.inspur.emmcloud.ui.chat;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.view.View;
-import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -25,13 +25,12 @@ import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListene
 public class DisplayResImageMsg {
 	/**
 	 * 展示图片资源卡片
-	 *
 	 * @param context
 	 * @param convertView
 	 * @param msg
-	 */
+     */
 	public static void displayResImgMsg(final Activity context,
-										View convertView, final Msg msg) {
+			View convertView, final Msg msg) {
 		final ImageView imageView = (ImageView) convertView
 				.findViewById(R.id.content_img);
 		final TextView longImgText = (TextView) convertView.findViewById(R.id.long_img_text);
@@ -53,7 +52,7 @@ public class DisplayResImageMsg {
 		ImageLoader.getInstance().displayImage(imageUri, imageView, options, new SimpleImageLoadingListener(){
 			@Override
 			public void onLoadingComplete(String imageUri, View view,
-										  Bitmap loadedImage) {
+					Bitmap loadedImage) {
 				FadeInBitmapDisplayer.animate(imageView, 800);
 				int minW = DensityUtil.dip2px(context, 116);
 				int minH = DensityUtil.dip2px(context, 94);
@@ -63,7 +62,7 @@ public class DisplayResImageMsg {
 				float HWMaxRadio = (float) (maxH*1.0/minW);
 				int w = loadedImage.getWidth();
 				int h = loadedImage.getHeight();
-				ViewGroup.LayoutParams params = imageView.getLayoutParams();
+				LayoutParams params = imageView.getLayoutParams();
 				if (w == h) {
 					params.width = minW;
 					params.height = minW;
@@ -80,10 +79,9 @@ public class DisplayResImageMsg {
 						longImgText.setVisibility(View.VISIBLE);
 					}
 				}
-				imageView.setLayoutParams(params);
+			 imageView.setLayoutParams(params);
 			}
 		});
-
+		
 	}
-
 }

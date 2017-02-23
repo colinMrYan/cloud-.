@@ -11,11 +11,13 @@ import android.text.SpannableString;
 import android.text.method.LinkMovementMethod;
 import android.view.View;
 import android.widget.RelativeLayout;
+import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.Msg;
+import com.inspur.emmcloud.util.DensityUtil;
 import com.inspur.emmcloud.util.JSONUtils;
 import com.inspur.emmcloud.util.MentionsAndUrlShowUtils;
 import com.inspur.emmcloud.util.TransHtmlToTextUtils;
@@ -52,11 +54,17 @@ public class DisplayTxtRichMsg {
 		SpannableString spannableString = MentionsAndUrlShowUtils
 				.handleMentioin(source, mentionList, urlList);
 		richText.setText(spannableString);
-		((RelativeLayout) convertView.findViewById(R.id.root_layout))
-				.setBackgroundResource(isMyMsg ? R.drawable.shape_chat_msg_card_my
-						: R.drawable.shape_chat_msg_card_other);
+		richText.setBackgroundColor(context.getResources().getColor(
+				isMyMsg ? R.color.header_bg : R.color.white));
 		richText.setTextColor(context.getResources().getColor(
 				isMyMsg ? R.color.white : R.color.black));
+		int normalPadding = DensityUtil.dip2px(context, 10);
+		int arrowPadding = DensityUtil.dip2px(context, 8);
+		if (isMyMsg) {
+			richText.setPadding(normalPadding, normalPadding, normalPadding+arrowPadding, normalPadding);
+		}else {
+			richText.setPadding(normalPadding+arrowPadding, normalPadding,normalPadding , normalPadding);
+		}
 		TransHtmlToTextUtils.stripUnderlines(
 				richText,
 				context.getResources().getColor(

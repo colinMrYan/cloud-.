@@ -1,19 +1,6 @@
 package com.inspur.emmcloud;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Locale;
-
-import org.xutils.x;
-import org.xutils.http.RequestParams;
-
 import android.app.Activity;
-import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
@@ -21,13 +8,14 @@ import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.os.Environment;
 import android.os.Parcelable;
-import cn.jpush.android.api.JPushInterface;
+import android.support.multidex.MultiDexApplication;
 
 import com.alibaba.fastjson.JSON;
-import com.facebook.react.*;
+import com.facebook.react.ReactApplication;
+import com.facebook.react.ReactNativeHost;
+import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
-import com.inspur.imp.api.Res;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.bean.GetMyInfoResult;
 import com.inspur.emmcloud.bean.Language;
@@ -41,7 +29,7 @@ import com.inspur.emmcloud.util.OauthCallBack;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.UriUtils;
-
+import com.inspur.imp.api.Res;
 import com.inspur.mdm.utils.MDMResUtils;
 import com.inspur.reactnative.AuthorizationManagerPackage;
 import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiskCache;
@@ -52,6 +40,20 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
 
+import org.xutils.http.RequestParams;
+import org.xutils.x;
+
+import java.io.File;
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Locale;
+
+import cn.jpush.android.api.JPushInterface;
+
 
 
 /**
@@ -59,7 +61,7 @@ import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
  * Application class
  * 
  */
-public class MyApplication extends Application implements  ReactApplication{
+public class MyApplication extends MultiDexApplication implements  ReactApplication{
 	private static final String TAG = "MyApplication";
 	private List<Activity> activityList = new LinkedList<Activity>();
 	private List<Activity> contactActivityList = new LinkedList<Activity>();

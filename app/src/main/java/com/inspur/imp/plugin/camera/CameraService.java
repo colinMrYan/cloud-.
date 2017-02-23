@@ -1,34 +1,5 @@
 package com.inspur.imp.plugin.camera;
 
-import android.app.Activity;
-import android.content.ContentValues;
-import android.content.Intent;
-import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.Bitmap.CompressFormat;
-import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
-import android.media.ExifInterface;
-import android.net.Uri;
-import android.os.Environment;
-import android.provider.MediaStore;
-import android.util.Base64;
-import android.widget.Toast;
-
-import com.lzy.imagepicker.ImagePicker;
-import com.lzy.imagepicker.bean.ImageItem;
-import com.lzy.imagepicker.ui.ImageGridActivity;
-import com.lzy.imagepicker.view.CropImageView;
-import com.inspur.emmcloud.util.ImageDisplayUtils;
-import com.inspur.emmcloud.util.LogUtils;
-import com.inspur.imp.api.Res;
-import com.inspur.imp.api.iLog;
-import com.inspur.imp.plugin.ImpPlugin;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -39,6 +10,35 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Date;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import android.app.Activity;
+import android.content.ContentValues;
+import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.Bitmap.CompressFormat;
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
+import android.net.Uri;
+import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.util.Base64;
+import android.widget.Toast;
+
+import com.inspur.emmcloud.util.ImageDisplayUtils;
+import com.inspur.emmcloud.util.LogUtils;
+import com.inspur.imp.api.Res;
+import com.inspur.imp.api.iLog;
+import com.inspur.imp.plugin.ImpPlugin;
+import com.inspur.imp.plugin.camera.imagepicker.ImagePicker;
+import com.inspur.imp.plugin.camera.imagepicker.bean.ImageItem;
+import com.inspur.imp.plugin.camera.imagepicker.ui.ImageGridActivity;
+import com.inspur.imp.plugin.camera.imagepicker.view.CropImageView;
 
 /**
  * 进入相册选择图片进行上传
@@ -90,8 +90,6 @@ public class CameraService extends ImpPlugin {
 	private String successCb, failCb;
 
 	public static int num = 8;// 可以选择的图片数目
-
-
 
 	@Override
 	public void execute(String action, JSONObject paramsObject) {
@@ -271,6 +269,7 @@ public class CameraService extends ImpPlugin {
 	 * IMP代码修改处
 	 */
 	public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+		PublicWay.photoService = null;
 		// 照相取得图片
 		if (requestCode == CAMERA) {
 			LogUtils.debug("jason", "onActivityResult----");
@@ -325,7 +324,7 @@ public class CameraService extends ImpPlugin {
 							// returned media store Uri
 							OutputStream os = this.context.getContentResolver()
 									.openOutputStream(uri);
-							bitmap.compress(CompressFormat.JPEG,
+							bitmap.compress(Bitmap.CompressFormat.JPEG,
 									this.mQuality, os);
 							os.close();
 							writeUncompressedImage(saveUri);
@@ -347,8 +346,8 @@ public class CameraService extends ImpPlugin {
 						;
 						Bitmap overviewBitmap =  Bimp.revitionImageSize(uri.getPath()
 								.toString());
-
-
+						
+						
 						// Send Uri back to JavaScript for viewing image
 						// 将高清图片地址和小图地址传回前端
 						callbackData(originalBitmap, overviewBitmap, saveUri,
@@ -439,13 +438,13 @@ public class CameraService extends ImpPlugin {
 								ExifHelper exif = new ExifHelper();
 								OutputStream os = new FileOutputStream(resizePath);
 								try {
-									bitmaps[i].compress(CompressFormat.JPEG,
+									bitmaps[i].compress(Bitmap.CompressFormat.JPEG,
 											this.mQuality, os);
 								} catch (Exception e) {
 									// TODO: handle exception
 									e.printStackTrace();
 								}
-
+								
 								filePaths[i] = "file://" + resizePath;
 								os.close();
 								// Restore exif data to file
@@ -484,7 +483,7 @@ public class CameraService extends ImpPlugin {
 										selectedList.get(i).path);
 //								originalBitmaps[i] = getDiskBitmap(PublicWay.selectedDataList
 //										.get(i).imagePath);
-
+								
 								originalBitmaps[i] = Bimp.revitionImageSize(selectedList
 										.get(i).path);
 								bitmaps[i] = Bimp.revitionImageSize(uris[i]);
@@ -510,11 +509,11 @@ public class CameraService extends ImpPlugin {
 					}
 					System.gc();
 
-
+					
 				}
-
-
-
+				
+				
+				
 			} else if (resultCode == Activity.RESULT_CANCELED) {
 				this.failPicture(Res.getString("cancel_select"));
 			} else {
@@ -535,7 +534,7 @@ public class CameraService extends ImpPlugin {
 	    }
 	    FileInputStream inputStream = null;
 	    try {
-
+	    	
 	        Bitmap bitmap = Bimp.revitionImageSize(this.imageUri.getPath());
 	        Bitmap destBitmap = rotaingImageView(degree,bitmap);
 	        bitmap.recycle();
@@ -554,9 +553,9 @@ public class CameraService extends ImpPlugin {
 	            }
 	        }
 	    }
-
+		
 	}
-
+	
 	/**
 	 * 保存bitmap
 	 *
@@ -567,7 +566,7 @@ public class CameraService extends ImpPlugin {
 		File file = new File(path+"---");
 		try {
 			FileOutputStream out = new FileOutputStream(file);
-			bitmap.compress(CompressFormat.PNG, 100, out);
+			bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
 			out.flush();
 			out.close();
 			if (orignFile.exists()) {
@@ -581,33 +580,33 @@ public class CameraService extends ImpPlugin {
 				file.delete();
 			}
 		}
-
+		
 
 	}
-
-
+	
+	
 
 	/**
 	 * Create entry in media store for image
-	 *
+	 * 
 	 * @return uri
 	 */
 	private Uri getUriFromMediaStore() {
 		ContentValues values = new ContentValues();
-		values.put(MediaStore.Images.Media.MIME_TYPE,
+		values.put(android.provider.MediaStore.Images.Media.MIME_TYPE,
 				"image/jpeg");
 		Uri uri;
 		try {
 			uri = this.context
 					.getContentResolver()
-					.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+					.insert(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
 							values);
 		} catch (UnsupportedOperationException e) {
 			iLog.i(LOG_TAG, "Can't write to external media storage.");
 			try {
 				uri = this.context
 						.getContentResolver()
-						.insert(MediaStore.Images.Media.INTERNAL_CONTENT_URI,
+						.insert(android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI,
 								values);
 			} catch (UnsupportedOperationException ex) {
 				iLog.i(LOG_TAG, "Can't write to internal media storage.");
@@ -620,7 +619,7 @@ public class CameraService extends ImpPlugin {
 	/**
 	 * Cleans up after picture taking. Checking for duplicates and that kind of
 	 * stuff.
-	 *
+	 * 
 	 * @param newImage
 	 */
 	private void cleanup(int imageType, Uri oldImage, Uri newImage,
@@ -640,7 +639,7 @@ public class CameraService extends ImpPlugin {
 	 * In the special case where the default width, height and quality are
 	 * unchanged we just write the file out to disk saving the expensive
 	 * Bitmap.compress function.
-	 *
+	 * 
 	 * @param uri
 	 * @throws FileNotFoundException
 	 * @throws IOException
@@ -649,8 +648,8 @@ public class CameraService extends ImpPlugin {
 			IOException {
 		FileInputStream fis = new FileInputStream(
 				FileHelper.stripFileProtocol(this.imageUri.toString()));
-
-
+		
+		
 		OutputStream os = this.context.getContentResolver().openOutputStream(
 				uri);
 		byte[] buffer = new byte[4096];
@@ -662,12 +661,12 @@ public class CameraService extends ImpPlugin {
 		os.close();
 		fis.close();
 	}
-
-
+	
+	
 
 	/**
 	 * IMP代码修改处
-	 *
+	 * 
 	 * @param pathString
 	 *            图片本地路径
 	 * @return bitmap对象
@@ -689,11 +688,10 @@ public class CameraService extends ImpPlugin {
 
 	/**
 	 * Return a scaled bitmap based on the target width and height
-	 *
-	 * @param
+	 * @param imageUrl
 	 * @return
 	 * @throws IOException
-	 */
+     */
 	private Bitmap getScaledBitmap(String imageUrl) throws IOException {
 		// If no new width or height were specified return the original bitmap
 		if (this.targetWidth <= 0 && this.targetHeight <= 0) {
@@ -815,9 +813,9 @@ public class CameraService extends ImpPlugin {
 	private Uri whichContentStore() {
 		if (Environment.getExternalStorageState().equals(
 				Environment.MEDIA_MOUNTED)) {
-			return MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+			return android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
 		} else {
-			return MediaStore.Images.Media.INTERNAL_CONTENT_URI;
+			return android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI;
 		}
 	}
 
@@ -980,7 +978,7 @@ public class CameraService extends ImpPlugin {
 	 * Compress bitmap using jpeg, convert to Base64 encoded string, and return
 	 * to JavaScript.
 	 * 
-	 * @param
+	 * @param bitmap
 	 */
 	public void processPictures(Bitmap bitmaps[], Bitmap originalBitmaps[]) {
 

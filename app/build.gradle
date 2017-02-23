@@ -24,17 +24,23 @@ def enableProguardInReleaseBuilds = false
 android {
     compileSdkVersion 23
     buildToolsVersion "23.0.3"
+    aaptOptions.cruncherEnabled = false
+    aaptOptions.useNewCruncher = false
     defaultConfig {
         applicationId "com.inspur.emmcloud"
         minSdkVersion 16
         targetSdkVersion 22
-        versionCode 1
-        versionName "1.0"
+        versionCode 18
+        versionName "1.1.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         ndk {
             abiFilters "armeabi-v7a", "x86"
         }
         multiDexEnabled true
+    }
+
+    sourceSets.main{
+            jniLibs.srcDirs = ['src/libs']
     }
     buildTypes {
         release {
@@ -119,7 +125,10 @@ dependencies {
     androidTestCompile('com.android.support.test:rules:0.5') {
         exclude module: 'support-annotations'
     }
+
     compile files('src/libs/xutils-2.6.15_db.jar')
     compile files('src/libs/xutils-3.3.36.jar')
-    compile files('src/libs/jpush-android-2.1.7.jar')
+    compile files('src/libs/jpush-android_v3.0.1.jar')
+    compile files('src/libs/jcore-android_v1.1.0.jar')
+    compile files('src/libs/mdm.jar')
 }

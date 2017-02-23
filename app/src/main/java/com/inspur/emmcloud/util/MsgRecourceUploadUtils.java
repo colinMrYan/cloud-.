@@ -1,28 +1,26 @@
 package com.inspur.emmcloud.util;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Environment;
 
-import com.lzy.imagepicker.ImagePicker;
-import com.lzy.imagepicker.bean.ImageItem;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.bean.Msg;
 import com.inspur.emmcloud.config.MyAppConfig;
+import com.inspur.imp.plugin.camera.imagepicker.ImagePicker;
+import com.inspur.imp.plugin.camera.imagepicker.bean.ImageItem;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Date;
 
 public class MsgRecourceUploadUtils {
 	
@@ -38,13 +36,9 @@ public class MsgRecourceUploadUtils {
 	public static Msg uploadMsgImg(Context context, Intent data,
 			ChatAPIService apiService){
 		String filePath = "";
-		if (data == null) { //当data == null时为拍照获取的图片
-			filePath = Environment.getExternalStorageDirectory()+"/DCIM/"+PreferencesUtils.getString(context, "capturekey");
-		}else {//图库中选择的图片
-//			String dirPath = MyAppConfig.LOCAL_CACHE_PATH;
-//			FileUtils.makeDirs(dirPath);
-//			Uri path = data.getData();
-//			filePath = Uri2Path.getRealFilePath(context, path);
+		if (data.hasExtra("save_file_path")) {
+			filePath = data.getStringExtra("save_file_path");
+		}else {
 			ArrayList<ImageItem> imageItemList = (ArrayList<ImageItem>) data
 					.getSerializableExtra(ImagePicker.EXTRA_RESULT_ITEMS);
 			filePath = imageItemList.get(0).path;
@@ -134,13 +128,12 @@ public class MsgRecourceUploadUtils {
 
 	/**
 	 * 上传图片
-	 * 
 	 * @param context
 	 * @param apiService
 	 * @param filePath
-	 * @param imagename
 	 * @param fakeMessageId
-	 */
+     * @param isImg
+     */
 	private static void uploadFile(Context context, ChatAPIService apiService,
 			final String filePath, String fakeMessageId, boolean isImg) {
 		if (NetUtils.isNetworkConnected(context)) {
