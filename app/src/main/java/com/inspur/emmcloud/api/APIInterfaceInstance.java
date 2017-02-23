@@ -61,6 +61,7 @@ import com.inspur.emmcloud.bean.GetUpgradeResult;
 import com.inspur.emmcloud.bean.GetUploadMyHeadResult;
 import com.inspur.emmcloud.bean.GetUserHeadUploadResult;
 import com.inspur.emmcloud.bean.GetWebSocketUrlResult;
+import com.inspur.emmcloud.bean.ReactNativeUpdateBean;
 import com.inspur.emmcloud.bean.Robot;
 import com.inspur.emmcloud.bean.TaskResult;
 import com.inspur.emmcloud.bean.Trip;
@@ -1256,6 +1257,16 @@ public class APIInterfaceInstance implements APIInterface{
 	public void returnUploadCollectFail() {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public void returnReactNativeUpdateSuccess(ReactNativeUpdateBean reactNativeUpdateBean) {
+
+	}
+
+	@Override
+	public void returnReactNativeUpdateFail(String error) {
+
 	}
 
 }

@@ -1,11 +1,5 @@
 package com.inspur.emmcloud.util;
 
-import java.util.List;
-import java.util.UUID;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningServiceInfo;
 import android.content.ContentResolver;
@@ -20,9 +14,13 @@ import android.graphics.Paint.FontMetrics;
 import android.net.Uri;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.inspur.emmcloud.R;
+
+import java.util.List;
+import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * 有关应用的一些方法
@@ -152,7 +150,7 @@ try{
 	String currentVersionCode = getNormalVersionCode(savedArray[2]);
 	currentArray[2] = currentVersionCode;
 }catch (Exception e){
-	LogUtils.YfcDebug("捕获到的异常信息："+e.getMessage());
+//	LogUtils.YfcDebug("捕获到的异常信息："+e.getMessage());
 }
 
 

@@ -245,11 +245,13 @@ public class ZipUtils {
      */
     // 第一个参数就是需要解压的文件，第二个就是解压的目录
     public static boolean upZipFile(String zipFile, String folderPath) {
+        isExist(folderPath);
         ZipFile zfile = null;
         try {
             // 转码为GBK格式，支持中文
             zfile = new ZipFile(zipFile);
         } catch (IOException e) {
+            LogUtils.YfcDebug("00000"+e.getMessage());
             e.printStackTrace();
             return false;
         }
@@ -261,7 +263,6 @@ public class ZipUtils {
             // 列举的压缩文件里面的各个文件，判断是否为目录
             if (ze.isDirectory()) {
                 String dirstr = folderPath + ze.getName();
-//                LogUtils.i(TAG, "dirstr=" + dirstr);
                 dirstr.trim();
                 File f = new File(dirstr);
                 f.mkdir();
@@ -270,11 +271,16 @@ public class ZipUtils {
             OutputStream os = null;
             FileOutputStream fos = null;
             // ze.getName()会返回 script/start.script这样的，是为了返回实体的File
+            LogUtils.YfcDebug("传入文件路径："+folderPath);
             File realFile = getRealFileName(folderPath, ze.getName());
+            LogUtils.YfcDebug("正式文件路径："+realFile.getPath());
             try {
+                if(!realFile.exists()){
+                    realFile = new File(folderPath, ze.getName());
+                }
                 fos = new FileOutputStream(realFile);
             } catch (FileNotFoundException e) {
-//                LogUtils.e(TAG, e.getMessage());
+                LogUtils.YfcDebug("11111"+e.getMessage());
                 return false;
             }
             os = new BufferedOutputStream(fos);
@@ -282,7 +288,7 @@ public class ZipUtils {
             try {
                 is = new BufferedInputStream(zfile.getInputStream(ze));
             } catch (IOException e) {
-//                LogUtils.e(TAG, e.getMessage());
+                LogUtils.YfcDebug("22222"+e.getMessage());
                 return false;
             }
             int readLen = 0;
@@ -292,24 +298,36 @@ public class ZipUtils {
                     os.write(buf, 0, readLen);
                 }
             } catch (IOException e) {
-//                LogUtils.e(TAG, e.getMessage());
+                LogUtils.YfcDebug("33333"+e.getMessage());
                 return false;
             }
             try {
                 is.close();
                 os.close();
             } catch (IOException e) {
-//                LogUtils.e(TAG, e.getMessage());
+                LogUtils.YfcDebug("44444"+e.getMessage());
                 return false;
             }
         }
         try {
             zfile.close();
         } catch (IOException e) {
-//            LogUtils.e(TAG, e.getMessage());
+            LogUtils.YfcDebug("55555"+e.getMessage());
             return false;
         }
         return true;
+    }
+
+    /**
+     *
+     * @param path 文件夹路径
+     */
+    public static void isExist(String path) {
+        File file = new File(path);
+        //判断文件夹是否存在,如果不存在则创建文件夹
+        if (!file.exists()) {
+            file.mkdir();
+        }
     }
 
     /**
@@ -322,12 +340,8 @@ public class ZipUtils {
      * @return java.io.File 实际的文件
      */
     public static File getRealFileName(String baseDir, String absFileName) {
-//        LogUtils.i(TAG, "baseDir=" + baseDir + "------absFileName="
-//                + absFileName);
         absFileName = absFileName.replace("\\", "/");
-//        LogUtils.i(TAG, "absFileName=" + absFileName);
         String[] dirs = absFileName.split("/");
-//        LogUtils.i(TAG, "dirs=" + dirs);
         File ret = new File(baseDir);
         String substr = null;
         if (dirs.length > 1) {

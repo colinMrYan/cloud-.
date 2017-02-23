@@ -527,4 +527,9 @@ public class APIUri {
 	public static String getSMSLogin(){
 		return smsLoginBaseUrl;
 	}
+
+	/*****************************************ReactNative**************************************/
+	public static String getReactNativeUpdate(){
+		return getEcmTanentUrl()+"/api/v0/view/package/test/DISCOVER/?";
+	}
 }
