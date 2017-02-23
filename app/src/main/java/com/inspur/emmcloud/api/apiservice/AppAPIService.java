@@ -16,6 +16,7 @@ import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.bean.GetAppTabsResult;
 import com.inspur.emmcloud.bean.GetExceptionResult;
 import com.inspur.emmcloud.bean.GetUpgradeResult;
+import com.inspur.emmcloud.bean.ReactNativeUpdateBean;
 import com.inspur.emmcloud.util.AppUtils;
 import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.OauthCallBack;
@@ -81,6 +82,38 @@ public class AppAPIService {
 			}
 		});
 
+	}
+
+	/**
+	 * 获取ReactNative更新版本
+	 * @param version
+	 * @param lastCreationDate
+     */
+	public void getReactNativeUpdate (final int version, final long lastCreationDate){
+		final String completeUrl = APIUri.getReactNativeUpdate()+"version="+version+"&lastCreationDate=" + lastCreationDate;
+		RequestParams params = ((MyApplication) context.getApplicationContext())
+				.getHttpRequestParams(completeUrl);
+		x.http().get(params, new APICallback() {
+			@Override
+			public void callbackSuccess(String arg0) {
+				apiInterface.returnReactNativeUpdateSuccess(new ReactNativeUpdateBean(arg0));
+			}
+
+			@Override
+			public void callbackFail(String error, int responseCode) {
+				apiInterface.returnReactNativeUpdateFail(error);
+			}
+
+			@Override
+			public void callbackTokenExpire() {
+				new OauthUtils(new OauthCallBack() {
+					@Override
+					public void execute() {
+						getReactNativeUpdate(version,lastCreationDate);
+					}
+				},context).refreshTocken(completeUrl);
+			}
+		});
 	}
 	
 	

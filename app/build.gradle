@@ -87,7 +87,7 @@ dependencies {
 
     // 3rd parts
     compile 'org.apache.commons:commons-lang3:3.5'
-//    compile 'cn.jpush.api:jpush-client:3.2.16'
+    //    compile 'cn.jpush.api:jpush-client:3.2.16'
     compile 'com.amap.api:location:3.3.0'
     compile 'com.baidu.mapapi:location:6.13'
     compile 'com.google.code.gson:gson:2.8.0'
@@ -104,15 +104,9 @@ dependencies {
         exclude module: 'support-core-utils'
     }
     compile 'com.readystatesoftware.systembartint:systembartint:1.0.3'
-
-
     // React Naive Components
     compile project(':react-native-smart-swipe-refresh-layout')
-
-
     testCompile 'junit:junit:4.12'
-
-
     androidTestCompile('com.android.support.test:runner:0.5') {
         exclude module: 'support-annotations'
     }
@@ -122,4 +116,5 @@ dependencies {
     compile files('src/libs/xutils-2.6.15_db.jar')
     compile files('src/libs/xutils-3.3.36.jar')
     compile files('src/libs/jpush-android-2.1.7.jar')
+    compile 'commons-codec:commons-codec:20041127.091804'
 }
