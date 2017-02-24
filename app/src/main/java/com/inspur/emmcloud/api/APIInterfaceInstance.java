@@ -35,6 +35,7 @@ import com.inspur.emmcloud.bean.GetMeetingReplyResult;
 import com.inspur.emmcloud.bean.GetMeetingRoomsResult;
 import com.inspur.emmcloud.bean.GetMeetingsResult;
 import com.inspur.emmcloud.bean.GetMsgCommentResult;
+import com.inspur.emmcloud.bean.GetMsgResult;
 import com.inspur.emmcloud.bean.GetMyAppResult;
 import com.inspur.emmcloud.bean.GetMyCalendarResult;
 import com.inspur.emmcloud.bean.GetMyInfoResult;
@@ -55,7 +56,6 @@ import com.inspur.emmcloud.bean.GetTagResult;
 import com.inspur.emmcloud.bean.GetTaskAddResult;
 import com.inspur.emmcloud.bean.GetTaskListResult;
 import com.inspur.emmcloud.bean.GetTripArriveCity;
-import com.inspur.emmcloud.bean.GetTripResult;
 import com.inspur.emmcloud.bean.GetUpdatePwdBySMSCodeBean;
 import com.inspur.emmcloud.bean.GetUpgradeResult;
 import com.inspur.emmcloud.bean.GetUploadMyHeadResult;
@@ -65,7 +65,6 @@ import com.inspur.emmcloud.bean.ReactNativeUpdateBean;
 import com.inspur.emmcloud.bean.Robot;
 import com.inspur.emmcloud.bean.TaskResult;
 import com.inspur.emmcloud.bean.Trip;
-import com.inspur.emmcloud.bean.getMsgResult;
 
 public class APIInterfaceInstance implements APIInterface{
 
@@ -393,7 +392,7 @@ public class APIInterfaceInstance implements APIInterface{
 	}
 
 	@Override
-	public void returnMsgSuccess(getMsgResult getMsgResult) {
+	public void returnMsgSuccess(GetMsgResult getMsgResult) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -532,7 +531,7 @@ public class APIInterfaceInstance implements APIInterface{
 	}
 
 	@Override
-	public void returnTripSuccess(GetTripResult getTripResult) {
+	public void returnTripSuccess(Trip trip) {
 		// TODO Auto-generated method stub
 		
 	}

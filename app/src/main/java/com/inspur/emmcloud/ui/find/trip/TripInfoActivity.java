@@ -1,34 +1,67 @@
 package com.inspur.emmcloud.ui.find.trip;
 
-import java.io.Serializable;
-
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.api.APIInterfaceInstance;
+import com.inspur.emmcloud.api.apiservice.FindAPIService;
 import com.inspur.emmcloud.bean.Trip;
+import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.TimeUtils;
+import com.inspur.emmcloud.util.ToastUtils;
+import com.inspur.emmcloud.widget.LoadingDialog;
+
+import java.io.Serializable;
 
 public class TripInfoActivity extends BaseActivity{
 
 	private static final int EDIT_TRIP_INFO = 1;
 	private Trip trip;
+	private LoadingDialog loadingDlg;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		((MyApplication) getApplicationContext()).addActivity(this);
 		setContentView(R.layout.activity_trip_info);
-		trip = (Trip) getIntent().getExtras().getSerializable("tripInfo");
-		disPlayTripInfo();
+		Uri uri = getIntent().getData();
+		if (uri != null) {
+			String path = uri.getPath();
+			String tripId = path.split("/")[1];
+			getTripInfo(tripId);
+		}else {
+			trip = (Trip) getIntent().getExtras().getSerializable("tripInfo");
+			disPlayTripInfo();
+		}
+
+
 	}
-	
+
+	/**
+	 * 网络获取行程数据
+	 * @param tripId
+     */
+	private void getTripInfo(String  tripId){
+		if (NetUtils.isNetworkConnected(getApplicationContext())){
+			loadingDlg  = new LoadingDialog(this);
+			loadingDlg.show();
+			FindAPIService apiService = new FindAPIService(getApplicationContext());
+			apiService.setAPIInterface(new WebServeice());
+			apiService.getTripInfo(tripId);
+		}
+
+	}
+
+	/**
+	 * 展示行程数据
+	 */
 	private void disPlayTripInfo() {
 		// TODO Auto-generated method stub
 		String startTime = TimeUtils.calendar2FormatString(getApplicationContext(),trip.getStart(),TimeUtils.FORMAT_HOUR_MINUTE);
@@ -84,5 +117,23 @@ public class TripInfoActivity extends BaseActivity{
 		}
 	}
 
-	
+	private class WebServeice extends APIInterfaceInstance{
+		@Override
+		public void returnTripSuccess(Trip trip) {
+			if (loadingDlg != null && loadingDlg.isShowing()){
+				loadingDlg.dismiss();
+			}
+			TripInfoActivity.this.trip = trip;
+			disPlayTripInfo();
+		}
+
+		@Override
+		public void returnTripFail(String error) {
+			if (loadingDlg != null && loadingDlg.isShowing()){
+				loadingDlg.dismiss();
+			}
+			ToastUtils.show(getApplicationContext(),"行程获取失败");
+			finish();
+		}
+	}
 }

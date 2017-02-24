@@ -38,7 +38,7 @@ import com.inspur.emmcloud.bean.GetNewMsgsResult;
 import com.inspur.emmcloud.bean.GetNewsImgResult;
 import com.inspur.emmcloud.bean.GetSendMsgResult;
 import com.inspur.emmcloud.bean.Msg;
-import com.inspur.emmcloud.bean.getMsgResult;
+import com.inspur.emmcloud.bean.GetMsgResult;
 import com.inspur.emmcloud.broadcastreceiver.MsgReceiver;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.ui.app.groupnews.NewsWebDetailActivity;
@@ -914,7 +914,7 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
         }
 
         @Override
-        public void returnMsgSuccess(getMsgResult getMsgResult) {
+        public void returnMsgSuccess(GetMsgResult getMsgResult) {
             Msg msg = getMsgResult.getMsg();
             if (msg != null && ChannelActivity.this != null) {
                 MsgCacheUtil.saveMsg(ChannelActivity.this, msg);

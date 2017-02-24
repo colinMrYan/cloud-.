@@ -1,13 +1,5 @@
 package com.inspur.emmcloud.util;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -20,11 +12,18 @@ import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.bean.Channel;
 import com.inspur.emmcloud.bean.ChannelGroup;
-import com.inspur.emmcloud.bean.Contact;
 import com.inspur.emmcloud.bean.GetSearchChannelGroupResult;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ChannelGroupIconUtils {
 	private static final int RERESH_GROUP_ICON = 2;
@@ -98,11 +97,10 @@ public class ChannelGroupIconUtils {
 					if (channel.getType().equals("GROUP")
 							&& !isIconInSDcard(channel.getCid())) {
 						isNeedCreatIcon = true;
-						List<Contact> memberList = ChannelGroupCacheUtils
-								.getMembersList(context, channel.getCid(), 4);
+						List<String> memberUidList = ChannelGroupCacheUtils.getMemberUidList(context,channel.getCid(),4);
 						List<Bitmap> bitmapList = new ArrayList<Bitmap>();
-						for (int j = 0; j < memberList.size(); j++) {
-							String pid = memberList.get(j).getInspurID();
+						for (int j = 0; j < memberUidList.size(); j++) {
+							String pid = memberUidList.get(j);
 							Bitmap bitmap = null;
 							if (!StringUtils.isBlank(pid) && !pid.equals("null")) {
 								bitmap = ImageLoader.getInstance().loadImageSync(UriUtils.getChannelImgUri(pid),options);

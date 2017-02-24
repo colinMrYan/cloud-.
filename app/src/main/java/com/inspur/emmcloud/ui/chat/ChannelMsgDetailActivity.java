@@ -41,7 +41,7 @@ import com.inspur.emmcloud.bean.CommentBodyBean;
 import com.inspur.emmcloud.bean.GetMsgCommentResult;
 import com.inspur.emmcloud.bean.GetSendMsgResult;
 import com.inspur.emmcloud.bean.Msg;
-import com.inspur.emmcloud.bean.getMsgResult;
+import com.inspur.emmcloud.bean.GetMsgResult;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
 import com.inspur.emmcloud.util.ChannelCacheUtils;
 import com.inspur.emmcloud.util.ChannelMentions;
@@ -599,7 +599,7 @@ public class ChannelMsgDetailActivity extends BaseActivity implements
 
 	class WebService extends APIInterfaceInstance {
 		@Override
-		public void returnMsgSuccess(getMsgResult getMsgResult) {
+		public void returnMsgSuccess(GetMsgResult getMsgResult) {
 			if (loadingDialog != null && loadingDialog.isShowing()) {
 				loadingDialog.dismiss();
 			}

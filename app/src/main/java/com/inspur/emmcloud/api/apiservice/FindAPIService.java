@@ -7,11 +7,6 @@
  */
 package com.inspur.emmcloud.api.apiservice;
 
-import org.json.JSONArray;
-import org.xutils.x;
-import org.xutils.http.HttpMethod;
-import org.xutils.http.RequestParams;
-
 import android.content.Context;
 
 import com.inspur.emmcloud.MyApplication;
@@ -26,6 +21,11 @@ import com.inspur.emmcloud.bean.Trip;
 import com.inspur.emmcloud.util.OauthCallBack;
 import com.inspur.emmcloud.util.OauthUtils;
 import com.inspur.emmcloud.util.UriUtils;
+
+import org.json.JSONArray;
+import org.xutils.http.HttpMethod;
+import org.xutils.http.RequestParams;
+import org.xutils.x;
 
 /**
  * com.inspur.emmcloud.api.apiservice.FindAPIService
@@ -45,8 +45,8 @@ public class FindAPIService {
 	/**
 	 * 获取行程信息
 	 */
-	public void getTripInfo() {
-		final String completeUrl = UriUtils.getHttpApiUri("trip/simple");
+	public void getTripInfo(final String  tripId) {
+		final String completeUrl = UriUtils.getHttpApiUri("trip/simple/detail?trip_ticket=")+tripId;
 		RequestParams params = ((MyApplication)context.getApplicationContext()).getHttpRequestParams(completeUrl);
 		x.http().get(params, new APICallback() {
 			
@@ -57,7 +57,7 @@ public class FindAPIService {
 
 					@Override
 					public void execute() {
-						getTripInfo();
+						getTripInfo(tripId);
 					}
 				}, context).refreshTocken(completeUrl);
 			}
@@ -65,7 +65,7 @@ public class FindAPIService {
 			@Override
 			public void callbackSuccess(String arg0) {
 				// TODO Auto-generated method stub
-				apiInterface.returnTripSuccess(new GetTripResult(arg0));
+				apiInterface.returnTripSuccess(new Trip(arg0));
 			}
 			
 			@Override
