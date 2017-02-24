@@ -1,7 +1,6 @@
 package com.inspur.emmcloud.api;
 
 
-
 import com.inspur.emmcloud.bean.Attachment;
 import com.inspur.emmcloud.bean.ChannelGroup;
 import com.inspur.emmcloud.bean.GetAddAppResult;
@@ -18,6 +17,7 @@ import com.inspur.emmcloud.bean.GetCalendarEventsResult;
 import com.inspur.emmcloud.bean.GetCardPackageListResult;
 import com.inspur.emmcloud.bean.GetChannelInfoResult;
 import com.inspur.emmcloud.bean.GetChannelListResult;
+import com.inspur.emmcloud.bean.GetClientIdRsult;
 import com.inspur.emmcloud.bean.GetCreateOfficeResult;
 import com.inspur.emmcloud.bean.GetCreateSingleChannelResult;
 import com.inspur.emmcloud.bean.GetExceptionResult;
@@ -62,6 +62,7 @@ import com.inspur.emmcloud.bean.GetUpgradeResult;
 import com.inspur.emmcloud.bean.GetUploadMyHeadResult;
 import com.inspur.emmcloud.bean.GetUserHeadUploadResult;
 import com.inspur.emmcloud.bean.GetWebSocketUrlResult;
+import com.inspur.emmcloud.bean.ReactNativeClientIdErrorBean;
 import com.inspur.emmcloud.bean.ReactNativeUpdateBean;
 import com.inspur.emmcloud.bean.Robot;
 import com.inspur.emmcloud.bean.TaskResult;
@@ -358,6 +359,9 @@ public interface APIInterface {
 	public void returnUploadCollectFail();
 
 	public void returnReactNativeUpdateSuccess(ReactNativeUpdateBean reactNativeUpdateBean);
-	public void returnReactNativeUpdateFail(String error);
-	
+	public void returnReactNativeUpdateFail(ReactNativeClientIdErrorBean reactNativeClientIdErrorBean);
+
+	public void returnGetClientIdResultSuccess(GetClientIdRsult getClientIdRsult);
+	public void returnGetClientIdResultFail(String error);
+
 }

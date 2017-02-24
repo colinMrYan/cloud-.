@@ -85,8 +85,9 @@ public class SystemBarTintManager {
             int[] attrs = {android.R.attr.windowTranslucentStatus, android.R.attr.windowTranslucentNavigation};
             TypedArray a = activity.obtainStyledAttributes(attrs);
             try {
-                mStatusBarAvailable = a.getBoolean(0, false);
-                mNavBarAvailable = a.getBoolean(1, false);
+                //为避免发版错误注释掉的内容date：20170224 name：yufuchang
+//                mStatusBarAvailable = a.getBoolean(0, false);
+//                mNavBarAvailable = a.getBoolean(1, false);
             } finally {
                 a.recycle();
             }

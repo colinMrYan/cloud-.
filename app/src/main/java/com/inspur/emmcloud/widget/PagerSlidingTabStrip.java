@@ -16,17 +16,12 @@
 
 package com.inspur.emmcloud.widget;
 
-import android.R.integer;
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
-import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Parcel;
@@ -35,12 +30,10 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
-import android.widget.CompoundButton;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -48,9 +41,9 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 
-import java.util.Locale;
-
 import com.inspur.emmcloud.R;
+
+import java.util.Locale;
 
 /**
  * 仿网易新闻活动tab页
@@ -317,8 +310,13 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
 		
 		tab.setSingleLine();
 		tab.setText(title);
-		tab.setTextColor(getResources().getColorStateList(
-				R.drawable.selector_viewpager_tab_text));
+
+
+		//为避免发版错误注释掉的date：20170224   name：yufuchang
+//		tab.setTextColor(getResources().getColorStateList(
+//				R.drawable.selector_viewpager_tab_text));
+
+
 //		tab.setTextSize(18);
 		addTab(position, tab);
 	}

@@ -1,6 +1,8 @@
 package com.inspur.emmcloud.bean;
 
 
+import com.inspur.emmcloud.util.LogUtils;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -10,96 +12,217 @@ import org.json.JSONObject;
 
 public class ReactNativeUpdateBean {
 
-    @Override
-    public String toString() {
-        return "ReactNativeUpdateBean{" +
-                "url='" + url + '\'' +
-                ", digest='" + digest + '\'' +
-                ", method='" + method + '\'' +
-                ", version=" + version +
-                ", creationDate=" + creationDate +
-                '}';
-    }
-
     /**
-     * url : EG5S7H.zip
-     * digest : bcbe3365e6ac95ea2c0343a2395834dd
-     * method : MD5
-     * version : 2
-     * creationDate : 1487037600000
+     * bundle : {"androidUri":"666.zip","iosUri":"666.zip","webUri":"666.zip","androidHash":"SHA256:81ab0ed3b728571d0fe502e66ec6a91d5a8fbdcdaff49969d79a93b174e26ec9","iosHash":"SHA256:81ab0ed3b728571d0fe502e66ec6a91d5a8fbdcdaff49969d79a93b174e26ec9","webHash":"SHA256:81ab0ed3b728571d0fe502e66ec6a91d5a8fbdcdaff49969d79a93b174e26ec9","compressedFormat":"ZIP","id":{"domain":"DISCOVER","version":"diccoverv666"},"creationDate":1487830148376}
+     * command : FORWARD
      */
 
-    private String url;
-    private String digest;
-    private String method;
-    private int version;
-    private long creationDate;
-    private String state;
 
 
 
-    public ReactNativeUpdateBean(String reactNativeUpdateJson){
+    private BundleBean bundle;
+    private String command;
+
+    public ReactNativeUpdateBean(String reactNativeUpdate){
+        LogUtils.YfcDebug("获取更新"+reactNativeUpdate);
         try {
-            JSONObject jsonObject = new JSONObject(reactNativeUpdateJson);
-            if(jsonObject.has("url")){
-                this.url = jsonObject.getString("url");
+            JSONObject jsonReactNative = new JSONObject(reactNativeUpdate);
+            if(jsonReactNative.has("bundle")){
+                this.bundle = new BundleBean(jsonReactNative.getString("bundle"));
             }
-            if(jsonObject.has("digest")){
-                this.digest = jsonObject.getString("digest");
-            }
-            if(jsonObject.has("method")){
-                this.digest = jsonObject.getString("method");
-            }
-            if(jsonObject.has("version")){
-                this.digest = jsonObject.getString("version");
-            }
-            if(jsonObject.has("creationDate")){
-                this.digest = jsonObject.getString("creationDate");
+            if(jsonReactNative.has("command")){
+                this.command = jsonReactNative.getString("command");
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
     }
 
-    public String getUrl() {
-        return url;
+    public BundleBean getBundle() {
+        return bundle;
     }
 
-    public void setUrl(String url) {
-        this.url = url;
+    public void setBundle(BundleBean bundle) {
+        this.bundle = bundle;
     }
 
-    public String getDigest() {
-        return digest;
+    public String getCommand() {
+        return command;
     }
 
-    public void setDigest(String digest) {
-        this.digest = digest;
+    public void setCommand(String command) {
+        this.command = command;
     }
 
-    public String getMethod() {
-        return method;
-    }
+    public static class BundleBean {
+        /**
+         * androidUri : 666.zip
+         * iosUri : 666.zip
+         * webUri : 666.zip
+         * androidHash : SHA256:81ab0ed3b728571d0fe502e66ec6a91d5a8fbdcdaff49969d79a93b174e26ec9
+         * iosHash : SHA256:81ab0ed3b728571d0fe502e66ec6a91d5a8fbdcdaff49969d79a93b174e26ec9
+         * webHash : SHA256:81ab0ed3b728571d0fe502e66ec6a91d5a8fbdcdaff49969d79a93b174e26ec9
+         * compressedFormat : ZIP
+         * id : {"domain":"DISCOVER","version":"diccoverv666"}
+         * creationDate : 1487830148376
+         */
 
-    public void setMethod(String method) {
-        this.method = method;
-    }
+        private String androidUri;
+        private String iosUri;
+        private String webUri;
+        private String androidHash;
+        private String iosHash;
+        private String webHash;
+        private String compressedFormat;
+        private IdBean id;
+        private long creationDate;
 
-    public int getVersion() {
-        return version;
-    }
+        public BundleBean(String bundle){
+            try {
+                JSONObject jsonBundle = new JSONObject(bundle);
+                if(jsonBundle.has("androidUri")){
+                    this.androidUri = jsonBundle.getString("androidUri");
+                }
+                if(jsonBundle.has("iosUri")){
+                    this.iosUri = jsonBundle.getString("iosUri");
+                }
+                if(jsonBundle.has("webUri")){
+                    this.webUri = jsonBundle.getString("webUri");
+                }
+                if(jsonBundle.has("androidHash")){
+                    this.androidHash = jsonBundle.getString("androidHash").split(":")[1];
+                }
+                if(jsonBundle.has("iosHash")){
+                    this.iosHash = jsonBundle.getString("iosHash");
+                }
+                if(jsonBundle.has("webHash")){
+                    this.webHash = jsonBundle.getString("webHash");
+                }
+                if(jsonBundle.has("compressedFormat")){
+                    this.compressedFormat = jsonBundle.getString("compressedFormat");
+                }
+                if(jsonBundle.has("id")){
+//                    this.id = jsonBundle.getString("id");
+                    this.id = new IdBean(jsonBundle.getString("id"));
+                }
+                if(jsonBundle.has("creationDate")){
+                    this.creationDate = jsonBundle.getLong("creationDate");
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
 
-    public void setVersion(int version) {
-        this.version = version;
-    }
+        public String getAndroidUri() {
+            return androidUri;
+        }
 
-    public long getCreationDate() {
-        return creationDate;
-    }
+        public void setAndroidUri(String androidUri) {
+            this.androidUri = androidUri;
+        }
 
-    public void setCreationDate(long creationDate) {
-        this.creationDate = creationDate;
-    }
+        public String getIosUri() {
+            return iosUri;
+        }
 
-    public String getState() {return state;}
+        public void setIosUri(String iosUri) {
+            this.iosUri = iosUri;
+        }
+
+        public String getWebUri() {
+            return webUri;
+        }
+
+        public void setWebUri(String webUri) {
+            this.webUri = webUri;
+        }
+
+        public String getAndroidHash() {
+            return androidHash;
+        }
+
+        public void setAndroidHash(String androidHash) {
+            this.androidHash = androidHash;
+        }
+
+        public String getIosHash() {
+            return iosHash;
+        }
+
+        public void setIosHash(String iosHash) {
+            this.iosHash = iosHash;
+        }
+
+        public String getWebHash() {
+            return webHash;
+        }
+
+        public void setWebHash(String webHash) {
+            this.webHash = webHash;
+        }
+
+        public String getCompressedFormat() {
+            return compressedFormat;
+        }
+
+        public void setCompressedFormat(String compressedFormat) {
+            this.compressedFormat = compressedFormat;
+        }
+
+        public IdBean getId() {
+            return id;
+        }
+
+        public void setId(IdBean id) {
+            this.id = id;
+        }
+
+        public long getCreationDate() {
+            return creationDate;
+        }
+
+        public void setCreationDate(long creationDate) {
+            this.creationDate = creationDate;
+        }
+
+        public static class IdBean {
+            /**
+             * domain : DISCOVER
+             * version : diccoverv666
+             */
+
+            private String domain;
+            private String version;
+
+            public IdBean(String idBean){
+                try {
+                    JSONObject jsonIdBean = new JSONObject(idBean);
+                    if(jsonIdBean.has("domain")){
+                        this.domain = jsonIdBean.getString("domain");
+                    }
+                    if(jsonIdBean.has("version")){
+                        this.version = jsonIdBean.getString("version");
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            public String getDomain() {
+                return domain;
+            }
+
+            public void setDomain(String domain) {
+                this.domain = domain;
+            }
+
+            public String getVersion() {
+                return version;
+            }
+
+            public void setVersion(String version) {
+                this.version = version;
+            }
+        }
+    }
 }

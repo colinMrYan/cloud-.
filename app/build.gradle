@@ -55,6 +55,9 @@ android {
     }
     lintOptions {
         lintConfig file("lint.xml")
+        abortOnError false
+        checkReleaseBuilds false
+        disable 'MissingTranslation', 'ExtraTranslation'
     }
 
 
@@ -93,7 +96,7 @@ dependencies {
 
     // 3rd parts
     compile 'org.apache.commons:commons-lang3:3.5'
-    //    compile 'cn.jpush.api:jpush-client:3.2.16'
+//    compile 'cn.jpush.api:jpush-client:3.2.16'
     compile 'com.amap.api:location:3.3.0'
     compile 'com.baidu.mapapi:location:6.13'
     compile 'com.google.code.gson:gson:2.8.0'
@@ -128,7 +131,7 @@ dependencies {
 
     compile files('src/libs/xutils-2.6.15_db.jar')
     compile files('src/libs/xutils-3.3.36.jar')
-    compile files('src/libs/jpush-android-2.1.7.jar')
+//    compile files('src/libs/jpush-android-2.1.7.jar')
     compile 'commons-codec:commons-codec:20041127.091804'
     compile files('src/libs/jpush-android_v3.0.1.jar')
     compile files('src/libs/jcore-android_v1.1.0.jar')

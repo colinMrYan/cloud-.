@@ -16,7 +16,6 @@ import com.facebook.react.ReactRootView;
 import com.facebook.react.common.LifecycleState;
 import com.facebook.react.modules.core.DefaultHardwareBackBtnHandler;
 import com.facebook.react.shell.MainReactPackage;
-import com.inspur.emmcloud.api.apiservice.AppAPIService;
 import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.reactnative.AuthorizationManagerPackage;
 import com.inspur.reactnative.ReactNativeFlow;
@@ -29,17 +28,12 @@ import com.reactnativecomponent.swiperefreshlayout.RCTSwipeRefreshLayoutPackage;
 public class FindFragment extends Fragment implements DefaultHardwareBackBtnHandler {
     private ReactRootView mReactRootView;
     private ReactInstanceManager mReactInstanceManager;
-    private AppAPIService appAPIService;
-//    public static boolean reactNativeViewNeedToRefresh = false;
     private String filePath;
     private RefreshReactNativeReceiver reactNativeReceiver;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-//        appAPIService = new AppAPIService(getActivity());
-//        appAPIService.setAPIInterface(new WebService());
-//        appAPIService.getReactNativeUpdate(0,0L);
         if (mReactRootView == null) {
             createReactNativeView(false);
         }
@@ -56,18 +50,16 @@ public class FindFragment extends Fragment implements DefaultHardwareBackBtnHand
                 .setApplication(getActivity().getApplication())
                 .setCurrentActivity(getActivity())
                 .setJSMainModuleName("index.android")
-//                    .setBundleAssetName("index.android.bundle")
-                .setJSBundleFile(filePath + "/current/default/" + "index.android.bundle")
-//                    .setJSBundleFile(Environment.getExternalStorageDirectory()+"/IMP-Cloud/reactnative")
+                .setJSBundleFile(filePath + "/current/index.android.bundle")
                 .addPackage(new MainReactPackage())
                 .addPackage(new RCTSwipeRefreshLayoutPackage())
                 .addPackage(new AuthorizationManagerPackage())
                 .setUseDeveloperSupport(BuildConfig.DEBUG)
                 .setInitialLifecycleState(LifecycleState.RESUMED)
                 .build();
+        LogUtils.YfcDebug("Fragment指向的bundle路径："+filePath+"/current/index.android.bundle");
         mReactRootView.startReactApplication(mReactInstanceManager, "discover", null);
         if(needToRefresh){
-            LogUtils.YfcDebug("发现执行重绘操作");
             mReactRootView.invalidate();
         }
     }
@@ -77,11 +69,9 @@ public class FindFragment extends Fragment implements DefaultHardwareBackBtnHand
         super.onCreate(savedInstanceState);
         reactNativeReceiver = new RefreshReactNativeReceiver();
         filePath = getActivity().getFilesDir().getPath();
-//                ZipUtils.upZipFile(Environment.getExternalStorageDirectory()+"/default.zip",filePath+"/unzipdefault");
-//                ZipUtils.upZipFile(Environment.getExternalStorageDirectory()+"/IMP-Cloud/cache/cloud/default.zip",filePath + "/");
-        if (!ReactNativeFlow.checkBundleFileIsExist(filePath + "/current/default/index.android.bundle")) {
+        if (!ReactNativeFlow.checkBundleFileIsExist(filePath + "/current/index.android.bundle")) {
             LogUtils.YfcDebug("在FindFragment里解压bundle");
-            ReactNativeFlow.unZipFile(getActivity(), "default.zip", filePath + "/current", true);
+            ReactNativeFlow.unZipFile(getActivity(), "bundle-v0.1.0.android.zip", filePath + "/current", true);
         }
         registerMsgReceiver();
     }
@@ -93,7 +83,27 @@ public class FindFragment extends Fragment implements DefaultHardwareBackBtnHand
         if(reactNativeReceiver == null){
             reactNativeReceiver = new RefreshReactNativeReceiver();
             IntentFilter filter = new IntentFilter();
-            filter.addAction("com.inspur.react.refresh");
+            filter.addAction("com.inspur.react.success");
+            getActivity().registerReceiver(reactNativeReceiver, filter);
+        }
+        LogUtils.YfcDebug("FindFragment创建");
+        reactNativeReceiver = new RefreshReactNativeReceiver();
+        filePath = getActivity().getFilesDir().getPath();
+        if (!ReactNativeFlow.checkBundleFileIsExist(filePath + "/current/index.android.bundle")) {
+            LogUtils.YfcDebug("在FindFragment里解压bundle");
+            ReactNativeFlow.unZipFile(getActivity(), "bundle-v0.1.0.android.zip", filePath + "/current", true);
+        }
+        registerReactNativeReceiver();
+    }
+
+    /**
+     * 注册刷新广播
+     */
+    private void registerReactNativeReceiver() {
+        if(reactNativeReceiver == null){
+            reactNativeReceiver = new RefreshReactNativeReceiver();
+            IntentFilter filter = new IntentFilter();
+            filter.addAction("com.inspur.react.success");
             getActivity().registerReceiver(reactNativeReceiver, filter);
         }
     }
@@ -104,12 +114,11 @@ public class FindFragment extends Fragment implements DefaultHardwareBackBtnHand
     }
 
     class RefreshReactNativeReceiver extends BroadcastReceiver{
-        private static final String ACTION_REFRESH = "com.inspur.react.refresh";
+        private static final String ACTION_REFRESH = "com.inspur.react.success";
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             if(action.equals(ACTION_REFRESH)){
-                LogUtils.YfcDebug("FindFragment里刷新View");
                 createReactNativeView(true);
             }
         }
@@ -123,4 +132,6 @@ public class FindFragment extends Fragment implements DefaultHardwareBackBtnHand
             reactNativeReceiver=null;
         }
     }
+
+
 }

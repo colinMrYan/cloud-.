@@ -5,10 +5,12 @@ package com.inspur.emmcloud.util;
  */
 
 import org.apache.commons.codec.digest.DigestUtils;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.math.BigInteger;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.security.MessageDigest;
@@ -19,8 +21,8 @@ public class FileSafeCode {
     /**
      * 计算大文件 md5获取getMD5(); SHA1获取getSha1() CRC32获取 getCRC32()
      */
-    protected static char hexDigits[] = { '0', '1', '2', '3', '4', '5', '6',
-            '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f' };
+    protected static char hexDigits[] = {'0', '1', '2', '3', '4', '5', '6',
+            '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
     public static MessageDigest messagedigest = null;
 
     /**
@@ -54,7 +56,7 @@ public class FileSafeCode {
      *
      * @return String 适用于上G大的文件
      * @throws NoSuchAlgorithmException
-     * */
+     */
     public static String getSha1(File file) throws OutOfMemoryError,
             IOException, NoSuchAlgorithmException {
         messagedigest = MessageDigest.getInstance("SHA-1");
@@ -70,7 +72,7 @@ public class FileSafeCode {
      * 获取文件CRC32码
      *
      * @return String
-     * */
+     */
     public static String getCRC32(File file) {
         CRC32 crc32 = new CRC32();
         // MessageDigest.get
@@ -108,10 +110,7 @@ public class FileSafeCode {
         return bufferToHex(messagedigest.digest());
     }
 
-    /**
-     * @Description 计算二进制数据
-     * @return String
-     * */
+
     private static String bufferToHex(byte bytes[]) {
         return bufferToHex(bytes, 0, bytes.length);
     }
@@ -135,5 +134,34 @@ public class FileSafeCode {
     public static boolean checkPassword(String password, String md5PwdStr) {
         String s = getMD5String(password);
         return s.equals(md5PwdStr);
+    }
+
+    /**
+     * 文件校验之SHA256
+     * @param file
+     * @return
+     */
+    public static String getFileSHA256(File file) {
+        if (!file.isFile()) {
+            System.err.println("not file");
+            return null;
+        }
+        MessageDigest digest = null;
+        FileInputStream in = null;
+        byte buffer[] = new byte[1024];
+        int len;
+        try {
+            digest = MessageDigest.getInstance("SHA-256");
+            in = new FileInputStream(file);
+            while ((len = in.read(buffer, 0, 1024)) != -1) {
+                digest.update(buffer, 0, len);
+            }
+            in.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+        BigInteger bigInt = new BigInteger(1, digest.digest());
+        return bigInt.toString(16);
     }
 }
