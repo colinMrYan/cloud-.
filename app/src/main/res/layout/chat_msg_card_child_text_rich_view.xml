@@ -11,7 +11,7 @@
         android:minWidth="60dp"
         android:maxWidth="280dp"
         android:textColor="@color/black"
-        android:textIsSelectable="true"
+        android:textIsSelectable="false"
         android:textSize="@dimen/content_title_textsize" />
 
 
