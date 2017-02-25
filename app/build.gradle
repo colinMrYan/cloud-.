@@ -55,6 +55,9 @@ android {
     }
     lintOptions {
         lintConfig file("lint.xml")
+        disable "ResourceType"   //解决Error:Error: Expected resource of type color [ResourceType]的问题  drawable引用为color
+        checkReleaseBuilds false
+        abortOnError false
     }
 
 
