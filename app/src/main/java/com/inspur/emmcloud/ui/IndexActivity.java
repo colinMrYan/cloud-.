@@ -3,7 +3,10 @@ package com.inspur.emmcloud.ui;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -27,14 +30,17 @@ import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.AppAPIService;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.api.apiservice.ContactAPIService;
+import com.inspur.emmcloud.bean.AndroidBundleBean;
 import com.inspur.emmcloud.bean.AppTabBean;
 import com.inspur.emmcloud.bean.ChannelGroup;
 import com.inspur.emmcloud.bean.Contact;
 import com.inspur.emmcloud.bean.GetAllContactResult;
 import com.inspur.emmcloud.bean.GetAllRobotsResult;
 import com.inspur.emmcloud.bean.GetAppTabsResult;
+import com.inspur.emmcloud.bean.GetClientIdRsult;
 import com.inspur.emmcloud.bean.GetExceptionResult;
 import com.inspur.emmcloud.bean.GetSearchChannelGroupResult;
+import com.inspur.emmcloud.bean.ReactNativeClientIdErrorBean;
 import com.inspur.emmcloud.bean.ReactNativeUpdateBean;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.interf.OnTabReselectListener;
@@ -44,7 +50,6 @@ import com.inspur.emmcloud.util.AppUtils;
 import com.inspur.emmcloud.util.ChannelGroupCacheUtils;
 import com.inspur.emmcloud.util.ContactCacheUtils;
 import com.inspur.emmcloud.util.DbCacheUtils;
-import com.inspur.emmcloud.util.FileSafeCode;
 import com.inspur.emmcloud.util.FileUtils;
 import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.NetUtils;
@@ -67,15 +72,10 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.facebook.react.common.ApplicationHolder.getApplication;
-import static com.inspur.emmcloud.util.FileUtils.readFile;
-import static com.inspur.reactnative.ReactNativeFlow.moveFolder;
-
 /**
  * 主页面
  *
  * @author Administrator
- *
  */
 public class IndexActivity extends BaseFragmentActivity implements
         OnTabChangeListener, OnTouchListener {
@@ -90,43 +90,51 @@ public class IndexActivity extends BaseFragmentActivity implements
     private boolean isHasCacheContact = false;
     private TipsView tipsView;
     private String reactNativeDicPath = "";
-	private LoadingDialog loadingDlg;
+    private LoadingDialog loadingDlg;
+    private IndexReactNativeReceiver reactNativeReceiver;
+    private ReactNativeUpdateBean reactNativeUpdateBean;
+    private AppAPIService appApiService;
+    private String userId;
+    private boolean isReactNativeClientIdInvalid = false;
 
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_index);
-		((MyApplication) getApplicationContext()).addActivity(this);
-		((MyApplication) getApplicationContext()).setIndexActvityRunning(true);
-		((MyApplication) getApplicationContext()).closeAllDb();
-		DbCacheUtils.initDb(getApplicationContext());
-		loadingDlg = new LoadingDialog(IndexActivity.this,getString(R.string.app_init));
-		handMessage();
-		getIsHasCacheContact();
-		if (!isHasCacheContact) {
-			loadingDlg.show();
-		}
-		getAllContact();
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_index);
+        ((MyApplication) getApplicationContext()).addActivity(this);
+        ((MyApplication) getApplicationContext()).setIndexActvityRunning(true);
+        ((MyApplication) getApplicationContext()).closeAllDb();
+        DbCacheUtils.initDb(getApplicationContext());
+        userId = ((MyApplication) getApplication()).getUid();
+        loadingDlg = new LoadingDialog(IndexActivity.this, getString(R.string.app_init));
+        handMessage();
+        getIsHasCacheContact();
+        if (!isHasCacheContact) {
+            loadingDlg.show();
+        }
+        getAllContact();
 
-		getAllRobots();
-		initTabView();
-		if (!AppUtils.isApkDebugable(IndexActivity.this)) {
-			uploadLastTimeException();
-		}
-		/**从服务端获取显示tab**/
-		getAppTabs();
+        getAllRobots();
+        initTabView();
+        if (!AppUtils.isApkDebugable(IndexActivity.this)) {
+            uploadLastTimeException();
+        }
+        /**从服务端获取显示tab**/
+        getAppTabs();
 //		startUploadCollectService();
+        registerReactNativeReceiver();
         initReactNative();
-//        boolean moveSuccess = FileUtils.copyFolder(reactNativeDicPath+"/current",reactNativeDicPath+"/temp");
-//        boolean moveSuccess = ReactNativeFlow.moveFolder(reactNativeDicPath+"/current",reactNativeDicPath+"/temp");
-//        LogUtils.YfcDebug("移动是否成功："+moveSuccess);
-        File file = new File("/sdcard/IMP-Cloud/cache/cloud/default.zip");
-        try {
-            LogUtils.YfcDebug("获取zip文件的sha1"+ FileSafeCode.getSha1(file));
-            LogUtils.YfcDebug("获取zip文件的md5"+ FileSafeCode.getMD5(file));
-            LogUtils.YfcDebug("获取zip文件的crc"+ FileSafeCode.getCRC32(file));
-        } catch (Exception e) {
-            e.printStackTrace();
+    }
+
+    /**
+     * 注册刷新广播
+     */
+    private void registerReactNativeReceiver() {
+        if (reactNativeReceiver == null) {
+            reactNativeReceiver = new IndexReactNativeReceiver();
+            IntentFilter filter = new IntentFilter();
+            filter.addAction("com.inspur.react.success");
+            registerReceiver(reactNativeReceiver, filter);
         }
     }
 
@@ -135,14 +143,38 @@ public class IndexActivity extends BaseFragmentActivity implements
      */
     private void initReactNative() {
         reactNativeDicPath = getFilesDir().getPath();
-        if(!ReactNativeFlow.checkBundleFileIsExist(reactNativeDicPath+"/current/default/index.android.bundle")){
-            LogUtils.YfcDebug("IndexActivity没有检测到Bundle");
-            ReactNativeFlow.initReactNative(IndexActivity.this);
-        }else{
-            if(ReactNativeFlow.moreThanHalfHour("")){
-                updateReactNative();
-            }
+        if (checkClientId()) {
+            getReactNativeClientId();
         }
+        if (!ReactNativeFlow.checkBundleFileIsExist(reactNativeDicPath + "/current/index.android.bundle")) {
+            LogUtils.YfcDebug("IndexActivity没有检测到Bundle，初始化默认bundle，解压assets下的zip到app中");
+            ReactNativeFlow.initReactNative(IndexActivity.this);
+        } else {
+            LogUtils.YfcDebug("不是第一次打开，更新");
+            updateReactNative();
+        }
+    }
+
+    /**
+     * 获取clientId
+     */
+    private void getReactNativeClientId() {
+        AppAPIService appAPIService = new AppAPIService(IndexActivity.this);
+        appAPIService.setAPIInterface(new WebService());
+        if (NetUtils.isNetworkConnected(IndexActivity.this)) {
+            appAPIService.getClientId(AppUtils.getMyUUID(IndexActivity.this), AppUtils.GetChangShang());
+        }
+    }
+
+
+    /**
+     * 检查clientId是否存在
+     *
+     * @return
+     */
+    private boolean checkClientId() {
+        String clientId = PreferencesUtils.getString(IndexActivity.this, UriUtils.tanent + userId + "react_native_clientid", "");
+        return StringUtils.isBlank(clientId);
     }
 
     /**
@@ -150,17 +182,13 @@ public class IndexActivity extends BaseFragmentActivity implements
      */
     private void updateReactNative() {
         LogUtils.YfcDebug("IndexActivity发起检查更新的请求");
-        AppAPIService appApiService = new AppAPIService(IndexActivity.this);
+        appApiService = new AppAPIService(IndexActivity.this);
         appApiService.setAPIInterface(new WebService());
-        //此处未写完读取json路径
-        StringBuilder describeVersionAndTime = FileUtils.readFile(reactNativeDicPath + "/current/xxx.json","UTF-8");
-        try {
-            JSONObject json = new JSONObject(String.valueOf(describeVersionAndTime));
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        if(NetUtils.isNetworkConnected(IndexActivity.this)){
-            appApiService.getReactNativeUpdate(0,0L);
+        String clientId = PreferencesUtils.getString(IndexActivity.this, UriUtils.tanent + userId + "react_native_clientid", "");
+        StringBuilder describeVersionAndTime = FileUtils.readFile(reactNativeDicPath + "/current/bundle.json", "UTF-8");
+        AndroidBundleBean androidBundleBean = new AndroidBundleBean(describeVersionAndTime.toString());
+        if (NetUtils.isNetworkConnected(IndexActivity.this)) {
+            appApiService.getReactNativeUpdate(androidBundleBean.getVersion(), androidBundleBean.getCreationDate(), clientId);
         }
     }
 
@@ -220,39 +248,39 @@ public class IndexActivity extends BaseFragmentActivity implements
         // TODO Auto-generated method stub
         handler = new Handler() {
 
-			@Override
-			public void handleMessage(Message msg) {
-				// TODO Auto-generated method stub
-				switch (msg.what) {
-				case SYNC_ALL_BASE_DATA_SUCCESS:
-					if (loadingDlg != null && loadingDlg.isShowing()) {
-						loadingDlg.dismiss();
-					}
+            @Override
+            public void handleMessage(Message msg) {
+                // TODO Auto-generated method stub
+                switch (msg.what) {
+                    case SYNC_ALL_BASE_DATA_SUCCESS:
+                        if (loadingDlg != null && loadingDlg.isShowing()) {
+                            loadingDlg.dismiss();
+                        }
 
-					((MyApplication) getApplicationContext())
-							.setIsContactReady(true);
-					sendCreatChannelGroupIconBroadCaset();
-					break;
-				case SYNC_CONTACT_SUCCESS:
-					getAllChannelGroup();
-					break;
-				default:
-					break;
-				}
-			}
+                        ((MyApplication) getApplicationContext())
+                                .setIsContactReady(true);
+                        sendCreatChannelGroupIconBroadCaset();
+                        break;
+                    case SYNC_CONTACT_SUCCESS:
+                        getAllChannelGroup();
+                        break;
+                    default:
+                        break;
+                }
+            }
 
         };
     }
 
-	/**
-	 * 通讯录完成时发送广播
-	 */
-	private void sendCreatChannelGroupIconBroadCaset() {
-		// TODO Auto-generated method stub
-		//当通讯录完成时需要刷新头像
-		Intent intent = new Intent("message_notify");
-		intent.putExtra("command", "creat_group_icon");
-		sendBroadcast(intent);
+    /**
+     * 通讯录完成时发送广播
+     */
+    private void sendCreatChannelGroupIconBroadCaset() {
+        // TODO Auto-generated method stub
+        //当通讯录完成时需要刷新头像
+        Intent intent = new Intent("message_notify");
+        intent.putExtra("command", "creat_group_icon");
+        sendBroadcast(intent);
 
     }
 
@@ -395,7 +423,6 @@ public class IndexActivity extends BaseFragmentActivity implements
      */
     private int getTabIndex() {
         int tabIndex = 0;
-        String userId = ((MyApplication) getApplication()).getUid();
         String appTabs = PreferencesUtils.getString(IndexActivity.this,
                 UriUtils.tanent + userId + "appTabs", "");
         ArrayList<AppTabBean> appTabList;
@@ -422,7 +449,6 @@ public class IndexActivity extends BaseFragmentActivity implements
      */
     private MainTab[] handleAppTabs() {
         MainTab[] tabs = null;
-        String userId = ((MyApplication) getApplication()).getUid();
         String appTabs = PreferencesUtils.getString(IndexActivity.this,
                 UriUtils.tanent + userId + "appTabs", "");
         if (!StringUtils.isBlank(appTabs)) {
@@ -507,15 +533,16 @@ public class IndexActivity extends BaseFragmentActivity implements
 
     /**
      * 添加Fragment
+     *
      * @param fragment
      */
     private void addFragment(Fragment fragment) {
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.attach(fragment);
-        transaction.add(fragment,"");
+        transaction.add(fragment, "");
         transaction.commit();
-        LogUtils.YfcDebug("当前Fragment是否已经attached："+fragment.isAdded());
+        LogUtils.YfcDebug("当前Fragment是否已经attached：" + fragment.isAdded());
     }
 
     @Override
@@ -693,7 +720,6 @@ public class IndexActivity extends BaseFragmentActivity implements
 
         @Override
         public void returnGetAppTabsSuccess(GetAppTabsResult getAppTabsResult) {
-            String userId = ((MyApplication) getApplication()).getUid();
             PreferencesUtils.putString(IndexActivity.this,
                     UriUtils.tanent + userId + "appTabs", JSON.toJSONString(getAppTabsResult.getAppTabBeanList()));
         }
@@ -706,40 +732,57 @@ public class IndexActivity extends BaseFragmentActivity implements
 
         @Override
         public void returnReactNativeUpdateSuccess(ReactNativeUpdateBean reactNativeUpdateBean) {
-            updateReactNativeWithOrder(reactNativeUpdateBean);
+            IndexActivity.this.reactNativeUpdateBean = reactNativeUpdateBean;
+            updateReactNativeWithOrder();
         }
 
         @Override
-        public void returnReactNativeUpdateFail(String error) {
-            WebServiceMiddleUtils.hand(IndexActivity.this,error);
+        public void returnReactNativeUpdateFail(ReactNativeClientIdErrorBean reactNativeClientIdErrorBean) {
+            isReactNativeClientIdInvalid = true;
+            getReactNativeClientId();
         }
 
+        @Override
+        public void returnGetClientIdResultSuccess(GetClientIdRsult getClientIdRsult) {
+            super.returnGetClientIdResultSuccess(getClientIdRsult);
+            PreferencesUtils.putString(IndexActivity.this, UriUtils.tanent + userId + "react_native_clientid", getClientIdRsult.getClientId());
+            if(isReactNativeClientIdInvalid){
+                updateReactNative();
+            }
+        }
+
+        @Override
+        public void returnGetClientIdResultFail(String error) {
+            super.returnGetClientIdResultFail(error);
+        }
     }
 
     /**
      * 按照更新指令更新ReactNative
-     * @param reactNativeUpdateBean
      */
-    private void updateReactNativeWithOrder(ReactNativeUpdateBean reactNativeUpdateBean) {
-        int state = ReactNativeFlow.checkReactNativeOperation(reactNativeUpdateBean.getState());
-        LogUtils.YfcDebug("返回请求结果state是："+state);
-        if(state == ReactNativeFlow.REACT_NATIVE_RESET){
+    private void updateReactNativeWithOrder() {
+        int state = ReactNativeFlow.checkReactNativeOperation(reactNativeUpdateBean.getCommand());
+        if (state == ReactNativeFlow.REACT_NATIVE_RESET) {
             //删除current和temp目录，重新解压assets下的zip
             resetReactNative();
-            LogUtils.YfcDebug("重置操作");
-        }else if(state == ReactNativeFlow.REACT_NATIVE_REVERT){
+        } else if (state == ReactNativeFlow.REACT_NATIVE_REVERT) {
             //拷贝temp下的current到app内部current目录下
-            moveFolder(reactNativeDicPath+"/temp",reactNativeDicPath+"/current");
-            LogUtils.YfcDebug("回滚操作");
-        }else if(state == ReactNativeFlow.REACT_NATIVE_FORWORD){
+            File file = new File(reactNativeDicPath + "/temp");
+            if(file.exists()){
+                ReactNativeFlow.moveFolder(reactNativeDicPath + "/temp", reactNativeDicPath + "/current");
+                FileUtils.deleteFile(reactNativeDicPath + "/temp");
+            }else {
+                ReactNativeFlow.initReactNative(IndexActivity.this);
+            }
+        } else if (state == ReactNativeFlow.REACT_NATIVE_FORWORD) {
             //下载zip包并检查是否完整，完整则解压，不完整则重新下载,完整则把current移动到temp下，把新包解压到current
-            ReactNativeFlow.downLoadZipFile(IndexActivity.this,reactNativeUpdateBean.getUrl());
-            LogUtils.YfcDebug("更新版本操作");
-        }else if(state == ReactNativeFlow.REACT_NATIVE_UNKNOWN){
+            ReactNativeFlow.downLoadZipFile(IndexActivity.this, reactNativeUpdateBean, userId);
+        } else if (state == ReactNativeFlow.REACT_NATIVE_UNKNOWN) {
             //发生了未知错误，下载state为0
             //同Reset的情况，删除current和temp目录，重新解压assets下的zip
             resetReactNative();
-            LogUtils.YfcDebug("未知错误重置操作");
+        } else if (state == ReactNativeFlow.REACT_NATIVE_NO_UPDATE) {
+            //没有更新什么也不做
         }
     }
 
@@ -747,10 +790,27 @@ public class IndexActivity extends BaseFragmentActivity implements
      * 重新整理目录恢复状态
      */
     private void resetReactNative() {
-        FileUtils.deleteFile(reactNativeDicPath+"/temp");
-        FileUtils.deleteFile(reactNativeDicPath+"/current");
+        FileUtils.deleteFile(reactNativeDicPath + "/temp");
+        FileUtils.deleteFile(reactNativeDicPath + "/current");
         ReactNativeFlow.initReactNative(IndexActivity.this);
-//        FindFragment.reactNativeViewNeedToRefresh = true;
+    }
+
+    /**
+     * 更新ReactNative广播接收类
+     */
+    class IndexReactNativeReceiver extends BroadcastReceiver {
+        private static final String ACTION_REFRESH = "com.inspur.react.success";
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (action.equals(ACTION_REFRESH)) {
+                String clientId = PreferencesUtils.getString(IndexActivity.this, UriUtils.tanent + userId +
+                        "react_native_clientid", "");
+                appApiService.sendBackReactNativeUpdateLog(reactNativeUpdateBean.getCommand(),
+                        reactNativeUpdateBean.getBundle().getId().getVersion(), clientId);
+            }
+        }
     }
 
 }

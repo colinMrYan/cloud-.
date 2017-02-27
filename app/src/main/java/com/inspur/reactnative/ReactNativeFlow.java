@@ -3,7 +3,11 @@ package com.inspur.reactnative;
 import android.content.Context;
 import android.content.Intent;
 
+import com.inspur.emmcloud.api.APIUri;
+import com.inspur.emmcloud.bean.ReactNativeUpdateBean;
+import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.util.DownLoaderUtils;
+import com.inspur.emmcloud.util.FileSafeCode;
 import com.inspur.emmcloud.util.FileUtils;
 import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.UnZipAssets;
@@ -37,6 +41,10 @@ public class ReactNativeFlow {
      */
     public static final int REACT_NATIVE_FORWORD = 3;
     /**
+     * 默认：不更新
+     */
+    public static final int REACT_NATIVE_NO_UPDATE = 4;
+    /**
      * 初始化ReactNative,为第一次加载准备资源
      */
     public static void initReactNative(Context context) {
@@ -44,7 +52,7 @@ public class ReactNativeFlow {
         String filePath = context.getFilesDir().getPath();
         if(!isBundleExist){
             try {
-                UnZipAssets.unZip(context,"default.zip",filePath+"/current",true);
+                UnZipAssets.unZip(context,"bundle-v0.1.0.android.zip",filePath+"/current",true);
                 LogUtils.YfcDebug("解压bundle到Current文件夹下");
             } catch (IOException e) {
                 e.printStackTrace();
@@ -57,7 +65,7 @@ public class ReactNativeFlow {
      */
     private static boolean checkIsBundleExist(Context context) {
         String filePath = context.getFilesDir().getPath();
-        File file = new File(filePath+"current/default/index.android.bundle");
+        File file = new File(filePath+"current/index.android.bundle");
         if(file.exists()){
             return  true;
         }
@@ -81,22 +89,23 @@ public class ReactNativeFlow {
      * @return
      */
     public static  boolean isCompleteZip(String localMd5,String zipFilePath){
-        return  true;
 //        File file = new File(zipFilePath);
-//        try {
-//            String fileMd5 = MD5Util.getFileMD5String(file);
-//            return localMd5.equals(fileMd5);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//        return false;
+//        LogUtils.YfcDebug("验证sha256本地值："+localMd5+"文件值："+ FileSafeCode.getFileSHA256(file));
+        File file = new File(zipFilePath);
+        try {
+            String zipSha256 = FileSafeCode.getFileSHA256(file);
+            return localMd5.equals(zipSha256);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     /**
      * 下载zip更新包
      * @param context
      */
-    public static void downLoadZipFile(final Context context,String downloadUrl){
+    public static void downLoadZipFile(final Context context, final ReactNativeUpdateBean reactNativeUpdateBean, final String userId){
         final DownLoaderUtils downLoaderUtils = new DownLoaderUtils();
         Callback.ProgressCallback<File> progressCallback = new Callback.ProgressCallback<File>() {
             @Override
@@ -132,30 +141,32 @@ public class ReactNativeFlow {
 
             @Override
             public void onFinished() {
-                LogUtils.YfcDebug("下载完成");
-//                    File file = new File(Environment.getExternalStorageDirectory()+"/IMP-Cloud/cache/cloud/default.zip");
-//                    try {
-//                        ZipUtils.upZipFile(file,Environment.getExternalStorageDirectory()+"/IMP-Cloud");
-//                    } catch (IOException e) {
-//                        LogUtils.YfcDebug("解压异常："+e.getMessage());
-//                        e.printStackTrace();
-//                    }
                 String filePath = context.getFilesDir().getPath();
-                if(ReactNativeFlow.isCompleteZip("","/sdcard/IMP-Cloud/cache/cloud/default.zip")){
+                if(ReactNativeFlow.isCompleteZip(reactNativeUpdateBean.getBundle().getAndroidHash(),
+                        MyAppConfig.LOCAL_DOWNLOAD_PATH+"/"+userId+"/"+reactNativeUpdateBean.getBundle().getAndroidUri())){
                     LogUtils.YfcDebug("下载的是一个完整的包");
                     moveFolder(filePath+"/current",filePath+"/temp");
-                    ZipUtils.upZipFile("/sdcard/IMP-Cloud/cache/cloud/default.zip",filePath+"/current");
-                    Intent intent = new Intent("com.inspur.react.refresh");
+                    deleteZipFile(filePath+"/current");
+                    ZipUtils.upZipFile(MyAppConfig.LOCAL_DOWNLOAD_PATH+"/"+userId+"/"+
+                            reactNativeUpdateBean.getBundle().getAndroidUri(),
+                            filePath+"/current");
+                    FileUtils.deleteFile(MyAppConfig.LOCAL_DOWNLOAD_PATH+"/"+userId+"/"+
+                            reactNativeUpdateBean.getBundle().getAndroidUri());
+                    Intent intent = new Intent("com.inspur.react.success");
                     context.sendBroadcast(intent);
-                }else{
+                }
+                else{
                     //如何处理？重新下载不行，progressCallback不能再当参数传入
                 }
 
             }
         };
-        LogUtils.YfcDebug("ReactNativeFlow里下载地址:"+ downloadUrl);
-//            downLoaderUtils.startDownLoad(reactNativeUpdateBean.getUrl(),Environment.getExternalStorageDirectory()+"/cloud",progressCallback);
-        downLoaderUtils.startDownLoad("http://10.24.13.151:8080/default.zip","/sdcard/IMP-Cloud/cache/cloud/default.zip",progressCallback);
+
+        downLoaderUtils.startDownLoad(APIUri.getZipUrl()+reactNativeUpdateBean.getBundle().getAndroidUri(),
+                MyAppConfig.LOCAL_DOWNLOAD_PATH+"/"+userId+"/"+reactNativeUpdateBean.getBundle().getAndroidUri(),
+                progressCallback);
+        LogUtils.YfcDebug("下载地址："+APIUri.getZipUrl()+reactNativeUpdateBean.getBundle().getAndroidUri());
+//        downLoaderUtils.startDownLoad("http://10.24.13.151:8080/default.zip","/sdcard/IMP-Cloud/cache/cloud/default.zip",progressCallback);
     }
 
     /**
@@ -173,15 +184,16 @@ public class ReactNativeFlow {
      * @return
      */
     public static int checkReactNativeOperation (String state){
-        return  3;
-//        if(state.equals("")){
-//            return REACT_NATIVE_RESET;
-//        }else if(state.equals("")){
-//            return REACT_NATIVE_REVERT;
-//        }else if(state.equals("")){
-//            return REACT_NATIVE_FORWORD;
-//        }
-//        return  REACT_NATIVE_UNKNOWN;
+        if(state.equals("RESET")){
+            return REACT_NATIVE_RESET;
+        }else if(state.equals("ROLLBACK")){
+            return REACT_NATIVE_REVERT;
+        }else if(state.equals("FORWARD")){
+            return REACT_NATIVE_FORWORD;
+        }else if(state.equals("STANDBY")){
+            return REACT_NATIVE_NO_UPDATE;
+        }
+        return  REACT_NATIVE_UNKNOWN;
     }
 
     /**
@@ -218,11 +230,6 @@ public class ReactNativeFlow {
         boolean unZipSuccess = false;
         try {
             UnZipAssets.unZip(context,assetName,outputDirectory,isReWrite);
-//            String filePath = context.getFilesDir().getPath();
-//            File file = new File(filePath+"/current/default");
-//            if(file.exists()){
-//                file.delete();
-//            }
             unZipSuccess = true;
         } catch (IOException e) {
             unZipSuccess = false;
@@ -240,5 +247,6 @@ public class ReactNativeFlow {
     public static boolean deleteZipFile(String deletePath){
         return FileUtils.deleteFile(deletePath);
     }
+
 
 }

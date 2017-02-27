@@ -50,6 +50,8 @@
     <string name="more_work_place">更多辦公點 ...</string>
     <string name="cancel_filter">取消過濾 </string>
     <string name="only_free">僅顯示空閒 </string>
+    <string name="file_no_identifiable">不能识别的文件类型</string>
+    <string name="login_code_login_text">验证码登录</string>
 
     <!-- 公共部分 -->
     <string name="year">年</string>
@@ -163,6 +165,7 @@
 
     <!-- 新用戶註冊 -->
     <string name="new_user">新用戶</string>
+    <string name="newuser_title">新用户</string>
     <string name="new_user_input_phonenum">請輸入手機號碼</string>
     <string name="new_user_agree">點擊“下一步”按鈕即表示您同意浪潮的</string>
     <string name="newuser_protocal_text">《使用者協定》</string>

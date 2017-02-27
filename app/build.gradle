@@ -55,9 +55,27 @@ android {
     }
     lintOptions {
         lintConfig file("lint.xml")
-        disable "ResourceType"   //解决Error:Error: Expected resource of type color [ResourceType]的问题  drawable引用为color
-        checkReleaseBuilds false
         abortOnError false
+        checkReleaseBuilds false
+        disable 'MissingTranslation', 'ExtraTranslation'
+    }
+
+    //指定打包后应用名称
+    applicationVariants.all {variant ->
+        variant.outputs.each {output ->
+            def outputFile = output.outputFile
+            def fileName
+            if (outputFile != null && outputFile.name.endsWith('.apk')) {
+                if (variant.buildType.name.equals('release')) {
+//                    fileName = "${defaultConfig.versionName}_${defaultConfig.versionCode}.apk"
+                    fileName = "inspur_cloud_mobileclient_1.0.0.apk"
+                } else if (variant.buildType.name.equals('debug')) {
+//                    fileName = "${defaultConfig.versionName}_${defaultConfig.versionCode}_debug.apk"
+                    fileName = "inspur_cloud_mobileclient_debug_1.0.0.apk"
+                }
+                output.outputFile = new File(outputFile.parent, fileName)
+            }
+        }
     }
 
 

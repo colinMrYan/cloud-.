@@ -3,6 +3,7 @@ package com.inspur.emmcloud.ui.app.groupnews;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -34,6 +35,7 @@ import com.inspur.emmcloud.widget.pullableview.PullableListView;
  * @author sunqx
  *
  */
+@SuppressLint("ValidFragment")
 public class GroupNewsCardFragment extends Fragment implements
 		OnRefreshListener {
 

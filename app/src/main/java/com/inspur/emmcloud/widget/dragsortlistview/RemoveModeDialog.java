@@ -1,6 +1,7 @@
 package com.inspur.emmcloud.widget.dragsortlistview;
 
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -24,6 +25,7 @@ public class RemoveModeDialog extends DialogFragment {
         mRemoveMode = DragSortController.FLING_REMOVE;
     }
 
+    @SuppressLint("ValidFragment")
     public RemoveModeDialog(int inRemoveMode) {
         super();
         mRemoveMode = inRemoveMode;
