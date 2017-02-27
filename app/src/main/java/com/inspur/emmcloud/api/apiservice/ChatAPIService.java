@@ -36,7 +36,7 @@ import com.inspur.emmcloud.bean.GetNewMsgsResult;
 import com.inspur.emmcloud.bean.GetNewsImgResult;
 import com.inspur.emmcloud.bean.GetSearchChannelGroupResult;
 import com.inspur.emmcloud.bean.GetSendMsgResult;
-import com.inspur.emmcloud.bean.getMsgResult;
+import com.inspur.emmcloud.bean.GetMsgResult;
 import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.OauthCallBack;
 import com.inspur.emmcloud.util.OauthUtils;
@@ -331,7 +331,7 @@ public class ChatAPIService {
 			@Override
 			public void callbackSuccess(String arg0) {
 				// TODO Auto-generated method stub
-				apiInterface.returnMsgSuccess(new getMsgResult(arg0));
+				apiInterface.returnMsgSuccess(new GetMsgResult(arg0));
 			}
 
 			@Override

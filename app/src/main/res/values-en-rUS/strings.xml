@@ -692,7 +692,7 @@
     <string name="download_fail">Download Failed</string>
     <string name="download_success">Download Success</string>
     <string name="file_downloading">In the download, please later...</string>
-    <string name="file_download_success">File has been downloaded successfully, is it open?</string>
+    <string name="file_download_success">File has been downloaded successfully, click again to open</string>
     <string name="has_downloaded">Downloaded</string>
     <string name="imp_content">Content</string>
     <string name="file_ok">Confirm</string>

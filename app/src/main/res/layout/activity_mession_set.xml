@@ -103,7 +103,7 @@
         android:background="#FFFFFFFF" >
 
         <com.inspur.emmcloud.widget.tag.TagListView
-            xmlns:f="http://schemas.android.com/apk/res/com.inspur.emmcloud"
+            xmlns:f="http://schemas.android.com/apk/res-auto"
             android:id="@+id/mession_tagview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

@@ -205,6 +205,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:scaleType="fitXY"
+                android:visibility="gone"
                 android:src="@drawable/icon_trip_share" />
         </RelativeLayout>
     </LinearLayout>

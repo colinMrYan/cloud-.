@@ -123,7 +123,7 @@ public class UriUtils {
 	 * 
 	 * @return
 	 */
-	private static String getLanguageCookie(Context context) {
+	public static String getLanguageCookie(Context context) {
 		// TODO Auto-generated method stub
 		String languageJson = PreferencesUtils.getString(context, tanent
 				+ "appLanguageObj");

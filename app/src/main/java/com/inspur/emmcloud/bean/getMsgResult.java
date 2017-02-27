@@ -3,10 +3,10 @@ package com.inspur.emmcloud.bean;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class getMsgResult {
+public class GetMsgResult {
 
 	private Msg msg;
-	public getMsgResult(String response){
+	public GetMsgResult(String response){
 		try {
 			JSONObject msgObj = new JSONObject(response);
 			this.msg = new Msg(msgObj);

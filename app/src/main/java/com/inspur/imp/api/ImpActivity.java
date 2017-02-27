@@ -18,12 +18,13 @@ import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.inspur.emmcloud.MyApplication;
+import com.inspur.emmcloud.util.AppUtils;
+import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.imp.engine.webview.ImpWebChromeClient;
 import com.inspur.imp.engine.webview.ImpWebView;
-import com.inspur.emmcloud.MyApplication;
 import com.inspur.imp.plugin.camera.PublicWay;
 import com.inspur.imp.plugin.file.FileService;
-
 
 import java.util.HashMap;
 import java.util.Map;
@@ -61,8 +62,15 @@ public class ImpActivity extends ImpBaseActivity {
 		getWindow().setSoftInputMode(
 				WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
 						| WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-		
-		String url = getIntent().getExtras().getString("uri");
+		String url = "";
+		Uri uri = getIntent().getData();
+		if (uri != null){
+			String host = uri.getHost();
+			url = "https://emm.inspur.com/ssohandler/gs_msg/"+host;
+
+		}else{
+			url = getIntent().getExtras().getString("uri");
+		}
 		if (getIntent().hasExtra("appName")) {
 			initWebViewGoBackOrClose();
 			((RelativeLayout) findViewById(Res.getWidgetID("header_layout")))
@@ -70,22 +78,27 @@ public class ImpActivity extends ImpBaseActivity {
 			((TextView) findViewById(Res.getWidgetID("header_text")))
 					.setText(getIntent().getExtras().getString("appName"));
 		}
-		if (getIntent().hasExtra("userAgentExtra")) {
-			String userAgentExtra = getIntent().getExtras().getString(
-					"userAgentExtra");
-			setUserAgent(userAgentExtra);
-		}
-
-		if (getIntent().hasExtra("Authorization")) {
-			String OauthHeader = getIntent().getExtras().getString(
-					"Authorization");
-			setOauthHeader(url, OauthHeader);
-		}
-
-		if (getIntent().hasExtra("cookie")) {
-			String cookie = getIntent().getExtras().getString("cookie");
-			setCookies(url, cookie);
-		}
+		String token = ((MyApplication)getApplicationContext())
+				.getToken();
+		setOauthHeader(url, token);
+		setUserAgent("/emmcloud/" + AppUtils.getVersion(this));
+		setCookies(url, UriUtils.getLanguageCookie(this));
+//		if (getIntent().hasExtra("userAgentExtra")) {
+//			String userAgentExtra = getIntent().getExtras().getString(
+//					"userAgentExtra");
+//			setUserAgent(userAgentExtra);
+//		}
+//
+//		if (getIntent().hasExtra("Authorization")) {
+//			String OauthHeader = getIntent().getExtras().getString(
+//					"Authorization");
+//			setOauthHeader(url, OauthHeader);
+//		}
+//
+//		if (getIntent().hasExtra("cookie")) {
+//			String cookie = getIntent().getExtras().getString("cookie");
+//			setCookies(url, cookie);
+//		}
 
 		webView.setOnTouchListener(new OnTouchListener() {
 			@Override
