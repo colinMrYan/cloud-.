@@ -529,7 +529,35 @@ public class APIUri {
 	}
 
 	/*****************************************ReactNative**************************************/
+	/**
+	 * 更新的Native地址
+	 * @return
+     */
 	public static String getReactNativeUpdate(){
-		return getEcmTanentUrl()+"/api/v0/view/package/test/DISCOVER/?";
+		return getEcmTanentUrl()+"/api/v0/view/DISCOVER/bundle/?";
+	}
+
+	/**
+	 * 获取clientid的
+	 * @return
+     */
+	public static String getClientId(){
+		return getEcmTanentUrl()+"/api/v0/view/client";
+	}
+
+	/**
+	 * 写回客户端日志
+	 * @return
+     */
+	public static String getClientLog(){
+		return getEcmTanentUrl()+"/api/v0/view/update/DISCOVER/?";
+	}
+
+	/**
+	 * zip文件下载地址
+	 * @return
+     */
+	public static String getZipUrl(){
+		return getEcmTanentUrl()+"/res/stream/";
 	}
 }

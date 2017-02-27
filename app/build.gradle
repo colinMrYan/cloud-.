@@ -55,6 +55,27 @@ android {
     }
     lintOptions {
         lintConfig file("lint.xml")
+        abortOnError false
+        checkReleaseBuilds false
+        disable 'MissingTranslation', 'ExtraTranslation'
+    }
+
+    //指定打包后应用名称
+    applicationVariants.all {variant ->
+        variant.outputs.each {output ->
+            def outputFile = output.outputFile
+            def fileName
+            if (outputFile != null && outputFile.name.endsWith('.apk')) {
+                if (variant.buildType.name.equals('release')) {
+//                    fileName = "${defaultConfig.versionName}_${defaultConfig.versionCode}.apk"
+                    fileName = "inspur_cloud_mobileclient_1.0.0.apk"
+                } else if (variant.buildType.name.equals('debug')) {
+//                    fileName = "${defaultConfig.versionName}_${defaultConfig.versionCode}_debug.apk"
+                    fileName = "inspur_cloud_mobileclient_debug_1.0.0.apk"
+                }
+                output.outputFile = new File(outputFile.parent, fileName)
+            }
+        }
     }
 
 
@@ -93,7 +114,7 @@ dependencies {
 
     // 3rd parts
     compile 'org.apache.commons:commons-lang3:3.5'
-    //    compile 'cn.jpush.api:jpush-client:3.2.16'
+//    compile 'cn.jpush.api:jpush-client:3.2.16'
     compile 'com.amap.api:location:3.3.0'
     compile 'com.baidu.mapapi:location:6.13'
     compile 'com.google.code.gson:gson:2.8.0'
@@ -128,7 +149,7 @@ dependencies {
 
     compile files('src/libs/xutils-2.6.15_db.jar')
     compile files('src/libs/xutils-3.3.36.jar')
-    compile files('src/libs/jpush-android-2.1.7.jar')
+//    compile files('src/libs/jpush-android-2.1.7.jar')
     compile 'commons-codec:commons-codec:20041127.091804'
     compile files('src/libs/jpush-android_v3.0.1.jar')
     compile files('src/libs/jcore-android_v1.1.0.jar')

@@ -1,6 +1,7 @@
 package com.inspur.emmcloud.widget.dragsortlistview;
 
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -21,11 +22,13 @@ public class DragInitModeDialog extends DialogFragment {
 
     private DragOkListener mListener;
 
+
     public DragInitModeDialog() {
         super();
         mDragInitMode = DragSortController.ON_DOWN;
     }
 
+    @SuppressLint("ValidFragment")
     public DragInitModeDialog(int dragStartMode) {
         super();
         mDragInitMode = dragStartMode;

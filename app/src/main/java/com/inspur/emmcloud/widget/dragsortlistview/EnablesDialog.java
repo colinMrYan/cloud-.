@@ -1,6 +1,7 @@
 package com.inspur.emmcloud.widget.dragsortlistview;
 
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -23,6 +24,7 @@ public class EnablesDialog extends DialogFragment {
         mEnabled[2] = false;
     }
 
+    @SuppressLint("ValidFragment")
     public EnablesDialog(boolean drag, boolean sort, boolean remove) {
         super();
         mEnabled = new boolean[3];

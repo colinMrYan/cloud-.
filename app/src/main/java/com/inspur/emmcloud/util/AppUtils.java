@@ -139,8 +139,6 @@ public class AppUtils {
 	 */
 	public static boolean isAppHasUpgraded(String savedVersion,
 			String currentVersion) {
-		LogUtils.YfcDebug("savedVersion："+savedVersion);
-		LogUtils.YfcDebug("currentVersion:"+currentVersion);
 		if (savedVersion != null || currentVersion != null) {
 			String[] savedArray = savedVersion.split("\\.");
 			String[] currentArray = currentVersion.split("\\.");

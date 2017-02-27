@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res/com.inspur.emmcloud"
     android:id="@+id/main_layout"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
@@ -56,7 +55,6 @@
             android:paddingBottom="7dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:scrollbars="@null"
             android:dividerHeight="7dp"
             android:divider="@color/content_bg"
             android:listSelector="#00000000" >
