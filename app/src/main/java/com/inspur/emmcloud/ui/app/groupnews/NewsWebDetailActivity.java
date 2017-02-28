@@ -1,6 +1,7 @@
 package com.inspur.emmcloud.ui.app.groupnews;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.webkit.WebSettings;
@@ -80,6 +81,13 @@ public class NewsWebDetailActivity extends BaseActivity {
 
 	}
 
+	@Override
+	protected void onResume() {
+		super.onResume();
+		if(webView != null){
+			webView.onResume();
+		}
+	}
 
 	public void onClick(View v) {
 		switch (v.getId()) {
@@ -240,6 +248,25 @@ public class NewsWebDetailActivity extends BaseActivity {
 			showShareFailToast();
 		}
 
+	}
+
+	protected void onPause() {
+		super.onPause();
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+			webView.onPause(); // 暂停网页中正在播放的视频
+		}
+	}
+
+
+
+	@Override
+	protected void onDestroy() {
+		// TODO Auto-generated method stub
+		super.onDestroy();
+		if (webView != null) {
+			webView.removeAllViews();
+			webView.destroy();
+		}
 	}
 
 }
