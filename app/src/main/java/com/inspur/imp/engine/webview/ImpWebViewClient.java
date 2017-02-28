@@ -8,6 +8,8 @@ import android.webkit.CookieSyncManager;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import com.inspur.emmcloud.util.PreferencesUtils;
+
 
 /**
  * 如果页面中链接，如果希望点击链接继续在当前browser中响应， 而不是新开Android的系统browser中响应该链接， 必须覆盖
@@ -76,6 +78,8 @@ public class ImpWebViewClient extends WebViewClient {
 		if (webview.destroyed || url.contains("error"))
 			return;
 		webview.loadUrl(F_UEX_SCRIPT_SELF_FINISH);
+		String c = CookieManager.getInstance().getCookie(url);
+		PreferencesUtils.putString(view.getContext(),"web_cookie",c);
 		CookieSyncManager.getInstance().sync();
 		webview.initPlugin();
 	}
