@@ -1,13 +1,7 @@
 package com.inspur.emmcloud.ui.app.groupnews;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -19,7 +13,6 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
-import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
 import com.inspur.emmcloud.bean.GetCreateSingleChannelResult;
 import com.inspur.emmcloud.bean.GetSendMsgResult;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
@@ -29,6 +22,10 @@ import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.ProgressWebView;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class NewsWebDetailActivity extends BaseActivity {
 
@@ -235,7 +232,7 @@ public class NewsWebDetailActivity extends BaseActivity {
 		}
 
 		@Override
-		public void returnSendMsgFail(String error) {
+		public void returnSendMsgFail(String error,String fakeMessageId) {
 			// TODO Auto-generated method stub
 			if (loadingDlg != null && loadingDlg.isShowing()) {
 				loadingDlg.dismiss();

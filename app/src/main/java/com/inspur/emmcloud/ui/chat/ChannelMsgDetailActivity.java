@@ -1,12 +1,5 @@
 package com.inspur.emmcloud.ui.chat;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -39,9 +32,9 @@ import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.bean.Comment;
 import com.inspur.emmcloud.bean.CommentBodyBean;
 import com.inspur.emmcloud.bean.GetMsgCommentResult;
+import com.inspur.emmcloud.bean.GetMsgResult;
 import com.inspur.emmcloud.bean.GetSendMsgResult;
 import com.inspur.emmcloud.bean.Msg;
-import com.inspur.emmcloud.bean.GetMsgResult;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
 import com.inspur.emmcloud.util.ChannelCacheUtils;
 import com.inspur.emmcloud.util.ChannelMentions;
@@ -69,6 +62,13 @@ import com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout;
 import com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout.OnRefreshListener;
 import com.inspur.emmcloud.widget.pullableview.PullableScrollView;
 import com.inspur.emmcloud.widget.spans.ForeColorSpan;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * 消息详情页面
@@ -641,7 +641,7 @@ public class ChannelMsgDetailActivity extends BaseActivity implements
 		}
 
 		@Override
-		public void returnSendMsgFail(String error) {
+		public void returnSendMsgFail(String error,String fakeMessageId) {
 			WebServiceMiddleUtils.hand(ChannelMsgDetailActivity.this, error);
 		}
 	}

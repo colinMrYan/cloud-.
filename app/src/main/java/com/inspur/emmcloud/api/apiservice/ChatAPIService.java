@@ -7,15 +7,6 @@
  */
 package com.inspur.emmcloud.api.apiservice;
 
-import java.io.File;
-import java.util.ArrayList;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
-import org.xutils.x;
-import org.xutils.http.HttpMethod;
-import org.xutils.http.RequestParams;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -32,16 +23,25 @@ import com.inspur.emmcloud.bean.GetCreateSingleChannelResult;
 import com.inspur.emmcloud.bean.GetFileUploadResult;
 import com.inspur.emmcloud.bean.GetMeetingReplyResult;
 import com.inspur.emmcloud.bean.GetMsgCommentResult;
+import com.inspur.emmcloud.bean.GetMsgResult;
 import com.inspur.emmcloud.bean.GetNewMsgsResult;
 import com.inspur.emmcloud.bean.GetNewsImgResult;
 import com.inspur.emmcloud.bean.GetSearchChannelGroupResult;
 import com.inspur.emmcloud.bean.GetSendMsgResult;
-import com.inspur.emmcloud.bean.GetMsgResult;
 import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.OauthCallBack;
 import com.inspur.emmcloud.util.OauthUtils;
 import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.UriUtils;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.xutils.http.HttpMethod;
+import org.xutils.http.RequestParams;
+import org.xutils.x;
+
+import java.io.File;
+import java.util.ArrayList;
 
 /**
  * com.inspur.emmcloud.api.apiservice.ChatAPIService create at 2016年11月8日
@@ -299,7 +299,7 @@ public class ChatAPIService {
 			@Override
 			public void callbackFail(String error, int responseCode) {
 				// TODO Auto-generated method stub
-				apiInterface.returnSendMsgFail(error);
+				apiInterface.returnSendMsgFail(error,fakeMessageId);
 			}
 		});
 
@@ -408,8 +408,6 @@ public class ChatAPIService {
 
 	/**
 	 * 获取搜索的频道列表
-	 * 
-	 * @param searchText
 	 */
 	public void getAllGroupChannelList() {
 
@@ -451,10 +449,9 @@ public class ChatAPIService {
 	}
 
 	/**
-	 * 获取频道列表信息
-	 * 
-	 * @param searchText
-	 */
+	 *  获取频道列表信息
+	 * @param cidArray
+     */
 	public void getChannelGroupList(final String[] cidArray) {
 		final String completeUrl = UriUtils.getHttpApiUri("channel?")
 				+ "limit=1000";

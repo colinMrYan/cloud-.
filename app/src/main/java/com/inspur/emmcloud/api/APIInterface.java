@@ -146,7 +146,7 @@ public interface APIInterface {
 	public void returnWebSocketUrlFail(String error);
 	
 	public void returnSendMsgSuccess(GetSendMsgResult getSendMsgResult, String fakeMessageId);
-	public void returnSendMsgFail(String error);
+	public void returnSendMsgFail(String error, String fakeMessageId);
 	
 	public void returnUploadMsgImgSuccess(GetNewsImgResult getNewsImgResult, String fakeMessageId);
 	public void returnUploadMsgImgFail(String error);
