@@ -325,7 +325,7 @@ public class APIInterfaceInstance implements APIInterface{
 	}
 
 	@Override
-	public void returnSendMsgFail(String error) {
+	public void returnSendMsgFail(String error,String fakeMessageId) {
 		// TODO Auto-generated method stub
 		
 	}

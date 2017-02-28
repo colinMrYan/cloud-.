@@ -1,38 +1,26 @@
 package com.inspur.imp.plugin.photo;
 
+import android.content.Context;
+
+import com.inspur.emmcloud.util.LogUtils;
+import com.inspur.emmcloud.util.PreferencesUtils;
+import com.inspur.imp.plugin.camera.imagepicker.bean.ImageItem;
+
+import org.xutils.common.Callback.CommonCallback;
+import org.xutils.ex.HttpException;
+import org.xutils.http.RequestParams;
+import org.xutils.x;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.xutils.x;
-import org.xutils.common.Callback.CommonCallback;
-import org.xutils.ex.HttpException;
-import org.xutils.http.RequestParams;
-
-
-
-
-
-
-
-
-
-
-
-import android.content.Context;
-import android.widget.Toast;
-
-import com.inspur.emmcloud.bean.GetCreateSingleChannelResult;
-import com.inspur.emmcloud.util.LogUtils;
-import com.inspur.emmcloud.util.ToastUtils;
-import com.inspur.imp.plugin.camera.imagepicker.bean.ImageItem;
-
 public class UploadPhoto {
-	private Context mcontext;
+	private Context mContext;
 	private List<String> filePathList = new ArrayList<String>();
 	private OnUploadPhotoListener onUploadPhotoListener;
 	public UploadPhoto(Context mContext,OnUploadPhotoListener onUploadPhotoListener){
-		this.mcontext =mcontext;
+		this.mContext =mContext;
 		this.onUploadPhotoListener = onUploadPhotoListener;
 	}
 	public void upload(String url,String filePath,int encodeType,String context){
@@ -56,6 +44,8 @@ public class UploadPhoto {
 			File file = new File(filePathList.get(i));
 			params.addBodyParameter(""+i, file, "application/json", file.getName());
 		}
+		String cookie = PreferencesUtils.getString(mContext,"web_cookie","");
+		params.addHeader("Cookie",cookie);
 		params.addBodyParameter("encodeType", encodeType+"");
 		params.addBodyParameter("context", context);
 		x.http().post(params, new CommonCallback<String>() {

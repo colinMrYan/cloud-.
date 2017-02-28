@@ -315,7 +315,7 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
                 String msgType = msg.getType();
                 String mid = "";
                 //当消息处于发送中状态时无法点击
-                if (msg.getSending()){
+                if (msg.getSendStatus() != 1){
                     return;
                 }
                 if (msgType.equals("image") || msgType.equals("res_image")
@@ -469,12 +469,27 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
             int fakeMsgIndex = msgList.indexOf(fakeMsg);
             if (fakeMsgIndex != -1) {
                 msgList.get(fakeMsgIndex).setMid(realMsg.getMid());
-                msgList.get(fakeMsgIndex).setSending(false);
+                msgList.get(fakeMsgIndex).setSendStatus(1);
             } else {
                 msgList.add(realMsg);
             }
         }
         adapter.notifyDataSetChanged();
+
+    }
+
+    /**
+     * 设置消息发送失败
+     * @param fakeMessageId
+     */
+    private void setMsgSendFail(String fakeMessageId){
+        Msg fakeMsg = new Msg();
+        fakeMsg.setMid(fakeMessageId);
+            int fakeMsgIndex = msgList.indexOf(fakeMsg);
+            if (fakeMsgIndex != -1) {
+                msgList.get(fakeMsgIndex).setSendStatus(2);
+                adapter.notifyDataSetChanged();
+            }
 
     }
 
@@ -557,7 +572,7 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
     private void addLocalMessage(Msg msg) {
         if (msg != null) {
             //本地添加的消息设置为正在发送状态
-            msg.setSending(true);
+            msg.setSendStatus(0);
             msgList.add(msg);
             adapter.notifyDataSetChanged();
             msgListView.setSelection(msgList.size() - 1);
@@ -661,8 +676,8 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
          * @param msg
          */
         private void showRefreshingImg(View convertView, Msg msg) {
-            if (msg.getSending()) {
-                ImageView refreshingImg = (ImageView) convertView.findViewById(R.id.refreshing_img);
+            ImageView refreshingImg = (ImageView) convertView.findViewById(R.id.refreshing_img);
+            if (msg.getSendStatus() == 0) {
                 RotateAnimation refreshingAnimation = (RotateAnimation) AnimationUtils.loadAnimation(
                         getApplicationContext(), R.anim.pull_rotating);
                 // 添加匀速转动动画
@@ -670,6 +685,9 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
                 refreshingAnimation.setInterpolator(lir);
                 refreshingImg.setVisibility(View.VISIBLE);
                 refreshingImg.startAnimation(refreshingAnimation);
+            }else if (msg.getSendStatus() == 2){
+                refreshingImg.setVisibility(View.VISIBLE);
+                refreshingImg.setImageResource(R.drawable.ic_chat_msg_send_fail);
             }
 
         }
@@ -873,8 +891,9 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
         }
 
         @Override
-        public void returnSendMsgFail(String error) {
+        public void returnSendMsgFail(String error,String fakeMessageId) {
             WebServiceMiddleUtils.hand(ChannelActivity.this, error);
+            setMsgSendFail(fakeMessageId);
         }
 
         @Override

@@ -6,7 +6,7 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.util.UriUtils;
 import com.lidroid.xutils.db.annotation.Table;
 
-@Table(name = "CollectModel") 
+@Table(name = "WebPVCollect")
 public class CollectModel {
 	private int id;
 	private String FunctionID = "";

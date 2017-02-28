@@ -240,7 +240,7 @@ public class NewsWebDetailActivity extends BaseActivity {
 		}
 
 		@Override
-		public void returnSendMsgFail(String error) {
+		public void returnSendMsgFail(String error,String fakeMessageId) {
 			// TODO Auto-generated method stub
 			if (loadingDlg != null && loadingDlg.isShowing()) {
 				loadingDlg.dismiss();

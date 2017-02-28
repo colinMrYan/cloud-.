@@ -35,7 +35,7 @@ public class Msg implements Serializable {
     private boolean isHaveRead = false;
     private String privates = "";
     @Transient
-    private boolean isSending = false;
+    private int sendStatus = 1;//0 发送中  1发送成功  2发送失败
 
     public Msg() {
 
@@ -162,12 +162,12 @@ public class Msg implements Serializable {
         return commentContent;
     }
 
-    public boolean getSending() {
-        return isSending;
+    public int getSendStatus() {
+        return sendStatus;
     }
 
-    public void setSending(boolean isSending) {
-        this.isSending = isSending;
+    public void setSendStatus(int sendStatus) {
+        this.sendStatus = sendStatus;
     }
 
     public String getNPublisher() {

@@ -97,10 +97,10 @@ public class BitmapUtils {
 		//float ww = 720f;// 这里设置宽度为480f
 		// 缩放比。由于是固定比例缩放，只用高或者宽其中一个数据进行计算即可
 		int be = 1;// be=1表示不缩放
-		if (w > h && w > maxSize) {// 如果宽度大的话根据宽度固定大小缩放
-			be = (int) (newOpts.outWidth / maxSize+0.5);
+		if (w >= h && w >= maxSize) {// 如果宽度大的话根据宽度固定大小缩放
+			be = (newOpts.outWidth / maxSize)+1;
 		} else if (w < h && h > maxSize) {// 如果高度高的话根据宽度固定大小缩放
-			be = (int) (newOpts.outHeight / maxSize+0.5);
+			be = (newOpts.outHeight / maxSize)+1;
 		}
 		if (be <= 0)
 			be = 1;
