@@ -1,13 +1,8 @@
 package com.inspur.emmcloud.ui.app.groupnews;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -19,7 +14,6 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
-import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
 import com.inspur.emmcloud.bean.GetCreateSingleChannelResult;
 import com.inspur.emmcloud.bean.GetSendMsgResult;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
@@ -29,6 +23,10 @@ import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.ProgressWebView;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class NewsWebDetailActivity extends BaseActivity {
 
@@ -83,6 +81,13 @@ public class NewsWebDetailActivity extends BaseActivity {
 
 	}
 
+	@Override
+	protected void onResume() {
+		super.onResume();
+		if(webView != null){
+			webView.onResume();
+		}
+	}
 
 	public void onClick(View v) {
 		switch (v.getId()) {
@@ -243,6 +248,25 @@ public class NewsWebDetailActivity extends BaseActivity {
 			showShareFailToast();
 		}
 
+	}
+
+	protected void onPause() {
+		super.onPause();
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+			webView.onPause(); // 暂停网页中正在播放的视频
+		}
+	}
+
+
+
+	@Override
+	protected void onDestroy() {
+		// TODO Auto-generated method stub
+		super.onDestroy();
+		if (webView != null) {
+			webView.removeAllViews();
+			webView.destroy();
+		}
 	}
 
 }
