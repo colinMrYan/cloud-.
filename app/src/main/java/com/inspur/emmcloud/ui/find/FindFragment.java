@@ -16,6 +16,7 @@ import com.facebook.react.ReactRootView;
 import com.facebook.react.common.LifecycleState;
 import com.facebook.react.modules.core.DefaultHardwareBackBtnHandler;
 import com.facebook.react.shell.MainReactPackage;
+import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.reactnative.AuthorizationManagerPackage;
 import com.inspur.reactnative.ReactNativeFlow;
@@ -30,6 +31,7 @@ public class FindFragment extends Fragment implements DefaultHardwareBackBtnHand
     private ReactInstanceManager mReactInstanceManager;
     private String filePath;
     private RefreshReactNativeReceiver reactNativeReceiver;
+    private String userId = "";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -45,19 +47,20 @@ public class FindFragment extends Fragment implements DefaultHardwareBackBtnHand
      */
     private void createReactNativeView(boolean needToRefresh) {
         LogUtils.YfcDebug("创建ReactView");
+
         mReactRootView = new ReactRootView(getActivity());
         mReactInstanceManager = ReactInstanceManager.builder()
                 .setApplication(getActivity().getApplication())
                 .setCurrentActivity(getActivity())
                 .setJSMainModuleName("index.android")
-                .setJSBundleFile(filePath + "/current/index.android.bundle")
+                .setJSBundleFile(filePath + "/current"+userId+"/index.android.bundle")
                 .addPackage(new MainReactPackage())
                 .addPackage(new RCTSwipeRefreshLayoutPackage())
                 .addPackage(new AuthorizationManagerPackage())
                 .setUseDeveloperSupport(BuildConfig.DEBUG)
                 .setInitialLifecycleState(LifecycleState.RESUMED)
                 .build();
-        LogUtils.YfcDebug("Fragment指向的bundle路径："+filePath+"/current/index.android.bundle");
+        LogUtils.YfcDebug("Fragment指向的bundle路径："+filePath+"/current"+userId+"/index.android.bundle");
         mReactRootView.startReactApplication(mReactInstanceManager, "discover", null);
         if(needToRefresh){
             mReactRootView.invalidate();
@@ -67,11 +70,12 @@ public class FindFragment extends Fragment implements DefaultHardwareBackBtnHand
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        userId = ((MyApplication)getActivity().getApplication()).getUid();
         reactNativeReceiver = new RefreshReactNativeReceiver();
         filePath = getActivity().getFilesDir().getPath();
-        if (!ReactNativeFlow.checkBundleFileIsExist(filePath + "/current/index.android.bundle")) {
+        if (!ReactNativeFlow.checkBundleFileIsExist(filePath + "/current"+userId+"/index.android.bundle")) {
             LogUtils.YfcDebug("在FindFragment里解压bundle");
-            ReactNativeFlow.unZipFile(getActivity(), "bundle-v0.1.0.android.zip", filePath + "/current", true);
+            ReactNativeFlow.unZipFile(getActivity(), "bundle-v0.1.0.android.zip", filePath + "/current"+userId, true);
         }
         registerMsgReceiver();
     }
@@ -89,9 +93,9 @@ public class FindFragment extends Fragment implements DefaultHardwareBackBtnHand
         LogUtils.YfcDebug("FindFragment创建");
         reactNativeReceiver = new RefreshReactNativeReceiver();
         filePath = getActivity().getFilesDir().getPath();
-        if (!ReactNativeFlow.checkBundleFileIsExist(filePath + "/current/index.android.bundle")) {
+        if (!ReactNativeFlow.checkBundleFileIsExist(filePath + "/current"+userId+"/index.android.bundle")) {
             LogUtils.YfcDebug("在FindFragment里解压bundle");
-            ReactNativeFlow.unZipFile(getActivity(), "bundle-v0.1.0.android.zip", filePath + "/current", true);
+            ReactNativeFlow.unZipFile(getActivity(), "bundle-v0.1.0.android.zip", filePath + "/current"+userId, true);
         }
         registerReactNativeReceiver();
     }

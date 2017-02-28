@@ -47,12 +47,12 @@ public class ReactNativeFlow {
     /**
      * 初始化ReactNative,为第一次加载准备资源
      */
-    public static void initReactNative(Context context) {
-        boolean isBundleExist = checkIsBundleExist(context);
+    public static void initReactNative(Context context,String userId) {
+        boolean isBundleExist = checkIsBundleExist(context,userId);
         String filePath = context.getFilesDir().getPath();
         if(!isBundleExist){
             try {
-                UnZipAssets.unZip(context,"bundle-v0.1.0.android.zip",filePath+"/current",true);
+                UnZipAssets.unZip(context,"bundle-v0.1.0.android.zip",filePath+"/current"+userId,true);
                 LogUtils.YfcDebug("解压bundle到Current文件夹下");
             } catch (IOException e) {
                 e.printStackTrace();
@@ -63,9 +63,9 @@ public class ReactNativeFlow {
     /**
      * 检查bundle文件是否存在
      */
-    private static boolean checkIsBundleExist(Context context) {
+    private static boolean checkIsBundleExist(Context context,String userId) {
         String filePath = context.getFilesDir().getPath();
-        File file = new File(filePath+"current/index.android.bundle");
+        File file = new File(filePath+"current"+userId+"/index.android.bundle");
         if(file.exists()){
             return  true;
         }
@@ -145,11 +145,11 @@ public class ReactNativeFlow {
                 if(ReactNativeFlow.isCompleteZip(reactNativeUpdateBean.getBundle().getAndroidHash(),
                         MyAppConfig.LOCAL_DOWNLOAD_PATH+"/"+userId+"/"+reactNativeUpdateBean.getBundle().getAndroidUri())){
                     LogUtils.YfcDebug("下载的是一个完整的包");
-                    moveFolder(filePath+"/current",filePath+"/temp");
-                    deleteZipFile(filePath+"/current");
+                    moveFolder(filePath+"/current"+userId,filePath+"/temp"+userId);
+                    deleteZipFile(filePath+"/current"+userId);
                     ZipUtils.upZipFile(MyAppConfig.LOCAL_DOWNLOAD_PATH+"/"+userId+"/"+
                             reactNativeUpdateBean.getBundle().getAndroidUri(),
-                            filePath+"/current");
+                            filePath+"/current"+userId);
                     FileUtils.deleteFile(MyAppConfig.LOCAL_DOWNLOAD_PATH+"/"+userId+"/"+
                             reactNativeUpdateBean.getBundle().getAndroidUri());
                     Intent intent = new Intent("com.inspur.react.success");

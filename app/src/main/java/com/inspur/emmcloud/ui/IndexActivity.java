@@ -146,9 +146,9 @@ public class IndexActivity extends BaseFragmentActivity implements
         if (checkClientId()) {
             getReactNativeClientId();
         }
-        if (!ReactNativeFlow.checkBundleFileIsExist(reactNativeDicPath + "/current/index.android.bundle")) {
+        if (!ReactNativeFlow.checkBundleFileIsExist(reactNativeDicPath + "/current"+userId+"/index.android.bundle")) {
             LogUtils.YfcDebug("IndexActivity没有检测到Bundle，初始化默认bundle，解压assets下的zip到app中");
-            ReactNativeFlow.initReactNative(IndexActivity.this);
+            ReactNativeFlow.initReactNative(IndexActivity.this,userId);
         } else {
             LogUtils.YfcDebug("不是第一次打开，更新");
             updateReactNative();
@@ -185,7 +185,8 @@ public class IndexActivity extends BaseFragmentActivity implements
         appApiService = new AppAPIService(IndexActivity.this);
         appApiService.setAPIInterface(new WebService());
         String clientId = PreferencesUtils.getString(IndexActivity.this, UriUtils.tanent + userId + "react_native_clientid", "");
-        StringBuilder describeVersionAndTime = FileUtils.readFile(reactNativeDicPath + "/current/bundle.json", "UTF-8");
+        LogUtils.YfcDebug("clientId:"+clientId);
+        StringBuilder describeVersionAndTime = FileUtils.readFile(reactNativeDicPath + "/current"+userId+"/bundle.json", "UTF-8");
         AndroidBundleBean androidBundleBean = new AndroidBundleBean(describeVersionAndTime.toString());
         if (NetUtils.isNetworkConnected(IndexActivity.this)) {
             appApiService.getReactNativeUpdate(androidBundleBean.getVersion(), androidBundleBean.getCreationDate(), clientId);
@@ -745,6 +746,7 @@ public class IndexActivity extends BaseFragmentActivity implements
         @Override
         public void returnGetClientIdResultSuccess(GetClientIdRsult getClientIdRsult) {
             super.returnGetClientIdResultSuccess(getClientIdRsult);
+            LogUtils.YfcDebug("重新存储的ClidntId："+getClientIdRsult.getClientId());
             PreferencesUtils.putString(IndexActivity.this, UriUtils.tanent + userId + "react_native_clientid", getClientIdRsult.getClientId());
             if(isReactNativeClientIdInvalid){
                 updateReactNative();
@@ -767,12 +769,12 @@ public class IndexActivity extends BaseFragmentActivity implements
             resetReactNative();
         } else if (state == ReactNativeFlow.REACT_NATIVE_REVERT) {
             //拷贝temp下的current到app内部current目录下
-            File file = new File(reactNativeDicPath + "/temp");
+            File file = new File(reactNativeDicPath + "/temp"+userId);
             if(file.exists()){
-                ReactNativeFlow.moveFolder(reactNativeDicPath + "/temp", reactNativeDicPath + "/current");
-                FileUtils.deleteFile(reactNativeDicPath + "/temp");
+                ReactNativeFlow.moveFolder(reactNativeDicPath + "/temp"+userId, reactNativeDicPath + "/current"+userId);
+                FileUtils.deleteFile(reactNativeDicPath + "/temp"+userId);
             }else {
-                ReactNativeFlow.initReactNative(IndexActivity.this);
+                ReactNativeFlow.initReactNative(IndexActivity.this,userId);
             }
         } else if (state == ReactNativeFlow.REACT_NATIVE_FORWORD) {
             //下载zip包并检查是否完整，完整则解压，不完整则重新下载,完整则把current移动到temp下，把新包解压到current
@@ -790,9 +792,9 @@ public class IndexActivity extends BaseFragmentActivity implements
      * 重新整理目录恢复状态
      */
     private void resetReactNative() {
-        FileUtils.deleteFile(reactNativeDicPath + "/temp");
-        FileUtils.deleteFile(reactNativeDicPath + "/current");
-        ReactNativeFlow.initReactNative(IndexActivity.this);
+        FileUtils.deleteFile(reactNativeDicPath + "/temp"+userId);
+        FileUtils.deleteFile(reactNativeDicPath + "/current"+userId);
+        ReactNativeFlow.initReactNative(IndexActivity.this,userId);
     }
 
     /**
