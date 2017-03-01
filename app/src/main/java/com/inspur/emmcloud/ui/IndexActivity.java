@@ -45,7 +45,7 @@ import com.inspur.emmcloud.bean.ReactNativeUpdateBean;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.interf.OnTabReselectListener;
 import com.inspur.emmcloud.interf.OnWorkFragmentDataChanged;
-import com.inspur.emmcloud.service.CollectService;
+import com.inspur.emmcloud.service.PVCollectService;
 import com.inspur.emmcloud.util.AppUtils;
 import com.inspur.emmcloud.util.ChannelGroupCacheUtils;
 import com.inspur.emmcloud.util.ContactCacheUtils;
@@ -121,7 +121,7 @@ public class IndexActivity extends BaseFragmentActivity implements
         }
         /**从服务端获取显示tab**/
         getAppTabs();
-//		startUploadCollectService();
+		startUploadPVCollectService();
         registerReactNativeReceiver();
         initReactNative();
     }
@@ -196,11 +196,12 @@ public class IndexActivity extends BaseFragmentActivity implements
     /***
      * 打开app应用行为分析上传的Service;
      */
-    private void startUploadCollectService() {
+    private void startUploadPVCollectService() {
         // TODO Auto-generated method stub
-        if (!AppUtils.isServiceWork(getApplicationContext(), "com.inspur.emmcloud.service.CollectService")) {
+        if (!AppUtils.isServiceWork(getApplicationContext(), "com.inspur.emmcloud.service.PVCollectService")) {
+            LogUtils.jasonDebug("start------------111");
             Intent intent = new Intent();
-            intent.setClass(this, CollectService.class);
+            intent.setClass(this, PVCollectService.class);
             startService(intent);
         }
     }
