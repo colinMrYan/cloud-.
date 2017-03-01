@@ -17,7 +17,8 @@ import com.facebook.react.common.LifecycleState;
 import com.facebook.react.modules.core.DefaultHardwareBackBtnHandler;
 import com.facebook.react.shell.MainReactPackage;
 import com.inspur.emmcloud.MyApplication;
-import com.inspur.emmcloud.util.LogUtils;
+import com.inspur.emmcloud.config.MyAppConfig;
+import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.reactnative.AuthorizationManagerPackage;
 import com.inspur.reactnative.ReactNativeFlow;
 import com.reactnativecomponent.swiperefreshlayout.RCTSwipeRefreshLayoutPackage;
@@ -29,15 +30,21 @@ import com.reactnativecomponent.swiperefreshlayout.RCTSwipeRefreshLayoutPackage;
 public class FindFragment extends Fragment implements DefaultHardwareBackBtnHandler {
     private ReactRootView mReactRootView;
     private ReactInstanceManager mReactInstanceManager;
-    private String filePath;
+    private String reactCurrentFilePath;
     private RefreshReactNativeReceiver reactNativeReceiver;
     private String userId = "";
+    public static boolean hasUpdated = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        String lastUpdateTime = PreferencesUtils.getString(getActivity(), "react_native_lastupdatetime", "");
         if (mReactRootView == null) {
             createReactNativeView(false);
+        }
+        if (hasUpdated) {
+            createReactNativeView(true);
+            hasUpdated = false;
         }
         return mReactRootView;
     }
@@ -46,23 +53,20 @@ public class FindFragment extends Fragment implements DefaultHardwareBackBtnHand
      * 创建并启动ReactNativeView
      */
     private void createReactNativeView(boolean needToRefresh) {
-        LogUtils.YfcDebug("创建ReactView");
-
         mReactRootView = new ReactRootView(getActivity());
         mReactInstanceManager = ReactInstanceManager.builder()
                 .setApplication(getActivity().getApplication())
                 .setCurrentActivity(getActivity())
                 .setJSMainModuleName("index.android")
-                .setJSBundleFile(filePath + "/current"+userId+"/index.android.bundle")
+                .setJSBundleFile(reactCurrentFilePath + "/index.android.bundle")
                 .addPackage(new MainReactPackage())
                 .addPackage(new RCTSwipeRefreshLayoutPackage())
                 .addPackage(new AuthorizationManagerPackage())
                 .setUseDeveloperSupport(BuildConfig.DEBUG)
                 .setInitialLifecycleState(LifecycleState.RESUMED)
                 .build();
-        LogUtils.YfcDebug("Fragment指向的bundle路径："+filePath+"/current"+userId+"/index.android.bundle");
         mReactRootView.startReactApplication(mReactInstanceManager, "discover", null);
-        if(needToRefresh){
+        if (needToRefresh) {
             mReactRootView.invalidate();
         }
     }
@@ -70,46 +74,23 @@ public class FindFragment extends Fragment implements DefaultHardwareBackBtnHand
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        userId = ((MyApplication)getActivity().getApplication()).getUid();
+        userId = ((MyApplication) getActivity().getApplication()).getUid();
         reactNativeReceiver = new RefreshReactNativeReceiver();
-        filePath = getActivity().getFilesDir().getPath();
-        if (!ReactNativeFlow.checkBundleFileIsExist(filePath + "/current"+userId+"/index.android.bundle")) {
-            LogUtils.YfcDebug("在FindFragment里解压bundle");
-            ReactNativeFlow.unZipFile(getActivity(), "bundle-v0.1.0.android.zip", filePath + "/current"+userId, true);
-        }
-        registerMsgReceiver();
-    }
-
-    /**
-     * 注册刷新广播
-     */
-    private void registerMsgReceiver() {
-        if(reactNativeReceiver == null){
-            reactNativeReceiver = new RefreshReactNativeReceiver();
-            IntentFilter filter = new IntentFilter();
-            filter.addAction("com.inspur.react.success");
-            getActivity().registerReceiver(reactNativeReceiver, filter);
-        }
-        LogUtils.YfcDebug("FindFragment创建");
-        reactNativeReceiver = new RefreshReactNativeReceiver();
-        filePath = getActivity().getFilesDir().getPath();
-        if (!ReactNativeFlow.checkBundleFileIsExist(filePath + "/current"+userId+"/index.android.bundle")) {
-            LogUtils.YfcDebug("在FindFragment里解压bundle");
-            ReactNativeFlow.unZipFile(getActivity(), "bundle-v0.1.0.android.zip", filePath + "/current"+userId, true);
+        reactCurrentFilePath = MyAppConfig.getReactCurrentFilePath(getActivity(), userId);
+        if (!ReactNativeFlow.checkBundleFileIsExist(reactCurrentFilePath + "/index.android.bundle")) {
+            ReactNativeFlow.unZipFile(getActivity(), "bundle-v0.1.0.android.zip", reactCurrentFilePath, true);
         }
         registerReactNativeReceiver();
     }
+
 
     /**
      * 注册刷新广播
      */
     private void registerReactNativeReceiver() {
-        if(reactNativeReceiver == null){
-            reactNativeReceiver = new RefreshReactNativeReceiver();
-            IntentFilter filter = new IntentFilter();
-            filter.addAction("com.inspur.react.success");
-            getActivity().registerReceiver(reactNativeReceiver, filter);
-        }
+        IntentFilter filter = new IntentFilter();
+        filter.addAction("com.inspur.react.success");
+        getActivity().registerReceiver(reactNativeReceiver, filter);
     }
 
     @Override
@@ -117,12 +98,12 @@ public class FindFragment extends Fragment implements DefaultHardwareBackBtnHand
         getActivity().onBackPressed();
     }
 
-    class RefreshReactNativeReceiver extends BroadcastReceiver{
+    class RefreshReactNativeReceiver extends BroadcastReceiver {
         private static final String ACTION_REFRESH = "com.inspur.react.success";
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
-            if(action.equals(ACTION_REFRESH)){
+            if (action.equals(ACTION_REFRESH)) {
                 createReactNativeView(true);
             }
         }
@@ -131,9 +112,9 @@ public class FindFragment extends Fragment implements DefaultHardwareBackBtnHand
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if(reactNativeReceiver != null){
+        if (reactNativeReceiver != null) {
             getActivity().unregisterReceiver(reactNativeReceiver);
-            reactNativeReceiver=null;
+            reactNativeReceiver = null;
         }
     }
 

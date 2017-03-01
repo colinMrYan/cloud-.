@@ -46,6 +46,7 @@ import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.interf.OnTabReselectListener;
 import com.inspur.emmcloud.interf.OnWorkFragmentDataChanged;
 import com.inspur.emmcloud.service.CollectService;
+import com.inspur.emmcloud.ui.find.FindFragment;
 import com.inspur.emmcloud.util.AppUtils;
 import com.inspur.emmcloud.util.ChannelGroupCacheUtils;
 import com.inspur.emmcloud.util.ContactCacheUtils;
@@ -89,7 +90,7 @@ public class IndexActivity extends BaseFragmentActivity implements
     private Handler handler;
     private boolean isHasCacheContact = false;
     private TipsView tipsView;
-    private String reactNativeDicPath = "";
+    private String reactNativeCurrentPath = "";
     private LoadingDialog loadingDlg;
     private IndexReactNativeReceiver reactNativeReceiver;
     private ReactNativeUpdateBean reactNativeUpdateBean;
@@ -106,6 +107,7 @@ public class IndexActivity extends BaseFragmentActivity implements
         ((MyApplication) getApplicationContext()).closeAllDb();
         DbCacheUtils.initDb(getApplicationContext());
         userId = ((MyApplication) getApplication()).getUid();
+        initReactNative();
         loadingDlg = new LoadingDialog(IndexActivity.this, getString(R.string.app_init));
         handMessage();
         getIsHasCacheContact();
@@ -113,7 +115,6 @@ public class IndexActivity extends BaseFragmentActivity implements
             loadingDlg.show();
         }
         getAllContact();
-
         getAllRobots();
         initTabView();
         if (!AppUtils.isApkDebugable(IndexActivity.this)) {
@@ -123,7 +124,6 @@ public class IndexActivity extends BaseFragmentActivity implements
         getAppTabs();
 //		startUploadCollectService();
         registerReactNativeReceiver();
-        initReactNative();
     }
 
     /**
@@ -142,15 +142,13 @@ public class IndexActivity extends BaseFragmentActivity implements
      * 初始化ReactNative
      */
     private void initReactNative() {
-        reactNativeDicPath = getFilesDir().getPath();
+        reactNativeCurrentPath = MyAppConfig.getReactCurrentFilePath(IndexActivity.this,userId);
         if (checkClientId()) {
             getReactNativeClientId();
         }
-        if (!ReactNativeFlow.checkBundleFileIsExist(reactNativeDicPath + "/current"+userId+"/index.android.bundle")) {
-            LogUtils.YfcDebug("IndexActivity没有检测到Bundle，初始化默认bundle，解压assets下的zip到app中");
+        if (!ReactNativeFlow.checkBundleFileIsExist(reactNativeCurrentPath + "/index.android.bundle")) {
             ReactNativeFlow.initReactNative(IndexActivity.this,userId);
         } else {
-            LogUtils.YfcDebug("不是第一次打开，更新");
             updateReactNative();
         }
     }
@@ -181,12 +179,10 @@ public class IndexActivity extends BaseFragmentActivity implements
      * 更新ReactNative
      */
     private void updateReactNative() {
-        LogUtils.YfcDebug("IndexActivity发起检查更新的请求");
         appApiService = new AppAPIService(IndexActivity.this);
         appApiService.setAPIInterface(new WebService());
         String clientId = PreferencesUtils.getString(IndexActivity.this, UriUtils.tanent + userId + "react_native_clientid", "");
-        LogUtils.YfcDebug("clientId:"+clientId);
-        StringBuilder describeVersionAndTime = FileUtils.readFile(reactNativeDicPath + "/current"+userId+"/bundle.json", "UTF-8");
+        StringBuilder describeVersionAndTime = FileUtils.readFile(reactNativeCurrentPath +"/bundle.json", "UTF-8");
         AndroidBundleBean androidBundleBean = new AndroidBundleBean(describeVersionAndTime.toString());
         if (NetUtils.isNetworkConnected(IndexActivity.this)) {
             appApiService.getReactNativeUpdate(androidBundleBean.getVersion(), androidBundleBean.getCreationDate(), clientId);
@@ -543,17 +539,20 @@ public class IndexActivity extends BaseFragmentActivity implements
         transaction.attach(fragment);
         transaction.add(fragment, "");
         transaction.commit();
-        LogUtils.YfcDebug("当前Fragment是否已经attached：" + fragment.isAdded());
     }
 
     @Override
     public void onTabChanged(String tabId) {
+        String lastUpdateTime = PreferencesUtils.getString(IndexActivity.this,"react_native_lastupdatetime","");
         if (tabId.equals(getString(R.string.communicate))) {
             tipsView.setCanTouch(true);
         } else {
             tipsView.setCanTouch(false);
         }
-
+        if(ReactNativeFlow.moreThanHalfHour(lastUpdateTime)){
+            updateReactNative();
+        }
+//        needCheckUpdate = true;
     }
 
     private Fragment getCurrentFragment() {
@@ -565,7 +564,6 @@ public class IndexActivity extends BaseFragmentActivity implements
     protected void onActivityResult(int arg0, int arg1, Intent arg2) {
         // TODO Auto-generated method stub
         super.onActivityResult(arg0, arg1, arg2);
-        LogUtils.debug("yfcLog", "返回到IndexActivity" + arg0);
         if (arg1 == RESULT_OK) {
 
             switch (arg0) {
@@ -735,6 +733,7 @@ public class IndexActivity extends BaseFragmentActivity implements
         public void returnReactNativeUpdateSuccess(ReactNativeUpdateBean reactNativeUpdateBean) {
             IndexActivity.this.reactNativeUpdateBean = reactNativeUpdateBean;
             updateReactNativeWithOrder();
+            PreferencesUtils.putString(IndexActivity.this,"react_native_lastupdatetime",System.currentTimeMillis()+"");
         }
 
         @Override
@@ -746,7 +745,6 @@ public class IndexActivity extends BaseFragmentActivity implements
         @Override
         public void returnGetClientIdResultSuccess(GetClientIdRsult getClientIdRsult) {
             super.returnGetClientIdResultSuccess(getClientIdRsult);
-            LogUtils.YfcDebug("重新存储的ClidntId："+getClientIdRsult.getClientId());
             PreferencesUtils.putString(IndexActivity.this, UriUtils.tanent + userId + "react_native_clientid", getClientIdRsult.getClientId());
             if(isReactNativeClientIdInvalid){
                 updateReactNative();
@@ -764,18 +762,23 @@ public class IndexActivity extends BaseFragmentActivity implements
      */
     private void updateReactNativeWithOrder() {
         int state = ReactNativeFlow.checkReactNativeOperation(reactNativeUpdateBean.getCommand());
+        String reactNatviveTempPath = MyAppConfig.getReactTempFilePath(IndexActivity.this,userId);
         if (state == ReactNativeFlow.REACT_NATIVE_RESET) {
             //删除current和temp目录，重新解压assets下的zip
             resetReactNative();
+            FindFragment.hasUpdated = true;
         } else if (state == ReactNativeFlow.REACT_NATIVE_REVERT) {
             //拷贝temp下的current到app内部current目录下
-            File file = new File(reactNativeDicPath + "/temp"+userId);
+            File file = new File(reactNatviveTempPath);
             if(file.exists()){
-                ReactNativeFlow.moveFolder(reactNativeDicPath + "/temp"+userId, reactNativeDicPath + "/current"+userId);
-                FileUtils.deleteFile(reactNativeDicPath + "/temp"+userId);
+                ReactNativeFlow.moveFolder(reactNatviveTempPath, reactNativeCurrentPath);
+                LogUtils.YfcDebug("回滚时temp："+reactNatviveTempPath);
+                LogUtils.YfcDebug("回滚时current："+reactNativeCurrentPath);
+                FileUtils.deleteFile(reactNatviveTempPath);
             }else {
                 ReactNativeFlow.initReactNative(IndexActivity.this,userId);
             }
+            FindFragment.hasUpdated = true;
         } else if (state == ReactNativeFlow.REACT_NATIVE_FORWORD) {
             //下载zip包并检查是否完整，完整则解压，不完整则重新下载,完整则把current移动到temp下，把新包解压到current
             ReactNativeFlow.downLoadZipFile(IndexActivity.this, reactNativeUpdateBean, userId);
@@ -783,6 +786,7 @@ public class IndexActivity extends BaseFragmentActivity implements
             //发生了未知错误，下载state为0
             //同Reset的情况，删除current和temp目录，重新解压assets下的zip
             resetReactNative();
+            FindFragment.hasUpdated = true;
         } else if (state == ReactNativeFlow.REACT_NATIVE_NO_UPDATE) {
             //没有更新什么也不做
         }
@@ -792,8 +796,9 @@ public class IndexActivity extends BaseFragmentActivity implements
      * 重新整理目录恢复状态
      */
     private void resetReactNative() {
-        FileUtils.deleteFile(reactNativeDicPath + "/temp"+userId);
-        FileUtils.deleteFile(reactNativeDicPath + "/current"+userId);
+        String reactNatviveTempPath = MyAppConfig.getReactTempFilePath(IndexActivity.this,userId);
+        FileUtils.deleteFile(reactNatviveTempPath);
+        FileUtils.deleteFile(reactNativeCurrentPath);
         ReactNativeFlow.initReactNative(IndexActivity.this,userId);
     }
 
