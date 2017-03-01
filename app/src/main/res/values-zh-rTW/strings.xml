@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">雲+</string>
+    <string name="app_name">浪潮雲+</string>
     <string name="reclick_to_desktop">再按一次退出程式</string>
     <string name="Network_Mobile">已經連接到到移動網路</string>
     <string name="Network_WIFI">已經連接到WIFI</string>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">云+</string>
+    <string name="app_name">浪潮云+</string>
     <string name="reclick_to_desktop">再按一次退出程序</string>
     <string name="Network_Mobile">已经连接到到移动网络</string>
     <string name="Network_WIFI">已经连接到WIFI</string>
