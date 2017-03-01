@@ -8,12 +8,15 @@
  */
 package com.inspur.emmcloud.config;
 
-import java.util.HashMap;
-import java.util.Map;
+import android.content.Context;
+import android.os.Environment;
 
 import com.inspur.emmcloud.bean.Language;
 
-import android.os.Environment;
+import java.util.HashMap;
+import java.util.Map;
+
+import static android.content.Context.MODE_PRIVATE;
 
 /**
  * com.inspur.emmcloud.config.MyAppConfig
@@ -38,6 +41,27 @@ public class MyAppConfig {
 		languageMap.put("zh-TW", "zh-TW");
 		return languageMap;
 
+	}
+
+
+	/**
+	 * 获取React当前展示的文件路径
+	 * @param context
+	 * @param userId
+     * @return
+     */
+	public static String getReactCurrentFilePath(Context context,String userId){
+		return context.getDir("react",MODE_PRIVATE).getPath()+"/current"+userId;
+	}
+
+	/**
+	 * 获取React上一版本缓存途径（用于Roback的版本）
+	 * @param context
+	 * @param userId
+     * @return
+     */
+	public static String getReactTempFilePath(Context context,String userId){
+		return context.getDir("react",MODE_PRIVATE).getPath()+"/temp"+userId;
 	}
 	
 	public static Language getDefaultLanguage = new Language("中文简体","zh-CN","zh-Hans","zh-CN","zh-CN","zh-Hans");
