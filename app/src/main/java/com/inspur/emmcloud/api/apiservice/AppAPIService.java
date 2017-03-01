@@ -296,7 +296,6 @@ public class AppAPIService {
      */
 	public void uploadPVCollect(String collectInfo){
 		String  completeUrl = "http://u.inspur.com/analytics/api/ECMPV/Post";
-		LogUtils.jasonDebug("collectInfo="+collectInfo);
 		RequestParams params = new RequestParams(completeUrl);
 		params.setBodyContent(collectInfo);
 		params.setAsJsonContent(true);

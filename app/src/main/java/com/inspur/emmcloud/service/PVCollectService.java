@@ -7,6 +7,7 @@ import android.os.IBinder;
 
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.AppAPIService;
+import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.PVCollectModelCacheUtils;
 
@@ -60,9 +61,17 @@ public class PVCollectService extends Service {
 	}
 
 	private void continueToRun(){
-		handler.postDelayed(runnable, 30000);
+		handler.postDelayed(runnable, 1800000);
 	}
-
+	@Override
+	public void onDestroy() {
+		// TODO Auto-generated method stub
+		if (handler != null) {
+			handler.removeCallbacks(runnable);
+			handler = null;
+		}
+		super.onDestroy();
+	}
 	
 	private class WebService extends APIInterfaceInstance{
 

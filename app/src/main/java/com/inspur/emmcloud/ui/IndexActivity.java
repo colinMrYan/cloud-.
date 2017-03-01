@@ -198,12 +198,9 @@ public class IndexActivity extends BaseFragmentActivity implements
      */
     private void startUploadPVCollectService() {
         // TODO Auto-generated method stub
-        if (!AppUtils.isServiceWork(getApplicationContext(), "com.inspur.emmcloud.service.PVCollectService")) {
-            LogUtils.jasonDebug("start------------111");
             Intent intent = new Intent();
             intent.setClass(this, PVCollectService.class);
             startService(intent);
-        }
     }
 
     /**
