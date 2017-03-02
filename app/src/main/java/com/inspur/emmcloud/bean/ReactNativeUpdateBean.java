@@ -1,7 +1,7 @@
 package com.inspur.emmcloud.bean;
 
 
-import com.inspur.emmcloud.util.LogUtils;
+import com.inspur.emmcloud.util.StringUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -24,11 +24,15 @@ public class ReactNativeUpdateBean {
     private String command;
 
     public ReactNativeUpdateBean(String reactNativeUpdate){
-        LogUtils.YfcDebug("获取更新"+reactNativeUpdate);
         try {
             JSONObject jsonReactNative = new JSONObject(reactNativeUpdate);
             if(jsonReactNative.has("bundle")){
-                this.bundle = new BundleBean(jsonReactNative.getString("bundle"));
+                String bundleString = jsonReactNative.getString("bundle");
+                if(StringUtils.isBlank(bundleString) || bundleString.equals("null")){
+                    this.bundle = new BundleBean();
+                }else{
+                    this.bundle = new BundleBean(bundleString);
+                }
             }
             if(jsonReactNative.has("command")){
                 this.command = jsonReactNative.getString("command");
@@ -76,6 +80,8 @@ public class ReactNativeUpdateBean {
         private String compressedFormat;
         private IdBean id;
         private long creationDate;
+
+        public BundleBean(){}
 
         public BundleBean(String bundle){
             try {

@@ -1,13 +1,5 @@
 package com.inspur.emmcloud.util;
 
-import java.io.File;
-import java.text.DecimalFormat;
-
-import org.xutils.x;
-import org.xutils.common.Callback;
-import org.xutils.common.Callback.Cancelable;
-import org.xutils.http.RequestParams;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
@@ -26,6 +18,14 @@ import com.inspur.emmcloud.api.apiservice.AppAPIService;
 import com.inspur.emmcloud.bean.GetUpgradeResult;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.dialogs.MyDialog;
+
+import org.xutils.common.Callback;
+import org.xutils.common.Callback.Cancelable;
+import org.xutils.http.RequestParams;
+import org.xutils.x;
+
+import java.io.File;
+import java.text.DecimalFormat;
 
 public class UpgradeUtils extends APIInterfaceInstance {
 
@@ -162,6 +162,10 @@ public class UpgradeUtils extends APIInterfaceInstance {
 		okBt.setText(activity.getString(R.string.upgrade));
 		TextView text = (TextView) dialog.findViewById(R.id.text);
 		text.setText(upgradeMsg);
+		TextView appUpdateTitle = (TextView) dialog.findViewById(R.id.app_update_title);
+		TextView appUpdateVersion = (TextView) dialog.findViewById(R.id.app_update_version);
+		appUpdateTitle.setText(activity.getString(R.string.app_update_remind));
+		appUpdateVersion.setText(activity.getString(R.string.app_last_version)+"("+getUpgradeResult.getLatestVersion()+")");
 		okBt.setOnClickListener(new View.OnClickListener() {
 
 			@Override
