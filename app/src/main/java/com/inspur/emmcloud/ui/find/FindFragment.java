@@ -18,7 +18,6 @@ import com.facebook.react.modules.core.DefaultHardwareBackBtnHandler;
 import com.facebook.react.shell.MainReactPackage;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.config.MyAppConfig;
-import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.reactnative.AuthorizationManagerPackage;
 import com.inspur.reactnative.ReactNativeFlow;
 import com.reactnativecomponent.swiperefreshlayout.RCTSwipeRefreshLayoutPackage;
@@ -38,7 +37,6 @@ public class FindFragment extends Fragment implements DefaultHardwareBackBtnHand
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        String lastUpdateTime = PreferencesUtils.getString(getActivity(), "react_native_lastupdatetime", "");
         if (mReactRootView == null) {
             createReactNativeView(false);
         }
