@@ -48,6 +48,8 @@
     <string name="check_update_fail">Check for update failed</string>
     <string name="upgrade">Now</string>
     <string name="not_upgrade">Later</string>
+    <string name="app_update_remind">Update Remind</string>
+    <string name="app_last_version">Last Version</string>
     <string name="more_work_place">More work places...</string>
     <string name="cancel_filter">Cancle filter</string>
     <string name="only_free">Only free</string>

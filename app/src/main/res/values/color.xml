@@ -34,6 +34,11 @@
     <color name="onekey_line_view">#cfd3d6</color>
     <color name="onekey_content_text">#4f87a2</color>
     <color name="hightlight_in_blue_bg">#31EEFF</color>
+    
+    <!--app的dialog-->
+    <color name="app_dialog_title_color">#666666</color>
+    <color name="app_dialog_sub_title_color">#FF9F00</color>
+    <color name="app_dialog_update_color">#4A90E2</color>
 
     <!-- 聊天界面背景色 -->
     <color name="channel_background_color">#F4F4F4</color>

@@ -552,7 +552,6 @@ public class IndexActivity extends BaseFragmentActivity implements
         if(ReactNativeFlow.moreThanHalfHour(lastUpdateTime)){
             updateReactNative();
         }
-//        needCheckUpdate = true;
     }
 
     private Fragment getCurrentFragment() {
