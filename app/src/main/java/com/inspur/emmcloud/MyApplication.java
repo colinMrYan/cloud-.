@@ -9,6 +9,7 @@ import android.content.res.Configuration;
 import android.os.Environment;
 import android.os.Parcelable;
 import android.support.multidex.MultiDexApplication;
+import android.webkit.CookieManager;
 
 import com.alibaba.fastjson.JSON;
 import com.facebook.react.ReactApplication;
@@ -109,9 +110,10 @@ public class MyApplication extends MultiDexApplication implements  ReactApplicat
 		uid = PreferencesUtils.getString(getApplicationContext(), "userID");
 		accessToken = PreferencesUtils.getString(getApplicationContext(), "accessToken","");
 		onConfigurationChanged(null);
-
+		removeAllSessionCookie();
 
 	}
+
 
 	private void init() {
 		// TODO Auto-generated method stub
@@ -140,6 +142,19 @@ public class MyApplication extends MultiDexApplication implements  ReactApplicat
 		if (!StringUtils.isBlank(pushRegId)) {
 			PreferencesUtils.putString(getApplicationContext(), "JpushRegId",
 					pushRegId);
+		}
+	}
+
+
+	/**
+	 * 清除所有的SessionCookie
+	 */
+	private void removeAllSessionCookie(){
+		if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+			CookieManager.getInstance().removeSessionCookies(null);
+			CookieManager.getInstance().flush();
+		}else {
+			CookieManager.getInstance().removeSessionCookie();
 		}
 	}
 

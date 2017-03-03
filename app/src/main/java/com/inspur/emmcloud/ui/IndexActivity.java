@@ -199,6 +199,7 @@ public class IndexActivity extends BaseFragmentActivity implements
             Intent intent = new Intent();
             intent.setClass(this, PVCollectService.class);
             startService(intent);
+        }
     }
 
     /**
