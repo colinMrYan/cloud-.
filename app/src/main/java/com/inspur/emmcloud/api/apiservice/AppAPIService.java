@@ -289,8 +289,32 @@ public class AppAPIService {
 			}
 		});
 	}
-	
-	public void uploadCollect(String collectInfo){
-		apiInterface.returnUploadCollectSuccess();
+
+	/**
+	 * 手机应用PV信息（web应用）
+	 * @param collectInfo
+     */
+	public void uploadPVCollect(String collectInfo){
+		String  completeUrl = "http://u.inspur.com/analytics/api/ECMPV/Post";
+		RequestParams params = new RequestParams(completeUrl);
+		params.setBodyContent(collectInfo);
+		params.setAsJsonContent(true);
+		x.http().request(HttpMethod.POST, params, new APICallback() {
+			@Override
+			public void callbackSuccess(String arg0) {
+				apiInterface.returnUploadCollectSuccess();
+			}
+
+			@Override
+			public void callbackFail(String error, int responseCode) {
+				apiInterface.returnUploadCollectFail();
+			}
+
+			@Override
+			public void callbackTokenExpire() {
+
+			}
+		});
+
 	}
 }

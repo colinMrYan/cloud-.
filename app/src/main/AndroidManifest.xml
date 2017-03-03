@@ -485,6 +485,7 @@
         <activity
             android:name=".ui.find.FindSearchMoreActivity"
             android:screenOrientation="portrait" />
+        <service android:name=".service.PVCollectService"></service>
 
         <!-- ImagePicker -->
 
