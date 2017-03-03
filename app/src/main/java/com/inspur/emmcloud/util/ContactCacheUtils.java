@@ -92,10 +92,7 @@ public class ContactCacheUtils {
 	 * @param time
 	 */
 	public static void saveLastUpdateTime(Context context, String time) {
-		String userID = PreferencesUtils.getString(context, "userID", "");
-		String tanent = UriUtils.tanent;
-		String key =userID+tanent+"contactUpdateTime";
-		PreferencesUtils.putString(context,key,time);
+		PreferencesByUserUtils.putString(context,"contactUpdateTime",time);
 	}
 
 	/**
@@ -104,10 +101,7 @@ public class ContactCacheUtils {
 	 * @return
 	 */
 	public static String getLastUpdateTime(Context context) {
-		String userID = PreferencesUtils.getString(context, "userID", "");
-		String tanent = UriUtils.tanent;
-		String key =userID+tanent+"contactUpdateTime";
-		return PreferencesUtils.getString(context,key,"");
+		return PreferencesByUserUtils.getString(context,"contactUpdateTime","");
 	}
 
 	/**
