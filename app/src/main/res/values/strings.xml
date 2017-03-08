@@ -433,6 +433,15 @@
     <string name="news_share">分享到</string>
     <string name="news_share_success">分享成功</string>
     <string name="news_share_fail">分享失败</string>
+    <string-array name="app_web_news_fonts">
+        <item>超小号字体</item>
+        <item>小号字体</item>
+        <item>正常字体</item>
+        <item>大号字体</item>
+        <item>超大号字体</item>
+    </string-array>
+    <string name="app_web_news_font_title">字体设置</string>
+
     <!-- 审批页面 -->
     <string name="onekey_approval_text">审批</string>
 

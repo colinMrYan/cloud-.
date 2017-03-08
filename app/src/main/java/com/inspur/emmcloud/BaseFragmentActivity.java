@@ -15,6 +15,13 @@ public class BaseFragmentActivity extends FragmentActivity {
 		super.onCreate(arg0);
 		StateBarColor.changeStateBarColor(this);
 	}
+
+	//修改字体方案预留
+//	@Override
+//	protected void attachBaseContext(Context newBase) {
+//		super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+//	}
+
 	@Override
 	protected void onStop() {
 		// TODO Auto-generated method stub
@@ -40,6 +47,8 @@ public class BaseFragmentActivity extends FragmentActivity {
 				((MyApplication)getApplicationContext()).sendActivedWSMsg();
 			}
 		}
+
+
 	}
 	
 	@Override  
@@ -49,6 +58,7 @@ public class BaseFragmentActivity extends FragmentActivity {
 	    config.setToDefaults();    
 	    res.updateConfiguration(config,res.getDisplayMetrics() );  
 	    return res;  
-	}  
+	}
+
 
 }

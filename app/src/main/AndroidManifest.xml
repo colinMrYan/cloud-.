@@ -111,9 +111,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".ui.find.RNActivity"
-            android:theme="@android:style/Theme.Holo.Light.NoActionBar" />
         <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" />
         <activity
             android:name=".ui.IndexActivity"
@@ -238,17 +235,14 @@
         <activity
             android:name=".ui.app.groupnews.NewsWebDetailActivity"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Holo.Light.NoActionBar">
 
         </activity>
         <activity
             android:name=".ui.find.ScanResultActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.find.MyReactFindActivity"
-            android:label="@string/app_name"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"></activity>
         <activity
             android:name=".ui.mine.feedback.FeedBackActivity"
             android:launchMode="singleTask"
@@ -699,7 +693,6 @@
             android:name="com.amap.api.v2.apikey"
             android:value="6fec0bde62bb59a08712ac15d02f8774" />
 
-        <activity android:name=".ui.find.MyReactNativeFindActivity"></activity>
     </application>
 
 </manifest>

@@ -429,6 +429,14 @@
     <string name="news_share">Share to</string>
     <string name="news_share_success">Share Success</string>
     <string name="news_share_fail">Share Failed</string>
+    <string-array name="app_web_news_fonts">
+        <item>Smallest Font</item>
+        <item>Smaller Font</item>
+        <item>Normal Font</item>
+        <item>Larger Font</item>
+        <item>Largest Font</item>
+    </string-array>
+    <string name="app_web_news_font_title">Fonts Set</string>
     <!-- 审批页面 -->
     <string name="onekey_approval_text">Approval</string>
 
