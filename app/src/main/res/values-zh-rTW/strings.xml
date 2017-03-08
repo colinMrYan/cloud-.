@@ -430,6 +430,14 @@
     <string name="news_share">分享到</string>
     <string name="news_share_success">分享成功</string>
     <string name="news_share_fail">分享失敗</string>
+    <string-array name="app_web_news_fonts">
+        <item>超小號字體</item>
+        <item>小號字體</item>
+        <item>正常字體</item>
+        <item>大號字體</item>
+        <item>超大號字體</item>
+    </string-array>
+    <string name="app_web_news_font_title">字體設置</string>
     <!-- 審批頁面 -->
     <string name="onekey_approval_text">審批</string>
 

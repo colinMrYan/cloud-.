@@ -124,6 +124,7 @@ public class IndexActivity extends BaseFragmentActivity implements
         getAppTabs();
 //		startUploadCollectService();
         registerReactNativeReceiver();
+
     }
 
     /**
@@ -507,6 +508,10 @@ public class IndexActivity extends BaseFragmentActivity implements
         }
         if (newMessageTipsLayout != null) {
             newMessageTipsLayout = null;
+        }
+        if(reactNativeReceiver != null){
+            unregisterReceiver(reactNativeReceiver);
+            reactNativeReceiver = null;
         }
     }
 

@@ -131,6 +131,7 @@ dependencies {
         exclude module: 'support-core-utils'
     }
     compile 'com.readystatesoftware.systembartint:systembartint:1.0.3'
+    compile 'uk.co.chrisjenx:calligraphy:2.2.0'
 
 
     // React Naive Components
