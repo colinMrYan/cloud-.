@@ -18,7 +18,7 @@ public class StateBarColor {
 			setTranslucentStatus(true, activity);
 		}
 		SystemBarTintManager tintManager = new SystemBarTintManager(activity);
-		tintManager.setStatusBarTintEnabled(true); 
+		tintManager.setStatusBarTintEnabled(true);
 		tintManager.setStatusBarTintResource(R.color.header_bg);// 通知栏所需颜色
 	}
 
@@ -33,5 +33,16 @@ public class StateBarColor {
 			winParams.flags &= ~bits;
 		}
 		win.setAttributes(winParams);
+	}
+
+	public static void changeStateBarColor(Activity activity,int color) {
+		activity.getWindow().addFlags(
+				WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+			setTranslucentStatus(true, activity);
+		}
+		SystemBarTintManager tintManager = new SystemBarTintManager(activity);
+		tintManager.setStatusBarTintEnabled(true);
+		tintManager.setStatusBarTintResource(color);// 通知栏所需颜色
 	}
 }

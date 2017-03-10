@@ -72,9 +72,8 @@ import java.util.List;
 
 /**
  * 消息详情页面
- * 
- * @author Administrator
  *
+ * @author Administrator
  */
 public class ChannelMsgDetailActivity extends BaseActivity implements
 		OnRefreshListener {
@@ -210,7 +209,7 @@ public class ChannelMsgDetailActivity extends BaseActivity implements
 				public void onClick(View v) {
 					if (msg.getType().equals("image")
 							|| msg.getType().equals("res_image")) {
-						displayZoomImage(commentBodyBean.getKey());
+						displayZoomImage(v, commentBodyBean.getKey());
 					}
 				}
 			});
@@ -224,7 +223,7 @@ public class ChannelMsgDetailActivity extends BaseActivity implements
 
 	/**
 	 * 展示图片或者文件图标
-	 * 
+	 *
 	 * @param fileName
 	 */
 	private void displayImage(String fileName) {
@@ -238,21 +237,30 @@ public class ChannelMsgDetailActivity extends BaseActivity implements
 
 	/**
 	 * 展示可以缩放的Image
-	 * 
+	 *
 	 * @param path
 	 */
-	protected void displayZoomImage(String path) {
-		Intent intent = new Intent(ChannelMsgDetailActivity.this,
-				ImagePagerActivity.class);
+	protected void displayZoomImage(View view, String path) {
+
+		int[] location = new int[2];
+		view.getLocationOnScreen(location);
+		view.invalidate();
+		int width = view.getWidth();
+		int height = view.getHeight();
 		String url = path;
 		if (!path.startsWith("file:") && !path.startsWith("content:")
 				&& !path.startsWith("drawable")) {
 			url = UriUtils.getPreviewUri(path);
-		} 
+		}
 		ArrayList<String> urlList = new ArrayList<String>();
 		urlList.add(url);
-		intent.putExtra("image_index", 0);
-		intent.putStringArrayListExtra("image_urls", urlList);
+		Intent intent = new Intent(getApplicationContext(),
+				ImagePagerActivity.class);
+		intent.putExtra(ImagePagerActivity.PHOTO_SELECT_X_TAG, location[0]);
+		intent.putExtra(ImagePagerActivity.PHOTO_SELECT_Y_TAG, location[1]);
+		intent.putExtra(ImagePagerActivity.PHOTO_SELECT_W_TAG, width);
+		intent.putExtra(ImagePagerActivity.PHOTO_SELECT_H_TAG, height);
+		intent.putExtra(ImagePagerActivity.EXTRA_IMAGE_URLS, urlList);
 		startActivity(intent);
 	}
 
@@ -310,7 +318,9 @@ public class ChannelMsgDetailActivity extends BaseActivity implements
 		senderNameText.setText(msg.getTitle());
 	}
 
-	/** 处理@逻辑 **/
+	/**
+	 * 处理@逻辑
+	 **/
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
@@ -321,24 +331,26 @@ public class ChannelMsgDetailActivity extends BaseActivity implements
 		}
 	}
 
-	/** 控件的点击逻辑 **/
+	/**
+	 * 控件的点击逻辑
+	 **/
 	public void onClick(View v) {
 		switch (v.getId()) {
-		case R.id.back_layout:
-			InputMethodUtils.hide(ChannelMsgDetailActivity.this);
-			finish();
-			break;
-		case R.id.post_comment_btn:
-			String commentContent = msgEdit.getText().toString();
-			if (StringUtils.isBlank(commentContent)) {
-				ToastUtils.show(getApplicationContext(),
-						getString(R.string.msgcontent_cannot_null));
+			case R.id.back_layout:
+				InputMethodUtils.hide(ChannelMsgDetailActivity.this);
+				finish();
 				break;
-			}
-			sendComment(commentContent);
-			break;
-		default:
-			break;
+			case R.id.post_comment_btn:
+				String commentContent = msgEdit.getText().toString();
+				if (StringUtils.isBlank(commentContent)) {
+					ToastUtils.show(getApplicationContext(),
+							getString(R.string.msgcontent_cannot_null));
+					break;
+				}
+				sendComment(commentContent);
+				break;
+			default:
+				break;
 		}
 	}
 
@@ -346,7 +358,7 @@ public class ChannelMsgDetailActivity extends BaseActivity implements
 	 * 发出评论
 	 */
 	private void sendComment(String commentContent) {
-		
+
 		if (NetUtils.isNetworkConnected(getApplicationContext())) {
 			String commentConbineResult = getConbineComment(commentContent);
 			apiService.sendMsg(cid, commentConbineResult, "txt_comment",
@@ -371,10 +383,9 @@ public class ChannelMsgDetailActivity extends BaseActivity implements
 
 	/**
 	 * 拼装评论
-	 *
 	 */
 	private Comment combineComment(String content) {
-		String uid = ((MyApplication)getApplicationContext()).getUid();
+		String uid = ((MyApplication) getApplicationContext()).getUid();
 		String title = PreferencesUtils.getString(
 				ChannelMsgDetailActivity.this, "userRealName");
 		String timeStamp = TimeUtils.getCurrentUTCTimeString();
@@ -432,7 +443,7 @@ public class ChannelMsgDetailActivity extends BaseActivity implements
 			String[] urls = urlsString.replace("[", "").replace("]", "").split(",");
 			List<String> mentionList = Arrays.asList(mentions);
 			List<String> urlList = Arrays.asList(urls);
-			SpannableString spannableString = MentionsAndUrlShowUtils.handleMentioin(source,mentionList,urlList);
+			SpannableString spannableString = MentionsAndUrlShowUtils.handleMentioin(source, mentionList, urlList);
 			contentText.setText(spannableString);
 			TransHtmlToTextUtils.stripUnderlines(contentText,
 					Color.parseColor("#0f7bca"));
@@ -457,7 +468,7 @@ public class ChannelMsgDetailActivity extends BaseActivity implements
 
 	/**
 	 * 打开个人信息
-	 * 
+	 *
 	 * @param uid
 	 */
 	private void openUserInfo(String uid) {
@@ -487,12 +498,12 @@ public class ChannelMsgDetailActivity extends BaseActivity implements
 
 		@Override
 		public void beforeTextChanged(CharSequence s, int start, int count,
-				int after) {
+									  int after) {
 		}
 
 		@Override
 		public void onTextChanged(CharSequence s, int start, int before,
-				int count) {
+								  int count) {
 			beginPosition = start;
 			endPosition = start + count;
 			changeContent = s.toString().substring(beginPosition, endPosition);
@@ -529,8 +540,8 @@ public class ChannelMsgDetailActivity extends BaseActivity implements
 			if (!StringUtils.isBlank(s.toString())
 					&& canMention
 					&& (textChangeString.substring(textChangeLength - 1,
-							textChangeLength).equals("@") || changeContent
-							.equals("@")) && channelType.equals("GROUP")) {
+					textChangeLength).equals("@") || changeContent
+					.equals("@")) && channelType.equals("GROUP")) {
 				overridePendingTransition(R.anim.activity_open, 0);
 				startActivityForResult(intent, RESULT_MENTIONS);
 			}
@@ -569,7 +580,7 @@ public class ChannelMsgDetailActivity extends BaseActivity implements
 		try {
 			richTextObj.put("source", source);
 			richTextObj.put("mentions", mentionArray);
-			richTextObj.put("urls", urlArray);
+			richTextObj.put("urlList", urlArray);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -578,7 +589,7 @@ public class ChannelMsgDetailActivity extends BaseActivity implements
 
 	/**
 	 * 获取消息
-	 * 
+	 *
 	 * @param mid
 	 */
 	private void getMsgById(String mid) {
@@ -637,11 +648,11 @@ public class ChannelMsgDetailActivity extends BaseActivity implements
 
 		@Override
 		public void returnSendMsgSuccess(GetSendMsgResult getSendMsgResult,
-				String fakeMessageId) {
+										 String fakeMessageId) {
 		}
 
 		@Override
-		public void returnSendMsgFail(String error,String fakeMessageId) {
+		public void returnSendMsgFail(String error, String fakeMessageId) {
 			WebServiceMiddleUtils.hand(ChannelMsgDetailActivity.this, error);
 		}
 	}

@@ -1,17 +1,9 @@
 package com.inspur.emmcloud.ui.chat;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import android.content.Context;
-import android.graphics.Color;
 import android.text.SpannableString;
 import android.text.method.LinkMovementMethod;
 import android.view.View;
-import android.widget.RelativeLayout;
-import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.MyApplication;
@@ -21,6 +13,11 @@ import com.inspur.emmcloud.util.DensityUtil;
 import com.inspur.emmcloud.util.JSONUtils;
 import com.inspur.emmcloud.util.MentionsAndUrlShowUtils;
 import com.inspur.emmcloud.util.TransHtmlToTextUtils;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * DisplayTxtRichMsg
@@ -47,7 +44,7 @@ public class DisplayTxtRichMsg {
 		String source = JSONUtils.getString(msgBody, "source", "");
 		String[] mentions = JSONUtils.getString(msgBody, "mentions", "")
 				.replace("[", "").replace("]", "").split(",");
-		String[] urls = JSONUtils.getString(msgBody, "urls", "")
+		String[] urls = JSONUtils.getString(msgBody, "urlList", "")
 				.replace("[", "").replace("]", "").split(",");
 		List<String> mentionList = Arrays.asList(mentions);
 		List<String> urlList = Arrays.asList(urls);

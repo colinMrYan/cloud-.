@@ -34,6 +34,19 @@ public class ImageDisplayUtils  implements ImagePickerLoader {
 		L.disableLogging(); // 关闭imageloader的疯狂的log
 	}
 
+	public ImageDisplayUtils(Context context) {
+		if (imageLoader == null) {
+			imageLoader = ImageLoader.getInstance();
+		}
+		options = new DisplayImageOptions.Builder()
+				// 设置图片的解码类型
+				.bitmapConfig(Bitmap.Config.RGB_565)
+				.cacheInMemory(true)
+				.cacheOnDisk(true)
+				.build();
+		L.disableLogging(); // 关闭imageloader的疯狂的log
+	}
+
 	public  ImageLoader getImageLoader(){
 		return imageLoader;
 	}
