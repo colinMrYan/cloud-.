@@ -140,5 +140,7 @@
         <attr name="aspectRatioY" format= "integer"/>
         <attr name="imageResource" format="reference"/>
     </declare-styleable>
-    
+    <declare-styleable name="ECMChatInputMenu">
+        <attr name="layoutType" format="string"/>
+    </declare-styleable>
 </resources>
