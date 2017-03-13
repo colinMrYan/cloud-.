@@ -3,7 +3,6 @@ package com.inspur.emmcloud.ui.app.groupnews;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.res.Resources;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
@@ -35,7 +34,7 @@ import com.inspur.emmcloud.util.ChatCreateUtils;
 import com.inspur.emmcloud.util.ChatCreateUtils.OnCreateDirectChannelListener;
 import com.inspur.emmcloud.util.DensityUtil;
 import com.inspur.emmcloud.util.NetUtils;
-import com.inspur.emmcloud.util.PreferencesUtils;
+import com.inspur.emmcloud.util.PreferencesByUserUtils;
 import com.inspur.emmcloud.util.StateBarColor;
 import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.UriUtils;
@@ -72,7 +71,11 @@ public class NewsWebDetailActivity extends BaseActivity {
     private TextView fontTxt;
     private View dayOrNightLine;
     private View fontLine;
-    private String userId = "";
+    private int darkModeBtnColor;
+    private int lightModeBtnColor;
+    private int lightModeFontColor;
+    private int blackFontColor;
+    private int whiteFontColor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,7 +100,7 @@ public class NewsWebDetailActivity extends BaseActivity {
      */
     private void initWebView() {
         webView = (ProgressWebView) findViewById(R.id.news_webdetail_webview);
-        String model = PreferencesUtils.getString(NewsWebDetailActivity.this, "app_news_webview_model", "");
+        String model = PreferencesByUserUtils.getString(NewsWebDetailActivity.this, "app_news_webview_model", "");
         if (model.equals(darkMode)) {
             webView.setBackgroundColor(ContextCompat.getColor(NewsWebDetailActivity.this, R.color.app_news_night_color));
         } else {
@@ -114,7 +117,7 @@ public class NewsWebDetailActivity extends BaseActivity {
      * 初始化是否夜间日间模式
      */
     private void initWebViewModel() {
-        String model = PreferencesUtils.getString(NewsWebDetailActivity.this, "app_news_webview_model", "");
+        String model = PreferencesByUserUtils.getString(NewsWebDetailActivity.this, "app_news_webview_model", "");
         if (StringUtils.isBlank(model)) {
             changeWebViewModel(lightMode);
         } else {
@@ -152,7 +155,7 @@ public class NewsWebDetailActivity extends BaseActivity {
      * 初始化WebView的字体大小
      */
     private void initWebViewTextSize() {
-        textSize = PreferencesUtils.getInt(NewsWebDetailActivity.this, "app_news_text_size", MyAppWebConfig.NORMAL);
+        textSize = PreferencesByUserUtils.getInt(NewsWebDetailActivity.this, "app_news_text_size", MyAppWebConfig.NORMAL);
         switch (textSize) {
             case MyAppWebConfig.SMALLESET:
                 textSize = MyAppWebConfig.SMALLESET;
@@ -179,7 +182,11 @@ public class NewsWebDetailActivity extends BaseActivity {
      * 初始化数据
      */
     private void initData() {
-        userId = ((MyApplication)getApplication()).getUid();
+        darkModeBtnColor = ContextCompat.getColor(NewsWebDetailActivity.this,R.color.app_dialog_night_background_btn);
+        lightModeBtnColor = ContextCompat.getColor(NewsWebDetailActivity.this,R.color.app_dialog_day_background_btn);
+        lightModeFontColor = ContextCompat.getColor(NewsWebDetailActivity.this,R.color.app_dialog_day_font_color);
+        blackFontColor = ContextCompat.getColor(NewsWebDetailActivity.this,R.color.black);
+        whiteFontColor = ContextCompat.getColor(NewsWebDetailActivity.this,R.color.white);
         Intent intent = getIntent();
         if (intent.hasExtra("url")) {
             url = intent.getStringExtra("url");
@@ -224,7 +231,7 @@ public class NewsWebDetailActivity extends BaseActivity {
         // 设置点击外围解散
         dialog.setCanceledOnTouchOutside(true);
         initDialogFontSize();
-        String model = PreferencesUtils.getString(NewsWebDetailActivity.this, "app_news_webview_model", "");
+        String model = PreferencesByUserUtils.getString(NewsWebDetailActivity.this, "app_news_webview_model", "");
         if(model.equals(darkMode)){
             changeDialogModelToNight();
         }else {
@@ -237,7 +244,7 @@ public class NewsWebDetailActivity extends BaseActivity {
      * 初始化Dialog的字体大小
      */
     private void initDialogFontSize() {
-        String model = PreferencesUtils.getString(NewsWebDetailActivity.this, "app_news_webview_model", "");
+        String model = PreferencesByUserUtils.getString(NewsWebDetailActivity.this, "app_news_webview_model", "");
         switch (textSize) {
             case MyAppWebConfig.SMALLESET:
                 chooseNormalFont(model);
@@ -289,16 +296,16 @@ public class NewsWebDetailActivity extends BaseActivity {
      */
     private void changeNewsFontSize(WebSettings settings, int textZoom) {
         settings.setTextZoom(textZoom);
-        PreferencesUtils.putInt(NewsWebDetailActivity.this, "app_news_text_size", textZoom);
+        PreferencesByUserUtils.putInt(NewsWebDetailActivity.this, "app_news_text_size", textZoom);
         textSize = textZoom;
-        String model = PreferencesUtils.getString(NewsWebDetailActivity.this, "app_news_webview_model", "");
+        String model = PreferencesByUserUtils.getString(NewsWebDetailActivity.this, "app_news_webview_model", "");
         GradientDrawable drawable = new GradientDrawable();
         drawable.setCornerRadius(DensityUtil.dip2px(NewsWebDetailActivity.this, 5));
         //这里为了解决一个改变字体时的bug，很奇怪
         if(model.equals(darkMode)){
-            drawable.setColor(Color.parseColor("#FF3B4451"));
+            drawable.setColor(darkModeBtnColor);
         }else{
-            drawable.setColor(Color.parseColor("#268E8E8E"));
+            drawable.setColor(lightModeBtnColor);
         }
         shareBtn.setBackground(drawable);
         dayOrNightLayout.setBackground(drawable);
@@ -314,7 +321,7 @@ public class NewsWebDetailActivity extends BaseActivity {
     }
 
     public void onClick(View v) {
-        String model = PreferencesUtils.getString(NewsWebDetailActivity.this, "app_news_webview_model", "");
+        String model = PreferencesByUserUtils.getString(NewsWebDetailActivity.this, "app_news_webview_model", "");
         switch (v.getId()) {
             case R.id.back_layout:
                 finish();
@@ -360,13 +367,13 @@ public class NewsWebDetailActivity extends BaseActivity {
      */
     private void chooseNormalFont(String model) {
         if(model.equals(darkMode)){
-            normalBtn.setTextColor(Color.parseColor("#FFFFFFFF"));
+            normalBtn.setTextColor(whiteFontColor);
         }else{
-            normalBtn.setTextColor(Color.parseColor("#FF999999"));
+            normalBtn.setTextColor(lightModeFontColor);
         }
-        middleBtn.setTextColor(Color.parseColor("#FF000000"));
-        bigBtn.setTextColor(Color.parseColor("#FF000000"));
-        biggestBtn.setTextColor(Color.parseColor("#FF000000"));
+        middleBtn.setTextColor(blackFontColor);
+        bigBtn.setTextColor(blackFontColor);
+        biggestBtn.setTextColor(blackFontColor);
     }
 
     /**
@@ -374,13 +381,13 @@ public class NewsWebDetailActivity extends BaseActivity {
      */
     private void chooseMiddleFont(String model) {
         if(model.equals(darkMode)){
-            middleBtn.setTextColor(Color.parseColor("#FFFFFFFF"));
+            middleBtn.setTextColor(whiteFontColor);
         }else{
-            middleBtn.setTextColor(Color.parseColor("#FF999999"));
+            middleBtn.setTextColor(lightModeFontColor);
         }
-        normalBtn.setTextColor(Color.parseColor("#FF000000"));
-        bigBtn.setTextColor(Color.parseColor("#FF000000"));
-        biggestBtn.setTextColor(Color.parseColor("#FF000000"));
+        normalBtn.setTextColor(blackFontColor);
+        bigBtn.setTextColor(blackFontColor);
+        biggestBtn.setTextColor(blackFontColor);
     }
 
     /**
@@ -388,13 +395,13 @@ public class NewsWebDetailActivity extends BaseActivity {
      */
     private void chooseBigFont(String model) {
         if(model.equals(darkMode)){
-            bigBtn.setTextColor(Color.parseColor("#FFFFFFFF"));
+            bigBtn.setTextColor(whiteFontColor);
         }else{
-            bigBtn.setTextColor(Color.parseColor("#FF999999"));
+            bigBtn.setTextColor(lightModeFontColor);
         }
-        normalBtn.setTextColor(Color.parseColor("#FF000000"));
-        middleBtn.setTextColor(Color.parseColor("#FF000000"));
-        biggestBtn.setTextColor(Color.parseColor("#FF000000"));
+        normalBtn.setTextColor(blackFontColor);
+        middleBtn.setTextColor(blackFontColor);
+        biggestBtn.setTextColor(blackFontColor);
     }
 
     /**
@@ -402,13 +409,13 @@ public class NewsWebDetailActivity extends BaseActivity {
      */
     private void chooseBiggestFont(String model) {
         if(model.equals(darkMode)){
-            biggestBtn.setTextColor(Color.parseColor("#FFFFFFFF"));
+            biggestBtn.setTextColor(whiteFontColor);
         }else{
-            biggestBtn.setTextColor(Color.parseColor("#FF999999"));
+            biggestBtn.setTextColor(lightModeFontColor);
         }
-        normalBtn.setTextColor(Color.parseColor("#FF000000"));
-        middleBtn.setTextColor(Color.parseColor("#FF000000"));
-        bigBtn.setTextColor(Color.parseColor("#FF000000"));
+        normalBtn.setTextColor(blackFontColor);
+        middleBtn.setTextColor(blackFontColor);
+        bigBtn.setTextColor(blackFontColor);
     }
 
     /**
@@ -426,7 +433,7 @@ public class NewsWebDetailActivity extends BaseActivity {
             relativeLayout.setBackgroundColor(ContextCompat.getColor(NewsWebDetailActivity.this, R.color.header_bg));
             webView.loadUrl(url + model);
         }
-        PreferencesUtils.putString(NewsWebDetailActivity.this, "app_news_webview_model", model);
+        PreferencesByUserUtils.putString(NewsWebDetailActivity.this, "app_news_webview_model", model);
     }
 
     /**
@@ -435,13 +442,13 @@ public class NewsWebDetailActivity extends BaseActivity {
     private void changeDialogModelToNight() {
         GradientDrawable drawable = new GradientDrawable();
         drawable.setCornerRadius(DensityUtil.dip2px(NewsWebDetailActivity.this, 5));
-        drawable.setColor(Color.parseColor("#FF5E6875"));
+        drawable.setColor(ContextCompat.getColor(NewsWebDetailActivity.this,R.color.app_dialog_night_background_layout));
         dialogLayout.setBackground(drawable);
         GradientDrawable drawableBtn = new GradientDrawable();
         drawableBtn.setCornerRadius(DensityUtil.dip2px(NewsWebDetailActivity.this, 5));
-        drawableBtn.setColor(Color.parseColor("#FF3B4451"));
+        drawableBtn.setColor(ContextCompat.getColor(NewsWebDetailActivity.this,R.color.app_dialog_night_background_btn));
         dayOrNightLayout.setBackground(drawableBtn);
-        dayBtn.setTextColor(Color.parseColor("#FFFFFFFF"));
+        dayBtn.setTextColor(whiteFontColor);
         setDayBtn(1);
         changeFontSizeBtn();
         shareBtn.setBackground(drawableBtn);
@@ -449,9 +456,9 @@ public class NewsWebDetailActivity extends BaseActivity {
         middleBtn.setBackground(drawableBtn);
         bigBtn.setBackground(drawableBtn);
         biggestBtn.setBackground(drawableBtn);
-        dayOrNightLine.setBackgroundColor(Color.parseColor("#FF161E29"));
-        fontLine.setBackgroundColor(Color.parseColor("#FF161E29"));
-        fontTxt.setTextColor(Color.parseColor("#FFFFFFFF"));
+        dayOrNightLine.setBackgroundColor(ContextCompat.getColor(NewsWebDetailActivity.this,R.color.app_dialog_night_line_color));
+        fontLine.setBackgroundColor(ContextCompat.getColor(NewsWebDetailActivity.this,R.color.app_dialog_night_line_color));
+        fontTxt.setTextColor(whiteFontColor);
     }
 
     /**
@@ -460,13 +467,13 @@ public class NewsWebDetailActivity extends BaseActivity {
     private void chagneDialogModelToDay() {
         GradientDrawable drawableDay = new GradientDrawable();
         drawableDay.setCornerRadius(DensityUtil.dip2px(NewsWebDetailActivity.this, 5));
-        drawableDay.setColor(Color.parseColor("#FFFFFCFA"));
+        drawableDay.setColor(ContextCompat.getColor(NewsWebDetailActivity.this,R.color.app_dialog_day_background_layout));
         dialogLayout.setBackground(drawableDay);
         GradientDrawable drawableDayBtn = new GradientDrawable();
         drawableDayBtn.setCornerRadius(DensityUtil.dip2px(NewsWebDetailActivity.this, 5));
-        drawableDayBtn.setColor(Color.parseColor("#268E8E8E"));
+        drawableDayBtn.setColor(lightModeBtnColor);
         dayOrNightLayout.setBackground(drawableDayBtn);
-        dayBtn.setTextColor(Color.parseColor("#FF999999"));
+        dayBtn.setTextColor(lightModeFontColor);
         setDayBtn(2);
         changeFontSizeBtn();
         shareBtn.setBackground(drawableDayBtn);
@@ -474,16 +481,16 @@ public class NewsWebDetailActivity extends BaseActivity {
         middleBtn.setBackground(drawableDayBtn);
         bigBtn.setBackground(drawableDayBtn);
         biggestBtn.setBackground(drawableDayBtn);
-        dayOrNightLine.setBackgroundColor(Color.parseColor("#FFD6D6D6"));
-        fontLine.setBackgroundColor(Color.parseColor("#FFD6D6D6"));
-        fontTxt.setTextColor(Color.parseColor("#FF999999"));
+        dayOrNightLine.setBackgroundColor(ContextCompat.getColor(NewsWebDetailActivity.this,R.color.app_dialog_day_line_color));
+        fontLine.setBackgroundColor(ContextCompat.getColor(NewsWebDetailActivity.this,R.color.app_dialog_day_line_color));
+        fontTxt.setTextColor(lightModeFontColor);
     }
 
     /**
      * 当改变日夜间模式的时候字体按钮对应改变
      */
     private void changeFontSizeBtn() {
-        String model = PreferencesUtils.getString(NewsWebDetailActivity.this, "app_news_webview_model", "");
+        String model = PreferencesByUserUtils.getString(NewsWebDetailActivity.this, "app_news_webview_model", "");
         switch (textSize){
             case MyAppWebConfig.SMALLER:
                 chooseNormalFont(model);
