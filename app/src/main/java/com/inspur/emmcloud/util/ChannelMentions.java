@@ -1,17 +1,17 @@
 package com.inspur.emmcloud.util;
 
-import java.util.ArrayList;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.graphics.Color;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.widget.EditText;
 
 import com.inspur.emmcloud.widget.spans.ForeColorSpan;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 public class ChannelMentions {
 
@@ -89,6 +89,7 @@ public class ChannelMentions {
 				}
 			}
 			msgEdit.setText(ss);
+			LogUtils.jasonDebug("sss="+ss.toString());
 			msgEdit.setSelection(ss.length());
 		} catch (JSONException e) {
 			e.printStackTrace();

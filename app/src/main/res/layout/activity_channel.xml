@@ -90,7 +90,6 @@
 
         <include layout="@layout/pull_load_more" />
     </com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout>
-	
     <com.inspur.emmcloud.widget.ECMChatInputMenu
         android:id="@+id/chat_input_menu"
          android:layout_width="match_parent"

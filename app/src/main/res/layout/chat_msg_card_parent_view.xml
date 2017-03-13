@@ -3,9 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingBottom="10dp"
+    android:paddingBottom="7dp"
     android:paddingRight="17dp"
-    android:paddingTop="10dp" >
+    android:paddingTop="7dp" >
 
     <TextView
         android:id="@+id/send_time_text"
@@ -32,7 +32,7 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp" />
+            android:layout_marginRight="7dp" />
 
         <ImageView
             android:id="@+id/msg_superscript_img"
@@ -66,7 +66,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="6dp"
-                android:paddingLeft="8dp"
+                android:layout_marginLeft="5dp"
                 android:singleLine="true"
                 android:textColor="#666666"
                 android:textSize="@dimen/content_normal_textsize" />

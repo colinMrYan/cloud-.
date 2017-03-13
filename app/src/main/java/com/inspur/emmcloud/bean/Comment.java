@@ -1,8 +1,8 @@
 package com.inspur.emmcloud.bean;
 
-import java.io.Serializable;
-
 import org.json.JSONObject;
+
+import java.io.Serializable;
 
 public class Comment implements Serializable{
 
@@ -106,8 +106,8 @@ public class Comment implements Serializable{
 					this.mentions = jsonBody.getString("mentions");
 				}
 				
-				if(jsonBody.has("urls")){
-					this.urls = jsonBody.getString("urls");
+				if(jsonBody.has("urlList")){
+					this.urls = jsonBody.getString("urlList");
 				}
 			}
 			

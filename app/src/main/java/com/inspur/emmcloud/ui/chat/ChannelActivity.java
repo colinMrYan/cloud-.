@@ -286,51 +286,6 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
         }
     }
 
-    // 分享
-    // public void shareMsg(){
-    // Intent intent = new Intent(Intent.ACTION_SEND);
-    // intent.setType("text/plain");
-    // // 查询所有可以分享的Activity
-    // List<ResolveInfo> resInfo =
-    // ChannelActivity.this.getPackageManager().queryIntentActivities(intent,
-    // PackageManager.MATCH_DEFAULT_ONLY);
-    // if (!resInfo.isEmpty()) {
-    // List<Intent> targetedShareIntents = new ArrayList<Intent>();
-    // for (ResolveInfo info : resInfo) {
-    // Intent targeted = new Intent(Intent.ACTION_SEND);
-    // targeted.setType("text/plain");
-    // ActivityInfo activityInfo = info.activityInfo;
-    // Log.v("logcat", "packageName=" + activityInfo.packageName + "Name=" +
-    // activityInfo.name);
-    // // 分享出去的内容
-    // targeted.putExtra(Intent.EXTRA_TEXT, "这是我的分享内容" + getPackageName());
-    // // 分享出去的标题
-    // targeted.putExtra(Intent.EXTRA_SUBJECT, "主题");
-    // targeted.setPackage(activityInfo.packageName);
-    // targeted.setClassName(activityInfo.packageName, info.activityInfo.name);
-    // PackageManager pm =
-    // ChannelActivity.this.getApplication().getPackageManager();
-    // // 微信有2个怎么区分-。- 朋友圈还有微信
-    // String appName =
-    // info.activityInfo.applicationInfo.loadLabel(pm).toString();
-    // if (appName.equals("微信")||appName.equals("QQ")) {
-    // targetedShareIntents.add(targeted);
-    // }
-    // }
-    // // 选择分享时的标题
-    // Intent chooserIntent =
-    // Intent.createChooser(targetedShareIntents.remove(0), "选择分享");
-    // if (chooserIntent == null) {
-    // return;
-    // }
-    // chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS,
-    // targetedShareIntents.toArray(new Parcelable[] {}));
-    // try {
-    // startActivity(chooserIntent);
-    // } catch (android.content.ActivityNotFoundException ex) {
-    // Toast.makeText(this, "找不到该分享应用组件", Toast.LENGTH_SHORT).show();
-    // }}
-    // }
 
     /**
      * 计算inputs的二进制
@@ -392,11 +347,11 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
                 String msgType = msg.getType();
                 String mid = "";
                 //当消息处于发送中状态时无法点击
-                if (msg.getSendStatus() != 1){
+                if (msg.getSendStatus() != 1) {
                     return;
                 }
-                if (msgType.equals("image") || msgType.equals("res_image")
-                        || msgType.equals("res_file")) {
+
+                if (msgType.equals("res_file")) {
                     mid = msg.getMid();
                     bundle.putString("mid", mid);
                     IntentUtils.startActivity(ChannelActivity.this,
@@ -557,16 +512,17 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
 
     /**
      * 设置消息发送失败
+     *
      * @param fakeMessageId
      */
-    private void setMsgSendFail(String fakeMessageId){
+    private void setMsgSendFail(String fakeMessageId) {
         Msg fakeMsg = new Msg();
         fakeMsg.setMid(fakeMessageId);
-            int fakeMsgIndex = msgList.indexOf(fakeMsg);
-            if (fakeMsgIndex != -1) {
-                msgList.get(fakeMsgIndex).setSendStatus(2);
-                adapter.notifyDataSetChanged();
-            }
+        int fakeMsgIndex = msgList.indexOf(fakeMsg);
+        if (fakeMsgIndex != -1) {
+            msgList.get(fakeMsgIndex).setSendStatus(2);
+            adapter.notifyDataSetChanged();
+        }
 
     }
 
@@ -629,7 +585,7 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
         try {
             richTextObj.put("source", source);
             richTextObj.put("mentions", mentionArray);
-            richTextObj.put("urls", urlArray);
+            richTextObj.put("urlList", urlArray);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -762,7 +718,7 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
                 refreshingAnimation.setInterpolator(lir);
                 refreshingImg.setVisibility(View.VISIBLE);
                 refreshingImg.startAnimation(refreshingAnimation);
-            }else if (msg.getSendStatus() == 2){
+            } else if (msg.getSendStatus() == 2) {
                 refreshingImg.setVisibility(View.VISIBLE);
                 refreshingImg.setImageResource(R.drawable.ic_chat_msg_send_fail);
             }
@@ -968,7 +924,7 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
         }
 
         @Override
-        public void returnSendMsgFail(String error,String fakeMessageId) {
+        public void returnSendMsgFail(String error, String fakeMessageId) {
             WebServiceMiddleUtils.hand(ChannelActivity.this, error);
             setMsgSendFail(fakeMessageId);
         }

@@ -1,11 +1,5 @@
 package com.inspur.emmcloud.ui.chat;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.xutils.common.Callback.ProgressCallback;
-
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,6 +22,13 @@ import com.inspur.emmcloud.util.ImageDisplayUtils;
 import com.inspur.emmcloud.util.MsgCacheUtil;
 import com.inspur.emmcloud.util.ToastUtils;
 import com.inspur.emmcloud.widget.HorizontalProgressBarWithNumber;
+
+import org.xutils.common.Callback.ProgressCallback;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class GroupFileActivity extends BaseActivity {
 

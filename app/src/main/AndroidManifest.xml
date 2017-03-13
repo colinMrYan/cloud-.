@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.inspur.emmcloud"
     android:configChanges="locale|layoutDirection"
-    android:versionCode="19"
-    android:versionName="1.1.1">
+    android:versionCode="20"
+    android:versionName="1.1.2">
 
     <uses-sdk
         android:minSdkVersion="14"
@@ -301,7 +301,9 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.chat.ImagePagerActivity"
-            android:launchMode="singleTask"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:launchMode="singleInstance"
+            android:windowSoftInputMode="stateHidden|adjustPan"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.chat.MembersActivity"

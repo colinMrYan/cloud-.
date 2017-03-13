@@ -10,11 +10,13 @@ package com.inspur.emmcloud.widget;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.TypedArray;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
+import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.Spannable;
 import android.text.Spanned;
@@ -30,6 +32,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -37,6 +40,7 @@ import android.widget.RelativeLayout;
 
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.MsgAddItemAdapter;
+import com.inspur.emmcloud.ui.chat.ImagePagerActivity;
 import com.inspur.emmcloud.ui.chat.MembersActivity;
 import com.inspur.emmcloud.util.ChannelMentions;
 import com.inspur.emmcloud.util.DensityUtil;
@@ -71,6 +75,7 @@ public class ECMChatInputMenu extends LinearLayout {
 	private ImageView addImg;
 	private Button sendMsgBtn;
 	private RelativeLayout addMenuLayout;
+	private LinearLayout rootLayout;
 	private boolean canMention = false;
 	private int editWordsLenth = 0;
 	private ArrayList<String> mentionsUserNameList = new ArrayList<String>();
@@ -85,33 +90,44 @@ public class ECMChatInputMenu extends LinearLayout {
 	private List<Integer> textList = new ArrayList<Integer>();
 	private int[] imgArray = {R.drawable.icon_select_album,R.drawable.icon_select_take_photo,R.drawable.icon_select_file};
 	private int[] textArray = {R.string.album,R.string.take_photo,R.string.file};
+	private Fragment fragment;
 
 	// private View view ;
 
 	public ECMChatInputMenu(Context context) {
 		super(context);
 		// TODO Auto-generated constructor stub
-		init(context);
+		init(context,null);
 	}
 
 	public ECMChatInputMenu(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		// TODO Auto-generated constructor stub
-		init(context);
+		init(context,attrs);
 	}
 
 	public ECMChatInputMenu(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
-		init(context);
+		init(context,attrs);
 	}
 
-	private void init(final Context context) {
+	private void init(final Context context,AttributeSet attrs) {
 		// TODO Auto-generated method stub
 		this.context = context;
 		layoutInflater = LayoutInflater.from(context);
 		layoutInflater.inflate(R.layout.ecm_widget_chat_input_menu, this);
 		inputEdit = (ChatInputEdit) findViewById(R.id.input_edit);
 		inputEdit.setECMChatInputMenu(this);
+		TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ECMChatInputMenu);
+		String layoutType = a.getString(R.styleable.ECMChatInputMenu_layoutType);
+		if (!StringUtils.isEmpty(layoutType) && layoutType.equals("img_comment_input")){
+			layoutInflater.inflate(R.layout.ecm_widget_chat_input_menu_img_comment, this);
+		}else {
+			layoutInflater.inflate(R.layout.ecm_widget_chat_input_menu, this);
+		}
+		a.recycle();
+		rootLayout = (LinearLayout)findViewById(R.id.root_layout);
+		inputEdit = (ChatInputEdit) findViewById(R.id.input_edit);
 		addImg = (ImageView) findViewById(R.id.add_img);
 		addMenuLayout = (RelativeLayout) findViewById(R.id.add_menu_layout);
 		sendMsgBtn = (Button) findViewById(R.id.send_msg_btn);
@@ -202,6 +218,14 @@ public class ECMChatInputMenu extends LinearLayout {
 
 	private void unlockContentHeight() {
 		chatInputMenuListener.onSetContentViewHeight(false);
+	}
+
+	public void showAddBtn(boolean isShowHideBtn){
+		addImg.setVisibility(isShowHideBtn?View.VISIBLE:View.GONE);
+	}
+
+	public void setFragmentContext(Fragment fragment){
+		this.fragment = fragment;
 	}
 
 	private void hideAddItemLayout(boolean showSoftInput) {
@@ -374,6 +398,7 @@ public class ECMChatInputMenu extends LinearLayout {
 
 	public void setMentionData(Intent data) {
 		String result = data.getStringExtra("searchResult");
+		LogUtils.jasonDebug("result===="+result);
 		PreferencesUtils.putString(context, channelId, "");
 		ChannelMentions.addMentions(result, mentionsUserNameList,
 				mentionsUidList, inputEdit, beginMentions, endMentions);
@@ -474,8 +499,14 @@ public class ECMChatInputMenu extends LinearLayout {
 							.equals("@"))) {
 				((Activity) context).overridePendingTransition(
 						R.anim.activity_open, 0);
-				((Activity) context).startActivityForResult(intent,
-						MENTIONS_RESULT);
+				if (context instanceof ImagePagerActivity){
+					fragment.startActivityForResult(intent,
+							MENTIONS_RESULT);
+				}else {
+					((Activity) context).startActivityForResult(intent,
+							MENTIONS_RESULT);
+				}
+
 			}
 			canMention = true;
 		}

@@ -43,7 +43,7 @@ public class DisplayCommentMsg {
 //		String msgBody = msg.getBody();
 //		String source = JSONUtils.getString(msgBody, "source", "");
 		String[] mentions = JSONUtils.getString(content, "mentions", "").replace("[", "").replace("]", "").split(",");
-		String[] urls = JSONUtils.getString(content, "urls", "").replace("[", "").replace("]", "").split(",");
+		String[] urls = JSONUtils.getString(content, "urlList", "").replace("[", "").replace("]", "").split(",");
 		List<String> mentionList = Arrays.asList(mentions);
 		List<String> urlList = Arrays.asList(urls);
 //		String handMention = MentionsMatcher.handleMentioin(source);

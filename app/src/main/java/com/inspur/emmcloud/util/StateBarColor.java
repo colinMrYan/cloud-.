@@ -54,4 +54,6 @@ public class StateBarColor {
 		}
 		win.setAttributes(winParams);
 	}
+
+
 }

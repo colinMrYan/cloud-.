@@ -5,57 +5,17 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.inspur.imp.api.ImpActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.App;
+import com.inspur.emmcloud.bean.PVCollectModel;
 import com.inspur.emmcloud.ui.app.groupnews.GroupNewsActivity;
+import com.inspur.imp.api.ImpActivity;
 
 
 public class UriUtils {
 	// public static String res;
 	public static String tanent;
-
-//	public static void opens(Activity activity, String uri, int appType,
-//			String identifiers, String appName) {
-//		Intent intent = new Intent();
-//		switch (appType) {
-//		case 0:
-//		case 1:
-//			if (uri.equals("emm://news")) {
-//				intent.setClass(activity, GroupNewsActivity.class);
-//				activity.startActivity(intent);
-//			} else {
-//				ToastUtils.show(activity,
-//						activity.getString(R.string.not_support_app_type));
-//			}
-//
-//			break;
-//		case 3:
-//		case 4:
-//			intent.setClass(activity, ImpActivity.class);
-//			intent.putExtra("uri", uri);
-//			String token = ((MyApplication) activity.getApplicationContext())
-//					.getToken();
-//			intent.putExtra("Authorization", token);
-//			intent.putExtra("userAgentExtra",
-//					"/emmcloud/" + AppUtils.getVersion(activity));
-//			String webLanguageCookie = getLanguageCookie(activity);
-//			intent.putExtra("cookie", webLanguageCookie);
-//			if (appType == 3) {
-//				intent.putExtra("appName", appName);
-//			}
-//			activity.startActivity(intent);
-//			break;
-//
-//		default:
-//			ToastUtils.show(activity,
-//					activity.getString(R.string.not_support_app_type));
-//			break;
-//		}
-//
-//	}
-
 	public static void openApp(Activity activity, App app) {
 		String uri = app.getUri();
 		int appType = app.getAppType();
@@ -95,6 +55,10 @@ public class UriUtils {
 					activity.getString(R.string.not_support_app_type));
 			break;
 		}
+
+		//web应用PV收集
+		PVCollectModel collectModel = new PVCollectModel(activity, app.getAppID(), "webApp", app.getAppName());
+		PVCollectModelCacheUtils.saveCollectModel(activity,collectModel);
 	}
 
 	/**
