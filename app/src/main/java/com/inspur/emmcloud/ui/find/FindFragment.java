@@ -116,6 +116,7 @@ public class FindFragment extends Fragment implements DefaultHardwareBackBtnHand
             getActivity().unregisterReceiver(reactNativeReceiver);
             reactNativeReceiver = null;
         }
+        hasUpdated = false;
     }
 
 

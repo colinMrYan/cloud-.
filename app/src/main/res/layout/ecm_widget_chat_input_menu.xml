@@ -29,7 +29,7 @@
             android:scaleType="centerInside"
             android:src="@drawable/selector_add_comment_btn" />
 
-        <EditText
+        <com.inspur.emmcloud.widget.ChatInputEdit
             android:id="@+id/input_edit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="bottom"
+    android:orientation="vertical"
+    android:paddingBottom="5dp">
+
+    <LinearLayout
+        android:id="@+id/app_news_dialog"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:background="@drawable/app_news_dialog_day_background"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/app_news_mode_layout"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="18dp"
+            android:background="@drawable/app_news_dialog_day_button">
+
+            <Button
+                android:id="@+id/app_news_mode_day_btn"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:background="@null"
+                android:onClick="onClick"
+                android:drawableLeft="@drawable/app_news_day_day"
+                android:paddingLeft="34dp"
+                android:drawablePadding="11dp"
+                android:textSize="@dimen/content_title_textsize"
+                android:gravity="left|center_vertical"
+                android:textColor="#FF999999"
+                android:text="日间模式" />
+
+            <View
+                android:id="@+id/app_news_mode_line"
+                android:layout_width="0.5dp"
+                android:layout_height="50dp"
+                android:background="#FFD6D6D6" />
+
+            <Button
+                android:id="@+id/app_news_mode_night_btn"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:background="@null"
+                android:onClick="onClick"
+                android:drawableLeft="@drawable/app_news_day_night"
+                android:paddingBottom="5dp"
+                android:paddingLeft="34dp"
+                android:paddingTop="5dp"
+                android:gravity="left|center_vertical"
+                android:drawablePadding="11dp"
+                android:textSize="@dimen/content_title_textsize"
+                android:text="夜间模式" />
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/app_news_share_btn"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="22dp"
+            android:drawableLeft="@drawable/app_news_share"
+            android:drawablePadding="11dp"
+            android:paddingLeft="139dp"
+            android:gravity="left|center_vertical"
+            android:onClick="onClick"
+            android:background="@drawable/app_news_dialog_day_button"
+            android:textSize="@dimen/content_title_textsize"
+            android:text="分享" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="10dp">
+
+            <TextView
+                android:id="@+id/app_news_font_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/content_smaller_textsize"
+                android:textColor="#FF666666"
+                android:text="字体" />
+
+            <View
+                android:id="@+id/app_news_font_line"
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="4dp"
+                android:background="#FFD6D6D6" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="12dp"
+            android:layout_marginTop="7dp"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/app_news_font_normal_btn"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:layout_marginRight="8dp"
+                android:layout_marginLeft="8dp"
+                android:onClick="onClick"
+                android:background="@drawable/app_news_dialog_day_button"
+                android:textSize="@dimen/content_title_textsize"
+                android:textColor="#FF999999"
+                android:text="小" />
+
+            <Button
+                android:id="@+id/app_news_font_middle_btn"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:onClick="onClick"
+                android:layout_marginRight="8dp"
+                android:layout_marginLeft="8dp"
+                android:background="@drawable/app_news_dialog_day_button"
+                android:textSize="@dimen/content_title_textsize"
+                android:text="标准" />
+
+            <Button
+                android:id="@+id/app_news_font_big_btn"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:onClick="onClick"
+                android:layout_marginRight="8dp"
+                android:layout_marginLeft="8dp"
+                android:background="@drawable/app_news_dialog_day_button"
+                android:textSize="@dimen/content_title_textsize"
+                android:text="大" />
+
+            <Button
+                android:id="@+id/app_news_font_biggest_btn"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:onClick="onClick"
+                android:layout_marginRight="8dp"
+                android:layout_marginLeft="8dp"
+                android:background="@drawable/app_news_dialog_day_button"
+                android:textSize="@dimen/content_title_textsize"
+                android:text="超大" />
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+</LinearLayout>

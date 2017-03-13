@@ -4,10 +4,13 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -34,11 +37,11 @@ import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.bean.Channel;
 import com.inspur.emmcloud.bean.GetFileUploadResult;
 import com.inspur.emmcloud.bean.GetMeetingReplyResult;
+import com.inspur.emmcloud.bean.GetMsgResult;
 import com.inspur.emmcloud.bean.GetNewMsgsResult;
 import com.inspur.emmcloud.bean.GetNewsImgResult;
 import com.inspur.emmcloud.bean.GetSendMsgResult;
 import com.inspur.emmcloud.bean.Msg;
-import com.inspur.emmcloud.bean.GetMsgResult;
 import com.inspur.emmcloud.broadcastreceiver.MsgReceiver;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.ui.app.groupnews.NewsWebDetailActivity;
@@ -77,6 +80,8 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static android.R.attr.action;
 
 /**
  * com.inspur.emmcloud.ui.ChannelActivity
@@ -120,9 +125,79 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
         // TODO Auto-generated method stub
         super.onNewIntent(intent);
         setIntent(intent);
-        getIntent().putExtras(intent);
         init();
+
+
     }
+
+    /**
+     * 分享
+     * @param intent
+     */
+    private void handleShareFromOtherApps(Intent intent) {
+        String type = intent.getType();
+        LogUtils.YfcDebug("传入的type："+type);
+        if (Intent.ACTION_SEND.equals(action)&&type!=null){
+            if ("text/plain".equals(type)){
+                dealTextMessage(intent);
+            }else if(type.startsWith("image/")){
+                LogUtils.YfcDebug("启动分享到Image");
+                dealPicStream(intent);
+            }
+        }else if (Intent.ACTION_SEND_MULTIPLE.equals(action)&&type!=null){
+            if (type.startsWith("image/")){
+                dealMultiplePicStream(intent);
+            }
+        }
+    }
+
+    /**
+     * 适配分享文本
+     * @param intent
+     */
+    private void dealTextMessage(Intent intent){
+        String share = intent.getStringExtra(Intent.EXTRA_TEXT);
+        String title = intent.getStringExtra(Intent.EXTRA_TITLE);
+    }
+
+    /**
+     * 处理图片
+     * @param intent
+     */
+    private void dealPicStream(Intent intent){
+        Uri uri = intent.getParcelableExtra(Intent.EXTRA_STREAM);
+        String imgPath = getImagePath(uri,null);
+        LogUtils.YfcDebug("imagePath:"+imgPath);
+        EditImageActivity.start(ChannelActivity.this, imgPath, MyAppConfig.LOCAL_IMG_CREATE_PATH);
+    }
+
+    /**
+     * 处理多个
+     * @param intent
+     */
+    private void dealMultiplePicStream(Intent intent){
+        ArrayList<Uri> arrayList = intent.getParcelableArrayListExtra(intent.EXTRA_STREAM);
+    }
+
+    /**
+     * uri转path
+     * @param uri
+     * @param selection
+     * @return
+     */
+    private String getImagePath(Uri uri, String selection) {
+        String path = null;
+        Cursor cursor = getContentResolver().query(uri, null, selection, null, null);
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                path = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));
+            }
+
+            cursor.close();
+        }
+        return path;
+    }
+
 
     private void init() {
         initData();
@@ -133,6 +208,8 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
      * 初始化界面数据
      */
     private void initData() {
+//            handleShareFromOtherApps(getIntent());
+
         channelId = getIntent().getExtras().getString("channelId");
 
         channelType = getIntent().getExtras().getString("channelType");

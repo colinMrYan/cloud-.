@@ -40,24 +40,32 @@
     <style name="myProgressBarStyle">
 
 
-　　                <item name="android:indeterminateDrawable">@drawable/loading_progress</item>
+        　　
+        <item name="android:indeterminateDrawable">@drawable/loading_progress</item>
 
 
-　　                <item name="android:minWidth">36dip</item>
+        　　
+        <item name="android:minWidth">36dip</item>
 
 
-　　                <item name="android:maxWidth">36dip</item>
+        　　
+        <item name="android:maxWidth">36dip</item>
 
 
-　　                <item name="android:minHeight">36dip</item>
+        　　
+        <item name="android:minHeight">36dip</item>
 
 
-　　                <item name="android:maxHeight">36dip</item>
+        　　
+        <item name="android:maxHeight">36dip</item>
     </style>
     <!-- 增加加号部分的style -->
     <style name="transparentFrameWindowStyle" parent="android:style/Theme.Dialog">
         <item name="android:windowBackground">@drawable/photo_choose_bg</item>
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:backgroundDimEnabled">false</item>
     </style>
+
 
     <!-- 增加加号部分的style -->
     <style name="transparentDateWindowStyle" parent="android:style/Theme.Dialog">
@@ -81,7 +89,7 @@
     </style>
 
     <style name="radiobutton_style">
-        <item name="android:background"> #000000 </item>
+        <item name="android:background">#000000</item>
     </style>
 
     <!-- 箭头大小调整 -->
@@ -103,11 +111,12 @@
     <style name="CustomCheckboxTheme" parent="@android:style/Widget.CompoundButton.CheckBox">
         <item name="android:button">@drawable/checkbox_style</item>
     </style>
-    
-     <style name="SearchCheckboxTheme" parent="@android:style/Widget.CompoundButton.CheckBox">
+
+    <style name="SearchCheckboxTheme" parent="@android:style/Widget.CompoundButton.CheckBox">
         <item name="android:button">@drawable/search_check_style</item>
     </style>
-  <style name="imp_plugin_fullScreenDialog" parent="@android:style/Theme.Light.NoTitleBar.Fullscreen">
+
+    <style name="imp_plugin_fullScreenDialog" parent="@android:style/Theme.Light.NoTitleBar.Fullscreen">
         <item name="android:backgroundDimEnabled">false</item>
         <item name="android:windowIsFloating">true</item>
         <item name="android:windowIsTranslucent">true</item>
@@ -118,7 +127,6 @@
         <item name="android:backgroundDimAmount">0.6</item><!-- 灰度 -->
         <item name="android:windowFullscreen">true</item>
     </style>
-    
-  
- 
+
+
 </resources>

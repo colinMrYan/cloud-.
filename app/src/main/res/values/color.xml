@@ -34,11 +34,24 @@
     <color name="onekey_line_view">#cfd3d6</color>
     <color name="onekey_content_text">#4f87a2</color>
     <color name="hightlight_in_blue_bg">#31EEFF</color>
-    
+
+    <!--新闻导航栏-->
+    <color name="app_news_head_color">#323C49</color>
+    <color name="app_news_background_color">#2A3441</color>
     <!--app的dialog-->
     <color name="app_dialog_title_color">#666666</color>
     <color name="app_dialog_sub_title_color">#FF9F00</color>
     <color name="app_dialog_update_color">#4A90E2</color>
+    <color name="app_news_night_color">#323C49</color>
+    <!--新闻日间模式配色-->
+    <color name="app_dialog_day_background_layout">#FFFFFCFA</color>
+    <color name="app_dialog_day_background_btn">#268E8E8E</color>
+    <color name="app_dialog_day_font_color">#FF999999</color>
+
+    <!--新闻夜间模式配色-->
+    <color name="app_dialog_night_background_layout">#FF5E6875</color>
+    <color name="app_dialog_night_background_btn">#FF3B4451</color>
+    <color name="app_dialog_night_font_color">#FF999999</color>
 
     <!-- 聊天界面背景色 -->
     <color name="channel_background_color">#F4F4F4</color>

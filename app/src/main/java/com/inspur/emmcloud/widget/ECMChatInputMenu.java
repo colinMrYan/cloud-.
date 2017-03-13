@@ -30,7 +30,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -42,6 +41,7 @@ import com.inspur.emmcloud.ui.chat.MembersActivity;
 import com.inspur.emmcloud.util.ChannelMentions;
 import com.inspur.emmcloud.util.DensityUtil;
 import com.inspur.emmcloud.util.ImageDisplayUtils;
+import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.StringUtils;
@@ -67,7 +67,7 @@ public class ECMChatInputMenu extends LinearLayout {
 	private static final int MENTIONS_RESULT = 5;
 	private Context context;
 	private LayoutInflater layoutInflater;
-	private EditText inputEdit;
+	private ChatInputEdit inputEdit;
 	private ImageView addImg;
 	private Button sendMsgBtn;
 	private RelativeLayout addMenuLayout;
@@ -110,7 +110,8 @@ public class ECMChatInputMenu extends LinearLayout {
 		this.context = context;
 		layoutInflater = LayoutInflater.from(context);
 		layoutInflater.inflate(R.layout.ecm_widget_chat_input_menu, this);
-		inputEdit = (EditText) findViewById(R.id.input_edit);
+		inputEdit = (ChatInputEdit) findViewById(R.id.input_edit);
+		inputEdit.setECMChatInputMenu(this);
 		addImg = (ImageView) findViewById(R.id.add_img);
 		addMenuLayout = (RelativeLayout) findViewById(R.id.add_menu_layout);
 		sendMsgBtn = (Button) findViewById(R.id.send_msg_btn);
@@ -153,20 +154,47 @@ public class ECMChatInputMenu extends LinearLayout {
 		initMenuGrid();
 		mInputManager = (InputMethodManager) context
 				.getSystemService(context.INPUT_METHOD_SERVICE);
+		inputEdit.setOnFocusChangeListener(new OnFocusChangeListener() {
+			@Override
+			public void onFocusChange(View v, boolean hasFocus) {
+				LogUtils.YfcDebug("焦点改变事件：");
+			}
+		});
 		inputEdit.setOnTouchListener(new OnTouchListener() {
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
+				LogUtils.YfcDebug("触发了点击事件");
+				if(event.getAction() == MotionEvent.ACTION_DOWN){
+					int index = inputEdit.getSelectionStart();
+					String inputContent = inputEdit.getText().toString();
+					for (int i = 0; i< mentionsUserNameList.size(); i++){
+						String mentionName = mentionsUserNameList.get(i);
+						int mentionNameStart = inputContent.indexOf(mentionName);
+						int mentionNameEnd = mentionNameStart + mentionName.length();
+						LogUtils.YfcDebug("光标位置："+index);
+						LogUtils.YfcDebug("mentionStart:"+mentionNameStart);
+						LogUtils.YfcDebug("mentioinEnd:"+mentionNameEnd);
+						if(index<mentionNameEnd && index >mentionNameStart){
+							LogUtils.YfcDebug("改变光标位置"+inputContent.length());
+//						EditTextUtils.setText(inputEdit,inputContent);
+							inputEdit.setSelection(inputContent.length());
+						}
+					}
+				}
 				if (event.getAction() == MotionEvent.ACTION_UP
 						&& addMenuLayout.isShown()) {
 					lockContentHeight();
 					hideAddItemLayout(true);
 					unlockContentHeight();
 				}
+
 				return false;
 			}
 		});
 
 	}
+
+
 
 	private void lockContentHeight() {
 		chatInputMenuListener.onSetContentViewHeight(true);
@@ -354,6 +382,7 @@ public class ECMChatInputMenu extends LinearLayout {
 	public void setCanMention(boolean isCanMention, String channelId) {
 		this.channelId = channelId;
 		inputEdit.addTextChangedListener(new TextChangedListener());
+		//当删除到只剩一个@时判断是否调起mentions
 		inputEdit.setOnKeyListener(new OnMentionsListener());
 	}
 
@@ -419,6 +448,7 @@ public class ECMChatInputMenu extends LinearLayout {
 					i--;
 				}
 			}
+
 			int spanslen = spans.length;
 			for (int i = 0; i < spanslen; i++) {
 				if (which == i) {
