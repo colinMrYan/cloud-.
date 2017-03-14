@@ -1,6 +1,7 @@
 package com.inspur.emmcloud.api;
 
 
+import com.inspur.emmcloud.bean.AppRedirectResult;
 import com.inspur.emmcloud.bean.Attachment;
 import com.inspur.emmcloud.bean.ChannelGroup;
 import com.inspur.emmcloud.bean.GetAddAppResult;
@@ -362,5 +363,8 @@ public interface APIInterface {
 
 	public void returnGetClientIdResultSuccess(GetClientIdRsult getClientIdRsult);
 	public void returnGetClientIdResultFail(String error);
+
+	public void returnGetAppAuthCodeResultSuccess(AppRedirectResult appRedirectResult);
+	public void returnGetAppAuthCodeResultFail(String error);
 
 }

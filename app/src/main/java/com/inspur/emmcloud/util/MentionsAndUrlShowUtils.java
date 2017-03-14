@@ -66,7 +66,8 @@ public class MentionsAndUrlShowUtils {
 			int urlSize = urlList.size();
 			for (int i = 0; i < urlSize; i++) {
 				String unesUrl = StringEscapeUtils.unescapeJava(urlList.get(i));
-				if(unesUrl.equals(contentResource) || unesUrl.contains(protocolResourceGS)){
+				unesUrl = unesUrl.replace("\"","");
+				if(unesUrl.equals(contentResource) || unesUrl.equals(protocolResourceGS)){
 					hasProtocol = true;
 				}
 			}

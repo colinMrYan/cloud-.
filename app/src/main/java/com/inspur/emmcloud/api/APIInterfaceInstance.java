@@ -1,6 +1,7 @@
 package com.inspur.emmcloud.api;
 
 
+import com.inspur.emmcloud.bean.AppRedirectResult;
 import com.inspur.emmcloud.bean.Attachment;
 import com.inspur.emmcloud.bean.ChannelGroup;
 import com.inspur.emmcloud.bean.GetAddAppResult;
@@ -1277,6 +1278,16 @@ public class APIInterfaceInstance implements APIInterface{
 
 	@Override
 	public void returnGetClientIdResultFail(String error) {
+
+	}
+
+	@Override
+	public void returnGetAppAuthCodeResultSuccess(AppRedirectResult appRedirectResult) {
+
+	}
+
+	@Override
+	public void returnGetAppAuthCodeResultFail(String error) {
 
 	}
 

@@ -45,7 +45,7 @@ public class DisplayTxtRichMsg {
 		String source = JSONUtils.getString(msgBody, "source", "");
 		String[] mentions = JSONUtils.getString(msgBody, "mentions", "")
 				.replace("[", "").replace("]", "").split(",");
-		String[] urls = JSONUtils.getString(msgBody, "urlList", "")
+		String[] urls = JSONUtils.getString(msgBody, "urls", "")
 				.replace("[", "").replace("]", "").split(",");
 		List<String> mentionList = Arrays.asList(mentions);
 		List<String> urlList = Arrays.asList(urls);
