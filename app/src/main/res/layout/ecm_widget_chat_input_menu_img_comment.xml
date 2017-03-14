@@ -56,7 +56,7 @@
             android:layout_alignBottom="@id/input_edit"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:background="@drawable/bg_chat_img_comment_send_btn"
+            android:background="@drawable/bg_chat_input_send_btn_enable"
             android:gravity="center"
             android:onClick="onClick"
             android:paddingTop="5dp"

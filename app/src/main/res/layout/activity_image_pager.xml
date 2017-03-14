@@ -1,25 +1,147 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-             android:fitsSystemWindows="true" >
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             android:fitsSystemWindows="true">
 
     <com.inspur.emmcloud.widget.HackyViewPager
         android:id="@+id/pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-         />
+        />
+
+    <RelativeLayout
+        android:id="@+id/function_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:background="@drawable/ic_chat_img_display_gradient_header"
+            android:paddingBottom="30dp">
+
+            <ImageView
+                android:id="@+id/close_img"
+                android:layout_width="50dp"
+                android:layout_height="40dp"
+                android:layout_alignParentRight="true"
+                android:onClick="onClick"
+                android:paddingBottom="5dp"
+                android:paddingLeft="5dp"
+                android:paddingRight="25dp"
+                android:paddingTop="15dp"
+                android:scaleType="centerInside"
+                android:src="@drawable/ic_chat_img_display_close"/>
+        </RelativeLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="67dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/ic_chat_img_display_gradient_footer"
+            android:gravity="right"
+            android:paddingBottom="7dp"
+            android:paddingTop="30dp">
+
+            <TextView
+                android:id="@+id/comment_num_text"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_marginRight="20dp"
+                android:drawableLeft="@drawable/ic_chat_img_display_comment"
+                android:drawablePadding="5dp"
+                android:gravity="center"
+                android:onClick="onClick"
+                android:padding="5dp"
+                android:clickable="true"
+                android:text="18"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:visibility="gone"/>
+
+            <ImageView
+                android:id="@+id/download_img"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginRight="23dp"
+                android:adjustViewBounds="true"
+                android:onClick="onClick"
+                android:padding="5dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/ic_chat_img_display_download"/>
+
+            <ImageView
+                android:id="@+id/enter_channel_imgs_img"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginRight="23dp"
+                android:adjustViewBounds="true"
+                android:onClick="onClick"
+                android:padding="5dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/ic_chat_enter_channel_imgs"
+                android:visibility="gone"/>
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/img_comment_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+        <View
+            android:id="@+id/img_comment_top_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/img_comment_bottom_layout"
+            android:background="#66000000"
+            android:onClick="onClick">
+        </View>
+
+        <LinearLayout
+            android:id="@+id/img_comment_bottom_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:orientation="vertical"
+            >
+
+            <ListView
+                android:id="@+id/comment_list"
+                android:layout_width="match_parent"
+                android:layout_height="288dp"
+                android:background="#ffffff"
+                android:divider="#00000000"
+                android:dividerHeight="0px"
+                android:listSelector="#00000000"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"></ListView>
+
+            <com.inspur.emmcloud.widget.ECMChatInputMenu
+                android:id="@+id/chat_input_menu"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                >
+            </com.inspur.emmcloud.widget.ECMChatInputMenu>
+        </LinearLayout>
+    </RelativeLayout>
+
 
     <TextView
         android:id="@+id/indicator"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
+        android:background="@android:color/transparent"
         android:gravity="center"
-        android:textSize="18sp"
-        android:visibility="gone"
-        android:textColor="@android:color/white"
         android:text="%1$d/%2$d"
-        android:background="@android:color/transparent" />
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        android:visibility="gone"/>
 
 </FrameLayout>
