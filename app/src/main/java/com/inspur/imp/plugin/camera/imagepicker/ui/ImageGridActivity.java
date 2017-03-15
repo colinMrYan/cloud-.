@@ -1,6 +1,5 @@
 package com.inspur.imp.plugin.camera.imagepicker.ui;
 
-import android.app.ActionBar;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Build;
@@ -11,21 +10,18 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.Toast;
 
-import com.inspur.emmcloud.util.LogUtils;
-import com.inspur.imp.plugin.camera.editimage.EditImageActivity;
-import com.inspur.imp.plugin.camera.editimage.utils.BitmapUtils;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.config.MyAppConfig;
+import com.inspur.emmcloud.util.LogUtils;
+import com.inspur.emmcloud.util.ToastUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
-import com.inspur.imp.plugin.photo.PhotoNameUtils;
-import com.inspur.imp.plugin.photo.UploadPhoto;
-import com.inspur.imp.plugin.photo.UploadPhoto.OnUploadPhotoListener;
+import com.inspur.imp.plugin.camera.editimage.EditImageActivity;
+import com.inspur.imp.plugin.camera.editimage.utils.BitmapUtils;
 import com.inspur.imp.plugin.camera.imagepicker.ImageDataSource;
 import com.inspur.imp.plugin.camera.imagepicker.ImagePicker;
 import com.inspur.imp.plugin.camera.imagepicker.adapter.ImageFolderAdapter;
@@ -34,10 +30,14 @@ import com.inspur.imp.plugin.camera.imagepicker.bean.ImageFolder;
 import com.inspur.imp.plugin.camera.imagepicker.bean.ImageItem;
 import com.inspur.imp.plugin.camera.imagepicker.util.Utils;
 import com.inspur.imp.plugin.camera.imagepicker.view.FolderPopUpWindow;
+import com.inspur.imp.plugin.photo.PhotoNameUtils;
+import com.inspur.imp.plugin.photo.UploadPhoto;
+import com.inspur.imp.plugin.photo.UploadPhoto.OnUploadPhotoListener;
 
 import org.json.JSONObject;
 
 import java.io.File;
+import java.text.DecimalFormat;
 import java.util.List;
 
 public class ImageGridActivity extends ImageBaseActivity implements
@@ -174,110 +174,6 @@ public class ImageGridActivity extends ImageBaseActivity implements
 	// }
 
 
-	private void hideStatusBar(boolean isHide) {
-		if (isHide) {
-			WindowManager.LayoutParams lp = getWindow().getAttributes();
-			lp.flags |= WindowManager.LayoutParams.FLAG_FULLSCREEN;
-			getWindow().setAttributes(lp);
-			getWindow().addFlags(
-					WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
-		} else {
-			WindowManager.LayoutParams attr = getWindow().getAttributes();
-			attr.flags &= (~WindowManager.LayoutParams.FLAG_FULLSCREEN);
-			getWindow().setAttributes(attr);
-			// 如果不注释下面这句话，状态栏将把界面挤下去
-			getWindow().clearFlags(
-					WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
-		}
-	}
-
-	/**
-	 * 隐藏navigationbar
-	 */
-	private void hideNavigationBar() {
-		// TODO Auto-generated method stub
-		View decorView = getWindow().getDecorView();
-		// Hide both the navigation bar and the status bar.
-		// SYSTEM_UI_FLAG_FULLSCREEN is only available on Android 4.1 and
-		// higher, but as
-		// a general rule, you should design your app to hide the status bar
-		// whenever you
-		// hide the navigation bar.
-		int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-				| View.SYSTEM_UI_FLAG_FULLSCREEN;
-		decorView.setSystemUiVisibility(uiOptions);
-	}
-
-	/**
-	 * 隐藏状态栏
-	 */
-	private void hideStatusBar() {
-		if (Build.VERSION.SDK_INT < 16) {
-			getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-					WindowManager.LayoutParams.FLAG_FULLSCREEN);
-		}
-
-		// TODO Auto-generated method stub
-		View decorView = getWindow().getDecorView();
-		// Hide the status bar.
-		int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
-		decorView.setSystemUiVisibility(uiOptions);
-		// Remember that you should never show the action bar if the
-		// status bar is hidden, so hide that too if necessary.
-		ActionBar actionBar = getActionBar();
-		actionBar.hide();
-	}
-
-	/**
-	 * 隐藏状态栏
-	 */
-	public void toggleHideyBar() {
-
-		// BEGIN_INCLUDE (get_current_ui_flags)
-		// The UI options currently enabled are represented by a bitfield.
-		// getSystemUiVisibility() gives us that bitfield.
-		int uiOptions = getWindow().getDecorView().getSystemUiVisibility();
-		int newUiOptions = uiOptions;
-		// END_INCLUDE (get_current_ui_flags)
-		// BEGIN_INCLUDE (toggle_ui_flags)
-		boolean isImmersiveModeEnabled = ((uiOptions | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY) == uiOptions);
-		if (isImmersiveModeEnabled) {
-			Log.i("123", "Turning immersive mode mode off. ");
-		} else {
-			Log.i("123", "Turning immersive mode mode on.");
-		}
-
-		// Navigation bar hiding: Backwards compatible to ICS.
-		if (Build.VERSION.SDK_INT >= 14) {
-			newUiOptions ^= View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
-		}
-
-		// Status bar hiding: Backwards compatible to Jellybean
-		if (Build.VERSION.SDK_INT >= 16) {
-			newUiOptions ^= View.SYSTEM_UI_FLAG_FULLSCREEN;
-		}
-
-		// Immersive mode: Backward compatible to KitKat.
-		// Note that this flag doesn't do anything by itself, it only augments
-		// the behavior
-		// of HIDE_NAVIGATION and FLAG_FULLSCREEN. For the purposes of this
-		// sample
-		// all three flags are being toggled together.
-		// Note that there are two immersive mode UI flags, one of which is
-		// referred to as "sticky".
-		// Sticky immersive mode differs in that it makes the navigation and
-		// status bars
-		// semi-transparent, and the UI flag does not get cleared when the user
-		// interacts with
-		// the screen.
-		if (Build.VERSION.SDK_INT >= 18) {
-			newUiOptions ^= View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
-		}
-
-		// getWindow().getDecorView().setSystemUiVisibility(newUiOptions);//上边状态栏和底部状态栏滑动都可以调出状态栏
-		getWindow().getDecorView().setSystemUiVisibility(4108);// 这里的4108可防止从底部滑动调出底部导航栏
-		// END_INCLUDE (set_ui_flags)
-	}
 
 	@Override
 	protected void onDestroy() {
@@ -395,17 +291,30 @@ public class ImageGridActivity extends ImageBaseActivity implements
 				}
 				long time = System.currentTimeMillis();
 				for (int i = 0; i < imagePicker.getSelectedImages().size(); i++) {
-					String newPath = MyAppConfig.LOCAL_IMG_CREATE_PATH+PhotoNameUtils.getListFileName(getApplicationContext(),time,i);
+					String fileName = PhotoNameUtils.getListFileName(getApplicationContext(),time,i);
+					String newPath = MyAppConfig.LOCAL_IMG_CREATE_PATH+fileName;
 					ImageItem imageItem = imagePicker.getSelectedImages().get(i);
 					String path = imageItem.path;
+					LogUtils.jasonDebug("path="+path);
+					LogUtils.jasonDebug("size="+getReadableFileSize(new File(path).length()));
 					Bitmap bitmap = BitmapUtils.getImageCompress(path, parm_resolution, parm_qualtity);
 					BitmapUtils.saveBitmap(bitmap, newPath);
 					imageItem.path = newPath;
+
 				}
 				handler.sendEmptyMessage(CUT_IMG_SUCCESS);
 			}
 		}).start();
 		
+	}
+
+	public String getReadableFileSize(long size) {
+		if (size <= 0) {
+			return "0";
+		}
+		final String[] units = new String[]{"B", "KB", "MB", "GB", "TB"};
+		int digitGroups = (int) (Math.log10(size) / Math.log10(1024));
+		return new DecimalFormat("#,##0.#").format(size / Math.pow(1024, digitGroups)) + " " + units[digitGroups];
 	}
 
 	/** 创建弹出的ListView */
@@ -487,8 +396,8 @@ public class ImageGridActivity extends ImageBaseActivity implements
 	public void onImageSelected(int position, ImageItem item, boolean isAdd) {
 		if (imagePicker.getSelectImageCount() > 0) {
 			mBtnOk.setText(getString(R.string.select_complete,
-					imagePicker.getSelectImageCount(),
-					imagePicker.getSelectLimit()));
+					imagePicker.getSelectImageCount()+"",
+					imagePicker.getSelectLimit()+""));
 			mBtnOk.setEnabled(true);
 		} else {
 			mBtnOk.setText(getString(R.string.complete));
