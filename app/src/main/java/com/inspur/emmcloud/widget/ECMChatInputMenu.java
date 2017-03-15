@@ -117,7 +117,7 @@ public class ECMChatInputMenu extends LinearLayout {
 		layoutInflater = LayoutInflater.from(context);
 		layoutInflater.inflate(R.layout.ecm_widget_chat_input_menu, this);
 		inputEdit = (ChatInputEdit) findViewById(R.id.input_edit);
-//		inputEdit.setECMChatInputMenu(this);
+		inputEdit.setIsOpen(true);
 		TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ECMChatInputMenu);
 		String layoutType = a.getString(R.styleable.ECMChatInputMenu_layoutType);
 		if (!StringUtils.isEmpty(layoutType) && layoutType.equals("img_comment_input")){
@@ -183,7 +183,6 @@ public class ECMChatInputMenu extends LinearLayout {
 					hideAddItemLayout(true);
 					unlockContentHeight();
 				}
-
 				return false;
 			}
 		});
