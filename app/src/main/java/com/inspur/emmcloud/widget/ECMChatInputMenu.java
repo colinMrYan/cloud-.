@@ -39,6 +39,7 @@ import android.widget.RelativeLayout;
 
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.MsgAddItemAdapter;
+import com.inspur.emmcloud.bean.MentionBean;
 import com.inspur.emmcloud.ui.chat.ImagePagerActivity;
 import com.inspur.emmcloud.ui.chat.MembersActivity;
 import com.inspur.emmcloud.util.ChannelMentions;
@@ -116,7 +117,7 @@ public class ECMChatInputMenu extends LinearLayout {
 		layoutInflater = LayoutInflater.from(context);
 		layoutInflater.inflate(R.layout.ecm_widget_chat_input_menu, this);
 		inputEdit = (ChatInputEdit) findViewById(R.id.input_edit);
-		inputEdit.setECMChatInputMenu(this);
+//		inputEdit.setECMChatInputMenu(this);
 		TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ECMChatInputMenu);
 		String layoutType = a.getString(R.styleable.ECMChatInputMenu_layoutType);
 		if (!StringUtils.isEmpty(layoutType) && layoutType.equals("img_comment_input")){
@@ -169,32 +170,12 @@ public class ECMChatInputMenu extends LinearLayout {
 		initMenuGrid();
 		mInputManager = (InputMethodManager) context
 				.getSystemService(context.INPUT_METHOD_SERVICE);
-		inputEdit.setOnFocusChangeListener(new OnFocusChangeListener() {
-			@Override
-			public void onFocusChange(View v, boolean hasFocus) {
-				LogUtils.YfcDebug("焦点改变事件：");
-			}
-		});
+
 		inputEdit.setOnTouchListener(new OnTouchListener() {
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
-				LogUtils.YfcDebug("触发了点击事件");
 				if(event.getAction() == MotionEvent.ACTION_DOWN){
-					int index = inputEdit.getSelectionStart();
-					String inputContent = inputEdit.getText().toString();
-					for (int i = 0; i< mentionsUserNameList.size(); i++){
-						String mentionName = mentionsUserNameList.get(i);
-						int mentionNameStart = inputContent.indexOf(mentionName);
-						int mentionNameEnd = mentionNameStart + mentionName.length();
-						LogUtils.YfcDebug("光标位置："+index);
-						LogUtils.YfcDebug("mentionStart:"+mentionNameStart);
-						LogUtils.YfcDebug("mentioinEnd:"+mentionNameEnd);
-						if(index<mentionNameEnd && index >mentionNameStart){
-							LogUtils.YfcDebug("改变光标位置"+inputContent.length());
-//						EditTextUtils.setText(inputEdit,inputContent);
-							inputEdit.setSelection(inputContent.length());
-						}
-					}
+					handMentions();
 				}
 				if (event.getAction() == MotionEvent.ACTION_UP
 						&& addMenuLayout.isShown()) {
@@ -209,7 +190,25 @@ public class ECMChatInputMenu extends LinearLayout {
 
 	}
 
-
+	/**
+	 * 处理mentions点击人，不让光标落在人名中
+	 */
+	private void handMentions() {
+		ArrayList<MentionBean> mentionBeenList = new ArrayList<MentionBean>();
+		String inputContent = inputEdit.getText().toString();
+		for (int i = 0; i< mentionsUserNameList.size(); i++){
+			String mentionName = mentionsUserNameList.get(i);
+			int mentionNameStart = inputContent.indexOf(mentionName);
+			int mentionNameEnd = mentionNameStart + mentionName.length();
+			MentionBean mentionBean = new MentionBean();
+			mentionBean.setMentionStart(mentionNameStart);
+			mentionBean.setMentioinEnd(mentionNameEnd);
+			mentionBean.setMentionName(mentionName);
+			mentionBeenList.add(mentionBean);
+		}
+		inputEdit.setIsOpen(true);
+		inputEdit.setMentionBeenList(mentionBeenList);
+	}
 
 	private void lockContentHeight() {
 		chatInputMenuListener.onSetContentViewHeight(true);
