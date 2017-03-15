@@ -11,7 +11,6 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.Msg;
 import com.inspur.emmcloud.util.DensityUtil;
 import com.inspur.emmcloud.util.JSONUtils;
-import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.MentionsAndUrlShowUtils;
 import com.inspur.emmcloud.util.TransHtmlToTextUtils;
 
@@ -47,17 +46,17 @@ public class DisplayTxtRichMsg {
 				.replace("[", "").replace("]", "").split(",");
 		String[] urls = JSONUtils.getString(msgBody, "urls", "")
 				.replace("[", "").replace("]", "").split(",");
-		LogUtils.YfcDebug("urls:"+JSONUtils.getString(msgBody, "urls", ""));
 		List<String> mentionList = Arrays.asList(mentions);
 		List<String> urlList = Arrays.asList(urls);
-		LogUtils.YfcDebug("urls长度："+urlList.size());
 		SpannableString spannableString = MentionsAndUrlShowUtils
 				.handleMentioin(source, mentionList, urlList);
 		richText.setText(spannableString);
 		richText.setBackgroundColor(context.getResources().getColor(
 				isMyMsg ? R.color.header_bg : R.color.white));
+//		richText.setBackgroundColor(ContextCompat.getColor(context,isMyMsg ? R.color.header_bg : R.color.white));
 		richText.setTextColor(context.getResources().getColor(
 				isMyMsg ? R.color.white : R.color.black));
+//		richText.setBackgroundColor(ContextCompat.getColor(context,isMyMsg ? R.color.white : R.color.black));
 		int normalPadding = DensityUtil.dip2px(context, 10);
 		int arrowPadding = DensityUtil.dip2px(context, 8);
 		if (isMyMsg) {

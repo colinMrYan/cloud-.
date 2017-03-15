@@ -144,7 +144,6 @@ public class NewsWebDetailActivity extends BaseActivity {
             url = UriUtils.getGroupNewsUrl(url);
         }
         webView.loadUrl(url);
-//		webView.loadUrl("file:///android_asset/news1.html");
         // 设置Web视图
         webView.setWebViewClient(new webViewClient());
         // 设置背景颜色
