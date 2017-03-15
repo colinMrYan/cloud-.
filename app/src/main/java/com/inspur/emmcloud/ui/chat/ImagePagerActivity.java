@@ -484,10 +484,15 @@ public class ImagePagerActivity extends BaseFragmentActivity {
 	private class WebService extends APIInterfaceInstance {
 		@Override
 		public void returnMsgCommentSuccess(GetMsgCommentResult getMsgCommentResult,String mid) {
-			commentList = getMsgCommentResult.getCommentList();
-			commentCountMap.put(mid,commentList.size());
-			Collections.reverse(commentList);
-			adapter.notifyDataSetChanged();
+			commentCountMap.put(mid, getMsgCommentResult.getCommentList().size());
+			String currentMid = imgTypeMsgList.get(pagerPosition).getMid();
+			if (mid.equals(currentMid)){
+				commentList = getMsgCommentResult.getCommentList();
+				commentCountText.setText(commentList.size()+"");
+				Collections.reverse(commentList);
+				adapter.notifyDataSetChanged();
+			}
+
 
 
 		}
