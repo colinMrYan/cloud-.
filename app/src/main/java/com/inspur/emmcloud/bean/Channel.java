@@ -7,6 +7,7 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.util.DirectChannelUtils;
 import com.inspur.emmcloud.util.HandMentionsMsgUtils;
 import com.inspur.emmcloud.util.JSONUtils;
+import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.MentionsAndUrlShowUtils;
 import com.inspur.emmcloud.util.PinyinUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
@@ -173,6 +174,7 @@ public class Channel implements Serializable {
 					newestMsgContent = HandMentionsMsgUtils.getRichText(msg);
 				}else if(type.equals("SERVICE")){
 					String msgBody = msg.getBody();
+					LogUtils.YfcDebug("channel里的msgBody："+msgBody);
 					String source = JSONUtils.getString(msgBody, "source", "");
 					String[] mentions = JSONUtils.getString(msgBody, "mentions", "")
 							.replace("[", "").replace("]", "").split(",");

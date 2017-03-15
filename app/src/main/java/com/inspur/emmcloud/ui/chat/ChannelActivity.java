@@ -585,7 +585,7 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
         try {
             richTextObj.put("source", source);
             richTextObj.put("mentions", mentionArray);
-            richTextObj.put("urlList", urlArray);
+            richTextObj.put("urls", urlArray);
         } catch (JSONException e) {
             e.printStackTrace();
         }

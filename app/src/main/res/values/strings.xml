@@ -252,6 +252,7 @@
     <string name="comment_text">评论：</string>
     <string name="administrators_of_channel">(管理员)</string>
     <string name="long_img">长图</string>
+    <string name="friend_list">好友列表</string>
 
 
     <!-- 会议卡片 -->

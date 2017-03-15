@@ -56,7 +56,8 @@ public class MentionsAndUrlShowUtils {
 			while (matcherContent.find()) {
 				content = matcherContent.group();
 				content = content.replace("[", "").replace("]", "");
-				contentResource = "\""+content+"\"";
+//				contentResource = "\""+content+"\"";
+				contentResource = content;
 				protocolResourceGS = protocolResource.replace("(", "").replace(")", "");
 			}
 
@@ -67,9 +68,11 @@ public class MentionsAndUrlShowUtils {
 			for (int i = 0; i < urlSize; i++) {
 				String unesUrl = StringEscapeUtils.unescapeJava(urlList.get(i));
 				unesUrl = unesUrl.replace("\"","");
-				if(unesUrl.equals(contentResource) || unesUrl.equals(protocolResourceGS)){
+				LogUtils.YfcDebug("unesUrl:"+unesUrl+"------------contentResource:"+contentResource);
+				if(unesUrl.contains(contentResource) || unesUrl.equals(protocolResourceGS)){
 					hasProtocol = true;
 				}
+
 			}
 			if(hasProtocol){
 //				mentions = mentions.replace(patternString, content);

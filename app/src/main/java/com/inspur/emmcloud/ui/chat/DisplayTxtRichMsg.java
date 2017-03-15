@@ -47,8 +47,10 @@ public class DisplayTxtRichMsg {
 				.replace("[", "").replace("]", "").split(",");
 		String[] urls = JSONUtils.getString(msgBody, "urls", "")
 				.replace("[", "").replace("]", "").split(",");
+		LogUtils.YfcDebug("urls:"+JSONUtils.getString(msgBody, "urls", ""));
 		List<String> mentionList = Arrays.asList(mentions);
 		List<String> urlList = Arrays.asList(urls);
+		LogUtils.YfcDebug("urls长度："+urlList.size());
 		SpannableString spannableString = MentionsAndUrlShowUtils
 				.handleMentioin(source, mentionList, urlList);
 		richText.setText(spannableString);
