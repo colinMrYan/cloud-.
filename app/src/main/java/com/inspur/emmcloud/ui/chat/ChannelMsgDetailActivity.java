@@ -630,7 +630,7 @@ public class ChannelMsgDetailActivity extends BaseActivity implements
 
 		@Override
 		public void returnMsgCommentSuccess(
-				GetMsgCommentResult getMsgCommentResult) {
+				GetMsgCommentResult getMsgCommentResult,String mid) {
 			pullToRefreshLayout.refreshFinish(PullToRefreshLayout.SUCCEED);
 			commentList = getMsgCommentResult.getCommentList();
 			if (commentList != null && commentList.size() > 0) {

@@ -120,6 +120,7 @@ public class ECMChatInputMenu extends LinearLayout {
 		addImg = (ImageView) findViewById(R.id.add_img);
 		addMenuLayout = (RelativeLayout) findViewById(R.id.add_menu_layout);
 		sendMsgBtn = (Button) findViewById(R.id.send_msg_btn);
+		sendMsgBtn.setEnabled(false);
 		sendMsgBtn.setOnClickListener(new OnClickListener() {
 
 			@Override

@@ -279,6 +279,7 @@
         <activity
             android:name=".ui.contact.ContactSearchMoreActivity"
             android:screenOrientation="portrait"
+            android:launchMode="singleTask"
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".ui.chat.MentionActivty"

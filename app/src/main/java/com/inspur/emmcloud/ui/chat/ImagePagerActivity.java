@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.util.ArrayMap;
 import android.support.v4.view.ViewPager;
 import android.text.SpannableString;
 import android.text.method.LinkMovementMethod;
@@ -24,6 +25,7 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.bean.Comment;
+import com.inspur.emmcloud.bean.GetMsgCommentCountResult;
 import com.inspur.emmcloud.bean.GetMsgCommentResult;
 import com.inspur.emmcloud.bean.Msg;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
@@ -33,7 +35,6 @@ import com.inspur.emmcloud.util.ImageDisplayUtils;
 import com.inspur.emmcloud.util.InputMethodUtils;
 import com.inspur.emmcloud.util.IntentUtils;
 import com.inspur.emmcloud.util.JSONUtils;
-import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.MentionsAndUrlShowUtils;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
@@ -53,6 +54,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -82,6 +84,8 @@ public class ImagePagerActivity extends BaseFragmentActivity {
 	private ImagePagerAdapter mAdapter;
 	private List<Comment> commentList = new ArrayList<>();
 	private RelativeLayout functionLayout;
+	private TextView commentCountText;
+	private Map<String,Integer>commentCountMap = new ArrayMap<>();
 
 
 	@Override
@@ -105,20 +109,21 @@ public class ImagePagerActivity extends BaseFragmentActivity {
 
 	private void init() {
 		initIntentData();
-		functionLayout = (RelativeLayout)findViewById(R.id.function_layout);
+		functionLayout = (RelativeLayout) findViewById(R.id.function_layout);
 		imgCommentLayout = (RelativeLayout) findViewById(R.id.img_comment_layout);
 		if (getIntent().hasExtra(EXTRA_CURRENT_IMAGE_MSG)) {
 			ecmChatInputMenu = (ECMChatInputMenu) findViewById(R.id.chat_input_menu);
 			initEcmChatInputMenu();
 			commentListView = (ListView) findViewById(R.id.comment_list);
 			commentListView.setAdapter(adapter);
-			(findViewById(R.id.comment_num_text)).setVisibility(View.VISIBLE);
+			(findViewById(R.id.comment_count_text)).setVisibility(View.VISIBLE);
 			(findViewById(R.id.enter_channel_imgs_img)).setVisibility(View.VISIBLE);
 			cid = imgTypeMsgList.get(0).getCid();
 			String channelType = ChannelCacheUtils.getChannelType(getApplicationContext(), cid);
 			if (channelType != null && channelType.equals("GROUP")) {
 				ecmChatInputMenu.setIsChannelGroup(true, cid);
 			}
+			commentCountText = (TextView) findViewById(R.id.comment_count_text);
 		}
 
 		mPager = (HackyViewPager) findViewById(R.id.pager);
@@ -162,17 +167,12 @@ public class ImagePagerActivity extends BaseFragmentActivity {
 				mAdapter.getCurrentFragment().downloadImg();
 				break;
 			case R.id.enter_channel_imgs_img:
-//				Intent intent = new Intent(ImagePagerActivity.this,GroupAlbumActivity.class);
-//				intent.putExtra("cid", cid);
-//				startActivity(intent);
-
-
 				Bundle bundle = new Bundle();
 				bundle.putString("cid", cid);
 				IntentUtils.startActivity(ImagePagerActivity.this,
 						GroupAlbumActivity.class, bundle);
 				break;
-			case R.id.comment_num_text:
+			case R.id.comment_count_text:
 				commentList.clear();
 				adapter.notifyDataSetChanged();
 				getImgComment(imgTypeMsgList.get(pagerPosition).getMid());
@@ -209,6 +209,9 @@ public class ImagePagerActivity extends BaseFragmentActivity {
 				CharSequence text = getString(R.string.viewpager_indicator, position + 1, mPager.getAdapter().getCount());
 				indicator.setText(text);
 				pagerPosition = position;
+				if (getIntent().hasExtra(EXTRA_CURRENT_IMAGE_MSG)) {
+					setCommentCount();
+				}
 			}
 
 			@Override
@@ -217,6 +220,21 @@ public class ImagePagerActivity extends BaseFragmentActivity {
 			}
 		});
 	}
+
+	/**
+	 * 设置评论数目
+	 */
+	private void setCommentCount(){
+		String mid = imgTypeMsgList.get(pagerPosition).getMid();
+		if (commentCountMap.containsKey(mid)){
+			int count = commentCountMap.get(mid);
+			commentCountText.setText(""+count);
+		}else {
+			commentCountText.setText("0");
+			getImgCommentCount(mid);
+		}
+	}
+
 
 
 	/**
@@ -302,11 +320,10 @@ public class ImagePagerActivity extends BaseFragmentActivity {
 	}
 
 	public void onPhotoTap() {
-		LogUtils.jasonDebug("onPhotoTap----------------------------");
-		if (functionLayout.getVisibility() == View.VISIBLE){
+		if (functionLayout.getVisibility() == View.VISIBLE) {
 			functionLayout.setVisibility(View.GONE);
 			imgCommentLayout.setVisibility(View.GONE);
-		}else {
+		} else {
 			functionLayout.setVisibility(View.VISIBLE);
 		}
 	}
@@ -343,7 +360,7 @@ public class ImagePagerActivity extends BaseFragmentActivity {
 
 		@Override
 		public void setPrimaryItem(ViewGroup container, int position, Object object) {
-			currentFragment = (ImageDetailFragment)object;
+			currentFragment = (ImageDetailFragment) object;
 			super.setPrimaryItem(container, position, object);
 		}
 
@@ -372,7 +389,7 @@ public class ImagePagerActivity extends BaseFragmentActivity {
 
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
-			convertView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.chat_img_msg_comment_item_view, null);
+			convertView = LayoutInflater.from(ImagePagerActivity.this).inflate(R.layout.chat_img_msg_comment_item_view, null);
 			TextView userNameText = (TextView) convertView
 					.findViewById(R.id.name_text);
 			TextView sendTimeText = (TextView) convertView
@@ -427,22 +444,14 @@ public class ImagePagerActivity extends BaseFragmentActivity {
 	}
 
 
-	@Override
-	protected void onDestroy() {
-		LogUtils.jasonDebug("onDestroy-------------------");
-		super.onDestroy();
-	}
 
-	@Override
-	protected void onPause() {
-		LogUtils.jasonDebug("onPause-------------------");
-		super.onPause();
-	}
 
-	@Override
-	protected void onStart() {
-		LogUtils.jasonDebug("onStart-------------------");
-		super.onStart();
+	private void getImgCommentCount(String mid) {
+		if (NetUtils.isNetworkConnected(getApplicationContext())) {
+			ChatAPIService apiService = new ChatAPIService(getApplicationContext());
+			apiService.setAPIInterface(new WebService());
+			apiService.getMsgCommentCount(mid);
+		}
 	}
 
 	/**
@@ -466,13 +475,17 @@ public class ImagePagerActivity extends BaseFragmentActivity {
 			apiService.sendMsg(cid, commentConbineSendText, "txt_comment",
 					imgTypeMsgList.get(pagerPosition).getMid(), "");
 			addLocalComment(commentConbineSendText);
+			int commentCount = commentCountMap.get(imgTypeMsgList.get(pagerPosition).getMid());
+			commentCountMap.put(imgTypeMsgList.get(pagerPosition).getMid(),(commentCount+1));
+			commentCountText.setText((commentCount+1)+"");
 		}
 	}
 
 	private class WebService extends APIInterfaceInstance {
 		@Override
-		public void returnMsgCommentSuccess(GetMsgCommentResult getMsgCommentResult) {
+		public void returnMsgCommentSuccess(GetMsgCommentResult getMsgCommentResult,String mid) {
 			commentList = getMsgCommentResult.getCommentList();
+			commentCountMap.put(mid,commentList.size());
 			Collections.reverse(commentList);
 			adapter.notifyDataSetChanged();
 
@@ -482,6 +495,21 @@ public class ImagePagerActivity extends BaseFragmentActivity {
 		@Override
 		public void returnMsgCommentFail(String error) {
 			super.returnMsgCommentFail(error);
+		}
+
+		@Override
+		public void returnMsgCommentCountSuccess(GetMsgCommentCountResult getMsgCommentCountResult, String mid) {
+			int count = getMsgCommentCountResult.getCount();
+			commentCountMap.put(mid,count);
+			String currentMid = imgTypeMsgList.get(pagerPosition).getMid();
+			if (mid.equals(currentMid)){
+				commentCountText.setText(count+"");
+			}
+		}
+
+		@Override
+		public void returnMsgCommentCountFail(String error) {
+			super.returnMsgCommentCountFail(error);
 		}
 	}
 
