@@ -13,6 +13,7 @@ import com.facebook.react.shell.MainReactPackage;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.reactnative.AuthorizationManagerPackage;
+import com.inspur.reactnative.ReactNativeFlow;
 
 /**
  * Created by yufuchang on 2017/3/15.
@@ -25,14 +26,18 @@ public class ReactNativeAppActivity extends Activity implements DefaultHardwareB
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        String reactCurrentFilePath = MyAppConfig.getReactCurrentFilePath(ReactNativeAppActivity.this,
+        String reactAppFilePath = MyAppConfig.getReactAppFilePath(ReactNativeAppActivity.this,
                 ((MyApplication)getApplication()).getUid());
+
+        if (!ReactNativeFlow.checkBundleFileIsExist(reactAppFilePath + "/index.android.bundle")) {
+            ReactNativeFlow.unZipFile(ReactNativeAppActivity.this, "WhoseCar.zip", reactAppFilePath, true);
+        }
 
         mReactRootView = new ReactRootView(this);
         mReactInstanceManager = ReactInstanceManager.builder()
                 .setApplication(getApplication())
-                .setBundleAssetName("whosecar/index.android.bundle")
                 .setJSMainModuleName("index.android")
+                .setJSBundleFile(reactAppFilePath + "/index.android.bundle")
                 .setCurrentActivity(ReactNativeAppActivity.this)
                 .addPackage(new MainReactPackage())
                 .addPackage(new AuthorizationManagerPackage())

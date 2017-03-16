@@ -12,6 +12,7 @@ import android.content.Context;
 import android.os.Environment;
 
 import com.inspur.emmcloud.bean.Language;
+import com.inspur.emmcloud.util.UriUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -53,6 +54,17 @@ public class MyAppConfig {
 	public static String getReactCurrentFilePath(Context context,String userId){
 		return context.getDir("react",MODE_PRIVATE).getPath()+"/current"+userId;
 	}
+
+	/**
+	 * 获取React App的存储路径，分租户用户
+	 * @param context
+	 * @param userId
+	 * @return
+	 */
+	public static String getReactAppFilePath(Context context,String userId){
+		return context.getDir("react",MODE_PRIVATE).getPath()+"/"+ UriUtils.tanent+userId;
+	}
+
 
 
 	/**
