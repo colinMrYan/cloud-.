@@ -1,7 +1,6 @@
 package com.inspur.imp.plugin.camera.imagepicker.ui;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -18,10 +17,8 @@ import android.widget.Toast;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.util.LogUtils;
-import com.inspur.emmcloud.util.ToastUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.imp.plugin.camera.editimage.EditImageActivity;
-import com.inspur.imp.plugin.camera.editimage.utils.BitmapUtils;
 import com.inspur.imp.plugin.camera.imagepicker.ImageDataSource;
 import com.inspur.imp.plugin.camera.imagepicker.ImagePicker;
 import com.inspur.imp.plugin.camera.imagepicker.adapter.ImageFolderAdapter;
@@ -39,6 +36,8 @@ import org.json.JSONObject;
 import java.io.File;
 import java.text.DecimalFormat;
 import java.util.List;
+
+import id.zelory.compressor.Compressor;
 
 public class ImageGridActivity extends ImageBaseActivity implements
 		ImageDataSource.OnImagesLoadedListener,
@@ -285,20 +284,16 @@ public class ImageGridActivity extends ImageBaseActivity implements
 			@Override
 			public void run() {
 				// TODO Auto-generated method stub
-				File file = new File(MyAppConfig.LOCAL_IMG_CREATE_PATH);
-				if (!file.exists()) {
-					file.mkdirs();
-				}
 				long time = System.currentTimeMillis();
 				for (int i = 0; i < imagePicker.getSelectedImages().size(); i++) {
 					String fileName = PhotoNameUtils.getListFileName(getApplicationContext(),time,i);
-					String newPath = MyAppConfig.LOCAL_IMG_CREATE_PATH+fileName;
 					ImageItem imageItem = imagePicker.getSelectedImages().get(i);
 					String path = imageItem.path;
-					LogUtils.jasonDebug("path="+path);
-					LogUtils.jasonDebug("size="+getReadableFileSize(new File(path).length()));
-					Bitmap bitmap = BitmapUtils.getImageCompress(path, parm_resolution, parm_qualtity);
-					BitmapUtils.saveBitmap(bitmap, newPath);
+//					Bitmap bitmap = BitmapUtils.getImageCompress(path, parm_resolution, parm_qualtity);
+//					BitmapUtils.saveBitmap(bitmap, newPath);
+					new Compressor.Builder(ImageGridActivity.this).setMaxHeight(parm_resolution).setMaxWidth(parm_resolution).setQuality(parm_qualtity).setDestinationDirectoryPath(MyAppConfig.LOCAL_IMG_CREATE_PATH)
+							.setFileName(fileName).build().compressToFile(new File(path));
+					String newPath = MyAppConfig.LOCAL_IMG_CREATE_PATH+fileName;
 					imageItem.path = newPath;
 
 				}

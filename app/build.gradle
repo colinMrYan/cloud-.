@@ -130,7 +130,7 @@ dependencies {
         exclude module: 'support-compat'
         exclude module: 'support-core-utils'
     }
-    compile 'id.zelory:compressor:1.0.4'
+    compile 'id.zelory:compressor:1.0.5'
     compile 'com.readystatesoftware.systembartint:systembartint:1.0.3'
 
 
