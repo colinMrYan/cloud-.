@@ -61,8 +61,8 @@ public class MyAppConfig {
 	 * @param userId
 	 * @return
 	 */
-	public static String getReactAppFilePath(Context context,String userId){
-		return context.getDir("react",MODE_PRIVATE).getPath()+"/"+ UriUtils.tanent+userId;
+	public static String getReactAppFilePath(Context context,String userId,String module){
+		return context.getDir("react",MODE_PRIVATE).getPath()+"/"+ UriUtils.tanent+userId+"/"+module;
 	}
 
 

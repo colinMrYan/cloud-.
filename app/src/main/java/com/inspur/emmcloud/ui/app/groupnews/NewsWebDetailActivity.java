@@ -86,6 +86,8 @@ public class NewsWebDetailActivity extends BaseActivity {
         initViews();
     }
 
+
+
     /**
      * 初始化Views
      */
@@ -297,10 +299,18 @@ public class NewsWebDetailActivity extends BaseActivity {
         settings.setTextZoom(textZoom);
         PreferencesByUserUtils.putInt(NewsWebDetailActivity.this, "app_news_text_size", textZoom);
         textSize = textZoom;
+        reRender();
+    }
+
+    /**
+     * 重新设置一次布局
+     */
+    private void reRender() {
+        //这里为了解决一个改变字体时的bug，很奇怪
         String model = PreferencesByUserUtils.getString(NewsWebDetailActivity.this, "app_news_webview_model", "");
         GradientDrawable drawable = new GradientDrawable();
         drawable.setCornerRadius(DensityUtil.dip2px(NewsWebDetailActivity.this, 5));
-        //这里为了解决一个改变字体时的bug，很奇怪
+
         if(model.equals(darkMode)){
             drawable.setColor(darkModeBtnColor);
         }else{
@@ -314,6 +324,9 @@ public class NewsWebDetailActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        if(dialog != null){
+            reRender();
+        }
         if (webView != null) {
             webView.onResume();
         }
