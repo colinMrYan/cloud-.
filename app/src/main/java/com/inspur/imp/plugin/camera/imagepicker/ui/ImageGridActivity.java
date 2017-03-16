@@ -30,6 +30,7 @@ import com.inspur.imp.plugin.camera.imagepicker.view.FolderPopUpWindow;
 import com.inspur.imp.plugin.photo.PhotoNameUtils;
 import com.inspur.imp.plugin.photo.UploadPhoto;
 import com.inspur.imp.plugin.photo.UploadPhoto.OnUploadPhotoListener;
+import com.inspur.imp.util.imgcompress.Compressor;
 
 import org.json.JSONObject;
 
@@ -37,7 +38,6 @@ import java.io.File;
 import java.text.DecimalFormat;
 import java.util.List;
 
-import id.zelory.compressor.Compressor;
 
 public class ImageGridActivity extends ImageBaseActivity implements
 		ImageDataSource.OnImagesLoadedListener,
