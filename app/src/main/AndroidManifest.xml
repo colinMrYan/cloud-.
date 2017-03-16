@@ -345,6 +345,11 @@
                     android:scheme="ecc-component" />
             </intent-filter>
         </activity>
+        <activity android:name=".ui.app.ReactNativeAppActivity"
+            android:screenOrientation="portrait"
+            >
+
+        </activity>
         <activity
             android:name=".ui.chat.ModifyChannelGroupNameActivity"
             android:screenOrientation="portrait" />

@@ -54,6 +54,7 @@ public class MyAppConfig {
 		return context.getDir("react",MODE_PRIVATE).getPath()+"/current"+userId;
 	}
 
+
 	/**
 	 * 获取React上一版本缓存途径（用于Roback的版本）
 	 * @param context
