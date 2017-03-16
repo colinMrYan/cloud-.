@@ -210,4 +210,27 @@ public class BitmapUtils {
 		// System.out.println("保存文件--->" + f.getAbsolutePath());
 	}
 
+	/**
+	 * 保存Bitmap图片到指定文件
+	 */
+	public static void saveBitmap(Bitmap bm, String filePath,int quality) {
+		File f = new File(filePath);
+		if (f.exists()) {
+			f.delete();
+		}
+		try {
+			FileOutputStream out = new FileOutputStream(f);
+			bm.compress(CompressFormat.JPEG, quality, out);
+			out.flush();
+			out.close();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		// System.out.println("保存文件--->" + f.getAbsolutePath());
+	}
+
 }

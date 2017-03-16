@@ -24,6 +24,7 @@ import android.widget.Toast;
 import android.widget.ViewFlipper;
 
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.ToastUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
@@ -40,6 +41,7 @@ import com.inspur.imp.plugin.camera.editimage.view.imagezoom.ImageViewTouchBase;
 import com.inspur.imp.plugin.photo.PhotoNameUtils;
 import com.inspur.imp.plugin.photo.UploadPhoto;
 import com.inspur.imp.plugin.photo.UploadPhoto.OnUploadPhotoListener;
+import com.inspur.imp.util.imgcompress.Compressor;
 
 import org.json.JSONObject;
 
@@ -288,8 +290,10 @@ public class EditImageActivity extends FragmentActivity {
 		protected Bitmap doInBackground(String... params) {
 			Bitmap bitmap = null;
 			try {
-				bitmap = BitmapUtils.loadImageByPath(params[0], imageWidth,
-						imageHeight,parm_resolution,parm_qualtity);
+				bitmap = new Compressor.Builder(EditImageActivity.this).setMaxHeight(parm_resolution).setMaxWidth(parm_resolution).setQuality(parm_qualtity).setDestinationDirectoryPath(MyAppConfig.LOCAL_IMG_CREATE_PATH)
+						.build().compressToBitmap(new File(params[0]));
+//				bitmap = BitmapUtils.loadImageByPath(params[0], imageWidth,
+//						imageHeight,parm_resolution,parm_qualtity);
 			}catch (Exception e){
 				e.printStackTrace();
 			}
@@ -434,8 +438,10 @@ public class EditImageActivity extends FragmentActivity {
 			@Override
 			public void run() {
 				// TODO Auto-generated method stub
+				LogUtils.jasonDebug("saveFilePath="+saveFilePath);
+				LogUtils.jasonDebug("currentFilePath="+currentFilePath);
 				if (!saveFilePath.equals(currentFilePath)) {
-					BitmapUtils.saveBitmap(mainBitmap, saveFilePath);
+					BitmapUtils.saveBitmap(mainBitmap, saveFilePath,parm_qualtity);
 					currentFilePath = saveFilePath;
 				}
 				handle.sendEmptyMessage(CUT_IMG_SUCCESS);

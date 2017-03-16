@@ -1,14 +1,5 @@
 package com.inspur.imp.plugin.photo;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Date;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -17,21 +8,23 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.widget.Toast;
 
-import com.inspur.imp.plugin.camera.editimage.EditImageActivity;
-import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.config.MyAppConfig;
-import com.inspur.emmcloud.util.DataCleanManager;
 import com.inspur.emmcloud.util.ImageDisplayUtils;
 import com.inspur.emmcloud.util.LogUtils;
-import com.inspur.emmcloud.util.PreferencesUtils;
-import com.inspur.emmcloud.util.ToastUtils;
 import com.inspur.imp.api.Res;
 import com.inspur.imp.plugin.ImpPlugin;
 import com.inspur.imp.plugin.camera.Bimp;
 import com.inspur.imp.plugin.camera.PublicWay;
+import com.inspur.imp.plugin.camera.editimage.EditImageActivity;
 import com.inspur.imp.plugin.camera.imagepicker.ImagePicker;
 import com.inspur.imp.plugin.camera.imagepicker.bean.ImageItem;
 import com.inspur.imp.plugin.camera.imagepicker.ui.ImageGridActivity;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.File;
+import java.util.ArrayList;
 
 public class PhotoService extends ImpPlugin {
 
@@ -203,7 +196,7 @@ public class PhotoService extends ImpPlugin {
 	 * 清除生成的图片cache
 	 */
 	private void clearImgCache(){
-		DataCleanManager.cleanCustomCache(MyAppConfig.LOCAL_IMG_CREATE_PATH);
+	//	DataCleanManager.cleanCustomCache(MyAppConfig.LOCAL_IMG_CREATE_PATH);
 	}
 
 	/**
