@@ -53,7 +53,7 @@ public class GroupAlbumActivity extends BaseActivity {
 				view.invalidate();
 				int width = view.getWidth();
 				int height = view.getHeight();
-				Intent intent = new Intent(getApplicationContext(),
+				Intent intent = new Intent(GroupAlbumActivity.this,
 						ImagePagerActivity.class);
 				intent.putExtra(ImagePagerActivity.EXTRA_IMAGE_MSG_LIST, (Serializable) imgTypeMsgList);
 				intent.putExtra(ImagePagerActivity.EXTRA_CURRENT_IMAGE_MSG, imgTypeMsgList.get(position));

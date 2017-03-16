@@ -86,6 +86,8 @@ public class ImagePagerActivity extends BaseFragmentActivity {
 	private RelativeLayout functionLayout;
 	private TextView commentCountText;
 	private Map<String,Integer>commentCountMap = new ArrayMap<>();
+	private Boolean isNeedTransformIn;
+	private boolean isHasTransformIn =false;
 
 
 	@Override
@@ -104,6 +106,7 @@ public class ImagePagerActivity extends BaseFragmentActivity {
 		super.onNewIntent(intent);
 		setIntent(intent);
 		getIntent().putExtras(intent);
+		isHasTransformIn = false;
 		init();
 	}
 
@@ -354,8 +357,14 @@ public class ImagePagerActivity extends BaseFragmentActivity {
 		@Override
 		public Fragment getItem(int position) {
 			String url = urlList.get(position);
-			boolean isTargetPosition = (position == pageStartPosition);
-			return ImageDetailFragment.newInstance(url, locationW, locationH, locationX, locationY, isTargetPosition);
+			boolean isNeedTransformOut = (position == pageStartPosition);
+			if (isNeedTransformOut && isHasTransformIn == false){
+				isNeedTransformIn = true;
+				isHasTransformIn = true;
+			}else {
+				isNeedTransformIn = false;
+			}
+			return ImageDetailFragment.newInstance(url, locationW, locationH, locationX, locationY,isNeedTransformIn ,isNeedTransformOut);
 		}
 
 		@Override

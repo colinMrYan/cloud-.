@@ -41,9 +41,10 @@ public class ImageDetailFragment extends Fragment {
 	private PhotoViewAttacher mAttacher;
 
 	private int locationW, locationH, locationX, locationY;
-	private boolean isTargetPosition;//是否是第一次显示的那个图片
+	private boolean isNeedTransformOut;
+	private boolean isNeedTransformIn;
 
-	public static ImageDetailFragment newInstance(String imageUrl,int w, int h, int x, int y, boolean isTargetPosition) {
+	public static ImageDetailFragment newInstance(String imageUrl,int w, int h, int x, int y,boolean isNeedTransformIn,boolean isNeedTransformOut) {
 		final ImageDetailFragment f = new ImageDetailFragment();
 
 		final Bundle args = new Bundle();
@@ -52,7 +53,8 @@ public class ImageDetailFragment extends Fragment {
 		args.putInt("h", h);
 		args.putInt("x", x);
 		args.putInt("y", y);
-		args.putBoolean("isTargetPosition", isTargetPosition);
+		args.putBoolean("isNeedTransformOut", isNeedTransformOut);
+		args.putBoolean("isNeedTransformIn", isNeedTransformIn);
 		f.setArguments(args);
 		return f;
 	}
@@ -61,7 +63,6 @@ public class ImageDetailFragment extends Fragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		LogUtils.jasonDebug("onCreate----------------------------");
 		mImageUrl = getArguments() != null ? getArguments().getString("url")
 				: null;
 		locationH = getArguments() != null ? getArguments().getInt("h")
@@ -72,7 +73,9 @@ public class ImageDetailFragment extends Fragment {
 				: null;
 		locationY = getArguments() != null ? getArguments().getInt("y")
 				: null;
-		isTargetPosition = getArguments() != null ? getArguments().getBoolean("isTargetPosition")
+		isNeedTransformOut = getArguments() != null ? getArguments().getBoolean("isNeedTransformOut")
+				: false;
+		isNeedTransformIn = getArguments() != null ? getArguments().getBoolean("isNeedTransformIn")
 				: false;
 
 	}
@@ -81,13 +84,12 @@ public class ImageDetailFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 							 Bundle savedInstanceState) {
-		LogUtils.jasonDebug("onCreateView----------------------------");
 		final View v = inflater.inflate(R.layout.fragment_image_pager_detail,
 				container, false);
 
 		mImageView = (SmoothImageView) v.findViewById(R.id.image);
 		mImageView.setOriginalInfo(locationW, locationH, locationX, locationY);
-		if (isTargetPosition) {
+		if (isNeedTransformIn) {
 			mImageView.transformIn();
 		}
 		mImageView.setOnTransformListener(new SmoothImageView.TransformListener() {
@@ -135,9 +137,8 @@ public class ImageDetailFragment extends Fragment {
 	 * 关闭图片显示
 	 */
 	public void closeImg() {
-		LogUtils.jasonDebug("closeImg----------------------------");
 		InputMethodUtils.hide(getActivity());
-		if (isTargetPosition && locationW != 0) {
+		if (isNeedTransformOut && locationW != 0) {
 			mImageView.transformOut();
 		} else {
 			getActivity().finish();
