@@ -29,6 +29,10 @@ import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
 
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.appindexing.Thing;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
@@ -73,6 +77,7 @@ import com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout.OnRefreshList
 import com.inspur.emmcloud.widget.pullableview.PullableListView;
 import com.inspur.imp.plugin.camera.editimage.EditImageActivity;
 import com.inspur.imp.plugin.camera.imagepicker.ImagePicker;
+import com.inspur.imp.plugin.camera.imagepicker.bean.ImageItem;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -107,6 +112,11 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
     private String title = "";
     private String uid = "";
     private ECMChatInputMenu chatInputMenu;
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    private GoogleApiClient client;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -117,6 +127,9 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
         handMessage();
         registeMsgReceiver();
         registeRefreshNameReceiver();
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
     // Activity在SingleTask的启动模式下多次打开传递Intent无效，用此方法解决
@@ -132,20 +145,21 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
 
     /**
      * 分享
+     *
      * @param intent
      */
     private void handleShareFromOtherApps(Intent intent) {
         String type = intent.getType();
-        LogUtils.YfcDebug("传入的type："+type);
-        if (Intent.ACTION_SEND.equals(action)&&type!=null){
-            if ("text/plain".equals(type)){
+        LogUtils.YfcDebug("传入的type：" + type);
+        if (Intent.ACTION_SEND.equals(action) && type != null) {
+            if ("text/plain".equals(type)) {
                 dealTextMessage(intent);
-            }else if(type.startsWith("image/")){
+            } else if (type.startsWith("image/")) {
                 LogUtils.YfcDebug("启动分享到Image");
                 dealPicStream(intent);
             }
-        }else if (Intent.ACTION_SEND_MULTIPLE.equals(action)&&type!=null){
-            if (type.startsWith("image/")){
+        } else if (Intent.ACTION_SEND_MULTIPLE.equals(action) && type != null) {
+            if (type.startsWith("image/")) {
                 dealMultiplePicStream(intent);
             }
         }
@@ -153,34 +167,38 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
 
     /**
      * 适配分享文本
+     *
      * @param intent
      */
-    private void dealTextMessage(Intent intent){
+    private void dealTextMessage(Intent intent) {
         String share = intent.getStringExtra(Intent.EXTRA_TEXT);
         String title = intent.getStringExtra(Intent.EXTRA_TITLE);
     }
 
     /**
      * 处理图片
+     *
      * @param intent
      */
-    private void dealPicStream(Intent intent){
+    private void dealPicStream(Intent intent) {
         Uri uri = intent.getParcelableExtra(Intent.EXTRA_STREAM);
-        String imgPath = getImagePath(uri,null);
-        LogUtils.YfcDebug("imagePath:"+imgPath);
+        String imgPath = getImagePath(uri, null);
+        LogUtils.YfcDebug("imagePath:" + imgPath);
         EditImageActivity.start(ChannelActivity.this, imgPath, MyAppConfig.LOCAL_IMG_CREATE_PATH);
     }
 
     /**
      * 处理多个
+     *
      * @param intent
      */
-    private void dealMultiplePicStream(Intent intent){
+    private void dealMultiplePicStream(Intent intent) {
         ArrayList<Uri> arrayList = intent.getParcelableArrayListExtra(intent.EXTRA_STREAM);
     }
 
     /**
      * uri转path
+     *
      * @param uri
      * @param selection
      * @return
@@ -425,19 +443,26 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
                 //拍照后图片编辑返回
             } else if (requestCode == EditImageActivity.ACTION_REQUEST_EDITIMAGE) {
 
-                Msg localMsg = MsgRecourceUploadUtils.uploadMsgImg(
+                Msg localMsg = MsgRecourceUploadUtils.uploadMsgImgFromCamera(
                         ChannelActivity.this, data, apiService);
                 addLocalMessage(localMsg);
             } else if (requestCode == MENTIONS_RESULT) {
                 // @返回
                 chatInputMenu.setMentionData(data);
             }
-        } else if (resultCode == ImagePicker.RESULT_CODE_ITEMS) { // 图库选择图片返回
-            if (data != null && requestCode == GELLARY_RESULT) {
-                Msg localMsg = MsgRecourceUploadUtils.uploadMsgImg(
-                        ChannelActivity.this, data, apiService);
-                addLocalMessage(localMsg);
-            }
+        } else {
+            // 图库选择图片返回
+            if (resultCode == ImagePicker.RESULT_CODE_ITEMS)
+                if (data != null && requestCode == GELLARY_RESULT) {
+                    ArrayList<ImageItem> imageItemList = (ArrayList<ImageItem>) data
+                            .getSerializableExtra(ImagePicker.EXTRA_RESULT_ITEMS);
+                    LogUtils.YfcDebug("接收到的长度是："+imageItemList.size());
+                    for (int i = 0;i<imageItemList.size();i++){
+                        Msg localMsg = MsgRecourceUploadUtils.uploadMsgImgFromPhotoSystem(
+                                ChannelActivity.this, imageItemList.get(i), apiService);
+                        addLocalMessage(localMsg);
+                    }
+                }
         }
     }
 
@@ -914,6 +939,42 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
 
     @Override
     public void onLoadMore(PullToRefreshLayout pullToRefreshLayout) {
+    }
+
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    public Action getIndexApiAction() {
+        Thing object = new Thing.Builder()
+                .setName("Channel Page") // TODO: Define a title for the content shown.
+                // TODO: Make sure this auto-generated URL is correct.
+                .setUrl(Uri.parse("http://[ENTER-YOUR-URL-HERE]"))
+                .build();
+        return new Action.Builder(Action.TYPE_VIEW)
+                .setObject(object)
+                .setActionStatus(Action.STATUS_TYPE_COMPLETED)
+                .build();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client.connect();
+        AppIndex.AppIndexApi.start(client, getIndexApiAction());
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        AppIndex.AppIndexApi.end(client, getIndexApiAction());
+        client.disconnect();
     }
 
     private class WebService extends APIInterfaceInstance {

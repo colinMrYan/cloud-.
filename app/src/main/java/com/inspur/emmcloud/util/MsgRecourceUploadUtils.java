@@ -33,7 +33,7 @@ public class MsgRecourceUploadUtils {
 	 * @param apiService
 	 * @return
 	 */
-	public static Msg uploadMsgImg(Context context, Intent data,
+	public static Msg uploadMsgImgFromCamera(Context context, Intent data,
 			ChatAPIService apiService){
 		String filePath = "";
 		if (data.hasExtra("save_file_path")) {
@@ -63,6 +63,55 @@ public class MsgRecourceUploadUtils {
 		Bitmap bitmapImg = BitmapFactory.decodeFile(filePath);
 //		bitmapImg.getHeight();
 //		bitmapImg.getWidth();
+		JSONObject jsonObject = new JSONObject();
+		try {
+			jsonObject.put("key", uploadFilePath);
+			jsonObject.put("name",
+					uploadFile.getName());
+			jsonObject.put("size", uploadFile.length());
+			jsonObject.put("type", "Photos");
+			jsonObject.put("height", bitmapImg.getHeight());
+			jsonObject.put("width", bitmapImg.getWidth());
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		bitmapImg.recycle();
+		Msg sendMsg = ConbineMsg.conbineMsg(context, jsonObject.toString(), "",
+				"res_image", fakeMessageId);
+		return sendMsg;
+	}
+
+
+
+	/**
+	 * 发送多图
+	 * @param context
+	 * @param imageItem
+	 * @param apiService
+     * @return
+     */
+	public static Msg uploadMsgImgFromPhotoSystem(Context context, ImageItem imageItem,
+								   ChatAPIService apiService){
+		String filePath = "";
+		filePath = imageItem.path;
+		//暂时为要显示的消息设定一个假的id
+		String fakeMessageId = System.currentTimeMillis() + "";
+		String uploadFilePath = filePath;
+		try {
+			String thumbDirPath = MyAppConfig.LOCAL_CACHE_PATH;
+			FileUtils.makeDirs(thumbDirPath);
+			String thumbFilePath = thumbDirPath + new Date().getTime() + ".jpg";
+			ImageUtils.createImageThumbnail(context,
+					filePath, thumbFilePath, 1200, 80);
+			uploadFilePath = thumbFilePath;
+		} catch (IOException e) {
+			e.printStackTrace();
+
+		}
+		uploadFile(context, apiService, uploadFilePath, fakeMessageId, true);
+		File uploadFile = new File(uploadFilePath);
+		uploadFilePath = "file://" + uploadFilePath;
+		Bitmap bitmapImg = BitmapFactory.decodeFile(filePath);
 		JSONObject jsonObject = new JSONObject();
 		try {
 			jsonObject.put("key", uploadFilePath);
