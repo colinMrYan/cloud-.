@@ -1,16 +1,8 @@
 package com.inspur.imp.plugin.camera.editimage.fragment;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-
 import android.app.Dialog;
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
 import android.graphics.Matrix;
-import android.graphics.Rect;
-import android.graphics.RectF;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -21,12 +13,10 @@ import android.view.ViewGroup;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 
+import com.inspur.emmcloud.R;
 import com.inspur.imp.plugin.camera.editimage.EditImageActivity;
-import com.inspur.imp.plugin.camera.editimage.utils.BitmapUtils;
 import com.inspur.imp.plugin.camera.editimage.view.RotateImageView;
 import com.inspur.imp.plugin.camera.editimage.view.imagezoom.ImageViewTouchBase;
-import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.util.LogUtils;
 
 
 /**
@@ -42,6 +32,7 @@ public class RotateFragment extends Fragment {
 	private View backToMenu;// 返回主菜单
 	public SeekBar mSeekBar;// 角度设定
 	private RotateImageView mRotatePanel;// 旋转效果展示控件
+	private int realAngle = 0;
 
 	public static RotateFragment newInstance(EditImageActivity activity) {
 		RotateFragment fragment = new RotateFragment();
@@ -83,9 +74,9 @@ public class RotateFragment extends Fragment {
 		@Override
 		public void onProgressChanged(SeekBar seekBar, int angle,
 				boolean fromUser) {
-			LogUtils.jasonDebug("angle="+angle);
 			// System.out.println("progress--->" + progress);
-			mRotatePanel.rotateImage(angle*90);
+			realAngle = angle*90;
+			mRotatePanel.rotateImage(realAngle);
 		}
 
 		@Override
@@ -200,10 +191,10 @@ public class RotateFragment extends Fragment {
 //					originBit.getHeight()), dst, null);
 //			canvas.restore();
 			Matrix matrix = new Matrix();
-		       matrix.postRotate(mRotatePanel.getRotateAngle());
+		       matrix.postRotate(realAngle);
 			Bitmap result = Bitmap.createBitmap(originBit, 0, 0, originBit.getWidth(), originBit.getHeight(), matrix, true);  
-			BitmapUtils.saveBitmap(result, activity.saveFilePath);// 保存图片
-			activity.currentFilePath = activity.saveFilePath;
+//			BitmapUtils.saveBitmap(result, activity.saveFilePath);// 保存图片
+//			activity.currentFilePath = activity.saveFilePath;
 			return result;
 		}
 
