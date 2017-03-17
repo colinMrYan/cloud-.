@@ -68,8 +68,8 @@ public class NewsWebDetailActivity extends BaseActivity {
 		webSettings.setJavaScriptEnabled(true);
 		// 设置可以访问文件
 		webSettings.setAllowFileAccess(true);
-		// 设置支持缩放
-		webSettings.setBuiltInZoomControls(true);
+		// 设置不支持缩放
+		webSettings.setBuiltInZoomControls(false);
 		// 加载需要显示的网页
 		if (!url.startsWith("http")) {
 			url = UriUtils.getGroupNewsUrl(url);
