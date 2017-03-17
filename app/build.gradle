@@ -130,6 +130,7 @@ dependencies {
         exclude module: 'support-compat'
         exclude module: 'support-core-utils'
     }
+
     compile 'com.readystatesoftware.systembartint:systembartint:1.0.3'
 
 

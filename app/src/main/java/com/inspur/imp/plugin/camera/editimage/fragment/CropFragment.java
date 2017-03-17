@@ -234,8 +234,8 @@ public class CropFragment extends Fragment {
 			Bitmap resultBit = Bitmap.createBitmap(params[0],
 					(int) cropRect.left, (int) cropRect.top,
 					(int) cropRect.width(), (int) cropRect.height());
-			BitmapUtils.saveBitmap(resultBit, activity.saveFilePath);
-			activity.currentFilePath = activity.saveFilePath;
+//			BitmapUtils.saveBitmap(resultBit, activity.saveFilePath);
+//			activity.currentFilePath = activity.saveFilePath;
 			return resultBit;
 		}
 
