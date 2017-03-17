@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
-import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
@@ -63,13 +62,6 @@ public class NewsWebDetailActivity extends BaseActivity {
 
 		webView = (ProgressWebView) findViewById(R.id.news_webdetail_webview);
 
-		WebSettings webSettings = webView.getSettings();
-		// 设置WebView属性，能够执行Javascript脚本
-		webSettings.setJavaScriptEnabled(true);
-		// 设置可以访问文件
-		webSettings.setAllowFileAccess(true);
-		// 设置不支持缩放
-		webSettings.setBuiltInZoomControls(false);
 		// 加载需要显示的网页
 		if (!url.startsWith("http")) {
 			url = UriUtils.getGroupNewsUrl(url);
