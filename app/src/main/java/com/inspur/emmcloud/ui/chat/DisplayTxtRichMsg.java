@@ -44,7 +44,7 @@ public class DisplayTxtRichMsg {
 		String source = JSONUtils.getString(msgBody, "source", "");
 		String[] mentions = JSONUtils.getString(msgBody, "mentions", "")
 				.replace("[", "").replace("]", "").split(",");
-		String[] urls = JSONUtils.getString(msgBody, "urlList", "")
+		String[] urls = JSONUtils.getString(msgBody, "urls", "")
 				.replace("[", "").replace("]", "").split(",");
 		List<String> mentionList = Arrays.asList(mentions);
 		List<String> urlList = Arrays.asList(urls);
@@ -53,8 +53,10 @@ public class DisplayTxtRichMsg {
 		richText.setText(spannableString);
 		richText.setBackgroundColor(context.getResources().getColor(
 				isMyMsg ? R.color.header_bg : R.color.white));
+//		richText.setBackgroundColor(ContextCompat.getColor(context,isMyMsg ? R.color.header_bg : R.color.white));
 		richText.setTextColor(context.getResources().getColor(
 				isMyMsg ? R.color.white : R.color.black));
+//		richText.setBackgroundColor(ContextCompat.getColor(context,isMyMsg ? R.color.white : R.color.black));
 		int normalPadding = DensityUtil.dip2px(context, 10);
 		int arrowPadding = DensityUtil.dip2px(context, 8);
 		if (isMyMsg) {

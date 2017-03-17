@@ -1,21 +1,27 @@
 package com.inspur.emmcloud.util;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import org.apache.commons.lang3.StringEscapeUtils;
-
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.URLSpan;
 
 import com.inspur.emmcloud.bean.MentionsAndUrl;
 
+import org.apache.commons.lang3.StringEscapeUtils;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class MentionsAndUrlShowUtils {
 
-	// 获取字符串里的网址信息
+	/**
+	 * 把mentions和urlList的信息组合成可渲染的字符串
+	 * @param mentions
+	 * @param mentionList
+	 * @param urlList
+     * @return
+     */
 	public static SpannableString handleMentioin(String mentions,List<String> mentionList,List<String> urlList) {
 		ArrayList<MentionsAndUrl> mentionsAndUrls = new ArrayList<MentionsAndUrl>();
 	    Pattern pattern = Pattern.compile("\\[[^\\]]+\\]\\([^\\)]+\\)");
@@ -28,6 +34,7 @@ public class MentionsAndUrlShowUtils {
 			String protocolResource = "";
 			String content = "";
 			String contentResource = "";
+			String protocolResourceGS = "";
 			String protocol = "";
 			int index = -1;
 			index = mentions.indexOf(patternString);
@@ -49,16 +56,22 @@ public class MentionsAndUrlShowUtils {
 			while (matcherContent.find()) {
 				content = matcherContent.group();
 				content = content.replace("[", "").replace("]", "");
-				contentResource = "\""+content+"\"";
+//				contentResource = "\""+content+"\"";
+				contentResource = content;
+				protocolResourceGS = protocolResource.replace("(", "").replace(")", "");
 			}
+
 			if(mentionList.contains(protocolResource)){
 				hasProtocol = true;
 			}
 			int urlSize = urlList.size();
 			for (int i = 0; i < urlSize; i++) {
-				if(StringEscapeUtils.unescapeJava(urlList.get(i)).equals(contentResource)){
+				String unesUrl = StringEscapeUtils.unescapeJava(urlList.get(i));
+				unesUrl = unesUrl.replaceAll("\"","");
+				if(protocolResourceGS.contains(contentResource) || unesUrl.equals(protocolResourceGS)){
 					hasProtocol = true;
 				}
+
 			}
 			if(hasProtocol){
 //				mentions = mentions.replace(patternString, content);

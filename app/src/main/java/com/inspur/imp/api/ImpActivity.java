@@ -14,12 +14,20 @@ import android.view.WindowManager;
 import android.webkit.CookieManager;
 import android.webkit.ValueCallback;
 import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.MyApplication;
+import com.inspur.emmcloud.api.APIInterfaceInstance;
+import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
+import com.inspur.emmcloud.bean.AppRedirectResult;
 import com.inspur.emmcloud.util.AppUtils;
+import com.inspur.emmcloud.util.LogUtils;
+import com.inspur.emmcloud.util.NetUtils;
+import com.inspur.emmcloud.util.URLRequestParamsUtils;
 import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.imp.engine.webview.ImpWebChromeClient;
 import com.inspur.imp.engine.webview.ImpWebView;
@@ -28,8 +36,6 @@ import com.inspur.imp.plugin.file.FileService;
 
 import java.util.HashMap;
 import java.util.Map;
-
-
 
 
 public class ImpActivity extends ImpBaseActivity {
@@ -59,6 +65,7 @@ public class ImpActivity extends ImpBaseActivity {
 				.getWidgetID("progress_layout"));
 		webView = (ImpWebView) findViewById(Res.getWidgetID("webview"));
 		webView.setProperty(progressLayout);
+		webView.setWebViewClient(new ImpWebViewClient());
 		getWindow().setSoftInputMode(
 				WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
 						| WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
@@ -67,7 +74,6 @@ public class ImpActivity extends ImpBaseActivity {
 		if (uri != null){
 			String host = uri.getHost();
 			url = "https://emm.inspur.com/ssohandler/gs_msg/"+host;
-
 		}else{
 			url = getIntent().getExtras().getString("uri");
 		}
@@ -256,6 +262,46 @@ public class ImpActivity extends ImpBaseActivity {
 				mUploadMessage.onReceiveValue(uri);
 				mUploadMessage = null;
 			}
+		}
+	}
+
+	class ImpWebViewClient extends  WebViewClient{
+		@Override
+		public boolean shouldOverrideUrlLoading(WebView view, String url) {
+			handleReDirectURL(url);
+			return super.shouldOverrideUrlLoading(view, url);
+		}
+	}
+
+	/**
+	 * 处理重定向的URL
+	 * @param url
+     */
+	private void handleReDirectURL(String url) {
+		if(url.contains("https://id.inspur.com/oauth2.0/authorize")){
+			String params = URLRequestParamsUtils.TruncateUrlPage(url);
+			MyAppAPIService appAPIService = new MyAppAPIService(ImpActivity.this);
+			appAPIService.setAPIInterface(new WebService());
+			if(NetUtils.isNetworkConnected(ImpActivity.this)){
+				appAPIService.getAuthCode(params);
+			}
+		}
+
+	}
+
+	class WebService extends APIInterfaceInstance{
+		@Override
+		public void returnGetAppAuthCodeResultSuccess(AppRedirectResult appRedirectResult) {
+			if(NetUtils.isNetworkConnected(ImpActivity.this)){
+				webView.loadUrl(appRedirectResult.getRedirect_uri());
+				LogUtils.YfcDebug("访问的Uri："+appRedirectResult.getRedirect_uri());
+			}
+			super.returnGetAppAuthCodeResultSuccess(appRedirectResult);
+		}
+
+		@Override
+		public void returnGetAppAuthCodeResultFail(String error) {
+			super.returnGetAppAuthCodeResultFail(error);
 		}
 	}
 

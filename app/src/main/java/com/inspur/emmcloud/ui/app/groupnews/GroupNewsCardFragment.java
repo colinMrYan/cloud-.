@@ -54,19 +54,20 @@ public class GroupNewsCardFragment extends Fragment implements
 	private boolean havedata = false;
 	private boolean isPullup = true;
 	private List<GroupNews> groupnNewsList = new ArrayList<GroupNews>();
+	private String pagerTitle = "";
 
-	public GroupNewsCardFragment(int position, String catagoryid) {
+	public GroupNewsCardFragment(int position, String catagoryid,String title) {
 		// TODO Auto-generated constructor stub
 		Bundle b = new Bundle();
 		b.putInt(ARG_POSITION, position);
 		b.putString("catagoryid", catagoryid);
 		this.setArguments(b);
+		this.pagerTitle = title;
 	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
 		inflater = (LayoutInflater) getActivity().getSystemService(
 				getActivity().LAYOUT_INFLATER_SERVICE);
 		v = inflater.inflate(R.layout.fragment_news, null);
@@ -88,7 +89,6 @@ public class GroupNewsCardFragment extends Fragment implements
 	/**
 	 * 获取每个标题下的新闻列表
 	 * 
-	 * @param string
 	 */
 	private void getGroupNewsList(String catagoryid) {
 		// TODO Auto-generated method stub
@@ -130,6 +130,7 @@ public class GroupNewsCardFragment extends Fragment implements
 						.getDigest());
 				intent.putExtra("url", TimeUtils.getNewsTime(posttime)
 						+ groupnNewsList.get(position).getUrl());
+				intent.putExtra("pager_title",pagerTitle);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

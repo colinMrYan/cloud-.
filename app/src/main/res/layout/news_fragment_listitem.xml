@@ -16,7 +16,7 @@
         <ImageView
             android:id="@+id/news_leftImg_img"
             android:layout_width="110dp"
-            android:layout_height="70dp"
+            android:layout_height="71dp"
             android:scaleType="fitXY"
             android:layout_centerVertical="true"
             android:paddingLeft="10dp"
@@ -37,6 +37,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
+                android:paddingTop="1dp"
                 android:maxLines="1"
                 android:textColor="#203b4f"
                 android:textSize="16sp"

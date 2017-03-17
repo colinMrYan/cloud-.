@@ -1,7 +1,5 @@
 package com.inspur.emmcloud.widget.slidebar;
 
-import com.inspur.emmcloud.R;
-
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -11,6 +9,10 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
+
+import com.inspur.emmcloud.R;
+
+import java.util.ArrayList;
 
 
 public class SideBar extends View {
@@ -25,6 +27,8 @@ public class SideBar extends View {
 	private Paint paint = new Paint();
 
 	private TextView mTextDialog;
+
+	private int count = 0 ;
 
 	public void setTextView(TextView mTextDialog) {
 		this.mTextDialog = mTextDialog;
@@ -51,13 +55,17 @@ public class SideBar extends View {
 		int height = getHeight();// 获取对应高度
 		int width = getWidth(); // 获取对应宽度
 		int singleHeight = height / b.length;// 获取每一个字母的高度
+		if(count == 0){
+			singleHeight = 0;
+			count = count + 1;
+		}
 
 		for (int i = 0; i < b.length; i++) {
 			if (!isInEditMode()) {
 				paint.setColor(Color.parseColor("#838383"));
 			}
 			paint.setAntiAlias(true);
-			paint.setTextSize(20);
+			paint.setTextSize(25);
 			// 选中的状态
 			if (i == choose) {
 				paint.setColor(getResources().getColor(R.color.yellow_light));
@@ -129,6 +137,20 @@ public class SideBar extends View {
 	 */
 	public interface OnTouchingLetterChangedListener {
 		public void onTouchingLetterChanged(String s);
+	}
+
+	/**
+	 * 转化list
+	 * @param list
+	 * @return
+     */
+	public String[] setIndexArray(ArrayList<String> list){
+		String[] arrString = list.toArray(new String[list.size()]);
+		if(arrString == null || arrString.length == 0){
+			arrString = new String[0];
+		}
+		b = arrString;
+		return arrString;
 	}
 
 }

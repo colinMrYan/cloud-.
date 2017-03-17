@@ -6,6 +6,7 @@ import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.uimanager.IllegalViewOperationException;
 import com.inspur.emmcloud.bean.GetMyInfoResult;
+import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.StringUtils;
 
@@ -94,6 +95,15 @@ public class NativeBridge extends ReactContextBaseJavaModule {
         }catch (Exception e){
             promise.reject(e);
         }
+    }
+
+    /**
+     * 结束
+     */
+    @ReactMethod
+    public void exit(){
+        LogUtils.YfcDebug("调用Exit");
+        getCurrentActivity().finish();
     }
 
 }

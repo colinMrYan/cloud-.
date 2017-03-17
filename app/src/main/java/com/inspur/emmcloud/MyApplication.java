@@ -12,6 +12,7 @@ import android.support.multidex.MultiDexApplication;
 import android.webkit.CookieManager;
 
 import com.alibaba.fastjson.JSON;
+import com.beefe.picker.PickerViewPackage;
 import com.facebook.react.ReactApplication;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
@@ -90,7 +91,8 @@ public class MyApplication extends MultiDexApplication implements  ReactApplicat
 		protected List<ReactPackage> getPackages() {
 			return Arrays.<ReactPackage>asList(
 					new MainReactPackage(),
-					new AuthorizationManagerPackage()
+					new AuthorizationManagerPackage(),
+					new PickerViewPackage()
 			);
 		}
 	};
@@ -111,6 +113,10 @@ public class MyApplication extends MultiDexApplication implements  ReactApplicat
 		accessToken = PreferencesUtils.getString(getApplicationContext(), "accessToken","");
 		onConfigurationChanged(null);
 		removeAllSessionCookie();
+		//修改字体方案预留
+//        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
+//                .setDefaultFontPath("fonts/xiaozhuan.ttf")
+//
 
 	}
 

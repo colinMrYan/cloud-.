@@ -187,7 +187,7 @@ public class ImpWebView extends WebView {
 		settings.setJavaScriptEnabled(true);
 		settings.setUseWideViewPort(true);
 		settings.setSupportZoom(false);
-		settings.setBuiltInZoomControls(true);
+		settings.setBuiltInZoomControls(false);
 	}
 
 	/* 页面效果设置 */

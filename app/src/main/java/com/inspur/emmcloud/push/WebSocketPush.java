@@ -52,7 +52,6 @@ public class WebSocketPush {
 			String enterpriseCode = myInfoResult.getEnterpriseCode();
 			String path = "/"+enterpriseCode+"/socket/handshake";
 			WebSocketConnect(url, path);
-			LogUtils.debug("yfcLog", "socketPath:"+path);
 	}
 
 

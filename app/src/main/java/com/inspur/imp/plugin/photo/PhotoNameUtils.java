@@ -1,8 +1,8 @@
 package com.inspur.imp.plugin.photo;
 
-import com.inspur.emmcloud.util.PreferencesUtils;
-
 import android.content.Context;
+
+import com.inspur.emmcloud.util.PreferencesUtils;
 
 public class PhotoNameUtils {
 	public static String getFileName(Context context) {

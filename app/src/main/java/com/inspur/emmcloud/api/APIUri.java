@@ -449,6 +449,14 @@ public class APIUri {
 	public static String getNewAllApps(){
 		return emmBaseUrl+"imp_app/appCenterList";
 	}
+
+	/**
+	 * 验证身份的Uri
+	 * @return
+     */
+	public static String getAppAuthCodeUri(){
+		return "https://id.inspur.com/oauth2.0/quick_authz_code";
+	}
 	
 	
 	/**

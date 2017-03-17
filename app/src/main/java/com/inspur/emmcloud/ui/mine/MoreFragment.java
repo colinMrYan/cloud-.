@@ -1,12 +1,7 @@
 package com.inspur.emmcloud.ui.mine;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-
 import android.app.Dialog;
-import android.content.ComponentName;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -25,18 +20,17 @@ import android.widget.TextView;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.bean.GetMyInfoResult;
-import com.inspur.emmcloud.ui.find.MyReactFindActivity;
-import com.inspur.emmcloud.ui.find.RNActivity;
 import com.inspur.emmcloud.ui.mine.cardpackage.CardPackageListActivity;
 import com.inspur.emmcloud.ui.mine.feedback.FeedBackActivity;
 import com.inspur.emmcloud.ui.mine.myinfo.MyInfoActivity;
 import com.inspur.emmcloud.ui.mine.setting.SettingActivity;
 import com.inspur.emmcloud.util.ImageDisplayUtils;
-import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.ToastUtils;
 import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
+
+import java.io.Serializable;
 
 /**
  * 更多页面
@@ -101,7 +95,6 @@ public class MoreFragment extends Fragment {
         String photoUri = UriUtils.getChannelImgUri(inspurId);
         imageDisplayUtils.display(moreHeadImg, photoUri);
 
-        LogUtils.debug("yfcLofg", "more里面的" + photoUri);
         if (!getMyInfoResult.getName().equals("null")) {
             userNameText.setText(getMyInfoResult.getName());
         } else {
@@ -176,19 +169,7 @@ public class MoreFragment extends Fragment {
 				intent.setClass(getActivity(), FeedBackActivity.class);
 				startActivity(intent);
 
-//				ComponentName componentName = new ComponentName(
-//			            "com.myprojectone",
-//			            "com.myprojectone.MainActivity");
-//			        Intent intentOpen = new Intent();
-//			        Bundle bundle = new Bundle();
-//			        bundle.putString("resUrl", resurl);
-//			        bundle.putSerializable("picUrlList", picurllist);
-//			        intentOpen.putExtras(bundle);
-//			        intentOpen.setComponent(componentName);
-//			        startActivity(intentOpen);
-//                    in(v);
 
-//				UriUtils.open(getActivity(), feedbackUrl, 3, "", getString(R.string.more_help));
                     break;
                 case R.id.more_message_layout:
                 case R.id.more_invite_friends_layout:
@@ -224,34 +205,6 @@ public class MoreFragment extends Fragment {
         return rootView;
     }
 
-    public void in(View v) {
-//		ComponentName componentName = new ComponentName(
-//	            "com.myprojectone",
-//	            "com.myprojectone.MainActivity");
-//		ComponentName componentName = new ComponentName(
-//	            "com.myproject",
-//	            "com.myproject.MainActivity");
-//		ComponentName componentName = new ComponentName(
-//	            "com.example.androidtest",
-//	            "com.example.androidtest.MainActivity");
-        Intent intentOpen = new Intent();
-        intentOpen.setClass(getActivity(), RNActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putString("resUrl", "resUrl");
-        bundle.putSerializable("picUrlList", new ArrayList<String>());
-        intentOpen.putExtras(bundle);
-//	        intentOpen.setComponent(componentName);
-//	        intentOpen.putExtra("tabs", "11111");
-//	        intentOpen.putExtra("data", bundle);
-//	        {\"title\":\"communicate\",\"selected\":false}
-//	        intentOpen.setData(Uri.parse("ecm-contact://9104"));
-        startActivity(intentOpen);
-        getActivity().overridePendingTransition(R.anim.anim_zoom_in, R.anim.anim_zoom_out);
-    }
-
-    public void out(View v) {
-        getActivity().overridePendingTransition(R.anim.anim_zoom_in, R.anim.anim_zoom_out);
-    }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
