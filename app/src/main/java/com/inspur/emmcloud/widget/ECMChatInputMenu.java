@@ -373,6 +373,7 @@ public class ECMChatInputMenu extends LinearLayout {
 			intentFromCapture.putExtra(MediaStore.EXTRA_OUTPUT,
 					Uri.fromFile(new File(appDir, fileName)));
 			PreferencesUtils.putString(context, "capturekey", fileName);
+			LogUtils.YfcDebug("打开相机之前");
 			((Activity) context).startActivityForResult(intentFromCapture,
 					CAMERA_RESULT);
 		} else {

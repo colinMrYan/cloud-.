@@ -87,7 +87,7 @@ public class GroupNewsActivity extends BaseFragmentActivity implements
 		@Override
 		public Fragment getItem(int position) {
 			return new GroupNewsCardFragment(position, titles.get(position)
-					.getNcid());
+					.getNcid(),titles.get(position).getTitle());
 		}
 
 	}

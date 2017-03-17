@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
@@ -21,7 +20,6 @@ import com.inspur.emmcloud.bean.Language;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.ui.login.LoginActivity;
-import com.inspur.emmcloud.util.AppUtils;
 import com.inspur.emmcloud.util.DataCleanManager;
 import com.inspur.emmcloud.util.ImageDisplayUtils;
 import com.inspur.emmcloud.util.IntentUtils;
@@ -32,6 +30,8 @@ import com.inspur.emmcloud.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.dialogs.EasyDialog;
 import com.inspur.emmcloud.widget.dialogs.MyDialog;
+
+import cn.jpush.android.api.JPushInterface;
 
 public class SettingActivity extends BaseActivity {
 
@@ -327,6 +327,7 @@ public class SettingActivity extends BaseActivity {
 			((MyApplication) getApplicationContext()).getWebSocketPush()
 			.webSocketSignout();
 		}
+		JPushInterface.stopPush(getApplicationContext());
 		PreferencesUtils.putString(SettingActivity.this, "tokenType", "");
 		PreferencesUtils.putString(SettingActivity.this, "accessToken", "");
 		Intent intent = new Intent();

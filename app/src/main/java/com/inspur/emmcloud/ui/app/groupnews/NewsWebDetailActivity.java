@@ -76,6 +76,8 @@ public class NewsWebDetailActivity extends BaseActivity {
     private int lightModeFontColor;
     private int blackFontColor;
     private int whiteFontColor;
+    private TextView headText;
+    private String pagerTitle = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,6 +96,11 @@ public class NewsWebDetailActivity extends BaseActivity {
     private void initViews() {
         loadingDlg = new LoadingDialog(NewsWebDetailActivity.this);
         relativeLayout = (RelativeLayout) findViewById(R.id.header_layout);
+        headText = (TextView)findViewById(R.id.header_text);
+        if(StringUtils.isBlank(title)){
+            title = getString(R.string.group_news_detail);
+        }
+        headText.setText(pagerTitle);
         initWebView();
     }
 
@@ -202,6 +209,9 @@ public class NewsWebDetailActivity extends BaseActivity {
         }
         if (intent.hasExtra("digest")) {
             digest = intent.getStringExtra("digest");
+        }
+        if(intent.hasExtra("pager_title")){
+            this.pagerTitle = intent.getStringExtra("pager_title");
         }
     }
 
