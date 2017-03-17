@@ -1,11 +1,11 @@
 package com.inspur.emmcloud.util;
 
-import java.util.Arrays;
-import java.util.List;
-
 import android.text.SpannableString;
 
 import com.inspur.emmcloud.bean.Msg;
+
+import java.util.Arrays;
+import java.util.List;
 
 public class HandMentionsMsgUtils {
 
@@ -24,7 +24,7 @@ public class HandMentionsMsgUtils {
 			String msgBody = msg.getBody();
 			String source = JSONUtils.getString(msgBody, "source", "");
 			String[] mentions = JSONUtils.getString(msgBody, "mentions", "").replace("[", "").replace("]", "").split(",");
-			String[] urls = JSONUtils.getString(msgBody, "urlList", "").replace("[", "").replace("]", "").split(",");
+			String[] urls = JSONUtils.getString(msgBody, "urls", "").replace("[", "").replace("]", "").split(",");
 			List<String> mentionList = Arrays.asList(mentions);
 			List<String> urlList = Arrays.asList(urls);
 			SpannableString spannableString = MentionsAndUrlShowUtils.handleMentioin(source,mentionList,urlList);

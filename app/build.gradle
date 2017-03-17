@@ -102,6 +102,8 @@ android {
     }
 }
 
+
+
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
@@ -132,10 +134,13 @@ dependencies {
     }
 
     compile 'com.readystatesoftware.systembartint:systembartint:1.0.3'
+    compile 'uk.co.chrisjenx:calligraphy:2.2.0'
+    compile 'com.fashare2015:HoverView:1.0.1'
 
 
     // React Naive Components
     compile project(':react-native-smart-swipe-refresh-layout')
+    compile project(':react-native-picker')
 
 
     testCompile 'junit:junit:4.12'
@@ -154,4 +159,5 @@ dependencies {
     compile files('src/libs/jpush-android_v3.0.1.jar')
     compile files('src/libs/jcore-android_v1.1.0.jar')
     compile files('src/libs/mdm.jar')
+    compile 'com.google.android.gms:play-services-appindexing:8.4.0'
 }

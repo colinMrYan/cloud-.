@@ -32,7 +32,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -40,6 +39,7 @@ import android.widget.RelativeLayout;
 
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.MsgAddItemAdapter;
+import com.inspur.emmcloud.bean.MentionBean;
 import com.inspur.emmcloud.ui.chat.ImagePagerActivity;
 import com.inspur.emmcloud.ui.chat.MembersActivity;
 import com.inspur.emmcloud.util.ChannelMentions;
@@ -71,7 +71,7 @@ public class ECMChatInputMenu extends LinearLayout {
 	private static final int MENTIONS_RESULT = 5;
 	private Context context;
 	private LayoutInflater layoutInflater;
-	private EditText inputEdit;
+	private ChatInputEdit inputEdit;
 	private ImageView addImg;
 	private Button sendMsgBtn;
 	private RelativeLayout addMenuLayout;
@@ -115,6 +115,9 @@ public class ECMChatInputMenu extends LinearLayout {
 		// TODO Auto-generated method stub
 		this.context = context;
 		layoutInflater = LayoutInflater.from(context);
+		layoutInflater.inflate(R.layout.ecm_widget_chat_input_menu, this);
+		inputEdit = (ChatInputEdit) findViewById(R.id.input_edit);
+		inputEdit.setIsOpen(true);
 		TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ECMChatInputMenu);
 		String layoutType = a.getString(R.styleable.ECMChatInputMenu_layoutType);
 		if (!StringUtils.isEmpty(layoutType) && layoutType.equals("img_comment_input")){
@@ -124,7 +127,7 @@ public class ECMChatInputMenu extends LinearLayout {
 		}
 		a.recycle();
 		rootLayout = (LinearLayout)findViewById(R.id.root_layout);
-		inputEdit = (EditText) findViewById(R.id.input_edit);
+		inputEdit = (ChatInputEdit) findViewById(R.id.input_edit);
 		addImg = (ImageView) findViewById(R.id.add_img);
 		addMenuLayout = (RelativeLayout) findViewById(R.id.add_menu_layout);
 		sendMsgBtn = (Button) findViewById(R.id.send_msg_btn);
@@ -167,9 +170,13 @@ public class ECMChatInputMenu extends LinearLayout {
 		initMenuGrid();
 		mInputManager = (InputMethodManager) context
 				.getSystemService(context.INPUT_METHOD_SERVICE);
+
 		inputEdit.setOnTouchListener(new OnTouchListener() {
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
+				if(event.getAction() == MotionEvent.ACTION_DOWN){
+					handMentions();
+				}
 				if (event.getAction() == MotionEvent.ACTION_UP
 						&& addMenuLayout.isShown()) {
 					lockContentHeight();
@@ -180,6 +187,26 @@ public class ECMChatInputMenu extends LinearLayout {
 			}
 		});
 
+	}
+
+	/**
+	 * 处理mentions点击人，不让光标落在人名中
+	 */
+	private void handMentions() {
+		ArrayList<MentionBean> mentionBeenList = new ArrayList<MentionBean>();
+		String inputContent = inputEdit.getText().toString();
+		for (int i = 0; i< mentionsUserNameList.size(); i++){
+			String mentionName = mentionsUserNameList.get(i);
+			int mentionNameStart = inputContent.indexOf(mentionName);
+			int mentionNameEnd = mentionNameStart + mentionName.length();
+			MentionBean mentionBean = new MentionBean();
+			mentionBean.setMentionStart(mentionNameStart);
+			mentionBean.setMentioinEnd(mentionNameEnd);
+			mentionBean.setMentionName(mentionName);
+			mentionBeenList.add(mentionBean);
+		}
+		inputEdit.setIsOpen(true);
+		inputEdit.setMentionBeenList(mentionBeenList);
 	}
 
 	private void lockContentHeight() {
@@ -231,7 +258,6 @@ public class ECMChatInputMenu extends LinearLayout {
 	public void hideSoftInput() {
 		mInputManager.hideSoftInputFromWindow(inputEdit.getWindowToken(), 0);
 	}
-
 
 	private boolean isSoftInputShown() {
 		return getSupportSoftInputHeight() != 0;
@@ -318,9 +344,9 @@ public class ECMChatInputMenu extends LinearLayout {
 		imagePicker.setImageLoader(new ImageDisplayUtils()); // 设置图片加载器
 		imagePicker.setShowCamera(false); // 显示拍照按钮
 		imagePicker.setCrop(false); // 允许裁剪（单选才有效）
-		imagePicker.setSelectLimit(1);
+		imagePicker.setSelectLimit(5);
 //		imagePicker.setSaveRectangle(true); // 是否按矩形区域保存
-		imagePicker.setMultiMode(false);
+		imagePicker.setMultiMode(true);
 //		imagePicker.setStyle(CropImageView.Style.RECTANGLE); // 裁剪框的形状
 //		imagePicker.setFocusWidth(1000); // 裁剪框的宽度。单位像素（圆形自动取宽高最小值）
 //		imagePicker.setFocusHeight(1000); // 裁剪框的高度。单位像素（圆形自动取宽高最小值）
@@ -347,6 +373,7 @@ public class ECMChatInputMenu extends LinearLayout {
 			intentFromCapture.putExtra(MediaStore.EXTRA_OUTPUT,
 					Uri.fromFile(new File(appDir, fileName)));
 			PreferencesUtils.putString(context, "capturekey", fileName);
+			LogUtils.YfcDebug("打开相机之前");
 			((Activity) context).startActivityForResult(intentFromCapture,
 					CAMERA_RESULT);
 		} else {
@@ -378,6 +405,7 @@ public class ECMChatInputMenu extends LinearLayout {
 	public void setCanMention(boolean isCanMention, String channelId) {
 		this.channelId = channelId;
 		inputEdit.addTextChangedListener(new TextChangedListener());
+		//当删除到只剩一个@时判断是否调起mentions
 		inputEdit.setOnKeyListener(new OnMentionsListener());
 	}
 
@@ -443,6 +471,7 @@ public class ECMChatInputMenu extends LinearLayout {
 					i--;
 				}
 			}
+
 			int spanslen = spans.length;
 			for (int i = 0; i < spanslen; i++) {
 				if (which == i) {
@@ -458,7 +487,7 @@ public class ECMChatInputMenu extends LinearLayout {
 		public void afterTextChanged(Editable s) {
 			Intent intent = new Intent();
 			intent.setClass(context, MembersActivity.class);
-			intent.putExtra("title", "@");
+			intent.putExtra("title", context.getString(R.string.friend_list));
 			intent.putExtra("cid", channelId);
 			String tstr = s.toString();
 			int strlen = tstr.length();

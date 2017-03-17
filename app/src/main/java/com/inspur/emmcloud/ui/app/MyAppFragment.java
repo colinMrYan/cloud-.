@@ -1,11 +1,5 @@
 package com.inspur.emmcloud.ui.app;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.List;
-
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -54,6 +48,12 @@ import com.inspur.emmcloud.widget.draggrid.DragGridView.OnChanageListener;
 import com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout;
 import com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout.OnRefreshListener;
 import com.inspur.emmcloud.widget.pullableview.PullableListView;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.List;
 /**
  * classes : com.inspur.emmcloud.ui.app.MyAppFragment Create at 2016年12月13日
  * 上午11:10:20
@@ -564,6 +564,8 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
 			}
 			List<AppGroupBean> appGroupList = handleAppList(getAppGroupResult
 					.getAppGroupBeanList());
+			addWhoseCar(appGroupList);
+
 			appListAdapter = new AppListAdapter(appGroupList);
 			appListView.setAdapter(appListAdapter);
 			appListAdapter.notifyDataSetChanged();
@@ -578,6 +580,26 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
 			pullToRefreshLayout.refreshFinish(PullToRefreshLayout.FAIL);
 			WebServiceMiddleUtils.hand(getActivity(), error);
 		}
+	}
+
+	/**
+	 * 添加WhoseCar
+	 * @param appGroupList
+     */
+	private void addWhoseCar(List<AppGroupBean> appGroupList) {
+		AppGroupBean appGroupBean = new AppGroupBean();
+		appGroupBean.setCategoryID("1111111");
+		appGroupBean.setCategoryName("挪车");
+		App app = new App();
+		app.setCategoryID("1111111");
+		app.setAppIcon("https://emm.inspur.com/img/app_ico/4lcgjyfglrzsh_esg");
+		app.setAppID("whosecar");
+		app.setAppName("挪车");
+		app.setAppType(5);
+		List<App> appList = new ArrayList<App>();
+		appList.add(app);
+		appGroupBean.setAppItemList(appList);
+		appGroupList.add(appGroupBean);
 	}
 
 	/**

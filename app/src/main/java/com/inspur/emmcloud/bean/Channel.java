@@ -1,14 +1,5 @@
 package com.inspur.emmcloud.bean;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.content.Context;
 import android.text.SpannableString;
 
@@ -23,6 +14,14 @@ import com.inspur.emmcloud.util.TimeUtils;
 import com.inspur.emmcloud.util.UriUtils;
 import com.lidroid.xutils.db.annotation.Id;
 import com.lidroid.xutils.db.annotation.Transient;
+
+import org.json.JSONObject;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
 
 public class Channel implements Serializable {
 	@Id
@@ -177,7 +176,7 @@ public class Channel implements Serializable {
 					String source = JSONUtils.getString(msgBody, "source", "");
 					String[] mentions = JSONUtils.getString(msgBody, "mentions", "")
 							.replace("[", "").replace("]", "").split(",");
-					String[] urls = JSONUtils.getString(msgBody, "urlList", "")
+					String[] urls = JSONUtils.getString(msgBody, "urls", "")
 							.replace("[", "").replace("]", "").split(",");
 					List<String> mentionList = Arrays.asList(mentions);
 					List<String> urlList = Arrays.asList(urls);

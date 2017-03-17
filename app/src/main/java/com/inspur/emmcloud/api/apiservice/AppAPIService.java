@@ -279,7 +279,6 @@ public class AppAPIService {
 			
 			@Override
 			public void callbackSuccess(String arg0) {
-				LogUtils.debug("yfcLog", "返回内容："+arg0);
 				apiInterface.returnGetAppTabsSuccess(new GetAppTabsResult(arg0));
 			}
 			

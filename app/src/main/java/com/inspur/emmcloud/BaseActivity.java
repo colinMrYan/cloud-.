@@ -15,6 +15,7 @@ public class BaseActivity extends Activity {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		StateBarColor.changeStateBarColor(this);
+
 	}
 	@Override
 	protected void onStop() {
@@ -50,7 +51,14 @@ public class BaseActivity extends Activity {
 	    config.setToDefaults();    
 	    res.updateConfiguration(config,res.getDisplayMetrics() );  
 	    return res;  
-	}  
+	}
+
+	//修改本地字体方案预留
+//	@Override
+//	protected void attachBaseContext(Context newBase) {
+//		super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+//
+//	}
 
 
 }
