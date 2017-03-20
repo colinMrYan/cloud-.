@@ -50,7 +50,7 @@ public class ImageGridActivity extends ImageBaseActivity implements
 	
 	private int parm_resolution = 1080;
 	private int parm_qualtity = 100;
-	private int parm_encodingType;
+	private int parm_encodingType = 0;
 	private String parm_context;
 	private String parm_uploadUrl;
 
@@ -286,7 +286,7 @@ public class ImageGridActivity extends ImageBaseActivity implements
 				// TODO Auto-generated method stub
 				long time = System.currentTimeMillis();
 				for (int i = 0; i < imagePicker.getSelectedImages().size(); i++) {
-					String fileName = PhotoNameUtils.getListFileName(getApplicationContext(),time,i);
+					String fileName = PhotoNameUtils.getListFileName(getApplicationContext(),time,i,parm_encodingType);
 					ImageItem imageItem = imagePicker.getSelectedImages().get(i);
 					String path = imageItem.path;
 //					Bitmap bitmap = BitmapUtils.getImageCompress(path, parm_resolution, parm_qualtity);
