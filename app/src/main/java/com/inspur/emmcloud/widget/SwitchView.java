@@ -32,6 +32,7 @@ public class SwitchView extends View {
 	private final AccelerateInterpolator aInterpolator = new AccelerateInterpolator(2);
 	private int paintColorOn = 0xff4ada60;
 	private int paintColorOff = 0xffe3e3e3;
+	private int paintCircleBtnColor = 0xffffffff;
 
 	/**
 	 * state switch on
@@ -212,7 +213,13 @@ public class SwitchView extends View {
 		final boolean isOn = (state == STATE_SWITCH_ON || state == STATE_SWITCH_ON2);
 		// draw background
 		paint.setStyle(Style.FILL);
-		paint.setColor(isOn ? getPaintColorOn() : getPaintColorOff());
+		int btnBackGroundColor = 0;
+		if(isOn){
+			btnBackGroundColor = getPaintColorOn();
+		}else {
+			btnBackGroundColor = getPaintColorOff();
+		}
+		paint.setColor(btnBackGroundColor);
 		canvas.drawPath(sPath, paint);
 
 		
@@ -236,7 +243,8 @@ public class SwitchView extends View {
 		calcBPath(isState2 ? 1 - dbAnim : dbAnim);
 		// draw shadow
 		paint.setStyle(Style.FILL);
-		paint.setColor(0xff333333);
+//		paint.setColor(0xff333333);
+		paint.setColor(getPaintCircleBtnColor());
 		paint.setShader(shadowGradient);
 		canvas.drawPath(bPath, paint);
 		paint.setShader(null);
@@ -244,13 +252,26 @@ public class SwitchView extends View {
 
 		canvas.scale(0.98f, 0.98f, bWidth / 2, bWidth / 2);
 		paint.setStyle(Style.FILL);
-		paint.setColor(0xffffffff);
+		int btnFrontGroundColor = 0;
+		if(isOn){
+			btnFrontGroundColor = getPaintCircleBtnColor();
+		}else {
+			btnFrontGroundColor = 0xffffffff;
+		}
+//		paint.setColor(btnBackGroundColor);
+		paint.setColor(btnFrontGroundColor);
 		canvas.drawPath(bPath, paint);
 
 		paint.setStyle(Style.STROKE);
 		paint.setStrokeWidth(bStrokeWidth * 0.5f);
 
-		paint.setColor(isOn ? getPaintColorOn() : 0xffbfbfbf);
+		int btnShadowGroundColor = 0;
+		if(isOn){
+			btnShadowGroundColor = getPaintCircleBtnColor();
+		}else {
+			btnShadowGroundColor = 0xffbfbfbf;
+		}
+		paint.setColor(btnShadowGroundColor);
 		canvas.drawPath(bPath, paint);
 
 		canvas.restore();
@@ -400,12 +421,21 @@ public class SwitchView extends View {
 		}
 	}
 
+
 	public int getPaintColorOn() {
 		return paintColorOn;
 	}
 
 	public void setPaintColorOn(int paintColorOn) {
 		this.paintColorOn = paintColorOn;
+	}
+
+	public int getPaintCircleBtnColor() {
+		return paintCircleBtnColor;
+	}
+
+	public void setPaintCircleBtnColor(int paintCircleBtnColor) {
+		this.paintCircleBtnColor = paintCircleBtnColor;
 	}
 
 	public int getPaintColorOff() {

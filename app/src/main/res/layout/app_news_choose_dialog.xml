@@ -9,7 +9,7 @@
     <LinearLayout
         android:id="@+id/app_news_dialog"
         android:layout_width="match_parent"
-        android:layout_height="250dp"
+        android:layout_height="268dp"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
         android:background="@drawable/app_news_dialog_day_background"
@@ -21,7 +21,7 @@
             android:layout_height="50dp"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
-            android:layout_marginTop="18dp"
+            android:layout_marginTop="15dp"
             android:drawableLeft="@drawable/app_news_share_night"
             android:drawablePadding="11dp"
             android:paddingLeft="139dp"
@@ -33,9 +33,21 @@
 
         <View
             android:id="@+id/app_news_read_mode_line"
-            android:layout_width="0.5dp"
-            android:layout_height="50dp"
-            android:background="#FFD6D6D6" />
+            android:layout_width="324dp"
+            android:layout_height="1dp"
+            android:layout_marginTop="15dp"
+            android:layout_gravity="center_horizontal"
+            android:background="#ff3B4451" />
+
+        <TextView
+            android:id="@+id/app_news_read_mode_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="20dp"
+            android:textSize="@dimen/content_smaller_textsize"
+            android:textColor="#ff1D2128"
+            android:text="阅读模式"/>
 
         <LinearLayout
             android:id="@+id/app_news_mode_layout"
@@ -43,7 +55,7 @@
             android:layout_height="50dp"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
-            android:layout_marginTop="22dp"
+            android:layout_marginTop="5dp"
             android:background="@drawable/app_news_dialog_day_button">
 
             <Button
@@ -87,21 +99,38 @@
                 android:text="@string/news_night_mode_text" />
 
             <TextView
-                android:id="@+id/app_news_mode_night"
+                android:id="@+id/app_news_mode_night_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
                 android:layout_marginLeft="45dp"
+                android:textColor="@color/white"
                 android:textSize="@dimen/content_title_textsize"
                 android:text="@string/news_night_mode_text"/>
+            <ImageView
+                android:id="@+id/app_news_mode_sun_img"
+                android:layout_width="21dp"
+                android:layout_height="21dp"
+                android:layout_marginLeft="50dp"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/app_news_mode_day_light"/>
 
             <com.inspur.emmcloud.widget.SwitchView
                 android:id="@+id/app_news_mode_switch"
                 android:layout_width="51dp"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="98dp"
+                android:layout_marginLeft="24dp"
                 android:layout_gravity="center_vertical"
+
                 android:foregroundGravity="right"/>
+
+            <ImageView
+                android:id="@+id/app_news_mode_moon_img"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:layout_marginLeft="19dp"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/app_news_mode_light"/>
 
         </LinearLayout>
 
@@ -110,19 +139,21 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
-            android:layout_marginTop="10dp">
+            android:layout_marginTop="8dp">
 
             <TextView
                 android:id="@+id/app_news_font_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/content_smaller_textsize"
+                android:textColor="#ff1D2128"
                 android:text="@string/news_font_name_text" />
 
             <View
                 android:id="@+id/app_news_font_line"
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"
+                android:visibility="gone"
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="4dp"
                 android:background="#FFD6D6D6" />
@@ -133,7 +164,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="12dp"
             android:layout_marginRight="12dp"
-            android:layout_marginTop="21dp"
+            android:layout_marginTop="5dp"
             android:orientation="horizontal">
 
             <Button
