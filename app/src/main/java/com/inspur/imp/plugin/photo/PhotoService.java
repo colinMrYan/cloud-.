@@ -53,7 +53,10 @@ public class PhotoService extends ImpPlugin {
 				successCb = paramsObject.getString("success");
 			if (!paramsObject.isNull("fail"))
 				failCb = paramsObject.getString("fail");
-			openGallery();
+			int picTotal = 6;
+			if (!paramsObject.isNull("picTotal"))
+				picTotal = paramsObject.getInt("picTotal");
+			openGallery(picTotal);
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
@@ -61,10 +64,10 @@ public class PhotoService extends ImpPlugin {
 
 	}
 
-	private void openGallery() {
+	private void openGallery(int picTotal) {
 		// TODO Auto-generated method stub
 		PublicWay.uploadPhotoService = this;
-		initImagePicker();
+		initImagePicker(picTotal);
 		Intent intent = new Intent(context, ImageGridActivity.class);
 		intent.putExtra("paramsObject", paramsObject.toString());
 		((Activity) context).startActivityForResult(intent, RESULT_GELLERY);
@@ -73,12 +76,15 @@ public class PhotoService extends ImpPlugin {
 	/**
 	 * 初始化图片选择控件
 	 */
-	private void initImagePicker() {
+	private void initImagePicker(int picTotal) {
 		ImagePicker imagePicker = ImagePicker.getInstance();
 		imagePicker.setImageLoader(new ImageDisplayUtils()); // 设置图片加载器
 		imagePicker.setShowCamera(false); // 显示拍照按钮
 		imagePicker.setCrop(false); // 允许裁剪（单选才有效）
-		imagePicker.setSelectLimit(6);
+		if (picTotal<0 || picTotal>6){
+			picTotal = 6;
+		}
+		imagePicker.setSelectLimit(picTotal);
 		imagePicker.setMultiMode(true);
 	}
 
@@ -89,14 +95,17 @@ public class PhotoService extends ImpPlugin {
 				successCb = paramsObject.getString("success");
 			if (!paramsObject.isNull("fail"))
 				failCb = paramsObject.getString("fail");
-			openCamera();
+			int encodingType = 0;
+			if (!paramsObject.isNull("encodingType"))
+				encodingType = paramsObject.getInt("encodingType");
+			openCamera(encodingType);
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
 		}
 	}
 
-	private void openCamera() {
+	private void openCamera(int encodingType) {
 		// TODO Auto-generated method stub
 		Intent intentFromCapture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 		// 判断存储卡是否可以用，可用进行存储
@@ -108,7 +117,7 @@ public class PhotoService extends ImpPlugin {
 				appDir.mkdir();
 			}
 			// 指定文件名字
-			String fileName = PhotoNameUtils.getFileName(getActivity());
+			String fileName = PhotoNameUtils.getFileName(getActivity(),encodingType);
 			takePhotoImgPath = MyAppConfig.LOCAL_IMG_CREATE_PATH + fileName;
 			intentFromCapture.putExtra(MediaStore.EXTRA_OUTPUT,
 					Uri.fromFile(new File(appDir, fileName)));

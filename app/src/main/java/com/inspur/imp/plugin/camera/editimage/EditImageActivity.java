@@ -72,7 +72,7 @@ public class EditImageActivity extends FragmentActivity {
 
 	private int parm_resolution = 1200;
 	private int parm_qualtity = 90;
-	private int parm_encodingType;
+	private int parm_encodingType = 0;
 	private String parm_context;
 	private String parm_uploadUrl;
 
@@ -188,7 +188,7 @@ public class EditImageActivity extends FragmentActivity {
 			file.mkdirs();
 		}
 
-		saveFilePath = saveFilePath + PhotoNameUtils.getFileName(getApplicationContext());
+		saveFilePath = saveFilePath + PhotoNameUtils.getFileName(getApplicationContext(),parm_encodingType);
 		loadImage(filePath);
 	}
 
