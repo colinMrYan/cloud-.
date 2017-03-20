@@ -569,7 +569,8 @@ public class NewsWebDetailActivity extends BaseActivity {
         shareBtn.setTextColor(ContextCompat.getColor(NewsWebDetailActivity.this,R.color.black));
         appReadModeLine.setBackgroundColor(ContextCompat.getColor(NewsWebDetailActivity.this,R.color.app_dialog_day_read_line_color));
         readModeText.setTextColor(ContextCompat.getColor(NewsWebDetailActivity.this,R.color.app_dialog_night_font_size_color));
-        dayOrNightModeText.setText(getString(R.string.news_read_mode));
+        readModeText.setText(getString(R.string.news_read_mode));
+        dayOrNightModeText.setText(getString(R.string.news_day_mode_text));
         dayOrNightModeText.setTextColor(ContextCompat.getColor(NewsWebDetailActivity.this,R.color.black));
         sunImg.setImageResource(R.drawable.app_news_mode_day_dark);
         moonImg.setImageResource(R.drawable.app_news_mode_dark);
