@@ -33,6 +33,7 @@ import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.util.ChatCreateUtils;
 import com.inspur.emmcloud.util.ChatCreateUtils.OnCreateDirectChannelListener;
 import com.inspur.emmcloud.util.DensityUtil;
+import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.PreferencesByUserUtils;
 import com.inspur.emmcloud.util.StateBarColor;
@@ -40,6 +41,7 @@ import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.ProgressWebView;
+import com.inspur.emmcloud.widget.SwitchView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -78,6 +80,10 @@ public class NewsWebDetailActivity extends BaseActivity {
     private int whiteFontColor;
     private TextView headText;
     private String pagerTitle = "";
+    private SwitchView nightModeSwitchBtn;
+    private GradientDrawable chooseFontBtnBackgroundDrawable;
+    private GradientDrawable unchooseFontBtnBackgroundDrawable;
+    private GradientDrawable lightChooseFontBtnBackgroundDrawable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,6 +100,15 @@ public class NewsWebDetailActivity extends BaseActivity {
      * 初始化Views
      */
     private void initViews() {
+        chooseFontBtnBackgroundDrawable = new GradientDrawable();
+        chooseFontBtnBackgroundDrawable.setCornerRadius(DensityUtil.dip2px(NewsWebDetailActivity.this, 5));
+        chooseFontBtnBackgroundDrawable.setColor(0xff4CA8E6);
+        unchooseFontBtnBackgroundDrawable = new GradientDrawable();
+        unchooseFontBtnBackgroundDrawable.setCornerRadius(DensityUtil.dip2px(NewsWebDetailActivity.this,5));
+        unchooseFontBtnBackgroundDrawable.setColor(darkModeBtnColor);
+        lightChooseFontBtnBackgroundDrawable = new GradientDrawable();
+        lightChooseFontBtnBackgroundDrawable.setCornerRadius(DensityUtil.dip2px(NewsWebDetailActivity.this,5));
+        lightChooseFontBtnBackgroundDrawable.setColor(lightModeBtnColor);
         loadingDlg = new LoadingDialog(NewsWebDetailActivity.this);
         relativeLayout = (RelativeLayout) findViewById(R.id.header_layout);
         headText = (TextView)findViewById(R.id.header_text);
@@ -190,11 +205,14 @@ public class NewsWebDetailActivity extends BaseActivity {
      * 初始化数据
      */
     private void initData() {
+        //夜间模式黑底
         darkModeBtnColor = ContextCompat.getColor(NewsWebDetailActivity.this,R.color.app_dialog_night_background_btn);
+//        darkModeBtnColor = 0xff4CA8E6;
         lightModeBtnColor = ContextCompat.getColor(NewsWebDetailActivity.this,R.color.app_dialog_day_background_btn);
         lightModeFontColor = ContextCompat.getColor(NewsWebDetailActivity.this,R.color.app_dialog_day_font_color);
         blackFontColor = ContextCompat.getColor(NewsWebDetailActivity.this,R.color.black);
         whiteFontColor = ContextCompat.getColor(NewsWebDetailActivity.this,R.color.white);
+//        whiteFontColor = 0xff4CA8E6;
         Intent intent = getIntent();
         if (intent.hasExtra("url")) {
             url = intent.getStringExtra("url");
@@ -252,9 +270,10 @@ public class NewsWebDetailActivity extends BaseActivity {
     }
 
     /**
-     * 初始化Dialog的字体大小
+     * Dialog字体按钮控制
      */
     private void initDialogFontSize() {
+        LogUtils.YfcDebug("执行字体初始化"+textSize);
         String model = PreferencesByUserUtils.getString(NewsWebDetailActivity.this, "app_news_webview_model", "");
         switch (textSize) {
             case MyAppWebConfig.SMALLESET:
@@ -297,6 +316,32 @@ public class NewsWebDetailActivity extends BaseActivity {
         dayOrNightLine = view.findViewById(R.id.app_news_mode_line);
         fontLine = view.findViewById(R.id.app_news_font_line);
         fontTxt = (TextView) view.findViewById(R.id.app_news_font_text);
+        nightModeSwitchBtn = (SwitchView) view.findViewById(R.id.app_news_mode_switch);
+        nightModeSwitchBtn.setPaintColorOn(0xff4CA8E6);
+
+        String model = PreferencesByUserUtils.getString(NewsWebDetailActivity.this, "app_news_webview_model", lightMode);
+        if(model.equals(darkMode)){
+            nightModeSwitchBtn.setOpened(true);
+        }else{
+            nightModeSwitchBtn.setOpened(false);
+        }
+        nightModeSwitchBtn.setOnStateChangedListener(new SwitchView.OnStateChangedListener() {
+            @Override
+            public void toggleToOn(View view) {
+                PreferencesByUserUtils.putString(NewsWebDetailActivity.this, "app_news_webview_model", darkMode);
+                changeDialogModelToNight();
+                changeWebViewModel(darkMode);
+                nightModeSwitchBtn.toggleSwitch(true);
+            }
+
+            @Override
+            public void toggleToOff(View view) {
+                PreferencesByUserUtils.putString(NewsWebDetailActivity.this, "app_news_webview_model", lightMode);
+                chagneDialogModelToDay();
+                changeWebViewModel(lightMode);
+                nightModeSwitchBtn.toggleSwitch(false);
+            }
+        });
     }
 
     /**
@@ -388,7 +433,12 @@ public class NewsWebDetailActivity extends BaseActivity {
      * 选择正常字体
      */
     private void chooseNormalFont(String model) {
+
         if(model.equals(darkMode)){
+            normalBtn.setBackground(chooseFontBtnBackgroundDrawable);
+            middleBtn.setBackground(unchooseFontBtnBackgroundDrawable);
+            bigBtn.setBackground(unchooseFontBtnBackgroundDrawable);
+            biggestBtn.setBackground(unchooseFontBtnBackgroundDrawable);
             normalBtn.setTextColor(whiteFontColor);
         }else{
             normalBtn.setTextColor(lightModeFontColor);
@@ -403,6 +453,10 @@ public class NewsWebDetailActivity extends BaseActivity {
      */
     private void chooseMiddleFont(String model) {
         if(model.equals(darkMode)){
+            middleBtn.setBackground(chooseFontBtnBackgroundDrawable);
+            normalBtn.setBackground(unchooseFontBtnBackgroundDrawable);
+            bigBtn.setBackground(unchooseFontBtnBackgroundDrawable);
+            biggestBtn.setBackground(unchooseFontBtnBackgroundDrawable);
             middleBtn.setTextColor(whiteFontColor);
         }else{
             middleBtn.setTextColor(lightModeFontColor);
@@ -417,12 +471,20 @@ public class NewsWebDetailActivity extends BaseActivity {
      */
     private void chooseBigFont(String model) {
         if(model.equals(darkMode)){
+            LogUtils.YfcDebug("初始化按钮背景色");
+            bigBtn.setBackground(chooseFontBtnBackgroundDrawable);
+            normalBtn.setBackground(unchooseFontBtnBackgroundDrawable);
+            middleBtn.setBackground(unchooseFontBtnBackgroundDrawable);
+            biggestBtn.setBackground(unchooseFontBtnBackgroundDrawable);
             bigBtn.setTextColor(whiteFontColor);
         }else{
             bigBtn.setTextColor(lightModeFontColor);
         }
+
         normalBtn.setTextColor(blackFontColor);
+
         middleBtn.setTextColor(blackFontColor);
+
         biggestBtn.setTextColor(blackFontColor);
     }
 
@@ -431,12 +493,19 @@ public class NewsWebDetailActivity extends BaseActivity {
      */
     private void chooseBiggestFont(String model) {
         if(model.equals(darkMode)){
+            biggestBtn.setBackground(chooseFontBtnBackgroundDrawable);
+            normalBtn.setBackground(unchooseFontBtnBackgroundDrawable);
+            middleBtn.setBackground(unchooseFontBtnBackgroundDrawable);
+            bigBtn.setBackground(unchooseFontBtnBackgroundDrawable);
             biggestBtn.setTextColor(whiteFontColor);
         }else{
             biggestBtn.setTextColor(lightModeFontColor);
         }
+
         normalBtn.setTextColor(blackFontColor);
+
         middleBtn.setTextColor(blackFontColor);
+
         bigBtn.setTextColor(blackFontColor);
     }
 
@@ -474,13 +543,15 @@ public class NewsWebDetailActivity extends BaseActivity {
         setDayBtn(1);
         changeFontSizeBtn();
         shareBtn.setBackground(drawableBtn);
+//        drawable.setColor(0xff4CA8E6);
         normalBtn.setBackground(drawableBtn);
         middleBtn.setBackground(drawableBtn);
         bigBtn.setBackground(drawableBtn);
         biggestBtn.setBackground(drawableBtn);
+        initDialogFontSize();
         dayOrNightLine.setBackgroundColor(ContextCompat.getColor(NewsWebDetailActivity.this,R.color.app_dialog_night_line_color));
         fontLine.setBackgroundColor(ContextCompat.getColor(NewsWebDetailActivity.this,R.color.app_dialog_night_line_color));
-        fontTxt.setTextColor(whiteFontColor);
+//        fontTxt.setTextColor(whiteFontColor);
     }
 
     /**
@@ -505,7 +576,7 @@ public class NewsWebDetailActivity extends BaseActivity {
         biggestBtn.setBackground(drawableDayBtn);
         dayOrNightLine.setBackgroundColor(ContextCompat.getColor(NewsWebDetailActivity.this,R.color.app_dialog_day_line_color));
         fontLine.setBackgroundColor(ContextCompat.getColor(NewsWebDetailActivity.this,R.color.app_dialog_day_line_color));
-        fontTxt.setTextColor(lightModeFontColor);
+//        fontTxt.setTextColor(lightModeFontColor);
     }
 
     /**
@@ -541,11 +612,11 @@ public class NewsWebDetailActivity extends BaseActivity {
         if(dayOrNight == 1){
             dayIcon = res.getDrawable(R.drawable.app_news_night_day);
             nightIcon = res.getDrawable(R.drawable.app_news_night_night);
-            shareIcon = res.getDrawable(R.drawable.app_news_night_share);
+            shareIcon = res.getDrawable(R.drawable.app_news_share_night);
         }else {
             dayIcon = res.getDrawable(R.drawable.app_news_day_day);
             nightIcon = res.getDrawable(R.drawable.app_news_day_night);
-            shareIcon = res.getDrawable(R.drawable.app_news_share);
+            shareIcon = res.getDrawable(R.drawable.app_news_share_day);
         }
         dayIcon.setBounds(0, 0, dayIcon.getMinimumWidth(), dayIcon.getMinimumHeight());
         dayBtn.setCompoundDrawables(dayIcon, null, null, null); //设置左图标

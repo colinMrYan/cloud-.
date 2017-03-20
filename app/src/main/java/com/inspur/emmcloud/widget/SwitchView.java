@@ -250,7 +250,7 @@ public class SwitchView extends View {
 		paint.setStyle(Style.STROKE);
 		paint.setStrokeWidth(bStrokeWidth * 0.5f);
 
-		paint.setColor(isOn ? 0xff4ada60 : 0xffbfbfbf);
+		paint.setColor(isOn ? getPaintColorOn() : 0xffbfbfbf);
 		canvas.drawPath(bPath, paint);
 
 		canvas.restore();

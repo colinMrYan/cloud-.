@@ -8,8 +8,11 @@
 package com.inspur.emmcloud.widget;
 
 import android.app.Activity;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.ResolveInfo;
 import android.content.res.TypedArray;
 import android.graphics.Rect;
 import android.net.Uri;
@@ -57,6 +60,7 @@ import com.inspur.imp.plugin.camera.imagepicker.ui.ImageGridActivity;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 
@@ -298,6 +302,7 @@ public class ECMChatInputMenu extends LinearLayout {
 					break;
 				case R.drawable.icon_select_take_photo:
 					openCamera();
+//					launchCamera();
 					break;
 				case R.drawable.icon_select_file:
 					openFileSystem();
@@ -353,6 +358,74 @@ public class ECMChatInputMenu extends LinearLayout {
 //		imagePicker.setOutPutX(1000); // 保存文件的宽度。单位像素
 //		imagePicker.setOutPutY(1000); // 保存文件的高度。单位像素
 	}
+
+
+	//启动相机
+	private void launchCamera()
+	{
+		try{
+			//获取相机包名
+			Intent infoIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+			ResolveInfo res = context.getPackageManager().
+					resolveActivity(infoIntent, 0);
+			if (res != null)
+			{
+				String packageName=res.activityInfo.packageName;
+				if(packageName.equals("android"))
+				{
+					infoIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE_SECURE);
+					res = context.getPackageManager().
+							resolveActivity(infoIntent, 0);
+					if (res != null)
+						packageName=res.activityInfo.packageName;
+				}
+				//启动相机
+				startApplicationByPackageName(packageName);
+			}
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+
+	}
+
+	//通过包名启动应用
+	private void startApplicationByPackageName(String packName)
+	{
+		PackageInfo packageInfo=null;
+		try{
+			packageInfo=context.getPackageManager().getPackageInfo(packName, 0);
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		if(null==packageInfo){
+			return;
+		}
+		Intent resolveIntent=new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+		resolveIntent.addCategory(Intent.CATEGORY_LAUNCHER);
+		resolveIntent.setPackage(packageInfo.packageName);
+		List<ResolveInfo> resolveInfoList =context.getPackageManager().queryIntentActivities(resolveIntent, 0);
+		if(null==resolveInfoList){
+			return;
+		}
+		Iterator<ResolveInfo> iter=resolveInfoList.iterator();
+		while(iter.hasNext()){
+			ResolveInfo resolveInfo=(ResolveInfo) iter.next();
+			if(null==resolveInfo){
+				return;
+			}
+			String packageName=resolveInfo.activityInfo.packageName;
+			String className=resolveInfo.activityInfo.name;
+			Intent intent=new Intent(Intent.ACTION_MAIN);
+			intent.addCategory(Intent.CATEGORY_LAUNCHER);
+			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			ComponentName cn=new ComponentName(packageName, className);
+			intent.setComponent(cn);
+			((Activity) context).startActivityForResult(intent,
+					CAMERA_RESULT);
+		}//while
+	}//method
 
 	
 	/**
