@@ -159,5 +159,4 @@ dependencies {
     compile files('src/libs/jpush-android_v3.0.1.jar')
     compile files('src/libs/jcore-android_v1.1.0.jar')
     compile files('src/libs/mdm.jar')
-    compile 'com.google.android.gms:play-services-appindexing:8.4.0'
 }
