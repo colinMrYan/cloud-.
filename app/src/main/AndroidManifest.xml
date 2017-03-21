@@ -162,6 +162,7 @@
             android:name=".ui.app.AppImgDisPlayActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"></activity>
+
         <activity
             android:name=".ui.chat.ChannelActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
@@ -253,13 +254,7 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Holo.Light.NoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-                <data
-                    android:scheme="https" />
-            </intent-filter>
+
         </activity>
         <activity
             android:name=".ui.find.ScanResultActivity"

@@ -48,11 +48,13 @@
     <color name="app_dialog_day_background_btn">#268E8E8E</color>
     <color name="app_dialog_day_font_color">#FF999999</color>
     <color name="app_dialog_day_line_color">#FFD6D6D6</color>
+    <color name="app_dialog_day_read_line_color">#FFEEEBEA</color>
     <!--新闻夜间模式配色-->
     <color name="app_dialog_night_background_layout">#FF5E6875</color>
     <color name="app_dialog_night_background_btn">#FF3B4451</color>
     <color name="app_dialog_night_font_color">#FF999999</color>
     <color name="app_dialog_night_line_color">#FF161E29</color>
+    <color name="app_dialog_night_font_size_color">#FF1D2128</color>
 
     <!-- 聊天界面背景色 -->
     <color name="channel_background_color">#F4F4F4</color>

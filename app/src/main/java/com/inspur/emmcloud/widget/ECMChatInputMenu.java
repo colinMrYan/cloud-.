@@ -113,6 +113,9 @@ public class ECMChatInputMenu extends LinearLayout {
 		// TODO Auto-generated method stub
 		this.context = context;
 		layoutInflater = LayoutInflater.from(context);
+		layoutInflater.inflate(R.layout.ecm_widget_chat_input_menu, this);
+		inputEdit = (ChatInputEdit) findViewById(R.id.input_edit);
+		inputEdit.setIsOpen(true);
 		TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ECMChatInputMenu);
 		String layoutType = a.getString(R.styleable.ECMChatInputMenu_layoutType);
 		if (layoutType != null && layoutType.equals("img_comment")) {
@@ -122,7 +125,7 @@ public class ECMChatInputMenu extends LinearLayout {
 		}
 
 		a.recycle();
-		rootLayout = (LinearLayout) findViewById(R.id.root_layout);
+		rootLayout = (LinearLayout)findViewById(R.id.root_layout);
 		inputEdit = (ChatInputEdit) findViewById(R.id.input_edit);
 		addImg = (ImageView) findViewById(R.id.add_img);
 		addMenuLayout = (RelativeLayout) findViewById(R.id.add_menu_layout);
@@ -304,17 +307,17 @@ public class ECMChatInputMenu extends LinearLayout {
 									int position, long id) {
 				int clickItem = imgList.get(position);
 				switch (clickItem) {
-					case R.drawable.icon_select_album:
-						openGallery();
-						break;
-					case R.drawable.icon_select_take_photo:
-						openCamera();
-						break;
-					case R.drawable.icon_select_file:
-						openFileSystem();
-						break;
-					default:
-						break;
+				case R.drawable.icon_select_album:
+					openGallery();
+					break;
+				case R.drawable.icon_select_take_photo:
+					openCamera();
+					break;
+				case R.drawable.icon_select_file:
+					openFileSystem();
+					break;
+				default:
+					break;
 				}
 
 			}
@@ -402,9 +405,7 @@ public class ECMChatInputMenu extends LinearLayout {
 		void onSendMsg(String content, List<String> mentionsUidList,
 					   List<String> mentionsUserNameList);
 
-	}
-
-	;
+	};
 
 	public void setMentionData(Intent data) {
 		String result = data.getStringExtra("searchResult");
@@ -500,7 +501,7 @@ public class ECMChatInputMenu extends LinearLayout {
 			boolean isContentBlank = StringUtils.isBlank(inputContent);
 			sendMsgBtn.setEnabled(!isContentBlank);
 			sendMsgBtn.setBackgroundResource(isContentBlank ? R.drawable.bg_chat_input_send_btn_disable : R.drawable.bg_chat_input_send_btn_enable);
-			LogUtils.jasonDebug("isChannelGroup="+isChannelGroup);
+			LogUtils.jasonDebug("isChannelGroup=" + isChannelGroup);
 			if (isChannelGroup) {
 				int inputContentLength = inputContent.length();
 				if (!isContentBlank
