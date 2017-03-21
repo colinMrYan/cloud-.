@@ -14,23 +14,16 @@ import android.view.WindowManager;
 import android.webkit.CookieManager;
 import android.webkit.ValueCallback;
 import android.webkit.WebSettings;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.MyApplication;
-import com.inspur.emmcloud.api.APIInterfaceInstance;
-import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
-import com.inspur.emmcloud.bean.AppRedirectResult;
 import com.inspur.emmcloud.util.AppUtils;
-import com.inspur.emmcloud.util.LogUtils;
-import com.inspur.emmcloud.util.NetUtils;
-import com.inspur.emmcloud.util.URLRequestParamsUtils;
 import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.imp.engine.webview.ImpWebChromeClient;
 import com.inspur.imp.engine.webview.ImpWebView;
+import com.inspur.imp.engine.webview.ImpWebViewClient;
 import com.inspur.imp.plugin.camera.PublicWay;
 import com.inspur.imp.plugin.file.FileService;
 
@@ -79,7 +72,7 @@ public class ImpActivity extends ImpBaseActivity {
 		}
 		if (getIntent().hasExtra("appName")) {
 			initWebViewGoBackOrClose();
-			((RelativeLayout) findViewById(Res.getWidgetID("header_layout")))
+			( findViewById(Res.getWidgetID("header_layout")))
 					.setVisibility(View.VISIBLE);
 			((TextView) findViewById(Res.getWidgetID("header_text")))
 					.setText(getIntent().getExtras().getString("appName"));
@@ -265,44 +258,7 @@ public class ImpActivity extends ImpBaseActivity {
 		}
 	}
 
-	class ImpWebViewClient extends  WebViewClient{
-		@Override
-		public boolean shouldOverrideUrlLoading(WebView view, String url) {
-			handleReDirectURL(url);
-			return super.shouldOverrideUrlLoading(view, url);
-		}
-	}
 
-	/**
-	 * 处理重定向的URL
-	 * @param url
-     */
-	private void handleReDirectURL(String url) {
-		if(url.contains("https://id.inspur.com/oauth2.0/authorize")){
-			String params = URLRequestParamsUtils.TruncateUrlPage(url);
-			MyAppAPIService appAPIService = new MyAppAPIService(ImpActivity.this);
-			appAPIService.setAPIInterface(new WebService());
-			if(NetUtils.isNetworkConnected(ImpActivity.this)){
-				appAPIService.getAuthCode(params);
-			}
-		}
 
-	}
-
-	class WebService extends APIInterfaceInstance{
-		@Override
-		public void returnGetAppAuthCodeResultSuccess(AppRedirectResult appRedirectResult) {
-			if(NetUtils.isNetworkConnected(ImpActivity.this)){
-				webView.loadUrl(appRedirectResult.getRedirect_uri());
-				LogUtils.YfcDebug("访问的Uri："+appRedirectResult.getRedirect_uri());
-			}
-			super.returnGetAppAuthCodeResultSuccess(appRedirectResult);
-		}
-
-		@Override
-		public void returnGetAppAuthCodeResultFail(String error) {
-			super.returnGetAppAuthCodeResultFail(error);
-		}
-	}
 
 }
