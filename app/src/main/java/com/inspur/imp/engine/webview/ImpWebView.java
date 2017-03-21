@@ -18,7 +18,6 @@ import android.webkit.WebView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
-
 import com.inspur.imp.api.JsInterface;
 import com.inspur.imp.api.Res;
 import com.inspur.imp.api.iLog;
@@ -151,7 +150,7 @@ public class ImpWebView extends WebView {
 		super.loadUrl(url);
 		Runtime.getRuntime().gc();
 	}
-	
+
 	/*
 	 * 测量webview高度和宽度
 	 */
