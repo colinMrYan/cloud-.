@@ -253,6 +253,7 @@
     <string name="long_img">Long</string>
     <string name="friend_list">Friend List</string>
     <string name="join_discuss">Join the discussion</string>
+    <string name="add_new_comment">Add new comments</string>
 
     <!-- 会议卡片 -->
     <string name="meeting_has_confirmed">Confirmed</string>

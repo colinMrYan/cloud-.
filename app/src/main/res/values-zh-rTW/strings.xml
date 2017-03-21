@@ -253,6 +253,7 @@
     <string name="long_img">長圖</string>
     <string name="friend_list">好友列表</string>
     <string name="join_discuss">加入討論吧</string>
+    <string name="add_new_comment">添加新評論</string>
 
     <!-- 會議卡片 -->
     <string name="meeting_has_confirmed">已確認</string>
