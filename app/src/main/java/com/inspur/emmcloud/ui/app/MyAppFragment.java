@@ -54,6 +54,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
+
 /**
  * classes : com.inspur.emmcloud.ui.app.MyAppFragment Create at 2016年12月13日
  * 上午11:10:20
@@ -246,9 +247,7 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
 						App app = appGroupItemList.get(position);
 						UriUtils.openApp(getActivity(), app);
 						if(getNeedCommonlyUseApp()){
-							if(!app.getAppName().equals("挪车")){
 								saveOrChangeCommonlyUseApp(app, appAdapterList);
-							}
 						}
 					}
 				}
@@ -566,8 +565,6 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
 			}
 			List<AppGroupBean> appGroupList = handleAppList(getAppGroupResult
 					.getAppGroupBeanList());
-			addWhoseCar(appGroupList);
-
 			appListAdapter = new AppListAdapter(appGroupList);
 			appListView.setAdapter(appListAdapter);
 			appListAdapter.notifyDataSetChanged();
@@ -584,25 +581,9 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
 		}
 	}
 
-	/**
-	 * 添加WhoseCar
-	 * @param appGroupList
-     */
-	private void addWhoseCar(List<AppGroupBean> appGroupList) {
-		AppGroupBean appGroupBean = new AppGroupBean();
-		appGroupBean.setCategoryID("1111111");
-		appGroupBean.setCategoryName("挪车");
-		App app = new App();
-		app.setCategoryID("1111111");
-		app.setAppIcon("https://emm.inspur.com/img/app_ico/4lcgjyfglrzsh_esg");
-		app.setAppID("whosecar");
-		app.setAppName("挪车");
-		app.setAppType(5);
-		List<App> appList = new ArrayList<App>();
-		appList.add(app);
-		appGroupBean.setAppItemList(appList);
-		appGroupList.add(appGroupBean);
-	}
+
+
+
 
 	/**
 	 * 获取到网络数据后对排序和显示进行处理
@@ -652,8 +633,9 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
 					AppCommonlyUse appCommonlyUse = new AppCommonlyUse();
 					appCommonlyUse.setAppID(app.getAppID());
 					int index = appCommonlyUseList.indexOf(appCommonlyUse);
+					int allreadHas = myCommonlyUseAppList.indexOf(app);
 					int appCommonlyUseListSize = appCommonlyUseList.size();
-					if (index != -1) {
+					if (index != -1 && allreadHas == -1) {
 						AppCommonlyUse appCommonlyUseTemp = appCommonlyUseList.get(index);
 //						double weight = 0.6*appCommonlyUseTemp.getClickCount()+(0.4*20*(1-((double)index)/(double)appCommonlyUseListSize));
 						app.setWeight(appCommonlyUseTemp.getWeight());
