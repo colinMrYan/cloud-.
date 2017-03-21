@@ -12,6 +12,7 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.Msg;
 import com.inspur.emmcloud.util.DensityUtil;
 import com.inspur.emmcloud.util.JSONUtils;
+import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.MsgCacheUtil;
 import com.inspur.emmcloud.util.UriUtils;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -91,6 +92,8 @@ public class DisplayResImageMsg {
 		imageView.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
+				LogUtils.jasonDebug("msg.getSendStatus()="+msg.getSendStatus());
+				LogUtils.jasonDebug("msg.getcid()="+msg.getCid());
 				if (msg.getSendStatus() != 1) {
 					return;
 				}

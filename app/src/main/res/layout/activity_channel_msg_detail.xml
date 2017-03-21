@@ -65,101 +65,18 @@
             android:paddingLeft="8dp"
             android:paddingRight="8dp"
             android:paddingTop="8dp"
-            android:scrollbars="@null"
+            android:scrollbars="none"
             android:stretchMode="columnWidth"
             android:verticalSpacing="3dp" />
 
         <include layout="@layout/pull_load_more" />
     </com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout>
-    
 
-    <LinearLayout
-        android:id="@+id/post_comment_layout"
+    <com.inspur.emmcloud.widget.ECMChatInputMenu
+        android:id="@+id/chat_input_menu"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone"
-        android:background="#FAFAFA"
-        android:orientation="vertical" >
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingBottom="5dp" >
-
-            <View
-                android:id="@+id/line"
-                android:layout_width="match_parent"
-                android:layout_height="1px"
-                android:layout_marginBottom="5dp"
-                android:background="@color/grey_line_color" />
-
-            <ImageView
-                android:visibility="gone"
-                android:id="@+id/add_comment_img"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_alignBottom="@+id/comment_edit"
-                android:layout_below="@id/line"
-                android:clickable="true"
-                android:onClick="onClick"
-                android:padding="6dp"
-                android:scaleType="centerInside"
-                android:src="@drawable/selector_add_comment_btn" />
-
-            <EditText
-                android:id="@+id/comment_edit"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/line"
-                android:layout_marginLeft="10dp"
-                android:layout_toLeftOf="@+id/post_comment_btn"
-                android:layout_toRightOf="@id/add_comment_img"
-                android:background="@drawable/bg_corner"
-                android:maxLines="5"
-                android:paddingBottom="7dp"
-                android:paddingLeft="7dp"
-                android:paddingRight="7dp"
-                android:paddingTop="7dp"
-                android:hint="@string/comment_text"
-                android:textSize="@dimen/content_normal_textsize" >
-            </EditText>
-
-            <Button
-                android:id="@+id/post_comment_btn"
-                android:layout_width="wrap_content"
-                android:layout_height="40dp"
-                android:layout_alignBottom="@id/comment_edit"
-                android:layout_alignParentRight="true"
-                android:layout_below="@id/line"
-                android:background="@null"
-                android:gravity="center"
-                android:onClick="onClick"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                android:text="@string/send"
-                android:textColor="@drawable/seclector_search_btn_text"
-                android:textSize="@dimen/content_title_textsize" >
-            </Button>
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/add_item_layout"
-            android:layout_width="match_parent"
-            android:layout_height="274dp"
-            android:paddingLeft="20dp"
-            android:paddingRight="20dp"
-            android:paddingTop="25dp"
-            android:visibility="gone" >
-
-            <GridView
-                android:id="@+id/add_item_grid"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:listSelector="@android:color/transparent"
-                android:numColumns="4"
-                android:paddingTop="8dp"
-                android:stretchMode="columnWidth" />
-        </RelativeLayout>
-    </LinearLayout>
+        >
+    </com.inspur.emmcloud.widget.ECMChatInputMenu>
 
 </LinearLayout>

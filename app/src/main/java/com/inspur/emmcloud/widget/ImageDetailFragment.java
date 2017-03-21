@@ -1,104 +1,60 @@
 package com.inspur.emmcloud.widget;
 
-import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.text.SpannableString;
-import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.api.APIInterfaceInstance;
-import com.inspur.emmcloud.api.apiservice.ChatAPIService;
-import com.inspur.emmcloud.bean.Comment;
-import com.inspur.emmcloud.bean.GetMsgCommentResult;
-import com.inspur.emmcloud.ui.chat.GroupAlbumActivity;
-import com.inspur.emmcloud.util.ChannelCacheUtils;
+import com.inspur.emmcloud.ui.chat.ImagePagerActivity;
 import com.inspur.emmcloud.util.DensityUtil;
 import com.inspur.emmcloud.util.FileUtils;
-import com.inspur.emmcloud.util.HandleMsgTextUtils;
 import com.inspur.emmcloud.util.InputMethodUtils;
-import com.inspur.emmcloud.util.IntentUtils;
-import com.inspur.emmcloud.util.JSONUtils;
-import com.inspur.emmcloud.util.MentionsAndUrlShowUtils;
-import com.inspur.emmcloud.util.NetUtils;
-import com.inspur.emmcloud.util.PreferencesUtils;
-import com.inspur.emmcloud.util.StringUtils;
-import com.inspur.emmcloud.util.TimeUtils;
+import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.ToastUtils;
-import com.inspur.emmcloud.util.TransHtmlToTextUtils;
-import com.inspur.emmcloud.util.URLMatcher;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 
 import uk.co.senab.photoview.PhotoViewAttacher;
 import uk.co.senab.photoview.PhotoViewAttacher.OnPhotoTapListener;
 
-import static android.app.Activity.RESULT_CANCELED;
 
 /**
  * 单张图片显示Fragment
  */
 public class ImageDetailFragment extends Fragment {
-	private static final int RESULT_MENTIONS = 5;
-	private String mImageUrl, mid, cid;
+	private String mImageUrl;
 	private SmoothImageView mImageView;
 	private ProgressBar progressBar;
 	private PhotoViewAttacher mAttacher;
-	private ECMChatInputMenu ecmChatInputMenu;
-	private MaxHightListView commentListView;
-	private List<Comment> commentList = new ArrayList<>();
-	private LinearLayout imgCommentLayout;
+
 	private int locationW, locationH, locationX, locationY;
-	private boolean isTargetPosition;//是否是第一次显示的那个图片
+	private boolean isNeedTransformOut;
+	private boolean isNeedTransformIn;
 
-	private ArrayList<String> userNameList = new ArrayList<String>();
-	private ArrayList<String> uidList = new ArrayList<String>();
-	private String channelType;
-	private ChatAPIService apiService;
-	private ImageView enterChannelImgsBtn;
-	private RelativeLayout headerLayout;
-
-	public static ImageDetailFragment newInstance(String imageUrl, String mid, String cid, int w, int h, int x, int y, boolean isTargetPosition) {
+	public static ImageDetailFragment newInstance(String imageUrl,int w, int h, int x, int y,boolean isNeedTransformIn,boolean isNeedTransformOut) {
 		final ImageDetailFragment f = new ImageDetailFragment();
 
 		final Bundle args = new Bundle();
 		args.putString("url", imageUrl);
-		args.putString("mid", mid);
-		args.putString("cid", cid);
 		args.putInt("w", w);
 		args.putInt("h", h);
 		args.putInt("x", x);
 		args.putInt("y", y);
-		args.putBoolean("isTargetPosition", isTargetPosition);
+		args.putBoolean("isNeedTransformOut", isNeedTransformOut);
+		args.putBoolean("isNeedTransformIn", isNeedTransformIn);
 		f.setArguments(args);
 		return f;
 	}
@@ -109,10 +65,6 @@ public class ImageDetailFragment extends Fragment {
 		super.onCreate(savedInstanceState);
 		mImageUrl = getArguments() != null ? getArguments().getString("url")
 				: null;
-		mid = getArguments() != null ? getArguments().getString("mid")
-				: null;
-		cid = getArguments() != null ? getArguments().getString("cid")
-				: null;
 		locationH = getArguments() != null ? getArguments().getInt("h")
 				: null;
 		locationW = getArguments() != null ? getArguments().getInt("w")
@@ -121,79 +73,46 @@ public class ImageDetailFragment extends Fragment {
 				: null;
 		locationY = getArguments() != null ? getArguments().getInt("y")
 				: null;
-		isTargetPosition = getArguments() != null ? getArguments().getBoolean("isTargetPosition")
+		isNeedTransformOut = getArguments() != null ? getArguments().getBoolean("isNeedTransformOut")
 				: false;
-		if (!StringUtils.isBlank(mid)) {
-			channelType = ChannelCacheUtils.getChannelType(getContext(),
-					cid);
-			apiService = new ChatAPIService(getContext());
-			apiService.setAPIInterface(new WebService());
-			getImgComment(mid);
-		}
+		isNeedTransformIn = getArguments() != null ? getArguments().getBoolean("isNeedTransformIn")
+				: false;
 
 	}
+
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 							 Bundle savedInstanceState) {
-		final View v = inflater.inflate(R.layout.image_pager_detail_fragment,
+		final View v = inflater.inflate(R.layout.fragment_image_pager_detail,
 				container, false);
-		headerLayout = (RelativeLayout) v.findViewById(R.id.header_layout);
-		((RelativeLayout)v.findViewById(R.id.back_layout)).setOnClickListener(clickListener);
-		((ImageView)v.findViewById(R.id.save_img_btn)).setOnClickListener(clickListener);
-		enterChannelImgsBtn = (ImageView) v.findViewById(R.id.enter_channel_imgs_btn);
-		enterChannelImgsBtn.setOnClickListener(clickListener);
-		commentListView = (MaxHightListView) v.findViewById(R.id.comment_list);
-		commentListView.setListViewHeight(DensityUtil.dip2px(getContext(), 200));
-		commentListView.setAdapter(adapter);
-		ecmChatInputMenu = (ECMChatInputMenu) v.findViewById(R.id.chat_input_menu);
-		initEcmChatInputMenu();
-		imgCommentLayout = (LinearLayout) v.findViewById(R.id.img_comment_layout);
-		if (!StringUtils.isBlank(mid)) {
-			imgCommentLayout.setVisibility(View.VISIBLE);
-			enterChannelImgsBtn.setVisibility(View.VISIBLE);
-			if (channelType != null && channelType.equals("GROUP")) {
-				ecmChatInputMenu.setCanMention(true, cid);
-			}
-		}
+
 		mImageView = (SmoothImageView) v.findViewById(R.id.image);
 		mImageView.setOriginalInfo(locationW, locationH, locationX, locationY);
-		if (isTargetPosition) {
+		if (isNeedTransformIn) {
 			mImageView.transformIn();
 		}
 		mImageView.setOnTransformListener(new SmoothImageView.TransformListener() {
 			@Override
 			public void onTransformComplete(int mode) {
 				if (mode == 2) {
+					LogUtils.jasonDebug("finshi----------------------------");
 					getActivity().finish();
 					getActivity().overridePendingTransition(0, 0);
 				}
 			}
 		});
 		mAttacher = new PhotoViewAttacher(mImageView);
-
 		mAttacher.setOnPhotoTapListener(new OnPhotoTapListener() {
 
 			@Override
 			public void onPhotoTap(View arg0, float arg1, float arg2) {
-				InputMethodUtils.hide(getActivity());
-				if (mid != null) {
-					if (imgCommentLayout.getVisibility() == View.VISIBLE) {
-						imgCommentLayout.setVisibility(View.GONE);
-						headerLayout.setVisibility(View.GONE);
-					} else {
-						imgCommentLayout.setVisibility(View.VISIBLE);
-						headerLayout.setVisibility(View.VISIBLE);
-					}
-				} else {
-					closeImg();
-				}
-
+				((ImagePagerActivity)getActivity()).onPhotoTap();
 			}
 
 			@Override
 			public void onOutsidePhotoTap() {
-
+				((ImagePagerActivity)getActivity()).onPhotoTap();
 			}
 		});
 		mAttacher.setOnSingleFlingListener(new PhotoViewAttacher.OnSingleFlingListener() {
@@ -210,96 +129,16 @@ public class ImageDetailFragment extends Fragment {
 	}
 
 
-	/**
-	 * 初始化评论输入框
-	 */
-	private void initEcmChatInputMenu(){
-		ecmChatInputMenu.showAddBtn(false);
-		ecmChatInputMenu.setFragmentContext(ImageDetailFragment.this);
-		ecmChatInputMenu.setChatInputMenuListener(new ECMChatInputMenu.ChatInputMenuListener() {
-			@Override
-			public void onSetContentViewHeight(boolean isLock) {
-
-			}
-
-			@Override
-			public void onSendMsg(String content, List<String> mentionsUidList, List<String> mentionsUserNameList) {
-				sendComment(content,mentionsUidList,mentionsUserNameList);
-				InputMethodUtils.hide(getActivity());
-			}
-		});
-	}
 
 
-	private void sendComment(String content, List<String> mentionsUidList, List<String> mentionsUserNameList){
-		if (NetUtils.isNetworkConnected(getActivity())) {
-			String commentConbineSendText = getConbineCommentSendText(content);
-			apiService.sendMsg(cid, commentConbineSendText, "txt_comment",
-					mid, "");
-			addLocalComment(commentConbineSendText);
-		}
-	}
 
-	private void addLocalComment(String commentConbineSendText){
-		Comment newComment = combineComment(commentConbineSendText);
-		commentList.add(0,newComment);
-		adapter.notifyDataSetChanged();
-		// 滚动到页面最后
-	}
-
-	/**
-	 * 拼接评论发送的内容
-	 * @param content
-	 * @return
-	 */
-	public String getConbineCommentSendText(String content) {
-		String source = "";
-		ArrayList<String> urlList = URLMatcher.getUrls(content);
-		JSONObject richTextObj = new JSONObject();
-		source = HandleMsgTextUtils.handleMentionAndURL(content, userNameList,
-				uidList);
-		JSONArray mentionArray = JSONUtils.toJSONArray(uidList);
-		JSONArray urlArray = JSONUtils.toJSONArray(urlList);
-		try {
-			richTextObj.put("source", source);
-			richTextObj.put("mentions", mentionArray);
-			richTextObj.put("urlList", urlArray);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return richTextObj.toString();
-	}
-
-	/**
-	 * 拼装评论消息
-	 * @param content
-	 * @return
-	 */
-	private Comment combineComment(String content) {
-		String uid = ((MyApplication) getActivity().getApplicationContext()).getUid();
-		String title = PreferencesUtils.getString(
-				getActivity(), "userRealName");
-		String timeStamp = TimeUtils.getCurrentUTCTimeString();
-		JSONObject jsonComment = new JSONObject();
-		JSONObject jsonFrom = new JSONObject();
-		try {
-			jsonFrom.put("title", title);
-			jsonFrom.put("uid", uid);
-			jsonComment.put("timestamp", timeStamp);
-			jsonComment.put("body", content);
-			jsonComment.put("from", jsonFrom);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return new Comment(jsonComment);
-	}
 
 	/**
 	 * 关闭图片显示
 	 */
-	private void closeImg() {
+	public void closeImg() {
 		InputMethodUtils.hide(getActivity());
-		if (isTargetPosition && locationW != 0) {
+		if (isNeedTransformOut && locationW != 0) {
 			mImageView.transformOut();
 		} else {
 			getActivity().finish();
@@ -307,31 +146,14 @@ public class ImageDetailFragment extends Fragment {
 		}
 	}
 
-	private OnClickListener clickListener = new OnClickListener() {
-		@Override
-		public void onClick(View v) {
-			switch (v.getId()){
-				case R.id.back_layout:
-					closeImg();
-					break;
-				case R.id.save_img_btn:
-					mImageView.buildDrawingCache(true);
-					mImageView.buildDrawingCache();
-					Bitmap bitmap = mImageView.getDrawingCache();
-					saveBitmapFile(bitmap);
-					mImageView.setDrawingCacheEnabled(false);
-					break;
-				case R.id.enter_channel_imgs_btn:
-					Bundle bundle = new Bundle();
-					bundle.putString("cid", cid);
-					IntentUtils.startActivity(getActivity(),
-							GroupAlbumActivity.class, bundle);
-					break;
-				default:
-					break;
-			}
-		}
-	};
+	public void downloadImg(){
+		mImageView.buildDrawingCache(true);
+		mImageView.buildDrawingCache();
+		Bitmap bitmap = mImageView.getDrawingCache();
+		saveBitmapFile(bitmap);
+		mImageView.setDrawingCacheEnabled(false);
+	}
+
 
 	/**
 	 * 保存图片
@@ -417,84 +239,10 @@ public class ImageDetailFragment extends Fragment {
 				});
 	}
 
-	private BaseAdapter adapter = new BaseAdapter() {
-		@Override
-		public int getCount() {
-			return commentList.size();
-		}
-
-		@Override
-		public Object getItem(int position) {
-			return null;
-		}
-
-		@Override
-		public long getItemId(int position) {
-			return 0;
-		}
-
-		@Override
-		public View getView(int position, View convertView, ViewGroup parent) {
-			convertView = LayoutInflater.from(getContext()).inflate(R.layout.image_pager_img_comment_item_view, null);
-			TextView commentContentText = (TextView) convertView.findViewById(R.id.comment_content_text);
-			TextView commenterText = (TextView) convertView.findViewById(R.id.commenter_text);
-			TextView commentTimeText = (TextView) convertView.findViewById(R.id.comment_time_text);
-			commentContentText.setMovementMethod(LinkMovementMethod.getInstance());
-			Comment comment = commentList.get(position);
-			String mentionsString = comment.getMentions();
-			String urlsString = comment.getUrls();
-			String[] mentions = mentionsString.replace("[", "").replace("]", "").split(",");
-			String[] urls = urlsString.replace("[", "").replace("]", "").split(",");
-			List<String> mentionList = Arrays.asList(mentions);
-			List<String> urlList = Arrays.asList(urls);
-			SpannableString spannableString = MentionsAndUrlShowUtils.handleMentioin(comment.getSource(), mentionList, urlList);
-			commentContentText.setText(spannableString);
-			TransHtmlToTextUtils.stripUnderlines(commentContentText,
-					Color.parseColor("#0f7bca"));
-			commenterText.setText(comment.getTitle());
-			String time = TimeUtils.getDisplayTime(getContext(),
-					comment.getTimestamp());
-			commentTimeText.setText(time);
-			return convertView;
-		}
-	};
 
 
-	@Override
-	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
-		if (resultCode != RESULT_CANCELED && requestCode == RESULT_MENTIONS) {
-			ecmChatInputMenu.setMentionData(data);
-		}
-	}
 
 
-	/**
-	 * 获取消息的评论
-	 *
-	 * @param mid
-	 */
-	private void getImgComment(String mid) {
-		if (NetUtils.isNetworkConnected(getContext())) {
-			apiService.getComment(mid);
-		}
-	}
-
-	;
-
-	private class WebService extends APIInterfaceInstance {
-		@Override
-		public void returnMsgCommentSuccess(GetMsgCommentResult getMsgCommentResult) {
-			commentList = getMsgCommentResult.getCommentList();
-			Collections.reverse(commentList);
-			adapter.notifyDataSetChanged();
 
 
-		}
-
-		@Override
-		public void returnMsgCommentFail(String error) {
-			super.returnMsgCommentFail(error);
-		}
-	}
 }

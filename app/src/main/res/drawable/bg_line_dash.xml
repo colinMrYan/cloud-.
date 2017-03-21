@@ -5,7 +5,7 @@
         android:dashGap="1.2dp"
         android:dashWidth="2dp"
         android:width="1dp"
-        android:color="#80ffffff" />
+        android:color="#80979797" />
     <!-- 虚线的高度 -->
     <size android:height="1dp" />
 </shape>
