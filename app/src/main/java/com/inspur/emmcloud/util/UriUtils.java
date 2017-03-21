@@ -87,7 +87,7 @@ public class UriUtils {
                 "/emmcloud/" + AppUtils.getVersion(context));
         String webLanguageCookie = getLanguageCookie(context);
         bundle.putString("cookie", webLanguageCookie);
-        bundle.putString("appName", context.getString(R.string.sweep));
+        bundle.putString("appName", header);
         IntentUtils.startActivity(context, ImpActivity.class, bundle);
     }
 

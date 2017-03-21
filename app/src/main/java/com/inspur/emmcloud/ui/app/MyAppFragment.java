@@ -246,7 +246,9 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
 						App app = appGroupItemList.get(position);
 						UriUtils.openApp(getActivity(), app);
 						if(getNeedCommonlyUseApp()){
-							saveOrChangeCommonlyUseApp(app, appAdapterList);
+							if(!app.getAppName().equals("挪车")){
+								saveOrChangeCommonlyUseApp(app, appAdapterList);
+							}
 						}
 					}
 				}
