@@ -1,5 +1,6 @@
 package com.inspur.emmcloud.ui.chat;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -9,6 +10,8 @@ import android.support.v4.util.ArrayMap;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -20,12 +23,11 @@ import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.bean.Comment;
 import com.inspur.emmcloud.bean.GetMsgCommentCountResult;
 import com.inspur.emmcloud.bean.Msg;
-import com.inspur.emmcloud.ui.contact.UserInfoActivity;
 import com.inspur.emmcloud.util.ChannelCacheUtils;
 import com.inspur.emmcloud.util.HandleMsgTextUtils;
-import com.inspur.emmcloud.util.InputMethodUtils;
 import com.inspur.emmcloud.util.IntentUtils;
 import com.inspur.emmcloud.util.JSONUtils;
+import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.StateBarColor;
@@ -60,7 +62,6 @@ public class ImagePagerActivity extends BaseFragmentActivity {
 	public static final String PHOTO_SELECT_H_TAG = "PHOTO_SELECT_H_TAG";
 
 	private ECMChatInputMenu ecmChatInputMenu;
-	private RelativeLayout imgCommentLayout;
 	private HackyViewPager mPager;
 	private int pagerPosition;
 	private int pageStartPosition = 0;
@@ -71,10 +72,10 @@ public class ImagePagerActivity extends BaseFragmentActivity {
 	private ImagePagerAdapter mAdapter;
 	private RelativeLayout functionLayout;
 	private TextView commentCountText;
-	private Map<String,Integer>commentCountMap = new ArrayMap<>();
+	private Map<String, Integer> commentCountMap = new ArrayMap<>();
 	private Boolean isNeedTransformIn;
-	private boolean isHasTransformIn =false;
-
+	private boolean isHasTransformIn = false;
+	private Dialog commentInputDlg;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -99,31 +100,12 @@ public class ImagePagerActivity extends BaseFragmentActivity {
 	private void init() {
 		initIntentData();
 		functionLayout = (RelativeLayout) findViewById(R.id.function_layout);
-		imgCommentLayout = (RelativeLayout) findViewById(R.id.img_comment_layout);
 		if (getIntent().hasExtra(EXTRA_CURRENT_IMAGE_MSG)) {
-			ecmChatInputMenu = (ECMChatInputMenu) findViewById(R.id.chat_input_menu);
-			initEcmChatInputMenu();
 			(findViewById(R.id.comment_count_text)).setVisibility(View.VISIBLE);
 			(findViewById(R.id.enter_channel_imgs_img)).setVisibility(View.VISIBLE);
 			(findViewById(R.id.write_comment_layout)).setVisibility(View.VISIBLE);
 			cid = imgTypeMsgList.get(0).getCid();
-			String channelType = ChannelCacheUtils.getChannelType(getApplicationContext(), cid);
-			if (channelType != null && channelType.equals("GROUP")) {
-				ecmChatInputMenu.setIsChannelGroup(true, cid);
-			}
 			commentCountText = (TextView) findViewById(R.id.comment_count_text);
-			final SoftKeyboardStateHelper softKeyboardStateHelper = new SoftKeyboardStateHelper(findViewById(R.id.main_layout));
-			softKeyboardStateHelper.addSoftKeyboardStateListener(new SoftKeyboardStateHelper.SoftKeyboardStateListener() {
-				@Override
-				public void onSoftKeyboardOpened(int keyboardHeightInPx) {
-
-				}
-
-				@Override
-				public void onSoftKeyboardClosed() {
-					imgCommentLayout.setVisibility(View.GONE);
-				}
-			});
 		}
 
 		mPager = (HackyViewPager) findViewById(R.id.pager);
@@ -132,28 +114,12 @@ public class ImagePagerActivity extends BaseFragmentActivity {
 		initIndicatorView();
 		pagerPosition = pageStartPosition;
 		mPager.setCurrentItem(pagerPosition);
+		//解决当只有一张图片无法显示评论数的问题
+		if (getIntent().hasExtra(EXTRA_CURRENT_IMAGE_MSG) && imgTypeMsgList.size() == 1) {
+			setCommentCount();
+		}
 	}
 
-
-	/**
-	 * 初始化评论输入框
-	 */
-	private void initEcmChatInputMenu() {
-		ecmChatInputMenu.showAddBtn(false);
-		ecmChatInputMenu.setChatInputMenuListener(new ECMChatInputMenu.ChatInputMenuListener() {
-			@Override
-			public void onSetContentViewHeight(boolean isLock) {
-
-			}
-
-			@Override
-			public void onSendMsg(String content, List<String> mentionsUidList, List<String> mentionsUserNameList) {
-				sendComment(content, mentionsUidList, mentionsUserNameList);
-				ecmChatInputMenu.setVisibility(View.GONE);
-				ecmChatInputMenu.hideSoftInput();
-			}
-		});
-	}
 
 	@Override
 	public void onBackPressed() {
@@ -178,23 +144,94 @@ public class ImagePagerActivity extends BaseFragmentActivity {
 			case R.id.comment_count_text:
 				bundle = new Bundle();
 				bundle.putString("mid", imgTypeMsgList.get(pagerPosition).getMid());
+				bundle.putString("cid", imgTypeMsgList.get(pagerPosition).getCid());
 				IntentUtils.startActivity(ImagePagerActivity.this,
 						ChannelMsgDetailActivity.class, bundle);
 
 				break;
 			case R.id.write_comment_layout:
-				imgCommentLayout.setVisibility(View.VISIBLE);
-				ecmChatInputMenu.showSoftInput();
-				break;
-			case R.id.img_comment_top_layout:
-				InputMethodUtils.hide(ImagePagerActivity.this);
-				imgCommentLayout.setVisibility(View.GONE);
+				showCommentInputDlg();
+
 				break;
 			default:
 				break;
 		}
 	}
 
+	/**
+	 * 显示评论输入框
+	 */
+	private void showCommentInputDlg() {
+		View view = getLayoutInflater().inflate(R.layout.dialog_chat_img_input, null);
+		commentInputDlg = new Dialog(this, R.style.transparentFrameWindowStyle);
+		commentInputDlg.setContentView(view, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+				ViewGroup.LayoutParams.WRAP_CONTENT));
+		initEcmChatInputMenu();
+		Window window = commentInputDlg.getWindow();
+		// 设置显示动画
+		window.setWindowAnimations(R.style.main_menu_animstyle);
+		WindowManager.LayoutParams wl = window.getAttributes();
+		wl.x = 0;
+		wl.y = getWindowManager().getDefaultDisplay().getHeight();
+		window.getDecorView().setPadding(0, 0, 0, 0);
+		// 以下这两句是为了保证按钮可以水平满屏
+		wl.width = WindowManager.LayoutParams.MATCH_PARENT;
+		wl.height = WindowManager.LayoutParams.WRAP_CONTENT;
+		// 设置Dialog的透明度
+		wl.dimAmount = 0.1f;
+		commentInputDlg.getWindow().setAttributes(wl);
+		commentInputDlg.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+		// 设置显示位置
+		commentInputDlg.onWindowAttributesChanged(wl);
+		// 设置点击外围解散
+		commentInputDlg.setCanceledOnTouchOutside(true);
+		commentInputDlg.show();
+		ecmChatInputMenu.showSoftInput();
+	}
+
+	/**
+	 * 初始化评论输入框
+	 */
+	private void initEcmChatInputMenu() {
+		ecmChatInputMenu = (ECMChatInputMenu) commentInputDlg.findViewById(R.id.chat_input_menu);
+		ecmChatInputMenu.setWindowListener(false);
+		String channelType = ChannelCacheUtils.getChannelType(getApplicationContext(), cid);
+		if (channelType != null && channelType.equals("GROUP")) {
+			ecmChatInputMenu.setIsChannelGroup(true, cid);
+		}else {
+			ecmChatInputMenu.setIsChannelGroup(false, cid);
+		}
+		ecmChatInputMenu.setChatInputMenuListener(new ECMChatInputMenu.ChatInputMenuListener() {
+
+			@Override
+			public void onSetContentViewHeight(boolean isLock) {
+				// TODO Auto-generated method stub
+			}
+
+			@Override
+			public void onSendMsg(String content, List<String> mentionsUidList,
+								  List<String> mentionsUserNameList) {
+				sendComment(content, mentionsUidList, mentionsUserNameList);
+				if (commentInputDlg != null && commentInputDlg.isShowing()) {
+					commentInputDlg.dismiss();
+				}
+				ecmChatInputMenu.hideSoftInput();
+				// TODO Auto-generated method stub
+			}
+		});
+		final SoftKeyboardStateHelper softKeyboardStateHelper = new SoftKeyboardStateHelper(findViewById(R.id.main_layout));
+		softKeyboardStateHelper.addSoftKeyboardStateListener(new SoftKeyboardStateHelper.SoftKeyboardStateListener() {
+			@Override
+			public void onSoftKeyboardOpened(int keyboardHeightInPx) {
+				ecmChatInputMenu.showAddItemLayout();
+			}
+
+			@Override
+			public void onSoftKeyboardClosed() {
+				ecmChatInputMenu.hideAddItemLayout(false);
+			}
+		});
+	}
 
 	/**
 	 * 初始化Indicator
@@ -214,6 +251,7 @@ public class ImagePagerActivity extends BaseFragmentActivity {
 
 			@Override
 			public void onPageSelected(int position) {
+				LogUtils.jasonDebug("onPageSelected=========="+position);
 				CharSequence text = getString(R.string.viewpager_indicator, position + 1, mPager.getAdapter().getCount());
 				indicator.setText(text);
 				pagerPosition = position;
@@ -232,17 +270,16 @@ public class ImagePagerActivity extends BaseFragmentActivity {
 	/**
 	 * 设置评论数目
 	 */
-	private void setCommentCount(){
+	private void setCommentCount() {
 		String mid = imgTypeMsgList.get(pagerPosition).getMid();
-		if (commentCountMap.containsKey(mid)){
+		if (commentCountMap.containsKey(mid)) {
 			int count = commentCountMap.get(mid);
-			commentCountText.setText(""+count);
-		}else {
+			commentCountText.setText("" + count);
+		} else {
 			commentCountText.setText("0");
 			getImgCommentCount(mid);
 		}
 	}
-
 
 
 	/**
@@ -324,7 +361,6 @@ public class ImagePagerActivity extends BaseFragmentActivity {
 	public void onPhotoTap() {
 		if (functionLayout.getVisibility() == View.VISIBLE) {
 			functionLayout.setVisibility(View.GONE);
-			imgCommentLayout.setVisibility(View.GONE);
 		} else {
 			functionLayout.setVisibility(View.VISIBLE);
 		}
@@ -357,13 +393,13 @@ public class ImagePagerActivity extends BaseFragmentActivity {
 		public Fragment getItem(int position) {
 			String url = urlList.get(position);
 			boolean isNeedTransformOut = (position == pageStartPosition);
-			if (isNeedTransformOut && isHasTransformIn == false){
+			if (isNeedTransformOut && isHasTransformIn == false) {
 				isNeedTransformIn = true;
 				isHasTransformIn = true;
-			}else {
+			} else {
 				isNeedTransformIn = false;
 			}
-			return ImageDetailFragment.newInstance(url, locationW, locationH, locationX, locationY,isNeedTransformIn ,isNeedTransformOut);
+			return ImageDetailFragment.newInstance(url, locationW, locationH, locationX, locationY, isNeedTransformIn, isNeedTransformOut);
 		}
 
 		@Override
@@ -379,24 +415,9 @@ public class ImagePagerActivity extends BaseFragmentActivity {
 	}
 
 
-
-	/**
-	 * 打开个人信息
-	 *
-	 * @param uid
-	 */
-	private void openUserInfo(String uid) {
-		Bundle bundle = new Bundle();
-		bundle.putString("uid", uid);
-		IntentUtils.startActivity(ImagePagerActivity.this,
-				UserInfoActivity.class, bundle);
-	}
-
-
-
-
 	private void getImgCommentCount(String mid) {
 		if (NetUtils.isNetworkConnected(getApplicationContext())) {
+			LogUtils.jasonDebug("getImgCommentCount");
 			ChatAPIService apiService = new ChatAPIService(getApplicationContext());
 			apiService.setAPIInterface(new WebService());
 			apiService.getMsgCommentCount(mid);
@@ -411,25 +432,30 @@ public class ImagePagerActivity extends BaseFragmentActivity {
 			String commentConbineSendText = getConbineCommentSendText(content, mentionsUidList, mentionsUserNameList);
 			apiService.sendMsg(cid, commentConbineSendText, "txt_comment",
 					imgTypeMsgList.get(pagerPosition).getMid(), "");
-			int commentCount = commentCountMap.get(imgTypeMsgList.get(pagerPosition).getMid());
-			commentCountMap.put(imgTypeMsgList.get(pagerPosition).getMid(),(commentCount+1));
-			commentCountText.setText((commentCount+1)+"");
+			Integer commentCount = commentCountMap.get(imgTypeMsgList.get(pagerPosition).getMid());
+			if (commentCount == null) {
+				commentCount = 0;
+			}
+			commentCountMap.put(imgTypeMsgList.get(pagerPosition).getMid(), (commentCount + 1));
+			commentCountText.setText((commentCount + 1) + "");
 		}
 	}
 
 	private class WebService extends APIInterfaceInstance {
 		@Override
 		public void returnMsgCommentCountSuccess(GetMsgCommentCountResult getMsgCommentCountResult, String mid) {
+			LogUtils.jasonDebug("returnMsgCommentCountSuccess");
 			int count = getMsgCommentCountResult.getCount();
-			commentCountMap.put(mid,count);
+			commentCountMap.put(mid, count);
 			String currentMid = imgTypeMsgList.get(pagerPosition).getMid();
-			if (mid.equals(currentMid)){
-				commentCountText.setText(count+"");
+			if (mid.equals(currentMid)) {
+				commentCountText.setText(count + "");
 			}
 		}
 
 		@Override
 		public void returnMsgCommentCountFail(String error) {
+			LogUtils.jasonDebug("returnMsgCommentCountFail");
 			super.returnMsgCommentCountFail(error);
 		}
 	}

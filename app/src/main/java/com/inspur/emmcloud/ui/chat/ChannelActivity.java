@@ -362,12 +362,14 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
                 if (msgType.equals("res_file")) {
                     mid = msg.getMid();
                     bundle.putString("mid", mid);
+                    bundle.putString("cid", msg.getCid());
                     IntentUtils.startActivity(ChannelActivity.this,
                             ChannelMsgDetailActivity.class, bundle);
                 } else if (msgType.equals("comment")
                         || msgType.equals("text_comment")) {
                     mid = msg.getCommentMid();
                     bundle.putString("mid", mid);
+                    bundle.putString("cid", msg.getCid());
                     IntentUtils.startActivity(ChannelActivity.this,
                             ChannelMsgDetailActivity.class, bundle);
                 } else if (msgType.equals("res_link")) {
@@ -652,7 +654,8 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
                     public void onClick(View v) {
                         // TODO Auto-generated method stub
                         Bundle bundle = new Bundle();
-                        bundle.putSerializable("mid", msg.getCommentMid());
+                        bundle.putString("cid", msg.getCid());
+                        bundle.putString("mid", msg.getCommentMid());
                         IntentUtils.startActivity(ChannelActivity.this,
                                 ChannelMsgDetailActivity.class, bundle);
                     }
@@ -672,7 +675,8 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
                     public void onClick(View v) {
                         // TODO Auto-generated method stub
                         Bundle bundle = new Bundle();
-                        bundle.putSerializable("mid", msg.getMid());
+                        bundle.putString("mid", msg.getMid());
+                        bundle.putString("cid", msg.getCid());
                         IntentUtils.startActivity(ChannelActivity.this,
                                 ChannelMsgDetailActivity.class, bundle);
                     }
