@@ -85,7 +85,8 @@
                         android:drawableLeft="@drawable/ic_chat_img_comment_edit_logo"
                         android:background="@drawable/bg_chat_img_comment_input"
                         android:gravity="center_vertical"
-                        android:paddingLeft="15dp"
+                        android:drawablePadding="6dp"
+                        android:paddingLeft="9dp"
                         android:text="加入讨论吧"
                         android:textColor="#e0ffffff"
                         android:textSize="16sp"/>
