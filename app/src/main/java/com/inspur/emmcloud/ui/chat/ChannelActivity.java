@@ -244,7 +244,7 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
         apiService.setAPIInterface(new WebService());
         chatInputMenu = (ECMChatInputMenu) findViewById(R.id.chat_input_menu);
         if (channelType.equals("GROUP")) {
-            chatInputMenu.setCanMention(true, channelId);
+            chatInputMenu.setIsChannelGroup(true, channelId);
         }
         chatInputMenu.setChatInputMenuListener(new ChatInputMenuListener() {
 
@@ -362,12 +362,14 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
                 if (msgType.equals("res_file")) {
                     mid = msg.getMid();
                     bundle.putString("mid", mid);
+                    bundle.putString("cid", msg.getCid());
                     IntentUtils.startActivity(ChannelActivity.this,
                             ChannelMsgDetailActivity.class, bundle);
                 } else if (msgType.equals("comment")
                         || msgType.equals("text_comment")) {
                     mid = msg.getCommentMid();
                     bundle.putString("mid", mid);
+                    bundle.putString("cid", msg.getCid());
                     IntentUtils.startActivity(ChannelActivity.this,
                             ChannelMsgDetailActivity.class, bundle);
                 } else if (msgType.equals("res_link")) {
@@ -515,8 +517,8 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
         } else { // 如果list中没有这真是的消息，就要替换成真实消息
             int fakeMsgIndex = msgList.indexOf(fakeMsg);
             if (fakeMsgIndex != -1) {
-                msgList.get(fakeMsgIndex).setMid(realMsg.getMid());
-                msgList.get(fakeMsgIndex).setSendStatus(1);
+                msgList.remove(fakeMsgIndex);
+                msgList.add(fakeMsgIndex,realMsg);
             } else {
                 msgList.add(realMsg);
             }
@@ -652,7 +654,8 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
                     public void onClick(View v) {
                         // TODO Auto-generated method stub
                         Bundle bundle = new Bundle();
-                        bundle.putSerializable("mid", msg.getCommentMid());
+                        bundle.putString("cid", msg.getCid());
+                        bundle.putString("mid", msg.getCommentMid());
                         IntentUtils.startActivity(ChannelActivity.this,
                                 ChannelMsgDetailActivity.class, bundle);
                     }
@@ -672,7 +675,8 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
                     public void onClick(View v) {
                         // TODO Auto-generated method stub
                         Bundle bundle = new Bundle();
-                        bundle.putSerializable("mid", msg.getMid());
+                        bundle.putString("mid", msg.getMid());
+                        bundle.putString("cid", msg.getCid());
                         IntentUtils.startActivity(ChannelActivity.this,
                                 ChannelMsgDetailActivity.class, bundle);
                     }

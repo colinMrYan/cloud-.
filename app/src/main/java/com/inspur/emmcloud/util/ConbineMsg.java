@@ -50,7 +50,7 @@ public class ConbineMsg {
 		}else {
 			msgSend.setBody(body);
 		}
-		
+
 		return msgSend;
 	}
 }

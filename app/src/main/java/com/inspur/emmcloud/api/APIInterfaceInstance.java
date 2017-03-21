@@ -36,6 +36,7 @@ import com.inspur.emmcloud.bean.GetMeetingListResult;
 import com.inspur.emmcloud.bean.GetMeetingReplyResult;
 import com.inspur.emmcloud.bean.GetMeetingRoomsResult;
 import com.inspur.emmcloud.bean.GetMeetingsResult;
+import com.inspur.emmcloud.bean.GetMsgCommentCountResult;
 import com.inspur.emmcloud.bean.GetMsgCommentResult;
 import com.inspur.emmcloud.bean.GetMsgResult;
 import com.inspur.emmcloud.bean.GetMyAppResult;
@@ -130,6 +131,16 @@ public class APIInterfaceInstance implements APIInterface{
 	public void returnSignoutFail(String error) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public void returnMsgCommentCountSuccess(GetMsgCommentCountResult getMsgCommentCountResult,String mid) {
+
+	}
+
+	@Override
+	public void returnMsgCommentCountFail(String error) {
+
 	}
 
 	@Override
@@ -271,7 +282,7 @@ public class APIInterfaceInstance implements APIInterface{
 	}
 
 	@Override
-	public void returnMsgCommentSuccess(GetMsgCommentResult getMsgCommentResult) {
+	public void returnMsgCommentSuccess(GetMsgCommentResult getMsgCommentResult,String mid) {
 		// TODO Auto-generated method stub
 		
 	}

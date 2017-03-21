@@ -1,6 +1,7 @@
 package com.inspur.imp.plugin.camera.imagepicker.ui;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -48,8 +49,8 @@ public class ImageGridActivity extends ImageBaseActivity implements
 	public static final int REQUEST_PERMISSION_CAMERA = 0x02;
 	protected static final int CUT_IMG_SUCCESS = 1;
 	
-	private int parm_resolution = 1080;
-	private int parm_qualtity = 100;
+	private int parm_resolution = 1200;
+	private int parm_qualtity = 90;
 	private int parm_encodingType = 0;
 	private String parm_context;
 	private String parm_uploadUrl;
@@ -291,7 +292,8 @@ public class ImageGridActivity extends ImageBaseActivity implements
 					String path = imageItem.path;
 //					Bitmap bitmap = BitmapUtils.getImageCompress(path, parm_resolution, parm_qualtity);
 //					BitmapUtils.saveBitmap(bitmap, newPath);
-					new Compressor.Builder(ImageGridActivity.this).setMaxHeight(parm_resolution).setMaxWidth(parm_resolution).setQuality(parm_qualtity).setDestinationDirectoryPath(MyAppConfig.LOCAL_IMG_CREATE_PATH)
+					Bitmap.CompressFormat format = (parm_encodingType == 0)? Bitmap.CompressFormat.JPEG:Bitmap.CompressFormat.PNG;
+					new Compressor.Builder(ImageGridActivity.this).setMaxHeight(parm_resolution).setMaxWidth(parm_resolution).setQuality(parm_qualtity).setCompressFormat(format).setDestinationDirectoryPath(MyAppConfig.LOCAL_IMG_CREATE_PATH)
 							.setFileName(fileName).build().compressToFile(new File(path));
 					String newPath = MyAppConfig.LOCAL_IMG_CREATE_PATH+fileName;
 					imageItem.path = newPath;

@@ -433,7 +433,7 @@ public class EditImageActivity extends FragmentActivity {
 			@Override
 			public void run() {
 				// TODO Auto-generated method stub
-				BitmapUtils.saveBitmap(mainBitmap, saveFilePath, parm_qualtity);
+				BitmapUtils.saveBitmap(mainBitmap, saveFilePath, parm_qualtity,parm_encodingType);
 				currentFilePath = saveFilePath;
 				handle.sendEmptyMessage(CUT_IMG_SUCCESS);
 			}

@@ -214,6 +214,10 @@ public class Msg implements Serializable {
         this.avatar = avatar;
     }
 
+    public void setCid(String cid){
+        this.cid = cid;
+    }
+
     public void setCommentContent(String commentContent) {
         this.commentContent = commentContent;
     }

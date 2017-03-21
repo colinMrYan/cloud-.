@@ -9,14 +9,12 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
-import android.widget.ImageView;
 
 import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.ui.login.LoginActivity;
 import com.inspur.emmcloud.ui.login.ModifyUserFirstPsdActivity;
 import com.inspur.emmcloud.ui.mine.setting.GuideActivity;
 import com.inspur.emmcloud.util.AppUtils;
-import com.inspur.emmcloud.util.ImageDisplayUtils;
 import com.inspur.emmcloud.util.IntentUtils;
 import com.inspur.emmcloud.util.LanguageUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
@@ -49,9 +47,6 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
         super.onCreate(savedInstanceState);
         StateBarColor.changeStateBarColor(this);
         setContentView(R.layout.activity_main);
-        //为了解决在有些低配置手机打开应用时crash的问题
-        ImageView splashImg = (ImageView)findViewById(R.id.splash_image);
-        new ImageDisplayUtils(this).display(splashImg,"drawable://"+R.drawable.splash);
 		/* 解决了在sd卡中第一次安装应用，进入到主页并切换到后台再打开会重新启动应用的bug */
         if ((getIntent().getFlags() & Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT) != 0) {
             finish();
