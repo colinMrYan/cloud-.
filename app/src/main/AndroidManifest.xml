@@ -303,7 +303,7 @@
         <activity
             android:name=".ui.chat.ImagePagerActivity"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
-            android:windowSoftInputMode="stateHidden|adjustPan"
+            android:windowSoftInputMode="adjustPan"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.chat.MembersActivity"

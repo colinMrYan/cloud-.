@@ -9,6 +9,7 @@ import android.provider.MediaStore;
 import android.widget.Toast;
 
 import com.inspur.emmcloud.config.MyAppConfig;
+import com.inspur.emmcloud.util.DataCleanManager;
 import com.inspur.emmcloud.util.ImageDisplayUtils;
 import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.imp.api.Res;
@@ -53,9 +54,15 @@ public class PhotoService extends ImpPlugin {
 				successCb = paramsObject.getString("success");
 			if (!paramsObject.isNull("fail"))
 				failCb = paramsObject.getString("fail");
+
 			int picTotal = 6;
-			if (!paramsObject.isNull("picTotal"))
-				picTotal = paramsObject.getInt("picTotal");
+			if (!paramsObject.isNull("options")) {
+				JSONObject obj = paramsObject.getJSONObject("options");
+				if (obj.has("picTotal")) {
+					picTotal = obj.getInt(
+							"picTotal");
+				}
+			}
 			openGallery(picTotal);
 		} catch (Exception e) {
 			// TODO: handle exception
@@ -77,6 +84,7 @@ public class PhotoService extends ImpPlugin {
 	 * 初始化图片选择控件
 	 */
 	private void initImagePicker(int picTotal) {
+		LogUtils.jasonDebug("picTotal="+picTotal);
 		ImagePicker imagePicker = ImagePicker.getInstance();
 		imagePicker.setImageLoader(new ImageDisplayUtils()); // 设置图片加载器
 		imagePicker.setShowCamera(false); // 显示拍照按钮
@@ -205,7 +213,7 @@ public class PhotoService extends ImpPlugin {
 	 * 清除生成的图片cache
 	 */
 	private void clearImgCache(){
-	//	DataCleanManager.cleanCustomCache(MyAppConfig.LOCAL_IMG_CREATE_PATH);
+		DataCleanManager.cleanCustomCache(MyAppConfig.LOCAL_IMG_CREATE_PATH);
 	}
 
 	/**

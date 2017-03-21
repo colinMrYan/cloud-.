@@ -1,21 +1,14 @@
 package com.inspur.emmcloud.ui.chat;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.util.ArrayMap;
 import android.support.v4.view.ViewPager;
-import android.text.SpannableString;
-import android.text.method.LinkMovementMethod;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -26,33 +19,28 @@ import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.bean.Comment;
 import com.inspur.emmcloud.bean.GetMsgCommentCountResult;
-import com.inspur.emmcloud.bean.GetMsgCommentResult;
 import com.inspur.emmcloud.bean.Msg;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
 import com.inspur.emmcloud.util.ChannelCacheUtils;
 import com.inspur.emmcloud.util.HandleMsgTextUtils;
-import com.inspur.emmcloud.util.ImageDisplayUtils;
 import com.inspur.emmcloud.util.InputMethodUtils;
 import com.inspur.emmcloud.util.IntentUtils;
 import com.inspur.emmcloud.util.JSONUtils;
-import com.inspur.emmcloud.util.MentionsAndUrlShowUtils;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.StateBarColor;
 import com.inspur.emmcloud.util.TimeUtils;
-import com.inspur.emmcloud.util.TransHtmlToTextUtils;
 import com.inspur.emmcloud.util.URLMatcher;
 import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.emmcloud.widget.ECMChatInputMenu;
 import com.inspur.emmcloud.widget.HackyViewPager;
 import com.inspur.emmcloud.widget.ImageDetailFragment;
+import com.inspur.emmcloud.widget.SoftKeyboardStateHelper;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -72,7 +60,6 @@ public class ImagePagerActivity extends BaseFragmentActivity {
 	public static final String PHOTO_SELECT_H_TAG = "PHOTO_SELECT_H_TAG";
 
 	private ECMChatInputMenu ecmChatInputMenu;
-	private ListView commentListView;
 	private RelativeLayout imgCommentLayout;
 	private HackyViewPager mPager;
 	private int pagerPosition;
@@ -82,7 +69,6 @@ public class ImagePagerActivity extends BaseFragmentActivity {
 	private String cid;
 	private int locationX, locationY, locationW, locationH;
 	private ImagePagerAdapter mAdapter;
-	private List<Comment> commentList = new ArrayList<>();
 	private RelativeLayout functionLayout;
 	private TextView commentCountText;
 	private Map<String,Integer>commentCountMap = new ArrayMap<>();
@@ -117,16 +103,27 @@ public class ImagePagerActivity extends BaseFragmentActivity {
 		if (getIntent().hasExtra(EXTRA_CURRENT_IMAGE_MSG)) {
 			ecmChatInputMenu = (ECMChatInputMenu) findViewById(R.id.chat_input_menu);
 			initEcmChatInputMenu();
-			commentListView = (ListView) findViewById(R.id.comment_list);
-			commentListView.setAdapter(adapter);
 			(findViewById(R.id.comment_count_text)).setVisibility(View.VISIBLE);
 			(findViewById(R.id.enter_channel_imgs_img)).setVisibility(View.VISIBLE);
+			(findViewById(R.id.write_comment_layout)).setVisibility(View.VISIBLE);
 			cid = imgTypeMsgList.get(0).getCid();
 			String channelType = ChannelCacheUtils.getChannelType(getApplicationContext(), cid);
 			if (channelType != null && channelType.equals("GROUP")) {
 				ecmChatInputMenu.setIsChannelGroup(true, cid);
 			}
 			commentCountText = (TextView) findViewById(R.id.comment_count_text);
+			final SoftKeyboardStateHelper softKeyboardStateHelper = new SoftKeyboardStateHelper(findViewById(R.id.main_layout));
+			softKeyboardStateHelper.addSoftKeyboardStateListener(new SoftKeyboardStateHelper.SoftKeyboardStateListener() {
+				@Override
+				public void onSoftKeyboardOpened(int keyboardHeightInPx) {
+
+				}
+
+				@Override
+				public void onSoftKeyboardClosed() {
+					imgCommentLayout.setVisibility(View.GONE);
+				}
+			});
 		}
 
 		mPager = (HackyViewPager) findViewById(R.id.pager);
@@ -136,6 +133,7 @@ public class ImagePagerActivity extends BaseFragmentActivity {
 		pagerPosition = pageStartPosition;
 		mPager.setCurrentItem(pagerPosition);
 	}
+
 
 	/**
 	 * 初始化评论输入框
@@ -151,7 +149,8 @@ public class ImagePagerActivity extends BaseFragmentActivity {
 			@Override
 			public void onSendMsg(String content, List<String> mentionsUidList, List<String> mentionsUserNameList) {
 				sendComment(content, mentionsUidList, mentionsUserNameList);
-				InputMethodUtils.hide(ImagePagerActivity.this);
+				ecmChatInputMenu.setVisibility(View.GONE);
+				ecmChatInputMenu.hideSoftInput();
 			}
 		});
 	}
@@ -162,6 +161,7 @@ public class ImagePagerActivity extends BaseFragmentActivity {
 	}
 
 	public void onClick(View v) {
+		Bundle bundle = null;
 		switch (v.getId()) {
 			case R.id.close_img:
 				mAdapter.getCurrentFragment().closeImg();
@@ -170,16 +170,21 @@ public class ImagePagerActivity extends BaseFragmentActivity {
 				mAdapter.getCurrentFragment().downloadImg();
 				break;
 			case R.id.enter_channel_imgs_img:
-				Bundle bundle = new Bundle();
+				bundle = new Bundle();
 				bundle.putString("cid", cid);
 				IntentUtils.startActivity(ImagePagerActivity.this,
 						GroupAlbumActivity.class, bundle);
 				break;
 			case R.id.comment_count_text:
-				commentList.clear();
-				adapter.notifyDataSetChanged();
-				getImgComment(imgTypeMsgList.get(pagerPosition).getMid());
+				bundle = new Bundle();
+				bundle.putString("mid", imgTypeMsgList.get(pagerPosition).getMid());
+				IntentUtils.startActivity(ImagePagerActivity.this,
+						ChannelMsgDetailActivity.class, bundle);
+
+				break;
+			case R.id.write_comment_layout:
 				imgCommentLayout.setVisibility(View.VISIBLE);
+				ecmChatInputMenu.showSoftInput();
 				break;
 			case R.id.img_comment_top_layout:
 				InputMethodUtils.hide(ImagePagerActivity.this);
@@ -266,12 +271,6 @@ public class ImagePagerActivity extends BaseFragmentActivity {
 		locationH = getIntent().getIntExtra(PHOTO_SELECT_H_TAG, 0);
 	}
 
-	private void addLocalComment(String commentConbineSendText) {
-		Comment newComment = combineComment(commentConbineSendText);
-		commentList.add(0, newComment);
-		adapter.notifyDataSetChanged();
-		// 滚动到页面最后
-	}
 
 	/**
 	 * 拼接评论发送的内容
@@ -380,65 +379,6 @@ public class ImagePagerActivity extends BaseFragmentActivity {
 	}
 
 
-	private BaseAdapter adapter = new BaseAdapter() {
-		@Override
-		public int getCount() {
-			return commentList.size();
-		}
-
-		@Override
-		public Object getItem(int position) {
-			return null;
-		}
-
-		@Override
-		public long getItemId(int position) {
-			return 0;
-		}
-
-		@Override
-		public View getView(int position, View convertView, ViewGroup parent) {
-			convertView = LayoutInflater.from(ImagePagerActivity.this).inflate(R.layout.chat_img_msg_comment_item_view, null);
-			TextView userNameText = (TextView) convertView
-					.findViewById(R.id.name_text);
-			TextView sendTimeText = (TextView) convertView
-					.findViewById(R.id.commentdetail_time_text);
-			TextView contentText = (TextView) convertView
-					.findViewById(R.id.comment_text);
-			ImageView photoImg = (ImageView) convertView
-					.findViewById(R.id.msg_img);
-			final Comment comment = commentList.get(position);
-			userNameText.setText(comment.getTitle());
-			contentText.setMovementMethod(LinkMovementMethod.getInstance());
-			String source = comment.getSource();
-			String mentionsString = comment.getMentions();
-			String urlsString = comment.getUrls();
-			String[] mentions = mentionsString.replace("[", "").replace("]", "").split(",");
-			String[] urls = urlsString.replace("[", "").replace("]", "").split(",");
-			List<String> mentionList = Arrays.asList(mentions);
-			List<String> urlList = Arrays.asList(urls);
-			SpannableString spannableString = MentionsAndUrlShowUtils.handleMentioin(source, mentionList, urlList);
-			contentText.setText(spannableString);
-			TransHtmlToTextUtils.stripUnderlines(contentText,
-					Color.parseColor("#0f7bca"));
-
-			String time = TimeUtils.getDisplayTime(getApplicationContext(),
-					comment.getTimestamp());
-			sendTimeText.setText(time);
-
-			new ImageDisplayUtils(ImagePagerActivity.this,
-					R.drawable.icon_person_default).display(photoImg,
-					UriUtils.getChannelImgUri(comment.getUid()));
-			photoImg.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					String uid = comment.getUid();
-					openUserInfo(uid);
-				}
-			});
-			return convertView;
-		}
-	};
 
 	/**
 	 * 打开个人信息
@@ -463,18 +403,6 @@ public class ImagePagerActivity extends BaseFragmentActivity {
 		}
 	}
 
-	/**
-	 * 获取消息的评论
-	 *
-	 * @param mid
-	 */
-	private void getImgComment(String mid) {
-		if (NetUtils.isNetworkConnected(getApplicationContext())) {
-			ChatAPIService apiService = new ChatAPIService(getApplicationContext());
-			apiService.setAPIInterface(new WebService());
-			apiService.getComment(mid);
-		}
-	}
 
 	private void sendComment(String content, List<String> mentionsUidList, List<String> mentionsUserNameList) {
 		if (NetUtils.isNetworkConnected(getApplicationContext())) {
@@ -483,7 +411,6 @@ public class ImagePagerActivity extends BaseFragmentActivity {
 			String commentConbineSendText = getConbineCommentSendText(content, mentionsUidList, mentionsUserNameList);
 			apiService.sendMsg(cid, commentConbineSendText, "txt_comment",
 					imgTypeMsgList.get(pagerPosition).getMid(), "");
-			addLocalComment(commentConbineSendText);
 			int commentCount = commentCountMap.get(imgTypeMsgList.get(pagerPosition).getMid());
 			commentCountMap.put(imgTypeMsgList.get(pagerPosition).getMid(),(commentCount+1));
 			commentCountText.setText((commentCount+1)+"");
@@ -491,26 +418,6 @@ public class ImagePagerActivity extends BaseFragmentActivity {
 	}
 
 	private class WebService extends APIInterfaceInstance {
-		@Override
-		public void returnMsgCommentSuccess(GetMsgCommentResult getMsgCommentResult,String mid) {
-			commentCountMap.put(mid, getMsgCommentResult.getCommentList().size());
-			String currentMid = imgTypeMsgList.get(pagerPosition).getMid();
-			if (mid.equals(currentMid)){
-				commentList = getMsgCommentResult.getCommentList();
-				commentCountText.setText(commentList.size()+"");
-				Collections.reverse(commentList);
-				adapter.notifyDataSetChanged();
-			}
-
-
-
-		}
-
-		@Override
-		public void returnMsgCommentFail(String error) {
-			super.returnMsgCommentFail(error);
-		}
-
 		@Override
 		public void returnMsgCommentCountSuccess(GetMsgCommentCountResult getMsgCommentCountResult, String mid) {
 			int count = getMsgCommentCountResult.getCount();

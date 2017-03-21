@@ -30,6 +30,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -181,6 +182,10 @@ public class ECMChatInputMenu extends LinearLayout {
 
 	}
 
+	public EditText getEdit(){
+		return inputEdit;
+	}
+
 	/**
 	 * 处理mentions点击人，不让光标落在人名中
 	 */
@@ -236,7 +241,7 @@ public class ECMChatInputMenu extends LinearLayout {
 		addMenuLayout.setVisibility(View.VISIBLE);
 	}
 
-	private void showSoftInput() {
+	public void showSoftInput() {
 		inputEdit.requestFocus();
 		new Handler().post(new Runnable() {
 			@Override
