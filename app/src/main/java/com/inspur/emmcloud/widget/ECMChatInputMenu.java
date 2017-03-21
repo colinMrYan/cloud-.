@@ -113,9 +113,6 @@ public class ECMChatInputMenu extends LinearLayout {
 		// TODO Auto-generated method stub
 		this.context = context;
 		layoutInflater = LayoutInflater.from(context);
-		layoutInflater.inflate(R.layout.ecm_widget_chat_input_menu, this);
-		inputEdit = (ChatInputEdit) findViewById(R.id.input_edit);
-		inputEdit.setIsOpen(true);
 		TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ECMChatInputMenu);
 		String layoutType = a.getString(R.styleable.ECMChatInputMenu_layoutType);
 		if (layoutType != null && layoutType.equals("img_comment")) {
@@ -123,8 +120,9 @@ public class ECMChatInputMenu extends LinearLayout {
 		} else {
 			layoutInflater.inflate(R.layout.ecm_widget_chat_input_menu, this);
 		}
-
 		a.recycle();
+		inputEdit = (ChatInputEdit) findViewById(R.id.input_edit);
+		inputEdit.setIsOpen(true);
 		rootLayout = (LinearLayout)findViewById(R.id.root_layout);
 		inputEdit = (ChatInputEdit) findViewById(R.id.input_edit);
 		addImg = (ImageView) findViewById(R.id.add_img);
