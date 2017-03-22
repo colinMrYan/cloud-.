@@ -87,7 +87,7 @@
                         android:gravity="center_vertical"
                         android:drawablePadding="6dp"
                         android:paddingLeft="9dp"
-                        android:text="加入讨论吧"
+                        android:text="@string/join_discuss"
                         android:textColor="#e0ffffff"
                         android:textSize="16sp"/>
 
