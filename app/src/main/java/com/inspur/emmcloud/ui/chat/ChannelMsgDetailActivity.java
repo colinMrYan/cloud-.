@@ -37,6 +37,7 @@ import com.inspur.emmcloud.util.ImageDisplayUtils;
 import com.inspur.emmcloud.util.InputMethodUtils;
 import com.inspur.emmcloud.util.IntentUtils;
 import com.inspur.emmcloud.util.JSONUtils;
+import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.MentionsAndUrlShowUtils;
 import com.inspur.emmcloud.util.MsgCacheUtil;
 import com.inspur.emmcloud.util.NetUtils;
@@ -353,13 +354,26 @@ public class ChannelMsgDetailActivity extends BaseActivity implements
 	public void onClick(View v) {
 		switch (v.getId()) {
 			case R.id.back_layout:
-				InputMethodUtils.hide(ChannelMsgDetailActivity.this);
-				finish();
+				onBackPressed();
 				break;
 			default:
 				break;
 		}
 	}
+
+	@Override
+	public void onBackPressed() {
+		InputMethodUtils.hide(ChannelMsgDetailActivity.this);
+		//将最新的评论数返回给ImagePagerActivity
+		if (getIntent().hasExtra("from") && getIntent().getStringExtra("from").equals("imagePager")){
+			Intent intent = new Intent();
+			intent.putExtra("mid",msg.getMid());
+			intent.putExtra("commentCount",commentList.size());
+			setResult(RESULT_OK,intent);
+		}
+		finish();
+	}
+
 
 	/**
 	 * 发出评论
