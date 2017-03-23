@@ -86,6 +86,7 @@
                         android:background="@drawable/bg_chat_img_comment_input"
                         android:gravity="center_vertical"
                         android:drawablePadding="6dp"
+                        android:maxLines="1"
                         android:paddingLeft="9dp"
                         android:text="@string/join_discuss"
                         android:textColor="#e0ffffff"
