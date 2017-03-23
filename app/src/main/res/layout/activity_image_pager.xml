@@ -79,7 +79,7 @@
 
 
                     <TextView
-                        android:layout_width="188dp"
+                        android:layout_width="200dp"
                         android:layout_height="30dp"
                         android:layout_centerVertical="true"
                         android:drawableLeft="@drawable/ic_chat_img_comment_edit_logo"
