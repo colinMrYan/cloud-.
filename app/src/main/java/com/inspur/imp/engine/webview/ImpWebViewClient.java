@@ -26,8 +26,6 @@ import com.inspur.emmcloud.util.URLRequestParamsUtils;
 public class ImpWebViewClient extends WebViewClient {
 	private String urlparam = "";
 	private final String F_UEX_SCRIPT_SELF_FINISH = "javascript:if(window.init){window.init();}";
-	private String mCurrentUrl;
-	private ImpWebView impView;
 	private ImpWebView myWebView;
 	private String errolUrl = "file:///android_asset/error/error.html";
 
@@ -95,12 +93,17 @@ public class ImpWebViewClient extends WebViewClient {
 	@Override
 	public void onReceivedError(WebView view, int errorCode,
 			String description, String failingUrl) {
-		ImpWebView webview = (ImpWebView) view;
-		// 清理缓存
-		webview.clearCache(true);
-		webview.clearHistory();
+		final ImpWebView webview = (ImpWebView) view;
 		CookieManager.getInstance().removeSessionCookie();
-		 impView = webview;
+		//延迟一秒钟解决无法清除历史的问题
+		webview.postDelayed(new Runnable() {
+			@Override
+			public void run() {
+				// 清理缓存
+				webview.clearCache(true);
+				webview.clearHistory();
+			}
+		}, 1000);
 		 webview.loadUrl(errolUrl);
 	}
 
@@ -113,8 +116,8 @@ public class ImpWebViewClient extends WebViewClient {
 
 
 	/*
-		 * 对网页中超链接按钮的响应
-		 */
+			 * 对网页中超链接按钮的响应
+			 */
 	@Override
 	public boolean shouldOverrideUrlLoading(WebView view, String url) {
 //		LogUtils.jasonDebug("shouldOverrideUrlLoading-------------");

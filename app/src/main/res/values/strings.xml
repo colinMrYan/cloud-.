@@ -253,6 +253,8 @@
     <string name="administrators_of_channel">(管理员)</string>
     <string name="long_img">长图</string>
     <string name="friend_list">好友列表</string>
+    <string name="join_discuss">加入讨论吧</string>
+    <string name="add_new_comment">添加新评论</string>
 
 
     <!-- 会议卡片 -->
