@@ -56,6 +56,8 @@ public class PluginMgr {
 	 */
 	public static void execute(final String serviceName, final String action,
 			final String params) {
+		Log.d("jason", "serviceName="+serviceName);
+		Log.d("jason", "action="+action);
 		IPlugin plugin = null;
 		if (!entries.containsKey(serviceName)) {
 			plugin = createPlugin(serviceName);
