@@ -16,8 +16,8 @@
     <string name="mail_cannot_null">郵箱不能為空</string>
     <string name="remark_cannot_null">備註資訊不能為空</string>
     <string name="no_thanks">不，謝謝</string>
-    <string name="_mobile">的手機</string>
-    <string name="_pad">的平板</string>
+    <string name="_mobile">%1$s的手機</string>
+    <string name="_pad">%1$s的平板</string>
     <string name="mdm_sure">確定</string>
     <string name="mdm_cancel">取消</string>
     <string name="mdm_tips">提示</string>
