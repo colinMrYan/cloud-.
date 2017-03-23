@@ -1,7 +1,11 @@
 package com.inspur.emmcloud.widget;
 
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -24,11 +28,14 @@ import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListene
 
 import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
 import uk.co.senab.photoview.PhotoViewAttacher;
 import uk.co.senab.photoview.PhotoViewAttacher.OnPhotoTapListener;
+
+import static android.R.attr.path;
 
 
 /**
@@ -146,29 +153,53 @@ public class ImageDetailFragment extends Fragment {
 		}
 	}
 
+	/**
+	 * 保存图片
+	 */
 	public void downloadImg(){
 		mImageView.buildDrawingCache(true);
 		mImageView.buildDrawingCache();
 		Bitmap bitmap = mImageView.getDrawingCache();
-		saveBitmapFile(bitmap);
+		String savedImagePath = saveBitmapFile(bitmap);
 		mImageView.setDrawingCacheEnabled(false);
+		refreshGallery(getActivity(),savedImagePath);
 	}
 
+	/**
+	 * 保存并显示把图片展示出来
+	 * @param context
+	 * @param cameraPath
+	 */
+	private  void refreshGallery(Context context, String cameraPath) {
+		File file = new File(cameraPath);
+		// 其次把文件插入到系统图库
+		try {
+			MediaStore.Images.Media.insertImage(context.getContentResolver(),
+					file.getAbsolutePath(), file.getName(), null);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+		// 最后通知图库更新
+		context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + path)));
+	}
 
 	/**
 	 * 保存图片
 	 *
 	 * @param bitmap
 	 */
-	public void saveBitmapFile(Bitmap bitmap) {
+	public String saveBitmapFile(Bitmap bitmap) {
 		File temp = new File("/sdcard/IMP-Cloud/cache/chat/");// 要保存文件先创建文件夹
 		if (!temp.exists()) {
 			temp.mkdir();
 		}
 		// 重复保存时，覆盖原同名图片
 		// 将要保存图片的路径和图片名称
+		String savedImagePath = "";
 		File file = new File("/sdcard/IMP-Cloud/cache/chat/"
 				+ FileUtils.getFileName(mImageUrl));
+		savedImagePath = "/sdcard/IMP-Cloud/cache/chat/"
+				+ FileUtils.getFileName(mImageUrl);
 		try {
 			BufferedOutputStream bos = new BufferedOutputStream(
 					new FileOutputStream(file));
@@ -180,6 +211,7 @@ public class ImageDetailFragment extends Fragment {
 			ToastUtils.show(getActivity(), getString(R.string.save_fail));
 			e.printStackTrace();
 		}
+		return savedImagePath;
 	}
 
 	@Override
