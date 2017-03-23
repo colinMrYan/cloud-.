@@ -79,10 +79,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
 import static android.R.attr.action;
+import static android.R.attr.path;
 
 /**
  * com.inspur.emmcloud.ui.ChannelActivity
@@ -431,6 +434,7 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
             } else if (requestCode == CAMERA_RESULT
                     && NetUtils.isNetworkConnected(getApplicationContext())) {
                 String cameraImgPath = Environment.getExternalStorageDirectory() + "/DCIM/" + PreferencesUtils.getString(ChannelActivity.this, "capturekey");
+                refreshGallery(ChannelActivity.this,cameraImgPath);
                 EditImageActivity.start(ChannelActivity.this, cameraImgPath, MyAppConfig.LOCAL_IMG_CREATE_PATH);
                 //拍照后图片编辑返回
             } else if (requestCode == EditImageActivity.ACTION_REQUEST_EDITIMAGE) {
@@ -448,7 +452,6 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
                 if (data != null && requestCode == GELLARY_RESULT) {
                     ArrayList<ImageItem> imageItemList = (ArrayList<ImageItem>) data
                             .getSerializableExtra(ImagePicker.EXTRA_RESULT_ITEMS);
-                    LogUtils.YfcDebug("接收到的长度是："+imageItemList.size());
                     for (int i = 0;i<imageItemList.size();i++){
                         Msg localMsg = MsgRecourceUploadUtils.uploadMsgImgFromPhotoSystem(
                                 ChannelActivity.this, imageItemList.get(i), apiService);
@@ -456,6 +459,24 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
                     }
                 }
         }
+    }
+
+    /**
+     * 保存并显示把图片展示出来
+     * @param context
+     * @param cameraPath
+     */
+    private  void refreshGallery(Context context, String cameraPath) {
+        File file = new File(cameraPath);
+        // 其次把文件插入到系统图库
+        try {
+            MediaStore.Images.Media.insertImage(context.getContentResolver(),
+                    file.getAbsolutePath(), file.getName(), null);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        // 最后通知图库更新
+        context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + path)));
     }
 
     /**

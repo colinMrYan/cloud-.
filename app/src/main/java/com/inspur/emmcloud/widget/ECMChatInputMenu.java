@@ -507,7 +507,7 @@ public class ECMChatInputMenu extends LinearLayout {
 						.equals("@"))) {
 					Intent intent = new Intent();
 					intent.setClass(context, MembersActivity.class);
-					intent.putExtra("title", "@");
+					intent.putExtra("title", context.getString(R.string.friend_list));
 					intent.putExtra("cid", channelId);
 					((Activity) context).overridePendingTransition(
 							R.anim.activity_open, 0);

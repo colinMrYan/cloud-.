@@ -18,6 +18,7 @@ import android.webkit.WebView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
+import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.imp.api.JsInterface;
 import com.inspur.imp.api.Res;
 import com.inspur.imp.api.iLog;
@@ -98,6 +99,7 @@ public class ImpWebView extends WebView {
 
 	// 重置当前接口的webview
 	public void initPlugin() {
+		LogUtils.YfcDebug("plugin初始化："+ (this.context == null));
 		PluginMgr.init(this.context, this);
 	}
 	private int mLastMotionX;

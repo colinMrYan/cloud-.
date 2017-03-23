@@ -16,6 +16,8 @@
     <string name="mail_cannot_null">Enter mail</string>
     <string name="remark_cannot_null">Enter remark</string>
     <string name="no_thanks">No,Thanks</string>
+    <string name="_mobile">Phone of %1$s</string>
+    <string name="_pad">Pad of %1$s</string>
     <string name="mdm_sure">Sure</string>
     <string name="mdm_cancel">Cancel</string>
     <string name="mdm_tips">Tips</string>

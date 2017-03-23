@@ -20,7 +20,6 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
-import com.inspur.emmcloud.bean.Comment;
 import com.inspur.emmcloud.bean.GetMsgCommentCountResult;
 import com.inspur.emmcloud.bean.Msg;
 import com.inspur.emmcloud.util.ChannelCacheUtils;
@@ -29,9 +28,7 @@ import com.inspur.emmcloud.util.IntentUtils;
 import com.inspur.emmcloud.util.JSONUtils;
 import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.NetUtils;
-import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.StateBarColor;
-import com.inspur.emmcloud.util.TimeUtils;
 import com.inspur.emmcloud.util.URLMatcher;
 import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.emmcloud.widget.ECMChatInputMenu;
@@ -52,6 +49,7 @@ import java.util.Map;
  */
 public class ImagePagerActivity extends BaseFragmentActivity {
 	private static final int RESULT_MENTIONS = 5;
+	private static final int CHECK_IMG_COMMENT = 1;
 	public static final String EXTRA_IMAGE_INDEX = "image_index";
 	public static final String EXTRA_IMAGE_URLS = "image_urls";
 	public static final String EXTRA_CURRENT_IMAGE_MSG = "channel_current_image_msg";
@@ -146,8 +144,10 @@ public class ImagePagerActivity extends BaseFragmentActivity {
 				bundle = new Bundle();
 				bundle.putString("mid", imgTypeMsgList.get(pagerPosition).getMid());
 				bundle.putString("cid", imgTypeMsgList.get(pagerPosition).getCid());
-				IntentUtils.startActivity(ImagePagerActivity.this,
-						ChannelMsgDetailActivity.class, bundle);
+				bundle.putString("from", "imagePager");
+				Intent intent = new Intent(ImagePagerActivity.this,ChannelMsgDetailActivity.class);
+				intent.putExtras(bundle);
+				startActivityForResult(intent,CHECK_IMG_COMMENT);
 
 				break;
 			case R.id.write_comment_layout:
@@ -336,30 +336,7 @@ public class ImagePagerActivity extends BaseFragmentActivity {
 		return richTextObj.toString();
 	}
 
-	/**
-	 * 拼装评论消息
-	 *
-	 * @param content
-	 * @return
-	 */
-	private Comment combineComment(String content) {
-		String uid = ((MyApplication) getApplicationContext()).getUid();
-		String title = PreferencesUtils.getString(
-				getApplicationContext(), "userRealName");
-		String timeStamp = TimeUtils.getCurrentUTCTimeString();
-		JSONObject jsonComment = new JSONObject();
-		JSONObject jsonFrom = new JSONObject();
-		try {
-			jsonFrom.put("title", title);
-			jsonFrom.put("uid", uid);
-			jsonComment.put("timestamp", timeStamp);
-			jsonComment.put("body", content);
-			jsonComment.put("from", jsonFrom);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return new Comment(jsonComment);
-	}
+
 
 	public void onPhotoTap() {
 		if (functionLayout.getVisibility() == View.VISIBLE) {
@@ -374,6 +351,11 @@ public class ImagePagerActivity extends BaseFragmentActivity {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (resultCode != RESULT_CANCELED && requestCode == RESULT_MENTIONS) {
 			ecmChatInputMenu.setMentionData(data);
+		}else if (resultCode == RESULT_OK && requestCode == CHECK_IMG_COMMENT){
+			String mid = data.getStringExtra("mid");
+			int commentCount = data.getIntExtra("commentCount",0);
+			commentCountMap.put(mid,commentCount);
+			commentCountText.setText(commentCount+"");
 		}
 	}
 
