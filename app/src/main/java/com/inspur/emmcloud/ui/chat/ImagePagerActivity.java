@@ -123,6 +123,7 @@ public class ImagePagerActivity extends BaseFragmentActivity {
 
 	@Override
 	public void onBackPressed() {
+		LogUtils.jasonDebug("onBackPressed----");
 		mAdapter.getCurrentFragment().closeImg();
 	}
 
@@ -173,6 +174,7 @@ public class ImagePagerActivity extends BaseFragmentActivity {
 		WindowManager.LayoutParams wl = window.getAttributes();
 		wl.x = 0;
 		wl.y = getWindowManager().getDefaultDisplay().getHeight();
+		LogUtils.jasonDebug("wl.y="+wl.y);
 		window.getDecorView().setPadding(0, 0, 0, 0);
 		// 以下这两句是为了保证按钮可以水平满屏
 		wl.width = WindowManager.LayoutParams.MATCH_PARENT;
@@ -228,6 +230,7 @@ public class ImagePagerActivity extends BaseFragmentActivity {
 
 			@Override
 			public void onSoftKeyboardClosed() {
+			//	commentInputDlg.dismiss();
 				ecmChatInputMenu.hideAddItemLayout(false);
 			}
 		});

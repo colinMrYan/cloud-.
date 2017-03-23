@@ -73,19 +73,21 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:onClick="onClick"
-                    android:paddingLeft="20dp"
+                    android:paddingLeft="19dp"
                     android:paddingRight="65dp"
                     android:visibility="gone">
 
 
                     <TextView
-                        android:layout_width="match_parent"
+                        android:layout_width="188dp"
                         android:layout_height="30dp"
                         android:layout_centerVertical="true"
+                        android:drawableLeft="@drawable/ic_chat_img_comment_edit_logo"
                         android:background="@drawable/bg_chat_img_comment_input"
                         android:gravity="center_vertical"
-                        android:paddingLeft="15dp"
-                        android:text="写评论..."
+                        android:drawablePadding="6dp"
+                        android:paddingLeft="9dp"
+                        android:text="加入讨论吧"
                         android:textColor="#e0ffffff"
                         android:textSize="16sp"/>
 
@@ -96,10 +98,10 @@
                     android:id="@+id/comment_count_text"
                     android:layout_width="wrap_content"
                     android:layout_height="30dp"
-                    android:layout_marginRight="20dp"
+                    android:layout_marginRight="24dp"
                     android:clickable="true"
                     android:drawableLeft="@drawable/ic_chat_img_display_comment"
-                    android:drawablePadding="5dp"
+                    android:drawablePadding="9dp"
                     android:gravity="center"
                     android:onClick="onClick"
                     android:padding="5dp"
@@ -111,7 +113,7 @@
                     android:id="@+id/download_img"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
-                    android:layout_marginRight="23dp"
+                    android:layout_marginRight="24dp"
                     android:adjustViewBounds="true"
                     android:onClick="onClick"
                     android:padding="5dp"

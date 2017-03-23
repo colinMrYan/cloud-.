@@ -64,6 +64,7 @@
         <item name="android:windowBackground">@drawable/photo_choose_bg</item>
         <item name="android:background">@android:color/transparent</item>
         <item name="android:backgroundDimEnabled">false</item>
+        <item name="android:windowNoTitle">true</item>
     </style>
 
 
