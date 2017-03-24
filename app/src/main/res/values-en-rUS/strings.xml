@@ -252,7 +252,7 @@
     <string name="file_no_identifiable">Unrecognized file types</string>
     <string name="long_img">Long</string>
     <string name="friend_list">Friends List</string>
-    <string name="join_discuss">Join the discussion</string>
+    <string name="join_discuss">Join discussion</string>
     <string name="add_new_comment">Add new comments</string>
 
     <!-- 会议卡片 -->
