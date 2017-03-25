@@ -13,7 +13,9 @@ import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
 import com.inspur.emmcloud.bean.AppRedirectResult;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
-import com.inspur.emmcloud.util.URLRequestParamsUtils;
+
+import java.net.MalformedURLException;
+import java.net.URL;
 
 
 /**
@@ -144,11 +146,18 @@ public class ImpWebViewClient extends WebViewClient {
 	 */
 	private void handleReDirectURL(String url, WebView view) {
 		if(url.contains("https://id.inspur.com/oauth2.0/authorize")){
-			String params = URLRequestParamsUtils.TruncateUrlPage(url);
+			URL urlWithParams = null;
+			try {
+				urlWithParams = new URL(url);
+			} catch (MalformedURLException e) {
+				e.printStackTrace();
+			}
+//			String params = URLRequestParamsUtils.TruncateUrlPage(url);
+//			params = urlWithParams.getQuery();
 			MyAppAPIService appAPIService = new MyAppAPIService(view.getContext());
 			appAPIService.setAPIInterface(new WebService(view));
 			if(NetUtils.isNetworkConnected(view.getContext())){
-				appAPIService.getAuthCode(params);
+				appAPIService.getAuthCode(urlWithParams.getQuery());
 			}
 		}
 
