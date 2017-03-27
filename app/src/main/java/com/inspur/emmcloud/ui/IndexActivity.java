@@ -372,7 +372,7 @@ public class IndexActivity extends BaseFragmentActivity implements
                     .inflate(R.layout.tab_item_view, null);
             ImageView tabImg = (ImageView) tabView.findViewById(R.id.imageview);
             TextView tabText = (TextView) tabView.findViewById(R.id.textview);
-            if (i == 0) {
+            if (mainTab == MainTab.NEWS) {
                 newMessageTipsText = (TextView) tabView
                         .findViewById(R.id.new_message_tips_text);
                 newMessageTipsLayout = (RelativeLayout) tabView.findViewById(R.id.new_message_tips_layout);
