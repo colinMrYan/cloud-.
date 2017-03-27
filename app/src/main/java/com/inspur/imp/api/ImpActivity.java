@@ -14,6 +14,8 @@ import android.view.WindowManager;
 import android.webkit.CookieManager;
 import android.webkit.ValueCallback;
 import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -115,6 +117,7 @@ public class ImpActivity extends ImpBaseActivity {
 		});
 
 		webView.loadUrl(url, extraHeaders);
+//		webView.computeScroll();
 		progressLayout.setVisibility(View.VISIBLE);
 	}
 
@@ -181,6 +184,8 @@ public class ImpActivity extends ImpBaseActivity {
 		String userAgent = settings.getUserAgentString();
 		userAgent = userAgent + userAgentExtra;
 		settings.setUserAgentString(userAgent);
+		settings.enableSmoothTransition();
+		settings.setJavaScriptEnabled(true);
 	}
 
 	private void setOauthHeader(String url, String OauthHeader) {
@@ -215,6 +220,17 @@ public class ImpActivity extends ImpBaseActivity {
 		if (webView != null) {
 			webView.removeAllViews();
 			webView.destroy();
+		}
+	}
+
+
+	/**
+	 * 自定义WebViewClient在应用中打开页面
+	 */
+	private class webViewClient extends WebViewClient {
+		public boolean shouldOverrideUrlLoading(WebView view, String url) {
+			view.loadUrl(url);
+			return true;
 		}
 	}
 
