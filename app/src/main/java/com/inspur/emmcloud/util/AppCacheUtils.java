@@ -77,6 +77,17 @@ public class AppCacheUtils {
 	}
 
 	/**
+	 * 存储常用应用顺序
+	 */
+	public static void saveAppCommonlyUseList(Context context,List<AppCommonlyUse> appCommonlyUseList){
+		try {
+			DbCacheUtils.getDb(context).saveOrUpdateAll(appCommonlyUseList);
+		} catch (DbException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
 	 * 更新点击次数
 	 * @param context
 	 * @param clickCount
@@ -100,7 +111,6 @@ public class AppCacheUtils {
 	/**
 	 * 删除常用app  List
 	 * @param context
-	 * @param appCommonlyUseList
 	 */
 	public static void deleteAppCommonlyByAppID(Context context,String appID){
 		try {
