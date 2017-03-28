@@ -59,7 +59,7 @@ public class DisplayTxtCommentMsg {
 		String commentContent = JSONUtils.getString(msgBody, "source", "");
 		String[] mentions = JSONUtils.getString(msgBody, "mentions", "")
 				.replace("[", "").replace("]", "").split(",");
-		String[] urls = JSONUtils.getString(msgBody, "urls", "")
+		String[] urls = JSONUtils.getString(msgBody, "urlList", "")
 				.replace("[", "").replace("]", "").split(",");
 		List<String> mentionList = Arrays.asList(mentions);
 		List<String> urlList = Arrays.asList(urls);
@@ -75,7 +75,7 @@ public class DisplayTxtCommentMsg {
 				.handleMentioin(commentContent, mentionList, urlList);
 		JSONArray mentionArray = JSONUtils.getJSONArray(msgBody, "mentions",
 				new JSONArray());
-		JSONArray urlArray = JSONUtils.getJSONArray(msgBody, "urls",
+		JSONArray urlArray = JSONUtils.getJSONArray(msgBody, "urlList",
 				new JSONArray());
 		if (mentionArray.length() > 0 || urlArray.length() > 0) {
 			// TextView设置此属性会让点击事件不响应，所有当没有@ url时不进行设置

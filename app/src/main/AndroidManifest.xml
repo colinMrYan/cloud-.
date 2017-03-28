@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.inspur.emmcloud"
     android:configChanges="locale|layoutDirection"
-    android:versionCode="19"
-    android:versionName="1.1.1">
+    android:versionCode="21"
+    android:versionName="1.1.3">
 
     <uses-sdk
         android:minSdkVersion="14"
@@ -162,12 +162,29 @@
             android:name=".ui.app.AppImgDisPlayActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"></activity>
+
         <activity
             android:name=".ui.chat.ChannelActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize|stateHidden"></activity>
+            android:windowSoftInputMode="adjustResize|stateHidden">
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="image/*" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="text/plain" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.SEND_MULTIPLE" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="image/*" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".ui.chat.ChannelInfoActivity"
             android:configChanges="locale|layoutDirection"
@@ -273,13 +290,15 @@
         <activity
             android:name=".ui.contact.ContactSearchMoreActivity"
             android:screenOrientation="portrait"
+            android:launchMode="singleTask"
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".ui.chat.MentionActivty"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.chat.ImagePagerActivity"
-            android:launchMode="singleTask"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:windowSoftInputMode="adjustPan"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.chat.MembersActivity"
@@ -320,6 +339,11 @@
                     android:host="trips"
                     android:scheme="ecc-component" />
             </intent-filter>
+        </activity>
+        <activity android:name=".ui.app.ReactNativeAppActivity"
+            android:screenOrientation="portrait"
+            >
+
         </activity>
         <activity
             android:name=".ui.chat.ModifyChannelGroupNameActivity"
@@ -479,6 +503,7 @@
         <activity
             android:name=".ui.find.FindSearchMoreActivity"
             android:screenOrientation="portrait" />
+        <service android:name=".service.PVCollectService"></service>
 
         <!-- ImagePicker -->
 

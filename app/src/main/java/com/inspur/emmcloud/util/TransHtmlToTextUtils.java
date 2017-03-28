@@ -2,14 +2,22 @@ package com.inspur.emmcloud.util;
 
 import android.text.Spannable;
 import android.text.SpannableString;
-import android.text.TextPaint;
+import android.text.style.CharacterStyle;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.URLSpan;
 import android.widget.TextView;
 
+import com.inspur.emmcloud.widget.spans.URLClickableSpan;
+import com.inspur.emmcloud.widget.spans.URLSpanNoUnderline;
+
 
 public class TransHtmlToTextUtils {
 
+	/**
+	 * 去掉Span的下划线，设置Span前景色
+	 * @param textView
+	 * @param color
+     */
 	public static void stripUnderlines(TextView textView,int color) {
 		Spannable spannable = new SpannableString(textView.getText());
 		URLSpan[] spans = spannable.getSpans(0, spannable.length(), URLSpan.class);
@@ -17,25 +25,17 @@ public class TransHtmlToTextUtils {
 			int start = spannable.getSpanStart(span);
 			int end = spannable.getSpanEnd(span);
 			spannable.removeSpan(span);
-			span = new URLSpanNoUnderline(span.getURL());
-			spannable.setSpan(span, start, end, 0);
+			String openUrl = span.getURL();
+			CharacterStyle characterStyle;
+			if(openUrl.startsWith("http")){
+				characterStyle = new URLClickableSpan(openUrl);
+			}else {
+				characterStyle = new URLSpanNoUnderline(openUrl);
+			}
+			spannable.setSpan(characterStyle, start, end, 0);
 			spannable.setSpan(new ForegroundColorSpan(color),
 					start, end, 0);
 		}
 		textView.setText(spannable);
 	}
-	
-	public static class URLSpanNoUnderline extends URLSpan {
-		public URLSpanNoUnderline(String url) {
-			super(url);
-		}
-
-		@Override
-		public void updateDrawState(TextPaint ds) {
-			super.updateDrawState(ds);
-			ds.setUnderlineText(false);
-		}
-		
-	}
-
 }

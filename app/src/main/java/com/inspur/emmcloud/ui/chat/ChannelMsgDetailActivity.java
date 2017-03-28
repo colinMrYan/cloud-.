@@ -3,21 +3,15 @@ package com.inspur.emmcloud.ui.chat;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.Spannable;
+import android.os.Handler;
 import android.text.SpannableString;
-import android.text.Spanned;
-import android.text.TextWatcher;
 import android.text.method.LinkMovementMethod;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnKeyListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.BaseAdapter;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -37,7 +31,6 @@ import com.inspur.emmcloud.bean.GetSendMsgResult;
 import com.inspur.emmcloud.bean.Msg;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
 import com.inspur.emmcloud.util.ChannelCacheUtils;
-import com.inspur.emmcloud.util.ChannelMentions;
 import com.inspur.emmcloud.util.FileUtils;
 import com.inspur.emmcloud.util.HandleMsgTextUtils;
 import com.inspur.emmcloud.util.ImageDisplayUtils;
@@ -48,20 +41,18 @@ import com.inspur.emmcloud.util.MentionsAndUrlShowUtils;
 import com.inspur.emmcloud.util.MsgCacheUtil;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
-import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.TimeUtils;
-import com.inspur.emmcloud.util.ToastUtils;
 import com.inspur.emmcloud.util.TransHtmlToTextUtils;
 import com.inspur.emmcloud.util.URLMatcher;
 import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.CircleImageView;
+import com.inspur.emmcloud.widget.ECMChatInputMenu;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.ScrollViewWithListView;
 import com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout;
 import com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout.OnRefreshListener;
 import com.inspur.emmcloud.widget.pullableview.PullableScrollView;
-import com.inspur.emmcloud.widget.spans.ForeColorSpan;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -72,9 +63,8 @@ import java.util.List;
 
 /**
  * 消息详情页面
- * 
- * @author Administrator
  *
+ * @author Administrator
  */
 public class ChannelMsgDetailActivity extends BaseActivity implements
 		OnRefreshListener {
@@ -82,7 +72,6 @@ public class ChannelMsgDetailActivity extends BaseActivity implements
 	private static final int RESULT_MENTIONS = 5;
 	private ScrollViewWithListView commentListView;
 	private ImageDisplayUtils imageDisplayUtils;
-	private EditText msgEdit;
 	private Msg msg;
 	private ChatAPIService apiService;
 	private List<Comment> commentList;
@@ -94,18 +83,10 @@ public class ChannelMsgDetailActivity extends BaseActivity implements
 	private TextView msgSendTimeText;
 	private TextView senderNameText;
 	private ImageView msgContentImg;
-
-	private boolean canMention = true;
-	private int editDeletePosition = 0;
 	private String cid = "";
-	private ArrayList<String> userNameList = new ArrayList<String>();
-	private ArrayList<String> uidList = new ArrayList<String>();
-	private int beginPosition = 0;
-	private int endPosition = 0;
-
-	//private String channelType = "";
 	private RelativeLayout msgDisplayLayout;
 	private LayoutInflater inflater;
+	private ECMChatInputMenu chatInputMenu;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -143,10 +124,48 @@ public class ChannelMsgDetailActivity extends BaseActivity implements
 		msgDisplayLayout = (RelativeLayout) msgDetailLayout
 				.findViewById(R.id.msg_display_layout);
 		commentScrollView.addView(msgDetailLayout);
-		msgEdit = (EditText) findViewById(R.id.comment_edit);
-		msgEdit.addTextChangedListener(new TextChangedListener());
-		msgEdit.setOnKeyListener(new OnMentionsListener());
+		initChatInputMenu();
 	}
+
+	private void initChatInputMenu(){
+		chatInputMenu = (ECMChatInputMenu) findViewById(R.id.chat_input_menu);
+		cid = getIntent().getExtras().getString("cid");
+		String channelType = ChannelCacheUtils.getChannelType(getApplicationContext(),
+				cid);
+		if (channelType.equals("GROUP")) {
+			chatInputMenu.setIsChannelGroup(true, cid);
+		}
+		chatInputMenu.hideAddMenuLayout();
+		chatInputMenu.showAddBtn(false);
+		chatInputMenu.setChatInputMenuListener(new ECMChatInputMenu.ChatInputMenuListener() {
+
+			@Override
+			public void onSetContentViewHeight(boolean isLock) {
+				// TODO Auto-generated method stub
+				final LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) pullToRefreshLayout
+						.getLayoutParams();
+				if (isLock) {
+					params.height = pullToRefreshLayout.getHeight();
+					params.weight = 0.0F;
+				} else {
+					new Handler().post(new Runnable() {
+						@Override
+						public void run() {
+							params.weight = 1.0F;
+						}
+					});
+				}
+			}
+
+			@Override
+			public void onSendMsg(String content, List<String> mentionsUidList,
+								  List<String> mentionsUserNameList) {
+				// TODO Auto-generated method stub
+				sendComment(content, mentionsUidList, mentionsUserNameList);
+			}
+		});
+	}
+
 
 	/**
 	 * 初始化数据源
@@ -210,7 +229,7 @@ public class ChannelMsgDetailActivity extends BaseActivity implements
 				public void onClick(View v) {
 					if (msg.getType().equals("image")
 							|| msg.getType().equals("res_image")) {
-						displayZoomImage(commentBodyBean.getKey());
+						displayZoomImage(v, commentBodyBean.getKey());
 					}
 				}
 			});
@@ -218,13 +237,11 @@ public class ChannelMsgDetailActivity extends BaseActivity implements
 		msgDisplayView.setLayoutParams(new LayoutParams(
 				LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
 		msgDisplayLayout.addView(msgDisplayView);
-		((LinearLayout) findViewById(R.id.post_comment_layout))
-				.setVisibility(View.VISIBLE);
 	}
 
 	/**
 	 * 展示图片或者文件图标
-	 * 
+	 *
 	 * @param fileName
 	 */
 	private void displayImage(String fileName) {
@@ -238,21 +255,30 @@ public class ChannelMsgDetailActivity extends BaseActivity implements
 
 	/**
 	 * 展示可以缩放的Image
-	 * 
+	 *
 	 * @param path
 	 */
-	protected void displayZoomImage(String path) {
-		Intent intent = new Intent(ChannelMsgDetailActivity.this,
-				ImagePagerActivity.class);
+	protected void displayZoomImage(View view, String path) {
+
+		int[] location = new int[2];
+		view.getLocationOnScreen(location);
+		view.invalidate();
+		int width = view.getWidth();
+		int height = view.getHeight();
 		String url = path;
 		if (!path.startsWith("file:") && !path.startsWith("content:")
 				&& !path.startsWith("drawable")) {
 			url = UriUtils.getPreviewUri(path);
-		} 
+		}
 		ArrayList<String> urlList = new ArrayList<String>();
 		urlList.add(url);
-		intent.putExtra("image_index", 0);
-		intent.putStringArrayListExtra("image_urls", urlList);
+		Intent intent = new Intent(getApplicationContext(),
+				ImagePagerActivity.class);
+		intent.putExtra(ImagePagerActivity.PHOTO_SELECT_X_TAG, location[0]);
+		intent.putExtra(ImagePagerActivity.PHOTO_SELECT_Y_TAG, location[1]);
+		intent.putExtra(ImagePagerActivity.PHOTO_SELECT_W_TAG, width);
+		intent.putExtra(ImagePagerActivity.PHOTO_SELECT_H_TAG, height);
+		intent.putExtra(ImagePagerActivity.EXTRA_IMAGE_URLS, urlList);
 		startActivity(intent);
 	}
 
@@ -310,48 +336,54 @@ public class ChannelMsgDetailActivity extends BaseActivity implements
 		senderNameText.setText(msg.getTitle());
 	}
 
-	/** 处理@逻辑 **/
+	/**
+	 * 处理@逻辑
+	 **/
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (resultCode != RESULT_CANCELED && requestCode == RESULT_MENTIONS) {
-			String result = data.getStringExtra("searchResult");
-			ChannelMentions.addMentions(result, userNameList, uidList, msgEdit,
-					beginPosition, endPosition);
-		}
-	}
-
-	/** 控件的点击逻辑 **/
-	public void onClick(View v) {
-		switch (v.getId()) {
-		case R.id.back_layout:
-			InputMethodUtils.hide(ChannelMsgDetailActivity.this);
-			finish();
-			break;
-		case R.id.post_comment_btn:
-			String commentContent = msgEdit.getText().toString();
-			if (StringUtils.isBlank(commentContent)) {
-				ToastUtils.show(getApplicationContext(),
-						getString(R.string.msgcontent_cannot_null));
-				break;
-			}
-			sendComment(commentContent);
-			break;
-		default:
-			break;
+			chatInputMenu.setMentionData(data);
 		}
 	}
 
 	/**
+	 * 控件的点击逻辑
+	 **/
+	public void onClick(View v) {
+		switch (v.getId()) {
+			case R.id.back_layout:
+				onBackPressed();
+				break;
+			default:
+				break;
+		}
+	}
+
+	@Override
+	public void onBackPressed() {
+		InputMethodUtils.hide(ChannelMsgDetailActivity.this);
+		//将最新的评论数返回给ImagePagerActivity
+		if (getIntent().hasExtra("from") && getIntent().getStringExtra("from").equals("imagePager")){
+			Intent intent = new Intent();
+			intent.putExtra("mid",msg.getMid());
+			intent.putExtra("commentCount",commentList.size());
+			setResult(RESULT_OK,intent);
+		}
+		finish();
+	}
+
+
+	/**
 	 * 发出评论
 	 */
-	private void sendComment(String commentContent) {
-		
+	private void sendComment(String commentContent, List<String> mentionsUidList,
+							 List<String> mentionsUserNameList) {
+
 		if (NetUtils.isNetworkConnected(getApplicationContext())) {
-			String commentConbineResult = getConbineComment(commentContent);
+			String commentConbineResult = getConbineComment(commentContent,mentionsUidList,mentionsUserNameList);
 			apiService.sendMsg(cid, commentConbineResult, "txt_comment",
 					msg.getMid(), "");
-			msgEdit.setText("");
 			Comment newComment = combineComment(commentConbineResult);
 			commentList.add(newComment);
 			if (commentAdapter == null) {
@@ -371,10 +403,9 @@ public class ChannelMsgDetailActivity extends BaseActivity implements
 
 	/**
 	 * 拼装评论
-	 *
 	 */
 	private Comment combineComment(String content) {
-		String uid = ((MyApplication)getApplicationContext()).getUid();
+		String uid = ((MyApplication) getApplicationContext()).getUid();
 		String title = PreferencesUtils.getString(
 				ChannelMsgDetailActivity.this, "userRealName");
 		String timeStamp = TimeUtils.getCurrentUTCTimeString();
@@ -432,7 +463,7 @@ public class ChannelMsgDetailActivity extends BaseActivity implements
 			String[] urls = urlsString.replace("[", "").replace("]", "").split(",");
 			List<String> mentionList = Arrays.asList(mentions);
 			List<String> urlList = Arrays.asList(urls);
-			SpannableString spannableString = MentionsAndUrlShowUtils.handleMentioin(source,mentionList,urlList);
+			SpannableString spannableString = MentionsAndUrlShowUtils.handleMentioin(source, mentionList, urlList);
 			contentText.setText(spannableString);
 			TransHtmlToTextUtils.stripUnderlines(contentText,
 					Color.parseColor("#0f7bca"));
@@ -457,7 +488,7 @@ public class ChannelMsgDetailActivity extends BaseActivity implements
 
 	/**
 	 * 打开个人信息
-	 * 
+	 *
 	 * @param uid
 	 */
 	private void openUserInfo(String uid) {
@@ -480,96 +511,21 @@ public class ChannelMsgDetailActivity extends BaseActivity implements
 	public void onLoadMore(PullToRefreshLayout pullToRefreshLayout) {
 	}
 
-	class TextChangedListener implements TextWatcher {
-		String changeContent = "";
-		String channelType = ChannelCacheUtils.getChannelType(getApplicationContext(),
-				cid);
 
-		@Override
-		public void beforeTextChanged(CharSequence s, int start, int count,
-				int after) {
-		}
 
-		@Override
-		public void onTextChanged(CharSequence s, int start, int before,
-				int count) {
-			beginPosition = start;
-			endPosition = start + count;
-			changeContent = s.toString().substring(beginPosition, endPosition);
-			if (s.toString().length() > editDeletePosition) {
-				canMention = true;
-			}
-			ForeColorSpan[] a = ((Spanned) s).getSpans(0, s.length(),
-					ForeColorSpan.class);
-			int which = -1;
-			for (int i = 0; i < userNameList.size(); i++) {
-				if (!s.toString().contains(userNameList.get(i))) {
-					which = i;
-					userNameList.remove(i);
-					uidList.remove(i);
-				}
-			}
-			for (int i = 0; i < a.length; i++) {
-				if (which == i) {
-					int started = ((Spannable) s).getSpanStart(a[i]);
-					int end = ((Spannable) s).getSpanEnd(a[i]);
-					msgEdit.getText().delete(started, end);
-				}
-			}
-		}
-
-		@Override
-		public void afterTextChanged(Editable s) {
-			Intent intent = new Intent();
-			intent.putExtra("title", "@");
-			intent.putExtra("cid", cid);
-			intent.setClass(getApplicationContext(), MembersActivity.class);
-			String textChangeString = s.toString();
-			int textChangeLength = textChangeString.length();
-			if (!StringUtils.isBlank(s.toString())
-					&& canMention
-					&& (textChangeString.substring(textChangeLength - 1,
-							textChangeLength).equals("@") || changeContent
-							.equals("@")) && channelType.equals("GROUP")) {
-				overridePendingTransition(R.anim.activity_open, 0);
-				startActivityForResult(intent, RESULT_MENTIONS);
-			}
-			canMention = true;
-		}
-
-	}
-
-	class OnMentionsListener implements OnKeyListener {
-		@Override
-		public boolean onKey(View v, int keyCode, KeyEvent event) {
-			String str = msgEdit.getText().toString();
-			editDeletePosition = str.length();
-			if (StringUtils.isBlank(msgEdit.getText().toString())) {
-				canMention = true;
-				return false;
-			}
-			if (keyCode == 67) {
-				canMention = false;
-			} else {
-				canMention = true;
-			}
-			return false;
-		}
-
-	}
-
-	public String getConbineComment(String content) {
+	public String getConbineComment(String content,List<String> mentionsUidList,
+									List<String> mentionsUserNameList) {
 		String source = "";
 		ArrayList<String> urlList = URLMatcher.getUrls(content);
 		JSONObject richTextObj = new JSONObject();
-		source = HandleMsgTextUtils.handleMentionAndURL(content, userNameList,
-				uidList);
-		JSONArray mentionArray = JSONUtils.toJSONArray(uidList);
+		source = HandleMsgTextUtils.handleMentionAndURL(content, mentionsUserNameList,
+				mentionsUidList);
+		JSONArray mentionArray = JSONUtils.toJSONArray(mentionsUidList);
 		JSONArray urlArray = JSONUtils.toJSONArray(urlList);
 		try {
 			richTextObj.put("source", source);
 			richTextObj.put("mentions", mentionArray);
-			richTextObj.put("urls", urlArray);
+			richTextObj.put("urlList", urlArray);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -578,7 +534,7 @@ public class ChannelMsgDetailActivity extends BaseActivity implements
 
 	/**
 	 * 获取消息
-	 * 
+	 *
 	 * @param mid
 	 */
 	private void getMsgById(String mid) {
@@ -619,7 +575,7 @@ public class ChannelMsgDetailActivity extends BaseActivity implements
 
 		@Override
 		public void returnMsgCommentSuccess(
-				GetMsgCommentResult getMsgCommentResult) {
+				GetMsgCommentResult getMsgCommentResult,String mid) {
 			pullToRefreshLayout.refreshFinish(PullToRefreshLayout.SUCCEED);
 			commentList = getMsgCommentResult.getCommentList();
 			if (commentList != null && commentList.size() > 0) {
@@ -637,11 +593,11 @@ public class ChannelMsgDetailActivity extends BaseActivity implements
 
 		@Override
 		public void returnSendMsgSuccess(GetSendMsgResult getSendMsgResult,
-				String fakeMessageId) {
+										 String fakeMessageId) {
 		}
 
 		@Override
-		public void returnSendMsgFail(String error,String fakeMessageId) {
+		public void returnSendMsgFail(String error, String fakeMessageId) {
 			WebServiceMiddleUtils.hand(ChannelMsgDetailActivity.this, error);
 		}
 	}

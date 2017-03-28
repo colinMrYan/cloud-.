@@ -1,25 +1,145 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fitsSystemWindows="true" >
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:id="@+id/main_layout"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:fitsSystemWindows="true"
+              android:orientation="horizontal">
 
-    <com.inspur.emmcloud.widget.HackyViewPager
-        android:id="@+id/pager"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@android:color/black" />
+        >
 
-    <TextView
-        android:id="@+id/indicator"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:gravity="center"
-        android:textSize="18sp"
-        android:visibility="gone"
-        android:textColor="@android:color/white"
-        android:text="%1$d/%2$d"
-        android:background="@android:color/transparent" />
+        <com.inspur.emmcloud.widget.HackyViewPager
+            android:id="@+id/pager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            />
 
-</FrameLayout>
+        <RelativeLayout
+            android:id="@+id/function_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:background="@drawable/ic_chat_img_display_gradient_header"
+                android:paddingBottom="30dp">
+
+                <ImageView
+                    android:id="@+id/enter_channel_imgs_img"
+                    android:layout_width="50dp"
+                    android:layout_height="40dp"
+                    android:layout_alignParentRight="true"
+                    android:adjustViewBounds="true"
+                    android:onClick="onClick"
+                    android:paddingBottom="5dp"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:paddingTop="15dp"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/ic_chat_enter_channel_imgs"
+                    android:visibility="gone"/>
+
+                <ImageView
+                    android:id="@+id/close_img"
+                    android:layout_width="50dp"
+                    android:layout_height="40dp"
+                    android:onClick="onClick"
+                    android:paddingBottom="5dp"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:paddingTop="15dp"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/ic_chat_img_display_close"/>
+            </RelativeLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="67dp"
+                android:layout_alignParentBottom="true"
+                android:background="@drawable/ic_chat_img_display_gradient_footer"
+                android:gravity="right"
+                android:orientation="horizontal"
+                android:paddingBottom="7dp"
+                android:paddingTop="30dp">
+
+                <RelativeLayout
+                    android:id="@+id/write_comment_layout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:onClick="onClick"
+                    android:paddingLeft="19dp"
+                    android:paddingRight="65dp"
+                    android:visibility="gone">
+
+
+                    <TextView
+                        android:layout_width="200dp"
+                        android:layout_height="30dp"
+                        android:layout_centerVertical="true"
+                        android:drawableLeft="@drawable/ic_chat_img_comment_edit_logo"
+                        android:background="@drawable/bg_chat_img_comment_input"
+                        android:gravity="center_vertical"
+                        android:drawablePadding="6dp"
+                        android:maxLines="1"
+                        android:paddingLeft="9dp"
+                        android:text="@string/join_discuss"
+                        android:textColor="#e0ffffff"
+                        android:textSize="16sp"/>
+
+
+                </RelativeLayout>
+
+                <TextView
+                    android:id="@+id/comment_count_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:layout_marginRight="24dp"
+                    android:clickable="true"
+                    android:drawableLeft="@drawable/ic_chat_img_display_comment"
+                    android:drawablePadding="9dp"
+                    android:gravity="center"
+                    android:onClick="onClick"
+                    android:padding="5dp"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    android:visibility="gone"/>
+
+                <ImageView
+                    android:id="@+id/download_img"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginRight="24dp"
+                    android:adjustViewBounds="true"
+                    android:onClick="onClick"
+                    android:padding="5dp"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/ic_chat_img_display_download"/>
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/indicator"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:background="@android:color/transparent"
+            android:gravity="center"
+            android:text="%1$d/%2$d"
+            android:textColor="@android:color/white"
+            android:textSize="18sp"
+            android:visibility="gone"/>
+
+    </FrameLayout>
+
+    >
+
+</LinearLayout>
+

@@ -4,10 +4,13 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -34,11 +37,11 @@ import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.bean.Channel;
 import com.inspur.emmcloud.bean.GetFileUploadResult;
 import com.inspur.emmcloud.bean.GetMeetingReplyResult;
+import com.inspur.emmcloud.bean.GetMsgResult;
 import com.inspur.emmcloud.bean.GetNewMsgsResult;
 import com.inspur.emmcloud.bean.GetNewsImgResult;
 import com.inspur.emmcloud.bean.GetSendMsgResult;
 import com.inspur.emmcloud.bean.Msg;
-import com.inspur.emmcloud.bean.GetMsgResult;
 import com.inspur.emmcloud.broadcastreceiver.MsgReceiver;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.ui.app.groupnews.NewsWebDetailActivity;
@@ -70,13 +73,19 @@ import com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout.OnRefreshList
 import com.inspur.emmcloud.widget.pullableview.PullableListView;
 import com.inspur.imp.plugin.camera.editimage.EditImageActivity;
 import com.inspur.imp.plugin.camera.imagepicker.ImagePicker;
+import com.inspur.imp.plugin.camera.imagepicker.bean.ImageItem;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
+
+import static android.R.attr.action;
+import static android.R.attr.path;
 
 /**
  * com.inspur.emmcloud.ui.ChannelActivity
@@ -103,6 +112,7 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
     private String uid = "";
     private ECMChatInputMenu chatInputMenu;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -112,6 +122,7 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
         handMessage();
         registeMsgReceiver();
         registeRefreshNameReceiver();
+
     }
 
     // Activity在SingleTask的启动模式下多次打开传递Intent无效，用此方法解决
@@ -120,9 +131,84 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
         // TODO Auto-generated method stub
         super.onNewIntent(intent);
         setIntent(intent);
-        getIntent().putExtras(intent);
         init();
+
+
     }
+
+    /**
+     * 分享
+     *
+     * @param intent
+     */
+    private void handleShareFromOtherApps(Intent intent) {
+        String type = intent.getType();
+        LogUtils.YfcDebug("传入的type：" + type);
+        if (Intent.ACTION_SEND.equals(action) && type != null) {
+            if ("text/plain".equals(type)) {
+                dealTextMessage(intent);
+            } else if (type.startsWith("image/")) {
+                LogUtils.YfcDebug("启动分享到Image");
+                dealPicStream(intent);
+            }
+        } else if (Intent.ACTION_SEND_MULTIPLE.equals(action) && type != null) {
+            if (type.startsWith("image/")) {
+                dealMultiplePicStream(intent);
+            }
+        }
+    }
+
+    /**
+     * 适配分享文本
+     *
+     * @param intent
+     */
+    private void dealTextMessage(Intent intent) {
+        String share = intent.getStringExtra(Intent.EXTRA_TEXT);
+        String title = intent.getStringExtra(Intent.EXTRA_TITLE);
+    }
+
+    /**
+     * 处理图片
+     *
+     * @param intent
+     */
+    private void dealPicStream(Intent intent) {
+        Uri uri = intent.getParcelableExtra(Intent.EXTRA_STREAM);
+        String imgPath = getImagePath(uri, null);
+        LogUtils.YfcDebug("imagePath:" + imgPath);
+        EditImageActivity.start(ChannelActivity.this, imgPath, MyAppConfig.LOCAL_IMG_CREATE_PATH);
+    }
+
+    /**
+     * 处理多个
+     *
+     * @param intent
+     */
+    private void dealMultiplePicStream(Intent intent) {
+        ArrayList<Uri> arrayList = intent.getParcelableArrayListExtra(intent.EXTRA_STREAM);
+    }
+
+    /**
+     * uri转path
+     *
+     * @param uri
+     * @param selection
+     * @return
+     */
+    private String getImagePath(Uri uri, String selection) {
+        String path = null;
+        Cursor cursor = getContentResolver().query(uri, null, selection, null, null);
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                path = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));
+            }
+
+            cursor.close();
+        }
+        return path;
+    }
+
 
     private void init() {
         initData();
@@ -133,6 +219,8 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
      * 初始化界面数据
      */
     private void initData() {
+//            handleShareFromOtherApps(getIntent());
+
         channelId = getIntent().getExtras().getString("channelId");
 
         channelType = getIntent().getExtras().getString("channelType");
@@ -159,7 +247,7 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
         apiService.setAPIInterface(new WebService());
         chatInputMenu = (ECMChatInputMenu) findViewById(R.id.chat_input_menu);
         if (channelType.equals("GROUP")) {
-            chatInputMenu.setCanMention(true, channelId);
+            chatInputMenu.setIsChannelGroup(true, channelId);
         }
         chatInputMenu.setChatInputMenuListener(new ChatInputMenuListener() {
 
@@ -209,51 +297,6 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
         }
     }
 
-    // 分享
-    // public void shareMsg(){
-    // Intent intent = new Intent(Intent.ACTION_SEND);
-    // intent.setType("text/plain");
-    // // 查询所有可以分享的Activity
-    // List<ResolveInfo> resInfo =
-    // ChannelActivity.this.getPackageManager().queryIntentActivities(intent,
-    // PackageManager.MATCH_DEFAULT_ONLY);
-    // if (!resInfo.isEmpty()) {
-    // List<Intent> targetedShareIntents = new ArrayList<Intent>();
-    // for (ResolveInfo info : resInfo) {
-    // Intent targeted = new Intent(Intent.ACTION_SEND);
-    // targeted.setType("text/plain");
-    // ActivityInfo activityInfo = info.activityInfo;
-    // Log.v("logcat", "packageName=" + activityInfo.packageName + "Name=" +
-    // activityInfo.name);
-    // // 分享出去的内容
-    // targeted.putExtra(Intent.EXTRA_TEXT, "这是我的分享内容" + getPackageName());
-    // // 分享出去的标题
-    // targeted.putExtra(Intent.EXTRA_SUBJECT, "主题");
-    // targeted.setPackage(activityInfo.packageName);
-    // targeted.setClassName(activityInfo.packageName, info.activityInfo.name);
-    // PackageManager pm =
-    // ChannelActivity.this.getApplication().getPackageManager();
-    // // 微信有2个怎么区分-。- 朋友圈还有微信
-    // String appName =
-    // info.activityInfo.applicationInfo.loadLabel(pm).toString();
-    // if (appName.equals("微信")||appName.equals("QQ")) {
-    // targetedShareIntents.add(targeted);
-    // }
-    // }
-    // // 选择分享时的标题
-    // Intent chooserIntent =
-    // Intent.createChooser(targetedShareIntents.remove(0), "选择分享");
-    // if (chooserIntent == null) {
-    // return;
-    // }
-    // chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS,
-    // targetedShareIntents.toArray(new Parcelable[] {}));
-    // try {
-    // startActivity(chooserIntent);
-    // } catch (android.content.ActivityNotFoundException ex) {
-    // Toast.makeText(this, "找不到该分享应用组件", Toast.LENGTH_SHORT).show();
-    // }}
-    // }
 
     /**
      * 计算inputs的二进制
@@ -315,19 +358,21 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
                 String msgType = msg.getType();
                 String mid = "";
                 //当消息处于发送中状态时无法点击
-                if (msg.getSendStatus() != 1){
+                if (msg.getSendStatus() != 1) {
                     return;
                 }
-                if (msgType.equals("image") || msgType.equals("res_image")
-                        || msgType.equals("res_file")) {
+
+                if (msgType.equals("res_file")) {
                     mid = msg.getMid();
                     bundle.putString("mid", mid);
+                    bundle.putString("cid", msg.getCid());
                     IntentUtils.startActivity(ChannelActivity.this,
                             ChannelMsgDetailActivity.class, bundle);
                 } else if (msgType.equals("comment")
                         || msgType.equals("text_comment")) {
                     mid = msg.getCommentMid();
                     bundle.putString("mid", mid);
+                    bundle.putString("cid", msg.getCid());
                     IntentUtils.startActivity(ChannelActivity.this,
                             ChannelMsgDetailActivity.class, bundle);
                 } else if (msgType.equals("res_link")) {
@@ -389,24 +434,49 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
             } else if (requestCode == CAMERA_RESULT
                     && NetUtils.isNetworkConnected(getApplicationContext())) {
                 String cameraImgPath = Environment.getExternalStorageDirectory() + "/DCIM/" + PreferencesUtils.getString(ChannelActivity.this, "capturekey");
+                refreshGallery(ChannelActivity.this,cameraImgPath);
                 EditImageActivity.start(ChannelActivity.this, cameraImgPath, MyAppConfig.LOCAL_IMG_CREATE_PATH);
                 //拍照后图片编辑返回
             } else if (requestCode == EditImageActivity.ACTION_REQUEST_EDITIMAGE) {
 
-                Msg localMsg = MsgRecourceUploadUtils.uploadMsgImg(
+                Msg localMsg = MsgRecourceUploadUtils.uploadMsgImgFromCamera(
                         ChannelActivity.this, data, apiService);
                 addLocalMessage(localMsg);
             } else if (requestCode == MENTIONS_RESULT) {
                 // @返回
                 chatInputMenu.setMentionData(data);
             }
-        } else if (resultCode == ImagePicker.RESULT_CODE_ITEMS) { // 图库选择图片返回
-            if (data != null && requestCode == GELLARY_RESULT) {
-                Msg localMsg = MsgRecourceUploadUtils.uploadMsgImg(
-                        ChannelActivity.this, data, apiService);
-                addLocalMessage(localMsg);
-            }
+        } else {
+            // 图库选择图片返回
+            if (resultCode == ImagePicker.RESULT_CODE_ITEMS)
+                if (data != null && requestCode == GELLARY_RESULT) {
+                    ArrayList<ImageItem> imageItemList = (ArrayList<ImageItem>) data
+                            .getSerializableExtra(ImagePicker.EXTRA_RESULT_ITEMS);
+                    for (int i = 0;i<imageItemList.size();i++){
+                        Msg localMsg = MsgRecourceUploadUtils.uploadMsgImgFromPhotoSystem(
+                                ChannelActivity.this, imageItemList.get(i), apiService);
+                        addLocalMessage(localMsg);
+                    }
+                }
         }
+    }
+
+    /**
+     * 保存并显示把图片展示出来
+     * @param context
+     * @param cameraPath
+     */
+    private  void refreshGallery(Context context, String cameraPath) {
+        File file = new File(cameraPath);
+        // 其次把文件插入到系统图库
+        try {
+            MediaStore.Images.Media.insertImage(context.getContentResolver(),
+                    file.getAbsolutePath(), file.getName(), null);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        // 最后通知图库更新
+        context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + path)));
     }
 
     /**
@@ -468,8 +538,8 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
         } else { // 如果list中没有这真是的消息，就要替换成真实消息
             int fakeMsgIndex = msgList.indexOf(fakeMsg);
             if (fakeMsgIndex != -1) {
-                msgList.get(fakeMsgIndex).setMid(realMsg.getMid());
-                msgList.get(fakeMsgIndex).setSendStatus(1);
+                msgList.remove(fakeMsgIndex);
+                msgList.add(fakeMsgIndex,realMsg);
             } else {
                 msgList.add(realMsg);
             }
@@ -480,16 +550,17 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
 
     /**
      * 设置消息发送失败
+     *
      * @param fakeMessageId
      */
-    private void setMsgSendFail(String fakeMessageId){
+    private void setMsgSendFail(String fakeMessageId) {
         Msg fakeMsg = new Msg();
         fakeMsg.setMid(fakeMessageId);
-            int fakeMsgIndex = msgList.indexOf(fakeMsg);
-            if (fakeMsgIndex != -1) {
-                msgList.get(fakeMsgIndex).setSendStatus(2);
-                adapter.notifyDataSetChanged();
-            }
+        int fakeMsgIndex = msgList.indexOf(fakeMsg);
+        if (fakeMsgIndex != -1) {
+            msgList.get(fakeMsgIndex).setSendStatus(2);
+            adapter.notifyDataSetChanged();
+        }
 
     }
 
@@ -604,7 +675,8 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
                     public void onClick(View v) {
                         // TODO Auto-generated method stub
                         Bundle bundle = new Bundle();
-                        bundle.putSerializable("mid", msg.getCommentMid());
+                        bundle.putString("cid", msg.getCid());
+                        bundle.putString("mid", msg.getCommentMid());
                         IntentUtils.startActivity(ChannelActivity.this,
                                 ChannelMsgDetailActivity.class, bundle);
                     }
@@ -624,7 +696,8 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
                     public void onClick(View v) {
                         // TODO Auto-generated method stub
                         Bundle bundle = new Bundle();
-                        bundle.putSerializable("mid", msg.getMid());
+                        bundle.putString("mid", msg.getMid());
+                        bundle.putString("cid", msg.getCid());
                         IntentUtils.startActivity(ChannelActivity.this,
                                 ChannelMsgDetailActivity.class, bundle);
                     }
@@ -685,7 +758,7 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
                 refreshingAnimation.setInterpolator(lir);
                 refreshingImg.setVisibility(View.VISIBLE);
                 refreshingImg.startAnimation(refreshingAnimation);
-            }else if (msg.getSendStatus() == 2){
+            } else if (msg.getSendStatus() == 2) {
                 refreshingImg.setVisibility(View.VISIBLE);
                 refreshingImg.setImageResource(R.drawable.ic_chat_msg_send_fail);
             }
@@ -883,6 +956,8 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
     public void onLoadMore(PullToRefreshLayout pullToRefreshLayout) {
     }
 
+
+
     private class WebService extends APIInterfaceInstance {
         @Override
         public void returnSendMsgSuccess(GetSendMsgResult getSendMsgResult,
@@ -891,7 +966,7 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
         }
 
         @Override
-        public void returnSendMsgFail(String error,String fakeMessageId) {
+        public void returnSendMsgFail(String error, String fakeMessageId) {
             WebServiceMiddleUtils.hand(ChannelActivity.this, error);
             setMsgSendFail(fakeMessageId);
         }

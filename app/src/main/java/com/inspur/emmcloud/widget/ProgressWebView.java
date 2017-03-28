@@ -44,8 +44,11 @@ public class ProgressWebView extends WebView {
 			}
 		});
 		// 是否可以缩放
-		getSettings().setSupportZoom(true);
-		getSettings().setBuiltInZoomControls(true);
+		getSettings().setSupportZoom(false);
+		getSettings().setBuiltInZoomControls(false);
+		getSettings().setJavaScriptEnabled(true);
+		// 设置可以访问文件
+		getSettings().setAllowFileAccess(true);
 
 	}
 

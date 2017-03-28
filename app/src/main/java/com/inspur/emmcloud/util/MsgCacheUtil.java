@@ -1,9 +1,5 @@
 package com.inspur.emmcloud.util;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import android.content.Context;
 
 import com.inspur.emmcloud.bean.MatheSet;
@@ -11,6 +7,10 @@ import com.inspur.emmcloud.bean.Msg;
 import com.lidroid.xutils.db.sqlite.Selector;
 import com.lidroid.xutils.db.sqlite.WhereBuilder;
 import com.lidroid.xutils.exception.DbException;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * 消息缓存处理类
@@ -236,14 +236,27 @@ public class MsgCacheUtil {
 	 * @return
 	 */
 	public static List<Msg> getImgTypeMsgList(Context context, String cid) {
+
+		return getImgTypeMsgList(context,cid,true);
+
+	}
+
+	/**
+	 * 获取特定频道图片类型的消息
+	 * @param context
+	 * @param cid
+	 * @param desc
+	 * @return
+	 */
+	public  static List<Msg>  getImgTypeMsgList(Context context, String cid,boolean desc ){
 		List<Msg> imgTypeMsgList = null;
 		try {
-			
+
 			imgTypeMsgList = DbCacheUtils.getDb(context).findAll(Selector
 					.from(Msg.class)
 					.where("cid", "=", cid)
 					.and(WhereBuilder.b("type", "=", "image").or("type", "=",
-							"res_image")).orderBy("mid", true));
+							"res_image")).orderBy("mid", desc));
 		} catch (DbException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -252,7 +265,6 @@ public class MsgCacheUtil {
 			imgTypeMsgList = new ArrayList<Msg>();
 		}
 		return imgTypeMsgList;
-
 	}
 
 	/**

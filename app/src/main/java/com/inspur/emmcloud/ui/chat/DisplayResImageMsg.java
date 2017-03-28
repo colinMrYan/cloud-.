@@ -1,6 +1,7 @@
 package com.inspur.emmcloud.ui.chat;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
@@ -11,11 +12,16 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.Msg;
 import com.inspur.emmcloud.util.DensityUtil;
 import com.inspur.emmcloud.util.JSONUtils;
+import com.inspur.emmcloud.util.LogUtils;
+import com.inspur.emmcloud.util.MsgCacheUtil;
 import com.inspur.emmcloud.util.UriUtils;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
+
+import java.io.Serializable;
+import java.util.List;
 
 /**
  * DisplayResImageMsg
@@ -80,6 +86,41 @@ public class DisplayResImageMsg {
 					}
 				}
 			 imageView.setLayoutParams(params);
+			}
+		});
+
+		imageView.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				LogUtils.jasonDebug("msg.getSendStatus()="+msg.getSendStatus());
+				LogUtils.jasonDebug("msg.getcid()="+msg.getCid());
+				if (msg.getSendStatus() != 1) {
+					return;
+				}
+				int[] location = new int[2];
+//				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+//					Rect frame = new Rect();
+//					context.getWindow().getDecorView().getWindowVisibleDisplayFrame(frame);
+//					int statusBarHeight = frame.top;
+//					view.getLocationOnScreen(location);
+//					location[1] += statusBarHeight;
+//				} else {
+//					view.getLocationOnScreen(location);
+//				}
+				view.getLocationOnScreen(location);
+				view.invalidate();
+				int width = view.getWidth();
+				int height = view.getHeight();
+				Intent intent = new Intent(context,
+						ImagePagerActivity.class);
+				List<Msg> imgTypeMsgList = MsgCacheUtil.getImgTypeMsgList(context, msg.getCid(),false);
+				intent.putExtra(ImagePagerActivity.EXTRA_IMAGE_MSG_LIST, (Serializable) imgTypeMsgList);
+				intent.putExtra(ImagePagerActivity.EXTRA_CURRENT_IMAGE_MSG, msg);
+				intent.putExtra(ImagePagerActivity.PHOTO_SELECT_X_TAG, location[0]);
+				intent.putExtra(ImagePagerActivity.PHOTO_SELECT_Y_TAG, location[1]);
+				intent.putExtra(ImagePagerActivity.PHOTO_SELECT_W_TAG, width);
+				intent.putExtra(ImagePagerActivity.PHOTO_SELECT_H_TAG, height);
+				context.startActivity(intent);
 			}
 		});
 		

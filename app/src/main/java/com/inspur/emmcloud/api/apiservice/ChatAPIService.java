@@ -22,6 +22,7 @@ import com.inspur.emmcloud.bean.GetChannelListResult;
 import com.inspur.emmcloud.bean.GetCreateSingleChannelResult;
 import com.inspur.emmcloud.bean.GetFileUploadResult;
 import com.inspur.emmcloud.bean.GetMeetingReplyResult;
+import com.inspur.emmcloud.bean.GetMsgCommentCountResult;
 import com.inspur.emmcloud.bean.GetMsgCommentResult;
 import com.inspur.emmcloud.bean.GetMsgResult;
 import com.inspur.emmcloud.bean.GetNewMsgsResult;
@@ -179,7 +180,7 @@ public class ChatAPIService {
 			public void callbackSuccess(String arg0) {
 				// TODO Auto-generated method stub
 				apiInterface.returnMsgCommentSuccess(new GetMsgCommentResult(
-						arg0, mid));
+						arg0), mid);
 			}
 
 			@Override
@@ -814,6 +815,39 @@ public class ChatAPIService {
 			}
 		});
 
+	}
+
+	public void getMsgCommentCount(final String mid){
+		final String completeUrl = UriUtils.getHttpApiUri("message/" + mid
+				+ "/comment/count");
+		RequestParams params = ((MyApplication) context.getApplicationContext())
+				.getHttpRequestParams(completeUrl);
+		x.http().get(params, new APICallback() {
+
+			@Override
+			public void callbackTokenExpire() {
+				// TODO Auto-generated method stub
+				new OauthUtils(new OauthCallBack() {
+
+					@Override
+					public void execute() {
+						getMsgCommentCount(mid);
+					}
+				}, context).refreshTocken(completeUrl);
+			}
+
+			@Override
+			public void callbackSuccess(String arg0) {
+				// TODO Auto-generated method stub
+				apiInterface.returnMsgCommentCountSuccess(new GetMsgCommentCountResult(arg0),mid);
+			}
+
+			@Override
+			public void callbackFail(String error, int responseCode) {
+				// TODO Auto-generated method stub
+				apiInterface.returnMsgCommentCountFail(error);
+			}
+		});
 	}
 	
 }

@@ -1,30 +1,27 @@
 package com.inspur.emmcloud.ui.chat;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.adapter.AppCenterAdapter.Holder;
 import com.inspur.emmcloud.bean.Msg;
 import com.inspur.emmcloud.util.ImageDisplayUtils;
 import com.inspur.emmcloud.util.MsgCacheUtil;
 import com.inspur.emmcloud.util.UriUtils;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 public class GroupAlbumActivity extends BaseActivity {
 
@@ -32,6 +29,7 @@ public class GroupAlbumActivity extends BaseActivity {
 	private String cid;
 	private ArrayList<String> imgUrlList = new ArrayList<String>();
 	private ImageDisplayUtils imageDisplayUtils;
+	private List<Msg> imgTypeMsgList;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -50,8 +48,19 @@ public class GroupAlbumActivity extends BaseActivity {
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
 				// TODO Auto-generated method stub
-				Intent intent = new Intent(getApplicationContext(),
+				int[] location = new int[2];
+				view.getLocationOnScreen(location);
+				view.invalidate();
+				int width = view.getWidth();
+				int height = view.getHeight();
+				Intent intent = new Intent(GroupAlbumActivity.this,
 						ImagePagerActivity.class);
+				intent.putExtra(ImagePagerActivity.EXTRA_IMAGE_MSG_LIST, (Serializable) imgTypeMsgList);
+				intent.putExtra(ImagePagerActivity.EXTRA_CURRENT_IMAGE_MSG, imgTypeMsgList.get(position));
+				intent.putExtra(ImagePagerActivity.PHOTO_SELECT_X_TAG, location[0]);
+				intent.putExtra(ImagePagerActivity.PHOTO_SELECT_Y_TAG, location[1]);
+				intent.putExtra(ImagePagerActivity.PHOTO_SELECT_W_TAG, width);
+				intent.putExtra(ImagePagerActivity.PHOTO_SELECT_H_TAG, height);
 				intent.putExtra("image_index", position);
 				intent.putStringArrayListExtra("image_urls", imgUrlList);
 				startActivity(intent);
@@ -65,7 +74,7 @@ public class GroupAlbumActivity extends BaseActivity {
 	 */
 	private void getImgMsgList() {
 		// TODO Auto-generated method stub
-		List<Msg> imgTypeMsgList = MsgCacheUtil.getImgTypeMsgList(GroupAlbumActivity.this, cid);
+		imgTypeMsgList = MsgCacheUtil.getImgTypeMsgList(GroupAlbumActivity.this, cid);
 		for (int i = 0; i < imgTypeMsgList.size(); i++) {
 			String url = UriUtils.getPreviewUri(imgTypeMsgList.get(i).getImgTypeMsgImg());
 			imgUrlList.add(url);

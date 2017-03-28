@@ -18,7 +18,6 @@ import android.webkit.WebView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
-
 import com.inspur.imp.api.JsInterface;
 import com.inspur.imp.api.Res;
 import com.inspur.imp.api.iLog;
@@ -54,7 +53,7 @@ public class ImpWebView extends WebView {
 	public static final String USERAGENT = "Mozilla/5.0 (Linux; U; Android "
 			+ Build.VERSION.RELEASE + "; en-us; " + Build.MODEL
 			+ " Build/FRF91) AppleWebKit/533.1 "
-			+ "(KHTML, like Gecko) Version/4.0 Mobile Safari/533.1";
+			+ "(KHTML, like Gecko) Version/4.0 Chrome/51.0.2704.81 Mobile Safari/533.1";
 	private ProgressBar progressbar;
 	private static final String TAG = "ImpWebView";
 	private RelativeLayout progressLayout;
@@ -151,7 +150,7 @@ public class ImpWebView extends WebView {
 		super.loadUrl(url);
 		Runtime.getRuntime().gc();
 	}
-	
+
 	/*
 	 * 测量webview高度和宽度
 	 */
@@ -187,7 +186,7 @@ public class ImpWebView extends WebView {
 		settings.setJavaScriptEnabled(true);
 		settings.setUseWideViewPort(true);
 		settings.setSupportZoom(false);
-		settings.setBuiltInZoomControls(true);
+		settings.setBuiltInZoomControls(false);
 	}
 
 	/* 页面效果设置 */

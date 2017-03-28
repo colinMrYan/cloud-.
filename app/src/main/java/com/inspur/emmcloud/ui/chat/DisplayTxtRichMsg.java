@@ -1,17 +1,9 @@
 package com.inspur.emmcloud.ui.chat;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import android.content.Context;
-import android.graphics.Color;
 import android.text.SpannableString;
 import android.text.method.LinkMovementMethod;
 import android.view.View;
-import android.widget.RelativeLayout;
-import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.MyApplication;
@@ -21,6 +13,11 @@ import com.inspur.emmcloud.util.DensityUtil;
 import com.inspur.emmcloud.util.JSONUtils;
 import com.inspur.emmcloud.util.MentionsAndUrlShowUtils;
 import com.inspur.emmcloud.util.TransHtmlToTextUtils;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * DisplayTxtRichMsg
@@ -56,8 +53,10 @@ public class DisplayTxtRichMsg {
 		richText.setText(spannableString);
 		richText.setBackgroundColor(context.getResources().getColor(
 				isMyMsg ? R.color.header_bg : R.color.white));
+//		richText.setBackgroundColor(ContextCompat.getColor(context,isMyMsg ? R.color.header_bg : R.color.white));
 		richText.setTextColor(context.getResources().getColor(
 				isMyMsg ? R.color.white : R.color.black));
+//		richText.setBackgroundColor(ContextCompat.getColor(context,isMyMsg ? R.color.white : R.color.black));
 		int normalPadding = DensityUtil.dip2px(context, 10);
 		int arrowPadding = DensityUtil.dip2px(context, 8);
 		if (isMyMsg) {

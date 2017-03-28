@@ -8,7 +8,12 @@ import android.webkit.CookieSyncManager;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import com.inspur.emmcloud.api.APIInterfaceInstance;
+import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
+import com.inspur.emmcloud.bean.AppRedirectResult;
+import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
+import com.inspur.emmcloud.util.URLRequestParamsUtils;
 
 
 /**
@@ -21,8 +26,6 @@ import com.inspur.emmcloud.util.PreferencesUtils;
 public class ImpWebViewClient extends WebViewClient {
 	private String urlparam = "";
 	private final String F_UEX_SCRIPT_SELF_FINISH = "javascript:if(window.init){window.init();}";
-	private String mCurrentUrl;
-	private ImpWebView impView;
 	private ImpWebView myWebView;
 	private String errolUrl = "file:///android_asset/error/error.html";
 
@@ -90,38 +93,84 @@ public class ImpWebViewClient extends WebViewClient {
 	@Override
 	public void onReceivedError(WebView view, int errorCode,
 			String description, String failingUrl) {
-		ImpWebView webview = (ImpWebView) view;
-		// 清理缓存
-		webview.clearCache(true);
-		webview.clearHistory();
+		final ImpWebView webview = (ImpWebView) view;
 		CookieManager.getInstance().removeSessionCookie();
-
-		// if (impView != null && webview != null && webview == impView
-		// && window != null) {
-		// window.close();
-		// return;
-		// }
-		// impView = webview;
-		// webview.loadUrl(errolUrl);
+		//延迟一秒钟解决无法清除历史的问题
+		webview.postDelayed(new Runnable() {
+			@Override
+			public void run() {
+				// 清理缓存
+				webview.clearCache(true);
+				webview.clearHistory();
+			}
+		}, 1000);
+		 webview.loadUrl(errolUrl);
 	}
 
+//	@Override
+//	public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
+//		super.onReceivedError(view, request, error);
+//		LogUtils.jasonDebug("onReceivedError222-------------");
+//		view.loadUrl(errolUrl);
+//	}
+
+
 	/*
-	 * 对网页中超链接按钮的响应
-	 */
+			 * 对网页中超链接按钮的响应
+			 */
 	@Override
 	public boolean shouldOverrideUrlLoading(WebView view, String url) {
-		ImpWebView impView = (ImpWebView) view;
-		if (url.contains("http")) {
-			int index = url.indexOf("http");
-			url = url.substring(index);
-		}
-		if (mCurrentUrl != null && url != null && url.equals(mCurrentUrl)) {
-			impView.goBack();
-			return true;
-		}
-		view.loadUrl(url);
-		mCurrentUrl = url;
-		return true;
+//		LogUtils.jasonDebug("shouldOverrideUrlLoading-------------");
+//		ImpWebView impView = (ImpWebView) view;
+//		if (url.contains("http")) {
+//			int index = url.indexOf("http");
+//			url = url.substring(index);
+//		}
+//		if (mCurrentUrl != null && url != null && url.equals(mCurrentUrl)) {
+//			impView.goBack();
+//			return true;
+//		}
+//		view.loadUrl(url);
+//		mCurrentUrl = url;
+//		return true;
+		handleReDirectURL(url,view);
+		return super.shouldOverrideUrlLoading(view, url);
 
+	}
+
+	/**
+	 * 处理重定向的URL
+	 * @param url
+	 */
+	private void handleReDirectURL(String url, WebView view) {
+		if(url.contains("https://id.inspur.com/oauth2.0/authorize")){
+			String params = URLRequestParamsUtils.TruncateUrlPage(url);
+			MyAppAPIService appAPIService = new MyAppAPIService(view.getContext());
+			appAPIService.setAPIInterface(new WebService(view));
+			if(NetUtils.isNetworkConnected(view.getContext())){
+				appAPIService.getAuthCode(params);
+			}
+		}
+
+	}
+
+	class WebService extends APIInterfaceInstance {
+		private WebView webView;
+		public WebService(WebView webView){
+			this.webView = webView;
+		}
+
+		@Override
+		public void returnGetAppAuthCodeResultSuccess(AppRedirectResult appRedirectResult) {
+			if(NetUtils.isNetworkConnected(webView.getContext())){
+				webView.loadUrl(appRedirectResult.getRedirect_uri());
+			}
+			super.returnGetAppAuthCodeResultSuccess(appRedirectResult);
+		}
+
+		@Override
+		public void returnGetAppAuthCodeResultFail(String error) {
+			super.returnGetAppAuthCodeResultFail(error);
+		}
 	}
 }

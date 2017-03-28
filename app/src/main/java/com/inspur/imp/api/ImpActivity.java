@@ -23,13 +23,12 @@ import com.inspur.emmcloud.util.AppUtils;
 import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.imp.engine.webview.ImpWebChromeClient;
 import com.inspur.imp.engine.webview.ImpWebView;
+import com.inspur.imp.engine.webview.ImpWebViewClient;
 import com.inspur.imp.plugin.camera.PublicWay;
 import com.inspur.imp.plugin.file.FileService;
 
 import java.util.HashMap;
 import java.util.Map;
-
-
 
 
 public class ImpActivity extends ImpBaseActivity {
@@ -59,6 +58,7 @@ public class ImpActivity extends ImpBaseActivity {
 				.getWidgetID("progress_layout"));
 		webView = (ImpWebView) findViewById(Res.getWidgetID("webview"));
 		webView.setProperty(progressLayout);
+		webView.setWebViewClient(new ImpWebViewClient());
 		getWindow().setSoftInputMode(
 				WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
 						| WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
@@ -67,13 +67,12 @@ public class ImpActivity extends ImpBaseActivity {
 		if (uri != null){
 			String host = uri.getHost();
 			url = "https://emm.inspur.com/ssohandler/gs_msg/"+host;
-
 		}else{
 			url = getIntent().getExtras().getString("uri");
 		}
 		if (getIntent().hasExtra("appName")) {
 			initWebViewGoBackOrClose();
-			((RelativeLayout) findViewById(Res.getWidgetID("header_layout")))
+			( findViewById(Res.getWidgetID("header_layout")))
 					.setVisibility(View.VISIBLE);
 			((TextView) findViewById(Res.getWidgetID("header_text")))
 					.setText(getIntent().getExtras().getString("appName"));
@@ -258,5 +257,8 @@ public class ImpActivity extends ImpBaseActivity {
 			}
 		}
 	}
+
+
+
 
 }

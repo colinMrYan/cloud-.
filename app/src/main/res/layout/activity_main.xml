@@ -10,8 +10,9 @@
         android:id="@+id/splash_image"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:src="@drawable/splash"
         android:scaleType="fitXY"
-        android:src="@drawable/splash" />
+         />
 
     <com.inspur.emmcloud.widget.CircularProgress
         android:layout_width="45dp"

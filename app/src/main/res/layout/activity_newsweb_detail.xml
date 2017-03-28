@@ -53,20 +53,9 @@
             android:paddingLeft="12dp"
             android:paddingRight="15dp"
             android:scaleType="centerInside"
-            android:src="@drawable/icon_share" />
+            android:src="@drawable/app_news_setting" />
 
-        <ImageView
-            android:id="@+id/news_font_size_img"
-            android:layout_width="48dp"
-            android:layout_height="match_parent"
-            android:layout_toLeftOf="@id/news_share_img"
-            android:layout_centerVertical="true"
-            android:clickable="true"
-            android:onClick="onClick"
-            android:paddingLeft="17dp"
-            android:paddingRight="5dp"
-            android:scaleType="centerInside"
-            android:src="@drawable/app_fonts_size" />
+
 
     </RelativeLayout>
 

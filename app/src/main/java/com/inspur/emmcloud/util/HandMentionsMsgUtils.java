@@ -1,11 +1,11 @@
 package com.inspur.emmcloud.util;
 
-import java.util.Arrays;
-import java.util.List;
-
 import android.text.SpannableString;
 
 import com.inspur.emmcloud.bean.Msg;
+
+import java.util.Arrays;
+import java.util.List;
 
 public class HandMentionsMsgUtils {
 

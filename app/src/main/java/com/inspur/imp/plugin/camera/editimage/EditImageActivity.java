@@ -24,6 +24,7 @@ import android.widget.Toast;
 import android.widget.ViewFlipper;
 
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.ToastUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
@@ -40,6 +41,7 @@ import com.inspur.imp.plugin.camera.editimage.view.imagezoom.ImageViewTouchBase;
 import com.inspur.imp.plugin.photo.PhotoNameUtils;
 import com.inspur.imp.plugin.photo.UploadPhoto;
 import com.inspur.imp.plugin.photo.UploadPhoto.OnUploadPhotoListener;
+import com.inspur.imp.util.imgcompress.Compressor;
 
 import org.json.JSONObject;
 
@@ -67,13 +69,13 @@ public class EditImageActivity extends FragmentActivity {
 	public static final int MODE_ROTATE = 4;// 旋转模式
 	public static final int MODE_TEXT = 5;// 文字模式
 	protected static final int CUT_IMG_SUCCESS = 7;
-	
-	private int parm_resolution = 1080;
-	private int parm_qualtity = 100;
-	private int parm_encodingType;
+
+	private int parm_resolution = 1200;
+	private int parm_qualtity = 90;
+	private int parm_encodingType = 0;
 	private String parm_context;
 	private String parm_uploadUrl;
-	
+
 	private LoadingDialog loadingDlg;
 	public boolean isNeedUpload = false;
 	public String filePath;// 需要编辑图片路径
@@ -105,29 +107,26 @@ public class EditImageActivity extends FragmentActivity {
 	public RotateFragment mRotateFragment;// 图片旋转Fragment
 	// public TextFragment mTextFragment;// 文字Fragment
 	private Handler handle;
+
 	/**
-	 * @param srcPath
-	 *            原图片路径
-	 * @param targetPath
-	 *            　图片修改后保存的位置
+	 * @param srcPath    原图片路径
+	 * @param targetPath 　图片修改后保存的位置
 	 */
 	public static void start(Activity activity, String srcPath,
-			String targetPath) {
+							 String targetPath) {
 		Intent intent = new Intent(activity, EditImageActivity.class);
 		intent.putExtra(EditImageActivity.FILE_PATH, srcPath);
-		LogUtils.jasonDebug("srcPath="+srcPath);
+		LogUtils.jasonDebug("srcPath=" + srcPath);
 		intent.putExtra(EditImageActivity.EXTRA_OUTPUT, targetPath);
 		activity.startActivityForResult(intent, ACTION_REQUEST_EDITIMAGE);
 	}
-	
+
 	/**
-	 * @param srcPath
-	 *            原图片路径
-	 * @param targetPath
-	 *            　图片修改后保存的位置
+	 * @param srcPath    原图片路径
+	 * @param targetPath 　图片修改后保存的位置
 	 */
 	public static void start(Activity activity, String srcPath,
-			String targetPath,boolean isNeedUpload,String paramsObject) {
+							 String targetPath, boolean isNeedUpload, String paramsObject) {
 		Intent intent = new Intent(activity, EditImageActivity.class);
 		intent.putExtra(EditImageActivity.FILE_PATH, srcPath);
 		intent.putExtra(EditImageActivity.EXTRA_OUTPUT, targetPath);
@@ -148,12 +147,12 @@ public class EditImageActivity extends FragmentActivity {
 	private void getData() {
 		filePath = getIntent().getStringExtra(FILE_PATH);
 		currentFilePath = filePath;
-		
+
 		saveFilePath = getIntent().getStringExtra(EXTRA_OUTPUT);// 保存图片路径
 		if (getIntent().hasExtra(EXTRA_NEED_UPLOAD)) {
 			isNeedUpload = getIntent().getBooleanExtra(EXTRA_NEED_UPLOAD, false);
 			String json = getIntent().getStringExtra(EXTRA_PARAM);
-			LogUtils.jasonDebug("json="+json);
+			LogUtils.jasonDebug("json=" + json);
 			try {
 				JSONObject jsonObject = new JSONObject(json);
 				if (!jsonObject.isNull("options")) {
@@ -182,14 +181,14 @@ public class EditImageActivity extends FragmentActivity {
 				// TODO: handle exception
 				e.printStackTrace();
 			}
-			
+
 		}
 		File file = new File(saveFilePath);
 		if (!file.exists()) {
 			file.mkdirs();
 		}
-		
-		saveFilePath = saveFilePath+PhotoNameUtils.getFileName(getApplicationContext());
+
+		saveFilePath = saveFilePath + PhotoNameUtils.getFileName(getApplicationContext(),parm_encodingType);
 		loadImage(filePath);
 	}
 
@@ -251,16 +250,16 @@ public class EditImageActivity extends FragmentActivity {
 			// System.out.println("createFragment-->"+index);
 			if (index == 0)
 				return mMainMenuFragment;// 主菜单
-				// if (index == 1)
-				// return mStirckerFragment;// 贴图
-				// if (index == 2)
-				// return mFliterListFragment;// 滤镜
+			// if (index == 1)
+			// return mStirckerFragment;// 贴图
+			// if (index == 2)
+			// return mFliterListFragment;// 滤镜
 			if (index == 1)
 				return mCropFragment;// 剪裁
 			if (index == 2)
 				return mRotateFragment;// 旋转
-				// if (index == 5)
-				// return mTextFragment;//文本
+			// if (index == 5)
+			// return mTextFragment;//文本
 			return MainMenuFragment.newInstance(EditImageActivity.this);
 		}
 
@@ -288,9 +287,9 @@ public class EditImageActivity extends FragmentActivity {
 		protected Bitmap doInBackground(String... params) {
 			Bitmap bitmap = null;
 			try {
-				bitmap = BitmapUtils.loadImageByPath(params[0], imageWidth,
-						imageHeight,parm_resolution,parm_qualtity);
-			}catch (Exception e){
+				bitmap = new Compressor.Builder(EditImageActivity.this).setMaxHeight(parm_resolution).setMaxWidth(parm_resolution).setQuality(parm_qualtity).setDestinationDirectoryPath(MyAppConfig.LOCAL_IMG_CREATE_PATH)
+						.build().compressToBitmap(new File(params[0]));
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 
@@ -305,10 +304,10 @@ public class EditImageActivity extends FragmentActivity {
 				mainBitmap = null;
 				System.gc();
 			}
-			if (result == null){
-				ToastUtils.show(getApplicationContext(),getResources().getString(R.string.img_decode_fail));
+			if (result == null) {
+				ToastUtils.show(getApplicationContext(), getResources().getString(R.string.img_decode_fail));
 				finish();
-			}else {
+			} else {
 				mainBitmap = result;
 				mainImage.setImageBitmap(result);
 				mainImage
@@ -325,21 +324,21 @@ public class EditImageActivity extends FragmentActivity {
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
 			switch (mode) {
-			case MODE_STICKERS:
-				// mStirckerFragment.backToMain();
-				return true;
-			case MODE_FILTER:// 滤镜编辑状态
-				// mFliterListFragment.backToMain();// 保存滤镜贴图
-				return true;
-			case MODE_CROP:// 剪切图片保存
-				mCropFragment.backToMain();
-				return true;
-			case MODE_ROTATE:// 旋转图片保存
-				mRotateFragment.backToMain();
-				return true;
-			case MODE_TEXT:// 旋转文字保存
-				// mTextFragment.backToMain();
-				return true;
+				case MODE_STICKERS:
+					// mStirckerFragment.backToMain();
+					return true;
+				case MODE_FILTER:// 滤镜编辑状态
+					// mFliterListFragment.backToMain();// 保存滤镜贴图
+					return true;
+				case MODE_CROP:// 剪切图片保存
+					mCropFragment.backToMain();
+					return true;
+				case MODE_ROTATE:// 旋转图片保存
+					mRotateFragment.backToMain();
+					return true;
+				case MODE_TEXT:// 旋转文字保存
+					// mTextFragment.backToMain();
+					return true;
 			}// end switch
 
 			forceReturnBack();
@@ -364,23 +363,23 @@ public class EditImageActivity extends FragmentActivity {
 		@Override
 		public void onClick(View v) {
 			switch (mode) {
-			case MODE_STICKERS:
-				// mStirckerFragment.saveStickers();// 保存贴图
-				break;
-			case MODE_FILTER:// 滤镜编辑状态
-				// mFliterListFragment.saveFilterImage();// 保存滤镜贴图
-				break;
-			case MODE_CROP:// 剪切图片保存
-				mCropFragment.saveCropImage();
-				break;
-			case MODE_ROTATE:// 旋转图片保存
-				mRotateFragment.saveRotateImage();
-				break;
-			case MODE_TEXT:// 文字保存
-				// mTextFragment.saveTextSticker();
-				break;
-			default:
-				break;
+				case MODE_STICKERS:
+					// mStirckerFragment.saveStickers();// 保存贴图
+					break;
+				case MODE_FILTER:// 滤镜编辑状态
+					// mFliterListFragment.saveFilterImage();// 保存滤镜贴图
+					break;
+				case MODE_CROP:// 剪切图片保存
+					mCropFragment.saveCropImage();
+					break;
+				case MODE_ROTATE:// 旋转图片保存
+					mRotateFragment.saveRotateImage();
+					break;
+				case MODE_TEXT:// 文字保存
+					// mTextFragment.saveTextSticker();
+					break;
+				default:
+					break;
 			}// end switch
 		}
 	}// end inner class
@@ -393,63 +392,61 @@ public class EditImageActivity extends FragmentActivity {
 	private final class SaveBtnClick implements OnClickListener {
 		@Override
 		public void onClick(View v) {
-			if (!isNeedUpload) {
-				returnDataAndClose(null);
-			}else {
-				loadingDlg.show();
-				cutImg();
-			}
+			loadingDlg.show(isNeedUpload);
+			cutImg();
 		}
 
 	}// end inner class
-	
+
 	private void handMessage() {
 		// TODO Auto-generated method stub
-		handle = new Handler(){
+		handle = new Handler() {
 
 			@Override
 			public void handleMessage(Message msg) {
 				// TODO Auto-generated method stub
 				switch (msg.what) {
-				case CUT_IMG_SUCCESS:
-					uploadImg();
-					break;
+					case CUT_IMG_SUCCESS:
+						if (!isNeedUpload){
+							returnDataAndClose(null);
+						}else{
+							uploadImg();
+						}
+						break;
 
-				default:
-					break;
+					default:
+						break;
 				}
 			}
-			
+
 		};
 	}
 
-	
+
 	/**
 	 * 进行图片裁剪
 	 */
 	private void cutImg() {
 		// TODO Auto-generated method stub
 		new Thread(new Runnable() {
-			
+
 			@Override
 			public void run() {
 				// TODO Auto-generated method stub
-				if (!saveFilePath.equals(currentFilePath)) {
-					BitmapUtils.saveBitmap(mainBitmap, saveFilePath);
-					currentFilePath = saveFilePath;
-				}
+				BitmapUtils.saveBitmap(mainBitmap, saveFilePath, parm_qualtity,parm_encodingType);
+				currentFilePath = saveFilePath;
 				handle.sendEmptyMessage(CUT_IMG_SUCCESS);
 			}
 		}).start();
-		
+
 	}
-	
+
 	/**
 	 * 图片进行上传
 	 */
-	private void uploadImg(){
-		new UploadPhoto(EditImageActivity.this,new OnUploadPhotoListener() {
-			
+	private void uploadImg() {
+		new UploadPhoto(EditImageActivity.this, new OnUploadPhotoListener() {
+
 			@Override
 			public void uploadPhotoSuccess(String result) {
 				// TODO Auto-generated method stub
@@ -458,7 +455,7 @@ public class EditImageActivity extends FragmentActivity {
 				}
 				returnDataAndClose(result);
 			}
-			
+
 			@Override
 			public void uploadPhotoFail() {
 				// TODO Auto-generated method stub
@@ -469,8 +466,8 @@ public class EditImageActivity extends FragmentActivity {
 			}
 		}).upload(parm_uploadUrl, saveFilePath, parm_encodingType, parm_context);
 	}
-	
-	private void returnDataAndClose(String uploadResult){
+
+	private void returnDataAndClose(String uploadResult) {
 		Intent returnIntent = new Intent();
 		if (uploadResult != null) {
 			returnIntent.putExtra("uploadResult", uploadResult);
@@ -506,7 +503,7 @@ public class EditImageActivity extends FragmentActivity {
 	}
 
 	public static Dialog getLoadingDialog(Context context, String title,
-			boolean canCancel) {
+										  boolean canCancel) {
 		ProgressDialog dialog = new ProgressDialog(context);
 		dialog.setCancelable(canCancel);
 		dialog.setMessage(title);

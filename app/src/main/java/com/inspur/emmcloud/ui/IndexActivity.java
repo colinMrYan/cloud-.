@@ -45,7 +45,7 @@ import com.inspur.emmcloud.bean.ReactNativeUpdateBean;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.interf.OnTabReselectListener;
 import com.inspur.emmcloud.interf.OnWorkFragmentDataChanged;
-import com.inspur.emmcloud.service.CollectService;
+import com.inspur.emmcloud.service.PVCollectService;
 import com.inspur.emmcloud.ui.find.FindFragment;
 import com.inspur.emmcloud.util.AppUtils;
 import com.inspur.emmcloud.util.ChannelGroupCacheUtils;
@@ -55,6 +55,7 @@ import com.inspur.emmcloud.util.FileUtils;
 import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
+import com.inspur.emmcloud.util.RNCacheViewManager;
 import com.inspur.emmcloud.util.RobotCacheUtils;
 import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.ToastUtils;
@@ -96,7 +97,7 @@ public class IndexActivity extends BaseFragmentActivity implements
     private ReactNativeUpdateBean reactNativeUpdateBean;
     private AppAPIService appApiService;
     private String userId;
-    private boolean isReactNativeClientIdInvalid = false;
+    private boolean isReactNativeClientUpdateFail = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -122,7 +123,7 @@ public class IndexActivity extends BaseFragmentActivity implements
         }
         /**从服务端获取显示tab**/
         getAppTabs();
-//		startUploadCollectService();
+		startUploadPVCollectService();
         registerReactNativeReceiver();
 
     }
@@ -143,8 +144,9 @@ public class IndexActivity extends BaseFragmentActivity implements
      * 初始化ReactNative
      */
     private void initReactNative() {
+        RNCacheViewManager.init(IndexActivity.this);
         reactNativeCurrentPath = MyAppConfig.getReactCurrentFilePath(IndexActivity.this,userId);
-        if (checkClientId()) {
+        if (checkClientIdNotExit()) {
             getReactNativeClientId();
         }
         if (!ReactNativeFlow.checkBundleFileIsExist(reactNativeCurrentPath + "/index.android.bundle")) {
@@ -171,7 +173,7 @@ public class IndexActivity extends BaseFragmentActivity implements
      *
      * @return
      */
-    private boolean checkClientId() {
+    private boolean checkClientIdNotExit() {
         String clientId = PreferencesUtils.getString(IndexActivity.this, UriUtils.tanent + userId + "react_native_clientid", "");
         return StringUtils.isBlank(clientId);
     }
@@ -194,11 +196,11 @@ public class IndexActivity extends BaseFragmentActivity implements
     /***
      * 打开app应用行为分析上传的Service;
      */
-    private void startUploadCollectService() {
+    private void startUploadPVCollectService() {
         // TODO Auto-generated method stub
         if (!AppUtils.isServiceWork(getApplicationContext(), "com.inspur.emmcloud.service.CollectService")) {
             Intent intent = new Intent();
-            intent.setClass(this, CollectService.class);
+            intent.setClass(this, PVCollectService.class);
             startService(intent);
         }
     }
@@ -742,15 +744,17 @@ public class IndexActivity extends BaseFragmentActivity implements
 
         @Override
         public void returnReactNativeUpdateFail(ReactNativeClientIdErrorBean reactNativeClientIdErrorBean) {
-            isReactNativeClientIdInvalid = true;
-            getReactNativeClientId();
+            isReactNativeClientUpdateFail = true;
+            if(!checkClientIdNotExit()){
+                getReactNativeClientId();
+            }
         }
 
         @Override
         public void returnGetClientIdResultSuccess(GetClientIdRsult getClientIdRsult) {
             super.returnGetClientIdResultSuccess(getClientIdRsult);
             PreferencesUtils.putString(IndexActivity.this, UriUtils.tanent + userId + "react_native_clientid", getClientIdRsult.getClientId());
-            if(isReactNativeClientIdInvalid){
+            if(isReactNativeClientUpdateFail){
                 updateReactNative();
             }
         }
@@ -793,6 +797,9 @@ public class IndexActivity extends BaseFragmentActivity implements
             FindFragment.hasUpdated = true;
         } else if (state == ReactNativeFlow.REACT_NATIVE_NO_UPDATE) {
             //没有更新什么也不做
+        }
+        if(FindFragment.hasUpdated){
+            RNCacheViewManager.init(IndexActivity.this);
         }
     }
 

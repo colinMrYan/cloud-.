@@ -1,18 +1,18 @@
 package com.inspur.emmcloud.util;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.json.JSONArray;
-
 import android.content.Context;
 
 import com.inspur.emmcloud.bean.Contact;
 import com.lidroid.xutils.db.sqlite.Selector;
 import com.lidroid.xutils.db.sqlite.WhereBuilder;
 import com.lidroid.xutils.exception.DbException;
+
+import org.json.JSONArray;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class ContactCacheUtils {
 
@@ -92,12 +92,7 @@ public class ContactCacheUtils {
 	 * @param time
 	 */
 	public static void saveLastUpdateTime(Context context, String time) {
-		String userID = PreferencesUtils.getString(context, "userID", "");
-		String tanent = UriUtils.tanent;
-		PropertiesConfigUtils.getInstance(userID + "/" + tanent + "/",
-				"config.txt", context).remove("contactLastUpdate_1");
-		PropertiesConfigUtils.getInstance(userID + "/" + tanent + "/",
-				"config.txt", context).setProperty("contactLastUpdate_2", time);
+		PreferencesByUserUtils.putString(context,"contactUpdateTime",time);
 	}
 
 	/**
@@ -106,11 +101,7 @@ public class ContactCacheUtils {
 	 * @return
 	 */
 	public static String getLastUpdateTime(Context context) {
-		String userID = PreferencesUtils.getString(context, "userID", "");
-		String tanent = UriUtils.tanent;
-		return PropertiesConfigUtils.getInstance(userID + "/" + tanent + "/",
-				"config.txt", context).getProperty("contactLastUpdate_2", "");
-
+		return PreferencesByUserUtils.getString(context,"contactUpdateTime","");
 	}
 
 	/**
@@ -118,6 +109,7 @@ public class ContactCacheUtils {
 	 * 
 	 * @param context
 	 * @return
+	 * +
 	 */
 	public static Contact getRootContact(Context context) {
 		Contact contact = null;

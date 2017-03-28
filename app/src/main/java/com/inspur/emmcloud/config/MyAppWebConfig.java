@@ -13,7 +13,7 @@ public class MyAppWebConfig {
     /**
      * 云+Web  小字体
      */
-    public static final int SMALLER = 75;
+    public static final int SMALLER = 90;
     /**
      * 云+Web 正常字体
      */
@@ -21,9 +21,9 @@ public class MyAppWebConfig {
     /**
      * 云+Web 大字体
      */
-    public static final int LARGER = 150;
+    public static final int LARGER = 120;
     /**
      * 云+Web 超大字体
      */
-    public static final int LARGEST = 200;
+    public static final int LARGEST = 150;
 }

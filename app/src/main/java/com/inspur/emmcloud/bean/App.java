@@ -1,12 +1,12 @@
 package com.inspur.emmcloud.bean;
 
-import java.io.Serializable;
-import java.util.List;
+import com.inspur.emmcloud.util.LogUtils;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import com.inspur.emmcloud.util.LogUtils;
+import java.io.Serializable;
+import java.util.List;
 
 public class App implements Serializable {
 	private static final String TAG = "App";
@@ -188,7 +188,59 @@ public class App implements Serializable {
 	public void setWeight(double weight) {
 		this.weight = weight;
 	}
-	
+
+	public void setAppID(String appID) {
+		this.appID = appID;
+	}
+
+	public void setAppName(String appName) {
+		this.appName = appName;
+	}
+
+	public void setLastModifyTime(String lastModifyTime) {
+		this.lastModifyTime = lastModifyTime;
+	}
+
+	public void setAppIcon(String appIcon) {
+		this.appIcon = appIcon;
+	}
+
+	public void setUri(String uri) {
+		this.uri = uri;
+	}
+
+	public void setNote(String note) {
+		this.note = note;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public void setDisabled(Boolean disabled) {
+		this.disabled = disabled;
+	}
+
+	public void setMustHave(Boolean mustHave) {
+		isMustHave = mustHave;
+	}
+
+	public void setAppType(int appType) {
+		this.appType = appType;
+	}
+
+	public void setVersion(String version) {
+		this.version = version;
+	}
+
+	public void setIdentifiers(String identifiers) {
+		this.identifiers = identifiers;
+	}
+
+	public void setLegends(List<String> legends) {
+		this.legends = legends;
+	}
+
 	@Override
 	public boolean equals(Object other) {
 		if(this == other){
