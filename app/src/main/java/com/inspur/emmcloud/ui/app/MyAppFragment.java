@@ -55,6 +55,8 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
+import static com.inspur.emmcloud.util.AppCacheUtils.getCommonlyUseAppList;
+
 /**
  * classes : com.inspur.emmcloud.ui.app.MyAppFragment Create at 2016年12月13日
  * 上午11:10:20
@@ -247,7 +249,8 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
                         App app = appGroupItemList.get(position);
                         UriUtils.openApp(getActivity(), app);
                         if(getNeedCommonlyUseApp()){
-                            saveOrChangeCommonlyUseApp(app, appAdapterList);
+//                            saveOrChangeCommonlyUseApp(app, appAdapterList);
+                            saveOrChangeCommonlyUseAppList(app,appAdapterList);
                         }
                     }
                 }
@@ -318,6 +321,107 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
     }
 
     /**
+     * 点击应用后处理常用应用
+     * @param app
+     * @param appAdapterList
+     */
+    private void saveOrChangeCommonlyUseAppList(App app, List<AppGroupBean> appAdapterList) {
+        List<AppCommonlyUse> appCommonlyUseAddCountList = addClickCount(app);
+        List<AppCommonlyUse> appCommonlyUseList = calculateAppWeight(appCommonlyUseAddCountList);
+        showCommonlyUseApps(app,appCommonlyUseList,appAdapterList);
+    }
+
+    /**
+     * 展示常用应用
+     * @param app
+     * @param appCommonlyUseList
+     * @param appAdapterList
+     */
+    private void showCommonlyUseApps(App app,List<AppCommonlyUse> appCommonlyUseList,
+                                     List<AppGroupBean> appAdapterList) {
+        if(hasCommonlyApp){
+            List<App> appItemList = new ArrayList<App>();
+            for(int i = 0;i < appCommonlyUseList.size();i++){
+                App appCommonlyUse = new App();
+                AppCommonlyUse appCommonlyUseWithWeight = appCommonlyUseList.get(i);
+                appCommonlyUse.setAppID(appCommonlyUseWithWeight.getAppID());
+                for(int j = 1; j < appAdapterList.size(); j++){
+                    List<App> searchAppList = appAdapterList.get(j).getAppItemList();
+                    int searchIndex = searchAppList.indexOf(appCommonlyUse);
+                    if(searchIndex != -1){
+                        App appPutInCommonlyUse = searchAppList.get(searchIndex);
+                        appPutInCommonlyUse.setWeight(appCommonlyUseWithWeight.getWeight());
+                        appItemList.add(appPutInCommonlyUse);
+                    }
+                }
+            }
+            Collections.sort(appItemList,new SortCommonlyUseAppClass());
+            appAdapterList.get(0).setAppItemList(appItemList);
+            appListAdapter.notifyDataSetChanged();
+        }else{
+            AppGroupBean appGroupBean = new AppGroupBean();
+            appGroupBean.setCategoryID("commonly");
+            appGroupBean.setCategoryName(getString(R.string.commoly_use_app));
+            List<App> commonlyUseAppList = new ArrayList<App>();
+            commonlyUseAppList.add(app);
+            appGroupBean.setAppItemList(commonlyUseAppList);
+            appAdapterList.add(0, appGroupBean);
+            hasCommonlyApp = true;
+            appListAdapter.notifyDataSetChanged();
+        }
+    }
+
+    /**
+     * 根据前面计算出的点击次数和当前位置计算权重
+     * @param appCommonlyUseAddCountList
+     * @return
+     */
+    private List<AppCommonlyUse> calculateAppWeight(List<AppCommonlyUse> appCommonlyUseAddCountList) {
+        int appCommonlyUseListSize = appCommonlyUseAddCountList.size();
+        List<AppCommonlyUse> appCommonlyUseList = null;
+        for (int i = 0;i < appCommonlyUseListSize;i++){
+            AppCommonlyUse appCommonlyUseWeight = appCommonlyUseAddCountList.get(i);
+            int count = appCommonlyUseWeight.getClickCount();
+            int index = appCommonlyUseAddCountList.indexOf(appCommonlyUseWeight);
+            double weight = 0.6*count+(0.4*10*(1-((double)index)/((double)appCommonlyUseListSize)));
+            appCommonlyUseAddCountList.get(i).setWeight(weight);
+        }
+        Collections.sort(appCommonlyUseAddCountList,new SortCommonlyUseApp());
+        AppCacheUtils.saveAppCommonlyUseList(getActivity(),appCommonlyUseAddCountList);
+        if(appCommonlyUseAddCountList.size()>4){
+            appCommonlyUseList = appCommonlyUseAddCountList.subList(0,4);
+            return appCommonlyUseList;
+        }
+        return appCommonlyUseAddCountList;
+    }
+
+    /**
+     * 点击应用后clickCount加1
+     * @param app
+     * @return
+     */
+    private List<AppCommonlyUse> addClickCount(App app) {
+        List<AppCommonlyUse> appCommonlyUseList = AppCacheUtils.getCommonlyUseAppList(getActivity());
+        AppCommonlyUse appCommonlyUse = new AppCommonlyUse();
+        appCommonlyUse.setAppID(app.getAppID());
+        int index = appCommonlyUseList.indexOf(appCommonlyUse);
+        if(index != -1){
+            AppCommonlyUse appCommonlyUseInTable = appCommonlyUseList.get(index);
+            int count = appCommonlyUseInTable.getClickCount();
+            appCommonlyUseList.get(index).setClickCount(count+1);
+        }else{
+            AppCommonlyUse appCommonlyUseNew = new AppCommonlyUse();
+            appCommonlyUseNew.setClickCount(1);
+            appCommonlyUseNew.setAppID(app.getAppID());
+            appCommonlyUseNew.setWeight(0);
+            appCommonlyUseNew.setLastUpdateTime(System.currentTimeMillis());
+            appCommonlyUseList.add(appCommonlyUseNew);
+        }
+        return appCommonlyUseList;
+    }
+
+
+    /**
      * 处理常用应用的改变
      *
      * @param appAdapterList
@@ -362,45 +466,64 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
     }
 
     /**
-     * 保存或者改变app的点击权重
+     * 保存或者改变app的点击权重 废弃方法----------
      *
      * @param app
      * @param appAdapterList
      */
     private void saveOrChangeCommonlyUseApp(App app,
                                             List<AppGroupBean> appAdapterList) {
+        //保存应用最后点击时间
         app.setLastUpdateTime(System.currentTimeMillis());
 //		AppCommonlyUse appCommonlyUse = AppCacheUtils.getCommonlyUseAppById(getActivity(), app.getAppID());
+        //新建一个常用应用对象用于查找点击应用在常用应用列表里的位置
         AppCommonlyUse appCommonlyUse = new AppCommonlyUse();
+        //根据id查找所以设置id
         appCommonlyUse.setAppID(app.getAppID());
-        List<AppCommonlyUse> appCommonlyUseList = AppCacheUtils.getCommonlyUseAppList(getActivity());
+        //取出当前存储的常用应用列表
+        List<AppCommonlyUse> appCommonlyUseList = getCommonlyUseAppList(getActivity());
+        //查找点击应用的位置
         int index = appCommonlyUseList.indexOf(appCommonlyUse);
+        //计算常用应用列表长度如果为0则置为1防止除0错，同时因为0个的时候是1那么后面的位置序号需要依次加1，因为0占了1的位置
         int appCommonlyUseListSize = (appCommonlyUseList.size()==0? 1:(appCommonlyUseList.size()+1));
         int count = 0;
         double weight = 0;
+
         if(index != -1){
+            //点击应用在常用应用表里存在，根据index取出点击应用
             AppCommonlyUse appCommonlyUseChange = appCommonlyUseList.get(index);
+            //取出点击应用现在的点击次数
             int clickCount = appCommonlyUseChange.getClickCount();
+            //重新设置最后点击时间和点击次数，时间可能已经没有用
             appCommonlyUseChange.setLastUpdateTime(System.currentTimeMillis());
             appCommonlyUseChange.setClickCount(clickCount + 1);
+            //点击次数的值
             count = clickCount + 1;
-            weight = 0.6*count+(0.4*20*(1-((double)index)/((double)appCommonlyUseListSize)));
+            //新权重计算并设置
+            weight = 0.6*count+(0.4*0*(1-((double)index)/((double)appCommonlyUseListSize)));
             appCommonlyUseChange.setWeight(weight);
+            //保存常用应用信息
             AppCacheUtils.saveAppCommonlyUse(getActivity(), appCommonlyUseChange);
         }else {
+            //点击应用在常用应用表里没有，新建一个
             AppCommonlyUse appCommonlyUseNull = new AppCommonlyUse();
+            //设置id和count
             appCommonlyUseNull.setAppID(app.getAppID());
             appCommonlyUseNull.setClickCount(1);
             count = 1;
-            weight = 0.6*count+(0.4*20*(1-((double)index)/((double)appCommonlyUseListSize)));
+            //计算设置权重，并存储
+            weight = 0.6*count+(0.4*0*(1-((double)index)/((double)appCommonlyUseListSize)));
             appCommonlyUseNull.setWeight(weight);
             appCommonlyUseNull.setLastUpdateTime(System.currentTimeMillis());
             AppCacheUtils.saveAppCommonlyUse(getActivity(), appCommonlyUseNull);
+            appCommonlyUseList.add(appCommonlyUseNull);
         }
-//		weight = 0.6*count+(0.4*20*(1-((double)index)/((double)appCommonlyUseListSize)));
-        app.setWeight(weight);
 
+//		weight = 0.6*count+(0.4*20*(1-((double)index)/((double)appCommonlyUseListSize)));
+        //为当前显示中的应用设置权重
+        app.setWeight(weight);
         if (hasCommonlyApp) {
+            //如果有常用应用组,取出常用应用的列表
             boolean hasApp = false;
             List<App> appItemList = appAdapterList.get(0).getAppItemList();
             int searchAppItemIndex = appItemList.indexOf(app);
@@ -413,7 +536,11 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
             }
             Collections.sort(appItemList, new SortCommonlyUseAppClass());
             if (appItemList.size() > 4) {
-                appItemList.remove(4);
+                List<App> commonlyUseAppList = appItemList.subList(0,4);
+                appAdapterList.get(0).setAppItemList(commonlyUseAppList);
+//                appItemList.remove(4);
+            }else {
+                appAdapterList.get(0).setAppItemList(appItemList);
             }
             for (int i = 0; i < appItemList.size(); i++) {
                 LogUtils.YfcDebug("app名称："+appItemList.get(i).getAppName()+"点击后常用应用的权重"+appItemList.get(i).getWeight());
@@ -581,10 +708,6 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
         }
     }
 
-
-
-
-
     /**
      * 获取到网络数据后对排序和显示进行处理
      * @param appGroupList
@@ -618,8 +741,8 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
      * @param appGroupList
      */
     private void handCommonlyUseAppData(List<AppGroupBean> appGroupList,boolean isNeedRefresh) {
-        List<AppCommonlyUse> appCommonlyUseList = AppCacheUtils
-                .getCommonlyUseAppList(getActivity());//这里换成获取所有
+        List<AppCommonlyUse> appCommonlyUseList =
+                getCommonlyUseAppList(getActivity());//这里换成获取所有
         if (appCommonlyUseList.size() > 0  && getNeedCommonlyUseApp()) {
             AppGroupBean appGroupBean = new AppGroupBean();
             appGroupBean.setCategoryID("commonly");
@@ -644,7 +767,7 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
                 }
             }
 
-
+            Collections.sort(myCommonlyUseAppList,new SortCommonlyUseAppClass());
             if(myCommonlyUseAppList.size() > 4){
                 myCommonlyUseAppList = myCommonlyUseAppList.subList(0, 4);
             }
@@ -692,6 +815,29 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
         public int compare(Object arg0, Object arg1) {
             App appItemA = (App) arg0;
             App appItemB = (App) arg1;
+            double appSortA = appItemA.getWeight();
+            double appSortB = appItemB.getWeight();
+            if (appSortA == 0 || appSortB == 0) {
+                return -1;
+            }
+            if (appSortA > appSortB) {
+                return -1;
+            } else if (appSortA < appSortB) {
+                return 1;
+            } else {
+                return -1;
+            }
+        }
+    }
+
+    /**
+     * 常用应用排序接口，比较权重
+     *
+     */
+    public class SortCommonlyUseApp implements Comparator {
+        public int compare(Object arg0, Object arg1) {
+            AppCommonlyUse appItemA = (AppCommonlyUse) arg0;
+            AppCommonlyUse appItemB = (AppCommonlyUse) arg1;
             double appSortA = appItemA.getWeight();
             double appSortB = appItemB.getWeight();
             if (appSortA == 0 || appSortB == 0) {

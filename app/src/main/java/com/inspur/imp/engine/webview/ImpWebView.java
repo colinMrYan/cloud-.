@@ -18,7 +18,6 @@ import android.webkit.WebView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
-import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.imp.api.JsInterface;
 import com.inspur.imp.api.Res;
 import com.inspur.imp.api.iLog;
@@ -54,7 +53,7 @@ public class ImpWebView extends WebView {
 	public static final String USERAGENT = "Mozilla/5.0 (Linux; U; Android "
 			+ Build.VERSION.RELEASE + "; en-us; " + Build.MODEL
 			+ " Build/FRF91) AppleWebKit/533.1 "
-			+ "(KHTML, like Gecko) Version/4.0 Mobile Safari/533.1";
+			+ "(KHTML, like Gecko) Version/4.0 Chrome/51.0.2704.81 Mobile Safari/533.1";
 	private ProgressBar progressbar;
 	private static final String TAG = "ImpWebView";
 	private RelativeLayout progressLayout;
@@ -99,7 +98,6 @@ public class ImpWebView extends WebView {
 
 	// 重置当前接口的webview
 	public void initPlugin() {
-		LogUtils.YfcDebug("plugin初始化："+ (this.context == null));
 		PluginMgr.init(this.context, this);
 	}
 	private int mLastMotionX;
