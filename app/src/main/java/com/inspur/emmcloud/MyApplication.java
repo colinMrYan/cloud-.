@@ -139,7 +139,7 @@ public class MyApplication extends MultiDexApplication implements  ReactApplicat
 	private void initJPush() {
 		// TODO Auto-generated method stub
 		// 设置开启日志,发布时请关闭日志
-		JPushInterface.setDebugMode(false);
+		JPushInterface.setDebugMode(true);
 		// 初始化 JPush
 		JPushInterface.init(this);
 		// 获取和存储RegId

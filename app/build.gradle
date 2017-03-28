@@ -156,7 +156,7 @@ dependencies {
     compile files('src/libs/xutils-2.6.15_db.jar')
     compile files('src/libs/xutils-3.3.36.jar')
     compile 'commons-codec:commons-codec:20041127.091804'
-    compile files('src/libs/jpush-android_v3.0.1.jar')
-    compile files('src/libs/jcore-android_v1.1.0.jar')
+    compile files('src/libs/jpush-android_v3.0.3.jar')
+    compile files('src/libs/jcore-android_v1.1.1.jar')
     compile files('src/libs/mdm.jar')
 }
