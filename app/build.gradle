@@ -37,15 +37,6 @@ android {
             abiFilters "armeabi-v7a", "x86"
         }
         multiDexEnabled true
-        //极光推送配置
-        manifestPlaceholders = [
-                JPUSH_PKGNAME : applicationId,
-                JPUSH_APPKEY :  "62712cda36f300fb813134bc", //正式版
-   //             JPUSH_APPKEY : "ce5858e0369f8d806f93994a", //dev版
-                JPUSH_CHANNEL : "developer-default", //暂时填写默认值即可.
-        ]
-
-
     }
 
     sourceSets.main{
@@ -109,7 +100,6 @@ android {
             }
         }
     }
-
 }
 
 
@@ -166,10 +156,7 @@ dependencies {
     compile files('src/libs/xutils-2.6.15_db.jar')
     compile files('src/libs/xutils-3.3.36.jar')
     compile 'commons-codec:commons-codec:20041127.091804'
-//    compile files('src/libs/jpush-android_v3.0.1.jar')
-//    compile files('src/libs/jcore-android_v1.1.0.jar')
+    compile files('src/libs/jpush-android_v3.0.1.jar')
+    compile files('src/libs/jcore-android_v1.1.0.jar')
     compile files('src/libs/mdm.jar')
-
-    compile 'cn.jiguang.sdk:jpush:3.0.3'
-    compile 'cn.jiguang.sdk:jcore:1.1.1'
 }
