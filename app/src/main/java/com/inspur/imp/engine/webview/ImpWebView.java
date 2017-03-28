@@ -18,7 +18,6 @@ import android.webkit.WebView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
-import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.imp.api.JsInterface;
 import com.inspur.imp.api.Res;
 import com.inspur.imp.api.iLog;
@@ -54,7 +53,7 @@ public class ImpWebView extends WebView {
 	public static final String USERAGENT = "Mozilla/5.0 (Linux; U; Android "
 			+ Build.VERSION.RELEASE + "; en-us; " + Build.MODEL
 			+ " Build/FRF91) AppleWebKit/533.1 "
-			+ "(KHTML, like Gecko) Version/4.0 Mobile Safari/533.1";
+			+ "(KHTML, like Gecko) Version/4.0 Chrome/51.0.2704.81 Mobile Safari/533.1";
 	private ProgressBar progressbar;
 	private static final String TAG = "ImpWebView";
 	private RelativeLayout progressLayout;
@@ -99,7 +98,6 @@ public class ImpWebView extends WebView {
 
 	// 重置当前接口的webview
 	public void initPlugin() {
-		LogUtils.YfcDebug("plugin初始化："+ (this.context == null));
 		PluginMgr.init(this.context, this);
 	}
 	private int mLastMotionX;
@@ -180,6 +178,7 @@ public class ImpWebView extends WebView {
 		// 代理字符串，如果字符串为空或者null系统默认字符串将被利用
 		settings.setUserAgentString(USERAGENT);
 
+
 	}
 
 	/* 支持js相关方法 */
@@ -194,6 +193,18 @@ public class ImpWebView extends WebView {
 	/* 页面效果设置 */
 	private void setPageStyle() {
 		//设置自适应屏幕
+		settings.setLayoutAlgorithm(LayoutAlgorithm.SINGLE_COLUMN);
+		// 支持自动加载图片
+		settings.setLoadsImagesAutomatically(true);
+		settings.setAllowFileAccess(true);
+		// 支持多窗口
+		settings.supportMultipleWindows();
+		settings.setJavaScriptCanOpenWindowsAutomatically(true);
+		// 设置webview推荐使用的窗口
+		settings.setUseWideViewPort(false);
+		// 页面适应手机屏幕的分辨率
+		settings.setLoadWithOverviewMode(true);
+		settings.setDefaultTextEncodingName("utf-8");//设置自适应屏幕
 		settings.setLayoutAlgorithm(LayoutAlgorithm.SINGLE_COLUMN);
 		// 支持自动加载图片
 		settings.setLoadsImagesAutomatically(true);
