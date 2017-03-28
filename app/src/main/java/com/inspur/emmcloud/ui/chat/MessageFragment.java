@@ -1,18 +1,5 @@
 package com.inspur.emmcloud.ui.chat;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -29,7 +16,6 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -60,6 +46,7 @@ import com.inspur.emmcloud.util.ChatCreateUtils.OnCreateGroupChannelListener;
 import com.inspur.emmcloud.util.DirectChannelUtils;
 import com.inspur.emmcloud.util.ImageDisplayUtils;
 import com.inspur.emmcloud.util.IntentUtils;
+import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.MsgCacheUtil;
 import com.inspur.emmcloud.util.MsgMatheSetCacheUtils;
 import com.inspur.emmcloud.util.MsgReadIDCacheUtils;
@@ -76,6 +63,21 @@ import com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout;
 import com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout.OnRefreshListener;
 import com.inspur.emmcloud.widget.pullableview.PullableListView;
 import com.inspur.emmcloud.widget.tipsview.TipsView;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+import io.socket.client.Socket;
 
 /**
  * 消息页面 com.inspur.emmcloud.ui.MessageFragment
@@ -99,6 +101,7 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 	private PullToRefreshLayout pullToRefreshLayout;
 	private MessageFragmentReceiver messageFragmentReceiver;
 	private TipsView TipsView;
+	private TextView titleText;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -131,11 +134,12 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
+		LogUtils.jasonDebug("onCreate-----------------");
 		super.onCreate(savedInstanceState);
 		initView();
 		handMessage();
-		getChannelContent();
 		registerMessageFragmentReceiver();
+		getChannelContent();
 	}
 
 	private void initView() {
@@ -149,13 +153,14 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 				.findViewById(R.id.refresh_view);
 		pullToRefreshLayout.setOnRefreshListener(MessageFragment.this);
 		msgListView = (PullableListView) rootView.findViewById(R.id.msg_list);
-		((ImageView) rootView.findViewById(R.id.address_list_img))
+		(rootView.findViewById(R.id.address_list_img))
 				.setOnClickListener(onViewClickListener);
-		((ImageView) rootView.findViewById(R.id.add_img))
+		(rootView.findViewById(R.id.add_img))
 				.setOnClickListener(onViewClickListener);
-		((Button) rootView.findViewById(R.id.find_friends_btn))
+		(rootView.findViewById(R.id.find_friends_btn))
 				.setOnClickListener(onViewClickListener);
 		TipsView = (TipsView) rootView.findViewById(R.id.tip);
+		titleText = (TextView)rootView.findViewById(R.id.header_text);
 	}
 
 	private OnClickListener onViewClickListener = new OnClickListener() {
@@ -500,15 +505,10 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 				if (channelType.equals("GROUP") || channelType.equals("DIRECT") || channelType.equals("SERVICE")) {
 					IntentUtils.startActivity(getActivity(),
 							ChannelActivity.class, bundle);
-				} 
-//				else if (channelType.equals("SERVICE")) {
-//
-//				} 
-				else {
+				}else {
 					ToastUtils.show(getActivity(),
 							R.string.not_support_open_channel);
 				}
-
 				setChannelAllMsgRead(channel);
 				refreshIndexNotify();
 
@@ -533,7 +533,6 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 	/**
 	 * 将频道的消息置为已读
 	 * 
-	 * @param position
 	 * @param channel
 	 */
 	private void setChannelAllMsgRead(Channel channel) {
@@ -594,7 +593,7 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 			}
 		});
 
-		((TextView) oprationDlg.findViewById(R.id.hide_text))
+		(oprationDlg.findViewById(R.id.hide_text))
 				.setOnClickListener(new OnClickListener() {
 
 					@Override
@@ -943,10 +942,25 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 				adapter.notifyDataSetChanged();
 			} else if (command.equals("set_all_message_read")) {
 				setAllChannelMsgRead();
+			} else if (command.equals("websocket_status")){
+				String socketStatus = intent.getExtras().getString("status");
+				showSocketStatusInTitle(socketStatus);
+				//"socket_connecting"
+
 			}
 
 		}
 
+	}
+
+	private void showSocketStatusInTitle(String socketStatus){
+		if (socketStatus.equals("socket_connecting")){
+			titleText.setText("连接中");
+		}else if (socketStatus.equals(Socket.EVENT_CONNECT)){
+			titleText.setText("沟通");
+		}else if(socketStatus.equals(Socket.EVENT_DISCONNECT) || socketStatus.equals(Socket.EVENT_CONNECT_ERROR)){
+			titleText.setText("已断开");
+		}
 	}
 
 	/**
