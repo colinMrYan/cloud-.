@@ -136,7 +136,7 @@ public class MyApplication extends MultiDexApplication implements  ReactApplicat
 	/**
 	 * 初始化极光推送
 	 */
-	private void initJPush() {
+	public void initJPush() {
 		// TODO Auto-generated method stub
 		// 设置开启日志,发布时请关闭日志
 		JPushInterface.setDebugMode(true);
@@ -149,6 +149,7 @@ public class MyApplication extends MultiDexApplication implements  ReactApplicat
 			PreferencesUtils.putString(getApplicationContext(), "JpushRegId",
 					pushRegId);
 		}
+		JPushInterface.resumePush(this);
 	}
 
 

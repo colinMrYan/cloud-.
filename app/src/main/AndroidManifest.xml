@@ -504,6 +504,8 @@
             android:name=".ui.find.FindSearchMoreActivity"
             android:screenOrientation="portrait" />
         <service android:name=".service.PVCollectService"></service>
+        <service android:name=".service.CoreService"></service>
+        <service android:name=".service.CoreInnerService"></service>
 
         <!-- ImagePicker -->
 
@@ -582,6 +584,21 @@
             android:label="NetworkConnection">
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+        </receiver>
+
+        <receiver android:name=".broadcastreceiver.ActionReceiver" >
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.USER_PRESENT" />
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+            <!-- Optional -->
+            <intent-filter>
+                <action android:name="android.intent.action.PACKAGE_ADDED" />
+                <action android:name="android.intent.action.PACKAGE_REMOVED" />
+
+                <data android:scheme="package" />
             </intent-filter>
         </receiver>
 

@@ -45,6 +45,7 @@ import com.inspur.emmcloud.bean.ReactNativeUpdateBean;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.interf.OnTabReselectListener;
 import com.inspur.emmcloud.interf.OnWorkFragmentDataChanged;
+import com.inspur.emmcloud.service.CoreService;
 import com.inspur.emmcloud.service.PVCollectService;
 import com.inspur.emmcloud.ui.find.FindFragment;
 import com.inspur.emmcloud.util.AppUtils;
@@ -125,7 +126,7 @@ public class IndexActivity extends BaseFragmentActivity implements
         getAppTabs();
 		startUploadPVCollectService();
         registerReactNativeReceiver();
-
+        startCoreService();
     }
 
     /**
@@ -165,6 +166,15 @@ public class IndexActivity extends BaseFragmentActivity implements
         if (NetUtils.isNetworkConnected(IndexActivity.this)) {
             appAPIService.getClientId(AppUtils.getMyUUID(IndexActivity.this), AppUtils.GetChangShang());
         }
+    }
+
+    /**
+     * 打开保活服务
+     */
+    private void startCoreService(){
+        Intent intent = new Intent();
+        intent.setClass(this, CoreService.class);
+        startService(intent);
     }
 
 
