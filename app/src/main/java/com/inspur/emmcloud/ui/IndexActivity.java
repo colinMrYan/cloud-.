@@ -289,7 +289,7 @@ public class IndexActivity extends BaseFragmentActivity implements
         // TODO Auto-generated method stub
         //当通讯录完成时需要刷新头像
         Intent intent = new Intent("message_notify");
-        intent.putExtra("command", "creat_group_icon");
+        intent.putExtra("command", "sort_session_list");
         sendBroadcast(intent);
 
     }

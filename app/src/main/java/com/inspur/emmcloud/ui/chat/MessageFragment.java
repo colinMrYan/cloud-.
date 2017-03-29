@@ -254,11 +254,20 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 		// TODO Auto-generated method stub
 		if (channelList.size() > 0) {
 			Iterator<Channel> it = channelList.iterator();
+			//将没有消息的单聊和没有消息的但不是自己创建的群聊隐藏掉
 			while (it.hasNext()) {
 				Channel channel = it.next();
-				if ((channel.getType().equals("DIRECT"))
-						&& (channel.getNewMsgList().size() == 0)) {
-					it.remove();
+				if (channel.getNewMsgList().size() == 0){
+					if (channel.getType().equals("DIRECT")){
+						it.remove();
+					}else if(channel.getType().equals("GROUP")){
+						ChannelGroup channelGroup = ChannelGroupCacheUtils.getChannelGroupById(getActivity(),channel.getCid());
+						String myUid = PreferencesUtils.getString(getActivity(),
+								"userID");
+						if (channelGroup != null && !channelGroup.getOwner().equals(myUid)){
+							it.remove();
+						}
+					}
 				}
 			}
 
