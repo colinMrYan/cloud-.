@@ -47,6 +47,7 @@ import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.ui.app.groupnews.NewsWebDetailActivity;
 import com.inspur.emmcloud.ui.contact.RobotInfoActivity;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
+import com.inspur.emmcloud.util.AppUtils;
 import com.inspur.emmcloud.util.ChannelCacheUtils;
 import com.inspur.emmcloud.util.ConbineMsg;
 import com.inspur.emmcloud.util.DirectChannelUtils;
@@ -438,9 +439,9 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
                 EditImageActivity.start(ChannelActivity.this, cameraImgPath, MyAppConfig.LOCAL_IMG_CREATE_PATH);
                 //拍照后图片编辑返回
             } else if (requestCode == EditImageActivity.ACTION_REQUEST_EDITIMAGE) {
-
-                Msg localMsg = MsgRecourceUploadUtils.uploadMsgImgFromCamera(
-                        ChannelActivity.this, data, apiService);
+                String imgPath = data.getExtras().getString("save_file_path");
+                Msg localMsg = MsgRecourceUploadUtils.uploadMsgImg(
+                        ChannelActivity.this, imgPath, apiService);
                 addLocalMessage(localMsg);
             } else if (requestCode == MENTIONS_RESULT) {
                 // @返回
@@ -453,8 +454,8 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
                     ArrayList<ImageItem> imageItemList = (ArrayList<ImageItem>) data
                             .getSerializableExtra(ImagePicker.EXTRA_RESULT_ITEMS);
                     for (int i = 0;i<imageItemList.size();i++){
-                        Msg localMsg = MsgRecourceUploadUtils.uploadMsgImgFromPhotoSystem(
-                                ChannelActivity.this, imageItemList.get(i), apiService);
+                        Msg localMsg = MsgRecourceUploadUtils.uploadMsgImg(
+                                ChannelActivity.this, imageItemList.get(i).path, apiService);
                         addLocalMessage(localMsg);
                     }
                 }
@@ -491,7 +492,7 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
                     case HAND_CALLBACK_MESSAGE: // 接收推送的消息·
                         Msg pushMsg = (Msg) msg.obj;
                         if (channelId.equals(pushMsg.getCid())
-                                && !msgList.contains(pushMsg)) {
+                                && !msgList.contains(pushMsg)&& !pushMsg.getTmpId().equals(AppUtils.getMyUUID(getApplicationContext()))) {
                             msgList.add(pushMsg);
                             msgListView.setCanPullDown(true);
                             adapter.notifyDataSetChanged();
@@ -624,6 +625,7 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
             richTextObj.put("source", source);
             richTextObj.put("mentions", mentionArray);
             richTextObj.put("urls", urlArray);
+            richTextObj.put("tmpId", AppUtils.getMyUUID(ChannelActivity.this));
         } catch (JSONException e) {
             e.printStackTrace();
         }

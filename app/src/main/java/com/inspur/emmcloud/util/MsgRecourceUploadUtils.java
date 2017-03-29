@@ -11,17 +11,12 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.bean.Msg;
 import com.inspur.emmcloud.config.MyAppConfig;
-import com.inspur.imp.plugin.camera.imagepicker.ImagePicker;
-import com.inspur.imp.plugin.camera.imagepicker.bean.ImageItem;
 import com.inspur.imp.util.imgcompress.Compressor;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
 
 public class MsgRecourceUploadUtils {
 	
@@ -30,52 +25,43 @@ public class MsgRecourceUploadUtils {
 	 * 发送图片类型消息
 	 *
 	 * @param context
-	 * @param data
+	 * @param filePath
 	 * @param apiService
 	 * @return
 	 */
-	public static Msg uploadMsgImgFromCamera(Context context, Intent data,
+	public static Msg uploadMsgImg(Context context,String filePath,
 			ChatAPIService apiService){
-		String filePath = "";
-		if (data.hasExtra("save_file_path")) {
-			filePath = data.getStringExtra("save_file_path");
+		final  int maxSize = 1200;
+		int imgHeight = 0;
+		int imgWidth= 0;
+		Bitmap bitmapImg = BitmapFactory.decodeFile(filePath);
+		imgHeight = bitmapImg.getHeight();
+		imgWidth = bitmapImg.getWidth();
+		bitmapImg.recycle();
+		if (imgHeight>maxSize || imgWidth>maxSize){
 			String fileName = System.currentTimeMillis() + ".jpg";
-			new Compressor.Builder(context).setMaxWidth(1200).setMaxHeight(1200).setQuality(90).setDestinationDirectoryPath(MyAppConfig.LOCAL_CACHE_PATH).setFileName(fileName).build().compressToFile(new File(filePath));
+			new Compressor.Builder(context).setMaxWidth(maxSize).setMaxHeight(maxSize).setQuality(90).setDestinationDirectoryPath(MyAppConfig.LOCAL_CACHE_PATH).setFileName(fileName).build().compressToFile(new File(filePath));
 			filePath = MyAppConfig.LOCAL_CACHE_PATH+fileName;
-		}else {
-			ArrayList<ImageItem> imageItemList = (ArrayList<ImageItem>) data
-					.getSerializableExtra(ImagePicker.EXTRA_RESULT_ITEMS);
-			filePath = imageItemList.get(0).path;
 		}
+		JSONObject jsonObject = new JSONObject();
 		//暂时为要显示的消息设定一个假的id
 		String fakeMessageId = System.currentTimeMillis() + "";
 		String uploadFilePath = filePath;
-//		try {
-//			String thumbDirPath = MyAppConfig.LOCAL_CACHE_PATH;
-//			FileUtils.makeDirs(thumbDirPath);
-//			String thumbFilePath = thumbDirPath + new Date().getTime() + ".jpg";
-//			ImageUtils.createImageThumbnail(context,
-//					filePath, thumbFilePath, 1200, 80);
-//			uploadFilePath = thumbFilePath;
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//
-//		}
 		uploadFile(context, apiService, uploadFilePath, fakeMessageId, true);
 		File uploadFile = new File(uploadFilePath);
 		uploadFilePath = "file://" + uploadFilePath;
-		Bitmap bitmapImg = BitmapFactory.decodeFile(filePath);
-//		bitmapImg.getHeight();
-//		bitmapImg.getWidth();
-		JSONObject jsonObject = new JSONObject();
+		bitmapImg = BitmapFactory.decodeFile(filePath);
+		imgHeight = bitmapImg.getHeight();
+		imgWidth = bitmapImg.getWidth();
 		try {
+			jsonObject.put("tmpId", AppUtils.getMyUUID(context));
 			jsonObject.put("key", uploadFilePath);
 			jsonObject.put("name",
 					uploadFile.getName());
 			jsonObject.put("size", uploadFile.length());
 			jsonObject.put("type", "Photos");
-			jsonObject.put("height", bitmapImg.getHeight());
-			jsonObject.put("width", bitmapImg.getWidth());
+			jsonObject.put("height", imgHeight);
+			jsonObject.put("width", imgWidth);
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
@@ -86,55 +72,6 @@ public class MsgRecourceUploadUtils {
 	}
 
 
-
-	/**
-	 * 发送多图
-	 * @param context
-	 * @param imageItem
-	 * @param apiService
-     * @return
-     */
-	public static Msg uploadMsgImgFromPhotoSystem(Context context, ImageItem imageItem,
-								   ChatAPIService apiService){
-		String filePath = "";
-		filePath = imageItem.path;
-		//暂时为要显示的消息设定一个假的id
-		String fakeMessageId = System.currentTimeMillis() + "";
-		String uploadFilePath = filePath;
-		try {
-			String thumbDirPath = MyAppConfig.LOCAL_CACHE_PATH;
-			FileUtils.makeDirs(thumbDirPath);
-			String thumbFilePath = thumbDirPath + new Date().getTime() + ".jpg";
-			ImageUtils.createImageThumbnail(context,
-					filePath, thumbFilePath, 1200, 80);
-			uploadFilePath = thumbFilePath;
-		} catch (IOException e) {
-			e.printStackTrace();
-
-		}
-		uploadFile(context, apiService, uploadFilePath, fakeMessageId, true);
-		File uploadFile = new File(uploadFilePath);
-		uploadFilePath = "file://" + uploadFilePath;
-		Bitmap bitmapImg = BitmapFactory.decodeFile(filePath);
-		JSONObject jsonObject = new JSONObject();
-		try {
-			jsonObject.put("key", uploadFilePath);
-			jsonObject.put("name",
-					uploadFile.getName());
-			jsonObject.put("size", uploadFile.length());
-			jsonObject.put("type", "Photos");
-			jsonObject.put("height", bitmapImg.getHeight());
-			jsonObject.put("width", bitmapImg.getWidth());
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-		bitmapImg.recycle();
-		Msg sendMsg = ConbineMsg.conbineMsg(context, jsonObject.toString(), "",
-				"res_image", fakeMessageId);
-		return sendMsg;
-	}
-
-	
 	public static Msg uploadImgFile(Context context, Intent data,
 			ChatAPIService apiService) {
 		// TODO Auto-generated method stub
@@ -168,7 +105,7 @@ public class MsgRecourceUploadUtils {
 			jsonObject.put("name", fileName);
 			jsonObject.put("size", tempFile.length());
 			jsonObject.put("type", fileMime);
-			
+			jsonObject.put("tmpId", AppUtils.getMyUUID(context));
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}

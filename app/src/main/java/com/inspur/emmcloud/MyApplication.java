@@ -440,7 +440,7 @@ public class MyApplication extends MultiDexApplication implements  ReactApplicat
 				Environment.MEDIA_MOUNTED)) {
 			config = new ImageLoaderConfiguration.Builder(
 					getApplicationContext())
-					.memoryCacheExtraOptions(720, 1200)
+					.memoryCacheExtraOptions(1200, 1200)
 					.imageDownloader(
 							new CustomImageDownloader(getApplicationContext()))
 					.threadPoolSize(6)
@@ -461,7 +461,7 @@ public class MyApplication extends MultiDexApplication implements  ReactApplicat
 			}
 			config = new ImageLoaderConfiguration.Builder(
 					getApplicationContext())
-					.memoryCacheExtraOptions(720, 1200)
+					.memoryCacheExtraOptions(1200, 1200)
 					.imageDownloader(
 							new CustomImageDownloader(getApplicationContext()))
 					.threadPoolSize(6)
