@@ -11,6 +11,7 @@ import com.inspur.emmcloud.util.DownLoaderUtils;
 import com.inspur.emmcloud.util.FileSafeCode;
 import com.inspur.emmcloud.util.FileUtils;
 import com.inspur.emmcloud.util.LogUtils;
+import com.inspur.emmcloud.util.PreferencesByUserUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.UnZipAssets;
@@ -266,6 +267,19 @@ public class ReactNativeFlow {
      */
     public static boolean deleteZipFile(String deletePath) {
         return FileUtils.deleteFile(deletePath);
+    }
+
+    /**
+     * 检查clientID是否存在
+     * @param context
+     * @return
+     */
+    public static boolean checkClientIdExist(Context context){
+        String clientId = PreferencesByUserUtils.getString(context,"react_native_clientid","");
+        if(StringUtils.isBlank(clientId)){
+           return false;
+        }
+        return true;
     }
 
 

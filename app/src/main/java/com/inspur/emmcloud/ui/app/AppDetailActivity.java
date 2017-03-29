@@ -18,15 +18,21 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
+import com.inspur.emmcloud.api.apiservice.ReactNativeAPIService;
 import com.inspur.emmcloud.bean.App;
 import com.inspur.emmcloud.bean.GetAddAppResult;
+import com.inspur.emmcloud.bean.GetClientIdRsult;
+import com.inspur.emmcloud.util.AppUtils;
 import com.inspur.emmcloud.util.ImageDisplayUtils;
+import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.NetUtils;
+import com.inspur.emmcloud.util.PreferencesByUserUtils;
 import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.HorizontalListView;
 import com.inspur.emmcloud.widget.LoadingDialog;
+import com.inspur.reactnative.ReactNativeFlow;
 
 import java.util.List;
 
@@ -45,6 +51,7 @@ public class AppDetailActivity extends BaseActivity {
     private ImageDisplayUtils imageDisplayUtils;
     private LoadingDialog loadingDlg;
     private MyAppAPIService apiService;
+    private ReactNativeAPIService reactNativeApiService;
     private App app;
 
     @Override
@@ -55,9 +62,12 @@ public class AppDetailActivity extends BaseActivity {
         ((MyApplication) getApplicationContext()).addActivity(this);
         imageDisplayUtils = new ImageDisplayUtils(getApplicationContext(), R.drawable.icon_empty_icon);
         app = (App) getIntent().getExtras().getSerializable("app");
+        LogUtils.YfcDebug("app:"+app.toString());
         initView();
         apiService = new MyAppAPIService(this);
         apiService.setAPIInterface(new WebService());
+        reactNativeApiService = new ReactNativeAPIService(AppDetailActivity.this);
+        reactNativeApiService.setAPIInterface(new WebService());
     }
 
     private void initView() {
@@ -123,12 +133,35 @@ public class AppDetailActivity extends BaseActivity {
                 break;
             case 3:
             case 4:
-            case 5:
                 addApp(statusBtn, appID);
+                break;
+            case 5:
+                addReactNativeApp();
                 break;
 
             default:
                 break;
+        }
+    }
+
+    /**
+     *  添加reactNativeApp
+     */
+    private void addReactNativeApp() {
+        LogUtils.YfcDebug("添加reactNative应用");
+        if(ReactNativeFlow.checkClientIdExist(AppDetailActivity.this)){
+//            String userId = ((MyApplication)getApplication()).getUid();
+//            String reactNativeCurrentPath = MyAppConfig.getReactCurrentFilePath(AppDetailActivity.this,userId);
+            String clientId = PreferencesByUserUtils.getString(AppDetailActivity.this,"react_native_clientid", "");
+//            StringBuilder describeVersionAndTime = FileUtils.readFile(reactNativeCurrentPath +"/bundle.json", "UTF-8");
+//            AndroidBundleBean androidBundleBean = new AndroidBundleBean(describeVersionAndTime.toString());
+//            if (NetUtils.isNetworkConnected(AppDetailActivity.this)) {
+//                reactNativeApiService.getReactNativeUpdate(androidBundleBean.getVersion(), androidBundleBean.getCreationDate(), clientId);
+//            }
+            reactNativeApiService.getDownLoadUrl(AppDetailActivity.this,app.getInstallUri(),clientId,"");
+        }else{
+            LogUtils.YfcDebug("clientId不存在");
+            reactNativeApiService.getClientId(AppUtils.getMyUUID(AppDetailActivity.this), AppUtils.GetChangShang());
         }
     }
 
@@ -213,6 +246,19 @@ public class AppDetailActivity extends BaseActivity {
             statusBtn.setText(getString(R.string.download));
             WebServiceMiddleUtils.hand(AppDetailActivity.this,
                     error);
+        }
+
+        @Override
+        public void returnGetClientIdResultSuccess(GetClientIdRsult getClientIdRsult) {
+            super.returnGetClientIdResultSuccess(getClientIdRsult);
+            LogUtils.YfcDebug("clientId获取成功："+getClientIdRsult.getClientId());
+            PreferencesByUserUtils.putString(AppDetailActivity.this,  "react_native_clientid", getClientIdRsult.getClientId());
+        }
+
+        @Override
+        public void returnGetClientIdResultFail(String error) {
+            LogUtils.YfcDebug("clientId获取失败："+error);
+            super.returnGetClientIdResultFail(error);
         }
     }
 

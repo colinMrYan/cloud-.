@@ -23,10 +23,10 @@ import com.inspur.reactnative.ReactNativeFlow;
 public class ReactNativeAppActivity extends Activity implements DefaultHardwareBackBtnHandler {
     private ReactRootView mReactRootView;
     private ReactInstanceManager mReactInstanceManager;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        String url = getIntent().getDataString();
         initReactNativeApp();
         setContentView(mReactRootView);
     }
