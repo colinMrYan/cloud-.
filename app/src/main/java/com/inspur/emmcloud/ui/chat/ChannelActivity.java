@@ -230,8 +230,11 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
         title = getIntent().getExtras().getString("title");
         LogUtils.jasonDebug("title=" + title);
         if (channelType.equals("DIRECT")) {
-            title = DirectChannelUtils.getDirectChannelTitle(
-                    getApplicationContext(), title);
+            String myUid = ((MyApplication)getApplicationContext()).getUid();
+            if (title.contains(myUid) && title.contains("-")){
+                title = DirectChannelUtils.getDirectChannelTitle(
+                        getApplicationContext(), title);
+            }
         } else if (channelType.equals("SERVICE")) {
             uid = DirectChannelUtils.getRobotInfo(getApplicationContext(),
                     title).getId();
