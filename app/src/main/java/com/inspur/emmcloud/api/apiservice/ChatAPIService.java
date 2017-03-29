@@ -29,6 +29,7 @@ import com.inspur.emmcloud.bean.GetNewMsgsResult;
 import com.inspur.emmcloud.bean.GetNewsImgResult;
 import com.inspur.emmcloud.bean.GetSearchChannelGroupResult;
 import com.inspur.emmcloud.bean.GetSendMsgResult;
+import com.inspur.emmcloud.util.AppUtils;
 import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.OauthCallBack;
 import com.inspur.emmcloud.util.OauthUtils;
@@ -382,6 +383,7 @@ public class ChatAPIService {
 						JSONObject jsonObject = new JSONObject(arg0);
 						jsonObject.put("height", bitmap.getHeight());
 						jsonObject.put("width", bitmap.getWidth());
+						jsonObject.put("tmpId", AppUtils.getMyUUID(context));
 						apiInterface.returnUploadMsgImgSuccess(
 								new GetNewsImgResult(jsonObject.toString()), fakeMessageId);
 					} catch (Exception e) {

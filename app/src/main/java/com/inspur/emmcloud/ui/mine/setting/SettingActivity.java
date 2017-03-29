@@ -1,5 +1,7 @@
 package com.inspur.emmcloud.ui.mine.setting;
 
+import android.app.NotificationManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -327,6 +329,8 @@ public class SettingActivity extends BaseActivity {
 			((MyApplication) getApplicationContext()).getWebSocketPush()
 			.webSocketSignout();
 		}
+		NotificationManager nm =(NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
+		nm.cancelAll();
 		JPushInterface.stopPush(getApplicationContext());
 		PreferencesUtils.putString(SettingActivity.this, "tokenType", "");
 		PreferencesUtils.putString(SettingActivity.this, "accessToken", "");
