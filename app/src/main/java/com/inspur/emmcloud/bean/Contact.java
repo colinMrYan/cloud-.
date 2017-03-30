@@ -1,16 +1,10 @@
 package com.inspur.emmcloud.bean;
 
-import java.io.Serializable;
+import com.inspur.emmcloud.util.UriUtils;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.R.integer;
-import android.util.Log;
-
-import com.inspur.emmcloud.util.LogUtils;
-import com.lidroid.xutils.db.annotation.Id;
-import com.lidroid.xutils.db.annotation.Transient;
+import java.io.Serializable;
 
 /**
  {"id":"lcgj_u_chenmch","inspur_id":"1ae36f30-b25a-435a-868e-2b7096d70cc0",
@@ -213,5 +207,23 @@ public class Contact implements Serializable{
 	public void setGlobalName(String globalName){
 		this.globalName = globalName;
 	}
+
+	public JSONObject contact2JSONObject(){
+		JSONObject obj = new JSONObject();
+		try {
+			obj.put("inspur_id",inspurID);
+			obj.put("code",code);
+			obj.put("real_name",realName);
+			obj.put("pinyin",pinyin);
+			obj.put("mobile",mobile);
+			obj.put("email",email);
+			obj.put("org_name",orgName);
+			obj.put("head", UriUtils.getChannelImgUri(inspurID));
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+
+		return  obj;
+	};
 
 }
