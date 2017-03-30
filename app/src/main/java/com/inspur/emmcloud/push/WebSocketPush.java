@@ -26,7 +26,7 @@ import io.socket.parseqs.ParseQS;
 public class WebSocketPush {
 
 	private static final String TAG = "WebSocketPush";
-	 private static WebSocketPush webSocketPush=null;  
+	 private static WebSocketPush webSocketPush=null;
 	private  Socket mSocket = null;
 	private Context context;
 
@@ -59,6 +59,7 @@ public class WebSocketPush {
 		if (((MyApplication)context.getApplicationContext()).getToken() == null) {
 			return;
 		}
+		sendWebSocketStatusBroadcaset("socket_connecting");
 		String username = PreferencesUtils.getString(context, "userRealName");
 		String uuid = AppUtils.getMyUUID(context);
 		String pushid = PreferencesUtils.getString(context, "JpushRegId", "");
@@ -107,10 +108,10 @@ public class WebSocketPush {
 			});
 
 			connectWebSocket();
-
 		} catch (URISyntaxException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			sendWebSocketStatusBroadcaset(Socket.EVENT_CONNECT_ERROR);
 			Log.d(TAG, "e=" + e.toString());
 			if (mSocket != null) {
 				mSocket.disconnect();
@@ -137,17 +138,19 @@ public class WebSocketPush {
 	
 
 	public void sendActivedMsg() {
-		if (mSocket != null) {
-			Log.d("jason", "send----------actived");
+		if (mSocket != null && isSocketConnect()) {
+			Log.d(TAG, "send----------actived");
 			mSocket.emit("state", "ACTIVED");
+		}else {
+			start();
 		}
 	}
 
 	public void sendFrozenMsg() {
 		if (mSocket != null) {
-			Log.d("jason", "send----------frozen");
+			Log.d(TAG, "send----------frozen");
 			mSocket.emit("state", "FROZEN");
-		}
+	}
 	}
 	
 	public void webSocketSignout(){
@@ -165,6 +168,7 @@ public class WebSocketPush {
 			public void call(Object... arg0) {
 				// TODO Auto-generated method stub
 				LogUtils.debug(TAG, "连接失败");
+				sendWebSocketStatusBroadcaset(Socket.EVENT_CONNECT_ERROR);
 
 			}
 		});
@@ -174,6 +178,7 @@ public class WebSocketPush {
 			public void call(Object... arg0) {
 				// TODO Auto-generated method stub
 				LogUtils.debug(TAG, "连接成功");
+				sendWebSocketStatusBroadcaset(Socket.EVENT_CONNECT);
 				if (((MyApplication) context.getApplicationContext())
 						.getIsActive()) { // 当第一次连接成功后发送消息
 					sendActivedMsg();
@@ -183,10 +188,7 @@ public class WebSocketPush {
 
 			}
 		});
-		
-		
-		
-		
+
 
 		mSocket.on("message", new Emitter.Listener() {
 
@@ -234,7 +236,7 @@ public class WebSocketPush {
 			@Override
 			public void call(Object... arg0) {
 				// TODO Auto-generated method stub
-				
+				sendWebSocketStatusBroadcaset(Socket.EVENT_DISCONNECT);
 				LogUtils.debug(TAG, "断开连接");
 			}
 		});
@@ -243,6 +245,7 @@ public class WebSocketPush {
 	public void connectWebSocket() {
 		addListeners();
 		mSocket.open();
+		LogUtils.debug(TAG, "mSocket.open");
 		// mSocket.connect();
 	}
 	
@@ -257,6 +260,16 @@ public class WebSocketPush {
 			mSocket.disconnect();
 			mSocket.close();
 			mSocket = null;
+		}
+	}
+
+	private void sendWebSocketStatusBroadcaset(String event){
+		if (((MyApplication) context.getApplicationContext())
+				.isIndexActivityRunning()){
+			Intent intent = new Intent("message_notify");
+			intent.putExtra("status",event);
+			intent.putExtra("command","websocket_status");
+			context.sendBroadcast(intent);
 		}
 	}
 

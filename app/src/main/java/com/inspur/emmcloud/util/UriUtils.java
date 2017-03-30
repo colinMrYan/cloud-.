@@ -101,7 +101,7 @@ public class UriUtils {
                 + "appLanguageObj");
         String cookie = "";
         if (languageJson != null) {
-            cookie = "lang=" + languageJson + ";";
+            cookie = languageJson;
         }
         return cookie;
     }

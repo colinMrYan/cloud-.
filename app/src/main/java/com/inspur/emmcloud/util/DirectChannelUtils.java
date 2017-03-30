@@ -15,7 +15,7 @@ public class DirectChannelUtils {
 	 * @return
 	 */
 	public static String getDirectChannelTitle(Context context, String msgTitle) {
-		String channelTitle = msgTitle;
+		String channelTitle = "";
 		Contact otherContact = getDirctChannelOtherContact(context, msgTitle);
 		if (otherContact != null) {
 			channelTitle = otherContact.getRealName();

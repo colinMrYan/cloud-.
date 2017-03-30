@@ -36,6 +36,8 @@ public class Msg implements Serializable {
     private String privates = "";
     @Transient
     private int sendStatus = 1;//0 发送中  1发送成功  2发送失败
+    @Transient
+    private String tmpId = "";
 
     public Msg() {
 
@@ -86,7 +88,10 @@ public class Msg implements Serializable {
                         e.printStackTrace();
                     }
                 }
-
+                JSONObject bodyObj = new JSONObject(body);
+                if (bodyObj.has("tmpId")){
+                    this.tmpId = bodyObj.getString("tmpId");
+                }
 
             }
             if (obj.has("from")) {
@@ -229,6 +234,10 @@ public class Msg implements Serializable {
     public boolean getIsHaveRead() {
         return isHaveRead;
     }
+
+    public String getTmpId(){
+		return  tmpId;
+	}
 
     public String getCommentMid() {
         JSONObject bodyJsonObject;
