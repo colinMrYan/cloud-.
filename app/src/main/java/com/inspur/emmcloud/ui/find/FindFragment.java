@@ -74,7 +74,8 @@ public class FindFragment extends Fragment implements DefaultHardwareBackBtnHand
         super.onCreate(savedInstanceState);
         userId = ((MyApplication) getActivity().getApplication()).getUid();
         reactNativeReceiver = new RefreshReactNativeReceiver();
-        reactCurrentFilePath = MyAppConfig.getReactCurrentFilePath(getActivity(), userId);
+//        reactCurrentFilePath = MyAppConfig.getReactCurrentFilePath(getActivity(), userId);
+        reactCurrentFilePath = MyAppConfig.getReactAppFilePath(getActivity(),userId,"discover");
         if (!ReactNativeFlow.checkBundleFileIsExist(reactCurrentFilePath + "/index.android.bundle")) {
             ReactNativeFlow.unZipFile(getActivity(), "bundle-v0.1.0.android.zip", reactCurrentFilePath, true);
         }

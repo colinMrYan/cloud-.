@@ -571,4 +571,20 @@ public class APIUri {
 	public static String getZipUrl(){
 		return getEcmTanentUrl()+"/res/stream/";
 	}
+
+	/**
+	 * ReactNative应用安装地址查询接口
+	 * @return
+     */
+	public static String getReactNativeInstallUrl(){
+		return "https://emm.inspur.com/api/imp_app/queryByUri";
+	}
+
+	/**
+	 * ReactNative应用更新写回
+	 * @return
+     */
+	public static String getReactNativeWriteBackUrl(String appModule){
+		return getEcmTanentUrl() + "/api/v0/app/"+appModule+"/update";
+	}
 }

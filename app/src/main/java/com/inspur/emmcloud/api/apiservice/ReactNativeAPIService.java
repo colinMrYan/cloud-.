@@ -7,8 +7,8 @@ import com.inspur.emmcloud.api.APICallback;
 import com.inspur.emmcloud.api.APIInterface;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.bean.GetClientIdRsult;
-import com.inspur.emmcloud.bean.ReactNativeClientIdErrorBean;
-import com.inspur.emmcloud.bean.ReactNativeUpdateBean;
+import com.inspur.emmcloud.bean.ReactNativeDownloadUrlBean;
+import com.inspur.emmcloud.bean.ReactNativeInstallUriBean;
 import com.inspur.emmcloud.util.DownLoaderUtils;
 import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.OauthCallBack;
@@ -68,6 +68,75 @@ public class ReactNativeAPIService {
         });
     }
 
+    /**
+     * 获取地址
+     * @param uri
+     */
+    public void getReactNativeInstallUrl(final String uri){
+        final String completeUrl = APIUri.getReactNativeInstallUrl();
+        RequestParams params = ((MyApplication) context.getApplicationContext())
+                .getHttpRequestParams(completeUrl);
+        params.addParameter("uri",uri);
+        x.http().post(params, new APICallback() {
+            @Override
+            public void callbackSuccess(String arg0) {
+                apiInterface.returnGetReactNativeInstallUrlSuccess(new ReactNativeInstallUriBean(arg0));
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                apiInterface.returnGetReactNativeInstallUrlFail(error);
+            }
+
+            @Override
+            public void callbackTokenExpire() {
+
+                new OauthUtils(new OauthCallBack() {
+                    @Override
+                    public void execute() {
+                        getReactNativeInstallUrl(uri);
+                    }
+                },context).refreshTocken(completeUrl);
+            }
+        });
+    }
+
+    /**
+     * 写回版本变更情况
+     * @param preVersion
+     * @param currentVersion
+     * @param clientId
+     * @param command
+     * @param appId
+     */
+    public void writeBackVersionChange(final String preVersion, final String currentVersion, final String clientId, final String command, final String appId){
+        final String completeUrl = APIUri.getReactNativeWriteBackUrl(appId)+"?preVersion="+preVersion+"&currentVersion="+currentVersion+"&clientId="+clientId+
+                "&command="+command;
+        RequestParams params = ((MyApplication) context.getApplicationContext())
+                .getHttpRequestParams(completeUrl);
+        x.http().post(params, new APICallback() {
+            @Override
+            public void callbackSuccess(String arg0) {
+                LogUtils.YfcDebug("写回成功，不需要后续处理");
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                LogUtils.YfcDebug("写回失败，不需要后续处理");
+            }
+
+            @Override
+            public void callbackTokenExpire() {
+                new OauthUtils(new OauthCallBack() {
+                    @Override
+                    public void execute() {
+                        writeBackVersionChange(preVersion,currentVersion,clientId, command,appId);
+                    }
+                },context).refreshTocken(completeUrl);
+            }
+        });
+    }
+
 
     /**
      * 获取ReactNative应用的下地址
@@ -76,20 +145,20 @@ public class ReactNativeAPIService {
      * @param clientId
      * @param currentVersion
      */
-    public void getDownLoadUrl(final Context context, final String findDownloadUrl, final String clientId, final String currentVersion){
-        final String completeUrl = findDownloadUrl+"?currentVersion="+currentVersion+"&clientId="+clientId;
-        LogUtils.YfcDebug("获取ReactNative应用下载地址："+completeUrl);
+    public void getDownLoadUrl(final Context context, final String findDownloadUrl,
+                               final String clientId, final String currentVersion){
+        final String completeUrl = findDownloadUrl+"?version="+currentVersion+"&clientId="+clientId;
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
         x.http().get(params, new APICallback() {
             @Override
             public void callbackSuccess(String arg0) {
-                LogUtils.YfcDebug("获取React下载地址成功："+arg0);
+                apiInterface.returnGetDownloadReactNativeUrlSuccess(new ReactNativeDownloadUrlBean(arg0));
             }
 
             @Override
             public void callbackFail(String error, int responseCode) {
-                LogUtils.YfcDebug("获取react下载地址返回失败："+error);
+                apiInterface.returnGetDownloadReactNativeUrlFail(error);
             }
 
             @Override
@@ -103,48 +172,6 @@ public class ReactNativeAPIService {
                 },context).refreshTocken(completeUrl);
             }
         });
-    }
-
-    /**
-     * 获取ReactNative更新版本
-     * @param version
-     * @param lastCreationDate
-     */
-    public void getReactNativeUpdate (final String version, final long lastCreationDate, final String clientId){
-        final String completeUrl = APIUri.getReactNativeUpdate()+"version="+version+"&lastCreationDate=" + lastCreationDate
-                +"&clientId="+clientId;
-        RequestParams params = ((MyApplication) context.getApplicationContext())
-                .getHttpRequestParams(completeUrl);
-        x.http().get(params, new APICallback() {
-            @Override
-            public void callbackSuccess(String arg0) {
-                apiInterface.returnReactNativeUpdateSuccess(new ReactNativeUpdateBean(arg0));
-            }
-
-            @Override
-            public void callbackFail(String error, int responseCode) {
-                apiInterface.returnReactNativeUpdateFail(new ReactNativeClientIdErrorBean(error));
-                LogUtils.YfcDebug("clientId失效："+error);
-            }
-
-            @Override
-            public void callbackTokenExpire() {
-                new OauthUtils(new OauthCallBack() {
-                    @Override
-                    public void execute() {
-                        getReactNativeUpdate(version,lastCreationDate,clientId);
-                    }
-                },context).refreshTocken(completeUrl);
-            }
-        });
-    }
-
-    /**
-     * 检查ReactNative模块是否需要更新
-     * @param scheme
-     */
-    public void checkReactNativeModuleUpdate(String scheme){
-
     }
 
     /**

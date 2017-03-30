@@ -28,8 +28,6 @@ import android.webkit.MimeTypeMap;
  * File Utils
  * <ul>
  * Read or write file
- * <li>{@link #readFile(String)} read file</li>
- * <li>{@link #readFileToList(String)} read file to string list</li>
  * <li>{@link #writeFile(String, String, boolean)} write file from String</li>
  * <li>{@link #writeFile(String, String)} write file from String</li>
  * <li>{@link #writeFile(String, List, boolean)} write file from String List</li>
@@ -77,7 +75,7 @@ public class FileUtils {
         File file = new File(filePath);
         StringBuilder fileContent = new StringBuilder("");
         if (file == null || !file.isFile()) {
-            return null;
+            return new StringBuilder();
         }
 
         BufferedReader reader = null;

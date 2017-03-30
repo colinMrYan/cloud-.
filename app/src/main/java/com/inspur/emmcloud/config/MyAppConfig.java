@@ -72,7 +72,7 @@ public class MyAppConfig {
      * @return
      */
 	public static String getReactTempFilePath(Context context,String userId){
-		return context.getDir("ReactResource",MODE_PRIVATE).getPath()+"/"+ UriUtils.tanent+"/"+userId+"/cache";
+		return context.getDir("ReactResource",MODE_PRIVATE).getPath()+"/"+ UriUtils.tanent+"/"+userId+"/Pre";
 	}
 	
 	public static Language getDefaultLanguage = new Language("中文简体","zh-CN","zh-Hans","zh-CN","zh-CN","zh-Hans");

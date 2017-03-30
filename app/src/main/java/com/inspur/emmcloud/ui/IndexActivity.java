@@ -145,7 +145,7 @@ public class IndexActivity extends BaseFragmentActivity implements
      */
     private void initReactNative() {
         RNCacheViewManager.init(IndexActivity.this);
-        reactNativeCurrentPath = MyAppConfig.getReactCurrentFilePath(IndexActivity.this,userId);
+        reactNativeCurrentPath = MyAppConfig.getReactAppFilePath(IndexActivity.this,userId,"discover");
         if (checkClientIdNotExit()) {
             getReactNativeClientId();
         }
@@ -753,6 +753,7 @@ public class IndexActivity extends BaseFragmentActivity implements
         @Override
         public void returnGetClientIdResultSuccess(GetClientIdRsult getClientIdRsult) {
             super.returnGetClientIdResultSuccess(getClientIdRsult);
+            isReactNativeClientUpdateFail = false;
             PreferencesUtils.putString(IndexActivity.this, UriUtils.tanent + userId + "react_native_clientid", getClientIdRsult.getClientId());
             if(isReactNativeClientUpdateFail){
                 updateReactNative();
@@ -770,12 +771,12 @@ public class IndexActivity extends BaseFragmentActivity implements
      */
     private void updateReactNativeWithOrder() {
         int state = ReactNativeFlow.checkReactNativeOperation(reactNativeUpdateBean.getCommand());
-        String reactNatviveTempPath = MyAppConfig.getReactTempFilePath(IndexActivity.this,userId);
-        if (state == ReactNativeFlow.REACT_NATIVE_RESET) {
-            //删除current和temp目录，重新解压assets下的zip
-            resetReactNative();
+            String reactNatviveTempPath = MyAppConfig.getReactTempFilePath(IndexActivity.this,userId);
+            if (state == ReactNativeFlow.REACT_NATIVE_RESET) {
+                //删除current和temp目录，重新解压assets下的zip
+                resetReactNative();
             FindFragment.hasUpdated = true;
-        } else if (state == ReactNativeFlow.REACT_NATIVE_REVERT) {
+        } else if (state == ReactNativeFlow.REACT_NATIVE_ROLLBACK) {
             //拷贝temp下的current到app内部current目录下
             File file = new File(reactNatviveTempPath);
             if(file.exists()){
