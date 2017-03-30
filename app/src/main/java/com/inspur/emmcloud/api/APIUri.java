@@ -1,6 +1,8 @@
 package com.inspur.emmcloud.api;
 
 
+import com.inspur.emmcloud.util.UriUtils;
+
 /**
  * 本类中包含4个常量，分别是
  * 域名的Url：ecmBaseUrl
@@ -550,7 +552,8 @@ public class APIUri {
 	 * @return
      */
 	public static String getClientId(){
-		return getEcmTanentUrl()+"/api/v0/view/client";
+//		return getEcmTanentUrl()+"/api/v0/view/client";
+		return "https://ecm.inspur.com/"+ UriUtils.tanent +"/api/v0/client/registry";
 	}
 
 	/**
@@ -567,5 +570,21 @@ public class APIUri {
      */
 	public static String getZipUrl(){
 		return getEcmTanentUrl()+"/res/stream/";
+	}
+
+	/**
+	 * ReactNative应用安装地址查询接口
+	 * @return
+     */
+	public static String getReactNativeInstallUrl(){
+		return "https://emm.inspur.com/api/imp_app/queryByUri";
+	}
+
+	/**
+	 * ReactNative应用更新写回
+	 * @return
+     */
+	public static String getReactNativeWriteBackUrl(String appModule){
+		return getEcmTanentUrl() + "/api/v0/app/"+appModule+"/update";
 	}
 }

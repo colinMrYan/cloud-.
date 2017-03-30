@@ -167,13 +167,13 @@ public class AppAPIService {
 		x.http().get(params, new APICallback() {
 			@Override
 			public void callbackSuccess(String arg0) {
+				LogUtils.YfcDebug("");
 				apiInterface.returnReactNativeUpdateSuccess(new ReactNativeUpdateBean(arg0));
 			}
 
 			@Override
 			public void callbackFail(String error, int responseCode) {
 				apiInterface.returnReactNativeUpdateFail(new ReactNativeClientIdErrorBean(error));
-				LogUtils.YfcDebug("clientId失效："+error);
 			}
 
 			@Override

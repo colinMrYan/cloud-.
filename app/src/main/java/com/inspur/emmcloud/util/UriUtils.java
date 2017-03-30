@@ -54,8 +54,7 @@ public class UriUtils {
             case 5:
 //                Intent intentRN = new Intent();
                 intent.setClass(activity, ReactNativeAppActivity.class);
-                //将这里换成对应的应用模块
-                intent.putExtra("react_module","WhoseCar");
+                intent.putExtra("ecc-app-react-native",uri);
                 activity.startActivity(intent);
                 break;
 

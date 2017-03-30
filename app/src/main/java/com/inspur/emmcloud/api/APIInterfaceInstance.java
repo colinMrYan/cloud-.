@@ -65,6 +65,8 @@ import com.inspur.emmcloud.bean.GetUploadMyHeadResult;
 import com.inspur.emmcloud.bean.GetUserHeadUploadResult;
 import com.inspur.emmcloud.bean.GetWebSocketUrlResult;
 import com.inspur.emmcloud.bean.ReactNativeClientIdErrorBean;
+import com.inspur.emmcloud.bean.ReactNativeDownloadUrlBean;
+import com.inspur.emmcloud.bean.ReactNativeInstallUriBean;
 import com.inspur.emmcloud.bean.ReactNativeUpdateBean;
 import com.inspur.emmcloud.bean.Robot;
 import com.inspur.emmcloud.bean.TaskResult;
@@ -1299,6 +1301,26 @@ public class APIInterfaceInstance implements APIInterface{
 
 	@Override
 	public void returnGetAppAuthCodeResultFail(String error) {
+
+	}
+
+	@Override
+	public void returnGetDownloadReactNativeUrlSuccess(ReactNativeDownloadUrlBean reactNativeDownloadUrlBean) {
+
+	}
+
+	@Override
+	public void returnGetDownloadReactNativeUrlFail(String error) {
+
+	}
+
+	@Override
+	public void returnGetReactNativeInstallUrlSuccess(ReactNativeInstallUriBean reactNativeInstallUriBean) {
+
+	}
+
+	@Override
+	public void returnGetReactNativeInstallUrlFail(String error) {
 
 	}
 
