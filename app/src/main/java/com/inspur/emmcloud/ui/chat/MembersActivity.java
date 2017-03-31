@@ -332,8 +332,8 @@ public class MembersActivity extends BaseActivity implements
                 String pinyin = cUserInfoDto.getPinyinFull();
                 String sortString = pinyin.substring(0, 1).toUpperCase();
                 indexList.add(sortString);
-                mSideBar.setIndexArray(indexList);
-                mSideBar.invalidate();
+//                mSideBar.setIndexArray(indexList);
+//                mSideBar.invalidate();
                 LogUtils.debug("jason", "sortString=" + sortString);
                 if ("1".equals(cUserInfoDto.getUtype())) {// 判断是否是管理员
                     cUserInfoDto.setSortLetters("☆");
