@@ -1,8 +1,9 @@
 package com.inspur.emmcloud.ui.chat;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.text.SpannableString;
-import android.text.method.LinkMovementMethod;
 import android.view.View;
 import android.widget.TextView;
 
@@ -12,7 +13,9 @@ import com.inspur.emmcloud.bean.Msg;
 import com.inspur.emmcloud.util.DensityUtil;
 import com.inspur.emmcloud.util.JSONUtils;
 import com.inspur.emmcloud.util.MentionsAndUrlShowUtils;
+import com.inspur.emmcloud.util.ToastUtils;
 import com.inspur.emmcloud.util.TransHtmlToTextUtils;
+import com.inspur.emmcloud.widget.LinkMovementClickMethod;
 
 import java.util.Arrays;
 import java.util.List;
@@ -33,13 +36,13 @@ public class DisplayTxtRichMsg {
 	 * @param convertView
 	 * @param msg
 	 */
-	public static void displayRichTextMsg(Context context, View convertView,
+	public static void displayRichTextMsg(final Context context, View convertView,
 			Msg msg) {
 		boolean isMyMsg = msg.getUid().equals(
 				((MyApplication) context.getApplicationContext()).getUid());
-		TextView richText = (TextView) convertView
+		final TextView richText = (TextView) convertView
 				.findViewById(R.id.content_text);
-		richText.setMovementMethod(LinkMovementMethod.getInstance());
+		richText.setMovementMethod(LinkMovementClickMethod.getInstance());
 		String msgBody = msg.getBody();
 		String source = JSONUtils.getString(msgBody, "source", "");
 		String[] mentions = JSONUtils.getString(msgBody, "mentions", "")
@@ -69,6 +72,15 @@ public class DisplayTxtRichMsg {
 				context.getResources().getColor(
 						isMyMsg ? R.color.hightlight_in_blue_bg
 								: R.color.header_bg));
+		richText.setOnLongClickListener(new View.OnLongClickListener() {
+			@Override
+			public boolean onLongClick(View v) {
+				ClipboardManager cmb = (ClipboardManager)context.getSystemService(Context.CLIPBOARD_SERVICE);
+				cmb.setPrimaryClip(ClipData.newPlainText(null, richText.getText()));
+				ToastUtils.show(context,R.string.copyed_to_paste_board);
+				return true;
+			}
+		});
 	}
 
 	/**
