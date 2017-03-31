@@ -1,13 +1,9 @@
 package com.inspur.emmcloud.ui.chat;
 
-import java.util.Arrays;
-import java.util.List;
-
-import org.json.JSONArray;
-
 import android.app.Activity;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -30,7 +26,13 @@ import com.inspur.emmcloud.util.MsgCacheUtil;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.TimeUtils;
+import com.inspur.emmcloud.util.ToastUtils;
 import com.inspur.emmcloud.util.TransHtmlToTextUtils;
+
+import org.json.JSONArray;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * DisplayTxtCommentMsg
@@ -51,7 +53,7 @@ public class DisplayTxtCommentMsg {
 		String msgBody = msg.getBody();
 		boolean isMyMsg = msg.getUid().equals(
 				((MyApplication) context.getApplicationContext()).getUid());
-		TextView commentContentText = (TextView) convertView
+		final TextView commentContentText = (TextView) convertView
 				.findViewById(R.id.comment_text);
 		TextView commentTitleText = (TextView) convertView
 				.findViewById(R.id.comment_title_text);
@@ -77,11 +79,9 @@ public class DisplayTxtCommentMsg {
 				new JSONArray());
 		JSONArray urlArray = JSONUtils.getJSONArray(msgBody, "urlList",
 				new JSONArray());
-		if (mentionArray.length() > 0 || urlArray.length() > 0) {
 			// TextView设置此属性会让点击事件不响应，所有当没有@ url时不进行设置
 			commentContentText.setMovementMethod(LinkMovementMethod
 					.getInstance());
-		}
 		commentContentText.setText(spannableString);
 		TransHtmlToTextUtils.stripUnderlines(
 				commentContentText,
@@ -116,16 +116,25 @@ public class DisplayTxtCommentMsg {
 			rootLayout.setPadding(normalPadding + arrowPadding, normalPadding,
 					normalPadding, normalPadding);
 		}
+		commentContentText.setOnLongClickListener(new View.OnLongClickListener() {
+			@Override
+			public boolean onLongClick(View v) {
+				ClipboardManager cmb = (ClipboardManager)context.getSystemService(Context.CLIPBOARD_SERVICE);
+				cmb.setPrimaryClip(ClipData.newPlainText(null, commentContentText.getText()));
+				ToastUtils.show(context,R.string.copyed_to_paste_board);
+				return true;
+			}
+		});
 
 	}
 
 	/**
 	 * 评论消息的详情
-	 *
 	 * @param context
 	 * @param commentedMsg
-	 * @param convertView
+	 * @param commentTitleText
 	 * @param type
+	 * @param isMyMsg
 	 */
 	private static void showCommentDetail(Context context, Msg commentedMsg,
 			TextView commentTitleText, String type, boolean isMyMsg) {
