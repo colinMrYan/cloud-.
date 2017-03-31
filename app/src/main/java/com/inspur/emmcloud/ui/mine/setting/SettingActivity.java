@@ -10,6 +10,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.webkit.CookieManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -331,6 +332,9 @@ public class SettingActivity extends BaseActivity {
 		}
 		NotificationManager nm =(NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
 		nm.cancelAll();
+		CookieManager cookieManager = CookieManager.getInstance();
+		cookieManager.removeAllCookie();
+		((MyApplication)getApplicationContext()).removeAllCookie();
 		JPushInterface.stopPush(getApplicationContext());
 		PreferencesUtils.putString(SettingActivity.this, "tokenType", "");
 		PreferencesUtils.putString(SettingActivity.this, "accessToken", "");

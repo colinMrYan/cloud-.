@@ -10,6 +10,7 @@ import android.os.Environment;
 import android.os.Parcelable;
 import android.support.multidex.MultiDexApplication;
 import android.webkit.CookieManager;
+import android.webkit.CookieSyncManager;
 
 import com.alibaba.fastjson.JSON;
 import com.beefe.picker.PickerViewPackage;
@@ -161,7 +162,20 @@ public class MyApplication extends MultiDexApplication implements  ReactApplicat
 			CookieManager.getInstance().removeSessionCookies(null);
 			CookieManager.getInstance().flush();
 		}else {
+			CookieSyncManager cookieSyncMngr =
+					CookieSyncManager.createInstance(getApplicationContext());
 			CookieManager.getInstance().removeSessionCookie();
+		}
+	}
+
+	public void removeAllCookie(){
+		if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+			CookieManager.getInstance().removeAllCookies(null);
+			CookieManager.getInstance().flush();
+		}else {
+			CookieSyncManager cookieSyncMngr =
+					CookieSyncManager.createInstance(getApplicationContext());
+			CookieManager.getInstance().removeAllCookie();
 		}
 	}
 
