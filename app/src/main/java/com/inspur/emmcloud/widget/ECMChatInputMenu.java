@@ -502,7 +502,7 @@ public class ECMChatInputMenu extends LinearLayout {
 			LogUtils.jasonDebug("isChannelGroup=" + isChannelGroup);
 			if (isChannelGroup) {
 				int inputContentLength = inputContent.length();
-				if (!isContentBlank
+				if (canMention&&!isContentBlank
 						&& (inputContent.substring(inputContentLength - 1, inputContentLength).equals("@") || changeContent
 						.equals("@"))) {
 					Intent intent = new Intent();
