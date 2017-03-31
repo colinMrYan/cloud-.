@@ -50,6 +50,7 @@ public class AmapLocateService extends ImpPlugin implements
     private void getInfo(JSONObject paramsObject) {
         // 解析json串获取到传递过来的参数和回调函数
         try {
+//            paramsObject.put("coordinateType","WGS84");
             LogUtils.YfcDebug("参数信息："+paramsObject.toString());
             if (!paramsObject.isNull("callback"))
                 functName = paramsObject.getString("callback");
