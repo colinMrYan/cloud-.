@@ -33,7 +33,6 @@ import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.PreferencesByUserUtils;
 import com.inspur.emmcloud.util.StringUtils;
-import com.inspur.emmcloud.util.ToastUtils;
 import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.HorizontalListView;
@@ -275,13 +274,17 @@ public class AppDetailActivity extends BaseActivity {
         @Override
         public void returnGetClientIdResultSuccess(GetClientIdRsult getClientIdRsult) {
             super.returnGetClientIdResultSuccess(getClientIdRsult);
+            if(loadingDlg!= null && loadingDlg.isShowing()){
+                loadingDlg.dismiss();
+            }
             PreferencesByUserUtils.putString(AppDetailActivity.this,  "react_native_clientid", getClientIdRsult.getClientId());
             installReactNativeApp();
         }
 
         @Override
         public void returnGetClientIdResultFail(String error) {
-            ToastUtils.show(AppDetailActivity.this,"ClientId获取失败");
+            WebServiceMiddleUtils.hand(AppDetailActivity.this,
+                    error);
             super.returnGetClientIdResultFail(error);
         }
 

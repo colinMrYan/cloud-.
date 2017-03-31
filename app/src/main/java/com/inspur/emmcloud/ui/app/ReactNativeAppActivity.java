@@ -25,7 +25,7 @@ import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.PreferencesByUserUtils;
 import com.inspur.emmcloud.util.StringUtils;
-import com.inspur.emmcloud.util.ToastUtils;
+import com.inspur.emmcloud.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.reactnative.AuthorizationManagerPackage;
 import com.inspur.reactnative.ReactNativeFlow;
@@ -156,7 +156,11 @@ public class ReactNativeAppActivity extends Activity implements DefaultHardwareB
 
         @Override
         public void returnGetClientIdResultFail(String error) {
-            ToastUtils.show(ReactNativeAppActivity.this,"ClientId获取失败");
+            if(loadingDialog != null && loadingDialog.isShowing()){
+                loadingDialog.dismiss();
+            }
+            WebServiceMiddleUtils.hand(ReactNativeAppActivity.this,
+                    error);
             super.returnGetClientIdResultFail(error);
         }
 
