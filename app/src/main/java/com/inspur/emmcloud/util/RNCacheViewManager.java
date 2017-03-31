@@ -43,7 +43,7 @@ public class RNCacheViewManager {
     public static void init(Activity activity){
         if (mManager==null){
             String userId = ((MyApplication) activity.getApplication()).getUid();
-            String reactCurrentFilePath = MyAppConfig.getReactCurrentFilePath(activity, userId);
+            String reactCurrentFilePath = MyAppConfig.getReactAppFilePath(activity, userId,"discover");
             mManager = ReactInstanceManager.builder()
                     .setApplication(activity.getApplication())
                     .setCurrentActivity(activity)

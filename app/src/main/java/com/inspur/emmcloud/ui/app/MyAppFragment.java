@@ -512,7 +512,7 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
             appCommonlyUseNull.setClickCount(1);
             count = 1;
             //计算设置权重，并存储
-            weight = 0.6*count+(0.4*10*(1-((double)index)/((double)appCommonlyUseListSize)));
+            weight = 0.6*count+(0.4*0*(1-((double)index)/((double)appCommonlyUseListSize)));
             appCommonlyUseNull.setWeight(weight);
             appCommonlyUseNull.setLastUpdateTime(System.currentTimeMillis());
             AppCacheUtils.saveAppCommonlyUse(getActivity(), appCommonlyUseNull);

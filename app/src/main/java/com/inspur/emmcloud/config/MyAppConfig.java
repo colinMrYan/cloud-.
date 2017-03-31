@@ -52,7 +52,7 @@ public class MyAppConfig {
      * @return
      */
 	public static String getReactCurrentFilePath(Context context,String userId){
-		return context.getDir("react",MODE_PRIVATE).getPath()+"/current"+userId;
+		return context.getDir("ReactResource",MODE_PRIVATE).getPath()+"/"+ UriUtils.tanent+"/"+userId;
 	}
 
 	/**
@@ -62,10 +62,8 @@ public class MyAppConfig {
 	 * @return
 	 */
 	public static String getReactAppFilePath(Context context,String userId,String module){
-		return context.getDir("react",MODE_PRIVATE).getPath()+"/"+ UriUtils.tanent+userId+"/"+module;
+		return context.getDir("ReactResource",MODE_PRIVATE).getPath()+"/"+ UriUtils.tanent+"/"+userId+"/"+module;
 	}
-
-
 
 	/**
 	 * 获取React上一版本缓存途径（用于Roback的版本）
@@ -74,7 +72,7 @@ public class MyAppConfig {
      * @return
      */
 	public static String getReactTempFilePath(Context context,String userId){
-		return context.getDir("react",MODE_PRIVATE).getPath()+"/temp"+userId;
+		return context.getDir("ReactResource",MODE_PRIVATE).getPath()+"/"+ UriUtils.tanent+"/"+userId+"/Pre";
 	}
 	
 	public static Language getDefaultLanguage = new Language("中文简体","zh-CN","zh-Hans","zh-CN","zh-CN","zh-Hans");

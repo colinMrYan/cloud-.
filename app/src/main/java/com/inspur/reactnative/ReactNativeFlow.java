@@ -11,6 +11,7 @@ import com.inspur.emmcloud.util.DownLoaderUtils;
 import com.inspur.emmcloud.util.FileSafeCode;
 import com.inspur.emmcloud.util.FileUtils;
 import com.inspur.emmcloud.util.LogUtils;
+import com.inspur.emmcloud.util.PreferencesByUserUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.UnZipAssets;
@@ -20,6 +21,7 @@ import org.xutils.common.Callback;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * Created by yufuchang on 2017/2/21.
@@ -38,7 +40,7 @@ public class ReactNativeFlow {
     /**
      * 回滚：恢复到上一版本，把temp移动到current
      */
-    public static final int REACT_NATIVE_REVERT = 2;
+    public static final int REACT_NATIVE_ROLLBACK = 2;
     /**
      * 升级版本：下载zip，验证完整性（不完整重新下载），旧版本移动到temp，新版本解压到current
      */
@@ -53,11 +55,11 @@ public class ReactNativeFlow {
      */
     public static void initReactNative(Context context, String userId) {
         boolean isBundleExist = checkIsBundleExist(context, userId);
-        String reactCurrentFilePath = MyAppConfig.getReactCurrentFilePath(context, userId);
+        String reactCurrentFilePath = MyAppConfig.getReactAppFilePath(context, userId,"discover");
         if (!isBundleExist) {
             try {
                 UnZipAssets.unZip(context, "bundle-v0.1.0.android.zip", reactCurrentFilePath, true);
-                PreferencesUtils.putString(context,"react_native_lastupdatetime",System.currentTimeMillis()+"");
+                PreferencesUtils.putString(context, "react_native_lastupdatetime", System.currentTimeMillis() + "");
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -68,7 +70,7 @@ public class ReactNativeFlow {
      * 检查bundle文件是否存在
      */
     private static boolean checkIsBundleExist(Context context, String userId) {
-        String filePath = MyAppConfig.getReactCurrentFilePath(context, userId);
+        String filePath = MyAppConfig.getReactAppFilePath(context, userId,"discover");
         File file = new File(filePath + "/index.android.bundle");
         if (file.exists()) {
             return true;
@@ -83,12 +85,12 @@ public class ReactNativeFlow {
      * @return
      */
     public static boolean moreThanHalfHour(String lastUpdateTime) {
-        if(StringUtils.isBlank(lastUpdateTime)){
-            return  false;
+        if (StringUtils.isBlank(lastUpdateTime)) {
+            return false;
         }
         long halfHour = System.currentTimeMillis() - Long.parseLong(lastUpdateTime);
         long halfHourMill = 30 * 60 * 1000;
-        return halfHour>halfHourMill;
+        return halfHour > halfHourMill;
     }
 
     /**
@@ -159,12 +161,13 @@ public class ReactNativeFlow {
 
     /**
      * 下载完成之后更新react版本
+     *
      * @param context
      * @param reactNativeUpdateBean
      * @param userId
      */
     private static void updateNewVersion(Context context, ReactNativeUpdateBean reactNativeUpdateBean, String userId) {
-        String reactCurrentPath = MyAppConfig.getReactCurrentFilePath(context, userId);
+        String reactCurrentPath = MyAppConfig.getReactAppFilePath(context, userId,"discover");
         String reactTempPath = MyAppConfig.getReactTempFilePath(context, userId);
         String reactZipFilePath = MyAppConfig.LOCAL_DOWNLOAD_PATH + "/" + userId + "/" +
                 reactNativeUpdateBean.getBundle().getAndroidUri();
@@ -173,7 +176,7 @@ public class ReactNativeFlow {
             deleteZipFile(reactCurrentPath);
             ZipUtils.upZipFile(reactZipFilePath, reactCurrentPath);
             FileUtils.deleteFile(reactZipFilePath);
-            PreferencesUtils.putString(context,"react_native_lastupdatetime",""+System.currentTimeMillis());
+            PreferencesUtils.putString(context, "react_native_lastupdatetime", "" + System.currentTimeMillis());
             FindFragment.hasUpdated = true;
             Intent intent = new Intent("com.inspur.react.success");
             context.sendBroadcast(intent);
@@ -196,6 +199,7 @@ public class ReactNativeFlow {
 
     /**
      * 判断react的状态，是更新，回退，重置还是保持
+     *
      * @param state
      * @return
      */
@@ -203,7 +207,7 @@ public class ReactNativeFlow {
         if (state.equals("RESET")) {
             return REACT_NATIVE_RESET;
         } else if (state.equals("ROLLBACK")) {
-            return REACT_NATIVE_REVERT;
+            return REACT_NATIVE_ROLLBACK;
         } else if (state.equals("FORWARD")) {
             return REACT_NATIVE_FORWORD;
         } else if (state.equals("STANDBY")) {
@@ -257,6 +261,22 @@ public class ReactNativeFlow {
         return unZipSuccess;
     }
 
+    /**
+     * 检查assets目录下文件是否存在
+     * @param context
+     * @param assetsFileName
+     * @return
+     */
+    public static boolean checkAssetsFileExits(Context context, String assetsFileName) {
+        InputStream in = null;
+        try {
+            in = context.getResources().getAssets().open(assetsFileName);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return in != null;
+    }
+
 
     /**
      * 删除zip文件  临时需求，以后可能不再使用
@@ -266,6 +286,20 @@ public class ReactNativeFlow {
      */
     public static boolean deleteZipFile(String deletePath) {
         return FileUtils.deleteFile(deletePath);
+    }
+
+    /**
+     * 检查clientID是否存在
+     *
+     * @param context
+     * @return
+     */
+    public static boolean checkClientIdExist(Context context) {
+        String clientId = PreferencesByUserUtils.getString(context, "react_native_clientid", "");
+        if (StringUtils.isBlank(clientId)) {
+            return false;
+        }
+        return true;
     }
 
 

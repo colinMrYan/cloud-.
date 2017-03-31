@@ -31,6 +31,7 @@ public class App implements Serializable {
 	private String categoryID = "";
 	private long lastUpdateTime = 0L;
 	private double weight = 0;
+	private String installUri = "";
 	
 	public App(){}
 	public App(JSONObject obj) {
@@ -84,6 +85,9 @@ public class App implements Serializable {
 					String url = jsonObject.getString("url");
 					legends.add(url);
 				}
+			}
+			if(obj.has("install_uri")){
+				this.installUri = obj.getString("install_uri");
 			}
 
 		} catch (Exception e) {
@@ -241,6 +245,14 @@ public class App implements Serializable {
 		this.legends = legends;
 	}
 
+	public String getInstallUri() {
+		return installUri;
+	}
+
+	public void setInstallUri(String installUri) {
+		this.installUri = installUri;
+	}
+
 	@Override
 	public boolean equals(Object other) {
 		if(this == other){
@@ -258,5 +270,30 @@ public class App implements Serializable {
 			return false;
 		}
 		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "App{" +
+				"appID='" + appID + '\'' +
+				", appName='" + appName + '\'' +
+				", lastModifyTime='" + lastModifyTime + '\'' +
+				", appIcon='" + appIcon + '\'' +
+				", uri='" + uri + '\'' +
+				", note='" + note + '\'' +
+				", description='" + description + '\'' +
+				", disabled=" + disabled +
+				", isMustHave=" + isMustHave +
+				", useStatus=" + useStatus +
+				", appType=" + appType +
+				", version='" + version + '\'' +
+				", identifiers='" + identifiers + '\'' +
+				", legends=" + legends +
+				", orderId=" + orderId +
+				", categoryID='" + categoryID + '\'' +
+				", lastUpdateTime=" + lastUpdateTime +
+				", weight=" + weight +
+				", installUri='" + installUri + '\'' +
+				'}';
 	}
 }
