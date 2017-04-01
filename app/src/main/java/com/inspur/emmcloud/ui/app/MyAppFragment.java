@@ -626,11 +626,13 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
         changeOrderLayout.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                appListAdapter.setCanEdit(true);
-                appListAdapter.notifyDataSetChanged();
-                editBtn.setVisibility(View.GONE);
-                editBtnFinish.setVisibility(View.VISIBLE);
-                popupWindow.dismiss();
+                if(appListAdapter != null){
+                    appListAdapter.setCanEdit(true);
+                    appListAdapter.notifyDataSetChanged();
+                    editBtn.setVisibility(View.GONE);
+                    editBtnFinish.setVisibility(View.VISIBLE);
+                    popupWindow.dismiss();
+                }
             }
         });
 
