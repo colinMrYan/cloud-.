@@ -595,7 +595,8 @@ public class MeetingsRoomDetailActivity extends BaseActivity {
 			if (loadingDlg != null && loadingDlg.isShowing()) {
 				loadingDlg.dismiss();
 			}
-
+			beforeDayLayout.setVisibility(View.VISIBLE);
+			afterDayLayout.setVisibility(View.VISIBLE);
 			setCurrentCalendar(date);
 			allMeetingList = getMeetingListResult.getMeetingsList();
 			initData();
