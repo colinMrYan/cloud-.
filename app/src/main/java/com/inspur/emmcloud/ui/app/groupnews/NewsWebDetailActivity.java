@@ -153,9 +153,9 @@ public class NewsWebDetailActivity extends BaseActivity {
         // 设置可以访问文件
         webSettings.setAllowFileAccess(true);
         // 设置支持缩放
-        webSettings.setBuiltInZoomControls(true);
+        webSettings.setBuiltInZoomControls(false);
         // 设置字体大小
-        webSettings.setSupportZoom(true);
+        webSettings.setSupportZoom(false);
         webSettings.setTextZoom(textSize);
         // 加载需要显示的网页
         if (!url.startsWith("http")) {
