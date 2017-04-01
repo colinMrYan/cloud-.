@@ -77,4 +77,11 @@ public class LoadingDialog extends Dialog {
 		}
 
 	}
+
+	@Override
+	public void dismiss() {
+		if (context != null){
+			super.dismiss();
+		}
+	}
 }

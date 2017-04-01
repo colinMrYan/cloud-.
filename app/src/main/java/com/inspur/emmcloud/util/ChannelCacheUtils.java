@@ -56,7 +56,7 @@ public class ChannelCacheUtils {
 	public static void clearChannel(Context context) {
 		try {
 			DbCacheUtils.getDb(context).deleteAll(Channel.class);
-		} catch (DbException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

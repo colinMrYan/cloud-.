@@ -5,7 +5,6 @@ import android.content.Context;
 import com.inspur.emmcloud.bean.Contact;
 import com.lidroid.xutils.db.sqlite.Selector;
 import com.lidroid.xutils.db.sqlite.WhereBuilder;
-import com.lidroid.xutils.exception.DbException;
 
 import org.json.JSONArray;
 
@@ -30,7 +29,7 @@ public class ContactCacheUtils {
 		try {
 			
 			DbCacheUtils.getDb(context).saveOrUpdateAll(contactList);
-		} catch (DbException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
