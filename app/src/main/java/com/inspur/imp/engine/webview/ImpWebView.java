@@ -178,6 +178,7 @@ public class ImpWebView extends WebView {
 		// 代理字符串，如果字符串为空或者null系统默认字符串将被利用
 		settings.setUserAgentString(USERAGENT);
 
+
 	}
 
 	/* 支持js相关方法 */
@@ -192,6 +193,18 @@ public class ImpWebView extends WebView {
 	/* 页面效果设置 */
 	private void setPageStyle() {
 		//设置自适应屏幕
+		settings.setLayoutAlgorithm(LayoutAlgorithm.SINGLE_COLUMN);
+		// 支持自动加载图片
+		settings.setLoadsImagesAutomatically(true);
+		settings.setAllowFileAccess(true);
+		// 支持多窗口
+		settings.supportMultipleWindows();
+		settings.setJavaScriptCanOpenWindowsAutomatically(true);
+		// 设置webview推荐使用的窗口
+		settings.setUseWideViewPort(false);
+		// 页面适应手机屏幕的分辨率
+		settings.setLoadWithOverviewMode(true);
+		settings.setDefaultTextEncodingName("utf-8");//设置自适应屏幕
 		settings.setLayoutAlgorithm(LayoutAlgorithm.SINGLE_COLUMN);
 		// 支持自动加载图片
 		settings.setLoadsImagesAutomatically(true);

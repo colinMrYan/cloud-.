@@ -1,5 +1,7 @@
 package com.inspur.emmcloud.ui.mine.setting;
 
+import android.app.NotificationManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,6 +10,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.webkit.CookieManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -327,6 +330,11 @@ public class SettingActivity extends BaseActivity {
 			((MyApplication) getApplicationContext()).getWebSocketPush()
 			.webSocketSignout();
 		}
+		NotificationManager nm =(NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
+		nm.cancelAll();
+		CookieManager cookieManager = CookieManager.getInstance();
+		cookieManager.removeAllCookie();
+		((MyApplication)getApplicationContext()).removeAllCookie();
 		JPushInterface.stopPush(getApplicationContext());
 		PreferencesUtils.putString(SettingActivity.this, "tokenType", "");
 		PreferencesUtils.putString(SettingActivity.this, "accessToken", "");

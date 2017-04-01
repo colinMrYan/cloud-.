@@ -45,6 +45,7 @@ import com.inspur.emmcloud.bean.ReactNativeUpdateBean;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.interf.OnTabReselectListener;
 import com.inspur.emmcloud.interf.OnWorkFragmentDataChanged;
+import com.inspur.emmcloud.service.CoreService;
 import com.inspur.emmcloud.service.PVCollectService;
 import com.inspur.emmcloud.ui.find.FindFragment;
 import com.inspur.emmcloud.util.AppUtils;
@@ -125,7 +126,7 @@ public class IndexActivity extends BaseFragmentActivity implements
         getAppTabs();
 		startUploadPVCollectService();
         registerReactNativeReceiver();
-
+        startCoreService();
     }
 
     /**
@@ -145,7 +146,7 @@ public class IndexActivity extends BaseFragmentActivity implements
      */
     private void initReactNative() {
         RNCacheViewManager.init(IndexActivity.this);
-        reactNativeCurrentPath = MyAppConfig.getReactCurrentFilePath(IndexActivity.this,userId);
+        reactNativeCurrentPath = MyAppConfig.getReactAppFilePath(IndexActivity.this,userId,"discover");
         if (checkClientIdNotExit()) {
             getReactNativeClientId();
         }
@@ -165,6 +166,15 @@ public class IndexActivity extends BaseFragmentActivity implements
         if (NetUtils.isNetworkConnected(IndexActivity.this)) {
             appAPIService.getClientId(AppUtils.getMyUUID(IndexActivity.this), AppUtils.GetChangShang());
         }
+    }
+
+    /**
+     * 打开保活服务
+     */
+    private void startCoreService(){
+        Intent intent = new Intent();
+        intent.setClass(this, CoreService.class);
+        startService(intent);
     }
 
 
@@ -279,7 +289,7 @@ public class IndexActivity extends BaseFragmentActivity implements
         // TODO Auto-generated method stub
         //当通讯录完成时需要刷新头像
         Intent intent = new Intent("message_notify");
-        intent.putExtra("command", "creat_group_icon");
+        intent.putExtra("command", "sort_session_list");
         sendBroadcast(intent);
 
     }
@@ -372,7 +382,7 @@ public class IndexActivity extends BaseFragmentActivity implements
                     .inflate(R.layout.tab_item_view, null);
             ImageView tabImg = (ImageView) tabView.findViewById(R.id.imageview);
             TextView tabText = (TextView) tabView.findViewById(R.id.textview);
-            if (i == 0) {
+            if (mainTab == MainTab.NEWS) {
                 newMessageTipsText = (TextView) tabView
                         .findViewById(R.id.new_message_tips_text);
                 newMessageTipsLayout = (RelativeLayout) tabView.findViewById(R.id.new_message_tips_layout);
@@ -753,6 +763,7 @@ public class IndexActivity extends BaseFragmentActivity implements
         @Override
         public void returnGetClientIdResultSuccess(GetClientIdRsult getClientIdRsult) {
             super.returnGetClientIdResultSuccess(getClientIdRsult);
+            isReactNativeClientUpdateFail = false;
             PreferencesUtils.putString(IndexActivity.this, UriUtils.tanent + userId + "react_native_clientid", getClientIdRsult.getClientId());
             if(isReactNativeClientUpdateFail){
                 updateReactNative();
@@ -770,12 +781,12 @@ public class IndexActivity extends BaseFragmentActivity implements
      */
     private void updateReactNativeWithOrder() {
         int state = ReactNativeFlow.checkReactNativeOperation(reactNativeUpdateBean.getCommand());
-        String reactNatviveTempPath = MyAppConfig.getReactTempFilePath(IndexActivity.this,userId);
-        if (state == ReactNativeFlow.REACT_NATIVE_RESET) {
-            //删除current和temp目录，重新解压assets下的zip
-            resetReactNative();
+            String reactNatviveTempPath = MyAppConfig.getReactTempFilePath(IndexActivity.this,userId);
+            if (state == ReactNativeFlow.REACT_NATIVE_RESET) {
+                //删除current和temp目录，重新解压assets下的zip
+                resetReactNative();
             FindFragment.hasUpdated = true;
-        } else if (state == ReactNativeFlow.REACT_NATIVE_REVERT) {
+        } else if (state == ReactNativeFlow.REACT_NATIVE_ROLLBACK) {
             //拷贝temp下的current到app内部current目录下
             File file = new File(reactNatviveTempPath);
             if(file.exists()){

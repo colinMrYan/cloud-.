@@ -11,9 +11,10 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.WindowManager;
-import android.webkit.CookieManager;
 import android.webkit.ValueCallback;
 import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -79,9 +80,10 @@ public class ImpActivity extends ImpBaseActivity {
 		}
 		String token = ((MyApplication)getApplicationContext())
 				.getToken();
-		setOauthHeader(url, token);
+		setOauthHeader(token);
+		setLangHeader(UriUtils.getLanguageCookie(this));
 		setUserAgent("/emmcloud/" + AppUtils.getVersion(this));
-		setCookies(url, UriUtils.getLanguageCookie(this));
+
 //		if (getIntent().hasExtra("userAgentExtra")) {
 //			String userAgentExtra = getIntent().getExtras().getString(
 //					"userAgentExtra");
@@ -115,6 +117,7 @@ public class ImpActivity extends ImpBaseActivity {
 		});
 
 		webView.loadUrl(url, extraHeaders);
+//		webView.computeScroll();
 		progressLayout.setVisibility(View.VISIBLE);
 	}
 
@@ -164,16 +167,16 @@ public class ImpActivity extends ImpBaseActivity {
 		}
 	}
 
-	/**
-	 * 设置cookie
-	 */
-	private void setCookies(String url, String cookie) {
-		// TODO Auto-generated method stub
-		CookieManager cookieManager = CookieManager.getInstance();
-		cookieManager.setAcceptCookie(true);
-		cookieManager.acceptCookie();
-		cookieManager.setCookie(url, cookie);
-	}
+//	/**
+//	 * 设置cookie
+//	 */
+//	private void setCookies(String url, String cookie) {
+//		// TODO Auto-generated method stub
+//		CookieManager cookieManager = CookieManager.getInstance();
+//		cookieManager.setAcceptCookie(true);
+//		cookieManager.acceptCookie();
+//		cookieManager.setCookie(url, cookie);
+//	}
 
 	private void setUserAgent(String userAgentExtra) {
 		// TODO Auto-generated method stub
@@ -181,11 +184,17 @@ public class ImpActivity extends ImpBaseActivity {
 		String userAgent = settings.getUserAgentString();
 		userAgent = userAgent + userAgentExtra;
 		settings.setUserAgentString(userAgent);
+		settings.enableSmoothTransition();
+		settings.setJavaScriptEnabled(true);
 	}
 
-	private void setOauthHeader(String url, String OauthHeader) {
+	private void setOauthHeader(String OauthHeader) {
 		extraHeaders = new HashMap<String, String>();
 		extraHeaders.put("Authorization", OauthHeader);
+	}
+
+	private void setLangHeader(String langHeader){
+		extraHeaders.put("lang", langHeader);
 	}
 
 	public void onClick(View v) {
@@ -215,6 +224,17 @@ public class ImpActivity extends ImpBaseActivity {
 		if (webView != null) {
 			webView.removeAllViews();
 			webView.destroy();
+		}
+	}
+
+
+	/**
+	 * 自定义WebViewClient在应用中打开页面
+	 */
+	private class webViewClient extends WebViewClient {
+		public boolean shouldOverrideUrlLoading(WebView view, String url) {
+			view.loadUrl(url);
+			return true;
 		}
 	}
 

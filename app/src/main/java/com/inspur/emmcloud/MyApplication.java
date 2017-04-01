@@ -10,6 +10,7 @@ import android.os.Environment;
 import android.os.Parcelable;
 import android.support.multidex.MultiDexApplication;
 import android.webkit.CookieManager;
+import android.webkit.CookieSyncManager;
 
 import com.alibaba.fastjson.JSON;
 import com.beefe.picker.PickerViewPackage;
@@ -136,10 +137,10 @@ public class MyApplication extends MultiDexApplication implements  ReactApplicat
 	/**
 	 * 初始化极光推送
 	 */
-	private void initJPush() {
+	public void initJPush() {
 		// TODO Auto-generated method stub
 		// 设置开启日志,发布时请关闭日志
-		JPushInterface.setDebugMode(false);
+		JPushInterface.setDebugMode(true);
 		// 初始化 JPush
 		JPushInterface.init(this);
 		// 获取和存储RegId
@@ -149,6 +150,7 @@ public class MyApplication extends MultiDexApplication implements  ReactApplicat
 			PreferencesUtils.putString(getApplicationContext(), "JpushRegId",
 					pushRegId);
 		}
+		JPushInterface.resumePush(this);
 	}
 
 
@@ -160,7 +162,20 @@ public class MyApplication extends MultiDexApplication implements  ReactApplicat
 			CookieManager.getInstance().removeSessionCookies(null);
 			CookieManager.getInstance().flush();
 		}else {
+			CookieSyncManager cookieSyncMngr =
+					CookieSyncManager.createInstance(getApplicationContext());
 			CookieManager.getInstance().removeSessionCookie();
+		}
+	}
+
+	public void removeAllCookie(){
+		if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+			CookieManager.getInstance().removeAllCookies(null);
+			CookieManager.getInstance().flush();
+		}else {
+			CookieSyncManager cookieSyncMngr =
+					CookieSyncManager.createInstance(getApplicationContext());
+			CookieManager.getInstance().removeAllCookie();
 		}
 	}
 
@@ -439,7 +454,7 @@ public class MyApplication extends MultiDexApplication implements  ReactApplicat
 				Environment.MEDIA_MOUNTED)) {
 			config = new ImageLoaderConfiguration.Builder(
 					getApplicationContext())
-					.memoryCacheExtraOptions(720, 1200)
+					.memoryCacheExtraOptions(1200, 1200)
 					.imageDownloader(
 							new CustomImageDownloader(getApplicationContext()))
 					.threadPoolSize(6)
@@ -460,7 +475,7 @@ public class MyApplication extends MultiDexApplication implements  ReactApplicat
 			}
 			config = new ImageLoaderConfiguration.Builder(
 					getApplicationContext())
-					.memoryCacheExtraOptions(720, 1200)
+					.memoryCacheExtraOptions(1200, 1200)
 					.imageDownloader(
 							new CustomImageDownloader(getApplicationContext()))
 					.threadPoolSize(6)

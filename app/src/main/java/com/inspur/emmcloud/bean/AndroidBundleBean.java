@@ -17,11 +17,30 @@ public class AndroidBundleBean {
      * type : ZIP
      */
 
-    private String domain;
-    private String version;
+    /**
+     * {
+     "source": "eac3eddd31f11e9327c443b9fcae731787a1cbf2",
+     "namespace": "com.inspur.ecc.core.apps",
+     "domain": "10000",
+     "version": "v0.1.0",
+     "mainComponent": "WhoseCar",
+     "creationDate": 1490691586492,
+     "platform": "ANDROID",
+     "update": "https://ecm.inspur.com/inspur_esg/api/v0/app/10000/latest",
+     "type": "ZIP"
+     }
+     */
+
+    private String domain = "";
+    private String version = "";
     private long creationDate;
-    private String platform;
-    private String type;
+    private String platform = "";
+    private String type = "";
+    private String source = "";
+    private String namespace = "";
+    private String mainComponent = "";
+    private String update = "";
+
 
     public AndroidBundleBean(String androidBundleBean){
         try {
@@ -41,6 +60,19 @@ public class AndroidBundleBean {
             if(jsonAndroid.has("type")){
                 this.type = jsonAndroid.getString("type");
             }
+            if(jsonAndroid.has("source")){
+                this.source = jsonAndroid.getString("source");
+            }
+            if(jsonAndroid.has("namespace")){
+                this.namespace = jsonAndroid.getString("namespace");
+            }
+            if(jsonAndroid.has("mainComponent")){
+                this.mainComponent = jsonAndroid.getString("mainComponent");
+            }
+            if(jsonAndroid.has("update")){
+                this.update = jsonAndroid.getString("update");
+            }
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -84,5 +116,37 @@ public class AndroidBundleBean {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public String getSource() {
+        return source;
+    }
+
+    public void setSource(String source) {
+        this.source = source;
+    }
+
+    public String getNamespace() {
+        return namespace;
+    }
+
+    public void setNamespace(String namespace) {
+        this.namespace = namespace;
+    }
+
+    public String getMainComponent() {
+        return mainComponent;
+    }
+
+    public void setMainComponent(String mainComponent) {
+        this.mainComponent = mainComponent;
+    }
+
+    public String getUpdate() {
+        return update;
+    }
+
+    public void setUpdate(String update) {
+        this.update = update;
     }
 }
