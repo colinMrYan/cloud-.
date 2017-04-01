@@ -485,7 +485,7 @@
             android:name=".ui.work.calendar.AlertTimeActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="ui.login.ModifyUserFirstPsdActivity"
+            android:name=".ui.login.ModifyUserFirstPsdActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.chat.ChannelMembersDelActivity"
