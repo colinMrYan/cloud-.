@@ -438,8 +438,10 @@ public class MyApplication extends MultiDexApplication implements  ReactApplicat
 				}
 				config.locale = new Locale(country, variant);
 			}
-			getResources().updateConfiguration(config,
-					getResources().getDisplayMetrics());
+			if(getApplicationContext() != null){
+				getApplicationContext().getResources().updateConfiguration(config,
+						getResources().getDisplayMetrics());
+			}
 		} else {
 			super.onConfigurationChanged(config);
 		}
