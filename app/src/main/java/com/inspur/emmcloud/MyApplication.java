@@ -104,10 +104,10 @@ public class MyApplication extends MultiDexApplication implements  ReactApplicat
 	}
 	public void onCreate() {
 		super.onCreate();
-		init();
-		isActive = false;
 		CrashHandler crashHandler = CrashHandler.getInstance();
 		crashHandler.init(getApplicationContext());
+		init();
+		isActive = false;
 		isContactReady = PreferencesUtils.getBoolean(getApplicationContext(),
 				"isContactReady", false);
 		uid = PreferencesUtils.getString(getApplicationContext(), "userID");
