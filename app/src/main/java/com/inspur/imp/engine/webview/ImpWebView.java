@@ -6,18 +6,23 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.webkit.JavascriptInterface;
 import android.webkit.WebBackForwardList;
 import android.webkit.WebHistoryItem;
 import android.webkit.WebSettings;
 import android.webkit.WebSettings.LayoutAlgorithm;
 import android.webkit.WebView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
+import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.imp.api.JsInterface;
 import com.inspur.imp.api.Res;
 import com.inspur.imp.api.iLog;
@@ -58,14 +63,18 @@ public class ImpWebView extends WebView {
 	private static final String TAG = "ImpWebView";
 	private RelativeLayout progressLayout;
 	private ImpWebChromeClient impWebChromeClient;
+	private TextView titleText;
+	private LinearLayout loadFailLayout;
 
 	public ImpWebView(Context context, AttributeSet attrs) {
 		super(context,attrs);
 		this.context = context;
 	}
 	
-	public void setProperty(RelativeLayout progressLayout){
+	public void setProperty(RelativeLayout progressLayout, TextView titleText, LinearLayout loadFailLayout){
 		this.progressLayout = progressLayout;
+		this.titleText =titleText;
+		this.loadFailLayout = loadFailLayout;
 		this.setWebView();
 		this.setWebSetting();
 		init();
@@ -93,7 +102,21 @@ public class ImpWebView extends WebView {
 
 	public void init() {
 		this.addJavascriptInterface(new JsInterface(), method);
+		//显示webview网页标题
+		if (titleText != null){
+			this.addJavascriptInterface(new GetTitle(), "getTitle");
+		}
 		initPlugin();
+	}
+
+	public class GetTitle {
+		@JavascriptInterface
+		public void onGetTitle(String title) {
+			// 参数title即为网页的标题，可在这里面进行相应的title的处理
+			if (titleText != null && !TextUtils.isEmpty(title)){
+				titleText.setText(title);
+			}
+		}
 	}
 
 	// 重置当前接口的webview
@@ -114,7 +137,7 @@ public class ImpWebView extends WebView {
 		setAnimation(null);
 		setNetworkAvailable(true);
 		this.setBackgroundColor(Color.WHITE);
-		this.setWebViewClient(new ImpWebViewClient());
+		this.setWebViewClient(new ImpWebViewClient(loadFailLayout));
 		// 使WebView支持弹出框
 		impWebChromeClient = new ImpWebChromeClient(context,progressLayout);
 		this.setWebChromeClient(impWebChromeClient);
@@ -307,6 +330,7 @@ public class ImpWebView extends WebView {
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
+			LogUtils.jasonDebug("onKeyDown---result="+(!(startOfHistory())));
 			return !(startOfHistory());
 		}
 		return super.onKeyDown(keyCode, event);
