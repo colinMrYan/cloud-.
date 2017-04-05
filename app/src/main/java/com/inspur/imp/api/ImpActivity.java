@@ -181,6 +181,10 @@ public class ImpActivity extends ImpBaseActivity {
 		settings.setUserAgentString(userAgent);
 		settings.enableSmoothTransition();
 		settings.setJavaScriptEnabled(true);
+		//禁用缩放
+		settings.setBuiltInZoomControls(false);
+		settings.setSupportZoom(false);
+		settings.setDisplayZoomControls(false);
 	}
 
 	private void setOauthHeader(String OauthHeader) {

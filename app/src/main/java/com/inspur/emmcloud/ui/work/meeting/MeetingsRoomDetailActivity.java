@@ -1,16 +1,5 @@
 package com.inspur.emmcloud.ui.work.meeting;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
-
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -48,6 +37,17 @@ import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.dialogs.EasyDialog;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
 
 public class MeetingsRoomDetailActivity extends BaseActivity {
 
@@ -111,10 +111,9 @@ public class MeetingsRoomDetailActivity extends BaseActivity {
 	}
 
 	/**
-	 * 从服务器获取当前时间
-	 * 
-	 * @param headers
-	 */
+	 * 从服务器获取时间
+	 * @param date
+     */
 	private void setCurrentCalendar(String date) {
 		// TODO Auto-generated method stub
 		try {
@@ -381,7 +380,7 @@ public class MeetingsRoomDetailActivity extends BaseActivity {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		if (resultCode == RESULT_OK) {
+		if (data != null && resultCode == RESULT_OK) {
 			if (data.hasExtra("delete")) {
 				Meeting meeting = (Meeting) data
 						.getSerializableExtra("delete");
@@ -416,10 +415,9 @@ public class MeetingsRoomDetailActivity extends BaseActivity {
 	}
 
 	/**
-	 * 删除在会议详情删除的会议
-	 * 
-	 * @param data
-	 */
+	 * 删除会议
+	 * @param meetingId
+     */
 	private void deleteMeeting(String meetingId) {
 		if (StringUtils.isBlank(meetingId)) {
 			return;
@@ -473,9 +471,7 @@ public class MeetingsRoomDetailActivity extends BaseActivity {
 	}
 
 	/**
-	 * 初始化从网络获取的数据
-	 *
-	 * @param meetingList
+	 * 初始化从网络获取来的数据
 	 */
 	private void initData() {
 		List<List<Meeting>> group = new ArrayList<List<Meeting>>();
