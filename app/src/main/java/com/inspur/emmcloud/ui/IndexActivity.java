@@ -8,7 +8,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.Message;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -64,6 +63,7 @@ import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.MyFragmentTabHost;
+import com.inspur.emmcloud.widget.WeakHandler;
 import com.inspur.emmcloud.widget.tipsview.TipsView;
 import com.inspur.reactnative.ReactNativeFlow;
 
@@ -89,7 +89,7 @@ public class IndexActivity extends BaseFragmentActivity implements
     private static TextView newMessageTipsText;
     private static RelativeLayout newMessageTipsLayout;
     private OnWorkFragmentDataChanged workFragmentListener;
-    private Handler handler;
+    private WeakHandler handler;
     private boolean isHasCacheContact = false;
     private TipsView tipsView;
     private String reactNativeCurrentPath = "";
@@ -256,11 +256,9 @@ public class IndexActivity extends BaseFragmentActivity implements
 
     private void handMessage() {
         // TODO Auto-generated method stub
-        handler = new Handler() {
-
+        handler = new WeakHandler(IndexActivity.this) {
             @Override
-            public void handleMessage(Message msg) {
-                // TODO Auto-generated method stub
+            protected void handleMessage(Object o, Message msg) {
                 switch (msg.what) {
                     case SYNC_ALL_BASE_DATA_SUCCESS:
                         if (loadingDlg != null && loadingDlg.isShowing()) {
@@ -278,7 +276,6 @@ public class IndexActivity extends BaseFragmentActivity implements
                         break;
                 }
             }
-
         };
     }
 
@@ -515,6 +512,9 @@ public class IndexActivity extends BaseFragmentActivity implements
     protected void onDestroy() {
         super.onDestroy();
         ((MyApplication) getApplicationContext()).setIndexActvityRunning(false);
+        if (handler != null){
+            handler = null;
+        }
         if (newMessageTipsText != null) {
             newMessageTipsText = null;
         }

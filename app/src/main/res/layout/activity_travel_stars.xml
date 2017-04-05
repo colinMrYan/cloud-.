@@ -46,7 +46,7 @@
         android:layout_height="match_parent"
         android:layout_below="@id/header_layout"
         android:background="@color/content_bg"
-        android:scrollbars="@null" >
+        android:scrollbars="none" >
         <ImageView 
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

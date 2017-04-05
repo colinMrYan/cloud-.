@@ -2,8 +2,6 @@ package com.inspur.emmcloud.widget;
 
 
 
-import com.inspur.emmcloud.R;
-
 import android.app.Dialog;
 import android.content.Context;
 import android.view.Gravity;
@@ -11,6 +9,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager.LayoutParams;
 import android.widget.TextView;
+
+import com.inspur.emmcloud.R;
 
 
 /**
@@ -22,10 +22,12 @@ public class LoadingDialog extends Dialog {
 	private LayoutInflater inflater;
 	private TextView loadtext;
 	private LayoutParams lp;
+	private Context context;
 
 	public LoadingDialog(Context context,String text) {
 		// TODO Auto-generated constructor stub
 		super(context, R.style.dialog_progressbar);
+		this.context = context;
 		this.setCanceledOnTouchOutside(false);
 		this.setCancelable(false);
 		inflater = (LayoutInflater) context
@@ -45,6 +47,7 @@ public class LoadingDialog extends Dialog {
 	public LoadingDialog(Context context) {
 		// TODO Auto-generated constructor stub
 		super(context, R.style.dialog_progressbar);
+		this.context = context;
 		this.setCanceledOnTouchOutside(false);
 		this.setCancelable(false);
 		inflater = (LayoutInflater) context
@@ -67,4 +70,18 @@ public class LoadingDialog extends Dialog {
 		}
 	}
 
+	@Override
+	public void show() {
+		if (context != null){
+			super.show();
+		}
+
+	}
+
+	@Override
+	public void dismiss() {
+		if (context != null){
+			super.dismiss();
+		}
+	}
 }
