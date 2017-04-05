@@ -47,7 +47,7 @@ public class DbCacheUtils {
 					}else if(oldVersion == 3||oldVersion == 4){
 						arg0.dropTable(AppCommonlyUse.class);
 					}
-				} catch (DbException e) {
+				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}

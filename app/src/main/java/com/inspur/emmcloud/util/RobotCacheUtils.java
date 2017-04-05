@@ -28,7 +28,7 @@ public class RobotCacheUtils {
 		}
 		try {
 			DbCacheUtils.getDb(context).saveOrUpdateAll(robotList);
-		} catch (DbException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
@@ -43,7 +43,7 @@ public class RobotCacheUtils {
 		try {
 			robotList = DbCacheUtils.getDb(context).findAll(
 					Selector.from(Robot.class));
-		} catch (DbException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		if (robotList == null) {
@@ -64,7 +64,7 @@ public class RobotCacheUtils {
 		try {
 			robot = DbCacheUtils.getDb(context).findFirst(
 					Selector.from(Robot.class).where("id", "=", id));
-		} catch (DbException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return robot;
@@ -102,7 +102,7 @@ public class RobotCacheUtils {
 						Selector.from(Robot.class)
 								.where("name", "like", search));
 			}
-		} catch (DbException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		if (robotList == null) {
@@ -119,7 +119,7 @@ public class RobotCacheUtils {
 	public static void deleteRobotById(Context context,String robotId){
 		try {
 			DbCacheUtils.getDb(context).deleteById(Robot.class, robotId);
-		} catch (DbException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
@@ -133,7 +133,7 @@ public class RobotCacheUtils {
 		for (int i = 0; i < idList.size(); i++) {
 			try {
 				DbCacheUtils.getDb(context).deleteById(Robot.class, idList.get(i));
-			} catch (DbException e) {
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}

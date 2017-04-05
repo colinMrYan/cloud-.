@@ -154,7 +154,6 @@ public class DragGridView extends GridView {
 
 		@Override
 		public void run() {
-			LogUtils.debug("jason", "mLongClickRunnable-----------");
 			if(pullToRefreshLayout != null){
 				pullToRefreshLayout.setCanTouch(false);
 			}
@@ -334,13 +333,9 @@ public class DragGridView extends GridView {
 
 	@Override
 	public boolean onTouchEvent(MotionEvent ev) {
-		LogUtils.jasonDebug("canEdit="+canEdit);
-		LogUtils.jasonDebug("isDrag="+isDrag);
-		LogUtils.jasonDebug("mDragImageView != null="+(mDragImageView != null));
 		if (canEdit && isDrag && mDragImageView != null) {
 			switch (ev.getAction()) {
 			case MotionEvent.ACTION_MOVE:
-				LogUtils.debug("jason", "ACTION_MOVE-----------");
 				moveX = (int) ev.getX();
 				moveY = (int) ev.getY();
 				// 拖动item
@@ -412,8 +407,6 @@ public class DragGridView extends GridView {
 	 * @param y
 	 */
 	private void onDragItem(int moveX, int moveY) {
-		LogUtils.jasonDebug("moveX="+moveX);
-		LogUtils.jasonDebug("moveY="+moveY);
 		mWindowLayoutParams.x = moveX - mPoint2ItemLeft + mOffset2Left;
 		mWindowLayoutParams.y = moveY - mPoint2ItemTop + mOffset2Top
 				- mStatusHeight;
@@ -461,7 +454,6 @@ public class DragGridView extends GridView {
 	private void onSwapItem(int moveX, int moveY) {
 		// 获取我们手指移动到的那个item的position
 		int tempPosition = pointToPosition(moveX, moveY);
-		LogUtils.jasonDebug("tempPosition="+tempPosition);
 		// 假如tempPosition 改变了并且tempPosition不等于-1,则进行交换
 		if (tempPosition != mDragPosition
 				&& tempPosition != AdapterView.INVALID_POSITION && mDragPosition != AdapterView.INVALID_POSITION)  {

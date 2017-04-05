@@ -69,7 +69,7 @@ public class FestivalCacheUtils {
 		festivalDateList.add(moonFestival);
 		try {
 			DbCacheUtils.getDb(context).saveOrUpdateAll(festivalDateList);
-		} catch (DbException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
@@ -82,7 +82,7 @@ public class FestivalCacheUtils {
 	public void saveFestivalList(Context context,List<FestivalDate> festivalDateList){
 		try {
 			DbCacheUtils.getDb(context).saveOrUpdateAll(festivalDateList);
-		} catch (DbException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -99,7 +99,7 @@ public class FestivalCacheUtils {
 		try {
 			Calendar cal = Calendar.getInstance();
 			festivalDate = DbCacheUtils.getDb(context).findFirst(Selector.from(FestivalDate.class).where("festivalTime", ">", cal.getTimeInMillis()).orderBy("festivalTime", false));
-		} catch (DbException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		if(festivalDate == null){

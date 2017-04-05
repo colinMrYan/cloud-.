@@ -35,7 +35,7 @@ public class CommonContactCacheUtils {
 						searchModel.setHeat(heat);
 					}
 					DbCacheUtils.getDb(context).saveOrUpdate(searchModel);
-				} catch (DbException e) {
+				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
