@@ -104,8 +104,6 @@ public class MyApplication extends MultiDexApplication implements  ReactApplicat
 	}
 	public void onCreate() {
 		super.onCreate();
-		CrashHandler crashHandler = CrashHandler.getInstance();
-		crashHandler.init(getApplicationContext());
 		init();
 		isActive = false;
 		isContactReady = PreferencesUtils.getBoolean(getApplicationContext(),
@@ -124,6 +122,8 @@ public class MyApplication extends MultiDexApplication implements  ReactApplicat
 
 	private void init() {
 		// TODO Auto-generated method stub
+		CrashHandler crashHandler = CrashHandler.getInstance();
+		crashHandler.init(getApplicationContext());
 		x.Ext.init(MyApplication.this);
 		x.Ext.setDebug(LogUtils.isDebug);
 		SoLoader.init(this,false);
