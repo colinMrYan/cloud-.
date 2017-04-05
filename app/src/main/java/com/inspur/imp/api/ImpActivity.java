@@ -16,11 +16,13 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.util.AppUtils;
+import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.imp.engine.webview.ImpWebChromeClient;
 import com.inspur.imp.engine.webview.ImpWebView;
@@ -48,6 +50,7 @@ public class ImpActivity extends ImpBaseActivity {
 	private Button buttonBack;
 	private Button buttonClose;
 	private TextView headerText;
+	private LinearLayout loadFailLayout;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +60,7 @@ public class ImpActivity extends ImpBaseActivity {
 		setContentView(Res.getLayoutID("activity_imp"));
 		progressLayout = (RelativeLayout) findViewById(Res
 				.getWidgetID("progress_layout"));
+		loadFailLayout = (LinearLayout)findViewById(Res.getWidgetID("load_error_layout")) ;
 		webView = (ImpWebView) findViewById(Res.getWidgetID("webview"));
 		getWindow().setSoftInputMode(
 				WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
@@ -71,13 +75,13 @@ public class ImpActivity extends ImpBaseActivity {
 		}
 		if (getIntent().hasExtra("appName")) {
 			headerText = (TextView) findViewById(Res.getWidgetID("header_text"));
-			webView.setProperty(progressLayout,headerText);
+			webView.setProperty(progressLayout,headerText,loadFailLayout);
 			initWebViewGoBackOrClose();
 			( findViewById(Res.getWidgetID("header_layout")))
 					.setVisibility(View.VISIBLE);
 			headerText.setText(getIntent().getExtras().getString("appName"));
 		}else {
-			webView.setProperty(progressLayout,null);
+			webView.setProperty(progressLayout,null,loadFailLayout);
 		}
 
 		String token = ((MyApplication)getApplicationContext())
@@ -85,24 +89,6 @@ public class ImpActivity extends ImpBaseActivity {
 		setOauthHeader(token);
 		setLangHeader(UriUtils.getLanguageCookie(this));
 		setUserAgent("/emmcloud/" + AppUtils.getVersion(this));
-
-//		if (getIntent().hasExtra("userAgentExtra")) {
-//			String userAgentExtra = getIntent().getExtras().getString(
-//					"userAgentExtra");
-//			setUserAgent(userAgentExtra);
-//		}
-//
-//		if (getIntent().hasExtra("Authorization")) {
-//			String OauthHeader = getIntent().getExtras().getString(
-//					"Authorization");
-//			setOauthHeader(url, OauthHeader);
-//		}
-//
-//		if (getIntent().hasExtra("cookie")) {
-//			String cookie = getIntent().getExtras().getString("cookie");
-//			setCookies(url, cookie);
-//		}
-
 		webView.setOnTouchListener(new OnTouchListener() {
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
@@ -118,8 +104,15 @@ public class ImpActivity extends ImpBaseActivity {
 			}
 		});
 
+		(findViewById(Res.getWidgetID("refresh_text"))).setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				loadFailLayout.setVisibility(View.GONE);
+				webView.reload();
+			}
+		});
+
 		webView.loadUrl(url, extraHeaders);
-//		webView.computeScroll();
 		progressLayout.setVisibility(View.VISIBLE);
 	}
 
@@ -208,9 +201,11 @@ public class ImpActivity extends ImpBaseActivity {
 		// TODO Auto-generated method stub
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
 			if (webView.canGoBack()) {
+				LogUtils.jasonDebug("canGoBack");
 				webView.goBack();// 返回上一页面
 				return true;
 			} else {
+				LogUtils.jasonDebug("not------canGoBack");
 				finish();// 退出程序
 			}
 		}

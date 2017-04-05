@@ -3,10 +3,12 @@ package com.inspur.imp.engine.webview;
 import android.graphics.Bitmap;
 import android.os.Handler;
 import android.os.Message;
+import android.view.View;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.LinearLayout;
 
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
@@ -31,6 +33,10 @@ public class ImpWebViewClient extends WebViewClient {
 	private final String F_UEX_SCRIPT_SELF_FINISH = "javascript:if(window.init){window.init();}";
 	private ImpWebView myWebView;
 	private String errolUrl = "file:///android_asset/error/error.html";
+	private LinearLayout loadFailLayout;
+	public ImpWebViewClient(LinearLayout loadFailLayout){
+		this.loadFailLayout = loadFailLayout;
+	}
 
 	private Handler mHandler = new Handler() {
 
@@ -81,11 +87,10 @@ public class ImpWebViewClient extends WebViewClient {
 	@Override
 	public void onPageFinished(WebView view, String url) {
 		ImpWebView webview = (ImpWebView) view;
-		LogUtils.jasonDebug("onPageFinished==url="+url);
 		if (webview.destroyed || url.contains("error")){
 			return;
 		}
-
+		//为了获取网页的title
 		view.loadUrl("javascript:window.getTitle.onGetTitle("
 				+ "document.getElementsByTagName('title')[0].innerHTML" + ");");
 		webview.loadUrl(F_UEX_SCRIPT_SELF_FINISH);
@@ -101,26 +106,34 @@ public class ImpWebViewClient extends WebViewClient {
 	@Override
 	public void onReceivedError(WebView view, int errorCode,
 			String description, String failingUrl) {
-		final ImpWebView webview = (ImpWebView) view;
-		CookieManager.getInstance().removeSessionCookie();
+		loadFailLayout.setVisibility(View.VISIBLE);
+//		final ImpWebView webview = (ImpWebView) view;
+//		removeAllSessionCookie();
 		//延迟一秒钟解决无法清除历史的问题
-		webview.postDelayed(new Runnable() {
-			@Override
-			public void run() {
-				// 清理缓存
-				webview.clearCache(true);
-				webview.clearHistory();
-			}
-		}, 1000);
-		 webview.loadUrl(errolUrl);
+//		webview.postDelayed(new Runnable() {
+//			@Override
+//			public void run() {
+//				// 清理缓存
+//				webview.clearCache(true);
+//				webview.clearHistory();
+//			}
+//		}, 600);
+//		 webview.loadUrl(errolUrl);
 	}
 
-//	@Override
-//	public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
-//		super.onReceivedError(view, request, error);
-//		LogUtils.jasonDebug("onReceivedError222-------------");
-//		view.loadUrl(errolUrl);
-//	}
+	/**
+	 * 清除所有的SessionCookie
+	 */
+	public void removeAllSessionCookie(){
+		if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+			CookieManager.getInstance().removeSessionCookies(null);
+			CookieManager.getInstance().flush();
+		}else {
+			CookieSyncManager cookieSyncMngr =
+					CookieSyncManager.createInstance(myWebView.getContext());
+			CookieManager.getInstance().removeSessionCookie();
+		}
+	}
 
 
 	/*
@@ -128,19 +141,6 @@ public class ImpWebViewClient extends WebViewClient {
 			 */
 	@Override
 	public boolean shouldOverrideUrlLoading(WebView view, String url) {
-//		LogUtils.jasonDebug("shouldOverrideUrlLoading-------------");
-//		ImpWebView impView = (ImpWebView) view;
-//		if (url.contains("http")) {
-//			int index = url.indexOf("http");
-//			url = url.substring(index);
-//		}
-//		if (mCurrentUrl != null && url != null && url.equals(mCurrentUrl)) {
-//			impView.goBack();
-//			return true;
-//		}
-//		view.loadUrl(url);
-//		mCurrentUrl = url;
-//		return true;
 		handleReDirectURL(url,view);
 		return super.shouldOverrideUrlLoading(view, url);
 
@@ -158,8 +158,6 @@ public class ImpWebViewClient extends WebViewClient {
 			} catch (MalformedURLException e) {
 				e.printStackTrace();
 			}
-//			String params = URLRequestParamsUtils.TruncateUrlPage(url);
-//			params = urlWithParams.getQuery();
 			MyAppAPIService appAPIService = new MyAppAPIService(view.getContext());
 			appAPIService.setAPIInterface(new WebService(view));
 			if(NetUtils.isNetworkConnected(view.getContext())){

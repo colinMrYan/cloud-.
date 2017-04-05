@@ -17,6 +17,7 @@ import android.webkit.WebHistoryItem;
 import android.webkit.WebSettings;
 import android.webkit.WebSettings.LayoutAlgorithm;
 import android.webkit.WebView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -63,15 +64,17 @@ public class ImpWebView extends WebView {
 	private RelativeLayout progressLayout;
 	private ImpWebChromeClient impWebChromeClient;
 	private TextView titleText;
+	private LinearLayout loadFailLayout;
 
 	public ImpWebView(Context context, AttributeSet attrs) {
 		super(context,attrs);
 		this.context = context;
 	}
 	
-	public void setProperty(RelativeLayout progressLayout,TextView titleText){
+	public void setProperty(RelativeLayout progressLayout, TextView titleText, LinearLayout loadFailLayout){
 		this.progressLayout = progressLayout;
 		this.titleText =titleText;
+		this.loadFailLayout = loadFailLayout;
 		this.setWebView();
 		this.setWebSetting();
 		init();
@@ -134,7 +137,7 @@ public class ImpWebView extends WebView {
 		setAnimation(null);
 		setNetworkAvailable(true);
 		this.setBackgroundColor(Color.WHITE);
-		this.setWebViewClient(new ImpWebViewClient());
+		this.setWebViewClient(new ImpWebViewClient(loadFailLayout));
 		// 使WebView支持弹出框
 		impWebChromeClient = new ImpWebChromeClient(context,progressLayout);
 		this.setWebChromeClient(impWebChromeClient);
@@ -327,6 +330,7 @@ public class ImpWebView extends WebView {
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
+			LogUtils.jasonDebug("onKeyDown---result="+(!(startOfHistory())));
 			return !(startOfHistory());
 		}
 		return super.onKeyDown(keyCode, event);

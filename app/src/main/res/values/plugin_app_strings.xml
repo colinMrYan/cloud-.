@@ -17,5 +17,6 @@
     <string name="beginUnpacked">下载成功,开始解压</string>
     <string name="being_unpacked">解压缩中。。。</string>
     <string name="complete_update">更新完成</string>
-    
+    <string name="web_load_fail">加载失败</string>
+    <string name="web_reload">重新加载</string>
 </resources>
