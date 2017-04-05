@@ -605,6 +605,9 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
 
             @Override
             public void toggleToOn(View view) {
+                if(view == null || switchView == null){
+                    return;
+                }
                 switchView.toggleSwitch(true);
                 saveNeedCommonlyUseApp(true);
                 handCommonlyUseAppData(appListAdapter.getAppAdapterList(), true);
@@ -612,6 +615,9 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
 
             @Override
             public void toggleToOff(View view) {
+                if(view == null || switchView == null){
+                    return;
+                }
                 switchView.toggleSwitch(false);
                 saveNeedCommonlyUseApp(false);
                 if(hasCommonlyApp){
