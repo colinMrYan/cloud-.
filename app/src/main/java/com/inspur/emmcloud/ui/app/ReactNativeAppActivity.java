@@ -99,6 +99,7 @@ public class ReactNativeAppActivity extends Activity implements DefaultHardwareB
      */
     private void checkReactNativeUpdate() {
         if(NetUtils.isNetworkConnected(ReactNativeAppActivity.this)){
+            loadingDialog.show();
             StringBuilder describeVersionAndTime = FileUtils.readFile(reactAppFilePath +"/bundle.json", "UTF-8");
             AndroidBundleBean androidBundleBean = new AndroidBundleBean(describeVersionAndTime.toString());
             String clientId = PreferencesByUserUtils.getString(ReactNativeAppActivity.this,"react_native_clientid", "");
