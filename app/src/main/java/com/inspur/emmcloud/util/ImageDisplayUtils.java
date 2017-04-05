@@ -11,6 +11,7 @@ import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.ImageSize;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
+import com.nostra13.universalimageloader.core.imageaware.ImageViewAware;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 import com.nostra13.universalimageloader.utils.L;
 
@@ -88,7 +89,15 @@ public class ImageDisplayUtils  implements ImagePickerLoader {
 			uri = "file://" + uri;
 		}
 		ImageSize size = new ImageSize(width, height);
-		ImageLoader.getInstance().displayImage(uri, imageView, size);
+		if(options == null){
+			options = new DisplayImageOptions.Builder()
+					// 设置图片的解码类型
+					.bitmapConfig(Bitmap.Config.RGB_565)
+					.cacheInMemory(true)
+					.cacheOnDisk(true)
+					.build();
+		}
+		ImageLoader.getInstance().displayImage(uri,new ImageViewAware(imageView),options,size,null,null);
 	}
 
 	@Override

@@ -2,7 +2,6 @@ package com.inspur.imp.plugin.camera.imagepicker.ui;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -105,8 +104,9 @@ public class ImageGridActivity extends ImageBaseActivity implements
 		handMessage();
 		onImageSelected(0, null, false);
 
-		if (Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN) {
-			new ImageDataSource(this, null, this);
+		new ImageDataSource(this, null, this);
+//		if (Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN) {
+//
 
 			//
 			// if (checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE))
@@ -119,7 +119,7 @@ public class ImageGridActivity extends ImageBaseActivity implements
 			// new String[] { Manifest.permission.WRITE_EXTERNAL_STORAGE },
 			// REQUEST_PERMISSION_STORAGE);
 			// }
-		}
+	//	}
 		
 		if (getIntent().hasExtra("paramsObject")) {
 			paramObjJson = getIntent().getExtras().getString("paramsObject");
