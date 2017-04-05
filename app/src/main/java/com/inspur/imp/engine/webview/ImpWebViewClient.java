@@ -11,6 +11,7 @@ import android.webkit.WebViewClient;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
 import com.inspur.emmcloud.bean.AppRedirectResult;
+import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 
@@ -80,8 +81,13 @@ public class ImpWebViewClient extends WebViewClient {
 	@Override
 	public void onPageFinished(WebView view, String url) {
 		ImpWebView webview = (ImpWebView) view;
-		if (webview.destroyed || url.contains("error"))
+		LogUtils.jasonDebug("onPageFinished==url="+url);
+		if (webview.destroyed || url.contains("error")){
 			return;
+		}
+
+		view.loadUrl("javascript:window.getTitle.onGetTitle("
+				+ "document.getElementsByTagName('title')[0].innerHTML" + ");");
 		webview.loadUrl(F_UEX_SCRIPT_SELF_FINISH);
 		String c = CookieManager.getInstance().getCookie(url);
 		PreferencesUtils.putString(view.getContext(),"web_cookie",c);

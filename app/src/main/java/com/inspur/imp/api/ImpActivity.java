@@ -24,7 +24,6 @@ import com.inspur.emmcloud.util.AppUtils;
 import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.imp.engine.webview.ImpWebChromeClient;
 import com.inspur.imp.engine.webview.ImpWebView;
-import com.inspur.imp.engine.webview.ImpWebViewClient;
 import com.inspur.imp.plugin.camera.PublicWay;
 import com.inspur.imp.plugin.file.FileService;
 
@@ -48,6 +47,7 @@ public class ImpActivity extends ImpBaseActivity {
 	private Map<String, String> extraHeaders;
 	private Button buttonBack;
 	private Button buttonClose;
+	private TextView headerText;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -58,8 +58,6 @@ public class ImpActivity extends ImpBaseActivity {
 		progressLayout = (RelativeLayout) findViewById(Res
 				.getWidgetID("progress_layout"));
 		webView = (ImpWebView) findViewById(Res.getWidgetID("webview"));
-		webView.setProperty(progressLayout);
-		webView.setWebViewClient(new ImpWebViewClient());
 		getWindow().setSoftInputMode(
 				WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
 						| WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
@@ -72,12 +70,16 @@ public class ImpActivity extends ImpBaseActivity {
 			url = getIntent().getExtras().getString("uri");
 		}
 		if (getIntent().hasExtra("appName")) {
+			headerText = (TextView) findViewById(Res.getWidgetID("header_text"));
+			webView.setProperty(progressLayout,headerText);
 			initWebViewGoBackOrClose();
 			( findViewById(Res.getWidgetID("header_layout")))
 					.setVisibility(View.VISIBLE);
-			((TextView) findViewById(Res.getWidgetID("header_text")))
-					.setText(getIntent().getExtras().getString("appName"));
+			headerText.setText(getIntent().getExtras().getString("appName"));
+		}else {
+			webView.setProperty(progressLayout,null);
 		}
+
 		String token = ((MyApplication)getApplicationContext())
 				.getToken();
 		setOauthHeader(token);
