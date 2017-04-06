@@ -45,6 +45,8 @@
     <uses-permission android:name="android.permission.DOWNLOAD_WITHOUT_NOTIFICATION" />
     <uses-permission android:name="android.permission.CHANGE_CONFIGURATION" />
     <uses-permission android:name="android.permission.REORDER_TASKS" />
+    <uses-permission android:name="android.permission.WRITE_SMS"/>
+    <uses-permission android:name="android.permission.READ_SMS"/>
 
     <!-- 闪光灯 -->
     <uses-permission android:name="android.permission.FLASHLIGHT" />
@@ -495,7 +497,7 @@
             android:name=".ui.work.calendar.AlertTimeActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="ui.login.ModifyUserFirstPsdActivity"
+            android:name=".ui.login.ModifyUserFirstPsdActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.chat.ChannelMembersDelActivity"

@@ -52,6 +52,7 @@ public class ChatInputEdit extends EditText {
                     setSelection(mentionEnd);
                 }
             }
+            isOpen = false;
         }
         super.onSelectionChanged(selStart, selEnd);
     }
@@ -84,7 +85,8 @@ public class ChatInputEdit extends EditText {
      */
     private void init() {
         this.setCustomSelectionActionModeCallback(new ActionModeCallbackInterceptor());
-        this.setLongClickable(false);
+        //这里修改长按事件
+//        this.setLongClickable(false);
     }
 
 

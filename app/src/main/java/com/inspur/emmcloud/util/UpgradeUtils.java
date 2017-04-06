@@ -95,10 +95,12 @@ public class UpgradeUtils extends APIInterfaceInstance {
 				case DOWNLOAD_FAIL:
 					ToastUtils.show(activity,
 							activity.getString(R.string.update_fail));
-					if (upgradeCode == 2) {
-						showForceUpgradeDlg();
-					} else {
-						showSelectUpgradeDlg();
+					if (activity != null) {
+						if (upgradeCode == 2) {
+							showForceUpgradeDlg();
+						} else {
+							showSelectUpgradeDlg();
+						}
 					}
 					break;
 				case SHOW_PEOGRESS_LAODING_DLG:

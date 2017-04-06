@@ -77,8 +77,8 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
     private BroadcastReceiver mBroadcastReceiver;
     private PopupWindow popupWindow;
     private boolean isNeedCommonlyUseApp = false;
-    private SwitchView switchView;
-    private View contentView;
+//    private SwitchView switchView;
+//    private View contentView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -126,11 +126,7 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
         OnAppCenterClickListener listener = new OnAppCenterClickListener();
         ((RelativeLayout)rootView.findViewById(R.id.appcenter_layout)).setOnClickListener(listener);
         getMyApp(true);
-        // 一个自定义的布局，作为popwindowivew显示的内容
-        contentView = LayoutInflater.from(getActivity())
-                .inflate(R.layout.app_center_popup_window_view, null);
-        switchView = (SwitchView) contentView.findViewById(R.id.app_hide_switch);
-        switchView.toggleSwitch(getNeedCommonlyUseApp());
+
     }
 
     /**
@@ -594,7 +590,11 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
      * @param view
      */
     private void showPopupWindow(View view) {
-
+        // 一个自定义的布局，作为popwindowivew显示的内容
+        View contentView = LayoutInflater.from(getActivity())
+                .inflate(R.layout.app_center_popup_window_view, null);
+        final  SwitchView switchView = (SwitchView) contentView.findViewById(R.id.app_hide_switch);
+        switchView.toggleSwitch(getNeedCommonlyUseApp());
         // 设置按钮的点击事件
         popupWindow = new PopupWindow(contentView,
                 LinearLayout.LayoutParams.WRAP_CONTENT,
@@ -605,6 +605,9 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
 
             @Override
             public void toggleToOn(View view) {
+                if(view == null || switchView == null){
+                    return;
+                }
                 switchView.toggleSwitch(true);
                 saveNeedCommonlyUseApp(true);
                 handCommonlyUseAppData(appListAdapter.getAppAdapterList(), true);
@@ -612,6 +615,9 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
 
             @Override
             public void toggleToOff(View view) {
+                if(view == null || switchView == null){
+                    return;
+                }
                 switchView.toggleSwitch(false);
                 saveNeedCommonlyUseApp(false);
                 if(hasCommonlyApp){
@@ -626,11 +632,13 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
         changeOrderLayout.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                appListAdapter.setCanEdit(true);
-                appListAdapter.notifyDataSetChanged();
-                editBtn.setVisibility(View.GONE);
-                editBtnFinish.setVisibility(View.VISIBLE);
-                popupWindow.dismiss();
+                if(appListAdapter != null){
+                    appListAdapter.setCanEdit(true);
+                    appListAdapter.notifyDataSetChanged();
+                    editBtn.setVisibility(View.GONE);
+                    editBtnFinish.setVisibility(View.VISIBLE);
+                    popupWindow.dismiss();
+                }
             }
         });
 
