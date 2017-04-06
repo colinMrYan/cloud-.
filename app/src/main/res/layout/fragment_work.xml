@@ -16,6 +16,7 @@
         <ImageView
             android:id="@+id/header_bg_img"
             android:scaleType="fitXY"
+            android:src="@drawable/work_navi_back"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
