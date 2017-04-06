@@ -378,7 +378,7 @@ public class MeetingRoomListActivity extends BaseActivity implements
 											beginCalendar,
 											TimeUtils.FORMAT_YEAR_MONTH_DAY));
 							if (isFirstTime) {
-								handleFirstSetTime();
+								handleFirstSetTime(true);
 							}
 							isHasModifyTime = true;
 							resetBtn.setTextColor(Color.BLACK);
@@ -402,9 +402,12 @@ public class MeetingRoomListActivity extends BaseActivity implements
 
 	/**
 	 * 初次设置时间的时候进行的时间设置
+	 * @param isSetBeginTimeHalfHour 是否将开始时间设置为整半小时
 	 */
-	protected void handleFirstSetTime() {
-		beginCalendar = TimeUtils.getNextHalfHourTime(beginCalendar);
+	protected void handleFirstSetTime(boolean isSetBeginTimeHalfHour) {
+		if (isSetBeginTimeHalfHour){
+			beginCalendar = TimeUtils.getNextHalfHourTime(beginCalendar);
+		}
 		beginTimeText.setText(TimeUtils.calendar2FormatString(
 				MeetingRoomListActivity.this, beginCalendar,
 				TimeUtils.FORMAT_HOUR_MINUTE));
@@ -446,7 +449,7 @@ public class MeetingRoomListActivity extends BaseActivity implements
 //											MeettingRoomListActivity.this,
 //											beginCalendar,
 //											TimeUtils.FORMAT_HOUR_MINUTE));
-							handleFirstSetTime();
+							handleFirstSetTime(false);
 						} else if (beginOrEnd == MEETING_ROOM_END_TIME) {
 							endCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
 							endCalendar.set(Calendar.MINUTE, minute);
