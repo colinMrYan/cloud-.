@@ -187,7 +187,7 @@ public class NativeBridge extends ReactContextBaseJavaModule implements Activity
 	 * @param promise
      */
 	@ReactMethod
-	public void getContactByEmail(String email,Promise promise){
+	public void findContactByMail(String email,Promise promise){
 		Contact contact = ContactCacheUtils.getContactByEmail(getCurrentActivity(),email);
 		if(contact != null){
 			String jsonObject = JSON.toJSONString(contact);
