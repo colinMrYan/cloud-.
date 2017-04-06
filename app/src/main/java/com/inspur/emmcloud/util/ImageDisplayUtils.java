@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.inspur.emmcloud.R;
 import com.inspur.imp.plugin.camera.imagepicker.loader.ImagePickerLoader;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -14,6 +15,7 @@ import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.nostra13.universalimageloader.core.imageaware.ImageViewAware;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 import com.nostra13.universalimageloader.utils.L;
+
 
 public class ImageDisplayUtils  implements ImagePickerLoader {
 	private DisplayImageOptions options;
@@ -93,6 +95,9 @@ public class ImageDisplayUtils  implements ImagePickerLoader {
 			options = new DisplayImageOptions.Builder()
 					// 设置图片的解码类型
 					.bitmapConfig(Bitmap.Config.RGB_565)
+					.showImageForEmptyUri(R.mipmap.default_image)
+					.showImageOnFail(R.mipmap.default_image)
+					.showImageOnLoading(R.mipmap.default_image)
 					.cacheInMemory(true)
 					.cacheOnDisk(true)
 					.build();
