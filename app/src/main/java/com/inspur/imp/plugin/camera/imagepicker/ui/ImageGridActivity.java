@@ -16,7 +16,6 @@ import android.widget.Toast;
 
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.config.MyAppConfig;
-import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.imp.plugin.camera.editimage.EditImageActivity;
 import com.inspur.imp.plugin.camera.imagepicker.ImageDataSource;
