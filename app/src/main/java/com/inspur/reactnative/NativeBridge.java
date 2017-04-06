@@ -123,7 +123,7 @@ public class NativeBridge extends ReactContextBaseJavaModule implements Activity
 
 	/**
 	 * 通讯录选人
-	 *
+	 * @param multi  是否多选
 	 * @param promise
 	 */
 	@ReactMethod

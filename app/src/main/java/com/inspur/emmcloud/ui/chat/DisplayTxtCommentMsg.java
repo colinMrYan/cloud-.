@@ -125,6 +125,16 @@ public class DisplayTxtCommentMsg {
 				return true;
 			}
 		});
+		commentContentText.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Bundle bundle = new Bundle();
+				bundle.putString("cid", msg.getCid());
+				bundle.putString("mid", msg.getCommentMid());
+				IntentUtils.startActivity(context,
+						ChannelMsgDetailActivity.class, bundle);
+			}
+		});
 
 	}
 
@@ -175,7 +185,6 @@ public class DisplayTxtCommentMsg {
 	 * 
 	 *
 	 * @param context
-	 * @param channelType
 	 * @param msg
 	 */
 	protected static void goDetail(Activity context, Msg msg) {

@@ -26,7 +26,6 @@ public class BaseActivity extends Activity {
 			((MyApplication) getApplicationContext()).setIsActive(false);
 			// 全局变量isActive = false 记录当前已经进入后台
 			((MyApplication)getApplicationContext()).sendFrozenWSMsg();
-			((MyApplication)getApplicationContext()).clearNotification();
 		}
 	}
 
@@ -37,6 +36,7 @@ public class BaseActivity extends Activity {
 
 		if (!((MyApplication) getApplicationContext()).getIsActive()) {
 			((MyApplication) getApplicationContext()).setIsActive(true);
+			((MyApplication)getApplicationContext()).clearNotification();
 			if (((MyApplication) getApplicationContext())
 					.isIndexActivityRunning()) {
 				((MyApplication)getApplicationContext()).sendActivedWSMsg();

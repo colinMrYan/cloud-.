@@ -1,10 +1,5 @@
 package com.inspur.emmcloud.ui.work.meeting;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Locale;
-
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.app.TimePickerDialog.OnTimeSetListener;
@@ -57,6 +52,11 @@ import com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout;
 import com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout.OnRefreshListener;
 import com.inspur.emmcloud.widget.pullableview.PullableExpandableListView;
 
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+import java.util.Locale;
+
 public class MeetingRoomListActivity extends BaseActivity implements
 		OnRefreshListener {
 
@@ -84,6 +84,7 @@ public class MeetingRoomListActivity extends BaseActivity implements
 	private boolean isAfterFilte = false;
 	private boolean isHasModifyTime = false;
 	private boolean isFirstTime = true;
+	private boolean isSetIntentTime = true; //是否需要设置从预订页面传过来的会议起止时间
 	private BroadcastReceiver meetingReceiver;
 	private Button resetBtn;
 
@@ -96,7 +97,16 @@ public class MeetingRoomListActivity extends BaseActivity implements
 		getCommonOfficeSpace(true);
 		registerMeetingReceiver();
 	}
-	
+
+	@Override
+	public void onWindowFocusChanged(boolean hasFocus) {
+		super.onWindowFocusChanged(hasFocus);
+		//当预订会议室界面时间传递过来时候默认设置为过滤条件
+		if (hasFocus && isSetIntentTime && getIntent().hasExtra("filterBeginCalendar")){
+			showPopupWindow(headLayout);
+		}
+	}
+
 	/**
 	 * 注册刷新任务的广播
 	 */
@@ -118,7 +128,7 @@ public class MeetingRoomListActivity extends BaseActivity implements
 
 	/**
 	 * 变更会议，取消会议下拉框
-	 * 
+	 *
 	 * @param view
 	 */
 	private void showPopupWindow(View view) {
@@ -178,6 +188,15 @@ public class MeetingRoomListActivity extends BaseActivity implements
 				resetBtn.setTextColor(0xff999999);
 			}
 		});
+		if (isSetIntentTime && getIntent().hasExtra("filterBeginCalendar")){
+			isFirstTime = false;
+			isSetIntentTime = false;
+			isAfterFilte = true;
+			long beginCalendarLong = getIntent().getLongExtra("filterBeginCalendar",0L);
+			beginCalendar = TimeUtils.timeLong2Calendar(beginCalendarLong);
+			long endCalendarLong = getIntent().getLongExtra("filterEndCalendar",0L);
+			endCalendar = TimeUtils.timeLong2Calendar(endCalendarLong);
+		}
 		if(isAfterFilte){
 			resetBtn.setTextColor(Color.BLACK);
 		}
@@ -201,7 +220,8 @@ public class MeetingRoomListActivity extends BaseActivity implements
 			endTimeText.setText(TimeUtils.calendar2FormatString(
 					MeetingRoomListActivity.this, endCalendar,
 					TimeUtils.FORMAT_HOUR_MINUTE));
-		} else {
+		}
+		else {
 			beginDateText.setText(getString(R.string.meeting_date_default));
 			endDateText.setText(getString(R.string.meeting_date_default));
 			beginTimeText.setText("");
@@ -326,11 +346,11 @@ public class MeetingRoomListActivity extends BaseActivity implements
 
 	/**
 	 * 日期选择
-	 * 
+	 *
 	 * @param beginOrEnd
 	 */
 	private void showDateDialog(final int beginOrEnd) {
-		
+
 		Calendar calendar = Calendar.getInstance();
 		if (beginOrEnd == MEETING_ROOM_BEGIN_DATE) {
 			calendar = beginCalendar;
@@ -338,7 +358,7 @@ public class MeetingRoomListActivity extends BaseActivity implements
 			calendar = endCalendar;
 		}
 		Locale locale = getResources().getConfiguration().locale;
-		 Locale.setDefault(locale); 
+		 Locale.setDefault(locale);
 		MyDatePickerDialog datePickerDialog = new MyDatePickerDialog(
 				MeetingRoomListActivity.this,
 				new DatePickerDialog.OnDateSetListener() {
@@ -358,7 +378,7 @@ public class MeetingRoomListActivity extends BaseActivity implements
 											beginCalendar,
 											TimeUtils.FORMAT_YEAR_MONTH_DAY));
 							if (isFirstTime) {
-								handleFirstSetTime();
+								handleFirstSetTime(true);
 							}
 							isHasModifyTime = true;
 							resetBtn.setTextColor(Color.BLACK);
@@ -382,9 +402,12 @@ public class MeetingRoomListActivity extends BaseActivity implements
 
 	/**
 	 * 初次设置时间的时候进行的时间设置
+	 * @param isSetBeginTimeHalfHour 是否将开始时间设置为整半小时
 	 */
-	protected void handleFirstSetTime() {
-		beginCalendar = TimeUtils.getNextHalfHourTime(beginCalendar);
+	protected void handleFirstSetTime(boolean isSetBeginTimeHalfHour) {
+		if (isSetBeginTimeHalfHour){
+			beginCalendar = TimeUtils.getNextHalfHourTime(beginCalendar);
+		}
 		beginTimeText.setText(TimeUtils.calendar2FormatString(
 				MeetingRoomListActivity.this, beginCalendar,
 				TimeUtils.FORMAT_HOUR_MINUTE));
@@ -402,7 +425,7 @@ public class MeetingRoomListActivity extends BaseActivity implements
 
 	/**
 	 * 弹出时间选择Dialog
-	 * 
+	 *
 	 * @param hour
 	 * @param minute
 	 * @param beginOrEnd
@@ -426,7 +449,7 @@ public class MeetingRoomListActivity extends BaseActivity implements
 //											MeettingRoomListActivity.this,
 //											beginCalendar,
 //											TimeUtils.FORMAT_HOUR_MINUTE));
-							handleFirstSetTime();
+							handleFirstSetTime(false);
 						} else if (beginOrEnd == MEETING_ROOM_END_TIME) {
 							endCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
 							endCalendar.set(Calendar.MINUTE, minute);
@@ -628,7 +651,7 @@ public class MeetingRoomListActivity extends BaseActivity implements
 					startActivityForResult(intent, CHECK_MEETING_ROOM_DETAIL);
 				}
 			});
-			
+
 			int busyDegreeSize = meetingAreas.get(groupPosition)
 			.getMeetingRooms().get(childPosition).getBusyDegreeList().size();
 			if(busyDegreeSize==1){
@@ -685,7 +708,7 @@ public class MeetingRoomListActivity extends BaseActivity implements
 
 	/**
 	 * 处理成员数量
-	 * 
+	 *
 	 * @param meetingMember
 	 * @param groupPosition
 	 * @param childPosition
@@ -699,7 +722,7 @@ public class MeetingRoomListActivity extends BaseActivity implements
 
 	/**
 	 * 处理是否会议中
-	 * 
+	 *
 	 * @param nowState
 	 * @param groupPosition
 	 * @param childPosition
@@ -723,16 +746,15 @@ public class MeetingRoomListActivity extends BaseActivity implements
 
 	/**
 	 * 处理equips
-	 * 
+	 *
 	 * @param groupPosition
 	 * @param childPosition
-	 * @param equips
 	 * @param equipsImg
 	 */
 	public void handleEquips(ImageView[] equipsImg, int groupPosition,
 			int childPosition) {
 		ArrayList<String> equipmentList = meetingAreas.get(groupPosition).getMeetingRooms().get(childPosition).getEquipmentList();
-		
+
 		for (int i = 0; i < 4; i++) {
 			equipsImg[i].setVisibility(View.GONE);
 		}
@@ -756,7 +778,7 @@ public class MeetingRoomListActivity extends BaseActivity implements
 
 	/**
 	 * 处理busyDegree
-	 * 
+	 *
 	 * @param imageView
 	 * @param groupPosition
 	 * @param childPosition
@@ -857,10 +879,7 @@ public class MeetingRoomListActivity extends BaseActivity implements
 
 	/**
 	 * 获取没有筛选条件下的会议室
-	 *
-	 * @param beginTimeLong
-	 * @param endTimeLong
-	 * @param isFilte
+	 * @param isShowDlg
 	 */
 	private void getNoFilteMeetingRooms(boolean isShowDlg) {
 //		Calendar calendar = Calendar.getInstance();
@@ -869,13 +888,13 @@ public class MeetingRoomListActivity extends BaseActivity implements
 		getFilteMeetingRooms(0, 0, false,
 				isShowDlg);
 	}
-	
+
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
 		unregisterReceiver();
 	}
-	
+
 	/**
 	 * 注销广播
 	 */
@@ -888,9 +907,10 @@ public class MeetingRoomListActivity extends BaseActivity implements
 
 	/**
 	 * 获取过滤后的会议室
-	 * 
-	 * @param endTimeLong
 	 * @param beginTimeLong
+	 * @param endTimeLong
+	 * @param isFilte
+	 * @param isShowDlg
 	 */
 	private void getFilteMeetingRooms(long beginTimeLong, long endTimeLong,
 			boolean isFilte, boolean isShowDlg) {
@@ -962,6 +982,6 @@ public class MeetingRoomListActivity extends BaseActivity implements
 		}
 
 	}
-	
+
 
 }
