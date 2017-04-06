@@ -525,4 +525,23 @@ public class ContactCacheUtils {
 		return contact;
 	}
 
+	/**
+	 * 根据Email查询联系人的接口
+	 * ReactNative中周计划使用
+	 * @param context
+	 * @param email
+     * @return
+     */
+	public static Contact getContactByEmail(Context context, String email){
+		Contact contact = null;
+		try {
+			contact = DbCacheUtils.getDb(context).findFirst(Selector.from(Contact.class).where("email",
+					"=", email));
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		return contact;
+	}
+
 }
