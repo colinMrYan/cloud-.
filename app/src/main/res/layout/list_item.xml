@@ -75,12 +75,4 @@
             android:textSize="13sp"
            />
     </RelativeLayout>
-
-    <View
-        android:id="@+id/work_bottom_line"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_alignParentBottom="true"
-        android:background="#33000000" />
-
 </RelativeLayout>

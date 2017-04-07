@@ -47,10 +47,10 @@
         android:src="@drawable/icon_arrow_right" />
 
     <View
-        android:background="@color/content_bg"
+        android:background="#33000000"
         android:layout_below="@id/app_icon_img"
         android:layout_toRightOf="@id/app_icon_img"
         android:layout_width="match_parent"
-        android:layout_height="0.8dp" />
+        android:layout_height="0.6dp" />
 
 </RelativeLayout>
