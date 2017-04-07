@@ -1,12 +1,5 @@
 package com.inspur.emmcloud.ui.work;
 
-import java.io.Serializable;
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Iterator;
-import java.util.List;
-
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -67,6 +60,13 @@ import com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout;
 import com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout.OnRefreshListener;
 import com.inspur.emmcloud.widget.pullableview.PullableExpandableListView;
 import com.lidroid.xutils.exception.DbException;
+
+import java.io.Serializable;
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * 工作页面
@@ -216,8 +216,6 @@ public class WorkFragment extends Fragment implements OnRefreshListener {
 
 	/**
 	 * 获取今明两天所有日历的所有event
-	 * 
-	 * @param calendarIdArray
 	 */
 	private void getTwoDaysCalEvents() {
 		if (NetUtils.isNetworkConnected(getActivity())) {
@@ -475,8 +473,6 @@ public class WorkFragment extends Fragment implements OnRefreshListener {
 						.findViewById(R.id.work_expand_layout);
 				holder.meetingTime = (TextView) convertView
 						.findViewById(R.id.work_meetingtime_text);
-				holder.lineview = convertView
-						.findViewById(R.id.work_bottom_line);
 				holder.iconLayout = (RelativeLayout) convertView
 						.findViewById(R.id.work_icon_layout);
 				holder.addImg = (ImageView) convertView

@@ -83,6 +83,9 @@ public class ImageDataSource implements LoaderManager.LoaderCallbacks<Cursor> {
 					continue;
 				}
 				long imageSize = data.getLong(data.getColumnIndexOrThrow(IMAGE_PROJECTION[2]));
+				if (imageSize == 0){
+					continue;
+				}
 				int imageWidth = data.getInt(data.getColumnIndexOrThrow(IMAGE_PROJECTION[3]));
 				int imageHeight = data.getInt(data.getColumnIndexOrThrow(IMAGE_PROJECTION[4]));
 				String imageMimeType = data.getString(data.getColumnIndexOrThrow(IMAGE_PROJECTION[5]));
