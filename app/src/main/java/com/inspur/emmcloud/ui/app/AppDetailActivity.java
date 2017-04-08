@@ -1,6 +1,7 @@
 package com.inspur.emmcloud.ui.app;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -78,6 +79,50 @@ public class AppDetailActivity extends BaseActivity {
         apiService.setAPIInterface(new WebService());
         reactNativeApiService = new ReactNativeAPIService(AppDetailActivity.this);
         reactNativeApiService.setAPIInterface(new WebService());
+    }
+
+
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.back_layout:
+                finish();
+                break;
+            case R.id.recommand_tab_text:
+//                viewPager.setCurrentItem(0);
+                changeFoucus(0);
+                break;
+            case R.id.class_tab_text:
+//                viewPager.setCurrentItem(1);
+                changeFoucus(1);
+                break;
+            default:
+                break;
+        }
+    }
+
+    /**
+     * 改变详情和评论的选中状态
+     * @param arg0
+     */
+    private void changeFoucus(int arg0) {
+        int recommandTabTextColor = arg0 == 0 ? Color.parseColor("#4990E2")
+                : Color.parseColor("#999999");
+        int classTabTextColor = arg0 == 1 ? Color.parseColor("#4990E2")
+                : Color.parseColor("#999999");
+        int recommandTabFooterViewVisible = arg0 == 0 ? View.VISIBLE
+                : View.INVISIBLE;
+        int classTabFooterViewVisible = arg0 == 1 ? View.VISIBLE
+                : View.INVISIBLE;
+        ((TextView) findViewById(R.id.recommand_tab_text))
+                .setTextColor(recommandTabTextColor);
+        ((TextView) findViewById(R.id.class_tab_text))
+                .setTextColor(classTabTextColor);
+        ((TextView) findViewById(R.id.class_tab_text))
+                .setTextColor(classTabTextColor);
+        findViewById(R.id.recommand_tab_footer_view).setVisibility(
+                recommandTabFooterViewVisible);
+        findViewById(R.id.class_tab_footer_view).setVisibility(
+                classTabFooterViewVisible);
     }
 
     private void initView() {
