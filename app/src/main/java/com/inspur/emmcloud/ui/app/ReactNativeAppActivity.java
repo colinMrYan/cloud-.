@@ -29,6 +29,7 @@ import com.inspur.emmcloud.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.reactnative.AuthorizationManagerPackage;
 import com.inspur.reactnative.ReactNativeFlow;
+import com.reactnativecomponent.swiperefreshlayout.RCTSwipeRefreshLayoutPackage;
 
 import org.xutils.common.Callback;
 
@@ -131,6 +132,7 @@ public class ReactNativeAppActivity extends Activity implements DefaultHardwareB
                 .setCurrentActivity(ReactNativeAppActivity.this)
                 .addPackage(new MainReactPackage())
                 .addPackage(new AuthorizationManagerPackage())
+                .addPackage(new RCTSwipeRefreshLayoutPackage())
                 .addPackage(new PickerViewPackage())
                 .setUseDeveloperSupport(BuildConfig.DEBUG)
                 .setInitialLifecycleState(LifecycleState.RESUMED)
@@ -148,6 +150,9 @@ public class ReactNativeAppActivity extends Activity implements DefaultHardwareB
     class WebService extends APIInterfaceInstance{
         @Override
         public void returnGetClientIdResultSuccess(GetClientIdRsult getClientIdRsult) {
+            if(loadingDialog != null && loadingDialog.isShowing()){
+                loadingDialog.dismiss();
+            }
             super.returnGetClientIdResultSuccess(getClientIdRsult);
             PreferencesByUserUtils.putString(ReactNativeAppActivity.this,  "react_native_clientid", getClientIdRsult.getClientId());
             installReactNativeApp();
@@ -166,23 +171,39 @@ public class ReactNativeAppActivity extends Activity implements DefaultHardwareB
         @Override
         public void returnGetReactNativeInstallUrlSuccess(ReactNativeInstallUriBean reactNativeInstallUriBean) {
             super.returnGetReactNativeInstallUrlSuccess(reactNativeInstallUriBean);
+            if(loadingDialog != null && loadingDialog.isShowing()){
+                loadingDialog.dismiss();
+            }
             installUri = reactNativeInstallUriBean.getInstallUri();
             getDownlaodUrl(reactNativeInstallUriBean);
         }
 
         @Override
         public void returnGetReactNativeInstallUrlFail(String error) {
+            if(loadingDialog != null && loadingDialog.isShowing()){
+                loadingDialog.dismiss();
+            }
+            WebServiceMiddleUtils.hand(ReactNativeAppActivity.this,
+                    error);
             super.returnGetReactNativeInstallUrlFail(error);
         }
 
         @Override
         public void returnGetDownloadReactNativeUrlSuccess(ReactNativeDownloadUrlBean reactNativeDownloadUrlBean) {
             super.returnGetDownloadReactNativeUrlSuccess(reactNativeDownloadUrlBean);
+            if(loadingDialog != null && loadingDialog.isShowing()){
+                loadingDialog.dismiss();
+            }
             changeReactNativeAppByOrder(reactNativeDownloadUrlBean);
         }
 
         @Override
         public void returnGetDownloadReactNativeUrlFail(String error) {
+            if(loadingDialog != null && loadingDialog.isShowing()){
+                loadingDialog.dismiss();
+            }
+            WebServiceMiddleUtils.hand(ReactNativeAppActivity.this,
+                    error);
             super.returnGetDownloadReactNativeUrlFail(error);
         }
 
