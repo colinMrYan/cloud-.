@@ -75,6 +75,7 @@ public class AppCenterActivity extends BaseActivity {
         initView();
         getAllApp();
         registerReceiver();
+
     }
 
     /**

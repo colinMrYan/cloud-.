@@ -72,13 +72,8 @@ public class AppDetailActivity extends BaseActivity {
         ((MyApplication) getApplicationContext()).addActivity(this);
         imageDisplayUtils = new ImageDisplayUtils(getApplicationContext(), R.drawable.icon_empty_icon);
         app = (App) getIntent().getExtras().getSerializable("app");
-        reactAppFilePath = MyAppConfig.getReactAppFilePath(AppDetailActivity.this,
-                ((MyApplication)getApplication()).getUid(),app.getUri().split("//")[1]);
         initView();
-        apiService = new MyAppAPIService(this);
-        apiService.setAPIInterface(new WebService());
-        reactNativeApiService = new ReactNativeAPIService(AppDetailActivity.this);
-        reactNativeApiService.setAPIInterface(new WebService());
+
     }
 
 
@@ -95,6 +90,7 @@ public class AppDetailActivity extends BaseActivity {
 //                viewPager.setCurrentItem(1);
                 changeFoucus(1);
                 break;
+
             default:
                 break;
         }
@@ -127,6 +123,12 @@ public class AppDetailActivity extends BaseActivity {
 
     private void initView() {
         // TODO Auto-generated method stub
+        reactAppFilePath = MyAppConfig.getReactAppFilePath(AppDetailActivity.this,
+                ((MyApplication)getApplication()).getUid(),app.getUri().split("//")[1]);
+        apiService = new MyAppAPIService(this);
+        apiService.setAPIInterface(new WebService());
+        reactNativeApiService = new ReactNativeAPIService(AppDetailActivity.this);
+        reactNativeApiService.setAPIInterface(new WebService());
         loadingDlg = new LoadingDialog(AppDetailActivity.this);
         appIconImg = (ImageView) findViewById(R.id.app_icon_img);
         imageDisplayUtils.display(appIconImg, app.getAppIcon());
@@ -187,6 +189,12 @@ public class AppDetailActivity extends BaseActivity {
     }
 
 
+    /**
+     * 安装app
+     * @param type
+     * @param appID
+     * @param statusBtn
+     */
     private void installApp(int type, String appID, Button statusBtn) {
         // TODO Auto-generated method stub
         switch (type) {

@@ -16,6 +16,7 @@ import com.inspur.emmcloud.bean.GetMyInfoResult;
 import com.inspur.emmcloud.bean.SearchModel;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.util.ContactCacheUtils;
+import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.StringUtils;
 
@@ -92,6 +93,7 @@ public class NativeBridge extends ReactContextBaseJavaModule implements Activity
 	public void getCurrentUserProfie(Promise promise) {
 		String myInfo = PreferencesUtils.getString(getReactApplicationContext(),
 				"myInfo", "");
+		LogUtils.YfcDebug("myInfo---->"+myInfo);
 		try {
 			JSONObject myprofile = new JSONObject(myInfo);
 			promise.resolve(myprofile);

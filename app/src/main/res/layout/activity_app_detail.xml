@@ -217,6 +217,10 @@
                 android:layout_width="fill_parent"
                 android:layout_height="1px"
                 android:background="#c8d3dc" />
+            <android.support.v4.view.ViewPager
+                android:id="@+id/app_detail_viewpager"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
 
             <TextView
                 android:layout_width="match_parent"
