@@ -3,6 +3,7 @@ package com.inspur.reactnative;
 import android.app.Activity;
 import android.content.Intent;
 
+import com.alibaba.fastjson.JSON;
 import com.facebook.react.bridge.ActivityEventListener;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -122,7 +123,7 @@ public class NativeBridge extends ReactContextBaseJavaModule implements Activity
 
 	/**
 	 * 通讯录选人
-	 *
+	 * @param multi  是否多选
 	 * @param promise
 	 */
 	@ReactMethod
@@ -178,6 +179,22 @@ public class NativeBridge extends ReactContextBaseJavaModule implements Activity
 
 		}
 
+	}
+
+	/**
+	 * 根据email查找联系人接口
+	 * @param email
+	 * @param promise
+     */
+	@ReactMethod
+	public void findContactByMail(String email,Promise promise){
+		Contact contact = ContactCacheUtils.getContactByEmail(getCurrentActivity(),email);
+		if(contact != null){
+			String jsonObject = JSON.toJSONString(contact);
+			promise.resolve(jsonObject);
+		}else{
+			promise.reject("");
+		}
 	}
 
 	@Override

@@ -1,16 +1,5 @@
 package com.inspur.emmcloud.ui.work.meeting;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
-
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -48,6 +37,16 @@ import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.dialogs.EasyDialog;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
 
 public class MeetingsRoomDetailActivity extends BaseActivity {
 
@@ -112,8 +111,8 @@ public class MeetingsRoomDetailActivity extends BaseActivity {
 
 	/**
 	 * 从服务器获取当前时间
-	 * 
-	 * @param headers
+	 *
+	 * @param date
 	 */
 	private void setCurrentCalendar(String date) {
 		// TODO Auto-generated method stub
@@ -381,7 +380,7 @@ public class MeetingsRoomDetailActivity extends BaseActivity {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		if (resultCode == RESULT_OK) {
+		if (data != null && resultCode == RESULT_OK) {
 			if (data.hasExtra("delete")) {
 				Meeting meeting = (Meeting) data
 						.getSerializableExtra("delete");
@@ -403,33 +402,28 @@ public class MeetingsRoomDetailActivity extends BaseActivity {
 		if (meeting == null) {
 			return;
 		}
-		Iterator<Meeting> sListIterator = allMeetingList.iterator();
-		while (sListIterator.hasNext()) {
-			Meeting meetingNext = sListIterator.next();
-			if (meeting.equals(meetingNext)) {
-				int index = allMeetingList.indexOf(meetingNext);
-				allMeetingList.add(index, meeting);
-				allMeetingList.remove(index + 1);
-			}
+		int index = allMeetingList.indexOf(meeting);
+		if (index != -1) {
+			allMeetingList.remove(index);
+			allMeetingList.add(index, meeting);
 		}
 		initData();
 	}
 
 	/**
 	 * 删除在会议详情删除的会议
-	 * 
-	 * @param data
+	 *
+	 * @param meetingId
 	 */
 	private void deleteMeeting(String meetingId) {
 		if (StringUtils.isBlank(meetingId)) {
 			return;
 		}
-		Iterator<Meeting> sListIterator = allMeetingList.iterator();
-		while (sListIterator.hasNext()) {
-			Meeting meeting = sListIterator.next();
-			if (!StringUtils.isBlank(meetingId)
-					&& meetingId.equals(meeting.getMeetingId())) {
-				sListIterator.remove();
+		for (int i=0;i<allMeetingList.size();i++){
+			Meeting meeting = allMeetingList.get(i);
+			if (meeting.getMeetingId().equals(meetingId)){
+				allMeetingList.remove(i);
+				break;
 			}
 		}
 		initData();
@@ -473,9 +467,7 @@ public class MeetingsRoomDetailActivity extends BaseActivity {
 	}
 
 	/**
-	 * 初始化从网络获取的数据
-	 *
-	 * @param meetingList
+	 * 初始化从网络获取来的数据
 	 */
 	private void initData() {
 		List<List<Meeting>> group = new ArrayList<List<Meeting>>();
@@ -595,7 +587,8 @@ public class MeetingsRoomDetailActivity extends BaseActivity {
 			if (loadingDlg != null && loadingDlg.isShowing()) {
 				loadingDlg.dismiss();
 			}
-
+			beforeDayLayout.setVisibility(View.VISIBLE);
+			afterDayLayout.setVisibility(View.VISIBLE);
 			setCurrentCalendar(date);
 			allMeetingList = getMeetingListResult.getMeetingsList();
 			initData();

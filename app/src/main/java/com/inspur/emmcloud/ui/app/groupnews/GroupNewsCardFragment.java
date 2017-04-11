@@ -1,8 +1,5 @@
 package com.inspur.emmcloud.ui.app.groupnews;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
@@ -28,6 +25,9 @@ import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout;
 import com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout.OnRefreshListener;
 import com.inspur.emmcloud.widget.pullableview.PullableListView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 新闻列表页面
@@ -55,6 +55,10 @@ public class GroupNewsCardFragment extends Fragment implements
 	private boolean isPullup = true;
 	private List<GroupNews> groupnNewsList = new ArrayList<GroupNews>();
 	private String pagerTitle = "";
+
+	public GroupNewsCardFragment(){
+
+	}
 
 	public GroupNewsCardFragment(int position, String catagoryid,String title) {
 		// TODO Auto-generated constructor stub

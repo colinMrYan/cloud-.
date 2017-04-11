@@ -1,12 +1,5 @@
 package com.inspur.emmcloud.ui.work.meeting;
 
-import java.io.File;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Locale;
-
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.app.TimePickerDialog.OnTimeSetListener;
@@ -31,6 +24,7 @@ import com.inspur.emmcloud.bean.SearchModel;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.util.ImageDisplayUtils;
+import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.MathCaculateUtils;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
@@ -42,6 +36,13 @@ import com.inspur.emmcloud.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.CircleImageView;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.MyDatePickerDialog;
+
+import java.io.File;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+import java.util.Locale;
 
 /**
  * 会议室预定Activity
@@ -68,6 +69,7 @@ public class MeetingBookingActivity extends BaseActivity {
 	private String userId = "";
 	private int maxAhead = 0;
 	private int maxDuration = 0;
+	private boolean isSetTime = false;//用户是否人为的修改过时间
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -214,6 +216,10 @@ public class MeetingBookingActivity extends BaseActivity {
 			Intent intent = new Intent();
 			intent.setClass(MeetingBookingActivity.this,
 					MeetingRoomListActivity.class);
+			if (isSetTime){
+				intent.putExtra("filterBeginCalendar",meetingBeginCalendar.getTimeInMillis());
+				intent.putExtra("filterEndCalendar",meetingEndCalendar.getTimeInMillis());
+			}
 			startActivityForResult(intent, SELECT_MEETING_ROOM);
 			break;
 		default:
@@ -223,8 +229,7 @@ public class MeetingBookingActivity extends BaseActivity {
 
 	/**
 	 * 弹出时间选择Dialog
-	 * @param hour
-	 * @param minute
+	 * @param calendar
 	 * @param beginOrEnd
 	 */
 	private void showTimePickerDlg(Calendar calendar, final int beginOrEnd) {
@@ -233,6 +238,7 @@ public class MeetingBookingActivity extends BaseActivity {
 					@Override
 					public void onTimeSet(TimePicker view, int hourOfDay,
 							int minute) {
+						isSetTime = true;
 						if (beginOrEnd == MEETING_BEGIN_TIME) {
 							meetingBeginCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
 							meetingBeginCalendar.set(Calendar.MINUTE, minute);
@@ -277,6 +283,7 @@ public class MeetingBookingActivity extends BaseActivity {
 					@Override
 					public void onDateSet(DatePicker view, int year,
 							int monthOfYear, int dayOfMonth) {
+						isSetTime = true;
 						meetingBeginCalendar.set(year, monthOfYear, dayOfMonth);
 						meetingEndCalendar.set(year, monthOfYear, dayOfMonth);
 						meetingBeginDateText.setText(TimeUtils.calendar2FormatString(
@@ -366,10 +373,6 @@ public class MeetingBookingActivity extends BaseActivity {
 
 	/**
 	 * 显示成员头像，这里残留对群组的识别和操作
-	 * 
-	 * @param memberCount
-	 * @param uids
-	 * @param groupCount
 	 */
 	private void showMembers() {
 		int count = 0;
@@ -422,6 +425,7 @@ public class MeetingBookingActivity extends BaseActivity {
 			meetingRoomText.setText(meetingRoomFlour + " " + meetingRoomName);
 		}
 		if (data.hasExtra("beginTime")) {
+			isSetTime = true;
 			long fromTime = data.getLongExtra("beginTime",0);
 			if (fromTime != 0) {
 				meetingBeginCalendar.setTimeInMillis(fromTime);
@@ -435,6 +439,7 @@ public class MeetingBookingActivity extends BaseActivity {
 		}
 		
 		if (data.hasExtra("endTime")) {
+			isSetTime = true;
 			long toTime = data.getLongExtra("endTime",0);
 			if(toTime != 0){
 				meetingEndCalendar.setTimeInMillis(toTime);

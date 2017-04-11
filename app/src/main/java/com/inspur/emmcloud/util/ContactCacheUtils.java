@@ -5,7 +5,6 @@ import android.content.Context;
 import com.inspur.emmcloud.bean.Contact;
 import com.lidroid.xutils.db.sqlite.Selector;
 import com.lidroid.xutils.db.sqlite.WhereBuilder;
-import com.lidroid.xutils.exception.DbException;
 
 import org.json.JSONArray;
 
@@ -30,7 +29,7 @@ public class ContactCacheUtils {
 		try {
 			
 			DbCacheUtils.getDb(context).saveOrUpdateAll(contactList);
-		} catch (DbException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -519,6 +518,25 @@ public class ContactCacheUtils {
 		try {
 			contact = DbCacheUtils.getDb(context).findFirst(Selector.from(Contact.class).where("id",
 					"=", structId).and("type", "!=", "user"));
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		return contact;
+	}
+
+	/**
+	 * 根据Email查询联系人的接口
+	 * ReactNative中周计划使用
+	 * @param context
+	 * @param email
+     * @return
+     */
+	public static Contact getContactByEmail(Context context, String email){
+		Contact contact = null;
+		try {
+			contact = DbCacheUtils.getDb(context).findFirst(Selector.from(Contact.class).where("email",
+					"=", email));
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();

@@ -81,7 +81,11 @@ public class UploadPhoto {
 			public void onSuccess(String arg0) {
 				// TODO Auto-generated method stub
 				LogUtils.jasonDebug("success="+arg0);
-				onUploadPhotoListener.uploadPhotoSuccess(arg0);
+				try {
+					onUploadPhotoListener.uploadPhotoSuccess(arg0);
+				}catch (Exception e){
+					e.printStackTrace();
+				}
 			}
 		});
 		

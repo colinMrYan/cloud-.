@@ -143,8 +143,10 @@ public class CaptureActivity extends ImpBaseActivity implements Callback {
 			 intent.putExtra("msg", result);
 			 setResult(RESULT_OK, intent);
 		}else {
-			 String functName = BarCodeService.functName;
-			BarCodeService.barcodeService.jsCallback(functName, result.toString());
+			String functName = BarCodeService.functName;
+			if(BarCodeService.barcodeService != null){
+				BarCodeService.barcodeService.jsCallback(functName, result.toString());
+			}
 		}
 		finish();
 	}

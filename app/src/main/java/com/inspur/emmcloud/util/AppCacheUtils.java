@@ -27,7 +27,7 @@ public class AppCacheUtils {
 			List<AppOrder> appOrderList, String categoryID) {
 		try {
 			DbCacheUtils.getDb(context).saveOrUpdateAll(appOrderList);
-		} catch (DbException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
@@ -41,7 +41,7 @@ public class AppCacheUtils {
 		try {
 			DbCacheUtils.getDb(context).delete(AppOrder.class,
 					WhereBuilder.b("categoryID", "=", categoryID));
-		} catch (DbException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
@@ -54,7 +54,7 @@ public class AppCacheUtils {
 		List<AppOrder> appOrderList = new ArrayList<AppOrder>();
 		try {
 			appOrderList = DbCacheUtils.getDb(context).findAll(Selector.from(AppOrder.class));
-		} catch (DbException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		if(appOrderList == null){
@@ -71,7 +71,7 @@ public class AppCacheUtils {
 	public static void saveAppCommonlyUse(Context context,AppCommonlyUse appCommonlyUse){
 		try {
 			DbCacheUtils.getDb(context).saveOrUpdate(appCommonlyUse);
-		} catch (DbException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
@@ -82,7 +82,7 @@ public class AppCacheUtils {
 	public static void saveAppCommonlyUseList(Context context,List<AppCommonlyUse> appCommonlyUseList){
 		try {
 			DbCacheUtils.getDb(context).saveOrUpdateAll(appCommonlyUseList);
-		} catch (DbException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
@@ -103,7 +103,7 @@ public class AppCacheUtils {
 	public static void deleteAppCommonlyUseList(Context context,List<AppCommonlyUse> appCommonlyUseList){
 		try {
 			DbCacheUtils.getDb(context).deleteAll(appCommonlyUseList);
-		} catch (DbException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
@@ -115,7 +115,7 @@ public class AppCacheUtils {
 	public static void deleteAppCommonlyByAppID(Context context,String appID){
 		try {
 			DbCacheUtils.getDb(context).deleteById(AppCommonlyUse.class, appID);
-		} catch (DbException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
@@ -131,7 +131,7 @@ public class AppCacheUtils {
 		try {
 			commonlyUseAppList = DbCacheUtils.getDb(context).findAll(Selector.from(AppCommonlyUse.class)
 						.orderBy("lastUpdateTime",true).limit(commonlyUseAppNum));
-		} catch (DbException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		if(commonlyUseAppList == null){
@@ -149,7 +149,7 @@ public class AppCacheUtils {
 		List<AppCommonlyUse> commonlyUseAppList = null;
 		try {
 			commonlyUseAppList = DbCacheUtils.getDb(context).findAll(Selector.from(AppCommonlyUse.class));
-		} catch (DbException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		if(commonlyUseAppList == null){
@@ -168,7 +168,7 @@ public class AppCacheUtils {
 		AppCommonlyUse appCommonlyUse = null;
 		try {
 			appCommonlyUse = DbCacheUtils.getDb(context).findById(AppCommonlyUse.class, appId);
-		} catch (DbException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 //		if(appCommonlyUse == null){

@@ -40,6 +40,9 @@ public class AppUtils {
 					.getSystemService(Context.ACTIVITY_SERVICE);
 			List<ActivityManager.RunningAppProcessInfo> appProcessInfos = activityManager
 					.getRunningAppProcesses();
+			if(appProcessInfos == null || appProcessInfos.size() == 0){
+				return false;
+			}
 			// 枚举进程
 			for (ActivityManager.RunningAppProcessInfo appProcessInfo : appProcessInfos) {
 				if (appProcessInfo.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND) {

@@ -1,6 +1,4 @@
-package com.inspur.imp.plugin.camera.imagepicker.adapter;;
-
-import java.util.ArrayList;
+package com.inspur.imp.plugin.camera.imagepicker.adapter;
 
 import android.app.Activity;
 import android.graphics.Color;
@@ -17,6 +15,11 @@ import com.inspur.imp.plugin.camera.imagepicker.ImagePicker;
 import com.inspur.imp.plugin.camera.imagepicker.bean.ImageItem;
 import com.inspur.imp.plugin.camera.imagepicker.util.Utils;
 import com.inspur.imp.plugin.camera.imagepicker.view.SuperCheckBox;
+
+import java.util.ArrayList;
+
+;
+
 public class ImageGridAdapter extends BaseAdapter {
 
     private static final int ITEM_TYPE_CAMERA = 0;  //第一个条目是相机
@@ -124,7 +127,7 @@ public class ImageGridAdapter extends BaseAdapter {
                 public void onClick(View v) {
                     int selectLimit = imagePicker.getSelectLimit();
                     if (holder.cbCheck.isChecked() && mSelectedImages.size() >= selectLimit) {
-                        Toast.makeText(mActivity.getApplicationContext(), mActivity.getString(R.string.select_limit, selectLimit), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mActivity.getApplicationContext(), mActivity.getString(R.string.select_limit, selectLimit+""), Toast.LENGTH_SHORT).show();
                         holder.cbCheck.setChecked(false);
                        // holder.mask.setVisibility(View.GONE);
                         holder.mask.setBackgroundColor(Color.parseColor("#11000000"));
@@ -149,7 +152,8 @@ public class ImageGridAdapter extends BaseAdapter {
             } else {
                 holder.cbCheck.setVisibility(View.GONE);
             }
-            imagePicker.getImageLoader().displayImage(mActivity, imageItem.path, holder.ivThumb, mImageSize, mImageSize); //显示图片
+            ImageView ivThumb = (ImageView) convertView.findViewById(R.id.iv_thumb);
+            imagePicker.getImageLoader().displayImage(mActivity, imageItem.path, ivThumb, mImageSize, mImageSize); //显示图片
         }
         return convertView;
     }

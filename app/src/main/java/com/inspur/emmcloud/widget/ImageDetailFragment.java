@@ -215,8 +215,8 @@ public class ImageDetailFragment extends Fragment {
 	}
 
 	@Override
-	public void onActivityCreated(Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
+	public void onStart() {
+		super.onStart();
 		DisplayImageOptions options = new DisplayImageOptions.Builder()
 				.showImageForEmptyUri(R.drawable.plugin_camera_no_pictures)
 				.showImageOnFail(R.drawable.plugin_camera_no_pictures)
@@ -270,11 +270,4 @@ public class ImageDetailFragment extends Fragment {
 					}
 				});
 	}
-
-
-
-
-
-
-
 }

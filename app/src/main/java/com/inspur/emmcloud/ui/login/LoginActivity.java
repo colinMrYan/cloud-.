@@ -23,6 +23,7 @@ import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.util.EditTextUtils;
 import com.inspur.emmcloud.util.InputMethodUtils;
 import com.inspur.emmcloud.util.IntentUtils;
+import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.LoginUtils;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
@@ -187,9 +188,15 @@ public class LoginActivity extends BaseActivity {
 			intent.setClass(LoginActivity.this,
 					ModifyUserFirstPsdActivity.class);
 		} else {
-			intent.setClass(LoginActivity.this, IndexActivity.class);
+			boolean hasPassWord = false;
+			hasPassWord = PreferencesUtils.getBoolean(LoginActivity.this,"hasPassword",false);
+			if(hasPassWord){
+				intent.setClass(LoginActivity.this, IndexActivity.class);
+			}else{
+				intent.setClass(LoginActivity.this,
+						ModifyUserFirstPsdActivity.class);
+			}
 		}
-
 		startActivity(intent);
 		LoginActivity.this.finish();
 	}

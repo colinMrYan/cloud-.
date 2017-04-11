@@ -118,7 +118,7 @@ public class MsgCacheUtil {
 				Collections.reverse(msgList);
 			}
 
-		} catch (DbException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -141,7 +141,7 @@ public class MsgCacheUtil {
 			
 			 msg = DbCacheUtils.getDb(context).findFirst(Selector.from(Msg.class)
 					.where("cid", "=", channelID).orderBy("mid", true));
-		} catch (DbException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -199,7 +199,7 @@ public class MsgCacheUtil {
 		try {
 			
 			cacheMsg = DbCacheUtils.getDb(context).findById(Msg.class, mid);
-		} catch (DbException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -220,7 +220,7 @@ public class MsgCacheUtil {
 			
 			count = (int) DbCacheUtils.getDb(context).count(Selector.from(Msg.class)
 					.where("mid", ">", mid).and("cid", "=", cid));
-		} catch (DbException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -257,7 +257,7 @@ public class MsgCacheUtil {
 					.where("cid", "=", cid)
 					.and(WhereBuilder.b("type", "=", "image").or("type", "=",
 							"res_image")).orderBy("mid", desc));
-		} catch (DbException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -281,7 +281,7 @@ public class MsgCacheUtil {
 			fileTypeMsgList = DbCacheUtils.getDb(context).findAll(Selector.from(Msg.class)
 					.where("cid", "=", cid).and("type", "=", "res_file")
 					.orderBy("mid", true));
-		} catch (DbException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

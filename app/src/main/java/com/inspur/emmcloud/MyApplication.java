@@ -10,6 +10,7 @@ import android.os.Environment;
 import android.os.Parcelable;
 import android.support.multidex.MultiDexApplication;
 import android.webkit.CookieManager;
+import android.webkit.CookieSyncManager;
 
 import com.alibaba.fastjson.JSON;
 import com.beefe.picker.PickerViewPackage;
@@ -105,8 +106,6 @@ public class MyApplication extends MultiDexApplication implements  ReactApplicat
 		super.onCreate();
 		init();
 		isActive = false;
-		CrashHandler crashHandler = CrashHandler.getInstance();
-		crashHandler.init(getApplicationContext());
 		isContactReady = PreferencesUtils.getBoolean(getApplicationContext(),
 				"isContactReady", false);
 		uid = PreferencesUtils.getString(getApplicationContext(), "userID");
@@ -123,6 +122,8 @@ public class MyApplication extends MultiDexApplication implements  ReactApplicat
 
 	private void init() {
 		// TODO Auto-generated method stub
+		CrashHandler crashHandler = CrashHandler.getInstance();
+		crashHandler.init(getApplicationContext());
 		x.Ext.init(MyApplication.this);
 		x.Ext.setDebug(LogUtils.isDebug);
 		SoLoader.init(this,false);
@@ -161,7 +162,20 @@ public class MyApplication extends MultiDexApplication implements  ReactApplicat
 			CookieManager.getInstance().removeSessionCookies(null);
 			CookieManager.getInstance().flush();
 		}else {
+			CookieSyncManager cookieSyncMngr =
+					CookieSyncManager.createInstance(getApplicationContext());
 			CookieManager.getInstance().removeSessionCookie();
+		}
+	}
+
+	public void removeAllCookie(){
+		if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+			CookieManager.getInstance().removeAllCookies(null);
+			CookieManager.getInstance().flush();
+		}else {
+			CookieSyncManager cookieSyncMngr =
+					CookieSyncManager.createInstance(getApplicationContext());
+			CookieManager.getInstance().removeAllCookie();
 		}
 	}
 
@@ -424,8 +438,10 @@ public class MyApplication extends MultiDexApplication implements  ReactApplicat
 				}
 				config.locale = new Locale(country, variant);
 			}
-			getResources().updateConfiguration(config,
-					getResources().getDisplayMetrics());
+			if(getApplicationContext() != null){
+				getApplicationContext().getResources().updateConfiguration(config,
+						getResources().getDisplayMetrics());
+			}
 		} else {
 			super.onConfigurationChanged(config);
 		}

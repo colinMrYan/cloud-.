@@ -283,9 +283,11 @@ public class AppDetailActivity extends BaseActivity {
 
         @Override
         public void returnGetClientIdResultFail(String error) {
+            if(loadingDlg!= null && loadingDlg.isShowing()){
+                loadingDlg.dismiss();
+            }
             WebServiceMiddleUtils.hand(AppDetailActivity.this,
                     error);
-            super.returnGetClientIdResultFail(error);
         }
 
         @Override
@@ -296,7 +298,11 @@ public class AppDetailActivity extends BaseActivity {
 
         @Override
         public void returnGetDownloadReactNativeUrlFail(String error) {
-            super.returnGetDownloadReactNativeUrlFail(error);
+            if(loadingDlg!= null && loadingDlg.isShowing()){
+                loadingDlg.dismiss();
+            }
+            WebServiceMiddleUtils.hand(AppDetailActivity.this,
+                    error);
         }
     }
 
