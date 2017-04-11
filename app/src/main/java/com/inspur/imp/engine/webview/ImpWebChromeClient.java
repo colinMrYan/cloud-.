@@ -15,6 +15,7 @@ import android.os.Message;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
+import android.webkit.GeolocationPermissions;
 import android.webkit.JsPromptResult;
 import android.webkit.JsResult;
 import android.webkit.ValueCallback;
@@ -48,7 +49,14 @@ public class ImpWebChromeClient extends WebChromeClient {
 		this.context = context;
 		this.progressLayout = progressLayout;
 	}
-	
+
+	public void onGeolocationPermissionsShowPrompt(String origin,
+												   GeolocationPermissions.Callback callback) {
+		callback.invoke(origin, true, false);
+		super.onGeolocationPermissionsShowPrompt(origin, callback);
+	}
+
+
 
 	@Override
 	public void onCloseWindow(WebView window) {
