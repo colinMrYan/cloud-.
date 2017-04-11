@@ -29,6 +29,7 @@ import com.inspur.emmcloud.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.reactnative.AuthorizationManagerPackage;
 import com.inspur.reactnative.ReactNativeFlow;
+import com.reactnativecomponent.swiperefreshlayout.RCTSwipeRefreshLayoutPackage;
 
 import org.xutils.common.Callback;
 
@@ -99,6 +100,7 @@ public class ReactNativeAppActivity extends Activity implements DefaultHardwareB
      */
     private void checkReactNativeUpdate() {
         if(NetUtils.isNetworkConnected(ReactNativeAppActivity.this)){
+            loadingDialog.show();
             StringBuilder describeVersionAndTime = FileUtils.readFile(reactAppFilePath +"/bundle.json", "UTF-8");
             AndroidBundleBean androidBundleBean = new AndroidBundleBean(describeVersionAndTime.toString());
             String clientId = PreferencesByUserUtils.getString(ReactNativeAppActivity.this,"react_native_clientid", "");
@@ -130,14 +132,13 @@ public class ReactNativeAppActivity extends Activity implements DefaultHardwareB
                 .setCurrentActivity(ReactNativeAppActivity.this)
                 .addPackage(new MainReactPackage())
                 .addPackage(new AuthorizationManagerPackage())
+                .addPackage(new RCTSwipeRefreshLayoutPackage())
                 .addPackage(new PickerViewPackage())
                 .setUseDeveloperSupport(BuildConfig.DEBUG)
                 .setInitialLifecycleState(LifecycleState.RESUMED)
                 .build();
         StringBuilder describeVersionAndTime = FileUtils.readFile(reactAppFilePath +"/bundle.json", "UTF-8");
         AndroidBundleBean androidBundleBean = new AndroidBundleBean(describeVersionAndTime.toString());
-        // 注意这里的HelloWorld必须对应“index.android.js”中的
-        // “AppRegistry.registerComponent()”的第一个参数
         mReactRootView.startReactApplication(mReactInstanceManager, androidBundleBean.getMainComponent(), null);
     }
 
@@ -149,6 +150,9 @@ public class ReactNativeAppActivity extends Activity implements DefaultHardwareB
     class WebService extends APIInterfaceInstance{
         @Override
         public void returnGetClientIdResultSuccess(GetClientIdRsult getClientIdRsult) {
+            if(loadingDialog != null && loadingDialog.isShowing()){
+                loadingDialog.dismiss();
+            }
             super.returnGetClientIdResultSuccess(getClientIdRsult);
             PreferencesByUserUtils.putString(ReactNativeAppActivity.this,  "react_native_clientid", getClientIdRsult.getClientId());
             installReactNativeApp();
@@ -167,23 +171,39 @@ public class ReactNativeAppActivity extends Activity implements DefaultHardwareB
         @Override
         public void returnGetReactNativeInstallUrlSuccess(ReactNativeInstallUriBean reactNativeInstallUriBean) {
             super.returnGetReactNativeInstallUrlSuccess(reactNativeInstallUriBean);
+            if(loadingDialog != null && loadingDialog.isShowing()){
+                loadingDialog.dismiss();
+            }
             installUri = reactNativeInstallUriBean.getInstallUri();
             getDownlaodUrl(reactNativeInstallUriBean);
         }
 
         @Override
         public void returnGetReactNativeInstallUrlFail(String error) {
+            if(loadingDialog != null && loadingDialog.isShowing()){
+                loadingDialog.dismiss();
+            }
+            WebServiceMiddleUtils.hand(ReactNativeAppActivity.this,
+                    error);
             super.returnGetReactNativeInstallUrlFail(error);
         }
 
         @Override
         public void returnGetDownloadReactNativeUrlSuccess(ReactNativeDownloadUrlBean reactNativeDownloadUrlBean) {
             super.returnGetDownloadReactNativeUrlSuccess(reactNativeDownloadUrlBean);
+            if(loadingDialog != null && loadingDialog.isShowing()){
+                loadingDialog.dismiss();
+            }
             changeReactNativeAppByOrder(reactNativeDownloadUrlBean);
         }
 
         @Override
         public void returnGetDownloadReactNativeUrlFail(String error) {
+            if(loadingDialog != null && loadingDialog.isShowing()){
+                loadingDialog.dismiss();
+            }
+            WebServiceMiddleUtils.hand(ReactNativeAppActivity.this,
+                    error);
             super.returnGetDownloadReactNativeUrlFail(error);
         }
 
@@ -198,10 +218,12 @@ public class ReactNativeAppActivity extends Activity implements DefaultHardwareB
         String userId = ((MyApplication)getApplication()).getUid();
         String reactNatviveTempPath = MyAppConfig.getReactTempFilePath(ReactNativeAppActivity.this,userId);
         String preVersion = "",currentVersion = "";
-        if (state == ReactNativeFlow.REACT_NATIVE_ROLLBACK) {
+        if (state == ReactNativeFlow.REACT_NATIVE_RESET) {
+            //应用暂无RESET操作
+        } else if (state == ReactNativeFlow.REACT_NATIVE_ROLLBACK) {
             File file = new File(reactNatviveTempPath);
             if(file.exists()){
-                LogUtils.YfcDebug("收到回滚操作");
+                LogUtils.YfcDebug("收到回滚指令");
                 preVersion = getAppBundleBean().getVersion();
                 ReactNativeFlow.moveFolder(reactNatviveTempPath+"/"+appModule, reactAppFilePath);
                 currentVersion = getAppBundleBean().getVersion();
@@ -211,14 +233,13 @@ public class ReactNativeAppActivity extends Activity implements DefaultHardwareB
                 FileUtils.deleteFile(reactNatviveTempPath+"/"+appModule);
             }else {
                 LogUtils.YfcDebug("收到回滚操作但是没有缓存文件当做是StandBy指令，不做任何操作");
-//                ReactNativeFlow.initReactNative(ReactNativeAppActivity.this,userId);
             }
         } else if (state == ReactNativeFlow.REACT_NATIVE_FORWORD) {
             LogUtils.YfcDebug("收到前进的指令");
             downloadReactNativeZip(reactNativeDownloadUrlBean);
         } else if (state == ReactNativeFlow.REACT_NATIVE_UNKNOWN) {
         } else if (state == ReactNativeFlow.REACT_NATIVE_NO_UPDATE) {
-            LogUtils.YfcDebug("收到StandBy指令");
+            LogUtils.YfcDebug("收到StandBy指令，什么也不做");
         }
 
     }
