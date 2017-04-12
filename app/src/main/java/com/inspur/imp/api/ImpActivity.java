@@ -1,6 +1,7 @@
 package com.inspur.imp.api;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
@@ -185,6 +186,14 @@ public class ImpActivity extends ImpBaseActivity {
 		settings.setBuiltInZoomControls(false);
 		settings.setSupportZoom(false);
 		settings.setDisplayZoomControls(false);
+		settings.setGeolocationEnabled(true);
+		settings.setDatabaseEnabled(true);
+		String dir = this.getApplicationContext().getDir("database", Context.MODE_PRIVATE).getPath();
+		settings.setGeolocationDatabasePath(dir);
+		settings.setDomStorageEnabled(true);
+
+
+
 	}
 
 	private void setOauthHeader(String OauthHeader) {

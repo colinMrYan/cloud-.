@@ -241,6 +241,7 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view,
                                         int position, long id) {
+
                     if(!canEdit){
                         App app = appGroupItemList.get(position);
                         UriUtils.openApp(getActivity(), app);
@@ -256,6 +257,8 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
                 @Override
                 public boolean onItemLongClick(AdapterView<?> parent,
                                                View view, int position, long id) {
+//                    App app = appGroupItemList.get(position);
+//                    ShortCutUtils.createShortCut(getActivity(),ReactNativeAppActivity.class,app.getAppName(),app.getInstallUri(),"ecc-app-react-native");
                     if(!canEdit){
                         appListAdapter.setCanEdit(true);
                         appListAdapter.notifyDataSetChanged();
