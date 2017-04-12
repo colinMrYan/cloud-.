@@ -53,6 +53,7 @@ public class BaseActivity extends Activity {
 	    return res;  
 	}
 
+
 	//修改本地字体方案预留
 //	@Override
 //	protected void attachBaseContext(Context newBase) {
