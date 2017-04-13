@@ -43,11 +43,24 @@ android {
             jniLibs.srcDirs = ['src/libs']
     }
     buildTypes {
+//        debug {
+//            applicationIdSuffix "debug"
+//        }
         release {
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }
     }
+
+//    productFlavors {
+//        normal {
+//            applicationId = "com.inspur.emmcloud.normal"
+////            resValue "string", "app_name", "浪潮云+"
+//        }
+//        dev {
+//            applicationId = "com.inspur.emmcloud.dev"
+//        }
+//    }
     configurations.all {
         // React Native依赖的findbugs版本更高
         resolutionStrategy.force 'com.google.code.findbugs:jsr305:3.0.0',
@@ -61,14 +74,14 @@ android {
     }
 
     //指定打包后应用名称
-    applicationVariants.all {variant ->
+        applicationVariants.all {variant ->
         variant.outputs.each {output ->
             def outputFile = output.outputFile
             def fileName
             if (outputFile != null && outputFile.name.endsWith('.apk')) {
                 if (variant.buildType.name.equals('release')) {
 //                    fileName = "${defaultConfig.versionName}_${defaultConfig.versionCode}.apk"
-                    fileName = "inspur_cloud_mobileclient_1.0.0.apk"
+                    fileName = "inspur_cloud_mobileclient_${defaultConfig.versionName}.apk"
                 } else if (variant.buildType.name.equals('debug')) {
 //                    fileName = "${defaultConfig.versionName}_${defaultConfig.versionCode}_debug.apk"
                     fileName = "inspur_cloud_mobileclient_debug_1.0.0.apk"
