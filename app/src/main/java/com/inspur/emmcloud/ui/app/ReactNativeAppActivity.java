@@ -11,11 +11,13 @@ import com.facebook.react.common.LifecycleState;
 import com.facebook.react.modules.core.DefaultHardwareBackBtnHandler;
 import com.facebook.react.shell.MainReactPackage;
 import com.inspur.emmcloud.MyApplication;
+import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.api.apiservice.ReactNativeAPIService;
 import com.inspur.emmcloud.bean.AndroidBundleBean;
 import com.inspur.emmcloud.bean.GetClientIdRsult;
+import com.inspur.emmcloud.bean.GetMyInfoResult;
 import com.inspur.emmcloud.bean.ReactNativeDownloadUrlBean;
 import com.inspur.emmcloud.bean.ReactNativeInstallUriBean;
 import com.inspur.emmcloud.config.MyAppConfig;
@@ -24,9 +26,10 @@ import com.inspur.emmcloud.util.FileUtils;
 import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.PreferencesByUserUtils;
+import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
-import com.inspur.emmcloud.widget.LoadingDialog;
+import com.inspur.emmcloud.widget.dialogs.ECMCustomIOSDialog;
 import com.inspur.reactnative.AuthorizationManagerPackage;
 import com.inspur.reactnative.ReactNativeFlow;
 import com.reactnativecomponent.swiperefreshlayout.RCTSwipeRefreshLayoutPackage;
@@ -45,13 +48,13 @@ public class ReactNativeAppActivity extends Activity implements DefaultHardwareB
     private ReactNativeAPIService reactNativeAPIService;
     private String reactNativeApp = "";
     private String reactAppFilePath;
-    private LoadingDialog loadingDialog;
+    private ECMCustomIOSDialog loadingDialog;
     private String appModule;
     private String installUri = "";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        loadingDialog = new LoadingDialog(ReactNativeAppActivity.this);
+        loadingDialog = new ECMCustomIOSDialog(this, R.style.CustomDialog);
         reactNativeAPIService = new ReactNativeAPIService(ReactNativeAppActivity.this);
         reactNativeAPIService.setAPIInterface(new WebService());
         String scheme = getIntent().getDataString();
@@ -127,19 +130,40 @@ public class ReactNativeAppActivity extends Activity implements DefaultHardwareB
         mReactRootView = new ReactRootView(this);
         mReactInstanceManager = ReactInstanceManager.builder()
                 .setApplication(getApplication())
-                .setJSMainModuleName("index.android")
-                .setJSBundleFile(reactAppFilePath + "/index.android.bundle")
                 .setCurrentActivity(ReactNativeAppActivity.this)
                 .addPackage(new MainReactPackage())
-                .addPackage(new AuthorizationManagerPackage())
                 .addPackage(new RCTSwipeRefreshLayoutPackage())
                 .addPackage(new PickerViewPackage())
+                .addPackage(new AuthorizationManagerPackage())
+                .setJSMainModuleName("index.android")
+                .setJSBundleFile(reactAppFilePath + "/index.android.bundle")
                 .setUseDeveloperSupport(BuildConfig.DEBUG)
                 .setInitialLifecycleState(LifecycleState.RESUMED)
                 .build();
         StringBuilder describeVersionAndTime = FileUtils.readFile(reactAppFilePath +"/bundle.json", "UTF-8");
         AndroidBundleBean androidBundleBean = new AndroidBundleBean(describeVersionAndTime.toString());
-        mReactRootView.startReactApplication(mReactInstanceManager, androidBundleBean.getMainComponent(), null);
+        Bundle bundle = createBundle();
+        mReactRootView.startReactApplication(mReactInstanceManager, androidBundleBean.getMainComponent(), bundle);
+    }
+
+    /**
+     * 创建初始化参数
+     * @return
+     */
+    private Bundle createBundle() {
+        Bundle bundle = new Bundle();
+        String myInfo = PreferencesUtils.getString(ReactNativeAppActivity.this,
+                "myInfo", "");
+        GetMyInfoResult getMyInfoResult = new GetMyInfoResult(myInfo);
+        bundle.putString("id",getMyInfoResult.getID());
+        bundle.putString("code",getMyInfoResult.getCode());
+        bundle.putString("name",getMyInfoResult.getName());
+        bundle.putString("mail",getMyInfoResult.getMail());
+        bundle.putString("avatar",getMyInfoResult.getAvatar());
+        bundle.putString("enterpriseCode",getMyInfoResult.getEnterpriseCode());
+        bundle.putString("enterpriseName",getMyInfoResult.getEnterpriseName());
+        bundle.putString("enterpriseId",getMyInfoResult.getEnterpriseId());
+        return bundle;
     }
 
     @Override
