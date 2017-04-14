@@ -173,7 +173,7 @@ public class NativeBridge extends ReactContextBaseJavaModule implements Activity
 					}
 
 				}else if(resultCode == RESULT_CANCELED){
-					promise.reject("picker was cancelled");
+					promise.reject(new Exception("picker was cancelled"));
 				}
 			}
 
@@ -193,7 +193,7 @@ public class NativeBridge extends ReactContextBaseJavaModule implements Activity
 			String jsonObject = JSON.toJSONString(contact);
 			promise.resolve(jsonObject);
 		}else{
-			promise.reject("");
+			promise.reject(new Exception("no contact found by email:"+email));
 		}
 	}
 
