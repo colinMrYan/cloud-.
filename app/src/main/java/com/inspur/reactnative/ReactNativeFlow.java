@@ -330,5 +330,14 @@ public class ReactNativeFlow {
         return FileUtils.deleteFile(deleteZipFilePath);
     }
 
+    /**
+     * 清除ReactNative缓存
+     * @param reactNativeInstallDir
+     * @return
+     */
+    public static boolean deleteReactNativeInstallDir(String reactNativeInstallDir){
+        return FileUtils.deleteFile(reactNativeInstallDir);
+    }
+
 
 }
