@@ -257,6 +257,7 @@ public class IndexActivity extends BaseFragmentActivity implements
     private void handMessage() {
         // TODO Auto-generated method stub
         handler = new WeakHandler(IndexActivity.this) {
+
             @Override
             protected void handleMessage(Object o, Message msg) {
                 switch (msg.what) {
@@ -678,8 +679,10 @@ public class IndexActivity extends BaseFragmentActivity implements
                     ContactCacheUtils.deleteContact(IndexActivity.this, deleteContactIdList);
                     ContactCacheUtils.saveLastUpdateTime(getApplicationContext(),
                             getAllContactResult.getLastUpdateTime());
-                    ContactCacheUtils.saveLastUpdateunitID(IndexActivity.this,getAllContactResult.getUnitID());
-                    handler.sendEmptyMessage(SYNC_CONTACT_SUCCESS);
+                    if(handler != null){
+                        handler.sendEmptyMessage(SYNC_CONTACT_SUCCESS);
+                    }
+
                 }
             }).start();
 
