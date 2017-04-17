@@ -3,12 +3,12 @@ package com.inspur.reactnative;
 import android.app.Activity;
 import android.content.Intent;
 
-import com.alibaba.fastjson.JSON;
 import com.facebook.react.bridge.ActivityEventListener;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
+import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.uimanager.IllegalViewOperationException;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.Contact;
@@ -16,6 +16,7 @@ import com.inspur.emmcloud.bean.GetMyInfoResult;
 import com.inspur.emmcloud.bean.SearchModel;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.util.ContactCacheUtils;
+import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.StringUtils;
 
@@ -127,7 +128,8 @@ public class NativeBridge extends ReactContextBaseJavaModule implements Activity
 	 * @param promise
 	 */
 	@ReactMethod
-	public void openContactsPicker(boolean multi,Promise promise) {
+	public void openContactsPicker(Boolean multi, ReadableArray array, Promise promise) {
+		LogUtils.YfcDebug("进入选择人员");
 		this.promise = promise;
 		this.multi = multi;
 		Intent intent = new Intent();
@@ -190,8 +192,8 @@ public class NativeBridge extends ReactContextBaseJavaModule implements Activity
 	public void findContactByMail(String email,Promise promise){
 		Contact contact = ContactCacheUtils.getContactByEmail(getCurrentActivity(),email);
 		if(contact != null){
-			String jsonObject = JSON.toJSONString(contact);
-			promise.resolve(jsonObject);
+//			String jsonObject = JSON.toJSONString(contact);
+			promise.resolve(contact);
 		}else{
 			promise.reject(new Exception("no contact found by email:"+email));
 		}
