@@ -74,6 +74,16 @@ public class MyAppConfig {
 	public static String getReactTempFilePath(Context context,String userId){
 		return context.getDir("ReactResource",MODE_PRIVATE).getPath()+"/"+ UriUtils.tanent+"/"+userId+"/Pre";
 	}
+
+	/**
+	 * 获取特定租户下特定用户ReactNative安装目录，清除所有缓存时在此清理
+	 * @param context
+	 * @param userId
+     * @return
+     */
+	public static String getReactInstallPath(Context context,String userId){
+		return  context.getDir("ReactResource",MODE_PRIVATE).getPath()+"/"+ UriUtils.tanent+"/"+userId;
+	}
 	
 	public static Language getDefaultLanguage = new Language("中文简体","zh-CN","zh-Hans","zh-CN","zh-CN","zh-Hans");
 }

@@ -173,7 +173,7 @@ public class ReactNativeFlow {
                 reactNativeUpdateBean.getBundle().getAndroidUri();
         if (ReactNativeFlow.isCompleteZip(reactNativeUpdateBean.getBundle().getAndroidHash(), reactZipFilePath)) {
             moveFolder(reactCurrentPath, reactTempPath);
-            deleteZipFile(reactCurrentPath);
+            deleteOldVersionFile(reactCurrentPath);
             ZipUtils.upZipFile(reactZipFilePath, reactCurrentPath);
             FileUtils.deleteFile(reactZipFilePath);
             PreferencesUtils.putString(context, "react_native_lastupdatetime", "" + System.currentTimeMillis());
@@ -279,12 +279,12 @@ public class ReactNativeFlow {
 
 
     /**
-     * 删除zip文件  临时需求，以后可能不再使用
+     * 删除原来版本文件
      *
      * @param deletePath
      * @return
      */
-    public static boolean deleteZipFile(String deletePath) {
+    public static boolean deleteOldVersionFile(String deletePath) {
         return FileUtils.deleteFile(deletePath);
     }
 
@@ -300,6 +300,43 @@ public class ReactNativeFlow {
             return false;
         }
         return true;
+    }
+
+    /**
+     * 以UTF-8编码读取传入文件夹下bundle.json文件里的信息
+     * @param reactAppFilePath
+     * @return
+     */
+    public static StringBuilder getBundleDotJsonFromFile(String reactAppFilePath){
+        return FileUtils.readFile(reactAppFilePath +"/bundle.json", "UTF-8");
+    }
+
+    /**
+     * 从Scheme里获取app的module
+     * scheme形式：'ecc-app-react-native: //10002'
+     * @param reactNativeApp
+     * @return
+     */
+    public static String getAppModuleFromScheme(String reactNativeApp){
+       return reactNativeApp.split("//")[1];
+    }
+
+    /**
+     * 删除下载的zip文件
+     * @param deleteZipFilePath 删除路径如xxx/xxx/ECA.zip
+     * @return
+     */
+    public static boolean deleteReactNativeDownloadZipFile(String deleteZipFilePath){
+        return FileUtils.deleteFile(deleteZipFilePath);
+    }
+
+    /**
+     * 清除ReactNative缓存
+     * @param reactNativeInstallDir
+     * @return
+     */
+    public static boolean deleteReactNativeInstallDir(String reactNativeInstallDir){
+        return FileUtils.deleteFile(reactNativeInstallDir);
     }
 
 
