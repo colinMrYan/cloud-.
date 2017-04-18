@@ -10,6 +10,7 @@ import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.WritableNativeArray;
+import com.facebook.react.bridge.WritableNativeMap;
 import com.facebook.react.uimanager.IllegalViewOperationException;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.Contact;
@@ -136,8 +137,8 @@ public class NativeBridge extends ReactContextBaseJavaModule implements Activity
             int arraySize = array.size();
             for (int i = 0; i < arraySize; i++) {
                 try {
-                    Contact contact = new Contact(new JSONObject(array.getString(i)));
-                    SearchModel searchModel = new SearchModel(contact);
+                    SearchModel searchModel = new SearchModel(array.getMap(i));
+                    LogUtils.YfcDebug("searchModel："+searchModel.toString());
                     searchModelList.add(searchModel);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -185,15 +186,16 @@ public class NativeBridge extends ReactContextBaseJavaModule implements Activity
                     if (multi) {
                         WritableNativeArray writableNativeArray = new WritableNativeArray();
                         for (int i = 0; i < contactList.size(); i++) {
-                            JSONObject obj = contactList.get(i).contact2JSONObject();
-                            writableNativeArray.pushString(obj.toString());
+                            WritableNativeMap map = contactList.get(i).contact2Map();
+                            writableNativeArray.pushMap(map);
                         }
                         promise.resolve(writableNativeArray);
                     } else {
-                        JSONObject obj = contactList.get(0).contact2JSONObject();
-                        WritableNativeArray array = new WritableNativeArray();
-                        array.pushString(obj.toString());
-                        promise.resolve(array);
+                        WritableNativeMap map = contactList.get(0).contact2Map();
+                        LogUtils.YfcDebug("选择审批人："+map.toString());
+//                        array.pushMap(map);
+                        promise.resolve(map);
+//                        promise.resolve(array);
 
                     }
 
@@ -216,11 +218,8 @@ public class NativeBridge extends ReactContextBaseJavaModule implements Activity
     public void findContactByMail(String email, Promise promise) {
         Contact contact = ContactCacheUtils.getContactByEmail(getCurrentActivity(), email);
         if (contact != null) {
-            JSONObject jsonObject = contact.contact2JSONObject();
-            WritableNativeArray writableNativeArray = new WritableNativeArray();
-            writableNativeArray.pushString(jsonObject.toString());
-            LogUtils.YfcDebug("findContactByMail:"+writableNativeArray.toString());
-            promise.resolve(writableNativeArray);
+            WritableNativeMap map = contact.contact2Map();
+            promise.resolve(map);
         } else {
             promise.reject(new Exception("no contact found by email:" + email));
         }

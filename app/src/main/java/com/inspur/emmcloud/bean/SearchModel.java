@@ -2,12 +2,10 @@ package com.inspur.emmcloud.bean;
 
 import android.content.Context;
 
+import com.facebook.react.bridge.ReadableMap;
 import com.inspur.emmcloud.util.ContactCacheUtils;
 import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.UriUtils;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.Serializable;
 
@@ -48,30 +46,18 @@ public class SearchModel implements Serializable {
 		}
 	}
 
-	public SearchModel(String nativeInfo){
+	public SearchModel(ReadableMap nativeInfo){
 		try {
-//			{
-//				"inspur_id": "10000",
-//					"code": "",
-//					"real_name": "仪思奇",
-//					"pinyin": "yisiqi",
-//					"mobile": "18660808064",
-//					"email": "yisiqi@inspur.com",
-//					"org_name": "运行平台研发部",
-//					"head": "https://emm.inspur.com/img/userhead/10000"
-//			}
-			JSONObject jsonObject = new JSONObject(nativeInfo);
-			if(jsonObject.has("new_id")){
-				id = jsonObject.getString("new_id");
+			if(nativeInfo.hasKey("new_id")){
+				id = nativeInfo.getString("new_id");
 			}
-			if(jsonObject.has("real_name")){
-				name = jsonObject.getString("real_name");
+			if(nativeInfo.hasKey("real_name")){
+				name = nativeInfo.getString("real_name");
 			}
-			if(jsonObject.has("type")){
-				type = jsonObject.getString("type");
+			if(nativeInfo.hasKey("type")){
+				type = nativeInfo.getString("type").toUpperCase();
 			}
-
-		} catch (JSONException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 

@@ -1,5 +1,6 @@
 package com.inspur.emmcloud.bean;
 
+import com.facebook.react.bridge.WritableNativeMap;
 import com.inspur.emmcloud.util.UriUtils;
 
 import org.json.JSONObject;
@@ -209,12 +210,12 @@ public class Contact implements Serializable{
 	}
 
 	public JSONObject contact2JSONObject(){
-		JSONObject obj = new JSONObject();
-		try {
-			obj.put("inspur_id",inspurID);
-			obj.put("code",code);
-			obj.put("real_name",realName);
-			obj.put("new_id",newID);
+				JSONObject obj = new JSONObject();
+				try {
+					obj.put("inspur_id",inspurID);
+					obj.put("code",code);
+					obj.put("real_name",realName);
+					obj.put("new_id",newID);
 			obj.put("pinyin",pinyin);
 			obj.put("mobile",mobile);
 			obj.put("email",email);
@@ -226,6 +227,26 @@ public class Contact implements Serializable{
 		}
 
 		return  obj;
+	};
+
+	public WritableNativeMap contact2Map(){
+		WritableNativeMap map = new WritableNativeMap();
+		try {
+			map.putString("inspur_id",inspurID);
+			map.putString("code",code);
+			map.putString("real_name",realName);
+			map.putString("new_id",newID);
+			map.putString("pinyin",pinyin);
+			map.putString("mobile",mobile);
+			map.putString("email",email);
+			map.putString("org_name",orgName);
+			map.putString("type",type);
+			map.putString("head", UriUtils.getChannelImgUri(inspurID));
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+
+		return  map;
 	};
 
 	@Override
