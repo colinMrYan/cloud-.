@@ -1,15 +1,15 @@
 package com.inspur.emmcloud.bean;
 
-import java.io.Serializable;
+import android.content.Context;
 
 import com.inspur.emmcloud.util.ContactCacheUtils;
 import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.UriUtils;
 
-import android.R.integer;
-import android.content.Context;
-import android.os.Parcelable;
-import android.util.Log;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.Serializable;
 
 public class SearchModel implements Serializable {
 	private String id = "";
@@ -46,6 +46,35 @@ public class SearchModel implements Serializable {
 			name = contact.getName();
 			id = contact.getId();
 		}
+	}
+
+	public SearchModel(String nativeInfo){
+		try {
+//			{
+//				"inspur_id": "10000",
+//					"code": "",
+//					"real_name": "仪思奇",
+//					"pinyin": "yisiqi",
+//					"mobile": "18660808064",
+//					"email": "yisiqi@inspur.com",
+//					"org_name": "运行平台研发部",
+//					"head": "https://emm.inspur.com/img/userhead/10000"
+//			}
+			JSONObject jsonObject = new JSONObject(nativeInfo);
+			if(jsonObject.has("new_id")){
+				id = jsonObject.getString("new_id");
+			}
+			if(jsonObject.has("real_name")){
+				name = jsonObject.getString("real_name");
+			}
+			if(jsonObject.has("type")){
+				type = jsonObject.getString("type");
+			}
+
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+
 	}
 
 	public SearchModel(Channel channel) {
@@ -140,5 +169,16 @@ public class SearchModel implements Serializable {
 		if (!getType().equals(otherSearchModel.getType()))
 			return false;
 		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "SearchModel{" +
+				"id='" + id + '\'' +
+				", name='" + name + '\'' +
+				", type='" + type + '\'' +
+				", icon='" + icon + '\'' +
+				", heat=" + heat +
+				'}';
 	}
 }

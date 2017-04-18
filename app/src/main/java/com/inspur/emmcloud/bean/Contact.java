@@ -214,10 +214,12 @@ public class Contact implements Serializable{
 			obj.put("inspur_id",inspurID);
 			obj.put("code",code);
 			obj.put("real_name",realName);
+			obj.put("new_id",newID);
 			obj.put("pinyin",pinyin);
 			obj.put("mobile",mobile);
 			obj.put("email",email);
 			obj.put("org_name",orgName);
+			obj.put("type",type);
 			obj.put("head", UriUtils.getChannelImgUri(inspurID));
 		}catch (Exception e){
 			e.printStackTrace();
@@ -226,4 +228,25 @@ public class Contact implements Serializable{
 		return  obj;
 	};
 
+	@Override
+	public String toString() {
+		return "Contact{" +
+				"id='" + id + '\'' +
+				", parentId='" + parentId + '\'' +
+				", name='" + name + '\'' +
+				", code='" + code + '\'' +
+				", email='" + email + '\'' +
+				", head='" + head + '\'' +
+				", mobile='" + mobile + '\'' +
+				", orgName='" + orgName + '\'' +
+				", realName='" + realName + '\'' +
+				", type='" + type + '\'' +
+				", sortOrder=" + sortOrder +
+				", fullPath='" + fullPath + '\'' +
+				", pinyin='" + pinyin + '\'' +
+				", inspurID='" + inspurID + '\'' +
+				", newID='" + newID + '\'' +
+				", globalName='" + globalName + '\'' +
+				'}';
+	}
 }
