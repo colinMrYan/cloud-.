@@ -1,10 +1,10 @@
 package com.inspur.emmcloud.bean;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class GetAllContactResult {
 
@@ -13,6 +13,7 @@ public class GetAllContactResult {
 	private List<String> deleteContactList = new ArrayList<String>();
 	private JSONArray deleteIdArray;
 	private String lastUpdateTime = "";
+	private String unitID = "";
 
 	public GetAllContactResult(String response) {
 		try {
@@ -44,6 +45,9 @@ public class GetAllContactResult {
 			if (obj.has("lastQueryTime")) {
 				lastUpdateTime = obj.getString("lastQueryTime");
 			}
+			if (obj.has("unitID")) {
+				unitID = obj.getString("unitID");
+			}
 
 		} catch (Exception e) {
 			// TODO: handle exception
@@ -69,5 +73,13 @@ public class GetAllContactResult {
 
 	public List<String> getDeleteContactIdList() {
 		return deleteContactList;
+	}
+
+	public String getUnitID() {
+		return unitID;
+	}
+
+	public void setUnitID(String unitID) {
+		this.unitID = unitID;
 	}
 }
