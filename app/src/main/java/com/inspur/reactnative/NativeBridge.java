@@ -2,7 +2,9 @@ package com.inspur.reactnative;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.widget.Toast;
 
+import com.alibaba.fastjson.JSON;
 import com.facebook.react.bridge.ActivityEventListener;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -23,6 +25,7 @@ import com.inspur.emmcloud.util.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -130,6 +133,20 @@ public class NativeBridge extends ReactContextBaseJavaModule implements Activity
 	@ReactMethod
 	public void openContactsPicker(Boolean multi, ReadableArray array, Promise promise) {
 		LogUtils.YfcDebug("进入选择人员");
+		List<SearchModel> searchModelList = new ArrayList<>();
+		if(array != null){
+			LogUtils.YfcDebug("如果有数据："+array.toString());
+			int arraySize = array.size();
+			for (int i = 0; i < arraySize; i++){
+				try {
+					LogUtils.YfcDebug("选择人员后的数据："+array.getString(i));
+//					searchModelList.add(new SearchModel(new Contact(new JSONObject(array.getString(i)))));
+				} catch (Exception e) {
+					LogUtils.YfcDebug("创建list有异常："+e.getMessage());
+					e.printStackTrace();
+				}
+			}
+		}
 		this.promise = promise;
 		this.multi = multi;
 		Intent intent = new Intent();
@@ -138,6 +155,9 @@ public class NativeBridge extends ReactContextBaseJavaModule implements Activity
 		intent.putExtra("select_content", 2);
 		intent.putExtra("isMulti_select", multi);
 		intent.putExtra("title",getReactApplicationContext().getString(R.string.adress_list));
+		if (searchModelList != null) {
+			intent.putExtra("hasSearchResult", (Serializable) searchModelList);
+		}
 		getCurrentActivity().startActivityForResult(intent,CONTACT_PICKER);
 
 	}
@@ -150,10 +170,14 @@ public class NativeBridge extends ReactContextBaseJavaModule implements Activity
 		getCurrentActivity().finish();
 	}
 
+
 	@Override
 	public void onActivityResult(Activity activity, int requestCode, int resultCode, Intent data) {
+		LogUtils.YfcDebug("resultCode："+resultCode);
 		if (requestCode == CONTACT_PICKER){
 			if (promise != null){
+				LogUtils.YfcDebug("Promise不为空");
+
 				if (resultCode == RESULT_OK){
 					List<SearchModel> searchModelList = (List<SearchModel>) data.getSerializableExtra("selectMemList");
 					List<String> uidList = new ArrayList<>();
@@ -168,10 +192,18 @@ public class NativeBridge extends ReactContextBaseJavaModule implements Activity
 							JSONObject obj = contactList.get(i).contact2JSONObject();
 							jsonArray.put(obj);
 						}
-						promise.resolve(jsonArray);
+						Toast.makeText(getCurrentActivity(), "所有选择人员"+jsonArray.toString(), Toast.LENGTH_LONG).show();
+						LogUtils.YfcDebug("所有选择人员："+jsonArray.toString());
+						promise.resolve(jsonArray.toString());
 					}else {
-						JSONObject obj = contactList.get(0).contact2JSONObject();
-						promise.resolve(obj);
+						try{
+							JSONObject obj = contactList.get(0).contact2JSONObject();
+							LogUtils.YfcDebug("选择单个人员："+obj.toString());
+							promise.resolve(obj.toString());
+						}catch(Exception e){
+							LogUtils.YfcDebug("异常信息："+e.getMessage());
+						}
+
 					}
 
 				}else if(resultCode == RESULT_CANCELED){
@@ -192,8 +224,8 @@ public class NativeBridge extends ReactContextBaseJavaModule implements Activity
 	public void findContactByMail(String email,Promise promise){
 		Contact contact = ContactCacheUtils.getContactByEmail(getCurrentActivity(),email);
 		if(contact != null){
-//			String jsonObject = JSON.toJSONString(contact);
-			promise.resolve(contact);
+			String jsonObject = JSON.toJSONString(contact);
+			promise.resolve(jsonObject);
 		}else{
 			promise.reject(new Exception("no contact found by email:"+email));
 		}

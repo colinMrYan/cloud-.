@@ -1,6 +1,7 @@
 package com.inspur.emmcloud.ui.app;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.beefe.picker.PickerViewPackage;
@@ -51,6 +52,7 @@ public class ReactNativeAppActivity extends Activity implements DefaultHardwareB
     private String appModule;
     private String installUri = "";
     private String userId;
+    private AuthorizationManagerPackage authorizationManagerPackage;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -87,6 +89,12 @@ public class ReactNativeAppActivity extends Activity implements DefaultHardwareB
             LogUtils.YfcDebug("未知来源,为保证应用稳定性未知来源时直接退出");
             finish();
         }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        mReactInstanceManager.onActivityResult(ReactNativeAppActivity.this,requestCode,resultCode,data);
     }
 
     /**
