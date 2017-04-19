@@ -338,25 +338,34 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
      */
     private void showCommonlyUseApps(App app,List<AppCommonlyUse> appCommonlyUseList,
                                      List<AppGroupBean> appAdapterList) {
+        LogUtils.YfcDebug("常用应用的长度："+appCommonlyUseList.size());
         if(hasCommonlyApp){
-            List<App> appItemList = new ArrayList<App>();
-            for(int i = 0;i < appCommonlyUseList.size();i++){
-                App appCommonlyUse = new App();
-                AppCommonlyUse appCommonlyUseWithWeight = appCommonlyUseList.get(i);
-                appCommonlyUse.setAppID(appCommonlyUseWithWeight.getAppID());
-                for(int j = 1; j < appAdapterList.size(); j++){
-                    List<App> searchAppList = appAdapterList.get(j).getAppItemList();
-                    int searchIndex = searchAppList.indexOf(appCommonlyUse);
-                    if(searchIndex != -1){
-                        App appPutInCommonlyUse = searchAppList.get(searchIndex);
-                        appPutInCommonlyUse.setWeight(appCommonlyUseWithWeight.getWeight());
-                        appItemList.add(appPutInCommonlyUse);
-                    }
-                }
-            }
-            Collections.sort(appItemList,new SortCommonlyUseAppClass());
-            appAdapterList.get(0).setAppItemList(appItemList);
-            appListAdapter.notifyDataSetChanged();
+            //如果已经有了常用app则需要先移除掉第一组
+            appAdapterList.remove(0);
+            handCommonlyUseAppData(appAdapterList,true);
+//            List<App> appItemList = new ArrayList<App>();
+//            for(int i = 0;i < appCommonlyUseList.size();i++){
+//                App appCommonlyUse = new App();
+//                AppCommonlyUse appCommonlyUseWithWeight = appCommonlyUseList.get(i);
+//                appCommonlyUse.setAppID(appCommonlyUseWithWeight.getAppID());
+//                for(int j = 1; j < appAdapterList.size(); j++){
+//                    List<App> searchAppList = appAdapterList.get(j).getAppItemList();
+//                    int searchIndex = searchAppList.indexOf(appCommonlyUse);
+//                    int allReadyhas = appItemList.indexOf(app);
+////                    if(commonlyUseIndex == -1){
+//                        if((searchIndex != -1) && (allReadyhas == -1)){
+//                            App appPutInCommonlyUse = searchAppList.get(searchIndex);
+//                            appPutInCommonlyUse.setWeight(appCommonlyUseWithWeight.getWeight());
+//                            appItemList.add(appPutInCommonlyUse);
+//                        }
+////                    }
+//                }
+//            }
+//
+//
+//            Collections.sort(appItemList,new SortCommonlyUseAppClass());
+//            appAdapterList.get(0).setAppItemList(appItemList);
+//            appListAdapter.notifyDataSetChanged();
         }else{
             AppGroupBean appGroupBean = new AppGroupBean();
             appGroupBean.setCategoryID("commonly");
@@ -385,6 +394,8 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
             double weight = 0.6*count+(0.4*10*(1-((double)index)/((double)appCommonlyUseListSize)));
             appCommonlyUseAddCountList.get(i).setWeight(weight);
         }
+
+
         Collections.sort(appCommonlyUseAddCountList,new SortCommonlyUseApp());
         AppCacheUtils.saveAppCommonlyUseList(getActivity(),appCommonlyUseAddCountList);
         if(appCommonlyUseAddCountList.size()>4){
