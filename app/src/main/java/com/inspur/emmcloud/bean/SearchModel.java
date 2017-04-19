@@ -1,15 +1,13 @@
 package com.inspur.emmcloud.bean;
 
-import java.io.Serializable;
+import android.content.Context;
 
+import com.facebook.react.bridge.ReadableMap;
 import com.inspur.emmcloud.util.ContactCacheUtils;
 import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.UriUtils;
 
-import android.R.integer;
-import android.content.Context;
-import android.os.Parcelable;
-import android.util.Log;
+import java.io.Serializable;
 
 public class SearchModel implements Serializable {
 	private String id = "";
@@ -46,6 +44,23 @@ public class SearchModel implements Serializable {
 			name = contact.getName();
 			id = contact.getId();
 		}
+	}
+
+	public SearchModel(ReadableMap nativeInfo){
+		try {
+			if(nativeInfo.hasKey("new_id")){
+				id = nativeInfo.getString("new_id");
+			}
+			if(nativeInfo.hasKey("real_name")){
+				name = nativeInfo.getString("real_name");
+			}
+			if(nativeInfo.hasKey("type")){
+				type = nativeInfo.getString("type").toUpperCase();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
 	}
 
 	public SearchModel(Channel channel) {
@@ -140,5 +155,16 @@ public class SearchModel implements Serializable {
 		if (!getType().equals(otherSearchModel.getType()))
 			return false;
 		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "SearchModel{" +
+				"id='" + id + '\'' +
+				", name='" + name + '\'' +
+				", type='" + type + '\'' +
+				", icon='" + icon + '\'' +
+				", heat=" + heat +
+				'}';
 	}
 }
