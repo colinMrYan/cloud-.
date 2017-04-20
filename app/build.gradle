@@ -26,6 +26,15 @@ android {
     buildToolsVersion "23.0.3"
     aaptOptions.cruncherEnabled = false
     aaptOptions.useNewCruncher = false
+
+//    signingConfigs{
+//        signingConfig{
+//            keyAlias 'sign'
+//            keyPassword 'inspurimp'
+//            storeFile file('../apk.keystore')
+//            storePassword 'YYX7573'
+//        }
+//    }
     defaultConfig {
         applicationId "com.inspur.emmcloud"
         minSdkVersion 16
@@ -37,6 +46,7 @@ android {
             abiFilters "armeabi-v7a", "x86"
         }
         multiDexEnabled true
+//        signingConfig signingConfigs.signingConfig
     }
 
     sourceSets.main{

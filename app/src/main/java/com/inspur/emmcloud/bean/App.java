@@ -21,7 +21,7 @@ public class App implements Serializable {
 	private Boolean isMustHave = false;
 	// 0:uninstalled 1:installed 2:needUpdate
 	private int useStatus = -1;
-	// 1：内部原生、2：外部原生、3：内嵌网页 4.外部网页
+	// 1：内部原生、2：外部原生、3：内嵌网页 4.外部网页、5：ReactNative应用
 	private int appType = 4;
 	private String version = "";
 	private String identifiers = "";// 应用的包名，当原生应用时才有意义，对web应用来说该值没有任何意义
