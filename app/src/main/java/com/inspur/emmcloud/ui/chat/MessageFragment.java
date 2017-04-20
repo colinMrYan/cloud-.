@@ -240,8 +240,8 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 	private void handData() {
 		// TODO Auto-generated method stub
 		List<Channel> channelList = getCacheData();// 获取缓存中的数据
-		sortChannelList(channelList);// 对Channel 进行排序
 		creatGroupIcon();// 创建群组的头像
+		sortChannelList(channelList);// 对Channel 进行排序
 		displayData();// 展示数据
 		registerMsgReceiver();// 注册接收消息的广播
 		startWebsocket();// 常见webSocket推送
@@ -347,8 +347,9 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 	 */
 	private void creatGroupIcon() {
 		// TODO Auto-generated method stub
-		if (displayChannelList.size() > 0 && ((MyApplication)getActivity().getApplicationContext()).getIsContactReady()) {
-			new ChannelGroupIconUtils(getActivity(), displayChannelList,
+		List<Channel> channelList = getCacheData();// 获取缓存中的数据
+		if (channelList.size() > 0 && ((MyApplication)getActivity().getApplicationContext()).getIsContactReady()) {
+			new ChannelGroupIconUtils(getActivity(), channelList,
 					handler).creat();
 		}
 	}
@@ -947,6 +948,7 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 			} else if (command.equals("refresh_session_list")) {
 				getChannelContent();
 			} else if (command.equals("sort_session_list")) {
+				creatGroupIcon();
 				sortChannelList(displayChannelList);
 				adapter.notifyDataSetChanged();
 			} else if (command.equals("set_all_message_read")) {
