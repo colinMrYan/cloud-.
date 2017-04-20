@@ -120,21 +120,25 @@ public class AppDetailActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 // TODO Auto-generated method stub
-                int system = app.getAppType();
-                if (app.getUseStatus() == 0) {
-                    installApp(system, app.getAppID(), statusBtn);
-                } else if (app.getUseStatus() == 1) {
-                    if(app.getAppType() == 5){
-                        Intent intent = new Intent();
-                        intent.setClass(AppDetailActivity.this,ReactNativeAppActivity.class);
-                        intent.putExtra("ecc-app-react-native",app.getUri());
-                        startActivity(intent);
-                    }else{
-                        UriUtils.openApp(AppDetailActivity.this, app);
+                int appType = app.getAppType();
+                //外部原生应用
+                if (appType == 2){
+
+                }else {
+                    if (app.getUseStatus() == 0) {
+                        installApp(appType, app.getAppID(), statusBtn);
+                    } else if (app.getUseStatus() == 1) {
+                        if(app.getAppType() == 5){
+                            Intent intent = new Intent();
+                            intent.setClass(AppDetailActivity.this,ReactNativeAppActivity.class);
+                            intent.putExtra("ecc-app-react-native",app.getUri());
+                            startActivity(intent);
+                        }else{
+                            UriUtils.openApp(AppDetailActivity.this, app);
+                        }
                     }
-                } else {
-                    // 更新
                 }
+
 
             }
 
