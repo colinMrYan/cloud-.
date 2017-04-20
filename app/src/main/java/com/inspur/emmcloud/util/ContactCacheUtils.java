@@ -138,7 +138,7 @@ public class ContactCacheUtils {
 						"id", "=", unitID));
 			}else{
 				contact = DbCacheUtils.getDb(context).findFirst(Selector.from(Contact.class).where(
-						"parent_id", "=", "root"));
+						"parentId", "=", "root"));
 			}
 		} catch (Exception e) {
 			// TODO: handle exception
