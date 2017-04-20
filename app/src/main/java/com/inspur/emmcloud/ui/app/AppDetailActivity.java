@@ -61,7 +61,6 @@ public class AppDetailActivity extends BaseActivity {
     private MyAppAPIService apiService;
     private ReactNativeAPIService reactNativeApiService;
     private App app;
-    private String reactAppFilePath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,8 +70,6 @@ public class AppDetailActivity extends BaseActivity {
         ((MyApplication) getApplicationContext()).addActivity(this);
         imageDisplayUtils = new ImageDisplayUtils(getApplicationContext(), R.drawable.icon_empty_icon);
         app = (App) getIntent().getExtras().getSerializable("app");
-        reactAppFilePath = MyAppConfig.getReactAppFilePath(AppDetailActivity.this,
-                ((MyApplication)getApplication()).getUid(),app.getUri().split("//")[1]);
         initView();
         apiService = new MyAppAPIService(this);
         apiService.setAPIInterface(new WebService());
@@ -185,6 +182,8 @@ public class AppDetailActivity extends BaseActivity {
      * 安装ReactNative应用
      */
     private void installReactNativeApp() {
+        String reactAppFilePath = MyAppConfig.getReactAppFilePath(AppDetailActivity.this,
+                ((MyApplication)getApplication()).getUid(),app.getUri().split("//")[1]);
         StringBuilder describeVersionAndTime = FileUtils.readFile(reactAppFilePath +"/bundle.json", "UTF-8");
 
         AndroidBundleBean androidBundleBean = new AndroidBundleBean(describeVersionAndTime.toString());
