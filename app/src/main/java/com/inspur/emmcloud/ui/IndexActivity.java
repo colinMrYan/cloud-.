@@ -16,9 +16,8 @@ import android.view.View;
 import android.view.View.OnTouchListener;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TabHost;
 import android.widget.TabHost.OnTabChangeListener;
-import android.widget.TabHost.TabContentFactory;
-import android.widget.TabHost.TabSpec;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
@@ -52,6 +51,7 @@ import com.inspur.emmcloud.util.ChannelGroupCacheUtils;
 import com.inspur.emmcloud.util.ContactCacheUtils;
 import com.inspur.emmcloud.util.DbCacheUtils;
 import com.inspur.emmcloud.util.FileUtils;
+import com.inspur.emmcloud.util.ImageDisplayUtils;
 import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
@@ -372,45 +372,75 @@ public class IndexActivity extends BaseFragmentActivity implements
 
 //		MainTab[] tabs = MainTab.values();
         MainTab[] tabs = handleAppTabs();
+    }
+
+    /**
+     * 处理tab数组
+     *
+     * @return
+     */
+    private MainTab[] handleAppTabs() {
+        MainTab[] tabs = null;
+        String appTabs = PreferencesUtils.getString(IndexActivity.this,
+                UriUtils.tanent + userId + "appTabs", "");
+        if (!StringUtils.isBlank(appTabs)) {
+            ArrayList<AppTabBean> appTabList = (ArrayList<AppTabBean>) JSON.parseArray(appTabs, AppTabBean.class);
+            if (appTabList != null && appTabList.size() > 0) {
+                tabs = new MainTab[appTabList.size()];
+                for (int i = 0; i < appTabList.size(); i++) {
+                    if (appTabList.get(i).getTitle().equals("communicate")) {
+                        MainTab.NEWS.setConfigureName("对话");
+                        MainTab.NEWS.setConfigureIcon("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1492678194983&di=f97e4eb2f600579cb1c07b9421cfeaa9&imgtype=0&src=http%3A%2F%2Fimg.zcool.cn%2Fcommunity%2F019c28554b6159000001bf729078c0.jpg");
+                        tabs[i] = MainTab.NEWS;
+                    } else if (appTabList.get(i).getTitle().equals("work")) {
+                        tabs[i] = MainTab.WORK;
+                    } else if (appTabList.get(i).getTitle().equals("find")) {
+                        tabs[i] = MainTab.FIND;
+                    } else if (appTabList.get(i).getTitle().equals("application")) {
+                        tabs[i] = MainTab.APPLICATION;
+                    } else if (appTabList.get(i).getTitle().equals("mine")) {
+                        tabs[i] = MainTab.MINE;
+                    }
+                }
+            } else {
+                tabs = MainTab.values();
+            }
+        } else {
+            tabs = MainTab.values();
+        }
+        displayAppTabs(tabs);
+        return tabs;
+    }
+
+    /**
+     * 根据定制展示App
+     * @param tabs
+     */
+    private void displayAppTabs(MainTab[] tabs) {
         final int size = tabs.length;
         for (int i = 0; i < size; i++) {
             MainTab mainTab = tabs[i];
-            TabSpec tab = mTabHost.newTabSpec(getString(mainTab.getResName()));
+            TabHost.TabSpec tab = mTabHost.newTabSpec(getString(mainTab.getResName()));
             View tabView = LayoutInflater.from(getApplicationContext())
                     .inflate(R.layout.tab_item_view, null);
             ImageView tabImg = (ImageView) tabView.findViewById(R.id.imageview);
             TextView tabText = (TextView) tabView.findViewById(R.id.textview);
             if (mainTab == MainTab.NEWS) {
-                newMessageTipsText = (TextView) tabView
-                        .findViewById(R.id.new_message_tips_text);
-                newMessageTipsLayout = (RelativeLayout) tabView.findViewById(R.id.new_message_tips_layout);
-                tipsView.attach(newMessageTipsLayout, new TipsView.Listener() {
-
-                    @Override
-                    public void onStart() {
-                        // TODO Auto-generated method stub
-                    }
-
-                    @Override
-                    public void onComplete() {
-                        // TODO Auto-generated method stub
-                        Intent intent = new Intent("message_notify");
-                        intent.putExtra("command", "set_all_message_read");
-                        sendBroadcast(intent);
-                        showNotifyIcon(0);
-                    }
-
-                    @Override
-                    public void onCancel() {
-                        // TODO Auto-generated method stub
-
-                    }
-                });
+                handleTipsView(tabView);
             }
-            tabText.setText(getString(mainTab.getResName()));
-            tabImg.setImageResource(mainTab.getResIcon());
+            if(!StringUtils.isBlank(mainTab.getConfigureName())){
+                tabText.setText(mainTab.getConfigureName());
+            }else{
+                tabText.setText(getString(mainTab.getResName()));
+            }
+            if(!StringUtils.isBlank(mainTab.getConfigureIcon())){
+                ImageDisplayUtils imageDisplayUtils  = new ImageDisplayUtils(getApplicationContext(), R.drawable.icon_empty_icon);
+                imageDisplayUtils.displayPic(tabImg,mainTab.getConfigureIcon());
+            }else{
+                tabImg.setImageResource(mainTab.getResIcon());
+            }
             tab.setIndicator(tabView);
-            tab.setContent(new TabContentFactory() {
+            tab.setContent(new TabHost.TabContentFactory() {
 
                 @Override
                 public View createTabContent(String tag) {
@@ -422,6 +452,38 @@ public class IndexActivity extends BaseFragmentActivity implements
             mTabHost.setOnTabChangedListener(this);
         }
         mTabHost.setCurrentTab(getTabIndex());
+    }
+
+    /**
+     * 处理小红点的逻辑
+     * @param tabView
+     */
+    private void handleTipsView(View tabView){
+        newMessageTipsText = (TextView) tabView
+                .findViewById(R.id.new_message_tips_text);
+        newMessageTipsLayout = (RelativeLayout) tabView.findViewById(R.id.new_message_tips_layout);
+        tipsView.attach(newMessageTipsLayout, new TipsView.Listener() {
+
+            @Override
+            public void onStart() {
+                // TODO Auto-generated method stub
+            }
+
+            @Override
+            public void onComplete() {
+                // TODO Auto-generated method stub
+                Intent intent = new Intent("message_notify");
+                intent.putExtra("command", "set_all_message_read");
+                sendBroadcast(intent);
+                showNotifyIcon(0);
+            }
+
+            @Override
+            public void onCancel() {
+                // TODO Auto-generated method stub
+
+            }
+        });
     }
 
     /**
@@ -450,40 +512,7 @@ public class IndexActivity extends BaseFragmentActivity implements
         return tabIndex;
     }
 
-    /**
-     * 处理tab数组
-     *
-     * @return
-     */
-    private MainTab[] handleAppTabs() {
-        MainTab[] tabs = null;
-        String appTabs = PreferencesUtils.getString(IndexActivity.this,
-                UriUtils.tanent + userId + "appTabs", "");
-        if (!StringUtils.isBlank(appTabs)) {
-            ArrayList<AppTabBean> appTabList = (ArrayList<AppTabBean>) JSON.parseArray(appTabs, AppTabBean.class);
-            if (appTabList != null && appTabList.size() > 0) {
-                tabs = new MainTab[appTabList.size()];
-                for (int i = 0; i < appTabList.size(); i++) {
-                    if (appTabList.get(i).getTitle().equals("communicate")) {
-                        tabs[i] = MainTab.NEWS;
-                    } else if (appTabList.get(i).getTitle().equals("work")) {
-                        tabs[i] = MainTab.WORK;
-                    } else if (appTabList.get(i).getTitle().equals("find")) {
-                        tabs[i] = MainTab.FIND;
-                    } else if (appTabList.get(i).getTitle().equals("application")) {
-                        tabs[i] = MainTab.APPLICATION;
-                    } else if (appTabList.get(i).getTitle().equals("mine")) {
-                        tabs[i] = MainTab.MINE;
-                    }
-                }
-            } else {
-                tabs = MainTab.values();
-            }
-        } else {
-            tabs = MainTab.values();
-        }
-        return tabs;
-    }
+
 
     /**
      * 连点退出应用
@@ -742,6 +771,11 @@ public class IndexActivity extends BaseFragmentActivity implements
         public void returnGetAppTabsSuccess(GetAppTabsResult getAppTabsResult) {
             PreferencesUtils.putString(IndexActivity.this,
                     UriUtils.tanent + userId + "appTabs", JSON.toJSONString(getAppTabsResult.getAppTabBeanList()));
+            if(!StringUtils.isBlank(JSON.toJSONString(getAppTabsResult.getAppTabBeanList()))){
+                mTabHost.clearAllTabs();
+                handleAppTabs();
+            }
+
         }
 
         @Override
