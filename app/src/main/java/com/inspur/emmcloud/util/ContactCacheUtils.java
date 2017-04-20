@@ -131,13 +131,15 @@ public class ContactCacheUtils {
 	public static Contact getRootContact(Context context) {
 		Contact contact = null;
 		try {
-			String unitID = "root";
+			String unitID = "";
 			if(!StringUtils.isBlank(PreferencesByUserUtils.getString(context,"unitID",""))){
 				unitID = PreferencesByUserUtils.getString(context,"unitID","");
+				contact = DbCacheUtils.getDb(context).findFirst(Selector.from(Contact.class).where(
+						"id", "=", unitID));
+			}else{
+				contact = DbCacheUtils.getDb(context).findFirst(Selector.from(Contact.class).where(
+						"parentId", "=", "root"));
 			}
-			contact = DbCacheUtils.getDb(context).findFirst(Selector.from(Contact.class).where(
-					"id", "=", unitID));
-			LogUtils.YfcDebug("unitid:"+unitID);
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();

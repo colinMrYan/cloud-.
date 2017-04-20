@@ -679,6 +679,7 @@ public class IndexActivity extends BaseFragmentActivity implements
                     ContactCacheUtils.deleteContact(IndexActivity.this, deleteContactIdList);
                     ContactCacheUtils.saveLastUpdateTime(getApplicationContext(),
                             getAllContactResult.getLastUpdateTime());
+                    ContactCacheUtils.saveLastUpdateunitID(IndexActivity.this,getAllContactResult.getUnitID());
                     if(handler != null){
                         handler.sendEmptyMessage(SYNC_CONTACT_SUCCESS);
                     }
