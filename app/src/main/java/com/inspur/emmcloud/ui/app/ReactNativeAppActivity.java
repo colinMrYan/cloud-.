@@ -28,6 +28,7 @@ import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.PreferencesByUserUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.StringUtils;
+import com.inspur.emmcloud.util.ToastUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.dialogs.ECMCustomIOSDialog;
 import com.inspur.reactnative.AuthorizationManagerPackage;
@@ -160,6 +161,10 @@ public class ReactNativeAppActivity extends Activity implements DefaultHardwareB
      * @param appModule
      */
     private void createReactRootView(String reactAppFilePath,String appModule) {
+        if(!ReactNativeFlow.checkBundleFileIsExist(reactAppFilePath + "/index.android.bundle")){
+            ToastUtils.show(ReactNativeAppActivity.this,getString(R.string.react_native_app_open_failed));
+            finish();
+        }
         mReactRootView = new ReactRootView(this);
         mReactInstanceManager = ReactInstanceManager.builder()
                 .setApplication(getApplication())
@@ -295,7 +300,10 @@ public class ReactNativeAppActivity extends Activity implements DefaultHardwareB
             downloadReactNativeZip(reactNativeDownloadUrlBean);
         } else if (state == ReactNativeFlow.REACT_NATIVE_UNKNOWN) {
         } else if (state == ReactNativeFlow.REACT_NATIVE_NO_UPDATE) {
-            LogUtils.YfcDebug("收到StandBy指令，什么也不做");
+            if(!ReactNativeFlow.checkBundleFileIsExist(reactAppFilePath + "/index.android.bundle")){
+                ToastUtils.show(ReactNativeAppActivity.this,getString(R.string.react_native_app_open_failed));
+                finish();
+            }
         }
 
     }
@@ -308,6 +316,7 @@ public class ReactNativeAppActivity extends Activity implements DefaultHardwareB
         if(NetUtils.isNetworkConnected(ReactNativeAppActivity.this)){
             String clientId = PreferencesByUserUtils.getString(ReactNativeAppActivity.this,"react_native_clientid", "");
             if(!StringUtils.isBlank(clientId)){
+
 //                StringBuilder describeVersionAndTime = FileUtils.readFile(reactAppFilePath +"/bundle.json", "UTF-8");
                 StringBuilder describeVersionAndTime = ReactNativeFlow.getBundleDotJsonFromFile(reactAppFilePath);
                 AndroidBundleBean androidBundleBean = new AndroidBundleBean(describeVersionAndTime.toString());
@@ -360,6 +369,11 @@ public class ReactNativeAppActivity extends Activity implements DefaultHardwareB
             public void onFinished() {
                 if(loadingDialog != null && loadingDialog.isShowing()){
                     loadingDialog.dismiss();
+                }
+                if(!ReactNativeFlow.isCompleteZip(reactNativeDownloadUrlBean.getHash(),reactZipFilePath)){
+                    ReactNativeFlow.deleteReactNativeDownloadZipFile(reactZipFilePath);
+                    ToastUtils.show(ReactNativeAppActivity.this,getString(R.string.react_native_app_update_failed));
+                    return;
                 }
                 String preVersion = getAppBundleBean().getVersion();
                 String reactAppTempPath = MyAppConfig.getReactTempFilePath(ReactNativeAppActivity.this,userId);
