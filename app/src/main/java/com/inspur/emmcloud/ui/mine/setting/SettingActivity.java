@@ -1,7 +1,5 @@
 package com.inspur.emmcloud.ui.mine.setting;
 
-import android.app.NotificationManager;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -289,6 +287,7 @@ public class SettingActivity extends BaseActivity {
 	 */
 	private void showClearCacheWarningDlg() {
 		// TODO Auto-generated method stub
+		final String userId = ((MyApplication)getApplication()).getUid();
 		DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
 
 			@Override
@@ -307,6 +306,8 @@ public class SettingActivity extends BaseActivity {
 							getApplicationContext(),
 							R.drawable.icon_photo_default);
 					imageDisplayUtils.clearCache();
+					//清除全部缓存时是否需要清除掉小程序，如果需要，解开下面一行的注释
+//					ReactNativeFlow.deleteReactNativeInstallDir(MyAppConfig.getReactInstallPath(SettingActivity.this,userId));
 					ToastUtils.show(getApplicationContext(),
 							R.string.data_clear_success);
 					((MyApplication) getApplicationContext()).exit();
@@ -330,8 +331,7 @@ public class SettingActivity extends BaseActivity {
 			((MyApplication) getApplicationContext()).getWebSocketPush()
 			.webSocketSignout();
 		}
-		NotificationManager nm =(NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
-		nm.cancelAll();
+		((MyApplication)getApplicationContext()).clearNotification();
 		CookieManager cookieManager = CookieManager.getInstance();
 		cookieManager.removeAllCookie();
 		((MyApplication)getApplicationContext()).removeAllCookie();

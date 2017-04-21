@@ -3,6 +3,7 @@ package com.inspur.reactnative;
 import android.content.Context;
 import android.content.Intent;
 
+import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.bean.ReactNativeUpdateBean;
 import com.inspur.emmcloud.config.MyAppConfig;
@@ -14,6 +15,7 @@ import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.PreferencesByUserUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.StringUtils;
+import com.inspur.emmcloud.util.ToastUtils;
 import com.inspur.emmcloud.util.UnZipAssets;
 import com.inspur.emmcloud.util.ZipUtils;
 
@@ -173,7 +175,7 @@ public class ReactNativeFlow {
                 reactNativeUpdateBean.getBundle().getAndroidUri();
         if (ReactNativeFlow.isCompleteZip(reactNativeUpdateBean.getBundle().getAndroidHash(), reactZipFilePath)) {
             moveFolder(reactCurrentPath, reactTempPath);
-            deleteZipFile(reactCurrentPath);
+            deleteOldVersionFile(reactCurrentPath);
             ZipUtils.upZipFile(reactZipFilePath, reactCurrentPath);
             FileUtils.deleteFile(reactZipFilePath);
             PreferencesUtils.putString(context, "react_native_lastupdatetime", "" + System.currentTimeMillis());
@@ -181,7 +183,8 @@ public class ReactNativeFlow {
             Intent intent = new Intent("com.inspur.react.success");
             context.sendBroadcast(intent);
         } else {
-            //如何处理？重新下载不行，progressCallback不能再当参数传入
+            FileUtils.deleteFile(reactZipFilePath);
+            ToastUtils.show(context,context.getString(R.string.react_native_app_update_failed));
         }
     }
 
@@ -279,12 +282,12 @@ public class ReactNativeFlow {
 
 
     /**
-     * 删除zip文件  临时需求，以后可能不再使用
+     * 删除原来版本文件
      *
      * @param deletePath
      * @return
      */
-    public static boolean deleteZipFile(String deletePath) {
+    public static boolean deleteOldVersionFile(String deletePath) {
         return FileUtils.deleteFile(deletePath);
     }
 
@@ -300,6 +303,43 @@ public class ReactNativeFlow {
             return false;
         }
         return true;
+    }
+
+    /**
+     * 以UTF-8编码读取传入文件夹下bundle.json文件里的信息
+     * @param reactAppFilePath
+     * @return
+     */
+    public static StringBuilder getBundleDotJsonFromFile(String reactAppFilePath){
+        return FileUtils.readFile(reactAppFilePath +"/bundle.json", "UTF-8");
+    }
+
+    /**
+     * 从Scheme里获取app的module
+     * scheme形式：'ecc-app-react-native: //10002'
+     * @param reactNativeApp
+     * @return
+     */
+    public static String getAppModuleFromScheme(String reactNativeApp){
+       return reactNativeApp.split("//")[1];
+    }
+
+    /**
+     * 删除下载的zip文件
+     * @param deleteZipFilePath 删除路径如xxx/xxx/ECA.zip
+     * @return
+     */
+    public static boolean deleteReactNativeDownloadZipFile(String deleteZipFilePath){
+        return FileUtils.deleteFile(deleteZipFilePath);
+    }
+
+    /**
+     * 清除ReactNative缓存
+     * @param reactNativeInstallDir
+     * @return
+     */
+    public static boolean deleteReactNativeInstallDir(String reactNativeInstallDir){
+        return FileUtils.deleteFile(reactNativeInstallDir);
     }
 
 

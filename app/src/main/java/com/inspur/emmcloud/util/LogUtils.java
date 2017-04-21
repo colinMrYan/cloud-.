@@ -18,7 +18,7 @@ public class LogUtils {
 	
 	public static void jasonDebug(String message){
 		if (isDebug) {
-			Log.w("jason", getTraceInfo() + message);
+			Log.d("jason", getTraceInfo() + message);
 		}
 	}
 	

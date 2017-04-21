@@ -1,5 +1,7 @@
 package com.inspur.imp.plugin.amaplocation;
 
+import android.util.Log;
+
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
@@ -35,6 +37,7 @@ public class AmapLocateService extends ImpPlugin implements
 
     @Override
     public void execute(String action, JSONObject paramsObject) {
+        LogUtils.YfcDebug("paramsObject:"+paramsObject.toString());
         LogUtils.debug("jason", "action=" + action);
         // 获取经纬度地址
         if ("getInfo".equals(action)) {

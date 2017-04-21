@@ -1,0 +1,20 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="100dp"
+    android:layout_height="100dp"
+    android:layout_centerInParent="true"
+    android:layout_gravity="center"
+    android:gravity="center"
+    android:background="@drawable/shape_dialog_custom_ios_layout"
+    android:orientation="vertical">
+
+    <ProgressBar
+        android:id="@+id/pb_load"
+        style="@android:style/Widget.ProgressBar"
+        android:layout_width="65dp"
+        android:layout_height="65dp"
+        android:layout_centerInParent="true"
+        android:indeterminateDrawable="@drawable/react_native_ios_progress"
+        android:indeterminateDuration="1000" />
+
+
+</RelativeLayout>

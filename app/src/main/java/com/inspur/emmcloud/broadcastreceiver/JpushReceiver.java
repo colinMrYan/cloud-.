@@ -2,7 +2,6 @@ package com.inspur.emmcloud.broadcastreceiver;
 
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningTaskInfo;
-import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
@@ -13,6 +12,7 @@ import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.bean.CalendarEvent;
 import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.ui.login.LoginActivity;
@@ -76,9 +76,7 @@ public class JpushReceiver extends BroadcastReceiver {
 			Log.d(TAG, "extra=" + bundle.getString(JPushInterface.EXTRA_EXTRA));
 			String accessToken = PreferencesUtils.getString(context,
 					"accessToken", "");
-			//打开通知后将所有的通知取消
-			NotificationManager nm =(NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
-			nm.cancelAll();
+			((MyApplication)context.getApplicationContext()).clearNotification();
 			if (!StringUtils.isBlank(accessToken)) {
 				String extra = "";
 				if (bundle.containsKey(JPushInterface.EXTRA_EXTRA)) {

@@ -151,7 +151,8 @@ try{
 	String currentVersionCode = getNormalVersionCode(savedArray[2]);
 	currentArray[2] = currentVersionCode;
 }catch (Exception e){
-//	LogUtils.YfcDebug("捕获到的异常信息："+e.getMessage());
+	LogUtils.YfcDebug("捕获版本异常："+e.getMessage());
+	e.printStackTrace();
 }
 
 

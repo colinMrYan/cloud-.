@@ -104,6 +104,24 @@ public class ContactCacheUtils {
 	}
 
 	/**
+	 * 存储更新后客户端通讯录显示起始位置
+	 * @param context
+	 * @param unitID
+     */
+	public static void saveLastUpdateunitID(Context context,String unitID){
+		PreferencesByUserUtils.putString(context,"unitID",unitID);
+	}
+
+	/**
+	 * 获取通讯录显示起始级别，如集团，单位，部门
+	 * @param context
+	 * @return
+     */
+	public static String getLastUpdateunitID(Context context){
+		return PreferencesByUserUtils.getString(context,"unitID","");
+	}
+
+	/**
 	 * 获取根组织架构
 	 * 
 	 * @param context
@@ -113,9 +131,15 @@ public class ContactCacheUtils {
 	public static Contact getRootContact(Context context) {
 		Contact contact = null;
 		try {
-			
-			contact = DbCacheUtils.getDb(context).findFirst(Selector.from(Contact.class).where(
-					"parentId", "=", "root"));
+			String unitID = "";
+			if(!StringUtils.isBlank(PreferencesByUserUtils.getString(context,"unitID",""))){
+				unitID = PreferencesByUserUtils.getString(context,"unitID","");
+				contact = DbCacheUtils.getDb(context).findFirst(Selector.from(Contact.class).where(
+						"id", "=", unitID));
+			}else{
+				contact = DbCacheUtils.getDb(context).findFirst(Selector.from(Contact.class).where(
+						"parentId", "=", "root"));
+			}
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();

@@ -31,7 +31,6 @@ public class BaseFragmentActivity extends FragmentActivity {
 			((MyApplication) getApplicationContext()).setIsActive(false);
 			// 全局变量isActive = false 记录当前已经进入后台
 			((MyApplication)getApplicationContext()).sendFrozenWSMsg();
-			((MyApplication)getApplicationContext()).clearNotification();
 		}
 	}
 
@@ -42,6 +41,7 @@ public class BaseFragmentActivity extends FragmentActivity {
 
 		if (!((MyApplication) getApplicationContext()).getIsActive()) {
 			((MyApplication) getApplicationContext()).setIsActive(true);
+			((MyApplication)getApplicationContext()).clearNotification();
 			if (((MyApplication) getApplicationContext())
 					.isIndexActivityRunning()) {
 				((MyApplication)getApplicationContext()).sendActivedWSMsg();

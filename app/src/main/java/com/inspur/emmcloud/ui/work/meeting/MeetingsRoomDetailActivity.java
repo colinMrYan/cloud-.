@@ -45,7 +45,6 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
@@ -111,9 +110,10 @@ public class MeetingsRoomDetailActivity extends BaseActivity {
 	}
 
 	/**
-	 * 从服务器获取时间
+	 * 从服务器获取当前时间
+	 *
 	 * @param date
-     */
+	 */
 	private void setCurrentCalendar(String date) {
 		// TODO Auto-generated method stub
 		try {
@@ -402,32 +402,28 @@ public class MeetingsRoomDetailActivity extends BaseActivity {
 		if (meeting == null) {
 			return;
 		}
-		Iterator<Meeting> sListIterator = allMeetingList.iterator();
-		while (sListIterator.hasNext()) {
-			Meeting meetingNext = sListIterator.next();
-			if (meeting.equals(meetingNext)) {
-				int index = allMeetingList.indexOf(meetingNext);
-				allMeetingList.add(index, meeting);
-				allMeetingList.remove(index + 1);
-			}
+		int index = allMeetingList.indexOf(meeting);
+		if (index != -1) {
+			allMeetingList.remove(index);
+			allMeetingList.add(index, meeting);
 		}
 		initData();
 	}
 
 	/**
-	 * 删除会议
+	 * 删除在会议详情删除的会议
+	 *
 	 * @param meetingId
-     */
+	 */
 	private void deleteMeeting(String meetingId) {
 		if (StringUtils.isBlank(meetingId)) {
 			return;
 		}
-		Iterator<Meeting> sListIterator = allMeetingList.iterator();
-		while (sListIterator.hasNext()) {
-			Meeting meeting = sListIterator.next();
-			if (!StringUtils.isBlank(meetingId)
-					&& meetingId.equals(meeting.getMeetingId())) {
-				sListIterator.remove();
+		for (int i=0;i<allMeetingList.size();i++){
+			Meeting meeting = allMeetingList.get(i);
+			if (meeting.getMeetingId().equals(meetingId)){
+				allMeetingList.remove(i);
+				break;
 			}
 		}
 		initData();

@@ -168,21 +168,25 @@ public class ECMChatInputMenu extends LinearLayout {
 		initMenuGrid();
 		mInputManager = (InputMethodManager) context
 				.getSystemService(context.INPUT_METHOD_SERVICE);
+		//防止长按输入框进行粘贴的事件被消化掉
+		inputEdit.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if (isSetWindowListener) {
+					if (addMenuLayout.isShown()) {
+						lockContentHeight();
+						hideAddItemLayout(true);
+						unlockContentHeight();
+					}
+				}
+			}
+		});
 		inputEdit.setOnTouchListener(new OnTouchListener() {
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
 				if (event.getAction() == MotionEvent.ACTION_DOWN) {
 					handMentions();
 				}
-				if (isSetWindowListener) {
-					if (event.getAction() == MotionEvent.ACTION_UP
-							&& addMenuLayout.isShown()) {
-						lockContentHeight();
-						hideAddItemLayout(true);
-						unlockContentHeight();
-					}
-				}
-
 				return false;
 			}
 		});

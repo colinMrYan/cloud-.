@@ -11,6 +11,7 @@ yarn.lock
 
 # Files for the ART/Dalvik VM
 *.dex
+*.keystore
 
 # Java class files
 *.class

@@ -731,4 +731,7 @@
     <string name="dummy_content">DUMMY\nCONTENT</string>
     <string name="dummy_button">Dummy Button</string>
 
+    <string name="react_native_app_open_failed">應用打開失敗 </string>
+    <string name="react_native_app_update_failed">更新包失敗 </string>
+
 </resources>
