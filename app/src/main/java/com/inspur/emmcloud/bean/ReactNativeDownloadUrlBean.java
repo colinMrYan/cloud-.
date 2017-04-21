@@ -35,7 +35,11 @@ public class ReactNativeDownloadUrlBean {
                 this.uri = jsonObject.getString("uri");
             }
             if(jsonObject.has("hash")){
-                this.hash = jsonObject.getString("hash");
+                if(jsonObject.getString("hash").startsWith("sha256") || jsonObject.getString("hash").startsWith("sha1")){
+                    this.hash = jsonObject.getString("hash").split(":")[1];
+                }else{
+                    this.hash = jsonObject.getString("hash");
+                }
             }
         } catch (JSONException e) {
             e.printStackTrace();
