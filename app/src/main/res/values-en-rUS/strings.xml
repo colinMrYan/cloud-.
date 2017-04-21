@@ -732,4 +732,7 @@
     <string name="dummy_content">DUMMY\nCONTENT</string>
     <string name="dummy_button">Dummy Button</string>
 
+    <string name="react_native_app_open_failed">Application open failure</string>
+    <string name="react_native_app_update_failed">Update packet breakage </string>
+
 </resources>
