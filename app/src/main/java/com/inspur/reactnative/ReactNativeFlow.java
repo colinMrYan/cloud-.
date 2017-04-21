@@ -3,6 +3,7 @@ package com.inspur.reactnative;
 import android.content.Context;
 import android.content.Intent;
 
+import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.bean.ReactNativeUpdateBean;
 import com.inspur.emmcloud.config.MyAppConfig;
@@ -14,6 +15,7 @@ import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.PreferencesByUserUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.StringUtils;
+import com.inspur.emmcloud.util.ToastUtils;
 import com.inspur.emmcloud.util.UnZipAssets;
 import com.inspur.emmcloud.util.ZipUtils;
 
@@ -181,7 +183,8 @@ public class ReactNativeFlow {
             Intent intent = new Intent("com.inspur.react.success");
             context.sendBroadcast(intent);
         } else {
-            //如何处理？重新下载不行，progressCallback不能再当参数传入
+            FileUtils.deleteFile(reactZipFilePath);
+            ToastUtils.show(context,context.getString(R.string.react_native_app_update_failed));
         }
     }
 

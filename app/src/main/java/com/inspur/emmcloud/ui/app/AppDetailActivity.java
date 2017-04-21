@@ -17,31 +17,18 @@ import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
-import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
 import com.inspur.emmcloud.api.apiservice.ReactNativeAPIService;
-import com.inspur.emmcloud.bean.AndroidBundleBean;
 import com.inspur.emmcloud.bean.App;
 import com.inspur.emmcloud.bean.GetAddAppResult;
-import com.inspur.emmcloud.bean.GetClientIdRsult;
-import com.inspur.emmcloud.bean.ReactNativeDownloadUrlBean;
-import com.inspur.emmcloud.config.MyAppConfig;
-import com.inspur.emmcloud.util.AppUtils;
-import com.inspur.emmcloud.util.FileUtils;
 import com.inspur.emmcloud.util.ImageDisplayUtils;
-import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.NetUtils;
-import com.inspur.emmcloud.util.PreferencesByUserUtils;
 import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.HorizontalListView;
 import com.inspur.emmcloud.widget.LoadingDialog;
-import com.inspur.reactnative.ReactNativeFlow;
 
-import org.xutils.common.Callback;
-
-import java.io.File;
 import java.util.List;
 
 /**
@@ -154,7 +141,7 @@ public class AppDetailActivity extends BaseActivity {
                 addApp(statusBtn, appID);
                 break;
             case 5:
-                addReactNativeApp();
+                addApp(statusBtn, appID);
                 break;
 
             default:
@@ -162,34 +149,6 @@ public class AppDetailActivity extends BaseActivity {
         }
     }
 
-    /**
-     *  添加reactNativeApp
-     */
-    private void addReactNativeApp() {
-        if(NetUtils.isNetworkConnected(AppDetailActivity.this)){
-            statusBtn.setText(getString(R.string.adding));
-            loadingDlg.show();
-            if(ReactNativeFlow.checkClientIdExist(AppDetailActivity.this)){
-                installReactNativeApp();
-            }else{
-                reactNativeApiService.getClientId(AppUtils.getMyUUID(AppDetailActivity.this), AppUtils.GetChangShang());
-            }
-        }
-
-    }
-
-    /**
-     * 安装ReactNative应用
-     */
-    private void installReactNativeApp() {
-        String reactAppFilePath = MyAppConfig.getReactAppFilePath(AppDetailActivity.this,
-                ((MyApplication)getApplication()).getUid(),app.getUri().split("//")[1]);
-        StringBuilder describeVersionAndTime = FileUtils.readFile(reactAppFilePath +"/bundle.json", "UTF-8");
-
-        AndroidBundleBean androidBundleBean = new AndroidBundleBean(describeVersionAndTime.toString());
-        String clientId = PreferencesByUserUtils.getString(AppDetailActivity.this,"react_native_clientid", "");
-        reactNativeApiService.getDownLoadUrl(AppDetailActivity.this,app.getInstallUri(),clientId, androidBundleBean.getVersion());
-    }
 
     /**
      * 封装网络请求的方法
@@ -274,88 +233,6 @@ public class AppDetailActivity extends BaseActivity {
                     error);
         }
 
-        @Override
-        public void returnGetClientIdResultSuccess(GetClientIdRsult getClientIdRsult) {
-            super.returnGetClientIdResultSuccess(getClientIdRsult);
-            if(loadingDlg!= null && loadingDlg.isShowing()){
-                loadingDlg.dismiss();
-            }
-            PreferencesByUserUtils.putString(AppDetailActivity.this,  "react_native_clientid", getClientIdRsult.getClientId());
-            installReactNativeApp();
-        }
-
-        @Override
-        public void returnGetClientIdResultFail(String error) {
-            if(loadingDlg!= null && loadingDlg.isShowing()){
-                loadingDlg.dismiss();
-            }
-            WebServiceMiddleUtils.hand(AppDetailActivity.this,
-                    error);
-        }
-
-        @Override
-        public void returnGetDownloadReactNativeUrlSuccess(ReactNativeDownloadUrlBean reactNativeDownloadUrlBean) {
-            super.returnGetDownloadReactNativeUrlSuccess(reactNativeDownloadUrlBean);
-            downloadReactNativeZip(reactNativeDownloadUrlBean);
-        }
-
-        @Override
-        public void returnGetDownloadReactNativeUrlFail(String error) {
-            if(loadingDlg!= null && loadingDlg.isShowing()){
-                loadingDlg.dismiss();
-            }
-            WebServiceMiddleUtils.hand(AppDetailActivity.this,
-                    error);
-        }
-    }
-
-    /**
-     * 下载reactNative的zip包
-     * @param reactNativeDownloadUrlBean
-     */
-    private void downloadReactNativeZip(final ReactNativeDownloadUrlBean reactNativeDownloadUrlBean) {
-        final String userId = ((MyApplication)getApplication()).getUid();
-        String reactZipDownloadFromUri = APIUri.getZipUrl() + reactNativeDownloadUrlBean.getUri();
-        final String reactZipFilePath = MyAppConfig.LOCAL_DOWNLOAD_PATH  + userId + "/" + reactNativeDownloadUrlBean.getUri() ;
-
-        Callback.ProgressCallback<File> progressCallback = new Callback.ProgressCallback<File>() {
-            @Override
-            public void onWaiting() {
-
-            }
-
-            @Override
-            public void onStarted() {
-                LogUtils.YfcDebug("下载开始");
-            }
-
-            @Override
-            public void onLoading(long l, long l1, boolean b) {
-            }
-
-            @Override
-            public void onSuccess(File file) {
-
-            }
-
-            @Override
-            public void onError(Throwable throwable, boolean b) {
-
-            }
-
-            @Override
-            public void onCancelled(CancelledException e) {
-
-            }
-
-            @Override
-            public void onFinished() {
-                String reactAppInstallPath = MyAppConfig.getReactAppFilePath(AppDetailActivity.this,userId,reactNativeDownloadUrlBean.getId().getDomain());
-                ReactNativeFlow.unZipFile(reactZipFilePath,reactAppInstallPath);
-            }
-        };
-        reactNativeApiService.downloadReactNativeModuleZipPackage(reactZipDownloadFromUri,reactZipFilePath,progressCallback);
-        addApp(statusBtn,app.getAppID());
     }
 
     @Override
