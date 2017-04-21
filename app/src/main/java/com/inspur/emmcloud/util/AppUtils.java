@@ -2,8 +2,10 @@ package com.inspur.emmcloud.util;
 
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningServiceInfo;
+import android.content.ComponentName;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -17,6 +19,8 @@ import android.text.TextUtils;
 
 import com.inspur.emmcloud.R;
 
+import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.regex.Matcher;
@@ -293,5 +297,64 @@ try{
 		}
 		return isWork;
 	}
-	
+
+	/**
+	 * 判断app是否已安装
+	 * @param context
+	 * @param packageName
+	 * @return
+	 */
+	public static  boolean isAppInstalled(Context context, String packageName) {
+		final PackageManager packageManager = context.getPackageManager();
+		List<PackageInfo> pinfo = packageManager.getInstalledPackages(0);
+		List<String> pName = new ArrayList<String>();
+		if (pinfo != null) {
+			for (int i = 0; i < pinfo.size(); i++) {
+				String pn = pinfo.get(i).packageName;
+				pName.add(pn);
+			}
+		}
+		return pName.contains(packageName);
+	}
+
+	/**
+	 * 打开其他第三方原生应用
+	 * @param packageName
+	 * @param mainActivityName
+	 */
+	public static void openNativeApp(Context context,String packageName,String mainActivityName){
+		try {
+			Intent intent = null;
+
+			if (StringUtils.isBlank(packageName) && StringUtils.isBlank(mainActivityName)){
+				intent = new Intent(Intent.ACTION_MAIN);
+				ComponentName cn = new ComponentName(packageName, mainActivityName);
+				intent.setComponent(cn);
+			}else {
+				PackageManager packageManager = context.getPackageManager();
+				intent= packageManager.getLaunchIntentForPackage(packageName);
+			}
+			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			context.startActivity(intent);
+		}catch (Exception e){
+			e.printStackTrace();
+			ToastUtils.show(context,"应用未安装");
+		}
+
+	}
+
+	/**
+	 * 打开APK文件（安装APK应用）
+	 * @param context
+	 * @param file
+	 */
+	public static  void openAPKFile(Context context,File file){
+		Intent intent = new Intent();
+		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		intent.setAction(android.content.Intent.ACTION_VIEW);
+		intent.setDataAndType(Uri.fromFile(file),
+				"application/vnd.android.package-archive");
+		context.startActivity(intent);
+	}
+
 }

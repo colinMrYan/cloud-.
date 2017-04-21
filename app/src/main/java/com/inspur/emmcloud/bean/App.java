@@ -25,6 +25,8 @@ public class App implements Serializable {
 	private int appType = 4;
 	private String version = "";
 	private String identifiers = "";// 应用的包名，当原生应用时才有意义，对web应用来说该值没有任何意义
+	private String packageName = "";
+	private String MainActivityName = "";
 	private List<String> legends;
 	
 	private int orderId = -1;
@@ -77,6 +79,11 @@ public class App implements Serializable {
 			}
 			if (obj.has("identifiers")) {
 				this.identifiers = obj.getString("identifiers");
+				String[] array = identifiers.split(",");
+				this.packageName = array[0];
+				if (array.length == 2){
+					this.MainActivityName = array[1];
+				}
 			}
 			if (obj.has("legends")) {
 				JSONArray jsonArray = obj.getJSONArray("legends");
@@ -167,7 +174,13 @@ public class App implements Serializable {
 	public void setOrderId(int orderId) {
 		this.orderId = orderId;
 	}
+	public String getPackageName(){
+		return packageName;
+	}
 
+	public String getMainActivityName(){
+		return MainActivityName;
+	}
 
 	public String getCategoryID() {
 		return categoryID;
@@ -252,6 +265,13 @@ public class App implements Serializable {
 	public void setInstallUri(String installUri) {
 		this.installUri = installUri;
 	}
+	public void setPackageName(String packageName){
+		this.packageName = packageName;
+	}
+	public void setMainActivityName(String mainActivityName){
+		this.MainActivityName = mainActivityName;
+	}
+
 
 	@Override
 	public boolean equals(Object other) {

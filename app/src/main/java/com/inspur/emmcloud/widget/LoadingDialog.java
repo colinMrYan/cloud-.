@@ -1,7 +1,6 @@
 package com.inspur.emmcloud.widget;
 
 
-
 import android.app.Dialog;
 import android.content.Context;
 import android.view.Gravity;
@@ -14,9 +13,7 @@ import com.inspur.emmcloud.R;
 
 
 /**
- * 
  * 网络服务等待dialog
- * 
  */
 public class LoadingDialog extends Dialog {
 	private LayoutInflater inflater;
@@ -24,7 +21,7 @@ public class LoadingDialog extends Dialog {
 	private LayoutParams lp;
 	private Context context;
 
-	public LoadingDialog(Context context,String text) {
+	public LoadingDialog(Context context, String text) {
 		// TODO Auto-generated constructor stub
 		super(context, R.style.dialog_progressbar);
 		this.context = context;
@@ -33,7 +30,7 @@ public class LoadingDialog extends Dialog {
 		inflater = (LayoutInflater) context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		View view = inflater.inflate(R.layout.dialog_loading, null);
-		loadtext = (TextView)view.findViewById(R.id.loading_text);
+		loadtext = (TextView) view.findViewById(R.id.loading_text);
 		loadtext.setText(text);
 		setContentView(view);
 		// 设置window属性
@@ -44,6 +41,7 @@ public class LoadingDialog extends Dialog {
 		getWindow().setAttributes(lp);
 
 	}
+
 	public LoadingDialog(Context context) {
 		// TODO Auto-generated constructor stub
 		super(context, R.style.dialog_progressbar);
@@ -53,7 +51,7 @@ public class LoadingDialog extends Dialog {
 		inflater = (LayoutInflater) context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		View view = inflater.inflate(R.layout.dialog_loading, null);
-		loadtext = (TextView)view.findViewById(R.id.loading_text);
+		loadtext = (TextView) view.findViewById(R.id.loading_text);
 		setContentView(view);
 		// 设置window属性
 		lp = getWindow().getAttributes();
@@ -63,16 +61,21 @@ public class LoadingDialog extends Dialog {
 		getWindow().setAttributes(lp);
 
 	}
-	
-	public void show(boolean isShow){
+
+	public void show(boolean isShow) {
 		if (isShow) {
 			show();
 		}
 	}
 
+	public void setText(String text) {
+		loadtext.setText(text);
+	}
+
+
 	@Override
 	public void show() {
-		if (context != null){
+		if (context != null) {
 			super.show();
 		}
 
@@ -80,7 +83,7 @@ public class LoadingDialog extends Dialog {
 
 	@Override
 	public void dismiss() {
-		if (context != null){
+		if (context != null) {
 			super.dismiss();
 		}
 	}
