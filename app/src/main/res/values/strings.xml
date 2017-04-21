@@ -758,5 +758,9 @@
         <item>Enable remove</item>
     </string-array>
 
+    <!--ReactNative 提示 -->
+    <string name="react_native_app_open_failed">应用打开失败</string>
+    <string name="react_native_app_update_failed">更新包失败</string>
+
 
 </resources>
