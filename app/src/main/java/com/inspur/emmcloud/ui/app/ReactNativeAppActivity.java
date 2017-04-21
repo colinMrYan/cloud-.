@@ -333,7 +333,7 @@ public class ReactNativeAppActivity extends Activity implements DefaultHardwareB
      */
     private void downloadReactNativeZip(final ReactNativeDownloadUrlBean reactNativeDownloadUrlBean) {
 //        final String userId = ((MyApplication)getApplication()).getUid();
-        String reactZipDownloadFromUri = APIUri.getZipUrl() + reactNativeDownloadUrlBean.getUri();
+        final String reactZipDownloadFromUri = APIUri.getZipUrl() + reactNativeDownloadUrlBean.getUri();
         final String reactZipFilePath = MyAppConfig.LOCAL_DOWNLOAD_PATH  + userId + "/" + reactNativeDownloadUrlBean.getUri() ;
         Callback.ProgressCallback<File> progressCallback = new Callback.ProgressCallback<File>() {
             @Override
