@@ -331,6 +331,12 @@
     <string name="search">搜索</string>
     <string name="app_commonly_use">常用应用</string>
     <string name="app_center_more_apps">更多应用</string>
+    <string name="app_input_mail_password">请输入邮箱密码</string>
+    <string name="app_need_input_mail_password">此功能需要输入邮箱密码</string>
+    <string name="app_download">应用下载中：</string>
+    <string name="app_password_error">密码错误，请重新输入</string>
+    <string name="app_password_encrypt_error">密码加密出错</string>
+
 
     <!-- 我的页面部分 -->
     <string name="data_clear_success">清除成功</string>

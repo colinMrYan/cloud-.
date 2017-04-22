@@ -79,11 +79,18 @@ public class App implements Serializable {
 			}
 			if (obj.has("identifiers")) {
 				this.identifiers = obj.getString("identifiers");
-				String[] array = identifiers.split(",");
-				this.packageName = array[0];
-				if (array.length == 2){
-					this.MainActivityName = array[1];
+				if (appType == 2){
+					if (identifiers.contains(",")){
+						String[] array = identifiers.split(",");
+						this.packageName = array[0];
+						if (array.length == 2){
+							this.MainActivityName = array[1];
+						}
+					}else {
+						this.packageName = this.identifiers;
+					}
 				}
+
 			}
 			if (obj.has("legends")) {
 				JSONArray jsonArray = obj.getJSONArray("legends");

@@ -15,7 +15,7 @@
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_gravity="center_vertical"
-        android:layout_marginRight="30dp"
+        android:layout_marginRight="25dp"
         app:borderWidth="3dp" />
 
     <TextView
@@ -25,7 +25,6 @@
         android:layout_gravity="center_vertical"
         android:text="@string/loading_text"
         android:textColor="#333333"
-        android:hint="100%"
         android:textSize="@dimen/content_normal_textsize" />
 
 </LinearLayout>

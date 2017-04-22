@@ -316,4 +316,37 @@ public class AppAPIService {
 		});
 
 	}
+
+	/**
+	 * 验证行政审批密码
+	 * @param password
+	 */
+	public void veriryApprovalPassword(String userName, final String password){
+		String  completeUrl = "http://shenpi.inspur.com/langchao.ecgap.inportal/login/CheckLoginDB.aspx?";
+		RequestParams params = new RequestParams(completeUrl);
+		params.addQueryStringParameter("userName",userName);
+		params.addQueryStringParameter("userPass",password);
+		x.http().request(HttpMethod.GET, params, new APICallback() {
+			@Override
+			public void callbackSuccess(String arg0) {
+				if (arg0.equals("登录成功")){
+					apiInterface.returnVeriryApprovalPasswordSuccess(password);
+				}else{
+					apiInterface.returnVeriryApprovalPasswordFail("");
+				}
+
+			}
+
+			@Override
+			public void callbackFail(String error, int responseCode) {
+				apiInterface.returnVeriryApprovalPasswordFail(error);
+			}
+
+			@Override
+			public void callbackTokenExpire() {
+				apiInterface.returnVeriryApprovalPasswordFail("");
+			}
+		});
+
+	}
 }

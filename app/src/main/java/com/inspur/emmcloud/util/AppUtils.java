@@ -2,7 +2,6 @@ package com.inspur.emmcloud.util;
 
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningServiceInfo;
-import android.content.ComponentName;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
@@ -315,32 +314,6 @@ try{
 			}
 		}
 		return pName.contains(packageName);
-	}
-
-	/**
-	 * 打开其他第三方原生应用
-	 * @param packageName
-	 * @param mainActivityName
-	 */
-	public static void openNativeApp(Context context,String packageName,String mainActivityName){
-		try {
-			Intent intent = null;
-
-			if (StringUtils.isBlank(packageName) && StringUtils.isBlank(mainActivityName)){
-				intent = new Intent(Intent.ACTION_MAIN);
-				ComponentName cn = new ComponentName(packageName, mainActivityName);
-				intent.setComponent(cn);
-			}else {
-				PackageManager packageManager = context.getPackageManager();
-				intent= packageManager.getLaunchIntentForPackage(packageName);
-			}
-			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-			context.startActivity(intent);
-		}catch (Exception e){
-			e.printStackTrace();
-			ToastUtils.show(context,"应用未安装");
-		}
-
 	}
 
 	/**

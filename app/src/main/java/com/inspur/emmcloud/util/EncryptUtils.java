@@ -1,9 +1,14 @@
 package com.inspur.emmcloud.util;
 
+import android.util.Base64;
+import android.util.Log;
+
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
+import java.security.Key;
 import java.security.NoSuchAlgorithmException;
+import java.security.spec.AlgorithmParameterSpec;
 import java.util.Arrays;
 
 import javax.crypto.BadPaddingException;
@@ -11,11 +16,10 @@ import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.DESKeySpec;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
-
-import android.util.Base64;
-import android.util.Log;
 
 public class EncryptUtils {
 	public static String keyString = "inspurIMPCloud968842022285d325h9";
@@ -151,4 +155,27 @@ public class EncryptUtils {
 	    return key;
 	}
 
+
+	public static String encodeApprovalPassword(String stringToEncode) throws Exception {
+		String keyString = ")P:?,ki8";
+
+		try {
+			DESKeySpec dks = new DESKeySpec(keyString.getBytes("UTF8"));
+			SecretKeyFactory keyFactory = SecretKeyFactory.getInstance("DES");
+			//key的长度不能够小于8位字节
+			Key secretKey = keyFactory.generateSecret(dks);
+			Cipher cipher = Cipher.getInstance("DES/CBC/PKCS5Padding");
+			byte[] array = new byte[8];
+			IvParameterSpec iv = new IvParameterSpec(array);
+			AlgorithmParameterSpec paramSpec = iv;
+			cipher.init(Cipher.ENCRYPT_MODE, secretKey,paramSpec);
+			byte[] bytes = cipher.doFinal(stringToEncode.getBytes("UTF8"));
+			Base64.encodeToString(bytes, android.util.Base64.DEFAULT);
+			return  Base64.encodeToString(bytes, android.util.Base64.DEFAULT);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return "";
+	}
 }

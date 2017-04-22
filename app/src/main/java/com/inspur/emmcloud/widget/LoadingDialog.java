@@ -72,6 +72,9 @@ public class LoadingDialog extends Dialog {
 		loadtext.setText(text);
 	}
 
+	public void setHint(String text) {
+		loadtext.setHint(text);
+	}
 
 	@Override
 	public void show() {
