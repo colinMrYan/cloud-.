@@ -233,6 +233,7 @@ public class ReactNativeAppActivity extends Activity implements DefaultHardwareB
         @Override
         public void returnGetReactNativeInstallUrlSuccess(ReactNativeInstallUriBean reactNativeInstallUriBean) {
             super.returnGetReactNativeInstallUrlSuccess(reactNativeInstallUriBean);
+            LogUtils.YfcDebug("返回正确的安装地址："+reactNativeInstallUriBean.getInstallUri());
             if(loadingDialog != null && loadingDialog.isShowing()){
                 loadingDialog.dismiss();
             }
@@ -255,6 +256,8 @@ public class ReactNativeAppActivity extends Activity implements DefaultHardwareB
             if(loadingDialog != null && loadingDialog.isShowing()){
                 loadingDialog.dismiss();
             }
+            LogUtils.YfcDebug("获取download地址命令"+reactNativeDownloadUrlBean.getCommand());
+            LogUtils.YfcDebug("获取downlaod地址："+reactNativeDownloadUrlBean.getUri());
             changeReactNativeAppByOrder(reactNativeDownloadUrlBean);
         }
 
@@ -370,11 +373,11 @@ public class ReactNativeAppActivity extends Activity implements DefaultHardwareB
                 if(loadingDialog != null && loadingDialog.isShowing()){
                     loadingDialog.dismiss();
                 }
-                if(!ReactNativeFlow.isCompleteZip(reactNativeDownloadUrlBean.getHash(),reactZipFilePath)){
-                    ReactNativeFlow.deleteReactNativeDownloadZipFile(reactZipFilePath);
-                    ToastUtils.show(ReactNativeAppActivity.this,getString(R.string.react_native_app_update_failed));
-                    return;
-                }
+//                if(!ReactNativeFlow.isCompleteZip(reactNativeDownloadUrlBean.getHash(),reactZipFilePath)){
+//                    ReactNativeFlow.deleteReactNativeDownloadZipFile(reactZipFilePath);
+//                    ToastUtils.show(ReactNativeAppActivity.this,getString(R.string.react_native_app_update_failed));
+//                    return;
+//                }
                 String preVersion = getAppBundleBean().getVersion();
                 String reactAppTempPath = MyAppConfig.getReactTempFilePath(ReactNativeAppActivity.this,userId);
                 ReactNativeFlow.moveFolder(reactAppFilePath, reactAppTempPath+"/"+appModule);

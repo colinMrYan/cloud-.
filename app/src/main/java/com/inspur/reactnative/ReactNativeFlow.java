@@ -3,7 +3,6 @@ package com.inspur.reactnative;
 import android.content.Context;
 import android.content.Intent;
 
-import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.bean.ReactNativeUpdateBean;
 import com.inspur.emmcloud.config.MyAppConfig;
@@ -15,7 +14,6 @@ import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.PreferencesByUserUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.StringUtils;
-import com.inspur.emmcloud.util.ToastUtils;
 import com.inspur.emmcloud.util.UnZipAssets;
 import com.inspur.emmcloud.util.ZipUtils;
 
@@ -171,8 +169,11 @@ public class ReactNativeFlow {
     private static void updateNewVersion(Context context, ReactNativeUpdateBean reactNativeUpdateBean, String userId) {
         String reactCurrentPath = MyAppConfig.getReactAppFilePath(context, userId,"discover");
         String reactTempPath = MyAppConfig.getReactTempFilePath(context, userId);
-        String reactZipFilePath = MyAppConfig.LOCAL_DOWNLOAD_PATH + "/" + userId + "/" +
+        String reactZipFilePath = MyAppConfig.LOCAL_DOWNLOAD_PATH  + userId + "/" +
                 reactNativeUpdateBean.getBundle().getAndroidUri();
+        LogUtils.YfcDebug("reactZipFilepath："+reactZipFilePath);
+        LogUtils.YfcDebug("网络返回的hash："+reactNativeUpdateBean.getBundle().getAndroidHash());
+        LogUtils.YfcDebug("文件目录下的hash："+FileSafeCode.getFileSHA256(new File(reactZipFilePath)));
         if (ReactNativeFlow.isCompleteZip(reactNativeUpdateBean.getBundle().getAndroidHash(), reactZipFilePath)) {
             moveFolder(reactCurrentPath, reactTempPath);
             deleteOldVersionFile(reactCurrentPath);
@@ -182,9 +183,11 @@ public class ReactNativeFlow {
             FindFragment.hasUpdated = true;
             Intent intent = new Intent("com.inspur.react.success");
             context.sendBroadcast(intent);
+            LogUtils.YfcDebug("更新成功");
         } else {
-            FileUtils.deleteFile(reactZipFilePath);
-            ToastUtils.show(context,context.getString(R.string.react_native_app_update_failed));
+            LogUtils.YfcDebug("包不完整，更新失败");
+//            FileUtils.deleteFile(reactZipFilePath);
+//            ToastUtils.show(context,context.getString(R.string.react_native_app_update_failed));
         }
     }
 

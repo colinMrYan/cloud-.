@@ -389,8 +389,9 @@ public class IndexActivity extends BaseFragmentActivity implements
                 tabs = new MainTab[appTabList.size()];
                 for (int i = 0; i < appTabList.size(); i++) {
                     if (appTabList.get(i).getTitle().equals("communicate")) {
-                        MainTab.NEWS.setConfigureName("对话");
-                        MainTab.NEWS.setConfigureIcon("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1492678194983&di=f97e4eb2f600579cb1c07b9421cfeaa9&imgtype=0&src=http%3A%2F%2Fimg.zcool.cn%2Fcommunity%2F019c28554b6159000001bf729078c0.jpg");
+                        //实验MainTab修改标题和图标
+//                        MainTab.NEWS.setConfigureName("对话");
+//                        MainTab.NEWS.setConfigureIcon("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1492678194983&di=f97e4eb2f600579cb1c07b9421cfeaa9&imgtype=0&src=http%3A%2F%2Fimg.zcool.cn%2Fcommunity%2F019c28554b6159000001bf729078c0.jpg");
                         tabs[i] = MainTab.NEWS;
                     } else if (appTabList.get(i).getTitle().equals("work")) {
                         tabs[i] = MainTab.WORK;
@@ -596,9 +597,9 @@ public class IndexActivity extends BaseFragmentActivity implements
         } else {
             tipsView.setCanTouch(false);
         }
-        if(ReactNativeFlow.moreThanHalfHour(lastUpdateTime)){
+//        if(ReactNativeFlow.moreThanHalfHour(lastUpdateTime)){
             updateReactNative();
-        }
+//        }
     }
 
     private Fragment getCurrentFragment() {
@@ -838,6 +839,7 @@ public class IndexActivity extends BaseFragmentActivity implements
             }
             FindFragment.hasUpdated = true;
         } else if (state == ReactNativeFlow.REACT_NATIVE_FORWORD) {
+                LogUtils.YfcDebug("Forword");
             //下载zip包并检查是否完整，完整则解压，不完整则重新下载,完整则把current移动到temp下，把新包解压到current
             ReactNativeFlow.downLoadZipFile(IndexActivity.this, reactNativeUpdateBean, userId);
         } else if (state == ReactNativeFlow.REACT_NATIVE_UNKNOWN) {
@@ -847,6 +849,7 @@ public class IndexActivity extends BaseFragmentActivity implements
             FindFragment.hasUpdated = true;
         } else if (state == ReactNativeFlow.REACT_NATIVE_NO_UPDATE) {
             //没有更新什么也不做
+                LogUtils.YfcDebug("Standy");
         }
         if(FindFragment.hasUpdated){
             RNCacheViewManager.init(IndexActivity.this);
