@@ -1,21 +1,25 @@
 package com.inspur.emmcloud.ui.app.groupnews;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -67,6 +71,7 @@ public class NewsWebDetailActivity extends BaseActivity {
     private LinearLayout dialogLayout;
     private LinearLayout dayOrNightLayout;
     private Button shareBtn;
+    private Button instructionsBtn;
     private TextView readModeText;
     private TextView dayOrNightModeText;
     private ImageView sunImg,moonImg;
@@ -296,6 +301,7 @@ public class NewsWebDetailActivity extends BaseActivity {
         dialogLayout = (LinearLayout) view.findViewById(R.id.app_news_dialog);
         dayOrNightLayout = (LinearLayout) view.findViewById(R.id.app_news_mode_layout);
         shareBtn = (Button) view.findViewById(R.id.app_news_share_btn);
+        instructionsBtn = (Button)view.findViewById(R.id.app_news_instructions_btn);
         shareBtn.setText(getString(R.string.news_share_text));
         dayOrNightModeText = (TextView) view.findViewById(R.id.app_news_mode_night_text);
         dayOrNightModeText.setText(getString(R.string.news_read_mode));
@@ -373,6 +379,7 @@ public class NewsWebDetailActivity extends BaseActivity {
             drawable.setColor(lightModeBtnColor);
         }
         shareBtn.setBackground(drawable);
+        instructionsBtn.setBackground(drawable);
         dayOrNightLayout.setBackground(drawable);
     }
 
@@ -408,6 +415,11 @@ public class NewsWebDetailActivity extends BaseActivity {
             case R.id.app_news_share_btn:
                 shareNewsToFrinds();
                 break;
+            case R.id.app_news_instructions_btn:
+                //批示逻辑
+                dialog.dismiss();
+                showInstruceionDialog();
+                break;
             case R.id.app_news_font_normal_btn:
                 changeNewsFontSize(webSettings, MyAppWebConfig.SMALLER);
                 chooseNormalFont(model);
@@ -429,6 +441,56 @@ public class NewsWebDetailActivity extends BaseActivity {
         }
 
     }
+
+    /**
+     * 展示审批
+     */
+    private void showInstruceionDialog(){
+        final Dialog intrcutionDialog = new Dialog(NewsWebDetailActivity.this,
+                R.style.transparentFrameWindowStyle);
+        intrcutionDialog.setCanceledOnTouchOutside(true);
+        View  view = getLayoutInflater().inflate(R.layout.app_news_instruction_dialog, null);
+        intrcutionDialog.setContentView(view);
+        Button cancleBtn = (Button) view.findViewById(R.id.cancel_btn);
+        cancleBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                intrcutionDialog.dismiss();
+            }
+        });
+        Button okBtn = (Button) view.findViewById(R.id.ok_btn);
+        okBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                intrcutionDialog.dismiss();
+            }
+        });
+        EditText editText = (EditText) view.findViewById(R.id.news_instrcution_text);
+        Window window = intrcutionDialog.getWindow();
+        WindowManager.LayoutParams wl = window.getAttributes();
+//        wl.alpha = 0.31f;
+        wl.dimAmount = 0.31f;
+        intrcutionDialog.getWindow().setAttributes(wl);
+        intrcutionDialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+        intrcutionDialog.show();
+        openSoftKeyboard(editText);
+    }
+
+    /**
+     * 打开软键盘
+     * @param view
+     */
+    private void openSoftKeyboard(final EditText view) {
+        final InputMethodManager input = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        view.requestFocus();
+        new Handler().post(new Runnable() {
+            @Override
+            public void run() {
+                input.showSoftInput(view, 0);
+            }
+        });
+    }
+
 
     /**
      * 选择正常字体
@@ -535,6 +597,8 @@ public class NewsWebDetailActivity extends BaseActivity {
         changeFontSizeBtn();
         shareBtn.setBackground(drawableBtn);
         shareBtn.setTextColor(ContextCompat.getColor(NewsWebDetailActivity.this,R.color.white));
+        instructionsBtn.setBackground(drawableBtn);
+        instructionsBtn.setTextColor(ContextCompat.getColor(NewsWebDetailActivity.this,R.color.white));
         appReadModeLine.setBackgroundColor(ContextCompat.getColor(NewsWebDetailActivity.this,R.color.app_dialog_night_background_btn));
         readModeText.setTextColor(ContextCompat.getColor(NewsWebDetailActivity.this,R.color.app_dialog_night_font_size_color));
         dayOrNightModeText.setText(getString(R.string.news_night_mode_text));
@@ -567,6 +631,8 @@ public class NewsWebDetailActivity extends BaseActivity {
         changeFontSizeBtn();
         shareBtn.setBackground(drawableDayBtn);
         shareBtn.setTextColor(ContextCompat.getColor(NewsWebDetailActivity.this,R.color.black));
+        instructionsBtn.setBackground(drawableDayBtn);
+        instructionsBtn.setTextColor(ContextCompat.getColor(NewsWebDetailActivity.this,R.color.black));
         appReadModeLine.setBackgroundColor(ContextCompat.getColor(NewsWebDetailActivity.this,R.color.app_dialog_day_read_line_color));
         readModeText.setTextColor(ContextCompat.getColor(NewsWebDetailActivity.this,R.color.app_dialog_night_font_size_color));
         readModeText.setText(getString(R.string.news_read_mode));
@@ -609,15 +675,23 @@ public class NewsWebDetailActivity extends BaseActivity {
      * @param dayOrNight
      */
     public void setDayBtn(int dayOrNight){
-        Drawable shareIcon = null;
+        Drawable shareIcon = null,instructionIcon = null;
         Resources res = getResources();
+        if(dayOrNight == 1){
+            instructionIcon = res.getDrawable(R.drawable.icon_news_instruction_wihte);
+        }else {
+            instructionIcon = res.getDrawable(R.drawable.icon_news_instructions);
+        }
+
         if(dayOrNight == 1){
             shareIcon = res.getDrawable(R.drawable.app_news_share_night);
         }else {
             shareIcon = res.getDrawable(R.drawable.app_news_share_day);
         }
+        instructionIcon.setBounds(0, 0, instructionIcon.getMinimumWidth(), instructionIcon.getMinimumHeight());
         shareIcon.setBounds(0, 0, shareIcon.getMinimumWidth(), shareIcon.getMinimumHeight());
         shareBtn.setCompoundDrawables(shareIcon,null,null,null);
+        instructionsBtn.setCompoundDrawables(instructionIcon,null,null,null);
     }
 
     /**
