@@ -32,6 +32,8 @@ public enum MainTab {
 	private int idx;
 	private int resName;
 	private int resIcon;
+	private String  configureName = "";
+	private String  configureIcon = "";
 	private Class<?> clz;
 
 	private MainTab(int idx, int resName, int resIcon, Class<?> clz) {
@@ -72,6 +74,20 @@ public enum MainTab {
 	public void setClz(Class<?> clz) {
 		this.clz = clz;
 	}
-	
-	
+
+	public String getConfigureName() {
+		return configureName;
+	}
+
+	public void setConfigureName(String configureName) {
+		this.configureName = configureName;
+	}
+
+	public String getConfigureIcon() {
+		return configureIcon;
+	}
+
+	public void setConfigureIcon(String configureIcon) {
+		this.configureIcon = configureIcon;
+	}
 }
