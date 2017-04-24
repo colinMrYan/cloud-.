@@ -338,6 +338,7 @@ public class ReactNativeAppActivity extends Activity implements DefaultHardwareB
 //        final String userId = ((MyApplication)getApplication()).getUid();
         final String reactZipDownloadFromUri = APIUri.getZipUrl() + reactNativeDownloadUrlBean.getUri();
         final String reactZipFilePath = MyAppConfig.LOCAL_DOWNLOAD_PATH  + userId + "/" + reactNativeDownloadUrlBean.getUri() ;
+        LogUtils.YfcDebug("reactZipFilePath:"+reactZipFilePath);
         Callback.ProgressCallback<File> progressCallback = new Callback.ProgressCallback<File>() {
             @Override
             public void onWaiting() {
@@ -355,29 +356,9 @@ public class ReactNativeAppActivity extends Activity implements DefaultHardwareB
 
             @Override
             public void onSuccess(File file) {
-
-            }
-
-            @Override
-            public void onError(Throwable throwable, boolean b) {
-
-            }
-
-            @Override
-            public void onCancelled(CancelledException e) {
-
-            }
-
-            @Override
-            public void onFinished() {
                 if(loadingDialog != null && loadingDialog.isShowing()){
                     loadingDialog.dismiss();
                 }
-//                if(!ReactNativeFlow.isCompleteZip(reactNativeDownloadUrlBean.getHash(),reactZipFilePath)){
-//                    ReactNativeFlow.deleteReactNativeDownloadZipFile(reactZipFilePath);
-//                    ToastUtils.show(ReactNativeAppActivity.this,getString(R.string.react_native_app_update_failed));
-//                    return;
-//                }
                 String preVersion = getAppBundleBean().getVersion();
                 String reactAppTempPath = MyAppConfig.getReactTempFilePath(ReactNativeAppActivity.this,userId);
                 ReactNativeFlow.moveFolder(reactAppFilePath, reactAppTempPath+"/"+appModule);
@@ -389,6 +370,26 @@ public class ReactNativeAppActivity extends Activity implements DefaultHardwareB
                 setContentView(mReactRootView);
                 String currentVersion = getAppBundleBean().getVersion();
                 writeBackVersion(preVersion,currentVersion,"FORWARD");
+            }
+
+            @Override
+            public void onError(Throwable throwable, boolean b) {
+                if(loadingDialog != null && loadingDialog.isShowing()){
+                    loadingDialog.dismiss();
+                }
+                ToastUtils.show(ReactNativeAppActivity.this,getString(R.string.react_native_app_update_failed));
+            }
+
+            @Override
+            public void onCancelled(CancelledException e) {
+                if(loadingDialog != null && loadingDialog.isShowing()){
+                    loadingDialog.dismiss();
+                }
+            }
+
+            @Override
+            public void onFinished() {
+
             }
         };
         reactNativeAPIService.downloadReactNativeModuleZipPackage(reactZipDownloadFromUri,reactZipFilePath,progressCallback);
