@@ -1,26 +1,21 @@
 package com.inspur.emmcloud.adapter;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
-import com.inspur.emmcloud.MyApplication;
-import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.bean.GroupNews;
-import com.inspur.emmcloud.util.ImageDisplayUtils;
-import com.inspur.emmcloud.util.LogUtils;
-import com.inspur.emmcloud.util.UriUtils;
-
-import android.R.integer;
 import android.content.Context;
 import android.graphics.Color;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.bean.GroupNews;
+import com.inspur.emmcloud.util.ImageDisplayUtils;
+import com.inspur.emmcloud.util.StringUtils;
+import com.inspur.emmcloud.util.UriUtils;
+
+import java.util.List;
 
 /**
  * 新闻列表
@@ -77,8 +72,8 @@ public class NewsListAdapter extends BaseAdapter{
 		}else {
 			holder = (NewsHolder) convertView.getTag();
 		}
-		
-		imageDisplayUtils.display(holder.imageView, UriUtils.getPreviewUri(groupNewsList.get(position).getPoster()));
+		String uri = handlePoster(position);
+		imageDisplayUtils.displayNewsPic(holder.imageView, uri);
 		if(groupNewsList.get(position).isImportant()){
 			holder.title.setTextColor(Color.RED);
 			holder.title.setText((String)groupNewsList.get(position).getTitle());
@@ -96,7 +91,19 @@ public class NewsListAdapter extends BaseAdapter{
 		
 		return convertView;
 	}
-	
+
+	/**
+	 * 处理poster
+	 * @param position
+	 * @return
+     */
+	private String handlePoster(int position) {
+		if(!StringUtils.isBlank(groupNewsList.get(position).getPoster())){
+			return UriUtils.getPreviewUri(groupNewsList.get(position).getPoster());
+		}
+		return "";
+	}
+
 	public static class NewsHolder {
 		ImageView imageView;
 		TextView title;

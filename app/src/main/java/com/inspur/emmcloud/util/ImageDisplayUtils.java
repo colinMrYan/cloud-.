@@ -64,6 +64,15 @@ public class ImageDisplayUtils  implements ImagePickerLoader {
 		}
 		imageLoader.displayImage(uri, imageView, options);
 	}
+
+	/**
+	 * 新闻展示列表图片方法
+	 * @param imageView
+	 * @param uri
+     */
+	public void displayNewsPic(final ImageView imageView, String uri) {
+		imageLoader.displayImage(uri, imageView, options);
+	}
 	
 	public void displayPic(final ImageView imageView,String uri){
 		if (!uri.startsWith("http") && !uri.startsWith("file:")&& !uri.startsWith("content:")&& !uri.startsWith("assets:")&& !uri.startsWith("drawable:")) {
