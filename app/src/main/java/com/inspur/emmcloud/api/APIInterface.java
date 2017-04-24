@@ -379,4 +379,7 @@ public interface APIInterface {
 	public void returnGetReactNativeInstallUrlSuccess(ReactNativeInstallUriBean reactNativeInstallUriBean);
 	public void returnGetReactNativeInstallUrlFail(String error);
 
+	public void returnVeriryApprovalPasswordSuccess(String password);
+	public void returnVeriryApprovalPasswordFail(String error);
+
 }

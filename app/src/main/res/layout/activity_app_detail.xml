@@ -48,7 +48,7 @@
         android:layout_height="fill_parent"
         android:layout_below="@id/header_layout"
         android:background="@color/white"
-        android:scrollbars="@null" >
+        android:scrollbars="none" >
 
         <LinearLayout
             android:layout_width="fill_parent"
@@ -108,6 +108,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="19dp"
                     android:layout_marginRight="19dp"
+                    android:onClick="onClick"
                     android:background="@drawable/selector_app_status_btn"
                     android:focusable="false"
                     android:textColor="@drawable/seclector_app_status_text"
