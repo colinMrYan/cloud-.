@@ -136,7 +136,7 @@ public class ReactNativeFlow {
 
             @Override
             public void onSuccess(File file) {
-
+                updateNewVersion(context, reactNativeUpdateBean, userId);
             }
 
             @Override
@@ -151,7 +151,7 @@ public class ReactNativeFlow {
 
             @Override
             public void onFinished() {
-                updateNewVersion(context, reactNativeUpdateBean, userId);
+
             }
         };
         downLoaderUtils.startDownLoad(APIUri.getZipUrl() + reactNativeUpdateBean.getBundle().getAndroidUri(),
