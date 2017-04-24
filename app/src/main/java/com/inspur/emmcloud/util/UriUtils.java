@@ -35,6 +35,9 @@ public class UriUtils {
                 }
 
                 break;
+            case 2:
+                new AppCenterNativeAppUtils().InstallOrOpen(activity,app);
+                break;
             case 3:
             case 4:
                 intent.setClass(activity, ImpActivity.class);

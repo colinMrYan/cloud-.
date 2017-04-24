@@ -8,6 +8,7 @@ yarn.lock
 # Built application files
 *.apk
 *.ap_
+*.keystore
 
 # Files for the ART/Dalvik VM
 *.dex
