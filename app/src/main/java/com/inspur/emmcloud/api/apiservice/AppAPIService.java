@@ -322,7 +322,7 @@ public class AppAPIService {
 	 * @param password
 	 */
 	public void veriryApprovalPassword(String userName, final String password){
-		String  completeUrl = "http://shenpi.inspur.com/langchao.ecgap.inportal/login/CheckLoginDB.aspx?";
+		String  completeUrl = "https://emm.inspur.com/proxy/shenpi/langchao.ecgap.inportal/login/CheckLoginDB.aspx?";
 		RequestParams params = new RequestParams(completeUrl);
 		params.addQueryStringParameter("userName",userName);
 		params.addQueryStringParameter("userPass",password);
