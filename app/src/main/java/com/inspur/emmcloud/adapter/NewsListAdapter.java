@@ -101,7 +101,7 @@ public class NewsListAdapter extends BaseAdapter{
 		if(!StringUtils.isBlank(groupNewsList.get(position).getPoster())){
 			return UriUtils.getPreviewUri(groupNewsList.get(position).getPoster());
 		}
-		return "";
+		return null;
 	}
 
 	public static class NewsHolder {
