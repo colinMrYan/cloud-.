@@ -303,6 +303,7 @@ public class NewsWebDetailActivity extends BaseActivity {
         shareBtn = (Button) view.findViewById(R.id.app_news_share_btn);
         instructionsBtn = (Button)view.findViewById(R.id.app_news_instructions_btn);
         shareBtn.setText(getString(R.string.news_share_text));
+//        shareBtn.setPadding(DensityUtil.dip2px(NewsWebDetailActivity.this,139),0,0,0);
         dayOrNightModeText = (TextView) view.findViewById(R.id.app_news_mode_night_text);
         dayOrNightModeText.setText(getString(R.string.news_read_mode));
         sunImg = (ImageView) view.findViewById(R.id.app_news_mode_sun_img);
