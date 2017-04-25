@@ -389,6 +389,8 @@
     <string name="card_package_listtext">卡包</string>
     <string name="my_setting_tips_quit">確定清除應用內所有緩存數據？清除后將退出應用</string>
     <string name="get_language_error">未獲取到可用的語言包，請聯繫管理員</string>
+    <string name="app_customer">雲+客服</string>
+
 
     <!-- 修改密碼部分 -->
     <string name="modify_input_user_new_password">請輸入新密碼</string>

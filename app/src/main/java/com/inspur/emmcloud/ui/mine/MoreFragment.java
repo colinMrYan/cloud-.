@@ -20,15 +20,15 @@ import android.widget.TextView;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.bean.GetMyInfoResult;
-import com.inspur.emmcloud.ui.mine.cardpackage.CardPackageListActivity;
+import com.inspur.emmcloud.ui.chat.ChannelActivity;
 import com.inspur.emmcloud.ui.mine.feedback.FeedBackActivity;
 import com.inspur.emmcloud.ui.mine.myinfo.MyInfoActivity;
 import com.inspur.emmcloud.ui.mine.setting.SettingActivity;
 import com.inspur.emmcloud.util.ImageDisplayUtils;
+import com.inspur.emmcloud.util.IntentUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.ToastUtils;
 import com.inspur.emmcloud.util.UriUtils;
-import com.inspur.emmcloud.widget.LoadingDialog;
 
 import java.io.Serializable;
 
@@ -38,13 +38,11 @@ import java.io.Serializable;
 public class MoreFragment extends Fragment {
 
     private static final int UPDATE_MY_HEAD = 3;
-    private static final String ACTION_NAME = "userInfo";
 
     public static Handler handler;
 
     private View rootView;
     private LayoutInflater inflater;
-    private LoadingDialog loadingDlg;
     private RelativeLayout setContentItem;
     private RelativeLayout userHeadLayout;
     private ImageView moreHeadImg;
@@ -63,7 +61,6 @@ public class MoreFragment extends Fragment {
                 getActivity().LAYOUT_INFLATER_SERVICE);
 
         rootView = inflater.inflate(R.layout.fragment_mine, null);
-        loadingDlg = new LoadingDialog(getActivity());
 
         handMessage();
 
@@ -72,11 +69,11 @@ public class MoreFragment extends Fragment {
         userHeadLayout = (RelativeLayout) rootView.findViewById(R.id.more_userhead_layout);
         setContentItem.setOnClickListener(onClickListener);
         userHeadLayout.setOnClickListener(onClickListener);
-        ((RelativeLayout) rootView.findViewById(R.id.more_help_layout)).setOnClickListener(onClickListener);
-        ((RelativeLayout) rootView.findViewById(R.id.more_message_layout)).setOnClickListener(onClickListener);
-        ((RelativeLayout) rootView.findViewById(R.id.more_invite_friends_layout)).setOnClickListener(onClickListener);
-        ((RelativeLayout) rootView.findViewById(R.id.more_cardpackage_layout)).setOnClickListener(onClickListener);
-        ((RelativeLayout) rootView.findViewById(R.id.more_department_layout)).setOnClickListener(onClickListener);
+        (rootView.findViewById(R.id.more_help_layout)).setOnClickListener(onClickListener);
+        (rootView.findViewById(R.id.more_message_layout)).setOnClickListener(onClickListener);
+        (rootView.findViewById(R.id.more_invite_friends_layout)).setOnClickListener(onClickListener);
+        (rootView.findViewById(R.id.more_department_layout)).setOnClickListener(onClickListener);
+        (rootView.findViewById(R.id.customer_layout)).setOnClickListener(onClickListener);
         moreHeadImg = (ImageView) rootView.findViewById(R.id.more_head_img);
         userNameText = (TextView) rootView.findViewById(R.id.more_head_textup);
         userOrgText = (TextView) rootView.findViewById(R.id.more_head_textdown);
@@ -165,22 +162,23 @@ public class MoreFragment extends Fragment {
                     startActivity(intent);
                     break;
                 case R.id.more_help_layout:
-				String feedbackUrl ="http://uservoices.inspur.com/feedback/";
-				intent.setClass(getActivity(), FeedBackActivity.class);
-				startActivity(intent);
-
-
+				    intent.setClass(getActivity(), FeedBackActivity.class);
+				    startActivity(intent);
                     break;
                 case R.id.more_message_layout:
                 case R.id.more_invite_friends_layout:
                     ToastUtils.show(getActivity(), R.string.function_not_implemented);
                     break;
-                case R.id.more_cardpackage_layout:
-                    intent.setClass(getActivity(), CardPackageListActivity.class);
-                    startActivity(intent);
-                    break;
                 case R.id.more_department_layout:
                     showDialog();
+                    break;
+                case R.id.customer_layout:
+                    Bundle bundle = new Bundle();
+                    bundle.putString("title", "BOT6005-66666");
+                    bundle.putString("channelId", "10714");
+                    bundle.putString("channelType", "SERVICE");
+                        IntentUtils.startActivity(getActivity(),
+                                ChannelActivity.class, bundle);
                     break;
                 default:
                     break;
