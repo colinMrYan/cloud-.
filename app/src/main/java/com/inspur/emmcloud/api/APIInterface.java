@@ -44,6 +44,7 @@ import com.inspur.emmcloud.bean.GetMyCalendarResult;
 import com.inspur.emmcloud.bean.GetMyInfoResult;
 import com.inspur.emmcloud.bean.GetNewMsgsResult;
 import com.inspur.emmcloud.bean.GetNewsImgResult;
+import com.inspur.emmcloud.bean.GetNewsInstructionResult;
 import com.inspur.emmcloud.bean.GetNewsResult;
 import com.inspur.emmcloud.bean.GetNewsTitleResult;
 import com.inspur.emmcloud.bean.GetOfficeResult;
@@ -381,5 +382,8 @@ public interface APIInterface {
 
 	public void returnVeriryApprovalPasswordSuccess(String password);
 	public void returnVeriryApprovalPasswordFail(String error);
+
+	public void returnNewsInstructionSuccess(GetNewsInstructionResult getNewsInstructionResult);
+	public void returnNewsInstructionFail(String error);
 
 }

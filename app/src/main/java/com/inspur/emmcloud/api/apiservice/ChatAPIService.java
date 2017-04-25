@@ -14,6 +14,7 @@ import android.graphics.BitmapFactory;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.api.APICallback;
 import com.inspur.emmcloud.api.APIInterface;
+import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.bean.ChannelGroup;
 import com.inspur.emmcloud.bean.GetAddMembersSuccessResult;
 import com.inspur.emmcloud.bean.GetBoolenResult;
@@ -27,6 +28,7 @@ import com.inspur.emmcloud.bean.GetMsgCommentResult;
 import com.inspur.emmcloud.bean.GetMsgResult;
 import com.inspur.emmcloud.bean.GetNewMsgsResult;
 import com.inspur.emmcloud.bean.GetNewsImgResult;
+import com.inspur.emmcloud.bean.GetNewsInstructionResult;
 import com.inspur.emmcloud.bean.GetSearchChannelGroupResult;
 import com.inspur.emmcloud.bean.GetSendMsgResult;
 import com.inspur.emmcloud.util.AppUtils;
@@ -848,6 +850,37 @@ public class ChatAPIService {
 			public void callbackFail(String error, int responseCode) {
 				// TODO Auto-generated method stub
 				apiInterface.returnMsgCommentCountFail(error);
+			}
+		});
+	}
+
+	/**
+	 *
+	 * @param instruction
+     */
+	public void sendNewsInstruction( final String instruction){
+		final String completeUrl = APIUri.getNewsInstruction();
+		RequestParams params = ((MyApplication) context.getApplicationContext())
+				.getHttpRequestParams(completeUrl);
+		x.http().post(params, new APICallback() {
+			@Override
+			public void callbackSuccess(String arg0) {
+				apiInterface.returnNewsInstructionSuccess(new GetNewsInstructionResult(""));
+			}
+
+			@Override
+			public void callbackFail(String error, int responseCode) {
+				apiInterface.returnNewsInstructionFail(error);
+			}
+
+			@Override
+			public void callbackTokenExpire() {
+				new OauthUtils(new OauthCallBack() {
+					@Override
+					public void execute() {
+						sendNewsInstruction(instruction);
+					}
+				}, context).refreshTocken(completeUrl);
 			}
 		});
 	}

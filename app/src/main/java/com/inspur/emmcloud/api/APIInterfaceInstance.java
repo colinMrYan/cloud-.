@@ -44,6 +44,7 @@ import com.inspur.emmcloud.bean.GetMyCalendarResult;
 import com.inspur.emmcloud.bean.GetMyInfoResult;
 import com.inspur.emmcloud.bean.GetNewMsgsResult;
 import com.inspur.emmcloud.bean.GetNewsImgResult;
+import com.inspur.emmcloud.bean.GetNewsInstructionResult;
 import com.inspur.emmcloud.bean.GetNewsResult;
 import com.inspur.emmcloud.bean.GetNewsTitleResult;
 import com.inspur.emmcloud.bean.GetOfficeResult;
@@ -1331,6 +1332,16 @@ public class APIInterfaceInstance implements APIInterface{
 
 	@Override
 	public void returnVeriryApprovalPasswordFail(String error) {
+
+	}
+
+	@Override
+	public void returnNewsInstructionSuccess(GetNewsInstructionResult getNewsInstructionResult) {
+
+	}
+
+	@Override
+	public void returnNewsInstructionFail(String error) {
 
 	}
 }

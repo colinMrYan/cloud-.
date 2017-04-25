@@ -87,6 +87,8 @@ public class APIUri {
 	public static String getGroupNewsArticle() {
 		return "/" + tanent+"/res" + "/article" + "/";
 	}
+
+	public static String getNewsInstruction(){return  "";}
 	
 	/*************************************************会议接口*******************************************/
 	/**
