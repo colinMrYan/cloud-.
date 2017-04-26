@@ -9,10 +9,10 @@
     <string name="cancel">取消</string>
     <string name="resolution_warning">您的设备分辨率小于800*480，无法运行此程序</string>
     <string name="retry">重试</string>
-    <string name="software_service_term">浪潮服务协议</string>
+    <string name="software_service_term">服务协议</string>
     <string name="update_fail">更新失败</string>
     <string name="downloading_package">下载中，请稍后....</string>
-    <string name="service_term">浪潮服务协议</string>
+    <string name="service_term">服务协议</string>
     <string name="prompt">提示</string>
     <string name="nothing">无 </string>
     <string name="function_intr">功能介绍 </string>
@@ -341,7 +341,7 @@
     <!-- 我的页面部分 -->
     <string name="data_clear_success">清除成功</string>
     <string name="not_set">未设置</string>
-    <string name="mine">我的</string>
+    <string name="mine">我</string>
     <string name="take_camera">相机拍摄</string>
     <string name="gallery">手机相册</string>
     <string name="quit_check">退出登录</string>
@@ -360,7 +360,7 @@
     <string name="about_text">关于</string>
     <string name="about_welcome_text">欢迎页面</string>
     <string name="about_newfun_text">新功能介绍</string>
-    <string name="about_protocol_text">浪潮服务协议</string>
+    <string name="about_protocol_text">服务协议</string>
     <string name="cloud_version">Cloud 版本</string>
     <string name="feed_back_no_empty">请输入反馈意见</string>
     <string name="feed_back_out_of_length">您输入的字数已经超过了限制</string>
@@ -375,7 +375,7 @@
     <string name="settings">设置</string>
     <string name="settings_protect">已保护</string>
     <string name="settings_clear_cache">清除缓存</string>
-    <string name="settings_aboutIMP">关于 浪潮云+</string>
+    <string name="settings_aboutIMP">关于 云+</string>
     <string name="settings_clean_imgae_attachment">清理图片及附件缓存</string>
     <string name="settings_clean_web">清理Web应用缓存</string>
     <string name="settings_clean_all">清理应用所有缓存数据</string>

@@ -337,7 +337,7 @@
     <!-- 我的页面部分 -->
     <string name="data_clear_success">Clear success</string>
     <string name="not_set">Not Set</string>
-    <string name="mine">Mine</string>
+    <string name="mine">Me</string>
     <string name="take_camera">Take a Photo</string>
     <string name="gallery">Choose from Gallery</string>
     <string name="quit_check">Log Out</string>

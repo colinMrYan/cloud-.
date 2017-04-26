@@ -24,17 +24,11 @@ import android.widget.TextView;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.util.AppUtils;
 import com.inspur.emmcloud.util.LogUtils;
-import com.inspur.emmcloud.util.ToastUtils;
 import com.inspur.emmcloud.util.UriUtils;
-import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.imp.engine.webview.ImpWebChromeClient;
 import com.inspur.imp.engine.webview.ImpWebView;
 import com.inspur.imp.plugin.camera.PublicWay;
 import com.inspur.imp.plugin.file.FileService;
-
-import org.xutils.common.Callback;
-import org.xutils.http.RequestParams;
-import org.xutils.x;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -58,13 +52,11 @@ public class ImpActivity extends ImpBaseActivity {
 	private Button buttonClose;
 	private TextView headerText;
 	private LinearLayout loadFailLayout;
-	private LoadingDialog loadingDialog;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		loadingDialog = new LoadingDialog(this);
 		((MyApplication) getApplicationContext()).addActivity(this);
 		setContentView(Res.getLayoutID("activity_imp"));
 		progressLayout = (RelativeLayout) findViewById(Res
@@ -102,12 +94,12 @@ public class ImpActivity extends ImpBaseActivity {
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
 				switch (event.getAction()) {
-				case MotionEvent.ACTION_DOWN:
-				case MotionEvent.ACTION_UP:
-					if (!v.hasFocus()) {
-						v.requestFocus();
-					}
-					break;
+					case MotionEvent.ACTION_DOWN:
+					case MotionEvent.ACTION_UP:
+						if (!v.hasFocus()) {
+							v.requestFocus();
+						}
+						break;
 				}
 				return false;
 			}
@@ -121,37 +113,9 @@ public class ImpActivity extends ImpBaseActivity {
 			}
 		});
 
-//		webView.loadUrl(url, extraHeaders);
-		progressLayout.setVisibility(View.GONE);
-		getReallyUrl(url);
+		webView.loadUrl(url, extraHeaders);
+		progressLayout.setVisibility(View.VISIBLE);
 	}
-
-	private void getReallyUrl(String url){
-		loadingDialog.show();
-		RequestParams params = ((MyApplication)getApplicationContext()).getHttpRequestParams(url);
-		x.http().get(params, new Callback.CommonCallback<String>() {
-			@Override
-			public void onSuccess(String s) {
-				webView.loadUrl(s, extraHeaders);
-			}
-
-			@Override
-			public void onError(Throwable throwable, boolean b) {
-				ToastUtils.show(getApplicationContext(),"获取应用真实地址失败");
-			}
-
-			@Override
-			public void onCancelled(CancelledException e) {
-
-			}
-
-			@Override
-			public void onFinished() {
-				loadingDialog.dismiss();
-			}
-		});
-	}
-
 
 	/**
 	 * 初始化原生WebView的返回和关闭
@@ -260,9 +224,9 @@ public class ImpActivity extends ImpBaseActivity {
 		}
 		return super.onKeyDown(keyCode, event);
 	}
-	
-	
-	
+
+
+
 	@Override
 	protected void onDestroy() {
 		// TODO Auto-generated method stub
