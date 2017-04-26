@@ -1,10 +1,5 @@
 package com.inspur.emmcloud.ui.contact;
 
-import java.io.File;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -46,6 +41,7 @@ import com.inspur.emmcloud.util.ContactCacheUtils;
 import com.inspur.emmcloud.util.DensityUtil;
 import com.inspur.emmcloud.util.EditTextUtils;
 import com.inspur.emmcloud.util.ImageDisplayUtils;
+import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.ToastUtils;
 import com.inspur.emmcloud.util.UriUtils;
@@ -56,6 +52,11 @@ import com.inspur.emmcloud.widget.MaxHightScrollView;
 import com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout;
 import com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout.OnRefreshListener;
 import com.inspur.emmcloud.widget.pullableview.PullableListView;
+
+import java.io.File;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ContactSearchMoreActivity extends BaseActivity implements OnRefreshListener{
 	private static final int SEARCH_ALL = 0;
@@ -331,6 +332,7 @@ public class ContactSearchMoreActivity extends BaseActivity implements OnRefresh
 		public void onTextChanged(CharSequence s, int start, int before,
 				int count) {
 			// TODO Auto-generated method stub
+			LogUtils.jasonDebug("onTextChanged==="+s);
 			searchText = searchEdit.getText().toString().trim();
 			searchListView.setCanPullUp(false);
 			pullToRefreshLayout.setVisibility(View.VISIBLE);
@@ -356,14 +358,16 @@ public class ContactSearchMoreActivity extends BaseActivity implements OnRefresh
 				case SEARCH_CONTACT:
 					String currentContactId = groupTextList.get(
 							groupTextList.size() - 1).getId();
-					if (StringUtils.isBlank(currentContactId)) {
-						Contact rootContact = ContactCacheUtils
-								.getRootContact(ContactSearchMoreActivity.this);
-						currentContactId = rootContact.getId();
-					}
+//					if (StringUtils.isBlank(currentContactId)) {
+//						Contact rootContact = ContactCacheUtils
+//								.getRootContact(ContactSearchMoreActivity.this);
+//						currentContactId = rootContact.getId();
+//					}
+					LogUtils.jasonDebug("secondcurrentContactId="+currentContactId);
 					searchContactList = ContactCacheUtils.getSearchContact(
 							getApplicationContext(), searchText,
 							currentContactId, 0, 25);
+					LogUtils.jasonDebug("size="+searchContactList.size() );
 					if (searchContactList.size() == 0) {
 						pullToRefreshLayout.setVisibility(View.GONE);
 					}
