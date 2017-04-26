@@ -349,8 +349,8 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 		// TODO Auto-generated method stub
 		List<Channel> channelList = getCacheData();// 获取缓存中的数据
 		if (channelList.size() > 0 && ((MyApplication)getActivity().getApplicationContext()).getIsContactReady()) {
-			new ChannelGroupIconUtils(getActivity(), channelList,
-					handler).creat();
+			ChannelGroupIconUtils.getInstance().creat(getActivity(), channelList,
+					handler);
 		}
 	}
 

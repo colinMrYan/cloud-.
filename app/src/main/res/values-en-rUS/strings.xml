@@ -337,7 +337,7 @@
     <!-- 我的页面部分 -->
     <string name="data_clear_success">Clear success</string>
     <string name="not_set">Not Set</string>
-    <string name="mine">Mine</string>
+    <string name="mine">Me</string>
     <string name="take_camera">Take a Photo</string>
     <string name="gallery">Choose from Gallery</string>
     <string name="quit_check">Log Out</string>
@@ -388,6 +388,7 @@
     <string name="card_package_listtext">Card Pack</string>
     <string name="my_setting_tips_quit">Sure to clear all cache? App will close after clear</string>
     <string name="get_language_error">Not available to the language package, please contact the administrator</string>
+    <string name="app_customer">Cloud+ Customer</string>
 
     <!-- 修改密码部分 -->
     <string name="modify_input_user_new_password">Enter a new password</string>
