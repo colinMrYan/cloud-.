@@ -201,8 +201,6 @@ public class UriUtils {
      * 频道页面头像显示图片
      **/
     public static String getChannelImgUri(String inspurID) {
-        LogUtils.jasonDebug("inspurID="+inspurID);
-        LogUtils.jasonDebug("isNull="+(StringUtils.isBlank(inspurID) || inspurID.equals("null")));
         if (StringUtils.isBlank(inspurID) || inspurID.equals("null"))
             return null;
         return "https://emm.inspur.com/img/userhead/" + inspurID;

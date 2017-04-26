@@ -1,6 +1,5 @@
 package com.inspur.emmcloud.ui.mine;
 
-import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -10,9 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.ViewGroup.LayoutParams;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -23,6 +19,7 @@ import com.inspur.emmcloud.bean.GetMyInfoResult;
 import com.inspur.emmcloud.ui.chat.ChannelActivity;
 import com.inspur.emmcloud.ui.mine.feedback.FeedBackActivity;
 import com.inspur.emmcloud.ui.mine.myinfo.MyInfoActivity;
+import com.inspur.emmcloud.ui.mine.setting.AboutActivity;
 import com.inspur.emmcloud.ui.mine.setting.SettingActivity;
 import com.inspur.emmcloud.util.ImageDisplayUtils;
 import com.inspur.emmcloud.util.IntentUtils;
@@ -72,7 +69,7 @@ public class MoreFragment extends Fragment {
         (rootView.findViewById(R.id.more_help_layout)).setOnClickListener(onClickListener);
         (rootView.findViewById(R.id.more_message_layout)).setOnClickListener(onClickListener);
         (rootView.findViewById(R.id.more_invite_friends_layout)).setOnClickListener(onClickListener);
-        (rootView.findViewById(R.id.more_department_layout)).setOnClickListener(onClickListener);
+        (rootView.findViewById(R.id.about_layout)).setOnClickListener(onClickListener);
         (rootView.findViewById(R.id.customer_layout)).setOnClickListener(onClickListener);
         moreHeadImg = (ImageView) rootView.findViewById(R.id.more_head_img);
         userNameText = (TextView) rootView.findViewById(R.id.more_head_textup);
@@ -123,27 +120,27 @@ public class MoreFragment extends Fragment {
         };
     }
 
-    private void showDialog() {
-        View view = getActivity().getLayoutInflater().inflate(R.layout.mine_team_choose_dialog, null);
-        Dialog dialog = new Dialog(getActivity(), R.style.transparentFrameWindowStyle);
-        dialog.setContentView(view, new LayoutParams(LayoutParams.FILL_PARENT,
-                LayoutParams.WRAP_CONTENT));
-        Window window = dialog.getWindow();
-        // 设置显示动画
-        window.setWindowAnimations(R.style.main_menu_animstyle);
-        WindowManager.LayoutParams wl = window.getAttributes();
-        wl.x = 0;
-        wl.y = getActivity().getWindowManager().getDefaultDisplay().getHeight();
-        // 以下这两句是为了保证按钮可以水平满屏
-        wl.width = LayoutParams.MATCH_PARENT;
-        wl.height = LayoutParams.WRAP_CONTENT;
-
-        // 设置显示位置
-        dialog.onWindowAttributesChanged(wl);
-        // 设置点击外围解散
-        dialog.setCanceledOnTouchOutside(true);
-        dialog.show();
-    }
+//    private void showDialog() {
+//        View view = getActivity().getLayoutInflater().inflate(R.layout.mine_team_choose_dialog, null);
+//        Dialog dialog = new Dialog(getActivity(), R.style.transparentFrameWindowStyle);
+//        dialog.setContentView(view, new LayoutParams(LayoutParams.FILL_PARENT,
+//                LayoutParams.WRAP_CONTENT));
+//        Window window = dialog.getWindow();
+//        // 设置显示动画
+//        window.setWindowAnimations(R.style.main_menu_animstyle);
+//        WindowManager.LayoutParams wl = window.getAttributes();
+//        wl.x = 0;
+//        wl.y = getActivity().getWindowManager().getDefaultDisplay().getHeight();
+//        // 以下这两句是为了保证按钮可以水平满屏
+//        wl.width = LayoutParams.MATCH_PARENT;
+//        wl.height = LayoutParams.WRAP_CONTENT;
+//
+//        // 设置显示位置
+//        dialog.onWindowAttributesChanged(wl);
+//        // 设置点击外围解散
+//        dialog.setCanceledOnTouchOutside(true);
+//        dialog.show();
+//    }
 
     private OnClickListener onClickListener = new OnClickListener() {
 
@@ -169,8 +166,9 @@ public class MoreFragment extends Fragment {
                 case R.id.more_invite_friends_layout:
                     ToastUtils.show(getActivity(), R.string.function_not_implemented);
                     break;
-                case R.id.more_department_layout:
-                    showDialog();
+                case R.id.about_layout:
+                    IntentUtils.startActivity(getActivity(),
+                            AboutActivity.class);
                     break;
                 case R.id.customer_layout:
                     Bundle bundle = new Bundle();
