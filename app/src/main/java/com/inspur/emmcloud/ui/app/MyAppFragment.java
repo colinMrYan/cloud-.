@@ -608,7 +608,8 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
         View contentView = LayoutInflater.from(getActivity())
                 .inflate(R.layout.app_center_popup_window_view, null);
         final  SwitchView switchView = (SwitchView) contentView.findViewById(R.id.app_hide_switch);
-        switchView.toggleSwitch(getNeedCommonlyUseApp());
+        //为了在打开PopWindow时立刻显示当前状态
+        switchView.setOpened(getNeedCommonlyUseApp());
         // 设置按钮的点击事件
         popupWindow = new PopupWindow(contentView,
                 LinearLayout.LayoutParams.WRAP_CONTENT,
