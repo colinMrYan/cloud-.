@@ -981,30 +981,16 @@ public class TimeUtils {
 	/**
 	 * 获取新闻的请求url中的时间
 	 *
-	 * @param posttime
+	 * @param postTime
 	 * @return
 	 */
 	public static String getNewsTime(String postTime) {
-
-		Date date = null;
-
 		String timeYear = postTime.substring(0, 4);
 		String timeMon = postTime.substring(5, 7);
 		String timeDay = postTime.substring(8, 10);
-
 		int year = Integer.parseInt(timeYear);
 		int mon = Integer.parseInt(timeMon);
 		int day = Integer.parseInt(timeDay);
-
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		try {
-			date = sdf.parse(postTime);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		// String timepath =
-		// "/"+"res/news"+"/"+date.getYear()+"/"+date.getMonth()+"/"+date.getDay()+"/";
 		String timepath = UriUtils.getGroupNewsArticle() + year + "/" + mon
 				+ "/" + day + "/";
 		return timepath;

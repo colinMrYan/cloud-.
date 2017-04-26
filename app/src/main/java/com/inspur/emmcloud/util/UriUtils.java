@@ -227,6 +227,7 @@ public class UriUtils {
      * 工作页面会议
      **/
     public static String getMeetings() {
+
         // return
         // "https://ecm.inspur.com/"+tanent+"/meeting/room/bookings/ugly";
         return "https://ecm.inspur.com/" + tanent + "/meeting/room/bookings";
