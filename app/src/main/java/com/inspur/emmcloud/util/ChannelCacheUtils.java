@@ -1,17 +1,16 @@
 package com.inspur.emmcloud.util;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.json.JSONArray;
-
 import android.content.Context;
 
 import com.inspur.emmcloud.bean.Channel;
 import com.lidroid.xutils.DbUtils;
 import com.lidroid.xutils.db.sqlite.Selector;
 import com.lidroid.xutils.db.sqlite.WhereBuilder;
-import com.lidroid.xutils.exception.DbException;
+
+import org.json.JSONArray;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 频道列表缓存处理类
@@ -150,7 +149,6 @@ public class ChannelCacheUtils {
 	 * @param context
 	 * @param cid
 	 * @param isChanelSetTop
-	 * @param setTopTime
 	 *            被置顶的时间
 	 */
 	public static void setChannelTop(Context context, String cid,
@@ -434,6 +432,24 @@ public class ChannelCacheUtils {
 		}
 		return isChannelNotDisturb;
 	}
-	
 
+	/**
+	 * 获取云+客服channel
+	 * @param context
+	 * @return
+	 */
+	public static Channel getCustomerChannel(Context context){
+		String uid = PreferencesUtils.getString(context, "userID", "");
+		Channel channel = null;
+		try {
+			channel = DbCacheUtils.getDb(context).findFirst(Selector
+					.from(Channel.class)
+					.where("title", "=", "BOT6005" + "-"+uid)
+					.and("type", "=", "SERVICE"));
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		return  channel;
+	}
 }
