@@ -27,7 +27,7 @@ public class NotSupportFragment extends Fragment {
         inflater = (LayoutInflater) getActivity().getSystemService(
                 getActivity().LAYOUT_INFLATER_SERVICE);
 
-        rootView = inflater.inflate(R.layout.fragment_mine, null);
+        rootView = inflater.inflate(R.layout.fragment_unknown, null);
 //        loadingDlg = new LoadingDialog(getActivity());
 
     }
@@ -37,7 +37,7 @@ public class NotSupportFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         if (rootView == null) {
-            rootView = inflater.inflate(R.layout.fragment_mine, container,
+            rootView = inflater.inflate(R.layout.fragment_unknown, container,
                     false);
         }
 

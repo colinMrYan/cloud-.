@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+   
+
+    <RelativeLayout
+        android:id="@+id/header_layout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/header_height"
+        android:background="@color/header_bg" >
+
+        <TextView
+            android:id="@+id/header_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:text="@string/unknown"
+            android:textColor="@color/header_text"
+            android:textSize="@dimen/header_textsize" />
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/app_unknow_function"
+        android:layout_width="140dp"
+        android:layout_height="139dp"
+        android:layout_marginTop="108dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/header_layout"
+        android:src="@drawable/icon_unknown_app"/>
+    <TextView
+        android:id="@+id/app_unknow_text"
+        android:layout_width="188dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/app_unknow_function"
+        android:textSize="@dimen/content_title_textsize"
+        android:layout_marginTop="32dp"
+        android:layout_centerHorizontal="true"
+        android:text="当前版本不支持此功能请立即升级到最新版本"/>
+
+</RelativeLayout>

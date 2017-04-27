@@ -164,6 +164,7 @@
     <string name="no_this_knowledge">暂无这条知识</string>
     <string name="comment">评论</string>
     <string name="find_your_friends">寻找你的伙伴</string>
+    <string name="unknown">未知</string>
 
     <!-- 新用户注册 -->
     <string name="new_user">新用户</string>

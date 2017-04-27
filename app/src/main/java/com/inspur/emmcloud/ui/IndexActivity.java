@@ -395,6 +395,7 @@ public class IndexActivity extends BaseFragmentActivity implements
     private MainTab[] handleAppTabs() {
         MainTab[] tabs = null;
         String appTabs = PreferencesByUserUtils.getString(IndexActivity.this,"app_tabbar_info_current","");
+        appTabs = "";
         if (!StringUtils.isBlank(appTabs)) {
             String languageJson = PreferencesUtils.getString(
                     getApplicationContext(), UriUtils.tanent + "appLanguageObj");
@@ -440,11 +441,11 @@ public class IndexActivity extends BaseFragmentActivity implements
      */
     private MainTab[] removeNotSupportTab(MainTab[] values) {
         int length = values.length;
-        MainTab[] tabs = new MainTab[length - 1];
-        for(int i = 0; i < length - 1; i++){
-            tabs[i] = values[i];
-        }
-        return tabs;
+//        MainTab[] tabs = new MainTab[length - 1];
+//        for(int i = 0; i < length - 1; i++){
+//            tabs[i] = values[i];
+//        }
+        return values;
     }
 
 
