@@ -436,6 +436,15 @@ public class APIUri {
 	public static String getAppTabs(){
 		return getEcmTanentUrl()+"/settings/client/mobile/main/tabs";
 	}
+
+	/**
+	 * 新版底部Tabbar接口
+	 * @return
+     */
+	public static String getAppNewTabs(){
+		return getEcmTanentUrl() + "/api/v0/preference/main-tab/latest";
+	}
+
 	/**
 	 * 获取所有App以及查询app
 	 * @return
