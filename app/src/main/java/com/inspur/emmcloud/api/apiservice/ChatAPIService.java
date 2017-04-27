@@ -855,17 +855,18 @@ public class ChatAPIService {
 	}
 
 	/**
-	 *
+	 * 新闻批示接口，传入内容为批示内容
 	 * @param instruction
      */
-	public void sendNewsInstruction( final String instruction){
+	public void sendNewsInstruction(final String instruction){
 		final String completeUrl = APIUri.getNewsInstruction();
 		RequestParams params = ((MyApplication) context.getApplicationContext())
 				.getHttpRequestParams(completeUrl);
+		params.setBodyContent(instruction);
 		x.http().post(params, new APICallback() {
 			@Override
 			public void callbackSuccess(String arg0) {
-				apiInterface.returnNewsInstructionSuccess(new GetNewsInstructionResult(""));
+				apiInterface.returnNewsInstructionSuccess(new GetNewsInstructionResult(arg0));
 			}
 
 			@Override

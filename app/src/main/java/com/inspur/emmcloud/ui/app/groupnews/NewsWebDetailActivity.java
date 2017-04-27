@@ -39,6 +39,7 @@ import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.util.ChatCreateUtils;
 import com.inspur.emmcloud.util.ChatCreateUtils.OnCreateDirectChannelListener;
 import com.inspur.emmcloud.util.DensityUtil;
+import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.PreferencesByUserUtils;
 import com.inspur.emmcloud.util.StateBarColor;
@@ -485,13 +486,14 @@ public class NewsWebDetailActivity extends BaseActivity {
      * @param s
      */
     private void sendInstructions(String s) {
-        ChatAPIService apiService = new ChatAPIService(NewsWebDetailActivity.this);
-        if(NetUtils.isNetworkConnected(NewsWebDetailActivity.this)){
-            if(!loadingDlg.isShowing()){
-                loadingDlg.show();
-            }
-            apiService.sendNewsInstruction(s);
-        }
+        LogUtils.YfcDebug("将要发布的批示："+s);
+//        ChatAPIService apiService = new ChatAPIService(NewsWebDetailActivity.this);
+//        if(NetUtils.isNetworkConnected(NewsWebDetailActivity.this)){
+//            if(!loadingDlg.isShowing()){
+//                loadingDlg.show();
+//            }
+//            apiService.sendNewsInstruction(s);
+//        }
     }
 
 
