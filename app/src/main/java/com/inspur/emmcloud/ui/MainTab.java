@@ -29,7 +29,7 @@ public enum MainTab {
 	MINE(4, R.string.mine, R.drawable.selector_tab_more_btn,
 			MoreFragment.class),
 
-	NOTSUPPORT(5, R.string.mine, R.drawable.selector_tab_more_btn,
+	NOTSUPPORT(5, R.string.name, R.drawable.selector_tab_more_btn,
 		 MoreFragment.class);
 
 	private int idx;

@@ -417,17 +417,36 @@ public class IndexActivity extends BaseFragmentActivity implements
                         tabs[i] = internationalLanguage(appTabList.get(i),environmentLanguage,MainTab.APPLICATION);
                     } else if (appTabList.get(i).getComponent().equals("mine")) {
                         tabs[i] = internationalLanguage(appTabList.get(i),environmentLanguage,MainTab.MINE);
+                    }else{
+                        tabs[i] = MainTab.NOTSUPPORT;
                     }
                 }
             } else {
-                tabs = MainTab.values();
+//                tabs = MainTab.values();
+                tabs = removeNotSupportTab(MainTab.values());
             }
         } else {
-            tabs = MainTab.values();
+//            tabs = MainTab.values();
+            tabs = removeNotSupportTab(MainTab.values());
         }
         displayAppTabs(tabs);
         return tabs;
     }
+
+    /**
+     * 处理当显示默认时移除不支持界面
+     * @param values
+     * @return
+     */
+    private MainTab[] removeNotSupportTab(MainTab[] values) {
+        int length = values.length;
+        MainTab[] tabs = new MainTab[length - 1];
+        for(int i = 0; i < length - 1; i++){
+            tabs[i] = values[i];
+        }
+        return tabs;
+    }
+
 
     /**
      * 根据语言设置tab，扩展语言从这里扩展
@@ -813,8 +832,6 @@ public class IndexActivity extends BaseFragmentActivity implements
                 mTabHost.clearAllTabs();
                 handleAppTabs();
             }
-
-
         }
 
         @Override

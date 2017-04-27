@@ -1,8 +1,6 @@
 package com.inspur.emmcloud.ui.notsupport;
 
-/**
- * Created by yufuchang on 2017/4/27.
- */
+
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -13,7 +11,7 @@ import android.view.ViewGroup;
 import com.inspur.emmcloud.R;
 
 /**
- * 更多页面
+ * 如果有不支持的功能时显示这个界面
  */
 public class NotSupportFragment extends Fragment {
 
