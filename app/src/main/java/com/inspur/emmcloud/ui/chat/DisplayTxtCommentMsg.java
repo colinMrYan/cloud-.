@@ -29,8 +29,6 @@ import com.inspur.emmcloud.util.TimeUtils;
 import com.inspur.emmcloud.util.ToastUtils;
 import com.inspur.emmcloud.util.TransHtmlToTextUtils;
 
-import org.json.JSONArray;
-
 import java.util.Arrays;
 import java.util.List;
 
@@ -75,10 +73,10 @@ public class DisplayTxtCommentMsg {
 		}
 		SpannableString spannableString = MentionsAndUrlShowUtils
 				.handleMentioin(commentContent, mentionList, urlList);
-		JSONArray mentionArray = JSONUtils.getJSONArray(msgBody, "mentions",
-				new JSONArray());
-		JSONArray urlArray = JSONUtils.getJSONArray(msgBody, "urlList",
-				new JSONArray());
+//		JSONArray mentionArray = JSONUtils.getJSONArray(msgBody, "mentions",
+//				new JSONArray());
+//		JSONArray urlArray = JSONUtils.getJSONArray(msgBody, "urlList",
+//				new JSONArray());
 			// TextView设置此属性会让点击事件不响应，所有当没有@ url时不进行设置
 			commentContentText.setMovementMethod(LinkMovementMethod
 					.getInstance());

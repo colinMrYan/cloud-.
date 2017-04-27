@@ -11,7 +11,12 @@ import com.inspur.emmcloud.bean.App;
 import com.inspur.emmcloud.bean.PVCollectModel;
 import com.inspur.emmcloud.ui.app.ReactNativeAppActivity;
 import com.inspur.emmcloud.ui.app.groupnews.GroupNewsActivity;
+import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.imp.api.ImpActivity;
+
+import org.xutils.common.Callback;
+import org.xutils.http.RequestParams;
+import org.xutils.x;
 
 
 public class UriUtils {
@@ -40,19 +45,15 @@ public class UriUtils {
                 break;
             case 3:
             case 4:
-                intent.setClass(activity, ImpActivity.class);
-                intent.putExtra("uri", uri);
-                String token = ((MyApplication) activity.getApplicationContext())
-                        .getToken();
-                intent.putExtra("Authorization", token);
-                intent.putExtra("userAgentExtra",
-                        "/emmcloud/" + AppUtils.getVersion(activity));
-                String webLanguageCookie = getLanguageCookie(activity);
-                intent.putExtra("cookie", webLanguageCookie);
-                if (appType == 3) {
-                    intent.putExtra("appName", appName);
+                if (uri.startsWith("https://emm.inspur.com:443/ssohandler/gs/")) {
+                    uri = uri.replace("/gs/","/gs_uri/");
+                    if (NetUtils.isNetworkConnected(activity)){
+                        getReallyUrl(activity,uri,app);
+                    }
+                }else {
+                    openWebApp(activity,uri,app);
+
                 }
-                activity.startActivity(intent);
                 break;
             case 5:
 //                Intent intentRN = new Intent();
@@ -70,6 +71,51 @@ public class UriUtils {
         //web应用PV收集
         PVCollectModel collectModel = new PVCollectModel(activity, app.getAppID(), "webApp", app.getAppName());
         PVCollectModelCacheUtils.saveCollectModel(activity, collectModel);
+    }
+
+    public  static  void  openWebApp(Activity activity,String uri,App app){
+        Intent intent = new Intent();
+        intent.setClass(activity, ImpActivity.class);
+        intent.putExtra("uri", uri);
+        String token = ((MyApplication) activity.getApplicationContext())
+                .getToken();
+        intent.putExtra("Authorization", token);
+        intent.putExtra("userAgentExtra",
+                "/emmcloud/" + AppUtils.getVersion(activity));
+        String webLanguageCookie = getLanguageCookie(activity);
+        intent.putExtra("cookie", webLanguageCookie);
+        if (app.getAppType() == 3) {
+            intent.putExtra("appName", app.getAppName());
+        }
+        activity.startActivity(intent);
+    }
+
+    private static void getReallyUrl(final Activity activity, String url,final App app) {
+       final LoadingDialog loadingDialog = new LoadingDialog(activity);
+        loadingDialog.show();
+        RequestParams params = ((MyApplication) activity.getApplicationContext()).getHttpRequestParams(url);
+        x.http().get(params, new Callback.CommonCallback<String>() {
+            @Override
+            public void onSuccess(String s) {
+                String reallyUrl = JSONUtils.getString(s,"uri","");
+                openWebApp(activity,reallyUrl,app);
+            }
+
+            @Override
+            public void onError(Throwable throwable, boolean b) {
+                ToastUtils.show(activity, "应用打开失败");
+            }
+
+            @Override
+            public void onCancelled(CancelledException e) {
+
+            }
+
+            @Override
+            public void onFinished() {
+                loadingDialog.dismiss();
+            }
+        });
     }
 
     /**
@@ -155,6 +201,8 @@ public class UriUtils {
      * 频道页面头像显示图片
      **/
     public static String getChannelImgUri(String inspurID) {
+        if (StringUtils.isBlank(inspurID) || inspurID.equals("null"))
+            return null;
         return "https://emm.inspur.com/img/userhead/" + inspurID;
     }
 

@@ -114,8 +114,8 @@ public class AppUtils {
 			PackageInfo info = manager.getPackageInfo(context.getPackageName(),
 					0);
 			// 截取正常版本号的方法
-			// versionCode = info.versionName;
-			versionCode = getNormalVersionCode(info.versionName);
+			 versionCode = info.versionName;
+//			versionCode = getNormalVersionCode(info.versionName);
 		} catch (Exception e) {
 			LogUtils.exceptionDebug(TAG, e.toString());
 		}

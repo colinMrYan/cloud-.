@@ -86,6 +86,7 @@
             android:fastScrollEnabled="true"
             android:scrollbarStyle="insideInset"
             android:scrollbars="none"
+            android:fastScrollAlwaysVisible="false"
             android:transcriptMode="normal" />
 
         <include layout="@layout/pull_load_more" />
