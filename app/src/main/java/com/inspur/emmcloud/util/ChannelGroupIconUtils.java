@@ -30,20 +30,33 @@ public class ChannelGroupIconUtils {
 	private List<Channel> channelList;
 	private Context context;
 	private Handler handler;
+	private NetThread netThread;
+	private static ChannelGroupIconUtils mInstance;
 
-	public ChannelGroupIconUtils(Context context, List<Channel> channelList,
-			Handler handler) {
-		this.channelList = channelList;
-		this.context = context;
-		this.handler = handler;
+	public static ChannelGroupIconUtils getInstance() {
+		if (mInstance == null) {
+			synchronized (ChannelGroupIconUtils.class) {
+				if (mInstance == null) {
+					mInstance = new ChannelGroupIconUtils();
+				}
+			}
+		}
+		return mInstance;
 	}
 
-	public void creat() {
+	private ChannelGroupIconUtils() {
+	}
+
+	public void creat(Context context, List<Channel> channelList,
+					  Handler handler) {
 		// TODO Auto-generated method stub
 		if (!Environment.getExternalStorageState().equals(
 				Environment.MEDIA_MOUNTED)) {
 			return;
 		}
+		this.channelList = channelList;
+		this.context = context;
+		this.handler = handler;
 		List<ChannelGroup> currentChannelGroupList = new ArrayList<ChannelGroup>();
 		for (int i = 0; i < channelList.size(); i++) {
 			Channel channel = channelList.get(i);
@@ -75,35 +88,39 @@ public class ChannelGroupIconUtils {
 	}
 
 	private void creatIcon() {
-		Runnable runnable = new Runnable() {
+		if (netThread == null) {
+			netThread = new NetThread();
+		}
+		new Thread(netThread).start();
+	}
 
-			@Override
-			public void run() {
-				// TODO Auto-generated method stub
+	class NetThread implements Runnable {
+		@Override
+		public void run() {
+			synchronized (this) {
 				File dir = new File(MyAppConfig.LOCAL_CACHE_PATH);
 				if (!dir.exists()) {
 					dir.mkdirs();
 				}
 				boolean isNeedCreatIcon = false;
-				DisplayImageOptions	options = new DisplayImageOptions.Builder()
-				// 设置图片的解码类型  
-                .bitmapConfig(Bitmap.Config.RGB_565)  
-                .cacheInMemory(true)
-                .cacheOnDisk(true)
-				.build();
+				DisplayImageOptions options = new DisplayImageOptions.Builder()
+						// 设置图片的解码类型
+						.bitmapConfig(Bitmap.Config.RGB_565)
+						.cacheInMemory(true)
+						.cacheOnDisk(true)
+						.build();
 				for (int i = 0; i < channelList.size(); i++) {
 					Channel channel = channelList.get(i);
-					
 					if (channel.getType().equals("GROUP")
 							&& !isIconInSDcard(channel.getCid())) {
 						isNeedCreatIcon = true;
-						List<String> memberUidList = ChannelGroupCacheUtils.getMemberUidList(context,channel.getCid(),4);
+						List<String> memberUidList = ChannelGroupCacheUtils.getMemberUidList(context, channel.getCid(), 4);
 						List<Bitmap> bitmapList = new ArrayList<Bitmap>();
 						for (int j = 0; j < memberUidList.size(); j++) {
 							String pid = memberUidList.get(j);
 							Bitmap bitmap = null;
 							if (!StringUtils.isBlank(pid) && !pid.equals("null")) {
-								bitmap = ImageLoader.getInstance().loadImageSync(UriUtils.getChannelImgUri(pid),options);
+								bitmap = ImageLoader.getInstance().loadImageSync(UriUtils.getChannelImgUri(pid), options);
 							}
 							if (bitmap == null) {
 								bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.icon_person_default);
@@ -112,7 +129,7 @@ public class ChannelGroupIconUtils {
 						}
 						Bitmap combineBitmap = BitmapUtils
 								.createGroupFace(context, bitmapList);
-						
+
 						if (combineBitmap != null) {
 							saveBitmap(channel.getCid(), combineBitmap);
 						}
@@ -122,12 +139,11 @@ public class ChannelGroupIconUtils {
 					handler.sendEmptyMessage(RERESH_GROUP_ICON);
 				}
 			}
-		};
-		new Thread(runnable).start();
+		}
 	}
 
 	private boolean isIconInSDcard(String cid) {
-		File file = new File(MyAppConfig.LOCAL_CACHE_PATH, UriUtils.tanent+cid + "_100.png1");
+		File file = new File(MyAppConfig.LOCAL_CACHE_PATH, UriUtils.tanent + cid + "_100.png1");
 		if (file.exists()
 				) {
 			return true;
@@ -143,7 +159,7 @@ public class ChannelGroupIconUtils {
 			myFileUrl = new URL(url);
 			HttpURLConnection conn;
 			conn = (HttpURLConnection) myFileUrl.openConnection();
-			String token =  ((MyApplication)context.getApplicationContext()).getToken();
+			String token = ((MyApplication) context.getApplicationContext()).getToken();
 			conn.setRequestProperty("Authorization", token);
 			conn.setDoInput(true);
 			conn.connect();
@@ -156,32 +172,33 @@ public class ChannelGroupIconUtils {
 		return bitmap;
 	}
 
-	/** 保存方法 */
+	/**
+	 * 保存方法
+	 */
 	public void saveBitmap(String cid, Bitmap bitmap) {
 		File dir = new File(MyAppConfig.LOCAL_CACHE_PATH);
 		if (!dir.exists()) {
 			dir.mkdirs();
 		}
-		File file = new File(MyAppConfig.LOCAL_CACHE_PATH, UriUtils.tanent+cid + "_100.png1");
-		if (file.exists()) {
-			file.delete();
-		}
-		try {
-			FileOutputStream out = new FileOutputStream(file);
-			bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
-			out.flush();
-			out.close();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			if (file.exists()) {
-				file.delete();
+		File file = new File(MyAppConfig.LOCAL_CACHE_PATH, UriUtils.tanent + cid + "_100.png1");
+		if (!file.exists()) {
+			try {
+				FileOutputStream out = new FileOutputStream(file);
+				bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
+				out.flush();
+				out.close();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				if (file.exists()) {
+					file.delete();
+				}
 			}
 		}
 
 	}
 
-	private class WebService extends APIInterfaceInstance{
+	private class WebService extends APIInterfaceInstance {
 
 		@Override
 		public void returnSearchChannelGroupSuccess(
@@ -197,6 +214,6 @@ public class ChannelGroupIconUtils {
 			// TODO Auto-generated method stub
 			creatIcon();
 		}
-		
+
 	}
 }

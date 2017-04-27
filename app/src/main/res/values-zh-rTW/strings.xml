@@ -9,10 +9,10 @@
     <string name="cancel">取消</string>
     <string name="resolution_warning">您的設備解析度小於800*480，無法運行此程式</string>
     <string name="retry">重試</string>
-    <string name="software_service_term">浪潮服務協定</string>
+    <string name="software_service_term">服務協定</string>
     <string name="update_fail">更新失敗</string>
     <string name="downloading_package">下載中，請稍後....</string>
-    <string name="service_term">浪潮服務協定</string>
+    <string name="service_term">服務協定</string>
     <string name="prompt">提示</string>
     <string name="nothing">無 </string>
     <string name="function_intr">功能介紹 </string>
@@ -338,7 +338,7 @@
     <!-- 我的頁面部分 -->
     <string name="data_clear_success">清除成功</string>
     <string name="not_set">未設置</string>
-    <string name="mine">我的</string>
+    <string name="mine">我</string>
     <string name="take_camera">相機拍攝</string>
     <string name="gallery">手機相冊</string>
     <string name="quit_check">退出登錄</string>
@@ -357,7 +357,7 @@
     <string name="about_text">關於</string>
     <string name="about_welcome_text">歡迎頁面</string>
     <string name="about_newfun_text">新功能介紹</string>
-    <string name="about_protocol_text">浪潮服務協定</string>
+    <string name="about_protocol_text">服務協定</string>
     <string name="cloud_version">Cloud 版本</string>
     <string name="feed_back_no_empty">請輸入回饋意見</string>
     <string name="feed_back_out_of_length">您輸入的字數已經超過了限制</string>
@@ -372,7 +372,7 @@
     <string name="settings">設置</string>
     <string name="settings_protect">已保護</string>
     <string name="settings_clear_cache">清除緩存</string>
-    <string name="settings_aboutIMP">關於 浪潮雲+</string>
+    <string name="settings_aboutIMP">關於 雲+</string>
     <string name="settings_clean_imgae_attachment">清理圖片及附件緩存</string>
     <string name="settings_clean_web">清理Web應用緩存</string>
     <string name="settings_clean_all">清理應用所有緩存資料</string>
@@ -389,6 +389,8 @@
     <string name="card_package_listtext">卡包</string>
     <string name="my_setting_tips_quit">確定清除應用內所有緩存數據？清除后將退出應用</string>
     <string name="get_language_error">未獲取到可用的語言包，請聯繫管理員</string>
+    <string name="app_customer">雲+客服</string>
+
 
     <!-- 修改密碼部分 -->
     <string name="modify_input_user_new_password">請輸入新密碼</string>
