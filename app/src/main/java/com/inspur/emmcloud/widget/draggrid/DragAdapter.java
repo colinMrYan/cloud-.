@@ -19,6 +19,7 @@ import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
 import com.inspur.emmcloud.bean.App;
 import com.inspur.emmcloud.bean.GetRemoveAppResult;
 import com.inspur.emmcloud.util.AppCacheUtils;
+import com.inspur.emmcloud.util.AppUtils;
 import com.inspur.emmcloud.util.DensityUtil;
 import com.inspur.emmcloud.util.ImageDisplayUtils;
 import com.inspur.emmcloud.util.NetUtils;
@@ -145,10 +146,12 @@ public class DragAdapter extends BaseAdapter {
 	}
 
 	private void uninstallNativeApp(String packageName){
-		Intent uninstall_intent = new Intent();
-		uninstall_intent.setAction(Intent.ACTION_DELETE);
-		uninstall_intent.setData(Uri.parse("package:"+packageName));
-		context.startActivity(uninstall_intent);
+		if (AppUtils.isAppInstalled(context,packageName)){
+			Intent intent = new Intent();
+			intent.setAction(Intent.ACTION_DELETE);
+			intent.setData(Uri.parse("package:"+packageName));
+			context.startActivity(intent);
+		}
 	}
 
 	/**
