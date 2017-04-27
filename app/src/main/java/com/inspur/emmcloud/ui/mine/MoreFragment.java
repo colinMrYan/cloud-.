@@ -15,12 +15,14 @@ import android.widget.TextView;
 
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
+import com.inspur.emmcloud.bean.Channel;
 import com.inspur.emmcloud.bean.GetMyInfoResult;
 import com.inspur.emmcloud.ui.chat.ChannelActivity;
 import com.inspur.emmcloud.ui.mine.feedback.FeedBackActivity;
 import com.inspur.emmcloud.ui.mine.myinfo.MyInfoActivity;
 import com.inspur.emmcloud.ui.mine.setting.AboutActivity;
 import com.inspur.emmcloud.ui.mine.setting.SettingActivity;
+import com.inspur.emmcloud.util.ChannelCacheUtils;
 import com.inspur.emmcloud.util.ImageDisplayUtils;
 import com.inspur.emmcloud.util.IntentUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
@@ -71,6 +73,11 @@ public class MoreFragment extends Fragment {
         (rootView.findViewById(R.id.more_invite_friends_layout)).setOnClickListener(onClickListener);
         (rootView.findViewById(R.id.about_layout)).setOnClickListener(onClickListener);
         (rootView.findViewById(R.id.customer_layout)).setOnClickListener(onClickListener);
+        Channel customerChannel = ChannelCacheUtils.getCustomerChannel(getActivity());
+        //如果找不到云+客服频道就隐藏
+        if (customerChannel == null){
+            (rootView.findViewById(R.id.customer_layout)).setVisibility(View.GONE);
+        }
         moreHeadImg = (ImageView) rootView.findViewById(R.id.more_head_img);
         userNameText = (TextView) rootView.findViewById(R.id.more_head_textup);
         userOrgText = (TextView) rootView.findViewById(R.id.more_head_textdown);
@@ -171,12 +178,15 @@ public class MoreFragment extends Fragment {
                             AboutActivity.class);
                     break;
                 case R.id.customer_layout:
-                    Bundle bundle = new Bundle();
-                    bundle.putString("title", "BOT6005-66666");
-                    bundle.putString("channelId", "10714");
-                    bundle.putString("channelType", "SERVICE");
+                    Channel customerChannel = ChannelCacheUtils.getCustomerChannel(getActivity());
+                    if (customerChannel != null ){
+                        Bundle bundle = new Bundle();
+                        bundle.putString("title", customerChannel.getTitle());
+                        bundle.putString("channelId", customerChannel.getCid());
+                        bundle.putString("channelType", customerChannel.getType());
                         IntentUtils.startActivity(getActivity(),
                                 ChannelActivity.class, bundle);
+                    }
                     break;
                 default:
                     break;
