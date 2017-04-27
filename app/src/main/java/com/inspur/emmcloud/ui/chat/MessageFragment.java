@@ -37,6 +37,7 @@ import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.service.WebSocketService;
 import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
+import com.inspur.emmcloud.util.AppTitleUtils;
 import com.inspur.emmcloud.util.ChannelCacheUtils;
 import com.inspur.emmcloud.util.ChannelGroupCacheUtils;
 import com.inspur.emmcloud.util.ChannelGroupIconUtils;
@@ -51,7 +52,9 @@ import com.inspur.emmcloud.util.MsgCacheUtil;
 import com.inspur.emmcloud.util.MsgMatheSetCacheUtils;
 import com.inspur.emmcloud.util.MsgReadIDCacheUtils;
 import com.inspur.emmcloud.util.NetUtils;
+import com.inspur.emmcloud.util.PreferencesByUserUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
+import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.TimeUtils;
 import com.inspur.emmcloud.util.ToastUtils;
 import com.inspur.emmcloud.util.TransHtmlToTextUtils;
@@ -106,6 +109,7 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
+		LogUtils.YfcDebug("名称："+getClass().getSimpleName());
 		if (rootView == null) {
 			rootView = inflater.inflate(R.layout.fragment_message, container,
 					false);
@@ -115,6 +119,16 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 			parent.removeView(rootView);
 		}
 		return rootView;
+	}
+
+	/**
+	 * 设置标题
+	 */
+	private void setTabTitle(){
+		String appTabs = PreferencesByUserUtils.getString(getActivity(),"app_tabbar_info_current","");
+		if(!StringUtils.isBlank(appTabs)){
+			titleText.setText(AppTitleUtils.getTabTitle(getActivity(),getClass().getSimpleName()));
+		}
 	}
 	
 
@@ -161,6 +175,7 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 				.setOnClickListener(onViewClickListener);
 		TipsView = (TipsView) rootView.findViewById(R.id.tip);
 		titleText = (TextView)rootView.findViewById(R.id.header_text);
+		setTabTitle();
 	}
 
 	private OnClickListener onViewClickListener = new OnClickListener() {

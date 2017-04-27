@@ -382,7 +382,6 @@ public class IndexActivity extends BaseFragmentActivity implements
         tipsView = (TipsView) findViewById(R.id.tip);
         mTabHost = (MyFragmentTabHost) findViewById(android.R.id.tabhost);
         mTabHost.setup(this, getSupportFragmentManager(), R.id.realtabcontent);
-
         MainTab[] tabs = handleAppTabs();
     }
 
@@ -395,7 +394,6 @@ public class IndexActivity extends BaseFragmentActivity implements
     private MainTab[] handleAppTabs() {
         MainTab[] tabs = null;
         String appTabs = PreferencesByUserUtils.getString(IndexActivity.this,"app_tabbar_info_current","");
-        appTabs = "";
         if (!StringUtils.isBlank(appTabs)) {
             String languageJson = PreferencesUtils.getString(
                     getApplicationContext(), UriUtils.tanent + "appLanguageObj");
@@ -463,6 +461,8 @@ public class IndexActivity extends BaseFragmentActivity implements
         }else if(environmentLanguage.toLowerCase().equals("en-US".toLowerCase())||
                 environmentLanguage.toLowerCase().equals("en".toLowerCase())){
            mainTab.setConfigureName(tabsBean.getTitle().getEnUS());
+        }else{
+            mainTab.setConfigureName(tabsBean.getTitle().getZhHans());
         }
         return mainTab;
     }

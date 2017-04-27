@@ -24,8 +24,11 @@ import com.inspur.emmcloud.ui.mine.cardpackage.CardPackageListActivity;
 import com.inspur.emmcloud.ui.mine.feedback.FeedBackActivity;
 import com.inspur.emmcloud.ui.mine.myinfo.MyInfoActivity;
 import com.inspur.emmcloud.ui.mine.setting.SettingActivity;
+import com.inspur.emmcloud.util.AppTitleUtils;
 import com.inspur.emmcloud.util.ImageDisplayUtils;
+import com.inspur.emmcloud.util.PreferencesByUserUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
+import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.ToastUtils;
 import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
@@ -54,6 +57,7 @@ public class MoreFragment extends Fragment {
     private ImageDisplayUtils imageDisplayUtils;
     private GetMyInfoResult getMyInfoResult;
     private String userheadUrl;
+    private TextView titleText;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -81,9 +85,10 @@ public class MoreFragment extends Fragment {
         userNameText = (TextView) rootView.findViewById(R.id.more_head_textup);
         userOrgText = (TextView) rootView.findViewById(R.id.more_head_textdown);
         userCodeImg = (ImageView) rootView.findViewById(R.id.more_head_codeImg);
-
+        titleText = (TextView) rootView.findViewById(R.id.header_text);
         imageDisplayUtils = new ImageDisplayUtils(getActivity(), R.drawable.icon_photo_default);
         getMyInfo();
+        setTabTitle();
     }
 
 
@@ -205,6 +210,16 @@ public class MoreFragment extends Fragment {
         return rootView;
     }
 
+    /**
+     * 设置标题
+     */
+    private void setTabTitle(){
+        String appTabs = PreferencesByUserUtils.getString(getActivity(),"app_tabbar_info_current","");
+        if(!StringUtils.isBlank(appTabs)){
+            titleText.setText(AppTitleUtils.getTabTitle(getActivity(),getClass().getSimpleName()));
+        }
+    }
+
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -213,8 +228,6 @@ public class MoreFragment extends Fragment {
     }
 
     public class WebService extends APIInterfaceInstance {
-
-
     }
 
     @Override

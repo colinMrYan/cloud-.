@@ -86,7 +86,11 @@ public class UpgradeUtils extends APIInterfaceInstance {
 					break;
 
 				case DOWNLOAD_FINISH:
+					if(mDownloadDialog != null && mDownloadDialog.isShowing()){
+						mDownloadDialog.dismiss();
+					}
 					installApk();
+
 					if (activity instanceof MainActivity) {
 						activity.finish();
 					}
