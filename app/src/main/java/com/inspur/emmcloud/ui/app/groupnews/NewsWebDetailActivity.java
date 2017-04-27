@@ -32,6 +32,7 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.bean.GetCreateSingleChannelResult;
+import com.inspur.emmcloud.bean.GetNewsInstructionResult;
 import com.inspur.emmcloud.bean.GetSendMsgResult;
 import com.inspur.emmcloud.config.MyAppWebConfig;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
@@ -459,14 +460,16 @@ public class NewsWebDetailActivity extends BaseActivity {
                 intrcutionDialog.dismiss();
             }
         });
+        final EditText editText = (EditText) view.findViewById(R.id.news_instrcution_text);
         Button okBtn = (Button) view.findViewById(R.id.ok_btn);
         okBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                sendInstructions(editText.getText().toString());
                 intrcutionDialog.dismiss();
             }
         });
-        EditText editText = (EditText) view.findViewById(R.id.news_instrcution_text);
+
         Window window = intrcutionDialog.getWindow();
         WindowManager.LayoutParams wl = window.getAttributes();
 //        wl.alpha = 0.31f;
@@ -476,6 +479,21 @@ public class NewsWebDetailActivity extends BaseActivity {
         intrcutionDialog.show();
         openSoftKeyboard(editText);
     }
+
+    /**
+     * 发布批示
+     * @param s
+     */
+    private void sendInstructions(String s) {
+        ChatAPIService apiService = new ChatAPIService(NewsWebDetailActivity.this);
+        if(NetUtils.isNetworkConnected(NewsWebDetailActivity.this)){
+            if(!loadingDlg.isShowing()){
+                loadingDlg.show();
+            }
+            apiService.sendNewsInstruction(s);
+        }
+    }
+
 
     /**
      * 打开软键盘
@@ -846,6 +864,19 @@ public class NewsWebDetailActivity extends BaseActivity {
             showShareFailToast();
         }
 
+        @Override
+        public void returnNewsInstructionSuccess(GetNewsInstructionResult getNewsInstructionResult) {
+            if(loadingDlg != null && loadingDlg.isShowing()){
+                loadingDlg.dismiss();
+            }
+        }
+
+        @Override
+        public void returnNewsInstructionFail(String error) {
+            if(loadingDlg != null && loadingDlg.isShowing()){
+                loadingDlg.dismiss();
+            }
+        }
     }
 
     protected void onPause() {
