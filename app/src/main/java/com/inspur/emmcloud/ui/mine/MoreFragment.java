@@ -77,11 +77,6 @@ public class MoreFragment extends Fragment {
         (rootView.findViewById(R.id.more_invite_friends_layout)).setOnClickListener(onClickListener);
         (rootView.findViewById(R.id.about_layout)).setOnClickListener(onClickListener);
         (rootView.findViewById(R.id.customer_layout)).setOnClickListener(onClickListener);
-        Channel customerChannel = ChannelCacheUtils.getCustomerChannel(getActivity());
-        //如果找不到云+客服频道就隐藏
-        if (customerChannel == null){
-            (rootView.findViewById(R.id.customer_layout)).setVisibility(View.GONE);
-        }
         moreHeadImg = (ImageView) rootView.findViewById(R.id.more_head_img);
         userNameText = (TextView) rootView.findViewById(R.id.more_head_textup);
         userOrgText = (TextView) rootView.findViewById(R.id.more_head_textdown);
@@ -214,6 +209,16 @@ public class MoreFragment extends Fragment {
             parent.removeView(rootView);
         }
         return rootView;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Channel customerChannel = ChannelCacheUtils.getCustomerChannel(getActivity());
+        //如果找不到云+客服频道就隐藏
+        if (customerChannel == null){
+            (rootView.findViewById(R.id.customer_layout)).setVisibility(View.GONE);
+        }
     }
 
     /**

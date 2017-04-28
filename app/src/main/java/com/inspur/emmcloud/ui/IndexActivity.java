@@ -417,7 +417,8 @@ public class IndexActivity extends BaseFragmentActivity implements
                     } else if (appTabList.get(i).getComponent().equals("mine")) {
                         tabs[i] = internationalLanguage(appTabList.get(i),environmentLanguage,MainTab.MINE);
                     }else{
-                        tabs[i] = MainTab.NOTSUPPORT;
+                        tabs[i] = internationalLanguage(appTabList.get(i),environmentLanguage,MainTab.NOTSUPPORT);
+                        PreferencesByUserUtils.putString(IndexActivity.this,"tab_unknown",tabs[i].getConfigureName());
                     }
                 }
             } else {

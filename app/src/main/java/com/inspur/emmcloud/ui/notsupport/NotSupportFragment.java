@@ -17,6 +17,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.util.PreferencesByUserUtils;
+import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.UpgradeUtils;
 
 /**
@@ -29,6 +31,7 @@ public class NotSupportFragment extends Fragment {
     private View rootView;
     private LayoutInflater inflater;
     private TextView unknownFuctionText;
+    private TextView titleText;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -39,8 +42,20 @@ public class NotSupportFragment extends Fragment {
 
         rootView = inflater.inflate(R.layout.fragment_unknown, null);
         unknownFuctionText = (TextView) rootView.findViewById(R.id.app_unknow_text);
+        titleText = (TextView) rootView.findViewById(R.id.header_text);
         unknownFuctionText.setText(getClickableSpan());
         unknownFuctionText.setMovementMethod(LinkMovementMethod.getInstance());//必须设置否则无效
+        setTabTitle();
+    }
+
+    /**
+     * 设置标题
+     */
+    private void setTabTitle(){
+        String appTabs = PreferencesByUserUtils.getString(getActivity(),"app_tabbar_info_current","");
+        if(!StringUtils.isBlank(appTabs)){
+            titleText.setText(PreferencesByUserUtils.getString(getActivity(),"tab_unknown"));
+        }
     }
 
     private Handler handler = new Handler(){
