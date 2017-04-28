@@ -47,7 +47,13 @@ import com.inspur.emmcloud.interf.OnTabReselectListener;
 import com.inspur.emmcloud.interf.OnWorkFragmentDataChanged;
 import com.inspur.emmcloud.service.CoreService;
 import com.inspur.emmcloud.service.PVCollectService;
+import com.inspur.emmcloud.ui.app.MyAppFragment;
+import com.inspur.emmcloud.ui.chat.MessageFragment;
 import com.inspur.emmcloud.ui.find.FindFragment;
+import com.inspur.emmcloud.ui.mine.MoreFragment;
+import com.inspur.emmcloud.ui.notsupport.NotSupportFragment;
+import com.inspur.emmcloud.ui.work.MainTabBean;
+import com.inspur.emmcloud.ui.work.WorkFragment;
 import com.inspur.emmcloud.util.AppUtils;
 import com.inspur.emmcloud.util.ChannelGroupCacheUtils;
 import com.inspur.emmcloud.util.ContactCacheUtils;
@@ -103,6 +109,7 @@ public class IndexActivity extends BaseFragmentActivity implements
     private String userId;
     private boolean isReactNativeClientUpdateFail = false;
     private boolean isGetTab = false;
+    private String notSupportTitle = "";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -382,7 +389,8 @@ public class IndexActivity extends BaseFragmentActivity implements
         tipsView = (TipsView) findViewById(R.id.tip);
         mTabHost = (MyFragmentTabHost) findViewById(android.R.id.tabhost);
         mTabHost.setup(this, getSupportFragmentManager(), R.id.realtabcontent);
-        MainTab[] tabs = handleAppTabs();
+//        MainTab[] tabs = handleAppTabs();
+        handleAppTabs();
     }
 
 
@@ -391,8 +399,8 @@ public class IndexActivity extends BaseFragmentActivity implements
      *
      * @return
      */
-    private MainTab[] handleAppTabs() {
-        MainTab[] tabs = null;
+    private MainTabBean[] handleAppTabs() {
+        MainTabBean[] mainTabs = null;
         String appTabs = PreferencesByUserUtils.getString(IndexActivity.this,"app_tabbar_info_current","");
         if (!StringUtils.isBlank(appTabs)) {
             String languageJson = PreferencesUtils.getString(
@@ -404,85 +412,58 @@ public class IndexActivity extends BaseFragmentActivity implements
             }
             ArrayList<AppTabAutoBean.PayloadBean.TabsBean> appTabList = (ArrayList<AppTabAutoBean.PayloadBean.TabsBean>) new AppTabAutoBean(appTabs).getPayload().getTabs();
             if (appTabList != null && appTabList.size() > 0) {
-                tabs = new MainTab[appTabList.size()];
+                mainTabs = new MainTabBean[appTabList.size()];
                 for (int i = 0; i < appTabList.size(); i++) {
                     if (appTabList.get(i).getComponent().equals("communicate")) {
-                        tabs[i] = internationalLanguage(appTabList.get(i),environmentLanguage,MainTab.NEWS);
+                        MainTabBean mainTabBean = new MainTabBean(0,R.string.communicate,R.drawable.selector_tab_message_btn,MessageFragment.class);
+                        mainTabBean.setCommpant(appTabList.get(i).getComponent());
+                        mainTabs[i] = internationalMainLanguage(appTabList.get(i),environmentLanguage,mainTabBean);
                     } else if (appTabList.get(i).getComponent().equals("work")) {
-                        tabs[i] = internationalLanguage(appTabList.get(i),environmentLanguage,MainTab.WORK);
+                        MainTabBean mainTabBean = new MainTabBean(1, R.string.work, R.drawable.selector_tab_work_btn,
+                                WorkFragment.class);
+                        mainTabs[i] = internationalMainLanguage(appTabList.get(i),environmentLanguage,mainTabBean);
                     } else if (appTabList.get(i).getComponent().equals("find")) {
-                        tabs[i] = internationalLanguage(appTabList.get(i),environmentLanguage,MainTab.FIND);
+                        MainTabBean mainTabBean = new MainTabBean(2, R.string.find, R.drawable.selector_tab_find_btn,
+                                FindFragment.class);
+                        mainTabs[i] = internationalMainLanguage(appTabList.get(i),environmentLanguage,mainTabBean);
                     } else if (appTabList.get(i).getComponent().equals("application")) {
-                        tabs[i] = internationalLanguage(appTabList.get(i),environmentLanguage,MainTab.APPLICATION);
+                        MainTabBean mainTabBean = new MainTabBean(3, R.string.application, R.drawable.selector_tab_app_btn,
+                                MyAppFragment.class);
+                        mainTabs[i] = internationalMainLanguage(appTabList.get(i),environmentLanguage,mainTabBean);
                     } else if (appTabList.get(i).getComponent().equals("mine")) {
-                        tabs[i] = internationalLanguage(appTabList.get(i),environmentLanguage,MainTab.MINE);
+                        MainTabBean mainTabBean = new MainTabBean(4, R.string.mine, R.drawable.selector_tab_more_btn,
+                                MoreFragment.class);
+                        mainTabs[i] = internationalMainLanguage(appTabList.get(i),environmentLanguage,mainTabBean);
                     }else{
-                        tabs[i] = internationalLanguage(appTabList.get(i),environmentLanguage,MainTab.NOTSUPPORT);
-                        PreferencesByUserUtils.putString(IndexActivity.this,"tab_unknown",tabs[i].getConfigureName());
+                        MainTabBean mainTabBean = new MainTabBean(5, R.string.unknown, R.drawable.selector_tab_unknown_btn,
+                                NotSupportFragment.class);
+                        mainTabs[i] = internationalMainLanguage(appTabList.get(i),environmentLanguage,mainTabBean);
                     }
                 }
             } else {
-//                tabs = MainTab.values();
-                tabs = removeNotSupportTab(MainTab.values());
+                mainTabs = addNoDataTabs();
             }
         } else {
-//            tabs = MainTab.values();
-            tabs = removeNotSupportTab(MainTab.values());
+            mainTabs = addNoDataTabs();
         }
-        displayAppTabs(tabs);
-        return tabs;
+        displayMainTabs(mainTabs);
+        return mainTabs;
     }
-
-    /**
-     * 处理当显示默认时移除不支持界面
-     * @param values
-     * @return
-     */
-    private MainTab[] removeNotSupportTab(MainTab[] values) {
-        int length = values.length;
-        MainTab[] tabs = new MainTab[length - 1];
-        for(int i = 0; i < length - 1; i++){
-            tabs[i] = values[i];
-        }
-        return tabs;
-    }
-
-
-    /**
-     * 根据语言设置tab，扩展语言从这里扩展
-     * @param tabsBean
-     * @param environmentLanguage
-     * @return
-     */
-    private MainTab internationalLanguage(AppTabAutoBean.PayloadBean.TabsBean tabsBean, String environmentLanguage,MainTab mainTab) {
-        if(environmentLanguage.toLowerCase().equals("zh-Hans".toLowerCase())){
-            mainTab.setConfigureName(tabsBean.getTitle().getZhHans());
-        }else if(environmentLanguage.toLowerCase().equals("zh-Hant".toLowerCase())){
-            mainTab.setConfigureName(tabsBean.getTitle().getZhHant());
-        }else if(environmentLanguage.toLowerCase().equals("en-US".toLowerCase())||
-                environmentLanguage.toLowerCase().equals("en".toLowerCase())){
-           mainTab.setConfigureName(tabsBean.getTitle().getEnUS());
-        }else{
-            mainTab.setConfigureName(tabsBean.getTitle().getZhHans());
-        }
-        return mainTab;
-    }
-
 
     /**
      * 根据定制展示App
      * @param tabs
      */
-    private void displayAppTabs(MainTab[] tabs) {
+    private void displayMainTabs(MainTabBean[] tabs) {
         final int size = tabs.length;
         for (int i = 0; i < size; i++) {
-            MainTab mainTab = tabs[i];
+            MainTabBean mainTab = tabs[i];
             TabHost.TabSpec tab = mTabHost.newTabSpec(getString(mainTab.getResName()));
             View tabView = LayoutInflater.from(getApplicationContext())
                     .inflate(R.layout.tab_item_view, null);
             ImageView tabImg = (ImageView) tabView.findViewById(R.id.imageview);
             TextView tabText = (TextView) tabView.findViewById(R.id.textview);
-            if (mainTab == MainTab.NEWS) {
+            if (mainTab.getCommpant().equals("communicate")) {
                 handleTipsView(tabView);
             }
             if(!StringUtils.isBlank(mainTab.getConfigureName())){
@@ -509,6 +490,61 @@ public class IndexActivity extends BaseFragmentActivity implements
             mTabHost.setOnTabChangedListener(this);
         }
         mTabHost.setCurrentTab(getTabIndex());
+    }
+
+
+    /**
+     * 当没有数据的时候返回内容
+     * @return
+     */
+    private MainTabBean[] addNoDataTabs() {
+        MainTabBean[] mainTabs = new MainTabBean[5];
+        MainTabBean mainTabBeanCommunicate = new MainTabBean(0,R.string.communicate,R.drawable.selector_tab_message_btn,
+                MessageFragment.class);
+        mainTabBeanCommunicate.setCommpant("communicate");
+        MainTabBean mainTabBeanWork = new MainTabBean(1, R.string.work, R.drawable.selector_tab_work_btn,
+                WorkFragment.class);
+        MainTabBean mainTabBeanFind = new MainTabBean(2, R.string.find, R.drawable.selector_tab_find_btn,
+                FindFragment.class);
+        MainTabBean mainTabBeanApp = new MainTabBean(3, R.string.application, R.drawable.selector_tab_app_btn,
+                MyAppFragment.class);
+        MainTabBean mainTabBeanMine = new MainTabBean(4, R.string.mine, R.drawable.selector_tab_more_btn,
+                MoreFragment.class);
+        mainTabs[0] = mainTabBeanCommunicate;
+        mainTabs[1] = mainTabBeanWork;
+        mainTabs[2] = mainTabBeanFind;
+        mainTabs[3] = mainTabBeanApp;
+        mainTabs[4] = mainTabBeanMine;
+        return mainTabs;
+    }
+
+    /**
+     * 暴露当前页面标题接口
+     * @return
+     */
+    public String getNotSupportString(){
+        return notSupportTitle;
+    }
+
+
+    /**
+     * 根据语言设置tab，扩展语言从这里扩展
+     * @param tabsBean
+     * @param environmentLanguage
+     * @return
+     */
+    private MainTabBean internationalMainLanguage(AppTabAutoBean.PayloadBean.TabsBean tabsBean, String environmentLanguage,MainTabBean mainTab) {
+        if(environmentLanguage.toLowerCase().equals("zh-Hans".toLowerCase())){
+            mainTab.setConfigureName(tabsBean.getTitle().getZhHans());
+        }else if(environmentLanguage.toLowerCase().equals("zh-Hant".toLowerCase())){
+            mainTab.setConfigureName(tabsBean.getTitle().getZhHant());
+        }else if(environmentLanguage.toLowerCase().equals("en-US".toLowerCase())||
+                environmentLanguage.toLowerCase().equals("en".toLowerCase())){
+            mainTab.setConfigureName(tabsBean.getTitle().getEnUS());
+        }else{
+            mainTab.setConfigureName(tabsBean.getTitle().getZhHans());
+        }
+        return mainTab;
     }
 
     /**
@@ -551,9 +587,6 @@ public class IndexActivity extends BaseFragmentActivity implements
     private int getTabIndex() {
         int tabIndex = 0;
         String appTabs = PreferencesByUserUtils.getString(IndexActivity.this,"app_tabbar_info_current","");
-//        String appTabs = PreferencesUtils.getString(IndexActivity.this,
-//                UriUtils.tanent + userId + "appTabs", "");
-//        ArrayList<AppTabBean> appTabList;
         ArrayList<AppTabAutoBean.PayloadBean.TabsBean> appTabList;
         if (!StringUtils.isBlank(appTabs)) {
             appTabList = (ArrayList<AppTabAutoBean.PayloadBean.TabsBean>) new AppTabAutoBean(appTabs).getPayload().getTabs();
@@ -649,6 +682,7 @@ public class IndexActivity extends BaseFragmentActivity implements
 
     @Override
     public void onTabChanged(String tabId) {
+        notSupportTitle = tabId;
         String lastUpdateTime = PreferencesUtils.getString(IndexActivity.this,"react_native_lastupdatetime","");
         if (tabId.equals(getString(R.string.communicate))) {
             tipsView.setCanTouch(true);

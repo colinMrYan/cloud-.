@@ -17,9 +17,13 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.ui.IndexActivity;
+import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.PreferencesByUserUtils;
 import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.UpgradeUtils;
+
+import static com.inspur.emmcloud.R.id.on;
 
 /**
  * 如果有不支持的功能时显示这个界面
@@ -45,18 +49,22 @@ public class NotSupportFragment extends Fragment {
         titleText = (TextView) rootView.findViewById(R.id.header_text);
         unknownFuctionText.setText(getClickableSpan());
         unknownFuctionText.setMovementMethod(LinkMovementMethod.getInstance());//必须设置否则无效
-        setTabTitle();
+
+
     }
 
     /**
      * 设置标题
      */
     private void setTabTitle(){
+        LogUtils.YfcDebug("不支持页面获取到的标题："+((IndexActivity)getActivity()).getNotSupportString());
         String appTabs = PreferencesByUserUtils.getString(getActivity(),"app_tabbar_info_current","");
         if(!StringUtils.isBlank(appTabs)){
-            titleText.setText(PreferencesByUserUtils.getString(getActivity(),"tab_unknown"));
+            String title = ((IndexActivity)getActivity()).getNotSupportString();
+            titleText.setText(title);
         }
     }
+
 
     private Handler handler = new Handler(){
         @Override
@@ -76,6 +84,7 @@ public class NotSupportFragment extends Fragment {
         if (parent != null) {
             parent.removeView(rootView);
         }
+        setTabTitle();
         return rootView;
     }
 
