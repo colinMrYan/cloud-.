@@ -29,15 +29,17 @@ import com.inspur.emmcloud.api.apiservice.AppAPIService;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.api.apiservice.ContactAPIService;
 import com.inspur.emmcloud.bean.AndroidBundleBean;
-import com.inspur.emmcloud.bean.AppTabBean;
+import com.inspur.emmcloud.bean.AppTabAutoBean;
 import com.inspur.emmcloud.bean.ChannelGroup;
 import com.inspur.emmcloud.bean.Contact;
 import com.inspur.emmcloud.bean.GetAllContactResult;
 import com.inspur.emmcloud.bean.GetAllRobotsResult;
+import com.inspur.emmcloud.bean.GetAppTabAutoResult;
 import com.inspur.emmcloud.bean.GetAppTabsResult;
 import com.inspur.emmcloud.bean.GetClientIdRsult;
 import com.inspur.emmcloud.bean.GetExceptionResult;
 import com.inspur.emmcloud.bean.GetSearchChannelGroupResult;
+import com.inspur.emmcloud.bean.Language;
 import com.inspur.emmcloud.bean.ReactNativeClientIdErrorBean;
 import com.inspur.emmcloud.bean.ReactNativeUpdateBean;
 import com.inspur.emmcloud.config.MyAppConfig;
@@ -54,6 +56,7 @@ import com.inspur.emmcloud.util.FileUtils;
 import com.inspur.emmcloud.util.ImageDisplayUtils;
 import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.NetUtils;
+import com.inspur.emmcloud.util.PreferencesByUserUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.RNCacheViewManager;
 import com.inspur.emmcloud.util.RobotCacheUtils;
@@ -99,6 +102,7 @@ public class IndexActivity extends BaseFragmentActivity implements
     private AppAPIService appApiService;
     private String userId;
     private boolean isReactNativeClientUpdateFail = false;
+    private boolean isGetTab = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -222,7 +226,16 @@ public class IndexActivity extends BaseFragmentActivity implements
         AppAPIService apiService = new AppAPIService(IndexActivity.this);
         apiService.setAPIInterface(new WebService());
         if (NetUtils.isNetworkConnected(getApplicationContext(), false)) {
-            apiService.getAppTabs();
+//            apiService.getAppTabs();
+            String version = PreferencesByUserUtils.getString(IndexActivity.this,"app_tabbar_version","");;
+            String clientid = PreferencesUtils.getString(IndexActivity.this, UriUtils.tanent + userId + "react_native_clientid","");
+            if(!StringUtils.isBlank(clientid)){
+                apiService.getAppNewTabs(version,clientid);
+            }else{
+                isGetTab = true;
+                getReactNativeClientId();
+            }
+
         }
     }
 
@@ -369,10 +382,9 @@ public class IndexActivity extends BaseFragmentActivity implements
         tipsView = (TipsView) findViewById(R.id.tip);
         mTabHost = (MyFragmentTabHost) findViewById(android.R.id.tabhost);
         mTabHost.setup(this, getSupportFragmentManager(), R.id.realtabcontent);
-
-//		MainTab[] tabs = MainTab.values();
         MainTab[] tabs = handleAppTabs();
     }
+
 
     /**
      * 处理tab数组
@@ -381,37 +393,81 @@ public class IndexActivity extends BaseFragmentActivity implements
      */
     private MainTab[] handleAppTabs() {
         MainTab[] tabs = null;
-        String appTabs = PreferencesUtils.getString(IndexActivity.this,
-                UriUtils.tanent + userId + "appTabs", "");
+        String appTabs = PreferencesByUserUtils.getString(IndexActivity.this,"app_tabbar_info_current","");
         if (!StringUtils.isBlank(appTabs)) {
-            ArrayList<AppTabBean> appTabList = (ArrayList<AppTabBean>) JSON.parseArray(appTabs, AppTabBean.class);
+            String languageJson = PreferencesUtils.getString(
+                    getApplicationContext(), UriUtils.tanent + "appLanguageObj");
+            String environmentLanguage = "";
+            if (languageJson != null) {
+                Language language = new Language(languageJson);
+                environmentLanguage = language.getIana();
+            }
+            ArrayList<AppTabAutoBean.PayloadBean.TabsBean> appTabList = (ArrayList<AppTabAutoBean.PayloadBean.TabsBean>) new AppTabAutoBean(appTabs).getPayload().getTabs();
             if (appTabList != null && appTabList.size() > 0) {
                 tabs = new MainTab[appTabList.size()];
                 for (int i = 0; i < appTabList.size(); i++) {
-                    if (appTabList.get(i).getTitle().equals("communicate")) {
-                        //实验MainTab修改标题和图标
-//                        MainTab.NEWS.setConfigureName("对话");
-//                        MainTab.NEWS.setConfigureIcon("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1492678194983&di=f97e4eb2f600579cb1c07b9421cfeaa9&imgtype=0&src=http%3A%2F%2Fimg.zcool.cn%2Fcommunity%2F019c28554b6159000001bf729078c0.jpg");
-                        tabs[i] = MainTab.NEWS;
-                    } else if (appTabList.get(i).getTitle().equals("work")) {
-                        tabs[i] = MainTab.WORK;
-                    } else if (appTabList.get(i).getTitle().equals("find")) {
-                        tabs[i] = MainTab.FIND;
-                    } else if (appTabList.get(i).getTitle().equals("application")) {
-                        tabs[i] = MainTab.APPLICATION;
-                    } else if (appTabList.get(i).getTitle().equals("mine")) {
-                        tabs[i] = MainTab.MINE;
+                    if (appTabList.get(i).getComponent().equals("communicate")) {
+                        tabs[i] = internationalLanguage(appTabList.get(i),environmentLanguage,MainTab.NEWS);
+                    } else if (appTabList.get(i).getComponent().equals("work")) {
+                        tabs[i] = internationalLanguage(appTabList.get(i),environmentLanguage,MainTab.WORK);
+                    } else if (appTabList.get(i).getComponent().equals("find")) {
+                        tabs[i] = internationalLanguage(appTabList.get(i),environmentLanguage,MainTab.FIND);
+                    } else if (appTabList.get(i).getComponent().equals("application")) {
+                        tabs[i] = internationalLanguage(appTabList.get(i),environmentLanguage,MainTab.APPLICATION);
+                    } else if (appTabList.get(i).getComponent().equals("mine")) {
+                        tabs[i] = internationalLanguage(appTabList.get(i),environmentLanguage,MainTab.MINE);
+                    }else{
+                        tabs[i] = internationalLanguage(appTabList.get(i),environmentLanguage,MainTab.NOTSUPPORT);
+                        PreferencesByUserUtils.putString(IndexActivity.this,"tab_unknown",tabs[i].getConfigureName());
                     }
                 }
             } else {
-                tabs = MainTab.values();
+//                tabs = MainTab.values();
+                tabs = removeNotSupportTab(MainTab.values());
             }
         } else {
-            tabs = MainTab.values();
+//            tabs = MainTab.values();
+            tabs = removeNotSupportTab(MainTab.values());
         }
         displayAppTabs(tabs);
         return tabs;
     }
+
+    /**
+     * 处理当显示默认时移除不支持界面
+     * @param values
+     * @return
+     */
+    private MainTab[] removeNotSupportTab(MainTab[] values) {
+        int length = values.length;
+        MainTab[] tabs = new MainTab[length - 1];
+        for(int i = 0; i < length - 1; i++){
+            tabs[i] = values[i];
+        }
+        return tabs;
+    }
+
+
+    /**
+     * 根据语言设置tab，扩展语言从这里扩展
+     * @param tabsBean
+     * @param environmentLanguage
+     * @return
+     */
+    private MainTab internationalLanguage(AppTabAutoBean.PayloadBean.TabsBean tabsBean, String environmentLanguage,MainTab mainTab) {
+        if(environmentLanguage.toLowerCase().equals("zh-Hans".toLowerCase())){
+            mainTab.setConfigureName(tabsBean.getTitle().getZhHans());
+        }else if(environmentLanguage.toLowerCase().equals("zh-Hant".toLowerCase())){
+            mainTab.setConfigureName(tabsBean.getTitle().getZhHant());
+        }else if(environmentLanguage.toLowerCase().equals("en-US".toLowerCase())||
+                environmentLanguage.toLowerCase().equals("en".toLowerCase())){
+           mainTab.setConfigureName(tabsBean.getTitle().getEnUS());
+        }else{
+            mainTab.setConfigureName(tabsBean.getTitle().getZhHans());
+        }
+        return mainTab;
+    }
+
 
     /**
      * 根据定制展示App
@@ -494,13 +550,15 @@ public class IndexActivity extends BaseFragmentActivity implements
      */
     private int getTabIndex() {
         int tabIndex = 0;
-        String appTabs = PreferencesUtils.getString(IndexActivity.this,
-                UriUtils.tanent + userId + "appTabs", "");
-        ArrayList<AppTabBean> appTabList;
+        String appTabs = PreferencesByUserUtils.getString(IndexActivity.this,"app_tabbar_info_current","");
+//        String appTabs = PreferencesUtils.getString(IndexActivity.this,
+//                UriUtils.tanent + userId + "appTabs", "");
+//        ArrayList<AppTabBean> appTabList;
+        ArrayList<AppTabAutoBean.PayloadBean.TabsBean> appTabList;
         if (!StringUtils.isBlank(appTabs)) {
-            appTabList = (ArrayList<AppTabBean>) JSON.parseArray(appTabs, AppTabBean.class);
+            appTabList = (ArrayList<AppTabAutoBean.PayloadBean.TabsBean>) new AppTabAutoBean(appTabs).getPayload().getTabs();
         } else {
-            appTabList = new ArrayList<AppTabBean>();
+            appTabList = new ArrayList<AppTabAutoBean.PayloadBean.TabsBean>();
         }
 
         if (appTabList != null && appTabList.size() > 0) {
@@ -776,7 +834,6 @@ public class IndexActivity extends BaseFragmentActivity implements
                 mTabHost.clearAllTabs();
                 handleAppTabs();
             }
-
         }
 
         @Override
@@ -808,12 +865,47 @@ public class IndexActivity extends BaseFragmentActivity implements
             if(isReactNativeClientUpdateFail){
                 updateReactNative();
             }
+            if(isGetTab){
+                getAppTabs();
+                isGetTab = false;
+            }
         }
 
         @Override
         public void returnGetClientIdResultFail(String error) {
             super.returnGetClientIdResultFail(error);
         }
+
+        @Override
+        public void returnAppTabAutoSuccess(GetAppTabAutoResult getAppTabAutoResult) {
+            updateTabbarWithOrder(getAppTabAutoResult);
+        }
+
+        @Override
+        public void returnAppTabAutoFail(String error) {
+            LogUtils.YfcDebug("检查是否有Tab新接口");
+//            WebServiceMiddleUtils.hand(IndexActivity.this, error);
+        }
+    }
+
+    /**
+     * 根据命令升级Tabbar
+     * @param getAppTabAutoResult
+     */
+    private void updateTabbarWithOrder(GetAppTabAutoResult getAppTabAutoResult) {
+        String command = getAppTabAutoResult.getCommand();
+        PreferencesByUserUtils.putString(IndexActivity.this,"app_tabbar_version",getAppTabAutoResult.getVersion());
+        if(command.equals("FORWARD")){
+            PreferencesByUserUtils.putString(IndexActivity.this,"app_tabbar_info_current",getAppTabAutoResult.getAppTabInfo());
+            mTabHost.clearAllTabs();
+            handleAppTabs();
+        }else if(command.equals("STANDBY")){
+            LogUtils.YfcDebug("收到保持现状指令");
+        }else{
+            LogUtils.YfcDebug("收到不支持的指令");
+        }
+//        mTabHost.clearAllTabs();
+//        handleAppTabs();
     }
 
     /**
