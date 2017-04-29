@@ -15,6 +15,7 @@ import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
 import com.inspur.emmcloud.bean.AppRedirectResult;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
+import com.inspur.emmcloud.util.ToastUtils;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -61,6 +62,7 @@ public class ImpWebViewClient extends WebViewClient {
 	 */
 	@Override
 	public void onPageStarted(WebView view, String url, Bitmap favicon) {
+		ToastUtils.show(view.getContext(),"onPageStarted");
 		super.onPageStarted(view, url, favicon);
 		urlparam = url;
 		myWebView = (ImpWebView) view;
@@ -85,8 +87,10 @@ public class ImpWebViewClient extends WebViewClient {
 	 */
 	@Override
 	public void onPageFinished(WebView view, String url) {
+		ToastUtils.show(view.getContext(),"onPageFinished");
 		ImpWebView webview = (ImpWebView) view;
 		if (webview.destroyed || url.contains("error")){
+			ToastUtils.show(view.getContext(),"webview.destroyed或url.contains(\"error\")");
 			return;
 		}
 		//为了获取网页的title
@@ -105,6 +109,7 @@ public class ImpWebViewClient extends WebViewClient {
 	@Override
 	public void onReceivedError(WebView view, int errorCode,
 			String description, String failingUrl) {
+		ToastUtils.show(view.getContext(),"web打开失败："+description);
 		loadFailLayout.setVisibility(View.VISIBLE);
 //		final ImpWebView webview = (ImpWebView) view;
 //		removeAllSessionCookie();
@@ -151,6 +156,7 @@ public class ImpWebViewClient extends WebViewClient {
 	 */
 	private void handleReDirectURL(String url, WebView view) {
 		if(url.contains("https://id.inspur.com/oauth2.0/authorize")){
+			ToastUtils.show(view.getContext(),"进行URL重定向");
 			URL urlWithParams = null;
 			try {
 				urlWithParams = new URL(url);
@@ -174,6 +180,7 @@ public class ImpWebViewClient extends WebViewClient {
 
 		@Override
 		public void returnGetAppAuthCodeResultSuccess(AppRedirectResult appRedirectResult) {
+			ToastUtils.show(webView.getContext(),"URL重定向成功");
 			if(NetUtils.isNetworkConnected(webView.getContext())){
 				webView.loadUrl(appRedirectResult.getRedirect_uri());
 			}
@@ -182,6 +189,7 @@ public class ImpWebViewClient extends WebViewClient {
 
 		@Override
 		public void returnGetAppAuthCodeResultFail(String error) {
+			ToastUtils.show(webView.getContext(),"URL重定向失败");
 			super.returnGetAppAuthCodeResultFail(error);
 		}
 	}

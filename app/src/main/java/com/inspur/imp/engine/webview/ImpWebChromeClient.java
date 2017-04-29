@@ -24,6 +24,8 @@ import android.webkit.WebView;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 
+import com.inspur.emmcloud.util.LogUtils;
+import com.inspur.emmcloud.util.ToastUtils;
 import com.inspur.imp.api.Res;
 import com.inspur.imp.api.iLog;
 
@@ -257,7 +259,8 @@ public class ImpWebChromeClient extends WebChromeClient {
 	 */
 	@Override
 	public void onProgressChanged(WebView view, int newProgress) {
-
+		ToastUtils.show(view.getContext(),"Progress："+newProgress);
+		LogUtils.jasonDebug("newProgress="+newProgress);
 		if (newProgress == 100) {
 			progressLayout.setVisibility(View.GONE);
 			if(listener != null){
