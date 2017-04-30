@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -24,7 +23,6 @@ import android.widget.TextView;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.util.AppUtils;
-import com.inspur.emmcloud.util.FileUtils;
 import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.imp.engine.webview.ImpWebChromeClient;
@@ -114,8 +112,7 @@ public class ImpActivity extends ImpBaseActivity {
 				webView.reload();
 			}
 		});
-		 FileUtils.writeFile(Environment.getExternalStorageDirectory()
-		 + "/IMP-Cloud/OpenUrl.txt","\r\n"+"=======================time:"+System.currentTimeMillis()+"\r\n"+url,true);
+
 		webView.loadUrl(url, extraHeaders);
 		progressLayout.setVisibility(View.VISIBLE);
 	}
