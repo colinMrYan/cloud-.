@@ -60,11 +60,12 @@ public class GroupNewsCardFragment extends Fragment implements
 
 	}
 
-	public GroupNewsCardFragment(int position, String catagoryid,String title) {
+	public GroupNewsCardFragment(int position, String catagoryid,String title,boolean hasExtraPermission) {
 		// TODO Auto-generated constructor stub
 		Bundle b = new Bundle();
 		b.putInt(ARG_POSITION, position);
 		b.putString("catagoryid", catagoryid);
+		b.putBoolean("hasExtraPermission",hasExtraPermission);
 		this.setArguments(b);
 		this.pagerTitle = title;
 	}
@@ -135,6 +136,7 @@ public class GroupNewsCardFragment extends Fragment implements
 				intent.putExtra("url", TimeUtils.getNewsTime(posttime)
 						+ groupnNewsList.get(position).getUrl());
 				intent.putExtra("pager_title",pagerTitle);
+				intent.putExtra("hasExtraPermission",getArguments().getBoolean("hasExtraPermission"));
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

@@ -1,15 +1,14 @@
 package com.inspur.emmcloud.bean;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.text.TextUtils;
 
 import com.inspur.emmcloud.util.LogUtils;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class GetGroupNewsDetailResult {
 
@@ -29,8 +28,8 @@ public class GetGroupNewsDetailResult {
 
 	public GetGroupNewsDetailResult(String response) {
 		try {
+			LogUtils.YfcDebug("每一个category下的新闻信息："+response);
 			jsonArray = new JSONArray(response);
-
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

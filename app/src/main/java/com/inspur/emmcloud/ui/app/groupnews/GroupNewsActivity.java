@@ -1,7 +1,5 @@
 package com.inspur.emmcloud.ui.app.groupnews;
 
-import java.util.List;
-
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -22,6 +20,8 @@ import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.PagerSlidingTabStrip;
+
+import java.util.List;
 /**
  * 集团新闻
  * com.inspur.emmcloud.ui.GroupNewsActivity
@@ -87,7 +87,7 @@ public class GroupNewsActivity extends BaseFragmentActivity implements
 		@Override
 		public Fragment getItem(int position) {
 			return new GroupNewsCardFragment(position, titles.get(position)
-					.getNcid(),titles.get(position).getTitle());
+					.getNcid(),titles.get(position).getTitle(),titles.get(position).isHasExtraPermission());
 		}
 
 	}
@@ -124,6 +124,9 @@ public class GroupNewsActivity extends BaseFragmentActivity implements
 			}
 
 			titles = getNewsTitleResult.getTitlesList();
+			if(titles.size() == 0){
+				finish();
+			}
 			
 //			//调整新闻的显示顺序，把单位新闻和集团新闻交换位置，不用元素交换的方法是因为决定下面新闻内容的是ncid
 //			if (titles.get(0).getNcid().equals("1")) {
