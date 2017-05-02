@@ -13,15 +13,15 @@ import java.util.List;
 public class GetGroupNewsDetailResult {
 
 	private static final String TAG = "GetNewsTitleResult";
-	private String author="";
-	private String category="";
-	private String digest="";
-	private String needpush="";
-	private String nid="";
-	private String posttime="";
-	private String publisher="";
-	private String title="";
-	private String url="";
+//	private String author="";
+//	private String category="";
+//	private String digest="";
+//	private String needpush="";
+//	private String nid="";
+//	private String posttime="";
+//	private String publisher="";
+//	private String title="";
+//	private String url="";
 
 	private JSONArray jsonArray;
 	private List<GroupNews> groupNewsList;
@@ -29,7 +29,11 @@ public class GetGroupNewsDetailResult {
 	public GetGroupNewsDetailResult(String response) {
 		try {
 			LogUtils.YfcDebug("每一个category下的新闻信息："+response);
-			jsonArray = new JSONArray(response);
+			JSONObject jsonObject = new JSONObject(response);
+//			jsonArray = new JSONArray(response);
+			if(jsonObject.has("content")){
+				jsonArray = jsonObject.getJSONArray("content");
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

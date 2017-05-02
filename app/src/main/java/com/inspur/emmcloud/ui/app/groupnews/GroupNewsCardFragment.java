@@ -18,6 +18,7 @@ import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
 import com.inspur.emmcloud.bean.GetGroupNewsDetailResult;
 import com.inspur.emmcloud.bean.GroupNews;
+import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.TimeUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
@@ -155,6 +156,7 @@ public class GroupNewsCardFragment extends Fragment implements
 			if (!isPullup) {
 				groupnNewsList.clear();
 			}
+			LogUtils.YfcDebug("每个分类下新闻数量"+getGroupNewsDetailResult.getGroupNews().size());
 			groupnNewsList.addAll(getGroupNewsDetailResult.getGroupNews());
 			if (groupnNewsList != null && groupnNewsList.size() > 0) {
 				adapter = new NewsListAdapter(getActivity(), groupnNewsList);

@@ -121,19 +121,19 @@ public class AppUtils {
 		return versionCode;
 	}
 
-	/**
-	 * 如果包含Beta则截取bata前的版本号信息
-	 * 
-	 * @param versionCode
-	 * @return
-	 */
-	private static String getNormalVersionCode(String versionCode) {
-		if (versionCode.contains("Beta")) {
-			int betaLoction = versionCode.indexOf(" Beta");
-			versionCode = versionCode.substring(0, betaLoction);
-		}
-		return versionCode;
-	}
+//	/**
+//	 * 如果包含Beta则截取bata前的版本号信息
+//	 *
+//	 * @param versionCode
+//	 * @return
+//	 */
+//	private static String getNormalVersionCode(String versionCode) {
+//		if (versionCode.contains("Beta")) {
+//			int betaLoction = versionCode.indexOf(" Beta");
+//			versionCode = versionCode.substring(0, betaLoction);
+//		}
+//		return versionCode;
+//	}
 
 	/**
 	 * 判断应用是否进行了版本升级
@@ -147,17 +147,15 @@ public class AppUtils {
 		if (savedVersion != null || currentVersion != null) {
 			String[] savedArray = savedVersion.split("\\.");
 			String[] currentArray = currentVersion.split("\\.");
-try{
-	String saveVersionCode = getNormalVersionCode(savedArray[2]);
-	savedArray[2] = saveVersionCode;
-	String currentVersionCode = getNormalVersionCode(savedArray[2]);
-	currentArray[2] = currentVersionCode;
-}catch (Exception e){
-	LogUtils.YfcDebug("捕获版本异常："+e.getMessage());
-	e.printStackTrace();
-}
-
-
+//try{
+//	String saveVersionCode = getNormalVersionCode(savedArray[2]);
+//	savedArray[2] = saveVersionCode;
+//	String currentVersionCode = getNormalVersionCode(savedArray[2]);
+//	currentArray[2] = currentVersionCode;
+//}catch (Exception e){
+//	LogUtils.YfcDebug("捕获版本异常："+e.getMessage());
+//	e.printStackTrace();
+//}
 			if (savedArray.length != 3) {
 				return false;
 			} else if (currentArray.length != 3) {
