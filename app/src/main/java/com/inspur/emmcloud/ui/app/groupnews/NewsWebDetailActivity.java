@@ -39,12 +39,12 @@ import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.util.ChatCreateUtils;
 import com.inspur.emmcloud.util.ChatCreateUtils.OnCreateDirectChannelListener;
 import com.inspur.emmcloud.util.DensityUtil;
-import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.PreferencesByUserUtils;
 import com.inspur.emmcloud.util.StateBarColor;
 import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.UriUtils;
+import com.inspur.emmcloud.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.ProgressWebView;
 import com.inspur.emmcloud.widget.SwitchView;
@@ -91,6 +91,7 @@ public class NewsWebDetailActivity extends BaseActivity {
     private String pagerTitle = "";
     private SwitchView nightModeSwitchBtn;
     private GradientDrawable lightChooseFontBtnBackgroundDrawable;
+    private String newsId = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -227,6 +228,9 @@ public class NewsWebDetailActivity extends BaseActivity {
         }
         if(intent.hasExtra("pager_title")){
             this.pagerTitle = intent.getStringExtra("pager_title");
+        }
+        if(intent.hasExtra("news_id")){
+            this.newsId = intent.getStringExtra("news_id");
         }
     }
 
@@ -486,17 +490,17 @@ public class NewsWebDetailActivity extends BaseActivity {
 
     /**
      * 发布批示
-     * @param s
+     * @param instruction
      */
-    private void sendInstructions(String s) {
-        LogUtils.YfcDebug("将要发布的批示："+s);
-//        ChatAPIService apiService = new ChatAPIService(NewsWebDetailActivity.this);
-//        if(NetUtils.isNetworkConnected(NewsWebDetailActivity.this)){
-//            if(!loadingDlg.isShowing()){
-//                loadingDlg.show();
-//            }
-//            apiService.sendNewsInstruction(s);
-//        }
+    private void sendInstructions(String instruction) {
+        ChatAPIService apiService = new ChatAPIService(NewsWebDetailActivity.this);
+        apiService.setAPIInterface(new WebService());
+        if(NetUtils.isNetworkConnected(NewsWebDetailActivity.this)){
+            if(!loadingDlg.isShowing()){
+                loadingDlg.show();
+            }
+            apiService.sendNewsInstruction(newsId,instruction);
+        }
     }
 
 
@@ -874,6 +878,9 @@ public class NewsWebDetailActivity extends BaseActivity {
             if(loadingDlg != null && loadingDlg.isShowing()){
                 loadingDlg.dismiss();
             }
+            Toast.makeText(NewsWebDetailActivity.this,
+                    getString(R.string.news_instructions_success_text), Toast.LENGTH_SHORT)
+                    .show();
         }
 
         @Override
@@ -881,6 +888,7 @@ public class NewsWebDetailActivity extends BaseActivity {
             if(loadingDlg != null && loadingDlg.isShowing()){
                 loadingDlg.dismiss();
             }
+            WebServiceMiddleUtils.hand(NewsWebDetailActivity.this,error);
         }
     }
 

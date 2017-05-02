@@ -88,7 +88,7 @@ public class APIUri {
 		return "/" + tanent+"/res" + "/article" + "/";
 	}
 
-	public static String getNewsInstruction(){return  "";}
+	public static String getNewsInstruction(String newsId){return  getEcmTanentUrl()+"/api/v0/content/news/"+newsId+"/editor-comment";}
 	
 	/*************************************************会议接口*******************************************/
 	/**

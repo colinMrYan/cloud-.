@@ -124,7 +124,9 @@ public class GroupNewsCardFragment extends Fragment implements
 		@Override
 		public void onItemClick(AdapterView<?> parent, View view, int position,
 				long id) {
-			String posttime = groupnNewsList.get(position).getPosttime();
+//			String posttime = groupnNewsList.get(position).getPosttime();
+			String posttime = groupnNewsList.get(position).getCreationDate();
+			posttime = TimeUtils.Calendar2TimeString(TimeUtils.timeLong2Calendar(Long.parseLong(posttime)),TimeUtils.getFormat(getActivity(),TimeUtils.FORMAT_DEFAULT_DATE));
 			Intent intent = new Intent();
 			intent.setClass(getActivity(), NewsWebDetailActivity.class);
 			try {
@@ -133,11 +135,12 @@ public class GroupNewsCardFragment extends Fragment implements
 				intent.putExtra("title", groupnNewsList.get(position)
 						.getTitle());
 				intent.putExtra("digest", groupnNewsList.get(position)
-						.getDigest());
+						.getSummary());
 				intent.putExtra("url", TimeUtils.getNewsTime(posttime)
-						+ groupnNewsList.get(position).getUrl());
+						+ groupnNewsList.get(position).getResource());
+				intent.putExtra("news_id",groupnNewsList.get(position).getId());
 				intent.putExtra("pager_title",pagerTitle);
-				intent.putExtra("hasExtraPermission",getArguments().getBoolean("hasExtraPermission"));
+				intent.putExtra("hasExtraPermission",groupnNewsList.get(position).isHasExtraPermission());
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -156,7 +159,6 @@ public class GroupNewsCardFragment extends Fragment implements
 			if (!isPullup) {
 				groupnNewsList.clear();
 			}
-			LogUtils.YfcDebug("每个分类下新闻数量"+getGroupNewsDetailResult.getGroupNews().size());
 			groupnNewsList.addAll(getGroupNewsDetailResult.getGroupNews());
 			if (groupnNewsList != null && groupnNewsList.size() > 0) {
 				adapter = new NewsListAdapter(getActivity(), groupnNewsList);

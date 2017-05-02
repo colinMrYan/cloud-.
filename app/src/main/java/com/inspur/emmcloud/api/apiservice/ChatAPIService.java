@@ -858,11 +858,12 @@ public class ChatAPIService {
 	 * 新闻批示接口，传入内容为批示内容
 	 * @param instruction
      */
-	public void sendNewsInstruction(final String instruction){
-		final String completeUrl = APIUri.getNewsInstruction();
+	public void sendNewsInstruction(final String newsId, final String instruction){
+		final String completeUrl = APIUri.getNewsInstruction(newsId);
 		RequestParams params = ((MyApplication) context.getApplicationContext())
 				.getHttpRequestParams(completeUrl);
-		params.setBodyContent(instruction);
+		params.setHeader("Content-Type","url-encoded-form");
+		params.addQueryStringParameter("comment",instruction);
 		x.http().post(params, new APICallback() {
 			@Override
 			public void callbackSuccess(String arg0) {
@@ -879,7 +880,7 @@ public class ChatAPIService {
 				new OauthUtils(new OauthCallBack() {
 					@Override
 					public void execute() {
-						sendNewsInstruction(instruction);
+						sendNewsInstruction(newsId,instruction);
 					}
 				}, context).refreshTocken(completeUrl);
 			}

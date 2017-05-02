@@ -13,6 +13,7 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.GroupNews;
 import com.inspur.emmcloud.util.ImageDisplayUtils;
 import com.inspur.emmcloud.util.StringUtils;
+import com.inspur.emmcloud.util.TimeUtils;
 import com.inspur.emmcloud.util.UriUtils;
 
 import java.util.List;
@@ -82,13 +83,13 @@ public class NewsListAdapter extends BaseAdapter{
 			holder.title.setText((String)groupNewsList.get(position).getTitle());
 		}
 		
-		holder.content.setText((String)groupNewsList.get(position).getDigest());
-		String postTime = groupNewsList.get(position).getPosttime();
-		if (postTime != null && postTime.endsWith("Z")) {
-			postTime = postTime.substring(0,postTime.length()-1);
-		}
+		holder.content.setText((String)groupNewsList.get(position).getSummary());
+		String postTime = groupNewsList.get(position).getCreationDate();
+		postTime = TimeUtils.Calendar2TimeString(TimeUtils.timeLong2Calendar(Long.parseLong(postTime)),TimeUtils.getFormat(context,TimeUtils.FORMAT_DEFAULT_DATE));
+//		if (postTime != null && postTime.endsWith("Z")) {
+//			postTime = postTime.substring(0,postTime.length()-1);
+//		}
 		holder.textposer.setText(groupNewsList.get(position).getAuthor()+"  "+postTime);
-		
 		return convertView;
 	}
 
