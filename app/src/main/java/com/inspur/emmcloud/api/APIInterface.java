@@ -11,6 +11,7 @@ import com.inspur.emmcloud.bean.GetAllAppResult;
 import com.inspur.emmcloud.bean.GetAllContactResult;
 import com.inspur.emmcloud.bean.GetAllRobotsResult;
 import com.inspur.emmcloud.bean.GetAppGroupResult;
+import com.inspur.emmcloud.bean.GetAppTabAutoResult;
 import com.inspur.emmcloud.bean.GetAppTabsResult;
 import com.inspur.emmcloud.bean.GetBookingRoomResult;
 import com.inspur.emmcloud.bean.GetBoolenResult;
@@ -381,5 +382,8 @@ public interface APIInterface {
 
 	public void returnVeriryApprovalPasswordSuccess(String password);
 	public void returnVeriryApprovalPasswordFail(String error);
+
+	public void returnAppTabAutoSuccess(GetAppTabAutoResult getAppTabAutoResult);
+	public void returnAppTabAutoFail(String error);
 
 }

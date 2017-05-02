@@ -15,15 +15,20 @@ import android.widget.TextView;
 
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
+import com.inspur.emmcloud.bean.Channel;
 import com.inspur.emmcloud.bean.GetMyInfoResult;
 import com.inspur.emmcloud.ui.chat.ChannelActivity;
 import com.inspur.emmcloud.ui.mine.feedback.FeedBackActivity;
 import com.inspur.emmcloud.ui.mine.myinfo.MyInfoActivity;
 import com.inspur.emmcloud.ui.mine.setting.AboutActivity;
 import com.inspur.emmcloud.ui.mine.setting.SettingActivity;
+import com.inspur.emmcloud.util.AppTitleUtils;
+import com.inspur.emmcloud.util.ChannelCacheUtils;
 import com.inspur.emmcloud.util.ImageDisplayUtils;
 import com.inspur.emmcloud.util.IntentUtils;
+import com.inspur.emmcloud.util.PreferencesByUserUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
+import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.ToastUtils;
 import com.inspur.emmcloud.util.UriUtils;
 
@@ -49,6 +54,7 @@ public class MoreFragment extends Fragment {
     private ImageDisplayUtils imageDisplayUtils;
     private GetMyInfoResult getMyInfoResult;
     private String userheadUrl;
+    private TextView titleText;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -75,9 +81,10 @@ public class MoreFragment extends Fragment {
         userNameText = (TextView) rootView.findViewById(R.id.more_head_textup);
         userOrgText = (TextView) rootView.findViewById(R.id.more_head_textdown);
         userCodeImg = (ImageView) rootView.findViewById(R.id.more_head_codeImg);
-
+        titleText = (TextView) rootView.findViewById(R.id.header_text);
         imageDisplayUtils = new ImageDisplayUtils(getActivity(), R.drawable.icon_photo_default);
         getMyInfo();
+        setTabTitle();
     }
 
 
@@ -171,12 +178,15 @@ public class MoreFragment extends Fragment {
                             AboutActivity.class);
                     break;
                 case R.id.customer_layout:
-                    Bundle bundle = new Bundle();
-                    bundle.putString("title", "BOT6005-66666");
-                    bundle.putString("channelId", "10714");
-                    bundle.putString("channelType", "SERVICE");
+                    Channel customerChannel = ChannelCacheUtils.getCustomerChannel(getActivity());
+                    if (customerChannel != null ){
+                        Bundle bundle = new Bundle();
+                        bundle.putString("title", customerChannel.getTitle());
+                        bundle.putString("channelId", customerChannel.getCid());
+                        bundle.putString("channelType", customerChannel.getType());
                         IntentUtils.startActivity(getActivity(),
                                 ChannelActivity.class, bundle);
+                    }
                     break;
                 default:
                     break;
@@ -199,6 +209,26 @@ public class MoreFragment extends Fragment {
             parent.removeView(rootView);
         }
         return rootView;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Channel customerChannel = ChannelCacheUtils.getCustomerChannel(getActivity());
+        //如果找不到云+客服频道就隐藏
+        if (customerChannel == null){
+            (rootView.findViewById(R.id.customer_layout)).setVisibility(View.GONE);
+        }
+    }
+
+    /**
+     * 设置标题
+     */
+    private void setTabTitle(){
+        String appTabs = PreferencesByUserUtils.getString(getActivity(),"app_tabbar_info_current","");
+        if(!StringUtils.isBlank(appTabs)){
+            titleText.setText(AppTitleUtils.getTabTitle(getActivity(),getClass().getSimpleName()));
+        }
     }
 
 
