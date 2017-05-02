@@ -19,7 +19,6 @@ import android.text.TextUtils;
 import com.inspur.emmcloud.R;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.regex.Matcher;
@@ -114,8 +113,8 @@ public class AppUtils {
 			PackageInfo info = manager.getPackageInfo(context.getPackageName(),
 					0);
 			// 截取正常版本号的方法
-			// versionCode = info.versionName;
-			versionCode = getNormalVersionCode(info.versionName);
+			 versionCode = info.versionName;
+//			versionCode = getNormalVersionCode(info.versionName);
 		} catch (Exception e) {
 			LogUtils.exceptionDebug(TAG, e.toString());
 		}
@@ -305,15 +304,14 @@ try{
 	 */
 	public static  boolean isAppInstalled(Context context, String packageName) {
 		final PackageManager packageManager = context.getPackageManager();
-		List<PackageInfo> pinfo = packageManager.getInstalledPackages(0);
-		List<String> pName = new ArrayList<String>();
-		if (pinfo != null) {
-			for (int i = 0; i < pinfo.size(); i++) {
-				String pn = pinfo.get(i).packageName;
-				pName.add(pn);
-			}
+		boolean installed =false;
+		try{
+			packageManager.getPackageInfo(packageName,PackageManager.GET_ACTIVITIES);
+			installed =true;
+		}catch(PackageManager.NameNotFoundException e){
+			installed =false;
 		}
-		return pName.contains(packageName);
+		return installed;
 	}
 
 	/**

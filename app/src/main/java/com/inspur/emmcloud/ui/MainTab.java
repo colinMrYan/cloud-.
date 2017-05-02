@@ -5,6 +5,7 @@ import com.inspur.emmcloud.ui.app.MyAppFragment;
 import com.inspur.emmcloud.ui.chat.MessageFragment;
 import com.inspur.emmcloud.ui.find.FindFragment;
 import com.inspur.emmcloud.ui.mine.MoreFragment;
+import com.inspur.emmcloud.ui.notsupport.NotSupportFragment;
 import com.inspur.emmcloud.ui.work.WorkFragment;
 
 /**
@@ -27,7 +28,10 @@ public enum MainTab {
 			MyAppFragment.class),
 
 	MINE(4, R.string.mine, R.drawable.selector_tab_more_btn,
-			MoreFragment.class);
+			MoreFragment.class),
+
+	NOTSUPPORT(5, R.string.unknown, R.drawable.selector_tab_unknown_btn,
+		 NotSupportFragment.class);
 
 	private int idx;
 	private int resName;

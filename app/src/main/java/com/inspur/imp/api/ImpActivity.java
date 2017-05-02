@@ -94,12 +94,12 @@ public class ImpActivity extends ImpBaseActivity {
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
 				switch (event.getAction()) {
-				case MotionEvent.ACTION_DOWN:
-				case MotionEvent.ACTION_UP:
-					if (!v.hasFocus()) {
-						v.requestFocus();
-					}
-					break;
+					case MotionEvent.ACTION_DOWN:
+					case MotionEvent.ACTION_UP:
+						if (!v.hasFocus()) {
+							v.requestFocus();
+						}
+						break;
 				}
 				return false;
 			}
@@ -224,9 +224,9 @@ public class ImpActivity extends ImpBaseActivity {
 		}
 		return super.onKeyDown(keyCode, event);
 	}
-	
-	
-	
+
+
+
 	@Override
 	protected void onDestroy() {
 		// TODO Auto-generated method stub

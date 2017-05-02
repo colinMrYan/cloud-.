@@ -1,6 +1,5 @@
 package com.inspur.emmcloud.ui.mine;
 
-import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -10,25 +9,28 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.ViewGroup.LayoutParams;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
+import com.inspur.emmcloud.bean.Channel;
 import com.inspur.emmcloud.bean.GetMyInfoResult;
-import com.inspur.emmcloud.ui.mine.cardpackage.CardPackageListActivity;
+import com.inspur.emmcloud.ui.chat.ChannelActivity;
 import com.inspur.emmcloud.ui.mine.feedback.FeedBackActivity;
 import com.inspur.emmcloud.ui.mine.myinfo.MyInfoActivity;
+import com.inspur.emmcloud.ui.mine.setting.AboutActivity;
 import com.inspur.emmcloud.ui.mine.setting.SettingActivity;
+import com.inspur.emmcloud.util.AppTitleUtils;
+import com.inspur.emmcloud.util.ChannelCacheUtils;
 import com.inspur.emmcloud.util.ImageDisplayUtils;
+import com.inspur.emmcloud.util.IntentUtils;
+import com.inspur.emmcloud.util.PreferencesByUserUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
+import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.ToastUtils;
 import com.inspur.emmcloud.util.UriUtils;
-import com.inspur.emmcloud.widget.LoadingDialog;
 
 import java.io.Serializable;
 
@@ -38,13 +40,11 @@ import java.io.Serializable;
 public class MoreFragment extends Fragment {
 
     private static final int UPDATE_MY_HEAD = 3;
-    private static final String ACTION_NAME = "userInfo";
 
     public static Handler handler;
 
     private View rootView;
     private LayoutInflater inflater;
-    private LoadingDialog loadingDlg;
     private RelativeLayout setContentItem;
     private RelativeLayout userHeadLayout;
     private ImageView moreHeadImg;
@@ -54,6 +54,7 @@ public class MoreFragment extends Fragment {
     private ImageDisplayUtils imageDisplayUtils;
     private GetMyInfoResult getMyInfoResult;
     private String userheadUrl;
+    private TextView titleText;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -63,7 +64,6 @@ public class MoreFragment extends Fragment {
                 getActivity().LAYOUT_INFLATER_SERVICE);
 
         rootView = inflater.inflate(R.layout.fragment_mine, null);
-        loadingDlg = new LoadingDialog(getActivity());
 
         handMessage();
 
@@ -72,18 +72,19 @@ public class MoreFragment extends Fragment {
         userHeadLayout = (RelativeLayout) rootView.findViewById(R.id.more_userhead_layout);
         setContentItem.setOnClickListener(onClickListener);
         userHeadLayout.setOnClickListener(onClickListener);
-        ((RelativeLayout) rootView.findViewById(R.id.more_help_layout)).setOnClickListener(onClickListener);
-        ((RelativeLayout) rootView.findViewById(R.id.more_message_layout)).setOnClickListener(onClickListener);
-        ((RelativeLayout) rootView.findViewById(R.id.more_invite_friends_layout)).setOnClickListener(onClickListener);
-        ((RelativeLayout) rootView.findViewById(R.id.more_cardpackage_layout)).setOnClickListener(onClickListener);
-        ((RelativeLayout) rootView.findViewById(R.id.more_department_layout)).setOnClickListener(onClickListener);
+        (rootView.findViewById(R.id.more_help_layout)).setOnClickListener(onClickListener);
+        (rootView.findViewById(R.id.more_message_layout)).setOnClickListener(onClickListener);
+        (rootView.findViewById(R.id.more_invite_friends_layout)).setOnClickListener(onClickListener);
+        (rootView.findViewById(R.id.about_layout)).setOnClickListener(onClickListener);
+        (rootView.findViewById(R.id.customer_layout)).setOnClickListener(onClickListener);
         moreHeadImg = (ImageView) rootView.findViewById(R.id.more_head_img);
         userNameText = (TextView) rootView.findViewById(R.id.more_head_textup);
         userOrgText = (TextView) rootView.findViewById(R.id.more_head_textdown);
         userCodeImg = (ImageView) rootView.findViewById(R.id.more_head_codeImg);
-
+        titleText = (TextView) rootView.findViewById(R.id.header_text);
         imageDisplayUtils = new ImageDisplayUtils(getActivity(), R.drawable.icon_photo_default);
         getMyInfo();
+        setTabTitle();
     }
 
 
@@ -126,27 +127,27 @@ public class MoreFragment extends Fragment {
         };
     }
 
-    private void showDialog() {
-        View view = getActivity().getLayoutInflater().inflate(R.layout.mine_team_choose_dialog, null);
-        Dialog dialog = new Dialog(getActivity(), R.style.transparentFrameWindowStyle);
-        dialog.setContentView(view, new LayoutParams(LayoutParams.FILL_PARENT,
-                LayoutParams.WRAP_CONTENT));
-        Window window = dialog.getWindow();
-        // 设置显示动画
-        window.setWindowAnimations(R.style.main_menu_animstyle);
-        WindowManager.LayoutParams wl = window.getAttributes();
-        wl.x = 0;
-        wl.y = getActivity().getWindowManager().getDefaultDisplay().getHeight();
-        // 以下这两句是为了保证按钮可以水平满屏
-        wl.width = LayoutParams.MATCH_PARENT;
-        wl.height = LayoutParams.WRAP_CONTENT;
-
-        // 设置显示位置
-        dialog.onWindowAttributesChanged(wl);
-        // 设置点击外围解散
-        dialog.setCanceledOnTouchOutside(true);
-        dialog.show();
-    }
+//    private void showDialog() {
+//        View view = getActivity().getLayoutInflater().inflate(R.layout.mine_team_choose_dialog, null);
+//        Dialog dialog = new Dialog(getActivity(), R.style.transparentFrameWindowStyle);
+//        dialog.setContentView(view, new LayoutParams(LayoutParams.FILL_PARENT,
+//                LayoutParams.WRAP_CONTENT));
+//        Window window = dialog.getWindow();
+//        // 设置显示动画
+//        window.setWindowAnimations(R.style.main_menu_animstyle);
+//        WindowManager.LayoutParams wl = window.getAttributes();
+//        wl.x = 0;
+//        wl.y = getActivity().getWindowManager().getDefaultDisplay().getHeight();
+//        // 以下这两句是为了保证按钮可以水平满屏
+//        wl.width = LayoutParams.MATCH_PARENT;
+//        wl.height = LayoutParams.WRAP_CONTENT;
+//
+//        // 设置显示位置
+//        dialog.onWindowAttributesChanged(wl);
+//        // 设置点击外围解散
+//        dialog.setCanceledOnTouchOutside(true);
+//        dialog.show();
+//    }
 
     private OnClickListener onClickListener = new OnClickListener() {
 
@@ -165,22 +166,27 @@ public class MoreFragment extends Fragment {
                     startActivity(intent);
                     break;
                 case R.id.more_help_layout:
-				String feedbackUrl ="http://uservoices.inspur.com/feedback/";
-				intent.setClass(getActivity(), FeedBackActivity.class);
-				startActivity(intent);
-
-
+				    intent.setClass(getActivity(), FeedBackActivity.class);
+				    startActivity(intent);
                     break;
                 case R.id.more_message_layout:
                 case R.id.more_invite_friends_layout:
                     ToastUtils.show(getActivity(), R.string.function_not_implemented);
                     break;
-                case R.id.more_cardpackage_layout:
-                    intent.setClass(getActivity(), CardPackageListActivity.class);
-                    startActivity(intent);
+                case R.id.about_layout:
+                    IntentUtils.startActivity(getActivity(),
+                            AboutActivity.class);
                     break;
-                case R.id.more_department_layout:
-                    showDialog();
+                case R.id.customer_layout:
+                    Channel customerChannel = ChannelCacheUtils.getCustomerChannel(getActivity());
+                    if (customerChannel != null ){
+                        Bundle bundle = new Bundle();
+                        bundle.putString("title", customerChannel.getTitle());
+                        bundle.putString("channelId", customerChannel.getCid());
+                        bundle.putString("channelType", customerChannel.getType());
+                        IntentUtils.startActivity(getActivity(),
+                                ChannelActivity.class, bundle);
+                    }
                     break;
                 default:
                     break;
@@ -203,6 +209,26 @@ public class MoreFragment extends Fragment {
             parent.removeView(rootView);
         }
         return rootView;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Channel customerChannel = ChannelCacheUtils.getCustomerChannel(getActivity());
+        //如果找不到云+客服频道就隐藏
+        if (customerChannel == null){
+            (rootView.findViewById(R.id.customer_layout)).setVisibility(View.GONE);
+        }
+    }
+
+    /**
+     * 设置标题
+     */
+    private void setTabTitle(){
+        String appTabs = PreferencesByUserUtils.getString(getActivity(),"app_tabbar_info_current","");
+        if(!StringUtils.isBlank(appTabs)){
+            titleText.setText(AppTitleUtils.getTabTitle(getActivity(),getClass().getSimpleName()));
+        }
     }
 
 

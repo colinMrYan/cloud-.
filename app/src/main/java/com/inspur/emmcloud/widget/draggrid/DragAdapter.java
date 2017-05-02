@@ -1,8 +1,8 @@
 package com.inspur.emmcloud.widget.draggrid;
 
-import java.util.List;
-
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -19,13 +19,15 @@ import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
 import com.inspur.emmcloud.bean.App;
 import com.inspur.emmcloud.bean.GetRemoveAppResult;
 import com.inspur.emmcloud.util.AppCacheUtils;
+import com.inspur.emmcloud.util.AppUtils;
 import com.inspur.emmcloud.util.DensityUtil;
 import com.inspur.emmcloud.util.ImageDisplayUtils;
-import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.ImageViewRound;
 import com.inspur.emmcloud.widget.LoadingDialog;
+
+import java.util.List;
 
 public class DragAdapter extends BaseAdapter {
 
@@ -125,16 +127,15 @@ public class DragAdapter extends BaseAdapter {
 		});
 		return convertView;
 	}
-	
+
 //	private static class ViewHolder{
 //		ImageView iconImg;
 //		TextView nameText;
 //		ImageView deleteImg;
 //	}
-	
+
 	/**
 	 * 移除app
-	 * @param position
 	 * @param app
 	 */
 	private void removeApp(App app) {
@@ -144,9 +145,18 @@ public class DragAdapter extends BaseAdapter {
 		}
 	}
 
+	private void uninstallNativeApp(String packageName){
+		if (AppUtils.isAppInstalled(context,packageName)){
+			Intent intent = new Intent();
+			intent.setAction(Intent.ACTION_DELETE);
+			intent.setData(Uri.parse("package:"+packageName));
+			context.startActivity(intent);
+		}
+	}
+
 	/**
 	 * 停止动画
-	 * 
+	 *
 	 * @param convertView
 	 */
 	private void stopAnimation(View convertView) {
@@ -155,7 +165,7 @@ public class DragAdapter extends BaseAdapter {
 
 	/**
 	 * 加入动画
-	 * 
+	 *
 	 * @param convertView
 	 */
 	private void startAnimation(View convertView, int position) {
@@ -229,7 +239,7 @@ public class DragAdapter extends BaseAdapter {
 	public interface NotifyCommonlyUseListener{
 		void onNotifyCommonlyUseApp(App app);
 	}
-	
+
 	/**
 	 * 设置刷新常用的接口
 	 * @param l
@@ -237,7 +247,7 @@ public class DragAdapter extends BaseAdapter {
 	public void setNotifyCommonlyUseListener(NotifyCommonlyUseListener l){
 		this.commonlyUseListener = l;
 	}
-	
+
 	class WebService extends APIInterfaceInstance{
 		@Override
 		public void returnRemoveAppFail(String error) {
@@ -257,6 +267,10 @@ public class DragAdapter extends BaseAdapter {
 				appList.remove(deletePosition);
 				commonlyUseListener.onNotifyCommonlyUseApp(app);
 				notifyDataSetChanged();
+				if (app.getAppType() == 2){
+					uninstallNativeApp(app.getPackageName());
+				}
+
 			}
 		}
 	}

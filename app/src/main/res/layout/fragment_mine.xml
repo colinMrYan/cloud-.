@@ -113,7 +113,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:background="#ffffff"
             android:orientation="vertical" >
 
             <!-- 细线 -->
@@ -164,52 +163,8 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"
-                android:layout_marginLeft="48dp"
                 android:background="#dadadd"
                 android:visibility="gone" />
-
-            <RelativeLayout
-                android:id="@+id/more_cardpackage_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/text_layout_selector"
-                android:clickable="true" >
-
-                <ImageView
-                    android:id="@+id/more_cardpackage_img"
-                    android:layout_width="33dp"
-                    android:layout_height="33dp"
-                    android:layout_centerVertical="true"
-                    android:layout_marginBottom="6dp"
-                    android:layout_marginLeft="12dp"
-                    android:layout_marginRight="10dp"
-                    android:layout_marginTop="6dp"
-                    android:padding="0.5dp"
-                    android:src="@drawable/icon_card_logo" />
-
-                <TextView
-                    android:id="@+id/more_cardpackage_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_toRightOf="@id/more_cardpackage_img"
-                    android:text="@string/card_package_listtext"
-                    android:textSize="@dimen/content_normal_textsize" />
-
-                <ImageView
-                    android:id="@+id/more_cardpackage_arrowImg"
-                    style="@style/arrow_right"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="10dp"
-                    android:src="@drawable/icon_arrow_right" />
-            </RelativeLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0.5dp"
-                android:layout_marginLeft="12dp"
-                android:background="#dadadd" />
 
             <RelativeLayout
                 android:id="@+id/more_set_layout"
@@ -227,6 +182,7 @@
                     android:layout_marginLeft="12dp"
                     android:layout_marginRight="10dp"
                     android:layout_marginTop="6dp"
+                    android:background="#ffffff"
                     android:padding="0.5dp"
                     android:src="@drawable/icon_set" />
 
@@ -247,23 +203,71 @@
                     android:layout_marginRight="10dp"
                     android:src="@drawable/icon_arrow_right" />
             </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="#dadadd" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_marginTop="10dp"
+                android:background="#dadadd" />
+            <RelativeLayout
+                android:id="@+id/more_help_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/text_layout_selector"
+                android:clickable="true" >
+
+                <ImageView
+                    android:id="@+id/more_help_img"
+                    android:layout_width="33dp"
+                    android:layout_height="33dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginBottom="6dp"
+                    android:layout_marginLeft="12dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="6dp"
+                    android:padding="0.5dp"
+                    android:src="@drawable/icon_help" />
+
+                <TextView
+                    android:id="@+id/more_help_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_toRightOf="@id/more_help_img"
+                    android:text="@string/more_help"
+                    android:textSize="@dimen/content_normal_textsize" />
+
+                <ImageView
+                    android:id="@+id/more_help_arrowImg"
+                    style="@style/arrow_right"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="10dp"
+                    android:src="@drawable/icon_arrow_right" />
+            </RelativeLayout>
         </LinearLayout>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
+            android:layout_marginTop="-0.5dp"
+            android:layout_marginLeft="48dp"
             android:background="#dadadd" />
 
         <RelativeLayout
-            android:id="@+id/more_help_layout"
+            android:id="@+id/customer_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-             android:layout_marginTop="10dp"
             android:background="@drawable/text_layout_selector"
             android:clickable="true" >
 
             <ImageView
-                android:id="@+id/more_help_img"
+                android:id="@+id/customer_img"
                 android:layout_width="33dp"
                 android:layout_height="33dp"
                 android:layout_centerVertical="true"
@@ -272,19 +276,19 @@
                 android:layout_marginRight="10dp"
                 android:layout_marginTop="6dp"
                 android:padding="0.5dp"
-                android:src="@drawable/icon_help" />
+                android:src="@drawable/ic_customer" />
 
             <TextView
-                android:id="@+id/more_help_text"
+                android:id="@+id/customer_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_toRightOf="@id/more_help_img"
-                android:text="@string/more_help"
+                android:layout_toRightOf="@id/customer_img"
+                android:text="@string/app_customer"
                 android:textSize="@dimen/content_normal_textsize" />
 
             <ImageView
-                android:id="@+id/more_help_arrowImg"
+                android:id="@+id/customer_arrowImg"
                 style="@style/arrow_right"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
@@ -301,37 +305,36 @@
         
         
                 <RelativeLayout
-            android:id="@+id/more_department_layout"
+            android:id="@+id/about_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
              android:layout_marginTop="10dp"
-             android:visibility="gone"
             android:background="@drawable/text_layout_selector"
             android:clickable="true" >
+             <com.inspur.emmcloud.widget.CircleImageView
+                        android:id="@+id/about_img"
+                        android:layout_width="33dp"
+                        android:layout_height="33dp"
+                        android:layout_centerVertical="true"
+                        android:layout_marginBottom="6dp"
+                        android:layout_marginLeft="12dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_marginTop="6dp"
+                        android:padding="0.5dp"
+                        android:src="@drawable/icon_circle_logo"/>
 
-            <ImageView
-                android:id="@+id/more_department_img"
-                android:layout_width="33dp"
-                android:layout_height="33dp"
-                android:layout_centerVertical="true"
-                android:layout_marginBottom="6dp"
-                android:layout_marginLeft="12dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginTop="6dp"
-                android:padding="0.5dp"
-                android:src="@drawable/icon_help" />
 
             <TextView
-                android:id="@+id/more_department_text"
+                android:id="@+id/about_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_toRightOf="@id/more_department_img"
-                android:text="@string/more_help"
+                android:layout_toRightOf="@id/about_img"
+                android:text="@string/settings_aboutIMP"
                 android:textSize="@dimen/content_normal_textsize" />
 
             <ImageView
-                android:id="@+id/more_department_arrowImg"
+                android:id="@+id/about_arrowImg"
                 style="@style/arrow_right"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"

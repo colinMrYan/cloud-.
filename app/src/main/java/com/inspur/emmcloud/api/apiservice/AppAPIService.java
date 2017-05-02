@@ -13,6 +13,7 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.api.APICallback;
 import com.inspur.emmcloud.api.APIInterface;
 import com.inspur.emmcloud.api.APIUri;
+import com.inspur.emmcloud.bean.GetAppTabAutoResult;
 import com.inspur.emmcloud.bean.GetAppTabsResult;
 import com.inspur.emmcloud.bean.GetClientIdRsult;
 import com.inspur.emmcloud.bean.GetExceptionResult;
@@ -288,6 +289,39 @@ public class AppAPIService {
 			}
 		});
 	}
+
+
+	/**
+	 * 获取显示tab页的接口
+	 */
+	public void getAppNewTabs(final String version, final String clientId){
+		final String completeUrl = APIUri.getAppNewTabs()+"?version="+version+"&clientId="+clientId;
+		RequestParams params = ((MyApplication) context.getApplicationContext())
+				.getHttpRequestParams(completeUrl);
+		x.http().request(HttpMethod.GET, params, new APICallback() {
+			@Override
+			public void callbackTokenExpire() {
+				new OauthUtils(new OauthCallBack() {
+
+					@Override
+					public void execute() {
+						getAppNewTabs(version,clientId);
+					}
+				}, context).refreshTocken(completeUrl);
+			}
+
+			@Override
+			public void callbackSuccess(String arg0) {
+				apiInterface.returnAppTabAutoSuccess(new GetAppTabAutoResult(arg0));
+			}
+
+			@Override
+			public void callbackFail(String error, int responseCode) {
+				apiInterface.returnAppTabAutoFail(error);
+			}
+		});
+	}
+
 
 	/**
 	 * 手机应用PV信息（web应用）
