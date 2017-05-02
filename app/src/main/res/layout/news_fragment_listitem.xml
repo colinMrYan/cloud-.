@@ -15,12 +15,12 @@
         android:layout_marginRight="10dp" -->
         <ImageView
             android:id="@+id/news_leftImg_img"
-            android:layout_width="110dp"
+            android:layout_width="90dp"
             android:layout_height="71dp"
-            android:scaleType="fitXY"
+            android:scaleType="centerCrop"
             android:layout_centerVertical="true"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp" />
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp" />
 
         <LinearLayout
             android:id="@+id/news_middleText_layout"

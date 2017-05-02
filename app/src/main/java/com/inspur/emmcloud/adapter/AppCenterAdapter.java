@@ -1,7 +1,5 @@
 package com.inspur.emmcloud.adapter;
 
-import java.util.List;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Handler;
@@ -25,6 +23,8 @@ import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
+
+import java.util.List;
 
 public class AppCenterAdapter extends BaseAdapter {
 
@@ -162,8 +162,6 @@ public class AppCenterAdapter extends BaseAdapter {
 		// TODO Auto-generated method stub
 		switch (type) {
 		case 2:
-
-			break;
 		case 3:
 		case 4:
 			if (NetUtils.isNetworkConnected(activity)) {

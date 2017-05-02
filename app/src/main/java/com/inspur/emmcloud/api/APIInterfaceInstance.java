@@ -11,6 +11,7 @@ import com.inspur.emmcloud.bean.GetAllAppResult;
 import com.inspur.emmcloud.bean.GetAllContactResult;
 import com.inspur.emmcloud.bean.GetAllRobotsResult;
 import com.inspur.emmcloud.bean.GetAppGroupResult;
+import com.inspur.emmcloud.bean.GetAppTabAutoResult;
 import com.inspur.emmcloud.bean.GetAppTabsResult;
 import com.inspur.emmcloud.bean.GetBookingRoomResult;
 import com.inspur.emmcloud.bean.GetBoolenResult;
@@ -1344,4 +1345,16 @@ public class APIInterfaceInstance implements APIInterface{
 	public void returnNewsInstructionFail(String error) {
 
 	}
+
+	@Override
+	public void returnAppTabAutoSuccess(GetAppTabAutoResult getAppTabAutoResult) {
+
+	}
+
+	@Override
+	public void returnAppTabAutoFail(String error) {
+
+	}
+
+
 }

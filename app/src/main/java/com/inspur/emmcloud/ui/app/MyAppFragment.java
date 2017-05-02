@@ -32,10 +32,13 @@ import com.inspur.emmcloud.bean.AppGroupBean;
 import com.inspur.emmcloud.bean.AppOrder;
 import com.inspur.emmcloud.bean.GetAppGroupResult;
 import com.inspur.emmcloud.util.AppCacheUtils;
+import com.inspur.emmcloud.util.AppTitleUtils;
 import com.inspur.emmcloud.util.IntentUtils;
 import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.NetUtils;
+import com.inspur.emmcloud.util.PreferencesByUserUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
+import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
@@ -79,6 +82,7 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
     private boolean isNeedCommonlyUseApp = false;
 //    private SwitchView switchView;
 //    private View contentView;
+    private TextView titleText;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -123,10 +127,22 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
                 }
             }
         });
+        titleText = (TextView) rootView.findViewById(R.id.header_text);
         OnAppCenterClickListener listener = new OnAppCenterClickListener();
         ((RelativeLayout)rootView.findViewById(R.id.appcenter_layout)).setOnClickListener(listener);
         getMyApp(true);
+        setTabTitle();
 
+    }
+
+    /**
+     * 设置标题
+     */
+    private void setTabTitle(){
+        String appTabs = PreferencesByUserUtils.getString(getActivity(),"app_tabbar_info_current","");
+        if(!StringUtils.isBlank(appTabs)){
+            titleText.setText(AppTitleUtils.getTabTitle(getActivity(),getClass().getSimpleName()));
+        }
     }
 
     /**
