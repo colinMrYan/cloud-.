@@ -65,7 +65,7 @@ public class AppAPIService {
 			params.addParameter("clientType", "android");
 		}
 
-		x.http().post(params, new APICallback() {
+		x.http().post(params, new APICallback(context,completeUrl) {
 
 			@Override
 			public void callbackTokenExpire() {
@@ -99,7 +99,7 @@ public class AppAPIService {
 				.getHttpRequestParams(completeUrl);
 		params.addParameter("deviceId",deviceId);
 		params.addParameter("deviceName",deviceName);
-		x.http().post(params, new APICallback() {
+		x.http().post(params, new APICallback(context,completeUrl) {
 			@Override
 			public void callbackSuccess(String arg0) {
 				apiInterface.returnGetClientIdResultSuccess(new GetClientIdRsult(arg0));
@@ -132,7 +132,7 @@ public class AppAPIService {
 //		final String completeUrl = APIUri.getReactNativeUpdate()+"version="+version+"&lastCreationDate=" + lastCreationDate;
 //		RequestParams params = ((MyApplication) context.getApplicationContext())
 //				.getHttpRequestParams(completeUrl);
-//		x.http().get(params, new APICallback() {
+//		x.http().get(params, new APICallback(context,completeUrl) {
 //			@Override
 //			public void callbackSuccess(String arg0) {
 //				apiInterface.returnReactNativeUpdateSuccess(new ReactNativeUpdateBean(arg0));
@@ -165,7 +165,7 @@ public class AppAPIService {
 				+"&clientId="+clientId;
 		RequestParams params = ((MyApplication) context.getApplicationContext())
 				.getHttpRequestParams(completeUrl);
-		x.http().get(params, new APICallback() {
+		x.http().get(params, new APICallback(context,completeUrl) {
 			@Override
 			public void callbackSuccess(String arg0) {
 				LogUtils.YfcDebug("");
@@ -201,7 +201,7 @@ public class AppAPIService {
 				+"&clientId="+clientId;
 		RequestParams params = ((MyApplication) context.getApplicationContext())
 				.getHttpRequestParams(completeUrl);
-		x.http().request(HttpMethod.PUT,params, new APICallback() {
+		x.http().request(HttpMethod.PUT,params, new APICallback(context,completeUrl) {
 			@Override
 			public void callbackSuccess(String arg0) {
 				LogUtils.YfcDebug("回写日志成功返回结果："+arg0);
@@ -234,8 +234,9 @@ public class AppAPIService {
 		final String completeUrl =APIUri.uploadException();
 		RequestParams params = ((MyApplication) context.getApplicationContext())
 				.getHttpRequestParams(completeUrl);
-		params.addParameter("data", exception);
-		x.http().post(params, new APICallback() {
+		params.setAsJsonContent(true);
+		params.setBodyContent(exception.toString());
+		x.http().post(params, new APICallback(context,completeUrl) {
 			
 			@Override
 			public void callbackTokenExpire() {
@@ -266,7 +267,7 @@ public class AppAPIService {
 		final String completeUrl = APIUri.getAppTabs();
 		RequestParams params = ((MyApplication) context.getApplicationContext())
 				.getHttpRequestParams(completeUrl);
-		x.http().request(HttpMethod.GET, params, new APICallback() {
+		x.http().request(HttpMethod.GET, params, new APICallback(context,completeUrl) {
 			@Override
 			public void callbackTokenExpire() {
 				new OauthUtils(new OauthCallBack() {
@@ -298,7 +299,7 @@ public class AppAPIService {
 		final String completeUrl = APIUri.getAppNewTabs()+"?version="+version+"&clientId="+clientId;
 		RequestParams params = ((MyApplication) context.getApplicationContext())
 				.getHttpRequestParams(completeUrl);
-		x.http().request(HttpMethod.GET, params, new APICallback() {
+		x.http().request(HttpMethod.GET, params, new APICallback(context,completeUrl) {
 			@Override
 			public void callbackTokenExpire() {
 				new OauthUtils(new OauthCallBack() {
@@ -332,7 +333,7 @@ public class AppAPIService {
 		RequestParams params = new RequestParams(completeUrl);
 		params.setBodyContent(collectInfo);
 		params.setAsJsonContent(true);
-		x.http().request(HttpMethod.POST, params, new APICallback() {
+		x.http().request(HttpMethod.POST, params, new APICallback(context,completeUrl) {
 			@Override
 			public void callbackSuccess(String arg0) {
 				apiInterface.returnUploadCollectSuccess();
@@ -360,7 +361,7 @@ public class AppAPIService {
 		RequestParams params = new RequestParams(completeUrl);
 		params.addQueryStringParameter("userName",userName);
 		params.addQueryStringParameter("userPass",password);
-		x.http().request(HttpMethod.GET, params, new APICallback() {
+		x.http().request(HttpMethod.GET, params, new APICallback(context,completeUrl) {
 			@Override
 			public void callbackSuccess(String arg0) {
 				if (arg0.equals("登录成功")){

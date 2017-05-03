@@ -7,15 +7,20 @@
  */
 package com.inspur.emmcloud.api;
 
-import java.net.HttpCookie;
-import java.util.List;
+import android.content.Context;
+
+import com.inspur.emmcloud.bean.AppException;
+import com.inspur.emmcloud.util.AppExceptionCacheUtils;
+import com.inspur.emmcloud.util.AppUtils;
+import com.inspur.emmcloud.util.LogUtils;
+import com.inspur.emmcloud.util.StringUtils;
 
 import org.xutils.common.Callback.CommonCallback;
 import org.xutils.ex.HttpException;
-import org.xutils.http.cookie.DbCookieStore;
 
-import com.inspur.emmcloud.util.LogUtils;
-import com.inspur.emmcloud.util.StringUtils;
+import java.net.SocketTimeoutException;
+import java.util.List;
+import java.util.concurrent.TimeoutException;
 
 
 /**
@@ -24,13 +29,20 @@ import com.inspur.emmcloud.util.StringUtils;
  */
 public abstract class APICallback implements CommonCallback<String>{
 
+	private Context context;
+	private String url;
+
+	public APICallback(Context context,String url){
+		this.context = context;
+		this.url = url;
+	}
+
 	/* (non-Javadoc)
 	 * @see org.xutils.common.Callback.CommonCallback#onCancelled(org.xutils.common.Callback.CancelledException)
 	 */
 	@Override
 	public void onCancelled(CancelledException arg0) {
 		// TODO Auto-generated method stub
-		
 	}
 
 	/* (non-Javadoc)
@@ -41,22 +53,23 @@ public abstract class APICallback implements CommonCallback<String>{
 		// TODO Auto-generated method stub
 		String error = "";
 		int responseCode = -1;
+		//connect timed out
 		if (arg0 instanceof HttpException) {
 			HttpException httpEx = (HttpException) arg0;
 			error = httpEx.getResult();
 			responseCode = httpEx.getCode();
 		}
-		
 		if (StringUtils.isBlank(error)) {
 			LogUtils.debug("HttpUtil","result=未知错误");
 		}else {
-			LogUtils.debug("HttpUtil","result="+arg0);
+			LogUtils.debug("HttpUtil","result="+arg0.toString());
 		}
 		 try {
 			 if (responseCode ==  401) {
 					callbackTokenExpire();
 				}else {
 					callbackFail(error, responseCode);
+				 saveNetException(arg0,responseCode);
 				}
 			} catch (Exception e) {
 				// TODO: handle exception
@@ -65,13 +78,42 @@ public abstract class APICallback implements CommonCallback<String>{
 		
 	}
 
+	/**
+	 * 处理异常网络请求
+	 * @param arg0
+	 */
+	private void saveNetException(Throwable arg0,int responseCode){
+		LogUtils.jasonDebug("saveNetException--------0");
+		if (!AppUtils.isApkDebugable(context)){
+			LogUtils.jasonDebug("saveNetException--------1");
+			String error = "";
+			int errorLevel = 2;
+			if (arg0 instanceof TimeoutException || arg0 instanceof SocketTimeoutException){
+				errorLevel = 3;
+				error = "time out";
+			}else if (arg0 instanceof HttpException) {
+				HttpException httpEx = (HttpException) arg0;
+				error = httpEx.getResult();
+			}else {
+				error = arg0.toString();
+			}
+			if (StringUtils.isBlank(error)) {
+				error = "未知错误";
+			}
+			AppException appException = new AppException(System.currentTimeMillis(), AppUtils.getVersion(context),errorLevel,url,error,responseCode);
+			AppExceptionCacheUtils.saveAppException(context,appException);
+			LogUtils.jasonDebug("saveNetException--------2");
+			List<AppException> appExceptionList = AppExceptionCacheUtils.getAppExceptionList(context);
+			LogUtils.jasonDebug("size="+appExceptionList.size());
+		}
+	}
+
 	/* (non-Javadoc)
 	 * @see org.xutils.common.Callback.CommonCallback#onFinished()
 	 */
 	@Override
 	public void onFinished() {
 		// TODO Auto-generated method stub
-		
 	}
 
 	/* (non-Javadoc)

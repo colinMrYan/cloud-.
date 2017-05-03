@@ -68,7 +68,7 @@ public class ChatAPIService {
 		final String completeUrl = UriUtils.getHttpApiUri("channel/session");
 		RequestParams params = ((MyApplication) context.getApplicationContext())
 				.getHttpRequestParams(completeUrl);
-		x.http().get(params, new APICallback() {
+		x.http().get(params, new APICallback(context,completeUrl) {
 
 			@Override
 			public void callbackTokenExpire() {
@@ -116,7 +116,7 @@ public class ChatAPIService {
 			params.addParameter("cid", cid);
 		}
 
-		x.http().get(params, new APICallback() {
+		x.http().get(params, new APICallback(context,completeUrl) {
 
 			@Override
 			public void callbackTokenExpire() {
@@ -163,7 +163,7 @@ public class ChatAPIService {
 				+ "/comment");
 		RequestParams params = ((MyApplication) context.getApplicationContext())
 				.getHttpRequestParams(completeUrl);
-		x.http().get(params, new APICallback() {
+		x.http().get(params, new APICallback(context,completeUrl) {
 
 			@Override
 			public void callbackTokenExpire() {
@@ -201,7 +201,7 @@ public class ChatAPIService {
 		final String completeUrl = UriUtils.getHttpApiUri("channel/" + cid);
 		RequestParams params = ((MyApplication) context.getApplicationContext())
 				.getHttpRequestParams(completeUrl);
-		x.http().get(params, new APICallback() {
+		x.http().get(params, new APICallback(context,completeUrl) {
 
 			@Override
 			public void callbackTokenExpire() {
@@ -276,7 +276,7 @@ public class ChatAPIService {
 			e.printStackTrace();
 		}
 
-		x.http().post(params, new APICallback() {
+		x.http().post(params, new APICallback(context,completeUrl) {
 
 			@Override
 			public void callbackTokenExpire() {
@@ -316,7 +316,7 @@ public class ChatAPIService {
 		final String completeUrl = UriUtils.getHttpApiUri("message/" + mid);
 		RequestParams params = ((MyApplication) context.getApplicationContext())
 				.getHttpRequestParams(completeUrl);
-		x.http().get(params, new APICallback() {
+		x.http().get(params, new APICallback(context,completeUrl) {
 
 			@Override
 			public void callbackTokenExpire() {
@@ -361,7 +361,7 @@ public class ChatAPIService {
 		params.setMultipart(true);// 有上传文件时使用multipart表单, 否则上传原始文件流.
 		params.addBodyParameter("file1", file);
 		final Bitmap bitmap = BitmapFactory.decodeFile(filePath);
-		x.http().post(params, new APICallback() {
+		x.http().post(params, new APICallback(context,completeUrl) {
 
 			@Override
 			public void callbackTokenExpire() {
@@ -418,7 +418,7 @@ public class ChatAPIService {
 				.getHttpApiUri("channel/group?limit=-1");
 		RequestParams params = ((MyApplication) context.getApplicationContext())
 				.getHttpRequestParams(completeUrl);
-		x.http().get(params, new APICallback() {
+		x.http().get(params, new APICallback(context,completeUrl) {
 
 			@Override
 			public void callbackTokenExpire() {
@@ -468,7 +468,7 @@ public class ChatAPIService {
 			params.addParameter("cids", cidArray);
 		}
 
-		x.http().get(params, new APICallback() {
+		x.http().get(params, new APICallback(context,completeUrl) {
 
 			@Override
 			public void callbackTokenExpire() {
@@ -510,7 +510,7 @@ public class ChatAPIService {
 				.getHttpRequestParams(completeUrl);
 		params.addParameter("mate", uid);
 		params.addParameter("type", "DIRECT");
-		x.http().post(params, new APICallback() {
+		x.http().post(params, new APICallback(context,completeUrl) {
 
 			@Override
 			public void callbackTokenExpire() {
@@ -559,7 +559,7 @@ public class ChatAPIService {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		x.http().request(HttpMethod.PUT, params, new APICallback() {
+		x.http().request(HttpMethod.PUT, params, new APICallback(context,completeUrl) {
 
 			@Override
 			public void callbackTokenExpire() {
@@ -605,7 +605,7 @@ public class ChatAPIService {
 		final String completeUrl = url;
 		RequestParams params = ((MyApplication) context.getApplicationContext())
 				.getHttpRequestParams(completeUrl);
-		x.http().request(HttpMethod.PUT, params, new APICallback() {
+		x.http().request(HttpMethod.PUT, params, new APICallback(context,completeUrl) {
 
 			@Override
 			public void callbackTokenExpire() {
@@ -651,7 +651,7 @@ public class ChatAPIService {
 		final String completeUrl = url;
 		RequestParams params = ((MyApplication) context.getApplicationContext())
 				.getHttpRequestParams(completeUrl);
-		x.http().request(HttpMethod.DELETE, params, new APICallback() {
+		x.http().request(HttpMethod.DELETE, params, new APICallback(context,completeUrl) {
 
 			@Override
 			public void callbackTokenExpire() {
@@ -693,7 +693,7 @@ public class ChatAPIService {
 				+ "&dnd=" + nointerruption;
 		RequestParams params = ((MyApplication) context.getApplicationContext())
 				.getHttpRequestParams(completeUrl);
-		x.http().request(HttpMethod.PUT, params, new APICallback() {
+		x.http().request(HttpMethod.PUT, params, new APICallback(context,completeUrl) {
 
 			@Override
 			public void callbackTokenExpire() {
@@ -737,7 +737,7 @@ public class ChatAPIService {
 		params.addQueryStringParameter("rid", rid);
 		params.addQueryStringParameter("mpid", mpid);
 		params.addQueryStringParameter("state", state);
-		x.http().request(HttpMethod.PUT, params, new APICallback() {
+		x.http().request(HttpMethod.PUT, params, new APICallback(context,completeUrl) {
 
 			@Override
 			public void callbackTokenExpire() {
@@ -789,7 +789,7 @@ public class ChatAPIService {
 			e.printStackTrace();
 		}
 
-		x.http().post(params, new APICallback() {
+		x.http().post(params, new APICallback(context,completeUrl) {
 
 			@Override
 			public void callbackTokenExpire() {
@@ -824,7 +824,7 @@ public class ChatAPIService {
 				+ "/comment/count");
 		RequestParams params = ((MyApplication) context.getApplicationContext())
 				.getHttpRequestParams(completeUrl);
-		x.http().get(params, new APICallback() {
+		x.http().get(params, new APICallback(context,completeUrl) {
 
 			@Override
 			public void callbackTokenExpire() {
