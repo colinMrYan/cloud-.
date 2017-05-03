@@ -29,7 +29,7 @@ public class APIUri {
 	 * @return
 	 */
 	public static String uploadException() {
-		return "http://u.inspur.com:8080/voice/collector/error";
+		return "http://u.inspur.com/analytics/api/ECMException/Post";
 	}
 	
 	/** 

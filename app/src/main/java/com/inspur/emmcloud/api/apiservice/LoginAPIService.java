@@ -61,7 +61,7 @@ public class LoginAPIService {
 		params.addParameter("client_id", "com.inspur.ecm.client.android");
 		params.addParameter("client_secret",
 				"6b3c48dc-2e56-440c-84fb-f35be37480e8");
-		x.http().post(params, new APICallback() {
+		x.http().post(params, new APICallback(context,completeUrl) {
 
 			@Override
 			public void callbackSuccess(String arg0) {
@@ -97,7 +97,7 @@ public class LoginAPIService {
 				"6b3c48dc-2e56-440c-84fb-f35be37480e8");
 		params.addParameter("refresh_token", refreshToken);
 		params.addParameter("grant_type", "refresh_token");
-		x.http().post(params, new APICallback() {
+		x.http().post(params, new APICallback(context,completeUrl) {
 
 			@Override
 			public void callbackSuccess(String arg0) {
@@ -131,7 +131,7 @@ public class LoginAPIService {
 				+ "&method=" + method;
 		RequestParams params = ((MyApplication) context.getApplicationContext())
 				.getHttpRequestParams(completeUrl);
-		x.http().post(params, new APICallback() {
+		x.http().post(params, new APICallback(context,completeUrl) {
 
 			@Override
 			public void callbackSuccess(String arg0) {
@@ -165,7 +165,7 @@ public class LoginAPIService {
 				+ mobile;
 		RequestParams params = ((MyApplication) context.getApplicationContext())
 				.getHttpRequestParams(completeUrl);
-		x.http().get(params, new APICallback() {
+		x.http().get(params, new APICallback(context,completeUrl) {
 
 			@Override
 			public void callbackTokenExpire() {
@@ -206,7 +206,7 @@ public class LoginAPIService {
 				.getHttpRequestParams(completeUrl);
 		params.addParameter("mobile", mobile);
 		params.addParameter("sms", sms);
-		x.http().post(params, new APICallback() {
+		x.http().post(params, new APICallback(context,completeUrl) {
 			
 			@Override
 			public void callbackTokenExpire() {
@@ -239,7 +239,7 @@ public class LoginAPIService {
 		final String completeUrl = "https://id.inspur.com/oauth2.0/profile";
 		RequestParams params = ((MyApplication) context.getApplicationContext())
 				.getHttpRequestParams(completeUrl);
-		x.http().get(params, new APICallback() {
+		x.http().get(params, new APICallback(context,completeUrl) {
 			
 			@Override
 			public void callbackTokenExpire() {
@@ -276,7 +276,7 @@ public class LoginAPIService {
 		final String completeUrl = UriUtils.getHttpApiUri("settings/socket");
 		RequestParams params = ((MyApplication) context.getApplicationContext())
 				.getHttpRequestParams(completeUrl);
-		x.http().get(params, new APICallback() {
+		x.http().get(params, new APICallback(context,completeUrl) {
 			
 			@Override
 			public void callbackTokenExpire() {
@@ -352,7 +352,7 @@ public class LoginAPIService {
 		RequestParams params = ((MyApplication)context.getApplicationContext()).getHttpRequestParams(completeUrl);
 		params.setBodyContent(logInfo);
 		params.setAsJsonContent(true);
-		x.http().post(params, new APICallback() {
+		x.http().post(params, new APICallback(context,completeUrl) {
 
 			@Override
 			public void callbackSuccess(String arg0) {
@@ -398,7 +398,7 @@ public class LoginAPIService {
 		params.addQueryStringParameter("new", newpsd);
 		params.setAsJsonContent(true);
 		params.addHeader("Content-Type", "application/json");
-		x.http().request(HttpMethod.PUT, params, new APICallback() {
+		x.http().request(HttpMethod.PUT, params, new APICallback(context,completeUrl) {
 			
 			@Override
 			public void callbackTokenExpire() {
@@ -441,7 +441,7 @@ public class LoginAPIService {
 		params.addQueryStringParameter("new", newPwd);
 		params.setAsJsonContent(true);
 		params.addHeader("Content-Type", "application/json");
-		x.http().request(HttpMethod.PUT, params, new APICallback() {
+		x.http().request(HttpMethod.PUT, params, new APICallback(context,completeUrl) {
 			@Override
 			public void callbackTokenExpire() {
 				new OauthUtils(new OauthCallBack() {

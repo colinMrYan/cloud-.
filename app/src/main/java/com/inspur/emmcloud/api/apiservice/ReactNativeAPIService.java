@@ -45,7 +45,7 @@ public class ReactNativeAPIService {
                 .getHttpRequestParams(completeUrl);
         params.addParameter("deviceId",deviceId);
         params.addParameter("deviceName",deviceName);
-        x.http().post(params, new APICallback() {
+        x.http().post(params, new APICallback(context,completeUrl) {
             @Override
             public void callbackSuccess(String arg0) {
                 apiInterface.returnGetClientIdResultSuccess(new GetClientIdRsult(arg0));
@@ -77,7 +77,7 @@ public class ReactNativeAPIService {
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
         params.addParameter("uri",uri);
-        x.http().post(params, new APICallback() {
+        x.http().post(params, new APICallback(context,completeUrl) {
             @Override
             public void callbackSuccess(String arg0) {
                 apiInterface.returnGetReactNativeInstallUrlSuccess(new ReactNativeInstallUriBean(arg0));
@@ -114,7 +114,7 @@ public class ReactNativeAPIService {
                 "&command="+command;
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
-        x.http().post(params, new APICallback() {
+        x.http().post(params, new APICallback(context,completeUrl) {
             @Override
             public void callbackSuccess(String arg0) {
                 LogUtils.YfcDebug("写回成功，不需要后续处理");
@@ -150,7 +150,7 @@ public class ReactNativeAPIService {
         final String completeUrl = findDownloadUrl+"?version="+currentVersion+"&clientId="+clientId;
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
-        x.http().get(params, new APICallback() {
+        x.http().get(params, new APICallback(context,completeUrl) {
             @Override
             public void callbackSuccess(String arg0) {
                 apiInterface.returnGetDownloadReactNativeUrlSuccess(new ReactNativeDownloadUrlBean(arg0));

@@ -59,67 +59,72 @@ public class WebSocketPush {
 		if (((MyApplication)context.getApplicationContext()).getToken() == null) {
 			return;
 		}
-		sendWebSocketStatusBroadcaset("socket_connecting");
-		String username = PreferencesUtils.getString(context, "userRealName");
-		String uuid = AppUtils.getMyUUID(context);
-		String pushid = PreferencesUtils.getString(context, "JpushRegId", "");
-		boolean isTelbet = AppUtils.isTablet(context);
-		String name;
-		if (isTelbet) {
-			name = username + "的平板电脑";
-		} else {
-			name = username + "的手机";
-		}
-//		final BlockingQueue<Object> values = new LinkedBlockingQueue<Object>();
-		IO.Options opts = new IO.Options();
-		opts.reconnectionAttempts = 4; // 设置websocket重连次数
-		 opts.forceNew = true;
-		Map<String, String> query = new HashMap<String, String>();
-		query.put("device.id", uuid);
-		query.put("device.name", name);
-		query.put("device.push", pushid);
-		// opts.transports = new String[] { Polling.NAME };
-		opts.path = path;
-		LogUtils.debug(TAG, "query.toString()=" + ParseQS.encode(query));
-		opts.query = ParseQS.encode(query);
-		try {
-			closeSocket();
-			mSocket = IO.socket(url, opts);
-			mSocket.io().on(Manager.EVENT_TRANSPORT, new Emitter.Listener() {
-				@Override
-				public void call(Object... args) {
-
-					Transport transport = (Transport) args[0];
-					transport.on(Transport.EVENT_REQUEST_HEADERS,
-							new Emitter.Listener() {
-								@Override
-								public void call(Object... args) {
-									@SuppressWarnings("unchecked")
-									Map<String, List<String>> headers = (Map<String, List<String>>) args[0];
-									headers.put("Authorization", Arrays.asList(((MyApplication)context.getApplicationContext()).getToken()));
-								}
-							}).on(Transport.EVENT_RESPONSE_HEADERS,
-							new Emitter.Listener() {
-								@Override
-								public void call(Object... args) {
-								}
-							});
+		synchronized (this) {
+			if (!isSocketConnect()){
+				sendWebSocketStatusBroadcaset("socket_connecting");
+				String username = PreferencesUtils.getString(context, "userRealName");
+				String uuid = AppUtils.getMyUUID(context);
+				String pushid = PreferencesUtils.getString(context, "JpushRegId", "");
+				boolean isTelbet = AppUtils.isTablet(context);
+				String name;
+				if (isTelbet) {
+					name = username + "的平板电脑";
+				} else {
+					name = username + "的手机";
 				}
-			});
+//		final BlockingQueue<Object> values = new LinkedBlockingQueue<Object>();
+				IO.Options opts = new IO.Options();
+				opts.reconnectionAttempts = 4; // 设置websocket重连次数
+				opts.forceNew = true;
+				Map<String, String> query = new HashMap<String, String>();
+				query.put("device.id", uuid);
+				query.put("device.name", name);
+				query.put("device.push", pushid);
+				// opts.transports = new String[] { Polling.NAME };
+				opts.path = path;
+				LogUtils.debug(TAG, "query.toString()=" + ParseQS.encode(query));
+				opts.query = ParseQS.encode(query);
+				try {
+					closeSocket();
+					mSocket = IO.socket(url, opts);
+					mSocket.io().on(Manager.EVENT_TRANSPORT, new Emitter.Listener() {
+						@Override
+						public void call(Object... args) {
 
-			connectWebSocket();
-		} catch (URISyntaxException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			sendWebSocketStatusBroadcaset(Socket.EVENT_CONNECT_ERROR);
-			Log.d(TAG, "e=" + e.toString());
-			if (mSocket != null) {
-				mSocket.disconnect();
-				mSocket.off();
-				mSocket.close();
-				mSocket = null;
+							Transport transport = (Transport) args[0];
+							transport.on(Transport.EVENT_REQUEST_HEADERS,
+									new Emitter.Listener() {
+										@Override
+										public void call(Object... args) {
+											@SuppressWarnings("unchecked")
+											Map<String, List<String>> headers = (Map<String, List<String>>) args[0];
+											headers.put("Authorization", Arrays.asList(((MyApplication)context.getApplicationContext()).getToken()));
+										}
+									}).on(Transport.EVENT_RESPONSE_HEADERS,
+									new Emitter.Listener() {
+										@Override
+										public void call(Object... args) {
+										}
+									});
+						}
+					});
+
+					connectWebSocket();
+				} catch (URISyntaxException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+					sendWebSocketStatusBroadcaset(Socket.EVENT_CONNECT_ERROR);
+					Log.d(TAG, "e=" + e.toString());
+					if (mSocket != null) {
+						mSocket.disconnect();
+						mSocket.off();
+						mSocket.close();
+						mSocket = null;
+					}
+				}
 			}
 		}
+
 
 	}
 
