@@ -83,9 +83,7 @@ public abstract class APICallback implements CommonCallback<String>{
 	 * @param arg0
 	 */
 	private void saveNetException(Throwable arg0,int responseCode){
-		LogUtils.jasonDebug("saveNetException--------0");
 		if (!AppUtils.isApkDebugable(context)){
-			LogUtils.jasonDebug("saveNetException--------1");
 			String error = "";
 			int errorLevel = 2;
 			if (arg0 instanceof TimeoutException || arg0 instanceof SocketTimeoutException){
@@ -102,9 +100,7 @@ public abstract class APICallback implements CommonCallback<String>{
 			}
 			AppException appException = new AppException(System.currentTimeMillis(), AppUtils.getVersion(context),errorLevel,url,error,responseCode);
 			AppExceptionCacheUtils.saveAppException(context,appException);
-			LogUtils.jasonDebug("saveNetException--------2");
 			List<AppException> appExceptionList = AppExceptionCacheUtils.getAppExceptionList(context);
-			LogUtils.jasonDebug("size="+appExceptionList.size());
 		}
 	}
 
