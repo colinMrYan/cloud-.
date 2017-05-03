@@ -500,7 +500,7 @@ public class ECMChatInputMenu extends LinearLayout {
 		@Override
 		public void afterTextChanged(Editable s) {
 			String inputContent = s.toString();
-			boolean isContentBlank = StringUtils.isBlank(inputContent);
+			boolean isContentBlank = StringUtils.isEmpty(inputContent);
 			sendMsgBtn.setEnabled(!isContentBlank);
 			sendMsgBtn.setBackgroundResource(isContentBlank ? R.drawable.bg_chat_input_send_btn_disable : R.drawable.bg_chat_input_send_btn_enable);
 			LogUtils.jasonDebug("isChannelGroup=" + isChannelGroup);

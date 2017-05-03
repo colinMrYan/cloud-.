@@ -7,18 +7,6 @@
  */
 package com.inspur.emmcloud.api.apiservice;
 
-import java.util.Calendar;
-import java.util.List;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.xutils.x;
-import org.xutils.http.HttpMethod;
-import org.xutils.http.RequestParams;
-import org.xutils.http.app.RequestTracker;
-import org.xutils.http.request.UriRequest;
-
 import android.content.Context;
 
 import com.inspur.emmcloud.MyApplication;
@@ -42,11 +30,22 @@ import com.inspur.emmcloud.bean.GetTaskAddResult;
 import com.inspur.emmcloud.bean.GetTaskListResult;
 import com.inspur.emmcloud.bean.SearchModel;
 import com.inspur.emmcloud.bean.TaskResult;
-import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.OauthCallBack;
 import com.inspur.emmcloud.util.OauthUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.UriUtils;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.xutils.http.HttpMethod;
+import org.xutils.http.RequestParams;
+import org.xutils.http.app.RequestTracker;
+import org.xutils.http.request.UriRequest;
+import org.xutils.x;
+
+import java.util.Calendar;
+import java.util.List;
 
 /**
  * com.inspur.emmcloud.api.apiservice.WorkAPIService create at 2016年11月8日
@@ -74,7 +73,7 @@ public class WorkAPIService {
 		final String completeUrl = UriUtils.getMeetings() + "?day=" + day;
 		RequestParams params = ((MyApplication) context.getApplicationContext())
 				.getHttpRequestParams(completeUrl);
-		x.http().get(params, new APICallback() {
+		x.http().get(params, new APICallback(context,completeUrl) {
 
 			@Override
 			public void callbackTokenExpire() {
@@ -111,7 +110,7 @@ public class WorkAPIService {
 		final String completeUrl = UriUtils.getMeetingRooms();
 		RequestParams params = ((MyApplication) context.getApplicationContext())
 				.getHttpRequestParams(completeUrl);
-		x.http().get(params, new APICallback() {
+		x.http().get(params, new APICallback(context,completeUrl) {
 
 			@Override
 			public void callbackTokenExpire() {
@@ -167,7 +166,7 @@ public class WorkAPIService {
 		final String completeUrl = baseUrl;
 		RequestParams params = ((MyApplication) context.getApplicationContext())
 				.getHttpRequestParams(completeUrl);
-		x.http().get(params, new APICallback() {
+		x.http().get(params, new APICallback(context,completeUrl) {
 
 			@Override
 			public void callbackTokenExpire() {
@@ -214,7 +213,7 @@ public class WorkAPIService {
 		RequestParams params = ((MyApplication) context.getApplicationContext())
 				.getHttpRequestParams(completeUrl);
 		//params.addParameter("keyword", keyword);
-		x.http().get(params, new APICallback() {
+		x.http().get(params, new APICallback(context,completeUrl) {
 
 			@Override
 			public void callbackTokenExpire() {
@@ -254,7 +253,7 @@ public class WorkAPIService {
 		final String completeUrl = UriUtils.getIsAdmin() + "?cid=" + cid;
 		RequestParams params = ((MyApplication) context.getApplicationContext())
 				.getHttpRequestParams(completeUrl);
-		x.http().get(params, new APICallback() {
+		x.http().get(params, new APICallback(context,completeUrl) {
 			
 			@Override
 			public void callbackTokenExpire() {
@@ -346,7 +345,7 @@ public class WorkAPIService {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		x.http().request(HttpMethod.PUT, params, new APICallback() {
+		x.http().request(HttpMethod.PUT, params, new APICallback(context,completeUrl) {
 			
 			@Override
 			public void callbackTokenExpire() {
@@ -441,7 +440,7 @@ public class WorkAPIService {
 			e.printStackTrace();
 		}
 
-		x.http().post(params, new APICallback() {
+		x.http().post(params, new APICallback(context,completeUrl) {
 
 			@Override
 			public void callbackTokenExpire() {
@@ -491,7 +490,7 @@ public class WorkAPIService {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		x.http().post(params, new APICallback() {
+		x.http().post(params, new APICallback(context,completeUrl) {
 
 			@Override
 			public void callbackTokenExpire() {
@@ -583,7 +582,7 @@ public class WorkAPIService {
 				
 			}
 		});
-		x.http().get(params, new APICallback() {
+		x.http().get(params, new APICallback(context,completeUrl) {
 
 			@Override
 			public void callbackTokenExpire() {
@@ -617,7 +616,7 @@ public class WorkAPIService {
 		final String completeUrl = UriUtils.getLoction();
 		RequestParams params = ((MyApplication) context.getApplicationContext())
 				.getHttpRequestParams(completeUrl);
-		x.http().get(params, new APICallback() {
+		x.http().get(params, new APICallback(context,completeUrl) {
 
 			@Override
 			public void callbackTokenExpire() {
@@ -654,7 +653,7 @@ public class WorkAPIService {
 		final String completeUrl = UriUtils.getOffice();
 		RequestParams params = ((MyApplication) context.getApplicationContext())
 				.getHttpRequestParams(completeUrl);
-		x.http().get(params, new APICallback() {
+		x.http().get(params, new APICallback(context,completeUrl) {
 
 			@Override
 			public void callbackSuccess(String arg0) {
@@ -704,7 +703,7 @@ public class WorkAPIService {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		x.http().post(params, new APICallback() {
+		x.http().post(params, new APICallback(context,completeUrl) {
 
 			@Override
 			public void callbackTokenExpire() {
@@ -744,7 +743,7 @@ public class WorkAPIService {
 		completeUrl = UriUtils.deleteMeeting() + "?rid=" + rid;
 		RequestParams params = ((MyApplication) context.getApplicationContext())
 				.getHttpRequestParams(completeUrl);
-		x.http().request(HttpMethod.DELETE, params, new APICallback() {
+		x.http().request(HttpMethod.DELETE, params, new APICallback(context,completeUrl) {
 			
 			@Override
 			public void callbackTokenExpire() {
@@ -782,7 +781,7 @@ public class WorkAPIService {
 		RequestParams params = ((MyApplication) context.getApplicationContext())
 				.getHttpRequestParams(completeUrl);
 		params.addParameter("id", buildingId);
-		x.http().request(HttpMethod.DELETE, params, new APICallback() {
+		x.http().request(HttpMethod.DELETE, params, new APICallback(context,completeUrl) {
 
 			@Override
 			public void callbackTokenExpire() {
@@ -827,7 +826,7 @@ public class WorkAPIService {
 		final String completeUrl = url;
 		RequestParams params = ((MyApplication) context.getApplicationContext())
 				.getHttpRequestParams(completeUrl);
-		x.http().get(params, new APICallback() {
+		x.http().get(params, new APICallback(context,completeUrl) {
 
 			@Override
 			public void callbackTokenExpire() {
@@ -874,7 +873,7 @@ public class WorkAPIService {
 		final String completeUrl = url;
 		RequestParams params = ((MyApplication) context.getApplicationContext())
 				.getHttpRequestParams(completeUrl);
-		x.http().get(params, new APICallback() {
+		x.http().get(params, new APICallback(context,completeUrl) {
 
 			@Override
 			public void callbackTokenExpire() {
@@ -918,7 +917,7 @@ public class WorkAPIService {
 				.getHttpRequestParams(completeUrl);
 		params.addParameter("order_by", orderBy);
 		params.addParameter("order_type", orderType);
-		x.http().get(params, new APICallback() {
+		x.http().get(params, new APICallback(context,completeUrl) {
 
 			@Override
 			public void callbackTokenExpire() {
@@ -958,7 +957,7 @@ public class WorkAPIService {
 		final String completeUrl = UriUtils.getTasks(id);
 		RequestParams params = ((MyApplication) context.getApplicationContext())
 				.getHttpRequestParams(completeUrl);
-		x.http().get(params, new APICallback() {
+		x.http().get(params, new APICallback(context,completeUrl) {
 			
 			@Override
 			public void callbackTokenExpire() {
@@ -1002,7 +1001,7 @@ public class WorkAPIService {
 		params.addParameter("page", page);
 		params.addParameter("limit", limit);
 		params.addParameter("state", state);
-		x.http().get(params, new APICallback() {
+		x.http().get(params, new APICallback(context,completeUrl) {
 
 			@Override
 			public void callbackTokenExpire() {
@@ -1040,7 +1039,7 @@ public class WorkAPIService {
 				.getHttpRequestParams(completeUrl);
 		params.addParameter("order_by", orderBy);
 		params.addParameter("order_type", orderType);
-		x.http().get(params, new APICallback() {
+		x.http().get(params, new APICallback(context,completeUrl) {
 
 			@Override
 			public void callbackTokenExpire() {
@@ -1078,7 +1077,7 @@ public class WorkAPIService {
 				.getHttpRequestParams(completeUrl);
 		params.addParameter("order_by", orderBy);
 		params.addParameter("order_type", orderType);
-		x.http().get(params, new APICallback() {
+		x.http().get(params, new APICallback(context,completeUrl) {
 
 			@Override
 			public void callbackTokenExpire() {
@@ -1115,7 +1114,7 @@ public class WorkAPIService {
 		RequestParams params = ((MyApplication) context.getApplicationContext())
 				.getHttpRequestParams(completeUrl);
 		params.addParameter("title", mession);
-		x.http().post(params, new APICallback() {
+		x.http().post(params, new APICallback(context,completeUrl) {
 
 			@Override
 			public void callbackTokenExpire() {
@@ -1154,7 +1153,7 @@ public class WorkAPIService {
 		final String completeUrl = UriUtils.createTask() + "/" + id;
 		RequestParams params = ((MyApplication) context.getApplicationContext())
 				.getHttpRequestParams(completeUrl);
-		x.http().request(HttpMethod.DELETE, params, new APICallback() {
+		x.http().request(HttpMethod.DELETE, params, new APICallback(context,completeUrl) {
 
 			@Override
 			public void callbackTokenExpire() {
@@ -1189,7 +1188,7 @@ public class WorkAPIService {
 		final String completeUrl = UriUtils.getTodayTask();
 		RequestParams params = ((MyApplication) context.getApplicationContext())
 				.getHttpRequestParams(completeUrl);
-		x.http().get(params, new APICallback() {
+		x.http().get(params, new APICallback(context,completeUrl) {
 
 			@Override
 			public void callbackTokenExpire() {
@@ -1228,7 +1227,7 @@ public class WorkAPIService {
 		final String completeUrl = UriUtils.createTask() + "/" + id;
 		RequestParams params = ((MyApplication) context.getApplicationContext())
 				.getHttpRequestParams(completeUrl);
-		x.http().get(params, new APICallback() {
+		x.http().get(params, new APICallback(context,completeUrl) {
 
 			@Override
 			public void callbackTokenExpire() {
@@ -1268,7 +1267,7 @@ public class WorkAPIService {
 				.getHttpRequestParams(completeUrl);
 		params.setBodyContent(taskJson);
 		params.setAsJsonContent(true);
-		x.http().request(HttpMethod.PUT, params, new APICallback() {
+		x.http().request(HttpMethod.PUT, params, new APICallback(context,completeUrl) {
 
 			@Override
 			public void callbackTokenExpire() {
@@ -1309,7 +1308,7 @@ public class WorkAPIService {
 				.getHttpRequestParams(completeUrl);
 		params.setBodyContent(uidArray.toString());
 		params.setAsJsonContent(true);
-		x.http().post(params, new APICallback() {
+		x.http().post(params, new APICallback(context,completeUrl) {
 
 			@Override
 			public void callbackTokenExpire() {
@@ -1351,7 +1350,7 @@ public class WorkAPIService {
 				.getHttpRequestParams(completeUrl);
 		params.setBodyContent(uidArray.toString());
 		params.setAsJsonContent(true);
-		x.http().request(HttpMethod.DELETE, params, new APICallback() {
+		x.http().request(HttpMethod.DELETE, params, new APICallback(context,completeUrl) {
 
 			@Override
 			public void callbackTokenExpire() {
@@ -1387,7 +1386,7 @@ public class WorkAPIService {
 		RequestParams params = ((MyApplication) context.getApplicationContext())
 				.getHttpRequestParams(completeUrl);
 		params.addHeader("Accept", "application/json");
-		x.http().get(params, new APICallback() {
+		x.http().get(params, new APICallback(context,completeUrl) {
 
 			@Override
 			public void callbackTokenExpire() {
@@ -1440,7 +1439,7 @@ public class WorkAPIService {
 				.getHttpRequestParams(completeUrl);
 		params.setBodyContent(jsonObject.toString());
 		params.setAsJsonContent(true);
-		x.http().request(HttpMethod.PUT, params, new APICallback() {
+		x.http().request(HttpMethod.PUT, params, new APICallback(context,completeUrl) {
 
 			@Override
 			public void callbackTokenExpire() {
@@ -1479,7 +1478,7 @@ public class WorkAPIService {
 		RequestParams params = ((MyApplication) context.getApplicationContext())
 				.getHttpRequestParams(completeUrl);
 
-		x.http().request(HttpMethod.DELETE, params, new APICallback() {
+		x.http().request(HttpMethod.DELETE, params, new APICallback(context,completeUrl) {
 
 			@Override
 			public void callbackTokenExpire() {
@@ -1520,7 +1519,7 @@ public class WorkAPIService {
 				.getHttpRequestParams(completeUrl);
 		params.addParameter("title", title);
 		params.addParameter("color", color);
-		x.http().post(params, new APICallback() {
+		x.http().post(params, new APICallback(context,completeUrl) {
 
 			@Override
 			public void callbackTokenExpire() {
@@ -1561,7 +1560,7 @@ public class WorkAPIService {
 		RequestParams params = ((MyApplication) context.getApplicationContext())
 				.getHttpRequestParams(completeUrl);
 		params.addParameter("owner", newOwner);
-		x.http().request(HttpMethod.PUT, params, new APICallback() {
+		x.http().request(HttpMethod.PUT, params, new APICallback(context,completeUrl) {
 			
 			@Override
 			public void callbackTokenExpire() {
@@ -1602,7 +1601,7 @@ public class WorkAPIService {
 				.getHttpRequestParams(completeUrl);
 		params.setBodyContent(tags);
 		params.setAsJsonContent(true);
-		x.http().post(params, new APICallback() {
+		x.http().post(params, new APICallback(context,completeUrl) {
 			
 			@Override
 			public void callbackTokenExpire() {
@@ -1651,7 +1650,7 @@ public class WorkAPIService {
 			e.printStackTrace();
 		}
 
-		x.http().post(params, new APICallback() {
+		x.http().post(params, new APICallback(context,completeUrl) {
 
 			@Override
 			public void callbackTokenExpire() {
@@ -1698,7 +1697,7 @@ public class WorkAPIService {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		x.http().request(HttpMethod.DELETE, params, new APICallback() {
+		x.http().request(HttpMethod.DELETE, params, new APICallback(context,completeUrl) {
 
 			@Override
 			public void callbackTokenExpire() {
@@ -1741,7 +1740,7 @@ public class WorkAPIService {
 				.getHttpRequestParams(completeUrl);
 		params.addParameter("page", page);
 		params.addParameter("limit", limit);
-		x.http().get(params, new APICallback() {
+		x.http().get(params, new APICallback(context,completeUrl) {
 			
 			@Override
 			public void callbackTokenExpire() {
@@ -1783,7 +1782,7 @@ public class WorkAPIService {
 				+ id;
 		RequestParams params = ((MyApplication) context.getApplicationContext())
 				.getHttpRequestParams(completeUrl);
-		x.http().request(HttpMethod.DELETE, params, new APICallback() {
+		x.http().request(HttpMethod.DELETE, params, new APICallback(context,completeUrl) {
 			
 			@Override
 			public void callbackTokenExpire() {
@@ -1823,7 +1822,7 @@ public class WorkAPIService {
 				.getHttpRequestParams(completeUrl);
 		params.setAsJsonContent(true);
 		params.setBodyContent(calendarJson);
-		x.http().request(HttpMethod.PUT, params, new APICallback() {
+		x.http().request(HttpMethod.PUT, params, new APICallback(context,completeUrl) {
 			
 			@Override
 			public void callbackTokenExpire() {
@@ -1866,7 +1865,7 @@ public class WorkAPIService {
 				.getHttpRequestParams(completeUrl);
 		params.setBodyContent(eventJson);
 		params.setAsJsonContent(true);
-		x.http().post(params, new APICallback() {
+		x.http().post(params, new APICallback(context,completeUrl) {
 			
 			@Override
 			public void callbackTokenExpire() {
@@ -1910,7 +1909,7 @@ public class WorkAPIService {
 		params.setBodyContent(calEventJson);
 		params.setAsJsonContent(true);
 		
-		x.http().request(HttpMethod.PUT, params, new APICallback() {
+		x.http().request(HttpMethod.PUT, params, new APICallback(context,completeUrl) {
 			
 			@Override
 			public void callbackTokenExpire() {
@@ -1974,7 +1973,7 @@ public class WorkAPIService {
 			params.addParameter("page", page);
 		}
 		
-		x.http().get(params, new APICallback() {
+		x.http().get(params, new APICallback(context,completeUrl) {
 			
 			@Override
 			public void callbackTokenExpire() {
@@ -2017,7 +2016,7 @@ public class WorkAPIService {
 				+ "/calendar/event/" + calEventId;
 		RequestParams params = ((MyApplication) context.getApplicationContext())
 				.getHttpRequestParams(completeUrl);
-		x.http().request(HttpMethod.DELETE, params, new APICallback() {
+		x.http().request(HttpMethod.DELETE, params, new APICallback(context,completeUrl) {
 			
 			@Override
 			public void callbackTokenExpire() {

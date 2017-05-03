@@ -63,7 +63,7 @@ public class MyAppAPIService {
                 .getHttpRequestParams(completeUrl);
         params.addParameter("pageNumber", pageNumber + "");
 
-        x.http().post(params, new APICallback() {
+        x.http().post(params, new APICallback(context,completeUrl) {
 
             @Override
             public void callbackSuccess(String arg0) {
@@ -116,7 +116,7 @@ public class MyAppAPIService {
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
         params.addParameter("appID", appID);
-        x.http().post(params, new APICallback() {
+        x.http().post(params, new APICallback(context,completeUrl) {
             @Override
             public void callbackTokenExpire() {
                 new OauthUtils(new OauthCallBack() {
@@ -151,7 +151,7 @@ public class MyAppAPIService {
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
         params.addParameter("appID", appID);
-        x.http().post(params, new APICallback() {
+        x.http().post(params, new APICallback(context,completeUrl) {
             @Override
             public void callbackTokenExpire() {
                 new OauthUtils(new OauthCallBack() {
@@ -184,7 +184,7 @@ public class MyAppAPIService {
         final String completeUrl = APIUri.getMyApp();
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
-        x.http().post(params, new APICallback() {
+        x.http().post(params, new APICallback(context,completeUrl) {
             @Override
             public void callbackTokenExpire() {
                 new OauthUtils(new OauthCallBack() {
@@ -220,7 +220,7 @@ public class MyAppAPIService {
         params.addParameter("keyword", keyword);
         params.addParameter("clientType", 0);
         params.addParameter("pageNumber", pageNumber);
-        x.http().post(params, new APICallback() {
+        x.http().post(params, new APICallback(context,completeUrl) {
             @Override
             public void callbackTokenExpire() {
                 new OauthUtils(new OauthCallBack() {
@@ -264,7 +264,7 @@ public class MyAppAPIService {
         final String completeUrl = UriUtils.getHttpApiUri("news/category");
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
-        x.http().get(params, new APICallback() {
+        x.http().get(params, new APICallback(context,completeUrl) {
 
             @Override
             public void callbackTokenExpire() {
@@ -308,7 +308,7 @@ public class MyAppAPIService {
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
 
-        x.http().get(params, new APICallback() {
+        x.http().get(params, new APICallback(context,completeUrl) {
 
             @Override
             public void callbackTokenExpire() {
@@ -346,7 +346,7 @@ public class MyAppAPIService {
         final String completeUrl = APIUri.getUserApps();
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
-        x.http().post(params, new APICallback() {
+        x.http().post(params, new APICallback(context,completeUrl) {
 
             @Override
             public void callbackTokenExpire() {
@@ -386,7 +386,7 @@ public class MyAppAPIService {
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
 
-        x.http().post(params, new APICallback() {
+        x.http().post(params, new APICallback(context,completeUrl) {
 
             @Override
             public void callbackSuccess(String arg0) {
@@ -421,7 +421,7 @@ public class MyAppAPIService {
     public void getAuthCode(final String urlParams) {
         final String completeUrl = APIUri.getAppAuthCodeUri() + "?" + urlParams;
         RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(completeUrl);
-        x.http().get(params, new APICallback() {
+        x.http().get(params, new APICallback(context,completeUrl) {
             @Override
             public void callbackSuccess(String arg0) {
                 apiInterface.returnGetAppAuthCodeResultSuccess(new AppRedirectResult(arg0));
