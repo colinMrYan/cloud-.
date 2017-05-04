@@ -864,7 +864,7 @@ public class ChatAPIService {
 				.getHttpRequestParams(completeUrl);
 		params.setHeader("Content-Type","url-encoded-form");
 		params.addQueryStringParameter("comment",instruction);
-		x.http().post(params, new APICallback() {
+		x.http().post(params, new APICallback(context,completeUrl) {
 			@Override
 			public void callbackSuccess(String arg0) {
 				apiInterface.returnNewsInstructionSuccess(new GetNewsInstructionResult(arg0));

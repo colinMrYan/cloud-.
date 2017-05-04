@@ -34,7 +34,7 @@ public class NewsListAdapter extends BaseAdapter{
 		// TODO Auto-generated constructor stub
 		this.context = context;
 		this.groupNewsList =groupNewsList;
-		imageDisplayUtils = new ImageDisplayUtils(context, R.drawable.group_news_ic);
+		imageDisplayUtils = new ImageDisplayUtils(context, R.drawable.news_poster);
 	}
 
 	@Override

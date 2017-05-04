@@ -43,6 +43,7 @@ import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.PreferencesByUserUtils;
 import com.inspur.emmcloud.util.StateBarColor;
 import com.inspur.emmcloud.util.StringUtils;
+import com.inspur.emmcloud.util.ToastUtils;
 import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
@@ -473,8 +474,13 @@ public class NewsWebDetailActivity extends BaseActivity {
         okBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sendInstructions(editText.getText().toString());
-                intrcutionDialog.dismiss();
+                String instructions = editText.getText().toString();
+                if(!StringUtils.isBlank(instructions)){
+                    sendInstructions(instructions);
+                    intrcutionDialog.dismiss();
+                }else{
+                    ToastUtils.show(NewsWebDetailActivity.this,getString(R.string.news_content_cant_empty));
+                }
             }
         });
 

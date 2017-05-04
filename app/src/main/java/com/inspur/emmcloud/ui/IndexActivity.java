@@ -442,7 +442,7 @@ public class IndexActivity extends BaseFragmentActivity implements
             ImageView tabImg = (ImageView) tabView.findViewById(R.id.imageview);
             TextView tabText = (TextView) tabView.findViewById(R.id.textview);
             if (mainTab.getCommpant().equals("communicate")) {
-                mTabHost.setCurrentTab(mainTab.getIdx());
+
                 handleTipsView(tabView);
             }
             if(!StringUtils.isBlank(mainTab.getConfigureName())){
@@ -464,9 +464,17 @@ public class IndexActivity extends BaseFragmentActivity implements
                     return new View(IndexActivity.this);
                 }
             });
+
             mTabHost.addTab(tab, mainTab.getClz(), null);
             mTabHost.getTabWidget().getChildAt(i).setOnTouchListener(this);
             mTabHost.setOnTabChangedListener(this);
+        }
+        int tabSize = tabs.length;
+        for (int i = 0; i < tabSize; i++){
+            if(tabs[i].getCommpant().equals("communicate")){
+                mTabHost.setCurrentTab(tabs[i].getIdx());
+                break;
+            }
         }
         mTabHost.setCurrentTab(getTabIndex());
     }
