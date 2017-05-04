@@ -10,6 +10,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
 
+import com.inspur.emmcloud.service.AppExceptionService;
 import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.ui.login.LoginActivity;
 import com.inspur.emmcloud.ui.login.ModifyUserFirstPsdActivity;
@@ -52,14 +53,21 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
             finish();
             return;
         }
+		//进行app异常上传
+		startUploadExceptionService();
         ((MyApplication) getApplicationContext()).addActivity(this);
-
         // 检测分辨率、网络环境
         if (!ResolutionUtils.isFitResolution(MainActivity.this)) {
             showResolutionDialog();
         } else {
             initEnvironment();
         }
+    }
+
+    private void startUploadExceptionService(){
+        Intent intent = new Intent();
+        intent.setClass(this, AppExceptionService.class);
+        startService(intent);
     }
 
 
