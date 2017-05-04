@@ -18,6 +18,7 @@ import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
 import com.inspur.emmcloud.bean.GetGroupNewsDetailResult;
 import com.inspur.emmcloud.bean.GroupNews;
+import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.TimeUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
@@ -60,11 +61,12 @@ public class GroupNewsCardFragment extends Fragment implements
 
 	}
 
-	public GroupNewsCardFragment(int position, String catagoryid,String title) {
+	public GroupNewsCardFragment(int position, String catagoryid,String title,boolean hasExtraPermission) {
 		// TODO Auto-generated constructor stub
 		Bundle b = new Bundle();
 		b.putInt(ARG_POSITION, position);
 		b.putString("catagoryid", catagoryid);
+		b.putBoolean("hasExtraPermission",hasExtraPermission);
 		this.setArguments(b);
 		this.pagerTitle = title;
 	}
@@ -122,7 +124,9 @@ public class GroupNewsCardFragment extends Fragment implements
 		@Override
 		public void onItemClick(AdapterView<?> parent, View view, int position,
 				long id) {
-			String posttime = groupnNewsList.get(position).getPosttime();
+//			String posttime = groupnNewsList.get(position).getPosttime();
+			String posttime = groupnNewsList.get(position).getCreationDate();
+			posttime = TimeUtils.Calendar2TimeString(TimeUtils.timeLong2Calendar(Long.parseLong(posttime)),TimeUtils.getFormat(getActivity(),TimeUtils.FORMAT_DEFAULT_DATE));
 			Intent intent = new Intent();
 			intent.setClass(getActivity(), NewsWebDetailActivity.class);
 			try {
@@ -131,10 +135,12 @@ public class GroupNewsCardFragment extends Fragment implements
 				intent.putExtra("title", groupnNewsList.get(position)
 						.getTitle());
 				intent.putExtra("digest", groupnNewsList.get(position)
-						.getDigest());
+						.getSummary());
 				intent.putExtra("url", TimeUtils.getNewsTime(posttime)
-						+ groupnNewsList.get(position).getUrl());
+						+ groupnNewsList.get(position).getResource());
+				intent.putExtra("news_id",groupnNewsList.get(position).getId());
 				intent.putExtra("pager_title",pagerTitle);
+				intent.putExtra("hasExtraPermission",groupnNewsList.get(position).isHasExtraPermission());
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

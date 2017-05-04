@@ -14,6 +14,7 @@ import android.graphics.BitmapFactory;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.api.APICallback;
 import com.inspur.emmcloud.api.APIInterface;
+import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.bean.ChannelGroup;
 import com.inspur.emmcloud.bean.GetAddMembersSuccessResult;
 import com.inspur.emmcloud.bean.GetBoolenResult;
@@ -27,6 +28,7 @@ import com.inspur.emmcloud.bean.GetMsgCommentResult;
 import com.inspur.emmcloud.bean.GetMsgResult;
 import com.inspur.emmcloud.bean.GetNewMsgsResult;
 import com.inspur.emmcloud.bean.GetNewsImgResult;
+import com.inspur.emmcloud.bean.GetNewsInstructionResult;
 import com.inspur.emmcloud.bean.GetSearchChannelGroupResult;
 import com.inspur.emmcloud.bean.GetSendMsgResult;
 import com.inspur.emmcloud.util.AppUtils;
@@ -848,6 +850,39 @@ public class ChatAPIService {
 			public void callbackFail(String error, int responseCode) {
 				// TODO Auto-generated method stub
 				apiInterface.returnMsgCommentCountFail(error);
+			}
+		});
+	}
+
+	/**
+	 * 新闻批示接口，传入内容为批示内容
+	 * @param instruction
+     */
+	public void sendNewsInstruction(final String newsId, final String instruction){
+		final String completeUrl = APIUri.getNewsInstruction(newsId);
+		RequestParams params = ((MyApplication) context.getApplicationContext())
+				.getHttpRequestParams(completeUrl);
+		params.setHeader("Content-Type","url-encoded-form");
+		params.addQueryStringParameter("comment",instruction);
+		x.http().post(params, new APICallback(context,completeUrl) {
+			@Override
+			public void callbackSuccess(String arg0) {
+				apiInterface.returnNewsInstructionSuccess(new GetNewsInstructionResult(arg0));
+			}
+
+			@Override
+			public void callbackFail(String error, int responseCode) {
+				apiInterface.returnNewsInstructionFail(error);
+			}
+
+			@Override
+			public void callbackTokenExpire() {
+				new OauthUtils(new OauthCallBack() {
+					@Override
+					public void execute() {
+						sendNewsInstruction(newsId,instruction);
+					}
+				}, context).refreshTocken(completeUrl);
 			}
 		});
 	}

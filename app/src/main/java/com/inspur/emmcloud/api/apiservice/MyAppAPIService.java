@@ -6,11 +6,6 @@
  */
 package com.inspur.emmcloud.api.apiservice;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.xutils.x;
-import org.xutils.http.RequestParams;
-
 import android.content.Context;
 
 import com.google.gson.JsonArray;
@@ -31,6 +26,9 @@ import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.OauthCallBack;
 import com.inspur.emmcloud.util.OauthUtils;
 import com.inspur.emmcloud.util.UriUtils;
+
+import org.xutils.http.RequestParams;
+import org.xutils.x;
 
 /**
  * com.inspur.emmcloud.api.apiservice.MyAppAPIService create at 2016年11月8日
@@ -211,7 +209,6 @@ public class MyAppAPIService {
     /**
      * 应用搜索
      *
-     * @param appID
      */
     public void searchApp(final String keyword, final int pageNumber) {
         final String completeUrl = APIUri.getAllApps();
@@ -261,7 +258,8 @@ public class MyAppAPIService {
      */
     public void getNewsTitles() {
 
-        final String completeUrl = UriUtils.getHttpApiUri("news/category");
+        final String completeUrl = UriUtils.getHttpApiUri("api/v0/content/news/section");
+        LogUtils.YfcDebug("请求新闻的地址："+completeUrl);
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
         x.http().get(params, new APICallback(context,completeUrl) {
@@ -281,6 +279,7 @@ public class MyAppAPIService {
             @Override
             public void callbackSuccess(String arg0) {
                 // TODO Auto-generated method stub
+                LogUtils.YfcDebug("分类接口返回："+arg0);
                 apiInterface
                         .returnGroupNewsTitleSuccess(new GetNewsTitleResult(
                                 arg0));
@@ -289,6 +288,7 @@ public class MyAppAPIService {
             @Override
             public void callbackFail(String error, int responseCode) {
                 // TODO Auto-generated method stub
+                LogUtils.YfcDebug("错误代码："+responseCode);
                 apiInterface.returnGroupNewsTitleFail(error);
             }
         });
@@ -303,8 +303,7 @@ public class MyAppAPIService {
      */
     public void getGroupNewsDetail(final String ncid, final int page) {
 
-        final String completeUrl = UriUtils.getHttpApiUri("news?cid=" + ncid
-                + "&page=" + page);
+        final String completeUrl = UriUtils.getHttpApiUri("/api/v0/content/news/section/"+ncid+"/post?page="+page+"&limit=20");
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
 
@@ -378,8 +377,6 @@ public class MyAppAPIService {
     /**
      * 获取所有应用
      *
-     * @param type
-     * @param pageNumber
      */
     public void getNewAllApps() {
         final String completeUrl = APIUri.getNewAllApps();
