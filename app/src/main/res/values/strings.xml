@@ -94,6 +94,7 @@
     <string name="close">关闭</string>
     <string name="commoly_use_app">常用</string>
     <string name="app_init">正在初始化中...</string>
+    <string name="news_content_cant_empty">内容不能为空</string>
 
     <!-- 新添加部分 -->
     <string name="alert">提醒</string>
@@ -454,6 +455,8 @@
     <string name="news_font_biggest_text">超大</string>
     <string name="news_font_name_text">字号</string>
     <string name="news_read_mode">阅读模式</string>
+    <string name="new_instructions_text">批示</string>
+    <string name="news_instructions_success_text">发送成功</string>
 
     <!-- 审批页面 -->
     <string name="onekey_approval_text">审批</string>

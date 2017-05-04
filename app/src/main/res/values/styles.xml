@@ -68,6 +68,9 @@
     </style>
 
 
+
+
+
     <!-- 增加加号部分的style -->
     <style name="transparentDateWindowStyle" parent="android:style/Theme.Dialog">
         <item name="android:windowBackground">@drawable/photo_choose_bg</item>

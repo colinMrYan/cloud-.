@@ -93,6 +93,7 @@
     <string name="commoly_use_app">Commonly</string>
     <string name="function_not_implemented">During closed beta, it will not open</string>
     <string name="app_init">init...</string>
+    <string name="news_content_cant_empty">Content cannot be empty</string>
 
     <!-- 新添加部分 -->
     <string name="alert">Remind</string>
@@ -449,6 +450,8 @@
     <string name="news_font_biggest_text">Extra</string>
     <string name="news_font_name_text">Font Size</string>
     <string name="news_read_mode">Reading Mode</string>
+    <string name="new_instructions_text">instruction</string>
+    <string name="news_instructions_success_text">Sending Success</string>
 
     <!-- 审批页面 -->
     <string name="onekey_approval_text">Approval</string>

@@ -1,36 +1,39 @@
 package com.inspur.emmcloud.bean;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.text.TextUtils;
 
 import com.inspur.emmcloud.util.LogUtils;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class GetGroupNewsDetailResult {
 
 	private static final String TAG = "GetNewsTitleResult";
-	private String author="";
-	private String category="";
-	private String digest="";
-	private String needpush="";
-	private String nid="";
-	private String posttime="";
-	private String publisher="";
-	private String title="";
-	private String url="";
+//	private String author="";
+//	private String category="";
+//	private String digest="";
+//	private String needpush="";
+//	private String nid="";
+//	private String posttime="";
+//	private String publisher="";
+//	private String title="";
+//	private String url="";
 
 	private JSONArray jsonArray;
 	private List<GroupNews> groupNewsList;
 
 	public GetGroupNewsDetailResult(String response) {
 		try {
-			jsonArray = new JSONArray(response);
-
+			LogUtils.YfcDebug("每一个category下的新闻信息："+response);
+			JSONObject jsonObject = new JSONObject(response);
+//			jsonArray = new JSONArray(response);
+			if(jsonObject.has("content")){
+				jsonArray = jsonObject.getJSONArray("content");
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

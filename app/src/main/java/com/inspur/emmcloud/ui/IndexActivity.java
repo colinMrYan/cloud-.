@@ -133,6 +133,7 @@ public class IndexActivity extends BaseFragmentActivity implements
         startCoreService();
     }
 
+
     /**
      * 注册刷新广播
      */
@@ -392,27 +393,27 @@ public class IndexActivity extends BaseFragmentActivity implements
                 mainTabs = new MainTabBean[appTabList.size()];
                 for (int i = 0; i < appTabList.size(); i++) {
                     if (appTabList.get(i).getComponent().equals("communicate")) {
-                        MainTabBean mainTabBean = new MainTabBean(0,R.string.communicate,R.drawable.selector_tab_message_btn,MessageFragment.class);
+                        MainTabBean mainTabBean = new MainTabBean(i,R.string.communicate,R.drawable.selector_tab_message_btn,MessageFragment.class);
                         mainTabBean.setCommpant(appTabList.get(i).getComponent());
                         mainTabs[i] = internationalMainLanguage(appTabList.get(i),environmentLanguage,mainTabBean);
                     } else if (appTabList.get(i).getComponent().equals("work")) {
-                        MainTabBean mainTabBean = new MainTabBean(1, R.string.work, R.drawable.selector_tab_work_btn,
+                        MainTabBean mainTabBean = new MainTabBean(i, R.string.work, R.drawable.selector_tab_work_btn,
                                 WorkFragment.class);
                         mainTabs[i] = internationalMainLanguage(appTabList.get(i),environmentLanguage,mainTabBean);
                     } else if (appTabList.get(i).getComponent().equals("find")) {
-                        MainTabBean mainTabBean = new MainTabBean(2, R.string.find, R.drawable.selector_tab_find_btn,
+                        MainTabBean mainTabBean = new MainTabBean(i, R.string.find, R.drawable.selector_tab_find_btn,
                                 FindFragment.class);
                         mainTabs[i] = internationalMainLanguage(appTabList.get(i),environmentLanguage,mainTabBean);
                     } else if (appTabList.get(i).getComponent().equals("application")) {
-                        MainTabBean mainTabBean = new MainTabBean(3, R.string.application, R.drawable.selector_tab_app_btn,
+                        MainTabBean mainTabBean = new MainTabBean(i, R.string.application, R.drawable.selector_tab_app_btn,
                                 MyAppFragment.class);
                         mainTabs[i] = internationalMainLanguage(appTabList.get(i),environmentLanguage,mainTabBean);
                     } else if (appTabList.get(i).getComponent().equals("mine")) {
-                        MainTabBean mainTabBean = new MainTabBean(4, R.string.mine, R.drawable.selector_tab_more_btn,
+                        MainTabBean mainTabBean = new MainTabBean(i, R.string.mine, R.drawable.selector_tab_more_btn,
                                 MoreFragment.class);
                         mainTabs[i] = internationalMainLanguage(appTabList.get(i),environmentLanguage,mainTabBean);
                     }else{
-                        MainTabBean mainTabBean = new MainTabBean(5, R.string.unknown, R.drawable.selector_tab_unknown_btn,
+                        MainTabBean mainTabBean = new MainTabBean(i, R.string.unknown, R.drawable.selector_tab_unknown_btn,
                                 NotSupportFragment.class);
                         mainTabs[i] = internationalMainLanguage(appTabList.get(i),environmentLanguage,mainTabBean);
                     }
@@ -441,6 +442,7 @@ public class IndexActivity extends BaseFragmentActivity implements
             ImageView tabImg = (ImageView) tabView.findViewById(R.id.imageview);
             TextView tabText = (TextView) tabView.findViewById(R.id.textview);
             if (mainTab.getCommpant().equals("communicate")) {
+
                 handleTipsView(tabView);
             }
             if(!StringUtils.isBlank(mainTab.getConfigureName())){
@@ -462,9 +464,17 @@ public class IndexActivity extends BaseFragmentActivity implements
                     return new View(IndexActivity.this);
                 }
             });
+
             mTabHost.addTab(tab, mainTab.getClz(), null);
             mTabHost.getTabWidget().getChildAt(i).setOnTouchListener(this);
             mTabHost.setOnTabChangedListener(this);
+        }
+        int tabSize = tabs.length;
+        for (int i = 0; i < tabSize; i++){
+            if(tabs[i].getCommpant().equals("communicate")){
+                mTabHost.setCurrentTab(tabs[i].getIdx());
+                break;
+            }
         }
         mTabHost.setCurrentTab(getTabIndex());
     }
@@ -835,7 +845,6 @@ public class IndexActivity extends BaseFragmentActivity implements
 
         @Override
         public void returnAppTabAutoFail(String error) {
-            LogUtils.YfcDebug("检查是否有Tab新接口");
 //            WebServiceMiddleUtils.hand(IndexActivity.this, error);
         }
     }
@@ -846,18 +855,24 @@ public class IndexActivity extends BaseFragmentActivity implements
      */
     private void updateTabbarWithOrder(GetAppTabAutoResult getAppTabAutoResult) {
         String command = getAppTabAutoResult.getCommand();
-        PreferencesByUserUtils.putString(IndexActivity.this,"app_tabbar_version",getAppTabAutoResult.getVersion());
         if(command.equals("FORWARD")){
+            PreferencesByUserUtils.putString(IndexActivity.this,"app_tabbar_version",getAppTabAutoResult.getVersion());
             PreferencesByUserUtils.putString(IndexActivity.this,"app_tabbar_info_current",getAppTabAutoResult.getAppTabInfo());
-            mTabHost.clearAllTabs();
-            handleAppTabs();
+            updateTabbar();
         }else if(command.equals("STANDBY")){
+            updateTabbar();
             LogUtils.YfcDebug("收到保持现状指令");
         }else{
             LogUtils.YfcDebug("收到不支持的指令");
         }
-//        mTabHost.clearAllTabs();
-//        handleAppTabs();
+    }
+
+    /**
+     * 更新tabbar
+     */
+    private void updateTabbar(){
+        mTabHost.clearAllTabs();
+        handleAppTabs();
     }
 
     /**

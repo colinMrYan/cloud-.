@@ -14,22 +14,46 @@
         android:layout_marginRight="5dp"
         android:background="@drawable/app_news_dialog_day_background"
         android:orientation="vertical">
-
-        <Button
-            android:id="@+id/app_news_share_btn"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginTop="15dp"
-            android:drawableLeft="@drawable/app_news_share_night"
-            android:drawablePadding="11dp"
-            android:paddingLeft="139dp"
-            android:gravity="left|center_vertical"
-            android:onClick="onClick"
-            android:background="@drawable/app_news_dialog_day_button"
-            android:textSize="@dimen/content_title_textsize"
-            android:text="@string/news_share_text" />
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <Button
+                android:id="@+id/app_news_instructions_btn"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="50dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="15dp"
+                android:drawableLeft="@drawable/icon_news_instructions"
+                android:drawablePadding="11dp"
+                android:paddingLeft="40dp"
+                android:gravity="left|center_vertical"
+                android:onClick="onClick"
+                android:background="@drawable/app_news_dialog_day_button"
+                android:textSize="@dimen/content_title_textsize"
+                android:text="@string/new_instructions_text" />
+            <!--android:visibility="gone"-->
+            <Button
+                android:id="@+id/app_news_share_btn"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="50dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="15dp"
+                android:drawableLeft="@drawable/app_news_share_night"
+                android:drawablePadding="11dp"
+                android:paddingLeft="40dp"
+                android:gravity="left|center_vertical"
+                android:onClick="onClick"
+                android:background="@drawable/app_news_dialog_day_button"
+                android:textSize="@dimen/content_title_textsize"
+                android:text="@string/news_share_text" />
+
+        </LinearLayout>
+
+
 
         <View
             android:id="@+id/app_news_read_mode_line"
