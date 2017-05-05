@@ -88,6 +88,7 @@ public class IndexActivity extends BaseFragmentActivity implements
         OnTabChangeListener, OnTouchListener {
     private static final int SYNC_ALL_BASE_DATA_SUCCESS = 0;
     private static final int SYNC_CONTACT_SUCCESS = 1;
+    private static final int CHANGE_TAB = 2;
     private long lastBackTime;
     public MyFragmentTabHost mTabHost;
     private static TextView newMessageTipsText;
@@ -270,6 +271,11 @@ public class IndexActivity extends BaseFragmentActivity implements
                         break;
                     case SYNC_CONTACT_SUCCESS:
                         getAllChannelGroup();
+                        break;
+                    case CHANGE_TAB:
+                        int communicateLocation = (int)msg.obj;
+                        mTabHost.setCurrentTab(communicateLocation);
+                        mTabHost.setCurrentTab(getTabIndex());
                         break;
                     default:
                         break;
@@ -470,13 +476,22 @@ public class IndexActivity extends BaseFragmentActivity implements
             mTabHost.setOnTabChangedListener(this);
         }
         int tabSize = tabs.length;
+        int communicateLocation = -1;
         for (int i = 0; i < tabSize; i++){
             if(tabs[i].getCommpant().equals("communicate")){
-                mTabHost.setCurrentTab(tabs[i].getIdx());
+                communicateLocation = tabs[i].getIdx();
                 break;
             }
         }
-        mTabHost.setCurrentTab(getTabIndex());
+        if(communicateLocation == -1){
+            mTabHost.setCurrentTab(getTabIndex());
+        }else{
+            Message msg = new Message();
+            msg.what = CHANGE_TAB;
+            msg.obj = communicateLocation;
+            handler.sendMessage(msg);
+        }
+
     }
 
 
