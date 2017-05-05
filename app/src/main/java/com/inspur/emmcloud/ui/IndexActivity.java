@@ -875,7 +875,7 @@ public class IndexActivity extends BaseFragmentActivity implements
             PreferencesByUserUtils.putString(IndexActivity.this,"app_tabbar_info_current",getAppTabAutoResult.getAppTabInfo());
             updateTabbar();
         }else if(command.equals("STANDBY")){
-            updateTabbar();
+//            updateTabbar();
             LogUtils.YfcDebug("收到保持现状指令");
         }else{
             LogUtils.YfcDebug("收到不支持的指令");
