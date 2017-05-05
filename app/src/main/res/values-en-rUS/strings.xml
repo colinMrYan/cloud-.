@@ -336,6 +336,8 @@
     <string name="app_download">App downloading：</string>
     <string name="app_password_error">Password is wrong, please re-enter</string>
     <string name="app_password_encrypt_error">Password encryption error</string>
+    <string name="app_recommand">Recommend</string>
+    <string name="app_classification">Classification</string>
 
     <!-- 我的页面部分 -->
     <string name="data_clear_success">Clear success</string>

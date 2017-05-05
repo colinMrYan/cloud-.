@@ -337,6 +337,8 @@
     <string name="app_download">應用下載中：</string>
     <string name="app_password_error">密碼錯誤，請重新輸入</string>
     <string name="app_password_encrypt_error">密碼加密出錯</string>
+    <string name="app_recommand">推薦</string>
+    <string name="app_classification">分類</string>
 
     <!-- 我的頁面部分 -->
     <string name="data_clear_success">清除成功</string>
