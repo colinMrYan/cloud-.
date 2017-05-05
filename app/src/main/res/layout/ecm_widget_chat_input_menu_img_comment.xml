@@ -47,7 +47,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="right"
-        android:background="@drawable/bg_chat_input_send_btn_enable"
+        android:background="@drawable/bg_chat_input_send_btn_disable"
         android:layout_marginRight="10dp"
         android:gravity="center"
         android:onClick="onClick"

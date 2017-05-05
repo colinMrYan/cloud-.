@@ -7,9 +7,6 @@
  */
 package com.inspur.emmcloud.api.apiservice;
 
-import org.xutils.x;
-import org.xutils.http.RequestParams;
-
 import android.content.Context;
 
 import com.inspur.emmcloud.MyApplication;
@@ -22,6 +19,9 @@ import com.inspur.emmcloud.bean.Robot;
 import com.inspur.emmcloud.util.OauthCallBack;
 import com.inspur.emmcloud.util.OauthUtils;
 import com.inspur.emmcloud.util.StringUtils;
+
+import org.xutils.http.RequestParams;
+import org.xutils.x;
 
 /**
  * com.inspur.emmcloud.api.apiservice.ContactAPIService
@@ -51,7 +51,7 @@ public class ContactAPIService {
 		if (!StringUtils.isBlank(lastQueryTime)) {
 			params.addParameter("lastQueryTime", lastQueryTime);
 		}
-		x.http().post(params, new APICallback() {
+		x.http().post(params, new APICallback(context,completeUrl) {
 			
 			@Override
 			public void callbackTokenExpire() {
@@ -88,7 +88,7 @@ public class ContactAPIService {
 	public void getAllRobotInfo(){
 		final String completeUrl = APIUri.getAllBotInfo();
 		RequestParams params = ((MyApplication)context.getApplicationContext()).getHttpRequestParams(completeUrl);
-		x.http().get(params, new APICallback() {
+		x.http().get(params, new APICallback(context,completeUrl) {
 			
 			@Override
 			public void callbackTokenExpire() {
@@ -120,7 +120,7 @@ public class ContactAPIService {
 	public void getRobotInfoById(final String id){
 		final String completeUrl = APIUri.getBotInfoById()+"/"+id;
 		RequestParams params = ((MyApplication)context.getApplicationContext()).getHttpRequestParams(completeUrl);
-		x.http().get(params, new APICallback() {
+		x.http().get(params, new APICallback(context,completeUrl) {
 			
 			@Override
 			public void callbackTokenExpire() {

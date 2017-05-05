@@ -327,7 +327,6 @@ public class AppTabAutoBean {
                 public TitleBean(String response){
                     try {
                         JSONObject jsonObject = new JSONObject(response);
-                        LogUtils.YfcDebug("Title:"+response);
                         if(jsonObject.has("zh-Hans")){
                             this.zhHans = jsonObject.getString("zh-Hans");
                         }

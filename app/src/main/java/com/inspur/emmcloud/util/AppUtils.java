@@ -123,7 +123,7 @@ public class AppUtils {
 
 	/**
 	 * 如果包含Beta则截取bata前的版本号信息
-	 * 
+	 *
 	 * @param versionCode
 	 * @return
 	 */
@@ -156,8 +156,6 @@ try{
 	LogUtils.YfcDebug("捕获版本异常："+e.getMessage());
 	e.printStackTrace();
 }
-
-
 			if (savedArray.length != 3) {
 				return false;
 			} else if (currentArray.length != 3) {

@@ -37,7 +37,6 @@ import com.inspur.emmcloud.bean.GetAllRobotsResult;
 import com.inspur.emmcloud.bean.GetAppTabAutoResult;
 import com.inspur.emmcloud.bean.GetAppTabsResult;
 import com.inspur.emmcloud.bean.GetClientIdRsult;
-import com.inspur.emmcloud.bean.GetExceptionResult;
 import com.inspur.emmcloud.bean.GetSearchChannelGroupResult;
 import com.inspur.emmcloud.bean.Language;
 import com.inspur.emmcloud.bean.ReactNativeClientIdErrorBean;
@@ -75,10 +74,6 @@ import com.inspur.emmcloud.widget.MyFragmentTabHost;
 import com.inspur.emmcloud.widget.WeakHandler;
 import com.inspur.emmcloud.widget.tipsview.TipsView;
 import com.inspur.reactnative.ReactNativeFlow;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -130,15 +125,14 @@ public class IndexActivity extends BaseFragmentActivity implements
         getAllContact();
         getAllRobots();
         initTabView();
-        if (!AppUtils.isApkDebugable(IndexActivity.this)) {
-            uploadLastTimeException();
-        }
+
         /**从服务端获取显示tab**/
         getAppTabs();
 		startUploadPVCollectService();
         registerReactNativeReceiver();
         startCoreService();
     }
+
 
     /**
      * 注册刷新广播
@@ -257,22 +251,6 @@ public class IndexActivity extends BaseFragmentActivity implements
         }
     }
 
-    /**
-     * 上传异常
-     */
-    private void uploadLastTimeException() {
-
-        boolean isErrFileExist = FileUtils
-                .isFileExist(MyAppConfig.ERROR_FILE_PATH + "errorLog.txt");
-        if (NetUtils.isNetworkConnected(getApplicationContext(), false)
-                && isErrFileExist) {
-            // 异常信息上传
-            JSONObject jsonException = organizeException();
-            AppAPIService apiService = new AppAPIService(IndexActivity.this);
-            apiService.setAPIInterface(new WebService());
-            apiService.uploadException(jsonException);
-        }
-    }
 
     private void handMessage() {
         // TODO Auto-generated method stub
@@ -415,27 +393,27 @@ public class IndexActivity extends BaseFragmentActivity implements
                 mainTabs = new MainTabBean[appTabList.size()];
                 for (int i = 0; i < appTabList.size(); i++) {
                     if (appTabList.get(i).getComponent().equals("communicate")) {
-                        MainTabBean mainTabBean = new MainTabBean(0,R.string.communicate,R.drawable.selector_tab_message_btn,MessageFragment.class);
+                        MainTabBean mainTabBean = new MainTabBean(i,R.string.communicate,R.drawable.selector_tab_message_btn,MessageFragment.class);
                         mainTabBean.setCommpant(appTabList.get(i).getComponent());
                         mainTabs[i] = internationalMainLanguage(appTabList.get(i),environmentLanguage,mainTabBean);
                     } else if (appTabList.get(i).getComponent().equals("work")) {
-                        MainTabBean mainTabBean = new MainTabBean(1, R.string.work, R.drawable.selector_tab_work_btn,
+                        MainTabBean mainTabBean = new MainTabBean(i, R.string.work, R.drawable.selector_tab_work_btn,
                                 WorkFragment.class);
                         mainTabs[i] = internationalMainLanguage(appTabList.get(i),environmentLanguage,mainTabBean);
                     } else if (appTabList.get(i).getComponent().equals("find")) {
-                        MainTabBean mainTabBean = new MainTabBean(2, R.string.find, R.drawable.selector_tab_find_btn,
+                        MainTabBean mainTabBean = new MainTabBean(i, R.string.find, R.drawable.selector_tab_find_btn,
                                 FindFragment.class);
                         mainTabs[i] = internationalMainLanguage(appTabList.get(i),environmentLanguage,mainTabBean);
                     } else if (appTabList.get(i).getComponent().equals("application")) {
-                        MainTabBean mainTabBean = new MainTabBean(3, R.string.application, R.drawable.selector_tab_app_btn,
+                        MainTabBean mainTabBean = new MainTabBean(i, R.string.application, R.drawable.selector_tab_app_btn,
                                 MyAppFragment.class);
                         mainTabs[i] = internationalMainLanguage(appTabList.get(i),environmentLanguage,mainTabBean);
                     } else if (appTabList.get(i).getComponent().equals("mine")) {
-                        MainTabBean mainTabBean = new MainTabBean(4, R.string.mine, R.drawable.selector_tab_more_btn,
+                        MainTabBean mainTabBean = new MainTabBean(i, R.string.mine, R.drawable.selector_tab_more_btn,
                                 MoreFragment.class);
                         mainTabs[i] = internationalMainLanguage(appTabList.get(i),environmentLanguage,mainTabBean);
                     }else{
-                        MainTabBean mainTabBean = new MainTabBean(5, R.string.unknown, R.drawable.selector_tab_unknown_btn,
+                        MainTabBean mainTabBean = new MainTabBean(i, R.string.unknown, R.drawable.selector_tab_unknown_btn,
                                 NotSupportFragment.class);
                         mainTabs[i] = internationalMainLanguage(appTabList.get(i),environmentLanguage,mainTabBean);
                     }
@@ -464,6 +442,7 @@ public class IndexActivity extends BaseFragmentActivity implements
             ImageView tabImg = (ImageView) tabView.findViewById(R.id.imageview);
             TextView tabText = (TextView) tabView.findViewById(R.id.textview);
             if (mainTab.getCommpant().equals("communicate")) {
+
                 handleTipsView(tabView);
             }
             if(!StringUtils.isBlank(mainTab.getConfigureName())){
@@ -485,9 +464,17 @@ public class IndexActivity extends BaseFragmentActivity implements
                     return new View(IndexActivity.this);
                 }
             });
+
             mTabHost.addTab(tab, mainTab.getClz(), null);
             mTabHost.getTabWidget().getChildAt(i).setOnTouchListener(this);
             mTabHost.setOnTabChangedListener(this);
+        }
+        int tabSize = tabs.length;
+        for (int i = 0; i < tabSize; i++){
+            if(tabs[i].getCommpant().equals("communicate")){
+                mTabHost.setCurrentTab(tabs[i].getIdx());
+                break;
+            }
         }
         mTabHost.setCurrentTab(getTabIndex());
     }
@@ -727,55 +714,6 @@ public class IndexActivity extends BaseFragmentActivity implements
         this.workFragmentListener = l;
     }
 
-    /**
-     * 上传异常信息前的信息组织
-     */
-    private JSONObject organizeException() {
-
-        JSONObject jsonException = new JSONObject();
-        JSONObject uploadJson = new JSONObject();
-        JSONArray jsonArray = new JSONArray();
-
-        String mobileInfo = "OSVERSION:" + android.os.Build.VERSION.RELEASE
-                + ";APPVERSION:" + AppUtils.getVersion(getApplicationContext())
-                + ";MOBILEMODEL:" + android.os.Build.MODEL;
-        try {
-            jsonException.put("InstanceCode", "");
-            jsonException.put("UserId",
-                    PreferencesUtils.getString(IndexActivity.this, "userID"));
-            jsonException.put("UserCode",
-                    PreferencesUtils.getString(this, "userRealID"));
-            jsonException.put("ErrorCode", "");
-            jsonException.put("ModuleCode", "");
-
-            if (PreferencesUtils.getString(IndexActivity.this, "crashtime") != null) {
-                jsonException.put("HappenTime", Long.parseLong(PreferencesUtils
-                        .getString(this, "crashtime")));
-            } else {
-                jsonException.put("HappenTime", 0);
-            }
-
-            jsonException.put("ClientInfo", mobileInfo);
-            jsonException.put("ServerInfo", "");
-            jsonException.put("ExceptionMessage", "App崩溃");
-            jsonException.put(
-                    "ExceptionInfo",
-                    FileUtils.readFile(MyAppConfig.ERROR_FILE_PATH
-                            + "errorLog.txt", "UTF-8"));
-            jsonException.put("LicenseInfo", "");
-            jsonException.put("LastModifyTime", "");
-            jsonException.put("ClientName", "ECM_Android");
-
-            jsonArray.put(jsonException);
-
-            uploadJson.put("errors", jsonArray);
-
-        } catch (JSONException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        return uploadJson;
-    }
 
     public class WebService extends APIInterfaceInstance {
 
@@ -837,16 +775,6 @@ public class IndexActivity extends BaseFragmentActivity implements
             handler.sendEmptyMessage(SYNC_ALL_BASE_DATA_SUCCESS);
         }
 
-        @Override
-        public void returnUploadExceptionSuccess(
-                GetExceptionResult getExceptionResult) {
-            FileUtils.deleteFile(MyAppConfig.ERROR_FILE_PATH + "errorLog.txt");
-        }
-
-        @Override
-        public void returnUploadExceptionFail(String error) {
-            WebServiceMiddleUtils.hand(IndexActivity.this, error);
-        }
 
         @Override
         public void returnAllRobotsSuccess(
@@ -917,7 +845,6 @@ public class IndexActivity extends BaseFragmentActivity implements
 
         @Override
         public void returnAppTabAutoFail(String error) {
-            LogUtils.YfcDebug("检查是否有Tab新接口");
 //            WebServiceMiddleUtils.hand(IndexActivity.this, error);
         }
     }
@@ -928,18 +855,24 @@ public class IndexActivity extends BaseFragmentActivity implements
      */
     private void updateTabbarWithOrder(GetAppTabAutoResult getAppTabAutoResult) {
         String command = getAppTabAutoResult.getCommand();
-        PreferencesByUserUtils.putString(IndexActivity.this,"app_tabbar_version",getAppTabAutoResult.getVersion());
         if(command.equals("FORWARD")){
+            PreferencesByUserUtils.putString(IndexActivity.this,"app_tabbar_version",getAppTabAutoResult.getVersion());
             PreferencesByUserUtils.putString(IndexActivity.this,"app_tabbar_info_current",getAppTabAutoResult.getAppTabInfo());
-            mTabHost.clearAllTabs();
-            handleAppTabs();
+            updateTabbar();
         }else if(command.equals("STANDBY")){
+            updateTabbar();
             LogUtils.YfcDebug("收到保持现状指令");
         }else{
             LogUtils.YfcDebug("收到不支持的指令");
         }
-//        mTabHost.clearAllTabs();
-//        handleAppTabs();
+    }
+
+    /**
+     * 更新tabbar
+     */
+    private void updateTabbar(){
+        mTabHost.clearAllTabs();
+        handleAppTabs();
     }
 
     /**

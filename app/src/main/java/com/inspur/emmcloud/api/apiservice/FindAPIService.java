@@ -48,7 +48,7 @@ public class FindAPIService {
 	public void getTripInfo(final String  tripId) {
 		final String completeUrl = UriUtils.getHttpApiUri("trip/simple/detail?trip_ticket=")+tripId;
 		RequestParams params = ((MyApplication)context.getApplicationContext()).getHttpRequestParams(completeUrl);
-		x.http().get(params, new APICallback() {
+		x.http().get(params, new APICallback(context,completeUrl) {
 			
 			@Override
 			public void callbackTokenExpire() {
@@ -89,7 +89,7 @@ public class FindAPIService {
 		array.put(tripId);
 		params.setBodyContent(array.toString());
 		params.setAsJsonContent(true);
-		x.http().request(HttpMethod.PUT, params, new APICallback() {
+		x.http().request(HttpMethod.PUT, params, new APICallback(context,completeUrl) {
 			
 			@Override
 			public void callbackTokenExpire() {
@@ -130,7 +130,7 @@ public class FindAPIService {
 		RequestParams params = ((MyApplication)context.getApplicationContext()).getHttpRequestParams(completeUrl);
 		params.setBodyContent(ticketInfos);
 		params.setAsJsonContent(true);
-		x.http().post(params, new APICallback() {
+		x.http().post(params, new APICallback(context,completeUrl) {
 			
 			@Override
 			public void callbackTokenExpire() {
@@ -169,7 +169,7 @@ public class FindAPIService {
 		RequestParams params = ((MyApplication)context.getApplicationContext()).getHttpRequestParams(completeUrl);
 		params.setBodyContent(ticketInfos);
 		params.setAsJsonContent(true);
-		x.http().request(HttpMethod.PUT, params, new APICallback() {
+		x.http().request(HttpMethod.PUT, params, new APICallback(context,completeUrl) {
 			
 			@Override
 			public void callbackTokenExpire() {
@@ -206,7 +206,7 @@ public class FindAPIService {
 		RequestParams params = ((MyApplication)context.getApplicationContext()).getHttpRequestParams(completeUrl);
 		params.addParameter("way", "TRAIN");
 		params.addParameter("source", "SMS");
-		x.http().get(params, new APICallback() {
+		x.http().get(params, new APICallback(context,completeUrl) {
 			
 			@Override
 			public void callbackTokenExpire() {
@@ -245,7 +245,7 @@ public class FindAPIService {
 		completeUrl = UriUtils.getTripArriveCity() + "?";
 		RequestParams params = ((MyApplication)context.getApplicationContext()).getHttpRequestParams(completeUrl);
 		params.addParameter("station", station);
-		x.http().get(params, new APICallback() {
+		x.http().get(params, new APICallback(context,completeUrl) {
 			
 			@Override
 			public void callbackTokenExpire() {
@@ -280,7 +280,7 @@ public class FindAPIService {
 	public void getKnowledgeList() {
 		final String completeUrl = UriUtils.knowledgeTips();
 		RequestParams params = ((MyApplication)context.getApplicationContext()).getHttpRequestParams(completeUrl);
-		x.http().get(params, new APICallback() {
+		x.http().get(params, new APICallback(context,completeUrl) {
 			
 			@Override
 			public void callbackTokenExpire() {
@@ -326,7 +326,7 @@ public class FindAPIService {
 		final String completeUrl = url;
 		RequestParams params = ((MyApplication)context.getApplicationContext()).getHttpRequestParams(completeUrl);
 		params.addParameter("q", keyword);
-		x.http().get(params, new APICallback() {
+		x.http().get(params, new APICallback(context,completeUrl) {
 			
 			@Override
 			public void callbackTokenExpire() {
@@ -365,7 +365,7 @@ public class FindAPIService {
 	public void findMixSearch(final String keyword) {
 		final String completeUrl = UriUtils.getFindMixSearch() + keyword;
 		RequestParams params = ((MyApplication)context.getApplicationContext()).getHttpRequestParams(completeUrl);
-		x.http().get(params, new APICallback() {
+		x.http().get(params, new APICallback(context,completeUrl) {
 			
 			@Override
 			public void callbackTokenExpire() {

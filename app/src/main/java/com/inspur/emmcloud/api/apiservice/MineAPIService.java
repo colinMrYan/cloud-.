@@ -63,7 +63,7 @@ public class MineAPIService {
 		File file = new File(filePath);
 		params.setMultipart(true);// 有上传文件时使用multipart表单, 否则上传原始文件流.
 		params.addBodyParameter("head", file);
-		x.http().post(params, new APICallback() {
+		x.http().post(params, new APICallback(context,completeUrl) {
 
 			@Override
 			public void callbackTokenExpire() {
@@ -111,7 +111,7 @@ public class MineAPIService {
 				.getHttpRequestParams(completeUrl);
 		params.addParameter("key", key);
 		params.addParameter("value", value);
-		x.http().post(params, new APICallback() {
+		x.http().post(params, new APICallback(context,completeUrl) {
 
 			@Override
 			public void callbackTokenExpire() {
@@ -170,7 +170,7 @@ public class MineAPIService {
 		params.addParameter("Email", "");
 		params.addParameter("Telephone", "");
 		params.addParameter("UUID", UUID);
-		x.http().post(params, new APICallback() {
+		x.http().post(params, new APICallback(context,completeUrl) {
 
 			@Override
 			public void callbackTokenExpire() {
@@ -200,7 +200,7 @@ public class MineAPIService {
 		final String completeUrl = UriUtils.getHttpApiUri("wallet");
 		RequestParams params = ((MyApplication) context.getApplicationContext())
 				.getHttpRequestParams(completeUrl);
-		x.http().get(params, new APICallback() {
+		x.http().get(params, new APICallback(context,completeUrl) {
 
 			@Override
 			public void callbackTokenExpire() {
@@ -239,7 +239,7 @@ public class MineAPIService {
 		final String completeUrl = UriUtils.getHttpApiUri("settings/lang");
 		RequestParams params = ((MyApplication) context.getApplicationContext())
 				.getHttpRequestParams(completeUrl);
-		x.http().get(params, new APICallback() {
+		x.http().get(params, new APICallback(context,completeUrl) {
 
 			@Override
 			public void callbackTokenExpire() {
@@ -282,7 +282,7 @@ public class MineAPIService {
 	// RequestParams params =
 	// ((MyApplication)context.getApplicationContext()).getHttpRequestParams(completeUrl);
 	// params.addParameter("userHead", userHead);
-	// x.http().post(params, new APICallback() {
+	// x.http().post(params, new APICallback(context,completeUrl) {
 	//
 	// @Override
 	// public void callbackTokenExpire() {

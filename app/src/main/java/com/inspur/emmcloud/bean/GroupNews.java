@@ -1,5 +1,8 @@
 package com.inspur.emmcloud.bean;
 
+import com.inspur.emmcloud.util.LogUtils;
+import com.inspur.emmcloud.util.StringUtils;
+
 import org.json.JSONObject;
 
 public class GroupNews {
@@ -12,14 +15,22 @@ public class GroupNews {
 	private String posttime;
 	private String publisher;
 	private String title;
-	private String url;
+//	private String url;
 	private String poster;
-	private boolean important;
+	private boolean important = false;
+	private String summary = "";
+	private String creationDate = "";
+	private String resource = "";
+	private String id = "";
+	private boolean hasExtraPermission = false;
 
 	public GroupNews(JSONObject jsonObject) {
 
 		try {
 
+			if(jsonObject.has("id")){
+				this.id = jsonObject.getString("id");
+			}
 			if (jsonObject.has("author")) {
 				this.author = jsonObject.getString("author");
 			}
@@ -44,14 +55,28 @@ public class GroupNews {
 			if (jsonObject.has("publisher")) {
 				this.publisher = jsonObject.getString("publisher");
 			}
-			if (jsonObject.has("url")) {
-				this.url = jsonObject.getString("url");
+//			if (jsonObject.has("resource")) {
+//				this.url = jsonObject.getString("resource");
+//			}
+			if(jsonObject.has("resource")){
+				this.resource = jsonObject.getString("resource");
 			}
 			if(jsonObject.has("poster")){
 				this.poster = jsonObject.getString("poster");
 			}
-			if(jsonObject.has("important")){
-				this.important = jsonObject.getBoolean("important");
+			if(jsonObject.has("editorComment")){
+				if(!StringUtils.isBlank(jsonObject.getString("editorComment"))){
+					this.important = true;
+				}
+			}
+			if(jsonObject.has("summary")){
+				this.summary = jsonObject.getString("summary");
+			}
+			if(jsonObject.has("creationDate")){
+				this.creationDate = jsonObject.getString("creationDate");
+			}
+			if(jsonObject.has("hasExtraPermission")){
+				this.hasExtraPermission = jsonObject.getBoolean("hasExtraPermission");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -90,9 +115,9 @@ public class GroupNews {
 		return title;
 	}
 
-	public String getUrl() {
-		return url;
-	}
+//	public String getUrl() {
+//		return url;
+//	}
 
 	public String getPoster() {
 		if(poster != null){
@@ -106,6 +131,44 @@ public class GroupNews {
 	public boolean isImportant() {
 		return important;
 	}
-	
-	
+
+	public String getSummary() {
+		return summary;
+	}
+
+	public void setSummary(String summary) {
+		this.summary = summary;
+	}
+
+	public String getCreationDate() {
+		return creationDate;
+	}
+
+	public void setCreationDate(String creationDate) {
+		this.creationDate = creationDate;
+	}
+
+	public String getResource() {
+		return resource;
+	}
+
+	public void setResource(String resource) {
+		this.resource = resource;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public boolean isHasExtraPermission() {
+		return hasExtraPermission;
+	}
+
+	public void setHasExtraPermission(boolean hasExtraPermission) {
+		this.hasExtraPermission = hasExtraPermission;
+	}
 }

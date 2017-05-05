@@ -14,6 +14,7 @@ import android.graphics.BitmapFactory;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.api.APICallback;
 import com.inspur.emmcloud.api.APIInterface;
+import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.bean.ChannelGroup;
 import com.inspur.emmcloud.bean.GetAddMembersSuccessResult;
 import com.inspur.emmcloud.bean.GetBoolenResult;
@@ -27,6 +28,7 @@ import com.inspur.emmcloud.bean.GetMsgCommentResult;
 import com.inspur.emmcloud.bean.GetMsgResult;
 import com.inspur.emmcloud.bean.GetNewMsgsResult;
 import com.inspur.emmcloud.bean.GetNewsImgResult;
+import com.inspur.emmcloud.bean.GetNewsInstructionResult;
 import com.inspur.emmcloud.bean.GetSearchChannelGroupResult;
 import com.inspur.emmcloud.bean.GetSendMsgResult;
 import com.inspur.emmcloud.util.AppUtils;
@@ -68,7 +70,7 @@ public class ChatAPIService {
 		final String completeUrl = UriUtils.getHttpApiUri("channel/session");
 		RequestParams params = ((MyApplication) context.getApplicationContext())
 				.getHttpRequestParams(completeUrl);
-		x.http().get(params, new APICallback() {
+		x.http().get(params, new APICallback(context,completeUrl) {
 
 			@Override
 			public void callbackTokenExpire() {
@@ -116,7 +118,7 @@ public class ChatAPIService {
 			params.addParameter("cid", cid);
 		}
 
-		x.http().get(params, new APICallback() {
+		x.http().get(params, new APICallback(context,completeUrl) {
 
 			@Override
 			public void callbackTokenExpire() {
@@ -163,7 +165,7 @@ public class ChatAPIService {
 				+ "/comment");
 		RequestParams params = ((MyApplication) context.getApplicationContext())
 				.getHttpRequestParams(completeUrl);
-		x.http().get(params, new APICallback() {
+		x.http().get(params, new APICallback(context,completeUrl) {
 
 			@Override
 			public void callbackTokenExpire() {
@@ -201,7 +203,7 @@ public class ChatAPIService {
 		final String completeUrl = UriUtils.getHttpApiUri("channel/" + cid);
 		RequestParams params = ((MyApplication) context.getApplicationContext())
 				.getHttpRequestParams(completeUrl);
-		x.http().get(params, new APICallback() {
+		x.http().get(params, new APICallback(context,completeUrl) {
 
 			@Override
 			public void callbackTokenExpire() {
@@ -276,7 +278,7 @@ public class ChatAPIService {
 			e.printStackTrace();
 		}
 
-		x.http().post(params, new APICallback() {
+		x.http().post(params, new APICallback(context,completeUrl) {
 
 			@Override
 			public void callbackTokenExpire() {
@@ -316,7 +318,7 @@ public class ChatAPIService {
 		final String completeUrl = UriUtils.getHttpApiUri("message/" + mid);
 		RequestParams params = ((MyApplication) context.getApplicationContext())
 				.getHttpRequestParams(completeUrl);
-		x.http().get(params, new APICallback() {
+		x.http().get(params, new APICallback(context,completeUrl) {
 
 			@Override
 			public void callbackTokenExpire() {
@@ -361,7 +363,7 @@ public class ChatAPIService {
 		params.setMultipart(true);// 有上传文件时使用multipart表单, 否则上传原始文件流.
 		params.addBodyParameter("file1", file);
 		final Bitmap bitmap = BitmapFactory.decodeFile(filePath);
-		x.http().post(params, new APICallback() {
+		x.http().post(params, new APICallback(context,completeUrl) {
 
 			@Override
 			public void callbackTokenExpire() {
@@ -418,7 +420,7 @@ public class ChatAPIService {
 				.getHttpApiUri("channel/group?limit=-1");
 		RequestParams params = ((MyApplication) context.getApplicationContext())
 				.getHttpRequestParams(completeUrl);
-		x.http().get(params, new APICallback() {
+		x.http().get(params, new APICallback(context,completeUrl) {
 
 			@Override
 			public void callbackTokenExpire() {
@@ -468,7 +470,7 @@ public class ChatAPIService {
 			params.addParameter("cids", cidArray);
 		}
 
-		x.http().get(params, new APICallback() {
+		x.http().get(params, new APICallback(context,completeUrl) {
 
 			@Override
 			public void callbackTokenExpire() {
@@ -510,7 +512,7 @@ public class ChatAPIService {
 				.getHttpRequestParams(completeUrl);
 		params.addParameter("mate", uid);
 		params.addParameter("type", "DIRECT");
-		x.http().post(params, new APICallback() {
+		x.http().post(params, new APICallback(context,completeUrl) {
 
 			@Override
 			public void callbackTokenExpire() {
@@ -559,7 +561,7 @@ public class ChatAPIService {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		x.http().request(HttpMethod.PUT, params, new APICallback() {
+		x.http().request(HttpMethod.PUT, params, new APICallback(context,completeUrl) {
 
 			@Override
 			public void callbackTokenExpire() {
@@ -605,7 +607,7 @@ public class ChatAPIService {
 		final String completeUrl = url;
 		RequestParams params = ((MyApplication) context.getApplicationContext())
 				.getHttpRequestParams(completeUrl);
-		x.http().request(HttpMethod.PUT, params, new APICallback() {
+		x.http().request(HttpMethod.PUT, params, new APICallback(context,completeUrl) {
 
 			@Override
 			public void callbackTokenExpire() {
@@ -651,7 +653,7 @@ public class ChatAPIService {
 		final String completeUrl = url;
 		RequestParams params = ((MyApplication) context.getApplicationContext())
 				.getHttpRequestParams(completeUrl);
-		x.http().request(HttpMethod.DELETE, params, new APICallback() {
+		x.http().request(HttpMethod.DELETE, params, new APICallback(context,completeUrl) {
 
 			@Override
 			public void callbackTokenExpire() {
@@ -693,7 +695,7 @@ public class ChatAPIService {
 				+ "&dnd=" + nointerruption;
 		RequestParams params = ((MyApplication) context.getApplicationContext())
 				.getHttpRequestParams(completeUrl);
-		x.http().request(HttpMethod.PUT, params, new APICallback() {
+		x.http().request(HttpMethod.PUT, params, new APICallback(context,completeUrl) {
 
 			@Override
 			public void callbackTokenExpire() {
@@ -737,7 +739,7 @@ public class ChatAPIService {
 		params.addQueryStringParameter("rid", rid);
 		params.addQueryStringParameter("mpid", mpid);
 		params.addQueryStringParameter("state", state);
-		x.http().request(HttpMethod.PUT, params, new APICallback() {
+		x.http().request(HttpMethod.PUT, params, new APICallback(context,completeUrl) {
 
 			@Override
 			public void callbackTokenExpire() {
@@ -789,7 +791,7 @@ public class ChatAPIService {
 			e.printStackTrace();
 		}
 
-		x.http().post(params, new APICallback() {
+		x.http().post(params, new APICallback(context,completeUrl) {
 
 			@Override
 			public void callbackTokenExpire() {
@@ -824,7 +826,7 @@ public class ChatAPIService {
 				+ "/comment/count");
 		RequestParams params = ((MyApplication) context.getApplicationContext())
 				.getHttpRequestParams(completeUrl);
-		x.http().get(params, new APICallback() {
+		x.http().get(params, new APICallback(context,completeUrl) {
 
 			@Override
 			public void callbackTokenExpire() {
@@ -848,6 +850,39 @@ public class ChatAPIService {
 			public void callbackFail(String error, int responseCode) {
 				// TODO Auto-generated method stub
 				apiInterface.returnMsgCommentCountFail(error);
+			}
+		});
+	}
+
+	/**
+	 * 新闻批示接口，传入内容为批示内容
+	 * @param instruction
+     */
+	public void sendNewsInstruction(final String newsId, final String instruction){
+		final String completeUrl = APIUri.getNewsInstruction(newsId);
+		RequestParams params = ((MyApplication) context.getApplicationContext())
+				.getHttpRequestParams(completeUrl);
+		params.setHeader("Content-Type","url-encoded-form");
+		params.addQueryStringParameter("comment",instruction);
+		x.http().post(params, new APICallback(context,completeUrl) {
+			@Override
+			public void callbackSuccess(String arg0) {
+				apiInterface.returnNewsInstructionSuccess(new GetNewsInstructionResult(arg0));
+			}
+
+			@Override
+			public void callbackFail(String error, int responseCode) {
+				apiInterface.returnNewsInstructionFail(error);
+			}
+
+			@Override
+			public void callbackTokenExpire() {
+				new OauthUtils(new OauthCallBack() {
+					@Override
+					public void execute() {
+						sendNewsInstruction(newsId,instruction);
+					}
+				}, context).refreshTocken(completeUrl);
 			}
 		});
 	}

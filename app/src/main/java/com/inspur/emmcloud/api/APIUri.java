@@ -29,7 +29,7 @@ public class APIUri {
 	 * @return
 	 */
 	public static String uploadException() {
-		return "http://u.inspur.com:8080/voice/collector/error";
+		return "http://u.inspur.com/analytics/api/ECMException/Post";
 	}
 	
 	/** 
@@ -87,6 +87,8 @@ public class APIUri {
 	public static String getGroupNewsArticle() {
 		return "/" + tanent+"/res" + "/article" + "/";
 	}
+
+	public static String getNewsInstruction(String newsId){return  getEcmTanentUrl()+"/api/v0/content/news/"+newsId+"/editor-comment";}
 	
 	/*************************************************会议接口*******************************************/
 	/**

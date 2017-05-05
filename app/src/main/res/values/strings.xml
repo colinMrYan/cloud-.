@@ -94,6 +94,7 @@
     <string name="close">关闭</string>
     <string name="commoly_use_app">常用</string>
     <string name="app_init">正在初始化中...</string>
+    <string name="news_content_cant_empty">内容不能为空</string>
 
     <!-- 新添加部分 -->
     <string name="alert">提醒</string>
@@ -338,6 +339,8 @@
     <string name="app_download">应用下载中：</string>
     <string name="app_password_error">密码错误，请重新输入</string>
     <string name="app_password_encrypt_error">密码加密出错</string>
+    <string name="app_recommand">推荐</string>
+    <string name="app_classification">分类</string>
 
 
     <!-- 我的页面部分 -->
@@ -454,6 +457,8 @@
     <string name="news_font_biggest_text">超大</string>
     <string name="news_font_name_text">字号</string>
     <string name="news_read_mode">阅读模式</string>
+    <string name="new_instructions_text">批示</string>
+    <string name="news_instructions_success_text">发送成功</string>
 
     <!-- 审批页面 -->
     <string name="onekey_approval_text">审批</string>

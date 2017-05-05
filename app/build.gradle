@@ -32,7 +32,7 @@ android {
 //            keyAlias 'sign'
 //            keyPassword 'inspurimp'
 //            storeFile file('../apk.keystore')
-//            storePassword 'YYX7573'
+//            storePassword '123456A?'
 //        }
 //    }
     defaultConfig {

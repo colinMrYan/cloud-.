@@ -77,7 +77,7 @@
                 android:onClick="onClick"
                 android:paddingBottom="7dp"
                 android:paddingTop="7dp"
-                android:text="推荐"
+                android:text="@string/app_recommand"
                 android:textColor="#4990E2"
                 android:textSize="@dimen/content_normal_textsize" />
 
@@ -97,7 +97,7 @@
                 android:onClick="onClick"
                 android:paddingBottom="7dp"
                 android:paddingTop="7dp"
-                android:text="分类"
+                android:text="@string/app_classification"
                 android:textColor="#999999"
                 android:textSize="@dimen/content_normal_textsize" />
         </LinearLayout>
