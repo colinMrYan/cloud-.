@@ -339,6 +339,8 @@
     <string name="app_download">应用下载中：</string>
     <string name="app_password_error">密码错误，请重新输入</string>
     <string name="app_password_encrypt_error">密码加密出错</string>
+    <string name="app_recommand">推荐</string>
+    <string name="app_classification">分类</string>
 
 
     <!-- 我的页面部分 -->
