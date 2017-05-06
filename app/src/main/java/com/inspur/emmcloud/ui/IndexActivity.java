@@ -483,15 +483,13 @@ public class IndexActivity extends BaseFragmentActivity implements
                 break;
             }
         }
-        if(communicateLocation == -1){
-            mTabHost.setCurrentTab(getTabIndex());
-        }else{
+        mTabHost.setCurrentTab(getTabIndex());
+        if(communicateLocation != -1 && communicateLocation != getTabIndex()){
             Message msg = new Message();
             msg.what = CHANGE_TAB;
             msg.obj = communicateLocation;
             handler.sendMessage(msg);
         }
-
     }
 
 
