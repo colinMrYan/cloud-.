@@ -109,7 +109,6 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		LogUtils.YfcDebug("名称："+getClass().getSimpleName());
 		if (rootView == null) {
 			rootView = inflater.inflate(R.layout.fragment_message, container,
 					false);
@@ -981,11 +980,11 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 
 	private void showSocketStatusInTitle(String socketStatus){
 		if (socketStatus.equals("socket_connecting")){
-			titleText.setText("连接中");
+			titleText.setText(R.string.socket_connecting);
 		}else if (socketStatus.equals(Socket.EVENT_CONNECT)){
-			titleText.setText("沟通");
+			titleText.setText(R.string.communicate);
 		}else if(socketStatus.equals(Socket.EVENT_DISCONNECT) || socketStatus.equals(Socket.EVENT_CONNECT_ERROR)){
-			titleText.setText("已断开");
+			titleText.setText(R.string.socket_close);
 		}
 	}
 

@@ -168,7 +168,6 @@ public class AppAPIService {
 		x.http().get(params, new APICallback(context,completeUrl) {
 			@Override
 			public void callbackSuccess(String arg0) {
-				LogUtils.YfcDebug("");
 				apiInterface.returnReactNativeUpdateSuccess(new ReactNativeUpdateBean(arg0));
 			}
 

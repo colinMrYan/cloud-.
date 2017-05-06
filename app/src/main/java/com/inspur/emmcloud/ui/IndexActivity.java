@@ -20,7 +20,6 @@ import android.widget.TabHost;
 import android.widget.TabHost.OnTabChangeListener;
 import android.widget.TextView;
 
-import com.alibaba.fastjson.JSON;
 import com.inspur.emmcloud.BaseFragmentActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
@@ -35,7 +34,6 @@ import com.inspur.emmcloud.bean.Contact;
 import com.inspur.emmcloud.bean.GetAllContactResult;
 import com.inspur.emmcloud.bean.GetAllRobotsResult;
 import com.inspur.emmcloud.bean.GetAppTabAutoResult;
-import com.inspur.emmcloud.bean.GetAppTabsResult;
 import com.inspur.emmcloud.bean.GetClientIdRsult;
 import com.inspur.emmcloud.bean.GetSearchChannelGroupResult;
 import com.inspur.emmcloud.bean.Language;
@@ -803,20 +801,20 @@ public class IndexActivity extends BaseFragmentActivity implements
 //			WebServiceMiddleUtils.hand(IndexActivity.this, error);
         }
 
-        @Override
-        public void returnGetAppTabsSuccess(GetAppTabsResult getAppTabsResult) {
-            PreferencesUtils.putString(IndexActivity.this,
-                    UriUtils.tanent + userId + "appTabs", JSON.toJSONString(getAppTabsResult.getAppTabBeanList()));
-            if(!StringUtils.isBlank(JSON.toJSONString(getAppTabsResult.getAppTabBeanList()))){
-                mTabHost.clearAllTabs();
-                handleAppTabs();
-            }
-        }
-
-        @Override
-        public void returnGetAppTabsFail(String error) {
-            WebServiceMiddleUtils.hand(IndexActivity.this, error);
-        }
+//        @Override
+//        public void returnGetAppTabsSuccess(GetAppTabsResult getAppTabsResult) {
+//            PreferencesUtils.putString(IndexActivity.this,
+//                    UriUtils.tanent + userId + "appTabs", JSON.toJSONString(getAppTabsResult.getAppTabBeanList()));
+//            if(!StringUtils.isBlank(JSON.toJSONString(getAppTabsResult.getAppTabBeanList()))){
+//                mTabHost.clearAllTabs();
+//                handleAppTabs();
+//            }
+//        }
+//
+//        @Override
+//        public void returnGetAppTabsFail(String error) {
+//            WebServiceMiddleUtils.hand(IndexActivity.this, error);
+//        }
 
 
         @Override
@@ -876,7 +874,7 @@ public class IndexActivity extends BaseFragmentActivity implements
             updateTabbar();
         }else if(command.equals("STANDBY")){
 //            updateTabbar();
-            LogUtils.YfcDebug("收到保持现状指令");
+//            LogUtils.YfcDebug("收到保持现状指令");
         }else{
             LogUtils.YfcDebug("收到不支持的指令");
         }
@@ -923,7 +921,7 @@ public class IndexActivity extends BaseFragmentActivity implements
             FindFragment.hasUpdated = true;
         } else if (state == ReactNativeFlow.REACT_NATIVE_NO_UPDATE) {
             //没有更新什么也不做
-                LogUtils.YfcDebug("Standy");
+//                LogUtils.YfcDebug("Standy");
         }
         if(FindFragment.hasUpdated){
             RNCacheViewManager.init(IndexActivity.this);
