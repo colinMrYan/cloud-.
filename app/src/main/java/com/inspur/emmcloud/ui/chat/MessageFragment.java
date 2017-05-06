@@ -981,11 +981,11 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 
 	private void showSocketStatusInTitle(String socketStatus){
 		if (socketStatus.equals("socket_connecting")){
-			titleText.setText("连接中");
+			titleText.setText(R.string.socket_connecting);
 		}else if (socketStatus.equals(Socket.EVENT_CONNECT)){
-			titleText.setText("沟通");
+			titleText.setText(R.string.communicate);
 		}else if(socketStatus.equals(Socket.EVENT_DISCONNECT) || socketStatus.equals(Socket.EVENT_CONNECT_ERROR)){
-			titleText.setText("已断开");
+			titleText.setText(R.string.socket_close);
 		}
 	}
 
