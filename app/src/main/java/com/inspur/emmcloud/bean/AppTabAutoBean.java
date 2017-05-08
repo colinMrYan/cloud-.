@@ -1,7 +1,6 @@
 package com.inspur.emmcloud.bean;
 
 import com.google.gson.annotations.SerializedName;
-import com.inspur.emmcloud.util.LogUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -331,10 +330,10 @@ public class AppTabAutoBean {
                             this.zhHans = jsonObject.getString("zh-Hans");
                         }
                         if(jsonObject.has("zh-Hant")){
-                            this.zhHans = jsonObject.getString("zh-Hans");
+                            this.zhHant = jsonObject.getString("zh-Hant");
                         }
                         if(jsonObject.has("en-US")){
-                            this.zhHans = jsonObject.getString("zh-Hans");
+                            this.enUS = jsonObject.getString("en-US");
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();

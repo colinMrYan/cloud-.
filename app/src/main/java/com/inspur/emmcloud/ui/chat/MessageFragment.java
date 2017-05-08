@@ -109,7 +109,6 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		LogUtils.YfcDebug("名称："+getClass().getSimpleName());
 		if (rootView == null) {
 			rootView = inflater.inflate(R.layout.fragment_message, container,
 					false);
