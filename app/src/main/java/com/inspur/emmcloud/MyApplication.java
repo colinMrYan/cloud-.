@@ -383,7 +383,6 @@ public class MyApplication extends MultiDexApplication implements  ReactApplicat
 	@Override
 	public void onConfigurationChanged(Configuration config) {
 		// TODO Auto-generated method stub
-		LogUtils.debug("jason", "onConfigurationChanged-------------");
 		if (config == null) {
 			config = getResources().getConfiguration();
 

@@ -159,6 +159,40 @@ public class ChannelGroupCacheUtils {
     }
 
     /**
+     * 获取群组成员
+     * @param context
+     * @param channelGroup
+     * @param limit
+     * @return
+     */
+    public static List<String> getMemberUidList(Context context,  ChannelGroup channelGroup,
+                                                int limit) {
+        List<String> userList = new ArrayList<String>();
+        try {
+            if (channelGroup != null) {
+                List<String>  allMemberList = channelGroup.getMemberList();
+                if (limit == 0 ){
+                    userList.addAll(allMemberList);
+                }else {
+                    int size = allMemberList.size();
+                    if (size < limit) {
+                        limit = size;
+                    }
+                    for (int i = 0; i < limit; i++) {
+                        String uid = allMemberList.get(i);
+                        userList.add(i,uid);
+                    }
+                }
+            }
+
+        }catch (Exception e) {
+            // TODO: handle exception
+            e.printStackTrace();
+        }
+        return  userList;
+    }
+
+    /**
      * 获取群组中成员列表
      *
      * @param context
