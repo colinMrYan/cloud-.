@@ -1,18 +1,11 @@
 package com.inspur.emmcloud.ui.contact;
 
-import java.util.ArrayList;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-
 import android.content.ComponentName;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.BaseActivity;
@@ -34,9 +27,15 @@ import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.StringUtils;
+import com.inspur.emmcloud.util.ToastUtils;
 import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+
+import java.util.ArrayList;
 
 public class UserInfoActivity extends BaseActivity {
 
@@ -58,7 +57,6 @@ public class UserInfoActivity extends BaseActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_user_info);
 		((MyApplication) getApplicationContext()).addActivity(this);
-//		in(null);
 		departmentText = (TextView) findViewById(R.id.department_text);
 		mailText = (TextView) findViewById(R.id.mail_text);
 		phoneNumText = (TextView) findViewById(R.id.phone_num_text);
@@ -87,25 +85,6 @@ public class UserInfoActivity extends BaseActivity {
 				String uid = getIntent().getExtras().getString("uid");
 				contact = ContactCacheUtils.getUserContact(
 						getApplicationContext(), uid);
-				// Contact contact;
-				// if (!uid.startsWith("BOT")) {
-				//
-				// } else {
-				// Robot robot = RobotCacheUtils.getRobotById(
-				// UserInfoActivity.this, uid);
-				// contact = new Contact();
-				// contact.setOrgName(robot.getName());
-				// contact.setEmail(robot.getSupport());
-				// contact.setName(robot.getName());
-				// contact.setMobile(robot.getSupport());
-				// // 如果是机器人隐藏发起会话信息
-				// ((ImageView) findViewById(R.id.start_chat_img))
-				// .setVisibility(View.GONE);
-				//
-				// }
-				// if (contact == null) {
-				// contact = new Contact();
-				// }
 			}
 			disPlayUserInfo(contact);
 		}
@@ -146,7 +125,9 @@ public class UserInfoActivity extends BaseActivity {
 	private void disPlayUserInfo(Contact contact) {
 
 		if (contact == null) {
-			contact = new Contact();
+			ToastUtils.show(UserInfoActivity.this,R.string.cannot_view_info);
+			finish();
+			return;
 		}
 		String inspurID = contact.getInspurID();
 		String organize = contact.getOrgName();
@@ -155,21 +136,21 @@ public class UserInfoActivity extends BaseActivity {
 		String name = contact.getName();
 		String headUrl = UriUtils.getChannelImgUri(contact.getInspurID());
 		if (StringUtils.isEmpty(organize)) {
-			((LinearLayout) findViewById(R.id.department_layout))
+			(findViewById(R.id.department_layout))
 					.setVisibility(View.GONE);
 		} else {
 			departmentText.setText(organize);
 		}
 
 		if (StringUtils.isEmpty(mail)) {
-			((LinearLayout) findViewById(R.id.mail_layout))
+			(findViewById(R.id.mail_layout))
 					.setVisibility(View.GONE);
 		} else {
 			mailText.setText(mail);
 		}
 
 		if (StringUtils.isEmpty(phoneNum)) {
-			((RelativeLayout) findViewById(R.id.contact_layout))
+			(findViewById(R.id.contact_layout))
 					.setVisibility(View.GONE);
 		} else {
 			phoneNumText.setText(phoneNum);
@@ -183,7 +164,7 @@ public class UserInfoActivity extends BaseActivity {
 		imageDisplayUtils.display(photoImg, headUrl);
 		String myUid = ((MyApplication)getApplicationContext()).getUid();
 		if (StringUtils.isBlank(inspurID)|| inspurID.equals(myUid)) {
-			((ImageView) findViewById(R.id.start_chat_img))
+			(findViewById(R.id.start_chat_img))
 					.setVisibility(View.GONE);
 		}
 
