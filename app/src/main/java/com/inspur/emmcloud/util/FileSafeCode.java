@@ -161,7 +161,7 @@ public class FileSafeCode {
             e.printStackTrace();
             return null;
         }
-        BigInteger bigInt = new BigInteger( digest.digest());
+        BigInteger bigInt = new BigInteger(1,digest.digest());
         //最小侵入修复bug，修复方式：高位补0 修复问题包验证 20170509 yfc
         String code = bigInt.toString(16);
         if(code.length() < 64){
@@ -170,6 +170,7 @@ public class FileSafeCode {
                 code = "0"+code;
             }
         }
+        LogUtils.YfcDebug("监控到现在zip文件的code："+code);
         return code;
     }
 }
