@@ -18,6 +18,8 @@ import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
 import com.inspur.emmcloud.bean.GetGroupNewsDetailResult;
 import com.inspur.emmcloud.bean.GroupNews;
+import com.inspur.emmcloud.bean.NewsIntrcutionUpdateEvent;
+import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.TimeUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
@@ -25,6 +27,10 @@ import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout;
 import com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout.OnRefreshListener;
 import com.inspur.emmcloud.widget.pullableview.PullableListView;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -89,6 +95,19 @@ public class GroupNewsCardFragment extends Fragment implements
 
 		myListView.setOnItemClickListener(new ListItemOnClickListener());
 		getGroupNewsList(getArguments().getString("catagoryid"));
+		EventBus.getDefault().register(this);
+	}
+
+	@Subscribe(threadMode = ThreadMode.MAIN)
+	public void updateNewsDataById(NewsIntrcutionUpdateEvent messageEvent) {
+		LogUtils.YfcDebug("接收到Event");
+		for(int i = 0; i< groupnNewsList.size(); i++){
+			if(groupnNewsList.get(i).getId().equals(messageEvent.getId())){
+				groupnNewsList.get(i).setOriginalEditorComment(messageEvent.getOriginalEditorComment());
+				groupnNewsList.get(i).setEditorCommentCreated(messageEvent.isEditorCommentCreated());
+				break;
+			}
+		}
 	}
 
 	/**
@@ -140,6 +159,9 @@ public class GroupNewsCardFragment extends Fragment implements
 				intent.putExtra("news_id",groupnNewsList.get(position).getId());
 				intent.putExtra("pager_title",pagerTitle);
 				intent.putExtra("instruction",groupnNewsList.get(position).getEditorComment());
+				intent.putExtra("approvedDate", groupnNewsList.get(position).getApprovedDate());
+				intent.putExtra("editorCommentCreated",groupnNewsList.get(position).isEditorCommentCreated());
+				intent.putExtra("originalEditorComment",groupnNewsList.get(position).getOriginalEditorComment());
 				intent.putExtra("hasExtraPermission",groupnNewsList.get(position).isHasExtraPermission());
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -251,5 +273,11 @@ public class GroupNewsCardFragment extends Fragment implements
 			pullToRefreshLayout.refreshFinish(PullToRefreshLayout.SUCCEED);
 		}
 
+	}
+
+	@Override
+	public void onDestroy() {
+		EventBus.getDefault().unregister(this);
+		super.onDestroy();
 	}
 }

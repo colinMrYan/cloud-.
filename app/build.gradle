@@ -155,6 +155,7 @@ dependencies {
         exclude module: 'support-compat'
         exclude module: 'support-core-utils'
     }
+    compile 'org.greenrobot:eventbus:3.0.0'
 
     compile 'com.readystatesoftware.systembartint:systembartint:1.0.3'
     compile 'uk.co.chrisjenx:calligraphy:2.2.0'

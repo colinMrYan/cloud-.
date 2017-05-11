@@ -40,6 +40,7 @@
                 android:layout_marginRight="18dp"
                 android:layout_marginTop="33dp"
                 android:lineSpacingMultiplier="1.1"
+                android:maxHeight="500dp"
                 android:background="@null"
                 android:hint=""
                 android:textColor="@color/app_dialog_title_color"

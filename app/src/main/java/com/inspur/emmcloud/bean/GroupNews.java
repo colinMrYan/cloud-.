@@ -4,7 +4,9 @@ import com.inspur.emmcloud.util.StringUtils;
 
 import org.json.JSONObject;
 
-public class GroupNews {
+import java.io.Serializable;
+
+public class GroupNews implements Serializable{
 
 	private String author;
 	private String category;
@@ -23,11 +25,12 @@ public class GroupNews {
 	private String id = "";
 	private boolean hasExtraPermission = false;
 	private String editorComment = "";
+	private String approvedDate = "";
+	private boolean editorCommentCreated = false;
+	private String originalEditorComment = "";
 
 	public GroupNews(JSONObject jsonObject) {
-
 		try {
-
 			if(jsonObject.has("id")){
 				this.id = jsonObject.getString("id");
 			}
@@ -79,6 +82,16 @@ public class GroupNews {
 			if(jsonObject.has("hasExtraPermission")){
 				this.hasExtraPermission = jsonObject.getBoolean("hasExtraPermission");
 			}
+			if(jsonObject.has("approvedDate")){
+				this.approvedDate = jsonObject.getString("approvedDate");
+			}
+			if(jsonObject.has("editorCommentCreated")){
+				this.editorCommentCreated = jsonObject.getBoolean("editorCommentCreated");
+			}
+			if(jsonObject.has("originalEditorComment")){
+				this.originalEditorComment = jsonObject.getString("originalEditorComment");
+			}
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -180,5 +193,29 @@ public class GroupNews {
 
 	public void setHasExtraPermission(boolean hasExtraPermission) {
 		this.hasExtraPermission = hasExtraPermission;
+	}
+
+	public String getOriginalEditorComment() {
+		return originalEditorComment;
+	}
+
+	public void setOriginalEditorComment(String originalEditorComment) {
+		this.originalEditorComment = originalEditorComment;
+	}
+
+	public String getApprovedDate() {
+		return approvedDate;
+	}
+
+	public void setApprovedDate(String approvedDate) {
+		this.approvedDate = approvedDate;
+	}
+
+	public boolean isEditorCommentCreated() {
+		return editorCommentCreated;
+	}
+
+	public void setEditorCommentCreated(boolean editorCommentCreated) {
+		this.editorCommentCreated = editorCommentCreated;
 	}
 }

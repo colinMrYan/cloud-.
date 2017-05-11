@@ -34,6 +34,7 @@ import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.bean.GetCreateSingleChannelResult;
 import com.inspur.emmcloud.bean.GetNewsInstructionResult;
 import com.inspur.emmcloud.bean.GetSendMsgResult;
+import com.inspur.emmcloud.bean.NewsIntrcutionUpdateEvent;
 import com.inspur.emmcloud.config.MyAppWebConfig;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.util.ChatCreateUtils;
@@ -51,6 +52,7 @@ import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.ProgressWebView;
 import com.inspur.emmcloud.widget.SwitchView;
 
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -95,6 +97,9 @@ public class NewsWebDetailActivity extends BaseActivity {
     private GradientDrawable lightChooseFontBtnBackgroundDrawable;
     private String newsId = "";
     private String instruction  = "";
+    private String approvedDate = "";
+    private boolean editorCommentCreated = false;
+    private String originalEditorComment = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -235,10 +240,20 @@ public class NewsWebDetailActivity extends BaseActivity {
         if(intent.hasExtra("news_id")){
             this.newsId = intent.getStringExtra("news_id");
         }
-        if(intent.hasExtra("instruction")){
-            this.instruction  = intent.getStringExtra("instruction");
-            LogUtils.YfcDebug("有批示内容："+instruction);
+//        if(intent.hasExtra("instruction")){
+//            this.instruction  = intent.getStringExtra("instruction");
+//            LogUtils.YfcDebug("有批示内容："+instruction);
+//        }
+        if(intent.hasExtra("approvedDate")){
+            this.approvedDate = intent.getStringExtra("approvedDate");
         }
+        if(intent.hasExtra("editorCommentCreated")){
+            this.editorCommentCreated = intent.getBooleanExtra("editorCommentCreated",false);
+        }
+        if(intent.hasExtra("originalEditorComment")){
+            this.originalEditorComment = intent.getStringExtra("originalEditorComment");
+        }
+
     }
 
     /**
@@ -436,12 +451,17 @@ public class NewsWebDetailActivity extends BaseActivity {
             case R.id.app_news_instructions_btn:
                 //批示逻辑
                 dialog.dismiss();
-                if(StringUtils.isBlank(instruction)){
-                    showInstruceionDialog();
-                }else{
+                if (!StringUtils.isBlank(approvedDate)){
+                    if(getIntent().hasExtra("instruction")){
+                        instruction  = getIntent().getStringExtra("instruction");
+                    }
                     showHasInstruceionDialog();
+                }else if(editorCommentCreated == true){
+                    instruction = originalEditorComment;
+                    showHasInstruceionDialog();
+                }else{
+                    showInstruceionDialog();
                 }
-
                 break;
             case R.id.app_news_font_normal_btn:
                 changeNewsFontSize(webSettings, MyAppWebConfig.SMALLER);
@@ -516,6 +536,7 @@ public class NewsWebDetailActivity extends BaseActivity {
             public void onClick(View v) {
                 String instructions = editText.getText().toString();
                 if(!StringUtils.isBlank(instructions)){
+                    originalEditorComment = instructions;
                     sendInstructions(instructions);
                     intrcutionDialog.dismiss();
                 }else{
@@ -924,6 +945,8 @@ public class NewsWebDetailActivity extends BaseActivity {
             if(loadingDlg != null && loadingDlg.isShowing()){
                 loadingDlg.dismiss();
             }
+            editorCommentCreated = true;
+            sendInstructionEvent();
             Toast.makeText(NewsWebDetailActivity.this,
                     getString(R.string.news_instructions_success_text), Toast.LENGTH_SHORT)
                     .show();
@@ -934,8 +957,21 @@ public class NewsWebDetailActivity extends BaseActivity {
             if(loadingDlg != null && loadingDlg.isShowing()){
                 loadingDlg.dismiss();
             }
+            editorCommentCreated = false;
+            originalEditorComment = "";
             WebServiceMiddleUtils.hand(NewsWebDetailActivity.this,error);
         }
+    }
+
+    /**
+     * 发送批示成功事件
+     */
+    private void sendInstructionEvent() {
+        NewsIntrcutionUpdateEvent groupEvent = new NewsIntrcutionUpdateEvent();
+        groupEvent.setId(newsId);
+        groupEvent.setEditorCommentCreated(true);
+        groupEvent.setOriginalEditorComment(originalEditorComment);
+        EventBus.getDefault().post(groupEvent);
     }
 
     protected void onPause() {
