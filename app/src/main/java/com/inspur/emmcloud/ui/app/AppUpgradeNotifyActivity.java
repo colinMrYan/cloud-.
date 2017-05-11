@@ -62,6 +62,7 @@ public class AppUpgradeNotifyActivity extends BaseActivity {
 		StateBarColor.changeStateBarColor(this, R.color.white);
 		setContentView(R.layout.activity_app_upgrade_notify);
 		getUpgradeResult = (GetUpgradeResult)getIntent().getSerializableExtra("getUpgradeResult");
+		LogUtils.jasonDebug("url="+getUpgradeResult.getUpgradeUrl());
 		int updateType = getUpgradeResult.getUpgradeCode();
 		if (updateType == 1) {
 			upgradeMsg = getUpgradeResult.getUpgradeMsg();

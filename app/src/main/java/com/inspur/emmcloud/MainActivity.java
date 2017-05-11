@@ -100,6 +100,7 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
                     .addShortCut(MainActivity.this);
         }
         handMessage();
+        getServerLanguage();
     }
 
     private void handMessage() {
@@ -124,14 +125,6 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
                     case LOGIN_FAIL:
                         IntentUtils.startActivity(MainActivity.this,
                                 LoginActivity.class, true);
-                        break;
-                    case UPGRADE_FAIL:
-                    case NO_NEED_UPGRADE:
-                    case DONOT_UPGRADE:
-                        getServerLanguage();
-                        break;
-                    case GET_LANGUAGE_SUCCESS:
-                        enterApp();
                         break;
                     default:
                         break;
