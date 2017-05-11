@@ -228,7 +228,6 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
         msgList = MsgCacheUtil.getHistoryMsgList(getApplicationContext(),
                 channelId, "", 10);
         title = getIntent().getExtras().getString("title");
-        LogUtils.jasonDebug("title=" + title);
         if (channelType.equals("DIRECT")) {
             String myUid = ((MyApplication)getApplicationContext()).getUid();
             if (title.contains(myUid) && title.contains("-")){
@@ -356,7 +355,6 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
             @Override
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
-                LogUtils.debug("jason", "onItemClick-------");
                 Bundle bundle = new Bundle();
                 Msg msg = msgList.get(position);
                 String msgType = msg.getType();

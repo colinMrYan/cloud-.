@@ -33,21 +33,18 @@ import com.inspur.emmcloud.bean.GetSearchChannelGroupResult;
 import com.inspur.emmcloud.bean.MatheSet;
 import com.inspur.emmcloud.bean.Msg;
 import com.inspur.emmcloud.broadcastreceiver.MsgReceiver;
-import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.service.WebSocketService;
 import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.util.AppTitleUtils;
 import com.inspur.emmcloud.util.ChannelCacheUtils;
 import com.inspur.emmcloud.util.ChannelGroupCacheUtils;
-import com.inspur.emmcloud.util.ChannelGroupIconUtils;
 import com.inspur.emmcloud.util.ChannelOperationCacheUtils;
 import com.inspur.emmcloud.util.ChatCreateUtils;
 import com.inspur.emmcloud.util.ChatCreateUtils.OnCreateGroupChannelListener;
 import com.inspur.emmcloud.util.DirectChannelUtils;
 import com.inspur.emmcloud.util.ImageDisplayUtils;
 import com.inspur.emmcloud.util.IntentUtils;
-import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.MsgCacheUtil;
 import com.inspur.emmcloud.util.MsgMatheSetCacheUtils;
 import com.inspur.emmcloud.util.MsgReadIDCacheUtils;
@@ -60,7 +57,7 @@ import com.inspur.emmcloud.util.ToastUtils;
 import com.inspur.emmcloud.util.TransHtmlToTextUtils;
 import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
-import com.inspur.emmcloud.widget.CircleImageView;
+import com.inspur.emmcloud.widget.CircleFrameLayout;
 import com.inspur.emmcloud.widget.dialogs.MyDialog;
 import com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout;
 import com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout.OnRefreshListener;
@@ -71,7 +68,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -109,7 +105,6 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		LogUtils.YfcDebug("名称："+getClass().getSimpleName());
 		if (rootView == null) {
 			rootView = inflater.inflate(R.layout.fragment_message, container,
 					false);
@@ -148,7 +143,6 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
-		LogUtils.jasonDebug("onCreate-----------------");
 		super.onCreate(savedInstanceState);
 		initView();
 		handMessage();
@@ -255,7 +249,7 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 	private void handData() {
 		// TODO Auto-generated method stub
 		List<Channel> channelList = getCacheData();// 获取缓存中的数据
-		creatGroupIcon();// 创建群组的头像
+		getGroupInfo();//获取缓存中没有的群组信息（群成员，为群组头像生成提供数据）
 		sortChannelList(channelList);// 对Channel 进行排序
 		displayData();// 展示数据
 		registerMsgReceiver();// 注册接收消息的广播
@@ -358,14 +352,34 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 	}
 
 	/**
-	 * 为群组创建头像
+	 * 获取缓存中不存在的群组信息
 	 */
-	private void creatGroupIcon() {
+	private void getGroupInfo() {
 		// TODO Auto-generated method stub
-		List<Channel> channelList = getCacheData();// 获取缓存中的数据
-		if (channelList.size() > 0 && ((MyApplication)getActivity().getApplicationContext()).getIsContactReady()) {
-			ChannelGroupIconUtils.getInstance().creat(getActivity(), channelList,
-					handler);
+		if (NetUtils.isNetworkConnected(getActivity())){
+			List<Channel> channelList = getCacheData();// 获取缓存中的数据
+			if (channelList.size() > 0 && ((MyApplication) getActivity().getApplicationContext()).getIsContactReady()) {
+				List<ChannelGroup> currentChannelGroupList = new ArrayList<ChannelGroup>();
+				for (int i = 0; i < channelList.size(); i++) {
+					Channel channel = channelList.get(i);
+					if (channel.getType().equals("GROUP")) {
+						ChannelGroup channelGroup = new ChannelGroup(channel);
+						currentChannelGroupList.add(channelGroup);
+					}
+				}
+				List<ChannelGroup> cacheChannelGroupList = ChannelGroupCacheUtils
+						.getAllChannelGroupList(getActivity());
+				currentChannelGroupList.removeAll(cacheChannelGroupList);
+				if (currentChannelGroupList.size() > 0) {
+					String[] cidArray = new String[currentChannelGroupList.size()];
+					for (int i = 0; i < currentChannelGroupList.size(); i++) {
+						cidArray[i] = currentChannelGroupList.get(i).getCid();
+					}
+					ChatAPIService apiService = new ChatAPIService(getActivity());
+					apiService.setAPIInterface(new WebService());
+					apiService.getChannelGroupList(cidArray);
+				}
+			}
 		}
 	}
 
@@ -464,10 +478,6 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 			ChannelOperationCacheUtils.setChannelHide(getActivity(),
 					receivedMsg.getCid(), false);
 			displayChannelList.add(receiveMsgChannel);
-			// 当频道显示时先创建下群组头像
-			if (receiveMsgChannel.getType().equals("GROUP")) {
-				creatGroupIcon();
-			}
 		} else {
 			receiveMsgChannel.addReceivedNewMsg(receivedMsg);
 		}
@@ -657,7 +667,6 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 
 	private class Adapter extends BaseAdapter {
 
-		ViewHolder holder;
 
 		@Override
 		public int getCount() {
@@ -680,124 +689,137 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
 			// TODO Auto-generated method stub
-			if (convertView == null) {
-				LayoutInflater mInflater = (LayoutInflater) getActivity()
-						.getSystemService(getActivity().LAYOUT_INFLATER_SERVICE);
-				convertView = mInflater.inflate(R.layout.msg_item_view, null);
-				holder = new ViewHolder();
-				initHolderView(convertView);
-				convertView.setTag(holder);
-			} else {
-				holder = (ViewHolder) convertView.getTag();
-			}
+			convertView = LayoutInflater.from(getActivity()).inflate(R.layout.msg_item_view, null);
 			Channel channel = displayChannelList.get(position);
-			setChannelBg(channel, holder.mainLayout);
-			setChannelIcon(channel);
-			setChannelTitle(channel, holder.channelTitleText);
-			holder.channelTimeText.setText(TimeUtils.getDisplayTime(
-					getActivity(), channel.getLastUpdate()));
-
-			holder.channelContentText.setText(channel
-					.getNewestMsgContent(getActivity()));
-			TransHtmlToTextUtils.stripUnderlines(holder.channelContentText,
-					R.color.msg_content_color);
-
+			setChannelBg(channel, convertView);
+			setChannelIcon(channel, convertView);
+			setChannelTitle(channel, convertView);
+			setChannelMsgReadStateUI(channel, convertView);
 			// 显示channel是否免打扰状态
-			if (!ChannelCacheUtils.isChannelNotDisturb(getActivity(),
-					channel.getCid())) {
-				holder.dndImg.setVisibility(View.GONE);
-			} else {
-				holder.dndImg.setVisibility(View.VISIBLE);
-			}
-			setChannelMsgReadStateUI(channel);
+			boolean isChannelNotDisturb = ChannelCacheUtils.isChannelNotDisturb(getActivity(),
+					channel.getCid());
+			ImageView dndImg = (ImageView) convertView
+					.findViewById(R.id.msg_dnd_img);
+			dndImg.setVisibility(isChannelNotDisturb ? View.VISIBLE : View.GONE);
 			return convertView;
 		}
 
-		/**
-		 * 初始化View
-		 * 
-		 * @param convertView
-		 */
-		private void initHolderView(View convertView) {
-			// TODO Auto-generated method stub
-			holder.mainLayout = (RelativeLayout) convertView
-					.findViewById(R.id.main_layout);
-			holder.channelImg = (CircleImageView) convertView
-					.findViewById(R.id.msg_img);
-			holder.robotSuperscriptImg = (ImageView) convertView
-					.findViewById(R.id.msg_superscript_img);
-			holder.channelTitleText = (TextView) convertView
-					.findViewById(R.id.name_text);
-			holder.channelContentText = (TextView) convertView
-					.findViewById(R.id.content_text);
-			holder.channelTimeText = (TextView) convertView
-					.findViewById(R.id.time_text);
-			holder.channelNotReadCountLayout = (RelativeLayout) convertView
-					.findViewById(R.id.msg_new_layout);
-			holder.channelNotReadCountText = (TextView) convertView
-					.findViewById(R.id.msg_new_text);
-			holder.dndImg = (ImageView) convertView
-					.findViewById(R.id.msg_dnd_img);
-		}
 
 		/**
 		 * 设置Channel的Icon
 		 * 
 		 * @param channel
 		 */
-		private void setChannelIcon(Channel channel) {
+		private void setChannelIcon(Channel channel, View convertView) {
 			// TODO Auto-generated method stub
+			CircleFrameLayout channelPhotoLayout = (CircleFrameLayout) convertView
+					.findViewById(R.id.channel_photo_layout);
+			View channelPhotoView = null;
 			Integer defaultIcon = -1; // 默认显示图标
-			String iconUrl = "";// Channel头像的uri
-			if (channel.getType().equals("DIRECT")) {
+			if (channel.getType().equals("GROUP")) {
 				defaultIcon = R.drawable.icon_person_default;
-				iconUrl = DirectChannelUtils.getDirectChannelIcon(
-						getActivity(), channel.getTitle());
-			} else if (channel.getType().equals("GROUP")) {
-				defaultIcon = R.drawable.icon_channel_group_default;
-				File file = new File(MyAppConfig.LOCAL_CACHE_PATH,
-						UriUtils.tanent + channel.getCid() + "_100.png1");
-				if (file.exists()) {
-					iconUrl = "file://" + file.getAbsolutePath();
+				ChannelGroup channelGroup = ChannelGroupCacheUtils.getChannelGroupById(getActivity(), channel.getCid());
+				if (channelGroup != null) {
+					List<String> memberUidList = ChannelGroupCacheUtils.getMemberUidList(getActivity(), channel.getCid(), 4);
+					int groupNumSize = memberUidList.size();
+					if (groupNumSize == 1) {
+						channelPhotoView = LayoutInflater.from(getActivity()).inflate(R.layout.chat_msg_session_photo_one, null);
+						ImageView photoImg = (ImageView) channelPhotoView.findViewById(R.id.photo_img1);
+						new ImageDisplayUtils(getActivity(), defaultIcon).display(
+								photoImg, UriUtils.getChannelImgUri(memberUidList.get(0)));
+					} else if (groupNumSize == 2) {
+						channelPhotoView = LayoutInflater.from(getActivity()).inflate(R.layout.chat_msg_session_photo_two, null);
+						ImageView photoImg1 = (ImageView) channelPhotoView.findViewById(R.id.photo_img1);
+						ImageView photoImg2 = (ImageView) channelPhotoView.findViewById(R.id.photo_img2);
+						new ImageDisplayUtils(getActivity(), defaultIcon).display(
+								photoImg1, UriUtils.getChannelImgUri(memberUidList.get(0)));
+						new ImageDisplayUtils(getActivity(), defaultIcon).display(
+								photoImg2, UriUtils.getChannelImgUri(memberUidList.get(1)));
+					} else if (groupNumSize == 3) {
+						channelPhotoView = LayoutInflater.from(getActivity()).inflate(R.layout.chat_msg_session_photo_three, null);
+						ImageView photoImg1 = (ImageView) channelPhotoView.findViewById(R.id.photo_img1);
+						ImageView photoImg2 = (ImageView) channelPhotoView.findViewById(R.id.photo_img2);
+						ImageView photoImg3 = (ImageView) channelPhotoView.findViewById(R.id.photo_img3);
+						new ImageDisplayUtils(getActivity(), defaultIcon).display(
+								photoImg1, UriUtils.getChannelImgUri(memberUidList.get(0)));
+						new ImageDisplayUtils(getActivity(), defaultIcon).display(
+								photoImg2, UriUtils.getChannelImgUri(memberUidList.get(1)));
+						new ImageDisplayUtils(getActivity(), defaultIcon).display(
+								photoImg3, UriUtils.getChannelImgUri(memberUidList.get(2)));
+					} else if (groupNumSize == 4) {
+						channelPhotoView = LayoutInflater.from(getActivity()).inflate(R.layout.chat_msg_session_photo_four, null);
+						ImageView photoImg1 = (ImageView) channelPhotoView.findViewById(R.id.photo_img1);
+						ImageView photoImg2 = (ImageView) channelPhotoView.findViewById(R.id.photo_img2);
+						ImageView photoImg3 = (ImageView) channelPhotoView.findViewById(R.id.photo_img3);
+						ImageView photoImg4 = (ImageView) channelPhotoView.findViewById(R.id.photo_img4);
+						new ImageDisplayUtils(getActivity(), defaultIcon).display(
+								photoImg1, UriUtils.getChannelImgUri(memberUidList.get(0)));
+						new ImageDisplayUtils(getActivity(), defaultIcon).display(
+								photoImg2, UriUtils.getChannelImgUri(memberUidList.get(1)));
+						new ImageDisplayUtils(getActivity(), defaultIcon).display(
+								photoImg3, UriUtils.getChannelImgUri(memberUidList.get(2)));
+						new ImageDisplayUtils(getActivity(), defaultIcon).display(
+								photoImg4, UriUtils.getChannelImgUri(memberUidList.get(3)));
+					}
+				}else {
+					channelPhotoLayout.setBackgroundResource(R.drawable.icon_channel_group_default);
 				}
-			} else if(channel.getType().equals("SERVICE")){
-				defaultIcon = R.drawable.icon_person_default;
-				iconUrl = DirectChannelUtils.getRobotIcon(getActivity(), channel.getTitle());
+
 			} else {
-				defaultIcon = R.drawable.icon_channel_group_default;
-				iconUrl = channel.getIcon();
+				String iconUrl = "";// Channel头像的uri
+				channelPhotoView = LayoutInflater.from(getActivity()).inflate(R.layout.chat_msg_session_photo_one, null);
+				ImageView photoImg = (ImageView) channelPhotoView.findViewById(R.id.photo_img1);
+				if (channel.getType().equals("DIRECT")) {
+					defaultIcon = R.drawable.icon_person_default;
+					iconUrl = DirectChannelUtils.getDirectChannelIcon(
+							getActivity(), channel.getTitle());
+				} else if (channel.getType().equals("SERVICE")) {
+					defaultIcon = R.drawable.icon_person_default;
+					iconUrl = DirectChannelUtils.getRobotIcon(getActivity(), channel.getTitle());
+				} else {
+					defaultIcon = R.drawable.icon_channel_group_default;
+					iconUrl = channel.getIcon();
+				}
+
+				new ImageDisplayUtils(getActivity(), defaultIcon).display(
+						photoImg, iconUrl);
+			}
+			if (channelPhotoView != null) {
+				channelPhotoLayout.addView(channelPhotoView);
 			}
 
-			new ImageDisplayUtils(getActivity(), defaultIcon).display(
-					holder.channelImg, iconUrl);
 
 		}
 
 		/**
 		 * 设置频道的背景色
-		 * 
+		 *
 		 * @param channel
-		 * @param mainLayout
+		 * @param convertView
 		 */
-		private void setChannelBg(Channel channel, RelativeLayout mainLayout) {
+		private void setChannelBg(Channel channel, View convertView) {
 			// TODO Auto-generated method stub
+			RelativeLayout mainLayout = (RelativeLayout) convertView
+					.findViewById(R.id.main_layout);
 			if (ChannelOperationCacheUtils.isChannelSetTop(getActivity(),
 					channel.getCid())) {
-				holder.mainLayout
+				mainLayout
 						.setBackgroundResource(R.drawable.selector_set_top_msg_list);
 			} else {
-				holder.mainLayout
+				mainLayout
 						.setBackgroundResource(R.drawable.selector_list);
 			}
 		}
 
 		/**
 		 * 设置Channel的title
-		 * 
+		 *
 		 * @param channel
-		 * @param channelTitleText
+		 * @param convertView
 		 */
-		private void setChannelTitle(Channel channel, TextView channelTitleText) {
+		private void setChannelTitle(Channel channel, View convertView) {
+			TextView channelTitleText = (TextView) convertView
+					.findViewById(R.id.name_text);
 			String title = "";
 			if (channel.getType().equals("DIRECT")) {
 				title = DirectChannelUtils.getDirectChannelTitle(getActivity(),
@@ -807,40 +829,51 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 			} else {
 				title = channel.getTitle();
 			}
-			holder.channelTitleText.setText(title);
+			channelTitleText.setText(title);
 		}
 
 		/**
 		 * 设置频道未读和已读消息的显示
-		 * 
+		 *
 		 * @param channel
-		 * 
 		 */
-		private void setChannelMsgReadStateUI(final Channel channel) {
+		private void setChannelMsgReadStateUI(final Channel channel, View convertView) {
 			// TODO Auto-generated method stub
+			TextView channelTimeText = (TextView) convertView
+					.findViewById(R.id.time_text);
+			RelativeLayout channelNotReadCountLayout = (RelativeLayout) convertView
+					.findViewById(R.id.msg_new_layout);
+			TextView channelNotReadCountText = (TextView) convertView
+					.findViewById(R.id.msg_new_text);
+			TextView channelTitleText = (TextView) convertView
+					.findViewById(R.id.name_text);
+			TextView channelContentText = (TextView) convertView
+					.findViewById(R.id.content_text);
 			int unReadCount = MsgReadIDCacheUtils.getNotReadMsgCount(
 					getActivity(), channel.getCid());
+			channelTimeText.setText(TimeUtils.getDisplayTime(
+					getActivity(), channel.getLastUpdate()));
+			channelContentText.setText(channel
+					.getNewestMsgContent(getActivity()));
+			TransHtmlToTextUtils.stripUnderlines(channelContentText,
+					R.color.msg_content_color);
 			if (unReadCount == 0) {
-				holder.channelNotReadCountLayout.setVisibility(View.INVISIBLE);
-				holder.channelTitleText.getPaint().setFakeBoldText(false);
-				holder.channelContentText.setTextColor(getResources().getColor(
+				channelNotReadCountLayout.setVisibility(View.INVISIBLE);
+				channelTitleText.getPaint().setFakeBoldText(false);
+				channelContentText.setTextColor(getResources().getColor(
 						R.color.msg_content_color));
-				holder.channelTimeText.setTextColor(getResources().getColor(
+				channelTimeText.setTextColor(getResources().getColor(
 						R.color.msg_content_color));
 			} else {
-				holder.channelNotReadCountLayout.setVisibility(View.VISIBLE);
-				holder.channelTitleText.getPaint().setFakeBoldText(true);
-				holder.channelContentText.setTextColor(getResources().getColor(
+				channelNotReadCountLayout.setVisibility(View.VISIBLE);
+				channelTitleText.getPaint().setFakeBoldText(true);
+				channelContentText.setTextColor(getResources().getColor(
 						R.color.black));
-				holder.channelTimeText.setTextColor(getResources().getColor(
+				channelTimeText.setTextColor(getResources().getColor(
 						R.color.msg_time_color));
-				if (unReadCount > 99) {
-					holder.channelNotReadCountText.setText("99+");
-				} else if (unReadCount <= 99) {
-					holder.channelNotReadCountText.setText("" + unReadCount);
-				}
+				channelNotReadCountText.setText(unReadCount > 99 ? "99+" : "" + unReadCount);
 			}
-			TipsView.attach(holder.channelNotReadCountLayout,
+			TipsView.attach(channelNotReadCountLayout,
 					new TipsView.Listener() {
 
 						@Override
@@ -867,17 +900,6 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 		}
 	}
 
-	private static class ViewHolder {
-		RelativeLayout mainLayout;
-		CircleImageView channelImg;
-		ImageView robotSuperscriptImg;
-		TextView channelContentText;
-		TextView channelTitleText;
-		TextView channelTimeText;
-		RelativeLayout channelNotReadCountLayout;
-		TextView channelNotReadCountText;
-		ImageView dndImg;
-	}
 
 	class WebService extends APIInterfaceInstance {
 
@@ -888,11 +910,8 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 			if (getActivity() != null) {
 				List<Channel> channelList = getChannelListResult
 						.getChannelList();
-
-				
 				ChannelCacheUtils.clearChannel(getActivity());
 				ChannelCacheUtils.saveChannelList(getActivity(), channelList);
-				
 				getChannelInfoResult(channelList);
 				apiService.getNewMsgs();
 			}
@@ -913,8 +932,10 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 		@Override
 		public void returnSearchChannelGroupSuccess(
 				GetSearchChannelGroupResult getSearchChannelGroupResult) {
-			resaveChannel(getSearchChannelGroupResult
+			saveChannelInfo(getSearchChannelGroupResult
 					.getSearchChannelGroupList());
+			//为了刷新群组头像
+			adapter.notifyDataSetChanged();
 		}
 
 		@Override
@@ -949,7 +970,6 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 	 * 接受创建群组头像的icon
 	 * 
 	 * @author Administrator
-	 *
 	 */
 	public class MessageFragmentReceiver extends BroadcastReceiver {
 
@@ -957,21 +977,16 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 		public void onReceive(Context context, Intent intent) {
 			// TODO Auto-generated method stub
 			String command = intent.getExtras().getString("command");
-			if (command.equals("creat_group_icon")) {
-				adapter.notifyDataSetChanged();
-				creatGroupIcon();
-			} else if (command.equals("refresh_session_list")) {
+			if (command.equals("refresh_session_list")) {
 				getChannelContent();
 			} else if (command.equals("sort_session_list")) {
-				creatGroupIcon();
 				sortChannelList(displayChannelList);
 				adapter.notifyDataSetChanged();
 			} else if (command.equals("set_all_message_read")) {
 				setAllChannelMsgRead();
-			} else if (command.equals("websocket_status")){
+			} else if (command.equals("websocket_status")) {
 				String socketStatus = intent.getExtras().getString("status");
 				showSocketStatusInTitle(socketStatus);
-				//"socket_connecting"
 
 			}
 
@@ -981,11 +996,11 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 
 	private void showSocketStatusInTitle(String socketStatus){
 		if (socketStatus.equals("socket_connecting")){
-			titleText.setText("连接中");
+			titleText.setText(R.string.socket_connecting);
 		}else if (socketStatus.equals(Socket.EVENT_CONNECT)){
-			titleText.setText("沟通");
+			titleText.setText(R.string.communicate);
 		}else if(socketStatus.equals(Socket.EVENT_DISCONNECT) || socketStatus.equals(Socket.EVENT_CONNECT_ERROR)){
-			titleText.setText("已断开");
+			titleText.setText(R.string.socket_close);
 		}
 	}
 
@@ -1007,11 +1022,14 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 	 * 
 	 * @param searchChannelGroupList
 	 */
-	public void resaveChannel(List<ChannelGroup> searchChannelGroupList) {
+	public void saveChannelInfo(List<ChannelGroup> searchChannelGroupList) {
 		Map<String, String> channelMap = new HashMap<String, String>();
 		for (int i = 0; i < searchChannelGroupList.size(); i++) {
 			ChannelGroup channelGroup = searchChannelGroupList.get(i);
 			channelMap.put(channelGroup.getCid(), channelGroup.getInputs());
+			if (channelGroup.getType().equals("GROUP")){
+				ChannelGroupCacheUtils.saveChannelGroup(getActivity(),channelGroup);
+			}
 		}
 		List<Channel> channelList = ChannelCacheUtils
 				.getCacheChannelList(getActivity());
@@ -1122,7 +1140,6 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 						ChannelGroupCacheUtils.saveChannelGroup(getActivity(),
 								channelGroup);
 						getChannelContent();
-
 					}
 
 					@Override

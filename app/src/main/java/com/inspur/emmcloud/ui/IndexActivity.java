@@ -20,7 +20,6 @@ import android.widget.TabHost;
 import android.widget.TabHost.OnTabChangeListener;
 import android.widget.TextView;
 
-import com.alibaba.fastjson.JSON;
 import com.inspur.emmcloud.BaseFragmentActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
@@ -35,7 +34,6 @@ import com.inspur.emmcloud.bean.Contact;
 import com.inspur.emmcloud.bean.GetAllContactResult;
 import com.inspur.emmcloud.bean.GetAllRobotsResult;
 import com.inspur.emmcloud.bean.GetAppTabAutoResult;
-import com.inspur.emmcloud.bean.GetAppTabsResult;
 import com.inspur.emmcloud.bean.GetClientIdRsult;
 import com.inspur.emmcloud.bean.GetSearchChannelGroupResult;
 import com.inspur.emmcloud.bean.Language;
@@ -88,6 +86,7 @@ public class IndexActivity extends BaseFragmentActivity implements
         OnTabChangeListener, OnTouchListener {
     private static final int SYNC_ALL_BASE_DATA_SUCCESS = 0;
     private static final int SYNC_CONTACT_SUCCESS = 1;
+    private static final int CHANGE_TAB = 2;
     private long lastBackTime;
     public MyFragmentTabHost mTabHost;
     private static TextView newMessageTipsText;
@@ -270,6 +269,11 @@ public class IndexActivity extends BaseFragmentActivity implements
                         break;
                     case SYNC_CONTACT_SUCCESS:
                         getAllChannelGroup();
+                        break;
+                    case CHANGE_TAB:
+                        int communicateLocation = (int)msg.obj;
+                        mTabHost.setCurrentTab(communicateLocation);
+                        mTabHost.setCurrentTab(getTabIndex());
                         break;
                     default:
                         break;
@@ -470,13 +474,20 @@ public class IndexActivity extends BaseFragmentActivity implements
             mTabHost.setOnTabChangedListener(this);
         }
         int tabSize = tabs.length;
+        int communicateLocation = -1;
         for (int i = 0; i < tabSize; i++){
             if(tabs[i].getCommpant().equals("communicate")){
-                mTabHost.setCurrentTab(tabs[i].getIdx());
+                communicateLocation = tabs[i].getIdx();
                 break;
             }
         }
         mTabHost.setCurrentTab(getTabIndex());
+        if(communicateLocation != -1 && communicateLocation != getTabIndex()){
+            Message msg = new Message();
+            msg.what = CHANGE_TAB;
+            msg.obj = communicateLocation;
+            handler.sendMessage(msg);
+        }
     }
 
 
@@ -788,20 +799,20 @@ public class IndexActivity extends BaseFragmentActivity implements
 //			WebServiceMiddleUtils.hand(IndexActivity.this, error);
         }
 
-        @Override
-        public void returnGetAppTabsSuccess(GetAppTabsResult getAppTabsResult) {
-            PreferencesUtils.putString(IndexActivity.this,
-                    UriUtils.tanent + userId + "appTabs", JSON.toJSONString(getAppTabsResult.getAppTabBeanList()));
-            if(!StringUtils.isBlank(JSON.toJSONString(getAppTabsResult.getAppTabBeanList()))){
-                mTabHost.clearAllTabs();
-                handleAppTabs();
-            }
-        }
-
-        @Override
-        public void returnGetAppTabsFail(String error) {
-            WebServiceMiddleUtils.hand(IndexActivity.this, error);
-        }
+//        @Override
+//        public void returnGetAppTabsSuccess(GetAppTabsResult getAppTabsResult) {
+//            PreferencesUtils.putString(IndexActivity.this,
+//                    UriUtils.tanent + userId + "appTabs", JSON.toJSONString(getAppTabsResult.getAppTabBeanList()));
+//            if(!StringUtils.isBlank(JSON.toJSONString(getAppTabsResult.getAppTabBeanList()))){
+//                mTabHost.clearAllTabs();
+//                handleAppTabs();
+//            }
+//        }
+//
+//        @Override
+//        public void returnGetAppTabsFail(String error) {
+//            WebServiceMiddleUtils.hand(IndexActivity.this, error);
+//        }
 
 
         @Override
@@ -860,8 +871,8 @@ public class IndexActivity extends BaseFragmentActivity implements
             PreferencesByUserUtils.putString(IndexActivity.this,"app_tabbar_info_current",getAppTabAutoResult.getAppTabInfo());
             updateTabbar();
         }else if(command.equals("STANDBY")){
-            updateTabbar();
-            LogUtils.YfcDebug("收到保持现状指令");
+//            updateTabbar();
+//            LogUtils.YfcDebug("收到保持现状指令");
         }else{
             LogUtils.YfcDebug("收到不支持的指令");
         }
@@ -908,7 +919,7 @@ public class IndexActivity extends BaseFragmentActivity implements
             FindFragment.hasUpdated = true;
         } else if (state == ReactNativeFlow.REACT_NATIVE_NO_UPDATE) {
             //没有更新什么也不做
-                LogUtils.YfcDebug("Standy");
+//                LogUtils.YfcDebug("Standy");
         }
         if(FindFragment.hasUpdated){
             RNCacheViewManager.init(IndexActivity.this);

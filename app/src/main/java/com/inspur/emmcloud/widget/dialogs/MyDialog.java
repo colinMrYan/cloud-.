@@ -1,12 +1,10 @@
 package com.inspur.emmcloud.widget.dialogs;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.view.Display;
-import android.view.Gravity;
 import android.view.WindowManager;
 
 /**
@@ -17,22 +15,22 @@ import android.view.WindowManager;
 public class MyDialog extends Dialog {
 
 	private float ratio = 0.800f;
-	private Activity context;
+	private Context context;
 
-	public MyDialog(Activity context,int layout) {
+	public MyDialog(Context context,int layout) {
 		super(context);
 		this.context = context;
 		setContentView(layout);
 		// TODO Auto-generated constructor stub
 	}
 
-	public MyDialog(Activity context,int layout,
+	public MyDialog(Context context,int layout,
 			int style) {
 		super(context, style);
 		this.context = context;
 		setContentView(layout);
 	}
-	public MyDialog(Activity context,int layout,
+	public MyDialog(Context context,int layout,
 			int style,float ratio) {
 		super(context, style);
 		this.ratio = ratio;
@@ -49,7 +47,7 @@ public class MyDialog extends Dialog {
 	}
 
 	private void setWidth() {
-		WindowManager m = context.getWindowManager();
+		WindowManager m = getWindow().getWindowManager();
 		Display d = m.getDefaultDisplay(); 
 		int width = d.getWidth();
 		WindowManager.LayoutParams p = getWindow().getAttributes();
