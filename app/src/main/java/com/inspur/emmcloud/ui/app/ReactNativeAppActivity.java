@@ -1,6 +1,5 @@
 package com.inspur.emmcloud.ui.app;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -11,6 +10,7 @@ import com.facebook.react.ReactRootView;
 import com.facebook.react.common.LifecycleState;
 import com.facebook.react.modules.core.DefaultHardwareBackBtnHandler;
 import com.facebook.react.shell.MainReactPackage;
+import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
@@ -27,6 +27,7 @@ import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.PreferencesByUserUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
+import com.inspur.emmcloud.util.StateBarColor;
 import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.ToastUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
@@ -43,7 +44,7 @@ import java.io.File;
  * Created by yufuchang on 2017/3/15.
  */
 
-public class ReactNativeAppActivity extends Activity implements DefaultHardwareBackBtnHandler {
+public class ReactNativeAppActivity extends BaseActivity implements DefaultHardwareBackBtnHandler {
     private ReactRootView mReactRootView;
     private ReactInstanceManager mReactInstanceManager;
     private ReactNativeAPIService reactNativeAPIService;
@@ -57,6 +58,7 @@ public class ReactNativeAppActivity extends Activity implements DefaultHardwareB
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        StateBarColor.changeStateBarColor(this,R.color.white);
         init();
         checkSource();
         initReactNativeApp();
