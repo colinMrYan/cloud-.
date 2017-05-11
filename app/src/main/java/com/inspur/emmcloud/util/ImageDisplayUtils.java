@@ -59,7 +59,7 @@ public class ImageDisplayUtils  implements ImagePickerLoader {
 	}
 	
 	public void display(final ImageView imageView, String uri) {
-		if (!uri.startsWith("http") && !uri.startsWith("file:")&& !uri.startsWith("content:")&& !uri.startsWith("assets:")&& !uri.startsWith("drawable:")) {
+		if (uri != null && !uri.startsWith("http") && !uri.startsWith("file:")&& !uri.startsWith("content:")&& !uri.startsWith("assets:")&& !uri.startsWith("drawable:")) {
 			uri = "file://" + uri;
 		}
 		imageLoader.displayImage(uri, imageView, options);
@@ -75,7 +75,7 @@ public class ImageDisplayUtils  implements ImagePickerLoader {
 	}
 	
 	public void displayPic(final ImageView imageView,String uri){
-		if (!uri.startsWith("http") && !uri.startsWith("file:")&& !uri.startsWith("content:")&& !uri.startsWith("assets:")&& !uri.startsWith("drawable:")) {
+		if (uri != null && !uri.startsWith("http") && !uri.startsWith("file:")&& !uri.startsWith("content:")&& !uri.startsWith("assets:")&& !uri.startsWith("drawable:")) {
 			uri = "file://" + uri;
 		}
 		imageLoader.displayImage(uri, imageView,options,new SimpleImageLoadingListener(){

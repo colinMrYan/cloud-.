@@ -103,11 +103,6 @@ public class SettingActivity extends BaseActivity {
 				// TODO Auto-generated method stub
 				ToastUtils.show(getApplicationContext(),
 						R.string.data_clear_success);
-				// 通知消息页面重新创建群组头像
-				Intent intent = new Intent("message_notify");
-				intent.putExtra("command", "creat_group_icon");
-				sendBroadcast(intent);
-
 			}
 
 		};

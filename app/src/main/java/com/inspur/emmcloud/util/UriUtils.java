@@ -103,7 +103,7 @@ public class UriUtils {
 
             @Override
             public void onError(Throwable throwable, boolean b) {
-                ToastUtils.show(activity, "应用打开失败");
+                ToastUtils.show(activity, R.string.react_native_app_open_failed);
             }
 
             @Override
