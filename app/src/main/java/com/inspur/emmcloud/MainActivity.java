@@ -22,7 +22,6 @@ import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.ResolutionUtils;
 import com.inspur.emmcloud.util.StateBarColor;
 import com.inspur.emmcloud.util.StringUtils;
-import com.inspur.emmcloud.util.UpgradeUtils;
 import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.emmcloud.widget.dialogs.EasyDialog;
 
@@ -101,8 +100,7 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
                     .addShortCut(MainActivity.this);
         }
         handMessage();
-        UpgradeUtils upgradeUtils = new UpgradeUtils(MainActivity.this, handler);
-        upgradeUtils.checkUpdate(false);
+		getServerLanguage();
     }
 
     private void handMessage() {
@@ -127,11 +125,6 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
                     case LOGIN_FAIL:
                         IntentUtils.startActivity(MainActivity.this,
                                 LoginActivity.class, true);
-                        break;
-                    case UPGRADE_FAIL:
-                    case NO_NEED_UPGRADE:
-                    case DONOT_UPGRADE:
-                        getServerLanguage();
                         break;
                     case GET_LANGUAGE_SUCCESS:
                         enterApp();

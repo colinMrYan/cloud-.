@@ -1,6 +1,6 @@
 package com.inspur.emmcloud.util;
 
-import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Environment;
@@ -10,7 +10,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.inspur.emmcloud.MainActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
@@ -43,7 +42,7 @@ public class UpgradeUtils extends APIInterfaceInstance {
 			.getExternalStorageDirectory() + "/IMP-Cloud/download/";
 	private static final String TAG = "UpgradeUtils";
 	private GetUpgradeResult getUpgradeResult;
-	private Activity activity;
+	private Context context;
 	private Handler upgradeHandler;
 	private Handler handler;
 	private int upgradeCode;
@@ -59,10 +58,10 @@ public class UpgradeUtils extends APIInterfaceInstance {
 	private LoadingDialog loadingDlg;
 	private Cancelable cancelable;
 
-	public UpgradeUtils(Activity activity, Handler handler) {
-		this.activity = activity;
+	public UpgradeUtils(Context context,Handler handler) {
+		this.context = context;
 		this.handler = handler;
-		loadingDlg = new LoadingDialog(activity);
+		loadingDlg = new LoadingDialog(context);
 		handMessage();
 	}
 
@@ -75,7 +74,9 @@ public class UpgradeUtils extends APIInterfaceInstance {
 				// TODO Auto-generated method stub
 				switch (msg.what) {
 				case UPGRADE_FAIL:
-					handler.sendEmptyMessage(UPGRADE_FAIL);
+					if (handler != null){
+						handler.sendEmptyMessage(UPGRADE_FAIL);
+					}
 					break;
 				case DOWNLOAD:
 					downloadPercent = getPercent(progress);
@@ -91,15 +92,12 @@ public class UpgradeUtils extends APIInterfaceInstance {
 					}
 					installApk();
 
-					if (activity instanceof MainActivity) {
-						activity.finish();
-					}
 					break;
 
 				case DOWNLOAD_FAIL:
-					ToastUtils.show(activity,
-							activity.getString(R.string.update_fail));
-					if (activity != null) {
+					ToastUtils.show(context,
+							context.getString(R.string.update_fail));
+					if (context != null) {
 						if (upgradeCode == 2) {
 							showForceUpgradeDlg();
 						} else {
@@ -120,9 +118,9 @@ public class UpgradeUtils extends APIInterfaceInstance {
 	}
 
 	public void checkUpdate(boolean isShowLoadingDlg) {
-		if (NetUtils.isNetworkConnected(activity, isShowLoadingDlg)) {
+		if (NetUtils.isNetworkConnected(context, isShowLoadingDlg)) {
 				loadingDlg.show(isShowLoadingDlg);
-			AppAPIService apiService = new AppAPIService(activity);
+			AppAPIService apiService = new AppAPIService(context);
 			apiService.setAPIInterface(UpgradeUtils.this);
 			apiService.checkUpgrade();
 		} else if (handler != null) {
@@ -144,12 +142,12 @@ public class UpgradeUtils extends APIInterfaceInstance {
 			handler.sendEmptyMessage(NO_NEED_UPGRADE);
 			break;
 		case 1: // 可选升级
-			if (activity != null) {
+			if (context != null) {
 				showSelectUpgradeDlg();
 			}
 			break;
 		case 2: // 必须升级
-			if (activity != null) {
+			if (context != null) {
 				showForceUpgradeDlg();
 			}
 			break;
@@ -161,17 +159,17 @@ public class UpgradeUtils extends APIInterfaceInstance {
 
 	private void showSelectUpgradeDlg() {
 		// TODO Auto-generated method stub
-		final MyDialog dialog = new MyDialog(activity,
+		final MyDialog dialog = new MyDialog(context,
 				R.layout.dialog_two_buttons);
 		dialog.setCancelable(false);
 		Button okBt = (Button) dialog.findViewById(R.id.ok_btn);
-		okBt.setText(activity.getString(R.string.upgrade));
+		okBt.setText(context.getString(R.string.upgrade));
 		TextView text = (TextView) dialog.findViewById(R.id.text);
 		text.setText(upgradeMsg);
 		TextView appUpdateTitle = (TextView) dialog.findViewById(R.id.app_update_title);
 		TextView appUpdateVersion = (TextView) dialog.findViewById(R.id.app_update_version);
-		appUpdateTitle.setText(activity.getString(R.string.app_update_remind));
-		appUpdateVersion.setText(activity.getString(R.string.app_last_version)+"("+getUpgradeResult.getLatestVersion()+")");
+		appUpdateTitle.setText(context.getString(R.string.app_update_remind));
+		appUpdateVersion.setText(context.getString(R.string.app_last_version)+"("+getUpgradeResult.getLatestVersion()+")");
 		okBt.setOnClickListener(new View.OnClickListener() {
 
 			@Override
@@ -183,7 +181,7 @@ public class UpgradeUtils extends APIInterfaceInstance {
 
 		});
 		Button cancelBt = (Button) dialog.findViewById(R.id.cancel_btn);
-		cancelBt.setText(activity.getString(R.string.not_upgrade));
+		cancelBt.setText(context.getString(R.string.not_upgrade));
 		cancelBt.setOnClickListener(new View.OnClickListener() {
 
 			@Override
@@ -195,7 +193,7 @@ public class UpgradeUtils extends APIInterfaceInstance {
 				}
 			}
 		});
-		if (activity != null) {
+		if (context != null) {
 			dialog.show();
 		}
 
@@ -203,11 +201,11 @@ public class UpgradeUtils extends APIInterfaceInstance {
 
 	private void showForceUpgradeDlg() {
 		// TODO Auto-generated method stub
-		final MyDialog dialog = new MyDialog(activity,
+		final MyDialog dialog = new MyDialog(context,
 				R.layout.dialog_two_buttons);
 		dialog.setCancelable(false);
 		Button okBt = (Button) dialog.findViewById(R.id.ok_btn);
-		okBt.setText(activity.getString(R.string.upgrade));
+		okBt.setText(context.getString(R.string.upgrade));
 		TextView text = (TextView) dialog.findViewById(R.id.text);
 		text.setText(upgradeMsg);
 		okBt.setOnClickListener(new View.OnClickListener() {
@@ -220,17 +218,17 @@ public class UpgradeUtils extends APIInterfaceInstance {
 			}
 		});
 		Button cancelBt = (Button) dialog.findViewById(R.id.cancel_btn);
-		cancelBt.setText(activity.getString(R.string.exit));
+		cancelBt.setText(context.getString(R.string.exit));
 		cancelBt.setOnClickListener(new View.OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				dialog.dismiss();
-				((MyApplication) activity.getApplicationContext()).exit();
+				((MyApplication) context.getApplicationContext()).exit();
 			}
 		});
-		if (activity != null) {
+		if (context != null) {
 			dialog.show();
 		}
 	}
@@ -238,7 +236,7 @@ public class UpgradeUtils extends APIInterfaceInstance {
 	private void showDownloadDialog() {
 		// TODO Auto-generated method stub
 		cancelUpdate = false;
-		mDownloadDialog = new MyDialog(activity,
+		mDownloadDialog = new MyDialog(context,
 				R.layout.dialog_app_update_progress);
 		mDownloadDialog.setCancelable(false);
 		ratioText = (TextView) mDownloadDialog.findViewById(R.id.ratio_text);
@@ -255,13 +253,13 @@ public class UpgradeUtils extends APIInterfaceInstance {
 				// 设置取消状态
 				cancelUpdate = true;
 				if (upgradeCode == 2) { // 强制升级时
-					((MyApplication) activity.getApplicationContext()).exit();
+					((MyApplication) context.getApplicationContext()).exit();
 				} else if (handler != null) {
 					handler.sendEmptyMessage(DONOT_UPGRADE);
 				}
 			}
 		});
-		if (activity != null) {
+		if (context != null) {
 			// 下载文件
 			downloadApk();
 		}
@@ -339,7 +337,7 @@ public class UpgradeUtils extends APIInterfaceInstance {
 	public void installApk() {
 		File apkfile = new File(DOWNLOAD_PATH, "update.apk");
 		if (!apkfile.exists()) {
-			ToastUtils.show(activity, R.string.update_fail);
+			ToastUtils.show(context, R.string.update_fail);
 			return;
 		}
 		// 通过Intent安装APK文件
@@ -348,7 +346,7 @@ public class UpgradeUtils extends APIInterfaceInstance {
 		i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		i.setDataAndType(Uri.parse("file://" + apkfile.toString()),
 				"application/vnd.android.package-archive");
-		activity.startActivity(i);
+		context.startActivity(i);
 	}
 
 	/** 获取百分率 **/
@@ -385,7 +383,7 @@ public class UpgradeUtils extends APIInterfaceInstance {
 		if (loadingDlg != null && loadingDlg.isShowing()) {
 			loadingDlg.dismiss();
 		}
-		WebServiceMiddleUtils.hand(activity, error, upgradeHandler,
+		WebServiceMiddleUtils.hand(context, error, upgradeHandler,
 				UPGRADE_FAIL);
 	}
 
