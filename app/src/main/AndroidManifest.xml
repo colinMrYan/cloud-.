@@ -3,7 +3,7 @@
     package="com.inspur.emmcloud"
     android:configChanges="locale|layoutDirection"
     android:versionCode="27"
-    android:versionName="1.1.9">
+    android:versionName="1.1.8">
 
     <uses-sdk
         android:minSdkVersion="14"
@@ -519,10 +519,15 @@
         <activity
             android:name=".ui.find.FindSearchMoreActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:theme="@style/dialog_activity"
+            android:name=".ui.app.AppUpgradeNotifyActivity"
+            android:screenOrientation="portrait" />
         <service android:name=".service.PVCollectService"></service>
         <service android:name=".service.CoreService"></service>
         <service android:name=".service.CoreInnerService"></service>
         <service android:name=".service.AppExceptionService"></service>
+
 
 
         <!-- ImagePicker -->

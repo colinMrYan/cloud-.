@@ -1,5 +1,4 @@
 /**
- * 
  * MineAPIService.java
  * classes : com.inspur.emmcloud.api.apiservice.MineAPIService
  * V 1.0.0
@@ -16,6 +15,7 @@ import com.inspur.emmcloud.bean.GetBoolenResult;
 import com.inspur.emmcloud.bean.GetCardPackageListResult;
 import com.inspur.emmcloud.bean.GetLanguageResult;
 import com.inspur.emmcloud.bean.GetUploadMyHeadResult;
+import com.inspur.emmcloud.bean.GetUserHeadUploadResult;
 import com.inspur.emmcloud.util.AppUtils;
 import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.OauthCallBack;
@@ -48,7 +48,7 @@ public class MineAPIService {
 
 	/**
 	 * 修改用户头像
-	 * 
+	 *
 	 * @param
 	 */
 	public void updateUserHead(final String filePath) {
@@ -57,13 +57,13 @@ public class MineAPIService {
 		final String completeUrl = baseUrl + "module=" + module + "&method="
 				+ method;
 
-		LogUtils.jasonDebug("filePath="+filePath);
+		LogUtils.jasonDebug("filePath=" + filePath);
 		RequestParams params = ((MyApplication) context.getApplicationContext())
 				.getHttpRequestParams(completeUrl);
 		File file = new File(filePath);
 		params.setMultipart(true);// 有上传文件时使用multipart表单, 否则上传原始文件流.
 		params.addBodyParameter("head", file);
-		x.http().post(params, new APICallback(context,completeUrl) {
+		x.http().post(params, new APICallback(context, completeUrl) {
 
 			@Override
 			public void callbackTokenExpire() {
@@ -95,7 +95,7 @@ public class MineAPIService {
 
 	/**
 	 * 修改用户信息
-	 * 
+	 *
 	 * @param key
 	 * @param value
 	 */
@@ -111,7 +111,7 @@ public class MineAPIService {
 				.getHttpRequestParams(completeUrl);
 		params.addParameter("key", key);
 		params.addParameter("value", value);
-		x.http().post(params, new APICallback(context,completeUrl) {
+		x.http().post(params, new APICallback(context, completeUrl) {
 
 			@Override
 			public void callbackTokenExpire() {
@@ -144,13 +144,13 @@ public class MineAPIService {
 
 	/**
 	 * 上传反馈和建议接口
-	 * 
+	 *
 	 * @param content
 	 * @param contact
 	 * @param userName
 	 */
 	public void uploadFeedback(final String content, final String contact,
-			final String userName) {
+							   final String userName) {
 		final String completeUrl = "http://u.inspur.com/analytics/RestFulServiceForIMP.ashx?resource=Feedback&method=AddECMFeedback";
 		RequestParams params = ((MyApplication) context.getApplicationContext())
 				.getHttpRequestParams(completeUrl);
@@ -170,7 +170,7 @@ public class MineAPIService {
 		params.addParameter("Email", "");
 		params.addParameter("Telephone", "");
 		params.addParameter("UUID", UUID);
-		x.http().post(params, new APICallback(context,completeUrl) {
+		x.http().post(params, new APICallback(context, completeUrl) {
 
 			@Override
 			public void callbackTokenExpire() {
@@ -200,7 +200,7 @@ public class MineAPIService {
 		final String completeUrl = UriUtils.getHttpApiUri("wallet");
 		RequestParams params = ((MyApplication) context.getApplicationContext())
 				.getHttpRequestParams(completeUrl);
-		x.http().get(params, new APICallback(context,completeUrl) {
+		x.http().get(params, new APICallback(context, completeUrl) {
 
 			@Override
 			public void callbackTokenExpire() {
@@ -239,7 +239,7 @@ public class MineAPIService {
 		final String completeUrl = UriUtils.getHttpApiUri("settings/lang");
 		RequestParams params = ((MyApplication) context.getApplicationContext())
 				.getHttpRequestParams(completeUrl);
-		x.http().get(params, new APICallback(context,completeUrl) {
+		x.http().get(params, new APICallback(context, completeUrl) {
 
 			@Override
 			public void callbackTokenExpire() {
@@ -267,50 +267,42 @@ public class MineAPIService {
 		});
 	}
 
-	// /**
-	// * 保存用户头像
-	// *
-	// * @param userHead
-	// */
-	// public void saveUserHead(final String userHead) {
-	//
-	// String module = "";
-	// String method = "";
-	// final String completeUrl = baseUrl + "module=" + module + "&method="
-	// + method;
-	//
-	// RequestParams params =
-	// ((MyApplication)context.getApplicationContext()).getHttpRequestParams(completeUrl);
-	// params.addParameter("userHead", userHead);
-	// x.http().post(params, new APICallback(context,completeUrl) {
-	//
-	// @Override
-	// public void callbackTokenExpire() {
-	// // TODO Auto-generated method stub
-	// new OauthUtils(new OauthCallBack() {
-	//
-	// @Override
-	// public void execute() {
-	// saveUserHead(userHead);
-	// }
-	// }, context).refreshTocken(completeUrl);
-	// }
-	//
-	// @Override
-	// public void callbackSuccess(String arg0) {
-	// // TODO Auto-generated method stub
-	// apiInterface
-	// .returnUserHeadUploadSuccess(new GetUserHeadUploadResult(
-	// arg0));
-	// }
-	//
-	// @Override
-	// public void callbackFail(String error, int responseCode) {
-	// // TODO Auto-generated method stub
-	// apiInterface.returnUserHeadUploadFail(error);
-	// }
-	// });
-	// }
+	/**
+	 * 获取当前绑定设备列表
+	 */
+	public void getBindingDevices() {
+		final String completeUrl = "";
+		RequestParams params =
+				((MyApplication) context.getApplicationContext()).getHttpRequestParams(completeUrl);
+		x.http().get(params, new APICallback(context, completeUrl) {
+
+			@Override
+			public void callbackTokenExpire() {
+				// TODO Auto-generated method stub
+				new OauthUtils(new OauthCallBack() {
+
+					@Override
+					public void execute() {
+						getBindingDevices();
+					}
+				}, context).refreshTocken(completeUrl);
+			}
+
+			@Override
+			public void callbackSuccess(String arg0) {
+				// TODO Auto-generated method stub
+				apiInterface
+						.returnUserHeadUploadSuccess(new GetUserHeadUploadResult(
+								arg0));
+			}
+
+			@Override
+			public void callbackFail(String error, int responseCode) {
+				// TODO Auto-generated method stub
+				apiInterface.returnUserHeadUploadFail(error);
+			}
+		});
+	}
 
 	// /**
 	// * 获取人员信息

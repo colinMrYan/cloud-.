@@ -1,11 +1,14 @@
 package com.inspur.emmcloud;
 
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 
+import com.inspur.emmcloud.service.AppUpgradeService;
 import com.inspur.emmcloud.util.AppUtils;
+import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.StateBarColor;
 
 public class BaseFragmentActivity extends FragmentActivity {
@@ -45,6 +48,7 @@ public class BaseFragmentActivity extends FragmentActivity {
 			if (((MyApplication) getApplicationContext())
 					.isIndexActivityRunning()) {
 				((MyApplication)getApplicationContext()).sendActivedWSMsg();
+				startUpgradeServcie();
 			}
 		}
 
@@ -60,5 +64,11 @@ public class BaseFragmentActivity extends FragmentActivity {
 	    return res;  
 	}
 
+	private void startUpgradeServcie(){
+		LogUtils.jasonDebug("startUpgradeServcie--------");
+		Intent intent = new Intent();
+		intent.setClass(this, AppUpgradeService.class);
+		startService(intent);
+	}
 
 }
