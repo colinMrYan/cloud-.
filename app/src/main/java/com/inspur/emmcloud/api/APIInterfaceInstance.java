@@ -148,13 +148,13 @@ public class APIInterfaceInstance implements APIInterface{
 	}
 
 	@Override
-	public void returnUpgradeSuccess(GetUpgradeResult getUpgradeResult) {
+	public void returnUpgradeSuccess(GetUpgradeResult getUpgradeResult,boolean isManualCheck) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void returnUpgradeFail(String error) {
+	public void returnUpgradeFail(String error,boolean isManualCheck) {
 		// TODO Auto-generated method stub
 
 	}

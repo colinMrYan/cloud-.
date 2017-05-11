@@ -51,9 +51,9 @@ public class AppAPIService {
 
 	/**
 	 * 获取版本更新信息
-	 * 
+	 * @param isManualCheck shi
 	 */
-	public void checkUpgrade() {
+	public void checkUpgrade(final boolean isManualCheck) {
 		String completeUrl = APIUri.checkUpgrade();
 		String clientVersion = AppUtils.getVersion(context);
 		RequestParams params = ((MyApplication) context.getApplicationContext())
@@ -70,19 +70,19 @@ public class AppAPIService {
 			@Override
 			public void callbackTokenExpire() {
 				// TODO Auto-generated method stub
-				apiInterface.returnUpgradeFail(new String(""));
+				apiInterface.returnUpgradeFail(new String(""),isManualCheck);
 			}
 
 			@Override
 			public void callbackSuccess(String arg0) {
 				// TODO Auto-generated method stub
-				apiInterface.returnUpgradeSuccess(new GetUpgradeResult(arg0));
+				apiInterface.returnUpgradeSuccess(new GetUpgradeResult(arg0),isManualCheck);
 			}
 
 			@Override
 			public void callbackFail(String error, int responseCode) {
 				// TODO Auto-generated method stub
-				apiInterface.returnUpgradeFail(error);
+				apiInterface.returnUpgradeFail(error,isManualCheck);
 			}
 		});
 

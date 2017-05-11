@@ -1,6 +1,5 @@
 package com.inspur.emmcloud.ui.app;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -10,11 +9,13 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.GetUpgradeResult;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.util.LogUtils;
+import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.ToastUtils;
 import com.inspur.emmcloud.widget.WeakHandler;
@@ -33,14 +34,14 @@ import java.text.DecimalFormat;
  * Created by Administrator on 2017/5/10.
  */
 
-public class AppUpgradeNotifyActivity extends Activity {
+public class AppUpgradeNotifyActivity extends BaseActivity {
 
 	protected static final int SHOW_PEOGRESS_LAODING_DLG = 0;
 	private static final int DOWNLOADING = 3;
 	private static final int DOWNLOAD_FINISH = 4;
 	private static final int DOWNLOAD_FAIL = 5;
-	private static double MBDATA = 1048576.0;
-	private static double KBDATA = 1024.0;
+	private static final double MBDATA = 1048576.0;
+	private static final double KBDATA = 1024.0;
 	private boolean cancelUpdate = false;
 	private GetUpgradeResult getUpgradeResult;
 	private long totalSize;
@@ -145,7 +146,9 @@ public class AppUpgradeNotifyActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
+				PreferencesUtils.putLong(getApplicationContext(),"appNotUpdateTime",System.currentTimeMillis());
 				dialog.dismiss();
+				finish();
 			}
 		});
 		dialog.show();
@@ -199,13 +202,13 @@ public class AppUpgradeNotifyActivity extends Activity {
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				downloadProgressDlg.dismiss();
+				finish();
 				if (cancelable != null) {
 					cancelable.cancel();
 				}
 				// 设置取消状态
 				cancelUpdate = true;
 				if (getUpgradeResult.getUpgradeCode() == 2) { // 强制升级时
-					finish();
 					((MyApplication)getApplicationContext()).exit();
 				}
 			}
@@ -312,9 +315,9 @@ public class AppUpgradeNotifyActivity extends Activity {
 	 **/
 	private String setFormat(long data) {
 		// TODO Auto-generated method stub
-		if (data < 1024) {
+		if (data < KBDATA) {
 			return data + "B";
-		} else if (data < 1024 * 1024) {
+		} else if (data < MBDATA) {
 			return new DecimalFormat(("####0.00")).format(data / KBDATA) + "KB";
 		} else {
 			return new DecimalFormat(("####0.00")).format(data / MBDATA) + "MB";

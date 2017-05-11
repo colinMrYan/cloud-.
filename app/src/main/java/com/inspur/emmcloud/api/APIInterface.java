@@ -102,8 +102,8 @@ public interface APIInterface {
 	public void returnSignoutSuccess(GetSignoutResult getSignoutResult);
 	public void returnSignoutFail(String error);
 
-	public void returnUpgradeSuccess(GetUpgradeResult getUpgradeResult);
-	public void returnUpgradeFail(String error);
+	public void returnUpgradeSuccess(GetUpgradeResult getUpgradeResult,boolean isManualCheck);
+	public void returnUpgradeFail(String error,boolean isManualCheck);
 
 	public void returnSearchAppSuccess(GetSearchAppResult getAllAppResult);
 	public void returnSearchAppFail(String error);

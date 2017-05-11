@@ -1,14 +1,11 @@
 package com.inspur.emmcloud;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
 
-import com.inspur.emmcloud.service.AppUpgradeService;
 import com.inspur.emmcloud.util.AppUtils;
-import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.StateBarColor;
 
 public class BaseActivity extends Activity {
@@ -66,13 +63,11 @@ public class BaseActivity extends Activity {
 //	}
 
 	private void startUpgradeServcie(){
-		LogUtils.jasonDebug("startUpgradeServcie--------");
-		Intent intent = new Intent();
-		if (AppUtils.isServiceWork(this,"com.inspur.emmcloud.service.AppUpgradeService")){
-			intent.setClass(this, AppUpgradeService.class);
-			stopService(intent);
-		}
-		startService(intent);
+//		Intent intent = new Intent();
+//		if (AppUtils.isServiceWork(this,"com.inspur.emmcloud.service.AppUpgradeService")){
+//			intent.setClass(getApplicationContext(), AppUpgradeService.class);
+//		}
+//		startService(intent);
 
 	}
 

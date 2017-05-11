@@ -1,23 +1,19 @@
 package com.inspur.emmcloud.ui.mine.setting;
 
-import com.inspur.emmcloud.BaseActivity;
-import com.inspur.emmcloud.MainActivity;
-import com.inspur.emmcloud.MyApplication;
-import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.util.AppUtils;
-import com.inspur.emmcloud.util.IntentUtils;
-import com.inspur.emmcloud.util.ToastUtils;
-import com.inspur.emmcloud.util.UpgradeUtils;
-
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.inspur.emmcloud.BaseActivity;
+import com.inspur.emmcloud.MyApplication;
+import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.service.AppUpgradeService;
+import com.inspur.emmcloud.util.AppUtils;
+import com.inspur.emmcloud.util.IntentUtils;
+import com.inspur.emmcloud.util.ToastUtils;
 
 /**
  * 关于页面 com.inspur.emmcloud.ui.AboutActivity
@@ -63,13 +59,21 @@ public class AboutActivity extends BaseActivity {
 					ServiceTermActivity.class);
 			break;
 		case R.id.check_update_layout:
-			UpgradeUtils upgradeUtils = new UpgradeUtils(AboutActivity.this,
-					hander);
-			upgradeUtils.checkUpdate(false);
+			startUpgradeServcie();
 			break;
 		default:
 			break;
 		}
+	}
+
+	private void startUpgradeServcie(){
+		Intent intent = new Intent();
+		if (AppUtils.isServiceWork(this,"com.inspur.emmcloud.service.AppUpgradeService")){
+			intent.setClass(getApplicationContext(), AppUpgradeService.class);
+			stopService(intent);
+		}
+		startService(intent);
+
 	}
 
 	private void handMessage() {
