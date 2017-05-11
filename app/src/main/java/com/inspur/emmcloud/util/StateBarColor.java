@@ -27,6 +27,20 @@ public class StateBarColor {
 	}
 
 	/**
+	 * 隐藏状态栏
+	 * @param activity
+	 */
+	public static void hideStatusBar(Activity activity){
+		activity.getWindow().addFlags(
+				WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+			setTranslucentStatus(true, activity);
+		}
+		SystemBarTintManager tintManager = new SystemBarTintManager(activity);
+		tintManager.setStatusBarTintEnabled(false);
+	}
+
+	/**
 	 * 修改状态栏颜色，传入颜色为R.id形式
 	 * @param activity
 	 * @param color

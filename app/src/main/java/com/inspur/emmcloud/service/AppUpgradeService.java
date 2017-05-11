@@ -4,6 +4,7 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.Looper;
 
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
@@ -29,7 +30,7 @@ public class AppUpgradeService extends Service{
 		//是否人工检查是否有新版本，此时如果有更新一定要提示
 		boolean isManualCheck = intent.getBooleanExtra("isManualCheck",false);
 		if (NetUtils.isNetworkConnected(this, false)) {
-//			handler = new Handler(Looper.getMainLooper());
+			handler = new Handler(Looper.getMainLooper());
 			AppAPIService apiService = new AppAPIService(this);
 			apiService.setAPIInterface(new Webservice());
 			apiService.checkUpgrade(isManualCheck);
@@ -68,11 +69,11 @@ public class AppUpgradeService extends Service{
 		public void returnUpgradeFail(String error,boolean isManualCheck) {
 			// TODO Auto-generated method stub
 			if (isManualCheck){
-//				handler.post(new Runnable(){
-//					public void run(){
-//						ToastUtils.show(getApplicationContext(), R.string.check_update_fail);
-//					}
-//				});
+				handler.post(new Runnable(){
+					public void run(){
+						ToastUtils.show(getApplicationContext(), R.string.check_update_fail);
+					}
+				});
 			}
 			onDestroy();
 		}
@@ -91,7 +92,6 @@ public class AppUpgradeService extends Service{
 				}
 			});
 		}
-
 
 		if (upgradeCode != 0 && (isManualCheck || appNotUpdateTime== -1 || (System.currentTimeMillis()-appNotUpdateTime>notUpdateInterval))){
 			Intent intent = new Intent(this, AppUpgradeNotifyActivity.class);

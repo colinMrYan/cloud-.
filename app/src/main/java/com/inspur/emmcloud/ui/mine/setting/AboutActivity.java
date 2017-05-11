@@ -17,7 +17,7 @@ import com.inspur.emmcloud.util.ToastUtils;
 
 /**
  * 关于页面 com.inspur.emmcloud.ui.AboutActivity
- * 
+ *
  * @author Jason Chen; create at 2016年8月23日 下午2:53:14
  */
 public class AboutActivity extends BaseActivity {
@@ -41,37 +41,39 @@ public class AboutActivity extends BaseActivity {
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
 		switch (v.getId()) {
-		case R.id.back_layout:
-			finish();
-			break;
-		// case R.id.welcome_layout:
-		// ToastUtils.show(getApplicationContext(),
-		// R.string.function_not_implemented);
-		// break;
-		case R.id.newfun_layout:
-			Bundle bundle = new Bundle();
-			bundle.putString("from", "about");
-			IntentUtils.startActivity(AboutActivity.this, GuideActivity.class,
-					bundle);
-			break;
-		case R.id.protocol_layout:
-			IntentUtils.startActivity(AboutActivity.this,
-					ServiceTermActivity.class);
-			break;
-		case R.id.check_update_layout:
-			startUpgradeServcie();
-			break;
-		default:
-			break;
+			case R.id.back_layout:
+				finish();
+				break;
+			// case R.id.welcome_layout:
+			// ToastUtils.show(getApplicationContext(),
+			// R.string.function_not_implemented);
+			// break;
+			case R.id.newfun_layout:
+				Bundle bundle = new Bundle();
+				bundle.putString("from", "about");
+				IntentUtils.startActivity(AboutActivity.this, GuideActivity.class,
+						bundle);
+				break;
+			case R.id.protocol_layout:
+				IntentUtils.startActivity(AboutActivity.this,
+						ServiceTermActivity.class);
+				break;
+			case R.id.check_update_layout:
+				startUpgradeServcie();
+				break;
+			default:
+				break;
 		}
 	}
 
-	private void startUpgradeServcie(){
+	private void startUpgradeServcie() {
 		Intent intent = new Intent();
-		if (AppUtils.isServiceWork(this,"com.inspur.emmcloud.service.AppUpgradeService")){
-			intent.setClass(getApplicationContext(), AppUpgradeService.class);
-			stopService(intent);
-		}
+//		if (AppUtils.isServiceWork(this,"com.inspur.emmcloud.service.AppUpgradeService")){
+		intent.setClass(getApplicationContext(), AppUpgradeService.class);
+		intent.putExtra("isManualCheck", true);
+
+//			stopService(intent);
+//		}
 		startService(intent);
 
 	}
@@ -84,16 +86,16 @@ public class AboutActivity extends BaseActivity {
 			public void handleMessage(Message msg) {
 				// TODO Auto-generated method stub
 				switch (msg.what) {
-				case NO_NEED_UPGRADE:
-					ToastUtils.show(getApplicationContext(), R.string.app_is_lastest_version);
-					break;
-				case UPGRADE_FAIL:
-					ToastUtils.show(getApplicationContext(), R.string.check_update_fail);
-					break;
-				case DONOT_UPGRADE:
-					break;
-				default:
-					break;
+					case NO_NEED_UPGRADE:
+						ToastUtils.show(getApplicationContext(), R.string.app_is_lastest_version);
+						break;
+					case UPGRADE_FAIL:
+						ToastUtils.show(getApplicationContext(), R.string.check_update_fail);
+						break;
+					case DONOT_UPGRADE:
+						break;
+					default:
+						break;
 				}
 			}
 

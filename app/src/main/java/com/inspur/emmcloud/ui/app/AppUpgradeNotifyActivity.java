@@ -16,6 +16,7 @@ import com.inspur.emmcloud.bean.GetUpgradeResult;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
+import com.inspur.emmcloud.util.StateBarColor;
 import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.ToastUtils;
 import com.inspur.emmcloud.widget.WeakHandler;
@@ -58,6 +59,8 @@ public class AppUpgradeNotifyActivity extends BaseActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		StateBarColor.changeStateBarColor(this, R.color.white);
+		setContentView(R.layout.activity_app_upgrade_notify);
 		getUpgradeResult = (GetUpgradeResult)getIntent().getSerializableExtra("getUpgradeResult");
 		int updateType = getUpgradeResult.getUpgradeCode();
 		if (updateType == 1) {
@@ -228,7 +231,6 @@ public class AppUpgradeNotifyActivity extends BaseActivity {
 			params.setSaveFilePath(MyAppConfig.LOCAL_DOWNLOAD_PATH + "update.apk");
 			cancelable = x.http().get(params,
 					new Callback.ProgressCallback<File>() {
-
 						@Override
 						public void onCancelled(CancelledException arg0) {
 							// TODO Auto-generated method stub

@@ -352,7 +352,27 @@ public class LoginAPIService {
 		RequestParams params = ((MyApplication)context.getApplicationContext()).getHttpRequestParams(completeUrl);
 		params.setBodyContent(logInfo);
 		params.setAsJsonContent(true);
-		x.http().post(params, null);
+		x.http().post(params, new APICallback(context,completeUrl) {
+
+			@Override
+			public void callbackSuccess(String arg0) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void callbackFail(String error, int responseCode) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void callbackTokenExpire() {
+				// TODO Auto-generated method stub
+
+			}
+
+		});
 	}
 	
 	
@@ -410,7 +430,6 @@ public class LoginAPIService {
 	
 	/**
 	 * 通过短信验证码更新密码
-	 * @param userPhone
 	 * @param smsCode
 	 * @param newPwd
 	 */

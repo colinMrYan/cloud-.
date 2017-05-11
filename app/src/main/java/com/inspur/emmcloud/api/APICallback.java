@@ -51,20 +51,20 @@ public abstract class APICallback implements CommonCallback<String>{
 	@Override
 	public void onError(Throwable arg0, boolean arg1) {
 		// TODO Auto-generated method stub
-		String error = "";
-		int responseCode = -1;
-		//connect timed out
-		if (arg0 instanceof HttpException) {
-			HttpException httpEx = (HttpException) arg0;
-			error = httpEx.getResult();
-			responseCode = httpEx.getCode();
-		}
-		if (StringUtils.isBlank(error)) {
-			LogUtils.debug("HttpUtil","result=未知错误");
-		}else {
-			LogUtils.debug("HttpUtil","result="+arg0.toString());
-		}
 		 try {
+			 String error = "";
+			 int responseCode = -1;
+			 //connect timed out
+			 if (arg0 instanceof HttpException) {
+				 HttpException httpEx = (HttpException) arg0;
+				 error = httpEx.getResult();
+				 responseCode = httpEx.getCode();
+			 }
+			 if (StringUtils.isBlank(error)) {
+				 LogUtils.debug("HttpUtil","result=未知错误");
+			 }else {
+				 LogUtils.debug("HttpUtil","result="+arg0.toString());
+			 }
 			 if (responseCode ==  401) {
 					callbackTokenExpire();
 				}else {
