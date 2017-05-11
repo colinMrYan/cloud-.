@@ -39,6 +39,7 @@ import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.util.ChatCreateUtils;
 import com.inspur.emmcloud.util.ChatCreateUtils.OnCreateDirectChannelListener;
 import com.inspur.emmcloud.util.DensityUtil;
+import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.PreferencesByUserUtils;
 import com.inspur.emmcloud.util.StateBarColor;
@@ -93,6 +94,7 @@ public class NewsWebDetailActivity extends BaseActivity {
     private SwitchView nightModeSwitchBtn;
     private GradientDrawable lightChooseFontBtnBackgroundDrawable;
     private String newsId = "";
+    private String instruction  = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -232,6 +234,10 @@ public class NewsWebDetailActivity extends BaseActivity {
         }
         if(intent.hasExtra("news_id")){
             this.newsId = intent.getStringExtra("news_id");
+        }
+        if(intent.hasExtra("instruction")){
+            this.instruction  = intent.getStringExtra("instruction");
+            LogUtils.YfcDebug("有批示内容："+instruction);
         }
     }
 
@@ -425,11 +431,17 @@ public class NewsWebDetailActivity extends BaseActivity {
                 break;
             case R.id.app_news_share_btn:
                 shareNewsToFrinds();
+//                showHasInstruceionDialog();
                 break;
             case R.id.app_news_instructions_btn:
                 //批示逻辑
                 dialog.dismiss();
-                showInstruceionDialog();
+                if(StringUtils.isBlank(instruction)){
+                    showInstruceionDialog();
+                }else{
+                    showHasInstruceionDialog();
+                }
+
                 break;
             case R.id.app_news_font_normal_btn:
                 changeNewsFontSize(webSettings, MyAppWebConfig.SMALLER);
@@ -451,6 +463,34 @@ public class NewsWebDetailActivity extends BaseActivity {
                 break;
         }
 
+    }
+
+    /**
+     * 展示已经批示过的新闻
+     */
+    private void showHasInstruceionDialog() {
+        final Dialog hasIntrcutionDialog = new Dialog(NewsWebDetailActivity.this,
+                R.style.transparentFrameWindowStyle);
+        hasIntrcutionDialog.setCanceledOnTouchOutside(true);
+        View  view = getLayoutInflater().inflate(R.layout.app_news_has_instruction_dialog, null);
+        hasIntrcutionDialog.setContentView(view);
+        final EditText editText = (EditText) view.findViewById(R.id.news_instrcution_text);
+        editText.setFocusable(false);
+        editText.setEnabled(false);
+        editText.setText(instruction);
+        Button okBtn = (Button) view.findViewById(R.id.ok_btn);
+        okBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                hasIntrcutionDialog.dismiss();
+            }
+        });
+        Window window = hasIntrcutionDialog.getWindow();
+        WindowManager.LayoutParams wl = window.getAttributes();
+        wl.dimAmount = 0.31f;
+        hasIntrcutionDialog.getWindow().setAttributes(wl);
+        hasIntrcutionDialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+        hasIntrcutionDialog.show();
     }
 
     /**

@@ -1,6 +1,5 @@
 package com.inspur.emmcloud.bean;
 
-import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.StringUtils;
 
 import org.json.JSONObject;
@@ -23,6 +22,7 @@ public class GroupNews {
 	private String resource = "";
 	private String id = "";
 	private boolean hasExtraPermission = false;
+	private String editorComment = "";
 
 	public GroupNews(JSONObject jsonObject) {
 
@@ -66,6 +66,7 @@ public class GroupNews {
 			}
 			if(jsonObject.has("editorComment")){
 				if(!StringUtils.isBlank(jsonObject.getString("editorComment"))){
+					this.editorComment = jsonObject.getString("editorComment");
 					this.important = true;
 				}
 			}
@@ -114,6 +115,15 @@ public class GroupNews {
 	public String getTitle() {
 		return title;
 	}
+
+	public String getEditorComment() {
+		return editorComment;
+	}
+
+	public void setEditorComment(String editorComment) {
+		this.editorComment = editorComment;
+	}
+
 
 //	public String getUrl() {
 //		return url;

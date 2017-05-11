@@ -18,7 +18,6 @@ import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
 import com.inspur.emmcloud.bean.GetGroupNewsDetailResult;
 import com.inspur.emmcloud.bean.GroupNews;
-import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.TimeUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
@@ -140,6 +139,7 @@ public class GroupNewsCardFragment extends Fragment implements
 						+ groupnNewsList.get(position).getResource());
 				intent.putExtra("news_id",groupnNewsList.get(position).getId());
 				intent.putExtra("pager_title",pagerTitle);
+				intent.putExtra("instruction",groupnNewsList.get(position).getEditorComment());
 				intent.putExtra("hasExtraPermission",groupnNewsList.get(position).isHasExtraPermission());
 			} catch (Exception e) {
 				e.printStackTrace();
