@@ -68,7 +68,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -479,10 +478,6 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 			ChannelOperationCacheUtils.setChannelHide(getActivity(),
 					receivedMsg.getCid(), false);
 			displayChannelList.add(receiveMsgChannel);
-			// 当频道显示时先创建下群组头像
-			if (receiveMsgChannel.getType().equals("GROUP")) {
-				creatGroupIcon();
-			}
 		} else {
 			receiveMsgChannel.addReceivedNewMsg(receivedMsg);
 		}
