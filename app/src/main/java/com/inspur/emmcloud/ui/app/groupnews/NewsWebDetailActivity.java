@@ -40,6 +40,7 @@ import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.util.ChatCreateUtils;
 import com.inspur.emmcloud.util.ChatCreateUtils.OnCreateDirectChannelListener;
 import com.inspur.emmcloud.util.DensityUtil;
+import com.inspur.emmcloud.util.HtmlRegexpUtil;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.PreferencesByUserUtils;
 import com.inspur.emmcloud.util.StateBarColor;
@@ -496,6 +497,7 @@ public class NewsWebDetailActivity extends BaseActivity {
         final EditText editText = (EditText) view.findViewById(R.id.news_instrcution_text);
         editText.setFocusable(false);
         editText.setEnabled(false);
+        instruction = handleInstruction(instruction);
         editText.setText(instruction);
         Button okBtn = (Button) view.findViewById(R.id.ok_btn);
         okBtn.setOnClickListener(new View.OnClickListener() {
@@ -511,6 +513,18 @@ public class NewsWebDetailActivity extends BaseActivity {
         hasIntrcutionDialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
         hasIntrcutionDialog.show();
     }
+
+    /**
+     * 如果批示里含有html标签，需要处理，如果不含则没有影响
+     * @param instruction
+     * @return
+     */
+    private String handleInstruction(String instruction) {
+        instruction = instruction.replace("<(br|BR)\\\\s*/?>(\\\\s*</(br|BR)>)?","\n").replace(" ","");
+        instruction = HtmlRegexpUtil.filterHtml(instruction);
+        return instruction;
+    }
+
 
     /**
      * 展示审批
