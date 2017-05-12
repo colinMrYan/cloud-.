@@ -14,12 +14,12 @@ import org.json.JSONObject;
  * error：错误类型，与错误代码是一对多关系</br>
  * error_description：错误描述，服务端对错误的描述</br>
  */
-public class ErrorBean {
+public class ECMErrorBean {
 
 	private int errorCode = -1;
 	private String errorType = "";
 	private String errorDescription = "";
-	public ErrorBean(String response){
+	public ECMErrorBean(String response){
 		try {
 			JSONObject jsonObject = new JSONObject(response);
 			if(jsonObject.has("code")){
