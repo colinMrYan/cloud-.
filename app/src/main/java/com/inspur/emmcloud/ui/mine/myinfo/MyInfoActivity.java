@@ -1,22 +1,15 @@
 package com.inspur.emmcloud.ui.mine.myinfo;
 
-import java.util.ArrayList;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Message;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.inspur.imp.plugin.camera.imagepicker.ImagePicker;
-import com.inspur.imp.plugin.camera.imagepicker.bean.ImageItem;
-import com.inspur.imp.plugin.camera.imagepicker.ui.ImageGridActivity;
-import com.inspur.imp.plugin.camera.imagepicker.view.CropImageView;
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
@@ -34,44 +27,38 @@ import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
-import com.inspur.emmcloud.widget.dialogs.MyDialog;
+import com.inspur.imp.plugin.camera.imagepicker.ImagePicker;
+import com.inspur.imp.plugin.camera.imagepicker.bean.ImageItem;
+import com.inspur.imp.plugin.camera.imagepicker.ui.ImageGridActivity;
+import com.inspur.imp.plugin.camera.imagepicker.view.CropImageView;
+
+import java.util.ArrayList;
 
 
 public class MyInfoActivity extends BaseActivity {
 
-	private static final int RESULT_REQUEST_CODE = 2;
+	private static final int REQUEST_CODE_SELECT_IMG = 1;
 	private static final int UPDATE_MY_HEAD = 3;
 	private static final int USER_INFO_CHANGE = 10;
-	private static final int REQUEST_CODE_SELECT_IMG = 1;
-	private static final String IMAGE_FILE_NAME = "photoImage.jpg";
 
 	private ImageView userHeadImg;
-	private TextView userName;
-	private TextView userMail;
-	private TextView userPhone;
-	private TextView tenantName;
+	private TextView userNameText;
+	private TextView userMailText;
+	private TextView userPhoneText;
+	private TextView tenantNameText;
 
 	private MineAPIService apiService;
 	private LoadingDialog loadingDlg;
 
 	private RelativeLayout userHeadLayout;
 	private RelativeLayout userNameLayout;
-	private RelativeLayout userDepartLayout;
 	private RelativeLayout userMailLayout;
 	private RelativeLayout userPhoneLayout;
-	private RelativeLayout userSexLayout;
-	private RelativeLayout userCodeLayout;
 	private RelativeLayout userCompanyLayout;
 	private RelativeLayout backLayout;
 	private RelativeLayout modifyLayout;
 	private RelativeLayout resetLayout;
-	private boolean isHasSdcard;
-
-	private MyDialog myDialog;
-	private TextView camaralText, galleryText;
-
 	private String photoLocalPath;
-
 	private ImageDisplayUtils imageDisplayUtils;
 	private GetMyInfoResult getMyInfoResult;
 
@@ -91,90 +78,52 @@ public class MyInfoActivity extends BaseActivity {
 		getMyInfoResult = (GetMyInfoResult) getIntent().getExtras()
 				.getSerializable("getMyInfoResult");
 		userHeadImg = (ImageView) findViewById(R.id.myinfo_userheadimg_img);
-		userName = (TextView) findViewById(R.id.myinfo_username_text);
-		userMail = (TextView) findViewById(R.id.myinfo_usermail_text);
-		userPhone = (TextView) findViewById(R.id.myinfo_userphone_text);
-		tenantName = (TextView) findViewById(R.id.myinfo_usercompanytext_text);
+		userNameText = (TextView) findViewById(R.id.myinfo_username_text);
+		userMailText = (TextView) findViewById(R.id.myinfo_usermail_text);
+		userPhoneText = (TextView) findViewById(R.id.myinfo_userphone_text);
+		tenantNameText = (TextView) findViewById(R.id.myinfo_usercompanytext_text);
 		loadingDlg = new LoadingDialog(this);
-
-		myDialog = new MyDialog(MyInfoActivity.this,
-				R.layout.dialog_modify_portrait, R.style.userhead_dialog_bg);
 		userHeadLayout = (RelativeLayout) findViewById(R.id.myinfo_userhead_layout);
-		userHeadLayout.setOnClickListener(new OnMoreClickItemListener());
 		userNameLayout = (RelativeLayout) findViewById(R.id.myinfo_username_layout);
-		userNameLayout.setOnClickListener(new OnMoreClickItemListener());
-		userDepartLayout = (RelativeLayout) findViewById(R.id.myinfo_userdepart_layout);
-		userDepartLayout.setOnClickListener(new OnMoreClickItemListener());
 		userMailLayout = (RelativeLayout) findViewById(R.id.myinfo_usermail_layout);
-		userMailLayout.setOnClickListener(new OnMoreClickItemListener());
 		userPhoneLayout = (RelativeLayout) findViewById(R.id.myinfo_userphone_layout);
-		userPhoneLayout.setOnClickListener(new OnMoreClickItemListener());
-		userSexLayout = (RelativeLayout) findViewById(R.id.myinfo_usersex_layout);
-		userSexLayout.setOnClickListener(new OnMoreClickItemListener());
-		userCodeLayout = (RelativeLayout) findViewById(R.id.myinfo_usercode_layout);
-		userCodeLayout.setOnClickListener(new OnMoreClickItemListener());
 		userCompanyLayout = (RelativeLayout) findViewById(R.id.myinfo_usercompany_layout);
-		userCompanyLayout.setOnClickListener(new OnMoreClickItemListener());
 		backLayout = (RelativeLayout) findViewById(R.id.back_layout);
-		backLayout.setOnClickListener(new OnMoreClickItemListener());
 		modifyLayout = (RelativeLayout) findViewById(R.id.myinfo_modifypsd_layout);
-		modifyLayout.setOnClickListener(new OnMoreClickItemListener());
 		resetLayout = (RelativeLayout) findViewById(R.id.myinfo_reset_layout);
-		resetLayout.setOnClickListener(new OnMoreClickItemListener());
 		imageDisplayUtils = new ImageDisplayUtils(getApplicationContext(),
 				R.drawable.icon_photo_default);
 		apiService = new MineAPIService(MyInfoActivity.this);
 		apiService.setAPIInterface(new WebService());
 		//这里手机号格式的正确性由服务端保证，客户端只关心是否为空
-		if(StringUtils.isBlank(getMyInfoResult.getPhoneNumber())){
+		if (StringUtils.isBlank(getMyInfoResult.getPhoneNumber())) {
 			resetLayout.setVisibility(View.GONE);
 		}
 	}
 
-	/** 显示个人信息数据 **/
+	/**
+	 * 显示个人信息数据
+	 **/
 	private void showMyInfo() {
 		if (getMyInfoResult != null) {
-			// String inspurId = getMyInfoResult.getOldId();
 			String photoUri = UriUtils
 					.getChannelImgUri(getMyInfoResult.getID());
 			imageDisplayUtils.display(userHeadImg, photoUri);
-
-			if (!getMyInfoResult.getName().equals("null")) {
-				userName.setText(getMyInfoResult.getName());
-			} else {
-				userName.setText(getString(R.string.not_set));
-			}
-
-			if (!getMyInfoResult.getMail().equals("null")) {
-				userMail.setText(getMyInfoResult.getMail());
-			} else {
-				userMail.setText(getString(R.string.not_set));
-			}
-
-			if (!getMyInfoResult.getPhoneNumber().equals("null")
-					&& !getMyInfoResult.getPhoneNumber().equals("")) {
-				userPhone.setText(getMyInfoResult.getPhoneNumber());
-			} else {
-				userPhone.setText(getString(R.string.not_set));
-			}
-
-			// if (!getMyInfoResult.getTenantName().equals("null")) {
-			// tenantName.setText(getMyInfoResult.getTenantName());
-			// } else {
-			tenantName.setText(getMyInfoResult.getEnterpriseName());
-			// }
+			String userName = getMyInfoResult.getName();
+			userNameText.setText(userName.equals("null") ? getString(R.string.not_set) : userName);
+			String mail = getMyInfoResult.getMail();
+			userMailText.setText(mail.equals("null") ? getString(R.string.not_set) : mail);
+			String phoneNumber = getMyInfoResult.getPhoneNumber();
+			userPhoneText.setText(phoneNumber.equals("null") ? getString(R.string.not_set) : phoneNumber);
+			tenantNameText.setText(getMyInfoResult.getEnterpriseName());
 		}
 
 	}
 
-	class OnMoreClickItemListener implements OnClickListener {
 
-		Intent intentModify = new Intent();
-
-		@Override
-		public void onClick(View v) {
-			// TODO Auto-generated method stub
-			switch (v.getId()) {
+	public void onClick(View v) {
+		// TODO Auto-generated method stub
+		switch (v.getId()) {
 			case R.id.myinfo_userhead_layout:
 				if (Environment.getExternalStorageState().equals(
 						Environment.MEDIA_MOUNTED)) {
@@ -197,17 +146,45 @@ public class MyInfoActivity extends BaseActivity {
 						ModifyUserPsdActivity.class);
 				break;
 			case R.id.myinfo_reset_layout:
-					Bundle bundle = new Bundle();
-					bundle.putString("phoneNum", getMyInfoResult.getPhoneNumber());
-					IntentUtils.startActivity(MyInfoActivity.this,
-							ModifyUserPwdBySMSActivity.class,bundle);
+				Bundle bundle = new Bundle();
+				bundle.putString("phoneNum", getMyInfoResult.getPhoneNumber());
+				IntentUtils.startActivity(MyInfoActivity.this,
+						ModifyUserPwdBySMSActivity.class, bundle);
 				break;
 			default:
 				break;
+		}
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode,
+									Intent intent) {
+		if (resultCode == RESULT_OK && requestCode == USER_INFO_CHANGE) {
+			String userName = intent.getExtras().getString("newname", "");
+			userMailText.setText(userName);
+		} else if (resultCode == ImagePicker.RESULT_CODE_ITEMS) {
+			if (intent != null && requestCode == REQUEST_CODE_SELECT_IMG) {
+				ArrayList<ImageItem> imageItemList = (ArrayList<ImageItem>) intent
+						.getSerializableExtra(ImagePicker.EXTRA_RESULT_ITEMS);
+				uploadUserHead(imageItemList.get(0).path);
 			}
 		}
-
 	}
+
+	/**
+	 * 上传用户头像
+	 *
+	 * @param
+	 */
+	private void uploadUserHead(String photoPath) {
+		// TODO Auto-generated method stub
+		if (NetUtils.isNetworkConnected(getApplicationContext())) {
+			loadingDlg.show();
+			photoLocalPath = photoPath;
+			apiService.updateUserHead(photoPath);
+		}
+	}
+
 
 	/**
 	 * 初始化图片选择控件
@@ -258,46 +235,4 @@ public class MyInfoActivity extends BaseActivity {
 		}
 
 	}
-
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode,
-			Intent intent) {
-		if (resultCode == RESULT_OK && requestCode == USER_INFO_CHANGE) {
-			String userNametext = null;
-			if (intent != null) {
-				userNametext = intent.getStringExtra("newname");
-			}
-			userName.setText(userNametext);
-		} else if (resultCode == ImagePicker.RESULT_CODE_ITEMS) {
-			if (intent != null && requestCode == REQUEST_CODE_SELECT_IMG) {
-				ArrayList<ImageItem> imageItemList = (ArrayList<ImageItem>) intent
-						.getSerializableExtra(ImagePicker.EXTRA_RESULT_ITEMS);
-				String photoPath = imageItemList.get(0).path;
-				uploadUserHead(photoPath);
-			}
-		}
-	}
-
-	/**
-	 * 上传用户头像
-	 * 
-	 * @param
-	 */
-	private void uploadUserHead(String photoPath) {
-		// TODO Auto-generated method stub
-		if (NetUtils.isNetworkConnected(getApplicationContext())) {
-			 loadingDlg.show();
-			 photoLocalPath = photoPath;
-			 apiService.updateUserHead(photoPath);
-		}
-	}
-
-
-	@Override
-	protected void onDestroy() {
-		// TODO Auto-generated method stub
-
-		super.onDestroy();
-	}
-
 }

@@ -69,6 +69,7 @@
                 android:id="@+id/myinfo_userhead_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:onClick="onClick"
                 android:background="@drawable/text_layout_selector"
                 android:paddingLeft="12dp" >
 
@@ -483,6 +484,7 @@
             android:id="@+id/myinfo_modifypsd_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:onClick="onClick"
             android:background="@drawable/text_layout_selector"
             android:paddingBottom="10dp"
             android:paddingLeft="12dp"
@@ -545,6 +547,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:visibility="visible"
+            android:onClick="onClick"
             android:background="@drawable/text_layout_selector"
             android:paddingBottom="10dp"
             android:paddingLeft="12dp"
