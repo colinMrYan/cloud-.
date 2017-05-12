@@ -260,6 +260,14 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
 
                     if(!canEdit){
                         App app = appGroupItemList.get(position);
+                        //可以再定具体出现的时机和是否需要对用户进行提示
+//                        if(app.getAppID().equals("1e169160-0e1f-11e7-8c5c-15b1be8e5981")){
+//                            ShortCutUtils.createShortCut(getActivity(),ImpActivity.class,app.getAppName(),app.getUri(),"ecc-app-web",R.drawable.icon_shortcut_register);
+//                            /*为了ReactNative应用创建的*/
+////                            ShortCutUtils.createShortCut(getActivity(),ReactNativeAppActivity.class,app.getAppName(),app.getUri(),"ecc-app-react-native",R.drawable.ic_launcher);
+//                        }
+//                        if(app.getAppID().equals("inspur_news_esg")){
+//                        }
                         UriUtils.openApp(getActivity(), app);
                         if(getNeedCommonlyUseApp()){
 //                            saveOrChangeCommonlyUseApp(app, appAdapterList);
@@ -273,8 +281,7 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
                 @Override
                 public boolean onItemLongClick(AdapterView<?> parent,
                                                View view, int position, long id) {
-//                    App app = appGroupItemList.get(position);
-//                    ShortCutUtils.createShortCut(getActivity(),ReactNativeAppActivity.class,app.getAppName(),app.getInstallUri(),"ecc-app-react-native");
+
                     if(!canEdit){
                         appListAdapter.setCanEdit(true);
                         appListAdapter.notifyDataSetChanged();

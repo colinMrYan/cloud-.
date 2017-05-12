@@ -9,6 +9,7 @@ import android.database.Cursor;
 import android.net.Uri;
 
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.ui.app.groupnews.GroupNewsActivity;
 
 /**
  * Created by yufuchang on 2017/3/30.
@@ -20,8 +21,11 @@ public class ShortCutUtils {
      * @param contxt
      * @param clz
      */
-    public static void createShortCut(Context contxt,Class clz,String shortCutName,String appPathOrUri,String type) {
+    public static void createShortCut(Context contxt,Class clz,String shortCutName,String appPathOrUri,String type,int icon) {
         //String applicationName=getApplicationName(contxt);
+        if(icon == 0){
+            icon = R.drawable.ic_launcher;
+        }
         String applicationName = shortCutName;//程序名称，不是packageName
         if (isInstallShortcut(contxt,applicationName)) {// 如果已经创建了一次就不会再创建了
             return;
@@ -39,13 +43,17 @@ public class ShortCutUtils {
 //            intentTodo.putExtra("ecc-app-react-native",appPathOrUri);
 //            intentTodo.setClass(contxt, ReactNativeAppActivity.class);
             sIntent.putExtra("ecc-app-react-native",appPathOrUri);
+        }else if(type.equals("ecc-app-web")){
+            sIntent.putExtra("uri",appPathOrUri);
+        }else if(type.equals("ecc-app-native")){
+            sIntent.setClass(contxt, GroupNewsActivity.class);
         }
         installer.putExtra(Intent.EXTRA_SHORTCUT_INTENT,intentTodo);
         installer.putExtra("android.intent.extra.shortcut.INTENT", sIntent);
         //设置应用的名称
         installer.putExtra("android.intent.extra.shortcut.NAME", applicationName);
         //设置图标
-        installer.putExtra("android.intent.extra.shortcut.ICON_RESOURCE", Intent.ShortcutIconResource.fromContext(contxt, R.drawable.ic_launcher));
+        installer.putExtra("android.intent.extra.shortcut.ICON_RESOURCE", Intent.ShortcutIconResource.fromContext(contxt, icon));
         installer.setAction("com.android.launcher.action.INSTALL_SHORTCUT");
         contxt.sendBroadcast(installer);//发送安装桌面图标的通知
     }
