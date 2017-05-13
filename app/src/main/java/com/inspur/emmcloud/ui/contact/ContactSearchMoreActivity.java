@@ -31,9 +31,8 @@ import com.inspur.emmcloud.bean.ChannelGroup;
 import com.inspur.emmcloud.bean.Contact;
 import com.inspur.emmcloud.bean.FirstGroupTextModel;
 import com.inspur.emmcloud.bean.SearchModel;
-import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.ui.chat.ChannelActivity;
-import com.inspur.emmcloud.ui.chat.ChannelInfoActivity;
+import com.inspur.emmcloud.ui.chat.DisplayChannelGroupIcon;
 import com.inspur.emmcloud.util.ChannelCacheUtils;
 import com.inspur.emmcloud.util.ChannelGroupCacheUtils;
 import com.inspur.emmcloud.util.CommonContactCacheUtils;
@@ -44,8 +43,7 @@ import com.inspur.emmcloud.util.ImageDisplayUtils;
 import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.ToastUtils;
-import com.inspur.emmcloud.util.UriUtils;
-import com.inspur.emmcloud.widget.CircleImageView;
+import com.inspur.emmcloud.widget.CircleFrameLayout;
 import com.inspur.emmcloud.widget.FlowLayout;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.MaxHightScrollView;
@@ -54,7 +52,6 @@ import com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout;
 import com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout.OnRefreshListener;
 import com.inspur.emmcloud.widget.pullableview.PullableListView;
 
-import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -447,9 +444,9 @@ public class ContactSearchMoreActivity extends BaseActivity implements OnRefresh
 						R.layout.member_search_item_view, null);
 				viewHolder.nameText = (TextView) convertView
 						.findViewById(R.id.name_text);
-				viewHolder.photoImg = (CircleImageView) convertView
-						.findViewById(R.id.photo_img);
-				viewHolder.photoImg.setVisibility(View.VISIBLE);
+				viewHolder.channelPhotoLayout =  (CircleFrameLayout) convertView
+						.findViewById(R.id.photo_layout);
+				viewHolder.channelPhotoLayout.setVisibility(View.VISIBLE);
 				viewHolder.selectedImg = (ImageView) convertView
 						.findViewById(R.id.selected_img);
 				convertView.setTag(viewHolder);
@@ -471,8 +468,7 @@ public class ContactSearchMoreActivity extends BaseActivity implements OnRefresh
 				searchModel = new SearchModel(contact);
 
 			}
-			displayImg(searchModel, viewHolder.photoImg);
-			checkInfo(viewHolder.photoImg, searchModel);
+			displayImg(searchModel, viewHolder.channelPhotoLayout);
 			viewHolder.nameText.setText(searchModel.getCompleteName(getApplicationContext()));
 			if (selectMemList.contains(searchModel)) {
 				viewHolder.selectedImg.setVisibility(View.VISIBLE);
@@ -488,87 +484,82 @@ public class ContactSearchMoreActivity extends BaseActivity implements OnRefresh
 
 	/**
 	 * 统一显示图片
-	 * 
 	 * @param searchModel
-	 * @param photoImg
+	 * @param photoLayout
 	 */
-	private void displayImg(SearchModel searchModel, CircleImageView photoImg) {
+	private void displayImg(SearchModel searchModel, CircleFrameLayout photoLayout) {
 		String icon = searchModel.getIcon();
 		String type = searchModel.getType();
 		if (type.equals("STRUCT")) {
-			photoImg.setImageResource(R.drawable.icon_channel_group_default);
+			photoLayout.setBackgroundResource(R.drawable.icon_channel_group_default);
 			return;
 		}
-		int defaultIcon = -1;
 		if (type.equals("GROUP")) {
-			File file = new File(MyAppConfig.LOCAL_CACHE_PATH, UriUtils.tanent+searchModel.getId() + "_100.png");
-			if (file.exists()) {
-				icon = "file://" + file.getAbsolutePath();
-			}
-			defaultIcon = R.drawable.icon_channel_group_default;
+			DisplayChannelGroupIcon.show(ContactSearchMoreActivity.this,searchModel.getId(),photoLayout);
 		} else {
-			defaultIcon = R.drawable.icon_person_default;
+			View channelPhotoView = LayoutInflater.from(ContactSearchMoreActivity.this).inflate(R.layout.chat_msg_session_photo_one, null);
+			ImageView photoImg = (ImageView) channelPhotoView.findViewById(R.id.photo_img1);
+			int defaultIcon = R.drawable.icon_person_default;
 			if (searchModel.getId().equals("null")) {
-				photoImg.setImageResource(defaultIcon);
+				photoLayout.setBackgroundResource(defaultIcon);
 				return;
 			}
+			new ImageDisplayUtils(getApplicationContext(), defaultIcon).display(
+					photoImg, icon);
+			photoLayout.addView(channelPhotoView);
 		}
-		new ImageDisplayUtils(getApplicationContext(), defaultIcon).display(
-				photoImg, icon);
-		// TODO Auto-generated method stub
 	}
 
-	/**
-	 * 查看信息
-	 * 
-	 * @param searchModel
-	 */
-	private void checkInfo(CircleImageView photoImg,
-			final SearchModel searchModel) {
-		// TODO Auto-generated method stub
-		photoImg.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				Intent intent = new Intent();
-				String id = searchModel.getId();
-				String type = searchModel.getType();
-				if (type.equals("STRUCT")) {
-					return;
-				}
-				if (id.equals("null")) {
-					ToastUtils.show(getApplicationContext(), getString(R.string.cannot_view_info));
-					return;
-				}
-				CommonContactCacheUtils.saveCommonContact(
-						getApplicationContext(), searchModel);
-				if (type.equals("USER")) {
-					intent.putExtra("uid", id);
-					intent.setClass(getApplicationContext(),
-							UserInfoActivity.class);
-					startActivity(intent);
-				} else if (type.equals("DIRECT")) {
-					intent.putExtra("cid", id);
-					intent.setClass(getApplicationContext(),
-							UserInfoActivity.class);
-					startActivity(intent);
-				} else if (type.equals("GROUP")) {
-					intent.putExtra("cid", id);
-					intent.setClass(getApplicationContext(),
-							ChannelInfoActivity.class);
-					startActivity(intent);
-				}
-
-			}
-		});
-
-	}
+//	/**
+//	 * 查看信息
+//	 *
+//	 * @param searchModel
+//	 */
+//	private void checkInfo(CircleImageView photoImg,
+//			final SearchModel searchModel) {
+//		// TODO Auto-generated method stub
+//		photoImg.setOnClickListener(new OnClickListener() {
+//
+//			@Override
+//			public void onClick(View v) {
+//				// TODO Auto-generated method stub
+//				Intent intent = new Intent();
+//				String id = searchModel.getId();
+//				String type = searchModel.getType();
+//				if (type.equals("STRUCT")) {
+//					return;
+//				}
+//				if (id.equals("null")) {
+//					ToastUtils.show(getApplicationContext(), getString(R.string.cannot_view_info));
+//					return;
+//				}
+//				CommonContactCacheUtils.saveCommonContact(
+//						getApplicationContext(), searchModel);
+//				if (type.equals("USER")) {
+//					intent.putExtra("uid", id);
+//					intent.setClass(getApplicationContext(),
+//							UserInfoActivity.class);
+//					startActivity(intent);
+//				} else if (type.equals("DIRECT")) {
+//					intent.putExtra("cid", id);
+//					intent.setClass(getApplicationContext(),
+//							UserInfoActivity.class);
+//					startActivity(intent);
+//				} else if (type.equals("GROUP")) {
+//					intent.putExtra("cid", id);
+//					intent.setClass(getApplicationContext(),
+//							ChannelInfoActivity.class);
+//					startActivity(intent);
+//				}
+//
+//			}
+//		});
+//
+//	}
 
 	public static class ViewHolder {
 		TextView nameText;
-		CircleImageView photoImg;
-		ImageView rightArrowImg;
+		CircleFrameLayout channelPhotoLayout;
 		ImageView selectedImg;
 	}
 

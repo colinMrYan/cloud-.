@@ -35,8 +35,8 @@ import com.inspur.emmcloud.bean.Contact;
 import com.inspur.emmcloud.bean.FirstGroupTextModel;
 import com.inspur.emmcloud.bean.GetCreateSingleChannelResult;
 import com.inspur.emmcloud.bean.SearchModel;
-import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.ui.chat.ChannelActivity;
+import com.inspur.emmcloud.ui.chat.DisplayChannelGroupIcon;
 import com.inspur.emmcloud.util.ChannelCacheUtils;
 import com.inspur.emmcloud.util.ChannelGroupCacheUtils;
 import com.inspur.emmcloud.util.ChatCreateUtils;
@@ -51,8 +51,7 @@ import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.ToastUtils;
-import com.inspur.emmcloud.util.UriUtils;
-import com.inspur.emmcloud.widget.CircleImageView;
+import com.inspur.emmcloud.widget.CircleFrameLayout;
 import com.inspur.emmcloud.widget.FlowLayout;
 import com.inspur.emmcloud.widget.MaxHightScrollView;
 import com.inspur.emmcloud.widget.NoHorScrollView;
@@ -62,7 +61,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -529,6 +527,11 @@ public class ContactSearchActivity extends BaseActivity {
 		public void onTextChanged(CharSequence s, int start, int before,
 								  int count) {
 			// TODO Auto-generated method stub
+		}
+
+		@Override
+		public void afterTextChanged(Editable s) {
+			// TODO Auto-generated method stub
 			final String searchText = searchEdit.getText().toString().trim();
 			if (!StringUtils.isBlank(searchText)) {
 				if (popLayout.getVisibility() == View.GONE) {
@@ -582,12 +585,6 @@ public class ContactSearchActivity extends BaseActivity {
 			} else {
 				hideSearchPop();
 			}
-		}
-
-		@Override
-		public void afterTextChanged(Editable s) {
-			// TODO Auto-generated method stub
-
 		}
 
 	}
@@ -1027,9 +1024,6 @@ public class ContactSearchActivity extends BaseActivity {
 						R.layout.member_search_item_view, null);
 				viewHolder.nameText = (TextView) convertView
 						.findViewById(R.id.name_text);
-				viewHolder.photoImg = (CircleImageView) convertView
-						.findViewById(R.id.photo_img);
-				viewHolder.photoImg.setVisibility(View.VISIBLE);
 				viewHolder.rightArrowImg = (ImageView) convertView
 						.findViewById(R.id.arrow_img);
 				viewHolder.selectedImg = (ImageView) convertView
@@ -1038,6 +1032,9 @@ public class ContactSearchActivity extends BaseActivity {
 			} else {
 				viewHolder = (ViewHolder) convertView.getTag();
 			}
+			CircleFrameLayout channelPhotoLayout = (CircleFrameLayout) convertView
+					.findViewById(R.id.photo_layout);
+			channelPhotoLayout.setVisibility(View.VISIBLE);
 			SearchModel searchModel = null;
 			if (orginCurrentArea == SEARCH_CONTACT)
 
@@ -1060,7 +1057,7 @@ public class ContactSearchActivity extends BaseActivity {
 
 			}
 			if (searchModel != null) {
-				displayImg(searchModel, viewHolder.photoImg);
+				displayImg(searchModel, channelPhotoLayout);
 			}
 			if (searchModel != null && selectMemList.contains(searchModel)) {
 				viewHolder.selectedImg.setVisibility(View.VISIBLE);
@@ -1111,19 +1108,19 @@ public class ContactSearchActivity extends BaseActivity {
 						R.layout.member_search_item_view, null);
 				viewHolder.nameText = (TextView) convertView
 						.findViewById(R.id.name_text);
-				viewHolder.photoImg = (CircleImageView) convertView
-						.findViewById(R.id.photo_img);
-				viewHolder.photoImg.setVisibility(View.VISIBLE);
 				viewHolder.selectedImg = (ImageView) convertView
 						.findViewById(R.id.selected_img);
 				convertView.setTag(viewHolder);
 			} else {
 				viewHolder = (ViewHolder) convertView.getTag();
 			}
+			CircleFrameLayout channelPhotoLayout = (CircleFrameLayout) convertView
+					.findViewById(R.id.photo_layout);
+			channelPhotoLayout.setVisibility(View.VISIBLE);
 			SearchModel searchModel = commonContactList.get(position);
 			viewHolder.nameText.setText(searchModel
 					.getCompleteName(getApplicationContext()));
-			displayImg(searchModel, viewHolder.photoImg);
+			displayImg(searchModel, channelPhotoLayout);
 			if (selectMemList.contains(searchModel)) {
 				viewHolder.selectedImg.setVisibility(View.VISIBLE);
 				viewHolder.nameText.setTextColor(Color.parseColor("#0f7bca"));
@@ -1138,7 +1135,7 @@ public class ContactSearchActivity extends BaseActivity {
 
 	public static class ViewHolder {
 		TextView nameText;
-		CircleImageView photoImg;
+//		CircleImageView photoImg;
 		ImageView rightArrowImg;
 		ImageView selectedImg;
 	}
@@ -1203,15 +1200,15 @@ public class ContactSearchActivity extends BaseActivity {
 						R.layout.member_search_item_view, null);
 				viewHolder.nameText = (TextView) convertView
 						.findViewById(R.id.name_text);
-				viewHolder.photoImg = (CircleImageView) convertView
-						.findViewById(R.id.photo_img);
-				viewHolder.photoImg.setVisibility(View.VISIBLE);
 				viewHolder.selectedImg = (ImageView) convertView
 						.findViewById(R.id.selected_img);
 				convertView.setTag(viewHolder);
 			} else {
 				viewHolder = (ViewHolder) convertView.getTag();
 			}
+			CircleFrameLayout channelPhotoLayout = (CircleFrameLayout) convertView
+					.findViewById(R.id.photo_layout);
+			channelPhotoLayout.setVisibility(View.VISIBLE);
 			convertView.setBackgroundColor(Color.parseColor("#F4F4F4"));
 			SearchModel searchModel = null;
 			if (groupPosition == 2) {
@@ -1242,7 +1239,7 @@ public class ContactSearchActivity extends BaseActivity {
 				searchModel = new SearchModel(contact);
 
 			}
-			displayImg(searchModel, viewHolder.photoImg);
+			displayImg(searchModel, channelPhotoLayout);
 			viewHolder.nameText.setText(searchModel
 					.getCompleteName(getApplicationContext()));
 			if (selectMemList.contains(searchModel)) {
@@ -1402,35 +1399,31 @@ public class ContactSearchActivity extends BaseActivity {
 
 	/**
 	 * 统一显示图片
-	 *
 	 * @param searchModel
-	 * @param photoImg
+	 * @param photoLayout
 	 */
-	private void displayImg(SearchModel searchModel, CircleImageView photoImg) {
+	private void displayImg(SearchModel searchModel, CircleFrameLayout photoLayout) {
 		String icon = searchModel.getIcon();
 		String type = searchModel.getType();
 		if (type.equals("STRUCT")) {
-			photoImg.setImageResource(R.drawable.icon_channel_group_default);
+			photoLayout.setBackgroundResource(R.drawable.icon_channel_group_default);
 			return;
 		}
-		int defaultIcon = -1;
 		if (type.equals("GROUP")) {
-			File file = new File(MyAppConfig.LOCAL_CACHE_PATH, UriUtils.tanent
-					+ searchModel.getId() + "_100.png1");
-			if (file.exists()) {
-				icon = "file://" + file.getAbsolutePath();
-			}
-			defaultIcon = R.drawable.icon_channel_group_default;
+			DisplayChannelGroupIcon.show(ContactSearchActivity.this,searchModel.getId(),photoLayout);
 		} else {
-			defaultIcon = R.drawable.icon_person_default;
+			View channelPhotoView = LayoutInflater.from(ContactSearchActivity.this).inflate(R.layout.chat_msg_session_photo_one, null);
+			ImageView photoImg = (ImageView) channelPhotoView.findViewById(R.id.photo_img1);
+			int defaultIcon = R.drawable.icon_person_default;
 			if (searchModel.getId().equals("null")) {
-				photoImg.setImageResource(defaultIcon);
+				photoLayout.setBackgroundResource(defaultIcon);
 				return;
 			}
+			new ImageDisplayUtils(getApplicationContext(), defaultIcon).display(
+					photoImg, icon);
+			photoLayout.addView(channelPhotoView);
 		}
-		new ImageDisplayUtils(getApplicationContext(), defaultIcon).display(
-				photoImg, icon);
-		// TODO Auto-generated method stub
+
 	}
 
 	/**

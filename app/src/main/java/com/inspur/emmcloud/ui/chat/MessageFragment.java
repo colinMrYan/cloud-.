@@ -55,7 +55,6 @@ import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.TimeUtils;
 import com.inspur.emmcloud.util.ToastUtils;
 import com.inspur.emmcloud.util.TransHtmlToTextUtils;
-import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.CircleFrameLayout;
 import com.inspur.emmcloud.widget.dialogs.MyDialog;
@@ -714,60 +713,12 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 			// TODO Auto-generated method stub
 			CircleFrameLayout channelPhotoLayout = (CircleFrameLayout) convertView
 					.findViewById(R.id.channel_photo_layout);
-			View channelPhotoView = null;
 			Integer defaultIcon = -1; // 默认显示图标
 			if (channel.getType().equals("GROUP")) {
-				defaultIcon = R.drawable.icon_person_default;
-				ChannelGroup channelGroup = ChannelGroupCacheUtils.getChannelGroupById(getActivity(), channel.getCid());
-				if (channelGroup != null) {
-					List<String> memberUidList = ChannelGroupCacheUtils.getMemberUidList(getActivity(), channel.getCid(), 4);
-					int groupNumSize = memberUidList.size();
-					if (groupNumSize == 1) {
-						channelPhotoView = LayoutInflater.from(getActivity()).inflate(R.layout.chat_msg_session_photo_one, null);
-						ImageView photoImg = (ImageView) channelPhotoView.findViewById(R.id.photo_img1);
-						new ImageDisplayUtils(getActivity(), defaultIcon).display(
-								photoImg, UriUtils.getChannelImgUri(memberUidList.get(0)));
-					} else if (groupNumSize == 2) {
-						channelPhotoView = LayoutInflater.from(getActivity()).inflate(R.layout.chat_msg_session_photo_two, null);
-						ImageView photoImg1 = (ImageView) channelPhotoView.findViewById(R.id.photo_img1);
-						ImageView photoImg2 = (ImageView) channelPhotoView.findViewById(R.id.photo_img2);
-						new ImageDisplayUtils(getActivity(), defaultIcon).display(
-								photoImg1, UriUtils.getChannelImgUri(memberUidList.get(0)));
-						new ImageDisplayUtils(getActivity(), defaultIcon).display(
-								photoImg2, UriUtils.getChannelImgUri(memberUidList.get(1)));
-					} else if (groupNumSize == 3) {
-						channelPhotoView = LayoutInflater.from(getActivity()).inflate(R.layout.chat_msg_session_photo_three, null);
-						ImageView photoImg1 = (ImageView) channelPhotoView.findViewById(R.id.photo_img1);
-						ImageView photoImg2 = (ImageView) channelPhotoView.findViewById(R.id.photo_img2);
-						ImageView photoImg3 = (ImageView) channelPhotoView.findViewById(R.id.photo_img3);
-						new ImageDisplayUtils(getActivity(), defaultIcon).display(
-								photoImg1, UriUtils.getChannelImgUri(memberUidList.get(0)));
-						new ImageDisplayUtils(getActivity(), defaultIcon).display(
-								photoImg2, UriUtils.getChannelImgUri(memberUidList.get(1)));
-						new ImageDisplayUtils(getActivity(), defaultIcon).display(
-								photoImg3, UriUtils.getChannelImgUri(memberUidList.get(2)));
-					} else if (groupNumSize == 4) {
-						channelPhotoView = LayoutInflater.from(getActivity()).inflate(R.layout.chat_msg_session_photo_four, null);
-						ImageView photoImg1 = (ImageView) channelPhotoView.findViewById(R.id.photo_img1);
-						ImageView photoImg2 = (ImageView) channelPhotoView.findViewById(R.id.photo_img2);
-						ImageView photoImg3 = (ImageView) channelPhotoView.findViewById(R.id.photo_img3);
-						ImageView photoImg4 = (ImageView) channelPhotoView.findViewById(R.id.photo_img4);
-						new ImageDisplayUtils(getActivity(), defaultIcon).display(
-								photoImg1, UriUtils.getChannelImgUri(memberUidList.get(0)));
-						new ImageDisplayUtils(getActivity(), defaultIcon).display(
-								photoImg2, UriUtils.getChannelImgUri(memberUidList.get(1)));
-						new ImageDisplayUtils(getActivity(), defaultIcon).display(
-								photoImg3, UriUtils.getChannelImgUri(memberUidList.get(2)));
-						new ImageDisplayUtils(getActivity(), defaultIcon).display(
-								photoImg4, UriUtils.getChannelImgUri(memberUidList.get(3)));
-					}
-				}else {
-					channelPhotoLayout.setBackgroundResource(R.drawable.icon_channel_group_default);
-				}
-
+				DisplayChannelGroupIcon.show(getActivity(),channel.getCid(),channelPhotoLayout);
 			} else {
 				String iconUrl = "";// Channel头像的uri
-				channelPhotoView = LayoutInflater.from(getActivity()).inflate(R.layout.chat_msg_session_photo_one, null);
+				View channelPhotoView = LayoutInflater.from(getActivity()).inflate(R.layout.chat_msg_session_photo_one, null);
 				ImageView photoImg = (ImageView) channelPhotoView.findViewById(R.id.photo_img1);
 				if (channel.getType().equals("DIRECT")) {
 					defaultIcon = R.drawable.icon_person_default;
@@ -783,8 +734,6 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 
 				new ImageDisplayUtils(getActivity(), defaultIcon).display(
 						photoImg, iconUrl);
-			}
-			if (channelPhotoView != null) {
 				channelPhotoLayout.addView(channelPhotoView);
 			}
 
