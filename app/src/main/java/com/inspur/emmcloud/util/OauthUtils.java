@@ -1,7 +1,5 @@
 package com.inspur.emmcloud.util;
 
-import java.util.List;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -13,6 +11,8 @@ import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.LoginAPIService;
 import com.inspur.emmcloud.bean.GetLoginResult;
 import com.inspur.emmcloud.ui.login.LoginActivity;
+
+import java.util.List;
 
 public class OauthUtils {
 	private OauthCallBack callBack;
@@ -51,6 +51,7 @@ public class OauthUtils {
 			PreferencesUtils.putInt(context, "keepAlive", keepAlive);
 			PreferencesUtils.putString(context, "tokenType", tokenType);
 			PreferencesUtils.putInt(context, "expiresIn", expiresIn);
+			PreferencesByUserUtils.putLong(context,"acccessTokenTime",System.currentTimeMillis());
 			((MyApplication)context.getApplicationContext()).setIsTokenRefreshing(false);
 			((MyApplication)context.getApplicationContext()).startWebSocket();
 			((MyApplication)context.getApplicationContext()).setAccessToken(accessToken);
