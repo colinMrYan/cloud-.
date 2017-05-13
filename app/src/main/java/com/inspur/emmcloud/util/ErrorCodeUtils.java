@@ -9,6 +9,9 @@ public class ErrorCodeUtils {
 
 	/**
 	 * 把错误代码转化为提示信息的方法
+	 * 处理Ecm错误码，如果Ecm增加了一种错误，
+	 * 需在此处添加一种错误码，
+	 * 并在国际化string.xml中添加相应文字资源
 	 * @param context
 	 * @param errorCode
 	 * @return
