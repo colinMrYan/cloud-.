@@ -282,10 +282,6 @@ public class ContactCacheUtils {
 							.or("code", "=", searchStr))
 					.limit(limit));
 			searchContactList.addAll(searchContactList1);
-			for (int i=0;i<searchContactList1.size();i++){
-				LogUtils.jasonDebug("searchContactList1=="+searchContactList1.get(i).getRealName());
-			}
-			LogUtils.jasonDebug("noInSql="+noInSql);
 			noInSql = getNoInSql(noInSql,searchContactList);
 			if (limit == -1 || searchContactList.size() < limit) {
 				searchStr = searchText + "%";
@@ -300,11 +296,6 @@ public class ContactCacheUtils {
 						.limit(limit-searchContactList.size()));
 				searchContactList.addAll(searchContactList.size(), searchContactList2);
 				noInSql = getNoInSql(noInSql,searchContactList);
-				for (int i=0;i<searchContactList2.size();i++){
-					LogUtils.jasonDebug("searchContactList2=="+searchContactList2.get(i).getRealName());
-				}
-				LogUtils.jasonDebug("size="+searchContactList.size());
-				LogUtils.jasonDebug("noInSql="+noInSql);
 			}
 
 			if (limit == -1 || searchContactList.size() < limit) {
@@ -319,11 +310,7 @@ public class ContactCacheUtils {
 						.and(WhereBuilder.b().expr("id not in" + noInSql))
 						.limit(limit-searchContactList.size()));
 				searchContactList.addAll(searchContactList.size(), searchContactList3);
-				for (int i=0;i<searchContactList3.size();i++){
-					LogUtils.jasonDebug("searchContactList3=="+searchContactList3.get(i).getRealName());
-				}
 				noInSql = getNoInSql(noInSql,searchContactList);
-				LogUtils.jasonDebug("noInSql="+noInSql);
 			}
 
 			if (limit == -1 || searchContactList.size() < limit) {
@@ -338,11 +325,7 @@ public class ContactCacheUtils {
 						.and(WhereBuilder.b().expr("id not in" +noInSql))
 						.limit(limit-searchContactList.size()));
 				searchContactList.addAll(searchContactList.size(), searchContactList4);
-				for (int i=0;i<searchContactList4.size();i++){
-					LogUtils.jasonDebug("searchContactList4=="+searchContactList4.get(i).getRealName());
-				}
 				noInSql = getNoInSql(noInSql,searchContactList);
-				LogUtils.jasonDebug("noInSql="+noInSql);
 			}
 
 			if (limit == -1 || searchContactList.size() < limit) {
@@ -364,13 +347,7 @@ public class ContactCacheUtils {
 						.and(WhereBuilder.b().expr("id not in" + noInSql))
 						.limit(limit-searchContactList.size()));
 				searchContactList.addAll(searchContactList.size(), searchContactList5);
-				for (int i=0;i<searchContactList5.size();i++){
-					LogUtils.jasonDebug("searchContactList5=="+searchContactList5.get(i).getRealName());
-				}
 			}
-			LogUtils.jasonDebug("size="+searchContactList.size());
-
-
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();

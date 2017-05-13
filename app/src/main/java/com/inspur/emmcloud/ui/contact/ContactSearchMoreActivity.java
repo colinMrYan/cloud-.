@@ -40,7 +40,6 @@ import com.inspur.emmcloud.util.ContactCacheUtils;
 import com.inspur.emmcloud.util.DensityUtil;
 import com.inspur.emmcloud.util.EditTextUtils;
 import com.inspur.emmcloud.util.ImageDisplayUtils;
-import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.ToastUtils;
 import com.inspur.emmcloud.widget.CircleFrameLayout;
@@ -332,55 +331,54 @@ public class ContactSearchMoreActivity extends BaseActivity implements OnRefresh
 		public void onTextChanged(CharSequence s, int start, int before,
 				int count) {
 			// TODO Auto-generated method stub
-			LogUtils.jasonDebug("onTextChanged==="+s);
-			searchText = searchEdit.getText().toString().trim();
-			searchListView.setCanPullUp(false);
-			pullToRefreshLayout.setVisibility(View.VISIBLE);
-			if (!StringUtils.isBlank(searchText)) {
-				switch (searchArea) {
-				case SEARCH_RECENT:
-					searchRecentList = ChannelCacheUtils.getSearchChannelList(
-							getApplicationContext(), searchText, searchContent);
-					if (searchRecentList.size() == 0) {
-						pullToRefreshLayout.setVisibility(View.GONE);
-					}
-					adapter.notifyDataSetChanged();
-					break;
-				case SEARCH_CHANNELGROUP:
-					searchChannelGroupList = ChannelGroupCacheUtils
-							.getSearchChannelGroupList(getApplicationContext(),
-									searchText);
-					if (searchChannelGroupList.size() == 0) {
-						pullToRefreshLayout.setVisibility(View.GONE);
-					}
-					adapter.notifyDataSetChanged();
-					break;
 
-				case SEARCH_CONTACT:
-					new Thread(new Runnable() {
-						@Override
-						public void run() {
-							searchContactList = ContactCacheUtils.getSearchContact(
-									getApplicationContext(), searchText,
-									null, 25);
-							handler.sendEmptyMessage(REFRESH_CONTACT_DATA);
-						}
-					}).start();
-					break;
-
-				default:
-					break;
-				}
-
-			} else {
-				returnSelectData();
-			}
 		}
 
 		@Override
 		public void afterTextChanged(Editable s) {
 			// TODO Auto-generated method stub
+			searchText = searchEdit.getText().toString().trim();
+			searchListView.setCanPullUp(false);
+			pullToRefreshLayout.setVisibility(View.VISIBLE);
+			if (!StringUtils.isBlank(searchText)) {
+				switch (searchArea) {
+					case SEARCH_RECENT:
+						searchRecentList = ChannelCacheUtils.getSearchChannelList(
+								getApplicationContext(), searchText, searchContent);
+						if (searchRecentList.size() == 0) {
+							pullToRefreshLayout.setVisibility(View.GONE);
+						}
+						adapter.notifyDataSetChanged();
+						break;
+					case SEARCH_CHANNELGROUP:
+						searchChannelGroupList = ChannelGroupCacheUtils
+								.getSearchChannelGroupList(getApplicationContext(),
+										searchText);
+						if (searchChannelGroupList.size() == 0) {
+							pullToRefreshLayout.setVisibility(View.GONE);
+						}
+						adapter.notifyDataSetChanged();
+						break;
 
+					case SEARCH_CONTACT:
+						new Thread(new Runnable() {
+							@Override
+							public void run() {
+								searchContactList = ContactCacheUtils.getSearchContact(
+										getApplicationContext(), searchText,
+										null, 25);
+								handler.sendEmptyMessage(REFRESH_CONTACT_DATA);
+							}
+						}).start();
+						break;
+
+					default:
+						break;
+				}
+
+			} else {
+				returnSelectData();
+			}
 		}
 
 	}
