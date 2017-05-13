@@ -110,9 +110,9 @@ public class ImpActivity extends ImpBaseActivity {
 				webView.reload();
 			}
 		});
-
 		webView.loadUrl(url, extraHeaders);
 		progressLayout.setVisibility(View.VISIBLE);
+
 	}
 
 	/**

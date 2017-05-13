@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
 import com.inspur.emmcloud.bean.AppRedirectResult;
+import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 
@@ -32,29 +33,58 @@ public class ImpWebViewClient extends WebViewClient {
 	private ImpWebView myWebView;
 	private String errolUrl = "file:///android_asset/error/error.html";
 	private LinearLayout loadFailLayout;
+	private Handler mHandler = null;
+	private Runnable runnable = null;
 
 	public ImpWebViewClient(LinearLayout loadFailLayout) {
 		this.loadFailLayout = loadFailLayout;
+		handMessage();
+		initRunnable();
 	}
 
-	private Handler mHandler = new Handler() {
+	private void handMessage(){
+		mHandler = new Handler(){
+			@Override
+			public void handleMessage(Message msg) {
+				switch (msg.what) {
+					case 1:
+						myWebView.reload();
+						break;
+					default:
+						break;
 
-		@Override
-		public void handleMessage(Message msg) {
-			super.handleMessage(msg);
-			switch (msg.what) {
-				case 1:
-					// 页面加载超时加载错误页面
-					if (myWebView.getProgress() < 100) {
-						myWebView.stopLoading();
-						onReceivedError(myWebView, -6,
-								"The connection to the server was unsuccessful.",
-								errolUrl);
-					}
+				}
 			}
-		}
+		};
+	}
 
-	};
+	private void initRunnable(){
+		runnable = new Runnable() {
+			@Override
+			public void run() {
+				mHandler.sendEmptyMessage(1);
+			}
+		} ;
+	}
+
+//	private Handler mHandler = new Handler() {
+//
+//		@Override
+//		public void handleMessage(Message msg) {
+//			super.handleMessage(msg);
+//			switch (msg.what) {
+//				case 1:
+//					// 页面加载超时加载错误页面
+//					if (myWebView.getProgress() < 100) {
+//						myWebView.stopLoading();
+//						onReceivedError(myWebView, -6,
+//								"The connection to the server was unsuccessful.",
+//								errolUrl);
+//					}
+//			}
+//		}
+//
+//	};
 
 	/*
 	 * 开始加载网页的操作
@@ -64,20 +94,9 @@ public class ImpWebViewClient extends WebViewClient {
 		super.onPageStarted(view, url, favicon);
 		urlparam = url;
 		myWebView = (ImpWebView) view;
-		// new Thread(new Runnable() {
-		// @Override
-		// public void run() {
-		// try {
-		// Thread.sleep(2000);
-		// } catch (InterruptedException e) {
-		// e.printStackTrace();
-		// }
-		// Message m = new Message();
-		// m.what = 1;
-		// mHandler.sendMessage(m);
-		// }
-		// }).start();
-
+		if (runnable != null && url.startsWith("http://baoxiao.inspur.com")){
+			mHandler.postDelayed(runnable,2000);
+		}
 	}
 
 	/*
@@ -85,6 +104,10 @@ public class ImpWebViewClient extends WebViewClient {
 	 */
 	@Override
 	public void onPageFinished(WebView view, String url) {
+		if (runnable != null){
+			mHandler.removeCallbacks(runnable);
+			runnable = null;
+		}
 		ImpWebView webview = (ImpWebView) view;
 		if (webview.destroyed || url.contains("error")) {
 			return;
@@ -105,6 +128,10 @@ public class ImpWebViewClient extends WebViewClient {
 	@Override
 	public void onReceivedError(WebView view, int errorCode,
 								String description, String failingUrl) {
+		if (runnable != null){
+			mHandler.removeCallbacks(runnable);
+			runnable = null;
+		}
 		loadFailLayout.setVisibility(View.VISIBLE);
 //		final ImpWebView webview = (ImpWebView) view;
 //		removeAllSessionCookie();
@@ -140,6 +167,10 @@ public class ImpWebViewClient extends WebViewClient {
 			 */
 	@Override
 	public boolean shouldOverrideUrlLoading(WebView view, String url) {
+		if (runnable != null){
+			mHandler.removeCallbacks(runnable);
+			runnable = null;
+		}
 		if (url.contains("https://id.inspur.com/oauth2.0/authorize")) {
 			handleReDirectURL(url, view);
 			return true;
