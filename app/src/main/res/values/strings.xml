@@ -261,6 +261,7 @@
     <string name="add_new_comment">添加新评论</string>
     <string name="socket_connecting">连接中</string>
     <string name="socket_close">已断开</string>
+    <string name="chat_file_download_success">文件已下载成功，再次点击进行打开</string>
 
 
     <!-- 会议卡片 -->
@@ -733,7 +734,7 @@
     <string name="download_fail">下载失败</string>
     <string name="download_success">下载成功</string>
     <string name="file_downloading">文件下载中，请稍候...</string>
-    <string name="file_download_success">文件已下载成功，再次点击进行打开</string>
+    <string name="file_download_success">文件已下载成功，是否打开？</string>
     <string name="has_downloaded">已下载</string>
     <string name="imp_content">内容</string>
     <string name="file_ok">确定</string>

@@ -16,7 +16,6 @@ import com.inspur.emmcloud.bean.ChannelGroup;
 import com.inspur.emmcloud.bean.Contact;
 import com.lidroid.xutils.DbUtils;
 import com.lidroid.xutils.DbUtils.DbUpgradeListener;
-import com.lidroid.xutils.exception.DbException;
 
 /**
  * com.inspur.emmcloud.util.DbCacheUtils
@@ -53,7 +52,7 @@ public class DbCacheUtils {
 			}
 		});
 		db.configAllowTransaction(true);
-		db.configDebug(false);
+		db.configDebug(true);
 	}
 	
 	public static DbUtils getDb(Context context){

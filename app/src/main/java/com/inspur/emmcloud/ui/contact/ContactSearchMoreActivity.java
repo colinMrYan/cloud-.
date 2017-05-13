@@ -3,7 +3,7 @@ package com.inspur.emmcloud.ui.contact;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Handler;
+import android.os.Message;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -31,9 +31,8 @@ import com.inspur.emmcloud.bean.ChannelGroup;
 import com.inspur.emmcloud.bean.Contact;
 import com.inspur.emmcloud.bean.FirstGroupTextModel;
 import com.inspur.emmcloud.bean.SearchModel;
-import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.ui.chat.ChannelActivity;
-import com.inspur.emmcloud.ui.chat.ChannelInfoActivity;
+import com.inspur.emmcloud.ui.chat.DisplayChannelGroupIcon;
 import com.inspur.emmcloud.util.ChannelCacheUtils;
 import com.inspur.emmcloud.util.ChannelGroupCacheUtils;
 import com.inspur.emmcloud.util.CommonContactCacheUtils;
@@ -41,19 +40,17 @@ import com.inspur.emmcloud.util.ContactCacheUtils;
 import com.inspur.emmcloud.util.DensityUtil;
 import com.inspur.emmcloud.util.EditTextUtils;
 import com.inspur.emmcloud.util.ImageDisplayUtils;
-import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.ToastUtils;
-import com.inspur.emmcloud.util.UriUtils;
-import com.inspur.emmcloud.widget.CircleImageView;
+import com.inspur.emmcloud.widget.CircleFrameLayout;
 import com.inspur.emmcloud.widget.FlowLayout;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.MaxHightScrollView;
+import com.inspur.emmcloud.widget.WeakHandler;
 import com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout;
 import com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout.OnRefreshListener;
 import com.inspur.emmcloud.widget.pullableview.PullableListView;
 
-import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -64,6 +61,7 @@ public class ContactSearchMoreActivity extends BaseActivity implements OnRefresh
 	private static final int SEARCH_CHANNELGROUP = 1;
 	private static final int SEARCH_RECENT = 3;
 	private static final int SEARCH_NOTHIING = 4;
+	private static final int REFRESH_CONTACT_DATA = 5;
 	private List<ChannelGroup> searchChannelGroupList = new ArrayList<ChannelGroup>(); // 群组搜索结果
 	private List<Contact> searchContactList = new ArrayList<Contact>(); // 通讯录搜索结果
 	private List<Channel> searchRecentList = new ArrayList<Channel>();// 常用联系人搜索结果
@@ -84,7 +82,7 @@ public class ContactSearchMoreActivity extends BaseActivity implements OnRefresh
 	private RecyclerView groupTitleListView;
 	private GroupTitleAdapter groupTitleAdapter;
 	private LoadingDialog loadingDlg;
-	private Handler handler;
+	private WeakHandler handler;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -94,6 +92,7 @@ public class ContactSearchMoreActivity extends BaseActivity implements OnRefresh
 		((MyApplication) getApplicationContext()).addActivity(this);
 		initView();
 		getIntentData();
+		handMessage();
 	}
 
 	private void initView() {
@@ -332,65 +331,78 @@ public class ContactSearchMoreActivity extends BaseActivity implements OnRefresh
 		public void onTextChanged(CharSequence s, int start, int before,
 				int count) {
 			// TODO Auto-generated method stub
-			LogUtils.jasonDebug("onTextChanged==="+s);
-			searchText = searchEdit.getText().toString().trim();
-			searchListView.setCanPullUp(false);
-			pullToRefreshLayout.setVisibility(View.VISIBLE);
-			if (!StringUtils.isBlank(searchText)) {
-				switch (searchArea) {
-				case SEARCH_RECENT:
-					searchRecentList = ChannelCacheUtils.getSearchChannelList(
-							getApplicationContext(), searchText, searchContent);
-					if (searchRecentList.size() == 0) {
-						pullToRefreshLayout.setVisibility(View.GONE);
-					}
 
-					break;
-				case SEARCH_CHANNELGROUP:
-					searchChannelGroupList = ChannelGroupCacheUtils
-							.getSearchChannelGroupList(getApplicationContext(),
-									searchText);
-					if (searchChannelGroupList.size() == 0) {
-						pullToRefreshLayout.setVisibility(View.GONE);
-					}
-					break;
-
-				case SEARCH_CONTACT:
-					String currentContactId = groupTextList.get(
-							groupTextList.size() - 1).getId();
-//					if (StringUtils.isBlank(currentContactId)) {
-//						Contact rootContact = ContactCacheUtils
-//								.getRootContact(ContactSearchMoreActivity.this);
-//						currentContactId = rootContact.getId();
-//					}
-					LogUtils.jasonDebug("secondcurrentContactId="+currentContactId);
-					searchContactList = ContactCacheUtils.getSearchContact(
-							getApplicationContext(), searchText,
-							currentContactId, 0, 25);
-					LogUtils.jasonDebug("size="+searchContactList.size() );
-					if (searchContactList.size() == 0) {
-						pullToRefreshLayout.setVisibility(View.GONE);
-					}
-					if (searchContactList.size() == 25) {
-						searchListView.setCanPullUp(true);
-					}
-					break;
-
-				default:
-					break;
-				}
-			} else {
-				returnSelectData();
-			}
-			adapter.notifyDataSetChanged();
 		}
 
 		@Override
 		public void afterTextChanged(Editable s) {
 			// TODO Auto-generated method stub
+			searchText = searchEdit.getText().toString().trim();
+			searchListView.setCanPullUp(false);
+			pullToRefreshLayout.setVisibility(View.VISIBLE);
+			if (!StringUtils.isBlank(searchText)) {
+				switch (searchArea) {
+					case SEARCH_RECENT:
+						searchRecentList = ChannelCacheUtils.getSearchChannelList(
+								getApplicationContext(), searchText, searchContent);
+						if (searchRecentList.size() == 0) {
+							pullToRefreshLayout.setVisibility(View.GONE);
+						}
+						adapter.notifyDataSetChanged();
+						break;
+					case SEARCH_CHANNELGROUP:
+						searchChannelGroupList = ChannelGroupCacheUtils
+								.getSearchChannelGroupList(getApplicationContext(),
+										searchText);
+						if (searchChannelGroupList.size() == 0) {
+							pullToRefreshLayout.setVisibility(View.GONE);
+						}
+						adapter.notifyDataSetChanged();
+						break;
 
+					case SEARCH_CONTACT:
+						new Thread(new Runnable() {
+							@Override
+							public void run() {
+								searchContactList = ContactCacheUtils.getSearchContact(
+										getApplicationContext(), searchText,
+										null, 25);
+								handler.sendEmptyMessage(REFRESH_CONTACT_DATA);
+							}
+						}).start();
+						break;
+
+					default:
+						break;
+				}
+
+			} else {
+				returnSelectData();
+			}
 		}
 
+	}
+
+
+	private void handMessage(){
+		handler = new WeakHandler(ContactSearchMoreActivity.this){
+
+			@Override
+			protected void handleMessage(Object o, Message message) {
+				switch (message.what){
+					case REFRESH_CONTACT_DATA:
+						if (searchContactList.size() == 0) {
+							pullToRefreshLayout.setVisibility(View.GONE);
+						}
+						if (searchContactList.size() == 25) {
+							searchListView.setCanPullUp(true);
+						}
+						adapter.notifyDataSetChanged();
+						break;
+				}
+			}
+
+		};
 	}
 
 	private class Adapter extends BaseAdapter {
@@ -430,9 +442,9 @@ public class ContactSearchMoreActivity extends BaseActivity implements OnRefresh
 						R.layout.member_search_item_view, null);
 				viewHolder.nameText = (TextView) convertView
 						.findViewById(R.id.name_text);
-				viewHolder.photoImg = (CircleImageView) convertView
-						.findViewById(R.id.photo_img);
-				viewHolder.photoImg.setVisibility(View.VISIBLE);
+				viewHolder.channelPhotoLayout =  (CircleFrameLayout) convertView
+						.findViewById(R.id.photo_layout);
+				viewHolder.channelPhotoLayout.setVisibility(View.VISIBLE);
 				viewHolder.selectedImg = (ImageView) convertView
 						.findViewById(R.id.selected_img);
 				convertView.setTag(viewHolder);
@@ -454,8 +466,7 @@ public class ContactSearchMoreActivity extends BaseActivity implements OnRefresh
 				searchModel = new SearchModel(contact);
 
 			}
-			displayImg(searchModel, viewHolder.photoImg);
-			checkInfo(viewHolder.photoImg, searchModel);
+			displayImg(searchModel, viewHolder.channelPhotoLayout);
 			viewHolder.nameText.setText(searchModel.getCompleteName(getApplicationContext()));
 			if (selectMemList.contains(searchModel)) {
 				viewHolder.selectedImg.setVisibility(View.VISIBLE);
@@ -471,87 +482,82 @@ public class ContactSearchMoreActivity extends BaseActivity implements OnRefresh
 
 	/**
 	 * 统一显示图片
-	 * 
 	 * @param searchModel
-	 * @param photoImg
+	 * @param photoLayout
 	 */
-	private void displayImg(SearchModel searchModel, CircleImageView photoImg) {
+	private void displayImg(SearchModel searchModel, CircleFrameLayout photoLayout) {
 		String icon = searchModel.getIcon();
 		String type = searchModel.getType();
 		if (type.equals("STRUCT")) {
-			photoImg.setImageResource(R.drawable.icon_channel_group_default);
+			photoLayout.setBackgroundResource(R.drawable.icon_channel_group_default);
 			return;
 		}
-		int defaultIcon = -1;
 		if (type.equals("GROUP")) {
-			File file = new File(MyAppConfig.LOCAL_CACHE_PATH, UriUtils.tanent+searchModel.getId() + "_100.png");
-			if (file.exists()) {
-				icon = "file://" + file.getAbsolutePath();
-			}
-			defaultIcon = R.drawable.icon_channel_group_default;
+			DisplayChannelGroupIcon.show(ContactSearchMoreActivity.this,searchModel.getId(),photoLayout);
 		} else {
-			defaultIcon = R.drawable.icon_person_default;
+			View channelPhotoView = LayoutInflater.from(ContactSearchMoreActivity.this).inflate(R.layout.chat_msg_session_photo_one, null);
+			ImageView photoImg = (ImageView) channelPhotoView.findViewById(R.id.photo_img1);
+			int defaultIcon = R.drawable.icon_person_default;
 			if (searchModel.getId().equals("null")) {
-				photoImg.setImageResource(defaultIcon);
+				photoLayout.setBackgroundResource(defaultIcon);
 				return;
 			}
+			new ImageDisplayUtils(getApplicationContext(), defaultIcon).display(
+					photoImg, icon);
+			photoLayout.addView(channelPhotoView);
 		}
-		new ImageDisplayUtils(getApplicationContext(), defaultIcon).display(
-				photoImg, icon);
-		// TODO Auto-generated method stub
 	}
 
-	/**
-	 * 查看信息
-	 * 
-	 * @param searchModel
-	 */
-	private void checkInfo(CircleImageView photoImg,
-			final SearchModel searchModel) {
-		// TODO Auto-generated method stub
-		photoImg.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				Intent intent = new Intent();
-				String id = searchModel.getId();
-				String type = searchModel.getType();
-				if (type.equals("STRUCT")) {
-					return;
-				}
-				if (id.equals("null")) {
-					ToastUtils.show(getApplicationContext(), getString(R.string.cannot_view_info));
-					return;
-				}
-				CommonContactCacheUtils.saveCommonContact(
-						getApplicationContext(), searchModel);
-				if (type.equals("USER")) {
-					intent.putExtra("uid", id);
-					intent.setClass(getApplicationContext(),
-							UserInfoActivity.class);
-					startActivity(intent);
-				} else if (type.equals("DIRECT")) {
-					intent.putExtra("cid", id);
-					intent.setClass(getApplicationContext(),
-							UserInfoActivity.class);
-					startActivity(intent);
-				} else if (type.equals("GROUP")) {
-					intent.putExtra("cid", id);
-					intent.setClass(getApplicationContext(),
-							ChannelInfoActivity.class);
-					startActivity(intent);
-				}
-
-			}
-		});
-
-	}
+//	/**
+//	 * 查看信息
+//	 *
+//	 * @param searchModel
+//	 */
+//	private void checkInfo(CircleImageView photoImg,
+//			final SearchModel searchModel) {
+//		// TODO Auto-generated method stub
+//		photoImg.setOnClickListener(new OnClickListener() {
+//
+//			@Override
+//			public void onClick(View v) {
+//				// TODO Auto-generated method stub
+//				Intent intent = new Intent();
+//				String id = searchModel.getId();
+//				String type = searchModel.getType();
+//				if (type.equals("STRUCT")) {
+//					return;
+//				}
+//				if (id.equals("null")) {
+//					ToastUtils.show(getApplicationContext(), getString(R.string.cannot_view_info));
+//					return;
+//				}
+//				CommonContactCacheUtils.saveCommonContact(
+//						getApplicationContext(), searchModel);
+//				if (type.equals("USER")) {
+//					intent.putExtra("uid", id);
+//					intent.setClass(getApplicationContext(),
+//							UserInfoActivity.class);
+//					startActivity(intent);
+//				} else if (type.equals("DIRECT")) {
+//					intent.putExtra("cid", id);
+//					intent.setClass(getApplicationContext(),
+//							UserInfoActivity.class);
+//					startActivity(intent);
+//				} else if (type.equals("GROUP")) {
+//					intent.putExtra("cid", id);
+//					intent.setClass(getApplicationContext(),
+//							ChannelInfoActivity.class);
+//					startActivity(intent);
+//				}
+//
+//			}
+//		});
+//
+//	}
 
 	public static class ViewHolder {
 		TextView nameText;
-		CircleImageView photoImg;
-		ImageView rightArrowImg;
+		CircleFrameLayout channelPhotoLayout;
 		ImageView selectedImg;
 	}
 
@@ -636,16 +642,9 @@ public class ContactSearchMoreActivity extends BaseActivity implements OnRefresh
 	@Override
 	public void onLoadMore(PullToRefreshLayout pullToRefreshLayout) {
 		// TODO Auto-generated method stub
-		String currentContactId = groupTextList.get(
-				groupTextList.size() - 1).getId();
-		if (StringUtils.isBlank(currentContactId)) {
-			Contact rootContact = ContactCacheUtils
-					.getRootContact(ContactSearchMoreActivity.this);
-			currentContactId = rootContact.getId();
-		}
 		List<Contact> moreContactList = ContactCacheUtils.getSearchContact(
 				getApplicationContext(), searchText,
-				currentContactId, searchContactList.size(), 25);
+				 searchContactList, 25);
 		pullToRefreshLayout.loadmoreFinish(PullToRefreshLayout.SUCCEED);
 		if (moreContactList.size() == 25) {
 			searchListView.setCanPullUp(true);

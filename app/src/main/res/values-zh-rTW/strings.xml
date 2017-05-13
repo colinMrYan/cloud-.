@@ -260,6 +260,7 @@
     <string name="add_new_comment">添加新評論</string>
     <string name="socket_connecting">連接中</string>
     <string name="socket_close">已斷開</string>
+    <string name="chat_file_download_success">檔案已下載成功，再次點擊進行打開</string>
 
 
     <!-- 會議卡片 -->
@@ -729,7 +730,7 @@
     <string name="download_fail">下載失敗</string>
     <string name="download_success">下載成功</string>
     <string name="file_downloading">文件下載中，請稍候...</string>
-    <string name="file_download_success">檔案已下載成功，再次點擊進行打開</string>
+    <string name="file_download_success">檔案已下載成功，是否打開？</string>
     <string name="has_downloaded">已下載</string>
     <string name="imp_content">內容</string>
     <string name="file_ok">確定</string>
