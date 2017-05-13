@@ -59,21 +59,23 @@ public class WebServiceMiddleUtils {
 	 */
 	public static void hand(Context context, String response,
 			Handler handler,int errorCode, Integer error) {
+		String errorMessage = "";
 		if(errorCode == 400){
 			ECMErrorBean ecmErrorBean = new ECMErrorBean(response);
-			ToastUtils.show(context, ErrorCodeUtils.getAlertByCode(context, ecmErrorBean.getErrorCode()));
+			errorMessage = ErrorCodeUtils.getAlertByCode(context,ecmErrorBean.getErrorCode());
 		}else if(errorCode == 500){
 			/*Emm服务器上对错误处理不统一，目前只需处理500，其余返回默认提示，已与emm确认  20170512  yfc*/
 			EMMErrorBean emmErrorBean = new EMMErrorBean(response);
 			if(!StringUtils.isBlank(emmErrorBean.getMsg())){
-				ToastUtils.show(context, emmErrorBean.getMsg());
+				errorMessage = emmErrorBean.getMsg();
 			}else{
 				/*处理当Ecm服务器返回500错误*/
-				ToastUtils.show(context, R.string.net_request_failed);
+				errorMessage = context.getString(R.string.net_request_failed);
 			}
 		}else {
-			ToastUtils.show(context, R.string.net_request_failed);
+			errorMessage = context.getString(R.string.net_request_failed);
 		}
+		ToastUtils.show(context, errorMessage);
 		if (handler != null && error != null) {
 			handler.sendEmptyMessage(error);
 		}
