@@ -240,10 +240,6 @@ public class NewsWebDetailActivity extends BaseActivity {
         if(intent.hasExtra("news_id")){
             this.newsId = intent.getStringExtra("news_id");
         }
-//        if(intent.hasExtra("instruction")){
-//            this.instruction  = intent.getStringExtra("instruction");
-//            LogUtils.YfcDebug("有批示内容："+instruction);
-//        }
         if(intent.hasExtra("approvedDate")){
             this.approvedDate = intent.getStringExtra("approvedDate");
         }

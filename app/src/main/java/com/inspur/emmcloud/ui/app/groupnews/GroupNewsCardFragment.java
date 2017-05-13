@@ -19,7 +19,6 @@ import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
 import com.inspur.emmcloud.bean.GetGroupNewsDetailResult;
 import com.inspur.emmcloud.bean.GroupNews;
 import com.inspur.emmcloud.bean.NewsIntrcutionUpdateEvent;
-import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.TimeUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
@@ -100,7 +99,6 @@ public class GroupNewsCardFragment extends Fragment implements
 
 	@Subscribe(threadMode = ThreadMode.MAIN)
 	public void updateNewsDataById(NewsIntrcutionUpdateEvent messageEvent) {
-		LogUtils.YfcDebug("接收到Event");
 		for(int i = 0; i< groupnNewsList.size(); i++){
 			if(groupnNewsList.get(i).getId().equals(messageEvent.getId())){
 				groupnNewsList.get(i).setOriginalEditorComment(messageEvent.getOriginalEditorComment());
