@@ -216,6 +216,7 @@
     <string name="group_album"> 群相册</string>
     <string name="group_file">群文件</string>
     <string name="authorization_expired">授权过期，请重新登录</string>
+    <string name="cant_login_with_sms">您的账号不允许使用短信登录</string>
 
     <!-- 消息部分 -->
     <string name="msgcontent_cannot_null">请输入消息内容</string>

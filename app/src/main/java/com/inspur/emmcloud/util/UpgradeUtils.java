@@ -208,6 +208,10 @@ public class UpgradeUtils extends APIInterfaceInstance {
 		okBt.setText(context.getString(R.string.upgrade));
 		TextView text = (TextView) dialog.findViewById(R.id.text);
 		text.setText(upgradeMsg);
+		TextView appUpdateTitle = (TextView) dialog.findViewById(R.id.app_update_title);
+		appUpdateTitle.setText(context.getString(R.string.app_update_remind));
+		TextView appUpdateVersion = (TextView) dialog.findViewById(R.id.app_update_version);
+		appUpdateVersion.setText(context.getString(R.string.app_last_version)+"("+getUpgradeResult.getLatestVersion()+")");
 		okBt.setOnClickListener(new View.OnClickListener() {
 
 			@Override
