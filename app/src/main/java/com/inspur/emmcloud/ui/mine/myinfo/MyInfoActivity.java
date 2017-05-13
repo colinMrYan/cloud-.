@@ -17,6 +17,7 @@ import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.MineAPIService;
 import com.inspur.emmcloud.bean.GetMyInfoResult;
 import com.inspur.emmcloud.bean.GetUploadMyHeadResult;
+import com.inspur.emmcloud.bean.UserProfileInfoBean;
 import com.inspur.emmcloud.ui.login.ModifyUserPsdActivity;
 import com.inspur.emmcloud.ui.login.ModifyUserPwdBySMSActivity;
 import com.inspur.emmcloud.ui.mine.MoreFragment;
@@ -61,6 +62,8 @@ public class MyInfoActivity extends BaseActivity {
 	private String photoLocalPath;
 	private ImageDisplayUtils imageDisplayUtils;
 	private GetMyInfoResult getMyInfoResult;
+	private LoadingDialog loadingDialog;
+	private View passWordView;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -69,12 +72,26 @@ public class MyInfoActivity extends BaseActivity {
 		((MyApplication) getApplicationContext()).addActivity(this);
 		setContentView(R.layout.activity_my_info);
 		initView();
+		getUserProfile();
 		showMyInfo();
 
 	}
 
+	/**
+	 *
+	 */
+	private void getUserProfile() {
+		if(NetUtils.isNetworkConnected(MyInfoActivity.this)){
+			if(loadingDialog != null && !loadingDialog.isShowing()){
+				loadingDialog.show();
+			}
+			apiService.getUserProfileInfo();
+		}
+	}
+
 	private void initView() {
 		// TODO Auto-generated method stub
+		loadingDialog = new LoadingDialog(MyInfoActivity.this);
 		getMyInfoResult = (GetMyInfoResult) getIntent().getExtras()
 				.getSerializable("getMyInfoResult");
 		userHeadImg = (ImageView) findViewById(R.id.myinfo_userheadimg_img);
@@ -91,6 +108,7 @@ public class MyInfoActivity extends BaseActivity {
 		backLayout = (RelativeLayout) findViewById(R.id.back_layout);
 		modifyLayout = (RelativeLayout) findViewById(R.id.myinfo_modifypsd_layout);
 		resetLayout = (RelativeLayout) findViewById(R.id.myinfo_reset_layout);
+		passWordView = findViewById(R.id.myinfo_password_line);
 		imageDisplayUtils = new ImageDisplayUtils(getApplicationContext(),
 				R.drawable.icon_photo_default);
 		apiService = new MineAPIService(MyInfoActivity.this);
@@ -99,6 +117,7 @@ public class MyInfoActivity extends BaseActivity {
 		if (StringUtils.isBlank(getMyInfoResult.getPhoneNumber())) {
 			resetLayout.setVisibility(View.GONE);
 		}
+
 	}
 
 	/**
@@ -234,5 +253,51 @@ public class MyInfoActivity extends BaseActivity {
 			WebServiceMiddleUtils.hand(MyInfoActivity.this, error);
 		}
 
+		@Override
+		public void returnUserProfileSuccess(UserProfileInfoBean userProfileInfoBean) {
+			if(loadingDialog != null && loadingDialog.isShowing()){
+				loadingDialog.dismiss();
+			}
+			updateInfoState(userProfileInfoBean);
+		}
+
+		@Override
+		public void returnUserProfileFail(String error) {
+			if(loadingDialog != null && loadingDialog.isShowing()){
+				loadingDialog.dismiss();
+			}
+		}
 	}
+
+	/**
+	 * 处理
+	 * @param userProfileInfoBean
+     */
+	private void updateInfoState(UserProfileInfoBean userProfileInfoBean) {
+		if(userProfileInfoBean.getShowHead() == 0){
+			userHeadLayout.setVisibility(View.GONE);
+		}
+		if(userProfileInfoBean.getShowUserName() == 0){
+			userNameLayout.setVisibility(View.GONE);
+		}
+		if(userProfileInfoBean.getShowUserMail() == 0){
+			userMailLayout.setVisibility(View.GONE);
+		}
+		if(userProfileInfoBean.getShowUserPhone() == 0){
+			userPhoneLayout.setVisibility(View.GONE);
+		}
+		if(userProfileInfoBean.getShowEpInfo() == 0){
+			userCompanyLayout.setVisibility(View.GONE);
+		}
+		if(userProfileInfoBean.getShowModifyPsd() == 0){
+			passWordView.setVisibility(View.GONE);
+			modifyLayout.setVisibility(View.GONE);
+		}
+		if(userProfileInfoBean.getShowResetPsd() == 0){
+			passWordView.setVisibility(View.GONE);
+			resetLayout.setVisibility(View.GONE);
+		}
+	}
+
+
 }

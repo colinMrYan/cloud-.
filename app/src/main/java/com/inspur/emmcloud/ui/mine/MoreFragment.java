@@ -62,12 +62,17 @@ public class MoreFragment extends Fragment {
         super.onCreate(savedInstanceState);
         inflater = (LayoutInflater) getActivity().getSystemService(
                 getActivity().LAYOUT_INFLATER_SERVICE);
-
         rootView = inflater.inflate(R.layout.fragment_mine, null);
-
         handMessage();
+        initViews();
+        getMyInfo();
+        setTabTitle();
+    }
 
-
+    /**
+     * 初始化views
+     */
+    private void initViews() {
         setContentItem = (RelativeLayout) rootView.findViewById(R.id.more_set_layout);
         userHeadLayout = (RelativeLayout) rootView.findViewById(R.id.more_userhead_layout);
         setContentItem.setOnClickListener(onClickListener);
@@ -83,8 +88,6 @@ public class MoreFragment extends Fragment {
         userCodeImg = (ImageView) rootView.findViewById(R.id.more_head_codeImg);
         titleText = (TextView) rootView.findViewById(R.id.header_text);
         imageDisplayUtils = new ImageDisplayUtils(getActivity(), R.drawable.icon_photo_default);
-        getMyInfo();
-        setTabTitle();
     }
 
 
