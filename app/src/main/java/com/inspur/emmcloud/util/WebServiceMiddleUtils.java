@@ -65,7 +65,12 @@ public class WebServiceMiddleUtils {
 		}else if(errorCode == 500){
 			/*Emm服务器上对错误处理不统一，目前只需处理500，其余返回默认提示，已与emm确认  20170512  yfc*/
 			EMMErrorBean emmErrorBean = new EMMErrorBean(response);
-			ToastUtils.show(context, emmErrorBean.getMsg());
+			if(!StringUtils.isBlank(emmErrorBean.getMsg())){
+				ToastUtils.show(context, emmErrorBean.getMsg());
+			}else{
+				/*处理当Ecm服务器返回500错误*/
+				ToastUtils.show(context, R.string.net_request_failed);
+			}
 		}else {
 			ToastUtils.show(context, R.string.net_request_failed);
 		}
