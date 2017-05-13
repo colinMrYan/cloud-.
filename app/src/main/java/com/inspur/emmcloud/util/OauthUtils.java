@@ -51,7 +51,7 @@ public class OauthUtils {
 			PreferencesUtils.putInt(context, "keepAlive", keepAlive);
 			PreferencesUtils.putString(context, "tokenType", tokenType);
 			PreferencesUtils.putInt(context, "expiresIn", expiresIn);
-			PreferencesByUserUtils.putLong(context,"acccessTokenTime",System.currentTimeMillis());
+			PreferencesUtils.putLong(context,"accessTokenTime",System.currentTimeMillis());
 			((MyApplication)context.getApplicationContext()).setIsTokenRefreshing(false);
 			((MyApplication)context.getApplicationContext()).startWebSocket();
 			((MyApplication)context.getApplicationContext()).setAccessToken(accessToken);
