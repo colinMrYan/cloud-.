@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
 import com.inspur.emmcloud.bean.AppRedirectResult;
+import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 
@@ -150,6 +151,7 @@ public class ImpWebViewClient extends WebViewClient {
 	 * @param url
 	 */
 	private void handleReDirectURL(String url, WebView view) {
+		LogUtils.YfcDebug("覆盖的Url："+url);
 		if(url.contains("https://id.inspur.com/oauth2.0/authorize")){
 			URL urlWithParams = null;
 			try {

@@ -514,6 +514,8 @@
         <activity
             android:name=".ui.find.FindSearchMoreActivity"
             android:screenOrientation="portrait" />
+        <activity android:name=".ui.app.ShortCutFunctionActivity"
+            android:screenOrientation="portrait"/>
         <service android:name=".service.PVCollectService"></service>
         <service android:name=".service.CoreService"></service>
         <service android:name=".service.CoreInnerService"></service>

@@ -38,6 +38,7 @@ import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.PreferencesByUserUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
+import com.inspur.emmcloud.util.ShortCutUtils;
 import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
@@ -51,6 +52,7 @@ import com.inspur.emmcloud.widget.draggrid.DragGridView.OnChanageListener;
 import com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout;
 import com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout.OnRefreshListener;
 import com.inspur.emmcloud.widget.pullableview.PullableListView;
+import com.inspur.imp.api.ImpActivity;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -261,13 +263,14 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
                     if(!canEdit){
                         App app = appGroupItemList.get(position);
                         //可以再定具体出现的时机和是否需要对用户进行提示
-//                        if(app.getAppID().equals("1e169160-0e1f-11e7-8c5c-15b1be8e5981")){
-//                            ShortCutUtils.createShortCut(getActivity(),ImpActivity.class,app.getAppName(),app.getUri(),"ecc-app-web",R.drawable.icon_shortcut_register);
-//                            /*为了ReactNative应用创建的*/
-////                            ShortCutUtils.createShortCut(getActivity(),ReactNativeAppActivity.class,app.getAppName(),app.getUri(),"ecc-app-react-native",R.drawable.ic_launcher);
-//                        }
-//                        if(app.getAppID().equals("inspur_news_esg")){
-//                        }
+                        if(app.getAppID().equals("1e169160-0e1f-11e7-8c5c-15b1be8e5981")){
+                            LogUtils.YfcDebug("移动签到功能："+app.toString());
+                            ShortCutUtils.createShortCut(getActivity(),ImpActivity.class,app.getAppName(),app.getUri(),"ecc-app-web",R.drawable.icon_shortcut_register);
+                            /*为了ReactNative应用创建的*/
+//                            ShortCutUtils.createShortCut(getActivity(),ReactNativeAppActivity.class,app.getAppName(),app.getUri(),"ecc-app-react-native",R.drawable.ic_launcher);
+                        }
+                        if(app.getAppID().equals("inspur_news_esg")){
+                        }
                         UriUtils.openApp(getActivity(), app);
                         if(getNeedCommonlyUseApp()){
 //                            saveOrChangeCommonlyUseApp(app, appAdapterList);
