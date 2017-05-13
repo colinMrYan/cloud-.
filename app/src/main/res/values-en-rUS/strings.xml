@@ -214,6 +214,7 @@
     <string name="group_album">Group Photos</string>
     <string name="group_file">Group Files</string>
     <string name="authorization_expired">Authorization Expired</string>
+    <string name="cant_login_with_sms">Your account is not allowed to log on with SMS</string>
 
     <!-- 消息部分 -->
     <string name="msgcontent_cannot_null">Please type message content</string>

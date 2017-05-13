@@ -28,7 +28,6 @@ import com.inspur.emmcloud.util.EditTextUtils;
 import com.inspur.emmcloud.util.FomatUtils;
 import com.inspur.emmcloud.util.InputMethodUtils;
 import com.inspur.emmcloud.util.JSONUtils;
-import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.LoginUtils;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
@@ -315,7 +314,7 @@ public class CaptchasLoginActivity extends BaseActivity {
     private void handleErrorCode(String error) {
         String code = JSONUtils.getString(error, "code", "");
         if (!StringUtils.isBlank(code) && code.equals("10901")) {
-            ToastUtils.show(getApplicationContext(), getApplicationContext().getString(R.string.no_phone_num));
+            ToastUtils.show(getApplicationContext(), getApplicationContext().getString(R.string.cant_login_with_sms));
         } else {
             WebServiceMiddleUtils.hand(CaptchasLoginActivity.this, error);
         }
