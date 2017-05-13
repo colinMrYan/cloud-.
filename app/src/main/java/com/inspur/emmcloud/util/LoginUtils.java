@@ -1,7 +1,5 @@
 package com.inspur.emmcloud.util;
 
-import org.json.JSONObject;
-
 import android.app.Activity;
 import android.os.Handler;
 import android.os.Message;
@@ -15,7 +13,6 @@ import com.inspur.emmcloud.bean.GetMyInfoResult;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.mdm.MDM;
 import com.inspur.mdm.MDMListener;
-import com.inspur.mdm.utils.MDMUtils;
 
 /**
  * 登录公共类
@@ -214,7 +211,6 @@ public class LoginUtils extends APIInterfaceInstance {
 		((MyApplication) activity.getApplicationContext())
 				.setUid(getMyInfoResult.getID());
 		if (isLogin) {
-			apiServices.uploadAuthorizationInfo(0, null, null);
 			isLogin = false;
 		}
 		if (handler != null) {

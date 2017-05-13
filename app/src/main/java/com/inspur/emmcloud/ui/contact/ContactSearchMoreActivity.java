@@ -3,7 +3,7 @@ package com.inspur.emmcloud.ui.contact;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Handler;
+import android.os.Message;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -49,6 +49,7 @@ import com.inspur.emmcloud.widget.CircleImageView;
 import com.inspur.emmcloud.widget.FlowLayout;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.MaxHightScrollView;
+import com.inspur.emmcloud.widget.WeakHandler;
 import com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout;
 import com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout.OnRefreshListener;
 import com.inspur.emmcloud.widget.pullableview.PullableListView;
@@ -64,6 +65,7 @@ public class ContactSearchMoreActivity extends BaseActivity implements OnRefresh
 	private static final int SEARCH_CHANNELGROUP = 1;
 	private static final int SEARCH_RECENT = 3;
 	private static final int SEARCH_NOTHIING = 4;
+	private static final int REFRESH_CONTACT_DATA = 5;
 	private List<ChannelGroup> searchChannelGroupList = new ArrayList<ChannelGroup>(); // 群组搜索结果
 	private List<Contact> searchContactList = new ArrayList<Contact>(); // 通讯录搜索结果
 	private List<Channel> searchRecentList = new ArrayList<Channel>();// 常用联系人搜索结果
@@ -84,7 +86,7 @@ public class ContactSearchMoreActivity extends BaseActivity implements OnRefresh
 	private RecyclerView groupTitleListView;
 	private GroupTitleAdapter groupTitleAdapter;
 	private LoadingDialog loadingDlg;
-	private Handler handler;
+	private WeakHandler handler;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -94,6 +96,7 @@ public class ContactSearchMoreActivity extends BaseActivity implements OnRefresh
 		((MyApplication) getApplicationContext()).addActivity(this);
 		initView();
 		getIntentData();
+		handMessage();
 	}
 
 	private void initView() {
@@ -344,7 +347,7 @@ public class ContactSearchMoreActivity extends BaseActivity implements OnRefresh
 					if (searchRecentList.size() == 0) {
 						pullToRefreshLayout.setVisibility(View.GONE);
 					}
-
+					adapter.notifyDataSetChanged();
 					break;
 				case SEARCH_CHANNELGROUP:
 					searchChannelGroupList = ChannelGroupCacheUtils
@@ -353,36 +356,28 @@ public class ContactSearchMoreActivity extends BaseActivity implements OnRefresh
 					if (searchChannelGroupList.size() == 0) {
 						pullToRefreshLayout.setVisibility(View.GONE);
 					}
+					adapter.notifyDataSetChanged();
 					break;
 
 				case SEARCH_CONTACT:
-					String currentContactId = groupTextList.get(
-							groupTextList.size() - 1).getId();
-//					if (StringUtils.isBlank(currentContactId)) {
-//						Contact rootContact = ContactCacheUtils
-//								.getRootContact(ContactSearchMoreActivity.this);
-//						currentContactId = rootContact.getId();
-//					}
-					LogUtils.jasonDebug("secondcurrentContactId="+currentContactId);
-					searchContactList = ContactCacheUtils.getSearchContact(
-							getApplicationContext(), searchText,
-							currentContactId, 0, 25);
-					LogUtils.jasonDebug("size="+searchContactList.size() );
-					if (searchContactList.size() == 0) {
-						pullToRefreshLayout.setVisibility(View.GONE);
-					}
-					if (searchContactList.size() == 25) {
-						searchListView.setCanPullUp(true);
-					}
+					new Thread(new Runnable() {
+						@Override
+						public void run() {
+							searchContactList = ContactCacheUtils.getSearchContact(
+									getApplicationContext(), searchText,
+									null, 25);
+							handler.sendEmptyMessage(REFRESH_CONTACT_DATA);
+						}
+					}).start();
 					break;
 
 				default:
 					break;
 				}
+
 			} else {
 				returnSelectData();
 			}
-			adapter.notifyDataSetChanged();
 		}
 
 		@Override
@@ -391,6 +386,28 @@ public class ContactSearchMoreActivity extends BaseActivity implements OnRefresh
 
 		}
 
+	}
+
+
+	private void handMessage(){
+		handler = new WeakHandler(ContactSearchMoreActivity.this){
+
+			@Override
+			protected void handleMessage(Object o, Message message) {
+				switch (message.what){
+					case REFRESH_CONTACT_DATA:
+						if (searchContactList.size() == 0) {
+							pullToRefreshLayout.setVisibility(View.GONE);
+						}
+						if (searchContactList.size() == 25) {
+							searchListView.setCanPullUp(true);
+						}
+						adapter.notifyDataSetChanged();
+						break;
+				}
+			}
+
+		};
 	}
 
 	private class Adapter extends BaseAdapter {
@@ -636,16 +653,9 @@ public class ContactSearchMoreActivity extends BaseActivity implements OnRefresh
 	@Override
 	public void onLoadMore(PullToRefreshLayout pullToRefreshLayout) {
 		// TODO Auto-generated method stub
-		String currentContactId = groupTextList.get(
-				groupTextList.size() - 1).getId();
-		if (StringUtils.isBlank(currentContactId)) {
-			Contact rootContact = ContactCacheUtils
-					.getRootContact(ContactSearchMoreActivity.this);
-			currentContactId = rootContact.getId();
-		}
 		List<Contact> moreContactList = ContactCacheUtils.getSearchContact(
 				getApplicationContext(), searchText,
-				currentContactId, searchContactList.size(), 25);
+				 searchContactList, 25);
 		pullToRefreshLayout.loadmoreFinish(PullToRefreshLayout.SUCCEED);
 		if (moreContactList.size() == 25) {
 			searchListView.setCanPullUp(true);

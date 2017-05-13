@@ -3,6 +3,7 @@ package com.inspur.emmcloud.ui.contact;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Message;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -55,6 +56,7 @@ import com.inspur.emmcloud.widget.CircleImageView;
 import com.inspur.emmcloud.widget.FlowLayout;
 import com.inspur.emmcloud.widget.MaxHightScrollView;
 import com.inspur.emmcloud.widget.NoHorScrollView;
+import com.inspur.emmcloud.widget.WeakHandler;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -67,9 +69,8 @@ import java.util.List;
 
 /**
  * 通讯录选择界面
- * 
- * @author Administrator
  *
+ * @author Administrator
  */
 public class ContactSearchActivity extends BaseActivity {
 	private static final int SEARCH_ALL = 0;
@@ -78,6 +79,7 @@ public class ContactSearchActivity extends BaseActivity {
 	private static final int SEARCH_RECENT = 3;
 	private static final int SEARCH_NOTHIING = 4;
 	private static final int SEARCH_MORE = 5;
+	private static final int REFRESH_DATA = 6;
 	private boolean isSearchSingle = false; // 判断是否搜索单一项
 	private boolean isContainMe = false; // 搜索结果是否可以包含自己
 	private boolean isMultiSelect = false;
@@ -106,7 +108,6 @@ public class ContactSearchActivity extends BaseActivity {
 	private Contact rootContact;
 	private int orginCurrentArea = 0; // orgin页面目前的搜索模式
 	private int searchArea = 0; // 搜索范围
-	private String currentContactId;
 	private String title;
 	private List<ChannelGroup> searchChannelGroupList = new ArrayList<ChannelGroup>(); // 群组搜索结果
 	private List<Contact> searchContactList = new ArrayList<Contact>(); // 通讯录搜索结果
@@ -128,10 +129,11 @@ public class ContactSearchActivity extends BaseActivity {
 	private NoHorScrollView popLayout;
 	private RecyclerView popSecondGroupTitleListView; // 第二组 群组导航列表
 	private RecyclerView popThirdGroupTitleListView; // 第三组 通讯录导航列表
-	private List<FirstGroupTextModel> popSecondGroupTextList = new ArrayList<FirstGroupTextModel>();
-	private List<FirstGroupTextModel> popThirdGroupTextList = new ArrayList<FirstGroupTextModel>();
+	private List<FirstGroupTextModel> popSecondGroupTextList = new ArrayList<>();
+	private List<FirstGroupTextModel> popThirdGroupTextList = new ArrayList<>();
 	private GroupTitleAdapter popSecondGroupTitleAdapter;
 	private GroupTitleAdapter popThirdGroupTitleAdapter;
+	private WeakHandler handler;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -143,6 +145,7 @@ public class ContactSearchActivity extends BaseActivity {
 				.getRootContact(ContactSearchActivity.this);
 		getIntentData();
 		initView();
+		handMessage();
 	}
 
 	/**
@@ -158,11 +161,11 @@ public class ContactSearchActivity extends BaseActivity {
 		}
 		initSearchArea();
 		if (searchContent == SEARCH_CHANNELGROUP) {
-			((RelativeLayout) findViewById(R.id.struct_layout))
+			(findViewById(R.id.struct_layout))
 					.setVisibility(View.GONE);
 		}
 		if (searchContent == SEARCH_CONTACT) {
-			((RelativeLayout) findViewById(R.id.channel_group_layout))
+			(findViewById(R.id.channel_group_layout))
 					.setVisibility(View.GONE);
 		}
 		if (searchContent == SEARCH_NOTHIING) {
@@ -219,6 +222,21 @@ public class ContactSearchActivity extends BaseActivity {
 		}
 	}
 
+	private void handMessage() {
+		handler = new WeakHandler(ContactSearchActivity.this) {
+
+			@Override
+			protected void handleMessage(Object o, Message message) {
+				switch (message.what) {
+					case REFRESH_DATA:
+						showSearchPop();
+						break;
+				}
+			}
+
+		};
+	}
+
 	/**
 	 * 初始化第二组的数据
 	 */
@@ -233,7 +251,7 @@ public class ContactSearchActivity extends BaseActivity {
 
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
-					int position, long id) {
+									int position, long id) {
 				// TODO Auto-generated method stub
 				SearchModel searchModel = commonContactList.get(position);
 				changeMembers(searchModel);
@@ -266,7 +284,7 @@ public class ContactSearchActivity extends BaseActivity {
 
 				@Override
 				public void onItemClick(AdapterView<?> parent, View view,
-						int position, long id) {
+										int position, long id) {
 					// TODO Auto-generated method stub
 					if (orginCurrentArea == SEARCH_CONTACT) {
 						Contact contact = openGroupContactList.get(position);
@@ -296,7 +314,7 @@ public class ContactSearchActivity extends BaseActivity {
 
 	/**
 	 * 点击组织分级列表
-	 * 
+	 *
 	 * @param position
 	 */
 	private void clickGroupTitle(int position) {
@@ -305,7 +323,6 @@ public class ContactSearchActivity extends BaseActivity {
 			openGroupTextList.clear();
 			originLayout.setVisibility(View.VISIBLE);
 			openGroupLayou.setVisibility(View.GONE);
-			currentContactId = "";// 将当前所在组织架构初始化
 		} else if (position != openGroupTextList.size() - 1) {
 			FirstGroupTextModel firstGroupTextModel = openGroupTextList
 					.get(position);
@@ -318,7 +335,7 @@ public class ContactSearchActivity extends BaseActivity {
 
 	/**
 	 * 打开通讯录
-	 * 
+	 *
 	 * @param currentStruct
 	 */
 	private void openContact(Contact currentStruct) {
@@ -338,12 +355,11 @@ public class ContactSearchActivity extends BaseActivity {
 
 	/**
 	 * 打开通讯录
-	 * 
+	 *
 	 * @param id
 	 * @param name
 	 */
 	private void openContact(String id, String name, String fullPath) {
-		currentContactId = id;
 		if (openGroupTextList.size() == 0) {
 			openGroupTextList.add(new FirstGroupTextModel(
 					getString(R.string.all), "", ""));
@@ -377,7 +393,7 @@ public class ContactSearchActivity extends BaseActivity {
 			searchEdit = new EditText(this);
 			FlowLayout.LayoutParams params = new FlowLayout.LayoutParams(
 					LayoutParams.WRAP_CONTENT, DensityUtil.dip2px(
-							getApplicationContext(), 45));
+					getApplicationContext(), 45));
 			int paddingRight = DensityUtil.dip2px(getApplicationContext(), 80);
 			searchEdit.setPadding(0, 0, paddingRight, 0);
 			searchEdit.setLayoutParams(params);
@@ -422,7 +438,7 @@ public class ContactSearchActivity extends BaseActivity {
 
 	/**
 	 * 查看信息
-	 * 
+	 *
 	 * @param searchModel
 	 */
 	private void checkInfoOrEnterChannel(final SearchModel searchModel) {
@@ -504,60 +520,65 @@ public class ContactSearchActivity extends BaseActivity {
 
 		@Override
 		public void beforeTextChanged(CharSequence s, int start, int count,
-				int after) {
+									  int after) {
 			// TODO Auto-generated method stub
 
 		}
 
 		@Override
 		public void onTextChanged(CharSequence s, int start, int before,
-				int count) {
+								  int count) {
 			// TODO Auto-generated method stub
-			String searchText = searchEdit.getText().toString().trim();
+			final String searchText = searchEdit.getText().toString().trim();
 			if (!StringUtils.isBlank(searchText)) {
 				if (popLayout.getVisibility() == View.GONE) {
 					searchArea = orginCurrentArea;
 				}
-				switch (searchArea) {
-				case SEARCH_ALL:
-					searchChannelGroupList = ChannelGroupCacheUtils
-							.getSearchChannelGroupList(getApplicationContext(),
-									searchText);
-					searchContactList = ContactCacheUtils.getSearchContact(
-							getApplicationContext(), searchText,
-							currentContactId, 0, 25);
-					searchRecentList = ChannelCacheUtils.getSearchChannelList(
-							getApplicationContext(), searchText, searchContent);
-					break;
-				case SEARCH_CHANNELGROUP:
-					searchChannelGroupList = ChannelGroupCacheUtils
-							.getSearchChannelGroupList(getApplicationContext(),
-									searchText);
-					if (!isSearchSingle) {
-						searchRecentList = ChannelCacheUtils
-								.getSearchChannelList(getApplicationContext(),
-										searchText, searchContent);
-					}
-					break;
-				case SEARCH_RECENT:
-					searchRecentList = ChannelCacheUtils.getSearchChannelList(
-							getApplicationContext(), searchText, searchContent);
-					break;
-				case SEARCH_CONTACT:
-					searchContactList = ContactCacheUtils.getSearchContact(
-							getApplicationContext(), searchText,
-							currentContactId, 0, 25);
-					if (!isSearchSingle) {
-						searchRecentList = ChannelCacheUtils
-								.getSearchChannelList(getApplicationContext(),
-										searchText, searchContent);
-					}
-					break;
+				new Thread(new Runnable() {
+					@Override
+					public void run() {
+						switch (searchArea) {
+							case SEARCH_ALL:
+								searchChannelGroupList = ChannelGroupCacheUtils
+										.getSearchChannelGroupList(getApplicationContext(),
+												searchText);
+								searchContactList = ContactCacheUtils.getSearchContact(
+										getApplicationContext(), searchText, null,
+										25);
+								searchRecentList = ChannelCacheUtils.getSearchChannelList(
+										getApplicationContext(), searchText, searchContent);
+								break;
+							case SEARCH_CHANNELGROUP:
+								searchChannelGroupList = ChannelGroupCacheUtils
+										.getSearchChannelGroupList(getApplicationContext(),
+												searchText);
+								if (!isSearchSingle) {
+									searchRecentList = ChannelCacheUtils
+											.getSearchChannelList(getApplicationContext(),
+													searchText, searchContent);
+								}
+								break;
+							case SEARCH_RECENT:
+								searchRecentList = ChannelCacheUtils.getSearchChannelList(
+										getApplicationContext(), searchText, searchContent);
+								break;
+							case SEARCH_CONTACT:
+								searchContactList = ContactCacheUtils.getSearchContact(
+										getApplicationContext(), searchText, null,
+										25);
+								if (!isSearchSingle) {
+									searchRecentList = ChannelCacheUtils
+											.getSearchChannelList(getApplicationContext(),
+													searchText, searchContent);
+								}
+								break;
 
-				default:
-					break;
-				}
-				showSearchPop();
+							default:
+								break;
+						}
+						handler.sendEmptyMessage(REFRESH_DATA);
+					}
+				}).start();
 			} else {
 				hideSearchPop();
 			}
@@ -573,7 +594,7 @@ public class ContactSearchActivity extends BaseActivity {
 
 	/**
 	 * 处理点击事件
-	 * 
+	 *
 	 * @param v
 	 */
 	public void onClick(View v) {
@@ -581,60 +602,57 @@ public class ContactSearchActivity extends BaseActivity {
 		Intent intent = new Intent(getApplicationContext(),
 				ContactSearchMoreActivity.class);
 		switch (v.getId()) {
-		case R.id.back_layout:
-		case R.id.cancel_text:
-			finish();
-			break;
-		case R.id.ok_text:
-			returnSearchResultData();
-			break;
-		case R.id.struct_layout:
-			openContact(null);
-			break;
-		case R.id.channel_group_layout:
-			showAllChannelGroup();
-			break;
+			case R.id.back_layout:
+			case R.id.cancel_text:
+				finish();
+				break;
+			case R.id.ok_text:
+				returnSearchResultData();
+				break;
+			case R.id.struct_layout:
+				openContact(null);
+				break;
+			case R.id.channel_group_layout:
+				showAllChannelGroup();
+				break;
 
-		// case R.id.title_all_layout:
-		// searchArea = SEARCH_ALL;
-		// currentContactId = "";
-		// firstGroupTextList.clear();
-		// notifyOrginAllLayout();
-		// break;
-		case R.id.pop_first_group_more_text:
-			List<FirstGroupTextModel> titleList = new ArrayList<FirstGroupTextModel>();
-			titleList.add(new FirstGroupTextModel(getString(R.string.recent),
-					"", ""));
-			intent.putExtra("groupTextList", (Serializable) titleList);
-			intent.putExtra("selectMemList", (Serializable) selectMemList);
-			intent.putExtra("groupPosition", 1);
-			intent.putExtra("searchContent", searchContent);
-			intent.putExtra("searchText", searchEdit.getText().toString());
-			intent.putExtra("isMultiSelect", isMultiSelect);
-			startActivityForResult(intent, SEARCH_MORE);
-			break;
-		case R.id.pop_second_group_more_text:
-			intent.putExtra("groupTextList",
-					(Serializable) popSecondGroupTextList);
-			intent.putExtra("selectMemList", (Serializable) selectMemList);
-			intent.putExtra("groupPosition", 2);
-			intent.putExtra("searchText", searchEdit.getText().toString());
-			intent.putExtra("searchContent", searchContent);
-			intent.putExtra("isMultiSelect", isMultiSelect);
-			startActivityForResult(intent, SEARCH_MORE);
-			break;
-		case R.id.pop_third_group_more_text:
-			intent.putExtra("groupTextList",
-					(Serializable) popThirdGroupTextList);
-			intent.putExtra("selectMemList", (Serializable) selectMemList);
-			intent.putExtra("groupPosition", 3);
-			intent.putExtra("searchText", searchEdit.getText().toString());
-			intent.putExtra("searchContent", searchContent);
-			intent.putExtra("isMultiSelect", isMultiSelect);
-			startActivityForResult(intent, SEARCH_MORE);
-			break;
-		default:
-			break;
+			case R.id.pop_first_group_more_text:
+				List<FirstGroupTextModel> titleList = new ArrayList<FirstGroupTextModel>();
+				titleList.add(new FirstGroupTextModel(getString(R.string.recent),
+						"", ""));
+				intent.putExtra("groupTextList", (Serializable) titleList);
+				intent.putExtra("selectMemList", (Serializable) selectMemList);
+				intent.putExtra("groupPosition", 1);
+				intent.putExtra("searchContent", searchContent);
+				intent.putExtra("searchText", searchEdit.getText().toString());
+				intent.putExtra("isMultiSelect", isMultiSelect);
+				startActivityForResult(intent, SEARCH_MORE);
+				break;
+			case R.id.pop_second_group_more_text:
+				intent.putExtra("groupTextList",
+						(Serializable) popSecondGroupTextList);
+				intent.putExtra("selectMemList", (Serializable) selectMemList);
+				intent.putExtra("groupPosition", 2);
+				intent.putExtra("searchText", searchEdit.getText().toString());
+				intent.putExtra("searchContent", searchContent);
+				intent.putExtra("isMultiSelect", isMultiSelect);
+				startActivityForResult(intent, SEARCH_MORE);
+				break;
+			case R.id.pop_third_group_more_text:
+				FirstGroupTextModel groupTextModel = new FirstGroupTextModel(getString(R.string.origanization_struct),"","");
+				List<FirstGroupTextModel> popGroupTextList = new ArrayList<>();
+				popGroupTextList.add(groupTextModel);
+				intent.putExtra("groupTextList",
+						(Serializable) popGroupTextList);
+				intent.putExtra("selectMemList", (Serializable) selectMemList);
+				intent.putExtra("groupPosition", 3);
+				intent.putExtra("searchText", searchEdit.getText().toString());
+				intent.putExtra("searchContent", searchContent);
+				intent.putExtra("isMultiSelect", isMultiSelect);
+				startActivityForResult(intent, SEARCH_MORE);
+				break;
+			default:
+				break;
 		}
 	}
 
@@ -730,7 +748,7 @@ public class ContactSearchActivity extends BaseActivity {
 
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
-					int position, long id) {
+									int position, long id) {
 				// TODO Auto-generated method stub
 				SearchModel searchModel = new SearchModel(searchRecentList
 						.get(position));
@@ -742,7 +760,7 @@ public class ContactSearchActivity extends BaseActivity {
 
 					@Override
 					public void onItemClick(AdapterView<?> parent, View view,
-							int position, long id) {
+											int position, long id) {
 						// TODO Auto-generated method stub
 						ChannelGroup channelGroup = searchChannelGroupList
 								.get(position);
@@ -754,7 +772,7 @@ public class ContactSearchActivity extends BaseActivity {
 
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
-					int position, long id) {
+									int position, long id) {
 				// TODO Auto-generated method stub
 				Contact contact = searchContactList.get(position);
 				changeMembers(new SearchModel(contact));
@@ -971,9 +989,8 @@ public class ContactSearchActivity extends BaseActivity {
 
 	/**
 	 * 原界面第一个list的Adapter
-	 * 
-	 * @author Administrator
 	 *
+	 * @author Administrator
 	 */
 	private class OpenGroupListAdapter extends BaseAdapter {
 
@@ -1060,9 +1077,8 @@ public class ContactSearchActivity extends BaseActivity {
 
 	/**
 	 * 原界面第二个list的Adapter
-	 * 
-	 * @author Administrator
 	 *
+	 * @author Administrator
 	 */
 	private class SecondGroupListAdapter extends BaseAdapter {
 
@@ -1129,9 +1145,8 @@ public class ContactSearchActivity extends BaseActivity {
 
 	/**
 	 * pop页面list的公共Adapter
-	 * 
-	 * @author Administrator
 	 *
+	 * @author Administrator
 	 */
 	private class popAdapter extends BaseAdapter {
 		private int groupPosition;
@@ -1244,9 +1259,8 @@ public class ContactSearchActivity extends BaseActivity {
 
 	/**
 	 * 第一个group title中list的adapter
-	 * 
-	 * @author Administrator
 	 *
+	 * @author Administrator
 	 */
 	public class GroupTitleAdapter extends RecyclerView.Adapter<MyViewHolder> {
 		private boolean isPopTitle = false;
@@ -1270,7 +1284,7 @@ public class ContactSearchActivity extends BaseActivity {
 				if (groupPosition == 2) {
 					return popSecondGroupTextList.size();
 				} else {
-					return popThirdGroupTextList.size();
+					return 1;
 				}
 
 			} else {
@@ -1288,8 +1302,7 @@ public class ContactSearchActivity extends BaseActivity {
 					arg0.titleText.setText(popSecondGroupTextList.get(arg1)
 							.getName());
 				} else {
-					arg0.titleText.setText(popThirdGroupTextList.get(arg1)
-							.getName());
+					arg0.titleText.setText(R.string.origanization_struct);
 				}
 
 				if (count > 1) {
@@ -1342,7 +1355,7 @@ public class ContactSearchActivity extends BaseActivity {
 
 		/**
 		 * 设置Item点击监听
-		 * 
+		 *
 		 * @param listener
 		 */
 		public void setOnItemClickListener(MyItemClickListener listener) {
@@ -1389,7 +1402,7 @@ public class ContactSearchActivity extends BaseActivity {
 
 	/**
 	 * 统一显示图片
-	 * 
+	 *
 	 * @param searchModel
 	 * @param photoImg
 	 */
@@ -1422,7 +1435,7 @@ public class ContactSearchActivity extends BaseActivity {
 
 	/**
 	 * list显示item的数量（最多显示3个）
-	 * 
+	 *
 	 * @param objectList
 	 * @return
 	 */
@@ -1453,7 +1466,7 @@ public class ContactSearchActivity extends BaseActivity {
 
 	/**
 	 * 创建或进入频道
-	 * 
+	 *
 	 * @param searchModel
 	 */
 	private void creatOrInterChannel(SearchModel searchModel) {
@@ -1479,7 +1492,7 @@ public class ContactSearchActivity extends BaseActivity {
 
 	/**
 	 * 创建单聊
-	 * 
+	 *
 	 * @param id
 	 */
 	private void creatDirectChannel(String id) {
@@ -1517,7 +1530,7 @@ public class ContactSearchActivity extends BaseActivity {
 
 	/**
 	 * 刷新ScrollViewWithListView，并计算其高度
-	 * 
+	 *
 	 * @param listView
 	 * @param adpter
 	 */
