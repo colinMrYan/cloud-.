@@ -34,11 +34,13 @@ import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.bean.GetCreateSingleChannelResult;
 import com.inspur.emmcloud.bean.GetNewsInstructionResult;
 import com.inspur.emmcloud.bean.GetSendMsgResult;
+import com.inspur.emmcloud.bean.NewsIntrcutionUpdateEvent;
 import com.inspur.emmcloud.config.MyAppWebConfig;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.util.ChatCreateUtils;
 import com.inspur.emmcloud.util.ChatCreateUtils.OnCreateDirectChannelListener;
 import com.inspur.emmcloud.util.DensityUtil;
+import com.inspur.emmcloud.util.HtmlRegexpUtil;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.PreferencesByUserUtils;
 import com.inspur.emmcloud.util.StateBarColor;
@@ -50,6 +52,7 @@ import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.ProgressWebView;
 import com.inspur.emmcloud.widget.SwitchView;
 
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -93,6 +96,10 @@ public class NewsWebDetailActivity extends BaseActivity {
     private SwitchView nightModeSwitchBtn;
     private GradientDrawable lightChooseFontBtnBackgroundDrawable;
     private String newsId = "";
+    private String instruction  = "";
+    private String approvedDate = "";
+    private boolean editorCommentCreated = false;
+    private String originalEditorComment = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -233,6 +240,16 @@ public class NewsWebDetailActivity extends BaseActivity {
         if(intent.hasExtra("news_id")){
             this.newsId = intent.getStringExtra("news_id");
         }
+        if(intent.hasExtra("approvedDate")){
+            this.approvedDate = intent.getStringExtra("approvedDate");
+        }
+        if(intent.hasExtra("editorCommentCreated")){
+            this.editorCommentCreated = intent.getBooleanExtra("editorCommentCreated",false);
+        }
+        if(intent.hasExtra("originalEditorComment")){
+            this.originalEditorComment = intent.getStringExtra("originalEditorComment");
+        }
+
     }
 
     /**
@@ -425,11 +442,22 @@ public class NewsWebDetailActivity extends BaseActivity {
                 break;
             case R.id.app_news_share_btn:
                 shareNewsToFrinds();
+//                showHasInstruceionDialog();
                 break;
             case R.id.app_news_instructions_btn:
                 //批示逻辑
                 dialog.dismiss();
-                showInstruceionDialog();
+                if (!StringUtils.isBlank(approvedDate)){
+                    if(getIntent().hasExtra("instruction")){
+                        instruction  = getIntent().getStringExtra("instruction");
+                    }
+                    showHasInstruceionDialog();
+                }else if(editorCommentCreated == true){
+                    instruction = originalEditorComment;
+                    showHasInstruceionDialog();
+                }else{
+                    showInstruceionDialog();
+                }
                 break;
             case R.id.app_news_font_normal_btn:
                 changeNewsFontSize(webSettings, MyAppWebConfig.SMALLER);
@@ -454,6 +482,47 @@ public class NewsWebDetailActivity extends BaseActivity {
     }
 
     /**
+     * 展示已经批示过的新闻
+     */
+    private void showHasInstruceionDialog() {
+        final Dialog hasIntrcutionDialog = new Dialog(NewsWebDetailActivity.this,
+                R.style.transparentFrameWindowStyle);
+        hasIntrcutionDialog.setCanceledOnTouchOutside(true);
+        View  view = getLayoutInflater().inflate(R.layout.app_news_has_instruction_dialog, null);
+        hasIntrcutionDialog.setContentView(view);
+        final EditText editText = (EditText) view.findViewById(R.id.news_instrcution_text);
+        editText.setFocusable(false);
+        editText.setEnabled(false);
+        instruction = handleInstruction(instruction);
+        editText.setText(instruction);
+        Button okBtn = (Button) view.findViewById(R.id.ok_btn);
+        okBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                hasIntrcutionDialog.dismiss();
+            }
+        });
+        Window window = hasIntrcutionDialog.getWindow();
+        WindowManager.LayoutParams wl = window.getAttributes();
+        wl.dimAmount = 0.31f;
+        hasIntrcutionDialog.getWindow().setAttributes(wl);
+        hasIntrcutionDialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+        hasIntrcutionDialog.show();
+    }
+
+    /**
+     * 如果批示里含有html标签，需要处理，如果不含则没有影响
+     * @param instruction
+     * @return
+     */
+    private String handleInstruction(String instruction) {
+        instruction = instruction.replace("<(br|BR)\\\\s*/?>(\\\\s*</(br|BR)>)?","\n").replace(" ","");
+        instruction = HtmlRegexpUtil.filterHtml(instruction);
+        return instruction;
+    }
+
+
+    /**
      * 展示审批
      */
     private void showInstruceionDialog(){
@@ -476,6 +545,7 @@ public class NewsWebDetailActivity extends BaseActivity {
             public void onClick(View v) {
                 String instructions = editText.getText().toString();
                 if(!StringUtils.isBlank(instructions)){
+                    originalEditorComment = instructions;
                     sendInstructions(instructions);
                     intrcutionDialog.dismiss();
                 }else{
@@ -884,6 +954,8 @@ public class NewsWebDetailActivity extends BaseActivity {
             if(loadingDlg != null && loadingDlg.isShowing()){
                 loadingDlg.dismiss();
             }
+            editorCommentCreated = true;
+            sendInstructionEvent();
             Toast.makeText(NewsWebDetailActivity.this,
                     getString(R.string.news_instructions_success_text), Toast.LENGTH_SHORT)
                     .show();
@@ -894,8 +966,21 @@ public class NewsWebDetailActivity extends BaseActivity {
             if(loadingDlg != null && loadingDlg.isShowing()){
                 loadingDlg.dismiss();
             }
+            editorCommentCreated = false;
+            originalEditorComment = "";
             WebServiceMiddleUtils.hand(NewsWebDetailActivity.this,error);
         }
+    }
+
+    /**
+     * 发送批示成功事件
+     */
+    private void sendInstructionEvent() {
+        NewsIntrcutionUpdateEvent groupEvent = new NewsIntrcutionUpdateEvent();
+        groupEvent.setId(newsId);
+        groupEvent.setEditorCommentCreated(true);
+        groupEvent.setOriginalEditorComment(originalEditorComment);
+        EventBus.getDefault().post(groupEvent);
     }
 
     protected void onPause() {

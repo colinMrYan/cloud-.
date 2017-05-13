@@ -73,6 +73,7 @@ import com.inspur.emmcloud.bean.ReactNativeUpdateBean;
 import com.inspur.emmcloud.bean.Robot;
 import com.inspur.emmcloud.bean.TaskResult;
 import com.inspur.emmcloud.bean.Trip;
+import com.inspur.emmcloud.bean.UserProfileInfoBean;
 
 public class APIInterfaceInstance implements APIInterface{
 
@@ -1353,6 +1354,16 @@ public class APIInterfaceInstance implements APIInterface{
 
 	@Override
 	public void returnAppTabAutoFail(String error) {
+
+	}
+
+	@Override
+	public void returnUserProfileSuccess(UserProfileInfoBean userProfileInfoBean) {
+
+	}
+
+	@Override
+	public void returnUserProfileFail(String error) {
 
 	}
 

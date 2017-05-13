@@ -215,6 +215,7 @@
     <string name="group_album"> 群相冊</string>
     <string name="group_file">群文件</string>
     <string name="authorization_expired">授權過期，請重新登錄</string>
+    <string name="cant_login_with_sms">您的賬號不允許使用短信登錄</string>
 
     <!-- 消息部分 -->
     <string name="msgcontent_cannot_null">請輸入消息內容</string>
@@ -459,7 +460,11 @@
     <string name="news_font_name_text">字體</string>
     <string name="news_read_mode">閱讀模式</string>
     <string name="new_instructions_text">批示</string>
+    <string name="news_instructions">批示意見</string>
     <string name="news_instructions_success_text">發送成功</string>
+    <string name="news_no_news">暫無新聞</string>
+    <string name="news_has_instructions_news">您已批示過此新聞</string>
+    <string name="news_has_instructions_known">瞭解了</string>
 
     <!-- 審批頁面 -->
     <string name="onekey_approval_text">審批</string>

@@ -12,10 +12,12 @@ import android.content.Context;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.api.APICallback;
 import com.inspur.emmcloud.api.APIInterface;
+import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.bean.GetBoolenResult;
 import com.inspur.emmcloud.bean.GetCardPackageListResult;
 import com.inspur.emmcloud.bean.GetLanguageResult;
 import com.inspur.emmcloud.bean.GetUploadMyHeadResult;
+import com.inspur.emmcloud.bean.UserProfileInfoBean;
 import com.inspur.emmcloud.util.AppUtils;
 import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.OauthCallBack;
@@ -267,6 +269,37 @@ public class MineAPIService {
 		});
 	}
 
+	/**
+	 * 获取我的信息
+	 */
+	public void getUserProfileInfo(){
+		final String completeUrl = APIUri.getUserProfileUrl();
+		RequestParams params = ((MyApplication) context.getApplicationContext())
+				.getHttpRequestParams(completeUrl);
+		x.http().get(params, new APICallback(context,completeUrl) {
+			@Override
+			public void callbackSuccess(String arg0) {
+				apiInterface.returnUserProfileSuccess(new UserProfileInfoBean(arg0));
+			}
+
+			@Override
+			public void callbackFail(String error, int responseCode) {
+				apiInterface.returnUserProfileFail(error);
+			}
+
+			@Override
+			public void callbackTokenExpire() {
+				new OauthUtils(new OauthCallBack() {
+
+					@Override
+					public void execute() {
+						getUserProfileInfo();
+					}
+				}, context).refreshTocken(completeUrl);
+			}
+		});
+	}
+
 	// /**
 	// * 保存用户头像
 	// *
@@ -356,4 +389,5 @@ public class MineAPIService {
 	// asyncHttpResponseHandler.setIsDebug(LogUtils.isDebug);
 	// client.post(completeUrl, params, asyncHttpResponseHandler);
 	// }
+
 }

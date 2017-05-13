@@ -216,6 +216,7 @@
     <string name="group_album"> 群相册</string>
     <string name="group_file">群文件</string>
     <string name="authorization_expired">授权过期，请重新登录</string>
+    <string name="cant_login_with_sms">您的账号不允许使用短信登录</string>
 
     <!-- 消息部分 -->
     <string name="msgcontent_cannot_null">请输入消息内容</string>
@@ -462,6 +463,10 @@
     <string name="news_read_mode">阅读模式</string>
     <string name="new_instructions_text">批示</string>
     <string name="news_instructions_success_text">发送成功</string>
+    <string name="news_instructions">批示意见</string>
+    <string name="news_no_news">暂无新闻</string>
+    <string name="news_has_instructions_news">您已批示过此新闻</string>
+    <string name="news_has_instructions_known">了解了</string>
 
     <!-- 审批页面 -->
     <string name="onekey_approval_text">审批</string>
