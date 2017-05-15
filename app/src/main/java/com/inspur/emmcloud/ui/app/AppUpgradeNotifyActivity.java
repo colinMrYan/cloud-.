@@ -14,7 +14,6 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.GetUpgradeResult;
 import com.inspur.emmcloud.config.MyAppConfig;
-import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.StateBarColor;
 import com.inspur.emmcloud.util.StringUtils;
@@ -62,14 +61,13 @@ public class AppUpgradeNotifyActivity extends BaseActivity {
 		StateBarColor.changeStateBarColor(this, R.color.white);
 		setContentView(R.layout.activity_app_upgrade_notify);
 		getUpgradeResult = (GetUpgradeResult)getIntent().getSerializableExtra("getUpgradeResult");
-		LogUtils.jasonDebug("url="+getUpgradeResult.getUpgradeUrl());
 		int updateType = getUpgradeResult.getUpgradeCode();
+		upgradeMsg = getUpgradeResult.getUpgradeMsg();
+		String changeLog = getUpgradeResult.getChangeLog();
+		if (!StringUtils.isBlank(changeLog)) {
+			upgradeMsg = changeLog;
+		}
 		if (updateType == 1) {
-			upgradeMsg = getUpgradeResult.getUpgradeMsg();
-			String changeLog = getUpgradeResult.getChangeLog();
-			if (!StringUtils.isBlank(changeLog)) {
-				upgradeMsg = changeLog;
-			}
 			showSelectUpgradeDlg();
 		} else {
 			showForceUpgradeDlg();
@@ -165,18 +163,13 @@ public class AppUpgradeNotifyActivity extends BaseActivity {
 				R.layout.dialog_two_buttons);
 		dialog.setCancelable(false);
 		Button okBt = (Button) dialog.findViewById(R.id.ok_btn);
-		okBt.setText(getString(R.string.upgrade));
+		okBt.setText(R.string.upgrade);
 		TextView text = (TextView) dialog.findViewById(R.id.text);
 		text.setText(upgradeMsg);
-		okBt.setOnClickListener(new View.OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				dialog.dismiss();
-				showDownloadDialog();
-			}
-		});
+		TextView appUpdateTitle = (TextView) dialog.findViewById(R.id.app_update_title);
+		appUpdateTitle.setText(R.string.app_update_remind);
+		TextView appUpdateVersion = (TextView) dialog.findViewById(R.id.app_update_version);
+		appUpdateVersion.setText(getString(R.string.app_last_version)+"("+getUpgradeResult.getLatestVersion()+")");
 		Button cancelBt = (Button) dialog.findViewById(R.id.cancel_btn);
 		cancelBt.setText(getString(R.string.exit));
 		cancelBt.setOnClickListener(new View.OnClickListener() {
@@ -258,7 +251,6 @@ public class AppUpgradeNotifyActivity extends BaseActivity {
 						@Override
 						public void onLoading(long arg0, long arg1, boolean arg2) {
 							// TODO Auto-generated method stub
-							LogUtils.debug("jason", "onLoading");
 							totalSize = arg0;
 							downloadSize = arg1;
 							progress = (int) (((float) arg1 / arg0) * 100);
