@@ -13,7 +13,6 @@ import com.inspur.emmcloud.bean.GetLoginResult;
 import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
-import com.inspur.emmcloud.util.ShortCutUtils;
 import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.ToastUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
@@ -92,8 +91,8 @@ public class ShortCutFunctionActivity extends BaseActivity{
             if(StringUtils.isBlank(uri)){
                 openApp();
             }else{
-                ToastUtils.show(ShortCutFunctionActivity.this,"您要打开的应用不存在，请重新登录后重新添加快捷方式");
-                ShortCutUtils.deleteShortcut(ShortCutFunctionActivity.this,appShortCutName);
+                ToastUtils.show(ShortCutFunctionActivity.this,"您要打开的应用不存在，请删除快捷方式，重新创建");
+//                ShortCutUtils.deleteShortcut(ShortCutFunctionActivity.this,appShortCutName);
                 finish();
             }
         }
