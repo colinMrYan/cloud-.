@@ -95,6 +95,7 @@ public class AppUpgradeService extends Service{
 
 		if (upgradeCode != 0 && (isManualCheck || appNotUpdateTime== -1 || (System.currentTimeMillis()-appNotUpdateTime>notUpdateInterval))){
 			Intent intent = new Intent(this, AppUpgradeNotifyActivity.class);
+			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 			intent.putExtra("getUpgradeResult",getUpgradeResult);
 			AppUpgradeService.this.startActivity(intent);
 		}
