@@ -269,6 +269,8 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
 //                            ShortCutUtils.createShortCut(getActivity(),ReactNativeAppActivity.class,app.getAppName(),app.getUri(),"ecc-app-react-native",R.drawable.ic_launcher);
                         }
                         if(app.getAppID().equals("inspur_news_esg")){
+                            LogUtils.YfcDebug("删除移动签到的快捷方式");
+                            ShortCutUtils.delShortcut(getActivity());
                         }
                         UriUtils.openApp(getActivity(), app);
                         if(getNeedCommonlyUseApp()){

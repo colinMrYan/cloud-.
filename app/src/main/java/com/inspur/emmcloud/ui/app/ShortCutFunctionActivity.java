@@ -13,6 +13,7 @@ import com.inspur.emmcloud.bean.GetLoginResult;
 import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
+import com.inspur.emmcloud.util.ShortCutUtils;
 import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.ToastUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
@@ -27,18 +28,24 @@ public class ShortCutFunctionActivity extends BaseActivity{
     private LoadingDialog loadingDialog;
     private Context context;
     private String uri = "";
+    private String appShortCutName = "";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+//        setContentView(R.layout.dialog_custom_ios_layout);
         loadingDialog = new LoadingDialog(this);
         context = ShortCutFunctionActivity.this;
         LogUtils.YfcDebug("进入ShortCut");
         if(getIntent().hasExtra("uri")){
             uri = getIntent().getStringExtra("uri");
         }
+        if(getIntent().hasExtra("appShortCutName")){
+            appShortCutName = getIntent().getStringExtra("appShortCutName");
+        }
         if(isRefreshTokenExist()){
             forceRereshToken();
         }else{
+            LogUtils.YfcDebug("不存在token导致失败");
             ToastUtils.show(context, context.getString(R.string.authorization_expired));
             finish();
         }
@@ -64,30 +71,40 @@ public class ShortCutFunctionActivity extends BaseActivity{
      * @return
      */
     private boolean isRefreshTokenExist() {
-        boolean flag = false;
+//        boolean flag = false;
         String rereshToken = PreferencesUtils.getString(ShortCutFunctionActivity.this,"refreshToken","");
-        long betweenTime = System.currentTimeMillis() - PreferencesUtils.getLong(ShortCutFunctionActivity.this,"acccessTokenTime",0);
-        if(betweenTime<259000000){
-            flag = true;
-        }
-        return flag && StringUtils.isBlank(rereshToken);
+        LogUtils.YfcDebug("refreshTOken："+rereshToken);
+//        long betweenTime = System.currentTimeMillis() - PreferencesUtils.getLong(ShortCutFunctionActivity.this,"acccessTokenTime",0);
+//        if(betweenTime<259000000){
+//            flag = true;
+//        }
+        return !StringUtils.isBlank(rereshToken);
     }
 
     private class WebService extends APIInterfaceInstance {
         @Override
         public void returnOauthSigninSuccess(GetLoginResult getLoginResult) {
             // TODO Auto-generated method stub
+            if(loadingDialog != null && loadingDialog.isShowing()){
+                loadingDialog.dismiss();
+            }
             saveTokenInfo(getLoginResult);
-            if(!StringUtils.isBlank(uri)){
+            if(StringUtils.isBlank(uri)){
                 openApp();
             }else{
-                ToastUtils.show(ShortCutFunctionActivity.this,"要打开的应用不存在");
+                ToastUtils.show(ShortCutFunctionActivity.this,"您要打开的应用不存在，请重新登录后重新添加快捷方式");
+                ShortCutUtils.deleteShortcut(ShortCutFunctionActivity.this,appShortCutName);
+                finish();
             }
         }
 
         @Override
         public void returnOauthSigninFail(String error) {
             // TODO Auto-generated method stub
+            LogUtils.YfcDebug("请求失败导致授权过期");
+            if(loadingDialog != null && loadingDialog.isShowing()){
+                loadingDialog.dismiss();
+            }
             ToastUtils.show(context, context.getString(R.string.authorization_expired));
             finish();
         }
@@ -122,5 +139,6 @@ public class ShortCutFunctionActivity extends BaseActivity{
         sIntent.setClass(ShortCutFunctionActivity.this, ImpActivity.class);//点击后进入的Activity
         sIntent.putExtra("uri",uri);
         startActivity(sIntent);
+        finish();
     }
 }
