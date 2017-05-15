@@ -43,7 +43,7 @@ public class ShortCutUtils {
 //            intentTodo.putExtra("ecc-app-react-native",appPathOrUri);
 //            intentTodo.setClass(contxt, ReactNativeAppActivity.class);
             sIntent.putExtra("ecc-app-react-native",appPathOrUri);
-        }else if(type.equals("ecc-app-web")){
+        }else if(type.equals("ecc-app-web-hcm")){
             sIntent.putExtra("uri",appPathOrUri);
         }else if(type.equals("ecc-app-native")){
             sIntent.setClass(contxt, GroupNewsActivity.class);
