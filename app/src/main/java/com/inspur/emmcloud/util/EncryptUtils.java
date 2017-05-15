@@ -171,7 +171,7 @@ public class EncryptUtils {
 			cipher.init(Cipher.ENCRYPT_MODE, secretKey,paramSpec);
 			byte[] bytes = cipher.doFinal(stringToEncode.getBytes("UTF8"));
 			Base64.encodeToString(bytes, android.util.Base64.DEFAULT);
-			return  Base64.encodeToString(bytes, android.util.Base64.DEFAULT);
+			return  Base64.encodeToString(bytes, Base64.NO_WRAP);
 
 		} catch (Exception e) {
 			e.printStackTrace();

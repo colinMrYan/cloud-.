@@ -216,6 +216,7 @@
     <string name="group_album"> 群相册</string>
     <string name="group_file">群文件</string>
     <string name="authorization_expired">授权过期，请重新登录</string>
+    <string name="cant_login_with_sms">您的账号不允许使用短信登录</string>
 
     <!-- 消息部分 -->
     <string name="msgcontent_cannot_null">请输入消息内容</string>
@@ -260,6 +261,7 @@
     <string name="add_new_comment">添加新评论</string>
     <string name="socket_connecting">连接中</string>
     <string name="socket_close">已断开</string>
+    <string name="chat_file_download_success">文件已下载成功，再次点击进行打开</string>
 
 
     <!-- 会议卡片 -->
@@ -461,6 +463,10 @@
     <string name="news_read_mode">阅读模式</string>
     <string name="new_instructions_text">批示</string>
     <string name="news_instructions_success_text">发送成功</string>
+    <string name="news_instructions">批示意见</string>
+    <string name="news_no_news">暂无新闻</string>
+    <string name="news_has_instructions_news">您已批示过此新闻</string>
+    <string name="news_has_instructions_known">了解了</string>
 
     <!-- 审批页面 -->
     <string name="onekey_approval_text">审批</string>
@@ -728,7 +734,7 @@
     <string name="download_fail">下载失败</string>
     <string name="download_success">下载成功</string>
     <string name="file_downloading">文件下载中，请稍候...</string>
-    <string name="file_download_success">文件已下载成功，再次点击进行打开</string>
+    <string name="file_download_success">文件已下载成功，是否打开？</string>
     <string name="has_downloaded">已下载</string>
     <string name="imp_content">内容</string>
     <string name="file_ok">确定</string>

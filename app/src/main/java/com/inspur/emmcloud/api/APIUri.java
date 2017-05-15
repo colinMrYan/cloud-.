@@ -598,4 +598,12 @@ public class APIUri {
 	public static String getReactNativeWriteBackUrl(String appModule){
 		return getEcmTanentUrl() + "/api/v0/app/"+appModule+"/update";
 	}
+
+	/**
+	 * 获取我的信息
+	 * @return
+     */
+	public static String getUserProfileUrl(){
+		return emmBaseUrl +"userprofile/displayconfig";
+	}
 }

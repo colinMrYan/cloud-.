@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical" >
@@ -11,8 +12,8 @@
         android:focusable="false"
         android:focusableInTouchMode="false" >
 
-        <com.inspur.emmcloud.widget.CircleImageView
-            android:id="@+id/photo_img"
+        <com.inspur.emmcloud.widget.CircleFrameLayout
+            android:id="@+id/photo_layout"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_centerVertical="true"
@@ -20,7 +21,9 @@
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:layout_marginTop="5dp"
-            android:src="@drawable/icon_org_structure" />
+            app:radius="20dp"
+            android:background="@color/transparent"
+            ></com.inspur.emmcloud.widget.CircleFrameLayout>
 
         <TextView
             android:id="@+id/name_text"
@@ -28,7 +31,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_toLeftOf="@+id/selected_img"
-            android:layout_toRightOf="@id/photo_img"
+            android:layout_toRightOf="@id/photo_layout"
             android:ellipsize="end"
             android:paddingBottom="13dp"
             android:paddingTop="13dp"

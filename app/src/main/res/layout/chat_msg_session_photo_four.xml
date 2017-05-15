@@ -12,6 +12,7 @@
             android:id="@+id/photo_img1"
             android:layout_width="0dp"
             android:scaleType="centerCrop"
+            android:background="@color/white"
             android:layout_height="match_parent"
             android:layout_weight="1"/>
         <View
@@ -21,6 +22,7 @@
         <ImageView
             android:id="@+id/photo_img2"
             android:layout_width="0dp"
+            android:background="@color/white"
             android:scaleType="centerCrop"
             android:layout_height="match_parent"
             android:layout_weight="1"/>
@@ -42,6 +44,7 @@
             android:id="@+id/photo_img3"
             android:layout_width="0dp"
             android:scaleType="centerCrop"
+            android:background="@color/white"
             android:layout_height="match_parent"
             android:layout_weight="1"/>
         <View
@@ -52,6 +55,7 @@
             android:id="@+id/photo_img4"
             android:layout_width="0dp"
             android:scaleType="centerCrop"
+            android:background="@color/white"
             android:layout_height="match_parent"
             android:layout_weight="1"/>
 

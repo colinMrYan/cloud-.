@@ -29,7 +29,6 @@ public class OauthUtils {
 		((MyApplication)context.getApplicationContext()).addCallBack(callBack);
 		if (!((MyApplication)context.getApplicationContext()).getIsTokenRefreshing()) {
 			((MyApplication)context.getApplicationContext()).setIsTokenRefreshing(true);
-			apiService.uploadAuthorizationInfo(1,url,null); 
 			apiService.setAPIInterface(new WebService());
 			apiService.refreshToken();
 		}
@@ -56,7 +55,6 @@ public class OauthUtils {
 			((MyApplication)context.getApplicationContext()).startWebSocket();
 			((MyApplication)context.getApplicationContext()).setAccessToken(accessToken);
 			LoginAPIService apiService = new LoginAPIService(context);
-			apiService.uploadAuthorizationInfo(2,null,oldToken); 
 			List<OauthCallBack> callBackList = ((MyApplication)context.getApplicationContext()).getCallBackList();
 			for (int i = 0; i < callBackList.size(); i++) {
 				callBackList.get(i).execute();
@@ -73,8 +71,6 @@ public class OauthUtils {
 			if (((MyApplication)context.getApplicationContext()).getWebSocketPush() != null) {
 				((MyApplication)context.getApplicationContext()).getWebSocketPush().connectWebSocket();
 			}
-			LoginAPIService apiService = new LoginAPIService(context);
-			apiService.uploadAuthorizationInfo(3,null,null); 
 			ToastUtils.show(context, context.getString(R.string.authorization_expired));
 			Intent intent = new Intent();
 			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);

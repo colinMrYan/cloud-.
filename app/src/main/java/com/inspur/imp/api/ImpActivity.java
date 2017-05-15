@@ -13,8 +13,6 @@ import android.view.View.OnClickListener;
 import android.view.WindowManager;
 import android.webkit.ValueCallback;
 import android.webkit.WebSettings;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -142,9 +140,9 @@ public class ImpActivity extends ImpBaseActivity {
 				webView.reload();
 			}
 		});
-
 		webView.loadUrl(url, extraHeaders);
 		progressLayout.setVisibility(View.VISIBLE);
+
 	}
 
 	/**
@@ -268,15 +266,6 @@ public class ImpActivity extends ImpBaseActivity {
 	}
 
 
-	/**
-	 * 自定义WebViewClient在应用中打开页面
-	 */
-	private class webViewClient extends WebViewClient {
-		public boolean shouldOverrideUrlLoading(WebView view, String url) {
-			view.loadUrl(url);
-			return true;
-		}
-	}
 
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (PublicWay.photoService != null) {
