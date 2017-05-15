@@ -307,73 +307,73 @@ public class LoginAPIService {
 	}
 	
 	
-	/**
-	 * 上传认证token信息
-	 * 
-	 * @param info
-	 */
-	public void uploadAuthorizationInfo(int type, String requestUrl,
-			String oldToken) {
-		String enterpriseCode = UriUtils.tanent;
-		String account = PreferencesUtils.getString(context, "userName", "");
-		final String completeUrl = "https://ecm.inspur.com/" + enterpriseCode
-				+ "/tlog";
-		String accessToken = PreferencesUtils.getString(context, "accessToken",
-				"");
-		String refreshToken = PreferencesUtils.getString(context,
-				"refreshToken", "");
-		String logInfo = "";
-		switch (type) {
-		case 0: // login
-			logInfo = "Android client signed-in as account: " + account
-					+ ". Got access token: " + accessToken
-					+ ", refresh token: " + refreshToken;
-			break;
-		case 1:// api return 401
-			logInfo = "Android client got code 401 when requesting "
-					+ requestUrl + ". Current account: " + account
-					+ ". Got access token: " + accessToken
-					+ ", refresh token: " + refreshToken;
-			break;
-		case 2:// token refresh success
-			logInfo = "Android client refreshed success whith token:"
-					+ oldToken + ". Current account: " + account
-					+ ". New access token: " + accessToken
-					+ ", refresh token: " + refreshToken;
-			break;
-		case 3:// token refresh fail
-			logInfo = "Android client refreshed failed whith token: "
-					+ refreshToken + ". Current account: " + account;
-
-			break;
-		default:
-			break;
-		}
-		RequestParams params = ((MyApplication)context.getApplicationContext()).getHttpRequestParams(completeUrl);
-		params.setBodyContent(logInfo);
-		params.setAsJsonContent(true);
-		x.http().post(params, new APICallback(context,completeUrl) {
-
-			@Override
-			public void callbackSuccess(String arg0) {
-				// TODO Auto-generated method stub
-
-			}
-
-			@Override
-			public void callbackFail(String error, int responseCode) {
-				// TODO Auto-generated method stub
-
-			}
-
-			@Override
-			public void callbackTokenExpire() {
-				// TODO Auto-generated method stub
-
-			}
-
-		});
-	}
+//	/**
+//	 * 上传认证token信息
+//	 *
+//	 * @param info
+//	 */
+//	public void uploadAuthorizationInfo(int type, String requestUrl,
+//			String oldToken) {
+//		String enterpriseCode = UriUtils.tanent;
+//		String account = PreferencesUtils.getString(context, "userName", "");
+//		final String completeUrl = "https://ecm.inspur.com/" + enterpriseCode
+//				+ "/tlog";
+//		String accessToken = PreferencesUtils.getString(context, "accessToken",
+//				"");
+//		String refreshToken = PreferencesUtils.getString(context,
+//				"refreshToken", "");
+//		String logInfo = "";
+//		switch (type) {
+//		case 0: // login
+//			logInfo = "Android client signed-in as account: " + account
+//					+ ". Got access token: " + accessToken
+//					+ ", refresh token: " + refreshToken;
+//			break;
+//		case 1:// api return 401
+//			logInfo = "Android client got code 401 when requesting "
+//					+ requestUrl + ". Current account: " + account
+//					+ ". Got access token: " + accessToken
+//					+ ", refresh token: " + refreshToken;
+//			break;
+//		case 2:// token refresh success
+//			logInfo = "Android client refreshed success whith token:"
+//					+ oldToken + ". Current account: " + account
+//					+ ". New access token: " + accessToken
+//					+ ", refresh token: " + refreshToken;
+//			break;
+//		case 3:// token refresh fail
+//			logInfo = "Android client refreshed failed whith token: "
+//					+ refreshToken + ". Current account: " + account;
+//
+//			break;
+//		default:
+//			break;
+//		}
+//		RequestParams params = ((MyApplication)context.getApplicationContext()).getHttpRequestParams(completeUrl);
+//		params.setBodyContent(logInfo);
+//		params.setAsJsonContent(true);
+//		x.http().post(params, new APICallback(context,completeUrl) {
+//
+//			@Override
+//			public void callbackSuccess(String arg0) {
+//				// TODO Auto-generated method stub
+//
+//			}
+//
+//			@Override
+//			public void callbackFail(String error, int responseCode) {
+//				// TODO Auto-generated method stub
+//
+//			}
+//
+//			@Override
+//			public void callbackTokenExpire() {
+//				// TODO Auto-generated method stub
+//
+//			}
+//
+//		});
+//	}
 	
 	
 	/**

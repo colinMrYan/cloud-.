@@ -17,6 +17,7 @@ import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
 import com.inspur.emmcloud.bean.GetNewsTitleResult;
 import com.inspur.emmcloud.bean.Titles;
 import com.inspur.emmcloud.util.NetUtils;
+import com.inspur.emmcloud.util.ToastUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.PagerSlidingTabStrip;
@@ -125,6 +126,7 @@ public class GroupNewsActivity extends BaseFragmentActivity implements
 
 			titles = getNewsTitleResult.getTitlesList();
 			if(titles.size() == 0){
+				ToastUtils.show(GroupNewsActivity.this,R.string.news_no_news);
 				finish();
 			}
 			
