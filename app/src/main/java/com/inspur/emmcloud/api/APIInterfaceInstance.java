@@ -13,6 +13,7 @@ import com.inspur.emmcloud.bean.GetAllRobotsResult;
 import com.inspur.emmcloud.bean.GetAppGroupResult;
 import com.inspur.emmcloud.bean.GetAppTabAutoResult;
 import com.inspur.emmcloud.bean.GetAppTabsResult;
+import com.inspur.emmcloud.bean.GetBindingDeviceResult;
 import com.inspur.emmcloud.bean.GetBookingRoomResult;
 import com.inspur.emmcloud.bean.GetBoolenResult;
 import com.inspur.emmcloud.bean.GetCalendarEventsResult;
@@ -76,6 +77,16 @@ import com.inspur.emmcloud.bean.Trip;
 import com.inspur.emmcloud.bean.UserProfileInfoBean;
 
 public class APIInterfaceInstance implements APIInterface{
+
+	@Override
+	public void returnBindingDeviceListSuccess(GetBindingDeviceResult getBindingDeviceResult) {
+
+	}
+
+	@Override
+	public void returnBindingDeviceListFail(String error) {
+
+	}
 
 	@Override
 	public void returnOauthSigninSuccess(GetLoginResult getLoginResult) {

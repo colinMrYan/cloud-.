@@ -11,11 +11,13 @@ import android.content.Context;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.api.APICallback;
 import com.inspur.emmcloud.api.APIInterface;
+import com.inspur.emmcloud.api.APIUri;
+import com.inspur.emmcloud.bean.GetBindingDeviceResult;
 import com.inspur.emmcloud.bean.GetBoolenResult;
 import com.inspur.emmcloud.bean.GetCardPackageListResult;
 import com.inspur.emmcloud.bean.GetLanguageResult;
 import com.inspur.emmcloud.bean.GetUploadMyHeadResult;
-import com.inspur.emmcloud.bean.GetUserHeadUploadResult;
+import com.inspur.emmcloud.bean.UserProfileInfoBean;
 import com.inspur.emmcloud.util.AppUtils;
 import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.OauthCallBack;
@@ -292,60 +294,48 @@ public class MineAPIService {
 			public void callbackSuccess(String arg0) {
 				// TODO Auto-generated method stub
 				apiInterface
-						.returnUserHeadUploadSuccess(new GetUserHeadUploadResult(
+						.returnBindingDeviceListSuccess(new GetBindingDeviceResult(
 								arg0));
 			}
 
 			@Override
 			public void callbackFail(String error, int responseCode) {
 				// TODO Auto-generated method stub
-				apiInterface.returnUserHeadUploadFail(error);
+				apiInterface.returnBindingDeviceListFail(error);
 			}
 		});
 	}
 
-	// /**
-	// * 获取人员信息
-	// *
-	// * @param inspurID
-	// */
-	// public void getUserInfo(final String inspurID) {
-	// String module = "user";
-	// String method = "get_user_by_inspurid";
-	// final String completeUrl = baseUrl + "module=" + module + "&method="
-	// + method;
-	// RequestParams params = new RequestParams();
-	// params.add("inspur_id", inspurID);
-	// // client.addHeader("Authorization",
-	// // ((MyApplication) context.getApplicationContext()).getToken());
-	// AsyncHttpResponseHandler asyncHttpResponseHandler = new
-	// AsyncHttpResponseHandler() {
-	//
-	// @Override
-	// public void onSuccess(int arg0, Header[] arg1, byte[] arg2) {
-	// apiInterface.returnUserInfoSuccess(new GetUserInfoResult(
-	// new String(arg2)));
-	// }
-	//
-	// @Override
-	// public void onFailure(int arg0, Header[] arg1, byte[] arg2,
-	// Throwable arg3) {
-	// apiInterface.returnUserInfoFail(new String(arg2));
-	// }
-	//
-	// @Override
-	// public void onTokenExpire() {
-	// new OauthUtils(new OauthCallBack() {
-	//
-	// @Override
-	// public void execute() {
-	// getUserInfo(inspurID);
-	// }
-	// }, context).refreshTocken(completeUrl);
-	// }
-	//
-	// };
-	// asyncHttpResponseHandler.setIsDebug(LogUtils.isDebug);
-	// client.post(completeUrl, params, asyncHttpResponseHandler);
-	// }
+
+	/**
+	 * 获取我的信息
+	 */
+	public void getUserProfileInfo(){
+		final String completeUrl = APIUri.getUserProfileUrl();
+		RequestParams params = ((MyApplication) context.getApplicationContext())
+				.getHttpRequestParams(completeUrl);
+		x.http().get(params, new APICallback(context,completeUrl) {
+			@Override
+			public void callbackSuccess(String arg0) {
+				apiInterface.returnUserProfileSuccess(new UserProfileInfoBean(arg0));
+			}
+
+			@Override
+			public void callbackFail(String error, int responseCode) {
+				apiInterface.returnUserProfileFail(error);
+			}
+
+			@Override
+			public void callbackTokenExpire() {
+				new OauthUtils(new OauthCallBack() {
+
+					@Override
+					public void execute() {
+						getUserProfileInfo();
+					}
+				}, context).refreshTocken(completeUrl);
+			}
+		});
+	}
+
 }

@@ -402,6 +402,7 @@
     <string name="my_setting_tips_quit">确定清除应用内所有缓存数据？清除后将退出应用</string>
     <string name="get_language_error">未获取到可用的语言包，请联系管理员</string>
     <string name="app_customer">云+客服</string>
+    <string name="settings_device_manager">设备安全与管理</string>
 
 
     <!-- 修改密码部分 -->

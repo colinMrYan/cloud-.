@@ -129,7 +129,6 @@ public class SettingActivity extends BaseActivity {
 		Intent intent = new Intent();
 		switch (v.getId()) {
 		case R.id.back_layout:
-
 			finish();
 			break;
 		case R.id.signout_layout:
@@ -150,12 +149,10 @@ public class SettingActivity extends BaseActivity {
 					dialogClickListener, true);
 
 			break;
-		case R.id.account_security_layout:
-			// ToastUtils.show(getApplicationContext(),
-			// R.string.function_not_implemented);
-			// intent.setClass(SettingActivity.this,
-			// AccountSecurityActivity.class);
-			// startActivity(intent);
+		case R.id.device_manager_layout:
+			 intent.setClass(SettingActivity.this,
+					 DeviceManagerActivity.class);
+			 startActivity(intent);
 			break;
 		case R.id.msg_notify_layout:
 			// ToastUtils.show(getApplicationContext(),

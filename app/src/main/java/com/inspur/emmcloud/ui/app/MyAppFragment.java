@@ -41,7 +41,6 @@ import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
-import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.SwitchView;
 import com.inspur.emmcloud.widget.SwitchView.OnStateChangedListener;
 import com.inspur.emmcloud.widget.draggrid.DragAdapter;
@@ -74,7 +73,6 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
     private ImageView editBtn;
     private Button editBtnFinish;
     private MyAppAPIService apiService;
-    private LoadingDialog loadingDialog;
     private boolean hasCommonlyApp = false;
     private PullToRefreshLayout pullToRefreshLayout;
     private BroadcastReceiver mBroadcastReceiver;
@@ -98,7 +96,6 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
      * 初始化Views
      */
     private void initViews() {
-        loadingDialog = new LoadingDialog(getActivity());
         apiService = new MyAppAPIService(getActivity());
         apiService.setAPIInterface(new WebService());
         pullToRefreshLayout = (PullToRefreshLayout) rootView
@@ -129,8 +126,8 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
         });
         titleText = (TextView) rootView.findViewById(R.id.header_text);
         OnAppCenterClickListener listener = new OnAppCenterClickListener();
-        ((RelativeLayout)rootView.findViewById(R.id.appcenter_layout)).setOnClickListener(listener);
-        getMyApp(true);
+        (rootView.findViewById(R.id.appcenter_layout)).setOnClickListener(listener);
+        getMyApp();
         setTabTitle();
 
     }
@@ -148,9 +145,8 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
     /**
      * 获取app
      */
-    private void getMyApp(boolean isShowDlg) {
+    private void getMyApp() {
         if (NetUtils.isNetworkConnected(getActivity())) {
-            loadingDialog.show(isShowDlg);
             apiService.getUserApps();
         } else {
             pullToRefreshLayout.refreshFinish(PullToRefreshLayout.FAIL);
@@ -166,7 +162,7 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
             public void onReceive(Context context, Intent intent) {
                 String action = intent.getAction();
                 if (action.equals(ACTION_NAME)) {
-                    getMyApp(true);
+                    getMyApp();
                 }
             }
         };
@@ -589,7 +585,7 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
 
     @Override
     public void onRefresh(PullToRefreshLayout pullToRefreshLayout) {
-        getMyApp(false);
+        getMyApp();
         editBtn.setVisibility(View.VISIBLE);
         editBtnFinish.setVisibility(View.GONE);
     }
@@ -726,9 +722,6 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
     class WebService extends APIInterfaceInstance {
         @Override
         public void returnUserAppsSuccess(GetAppGroupResult getAppGroupResult) {
-            if (loadingDialog.isShowing()) {
-                loadingDialog.dismiss();
-            }
             List<AppGroupBean> appGroupList = handleAppList(getAppGroupResult
                     .getAppGroupBeanList());
             appListAdapter = new AppListAdapter(appGroupList);
@@ -739,9 +732,6 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
 
         @Override
         public void returnUserAppsFail(String error) {
-            if (loadingDialog.isShowing()) {
-                loadingDialog.dismiss();
-            }
             pullToRefreshLayout.refreshFinish(PullToRefreshLayout.FAIL);
             WebServiceMiddleUtils.hand(getActivity(), error);
         }

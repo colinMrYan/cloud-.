@@ -16,4 +16,12 @@ public class BindingDevice {
 		deviceId = JSONUtils.getString(obj, "deviceId", "");
 		deviceType = JSONUtils.getString(obj, "deviceType", "");
 	}
+
+	public String getDeviceId(){
+		return  deviceId;
+	}
+
+	public String getDeviceType(){
+		return deviceType;
+	}
 }

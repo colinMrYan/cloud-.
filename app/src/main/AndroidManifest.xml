@@ -6,7 +6,7 @@
     android:versionName="1.1.10">
 
     <uses-sdk
-        android:minSdkVersion="14"
+        android:minSdkVersion="16"
         android:targetSdkVersion="22" />
 
     <!-- 极光推送权限配置开始 -->
@@ -210,6 +210,14 @@
             android:name=".ui.mine.setting.SettingActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.mine.setting.DeviceManagerActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".ui.mine.setting.DeviceInfoActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".ui.contact.UserInfoActivity"
             android:launchMode="singleTask"

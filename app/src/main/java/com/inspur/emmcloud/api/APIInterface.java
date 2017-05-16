@@ -13,6 +13,7 @@ import com.inspur.emmcloud.bean.GetAllRobotsResult;
 import com.inspur.emmcloud.bean.GetAppGroupResult;
 import com.inspur.emmcloud.bean.GetAppTabAutoResult;
 import com.inspur.emmcloud.bean.GetAppTabsResult;
+import com.inspur.emmcloud.bean.GetBindingDeviceResult;
 import com.inspur.emmcloud.bean.GetBookingRoomResult;
 import com.inspur.emmcloud.bean.GetBoolenResult;
 import com.inspur.emmcloud.bean.GetCalendarEventsResult;
@@ -393,5 +394,8 @@ public interface APIInterface {
 
 	public void returnUserProfileSuccess(UserProfileInfoBean userProfileInfoBean);
 	public void returnUserProfileFail(String error);
+
+	void returnBindingDeviceListSuccess(GetBindingDeviceResult getBindingDeviceResult);
+	void returnBindingDeviceListFail(String error);
 
 }
