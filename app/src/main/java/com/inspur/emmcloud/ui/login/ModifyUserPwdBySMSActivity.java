@@ -20,6 +20,7 @@ import com.inspur.emmcloud.broadcastreceiver.SmsCaptchasReceiver;
 import com.inspur.emmcloud.util.AppUtils;
 import com.inspur.emmcloud.util.FomatUtils;
 import com.inspur.emmcloud.util.IntentUtils;
+import com.inspur.emmcloud.util.JSONUtils;
 import com.inspur.emmcloud.util.LoginUtils;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.StringUtils;
@@ -264,13 +265,31 @@ public class ModifyUserPwdBySMSActivity extends BaseActivity{
 				loadingDialog.dismiss();
 			}
 			if (errorCode == 400) {
-				ToastUtils.show(getApplicationContext(), getApplicationContext().getString(R.string.no_phone_num));
+				handleErrorCode(error);
+//				ToastUtils.show(getApplicationContext(), getApplicationContext().getString(R.string.no_phone_num));
 			} else {
 				WebServiceMiddleUtils.hand(ModifyUserPwdBySMSActivity.this, error);
 			}
 		}
 		
 		
+	}
+
+	/**
+	 * 处理400错，因现在10901错不是基本的错误类型
+	 * 只在此处进行了特殊处理，如果以后是统一错误将封装，
+	 * 且仅处理验证码登录没有处理忘记密码时通过验证码找回
+	 * 此处理方法已确认
+	 * 20170516  yfc
+	 * @param error
+	 */
+	private void handleErrorCode(String error) {
+		String code = JSONUtils.getString(error, "code", "");
+		if (!StringUtils.isBlank(code) && code.equals("10901")) {
+			ToastUtils.show(getApplicationContext(), getApplicationContext().getString(R.string.cant_login_with_sms));
+		} else {
+			WebServiceMiddleUtils.hand(ModifyUserPwdBySMSActivity.this, error);
+		}
 	}
 	
 	@Override
