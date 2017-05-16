@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
+import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TabHost;
@@ -130,6 +131,7 @@ public class IndexActivity extends BaseFragmentActivity implements
 		startUploadPVCollectService();
         registerReactNativeReceiver();
         startCoreService();
+        setPreloadWebApp();
     }
 
 
@@ -179,6 +181,17 @@ public class IndexActivity extends BaseFragmentActivity implements
         Intent intent = new Intent();
         intent.setClass(this, CoreService.class);
         startService(intent);
+    }
+
+    /**
+     * 为了使打开报销web应用更快，进行预加载
+     */
+    private void setPreloadWebApp(){
+        if (UriUtils.tanent.equals("inspur_esg")){
+            WebView webView = (WebView) findViewById(R.id.preload_webview);
+            webView.getSettings().setJavaScriptEnabled(true);
+            webView.loadUrl("http://baoxiao.inspur.com/loadres.html");
+        }
     }
 
 
