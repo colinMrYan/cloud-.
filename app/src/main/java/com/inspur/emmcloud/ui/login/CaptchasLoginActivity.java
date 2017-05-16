@@ -305,7 +305,6 @@ public class CaptchasLoginActivity extends BaseActivity {
     /**
      * 处理400错，因现在10901错不是基本的错误类型
      * 只在此处进行了特殊处理，如果以后是统一错误将封装，
-     * 且仅处理验证码登录没有处理忘记密码时通过验证码找回
      * 此处理方法已确认
      * 20170513  yfc
      *
