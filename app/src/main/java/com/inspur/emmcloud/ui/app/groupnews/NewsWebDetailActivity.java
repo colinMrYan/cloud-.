@@ -67,6 +67,7 @@ public class NewsWebDetailActivity extends BaseActivity {
     private static final String lightMode = "#light_120";
     private String url;
     private String poster;
+    private String title;
     private String digest;
     private LoadingDialog loadingDlg;
     private String shareCid;
@@ -227,7 +228,7 @@ public class NewsWebDetailActivity extends BaseActivity {
             poster = intent.getStringExtra("poster");
         }
         if (intent.hasExtra("title")) {
-            pagerTitle = intent.getStringExtra("title");
+            title = intent.getStringExtra("title");
         }
         if (intent.hasExtra("digest")) {
             digest = intent.getStringExtra("digest");
@@ -900,7 +901,7 @@ public class NewsWebDetailActivity extends BaseActivity {
             jsonObject.put("url", url);
             jsonObject.put("poster", poster);
             jsonObject.put("digest", digest);
-            jsonObject.put("title", pagerTitle);
+            jsonObject.put("title", title);
         } catch (JSONException e) {
             e.printStackTrace();
         }
