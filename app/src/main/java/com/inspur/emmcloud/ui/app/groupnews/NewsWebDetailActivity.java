@@ -67,7 +67,6 @@ public class NewsWebDetailActivity extends BaseActivity {
     private static final String lightMode = "#light_120";
     private String url;
     private String poster;
-    private String title;
     private String digest;
     private LoadingDialog loadingDlg;
     private String shareCid;
@@ -123,9 +122,7 @@ public class NewsWebDetailActivity extends BaseActivity {
         loadingDlg = new LoadingDialog(NewsWebDetailActivity.this);
         relativeLayout = (RelativeLayout) findViewById(R.id.header_layout);
         headText = (TextView)findViewById(R.id.header_text);
-        if(StringUtils.isBlank(title)){
-            title = getString(R.string.group_news_detail);
-        }
+        pagerTitle = getString(R.string.group_news_detail);
         headText.setText(pagerTitle);
         initWebView();
     }
@@ -230,7 +227,7 @@ public class NewsWebDetailActivity extends BaseActivity {
             poster = intent.getStringExtra("poster");
         }
         if (intent.hasExtra("title")) {
-            title = intent.getStringExtra("title");
+            pagerTitle = intent.getStringExtra("title");
         }
         if (intent.hasExtra("digest")) {
             digest = intent.getStringExtra("digest");
@@ -903,7 +900,7 @@ public class NewsWebDetailActivity extends BaseActivity {
             jsonObject.put("url", url);
             jsonObject.put("poster", poster);
             jsonObject.put("digest", digest);
-            jsonObject.put("title", title);
+            jsonObject.put("title", pagerTitle);
         } catch (JSONException e) {
             e.printStackTrace();
         }
