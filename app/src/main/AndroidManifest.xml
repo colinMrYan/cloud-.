@@ -519,6 +519,7 @@
             android:name=".ui.find.FindSearchMoreActivity"
             android:screenOrientation="portrait" />
         <activity android:name=".ui.app.ShortCutFunctionActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />

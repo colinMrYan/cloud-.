@@ -7,6 +7,7 @@ import android.os.Bundle;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.api.APICallback;
 import com.inspur.emmcloud.bean.App;
 import com.inspur.emmcloud.bean.PVCollectModel;
 import com.inspur.emmcloud.ui.app.ReactNativeAppActivity;
@@ -14,7 +15,6 @@ import com.inspur.emmcloud.ui.app.groupnews.GroupNewsActivity;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.imp.api.ImpActivity;
 
-import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
 import org.xutils.x;
 
@@ -90,32 +90,50 @@ public class UriUtils {
         activity.startActivity(intent);
     }
 
-    private static void getReallyUrl(final Activity activity, String url,final App app) {
+    public static void getReallyUrl(final Activity activity, String url,final App app) {
        final LoadingDialog loadingDialog = new LoadingDialog(activity);
         loadingDialog.show();
         RequestParams params = ((MyApplication) activity.getApplicationContext()).getHttpRequestParams(url);
-        x.http().get(params, new Callback.CommonCallback<String>() {
+        x.http().get(params, new APICallback(activity,url) {
             @Override
-            public void onSuccess(String s) {
-                String reallyUrl = JSONUtils.getString(s,"uri","");
+            public void callbackSuccess(String arg0) {
+                String reallyUrl = JSONUtils.getString(arg0,"uri","");
                 openWebApp(activity,reallyUrl,app);
             }
 
             @Override
-            public void onError(Throwable throwable, boolean b) {
+            public void callbackFail(String error, int responseCode) {
+                LogUtils.YfcDebug("error:"+error+"错误码："+responseCode);
                 ToastUtils.show(activity, R.string.react_native_app_open_failed);
             }
 
             @Override
-            public void onCancelled(CancelledException e) {
+            public void callbackTokenExpire() {
 
-            }
-
-            @Override
-            public void onFinished() {
-                loadingDialog.dismiss();
             }
         });
+//        x.http().get(params, new Callback.CommonCallback<String>() {
+//            @Override
+//            public void onSuccess(String s) {
+//                String reallyUrl = JSONUtils.getString(s,"uri","");
+//                openWebApp(activity,reallyUrl,app);
+//            }
+//
+//            @Override
+//            public void onError(Throwable throwable, boolean b) {
+//                ToastUtils.show(activity, R.string.react_native_app_open_failed);
+//            }
+//
+//            @Override
+//            public void onCancelled(CancelledException e) {
+//
+//            }
+//
+//            @Override
+//            public void onFinished() {
+//                loadingDialog.dismiss();
+//            }
+//        });
     }
 
     /**

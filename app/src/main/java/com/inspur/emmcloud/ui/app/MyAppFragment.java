@@ -264,13 +264,13 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
                         //可以再定具体出现的时机和是否需要对用户进行提示
                         if(app.getAppID().equals("1e169160-0e1f-11e7-8c5c-15b1be8e5981")){
                             LogUtils.YfcDebug("移动签到功能："+app.toString());
-                            ShortCutUtils.createShortCut(getActivity(),ShortCutFunctionActivity.class,app.getAppName(),app.getUri(),"ecc-app-web-hcm",R.drawable.icon_shortcut_register);
+                            ShortCutUtils.createShortCut(getActivity(),ShortCutFunctionActivity.class,
+                                    app.getAppName(),app.getUri(),"ecc-app-web-hcm",R.drawable.icon_shortcut_register);
                             /*为了ReactNative应用创建的*/
 //                            ShortCutUtils.createShortCut(getActivity(),ReactNativeAppActivity.class,app.getAppName(),app.getUri(),"ecc-app-react-native",R.drawable.ic_launcher);
                         }
                         if(app.getAppID().equals("inspur_news_esg")){
-                            LogUtils.YfcDebug("删除移动签到的快捷方式");
-                            ShortCutUtils.delShortcut(getActivity());
+                            LogUtils.YfcDebug("这是新闻应用");
                         }
                         UriUtils.openApp(getActivity(), app);
                         if(getNeedCommonlyUseApp()){

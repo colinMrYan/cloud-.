@@ -27,19 +27,15 @@ public class ShortCutFunctionActivity extends BaseActivity{
     private LoadingDialog loadingDialog;
     private Context context;
     private String uri = "";
-    private String appShortCutName = "";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        setContentView(R.layout.dialog_custom_ios_layout);
+        setContentView(R.layout.activity_blank);
         loadingDialog = new LoadingDialog(this);
         context = ShortCutFunctionActivity.this;
         LogUtils.YfcDebug("进入ShortCut");
         if(getIntent().hasExtra("uri")){
             uri = getIntent().getStringExtra("uri");
-        }
-        if(getIntent().hasExtra("appShortCutName")){
-            appShortCutName = getIntent().getStringExtra("appShortCutName");
         }
         if(isRefreshTokenExist()){
             forceRereshToken();
@@ -88,11 +84,10 @@ public class ShortCutFunctionActivity extends BaseActivity{
                 loadingDialog.dismiss();
             }
             saveTokenInfo(getLoginResult);
-            if(StringUtils.isBlank(uri)){
+            if(!StringUtils.isBlank(uri)){
                 openApp();
             }else{
-                ToastUtils.show(ShortCutFunctionActivity.this,"您要打开的应用不存在，请删除快捷方式，重新创建");
-//                ShortCutUtils.deleteShortcut(ShortCutFunctionActivity.this,appShortCutName);
+                ToastUtils.show(ShortCutFunctionActivity.this,"您要打开的应用不存在，请删除现在快捷后重新添加");
                 finish();
             }
         }
