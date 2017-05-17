@@ -15,6 +15,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TabHost;
@@ -190,7 +191,16 @@ public class IndexActivity extends BaseFragmentActivity implements
         if (UriUtils.tanent.equals("inspur_esg")){
             WebView webView = (WebView) findViewById(R.id.preload_webview);
             webView.getSettings().setJavaScriptEnabled(true);
+            webView.setWebViewClient(new WebViewClient(){
+                @Override
+                public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                    // TODO Auto-generated method stub
+                    view.loadUrl(url);
+                    return true;
+                }
+            });
             webView.loadUrl("http://baoxiao.inspur.com/loadres.html");
+            webView.reload();
         }
     }
 
