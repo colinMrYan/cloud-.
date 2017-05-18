@@ -123,9 +123,7 @@ public class NewsWebDetailActivity extends BaseActivity {
         loadingDlg = new LoadingDialog(NewsWebDetailActivity.this);
         relativeLayout = (RelativeLayout) findViewById(R.id.header_layout);
         headText = (TextView)findViewById(R.id.header_text);
-        if(StringUtils.isBlank(title)){
-            title = getString(R.string.group_news_detail);
-        }
+        pagerTitle = getString(R.string.group_news_detail);
         headText.setText(pagerTitle);
         initWebView();
     }

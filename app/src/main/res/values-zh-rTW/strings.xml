@@ -215,7 +215,8 @@
     <string name="group_album"> 群相冊</string>
     <string name="group_file">群文件</string>
     <string name="authorization_expired">授權過期，請重新登錄</string>
-    <string name="cant_login_with_sms">您的賬號不允許使用短信登錄</string>
+    <string name="cant_login_with_sms">根據集團安全性原則,您的賬號不允許使用短信登錄</string>
+    <string name="cant_get_password_with_sms">根據集團安全性原則,您的帳號不允許使用手機號找回密碼</string>
 
     <!-- 消息部分 -->
     <string name="msgcontent_cannot_null">請輸入消息內容</string>

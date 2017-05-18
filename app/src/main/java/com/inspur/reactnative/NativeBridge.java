@@ -216,12 +216,16 @@ public class NativeBridge extends ReactContextBaseJavaModule implements Activity
      */
     @ReactMethod
     public void findContactByMail(String email, Promise promise) {
+        if(StringUtils.isBlank(email) || email.equals("null")){
+            promise.reject(new Exception("no contact found by email"));
+            return;
+        }
         Contact contact = ContactCacheUtils.getContactByEmail(getCurrentActivity(), email);
         if (contact != null) {
             WritableNativeMap map = contact.contact2Map();
             promise.resolve(map);
         } else {
-            promise.reject(new Exception("no contact found by email:" + email));
+            promise.reject(new Exception("no contact found by email"));
         }
     }
 
