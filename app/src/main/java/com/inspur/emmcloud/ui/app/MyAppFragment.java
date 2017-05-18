@@ -444,7 +444,6 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
      */
     private void showCommonlyUseApps(App app, List<AppCommonlyUse> appCommonlyUseList,
                                      List<AppGroupBean> appAdapterList) {
-        LogUtils.YfcDebug("常用应用的长度：" + appCommonlyUseList.size());
         if (hasCommonlyApp) {
             //如果已经有了常用app则需要先移除掉第一组
             appAdapterList.remove(0);

@@ -45,7 +45,6 @@ public class ShortCutUtils {
         installer.putExtra("duplicate", false);//false标示不重复创建
         Intent intentTodo = new Intent();
         if(type.equals("ecc-app-react-native")){
-            LogUtils.YfcDebug("添加react：ecc-app-react-native===="+appPathOrUri);
 //            intentTodo.putExtra("ecc-app-react-native",appPathOrUri);
 //            intentTodo.setClass(contxt, ReactNativeAppActivity.class);
             sIntent.putExtra("ecc-app-react-native",appPathOrUri);
@@ -144,7 +143,6 @@ public class ShortCutUtils {
             }
 
         }
-        LogUtils.YfcDebug("使用新方法判断快捷方式是否存在"+isInstallShortcut);
         return isInstallShortcut;
 
     }

@@ -251,7 +251,6 @@ public class ZipUtils {
             // 转码为GBK格式，支持中文
             zfile = new ZipFile(zipFile);
         } catch (IOException e) {
-            LogUtils.YfcDebug("00000"+e.getMessage());
             e.printStackTrace();
             return false;
         }
@@ -271,16 +270,13 @@ public class ZipUtils {
             OutputStream os = null;
             FileOutputStream fos = null;
             // ze.getName()会返回 script/start.script这样的，是为了返回实体的File
-            LogUtils.YfcDebug("传入文件路径："+folderPath);
             File realFile = getRealFileName(folderPath, ze.getName());
-            LogUtils.YfcDebug("正式文件路径："+realFile.getPath());
             try {
                 if(!realFile.exists()){
                     realFile = new File(folderPath, ze.getName());
                 }
                 fos = new FileOutputStream(realFile);
             } catch (FileNotFoundException e) {
-                LogUtils.YfcDebug("11111"+e.getMessage());
                 return false;
             }
             os = new BufferedOutputStream(fos);
@@ -288,7 +284,6 @@ public class ZipUtils {
             try {
                 is = new BufferedInputStream(zfile.getInputStream(ze));
             } catch (IOException e) {
-                LogUtils.YfcDebug("22222"+e.getMessage());
                 return false;
             }
             int readLen = 0;
@@ -298,21 +293,18 @@ public class ZipUtils {
                     os.write(buf, 0, readLen);
                 }
             } catch (IOException e) {
-                LogUtils.YfcDebug("33333"+e.getMessage());
                 return false;
             }
             try {
                 is.close();
                 os.close();
             } catch (IOException e) {
-                LogUtils.YfcDebug("44444"+e.getMessage());
                 return false;
             }
         }
         try {
             zfile.close();
         } catch (IOException e) {
-            LogUtils.YfcDebug("55555"+e.getMessage());
             return false;
         }
         return true;
