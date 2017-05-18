@@ -38,10 +38,10 @@ import com.inspur.emmcloud.bean.AppCommonlyUse;
 import com.inspur.emmcloud.bean.AppGroupBean;
 import com.inspur.emmcloud.bean.AppOrder;
 import com.inspur.emmcloud.bean.GetAppGroupResult;
+import com.inspur.emmcloud.ui.app.groupnews.GroupNewsActivity;
 import com.inspur.emmcloud.util.AppCacheUtils;
 import com.inspur.emmcloud.util.AppTitleUtils;
 import com.inspur.emmcloud.util.IntentUtils;
-import com.inspur.emmcloud.util.LauncherUtils;
 import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.PreferencesByUserUtils;
@@ -146,7 +146,7 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
         getMyApp(true);
         setTabTitle();
         shortCutAppList.add("1e169160-0e1f-11e7-8c5c-15b1be8e5981");
-        shortCutAppList.add("inspur_news_esg");
+        shortCutAppList.add("inspur_news_esg");//目前，除在此处添加id还需要为每个需要生成快捷方式的应用配置图标
 
     }
 
@@ -277,8 +277,7 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
                         String appId = app.getAppID();
                         if (shortCutAppList.indexOf(appId) != -1) {
                             boolean needCreateShortCut = PreferencesByUserUtils.getBoolean(getActivity(), "need_create_shortcut" + app.getAppID(), true);
-                            LogUtils.YfcDebug("是否需要创建快捷方式："+needCreateShortCut);
-                            if (needCreateShortCut && !LauncherUtils.isShortCutExist(getActivity(), app.getAppName())) {
+                            if (needCreateShortCut && !ShortCutUtils.isShortCutExist(getActivity(), app.getAppName())) {
                                 //目前只识别的移动签到和集团新闻两个应用，设置了两个图标，以后可以改成可配置的
                                 if(appId.equals("1e169160-0e1f-11e7-8c5c-15b1be8e5981")){
                                     InputStream is = null;
@@ -291,7 +290,7 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
                                         e.printStackTrace();
                                     }
                                 }else if(appId.equals("inspur_news_esg")){
-                                    showCreateShortCutDialog(app, "ecc-app-native", ImpActivity.class,
+                                    showCreateShortCutDialog(app, "ecc-app-native", GroupNewsActivity.class,
                                             R.drawable.news_icon,null);
                                 }
                             } else {
@@ -400,7 +399,6 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
                             app.getAppName(), app.getUri(), appType, bitmap);
                 }
                 if(bitmap == null){
-                    LogUtils.YfcDebug("通过bitmap创建快捷方式");
                     ShortCutUtils.createShortCut(getActivity(), clz,
                             app.getAppName(), app.getUri(), appType, icon);
                 }
@@ -910,9 +908,10 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
                 myCommonlyUseAppList = myCommonlyUseAppList.subList(0, 4);
             }
             Collections.sort(myCommonlyUseAppList, new SortCommonlyUseAppClass());
-            for (int i = 0; i < myCommonlyUseAppList.size(); i++) {
-                LogUtils.YfcDebug("app名称：" + myCommonlyUseAppList.get(i).getAppName() + "常用应用的权重" + myCommonlyUseAppList.get(i).getWeight());
-            }
+            //需要调试常用应用权重时解开
+//            for (int i = 0; i < myCommonlyUseAppList.size(); i++) {
+//                LogUtils.YfcDebug("app名称：" + myCommonlyUseAppList.get(i).getAppName() + "常用应用的权重" + myCommonlyUseAppList.get(i).getWeight());
+//            }
 
             if (myCommonlyUseAppList.size() > 0) {
                 appGroupBean.setAppItemList(myCommonlyUseAppList);
