@@ -130,6 +130,7 @@ public class IndexActivity extends BaseFragmentActivity implements
 		/**从服务端获取显示tab**/
 		getAppTabs();
 		startUploadPVCollectService();
+<<<<<<< HEAD
 		registerReactNativeReceiver();
 		startCoreService();
 		setPreloadWebApp();
@@ -248,6 +249,127 @@ public class IndexActivity extends BaseFragmentActivity implements
 		AppAPIService apiService = new AppAPIService(IndexActivity.this);
 		apiService.setAPIInterface(new WebService());
 		if (NetUtils.isNetworkConnected(getApplicationContext(), false)) {
+=======
+        registerReactNativeReceiver();
+        startCoreService();
+        setPreloadWebApp();
+    }
+
+
+    /**
+     * 注册刷新广播
+     */
+    private void registerReactNativeReceiver() {
+        if (reactNativeReceiver == null) {
+            reactNativeReceiver = new IndexReactNativeReceiver();
+            IntentFilter filter = new IntentFilter();
+            filter.addAction("com.inspur.react.success");
+            registerReceiver(reactNativeReceiver, filter);
+        }
+    }
+
+    /**
+     * 初始化ReactNative
+     */
+    private void initReactNative() {
+        RNCacheViewManager.init(IndexActivity.this);
+        reactNativeCurrentPath = MyAppConfig.getReactAppFilePath(IndexActivity.this,userId,"discover");
+        if (checkClientIdNotExit()) {
+            getReactNativeClientId();
+        }
+        if (!ReactNativeFlow.checkBundleFileIsExist(reactNativeCurrentPath + "/index.android.bundle")) {
+            ReactNativeFlow.initReactNative(IndexActivity.this,userId);
+        } else {
+            updateReactNative();
+        }
+    }
+
+    /**
+     * 获取clientId
+     */
+    private void getReactNativeClientId() {
+        AppAPIService appAPIService = new AppAPIService(IndexActivity.this);
+        appAPIService.setAPIInterface(new WebService());
+        if (NetUtils.isNetworkConnected(IndexActivity.this)) {
+            appAPIService.getClientId(AppUtils.getMyUUID(IndexActivity.this), AppUtils.GetChangShang());
+        }
+    }
+
+    /**
+     * 打开保活服务
+     */
+    private void startCoreService(){
+        Intent intent = new Intent();
+        intent.setClass(this, CoreService.class);
+        startService(intent);
+    }
+
+    /**
+     * 为了使打开报销web应用更快，进行预加载
+     */
+    private void setPreloadWebApp(){
+        if (UriUtils.tanent.equals("inspur_esg")){
+            WebView webView = (WebView) findViewById(R.id.preload_webview);
+            webView.getSettings().setJavaScriptEnabled(true);
+            webView.setWebViewClient(new WebViewClient(){
+                @Override
+                public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                    // TODO Auto-generated method stub
+                    view.loadUrl(url);
+                    return true;
+                }
+            });
+            webView.loadUrl("http://baoxiao.inspur.com/loadres.html");
+            webView.reload();
+        }
+    }
+
+
+    /**
+     * 检查clientId是否存在
+     *
+     * @return
+     */
+    private boolean checkClientIdNotExit() {
+        String clientId = PreferencesUtils.getString(IndexActivity.this, UriUtils.tanent + userId + "react_native_clientid", "");
+        return StringUtils.isBlank(clientId);
+    }
+
+    /**
+     * 更新ReactNative
+     */
+    private void updateReactNative() {
+        appApiService = new AppAPIService(IndexActivity.this);
+        appApiService.setAPIInterface(new WebService());
+        String clientId = PreferencesUtils.getString(IndexActivity.this, UriUtils.tanent + userId + "react_native_clientid", "");
+        StringBuilder describeVersionAndTime = FileUtils.readFile(reactNativeCurrentPath +"/bundle.json", "UTF-8");
+        AndroidBundleBean androidBundleBean = new AndroidBundleBean(describeVersionAndTime.toString());
+        if (NetUtils.isNetworkConnected(IndexActivity.this)) {
+            appApiService.getReactNativeUpdate(androidBundleBean.getVersion(), androidBundleBean.getCreationDate(), clientId);
+        }
+    }
+
+
+    /***
+     * 打开app应用行为分析上传的Service;
+     */
+    private void startUploadPVCollectService() {
+        // TODO Auto-generated method stub
+        if (!AppUtils.isServiceWork(getApplicationContext(), "com.inspur.emmcloud.service.CollectService")) {
+            Intent intent = new Intent();
+            intent.setClass(this, PVCollectService.class);
+            startService(intent);
+        }
+    }
+
+    /**
+     * 获取应用显示tab
+     */
+    private void getAppTabs() {
+        AppAPIService apiService = new AppAPIService(IndexActivity.this);
+        apiService.setAPIInterface(new WebService());
+        if (NetUtils.isNetworkConnected(getApplicationContext(), false)) {
+>>>>>>> dev
 //            apiService.getAppTabs();
 			String version = PreferencesByUserUtils.getString(IndexActivity.this, "app_tabbar_version", "");
 			;

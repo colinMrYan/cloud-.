@@ -338,4 +338,31 @@ public class MineAPIService {
 		});
 	}
 
+	/**
+	 * 解绑设备
+	 * @param udid
+	 */
+	public void unBindDevice(String udid){
+		final String completeUrl = "https://emm.inspur.com/api/device/unbind";
+		RequestParams params = ((MyApplication) context.getApplicationContext())
+				.getHttpRequestParams(completeUrl);
+		params.addParameter("udid",udid);
+		x.http().post(params, new APICallback(context,completeUrl) {
+			@Override
+			public void callbackSuccess(String arg0) {
+
+			}
+
+			@Override
+			public void callbackFail(String error, int responseCode) {
+
+			}
+
+			@Override
+			public void callbackTokenExpire() {
+
+			}
+		})
+	}
+
 }

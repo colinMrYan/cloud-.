@@ -398,4 +398,7 @@ public interface APIInterface {
 	void returnBindingDeviceListSuccess(GetBindingDeviceResult getBindingDeviceResult);
 	void returnBindingDeviceListFail(String error);
 
+	void returnUnBindDeviceSuccess();
+	void returnUnBindDeviceFail(String error);
+
 }

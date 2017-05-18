@@ -266,6 +266,7 @@ public class MyInfoActivity extends BaseActivity {
 			if(loadingDialog != null && loadingDialog.isShowing()){
 				loadingDialog.dismiss();
 			}
+			//此处异常不予处理照常显示，所以没有异常处理
 		}
 	}
 
