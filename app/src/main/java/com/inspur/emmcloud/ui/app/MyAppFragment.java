@@ -378,7 +378,7 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
         final TextView textView = (TextView) view.findViewById(R.id.news_has_instrcution_text);
         final CheckBox checkBox = (CheckBox) view.findViewById(R.id.shortcut_dialog_checkbox);
         textView.setMovementMethod(ScrollingMovementMethod.getInstance());
-        textView.setText("系统检测到您使用" + app.getAppName() + "的频率较高，是否需要生成快捷方式，助您办公更便捷");
+        textView.setText(app.getAppName() + "是一个常用应用，是否需要生成快捷方式，助您办公更便捷");
         Button okBtn = (Button) view.findViewById(R.id.ok_btn);
         okBtn.setOnClickListener(new View.OnClickListener() {
             @Override
