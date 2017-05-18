@@ -6,10 +6,10 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.net.Uri;
 
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.ui.app.groupnews.GroupNewsActivity;
 
 /**
  * Created by yufuchang on 2017/3/30.
@@ -47,7 +47,10 @@ public class ShortCutUtils {
             LogUtils.YfcDebug("创建hcm快捷方式");
             sIntent.putExtra("uri",appPathOrUri);
         }else if(type.equals("ecc-app-native")){
-            sIntent.setClass(contxt, GroupNewsActivity.class);
+//            sIntent.setClass(contxt, clz);
+        }else if(type.equals("ecc-app-web-gs")){
+            sIntent.putExtra("uri",appPathOrUri);
+//            sIntent.setClass(contxt, clz);
         }
         installer.putExtra(Intent.EXTRA_SHORTCUT_INTENT,intentTodo);
         installer.putExtra("android.intent.extra.shortcut.INTENT", sIntent);
@@ -58,6 +61,51 @@ public class ShortCutUtils {
         installer.setAction("com.android.launcher.action.INSTALL_SHORTCUT");
         contxt.sendBroadcast(installer);//发送安装桌面图标的通知
     }
+
+
+    /**
+     * 创建快捷方式，以bitmap指定图标的方式
+     * @param contxt
+     * @param clz
+     * @param shortCutName
+     * @param appPathOrUri
+     * @param type
+     * @param iconBitmap
+     */
+    public static void createShortCut(Context contxt,Class clz,String shortCutName,String appPathOrUri,String type,Bitmap iconBitmap) {
+        String applicationName = shortCutName;//程序名称，不是packageName
+        if (isInstallShortcut(contxt,applicationName)) {// 如果已经创建了一次就不会再创建了
+            return;
+        }
+        Intent sIntent = new Intent(Intent.ACTION_MAIN);
+        sIntent.addCategory(Intent.CATEGORY_LAUNCHER);// 加入action,和category之后，程序卸载的时候才会主动将该快捷方式也卸载
+        sIntent.setClass(contxt, clz);//点击后进入的Activity
+        Intent installer = new Intent();
+        installer.putExtra("duplicate", false);//false标示不重复创建
+        Intent intentTodo = new Intent();
+        if(type.equals("ecc-app-react-native")){
+            sIntent.putExtra("ecc-app-react-native",appPathOrUri);
+        }else if(type.equals("ecc-app-web-hcm")){
+            sIntent.putExtra("uri",appPathOrUri);
+        }else if(type.equals("ecc-app-native")){
+//            sIntent.setClass(contxt, clz);
+        }else if(type.equals("ecc-app-web-gs")){
+            sIntent.putExtra("uri",appPathOrUri);
+//            sIntent.setClass(contxt, clz);
+        }
+        installer.putExtra(Intent.EXTRA_SHORTCUT_INTENT,intentTodo);
+        installer.putExtra("android.intent.extra.shortcut.INTENT", sIntent);
+        //设置应用的名称
+        installer.putExtra("android.intent.extra.shortcut.NAME", applicationName);
+        //设置图标
+        installer.putExtra(Intent.EXTRA_SHORTCUT_ICON, iconBitmap);
+//        installer.putExtra("android.intent.extra.shortcut.ICON_RESOURCE", Intent.ShortcutIconResource.fromContext(contxt, icon));
+        installer.setAction("com.android.launcher.action.INSTALL_SHORTCUT");
+        contxt.sendBroadcast(installer);//发送安装桌面图标的通知
+    }
+
+
+
 
     /**
      * 检查是否已经存在

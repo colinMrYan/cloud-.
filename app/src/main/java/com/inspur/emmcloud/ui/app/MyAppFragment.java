@@ -5,6 +5,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.v4.app.Fragment;
@@ -36,7 +38,6 @@ import com.inspur.emmcloud.bean.AppCommonlyUse;
 import com.inspur.emmcloud.bean.AppGroupBean;
 import com.inspur.emmcloud.bean.AppOrder;
 import com.inspur.emmcloud.bean.GetAppGroupResult;
-import com.inspur.emmcloud.ui.app.groupnews.GroupNewsActivity;
 import com.inspur.emmcloud.util.AppCacheUtils;
 import com.inspur.emmcloud.util.AppTitleUtils;
 import com.inspur.emmcloud.util.IntentUtils;
@@ -61,6 +62,8 @@ import com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout.OnRefreshList
 import com.inspur.emmcloud.widget.pullableview.PullableListView;
 import com.inspur.imp.api.ImpActivity;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -89,6 +92,7 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
     private BroadcastReceiver mBroadcastReceiver;
     private PopupWindow popupWindow;
     private boolean isNeedCommonlyUseApp = false;
+    private List<String> shortCutAppList = new ArrayList<>();
     //    private SwitchView switchView;
 //    private View contentView;
     private TextView titleText;
@@ -141,6 +145,8 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
         ((RelativeLayout) rootView.findViewById(R.id.appcenter_layout)).setOnClickListener(listener);
         getMyApp(true);
         setTabTitle();
+        shortCutAppList.add("1e169160-0e1f-11e7-8c5c-15b1be8e5981");
+        shortCutAppList.add("inspur_news_esg");
 
     }
 
@@ -215,7 +221,6 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
      * App组列表
      */
     public class AppListAdapter extends BaseAdapter {
-
         private List<AppGroupBean> appAdapterList = new ArrayList<AppGroupBean>();
         private boolean canEdit = false;
 
@@ -270,18 +275,25 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
                         App app = appGroupItemList.get(position);
                         //可以再定具体出现的时机和是否需要对用户进行提示
                         String appId = app.getAppID();
-                        if (appId.equals("1e169160-0e1f-11e7-8c5c-15b1be8e5981")||appId.equals("inspur_news_esg")) {
+                        if (shortCutAppList.indexOf(appId) != -1) {
                             boolean needCreateShortCut = PreferencesByUserUtils.getBoolean(getActivity(), "need_create_shortcut" + app.getAppID(), true);
                             LogUtils.YfcDebug("是否需要创建快捷方式："+needCreateShortCut);
                             if (needCreateShortCut && !LauncherUtils.isShortCutExist(getActivity(), app.getAppName())) {
+                                //目前只识别的移动签到和集团新闻两个应用，设置了两个图标，以后可以改成可配置的
                                 if(appId.equals("1e169160-0e1f-11e7-8c5c-15b1be8e5981")){
-                                    showCreateShortCutDialog(app, "ecc-app-web-hcm", ImpActivity.class,
-                                            R.drawable.icon_shortcut_register);
+                                    InputStream is = null;
+                                    try {
+                                        is = getActivity().getAssets().open("icon_test.png");
+                                        Bitmap bitmap = BitmapFactory.decodeStream(is);
+                                        showCreateShortCutDialog(app, "ecc-app-web-hcm",
+                                                ImpActivity.class, 0,bitmap);
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
                                 }else if(appId.equals("inspur_news_esg")){
-                                    showCreateShortCutDialog(app, "ecc-app-native",
-                                        GroupNewsActivity.class, R.drawable.news_icon);
+                                    showCreateShortCutDialog(app, "ecc-app-native", ImpActivity.class,
+                                            R.drawable.news_icon,null);
                                 }
-
                             } else {
                                 UriUtils.openApp(getActivity(), app);
                             }
@@ -369,7 +381,7 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
      * @param clz
      * @param icon
      */
-    private void showCreateShortCutDialog(final App app, final String appType, final Class clz, final int icon) {
+    private void showCreateShortCutDialog(final App app, final String appType, final Class clz, final int icon,final Bitmap bitmap) {
         final Dialog hasIntrcutionDialog = new Dialog(getActivity(),
                 R.style.transparentFrameWindowStyle);
         hasIntrcutionDialog.setCanceledOnTouchOutside(true);
@@ -378,13 +390,20 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
         final TextView textView = (TextView) view.findViewById(R.id.news_has_instrcution_text);
         final CheckBox checkBox = (CheckBox) view.findViewById(R.id.shortcut_dialog_checkbox);
         textView.setMovementMethod(ScrollingMovementMethod.getInstance());
-        textView.setText(app.getAppName() + "是一个常用应用，是否需要生成快捷方式，助您办公更便捷");
+        textView.setText(app.getAppName() + getString(R.string.app_commonly_use_app));
         Button okBtn = (Button) view.findViewById(R.id.ok_btn);
         okBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ShortCutUtils.createShortCut(getActivity(), clz,
-                        app.getAppName(), app.getUri(), appType, icon);
+                if(icon == 0){
+                    ShortCutUtils.createShortCut(getActivity(), clz,
+                            app.getAppName(), app.getUri(), appType, bitmap);
+                }
+                if(bitmap == null){
+                    LogUtils.YfcDebug("通过bitmap创建快捷方式");
+                    ShortCutUtils.createShortCut(getActivity(), clz,
+                            app.getAppName(), app.getUri(), appType, icon);
+                }
                 hasIntrcutionDialog.dismiss();
             }
         });
