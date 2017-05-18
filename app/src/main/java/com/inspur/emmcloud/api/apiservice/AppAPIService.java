@@ -38,7 +38,6 @@ import org.xutils.x;
 public class AppAPIService {
 	private Context context;
 	private APIInterface apiInterface;
-	private String baseUrl = "https://emm.inspur.com/api?";
 
 	public AppAPIService(Context context) {
 		this.context = context;
@@ -122,38 +121,6 @@ public class AppAPIService {
 		});
 	}
 
-
-//	/**
-//	 * 获取ReactNative更新版本
-//	 * @param version
-//	 * @param lastCreationDate
-//	 */
-//	public void getReactNativeUpdate (final int version, final long lastCreationDate){
-//		final String completeUrl = APIUri.getReactNativeUpdate()+"version="+version+"&lastCreationDate=" + lastCreationDate;
-//		RequestParams params = ((MyApplication) context.getApplicationContext())
-//				.getHttpRequestParams(completeUrl);
-//		x.http().get(params, new APICallback(context,completeUrl) {
-//			@Override
-//			public void callbackSuccess(String arg0) {
-//				apiInterface.returnReactNativeUpdateSuccess(new ReactNativeUpdateBean(arg0));
-//			}
-//
-//			@Override
-//			public void callbackFail(String error, int responseCode) {
-//				apiInterface.returnReactNativeUpdateFail(error);
-//			}
-//
-//			@Override
-//			public void callbackTokenExpire() {
-//				new OauthUtils(new OauthCallBack() {
-//					@Override
-//					public void execute() {
-//						getReactNativeUpdate(version,lastCreationDate);
-//					}
-//				},context).refreshTocken(completeUrl);
-//			}
-//		});
-//	}
 
 	/**
 	 * 获取ReactNative更新版本

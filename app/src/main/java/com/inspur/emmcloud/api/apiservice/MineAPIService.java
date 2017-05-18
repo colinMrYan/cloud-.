@@ -270,6 +270,38 @@ public class MineAPIService {
 	}
 
 	/**
+	 * 获取我的信息
+	 */
+	public void getUserProfileInfo(){
+		final String completeUrl = APIUri.getUserProfileUrl();
+		RequestParams params = ((MyApplication) context.getApplicationContext())
+				.getHttpRequestParams(completeUrl);
+		x.http().get(params, new APICallback(context,completeUrl) {
+			@Override
+			public void callbackSuccess(String arg0) {
+				apiInterface.returnUserProfileSuccess(new UserProfileInfoBean(arg0));
+			}
+
+			@Override
+			public void callbackFail(String error, int responseCode) {
+				apiInterface.returnUserProfileFail(error);
+			}
+
+			@Override
+			public void callbackTokenExpire() {
+				new OauthUtils(new OauthCallBack() {
+
+					@Override
+					public void execute() {
+						getUserProfileInfo();
+					}
+				}, context).refreshTocken(completeUrl);
+			}
+		});
+	}
+
+
+	/**
 	 * 获取当前绑定设备列表
 	 */
 	public void getBindingDevices() {
@@ -306,23 +338,24 @@ public class MineAPIService {
 		});
 	}
 
-
 	/**
-	 * 获取我的信息
+	 * 解绑设备
+	 * @param udid
 	 */
-	public void getUserProfileInfo(){
-		final String completeUrl = APIUri.getUserProfileUrl();
+	public void unBindDevice(final String udid){
+		final String completeUrl = APIUri.getUnBindDeviceUrl();
 		RequestParams params = ((MyApplication) context.getApplicationContext())
 				.getHttpRequestParams(completeUrl);
-		x.http().get(params, new APICallback(context,completeUrl) {
+		params.addParameter("udid",udid);
+		x.http().post(params, new APICallback(context,completeUrl) {
 			@Override
 			public void callbackSuccess(String arg0) {
-				apiInterface.returnUserProfileSuccess(new UserProfileInfoBean(arg0));
+				apiInterface.returnUnBindDeviceSuccess();
 			}
 
 			@Override
 			public void callbackFail(String error, int responseCode) {
-				apiInterface.returnUserProfileFail(error);
+
 			}
 
 			@Override
@@ -331,38 +364,11 @@ public class MineAPIService {
 
 					@Override
 					public void execute() {
-						getUserProfileInfo();
+						unBindDevice(udid);
 					}
 				}, context).refreshTocken(completeUrl);
 			}
 		});
-	}
-
-	/**
-	 * 解绑设备
-	 * @param udid
-	 */
-	public void unBindDevice(String udid){
-		final String completeUrl = "https://emm.inspur.com/api/device/unbind";
-		RequestParams params = ((MyApplication) context.getApplicationContext())
-				.getHttpRequestParams(completeUrl);
-		params.addParameter("udid",udid);
-		x.http().post(params, new APICallback(context,completeUrl) {
-			@Override
-			public void callbackSuccess(String arg0) {
-
-			}
-
-			@Override
-			public void callbackFail(String error, int responseCode) {
-
-			}
-
-			@Override
-			public void callbackTokenExpire() {
-
-			}
-		})
 	}
 
 }

@@ -441,4 +441,34 @@ public class MyAppAPIService {
         });
     }
 
+    /**
+     * 获取真实的url地址
+     * @param url
+     */
+    public void getReallyUrl(final String url){
+//        RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
+//        x.http().get(params, new Callback.CommonCallback<String>() {
+//            @Override
+//            public void onSuccess(String s) {
+//                String reallyUrl = JSONUtils.getString(s,"uri","");
+//                openWebApp(activity,reallyUrl,app);
+//            }
+//
+//            @Override
+//            public void onError(Throwable throwable, boolean b) {
+//                ToastUtils.show(activity, R.string.react_native_app_open_failed);
+//            }
+//
+//            @Override
+//            public void onCancelled(CancelledException e) {
+//
+//            }
+//
+//            @Override
+//            public void onFinished() {
+//                loadingDialog.dismiss();
+//            }
+//        });
+    }
+
 }

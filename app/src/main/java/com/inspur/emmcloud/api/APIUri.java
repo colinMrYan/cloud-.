@@ -606,4 +606,11 @@ public class APIUri {
 	public static String getUserProfileUrl(){
 		return emmBaseUrl +"userprofile/displayconfig";
 	}
+
+
+	/**
+	 * 获取解绑设备url
+	 * @return
+	 */
+	public static String getUnBindDeviceUrl(){return  emmBaseUrl+"device/unbind";}
 }

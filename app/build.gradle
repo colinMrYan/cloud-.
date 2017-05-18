@@ -184,5 +184,5 @@ dependencies {
     compile 'commons-codec:commons-codec:20041127.091804'
     compile files('src/libs/jpush-android_v3.0.3.jar')
     compile files('src/libs/jcore-android_v1.1.1.jar')
-    compile files('src/libs/mdm.jar')
+    //compile files('src/libs/mdm.jar')
 }

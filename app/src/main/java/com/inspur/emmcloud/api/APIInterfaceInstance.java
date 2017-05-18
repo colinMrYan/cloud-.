@@ -77,6 +77,15 @@ import com.inspur.emmcloud.bean.Trip;
 import com.inspur.emmcloud.bean.UserProfileInfoBean;
 
 public class APIInterfaceInstance implements APIInterface{
+	@Override
+	public void returnUnBindDeviceSuccess() {
+
+	}
+
+	@Override
+	public void returnUnBindDeviceFail(String error) {
+
+	}
 
 	@Override
 	public void returnBindingDeviceListSuccess(GetBindingDeviceResult getBindingDeviceResult) {
