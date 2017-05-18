@@ -44,6 +44,7 @@ public class ShortCutUtils {
 //            intentTodo.setClass(contxt, ReactNativeAppActivity.class);
             sIntent.putExtra("ecc-app-react-native",appPathOrUri);
         }else if(type.equals("ecc-app-web-hcm")){
+            LogUtils.YfcDebug("创建hcm快捷方式");
             sIntent.putExtra("uri",appPathOrUri);
         }else if(type.equals("ecc-app-native")){
             sIntent.setClass(contxt, GroupNewsActivity.class);
@@ -93,6 +94,7 @@ public class ShortCutUtils {
         if (c != null) {
             c.close();
         }
+        LogUtils.YfcDebug("工具类里检测是否安装："+isInstallShortcut);
         return isInstallShortcut;
     }
 

@@ -38,7 +38,13 @@ public class ShortCutFunctionActivity extends BaseActivity{
             uri = getIntent().getStringExtra("uri");
         }
         if(isRefreshTokenExist()){
-            forceRereshToken();
+//            forceRereshToken();
+            if(!StringUtils.isBlank(uri)){
+                openApp();
+            }else{
+                ToastUtils.show(context, context.getString(R.string.authorization_expired));
+                finish();
+            }
         }else{
             LogUtils.YfcDebug("不存在token导致失败");
             ToastUtils.show(context, context.getString(R.string.authorization_expired));

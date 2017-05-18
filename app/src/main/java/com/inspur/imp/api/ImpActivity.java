@@ -19,10 +19,14 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.MyApplication;
+import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.ui.login.LoginActivity;
 import com.inspur.emmcloud.util.AppUtils;
 import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.OauthUtils;
 import com.inspur.emmcloud.util.PreferencesByUserUtils;
+import com.inspur.emmcloud.util.StringUtils;
+import com.inspur.emmcloud.util.ToastUtils;
 import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.imp.engine.webview.ImpWebChromeClient;
 import com.inspur.imp.engine.webview.ImpWebView;
@@ -115,6 +119,7 @@ public class ImpActivity extends ImpBaseActivity {
 
 		String token = ((MyApplication)getApplicationContext())
 				.getToken();
+		checkToken(token);
 		setOauthHeader(token);
 		setLangHeader(UriUtils.getLanguageCookie(this));
 		setUserAgent("/emmcloud/" + AppUtils.getVersion(this));
@@ -143,6 +148,20 @@ public class ImpActivity extends ImpBaseActivity {
 		webView.loadUrl(url, extraHeaders);
 		progressLayout.setVisibility(View.VISIBLE);
 
+	}
+
+	/**
+	 * 检查token，如果token不存在则跳转到登录页面
+	 * @param token
+     */
+	private void checkToken(String token) {
+		if(StringUtils.isBlank(token)){
+			ToastUtils.show(ImpActivity.this, ImpActivity.this.getString(R.string.authorization_expired));
+			Intent intent = new Intent();
+			intent.setClass(ImpActivity.this, LoginActivity.class);
+			startActivity(intent);
+			finish();
+		}
 	}
 
 	/**
