@@ -40,13 +40,11 @@ public class AppUpgradeService extends Service{
 
 	@Override
 	public void onCreate() {
-		LogUtils.jasonDebug("AppUpgradeService-------onCreate");
 		super.onCreate();
 	}
 
 	@Override
 	public void onDestroy() {
-		LogUtils.jasonDebug("AppUpgradeService-------onDestroy");
 		super.onDestroy();
 	}
 
