@@ -9,6 +9,7 @@ package com.inspur.emmcloud.api.apiservice;
 
 import android.content.Context;
 
+import com.alibaba.fastjson.JSON;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.api.APICallback;
 import com.inspur.emmcloud.api.APIInterface;
@@ -20,10 +21,12 @@ import com.inspur.emmcloud.bean.GetExceptionResult;
 import com.inspur.emmcloud.bean.GetUpgradeResult;
 import com.inspur.emmcloud.bean.ReactNativeClientIdErrorBean;
 import com.inspur.emmcloud.bean.ReactNativeUpdateBean;
+import com.inspur.emmcloud.bean.SplashPageBean;
 import com.inspur.emmcloud.util.AppUtils;
 import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.OauthCallBack;
 import com.inspur.emmcloud.util.OauthUtils;
+import com.inspur.emmcloud.util.PreferencesByUserUtils;
 
 import org.json.JSONObject;
 import org.xutils.http.HttpMethod;
@@ -382,5 +385,39 @@ public class AppAPIService {
 			}
 		});
 
+	}
+
+	/**
+	 * 获取闪屏页信息
+	 * 采用新式数据解析方法
+	 * @param clientId
+	 * @param versionCode
+     */
+	public void getSplashPageInfo(final String clientId, final String versionCode){
+		final String completeUrl = APIUri.getSplashPageUrl();
+		RequestParams params = ((MyApplication) context.getApplicationContext())
+				.getHttpRequestParams(completeUrl);
+		x.http().get(params, new APICallback(context,completeUrl) {
+			@Override
+			public void callbackSuccess(String arg0) {
+				PreferencesByUserUtils.putString(context,"splash_page_info",arg0);
+				apiInterface.returnSplashPageInfoSuccess(JSON.parseObject(arg0, SplashPageBean.class));
+			}
+
+			@Override
+			public void callbackFail(String error, int responseCode) {
+				apiInterface.returnSplashPageInfoFail(error,responseCode);
+			}
+
+			@Override
+			public void callbackTokenExpire() {
+				new OauthUtils(new OauthCallBack() {
+					@Override
+					public void execute() {
+						getSplashPageInfo(clientId,versionCode);
+					}
+				},context).refreshTocken(completeUrl);
+			}
+		});
 	}
 }

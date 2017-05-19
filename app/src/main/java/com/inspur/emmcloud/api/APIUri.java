@@ -606,4 +606,12 @@ public class APIUri {
 	public static String getUserProfileUrl(){
 		return emmBaseUrl +"userprofile/displayconfig";
 	}
+
+	/**
+	 * app闪屏页面
+	 * @return
+     */
+	public static String getSplashPageUrl(){
+		return "";
+	}
 }
