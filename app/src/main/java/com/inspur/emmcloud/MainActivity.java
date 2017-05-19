@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
+import android.view.View;
 
 import com.alibaba.fastjson.JSON;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
@@ -73,7 +74,8 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
         init();
         //updateSplashPage();
         downloadSplashPage("https://ss0.bdstatic.com/94oJfD_bAAcT8t7mm9GUKT-xh_/timg?" +
-                        "image&quality=100&size=b4000_4000&sec=1495175375&di=ffcdfea98e5e825a242e119d2cc444fa&src=http://i.dimg.cc/5e/a5/0c/a2/47/9c/ac/0e/a4/56/cb/d7/03/09/e5/bc.jpg",
+                        "image&quality=100&size=b4000_4000&sec=1495175375&di=ffcdfea98e5e825a242e119d2cc444fa&src=" +
+                "http://i.dimg.cc/5e/a5/0c/a2/47/9c/ac/0e/a4/56/cb/d7/03/09/e5/bc.jpg",
                 "bc.jpg");
     }
 
@@ -106,6 +108,7 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
         reactApiService.setAPIInterface(new WebService());
         appAPIService = new AppAPIService(MainActivity.this);
         appAPIService.setAPIInterface(new WebService());
+        showLastSplash();
         //这里并不是实时更新所以不加dialog
         if (NetUtils.isNetworkConnected(MainActivity.this)) {
             String splashInfo = PreferencesByUserUtils.getString(MainActivity.this, "splash_page_info");
@@ -115,6 +118,7 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
             if (!StringUtils.isBlank(clientId)) {
                 appAPIService.getSplashPageInfo(clientId, splashPageBean.getVersionCode());
             } else {
+                //没有clientId首先将获取ClientId然后再检查更新
                 getSplashClientId();
             }
 
@@ -350,7 +354,7 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
     }
 
     /**
-     * 展示最新splash
+     * 展示最新splash   需要添加是否已过期的逻辑
      */
     private void showLastSplash() {
         String splashInfo = PreferencesByUserUtils.getString(MainActivity.this, "splash_page_info");
@@ -358,7 +362,11 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
             SplashPageBean splashPageBeanLocal = JSON.parseObject(splashInfo, SplashPageBean.class);
             String name = MyAppConfig.getSplashPageImageShowPath(MainActivity.this,
                     ((MyApplication) getApplication()).getUid(), "splash/" + splashPageBeanLocal.getName());
-            splashImageTop.setImageBitmap(BitmapFactory.decodeFile(name));
+            if(!StringUtils.isBlank(name)){
+                splashImageTop.setImageBitmap(BitmapFactory.decodeFile(name));
+            }else{
+                splashImageTop.setVisibility(View.GONE);
+            }
         }
     }
 
