@@ -394,7 +394,7 @@ public class AppAPIService {
 	 * @param versionCode
      */
 	public void getSplashPageInfo(final String clientId, final String versionCode){
-		final String completeUrl = APIUri.getSplashPageUrl();
+		final String completeUrl = APIUri.getSplashPageUrl()+"?version="+versionCode+"&clientId="+clientId;
 		RequestParams params = ((MyApplication) context.getApplicationContext())
 				.getHttpRequestParams(completeUrl);
 		x.http().get(params, new APICallback(context,completeUrl) {

@@ -612,6 +612,6 @@ public class APIUri {
 	 * @return
      */
 	public static String getSplashPageUrl(){
-		return "";
+		return getEcmTanentUrl()+"/api/v0/preference/launch-screen/latest";
 	}
 }
