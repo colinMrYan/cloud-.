@@ -38,7 +38,6 @@ import com.inspur.emmcloud.bean.AppCommonlyUse;
 import com.inspur.emmcloud.bean.AppGroupBean;
 import com.inspur.emmcloud.bean.AppOrder;
 import com.inspur.emmcloud.bean.GetAppGroupResult;
-import com.inspur.emmcloud.ui.app.groupnews.GroupNewsActivity;
 import com.inspur.emmcloud.util.AppCacheUtils;
 import com.inspur.emmcloud.util.AppTitleUtils;
 import com.inspur.emmcloud.util.IntentUtils;
@@ -146,7 +145,7 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
         getMyApp(true);
         setTabTitle();
         shortCutAppList.add("1e169160-0e1f-11e7-8c5c-15b1be8e5981");
-        shortCutAppList.add("inspur_news_esg");//目前，除在此处添加id还需要为每个需要生成快捷方式的应用配置图标
+//        shortCutAppList.add("inspur_news_esg");//目前，除在此处添加id还需要为每个需要生成快捷方式的应用配置图标
 
     }
 
@@ -290,8 +289,10 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
                                         e.printStackTrace();
                                     }
                                 }else if(appId.equals("inspur_news_esg")){
-                                    showCreateShortCutDialog(app, "ecc-app-native", GroupNewsActivity.class,
-                                            R.drawable.news_icon,null);
+                                    //暂时保留
+//                                    showCreateShortCutDialog(app, "ecc-app-native", GroupNewsActivity.class,
+//                                            R.drawable.news_icon,null);
+                                    UriUtils.openApp(getActivity(),app);
                                 }
                             } else {
                                 UriUtils.openApp(getActivity(), app);
@@ -389,7 +390,7 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
         final TextView textView = (TextView) view.findViewById(R.id.news_has_instrcution_text);
         final CheckBox checkBox = (CheckBox) view.findViewById(R.id.shortcut_dialog_checkbox);
         textView.setMovementMethod(ScrollingMovementMethod.getInstance());
-        textView.setText(app.getAppName() + getString(R.string.app_commonly_use_app));
+        textView.setText(getString(R.string.app_commonly_use_app));
         Button okBtn = (Button) view.findViewById(R.id.ok_btn);
         okBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -402,6 +403,7 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
                     ShortCutUtils.createShortCut(getActivity(), clz,
                             app.getAppName(), app.getUri(), appType, icon);
                 }
+                UriUtils.openApp(getActivity(),app);
                 hasIntrcutionDialog.dismiss();
             }
         });
@@ -412,6 +414,7 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
                 if (checkBox.isChecked()) {
                     PreferencesByUserUtils.putBoolean(getActivity(), "need_create_shortcut" + app.getAppID(), false);
                 }
+                UriUtils.openApp(getActivity(),app);
                 hasIntrcutionDialog.dismiss();
             }
         });

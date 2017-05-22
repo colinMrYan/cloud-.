@@ -345,7 +345,7 @@
     <string name="app_recommand">Recommend</string>
     <string name="app_classification">Classification</string>
     <string name="app_create_shortcut_no_more_remind">No more reminders</string>
-    <string name="app_commonly_use_app">Is a common application, whether you need to generate shortcuts to help you more convenient office </string>
+    <string name="app_commonly_use_app">Do you want to add mobile registration to desktop shortcuts, one click sign in? </string>
 
     <!-- 我的页面部分 -->
     <string name="data_clear_success">Clear success</string>

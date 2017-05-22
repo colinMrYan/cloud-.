@@ -347,7 +347,7 @@
     <string name="app_recommand">推荐</string>
     <string name="app_classification">分类</string>
     <string name="app_create_shortcut_no_more_remind">不再提醒</string>
-    <string name="app_commonly_use_app">是一个常用应用，是否需要生成快捷方式，助您办公更便捷</string>
+    <string name="app_commonly_use_app">是否将移动签到添加到桌面快捷方式，一键签到?</string>
 
 
     <!-- 我的页面部分 -->
