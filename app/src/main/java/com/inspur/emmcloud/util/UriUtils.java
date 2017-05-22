@@ -48,7 +48,9 @@ public class UriUtils {
                 if (uri.startsWith("https://emm.inspur.com:443/ssohandler/gs/")) {
                     uri = uri.replace("/gs/","/gs_uri/");
                     if (NetUtils.isNetworkConnected(activity)){
-                        getReallyUrl(activity,uri,app);
+                       LoadingDialog loadingDialog = new LoadingDialog(activity);
+                        loadingDialog.show();
+                        getGSWebReallyUrl(activity,uri,app,loadingDialog);
                     }
                 }else {
                     openWebApp(activity,uri,app);
@@ -90,50 +92,44 @@ public class UriUtils {
         activity.startActivity(intent);
     }
 
-    public static void getReallyUrl(final Activity activity, String url,final App app) {
-       final LoadingDialog loadingDialog = new LoadingDialog(activity);
-        loadingDialog.show();
+    /**
+     * 获取web页面真实url地址
+     * @param activity
+     * @param url
+     * @param app
+     * @param loadingDialog
+     */
+    private static void getGSWebReallyUrl(final Activity activity, final String url, final App app, final LoadingDialog loadingDialog) {
         RequestParams params = ((MyApplication) activity.getApplicationContext()).getHttpRequestParams(url);
         x.http().get(params, new APICallback(activity,url) {
             @Override
             public void callbackSuccess(String arg0) {
+                if (loadingDialog != null && loadingDialog.isShowing()){
+                    loadingDialog.dismiss();
+                }
                 String reallyUrl = JSONUtils.getString(arg0,"uri","");
                 openWebApp(activity,reallyUrl,app);
             }
 
             @Override
             public void callbackFail(String error, int responseCode) {
-                LogUtils.YfcDebug("error:"+error+"错误码："+responseCode);
+                if (loadingDialog != null && loadingDialog.isShowing()){
+                    loadingDialog.dismiss();
+                }
                 ToastUtils.show(activity, R.string.react_native_app_open_failed);
             }
 
             @Override
             public void callbackTokenExpire() {
-
+                new OauthUtils(new OauthCallBack() {
+                    @Override
+                    public void execute() {
+                        getGSWebReallyUrl(activity, url, app, loadingDialog);
+                    }
+                },activity).refreshTocken(url);
             }
         });
-//        x.http().get(params, new Callback.CommonCallback<String>() {
-//            @Override
-//            public void onSuccess(String s) {
-//                String reallyUrl = JSONUtils.getString(s,"uri","");
-//                openWebApp(activity,reallyUrl,app);
-//            }
-//
-//            @Override
-//            public void onError(Throwable throwable, boolean b) {
-//                ToastUtils.show(activity, R.string.react_native_app_open_failed);
-//            }
-//
-//            @Override
-//            public void onCancelled(CancelledException e) {
-//
-//            }
-//
-//            @Override
-//            public void onFinished() {
-//                loadingDialog.dismiss();
-//            }
-//        });
+
     }
 
     /**

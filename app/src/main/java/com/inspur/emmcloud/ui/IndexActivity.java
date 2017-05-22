@@ -89,6 +89,7 @@ public class IndexActivity extends BaseFragmentActivity implements
     private static final int SYNC_ALL_BASE_DATA_SUCCESS = 0;
     private static final int SYNC_CONTACT_SUCCESS = 1;
     private static final int CHANGE_TAB = 2;
+    private static final int RELOAD_WEB = 3;
     private long lastBackTime;
     public MyFragmentTabHost mTabHost;
     private static TextView newMessageTipsText;
@@ -106,6 +107,7 @@ public class IndexActivity extends BaseFragmentActivity implements
     private boolean isReactNativeClientUpdateFail = false;
     private boolean isGetTab = false;
     private String notSupportTitle = "";
+    private WebView webView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -189,7 +191,7 @@ public class IndexActivity extends BaseFragmentActivity implements
      */
     private void setPreloadWebApp(){
         if (UriUtils.tanent.equals("inspur_esg")){
-            WebView webView = (WebView) findViewById(R.id.preload_webview);
+            webView = (WebView) findViewById(R.id.preload_webview);
             webView.getSettings().setJavaScriptEnabled(true);
             webView.setWebViewClient(new WebViewClient(){
                 @Override
@@ -200,7 +202,7 @@ public class IndexActivity extends BaseFragmentActivity implements
                 }
             });
             webView.loadUrl("http://baoxiao.inspur.com/loadres.html");
-            webView.reload();
+            handler.sendEmptyMessageDelayed(RELOAD_WEB,1000);
         }
     }
 
@@ -297,6 +299,11 @@ public class IndexActivity extends BaseFragmentActivity implements
                         int communicateLocation = (int)msg.obj;
                         mTabHost.setCurrentTab(communicateLocation);
                         mTabHost.setCurrentTab(getTabIndex());
+                        break;
+                    case RELOAD_WEB:
+                        if (webView != null){
+                            webView.reload();
+                        }
                         break;
                     default:
                         break;
