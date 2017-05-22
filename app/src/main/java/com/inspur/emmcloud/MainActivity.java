@@ -357,6 +357,7 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
      * 展示最新splash   需要添加是否已过期的逻辑
      */
     private void showLastSplash() {
+//        boolean isSplashEffiective = checkIfSplashIsEffective("","");
         String splashInfo = PreferencesByUserUtils.getString(MainActivity.this, "splash_page_info");
         if(!StringUtils.isBlank(splashInfo)){
             SplashPageBean splashPageBeanLocal = JSON.parseObject(splashInfo, SplashPageBean.class);
@@ -369,6 +370,17 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
             }
         }
     }
+
+//    /**
+//     * 检查闪屏页是否有效
+//     * @param startTime
+//     * @param endTime
+//     * @return
+//     */
+//    private boolean checkIfSplashIsEffective(String startTime, String endTime) {
+//        return false;
+//    }
+
 
     /**
      * 下载闪屏页
