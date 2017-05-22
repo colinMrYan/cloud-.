@@ -141,7 +141,7 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
         ((RelativeLayout) rootView.findViewById(R.id.appcenter_layout)).setOnClickListener(listener);
         getMyApp(true);
         setTabTitle();
-        shortCutAppList.add("1e169160-0e1f-11e7-8c5c-15b1be8e5981");
+        shortCutAppList.add("mobile_checkin_hcm");
 //        shortCutAppList.add("inspur_news_esg");//目前，除在此处添加id还需要为每个需要生成快捷方式的应用配置图标
 
     }
@@ -289,7 +289,7 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
                                     showCreateShortCutDialog(app, "ecc-app-web-hcm", ImpActivity.class,
                                             R.drawable.icon_shortcut_register,null);
                                 }else if(appId.equals("inspur_news_esg")){
-                                    //暂时保留
+                                    //暂时保留，这里可以指定新闻
 //                                    showCreateShortCutDialog(app, "ecc-app-native", GroupNewsActivity.class,
 //                                            R.drawable.news_icon,null);
                                     UriUtils.openApp(getActivity(),app);
