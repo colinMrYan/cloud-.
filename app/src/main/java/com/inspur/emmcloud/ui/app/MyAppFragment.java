@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.v4.app.Fragment;
@@ -61,8 +60,6 @@ import com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout.OnRefreshList
 import com.inspur.emmcloud.widget.pullableview.PullableListView;
 import com.inspur.imp.api.ImpActivity;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -273,21 +270,24 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
                     if (!canEdit) {
                         App app = appGroupItemList.get(position);
                         //可以再定具体出现的时机和是否需要对用户进行提示
-                        String appId = app.getAppID();
+                        String appId = app.getIdentifiers();
                         if (shortCutAppList.indexOf(appId) != -1) {
                             boolean needCreateShortCut = PreferencesByUserUtils.getBoolean(getActivity(), "need_create_shortcut" + app.getAppID(), true);
                             if (needCreateShortCut && !ShortCutUtils.isShortCutExist(getActivity(), app.getAppName())) {
                                 //目前只识别的移动签到和集团新闻两个应用，设置了两个图标，以后可以改成可配置的
-                                if(appId.equals("1e169160-0e1f-11e7-8c5c-15b1be8e5981")){
-                                    InputStream is = null;
-                                    try {
-                                        is = getActivity().getAssets().open("icon_test.png");
-                                        Bitmap bitmap = BitmapFactory.decodeStream(is);
-                                        showCreateShortCutDialog(app, "ecc-app-web-hcm",
-                                                ImpActivity.class, 0,bitmap);
-                                    } catch (IOException e) {
-                                        e.printStackTrace();
-                                    }
+                                if(appId.equals("mobile_checkin_hcm")){
+                                    //保留指定BItmap的指定方式
+//                                    InputStream is = null;
+//                                    try {
+//                                        is = getActivity().getAssets().open("icon_test.png");
+//                                        Bitmap bitmap = BitmapFactory.decodeStream(is);
+//                                        showCreateShortCutDialog(app, "ecc-app-web-hcm",
+//                                                ImpActivity.class, 0,bitmap);
+//                                    } catch (IOException e) {
+//                                        e.printStackTrace();
+//                                    }
+                                    showCreateShortCutDialog(app, "ecc-app-web-hcm", ImpActivity.class,
+                                            R.drawable.icon_shortcut_register,null);
                                 }else if(appId.equals("inspur_news_esg")){
                                     //暂时保留
 //                                    showCreateShortCutDialog(app, "ecc-app-native", GroupNewsActivity.class,
