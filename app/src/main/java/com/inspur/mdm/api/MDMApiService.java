@@ -1,18 +1,19 @@
 package com.inspur.mdm.api;
 
-import org.json.JSONObject;
-import org.xutils.x;
-import org.xutils.common.Callback.CommonCallback;
-import org.xutils.ex.HttpException;
-import org.xutils.http.RequestParams;
-
 import android.app.Activity;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.inspur.emmcloud.util.AppUtils;
 import com.inspur.mdm.bean.GetDeviceCheckResult;
 import com.inspur.mdm.utils.MDMResUtils;
 import com.inspur.mdm.utils.MDMUtils;
+
+import org.json.JSONObject;
+import org.xutils.common.Callback.CommonCallback;
+import org.xutils.ex.HttpException;
+import org.xutils.http.RequestParams;
+import org.xutils.x;
 
 public class MDMApiService {
 	private Activity context;
@@ -30,16 +31,15 @@ public class MDMApiService {
 
 	/**
 	 * 设备检查
-	 * 
-	 * @param UUID
-	 * @param impCloudID
+	 * @param tenantId
+	 * @param userCode
 	 */
 	public void deviceCheck(String tenantId, String userCode) {
 		// TODO Auto-generated method stub
 		String module = "mdm";
 		String method = "check_state";
 		String completeUrl = baseUrl + "module=" + module + "&method=" + method;
-		String uuid = MDMUtils.getMyUUID(context);
+		String uuid = AppUtils.getMyUUID(context);
 		RequestParams params = new RequestParams(completeUrl);
 		params.addBodyParameter("udid", uuid);
 		params.addBodyParameter("tenant_id", tenantId);
@@ -82,18 +82,19 @@ public class MDMApiService {
 
 	/**
 	 * 注册设备
-	 * 
+	 * @param userCode
 	 * @param phoneNum
 	 * @param mail
 	 * @param remark
-	 * @return
+	 * @param deviceName
+	 * @param tanentId
 	 */
 	public void deviceRegister(String userCode, String phoneNum, String mail,
 			String remark, String deviceName, String tanentId) {
 		String module = "mdm";
 		String method = "device_register";
 		String completeUrl = baseUrl + "module=" + module + "&method=" + method;
-		String uuid = MDMUtils.getMyUUID((Activity) context);
+		String uuid = AppUtils.getMyUUID((Activity) context);
 		RequestParams params = new RequestParams(completeUrl);
 		// phone:1 pad:2
 		int deviceType = 1;

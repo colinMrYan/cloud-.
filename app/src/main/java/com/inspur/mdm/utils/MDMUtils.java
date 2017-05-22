@@ -1,11 +1,5 @@
 package com.inspur.mdm.utils;
 
-import java.lang.reflect.Method;
-import java.util.UUID;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageInfo;
@@ -17,6 +11,10 @@ import android.telephony.TelephonyManager;
 import android.util.DisplayMetrics;
 import android.view.Display;
 import android.widget.Toast;
+
+import java.lang.reflect.Method;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class MDMUtils {
 	/**
@@ -86,28 +84,28 @@ public class MDMUtils {
 		return versionCode;
 	}
 
-	/**
-	 * 获取设备UUID
-	 * 
-	 * @param activity
-	 * @return
-	 */
-	public static String getMyUUID(Activity activity) {
-		final TelephonyManager tm = (TelephonyManager) activity
-				.getBaseContext().getSystemService(Context.TELEPHONY_SERVICE);
-		final String tmDevice, tmSerial, tmPhone, androidId;
-		tmDevice = "" + tm.getDeviceId();
-		tmSerial = "" + tm.getSimSerialNumber();
-		androidId = ""
-				+ android.provider.Settings.Secure.getString(
-						activity.getContentResolver(),
-						android.provider.Settings.Secure.ANDROID_ID);
-		UUID deviceUuid = new UUID(androidId.hashCode(),
-				((long) tmDevice.hashCode() << 32) | tmSerial.hashCode());
-		String uniqueId = deviceUuid.toString();
-		return uniqueId;
-
-	}
+//	/**
+//	 * 获取设备UUID
+//	 *
+//	 * @param activity
+//	 * @return
+//	 */
+//	public static String getMyUUID(Activity activity) {
+//		final TelephonyManager tm = (TelephonyManager) activity
+//				.getBaseContext().getSystemService(Context.TELEPHONY_SERVICE);
+//		final String tmDevice, tmSerial, tmPhone, androidId;
+//		tmDevice = "" + tm.getDeviceId();
+//		tmSerial = "" + tm.getSimSerialNumber();
+//		androidId = ""
+//				+ android.provider.Settings.Secure.getString(
+//						activity.getContentResolver(),
+//						android.provider.Settings.Secure.ANDROID_ID);
+//		UUID deviceUuid = new UUID(androidId.hashCode(),
+//				((long) tmDevice.hashCode() << 32) | tmSerial.hashCode());
+//		String uniqueId = deviceUuid.toString();
+//		return uniqueId;
+//
+//	}
 
 	/**
 	 * 获取手机号

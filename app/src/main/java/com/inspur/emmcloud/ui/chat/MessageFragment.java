@@ -33,7 +33,6 @@ import com.inspur.emmcloud.bean.GetSearchChannelGroupResult;
 import com.inspur.emmcloud.bean.MatheSet;
 import com.inspur.emmcloud.bean.Msg;
 import com.inspur.emmcloud.broadcastreceiver.MsgReceiver;
-import com.inspur.emmcloud.service.WebSocketService;
 import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.util.AppTitleUtils;
@@ -252,7 +251,7 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 		sortChannelList(channelList);// 对Channel 进行排序
 		displayData();// 展示数据
 		registerMsgReceiver();// 注册接收消息的广播
-		startWebsocket();// 常见webSocket推送
+		((MyApplication)getActivity().getApplication()).startWebSocket();// 启动webSocket推送
 	}
 
 	/**
@@ -493,17 +492,6 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 			filter.addAction("com.inspur.msg");
 			getActivity().registerReceiver(msgReceiver, filter);
 		}
-	}
-
-	/**
-	 * 启动webSocket推送服务
-	 */
-	private void startWebsocket() {
-		// TODO Auto-generated method stub
-		Intent intent = new Intent();
-		intent.setClass(getActivity(), WebSocketService.class);
-		getActivity().startService(intent);
-
 	}
 
 	/**

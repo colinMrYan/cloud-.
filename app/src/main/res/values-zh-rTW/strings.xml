@@ -400,6 +400,16 @@
     <string name="my_setting_tips_quit">確定清除應用內所有緩存數據？清除后將退出應用</string>
     <string name="get_language_error">未獲取到可用的語言包，請聯繫管理員</string>
     <string name="app_customer">雲+客服</string>
+    <string name="settings_device_manager">設備安全與管理</string>
+    <string name="device_unbind_sucess">設備解綁成功！</string>
+    <string name="current_device">當前設備</string>
+    <string name="device_bind_time_title">綁定時間: </string>
+    <string name="device_bind_time">綁定時間</string>
+    <string name="device_info">設備詳情</string>
+    <string name="device_id">設備ID</string>
+    <string name="unbind_this_device">解綁此設備</string>
+
+
 
 
     <!-- 修改密碼部分 -->

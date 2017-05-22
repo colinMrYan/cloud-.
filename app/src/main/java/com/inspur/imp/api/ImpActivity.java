@@ -22,11 +22,13 @@ import android.widget.TextView;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.util.AppUtils;
 import com.inspur.emmcloud.util.LogUtils;
+import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.imp.engine.webview.ImpWebChromeClient;
 import com.inspur.imp.engine.webview.ImpWebView;
 import com.inspur.imp.plugin.camera.PublicWay;
 import com.inspur.imp.plugin.file.FileService;
+import com.inspur.mdm.MDM;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -50,6 +52,7 @@ public class ImpActivity extends ImpBaseActivity {
 	private Button buttonClose;
 	private TextView headerText;
 	private LinearLayout loadFailLayout;
+	private boolean isMDM = false;//mdm页面
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +75,7 @@ public class ImpActivity extends ImpBaseActivity {
 		}else{
 			url = getIntent().getExtras().getString("uri");
 		}
+		LogUtils.jasonDebug("url="+url);
 		if (getIntent().hasExtra("appName")) {
 			headerText = (TextView) findViewById(Res.getWidgetID("header_text"));
 			webView.setProperty(progressLayout,headerText,loadFailLayout);
@@ -85,6 +89,11 @@ public class ImpActivity extends ImpBaseActivity {
 
 		String token = ((MyApplication)getApplicationContext())
 				.getToken();
+		isMDM = getIntent().hasExtra("function")&&getIntent().getStringExtra("function").equals("mdm");
+		if (isMDM){
+			token = PreferencesUtils.getString(this,"mdm_accessToken");
+			LogUtils.jasonDebug("token="+token);
+		}
 		setOauthHeader(token);
 		setLangHeader(UriUtils.getLanguageCookie(this));
 		setUserAgent("/emmcloud/" + AppUtils.getVersion(this));
@@ -158,6 +167,9 @@ public class ImpActivity extends ImpBaseActivity {
 			webView.goBack();// 返回上一页面
 		} else {
 			finish();// 退出程序
+			if (getIntent().hasExtra("function")&&getIntent().getStringExtra("function").equals("mdm")){
+				new MDM().getMDMListener().MDMStatusNoPass();
+			}
 		}
 	}
 

@@ -613,4 +613,6 @@ public class APIUri {
 	 * @return
 	 */
 	public static String getUnBindDeviceUrl(){return  emmBaseUrl+"device/unbind";}
+
+	public static String getBindingDevicesUrl(){return  emmBaseUrl+"device/getUserDevices";}
 }

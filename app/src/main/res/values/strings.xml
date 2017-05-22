@@ -403,6 +403,16 @@
     <string name="get_language_error">未获取到可用的语言包，请联系管理员</string>
     <string name="app_customer">云+客服</string>
     <string name="settings_device_manager">设备安全与管理</string>
+    <string name="device_unbind_sucess">设备解绑成功！</string>
+    <string name="device_unbind_warning">确定解绑此设备？</string>
+    <string name="current_device">当前设备</string>
+    <string name="device_bind_time_title">绑定时间: </string>
+    <string name="device_bind_time">绑定时间</string>
+    <string name="device_info">设备详情</string>
+    <string name="device_id">设备ID</string>
+    <string name="unbind_this_device">解绑此设备</string>
+
+
 
 
     <!-- 修改密码部分 -->

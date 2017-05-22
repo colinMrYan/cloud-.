@@ -587,19 +587,8 @@
             android:name="com.inspur.imp.plugin.filetransfer.TextFileShowActivity"
             android:theme="@android:style/Theme.NoTitleBar"></activity>
 
-        <service
-            android:name=".service.WebSocketService"
-            android:enabled="true"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="com.inspur.emmcloud.service.WebSocketService" />
-            </intent-filter>
-        </service>
         <service android:name="com.amap.api.location.APSService"></service>
         <!-- MDM设备管理 -->
-        <activity
-            android:name="com.inspur.mdm.ui.DeviceRegisterActivity"
-            android:screenOrientation="portrait"></activity>
         <activity
             android:name="com.inspur.mdm.ui.DeviceRegisterFailDetailActivity"
             android:screenOrientation="portrait"></activity>

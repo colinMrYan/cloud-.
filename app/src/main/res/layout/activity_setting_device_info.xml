@@ -36,7 +36,7 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:text="设备详情"
+            android:text="@string/device_info"
             android:textColor="@color/header_text"
             android:textSize="@dimen/header_textsize"/>
     </RelativeLayout>
@@ -86,13 +86,14 @@
                     android:maxLines="1"
                     android:paddingTop="10dp"
                     android:paddingBottom="10dp"
-                    android:text="绑定时间"
+                    android:text="@string/device_bind_time"
                     android:textColor="#333333"
                     android:textSize="17sp"/>
                 <TextView
                     android:id="@+id/device_bind_time_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:gravity="right"
                     android:layout_toRightOf="@+id/device_bind_time_title_text"
                     android:layout_centerVertical="true"
                     android:paddingRight="10dp"
@@ -100,7 +101,6 @@
                     android:maxLines="1"
                     android:paddingTop="10dp"
                     android:paddingBottom="10dp"
-                    android:text="2017-3-12"
                     android:textColor="#999999"
                     android:textSize="17sp"/>
             </RelativeLayout>
@@ -121,21 +121,19 @@
                     android:maxLines="1"
                     android:paddingTop="10dp"
                     android:paddingBottom="10dp"
-                    android:text="设备ID"
-                    android:hint="绑定时间"
+                    android:text="@string/device_id"
                     android:textColor="#333333"
                     android:textSize="17sp"/>
                 <TextView
                     android:id="@+id/device_id_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_toRightOf="@+id/device_id_title_text"
+                    android:gravity="right"
                     android:paddingRight="10dp"
-                    android:ellipsize="end"
+                    android:layout_toRightOf="@+id/device_id_title_text"
                     android:onClick="onClick"
                     android:paddingTop="10dp"
                     android:paddingBottom="10dp"
-                    android:text="555555-5556565333-45431212112121-4121212121"
                     android:textColor="#999999"
                     android:textSize="17sp"/>
             </RelativeLayout>
@@ -146,7 +144,7 @@
             android:id="@+id/device_unbound_btn"
             android:onClick="onClick"
             android:layout_marginTop="10dp"
-            android:text="解绑此设备"
+            android:text="@string/unbind_this_device"
             android:padding="10dp"
             android:gravity="center"
             android:textColor="#ff3c3c"

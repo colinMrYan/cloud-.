@@ -399,6 +399,14 @@
     <string name="my_setting_tips_quit">Sure to clear all cache? App will close after clear</string>
     <string name="get_language_error">Not available to the language package, please contact the administrator</string>
     <string name="app_customer">Cloud+ Customer</string>
+    <string name="settings_device_manager">Equipment safety and management</string>
+    <string name="device_unbind_sucess">Device unbound successfully!</string>
+    <string name="current_device">Current device</string>
+    <string name="device_bind_time_title">Binding time: </string>
+    <string name="device_bind_time">Binding time</string>
+    <string name="device_info">Device details</string>
+    <string name="device_id">Device ID</string>
+    <string name="unbind_this_device">Unbound this device</string>
 
     <!-- 修改密码部分 -->
     <string name="modify_input_user_new_password">Enter a new password</string>

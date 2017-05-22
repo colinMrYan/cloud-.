@@ -396,9 +396,9 @@ import com.inspur.emmcloud.bean.UserProfileInfoBean;
 	  void returnUserProfileFail(String error);
 
 	 void returnBindingDeviceListSuccess(GetBindingDeviceResult getBindingDeviceResult);
-	 void returnBindingDeviceListFail(String error);
+	 void returnBindingDeviceListFail(String error,int errorCode);
 
 	 void returnUnBindDeviceSuccess();
-	 void returnUnBindDeviceFail(String error);
+	 void returnUnBindDeviceFail(String error,int errorCode);
 
 }

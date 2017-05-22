@@ -304,8 +304,8 @@ public class MineAPIService {
 	/**
 	 * 获取当前绑定设备列表
 	 */
-	public void getBindingDevices() {
-		final String completeUrl = "";
+	public void getBindingDeviceList() {
+		final String completeUrl = APIUri.getBindingDevicesUrl();
 		RequestParams params =
 				((MyApplication) context.getApplicationContext()).getHttpRequestParams(completeUrl);
 		x.http().get(params, new APICallback(context, completeUrl) {
@@ -317,7 +317,7 @@ public class MineAPIService {
 
 					@Override
 					public void execute() {
-						getBindingDevices();
+						getBindingDeviceList();
 					}
 				}, context).refreshTocken(completeUrl);
 			}
@@ -333,7 +333,7 @@ public class MineAPIService {
 			@Override
 			public void callbackFail(String error, int responseCode) {
 				// TODO Auto-generated method stub
-				apiInterface.returnBindingDeviceListFail(error);
+				apiInterface.returnBindingDeviceListFail(error,responseCode);
 			}
 		});
 	}

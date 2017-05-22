@@ -83,7 +83,7 @@ public class APIInterfaceInstance implements APIInterface{
 	}
 
 	@Override
-	public void returnUnBindDeviceFail(String error) {
+	public void returnUnBindDeviceFail(String error,int errorCode) {
 
 	}
 
@@ -93,7 +93,7 @@ public class APIInterfaceInstance implements APIInterface{
 	}
 
 	@Override
-	public void returnBindingDeviceListFail(String error) {
+	public void returnBindingDeviceListFail(String error,int errorCode) {
 
 	}
 

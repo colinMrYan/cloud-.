@@ -1,11 +1,12 @@
 package com.inspur.mdm.ui;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
+import com.inspur.emmcloud.util.AppUtils;
+import com.inspur.imp.api.ImpActivity;
 import com.inspur.mdm.MDM;
 import com.inspur.mdm.utils.MDMResUtils;
 
@@ -25,15 +26,17 @@ public class DeviceRegisterFailDetailActivity extends MDMBaseActivity {
 	}
 
 	public void onClick(View v) {
-		Intent intent = new Intent();
 		if (v.getId() == MDMResUtils.getWidgetID("back_layout")) {
 			onBackPressed();
 		} else if (v.getId() == MDMResUtils.getWidgetID("register_btn")) {
-			intent.setClass(getApplicationContext(),
-					DeviceRegisterActivity.class);
-			intent.putExtra("bundle", bundle);
+			Intent intent = new Intent();
+			intent.setClass(this, ImpActivity.class);
+			Bundle bundle = new Bundle();
+			bundle.putString("appName", "设备注册");
+			bundle.putString("function","mdm");
+			bundle.putString("uri", "https://emm.inspur.com/mdm/loadForRegister?udid="+ AppUtils.getMyUUID(this));
+			intent.putExtras(bundle);
 			startActivity(intent);
-			finish();
 		}
 	}
 

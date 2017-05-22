@@ -210,6 +210,7 @@ public class LoginUtils extends APIInterfaceInstance {
 		((MyApplication) activity.getApplicationContext()).initTanent();
 		((MyApplication) activity.getApplicationContext())
 				.setUid(getMyInfoResult.getID());
+		PreferencesUtils.putString(activity, "mdm_accessToken", "Bearer" + " " + getLoginResult.getAccessToken());
 		if (isLogin) {
 			isLogin = false;
 		}
