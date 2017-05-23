@@ -1,21 +1,27 @@
 package com.inspur.emmcloud.ui.app;
 
+import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.v4.app.Fragment;
+import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
@@ -38,9 +44,11 @@ import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.PreferencesByUserUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
+import com.inspur.emmcloud.util.ShortCutUtils;
 import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
+import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.SwitchView;
 import com.inspur.emmcloud.widget.SwitchView.OnStateChangedListener;
 import com.inspur.emmcloud.widget.draggrid.DragAdapter;
@@ -50,6 +58,7 @@ import com.inspur.emmcloud.widget.draggrid.DragGridView.OnChanageListener;
 import com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout;
 import com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout.OnRefreshListener;
 import com.inspur.emmcloud.widget.pullableview.PullableListView;
+import com.inspur.imp.api.ImpActivity;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -73,12 +82,14 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
     private ImageView editBtn;
     private Button editBtnFinish;
     private MyAppAPIService apiService;
+    private LoadingDialog loadingDialog;
     private boolean hasCommonlyApp = false;
     private PullToRefreshLayout pullToRefreshLayout;
     private BroadcastReceiver mBroadcastReceiver;
     private PopupWindow popupWindow;
     private boolean isNeedCommonlyUseApp = false;
-//    private SwitchView switchView;
+    private List<String> shortCutAppList = new ArrayList<>();
+    //    private SwitchView switchView;
 //    private View contentView;
     private TextView titleText;
 
@@ -96,6 +107,7 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
      * 初始化Views
      */
     private void initViews() {
+        loadingDialog = new LoadingDialog(getActivity());
         apiService = new MyAppAPIService(getActivity());
         apiService.setAPIInterface(new WebService());
         pullToRefreshLayout = (PullToRefreshLayout) rootView
@@ -119,34 +131,37 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
                 appListAdapter.notifyDataSetChanged();
                 editBtn.setVisibility(View.VISIBLE);
                 editBtnFinish.setVisibility(View.GONE);
-                if(popupWindow != null && popupWindow.isShowing()){
+                if (popupWindow != null && popupWindow.isShowing()) {
                     popupWindow.dismiss();
                 }
             }
         });
         titleText = (TextView) rootView.findViewById(R.id.header_text);
         OnAppCenterClickListener listener = new OnAppCenterClickListener();
-        (rootView.findViewById(R.id.appcenter_layout)).setOnClickListener(listener);
-        getMyApp();
+        ((RelativeLayout) rootView.findViewById(R.id.appcenter_layout)).setOnClickListener(listener);
+        getMyApp(true);
         setTabTitle();
+        shortCutAppList.add("mobile_checkin_hcm");
+//        shortCutAppList.add("inspur_news_esg");//目前，除在此处添加id还需要为每个需要生成快捷方式的应用配置图标
 
     }
 
     /**
      * 设置标题
      */
-    private void setTabTitle(){
-        String appTabs = PreferencesByUserUtils.getString(getActivity(),"app_tabbar_info_current","");
-        if(!StringUtils.isBlank(appTabs)){
-            titleText.setText(AppTitleUtils.getTabTitle(getActivity(),getClass().getSimpleName()));
+    private void setTabTitle() {
+        String appTabs = PreferencesByUserUtils.getString(getActivity(), "app_tabbar_info_current", "");
+        if (!StringUtils.isBlank(appTabs)) {
+            titleText.setText(AppTitleUtils.getTabTitle(getActivity(), getClass().getSimpleName()));
         }
     }
 
     /**
      * 获取app
      */
-    private void getMyApp() {
+    private void getMyApp(boolean isShowDlg) {
         if (NetUtils.isNetworkConnected(getActivity())) {
+            loadingDialog.show(isShowDlg);
             apiService.getUserApps();
         } else {
             pullToRefreshLayout.refreshFinish(PullToRefreshLayout.FAIL);
@@ -162,7 +177,7 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
             public void onReceive(Context context, Intent intent) {
                 String action = intent.getAction();
                 if (action.equals(ACTION_NAME)) {
-                    getMyApp();
+                    getMyApp(true);
                 }
             }
         };
@@ -202,7 +217,6 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
      * App组列表
      */
     public class AppListAdapter extends BaseAdapter {
-
         private List<AppGroupBean> appAdapterList = new ArrayList<AppGroupBean>();
         private boolean canEdit = false;
 
@@ -253,13 +267,43 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view,
                                         int position, long id) {
-
-                    if(!canEdit){
+                    if (!canEdit) {
                         App app = appGroupItemList.get(position);
-                        UriUtils.openApp(getActivity(), app);
-                        if(getNeedCommonlyUseApp()){
+                        //可以再定具体出现的时机和是否需要对用户进行提示
+                        String appId = app.getIdentifiers();
+                        if (shortCutAppList.indexOf(appId) != -1) {
+                            boolean needCreateShortCut = PreferencesByUserUtils.getBoolean(getActivity(), "need_create_shortcut" + app.getAppID(), true);
+                            if (needCreateShortCut && !ShortCutUtils.isShortCutExist(getActivity(), app.getAppName())) {
+                                //目前只识别的移动签到和集团新闻两个应用，设置了两个图标，以后可以改成可配置的
+                                if(appId.equals("mobile_checkin_hcm")){
+                                    //保留指定BItmap的指定方式
+//                                    InputStream is = null;
+//                                    try {
+//                                        is = getActivity().getAssets().open("icon_test.png");
+//                                        Bitmap bitmap = BitmapFactory.decodeStream(is);
+//                                        showCreateShortCutDialog(app, "ecc-app-web-hcm",
+//                                                ImpActivity.class, 0,bitmap);
+//                                    } catch (IOException e) {
+//                                        e.printStackTrace();
+//                                    }
+                                    showCreateShortCutDialog(app, "ecc-app-web-hcm", ImpActivity.class,
+                                            R.drawable.icon_shortcut_register,null);
+                                }else if(appId.equals("inspur_news_esg")){
+                                    //暂时保留，这里可以指定新闻
+//                                    showCreateShortCutDialog(app, "ecc-app-native", GroupNewsActivity.class,
+//                                            R.drawable.news_icon,null);
+                                    UriUtils.openApp(getActivity(),app);
+                                }
+                            } else {
+                                UriUtils.openApp(getActivity(), app);
+                            }
+                        }else{
+                            UriUtils.openApp(getActivity(), app);
+                        }
+
+                        if (getNeedCommonlyUseApp()) {
 //                            saveOrChangeCommonlyUseApp(app, appAdapterList);
-                            saveOrChangeCommonlyUseAppList(app,appAdapterList);
+                            saveOrChangeCommonlyUseAppList(app, appAdapterList);
                         }
                     }
                 }
@@ -269,9 +313,8 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
                 @Override
                 public boolean onItemLongClick(AdapterView<?> parent,
                                                View view, int position, long id) {
-//                    App app = appGroupItemList.get(position);
-//                    ShortCutUtils.createShortCut(getActivity(),ReactNativeAppActivity.class,app.getAppName(),app.getInstallUri(),"ecc-app-react-native");
-                    if(!canEdit){
+
+                    if (!canEdit) {
                         appListAdapter.setCanEdit(true);
                         appListAdapter.notifyDataSetChanged();
                         editBtn.setVisibility(View.GONE);
@@ -332,29 +375,82 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
     }
 
     /**
+     * 创建快捷方式的Dialog
+     * @param app
+     * @param appType
+     * @param clz
+     * @param icon
+     */
+    private void showCreateShortCutDialog(final App app, final String appType, final Class clz, final int icon,final Bitmap bitmap) {
+        final Dialog hasIntrcutionDialog = new Dialog(getActivity(),
+                R.style.transparentFrameWindowStyle);
+        hasIntrcutionDialog.setCanceledOnTouchOutside(true);
+        View view = getActivity().getLayoutInflater().inflate(R.layout.app_create_shortcut_dialog, null);
+        hasIntrcutionDialog.setContentView(view);
+        final TextView textView = (TextView) view.findViewById(R.id.news_has_instrcution_text);
+        final CheckBox checkBox = (CheckBox) view.findViewById(R.id.shortcut_dialog_checkbox);
+        textView.setMovementMethod(ScrollingMovementMethod.getInstance());
+        textView.setText(getString(R.string.app_commonly_use_app));
+        Button okBtn = (Button) view.findViewById(R.id.ok_btn);
+        okBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(icon == 0){
+                    ShortCutUtils.createShortCut(getActivity(), clz,
+                            app.getAppName(), app.getUri(), appType, bitmap);
+                }
+                if(bitmap == null){
+                    ShortCutUtils.createShortCut(getActivity(), clz,
+                            app.getAppName(), app.getUri(), appType, icon);
+                }
+                UriUtils.openApp(getActivity(),app);
+                hasIntrcutionDialog.dismiss();
+            }
+        });
+        Button cancelBtn = (Button) view.findViewById(R.id.cancel_btn);
+        cancelBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (checkBox.isChecked()) {
+                    PreferencesByUserUtils.putBoolean(getActivity(), "need_create_shortcut" + app.getAppID(), false);
+                }
+                UriUtils.openApp(getActivity(),app);
+                hasIntrcutionDialog.dismiss();
+            }
+        });
+        Window window = hasIntrcutionDialog.getWindow();
+        WindowManager.LayoutParams wl = window.getAttributes();
+        wl.dimAmount = 0.31f;
+        hasIntrcutionDialog.getWindow().setAttributes(wl);
+        hasIntrcutionDialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+        hasIntrcutionDialog.show();
+    }
+
+    /**
      * 点击应用后处理常用应用
+     *
      * @param app
      * @param appAdapterList
      */
     private void saveOrChangeCommonlyUseAppList(App app, List<AppGroupBean> appAdapterList) {
         List<AppCommonlyUse> appCommonlyUseAddCountList = addClickCount(app);
         List<AppCommonlyUse> appCommonlyUseList = calculateAppWeight(appCommonlyUseAddCountList);
-        showCommonlyUseApps(app,appCommonlyUseList,appAdapterList);
+        showCommonlyUseApps(app, appCommonlyUseList, appAdapterList);
     }
 
     /**
      * 展示常用应用
+     *
      * @param app
      * @param appCommonlyUseList
      * @param appAdapterList
      */
-    private void showCommonlyUseApps(App app,List<AppCommonlyUse> appCommonlyUseList,
+    private void showCommonlyUseApps(App app, List<AppCommonlyUse> appCommonlyUseList,
                                      List<AppGroupBean> appAdapterList) {
-        LogUtils.YfcDebug("常用应用的长度："+appCommonlyUseList.size());
-        if(hasCommonlyApp){
+        if (hasCommonlyApp) {
             //如果已经有了常用app则需要先移除掉第一组
             appAdapterList.remove(0);
-            handCommonlyUseAppData(appAdapterList,true);
+            handCommonlyUseAppData(appAdapterList, true);
 //            List<App> appItemList = new ArrayList<App>();
 //            for(int i = 0;i < appCommonlyUseList.size();i++){
 //                App appCommonlyUse = new App();
@@ -378,7 +474,7 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
 //            Collections.sort(appItemList,new SortCommonlyUseAppClass());
 //            appAdapterList.get(0).setAppItemList(appItemList);
 //            appListAdapter.notifyDataSetChanged();
-        }else{
+        } else {
             AppGroupBean appGroupBean = new AppGroupBean();
             appGroupBean.setCategoryID("commonly");
             appGroupBean.setCategoryName(getString(R.string.commoly_use_app));
@@ -393,25 +489,26 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
 
     /**
      * 根据前面计算出的点击次数和当前位置计算权重
+     *
      * @param appCommonlyUseAddCountList
      * @return
      */
     private List<AppCommonlyUse> calculateAppWeight(List<AppCommonlyUse> appCommonlyUseAddCountList) {
         int appCommonlyUseListSize = appCommonlyUseAddCountList.size();
         List<AppCommonlyUse> appCommonlyUseList = null;
-        for (int i = 0;i < appCommonlyUseListSize;i++){
+        for (int i = 0; i < appCommonlyUseListSize; i++) {
             AppCommonlyUse appCommonlyUseWeight = appCommonlyUseAddCountList.get(i);
             int count = appCommonlyUseWeight.getClickCount();
             int index = appCommonlyUseAddCountList.indexOf(appCommonlyUseWeight);
-            double weight = 0.6*count+(0.4*10*(1-((double)index)/((double)appCommonlyUseListSize)));
+            double weight = 0.6 * count + (0.4 * 10 * (1 - ((double) index) / ((double) appCommonlyUseListSize)));
             appCommonlyUseAddCountList.get(i).setWeight(weight);
         }
 
 
-        Collections.sort(appCommonlyUseAddCountList,new SortCommonlyUseApp());
-        AppCacheUtils.saveAppCommonlyUseList(getActivity(),appCommonlyUseAddCountList);
-        if(appCommonlyUseAddCountList.size()>4){
-            appCommonlyUseList = appCommonlyUseAddCountList.subList(0,4);
+        Collections.sort(appCommonlyUseAddCountList, new SortCommonlyUseApp());
+        AppCacheUtils.saveAppCommonlyUseList(getActivity(), appCommonlyUseAddCountList);
+        if (appCommonlyUseAddCountList.size() > 4) {
+            appCommonlyUseList = appCommonlyUseAddCountList.subList(0, 4);
             return appCommonlyUseList;
         }
         return appCommonlyUseAddCountList;
@@ -419,6 +516,7 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
 
     /**
      * 点击应用后clickCount加1
+     *
      * @param app
      * @return
      */
@@ -427,11 +525,11 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
         AppCommonlyUse appCommonlyUse = new AppCommonlyUse();
         appCommonlyUse.setAppID(app.getAppID());
         int index = appCommonlyUseList.indexOf(appCommonlyUse);
-        if(index != -1){
+        if (index != -1) {
             AppCommonlyUse appCommonlyUseInTable = appCommonlyUseList.get(index);
             int count = appCommonlyUseInTable.getClickCount();
-            appCommonlyUseList.get(index).setClickCount(count+1);
-        }else{
+            appCommonlyUseList.get(index).setClickCount(count + 1);
+        } else {
             AppCommonlyUse appCommonlyUseNew = new AppCommonlyUse();
             appCommonlyUseNew.setClickCount(1);
             appCommonlyUseNew.setAppID(app.getAppID());
@@ -507,11 +605,11 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
         //查找点击应用的位置
         int index = appCommonlyUseList.indexOf(appCommonlyUse);
         //计算常用应用列表长度如果为0则置为1防止除0错，同时因为0个的时候是1那么后面的位置序号需要依次加1，因为0占了1的位置
-        int appCommonlyUseListSize = (appCommonlyUseList.size()==0? 1:(appCommonlyUseList.size()+1));
+        int appCommonlyUseListSize = (appCommonlyUseList.size() == 0 ? 1 : (appCommonlyUseList.size() + 1));
         int count = 0;
         double weight = 0;
 
-        if(index != -1){
+        if (index != -1) {
             //点击应用在常用应用表里存在，根据index取出点击应用
             AppCommonlyUse appCommonlyUseChange = appCommonlyUseList.get(index);
             //取出点击应用现在的点击次数
@@ -522,11 +620,11 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
             //点击次数的值
             count = clickCount + 1;
             //新权重计算并设置
-            weight = 0.6*count+(0.4*0*(1-((double)index)/((double)appCommonlyUseListSize)));
+            weight = 0.6 * count + (0.4 * 0 * (1 - ((double) index) / ((double) appCommonlyUseListSize)));
             appCommonlyUseChange.setWeight(weight);
             //保存常用应用信息
             AppCacheUtils.saveAppCommonlyUse(getActivity(), appCommonlyUseChange);
-        }else {
+        } else {
             //点击应用在常用应用表里没有，新建一个
             AppCommonlyUse appCommonlyUseNull = new AppCommonlyUse();
             //设置id和count
@@ -534,7 +632,7 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
             appCommonlyUseNull.setClickCount(1);
             count = 1;
             //计算设置权重，并存储
-            weight = 0.6*count+(0.4*0*(1-((double)index)/((double)appCommonlyUseListSize)));
+            weight = 0.6 * count + (0.4 * 0 * (1 - ((double) index) / ((double) appCommonlyUseListSize)));
             appCommonlyUseNull.setWeight(weight);
             appCommonlyUseNull.setLastUpdateTime(System.currentTimeMillis());
             AppCacheUtils.saveAppCommonlyUse(getActivity(), appCommonlyUseNull);
@@ -558,14 +656,14 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
             }
             Collections.sort(appItemList, new SortCommonlyUseAppClass());
             if (appItemList.size() > 4) {
-                List<App> commonlyUseAppList = appItemList.subList(0,4);
+                List<App> commonlyUseAppList = appItemList.subList(0, 4);
                 appAdapterList.get(0).setAppItemList(commonlyUseAppList);
 //                appItemList.remove(4);
-            }else {
+            } else {
                 appAdapterList.get(0).setAppItemList(appItemList);
             }
             for (int i = 0; i < appItemList.size(); i++) {
-                LogUtils.YfcDebug("app名称："+appItemList.get(i).getAppName()+"点击后常用应用的权重"+appItemList.get(i).getWeight());
+                LogUtils.YfcDebug("app名称：" + appItemList.get(i).getAppName() + "点击后常用应用的权重" + appItemList.get(i).getWeight());
             }
             appListAdapter.notifyDataSetChanged();
         } else {
@@ -585,7 +683,7 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
 
     @Override
     public void onRefresh(PullToRefreshLayout pullToRefreshLayout) {
-        getMyApp();
+        getMyApp(false);
         editBtn.setVisibility(View.VISIBLE);
         editBtnFinish.setVisibility(View.GONE);
     }
@@ -619,7 +717,7 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
         // 一个自定义的布局，作为popwindowivew显示的内容
         View contentView = LayoutInflater.from(getActivity())
                 .inflate(R.layout.app_center_popup_window_view, null);
-        final  SwitchView switchView = (SwitchView) contentView.findViewById(R.id.app_hide_switch);
+        final SwitchView switchView = (SwitchView) contentView.findViewById(R.id.app_hide_switch);
         //为了在打开PopWindow时立刻显示当前状态
         switchView.setOpened(getNeedCommonlyUseApp());
         // 设置按钮的点击事件
@@ -632,7 +730,7 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
 
             @Override
             public void toggleToOn(View view) {
-                if(view == null || switchView == null){
+                if (view == null || switchView == null) {
                     return;
                 }
                 switchView.toggleSwitch(true);
@@ -642,12 +740,12 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
 
             @Override
             public void toggleToOff(View view) {
-                if(view == null || switchView == null){
+                if (view == null || switchView == null) {
                     return;
                 }
                 switchView.toggleSwitch(false);
                 saveNeedCommonlyUseApp(false);
-                if(hasCommonlyApp){
+                if (hasCommonlyApp) {
                     appListAdapter.getAppAdapterList().remove(0);
                     appListAdapter.notifyDataSetChanged();
                     hasCommonlyApp = false;
@@ -659,7 +757,7 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
         changeOrderLayout.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(appListAdapter != null){
+                if (appListAdapter != null) {
                     appListAdapter.setCanEdit(true);
                     appListAdapter.notifyDataSetChanged();
                     editBtn.setVisibility(View.GONE);
@@ -679,10 +777,11 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
 
     /**
      * 存储是否需要显示常用app
+     *
      * @param isNeedCommonlyUseApp
      */
-    private void saveNeedCommonlyUseApp(boolean isNeedCommonlyUseApp){
-        String userId = ((MyApplication)getActivity().getApplication()).getUid();
+    private void saveNeedCommonlyUseApp(boolean isNeedCommonlyUseApp) {
+        String userId = ((MyApplication) getActivity().getApplication()).getUid();
         PreferencesUtils.putBoolean(getActivity(), UriUtils.tanent
                         + userId + "needCommonlyUseApp",
                 isNeedCommonlyUseApp);
@@ -690,17 +789,19 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
 
     /**
      * 获取是否需要显示常用app
+     *
      * @return
      */
-    private boolean getNeedCommonlyUseApp(){
-        String userId = ((MyApplication)getActivity().getApplication()).getUid();
+    private boolean getNeedCommonlyUseApp() {
+        String userId = ((MyApplication) getActivity().getApplication()).getUid();
         isNeedCommonlyUseApp = PreferencesUtils.getBoolean(getActivity(), UriUtils.tanent
-                + userId + "needCommonlyUseApp",true);
+                + userId + "needCommonlyUseApp", true);
         return isNeedCommonlyUseApp;
     }
 
     /**
      * 存储App顺序
+     *
      * @param changeId
      */
     private void saveAppChangeOrder(int changeId) {
@@ -722,6 +823,9 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
     class WebService extends APIInterfaceInstance {
         @Override
         public void returnUserAppsSuccess(GetAppGroupResult getAppGroupResult) {
+            if (loadingDialog.isShowing()) {
+                loadingDialog.dismiss();
+            }
             List<AppGroupBean> appGroupList = handleAppList(getAppGroupResult
                     .getAppGroupBeanList());
             appListAdapter = new AppListAdapter(appGroupList);
@@ -732,6 +836,9 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
 
         @Override
         public void returnUserAppsFail(String error) {
+            if (loadingDialog.isShowing()) {
+                loadingDialog.dismiss();
+            }
             pullToRefreshLayout.refreshFinish(PullToRefreshLayout.FAIL);
             WebServiceMiddleUtils.hand(getActivity(), error);
         }
@@ -739,6 +846,7 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
 
     /**
      * 获取到网络数据后对排序和显示进行处理
+     *
      * @param appGroupList
      * @return
      */
@@ -761,18 +869,19 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
             Collections.sort(appGroupList.get(i).getAppItemList(),
                     new SortClass());
         }
-        handCommonlyUseAppData(appGroupList,false);
+        handCommonlyUseAppData(appGroupList, false);
         return appGroupList;
     }
 
     /**
      * 处理应用加载数据时常用应用部分
+     *
      * @param appGroupList
      */
-    private void handCommonlyUseAppData(List<AppGroupBean> appGroupList,boolean isNeedRefresh) {
+    private void handCommonlyUseAppData(List<AppGroupBean> appGroupList, boolean isNeedRefresh) {
         List<AppCommonlyUse> appCommonlyUseList =
                 getCommonlyUseAppList(getActivity());//这里换成获取所有
-        if (appCommonlyUseList.size() > 0  && getNeedCommonlyUseApp()) {
+        if (appCommonlyUseList.size() > 0 && getNeedCommonlyUseApp()) {
             AppGroupBean appGroupBean = new AppGroupBean();
             appGroupBean.setCategoryID("commonly");
             appGroupBean.setCategoryName(getString(R.string.commoly_use_app));
@@ -796,29 +905,29 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
                 }
             }
 
-            Collections.sort(myCommonlyUseAppList,new SortCommonlyUseAppClass());
-            if(myCommonlyUseAppList.size() > 4){
+            Collections.sort(myCommonlyUseAppList, new SortCommonlyUseAppClass());
+            if (myCommonlyUseAppList.size() > 4) {
                 myCommonlyUseAppList = myCommonlyUseAppList.subList(0, 4);
             }
             Collections.sort(myCommonlyUseAppList, new SortCommonlyUseAppClass());
-            for (int i = 0; i < myCommonlyUseAppList.size(); i++) {
-                LogUtils.YfcDebug("app名称："+myCommonlyUseAppList.get(i).getAppName()+"常用应用的权重"+myCommonlyUseAppList.get(i).getWeight());
-            }
+            //需要调试常用应用权重时解开
+//            for (int i = 0; i < myCommonlyUseAppList.size(); i++) {
+//                LogUtils.YfcDebug("app名称：" + myCommonlyUseAppList.get(i).getAppName() + "常用应用的权重" + myCommonlyUseAppList.get(i).getWeight());
+//            }
 
-            if(myCommonlyUseAppList.size()>0){
+            if (myCommonlyUseAppList.size() > 0) {
                 appGroupBean.setAppItemList(myCommonlyUseAppList);
                 appGroupList.add(0, appGroupBean);
                 hasCommonlyApp = true;
             }
         }
-        if(isNeedRefresh){
+        if (isNeedRefresh) {
             appListAdapter.notifyDataSetChanged();
         }
     }
 
     /**
      * 应用顺序排序接口，比较orderId
-     *
      */
     public class SortClass implements Comparator {
         public int compare(Object arg0, Object arg1) {
@@ -838,7 +947,6 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
 
     /**
      * 常用应用排序接口，比较权重
-     *
      */
     public class SortCommonlyUseAppClass implements Comparator {
         public int compare(Object arg0, Object arg1) {
@@ -861,7 +969,6 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
 
     /**
      * 常用应用排序接口，比较权重
-     *
      */
     public class SortCommonlyUseApp implements Comparator {
         public int compare(Object arg0, Object arg1) {

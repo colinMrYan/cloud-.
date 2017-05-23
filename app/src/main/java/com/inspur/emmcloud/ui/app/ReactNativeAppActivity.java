@@ -22,6 +22,7 @@ import com.inspur.emmcloud.bean.GetMyInfoResult;
 import com.inspur.emmcloud.bean.ReactNativeDownloadUrlBean;
 import com.inspur.emmcloud.bean.ReactNativeInstallUriBean;
 import com.inspur.emmcloud.config.MyAppConfig;
+import com.inspur.emmcloud.ui.login.LoginActivity;
 import com.inspur.emmcloud.util.AppUtils;
 import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.NetUtils;
@@ -32,6 +33,7 @@ import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.ToastUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.dialogs.ECMCustomIOSDialog;
+import com.inspur.imp.api.ImpActivity;
 import com.inspur.reactnative.AuthorizationManagerPackage;
 import com.inspur.reactnative.ReactNativeFlow;
 import com.reactnativecomponent.swiperefreshlayout.RCTSwipeRefreshLayoutPackage;
@@ -68,10 +70,27 @@ public class ReactNativeAppActivity extends BaseActivity implements DefaultHardw
      * 初始化RN应用Activity
      */
     private void init() {
+        String token = ((MyApplication)getApplicationContext())
+                .getToken();
+        checkToken(token);
         loadingDialog = new ECMCustomIOSDialog(this, R.style.CustomDialog);
         reactNativeAPIService = new ReactNativeAPIService(ReactNativeAppActivity.this);
         reactNativeAPIService.setAPIInterface(new WebService());
         userId = ((MyApplication)getApplication()).getUid();
+    }
+
+    /**
+     * 检查token，如果token不存在则跳转到登录页面
+     * @param token
+     */
+    private void checkToken(String token) {
+        if(StringUtils.isBlank(token)){
+            ToastUtils.show(ReactNativeAppActivity.this, ReactNativeAppActivity.this.getString(R.string.authorization_expired));
+            Intent intent = new Intent();
+            intent.setClass(ReactNativeAppActivity.this, LoginActivity.class);
+            startActivity(intent);
+            finish();
+        }
     }
 
     /**

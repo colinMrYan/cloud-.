@@ -60,6 +60,14 @@ public class ImpActivity extends ImpBaseActivity {
 		super.onCreate(savedInstanceState);
 		((MyApplication) getApplicationContext()).addActivity(this);
 		setContentView(Res.getLayoutID("activity_imp"));
+		initViews();
+	}
+
+
+	/**
+	 * 初始化Views
+	 */
+	private void initViews() {
 		progressLayout = (RelativeLayout) findViewById(Res
 				.getWidgetID("progress_layout"));
 		loadFailLayout = (LinearLayout)findViewById(Res.getWidgetID("load_error_layout")) ;
@@ -75,7 +83,6 @@ public class ImpActivity extends ImpBaseActivity {
 		}else{
 			url = getIntent().getExtras().getString("uri");
 		}
-		LogUtils.jasonDebug("url="+url);
 		if (getIntent().hasExtra("appName")) {
 			headerText = (TextView) findViewById(Res.getWidgetID("header_text"));
 			webView.setProperty(progressLayout,headerText,loadFailLayout);
@@ -92,7 +99,6 @@ public class ImpActivity extends ImpBaseActivity {
 		isMDM = getIntent().hasExtra("function")&&getIntent().getStringExtra("function").equals("mdm");
 		if (isMDM){
 			token = PreferencesUtils.getString(this,"mdm_accessToken");
-			LogUtils.jasonDebug("token="+token);
 		}
 		setOauthHeader(token);
 		setLangHeader(UriUtils.getLanguageCookie(this));

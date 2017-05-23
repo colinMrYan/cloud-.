@@ -344,6 +344,8 @@
     <string name="app_password_encrypt_error">密碼加密出錯</string>
     <string name="app_recommand">推薦</string>
     <string name="app_classification">分類</string>
+    <string name="app_create_shortcut_no_more_remind">不再提醒</string>
+    <string name="app_commonly_use_app">是否將移動簽到添加到案頭快捷方式，一鍵簽到？ </string>
 
     <!-- 我的頁面部分 -->
     <string name="data_clear_success">清除成功</string>

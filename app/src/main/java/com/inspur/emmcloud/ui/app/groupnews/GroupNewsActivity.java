@@ -1,5 +1,6 @@
 package com.inspur.emmcloud.ui.app.groupnews;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -16,7 +17,9 @@ import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
 import com.inspur.emmcloud.bean.GetNewsTitleResult;
 import com.inspur.emmcloud.bean.Titles;
+import com.inspur.emmcloud.ui.login.LoginActivity;
 import com.inspur.emmcloud.util.NetUtils;
+import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.ToastUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
@@ -42,7 +45,17 @@ public class GroupNewsActivity extends BaseFragmentActivity implements
 		super.onCreate(savedInstanceState);
 		((MyApplication) getApplicationContext()).addActivity(this);
 		setContentView(R.layout.activity_group_news);
+		init();
+		getNewTitles();
+	}
 
+	/**
+	 * 初始化
+	 */
+	private void init() {
+		String token = ((MyApplication)getApplicationContext())
+				.getToken();
+		checkToken(token);
 		loadingDlg = new LoadingDialog(GroupNewsActivity.this);
 		tabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);
 		tabs.setDividerColor(getResources().getColor(R.color.content_border));
@@ -51,9 +64,21 @@ public class GroupNewsActivity extends BaseFragmentActivity implements
 		tabs.setTextColor(R.drawable.selector_viewpager_tab_text);
 		pager = (ViewPager) findViewById(R.id.pager);
 		tabs.setOnPageChangeListener(this);
-		getNewTitles();
-		
 
+	}
+
+	/**
+	 * 检查token，如果token不存在则跳转到登录页面
+	 * @param token
+	 */
+	private void checkToken(String token) {
+		if(StringUtils.isBlank(token)){
+			ToastUtils.show(GroupNewsActivity.this, GroupNewsActivity.this.getString(R.string.authorization_expired));
+			Intent intent = new Intent();
+			intent.setClass(GroupNewsActivity.this, LoginActivity.class);
+			startActivity(intent);
+			finish();
+		}
 	}
 
 	/**
