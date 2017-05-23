@@ -259,7 +259,6 @@ public class MyAppAPIService {
     public void getNewsTitles() {
 
         final String completeUrl = UriUtils.getHttpApiUri("api/v0/content/news/section");
-        LogUtils.YfcDebug("请求新闻的地址："+completeUrl);
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
         x.http().get(params, new APICallback(context,completeUrl) {
@@ -279,7 +278,6 @@ public class MyAppAPIService {
             @Override
             public void callbackSuccess(String arg0) {
                 // TODO Auto-generated method stub
-                LogUtils.YfcDebug("分类接口返回："+arg0);
                 apiInterface
                         .returnGroupNewsTitleSuccess(new GetNewsTitleResult(
                                 arg0));

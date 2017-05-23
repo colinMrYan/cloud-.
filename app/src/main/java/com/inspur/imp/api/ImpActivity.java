@@ -10,7 +10,6 @@ import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnTouchListener;
 import android.view.WindowManager;
 import android.webkit.ValueCallback;
 import android.webkit.WebSettings;
@@ -20,8 +19,14 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.MyApplication;
+import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.ui.login.LoginActivity;
 import com.inspur.emmcloud.util.AppUtils;
 import com.inspur.emmcloud.util.LogUtils;
+import com.inspur.emmcloud.util.OauthUtils;
+import com.inspur.emmcloud.util.PreferencesByUserUtils;
+import com.inspur.emmcloud.util.StringUtils;
+import com.inspur.emmcloud.util.ToastUtils;
 import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.imp.engine.webview.ImpWebChromeClient;
 import com.inspur.imp.engine.webview.ImpWebView;
@@ -50,6 +55,7 @@ public class ImpActivity extends ImpBaseActivity {
 	private Button buttonClose;
 	private TextView headerText;
 	private LinearLayout loadFailLayout;
+	private OauthUtils oauthUtils;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +63,34 @@ public class ImpActivity extends ImpBaseActivity {
 		super.onCreate(savedInstanceState);
 		((MyApplication) getApplicationContext()).addActivity(this);
 		setContentView(Res.getLayoutID("activity_imp"));
+		init();
+		initViews();
+	}
+
+	/**
+	 * 初始化
+	 */
+	private void init() {
+		long getAccessTokenTime = PreferencesByUserUtils.getLong(ImpActivity.this,"acccessTokenTime",0);
+		if(getIntent().hasExtra("uri")){
+			String url = getIntent().getExtras().getString("uri");
+			long betweenTime = 0;
+			if(getAccessTokenTime > 0){
+				betweenTime = System.currentTimeMillis()-getAccessTokenTime;
+			}else{
+				return;
+			}
+			boolean outTime = (betweenTime>28200000);
+			if(url != null && url.contains("inspur.hcmcloud.cn") && outTime){
+
+			}
+		}
+	}
+
+	/**
+	 * 初始化Views
+	 */
+	private void initViews() {
 		progressLayout = (RelativeLayout) findViewById(Res
 				.getWidgetID("progress_layout"));
 		loadFailLayout = (LinearLayout)findViewById(Res.getWidgetID("load_error_layout")) ;
@@ -85,10 +119,11 @@ public class ImpActivity extends ImpBaseActivity {
 
 		String token = ((MyApplication)getApplicationContext())
 				.getToken();
+		checkToken(token);
 		setOauthHeader(token);
 		setLangHeader(UriUtils.getLanguageCookie(this));
 		setUserAgent("/emmcloud/" + AppUtils.getVersion(this));
-		webView.setOnTouchListener(new OnTouchListener() {
+		webView.setOnTouchListener(new View.OnTouchListener() {
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
 				switch (event.getAction()) {
@@ -113,6 +148,20 @@ public class ImpActivity extends ImpBaseActivity {
 		webView.loadUrl(url, extraHeaders);
 		progressLayout.setVisibility(View.VISIBLE);
 
+	}
+
+	/**
+	 * 检查token，如果token不存在则跳转到登录页面
+	 * @param token
+     */
+	private void checkToken(String token) {
+		if(StringUtils.isBlank(token)){
+			ToastUtils.show(ImpActivity.this, ImpActivity.this.getString(R.string.authorization_expired));
+			Intent intent = new Intent();
+			intent.setClass(ImpActivity.this, LoginActivity.class);
+			startActivity(intent);
+			finish();
+		}
 	}
 
 	/**

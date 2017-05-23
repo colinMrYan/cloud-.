@@ -26,6 +26,7 @@ public class UriUtils {
     public static void openApp(Activity activity, App app) {
         String uri = app.getUri();
         int appType = app.getAppType();
+        String appName = app.getAppName();
         Intent intent = new Intent();
         switch (appType) {
             case 0:
