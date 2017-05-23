@@ -14,7 +14,6 @@ import android.view.View.OnTouchListener;
 import android.view.WindowManager;
 import android.webkit.ValueCallback;
 import android.webkit.WebSettings;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -48,8 +47,6 @@ public class ImpActivity extends ImpBaseActivity {
 	private int FILEEXPLOER_RESULTCODE = 4;
 	private RelativeLayout progressLayout;
 	private Map<String, String> extraHeaders;
-	private Button buttonBack;
-	private Button buttonClose;
 	private TextView headerText;
 	private LinearLayout loadFailLayout;
 	private boolean isMDM = false;//mdm页面
@@ -77,19 +74,27 @@ public class ImpActivity extends ImpBaseActivity {
 						| WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 		String url = "";
 		Uri uri = getIntent().getData();
+		boolean isUriHasTitle = false;
+		String title = "";
 		if (uri != null){
 			String host = uri.getHost();
 			url = "https://emm.inspur.com/ssohandler/gs_msg/"+host;
+			String openMode = uri.getQueryParameter("openMode");
+			isUriHasTitle = (openMode != null && openMode.equals("1"))?true:false;
 		}else{
 			url = getIntent().getExtras().getString("uri");
 		}
-		if (getIntent().hasExtra("appName")) {
+		if (getIntent().hasExtra("appName")){
+			isUriHasTitle = true;
+			title = getIntent().getExtras().getString("appName");
+		}
+		if (isUriHasTitle) {
 			headerText = (TextView) findViewById(Res.getWidgetID("header_text"));
 			webView.setProperty(progressLayout,headerText,loadFailLayout);
 			initWebViewGoBackOrClose();
 			( findViewById(Res.getWidgetID("header_layout")))
 					.setVisibility(View.VISIBLE);
-			headerText.setText(getIntent().getExtras().getString("appName"));
+			headerText.setText(title);
 		}else {
 			webView.setProperty(progressLayout,null,loadFailLayout);
 		}
@@ -135,14 +140,8 @@ public class ImpActivity extends ImpBaseActivity {
 	 * （不是GS应用，GS应用有重定向，不容易实现返回）
 	 */
 	private void initWebViewGoBackOrClose() {
-		buttonBack = (Button) findViewById(Res.getWidgetID("imp_back_btn"));
-		buttonClose = (Button) findViewById(Res.getWidgetID("imp_close_btn"));
-		buttonBack.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				goBack();
-			}
-		});
+		final  TextView buttonBack = (TextView) findViewById(Res.getWidgetID("imp_back_btn"));
+		final  TextView buttonClose = (TextView) findViewById(Res.getWidgetID("imp_close_btn"));
 		buttonClose.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -153,7 +152,7 @@ public class ImpActivity extends ImpBaseActivity {
 				new ImpWebChromeClient.OnFinishLoadUrlListener() {
 					@Override
 					public void OnFinishLoadUrlListener(boolean isFinish) {
-						((RelativeLayout) findViewById(Res
+						( findViewById(Res
 								.getWidgetID("header_layout")))
 								.setVisibility(View.VISIBLE);
 						if (webView.canGoBack()) {
@@ -172,10 +171,14 @@ public class ImpActivity extends ImpBaseActivity {
 		if (webView.canGoBack()) {
 			webView.goBack();// 返回上一页面
 		} else {
-			finish();// 退出程序
-			if (getIntent().hasExtra("function")&&getIntent().getStringExtra("function").equals("mdm")){
-				new MDM().getMDMListener().MDMStatusNoPass();
-			}
+			finishActivity();
+		}
+	}
+
+	private void finishActivity(){
+		finish();// 退出程序
+		if (getIntent().hasExtra("function")&&getIntent().getStringExtra("function").equals("mdm")){
+			new MDM().getMDMListener().MDMStatusNoPass();
 		}
 	}
 
@@ -235,7 +238,7 @@ public class ImpActivity extends ImpBaseActivity {
 				return true;
 			} else {
 				LogUtils.jasonDebug("not------canGoBack");
-				finish();// 退出程序
+				finishActivity();// 退出程序
 			}
 		}
 		return super.onKeyDown(keyCode, event);

@@ -67,7 +67,7 @@ public class JsInterface {
 	public String invokeAndReturn(String serviceName,
 			String action,  String params) {
 		if (serviceName.equals("com.inspur.gsp.imp.framework.plugin.GloSessionService") && action.equals("getClose")) {
-			serviceName = "com.inspur.imp.plugin.app.EMMService";
+			serviceName = "com.inspur.imp.plugin.app.AppService";
 			action= "close";
 		}else if (serviceName.equals("com.inspur.gsp.imp.framework.plugin.GloSessionService") && action.equals("downloadFile")) {
 			serviceName = "com.inspur.imp.plugin.filetransfer.FileTransferService";

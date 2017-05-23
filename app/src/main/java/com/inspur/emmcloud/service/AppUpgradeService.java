@@ -28,8 +28,8 @@ public class AppUpgradeService extends Service{
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		//是否人工检查是否有新版本，此时如果有更新一定要提示
-		boolean isManualCheck = intent.getBooleanExtra("isManualCheck",false);
-		if (NetUtils.isNetworkConnected(this, false)) {
+		if (NetUtils.isNetworkConnected(this, false) && intent != null) {
+			boolean isManualCheck = intent.getBooleanExtra("isManualCheck",false);
 			handler = new Handler(Looper.getMainLooper());
 			AppAPIService apiService = new AppAPIService(this);
 			apiService.setAPIInterface(new Webservice());
