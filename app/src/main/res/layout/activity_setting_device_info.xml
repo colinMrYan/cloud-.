@@ -102,7 +102,7 @@
                     android:paddingTop="10dp"
                     android:paddingBottom="10dp"
                     android:textColor="#999999"
-                    android:textSize="17sp"/>
+                    android:textSize="16sp"/>
             </RelativeLayout>
             <View
                 android:layout_width="fill_parent"
@@ -131,11 +131,12 @@
                     android:gravity="right"
                     android:paddingRight="10dp"
                     android:layout_toRightOf="@+id/device_id_title_text"
+                    android:paddingLeft="15dp"
                     android:onClick="onClick"
                     android:paddingTop="10dp"
                     android:paddingBottom="10dp"
                     android:textColor="#999999"
-                    android:textSize="17sp"/>
+                    android:textSize="16sp"/>
             </RelativeLayout>
 
         </LinearLayout>

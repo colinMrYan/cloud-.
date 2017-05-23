@@ -563,6 +563,7 @@
         <activity
             android:name="com.inspur.imp.api.ImpActivity"
             android:configChanges="orientation|screenSize"
+            android:theme="@android:style/Theme.Holo.Light.NoActionBar"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />

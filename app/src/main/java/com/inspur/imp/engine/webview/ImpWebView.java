@@ -6,6 +6,8 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.os.Handler;
+import android.os.Message;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
@@ -65,6 +67,7 @@ public class ImpWebView extends WebView {
 	private ImpWebChromeClient impWebChromeClient;
 	private TextView titleText;
 	private LinearLayout loadFailLayout;
+	private Handler handler;
 
 	public ImpWebView(Context context, AttributeSet attrs) {
 		super(context,attrs);
@@ -77,7 +80,19 @@ public class ImpWebView extends WebView {
 		this.loadFailLayout = loadFailLayout;
 		this.setWebView();
 		this.setWebSetting();
+		handMessage();
 		init();
+	}
+
+	private void handMessage(){
+		handler = new Handler(){
+			@Override
+			public void handleMessage(Message msg) {
+				String title =(String) msg.obj;
+				titleText.setText(title);
+			}
+		};
+
 	}
 	
 	/**添加顶部加载进度条**/
@@ -111,10 +126,14 @@ public class ImpWebView extends WebView {
 
 	public class GetTitle {
 		@JavascriptInterface
-		public void onGetTitle(String title) {
+		public void onGetTitle(final String title) {
+			LogUtils.jasonDebug("title="+title);
 			// 参数title即为网页的标题，可在这里面进行相应的title的处理
 			if (titleText != null && !TextUtils.isEmpty(title)){
-				titleText.setText(title);
+				Message msg = new Message();
+				msg.what = 1;
+				msg.obj = title;
+				handler.sendMessage(msg);
 			}
 		}
 	}
@@ -351,6 +370,9 @@ public class ImpWebView extends WebView {
 
 	public void destroy() {
 		this.destroyed = true;
+		if (handler != null){
+			handler = null;
+		}
 		super.destroy();
 	}
 

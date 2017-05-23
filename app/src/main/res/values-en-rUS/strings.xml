@@ -401,6 +401,8 @@
     <string name="app_customer">Cloud+ Customer</string>
     <string name="settings_device_manager">Equipment safety and management</string>
     <string name="device_unbind_sucess">Device unbound successfully!</string>
+    <string name="device_other_unbind_warning">After binding, log on from %1$s, you need to re register the device</string>
+    <string name="device_current_unbind_warning">After binding, you need to log in again and register your device</string>
     <string name="current_device">Current device</string>
     <string name="device_bind_time_title">Binding time: </string>
     <string name="device_bind_time">Binding time</string>

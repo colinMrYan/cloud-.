@@ -18,6 +18,7 @@ import com.inspur.emmcloud.bean.BindingDevice;
 import com.inspur.emmcloud.bean.GetBindingDeviceResult;
 import com.inspur.emmcloud.util.AppUtils;
 import com.inspur.emmcloud.util.NetUtils;
+import com.inspur.emmcloud.util.TimeUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 
@@ -114,6 +115,8 @@ public class DeviceManagerActivity extends BaseActivity {
 			if (bindingDevice.getDeviceId().equals(AppUtils.getMyUUID(DeviceManagerActivity.this))){
 				(convertView.findViewById(R.id.current_device_text)).setVisibility(View.VISIBLE);
 			}
+			String bindingTime = TimeUtils.getTime(bindingDevice.getDeviceBindTime(),TimeUtils.getFormat(DeviceManagerActivity.this,TimeUtils.FORMAT_DEFAULT_DATE));
+			((TextView)convertView.findViewById(R.id.device_bind_time_text)).setText(bindingTime);
 			return convertView;
 		}
 	};

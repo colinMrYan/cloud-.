@@ -71,7 +71,6 @@ public class EMMService extends ImpPlugin {
 
 	private void webviewReload(){
 		webview.reload();
-		ToastUtils.show(getActivity(),"webviewReload----------");
 	}
 
 

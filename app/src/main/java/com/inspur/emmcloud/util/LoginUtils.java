@@ -191,7 +191,7 @@ public class LoginUtils extends APIInterfaceInstance {
 			}
 			
 		} else {
-			WebServiceMiddleUtils.hand(activity, error);
+			WebServiceMiddleUtils.hand(activity, error,errorCode);
 		}
 		
 		loginUtilsHandler.sendEmptyMessage(LOGIN_FAIL);

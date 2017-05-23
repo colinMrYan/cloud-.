@@ -22,6 +22,7 @@ public class BindingDevice implements Serializable{
 	public BindingDevice(JSONObject obj) {
 		deviceId = JSONUtils.getString(obj, "udid", "");
 		deviceModel = JSONUtils.getString(obj, "device_model", "");
+		deviceBindTime=JSONUtils.getLong(obj,"create_time",0L);
 	}
 
 	public String getDeviceId(){
