@@ -130,6 +130,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="right"
                     android:paddingRight="10dp"
+                    android:clickable="true"
                     android:layout_toRightOf="@+id/device_id_title_text"
                     android:paddingLeft="15dp"
                     android:onClick="onClick"
