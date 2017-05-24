@@ -1,102 +1,59 @@
 package com.inspur.emmcloud.bean;
 
-import java.io.Serializable;
+import com.inspur.emmcloud.util.JSONUtils;
 
-import org.json.JSONException;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
-import android.util.Log;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
-public class GetMyInfoResult implements Serializable{
+public class GetMyInfoResult implements Serializable {
 
 	private static final String TAG = "GetRegisterResult";
-	
-	private String response = "";
-	private String avatar ="";
-	private String code ="";
-	private String creationDate = "";
-	private String firstName = "";
-	private String lastName = "";
-	private String id="";
-	private String gender="";
-	private String mail ="";
-	private String phoneNumber="";
-	private String enterpriseCode="";
-	private String enterpriseName="";
-	private String oldId = "";
-	private Boolean hasPassord = false;
-	private String enterpriseId = "";
-	
-	public GetMyInfoResult(String response){
+
+	private String response ;
+	private String avatar;
+	private String code ;
+	private String creationDate ;
+	private String firstName;
+	private String lastName;
+	private String id ;
+	private String mail ;
+	private String phoneNumber ;
+	private String enterpriseCode ;
+	private String enterpriseName;
+	private Boolean hasPassord ;
+	private String enterpriseId ;
+	private List<Enterprise> enterpriseList = new ArrayList<>();
+
+	public GetMyInfoResult(String response) {
 		this.response = response;
-		try {
-			JSONObject jsonObject = new JSONObject(response);
-			
-			if(jsonObject.has("enterprise")){
-				JSONObject jObject = jsonObject.getJSONObject("enterprise");
-				if(jObject.has("code")){
-					this.enterpriseCode = jObject.getString("code");
-				}
-				if(jObject.has("name")){
-					this.enterpriseName = jObject.getString("name");
-				}
-				if (jObject.has("id")) {
-					this.enterpriseId = jObject.getString("id");
-				}
-				
+		JSONObject jObject = JSONUtils.getJSONObject(response, "enterprise", new JSONObject());
+		this.enterpriseCode = JSONUtils.getString(jObject, "code", "");
+		this.enterpriseName = JSONUtils.getString(jObject, "name", "");
+		this.enterpriseId = JSONUtils.getString(jObject, "id", "");
+		this.avatar = JSONUtils.getString(response, "avatar", "");
+		this.code = JSONUtils.getString(response, "code", "");
+		this.creationDate = JSONUtils.getString(response, "creation_date", "");
+		this.firstName = JSONUtils.getString(response, "first_name", "");
+		this.lastName = JSONUtils.getString(response, "last_name", "");
+		this.id = JSONUtils.getString(response, "id", "");
+		this.mail = JSONUtils.getString(response, "mail", "");
+		this.phoneNumber = JSONUtils.getString(response, "phone", "");
+		this.hasPassord = JSONUtils.getBoolean(response, "has_password", false);
+		JSONArray enterpriseArray = JSONUtils.getJSONArray(response, "enterprises", new JSONArray());
+		for (int i = 0; i < enterpriseArray.length(); i++) {
+			JSONObject obj = JSONUtils.getJSONObject(enterpriseArray, i, null);
+			if (obj != null) {
+				enterpriseList.add(new Enterprise(obj));
 			}
-			if(jsonObject.has("avatar")){
-				this.avatar = jsonObject.getString("avatar");
-			}
-			if (jsonObject.has("old_id")) {
-				this.oldId = jsonObject.getString("old_id");
-			}
-			
-			if(jsonObject.has("code")){
-				this.code = jsonObject.getString("code");
-			}
-			
-			if(jsonObject.has("creation_date")){
-				this.creationDate = jsonObject.getString("creation_date");
-			}
-			
-			if(jsonObject.has("first_name")){
-				this.firstName = jsonObject.getString("first_name");
-			}
-			
-			if(jsonObject.has("last_name")){
-				this.lastName = jsonObject.getString("last_name");
-			}
-			
-			if(jsonObject.has("id")){
-				this.id = jsonObject.getString("id");
-			}
-			
-			if(jsonObject.has("gender")){
-				this.gender = jsonObject.getString("gender");
-			}
-			
-			if(jsonObject.has("mail")){
-				this.mail = jsonObject.getString("mail");
-			}
-			
-			if(jsonObject.has("phone")){
-				this.phoneNumber = jsonObject.getString("phone");
-			}
-			
-			if(jsonObject.has("has_password")){
-				this.hasPassord = jsonObject.getBoolean("has_password");
-			}
-			
-			
-			
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
+
 	}
-	
-	public void setAvatar(String avatar){
+
+	public void setAvatar(String avatar) {
 		this.avatar = avatar;
 	}
 
@@ -107,57 +64,48 @@ public class GetMyInfoResult implements Serializable{
 	public String getCreationDate() {
 		return creationDate;
 	}
-	
+
 	public String getCode() {
 		return code;
 	}
-	
-	public String getName(){
-		return firstName+lastName;
+
+	public String getName() {
+		return firstName + lastName;
 	}
-	
-	public String getID(){
+
+	public String getID() {
 		return id;
 	}
-	
-	public String gender(){
-		return gender;
-	}
-	
-	public String getMail(){
+
+
+	public String getMail() {
 		return mail;
 	}
-	
-	public String getPhoneNumber(){
+
+	public String getPhoneNumber() {
 		return phoneNumber;
 	}
-	
-	public String getEnterpriseCode(){
+
+	public String getEnterpriseCode() {
 		return enterpriseCode;
 	}
-	
-	public String getEnterpriseName(){
+
+	public String getEnterpriseName() {
 		return enterpriseName;
 	}
 
-	public String getResponse(){
+	public String getResponse() {
 		return response;
-	}
-	public String getOldId(){
-		return oldId;
 	}
 
 	public Boolean getHasPassord() {
 		return hasPassord;
 	}
 
-	public void setHasPassord(Boolean hasPassord) {
-		this.hasPassord = hasPassord;
+
+	public String getEnterpriseId() {
+		return enterpriseId;
 	}
-	
-	public String getEnterpriseId(){
-		return  enterpriseId;
-	}
-	
-	
+
+
 }
