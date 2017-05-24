@@ -1,8 +1,6 @@
 package com.inspur.emmcloud.ui;
 
 import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -108,7 +106,6 @@ public class IndexActivity extends BaseFragmentActivity implements
     private IndexReactNativeReceiver reactNativeReceiver;
     private ReactNativeUpdateBean reactNativeUpdateBean;
     private AppAPIService appApiService;
-    private ReactNativeAPIService reactNativeAPIService;
     private String userId;
     private boolean isReactNativeClientUpdateFail = false;
     private boolean isGetTab = false;
@@ -697,18 +694,6 @@ public class IndexActivity extends BaseFragmentActivity implements
         return consumed;
     }
 
-    /**
-     * 添加Fragment
-     *
-     * @param fragment
-     */
-    private void addFragment(Fragment fragment) {
-        FragmentManager fragmentManager = getFragmentManager();
-        FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.attach(fragment);
-        transaction.add(fragment, "");
-        transaction.commit();
-    }
 
     @Override
     public void onTabChanged(String tabId) {
@@ -757,9 +742,9 @@ public class IndexActivity extends BaseFragmentActivity implements
      * 检查闪屏页更新
      */
     private void updateSplashPage() {
-        reactNativeAPIService = new ReactNativeAPIService(IndexActivity.this);
-        reactNativeAPIService.setAPIInterface(new WebService());
         //这里并不是实时更新所以不加dialog
+        String splashInfoOld = PreferencesByUserUtils.getString(IndexActivity.this,"splash_page_info_old","");
+        LogUtils.YfcDebug("老版信息："+splashInfoOld);
         if (NetUtils.isNetworkConnected(IndexActivity.this)) {
             String splashInfo = PreferencesByUserUtils.getString(IndexActivity.this, "splash_page_info","");
             SplashPageBean splashPageBean = new SplashPageBean(splashInfo);
@@ -928,6 +913,10 @@ public class IndexActivity extends BaseFragmentActivity implements
         @Override
         public void returnSplashPageInfoFail(String error, int errorCode) {
             super.returnSplashPageInfoFail(error, errorCode);
+            isGetTab = true;
+            if(!checkClientIdNotExit()){
+                getReactNativeClientId();
+            }
         }
     }
 
@@ -952,16 +941,12 @@ public class IndexActivity extends BaseFragmentActivity implements
                 downloadSplashPage(UriUtils.getPreviewUri(defaultBean.getHdpi()),defaultBean.getHdpi());
             }
 
-//            downloadSplashPage(splashPageBean.getXhdpi(), splashPageBean.getCommand());
         } else if (command.equals("ROLLBACK")) {
-            String userId = ((MyApplication)getApplication()).getUid();
             ReactNativeFlow.moveFolder(MyAppConfig.getSplashPageImageLastVersionPath(IndexActivity.this,userId),
                     MyAppConfig.getSplashPageImageShowPath(IndexActivity.this,
                             userId, "splash"));
         } else if (command.equals("STANDBY")) {
-//            showLastSplash();
         } else {
-//            showLastSplash();
             LogUtils.YfcDebug("当做STANDBY");
         }
 
@@ -1001,7 +986,6 @@ public class IndexActivity extends BaseFragmentActivity implements
                 SplashPageBean splashPageBeanLocalOld = new SplashPageBean(splashInfoOld);
                 String splashInfoShowing = PreferencesByUserUtils.getString(IndexActivity.this,"splash_page_info","");
                 SplashPageBean splashPageBeanLocalShowing = new SplashPageBean(splashInfoShowing);
-                String userId = ((MyApplication)getApplication()).getUid();
 //                ReactNativeFlow.moveFolder(MyAppConfig.getSplashPageImageShowPath(IndexActivity.this,
 //                        userId, "splash"),MyAppConfig.getSplashPageImageLastVersionPath(IndexActivity.this,userId)
 //                );
@@ -1022,6 +1006,8 @@ public class IndexActivity extends BaseFragmentActivity implements
                         sha256Code = splashPageBeanLocalShowing.getPayload().getHdpiHash().split(":")[1];
                         oldSplashPageName = splashPageBeanLocalOld.getPayload().getResource().getDefaultX().getHdpi();
                     }
+                    LogUtils.YfcDebug("老版名称："+MyAppConfig.getSplashPageImageShowPath(IndexActivity.this,
+                        userId, "splash/")+oldSplashPageName);
                     ReactNativeFlow.deleteOldVersionFile(MyAppConfig.getSplashPageImageShowPath(IndexActivity.this,
                         userId, "splash/")+oldSplashPageName);
                     if(filelSha256.equals(sha256Code)){
@@ -1058,7 +1044,8 @@ public class IndexActivity extends BaseFragmentActivity implements
     private void writeBackSplashPageLog(String s,String preversion,String currentVersion) {
         String clientId = PreferencesUtils.getString(IndexActivity.this, UriUtils.tanent + userId +
                 "react_native_clientid", "");
-
+        ReactNativeAPIService reactNativeAPIService = new ReactNativeAPIService(IndexActivity.this);
+        reactNativeAPIService.setAPIInterface(new WebService());
         reactNativeAPIService.writeBackSplashPageVersionChange(preversion,currentVersion,clientId,s);
     }
 

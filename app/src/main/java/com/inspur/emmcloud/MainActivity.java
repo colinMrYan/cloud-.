@@ -50,7 +50,6 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
     private static final int DONOT_UPGRADE = 12;
     private Handler handler;
     private LanguageUtils languageUtils;
-    private GifImageView splashImageTop;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +63,6 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
      * 初始化
      */
     private void init() {
-        splashImageTop = (GifImageView) findViewById(R.id.splash_img_top);
                 /* 解决了在sd卡中第一次安装应用，进入到主页并切换到后台再打开会重新启动应用的bug */
         if ((getIntent().getFlags() & Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT) != 0) {
             finish();
@@ -277,9 +275,9 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
             boolean shouldShow = ((nowTime>splashPageBeanLoacal.getPayload().getEffectiveDate())
                     &&(nowTime<splashPageBeanLoacal.getPayload().getExpireDate()));
             if(shouldShow && !StringUtils.isBlank(name)){
-                ImageLoader.getInstance().displayImage("file://"+name,splashImageTop);
+                ImageLoader.getInstance().displayImage("file://"+name,(GifImageView) findViewById(R.id.splash_img_top));
             }else{
-                splashImageTop.setVisibility(View.GONE);
+                ((GifImageView) findViewById(R.id.splash_img_top)).setVisibility(View.GONE);
             }
         }
     }
