@@ -41,6 +41,9 @@ public class ReactNativeAPIService {
      */
     public void getClientId(final String deviceId, final String deviceName){
         final String completeUrl = APIUri.getClientId();
+        LogUtils.YfcDebug("请求clietnid的地址："+completeUrl);
+        LogUtils.YfcDebug("设备Id："+deviceId);
+        LogUtils.YfcDebug("设备名称："+deviceName);
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
         params.addParameter("deviceId",deviceId);
@@ -185,6 +188,40 @@ public class ReactNativeAPIService {
         downLoaderUtils.startDownLoad(fromUri,filePath,progressCallback);
     }
 
+    /**
+     * 写回闪屏日志
+     * @param preVersion
+     * @param currentVersion
+     * @param clientId
+     * @param command
+     */
+    public void writeBackSplashPageVersionChange(final String preVersion, final String currentVersion, final String clientId, final String command){
+        final String completeUrl = APIUri.getUploadSplashPageWriteBackLogUrl()+"?preVersion="+preVersion+"&currentVersion="+currentVersion+"&clientId="+clientId+
+                "&command="+command;
+        RequestParams params = ((MyApplication) context.getApplicationContext())
+                .getHttpRequestParams(completeUrl);
+        x.http().post(params, new APICallback(context,completeUrl) {
+            @Override
+            public void callbackSuccess(String arg0) {
+                LogUtils.YfcDebug("闪屏写回成功，不需要后续处理");
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                LogUtils.YfcDebug("闪屏写回失败，不需要后续处理"+error+responseCode);
+            }
+
+            @Override
+            public void callbackTokenExpire() {
+                new OauthUtils(new OauthCallBack() {
+                    @Override
+                    public void execute() {
+                        writeBackSplashPageVersionChange(preVersion,currentVersion,clientId, command);
+                    }
+                },context).refreshTocken(completeUrl);
+            }
+        });
+    }
 
 
 }

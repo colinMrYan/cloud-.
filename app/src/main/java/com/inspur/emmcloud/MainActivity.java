@@ -5,18 +5,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
 import android.view.View;
 
-import com.alibaba.fastjson.JSON;
-import com.inspur.emmcloud.api.APIInterfaceInstance;
-import com.inspur.emmcloud.api.apiservice.AppAPIService;
-import com.inspur.emmcloud.api.apiservice.ReactNativeAPIService;
-import com.inspur.emmcloud.bean.GetClientIdRsult;
 import com.inspur.emmcloud.bean.SplashPageBean;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.service.AppExceptionService;
@@ -25,11 +19,9 @@ import com.inspur.emmcloud.ui.login.LoginActivity;
 import com.inspur.emmcloud.ui.login.ModifyUserFirstPsdActivity;
 import com.inspur.emmcloud.ui.mine.setting.GuideActivity;
 import com.inspur.emmcloud.util.AppUtils;
-import com.inspur.emmcloud.util.DownLoaderUtils;
 import com.inspur.emmcloud.util.IntentUtils;
 import com.inspur.emmcloud.util.LanguageUtils;
 import com.inspur.emmcloud.util.LogUtils;
-import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.PreferencesByUserUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.ResolutionUtils;
@@ -38,13 +30,10 @@ import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.UpgradeUtils;
 import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.emmcloud.widget.dialogs.EasyDialog;
-import com.inspur.reactnative.ReactNativeFlow;
-
-import org.xutils.common.Callback;
-
-import java.io.File;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import pl.droidsonroids.gif.GifImageView;
+
 
 /**
  * 应用启动Activity
@@ -61,10 +50,7 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
     private static final int DONOT_UPGRADE = 12;
     private Handler handler;
     private LanguageUtils languageUtils;
-    private ReactNativeAPIService reactApiService;
-    private AppAPIService appAPIService;
     private GifImageView splashImageTop;
-    private String oldSplashVersionName = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,11 +58,6 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
         StateBarColor.changeStateBarColor(this);
         setContentView(R.layout.activity_main);
         init();
-        //updateSplashPage();
-        downloadSplashPage("https://ss0.bdstatic.com/94oJfD_bAAcT8t7mm9GUKT-xh_/timg?" +
-                        "image&quality=100&size=b4000_4000&sec=1495175375&di=ffcdfea98e5e825a242e119d2cc444fa&src=" +
-                "http://i.dimg.cc/5e/a5/0c/a2/47/9c/ac/0e/a4/56/cb/d7/03/09/e5/bc.jpg",
-                "bc.jpg");
     }
 
     /**
@@ -98,40 +79,7 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
         } else {
             initEnvironment();
         }
-    }
-
-    /**
-     * 检查闪屏页更新
-     */
-    private void updateSplashPage() {
-        reactApiService = new ReactNativeAPIService(MainActivity.this);
-        reactApiService.setAPIInterface(new WebService());
-        appAPIService = new AppAPIService(MainActivity.this);
-        appAPIService.setAPIInterface(new WebService());
         showLastSplash();
-        //这里并不是实时更新所以不加dialog
-        if (NetUtils.isNetworkConnected(MainActivity.this)) {
-            String splashInfo = PreferencesByUserUtils.getString(MainActivity.this, "splash_page_info");
-            SplashPageBean splashPageBean = JSON.parseObject(splashInfo, SplashPageBean.class);
-            oldSplashVersionName = splashPageBean.getName();
-            String clientId = PreferencesUtils.getString(MainActivity.this, UriUtils.tanent + ((MyApplication) getApplication()).getUid() + "react_native_clientid", "");
-            if (!StringUtils.isBlank(clientId)) {
-                appAPIService.getSplashPageInfo(clientId, splashPageBean.getVersionCode());
-            } else {
-                //没有clientId首先将获取ClientId然后再检查更新
-                getSplashClientId();
-            }
-
-        }
-    }
-
-    /**
-     * 获取clientid,这里没有转圈的dialog
-     */
-    private void getSplashClientId() {
-        if (NetUtils.isNetworkConnected(MainActivity.this)) {
-            reactApiService.getClientId(AppUtils.getMyUUID(MainActivity.this), AppUtils.GetChangShang());
-        }
     }
 
     /**
@@ -238,7 +186,6 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
         }
     }
 
-
     /**
      * 进入App
      */
@@ -301,152 +248,39 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
         return res;
     }
 
-    //这里发生失败都不提示，下次继续检查更新
-    class WebService extends APIInterfaceInstance {
-
-        @Override
-        public void returnSplashPageInfoSuccess(SplashPageBean splashPageBean) {
-            updateSplashPageWithOrder(splashPageBean);
-            super.returnSplashPageInfoSuccess(splashPageBean);
-        }
-
-        @Override
-        public void returnSplashPageInfoFail(String error, int errorCode) {
-            super.returnSplashPageInfoFail(error, errorCode);
-            LogUtils.YfcDebug("获取闪屏页失败：" + error + "错误代码：" + errorCode);
-        }
-
-        @Override
-        public void returnGetClientIdResultSuccess(GetClientIdRsult getClientIdRsult) {
-            super.returnGetClientIdResultSuccess(getClientIdRsult);
-            PreferencesUtils.putString(MainActivity.this, UriUtils.tanent +
-                            ((MyApplication) getApplication()).getUid() + "react_native_clientid",
-                    getClientIdRsult.getClientId());
-            updateSplashPage();
-        }
-
-        @Override
-        public void returnGetClientIdResultFail(String error) {
-            super.returnGetClientIdResultFail(error);
-        }
-    }
-
-    /**
-     * 根据命令更新闪屏页
-     *
-     * @param splashPageBean
-     */
-    private void updateSplashPageWithOrder(SplashPageBean splashPageBean) {
-        String command = splashPageBean.getCommand();
-        if (command.equals("FORWARD")) {
-            downloadSplashPage(splashPageBean.getUrl(), splashPageBean.getCommand());
-        } else if (command.equals("ROLLBACK")) {
-            String userId = ((MyApplication)getApplication()).getUid();
-            ReactNativeFlow.moveFolder(MyAppConfig.getSplashPageImageLastVersionPath(MainActivity.this,userId),
-                    MyAppConfig.getSplashPageImageShowPath(MainActivity.this,
-                            userId, "splash"));
-        } else if (command.equals("STANDBY")) {
-            showLastSplash();
-        } else {
-            showLastSplash();
-            LogUtils.YfcDebug("当做STANDBY");
-        }
-    }
-
     /**
      * 展示最新splash   需要添加是否已过期的逻辑
      */
     private void showLastSplash() {
-//        boolean isSplashEffiective = checkIfSplashIsEffective("","");
         String splashInfo = PreferencesByUserUtils.getString(MainActivity.this, "splash_page_info");
         if(!StringUtils.isBlank(splashInfo)){
-            SplashPageBean splashPageBeanLocal = JSON.parseObject(splashInfo, SplashPageBean.class);
-            String name = MyAppConfig.getSplashPageImageShowPath(MainActivity.this,
-                    ((MyApplication) getApplication()).getUid(), "splash/" + splashPageBeanLocal.getName());
-            if(!StringUtils.isBlank(name)){
-                splashImageTop.setImageBitmap(BitmapFactory.decodeFile(name));
+            SplashPageBean splashPageBeanLoacal = new SplashPageBean(splashInfo);
+            String screenType = AppUtils.getScreenType(MainActivity.this);
+            SplashPageBean.PayloadBean.ResourceBean.DefaultBean defaultBean = splashPageBeanLoacal.getPayload()
+                    .getResource().getDefaultX();
+            String name = "";
+            LogUtils.YfcDebug("screenType："+screenType);
+            if(screenType.equals("2k")){
+                name = MyAppConfig.getSplashPageImageShowPath(MainActivity.this,
+                        ((MyApplication) getApplication()).getUid(), "splash/" + defaultBean.getXxxhdpi());
+            }else if(screenType.equals("xxxhdpi")){
+                name = MyAppConfig.getSplashPageImageShowPath(MainActivity.this,
+                        ((MyApplication) getApplication()).getUid(), "splash/" + defaultBean.getXxhdpi());
+            }else if(screenType.equals("xxhdpi")){
+                name = MyAppConfig.getSplashPageImageShowPath(MainActivity.this,
+                        ((MyApplication) getApplication()).getUid(), "splash/" + defaultBean.getXhdpi());
+            }else{
+                name = MyAppConfig.getSplashPageImageShowPath(MainActivity.this,
+                        ((MyApplication) getApplication()).getUid(), "splash/" + defaultBean.getHdpi());
+            }
+            long nowTime = System.currentTimeMillis();
+            boolean shouldShow = ((nowTime>splashPageBeanLoacal.getPayload().getEffectiveDate())
+                    &&(nowTime<splashPageBeanLoacal.getPayload().getExpireDate()));
+            if(shouldShow && !StringUtils.isBlank(name)){
+                ImageLoader.getInstance().displayImage("file://"+name,splashImageTop);
             }else{
                 splashImageTop.setVisibility(View.GONE);
             }
         }
     }
-
-//    /**
-//     * 检查闪屏页是否有效
-//     * @param startTime
-//     * @param endTime
-//     * @return
-//     */
-//    private boolean checkIfSplashIsEffective(String startTime, String endTime) {
-//        return false;
-//    }
-
-
-    /**
-     * 下载闪屏页
-     *
-     * @param url
-     */
-    private void downloadSplashPage(String url, String fileName) {
-        DownLoaderUtils downloaderUtils = new DownLoaderUtils();
-        LogUtils.YfcDebug("下载到的路径：" + MyAppConfig.getSplashPageImageShowPath(MainActivity.this,
-                ((MyApplication) getApplication()).getUid(), "splash/" + fileName));
-        downloaderUtils.startDownLoad(url, MyAppConfig.getSplashPageImageShowPath(MainActivity.this,
-                ((MyApplication) getApplication()).getUid(), "splash/" + fileName), new Callback.ProgressCallback<File>() {
-            @Override
-            public void onWaiting() {
-
-            }
-
-            @Override
-            public void onStarted() {
-
-            }
-
-            @Override
-            public void onLoading(long l, long l1, boolean b) {
-
-            }
-
-            @Override
-            public void onSuccess(File file) {
-                String userId = ((MyApplication)getApplication()).getUid();
-                ReactNativeFlow.moveFolder(MyAppConfig.getSplashPageImageShowPath(MainActivity.this,
-                        userId, "splash"),MyAppConfig.getSplashPageImageLastVersionPath(MainActivity.this,userId)
-                        );
-                ReactNativeFlow.deleteOldVersionFile(MyAppConfig.getSplashPageImageShowPath(MainActivity.this,
-                        userId, "splash/"+oldSplashVersionName));
-//                try {
-//                    LogUtils.YfcDebug("文件后缀名："+FileUtils.getSuffix(file));
-//                    if (FileUtils.getSuffix(file).toLowerCase().equals("gif")) {
-//                        GifDrawable gifFromPath = new GifDrawable(file);
-//                        splashImageTop.setImageDrawable(gifFromPath);
-//                    }else{
-//                        InputStream input = new FileInputStream(file);
-//                        Bitmap bitmap = BitmapFactory.decodeStream(input);
-//                        splashImageTop.setImageBitmap(bitmap);
-//                    }
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-                LogUtils.YfcDebug("下载成功");
-            }
-
-            @Override
-            public void onError(Throwable throwable, boolean b) {
-
-            }
-
-            @Override
-            public void onCancelled(CancelledException e) {
-
-            }
-
-            @Override
-            public void onFinished() {
-
-            }
-        });
-    }
-
 }

@@ -4,20 +4,23 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
+    android:background="#ffffff"
     tools:context=".MainActivity" >
 
     <ImageView
         android:id="@+id/splash_image"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:src="@drawable/splash"
-        android:scaleType="fitXY"
+        android:layout_height="wrap_content"
+        android:src="@drawable/splash_page_bottom"
+        android:layout_alignParentBottom="true"
+        android:scaleType="centerCrop"
          />
 
     <pl.droidsonroids.gif.GifImageView
         android:id="@+id/splash_img_top"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_above="@id/splash_image"
         android:scaleType="centerCrop"
         />
 

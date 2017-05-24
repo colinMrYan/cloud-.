@@ -614,4 +614,12 @@ public class APIUri {
 	public static String getSplashPageUrl(){
 		return getEcmTanentUrl()+"/api/v0/preference/launch-screen/latest";
 	}
+
+	/**
+	 *
+	 * @return
+     */
+	public static String getUploadSplashPageWriteBackLogUrl(){
+		return getEcmTanentUrl()+"/api/v0/preference/launch-screen/update";
+	}
 }
