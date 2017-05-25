@@ -24,6 +24,15 @@
         android:scaleType="centerCrop"
         />
 
+    <Button
+        android:id="@+id/splash_skip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/splash_skip"
+        android:layout_alignParentRight="true"
+        android:visibility="gone"
+        android:textColor="#ffffff"
+        android:onClick="onClick"/>
     <com.inspur.emmcloud.widget.CircularProgress
         android:layout_width="45dp"
         android:layout_height="45dp"

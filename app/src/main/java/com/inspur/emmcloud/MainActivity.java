@@ -10,6 +10,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.Button;
 
 import com.inspur.emmcloud.bean.SplashPageBean;
 import com.inspur.emmcloud.config.MyAppConfig;
@@ -19,6 +20,7 @@ import com.inspur.emmcloud.ui.login.LoginActivity;
 import com.inspur.emmcloud.ui.login.ModifyUserFirstPsdActivity;
 import com.inspur.emmcloud.ui.mine.setting.GuideActivity;
 import com.inspur.emmcloud.util.AppUtils;
+import com.inspur.emmcloud.util.FileUtils;
 import com.inspur.emmcloud.util.IntentUtils;
 import com.inspur.emmcloud.util.LanguageUtils;
 import com.inspur.emmcloud.util.LogUtils;
@@ -31,6 +33,9 @@ import com.inspur.emmcloud.util.UpgradeUtils;
 import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.emmcloud.widget.dialogs.EasyDialog;
 import com.nostra13.universalimageloader.core.ImageLoader;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 import pl.droidsonroids.gif.GifImageView;
 
@@ -48,9 +53,12 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
     private static final int NO_NEED_UPGRADE = 10;
     private static final int UPGRADE_FAIL = 11;
     private static final int DONOT_UPGRADE = 12;
+    private static final long SPLASH_PAGE_TIME = 2500;
     private Handler handler;
     private LanguageUtils languageUtils;
     private long activityShowTime = 0;
+    private Timer timer;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +75,7 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
     }
 
     /**
+     * ea
      * 初始化
      */
     private void init() {
@@ -75,6 +84,7 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
             finish();
             return;
         }
+
         //进行app异常上传
         startUploadExceptionService();
         ((MyApplication) getApplicationContext()).addActivity(this);
@@ -133,6 +143,18 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
         upgradeUtils.checkUpdate(false);
     }
 
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.splash_skip:
+                LogUtils.YfcDebug("跳过按钮");
+                if(timer != null){
+                    timer.cancel();
+                    startApp();
+                }
+                break;
+        }
+    }
+
     private void handMessage() {
         // TODO Auto-generated method stub
         handler = new Handler() {
@@ -159,13 +181,14 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
                     case UPGRADE_FAIL:
                     case NO_NEED_UPGRADE:
                     case DONOT_UPGRADE:
+                        LogUtils.YfcDebug("可以显示跳过按钮");
+                        showSkipButton();
                         getServerLanguage();
                         break;
                     case GET_LANGUAGE_SUCCESS:
-
+                        LogUtils.YfcDebug("可以显示跳过按钮");
+                        showSkipButton();
                         enterApp();
-
-//                        enterApp();
                         break;
                     default:
                         break;
@@ -173,6 +196,13 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
             }
 
         };
+    }
+
+    /**
+     * 显示跳过按钮
+     */
+    public void showSkipButton(){
+        ((Button)findViewById(R.id.splash_skip)).setVisibility(View.VISIBLE);
     }
 
     /**
@@ -200,19 +230,18 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
     private void enterApp() {
         // TODO Auto-generated method stub
         long betweenTime = System.currentTimeMillis() - activityShowTime;
-        long leftTime = 2500 - betweenTime;
-        LogUtils.YfcDebug("剩余时间：" + leftTime);
-        if(checkIfShowSplashPage()){
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    startApp();
-                }
-            }, leftTime);
-        }else {
+        long leftTime = SPLASH_PAGE_TIME - betweenTime;
+        TimerTask task = new TimerTask() {
+            public void run() {
+                startApp();
+            }
+        };
+        if (checkIfShowSplashPage() && (leftTime>0)) {
+            timer = new Timer();
+            timer.schedule(task, leftTime);
+        } else {
             startApp();
         }
-
     }
 
     /**
@@ -231,10 +260,22 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
 
     /**
      * 检查是否有可以展示的图片
+     *
      * @return
      */
     private boolean checkIfShowSplashPage() {
-        return false;
+        boolean flag = false;
+        String splashInfo = PreferencesByUserUtils.getString(MainActivity.this, "splash_page_info");
+        if (!StringUtils.isBlank(splashInfo)) {
+            SplashPageBean splashPageBeanLoacal = new SplashPageBean(splashInfo);
+            SplashPageBean.PayloadBean.ResourceBean.DefaultBean defaultBean = splashPageBeanLoacal.getPayload()
+                    .getResource().getDefaultX();
+            String name = getSplashPagePath(defaultBean);
+            if (FileUtils.isFileExist(name)) {
+                flag = true;
+            }
+        }
+        return flag;
     }
 
 
@@ -292,23 +333,9 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
         String splashInfo = PreferencesByUserUtils.getString(MainActivity.this, "splash_page_info");
         if (!StringUtils.isBlank(splashInfo)) {
             SplashPageBean splashPageBeanLoacal = new SplashPageBean(splashInfo);
-            String screenType = AppUtils.getScreenType(MainActivity.this);
             SplashPageBean.PayloadBean.ResourceBean.DefaultBean defaultBean = splashPageBeanLoacal.getPayload()
                     .getResource().getDefaultX();
-            String name = "";
-            if (screenType.equals("2k")) {
-                name = MyAppConfig.getSplashPageImageShowPath(MainActivity.this,
-                        ((MyApplication) getApplication()).getUid(), "splash/" + defaultBean.getXxxhdpi());
-            } else if (screenType.equals("xxxhdpi")) {
-                name = MyAppConfig.getSplashPageImageShowPath(MainActivity.this,
-                        ((MyApplication) getApplication()).getUid(), "splash/" + defaultBean.getXxhdpi());
-            } else if (screenType.equals("xxhdpi")) {
-                name = MyAppConfig.getSplashPageImageShowPath(MainActivity.this,
-                        ((MyApplication) getApplication()).getUid(), "splash/" + defaultBean.getXhdpi());
-            } else {
-                name = MyAppConfig.getSplashPageImageShowPath(MainActivity.this,
-                        ((MyApplication) getApplication()).getUid(), "splash/" + defaultBean.getHdpi());
-            }
+            String name = getSplashPagePath(defaultBean);
             long nowTime = System.currentTimeMillis();
             boolean shouldShow = ((nowTime > splashPageBeanLoacal.getPayload().getEffectiveDate())
                     && (nowTime < splashPageBeanLoacal.getPayload().getExpireDate()));
@@ -318,5 +345,31 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
                 ((GifImageView) findViewById(R.id.splash_img_top)).setVisibility(View.GONE);
             }
         }
+    }
+
+
+    /**
+     * 闪屏文件路径
+     *
+     * @param defaultBean
+     * @return
+     */
+    private String getSplashPagePath(SplashPageBean.PayloadBean.ResourceBean.DefaultBean defaultBean) {
+        String screenType = AppUtils.getScreenType(MainActivity.this);
+        String name = "";
+        if (screenType.equals("2k")) {
+            name = MyAppConfig.getSplashPageImageShowPath(MainActivity.this,
+                    ((MyApplication) getApplication()).getUid(), "splash/" + defaultBean.getXxxhdpi());
+        } else if (screenType.equals("xxxhdpi")) {
+            name = MyAppConfig.getSplashPageImageShowPath(MainActivity.this,
+                    ((MyApplication) getApplication()).getUid(), "splash/" + defaultBean.getXxhdpi());
+        } else if (screenType.equals("xxhdpi")) {
+            name = MyAppConfig.getSplashPageImageShowPath(MainActivity.this,
+                    ((MyApplication) getApplication()).getUid(), "splash/" + defaultBean.getXhdpi());
+        } else {
+            name = MyAppConfig.getSplashPageImageShowPath(MainActivity.this,
+                    ((MyApplication) getApplication()).getUid(), "splash/" + defaultBean.getHdpi());
+        }
+        return name;
     }
 }
