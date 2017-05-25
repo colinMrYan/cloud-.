@@ -698,7 +698,7 @@ public class IndexActivity extends BaseFragmentActivity implements
     @Override
     public void onTabChanged(String tabId) {
         notSupportTitle = tabId;
-        String lastUpdateTime = PreferencesUtils.getString(IndexActivity.this,"react_native_lastupdatetime","");
+//        String lastUpdateTime = PreferencesUtils.getString(IndexActivity.this,"react_native_lastupdatetime","");
         if (tabId.equals(getString(R.string.communicate))) {
             tipsView.setCanTouch(true);
         } else {
@@ -743,14 +743,13 @@ public class IndexActivity extends BaseFragmentActivity implements
      */
     private void updateSplashPage() {
         //这里并不是实时更新所以不加dialog
-        String splashInfoOld = PreferencesByUserUtils.getString(IndexActivity.this,"splash_page_info_old","");
-        LogUtils.YfcDebug("老版信息："+splashInfoOld);
+//        String splashInfoOld = PreferencesByUserUtils.getString(IndexActivity.this,"splash_page_info_old","");
         if (NetUtils.isNetworkConnected(IndexActivity.this)) {
             String splashInfo = PreferencesByUserUtils.getString(IndexActivity.this, "splash_page_info","");
             SplashPageBean splashPageBean = new SplashPageBean(splashInfo);
-            if(splashPageBean == null){
-                splashPageBean = new SplashPageBean("");
-            }
+//            if(splashPageBean == null){
+//                splashPageBean = new SplashPageBean("");
+//            }
             String clientId = PreferencesUtils.getString(IndexActivity.this, UriUtils.tanent + ((MyApplication) getApplication()).getUid() + "react_native_clientid", "");
             if (!StringUtils.isBlank(clientId)) {
                 appApiService.getSplashPageInfo(clientId, splashPageBean.getId().getVersion());
@@ -962,7 +961,6 @@ public class IndexActivity extends BaseFragmentActivity implements
         DownLoaderUtils downloaderUtils = new DownLoaderUtils();
         LogUtils.YfcDebug("下载到的路径：" + MyAppConfig.getSplashPageImageShowPath(IndexActivity.this,
                 ((MyApplication) getApplication()).getUid(), "splash/" + fileName));
-        UriUtils.getPreviewUri(fileName);
         downloaderUtils.startDownLoad(url, MyAppConfig.getSplashPageImageShowPath(IndexActivity.this,
                 ((MyApplication) getApplication()).getUid(), "splash/" + fileName), new Callback.ProgressCallback<File>() {
             @Override
@@ -1006,7 +1004,7 @@ public class IndexActivity extends BaseFragmentActivity implements
                         sha256Code = splashPageBeanLocalShowing.getPayload().getHdpiHash().split(":")[1];
                         oldSplashPageName = splashPageBeanLocalOld.getPayload().getResource().getDefaultX().getHdpi();
                     }
-                    LogUtils.YfcDebug("老版名称："+MyAppConfig.getSplashPageImageShowPath(IndexActivity.this,
+                    LogUtils.YfcDebug("老版文件路径："+MyAppConfig.getSplashPageImageShowPath(IndexActivity.this,
                         userId, "splash/")+oldSplashPageName);
                     ReactNativeFlow.deleteOldVersionFile(MyAppConfig.getSplashPageImageShowPath(IndexActivity.this,
                         userId, "splash/")+oldSplashPageName);

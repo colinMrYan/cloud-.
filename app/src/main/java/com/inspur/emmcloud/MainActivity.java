@@ -50,6 +50,7 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
     private static final int DONOT_UPGRADE = 12;
     private Handler handler;
     private LanguageUtils languageUtils;
+    private long activityShowTime = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +58,12 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
         StateBarColor.changeStateBarColor(this);
         setContentView(R.layout.activity_main);
         init();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        activityShowTime = System.currentTimeMillis();
     }
 
     /**
@@ -155,7 +162,10 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
                         getServerLanguage();
                         break;
                     case GET_LANGUAGE_SUCCESS:
+
                         enterApp();
+
+//                        enterApp();
                         break;
                     default:
                         break;
@@ -189,6 +199,26 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
      */
     private void enterApp() {
         // TODO Auto-generated method stub
+        long betweenTime = System.currentTimeMillis() - activityShowTime;
+        long leftTime = 2500 - betweenTime;
+        LogUtils.YfcDebug("剩余时间：" + leftTime);
+        if(checkIfShowSplashPage()){
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    startApp();
+                }
+            }, leftTime);
+        }else {
+            startApp();
+        }
+
+    }
+
+    /**
+     * 开启应用
+     */
+    private void startApp() {
         Boolean isFirst = PreferencesUtils.getBoolean(
                 MainActivity.this, "isFirst", true);
         if (checkIfUpgraded() || isFirst) {
@@ -198,6 +228,15 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
             loginApp();
         }
     }
+
+    /**
+     * 检查是否有可以展示的图片
+     * @return
+     */
+    private boolean checkIfShowSplashPage() {
+        return false;
+    }
+
 
     /**
      * 检测是否应用版本是否进行了升级
@@ -251,32 +290,31 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
      */
     private void showLastSplash() {
         String splashInfo = PreferencesByUserUtils.getString(MainActivity.this, "splash_page_info");
-        if(!StringUtils.isBlank(splashInfo)){
+        if (!StringUtils.isBlank(splashInfo)) {
             SplashPageBean splashPageBeanLoacal = new SplashPageBean(splashInfo);
             String screenType = AppUtils.getScreenType(MainActivity.this);
             SplashPageBean.PayloadBean.ResourceBean.DefaultBean defaultBean = splashPageBeanLoacal.getPayload()
                     .getResource().getDefaultX();
             String name = "";
-            LogUtils.YfcDebug("screenType："+screenType);
-            if(screenType.equals("2k")){
+            if (screenType.equals("2k")) {
                 name = MyAppConfig.getSplashPageImageShowPath(MainActivity.this,
                         ((MyApplication) getApplication()).getUid(), "splash/" + defaultBean.getXxxhdpi());
-            }else if(screenType.equals("xxxhdpi")){
+            } else if (screenType.equals("xxxhdpi")) {
                 name = MyAppConfig.getSplashPageImageShowPath(MainActivity.this,
                         ((MyApplication) getApplication()).getUid(), "splash/" + defaultBean.getXxhdpi());
-            }else if(screenType.equals("xxhdpi")){
+            } else if (screenType.equals("xxhdpi")) {
                 name = MyAppConfig.getSplashPageImageShowPath(MainActivity.this,
                         ((MyApplication) getApplication()).getUid(), "splash/" + defaultBean.getXhdpi());
-            }else{
+            } else {
                 name = MyAppConfig.getSplashPageImageShowPath(MainActivity.this,
                         ((MyApplication) getApplication()).getUid(), "splash/" + defaultBean.getHdpi());
             }
             long nowTime = System.currentTimeMillis();
-            boolean shouldShow = ((nowTime>splashPageBeanLoacal.getPayload().getEffectiveDate())
-                    &&(nowTime<splashPageBeanLoacal.getPayload().getExpireDate()));
-            if(shouldShow && !StringUtils.isBlank(name)){
-                ImageLoader.getInstance().displayImage("file://"+name,(GifImageView) findViewById(R.id.splash_img_top));
-            }else{
+            boolean shouldShow = ((nowTime > splashPageBeanLoacal.getPayload().getEffectiveDate())
+                    && (nowTime < splashPageBeanLoacal.getPayload().getExpireDate()));
+            if (shouldShow && !StringUtils.isBlank(name)) {
+                ImageLoader.getInstance().displayImage("file://" + name, (GifImageView) findViewById(R.id.splash_img_top));
+            } else {
                 ((GifImageView) findViewById(R.id.splash_img_top)).setVisibility(View.GONE);
             }
         }
