@@ -5,7 +5,9 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
 
+import com.inspur.emmcloud.api.apiservice.AppAPIService;
 import com.inspur.emmcloud.util.AppUtils;
+import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.StateBarColor;
 
 public class BaseActivity extends Activity {
@@ -33,12 +35,12 @@ public class BaseActivity extends Activity {
 	protected void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
-
 		if (!((MyApplication) getApplicationContext()).getIsActive()) {
-			((MyApplication) getApplicationContext()).setIsActive(true);
-			((MyApplication)getApplicationContext()).clearNotification();
 			if (((MyApplication) getApplicationContext())
 					.isIndexActivityRunning()) {
+				((MyApplication) getApplicationContext()).setIsActive(true);
+				((MyApplication)getApplicationContext()).clearNotification();
+				uploadMDMInfo();
 				((MyApplication)getApplicationContext()).sendActivedWSMsg();
 			}
 		}
@@ -51,6 +53,16 @@ public class BaseActivity extends Activity {
 	    config.setToDefaults();    
 	    res.updateConfiguration(config,res.getDisplayMetrics() );  
 	    return res;  
+	}
+
+	/**
+	 * 上传MDM需要的设备信息
+	 */
+	private void uploadMDMInfo(){
+		if (NetUtils.isNetworkConnected(this)){
+			new AppAPIService(this).uploadMDMInfo();
+		}
+
 	}
 
 

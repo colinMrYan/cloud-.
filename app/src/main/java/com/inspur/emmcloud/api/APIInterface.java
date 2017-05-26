@@ -13,6 +13,7 @@ import com.inspur.emmcloud.bean.GetAllRobotsResult;
 import com.inspur.emmcloud.bean.GetAppGroupResult;
 import com.inspur.emmcloud.bean.GetAppTabAutoResult;
 import com.inspur.emmcloud.bean.GetAppTabsResult;
+import com.inspur.emmcloud.bean.GetBindingDeviceResult;
 import com.inspur.emmcloud.bean.GetBookingRoomResult;
 import com.inspur.emmcloud.bean.GetBoolenResult;
 import com.inspur.emmcloud.bean.GetCalendarEventsResult;
@@ -33,6 +34,7 @@ import com.inspur.emmcloud.bean.GetKnowledgeInfo;
 import com.inspur.emmcloud.bean.GetLanguageResult;
 import com.inspur.emmcloud.bean.GetLoctionResult;
 import com.inspur.emmcloud.bean.GetLoginResult;
+import com.inspur.emmcloud.bean.GetMDMStateResult;
 import com.inspur.emmcloud.bean.GetMeetingListResult;
 import com.inspur.emmcloud.bean.GetMeetingReplyResult;
 import com.inspur.emmcloud.bean.GetMeetingRoomsResult;
@@ -79,321 +81,437 @@ import com.inspur.emmcloud.bean.UserProfileInfoBean;
 
 public interface APIInterface {
 
-	 void returnOauthSigninSuccess(GetLoginResult getLoginResult);
-	 void returnOauthSigninFail(String error, int errorCode);
-	 void returnOauthSigninFail(String error);
+	void returnOauthSigninSuccess(GetLoginResult getLoginResult);
 
-	public void returnAllAppsSuccess(GetAllAppResult getAllAppResult);
-	public void returnAllAppsFail(String error);
+	void returnOauthSigninFail(String error, int errorCode);
 
-	public void returnAllAppsFreshSuccess(GetAllAppResult getAllAppResult);
-	public void returnAllAppsFreshFail(String error);
+	void returnOauthSigninFail(String error);
 
-	public void returnAllAppsMoreSuccess(GetAllAppResult getAllAppResult);
-	public void returnAllAppsMoreFail(String error);
+	void returnAllAppsSuccess(GetAllAppResult getAllAppResult);
 
-	public void returnAddAppSuccess(GetAddAppResult getAddAppResult);
-	public void returnAddAppFail(String error);
+	void returnAllAppsFail(String error);
 
-	public void returnRemoveAppSuccess(GetRemoveAppResult getRemoveAppResult);
-	public void returnRemoveAppFail(String error);
+	void returnAllAppsFreshSuccess(GetAllAppResult getAllAppResult);
 
-	public void returnMyAppSuccess(GetMyAppResult getMyAppResult);
-	public void returnMyAppFail(String error);
+	void returnAllAppsFreshFail(String error);
 
-	public void returnSignoutSuccess(GetSignoutResult getSignoutResult);
-	public void returnSignoutFail(String error);
+	void returnAllAppsMoreSuccess(GetAllAppResult getAllAppResult);
 
-	public void returnUpgradeSuccess(GetUpgradeResult getUpgradeResult);
-	public void returnUpgradeFail(String error);
+	void returnAllAppsMoreFail(String error);
 
-	public void returnSearchAppSuccess(GetSearchAppResult getAllAppResult);
-	public void returnSearchAppFail(String error);
+	void returnAddAppSuccess(GetAddAppResult getAddAppResult);
 
-	public void returnSearchAppMoreSuccess(GetSearchAppResult getAllAppResult);
-	public void returnSearchAppMoreFail(String error);
+	void returnAddAppFail(String error);
 
-	public void returnReqLoginSMSSuccess(GetBoolenResult getBoolenResult);
-	public void returnReqLoginSMSFail(String error, int errorCode);
+	void returnRemoveAppSuccess(GetRemoveAppResult getRemoveAppResult);
 
+	void returnRemoveAppFail(String error);
 
-	public void returnRegisterSMSSuccess(GetRegisterResult getRegisterResult);
-	public void returnRegisterSMSFail(String error);
+	void returnMyAppSuccess(GetMyAppResult getMyAppResult);
 
-	public void returnReisterSMSCheckSuccess(GetRegisterCheckResult getRegisterResult);
-	public void returnReisterSMSCheckFail(String error);
+	void returnMyAppFail(String error);
 
-	public void returnMyInfoSuccess(GetMyInfoResult getMyInfoResult);
-	public void returnMyInfoFail(String error);
+	void returnSignoutSuccess(GetSignoutResult getSignoutResult);
 
+	void returnSignoutFail(String error);
 
-	public void returnUsersInOrgSuccess(GetAdressUsersResult getAdressUsersResult);
-	public void returnUsersInOrgFail(String error);
+	void returnUpgradeSuccess(GetUpgradeResult getUpgradeResult, boolean isManualCheck);
 
-	public void returnUploadMyHeadSuccess(GetUploadMyHeadResult getUploadMyInfoResult);
-	public void returnUploadMyHeadFail(String error);
+	void returnUpgradeFail(String error, boolean isManualCheck);
 
-	public void returnChannelListSuccess(GetChannelListResult getSessionListResult);
-	public void returnChannelListFail(String error);
+	void returnSearchAppSuccess(GetSearchAppResult getAllAppResult);
 
-	public void returnNewMsgsSuccess(GetNewMsgsResult getNewMsgsResult);
-	public void returnNewMsgsFail(String error);
+	void returnSearchAppFail(String error);
 
+	void returnSearchAppMoreSuccess(GetSearchAppResult getAllAppResult);
 
+	void returnSearchAppMoreFail(String error);
 
-	public void returnMsgCommentSuccess(GetMsgCommentResult getMsgCommentResult,String mid);
-	public void returnMsgCommentFail(String error);
+	void returnReqLoginSMSSuccess(GetBoolenResult getBoolenResult);
 
-	public void returnMsgCommentCountSuccess(GetMsgCommentCountResult getMsgCommentCountResult,String mid);
-	public void returnMsgCommentCountFail(String error);
+	void returnReqLoginSMSFail(String error, int errorCode);
 
-	public void returnNewsSuccess(GetNewsResult getNewsResult);
-	public void returnNewsFail(String error);
 
-	public void returnModifyUserInfoSucces(GetBoolenResult getBoolenResult);
-	public void returnModifyUserInfoFail(String error);
+	void returnRegisterSMSSuccess(GetRegisterResult getRegisterResult);
 
-	public void returnWebSocketUrlSuccess(GetWebSocketUrlResult getWebSocketResult);
-	public void returnWebSocketUrlFail(String error);
+	void returnRegisterSMSFail(String error);
 
-	public void returnSendMsgSuccess(GetSendMsgResult getSendMsgResult, String fakeMessageId);
-	public void returnSendMsgFail(String error, String fakeMessageId);
+	void returnReisterSMSCheckSuccess(GetRegisterCheckResult getRegisterResult);
 
-	public void returnUploadMsgImgSuccess(GetNewsImgResult getNewsImgResult, String fakeMessageId);
-	public void returnUploadMsgImgFail(String error);
+	void returnReisterSMSCheckFail(String error);
 
-	public void returnGroupNewsTitleSuccess(GetNewsTitleResult getNewsTitleResult);
-	public void returnGroupNewsTitleFail(String error);
+	void returnMyInfoSuccess(GetMyInfoResult getMyInfoResult);
 
-	public void returnGroupNewsDetailSuccess(GetGroupNewsDetailResult getGroupNewsDetailResult);
-	public void returnGroupNewsDetailFail(String error);
+	void returnMyInfoFail(String error);
 
-	public void returnMeetingsSuccess(GetMeetingsResult getMeetingsResult);
-	public void returnMeetingsFail(String error);
 
-	public void returnMeetingsSuccess(GetMeetingsResult getMeetingsResult, boolean isLoadMore);
+	void returnUsersInOrgSuccess(GetAdressUsersResult getAdressUsersResult);
 
-	public void returnMeetingRoomsSuccess(GetMeetingRoomsResult getMeetingRoomsResult);
-	public void returnMeetingRoomsFail(String error);
+	void returnUsersInOrgFail(String error);
 
-	public void returnMeetingRoomsSuccess(GetMeetingRoomsResult getMeetingRoomsResult, boolean isFilte);
+	void returnUploadMyHeadSuccess(GetUploadMyHeadResult getUploadMyInfoResult);
 
-	public void returnMsgSuccess(GetMsgResult getMsgResult);
-	public void returnMsgFail(String error);
+	void returnUploadMyHeadFail(String error);
 
-	public void returnBookingRoomSuccess(GetBookingRoomResult getBookingRoomResult);
-	public void returnBookingRoomFail(String error, int errorCode);
+	void returnChannelListSuccess(GetChannelListResult getSessionListResult);
 
-	public void returnChannelInfoSuccess(GetChannelInfoResult getChannelInfoResult);
-	public void returnChannelInfoFail(String error);
+	void returnChannelListFail(String error);
 
-	public void returnRoomAvailableTimeSuccess(GetRoomAvailableResult getRoomAvailableResult);
-	public void returnRoomAvailableTimeFail(String error);
+	void returnNewMsgsSuccess(GetNewMsgsResult getNewMsgsResult);
 
-	public void returnAllContactSuccess(GetAllContactResult getAllContactResult);
-	public void returnAllContactFail(String error);
+	void returnNewMsgsFail(String error);
 
-	public void returnFileUpLoadSuccess(GetFileUploadResult getFileUploadResult, String fakeMessageId);
-	public void returnFileUpLoadFail(String error);
 
-	public void returnSearchChannelGroupSuccess(GetSearchChannelGroupResult getSearchChannelGroupResult);
-	public void returnSearchChannelGroupFail(String error);
+	void returnMsgCommentSuccess(GetMsgCommentResult getMsgCommentResult, String mid);
 
-	public void returnUserHeadUploadSuccess(GetUserHeadUploadResult getUserHeadUploadResult);
-	public void returnUserHeadUploadFail(String error);
+	void returnMsgCommentFail(String error);
 
-	public void returnCreateSingleChannelSuccess(GetCreateSingleChannelResult getCreatSingleChannelResult);
-	public void returnCreatSingleChannelFail(String error);
+	void returnMsgCommentCountSuccess(GetMsgCommentCountResult getMsgCommentCountResult, String mid);
 
-	public void returnCreatChannelGroupSuccess(ChannelGroup channelGroup);
-	public void returnCreateChannelGroupFail(String error);
+	void returnMsgCommentCountFail(String error);
 
-	public void returnGetMeetingReplySuccess(GetMeetingReplyResult getMeetingReplyResult);
-	public void returnGetMeetingReplyFail(String error);
+	void returnNewsSuccess(GetNewsResult getNewsResult);
 
-	public void returnTripSuccess(Trip trip);
-	public void returnTripFail(String error);
+	void returnNewsFail(String error);
 
-	public void returnLastUploadTripSuccess(Trip trip);
-	public void returnLastUploadTripFail(String error);
+	void returnModifyUserInfoSucces(GetBoolenResult getBoolenResult);
 
-	public void returnUpdateChannelGroupNameSuccess(GetBoolenResult getBoolenResult);
-	public void returnUpdateChannelGroupNameFail(String error);
+	void returnModifyUserInfoFail(String error);
 
-	public void returnMeetingListSuccess(GetMeetingListResult getMeetingListResult, String date);
-	public void returnMeetingListSuccess(GetMeetingListResult getMeetingListResult);
-	public void returnMeetingListFail(String error);
+	void returnWebSocketUrlSuccess(GetWebSocketUrlResult getWebSocketResult);
 
-	public void returnUploadTrainTicketSuccess();
-	public void returnUploadTrainTicketFail(String error);
+	void returnWebSocketUrlFail(String error);
 
-	public void returnUploadExceptionSuccess(GetExceptionResult getExceptionResult);
-	public void returnUploadExceptionFail(String error);
+	void returnSendMsgSuccess(GetSendMsgResult getSendMsgResult, String fakeMessageId);
 
-	public void returnLoctionResultSuccess(GetLoctionResult getLoctionResult);
-	public void returnLoctionResultFail(String error);
+	void returnSendMsgFail(String error, String fakeMessageId);
 
-	public void returnOfficeResultSuccess(GetOfficeResult getOfficeResult);
-	public void returnOfficeResultFail(String error);
+	void returnUploadMsgImgSuccess(GetNewsImgResult getNewsImgResult, String fakeMessageId);
 
-	public void returnCreatOfficeSuccess(GetCreateOfficeResult getCreateOfficeResult);
-	public void returnCreatOfficeFail(String error);
+	void returnUploadMsgImgFail(String error);
 
-	public void returnAddMembersSuccess(GetAddMembersSuccessResult getAddMembersSuccessResult);
-	public void returnAddMembersFail(String error);
+	void returnGroupNewsTitleSuccess(GetNewsTitleResult getNewsTitleResult);
 
-	public void returnRecentTasksSuccess(GetTaskListResult getTaskListResult);
-	public void returnRecentTasksFail(String error);
+	void returnGroupNewsTitleFail(String error);
 
-	public void returnMyCalendarSuccess(GetMyCalendarResult getMyCalendarResult);
-	public void returnMyCalendarFail(String error);
+	void returnGroupNewsDetailSuccess(GetGroupNewsDetailResult getGroupNewsDetailResult);
 
-	public void returnDelelteCalendarByIdSuccess();
-	public void returnDelelteCalendarByIdFail(String error);
+	void returnGroupNewsDetailFail(String error);
 
-	public void returnUpdateCalendarSuccess();
-	public void returnUpdateCalendarFail(String error);
+	void returnMeetingsSuccess(GetMeetingsResult getMeetingsResult);
 
-	public void returnGetTagResultSuccess(GetTagResult getTagResult);
-	public void returnGetTagResultFail(String error);
+	void returnMeetingsFail(String error);
 
-	public void returnAddCalEventSuccess(GetIDResult getIDResult);
-	public void returnAddCalEventFail(String error);
+	void returnMeetingsSuccess(GetMeetingsResult getMeetingsResult, boolean isLoadMore);
 
-	public void returnDeleteTagSuccess();
-	public void returnDeleteTagFail(String error);
+	void returnMeetingRoomsSuccess(GetMeetingRoomsResult getMeetingRoomsResult);
 
-	public void returnCreateTagSuccess();
-	public void returnCreateTagFail(String error);
+	void returnMeetingRoomsFail(String error);
 
-	public void returnCreateTaskSuccess(GetTaskAddResult getTaskAddResult);
-	public void returnCreateTaskFail(String error);
+	void returnMeetingRoomsSuccess(GetMeetingRoomsResult getMeetingRoomsResult, boolean isFilte);
 
-	public void returnDeleteTaskSuccess();
-	public void returnDeleteTaskFail(String error);
+	void returnMsgSuccess(GetMsgResult getMsgResult);
 
-	public void returnInviteMateForTaskSuccess(String subobject);
-	public void returnInviteMateForTaskFail(String error);
+	void returnMsgFail(String error);
 
-	public void returnUpdateTaskSuccess();
-	public void returnUpdateTaskFail(String error);
+	void returnBookingRoomSuccess(GetBookingRoomResult getBookingRoomResult);
 
-	public void returnCalEventsSuccess(GetCalendarEventsResult getCalendarEventsResult, boolean isRefresh);
-	public void returnCalEventsFail(String error, boolean isRefresh);
-	public void returnCalEventsSuccess(GetCalendarEventsResult getCalendarEventsResult);
-	public void returnCalEventsFail(String error);
+	void returnBookingRoomFail(String error, int errorCode);
 
-	public void returnAttachmentSuccess(TaskResult taskResult);
-	public void returnAttachmentFail(String error);
+	void returnChannelInfoSuccess(GetChannelInfoResult getChannelInfoResult);
 
-	public void returnUpdateCalEventSuccess();
-	public void returnUpdateCalEventFail(String error);
+	void returnChannelInfoFail(String error);
 
-	public void returnDeleteCalEventSuccess();
-	public void returnDeleteCalEventFail(String error);
+	void returnRoomAvailableTimeSuccess(GetRoomAvailableResult getRoomAvailableResult);
 
-	public void returnAddAttachMentSuccess(Attachment attachment);
-	public void returnAddAttachMentFail(String error);
+	void returnRoomAvailableTimeFail(String error);
 
-	public void returnGetTasksSuccess(GetTaskListResult getTaskListResult);
-	public void returnGetTasksFail(String error);
+	void returnAllContactSuccess(GetAllContactResult getAllContactResult);
 
-	public void returnDelTaskMemSuccess();
-	public void returnDelTaskMemFail(String error);
+	void returnAllContactFail(String error);
 
-	public void returnDelTripSuccess();
-	public void returnDelTripFail(String error);
+	void returnFileUpLoadSuccess(GetFileUploadResult getFileUploadResult, String fakeMessageId);
 
-	public void returnDndSuccess();
-	public void returnDndFail(String error);
+	void returnFileUpLoadFail(String error);
 
-	public void returnModifyPsdSuccess();
-	public void returnModifyPsdFail(String error);
+	void returnSearchChannelGroupSuccess(GetSearchChannelGroupResult getSearchChannelGroupResult);
 
-	public void returnTripArriveSuccess(GetTripArriveCity getTripArriveCity);
-	public void retrunTripArriveFail(String error);
+	void returnSearchChannelGroupFail(String error);
 
-	public void returnDelMeetingSuccess();
-	public void returnDelMeetingFail(String error);
+	void returnUserHeadUploadSuccess(GetUserHeadUploadResult getUserHeadUploadResult);
 
-	public void returnDelMembersSuccess(GetChannelInfoResult getChannelInfoResult);
-	public void returnDelMembersFail(String errors);
+	void returnUserHeadUploadFail(String error);
 
-	public void returnDelAttachmentSuccess();
-	public void returnDelAttachmentFail(String error);
+	void returnCreateSingleChannelSuccess(GetCreateSingleChannelResult getCreatSingleChannelResult);
 
-	public void returnChangeMessionOwnerSuccess();
-	public void returnChangeMessionOwnerFail(String error);
+	void returnCreatSingleChannelFail(String error);
 
-	public void returnChangeMessionTagSuccess();
-	public void returnChangeMessionTagFail(String error);
+	void returnCreatChannelGroupSuccess(ChannelGroup channelGroup);
 
+	void returnCreateChannelGroupFail(String error);
 
-	public void returnCardPackageListSuccess(GetCardPackageListResult getCardPackageListResult);
-	public void returnCardPackageListFail(String error);
+	void returnGetMeetingReplySuccess(GetMeetingReplyResult getMeetingReplyResult);
 
-	public void returnDeleteOfficeSuccess();
-	public void returnDeleteOfficeFail(String error);
+	void returnGetMeetingReplyFail(String error);
 
-	public void returnKnowledgeListSuccess(GetKnowledgeInfo getKnowledgeInfo);
-	public void returnKnowledgeListFail(String error);
+	void returnTripSuccess(Trip trip);
 
-	public void returnIsAdminSuccess(GetIsAdmin getIsAdmin);
-	public void returnIsAdminFail(String error);
+	void returnTripFail(String error);
 
-	public void returnLanguageSuccess(GetLanguageResult getLanguageResult);
-	public void returnLanguageFail(String error);
+	void returnLastUploadTripSuccess(Trip trip);
 
-	public void returnFindSearchSuccess(GetFindSearchResult getFindSearchResult);
-	public void returnFindSearchFail(String error);
+	void returnLastUploadTripFail(String error);
 
-	public void returnFindMixSearchSuccess(GetFindMixSearchResult getFindMixSearchResult);
-	public void returnFindMixSearchFail(String error);
+	void returnUpdateChannelGroupNameSuccess(GetBoolenResult getBoolenResult);
 
-	public void returnAllRobotsSuccess(GetAllRobotsResult getAllRobotsResult);
-	public void returnAllRobotsFail(String error);
+	void returnUpdateChannelGroupNameFail(String error);
 
-	public void returnRobotByIdSuccess(Robot robot);
-	public void returnRobotByIdFail(String error);
+	void returnMeetingListSuccess(GetMeetingListResult getMeetingListResult, String date);
 
-	public void returnUpdatePwdBySMSCodeSuccess(GetUpdatePwdBySMSCodeBean getUpdatePwdBySMSCodeBean);
-	public void returnUpdatePwdBySMSCodeFail(String error);
+	void returnMeetingListSuccess(GetMeetingListResult getMeetingListResult);
 
-	public void returnGetAppTabsSuccess(GetAppTabsResult getAppTabsResult);
-	public void returnGetAppTabsFail(String error);
+	void returnMeetingListFail(String error);
 
-	public void returnUserAppsSuccess(GetAppGroupResult getAppGroupResult);
-	public void returnUserAppsFail(String error);
+	void returnUploadTrainTicketSuccess();
 
-	public void returnUploadCollectSuccess();
-	public void returnUploadCollectFail();
+	void returnUploadTrainTicketFail(String error);
 
-	public void returnReactNativeUpdateSuccess(ReactNativeUpdateBean reactNativeUpdateBean);
-	public void returnReactNativeUpdateFail(ReactNativeClientIdErrorBean reactNativeClientIdErrorBean);
+	void returnUploadExceptionSuccess(GetExceptionResult getExceptionResult);
 
-	public void returnGetClientIdResultSuccess(GetClientIdRsult getClientIdRsult);
-	public void returnGetClientIdResultFail(String error);
+	void returnUploadExceptionFail(String error);
 
-	public void returnGetAppAuthCodeResultSuccess(AppRedirectResult appRedirectResult);
-	public void returnGetAppAuthCodeResultFail(String error);
+	void returnLoctionResultSuccess(GetLoctionResult getLoctionResult);
 
-	public void returnGetDownloadReactNativeUrlSuccess(ReactNativeDownloadUrlBean reactNativeDownloadUrlBean);
-	public void returnGetDownloadReactNativeUrlFail(String error);
+	void returnLoctionResultFail(String error);
 
-	public void returnGetReactNativeInstallUrlSuccess(ReactNativeInstallUriBean reactNativeInstallUriBean);
-	public void returnGetReactNativeInstallUrlFail(String error);
+	void returnOfficeResultSuccess(GetOfficeResult getOfficeResult);
 
-	public void returnVeriryApprovalPasswordSuccess(String password);
-	public void returnVeriryApprovalPasswordFail(String error);
+	void returnOfficeResultFail(String error);
 
-	public void returnNewsInstructionSuccess(GetNewsInstructionResult getNewsInstructionResult);
-	public void returnNewsInstructionFail(String error);
+	void returnCreatOfficeSuccess(GetCreateOfficeResult getCreateOfficeResult);
 
-	public void returnAppTabAutoSuccess(GetAppTabAutoResult getAppTabAutoResult);
-	public void returnAppTabAutoFail(String error);
+	void returnCreatOfficeFail(String error);
 
-	public void returnUserProfileSuccess(UserProfileInfoBean userProfileInfoBean);
-	public void returnUserProfileFail(String error);
+	void returnAddMembersSuccess(GetAddMembersSuccessResult getAddMembersSuccessResult);
+
+	void returnAddMembersFail(String error);
+
+	void returnRecentTasksSuccess(GetTaskListResult getTaskListResult);
+
+	void returnRecentTasksFail(String error);
+
+	void returnMyCalendarSuccess(GetMyCalendarResult getMyCalendarResult);
+
+	void returnMyCalendarFail(String error);
+
+	void returnDelelteCalendarByIdSuccess();
+
+	void returnDelelteCalendarByIdFail(String error);
+
+	void returnUpdateCalendarSuccess();
+
+	void returnUpdateCalendarFail(String error);
+
+	void returnGetTagResultSuccess(GetTagResult getTagResult);
+
+	void returnGetTagResultFail(String error);
+
+	void returnAddCalEventSuccess(GetIDResult getIDResult);
+
+	void returnAddCalEventFail(String error);
+
+	void returnDeleteTagSuccess();
+
+	void returnDeleteTagFail(String error);
+
+	void returnCreateTagSuccess();
+
+	void returnCreateTagFail(String error);
+
+	void returnCreateTaskSuccess(GetTaskAddResult getTaskAddResult);
+
+	void returnCreateTaskFail(String error);
+
+	void returnDeleteTaskSuccess();
+
+	void returnDeleteTaskFail(String error);
+
+	void returnInviteMateForTaskSuccess(String subobject);
+
+	void returnInviteMateForTaskFail(String error);
+
+	void returnUpdateTaskSuccess();
+
+	void returnUpdateTaskFail(String error);
+
+	void returnCalEventsSuccess(GetCalendarEventsResult getCalendarEventsResult, boolean isRefresh);
+
+	void returnCalEventsFail(String error, boolean isRefresh);
+
+	void returnCalEventsSuccess(GetCalendarEventsResult getCalendarEventsResult);
+
+	void returnCalEventsFail(String error);
+
+	void returnAttachmentSuccess(TaskResult taskResult);
+
+	void returnAttachmentFail(String error);
+
+	void returnUpdateCalEventSuccess();
+
+	void returnUpdateCalEventFail(String error);
+
+	void returnDeleteCalEventSuccess();
+
+	void returnDeleteCalEventFail(String error);
+
+	void returnAddAttachMentSuccess(Attachment attachment);
+
+	void returnAddAttachMentFail(String error);
+
+	void returnGetTasksSuccess(GetTaskListResult getTaskListResult);
+
+	void returnGetTasksFail(String error);
+
+	void returnDelTaskMemSuccess();
+
+	void returnDelTaskMemFail(String error);
+
+	void returnDelTripSuccess();
+
+	void returnDelTripFail(String error);
+
+	void returnDndSuccess();
+
+	void returnDndFail(String error);
+
+	void returnModifyPsdSuccess();
+
+	void returnModifyPsdFail(String error);
+
+	void returnTripArriveSuccess(GetTripArriveCity getTripArriveCity);
+
+	void retrunTripArriveFail(String error);
+
+	void returnDelMeetingSuccess();
+
+	void returnDelMeetingFail(String error);
+
+	void returnDelMembersSuccess(GetChannelInfoResult getChannelInfoResult);
+
+	void returnDelMembersFail(String errors);
+
+	void returnDelAttachmentSuccess();
+
+	void returnDelAttachmentFail(String error);
+
+	void returnChangeMessionOwnerSuccess();
+
+	void returnChangeMessionOwnerFail(String error);
+
+	void returnChangeMessionTagSuccess();
+
+	void returnChangeMessionTagFail(String error);
+
+
+	void returnCardPackageListSuccess(GetCardPackageListResult getCardPackageListResult);
+
+	void returnCardPackageListFail(String error);
+
+	void returnDeleteOfficeSuccess();
+
+	void returnDeleteOfficeFail(String error);
+
+	void returnKnowledgeListSuccess(GetKnowledgeInfo getKnowledgeInfo);
+
+	void returnKnowledgeListFail(String error);
+
+	void returnIsAdminSuccess(GetIsAdmin getIsAdmin);
+
+	void returnIsAdminFail(String error);
+
+	void returnLanguageSuccess(GetLanguageResult getLanguageResult);
+
+	void returnLanguageFail(String error);
+
+	void returnFindSearchSuccess(GetFindSearchResult getFindSearchResult);
+
+	void returnFindSearchFail(String error);
+
+	void returnFindMixSearchSuccess(GetFindMixSearchResult getFindMixSearchResult);
+
+	void returnFindMixSearchFail(String error);
+
+	void returnAllRobotsSuccess(GetAllRobotsResult getAllRobotsResult);
+
+	void returnAllRobotsFail(String error);
+
+	void returnRobotByIdSuccess(Robot robot);
+
+	void returnRobotByIdFail(String error);
+
+	void returnUpdatePwdBySMSCodeSuccess(GetUpdatePwdBySMSCodeBean getUpdatePwdBySMSCodeBean);
+
+	void returnUpdatePwdBySMSCodeFail(String error);
+
+	void returnGetAppTabsSuccess(GetAppTabsResult getAppTabsResult);
+
+	void returnGetAppTabsFail(String error);
+
+	void returnUserAppsSuccess(GetAppGroupResult getAppGroupResult);
+
+	void returnUserAppsFail(String error);
+
+	void returnUploadCollectSuccess();
+
+	void returnUploadCollectFail();
+
+	void returnReactNativeUpdateSuccess(ReactNativeUpdateBean reactNativeUpdateBean);
+
+	void returnReactNativeUpdateFail(ReactNativeClientIdErrorBean reactNativeClientIdErrorBean);
+
+	void returnGetClientIdResultSuccess(GetClientIdRsult getClientIdRsult);
+
+	void returnGetClientIdResultFail(String error);
+
+	void returnGetAppAuthCodeResultSuccess(AppRedirectResult appRedirectResult);
+
+	void returnGetAppAuthCodeResultFail(String error);
+
+	void returnGetDownloadReactNativeUrlSuccess(ReactNativeDownloadUrlBean reactNativeDownloadUrlBean);
+
+	void returnGetDownloadReactNativeUrlFail(String error);
+
+	void returnGetReactNativeInstallUrlSuccess(ReactNativeInstallUriBean reactNativeInstallUriBean);
+
+	void returnGetReactNativeInstallUrlFail(String error);
+
+	void returnVeriryApprovalPasswordSuccess(String password);
+
+	void returnVeriryApprovalPasswordFail(String error);
+
+	void returnNewsInstructionSuccess(GetNewsInstructionResult getNewsInstructionResult);
+
+	void returnNewsInstructionFail(String error);
+
+	void returnAppTabAutoSuccess(GetAppTabAutoResult getAppTabAutoResult);
+
+	void returnAppTabAutoFail(String error);
+
+	void returnUserProfileSuccess(UserProfileInfoBean userProfileInfoBean);
+
+	void returnUserProfileFail(String error);
+
+	void returnBindingDeviceListSuccess(GetBindingDeviceResult getBindingDeviceResult);
+
+	void returnBindingDeviceListFail(String error, int errorCode);
+
+	void returnUnBindDeviceSuccess();
+
+	void returnUnBindDeviceFail(String error, int errorCode);
+
+	void returnMDMStateSuccess(GetMDMStateResult getMDMStateResult);
+	void returnMDMStateFail(String error, int errorCode);
+
 
 	public void returnSplashPageInfoSuccess(SplashPageBean splashPageBean);
 	public void returnSplashPageInfoFail(String error,int errorCode);

@@ -1,6 +1,8 @@
 package com.inspur.imp.engine.webview;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
 import android.view.View;
@@ -172,6 +174,11 @@ public class ImpWebViewClient extends WebViewClient {
 		}
 		if (url.contains("https://id.inspur.com/oauth2.0/authorize")) {
 			handleReDirectURL(url, view);
+			return true;
+		}
+		if (url.startsWith("mailto:") || url.startsWith("geo:") ||url.startsWith("tel:")) {
+			Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+			myWebView.getContext().startActivity(intent);
 			return true;
 		}
 		return super.shouldOverrideUrlLoading(view, url);

@@ -66,7 +66,7 @@ public class ReactNativeAPIService {
                     public void execute() {
                         getClientId(deviceId,deviceName);
                     }
-                },context).refreshTocken(completeUrl);
+                },context).refreshToken(completeUrl);
             }
         });
     }
@@ -99,7 +99,7 @@ public class ReactNativeAPIService {
                     public void execute() {
                         getReactNativeInstallUrl(uri);
                     }
-                },context).refreshTocken(completeUrl);
+                },context).refreshToken(completeUrl);
             }
         });
     }
@@ -135,7 +135,7 @@ public class ReactNativeAPIService {
                     public void execute() {
                         writeBackVersionChange(preVersion,currentVersion,clientId, command,appId);
                     }
-                },context).refreshTocken(completeUrl);
+                },context).refreshToken(completeUrl);
             }
         });
     }
@@ -172,7 +172,7 @@ public class ReactNativeAPIService {
                     public void execute() {
                         getDownLoadUrl(context,findDownloadUrl,clientId,currentVersion);
                     }
-                },context).refreshTocken(completeUrl);
+                },context).refreshToken(completeUrl);
             }
         });
     }
@@ -218,7 +218,7 @@ public class ReactNativeAPIService {
                     public void execute() {
                         writeBackSplashPageVersionChange(preVersion,currentVersion,clientId, command);
                     }
-                },context).refreshTocken(completeUrl);
+                },context).refreshToken(completeUrl);
             }
         });
     }

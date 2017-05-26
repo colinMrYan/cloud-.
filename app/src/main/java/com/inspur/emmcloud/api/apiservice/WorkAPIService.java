@@ -84,7 +84,7 @@ public class WorkAPIService {
 					public void execute() {
 						getMeetings(day);
 					}
-				}, context).refreshTocken(completeUrl);
+				}, context).refreshToken(completeUrl);
 			}
 
 			@Override
@@ -121,7 +121,7 @@ public class WorkAPIService {
 					public void execute() {
 						getMeetingRooms();
 					}
-				}, context).refreshTocken(completeUrl);
+				}, context).refreshToken(completeUrl);
 			}
 
 			@Override
@@ -178,7 +178,7 @@ public class WorkAPIService {
 						getFiltMeetingRooms(start, end, commonOfficeIdList,
 								isFilte);
 					}
-				}, context).refreshTocken(completeUrl);
+				}, context).refreshToken(completeUrl);
 			}
 
 			@Override
@@ -225,7 +225,7 @@ public class WorkAPIService {
 						// TODO Auto-generated method stub
 						getHistoryMeetingList(keyword, page, limit, isLoadMore);
 					}
-				}, context).refreshTocken(completeUrl);
+				}, context).refreshToken(completeUrl);
 			}
 
 			@Override
@@ -264,7 +264,7 @@ public class WorkAPIService {
 					public void execute() {
 						getIsAdmin(cid);
 					}
-				}, context).refreshTocken(completeUrl);
+				}, context).refreshToken(completeUrl);
 			}
 			
 			@Override
@@ -358,7 +358,7 @@ public class WorkAPIService {
 								bookDate, from, to, organizer, cids, pids,
 								attendant, id);
 					}
-				}, context).refreshTocken(completeUrl);
+				}, context).refreshToken(completeUrl);
 			}
 			
 			@Override
@@ -452,7 +452,7 @@ public class WorkAPIService {
 						getBookingRoom(topic, roomid, name, alert, notice,
 								from, to, organizer, cids, pids, attendant);
 					}
-				}, context).refreshTocken(completeUrl);
+				}, context).refreshToken(completeUrl);
 			}
 
 			@Override
@@ -501,7 +501,7 @@ public class WorkAPIService {
 					public void execute() {
 						creatGroupChannel(name, members);
 					}
-				}, context).refreshTocken(completeUrl);
+				}, context).refreshToken(completeUrl);
 			}
 
 			@Override
@@ -593,7 +593,7 @@ public class WorkAPIService {
 					public void execute() {
 						getRoomMeetingList(bid);
 					}
-				}, context).refreshTocken(completeUrl);
+				}, context).refreshToken(completeUrl);
 			}
 
 			@Override
@@ -627,7 +627,7 @@ public class WorkAPIService {
 					public void execute() {
 						getLoction();
 					}
-				}, context).refreshTocken(completeUrl);
+				}, context).refreshToken(completeUrl);
 			}
 
 			@Override
@@ -677,7 +677,7 @@ public class WorkAPIService {
 					public void execute() {
 						getOffice();
 					}
-				}, context).refreshTocken(completeUrl);
+				}, context).refreshToken(completeUrl);
 			}
 		});
 	}
@@ -714,7 +714,7 @@ public class WorkAPIService {
 					public void execute() {
 						creatOffice(name, buildingId);
 					}
-				}, context).refreshTocken(completeUrl);
+				}, context).refreshToken(completeUrl);
 			}
 
 			@Override
@@ -754,7 +754,7 @@ public class WorkAPIService {
 					public void execute() {
 						deleteMeeting(rid);
 					}
-				}, context).refreshTocken(completeUrl);
+				}, context).refreshToken(completeUrl);
 			}
 			
 			@Override
@@ -792,7 +792,7 @@ public class WorkAPIService {
 					public void execute() {
 						deleteOffice(buildingId);
 					}
-				}, context).refreshTocken(completeUrl);
+				}, context).refreshToken(completeUrl);
 			}
 
 			@Override
@@ -837,7 +837,7 @@ public class WorkAPIService {
 					public void execute() {
 						getOfficeMeetingRooms(oidList, day);
 					}
-				}, context).refreshTocken(completeUrl);
+				}, context).refreshToken(completeUrl);
 			}
 
 			@Override
@@ -884,7 +884,7 @@ public class WorkAPIService {
 					public void execute() {
 						getAvailableRooms(oids, start, end);
 					}
-				}, context).refreshTocken(completeUrl);
+				}, context).refreshToken(completeUrl);
 			}
 
 			@Override
@@ -928,7 +928,7 @@ public class WorkAPIService {
 					public void execute() {
 						getRecentTasks(orderBy, orderType);
 					}
-				}, context).refreshTocken(completeUrl);
+				}, context).refreshToken(completeUrl);
 			}
 
 			@Override
@@ -968,7 +968,7 @@ public class WorkAPIService {
 					public void execute() {
 						getTask(id);
 					}
-				}, context).refreshTocken(completeUrl);
+				}, context).refreshToken(completeUrl);
 			}
 			
 			@Override
@@ -1012,7 +1012,7 @@ public class WorkAPIService {
 					public void execute() {
 						getAllTasks(page, limit, state);
 					}
-				}, context).refreshTocken(completeUrl);
+				}, context).refreshToken(completeUrl);
 			}
 
 			@Override
@@ -1049,7 +1049,7 @@ public class WorkAPIService {
 					public void execute() {
 						getInvolvedTasks(orderBy,orderType);
 					}
-				}, context).refreshTocken(completeUrl);
+				}, context).refreshToken(completeUrl);
 			}
 
 			@Override
@@ -1088,7 +1088,7 @@ public class WorkAPIService {
 					public void execute() {
 						getFocusedTasks(orderBy,orderType);
 					}
-				}, context).refreshTocken(completeUrl);
+				}, context).refreshToken(completeUrl);
 			}
 
 			@Override
@@ -1125,7 +1125,7 @@ public class WorkAPIService {
 					public void execute() {
 						createTasks(mession);
 					}
-				}, context).refreshTocken(completeUrl);
+				}, context).refreshToken(completeUrl);
 			}
 
 			@Override
@@ -1164,7 +1164,7 @@ public class WorkAPIService {
 					public void execute() {
 						deleteTasks(id);
 					}
-				}, context).refreshTocken(completeUrl);
+				}, context).refreshToken(completeUrl);
 			}
 
 			@Override
@@ -1199,7 +1199,7 @@ public class WorkAPIService {
 					public void execute() {
 						getTodayTasks();
 					}
-				}, context).refreshTocken(completeUrl);
+				}, context).refreshToken(completeUrl);
 			}
 
 			@Override
@@ -1239,7 +1239,7 @@ public class WorkAPIService {
 						getSigleTask(id);
 
 					}
-				}, context).refreshTocken(completeUrl);
+				}, context).refreshToken(completeUrl);
 			}
 
 			@Override
@@ -1278,7 +1278,7 @@ public class WorkAPIService {
 					public void execute() {
 						updateTask(taskJson);
 					}
-				}, context).refreshTocken(completeUrl);
+				}, context).refreshToken(completeUrl);
 			}
 
 			@Override
@@ -1319,7 +1319,7 @@ public class WorkAPIService {
 					public void execute() {
 						inviteMateForTask(taskId, uidArray);
 					}
-				}, context).refreshTocken(completeUrl);
+				}, context).refreshToken(completeUrl);
 			}
 
 			@Override
@@ -1361,7 +1361,7 @@ public class WorkAPIService {
 					public void execute() {
 						deleteMateForTask(taskId, uidArray);
 					}
-				}, context).refreshTocken(completeUrl);
+				}, context).refreshToken(completeUrl);
 			}
 
 			@Override
@@ -1397,7 +1397,7 @@ public class WorkAPIService {
 					public void execute() {
 						getTags();
 					}
-				}, context).refreshTocken(completeUrl);
+				}, context).refreshToken(completeUrl);
 			}
 
 			@Override
@@ -1450,7 +1450,7 @@ public class WorkAPIService {
 					public void execute() {
 						changeTag(id, title, color, owner);
 					}
-				}, context).refreshTocken(completeUrl);
+				}, context).refreshToken(completeUrl);
 			}
 
 			@Override
@@ -1489,7 +1489,7 @@ public class WorkAPIService {
 					public void execute() {
 						deleteTag(id);
 					}
-				}, context).refreshTocken(completeUrl);
+				}, context).refreshToken(completeUrl);
 			}
 
 			@Override
@@ -1529,7 +1529,7 @@ public class WorkAPIService {
 					public void execute() {
 						createTag(title, color);
 					}
-				}, context).refreshTocken(completeUrl);
+				}, context).refreshToken(completeUrl);
 			}
 
 			@Override
@@ -1571,7 +1571,7 @@ public class WorkAPIService {
 					public void execute() {
 						changeMessionOwner(id, newOwner);
 					}
-				}, context).refreshTocken(completeUrl);
+				}, context).refreshToken(completeUrl);
 			}
 			
 			@Override
@@ -1612,7 +1612,7 @@ public class WorkAPIService {
 					public void execute() {
 						changeMessionTag(id, tags);
 					}
-				}, context).refreshTocken(completeUrl);
+				}, context).refreshToken(completeUrl);
 			}
 			
 			@Override
@@ -1662,7 +1662,7 @@ public class WorkAPIService {
 						// TODO Auto-generated method stub
 						addAttachments(id, attachments);
 					}
-				}, context).refreshTocken(completeUrl);
+				}, context).refreshToken(completeUrl);
 			}
 
 			@Override
@@ -1708,7 +1708,7 @@ public class WorkAPIService {
 						// TODO Auto-generated method stub
 						addAttachments(id, attachments);
 					}
-				}, context).refreshTocken(completeUrl);
+				}, context).refreshToken(completeUrl);
 			}
 
 			@Override
@@ -1751,7 +1751,7 @@ public class WorkAPIService {
 					public void execute() {
 						getMyCalendar(page, limit);
 					}
-				}, context).refreshTocken(completeUrl);
+				}, context).refreshToken(completeUrl);
 			}
 			
 			@Override
@@ -1793,7 +1793,7 @@ public class WorkAPIService {
 					public void execute() {
 						delelteCalendarById(id);
 					}
-				}, context).refreshTocken(completeUrl);
+				}, context).refreshToken(completeUrl);
 			}
 			
 			@Override
@@ -1833,7 +1833,7 @@ public class WorkAPIService {
 					public void execute() {
 						updateCalendar(calendarJson);
 					}
-				}, context).refreshTocken(completeUrl);
+				}, context).refreshToken(completeUrl);
 			}
 			
 			@Override
@@ -1877,7 +1877,7 @@ public class WorkAPIService {
 						// TODO Auto-generated method stub
 						addCalEvent(calendarId, eventJson);
 					}
-				}, context).refreshTocken(completeUrl);
+				}, context).refreshToken(completeUrl);
 			}
 			
 			@Override
@@ -1921,7 +1921,7 @@ public class WorkAPIService {
 						// TODO Auto-generated method stub
 						updateCalEvent(calEventJson);
 					}
-				}, context).refreshTocken(completeUrl);
+				}, context).refreshToken(completeUrl);
 			}
 			
 			@Override
@@ -1986,7 +1986,7 @@ public class WorkAPIService {
 						getAllCalEvents(calendarIdList, afterCalendar,
 								beforCalendar, limit, page, isRefresh);
 					}
-				}, context).refreshTocken(completeUrl);
+				}, context).refreshToken(completeUrl);
 			}
 			
 			@Override
@@ -2027,7 +2027,7 @@ public class WorkAPIService {
 					public void execute() {
 						deleteCalEvent(calEventId);
 					}
-				}, context).refreshTocken(completeUrl);
+				}, context).refreshToken(completeUrl);
 			}
 			
 			@Override

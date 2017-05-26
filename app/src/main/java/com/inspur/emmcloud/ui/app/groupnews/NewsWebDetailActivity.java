@@ -10,7 +10,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.content.ContextCompat;
-import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -123,7 +122,9 @@ public class NewsWebDetailActivity extends BaseActivity {
         loadingDlg = new LoadingDialog(NewsWebDetailActivity.this);
         relativeLayout = (RelativeLayout) findViewById(R.id.header_layout);
         headText = (TextView)findViewById(R.id.header_text);
-        pagerTitle = getString(R.string.group_news_detail);
+        if(StringUtils.isBlank(title)){
+            title = getString(R.string.group_news_detail);
+        }
         headText.setText(pagerTitle);
         initWebView();
     }
@@ -327,8 +328,7 @@ public class NewsWebDetailActivity extends BaseActivity {
         instructionsBtn = (Button)view.findViewById(R.id.app_news_instructions_btn);
         if(!getIntent().getBooleanExtra("hasExtraPermission",false)){
             instructionsBtn.setVisibility(View.GONE);
-            float leftSize = getIconLeftSize();
-            shareBtn.setPadding(DensityUtil.dip2px(NewsWebDetailActivity.this,leftSize),0,0,0);
+            shareBtn.setPadding(DensityUtil.dip2px(NewsWebDetailActivity.this,139),0,0,0);
         }
         shareBtn.setText(getString(R.string.news_share_text));
         dayOrNightModeText = (TextView) view.findViewById(R.id.app_news_mode_night_text);
@@ -377,19 +377,6 @@ public class NewsWebDetailActivity extends BaseActivity {
                 reRender();
             }
         });
-    }
-
-    /**
-     * 获取分享图标左侧大小
-     * @return
-     */
-    private float getIconLeftSize() {
-        WindowManager wm = (WindowManager) this
-                .getSystemService(Context.WINDOW_SERVICE);
-        int width = wm.getDefaultDisplay().getWidth();
-        float leftSize = (float) (width * 0.34);
-        leftSize = DensityUtil.px2dip(NewsWebDetailActivity.this,leftSize);
-        return leftSize;
     }
 
     /**
@@ -503,12 +490,11 @@ public class NewsWebDetailActivity extends BaseActivity {
         hasIntrcutionDialog.setCanceledOnTouchOutside(true);
         View  view = getLayoutInflater().inflate(R.layout.app_news_has_instruction_dialog, null);
         hasIntrcutionDialog.setContentView(view);
-        final TextView textView = (TextView) view.findViewById(R.id.news_has_instrcution_text);
-//        editText.setFocusable(false);
-//        editText.setEnabled(false);
-        textView.setMovementMethod(ScrollingMovementMethod.getInstance());
+        final EditText editText = (EditText) view.findViewById(R.id.news_instrcution_text);
+        editText.setFocusable(false);
+        editText.setEnabled(false);
         instruction = handleInstruction(instruction);
-        textView.setText(instruction);
+        editText.setText(instruction);
         Button okBtn = (Button) view.findViewById(R.id.ok_btn);
         okBtn.setOnClickListener(new View.OnClickListener() {
             @Override

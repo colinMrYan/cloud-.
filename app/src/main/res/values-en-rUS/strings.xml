@@ -214,8 +214,7 @@
     <string name="group_album">Group Photos</string>
     <string name="group_file">Group Files</string>
     <string name="authorization_expired">Authorization Expired</string>
-    <string name="cant_login_with_sms">Group security policy ,Your account is not allowed to log on with SMS</string>
-    <string name="cant_get_password_with_sms">Group security policy ,Your account number is not allowed to use the phone number to retrieve the password </string>
+    <string name="cant_login_with_sms">Your account is not allowed to log on with SMS</string>
 
     <!-- 消息部分 -->
     <string name="msgcontent_cannot_null">Please type message content</string>
@@ -402,6 +401,23 @@
     <string name="my_setting_tips_quit">Sure to clear all cache? App will close after clear</string>
     <string name="get_language_error">Not available to the language package, please contact the administrator</string>
     <string name="app_customer">Cloud+ Customer</string>
+    <string name="settings_device_manager">Equipment safety and management</string>
+    <string name="device_unbind_sucess">Device unbound successfully!</string>
+    <string name="device_other_unbind_warning">After binding, log on from %1$s, you need to re register the device</string>
+    <string name="device_current_unbind_warning">After binding, you need to log in again and register your device</string>
+    <string name="current_device">Current device</string>
+    <string name="device_bind_time_title">Binding time: </string>
+    <string name="device_bind_time">Binding time</string>
+    <string name="device_info">Device details</string>
+    <string name="device_id">Device ID</string>
+    <string name="unbind_this_device">Unbound this device</string>
+    <string name="sure_switch_to">Make sure to switch to %1$s</string>
+    <string name="fail_to_switch_enterprise">Failed to switch enterprise!</string>
+    <string name="select_enterprise">Select enterprise</string>
+    <string name="switch_enterprise">Switch enterprise</string>
+    <string name="current_enterprise">Current enterprise</string>
+
+
 
     <!-- 修改密码部分 -->
     <string name="modify_input_user_new_password">Enter a new password</string>

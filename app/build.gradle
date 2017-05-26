@@ -39,8 +39,8 @@ android {
         applicationId "com.inspur.emmcloud"
         minSdkVersion 16
         targetSdkVersion 22
-        versionCode 28
-        versionName "1.1.10"
+        versionCode 29
+        versionName "1.2.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         ndk {
             abiFilters "armeabi-v7a", "x86"
@@ -185,5 +185,5 @@ dependencies {
     compile 'commons-codec:commons-codec:20041127.091804'
     compile files('src/libs/jpush-android_v3.0.3.jar')
     compile files('src/libs/jcore-android_v1.1.1.jar')
-    compile files('src/libs/mdm.jar')
+    //compile files('src/libs/mdm.jar')
 }

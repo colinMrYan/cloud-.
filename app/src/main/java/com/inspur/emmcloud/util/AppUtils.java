@@ -207,17 +207,22 @@ try{
 	public static String getMyUUID(Context context) {
 		final TelephonyManager tm = (TelephonyManager) context
 				.getSystemService(Context.TELEPHONY_SERVICE);
-		final String tmDevice, tmSerial, tmPhone, androidId;
-		tmDevice = "" + tm.getDeviceId();
-		tmSerial = "" + tm.getSimSerialNumber();
-		androidId = ""
-				+ android.provider.Settings.Secure.getString(
-						context.getContentResolver(),
-						android.provider.Settings.Secure.ANDROID_ID);
-		UUID deviceUuid = new UUID(androidId.hashCode(),
-				((long) tmDevice.hashCode() << 32) | tmSerial.hashCode());
-		String uniqueId = deviceUuid.toString();
-		return uniqueId;
+		String uuid = PreferencesUtils.getString(context,"device_uuid","");
+		if (StringUtils.isBlank(uuid)){
+			String tmDevice, tmSerial,androidId;
+			tmDevice = "" + tm.getDeviceId();
+			tmSerial = "" + tm.getSimSerialNumber();
+			androidId = ""
+					+ android.provider.Settings.Secure.getString(
+					context.getContentResolver(),
+					android.provider.Settings.Secure.ANDROID_ID);
+			UUID deviceUuid = new UUID(androidId.hashCode(),
+					((long) tmDevice.hashCode() << 32) | tmSerial.hashCode());
+			uuid = deviceUuid.toString();
+			PreferencesUtils.putString(context,"device_uuid",uuid);
+		}
+
+		return uuid;
 
 	}
 
@@ -356,21 +361,17 @@ try{
      */
 	public static String getScreenType(Activity activity) {
 		int kkhdpi = 2560*1600;
-		int xxxHdpi = 1920 * 1080;
-		int xxhdpi = 1080 * 720;
-		DisplayMetrics metrics = new DisplayMetrics();
-		activity.getWindowManager().getDefaultDisplay().getMetrics(metrics);
-		int width = metrics.widthPixels;
-		int height = metrics.heightPixels;
-		int screenSize = width * height;
+		int xxHdpi = 1920 * 1080;
+		int xhdpi = 1080 * 720;
+		int screenSize =ResolutionUtils.getResolution(activity);
 		if(screenSize >= kkhdpi){
 			return "2k";
-		}else if(screenSize >= xxxHdpi ){
-			return "xxxhdpi";
-		}else if(screenSize >= xxhdpi){
+		}else if(screenSize >= xxHdpi ){
 			return "xxhdpi";
-		}else{
+		}else if(screenSize >= xhdpi){
 			return "xhdpi";
+		}else{
+			return "hdpi";
 		}
 	}
 }

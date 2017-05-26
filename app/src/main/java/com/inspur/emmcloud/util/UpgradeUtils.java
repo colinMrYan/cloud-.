@@ -29,6 +29,7 @@ import java.text.DecimalFormat;
 public class UpgradeUtils extends APIInterfaceInstance {
 
 	protected static final int SHOW_PEOGRESS_LAODING_DLG = 0;
+	private static  final  int notUpdateInterval = 86400000;
 	private static final int DOWNLOAD = 3;
 	private static final int DOWNLOAD_FINISH = 4;
 	private static final int DOWNLOAD_FAIL = 5;
@@ -57,10 +58,13 @@ public class UpgradeUtils extends APIInterfaceInstance {
 	private String downloadPercent;
 	private LoadingDialog loadingDlg;
 	private Cancelable cancelable;
+	private boolean isManualCheck;
 
-	public UpgradeUtils(Context context,Handler handler) {
+	//isManualCheck 是否在关于中手动检查更新
+	public UpgradeUtils(Context context,Handler handler,boolean isManualCheck) {
 		this.context = context;
 		this.handler = handler;
+		this.isManualCheck = isManualCheck;
 		loadingDlg = new LoadingDialog(context);
 		handMessage();
 	}
@@ -122,7 +126,7 @@ public class UpgradeUtils extends APIInterfaceInstance {
 				loadingDlg.show(isShowLoadingDlg);
 			AppAPIService apiService = new AppAPIService(context);
 			apiService.setAPIInterface(UpgradeUtils.this);
-			apiService.checkUpgrade();
+			apiService.checkUpgrade(isManualCheck);
 		} else if (handler != null) {
 			handler.sendEmptyMessage(UPGRADE_FAIL);
 		}
@@ -142,14 +146,14 @@ public class UpgradeUtils extends APIInterfaceInstance {
 			handler.sendEmptyMessage(NO_NEED_UPGRADE);
 			break;
 		case 1: // 可选升级
-			if (context != null) {
-				showSelectUpgradeDlg();
-			}
+				long appNotUpdateTime = PreferencesUtils.getLong(context,"appNotUpdateTime");
+				if (System.currentTimeMillis()-appNotUpdateTime>notUpdateInterval){
+					showSelectUpgradeDlg();
+				}
+
 			break;
 		case 2: // 必须升级
-			if (context != null) {
 				showForceUpgradeDlg();
-			}
 			break;
 
 		default:
@@ -188,6 +192,7 @@ public class UpgradeUtils extends APIInterfaceInstance {
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				dialog.dismiss();
+				PreferencesUtils.putLong(context,"appNotUpdateTime",System.currentTimeMillis());
 				if (handler != null) {
 					handler.sendEmptyMessage(DONOT_UPGRADE);
 				}
@@ -362,9 +367,9 @@ public class UpgradeUtils extends APIInterfaceInstance {
 	/** 格式化数据 **/
 	private String setFormat(long data) {
 		// TODO Auto-generated method stub
-		if (data < 1024) {
+		if (data < KBDATA) {
 			return data + "B";
-		} else if (data < 1024 * 1024) {
+		} else if (data < MBDATA) {
 			return new DecimalFormat(("####0.00")).format(data / KBDATA) + "KB";
 		} else {
 			return new DecimalFormat(("####0.00")).format(data / MBDATA) + "MB";
@@ -372,7 +377,7 @@ public class UpgradeUtils extends APIInterfaceInstance {
 	}
 
 	@Override
-	public void returnUpgradeSuccess(GetUpgradeResult getUpgradeResult) {
+	public void returnUpgradeSuccess(GetUpgradeResult getUpgradeResult,boolean isManualCheck) {
 		// TODO Auto-generated method stub
 		if (loadingDlg != null && loadingDlg.isShowing()) {
 			loadingDlg.dismiss();
@@ -382,7 +387,7 @@ public class UpgradeUtils extends APIInterfaceInstance {
 	}
 
 	@Override
-	public void returnUpgradeFail(String error) {
+	public void returnUpgradeFail(String error,boolean isManualCheck) {
 		// TODO Auto-generated method stub
 		if (loadingDlg != null && loadingDlg.isShowing()) {
 			loadingDlg.dismiss();

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">浪潮雲+</string>
+    <string name="app_name">雲+</string>
     <string name="reclick_to_desktop">再按一次退出程式</string>
     <string name="Network_Mobile">已經連接到到移動網路</string>
     <string name="Network_WIFI">已經連接到WIFI</string>
@@ -215,8 +215,7 @@
     <string name="group_album"> 群相冊</string>
     <string name="group_file">群文件</string>
     <string name="authorization_expired">授權過期，請重新登錄</string>
-    <string name="cant_login_with_sms">根據集團安全性原則,您的賬號不允許使用短信登錄</string>
-    <string name="cant_get_password_with_sms">根據集團安全性原則,您的帳號不允許使用手機號找回密碼</string>
+    <string name="cant_login_with_sms">您的賬號不允許使用短信登錄</string>
 
     <!-- 消息部分 -->
     <string name="msgcontent_cannot_null">請輸入消息內容</string>
@@ -403,6 +402,24 @@
     <string name="my_setting_tips_quit">確定清除應用內所有緩存數據？清除后將退出應用</string>
     <string name="get_language_error">未獲取到可用的語言包，請聯繫管理員</string>
     <string name="app_customer">雲+客服</string>
+    <string name="settings_device_manager">設備安全與管理</string>
+    <string name="device_unbind_sucess">設備解綁成功！</string>
+    <string name="device_other_unbind_warning">解綁後，從%1$s上登錄，您需要重新註冊設備</string>
+    <string name="device_current_unbind_warning">解綁後，您需要重新登入並注册設備</string>
+    <string name="current_device">當前設備</string>
+    <string name="device_bind_time_title">綁定時間: </string>
+    <string name="device_bind_time">綁定時間</string>
+    <string name="device_info">設備詳情</string>
+    <string name="device_id">設備ID</string>
+    <string name="unbind_this_device">解綁此設備</string>
+    <string name="sure_switch_to">確定切換到%1$s</string>
+    <string name="fail_to_switch_enterprise">企業切換失敗！</string>
+    <string name="select_enterprise">選擇企業</string>
+    <string name="switch_enterprise">切換企業</string>
+    <string name="current_enterprise">當前企業</string>
+
+
+
 
 
     <!-- 修改密碼部分 -->

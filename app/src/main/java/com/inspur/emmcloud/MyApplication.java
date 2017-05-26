@@ -153,7 +153,7 @@ public class MyApplication extends MultiDexApplication implements  ReactApplicat
 		JPushInterface.resumePush(this);
 	}
 
-
+/************************ Cookie相关 *****************************/
 	/**
 	 * 清除所有的SessionCookie
 	 */
@@ -210,6 +210,7 @@ public class MyApplication extends MultiDexApplication implements  ReactApplicat
 		params.addHeader("Accept", "application/json");
 		if (getToken() != null) {
 			params.addHeader("Authorization", getToken());
+			params.addHeader("X-ECC-Current-Enterprise", UriUtils.tanent);
 		}
 		String languageJson = PreferencesUtils.getString(
 				getApplicationContext(), UriUtils.tanent + "appLanguageObj");
@@ -298,7 +299,7 @@ public class MyApplication extends MultiDexApplication implements  ReactApplicat
 		DbCacheUtils.deleteDb(getApplicationContext());
 	}
 
-	/**************************************************************************/
+	/******************************Websocket********************************************/
 
 	/**
 	 * 开启推送
@@ -345,6 +346,8 @@ public class MyApplication extends MultiDexApplication implements  ReactApplicat
 		}
 	}
 
+	/******************************t********************************************/
+
 	public void initTanent() {
 		// TODO Auto-generated method stub
 		// UriUtils.res = "res_dev";
@@ -379,6 +382,7 @@ public class MyApplication extends MultiDexApplication implements  ReactApplicat
 		return false;
 
 	}
+
 
 	@Override
 	public void onConfigurationChanged(Configuration config) {

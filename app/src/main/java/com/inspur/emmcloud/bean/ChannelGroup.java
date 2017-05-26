@@ -1,16 +1,18 @@
 package com.inspur.emmcloud.bean;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.alibaba.fastjson.JSON;
+import com.inspur.emmcloud.util.UriUtils;
+import com.lidroid.xutils.db.annotation.Id;
+import com.lidroid.xutils.db.annotation.Table;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.alibaba.fastjson.JSON;
-import com.inspur.emmcloud.util.UriUtils;
-import com.lidroid.xutils.db.annotation.Id;
+import java.util.ArrayList;
+import java.util.List;
 
+@Table(name = "ChannelGroup")
 public class ChannelGroup {
 	@Id
 	private String cid = "";

@@ -251,7 +251,7 @@ public class LoginAPIService {
 						// TODO Auto-generated method stub
 						getMyInfo();
 					}
-				}, context).refreshTocken(completeUrl);
+				}, context).refreshToken(completeUrl);
 			}
 			
 			@Override
@@ -287,7 +287,7 @@ public class LoginAPIService {
 					public void execute() {
 						getWebsocketUrl();
 					}
-				}, context).refreshTocken(completeUrl);
+				}, context).refreshToken(completeUrl);
 			}
 			
 			@Override
@@ -410,7 +410,7 @@ public class LoginAPIService {
 						// TODO Auto-generated method stub
 						changePsd(oldpsd, newpsd);
 					}
-				}, context).refreshTocken(completeUrl);
+				}, context).refreshToken(completeUrl);
 			}
 			
 			@Override
@@ -430,7 +430,6 @@ public class LoginAPIService {
 	
 	/**
 	 * 通过短信验证码更新密码
-	 * @param userPhone
 	 * @param smsCode
 	 * @param newPwd
 	 */
@@ -449,7 +448,7 @@ public class LoginAPIService {
 					public void execute() {
 						updatePwdBySMSCode( smsCode, newPwd);
 					}
-				}, context).refreshTocken(completeUrl);
+				}, context).refreshToken(completeUrl);
 			}
 			
 			@Override

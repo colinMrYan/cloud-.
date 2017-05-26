@@ -2,11 +2,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.inspur.emmcloud"
     android:configChanges="locale|layoutDirection"
-    android:versionCode="28"
-    android:versionName="1.1.10">
+    android:versionCode="29"
+    android:versionName="1.2.0">
 
     <uses-sdk
-        android:minSdkVersion="14"
+        android:minSdkVersion="16"
         android:targetSdkVersion="22" />
 
     <!-- 极光推送权限配置开始 -->
@@ -131,6 +131,13 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait"></activity>
         <activity
+            android:name=".ui.mine.setting.SwitchEnterpriseActivity"
+            android:theme="@android:style/Theme.Holo.Light.NoActionBar"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"></activity>
+
+
+        <activity
             android:name=".ui.login.LoginActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"></activity>
@@ -215,6 +222,14 @@
             android:name=".ui.mine.setting.SettingActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.mine.setting.DeviceManagerActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".ui.mine.setting.DeviceInfoActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".ui.contact.UserInfoActivity"
             android:launchMode="singleTask"
@@ -519,6 +534,11 @@
         <activity
             android:name=".ui.find.FindSearchMoreActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:theme="@style/dialog_activity"
+            android:name=".ui.app.AppUpgradeNotifyActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
         <activity android:name=".ui.app.ShortCutFunctionActivity"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
             android:screenOrientation="portrait">
@@ -532,6 +552,7 @@
         <service android:name=".service.CoreService"></service>
         <service android:name=".service.CoreInnerService"></service>
         <service android:name=".service.AppExceptionService"></service>
+        <service android:name=".service.AppUpgradeService"></service>
 
 
         <!-- ImagePicker -->
@@ -563,6 +584,7 @@
         <activity
             android:name="com.inspur.imp.api.ImpActivity"
             android:configChanges="orientation|screenSize"
+            android:theme="@android:style/Theme.Holo.Light.NoActionBar"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -587,19 +609,8 @@
             android:name="com.inspur.imp.plugin.filetransfer.TextFileShowActivity"
             android:theme="@android:style/Theme.NoTitleBar"></activity>
 
-        <service
-            android:name=".service.WebSocketService"
-            android:enabled="true"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="com.inspur.emmcloud.service.WebSocketService" />
-            </intent-filter>
-        </service>
         <service android:name="com.amap.api.location.APSService"></service>
         <!-- MDM设备管理 -->
-        <activity
-            android:name="com.inspur.mdm.ui.DeviceRegisterActivity"
-            android:screenOrientation="portrait"></activity>
         <activity
             android:name="com.inspur.mdm.ui.DeviceRegisterFailDetailActivity"
             android:screenOrientation="portrait"></activity>

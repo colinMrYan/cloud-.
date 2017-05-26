@@ -17,18 +17,15 @@ import java.util.List;
 public class OauthUtils {
 	private OauthCallBack callBack;
 	private Context context;
-	private String oldToken ="";
 	public OauthUtils(OauthCallBack callBack,Context context){
 		this.callBack = callBack;
 		this.context = context;
 	}
-	public void refreshTocken(String url){
-		Log.d("jason", "refreshTocken----------");
-		LoginAPIService apiService = new LoginAPIService(context);
-		oldToken = PreferencesUtils.getString(context, "accessToken", "");
+	public void refreshToken(String url){
 		((MyApplication)context.getApplicationContext()).addCallBack(callBack);
 		if (!((MyApplication)context.getApplicationContext()).getIsTokenRefreshing()) {
 			((MyApplication)context.getApplicationContext()).setIsTokenRefreshing(true);
+			LoginAPIService apiService = new LoginAPIService(context);
 			apiService.setAPIInterface(new WebService());
 			apiService.refreshToken();
 		}
@@ -53,7 +50,6 @@ public class OauthUtils {
 			((MyApplication)context.getApplicationContext()).setIsTokenRefreshing(false);
 			((MyApplication)context.getApplicationContext()).startWebSocket();
 			((MyApplication)context.getApplicationContext()).setAccessToken(accessToken);
-			LoginAPIService apiService = new LoginAPIService(context);
 			List<OauthCallBack> callBackList = ((MyApplication)context.getApplicationContext()).getCallBackList();
 			for (int i = 0; i < callBackList.size(); i++) {
 				callBackList.get(i).execute();

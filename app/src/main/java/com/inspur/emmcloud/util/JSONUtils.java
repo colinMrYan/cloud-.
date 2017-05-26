@@ -855,4 +855,24 @@ public class JSONUtils {
 		}
     	return array;
     }
+
+    /**
+     *
+     * @param array
+     * @param index
+     * @param defaultValue
+     * @return
+     */
+    public static JSONObject getJSONObject(JSONArray array,int index,JSONObject defaultValue){
+        if (array == null || array.length() == 0 || index<0 || array.length()<index+1) {
+            return defaultValue;
+        }
+        try {
+            JSONObject obj = array.getJSONObject(index);
+            return  obj;
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return defaultValue;
+    };
 }

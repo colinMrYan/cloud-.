@@ -537,9 +537,9 @@ public class ContactSearchActivity extends BaseActivity {
 				if (popLayout.getVisibility() == View.GONE) {
 					searchArea = orginCurrentArea;
 				}
-//				new Thread(new Runnable() {
-//					@Override
-//					public void run() {
+				new Thread(new Runnable() {
+					@Override
+					public void run() {
 						switch (searchArea) {
 							case SEARCH_ALL:
 								searchChannelGroupList = ChannelGroupCacheUtils
@@ -547,7 +547,7 @@ public class ContactSearchActivity extends BaseActivity {
 												searchText);
 								searchContactList = ContactCacheUtils.getSearchContact(
 										getApplicationContext(), searchText, null,
-										4);
+										25);
 								searchRecentList = ChannelCacheUtils.getSearchChannelList(
 										getApplicationContext(), searchText, searchContent);
 								break;
@@ -568,7 +568,7 @@ public class ContactSearchActivity extends BaseActivity {
 							case SEARCH_CONTACT:
 								searchContactList = ContactCacheUtils.getSearchContact(
 										getApplicationContext(), searchText, null,
-										4);
+										25);
 								if (!isSearchSingle) {
 									searchRecentList = ChannelCacheUtils
 											.getSearchChannelList(getApplicationContext(),
@@ -579,10 +579,9 @@ public class ContactSearchActivity extends BaseActivity {
 							default:
 								break;
 						}
-				showSearchPop();
-						//handler.sendEmptyMessage(REFRESH_DATA);
-//					}
-//				}).start();
+						handler.sendEmptyMessage(REFRESH_DATA);
+					}
+				}).start();
 			} else {
 				hideSearchPop();
 			}

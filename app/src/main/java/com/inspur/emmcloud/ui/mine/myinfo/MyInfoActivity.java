@@ -24,6 +24,7 @@ import com.inspur.emmcloud.ui.mine.MoreFragment;
 import com.inspur.emmcloud.util.ImageDisplayUtils;
 import com.inspur.emmcloud.util.IntentUtils;
 import com.inspur.emmcloud.util.NetUtils;
+import com.inspur.emmcloud.util.PreferencesByUserUtils;
 import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
@@ -43,27 +44,14 @@ public class MyInfoActivity extends BaseActivity {
 	private static final int USER_INFO_CHANGE = 10;
 
 	private ImageView userHeadImg;
-	private TextView userNameText;
 	private TextView userMailText;
-	private TextView userPhoneText;
-	private TextView tenantNameText;
-
 	private MineAPIService apiService;
 	private LoadingDialog loadingDlg;
-
-	private RelativeLayout userHeadLayout;
-	private RelativeLayout userNameLayout;
-	private RelativeLayout userMailLayout;
-	private RelativeLayout userPhoneLayout;
-	private RelativeLayout userCompanyLayout;
-	private RelativeLayout backLayout;
-	private RelativeLayout modifyLayout;
 	private RelativeLayout resetLayout;
 	private String photoLocalPath;
 	private ImageDisplayUtils imageDisplayUtils;
 	private GetMyInfoResult getMyInfoResult;
 	private LoadingDialog loadingDialog;
-	private View passWordView;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -78,14 +66,14 @@ public class MyInfoActivity extends BaseActivity {
 	}
 
 	/**
-	 *
+	 * 获取用户信息配置
 	 */
 	private void getUserProfile() {
-		if(NetUtils.isNetworkConnected(MyInfoActivity.this)){
-			if(loadingDialog != null && !loadingDialog.isShowing()){
-				loadingDialog.show();
-			}
+		if (NetUtils.isNetworkConnected(MyInfoActivity.this)) {
+			loadingDialog.show();
 			apiService.getUserProfileInfo();
+		} else {
+			updateInfoState(null);
 		}
 	}
 
@@ -95,20 +83,9 @@ public class MyInfoActivity extends BaseActivity {
 		getMyInfoResult = (GetMyInfoResult) getIntent().getExtras()
 				.getSerializable("getMyInfoResult");
 		userHeadImg = (ImageView) findViewById(R.id.myinfo_userheadimg_img);
-		userNameText = (TextView) findViewById(R.id.myinfo_username_text);
 		userMailText = (TextView) findViewById(R.id.myinfo_usermail_text);
-		userPhoneText = (TextView) findViewById(R.id.myinfo_userphone_text);
-		tenantNameText = (TextView) findViewById(R.id.myinfo_usercompanytext_text);
 		loadingDlg = new LoadingDialog(this);
-		userHeadLayout = (RelativeLayout) findViewById(R.id.myinfo_userhead_layout);
-		userNameLayout = (RelativeLayout) findViewById(R.id.myinfo_username_layout);
-		userMailLayout = (RelativeLayout) findViewById(R.id.myinfo_usermail_layout);
-		userPhoneLayout = (RelativeLayout) findViewById(R.id.myinfo_userphone_layout);
-		userCompanyLayout = (RelativeLayout) findViewById(R.id.myinfo_usercompany_layout);
-		backLayout = (RelativeLayout) findViewById(R.id.back_layout);
-		modifyLayout = (RelativeLayout) findViewById(R.id.myinfo_modifypsd_layout);
 		resetLayout = (RelativeLayout) findViewById(R.id.myinfo_reset_layout);
-		passWordView = findViewById(R.id.myinfo_password_line);
 		imageDisplayUtils = new ImageDisplayUtils(getApplicationContext(),
 				R.drawable.icon_photo_default);
 		apiService = new MineAPIService(MyInfoActivity.this);
@@ -129,12 +106,12 @@ public class MyInfoActivity extends BaseActivity {
 					.getChannelImgUri(getMyInfoResult.getID());
 			imageDisplayUtils.display(userHeadImg, photoUri);
 			String userName = getMyInfoResult.getName();
-			userNameText.setText(userName.equals("null") ? getString(R.string.not_set) : userName);
+			((TextView) findViewById(R.id.myinfo_username_text)).setText(userName.equals("null") ? getString(R.string.not_set) : userName);
 			String mail = getMyInfoResult.getMail();
 			userMailText.setText(mail.equals("null") ? getString(R.string.not_set) : mail);
 			String phoneNumber = getMyInfoResult.getPhoneNumber();
-			userPhoneText.setText(phoneNumber.equals("null") ? getString(R.string.not_set) : phoneNumber);
-			tenantNameText.setText(getMyInfoResult.getEnterpriseName());
+			((TextView) findViewById(R.id.myinfo_userphone_text)).setText(phoneNumber.equals("null") ? getString(R.string.not_set) : phoneNumber);
+			((TextView) findViewById(R.id.myinfo_usercompanytext_text)).setText(getMyInfoResult.getEnterpriseName());
 		}
 
 	}
@@ -222,6 +199,45 @@ public class MyInfoActivity extends BaseActivity {
 		imagePicker.setOutPutY(1000); // 保存文件的高度。单位像素
 	}
 
+	/**
+	 * 处理
+	 *
+	 * @param userProfileInfoBean
+	 */
+	private void updateInfoState(UserProfileInfoBean userProfileInfoBean) {
+		if (userProfileInfoBean == null) {
+			String response = PreferencesByUserUtils.getString(getApplicationContext(), "user_profiles");
+			if (!StringUtils.isBlank(response)) {
+				userProfileInfoBean = new UserProfileInfoBean(response);
+			}else {
+				return;
+			}
+		}
+
+		if (userProfileInfoBean.getShowHead() == 0) {
+			(findViewById(R.id.myinfo_userhead_layout)).setVisibility(View.GONE);
+		}
+		if (userProfileInfoBean.getShowUserName() == 0) {
+			(findViewById(R.id.myinfo_username_layout)).setVisibility(View.GONE);
+		}
+		if (userProfileInfoBean.getShowUserMail() == 0) {
+			(findViewById(R.id.myinfo_usermail_layout)).setVisibility(View.GONE);
+		}
+		if (userProfileInfoBean.getShowUserPhone() == 0) {
+			(findViewById(R.id.myinfo_userphone_layout)).setVisibility(View.GONE);
+		}
+		if (userProfileInfoBean.getShowEpInfo() == 0) {
+			(findViewById(R.id.myinfo_usercompany_layout)).setVisibility(View.GONE);
+		}
+		if (userProfileInfoBean.getShowModifyPsd() == 0) {
+			(findViewById(R.id.myinfo_modifypsd_layout)).setVisibility(View.GONE);
+		}
+		if (userProfileInfoBean.getShowResetPsd() == 0) {
+			resetLayout.setVisibility(View.GONE);
+		}
+
+	}
+
 	public class WebService extends APIInterfaceInstance {
 
 		@Override
@@ -255,50 +271,20 @@ public class MyInfoActivity extends BaseActivity {
 
 		@Override
 		public void returnUserProfileSuccess(UserProfileInfoBean userProfileInfoBean) {
-			if(loadingDialog != null && loadingDialog.isShowing()){
+			if (loadingDialog != null && loadingDialog.isShowing()) {
 				loadingDialog.dismiss();
 			}
 			updateInfoState(userProfileInfoBean);
+			PreferencesByUserUtils.putString(getApplicationContext(), "user_profiles", userProfileInfoBean.getResponse());
 		}
 
 		@Override
 		public void returnUserProfileFail(String error) {
-			if(loadingDialog != null && loadingDialog.isShowing()){
+			if (loadingDialog != null && loadingDialog.isShowing()) {
 				loadingDialog.dismiss();
 			}
+			updateInfoState(null);
 			//此处异常不予处理照常显示，所以没有异常处理
 		}
 	}
-
-	/**
-	 * 处理
-	 * @param userProfileInfoBean
-     */
-	private void updateInfoState(UserProfileInfoBean userProfileInfoBean) {
-		if(userProfileInfoBean.getShowHead() == 0){
-			userHeadLayout.setVisibility(View.GONE);
-		}
-		if(userProfileInfoBean.getShowUserName() == 0){
-			userNameLayout.setVisibility(View.GONE);
-		}
-		if(userProfileInfoBean.getShowUserMail() == 0){
-			userMailLayout.setVisibility(View.GONE);
-		}
-		if(userProfileInfoBean.getShowUserPhone() == 0){
-			userPhoneLayout.setVisibility(View.GONE);
-		}
-		if(userProfileInfoBean.getShowEpInfo() == 0){
-			userCompanyLayout.setVisibility(View.GONE);
-		}
-		if(userProfileInfoBean.getShowModifyPsd() == 0){
-			passWordView.setVisibility(View.GONE);
-			modifyLayout.setVisibility(View.GONE);
-		}
-		if(userProfileInfoBean.getShowResetPsd() == 0){
-			passWordView.setVisibility(View.GONE);
-			resetLayout.setVisibility(View.GONE);
-		}
-	}
-
-
 }

@@ -63,7 +63,7 @@ public class ContactAPIService {
 						// TODO Auto-generated method stub
 						getAllContact(lastQueryTime);
 					}
-				}, context).refreshTocken(completeUrl);
+				}, context).refreshToken(completeUrl);
 			}
 			
 			@Override
@@ -98,7 +98,7 @@ public class ContactAPIService {
 					public void execute() {
 						getAllRobotInfo();
 					}
-				}, context).refreshTocken(completeUrl);
+				}, context).refreshToken(completeUrl);
 			}
 			
 			@Override
@@ -130,7 +130,7 @@ public class ContactAPIService {
 					public void execute() {
 						getRobotInfoById(id);
 					}
-				}, context).refreshTocken(completeUrl);
+				}, context).refreshToken(completeUrl);
 			}
 			
 			@Override

@@ -97,7 +97,7 @@ public class MyAppAPIService {
                     public void execute() {
                         getAllApps(type, pageNumber);
                     }
-                }, context).refreshTocken(completeUrl);
+                }, context).refreshToken(completeUrl);
             }
 
         });
@@ -122,7 +122,7 @@ public class MyAppAPIService {
                     public void execute() {
                         addApp(appID);
                     }
-                }, context).refreshTocken(completeUrl);
+                }, context).refreshToken(completeUrl);
             }
 
             @Override
@@ -157,7 +157,7 @@ public class MyAppAPIService {
                     public void execute() {
                         removeApp(appID);
                     }
-                }, context).refreshTocken(completeUrl);
+                }, context).refreshToken(completeUrl);
             }
 
             @Override
@@ -190,7 +190,7 @@ public class MyAppAPIService {
                     public void execute() {
                         getMyApp(jsonArray);
                     }
-                }, context).refreshTocken(completeUrl);
+                }, context).refreshToken(completeUrl);
             }
 
             @Override
@@ -225,7 +225,7 @@ public class MyAppAPIService {
                     public void execute() {
                         searchApp(keyword, pageNumber);
                     }
-                }, context).refreshTocken(completeUrl);
+                }, context).refreshToken(completeUrl);
             }
 
             @Override
@@ -272,7 +272,7 @@ public class MyAppAPIService {
                     public void execute() {
                         getNewsTitles();
                     }
-                }, context).refreshTocken(completeUrl);
+                }, context).refreshToken(completeUrl);
             }
 
             @Override
@@ -316,7 +316,7 @@ public class MyAppAPIService {
                     public void execute() {
                         getGroupNewsDetail(ncid, page);
                     }
-                }, context).refreshTocken(completeUrl);
+                }, context).refreshToken(completeUrl);
             }
 
             @Override
@@ -355,7 +355,7 @@ public class MyAppAPIService {
                         // TODO Auto-generated method stub
                         getUserApps();
                     }
-                }, context).refreshTocken(completeUrl);
+                }, context).refreshToken(completeUrl);
                 ;
             }
 
@@ -402,7 +402,7 @@ public class MyAppAPIService {
                     public void execute() {
                         getNewAllApps();
                     }
-                }, context).refreshTocken(completeUrl);
+                }, context).refreshToken(completeUrl);
             }
 
         });
@@ -434,9 +434,39 @@ public class MyAppAPIService {
                     public void execute() {
                         getAuthCode(urlParams);
                     }
-                }, context).refreshTocken(completeUrl);
+                }, context).refreshToken(completeUrl);
             }
         });
+    }
+
+    /**
+     * 获取真实的url地址
+     * @param url
+     */
+    public void getReallyUrl(final String url){
+//        RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
+//        x.http().get(params, new Callback.CommonCallback<String>() {
+//            @Override
+//            public void onSuccess(String s) {
+//                String reallyUrl = JSONUtils.getString(s,"uri","");
+//                openWebApp(activity,reallyUrl,app);
+//            }
+//
+//            @Override
+//            public void onError(Throwable throwable, boolean b) {
+//                ToastUtils.show(activity, R.string.react_native_app_open_failed);
+//            }
+//
+//            @Override
+//            public void onCancelled(CancelledException e) {
+//
+//            }
+//
+//            @Override
+//            public void onFinished() {
+//                loadingDialog.dismiss();
+//            }
+//        });
     }
 
 }

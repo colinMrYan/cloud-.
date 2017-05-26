@@ -13,6 +13,7 @@ import com.inspur.emmcloud.bean.GetAllRobotsResult;
 import com.inspur.emmcloud.bean.GetAppGroupResult;
 import com.inspur.emmcloud.bean.GetAppTabAutoResult;
 import com.inspur.emmcloud.bean.GetAppTabsResult;
+import com.inspur.emmcloud.bean.GetBindingDeviceResult;
 import com.inspur.emmcloud.bean.GetBookingRoomResult;
 import com.inspur.emmcloud.bean.GetBoolenResult;
 import com.inspur.emmcloud.bean.GetCalendarEventsResult;
@@ -33,6 +34,7 @@ import com.inspur.emmcloud.bean.GetKnowledgeInfo;
 import com.inspur.emmcloud.bean.GetLanguageResult;
 import com.inspur.emmcloud.bean.GetLoctionResult;
 import com.inspur.emmcloud.bean.GetLoginResult;
+import com.inspur.emmcloud.bean.GetMDMStateResult;
 import com.inspur.emmcloud.bean.GetMeetingListResult;
 import com.inspur.emmcloud.bean.GetMeetingReplyResult;
 import com.inspur.emmcloud.bean.GetMeetingRoomsResult;
@@ -77,6 +79,25 @@ import com.inspur.emmcloud.bean.Trip;
 import com.inspur.emmcloud.bean.UserProfileInfoBean;
 
 public class APIInterfaceInstance implements APIInterface{
+	@Override
+	public void returnUnBindDeviceSuccess() {
+
+	}
+
+	@Override
+	public void returnUnBindDeviceFail(String error,int errorCode) {
+
+	}
+
+	@Override
+	public void returnBindingDeviceListSuccess(GetBindingDeviceResult getBindingDeviceResult) {
+
+	}
+
+	@Override
+	public void returnBindingDeviceListFail(String error,int errorCode) {
+
+	}
 
 	@Override
 	public void returnOauthSigninSuccess(GetLoginResult getLoginResult) {
@@ -150,13 +171,13 @@ public class APIInterfaceInstance implements APIInterface{
 	}
 
 	@Override
-	public void returnUpgradeSuccess(GetUpgradeResult getUpgradeResult) {
+	public void returnUpgradeSuccess(GetUpgradeResult getUpgradeResult,boolean isManualCheck) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void returnUpgradeFail(String error) {
+	public void returnUpgradeFail(String error,boolean isManualCheck) {
 		// TODO Auto-generated method stub
 
 	}
@@ -1378,5 +1399,13 @@ public class APIInterfaceInstance implements APIInterface{
 
 	}
 
+	@Override
+	public void returnMDMStateSuccess(GetMDMStateResult getMDMStateResult) {
 
+	}
+
+	@Override
+	public void returnMDMStateFail(String error, int errorCode) {
+
+	}
 }

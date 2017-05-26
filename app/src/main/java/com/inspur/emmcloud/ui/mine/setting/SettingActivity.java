@@ -16,7 +16,10 @@ import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
-import com.inspur.emmcloud.bean.GetSignoutResult;
+import com.inspur.emmcloud.api.apiservice.MineAPIService;
+import com.inspur.emmcloud.bean.Enterprise;
+import com.inspur.emmcloud.bean.GetMDMStateResult;
+import com.inspur.emmcloud.bean.GetMyInfoResult;
 import com.inspur.emmcloud.bean.Language;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.ui.IndexActivity;
@@ -24,6 +27,8 @@ import com.inspur.emmcloud.ui.login.LoginActivity;
 import com.inspur.emmcloud.util.DataCleanManager;
 import com.inspur.emmcloud.util.ImageDisplayUtils;
 import com.inspur.emmcloud.util.IntentUtils;
+import com.inspur.emmcloud.util.NetUtils;
+import com.inspur.emmcloud.util.PreferencesByUserUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.ToastUtils;
 import com.inspur.emmcloud.util.UriUtils;
@@ -32,7 +37,11 @@ import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.dialogs.EasyDialog;
 import com.inspur.emmcloud.widget.dialogs.MyDialog;
 
+import java.util.List;
+
 import cn.jpush.android.api.JPushInterface;
+
+import static com.inspur.emmcloud.R.id.device_manager_layout;
 
 public class SettingActivity extends BaseActivity {
 
@@ -45,15 +54,14 @@ public class SettingActivity extends BaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-
-		// this.requestWindowFeature(Window.FEATURE_NO_TITLE);// 去掉标题栏
 		setContentView(R.layout.activity_setting);
 		((MyApplication) getApplicationContext()).addActivity(this);
-
 		loadingDlg = new LoadingDialog(this);
 		languageText = (TextView) findViewById(R.id.msg_languagechg_result_text);
 		setLanguage();
 		handMessage();
+		getMDMState();
+		setSwitchEnterpriseLayout();
 
 	}
 
@@ -89,6 +97,29 @@ public class SettingActivity extends BaseActivity {
 		((ImageView)findViewById(R.id.msg_language_flag_img)).setImageResource(id);
 	}
 
+	private void getMDMState(){
+		if (NetUtils.isNetworkConnected(this)){
+			loadingDlg.show();
+			MineAPIService apiService = new MineAPIService(this);
+			apiService.setAPIInterface(new Webservice());
+			apiService.getMDMState();
+		}else {
+			setMDMLayoutState(null);
+		}
+	}
+
+	/**
+	 * 当只要一个企业时不显示切换企业按钮
+	 */
+	private void setSwitchEnterpriseLayout(){
+		String myInfo = PreferencesUtils.getString(this, "myInfo", "");
+		GetMyInfoResult getMyInfoResult = new GetMyInfoResult(myInfo);
+		List<Enterprise> enterpriseList = getMyInfoResult.getEnterpriseList();
+		if (enterpriseList.size() < 2){
+			(findViewById(R.id.switch_enterprese_text)).setVisibility(View.GONE);
+		}
+	}
+
 	@Override
 	protected void onResume() {
 		super.onResume();
@@ -108,28 +139,12 @@ public class SettingActivity extends BaseActivity {
 		};
 	}
 
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		// TODO Auto-generated method stub
-		super.onActivityResult(requestCode, resultCode, data);
-
-		// 屏蔽语言设置
-		// if (resultCode == RESULT_OK && data.hasExtra("position")) {
-		// int languageIndex = data.getExtras().getInt("position");
-		// ((TextView) findViewById(R.id.msg_languagechg_result_text))
-		// .setText(PreferencesUtils.getString(getApplicationContext(),
-		// "nowlanguage","跟随系统"));
-		// }
-
-	}
-
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
 
 		Intent intent = new Intent();
 		switch (v.getId()) {
 		case R.id.back_layout:
-
 			finish();
 			break;
 		case R.id.signout_layout:
@@ -150,12 +165,10 @@ public class SettingActivity extends BaseActivity {
 					dialogClickListener, true);
 
 			break;
-		case R.id.account_security_layout:
-			// ToastUtils.show(getApplicationContext(),
-			// R.string.function_not_implemented);
-			// intent.setClass(SettingActivity.this,
-			// AccountSecurityActivity.class);
-			// startActivity(intent);
+		case device_manager_layout:
+			 intent.setClass(SettingActivity.this,
+					 DeviceManagerActivity.class);
+			 startActivity(intent);
 			break;
 		case R.id.msg_notify_layout:
 			// ToastUtils.show(getApplicationContext(),
@@ -167,29 +180,14 @@ public class SettingActivity extends BaseActivity {
 			break;
 
 		case R.id.msg_languagechg_layout:
-			// intent.setClass(SettingActivity.this,
-			// LanguageChangeActivity.class);
-			// startActivityForResult(intent, LANGUAGE_OK);
 			IntentUtils.startActivity(SettingActivity.this,
 					LanguageChangeActivity.class);
-
-			// Resources resources =getResources();
-			// DisplayMetrics dm =resources.getDisplayMetrics();
-			// Configuration config =resources.getConfiguration();
-			// // 应用用户选择语言
-			// config.locale = Locale.US;
-			// resources.updateConfiguration(config, dm);
-			//
-			// Intent intentLog = new Intent(this, IndexActivity.class);
-			//
-			// intentLog.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
-			// | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-			//
-			// startActivity(intentLog);
 			break;
 		case R.id.clear_cache_layout:
-
 			showClearCacheDlg();
+			break;
+		case R.id.switch_enterprese_text:
+			IntentUtils.startActivity(SettingActivity.this,SwitchEnterpriseActivity.class);
 			break;
 		default:
 			break;
@@ -197,11 +195,22 @@ public class SettingActivity extends BaseActivity {
 	}
 
 	/**
+	 * 设置设备管理layout显示状态
+	 * @param mdmState
+	 */
+	private void setMDMLayoutState(Integer mdmState){
+		if (mdmState == null){
+			mdmState = PreferencesByUserUtils.getInt(getApplicationContext(),"mdm_state",1);
+		}
+		(findViewById(R.id.device_manager_layout)).setVisibility((mdmState==1)?View.VISIBLE:View.GONE);
+	}
+
+	/**
 	 * 弹出清除缓存选项提示框
 	 */
 	private void showClearCacheDlg() {
 		// TODO Auto-generated method stub
-		float radio = 0.900f;
+		float radio = 0.850f;
 		final MyDialog clearCacheDlg = new MyDialog(SettingActivity.this,
 				R.layout.dialog_four_item, R.style.userhead_dialog_bg, radio);
 		TextView clearImgAndFileText = (TextView) clearCacheDlg
@@ -343,23 +352,25 @@ public class SettingActivity extends BaseActivity {
 	private class Webservice extends APIInterfaceInstance {
 
 		@Override
-		public void returnSignoutSuccess(GetSignoutResult getSignoutResult) {
-			// TODO Auto-generated method stub
+		public void returnMDMStateSuccess(GetMDMStateResult getMDMStateResult) {
 			if (loadingDlg != null && loadingDlg.isShowing()) {
 				loadingDlg.dismiss();
 			}
-			signout();
+			int mdmState = getMDMStateResult.getMdmState();
+			PreferencesByUserUtils.putInt(getApplicationContext(),"mdm_state",mdmState);
+			setMDMLayoutState(mdmState);
+
 		}
 
 		@Override
-		public void returnSignoutFail(String error) {
-			// TODO Auto-generated method stub
+		public void returnMDMStateFail(String error, int errorCode) {
 			if (loadingDlg != null && loadingDlg.isShowing()) {
 				loadingDlg.dismiss();
 			}
-			signout();
-			WebServiceMiddleUtils.hand(SettingActivity.this, error);
+			setMDMLayoutState(null);
+			WebServiceMiddleUtils.hand(SettingActivity.this, error,errorCode);
 		}
+
 
 	}
 

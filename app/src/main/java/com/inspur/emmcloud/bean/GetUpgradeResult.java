@@ -1,15 +1,14 @@
 package com.inspur.emmcloud.bean;
 
-import com.inspur.emmcloud.util.LogUtils;
-
 import org.json.JSONObject;
 
+import java.io.Serializable;
 import java.util.Map;
 
 /**
  * 版本返回解析类
  */
-public class GetUpgradeResult {
+public class GetUpgradeResult implements Serializable{
 
     private static final String TAG = "GetVersionUpdateResult";
     private String resultText = "";

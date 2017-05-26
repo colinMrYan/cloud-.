@@ -622,4 +622,25 @@ public class APIUri {
 	public static String getUploadSplashPageWriteBackLogUrl(){
 		return getEcmTanentUrl()+"/api/v0/preference/launch-screen/update";
 	}
+
+
+	/**
+	 * 获取解绑设备url
+	 * @return
+	 */
+	public static String getUnBindDeviceUrl(){return  emmBaseUrl+"device/unbind";}
+
+	public static String getBindingDevicesUrl(){return  emmBaseUrl+"device/getUserDevices";}
+
+	/**
+	 * 获取MDM启用状态
+	 * @return
+	 */
+	public static String getMDMStateUrl(){return  emmBaseUrl+"userprofile/mdm_state";}
+
+	/**
+	 * 上传设备管理所需token和设备ID
+	 * @return
+	 */
+	public static String getUploadMDMInfoUrl(){return  emmBaseUrl+"mdm/mdm_check";}
 }
