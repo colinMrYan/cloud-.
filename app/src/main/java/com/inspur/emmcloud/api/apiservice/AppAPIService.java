@@ -119,7 +119,7 @@ public class AppAPIService {
 					public void execute() {
 						getClientId(deviceId,deviceName);
 					}
-				},context).refreshTocken(completeUrl);
+				},context).refreshToken(completeUrl);
 			}
 		});
 	}
@@ -153,7 +153,7 @@ public class AppAPIService {
 					public void execute() {
 						getReactNativeUpdate(version,lastCreationDate,clientId);
 					}
-				},context).refreshTocken(completeUrl);
+				},context).refreshToken(completeUrl);
 			}
 		});
 	}
@@ -187,7 +187,7 @@ public class AppAPIService {
 					public void execute() {
 						sendBackReactNativeUpdateLog(command,version,clientId);
 					}
-				},context).refreshTocken(completeUrl);
+				},context).refreshToken(completeUrl);
 			}
 		});
 	}
@@ -245,7 +245,7 @@ public class AppAPIService {
 					public void execute() {
 						getAppTabs();
 					}
-				}, context).refreshTocken(completeUrl);
+				}, context).refreshToken(completeUrl);
 			}
 			
 			@Override
@@ -277,7 +277,7 @@ public class AppAPIService {
 					public void execute() {
 						getAppNewTabs(version,clientId);
 					}
-				}, context).refreshTocken(completeUrl);
+				}, context).refreshToken(completeUrl);
 			}
 
 			@Override
@@ -380,7 +380,6 @@ public class AppAPIService {
 			}
 		});
 	}
-    }
 
     /**
      * 获取闪屏页信息
@@ -416,7 +415,7 @@ public class AppAPIService {
                     public void execute() {
                         getSplashPageInfo(clientId, versionCode);
                     }
-                }, context).refreshTocken(completeUrl);
+                }, context).refreshToken(completeUrl);
             }
         });
     }

@@ -361,21 +361,17 @@ try{
      */
 	public static String getScreenType(Activity activity) {
 		int kkhdpi = 2560*1600;
-		int xxxHdpi = 1920 * 1080;
-		int xxhdpi = 1080 * 720;
-		DisplayMetrics metrics = new DisplayMetrics();
-		activity.getWindowManager().getDefaultDisplay().getMetrics(metrics);
-		int width = metrics.widthPixels;
-		int height = metrics.heightPixels;
-		int screenSize = width * height;
+		int xxHdpi = 1920 * 1080;
+		int xhdpi = 1080 * 720;
+		int screenSize =ResolutionUtils.getResolution(activity);
 		if(screenSize >= kkhdpi){
 			return "2k";
-		}else if(screenSize >= xxxHdpi ){
-			return "xxxhdpi";
-		}else if(screenSize >= xxhdpi){
+		}else if(screenSize >= xxHdpi ){
 			return "xxhdpi";
-		}else{
+		}else if(screenSize >= xhdpi){
 			return "xhdpi";
+		}else{
+			return "hdpi";
 		}
 	}
 }

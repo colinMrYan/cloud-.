@@ -10,8 +10,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.Button;
-import android.widget.LinearLayout;
 
 import com.inspur.emmcloud.bean.SplashPageBean;
 import com.inspur.emmcloud.config.MyAppConfig;
@@ -54,7 +52,7 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
     private static final long SPLASH_PAGE_TIME = 2500;
     private Handler handler;
     private LanguageUtils languageUtils;
-    private long activityShowTime = 0;
+    private long activitySplashShowTime = 0;
     private Timer timer;
 
 
@@ -66,11 +64,6 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
         init();
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        activityShowTime = System.currentTimeMillis();
-    }
 
     /**
      * ea
@@ -82,6 +75,7 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
             finish();
             return;
         }
+        activitySplashShowTime = System.currentTimeMillis();
 		//进行app异常上传
 		startUploadExceptionService();
         startUpgradeServcie();
@@ -92,6 +86,7 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
         } else {
             initEnvironment();
         }
+
         showLastSplash();
     }
 
@@ -154,7 +149,6 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
         switch (v.getId()) {
             case R.id.splash_skip_layout:
             case R.id.splash_skip_btn:
-                LogUtils.YfcDebug("跳过按钮");
                 if(timer != null){
                     timer.cancel();
                     startApp();
@@ -201,8 +195,8 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
      * 显示跳过按钮
      */
     public void showSkipButton(){
-        ((Button)findViewById(R.id.splash_skip_btn)).setVisibility(View.VISIBLE);
-        ((LinearLayout)findViewById(R.id.splash_skip_layout)).setVisibility(View.VISIBLE);
+        (findViewById(R.id.splash_skip_btn)).setVisibility(View.VISIBLE);
+        (findViewById(R.id.splash_skip_layout)).setVisibility(View.VISIBLE);
     }
 
     /**
@@ -231,7 +225,7 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
     private void enterApp() {
         // TODO Auto-generated method stub
         showSkipButton();
-        long betweenTime = System.currentTimeMillis() - activityShowTime;
+        long betweenTime = System.currentTimeMillis() - activitySplashShowTime;
         long leftTime = SPLASH_PAGE_TIME - betweenTime;
         TimerTask task = new TimerTask() {
             public void run() {
@@ -272,10 +266,8 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
             SplashPageBean splashPageBeanLoacal = new SplashPageBean(splashInfo);
             SplashPageBean.PayloadBean.ResourceBean.DefaultBean defaultBean = splashPageBeanLoacal.getPayload()
                     .getResource().getDefaultX();
-            String name = getSplashPagePath(defaultBean);
-            if (FileUtils.isFileExist(name)) {
-                flag = true;
-            }
+            String splashImgPath = getSplashPagePath(defaultBean);
+            flag = FileUtils.isFileExist(splashImgPath);
         }
         return flag;
     }
@@ -337,12 +329,12 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
             SplashPageBean splashPageBeanLoacal = new SplashPageBean(splashInfo);
             SplashPageBean.PayloadBean.ResourceBean.DefaultBean defaultBean = splashPageBeanLoacal.getPayload()
                     .getResource().getDefaultX();
-            String name = getSplashPagePath(defaultBean);
+            String splashPagePath = getSplashPagePath(defaultBean);
             long nowTime = System.currentTimeMillis();
             boolean shouldShow = ((nowTime > splashPageBeanLoacal.getPayload().getEffectiveDate())
                     && (nowTime < splashPageBeanLoacal.getPayload().getExpireDate()));
-            if (shouldShow && !StringUtils.isBlank(name)) {
-                ImageLoader.getInstance().displayImage("file://" + name, (GifImageView) findViewById(R.id.splash_img_top));
+            if (shouldShow && !StringUtils.isBlank(splashPagePath)) {
+                ImageLoader.getInstance().displayImage("file://" + splashPagePath, (GifImageView) findViewById(R.id.splash_img_top));
             } else {
                 ((GifImageView) findViewById(R.id.splash_img_top)).setVisibility(View.GONE);
             }

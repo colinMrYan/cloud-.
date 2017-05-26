@@ -218,7 +218,7 @@ public class ReactNativeAPIService {
                     public void execute() {
                         writeBackSplashPageVersionChange(preVersion,currentVersion,clientId, command);
                     }
-                },context).refreshTocken(completeUrl);
+                },context).refreshToken(completeUrl);
             }
         });
     }
