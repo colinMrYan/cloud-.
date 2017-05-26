@@ -76,6 +76,26 @@ public class MyAppConfig {
 	}
 
 	/**
+	 * 获取闪屏页目前显示图片的路径
+	 * @param context
+	 * @param userId
+     * @return
+     */
+	public static String getSplashPageImageShowPath(Context context,String userId,String module){
+		return context.getDir("SplashPage", MODE_PRIVATE).getPath()+"/"+UriUtils.tanent+"/"+userId+"/"+module;
+	}
+
+	/**
+	 * 获取闪屏页前一个版本图片路径
+	 * @param context
+	 * @param userId
+     * @return
+     */
+	public static String getSplashPageImageLastVersionPath(Context context,String userId){
+		return context.getDir("SplashPage",MODE_PRIVATE).getPath()+"/"+UriUtils.tanent+"/"+userId+"/Pre";
+	}
+
+	/**
 	 * 获取特定租户下特定用户ReactNative安装目录，清除所有缓存时在此清理
 	 * @param context
 	 * @param userId

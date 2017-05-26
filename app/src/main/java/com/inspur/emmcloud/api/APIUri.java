@@ -607,6 +607,22 @@ public class APIUri {
 		return emmBaseUrl +"userprofile/displayconfig";
 	}
 
+	/**
+	 * app闪屏页面
+	 * @return
+     */
+	public static String getSplashPageUrl(){
+		return getEcmTanentUrl()+"/api/v0/preference/launch-screen/latest";
+	}
+
+	/**
+	 *
+	 * @return
+     */
+	public static String getUploadSplashPageWriteBackLogUrl(){
+		return getEcmTanentUrl()+"/api/v0/preference/launch-screen/update";
+	}
+
 
 	/**
 	 * 获取解绑设备url

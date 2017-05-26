@@ -1,5 +1,6 @@
 package com.inspur.emmcloud.util;
 
+import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningServiceInfo;
 import android.content.ContentResolver;
@@ -15,6 +16,7 @@ import android.graphics.Paint.FontMetrics;
 import android.net.Uri;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
 
 import com.inspur.emmcloud.R;
 
@@ -331,4 +333,49 @@ try{
 		context.startActivity(intent);
 	}
 
+	/**
+	 * 获取手机dpi的方法 返回整型值
+	 * @return
+	 */
+	public static int getScreenDpi(Activity activity){
+		DisplayMetrics metric = new DisplayMetrics();
+		activity.getWindowManager().getDefaultDisplay().getMetrics(metric);
+		return metric.densityDpi;
+	}
+
+	/**
+	 * 获取屏幕密度的方法 返回浮点值
+	 * @param activity
+	 * @return
+     */
+	public static float getDensity(Activity activity){
+		DisplayMetrics metrics = new DisplayMetrics();
+		activity.getWindowManager().getDefaultDisplay().getMetrics(metrics);
+		return  metrics.density;
+	}
+
+	/**
+	 * 获取屏幕类型
+	 * @param activity
+	 * @return
+     */
+	public static String getScreenType(Activity activity) {
+		int kkhdpi = 2560*1600;
+		int xxxHdpi = 1920 * 1080;
+		int xxhdpi = 1080 * 720;
+		DisplayMetrics metrics = new DisplayMetrics();
+		activity.getWindowManager().getDefaultDisplay().getMetrics(metrics);
+		int width = metrics.widthPixels;
+		int height = metrics.heightPixels;
+		int screenSize = width * height;
+		if(screenSize >= kkhdpi){
+			return "2k";
+		}else if(screenSize >= xxxHdpi ){
+			return "xxxhdpi";
+		}else if(screenSize >= xxhdpi){
+			return "xxhdpi";
+		}else{
+			return "xhdpi";
+		}
+	}
 }

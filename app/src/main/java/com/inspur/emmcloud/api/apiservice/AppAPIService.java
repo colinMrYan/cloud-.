@@ -20,11 +20,13 @@ import com.inspur.emmcloud.bean.GetExceptionResult;
 import com.inspur.emmcloud.bean.GetUpgradeResult;
 import com.inspur.emmcloud.bean.ReactNativeClientIdErrorBean;
 import com.inspur.emmcloud.bean.ReactNativeUpdateBean;
+import com.inspur.emmcloud.bean.SplashPageBean;
 import com.inspur.emmcloud.util.AppUtils;
 import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.OauthCallBack;
 import com.inspur.emmcloud.util.OauthUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
+import com.inspur.emmcloud.util.PreferencesByUserUtils;
 
 import org.json.JSONObject;
 import org.xutils.http.HttpMethod;
@@ -117,7 +119,7 @@ public class AppAPIService {
 					public void execute() {
 						getClientId(deviceId,deviceName);
 					}
-				},context).refreshToken(completeUrl);
+				},context).refreshTocken(completeUrl);
 			}
 		});
 	}
@@ -151,7 +153,7 @@ public class AppAPIService {
 					public void execute() {
 						getReactNativeUpdate(version,lastCreationDate,clientId);
 					}
-				},context).refreshToken(completeUrl);
+				},context).refreshTocken(completeUrl);
 			}
 		});
 	}
@@ -185,7 +187,7 @@ public class AppAPIService {
 					public void execute() {
 						sendBackReactNativeUpdateLog(command,version,clientId);
 					}
-				},context).refreshToken(completeUrl);
+				},context).refreshTocken(completeUrl);
 			}
 		});
 	}
@@ -243,7 +245,7 @@ public class AppAPIService {
 					public void execute() {
 						getAppTabs();
 					}
-				}, context).refreshToken(completeUrl);
+				}, context).refreshTocken(completeUrl);
 			}
 			
 			@Override
@@ -253,7 +255,7 @@ public class AppAPIService {
 			
 			@Override
 			public void callbackFail(String error, int responseCode) {
-				apiInterface.returnGetAppTabsFail(error);
+				apiInterface.returnAddAppFail(error);
 			}
 		});
 	}
@@ -275,7 +277,7 @@ public class AppAPIService {
 					public void execute() {
 						getAppNewTabs(version,clientId);
 					}
-				}, context).refreshToken(completeUrl);
+				}, context).refreshTocken(completeUrl);
 			}
 
 			@Override
@@ -378,4 +380,44 @@ public class AppAPIService {
 			}
 		});
 	}
+    }
+
+    /**
+     * 获取闪屏页信息
+     * 采用新式数据解析方法
+     * @param clientId
+     * @param versionCode
+     */
+    public void getSplashPageInfo(final String clientId, final String versionCode) {
+        final String completeUrl = APIUri.getSplashPageUrl() + "?version=" + versionCode + "&clientId=" + clientId;
+        RequestParams params = ((MyApplication) context.getApplicationContext())
+                .getHttpRequestParams(completeUrl);
+        x.http().get(params, new APICallback(context, completeUrl) {
+            @Override
+            public void callbackSuccess(String arg0) {
+                SplashPageBean splashPageBean = new SplashPageBean(arg0);
+                if (splashPageBean.getCommand().equals("FORWARD")) {
+                    String splashPageInfoOld = PreferencesByUserUtils.getString(context,"splash_page_info","");
+                    PreferencesByUserUtils.putString(context,"splash_page_info_old",splashPageInfoOld);
+                    PreferencesByUserUtils.putString(context, "splash_page_info", arg0);
+                }
+                apiInterface.returnSplashPageInfoSuccess(splashPageBean);
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                apiInterface.returnSplashPageInfoFail(error, responseCode);
+            }
+
+            @Override
+            public void callbackTokenExpire() {
+                new OauthUtils(new OauthCallBack() {
+                    @Override
+                    public void execute() {
+                        getSplashPageInfo(clientId, versionCode);
+                    }
+                }, context).refreshTocken(completeUrl);
+            }
+        });
+    }
 }

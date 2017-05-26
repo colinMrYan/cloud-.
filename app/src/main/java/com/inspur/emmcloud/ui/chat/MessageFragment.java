@@ -24,6 +24,7 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
+import com.inspur.emmcloud.bean.AppTabAutoBean;
 import com.inspur.emmcloud.bean.Channel;
 import com.inspur.emmcloud.bean.ChannelGroup;
 import com.inspur.emmcloud.bean.ChannelOperationInfo;
@@ -62,6 +63,9 @@ import com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout.OnRefreshList
 import com.inspur.emmcloud.widget.pullableview.PullableListView;
 import com.inspur.emmcloud.widget.tipsview.TipsView;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -138,15 +142,54 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 		pullToRefreshLayout.refreshFinish(PullToRefreshLayout.FAIL);
 	}
 
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
-		super.onCreate(savedInstanceState);
-		initView();
-		handMessage();
-		registerMessageFragmentReceiver();
-		getChannelContent();
-	}
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        // TODO Auto-generated method stub
+        super.onCreate(savedInstanceState);
+        initView();
+        handMessage();
+        registerMessageFragmentReceiver();
+        getChannelContent();
+        showMessageButtons();
+        EventBus.getDefault().register(this);
+    }
+
+    /**
+     * 展示创建
+     */
+    private void showMessageButtons() {
+        String tabBarInfo = PreferencesByUserUtils.getString(getActivity(), "app_tabbar_info_current", "");
+        AppTabAutoBean appTabAutoBean = new AppTabAutoBean(tabBarInfo);
+        if(appTabAutoBean != null) {
+            AppTabAutoBean.PayloadBean payloadBean = appTabAutoBean.getPayload();
+            if (payloadBean != null) {
+                showCreateGroupOrFindContact(payloadBean);
+            }
+        }
+    }
+
+    /**
+     * 如果数据没有问题则决定展示或者不展示加号，以及通讯录
+     * @param payloadBean
+     */
+    private void showCreateGroupOrFindContact(AppTabAutoBean.PayloadBean payloadBean){
+        ArrayList<AppTabAutoBean.PayloadBean.TabsBean> appTabList =
+                (ArrayList<AppTabAutoBean.PayloadBean.TabsBean>) payloadBean.getTabs();
+        for (int i = 0; i < appTabList.size(); i++) {
+            if (appTabList.get(i).getComponent().equals("communicate")) {
+                AppTabAutoBean.PayloadBean.TabsBean.Property property = appTabList.get(i).getProperty();
+                if (property != null) {
+                    if (!property.isCanCreate()) {
+                        rootView.findViewById(R.id.add_img).setVisibility(View.GONE);
+                    }
+                    if (!property.isCanContact()) {
+                        rootView.findViewById(R.id.address_list_img).setVisibility(View.GONE);
+                    }
+                }
+            }
+        }
+
+    }
 
 	private void initView() {
 		// TODO Auto-generated method stub
@@ -170,7 +213,18 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 		setTabTitle();
 	}
 
-	private OnClickListener onViewClickListener = new OnClickListener() {
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void updateMessageUI(AppTabAutoBean appTabAutoBean) {
+        if(appTabAutoBean != null){
+            AppTabAutoBean.PayloadBean payloadBean = appTabAutoBean.getPayload();
+            if(payloadBean != null){
+                showCreateGroupOrFindContact(payloadBean);
+            }
+        }
+
+    }
+
+    private OnClickListener onViewClickListener = new OnClickListener() {
 
 		@Override
 		public void onClick(View v) {
@@ -1023,10 +1077,11 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 			messageFragmentReceiver = null;
 		}
 
-		if (handler != null) {
-			handler = null;
-		}
-	}
+        if (handler != null) {
+            handler = null;
+        }
+        EventBus.getDefault().unregister(this);
+    }
 
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
