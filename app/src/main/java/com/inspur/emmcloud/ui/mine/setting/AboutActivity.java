@@ -2,8 +2,6 @@ package com.inspur.emmcloud.ui.mine.setting;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.view.View;
 import android.widget.TextView;
 
@@ -13,7 +11,6 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.service.AppUpgradeService;
 import com.inspur.emmcloud.util.AppUtils;
 import com.inspur.emmcloud.util.IntentUtils;
-import com.inspur.emmcloud.util.ToastUtils;
 
 /**
  * 关于页面 com.inspur.emmcloud.ui.AboutActivity
@@ -21,10 +18,6 @@ import com.inspur.emmcloud.util.ToastUtils;
  * @author Jason Chen; create at 2016年8月23日 下午2:53:14
  */
 public class AboutActivity extends BaseActivity {
-	private static final int NO_NEED_UPGRADE = 10;
-	private static final int UPGRADE_FAIL = 11;
-	private static final int DONOT_UPGRADE = 12;
-	private Handler hander;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +28,6 @@ public class AboutActivity extends BaseActivity {
 		((TextView) findViewById(R.id.app_version_text))
 				.setText(getString(R.string.app_name)
 						+ AppUtils.getVersion(this));
-		handMessage();
 	}
 
 	public void onClick(View v) {
@@ -44,10 +36,6 @@ public class AboutActivity extends BaseActivity {
 			case R.id.back_layout:
 				finish();
 				break;
-			// case R.id.welcome_layout:
-			// ToastUtils.show(getApplicationContext(),
-			// R.string.function_not_implemented);
-			// break;
 			case R.id.newfun_layout:
 				Bundle bundle = new Bundle();
 				bundle.putString("from", "about");
@@ -68,38 +56,11 @@ public class AboutActivity extends BaseActivity {
 
 	private void startUpgradeServcie() {
 		Intent intent = new Intent();
-//		if (AppUtils.isServiceWork(this,"com.inspur.emmcloud.service.AppUpgradeService")){
 		intent.setClass(getApplicationContext(), AppUpgradeService.class);
 		intent.putExtra("isManualCheck", true);
-
-//			stopService(intent);
-//		}
 		startService(intent);
 
 	}
 
-	private void handMessage() {
-		// TODO Auto-generated method stub
-		hander = new Handler() {
-
-			@Override
-			public void handleMessage(Message msg) {
-				// TODO Auto-generated method stub
-				switch (msg.what) {
-					case NO_NEED_UPGRADE:
-						ToastUtils.show(getApplicationContext(), R.string.app_is_lastest_version);
-						break;
-					case UPGRADE_FAIL:
-						ToastUtils.show(getApplicationContext(), R.string.check_update_fail);
-						break;
-					case DONOT_UPGRADE:
-						break;
-					default:
-						break;
-				}
-			}
-
-		};
-	}
 
 }

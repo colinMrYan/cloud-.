@@ -11,6 +11,7 @@ import android.os.Message;
 import android.text.TextUtils;
 
 import com.inspur.emmcloud.service.AppExceptionService;
+import com.inspur.emmcloud.service.AppUpgradeService;
 import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.ui.login.LoginActivity;
 import com.inspur.emmcloud.ui.login.ModifyUserFirstPsdActivity;
@@ -36,9 +37,6 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
     private static final int LOGIN_SUCCESS = 0;
     private static final int LOGIN_FAIL = 1;
     private static final int GET_LANGUAGE_SUCCESS = 3;
-    private static final int NO_NEED_UPGRADE = 10;
-    private static final int UPGRADE_FAIL = 11;
-    private static final int DONOT_UPGRADE = 12;
     private Handler handler;
     private LanguageUtils languageUtils;
 
@@ -54,6 +52,7 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
         }
 		//进行app异常上传
 		startUploadExceptionService();
+        startUpgradeServcie();
         ((MyApplication) getApplicationContext()).addActivity(this);
         // 检测分辨率、网络环境
         if (!ResolutionUtils.isFitResolution(MainActivity.this)) {
@@ -63,10 +62,23 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
         }
     }
 
+    /**
+     * 启动异常上传服务
+     */
     private void startUploadExceptionService(){
         Intent intent = new Intent();
         intent.setClass(this, AppExceptionService.class);
         startService(intent);
+    }
+
+    /**
+     * 启动app版本升级检查服务
+     */
+    private void startUpgradeServcie() {
+        Intent intent = new Intent();
+        intent.setClass(getApplicationContext(), AppUpgradeService.class);
+        startService(intent);
+
     }
 
 
@@ -126,6 +138,9 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
                         IntentUtils.startActivity(MainActivity.this,
                                 LoginActivity.class, true);
                         break;
+                    case GET_LANGUAGE_SUCCESS:
+                        enterApp();
+                        break;
                     default:
                         break;
                 }
@@ -180,7 +195,7 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
                 "previousVersion", "");
         String currentVersion = AppUtils.getVersion(MainActivity.this);
         if (TextUtils.isEmpty(savedVersion)) {
-            return false;
+            ifUpgraded = false;
         } else {
             ifUpgraded = AppUtils
                     .isAppHasUpgraded(savedVersion, currentVersion);

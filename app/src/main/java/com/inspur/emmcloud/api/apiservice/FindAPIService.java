@@ -16,7 +16,6 @@ import com.inspur.emmcloud.bean.GetFindMixSearchResult;
 import com.inspur.emmcloud.bean.GetFindSearchResult;
 import com.inspur.emmcloud.bean.GetKnowledgeInfo;
 import com.inspur.emmcloud.bean.GetTripArriveCity;
-import com.inspur.emmcloud.bean.GetTripResult;
 import com.inspur.emmcloud.bean.Trip;
 import com.inspur.emmcloud.util.OauthCallBack;
 import com.inspur.emmcloud.util.OauthUtils;
@@ -59,7 +58,7 @@ public class FindAPIService {
 					public void execute() {
 						getTripInfo(tripId);
 					}
-				}, context).refreshTocken(completeUrl);
+				}, context).refreshToken(completeUrl);
 			}
 			
 			@Override
@@ -100,7 +99,7 @@ public class FindAPIService {
 					public void execute() {
 						deleteTripByIds(tripId);
 					}
-				}, context).refreshTocken(completeUrl);
+				}, context).refreshToken(completeUrl);
 			}
 			
 			@Override
@@ -141,7 +140,7 @@ public class FindAPIService {
 					public void execute() {
 						uploadTrainTicket(ticketInfos);
 					}
-				}, context).refreshTocken(completeUrl);
+				}, context).refreshToken(completeUrl);
 			}
 			
 			@Override
@@ -180,7 +179,7 @@ public class FindAPIService {
 					public void execute() {
 						updateTrainTicket(ticketInfos);
 					}
-				}, context).refreshTocken(completeUrl);
+				}, context).refreshToken(completeUrl);
 			}
 			
 			@Override
@@ -217,7 +216,7 @@ public class FindAPIService {
 					public void execute() {
 						getLastUploadTrip();
 					}
-				}, context).refreshTocken(completeUrl);
+				}, context).refreshToken(completeUrl);
 			}
 			
 			@Override
@@ -256,7 +255,7 @@ public class FindAPIService {
 					public void execute() {
 						getArriveCity(station);
 					}
-				}, context).refreshTocken(completeUrl);
+				}, context).refreshToken(completeUrl);
 			}
 			
 			@Override
@@ -292,7 +291,7 @@ public class FindAPIService {
 						// TODO Auto-generated method stub
 						getKnowledgeList();
 					}
-				}, context).refreshTocken(completeUrl);
+				}, context).refreshToken(completeUrl);
 			}
 			
 			@Override
@@ -337,7 +336,7 @@ public class FindAPIService {
 					public void execute() {
 						findSearch(keyword, datatype, page, num, start);
 					}
-				}, context).refreshTocken(completeUrl);
+				}, context).refreshToken(completeUrl);
 			}
 			
 			@Override
@@ -376,7 +375,7 @@ public class FindAPIService {
 					public void execute() {
 						findMixSearch(keyword);
 					}
-				}, context).refreshTocken(completeUrl);
+				}, context).refreshToken(completeUrl);
 			}
 			
 			@Override

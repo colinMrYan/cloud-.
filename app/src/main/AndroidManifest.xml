@@ -130,6 +130,13 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait"></activity>
         <activity
+            android:name=".ui.mine.setting.SwitchEnterpriseActivity"
+            android:theme="@android:style/Theme.Holo.Light.NoActionBar"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"></activity>
+
+
+        <activity
             android:name=".ui.login.LoginActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"></activity>

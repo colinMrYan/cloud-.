@@ -81,7 +81,7 @@ public class ChatAPIService {
 					public void execute() {
 						getChannelList();
 					}
-				}, context).refreshTocken(completeUrl);
+				}, context).refreshToken(completeUrl);
 			}
 
 			@Override
@@ -129,7 +129,7 @@ public class ChatAPIService {
 					public void execute() {
 						getNewMsgs(cid, msgId, count);
 					}
-				}, context).refreshTocken(completeUrl);
+				}, context).refreshToken(completeUrl);
 			}
 
 			@Override
@@ -176,7 +176,7 @@ public class ChatAPIService {
 					public void execute() {
 						getComment(mid);
 					}
-				}, context).refreshTocken(completeUrl);
+				}, context).refreshToken(completeUrl);
 			}
 
 			@Override
@@ -214,7 +214,7 @@ public class ChatAPIService {
 					public void execute() {
 						getChannelInfo(cid);
 					}
-				}, context).refreshTocken(completeUrl);
+				}, context).refreshToken(completeUrl);
 			}
 
 			@Override
@@ -289,7 +289,7 @@ public class ChatAPIService {
 					public void execute() {
 						sendMsg(channelId, msgContent, type, mid, fakeMessageId);
 					}
-				}, context).refreshTocken(completeUrl);
+				}, context).refreshToken(completeUrl);
 
 			}
 
@@ -329,7 +329,7 @@ public class ChatAPIService {
 					public void execute() {
 						getMsg(mid);
 					}
-				}, context).refreshTocken(completeUrl);
+				}, context).refreshToken(completeUrl);
 			}
 
 			@Override
@@ -374,7 +374,7 @@ public class ChatAPIService {
 					public void execute() {
 						uploadMsgResource(filePath, fakeMessageId, isImg);
 					}
-				}, context).refreshTocken(completeUrl);
+				}, context).refreshToken(completeUrl);
 			}
 
 			@Override
@@ -431,7 +431,7 @@ public class ChatAPIService {
 					public void execute() {
 						getAllGroupChannelList();
 					}
-				}, context).refreshTocken(completeUrl);
+				}, context).refreshToken(completeUrl);
 			}
 
 			@Override
@@ -481,7 +481,7 @@ public class ChatAPIService {
 					public void execute() {
 						getChannelGroupList(cidArray);
 					}
-				}, context).refreshTocken(completeUrl);
+				}, context).refreshToken(completeUrl);
 			}
 
 			@Override
@@ -523,7 +523,7 @@ public class ChatAPIService {
 					public void execute() {
 						createDirectChannel(uid);
 					}
-				}, context).refreshTocken(completeUrl);
+				}, context).refreshToken(completeUrl);
 			}
 
 			@Override
@@ -572,7 +572,7 @@ public class ChatAPIService {
 					public void execute() {
 						updateChannelGroupName(cid, name);
 					}
-				}, context).refreshTocken(completeUrl);
+				}, context).refreshToken(completeUrl);
 			}
 
 			@Override
@@ -618,7 +618,7 @@ public class ChatAPIService {
 					public void execute() {
 						addGroupMembers(uids, cid);
 					}
-				}, context).refreshTocken(completeUrl);
+				}, context).refreshToken(completeUrl);
 			}
 
 			@Override
@@ -664,7 +664,7 @@ public class ChatAPIService {
 					public void execute() {
 						deleteGroupMembers(uids, cid);
 					}
-				}, context).refreshTocken(completeUrl);
+				}, context).refreshToken(completeUrl);
 			}
 
 			@Override
@@ -707,7 +707,7 @@ public class ChatAPIService {
 						// TODO Auto-generated method stub
 						updateDnd(cid, nointerruption);
 					}
-				}, context).refreshTocken(completeUrl);
+				}, context).refreshToken(completeUrl);
 			}
 
 			@Override
@@ -750,7 +750,7 @@ public class ChatAPIService {
 					public void execute() {
 						sendMeetingReply(rid, mpid, state);
 					}
-				}, context).refreshTocken(completeUrl);
+				}, context).refreshToken(completeUrl);
 			}
 
 			@Override
@@ -802,7 +802,7 @@ public class ChatAPIService {
 					public void execute() {
 						createGroupChannel(name, members);
 					}
-				}, context).refreshTocken(completeUrl);
+				}, context).refreshToken(completeUrl);
 			}
 
 			@Override
@@ -837,7 +837,7 @@ public class ChatAPIService {
 					public void execute() {
 						getMsgCommentCount(mid);
 					}
-				}, context).refreshTocken(completeUrl);
+				}, context).refreshToken(completeUrl);
 			}
 
 			@Override
@@ -882,7 +882,7 @@ public class ChatAPIService {
 					public void execute() {
 						sendNewsInstruction(newsId,instruction);
 					}
-				}, context).refreshTocken(completeUrl);
+				}, context).refreshToken(completeUrl);
 			}
 		});
 	}

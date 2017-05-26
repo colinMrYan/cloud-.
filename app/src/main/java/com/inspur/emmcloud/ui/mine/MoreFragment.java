@@ -14,7 +14,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.bean.Channel;
 import com.inspur.emmcloud.bean.GetMyInfoResult;
 import com.inspur.emmcloud.ui.chat.ChannelActivity;
@@ -239,11 +238,6 @@ public class MoreFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onActivityCreated(savedInstanceState);
-    }
-
-    public class WebService extends APIInterfaceInstance {
-
-
     }
 
     @Override

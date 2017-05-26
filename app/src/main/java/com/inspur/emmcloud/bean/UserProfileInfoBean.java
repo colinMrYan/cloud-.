@@ -24,8 +24,10 @@ public class UserProfileInfoBean {
     private int showEpInfo = 1;
     private int showModifyPsd = 1;
     private int showResetPsd = 1;
+    private String response;
 
     public UserProfileInfoBean(String response){
+        this.response = response;
         try {
             JSONObject jsonObject = new JSONObject(response);
             if(jsonObject.has("showHead")){
@@ -108,5 +110,9 @@ public class UserProfileInfoBean {
 
     public void setShowResetPsd(int showResetPsd) {
         this.showResetPsd = showResetPsd;
+    }
+
+    public String getResponse(){
+        return response;
     }
 }

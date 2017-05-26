@@ -24,6 +24,7 @@ import com.inspur.emmcloud.ui.mine.MoreFragment;
 import com.inspur.emmcloud.util.ImageDisplayUtils;
 import com.inspur.emmcloud.util.IntentUtils;
 import com.inspur.emmcloud.util.NetUtils;
+import com.inspur.emmcloud.util.PreferencesByUserUtils;
 import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
@@ -71,6 +72,8 @@ public class MyInfoActivity extends BaseActivity {
 		if (NetUtils.isNetworkConnected(MyInfoActivity.this)) {
 			loadingDialog.show();
 			apiService.getUserProfileInfo();
+		} else {
+			updateInfoState(null);
 		}
 	}
 
@@ -202,6 +205,15 @@ public class MyInfoActivity extends BaseActivity {
 	 * @param userProfileInfoBean
 	 */
 	private void updateInfoState(UserProfileInfoBean userProfileInfoBean) {
+		if (userProfileInfoBean == null) {
+			String response = PreferencesByUserUtils.getString(getApplicationContext(), "user_profiles");
+			if (!StringUtils.isBlank(response)) {
+				userProfileInfoBean = new UserProfileInfoBean(response);
+			}else {
+				return;
+			}
+		}
+
 		if (userProfileInfoBean.getShowHead() == 0) {
 			(findViewById(R.id.myinfo_userhead_layout)).setVisibility(View.GONE);
 		}
@@ -223,6 +235,7 @@ public class MyInfoActivity extends BaseActivity {
 		if (userProfileInfoBean.getShowResetPsd() == 0) {
 			resetLayout.setVisibility(View.GONE);
 		}
+
 	}
 
 	public class WebService extends APIInterfaceInstance {
@@ -262,6 +275,7 @@ public class MyInfoActivity extends BaseActivity {
 				loadingDialog.dismiss();
 			}
 			updateInfoState(userProfileInfoBean);
+			PreferencesByUserUtils.putString(getApplicationContext(), "user_profiles", userProfileInfoBean.getResponse());
 		}
 
 		@Override
@@ -269,6 +283,7 @@ public class MyInfoActivity extends BaseActivity {
 			if (loadingDialog != null && loadingDialog.isShowing()) {
 				loadingDialog.dismiss();
 			}
+			updateInfoState(null);
 			//此处异常不予处理照常显示，所以没有异常处理
 		}
 	}

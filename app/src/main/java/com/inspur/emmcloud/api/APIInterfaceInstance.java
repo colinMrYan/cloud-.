@@ -34,6 +34,7 @@ import com.inspur.emmcloud.bean.GetKnowledgeInfo;
 import com.inspur.emmcloud.bean.GetLanguageResult;
 import com.inspur.emmcloud.bean.GetLoctionResult;
 import com.inspur.emmcloud.bean.GetLoginResult;
+import com.inspur.emmcloud.bean.GetMDMStateResult;
 import com.inspur.emmcloud.bean.GetMeetingListResult;
 import com.inspur.emmcloud.bean.GetMeetingReplyResult;
 import com.inspur.emmcloud.bean.GetMeetingRoomsResult;
@@ -1387,5 +1388,13 @@ public class APIInterfaceInstance implements APIInterface{
 
 	}
 
+	@Override
+	public void returnMDMStateSuccess(GetMDMStateResult getMDMStateResult) {
 
+	}
+
+	@Override
+	public void returnMDMStateFail(String error, int errorCode) {
+
+	}
 }

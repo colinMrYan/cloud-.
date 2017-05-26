@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">浪潮雲+</string>
+    <string name="app_name">雲+</string>
     <string name="reclick_to_desktop">再按一次退出程式</string>
     <string name="Network_Mobile">已經連接到到移動網路</string>
     <string name="Network_WIFI">已經連接到WIFI</string>
@@ -412,6 +412,12 @@
     <string name="device_info">設備詳情</string>
     <string name="device_id">設備ID</string>
     <string name="unbind_this_device">解綁此設備</string>
+    <string name="sure_switch_to">確定切換到%1$s</string>
+    <string name="fail_to_switch_enterprise">企業切換失敗！</string>
+    <string name="select_enterprise">選擇企業</string>
+    <string name="switch_enterprise">切換企業</string>
+    <string name="current_enterprise">當前企業</string>
+
 
 
 

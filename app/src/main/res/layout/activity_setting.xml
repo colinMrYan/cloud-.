@@ -39,6 +39,20 @@
             android:text="@string/settings"
             android:textColor="@color/header_text"
             android:textSize="@dimen/header_textsize" />
+        <TextView
+            android:id="@+id/switch_enterprese_text"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:paddingRight="15dp"
+            android:gravity="center_vertical"
+            android:clickable="true"
+            android:onClick="onClick"
+            android:paddingLeft="20dp"
+            android:text="@string/switch_enterprise"
+            android:textColor="@color/white"
+            android:textSize="16sp" />
     </RelativeLayout>
 
     <LinearLayout

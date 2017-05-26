@@ -411,6 +411,13 @@
     <string name="device_info">Device details</string>
     <string name="device_id">Device ID</string>
     <string name="unbind_this_device">Unbound this device</string>
+    <string name="sure_switch_to">Make sure to switch to %1$s</string>
+    <string name="fail_to_switch_enterprise">Failed to switch enterprise!</string>
+    <string name="select_enterprise">Select enterprise</string>
+    <string name="switch_enterprise">Switch enterprise</string>
+    <string name="current_enterprise">Current enterprise</string>
+
+
 
     <!-- 修改密码部分 -->
     <string name="modify_input_user_new_password">Enter a new password</string>

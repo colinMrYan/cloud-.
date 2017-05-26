@@ -24,6 +24,7 @@ import com.inspur.emmcloud.util.AppUtils;
 import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.OauthCallBack;
 import com.inspur.emmcloud.util.OauthUtils;
+import com.inspur.emmcloud.util.PreferencesUtils;
 
 import org.json.JSONObject;
 import org.xutils.http.HttpMethod;
@@ -116,7 +117,7 @@ public class AppAPIService {
 					public void execute() {
 						getClientId(deviceId,deviceName);
 					}
-				},context).refreshTocken(completeUrl);
+				},context).refreshToken(completeUrl);
 			}
 		});
 	}
@@ -150,7 +151,7 @@ public class AppAPIService {
 					public void execute() {
 						getReactNativeUpdate(version,lastCreationDate,clientId);
 					}
-				},context).refreshTocken(completeUrl);
+				},context).refreshToken(completeUrl);
 			}
 		});
 	}
@@ -184,7 +185,7 @@ public class AppAPIService {
 					public void execute() {
 						sendBackReactNativeUpdateLog(command,version,clientId);
 					}
-				},context).refreshTocken(completeUrl);
+				},context).refreshToken(completeUrl);
 			}
 		});
 	}
@@ -242,7 +243,7 @@ public class AppAPIService {
 					public void execute() {
 						getAppTabs();
 					}
-				}, context).refreshTocken(completeUrl);
+				}, context).refreshToken(completeUrl);
 			}
 			
 			@Override
@@ -252,7 +253,7 @@ public class AppAPIService {
 			
 			@Override
 			public void callbackFail(String error, int responseCode) {
-				apiInterface.returnAddAppFail(error);
+				apiInterface.returnGetAppTabsFail(error);
 			}
 		});
 	}
@@ -274,7 +275,7 @@ public class AppAPIService {
 					public void execute() {
 						getAppNewTabs(version,clientId);
 					}
-				}, context).refreshTocken(completeUrl);
+				}, context).refreshToken(completeUrl);
 			}
 
 			@Override
@@ -349,5 +350,32 @@ public class AppAPIService {
 			}
 		});
 
+	}
+
+	/**
+	 * 上传设备管理需要的一些信息
+	 */
+	public void uploadMDMInfo(){
+		String completeUrl = APIUri.getUploadMDMInfoUrl();
+		RequestParams params = ((MyApplication) context.getApplicationContext())
+				.getHttpRequestParams(completeUrl);
+		params.addQueryStringParameter("udid",AppUtils.getMyUUID(context));
+		String refreshToken = PreferencesUtils.getString(context, "refreshToken", "");
+		params.addQueryStringParameter("refresh_token",refreshToken);
+		x.http().post(params, new APICallback(context,completeUrl) {
+			@Override
+			public void callbackSuccess(String arg0) {
+			}
+
+			@Override
+			public void callbackFail(String error, int responseCode) {
+			}
+
+			@Override
+			public void callbackTokenExpire() {
+
+				uploadMDMInfo();
+			}
+		});
 	}
 }

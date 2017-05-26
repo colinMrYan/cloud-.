@@ -16,6 +16,7 @@ import com.inspur.emmcloud.bean.GetBindingDeviceResult;
 import com.inspur.emmcloud.bean.GetBoolenResult;
 import com.inspur.emmcloud.bean.GetCardPackageListResult;
 import com.inspur.emmcloud.bean.GetLanguageResult;
+import com.inspur.emmcloud.bean.GetMDMStateResult;
 import com.inspur.emmcloud.bean.GetUploadMyHeadResult;
 import com.inspur.emmcloud.bean.UserProfileInfoBean;
 import com.inspur.emmcloud.util.AppUtils;
@@ -75,7 +76,7 @@ public class MineAPIService {
 					public void execute() {
 						updateUserHead(filePath);
 					}
-				}, context).refreshTocken(completeUrl);
+				}, context).refreshToken(completeUrl);
 			}
 
 			@Override
@@ -124,7 +125,7 @@ public class MineAPIService {
 					public void execute() {
 						modifyUserInfo(key, value);
 					}
-				}, context).refreshTocken(completeUrl);
+				}, context).refreshToken(completeUrl);
 			}
 
 			@Override
@@ -214,7 +215,7 @@ public class MineAPIService {
 						// TODO Auto-generated method stub
 						getCardPackageList();
 					}
-				}, context).refreshTocken(completeUrl);
+				}, context).refreshToken(completeUrl);
 			}
 
 			@Override
@@ -252,7 +253,7 @@ public class MineAPIService {
 					public void execute() {
 						getLanguage();
 					}
-				}, context).refreshTocken(completeUrl);
+				}, context).refreshToken(completeUrl);
 			}
 
 			@Override
@@ -295,7 +296,7 @@ public class MineAPIService {
 					public void execute() {
 						getUserProfileInfo();
 					}
-				}, context).refreshTocken(completeUrl);
+				}, context).refreshToken(completeUrl);
 			}
 		});
 	}
@@ -319,7 +320,7 @@ public class MineAPIService {
 					public void execute() {
 						getBindingDeviceList();
 					}
-				}, context).refreshTocken(completeUrl);
+				}, context).refreshToken(completeUrl);
 			}
 
 			@Override
@@ -355,7 +356,7 @@ public class MineAPIService {
 
 			@Override
 			public void callbackFail(String error, int responseCode) {
-
+					apiInterface.returnUnBindDeviceFail(error,responseCode);
 			}
 
 			@Override
@@ -366,7 +367,38 @@ public class MineAPIService {
 					public void execute() {
 						unBindDevice(udid);
 					}
-				}, context).refreshTocken(completeUrl);
+				}, context).refreshToken(completeUrl);
+			}
+		});
+	}
+
+	/**
+	 * 获取是否启动MDM
+	 */
+	public void getMDMState(){
+		final String completeUrl = APIUri.getMDMStateUrl();
+		RequestParams params = ((MyApplication) context.getApplicationContext())
+				.getHttpRequestParams(completeUrl);
+		x.http().get(params, new APICallback(context,completeUrl) {
+			@Override
+			public void callbackSuccess(String arg0) {
+				apiInterface.returnMDMStateSuccess(new GetMDMStateResult(arg0));
+			}
+
+			@Override
+			public void callbackFail(String error, int responseCode) {
+				apiInterface.returnMDMStateFail(error,responseCode);
+			}
+
+			@Override
+			public void callbackTokenExpire() {
+				new OauthUtils(new OauthCallBack() {
+
+					@Override
+					public void execute() {
+						getMDMState();
+					}
+				}, context).refreshToken(completeUrl);
 			}
 		});
 	}

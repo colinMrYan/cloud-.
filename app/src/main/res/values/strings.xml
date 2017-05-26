@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">浪潮云+</string>
+    <string name="app_name">云+</string>
     <string name="reclick_to_desktop">再按一次退出程序</string>
     <string name="Network_Mobile">已经连接到到移动网络</string>
     <string name="Network_WIFI">已经连接到WIFI</string>
@@ -414,6 +414,11 @@
     <string name="device_info">设备详情</string>
     <string name="device_id">设备ID</string>
     <string name="unbind_this_device">解绑此设备</string>
+    <string name="sure_switch_to">确定切换到%1$s</string>
+    <string name="fail_to_switch_enterprise">企业切换失败！</string>
+    <string name="select_enterprise">选择企业</string>
+    <string name="switch_enterprise">切换企业</string>
+    <string name="current_enterprise">当前企业</string>
 
 
 
