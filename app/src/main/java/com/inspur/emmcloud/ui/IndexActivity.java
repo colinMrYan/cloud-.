@@ -77,6 +77,7 @@ import com.inspur.emmcloud.widget.WeakHandler;
 import com.inspur.emmcloud.widget.tipsview.TipsView;
 import com.inspur.reactnative.ReactNativeFlow;
 
+import org.greenrobot.eventbus.EventBus;
 import org.xutils.common.Callback;
 
 import java.io.File;
@@ -421,7 +422,11 @@ public class IndexActivity extends BaseFragmentActivity implements
                 Language language = new Language(languageJson);
                 environmentLanguage = language.getIana();
             }
-            ArrayList<AppTabAutoBean.PayloadBean.TabsBean> appTabList = (ArrayList<AppTabAutoBean.PayloadBean.TabsBean>) new AppTabAutoBean(appTabs).getPayload().getTabs();
+            AppTabAutoBean appTabAutoBean = new AppTabAutoBean(appTabs);
+            if(appTabAutoBean != null){
+                EventBus.getDefault().post(appTabAutoBean);
+            }
+            ArrayList<AppTabAutoBean.PayloadBean.TabsBean> appTabList = (ArrayList<AppTabAutoBean.PayloadBean.TabsBean>)appTabAutoBean.getPayload().getTabs();
             if (appTabList != null && appTabList.size() > 0) {
                 mainTabs = new MainTabBean[appTabList.size()];
                 for (int i = 0; i < appTabList.size(); i++) {
@@ -958,6 +963,7 @@ public class IndexActivity extends BaseFragmentActivity implements
      * @param url
      */
     private void downloadSplashPage(String url, String fileName) {
+        LogUtils.YfcDebug("下载文件名称："+fileName);
         DownLoaderUtils downloaderUtils = new DownLoaderUtils();
         LogUtils.YfcDebug("下载到的路径：" + MyAppConfig.getSplashPageImageShowPath(IndexActivity.this,
                 ((MyApplication) getApplication()).getUid(), "splash/" + fileName));
@@ -990,24 +996,16 @@ public class IndexActivity extends BaseFragmentActivity implements
                 if(file.exists()){
                     String filelSha256 =  FileSafeCode.getFileSHA256(file);
                     String screenType = AppUtils.getScreenType(IndexActivity.this);
-                    String sha256Code = "",oldSplashPageName = "";
+                    String sha256Code = "";
                     if(screenType.equals("2k")){
                         sha256Code = splashPageBeanLocalShowing.getPayload().getXxxhdpiHash().split(":")[1];
-                        oldSplashPageName = splashPageBeanLocalOld.getPayload().getResource().getDefaultX().getXxxhdpi();
                     }else if(screenType.equals("xxxhdpi")){
                         sha256Code = splashPageBeanLocalShowing.getPayload().getXxhdpiHash().split(":")[1];
-                        oldSplashPageName = splashPageBeanLocalOld.getPayload().getResource().getDefaultX().getXxhdpi();
                     }else if(screenType.equals("xxhdpi")){
                         sha256Code = splashPageBeanLocalShowing.getPayload().getXhdpiHash().split(":")[1];
-                        oldSplashPageName = splashPageBeanLocalOld.getPayload().getResource().getDefaultX().getXhdpi();
                     }else{
                         sha256Code = splashPageBeanLocalShowing.getPayload().getHdpiHash().split(":")[1];
-                        oldSplashPageName = splashPageBeanLocalOld.getPayload().getResource().getDefaultX().getHdpi();
                     }
-                    LogUtils.YfcDebug("老版文件路径："+MyAppConfig.getSplashPageImageShowPath(IndexActivity.this,
-                        userId, "splash/")+oldSplashPageName);
-                    ReactNativeFlow.deleteOldVersionFile(MyAppConfig.getSplashPageImageShowPath(IndexActivity.this,
-                        userId, "splash/")+oldSplashPageName);
                     if(filelSha256.equals(sha256Code)){
                         writeBackSplashPageLog("FORWARD",splashPageBeanLocalOld.getId().getVersion()
                                 ,splashPageBeanLocalShowing.getId().getVersion());

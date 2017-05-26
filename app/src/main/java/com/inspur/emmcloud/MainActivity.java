@@ -11,6 +11,7 @@ import android.os.Message;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 
 import com.inspur.emmcloud.bean.SplashPageBean;
 import com.inspur.emmcloud.config.MyAppConfig;
@@ -145,7 +146,8 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
 
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.splash_skip:
+            case R.id.splash_skip_layout:
+            case R.id.splash_skip_btn:
                 LogUtils.YfcDebug("跳过按钮");
                 if(timer != null){
                     timer.cancel();
@@ -181,13 +183,13 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
                     case UPGRADE_FAIL:
                     case NO_NEED_UPGRADE:
                     case DONOT_UPGRADE:
-                        LogUtils.YfcDebug("可以显示跳过按钮");
-                        showSkipButton();
+//                        LogUtils.YfcDebug("可以显示跳过按钮");
+//                        showSkipButton();
                         getServerLanguage();
                         break;
                     case GET_LANGUAGE_SUCCESS:
                         LogUtils.YfcDebug("可以显示跳过按钮");
-                        showSkipButton();
+
                         enterApp();
                         break;
                     default:
@@ -202,7 +204,8 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
      * 显示跳过按钮
      */
     public void showSkipButton(){
-        ((Button)findViewById(R.id.splash_skip)).setVisibility(View.VISIBLE);
+        ((Button)findViewById(R.id.splash_skip_btn)).setVisibility(View.VISIBLE);
+        ((LinearLayout)findViewById(R.id.splash_skip_layout)).setVisibility(View.VISIBLE);
     }
 
     /**
@@ -229,6 +232,7 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
      */
     private void enterApp() {
         // TODO Auto-generated method stub
+        showSkipButton();
         long betweenTime = System.currentTimeMillis() - activityShowTime;
         long leftTime = SPLASH_PAGE_TIME - betweenTime;
         TimerTask task = new TimerTask() {

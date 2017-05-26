@@ -24,15 +24,31 @@
         android:scaleType="centerCrop"
         />
 
-    <Button
-        android:id="@+id/splash_skip"
+    <LinearLayout
+        android:id="@+id/splash_skip_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/splash_skip"
         android:layout_alignParentRight="true"
-        android:visibility="gone"
-        android:textColor="#ffffff"
-        android:onClick="onClick"/>
+        android:orientation="vertical"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp"
+        android:padding="6dp">
+        <Button
+            android:id="@+id/splash_skip_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/splash_skip"
+            android:layout_alignParentRight="true"
+            android:visibility="gone"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:background="@drawable/bg_app_splash_skip"
+            android:textColor="#ffffff"
+            android:onClick="onClick"/>
+    </LinearLayout>
+
     <com.inspur.emmcloud.widget.CircularProgress
         android:layout_width="45dp"
         android:layout_height="45dp"
