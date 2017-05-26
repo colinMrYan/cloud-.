@@ -28,7 +28,6 @@ public class GetGroupNewsDetailResult {
 
 	public GetGroupNewsDetailResult(String response) {
 		try {
-			LogUtils.YfcDebug("每一个category下的新闻信息："+response);
 			JSONObject jsonObject = new JSONObject(response);
 //			jsonArray = new JSONArray(response);
 			if(jsonObject.has("content")){

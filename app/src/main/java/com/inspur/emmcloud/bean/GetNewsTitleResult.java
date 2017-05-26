@@ -18,7 +18,6 @@ public class GetNewsTitleResult implements Serializable{
 	
 	public GetNewsTitleResult(String response){
 		try {
-			LogUtils.YfcDebug("获取到的category信息："+response);
 			jsonArray = new JSONArray(response);
 		} catch (Exception e) {
 			e.printStackTrace();
