@@ -787,5 +787,7 @@
     <string name="react_native_app_open_failed">应用打开失败</string>
     <string name="react_native_app_update_failed">更新包失败</string>
 
+    <!--闪屏页文字资源-->
+    <string name="splash_skip">立即进入</string>
 
 </resources>

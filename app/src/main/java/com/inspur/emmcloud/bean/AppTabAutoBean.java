@@ -1,6 +1,8 @@
 package com.inspur.emmcloud.bean;
 
 import com.google.gson.annotations.SerializedName;
+import com.inspur.emmcloud.util.JSONUtils;
+import com.inspur.emmcloud.util.StringUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -222,6 +224,11 @@ public class AppTabAutoBean {
              * icon : hello-app
              * selected : true
              * title : {"zh-Hans":"应用","zh-Hant":"應用","en-US":"App"}
+             * "properties": {
+             "canContact": "false",
+             "canCreate": "true"
+             }
+
              */
 
             private int id;
@@ -230,6 +237,7 @@ public class AppTabAutoBean {
             private String icon = "";
             private boolean selected = false;
             private TitleBean title;
+            private Property property;
 
             public TabsBean(JSONObject jsonObject){
                 try {
@@ -254,11 +262,26 @@ public class AppTabAutoBean {
                         if(jsonObject.has("title")){
                             this.title = new TitleBean(jsonObject.getString("title"));
                         }
+                        if(jsonObject.has("properties")){
+                            String response = "";
+                            if(StringUtils.isBlank(jsonObject.getString("properties"))){
+                                response = "";
+                            }
+                            this.property = new Property(response);
+                        }
                     }
                 }catch(Exception e){
                     e.printStackTrace();
                 }
 
+            }
+
+            public Property getProperty() {
+                return property;
+            }
+
+            public void setProperty(Property property) {
+                this.property = property;
             }
 
             public int getId() {
@@ -307,6 +330,37 @@ public class AppTabAutoBean {
 
             public void setTitle(TitleBean title) {
                 this.title = title;
+            }
+
+            public static class Property{
+                /**
+                 *  "properties": {
+                 "canContact": "false",
+                 "canCreate": "true"
+                 }
+                 */
+               private boolean canContact = false;
+                private boolean canCreate = false;
+                public Property(String response){
+                    canContact = JSONUtils.getBoolean(response,"canOpenContact",false);
+                    canCreate = JSONUtils.getBoolean(response,"canCreateChannel",false);
+                }
+
+                public boolean isCanContact() {
+                    return canContact;
+                }
+
+                public void setCanContact(boolean canContact) {
+                    this.canContact = canContact;
+                }
+
+                public boolean isCanCreate() {
+                    return canCreate;
+                }
+
+                public void setCanCreate(boolean canCreate) {
+                    this.canCreate = canCreate;
+                }
             }
 
             public static class TitleBean {

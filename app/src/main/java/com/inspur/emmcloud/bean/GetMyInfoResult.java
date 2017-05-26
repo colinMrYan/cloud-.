@@ -1,12 +1,43 @@
 package com.inspur.emmcloud.bean;
 
-import java.io.Serializable;
-
-import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.util.Log;
+import java.io.Serializable;
 
+/**
+ * 获取到的个人信息数据
+ * {
+ "avatar": "/img/headimg/5af5e6b0-aa18-11e5-826d-d954fe083969",
+ "code": "yufuchang",
+ "creation_date": 1464281933000,
+ "enterprise": {
+ "code": "inspur_esg",
+ "creation_date": 1464340157000,
+ "ent_license_copy": "123",
+ "ent_license_sn": "123",
+ "id": 10000,
+ "last_update": 1484808046358,
+ "name": "浪潮集团"
+ },
+ "enterprises": [
+ {
+ "$ref": "$.enterprise"
+ }
+ ],
+ "first_name": "于",
+ "gender": "MALE",
+ "has_password": true,
+ "id": 99999,
+ "instance_credentials_available": false,
+ "last_name": "富昌",
+ "last_update": 1491465514834,
+ "locale": "zh-cn",
+ "mail": "yufuchang@inspur.com",
+ "old_id": "688aba0c-7a23-4849-9b89-3e206336ba7d",
+ "partners": [],
+ "phone": "15165155920"
+ }
+ */
 public class GetMyInfoResult implements Serializable{
 
 	private static final String TAG = "GetRegisterResult";

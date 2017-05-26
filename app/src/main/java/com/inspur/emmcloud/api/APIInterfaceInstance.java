@@ -71,6 +71,7 @@ import com.inspur.emmcloud.bean.ReactNativeDownloadUrlBean;
 import com.inspur.emmcloud.bean.ReactNativeInstallUriBean;
 import com.inspur.emmcloud.bean.ReactNativeUpdateBean;
 import com.inspur.emmcloud.bean.Robot;
+import com.inspur.emmcloud.bean.SplashPageBean;
 import com.inspur.emmcloud.bean.TaskResult;
 import com.inspur.emmcloud.bean.Trip;
 import com.inspur.emmcloud.bean.UserProfileInfoBean;
@@ -1364,6 +1365,16 @@ public class APIInterfaceInstance implements APIInterface{
 
 	@Override
 	public void returnUserProfileFail(String error) {
+
+	}
+
+	@Override
+	public void returnSplashPageInfoSuccess(SplashPageBean splashPageBean) {
+
+	}
+
+	@Override
+	public void returnSplashPageInfoFail(String error, int errorCode) {
 
 	}
 

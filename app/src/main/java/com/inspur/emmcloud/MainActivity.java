@@ -9,15 +9,23 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
+import android.view.View;
+import android.widget.Button;
+import android.widget.LinearLayout;
 
+import com.inspur.emmcloud.bean.SplashPageBean;
+import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.service.AppExceptionService;
 import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.ui.login.LoginActivity;
 import com.inspur.emmcloud.ui.login.ModifyUserFirstPsdActivity;
 import com.inspur.emmcloud.ui.mine.setting.GuideActivity;
 import com.inspur.emmcloud.util.AppUtils;
+import com.inspur.emmcloud.util.FileUtils;
 import com.inspur.emmcloud.util.IntentUtils;
 import com.inspur.emmcloud.util.LanguageUtils;
+import com.inspur.emmcloud.util.LogUtils;
+import com.inspur.emmcloud.util.PreferencesByUserUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.ResolutionUtils;
 import com.inspur.emmcloud.util.StateBarColor;
@@ -25,12 +33,18 @@ import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.UpgradeUtils;
 import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.emmcloud.widget.dialogs.EasyDialog;
+import com.nostra13.universalimageloader.core.ImageLoader;
+
+import java.util.Timer;
+import java.util.TimerTask;
+
+import pl.droidsonroids.gif.GifImageView;
+
 
 /**
  * 应用启动Activity
  *
  * @author Administrator
- *
  */
 public class MainActivity extends Activity { // 此处不能继承BaseActivity 推送会有问题
 
@@ -40,21 +54,40 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
     private static final int NO_NEED_UPGRADE = 10;
     private static final int UPGRADE_FAIL = 11;
     private static final int DONOT_UPGRADE = 12;
+    private static final long SPLASH_PAGE_TIME = 2500;
     private Handler handler;
     private LanguageUtils languageUtils;
+    private long activityShowTime = 0;
+    private Timer timer;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         StateBarColor.changeStateBarColor(this);
         setContentView(R.layout.activity_main);
-		/* 解决了在sd卡中第一次安装应用，进入到主页并切换到后台再打开会重新启动应用的bug */
+        init();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        activityShowTime = System.currentTimeMillis();
+    }
+
+    /**
+     * ea
+     * 初始化
+     */
+    private void init() {
+                /* 解决了在sd卡中第一次安装应用，进入到主页并切换到后台再打开会重新启动应用的bug */
         if ((getIntent().getFlags() & Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT) != 0) {
             finish();
             return;
         }
-		//进行app异常上传
-		startUploadExceptionService();
+
+        //进行app异常上传
+        startUploadExceptionService();
         ((MyApplication) getApplicationContext()).addActivity(this);
         // 检测分辨率、网络环境
         if (!ResolutionUtils.isFitResolution(MainActivity.this)) {
@@ -62,16 +95,22 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
         } else {
             initEnvironment();
         }
+        showLastSplash();
     }
 
-    private void startUploadExceptionService(){
+    /**
+     * 开启异常上传服务
+     */
+    private void startUploadExceptionService() {
         Intent intent = new Intent();
         intent.setClass(this, AppExceptionService.class);
         startService(intent);
     }
 
 
-    /** 显示分辨率不符合条件的提示框 **/
+    /**
+     * 显示分辨率不符合条件的提示框
+     **/
     private void showResolutionDialog() {
         // TODO Auto-generated method stub
         DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
@@ -105,6 +144,19 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
         upgradeUtils.checkUpdate(false);
     }
 
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.splash_skip_layout:
+            case R.id.splash_skip_btn:
+                LogUtils.YfcDebug("跳过按钮");
+                if(timer != null){
+                    timer.cancel();
+                    startApp();
+                }
+                break;
+        }
+    }
+
     private void handMessage() {
         // TODO Auto-generated method stub
         handler = new Handler() {
@@ -131,9 +183,13 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
                     case UPGRADE_FAIL:
                     case NO_NEED_UPGRADE:
                     case DONOT_UPGRADE:
+//                        LogUtils.YfcDebug("可以显示跳过按钮");
+//                        showSkipButton();
                         getServerLanguage();
                         break;
                     case GET_LANGUAGE_SUCCESS:
+                        LogUtils.YfcDebug("可以显示跳过按钮");
+
                         enterApp();
                         break;
                     default:
@@ -142,6 +198,14 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
             }
 
         };
+    }
+
+    /**
+     * 显示跳过按钮
+     */
+    public void showSkipButton(){
+        ((Button)findViewById(R.id.splash_skip_btn)).setVisibility(View.VISIBLE);
+        ((LinearLayout)findViewById(R.id.splash_skip_layout)).setVisibility(View.VISIBLE);
     }
 
     /**
@@ -158,17 +222,36 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
         if (!StringUtils.isBlank(accessToken) && !StringUtils.isBlank(myInfo) && StringUtils.isBlank(languageJson)) {
             languageUtils = new LanguageUtils(MainActivity.this, handler);
             languageUtils.getServerSupportLanguage();
-        }else {
+        } else {
             enterApp();
         }
     }
-
 
     /**
      * 进入App
      */
     private void enterApp() {
         // TODO Auto-generated method stub
+        showSkipButton();
+        long betweenTime = System.currentTimeMillis() - activityShowTime;
+        long leftTime = SPLASH_PAGE_TIME - betweenTime;
+        TimerTask task = new TimerTask() {
+            public void run() {
+                startApp();
+            }
+        };
+        if (checkIfShowSplashPage() && (leftTime>0)) {
+            timer = new Timer();
+            timer.schedule(task, leftTime);
+        } else {
+            startApp();
+        }
+    }
+
+    /**
+     * 开启应用
+     */
+    private void startApp() {
         Boolean isFirst = PreferencesUtils.getBoolean(
                 MainActivity.this, "isFirst", true);
         if (checkIfUpgraded() || isFirst) {
@@ -178,6 +261,27 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
             loginApp();
         }
     }
+
+    /**
+     * 检查是否有可以展示的图片
+     *
+     * @return
+     */
+    private boolean checkIfShowSplashPage() {
+        boolean flag = false;
+        String splashInfo = PreferencesByUserUtils.getString(MainActivity.this, "splash_page_info");
+        if (!StringUtils.isBlank(splashInfo)) {
+            SplashPageBean splashPageBeanLoacal = new SplashPageBean(splashInfo);
+            SplashPageBean.PayloadBean.ResourceBean.DefaultBean defaultBean = splashPageBeanLoacal.getPayload()
+                    .getResource().getDefaultX();
+            String name = getSplashPagePath(defaultBean);
+            if (FileUtils.isFileExist(name)) {
+                flag = true;
+            }
+        }
+        return flag;
+    }
+
 
     /**
      * 检测是否应用版本是否进行了升级
@@ -224,5 +328,52 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
         config.setToDefaults();
         res.updateConfiguration(config, res.getDisplayMetrics());
         return res;
+    }
+
+    /**
+     * 展示最新splash   需要添加是否已过期的逻辑
+     */
+    private void showLastSplash() {
+        String splashInfo = PreferencesByUserUtils.getString(MainActivity.this, "splash_page_info");
+        if (!StringUtils.isBlank(splashInfo)) {
+            SplashPageBean splashPageBeanLoacal = new SplashPageBean(splashInfo);
+            SplashPageBean.PayloadBean.ResourceBean.DefaultBean defaultBean = splashPageBeanLoacal.getPayload()
+                    .getResource().getDefaultX();
+            String name = getSplashPagePath(defaultBean);
+            long nowTime = System.currentTimeMillis();
+            boolean shouldShow = ((nowTime > splashPageBeanLoacal.getPayload().getEffectiveDate())
+                    && (nowTime < splashPageBeanLoacal.getPayload().getExpireDate()));
+            if (shouldShow && !StringUtils.isBlank(name)) {
+                ImageLoader.getInstance().displayImage("file://" + name, (GifImageView) findViewById(R.id.splash_img_top));
+            } else {
+                ((GifImageView) findViewById(R.id.splash_img_top)).setVisibility(View.GONE);
+            }
+        }
+    }
+
+
+    /**
+     * 闪屏文件路径
+     *
+     * @param defaultBean
+     * @return
+     */
+    private String getSplashPagePath(SplashPageBean.PayloadBean.ResourceBean.DefaultBean defaultBean) {
+        String screenType = AppUtils.getScreenType(MainActivity.this);
+        String name = "";
+        if (screenType.equals("2k")) {
+            name = MyAppConfig.getSplashPageImageShowPath(MainActivity.this,
+                    ((MyApplication) getApplication()).getUid(), "splash/" + defaultBean.getXxxhdpi());
+        } else if (screenType.equals("xxxhdpi")) {
+            name = MyAppConfig.getSplashPageImageShowPath(MainActivity.this,
+                    ((MyApplication) getApplication()).getUid(), "splash/" + defaultBean.getXxhdpi());
+        } else if (screenType.equals("xxhdpi")) {
+            name = MyAppConfig.getSplashPageImageShowPath(MainActivity.this,
+                    ((MyApplication) getApplication()).getUid(), "splash/" + defaultBean.getXhdpi());
+        } else {
+            name = MyAppConfig.getSplashPageImageShowPath(MainActivity.this,
+                    ((MyApplication) getApplication()).getUid(), "splash/" + defaultBean.getHdpi());
+        }
+        return name;
     }
 }
