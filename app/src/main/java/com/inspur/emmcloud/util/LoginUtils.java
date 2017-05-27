@@ -160,18 +160,20 @@ public class LoginUtils extends APIInterfaceInstance {
 	}
 
 	private void saveLoginInfo() {
-		String accessToken = getLoginResult.getAccessToken();
-		String refreshToken = getLoginResult.getRefreshToken();
-		int keepAlive = getLoginResult.getKeepAlive();
-		String tokenType = getLoginResult.getTokenType();
-		int expiresIn = getLoginResult.getExpiresIn();
-		((MyApplication) activity.getApplicationContext())
-				.setAccessToken(accessToken);
-		PreferencesUtils.putString(activity, "accessToken", accessToken);
-		PreferencesUtils.putString(activity, "refreshToken", refreshToken);
-		PreferencesUtils.putInt(activity, "keepAlive", keepAlive);
-		PreferencesUtils.putString(activity, "tokenType", tokenType);
-		PreferencesUtils.putInt(activity, "expiresIn", expiresIn);
+		if (getLoginResult != null){
+			String accessToken = getLoginResult.getAccessToken();
+			String refreshToken = getLoginResult.getRefreshToken();
+			int keepAlive = getLoginResult.getKeepAlive();
+			String tokenType = getLoginResult.getTokenType();
+			int expiresIn = getLoginResult.getExpiresIn();
+			((MyApplication) activity.getApplicationContext())
+					.setAccessToken(accessToken);
+			PreferencesUtils.putString(activity, "accessToken", accessToken);
+			PreferencesUtils.putString(activity, "refreshToken", refreshToken);
+			PreferencesUtils.putInt(activity, "keepAlive", keepAlive);
+			PreferencesUtils.putString(activity, "tokenType", tokenType);
+			PreferencesUtils.putInt(activity, "expiresIn", expiresIn);
+		}
 	}
 
 	@Override

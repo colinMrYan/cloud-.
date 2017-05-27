@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.widget.Toast;
 
 import com.inspur.emmcloud.util.AppUtils;
+import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.imp.api.ImpActivity;
 import com.inspur.mdm.api.APIInterfaceInstance;
 import com.inspur.mdm.api.MDMApiService;
