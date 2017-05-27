@@ -79,6 +79,7 @@ public class MyApplication extends MultiDexApplication implements  ReactApplicat
 	private List<OauthCallBack> callBackList = new ArrayList<OauthCallBack>();
 	private String uid;
 	private String accessToken;
+	private String enterpriseId;
 
 
 
@@ -210,7 +211,7 @@ public class MyApplication extends MultiDexApplication implements  ReactApplicat
 		params.addHeader("Accept", "application/json");
 		if (getToken() != null) {
 			params.addHeader("Authorization", getToken());
-			params.addHeader("X-ECC-Current-Enterprise", UriUtils.tanent);
+			params.addHeader("X-ECC-Current-Enterprise", enterpriseId);
 		}
 		String languageJson = PreferencesUtils.getString(
 				getApplicationContext(), UriUtils.tanent + "appLanguageObj");
@@ -346,7 +347,7 @@ public class MyApplication extends MultiDexApplication implements  ReactApplicat
 		}
 	}
 
-	/******************************t********************************************/
+	/******************************租户信息*******************************************/
 
 	public void initTanent() {
 		// TODO Auto-generated method stub
@@ -358,8 +359,15 @@ public class MyApplication extends MultiDexApplication implements  ReactApplicat
 			String enterpriseCode = getMyInfoResult.getEnterpriseCode();
 			UriUtils.tanent = enterpriseCode;
 			APIUri.tanent = enterpriseCode;
+			enterpriseId = getMyInfoResult.getEnterpriseId();
 		}
 	}
+
+	public String  getInterpriseId(){
+		return  enterpriseId;
+	}
+
+	/*************************************************************************/
 
 	/***
 	 * 判断当前版本是否是开发版
