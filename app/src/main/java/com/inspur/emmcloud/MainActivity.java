@@ -23,7 +23,7 @@ import com.inspur.emmcloud.util.AppUtils;
 import com.inspur.emmcloud.util.FileUtils;
 import com.inspur.emmcloud.util.IntentUtils;
 import com.inspur.emmcloud.util.LanguageUtils;
-import com.inspur.emmcloud.util.LogUtils;
+import com.inspur.emmcloud.util.LoginUtils;
 import com.inspur.emmcloud.util.PreferencesByUserUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.ResolutionUtils;
@@ -301,12 +301,13 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
                 "accessToken", "");
         String myInfo = PreferencesUtils.getString(getApplicationContext(),
                 "myInfo", "");
-        if ((!StringUtils.isBlank(accessToken))
-                && (!StringUtils.isBlank(myInfo))) {
-            IntentUtils.startActivity(MainActivity.this, IndexActivity.class,
-                    true);
-        } else {
+        if (StringUtils.isBlank(accessToken)){
             IntentUtils.startActivity(MainActivity.this, LoginActivity.class,
+                    true);
+        }else if (StringUtils.isBlank(myInfo)){
+            new LoginUtils(MainActivity.this,handler).getMyInfo();
+        }else {
+            IntentUtils.startActivity(MainActivity.this, IndexActivity.class,
                     true);
         }
     }
