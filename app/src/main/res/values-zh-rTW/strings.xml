@@ -442,8 +442,8 @@
     <string name="modify_user_password_success">通行證密碼修改成功，請使用新密碼登錄</string>
     <string name="modify_user_password_fail">設置密碼失敗，您是否繼續設置</string>
     <string name="modify_jump">跳過</string>
-    <string name="modify_welcom_user_cloud">歡迎使用浪潮雲+</string>
-    <string name="modify_first_use">這是您第一次使用浪潮雲+，是否設置浪潮通行證密碼，以方便下次登錄</string>
+    <string name="modify_welcom_user_cloud">歡迎使用雲+</string>
+    <string name="modify_first_use">這是您第一次使用雲+，是否設置通行證密碼，以方便下次登錄</string>
 
     <!-- 使用者資訊頁面部分 -->
     <string name="user_info_text">個人資訊</string>
@@ -693,7 +693,7 @@
     <string name="load_fail">載入失敗</string>
     <string name="see_more">查看更多</string>
     <string name="pull_down_loading_history">下拉載入歷史消息</string>
-    <string name="license_agreement">1、本協議是使用者 (自然人、法人或社會團體)與浪潮通用軟體有限公司之間關於“浪潮雲+”軟體產品（以下
+    <string name="license_agreement">1、本協議是使用者 (自然人、法人或社會團體)與浪潮通用軟體有限公司之間關於“雲+”軟體產品（以下
 
 簡稱“本軟體產品”）的法律協定。一旦安裝、複製或以其他方式使用本軟體產品，即表示同意接受協議各項條件的約束。如果用戶
 
