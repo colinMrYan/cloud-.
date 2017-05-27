@@ -218,7 +218,7 @@ public class ImpActivity extends ImpBaseActivity {
 	private void setOauthHeader(String OauthHeader) {
 		extraHeaders = new HashMap<>();
 		extraHeaders.put("Authorization", OauthHeader);
-		extraHeaders.put("X-ECC-Current-Enterprise", UriUtils.tanent);
+		extraHeaders.put("X-ECC-Current-Enterprise", ((MyApplication)getApplicationContext()).getInterpriseId());
 	}
 
 	private void setLangHeader(String langHeader){
