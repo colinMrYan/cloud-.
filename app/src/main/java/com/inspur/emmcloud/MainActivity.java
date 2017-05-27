@@ -61,6 +61,11 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
         super.onCreate(savedInstanceState);
         StateBarColor.changeStateBarColor(this);
         setContentView(R.layout.activity_main);
+         /* 解决了在sd卡中第一次安装应用，进入到主页并切换到后台再打开会重新启动应用的bug */
+        if ((getIntent().getFlags() & Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT) != 0) {
+            finish();
+            return;
+        }
         init();
     }
 
@@ -70,11 +75,6 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
      * 初始化
      */
     private void init() {
-                /* 解决了在sd卡中第一次安装应用，进入到主页并切换到后台再打开会重新启动应用的bug */
-        if ((getIntent().getFlags() & Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT) != 0) {
-            finish();
-            return;
-        }
         activitySplashShowTime = System.currentTimeMillis();
 		//进行app异常上传
 		startUploadExceptionService();
@@ -86,7 +86,6 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
         } else {
             initEnvironment();
         }
-
         showLastSplash();
     }
 
@@ -142,7 +141,17 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
                     .addShortCut(MainActivity.this);
         }
         handMessage();
-        getServerLanguage();
+        String accessToken = PreferencesUtils.getString(MainActivity.this,
+                "accessToken", "");
+        String myInfo = PreferencesUtils.getString(getApplicationContext(),
+                "myInfo", "");
+        String languageJson = PreferencesUtils.getString(getApplicationContext(),
+                UriUtils.tanent + "appLanguageObj");
+        if (!StringUtils.isBlank(accessToken) && !StringUtils.isBlank(myInfo) && StringUtils.isBlank(languageJson)) {
+            getServerLanguage();
+        }else {
+            enterApp();
+        }
     }
 
     public void onClick(View v) {
@@ -204,18 +213,8 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
      */
     private void getServerLanguage() {
         // TODO Auto-generated method stub
-        String accessToken = PreferencesUtils.getString(MainActivity.this,
-                "accessToken", "");
-        String myInfo = PreferencesUtils.getString(getApplicationContext(),
-                "myInfo", "");
-        String languageJson = PreferencesUtils.getString(getApplicationContext(),
-                UriUtils.tanent + "appLanguageObj");
-        if (!StringUtils.isBlank(accessToken) && !StringUtils.isBlank(myInfo) && StringUtils.isBlank(languageJson)) {
             languageUtils = new LanguageUtils(MainActivity.this, handler);
             languageUtils.getServerSupportLanguage();
-        }else {
-            enterApp();
-        }
     }
 
 
@@ -229,7 +228,7 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
         long leftTime = SPLASH_PAGE_TIME - betweenTime;
         TimerTask task = new TimerTask() {
             public void run() {
-                startApp();
+               // startApp();
             }
         };
         if (checkIfShowSplashPage() && (leftTime>0)) {

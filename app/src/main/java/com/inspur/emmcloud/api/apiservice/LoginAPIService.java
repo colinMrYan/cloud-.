@@ -7,10 +7,6 @@
  */
 package com.inspur.emmcloud.api.apiservice;
 
-import org.xutils.x;
-import org.xutils.http.HttpMethod;
-import org.xutils.http.RequestParams;
-
 import android.content.Context;
 
 import com.inspur.emmcloud.MyApplication;
@@ -24,10 +20,15 @@ import com.inspur.emmcloud.bean.GetRegisterCheckResult;
 import com.inspur.emmcloud.bean.GetSignoutResult;
 import com.inspur.emmcloud.bean.GetUpdatePwdBySMSCodeBean;
 import com.inspur.emmcloud.bean.GetWebSocketUrlResult;
+import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.OauthCallBack;
 import com.inspur.emmcloud.util.OauthUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.UriUtils;
+
+import org.xutils.http.HttpMethod;
+import org.xutils.http.RequestParams;
+import org.xutils.x;
 
 /**
  * com.inspur.emmcloud.api.apiservice.LoginAPIService create at 2016年11月8日
@@ -244,6 +245,7 @@ public class LoginAPIService {
 			@Override
 			public void callbackTokenExpire() {
 				// TODO Auto-generated method stub
+				LogUtils.jasonDebug("callbackTokenExpire");
 				new OauthUtils(new OauthCallBack() {
 
 					@Override
@@ -257,6 +259,7 @@ public class LoginAPIService {
 			@Override
 			public void callbackSuccess(String arg0) {
 				// TODO Auto-generated method stub
+				LogUtils.jasonDebug("callbackSuccess");
 				apiInterface.returnMyInfoSuccess(new GetMyInfoResult(
 						arg0));
 			}
@@ -264,6 +267,7 @@ public class LoginAPIService {
 			@Override
 			public void callbackFail(String error, int responseCode) {
 				// TODO Auto-generated method stub
+				LogUtils.jasonDebug("callbackFail");
 				apiInterface.returnMyInfoFail(error);
 			}
 		});
@@ -379,8 +383,8 @@ public class LoginAPIService {
 	/**
 	 * 修改密码
 	 * 
-	 * @param calendarId
-	 * @param title
+	 * @param oldpsd
+	 * @param newpsd
 	 */
 	public void changePsd(final String oldpsd, final String newpsd) {
 		final String completeUrl  = UriUtils.getChangePsd();
