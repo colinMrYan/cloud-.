@@ -265,7 +265,9 @@ public class AppTabAutoBean {
                         if(jsonObject.has("properties")){
                             String response = "";
                             if(StringUtils.isBlank(jsonObject.getString("properties"))){
-                                response = "";
+                                response = " ";
+                            }else{
+                                response = jsonObject.getString("properties");
                             }
                             this.property = new Property(response);
                         }
@@ -342,8 +344,8 @@ public class AppTabAutoBean {
                private boolean canContact = false;
                 private boolean canCreate = false;
                 public Property(String response){
-                    canContact = JSONUtils.getBoolean(response,"canOpenContact",false);
-                    canCreate = JSONUtils.getBoolean(response,"canCreateChannel",false);
+                    canContact = JSONUtils.getBoolean(response,"canOpenContact",true);
+                    canCreate = JSONUtils.getBoolean(response,"canCreateChannel",true);
                 }
 
                 public boolean isCanContact() {
