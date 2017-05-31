@@ -265,7 +265,9 @@ public class AppTabAutoBean {
                         if(jsonObject.has("properties")){
                             String response = "";
                             if(StringUtils.isBlank(jsonObject.getString("properties"))){
-                                response = "";
+                                response = " ";
+                            }else{
+                                response = jsonObject.getString("properties");
                             }
                             this.property = new Property(response);
                         }
