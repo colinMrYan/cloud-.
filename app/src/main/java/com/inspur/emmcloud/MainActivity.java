@@ -23,7 +23,6 @@ import com.inspur.emmcloud.util.AppUtils;
 import com.inspur.emmcloud.util.FileUtils;
 import com.inspur.emmcloud.util.IntentUtils;
 import com.inspur.emmcloud.util.LanguageUtils;
-import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.PreferencesByUserUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.ResolutionUtils;
@@ -267,7 +266,10 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
             SplashPageBean.PayloadBean.ResourceBean.DefaultBean defaultBean = splashPageBeanLoacal.getPayload()
                     .getResource().getDefaultX();
             String splashImgPath = getSplashPagePath(defaultBean);
-            flag = FileUtils.isFileExist(splashImgPath);
+            long startTime = splashPageBeanLoacal.getPayload().getEffectiveDate();
+            long endTime = splashPageBeanLoacal.getPayload().getExpireDate();
+            long nowTime = System.currentTimeMillis();
+            flag = FileUtils.isFileExist(splashImgPath) && ((nowTime<startTime) || (nowTime > endTime));
         }
         return flag;
     }
