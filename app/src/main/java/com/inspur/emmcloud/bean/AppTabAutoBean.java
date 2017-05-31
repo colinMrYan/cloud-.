@@ -342,8 +342,8 @@ public class AppTabAutoBean {
                private boolean canContact = false;
                 private boolean canCreate = false;
                 public Property(String response){
-                    canContact = JSONUtils.getBoolean(response,"canOpenContact",false);
-                    canCreate = JSONUtils.getBoolean(response,"canCreateChannel",false);
+                    canContact = JSONUtils.getBoolean(response,"canOpenContact",true);
+                    canCreate = JSONUtils.getBoolean(response,"canCreateChannel",true);
                 }
 
                 public boolean isCanContact() {
