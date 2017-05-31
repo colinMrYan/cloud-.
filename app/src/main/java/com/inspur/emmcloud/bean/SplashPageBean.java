@@ -22,6 +22,7 @@ public class SplashPageBean {
     private String response = "";
 
     public SplashPageBean(String response){
+        this.response = response;
         this.command = JSONUtils.getString(response,"command","");
         String idBean = JSONUtils.getString(response,"id","");
         String payLoadBean = JSONUtils.getString(response,"payload","");
