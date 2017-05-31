@@ -54,6 +54,10 @@ public class ModifyChannelGroupNameActivity extends BaseActivity {
 				ToastUtils.show(getApplicationContext(), R.string.group_name_cannot_null);
 				return;
 			}
+			if (name.length()>20){
+				ToastUtils.show(getApplicationContext(), R.string.group_name_longth_valid);
+				return;
+			}
 			if (NetUtils.isNetworkConnected(getApplicationContext())) {
 				loadingDlg.show();
 				ChatAPIService apiService = new ChatAPIService(ModifyChannelGroupNameActivity.this);
