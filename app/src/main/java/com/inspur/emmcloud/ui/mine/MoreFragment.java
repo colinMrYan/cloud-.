@@ -25,7 +25,7 @@ import com.inspur.emmcloud.util.AppTitleUtils;
 import com.inspur.emmcloud.util.ChannelCacheUtils;
 import com.inspur.emmcloud.util.ImageDisplayUtils;
 import com.inspur.emmcloud.util.IntentUtils;
-import com.inspur.emmcloud.util.PreferencesByUserUtils;
+import com.inspur.emmcloud.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.ToastUtils;
@@ -227,7 +227,7 @@ public class MoreFragment extends Fragment {
      * 设置标题
      */
     private void setTabTitle(){
-        String appTabs = PreferencesByUserUtils.getString(getActivity(),"app_tabbar_info_current","");
+        String appTabs = PreferencesByUserAndTanentUtils.getString(getActivity(),"app_tabbar_info_current","");
         if(!StringUtils.isBlank(appTabs)){
             titleText.setText(AppTitleUtils.getTabTitle(getActivity(),getClass().getSimpleName()));
         }

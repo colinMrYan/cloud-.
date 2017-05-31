@@ -20,6 +20,7 @@ import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
 import com.inspur.emmcloud.api.APIUri;
+import com.inspur.emmcloud.bean.Enterprise;
 import com.inspur.emmcloud.bean.GetMyInfoResult;
 import com.inspur.emmcloud.bean.Language;
 import com.inspur.emmcloud.config.MyAppConfig;
@@ -29,6 +30,7 @@ import com.inspur.emmcloud.util.CrashHandler;
 import com.inspur.emmcloud.util.DbCacheUtils;
 import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.OauthCallBack;
+import com.inspur.emmcloud.util.PreferencesByUserUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.UriUtils;
@@ -43,6 +45,7 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
 
+import org.json.JSONObject;
 import org.xutils.http.RequestParams;
 import org.xutils.x;
 
@@ -79,7 +82,7 @@ public class MyApplication extends MultiDexApplication implements  ReactApplicat
 	private List<OauthCallBack> callBackList = new ArrayList<OauthCallBack>();
 	private String uid;
 	private String accessToken;
-	private String enterpriseId;
+	private Enterprise currentEnterprise;
 
 
 
@@ -211,7 +214,9 @@ public class MyApplication extends MultiDexApplication implements  ReactApplicat
 		params.addHeader("Accept", "application/json");
 		if (getToken() != null) {
 			params.addHeader("Authorization", getToken());
-			params.addHeader("X-ECC-Current-Enterprise", enterpriseId);
+		}
+		if (currentEnterprise != null){
+			params.addHeader("X-ECC-Current-Enterprise", currentEnterprise.getId());
 		}
 		String languageJson = PreferencesUtils.getString(
 				getApplicationContext(), UriUtils.tanent + "appLanguageObj");
@@ -356,15 +361,20 @@ public class MyApplication extends MultiDexApplication implements  ReactApplicat
 				"myInfo");
 		if (!StringUtils.isBlank(myInfo)) {
 			GetMyInfoResult getMyInfoResult = new GetMyInfoResult(myInfo);
+			String currentEnterpriseCode = PreferencesByUserUtils.getString(getApplicationContext(),"current_enterprise_id");
+			if (StringUtils.isBlank(currentEnterpriseCode)){
+				currentEnterprise = getMyInfoResult.getDefaultEnterprise();
+			}
 			String enterpriseCode = getMyInfoResult.getEnterpriseCode();
 			UriUtils.tanent = enterpriseCode;
 			APIUri.tanent = enterpriseCode;
 			enterpriseId = getMyInfoResult.getEnterpriseId();
+
 		}
 	}
 
-	public String  getInterpriseId(){
-		return  enterpriseId;
+	public Enterprise  getCurrentEnterprise(){
+		return  currentEnterprise;
 	}
 
 	/*************************************************************************/

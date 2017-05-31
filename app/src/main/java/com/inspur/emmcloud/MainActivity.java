@@ -24,7 +24,7 @@ import com.inspur.emmcloud.util.FileUtils;
 import com.inspur.emmcloud.util.IntentUtils;
 import com.inspur.emmcloud.util.LanguageUtils;
 import com.inspur.emmcloud.util.LoginUtils;
-import com.inspur.emmcloud.util.PreferencesByUserUtils;
+import com.inspur.emmcloud.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.ResolutionUtils;
 import com.inspur.emmcloud.util.StateBarColor;
@@ -260,7 +260,7 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
      */
     private boolean checkIfShowSplashPage() {
         boolean flag = false;
-        String splashInfo = PreferencesByUserUtils.getString(MainActivity.this, "splash_page_info");
+        String splashInfo = PreferencesByUserAndTanentUtils.getString(MainActivity.this, "splash_page_info");
         if (!StringUtils.isBlank(splashInfo)) {
             SplashPageBean splashPageBeanLoacal = new SplashPageBean(splashInfo);
             SplashPageBean.PayloadBean.ResourceBean.DefaultBean defaultBean = splashPageBeanLoacal.getPayload()
@@ -324,7 +324,7 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
      * 展示最新splash   需要添加是否已过期的逻辑
      */
     private void showLastSplash() {
-        String splashInfo = PreferencesByUserUtils.getString(MainActivity.this, "splash_page_info");
+        String splashInfo = PreferencesByUserAndTanentUtils.getString(MainActivity.this, "splash_page_info");
         if (!StringUtils.isBlank(splashInfo)) {
             SplashPageBean splashPageBeanLoacal = new SplashPageBean(splashInfo);
             SplashPageBean.PayloadBean.ResourceBean.DefaultBean defaultBean = splashPageBeanLoacal.getPayload()

@@ -22,7 +22,7 @@ import com.inspur.emmcloud.service.AppUpgradeService;
 import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.util.AppUtils;
 import com.inspur.emmcloud.util.LogUtils;
-import com.inspur.emmcloud.util.PreferencesByUserUtils;
+import com.inspur.emmcloud.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.StringUtils;
 
 /**
@@ -58,7 +58,7 @@ public class NotSupportFragment extends Fragment {
      */
     private void setTabTitle(){
         LogUtils.YfcDebug("不支持页面获取到的标题："+((IndexActivity)getActivity()).getNotSupportString());
-        String appTabs = PreferencesByUserUtils.getString(getActivity(),"app_tabbar_info_current","");
+        String appTabs = PreferencesByUserAndTanentUtils.getString(getActivity(),"app_tabbar_info_current","");
         if(!StringUtils.isBlank(appTabs)){
             String title = ((IndexActivity)getActivity()).getNotSupportString();
             titleText.setText(title);

@@ -23,18 +23,17 @@ public class GetMyInfoResult implements Serializable {
 	private String id ;
 	private String mail ;
 	private String phoneNumber ;
-	private String enterpriseCode ;
-	private String enterpriseName;
+//	private String enterpriseCode ;
+//	private String enterpriseName;
 	private Boolean hasPassord ;
-	private String enterpriseId ;
+	//private String enterpriseId ;
 	private List<Enterprise> enterpriseList = new ArrayList<>();
+	private Enterprise defaultEnterprise;
 
 	public GetMyInfoResult(String response) {
 		this.response = response;
 		JSONObject jObject = JSONUtils.getJSONObject(response, "enterprise", new JSONObject());
-		this.enterpriseCode = JSONUtils.getString(jObject, "code", "");
-		this.enterpriseName = JSONUtils.getString(jObject, "name", "");
-		this.enterpriseId = JSONUtils.getString(jObject, "id", "");
+		defaultEnterprise = new Enterprise(jObject);
 		this.avatar = JSONUtils.getString(response, "avatar", "");
 		this.code = JSONUtils.getString(response, "code", "");
 		this.creationDate = JSONUtils.getString(response, "creation_date", "");
@@ -87,13 +86,13 @@ public class GetMyInfoResult implements Serializable {
 		return phoneNumber;
 	}
 
-	public String getEnterpriseCode() {
-		return enterpriseCode;
-	}
-
-	public String getEnterpriseName() {
-		return enterpriseName;
-	}
+//	public String getEnterpriseCode() {
+//		return enterpriseCode;
+//	}
+//
+//	public String getEnterpriseName() {
+//		return enterpriseName;
+//	}
 
 	public String getResponse() {
 		return response;
@@ -103,10 +102,12 @@ public class GetMyInfoResult implements Serializable {
 		return hasPassord;
 	}
 
-
-	public String getEnterpriseId() {
-		return enterpriseId;
+	public Enterprise getDefaultEnterprise(){
+		return defaultEnterprise;
 	}
+//	public String getEnterpriseId() {
+//		return enterpriseId;
+//	}
 
 	public List<Enterprise> getEnterpriseList(){
 		LogUtils.jasonDebug("size="+ enterpriseList.size());

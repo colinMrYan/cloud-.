@@ -26,14 +26,13 @@ import com.inspur.emmcloud.ui.login.LoginActivity;
 import com.inspur.emmcloud.util.AppUtils;
 import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.NetUtils;
-import com.inspur.emmcloud.util.PreferencesByUserUtils;
+import com.inspur.emmcloud.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.StateBarColor;
 import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.ToastUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.dialogs.ECMCustomIOSDialog;
-import com.inspur.imp.api.ImpActivity;
 import com.inspur.reactnative.AuthorizationManagerPackage;
 import com.inspur.reactnative.ReactNativeFlow;
 import com.reactnativecomponent.swiperefreshlayout.RCTSwipeRefreshLayoutPackage;
@@ -159,7 +158,7 @@ public class ReactNativeAppActivity extends BaseActivity implements DefaultHardw
             loadingDialog.show();
             StringBuilder describeVersionAndTime = ReactNativeFlow.getBundleDotJsonFromFile(reactAppFilePath);
             AndroidBundleBean androidBundleBean = new AndroidBundleBean(describeVersionAndTime.toString());
-            String clientId = PreferencesByUserUtils.getString(ReactNativeAppActivity.this,"react_native_clientid", "");
+            String clientId = PreferencesByUserAndTanentUtils.getString(ReactNativeAppActivity.this,"react_native_clientid", "");
             reactNativeAPIService.getDownLoadUrl(ReactNativeAppActivity.this,androidBundleBean.getUpdate(),clientId,androidBundleBean.getVersion());
         }
     }
@@ -238,7 +237,7 @@ public class ReactNativeAppActivity extends BaseActivity implements DefaultHardw
                 loadingDialog.dismiss();
             }
             super.returnGetClientIdResultSuccess(getClientIdRsult);
-            PreferencesByUserUtils.putString(ReactNativeAppActivity.this,  "react_native_clientid", getClientIdRsult.getClientId());
+            PreferencesByUserAndTanentUtils.putString(ReactNativeAppActivity.this,  "react_native_clientid", getClientIdRsult.getClientId());
             installReactNativeApp();
         }
 
@@ -338,7 +337,7 @@ public class ReactNativeAppActivity extends BaseActivity implements DefaultHardw
      */
     private void getDownlaodUrl(ReactNativeInstallUriBean reactNativeInstallUriBean) {
         if(NetUtils.isNetworkConnected(ReactNativeAppActivity.this)){
-            String clientId = PreferencesByUserUtils.getString(ReactNativeAppActivity.this,"react_native_clientid", "");
+            String clientId = PreferencesByUserAndTanentUtils.getString(ReactNativeAppActivity.this,"react_native_clientid", "");
             if(!StringUtils.isBlank(clientId)){
 
 //                StringBuilder describeVersionAndTime = FileUtils.readFile(reactAppFilePath +"/bundle.json", "UTF-8");
@@ -420,7 +419,7 @@ public class ReactNativeAppActivity extends BaseActivity implements DefaultHardw
      * 向服务端写回目前版本
      */
     private void writeBackVersion(String preVersion,String currentVersion,String command) {
-        String clientId = PreferencesByUserUtils.getString(ReactNativeAppActivity.this,"react_native_clientid", "");
+        String clientId = PreferencesByUserAndTanentUtils.getString(ReactNativeAppActivity.this,"react_native_clientid", "");
         reactNativeAPIService.writeBackVersionChange(preVersion,currentVersion,clientId,command,appModule);
     }
 
@@ -444,7 +443,7 @@ public class ReactNativeAppActivity extends BaseActivity implements DefaultHardw
 //            StringBuilder describeVersionAndTime = FileUtils.readFile(reactAppFilePath +"/bundle.json", "UTF-8");
             StringBuilder describeVersionAndTime = ReactNativeFlow.getBundleDotJsonFromFile(reactAppFilePath);
             AndroidBundleBean androidBundleBean = new AndroidBundleBean(describeVersionAndTime.toString());
-            String clientId = PreferencesByUserUtils.getString(ReactNativeAppActivity.this,"react_native_clientid", "");
+            String clientId = PreferencesByUserAndTanentUtils.getString(ReactNativeAppActivity.this,"react_native_clientid", "");
             reactNativeAPIService.getDownLoadUrl(ReactNativeAppActivity.this,installUri,clientId,androidBundleBean.getVersion());
         }
     }
