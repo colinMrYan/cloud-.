@@ -269,7 +269,8 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
             long startTime = splashPageBeanLoacal.getPayload().getEffectiveDate();
             long endTime = splashPageBeanLoacal.getPayload().getExpireDate();
             long nowTime = System.currentTimeMillis();
-            flag = FileUtils.isFileExist(splashImgPath) && ((nowTime<startTime) || (nowTime > endTime));
+            flag = FileUtils.isFileExist(splashImgPath) &&
+                    ((nowTime>startTime) && (nowTime < endTime));
         }
         return flag;
     }

@@ -153,4 +153,9 @@
         <!-- 背景透明 -->
     </style>
 
+    <style name="SplashTheme" parent="@android:style/Theme.Light.NoTitleBar.Fullscreen">
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowIsTranslucent">true</item>
+    </style>
+
 </resources>
