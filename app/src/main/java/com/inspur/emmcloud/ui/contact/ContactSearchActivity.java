@@ -45,6 +45,7 @@ import com.inspur.emmcloud.util.CommonContactCacheUtils;
 import com.inspur.emmcloud.util.ContactCacheUtils;
 import com.inspur.emmcloud.util.DensityUtil;
 import com.inspur.emmcloud.util.ImageDisplayUtils;
+import com.inspur.emmcloud.util.InputMethodUtils;
 import com.inspur.emmcloud.util.IntentUtils;
 import com.inspur.emmcloud.util.ListViewUtils;
 import com.inspur.emmcloud.util.NetUtils;
@@ -658,6 +659,7 @@ public class ContactSearchActivity extends BaseActivity {
 	 */
 	private void returnSearchResultData() {
 		// TODO Auto-generated method stub
+		InputMethodUtils.hide(ContactSearchActivity.this);
 		JSONArray peopleArray = new JSONArray();
 		JSONArray channelGroupArray = new JSONArray();
 		JSONObject searchResultObj = new JSONObject();
