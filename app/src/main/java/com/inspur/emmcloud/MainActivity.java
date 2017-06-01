@@ -14,7 +14,6 @@ import android.view.View;
 import com.inspur.emmcloud.bean.SplashPageBean;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.service.AppExceptionService;
-import com.inspur.emmcloud.service.AppUpgradeService;
 import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.ui.login.LoginActivity;
 import com.inspur.emmcloud.ui.login.ModifyUserFirstPsdActivity;
@@ -23,11 +22,13 @@ import com.inspur.emmcloud.util.AppUtils;
 import com.inspur.emmcloud.util.FileUtils;
 import com.inspur.emmcloud.util.IntentUtils;
 import com.inspur.emmcloud.util.LanguageUtils;
+import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.PreferencesByUserUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.ResolutionUtils;
 import com.inspur.emmcloud.util.StateBarColor;
 import com.inspur.emmcloud.util.StringUtils;
+import com.inspur.emmcloud.util.UpgradeUtils;
 import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.emmcloud.widget.dialogs.EasyDialog;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -48,6 +49,9 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
     private static final int LOGIN_SUCCESS = 0;
     private static final int LOGIN_FAIL = 1;
     private static final int GET_LANGUAGE_SUCCESS = 3;
+    private static final int NO_NEED_UPGRADE = 10;
+    private static final int UPGRADE_FAIL = 11;
+    private static final int DONOT_UPGRADE = 12;
     private static final long SPLASH_PAGE_TIME = 2500;
     private Handler handler;
     private LanguageUtils languageUtils;
@@ -77,7 +81,6 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
         activitySplashShowTime = System.currentTimeMillis();
 		//进行app异常上传
 		startUploadExceptionService();
-        startUpgradeServcie();
         ((MyApplication) getApplicationContext()).addActivity(this);
         // 检测分辨率、网络环境
         if (!ResolutionUtils.isFitResolution(MainActivity.this)) {
@@ -98,15 +101,15 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
         startService(intent);
     }
 
-    /**
-     * 启动app版本升级检查服务
-     */
-    private void startUpgradeServcie() {
-        Intent intent = new Intent();
-        intent.setClass(getApplicationContext(), AppUpgradeService.class);
-        startService(intent);
-
-    }
+//    /**
+//     * 启动app版本升级检查服务
+//     */
+//    private void startUpgradeServcie() {
+//        Intent intent = new Intent();
+//        intent.setClass(getApplicationContext(), AppUpgradeService.class);
+//        startService(intent);
+//
+//    }
 
 
     /**
@@ -141,7 +144,10 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
                     .addShortCut(MainActivity.this);
         }
         handMessage();
-        getServerLanguage();
+        UpgradeUtils upgradeUtils = new UpgradeUtils(MainActivity.this,
+                handler,false);
+        upgradeUtils.checkUpdate(false);
+//        getServerLanguage();
     }
 
     public void onClick(View v) {
@@ -163,6 +169,7 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
             @Override
             public void handleMessage(Message msg) {
                 // TODO Auto-generated method stub
+                LogUtils.jasonDebug("msg.what="+msg.what);
                 switch (msg.what) {
                     case LOGIN_SUCCESS:
                         // 是否已建立简易密码
@@ -176,8 +183,14 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
                         }
                         break;
                     case LOGIN_FAIL:
+                        LogUtils.jasonDebug("3333333333333666666666666666666666");
                         IntentUtils.startActivity(MainActivity.this,
                                 LoginActivity.class, true);
+                        break;
+                    case UPGRADE_FAIL:
+                    case NO_NEED_UPGRADE:
+                    case DONOT_UPGRADE:
+                        getServerLanguage();
                         break;
                     case GET_LANGUAGE_SUCCESS:
                         enterApp();
@@ -243,6 +256,7 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
      * 开启应用
      */
     private void startApp() {
+        LogUtils.jasonDebug("startapp------------");
         Boolean isFirst = PreferencesUtils.getBoolean(
                 MainActivity.this, "isFirst", true);
         if (checkIfUpgraded() || isFirst) {
@@ -300,6 +314,7 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
      */
     private void loginApp() {
         // TODO Auto-generated method stub
+        LogUtils.jasonDebug("loginApp------------");
         String accessToken = PreferencesUtils.getString(MainActivity.this,
                 "accessToken", "");
         String myInfo = PreferencesUtils.getString(getApplicationContext(),
@@ -309,6 +324,7 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
             IntentUtils.startActivity(MainActivity.this, IndexActivity.class,
                     true);
         } else {
+            LogUtils.jasonDebug("999999999999999");
             IntentUtils.startActivity(MainActivity.this, LoginActivity.class,
                     true);
         }
