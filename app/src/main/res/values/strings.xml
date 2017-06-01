@@ -262,6 +262,8 @@
     <string name="socket_connecting">连接中</string>
     <string name="socket_close">已断开</string>
     <string name="chat_file_download_success">文件已下载成功，再次点击进行打开</string>
+    <string name="group_name_longth_valid">群名称字数超限（不超过20个字符）</string>
+
 
 
     <!-- 会议卡片 -->

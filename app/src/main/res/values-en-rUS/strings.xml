@@ -261,6 +261,7 @@
     <string name="socket_connecting">Connecting</string>
     <string name="socket_close">Disconnect</string>
     <string name="chat_file_download_success">File has been downloaded successfully, click again to open</string>
+    <string name="group_name_longth_valid">Group name, word overrun (no more than 20 characters)</string>
 
 
     <!-- 会议卡片 -->
