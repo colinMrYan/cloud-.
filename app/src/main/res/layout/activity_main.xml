@@ -54,6 +54,7 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="180dp"
+        android:visibility="gone"
         app:borderWidth="3dp" />
 
 </RelativeLayout>
