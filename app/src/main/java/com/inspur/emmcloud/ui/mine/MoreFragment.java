@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.Channel;
 import com.inspur.emmcloud.bean.GetMyInfoResult;
@@ -97,14 +98,9 @@ public class MoreFragment extends Fragment {
         String inspurId = getMyInfoResult.getID();
         String photoUri = UriUtils.getChannelImgUri(inspurId);
         imageDisplayUtils.display(moreHeadImg, photoUri);
-
-        if (!getMyInfoResult.getName().equals("null")) {
-            userNameText.setText(getMyInfoResult.getName());
-        } else {
-            userNameText.setText(getString(R.string.not_set));
-        }
-
-        userOrgText.setText(getMyInfoResult.getEnterpriseName());
+        String userName = PreferencesUtils.getString(getActivity(), "userRealName", getString(R.string.not_set));
+        userNameText.setText(userName);
+        userOrgText.setText(((MyApplication)getActivity().getApplicationContext()).getCurrentEnterprise().getName());
     }
 
 

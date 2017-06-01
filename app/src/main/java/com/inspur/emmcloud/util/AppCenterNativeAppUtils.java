@@ -65,8 +65,6 @@ public class AppCenterNativeAppUtils {
 				intent.putExtra("USERNAME", getMyInfoResult.getCode());
 				String password = PreferencesByUserAndTanentUtils.getString(context, "approvalPassword");
 				intent.putExtra("PASSWORD", password);
-				LogUtils.jasonDebug("USERNAME=" + getMyInfoResult.getCode());
-				LogUtils.jasonDebug("PASSWORD=" + password);
 			} else {
 				PackageManager packageManager = context.getPackageManager();
 				intent = packageManager.getLaunchIntentForPackage(packageName);

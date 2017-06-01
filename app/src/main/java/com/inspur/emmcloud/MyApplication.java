@@ -30,7 +30,7 @@ import com.inspur.emmcloud.util.CrashHandler;
 import com.inspur.emmcloud.util.DbCacheUtils;
 import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.OauthCallBack;
-import com.inspur.emmcloud.util.PreferencesByUserUtils;
+import com.inspur.emmcloud.util.PreferencesByUsersUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.UriUtils;
@@ -45,7 +45,6 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
 
-import org.json.JSONObject;
 import org.xutils.http.RequestParams;
 import org.xutils.x;
 
@@ -361,15 +360,24 @@ public class MyApplication extends MultiDexApplication implements  ReactApplicat
 				"myInfo");
 		if (!StringUtils.isBlank(myInfo)) {
 			GetMyInfoResult getMyInfoResult = new GetMyInfoResult(myInfo);
-			String currentEnterpriseCode = PreferencesByUserUtils.getString(getApplicationContext(),"current_enterprise_id");
-			if (StringUtils.isBlank(currentEnterpriseCode)){
-				currentEnterprise = getMyInfoResult.getDefaultEnterprise();
+			String currentEnterpriseId = PreferencesByUsersUtils.getString(getApplicationContext(),"current_enterprise_id");
+			if (!StringUtils.isBlank(currentEnterpriseId)){
+				List<Enterprise> enterpriseList = getMyInfoResult.getEnterpriseList();
+				for (int i=0;i<enterpriseList.size();i++){
+					Enterprise enterprise = enterpriseList.get(i);
+					if (enterprise.getId().equals(currentEnterpriseId)){
+						currentEnterprise = enterprise;
+						break;
+					}
+
+				}
 			}
-			String enterpriseCode = getMyInfoResult.getEnterpriseCode();
+			if (currentEnterprise == null){
+				currentEnterprise =getMyInfoResult.getDefaultEnterprise();
+			}
+			String enterpriseCode = currentEnterprise.getCode();
 			UriUtils.tanent = enterpriseCode;
 			APIUri.tanent = enterpriseCode;
-			enterpriseId = getMyInfoResult.getEnterpriseId();
-
 		}
 	}
 

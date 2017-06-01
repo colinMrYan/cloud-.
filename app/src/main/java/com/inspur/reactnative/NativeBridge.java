@@ -12,9 +12,10 @@ import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.WritableNativeArray;
 import com.facebook.react.bridge.WritableNativeMap;
 import com.facebook.react.uimanager.IllegalViewOperationException;
+import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.Contact;
-import com.inspur.emmcloud.bean.GetMyInfoResult;
+import com.inspur.emmcloud.bean.Enterprise;
 import com.inspur.emmcloud.bean.SearchModel;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.util.ContactCacheUtils;
@@ -110,14 +111,12 @@ public class NativeBridge extends ReactContextBaseJavaModule implements Activity
      */
     @ReactMethod
     public void getCurrentEnterprise(Promise promise) {
-        String myInfo = PreferencesUtils.getString(getReactApplicationContext(),
-                "myInfo", "");
-        GetMyInfoResult getMyInfoResult = new GetMyInfoResult(myInfo);
+        Enterprise enterprise = ((MyApplication)getReactApplicationContext().getApplicationContext()).getCurrentEnterprise();
         try {
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put("id", getMyInfoResult.getEnterpriseId());
-            jsonObject.put("name", getMyInfoResult.getEnterpriseName());
-            jsonObject.put("code", getMyInfoResult.getEnterpriseCode());
+            jsonObject.put("id", enterprise.getId());
+            jsonObject.put("name", enterprise.getName());
+            jsonObject.put("code", enterprise.getCode());
             promise.resolve(jsonObject);
         } catch (Exception e) {
             promise.reject(e);

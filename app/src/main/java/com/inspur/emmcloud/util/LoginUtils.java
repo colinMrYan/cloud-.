@@ -81,14 +81,9 @@ public class LoginUtils extends APIInterfaceInstance {
 	// 开始进行设备管理检查
 	private void startMDM() {
 		// TODO Auto-generated method stub
-		LogUtils.jasonDebug("startMDM--------");
-		((MyApplication) activity.getApplicationContext()).setAccessToken("");
 		String userName = PreferencesUtils.getString(activity, "userRealName",
 				"");
-		String myInfo = PreferencesUtils.getString(activity, "myInfo", "");
-		GetMyInfoResult myInfoObj = new GetMyInfoResult(myInfo);
-		String tanentId = myInfoObj.getEnterpriseId();
-		LogUtils.jasonDebug("tanentId=" + tanentId);
+		String tanentId = ((MyApplication)activity.getApplicationContext()).getCurrentEnterprise().getId();
 		String userCode = ((MyApplication) activity.getApplicationContext())
 				.getUid();
 		MDM mdm = new MDM(activity, tanentId, userCode, userName);
@@ -97,7 +92,6 @@ public class LoginUtils extends APIInterfaceInstance {
 			@Override
 			public void MDMStatusPass() {
 				// TODO Auto-generated method stub
-				LogUtils.jasonDebug("MDMStatusPass--------");
 				saveLoginInfo();
 				loginUtilsHandler.sendEmptyMessage(LOGIN_SUCCESS);
 			}
@@ -105,7 +99,7 @@ public class LoginUtils extends APIInterfaceInstance {
 			@Override
 			public void MDMStatusNoPass() {
 				// TODO Auto-generated method stub
-				LogUtils.jasonDebug("MDMStatusNoPass--------");
+				((MyApplication) activity.getApplicationContext()).setAccessToken("");
 				clearLoginInfo();
 				loginUtilsHandler.sendEmptyMessage(LOGIN_FAIL);
 			}
@@ -113,7 +107,6 @@ public class LoginUtils extends APIInterfaceInstance {
 			@Override
 			public void dimissExternalLoadingDlg() {
 				// TODO Auto-generated method stub
-				LogUtils.jasonDebug("dimissExternalLoadingDlg--------");
 				if (loadingDialog != null && loadingDialog.isShowing()) {
 					loadingDialog.dismiss();
 				}
@@ -207,7 +200,6 @@ public class LoginUtils extends APIInterfaceInstance {
 	@Override
 	public void returnMyInfoSuccess(GetMyInfoResult getMyInfoResult) {
 		// TODO Auto-generated method stub
-		LogUtils.jasonDebug("callbackSuccess000000000000000000000000000000000000");
 		String myInfo = getMyInfoResult.getResponse();
 		String name = getMyInfoResult.getName();
 		PreferencesUtils.putString(activity, "userRealName", name);

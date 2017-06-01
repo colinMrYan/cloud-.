@@ -29,10 +29,10 @@ import android.content.SharedPreferences;
  *
  * @author <a href="http://www.trinea.cn" target="_blank">Trinea</a> 2013-3-6
  */
-public class PreferencesByUserUtils {
+public class PreferencesByUsersUtils {
 
 
-    private PreferencesByUserUtils() {
+    private PreferencesByUsersUtils() {
         throw new AssertionError();
     }
 

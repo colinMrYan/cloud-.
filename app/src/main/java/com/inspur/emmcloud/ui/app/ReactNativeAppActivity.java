@@ -17,6 +17,7 @@ import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.api.apiservice.ReactNativeAPIService;
 import com.inspur.emmcloud.bean.AndroidBundleBean;
+import com.inspur.emmcloud.bean.Enterprise;
 import com.inspur.emmcloud.bean.GetClientIdRsult;
 import com.inspur.emmcloud.bean.GetMyInfoResult;
 import com.inspur.emmcloud.bean.ReactNativeDownloadUrlBean;
@@ -219,9 +220,10 @@ public class ReactNativeAppActivity extends BaseActivity implements DefaultHardw
         bundle.putString("name",getMyInfoResult.getName());
         bundle.putString("mail",getMyInfoResult.getMail());
         bundle.putString("avatar",getMyInfoResult.getAvatar());
-        bundle.putString("enterpriseCode",getMyInfoResult.getEnterpriseCode());
-        bundle.putString("enterpriseName",getMyInfoResult.getEnterpriseName());
-        bundle.putString("enterpriseId",getMyInfoResult.getEnterpriseId());
+        Enterprise currentEnterprise = ((MyApplication)getApplicationContext()).getCurrentEnterprise();
+        bundle.putString("enterpriseCode",currentEnterprise.getCode());
+        bundle.putString("enterpriseName",currentEnterprise.getName());
+        bundle.putString("enterpriseId",currentEnterprise.getId());
         return bundle;
     }
 

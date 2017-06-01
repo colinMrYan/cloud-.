@@ -111,7 +111,7 @@ public class MyInfoActivity extends BaseActivity {
 			userMailText.setText(mail.equals("null") ? getString(R.string.not_set) : mail);
 			String phoneNumber = getMyInfoResult.getPhoneNumber();
 			((TextView) findViewById(R.id.myinfo_userphone_text)).setText(phoneNumber.equals("null") ? getString(R.string.not_set) : phoneNumber);
-			((TextView) findViewById(R.id.myinfo_usercompanytext_text)).setText(getMyInfoResult.getEnterpriseName());
+			((TextView) findViewById(R.id.myinfo_usercompanytext_text)).setText(((MyApplication)getApplicationContext()).getCurrentEnterprise().getName());
 		}
 
 	}
