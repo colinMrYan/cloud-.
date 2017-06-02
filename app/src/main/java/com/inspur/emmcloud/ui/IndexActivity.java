@@ -527,7 +527,7 @@ public class IndexActivity extends BaseFragmentActivity implements
             Message msg = new Message();
             msg.what = CHANGE_TAB;
             msg.obj = communicateLocation;
-            handler.sendMessage(msg);
+            handler.sendMessageDelayed(msg,50);
         }
     }
 
