@@ -20,16 +20,16 @@ public class MentionsAndUrlShowUtils {
 	 * @param mentions
 	 * @param mentionList
 	 * @param urlList
-     * @return
-     */
+	 * @return
+	 */
 	public static SpannableString handleMentioin(String mentions,List<String> mentionList,List<String> urlList) {
 		ArrayList<MentionsAndUrl> mentionsAndUrls = new ArrayList<MentionsAndUrl>();
-	    Pattern pattern = Pattern.compile("\\[[^\\]]+\\]\\([^\\)]+\\)");
-	    if(StringUtils.isBlank(mentions)){
-	    	return new SpannableString("");
-	    }
-	    Matcher matcher = pattern.matcher(mentions);
-	    while (matcher.find()) {
+		Pattern pattern = Pattern.compile("\\[[^\\]]+\\]\\([^\\)]+\\)");
+		if(StringUtils.isBlank(mentions)){
+			return new SpannableString("");
+		}
+		Matcher matcher = pattern.matcher(mentions);
+		while (matcher.find()) {
 			String patternString = matcher.group();
 			String protocolResource = "";
 			String content = "";
@@ -39,7 +39,9 @@ public class MentionsAndUrlShowUtils {
 			int index = -1;
 			index = mentions.indexOf(patternString);
 			boolean hasProtocol = false;
-			Pattern patternProtocol = Pattern.compile("\\(.*\\)");
+			//修改正则表达式，和IOS一致，注释掉的为原来表达式
+//			Pattern patternProtocol = Pattern.compile("\\(.*\\)");
+			Pattern patternProtocol = Pattern.compile("\\((((https?|ec[cm](-[0-9a-z]+)+|gs-msg)://[a-zA-Z0-9\\_\\-]+(\\.[a-zA-Z0-9\\_\\-]+)*(\\:\\d{2,4})?(/?[a-zA-Z0-9\\-\\_\\.\\?\\=\\&\\%\\#]+)*/?)|([a-zA-Z0-9\\-\\_]+\\.)+([a-zA-Z\\-\\_]+)(\\:\\d{2,4})?(/?[a-zA-Z0-9\\-\\_\\.\\?\\=\\&\\%\\#]+)*/?|\\d+(\\.\\d+){3}(\\:\\d{2,4})?)\\)\n");
 			Matcher matcherProtocol = patternProtocol.matcher(patternString);
 			while (matcherProtocol.find()) {
 				protocolResource = matcherProtocol.group();
@@ -83,12 +85,12 @@ public class MentionsAndUrlShowUtils {
 				mentionsAndUrls.add(mentionsAndUrl);
 			}
 		}
-	    SpannableString spannableString = new SpannableString(mentions);
-	    for (int i = 0; i < mentionsAndUrls.size(); i++) {
-	    	MentionsAndUrl mentionsAndUrl = mentionsAndUrls.get(i);
-	    	URLSpan urlSpan = new URLSpan(mentionsAndUrl.getProtocol());
-	    	int start = mentionsAndUrl.getStart();
-	    	int end = mentionsAndUrl.getEnd();
+		SpannableString spannableString = new SpannableString(mentions);
+		for (int i = 0; i < mentionsAndUrls.size(); i++) {
+			MentionsAndUrl mentionsAndUrl = mentionsAndUrls.get(i);
+			URLSpan urlSpan = new URLSpan(mentionsAndUrl.getProtocol());
+			int start = mentionsAndUrl.getStart();
+			int end = mentionsAndUrl.getEnd();
 			spannableString.setSpan(urlSpan, start, end, Spanned.SPAN_INCLUSIVE_INCLUSIVE);
 		}
 		return spannableString;
