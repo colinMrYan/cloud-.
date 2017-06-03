@@ -358,7 +358,7 @@ public class AppAPIService {
 	 * 上传设备管理需要的一些信息
 	 */
 	public void uploadMDMInfo(){
-		String completeUrl = APIUri.getUploadMDMInfoUrl();
+		final String completeUrl = APIUri.getUploadMDMInfoUrl();
 		RequestParams params = ((MyApplication) context.getApplicationContext())
 				.getHttpRequestParams(completeUrl);
 		params.addQueryStringParameter("udid",AppUtils.getMyUUID(context));
@@ -376,7 +376,12 @@ public class AppAPIService {
 			@Override
 			public void callbackTokenExpire() {
 
-				uploadMDMInfo();
+				new OauthUtils(new OauthCallBack() {
+					@Override
+					public void execute() {
+						uploadMDMInfo();
+					}
+				}, context).refreshToken(completeUrl);
 			}
 		});
 	}
