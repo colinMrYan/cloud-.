@@ -48,7 +48,6 @@ import com.inspur.emmcloud.util.ImageDisplayUtils;
 import com.inspur.emmcloud.util.InputMethodUtils;
 import com.inspur.emmcloud.util.IntentUtils;
 import com.inspur.emmcloud.util.ListViewUtils;
-import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.StringUtils;
@@ -594,10 +593,8 @@ public class ContactSearchActivity extends BaseActivity {
 				}
 				long currentTime = System.currentTimeMillis();
 				if (currentTime - lastSearchTime > 500){
-					LogUtils.jasonDebug("111111111111");
 					handler.post(searchRunnbale);
 				}else {
-					LogUtils.jasonDebug("00000000000");
 					handler.removeCallbacks(searchRunnbale);
 					handler.postDelayed(searchRunnbale,500);
 				}
