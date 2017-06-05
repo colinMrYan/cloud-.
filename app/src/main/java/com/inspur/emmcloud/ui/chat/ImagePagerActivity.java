@@ -322,7 +322,7 @@ public class ImagePagerActivity extends BaseFragmentActivity {
 		String source = "";
 		ArrayList<String> urlList = URLMatcher.getUrls(content);
 		JSONObject richTextObj = new JSONObject();
-		source = HandleMsgTextUtils.handleMentionAndURL(content, mentionsUserNameList,
+		source = HandleMsgTextUtils.handleMentionAndURL(ecmChatInputMenu.getEdit(),content, mentionsUserNameList,
 				mentionsUidList);
 		JSONArray mentionArray = JSONUtils.toJSONArray(mentionsUidList);
 		JSONArray urlArray = JSONUtils.toJSONArray(urlList);

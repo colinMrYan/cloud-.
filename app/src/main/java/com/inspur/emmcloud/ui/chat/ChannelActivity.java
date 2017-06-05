@@ -618,7 +618,7 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
 
         ArrayList<String> urlList = URLMatcher.getUrls(content);
         JSONObject richTextObj = new JSONObject();
-        String source = HandleMsgTextUtils.handleMentionAndURL(content,
+        String source = HandleMsgTextUtils.handleMentionAndURL(chatInputMenu.getEdit(),content,
                 mentionsUserNameList, mentionsUidList);
         JSONArray mentionArray = JSONUtils.toJSONArray(mentionsUidList);
         JSONArray urlArray = JSONUtils.toJSONArray(urlList);
