@@ -996,6 +996,28 @@ public class TimeUtils {
 		return timepath;
 	}
 
+    /**
+     * 带有时区的时间路径,目前是零时区GMT
+     * 如果需要改成东八区则GMT+8
+     *
+     * @param postTime
+     * @return
+     */
+    public static String getNewsTimePath(String postTime) {
+        SimpleDateFormat sdfGMT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        sdfGMT.setTimeZone(TimeZone.getTimeZone("GMT"));
+        postTime = sdfGMT.format(Long.parseLong(postTime));
+        String timeYear = postTime.substring(0, 4);
+        String timeMon = postTime.substring(5, 7);
+        String timeDay = postTime.substring(8, 10);
+        int year = Integer.parseInt(timeYear);
+        int mon = Integer.parseInt(timeMon);
+        int day = Integer.parseInt(timeDay);
+        String timePath = UriUtils.getGroupNewsArticle() + year + "/" + mon
+                + "/" + day + "/";
+        return timePath;
+    }
+
 	/**
 	 * 获取发现搜索新闻中的发布时间显示
 	 *
