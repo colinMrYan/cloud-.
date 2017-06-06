@@ -992,22 +992,16 @@ public class TimeUtils {
     }
 
     /**
-     * 带有时区的时间路径,目前是零时区
+     * 带有时区的时间路径,目前是零时区GMT
+     * 如果需要改成东八区则GMT+8
      *
      * @param postTime
      * @return
      */
-    public static String getNewsTimeWithTimeZone(String postTime) {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Date result = null;
-        try {
-            result = sdf.parse(postTime);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+    public static String getNewsTimePathIn(String postTime) {
         SimpleDateFormat sdfGMT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         sdfGMT.setTimeZone(TimeZone.getTimeZone("GMT"));
-        postTime = sdfGMT.format(result.getTime());
+        postTime = sdfGMT.format(Long.parseLong(postTime));
         String timeYear = postTime.substring(0, 4);
         String timeMon = postTime.substring(5, 7);
         String timeDay = postTime.substring(8, 10);
