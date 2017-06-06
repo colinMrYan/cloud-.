@@ -3,7 +3,6 @@ package com.inspur.emmcloud.util;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
@@ -36,7 +35,6 @@ public class OauthUtils {
 		@Override
 		public void returnOauthSigninSuccess(GetLoginResult getLoginResult) {
 			// TODO Auto-generated method stub
-			Log.d("jason", "refresh---token---success");
 			String accessToken = getLoginResult.getAccessToken();
 			String refreshToken = getLoginResult.getRefreshToken();
 			int keepAlive = getLoginResult.getKeepAlive();
@@ -60,21 +58,30 @@ public class OauthUtils {
 		@Override
 		public void returnOauthSigninFail(String error,int errorCode) {
 			// TODO Auto-generated method stub
-			Log.d("jason", "refresh---token---fail");
 			((MyApplication)context.getApplicationContext()).setIsTokenRefreshing(false);
-			((MyApplication)context.getApplicationContext()).clearCallBackList();
-			if (((MyApplication)context.getApplicationContext()).getWebSocketPush() != null) {
-				((MyApplication)context.getApplicationContext()).getWebSocketPush().connectWebSocket();
+			//当errorCode为400时代表refreshToken也失效，需要重新登录
+			if (errorCode == 400){
+				((MyApplication)context.getApplicationContext()).clearCallBackList();
+				if (((MyApplication)context.getApplicationContext()).getWebSocketPush() != null) {
+					((MyApplication)context.getApplicationContext()).getWebSocketPush().closeSocket();
+				}
+				ToastUtils.show(context, context.getString(R.string.authorization_expired));
+				Intent intent = new Intent();
+				intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+				intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+				intent.setClass(context, LoginActivity.class);
+				context.startActivity(intent);
+				if (context != null && context instanceof Activity) {
+					((Activity) context).finish();
+				}
+			}else{
+				List<OauthCallBack> callBackList = ((MyApplication)context.getApplicationContext()).getCallBackList();
+				for (int i = 0; i < callBackList.size(); i++) {
+					callBackList.get(i).executeFailCallback();
+				}
+				((MyApplication)context.getApplicationContext()).clearCallBackList();
 			}
-			ToastUtils.show(context, context.getString(R.string.authorization_expired));
-			Intent intent = new Intent();
-			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-			intent.setClass(context, LoginActivity.class);
-			context.startActivity(intent);
-			if (context != null && context instanceof Activity) {
-				((Activity) context).finish();
-			}
+
 		}
 
 	}

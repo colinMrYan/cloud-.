@@ -65,7 +65,7 @@ public abstract class APICallback implements CommonCallback<String> {
 				error = arg0.toString();
 			}
 			if (StringUtils.isBlank(error)) {
-				LogUtils.debug("HttpUtil", "result=未知错误");
+				error = "未知错误";
 			} else {
 				LogUtils.debug("HttpUtil", "result=" + arg0.toString());
 			}
