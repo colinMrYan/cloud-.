@@ -348,6 +348,12 @@
             android:layout_height="0.5dp"
             android:background="#dadadd"
             android:visibility="gone" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_marginTop="-0.5dp"
+            android:layout_marginLeft="48dp"
+            android:background="#dadadd" />
 
         <RelativeLayout
             android:id="@+id/scan_login_desktop_layout"
@@ -359,10 +365,7 @@
 
             <!-- 细线 -->
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0.5dp"
-                android:background="#dadadd" />
+
 
             <ImageView
                 android:id="@+id/scan_login_desktop_img"
