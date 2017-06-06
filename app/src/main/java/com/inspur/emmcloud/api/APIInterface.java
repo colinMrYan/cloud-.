@@ -68,11 +68,13 @@ import com.inspur.emmcloud.bean.GetUpgradeResult;
 import com.inspur.emmcloud.bean.GetUploadMyHeadResult;
 import com.inspur.emmcloud.bean.GetUserHeadUploadResult;
 import com.inspur.emmcloud.bean.GetWebSocketUrlResult;
+import com.inspur.emmcloud.bean.LoginDesktopCloudPlusBean;
 import com.inspur.emmcloud.bean.ReactNativeClientIdErrorBean;
 import com.inspur.emmcloud.bean.ReactNativeDownloadUrlBean;
 import com.inspur.emmcloud.bean.ReactNativeInstallUriBean;
 import com.inspur.emmcloud.bean.ReactNativeUpdateBean;
 import com.inspur.emmcloud.bean.Robot;
+import com.inspur.emmcloud.bean.ShareCloudPlusBean;
 import com.inspur.emmcloud.bean.SplashPageBean;
 import com.inspur.emmcloud.bean.TaskResult;
 import com.inspur.emmcloud.bean.Trip;
@@ -513,7 +515,13 @@ public interface APIInterface {
 	void returnMDMStateFail(String error, int errorCode);
 
 
-	public void returnSplashPageInfoSuccess(SplashPageBean splashPageBean);
-	public void returnSplashPageInfoFail(String error,int errorCode);
+	void returnSplashPageInfoSuccess(SplashPageBean splashPageBean);
+	void returnSplashPageInfoFail(String error,int errorCode);
+
+	void returnLoginDesktopCloudPlusSuccess(LoginDesktopCloudPlusBean loginDesktopCloudPlusBean);
+	void returnLoginDesktopCloudPlusFail(String error,int errorCode);
+
+	void returnShareCloudPlusInfoSuccess(ShareCloudPlusBean shareCloudPlusBean);
+	void returnShareCloudPlusInfoFail(String error,int errorCode);
 
 }

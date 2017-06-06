@@ -18,8 +18,10 @@ import com.inspur.emmcloud.bean.GetAppTabsResult;
 import com.inspur.emmcloud.bean.GetClientIdRsult;
 import com.inspur.emmcloud.bean.GetExceptionResult;
 import com.inspur.emmcloud.bean.GetUpgradeResult;
+import com.inspur.emmcloud.bean.LoginDesktopCloudPlusBean;
 import com.inspur.emmcloud.bean.ReactNativeClientIdErrorBean;
 import com.inspur.emmcloud.bean.ReactNativeUpdateBean;
+import com.inspur.emmcloud.bean.ShareCloudPlusBean;
 import com.inspur.emmcloud.bean.SplashPageBean;
 import com.inspur.emmcloud.util.AppUtils;
 import com.inspur.emmcloud.util.LogUtils;
@@ -424,4 +426,60 @@ public class AppAPIService {
             }
         });
     }
+
+
+	public void sendLoginDesktopCloudPlusInfo(){
+		final String completeUrl = APIUri.getLoginDesktopCloudPlusUrl();
+		RequestParams params = ((MyApplication) context.getApplicationContext())
+				.getHttpRequestParams(completeUrl);
+		x.http().post(params, new APICallback(context,completeUrl) {
+			@Override
+			public void callbackSuccess(String arg0) {
+				apiInterface.returnLoginDesktopCloudPlusSuccess(new LoginDesktopCloudPlusBean());
+			}
+
+			@Override
+			public void callbackFail(String error, int responseCode) {
+				apiInterface.returnLoginDesktopCloudPlusFail(error,responseCode);
+			}
+
+			@Override
+			public void callbackTokenExpire() {
+				new OauthUtils(new OauthCallBack() {
+					@Override
+					public void execute() {
+						sendLoginDesktopCloudPlusInfo();
+					}
+				},context).refreshToken(completeUrl);
+			}
+		});
+	}
+
+	public void getShareCloudPlusQrCode(){
+		final String completeUrl = APIUri.getShareCloudPlusUrl();
+
+		RequestParams params = ((MyApplication) context.getApplicationContext())
+				.getHttpRequestParams(completeUrl);
+		x.http().post(params, new APICallback(context,completeUrl) {
+			@Override
+			public void callbackSuccess(String arg0) {
+				apiInterface.returnShareCloudPlusInfoSuccess(new ShareCloudPlusBean(arg0));
+			}
+
+			@Override
+			public void callbackFail(String error, int responseCode) {
+				apiInterface.returnShareCloudPlusInfoFail(error,responseCode);
+			}
+
+			@Override
+			public void callbackTokenExpire() {
+				new OauthUtils(new OauthCallBack() {
+					@Override
+					public void execute() {
+						getShareCloudPlusQrCode();
+					}
+				},context).refreshToken(completeUrl);
+			}
+		});
+	}
 }
