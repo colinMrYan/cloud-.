@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="bottom"
+    android:orientation="vertical"
+    android:paddingBottom="5dp">
+
+    <LinearLayout
+        android:id="@+id/app_imp_crm_font_dialog"
+        android:layout_width="match_parent"
+        android:layout_height="108dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:background="@drawable/app_news_dialog_day_background"
+        android:orientation="vertical">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="8dp">
+
+            <TextView
+                android:id="@+id/app_imp_crm_font_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/news_font_name_text"
+                android:textColor="#ff1D2128"
+                android:textSize="@dimen/content_smaller_textsize" />
+
+            <View
+                android:id="@+id/app_imp_crm_font_line"
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="4dp"
+                android:background="#FFD6D6D6"
+                android:visibility="gone" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="12dp"
+            android:layout_marginTop="5dp"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/app_imp_crm_font_normal_btn"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_weight="1"
+                android:background="@drawable/app_news_dialog_day_button"
+                android:onClick="onClick"
+                android:text="@string/news_font_smaller"
+                android:textColor="#FF999999"
+                android:textSize="@dimen/content_title_textsize" />
+
+            <Button
+                android:id="@+id/app_imp_crm_font_middle_btn"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_weight="1"
+                android:background="@drawable/app_news_dialog_day_button"
+                android:onClick="onClick"
+                android:text="@string/news_font_normal"
+                android:textSize="@dimen/content_title_textsize" />
+
+            <Button
+                android:id="@+id/app_imp_crm_font_big_btn"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_weight="1"
+                android:background="@drawable/app_news_dialog_day_button"
+                android:onClick="onClick"
+                android:text="@string/news_font_big_text"
+                android:textSize="@dimen/content_title_textsize" />
+
+            <Button
+                android:id="@+id/app_imp_crm_font_biggest_btn"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_weight="1"
+                android:background="@drawable/app_news_dialog_day_button"
+                android:onClick="onClick"
+                android:text="@string/news_font_biggest_text"
+                android:textSize="@dimen/content_title_textsize" />
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+</LinearLayout>
