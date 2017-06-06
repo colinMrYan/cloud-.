@@ -146,8 +146,8 @@ public class ContactSearchActivity extends BaseActivity {
 		rootContact = ContactCacheUtils
 				.getRootContact(ContactSearchActivity.this);
 		getIntentData();
-		initView();
 		handMessage();
+		initView();
 		initSearchRunnable();
 	}
 
