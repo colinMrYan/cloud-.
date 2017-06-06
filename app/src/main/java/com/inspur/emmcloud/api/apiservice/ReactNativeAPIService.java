@@ -41,9 +41,6 @@ public class ReactNativeAPIService {
      */
     public void getClientId(final String deviceId, final String deviceName){
         final String completeUrl = APIUri.getClientId();
-        LogUtils.YfcDebug("请求clietnid的地址："+completeUrl);
-        LogUtils.YfcDebug("设备Id："+deviceId);
-        LogUtils.YfcDebug("设备名称："+deviceName);
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
         params.addParameter("deviceId",deviceId);
@@ -56,15 +53,20 @@ public class ReactNativeAPIService {
 
             @Override
             public void callbackFail(String error, int responseCode) {
-                apiInterface.returnGetClientIdResultFail(error);
+                apiInterface.returnGetClientIdResultFail(error,responseCode);
             }
 
             @Override
             public void callbackTokenExpire() {
                 new OauthUtils(new OauthCallBack() {
                     @Override
-                    public void execute() {
+                    public void reExecute() {
                         getClientId(deviceId,deviceName);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
                     }
                 },context).refreshToken(completeUrl);
             }
@@ -88,7 +90,7 @@ public class ReactNativeAPIService {
 
             @Override
             public void callbackFail(String error, int responseCode) {
-                apiInterface.returnGetReactNativeInstallUrlFail(error);
+                apiInterface.returnGetReactNativeInstallUrlFail(error,responseCode);
             }
 
             @Override
@@ -96,8 +98,13 @@ public class ReactNativeAPIService {
 
                 new OauthUtils(new OauthCallBack() {
                     @Override
-                    public void execute() {
+                    public void reExecute() {
                         getReactNativeInstallUrl(uri);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
                     }
                 },context).refreshToken(completeUrl);
             }
@@ -132,8 +139,13 @@ public class ReactNativeAPIService {
             public void callbackTokenExpire() {
                 new OauthUtils(new OauthCallBack() {
                     @Override
-                    public void execute() {
+                    public void reExecute() {
                         writeBackVersionChange(preVersion,currentVersion,clientId, command,appId);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
                     }
                 },context).refreshToken(completeUrl);
             }
@@ -161,7 +173,7 @@ public class ReactNativeAPIService {
 
             @Override
             public void callbackFail(String error, int responseCode) {
-                apiInterface.returnGetDownloadReactNativeUrlFail(error);
+                apiInterface.returnGetDownloadReactNativeUrlFail(error,responseCode);
             }
 
             @Override
@@ -169,8 +181,13 @@ public class ReactNativeAPIService {
 
                 new OauthUtils(new OauthCallBack() {
                     @Override
-                    public void execute() {
+                    public void reExecute() {
                         getDownLoadUrl(context,findDownloadUrl,clientId,currentVersion);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
                     }
                 },context).refreshToken(completeUrl);
             }
@@ -215,8 +232,13 @@ public class ReactNativeAPIService {
             public void callbackTokenExpire() {
                 new OauthUtils(new OauthCallBack() {
                     @Override
-                    public void execute() {
+                    public void reExecute() {
                         writeBackSplashPageVersionChange(preVersion,currentVersion,clientId, command);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
                     }
                 },context).refreshToken(completeUrl);
             }

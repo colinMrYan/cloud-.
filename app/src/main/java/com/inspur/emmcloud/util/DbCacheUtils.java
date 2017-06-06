@@ -52,7 +52,7 @@ public class DbCacheUtils {
 			}
 		});
 		db.configAllowTransaction(true);
-		db.configDebug(true);
+		db.configDebug(false);
 	}
 	
 	public static DbUtils getDb(Context context){

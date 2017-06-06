@@ -387,7 +387,7 @@ public class UpgradeUtils extends APIInterfaceInstance {
 	}
 
 	@Override
-	public void returnUpgradeFail(String error,boolean isManualCheck) {
+	public void returnUpgradeFail(String error,boolean isManualCheck,int errorCode) {
 		// TODO Auto-generated method stub
 		if (loadingDlg != null && loadingDlg.isShowing()) {
 			loadingDlg.dismiss();

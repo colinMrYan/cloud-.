@@ -1,9 +1,5 @@
 package com.inspur.emmcloud.ui.work.calendar;
 
-import java.io.Serializable;
-import java.util.Calendar;
-import java.util.Locale;
-
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.app.TimePickerDialog.OnTimeSetListener;
@@ -38,6 +34,10 @@ import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.MyDatePickerDialog;
 import com.inspur.emmcloud.widget.SwitchView;
 import com.inspur.emmcloud.widget.SwitchView.OnStateChangedListener;
+
+import java.io.Serializable;
+import java.util.Calendar;
+import java.util.Locale;
 
 /**
  * 日历事件添加界面 com.inspur.emmcloud.ui.CalEventAddActivity create at 2016年9月12日
@@ -370,7 +370,7 @@ public class CalEventAddActivity extends BaseActivity {
 	 * 本地数据拼接CalEvent
 	 * 
 	 * @param title
-	 * @param isAllDay2
+	 * @param isAllDay
 	 * @param startCalendar
 	 * @param endCalendar
 	 */
@@ -405,8 +405,6 @@ public class CalEventAddActivity extends BaseActivity {
 
 	/**
 	 * 添加事件
-	 * 
-	 * @param tilte
 	 */
 	private void addCalEvent() {
 		// TODO Auto-generated method stub
@@ -557,12 +555,12 @@ public class CalEventAddActivity extends BaseActivity {
 		}
 
 		@Override
-		public void returnAddCalEventFail(String error) {
+		public void returnAddCalEventFail(String error,int errorCode) {
 			// TODO Auto-generated method stub
 			if (loadingDlg != null && loadingDlg.isShowing()) {
 				loadingDlg.dismiss();
 			}
-			WebServiceMiddleUtils.hand(CalEventAddActivity.this, error);
+			WebServiceMiddleUtils.hand(CalEventAddActivity.this, error,errorCode);
 		}
 
 		@Override
@@ -582,12 +580,12 @@ public class CalEventAddActivity extends BaseActivity {
 		}
 
 		@Override
-		public void returnUpdateCalEventFail(String error) {
+		public void returnUpdateCalEventFail(String error,int errorCode) {
 			// TODO Auto-generated method stub
 			if (loadingDlg != null && loadingDlg.isShowing()) {
 				loadingDlg.dismiss();
 			}
-			WebServiceMiddleUtils.hand(CalEventAddActivity.this, error);
+			WebServiceMiddleUtils.hand(CalEventAddActivity.this, error,errorCode);
 		}
 
 	}

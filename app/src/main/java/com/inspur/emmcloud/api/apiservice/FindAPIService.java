@@ -55,8 +55,13 @@ public class FindAPIService {
 				new OauthUtils(new OauthCallBack() {
 
 					@Override
-					public void execute() {
+					public void reExecute() {
 						getTripInfo(tripId);
+					}
+
+					@Override
+					public void executeFailCallback() {
+						callbackFail("", -1);
 					}
 				}, context).refreshToken(completeUrl);
 			}
@@ -70,7 +75,7 @@ public class FindAPIService {
 			@Override
 			public void callbackFail(String error, int responseCode) {
 				// TODO Auto-generated method stub
-				apiInterface.returnTripFail(error);
+				apiInterface.returnTripFail(error,responseCode);
 			}
 		});
 	}
@@ -96,8 +101,13 @@ public class FindAPIService {
 				new OauthUtils(new OauthCallBack() {
 
 					@Override
-					public void execute() {
+					public void reExecute() {
 						deleteTripByIds(tripId);
+					}
+
+					@Override
+					public void executeFailCallback() {
+						callbackFail("", -1);
 					}
 				}, context).refreshToken(completeUrl);
 			}
@@ -111,7 +121,7 @@ public class FindAPIService {
 			@Override
 			public void callbackFail(String error, int responseCode) {
 				// TODO Auto-generated method stub
-				apiInterface.returnDelTripFail(error);
+				apiInterface.returnDelTripFail(error,responseCode);
 			}
 		});
 
@@ -137,8 +147,13 @@ public class FindAPIService {
 				new OauthUtils(new OauthCallBack() {
 
 					@Override
-					public void execute() {
+					public void reExecute() {
 						uploadTrainTicket(ticketInfos);
+					}
+
+					@Override
+					public void executeFailCallback() {
+						callbackFail("", -1);
 					}
 				}, context).refreshToken(completeUrl);
 			}
@@ -152,7 +167,7 @@ public class FindAPIService {
 			@Override
 			public void callbackFail(String error, int responseCode) {
 				// TODO Auto-generated method stub
-				apiInterface.returnUploadTrainTicketFail(error);
+				apiInterface.returnUploadTrainTicketFail(error,responseCode);
 			}
 		});
 	}
@@ -176,8 +191,13 @@ public class FindAPIService {
 				new OauthUtils(new OauthCallBack() {
 
 					@Override
-					public void execute() {
+					public void reExecute() {
 						updateTrainTicket(ticketInfos);
+					}
+
+					@Override
+					public void executeFailCallback() {
+						callbackFail("", -1);
 					}
 				}, context).refreshToken(completeUrl);
 			}
@@ -191,7 +211,7 @@ public class FindAPIService {
 			@Override
 			public void callbackFail(String error, int responseCode) {
 				// TODO Auto-generated method stub
-				apiInterface.returnUploadTrainTicketFail(error);
+				apiInterface.returnUploadTrainTicketFail(error,responseCode);
 			}
 		});
 	}
@@ -213,8 +233,13 @@ public class FindAPIService {
 				new OauthUtils(new OauthCallBack() {
 
 					@Override
-					public void execute() {
+					public void reExecute() {
 						getLastUploadTrip();
+					}
+
+					@Override
+					public void executeFailCallback() {
+						callbackFail("", -1);
 					}
 				}, context).refreshToken(completeUrl);
 			}
@@ -228,7 +253,7 @@ public class FindAPIService {
 			@Override
 			public void callbackFail(String error, int responseCode) {
 				// TODO Auto-generated method stub
-				apiInterface.returnLastUploadTripFail(error);
+				apiInterface.returnLastUploadTripFail(error,responseCode);
 			}
 		});
 		
@@ -252,8 +277,13 @@ public class FindAPIService {
 				new OauthUtils(new OauthCallBack() {
 
 					@Override
-					public void execute() {
+					public void reExecute() {
 						getArriveCity(station);
+					}
+
+					@Override
+					public void executeFailCallback() {
+						callbackFail("", -1);
 					}
 				}, context).refreshToken(completeUrl);
 			}
@@ -268,7 +298,7 @@ public class FindAPIService {
 			@Override
 			public void callbackFail(String error, int responseCode) {
 				// TODO Auto-generated method stub
-				apiInterface.retrunTripArriveFail(error);
+				apiInterface.retrunTripArriveFail(error,responseCode);
 			}
 		});
 	}
@@ -287,9 +317,14 @@ public class FindAPIService {
 				new OauthUtils(new OauthCallBack() {
 
 					@Override
-					public void execute() {
+					public void reExecute() {
 						// TODO Auto-generated method stub
 						getKnowledgeList();
+					}
+
+					@Override
+					public void executeFailCallback() {
+						callbackFail("", -1);
 					}
 				}, context).refreshToken(completeUrl);
 			}
@@ -304,7 +339,7 @@ public class FindAPIService {
 			@Override
 			public void callbackFail(String error, int responseCode) {
 				// TODO Auto-generated method stub
-				apiInterface.returnKnowledgeListFail(error);
+				apiInterface.returnKnowledgeListFail(error,responseCode);
 			}
 		});
 	}
@@ -333,8 +368,13 @@ public class FindAPIService {
 				new OauthUtils(new OauthCallBack() {
 
 					@Override
-					public void execute() {
+					public void reExecute() {
 						findSearch(keyword, datatype, page, num, start);
+					}
+
+					@Override
+					public void executeFailCallback() {
+						callbackFail("", -1);
 					}
 				}, context).refreshToken(completeUrl);
 			}
@@ -349,7 +389,7 @@ public class FindAPIService {
 			@Override
 			public void callbackFail(String error, int responseCode) {
 				// TODO Auto-generated method stub
-				apiInterface.returnFindSearchFail(error);
+				apiInterface.returnFindSearchFail(error,responseCode);
 			}
 		});
 	}
@@ -358,8 +398,7 @@ public class FindAPIService {
 	 * 发现界面的搜索
 	 *
 	 * @param keyword
-	 * @param datatype
-	 * @param page
+	 * @param keyword
 	 */
 	public void findMixSearch(final String keyword) {
 		final String completeUrl = UriUtils.getFindMixSearch() + keyword;
@@ -372,8 +411,13 @@ public class FindAPIService {
 				new OauthUtils(new OauthCallBack() {
 
 					@Override
-					public void execute() {
+					public void reExecute() {
 						findMixSearch(keyword);
+					}
+
+					@Override
+					public void executeFailCallback() {
+						callbackFail("", -1);
 					}
 				}, context).refreshToken(completeUrl);
 			}
@@ -389,7 +433,7 @@ public class FindAPIService {
 			@Override
 			public void callbackFail(String error, int responseCode) {
 				// TODO Auto-generated method stub
-				apiInterface.returnFindMixSearchFail(error);
+				apiInterface.returnFindMixSearchFail(error,responseCode);
 			}
 		});
 	}

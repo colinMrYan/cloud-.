@@ -96,12 +96,12 @@ public class ModifyChannelGroupNameActivity extends BaseActivity {
 		}
 
 		@Override
-		public void returnUpdateChannelGroupNameFail(String error) {
+		public void returnUpdateChannelGroupNameFail(String error,int errorCode) {
 			// TODO Auto-generated method stub
 			if (loadingDlg != null && loadingDlg.isShowing()) {
 				loadingDlg.dismiss();
 			}
-			WebServiceMiddleUtils.hand(ModifyChannelGroupNameActivity.this, error);
+			WebServiceMiddleUtils.hand(ModifyChannelGroupNameActivity.this, error,errorCode);
 		}
 		
 	}

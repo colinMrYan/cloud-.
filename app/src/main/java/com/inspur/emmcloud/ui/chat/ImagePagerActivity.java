@@ -439,9 +439,9 @@ public class ImagePagerActivity extends BaseFragmentActivity {
 		}
 
 		@Override
-		public void returnMsgCommentCountFail(String error) {
+		public void returnMsgCommentCountFail(String error,int errorCode) {
 			LogUtils.jasonDebug("returnMsgCommentCountFail");
-			super.returnMsgCommentCountFail(error);
+			super.returnMsgCommentCountFail(error,errorCode);
 		}
 	}
 

@@ -1,13 +1,5 @@
 package com.inspur.emmcloud.ui.work.meeting;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.util.ArrayMap;
@@ -46,6 +38,14 @@ import com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout;
 import com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout.OnRefreshListener;
 import com.inspur.emmcloud.widget.pullableview.PullableExpandableListView;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+
 /**
  * 会议历史记录搜索 com.inspur.emmcloud.ui.work.meeting.MeetingHistorySearchActivity
  * create at 2016年10月9日 上午9:47:05
@@ -78,14 +78,12 @@ public class MeetingHistorySearchActivity extends BaseActivity implements
 	/**
 	 * 获取会议列表
 	 *
-	 * @param page
+	 * @param isShowDlg
 	 * @param isLoadMore
 	 */
 	private void getSearchMeetings(boolean isShowDlg, boolean isLoadMore) {
 		if (NetUtils.isNetworkConnected(getApplicationContext())) {
-			if (isShowDlg) {
-				loadingDlg.show();
-			}
+				loadingDlg.show(isShowDlg);
 			apiService.getHistoryMeetingList(keyword, page, LIMIT, isLoadMore);
 		}
 	}
@@ -406,8 +404,7 @@ public class MeetingHistorySearchActivity extends BaseActivity implements
 	/**
 	 * 得到格式化的时间如06:00-07:30
 	 * 
-	 * @param from
-	 * @param to
+	 * @param meeting
 	 * @return
 	 */
 	public String getTimeDuration(Meeting meeting) {
@@ -436,7 +433,7 @@ public class MeetingHistorySearchActivity extends BaseActivity implements
 
 	/**
 	 * 
-	 * @param form
+	 * @param from
 	 * @return
 	 */
 	private String getFromTime(String from) {
@@ -527,14 +524,14 @@ public class MeetingHistorySearchActivity extends BaseActivity implements
 		}
 
 		@Override
-		public void returnMeetingsFail(String error) {
+		public void returnMeetingsFail(String error,int errorCode) {
 			if (loadingDlg.isShowing()) {
 				loadingDlg.dismiss();
 			}
 			pullToRefreshLayout.refreshFinish(PullToRefreshLayout.FAIL);
 			pullToRefreshLayout.loadmoreFinish(PullToRefreshLayout.FAIL);
 			WebServiceMiddleUtils.hand(MeetingHistorySearchActivity.this,
-					error);
+					error,errorCode);
 		}
 
 	}

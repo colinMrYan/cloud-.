@@ -33,7 +33,6 @@ import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.ToastUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.dialogs.ECMCustomIOSDialog;
-import com.inspur.imp.api.ImpActivity;
 import com.inspur.reactnative.AuthorizationManagerPackage;
 import com.inspur.reactnative.ReactNativeFlow;
 import com.reactnativecomponent.swiperefreshlayout.RCTSwipeRefreshLayoutPackage;
@@ -243,12 +242,12 @@ public class ReactNativeAppActivity extends BaseActivity implements DefaultHardw
         }
 
         @Override
-        public void returnGetClientIdResultFail(String error) {
+        public void returnGetClientIdResultFail(String error,int errorCode) {
             if(loadingDialog != null && loadingDialog.isShowing()){
                 loadingDialog.dismiss();
             }
             WebServiceMiddleUtils.hand(ReactNativeAppActivity.this,
-                    error);
+                    error,errorCode);
         }
 
         @Override
@@ -263,12 +262,12 @@ public class ReactNativeAppActivity extends BaseActivity implements DefaultHardw
         }
 
         @Override
-        public void returnGetReactNativeInstallUrlFail(String error) {
+        public void returnGetReactNativeInstallUrlFail(String error,int errorCode) {
             if(loadingDialog != null && loadingDialog.isShowing()){
                 loadingDialog.dismiss();
             }
             WebServiceMiddleUtils.hand(ReactNativeAppActivity.this,
-                    error);
+                    error,errorCode);
         }
 
         @Override
@@ -283,12 +282,12 @@ public class ReactNativeAppActivity extends BaseActivity implements DefaultHardw
         }
 
         @Override
-        public void returnGetDownloadReactNativeUrlFail(String error) {
+        public void returnGetDownloadReactNativeUrlFail(String error,int errorCode) {
             if(loadingDialog != null && loadingDialog.isShowing()){
                 loadingDialog.dismiss();
             }
             WebServiceMiddleUtils.hand(ReactNativeAppActivity.this,
-                    error);
+                    error,errorCode);
         }
 
     }

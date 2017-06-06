@@ -88,7 +88,7 @@ public class StirckerFragment extends Fragment {
 //            mLoadStickersTask.cancel(true);
 //        }
 //        mLoadStickersTask = new LoadStickersTask();
-//        mLoadStickersTask.execute(1);
+//        mLoadStickersTask.reExecute(1);
 //    }
 //
 //
@@ -283,7 +283,7 @@ public class StirckerFragment extends Fragment {
 //    public void saveStickers() {
 //        // System.out.println("保存 合成图片");
 //        SaveStickersTask task = new SaveStickersTask();
-//        task.execute(activity.mainBitmap);
+//        task.reExecute(activity.mainBitmap);
 //    }
 //
 //    /**

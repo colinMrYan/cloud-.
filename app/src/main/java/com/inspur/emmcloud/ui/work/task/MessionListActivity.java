@@ -1,9 +1,5 @@
 package com.inspur.emmcloud.ui.work.task;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-
 import android.content.BroadcastReceiver;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -44,6 +40,10 @@ import com.inspur.emmcloud.widget.dialogs.EasyDialog;
 import com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout;
 import com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout.OnRefreshListener;
 import com.inspur.emmcloud.widget.pullableview.PullableListView;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 任务列表页
@@ -174,7 +174,7 @@ public class MessionListActivity extends BaseActivity implements
 	/**
 	 * 获取关注的任务
 	 * 
-	 * @param index
+	 * @param isDialogShow
 	 */
 	protected void getFocusedMessions(boolean isDialogShow) {
 		if (NetUtils.isNetworkConnected(MessionListActivity.this)) {
@@ -186,7 +186,7 @@ public class MessionListActivity extends BaseActivity implements
 	/**
 	 * 获取我参与的任务
 	 * 
-	 * @param index
+	 * @param isDialogShow
 	 */
 	protected void getInvolvedMessions(boolean isDialogShow) {
 		if (NetUtils.isNetworkConnected(MessionListActivity.this)) {
@@ -198,7 +198,7 @@ public class MessionListActivity extends BaseActivity implements
 	/**
 	 * 获取我的任务
 	 * 
-	 * @param index
+	 * @param isDialogShow
 	 */
 	protected void getMineMessions(boolean isDialogShow) {
 		if (NetUtils.isNetworkConnected(MessionListActivity.this)) {
@@ -448,12 +448,11 @@ public class MessionListActivity extends BaseActivity implements
 		}
 
 		@Override
-		public void returnCreateTaskFail(String error) {
-			super.returnCreateTaskFail(error);
+		public void returnCreateTaskFail(String error,int errorCode) {
 			if (loadingDialog.isShowing()) {
 				loadingDialog.dismiss();
 			}
-			WebServiceMiddleUtils.hand(MessionListActivity.this, error);
+			WebServiceMiddleUtils.hand(MessionListActivity.this, error,errorCode);
 		}
 
 		@Override
@@ -483,12 +482,11 @@ public class MessionListActivity extends BaseActivity implements
 		}
 
 		@Override
-		public void returnRecentTasksFail(String error) {
-			super.returnRecentTasksFail(error);
+		public void returnRecentTasksFail(String error,int errorCode) {
 			if (loadingDialog.isShowing()) {
 				loadingDialog.dismiss();
 			}
-			WebServiceMiddleUtils.hand(MessionListActivity.this, error);
+			WebServiceMiddleUtils.hand(MessionListActivity.this, error,errorCode);
 		}
 
 		@Override
@@ -505,12 +503,11 @@ public class MessionListActivity extends BaseActivity implements
 		}
 
 		@Override
-		public void returnDeleteTaskFail(String error) {
-			super.returnDeleteTaskFail(error);
+		public void returnDeleteTaskFail(String error,int errorCode) {
 			if (loadingDialog.isShowing()) {
 				loadingDialog.dismiss();
 			}
-			WebServiceMiddleUtils.hand(MessionListActivity.this, error);
+			WebServiceMiddleUtils.hand(MessionListActivity.this, error,errorCode);
 		}
 
 	}
@@ -534,7 +531,6 @@ public class MessionListActivity extends BaseActivity implements
 	/**
 	 * 处理
 	 * 
-	 * @param taskList2
 	 * @param chooseTags
 	 */
 	public void handleResultUI(ArrayList<String> chooseTags) {
@@ -550,7 +546,7 @@ public class MessionListActivity extends BaseActivity implements
 	 * 整理任务列表
 	 * 
 	 * @param getTaskListResult
-	 * @param chooseTags
+	 * @param chooseTagList
 	 * @return
 	 */
 	public ArrayList<TaskResult> handleTaskList(

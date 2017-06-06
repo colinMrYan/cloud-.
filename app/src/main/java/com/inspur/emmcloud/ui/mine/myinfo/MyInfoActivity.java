@@ -260,13 +260,13 @@ public class MyInfoActivity extends BaseActivity {
 		}
 
 		@Override
-		public void returnUploadMyHeadFail(String error) {
+		public void returnUploadMyHeadFail(String error,int errorCode) {
 			// TODO Auto-generated method stub
 			if (loadingDlg != null && loadingDlg.isShowing()) {
 				loadingDlg.dismiss();
 			}
 
-			WebServiceMiddleUtils.hand(MyInfoActivity.this, error);
+			WebServiceMiddleUtils.hand(MyInfoActivity.this, error,errorCode);
 		}
 
 		@Override
@@ -279,7 +279,7 @@ public class MyInfoActivity extends BaseActivity {
 		}
 
 		@Override
-		public void returnUserProfileFail(String error) {
+		public void returnUserProfileFail(String error,int errorCode) {
 			if (loadingDialog != null && loadingDialog.isShowing()) {
 				loadingDialog.dismiss();
 			}

@@ -122,8 +122,13 @@ public class UriUtils {
             public void callbackTokenExpire() {
                 new OauthUtils(new OauthCallBack() {
                     @Override
-                    public void execute() {
+                    public void reExecute() {
                         getGSWebReallyUrl(activity, url, app, loadingDialog);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
                     }
                 },activity).refreshToken(url);
             }

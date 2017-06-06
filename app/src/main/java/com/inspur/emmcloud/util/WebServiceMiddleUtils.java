@@ -17,14 +17,14 @@ public class WebServiceMiddleUtils {
 
 	private static final String TAG = "WebServiceMiddleUtils";
 	
-	/**
-	 * 最常用的弹出toast
-	 * @param context
-	 * @param response
-	 */
-	public static void hand(Context context,String response){
-		hand(context, response, null, null);
-	}
+//	/**
+//	 * 最常用的弹出toast
+//	 * @param context
+//	 * @param response
+//	 */
+//	public static void hand(Context context,String response){
+//		hand(context, response, null, null);
+//	}
 	
 	/**
 	 * 处理错误

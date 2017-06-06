@@ -10,9 +10,9 @@ import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.LoginAPIService;
 import com.inspur.emmcloud.bean.GetLoginResult;
 import com.inspur.emmcloud.bean.GetMyInfoResult;
+import com.inspur.emmcloud.util.MDM.MDM;
+import com.inspur.emmcloud.util.MDM.MDMListener;
 import com.inspur.emmcloud.widget.LoadingDialog;
-import com.inspur.mdm.MDM;
-import com.inspur.mdm.MDMListener;
 
 /**
  * 登录公共类
@@ -221,11 +221,11 @@ public class LoginUtils extends APIInterfaceInstance {
 	}
 
 	@Override
-	public void returnMyInfoFail(String error) {
+	public void returnMyInfoFail(String error,int errorCode) {
 		// TODO Auto-generated method stub
 		clearLoginInfo();
 		loginUtilsHandler.sendEmptyMessage(LOGIN_FAIL);
-		WebServiceMiddleUtils.hand(activity, error);
+		WebServiceMiddleUtils.hand(activity, error,errorCode);
 	}
 
 }

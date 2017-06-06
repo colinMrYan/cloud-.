@@ -21,13 +21,13 @@ import android.widget.TextView;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.util.AppUtils;
 import com.inspur.emmcloud.util.LogUtils;
+import com.inspur.emmcloud.util.MDM.MDM;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.imp.engine.webview.ImpWebChromeClient;
 import com.inspur.imp.engine.webview.ImpWebView;
 import com.inspur.imp.plugin.camera.PublicWay;
 import com.inspur.imp.plugin.file.FileService;
-import com.inspur.mdm.MDM;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -73,7 +73,7 @@ public class MineAPIService {
 				// TODO Auto-generated method stub
 				new OauthUtils(new OauthCallBack() {
 					@Override
-					public void execute() {
+					public void reExecute() {
 						updateUserHead(filePath);
 					}
 				}, context).refreshToken(completeUrl);
@@ -90,7 +90,7 @@ public class MineAPIService {
 			@Override
 			public void callbackFail(String error, int responseCode) {
 				// TODO Auto-generated method stub
-				apiInterface.returnUploadMyHeadFail(error);
+				apiInterface.returnUploadMyHeadFail(error,responseCode);
 			}
 		});
 
@@ -122,7 +122,7 @@ public class MineAPIService {
 				new OauthUtils(new OauthCallBack() {
 
 					@Override
-					public void execute() {
+					public void reExecute() {
 						modifyUserInfo(key, value);
 					}
 				}, context).refreshToken(completeUrl);
@@ -138,7 +138,7 @@ public class MineAPIService {
 			@Override
 			public void callbackFail(String error, int responseCode) {
 				// TODO Auto-generated method stub
-				apiInterface.returnModifyUserInfoFail(error);
+				apiInterface.returnModifyUserInfoFail(error,responseCode);
 
 			}
 		});
@@ -211,7 +211,7 @@ public class MineAPIService {
 				new OauthUtils(new OauthCallBack() {
 
 					@Override
-					public void execute() {
+					public void reExecute() {
 						// TODO Auto-generated method stub
 						getCardPackageList();
 					}
@@ -229,7 +229,7 @@ public class MineAPIService {
 			@Override
 			public void callbackFail(String error, int responseCode) {
 				// TODO Auto-generated method stub
-				apiInterface.returnCardPackageListFail(error);
+				apiInterface.returnCardPackageListFail(error,responseCode);
 			}
 		});
 	}
@@ -250,7 +250,7 @@ public class MineAPIService {
 				new OauthUtils(new OauthCallBack() {
 
 					@Override
-					public void execute() {
+					public void reExecute() {
 						getLanguage();
 					}
 				}, context).refreshToken(completeUrl);
@@ -265,7 +265,7 @@ public class MineAPIService {
 			@Override
 			public void callbackFail(String error, int responseCode) {
 				// TODO Auto-generated method stub
-				apiInterface.returnLanguageFail(error);
+				apiInterface.returnLanguageFail(error,responseCode);
 			}
 		});
 	}
@@ -285,7 +285,7 @@ public class MineAPIService {
 
 			@Override
 			public void callbackFail(String error, int responseCode) {
-				apiInterface.returnUserProfileFail(error);
+				apiInterface.returnUserProfileFail(error,responseCode);
 			}
 
 			@Override
@@ -293,7 +293,7 @@ public class MineAPIService {
 				new OauthUtils(new OauthCallBack() {
 
 					@Override
-					public void execute() {
+					public void reExecute() {
 						getUserProfileInfo();
 					}
 				}, context).refreshToken(completeUrl);
@@ -317,7 +317,7 @@ public class MineAPIService {
 				new OauthUtils(new OauthCallBack() {
 
 					@Override
-					public void execute() {
+					public void reExecute() {
 						getBindingDeviceList();
 					}
 				}, context).refreshToken(completeUrl);
@@ -364,7 +364,7 @@ public class MineAPIService {
 				new OauthUtils(new OauthCallBack() {
 
 					@Override
-					public void execute() {
+					public void reExecute() {
 						unBindDevice(udid);
 					}
 				}, context).refreshToken(completeUrl);
@@ -395,7 +395,7 @@ public class MineAPIService {
 				new OauthUtils(new OauthCallBack() {
 
 					@Override
-					public void execute() {
+					public void reExecute() {
 						getMDMState();
 					}
 				}, context).refreshToken(completeUrl);

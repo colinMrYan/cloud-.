@@ -52,13 +52,13 @@ public class OauthUtils {
 			((MyApplication)context.getApplicationContext()).setAccessToken(accessToken);
 			List<OauthCallBack> callBackList = ((MyApplication)context.getApplicationContext()).getCallBackList();
 			for (int i = 0; i < callBackList.size(); i++) {
-				callBackList.get(i).execute();
+				callBackList.get(i).reExecute();
 			}
 			((MyApplication)context.getApplicationContext()).clearCallBackList();
 		}
 
 		@Override
-		public void returnOauthSigninFail(String error) {
+		public void returnOauthSigninFail(String error,int errorCode) {
 			// TODO Auto-generated method stub
 			Log.d("jason", "refresh---token---fail");
 			((MyApplication)context.getApplicationContext()).setIsTokenRefreshing(false);

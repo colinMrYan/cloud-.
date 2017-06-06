@@ -38,7 +38,6 @@ import com.inspur.emmcloud.bean.GetAppTabAutoResult;
 import com.inspur.emmcloud.bean.GetClientIdRsult;
 import com.inspur.emmcloud.bean.GetSearchChannelGroupResult;
 import com.inspur.emmcloud.bean.Language;
-import com.inspur.emmcloud.bean.ReactNativeClientIdErrorBean;
 import com.inspur.emmcloud.bean.ReactNativeUpdateBean;
 import com.inspur.emmcloud.bean.SplashPageBean;
 import com.inspur.emmcloud.config.MyAppConfig;
@@ -813,10 +812,10 @@ public class IndexActivity extends BaseFragmentActivity implements
         }
 
         @Override
-        public void returnAllContactFail(String error) {
+        public void returnAllContactFail(String error,int errorCode) {
             // TODO Auto-generated method stub
             getAllChannelGroup();
-            WebServiceMiddleUtils.hand(IndexActivity.this, error);
+            WebServiceMiddleUtils.hand(IndexActivity.this, error,errorCode);
         }
 
         @Override
@@ -832,8 +831,8 @@ public class IndexActivity extends BaseFragmentActivity implements
         }
 
         @Override
-        public void returnSearchChannelGroupFail(String error) {
-            super.returnSearchChannelGroupFail(error);
+        public void returnSearchChannelGroupFail(String error,int errorCode) {
+            super.returnSearchChannelGroupFail(error,errorCode);
             // 无论成功或者失败都返回成功都能进入应用
             handler.sendEmptyMessage(SYNC_ALL_BASE_DATA_SUCCESS);
         }
@@ -846,7 +845,7 @@ public class IndexActivity extends BaseFragmentActivity implements
         }
 
         @Override
-        public void returnAllRobotsFail(String error) {
+        public void returnAllRobotsFail(String error,int errorCode) {
             //暂时去掉机器人错误
 //			WebServiceMiddleUtils.hand(IndexActivity.this, error);
         }
@@ -875,7 +874,7 @@ public class IndexActivity extends BaseFragmentActivity implements
         }
 
         @Override
-        public void returnReactNativeUpdateFail(ReactNativeClientIdErrorBean reactNativeClientIdErrorBean) {
+        public void returnReactNativeUpdateFail(String error,int errorCode) {
             isReactNativeClientUpdateFail = true;
             if(!checkClientIdNotExit()){
                 getReactNativeClientId();
@@ -901,8 +900,7 @@ public class IndexActivity extends BaseFragmentActivity implements
         }
 
         @Override
-        public void returnGetClientIdResultFail(String error) {
-            super.returnGetClientIdResultFail(error);
+        public void returnGetClientIdResultFail(String error,int errorCode) {
         }
 
         @Override
@@ -911,8 +909,7 @@ public class IndexActivity extends BaseFragmentActivity implements
         }
 
         @Override
-        public void returnAppTabAutoFail(String error) {
-//            WebServiceMiddleUtils.hand(IndexActivity.this, error);
+        public void returnAppTabAutoFail(String error,int errorCode) {
         }
 
         @Override
