@@ -392,8 +392,10 @@ public class UpgradeUtils extends APIInterfaceInstance {
 		if (loadingDlg != null && loadingDlg.isShowing()) {
 			loadingDlg.dismiss();
 		}
-		WebServiceMiddleUtils.hand(context, error, upgradeHandler,
-				UPGRADE_FAIL);
+		upgradeHandler.sendEmptyMessage(UPGRADE_FAIL);
+		WebServiceMiddleUtils.hand(context,error,errorCode);
+//		WebServiceMiddleUtils.hand(context, error, upgradeHandler,
+//				UPGRADE_FAIL);
 	}
 
 }

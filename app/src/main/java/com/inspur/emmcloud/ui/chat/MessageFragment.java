@@ -34,6 +34,7 @@ import com.inspur.emmcloud.bean.GetSearchChannelGroupResult;
 import com.inspur.emmcloud.bean.MatheSet;
 import com.inspur.emmcloud.bean.Msg;
 import com.inspur.emmcloud.broadcastreceiver.MsgReceiver;
+import com.inspur.emmcloud.callback.CommonCallBack;
 import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.util.AppTitleUtils;
@@ -116,6 +117,13 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 			parent.removeView(rootView);
 		}
 		return rootView;
+	}
+
+	@Override
+	public void onAttach(Context context) {
+		super.onAttach(context);
+		CommonCallBack callBack = (CommonCallBack)context;
+		callBack.excute();
 	}
 
 	/**

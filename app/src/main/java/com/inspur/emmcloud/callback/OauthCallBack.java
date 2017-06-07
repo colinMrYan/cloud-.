@@ -1,4 +1,4 @@
-package com.inspur.emmcloud.util;
+package com.inspur.emmcloud.callback;
 
 public interface OauthCallBack {
 	void reExecute();

@@ -19,7 +19,7 @@ import com.inspur.emmcloud.bean.GetMyInfoResult;
 import com.inspur.emmcloud.bean.GetRegisterCheckResult;
 import com.inspur.emmcloud.bean.GetSignoutResult;
 import com.inspur.emmcloud.bean.GetUpdatePwdBySMSCodeBean;
-import com.inspur.emmcloud.util.OauthCallBack;
+import com.inspur.emmcloud.callback.OauthCallBack;
 import com.inspur.emmcloud.util.OauthUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.UriUtils;

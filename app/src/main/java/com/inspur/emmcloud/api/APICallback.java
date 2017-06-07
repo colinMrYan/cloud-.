@@ -18,6 +18,7 @@ import org.xutils.common.Callback.CommonCallback;
 import org.xutils.ex.HttpException;
 
 import java.net.SocketTimeoutException;
+import java.net.UnknownHostException;
 import java.util.concurrent.TimeoutException;
 
 
@@ -54,7 +55,7 @@ public abstract class APICallback implements CommonCallback<String> {
 			int responseCode = -1;
 			int errorLevel = 2;
 			//connect timed out
-			if (arg0 instanceof TimeoutException || arg0 instanceof SocketTimeoutException) {
+			if (arg0 instanceof TimeoutException || arg0 instanceof SocketTimeoutException || arg0 instanceof UnknownHostException) {
 				errorLevel = 3;
 				error = "time out";
 			} else if (arg0 instanceof HttpException) {
@@ -66,9 +67,9 @@ public abstract class APICallback implements CommonCallback<String> {
 			}
 			if (StringUtils.isBlank(error)) {
 				error = "未知错误";
-			} else {
-				LogUtils.debug("HttpUtil", "result=" + arg0.toString());
 			}
+			LogUtils.debug("HttpUtil", "result=" + error);
+
 			if (responseCode == 401) {
 				callbackTokenExpire();
 			} else {
@@ -89,9 +90,6 @@ public abstract class APICallback implements CommonCallback<String> {
 	 */
 	private void saveNetException(String error, int responseCode,int errorLevel) {
 		if (!AppUtils.isApkDebugable(context)) {
-			if (StringUtils.isBlank(error)) {
-				error = "未知错误";
-			}
 			AppException appException = new AppException(System.currentTimeMillis(), AppUtils.getVersion(context), errorLevel, url, error, responseCode);
 			AppExceptionCacheUtils.saveAppException(context, appException);
 		}
