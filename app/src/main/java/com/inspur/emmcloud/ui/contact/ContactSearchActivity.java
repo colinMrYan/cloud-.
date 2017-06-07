@@ -133,6 +133,9 @@ public class ContactSearchActivity extends BaseActivity {
 	private GroupTitleAdapter popSecondGroupTitleAdapter;
 	private GroupTitleAdapter popThirdGroupTitleAdapter;
 	private WeakHandler handler;
+	private Runnable searchRunnbale;
+	private String searchText;
+	private long lastSearchTime = 0L;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -143,8 +146,9 @@ public class ContactSearchActivity extends BaseActivity {
 		rootContact = ContactCacheUtils
 				.getRootContact(ContactSearchActivity.this);
 		getIntentData();
-		initView();
 		handMessage();
+		initView();
+		initSearchRunnable();
 	}
 
 	/**
@@ -515,6 +519,55 @@ public class ContactSearchActivity extends BaseActivity {
 		notifyAllDataChanged();
 	}
 
+	private void initSearchRunnable(){
+		searchRunnbale = new Runnable() {
+			@Override
+			public void run() {
+				lastSearchTime = System.currentTimeMillis();
+				switch (searchArea) {
+					case SEARCH_ALL:
+						searchChannelGroupList = ChannelGroupCacheUtils
+								.getSearchChannelGroupList(getApplicationContext(),
+										searchText);
+						searchContactList = ContactCacheUtils.getSearchContact(
+								getApplicationContext(), searchText, null,
+								4);
+						searchRecentList = ChannelCacheUtils.getSearchChannelList(
+								getApplicationContext(), searchText, searchContent);
+						break;
+					case SEARCH_CHANNELGROUP:
+						searchChannelGroupList = ChannelGroupCacheUtils
+								.getSearchChannelGroupList(getApplicationContext(),
+										searchText);
+						if (!isSearchSingle) {
+							searchRecentList = ChannelCacheUtils
+									.getSearchChannelList(getApplicationContext(),
+											searchText, searchContent);
+						}
+						break;
+					case SEARCH_RECENT:
+						searchRecentList = ChannelCacheUtils.getSearchChannelList(
+								getApplicationContext(), searchText, searchContent);
+						break;
+					case SEARCH_CONTACT:
+						searchContactList = ContactCacheUtils.getSearchContact(
+								getApplicationContext(), searchText, null,
+								4);
+						if (!isSearchSingle) {
+							searchRecentList = ChannelCacheUtils
+									.getSearchChannelList(getApplicationContext(),
+											searchText, searchContent);
+						}
+						break;
+
+					default:
+						break;
+				}
+				handler.sendEmptyMessage(REFRESH_DATA);
+			}
+		};
+	}
+
 	private class MyTextWatcher implements TextWatcher {
 
 		@Override
@@ -533,58 +586,21 @@ public class ContactSearchActivity extends BaseActivity {
 		@Override
 		public void afterTextChanged(Editable s) {
 			// TODO Auto-generated method stub
-			final String searchText = searchEdit.getText().toString().trim();
+			searchText = searchEdit.getText().toString().trim();
 			if (!StringUtils.isBlank(searchText)) {
 				if (popLayout.getVisibility() == View.GONE) {
 					searchArea = orginCurrentArea;
 				}
-			//	new Thread(new Runnable() {
-//					@Override
-//					public void run() {
-						switch (searchArea) {
-							case SEARCH_ALL:
-								searchChannelGroupList = ChannelGroupCacheUtils
-										.getSearchChannelGroupList(getApplicationContext(),
-												searchText);
-								searchContactList = ContactCacheUtils.getSearchContact(
-										getApplicationContext(), searchText, null,
-										4);
-								searchRecentList = ChannelCacheUtils.getSearchChannelList(
-										getApplicationContext(), searchText, searchContent);
-								break;
-							case SEARCH_CHANNELGROUP:
-								searchChannelGroupList = ChannelGroupCacheUtils
-										.getSearchChannelGroupList(getApplicationContext(),
-												searchText);
-								if (!isSearchSingle) {
-									searchRecentList = ChannelCacheUtils
-											.getSearchChannelList(getApplicationContext(),
-													searchText, searchContent);
-								}
-								break;
-							case SEARCH_RECENT:
-								searchRecentList = ChannelCacheUtils.getSearchChannelList(
-										getApplicationContext(), searchText, searchContent);
-								break;
-							case SEARCH_CONTACT:
-								searchContactList = ContactCacheUtils.getSearchContact(
-										getApplicationContext(), searchText, null,
-										4);
-								if (!isSearchSingle) {
-									searchRecentList = ChannelCacheUtils
-											.getSearchChannelList(getApplicationContext(),
-													searchText, searchContent);
-								}
-								break;
-
-							default:
-								break;
-						}
-					showSearchPop();
-					//	handler.sendEmptyMessage(REFRESH_DATA);
-				//	}
-			//	}).start();
+				long currentTime = System.currentTimeMillis();
+				if (currentTime - lastSearchTime > 500){
+					handler.post(searchRunnbale);
+				}else {
+					handler.removeCallbacks(searchRunnbale);
+					handler.postDelayed(searchRunnbale,500);
+				}
 			} else {
+				lastSearchTime = 0;
+				handler.removeCallbacks(searchRunnbale);
 				hideSearchPop();
 			}
 		}
@@ -784,6 +800,9 @@ public class ContactSearchActivity extends BaseActivity {
 
 	private void showSearchPop() {
 		// TODO Auto-generated method stub
+		if(StringUtils.isBlank(searchText)){
+			return;
+		}
 		originAllLayout.setVisibility(View.GONE);
 		popLayout.setVisibility(View.VISIBLE);
 		if (searchArea == SEARCH_ALL) {
