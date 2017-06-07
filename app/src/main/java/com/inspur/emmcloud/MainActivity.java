@@ -203,6 +203,12 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
         };
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        overridePendingTransition(R.anim.right_in, R.anim.left_out);
+    }
+
     /**
      * 显示跳过按钮
      */
@@ -288,6 +294,7 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
         }
         return flag;
     }
+
 
 
     /**
