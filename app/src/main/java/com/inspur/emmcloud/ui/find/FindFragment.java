@@ -4,7 +4,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -20,15 +19,9 @@ import com.facebook.react.modules.core.DefaultHardwareBackBtnHandler;
 import com.facebook.react.shell.MainReactPackage;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.config.MyAppConfig;
-import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.reactnative.AuthorizationManagerPackage;
 import com.inspur.reactnative.ReactNativeFlow;
 import com.reactnativecomponent.swiperefreshlayout.RCTSwipeRefreshLayoutPackage;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
 
 
 /**
@@ -60,14 +53,15 @@ public class FindFragment extends Fragment implements DefaultHardwareBackBtnHand
      */
     private void createReactNativeView(boolean needToRefresh) {
         mReactRootView = new ReactRootView(getActivity());
-        try {
-            InputStream fis = new FileInputStream(new File(reactCurrentFilePath+"/default.9.png"));
-            Drawable da = Drawable.createFromStream(fis, "default.9.png");
-            mReactRootView.setBackground(da);
-        } catch (FileNotFoundException e) {
-            LogUtils.YfcDebug("出现文件解析异常："+e.getMessage());
-            e.printStackTrace();
-        }
+        //暂时屏蔽以下8行
+//        try {
+//            InputStream fis = new FileInputStream(new File(reactCurrentFilePath+"/default.9.png"));
+//            Drawable da = Drawable.createFromStream(fis, "default.9.png");
+//            mReactRootView.setBackground(da);
+//        } catch (FileNotFoundException e) {
+//            LogUtils.YfcDebug("出现文件解析异常："+e.getMessage());
+//            e.printStackTrace();
+//        }
 //        mReactRootView.setBackgroundResource(R.drawable.loading2);
         mReactInstanceManager = ReactInstanceManager.builder()
                 .setApplication(getActivity().getApplication())
