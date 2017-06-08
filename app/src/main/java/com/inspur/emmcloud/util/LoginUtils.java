@@ -137,7 +137,6 @@ public class LoginUtils extends APIInterfaceInstance {
 	 * 获取基本信息
 	 */
 	public void getMyInfo() {
-		LogUtils.jasonDebug("getMyInfo-------------");
 		apiServices.getMyInfo();
 	}
 
@@ -213,18 +212,15 @@ public class LoginUtils extends APIInterfaceInstance {
 		if (isLogin) {
 			isLogin = false;
 		}
-		LogUtils.jasonDebug("getMyInfo-------------0000");
 		if (handler != null) {
 			languageUtils = new LanguageUtils(activity, loginUtilsHandler);
 			languageUtils.getServerSupportLanguage();
-			LogUtils.jasonDebug("getMyInfo-------------11111111");
 		}
 	}
 
 	@Override
 	public void returnMyInfoFail(String error,int errorCode) {
 		// TODO Auto-generated method stub
-		LogUtils.jasonDebug("getMyInfo-------------222222222");
 		clearLoginInfo();
 		loginUtilsHandler.sendEmptyMessage(LOGIN_FAIL);
 		WebServiceMiddleUtils.hand(activity, error,errorCode);
