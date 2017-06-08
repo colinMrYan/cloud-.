@@ -8,6 +8,8 @@
 package com.inspur.emmcloud.util;
 
 import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.bean.AppCommonlyUse;
@@ -29,7 +31,7 @@ public class DbCacheUtils {
 		String dbCachePath = "/data/data/" + context.getPackageName()
 				+ "/databases/" + userID + "/" + tanentID + "/" + "db/";
 		//db = DbUtils.create(context, dbCachePath, "emm.db");
-		db = DbUtils.create(context, dbCachePath, "emm.db", 5, new DbUpgradeListener() {
+		db = DbUtils.create(context, dbCachePath, "emm.db", 6, new DbUpgradeListener() {
 			@Override
 			public void onUpgrade(DbUtils arg0, int oldVersion, int newVersion) {
 				// TODO Auto-generated method stub
@@ -46,6 +48,11 @@ public class DbCacheUtils {
 					}else if(oldVersion == 3||oldVersion == 4){
 						arg0.dropTable(AppCommonlyUse.class);
 					}
+					if (oldVersion <6 ){
+						if (tableIsExist("com_inspur_emmcloud_bean_Contact",arg0.getDatabase())){
+							arg0.execNonQuery("alter table com_inspur_emmcloud_bean_Contact rename to Contact");
+						}
+					}
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -54,7 +61,30 @@ public class DbCacheUtils {
 		db.configAllowTransaction(true);
 		db.configDebug(true);
 	}
-	
+
+	private static  boolean tableIsExist(String tabName, SQLiteDatabase db) {
+		boolean result = false;
+		if (tabName == null) {
+			return false;
+		}
+		Cursor cursor = null;
+		try {
+
+			String sql = "select count(*) as c from sqlite_master where type ='table' and name ='" + tabName.trim() + "' ";
+			cursor = db.rawQuery(sql, null);
+			if (cursor.moveToNext()) {
+				int count = cursor.getInt(0);
+				if (count > 0) {
+					result = true;
+				}
+			}
+
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		return result;
+	}
+
 	public static DbUtils getDb(Context context){
 		if (db == null) {
 			initDb(context.getApplicationContext());
