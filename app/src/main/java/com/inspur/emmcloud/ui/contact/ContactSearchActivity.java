@@ -1427,22 +1427,27 @@ public class ContactSearchActivity extends BaseActivity {
 	private void displayImg(SearchModel searchModel, CircleFrameLayout photoLayout) {
 		String icon = searchModel.getIcon();
 		String type = searchModel.getType();
-		if (type.equals("STRUCT")) {
-			photoLayout.setBackgroundResource(R.drawable.icon_channel_group_default);
-			return;
-		}
+//		if (type.equals("STRUCT")) {
+//			photoLayout.setBackgroundResource(R.drawable.icon_channel_group_default);
+//			return;
+//		}
 		if (type.equals("GROUP")) {
 			DisplayChannelGroupIcon.show(ContactSearchActivity.this,searchModel.getId(),photoLayout);
 		} else {
 			View channelPhotoView = LayoutInflater.from(ContactSearchActivity.this).inflate(R.layout.chat_msg_session_photo_one, null);
 			ImageView photoImg = (ImageView) channelPhotoView.findViewById(R.id.photo_img1);
-			int defaultIcon = R.drawable.icon_person_default;
-			if (searchModel.getId().equals("null")) {
-				photoLayout.setBackgroundResource(defaultIcon);
-				return;
+			if (type.equals("STRUCT")){
+				new ImageDisplayUtils().display(photoImg,"drawable://"+R.drawable.icon_channel_group_default);
+			}else{
+				int defaultIcon = R.drawable.icon_person_default;
+				if (searchModel.getId().equals("null")) {
+					photoLayout.setBackgroundResource(defaultIcon);
+					return;
+				}
+				new ImageDisplayUtils(getApplicationContext(), defaultIcon).display(
+						photoImg, icon);
 			}
-			new ImageDisplayUtils(getApplicationContext(), defaultIcon).display(
-					photoImg, icon);
+
 			photoLayout.addView(channelPhotoView);
 		}
 
