@@ -1427,10 +1427,6 @@ public class ContactSearchActivity extends BaseActivity {
 	private void displayImg(SearchModel searchModel, CircleFrameLayout photoLayout) {
 		String icon = searchModel.getIcon();
 		String type = searchModel.getType();
-//		if (type.equals("STRUCT")) {
-//			photoLayout.setBackgroundResource(R.drawable.icon_channel_group_default);
-//			return;
-//		}
 		if (type.equals("GROUP")) {
 			DisplayChannelGroupIcon.show(ContactSearchActivity.this,searchModel.getId(),photoLayout);
 		} else {
