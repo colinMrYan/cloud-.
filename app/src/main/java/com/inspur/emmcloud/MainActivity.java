@@ -206,7 +206,7 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
     @Override
     protected void onPause() {
         super.onPause();
-        overridePendingTransition(R.anim.right_in, R.anim.left_out);
+        overridePendingTransition(0,0);
     }
 
     /**
