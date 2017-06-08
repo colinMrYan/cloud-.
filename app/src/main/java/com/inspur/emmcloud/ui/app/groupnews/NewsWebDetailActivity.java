@@ -42,7 +42,7 @@ import com.inspur.emmcloud.util.ChatCreateUtils.OnCreateDirectChannelListener;
 import com.inspur.emmcloud.util.DensityUtil;
 import com.inspur.emmcloud.util.HtmlRegexpUtil;
 import com.inspur.emmcloud.util.NetUtils;
-import com.inspur.emmcloud.util.PreferencesByUserUtils;
+import com.inspur.emmcloud.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.StateBarColor;
 import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.ToastUtils;
@@ -134,7 +134,7 @@ public class NewsWebDetailActivity extends BaseActivity {
      */
     private void initWebView() {
         webView = (ProgressWebView) findViewById(R.id.news_webdetail_webview);
-        String model = PreferencesByUserUtils.getString(NewsWebDetailActivity.this, "app_news_webview_model", "");
+        String model = PreferencesByUserAndTanentUtils.getString(NewsWebDetailActivity.this, "app_news_webview_model", "");
         if (model.equals(darkMode)) {
             webView.setBackgroundColor(ContextCompat.getColor(NewsWebDetailActivity.this, R.color.app_news_night_color));
         } else {
@@ -151,7 +151,7 @@ public class NewsWebDetailActivity extends BaseActivity {
      * 初始化是否夜间日间模式
      */
     private void initWebViewModel() {
-        String model = PreferencesByUserUtils.getString(NewsWebDetailActivity.this, "app_news_webview_model", "");
+        String model = PreferencesByUserAndTanentUtils.getString(NewsWebDetailActivity.this, "app_news_webview_model", "");
         if (StringUtils.isBlank(model)) {
             changeWebViewModel(lightMode);
         } else {
@@ -186,7 +186,7 @@ public class NewsWebDetailActivity extends BaseActivity {
      * 初始化WebView的字体大小
      */
     private void initWebViewTextSize() {
-        textSize = PreferencesByUserUtils.getInt(NewsWebDetailActivity.this, "app_news_text_size", MyAppWebConfig.NORMAL);
+        textSize = PreferencesByUserAndTanentUtils.getInt(NewsWebDetailActivity.this, "app_news_text_size", MyAppWebConfig.NORMAL);
         switch (textSize) {
             case MyAppWebConfig.SMALLESET:
                 textSize = MyAppWebConfig.SMALLESET;
@@ -279,7 +279,7 @@ public class NewsWebDetailActivity extends BaseActivity {
         // 设置点击外围解散
         dialog.setCanceledOnTouchOutside(true);
         initDialogFontSize();
-        String model = PreferencesByUserUtils.getString(NewsWebDetailActivity.this, "app_news_webview_model", "");
+        String model = PreferencesByUserAndTanentUtils.getString(NewsWebDetailActivity.this, "app_news_webview_model", "");
         if(model.equals(darkMode)){
             changeDialogModelToNight();
         }else {
@@ -292,7 +292,7 @@ public class NewsWebDetailActivity extends BaseActivity {
      * Dialog字体按钮控制
      */
     private void initDialogFontSize() {
-        String model = PreferencesByUserUtils.getString(NewsWebDetailActivity.this, "app_news_webview_model", "");
+        String model = PreferencesByUserAndTanentUtils.getString(NewsWebDetailActivity.this, "app_news_webview_model", "");
         switch (textSize) {
             case MyAppWebConfig.SMALLESET:
                 chooseNormalFont(model);
@@ -352,7 +352,7 @@ public class NewsWebDetailActivity extends BaseActivity {
         nightModeSwitchBtn = (SwitchView) view.findViewById(R.id.app_news_mode_switch);
         nightModeSwitchBtn.setPaintColorOn(0x7E000000);
         nightModeSwitchBtn.setPaintCircleBtnColor(0x1A666666);
-        String model = PreferencesByUserUtils.getString(NewsWebDetailActivity.this, "app_news_webview_model", lightMode);
+        String model = PreferencesByUserAndTanentUtils.getString(NewsWebDetailActivity.this, "app_news_webview_model", lightMode);
         if(model.equals(darkMode)){
             nightModeSwitchBtn.setOpened(true);
         }else{
@@ -361,7 +361,7 @@ public class NewsWebDetailActivity extends BaseActivity {
         nightModeSwitchBtn.setOnStateChangedListener(new SwitchView.OnStateChangedListener() {
             @Override
             public void toggleToOn(View view) {
-                PreferencesByUserUtils.putString(NewsWebDetailActivity.this, "app_news_webview_model", darkMode);
+                PreferencesByUserAndTanentUtils.putString(NewsWebDetailActivity.this, "app_news_webview_model", darkMode);
                 changeDialogModelToNight();
                 changeWebViewModel(darkMode);
                 nightModeSwitchBtn.toggleSwitch(true);
@@ -370,7 +370,7 @@ public class NewsWebDetailActivity extends BaseActivity {
 
             @Override
             public void toggleToOff(View view) {
-                PreferencesByUserUtils.putString(NewsWebDetailActivity.this, "app_news_webview_model", lightMode);
+                PreferencesByUserAndTanentUtils.putString(NewsWebDetailActivity.this, "app_news_webview_model", lightMode);
                 changeDialogModelToDay();
                 changeWebViewModel(lightMode);
                 nightModeSwitchBtn.toggleSwitch(false);
@@ -387,7 +387,7 @@ public class NewsWebDetailActivity extends BaseActivity {
      */
     private void changeNewsFontSize(WebSettings settings, int textZoom) {
         settings.setTextZoom(textZoom);
-        PreferencesByUserUtils.putInt(NewsWebDetailActivity.this, "app_news_text_size", textZoom);
+        PreferencesByUserAndTanentUtils.putInt(NewsWebDetailActivity.this, "app_news_text_size", textZoom);
         textSize = textZoom;
         reRender();
     }
@@ -397,7 +397,7 @@ public class NewsWebDetailActivity extends BaseActivity {
      */
     private void reRender() {
         //这里为了解决一个改变字体时的bug，很奇怪
-        String model = PreferencesByUserUtils.getString(NewsWebDetailActivity.this, "app_news_webview_model", "");
+        String model = PreferencesByUserAndTanentUtils.getString(NewsWebDetailActivity.this, "app_news_webview_model", "");
         GradientDrawable drawable = new GradientDrawable();
         drawable.setCornerRadius(DensityUtil.dip2px(NewsWebDetailActivity.this, 5));
 
@@ -424,7 +424,7 @@ public class NewsWebDetailActivity extends BaseActivity {
     }
 
     public void onClick(View v) {
-        String model = PreferencesByUserUtils.getString(NewsWebDetailActivity.this, "app_news_webview_model", "");
+        String model = PreferencesByUserAndTanentUtils.getString(NewsWebDetailActivity.this, "app_news_webview_model", "");
         switch (v.getId()) {
             case R.id.back_layout:
                 finish();
@@ -682,7 +682,7 @@ public class NewsWebDetailActivity extends BaseActivity {
             relativeLayout.setBackgroundColor(ContextCompat.getColor(NewsWebDetailActivity.this, R.color.header_bg));
             webView.loadUrl(url + model);
         }
-        PreferencesByUserUtils.putString(NewsWebDetailActivity.this, "app_news_webview_model", model);
+        PreferencesByUserAndTanentUtils.putString(NewsWebDetailActivity.this, "app_news_webview_model", model);
     }
 
     /**
@@ -757,7 +757,7 @@ public class NewsWebDetailActivity extends BaseActivity {
      * 当改变日夜间模式的时候字体按钮对应改变
      */
     private void changeFontSizeBtn() {
-        String model = PreferencesByUserUtils.getString(NewsWebDetailActivity.this, "app_news_webview_model", "");
+        String model = PreferencesByUserAndTanentUtils.getString(NewsWebDetailActivity.this, "app_news_webview_model", "");
         switch (textSize){
             case MyAppWebConfig.SMALLER:
                 chooseNormalFont(model);

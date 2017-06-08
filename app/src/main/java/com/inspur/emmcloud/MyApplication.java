@@ -20,6 +20,7 @@ import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
 import com.inspur.emmcloud.api.APIUri;
+import com.inspur.emmcloud.bean.Enterprise;
 import com.inspur.emmcloud.bean.GetMyInfoResult;
 import com.inspur.emmcloud.bean.Language;
 import com.inspur.emmcloud.callback.OauthCallBack;
@@ -29,6 +30,8 @@ import com.inspur.emmcloud.util.AppUtils;
 import com.inspur.emmcloud.util.CrashHandler;
 import com.inspur.emmcloud.util.DbCacheUtils;
 import com.inspur.emmcloud.util.LogUtils;
+import com.inspur.emmcloud.util.OauthCallBack;
+import com.inspur.emmcloud.util.PreferencesByUsersUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.UriUtils;
@@ -78,7 +81,7 @@ public class MyApplication extends MultiDexApplication implements  ReactApplicat
 	private List<OauthCallBack> callBackList = new ArrayList<OauthCallBack>();
 	private String uid;
 	private String accessToken;
-	private String enterpriseId;
+	private Enterprise currentEnterprise;
 
 
 
@@ -209,7 +212,9 @@ public class MyApplication extends MultiDexApplication implements  ReactApplicat
 		params.addHeader("Accept", "application/json");
 		if (getToken() != null) {
 			params.addHeader("Authorization", getToken());
-			params.addHeader("X-ECC-Current-Enterprise", enterpriseId);
+		}
+		if (currentEnterprise != null){
+			params.addHeader("X-ECC-Current-Enterprise", currentEnterprise.getId());
 		}
 		String languageJson = PreferencesUtils.getString(
 				getApplicationContext(), UriUtils.tanent + "appLanguageObj");
@@ -354,15 +359,29 @@ public class MyApplication extends MultiDexApplication implements  ReactApplicat
 				"myInfo");
 		if (!StringUtils.isBlank(myInfo)) {
 			GetMyInfoResult getMyInfoResult = new GetMyInfoResult(myInfo);
-			String enterpriseCode = getMyInfoResult.getEnterpriseCode();
+			String currentEnterpriseId = PreferencesByUsersUtils.getString(getApplicationContext(),"current_enterprise_id");
+			if (!StringUtils.isBlank(currentEnterpriseId)){
+				List<Enterprise> enterpriseList = getMyInfoResult.getEnterpriseList();
+				for (int i=0;i<enterpriseList.size();i++){
+					Enterprise enterprise = enterpriseList.get(i);
+					if (enterprise.getId().equals(currentEnterpriseId)){
+						currentEnterprise = enterprise;
+						break;
+					}
+
+				}
+			}
+			if (currentEnterprise == null){
+				currentEnterprise =getMyInfoResult.getDefaultEnterprise();
+			}
+			String enterpriseCode = currentEnterprise.getCode();
 			UriUtils.tanent = enterpriseCode;
 			APIUri.tanent = enterpriseCode;
-			enterpriseId = getMyInfoResult.getEnterpriseId();
 		}
 	}
 
-	public String  getInterpriseId(){
-		return  enterpriseId;
+	public Enterprise  getCurrentEnterprise(){
+		return  currentEnterprise;
 	}
 
 	/*************************************************************************/

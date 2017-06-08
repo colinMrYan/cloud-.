@@ -7,6 +7,10 @@
  */
 package com.inspur.emmcloud.api.apiservice;
 
+import org.xutils.x;
+import org.xutils.http.HttpMethod;
+import org.xutils.http.RequestParams;
+
 import android.content.Context;
 
 import com.inspur.emmcloud.MyApplication;
@@ -23,10 +27,6 @@ import com.inspur.emmcloud.callback.OauthCallBack;
 import com.inspur.emmcloud.util.OauthUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.UriUtils;
-
-import org.xutils.http.HttpMethod;
-import org.xutils.http.RequestParams;
-import org.xutils.x;
 
 /**
  * com.inspur.emmcloud.api.apiservice.LoginAPIService create at 2016年11月8日

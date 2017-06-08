@@ -50,7 +50,7 @@ import com.inspur.emmcloud.util.MsgCacheUtil;
 import com.inspur.emmcloud.util.MsgMatheSetCacheUtils;
 import com.inspur.emmcloud.util.MsgReadIDCacheUtils;
 import com.inspur.emmcloud.util.NetUtils;
-import com.inspur.emmcloud.util.PreferencesByUserUtils;
+import com.inspur.emmcloud.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.TimeUtils;
@@ -130,7 +130,7 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 	 * 设置标题
 	 */
 	private void setTabTitle(){
-		String appTabs = PreferencesByUserUtils.getString(getActivity(),"app_tabbar_info_current","");
+		String appTabs = PreferencesByUserAndTanentUtils.getString(getActivity(),"app_tabbar_info_current","");
 		if(!StringUtils.isBlank(appTabs)){
 			titleText.setText(AppTitleUtils.getTabTitle(getActivity(),getClass().getSimpleName()));
 		}
@@ -166,7 +166,7 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
      * 展示创建
      */
     private void showMessageButtons() {
-        String tabBarInfo = PreferencesByUserUtils.getString(getActivity(), "app_tabbar_info_current", "");
+        String tabBarInfo = PreferencesByUserAndTanentUtils.getString(getActivity(), "app_tabbar_info_current", "");
         AppTabAutoBean appTabAutoBean = new AppTabAutoBean(tabBarInfo);
         if(appTabAutoBean != null) {
             AppTabAutoBean.PayloadBean payloadBean = appTabAutoBean.getPayload();

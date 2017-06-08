@@ -63,10 +63,8 @@ public class AppCenterNativeAppUtils {
 				String myInfo = PreferencesUtils.getString(context, "myInfo");
 				GetMyInfoResult getMyInfoResult = new GetMyInfoResult(myInfo);
 				intent.putExtra("USERNAME", getMyInfoResult.getCode());
-				String password = PreferencesByUserUtils.getString(context, "approvalPassword");
+				String password = PreferencesByUserAndTanentUtils.getString(context, "approvalPassword");
 				intent.putExtra("PASSWORD", password);
-				LogUtils.jasonDebug("USERNAME=" + getMyInfoResult.getCode());
-				LogUtils.jasonDebug("PASSWORD=" + password);
 			} else {
 				PackageManager packageManager = context.getPackageManager();
 				intent = packageManager.getLaunchIntentForPackage(packageName);
@@ -84,7 +82,7 @@ public class AppCenterNativeAppUtils {
 	 * 获取审批的密码
 	 */
 	private void getApprovalPassword() {
-		String password = PreferencesByUserUtils.getString(context, "approvalPassword");
+		String password = PreferencesByUserAndTanentUtils.getString(context, "approvalPassword");
 		if (StringUtils.isBlank(password)) {
 			showPasswordInputDlg();
 		} else {
@@ -209,7 +207,7 @@ public class AppCenterNativeAppUtils {
 			if (passwordInputDlg != null && passwordInputDlg.isShowing()) {
 				passwordInputDlg.dismiss();
 			}
-			PreferencesByUserUtils.putString(context, "approvalPassword", password);
+			PreferencesByUserAndTanentUtils.putString(context, "approvalPassword", password);
 			openNativeApp();
 		}
 
@@ -219,7 +217,7 @@ public class AppCenterNativeAppUtils {
 				loadingDlg.dismiss();
 			}
 			ToastUtils.show(context, R.string.app_password_error);
-			PreferencesByUserUtils.putString(context, "approvalPassword", "");
+			PreferencesByUserAndTanentUtils.putString(context, "approvalPassword", "");
 			if (passwordInputDlg == null) {
 				showPasswordInputDlg();
 			} else if (!passwordInputDlg.isShowing()) {
