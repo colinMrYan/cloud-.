@@ -14,7 +14,6 @@ import android.view.View;
 import com.inspur.emmcloud.bean.SplashPageBean;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.service.AppExceptionService;
-import com.inspur.emmcloud.service.AppUpgradeService;
 import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.ui.login.LoginActivity;
 import com.inspur.emmcloud.ui.login.ModifyUserFirstPsdActivity;
@@ -23,12 +22,12 @@ import com.inspur.emmcloud.util.AppUtils;
 import com.inspur.emmcloud.util.FileUtils;
 import com.inspur.emmcloud.util.IntentUtils;
 import com.inspur.emmcloud.util.LanguageUtils;
-import com.inspur.emmcloud.util.LoginUtils;
-import com.inspur.emmcloud.util.PreferencesByUserAndTanentUtils;
+import com.inspur.emmcloud.util.PreferencesByUserUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.ResolutionUtils;
 import com.inspur.emmcloud.util.StateBarColor;
 import com.inspur.emmcloud.util.StringUtils;
+import com.inspur.emmcloud.util.UpgradeUtils;
 import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.emmcloud.widget.dialogs.EasyDialog;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -49,6 +48,9 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
     private static final int LOGIN_SUCCESS = 0;
     private static final int LOGIN_FAIL = 1;
     private static final int GET_LANGUAGE_SUCCESS = 3;
+    private static final int NO_NEED_UPGRADE = 10;
+    private static final int UPGRADE_FAIL = 11;
+    private static final int DONOT_UPGRADE = 12;
     private static final long SPLASH_PAGE_TIME = 2500;
     private Handler handler;
     private LanguageUtils languageUtils;
@@ -61,11 +63,6 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
         super.onCreate(savedInstanceState);
         StateBarColor.changeStateBarColor(this);
         setContentView(R.layout.activity_main);
-         /* 解决了在sd卡中第一次安装应用，进入到主页并切换到后台再打开会重新启动应用的bug */
-        if ((getIntent().getFlags() & Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT) != 0) {
-            finish();
-            return;
-        }
         init();
     }
 
@@ -75,10 +72,14 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
      * 初始化
      */
     private void init() {
+                /* 解决了在sd卡中第一次安装应用，进入到主页并切换到后台再打开会重新启动应用的bug */
+        if ((getIntent().getFlags() & Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT) != 0) {
+            finish();
+            return;
+        }
         activitySplashShowTime = System.currentTimeMillis();
 		//进行app异常上传
 		startUploadExceptionService();
-        startUpgradeServcie();
         ((MyApplication) getApplicationContext()).addActivity(this);
         // 检测分辨率、网络环境
         if (!ResolutionUtils.isFitResolution(MainActivity.this)) {
@@ -86,6 +87,7 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
         } else {
             initEnvironment();
         }
+
         showLastSplash();
     }
 
@@ -98,15 +100,15 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
         startService(intent);
     }
 
-    /**
-     * 启动app版本升级检查服务
-     */
-    private void startUpgradeServcie() {
-        Intent intent = new Intent();
-        intent.setClass(getApplicationContext(), AppUpgradeService.class);
-        startService(intent);
-
-    }
+//    /**
+//     * 启动app版本升级检查服务
+//     */
+//    private void startUpgradeServcie() {
+//        Intent intent = new Intent();
+//        intent.setClass(getApplicationContext(), AppUpgradeService.class);
+//        startService(intent);
+//
+//    }
 
 
     /**
@@ -141,17 +143,10 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
                     .addShortCut(MainActivity.this);
         }
         handMessage();
-        String accessToken = PreferencesUtils.getString(MainActivity.this,
-                "accessToken", "");
-        String myInfo = PreferencesUtils.getString(getApplicationContext(),
-                "myInfo", "");
-        String languageJson = PreferencesUtils.getString(getApplicationContext(),
-                UriUtils.tanent + "appLanguageObj");
-        if (!StringUtils.isBlank(accessToken) && !StringUtils.isBlank(myInfo) && StringUtils.isBlank(languageJson)) {
-            getServerLanguage();
-        }else {
-            enterApp();
-        }
+        UpgradeUtils upgradeUtils = new UpgradeUtils(MainActivity.this,
+                handler,false);
+        upgradeUtils.checkUpdate(false);
+//        getServerLanguage();
     }
 
     public void onClick(View v) {
@@ -189,6 +184,11 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
                         IntentUtils.startActivity(MainActivity.this,
                                 LoginActivity.class, true);
                         break;
+                    case UPGRADE_FAIL:
+                    case NO_NEED_UPGRADE:
+                    case DONOT_UPGRADE:
+                        getServerLanguage();
+                        break;
                     case GET_LANGUAGE_SUCCESS:
                         enterApp();
                         break;
@@ -198,6 +198,12 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
             }
 
         };
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        overridePendingTransition(0,0);
     }
 
     /**
@@ -213,8 +219,18 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
      */
     private void getServerLanguage() {
         // TODO Auto-generated method stub
+        String accessToken = PreferencesUtils.getString(MainActivity.this,
+                "accessToken", "");
+        String myInfo = PreferencesUtils.getString(getApplicationContext(),
+                "myInfo", "");
+        String languageJson = PreferencesUtils.getString(getApplicationContext(),
+                UriUtils.tanent + "appLanguageObj");
+        if (!StringUtils.isBlank(accessToken) && !StringUtils.isBlank(myInfo) && StringUtils.isBlank(languageJson)) {
             languageUtils = new LanguageUtils(MainActivity.this, handler);
             languageUtils.getServerSupportLanguage();
+        }else {
+            enterApp();
+        }
     }
 
 
@@ -223,15 +239,15 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
      */
     private void enterApp() {
         // TODO Auto-generated method stub
-        showSkipButton();
         long betweenTime = System.currentTimeMillis() - activitySplashShowTime;
         long leftTime = SPLASH_PAGE_TIME - betweenTime;
         TimerTask task = new TimerTask() {
             public void run() {
-               // startApp();
+                startApp();
             }
         };
         if (checkIfShowSplashPage() && (leftTime>0)) {
+            showSkipButton();
             timer = new Timer();
             timer.schedule(task, leftTime);
         } else {
@@ -260,16 +276,21 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
      */
     private boolean checkIfShowSplashPage() {
         boolean flag = false;
-        String splashInfo = PreferencesByUserAndTanentUtils.getString(MainActivity.this, "splash_page_info");
+        String splashInfo = PreferencesByUserUtils.getString(MainActivity.this, "splash_page_info");
         if (!StringUtils.isBlank(splashInfo)) {
             SplashPageBean splashPageBeanLoacal = new SplashPageBean(splashInfo);
             SplashPageBean.PayloadBean.ResourceBean.DefaultBean defaultBean = splashPageBeanLoacal.getPayload()
                     .getResource().getDefaultX();
             String splashImgPath = getSplashPagePath(defaultBean);
-            flag = FileUtils.isFileExist(splashImgPath);
+            long startTime = splashPageBeanLoacal.getPayload().getEffectiveDate();
+            long endTime = splashPageBeanLoacal.getPayload().getExpireDate();
+            long nowTime = System.currentTimeMillis();
+            flag = FileUtils.isFileExist(splashImgPath) &&
+                    ((nowTime>startTime) && (nowTime < endTime));
         }
         return flag;
     }
+
 
 
     /**
@@ -300,13 +321,12 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
                 "accessToken", "");
         String myInfo = PreferencesUtils.getString(getApplicationContext(),
                 "myInfo", "");
-        if (StringUtils.isBlank(accessToken)){
-            IntentUtils.startActivity(MainActivity.this, LoginActivity.class,
-                    true);
-        }else if (StringUtils.isBlank(myInfo)){
-            new LoginUtils(MainActivity.this,handler).getMyInfo();
-        }else {
+        if ((!StringUtils.isBlank(accessToken))
+                && (!StringUtils.isBlank(myInfo))) {
             IntentUtils.startActivity(MainActivity.this, IndexActivity.class,
+                    true);
+        } else {
+            IntentUtils.startActivity(MainActivity.this, LoginActivity.class,
                     true);
         }
     }
@@ -324,7 +344,7 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
      * 展示最新splash   需要添加是否已过期的逻辑
      */
     private void showLastSplash() {
-        String splashInfo = PreferencesByUserAndTanentUtils.getString(MainActivity.this, "splash_page_info");
+        String splashInfo = PreferencesByUserUtils.getString(MainActivity.this, "splash_page_info");
         if (!StringUtils.isBlank(splashInfo)) {
             SplashPageBean splashPageBeanLoacal = new SplashPageBean(splashInfo);
             SplashPageBean.PayloadBean.ResourceBean.DefaultBean defaultBean = splashPageBeanLoacal.getPayload()

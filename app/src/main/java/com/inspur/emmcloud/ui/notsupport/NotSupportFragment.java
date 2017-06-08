@@ -1,7 +1,6 @@
 package com.inspur.emmcloud.ui.notsupport;
 
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -18,12 +17,11 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.service.AppUpgradeService;
 import com.inspur.emmcloud.ui.IndexActivity;
-import com.inspur.emmcloud.util.AppUtils;
 import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.StringUtils;
+import com.inspur.emmcloud.util.UpgradeUtils;
 
 /**
  * 如果有不支持的功能时显示这个界面
@@ -96,13 +94,8 @@ public class NotSupportFragment extends Fragment {
         View.OnClickListener l = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent();
-                if (AppUtils.isServiceWork(getActivity(),"com.inspur.emmcloud.service.AppUpgradeService")){
-                    intent.setClass(getActivity(), AppUpgradeService.class);
-                    getActivity().stopService(intent);
-                }
-                getActivity().startService(intent);
-
+                UpgradeUtils upgradeUtils = new UpgradeUtils(getActivity(),handler,false);
+                upgradeUtils.checkUpdate(false);
             }
         };
 

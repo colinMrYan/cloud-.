@@ -40,6 +40,7 @@ import com.inspur.emmcloud.util.ContactCacheUtils;
 import com.inspur.emmcloud.util.DensityUtil;
 import com.inspur.emmcloud.util.EditTextUtils;
 import com.inspur.emmcloud.util.ImageDisplayUtils;
+import com.inspur.emmcloud.util.InputMethodUtils;
 import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.ToastUtils;
 import com.inspur.emmcloud.widget.CircleFrameLayout;
@@ -90,9 +91,9 @@ public class ContactSearchMoreActivity extends BaseActivity implements OnRefresh
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_contact_search_more);
 		((MyApplication) getApplicationContext()).addActivity(this);
+		handMessage();
 		initView();
 		getIntentData();
-		handMessage();
 	}
 
 	private void initView() {
@@ -312,6 +313,7 @@ public class ContactSearchMoreActivity extends BaseActivity implements OnRefresh
 
 	private void returnSelectData() {
 		// TODO Auto-generated method stub
+		InputMethodUtils.hide(ContactSearchMoreActivity.this);
 		Intent intent = new Intent();
 		intent.putExtra("selectMemList", (Serializable) selectMemList);
 		setResult(RESULT_OK, intent);

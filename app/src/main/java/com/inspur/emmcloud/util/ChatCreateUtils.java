@@ -7,9 +7,6 @@
  */
 package com.inspur.emmcloud.util;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-
 import android.app.Activity;
 import android.content.Context;
 
@@ -18,6 +15,9 @@ import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.bean.ChannelGroup;
 import com.inspur.emmcloud.bean.GetCreateSingleChannelResult;
 import com.inspur.emmcloud.widget.LoadingDialog;
+
+import org.json.JSONArray;
+import org.json.JSONException;
 
 /**
  * com.inspur.emmcloud.util.ChatCreateUtils create at 2016年11月29日 下午7:44:41
@@ -58,6 +58,7 @@ public class ChatCreateUtils {
 
 		}
 		String groupName = createChannelGroupName(nameArray);
+		LogUtils.jasonDebug("groupName="+groupName);
 		loadingDlg = new LoadingDialog(context);
 		loadingDlg.show();
 		ChatAPIService apiService = new ChatAPIService(context);
@@ -77,6 +78,7 @@ public class ChatCreateUtils {
 		StringBuilder nameBuilder = new StringBuilder();
 		String myName = PreferencesUtils.getString(context, "userRealName");
 		int length = Math.min(4, nameArray.length());
+		nameBuilder.append(myName);
 		for (int i = 0; i < length; i++) {
 			String name = "";
 			try {
@@ -85,8 +87,7 @@ public class ChatCreateUtils {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			nameBuilder.append(myName + "、");
-			nameBuilder.append(name);
+			nameBuilder.append("、"+name);
 		}
 		if (nameArray.length() > 4) {
 			nameBuilder.append("...");

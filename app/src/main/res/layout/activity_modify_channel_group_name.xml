@@ -71,7 +71,6 @@
             android:layout_height="wrap_content"
             android:background="@drawable/bg_corner"
             android:lines="1"
-            android:maxLength="20"
             android:padding="10dp"
             android:singleLine="true"
             android:textColor="#FF333333"
