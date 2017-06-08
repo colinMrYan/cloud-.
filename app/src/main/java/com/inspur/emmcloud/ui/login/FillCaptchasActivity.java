@@ -185,7 +185,7 @@ public class FillCaptchasActivity extends BaseActivity {
 		}
 
 		@Override
-		public void returnReisterSMSCheckFail(String error) {
+		public void returnReisterSMSCheckFail(String error,int errorCode) {
 			// TODO Auto-generated method stub
 			if (loadingDialog != null && loadingDialog.isShowing()) {
 				loadingDialog.dismiss();
@@ -202,7 +202,7 @@ public class FillCaptchasActivity extends BaseActivity {
 			};
 			EasyDialog.showDialog(FillCaptchasActivity.this, getString(R.string.prompt), getString(R.string.captchas_input_error),
 					getString(R.string.ok), listener, false);
-			WebServiceMiddleUtils.hand(FillCaptchasActivity.this, error);
+			WebServiceMiddleUtils.hand(FillCaptchasActivity.this, error,errorCode);
 		}
 
 	}

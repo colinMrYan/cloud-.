@@ -1,10 +1,6 @@
 package com.inspur.emmcloud.ui.find;
 
 
-import java.util.ArrayList;
-import java.util.List;
-
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,10 +20,11 @@ import com.inspur.emmcloud.api.apiservice.FindAPIService;
 import com.inspur.emmcloud.bean.GetKnowledgeInfo;
 import com.inspur.emmcloud.bean.KnowledgeInfo;
 import com.inspur.emmcloud.util.ImageDisplayUtils;
-import com.inspur.emmcloud.util.StringUtils;
-import com.inspur.emmcloud.util.ToastUtils;
 import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class KnowledgeActivity extends BaseActivity {
@@ -138,9 +135,9 @@ public class KnowledgeActivity extends BaseActivity {
 		}
 
 		@Override
-		public void returnKnowledgeListFail(String error) {
+		public void returnKnowledgeListFail(String error,int errorCode) {
 			// TODO Auto-generated method stub
-			WebServiceMiddleUtils.hand(KnowledgeActivity.this, error);
+			WebServiceMiddleUtils.hand(KnowledgeActivity.this, error,errorCode);
 		}
 		
 	}

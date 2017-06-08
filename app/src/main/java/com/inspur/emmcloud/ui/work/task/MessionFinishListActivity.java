@@ -1,8 +1,5 @@
 package com.inspur.emmcloud.ui.work.task;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -32,6 +29,9 @@ import com.inspur.emmcloud.widget.dialogs.EasyDialog;
 import com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout;
 import com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout.OnRefreshListener;
 import com.inspur.emmcloud.widget.pullableview.PullableListView;
+
+import java.io.Serializable;
+import java.util.ArrayList;
 
 public class MessionFinishListActivity extends BaseActivity implements
 		OnRefreshListener {
@@ -228,12 +228,11 @@ public class MessionFinishListActivity extends BaseActivity implements
 		}
 
 		@Override
-		public void returnRecentTasksFail(String error) {
-			super.returnRecentTasksFail(error);
+		public void returnRecentTasksFail(String error,int errorCode) {
 			if (loadingDialog.isShowing()) {
 				loadingDialog.dismiss();
 			}
-			WebServiceMiddleUtils.hand(MessionFinishListActivity.this, error);
+			WebServiceMiddleUtils.hand(MessionFinishListActivity.this, error,errorCode);
 		}
 
 		@Override
@@ -249,11 +248,11 @@ public class MessionFinishListActivity extends BaseActivity implements
 		}
 
 		@Override
-		public void returnUpdateTaskFail(String error) {
+		public void returnUpdateTaskFail(String error,int errorCode) {
 			if (loadingDialog != null && loadingDialog.isShowing()) {
 				loadingDialog.dismiss();
 			}
-			WebServiceMiddleUtils.hand(MessionFinishListActivity.this, error);
+			WebServiceMiddleUtils.hand(MessionFinishListActivity.this, error,errorCode);
 		}
 
 	}

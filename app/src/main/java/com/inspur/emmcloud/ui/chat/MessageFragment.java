@@ -34,6 +34,7 @@ import com.inspur.emmcloud.bean.GetSearchChannelGroupResult;
 import com.inspur.emmcloud.bean.MatheSet;
 import com.inspur.emmcloud.bean.Msg;
 import com.inspur.emmcloud.broadcastreceiver.MsgReceiver;
+import com.inspur.emmcloud.callback.CommonCallBack;
 import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.util.AppTitleUtils;
@@ -49,7 +50,7 @@ import com.inspur.emmcloud.util.MsgCacheUtil;
 import com.inspur.emmcloud.util.MsgMatheSetCacheUtils;
 import com.inspur.emmcloud.util.MsgReadIDCacheUtils;
 import com.inspur.emmcloud.util.NetUtils;
-import com.inspur.emmcloud.util.PreferencesByUserUtils;
+import com.inspur.emmcloud.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.TimeUtils;
@@ -118,11 +119,18 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 		return rootView;
 	}
 
+	@Override
+	public void onAttach(Context context) {
+		super.onAttach(context);
+		CommonCallBack callBack = (CommonCallBack)context;
+		callBack.excute();
+	}
+
 	/**
 	 * 设置标题
 	 */
 	private void setTabTitle(){
-		String appTabs = PreferencesByUserUtils.getString(getActivity(),"app_tabbar_info_current","");
+		String appTabs = PreferencesByUserAndTanentUtils.getString(getActivity(),"app_tabbar_info_current","");
 		if(!StringUtils.isBlank(appTabs)){
 			titleText.setText(AppTitleUtils.getTabTitle(getActivity(),getClass().getSimpleName()));
 		}
@@ -158,7 +166,7 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
      * 展示创建
      */
     private void showMessageButtons() {
-        String tabBarInfo = PreferencesByUserUtils.getString(getActivity(), "app_tabbar_info_current", "");
+        String tabBarInfo = PreferencesByUserAndTanentUtils.getString(getActivity(), "app_tabbar_info_current", "");
         AppTabAutoBean appTabAutoBean = new AppTabAutoBean(tabBarInfo);
         if(appTabAutoBean != null) {
             AppTabAutoBean.PayloadBean payloadBean = appTabAutoBean.getPayload();
@@ -910,11 +918,11 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 		}
 
 		@Override
-		public void returnChannelListFail(String error) {
+		public void returnChannelListFail(String error,int errorCode) {
 			// TODO Auto-generated method stub
 			if (getActivity() != null) {
 				pullToRefreshLayout.refreshFinish(PullToRefreshLayout.FAIL);
-				WebServiceMiddleUtils.hand(getActivity(), error);
+				WebServiceMiddleUtils.hand(getActivity(), error,errorCode);
 				handData();
 			}
 
@@ -930,7 +938,7 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 		}
 
 		@Override
-		public void returnSearchChannelGroupFail(String error) {
+		public void returnSearchChannelGroupFail(String error,int errorCode) {
 		}
 
 		@Override
@@ -945,12 +953,12 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 		}
 
 		@Override
-		public void returnNewMsgsFail(String error) {
+		public void returnNewMsgsFail(String error,int errorCode) {
 			// TODO Auto-generated method stub
 			if (getActivity() != null) {
 				pullToRefreshLayout.refreshFinish(PullToRefreshLayout.FAIL);
 				handData();
-				WebServiceMiddleUtils.hand(getActivity(), error);
+				WebServiceMiddleUtils.hand(getActivity(), error,errorCode);
 			}
 
 		}

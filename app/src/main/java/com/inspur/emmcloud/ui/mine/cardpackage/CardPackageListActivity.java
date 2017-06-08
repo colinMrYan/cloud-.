@@ -1,8 +1,5 @@
 package com.inspur.emmcloud.ui.mine.cardpackage;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -24,6 +21,9 @@ import com.inspur.emmcloud.bean.GetCardPackageListResult;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 卡包列表
@@ -127,12 +127,12 @@ public class CardPackageListActivity extends BaseActivity{
 		}
 
 		@Override
-		public void returnCardPackageListFail(String error) {
+		public void returnCardPackageListFail(String error,int errorCode) {
 			// TODO Auto-generated method stub
 			if (loadingDlg != null && loadingDlg.isShowing()) {
 				loadingDlg.dismiss();
 			}
-			WebServiceMiddleUtils.hand(CardPackageListActivity.this,error );
+			WebServiceMiddleUtils.hand(CardPackageListActivity.this,error,errorCode );
 		}
 		
 	}

@@ -1,11 +1,5 @@
 package com.inspur.emmcloud.ui.work.meeting;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Locale;
-
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.app.TimePickerDialog.OnTimeSetListener;
@@ -55,6 +49,12 @@ import com.inspur.emmcloud.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.CircleImageView;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.MyDatePickerDialog;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+import java.util.Locale;
 
 /**
  * 会议详情，这里是每个会议的详情内容
@@ -417,7 +417,6 @@ public class MeetingDetailActivity extends BaseActivity {
 	 * 
 	 * @param topic
 	 * @param notice
-	 * @param bookDate
 	 * @param beginLong
 	 * @param endLong
 	 */
@@ -544,9 +543,6 @@ public class MeetingDetailActivity extends BaseActivity {
 
 	/**
 	 * 设置成员数量不超过5
-	 * 
-	 * @param uids
-	 * @return
 	 */
 	private int getMemberCount() {
 		int memberCount = selectMemList.size() > 5 ? 5 : selectMemList.size();
@@ -798,12 +794,11 @@ public class MeetingDetailActivity extends BaseActivity {
 		}
 
 		@Override
-		public void returnDelMeetingFail(String error) {
-			super.returnDelMeetingFail(error);
+		public void returnDelMeetingFail(String error,int errorCode) {
 			if (loadingDialog.isShowing()) {
 				loadingDialog.dismiss();
 			}
-			WebServiceMiddleUtils.hand(MeetingDetailActivity.this, error);
+			WebServiceMiddleUtils.hand(MeetingDetailActivity.this, error,errorCode);
 		}
 	}
 

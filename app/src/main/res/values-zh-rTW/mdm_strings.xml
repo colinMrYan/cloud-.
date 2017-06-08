@@ -23,7 +23,8 @@
     <string name="mdm_tips">提示</string>
    <string name="loading_text">正在載入...</string>
      <string name="network_exception">網路不可用，請檢查您的網路設置</string>
-      <string name="net_request_failed">網路請求失敗</string>
+    <string name="network_timeout">網絡超時，請檢查您的網絡設定</string>
+      <string name="net_request_failed">服務未能正確回應</string>
       <string name="telephone_input_illegal">輸入的手機號格式不正確</string>
     <string name="email_input_illegal">輸入的郵箱格式不正確</string>
      <string name="device_registe">設備註冊</string>

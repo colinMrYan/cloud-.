@@ -16,7 +16,7 @@ import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.bean.GetAllContactResult;
 import com.inspur.emmcloud.bean.GetAllRobotsResult;
 import com.inspur.emmcloud.bean.Robot;
-import com.inspur.emmcloud.util.OauthCallBack;
+import com.inspur.emmcloud.callback.OauthCallBack;
 import com.inspur.emmcloud.util.OauthUtils;
 import com.inspur.emmcloud.util.StringUtils;
 
@@ -59,9 +59,14 @@ public class ContactAPIService {
 				new OauthUtils(new OauthCallBack() {
 
 					@Override
-					public void execute() {
+					public void reExecute() {
 						// TODO Auto-generated method stub
 						getAllContact(lastQueryTime);
+					}
+
+					@Override
+					public void executeFailCallback() {
+						callbackFail("",-1);
 					}
 				}, context).refreshToken(completeUrl);
 			}
@@ -76,7 +81,7 @@ public class ContactAPIService {
 			@Override
 			public void callbackFail(String error, int responseCode) {
 				// TODO Auto-generated method stub
-				apiInterface.returnAllContactFail(error);
+				apiInterface.returnAllContactFail(error,responseCode);
 			}
 		});
 		
@@ -95,8 +100,13 @@ public class ContactAPIService {
 				new OauthUtils(new OauthCallBack() {
 					
 					@Override
-					public void execute() {
+					public void reExecute() {
 						getAllRobotInfo();
+					}
+
+					@Override
+					public void executeFailCallback() {
+						callbackFail("", -1);
 					}
 				}, context).refreshToken(completeUrl);
 			}
@@ -108,7 +118,7 @@ public class ContactAPIService {
 			
 			@Override
 			public void callbackFail(String error, int responseCode) {
-				apiInterface.returnAllRobotsFail(error);
+				apiInterface.returnAllRobotsFail(error,responseCode);
 			}
 		});
 	}
@@ -127,8 +137,13 @@ public class ContactAPIService {
 				new OauthUtils(new OauthCallBack() {
 					
 					@Override
-					public void execute() {
+					public void reExecute() {
 						getRobotInfoById(id);
+					}
+
+					@Override
+					public void executeFailCallback() {
+						callbackFail("", -1);
 					}
 				}, context).refreshToken(completeUrl);
 			}
@@ -140,7 +155,7 @@ public class ContactAPIService {
 			
 			@Override
 			public void callbackFail(String error, int responseCode) {
-				apiInterface.returnRobotByIdFail(error);
+				apiInterface.returnRobotByIdFail(error,responseCode);
 			}
 		});
 	}

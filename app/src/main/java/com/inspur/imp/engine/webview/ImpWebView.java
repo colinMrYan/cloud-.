@@ -247,18 +247,6 @@ public class ImpWebView extends WebView {
 		// 页面适应手机屏幕的分辨率
 		settings.setLoadWithOverviewMode(true);
 		settings.setDefaultTextEncodingName("utf-8");//设置自适应屏幕
-		settings.setLayoutAlgorithm(LayoutAlgorithm.SINGLE_COLUMN);
-		// 支持自动加载图片
-		settings.setLoadsImagesAutomatically(true);
-		settings.setAllowFileAccess(true);
-		// 支持多窗口
-		settings.supportMultipleWindows();
-		settings.setJavaScriptCanOpenWindowsAutomatically(true);
-		// 设置webview推荐使用的窗口
-		settings.setUseWideViewPort(false);
-		// 页面适应手机屏幕的分辨率
-		settings.setLoadWithOverviewMode(true);
-		settings.setDefaultTextEncodingName("utf-8");
 	}
 
 	// 本地安全设置

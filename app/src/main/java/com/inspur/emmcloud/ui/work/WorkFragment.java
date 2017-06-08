@@ -752,12 +752,12 @@ public class WorkFragment extends Fragment implements OnRefreshListener {
 		}
 
 		@Override
-		public void returnMeetingsFail(String error) {
+		public void returnMeetingsFail(String error,int errorCode) {
 			if (loadingDialog != null && loadingDialog.isShowing()) {
 				loadingDialog.dismiss();
 			}
 			pullToRefreshLayout.refreshFinish(PullToRefreshLayout.FAIL);
-			WebServiceMiddleUtils.hand(getActivity(), error);
+			WebServiceMiddleUtils.hand(getActivity(), error,errorCode);
 		}
 
 		@Override
@@ -772,11 +772,11 @@ public class WorkFragment extends Fragment implements OnRefreshListener {
 		}
 
 		@Override
-		public void returnRecentTasksFail(String error) {
+		public void returnRecentTasksFail(String error,int errorCode) {
 			if (loadingDialog != null && loadingDialog.isShowing()) {
 				loadingDialog.dismiss();
 			}
-			WebServiceMiddleUtils.hand(getActivity(), error);
+			WebServiceMiddleUtils.hand(getActivity(), error,errorCode);
 		}
 
 		@Override
@@ -800,8 +800,8 @@ public class WorkFragment extends Fragment implements OnRefreshListener {
 		}
 
 		@Override
-		public void returnMyCalendarFail(String error) {
-			WebServiceMiddleUtils.hand(getActivity(), error);
+		public void returnMyCalendarFail(String error,int errorCode) {
+			WebServiceMiddleUtils.hand(getActivity(), error,errorCode);
 		}
 
 		@Override
@@ -827,11 +827,11 @@ public class WorkFragment extends Fragment implements OnRefreshListener {
 		}
 
 		@Override
-		public void returnCalEventsFail(String error, boolean isRefresh) {
+		public void returnCalEventsFail(String error, boolean isRefresh,int errorCode) {
 			if (loadingDialog != null && loadingDialog.isShowing()) {
 				loadingDialog.dismiss();
 			}
-			WebServiceMiddleUtils.hand(getActivity(), error);
+			WebServiceMiddleUtils.hand(getActivity(), error,errorCode);
 		}
 
 	}

@@ -55,7 +55,9 @@ public class ImageDisplayUtils  implements ImagePickerLoader {
 	}
 	
 	public ImageDisplayUtils() {
-
+		if (imageLoader == null) {
+			imageLoader = ImageLoader.getInstance();
+		}
 	}
 	
 	public void display(final ImageView imageView, String uri) {

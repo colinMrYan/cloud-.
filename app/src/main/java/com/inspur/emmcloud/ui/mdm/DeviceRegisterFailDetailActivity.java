@@ -1,34 +1,35 @@
-package com.inspur.mdm.ui;
+package com.inspur.emmcloud.ui.mdm;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
+import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.util.AppUtils;
+import com.inspur.emmcloud.util.MDM.MDM;
 import com.inspur.imp.api.ImpActivity;
-import com.inspur.mdm.MDM;
-import com.inspur.mdm.utils.MDMResUtils;
+import com.inspur.imp.api.Res;
 
-public class DeviceRegisterFailDetailActivity extends MDMBaseActivity {
+public class DeviceRegisterFailDetailActivity extends BaseActivity {
 	private Bundle bundle;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		setContentView(MDMResUtils
+		setContentView(Res
 				.getLayoutID("mdm_activity_device_register_fail_detail"));
 		bundle = getIntent().getExtras().getBundle("bundle");
 		String message = bundle.getString("message");
-		((TextView) findViewById(MDMResUtils.getWidgetID("reason_text")))
+		((TextView) findViewById(Res.getWidgetID("reason_text")))
 				.setText(message);
 	}
 
 	public void onClick(View v) {
-		if (v.getId() == MDMResUtils.getWidgetID("back_layout")) {
+		if (v.getId() == Res.getWidgetID("back_layout")) {
 			onBackPressed();
-		} else if (v.getId() == MDMResUtils.getWidgetID("register_btn")) {
+		} else if (v.getId() == Res.getWidgetID("register_btn")) {
 			Intent intent = new Intent();
 			intent.setClass(this, ImpActivity.class);
 			Bundle bundle = new Bundle();

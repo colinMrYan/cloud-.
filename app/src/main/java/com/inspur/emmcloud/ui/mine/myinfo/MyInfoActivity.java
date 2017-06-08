@@ -24,7 +24,7 @@ import com.inspur.emmcloud.ui.mine.MoreFragment;
 import com.inspur.emmcloud.util.ImageDisplayUtils;
 import com.inspur.emmcloud.util.IntentUtils;
 import com.inspur.emmcloud.util.NetUtils;
-import com.inspur.emmcloud.util.PreferencesByUserUtils;
+import com.inspur.emmcloud.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
@@ -111,7 +111,7 @@ public class MyInfoActivity extends BaseActivity {
 			userMailText.setText(mail.equals("null") ? getString(R.string.not_set) : mail);
 			String phoneNumber = getMyInfoResult.getPhoneNumber();
 			((TextView) findViewById(R.id.myinfo_userphone_text)).setText(phoneNumber.equals("null") ? getString(R.string.not_set) : phoneNumber);
-			((TextView) findViewById(R.id.myinfo_usercompanytext_text)).setText(getMyInfoResult.getEnterpriseName());
+			((TextView) findViewById(R.id.myinfo_usercompanytext_text)).setText(((MyApplication)getApplicationContext()).getCurrentEnterprise().getName());
 		}
 
 	}
@@ -206,7 +206,7 @@ public class MyInfoActivity extends BaseActivity {
 	 */
 	private void updateInfoState(UserProfileInfoBean userProfileInfoBean) {
 		if (userProfileInfoBean == null) {
-			String response = PreferencesByUserUtils.getString(getApplicationContext(), "user_profiles");
+			String response = PreferencesByUserAndTanentUtils.getString(getApplicationContext(), "user_profiles");
 			if (!StringUtils.isBlank(response)) {
 				userProfileInfoBean = new UserProfileInfoBean(response);
 			}else {
@@ -260,13 +260,13 @@ public class MyInfoActivity extends BaseActivity {
 		}
 
 		@Override
-		public void returnUploadMyHeadFail(String error) {
+		public void returnUploadMyHeadFail(String error,int errorCode) {
 			// TODO Auto-generated method stub
 			if (loadingDlg != null && loadingDlg.isShowing()) {
 				loadingDlg.dismiss();
 			}
 
-			WebServiceMiddleUtils.hand(MyInfoActivity.this, error);
+			WebServiceMiddleUtils.hand(MyInfoActivity.this, error,errorCode);
 		}
 
 		@Override
@@ -275,11 +275,11 @@ public class MyInfoActivity extends BaseActivity {
 				loadingDialog.dismiss();
 			}
 			updateInfoState(userProfileInfoBean);
-			PreferencesByUserUtils.putString(getApplicationContext(), "user_profiles", userProfileInfoBean.getResponse());
+			PreferencesByUserAndTanentUtils.putString(getApplicationContext(), "user_profiles", userProfileInfoBean.getResponse());
 		}
 
 		@Override
-		public void returnUserProfileFail(String error) {
+		public void returnUserProfileFail(String error,int errorCode) {
 			if (loadingDialog != null && loadingDialog.isShowing()) {
 				loadingDialog.dismiss();
 			}

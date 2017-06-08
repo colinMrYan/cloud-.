@@ -1,9 +1,5 @@
 package com.inspur.emmcloud.ui.work.calendar;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -27,6 +23,10 @@ import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.ScrollViewWithListView;
 import com.inspur.emmcloud.widget.SwitchView;
 import com.inspur.emmcloud.widget.SwitchView.OnStateChangedListener;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CalFilterActivity extends BaseActivity {
 
@@ -177,8 +177,6 @@ public class CalFilterActivity extends BaseActivity {
 
 	/**
 	 * 发送Calendar变化通知
-	 * 
-	 * @param isAdd
 	 */
 	public void sendBoradcastReceiver() {
 		Intent mIntent = new Intent("editcalendar_event");
@@ -200,12 +198,12 @@ public class CalFilterActivity extends BaseActivity {
 		}
 
 		@Override
-		public void returnDelelteCalendarByIdFail(String error) {
+		public void returnDelelteCalendarByIdFail(String error,int errorCode) {
 			// TODO Auto-generated method stub
 			if (loadingDlg != null && loadingDlg.isShowing()) {
 				loadingDlg.dismiss();
 			}
-			WebServiceMiddleUtils.hand(CalFilterActivity.this, error);
+			WebServiceMiddleUtils.hand(CalFilterActivity.this, error,errorCode);
 		}
 
 	}

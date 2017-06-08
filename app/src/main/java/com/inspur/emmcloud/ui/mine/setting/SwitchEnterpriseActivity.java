@@ -17,11 +17,10 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.Enterprise;
 import com.inspur.emmcloud.bean.GetMyInfoResult;
+import com.inspur.emmcloud.util.PreferencesByUsersUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.ToastUtils;
 import com.inspur.emmcloud.widget.dialogs.EasyDialog;
-
-import org.json.JSONObject;
 
 import java.util.List;
 
@@ -55,7 +54,7 @@ public class SwitchEnterpriseActivity extends BaseActivity {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				Enterprise enterprise = enterpriseList.get(position);
-				if (!enterprise.getCode().equals(getMyInfoResult.getEnterpriseCode())){
+				if (!enterprise.getId().equals(((MyApplication)getApplicationContext()).getCurrentEnterprise().getId())){
 					showSwitchWarningDlg(enterprise);
 				}
 			}
@@ -85,13 +84,12 @@ public class SwitchEnterpriseActivity extends BaseActivity {
 	 * @param enterprise
 	 */
 	private void switchToEnterprise(Enterprise enterprise){
-		JSONObject object  = getMyInfoResult.getMyInfoJSONObject();
 		try {
-			object.put("enterprise",enterprise.toJSONObject());
-			PreferencesUtils.putString(SwitchEnterpriseActivity.this, "myInfo", object.toString());
+			PreferencesByUsersUtils.putString(getApplicationContext(),"current_enterprise_id",enterprise.getId());
 			((MyApplication)getApplicationContext()).initTanent();
 			((MyApplication)getApplicationContext()).stopWebSocket();
 			((MyApplication)getApplicationContext()).clearNotification();
+			PreferencesUtils.putString(SwitchEnterpriseActivity.this, "myInfo", "");
 			Intent intent = new Intent(SwitchEnterpriseActivity.this,
 					MainActivity.class);
 			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
@@ -134,7 +132,7 @@ public class SwitchEnterpriseActivity extends BaseActivity {
 			Enterprise enterprise = enterpriseList.get(position);
 			convertView = LayoutInflater.from(SwitchEnterpriseActivity.this).inflate(R.layout.mine_setting_enterprise_item_view,null);
 			((TextView)convertView.findViewById(R.id.enterprise_text)).setText(enterprise.getName());
-			if (enterprise.getCode().equals(getMyInfoResult.getEnterpriseCode())){
+			if (enterprise.getId().equals(((MyApplication)getApplicationContext()).getCurrentEnterprise().getId())){
 				(convertView.findViewById(R.id.current_enterprise_text)).setVisibility(View.VISIBLE);
 			}
 			return convertView;

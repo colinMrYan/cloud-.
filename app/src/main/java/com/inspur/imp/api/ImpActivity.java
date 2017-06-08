@@ -102,9 +102,6 @@ public class ImpActivity extends ImpBaseActivity {
 		String token = ((MyApplication)getApplicationContext())
 				.getToken();
 		isMDM = getIntent().hasExtra("function")&&getIntent().getStringExtra("function").equals("mdm");
-		if (isMDM){
-			token = PreferencesUtils.getString(this,"mdm_accessToken");
-		}
 		setOauthHeader(token);
 		setLangHeader(UriUtils.getLanguageCookie(this));
 		setUserAgent("/emmcloud/" + AppUtils.getVersion(this));
@@ -218,7 +215,7 @@ public class ImpActivity extends ImpBaseActivity {
 	private void setOauthHeader(String OauthHeader) {
 		extraHeaders = new HashMap<>();
 		extraHeaders.put("Authorization", OauthHeader);
-		extraHeaders.put("X-ECC-Current-Enterprise", ((MyApplication)getApplicationContext()).getInterpriseId());
+		extraHeaders.put("X-ECC-Current-Enterprise", ((MyApplication)getApplicationContext()).getCurrentEnterprise().getId());
 	}
 
 	private void setLangHeader(String langHeader){

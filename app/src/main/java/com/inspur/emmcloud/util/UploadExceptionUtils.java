@@ -76,7 +76,7 @@ public class UploadExceptionUtils {
 		}
 
 		@Override
-		public void returnUploadExceptionFail(String error) {
+		public void returnUploadExceptionFail(String error,int errorCode) {
 		}
 	}
 

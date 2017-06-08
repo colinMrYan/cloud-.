@@ -221,11 +221,11 @@ public class GroupNewsCardFragment extends Fragment implements
 		}
 
 		@Override
-		public void returnGroupNewsDetailFail(String error) {
+		public void returnGroupNewsDetailFail(String error,int errorCode) {
 			if (loadingDlg.isShowing()) {
 				loadingDlg.dismiss();
 			}
-			WebServiceMiddleUtils.hand(getActivity(), error);
+			WebServiceMiddleUtils.hand(getActivity(), error,errorCode);
 		}
 
 	}

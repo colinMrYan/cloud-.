@@ -1,11 +1,7 @@
 package com.inspur.emmcloud.widget;
 
-import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.util.LogUtils;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Paint;
@@ -16,6 +12,9 @@ import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
+
+import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.util.LogUtils;
 
 /**
  * Created by .
@@ -451,6 +450,10 @@ public class SegmentControl extends View {
 
                 //draw texts
                 canvas.drawText(mTexts[i], mCacheBounds[i].left + (mSingleChildWidth - mTextBounds[i].width()) / 2, mCacheBounds[i].top + (mSingleChildHeight-mPaint.ascent()-mPaint.descent()) / 2, mPaint);
+                LogUtils.jasonDebug("mCacheBounds[i].left="+mCacheBounds[i].left);
+                LogUtils.jasonDebug("mSingleChildWidth="+mSingleChildWidth);
+                LogUtils.jasonDebug("mTextBounds[i].width()="+mTextBounds[i].width());
+                LogUtils.jasonDebug("x="+(mCacheBounds[i].left + (mSingleChildWidth - mTextBounds[i].width()) / 2));
             }
         }
 

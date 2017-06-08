@@ -13,7 +13,7 @@ import java.util.ArrayList;
 
 public class AppTitleUtils {
     public static String getTabTitle(Context context,String tabkey){
-        String appTabs = PreferencesByUserUtils.getString(context,"app_tabbar_info_current","");
+        String appTabs = PreferencesByUserAndTanentUtils.getString(context,"app_tabbar_info_current","");
         ArrayList<AppTabAutoBean.PayloadBean.TabsBean> tabList =
                 (ArrayList<AppTabAutoBean.PayloadBean.TabsBean>) new AppTabAutoBean(appTabs).getPayload().getTabs();
         String tabCompont = getCompont(tabkey);

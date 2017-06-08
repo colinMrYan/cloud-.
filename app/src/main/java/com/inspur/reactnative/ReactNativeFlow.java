@@ -11,7 +11,7 @@ import com.inspur.emmcloud.util.DownLoaderUtils;
 import com.inspur.emmcloud.util.FileSafeCode;
 import com.inspur.emmcloud.util.FileUtils;
 import com.inspur.emmcloud.util.LogUtils;
-import com.inspur.emmcloud.util.PreferencesByUserUtils;
+import com.inspur.emmcloud.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.UnZipAssets;
@@ -301,7 +301,7 @@ public class ReactNativeFlow {
      * @return
      */
     public static boolean checkClientIdExist(Context context) {
-        String clientId = PreferencesByUserUtils.getString(context, "react_native_clientid", "");
+        String clientId = PreferencesByUserAndTanentUtils.getString(context, "react_native_clientid", "");
         if (StringUtils.isBlank(clientId)) {
             return false;
         }
