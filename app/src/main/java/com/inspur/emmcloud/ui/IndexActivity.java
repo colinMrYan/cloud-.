@@ -63,7 +63,7 @@ import com.inspur.emmcloud.util.FileUtils;
 import com.inspur.emmcloud.util.ImageDisplayUtils;
 import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.NetUtils;
-import com.inspur.emmcloud.util.PreferencesByUserUtils;
+import com.inspur.emmcloud.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.RNCacheViewManager;
 import com.inspur.emmcloud.util.RobotCacheUtils;
@@ -259,7 +259,7 @@ public class IndexActivity extends BaseFragmentActivity implements
         apiService.setAPIInterface(new WebService());
         if (NetUtils.isNetworkConnected(getApplicationContext(), false)) {
 //            apiService.getAppTabs();
-            String version = PreferencesByUserUtils.getString(IndexActivity.this,"app_tabbar_version","");;
+            String version = PreferencesByUserAndTanentUtils.getString(IndexActivity.this,"app_tabbar_version","");;
             String clientid = PreferencesUtils.getString(IndexActivity.this, UriUtils.tanent + userId + "react_native_clientid","");
             if(!StringUtils.isBlank(clientid)){
                 apiService.getAppNewTabs(version,clientid);
@@ -420,7 +420,7 @@ public class IndexActivity extends BaseFragmentActivity implements
      */
     private MainTabBean[] handleAppTabs() {
         MainTabBean[] mainTabs = null;
-        String appTabs = PreferencesByUserUtils.getString(IndexActivity.this,"app_tabbar_info_current","");
+        String appTabs = PreferencesByUserAndTanentUtils.getString(IndexActivity.this,"app_tabbar_info_current","");
         if (!StringUtils.isBlank(appTabs)) {
             String languageJson = PreferencesUtils.getString(
                     getApplicationContext(), UriUtils.tanent + "appLanguageObj");
@@ -625,7 +625,7 @@ public class IndexActivity extends BaseFragmentActivity implements
      */
     private int getTabIndex() {
         int tabIndex = 0;
-        String appTabs = PreferencesByUserUtils.getString(IndexActivity.this,"app_tabbar_info_current","");
+        String appTabs = PreferencesByUserAndTanentUtils.getString(IndexActivity.this,"app_tabbar_info_current","");
         ArrayList<AppTabAutoBean.PayloadBean.TabsBean> appTabList;
         if (!StringUtils.isBlank(appTabs)) {
             appTabList = (ArrayList<AppTabAutoBean.PayloadBean.TabsBean>) new AppTabAutoBean(appTabs).getPayload().getTabs();
@@ -755,9 +755,9 @@ public class IndexActivity extends BaseFragmentActivity implements
      */
     private void updateSplashPage() {
         //这里并不是实时更新所以不加dialog
-//        String splashInfoOld = PreferencesByUserUtils.getString(IndexActivity.this,"splash_page_info_old","");
+//        String splashInfoOld = PreferencesByUserAndTanentUtils.getString(IndexActivity.this,"splash_page_info_old","");
         if (NetUtils.isNetworkConnected(IndexActivity.this)) {
-            String splashInfo = PreferencesByUserUtils.getString(IndexActivity.this, "splash_page_info","");
+            String splashInfo = PreferencesByUserAndTanentUtils.getString(IndexActivity.this, "splash_page_info","");
             SplashPageBean splashPageBean = new SplashPageBean(splashInfo);
 //            if(splashPageBean == null){
 //                splashPageBean = new SplashPageBean("");
@@ -993,9 +993,9 @@ public class IndexActivity extends BaseFragmentActivity implements
 
             @Override
             public void onSuccess(File file) {
-                String splashInfoOld = PreferencesByUserUtils.getString(IndexActivity.this,"splash_page_info_old","");
+                String splashInfoOld = PreferencesByUserAndTanentUtils.getString(IndexActivity.this,"splash_page_info_old","");
                 SplashPageBean splashPageBeanLocalOld = new SplashPageBean(splashInfoOld);
-                String splashInfoShowing = PreferencesByUserUtils.getString(IndexActivity.this,"splash_page_info","");
+                String splashInfoShowing = PreferencesByUserAndTanentUtils.getString(IndexActivity.this,"splash_page_info","");
                 SplashPageBean splashPageBeanLocalShowing = new SplashPageBean(splashInfoShowing);
 //                ReactNativeFlow.moveFolder(MyAppConfig.getSplashPageImageShowPath(IndexActivity.this,
 //                        userId, "splash"),MyAppConfig.getSplashPageImageLastVersionPath(IndexActivity.this,userId)
@@ -1059,8 +1059,8 @@ public class IndexActivity extends BaseFragmentActivity implements
     private void updateTabbarWithOrder(GetAppTabAutoResult getAppTabAutoResult) {
         String command = getAppTabAutoResult.getCommand();
         if(command.equals("FORWARD")){
-            PreferencesByUserUtils.putString(IndexActivity.this,"app_tabbar_version",getAppTabAutoResult.getVersion());
-            PreferencesByUserUtils.putString(IndexActivity.this,"app_tabbar_info_current",getAppTabAutoResult.getAppTabInfo());
+            PreferencesByUserAndTanentUtils.putString(IndexActivity.this,"app_tabbar_version",getAppTabAutoResult.getVersion());
+            PreferencesByUserAndTanentUtils.putString(IndexActivity.this,"app_tabbar_info_current",getAppTabAutoResult.getAppTabInfo());
             updateTabbar();
         }else if(command.equals("STANDBY")){
 //            updateTabbar();

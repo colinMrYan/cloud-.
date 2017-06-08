@@ -21,7 +21,6 @@ import android.widget.TextView;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.util.AppUtils;
 import com.inspur.emmcloud.util.LogUtils;
-import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.imp.engine.webview.ImpWebChromeClient;
 import com.inspur.imp.engine.webview.ImpWebView;
@@ -102,9 +101,6 @@ public class ImpActivity extends ImpBaseActivity {
 		String token = ((MyApplication)getApplicationContext())
 				.getToken();
 		isMDM = getIntent().hasExtra("function")&&getIntent().getStringExtra("function").equals("mdm");
-		if (isMDM){
-			token = PreferencesUtils.getString(this,"mdm_accessToken");
-		}
 		setOauthHeader(token);
 		setLangHeader(UriUtils.getLanguageCookie(this));
 		setUserAgent("/emmcloud/" + AppUtils.getVersion(this));
@@ -218,7 +214,7 @@ public class ImpActivity extends ImpBaseActivity {
 	private void setOauthHeader(String OauthHeader) {
 		extraHeaders = new HashMap<>();
 		extraHeaders.put("Authorization", OauthHeader);
-		extraHeaders.put("X-ECC-Current-Enterprise", ((MyApplication)getApplicationContext()).getInterpriseId());
+		extraHeaders.put("X-ECC-Current-Enterprise", ((MyApplication)getApplicationContext()).getCurrentEnterprise().getId());
 	}
 
 	private void setLangHeader(String langHeader){

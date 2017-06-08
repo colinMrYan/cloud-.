@@ -81,13 +81,9 @@ public class LoginUtils extends APIInterfaceInstance {
 	// 开始进行设备管理检查
 	private void startMDM() {
 		// TODO Auto-generated method stub
-		((MyApplication) activity.getApplicationContext()).setAccessToken("");
 		String userName = PreferencesUtils.getString(activity, "userRealName",
 				"");
-		String myInfo = PreferencesUtils.getString(activity, "myInfo", "");
-		GetMyInfoResult myInfoObj = new GetMyInfoResult(myInfo);
-		String tanentId = myInfoObj.getEnterpriseId();
-		LogUtils.jasonDebug("tanentId=" + tanentId);
+		String tanentId = ((MyApplication)activity.getApplicationContext()).getCurrentEnterprise().getId();
 		String userCode = ((MyApplication) activity.getApplicationContext())
 				.getUid();
 		MDM mdm = new MDM(activity, tanentId, userCode, userName);
@@ -103,6 +99,7 @@ public class LoginUtils extends APIInterfaceInstance {
 			@Override
 			public void MDMStatusNoPass() {
 				// TODO Auto-generated method stub
+				((MyApplication) activity.getApplicationContext()).setAccessToken("");
 				clearLoginInfo();
 				loginUtilsHandler.sendEmptyMessage(LOGIN_FAIL);
 			}
@@ -140,6 +137,7 @@ public class LoginUtils extends APIInterfaceInstance {
 	 * 获取基本信息
 	 */
 	public void getMyInfo() {
+		LogUtils.jasonDebug("getMyInfo-------------");
 		apiServices.getMyInfo();
 	}
 
@@ -155,18 +153,20 @@ public class LoginUtils extends APIInterfaceInstance {
 	}
 
 	private void saveLoginInfo() {
-		String accessToken = getLoginResult.getAccessToken();
-		String refreshToken = getLoginResult.getRefreshToken();
-		int keepAlive = getLoginResult.getKeepAlive();
-		String tokenType = getLoginResult.getTokenType();
-		int expiresIn = getLoginResult.getExpiresIn();
-		((MyApplication) activity.getApplicationContext())
-				.setAccessToken(accessToken);
-		PreferencesUtils.putString(activity, "accessToken", accessToken);
-		PreferencesUtils.putString(activity, "refreshToken", refreshToken);
-		PreferencesUtils.putInt(activity, "keepAlive", keepAlive);
-		PreferencesUtils.putString(activity, "tokenType", tokenType);
-		PreferencesUtils.putInt(activity, "expiresIn", expiresIn);
+		if (getLoginResult != null){
+			String accessToken = getLoginResult.getAccessToken();
+			String refreshToken = getLoginResult.getRefreshToken();
+			int keepAlive = getLoginResult.getKeepAlive();
+			String tokenType = getLoginResult.getTokenType();
+			int expiresIn = getLoginResult.getExpiresIn();
+			((MyApplication) activity.getApplicationContext())
+					.setAccessToken(accessToken);
+			PreferencesUtils.putString(activity, "accessToken", accessToken);
+			PreferencesUtils.putString(activity, "refreshToken", refreshToken);
+			PreferencesUtils.putInt(activity, "keepAlive", keepAlive);
+			PreferencesUtils.putString(activity, "tokenType", tokenType);
+			PreferencesUtils.putInt(activity, "expiresIn", expiresIn);
+		}
 	}
 
 	@Override
@@ -210,19 +210,21 @@ public class LoginUtils extends APIInterfaceInstance {
 		((MyApplication) activity.getApplicationContext()).initTanent();
 		((MyApplication) activity.getApplicationContext())
 				.setUid(getMyInfoResult.getID());
-		PreferencesUtils.putString(activity, "mdm_accessToken", "Bearer" + " " + getLoginResult.getAccessToken());
 		if (isLogin) {
 			isLogin = false;
 		}
+		LogUtils.jasonDebug("getMyInfo-------------0000");
 		if (handler != null) {
 			languageUtils = new LanguageUtils(activity, loginUtilsHandler);
 			languageUtils.getServerSupportLanguage();
+			LogUtils.jasonDebug("getMyInfo-------------11111111");
 		}
 	}
 
 	@Override
 	public void returnMyInfoFail(String error) {
 		// TODO Auto-generated method stub
+		LogUtils.jasonDebug("getMyInfo-------------222222222");
 		clearLoginInfo();
 		loginUtilsHandler.sendEmptyMessage(LOGIN_FAIL);
 		WebServiceMiddleUtils.hand(activity, error);
