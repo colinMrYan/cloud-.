@@ -34,6 +34,7 @@ import com.inspur.emmcloud.bean.GetSearchChannelGroupResult;
 import com.inspur.emmcloud.bean.MatheSet;
 import com.inspur.emmcloud.bean.Msg;
 import com.inspur.emmcloud.broadcastreceiver.MsgReceiver;
+import com.inspur.emmcloud.callback.CommonCallBack;
 import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.util.AppTitleUtils;
@@ -116,6 +117,13 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 			parent.removeView(rootView);
 		}
 		return rootView;
+	}
+
+	@Override
+	public void onAttach(Context context) {
+		super.onAttach(context);
+		CommonCallBack callBack = (CommonCallBack)context;
+		callBack.excute();
 	}
 
 	/**
@@ -910,11 +918,11 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 		}
 
 		@Override
-		public void returnChannelListFail(String error) {
+		public void returnChannelListFail(String error,int errorCode) {
 			// TODO Auto-generated method stub
 			if (getActivity() != null) {
 				pullToRefreshLayout.refreshFinish(PullToRefreshLayout.FAIL);
-				WebServiceMiddleUtils.hand(getActivity(), error);
+				WebServiceMiddleUtils.hand(getActivity(), error,errorCode);
 				handData();
 			}
 
@@ -930,7 +938,7 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 		}
 
 		@Override
-		public void returnSearchChannelGroupFail(String error) {
+		public void returnSearchChannelGroupFail(String error,int errorCode) {
 		}
 
 		@Override
@@ -945,12 +953,12 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 		}
 
 		@Override
-		public void returnNewMsgsFail(String error) {
+		public void returnNewMsgsFail(String error,int errorCode) {
 			// TODO Auto-generated method stub
 			if (getActivity() != null) {
 				pullToRefreshLayout.refreshFinish(PullToRefreshLayout.FAIL);
 				handData();
-				WebServiceMiddleUtils.hand(getActivity(), error);
+				WebServiceMiddleUtils.hand(getActivity(), error,errorCode);
 			}
 
 		}

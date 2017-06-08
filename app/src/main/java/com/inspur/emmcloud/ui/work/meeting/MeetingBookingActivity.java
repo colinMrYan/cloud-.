@@ -24,7 +24,6 @@ import com.inspur.emmcloud.bean.SearchModel;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.util.ImageDisplayUtils;
-import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.MathCaculateUtils;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
@@ -486,14 +485,13 @@ public class MeetingBookingActivity extends BaseActivity {
 		}
 
 		@Override
-		public void returnIsAdminFail(String error) {
-			super.returnIsAdminFail(error);
+		public void returnIsAdminFail(String error,int errorCode) {
 			if (loadingDlg != null && loadingDlg.isShowing() ) {
 				loadingDlg.dismiss();
 			}
 			PreferencesUtils.putBoolean(MeetingBookingActivity.this,
 					UriUtils.tanent + userId + "isAdmin", false);
-			WebServiceMiddleUtils.hand(MeetingBookingActivity.this, error);
+			WebServiceMiddleUtils.hand(MeetingBookingActivity.this, error,errorCode);
 		}
 
 	}

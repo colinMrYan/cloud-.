@@ -387,13 +387,15 @@ public class UpgradeUtils extends APIInterfaceInstance {
 	}
 
 	@Override
-	public void returnUpgradeFail(String error,boolean isManualCheck) {
+	public void returnUpgradeFail(String error,boolean isManualCheck,int errorCode) {
 		// TODO Auto-generated method stub
 		if (loadingDlg != null && loadingDlg.isShowing()) {
 			loadingDlg.dismiss();
 		}
-		WebServiceMiddleUtils.hand(context, error, upgradeHandler,
-				UPGRADE_FAIL);
+		upgradeHandler.sendEmptyMessage(UPGRADE_FAIL);
+		WebServiceMiddleUtils.hand(context,error,errorCode);
+//		WebServiceMiddleUtils.hand(context, error, upgradeHandler,
+//				UPGRADE_FAIL);
 	}
 
 }

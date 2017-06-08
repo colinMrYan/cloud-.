@@ -23,19 +23,18 @@ import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.bean.Enterprise;
 import com.inspur.emmcloud.bean.GetMyInfoResult;
 import com.inspur.emmcloud.bean.Language;
+import com.inspur.emmcloud.callback.OauthCallBack;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.push.WebSocketPush;
 import com.inspur.emmcloud.util.AppUtils;
 import com.inspur.emmcloud.util.CrashHandler;
 import com.inspur.emmcloud.util.DbCacheUtils;
 import com.inspur.emmcloud.util.LogUtils;
-import com.inspur.emmcloud.util.OauthCallBack;
 import com.inspur.emmcloud.util.PreferencesByUsersUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.imp.api.Res;
-import com.inspur.mdm.utils.MDMResUtils;
 import com.inspur.reactnative.AuthorizationManagerPackage;
 import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiskCache;
 import com.nostra13.universalimageloader.cache.disc.naming.HashCodeFileNameGenerator;
@@ -130,7 +129,6 @@ public class MyApplication extends MultiDexApplication implements  ReactApplicat
 		x.Ext.init(MyApplication.this);
 		x.Ext.setDebug(LogUtils.isDebug);
 		SoLoader.init(this,false);
-		MDMResUtils.init(this);// 注册MDM的资源文件类
 		Res.init(this); // 注册imp的资源文件类
 		initJPush();
 		initImageLoader();

@@ -969,8 +969,8 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
         }
 
         @Override
-        public void returnSendMsgFail(String error, String fakeMessageId) {
-            WebServiceMiddleUtils.hand(ChannelActivity.this, error);
+        public void returnSendMsgFail(String error, String fakeMessageId,int errorCode) {
+            WebServiceMiddleUtils.hand(ChannelActivity.this, error,errorCode);
             setMsgSendFail(fakeMessageId);
         }
 
@@ -982,8 +982,8 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
         }
 
         @Override
-        public void returnUploadMsgImgFail(String error) {
-            WebServiceMiddleUtils.hand(ChannelActivity.this, error);
+        public void returnUploadMsgImgFail(String error,int errorCode) {
+            WebServiceMiddleUtils.hand(ChannelActivity.this, error,errorCode);
         }
 
         @Override
@@ -1005,9 +1005,9 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
         }
 
         @Override
-        public void returnNewMsgsFail(String error) {
+        public void returnNewMsgsFail(String error,int errorCode) {
             pullToRefreshLayout.refreshFinish(PullToRefreshLayout.FAIL);
-            WebServiceMiddleUtils.hand(ChannelActivity.this, error);
+            WebServiceMiddleUtils.hand(ChannelActivity.this, error,errorCode);
         }
 
         @Override
@@ -1020,8 +1020,8 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
         }
 
         @Override
-        public void returnMsgFail(String error) {
-            WebServiceMiddleUtils.hand(ChannelActivity.this, error);
+        public void returnMsgFail(String error,int errorCode) {
+            WebServiceMiddleUtils.hand(ChannelActivity.this, error,errorCode);
         }
 
         @Override
@@ -1032,8 +1032,8 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
         }
 
         @Override
-        public void returnFileUpLoadFail(String error) {
-            WebServiceMiddleUtils.hand(ChannelActivity.this, error);
+        public void returnFileUpLoadFail(String error,int errorCode) {
+            WebServiceMiddleUtils.hand(ChannelActivity.this, error,errorCode);
         }
 
         @Override
@@ -1043,8 +1043,8 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
         }
 
         @Override
-        public void returnGetMeetingReplyFail(String error) {
-            super.returnGetMeetingReplyFail(error);
+        public void returnGetMeetingReplyFail(String error,int errorCode) {
+            super.returnGetMeetingReplyFail(error,errorCode);
         }
 
     }

@@ -82,7 +82,7 @@ public class PVCollectService extends Service {
 		}
 
 		@Override
-		public void returnUploadCollectFail() {
+		public void returnUploadCollectFail(String error,int errorCode) {
 			// TODO Auto-generated method stub
 			 continueToRun();
 		}

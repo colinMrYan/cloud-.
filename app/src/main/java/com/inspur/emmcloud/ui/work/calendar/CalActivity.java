@@ -1,12 +1,5 @@
 package com.inspur.emmcloud.ui.work.calendar;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -42,6 +35,12 @@ import com.inspur.emmcloud.widget.dialogs.MyDialog;
 import com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout;
 import com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout.OnRefreshListener;
 import com.inspur.emmcloud.widget.pullableview.PullableExpandableListView;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.List;
 
 public class CalActivity extends BaseActivity implements OnRefreshListener {
 
@@ -115,7 +114,7 @@ public class CalActivity extends BaseActivity implements OnRefreshListener {
 	/**
 	 * 获取所有日历的所有event
 	 * 
-	 * @param calendarIdArray
+	 * @param isRefresh
 	 */
 	private void getCalEvents(boolean isRefresh) {
 		// TODO Auto-generated method stub
@@ -221,7 +220,7 @@ public class CalActivity extends BaseActivity implements OnRefreshListener {
 	/**
 	 * 弹出频道操作选择框
 	 * 
-	 * @param position
+	 * @param calEvent
 	 */
 	private void showOperationDlg(final CalendarEvent calEvent) {
 		// TODO Auto-generated method stub
@@ -470,8 +469,6 @@ public class CalActivity extends BaseActivity implements OnRefreshListener {
 
 	/**
 	 * 发送CalEvent变化通知
-	 * 
-	 * @param isAdd
 	 */
 	public void sendBoradcastReceiver() {
 		Calendar startLocalDate = deleteCalEvent.getLocalStartDate();
@@ -513,12 +510,12 @@ public class CalActivity extends BaseActivity implements OnRefreshListener {
 		}
 
 		@Override
-		public void returnCalEventsFail(String error, boolean isRefresh) {
+		public void returnCalEventsFail(String error, boolean isRefresh,int errorCode) {
 			// TODO Auto-generated method stub
 			if (loadingDlg != null && loadingDlg.isShowing()) {
 				loadingDlg.dismiss();
 			}
-			WebServiceMiddleUtils.hand(CalActivity.this, error);
+			WebServiceMiddleUtils.hand(CalActivity.this, error,errorCode);
 			pullToRefreshLayout.refreshFinish(PullToRefreshLayout.FAIL);
 			pullToRefreshLayout.loadmoreFinish(PullToRefreshLayout.FAIL);
 		}
@@ -541,12 +538,12 @@ public class CalActivity extends BaseActivity implements OnRefreshListener {
 		}
 
 		@Override
-		public void returnDeleteCalEventFail(String error) {
+		public void returnDeleteCalEventFail(String error,int errorCode) {
 			// TODO Auto-generated method stub
 			if (loadingDlg != null && loadingDlg.isShowing()) {
 				loadingDlg.dismiss();
 			}
-			WebServiceMiddleUtils.hand(CalActivity.this, error);
+			WebServiceMiddleUtils.hand(CalActivity.this, error,errorCode);
 		}
 
 	}

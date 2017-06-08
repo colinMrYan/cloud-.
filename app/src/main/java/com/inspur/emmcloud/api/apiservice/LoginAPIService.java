@@ -7,6 +7,10 @@
  */
 package com.inspur.emmcloud.api.apiservice;
 
+import org.xutils.x;
+import org.xutils.http.HttpMethod;
+import org.xutils.http.RequestParams;
+
 import android.content.Context;
 
 import com.inspur.emmcloud.MyApplication;
@@ -19,16 +23,10 @@ import com.inspur.emmcloud.bean.GetMyInfoResult;
 import com.inspur.emmcloud.bean.GetRegisterCheckResult;
 import com.inspur.emmcloud.bean.GetSignoutResult;
 import com.inspur.emmcloud.bean.GetUpdatePwdBySMSCodeBean;
-import com.inspur.emmcloud.bean.GetWebSocketUrlResult;
-import com.inspur.emmcloud.util.LogUtils;
-import com.inspur.emmcloud.util.OauthCallBack;
+import com.inspur.emmcloud.callback.OauthCallBack;
 import com.inspur.emmcloud.util.OauthUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.UriUtils;
-
-import org.xutils.http.HttpMethod;
-import org.xutils.http.RequestParams;
-import org.xutils.x;
 
 /**
  * com.inspur.emmcloud.api.apiservice.LoginAPIService create at 2016年11月8日
@@ -109,13 +107,13 @@ public class LoginAPIService {
 			@Override
 			public void callbackFail(String error, int responseCode) {
 				// TODO Auto-generated method stub
-				apiInterface.returnOauthSigninFail(error);
+				apiInterface.returnOauthSigninFail(error,responseCode);
 			}
 
 			@Override
 			public void callbackTokenExpire() {
 				// TODO Auto-generated method stub
-				apiInterface.returnOauthSigninFail("");
+				apiInterface.returnOauthSigninFail("",-1);
 			}
 
 		});
@@ -144,13 +142,13 @@ public class LoginAPIService {
 			@Override
 			public void callbackFail(String error, int responseCode) {
 				// TODO Auto-generated method stub
-				apiInterface.returnSignoutFail(error);
+				apiInterface.returnSignoutFail(error,responseCode);
 			}
 
 			@Override
 			public void callbackTokenExpire() {
 				// TODO Auto-generated method stub
-				apiInterface.returnSignoutFail(new String(""));
+				apiInterface.returnSignoutFail(new String(""),-1);
 			}
 
 		});
@@ -212,7 +210,7 @@ public class LoginAPIService {
 			@Override
 			public void callbackTokenExpire() {
 				// TODO Auto-generated method stub
-				apiInterface.returnReisterSMSCheckFail("");
+				apiInterface.returnReisterSMSCheckFail("",-1);
 			}
 			
 			@Override
@@ -226,7 +224,7 @@ public class LoginAPIService {
 			@Override
 			public void callbackFail(String error, int responseCode) {
 				// TODO Auto-generated method stub
-				apiInterface.returnReisterSMSCheckFail(error);
+				apiInterface.returnReisterSMSCheckFail(error,responseCode);
 			}
 		});
 		
@@ -245,13 +243,17 @@ public class LoginAPIService {
 			@Override
 			public void callbackTokenExpire() {
 				// TODO Auto-generated method stub
-				LogUtils.jasonDebug("callbackTokenExpire");
 				new OauthUtils(new OauthCallBack() {
 
 					@Override
-					public void execute() {
+					public void reExecute() {
 						// TODO Auto-generated method stub
 						getMyInfo();
+					}
+
+					@Override
+					public void executeFailCallback() {
+						callbackFail("", -1);
 					}
 				}, context).refreshToken(completeUrl);
 			}
@@ -259,7 +261,6 @@ public class LoginAPIService {
 			@Override
 			public void callbackSuccess(String arg0) {
 				// TODO Auto-generated method stub
-				LogUtils.jasonDebug("callbackSuccess");
 				apiInterface.returnMyInfoSuccess(new GetMyInfoResult(
 						arg0));
 			}
@@ -267,48 +268,52 @@ public class LoginAPIService {
 			@Override
 			public void callbackFail(String error, int responseCode) {
 				// TODO Auto-generated method stub
-				LogUtils.jasonDebug("callbackFail");
-				apiInterface.returnMyInfoFail(error);
+				apiInterface.returnMyInfoFail(error,responseCode);
 			}
 		});
 	}
 	
-	/**
-	 * 获取websocket的连接url
-	 */
-	public void getWebsocketUrl() {
-		final String completeUrl = UriUtils.getHttpApiUri("settings/socket");
-		RequestParams params = ((MyApplication) context.getApplicationContext())
-				.getHttpRequestParams(completeUrl);
-		x.http().get(params, new APICallback(context,completeUrl) {
-			
-			@Override
-			public void callbackTokenExpire() {
-				// TODO Auto-generated method stub
-				new OauthUtils(new OauthCallBack() {
-
-					@Override
-					public void execute() {
-						getWebsocketUrl();
-					}
-				}, context).refreshToken(completeUrl);
-			}
-			
-			@Override
-			public void callbackSuccess(String arg0) {
-				// TODO Auto-generated method stub
-				apiInterface
-				.returnWebSocketUrlSuccess(new GetWebSocketUrlResult(
-						arg0));
-			}
-			
-			@Override
-			public void callbackFail(String error, int responseCode) {
-				// TODO Auto-generated method stub
-				apiInterface.returnWebSocketUrlFail(error);
-			}
-		});
-	}
+//	/**
+//	 * 获取websocket的连接url
+//	 */
+//	public void getWebsocketUrl() {
+//		final String completeUrl = UriUtils.getHttpApiUri("settings/socket");
+//		RequestParams params = ((MyApplication) context.getApplicationContext())
+//				.getHttpRequestParams(completeUrl);
+//		x.http().get(params, new APICallback(context,completeUrl) {
+//
+//			@Override
+//			public void callbackTokenExpire() {
+//				// TODO Auto-generated method stub
+//				new OauthUtils(new OauthCallBack() {
+//
+//					@Override
+//					public void reExecute() {
+//						getWebsocketUrl();
+//					}
+//
+//					@Override
+//					public void executeFailCallback() {
+//						callbackFail("", -1);
+//					}
+//				}, context).refreshToken(completeUrl);
+//			}
+//
+//			@Override
+//			public void callbackSuccess(String arg0) {
+//				// TODO Auto-generated method stub
+//				apiInterface
+//				.returnWebSocketUrlSuccess(new GetWebSocketUrlResult(
+//						arg0));
+//			}
+//
+//			@Override
+//			public void callbackFail(String error, int responseCode) {
+//				// TODO Auto-generated method stub
+//				apiInterface.returnWebSocketUrlFail(error,responseCode);
+//			}
+//		});
+//	}
 	
 	
 //	/**
@@ -410,9 +415,14 @@ public class LoginAPIService {
 				new OauthUtils(new OauthCallBack() {
 
 					@Override
-					public void execute() {
+					public void reExecute() {
 						// TODO Auto-generated method stub
 						changePsd(oldpsd, newpsd);
+					}
+
+					@Override
+					public void executeFailCallback() {
+						callbackFail("", -1);
 					}
 				}, context).refreshToken(completeUrl);
 			}
@@ -426,7 +436,7 @@ public class LoginAPIService {
 			@Override
 			public void callbackFail(String error, int responseCode) {
 				// TODO Auto-generated method stub
-				apiInterface.returnModifyPsdFail(error);
+				apiInterface.returnModifyPsdFail(error,responseCode);
 			}
 		});
 	}
@@ -449,8 +459,13 @@ public class LoginAPIService {
 			public void callbackTokenExpire() {
 				new OauthUtils(new OauthCallBack() {
 					@Override
-					public void execute() {
+					public void reExecute() {
 						updatePwdBySMSCode( smsCode, newPwd);
+					}
+
+					@Override
+					public void executeFailCallback() {
+						callbackFail("", -1);
 					}
 				}, context).refreshToken(completeUrl);
 			}
@@ -462,7 +477,7 @@ public class LoginAPIService {
 			
 			@Override
 			public void callbackFail(String error, int responseCode) {
-				apiInterface.returnUpdatePwdBySMSCodeFail(error);
+				apiInterface.returnUpdatePwdBySMSCodeFail(error,responseCode);
 			}
 		});
 	}
