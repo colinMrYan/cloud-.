@@ -78,14 +78,18 @@
             android:text="@string/about_text"
             android:textColor="@color/header_text"
             android:textSize="@dimen/header_textsize"/>
+
         <Button
             android:id="@+id/imp_change_font_size_btn"
             android:layout_width="wrap_content"
+            android:layout_marginRight="10dp"
+            android:layout_alignParentRight="true"
             android:layout_height="match_parent"
             android:background="@null"
             android:onClick="onClick"
-            android:layout_alignParentRight="true"
-            android:text="调整字体"/>
+            android:textSize="@dimen/button_textsize"
+            android:textColor="@color/white"
+            android:text="字体大小"/>
     </RelativeLayout>
 
     <com.inspur.imp.engine.webview.ImpWebView
