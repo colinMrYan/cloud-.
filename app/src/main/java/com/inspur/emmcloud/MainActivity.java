@@ -169,7 +169,6 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
             @Override
             public void handleMessage(Message msg) {
                 // TODO Auto-generated method stub
-                LogUtils.jasonDebug("msg.what="+msg.what);
                 switch (msg.what) {
                     case LOGIN_SUCCESS:
                         // 是否已建立简易密码
@@ -183,7 +182,6 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
                         }
                         break;
                     case LOGIN_FAIL:
-                        LogUtils.jasonDebug("3333333333333666666666666666666666");
                         IntentUtils.startActivity(MainActivity.this,
                                 LoginActivity.class, true);
                         break;
@@ -242,7 +240,6 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
      */
     private void enterApp() {
         // TODO Auto-generated method stub
-        showSkipButton();
         long betweenTime = System.currentTimeMillis() - activitySplashShowTime;
         long leftTime = SPLASH_PAGE_TIME - betweenTime;
         TimerTask task = new TimerTask() {
@@ -251,6 +248,7 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
             }
         };
         if (checkIfShowSplashPage() && (leftTime>0)) {
+            showSkipButton();
             timer = new Timer();
             timer.schedule(task, leftTime);
         } else {
@@ -262,7 +260,6 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
      * 开启应用
      */
     private void startApp() {
-        LogUtils.jasonDebug("startapp------------");
         Boolean isFirst = PreferencesUtils.getBoolean(
                 MainActivity.this, "isFirst", true);
         if (checkIfUpgraded() || isFirst) {
@@ -321,7 +318,6 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
      */
     private void loginApp() {
         // TODO Auto-generated method stub
-        LogUtils.jasonDebug("loginApp------------");
         String accessToken = PreferencesUtils.getString(MainActivity.this,
                 "accessToken", "");
         String myInfo = PreferencesUtils.getString(getApplicationContext(),
@@ -331,7 +327,6 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
             IntentUtils.startActivity(MainActivity.this, IndexActivity.class,
                     true);
         } else {
-            LogUtils.jasonDebug("999999999999999");
             IntentUtils.startActivity(MainActivity.this, LoginActivity.class,
                     true);
         }
