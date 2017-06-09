@@ -36,6 +36,26 @@ public class ContactCacheUtils {
 	}
 
 	/**
+	 * 存储通讯录列表
+	 *
+	 * @param context
+	 */
+	public static void saveContact(Context context,
+									   Contact contact) {
+		LogUtils.YfcDebug("存储的头像时间："+contact.getLastUpdateTime());
+		if (contact == null ) {
+			return;
+		}
+		try {
+			DbCacheUtils.getDb(context).saveOrUpdate(contact);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			LogUtils.YfcDebug("存储时出现异常："+e.getMessage());
+			e.printStackTrace();
+		}
+	}
+
+	/**
 	 * 删除通讯录
 	 *
 	 * @param deleteIdArray 删除通讯录id的json数组

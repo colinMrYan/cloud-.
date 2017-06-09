@@ -228,10 +228,14 @@ public class UriUtils {
         Contact contact = ContactCacheUtils.getUserContact(context,inspurID);
         if(contact != null){
             String lastUpdateTime = contact.getLastUpdateTime();
+            LogUtils.YfcDebug("获取到的头像最后更新时间："+lastUpdateTime);
             if(!StringUtils.isBlank(lastUpdateTime)&&(!lastUpdateTime.equals("null"))){
                 headImgUrl = headImgUrl + "?"+lastUpdateTime;
             }
+        }else{
+            return null;
         }
+        LogUtils.YfcDebug("headUrl："+headImgUrl);
         return headImgUrl;
     }
 
