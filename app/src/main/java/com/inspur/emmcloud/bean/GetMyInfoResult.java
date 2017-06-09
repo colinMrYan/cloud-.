@@ -1,7 +1,6 @@
 package com.inspur.emmcloud.bean;
 
 import com.inspur.emmcloud.util.JSONUtils;
-import com.inspur.emmcloud.util.LogUtils;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -110,7 +109,6 @@ public class GetMyInfoResult implements Serializable {
 //	}
 
 	public List<Enterprise> getEnterpriseList(){
-		LogUtils.jasonDebug("size="+ enterpriseList.size());
 		return enterpriseList;
 	}
 

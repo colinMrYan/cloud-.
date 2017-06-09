@@ -16,7 +16,7 @@ import com.inspur.emmcloud.widget.LoadingDialog;
 
 /**
  * 登录公共类
- * 
+ *
  * @author Administrator
  *
  */
@@ -99,7 +99,6 @@ public class LoginUtils extends APIInterfaceInstance {
 			@Override
 			public void MDMStatusNoPass() {
 				// TODO Auto-generated method stub
-				((MyApplication) activity.getApplicationContext()).setAccessToken("");
 				clearLoginInfo();
 				loginUtilsHandler.sendEmptyMessage(LOGIN_FAIL);
 			}
@@ -124,7 +123,7 @@ public class LoginUtils extends APIInterfaceInstance {
 		}else {
 			loginUtilsHandler.sendEmptyMessage(LOGIN_FAIL);
 		}
-		
+
 	}
 
 	// 登录
@@ -188,11 +187,11 @@ public class LoginUtils extends APIInterfaceInstance {
 			} else {
 				ToastUtils.show(activity, R.string.code_verification_failure);
 			}
-			
+
 		} else {
 			WebServiceMiddleUtils.hand(activity, error,errorCode);
 		}
-		
+
 		loginUtilsHandler.sendEmptyMessage(LOGIN_FAIL);
 	}
 

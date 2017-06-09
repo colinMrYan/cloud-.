@@ -33,7 +33,7 @@ public class DeviceRegisterFailDetailActivity extends BaseActivity {
 			Intent intent = new Intent();
 			intent.setClass(this, ImpActivity.class);
 			Bundle bundle = new Bundle();
-			bundle.putString("appName", "设备注册");
+			bundle.putString("appName", getString(Res.getStringID("device_registe")));
 			bundle.putString("function","mdm");
 			bundle.putString("uri", "https://emm.inspur.com/mdm/loadForRegister?udid="+ AppUtils.getMyUUID(this));
 			intent.putExtras(bundle);

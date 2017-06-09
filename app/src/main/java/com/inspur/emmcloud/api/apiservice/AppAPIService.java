@@ -482,12 +482,12 @@ public class AppAPIService {
 
 			@Override
 			public void callbackFail(String error, int responseCode) {
-				apiInterface.returnUnBindDeviceFail(error,responseCode);
+				apiInterface.returnDeviceCheckFail(error,responseCode);
 			}
 
 			@Override
 			public void callbackTokenExpire() {
-				apiInterface.returnUnBindDeviceFail("",-1);
+				apiInterface.returnDeviceCheckFail("",-1);
 			}
 		});
 
