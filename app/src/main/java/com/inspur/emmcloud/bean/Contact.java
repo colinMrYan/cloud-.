@@ -1,5 +1,7 @@
 package com.inspur.emmcloud.bean;
 
+import android.content.Context;
+
 import com.facebook.react.bridge.WritableNativeMap;
 import com.inspur.emmcloud.util.UriUtils;
 import com.lidroid.xutils.db.annotation.Table;
@@ -35,6 +37,7 @@ public class Contact implements Serializable{
 	private String inspurID = "";
 	private String newID="";
 	private String globalName="";
+	private String lastUpdateTime = "";
 //	@Transient
 //	private String selectStatus;
 
@@ -93,6 +96,9 @@ public class Contact implements Serializable{
 			}
 			if (obj.has("name_global")) {
 				this.globalName = obj.getString("name_global");
+			}
+			if(obj.has("lastUpdateTime")){
+				this.lastUpdateTime = obj.getString("lastUpdateTime");
 			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -211,7 +217,15 @@ public class Contact implements Serializable{
 		this.globalName = globalName;
 	}
 
-	public JSONObject contact2JSONObject(){
+	public String getLastUpdateTime() {
+		return lastUpdateTime;
+	}
+
+	public void setLastUpdateTime(String lastUpdateTime) {
+		this.lastUpdateTime = lastUpdateTime;
+	}
+
+	public JSONObject contact2JSONObject(Context context){
 				JSONObject obj = new JSONObject();
 				try {
 					obj.put("inspur_id",inspurID);
@@ -223,7 +237,7 @@ public class Contact implements Serializable{
 			obj.put("email",email);
 			obj.put("org_name",orgName);
 			obj.put("type",type);
-			obj.put("head", UriUtils.getChannelImgUri(inspurID));
+			obj.put("head", UriUtils.getChannelImgUri(context,inspurID));
 		}catch (Exception e){
 			e.printStackTrace();
 		}
@@ -231,7 +245,7 @@ public class Contact implements Serializable{
 		return  obj;
 	};
 
-	public WritableNativeMap contact2Map(){
+	public WritableNativeMap contact2Map(Context context){
 		WritableNativeMap map = new WritableNativeMap();
 		try {
 			map.putString("inspur_id",inspurID);
@@ -243,7 +257,7 @@ public class Contact implements Serializable{
 			map.putString("email",email);
 			map.putString("org_name",orgName);
 			map.putString("type",type);
-			map.putString("head", UriUtils.getChannelImgUri(inspurID));
+			map.putString("head", UriUtils.getChannelImgUri(context,inspurID));
 		}catch (Exception e){
 			e.printStackTrace();
 		}

@@ -323,7 +323,7 @@ public class ChannelMsgDetailActivity extends BaseActivity implements
 	 */
 	private void disPlayCommonInfo() {
 		imageDisplayUtils.display(senderHeadImg,
-				UriUtils.getChannelImgUri(msg.getUid()));
+				UriUtils.getChannelImgUri(ChannelMsgDetailActivity.this,msg.getUid()));
 		senderHeadImg.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -474,7 +474,7 @@ public class ChannelMsgDetailActivity extends BaseActivity implements
 
 			new ImageDisplayUtils(ChannelMsgDetailActivity.this,
 					R.drawable.icon_person_default).display(photoImg,
-					UriUtils.getChannelImgUri(comment.getUid()));
+					UriUtils.getChannelImgUri(ChannelMsgDetailActivity.this,comment.getUid()));
 			photoImg.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {

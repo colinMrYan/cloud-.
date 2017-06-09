@@ -1,5 +1,11 @@
 package com.inspur.emmcloud.ui.work.meeting;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+import java.util.Locale;
+
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.app.TimePickerDialog.OnTimeSetListener;
@@ -125,7 +131,7 @@ public class MeetingDetailActivity extends BaseActivity {
 					- 1);
 			if (!StringUtils.isBlank(memberId)) {
 				imageDisplayUtils.display(circleImg[i],
-						UriUtils.getChannelImgUri(memberId));
+						UriUtils.getChannelImgUri(MeetingDetailActivity.this,memberId));
 			}
 		}
 	}
@@ -543,6 +549,8 @@ public class MeetingDetailActivity extends BaseActivity {
 
 	/**
 	 * 设置成员数量不超过5
+	 * 
+	 * @return
 	 */
 	private int getMemberCount() {
 		int memberCount = selectMemList.size() > 5 ? 5 : selectMemList.size();
@@ -558,7 +566,7 @@ public class MeetingDetailActivity extends BaseActivity {
 		for (int i = 0; i < memberCount; i++) {
 			circleImg[i].setVisibility(View.VISIBLE);
 			imageDisplayUtils.display(circleImg[i],
-					selectMemList.get(selectMemList.size() - i - 1).getIcon());
+					selectMemList.get(selectMemList.size() - i - 1).getIcon(MeetingDetailActivity.this));
 		}
 	}
 

@@ -781,7 +781,6 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 					defaultIcon = R.drawable.icon_channel_group_default;
 					iconUrl = channel.getIcon();
 				}
-
 				new ImageDisplayUtils(getActivity(), defaultIcon).display(
 						photoImg, iconUrl);
 				channelPhotoLayout.addView(channelPhotoView);

@@ -1,15 +1,11 @@
 /**
- * 
+ *
  * LoginAPIService.java
  * classes : com.inspur.emmcloud.api.apiservice.LoginAPIService
  * V 1.0.0
  * Create at 2016年11月8日 下午2:34:43
  */
 package com.inspur.emmcloud.api.apiservice;
-
-import org.xutils.x;
-import org.xutils.http.HttpMethod;
-import org.xutils.http.RequestParams;
 
 import android.content.Context;
 
@@ -27,6 +23,10 @@ import com.inspur.emmcloud.callback.OauthCallBack;
 import com.inspur.emmcloud.util.OauthUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.UriUtils;
+
+import org.xutils.http.HttpMethod;
+import org.xutils.http.RequestParams;
+import org.xutils.x;
 
 /**
  * com.inspur.emmcloud.api.apiservice.LoginAPIService create at 2016年11月8日
@@ -47,7 +47,7 @@ public class LoginAPIService {
 
 	/**
 	 * 登录
-	 * 
+	 *
 	 * @param userName
 	 * @param password
 	 */
@@ -189,11 +189,11 @@ public class LoginAPIService {
 		});
 
 	}
-	
-	
+
+
 	/**
 	 * 验证短信验证码
-	 * 
+	 *
 	 * @param mobile
 	 * @param sms
 	 */
@@ -206,31 +206,31 @@ public class LoginAPIService {
 		params.addParameter("mobile", mobile);
 		params.addParameter("sms", sms);
 		x.http().post(params, new APICallback(context,completeUrl) {
-			
+
 			@Override
 			public void callbackTokenExpire() {
 				// TODO Auto-generated method stub
 				apiInterface.returnReisterSMSCheckFail("",-1);
 			}
-			
+
 			@Override
 			public void callbackSuccess(String arg0) {
 				// TODO Auto-generated method stub
 				apiInterface
-				.returnReisterSMSCheckSuccess(new GetRegisterCheckResult(
-						arg0));
+						.returnReisterSMSCheckSuccess(new GetRegisterCheckResult(
+								arg0));
 			}
-			
+
 			@Override
 			public void callbackFail(String error, int responseCode) {
 				// TODO Auto-generated method stub
 				apiInterface.returnReisterSMSCheckFail(error,responseCode);
 			}
 		});
-		
+
 	}
-	
-	
+
+
 	/**
 	 * 获取个人信息 得到当前用户的登录信息
 	 */
@@ -239,7 +239,7 @@ public class LoginAPIService {
 		RequestParams params = ((MyApplication) context.getApplicationContext())
 				.getHttpRequestParams(completeUrl);
 		x.http().get(params, new APICallback(context,completeUrl) {
-			
+
 			@Override
 			public void callbackTokenExpire() {
 				// TODO Auto-generated method stub
@@ -257,14 +257,14 @@ public class LoginAPIService {
 					}
 				}, context).refreshToken(completeUrl);
 			}
-			
+
 			@Override
 			public void callbackSuccess(String arg0) {
 				// TODO Auto-generated method stub
 				apiInterface.returnMyInfoSuccess(new GetMyInfoResult(
 						arg0));
 			}
-			
+
 			@Override
 			public void callbackFail(String error, int responseCode) {
 				// TODO Auto-generated method stub
@@ -272,7 +272,7 @@ public class LoginAPIService {
 			}
 		});
 	}
-	
+
 //	/**
 //	 * 获取websocket的连接url
 //	 */
@@ -314,8 +314,8 @@ public class LoginAPIService {
 //			}
 //		});
 //	}
-	
-	
+
+
 //	/**
 //	 * 上传认证token信息
 //	 *
@@ -383,11 +383,11 @@ public class LoginAPIService {
 //
 //		});
 //	}
-	
-	
+
+
 	/**
 	 * 修改密码
-	 * 
+	 *
 	 * @param oldpsd
 	 * @param newpsd
 	 */
@@ -408,7 +408,7 @@ public class LoginAPIService {
 		params.setAsJsonContent(true);
 		params.addHeader("Content-Type", "application/json");
 		x.http().request(HttpMethod.PUT, params, new APICallback(context,completeUrl) {
-			
+
 			@Override
 			public void callbackTokenExpire() {
 				// TODO Auto-generated method stub
@@ -426,13 +426,13 @@ public class LoginAPIService {
 					}
 				}, context).refreshToken(completeUrl);
 			}
-			
+
 			@Override
 			public void callbackSuccess(String arg0) {
 				// TODO Auto-generated method stub
 				apiInterface.returnModifyPsdSuccess();
 			}
-			
+
 			@Override
 			public void callbackFail(String error, int responseCode) {
 				// TODO Auto-generated method stub
@@ -440,15 +440,15 @@ public class LoginAPIService {
 			}
 		});
 	}
-	
-	
+
+
 	/**
 	 * 通过短信验证码更新密码
 	 * @param smsCode
 	 * @param newPwd
 	 */
 	public void updatePwdBySMSCode(final String smsCode,final String newPwd){
-		final String completeUrl = UriUtils.getChangePsd(); 
+		final String completeUrl = UriUtils.getChangePsd();
 		RequestParams params = ((MyApplication)context.getApplicationContext()).getHttpRequestParams(completeUrl);
 		params.addQueryStringParameter("passcode", smsCode);
 		params.addQueryStringParameter("new", newPwd);
@@ -469,20 +469,20 @@ public class LoginAPIService {
 					}
 				}, context).refreshToken(completeUrl);
 			}
-			
+
 			@Override
 			public void callbackSuccess(String arg0) {
 				apiInterface.returnUpdatePwdBySMSCodeSuccess(new GetUpdatePwdBySMSCodeBean(arg0));
 			}
-			
+
 			@Override
 			public void callbackFail(String error, int responseCode) {
 				apiInterface.returnUpdatePwdBySMSCodeFail(error,responseCode);
 			}
 		});
 	}
-	
-	
+
+
 //	/**
 //	 * 暂时没用上的接口
 //	 * 
@@ -525,7 +525,7 @@ public class LoginAPIService {
 //		asyncHttpResponseHandler.setIsDebug(LogUtils.isDebug);
 //		client.post(completeUrl, params, asyncHttpResponseHandler);
 //	}
-	
+
 //	/**
 //	 * 手机短信注册，传入手机号码，验证是否已经注册，如果已经注册返回-1，未注册返回1
 //	 * 
@@ -560,5 +560,5 @@ public class LoginAPIService {
 //		asyncHttpResponseHandler.setIsDebug(LogUtils.isDebug);
 //		client.post(completeUrl, params, asyncHttpResponseHandler);
 //	}
-	
+
 }
