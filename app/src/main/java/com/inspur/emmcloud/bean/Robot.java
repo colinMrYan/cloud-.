@@ -1,7 +1,10 @@
 package com.inspur.emmcloud.bean;
 
+import com.lidroid.xutils.db.annotation.Table;
+
 import org.json.JSONObject;
 
+@Table(name = "Robot")
 public class Robot {
 
 	private String id = "";

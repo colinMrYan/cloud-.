@@ -51,7 +51,46 @@ public class DbCacheUtils {
 					if (oldVersion <6 ){
 						if (tableIsExist("com_inspur_emmcloud_bean_Contact",arg0.getDatabase())){
 							arg0.execNonQuery("alter table com_inspur_emmcloud_bean_Contact rename to Contact");
+							arg0.execNonQuery("alter table Contact add lastUpdateTime String");
 						}
+
+						if (tableIsExist("com_inspur_emmcloud_bean_Channel",arg0.getDatabase())){
+							arg0.execNonQuery("alter table com_inspur_emmcloud_bean_Channel rename to Channel");
+						}
+
+						if (tableIsExist("com_inspur_emmcloud_bean_ChannelOperationInfo",arg0.getDatabase())){
+							arg0.execNonQuery("alter table com_inspur_emmcloud_bean_ChannelOperationInfo rename to ChannelOperationInfo");
+						}
+
+						if (tableIsExist("com_inspur_emmcloud_bean_SearchModel",arg0.getDatabase())){
+							arg0.execNonQuery("alter table com_inspur_emmcloud_bean_SearchModel rename to SearchModel");
+						}
+
+
+						if (tableIsExist("com_inspur_emmcloud_bean_Msg",arg0.getDatabase())){
+							arg0.execNonQuery("alter table com_inspur_emmcloud_bean_Msg rename to Msg");
+						}
+
+						if (tableIsExist("com_inspur_emmcloud_bean_MsgMatheSet",arg0.getDatabase())){
+							arg0.execNonQuery("alter table com_inspur_emmcloud_bean_MsgMatheSet rename to MsgMatheSet");
+						}
+
+						if (tableIsExist("com_inspur_emmcloud_bean_MsgReadId",arg0.getDatabase())){
+							arg0.execNonQuery("alter table com_inspur_emmcloud_bean_MsgReadId rename to MsgReadId");
+						}
+
+						if (tableIsExist("com_inspur_emmcloud_bean_MyCalendarOperation",arg0.getDatabase())){
+							arg0.execNonQuery("alter table com_inspur_emmcloud_bean_MyCalendarOperation rename to MyCalendarOperation");
+						}
+
+						if (tableIsExist("com_inspur_emmcloud_bean_Robot",arg0.getDatabase())){
+							arg0.execNonQuery("alter table com_inspur_emmcloud_bean_Robot rename to Robot");
+						}
+
+						if (tableIsExist("com_inspur_emmcloud_bean_AppOrder",arg0.getDatabase())){
+							arg0.execNonQuery("alter table com_inspur_emmcloud_bean_AppOrder rename to AppOrder");
+						}
+
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
