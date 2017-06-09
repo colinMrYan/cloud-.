@@ -155,8 +155,6 @@ public class GroupNewsCardFragment extends Fragment implements
 						.getSummary());
 				intent.putExtra("url", TimeUtils.getNewsTimePathIn(posttime)
 						+ groupnNewsList.get(position).getResource());
-				LogUtils.YfcDebug("访问新闻的路径："+TimeUtils.getNewsTimePathIn(posttime)
-						+ groupnNewsList.get(position).getResource());
 				intent.putExtra("news_id",groupnNewsList.get(position).getId());
 				intent.putExtra("pager_title",pagerTitle);
 				intent.putExtra("instruction",groupnNewsList.get(position).getEditorComment());
