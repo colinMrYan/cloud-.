@@ -236,7 +236,7 @@ public class FindSearchMoreActivity extends BaseActivity implements
 				String inspurId = findSearchContacts.getInspurId();
 				new ImageDisplayUtils(getApplicationContext(),
 						R.drawable.icon_person_default).display(photoImg,
-						UriUtils.getChannelImgUri(inspurId));
+						UriUtils.getChannelImgUri(FindSearchMoreActivity.this,inspurId));
 				titleText.setText(findSearchContacts.getName());
 				String mobile = findSearchContacts.getMobile();
 				String mail = findSearchContacts.getEmail();

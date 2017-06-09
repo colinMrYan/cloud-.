@@ -1,11 +1,5 @@
 package com.inspur.emmcloud.ui.work.meeting;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Locale;
-
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.app.TimePickerDialog.OnTimeSetListener;
@@ -55,6 +49,12 @@ import com.inspur.emmcloud.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.CircleImageView;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.MyDatePickerDialog;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+import java.util.Locale;
 
 /**
  * 会议详情，这里是每个会议的详情内容
@@ -125,7 +125,7 @@ public class MeetingDetailActivity extends BaseActivity {
 					- 1);
 			if (!StringUtils.isBlank(memberId)) {
 				imageDisplayUtils.display(circleImg[i],
-						UriUtils.getChannelImgUri(memberId));
+						UriUtils.getChannelImgUri(MeetingDetailActivity.this,memberId));
 			}
 		}
 	}
@@ -417,7 +417,6 @@ public class MeetingDetailActivity extends BaseActivity {
 	 * 
 	 * @param topic
 	 * @param notice
-	 * @param bookDate
 	 * @param beginLong
 	 * @param endLong
 	 */
@@ -545,7 +544,6 @@ public class MeetingDetailActivity extends BaseActivity {
 	/**
 	 * 设置成员数量不超过5
 	 * 
-	 * @param uids
 	 * @return
 	 */
 	private int getMemberCount() {
@@ -562,7 +560,7 @@ public class MeetingDetailActivity extends BaseActivity {
 		for (int i = 0; i < memberCount; i++) {
 			circleImg[i].setVisibility(View.VISIBLE);
 			imageDisplayUtils.display(circleImg[i],
-					selectMemList.get(selectMemList.size() - i - 1).getIcon());
+					selectMemList.get(selectMemList.size() - i - 1).getIcon(MeetingDetailActivity.this));
 		}
 	}
 

@@ -24,7 +24,6 @@ import com.inspur.emmcloud.bean.SearchModel;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.util.ImageDisplayUtils;
-import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.MathCaculateUtils;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
@@ -384,7 +383,7 @@ public class MeetingBookingActivity extends BaseActivity {
 		for (int i = 0; i < count; i++) {
 			circleHeadImageView[i].setVisibility(View.VISIBLE);
 			SearchModel searchModel = selectMemList.get(i);
-			String icon = searchModel.getIcon();
+			String icon = searchModel.getIcon(MeetingBookingActivity.this);
 			int  defaultIcon = -1;
 			if (searchModel.getType().equals("GROUP")) {
 				File file = new File(MyAppConfig.LOCAL_CACHE_PATH, UriUtils.tanent

@@ -378,11 +378,11 @@ public class ChannelInfoActivity extends BaseActivity {
 				String uid = memberList.get(position);
 				viewHolder.nameText.setText(ContactCacheUtils.getUserName(
 						ChannelInfoActivity.this, uid));
-				userPhotoUrl = UriUtils.getChannelImgUri(uid);
+				userPhotoUrl = UriUtils.getChannelImgUri(ChannelInfoActivity.this,uid);
 				userName = ContactCacheUtils.getUserName(
 						ChannelInfoActivity.this, uid);
 				imageDisplayUtils.display(viewHolder.memberHeadImg,
-						UriUtils.getChannelImgUri(uid));
+						UriUtils.getChannelImgUri(ChannelInfoActivity.this,uid));
 			}
 			viewHolder.nameText.setText(userName);
 			imageDisplayUtils.display(viewHolder.memberHeadImg, userPhotoUrl);

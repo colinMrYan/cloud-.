@@ -116,14 +116,14 @@ public class SearchModel implements Serializable {
 		return heat;
 	}
 
-	public String getIcon() {
+	public String getIcon(Context context) {
 		if (!icon.startsWith("http")) {
 			if (type.equals("GROUP")) {
 				return UriUtils.getPreviewUri(icon);
 			} else if (type.equals("DIRECT")) {
 				return UriUtils.getUserInfoPhotoUri(icon);
 			} else if (type.equals("USER")) {
-				return UriUtils.getChannelImgUri(id);
+				return UriUtils.getChannelImgUri(context,id);
 			} else {
 				return null;
 			}

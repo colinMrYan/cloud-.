@@ -103,7 +103,7 @@ public class MyInfoActivity extends BaseActivity {
 	private void showMyInfo() {
 		if (getMyInfoResult != null) {
 			String photoUri = UriUtils
-					.getChannelImgUri(getMyInfoResult.getID());
+					.getChannelImgUri(MyInfoActivity.this,getMyInfoResult.getID());
 			imageDisplayUtils.display(userHeadImg, photoUri);
 			String userName = getMyInfoResult.getName();
 			((TextView) findViewById(R.id.myinfo_username_text)).setText(userName.equals("null") ? getString(R.string.not_set) : userName);
