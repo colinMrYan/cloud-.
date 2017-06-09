@@ -19,6 +19,7 @@ import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
 import com.inspur.emmcloud.bean.GetGroupNewsDetailResult;
 import com.inspur.emmcloud.bean.GroupNews;
 import com.inspur.emmcloud.bean.NewsIntrcutionUpdateEvent;
+import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.TimeUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
@@ -142,7 +143,7 @@ public class GroupNewsCardFragment extends Fragment implements
 				long id) {
 //			String posttime = groupnNewsList.get(position).getPosttime();
 			String posttime = groupnNewsList.get(position).getCreationDate();
-			posttime = TimeUtils.Calendar2TimeString(TimeUtils.timeLong2Calendar(Long.parseLong(posttime)),TimeUtils.getFormat(getActivity(),TimeUtils.FORMAT_DEFAULT_DATE));
+//			posttime = TimeUtils.Calendar2TimeString(TimeUtils.timeLong2Calendar(Long.parseLong(posttime)),TimeUtils.getFormat(getActivity(),TimeUtils.FORMAT_DEFAULT_DATE));
 			Intent intent = new Intent();
 			intent.setClass(getActivity(), NewsWebDetailActivity.class);
 			try {
@@ -152,7 +153,9 @@ public class GroupNewsCardFragment extends Fragment implements
 						.getTitle());
 				intent.putExtra("digest", groupnNewsList.get(position)
 						.getSummary());
-				intent.putExtra("url", TimeUtils.getNewsTime(posttime)
+				intent.putExtra("url", TimeUtils.getNewsTimePathIn(posttime)
+						+ groupnNewsList.get(position).getResource());
+				LogUtils.YfcDebug("访问新闻的路径："+TimeUtils.getNewsTimePathIn(posttime)
 						+ groupnNewsList.get(position).getResource());
 				intent.putExtra("news_id",groupnNewsList.get(position).getId());
 				intent.putExtra("pager_title",pagerTitle);
