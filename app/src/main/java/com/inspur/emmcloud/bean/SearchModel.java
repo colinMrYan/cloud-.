@@ -6,9 +6,11 @@ import com.facebook.react.bridge.ReadableMap;
 import com.inspur.emmcloud.util.ContactCacheUtils;
 import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.UriUtils;
+import com.lidroid.xutils.db.annotation.Table;
 
 import java.io.Serializable;
 
+@Table(name = "SearchModel")
 public class SearchModel implements Serializable {
 	private String id = "";
 	private String name = "";
