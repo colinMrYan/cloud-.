@@ -1,11 +1,13 @@
 package com.inspur.emmcloud.bean; 
 
 import com.lidroid.xutils.db.annotation.Id;
+import com.lidroid.xutils.db.annotation.Table;
 
 /**
  * classes : com.inspur.emmcloud.bean.AppOrder
  * Create at 2016年12月17日 下午2:53:19
  */
+@Table(name = "AppOrder")
 public class AppOrder {
 
 	@Id
