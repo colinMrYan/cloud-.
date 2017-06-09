@@ -16,13 +16,11 @@ import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.service.AppExceptionService;
 import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.ui.login.LoginActivity;
-import com.inspur.emmcloud.ui.login.ModifyUserFirstPsdActivity;
 import com.inspur.emmcloud.ui.mine.setting.GuideActivity;
 import com.inspur.emmcloud.util.AppUtils;
 import com.inspur.emmcloud.util.FileUtils;
 import com.inspur.emmcloud.util.IntentUtils;
 import com.inspur.emmcloud.util.LanguageUtils;
-import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.LoginUtils;
 import com.inspur.emmcloud.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
@@ -171,30 +169,15 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
 			public void handleMessage(Message msg) {
 				// TODO Auto-generated method stub
 				switch (msg.what) {
-					case LOGIN_SUCCESS:
-						LogUtils.jasonDebug("LOGIN_SUCCESS----------");
-						// 是否已建立简易密码
-						if (!PreferencesUtils.getBoolean(MainActivity.this,
-								"hasPassword")) {
-							IntentUtils.startActivity(MainActivity.this,
-									ModifyUserFirstPsdActivity.class, true);
-						} else {
-							IntentUtils.startActivity(MainActivity.this,
-									IndexActivity.class, true);
-						}
-						break;
-					case LOGIN_FAIL:
-						LogUtils.jasonDebug("LOGIN_FAIL----------");
-						IntentUtils.startActivity(MainActivity.this,
-								LoginActivity.class, true);
-						break;
 					case UPGRADE_FAIL:
 					case NO_NEED_UPGRADE:
 					case DONOT_UPGRADE:
 						getServerLanguage();
 						break;
+					case LOGIN_SUCCESS:
+					case LOGIN_FAIL:
 					case GET_LANGUAGE_SUCCESS:
-						enterApp();
+						setSplashShow();
 						break;
 					default:
 						break;
@@ -229,11 +212,13 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
 				"myInfo", "");
 		String languageJson = PreferencesUtils.getString(getApplicationContext(),
 				UriUtils.tanent + "appLanguageObj");
-		if (!StringUtils.isBlank(accessToken) && !StringUtils.isBlank(myInfo) && StringUtils.isBlank(languageJson)) {
+		if (!StringUtils.isBlank(accessToken) && StringUtils.isBlank(myInfo)) {
+			new LoginUtils(MainActivity.this, handler).getMyInfo();
+		} else if (!StringUtils.isBlank(accessToken) && !StringUtils.isBlank(myInfo) && StringUtils.isBlank(languageJson)) {
 			languageUtils = new LanguageUtils(MainActivity.this, handler);
 			languageUtils.getServerSupportLanguage();
 		} else {
-			enterApp();
+			setSplashShow();
 		}
 	}
 
@@ -241,7 +226,7 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
 	/**
 	 * 进入App
 	 */
-	private void enterApp() {
+	private void setSplashShow() {
 		// TODO Auto-generated method stub
 		long betweenTime = System.currentTimeMillis() - activitySplashShowTime;
 		long leftTime = SPLASH_PAGE_TIME - betweenTime;
@@ -269,7 +254,15 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
 			IntentUtils.startActivity(MainActivity.this,
 					GuideActivity.class, true);
 		} else {
-			loginApp();
+			String accessToken = PreferencesUtils.getString(MainActivity.this,
+					"accessToken", "");
+			if (!StringUtils.isBlank(accessToken)) {
+				IntentUtils.startActivity(MainActivity.this, IndexActivity.class,
+						true);
+			}else {
+				IntentUtils.startActivity(MainActivity.this, LoginActivity.class,
+						true);
+			}
 		}
 	}
 
@@ -315,26 +308,6 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
 		return ifUpgraded;
 	}
 
-	/**
-	 * 登录app
-	 */
-	private void loginApp() {
-		// TODO Auto-generated method stub
-		String accessToken = PreferencesUtils.getString(MainActivity.this,
-				"accessToken", "");
-		String myInfo = PreferencesUtils.getString(getApplicationContext(),
-				"myInfo", "");
-		if ((!StringUtils.isBlank(accessToken))
-				&& (!StringUtils.isBlank(myInfo))) {
-			IntentUtils.startActivity(MainActivity.this, IndexActivity.class,
-					true);
-		} else if (StringUtils.isBlank(myInfo)) {
-            new LoginUtils(MainActivity.this,handler).getMyInfo();
-		} else {
-			IntentUtils.startActivity(MainActivity.this, LoginActivity.class,
-					true);
-		}
-	}
 
 	@Override
 	public Resources getResources() {

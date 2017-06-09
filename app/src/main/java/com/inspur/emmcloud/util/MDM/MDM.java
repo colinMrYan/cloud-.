@@ -110,7 +110,7 @@ public class MDM extends APIInterfaceInstance {
 		Intent intent = new Intent();
 		intent.setClass(context, ImpActivity.class);
 		Bundle bundle = new Bundle();
-		bundle.putString("appName", "");
+		bundle.putString("appName", context.getString(Res.getStringID("device_registe")));
 		bundle.putString("function","mdm");
 		bundle.putString("uri", "https://emm.inspur.com/mdm/loadForRegister?udid="+ AppUtils.getMyUUID(context));
 		intent.putExtras(bundle);
