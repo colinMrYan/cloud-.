@@ -3,6 +3,7 @@ package com.inspur.emmcloud.bean;
 import android.content.Context;
 
 import com.facebook.react.bridge.WritableNativeMap;
+import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.UriUtils;
 import com.lidroid.xutils.db.annotation.Table;
 
@@ -45,7 +46,14 @@ public class Contact implements Serializable{
 
 	}
 
+	public  Contact(JSONObject obj,String lastUpdateTime){
+		this(obj);
+		this.lastUpdateTime = lastUpdateTime;
+	}
+
+
 	public Contact(JSONObject obj) {
+		LogUtils.YfcDebug("通讯录--------》");
 		try {
 			if (obj.has("id")) {
 				this.id = obj.getString("id");
@@ -97,9 +105,7 @@ public class Contact implements Serializable{
 			if (obj.has("name_global")) {
 				this.globalName = obj.getString("name_global");
 			}
-			if(obj.has("lastUpdateTime")){
-				this.lastUpdateTime = obj.getString("lastUpdateTime");
-			}
+
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

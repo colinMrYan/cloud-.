@@ -221,21 +221,18 @@ public class UriUtils {
      * 频道页面头像显示图片
      **/
     public static String getChannelImgUri(Context context,String inspurID) {
-        String headImgUrl = "";
+        String headImgUrl = null;
         if (StringUtils.isBlank(inspurID) || inspurID.equals("null"))
             return null;
-        headImgUrl = "https://emm.inspur.com/img/userhead/" + inspurID;
+
         Contact contact = ContactCacheUtils.getUserContact(context,inspurID);
         if(contact != null){
+            headImgUrl = "https://emm.inspur.com/img/userhead/" + inspurID;
             String lastUpdateTime = contact.getLastUpdateTime();
-            LogUtils.YfcDebug("获取到的头像最后更新时间："+lastUpdateTime);
             if(!StringUtils.isBlank(lastUpdateTime)&&(!lastUpdateTime.equals("null"))){
                 headImgUrl = headImgUrl + "?"+lastUpdateTime;
             }
-        }else{
-            return null;
         }
-        LogUtils.YfcDebug("headUrl："+headImgUrl);
         return headImgUrl;
     }
 
