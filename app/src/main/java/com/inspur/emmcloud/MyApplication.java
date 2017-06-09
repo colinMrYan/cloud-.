@@ -354,6 +354,7 @@ public class MyApplication extends MultiDexApplication implements  ReactApplicat
 	public void initTanent() {
 		// TODO Auto-generated method stub
 		// UriUtils.res = "res_dev";
+		currentEnterprise = null;
 		String myInfo = PreferencesUtils.getString(getApplicationContext(),
 				"myInfo");
 		if (!StringUtils.isBlank(myInfo)) {
@@ -374,6 +375,7 @@ public class MyApplication extends MultiDexApplication implements  ReactApplicat
 				currentEnterprise =getMyInfoResult.getDefaultEnterprise();
 			}
 			String enterpriseCode = currentEnterprise.getCode();
+			LogUtils.jasonDebug("enterpriseCode="+enterpriseCode);
 			UriUtils.tanent = enterpriseCode;
 			APIUri.tanent = enterpriseCode;
 		}
