@@ -849,7 +849,7 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
                 senderPhotoImg.setVisibility(View.INVISIBLE);
             } else {
                 senderPhotoImg.setVisibility(View.VISIBLE);
-                String iconUrl = UriUtils.getChannelImgUri(msg.getUid());
+                String iconUrl = UriUtils.getChannelImgUri(ChannelActivity.this,msg.getUid());
                 if (channelType.equals("SERVICE")) {
                     iconUrl = UriUtils.getRobotIconUri(RobotCacheUtils
                             .getRobotById(ChannelActivity.this, msg.getUid())

@@ -1,5 +1,5 @@
 /**
- * 
+ *
  * MyAppAPIService.java
  * classes : com.inspur.emmcloud.api.apiservice.MyAppAPIService
  * V 1.0.0
@@ -44,7 +44,7 @@ public class AppAPIService {
 
 	public AppAPIService(Context context) {
 		this.context = context;
-		
+
 	}
 
 	public void setAPIInterface(APIInterface apiInterface) {
@@ -94,7 +94,7 @@ public class AppAPIService {
 	 * 获取ClientId
 	 * @param deviceId
 	 * @param deviceName
-     */
+	 */
 	public void getClientId(final String deviceId, final String deviceName){
 		final String completeUrl = APIUri.getClientId();
 		RequestParams params = ((MyApplication) context.getApplicationContext())
@@ -133,7 +133,7 @@ public class AppAPIService {
 	 * 获取ReactNative更新版本
 	 * @param version
 	 * @param lastCreationDate
-     */
+	 */
 	public void getReactNativeUpdate (final String version, final long lastCreationDate, final String clientId){
 		final String completeUrl = APIUri.getReactNativeUpdate()+"version="+version+"&lastCreationDate=" + lastCreationDate
 				+"&clientId="+clientId;
@@ -172,7 +172,7 @@ public class AppAPIService {
 	 * @param command
 	 * @param version
 	 * @param clientId
-     */
+	 */
 	public void sendBackReactNativeUpdateLog(final String command, final String version, final String clientId){
 		final String completeUrl = APIUri.getClientLog()+"command=" + command+"&version="+version
 				+"&clientId="+clientId;
@@ -205,10 +205,10 @@ public class AppAPIService {
 	}
 
 
-	
+
 	/**
 	 * 异常上传
-	 * 
+	 *
 	 * @param exception
 	 */
 	public void uploadException(final JSONObject exception) {
@@ -218,21 +218,21 @@ public class AppAPIService {
 		params.setAsJsonContent(true);
 		params.setBodyContent(exception.toString());
 		x.http().post(params, new APICallback(context,completeUrl) {
-			
+
 			@Override
 			public void callbackTokenExpire() {
 				// TODO Auto-generated method stub
 				apiInterface.returnUploadExceptionFail(new String(""),-1);
 			}
-			
+
 			@Override
 			public void callbackSuccess(String arg0) {
 				// TODO Auto-generated method stub
 				apiInterface
-				.returnUploadExceptionSuccess(new GetExceptionResult(
-						arg0));
+						.returnUploadExceptionSuccess(new GetExceptionResult(
+								arg0));
 			}
-			
+
 			@Override
 			public void callbackFail(String error, int responseCode) {
 				// TODO Auto-generated method stub
@@ -240,7 +240,7 @@ public class AppAPIService {
 			}
 		});
 	}
-	
+
 	/**
 	 * 获取显示tab页的接口
 	 */
@@ -252,7 +252,7 @@ public class AppAPIService {
 			@Override
 			public void callbackTokenExpire() {
 				new OauthUtils(new OauthCallBack() {
-					
+
 					@Override
 					public void reExecute() {
 						getAppTabs();
@@ -263,12 +263,12 @@ public class AppAPIService {
 					}
 				}, context).refreshToken(completeUrl);
 			}
-			
+
 			@Override
 			public void callbackSuccess(String arg0) {
 				apiInterface.returnGetAppTabsSuccess(new GetAppTabsResult(arg0));
 			}
-			
+
 			@Override
 			public void callbackFail(String error, int responseCode) {
 				apiInterface.returnAddAppFail(error,responseCode);
@@ -316,7 +316,7 @@ public class AppAPIService {
 	/**
 	 * 手机应用PV信息（web应用）
 	 * @param collectInfo
-     */
+	 */
 	public void uploadPVCollect(String collectInfo){
 		String  completeUrl = "http://u.inspur.com/analytics/api/ECMPV/Post";
 		RequestParams params = new RequestParams(completeUrl);
@@ -411,48 +411,48 @@ public class AppAPIService {
 		});
 	}
 
-    /**
-     * 获取闪屏页信息
-     * 采用新式数据解析方法
-     * @param clientId
-     * @param versionCode
-     */
-    public void getSplashPageInfo(final String clientId, final String versionCode) {
-        final String completeUrl = APIUri.getSplashPageUrl() + "?version=" + versionCode + "&clientId=" + clientId;
-        RequestParams params = ((MyApplication) context.getApplicationContext())
-                .getHttpRequestParams(completeUrl);
-        x.http().get(params, new APICallback(context, completeUrl) {
-            @Override
-            public void callbackSuccess(String arg0) {
-                SplashPageBean splashPageBean = new SplashPageBean(arg0);
-                if (splashPageBean.getCommand().equals("FORWARD")) {
-                    String splashPageInfoOld = PreferencesByUserAndTanentUtils.getString(context,"splash_page_info","");
-                    PreferencesByUserAndTanentUtils.putString(context,"splash_page_info_old",splashPageInfoOld);
-                    PreferencesByUserAndTanentUtils.putString(context, "splash_page_info", arg0);
-                }
-                apiInterface.returnSplashPageInfoSuccess(splashPageBean);
-            }
+	/**
+	 * 获取闪屏页信息
+	 * 采用新式数据解析方法
+	 * @param clientId
+	 * @param versionCode
+	 */
+	public void getSplashPageInfo(final String clientId, final String versionCode) {
+		final String completeUrl = APIUri.getSplashPageUrl() + "?version=" + versionCode + "&clientId=" + clientId;
+		RequestParams params = ((MyApplication) context.getApplicationContext())
+				.getHttpRequestParams(completeUrl);
+		x.http().get(params, new APICallback(context, completeUrl) {
+			@Override
+			public void callbackSuccess(String arg0) {
+				SplashPageBean splashPageBean = new SplashPageBean(arg0);
+				if (splashPageBean.getCommand().equals("FORWARD")) {
+					String splashPageInfoOld = PreferencesByUserAndTanentUtils.getString(context,"splash_page_info","");
+					PreferencesByUserAndTanentUtils.putString(context,"splash_page_info_old",splashPageInfoOld);
+					PreferencesByUserAndTanentUtils.putString(context, "splash_page_info", arg0);
+				}
+				apiInterface.returnSplashPageInfoSuccess(splashPageBean);
+			}
 
-            @Override
-            public void callbackFail(String error, int responseCode) {
-                apiInterface.returnSplashPageInfoFail(error, responseCode);
-            }
+			@Override
+			public void callbackFail(String error, int responseCode) {
+				apiInterface.returnSplashPageInfoFail(error, responseCode);
+			}
 
-            @Override
-            public void callbackTokenExpire() {
-                new OauthUtils(new OauthCallBack() {
-                    @Override
-                    public void reExecute() {
-                        getSplashPageInfo(clientId, versionCode);
-                    }
+			@Override
+			public void callbackTokenExpire() {
+				new OauthUtils(new OauthCallBack() {
+					@Override
+					public void reExecute() {
+						getSplashPageInfo(clientId, versionCode);
+					}
 					@Override
 					public void executeFailCallback() {
 						callbackFail("",-1);
 					}
-                }, context).refreshToken(completeUrl);
-            }
-        });
-    }
+				}, context).refreshToken(completeUrl);
+			}
+		});
+	}
 
 
 	/**
