@@ -232,12 +232,12 @@ public class Contact implements Serializable{
 	}
 
 	public JSONObject contact2JSONObject(Context context){
-				JSONObject obj = new JSONObject();
-				try {
-					obj.put("inspur_id",inspurID);
-					obj.put("code",code);
-					obj.put("real_name",realName);
-					obj.put("new_id",newID);
+		JSONObject obj = new JSONObject();
+		try {
+			obj.put("inspur_id",inspurID);
+			obj.put("code",code);
+			obj.put("real_name",realName);
+			obj.put("new_id",newID);
 			obj.put("pinyin",pinyin);
 			obj.put("mobile",mobile);
 			obj.put("email",email);

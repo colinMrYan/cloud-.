@@ -63,11 +63,11 @@ public class GetAllContactResult {
 	public String getLastUpdateTime() {
 		return lastUpdateTime;
 	}
-	
+
 	public List<Contact> getModifyContactList(){
 		return modifyContactList;
 	}
-	
+
 	public JSONArray getDeleteIdArray(){
 		return deleteIdArray;
 	}

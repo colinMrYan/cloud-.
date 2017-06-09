@@ -49,7 +49,7 @@ public class UriUtils {
                 if (uri.startsWith("https://emm.inspur.com:443/ssohandler/gs/") || uri.startsWith("https://emm.inspur.com/ssohandler/gs/")) {
                     uri = uri.replace("/gs/","/gs_uri/");
                     if (NetUtils.isNetworkConnected(activity)){
-                       LoadingDialog loadingDialog = new LoadingDialog(activity);
+                        LoadingDialog loadingDialog = new LoadingDialog(activity);
                         loadingDialog.show();
                         getGSWebReallyUrl(activity,uri,app,loadingDialog);
                     }

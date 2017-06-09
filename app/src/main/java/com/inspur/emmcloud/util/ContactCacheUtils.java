@@ -42,7 +42,6 @@ public class ContactCacheUtils {
 	 */
 	public static void saveContact(Context context,
 									   Contact contact) {
-		LogUtils.YfcDebug("存储的头像时间："+contact.getLastUpdateTime());
 		if (contact == null ) {
 			return;
 		}
@@ -50,7 +49,6 @@ public class ContactCacheUtils {
 			DbCacheUtils.getDb(context).saveOrUpdate(contact);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			LogUtils.YfcDebug("存储时出现异常："+e.getMessage());
 			e.printStackTrace();
 		}
 	}
