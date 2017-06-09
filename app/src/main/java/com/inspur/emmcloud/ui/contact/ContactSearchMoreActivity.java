@@ -91,9 +91,9 @@ public class ContactSearchMoreActivity extends BaseActivity implements OnRefresh
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_contact_search_more);
 		((MyApplication) getApplicationContext()).addActivity(this);
+		handMessage();
 		initView();
 		getIntentData();
-		handMessage();
 	}
 
 	private void initView() {
@@ -488,7 +488,7 @@ public class ContactSearchMoreActivity extends BaseActivity implements OnRefresh
 	 * @param photoLayout
 	 */
 	private void displayImg(SearchModel searchModel, CircleFrameLayout photoLayout) {
-		String icon = searchModel.getIcon();
+		String icon = searchModel.getIcon(ContactSearchMoreActivity.this);
 		String type = searchModel.getType();
 		if (type.equals("STRUCT")) {
 			photoLayout.setBackgroundResource(R.drawable.icon_channel_group_default);

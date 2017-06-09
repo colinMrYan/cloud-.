@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.util.Log;
 
 import com.inspur.emmcloud.MyApplication;
-import com.inspur.emmcloud.bean.GetMyInfoResult;
 import com.inspur.emmcloud.util.AppUtils;
 import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
@@ -36,7 +35,11 @@ public class WebSocketPush {
 
 	public static WebSocketPush getInstance(Context context){
 		if (webSocketPush == null) {
-			webSocketPush = new WebSocketPush(context);
+			synchronized (WebSocketPush.class) {
+				if (webSocketPush == null) {
+					webSocketPush = new WebSocketPush(context);
+				}
+			}
 		}
 		return webSocketPush;
 	}
@@ -47,9 +50,7 @@ public class WebSocketPush {
 	public void start() {
 		// TODO Auto-generated method stub
 			String url = "https://ecm.inspur.com/";
-			String myInfo = PreferencesUtils.getString(context, "myInfo","");
-			GetMyInfoResult myInfoResult = new GetMyInfoResult(myInfo); 
-			String enterpriseCode = myInfoResult.getEnterpriseCode();
+			String enterpriseCode = ((MyApplication)context.getApplicationContext()).getCurrentEnterprise().getCode();
 			String path = "/"+enterpriseCode+"/socket/handshake";
 			WebSocketConnect(url, path);
 	}

@@ -98,7 +98,7 @@ public class ChannelMemActivity extends BaseActivity {
 			String uid = "";
 			uid = memberArray[position];
 			imageDisplayUtils.display(viewHolder.memberHeadImg,
-					UriUtils.getChannelImgUri(uid));
+					UriUtils.getChannelImgUri(ChannelMemActivity.this,uid));
 			viewHolder.nameText.setText("");
 			return convertView;
 		}

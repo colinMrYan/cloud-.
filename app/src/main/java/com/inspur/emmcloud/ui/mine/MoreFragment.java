@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.Channel;
 import com.inspur.emmcloud.bean.GetMyInfoResult;
@@ -25,7 +26,7 @@ import com.inspur.emmcloud.util.AppTitleUtils;
 import com.inspur.emmcloud.util.ChannelCacheUtils;
 import com.inspur.emmcloud.util.ImageDisplayUtils;
 import com.inspur.emmcloud.util.IntentUtils;
-import com.inspur.emmcloud.util.PreferencesByUserUtils;
+import com.inspur.emmcloud.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.ToastUtils;
@@ -95,16 +96,11 @@ public class MoreFragment extends Fragment {
         String myInfo = PreferencesUtils.getString(getActivity(), "myInfo", "");
         getMyInfoResult = new GetMyInfoResult(myInfo);
         String inspurId = getMyInfoResult.getID();
-        String photoUri = UriUtils.getChannelImgUri(inspurId);
+        String photoUri = UriUtils.getChannelImgUri(getActivity(),inspurId)+"?"+System.currentTimeMillis();
         imageDisplayUtils.display(moreHeadImg, photoUri);
-
-        if (!getMyInfoResult.getName().equals("null")) {
-            userNameText.setText(getMyInfoResult.getName());
-        } else {
-            userNameText.setText(getString(R.string.not_set));
-        }
-
-        userOrgText.setText(getMyInfoResult.getEnterpriseName());
+        String userName = PreferencesUtils.getString(getActivity(), "userRealName", getString(R.string.not_set));
+        userNameText.setText(userName);
+        userOrgText.setText(((MyApplication)getActivity().getApplicationContext()).getCurrentEnterprise().getName());
     }
 
 
@@ -227,7 +223,7 @@ public class MoreFragment extends Fragment {
      * 设置标题
      */
     private void setTabTitle(){
-        String appTabs = PreferencesByUserUtils.getString(getActivity(),"app_tabbar_info_current","");
+        String appTabs = PreferencesByUserAndTanentUtils.getString(getActivity(),"app_tabbar_info_current","");
         if(!StringUtils.isBlank(appTabs)){
             titleText.setText(AppTitleUtils.getTabTitle(getActivity(),getClass().getSimpleName()));
         }

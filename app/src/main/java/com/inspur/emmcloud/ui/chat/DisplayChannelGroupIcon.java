@@ -30,26 +30,26 @@ public class DisplayChannelGroupIcon {
 				channelPhotoView = LayoutInflater.from(context).inflate(R.layout.chat_msg_session_photo_one, null);
 				ImageView photoImg = (ImageView) channelPhotoView.findViewById(R.id.photo_img1);
 				new ImageDisplayUtils(context, defaultIcon).display(
-						photoImg, UriUtils.getChannelImgUri(memberUidList.get(0)));
+						photoImg, UriUtils.getChannelImgUri(context,memberUidList.get(0)));
 			} else if (groupNumSize == 2) {
 				channelPhotoView = LayoutInflater.from(context).inflate(R.layout.chat_msg_session_photo_two, null);
 				ImageView photoImg1 = (ImageView) channelPhotoView.findViewById(R.id.photo_img1);
 				ImageView photoImg2 = (ImageView) channelPhotoView.findViewById(R.id.photo_img2);
 				new ImageDisplayUtils(context, defaultIcon).display(
-						photoImg1, UriUtils.getChannelImgUri(memberUidList.get(0)));
+						photoImg1, UriUtils.getChannelImgUri(context,memberUidList.get(0)));
 				new ImageDisplayUtils(context, defaultIcon).display(
-						photoImg2, UriUtils.getChannelImgUri(memberUidList.get(1)));
+						photoImg2, UriUtils.getChannelImgUri(context,memberUidList.get(1)));
 			} else if (groupNumSize == 3) {
 				channelPhotoView = LayoutInflater.from(context).inflate(R.layout.chat_msg_session_photo_three, null);
 				ImageView photoImg1 = (ImageView) channelPhotoView.findViewById(R.id.photo_img1);
 				ImageView photoImg2 = (ImageView) channelPhotoView.findViewById(R.id.photo_img2);
 				ImageView photoImg3 = (ImageView) channelPhotoView.findViewById(R.id.photo_img3);
 				new ImageDisplayUtils(context, defaultIcon).display(
-						photoImg1, UriUtils.getChannelImgUri(memberUidList.get(0)));
+						photoImg1, UriUtils.getChannelImgUri(context,memberUidList.get(0)));
 				new ImageDisplayUtils(context, defaultIcon).display(
-						photoImg2, UriUtils.getChannelImgUri(memberUidList.get(1)));
+						photoImg2, UriUtils.getChannelImgUri(context,memberUidList.get(1)));
 				new ImageDisplayUtils(context, defaultIcon).display(
-						photoImg3, UriUtils.getChannelImgUri(memberUidList.get(2)));
+						photoImg3, UriUtils.getChannelImgUri(context,memberUidList.get(2)));
 			} else if (groupNumSize == 4) {
 				channelPhotoView = LayoutInflater.from(context).inflate(R.layout.chat_msg_session_photo_four, null);
 				ImageView photoImg1 = (ImageView) channelPhotoView.findViewById(R.id.photo_img1);
@@ -57,13 +57,13 @@ public class DisplayChannelGroupIcon {
 				ImageView photoImg3 = (ImageView) channelPhotoView.findViewById(R.id.photo_img3);
 				ImageView photoImg4 = (ImageView) channelPhotoView.findViewById(R.id.photo_img4);
 				new ImageDisplayUtils(context, defaultIcon).display(
-						photoImg1, UriUtils.getChannelImgUri(memberUidList.get(0)));
+						photoImg1, UriUtils.getChannelImgUri(context,memberUidList.get(0)));
 				new ImageDisplayUtils(context, defaultIcon).display(
-						photoImg2, UriUtils.getChannelImgUri(memberUidList.get(1)));
+						photoImg2, UriUtils.getChannelImgUri(context,memberUidList.get(1)));
 				new ImageDisplayUtils(context, defaultIcon).display(
-						photoImg3, UriUtils.getChannelImgUri(memberUidList.get(2)));
+						photoImg3, UriUtils.getChannelImgUri(context,memberUidList.get(2)));
 				new ImageDisplayUtils(context, defaultIcon).display(
-						photoImg4, UriUtils.getChannelImgUri(memberUidList.get(3)));
+						photoImg4, UriUtils.getChannelImgUri(context,memberUidList.get(3)));
 			}
 			if (channelPhotoView != null){
 				channelPhotoLayout.addView(channelPhotoView);

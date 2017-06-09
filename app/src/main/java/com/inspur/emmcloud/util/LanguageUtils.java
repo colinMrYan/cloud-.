@@ -7,11 +7,6 @@
  */
 package com.inspur.emmcloud.util;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-
 import android.app.Activity;
 import android.content.Context;
 import android.os.Handler;
@@ -23,6 +18,11 @@ import com.inspur.emmcloud.api.apiservice.MineAPIService;
 import com.inspur.emmcloud.bean.GetLanguageResult;
 import com.inspur.emmcloud.bean.Language;
 import com.inspur.emmcloud.config.MyAppConfig;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 /**
  * com.inspur.emmcloud.util.LanguageUtils create at 2016年10月9日 下午5:04:20
@@ -155,7 +155,7 @@ public class LanguageUtils {
 		}
 
 		@Override
-		public void returnLanguageFail(String error) {
+		public void returnLanguageFail(String error,int errorCode) {
 			// TODO Auto-generated method stub
 			String languageResult = PreferencesUtils.getString(context,
 					UriUtils.tanent + "languageResult");

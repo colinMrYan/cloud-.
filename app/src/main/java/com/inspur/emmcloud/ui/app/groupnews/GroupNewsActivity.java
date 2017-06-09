@@ -177,12 +177,12 @@ public class GroupNewsActivity extends BaseFragmentActivity implements
 		}
 
 		@Override
-		public void returnGroupNewsTitleFail(String error) {
+		public void returnGroupNewsTitleFail(String error,int errorCode) {
 
 			if (loadingDlg != null && loadingDlg.isShowing()) {
 				loadingDlg.dismiss();
 			}
-			WebServiceMiddleUtils.hand(GroupNewsActivity.this, error);
+			WebServiceMiddleUtils.hand(GroupNewsActivity.this, error,errorCode);
 		}
 
 	}

@@ -293,9 +293,9 @@ public class CaptchasLoginActivity extends BaseActivity {
                 loadingDlg.dismiss();
             }
             if (errorCode == 400) {
-                handleErrorCode(error);
+                handleErrorCode(error,errorCode);
             } else {
-                WebServiceMiddleUtils.hand(CaptchasLoginActivity.this, error);
+                WebServiceMiddleUtils.hand(CaptchasLoginActivity.this, error,errorCode);
             }
             unRegisterSMSReceiver();
         }
@@ -310,12 +310,12 @@ public class CaptchasLoginActivity extends BaseActivity {
      *
      * @param error
      */
-    private void handleErrorCode(String error) {
+    private void handleErrorCode(String error,int errorCode) {
         String code = JSONUtils.getString(error, "code", "");
         if (!StringUtils.isBlank(code) && code.equals("10901")) {
             ToastUtils.show(getApplicationContext(), getApplicationContext().getString(R.string.cant_login_with_sms));
         } else {
-            WebServiceMiddleUtils.hand(CaptchasLoginActivity.this, error);
+            WebServiceMiddleUtils.hand(CaptchasLoginActivity.this, error,errorCode);
         }
     }
 

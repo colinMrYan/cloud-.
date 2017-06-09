@@ -53,6 +53,16 @@ public class FindFragment extends Fragment implements DefaultHardwareBackBtnHand
      */
     private void createReactNativeView(boolean needToRefresh) {
         mReactRootView = new ReactRootView(getActivity());
+        //暂时屏蔽以下8行
+//        try {
+//            InputStream fis = new FileInputStream(new File(reactCurrentFilePath+"/default.9.png"));
+//            Drawable da = Drawable.createFromStream(fis, "default.9.png");
+//            mReactRootView.setBackground(da);
+//        } catch (FileNotFoundException e) {
+//            LogUtils.YfcDebug("出现文件解析异常："+e.getMessage());
+//            e.printStackTrace();
+//        }
+//        mReactRootView.setBackgroundResource(R.drawable.loading2);
         mReactInstanceManager = ReactInstanceManager.builder()
                 .setApplication(getActivity().getApplication())
                 .setCurrentActivity(getActivity())

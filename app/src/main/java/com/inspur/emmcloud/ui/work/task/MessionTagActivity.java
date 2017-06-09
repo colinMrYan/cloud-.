@@ -1,8 +1,5 @@
 package com.inspur.emmcloud.ui.work.task;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -35,6 +32,9 @@ import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.dialogs.EasyDialog;
+
+import java.util.ArrayList;
+import java.util.Iterator;
 
 public class MessionTagActivity extends BaseActivity {
 
@@ -303,12 +303,11 @@ public class MessionTagActivity extends BaseActivity {
 		}
 
 		@Override
-		public void returnDeleteTagFail(String error) {
-			super.returnDeleteTagFail(error);
+		public void returnDeleteTagFail(String error,int errorCode) {
 			if (loadingDialog.isShowing()) {
 				loadingDialog.dismiss();
 			}
-			WebServiceMiddleUtils.hand(MessionTagActivity.this, error);
+			WebServiceMiddleUtils.hand(MessionTagActivity.this, error,errorCode);
 		}
 
 		@Override
@@ -322,9 +321,8 @@ public class MessionTagActivity extends BaseActivity {
 		}
 
 		@Override
-		public void returnCreateTagFail(String error) {
-			super.returnCreateTagFail(error);
-			WebServiceMiddleUtils.hand(MessionTagActivity.this, error);
+		public void returnCreateTagFail(String error,int errorCode) {
+			WebServiceMiddleUtils.hand(MessionTagActivity.this, error,errorCode);
 		}
 
 	}

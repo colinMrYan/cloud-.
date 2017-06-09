@@ -124,12 +124,12 @@ public class ChatCreateUtils {
 		}
 
 		@Override
-		public void returnCreatSingleChannelFail(String error) {
+		public void returnCreatSingleChannelFail(String error,int errorCode) {
 			// TODO Auto-generated method stub
 			if (loadingDlg != null && loadingDlg.isShowing()) {
 				loadingDlg.dismiss();
 			}
-			WebServiceMiddleUtils.hand(context, error);
+			WebServiceMiddleUtils.hand(context, error,errorCode);
 			if (onCreateDirectChannelListener != null) {
 				onCreateDirectChannelListener.createDirectChannelFail();
 			}
@@ -150,12 +150,12 @@ public class ChatCreateUtils {
 		}
 
 		@Override
-		public void returnCreateChannelGroupFail(String error) {
+		public void returnCreateChannelGroupFail(String error,int errorCode) {
 			// TODO Auto-generated method stub
 			if (loadingDlg != null && loadingDlg.isShowing()) {
 				loadingDlg.dismiss();
 			}
-			WebServiceMiddleUtils.hand(context, error);
+			WebServiceMiddleUtils.hand(context, error,errorCode);
 			if (onCreateGroupChannelListener != null) {
 				onCreateGroupChannelListener.createGroupChannelFail();
 			}
