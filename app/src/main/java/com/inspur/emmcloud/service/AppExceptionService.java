@@ -114,7 +114,7 @@ public class AppExceptionService extends Service {
 		}
 
 		@Override
-		public void returnUploadExceptionFail(String error) {
+		public void returnUploadExceptionFail(String error,int errorCode) {
 			onDestroy();
 		}
 	}

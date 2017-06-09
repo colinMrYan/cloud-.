@@ -7,10 +7,6 @@
  */
 package com.inspur.emmcloud.ui.find;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.text.Editable;
@@ -58,6 +54,10 @@ import com.inspur.emmcloud.widget.ClearEditText;
 import com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout;
 import com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout.OnRefreshListener;
 import com.inspur.emmcloud.widget.pullableview.PullableExpandableListView;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * com.inspur.emmcloud.ui.find.FindSearchActivity create at 2016年10月17日
@@ -524,8 +524,6 @@ public class FindSearchActivity extends BaseActivity implements
 
 	/**
 	 * 搜索关键字
-	 * 
-	 * @param searchContent
 	 */
 	private void search() {
 		// TODO Auto-generated method stub
@@ -558,9 +556,9 @@ public class FindSearchActivity extends BaseActivity implements
 		}
 
 		@Override
-		public void returnFindSearchFail(String error) {
+		public void returnFindSearchFail(String error,int errorCode) {
 			// TODO Auto-generated method stub
-			WebServiceMiddleUtils.hand(FindSearchActivity.this, error);
+			WebServiceMiddleUtils.hand(FindSearchActivity.this, error,errorCode);
 		}
 
 		@Override
@@ -582,9 +580,9 @@ public class FindSearchActivity extends BaseActivity implements
 		}
 
 		@Override
-		public void returnFindMixSearchFail(String error) {
+		public void returnFindMixSearchFail(String error,int errorCode) {
 			// TODO Auto-generated method stub
-			WebServiceMiddleUtils.hand(FindSearchActivity.this, error);
+			WebServiceMiddleUtils.hand(FindSearchActivity.this, error,errorCode);
 		}
 
 	}

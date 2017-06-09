@@ -2,8 +2,6 @@ package com.inspur.emmcloud.adapter;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.os.Handler;
-import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -35,7 +33,6 @@ public class AppCenterAdapter extends BaseAdapter {
 	private Activity activity;
 	private LoadingDialog loadingDialog;
 	private MyAppAPIService apiService;
-	private Handler handler;
 	private GetAddAppResult getAddAppResult;
 
 	public AppCenterAdapter(Activity activity, List<App> appList) {
@@ -46,28 +43,9 @@ public class AppCenterAdapter extends BaseAdapter {
 		loadingDialog = new LoadingDialog(activity);
 		apiService = new MyAppAPIService(activity);
 		apiService.setAPIInterface(new WebService());
-		handMessage();
 	}
 
-	private void handMessage() {
-		// TODO Auto-generated method stub
-		handler = new Handler() {
 
-			@Override
-			public void handleMessage(Message msg) {
-				// TODO Auto-generated method stub
-				switch (msg.what) {
-				case ADD_APP_FAIL:
-					AppCenterAdapter.this.notifyDataSetChanged();
-					break;
-				default:
-					break;
-				}
-			}
-
-		};
-	}
-	
 	public void addApp(App app){
 		int addPosition = -1;
 		for (int i = 0; i < appList.size(); i++) {
@@ -205,14 +183,13 @@ public class AppCenterAdapter extends BaseAdapter {
 		}
 
 		@Override
-		public void returnAddAppFail(String error) {
+		public void returnAddAppFail(String error,int errorCode) {
 			// TODO Auto-generated method stub
 			if (loadingDialog != null && loadingDialog.isShowing()) {
 				loadingDialog.dismiss();
 			}
-			WebServiceMiddleUtils.hand(activity,
-					error, handler,
-					 ADD_APP_FAIL);
+			WebServiceMiddleUtils.hand(activity,error,errorCode);
+			AppCenterAdapter.this.notifyDataSetChanged();
 		}
 
 

@@ -11,6 +11,7 @@ import com.inspur.emmcloud.api.APICallback;
 import com.inspur.emmcloud.bean.App;
 import com.inspur.emmcloud.bean.Contact;
 import com.inspur.emmcloud.bean.PVCollectModel;
+import com.inspur.emmcloud.callback.OauthCallBack;
 import com.inspur.emmcloud.ui.app.ReactNativeAppActivity;
 import com.inspur.emmcloud.ui.app.groupnews.GroupNewsActivity;
 import com.inspur.emmcloud.widget.LoadingDialog;
@@ -123,8 +124,13 @@ public class UriUtils {
             public void callbackTokenExpire() {
                 new OauthUtils(new OauthCallBack() {
                     @Override
-                    public void execute() {
+                    public void reExecute() {
                         getGSWebReallyUrl(activity, url, app, loadingDialog);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
                     }
                 },activity).refreshToken(url);
             }

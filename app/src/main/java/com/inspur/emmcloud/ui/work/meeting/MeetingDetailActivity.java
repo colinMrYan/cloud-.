@@ -1,5 +1,11 @@
 package com.inspur.emmcloud.ui.work.meeting;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+import java.util.Locale;
+
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.app.TimePickerDialog.OnTimeSetListener;
@@ -796,12 +802,11 @@ public class MeetingDetailActivity extends BaseActivity {
 		}
 
 		@Override
-		public void returnDelMeetingFail(String error) {
-			super.returnDelMeetingFail(error);
+		public void returnDelMeetingFail(String error,int errorCode) {
 			if (loadingDialog.isShowing()) {
 				loadingDialog.dismiss();
 			}
-			WebServiceMiddleUtils.hand(MeetingDetailActivity.this, error);
+			WebServiceMiddleUtils.hand(MeetingDetailActivity.this, error,errorCode);
 		}
 	}
 

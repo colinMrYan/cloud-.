@@ -835,12 +835,12 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
         }
 
         @Override
-        public void returnUserAppsFail(String error) {
+        public void returnUserAppsFail(String error,int errorCode) {
             if (loadingDialog.isShowing()) {
                 loadingDialog.dismiss();
             }
             pullToRefreshLayout.refreshFinish(PullToRefreshLayout.FAIL);
-            WebServiceMiddleUtils.hand(getActivity(), error);
+            WebServiceMiddleUtils.hand(getActivity(), error,errorCode);
         }
     }
 

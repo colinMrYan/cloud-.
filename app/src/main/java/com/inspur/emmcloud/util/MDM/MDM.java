@@ -1,4 +1,4 @@
-package com.inspur.mdm;
+package com.inspur.emmcloud.util.MDM;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -8,15 +8,15 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
 
+import com.inspur.emmcloud.api.APIInterfaceInstance;
+import com.inspur.emmcloud.api.apiservice.AppAPIService;
+import com.inspur.emmcloud.bean.GetDeviceCheckResult;
+import com.inspur.emmcloud.ui.mdm.DeviceRegisterFailDetailActivity;
 import com.inspur.emmcloud.util.AppUtils;
-import com.inspur.emmcloud.util.LogUtils;
+import com.inspur.emmcloud.util.NetUtils;
+import com.inspur.emmcloud.util.WebServiceMiddleUtils;
 import com.inspur.imp.api.ImpActivity;
-import com.inspur.mdm.api.APIInterfaceInstance;
-import com.inspur.mdm.api.MDMApiService;
-import com.inspur.mdm.bean.GetDeviceCheckResult;
-import com.inspur.mdm.ui.DeviceRegisterFailDetailActivity;
-import com.inspur.mdm.utils.MDMResUtils;
-import com.inspur.mdm.utils.MDMUtils;
+import com.inspur.imp.api.Res;
 
 import java.util.ArrayList;
 
@@ -40,7 +40,7 @@ public class MDM extends APIInterfaceInstance {
 	}
 
 	public MDM(Activity context, String tanentId, String userCode,
-			String userName) {
+			   String userName) {
 		this.context = context;
 		this.tanentId = tanentId;
 		this.userCode = userCode;
@@ -48,7 +48,7 @@ public class MDM extends APIInterfaceInstance {
 	}
 
 	public MDM(Activity context, String tanentId, String userCode,
-			String userName, GetDeviceCheckResult getDeviceCheckResult) {
+			   String userName, GetDeviceCheckResult getDeviceCheckResult) {
 		this.userName = userName;
 		this.context = context;
 		this.tanentId = tanentId;
@@ -84,7 +84,7 @@ public class MDM extends APIInterfaceInstance {
 			break;
 		case STATUS_NOT_REGISTERED:
 			goDeviceRegister();
-			Toast.makeText(context, MDMResUtils.getStringID("device_not_register"),
+			Toast.makeText(context, Res.getStringID("device_not_register"),
 					Toast.LENGTH_SHORT).show();
 			break;
 		case STATUS_IN_BLACKLIST:
@@ -110,7 +110,7 @@ public class MDM extends APIInterfaceInstance {
 		Intent intent = new Intent();
 		intent.setClass(context, ImpActivity.class);
 		Bundle bundle = new Bundle();
-		bundle.putString("appName", "设备注册");
+		bundle.putString("appName", context.getString(Res.getStringID("device_registe")));
 		bundle.putString("function","mdm");
 		bundle.putString("uri", "https://emm.inspur.com/mdm/loadForRegister?udid="+ AppUtils.getMyUUID(context));
 		intent.putExtras(bundle);
@@ -145,24 +145,24 @@ public class MDM extends APIInterfaceInstance {
 	private void showWraningDlg(final int status) {
 		String title = "";
 		if (status == STATUS_DISABLE) {
-			title = context.getString(MDMResUtils.getStringID("device_disabled_cannot_login"));
+			title = context.getString(Res.getStringID("device_disabled_cannot_login"));
 		} else if (status == STATUS_WAITING_VERIFY) {
 			if (context instanceof ImpActivity) {
 				title = context
-						.getString(MDMResUtils.getStringID("register_submit_waitting_verify"));
+						.getString(Res.getStringID("register_submit_waitting_verify"));
 			} else {
-				title = context.getString(MDMResUtils.getStringID("device_waitting_verify"));
+				title = context.getString(Res.getStringID("device_waitting_verify"));
 			}
 		} else {
-			title = context.getString(MDMResUtils.getStringID("device_in_blacklist"));
+			title = context.getString(Res.getStringID("device_in_blacklist"));
 		}
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(context,
 				android.R.style.Theme_Holo_Light_Dialog);
 
-		builder.setTitle(context.getString(MDMResUtils.getStringID("mdm_tips")));
+		builder.setTitle(context.getString(Res.getStringID("mdm_tips")));
 		builder.setMessage(title);
-		builder.setPositiveButton(context.getString(MDMResUtils.getStringID("mdm_sure")),
+		builder.setPositiveButton(context.getString(Res.getStringID("mdm_sure")),
 				new OnClickListener() {
 
 					@Override
@@ -184,60 +184,13 @@ public class MDM extends APIInterfaceInstance {
 		dialog.show();
 	}
 
-//	/**
-//	 * 弹出设备注册失败提示框
-//	 */
-//	public void showRegisterFailDlg(String errorMsg) {
-//		AlertDialog.Builder builder = new AlertDialog.Builder(context,
-//				android.R.style.Theme_Holo_Light_Dialog);
-//
-//		builder.setTitle(context.getString(MDMResUtils.getStringID("mdm_tips")));
-//		builder.setMessage(errorMsg);
-//		builder.setPositiveButton(context.getString(MDMResUtils.getStringID("ok")), new OnClickListener() {
-//
-//			@Override
-//			public void onClick(DialogInterface dialog, int which) {
-//				// TODO Auto-generated method stub
-//				if (!(context instanceof DeviceRegisterActivity)) {
-//					if (mdmListener != null) {
-//						mdmListener.dimissExternalLoadingDlg();
-//					}
-//					Intent intent = new Intent();
-//					intent.setClass(context, DeviceRegisterActivity.class);
-//					Bundle bundle = new Bundle();
-//					bundle.putString("userCode", userCode);
-//					bundle.putString("tanentId", tanentId);
-//					bundle.putStringArrayList("requireFields", requireFieldList);
-//					intent.putExtras(bundle);
-//					context.startActivity(intent);
-//					context.finish();
-//				}
-//			}
-//		});
-//		builder.setNegativeButton(context.getString(MDMResUtils.getStringID("mdm_cancel")), new OnClickListener() {
-//
-//			@Override
-//			public void onClick(DialogInterface dialog, int which) {
-//				// TODO Auto-generated method stub
-//				if (mdmListener != null) {
-//					mdmListener.MDMStatusNoPass();
-//				}
-//			}
-//		});
-//
-//		AlertDialog dialog = builder.create();
-//		dialog.getWindow().setBackgroundDrawableResource(
-//				android.R.color.transparent);
-//		dialog.setCancelable(false);
-//		dialog.show();
-//	}
 
 	/**
 	 * 设备检查
 	 */
 	public void deviceCheck() {
-		if (MDMUtils.isNetworkConnected(context)) {
-			MDMApiService apiServices = new MDMApiService(context);
+		if (NetUtils.isNetworkConnected(context)) {
+			AppAPIService apiServices = new AppAPIService(context);
 			apiServices.setAPIInterface(MDM.this);
 			apiServices.deviceCheck(tanentId, userCode);
 		}else if (mdmListener != null) {
@@ -260,12 +213,12 @@ public class MDM extends APIInterfaceInstance {
 	}
 
 	@Override
-	public void returnDeviceCheckFail(String error) {
+	public void returnDeviceCheckFail(String error,int errorCode) {
 		// TODO Auto-generated method stub
 		if (mdmListener != null) {
 			mdmListener.MDMStatusNoPass();
 		}
-		Toast.makeText(context, error, Toast.LENGTH_SHORT).show();
+		WebServiceMiddleUtils.hand(context,error,errorCode);
 	}
 
 }

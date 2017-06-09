@@ -596,12 +596,12 @@ public class MeetingsRoomDetailActivity extends BaseActivity {
 		}
 
 		@Override
-		public void returnMeetingListFail(String error) {
+		public void returnMeetingListFail(String error,int errorCode) {
 			// TODO Auto-generated method stub
 			if (loadingDlg != null && loadingDlg.isShowing()) {
 				loadingDlg.dismiss();
 			}
-			WebServiceMiddleUtils.hand(MeetingsRoomDetailActivity.this, error);
+			WebServiceMiddleUtils.hand(MeetingsRoomDetailActivity.this, error,errorCode);
 		}
 
 		@Override
@@ -616,11 +616,11 @@ public class MeetingsRoomDetailActivity extends BaseActivity {
 		}
 
 		@Override
-		public void returnDelMeetingFail(String error) {
+		public void returnDelMeetingFail(String error,int errorCode) {
 			if (loadingDlg != null && loadingDlg.isShowing()) {
 				loadingDlg.dismiss();
 			}
-			WebServiceMiddleUtils.hand(MeetingsRoomDetailActivity.this, error);
+			WebServiceMiddleUtils.hand(MeetingsRoomDetailActivity.this, error,errorCode);
 		}
 
 	}

@@ -355,12 +355,12 @@ public class UserInfoActivity extends BaseActivity {
 		}
 
 		@Override
-		public void returnChannelInfoFail(String error) {
+		public void returnChannelInfoFail(String error,int errorCode) {
 			// TODO Auto-generated method stub
 			if (loadingDlg != null && loadingDlg.isShowing()) {
 				loadingDlg.dismiss();
 			}
-			WebServiceMiddleUtils.hand(UserInfoActivity.this, error);
+			WebServiceMiddleUtils.hand(UserInfoActivity.this, error,errorCode);
 		}
 
 	}

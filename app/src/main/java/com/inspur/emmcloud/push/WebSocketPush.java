@@ -35,7 +35,11 @@ public class WebSocketPush {
 
 	public static WebSocketPush getInstance(Context context){
 		if (webSocketPush == null) {
-			webSocketPush = new WebSocketPush(context);
+			synchronized (WebSocketPush.class) {
+				if (webSocketPush == null) {
+					webSocketPush = new WebSocketPush(context);
+				}
+			}
 		}
 		return webSocketPush;
 	}

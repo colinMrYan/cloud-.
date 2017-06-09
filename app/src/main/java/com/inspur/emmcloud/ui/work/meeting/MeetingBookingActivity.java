@@ -485,14 +485,13 @@ public class MeetingBookingActivity extends BaseActivity {
 		}
 
 		@Override
-		public void returnIsAdminFail(String error) {
-			super.returnIsAdminFail(error);
+		public void returnIsAdminFail(String error,int errorCode) {
 			if (loadingDlg != null && loadingDlg.isShowing() ) {
 				loadingDlg.dismiss();
 			}
 			PreferencesUtils.putBoolean(MeetingBookingActivity.this,
 					UriUtils.tanent + userId + "isAdmin", false);
-			WebServiceMiddleUtils.hand(MeetingBookingActivity.this, error);
+			WebServiceMiddleUtils.hand(MeetingBookingActivity.this, error,errorCode);
 		}
 
 	}

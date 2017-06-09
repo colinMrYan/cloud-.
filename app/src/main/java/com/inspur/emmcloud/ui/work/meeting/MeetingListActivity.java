@@ -1,14 +1,5 @@
 package com.inspur.emmcloud.ui.work.meeting;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -48,6 +39,15 @@ import com.inspur.emmcloud.widget.dialogs.EasyDialog;
 import com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout;
 import com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout.OnRefreshListener;
 import com.inspur.emmcloud.widget.pullableview.PullableExpandableListView;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * MeetingListActivity
@@ -420,8 +420,7 @@ public class MeetingListActivity extends BaseActivity implements
 	/**
 	 * 得到格式化的时间如06:00-07:30
 	 * 
-	 * @param from
-	 * @param to
+	 * @param meeting
 	 * @return
 	 */
 	public String getTimeFormat(Meeting meeting) {
@@ -448,7 +447,7 @@ public class MeetingListActivity extends BaseActivity implements
 	}
 
 	/**
-	 * @param form
+	 * @param from
 	 * @return
 	 */
 	private String getFromTime(String from) {
@@ -534,12 +533,12 @@ public class MeetingListActivity extends BaseActivity implements
 		}
 
 		@Override
-		public void returnMeetingsFail(String error) {
+		public void returnMeetingsFail(String error,int errorCode) {
 			if (loadingDlg != null && loadingDlg.isShowing()) {
 				loadingDlg.dismiss();
 			}
 			pullToRefreshLayout.refreshFinish(PullToRefreshLayout.FAIL);
-			WebServiceMiddleUtils.hand(MeetingListActivity.this, error);
+			WebServiceMiddleUtils.hand(MeetingListActivity.this, error,errorCode);
 		}
 
 		@Override
@@ -562,11 +561,11 @@ public class MeetingListActivity extends BaseActivity implements
 		}
 
 		@Override
-		public void returnDelMeetingFail(String error) {
+		public void returnDelMeetingFail(String error,int errorCode) {
 			if (loadingDlg != null && loadingDlg.isShowing()) {
 				loadingDlg.dismiss();
 			}
-			WebServiceMiddleUtils.hand(MeetingListActivity.this, error);
+			WebServiceMiddleUtils.hand(MeetingListActivity.this, error,errorCode);
 		}
 
 	}

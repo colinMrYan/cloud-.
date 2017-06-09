@@ -38,9 +38,9 @@ import com.inspur.emmcloud.bean.GetAppTabAutoResult;
 import com.inspur.emmcloud.bean.GetClientIdRsult;
 import com.inspur.emmcloud.bean.GetSearchChannelGroupResult;
 import com.inspur.emmcloud.bean.Language;
-import com.inspur.emmcloud.bean.ReactNativeClientIdErrorBean;
 import com.inspur.emmcloud.bean.ReactNativeUpdateBean;
 import com.inspur.emmcloud.bean.SplashPageBean;
+import com.inspur.emmcloud.callback.CommonCallBack;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.interf.OnTabReselectListener;
 import com.inspur.emmcloud.interf.OnWorkFragmentDataChanged;
@@ -90,7 +90,7 @@ import java.util.List;
  * @author Administrator
  */
 public class IndexActivity extends BaseFragmentActivity implements
-        OnTabChangeListener, OnTouchListener {
+        OnTabChangeListener, OnTouchListener,CommonCallBack {
     private static final int SYNC_ALL_BASE_DATA_SUCCESS = 0;
     private static final int SYNC_CONTACT_SUCCESS = 1;
     private static final int CHANGE_TAB = 2;
@@ -114,6 +114,7 @@ public class IndexActivity extends BaseFragmentActivity implements
     private String notSupportTitle = "";
     private boolean isSplash = false;
     private WebView webView;
+    private boolean isCommunicationRunning =false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -213,6 +214,10 @@ public class IndexActivity extends BaseFragmentActivity implements
         }
     }
 
+    public WeakHandler getHandler(){
+        return  handler;
+    }
+
 
     /**
      * 检查clientId是否存在
@@ -303,8 +308,6 @@ public class IndexActivity extends BaseFragmentActivity implements
                         getAllChannelGroup();
                         break;
                     case CHANGE_TAB:
-                        int communicateLocation = (int)msg.obj;
-                        mTabHost.setCurrentTab(communicateLocation);
                         mTabHost.setCurrentTab(getTabIndex());
                         break;
                     case RELOAD_WEB:
@@ -522,15 +525,21 @@ public class IndexActivity extends BaseFragmentActivity implements
                 break;
             }
         }
-        mTabHost.setCurrentTab(getTabIndex());
-        if(communicateLocation != -1 && communicateLocation != getTabIndex()){
-            Message msg = new Message();
-            msg.what = CHANGE_TAB;
-            msg.obj = communicateLocation;
-            handler.sendMessageDelayed(msg,50);
+        if(communicateLocation != -1 && isCommunicationRunning == false){
+            mTabHost.setCurrentTab(communicateLocation);
+        }else {
+            mTabHost.setCurrentTab(getTabIndex());
         }
     }
 
+    @Override
+    public void excute() {
+        isCommunicationRunning = true;
+        int targetTabIndex = getTabIndex();
+        if (mTabHost.getCurrentTab() != targetTabIndex){
+            mTabHost.setCurrentTab(targetTabIndex);
+        }
+    }
 
     /**
      * 当没有数据的时候返回内容
@@ -710,15 +719,12 @@ public class IndexActivity extends BaseFragmentActivity implements
     @Override
     public void onTabChanged(String tabId) {
         notSupportTitle = tabId;
-//        String lastUpdateTime = PreferencesUtils.getString(IndexActivity.this,"react_native_lastupdatetime","");
         if (tabId.equals(getString(R.string.communicate))) {
             tipsView.setCanTouch(true);
         } else {
             tipsView.setCanTouch(false);
         }
-//        if(ReactNativeFlow.moreThanHalfHour(lastUpdateTime)){
             updateReactNative();
-//        }
     }
 
     private Fragment getCurrentFragment() {
@@ -813,10 +819,10 @@ public class IndexActivity extends BaseFragmentActivity implements
         }
 
         @Override
-        public void returnAllContactFail(String error) {
+        public void returnAllContactFail(String error,int errorCode) {
             // TODO Auto-generated method stub
             getAllChannelGroup();
-            WebServiceMiddleUtils.hand(IndexActivity.this, error);
+            WebServiceMiddleUtils.hand(IndexActivity.this, error,errorCode);
         }
 
         @Override
@@ -832,8 +838,8 @@ public class IndexActivity extends BaseFragmentActivity implements
         }
 
         @Override
-        public void returnSearchChannelGroupFail(String error) {
-            super.returnSearchChannelGroupFail(error);
+        public void returnSearchChannelGroupFail(String error,int errorCode) {
+            super.returnSearchChannelGroupFail(error,errorCode);
             // 无论成功或者失败都返回成功都能进入应用
             handler.sendEmptyMessage(SYNC_ALL_BASE_DATA_SUCCESS);
         }
@@ -846,25 +852,11 @@ public class IndexActivity extends BaseFragmentActivity implements
         }
 
         @Override
-        public void returnAllRobotsFail(String error) {
+        public void returnAllRobotsFail(String error,int errorCode) {
             //暂时去掉机器人错误
 //			WebServiceMiddleUtils.hand(IndexActivity.this, error);
         }
 
-//        @Override
-//        public void returnGetAppTabsSuccess(GetAppTabsResult getAppTabsResult) {
-//            PreferencesUtils.putString(IndexActivity.this,
-//                    UriUtils.tanent + userId + "appTabs", JSON.toJSONString(getAppTabsResult.getAppTabBeanList()));
-//            if(!StringUtils.isBlank(JSON.toJSONString(getAppTabsResult.getAppTabBeanList()))){
-//                mTabHost.clearAllTabs();
-//                handleAppTabs();
-//            }
-//        }
-//
-//        @Override
-//        public void returnGetAppTabsFail(String error) {
-//            WebServiceMiddleUtils.hand(IndexActivity.this, error);
-//        }
 
 
         @Override
@@ -875,7 +867,7 @@ public class IndexActivity extends BaseFragmentActivity implements
         }
 
         @Override
-        public void returnReactNativeUpdateFail(ReactNativeClientIdErrorBean reactNativeClientIdErrorBean) {
+        public void returnReactNativeUpdateFail(String error,int errorCode) {
             isReactNativeClientUpdateFail = true;
             if(!checkClientIdNotExit()){
                 getReactNativeClientId();
@@ -901,8 +893,7 @@ public class IndexActivity extends BaseFragmentActivity implements
         }
 
         @Override
-        public void returnGetClientIdResultFail(String error) {
-            super.returnGetClientIdResultFail(error);
+        public void returnGetClientIdResultFail(String error,int errorCode) {
         }
 
         @Override
@@ -911,8 +902,7 @@ public class IndexActivity extends BaseFragmentActivity implements
         }
 
         @Override
-        public void returnAppTabAutoFail(String error) {
-//            WebServiceMiddleUtils.hand(IndexActivity.this, error);
+        public void returnAppTabAutoFail(String error,int errorCode) {
         }
 
         @Override
