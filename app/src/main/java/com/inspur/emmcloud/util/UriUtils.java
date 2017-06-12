@@ -49,7 +49,7 @@ public class UriUtils {
                 if (uri.startsWith("https://emm.inspur.com:443/ssohandler/gs/") || uri.startsWith("https://emm.inspur.com/ssohandler/gs/")) {
                     uri = uri.replace("/gs/","/gs_uri/");
                     if (NetUtils.isNetworkConnected(activity)){
-                       LoadingDialog loadingDialog = new LoadingDialog(activity);
+                        LoadingDialog loadingDialog = new LoadingDialog(activity);
                         loadingDialog.show();
                         getGSWebReallyUrl(activity,uri,app,loadingDialog);
                     }
@@ -221,12 +221,13 @@ public class UriUtils {
      * 频道页面头像显示图片
      **/
     public static String getChannelImgUri(Context context,String inspurID) {
-        String headImgUrl = "";
+        String headImgUrl = null;
         if (StringUtils.isBlank(inspurID) || inspurID.equals("null"))
             return null;
-        headImgUrl = "https://emm.inspur.com/img/userhead/" + inspurID;
+
         Contact contact = ContactCacheUtils.getUserContact(context,inspurID);
         if(contact != null){
+            headImgUrl = "https://emm.inspur.com/img/userhead/" + inspurID;
             String lastUpdateTime = contact.getLastUpdateTime();
             if(!StringUtils.isBlank(lastUpdateTime)&&(!lastUpdateTime.equals("null"))){
                 headImgUrl = headImgUrl + "?"+lastUpdateTime;

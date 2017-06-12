@@ -15,12 +15,14 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.MineAPIService;
+import com.inspur.emmcloud.bean.Contact;
 import com.inspur.emmcloud.bean.GetMyInfoResult;
 import com.inspur.emmcloud.bean.GetUploadMyHeadResult;
 import com.inspur.emmcloud.bean.UserProfileInfoBean;
 import com.inspur.emmcloud.ui.login.ModifyUserPsdActivity;
 import com.inspur.emmcloud.ui.login.ModifyUserPwdBySMSActivity;
 import com.inspur.emmcloud.ui.mine.MoreFragment;
+import com.inspur.emmcloud.util.ContactCacheUtils;
 import com.inspur.emmcloud.util.ImageDisplayUtils;
 import com.inspur.emmcloud.util.IntentUtils;
 import com.inspur.emmcloud.util.NetUtils;
@@ -247,7 +249,7 @@ public class MyInfoActivity extends BaseActivity {
 			if (loadingDlg != null && loadingDlg.isShowing()) {
 				loadingDlg.dismiss();
 			}
-
+			saveUpdateHeadTime();
 			/**
 			 * 向更多页面发送消息修改头像
 			 */
@@ -286,5 +288,14 @@ public class MyInfoActivity extends BaseActivity {
 			updateInfoState(null);
 			//此处异常不予处理照常显示，所以没有异常处理
 		}
+	}
+
+	/**
+	 * 保存更新头像时间
+	 */
+	private void saveUpdateHeadTime() {
+		Contact contact = ContactCacheUtils.getUserContact(MyInfoActivity.this,((MyApplication)getApplication()).getUid());
+		contact.setLastUpdateTime(System.currentTimeMillis()+"");
+		ContactCacheUtils.saveContact(MyInfoActivity.this,contact);
 	}
 }

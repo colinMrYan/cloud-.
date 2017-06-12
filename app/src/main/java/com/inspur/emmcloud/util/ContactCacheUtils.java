@@ -36,6 +36,24 @@ public class ContactCacheUtils {
 	}
 
 	/**
+	 * 存储通讯录列表
+	 *
+	 * @param context
+	 */
+	public static void saveContact(Context context,
+									   Contact contact) {
+		if (contact == null ) {
+			return;
+		}
+		try {
+			DbCacheUtils.getDb(context).saveOrUpdate(contact);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	/**
 	 * 删除通讯录
 	 *
 	 * @param deleteIdArray 删除通讯录id的json数组
