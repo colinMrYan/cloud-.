@@ -16,7 +16,6 @@ import android.widget.TextView;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.AppAPIService;
-import com.inspur.emmcloud.bean.App;
 import com.inspur.emmcloud.bean.Channel;
 import com.inspur.emmcloud.bean.GetMyInfoResult;
 import com.inspur.emmcloud.bean.LoginDesktopCloudPlusBean;
@@ -189,13 +188,13 @@ public class MoreFragment extends Fragment {
                 case R.id.more_message_layout:
                     ToastUtils.show(getActivity(), R.string.function_not_implemented);
                     break;
-                case R.id.more_invite_friends_layout:
-                    App app = new App();
-                    app.setUri("https://emm.inspur.com/admin/share_qr");
-                    app.setAppType(3);
-                    app.setAppName(getString(R.string.share));
-                    UriUtils.openApp(getActivity(),app);
-                    break;
+//                case R.id.more_invite_friends_layout:
+//                    App app = new App();
+//                    app.setUri("https://emm.inspur.com/admin/share_qr");
+//                    app.setAppType(3);
+//                    app.setAppName(getString(R.string.share));
+//                    UriUtils.openApp(getActivity(),app);
+//                    break;
                 case R.id.scan_login_desktop_layout:
                     intent.setClass(getActivity(), CaptureActivity.class);
                     intent.putExtra("from","MoreFragment");
