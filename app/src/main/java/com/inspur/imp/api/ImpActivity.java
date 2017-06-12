@@ -80,6 +80,14 @@ public class ImpActivity extends ImpBaseActivity {
                 .getWidgetID("progress_layout"));
         loadFailLayout = (LinearLayout) findViewById(Res.getWidgetID("load_error_layout"));
         webView = (ImpWebView) findViewById(Res.getWidgetID("webview"));
+        if(getIntent().hasExtra("is_zoomable")){
+            int isZoomable = getIntent().getIntExtra("is_zoomable",0);
+            if(isZoomable == 0){
+                ((Button)findViewById(R.id.imp_change_font_size_btn)).setVisibility(View.GONE);
+            }else if(isZoomable == 1){
+                ((Button)findViewById(R.id.imp_change_font_size_btn)).setVisibility(View.VISIBLE);
+            }
+        }
         getWindow().setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
                         | WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
