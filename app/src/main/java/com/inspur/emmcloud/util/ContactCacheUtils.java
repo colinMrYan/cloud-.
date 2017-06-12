@@ -298,6 +298,7 @@ public class ContactCacheUtils {
 							.or("realName", "=", searchStr)
 							.or("globalName", "=", searchStr)
 							.or("code", "=", searchStr))
+					.and(WhereBuilder.b().expr("id not in" +noInSql))
 					.limit(limit));
 			searchContactList.addAll(searchContactList1);
 			noInSql = getNoInSql(noInSql,searchContactList);
