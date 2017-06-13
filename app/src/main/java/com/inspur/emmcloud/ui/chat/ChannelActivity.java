@@ -133,83 +133,7 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
         super.onNewIntent(intent);
         setIntent(intent);
         init();
-
-
     }
-
-    /**
-     * 分享
-     *
-     * @param intent
-     */
-    private void handleShareFromOtherApps(Intent intent) {
-        String type = intent.getType();
-        LogUtils.YfcDebug("传入的type：" + type);
-        if (Intent.ACTION_SEND.equals(action) && type != null) {
-            if ("text/plain".equals(type)) {
-                dealTextMessage(intent);
-            } else if (type.startsWith("image/")) {
-                LogUtils.YfcDebug("启动分享到Image");
-                dealPicStream(intent);
-            }
-        } else if (Intent.ACTION_SEND_MULTIPLE.equals(action) && type != null) {
-            if (type.startsWith("image/")) {
-                dealMultiplePicStream(intent);
-            }
-        }
-    }
-
-    /**
-     * 适配分享文本
-     *
-     * @param intent
-     */
-    private void dealTextMessage(Intent intent) {
-        String share = intent.getStringExtra(Intent.EXTRA_TEXT);
-        String title = intent.getStringExtra(Intent.EXTRA_TITLE);
-    }
-
-    /**
-     * 处理图片
-     *
-     * @param intent
-     */
-    private void dealPicStream(Intent intent) {
-        Uri uri = intent.getParcelableExtra(Intent.EXTRA_STREAM);
-        String imgPath = getImagePath(uri, null);
-        LogUtils.YfcDebug("imagePath:" + imgPath);
-        EditImageActivity.start(ChannelActivity.this, imgPath, MyAppConfig.LOCAL_IMG_CREATE_PATH);
-    }
-
-    /**
-     * 处理多个
-     *
-     * @param intent
-     */
-    private void dealMultiplePicStream(Intent intent) {
-        ArrayList<Uri> arrayList = intent.getParcelableArrayListExtra(intent.EXTRA_STREAM);
-    }
-
-    /**
-     * uri转path
-     *
-     * @param uri
-     * @param selection
-     * @return
-     */
-    private String getImagePath(Uri uri, String selection) {
-        String path = null;
-        Cursor cursor = getContentResolver().query(uri, null, selection, null, null);
-        if (cursor != null) {
-            if (cursor.moveToFirst()) {
-                path = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));
-            }
-
-            cursor.close();
-        }
-        return path;
-    }
-
 
     private void init() {
         initData();
@@ -220,13 +144,11 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
      * 初始化界面数据
      */
     private void initData() {
-//            handleShareFromOtherApps(getIntent());
-
         channelId = getIntent().getExtras().getString("channelId");
 
         channelType = getIntent().getExtras().getString("channelType");
         msgList = MsgCacheUtil.getHistoryMsgList(getApplicationContext(),
-                channelId, "", 10);
+                channelId, "", 15);
         title = getIntent().getExtras().getString("title");
         if (channelType.equals("DIRECT")) {
             String myUid = ((MyApplication)getApplicationContext()).getUid();
@@ -935,11 +857,11 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
     @Override
     public void onRefresh(PullToRefreshLayout pullToRefreshLayout) {
         if (MsgCacheUtil.isDataInLocal(ChannelActivity.this, channelId, msgList
-                .get(0).getMid(), 20)) {
+                .get(0).getMid(), 15)) {
             pullToRefreshLayout.refreshFinish(PullToRefreshLayout.SUCCEED);
             List<Msg> historyMsgList = MsgCacheUtil.getHistoryMsgList(
                     ChannelActivity.this, channelId, msgList.get(0).getMid(),
-                    20);
+                    15);
             msgList.addAll(0, historyMsgList);
             adapter.notifyDataSetChanged();
             ListViewUtils.setSelection(msgListView, historyMsgList.size() - 1);
@@ -952,7 +874,7 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
      * 获取新消息
      */
     private void getNewsMsg() {
-        apiService.getNewMsgs(channelId, msgList.get(0).getMid(), 20);
+        apiService.getNewMsgs(channelId, msgList.get(0).getMid(), 15);
     }
 
     @Override

@@ -298,7 +298,7 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 			String cid = channelList.get(i).getCid();
 			List<Msg> newMsgList = new ArrayList<Msg>();
 			newMsgList = MsgCacheUtil.getHistoryMsgList(getActivity(), cid, "",
-					10);
+					15);
 			channelList.get(i).setNewMsgList(newMsgList);
 		}
 		return channelList;
@@ -534,7 +534,7 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 			receiveMsgChannel = ChannelCacheUtils.getChannel(getActivity(),
 					receivedMsg.getCid());
 			List<Msg> newMsgList = MsgCacheUtil.getHistoryMsgList(
-					getActivity(), receivedMsg.getCid(), "", 10);
+					getActivity(), receivedMsg.getCid(), "", 15);
 			receiveMsgChannel.setNewMsgList(newMsgList);
 			ChannelOperationCacheUtils.setChannelHide(getActivity(),
 					receivedMsg.getCid(), false);

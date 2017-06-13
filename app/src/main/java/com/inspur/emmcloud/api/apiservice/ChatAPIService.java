@@ -160,7 +160,7 @@ public class ChatAPIService {
 	 * 获取10条最新消息
 	 */
 	public void getNewMsgs() {
-		getNewMsgs("", "", 10);
+		getNewMsgs("", "", 15);
 	}
 
 	/**
