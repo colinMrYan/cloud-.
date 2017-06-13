@@ -224,7 +224,6 @@ public class UriUtils {
         String headImgUrl = null;
         if (StringUtils.isBlank(inspurID) || inspurID.equals("null"))
             return null;
-
         Contact contact = ContactCacheUtils.getUserContact(context,inspurID);
         if(contact != null){
             headImgUrl = "https://emm.inspur.com/img/userhead/" + inspurID;
