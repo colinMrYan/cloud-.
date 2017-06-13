@@ -213,7 +213,7 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
 				"myInfo", "");
 		String languageJson = PreferencesUtils.getString(getApplicationContext(),
 				UriUtils.tanent + "appLanguageObj");
-		boolean isMDMStatusPass = PreferencesUtils.getBoolean(getApplicationContext(), "isMDMStatusPass", false);
+		boolean isMDMStatusPass = PreferencesUtils.getBoolean(getApplicationContext(), "isMDMStatusPass", true);
 		if (!StringUtils.isBlank(accessToken) && (StringUtils.isBlank(myInfo) || !isMDMStatusPass)) {
 			new LoginUtils(MainActivity.this, handler).getMyInfo();
 		} else if (!StringUtils.isBlank(accessToken) && !StringUtils.isBlank(myInfo) && StringUtils.isBlank(languageJson)) {
