@@ -25,6 +25,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.util.LogUtils;
+import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.imp.api.JsInterface;
 import com.inspur.imp.api.Res;
 import com.inspur.imp.api.iLog;
@@ -129,7 +130,7 @@ public class ImpWebView extends WebView {
 		public void onGetTitle(final String title) {
 			LogUtils.jasonDebug("title="+title);
 			// 参数title即为网页的标题，可在这里面进行相应的title的处理
-			if (titleText != null && !TextUtils.isEmpty(title)){
+			if (titleText != null && !StringUtils.isBlank(title)){
 				Message msg = new Message();
 				msg.what = 1;
 				msg.obj = title;
