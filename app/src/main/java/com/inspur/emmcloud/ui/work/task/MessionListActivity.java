@@ -498,6 +498,9 @@ public class MessionListActivity extends BaseActivity implements
 				taskList.remove(deletePosition);
 				adapter.notifyDataSetChanged();
 			}
+			if(taskList.size() == 0){
+				noResultText.setVisibility(View.VISIBLE);
+			}
 			isNeedRefresh = true;
 		}
 
@@ -573,7 +576,7 @@ public class MessionListActivity extends BaseActivity implements
 				}
 			}
 			if (taskList.size() == 0) {
-				noResultText.setVisibility(View.GONE);
+				noResultText.setVisibility(View.VISIBLE);
 				noSearchResultLayout.setVisibility(View.VISIBLE);
 			} else {
 				noSearchResultLayout.setVisibility(View.GONE);
