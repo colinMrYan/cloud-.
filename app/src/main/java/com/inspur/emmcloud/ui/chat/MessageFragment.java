@@ -124,7 +124,7 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 	public void onAttach(Context context) {
 		super.onAttach(context);
 		CommonCallBack callBack = (CommonCallBack)context;
-		callBack.excute();
+		callBack.execute();
 	}
 
 	/**

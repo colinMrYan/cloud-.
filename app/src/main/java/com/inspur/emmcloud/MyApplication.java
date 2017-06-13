@@ -375,7 +375,6 @@ public class MyApplication extends MultiDexApplication implements  ReactApplicat
 				currentEnterprise =getMyInfoResult.getDefaultEnterprise();
 			}
 			String enterpriseCode = currentEnterprise.getCode();
-			LogUtils.jasonDebug("enterpriseCode="+enterpriseCode);
 			UriUtils.tanent = enterpriseCode;
 			APIUri.tanent = enterpriseCode;
 		}
