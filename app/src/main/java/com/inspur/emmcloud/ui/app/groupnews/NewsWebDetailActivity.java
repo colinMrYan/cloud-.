@@ -954,7 +954,7 @@ public class NewsWebDetailActivity extends BaseActivity {
         }
 
         @Override
-        public void returnSendMsgFail(String error, String fakeMessageId) {
+        public void returnSendMsgFail(String error, String fakeMessageId,int errorCode) {
             // TODO Auto-generated method stub
             if (loadingDlg != null && loadingDlg.isShowing()) {
                 loadingDlg.dismiss();
@@ -975,13 +975,13 @@ public class NewsWebDetailActivity extends BaseActivity {
         }
 
         @Override
-        public void returnNewsInstructionFail(String error) {
+        public void returnNewsInstructionFail(String error,int errorCode) {
             if(loadingDlg != null && loadingDlg.isShowing()){
                 loadingDlg.dismiss();
             }
             editorCommentCreated = false;
             originalEditorComment = "";
-            WebServiceMiddleUtils.hand(NewsWebDetailActivity.this,error);
+            WebServiceMiddleUtils.hand(NewsWebDetailActivity.this,error,errorCode);
         }
     }
 

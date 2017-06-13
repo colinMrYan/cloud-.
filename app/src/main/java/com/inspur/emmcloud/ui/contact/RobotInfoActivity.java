@@ -10,7 +10,6 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.ContactAPIService;
 import com.inspur.emmcloud.bean.Robot;
-import com.inspur.emmcloud.ui.chat.ChannelInfoActivity;
 import com.inspur.emmcloud.util.ChannelOperationCacheUtils;
 import com.inspur.emmcloud.util.ImageDisplayUtils;
 import com.inspur.emmcloud.util.NetUtils;
@@ -145,11 +144,11 @@ public class RobotInfoActivity extends BaseActivity implements OnStateChangedLis
 		}
 		
 		@Override
-		public void returnRobotByIdFail(String error) {
+		public void returnRobotByIdFail(String error,int errorCode) {
 			if(loadingDialog.isShowing()){
 				loadingDialog.dismiss();
 			}
-			WebServiceMiddleUtils.hand(RobotInfoActivity.this, error);
+			WebServiceMiddleUtils.hand(RobotInfoActivity.this, error,errorCode);
 		}
 	}
 

@@ -212,7 +212,7 @@ public class AppCenterNativeAppUtils {
 		}
 
 		@Override
-		public void returnVeriryApprovalPasswordFail(String error) {
+		public void returnVeriryApprovalPasswordFail(String error,int errorCode) {
 			if (loadingDlg != null && loadingDlg.isShowing()) {
 				loadingDlg.dismiss();
 			}

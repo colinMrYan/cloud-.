@@ -185,12 +185,12 @@ public class NativeBridge extends ReactContextBaseJavaModule implements Activity
                     if (multi) {
                         WritableNativeArray writableNativeArray = new WritableNativeArray();
                         for (int i = 0; i < contactList.size(); i++) {
-                            WritableNativeMap map = contactList.get(i).contact2Map();
+                            WritableNativeMap map = contactList.get(i).contact2Map(getCurrentActivity());
                             writableNativeArray.pushMap(map);
                         }
                         promise.resolve(writableNativeArray);
                     } else {
-                        WritableNativeMap map = contactList.get(0).contact2Map();
+                        WritableNativeMap map = contactList.get(0).contact2Map(getCurrentActivity());
                         LogUtils.YfcDebug("选择审批人："+map.toString());
 //                        array.pushMap(map);
                         promise.resolve(map);
@@ -221,7 +221,7 @@ public class NativeBridge extends ReactContextBaseJavaModule implements Activity
         }
         Contact contact = ContactCacheUtils.getContactByEmail(getCurrentActivity(), email);
         if (contact != null) {
-            WritableNativeMap map = contact.contact2Map();
+            WritableNativeMap map = contact.contact2Map(getCurrentActivity());
             promise.resolve(map);
         } else {
             promise.reject(new Exception("no contact found by email"));

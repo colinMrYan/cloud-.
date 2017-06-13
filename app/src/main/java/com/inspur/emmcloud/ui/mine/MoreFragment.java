@@ -96,7 +96,7 @@ public class MoreFragment extends Fragment {
         String myInfo = PreferencesUtils.getString(getActivity(), "myInfo", "");
         getMyInfoResult = new GetMyInfoResult(myInfo);
         String inspurId = getMyInfoResult.getID();
-        String photoUri = UriUtils.getChannelImgUri(inspurId);
+        String photoUri = UriUtils.getChannelImgUri(getActivity(),inspurId);
         imageDisplayUtils.display(moreHeadImg, photoUri);
         String userName = PreferencesUtils.getString(getActivity(), "userRealName", getString(R.string.not_set));
         userNameText.setText(userName);

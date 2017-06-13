@@ -1,8 +1,5 @@
 package com.inspur.emmcloud.ui.work.task;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -36,6 +33,9 @@ import com.inspur.emmcloud.widget.tag.Tag;
 import com.inspur.emmcloud.widget.tag.TagListView;
 import com.inspur.emmcloud.widget.tag.TagListView.OnTagClickListener;
 import com.inspur.emmcloud.widget.tag.TagView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MessionSetActivity extends BaseActivity {
 
@@ -409,11 +409,11 @@ public class MessionSetActivity extends BaseActivity {
 		}
 
 		@Override
-		public void returnGetTagResultFail(String error) {
+		public void returnGetTagResultFail(String error,int errorCode) {
 			if (loadingDialog != null && loadingDialog.isShowing()) {
 				loadingDialog.dismiss();
 			}
-			WebServiceMiddleUtils.hand(MessionSetActivity.this, error);
+			WebServiceMiddleUtils.hand(MessionSetActivity.this, error,errorCode);
 		}
 	}
 

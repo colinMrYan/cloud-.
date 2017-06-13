@@ -10,13 +10,13 @@ import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.LoginAPIService;
 import com.inspur.emmcloud.bean.GetLoginResult;
 import com.inspur.emmcloud.bean.GetMyInfoResult;
+import com.inspur.emmcloud.util.MDM.MDM;
+import com.inspur.emmcloud.util.MDM.MDMListener;
 import com.inspur.emmcloud.widget.LoadingDialog;
-import com.inspur.mdm.MDM;
-import com.inspur.mdm.MDMListener;
 
 /**
  * 登录公共类
- * 
+ *
  * @author Administrator
  *
  */
@@ -99,7 +99,6 @@ public class LoginUtils extends APIInterfaceInstance {
 			@Override
 			public void MDMStatusNoPass() {
 				// TODO Auto-generated method stub
-				((MyApplication) activity.getApplicationContext()).setAccessToken("");
 				clearLoginInfo();
 				loginUtilsHandler.sendEmptyMessage(LOGIN_FAIL);
 			}
@@ -124,7 +123,7 @@ public class LoginUtils extends APIInterfaceInstance {
 		}else {
 			loginUtilsHandler.sendEmptyMessage(LOGIN_FAIL);
 		}
-		
+
 	}
 
 	// 登录
@@ -137,7 +136,6 @@ public class LoginUtils extends APIInterfaceInstance {
 	 * 获取基本信息
 	 */
 	public void getMyInfo() {
-		LogUtils.jasonDebug("getMyInfo-------------");
 		apiServices.getMyInfo();
 	}
 
@@ -189,11 +187,11 @@ public class LoginUtils extends APIInterfaceInstance {
 			} else {
 				ToastUtils.show(activity, R.string.code_verification_failure);
 			}
-			
+
 		} else {
 			WebServiceMiddleUtils.hand(activity, error,errorCode);
 		}
-		
+
 		loginUtilsHandler.sendEmptyMessage(LOGIN_FAIL);
 	}
 
@@ -213,21 +211,18 @@ public class LoginUtils extends APIInterfaceInstance {
 		if (isLogin) {
 			isLogin = false;
 		}
-		LogUtils.jasonDebug("getMyInfo-------------0000");
 		if (handler != null) {
 			languageUtils = new LanguageUtils(activity, loginUtilsHandler);
 			languageUtils.getServerSupportLanguage();
-			LogUtils.jasonDebug("getMyInfo-------------11111111");
 		}
 	}
 
 	@Override
-	public void returnMyInfoFail(String error) {
+	public void returnMyInfoFail(String error,int errorCode) {
 		// TODO Auto-generated method stub
-		LogUtils.jasonDebug("getMyInfo-------------222222222");
 		clearLoginInfo();
 		loginUtilsHandler.sendEmptyMessage(LOGIN_FAIL);
-		WebServiceMiddleUtils.hand(activity, error);
+		WebServiceMiddleUtils.hand(activity, error,errorCode);
 	}
 
 }

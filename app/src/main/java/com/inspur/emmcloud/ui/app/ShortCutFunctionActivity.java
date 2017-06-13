@@ -99,7 +99,7 @@ public class ShortCutFunctionActivity extends BaseActivity{
         }
 
         @Override
-        public void returnOauthSigninFail(String error) {
+        public void returnOauthSigninFail(String error,int errorCode) {
             // TODO Auto-generated method stub
             LogUtils.YfcDebug("请求失败导致授权过期");
             if(loadingDialog != null && loadingDialog.isShowing()){

@@ -1,9 +1,5 @@
 package com.inspur.emmcloud.ui.app;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -36,9 +32,14 @@ import com.inspur.emmcloud.util.ImageDisplayUtils;
 import com.inspur.emmcloud.util.IntentUtils;
 import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.NetUtils;
+import com.inspur.emmcloud.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.CircularProgress;
 import com.inspur.emmcloud.widget.draggrid.AppCenterDragAdapter;
 import com.inspur.emmcloud.widget.draggrid.DragGridView;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 应用中心页面 com.inspur.emmcloud.ui.AppCenterActivity create at 2016年8月31日
@@ -212,7 +213,8 @@ public class AppCenterActivity extends BaseActivity {
 		}
 
 		@Override
-		public void returnAllAppsFail(String error) {
+		public void returnAllAppsFail(String error,int errorCode) {
+			WebServiceMiddleUtils.hand(AppCenterActivity.this,error,errorCode);
 			recommandCircleProgress.setVisibility(View.GONE);
 			classCircleProgress.setVisibility(View.GONE);
 		}

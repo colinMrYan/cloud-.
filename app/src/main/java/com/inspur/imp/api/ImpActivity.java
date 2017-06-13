@@ -20,13 +20,12 @@ import android.widget.TextView;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.util.AppUtils;
-import com.inspur.emmcloud.util.LogUtils;
+import com.inspur.emmcloud.util.MDM.MDM;
 import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.imp.engine.webview.ImpWebChromeClient;
 import com.inspur.imp.engine.webview.ImpWebView;
 import com.inspur.imp.plugin.camera.PublicWay;
 import com.inspur.imp.plugin.file.FileService;
-import com.inspur.mdm.MDM;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -230,11 +229,9 @@ public class ImpActivity extends ImpBaseActivity {
 		// TODO Auto-generated method stub
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
 			if (webView.canGoBack()) {
-				LogUtils.jasonDebug("canGoBack");
 				webView.goBack();// 返回上一页面
 				return true;
 			} else {
-				LogUtils.jasonDebug("not------canGoBack");
 				finishActivity();// 退出程序
 			}
 		}

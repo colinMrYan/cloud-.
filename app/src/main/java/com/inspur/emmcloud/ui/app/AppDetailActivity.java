@@ -203,14 +203,14 @@ public class AppDetailActivity extends BaseActivity {
 		}
 
 		@Override
-		public void returnAddAppFail(String error) {
+		public void returnAddAppFail(String error,int errorCode) {
 			// TODO Auto-generated method stub
 			if (loadingDlg != null && loadingDlg.isShowing()) {
 				loadingDlg.dismiss();
 			}
 			statusBtn.setText(getString(R.string.download));
 			WebServiceMiddleUtils.hand(AppDetailActivity.this,
-					error);
+					error,errorCode);
 		}
 
 	}

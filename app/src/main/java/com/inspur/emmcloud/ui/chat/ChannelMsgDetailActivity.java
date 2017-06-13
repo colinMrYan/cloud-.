@@ -323,7 +323,7 @@ public class ChannelMsgDetailActivity extends BaseActivity implements
 	 */
 	private void disPlayCommonInfo() {
 		imageDisplayUtils.display(senderHeadImg,
-				UriUtils.getChannelImgUri(msg.getUid()));
+				UriUtils.getChannelImgUri(ChannelMsgDetailActivity.this,msg.getUid()));
 		senderHeadImg.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -474,7 +474,7 @@ public class ChannelMsgDetailActivity extends BaseActivity implements
 
 			new ImageDisplayUtils(ChannelMsgDetailActivity.this,
 					R.drawable.icon_person_default).display(photoImg,
-					UriUtils.getChannelImgUri(comment.getUid()));
+					UriUtils.getChannelImgUri(ChannelMsgDetailActivity.this,comment.getUid()));
 			photoImg.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
@@ -566,11 +566,11 @@ public class ChannelMsgDetailActivity extends BaseActivity implements
 		}
 
 		@Override
-		public void returnMsgFail(String error) {
+		public void returnMsgFail(String error,int errorCode) {
 			if (loadingDialog != null && loadingDialog.isShowing()) {
 				loadingDialog.dismiss();
 			}
-			WebServiceMiddleUtils.hand(ChannelMsgDetailActivity.this, error);
+			WebServiceMiddleUtils.hand(ChannelMsgDetailActivity.this, error,errorCode);
 		}
 
 		@Override
@@ -586,9 +586,9 @@ public class ChannelMsgDetailActivity extends BaseActivity implements
 		}
 
 		@Override
-		public void returnMsgCommentFail(String error) {
+		public void returnMsgCommentFail(String error,int errorCode) {
 			pullToRefreshLayout.refreshFinish(PullToRefreshLayout.FAIL);
-			WebServiceMiddleUtils.hand(ChannelMsgDetailActivity.this, error);
+			WebServiceMiddleUtils.hand(ChannelMsgDetailActivity.this, error,errorCode);
 		}
 
 		@Override
@@ -597,8 +597,8 @@ public class ChannelMsgDetailActivity extends BaseActivity implements
 		}
 
 		@Override
-		public void returnSendMsgFail(String error, String fakeMessageId) {
-			WebServiceMiddleUtils.hand(ChannelMsgDetailActivity.this, error);
+		public void returnSendMsgFail(String error, String fakeMessageId,int errorCode) {
+			WebServiceMiddleUtils.hand(ChannelMsgDetailActivity.this, error,errorCode);
 		}
 	}
 

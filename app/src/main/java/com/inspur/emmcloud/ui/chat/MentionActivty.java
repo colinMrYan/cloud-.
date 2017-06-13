@@ -1,16 +1,5 @@
 package com.inspur.emmcloud.ui.chat;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -30,6 +19,17 @@ import com.inspur.emmcloud.util.ImageDisplayUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.emmcloud.widget.CircleImageView;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 public class MentionActivty extends BaseActivity {
 
@@ -155,7 +155,7 @@ public class MentionActivty extends BaseActivity {
 			name = (String) entry.getValue();
 
 			imageDisplayUtils
-					.display(headImage, UriUtils.getChannelImgUri(uid));
+					.display(headImage, UriUtils.getChannelImgUri(MentionActivty.this,uid));
 
 			nameTextView.setText(name);
 			return convertView;

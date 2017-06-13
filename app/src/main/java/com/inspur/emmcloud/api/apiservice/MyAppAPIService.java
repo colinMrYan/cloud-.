@@ -22,8 +22,8 @@ import com.inspur.emmcloud.bean.GetMyAppResult;
 import com.inspur.emmcloud.bean.GetNewsTitleResult;
 import com.inspur.emmcloud.bean.GetRemoveAppResult;
 import com.inspur.emmcloud.bean.GetSearchAppResult;
+import com.inspur.emmcloud.callback.OauthCallBack;
 import com.inspur.emmcloud.util.LogUtils;
-import com.inspur.emmcloud.util.OauthCallBack;
 import com.inspur.emmcloud.util.OauthUtils;
 import com.inspur.emmcloud.util.UriUtils;
 
@@ -82,11 +82,11 @@ public class MyAppAPIService {
             public void callbackFail(String error, int responseCode) {
                 // TODO Auto-generated method stub
                 if (type == TYPE_NORMAL) {
-                    apiInterface.returnAllAppsFail(error);
+                    apiInterface.returnAllAppsFail(error,responseCode);
                 } else if (type == TYPE_REFRESH) {
-                    apiInterface.returnAllAppsFreshFail(error);
+                    apiInterface.returnAllAppsFreshFail(error,responseCode);
                 } else {
-                    apiInterface.returnAllAppsMoreFail(error);
+                    apiInterface.returnAllAppsMoreFail(error,responseCode);
                 }
             }
 
@@ -94,8 +94,13 @@ public class MyAppAPIService {
             public void callbackTokenExpire() {
                 new OauthUtils(new OauthCallBack() {
                     @Override
-                    public void execute() {
+                    public void reExecute() {
                         getAllApps(type, pageNumber);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
                     }
                 }, context).refreshToken(completeUrl);
             }
@@ -119,8 +124,13 @@ public class MyAppAPIService {
             public void callbackTokenExpire() {
                 new OauthUtils(new OauthCallBack() {
                     @Override
-                    public void execute() {
+                    public void reExecute() {
                         addApp(appID);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
                     }
                 }, context).refreshToken(completeUrl);
             }
@@ -133,7 +143,7 @@ public class MyAppAPIService {
 
             @Override
             public void callbackFail(String error, int responseCode) {
-                apiInterface.returnAddAppFail(error);
+                apiInterface.returnAddAppFail(error,responseCode);
             }
         });
 
@@ -154,8 +164,13 @@ public class MyAppAPIService {
             public void callbackTokenExpire() {
                 new OauthUtils(new OauthCallBack() {
                     @Override
-                    public void execute() {
+                    public void reExecute() {
                         removeApp(appID);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
                     }
                 }, context).refreshToken(completeUrl);
             }
@@ -168,7 +183,7 @@ public class MyAppAPIService {
 
             @Override
             public void callbackFail(String error, int responseCode) {
-                apiInterface.returnRemoveAppFail(error);
+                apiInterface.returnRemoveAppFail(error,responseCode);
             }
         });
     }
@@ -187,8 +202,13 @@ public class MyAppAPIService {
             public void callbackTokenExpire() {
                 new OauthUtils(new OauthCallBack() {
                     @Override
-                    public void execute() {
+                    public void reExecute() {
                         getMyApp(jsonArray);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
                     }
                 }, context).refreshToken(completeUrl);
             }
@@ -200,7 +220,7 @@ public class MyAppAPIService {
 
             @Override
             public void callbackFail(String error, int responseCode) {
-                apiInterface.returnMyAppFail(error);
+                apiInterface.returnMyAppFail(error,responseCode);
             }
         });
 
@@ -222,8 +242,13 @@ public class MyAppAPIService {
             public void callbackTokenExpire() {
                 new OauthUtils(new OauthCallBack() {
                     @Override
-                    public void execute() {
+                    public void reExecute() {
                         searchApp(keyword, pageNumber);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
                     }
                 }, context).refreshToken(completeUrl);
             }
@@ -242,9 +267,9 @@ public class MyAppAPIService {
             @Override
             public void callbackFail(String error, int responseCode) {
                 if (pageNumber > 1) {
-                    apiInterface.returnSearchAppMoreFail(error);
+                    apiInterface.returnSearchAppMoreFail(error,responseCode);
                 } else {
-                    apiInterface.returnSearchAppFail(error);
+                    apiInterface.returnSearchAppFail(error,responseCode);
                 }
             }
         });
@@ -269,8 +294,13 @@ public class MyAppAPIService {
                 new OauthUtils(new OauthCallBack() {
 
                     @Override
-                    public void execute() {
+                    public void reExecute() {
                         getNewsTitles();
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
                     }
                 }, context).refreshToken(completeUrl);
             }
@@ -287,7 +317,7 @@ public class MyAppAPIService {
             public void callbackFail(String error, int responseCode) {
                 // TODO Auto-generated method stub
                 LogUtils.YfcDebug("错误代码："+responseCode);
-                apiInterface.returnGroupNewsTitleFail(error);
+                apiInterface.returnGroupNewsTitleFail(error,responseCode);
             }
         });
     }
@@ -313,8 +343,13 @@ public class MyAppAPIService {
                 new OauthUtils(new OauthCallBack() {
 
                     @Override
-                    public void execute() {
+                    public void reExecute() {
                         getGroupNewsDetail(ncid, page);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
                     }
                 }, context).refreshToken(completeUrl);
             }
@@ -330,7 +365,7 @@ public class MyAppAPIService {
             @Override
             public void callbackFail(String error, int responseCode) {
                 // TODO Auto-generated method stub
-                apiInterface.returnGroupNewsDetailFail(error);
+                apiInterface.returnGroupNewsDetailFail(error,responseCode);
             }
         });
 
@@ -351,12 +386,16 @@ public class MyAppAPIService {
                 new OauthUtils(new OauthCallBack() {
 
                     @Override
-                    public void execute() {
+                    public void reExecute() {
                         // TODO Auto-generated method stub
                         getUserApps();
                     }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
                 }, context).refreshToken(completeUrl);
-                ;
             }
 
             @Override
@@ -366,7 +405,7 @@ public class MyAppAPIService {
 
             @Override
             public void callbackFail(String error, int responseCode) {
-                apiInterface.returnUserAppsFail(error);
+                apiInterface.returnUserAppsFail(error,responseCode);
             }
         });
     }
@@ -392,15 +431,20 @@ public class MyAppAPIService {
             @Override
             public void callbackFail(String error, int responseCode) {
                 // TODO Auto-generated method stub
-                apiInterface.returnAllAppsFail(error);
+                apiInterface.returnAllAppsFail(error,responseCode);
             }
 
             @Override
             public void callbackTokenExpire() {
                 new OauthUtils(new OauthCallBack() {
                     @Override
-                    public void execute() {
+                    public void reExecute() {
                         getNewAllApps();
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
                     }
                 }, context).refreshToken(completeUrl);
             }
@@ -424,15 +468,20 @@ public class MyAppAPIService {
 
             @Override
             public void callbackFail(String error, int responseCode) {
-                apiInterface.returnGetAppAuthCodeResultFail(error);
+                apiInterface.returnGetAppAuthCodeResultFail(error,responseCode);
             }
 
             @Override
             public void callbackTokenExpire() {
                 new OauthUtils(new OauthCallBack() {
                     @Override
-                    public void execute() {
+                    public void reExecute() {
                         getAuthCode(urlParams);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
                     }
                 }, context).refreshToken(completeUrl);
             }

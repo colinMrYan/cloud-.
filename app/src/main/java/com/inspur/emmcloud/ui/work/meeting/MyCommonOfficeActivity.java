@@ -1,9 +1,5 @@
 package com.inspur.emmcloud.ui.work.meeting;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -40,6 +36,10 @@ import com.inspur.emmcloud.widget.dragsortlistview.DragSortListView;
 import com.inspur.emmcloud.widget.dragsortlistview.DragSortListView.DropListener;
 import com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout;
 import com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout.OnRefreshListener;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * 我的办公地点
@@ -324,11 +324,11 @@ public class MyCommonOfficeActivity extends BaseActivity implements
 		}
 
 		@Override
-		public void returnOfficeResultFail(String error) {
+		public void returnOfficeResultFail(String error,int errorCode) {
 			if (loadingDialog != null && loadingDialog.isShowing()) {
 				loadingDialog.dismiss();
 			}
-			WebServiceMiddleUtils.hand(MyCommonOfficeActivity.this, error);
+			WebServiceMiddleUtils.hand(MyCommonOfficeActivity.this, error,errorCode);
 		}
 
 		@Override
@@ -347,13 +347,11 @@ public class MyCommonOfficeActivity extends BaseActivity implements
 		}
 
 		@Override
-		public void returnDeleteOfficeFail(String error) {
-			super.returnDeleteOfficeFail(error);
+		public void returnDeleteOfficeFail(String error,int errorCode) {
 			if (loadingDialog != null && loadingDialog.isShowing()) {
 				loadingDialog.dismiss();
 			}
-			LogUtils.debug("yfcLog", "error:"+error);
-			WebServiceMiddleUtils.hand(MyCommonOfficeActivity.this, error);
+			WebServiceMiddleUtils.hand(MyCommonOfficeActivity.this, error,errorCode);
 		}
 	}
 

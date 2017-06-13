@@ -9,7 +9,9 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APICallback;
 import com.inspur.emmcloud.bean.App;
+import com.inspur.emmcloud.bean.Contact;
 import com.inspur.emmcloud.bean.PVCollectModel;
+import com.inspur.emmcloud.callback.OauthCallBack;
 import com.inspur.emmcloud.ui.app.ReactNativeAppActivity;
 import com.inspur.emmcloud.ui.app.groupnews.GroupNewsActivity;
 import com.inspur.emmcloud.widget.LoadingDialog;
@@ -47,7 +49,7 @@ public class UriUtils {
                 if (uri.startsWith("https://emm.inspur.com:443/ssohandler/gs/") || uri.startsWith("https://emm.inspur.com/ssohandler/gs/")) {
                     uri = uri.replace("/gs/","/gs_uri/");
                     if (NetUtils.isNetworkConnected(activity)){
-                       LoadingDialog loadingDialog = new LoadingDialog(activity);
+                        LoadingDialog loadingDialog = new LoadingDialog(activity);
                         loadingDialog.show();
                         getGSWebReallyUrl(activity,uri,app,loadingDialog);
                     }
@@ -122,8 +124,13 @@ public class UriUtils {
             public void callbackTokenExpire() {
                 new OauthUtils(new OauthCallBack() {
                     @Override
-                    public void execute() {
+                    public void reExecute() {
                         getGSWebReallyUrl(activity, url, app, loadingDialog);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
                     }
                 },activity).refreshToken(url);
             }
@@ -213,10 +220,20 @@ public class UriUtils {
     /**
      * 频道页面头像显示图片
      **/
-    public static String getChannelImgUri(String inspurID) {
+    public static String getChannelImgUri(Context context,String inspurID) {
+        String headImgUrl = null;
         if (StringUtils.isBlank(inspurID) || inspurID.equals("null"))
             return null;
-        return "https://emm.inspur.com/img/userhead/" + inspurID;
+
+        Contact contact = ContactCacheUtils.getUserContact(context,inspurID);
+        if(contact != null){
+            headImgUrl = "https://emm.inspur.com/img/userhead/" + inspurID;
+            String lastUpdateTime = contact.getLastUpdateTime();
+            if(!StringUtils.isBlank(lastUpdateTime)&&(!lastUpdateTime.equals("null"))){
+                headImgUrl = headImgUrl + "?"+lastUpdateTime;
+            }
+        }
+        return headImgUrl;
     }
 
     /**

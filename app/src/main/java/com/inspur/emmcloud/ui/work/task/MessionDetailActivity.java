@@ -1,16 +1,5 @@
 package com.inspur.emmcloud.ui.work.task;
 
-import java.io.File;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Locale;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
-import org.xutils.common.Callback.ProgressCallback;
-
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.DialogInterface;
@@ -70,6 +59,17 @@ import com.inspur.emmcloud.widget.MyDatePickerDialog;
 import com.inspur.emmcloud.widget.SegmentControl;
 import com.inspur.emmcloud.widget.SegmentControl.OnSegmentControlClickListener;
 import com.inspur.emmcloud.widget.dialogs.EasyDialog;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.xutils.common.Callback.ProgressCallback;
+
+import java.io.File;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+import java.util.Locale;
 
 public class MessionDetailActivity extends BaseActivity {
 
@@ -819,8 +819,6 @@ public class MessionDetailActivity extends BaseActivity {
 
 	/**
 	 * 邀请其他人协作，同时包含增减人员
-	 * 
-	 * @param cid
 	 */
 	private void inviteMatesForTask() {
 		if (NetUtils.isNetworkConnected(getApplicationContext())) {
@@ -860,11 +858,11 @@ public class MessionDetailActivity extends BaseActivity {
 		}
 
 		@Override
-		public void returnInviteMateForTaskFail(String error) {
+		public void returnInviteMateForTaskFail(String error,int errorCode) {
 			if (loadingDlg != null && loadingDlg.isShowing()) {
 				loadingDlg.dismiss();
 			}
-			WebServiceMiddleUtils.hand(MessionDetailActivity.this, error);
+			WebServiceMiddleUtils.hand(MessionDetailActivity.this, error,errorCode);
 		}
 
 		@Override
@@ -881,11 +879,11 @@ public class MessionDetailActivity extends BaseActivity {
 		}
 
 		@Override
-		public void returnUpdateTaskFail(String error) {
+		public void returnUpdateTaskFail(String error,int errorCode) {
 			if (loadingDlg != null && loadingDlg.isShowing()) {
 				loadingDlg.dismiss();
 			}
-			WebServiceMiddleUtils.hand(MessionDetailActivity.this, error);
+			WebServiceMiddleUtils.hand(MessionDetailActivity.this, error,errorCode);
 		}
 
 		@Override
@@ -902,12 +900,11 @@ public class MessionDetailActivity extends BaseActivity {
 		}
 
 		@Override
-		public void returnFileUpLoadFail(String error) {
-			super.returnFileUpLoadFail(error);
+		public void returnFileUpLoadFail(String error,int errorCode) {
 			if (loadingDlg != null && loadingDlg.isShowing()) {
 				loadingDlg.dismiss();
 			}
-			WebServiceMiddleUtils.hand(MessionDetailActivity.this, error);
+			WebServiceMiddleUtils.hand(MessionDetailActivity.this, error,errorCode);
 		}
 
 		@Override
@@ -924,12 +921,11 @@ public class MessionDetailActivity extends BaseActivity {
 		}
 
 		@Override
-		public void returnAttachmentFail(String error) {
-			super.returnAttachmentFail(error);
+		public void returnAttachmentFail(String error,int errorCode) {
 			if (loadingDlg != null && loadingDlg.isShowing()) {
 				loadingDlg.dismiss();
 			}
-			WebServiceMiddleUtils.hand(MessionDetailActivity.this, error);
+			WebServiceMiddleUtils.hand(MessionDetailActivity.this, error,errorCode);
 		}
 
 		@Override
@@ -943,12 +939,11 @@ public class MessionDetailActivity extends BaseActivity {
 		}
 
 		@Override
-		public void returnAddAttachMentFail(String error) {
-			super.returnAddAttachMentFail(error);
+		public void returnAddAttachMentFail(String error,int errorCode) {
 			if (loadingDlg != null && loadingDlg.isShowing()) {
 				loadingDlg.dismiss();
 			}
-			WebServiceMiddleUtils.hand(MessionDetailActivity.this, error);
+			WebServiceMiddleUtils.hand(MessionDetailActivity.this, error,errorCode);
 		}
 
 		@Override
@@ -981,12 +976,11 @@ public class MessionDetailActivity extends BaseActivity {
 		}
 
 		@Override
-		public void returnGetTasksFail(String error) {
-			super.returnGetTasksFail(error);
+		public void returnGetTasksFail(String error,int errorCode) {
 			if (loadingDlg != null && loadingDlg.isShowing()) {
 				loadingDlg.dismiss();
 			}
-			WebServiceMiddleUtils.hand(MessionDetailActivity.this, error);
+			WebServiceMiddleUtils.hand(MessionDetailActivity.this, error,errorCode);
 		}
 
 		@Override
@@ -1000,12 +994,11 @@ public class MessionDetailActivity extends BaseActivity {
 		}
 
 		@Override
-		public void returnDelTaskMemFail(String error) {
-			super.returnDelTaskMemFail(error);
+		public void returnDelTaskMemFail(String error,int errorCode) {
 			if (loadingDlg != null && loadingDlg.isShowing()) {
 				loadingDlg.dismiss();
 			}
-			WebServiceMiddleUtils.hand(MessionDetailActivity.this, error);
+			WebServiceMiddleUtils.hand(MessionDetailActivity.this, error,errorCode);
 		}
 
 		@Override
@@ -1021,12 +1014,11 @@ public class MessionDetailActivity extends BaseActivity {
 		}
 
 		@Override
-		public void returnDelAttachmentFail(String error) {
-			super.returnDelAttachmentFail(error);
+		public void returnDelAttachmentFail(String error,int errorCode) {
 			if (loadingDlg != null && loadingDlg.isShowing()) {
 				loadingDlg.dismiss();
 			}
-			WebServiceMiddleUtils.hand(MessionDetailActivity.this, error);
+			WebServiceMiddleUtils.hand(MessionDetailActivity.this, error,errorCode);
 		}
 
 		@Override
@@ -1046,13 +1038,12 @@ public class MessionDetailActivity extends BaseActivity {
 		}
 
 		@Override
-		public void returnChangeMessionOwnerFail(String error) {
+		public void returnChangeMessionOwnerFail(String error,int errorCode) {
 			// TODO Auto-generated method stub
-			super.returnChangeMessionOwnerFail(error);
 			if (loadingDlg != null && loadingDlg.isShowing()) {
 				loadingDlg.dismiss();
 			}
-			WebServiceMiddleUtils.hand(MessionDetailActivity.this, error);
+			WebServiceMiddleUtils.hand(MessionDetailActivity.this, error,errorCode);
 		}
 
 		@Override
@@ -1065,12 +1056,11 @@ public class MessionDetailActivity extends BaseActivity {
 		}
 
 		@Override
-		public void returnChangeMessionTagFail(String error) {
-			super.returnChangeMessionTagFail(error);
+		public void returnChangeMessionTagFail(String error,int errorCode) {
 			if (loadingDlg != null && loadingDlg.isShowing()) {
 				loadingDlg.dismiss();
 			}
-			WebServiceMiddleUtils.hand(MessionDetailActivity.this, error);
+			WebServiceMiddleUtils.hand(MessionDetailActivity.this, error,errorCode);
 		}
 
 	}

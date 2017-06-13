@@ -1,8 +1,5 @@
 package com.inspur.emmcloud.ui.chat;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -44,6 +41,9 @@ import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.NoScrollGridView;
 import com.inspur.emmcloud.widget.SwitchView;
 import com.inspur.emmcloud.widget.SwitchView.OnStateChangedListener;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 频道详情页面
@@ -123,11 +123,6 @@ public class ChannelInfoActivity extends BaseActivity {
 
 	}
 
-	/**
-	 * 
-	 *
-	 * @param cid2
-	 */
 	private void getChannelInfoFromCache() {
 		final ChannelGroup channelGroup = ChannelGroupCacheUtils
 				.getChannelGroupById(getApplicationContext(), cid);
@@ -378,11 +373,11 @@ public class ChannelInfoActivity extends BaseActivity {
 				String uid = memberList.get(position);
 				viewHolder.nameText.setText(ContactCacheUtils.getUserName(
 						ChannelInfoActivity.this, uid));
-				userPhotoUrl = UriUtils.getChannelImgUri(uid);
+				userPhotoUrl = UriUtils.getChannelImgUri(ChannelInfoActivity.this,uid);
 				userName = ContactCacheUtils.getUserName(
 						ChannelInfoActivity.this, uid);
 				imageDisplayUtils.display(viewHolder.memberHeadImg,
-						UriUtils.getChannelImgUri(uid));
+						UriUtils.getChannelImgUri(ChannelInfoActivity.this,uid));
 			}
 			viewHolder.nameText.setText(userName);
 			imageDisplayUtils.display(viewHolder.memberHeadImg, userPhotoUrl);
@@ -398,7 +393,6 @@ public class ChannelInfoActivity extends BaseActivity {
 	/**
 	 * 更改是否频道消息免打扰
 	 *
-	 * @param cid
 	 * @param isNoInterruption
 	 */
 	private void updateIsNoInterruption(boolean isNoInterruption) {
@@ -456,12 +450,12 @@ public class ChannelInfoActivity extends BaseActivity {
 		}
 
 		@Override
-		public void returnChannelInfoFail(String error) {
+		public void returnChannelInfoFail(String error,int errorCode) {
 			// TODO Auto-generated method stub
 			if (loadingDlg != null && loadingDlg.isShowing()) {
 				loadingDlg.dismiss();
 			}
-			WebServiceMiddleUtils.hand(ChannelInfoActivity.this, error);
+			WebServiceMiddleUtils.hand(ChannelInfoActivity.this, error,errorCode);
 			getChannelInfoFromCache();
 		}
 
@@ -479,12 +473,12 @@ public class ChannelInfoActivity extends BaseActivity {
 		}
 
 		@Override
-		public void returnAddMembersFail(String error) {
+		public void returnAddMembersFail(String error,int errorCode) {
 			// TODO Auto-generated method stub
 			if (loadingDlg.isShowing()) {
 				loadingDlg.dismiss();
 			}
-			WebServiceMiddleUtils.hand(ChannelInfoActivity.this, error);
+			WebServiceMiddleUtils.hand(ChannelInfoActivity.this, error,errorCode);
 		}
 
 		@Override
@@ -502,14 +496,14 @@ public class ChannelInfoActivity extends BaseActivity {
 		}
 
 		@Override
-		public void returnDndFail(String error) {
+		public void returnDndFail(String error,int errorCode) {
 			// TODO Auto-generated method stub
 			if (loadingDlg.isShowing()) {
 				loadingDlg.dismiss();
 			}
 			isNoInterruption = !isNoInterruption;
 			msgInterruptionSwitch.setOpened(isNoInterruption);
-			WebServiceMiddleUtils.hand(ChannelInfoActivity.this, error);
+			WebServiceMiddleUtils.hand(ChannelInfoActivity.this, error,errorCode);
 		}
 
 		@Override
@@ -531,9 +525,9 @@ public class ChannelInfoActivity extends BaseActivity {
 		}
 
 		@Override
-		public void returnDelMembersFail(String error) {
+		public void returnDelMembersFail(String error,int errorCode) {
 			// TODO Auto-generated method stub
-			WebServiceMiddleUtils.hand(ChannelInfoActivity.this, error);
+			WebServiceMiddleUtils.hand(ChannelInfoActivity.this, error,errorCode);
 			if (loadingDlg != null && loadingDlg.isShowing()) {
 				loadingDlg.dismiss();
 			}

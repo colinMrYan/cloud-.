@@ -76,7 +76,7 @@ public class FliterListFragment extends Fragment {
 //		} else {// 经滤镜处理后的图片
 //			// System.out.println("滤镜图片");
 //			SaveImageTask saveTask = new SaveImageTask();
-//			saveTask.execute(fliterBit);
+//			saveTask.reExecute(fliterBit);
 //		}// end if
 //	}
 //
@@ -195,7 +195,7 @@ public class FliterListFragment extends Fragment {
 //			String key = String.valueOf(v.getTag());
 //			// 滤镜处理
 //			ProcessingImage task = new ProcessingImage();
-//			task.execute(key);
+//			task.reExecute(key);
 //		}
 //	}// end inner class
 //

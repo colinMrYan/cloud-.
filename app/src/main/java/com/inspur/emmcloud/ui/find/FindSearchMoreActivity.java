@@ -7,9 +7,6 @@
  */
 package com.inspur.emmcloud.ui.find;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,6 +38,9 @@ import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout;
 import com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout.OnRefreshListener;
 import com.inspur.emmcloud.widget.pullableview.PullableListView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 发现页面搜索更多页面 com.inspur.emmcloud.ui.find.FindSearchMoreActivity create at
@@ -236,7 +236,7 @@ public class FindSearchMoreActivity extends BaseActivity implements
 				String inspurId = findSearchContacts.getInspurId();
 				new ImageDisplayUtils(getApplicationContext(),
 						R.drawable.icon_person_default).display(photoImg,
-						UriUtils.getChannelImgUri(inspurId));
+						UriUtils.getChannelImgUri(FindSearchMoreActivity.this,inspurId));
 				titleText.setText(findSearchContacts.getName());
 				String mobile = findSearchContacts.getMobile();
 				String mail = findSearchContacts.getEmail();
@@ -255,7 +255,7 @@ public class FindSearchMoreActivity extends BaseActivity implements
 	/**
 	 * 搜索关键字
 	 * 
-	 * @param searchContent
+	 * @param isShowDlg
 	 */
 	private void search(boolean isShowDlg) {
 		// TODO Auto-generated method stub
@@ -310,12 +310,12 @@ public class FindSearchMoreActivity extends BaseActivity implements
 
 
 		@Override
-		public void returnFindSearchFail(String error) {
+		public void returnFindSearchFail(String error,int errorCode) {
 			// TODO Auto-generated method stub
 			if (loadingDlg != null && loadingDlg.isShowing()) {
 				loadingDlg.dismiss();
 			}
-			WebServiceMiddleUtils.hand(FindSearchMoreActivity.this, error);
+			WebServiceMiddleUtils.hand(FindSearchMoreActivity.this, error,errorCode);
 			refreshLayout.refreshFinish(PullToRefreshLayout.FAIL);
 		}
 

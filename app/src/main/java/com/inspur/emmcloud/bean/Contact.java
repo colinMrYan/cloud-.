@@ -1,7 +1,11 @@
 package com.inspur.emmcloud.bean;
 
+import android.content.Context;
+
 import com.facebook.react.bridge.WritableNativeMap;
+import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.UriUtils;
+import com.lidroid.xutils.db.annotation.Table;
 
 import org.json.JSONObject;
 
@@ -16,6 +20,7 @@ import java.io.Serializable;
  "parent_id":"inspur_dev000100040007239","head":"/img/headimg/d6858120-f6e7-11e5-9cad-850d114ad5ec",
  "sort_order":1,"type":"user"}
  */
+@Table(name = "Contact")
 public class Contact implements Serializable{
 	private String id;
 	private String parentId = "";
@@ -33,6 +38,7 @@ public class Contact implements Serializable{
 	private String inspurID = "";
 	private String newID="";
 	private String globalName="";
+	private String lastUpdateTime = "";
 //	@Transient
 //	private String selectStatus;
 
@@ -40,7 +46,14 @@ public class Contact implements Serializable{
 
 	}
 
+	public  Contact(JSONObject obj,String lastUpdateTime){
+		this(obj);
+		this.lastUpdateTime = lastUpdateTime;
+	}
+
+
 	public Contact(JSONObject obj) {
+		LogUtils.YfcDebug("通讯录--------》");
 		try {
 			if (obj.has("id")) {
 				this.id = obj.getString("id");
@@ -48,7 +61,7 @@ public class Contact implements Serializable{
 			if (obj.has("parent_id")) {
 				this.parentId = obj.getString("parent_id");
 			}
-			
+
 			if (obj.has("new_id")) {
 				this.newID = obj.getString("new_id");
 			}
@@ -92,31 +105,32 @@ public class Contact implements Serializable{
 			if (obj.has("name_global")) {
 				this.globalName = obj.getString("name_global");
 			}
+
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
-	
+
 	public String getId(){
 		return id;
 	}
 	public void setId(String id){
 		this.id = id;
 	}
-	
+
 	public String getInspurID(){
 		return inspurID;
 	}
-	
+
 	public String getNewID(){
 		return newID;
 	}
-	
+
 	public void setNewID(String newID){
 		this.newID = newID;
 	}
-	
+
 
 	public String getParentId() {
 		return parentId;
@@ -132,7 +146,7 @@ public class Contact implements Serializable{
 		}
 		return name;
 	}
-	
+
 	public String getFullPath(){
 		return fullPath;
 	}
@@ -193,35 +207,43 @@ public class Contact implements Serializable{
 	public void setType(String type){
 		this.type = type;
 	}
-	
+
 	public int getSortOrder(){
 		return sortOrder;
 	}
 	public void setSortOrder(int sortOrder){
 		this.sortOrder = sortOrder;
 	}
-	
+
 	public String getGlobalName(){
 		return globalName;
 	}
-	
+
 	public void setGlobalName(String globalName){
 		this.globalName = globalName;
 	}
 
-	public JSONObject contact2JSONObject(){
-				JSONObject obj = new JSONObject();
-				try {
-					obj.put("inspur_id",inspurID);
-					obj.put("code",code);
-					obj.put("real_name",realName);
-					obj.put("new_id",newID);
+	public String getLastUpdateTime() {
+		return lastUpdateTime;
+	}
+
+	public void setLastUpdateTime(String lastUpdateTime) {
+		this.lastUpdateTime = lastUpdateTime;
+	}
+
+	public JSONObject contact2JSONObject(Context context){
+		JSONObject obj = new JSONObject();
+		try {
+			obj.put("inspur_id",inspurID);
+			obj.put("code",code);
+			obj.put("real_name",realName);
+			obj.put("new_id",newID);
 			obj.put("pinyin",pinyin);
 			obj.put("mobile",mobile);
 			obj.put("email",email);
 			obj.put("org_name",orgName);
 			obj.put("type",type);
-			obj.put("head", UriUtils.getChannelImgUri(inspurID));
+			obj.put("head", UriUtils.getChannelImgUri(context,inspurID));
 		}catch (Exception e){
 			e.printStackTrace();
 		}
@@ -229,7 +251,7 @@ public class Contact implements Serializable{
 		return  obj;
 	};
 
-	public WritableNativeMap contact2Map(){
+	public WritableNativeMap contact2Map(Context context){
 		WritableNativeMap map = new WritableNativeMap();
 		try {
 			map.putString("inspur_id",inspurID);
@@ -241,7 +263,7 @@ public class Contact implements Serializable{
 			map.putString("email",email);
 			map.putString("org_name",orgName);
 			map.putString("type",type);
-			map.putString("head", UriUtils.getChannelImgUri(inspurID));
+			map.putString("head", UriUtils.getChannelImgUri(context,inspurID));
 		}catch (Exception e){
 			e.printStackTrace();
 		}

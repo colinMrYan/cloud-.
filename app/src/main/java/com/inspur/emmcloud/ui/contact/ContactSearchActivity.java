@@ -1438,7 +1438,7 @@ public class ContactSearchActivity extends BaseActivity {
 			}else{
 				defaultIcon = R.drawable.icon_person_default;
 				if (!searchModel.getId().equals("null")) {
-					icon = searchModel.getIcon();
+					icon = searchModel.getIcon(ContactSearchActivity.this);
 				}
 
 			}

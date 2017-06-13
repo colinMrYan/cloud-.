@@ -1,16 +1,5 @@
 package com.inspur.emmcloud.ui.find.trip;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.app.TimePickerDialog.OnTimeSetListener;
@@ -42,6 +31,17 @@ import com.inspur.emmcloud.util.ToastUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.MyDatePickerDialog;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
 public class TripDetailActivity extends BaseActivity {
 	private static final int SELECT_RIDER = 1;
@@ -379,12 +379,12 @@ public class TripDetailActivity extends BaseActivity {
 
 	/**
 	 * 上传完整的行程信息
-	 * 
-	 * @param tripDate
+	 * @param tripStartDate
+	 * @param tripArriveDate
+	 * @param tripStartCity
 	 * @param tripFrom
+	 * @param tripDestinationCity
 	 * @param tripDestination
-	 * @param tripStartTime
-	 * @param tripArriveTime
 	 * @param trainID
 	 * @param seatID
 	 * @param rider
@@ -445,12 +445,12 @@ public class TripDetailActivity extends BaseActivity {
 		}
 
 		@Override
-		public void returnUploadTrainTicketFail(String error) {
+		public void returnUploadTrainTicketFail(String error,int errorCode) {
 			// TODO Auto-generated method stub
 			if (loadingDlg != null && loadingDlg.isShowing()) {
 				loadingDlg.dismiss();
 			}
-			ToastUtils.show(getApplicationContext(), R.string.save_fail);
+			ToastUtils.show(getApplicationContext(), R.string.save_fail,errorCode);
 		}
 
 		@Override
@@ -478,13 +478,12 @@ public class TripDetailActivity extends BaseActivity {
 		}
 
 		@Override
-		public void retrunTripArriveFail(String error) {
+		public void retrunTripArriveFail(String error,int errorCode) {
 			// TODO Auto-generated method stub
-			super.retrunTripArriveFail(error);
 			if (loadingDlg != null && loadingDlg.isShowing()) {
 				loadingDlg.dismiss();
 			}
-			WebServiceMiddleUtils.hand(TripDetailActivity.this, error);
+			WebServiceMiddleUtils.hand(TripDetailActivity.this, error,errorCode);
 		}
 
 	}

@@ -934,12 +934,12 @@ public class MeetingRoomListActivity extends BaseActivity implements
 
 	class WebService extends APIInterfaceInstance {
 		@Override
-		public void returnMeetingRoomsFail(String error) {
+		public void returnMeetingRoomsFail(String error,int errorCode) {
 			if (loadingDlg.isShowing()) {
 				loadingDlg.dismiss();
 			}
 			pullToRefreshLayout.refreshFinish(PullToRefreshLayout.FAIL);
-			WebServiceMiddleUtils.hand(MeetingRoomListActivity.this, error);
+			WebServiceMiddleUtils.hand(MeetingRoomListActivity.this, error,errorCode);
 		}
 
 		@Override
@@ -973,12 +973,12 @@ public class MeetingRoomListActivity extends BaseActivity implements
 		}
 
 		@Override
-		public void returnOfficeResultFail(String error) {
+		public void returnOfficeResultFail(String error,int errorCode) {
 			if (loadingDlg.isShowing()) {
 				loadingDlg.dismiss();
 			}
 			pullToRefreshLayout.refreshFinish(PullToRefreshLayout.FAIL);
-			WebServiceMiddleUtils.hand(MeetingRoomListActivity.this, error);
+			WebServiceMiddleUtils.hand(MeetingRoomListActivity.this, error,errorCode);
 		}
 
 	}
