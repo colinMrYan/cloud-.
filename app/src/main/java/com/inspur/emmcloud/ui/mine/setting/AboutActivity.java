@@ -32,7 +32,7 @@ public class AboutActivity extends BaseActivity {
 		setContentView(R.layout.activity_about);
 		((MyApplication) getApplicationContext()).addActivity(this);
 		((TextView) findViewById(R.id.app_version_text))
-				.setText(getString(R.string.app_name)
+				.setText(getString(R.string.app_name)+"  "
 						+ AppUtils.getVersion(this));
 		handMessage();
 	}
