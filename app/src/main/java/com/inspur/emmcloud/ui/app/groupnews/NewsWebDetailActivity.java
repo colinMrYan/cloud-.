@@ -328,7 +328,7 @@ public class NewsWebDetailActivity extends BaseActivity {
         instructionsBtn = (Button)view.findViewById(R.id.app_news_instructions_btn);
         if(!getIntent().getBooleanExtra("hasExtraPermission",false)){
             instructionsBtn.setVisibility(View.GONE);
-            shareBtn.setPadding(DensityUtil.dip2px(NewsWebDetailActivity.this,getIconLeftSize()),0,0,0);
+            shareBtn.setPadding(getIconLeftSize(),0,0,0);
         }
         shareBtn.setText(getString(R.string.news_share_text));
         dayOrNightModeText = (TextView) view.findViewById(R.id.app_news_mode_night_text);
@@ -383,13 +383,12 @@ public class NewsWebDetailActivity extends BaseActivity {
      * 获取分享图标左侧大小
      * @return
      */
-    private float getIconLeftSize() {
+    private int getIconLeftSize() {
         WindowManager wm = (WindowManager) this
                 .getSystemService(Context.WINDOW_SERVICE);
         int width = wm.getDefaultDisplay().getWidth();
         float leftSize = (float) (width * 0.34);
-        leftSize = DensityUtil.px2dip(NewsWebDetailActivity.this,leftSize);
-        return leftSize;
+        return Math.round(leftSize);
     }
 
     /**
