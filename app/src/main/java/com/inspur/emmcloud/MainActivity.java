@@ -21,6 +21,7 @@ import com.inspur.emmcloud.util.AppUtils;
 import com.inspur.emmcloud.util.FileUtils;
 import com.inspur.emmcloud.util.IntentUtils;
 import com.inspur.emmcloud.util.LanguageUtils;
+import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.LoginUtils;
 import com.inspur.emmcloud.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
@@ -212,7 +213,8 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
 				"myInfo", "");
 		String languageJson = PreferencesUtils.getString(getApplicationContext(),
 				UriUtils.tanent + "appLanguageObj");
-		if (!StringUtils.isBlank(accessToken) && StringUtils.isBlank(myInfo)) {
+		boolean isMDMStatusPass = PreferencesUtils.getBoolean(getApplicationContext(), "isMDMStatusPass", false);
+		if (!StringUtils.isBlank(accessToken) && (StringUtils.isBlank(myInfo) || !isMDMStatusPass)) {
 			new LoginUtils(MainActivity.this, handler).getMyInfo();
 		} else if (!StringUtils.isBlank(accessToken) && !StringUtils.isBlank(myInfo) && StringUtils.isBlank(languageJson)) {
 			languageUtils = new LanguageUtils(MainActivity.this, handler);

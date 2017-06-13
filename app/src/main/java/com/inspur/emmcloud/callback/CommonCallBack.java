@@ -5,5 +5,5 @@ package com.inspur.emmcloud.callback;
  */
 
 public interface CommonCallBack {
-	void excute();
+	void execute();
 }

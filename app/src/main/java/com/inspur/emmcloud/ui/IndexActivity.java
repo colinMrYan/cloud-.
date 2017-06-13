@@ -533,11 +533,15 @@ public class IndexActivity extends BaseFragmentActivity implements
     }
 
     @Override
-    public void excute() {
-        isCommunicationRunning = true;
-        int targetTabIndex = getTabIndex();
-        if (mTabHost.getCurrentTab() != targetTabIndex){
-            mTabHost.setCurrentTab(targetTabIndex);
+    public void execute() {
+        try {
+            isCommunicationRunning = true;
+            int targetTabIndex = getTabIndex();
+            if ( mTabHost.getCurrentTab() != targetTabIndex){
+                mTabHost.setCurrentTab(targetTabIndex);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
         }
     }
 

@@ -86,12 +86,14 @@ public class LoginUtils extends APIInterfaceInstance {
 		String tanentId = ((MyApplication)activity.getApplicationContext()).getCurrentEnterprise().getId();
 		String userCode = ((MyApplication) activity.getApplicationContext())
 				.getUid();
+		PreferencesUtils.putBoolean(activity, "isMDMStatusPass", false);
 		MDM mdm = new MDM(activity, tanentId, userCode, userName);
 		mdm.addOnMDMListener(new MDMListener() {
 
 			@Override
 			public void MDMStatusPass() {
 				// TODO Auto-generated method stub
+				PreferencesUtils.putBoolean(activity, "isMDMStatusPass", true);
 				saveLoginInfo();
 				loginUtilsHandler.sendEmptyMessage(LOGIN_SUCCESS);
 			}
