@@ -113,7 +113,7 @@ public class ImagePagerActivity extends BaseFragmentActivity {
 		pagerPosition = pageStartPosition;
 		mPager.setCurrentItem(pagerPosition);
 		//解决当只有一张图片无法显示评论数的问题
-		if (pagerPosition == 0) {
+		if (getIntent().hasExtra(EXTRA_CURRENT_IMAGE_MSG) && pagerPosition == 0) {
 			setCommentCount();
 		}
 	}
