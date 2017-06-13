@@ -728,7 +728,9 @@ public class IndexActivity extends BaseFragmentActivity implements
         } else {
             tipsView.setCanTouch(false);
         }
+        if(tabId.equals(getString(R.string.find))){
             updateReactNative();
+        }
     }
 
     private Fragment getCurrentFragment() {
