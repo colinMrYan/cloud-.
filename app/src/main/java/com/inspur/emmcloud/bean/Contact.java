@@ -53,7 +53,6 @@ public class Contact implements Serializable{
 
 
 	public Contact(JSONObject obj) {
-		LogUtils.YfcDebug("通讯录--------》");
 		try {
 			if (obj.has("id")) {
 				this.id = obj.getString("id");
