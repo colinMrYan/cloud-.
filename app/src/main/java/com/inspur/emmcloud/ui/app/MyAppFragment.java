@@ -259,6 +259,7 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
                 public void onChange(int listPosition, int from, int to) {
                     handAppOrderChange(appGroupItemList, from, to);
                     dragGridViewAdapter.notifyDataSetChanged();
+                    appListAdapter.notifyDataSetChanged();
                     saveAppChangeOrder(listPosition);
                 }
             });
@@ -332,6 +333,7 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
                         @Override
                         public void onNotifyCommonlyUseApp(App app) {
                             handCommonlyUseAppChange(appAdapterList, app);
+                            appListAdapter.notifyDataSetChanged();
                             dragGridViewAdapter.notifyDataSetChanged();
                         }
                     });
