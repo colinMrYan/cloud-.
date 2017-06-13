@@ -67,9 +67,8 @@ public class MessionListActivity extends BaseActivity implements
 	private String orderBy = "PRIORITY";
 	private String orderType = "ASC";
 	private SegmentControl segmentControl;
-	// private String[] tags;
 	private LinearLayout noSearchResultLayout;
-	private ImageView noResultImg;
+	private TextView noResultText;
 	private int deletePosition = -1;
 	private boolean isNeedRefresh = false;
 	private BroadcastReceiver taskEventReceiver;
@@ -126,7 +125,7 @@ public class MessionListActivity extends BaseActivity implements
 		adapter = new MessionListAdapter();
 		noSearchResultLayout = (LinearLayout) findViewById(R.id.nosearch_result_layout);
 		pullToRefreshLayout = (PullToRefreshLayout) findViewById(R.id.refresh_view);
-		noResultImg = (ImageView) findViewById(R.id.noresult_img);
+		noResultText = (TextView) findViewById(R.id.mession_no_result_text);
 		final RelativeLayout addLayout = (RelativeLayout) findViewById(R.id.mession_add_layout);
 		pullToRefreshLayout.setOnRefreshListener(MessionListActivity.this);
 		loadingDialog = new LoadingDialog(MessionListActivity.this);
@@ -433,7 +432,7 @@ public class MessionListActivity extends BaseActivity implements
 			if (loadingDialog.isShowing()) {
 				loadingDialog.dismiss();
 			}
-			noResultImg.setVisibility(View.GONE);
+			noResultText.setVisibility(View.GONE);
 			pullToRefreshLayout.setVisibility(View.VISIBLE);
 			TaskResult taskResult = new TaskResult();
 			taskResult.setTitle(messionAddEdit.getText().toString());
@@ -535,10 +534,10 @@ public class MessionListActivity extends BaseActivity implements
 	 */
 	public void handleResultUI(ArrayList<String> chooseTags) {
 		if (taskList.size() == 0 && chooseTags.size() == 0) {
-			noResultImg.setVisibility(View.VISIBLE);
+			noResultText.setVisibility(View.VISIBLE);
 		} else {
 			pullToRefreshLayout.setVisibility(View.VISIBLE);
-			noResultImg.setVisibility(View.GONE);
+			noResultText.setVisibility(View.GONE);
 		}
 	}
 
@@ -574,7 +573,7 @@ public class MessionListActivity extends BaseActivity implements
 				}
 			}
 			if (taskList.size() == 0) {
-				noResultImg.setVisibility(View.GONE);
+				noResultText.setVisibility(View.GONE);
 				noSearchResultLayout.setVisibility(View.VISIBLE);
 			} else {
 				noSearchResultLayout.setVisibility(View.GONE);
