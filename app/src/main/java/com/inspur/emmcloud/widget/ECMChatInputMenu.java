@@ -172,13 +172,14 @@ public class ECMChatInputMenu extends LinearLayout {
 		inputEdit.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if (isSetWindowListener) {
-					if (addMenuLayout.isShown()) {
-						lockContentHeight();
-						hideAddItemLayout(true);
-						unlockContentHeight();
-					}
-				}
+//				LogUtils.jasonDebug("isSetWindowListener="+isSetWindowListener);
+//				if (isSetWindowListener) {
+//					if (addMenuLayout.isShown()) {
+//						lockContentHeight();
+//						hideAddItemLayout(true);
+//						unlockContentHeight();
+//					}
+//				}
 			}
 		});
 		inputEdit.setOnTouchListener(new OnTouchListener() {
@@ -186,6 +187,15 @@ public class ECMChatInputMenu extends LinearLayout {
 			public boolean onTouch(View v, MotionEvent event) {
 				if (event.getAction() == MotionEvent.ACTION_DOWN) {
 					handMentions();
+				}
+
+				if (isSetWindowListener) {
+					if (event.getAction() == MotionEvent.ACTION_UP
+							&& addMenuLayout.isShown()) {
+						lockContentHeight();
+						hideAddItemLayout(true);
+						unlockContentHeight();
+					}
 				}
 				return false;
 			}
