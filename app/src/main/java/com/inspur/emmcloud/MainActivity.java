@@ -21,7 +21,6 @@ import com.inspur.emmcloud.util.AppUtils;
 import com.inspur.emmcloud.util.FileUtils;
 import com.inspur.emmcloud.util.IntentUtils;
 import com.inspur.emmcloud.util.LanguageUtils;
-import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.LoginUtils;
 import com.inspur.emmcloud.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
@@ -62,7 +61,7 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		StateBarColor.changeStateBarColor(this);
+		StateBarColor.hideStatusBar(this);
 		setContentView(R.layout.activity_main);
 		init();
 	}
