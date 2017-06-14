@@ -28,6 +28,7 @@ import com.inspur.emmcloud.ui.mine.setting.SwitchEnterpriseActivity;
 import com.inspur.emmcloud.util.ContactCacheUtils;
 import com.inspur.emmcloud.util.ImageDisplayUtils;
 import com.inspur.emmcloud.util.IntentUtils;
+import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
@@ -134,6 +135,7 @@ public class MyInfoActivity extends BaseActivity {
 
 	private void dimissDlg(){
 		if (loadingDialog != null && loadingDialog.isShowing()) {
+			LogUtils.YfcDebug("调用dialog消失");
 			loadingDialog.dismiss();
 		}
 	}
