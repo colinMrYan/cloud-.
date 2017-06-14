@@ -60,7 +60,6 @@ public class MineAPIService {
 		final String completeUrl = baseUrl + "module=" + module + "&method="
 				+ method;
 
-		LogUtils.jasonDebug("filePath=" + filePath);
 		RequestParams params = ((MyApplication) context.getApplicationContext())
 				.getHttpRequestParams(completeUrl);
 		File file = new File(filePath);
