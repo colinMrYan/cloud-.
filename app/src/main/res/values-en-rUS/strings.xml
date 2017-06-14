@@ -290,8 +290,8 @@
     <string name="work_lunar">According to the lunar calendar in August eighth day, Sunday</string>
     <string name="work_festval_date">From the National Day, 10 days </string>
     <string name="work_nomeeting_text">No meetings </string>
-    <string name="work_notask_text">No backlog</string>
-    <string name="work_nocal_text">No todo</string>
+    <string name="work_notask_text">No todo</string>
+    <string name="work_nocal_text">No agenda</string>
     <string name="time">Time</string>
     <string name="work_meeting_text">Meeting</string>
     <string name="work_calendar_text">Enterprise calendar</string>
@@ -416,7 +416,7 @@
     <string name="sure_switch_to">Make sure to switch to %1$s</string>
     <string name="fail_to_switch_enterprise">Failed to switch enterprise!</string>
     <string name="select_enterprise">Select enterprise</string>
-    <string name="switch_enterprise">Switch enterprise</string>
+    <string name="switch_enterprise">Switch</string>
     <string name="current_enterprise">Current enterprise</string>
 
 
@@ -458,7 +458,7 @@
     <string name="resend_code">Resend(51)</string>
     <string name="modify_user_info">Modify user info</string>
     <string name="modify_modify">Modify</string>
-    <string name="user_info_my_info">My Information</string>
+    <string name="user_info_my_info">Profile</string>
     <string name="user_info_organ">Inspur</string>
     <string name="user_info_phone_number">Phone Number</string>
     <string name="user_no_storage">No Storage</string>
