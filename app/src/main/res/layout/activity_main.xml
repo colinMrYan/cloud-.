@@ -13,7 +13,9 @@
         android:layout_height="wrap_content"
         android:src="@drawable/splash_page_bottom"
         android:layout_alignParentBottom="true"
-        android:scaleType="centerCrop"
+        android:layout_marginTop="30dp"
+        android:adjustViewBounds="true"
+        android:scaleType="fitXY"
          />
 
     <pl.droidsonroids.gif.GifImageView
