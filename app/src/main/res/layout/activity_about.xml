@@ -4,13 +4,13 @@
     android:id="@+id/main_layout"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:fitsSystemWindows="true" >
+    android:fitsSystemWindows="true">
 
     <RelativeLayout
         android:id="@+id/header_layout"
         android:layout_width="match_parent"
         android:layout_height="@dimen/header_height"
-        android:background="@color/header_bg" >
+        android:background="@color/header_bg">
 
         <RelativeLayout
             android:id="@+id/back_layout"
@@ -19,7 +19,7 @@
             android:layout_centerVertical="true"
             android:onClick="onClick"
             android:paddingLeft="12dp"
-            android:paddingRight="12dp" >
+            android:paddingRight="12dp">
 
             <ImageView
                 android:id="@+id/back_btn"
@@ -47,10 +47,10 @@
         android:id="@+id/header_image_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/header_layout"
         android:layout_marginTop="15dp"
         android:gravity="center"
-        android:layout_below="@id/header_layout"
-        android:orientation="vertical" >
+        android:orientation="vertical">
 
         <com.inspur.emmcloud.widget.CircleImageView
             android:id="@+id/myinfo_userheadimg_img"
@@ -58,14 +58,13 @@
             android:layout_height="80dp"
             android:layout_marginBottom="10dp"
             android:layout_marginTop="5dp"
-            android:src="@drawable/icon_circle_logo"/>
+            android:src="@drawable/icon_circle_logo" />
 
         <TextView
             android:id="@+id/app_version_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="#616f79"
-            />
+            android:textColor="#616f79" />
     </LinearLayout>
 
     <LinearLayout
@@ -74,8 +73,7 @@
         android:layout_below="@id/header_image_layout"
         android:layout_marginTop="15dp"
         android:background="#ffffff"
-        android:orientation="vertical"
-         >
+        android:orientation="vertical">
         <!-- 
 <View
             android:layout_width="match_parent"
@@ -120,9 +118,9 @@
             android:id="@+id/newfun_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@drawable/text_layout_selector"
             android:onClick="onClick"
-            android:paddingLeft="12dp"
-            android:background="@drawable/text_layout_selector" >
+            android:paddingLeft="12dp">
 
             <TextView
                 android:id="@+id/newfun_text"
@@ -133,6 +131,7 @@
                 android:paddingTop="10dp"
                 android:text="@string/about_welcome_text"
                 android:textSize="@dimen/content_normal_textsize" />
+
             <ImageView
                 android:id="@+id/newfun_img"
                 android:layout_width="15dp"
@@ -153,9 +152,9 @@
             android:id="@+id/protocol_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@drawable/text_layout_selector"
             android:onClick="onClick"
-            android:paddingLeft="12dp"
-            android:background="@drawable/text_layout_selector" >
+            android:paddingLeft="12dp">
 
             <TextView
                 android:id="@+id/protocol_text"
@@ -166,6 +165,7 @@
                 android:paddingTop="10dp"
                 android:text="@string/about_protocol_text"
                 android:textSize="@dimen/content_normal_textsize" />
+
             <ImageView
                 android:id="@+id/protocol_img"
                 android:layout_width="15dp"
@@ -176,18 +176,19 @@
                 android:layout_marginRight="10dp"
                 android:src="@drawable/icon_arrow_right" />
         </RelativeLayout>
+
         <View
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
             android:background="#dadadd" />
-        
-               <RelativeLayout
+
+        <RelativeLayout
             android:id="@+id/check_update_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@drawable/text_layout_selector"
             android:onClick="onClick"
-            android:paddingLeft="12dp"
-            android:background="@drawable/text_layout_selector" >
+            android:paddingLeft="12dp">
 
             <TextView
                 android:id="@+id/check_update_text"
@@ -198,6 +199,40 @@
                 android:paddingTop="10dp"
                 android:text="@string/check_update_text"
                 android:textSize="@dimen/content_normal_textsize" />
+
+            <ImageView
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:src="@drawable/icon_arrow_right" />
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="#dadadd" />
+
+        <RelativeLayout
+            android:id="@+id/invite_friends_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/text_layout_selector"
+            android:onClick="onClick"
+            android:paddingLeft="12dp">
+
+            <TextView
+                android:id="@+id/invite_friends_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:paddingBottom="10dp"
+                android:paddingTop="10dp"
+                android:text="@string/invite_friends_text"
+                android:textSize="@dimen/content_normal_textsize" />
+
             <ImageView
                 android:layout_width="15dp"
                 android:layout_height="15dp"

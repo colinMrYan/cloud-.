@@ -54,6 +54,7 @@
     <string name="only_free">僅顯示空閒 </string>
     <string name="file_no_identifiable">不能识别的文件类型</string>
     <string name="login_code_login_text">验证码登录</string>
+    <string name="invite_friends_text">把雲+推薦給朋友</string>
 
     <!-- 公共部分 -->
     <string name="year">年</string>

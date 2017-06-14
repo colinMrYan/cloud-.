@@ -92,6 +92,7 @@ public class LoginUtils extends APIInterfaceInstance {
 			@Override
 			public void MDMStatusPass() {
 				// TODO Auto-generated method stub
+				PreferencesUtils.putBoolean(activity, "isMDMStatusPass", true);
 				saveLoginInfo();
 				loginUtilsHandler.sendEmptyMessage(LOGIN_SUCCESS);
 			}
@@ -200,6 +201,7 @@ public class LoginUtils extends APIInterfaceInstance {
 		// TODO Auto-generated method stub
 		String myInfo = getMyInfoResult.getResponse();
 		String name = getMyInfoResult.getName();
+		PreferencesUtils.putBoolean(activity, "isMDMStatusPass", false);
 		PreferencesUtils.putString(activity, "userRealName", name);
 		PreferencesUtils.putString(activity, "userID", getMyInfoResult.getID());
 		PreferencesUtils.putString(activity, "myInfo", myInfo);

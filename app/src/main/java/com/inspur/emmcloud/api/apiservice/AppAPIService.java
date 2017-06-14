@@ -1,5 +1,5 @@
 /**
- *
+ * 
  * MyAppAPIService.java
  * classes : com.inspur.emmcloud.api.apiservice.MyAppAPIService
  * V 1.0.0
@@ -19,6 +19,7 @@ import com.inspur.emmcloud.bean.GetClientIdRsult;
 import com.inspur.emmcloud.bean.GetDeviceCheckResult;
 import com.inspur.emmcloud.bean.GetExceptionResult;
 import com.inspur.emmcloud.bean.GetUpgradeResult;
+import com.inspur.emmcloud.bean.LoginDesktopCloudPlusBean;
 import com.inspur.emmcloud.bean.ReactNativeUpdateBean;
 import com.inspur.emmcloud.bean.SplashPageBean;
 import com.inspur.emmcloud.callback.OauthCallBack;
@@ -454,6 +455,37 @@ public class AppAPIService {
 		});
 	}
 
+	public void sendLoginDesktopCloudPlusInfo(){
+		final String completeUrl = APIUri.getLoginDesktopCloudPlusUrl();
+		RequestParams params = ((MyApplication) context.getApplicationContext())
+				.getHttpRequestParams(completeUrl);
+		x.http().post(params, new APICallback(context,completeUrl) {
+			@Override
+			public void callbackSuccess(String arg0) {
+				apiInterface.returnLoginDesktopCloudPlusSuccess(new LoginDesktopCloudPlusBean());
+			}
+
+			@Override
+			public void callbackFail(String error, int responseCode) {
+				apiInterface.returnLoginDesktopCloudPlusFail(error,responseCode);
+			}
+
+			@Override
+			public void callbackTokenExpire() {
+				new OauthUtils(new OauthCallBack() {
+					@Override
+					public void reExecute() {
+						sendLoginDesktopCloudPlusInfo();
+					}
+
+					@Override
+					public void executeFailCallback() {
+						callbackFail("",-1);
+					}
+				},context).refreshToken(completeUrl);
+			}
+		});
+	}
 
 	/**
 	 * 设备检查

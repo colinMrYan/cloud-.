@@ -3,7 +3,6 @@ package com.inspur.emmcloud.bean;
 import android.content.Context;
 
 import com.facebook.react.bridge.WritableNativeMap;
-import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.UriUtils;
 import com.lidroid.xutils.db.annotation.Table;
 

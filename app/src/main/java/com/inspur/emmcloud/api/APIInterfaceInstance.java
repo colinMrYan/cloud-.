@@ -69,6 +69,7 @@ import com.inspur.emmcloud.bean.GetUpgradeResult;
 import com.inspur.emmcloud.bean.GetUploadMyHeadResult;
 import com.inspur.emmcloud.bean.GetUserHeadUploadResult;
 import com.inspur.emmcloud.bean.GetWebSocketUrlResult;
+import com.inspur.emmcloud.bean.LoginDesktopCloudPlusBean;
 import com.inspur.emmcloud.bean.ReactNativeDownloadUrlBean;
 import com.inspur.emmcloud.bean.ReactNativeInstallUriBean;
 import com.inspur.emmcloud.bean.ReactNativeUpdateBean;
@@ -1411,6 +1412,16 @@ public class APIInterfaceInstance implements APIInterface{
 
 	@Override
 	public void returnMDMStateFail(String error, int errorCode) {
+
+	}
+
+	@Override
+	public void returnLoginDesktopCloudPlusSuccess(LoginDesktopCloudPlusBean loginDesktopCloudPlusBean) {
+
+	}
+
+	@Override
+	public void returnLoginDesktopCloudPlusFail(String error, int errorCode) {
 
 	}
 }
