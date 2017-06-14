@@ -1424,14 +1424,4 @@ public class APIInterfaceInstance implements APIInterface{
 	public void returnLoginDesktopCloudPlusFail(String error, int errorCode) {
 
 	}
-
-	@Override
-	public void returnShareCloudPlusInfoSuccess(ShareCloudPlusBean shareCloudPlusBean) {
-
-	}
-
-	@Override
-	public void returnShareCloudPlusInfoFail(String error, int errorCode) {
-
-	}
 }

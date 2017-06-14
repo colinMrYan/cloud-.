@@ -518,8 +518,6 @@ public interface APIInterface {
 	void returnLoginDesktopCloudPlusSuccess(LoginDesktopCloudPlusBean loginDesktopCloudPlusBean);
 	void returnLoginDesktopCloudPlusFail(String error,int errorCode);
 
-	void returnShareCloudPlusInfoSuccess(ShareCloudPlusBean shareCloudPlusBean);
-	void returnShareCloudPlusInfoFail(String error,int errorCode);
 
 	void returnDeviceCheckSuccess(
 			GetDeviceCheckResult getDeviceCheckResult);

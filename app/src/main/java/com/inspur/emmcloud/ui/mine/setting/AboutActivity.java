@@ -1,5 +1,6 @@
 package com.inspur.emmcloud.ui.mine.setting;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -9,12 +10,11 @@ import android.widget.TextView;
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.bean.App;
 import com.inspur.emmcloud.util.AppUtils;
 import com.inspur.emmcloud.util.IntentUtils;
 import com.inspur.emmcloud.util.ToastUtils;
 import com.inspur.emmcloud.util.UpgradeUtils;
-import com.inspur.emmcloud.util.UriUtils;
+import com.inspur.imp.api.ImpActivity;
 
 /**
  * 关于页面 com.inspur.emmcloud.ui.AboutActivity
@@ -61,11 +61,11 @@ public class AboutActivity extends BaseActivity {
 				upgradeUtils.checkUpdate(false);
 				break;
 			case R.id.invite_friends_layout:
-				App app = new App();
-				app.setUri("https://emm.inspur.com/admin/share_qr");
-				app.setAppType(3);
-//				app.setAppName(getString(R.string.share));
-				UriUtils.openApp(AboutActivity.this,app);
+				Intent intent = new Intent();
+				intent.setClass(AboutActivity.this, ImpActivity.class);
+				intent.putExtra("uri","https://emm.inspur.com/admin/share_qr");
+				intent.putExtra("appName",getString(R.string.invite_friends_text));
+				startActivity(intent);
 				break;
 			default:
 				break;
