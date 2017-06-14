@@ -462,7 +462,7 @@
     <string name="resend_code">重新发送(51)</string>
     <string name="modify_user_info">修改信息</string>
     <string name="modify_modify">修改</string>
-    <string name="user_info_my_info">我的个人信息</string>
+    <string name="user_info_my_info">个人信息</string>
     <string name="user_info_organ">浪潮国际</string>
     <string name="user_info_phone_number">联系方式</string>
     <string name="user_no_storage">没有存储设备</string>

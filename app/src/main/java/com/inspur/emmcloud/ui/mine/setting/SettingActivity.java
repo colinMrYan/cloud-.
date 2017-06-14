@@ -61,8 +61,6 @@ public class SettingActivity extends BaseActivity {
 		setLanguage();
 		handMessage();
 		getMDMState();
-		setSwitchEnterpriseLayout();
-
 	}
 
 	/**
@@ -108,17 +106,6 @@ public class SettingActivity extends BaseActivity {
 		}
 	}
 
-	/**
-	 * 当只要一个企业时不显示切换企业按钮
-	 */
-	private void setSwitchEnterpriseLayout(){
-		String myInfo = PreferencesUtils.getString(this, "myInfo", "");
-		GetMyInfoResult getMyInfoResult = new GetMyInfoResult(myInfo);
-		List<Enterprise> enterpriseList = getMyInfoResult.getEnterpriseList();
-		if (enterpriseList.size() < 2){
-			(findViewById(R.id.switch_enterprese_text)).setVisibility(View.GONE);
-		}
-	}
 
 	@Override
 	protected void onResume() {
