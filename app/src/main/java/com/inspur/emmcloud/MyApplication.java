@@ -412,7 +412,8 @@ public class MyApplication extends MultiDexApplication implements  ReactApplicat
 	@Override
 	public void onConfigurationChanged(Configuration config) {
 		// TODO Auto-generated method stub
-		if (config == null) {
+		super.onConfigurationChanged(null);
+//		if (config == null) {
 			config = getResources().getConfiguration();
 
 			String languageJson = PreferencesUtils
@@ -470,9 +471,9 @@ public class MyApplication extends MultiDexApplication implements  ReactApplicat
 				getApplicationContext().getResources().updateConfiguration(config,
 						getResources().getDisplayMetrics());
 			}
-		} else {
-			super.onConfigurationChanged(config);
-		}
+//		} else {
+//			super.onConfigurationChanged(null);
+//		}
 
 	}
 
