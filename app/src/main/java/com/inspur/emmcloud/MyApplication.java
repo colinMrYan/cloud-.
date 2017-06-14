@@ -44,6 +44,7 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
 
+import org.greenrobot.eventbus.EventBus;
 import org.xutils.http.RequestParams;
 import org.xutils.x;
 
@@ -412,6 +413,7 @@ public class MyApplication extends MultiDexApplication implements  ReactApplicat
 	@Override
 	public void onConfigurationChanged(Configuration config) {
 		// TODO Auto-generated method stub
+
 		if (config == null) {
 			config = getResources().getConfiguration();
 
@@ -473,6 +475,7 @@ public class MyApplication extends MultiDexApplication implements  ReactApplicat
 		} else {
 			super.onConfigurationChanged(config);
 		}
+		EventBus.getDefault().post(new Language());
 
 	}
 
