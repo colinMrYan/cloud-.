@@ -3,7 +3,6 @@ package com.inspur.emmcloud.bean;
 import android.content.Context;
 
 import com.facebook.react.bridge.WritableNativeMap;
-import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.UriUtils;
 import com.lidroid.xutils.db.annotation.Table;
 
@@ -53,7 +52,6 @@ public class Contact implements Serializable{
 
 
 	public Contact(JSONObject obj) {
-		LogUtils.YfcDebug("通讯录--------》");
 		try {
 			if (obj.has("id")) {
 				this.id = obj.getString("id");

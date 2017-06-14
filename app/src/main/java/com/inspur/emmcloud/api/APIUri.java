@@ -643,4 +643,20 @@ public class APIUri {
 	 * @return
 	 */
 	public static String getUploadMDMInfoUrl(){return  emmBaseUrl+"mdm/mdm_check";}
+
+	/**
+	 * 扫码登录url
+	 * @return
+     */
+	public static String getLoginDesktopCloudPlusUrl(){
+		return "";
+	}
+
+	/**
+	 * 获取分享二维码的url
+	 * @return
+     */
+	public static String getShareCloudPlusUrl(){
+		return "";
+	}
 }
