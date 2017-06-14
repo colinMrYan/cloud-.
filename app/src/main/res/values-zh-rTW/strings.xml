@@ -461,7 +461,7 @@
     <string name="resend_code">重新發送(51)</string>
     <string name="modify_user_info">修改資訊</string>
     <string name="modify_modify">修改</string>
-    <string name="user_info_my_info">我的個人資訊</string>
+    <string name="user_info_my_info">個人資訊</string>
     <string name="user_info_organ">浪潮國際</string>
     <string name="user_info_phone_number">聯繫方式</string>
     <string name="user_no_storage">沒有存放裝置</string>

@@ -14,19 +14,23 @@ import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
+import com.inspur.emmcloud.api.apiservice.LoginAPIService;
 import com.inspur.emmcloud.api.apiservice.MineAPIService;
 import com.inspur.emmcloud.bean.Contact;
+import com.inspur.emmcloud.bean.Enterprise;
 import com.inspur.emmcloud.bean.GetMyInfoResult;
 import com.inspur.emmcloud.bean.GetUploadMyHeadResult;
 import com.inspur.emmcloud.bean.UserProfileInfoBean;
 import com.inspur.emmcloud.ui.login.ModifyUserPsdActivity;
 import com.inspur.emmcloud.ui.login.ModifyUserPwdBySMSActivity;
 import com.inspur.emmcloud.ui.mine.MoreFragment;
+import com.inspur.emmcloud.ui.mine.setting.SwitchEnterpriseActivity;
 import com.inspur.emmcloud.util.ContactCacheUtils;
 import com.inspur.emmcloud.util.ImageDisplayUtils;
 import com.inspur.emmcloud.util.IntentUtils;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.PreferencesByUserAndTanentUtils;
+import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
@@ -37,6 +41,7 @@ import com.inspur.imp.plugin.camera.imagepicker.ui.ImageGridActivity;
 import com.inspur.imp.plugin.camera.imagepicker.view.CropImageView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class MyInfoActivity extends BaseActivity {
@@ -62,22 +67,36 @@ public class MyInfoActivity extends BaseActivity {
 		((MyApplication) getApplicationContext()).addActivity(this);
 		setContentView(R.layout.activity_my_info);
 		initView();
-		getUserProfile();
+		//getUserProfile();
+		getUserInfoConfig();
 		showMyInfo();
 
+	}
+
+	private void getUserProfile(){
+		if (NetUtils.isNetworkConnected(MyInfoActivity.this,false)){
+			LoginAPIService apiServices = new LoginAPIService(MyInfoActivity.this);
+			apiServices.setAPIInterface(new WebService());
+			apiServices.getMyInfo();
+		}else {
+			dimissDlg();
+			setSwitchEnterpriseState(null);
+		}
 	}
 
 	/**
 	 * 获取用户信息配置
 	 */
-	private void getUserProfile() {
-		if (NetUtils.isNetworkConnected(MyInfoActivity.this)) {
+	private void getUserInfoConfig() {
+		if (NetUtils.isNetworkConnected(MyInfoActivity.this,false)) {
 			loadingDialog.show();
 			apiService.getUserProfileInfo();
 		} else {
-			updateInfoState(null);
+			setSwitchEnterpriseState(null);
+			setUserInfoConfig(null);
 		}
 	}
+
 
 	private void initView() {
 		// TODO Auto-generated method stub
@@ -92,11 +111,6 @@ public class MyInfoActivity extends BaseActivity {
 				R.drawable.icon_photo_default);
 		apiService = new MineAPIService(MyInfoActivity.this);
 		apiService.setAPIInterface(new WebService());
-		//这里手机号格式的正确性由服务端保证，客户端只关心是否为空
-		if (StringUtils.isBlank(getMyInfoResult.getPhoneNumber())) {
-			resetLayout.setVisibility(View.GONE);
-		}
-
 	}
 
 	/**
@@ -116,6 +130,12 @@ public class MyInfoActivity extends BaseActivity {
 			((TextView) findViewById(R.id.myinfo_usercompanytext_text)).setText(((MyApplication)getApplicationContext()).getCurrentEnterprise().getName());
 		}
 
+	}
+
+	private void dimissDlg(){
+		if (loadingDialog != null && loadingDialog.isShowing()) {
+			loadingDialog.dismiss();
+		}
 	}
 
 
@@ -148,6 +168,9 @@ public class MyInfoActivity extends BaseActivity {
 				bundle.putString("phoneNum", getMyInfoResult.getPhoneNumber());
 				IntentUtils.startActivity(MyInfoActivity.this,
 						ModifyUserPwdBySMSActivity.class, bundle);
+				break;
+			case R.id.switch_enterprese_text:
+				IntentUtils.startActivity(MyInfoActivity.this,SwitchEnterpriseActivity.class);
 				break;
 			default:
 				break;
@@ -202,42 +225,67 @@ public class MyInfoActivity extends BaseActivity {
 	}
 
 	/**
-	 * 处理
+	 * 保存更新头像时间
+	 */
+	private void saveUpdateHeadTime() {
+		Contact contact = ContactCacheUtils.getUserContact(MyInfoActivity.this,((MyApplication)getApplication()).getUid());
+		contact.setLastUpdateTime(System.currentTimeMillis()+"");
+		ContactCacheUtils.saveContact(MyInfoActivity.this,contact);
+	}
+
+	/**
+	 * 配置用户信息的显示和隐藏
 	 *
 	 * @param userProfileInfoBean
 	 */
-	private void updateInfoState(UserProfileInfoBean userProfileInfoBean) {
+	private void setUserInfoConfig(UserProfileInfoBean userProfileInfoBean) {
 		if (userProfileInfoBean == null) {
 			String response = PreferencesByUserAndTanentUtils.getString(getApplicationContext(), "user_profiles");
 			if (!StringUtils.isBlank(response)) {
 				userProfileInfoBean = new UserProfileInfoBean(response);
-			}else {
-				return;
 			}
 		}
+		if (userProfileInfoBean != null){
+			if (userProfileInfoBean.getShowHead() == 0) {
+				(findViewById(R.id.myinfo_userhead_layout)).setVisibility(View.GONE);
+			}
+			if (userProfileInfoBean.getShowUserName() == 0) {
+				(findViewById(R.id.myinfo_username_layout)).setVisibility(View.GONE);
+			}
+			if (userProfileInfoBean.getShowUserMail() == 0) {
+				(findViewById(R.id.myinfo_usermail_layout)).setVisibility(View.GONE);
+			}
+			if (userProfileInfoBean.getShowUserPhone() == 0) {
+				(findViewById(R.id.myinfo_userphone_layout)).setVisibility(View.GONE);
+			}
+			if (userProfileInfoBean.getShowEpInfo() == 0) {
+				(findViewById(R.id.myinfo_usercompany_layout)).setVisibility(View.GONE);
+			}
+			if (userProfileInfoBean.getShowModifyPsd() == 1) {
+				(findViewById(R.id.myinfo_modifypsd_layout)).setVisibility(View.VISIBLE);
+			}
+			if (userProfileInfoBean.getShowResetPsd() == 1) {
+				resetLayout.setVisibility(View.VISIBLE);
+			}
+			//这里手机号格式的正确性由服务端保证，客户端只关心是否为空
+			if (StringUtils.isBlank(getMyInfoResult.getPhoneNumber())) {
+				resetLayout.setVisibility(View.GONE);
+			}
+		}
+	}
 
-		if (userProfileInfoBean.getShowHead() == 0) {
-			(findViewById(R.id.myinfo_userhead_layout)).setVisibility(View.GONE);
+	/**
+	 * 设置多企业切换按钮的显示和隐藏
+	 */
+	private void setSwitchEnterpriseState(GetMyInfoResult getMyInfoResult){
+		if (getMyInfoResult == null){
+			String myInfo = PreferencesUtils.getString(this, "myInfo", "");
+			getMyInfoResult = new GetMyInfoResult(myInfo);
 		}
-		if (userProfileInfoBean.getShowUserName() == 0) {
-			(findViewById(R.id.myinfo_username_layout)).setVisibility(View.GONE);
+		List<Enterprise> enterpriseList = getMyInfoResult.getEnterpriseList();
+		if (enterpriseList.size()>1){
+			(findViewById(R.id.switch_enterprese_text)).setVisibility(View.VISIBLE);
 		}
-		if (userProfileInfoBean.getShowUserMail() == 0) {
-			(findViewById(R.id.myinfo_usermail_layout)).setVisibility(View.GONE);
-		}
-		if (userProfileInfoBean.getShowUserPhone() == 0) {
-			(findViewById(R.id.myinfo_userphone_layout)).setVisibility(View.GONE);
-		}
-		if (userProfileInfoBean.getShowEpInfo() == 0) {
-			(findViewById(R.id.myinfo_usercompany_layout)).setVisibility(View.GONE);
-		}
-		if (userProfileInfoBean.getShowModifyPsd() == 0) {
-			(findViewById(R.id.myinfo_modifypsd_layout)).setVisibility(View.GONE);
-		}
-		if (userProfileInfoBean.getShowResetPsd() == 0) {
-			resetLayout.setVisibility(View.GONE);
-		}
-
 	}
 
 	public class WebService extends APIInterfaceInstance {
@@ -246,9 +294,7 @@ public class MyInfoActivity extends BaseActivity {
 		public void returnUploadMyHeadSuccess(
 				GetUploadMyHeadResult getUploadMyHeadResult) {
 			// TODO Auto-generated method stub
-			if (loadingDlg != null && loadingDlg.isShowing()) {
-				loadingDlg.dismiss();
-			}
+			dimissDlg();
 			saveUpdateHeadTime();
 			/**
 			 * 向更多页面发送消息修改头像
@@ -264,38 +310,37 @@ public class MyInfoActivity extends BaseActivity {
 		@Override
 		public void returnUploadMyHeadFail(String error,int errorCode) {
 			// TODO Auto-generated method stub
-			if (loadingDlg != null && loadingDlg.isShowing()) {
-				loadingDlg.dismiss();
-			}
-
+			dimissDlg();
 			WebServiceMiddleUtils.hand(MyInfoActivity.this, error,errorCode);
 		}
 
 		@Override
 		public void returnUserProfileSuccess(UserProfileInfoBean userProfileInfoBean) {
-			if (loadingDialog != null && loadingDialog.isShowing()) {
-				loadingDialog.dismiss();
-			}
-			updateInfoState(userProfileInfoBean);
+			setUserInfoConfig(userProfileInfoBean);
 			PreferencesByUserAndTanentUtils.putString(getApplicationContext(), "user_profiles", userProfileInfoBean.getResponse());
+			getUserProfile();
 		}
 
 		@Override
 		public void returnUserProfileFail(String error,int errorCode) {
-			if (loadingDialog != null && loadingDialog.isShowing()) {
-				loadingDialog.dismiss();
-			}
-			updateInfoState(null);
-			//此处异常不予处理照常显示，所以没有异常处理
+			setUserInfoConfig(null);
+			getUserProfile();
+		}
+
+		@Override
+		public void returnMyInfoSuccess(GetMyInfoResult getMyInfoResult) {
+			// TODO Auto-generated method stub
+			dimissDlg();
+			PreferencesUtils.putString(MyInfoActivity.this, "myInfo", getMyInfoResult.getResponse());
+			setSwitchEnterpriseState(getMyInfoResult);
+		}
+
+		@Override
+		public void returnMyInfoFail(String error,int errorCode) {
+			// TODO Auto-generated method stub
+			dimissDlg();
+			setSwitchEnterpriseState(null);
 		}
 	}
 
-	/**
-	 * 保存更新头像时间
-	 */
-	private void saveUpdateHeadTime() {
-		Contact contact = ContactCacheUtils.getUserContact(MyInfoActivity.this,((MyApplication)getApplication()).getUid());
-		contact.setLastUpdateTime(System.currentTimeMillis()+"");
-		ContactCacheUtils.saveContact(MyInfoActivity.this,contact);
-	}
 }

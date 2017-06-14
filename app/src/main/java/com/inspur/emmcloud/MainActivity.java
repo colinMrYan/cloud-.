@@ -172,7 +172,7 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
 					case UPGRADE_FAIL:
 					case NO_NEED_UPGRADE:
 					case DONOT_UPGRADE:
-						getServerLanguage();
+						getLoginInfo();
 						break;
 					case LOGIN_SUCCESS:
 					case LOGIN_FAIL:
@@ -202,9 +202,9 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
 	}
 
 	/**
-	 * 获取服务端支持的语言
+	 * 获取登录需要的一些信息
 	 */
-	private void getServerLanguage() {
+	private void getLoginInfo() {
 		// TODO Auto-generated method stub
 		String accessToken = PreferencesUtils.getString(MainActivity.this,
 				"accessToken", "");
@@ -213,11 +213,12 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
 		String languageJson = PreferencesUtils.getString(getApplicationContext(),
 				UriUtils.tanent + "appLanguageObj");
 		boolean isMDMStatusPass = PreferencesUtils.getBoolean(getApplicationContext(), "isMDMStatusPass", true);
-		if (!StringUtils.isBlank(accessToken) && (StringUtils.isBlank(myInfo) || !isMDMStatusPass)) {
+		if (!StringUtils.isBlank(accessToken) && (StringUtils.isBlank(myInfo))) {
 			new LoginUtils(MainActivity.this, handler).getMyInfo();
 		} else if (!StringUtils.isBlank(accessToken) && !StringUtils.isBlank(myInfo) && StringUtils.isBlank(languageJson)) {
-			languageUtils = new LanguageUtils(MainActivity.this, handler);
-			languageUtils.getServerSupportLanguage();
+			new LoginUtils(MainActivity.this, handler).getServerSupportLanguage();
+		} else if(!StringUtils.isBlank(accessToken) && !StringUtils.isBlank(myInfo) && !StringUtils.isBlank(languageJson)&&!isMDMStatusPass){
+			new LoginUtils(MainActivity.this, handler).startMDM();
 		} else {
 			setSplashShow();
 		}

@@ -89,7 +89,7 @@ public class SwitchEnterpriseActivity extends BaseActivity {
 			((MyApplication)getApplicationContext()).initTanent();
 			((MyApplication)getApplicationContext()).stopWebSocket();
 			((MyApplication)getApplicationContext()).clearNotification();
-			PreferencesUtils.putString(SwitchEnterpriseActivity.this, "myInfo", "");
+			PreferencesUtils.putBoolean(SwitchEnterpriseActivity.this, "isMDMStatusPass", false);
 			Intent intent = new Intent(SwitchEnterpriseActivity.this,
 					MainActivity.class);
 			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK

@@ -79,7 +79,7 @@ public class LoginUtils extends APIInterfaceInstance {
 	}
 
 	// 开始进行设备管理检查
-	private void startMDM() {
+	public void startMDM() {
 		// TODO Auto-generated method stub
 		String userName = PreferencesUtils.getString(activity, "userRealName",
 				"");
@@ -137,7 +137,26 @@ public class LoginUtils extends APIInterfaceInstance {
 	 * 获取基本信息
 	 */
 	public void getMyInfo() {
-		apiServices.getMyInfo();
+		if (NetUtils.isNetworkConnected(activity)){
+			apiServices.getMyInfo();
+		}else {
+			clearLoginInfo();
+			loginUtilsHandler.sendEmptyMessage(LOGIN_FAIL);
+		}
+
+	}
+
+	/**
+	 * 获取语音
+	 */
+	public void getServerSupportLanguage(){
+		if (NetUtils.isNetworkConnected(activity,false)){
+			languageUtils = new LanguageUtils(activity, loginUtilsHandler);
+			languageUtils.getServerSupportLanguage();
+		}else {
+			loginUtilsHandler.sendEmptyMessage(GET_LANGUAGE_SUCCESS);
+		}
+
 	}
 
 	/**
@@ -213,10 +232,7 @@ public class LoginUtils extends APIInterfaceInstance {
 		if (isLogin) {
 			isLogin = false;
 		}
-		if (handler != null) {
-			languageUtils = new LanguageUtils(activity, loginUtilsHandler);
-			languageUtils.getServerSupportLanguage();
-		}
+		getServerSupportLanguage();
 	}
 
 	@Override
