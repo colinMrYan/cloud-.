@@ -61,7 +61,7 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		StateBarColor.changeStateBarColor(this);
+		StateBarColor.hideStatusBar(this);
 		setContentView(R.layout.activity_main);
 		init();
 	}
