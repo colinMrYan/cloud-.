@@ -250,11 +250,11 @@ public class DragAdapter extends BaseAdapter {
 
 	class WebService extends APIInterfaceInstance{
 		@Override
-		public void returnRemoveAppFail(String error) {
+		public void returnRemoveAppFail(String error,int errorCode) {
 			if (loadingDialog != null && loadingDialog.isShowing()) {
 				loadingDialog.dismiss();
 			}
-			WebServiceMiddleUtils.hand(context, error);
+			WebServiceMiddleUtils.hand(context, error,errorCode);
 		}
 
 		public void returnRemoveAppSuccess(GetRemoveAppResult getRemoveAppResult) {

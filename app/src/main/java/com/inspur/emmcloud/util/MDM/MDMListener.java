@@ -1,4 +1,4 @@
-package com.inspur.mdm;
+package com.inspur.emmcloud.util.MDM;
 
 import java.io.Serializable;
 

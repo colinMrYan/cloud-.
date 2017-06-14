@@ -55,13 +55,16 @@ public class ImageDisplayUtils  implements ImagePickerLoader {
 	}
 	
 	public ImageDisplayUtils() {
-
+		if (imageLoader == null) {
+			imageLoader = ImageLoader.getInstance();
+		}
 	}
 	
 	public void display(final ImageView imageView, String uri) {
 		if (uri != null && !uri.startsWith("http") && !uri.startsWith("file:")&& !uri.startsWith("content:")&& !uri.startsWith("assets:")&& !uri.startsWith("drawable:")) {
 			uri = "file://" + uri;
 		}
+//		LogUtils.YfcDebug("访问路径："+uri);
 		imageLoader.displayImage(uri, imageView, options);
 	}
 

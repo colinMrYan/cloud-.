@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 
-
 /**
  * 支持人员与租户的隔离
  * PreferencesUtils, easy to get or put data
@@ -30,17 +29,16 @@ import android.content.SharedPreferences;
  *
  * @author <a href="http://www.trinea.cn" target="_blank">Trinea</a> 2013-3-6
  */
-public class PreferencesByUserUtils {
+public class PreferencesByUsersUtils {
 
 
-    private PreferencesByUserUtils() {
+    private PreferencesByUsersUtils() {
         throw new AssertionError();
     }
 
     private static String getPreferenceName(Context context) {
-        String userID = PreferencesUtils.getString(context, "userID", "");
-        String tanent = UriUtils.tanent;
-        return userID + tanent;
+        String userID = PreferencesUtils.getString(context, "userID", "unkown_user");
+        return userID ;
     }
 
     ;

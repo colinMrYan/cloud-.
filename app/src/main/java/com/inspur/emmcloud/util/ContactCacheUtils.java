@@ -36,6 +36,24 @@ public class ContactCacheUtils {
 	}
 
 	/**
+	 * 存储通讯录列表
+	 *
+	 * @param context
+	 */
+	public static void saveContact(Context context,
+									   Contact contact) {
+		if (contact == null ) {
+			return;
+		}
+		try {
+			DbCacheUtils.getDb(context).saveOrUpdate(contact);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	/**
 	 * 删除通讯录
 	 *
 	 * @param deleteIdArray 删除通讯录id的json数组
@@ -89,7 +107,7 @@ public class ContactCacheUtils {
 	 * @param time
 	 */
 	public static void saveLastUpdateTime(Context context, String time) {
-		PreferencesByUserUtils.putString(context, "contactUpdateTime", time);
+		PreferencesByUserAndTanentUtils.putString(context, "contactUpdateTime", time);
 	}
 
 	/**
@@ -98,7 +116,7 @@ public class ContactCacheUtils {
 	 * @return
 	 */
 	public static String getLastUpdateTime(Context context) {
-		return PreferencesByUserUtils.getString(context, "contactUpdateTime", "");
+		return PreferencesByUserAndTanentUtils.getString(context, "contactUpdateTime", "");
 	}
 
 	/**
@@ -108,7 +126,7 @@ public class ContactCacheUtils {
 	 * @param unitID
 	 */
 	public static void saveLastUpdateunitID(Context context, String unitID) {
-		PreferencesByUserUtils.putString(context, "unitID", unitID);
+		PreferencesByUserAndTanentUtils.putString(context, "unitID", unitID);
 	}
 
 	/**
@@ -118,7 +136,7 @@ public class ContactCacheUtils {
 	 * @return
 	 */
 	public static String getLastUpdateunitID(Context context) {
-		return PreferencesByUserUtils.getString(context, "unitID", "");
+		return PreferencesByUserAndTanentUtils.getString(context, "unitID", "");
 	}
 
 	/**
@@ -131,8 +149,8 @@ public class ContactCacheUtils {
 		Contact contact = null;
 		try {
 			String unitID = "";
-			if (!StringUtils.isBlank(PreferencesByUserUtils.getString(context, "unitID", ""))) {
-				unitID = PreferencesByUserUtils.getString(context, "unitID", "");
+			if (!StringUtils.isBlank(PreferencesByUserAndTanentUtils.getString(context, "unitID", ""))) {
+				unitID = PreferencesByUserAndTanentUtils.getString(context, "unitID", "");
 				contact = DbCacheUtils.getDb(context).findFirst(Selector.from(Contact.class).where(
 						"id", "=", unitID));
 			} else {
@@ -280,6 +298,7 @@ public class ContactCacheUtils {
 							.or("realName", "=", searchStr)
 							.or("globalName", "=", searchStr)
 							.or("code", "=", searchStr))
+					.and(WhereBuilder.b().expr("id not in" +noInSql))
 					.limit(limit));
 			searchContactList.addAll(searchContactList1);
 			noInSql = getNoInSql(noInSql,searchContactList);

@@ -1,7 +1,5 @@
 package com.inspur.emmcloud.adapter;
 
-import java.util.List;
-
 import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -17,6 +15,8 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.PersonDto;
 import com.inspur.emmcloud.util.ImageDisplayUtils;
 import com.inspur.emmcloud.util.UriUtils;
+
+import java.util.List;
 
 
 
@@ -99,7 +99,7 @@ public class ChannelMemberListAdapter extends BaseAdapter implements SectionInde
 			}
 			holder.username.setText(dto.getName());
 			imageDisplayUtils.display(holder.headimg, 
-					UriUtils.getChannelImgUri(dto.getUid()));
+					UriUtils.getChannelImgUri(mActivity,dto.getUid()));
 		}
 		return convertView;
 	}

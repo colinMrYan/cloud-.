@@ -13,13 +13,13 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.AppAPIService;
 import com.inspur.emmcloud.bean.Channel;
 import com.inspur.emmcloud.bean.GetMyInfoResult;
 import com.inspur.emmcloud.bean.LoginDesktopCloudPlusBean;
-import com.inspur.emmcloud.bean.ShareCloudPlusBean;
 import com.inspur.emmcloud.ui.chat.ChannelActivity;
 import com.inspur.emmcloud.ui.mine.feedback.FeedBackActivity;
 import com.inspur.emmcloud.ui.mine.myinfo.MyInfoActivity;
@@ -31,7 +31,7 @@ import com.inspur.emmcloud.util.ImageDisplayUtils;
 import com.inspur.emmcloud.util.IntentUtils;
 import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.NetUtils;
-import com.inspur.emmcloud.util.PreferencesByUserUtils;
+import com.inspur.emmcloud.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.ToastUtils;
@@ -109,16 +109,11 @@ public class MoreFragment extends Fragment {
         String myInfo = PreferencesUtils.getString(getActivity(), "myInfo", "");
         getMyInfoResult = new GetMyInfoResult(myInfo);
         String inspurId = getMyInfoResult.getID();
-        String photoUri = UriUtils.getChannelImgUri(inspurId);
+        String photoUri = UriUtils.getChannelImgUri(getActivity(),inspurId);
         imageDisplayUtils.display(moreHeadImg, photoUri);
-
-        if (!getMyInfoResult.getName().equals("null")) {
-            userNameText.setText(getMyInfoResult.getName());
-        } else {
-            userNameText.setText(getString(R.string.not_set));
-        }
-
-        userOrgText.setText(getMyInfoResult.getEnterpriseName());
+        String userName = PreferencesUtils.getString(getActivity(), "userRealName", getString(R.string.not_set));
+        userNameText.setText(userName);
+        userOrgText.setText(((MyApplication)getActivity().getApplicationContext()).getCurrentEnterprise().getName());
     }
 
 
@@ -188,14 +183,8 @@ public class MoreFragment extends Fragment {
                 case R.id.more_message_layout:
                     ToastUtils.show(getActivity(), R.string.function_not_implemented);
                     break;
-//                case R.id.more_invite_friends_layout:
-//                    App app = new App();
-//                    app.setUri("https://emm.inspur.com/admin/share_qr");
-//                    app.setAppType(3);
-//                    app.setAppName(getString(R.string.share));
-//                    UriUtils.openApp(getActivity(),app);
-//                    break;
                 case R.id.scan_login_desktop_layout:
+                    //登录桌面版云+逻辑，还没有开放，有可能不从这里发起
                     intent.setClass(getActivity(), CaptureActivity.class);
                     intent.putExtra("from","MoreFragment");
                     startActivityForResult(intent,SCAN_LOGIN_QRCODE_RESULT);
@@ -284,7 +273,7 @@ public class MoreFragment extends Fragment {
      * 设置标题
      */
     private void setTabTitle(){
-        String appTabs = PreferencesByUserUtils.getString(getActivity(),"app_tabbar_info_current","");
+        String appTabs = PreferencesByUserAndTanentUtils.getString(getActivity(),"app_tabbar_info_current","");
         if(!StringUtils.isBlank(appTabs)){
             titleText.setText(AppTitleUtils.getTabTitle(getActivity(),getClass().getSimpleName()));
         }
@@ -321,18 +310,5 @@ public class MoreFragment extends Fragment {
             }
         }
 
-        @Override
-        public void returnShareCloudPlusInfoSuccess(ShareCloudPlusBean shareCloudPlusBean) {
-            if((loadingDialog != null) && loadingDialog.isShowing()){
-                loadingDialog.dismiss();
-            }
-        }
-
-        @Override
-        public void returnShareCloudPlusInfoFail(String error, int errorCode) {
-            if((loadingDialog != null) && loadingDialog.isShowing()){
-                loadingDialog.dismiss();
-            }
-        }
     }
 }

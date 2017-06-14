@@ -1,8 +1,5 @@
 package com.inspur.emmcloud.ui.login;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -24,6 +21,9 @@ import com.inspur.emmcloud.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.ClearEditText;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.dialogs.EasyDialog;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ModifyUserFirstPsdActivity extends BaseActivity {
 
@@ -142,9 +142,9 @@ public class ModifyUserFirstPsdActivity extends BaseActivity {
 		}
 
 		@Override
-		public void returnModifyPsdFail(String error) {
+		public void returnModifyPsdFail(String error,int errorCode) {
 			// TODO Auto-generated method stub
-			WebServiceMiddleUtils.hand(ModifyUserFirstPsdActivity.this, error);
+			WebServiceMiddleUtils.hand(ModifyUserFirstPsdActivity.this, error,errorCode);
 			if(loadingDialog.isShowing()){
 				loadingDialog.dismiss();
 			}

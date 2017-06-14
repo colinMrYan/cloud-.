@@ -134,7 +134,7 @@ public class UserInfoActivity extends BaseActivity {
 		String mail = contact.getEmail();
 		String phoneNum = contact.getMobile();
 		String name = contact.getName();
-		String headUrl = UriUtils.getChannelImgUri(contact.getInspurID());
+		String headUrl = UriUtils.getChannelImgUri(UserInfoActivity.this,contact.getInspurID());
 		if (StringUtils.isEmpty(organize)) {
 			(findViewById(R.id.department_layout))
 					.setVisibility(View.GONE);
@@ -214,7 +214,7 @@ public class UserInfoActivity extends BaseActivity {
 			Intent intent = new Intent(UserInfoActivity.this,
 					ImagePagerActivity.class);
 			ArrayList<String> urls = new ArrayList<String>();
-			urls.add(UriUtils.getChannelImgUri(contact.getInspurID()));
+			urls.add(UriUtils.getChannelImgUri(UserInfoActivity.this,contact.getInspurID()));
 			intent.putExtra("image_index", 0);
 			intent.putStringArrayListExtra("image_urls", urls);
 			startActivity(intent);
@@ -355,12 +355,12 @@ public class UserInfoActivity extends BaseActivity {
 		}
 
 		@Override
-		public void returnChannelInfoFail(String error) {
+		public void returnChannelInfoFail(String error,int errorCode) {
 			// TODO Auto-generated method stub
 			if (loadingDlg != null && loadingDlg.isShowing()) {
 				loadingDlg.dismiss();
 			}
-			WebServiceMiddleUtils.hand(UserInfoActivity.this, error);
+			WebServiceMiddleUtils.hand(UserInfoActivity.this, error,errorCode);
 		}
 
 	}

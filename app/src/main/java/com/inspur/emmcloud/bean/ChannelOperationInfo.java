@@ -1,12 +1,14 @@
 package com.inspur.emmcloud.bean;
 
 import com.lidroid.xutils.db.annotation.Id;
+import com.lidroid.xutils.db.annotation.Table;
 
 /**
  * 会话的操作信息类
  * @author Administrator
  *
  */
+@Table(name = "ChannelOperationInfo")
 public class ChannelOperationInfo {
 	@Id
 	private String cid ="";

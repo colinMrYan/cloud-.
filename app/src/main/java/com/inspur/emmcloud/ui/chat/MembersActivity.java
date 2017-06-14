@@ -87,26 +87,13 @@ public class MembersActivity extends BaseActivity implements
             public void run() {
 
                 if (!StringUtils.isBlank(channelID)) {
-                    contactList = ChannelGroupCacheUtils.getMembersList(
-                            MembersActivity.this, channelID);
-                    LogUtils.debug("jason", "contactList.size=" + contactList.size());
-                } else if (StringUtils.isEmpty(channelID)
-                        && (getIntent().getStringArrayListExtra("uids") != null)) {
-                    try {
+                    List<String> uidList = ChannelGroupCacheUtils.getMemberUidList(MembersActivity.this,channelID,0);
+                    contactList = ContactCacheUtils.getUserList( MembersActivity.this,uidList);
+                } else if (getIntent().getStringArrayListExtra("uids") != null) {
                         contactList = ContactCacheUtils.getUserList(
                                 MembersActivity.this, getIntent().getStringArrayListExtra("uids"));
-                    } catch (Exception e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
-                    }
+
                 }
-//				for (int i = 0; i < contactList.size(); i++) {
-//
-//					if (contactList.get(i).getNewID().contains(userid)
-//							&& (!getIntent().hasExtra("search"))) {
-//						contactList.remove(i);
-//					}
-//				}
 
                 //修复迭代器问题
                 Iterator<Contact> sListIterator = contactList.iterator();

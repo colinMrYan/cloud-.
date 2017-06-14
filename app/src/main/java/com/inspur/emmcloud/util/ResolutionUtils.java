@@ -1,12 +1,29 @@
 package com.inspur.emmcloud.util;
 
 import android.app.Activity;
+import android.content.Context;
 import android.util.DisplayMetrics;
 import android.view.Display;
 
 import java.lang.reflect.Method;
 
 public class ResolutionUtils {
+
+
+		/**
+	 * 获取设备分辨率
+	 *
+	 * @param context
+	 * @return
+	 */
+	public static String getDeviceResolution(Context context) {
+		DisplayMetrics displayMetrics = new DisplayMetrics();
+		((Activity) context).getWindowManager().getDefaultDisplay()
+				.getMetrics(displayMetrics);
+		int width = displayMetrics.widthPixels;
+		int height = getHeight(((Activity) context));
+		return height + "*" + width;
+	}
 
 	/**
 	 * 检查设备分辨率是否符合条件

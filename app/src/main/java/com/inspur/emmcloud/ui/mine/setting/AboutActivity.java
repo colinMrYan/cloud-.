@@ -34,7 +34,7 @@ public class AboutActivity extends BaseActivity {
 		setContentView(R.layout.activity_about);
 		((MyApplication) getApplicationContext()).addActivity(this);
 		((TextView) findViewById(R.id.app_version_text))
-				.setText(getString(R.string.app_name)
+				.setText(getString(R.string.app_name)+"  "
 						+ AppUtils.getVersion(this));
 		handMessage();
 	}
@@ -64,7 +64,7 @@ public class AboutActivity extends BaseActivity {
 				App app = new App();
 				app.setUri("https://emm.inspur.com/admin/share_qr");
 				app.setAppType(3);
-				app.setAppName(getString(R.string.share));
+//				app.setAppName(getString(R.string.share));
 				UriUtils.openApp(AboutActivity.this,app);
 				break;
 			default:

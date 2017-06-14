@@ -221,8 +221,8 @@ public class ImpWebViewClient extends WebViewClient {
 		}
 
 		@Override
-		public void returnGetAppAuthCodeResultFail(String error) {
-			super.returnGetAppAuthCodeResultFail(error);
+		public void returnGetAppAuthCodeResultFail(String error,int errorCode) {
+			super.returnGetAppAuthCodeResultFail(error,errorCode);
 		}
 	}
 }
