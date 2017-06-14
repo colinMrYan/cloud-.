@@ -298,7 +298,6 @@ public class MyInfoActivity extends BaseActivity {
 		@Override
 		public void returnUploadMyHeadSuccess(
 				GetUploadMyHeadResult getUploadMyHeadResult) {
-			LogUtils.jasonDebug("returnUploadMyHeadSuccess-------------");
 			// TODO Auto-generated method stub
 			dimissDlg();
 			saveUpdateHeadTime();
@@ -316,7 +315,6 @@ public class MyInfoActivity extends BaseActivity {
 		@Override
 		public void returnUploadMyHeadFail(String error,int errorCode) {
 			// TODO Auto-generated method stub
-			LogUtils.jasonDebug("returnUploadMyHeadFail-------------");
 			dimissDlg();
 			WebServiceMiddleUtils.hand(MyInfoActivity.this, error,errorCode);
 		}
