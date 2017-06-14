@@ -59,7 +59,6 @@ public class MyInfoActivity extends BaseActivity {
 	private String photoLocalPath;
 	private ImageDisplayUtils imageDisplayUtils;
 	private GetMyInfoResult getMyInfoResult;
-	private LoadingDialog loadingDialog;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -74,39 +73,13 @@ public class MyInfoActivity extends BaseActivity {
 
 	}
 
-	private void getUserProfile(){
-		if (NetUtils.isNetworkConnected(MyInfoActivity.this,false)){
-			LoginAPIService apiServices = new LoginAPIService(MyInfoActivity.this);
-			apiServices.setAPIInterface(new WebService());
-			apiServices.getMyInfo();
-		}else {
-			dimissDlg();
-			setSwitchEnterpriseState(null);
-		}
-	}
-
-	/**
-	 * 获取用户信息配置
-	 */
-	private void getUserInfoConfig() {
-		if (NetUtils.isNetworkConnected(MyInfoActivity.this,false)) {
-			loadingDialog.show();
-			apiService.getUserProfileInfo();
-		} else {
-			setSwitchEnterpriseState(null);
-			setUserInfoConfig(null);
-		}
-	}
-
-
 	private void initView() {
 		// TODO Auto-generated method stub
-		loadingDialog = new LoadingDialog(MyInfoActivity.this);
+		loadingDlg = new LoadingDialog(MyInfoActivity.this);
 		getMyInfoResult = (GetMyInfoResult) getIntent().getExtras()
 				.getSerializable("getMyInfoResult");
 		userHeadImg = (ImageView) findViewById(R.id.myinfo_userheadimg_img);
 		userMailText = (TextView) findViewById(R.id.myinfo_usermail_text);
-		loadingDlg = new LoadingDialog(this);
 		resetLayout = (RelativeLayout) findViewById(R.id.myinfo_reset_layout);
 		imageDisplayUtils = new ImageDisplayUtils(getApplicationContext(),
 				R.drawable.icon_photo_default);
@@ -134,9 +107,8 @@ public class MyInfoActivity extends BaseActivity {
 	}
 
 	private void dimissDlg(){
-		if (loadingDialog != null && loadingDialog.isShowing()) {
-			LogUtils.YfcDebug("调用dialog消失");
-			loadingDialog.dismiss();
+		if (loadingDlg != null && loadingDlg.isShowing()) {
+			loadingDlg.dismiss();
 		}
 	}
 
@@ -191,20 +163,6 @@ public class MyInfoActivity extends BaseActivity {
 						.getSerializableExtra(ImagePicker.EXTRA_RESULT_ITEMS);
 				uploadUserHead(imageItemList.get(0).path);
 			}
-		}
-	}
-
-	/**
-	 * 上传用户头像
-	 *
-	 * @param
-	 */
-	private void uploadUserHead(String photoPath) {
-		// TODO Auto-generated method stub
-		if (NetUtils.isNetworkConnected(getApplicationContext())) {
-			loadingDlg.show();
-			photoLocalPath = photoPath;
-			apiService.updateUserHead(photoPath);
 		}
 	}
 
@@ -289,6 +247,51 @@ public class MyInfoActivity extends BaseActivity {
 			(findViewById(R.id.switch_enterprese_text)).setVisibility(View.VISIBLE);
 		}
 	}
+
+
+
+	/**
+	 * 上传用户头像
+	 *
+	 * @param
+	 */
+	private void uploadUserHead(String photoPath) {
+		// TODO Auto-generated method stub
+		if (NetUtils.isNetworkConnected(getApplicationContext())) {
+			loadingDlg.show();
+			photoLocalPath = photoPath;
+			apiService.updateUserHead(photoPath);
+		}
+	}
+
+	/**
+	 * 获取用户profile信息
+	 */
+	private void getUserProfile(){
+		if (NetUtils.isNetworkConnected(MyInfoActivity.this,false)){
+			LoginAPIService apiServices = new LoginAPIService(MyInfoActivity.this);
+			apiServices.setAPIInterface(new WebService());
+			apiServices.getMyInfo();
+		}else {
+			dimissDlg();
+			setSwitchEnterpriseState(null);
+		}
+	}
+
+	/**
+	 * 获取用户信息配置
+	 */
+	private void getUserInfoConfig() {
+		if (NetUtils.isNetworkConnected(MyInfoActivity.this,false)) {
+			loadingDlg.show();
+			apiService.getUserProfileInfo();
+		} else {
+			setSwitchEnterpriseState(null);
+			setUserInfoConfig(null);
+		}
+	}
+
+
 
 	public class WebService extends APIInterfaceInstance {
 
