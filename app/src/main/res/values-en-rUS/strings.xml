@@ -53,6 +53,7 @@
     <string name="more_work_place">More work places...</string>
     <string name="cancel_filter">Cancle filter</string>
     <string name="only_free">Only free</string>
+    <string name="invite_friends_text">Recommend Cloud+ to friends</string>
 
     <!-- 公共部分 -->
     <string name="year">Year</string>
