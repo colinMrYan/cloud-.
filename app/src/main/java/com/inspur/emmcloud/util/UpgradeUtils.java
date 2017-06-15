@@ -1,5 +1,6 @@
 package com.inspur.emmcloud.util;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -10,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.inspur.emmcloud.MainActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
@@ -93,6 +95,9 @@ public class UpgradeUtils extends APIInterfaceInstance {
 				case DOWNLOAD_FINISH:
 					if(mDownloadDialog != null && mDownloadDialog.isShowing()){
 						mDownloadDialog.dismiss();
+					}
+					if (context instanceof MainActivity) {
+						((Activity)context).finish();
 					}
 					installApk();
 
@@ -303,7 +308,7 @@ public class UpgradeUtils extends APIInterfaceInstance {
 						@Override
 						public void onFinished() {
 							// TODO Auto-generated method stub
-							
+
 						}
 
 						@Override
