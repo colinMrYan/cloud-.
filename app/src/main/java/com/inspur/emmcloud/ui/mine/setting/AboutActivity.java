@@ -58,7 +58,7 @@ public class AboutActivity extends BaseActivity {
 			case R.id.check_update_layout:
 				UpgradeUtils upgradeUtils = new UpgradeUtils(AboutActivity.this,
 						handler,true);
-				upgradeUtils.checkUpdate(false);
+				upgradeUtils.checkUpdate(true);
 				break;
 			case R.id.invite_friends_layout:
 				Intent intent = new Intent();

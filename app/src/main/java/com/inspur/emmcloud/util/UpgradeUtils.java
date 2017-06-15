@@ -147,8 +147,10 @@ public class UpgradeUtils extends APIInterfaceInstance {
 			break;
 		case 1: // 可选升级
 				long appNotUpdateTime = PreferencesUtils.getLong(context,"appNotUpdateTime");
-				if (System.currentTimeMillis()-appNotUpdateTime>notUpdateInterval){
+				if (isManualCheck || System.currentTimeMillis()-appNotUpdateTime>notUpdateInterval){
 					showSelectUpgradeDlg();
+				}else {
+					handler.sendEmptyMessage(NO_NEED_UPGRADE);
 				}
 
 			break;
