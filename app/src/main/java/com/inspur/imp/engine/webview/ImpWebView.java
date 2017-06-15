@@ -8,7 +8,6 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
-import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -25,12 +24,15 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.util.LogUtils;
+import com.inspur.emmcloud.util.ParseHtmlUtils;
 import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.imp.api.JsInterface;
 import com.inspur.imp.api.Res;
 import com.inspur.imp.api.iLog;
 import com.inspur.imp.plugin.PluginMgr;
 import com.inspur.imp.util.DeviceInfo;
+
+import org.jsoup.select.Elements;
 
 import java.lang.reflect.Method;
 
@@ -135,6 +137,15 @@ public class ImpWebView extends WebView {
 				msg.what = 1;
 				msg.obj = title;
 				handler.sendMessage(msg);
+			}
+		}
+
+		@JavascriptInterface
+		public void onGetHtmlContent(String html){
+//			LogUtils.YfcDebug("获取到的html文本："+html);
+			Elements elements = ParseHtmlUtils.getDataFromHtml(html,"meta");
+			for (int i = 0; i < elements.size(); i++){
+				LogUtils.YfcDebug("解析到的content："+elements.get(i).attr("content"));
 			}
 		}
 	}
