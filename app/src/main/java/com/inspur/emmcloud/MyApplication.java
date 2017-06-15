@@ -44,6 +44,7 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
 
+import org.apache.commons.lang3.SystemUtils;
 import org.xutils.http.RequestParams;
 import org.xutils.x;
 
@@ -409,8 +410,9 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
     @Override
     public void onConfigurationChanged(Configuration config) {
         // TODO Auto-generated method stub
+        LogUtils.YfcDebug("刚进入时的语言："+Locale.getDefault().getCountry());
         try {
-            super.onConfigurationChanged(null);
+//            super.onConfigurationChanged(null);
             config = getResources().getConfiguration();
 
             String languageJson = PreferencesUtils
@@ -419,6 +421,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
             if (languageJson != null) {
                 String language = PreferencesUtils.getString(
                         getApplicationContext(), UriUtils.tanent + "language");
+                LogUtils.YfcDebug("language:"+language);
                 // 当系统语言选择为跟随系统的时候，要检查当前系统的语言是不是在commonList中，重新赋值
                 if (language.equals("followSys")) {
                     String commonLanguageListJson = PreferencesUtils.getString(
@@ -462,13 +465,46 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
                     // TODO: handle exception
                     e.printStackTrace();
                 }
-                config.locale = new Locale(country, variant);
+
+                LogUtils.YfcDebug("改变语言前language："+language);
+                LogUtils.YfcDebug("操作系统语言："+ SystemUtils.USER_LANGUAGE);
+                if(language.equals("followSys")){
+                    country =  Locale.getDefault().getCountry();
+                }
+                LogUtils.YfcDebug("最终的country："+country);
+                LogUtils.YfcDebug("最终的variant："+variant);
+
+                if(country.contains("en") || country.contains("US")){
+                    Locale locale = new Locale("en","US");
+                    Locale.setDefault(locale);
+                    config.locale = locale;
+                    LogUtils.YfcDebug("设置英文");
+                    PreferencesUtils.putString(getApplicationContext(),
+                            UriUtils.tanent + "appLanguageObj",
+                            "{\"label\":\"English(US)\",\"iso\":\"en-US\",\"iana\":\"en\",\"gsp\":\"en-US\",\"gsp60\":\"en-US\"}\n");
+                }else if(country.contains("zh") || country.contains("CN")){
+                    Locale.setDefault(Locale.SIMPLIFIED_CHINESE);
+                    config.locale = Locale.SIMPLIFIED_CHINESE;
+                    LogUtils.YfcDebug("设置中文简体");
+                    PreferencesUtils.putString(getApplicationContext(),
+                            UriUtils.tanent + "appLanguageObj",
+                            "{\"label\":\"中文简体\",\"iso\":\"zh-CN\",\"iana\":\"zh-Hans\",\"gsp\":\"zh-CN\",\"gsp60\":\"zh-CN\"}");
+                }else if(country.contains("TW")){
+                    Locale.setDefault(Locale.TRADITIONAL_CHINESE);
+                    config.locale = Locale.TRADITIONAL_CHINESE;
+                    LogUtils.YfcDebug("设置中文繁体");
+                    PreferencesUtils.putString(getApplicationContext(),
+                            UriUtils.tanent + "appLanguageObj",
+                            "{\"label\":\"中文繁体\",\"iso\":\"zh-TW\",\"iana\":\"zh-Hant\",\"gsp\":\"zh-TW\",\"gsp60\":\"zh-TW\"}");
+                }
+                LogUtils.YfcDebug("切换语言后的local："+config.locale.toString());
             }
             if (getApplicationContext() != null) {
                 getApplicationContext().getResources().updateConfiguration(config,
                         getResources().getDisplayMetrics());
             }
         }catch (Exception e){
+            LogUtils.YfcDebug("捕获到异常："+e.getMessage());
             e.printStackTrace();
         }
     }
