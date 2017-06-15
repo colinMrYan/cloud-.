@@ -96,11 +96,10 @@ public class UpgradeUtils extends APIInterfaceInstance {
 					if(mDownloadDialog != null && mDownloadDialog.isShowing()){
 						mDownloadDialog.dismiss();
 					}
+					installApk();
 					if (context instanceof MainActivity) {
 						((Activity)context).finish();
 					}
-					installApk();
-
 					break;
 
 				case DOWNLOAD_FAIL:
