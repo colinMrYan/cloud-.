@@ -28,9 +28,9 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.config.MyAppWebConfig;
 import com.inspur.emmcloud.util.AppUtils;
 import com.inspur.emmcloud.util.LogUtils;
-
-import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.MDM.MDM;
+import com.inspur.emmcloud.util.PreferencesByUsersUtils;
+import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.imp.engine.webview.ImpWebChromeClient;
 import com.inspur.imp.engine.webview.ImpWebView;
@@ -61,6 +61,7 @@ public class ImpActivity extends ImpBaseActivity {
     private Button normalBtn, middleBtn, bigBtn, biggestBtn;
     private int blackFontColor;
     private int lightModeFontColor;
+    private int isZoomable = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,7 +82,7 @@ public class ImpActivity extends ImpBaseActivity {
         loadFailLayout = (LinearLayout) findViewById(Res.getWidgetID("load_error_layout"));
         webView = (ImpWebView) findViewById(Res.getWidgetID("webview"));
         if(getIntent().hasExtra("is_zoomable")){
-            int isZoomable = getIntent().getIntExtra("is_zoomable",0);
+            isZoomable = getIntent().getIntExtra("is_zoomable",0);
             if(isZoomable == 0){
                 ((Button)findViewById(R.id.imp_change_font_size_btn)).setVisibility(View.GONE);
             }else if(isZoomable == 1){
@@ -153,8 +154,12 @@ public class ImpActivity extends ImpBaseActivity {
         progressLayout.setVisibility(View.VISIBLE);
         lightModeFontColor = ContextCompat.getColor(ImpActivity.this, R.color.app_dialog_day_font_color);
         blackFontColor = ContextCompat.getColor(ImpActivity.this, R.color.black);
-        int textSize = PreferencesByUserUtils.getInt(ImpActivity.this, "app_crm_font_size", MyAppWebConfig.NORMAL);
-        webView.getSettings().setTextZoom(textSize);
+        int textSize = PreferencesByUsersUtils.getInt(ImpActivity.this, "app_crm_font_size", MyAppWebConfig.NORMAL);
+        if(isZoomable == 0){
+            webView.getSettings().setTextZoom(MyAppWebConfig.NORMAL);
+        }else {
+            webView.getSettings().setTextZoom(textSize);
+        }
     }
 
     /**
@@ -239,7 +244,7 @@ public class ImpActivity extends ImpBaseActivity {
     private void setOauthHeader(String OauthHeader) {
         extraHeaders = new HashMap<>();
         extraHeaders.put("Authorization", OauthHeader);
-        extraHeaders.put("X-ECC-Current-Enterprise", ((MyApplication) getApplicationContext()).getInterpriseId());
+        extraHeaders.put("X-ECC-Current-Enterprise", ((MyApplication) getApplicationContext()).getCurrentEnterprise().getId());
     }
 
     private void setLangHeader(String langHeader) {
@@ -323,7 +328,7 @@ public class ImpActivity extends ImpBaseActivity {
      */
     private void changeNewsFontSize(int textZoom) {
         WebSettings webSettings = webView.getSettings();
-        PreferencesByUserUtils.putInt(ImpActivity.this, "app_crm_font_size", textZoom);
+        PreferencesByUsersUtils.putInt(ImpActivity.this, "app_crm_font_size", textZoom);
         webSettings.setTextZoom(textZoom);
         initWebViewTextSize(textZoom);
     }
@@ -332,7 +337,7 @@ public class ImpActivity extends ImpBaseActivity {
      * 初始化WebView的字体大小
      */
     private void initWebViewTextSize(int textZoom) {
-        int textSize = PreferencesByUserUtils.getInt(ImpActivity.this, "app_crm_font_size", MyAppWebConfig.NORMAL);
+        int textSize = PreferencesByUsersUtils.getInt(ImpActivity.this, "app_crm_font_size", MyAppWebConfig.NORMAL);
         if(textZoom != 0){
             textSize = textZoom;
         }
