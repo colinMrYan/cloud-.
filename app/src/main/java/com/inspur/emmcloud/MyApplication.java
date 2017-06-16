@@ -411,6 +411,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
     public void onConfigurationChanged(Configuration config) {
         // TODO Auto-generated method stub
         LogUtils.YfcDebug("刚进入时的语言："+Locale.getDefault().getCountry());
+        LogUtils.YfcDebug("刚进入时语言切换Resources："+getResources().getConfiguration().locale.getCountry());
         try {
 //            super.onConfigurationChanged(null);
             config = getResources().getConfiguration();
