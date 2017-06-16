@@ -54,6 +54,7 @@
     <string name="only_free">僅顯示空閒 </string>
     <string name="file_no_identifiable">不能识别的文件类型</string>
     <string name="login_code_login_text">验证码登录</string>
+    <string name="invite_friends_text">把雲+推薦給朋友</string>
 
     <!-- 公共部分 -->
     <string name="year">年</string>
@@ -460,7 +461,7 @@
     <string name="resend_code">重新發送(51)</string>
     <string name="modify_user_info">修改資訊</string>
     <string name="modify_modify">修改</string>
-    <string name="user_info_my_info">我的個人資訊</string>
+    <string name="user_info_my_info">個人資訊</string>
     <string name="user_info_organ">浪潮國際</string>
     <string name="user_info_phone_number">聯繫方式</string>
     <string name="user_no_storage">沒有存放裝置</string>

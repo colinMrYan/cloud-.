@@ -1,15 +1,11 @@
 /**
- * 
+ *
  * LoginAPIService.java
  * classes : com.inspur.emmcloud.api.apiservice.LoginAPIService
  * V 1.0.0
  * Create at 2016年11月8日 下午2:34:43
  */
 package com.inspur.emmcloud.api.apiservice;
-
-import org.xutils.x;
-import org.xutils.http.HttpMethod;
-import org.xutils.http.RequestParams;
 
 import android.content.Context;
 
@@ -23,11 +19,14 @@ import com.inspur.emmcloud.bean.GetMyInfoResult;
 import com.inspur.emmcloud.bean.GetRegisterCheckResult;
 import com.inspur.emmcloud.bean.GetSignoutResult;
 import com.inspur.emmcloud.bean.GetUpdatePwdBySMSCodeBean;
-import com.inspur.emmcloud.bean.GetWebSocketUrlResult;
-import com.inspur.emmcloud.util.OauthCallBack;
+import com.inspur.emmcloud.callback.OauthCallBack;
 import com.inspur.emmcloud.util.OauthUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.UriUtils;
+
+import org.xutils.http.HttpMethod;
+import org.xutils.http.RequestParams;
+import org.xutils.x;
 
 /**
  * com.inspur.emmcloud.api.apiservice.LoginAPIService create at 2016年11月8日
@@ -48,7 +47,7 @@ public class LoginAPIService {
 
 	/**
 	 * 登录
-	 * 
+	 *
 	 * @param userName
 	 * @param password
 	 */
@@ -108,13 +107,13 @@ public class LoginAPIService {
 			@Override
 			public void callbackFail(String error, int responseCode) {
 				// TODO Auto-generated method stub
-				apiInterface.returnOauthSigninFail(error);
+				apiInterface.returnOauthSigninFail(error,responseCode);
 			}
 
 			@Override
 			public void callbackTokenExpire() {
 				// TODO Auto-generated method stub
-				apiInterface.returnOauthSigninFail("");
+				apiInterface.returnOauthSigninFail("",-1);
 			}
 
 		});
@@ -143,13 +142,13 @@ public class LoginAPIService {
 			@Override
 			public void callbackFail(String error, int responseCode) {
 				// TODO Auto-generated method stub
-				apiInterface.returnSignoutFail(error);
+				apiInterface.returnSignoutFail(error,responseCode);
 			}
 
 			@Override
 			public void callbackTokenExpire() {
 				// TODO Auto-generated method stub
-				apiInterface.returnSignoutFail(new String(""));
+				apiInterface.returnSignoutFail(new String(""),-1);
 			}
 
 		});
@@ -190,11 +189,11 @@ public class LoginAPIService {
 		});
 
 	}
-	
-	
+
+
 	/**
 	 * 验证短信验证码
-	 * 
+	 *
 	 * @param mobile
 	 * @param sms
 	 */
@@ -207,31 +206,31 @@ public class LoginAPIService {
 		params.addParameter("mobile", mobile);
 		params.addParameter("sms", sms);
 		x.http().post(params, new APICallback(context,completeUrl) {
-			
+
 			@Override
 			public void callbackTokenExpire() {
 				// TODO Auto-generated method stub
-				apiInterface.returnReisterSMSCheckFail("");
+				apiInterface.returnReisterSMSCheckFail("",-1);
 			}
-			
+
 			@Override
 			public void callbackSuccess(String arg0) {
 				// TODO Auto-generated method stub
 				apiInterface
-				.returnReisterSMSCheckSuccess(new GetRegisterCheckResult(
-						arg0));
+						.returnReisterSMSCheckSuccess(new GetRegisterCheckResult(
+								arg0));
 			}
-			
+
 			@Override
 			public void callbackFail(String error, int responseCode) {
 				// TODO Auto-generated method stub
-				apiInterface.returnReisterSMSCheckFail(error);
+				apiInterface.returnReisterSMSCheckFail(error,responseCode);
 			}
 		});
-		
+
 	}
-	
-	
+
+
 	/**
 	 * 获取个人信息 得到当前用户的登录信息
 	 */
@@ -240,73 +239,83 @@ public class LoginAPIService {
 		RequestParams params = ((MyApplication) context.getApplicationContext())
 				.getHttpRequestParams(completeUrl);
 		x.http().get(params, new APICallback(context,completeUrl) {
-			
+
 			@Override
 			public void callbackTokenExpire() {
 				// TODO Auto-generated method stub
 				new OauthUtils(new OauthCallBack() {
 
 					@Override
-					public void execute() {
+					public void reExecute() {
 						// TODO Auto-generated method stub
 						getMyInfo();
 					}
+
+					@Override
+					public void executeFailCallback() {
+						callbackFail("", -1);
+					}
 				}, context).refreshToken(completeUrl);
 			}
-			
+
 			@Override
 			public void callbackSuccess(String arg0) {
 				// TODO Auto-generated method stub
 				apiInterface.returnMyInfoSuccess(new GetMyInfoResult(
 						arg0));
 			}
-			
-			@Override
-			public void callbackFail(String error, int responseCode) {
-				// TODO Auto-generated method stub
-				apiInterface.returnMyInfoFail(error);
-			}
-		});
-	}
-	
-	/**
-	 * 获取websocket的连接url
-	 */
-	public void getWebsocketUrl() {
-		final String completeUrl = UriUtils.getHttpApiUri("settings/socket");
-		RequestParams params = ((MyApplication) context.getApplicationContext())
-				.getHttpRequestParams(completeUrl);
-		x.http().get(params, new APICallback(context,completeUrl) {
-			
-			@Override
-			public void callbackTokenExpire() {
-				// TODO Auto-generated method stub
-				new OauthUtils(new OauthCallBack() {
 
-					@Override
-					public void execute() {
-						getWebsocketUrl();
-					}
-				}, context).refreshToken(completeUrl);
-			}
-			
-			@Override
-			public void callbackSuccess(String arg0) {
-				// TODO Auto-generated method stub
-				apiInterface
-				.returnWebSocketUrlSuccess(new GetWebSocketUrlResult(
-						arg0));
-			}
-			
 			@Override
 			public void callbackFail(String error, int responseCode) {
 				// TODO Auto-generated method stub
-				apiInterface.returnWebSocketUrlFail(error);
+				apiInterface.returnMyInfoFail(error,responseCode);
 			}
 		});
 	}
-	
-	
+
+//	/**
+//	 * 获取websocket的连接url
+//	 */
+//	public void getWebsocketUrl() {
+//		final String completeUrl = UriUtils.getHttpApiUri("settings/socket");
+//		RequestParams params = ((MyApplication) context.getApplicationContext())
+//				.getHttpRequestParams(completeUrl);
+//		x.http().get(params, new APICallback(context,completeUrl) {
+//
+//			@Override
+//			public void callbackTokenExpire() {
+//				// TODO Auto-generated method stub
+//				new OauthUtils(new OauthCallBack() {
+//
+//					@Override
+//					public void reExecute() {
+//						getWebsocketUrl();
+//					}
+//
+//					@Override
+//					public void executeFailCallback() {
+//						callbackFail("", -1);
+//					}
+//				}, context).refreshToken(completeUrl);
+//			}
+//
+//			@Override
+//			public void callbackSuccess(String arg0) {
+//				// TODO Auto-generated method stub
+//				apiInterface
+//				.returnWebSocketUrlSuccess(new GetWebSocketUrlResult(
+//						arg0));
+//			}
+//
+//			@Override
+//			public void callbackFail(String error, int responseCode) {
+//				// TODO Auto-generated method stub
+//				apiInterface.returnWebSocketUrlFail(error,responseCode);
+//			}
+//		});
+//	}
+
+
 //	/**
 //	 * 上传认证token信息
 //	 *
@@ -374,13 +383,13 @@ public class LoginAPIService {
 //
 //		});
 //	}
-	
-	
+
+
 	/**
 	 * 修改密码
-	 * 
-	 * @param calendarId
-	 * @param title
+	 *
+	 * @param oldpsd
+	 * @param newpsd
 	 */
 	public void changePsd(final String oldpsd, final String newpsd) {
 		final String completeUrl  = UriUtils.getChangePsd();
@@ -399,42 +408,47 @@ public class LoginAPIService {
 		params.setAsJsonContent(true);
 		params.addHeader("Content-Type", "application/json");
 		x.http().request(HttpMethod.PUT, params, new APICallback(context,completeUrl) {
-			
+
 			@Override
 			public void callbackTokenExpire() {
 				// TODO Auto-generated method stub
 				new OauthUtils(new OauthCallBack() {
 
 					@Override
-					public void execute() {
+					public void reExecute() {
 						// TODO Auto-generated method stub
 						changePsd(oldpsd, newpsd);
 					}
+
+					@Override
+					public void executeFailCallback() {
+						callbackFail("", -1);
+					}
 				}, context).refreshToken(completeUrl);
 			}
-			
+
 			@Override
 			public void callbackSuccess(String arg0) {
 				// TODO Auto-generated method stub
 				apiInterface.returnModifyPsdSuccess();
 			}
-			
+
 			@Override
 			public void callbackFail(String error, int responseCode) {
 				// TODO Auto-generated method stub
-				apiInterface.returnModifyPsdFail(error);
+				apiInterface.returnModifyPsdFail(error,responseCode);
 			}
 		});
 	}
-	
-	
+
+
 	/**
 	 * 通过短信验证码更新密码
 	 * @param smsCode
 	 * @param newPwd
 	 */
 	public void updatePwdBySMSCode(final String smsCode,final String newPwd){
-		final String completeUrl = UriUtils.getChangePsd(); 
+		final String completeUrl = UriUtils.getChangePsd();
 		RequestParams params = ((MyApplication)context.getApplicationContext()).getHttpRequestParams(completeUrl);
 		params.addQueryStringParameter("passcode", smsCode);
 		params.addQueryStringParameter("new", newPwd);
@@ -445,25 +459,30 @@ public class LoginAPIService {
 			public void callbackTokenExpire() {
 				new OauthUtils(new OauthCallBack() {
 					@Override
-					public void execute() {
+					public void reExecute() {
 						updatePwdBySMSCode( smsCode, newPwd);
+					}
+
+					@Override
+					public void executeFailCallback() {
+						callbackFail("", -1);
 					}
 				}, context).refreshToken(completeUrl);
 			}
-			
+
 			@Override
 			public void callbackSuccess(String arg0) {
 				apiInterface.returnUpdatePwdBySMSCodeSuccess(new GetUpdatePwdBySMSCodeBean(arg0));
 			}
-			
+
 			@Override
 			public void callbackFail(String error, int responseCode) {
-				apiInterface.returnUpdatePwdBySMSCodeFail(error);
+				apiInterface.returnUpdatePwdBySMSCodeFail(error,responseCode);
 			}
 		});
 	}
-	
-	
+
+
 //	/**
 //	 * 暂时没用上的接口
 //	 * 
@@ -506,7 +525,7 @@ public class LoginAPIService {
 //		asyncHttpResponseHandler.setIsDebug(LogUtils.isDebug);
 //		client.post(completeUrl, params, asyncHttpResponseHandler);
 //	}
-	
+
 //	/**
 //	 * 手机短信注册，传入手机号码，验证是否已经注册，如果已经注册返回-1，未注册返回1
 //	 * 
@@ -541,5 +560,5 @@ public class LoginAPIService {
 //		asyncHttpResponseHandler.setIsDebug(LogUtils.isDebug);
 //		client.post(completeUrl, params, asyncHttpResponseHandler);
 //	}
-	
+
 }

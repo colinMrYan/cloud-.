@@ -214,7 +214,7 @@ public class TextFragment extends Fragment {
 //    public void saveTextSticker() {
 //        // System.out.println("保存 合成图片");
 //        SaveTextTask task = new SaveTextTask();
-//        task.execute(activity.mainBitmap);
+//        task.reExecute(activity.mainBitmap);
 //    }
 //
 //    /**

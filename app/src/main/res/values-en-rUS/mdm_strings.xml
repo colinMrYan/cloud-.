@@ -23,7 +23,8 @@
     <string name="mdm_tips">Tips</string>
     <string name="loading_text">Loading...</string>
     <string name="network_exception">Network unavailable,please check</string>
-     <string name="net_request_failed">Requests Failed</string>
+    <string name="network_timeout">Network timeout, please check</string>
+     <string name="net_request_failed">The server failed to respond correctly</string>
       <string name="telephone_input_illegal">Enter the phone number format is not correct</string>
     <string name="email_input_illegal">The format of the entered mailbox is incorrect</string>
      <string name="device_registe">Device registration</string>

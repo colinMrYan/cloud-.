@@ -17,6 +17,7 @@ import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.api.apiservice.ReactNativeAPIService;
 import com.inspur.emmcloud.bean.AndroidBundleBean;
+import com.inspur.emmcloud.bean.Enterprise;
 import com.inspur.emmcloud.bean.GetClientIdRsult;
 import com.inspur.emmcloud.bean.GetMyInfoResult;
 import com.inspur.emmcloud.bean.ReactNativeDownloadUrlBean;
@@ -26,14 +27,13 @@ import com.inspur.emmcloud.ui.login.LoginActivity;
 import com.inspur.emmcloud.util.AppUtils;
 import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.NetUtils;
-import com.inspur.emmcloud.util.PreferencesByUserUtils;
+import com.inspur.emmcloud.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.StateBarColor;
 import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.ToastUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.dialogs.ECMCustomIOSDialog;
-import com.inspur.imp.api.ImpActivity;
 import com.inspur.reactnative.AuthorizationManagerPackage;
 import com.inspur.reactnative.ReactNativeFlow;
 import com.reactnativecomponent.swiperefreshlayout.RCTSwipeRefreshLayoutPackage;
@@ -159,7 +159,7 @@ public class ReactNativeAppActivity extends BaseActivity implements DefaultHardw
             loadingDialog.show();
             StringBuilder describeVersionAndTime = ReactNativeFlow.getBundleDotJsonFromFile(reactAppFilePath);
             AndroidBundleBean androidBundleBean = new AndroidBundleBean(describeVersionAndTime.toString());
-            String clientId = PreferencesByUserUtils.getString(ReactNativeAppActivity.this,"react_native_clientid", "");
+            String clientId = PreferencesByUserAndTanentUtils.getString(ReactNativeAppActivity.this,"react_native_clientid", "");
             reactNativeAPIService.getDownLoadUrl(ReactNativeAppActivity.this,androidBundleBean.getUpdate(),clientId,androidBundleBean.getVersion());
         }
     }
@@ -220,9 +220,10 @@ public class ReactNativeAppActivity extends BaseActivity implements DefaultHardw
         bundle.putString("name",getMyInfoResult.getName());
         bundle.putString("mail",getMyInfoResult.getMail());
         bundle.putString("avatar",getMyInfoResult.getAvatar());
-        bundle.putString("enterpriseCode",getMyInfoResult.getEnterpriseCode());
-        bundle.putString("enterpriseName",getMyInfoResult.getEnterpriseName());
-        bundle.putString("enterpriseId",getMyInfoResult.getEnterpriseId());
+        Enterprise currentEnterprise = ((MyApplication)getApplicationContext()).getCurrentEnterprise();
+        bundle.putString("enterpriseCode",currentEnterprise.getCode());
+        bundle.putString("enterpriseName",currentEnterprise.getName());
+        bundle.putString("enterpriseId",currentEnterprise.getId());
         return bundle;
     }
 
@@ -238,17 +239,17 @@ public class ReactNativeAppActivity extends BaseActivity implements DefaultHardw
                 loadingDialog.dismiss();
             }
             super.returnGetClientIdResultSuccess(getClientIdRsult);
-            PreferencesByUserUtils.putString(ReactNativeAppActivity.this,  "react_native_clientid", getClientIdRsult.getClientId());
+            PreferencesByUserAndTanentUtils.putString(ReactNativeAppActivity.this,  "react_native_clientid", getClientIdRsult.getClientId());
             installReactNativeApp();
         }
 
         @Override
-        public void returnGetClientIdResultFail(String error) {
+        public void returnGetClientIdResultFail(String error,int errorCode) {
             if(loadingDialog != null && loadingDialog.isShowing()){
                 loadingDialog.dismiss();
             }
             WebServiceMiddleUtils.hand(ReactNativeAppActivity.this,
-                    error);
+                    error,errorCode);
         }
 
         @Override
@@ -263,12 +264,12 @@ public class ReactNativeAppActivity extends BaseActivity implements DefaultHardw
         }
 
         @Override
-        public void returnGetReactNativeInstallUrlFail(String error) {
+        public void returnGetReactNativeInstallUrlFail(String error,int errorCode) {
             if(loadingDialog != null && loadingDialog.isShowing()){
                 loadingDialog.dismiss();
             }
             WebServiceMiddleUtils.hand(ReactNativeAppActivity.this,
-                    error);
+                    error,errorCode);
         }
 
         @Override
@@ -283,12 +284,12 @@ public class ReactNativeAppActivity extends BaseActivity implements DefaultHardw
         }
 
         @Override
-        public void returnGetDownloadReactNativeUrlFail(String error) {
+        public void returnGetDownloadReactNativeUrlFail(String error,int errorCode) {
             if(loadingDialog != null && loadingDialog.isShowing()){
                 loadingDialog.dismiss();
             }
             WebServiceMiddleUtils.hand(ReactNativeAppActivity.this,
-                    error);
+                    error,errorCode);
         }
 
     }
@@ -338,7 +339,7 @@ public class ReactNativeAppActivity extends BaseActivity implements DefaultHardw
      */
     private void getDownlaodUrl(ReactNativeInstallUriBean reactNativeInstallUriBean) {
         if(NetUtils.isNetworkConnected(ReactNativeAppActivity.this)){
-            String clientId = PreferencesByUserUtils.getString(ReactNativeAppActivity.this,"react_native_clientid", "");
+            String clientId = PreferencesByUserAndTanentUtils.getString(ReactNativeAppActivity.this,"react_native_clientid", "");
             if(!StringUtils.isBlank(clientId)){
 
 //                StringBuilder describeVersionAndTime = FileUtils.readFile(reactAppFilePath +"/bundle.json", "UTF-8");
@@ -420,7 +421,7 @@ public class ReactNativeAppActivity extends BaseActivity implements DefaultHardw
      * 向服务端写回目前版本
      */
     private void writeBackVersion(String preVersion,String currentVersion,String command) {
-        String clientId = PreferencesByUserUtils.getString(ReactNativeAppActivity.this,"react_native_clientid", "");
+        String clientId = PreferencesByUserAndTanentUtils.getString(ReactNativeAppActivity.this,"react_native_clientid", "");
         reactNativeAPIService.writeBackVersionChange(preVersion,currentVersion,clientId,command,appModule);
     }
 
@@ -444,7 +445,7 @@ public class ReactNativeAppActivity extends BaseActivity implements DefaultHardw
 //            StringBuilder describeVersionAndTime = FileUtils.readFile(reactAppFilePath +"/bundle.json", "UTF-8");
             StringBuilder describeVersionAndTime = ReactNativeFlow.getBundleDotJsonFromFile(reactAppFilePath);
             AndroidBundleBean androidBundleBean = new AndroidBundleBean(describeVersionAndTime.toString());
-            String clientId = PreferencesByUserUtils.getString(ReactNativeAppActivity.this,"react_native_clientid", "");
+            String clientId = PreferencesByUserAndTanentUtils.getString(ReactNativeAppActivity.this,"react_native_clientid", "");
             reactNativeAPIService.getDownLoadUrl(ReactNativeAppActivity.this,installUri,clientId,androidBundleBean.getVersion());
         }
     }

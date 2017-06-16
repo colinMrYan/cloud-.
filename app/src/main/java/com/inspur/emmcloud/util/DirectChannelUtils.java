@@ -35,7 +35,7 @@ public class DirectChannelUtils {
 		Contact otherContact = getDirctChannelOtherContact(context, msgTitle);
 		if (otherContact != null) {
 			String otherInspurID = otherContact.getInspurID();
-			channelIcon = UriUtils.getChannelImgUri(otherInspurID);
+			channelIcon = UriUtils.getChannelImgUri(context,otherInspurID);
 		}
 		return channelIcon;
 	}

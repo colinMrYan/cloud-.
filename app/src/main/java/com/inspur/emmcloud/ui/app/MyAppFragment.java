@@ -42,7 +42,7 @@ import com.inspur.emmcloud.util.AppTitleUtils;
 import com.inspur.emmcloud.util.IntentUtils;
 import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.NetUtils;
-import com.inspur.emmcloud.util.PreferencesByUserUtils;
+import com.inspur.emmcloud.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.ShortCutUtils;
 import com.inspur.emmcloud.util.StringUtils;
@@ -149,7 +149,7 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
      * 设置标题
      */
     private void setTabTitle() {
-        String appTabs = PreferencesByUserUtils.getString(getActivity(), "app_tabbar_info_current", "");
+        String appTabs = PreferencesByUserAndTanentUtils.getString(getActivity(), "app_tabbar_info_current", "");
         if (!StringUtils.isBlank(appTabs)) {
             titleText.setText(AppTitleUtils.getTabTitle(getActivity(), getClass().getSimpleName()));
         }
@@ -259,6 +259,7 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
                 public void onChange(int listPosition, int from, int to) {
                     handAppOrderChange(appGroupItemList, from, to);
                     dragGridViewAdapter.notifyDataSetChanged();
+                    appListAdapter.notifyDataSetChanged();
                     saveAppChangeOrder(listPosition);
                 }
             });
@@ -272,7 +273,7 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
                         //快捷方式逻辑，因不同手机rom定制问题，暂时不打开这个功能
 //                        String appId = app.getIdentifiers();
 //                        if (shortCutAppList.indexOf(appId) != -1) {
-//                            boolean needCreateShortCut = PreferencesByUserUtils.getBoolean(getActivity(), "need_create_shortcut" + app.getAppID(), true);
+//                            boolean needCreateShortCut = PreferencesByUserAndTanentUtils.getBoolean(getActivity(), "need_create_shortcut" + app.getAppID(), true);
 //                            if (needCreateShortCut && !ShortCutUtils.isShortCutExist(getActivity(), app.getAppName())) {
 //                                //目前只识别的移动签到和集团新闻两个应用，设置了两个图标，以后可以改成可配置的
 //                                if(appId.equals("mobile_checkin_hcm")){
@@ -332,6 +333,7 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
                         @Override
                         public void onNotifyCommonlyUseApp(App app) {
                             handCommonlyUseAppChange(appAdapterList, app);
+                            appListAdapter.notifyDataSetChanged();
                             dragGridViewAdapter.notifyDataSetChanged();
                         }
                     });
@@ -412,7 +414,7 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
             @Override
             public void onClick(View v) {
                 if (checkBox.isChecked()) {
-                    PreferencesByUserUtils.putBoolean(getActivity(), "need_create_shortcut" + app.getAppID(), false);
+                    PreferencesByUserAndTanentUtils.putBoolean(getActivity(), "need_create_shortcut" + app.getAppID(), false);
                 }
                 UriUtils.openApp(getActivity(),app);
                 hasIntrcutionDialog.dismiss();
@@ -835,12 +837,12 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
         }
 
         @Override
-        public void returnUserAppsFail(String error) {
+        public void returnUserAppsFail(String error,int errorCode) {
             if (loadingDialog.isShowing()) {
                 loadingDialog.dismiss();
             }
             pullToRefreshLayout.refreshFinish(PullToRefreshLayout.FAIL);
-            WebServiceMiddleUtils.hand(getActivity(), error);
+            WebServiceMiddleUtils.hand(getActivity(), error,errorCode);
         }
     }
 

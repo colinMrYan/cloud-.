@@ -28,7 +28,7 @@ import com.inspur.emmcloud.util.DataCleanManager;
 import com.inspur.emmcloud.util.ImageDisplayUtils;
 import com.inspur.emmcloud.util.IntentUtils;
 import com.inspur.emmcloud.util.NetUtils;
-import com.inspur.emmcloud.util.PreferencesByUserUtils;
+import com.inspur.emmcloud.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.ToastUtils;
 import com.inspur.emmcloud.util.UriUtils;
@@ -61,8 +61,6 @@ public class SettingActivity extends BaseActivity {
 		setLanguage();
 		handMessage();
 		getMDMState();
-		setSwitchEnterpriseLayout();
-
 	}
 
 	/**
@@ -108,17 +106,6 @@ public class SettingActivity extends BaseActivity {
 		}
 	}
 
-	/**
-	 * 当只要一个企业时不显示切换企业按钮
-	 */
-	private void setSwitchEnterpriseLayout(){
-		String myInfo = PreferencesUtils.getString(this, "myInfo", "");
-		GetMyInfoResult getMyInfoResult = new GetMyInfoResult(myInfo);
-		List<Enterprise> enterpriseList = getMyInfoResult.getEnterpriseList();
-		if (enterpriseList.size() < 2){
-			(findViewById(R.id.switch_enterprese_text)).setVisibility(View.GONE);
-		}
-	}
 
 	@Override
 	protected void onResume() {
@@ -200,7 +187,7 @@ public class SettingActivity extends BaseActivity {
 	 */
 	private void setMDMLayoutState(Integer mdmState){
 		if (mdmState == null){
-			mdmState = PreferencesByUserUtils.getInt(getApplicationContext(),"mdm_state",1);
+			mdmState = PreferencesByUserAndTanentUtils.getInt(getApplicationContext(),"mdm_state",1);
 		}
 		(findViewById(R.id.device_manager_layout)).setVisibility((mdmState==1)?View.VISIBLE:View.GONE);
 	}
@@ -357,7 +344,7 @@ public class SettingActivity extends BaseActivity {
 				loadingDlg.dismiss();
 			}
 			int mdmState = getMDMStateResult.getMdmState();
-			PreferencesByUserUtils.putInt(getApplicationContext(),"mdm_state",mdmState);
+			PreferencesByUserAndTanentUtils.putInt(getApplicationContext(),"mdm_state",mdmState);
 			setMDMLayoutState(mdmState);
 
 		}

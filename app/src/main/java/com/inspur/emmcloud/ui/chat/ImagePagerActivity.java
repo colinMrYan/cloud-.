@@ -113,7 +113,7 @@ public class ImagePagerActivity extends BaseFragmentActivity {
 		pagerPosition = pageStartPosition;
 		mPager.setCurrentItem(pagerPosition);
 		//解决当只有一张图片无法显示评论数的问题
-		if (getIntent().hasExtra(EXTRA_CURRENT_IMAGE_MSG) && imgTypeMsgList.size() == 1) {
+		if (getIntent().hasExtra(EXTRA_CURRENT_IMAGE_MSG) && pagerPosition == 0) {
 			setCommentCount();
 		}
 	}
@@ -121,7 +121,6 @@ public class ImagePagerActivity extends BaseFragmentActivity {
 
 	@Override
 	public void onBackPressed() {
-		LogUtils.jasonDebug("onBackPressed----");
 		mAdapter.getCurrentFragment().closeImg();
 	}
 
@@ -174,7 +173,6 @@ public class ImagePagerActivity extends BaseFragmentActivity {
 		WindowManager.LayoutParams wl = window.getAttributes();
 		wl.x = 0;
 		wl.y = getWindowManager().getDefaultDisplay().getHeight();
-		LogUtils.jasonDebug("wl.y="+wl.y);
 		window.getDecorView().setPadding(0, 0, 0, 0);
 		// 以下这两句是为了保证按钮可以水平满屏
 		wl.width = WindowManager.LayoutParams.MATCH_PARENT;
@@ -254,7 +252,6 @@ public class ImagePagerActivity extends BaseFragmentActivity {
 
 			@Override
 			public void onPageSelected(int position) {
-				LogUtils.jasonDebug("onPageSelected=========="+position);
 				CharSequence text = getString(R.string.viewpager_indicator, position + 1, mPager.getAdapter().getCount());
 				indicator.setText(text);
 				pagerPosition = position;
@@ -322,7 +319,7 @@ public class ImagePagerActivity extends BaseFragmentActivity {
 		String source = "";
 		ArrayList<String> urlList = URLMatcher.getUrls(content);
 		JSONObject richTextObj = new JSONObject();
-		source = HandleMsgTextUtils.handleMentionAndURL(content, mentionsUserNameList,
+		source = HandleMsgTextUtils.handleMentionAndURL(ecmChatInputMenu.getEdit(),content, mentionsUserNameList,
 				mentionsUidList);
 		JSONArray mentionArray = JSONUtils.toJSONArray(mentionsUidList);
 		JSONArray urlArray = JSONUtils.toJSONArray(urlList);
@@ -402,7 +399,6 @@ public class ImagePagerActivity extends BaseFragmentActivity {
 
 	private void getImgCommentCount(String mid) {
 		if (NetUtils.isNetworkConnected(getApplicationContext())) {
-			LogUtils.jasonDebug("getImgCommentCount");
 			ChatAPIService apiService = new ChatAPIService(getApplicationContext());
 			apiService.setAPIInterface(new WebService());
 			apiService.getMsgCommentCount(mid);
@@ -429,7 +425,6 @@ public class ImagePagerActivity extends BaseFragmentActivity {
 	private class WebService extends APIInterfaceInstance {
 		@Override
 		public void returnMsgCommentCountSuccess(GetMsgCommentCountResult getMsgCommentCountResult, String mid) {
-			LogUtils.jasonDebug("returnMsgCommentCountSuccess");
 			int count = getMsgCommentCountResult.getCount();
 			commentCountMap.put(mid, count);
 			String currentMid = imgTypeMsgList.get(pagerPosition).getMid();
@@ -439,9 +434,8 @@ public class ImagePagerActivity extends BaseFragmentActivity {
 		}
 
 		@Override
-		public void returnMsgCommentCountFail(String error) {
-			LogUtils.jasonDebug("returnMsgCommentCountFail");
-			super.returnMsgCommentCountFail(error);
+		public void returnMsgCommentCountFail(String error,int errorCode) {
+			super.returnMsgCommentCountFail(error,errorCode);
 		}
 	}
 

@@ -23,6 +23,7 @@ import com.inspur.emmcloud.bean.GetChannelListResult;
 import com.inspur.emmcloud.bean.GetClientIdRsult;
 import com.inspur.emmcloud.bean.GetCreateOfficeResult;
 import com.inspur.emmcloud.bean.GetCreateSingleChannelResult;
+import com.inspur.emmcloud.bean.GetDeviceCheckResult;
 import com.inspur.emmcloud.bean.GetExceptionResult;
 import com.inspur.emmcloud.bean.GetFileUploadResult;
 import com.inspur.emmcloud.bean.GetFindMixSearchResult;
@@ -68,7 +69,7 @@ import com.inspur.emmcloud.bean.GetUpgradeResult;
 import com.inspur.emmcloud.bean.GetUploadMyHeadResult;
 import com.inspur.emmcloud.bean.GetUserHeadUploadResult;
 import com.inspur.emmcloud.bean.GetWebSocketUrlResult;
-import com.inspur.emmcloud.bean.ReactNativeClientIdErrorBean;
+import com.inspur.emmcloud.bean.LoginDesktopCloudPlusBean;
 import com.inspur.emmcloud.bean.ReactNativeDownloadUrlBean;
 import com.inspur.emmcloud.bean.ReactNativeInstallUriBean;
 import com.inspur.emmcloud.bean.ReactNativeUpdateBean;
@@ -79,6 +80,16 @@ import com.inspur.emmcloud.bean.Trip;
 import com.inspur.emmcloud.bean.UserProfileInfoBean;
 
 public class APIInterfaceInstance implements APIInterface{
+	@Override
+	public void returnDeviceCheckSuccess(GetDeviceCheckResult getDeviceCheckResult) {
+
+	}
+
+	@Override
+	public void returnDeviceCheckFail(String error, int errorCode) {
+
+	}
+
 	@Override
 	public void returnUnBindDeviceSuccess() {
 
@@ -119,7 +130,7 @@ public class APIInterfaceInstance implements APIInterface{
 	}
 
 	@Override
-	public void returnAddAppFail(String error) {
+	public void returnAddAppFail(String error,int errorCode) {
 		// TODO Auto-generated method stub
 
 	}
@@ -131,7 +142,7 @@ public class APIInterfaceInstance implements APIInterface{
 	}
 
 	@Override
-	public void returnRemoveAppFail(String error) {
+	public void returnRemoveAppFail(String error,int errorCode) {
 		// TODO Auto-generated method stub
 
 	}
@@ -143,7 +154,7 @@ public class APIInterfaceInstance implements APIInterface{
 	}
 
 	@Override
-	public void returnMyAppFail(String error) {
+	public void returnMyAppFail(String error,int errorCode) {
 		// TODO Auto-generated method stub
 
 	}
@@ -155,7 +166,7 @@ public class APIInterfaceInstance implements APIInterface{
 	}
 
 	@Override
-	public void returnSignoutFail(String error) {
+	public void returnSignoutFail(String error,int errorCode) {
 		// TODO Auto-generated method stub
 
 	}
@@ -166,7 +177,7 @@ public class APIInterfaceInstance implements APIInterface{
 	}
 
 	@Override
-	public void returnMsgCommentCountFail(String error) {
+	public void returnMsgCommentCountFail(String error,int errorCode) {
 
 	}
 
@@ -177,7 +188,7 @@ public class APIInterfaceInstance implements APIInterface{
 	}
 
 	@Override
-	public void returnUpgradeFail(String error,boolean isManualCheck) {
+	public void returnUpgradeFail(String error,boolean isManualCheck,int errorCode) {
 		// TODO Auto-generated method stub
 
 	}
@@ -189,7 +200,7 @@ public class APIInterfaceInstance implements APIInterface{
 	}
 
 	@Override
-	public void returnSearchAppFail(String error) {
+	public void returnSearchAppFail(String error,int errorCode){
 		// TODO Auto-generated method stub
 
 	}
@@ -201,7 +212,7 @@ public class APIInterfaceInstance implements APIInterface{
 	}
 
 	@Override
-	public void returnSearchAppMoreFail(String error) {
+	public void returnSearchAppMoreFail(String error,int errorCode) {
 		// TODO Auto-generated method stub
 
 	}
@@ -225,7 +236,7 @@ public class APIInterfaceInstance implements APIInterface{
 	}
 
 	@Override
-	public void returnRegisterSMSFail(String error) {
+	public void returnRegisterSMSFail(String error,int errorCode) {
 		// TODO Auto-generated method stub
 
 	}
@@ -238,7 +249,7 @@ public class APIInterfaceInstance implements APIInterface{
 	}
 
 	@Override
-	public void returnReisterSMSCheckFail(String error) {
+	public void returnReisterSMSCheckFail(String error,int errorCode) {
 		// TODO Auto-generated method stub
 
 	}
@@ -250,7 +261,7 @@ public class APIInterfaceInstance implements APIInterface{
 	}
 
 	@Override
-	public void returnMyInfoFail(String error) {
+	public void returnMyInfoFail(String error,int errorCode) {
 		// TODO Auto-generated method stub
 
 	}
@@ -264,7 +275,7 @@ public class APIInterfaceInstance implements APIInterface{
 	}
 
 	@Override
-	public void returnUsersInOrgFail(String error) {
+	public void returnUsersInOrgFail(String error,int errorCode) {
 		// TODO Auto-generated method stub
 
 	}
@@ -277,7 +288,7 @@ public class APIInterfaceInstance implements APIInterface{
 	}
 
 	@Override
-	public void returnUploadMyHeadFail(String error) {
+	public void returnUploadMyHeadFail(String error,int errorCode) {
 		// TODO Auto-generated method stub
 
 	}
@@ -290,7 +301,7 @@ public class APIInterfaceInstance implements APIInterface{
 	}
 
 	@Override
-	public void returnChannelListFail(String error) {
+	public void returnChannelListFail(String error,int errorCode) {
 		// TODO Auto-generated method stub
 
 	}
@@ -303,7 +314,7 @@ public class APIInterfaceInstance implements APIInterface{
 	}
 
 	@Override
-	public void returnNewMsgsFail(String error) {
+	public void returnNewMsgsFail(String error,int errorCode) {
 		// TODO Auto-generated method stub
 
 	}
@@ -315,7 +326,7 @@ public class APIInterfaceInstance implements APIInterface{
 	}
 
 	@Override
-	public void returnMsgCommentFail(String error) {
+	public void returnMsgCommentFail(String error,int errorCode) {
 		// TODO Auto-generated method stub
 
 	}
@@ -327,7 +338,7 @@ public class APIInterfaceInstance implements APIInterface{
 	}
 
 	@Override
-	public void returnNewsFail(String error) {
+	public void returnNewsFail(String error,int errorCode) {
 		// TODO Auto-generated method stub
 
 	}
@@ -339,7 +350,7 @@ public class APIInterfaceInstance implements APIInterface{
 	}
 
 	@Override
-	public void returnModifyUserInfoFail(String error) {
+	public void returnModifyUserInfoFail(String error,int errorCode) {
 		// TODO Auto-generated method stub
 
 	}
@@ -352,7 +363,7 @@ public class APIInterfaceInstance implements APIInterface{
 	}
 
 	@Override
-	public void returnWebSocketUrlFail(String error) {
+	public void returnWebSocketUrlFail(String error,int errorCode) {
 		// TODO Auto-generated method stub
 
 	}
@@ -364,7 +375,7 @@ public class APIInterfaceInstance implements APIInterface{
 	}
 
 	@Override
-	public void returnSendMsgFail(String error,String fakeMessageId) {
+	public void returnSendMsgFail(String error,String fakeMessageId,int errorCode) {
 		// TODO Auto-generated method stub
 
 	}
@@ -376,7 +387,7 @@ public class APIInterfaceInstance implements APIInterface{
 	}
 
 	@Override
-	public void returnUploadMsgImgFail(String error) {
+	public void returnUploadMsgImgFail(String error,int errorCode) {
 		// TODO Auto-generated method stub
 
 	}
@@ -389,7 +400,7 @@ public class APIInterfaceInstance implements APIInterface{
 	}
 
 	@Override
-	public void returnGroupNewsTitleFail(String error) {
+	public void returnGroupNewsTitleFail(String error,int errorCode) {
 		// TODO Auto-generated method stub
 
 	}
@@ -402,7 +413,7 @@ public class APIInterfaceInstance implements APIInterface{
 	}
 
 	@Override
-	public void returnGroupNewsDetailFail(String error) {
+	public void returnGroupNewsDetailFail(String error,int errorCode) {
 		// TODO Auto-generated method stub
 
 	}
@@ -414,7 +425,7 @@ public class APIInterfaceInstance implements APIInterface{
 	}
 
 	@Override
-	public void returnMeetingsFail(String error) {
+	public void returnMeetingsFail(String error,int errorCode) {
 		// TODO Auto-generated method stub
 
 	}
@@ -427,7 +438,7 @@ public class APIInterfaceInstance implements APIInterface{
 	}
 
 	@Override
-	public void returnMeetingRoomsFail(String error) {
+	public void returnMeetingRoomsFail(String error,int errorCode) {
 		// TODO Auto-generated method stub
 
 	}
@@ -439,7 +450,7 @@ public class APIInterfaceInstance implements APIInterface{
 	}
 
 	@Override
-	public void returnMsgFail(String error) {
+	public void returnMsgFail(String error,int errorCode) {
 		// TODO Auto-generated method stub
 
 	}
@@ -465,7 +476,7 @@ public class APIInterfaceInstance implements APIInterface{
 	}
 
 	@Override
-	public void returnChannelInfoFail(String error) {
+	public void returnChannelInfoFail(String error,int errorCode) {
 		// TODO Auto-generated method stub
 
 	}
@@ -478,7 +489,7 @@ public class APIInterfaceInstance implements APIInterface{
 	}
 
 	@Override
-	public void returnRoomAvailableTimeFail(String error) {
+	public void returnRoomAvailableTimeFail(String error,int errorCode) {
 		// TODO Auto-generated method stub
 
 	}
@@ -490,7 +501,7 @@ public class APIInterfaceInstance implements APIInterface{
 	}
 
 	@Override
-	public void returnAllContactFail(String error) {
+	public void returnAllContactFail(String error,int errorCode) {
 		// TODO Auto-generated method stub
 
 	}
@@ -502,7 +513,7 @@ public class APIInterfaceInstance implements APIInterface{
 	}
 
 	@Override
-	public void returnFileUpLoadFail(String error) {
+	public void returnFileUpLoadFail(String error,int errorCode) {
 		// TODO Auto-generated method stub
 
 	}
@@ -515,7 +526,7 @@ public class APIInterfaceInstance implements APIInterface{
 	}
 
 	@Override
-	public void returnSearchChannelGroupFail(String error) {
+	public void returnSearchChannelGroupFail(String error,int errorCode) {
 		// TODO Auto-generated method stub
 
 	}
@@ -528,7 +539,7 @@ public class APIInterfaceInstance implements APIInterface{
 	}
 
 	@Override
-	public void returnUserHeadUploadFail(String error) {
+	public void returnUserHeadUploadFail(String error,int errorCode) {
 		// TODO Auto-generated method stub
 
 	}
@@ -541,7 +552,7 @@ public class APIInterfaceInstance implements APIInterface{
 	}
 
 	@Override
-	public void returnCreatSingleChannelFail(String error) {
+	public void returnCreatSingleChannelFail(String error,int errorCode) {
 		// TODO Auto-generated method stub
 
 	}
@@ -553,7 +564,7 @@ public class APIInterfaceInstance implements APIInterface{
 	}
 
 	@Override
-	public void returnCreateChannelGroupFail(String error) {
+	public void returnCreateChannelGroupFail(String error,int errorCode) {
 		// TODO Auto-generated method stub
 
 	}
@@ -566,7 +577,7 @@ public class APIInterfaceInstance implements APIInterface{
 	}
 
 	@Override
-	public void returnGetMeetingReplyFail(String error) {
+	public void returnGetMeetingReplyFail(String error,int errorCode) {
 		// TODO Auto-generated method stub
 
 	}
@@ -578,7 +589,7 @@ public class APIInterfaceInstance implements APIInterface{
 	}
 
 	@Override
-	public void returnTripFail(String error) {
+	public void returnTripFail(String error,int errorCode) {
 		// TODO Auto-generated method stub
 
 	}
@@ -590,7 +601,7 @@ public class APIInterfaceInstance implements APIInterface{
 	}
 
 	@Override
-	public void returnLastUploadTripFail(String error) {
+	public void returnLastUploadTripFail(String error,int errorCode) {
 		// TODO Auto-generated method stub
 
 	}
@@ -603,7 +614,7 @@ public class APIInterfaceInstance implements APIInterface{
 	}
 
 	@Override
-	public void returnUpdateChannelGroupNameFail(String error) {
+	public void returnUpdateChannelGroupNameFail(String error,int errorCode) {
 		// TODO Auto-generated method stub
 
 	}
@@ -616,7 +627,7 @@ public class APIInterfaceInstance implements APIInterface{
 	}
 
 	@Override
-	public void returnMeetingListFail(String error) {
+	public void returnMeetingListFail(String error,int errorCode) {
 		// TODO Auto-generated method stub
 
 	}
@@ -628,7 +639,7 @@ public class APIInterfaceInstance implements APIInterface{
 	}
 
 	@Override
-	public void returnUploadTrainTicketFail(String error) {
+	public void returnUploadTrainTicketFail(String error,int errorCode) {
 		// TODO Auto-generated method stub
 
 	}
@@ -641,7 +652,7 @@ public class APIInterfaceInstance implements APIInterface{
 	}
 
 	@Override
-	public void returnUploadExceptionFail(String error) {
+	public void returnUploadExceptionFail(String error,int errorCode) {
 		// TODO Auto-generated method stub
 
 	}
@@ -653,7 +664,7 @@ public class APIInterfaceInstance implements APIInterface{
 	}
 
 	@Override
-	public void returnLoctionResultFail(String error) {
+	public void returnLoctionResultFail(String error,int errorCode) {
 		// TODO Auto-generated method stub
 
 	}
@@ -665,7 +676,7 @@ public class APIInterfaceInstance implements APIInterface{
 	}
 
 	@Override
-	public void returnOfficeResultFail(String error) {
+	public void returnOfficeResultFail(String error,int errorCode) {
 		// TODO Auto-generated method stub
 
 	}
@@ -678,7 +689,7 @@ public class APIInterfaceInstance implements APIInterface{
 	}
 
 	@Override
-	public void returnCreatOfficeFail(String error) {
+	public void returnCreatOfficeFail(String error,int errorCode) {
 		// TODO Auto-generated method stub
 
 	}
@@ -691,7 +702,7 @@ public class APIInterfaceInstance implements APIInterface{
 	}
 
 	@Override
-	public void returnAddMembersFail(String error) {
+	public void returnAddMembersFail(String error,int errorCode) {
 		// TODO Auto-generated method stub
 
 	}
@@ -703,7 +714,7 @@ public class APIInterfaceInstance implements APIInterface{
 	}
 
 	@Override
-	public void returnRecentTasksFail(String error) {
+	public void returnRecentTasksFail(String error,int errorCode) {
 		// TODO Auto-generated method stub
 
 	}
@@ -715,7 +726,7 @@ public class APIInterfaceInstance implements APIInterface{
 	}
 
 	@Override
-	public void returnMyCalendarFail(String error) {
+	public void returnMyCalendarFail(String error,int errorCode) {
 		// TODO Auto-generated method stub
 
 	}
@@ -727,7 +738,7 @@ public class APIInterfaceInstance implements APIInterface{
 	}
 
 	@Override
-	public void returnDelelteCalendarByIdFail(String error) {
+	public void returnDelelteCalendarByIdFail(String error,int errorCode) {
 		// TODO Auto-generated method stub
 
 	}
@@ -739,7 +750,7 @@ public class APIInterfaceInstance implements APIInterface{
 	}
 
 	@Override
-	public void returnUpdateCalendarFail(String error) {
+	public void returnUpdateCalendarFail(String error,int errorCode) {
 		// TODO Auto-generated method stub
 
 	}
@@ -751,7 +762,7 @@ public class APIInterfaceInstance implements APIInterface{
 	}
 
 	@Override
-	public void returnGetTagResultFail(String error) {
+	public void returnGetTagResultFail(String error,int errorCode) {
 		// TODO Auto-generated method stub
 
 	}
@@ -763,7 +774,7 @@ public class APIInterfaceInstance implements APIInterface{
 	}
 
 	@Override
-	public void returnAddCalEventFail(String error) {
+	public void returnAddCalEventFail(String error,int errorCode) {
 		// TODO Auto-generated method stub
 
 	}
@@ -775,7 +786,7 @@ public class APIInterfaceInstance implements APIInterface{
 	}
 
 	@Override
-	public void returnDeleteTagFail(String error) {
+	public void returnDeleteTagFail(String error,int errorCode) {
 		// TODO Auto-generated method stub
 
 	}
@@ -787,7 +798,7 @@ public class APIInterfaceInstance implements APIInterface{
 	}
 
 	@Override
-	public void returnCreateTagFail(String error) {
+	public void returnCreateTagFail(String error,int errorCode) {
 		// TODO Auto-generated method stub
 
 	}
@@ -799,7 +810,7 @@ public class APIInterfaceInstance implements APIInterface{
 	}
 
 	@Override
-	public void returnCreateTaskFail(String error) {
+	public void returnCreateTaskFail(String error,int errorCode) {
 		// TODO Auto-generated method stub
 
 	}
@@ -811,7 +822,7 @@ public class APIInterfaceInstance implements APIInterface{
 	}
 
 	@Override
-	public void returnDeleteTaskFail(String error) {
+	public void returnDeleteTaskFail(String error,int errorCode) {
 		// TODO Auto-generated method stub
 
 	}
@@ -823,7 +834,7 @@ public class APIInterfaceInstance implements APIInterface{
 	}
 
 	@Override
-	public void returnInviteMateForTaskFail(String error) {
+	public void returnInviteMateForTaskFail(String error,int errorCode) {
 		// TODO Auto-generated method stub
 
 	}
@@ -835,7 +846,7 @@ public class APIInterfaceInstance implements APIInterface{
 	}
 
 	@Override
-	public void returnUpdateTaskFail(String error) {
+	public void returnUpdateTaskFail(String error,int errorCode) {
 		// TODO Auto-generated method stub
 
 	}
@@ -848,7 +859,7 @@ public class APIInterfaceInstance implements APIInterface{
 	}
 
 	@Override
-	public void returnAttachmentFail(String error) {
+	public void returnAttachmentFail(String error,int errorCode) {
 		// TODO Auto-generated method stub
 
 	}
@@ -860,7 +871,7 @@ public class APIInterfaceInstance implements APIInterface{
 	}
 
 	@Override
-	public void returnUpdateCalEventFail(String error) {
+	public void returnUpdateCalEventFail(String error,int errorCode) {
 		// TODO Auto-generated method stub
 
 	}
@@ -872,7 +883,7 @@ public class APIInterfaceInstance implements APIInterface{
 	}
 
 	@Override
-	public void returnDeleteCalEventFail(String error) {
+	public void returnDeleteCalEventFail(String error,int errorCode) {
 		// TODO Auto-generated method stub
 
 	}
@@ -884,7 +895,7 @@ public class APIInterfaceInstance implements APIInterface{
 	}
 
 	@Override
-	public void returnAddAttachMentFail(String error) {
+	public void returnAddAttachMentFail(String error,int errorCode) {
 		// TODO Auto-generated method stub
 
 	}
@@ -896,7 +907,7 @@ public class APIInterfaceInstance implements APIInterface{
 	}
 
 	@Override
-	public void returnGetTasksFail(String error) {
+	public void returnGetTasksFail(String error,int errorCode) {
 		// TODO Auto-generated method stub
 
 	}
@@ -908,7 +919,7 @@ public class APIInterfaceInstance implements APIInterface{
 	}
 
 	@Override
-	public void returnDelTaskMemFail(String error) {
+	public void returnDelTaskMemFail(String error,int errorCode) {
 		// TODO Auto-generated method stub
 
 	}
@@ -920,7 +931,7 @@ public class APIInterfaceInstance implements APIInterface{
 	}
 
 	@Override
-	public void returnDelTripFail(String error) {
+	public void returnDelTripFail(String error,int errorCode) {
 		// TODO Auto-generated method stub
 
 	}
@@ -933,7 +944,7 @@ public class APIInterfaceInstance implements APIInterface{
 	}
 
 	@Override
-	public void returnCalEventsFail(String error, boolean isRefresh) {
+	public void returnCalEventsFail(String error, boolean isRefresh,int errorCode) {
 		// TODO Auto-generated method stub
 
 	}
@@ -946,7 +957,7 @@ public class APIInterfaceInstance implements APIInterface{
 	}
 
 	@Override
-	public void returnCalEventsFail(String error) {
+	public void returnCalEventsFail(String error,int errorCode) {
 		// TODO Auto-generated method stub
 
 	}
@@ -958,7 +969,7 @@ public class APIInterfaceInstance implements APIInterface{
 	}
 
 	@Override
-	public void returnDndFail(String error) {
+	public void returnDndFail(String error,int errorCode) {
 		// TODO Auto-generated method stub
 
 	}
@@ -970,7 +981,7 @@ public class APIInterfaceInstance implements APIInterface{
 	}
 
 	@Override
-	public void returnModifyPsdFail(String error) {
+	public void returnModifyPsdFail(String error,int errorCode) {
 		// TODO Auto-generated method stub
 
 	}
@@ -982,7 +993,7 @@ public class APIInterfaceInstance implements APIInterface{
 	}
 
 	@Override
-	public void retrunTripArriveFail(String error) {
+	public void retrunTripArriveFail(String error,int errorCode) {
 		// TODO Auto-generated method stub
 
 	}
@@ -994,7 +1005,7 @@ public class APIInterfaceInstance implements APIInterface{
 	}
 
 	@Override
-	public void returnDelMeetingFail(String error) {
+	public void returnDelMeetingFail(String error,int errorCode) {
 		// TODO Auto-generated method stub
 
 	}
@@ -1007,7 +1018,7 @@ public class APIInterfaceInstance implements APIInterface{
 	}
 
 	@Override
-	public void returnDelMembersFail(String errors) {
+	public void returnDelMembersFail(String error ,int errorCode) {
 		// TODO Auto-generated method stub
 
 	}
@@ -1019,7 +1030,7 @@ public class APIInterfaceInstance implements APIInterface{
 	}
 
 	@Override
-	public void returnDelAttachmentFail(String error) {
+	public void returnDelAttachmentFail(String error,int errorCode) {
 		// TODO Auto-generated method stub
 
 	}
@@ -1031,7 +1042,7 @@ public class APIInterfaceInstance implements APIInterface{
 	}
 
 	@Override
-	public void returnChangeMessionOwnerFail(String error) {
+	public void returnChangeMessionOwnerFail(String error,int errorCode) {
 		// TODO Auto-generated method stub
 
 	}
@@ -1043,16 +1054,11 @@ public class APIInterfaceInstance implements APIInterface{
 	}
 
 	@Override
-	public void returnChangeMessionTagFail(String error) {
+	public void returnChangeMessionTagFail(String error,int errorCode) {
 		// TODO Auto-generated method stub
 
 	}
 
-	@Override
-	public void returnOauthSigninFail(String error) {
-		// TODO Auto-generated method stub
-
-	}
 
 	@Override
 	public void returnCardPackageListSuccess(
@@ -1062,7 +1068,7 @@ public class APIInterfaceInstance implements APIInterface{
 	}
 
 	@Override
-	public void returnCardPackageListFail(String error) {
+	public void returnCardPackageListFail(String error,int errorCode) {
 		// TODO Auto-generated method stub
 
 	}
@@ -1074,7 +1080,7 @@ public class APIInterfaceInstance implements APIInterface{
 	}
 
 	@Override
-	public void returnDeleteOfficeFail(String error) {
+	public void returnDeleteOfficeFail(String error,int errorCode) {
 		// TODO Auto-generated method stub
 
 	}
@@ -1086,7 +1092,7 @@ public class APIInterfaceInstance implements APIInterface{
 	}
 
 	@Override
-	public void returnKnowledgeListFail(String error) {
+	public void returnKnowledgeListFail(String error,int errorCode) {
 		// TODO Auto-generated method stub
 
 	}
@@ -1098,7 +1104,7 @@ public class APIInterfaceInstance implements APIInterface{
 	}
 
 	@Override
-	public void returnIsAdminFail(String error) {
+	public void returnIsAdminFail(String error,int errorCode) {
 		// TODO Auto-generated method stub
 
 	}
@@ -1126,7 +1132,7 @@ public class APIInterfaceInstance implements APIInterface{
 	 * @see com.inspur.emmcloud.api.APIInterface#returnLanguageFail(java.lang.String)
 	 */
 	@Override
-	public void returnLanguageFail(String error) {
+	public void returnLanguageFail(String error,int errorCode) {
 		// TODO Auto-generated method stub
 
 	}
@@ -1154,7 +1160,7 @@ public class APIInterfaceInstance implements APIInterface{
 	 * @see com.inspur.emmcloud.api.APIInterface#returnFindSearchFail(java.lang.String)
 	 */
 	@Override
-	public void returnFindSearchFail(String error) {
+	public void returnFindSearchFail(String error,int errorCode) {
 		// TODO Auto-generated method stub
 
 	}
@@ -1173,7 +1179,7 @@ public class APIInterfaceInstance implements APIInterface{
 	 * @see com.inspur.emmcloud.api.APIInterface#returnFindMixSearchFail(java.lang.String)
 	 */
 	@Override
-	public void returnFindMixSearchFail(String error) {
+	public void returnFindMixSearchFail(String error,int errorCode) {
 		// TODO Auto-generated method stub
 
 	}
@@ -1196,7 +1202,7 @@ public class APIInterfaceInstance implements APIInterface{
 	}
 
 	@Override
-	public void returnAllRobotsFail(String error) {
+	public void returnAllRobotsFail(String error,int errorCode) {
 		// TODO Auto-generated method stub
 
 	}
@@ -1208,7 +1214,7 @@ public class APIInterfaceInstance implements APIInterface{
 	}
 
 	@Override
-	public void returnRobotByIdFail(String error) {
+	public void returnRobotByIdFail(String error,int errorCode) {
 		// TODO Auto-generated method stub
 
 	}
@@ -1222,7 +1228,7 @@ public class APIInterfaceInstance implements APIInterface{
 	}
 
 	@Override
-	public void returnUpdatePwdBySMSCodeFail(String error) {
+	public void returnUpdatePwdBySMSCodeFail(String error,int errorCode) {
 		// TODO Auto-generated method stub
 
 	}
@@ -1234,7 +1240,7 @@ public class APIInterfaceInstance implements APIInterface{
 	}
 
 	@Override
-	public void returnGetAppTabsFail(String error) {
+	public void returnGetAppTabsFail(String error,int errorCode) {
 		// TODO Auto-generated method stub
 
 	}
@@ -1246,7 +1252,7 @@ public class APIInterfaceInstance implements APIInterface{
 	}
 
 	@Override
-	public void returnUserAppsFail(String error) {
+	public void returnUserAppsFail(String error,int errorCode) {
 		// TODO Auto-generated method stub
 
 	}
@@ -1258,7 +1264,7 @@ public class APIInterfaceInstance implements APIInterface{
 	}
 
 	@Override
-	public void returnAllAppsFail(String error) {
+	public void returnAllAppsFail(String error,int errorCode) {
 		// TODO Auto-generated method stub
 
 	}
@@ -1270,7 +1276,7 @@ public class APIInterfaceInstance implements APIInterface{
 	}
 
 	@Override
-	public void returnAllAppsFreshFail(String error) {
+	public void returnAllAppsFreshFail(String error,int errorCode) {
 		// TODO Auto-generated method stub
 
 	}
@@ -1282,7 +1288,7 @@ public class APIInterfaceInstance implements APIInterface{
 	}
 
 	@Override
-	public void returnAllAppsMoreFail(String error) {
+	public void returnAllAppsMoreFail(String error,int errorCode) {
 		// TODO Auto-generated method stub
 
 	}
@@ -1294,7 +1300,7 @@ public class APIInterfaceInstance implements APIInterface{
 	}
 
 	@Override
-	public void returnUploadCollectFail() {
+	public void returnUploadCollectFail(String error,int errorCode) {
 		// TODO Auto-generated method stub
 
 	}
@@ -1305,7 +1311,7 @@ public class APIInterfaceInstance implements APIInterface{
 	}
 
 	@Override
-	public void returnReactNativeUpdateFail(ReactNativeClientIdErrorBean reactNativeClientIdErrorBean) {
+	public void returnReactNativeUpdateFail(String error,int errorCode) {
 
 	}
 
@@ -1315,7 +1321,7 @@ public class APIInterfaceInstance implements APIInterface{
 	}
 
 	@Override
-	public void returnGetClientIdResultFail(String error) {
+	public void returnGetClientIdResultFail(String error,int errorCode) {
 
 	}
 
@@ -1325,7 +1331,7 @@ public class APIInterfaceInstance implements APIInterface{
 	}
 
 	@Override
-	public void returnGetAppAuthCodeResultFail(String error) {
+	public void returnGetAppAuthCodeResultFail(String error,int errorCode) {
 
 	}
 
@@ -1335,7 +1341,7 @@ public class APIInterfaceInstance implements APIInterface{
 	}
 
 	@Override
-	public void returnGetDownloadReactNativeUrlFail(String error) {
+	public void returnGetDownloadReactNativeUrlFail(String error,int errorCode) {
 
 	}
 
@@ -1345,7 +1351,7 @@ public class APIInterfaceInstance implements APIInterface{
 	}
 
 	@Override
-	public void returnGetReactNativeInstallUrlFail(String error) {
+	public void returnGetReactNativeInstallUrlFail(String error,int errorCode) {
 
 	}
 
@@ -1355,7 +1361,7 @@ public class APIInterfaceInstance implements APIInterface{
 	}
 
 	@Override
-	public void returnVeriryApprovalPasswordFail(String error) {
+	public void returnVeriryApprovalPasswordFail(String error,int errorCode) {
 
 	}
 
@@ -1365,7 +1371,7 @@ public class APIInterfaceInstance implements APIInterface{
 	}
 
 	@Override
-	public void returnNewsInstructionFail(String error) {
+	public void returnNewsInstructionFail(String error,int errorCode) {
 
 	}
 
@@ -1375,7 +1381,7 @@ public class APIInterfaceInstance implements APIInterface{
 	}
 
 	@Override
-	public void returnAppTabAutoFail(String error) {
+	public void returnAppTabAutoFail(String error,int errorCode) {
 
 	}
 
@@ -1385,7 +1391,7 @@ public class APIInterfaceInstance implements APIInterface{
 	}
 
 	@Override
-	public void returnUserProfileFail(String error) {
+	public void returnUserProfileFail(String error,int errorCode) {
 
 	}
 
@@ -1406,6 +1412,16 @@ public class APIInterfaceInstance implements APIInterface{
 
 	@Override
 	public void returnMDMStateFail(String error, int errorCode) {
+
+	}
+
+	@Override
+	public void returnLoginDesktopCloudPlusSuccess(LoginDesktopCloudPlusBean loginDesktopCloudPlusBean) {
+
+	}
+
+	@Override
+	public void returnLoginDesktopCloudPlusFail(String error, int errorCode) {
 
 	}
 }

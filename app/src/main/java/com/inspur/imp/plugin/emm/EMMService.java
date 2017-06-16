@@ -2,15 +2,15 @@ package com.inspur.imp.plugin.emm;
 
 import android.os.Build;
 
+import com.inspur.emmcloud.bean.GetDeviceCheckResult;
 import com.inspur.emmcloud.util.AppUtils;
 import com.inspur.emmcloud.util.LogUtils;
+import com.inspur.emmcloud.util.MDM.MDM;
 import com.inspur.emmcloud.util.PreferencesUtils;
+import com.inspur.emmcloud.util.ResolutionUtils;
 import com.inspur.emmcloud.util.ToastUtils;
 import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.imp.plugin.ImpPlugin;
-import com.inspur.mdm.MDM;
-import com.inspur.mdm.bean.GetDeviceCheckResult;
-import com.inspur.mdm.utils.MDMUtils;
 
 import org.json.JSONObject;
 
@@ -62,7 +62,7 @@ public class EMMService extends ImpPlugin {
 			obj.put("device_model", Build.MODEL);
 			obj.put("os", "Android");
 			obj.put("os_version", Build.VERSION.RELEASE);
-			obj.put("resolution", MDMUtils.getDeviceResolution(context));
+			obj.put("resolution", ResolutionUtils.getResolution(getActivity()));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

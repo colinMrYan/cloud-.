@@ -13,6 +13,7 @@ import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.TimeUtils;
 import com.inspur.emmcloud.util.UriUtils;
 import com.lidroid.xutils.db.annotation.Id;
+import com.lidroid.xutils.db.annotation.Table;
 import com.lidroid.xutils.db.annotation.Transient;
 
 import org.json.JSONObject;
@@ -23,6 +24,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
+@Table(name="Channel")
 public class Channel implements Serializable {
 	@Id
 	private String cid = "";

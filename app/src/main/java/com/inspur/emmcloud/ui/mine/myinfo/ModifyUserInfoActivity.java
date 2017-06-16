@@ -80,11 +80,11 @@ public class ModifyUserInfoActivity extends BaseActivity {
 		}
 
 		@Override
-		public void returnModifyUserInfoFail(String error) {
+		public void returnModifyUserInfoFail(String error,int errorCode) {
 			if(loadingDialog != null && loadingDialog.isShowing()){
 				loadingDialog.dismiss();
 			}
-			WebServiceMiddleUtils.hand(ModifyUserInfoActivity.this, error);
+			WebServiceMiddleUtils.hand(ModifyUserInfoActivity.this, error,errorCode);
 		}
 
 	}

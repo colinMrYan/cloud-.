@@ -90,7 +90,7 @@ public class StartAppService extends ImpPlugin {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.inspur.imp.plugin.ImpPlugin#execute(java.lang.String,
+	 * @see com.inspur.imp.plugin.ImpPlugin#reExecute(java.lang.String,
 	 * org.json.JSONObject)
 	 */
 	@Override

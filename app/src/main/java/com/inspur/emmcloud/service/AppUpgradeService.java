@@ -64,7 +64,7 @@ public class AppUpgradeService extends Service{
 		}
 
 		@Override
-		public void returnUpgradeFail(String error,boolean isManualCheck) {
+		public void returnUpgradeFail(String error,boolean isManualCheck,int errorCode) {
 			// TODO Auto-generated method stub
 			if (isManualCheck){
 				handler.post(new Runnable(){

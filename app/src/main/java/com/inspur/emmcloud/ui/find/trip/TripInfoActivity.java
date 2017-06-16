@@ -15,7 +15,7 @@ import com.inspur.emmcloud.bean.Trip;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.TimeUtils;
-import com.inspur.emmcloud.util.ToastUtils;
+import com.inspur.emmcloud.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 
 import java.io.Serializable;
@@ -128,11 +128,11 @@ public class TripInfoActivity extends BaseActivity{
 		}
 
 		@Override
-		public void returnTripFail(String error) {
+		public void returnTripFail(String error,int errorCode) {
 			if (loadingDlg != null && loadingDlg.isShowing()){
 				loadingDlg.dismiss();
 			}
-			ToastUtils.show(getApplicationContext(),"行程获取失败");
+			WebServiceMiddleUtils.hand(TripInfoActivity.this,error,errorCode);
 			finish();
 		}
 	}

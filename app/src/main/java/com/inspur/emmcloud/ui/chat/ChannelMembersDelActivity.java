@@ -1,9 +1,5 @@
 package com.inspur.emmcloud.ui.chat;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -25,6 +21,10 @@ import com.inspur.emmcloud.util.ImageDisplayUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.emmcloud.widget.CircleImageView;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * 删除成员的Activity
@@ -93,7 +93,7 @@ public class ChannelMembersDelActivity extends BaseActivity {
 			CircleImageView circleImageView = (CircleImageView) convertView
 					.findViewById(R.id.head);
 			imageDisplayUtils.display(circleImageView, UriUtils
-					.getChannelImgUri(memberList.get(position).getInspurID()));
+					.getChannelImgUri(ChannelMembersDelActivity.this,memberList.get(position).getInspurID()));
 			((TextView) convertView.findViewById(R.id.title))
 					.setText(memberList.get(position).getName());
 			((CheckBox) convertView.findViewById(R.id.choose_check))

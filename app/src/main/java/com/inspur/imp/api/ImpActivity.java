@@ -28,14 +28,14 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.config.MyAppWebConfig;
 import com.inspur.emmcloud.util.AppUtils;
 import com.inspur.emmcloud.util.LogUtils;
-import com.inspur.emmcloud.util.PreferencesByUserUtils;
+
 import com.inspur.emmcloud.util.PreferencesUtils;
+import com.inspur.emmcloud.util.MDM.MDM;
 import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.imp.engine.webview.ImpWebChromeClient;
 import com.inspur.imp.engine.webview.ImpWebView;
 import com.inspur.imp.plugin.camera.PublicWay;
 import com.inspur.imp.plugin.file.FileService;
-import com.inspur.mdm.MDM;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -1,8 +1,5 @@
 package com.inspur.emmcloud.adapter;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.view.LayoutInflater;
@@ -23,8 +20,12 @@ import com.inspur.emmcloud.bean.GetOfficeResult.Office;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.UriUtils;
+import com.inspur.emmcloud.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.dialogs.EasyDialog;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MeetingRoomPopAdater extends BaseAdapter {
 
@@ -165,8 +166,6 @@ public class MeetingRoomPopAdater extends BaseAdapter {
 		@Override
 		public void returnDeleteOfficeSuccess() {
 			// TODO Auto-generated method stub
-			super.returnDeleteOfficeSuccess();
-
 			if (loadingDialog.isShowing()) {
 				loadingDialog.dismiss();
 			}
@@ -186,13 +185,13 @@ public class MeetingRoomPopAdater extends BaseAdapter {
 		}
 
 		@Override
-		public void returnDeleteOfficeFail(String error) {
+		public void returnDeleteOfficeFail(String error,int errorCode) {
 			// TODO Auto-generated method stub
-			super.returnDeleteOfficeFail(error);
 
 			if (loadingDialog.isShowing()) {
 				loadingDialog.dismiss();
 			}
+			WebServiceMiddleUtils.hand(context,error,errorCode);
 		}
 	}
 

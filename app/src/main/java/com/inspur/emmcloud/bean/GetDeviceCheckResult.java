@@ -1,12 +1,11 @@
-package com.inspur.mdm.bean;
-
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+package com.inspur.emmcloud.bean;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Map;
 
 /**
  * 

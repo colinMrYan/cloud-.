@@ -68,7 +68,7 @@ import com.inspur.emmcloud.bean.GetUpgradeResult;
 import com.inspur.emmcloud.bean.GetUploadMyHeadResult;
 import com.inspur.emmcloud.bean.GetUserHeadUploadResult;
 import com.inspur.emmcloud.bean.GetWebSocketUrlResult;
-import com.inspur.emmcloud.bean.ReactNativeClientIdErrorBean;
+import com.inspur.emmcloud.bean.LoginDesktopCloudPlusBean;
 import com.inspur.emmcloud.bean.ReactNativeDownloadUrlBean;
 import com.inspur.emmcloud.bean.ReactNativeInstallUriBean;
 import com.inspur.emmcloud.bean.ReactNativeUpdateBean;
@@ -77,6 +77,7 @@ import com.inspur.emmcloud.bean.SplashPageBean;
 import com.inspur.emmcloud.bean.TaskResult;
 import com.inspur.emmcloud.bean.Trip;
 import com.inspur.emmcloud.bean.UserProfileInfoBean;
+import com.inspur.emmcloud.bean.GetDeviceCheckResult;
 
 
 public interface APIInterface {
@@ -85,47 +86,45 @@ public interface APIInterface {
 
 	void returnOauthSigninFail(String error, int errorCode);
 
-	void returnOauthSigninFail(String error);
-
 	void returnAllAppsSuccess(GetAllAppResult getAllAppResult);
 
-	void returnAllAppsFail(String error);
+	void returnAllAppsFail(String error,int errorCode);
 
 	void returnAllAppsFreshSuccess(GetAllAppResult getAllAppResult);
 
-	void returnAllAppsFreshFail(String error);
+	void returnAllAppsFreshFail(String error,int errorCode);
 
 	void returnAllAppsMoreSuccess(GetAllAppResult getAllAppResult);
 
-	void returnAllAppsMoreFail(String error);
+	void returnAllAppsMoreFail(String error,int errorCode);
 
 	void returnAddAppSuccess(GetAddAppResult getAddAppResult);
 
-	void returnAddAppFail(String error);
+	void returnAddAppFail(String error,int errorCode);
 
 	void returnRemoveAppSuccess(GetRemoveAppResult getRemoveAppResult);
 
-	void returnRemoveAppFail(String error);
+	void returnRemoveAppFail(String error,int errorCode);
 
 	void returnMyAppSuccess(GetMyAppResult getMyAppResult);
 
-	void returnMyAppFail(String error);
+	void returnMyAppFail(String error,int errorCode);
 
 	void returnSignoutSuccess(GetSignoutResult getSignoutResult);
 
-	void returnSignoutFail(String error);
+	void returnSignoutFail(String error,int errorCode);
 
 	void returnUpgradeSuccess(GetUpgradeResult getUpgradeResult, boolean isManualCheck);
 
-	void returnUpgradeFail(String error, boolean isManualCheck);
+	void returnUpgradeFail(String error,boolean isManualCheck,int errorCode);
 
 	void returnSearchAppSuccess(GetSearchAppResult getAllAppResult);
 
-	void returnSearchAppFail(String error);
+	void returnSearchAppFail(String error,int errorCode);
 
 	void returnSearchAppMoreSuccess(GetSearchAppResult getAllAppResult);
 
-	void returnSearchAppMoreFail(String error);
+	void returnSearchAppMoreFail(String error,int errorCode);
 
 	void returnReqLoginSMSSuccess(GetBoolenResult getBoolenResult);
 
@@ -134,85 +133,85 @@ public interface APIInterface {
 
 	void returnRegisterSMSSuccess(GetRegisterResult getRegisterResult);
 
-	void returnRegisterSMSFail(String error);
+	void returnRegisterSMSFail(String error,int errorCode);
 
 	void returnReisterSMSCheckSuccess(GetRegisterCheckResult getRegisterResult);
 
-	void returnReisterSMSCheckFail(String error);
+	void returnReisterSMSCheckFail(String error,int errorCode);
 
 	void returnMyInfoSuccess(GetMyInfoResult getMyInfoResult);
 
-	void returnMyInfoFail(String error);
+	void returnMyInfoFail(String error,int errorCode);
 
 
 	void returnUsersInOrgSuccess(GetAdressUsersResult getAdressUsersResult);
 
-	void returnUsersInOrgFail(String error);
+	void returnUsersInOrgFail(String error,int errorCode);
 
 	void returnUploadMyHeadSuccess(GetUploadMyHeadResult getUploadMyInfoResult);
 
-	void returnUploadMyHeadFail(String error);
+	void returnUploadMyHeadFail(String error,int errorCode);
 
 	void returnChannelListSuccess(GetChannelListResult getSessionListResult);
 
-	void returnChannelListFail(String error);
+	void returnChannelListFail(String error,int errorCode);
 
 	void returnNewMsgsSuccess(GetNewMsgsResult getNewMsgsResult);
 
-	void returnNewMsgsFail(String error);
+	void returnNewMsgsFail(String error,int errorCode);
 
 
 	void returnMsgCommentSuccess(GetMsgCommentResult getMsgCommentResult, String mid);
 
-	void returnMsgCommentFail(String error);
+	void returnMsgCommentFail(String error,int errorCode);
 
 	void returnMsgCommentCountSuccess(GetMsgCommentCountResult getMsgCommentCountResult, String mid);
 
-	void returnMsgCommentCountFail(String error);
+	void returnMsgCommentCountFail(String error,int errorCode);
 
 	void returnNewsSuccess(GetNewsResult getNewsResult);
 
-	void returnNewsFail(String error);
+	void returnNewsFail(String error,int errorCode);
 
 	void returnModifyUserInfoSucces(GetBoolenResult getBoolenResult);
 
-	void returnModifyUserInfoFail(String error);
+	void returnModifyUserInfoFail(String error,int errorCode);
 
 	void returnWebSocketUrlSuccess(GetWebSocketUrlResult getWebSocketResult);
 
-	void returnWebSocketUrlFail(String error);
+	void returnWebSocketUrlFail(String error,int errorCode);
 
 	void returnSendMsgSuccess(GetSendMsgResult getSendMsgResult, String fakeMessageId);
 
-	void returnSendMsgFail(String error, String fakeMessageId);
+	void returnSendMsgFail(String error, String fakeMessageId,int errorCode);
 
 	void returnUploadMsgImgSuccess(GetNewsImgResult getNewsImgResult, String fakeMessageId);
 
-	void returnUploadMsgImgFail(String error);
+	void returnUploadMsgImgFail(String error,int errorCode);
 
 	void returnGroupNewsTitleSuccess(GetNewsTitleResult getNewsTitleResult);
 
-	void returnGroupNewsTitleFail(String error);
+	void returnGroupNewsTitleFail(String error,int errorCode);
 
 	void returnGroupNewsDetailSuccess(GetGroupNewsDetailResult getGroupNewsDetailResult);
 
-	void returnGroupNewsDetailFail(String error);
+	void returnGroupNewsDetailFail(String error,int errorCode);
 
 	void returnMeetingsSuccess(GetMeetingsResult getMeetingsResult);
 
-	void returnMeetingsFail(String error);
+	void returnMeetingsFail(String error,int errorCode);
 
 	void returnMeetingsSuccess(GetMeetingsResult getMeetingsResult, boolean isLoadMore);
 
 	void returnMeetingRoomsSuccess(GetMeetingRoomsResult getMeetingRoomsResult);
 
-	void returnMeetingRoomsFail(String error);
+	void returnMeetingRoomsFail(String error,int errorCode);
 
 	void returnMeetingRoomsSuccess(GetMeetingRoomsResult getMeetingRoomsResult, boolean isFilte);
 
 	void returnMsgSuccess(GetMsgResult getMsgResult);
 
-	void returnMsgFail(String error);
+	void returnMsgFail(String error,int errorCode);
 
 	void returnBookingRoomSuccess(GetBookingRoomResult getBookingRoomResult);
 
@@ -220,286 +219,286 @@ public interface APIInterface {
 
 	void returnChannelInfoSuccess(GetChannelInfoResult getChannelInfoResult);
 
-	void returnChannelInfoFail(String error);
+	void returnChannelInfoFail(String error,int errorCode);
 
 	void returnRoomAvailableTimeSuccess(GetRoomAvailableResult getRoomAvailableResult);
 
-	void returnRoomAvailableTimeFail(String error);
+	void returnRoomAvailableTimeFail(String error,int errorCode);
 
 	void returnAllContactSuccess(GetAllContactResult getAllContactResult);
 
-	void returnAllContactFail(String error);
+	void returnAllContactFail(String error,int errorCode);
 
 	void returnFileUpLoadSuccess(GetFileUploadResult getFileUploadResult, String fakeMessageId);
 
-	void returnFileUpLoadFail(String error);
+	void returnFileUpLoadFail(String error,int errorCode);
 
 	void returnSearchChannelGroupSuccess(GetSearchChannelGroupResult getSearchChannelGroupResult);
 
-	void returnSearchChannelGroupFail(String error);
+	void returnSearchChannelGroupFail(String error,int errorCode);
 
 	void returnUserHeadUploadSuccess(GetUserHeadUploadResult getUserHeadUploadResult);
 
-	void returnUserHeadUploadFail(String error);
+	void returnUserHeadUploadFail(String error,int errorCode);
 
 	void returnCreateSingleChannelSuccess(GetCreateSingleChannelResult getCreatSingleChannelResult);
 
-	void returnCreatSingleChannelFail(String error);
+	void returnCreatSingleChannelFail(String error,int errorCode);
 
 	void returnCreatChannelGroupSuccess(ChannelGroup channelGroup);
 
-	void returnCreateChannelGroupFail(String error);
+	void returnCreateChannelGroupFail(String error,int errorCode);
 
 	void returnGetMeetingReplySuccess(GetMeetingReplyResult getMeetingReplyResult);
 
-	void returnGetMeetingReplyFail(String error);
+	void returnGetMeetingReplyFail(String error,int errorCode);
 
 	void returnTripSuccess(Trip trip);
 
-	void returnTripFail(String error);
+	void returnTripFail(String error,int errorCode);
 
 	void returnLastUploadTripSuccess(Trip trip);
 
-	void returnLastUploadTripFail(String error);
+	void returnLastUploadTripFail(String error,int errorCode);
 
 	void returnUpdateChannelGroupNameSuccess(GetBoolenResult getBoolenResult);
 
-	void returnUpdateChannelGroupNameFail(String error);
+	void returnUpdateChannelGroupNameFail(String error,int errorCode);
 
 	void returnMeetingListSuccess(GetMeetingListResult getMeetingListResult, String date);
 
 	void returnMeetingListSuccess(GetMeetingListResult getMeetingListResult);
 
-	void returnMeetingListFail(String error);
+	void returnMeetingListFail(String error,int errorCode);
 
 	void returnUploadTrainTicketSuccess();
 
-	void returnUploadTrainTicketFail(String error);
+	void returnUploadTrainTicketFail(String error,int errorCode);
 
 	void returnUploadExceptionSuccess(GetExceptionResult getExceptionResult);
 
-	void returnUploadExceptionFail(String error);
+	void returnUploadExceptionFail(String error,int errorCode);
 
 	void returnLoctionResultSuccess(GetLoctionResult getLoctionResult);
 
-	void returnLoctionResultFail(String error);
+	void returnLoctionResultFail(String error,int errorCode);
 
 	void returnOfficeResultSuccess(GetOfficeResult getOfficeResult);
 
-	void returnOfficeResultFail(String error);
+	void returnOfficeResultFail(String error,int errorCode);
 
 	void returnCreatOfficeSuccess(GetCreateOfficeResult getCreateOfficeResult);
 
-	void returnCreatOfficeFail(String error);
+	void returnCreatOfficeFail(String error,int errorCode);
 
 	void returnAddMembersSuccess(GetAddMembersSuccessResult getAddMembersSuccessResult);
 
-	void returnAddMembersFail(String error);
+	void returnAddMembersFail(String error,int errorCode);
 
 	void returnRecentTasksSuccess(GetTaskListResult getTaskListResult);
 
-	void returnRecentTasksFail(String error);
+	void returnRecentTasksFail(String error,int errorCode);
 
 	void returnMyCalendarSuccess(GetMyCalendarResult getMyCalendarResult);
 
-	void returnMyCalendarFail(String error);
+	void returnMyCalendarFail(String error,int errorCode);
 
 	void returnDelelteCalendarByIdSuccess();
 
-	void returnDelelteCalendarByIdFail(String error);
+	void returnDelelteCalendarByIdFail(String error,int errorCode);
 
 	void returnUpdateCalendarSuccess();
 
-	void returnUpdateCalendarFail(String error);
+	void returnUpdateCalendarFail(String error,int errorCode);
 
 	void returnGetTagResultSuccess(GetTagResult getTagResult);
 
-	void returnGetTagResultFail(String error);
+	void returnGetTagResultFail(String error,int errorCode);
 
 	void returnAddCalEventSuccess(GetIDResult getIDResult);
 
-	void returnAddCalEventFail(String error);
+	void returnAddCalEventFail(String error,int errorCode);
 
 	void returnDeleteTagSuccess();
 
-	void returnDeleteTagFail(String error);
+	void returnDeleteTagFail(String error,int errorCode);
 
 	void returnCreateTagSuccess();
 
-	void returnCreateTagFail(String error);
+	void returnCreateTagFail(String error,int errorCode);
 
 	void returnCreateTaskSuccess(GetTaskAddResult getTaskAddResult);
 
-	void returnCreateTaskFail(String error);
+	void returnCreateTaskFail(String error,int errorCode);
 
 	void returnDeleteTaskSuccess();
 
-	void returnDeleteTaskFail(String error);
+	void returnDeleteTaskFail(String error,int errorCode);
 
 	void returnInviteMateForTaskSuccess(String subobject);
 
-	void returnInviteMateForTaskFail(String error);
+	void returnInviteMateForTaskFail(String error,int errorCode);
 
 	void returnUpdateTaskSuccess();
 
-	void returnUpdateTaskFail(String error);
+	void returnUpdateTaskFail(String error,int errorCode);
 
 	void returnCalEventsSuccess(GetCalendarEventsResult getCalendarEventsResult, boolean isRefresh);
 
-	void returnCalEventsFail(String error, boolean isRefresh);
+	void returnCalEventsFail(String error, boolean isRefresh,int errorCode);
 
 	void returnCalEventsSuccess(GetCalendarEventsResult getCalendarEventsResult);
 
-	void returnCalEventsFail(String error);
+	void returnCalEventsFail(String error,int errorCode);
 
 	void returnAttachmentSuccess(TaskResult taskResult);
 
-	void returnAttachmentFail(String error);
+	void returnAttachmentFail(String error,int errorCode);
 
 	void returnUpdateCalEventSuccess();
 
-	void returnUpdateCalEventFail(String error);
+	void returnUpdateCalEventFail(String error,int errorCode);
 
 	void returnDeleteCalEventSuccess();
 
-	void returnDeleteCalEventFail(String error);
+	void returnDeleteCalEventFail(String error,int errorCode);
 
 	void returnAddAttachMentSuccess(Attachment attachment);
 
-	void returnAddAttachMentFail(String error);
+	void returnAddAttachMentFail(String error,int errorCode);
 
 	void returnGetTasksSuccess(GetTaskListResult getTaskListResult);
 
-	void returnGetTasksFail(String error);
+	void returnGetTasksFail(String error,int errorCode);
 
 	void returnDelTaskMemSuccess();
 
-	void returnDelTaskMemFail(String error);
+	void returnDelTaskMemFail(String error,int errorCode);
 
 	void returnDelTripSuccess();
 
-	void returnDelTripFail(String error);
+	void returnDelTripFail(String error,int errorCode);
 
 	void returnDndSuccess();
 
-	void returnDndFail(String error);
+	void returnDndFail(String error,int errorCode);
 
 	void returnModifyPsdSuccess();
 
-	void returnModifyPsdFail(String error);
+	void returnModifyPsdFail(String error,int errorCode);
 
 	void returnTripArriveSuccess(GetTripArriveCity getTripArriveCity);
 
-	void retrunTripArriveFail(String error);
+	void retrunTripArriveFail(String error,int errorCode);
 
 	void returnDelMeetingSuccess();
 
-	void returnDelMeetingFail(String error);
+	void returnDelMeetingFail(String error,int errorCode);
 
 	void returnDelMembersSuccess(GetChannelInfoResult getChannelInfoResult);
 
-	void returnDelMembersFail(String errors);
+	void returnDelMembersFail(String error,int errorCode);
 
 	void returnDelAttachmentSuccess();
 
-	void returnDelAttachmentFail(String error);
+	void returnDelAttachmentFail(String error,int errorCode);
 
 	void returnChangeMessionOwnerSuccess();
 
-	void returnChangeMessionOwnerFail(String error);
+	void returnChangeMessionOwnerFail(String error,int errorCode);
 
 	void returnChangeMessionTagSuccess();
 
-	void returnChangeMessionTagFail(String error);
+	void returnChangeMessionTagFail(String error,int errorCode);
 
 
 	void returnCardPackageListSuccess(GetCardPackageListResult getCardPackageListResult);
 
-	void returnCardPackageListFail(String error);
+	void returnCardPackageListFail(String error,int errorCode);
 
 	void returnDeleteOfficeSuccess();
 
-	void returnDeleteOfficeFail(String error);
+	void returnDeleteOfficeFail(String error,int errorCode);
 
 	void returnKnowledgeListSuccess(GetKnowledgeInfo getKnowledgeInfo);
 
-	void returnKnowledgeListFail(String error);
+	void returnKnowledgeListFail(String error,int errorCode);
 
 	void returnIsAdminSuccess(GetIsAdmin getIsAdmin);
 
-	void returnIsAdminFail(String error);
+	void returnIsAdminFail(String error,int errorCode);
 
 	void returnLanguageSuccess(GetLanguageResult getLanguageResult);
 
-	void returnLanguageFail(String error);
+	void returnLanguageFail(String error,int errorCode);
 
 	void returnFindSearchSuccess(GetFindSearchResult getFindSearchResult);
 
-	void returnFindSearchFail(String error);
+	void returnFindSearchFail(String error,int errorCode);
 
 	void returnFindMixSearchSuccess(GetFindMixSearchResult getFindMixSearchResult);
 
-	void returnFindMixSearchFail(String error);
+	void returnFindMixSearchFail(String error,int errorCode);
 
 	void returnAllRobotsSuccess(GetAllRobotsResult getAllRobotsResult);
 
-	void returnAllRobotsFail(String error);
+	void returnAllRobotsFail(String error,int errorCode);
 
 	void returnRobotByIdSuccess(Robot robot);
 
-	void returnRobotByIdFail(String error);
+	void returnRobotByIdFail(String error,int errorCode);
 
 	void returnUpdatePwdBySMSCodeSuccess(GetUpdatePwdBySMSCodeBean getUpdatePwdBySMSCodeBean);
 
-	void returnUpdatePwdBySMSCodeFail(String error);
+	void returnUpdatePwdBySMSCodeFail(String error,int errorCode);
 
 	void returnGetAppTabsSuccess(GetAppTabsResult getAppTabsResult);
 
-	void returnGetAppTabsFail(String error);
+	void returnGetAppTabsFail(String error,int errorCode);
 
 	void returnUserAppsSuccess(GetAppGroupResult getAppGroupResult);
 
-	void returnUserAppsFail(String error);
+	void returnUserAppsFail(String error,int errorCode);
 
 	void returnUploadCollectSuccess();
 
-	void returnUploadCollectFail();
+	void returnUploadCollectFail(String error,int errorCode);
 
 	void returnReactNativeUpdateSuccess(ReactNativeUpdateBean reactNativeUpdateBean);
 
-	void returnReactNativeUpdateFail(ReactNativeClientIdErrorBean reactNativeClientIdErrorBean);
+	void returnReactNativeUpdateFail(String error,int errorCode);
 
 	void returnGetClientIdResultSuccess(GetClientIdRsult getClientIdRsult);
 
-	void returnGetClientIdResultFail(String error);
+	void returnGetClientIdResultFail(String error,int errorCode);
 
 	void returnGetAppAuthCodeResultSuccess(AppRedirectResult appRedirectResult);
 
-	void returnGetAppAuthCodeResultFail(String error);
+	void returnGetAppAuthCodeResultFail(String error,int errorCode);
 
 	void returnGetDownloadReactNativeUrlSuccess(ReactNativeDownloadUrlBean reactNativeDownloadUrlBean);
 
-	void returnGetDownloadReactNativeUrlFail(String error);
+	void returnGetDownloadReactNativeUrlFail(String error,int errorCode);
 
 	void returnGetReactNativeInstallUrlSuccess(ReactNativeInstallUriBean reactNativeInstallUriBean);
 
-	void returnGetReactNativeInstallUrlFail(String error);
+	void returnGetReactNativeInstallUrlFail(String error,int errorCode);
 
 	void returnVeriryApprovalPasswordSuccess(String password);
 
-	void returnVeriryApprovalPasswordFail(String error);
+	void returnVeriryApprovalPasswordFail(String error,int errorCode);
 
 	void returnNewsInstructionSuccess(GetNewsInstructionResult getNewsInstructionResult);
 
-	void returnNewsInstructionFail(String error);
+	void returnNewsInstructionFail(String error,int errorCode);
 
 	void returnAppTabAutoSuccess(GetAppTabAutoResult getAppTabAutoResult);
 
-	void returnAppTabAutoFail(String error);
+	void returnAppTabAutoFail(String error,int errorCode);
 
 	void returnUserProfileSuccess(UserProfileInfoBean userProfileInfoBean);
 
-	void returnUserProfileFail(String error);
+	void returnUserProfileFail(String error,int errorCode);
 
 	void returnBindingDeviceListSuccess(GetBindingDeviceResult getBindingDeviceResult);
 
@@ -513,7 +512,16 @@ public interface APIInterface {
 	void returnMDMStateFail(String error, int errorCode);
 
 
-	public void returnSplashPageInfoSuccess(SplashPageBean splashPageBean);
-	public void returnSplashPageInfoFail(String error,int errorCode);
+	void returnSplashPageInfoSuccess(SplashPageBean splashPageBean);
+	void returnSplashPageInfoFail(String error,int errorCode);
+
+	void returnLoginDesktopCloudPlusSuccess(LoginDesktopCloudPlusBean loginDesktopCloudPlusBean);
+	void returnLoginDesktopCloudPlusFail(String error,int errorCode);
+
+
+	void returnDeviceCheckSuccess(
+			GetDeviceCheckResult getDeviceCheckResult);
+
+	void returnDeviceCheckFail(String error,int errorCode);
 
 }
