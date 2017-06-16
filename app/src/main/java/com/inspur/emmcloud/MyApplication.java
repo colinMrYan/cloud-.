@@ -409,9 +409,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
     @Override
     public void onConfigurationChanged(Configuration config) {
         // TODO Auto-generated method stub
-        if (config != null) {
-            super.onConfigurationChanged(config);
-        }
+        config = getResources().getConfiguration();
         String languageJson = PreferencesUtils
                 .getString(getApplicationContext(), UriUtils.tanent
                         + "appLanguageObj");
@@ -461,15 +459,13 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
                 // TODO: handle exception
                 e.printStackTrace();
             }
-            Locale locale = new Locale(country, variant);
-            Locale.setDefault(locale);
-            config = getResources().getConfiguration();
-            config.locale = locale;
-            if (getApplicationContext() != null) {
-                getApplicationContext().getResources().updateConfiguration(config,
-                        getResources().getDisplayMetrics());
-            }
+            config.locale = new Locale(country, variant);
         }
+        if (getApplicationContext() != null) {
+            getApplicationContext().getResources().updateConfiguration(config,
+                    getResources().getDisplayMetrics());
+        }
+        super.onConfigurationChanged(config);
     }
 
     /**
