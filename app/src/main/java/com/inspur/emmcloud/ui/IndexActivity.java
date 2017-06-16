@@ -538,7 +538,7 @@ public class IndexActivity extends BaseFragmentActivity implements
             isCommunicationRunning = true;
             int targetTabIndex = getTabIndex();
             boolean isOpenNotify = getIntent().hasExtra("command") && getIntent().getStringExtra("command").equals("open_notification");
-            if ( mTabHost.getCurrentTab() != targetTabIndex && !isOpenNotify){
+            if (mTabHost!=null && mTabHost.getCurrentTab() != targetTabIndex && !isOpenNotify){
                 mTabHost.setCurrentTab(targetTabIndex);
             }
         }catch (Exception e){
