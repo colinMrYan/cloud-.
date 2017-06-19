@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.os.Environment;
 import android.os.Parcelable;
 import android.support.multidex.MultiDexApplication;
@@ -44,7 +45,6 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
 
-import org.apache.commons.lang3.SystemUtils;
 import org.xutils.http.RequestParams;
 import org.xutils.x;
 
@@ -110,7 +110,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
                 "isContactReady", false);
         uid = PreferencesUtils.getString(getApplicationContext(), "userID");
         accessToken = PreferencesUtils.getString(getApplicationContext(), "accessToken", "");
-        setAppLanguage();
+        setAppLanguageAndFontScale();
         removeAllSessionCookie();
         //修改字体方案预留
 //        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
@@ -406,23 +406,25 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
 
     }
 
-	@Override
+
+    @Override
 	public void onConfigurationChanged(Configuration config) {
 		// TODO Auto-generated method stub
         if (config != null){
             super.onConfigurationChanged(config);
         }
-        setAppLanguage();
+        setAppLanguageAndFontScale();
 	}
 
     /**
      * 设置App的语言
      */
-	public void setAppLanguage(){
+	public void setAppLanguageAndFontScale(){
 
             String languageJson = PreferencesUtils
                     .getString(getApplicationContext(), UriUtils.tanent
                             + "appLanguageObj");
+        Configuration config = getResources().getConfiguration();
             if (languageJson != null) {
                 String language = PreferencesUtils.getString(
                         getApplicationContext(), UriUtils.tanent + "language");
@@ -436,13 +438,10 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
                                 .parseArray(commonLanguageListJson,
                                         Language.class);
                         boolean isContainDefault = false;
-//                        Configuration config=new Configuration();
-//                        config.setToDefaults();
-                        LogUtils.jasonDebug("Locale.getDefault().getCountry())000000="+ Locale.getDefault().getLanguage());
                         for (int i = 0; i < commonLanguageList.size(); i++) {
                             Language commonLanguage = commonLanguageList.get(i);
                             if (commonLanguage.getIso().contains(
-                                    Locale.getDefault().getCountry())) {
+                                    Resources.getSystem().getConfiguration().locale.getCountry())) {
                                 PreferencesUtils.putString(
                                         getApplicationContext(),
                                         UriUtils.tanent + "appLanguageObj",
@@ -472,15 +471,15 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
                     // TODO: handle exception
                     e.printStackTrace();
                 }
-                Configuration config = getResources().getConfiguration();
                 Locale locale =  new Locale(country, variant);
                 config.locale = locale;
-                getResources().updateConfiguration(config,
-                        getResources().getDisplayMetrics());
-                LogUtils.jasonDebug("end="+getResources().getConfiguration().locale.getLanguage());
             }
+            config.fontScale = 1.0f;
+        getResources().updateConfiguration(config,
+                getResources().getDisplayMetrics());
 
     }
+
 
     /**
      * init ImageLoader

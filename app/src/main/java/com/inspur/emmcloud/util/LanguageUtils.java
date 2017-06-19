@@ -126,7 +126,7 @@ public class LanguageUtils {
 		String commonLanguageListJson = JSON.toJSONString(commonLanguageList);
 		PreferencesUtils.putString(context, UriUtils.tanent+"commonLanguageList", commonLanguageListJson);
 		((MyApplication) context.getApplicationContext())
-				.setAppLanguage();
+				.setAppLanguageAndFontScale();
 		handler.sendEmptyMessage(GET_LANGUAGE_SUCCESS);
 		
 	}

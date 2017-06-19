@@ -157,7 +157,7 @@ public class LanguageChangeActivity extends BaseActivity {
 
 //					Configuration config = getResources().getConfiguration();
 					((MyApplication) getApplicationContext())
-							.setAppLanguage();
+							.setAppLanguageAndFontScale();
 					Intent intentLog = new Intent(LanguageChangeActivity.this,
 							IndexActivity.class);
 					intentLog.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
