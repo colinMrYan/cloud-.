@@ -46,14 +46,14 @@ public class BaseActivity extends Activity {
 		}
 	}
 	
-	@Override  
-	public Resources getResources() {  
-	    Resources res = super.getResources();    
-	    Configuration config=new Configuration();    
-	    config.setToDefaults();    
-	    res.updateConfiguration(config,res.getDisplayMetrics() );  
-	    return res;  
-	}
+//	@Override
+//	public Resources getResources() {
+//	    Resources res = super.getResources();
+//	    Configuration config=new Configuration();
+//	    config.setToDefaults();
+//	    res.updateConfiguration(config,res.getDisplayMetrics() );
+//	    return res;
+//	}
 
 	/**
 	 * 上传MDM需要的设备信息
