@@ -46,7 +46,6 @@ import com.inspur.emmcloud.util.ChatCreateUtils.OnCreateGroupChannelListener;
 import com.inspur.emmcloud.util.DirectChannelUtils;
 import com.inspur.emmcloud.util.ImageDisplayUtils;
 import com.inspur.emmcloud.util.IntentUtils;
-import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.MsgCacheUtil;
 import com.inspur.emmcloud.util.MsgMatheSetCacheUtils;
 import com.inspur.emmcloud.util.MsgReadIDCacheUtils;
@@ -188,6 +187,7 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
             if (appTabList.get(i).getComponent().equals("communicate")) {
                 AppTabAutoBean.PayloadBean.TabsBean.Property property = appTabList.get(i).getProperty();
                 if (property != null) {
+					rootView.findViewById(R.id.find_friends_btn).setVisibility(View.GONE);
                     if (!property.isCanCreate()) {
                         rootView.findViewById(R.id.add_img).setVisibility(View.GONE);
                     }
