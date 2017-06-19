@@ -21,6 +21,7 @@ import android.widget.TextView;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.util.AppUtils;
 import com.inspur.emmcloud.util.MDM.MDM;
+import com.inspur.emmcloud.util.StateBarColor;
 import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.imp.engine.webview.ImpWebChromeClient;
 import com.inspur.imp.engine.webview.ImpWebView;
@@ -94,6 +95,7 @@ public class ImpActivity extends ImpBaseActivity {
 					.setVisibility(View.VISIBLE);
 			headerText.setText(title);
 		}else {
+			StateBarColor.hideStatusBar(ImpActivity.this);
 			webView.setProperty(progressLayout,null,loadFailLayout);
 		}
 
