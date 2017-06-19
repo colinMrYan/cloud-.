@@ -91,6 +91,7 @@ public class UriUtils {
             intent.putExtra("appName", app.getAppName());
         }
         intent.putExtra("is_zoomable", app.getIsZoomable());
+        intent.putExtra("appId",app.getAppID());
         activity.startActivity(intent);
     }
 

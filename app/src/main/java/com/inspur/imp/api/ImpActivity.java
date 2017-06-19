@@ -62,6 +62,7 @@ public class ImpActivity extends ImpBaseActivity {
     private int blackFontColor;
     private int lightModeFontColor;
     private int isZoomable = 0;
+    private String appId = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,6 +108,9 @@ public class ImpActivity extends ImpBaseActivity {
         if (getIntent().hasExtra("appName")) {
             isUriHasTitle = true;
             title = getIntent().getExtras().getString("appName");
+        }
+        if(getIntent().hasExtra("appId")){
+            appId = getIntent().getExtras().getString("appId");
         }
         if (isUriHasTitle) {
             headerText = (TextView) findViewById(Res.getWidgetID("header_text"));
@@ -154,7 +158,7 @@ public class ImpActivity extends ImpBaseActivity {
         progressLayout.setVisibility(View.VISIBLE);
         lightModeFontColor = ContextCompat.getColor(ImpActivity.this, R.color.app_dialog_day_font_color);
         blackFontColor = ContextCompat.getColor(ImpActivity.this, R.color.black);
-        int textSize = PreferencesByUsersUtils.getInt(ImpActivity.this, "app_crm_font_size", MyAppWebConfig.NORMAL);
+        int textSize = PreferencesByUsersUtils.getInt(ImpActivity.this, "app_crm_font_size_"+appId, MyAppWebConfig.NORMAL);
         if(isZoomable == 0){
             webView.getSettings().setTextZoom(MyAppWebConfig.NORMAL);
         }else {
@@ -328,7 +332,7 @@ public class ImpActivity extends ImpBaseActivity {
      */
     private void changeNewsFontSize(int textZoom) {
         WebSettings webSettings = webView.getSettings();
-        PreferencesByUsersUtils.putInt(ImpActivity.this, "app_crm_font_size", textZoom);
+        PreferencesByUsersUtils.putInt(ImpActivity.this, "app_crm_font_size_"+appId, textZoom);
         webSettings.setTextZoom(textZoom);
         initWebViewTextSize(textZoom);
     }
@@ -337,7 +341,7 @@ public class ImpActivity extends ImpBaseActivity {
      * 初始化WebView的字体大小
      */
     private void initWebViewTextSize(int textZoom) {
-        int textSize = PreferencesByUsersUtils.getInt(ImpActivity.this, "app_crm_font_size", MyAppWebConfig.NORMAL);
+        int textSize = PreferencesByUsersUtils.getInt(ImpActivity.this, "app_crm_font_size_"+appId, MyAppWebConfig.NORMAL);
         if(textZoom != 0){
             textSize = textZoom;
         }
