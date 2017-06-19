@@ -137,18 +137,12 @@ public class ChannelGroupCacheUtils {
             ChannelGroup channelGroup = DbCacheUtils.getDb(context).findById(ChannelGroup.class, cid);
             if (channelGroup != null) {
                 List<String>  allMemberList = channelGroup.getMemberList();
-                if (limit == 0 ){
-                    userList.addAll(allMemberList);
-                }else {
-                    int size = allMemberList.size();
-                    if (size < limit) {
-                        limit = size;
-                    }
-                    for (int i = 0; i < limit; i++) {
-                        String uid = allMemberList.get(i);
-                        userList.add(i,uid);
-                    }
+                int size = allMemberList.size();
+                if (limit <= 0 || limit > size){
+                    limit = size;
                 }
+                List<String>  limitMemberList = allMemberList.subList(0,limit-1);
+                userList.addAll(limitMemberList);
             }
 
         }catch (Exception e) {

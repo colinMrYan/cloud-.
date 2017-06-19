@@ -220,8 +220,10 @@ public class ChannelGroup {
 	}
 	
 	public List<String> getMemberList(){
-		List<String> memberList = new ArrayList<String>();
-		memberList = JSON.parseArray(getMembersArray().toString(), String.class);
+		List<String> memberList = JSON.parseArray(members, String.class);
+		if (memberList == null){
+			memberList = new ArrayList<>();
+		}
 		return memberList;
 	}
 	
