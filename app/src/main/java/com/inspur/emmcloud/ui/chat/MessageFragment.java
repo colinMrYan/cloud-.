@@ -116,6 +116,7 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 		if (parent != null) {
 			parent.removeView(rootView);
 		}
+		setTabTitle();
 		return rootView;
 	}
 
@@ -219,7 +220,6 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 				.setOnClickListener(onViewClickListener);
 		TipsView = (TipsView) rootView.findViewById(R.id.tip);
 		titleText = (TextView)rootView.findViewById(R.id.header_text);
-		setTabTitle();
 	}
 
     @Subscribe(threadMode = ThreadMode.MAIN)
