@@ -61,7 +61,7 @@ public class ImageDisplayUtils  implements ImagePickerLoader {
 	}
 	
 	public void display(final ImageView imageView, String uri) {
-		if (uri != null && !uri.startsWith("http") && !uri.startsWith("file:")&& !uri.startsWith("content:")&& !uri.startsWith("assets:")&& !uri.startsWith("drawable:")) {
+		if (!StringUtils.isBlank(uri) && !uri.startsWith("http") && !uri.startsWith("file:")&& !uri.startsWith("content:")&& !uri.startsWith("assets:")&& !uri.startsWith("drawable:")) {
 			uri = "file://" + uri;
 		}
 //		LogUtils.YfcDebug("访问路径："+uri);
@@ -78,7 +78,7 @@ public class ImageDisplayUtils  implements ImagePickerLoader {
 	}
 	
 	public void displayPic(final ImageView imageView,String uri){
-		if (uri != null && !uri.startsWith("http") && !uri.startsWith("file:")&& !uri.startsWith("content:")&& !uri.startsWith("assets:")&& !uri.startsWith("drawable:")) {
+		if (!StringUtils.isBlank(uri) && !uri.startsWith("http") && !uri.startsWith("file:")&& !uri.startsWith("content:")&& !uri.startsWith("assets:")&& !uri.startsWith("drawable:")) {
 			uri = "file://" + uri;
 		}
 		imageLoader.displayImage(uri, imageView,options,new SimpleImageLoadingListener(){
@@ -99,7 +99,7 @@ public class ImageDisplayUtils  implements ImagePickerLoader {
 	public void displayImage(Activity activity, String uri,
 			ImageView imageView, int width, int height) {
 		// TODO Auto-generated method stub
-		if (!uri.startsWith("http") && !uri.startsWith("file:")&& !uri.startsWith("content:")&& !uri.startsWith("assets:")&& !uri.startsWith("drawable:")) {
+		if (!StringUtils.isBlank(uri) && !uri.startsWith("http") && !uri.startsWith("file:")&& !uri.startsWith("content:")&& !uri.startsWith("assets:")&& !uri.startsWith("drawable:")) {
 			uri = "file://" + uri;
 		}
 		ImageSize size = new ImageSize(width, height);

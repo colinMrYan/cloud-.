@@ -236,7 +236,6 @@ public class UriUtils {
                 ((MyApplication)context.getApplicationContext()).setUsesrPhotoUrl(inspurID,headImgUrl);
             }
         }
-
         return headImgUrl;
     }
 
