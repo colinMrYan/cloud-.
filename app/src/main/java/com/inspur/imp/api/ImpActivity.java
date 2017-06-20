@@ -85,9 +85,9 @@ public class ImpActivity extends ImpBaseActivity {
         if(getIntent().hasExtra("is_zoomable")){
             isZoomable = getIntent().getIntExtra("is_zoomable",0);
             if(isZoomable == 0){
-                ((Button)findViewById(R.id.imp_change_font_size_btn)).setVisibility(View.GONE);
+                findViewById(R.id.imp_change_font_size_btn).setVisibility(View.GONE);
             }else if(isZoomable == 1){
-                ((Button)findViewById(R.id.imp_change_font_size_btn)).setVisibility(View.VISIBLE);
+                findViewById(R.id.imp_change_font_size_btn).setVisibility(View.VISIBLE);
             }
         }
         getWindow().setSoftInputMode(
