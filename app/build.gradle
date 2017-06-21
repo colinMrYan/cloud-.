@@ -163,6 +163,8 @@ dependencies {
     compile 'uk.co.chrisjenx:calligraphy:2.2.0'
     compile 'com.fashare2015:HoverView:1.0.1'
     compile 'pl.droidsonroids.gif:android-gif-drawable:1.2.7'
+    compile 'com.zhy:magic-viewpager:1.0.1'
+
 
 
     // React Naive Components

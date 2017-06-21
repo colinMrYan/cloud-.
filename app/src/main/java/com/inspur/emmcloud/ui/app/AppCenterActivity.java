@@ -41,10 +41,10 @@ import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.ToastUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.CircularProgress;
-import com.inspur.emmcloud.widget.DecoratorViewPager;
 import com.inspur.emmcloud.widget.ECMSpaceItemDecoration;
 import com.inspur.emmcloud.widget.draggrid.AppCenterDragAdapter;
 import com.inspur.emmcloud.widget.draggrid.DragGridView;
+import com.zhy.magicviewpager.transformer.ScaleInTransformer;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -76,7 +76,6 @@ public class AppCenterActivity extends BaseActivity {
         initView();
         getAllApp();
         registerReceiver();
-
     }
 
     /**
@@ -238,8 +237,21 @@ public class AppCenterActivity extends BaseActivity {
             if (recommandAppList.size() > 0 && position == 0) {
                 convertView = LayoutInflater.from(AppCenterActivity.this).inflate(R.layout.my_app_recommand_banner_app_item_view, null);
                 RelativeLayout appRecomandLayout = (RelativeLayout) convertView.findViewById(R.id.app_center_recomand_viewpager_layout);
-                DecoratorViewPager viewPager = (DecoratorViewPager) convertView.findViewById(R.id.app_center_banner_viewpager);
-                viewPager.setNestedpParent((ViewGroup) viewPager.getParent());
+                ViewPager viewPager = (ViewPager) convertView.findViewById(R.id.app_center_banner_viewpager);
+                viewPager.setOffscreenPageLimit(3);
+                viewPager.getParent().requestDisallowInterceptTouchEvent(true);
+                int pagerWidth= (int) (getResources().getDisplayMetrics().widthPixels*5.0f/5.0f);
+                ViewGroup.LayoutParams lp=viewPager.getLayoutParams();
+                if (lp==null){
+                    lp=new ViewGroup.LayoutParams(pagerWidth, ViewGroup.LayoutParams.MATCH_PARENT);
+                }else {
+                    lp.width=pagerWidth;
+                }
+                viewPager.setLayoutParams(lp);
+                viewPager.setPageMargin(-90);
+                viewPager.setClipChildren(false);
+                viewPager.setPageTransformer(true,new ScaleInTransformer());
+//                viewPager.setNestedpParent((ViewGroup) viewPager.getParent());
                 initRecomandViewPager(appRecomandLayout, viewPager);
             } else {
                 convertView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.my_app_recommand_app_item_view, null);
@@ -351,11 +363,11 @@ public class AppCenterActivity extends BaseActivity {
         //为ViewPager设置PagerAdapter
         mViewPager.setAdapter(new RecommandAppPagerAdapter());
         //设置ViewPager切换效果，即实现画廊效果
-        mViewPager.setPageTransformer(true, new ZoomOutPageTransformer());
-        //设置预加载数量
-        mViewPager.setOffscreenPageLimit(2);
-        //设置每页之间的左右间隔
-        mViewPager.setPageMargin(-60);
+//        mViewPager.setPageTransformer(true, new ZoomOutPageTransformer());
+//        //设置预加载数量
+//        mViewPager.setOffscreenPageLimit(2);
+//        //设置每页之间的左右间隔
+//        mViewPager.setPageMargin(-90);
 
         //将容器的触摸事件反馈给ViewPager
         mViewPagerContainer.setOnTouchListener(new View.OnTouchListener() {
@@ -377,6 +389,9 @@ public class AppCenterActivity extends BaseActivity {
         @Override
         public int getCount() {
             //return viewList==null?0:viewList.size();
+            if(recommandAppList == null){
+                return 0;
+            }
             return Integer.MAX_VALUE;
 //            return recommandAppList == null?0:recommandAppList.size();//ViewPager里的个数
         }
@@ -427,40 +442,40 @@ public class AppCenterActivity extends BaseActivity {
         }
     }
 
-    /**
-     * 实现的原理是，在当前显示页面放大至原来的MAX_SCALE
-     * 其他页面才是正常的的大小MIN_SCALE
-     */
-    class ZoomOutPageTransformer implements ViewPager.PageTransformer {
-        private static final float MAX_SCALE = 1.2f;
-        private static final float MIN_SCALE = 1.0f;//0.85f
-
-        @Override
-        public void transformPage(View view, float position) {
-            //setScaleY只支持api11以上
-            if (position < -1) {
-                view.setScaleX(MIN_SCALE);
-                view.setScaleY(MIN_SCALE);
-            } else if (position <= 1) //a页滑动至b页 ； a页从 0.0 -1 ；b页从1 ~ 0.0
-            { // [-1,1]
-                float scaleFactor = MIN_SCALE + (1 - Math.abs(position)) * (MAX_SCALE - MIN_SCALE);
-                view.setScaleX(scaleFactor);
-                //每次滑动后进行微小的移动目的是为了防止在三星的某些手机上出现两边的页面为显示的情况
-                if (position > 0) {
-                    view.setTranslationX(-scaleFactor * 2);
-                } else if (position < 0) {
-                    view.setTranslationX(scaleFactor * 2);
-                }
-                view.setScaleY(scaleFactor);
-
-            } else { // (1,+Infinity]
-                view.setScaleX(MIN_SCALE);
-                view.setScaleY(MIN_SCALE);
-            }
-
-        }
-
-    }
+//    /**
+//     * 实现的原理是，在当前显示页面放大至原来的MAX_SCALE
+//     * 其他页面才是正常的的大小MIN_SCALE
+//     */
+//    class ZoomOutPageTransformer implements ViewPager.PageTransformer {
+//        private static final float MAX_SCALE = 1.2f;
+//        private static final float MIN_SCALE = 1.0f;//0.85f
+//
+//        @Override
+//        public void transformPage(View view, float position) {
+//            //setScaleY只支持api11以上
+//            if (position < -1) {
+//                view.setScaleX(MIN_SCALE);
+//                view.setScaleY(MIN_SCALE);
+//            } else if (position <= 1) //a页滑动至b页 ； a页从 0.0 -1 ；b页从1 ~ 0.0
+//            { // [-1,1]
+//                float scaleFactor = MIN_SCALE + (1 - Math.abs(position)) * (MAX_SCALE - MIN_SCALE);
+//                view.setScaleX(scaleFactor);
+//                //每次滑动后进行微小的移动目的是为了防止在三星的某些手机上出现两边的页面为显示的情况
+//                if (position > 0) {
+//                    view.setTranslationX(-scaleFactor * 2);
+//                } else if (position < 0) {
+//                    view.setTranslationX(scaleFactor * 2);
+//                }
+//                view.setScaleY(scaleFactor);
+//
+//            } else { // (1,+Infinity]
+//                view.setScaleX(MIN_SCALE);
+//                view.setScaleY(MIN_SCALE);
+//            }
+//
+//        }
+//
+//    }
 
     public class RecommandAppListAdapter extends RecyclerView.Adapter<RecommandAppListAdapter.RecommandViewHolder>{
 
