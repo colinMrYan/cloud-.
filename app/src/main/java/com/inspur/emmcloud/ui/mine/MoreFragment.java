@@ -13,10 +13,13 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
+import com.inspur.emmcloud.api.apiservice.AppAPIService;
 import com.inspur.emmcloud.bean.Channel;
 import com.inspur.emmcloud.bean.GetMyInfoResult;
+import com.inspur.emmcloud.bean.LoginDesktopCloudPlusBean;
 import com.inspur.emmcloud.ui.chat.ChannelActivity;
 import com.inspur.emmcloud.ui.mine.feedback.FeedBackActivity;
 import com.inspur.emmcloud.ui.mine.myinfo.MyInfoActivity;
@@ -26,13 +29,19 @@ import com.inspur.emmcloud.util.AppTitleUtils;
 import com.inspur.emmcloud.util.ChannelCacheUtils;
 import com.inspur.emmcloud.util.ImageDisplayUtils;
 import com.inspur.emmcloud.util.IntentUtils;
-import com.inspur.emmcloud.util.PreferencesByUserUtils;
+import com.inspur.emmcloud.util.LogUtils;
+import com.inspur.emmcloud.util.NetUtils;
+import com.inspur.emmcloud.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.ToastUtils;
 import com.inspur.emmcloud.util.UriUtils;
+import com.inspur.emmcloud.widget.LoadingDialog;
+import com.inspur.imp.plugin.barcode.scan.CaptureActivity;
 
 import java.io.Serializable;
+
+import static android.app.Activity.RESULT_OK;
 
 /**
  * 更多页面
@@ -40,6 +49,7 @@ import java.io.Serializable;
 public class MoreFragment extends Fragment {
 
     private static final int UPDATE_MY_HEAD = 3;
+    private static final int SCAN_LOGIN_QRCODE_RESULT = 5;
 
     public static Handler handler;
 
@@ -55,6 +65,7 @@ public class MoreFragment extends Fragment {
     private GetMyInfoResult getMyInfoResult;
     private String userheadUrl;
     private TextView titleText;
+    private LoadingDialog loadingDialog;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -62,12 +73,18 @@ public class MoreFragment extends Fragment {
         super.onCreate(savedInstanceState);
         inflater = (LayoutInflater) getActivity().getSystemService(
                 getActivity().LAYOUT_INFLATER_SERVICE);
-
         rootView = inflater.inflate(R.layout.fragment_mine, null);
-
         handMessage();
+        initViews();
+        getMyInfo();
+        setTabTitle();
+    }
 
-
+    /**
+     * 初始化views
+     */
+    private void initViews() {
+        loadingDialog = new LoadingDialog(getActivity());
         setContentItem = (RelativeLayout) rootView.findViewById(R.id.more_set_layout);
         userHeadLayout = (RelativeLayout) rootView.findViewById(R.id.more_userhead_layout);
         setContentItem.setOnClickListener(onClickListener);
@@ -77,14 +94,13 @@ public class MoreFragment extends Fragment {
         (rootView.findViewById(R.id.more_invite_friends_layout)).setOnClickListener(onClickListener);
         (rootView.findViewById(R.id.about_layout)).setOnClickListener(onClickListener);
         (rootView.findViewById(R.id.customer_layout)).setOnClickListener(onClickListener);
+        (rootView.findViewById(R.id.scan_login_desktop_layout)).setOnClickListener(onClickListener);
         moreHeadImg = (ImageView) rootView.findViewById(R.id.more_head_img);
         userNameText = (TextView) rootView.findViewById(R.id.more_head_textup);
         userOrgText = (TextView) rootView.findViewById(R.id.more_head_textdown);
         userCodeImg = (ImageView) rootView.findViewById(R.id.more_head_codeImg);
         titleText = (TextView) rootView.findViewById(R.id.header_text);
         imageDisplayUtils = new ImageDisplayUtils(getActivity(), R.drawable.icon_photo_default);
-        getMyInfo();
-        setTabTitle();
     }
 
 
@@ -93,16 +109,11 @@ public class MoreFragment extends Fragment {
         String myInfo = PreferencesUtils.getString(getActivity(), "myInfo", "");
         getMyInfoResult = new GetMyInfoResult(myInfo);
         String inspurId = getMyInfoResult.getID();
-        String photoUri = UriUtils.getChannelImgUri(inspurId);
+        String photoUri = UriUtils.getChannelImgUri(getActivity(),inspurId);
         imageDisplayUtils.display(moreHeadImg, photoUri);
-
-        if (!getMyInfoResult.getName().equals("null")) {
-            userNameText.setText(getMyInfoResult.getName());
-        } else {
-            userNameText.setText(getString(R.string.not_set));
-        }
-
-        userOrgText.setText(getMyInfoResult.getEnterpriseName());
+        String userName = PreferencesUtils.getString(getActivity(), "userRealName", getString(R.string.not_set));
+        userNameText.setText(userName);
+        userOrgText.setText(((MyApplication)getActivity().getApplicationContext()).getCurrentEnterprise().getName());
     }
 
 
@@ -170,8 +181,13 @@ public class MoreFragment extends Fragment {
 				    startActivity(intent);
                     break;
                 case R.id.more_message_layout:
-                case R.id.more_invite_friends_layout:
                     ToastUtils.show(getActivity(), R.string.function_not_implemented);
+                    break;
+                case R.id.scan_login_desktop_layout:
+                    //登录桌面版云+逻辑，还没有开放，有可能不从这里发起
+                    intent.setClass(getActivity(), CaptureActivity.class);
+                    intent.putExtra("from","MoreFragment");
+                    startActivityForResult(intent,SCAN_LOGIN_QRCODE_RESULT);
                     break;
                 case R.id.about_layout:
                     IntentUtils.startActivity(getActivity(),
@@ -194,6 +210,38 @@ public class MoreFragment extends Fragment {
 
         }
     };
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if((resultCode == RESULT_OK) && (requestCode == SCAN_LOGIN_QRCODE_RESULT)){
+            if(data.hasExtra("isDecodeSuccess")){
+                boolean isDecodeSuccess = data.getBooleanExtra("isDecodeSuccess",false);
+                if(isDecodeSuccess){
+                    String msg = data.getStringExtra("msg");
+                    LogUtils.YfcDebug("解析到的信息："+msg);
+                    loginDesktopCloudPlus(msg);
+                }else{
+                    LogUtils.YfcDebug("解析失败");
+                }
+            }
+        }
+    }
+
+    /**
+     * 扫码登录云加逻辑
+     * @param msg
+     */
+    private void loginDesktopCloudPlus(String msg){
+        if(NetUtils.isNetworkConnected(getActivity())){
+            if((loadingDialog != null) && !loadingDialog.isShowing()){
+                loadingDialog.show();
+                AppAPIService appAPIService = new AppAPIService(getActivity());
+                appAPIService.setAPIInterface(new WebService());
+                appAPIService.sendLoginDesktopCloudPlusInfo();
+            }
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -225,7 +273,7 @@ public class MoreFragment extends Fragment {
      * 设置标题
      */
     private void setTabTitle(){
-        String appTabs = PreferencesByUserUtils.getString(getActivity(),"app_tabbar_info_current","");
+        String appTabs = PreferencesByUserAndTanentUtils.getString(getActivity(),"app_tabbar_info_current","");
         if(!StringUtils.isBlank(appTabs)){
             titleText.setText(AppTitleUtils.getTabTitle(getActivity(),getClass().getSimpleName()));
         }
@@ -238,11 +286,6 @@ public class MoreFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
     }
 
-    public class WebService extends APIInterfaceInstance {
-
-
-    }
-
     @Override
     public void onDestroy() {
         // TODO Auto-generated method stub
@@ -250,5 +293,22 @@ public class MoreFragment extends Fragment {
         if (handler != null) {
             handler = null;
         }
+    }
+
+    class WebService extends APIInterfaceInstance{
+        @Override
+        public void returnLoginDesktopCloudPlusSuccess(LoginDesktopCloudPlusBean loginDesktopCloudPlusBean) {
+            if((loadingDialog != null) && loadingDialog.isShowing()){
+                loadingDialog.dismiss();
+            }
+        }
+
+        @Override
+        public void returnLoginDesktopCloudPlusFail(String error, int errorCode) {
+            if((loadingDialog != null) && loadingDialog.isShowing()){
+                loadingDialog.dismiss();
+            }
+        }
+
     }
 }

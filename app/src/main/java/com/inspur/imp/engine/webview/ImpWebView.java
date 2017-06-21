@@ -6,6 +6,8 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.os.Handler;
+import android.os.Message;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
@@ -23,6 +25,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.util.LogUtils;
+import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.imp.api.JsInterface;
 import com.inspur.imp.api.Res;
 import com.inspur.imp.api.iLog;
@@ -65,6 +68,7 @@ public class ImpWebView extends WebView {
 	private ImpWebChromeClient impWebChromeClient;
 	private TextView titleText;
 	private LinearLayout loadFailLayout;
+	private Handler handler;
 
 	public ImpWebView(Context context, AttributeSet attrs) {
 		super(context,attrs);
@@ -77,7 +81,19 @@ public class ImpWebView extends WebView {
 		this.loadFailLayout = loadFailLayout;
 		this.setWebView();
 		this.setWebSetting();
+		handMessage();
 		init();
+	}
+
+	private void handMessage(){
+		handler = new Handler(){
+			@Override
+			public void handleMessage(Message msg) {
+				String title =(String) msg.obj;
+				titleText.setText(title);
+			}
+		};
+
 	}
 	
 	/**添加顶部加载进度条**/
@@ -111,10 +127,14 @@ public class ImpWebView extends WebView {
 
 	public class GetTitle {
 		@JavascriptInterface
-		public void onGetTitle(String title) {
+		public void onGetTitle(final String title) {
+			LogUtils.jasonDebug("title="+title);
 			// 参数title即为网页的标题，可在这里面进行相应的title的处理
-			if (titleText != null && !TextUtils.isEmpty(title)){
-				titleText.setText(title);
+			if (titleText != null && !StringUtils.isBlank(title)){
+				Message msg = new Message();
+				msg.what = 1;
+				msg.obj = title;
+				handler.sendMessage(msg);
 			}
 		}
 	}
@@ -228,18 +248,6 @@ public class ImpWebView extends WebView {
 		// 页面适应手机屏幕的分辨率
 		settings.setLoadWithOverviewMode(true);
 		settings.setDefaultTextEncodingName("utf-8");//设置自适应屏幕
-		settings.setLayoutAlgorithm(LayoutAlgorithm.SINGLE_COLUMN);
-		// 支持自动加载图片
-		settings.setLoadsImagesAutomatically(true);
-		settings.setAllowFileAccess(true);
-		// 支持多窗口
-		settings.supportMultipleWindows();
-		settings.setJavaScriptCanOpenWindowsAutomatically(true);
-		// 设置webview推荐使用的窗口
-		settings.setUseWideViewPort(false);
-		// 页面适应手机屏幕的分辨率
-		settings.setLoadWithOverviewMode(true);
-		settings.setDefaultTextEncodingName("utf-8");
 	}
 
 	// 本地安全设置
@@ -351,6 +359,9 @@ public class ImpWebView extends WebView {
 
 	public void destroy() {
 		this.destroyed = true;
+		if (handler != null){
+			handler = null;
+		}
 		super.destroy();
 	}
 

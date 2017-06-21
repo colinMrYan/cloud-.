@@ -1,5 +1,4 @@
 /**
- * 
  * ChatAPIService.java
  * classes : com.inspur.emmcloud.api.apiservice.ChatAPIService
  * V 1.0.0
@@ -31,9 +30,9 @@ import com.inspur.emmcloud.bean.GetNewsImgResult;
 import com.inspur.emmcloud.bean.GetNewsInstructionResult;
 import com.inspur.emmcloud.bean.GetSearchChannelGroupResult;
 import com.inspur.emmcloud.bean.GetSendMsgResult;
+import com.inspur.emmcloud.callback.OauthCallBack;
 import com.inspur.emmcloud.util.AppUtils;
 import com.inspur.emmcloud.util.LogUtils;
-import com.inspur.emmcloud.util.OauthCallBack;
 import com.inspur.emmcloud.util.OauthUtils;
 import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.UriUtils;
@@ -70,7 +69,7 @@ public class ChatAPIService {
 		final String completeUrl = UriUtils.getHttpApiUri("channel/session");
 		RequestParams params = ((MyApplication) context.getApplicationContext())
 				.getHttpRequestParams(completeUrl);
-		x.http().get(params, new APICallback(context,completeUrl) {
+		x.http().get(params, new APICallback(context, completeUrl) {
 
 			@Override
 			public void callbackTokenExpire() {
@@ -78,10 +77,15 @@ public class ChatAPIService {
 				new OauthUtils(new OauthCallBack() {
 
 					@Override
-					public void execute() {
+					public void reExecute() {
 						getChannelList();
 					}
-				}, context).refreshTocken(completeUrl);
+
+					@Override
+					public void executeFailCallback() {
+						callbackFail("", -1);
+					}
+				}, context).refreshToken(completeUrl);
 			}
 
 			@Override
@@ -94,7 +98,7 @@ public class ChatAPIService {
 			@Override
 			public void callbackFail(String error, int responseCode) {
 				// TODO Auto-generated method stub
-				apiInterface.returnChannelListFail(error);
+				apiInterface.returnChannelListFail(error, responseCode);
 			}
 		});
 	}
@@ -118,7 +122,7 @@ public class ChatAPIService {
 			params.addParameter("cid", cid);
 		}
 
-		x.http().get(params, new APICallback(context,completeUrl) {
+		x.http().get(params, new APICallback(context, completeUrl) {
 
 			@Override
 			public void callbackTokenExpire() {
@@ -126,10 +130,15 @@ public class ChatAPIService {
 				new OauthUtils(new OauthCallBack() {
 
 					@Override
-					public void execute() {
+					public void reExecute() {
 						getNewMsgs(cid, msgId, count);
 					}
-				}, context).refreshTocken(completeUrl);
+
+					@Override
+					public void executeFailCallback() {
+						callbackFail("", -1);
+					}
+				}, context).refreshToken(completeUrl);
 			}
 
 			@Override
@@ -141,7 +150,7 @@ public class ChatAPIService {
 			@Override
 			public void callbackFail(String error, int responseCode) {
 				// TODO Auto-generated method stub
-				apiInterface.returnNewMsgsFail(error);
+				apiInterface.returnNewMsgsFail(error, responseCode);
 			}
 		});
 
@@ -151,12 +160,12 @@ public class ChatAPIService {
 	 * 获取10条最新消息
 	 */
 	public void getNewMsgs() {
-		getNewMsgs("", "", 10);
+		getNewMsgs("", "", 15);
 	}
 
 	/**
 	 * 获取评论
-	 * 
+	 *
 	 * @param mid
 	 */
 	public void getComment(final String mid) {
@@ -165,7 +174,7 @@ public class ChatAPIService {
 				+ "/comment");
 		RequestParams params = ((MyApplication) context.getApplicationContext())
 				.getHttpRequestParams(completeUrl);
-		x.http().get(params, new APICallback(context,completeUrl) {
+		x.http().get(params, new APICallback(context, completeUrl) {
 
 			@Override
 			public void callbackTokenExpire() {
@@ -173,10 +182,15 @@ public class ChatAPIService {
 				new OauthUtils(new OauthCallBack() {
 
 					@Override
-					public void execute() {
+					public void reExecute() {
 						getComment(mid);
 					}
-				}, context).refreshTocken(completeUrl);
+
+					@Override
+					public void executeFailCallback() {
+						callbackFail("", -1);
+					}
+				}, context).refreshToken(completeUrl);
 			}
 
 			@Override
@@ -189,21 +203,21 @@ public class ChatAPIService {
 			@Override
 			public void callbackFail(String error, int responseCode) {
 				// TODO Auto-generated method stub
-				apiInterface.returnMsgCommentFail(error);
+				apiInterface.returnMsgCommentFail(error, responseCode);
 			}
 		});
 	}
 
 	/**
 	 * 获取频道信息
-	 * 
+	 *
 	 * @param cid
 	 */
 	public void getChannelInfo(final String cid) {
 		final String completeUrl = UriUtils.getHttpApiUri("channel/" + cid);
 		RequestParams params = ((MyApplication) context.getApplicationContext())
 				.getHttpRequestParams(completeUrl);
-		x.http().get(params, new APICallback(context,completeUrl) {
+		x.http().get(params, new APICallback(context, completeUrl) {
 
 			@Override
 			public void callbackTokenExpire() {
@@ -211,16 +225,21 @@ public class ChatAPIService {
 				new OauthUtils(new OauthCallBack() {
 
 					@Override
-					public void execute() {
+					public void reExecute() {
 						getChannelInfo(cid);
 					}
-				}, context).refreshTocken(completeUrl);
+
+					@Override
+					public void executeFailCallback() {
+						callbackFail("", -1);
+					}
+				}, context).refreshToken(completeUrl);
 			}
 
 			@Override
 			public void callbackSuccess(String arg0) {
 				// TODO Auto-generated method stub
-				LogUtils.debug("yfcLog", "返回数据："+arg0);
+				LogUtils.debug("yfcLog", "返回数据：" + arg0);
 				apiInterface.returnChannelInfoSuccess(new GetChannelInfoResult(
 						arg0));
 			}
@@ -228,7 +247,7 @@ public class ChatAPIService {
 			@Override
 			public void callbackFail(String error, int responseCode) {
 				// TODO Auto-generated method stub
-				apiInterface.returnChannelInfoFail(error);
+				apiInterface.returnChannelInfoFail(error, responseCode);
 			}
 		});
 	}
@@ -242,7 +261,7 @@ public class ChatAPIService {
 	 * @param fakeMessageId
 	 */
 	public void sendMsg(String channelId, String msgContent, String type,
-			String fakeMessageId) {
+						String fakeMessageId) {
 		sendMsg(channelId, msgContent, type, "", fakeMessageId);
 	}
 
@@ -256,7 +275,7 @@ public class ChatAPIService {
 	 * @param fakeMessageId
 	 */
 	public void sendMsg(final String channelId, final String msgContent,
-			final String type, final String mid, final String fakeMessageId) {
+						final String type, final String mid, final String fakeMessageId) {
 		final String completeUrl = UriUtils.getHttpApiUri("message");
 		RequestParams params = ((MyApplication) context.getApplicationContext())
 				.getHttpRequestParams(completeUrl);
@@ -278,7 +297,7 @@ public class ChatAPIService {
 			e.printStackTrace();
 		}
 
-		x.http().post(params, new APICallback(context,completeUrl) {
+		x.http().post(params, new APICallback(context, completeUrl) {
 
 			@Override
 			public void callbackTokenExpire() {
@@ -286,10 +305,15 @@ public class ChatAPIService {
 				new OauthUtils(new OauthCallBack() {
 
 					@Override
-					public void execute() {
+					public void reExecute() {
 						sendMsg(channelId, msgContent, type, mid, fakeMessageId);
 					}
-				}, context).refreshTocken(completeUrl);
+
+					@Override
+					public void executeFailCallback() {
+						callbackFail("", -1);
+					}
+				}, context).refreshToken(completeUrl);
 
 			}
 
@@ -303,7 +327,7 @@ public class ChatAPIService {
 			@Override
 			public void callbackFail(String error, int responseCode) {
 				// TODO Auto-generated method stub
-				apiInterface.returnSendMsgFail(error,fakeMessageId);
+				apiInterface.returnSendMsgFail(error, fakeMessageId, responseCode);
 			}
 		});
 
@@ -311,14 +335,14 @@ public class ChatAPIService {
 
 	/**
 	 * 获取消息
-	 * 
+	 *
 	 * @param mid
 	 */
 	public void getMsg(final String mid) {
 		final String completeUrl = UriUtils.getHttpApiUri("message/" + mid);
 		RequestParams params = ((MyApplication) context.getApplicationContext())
 				.getHttpRequestParams(completeUrl);
-		x.http().get(params, new APICallback(context,completeUrl) {
+		x.http().get(params, new APICallback(context, completeUrl) {
 
 			@Override
 			public void callbackTokenExpire() {
@@ -326,10 +350,15 @@ public class ChatAPIService {
 				new OauthUtils(new OauthCallBack() {
 
 					@Override
-					public void execute() {
+					public void reExecute() {
 						getMsg(mid);
 					}
-				}, context).refreshTocken(completeUrl);
+
+					@Override
+					public void executeFailCallback() {
+						callbackFail("", -1);
+					}
+				}, context).refreshToken(completeUrl);
 			}
 
 			@Override
@@ -341,7 +370,7 @@ public class ChatAPIService {
 			@Override
 			public void callbackFail(String error, int responseCode) {
 				// TODO Auto-generated method stub
-				apiInterface.returnMsgFail(error);
+				apiInterface.returnMsgFail(error, responseCode);
 			}
 		});
 	}
@@ -355,7 +384,7 @@ public class ChatAPIService {
 	 *            区分是否是图片类型
 	 */
 	public void uploadMsgResource(final String filePath,
-			final String fakeMessageId, final boolean isImg) {
+								  final String fakeMessageId, final boolean isImg) {
 		final String completeUrl = UriUtils.getResUri("upload");
 		RequestParams params = ((MyApplication) context.getApplicationContext())
 				.getHttpRequestParams(completeUrl);
@@ -363,7 +392,7 @@ public class ChatAPIService {
 		params.setMultipart(true);// 有上传文件时使用multipart表单, 否则上传原始文件流.
 		params.addBodyParameter("file1", file);
 		final Bitmap bitmap = BitmapFactory.decodeFile(filePath);
-		x.http().post(params, new APICallback(context,completeUrl) {
+		x.http().post(params, new APICallback(context, completeUrl) {
 
 			@Override
 			public void callbackTokenExpire() {
@@ -371,10 +400,15 @@ public class ChatAPIService {
 				new OauthUtils(new OauthCallBack() {
 
 					@Override
-					public void execute() {
+					public void reExecute() {
 						uploadMsgResource(filePath, fakeMessageId, isImg);
 					}
-				}, context).refreshTocken(completeUrl);
+
+					@Override
+					public void executeFailCallback() {
+						callbackFail("", -1);
+					}
+				}, context).refreshToken(completeUrl);
 			}
 
 			@Override
@@ -403,9 +437,9 @@ public class ChatAPIService {
 			public void callbackFail(String error, int responseCode) {
 				// TODO Auto-generated method stub
 				if (isImg) {
-					apiInterface.returnUploadMsgImgFail(error);
+					apiInterface.returnUploadMsgImgFail(error, responseCode);
 				} else {
-					apiInterface.returnFileUpLoadFail(error);
+					apiInterface.returnFileUpLoadFail(error, responseCode);
 				}
 			}
 		});
@@ -420,7 +454,7 @@ public class ChatAPIService {
 				.getHttpApiUri("channel/group?limit=-1");
 		RequestParams params = ((MyApplication) context.getApplicationContext())
 				.getHttpRequestParams(completeUrl);
-		x.http().get(params, new APICallback(context,completeUrl) {
+		x.http().get(params, new APICallback(context, completeUrl) {
 
 			@Override
 			public void callbackTokenExpire() {
@@ -428,10 +462,15 @@ public class ChatAPIService {
 				new OauthUtils(new OauthCallBack() {
 
 					@Override
-					public void execute() {
+					public void reExecute() {
 						getAllGroupChannelList();
 					}
-				}, context).refreshTocken(completeUrl);
+
+					@Override
+					public void executeFailCallback() {
+						callbackFail("", -1);
+					}
+				}, context).refreshToken(completeUrl);
 			}
 
 			@Override
@@ -447,7 +486,7 @@ public class ChatAPIService {
 			@Override
 			public void callbackFail(String error, int responseCode) {
 				// TODO Auto-generated method stub
-				apiInterface.returnSearchChannelGroupFail(error);
+				apiInterface.returnSearchChannelGroupFail(error, responseCode);
 			}
 		});
 
@@ -456,7 +495,7 @@ public class ChatAPIService {
 	/**
 	 *  获取频道列表信息
 	 * @param cidArray
-     */
+	 */
 	public void getChannelGroupList(final String[] cidArray) {
 		final String completeUrl = UriUtils.getHttpApiUri("channel?")
 				+ "limit=1000";
@@ -464,13 +503,13 @@ public class ChatAPIService {
 				.getHttpRequestParams(completeUrl);
 		// 解决服务端的一个bug
 		if (cidArray.length == 1) {
-			String[] cidArray2 = { cidArray[0], cidArray[0] };
+			String[] cidArray2 = {cidArray[0], cidArray[0]};
 			params.addParameter("cids", cidArray2);
 		} else {
 			params.addParameter("cids", cidArray);
 		}
 
-		x.http().get(params, new APICallback(context,completeUrl) {
+		x.http().get(params, new APICallback(context, completeUrl) {
 
 			@Override
 			public void callbackTokenExpire() {
@@ -478,10 +517,16 @@ public class ChatAPIService {
 				new OauthUtils(new OauthCallBack() {
 
 					@Override
-					public void execute() {
+					public void reExecute() {
 						getChannelGroupList(cidArray);
 					}
-				}, context).refreshTocken(completeUrl);
+
+					@Override
+					public void executeFailCallback() {
+						callbackFail("", -1);
+					}
+				}, context).refreshToken(completeUrl);
+
 			}
 
 			@Override
@@ -495,7 +540,7 @@ public class ChatAPIService {
 			@Override
 			public void callbackFail(String error, int responseCode) {
 				// TODO Auto-generated method stub
-				apiInterface.returnSearchChannelGroupFail(error);
+				apiInterface.returnSearchChannelGroupFail(error, responseCode);
 			}
 		});
 
@@ -503,7 +548,7 @@ public class ChatAPIService {
 
 	/**
 	 * 创建点聊
-	 * 
+	 *
 	 * @param uid
 	 */
 	public void createDirectChannel(final String uid) {
@@ -512,7 +557,7 @@ public class ChatAPIService {
 				.getHttpRequestParams(completeUrl);
 		params.addParameter("mate", uid);
 		params.addParameter("type", "DIRECT");
-		x.http().post(params, new APICallback(context,completeUrl) {
+		x.http().post(params, new APICallback(context, completeUrl) {
 
 			@Override
 			public void callbackTokenExpire() {
@@ -520,10 +565,16 @@ public class ChatAPIService {
 				new OauthUtils(new OauthCallBack() {
 
 					@Override
-					public void execute() {
+					public void reExecute() {
 						createDirectChannel(uid);
 					}
-				}, context).refreshTocken(completeUrl);
+
+					@Override
+					public void executeFailCallback() {
+						callbackFail("", -1);
+					}
+
+				}, context).refreshToken(completeUrl);
 			}
 
 			@Override
@@ -537,7 +588,7 @@ public class ChatAPIService {
 			@Override
 			public void callbackFail(String error, int responseCode) {
 				// TODO Auto-generated method stub
-				apiInterface.returnCreatSingleChannelFail(error);
+				apiInterface.returnCreatSingleChannelFail(error, responseCode);
 
 			}
 		});
@@ -545,7 +596,7 @@ public class ChatAPIService {
 
 	/**
 	 * 修改群组名称
-	 * 
+	 *
 	 * @param cid
 	 * @param name
 	 */
@@ -561,7 +612,7 @@ public class ChatAPIService {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		x.http().request(HttpMethod.PUT, params, new APICallback(context,completeUrl) {
+		x.http().request(HttpMethod.PUT, params, new APICallback(context, completeUrl) {
 
 			@Override
 			public void callbackTokenExpire() {
@@ -569,10 +620,16 @@ public class ChatAPIService {
 				new OauthUtils(new OauthCallBack() {
 
 					@Override
-					public void execute() {
+					public void reExecute() {
 						updateChannelGroupName(cid, name);
 					}
-				}, context).refreshTocken(completeUrl);
+
+					@Override
+					public void executeFailCallback() {
+						callbackFail("",-1);
+					}
+
+				}, context).refreshToken(completeUrl);
 			}
 
 			@Override
@@ -586,14 +643,14 @@ public class ChatAPIService {
 			@Override
 			public void callbackFail(String error, int responseCode) {
 				// TODO Auto-generated method stub
-				apiInterface.returnUpdateChannelGroupNameFail(error);
+				apiInterface.returnUpdateChannelGroupNameFail(error, responseCode);
 			}
 		});
 	}
 
 	/**
 	 * 添加群组成员
-	 * 
+	 *
 	 * @param uids
 	 * @param cid
 	 */
@@ -607,7 +664,7 @@ public class ChatAPIService {
 		final String completeUrl = url;
 		RequestParams params = ((MyApplication) context.getApplicationContext())
 				.getHttpRequestParams(completeUrl);
-		x.http().request(HttpMethod.PUT, params, new APICallback(context,completeUrl) {
+		x.http().request(HttpMethod.PUT, params, new APICallback(context, completeUrl) {
 
 			@Override
 			public void callbackTokenExpire() {
@@ -615,10 +672,16 @@ public class ChatAPIService {
 				new OauthUtils(new OauthCallBack() {
 
 					@Override
-					public void execute() {
+					public void reExecute() {
 						addGroupMembers(uids, cid);
 					}
-				}, context).refreshTocken(completeUrl);
+
+					@Override
+					public void executeFailCallback() {
+						callbackFail("",-1);
+					}
+
+				}, context).refreshToken(completeUrl);
 			}
 
 			@Override
@@ -632,19 +695,19 @@ public class ChatAPIService {
 			@Override
 			public void callbackFail(String error, int responseCode) {
 				// TODO Auto-generated method stub
-				apiInterface.returnAddMembersFail(error);
+				apiInterface.returnAddMembersFail(error, responseCode);
 			}
 		});
 	}
 
 	/**
 	 * 删除群组成员
-	 * 
+	 *
 	 * @param uids
 	 * @param cid
 	 */
 	public void deleteGroupMembers(final ArrayList<String> uids,
-			final String cid) {
+								   final String cid) {
 		String url = UriUtils.addGroupMembers(cid);
 		for (int i = 0; i < uids.size(); i++) {
 			url = url + "uids=" + uids.get(i) + "&";
@@ -653,7 +716,7 @@ public class ChatAPIService {
 		final String completeUrl = url;
 		RequestParams params = ((MyApplication) context.getApplicationContext())
 				.getHttpRequestParams(completeUrl);
-		x.http().request(HttpMethod.DELETE, params, new APICallback(context,completeUrl) {
+		x.http().request(HttpMethod.DELETE, params, new APICallback(context, completeUrl) {
 
 			@Override
 			public void callbackTokenExpire() {
@@ -661,10 +724,16 @@ public class ChatAPIService {
 				new OauthUtils(new OauthCallBack() {
 
 					@Override
-					public void execute() {
+					public void reExecute() {
 						deleteGroupMembers(uids, cid);
 					}
-				}, context).refreshTocken(completeUrl);
+
+					@Override
+					public void executeFailCallback() {
+						callbackFail("",-1);
+					}
+
+				}, context).refreshToken(completeUrl);
 			}
 
 			@Override
@@ -677,14 +746,14 @@ public class ChatAPIService {
 			@Override
 			public void callbackFail(String error, int responseCode) {
 				// TODO Auto-generated method stub
-				apiInterface.returnDelMembersFail(error);
+				apiInterface.returnDelMembersFail(error, responseCode);
 			}
 		});
 	}
 
 	/**
 	 * 消息免打扰接口
-	 * 
+	 *
 	 * @param cid
 	 * @param nointerruption
 	 *            是否免打扰
@@ -695,7 +764,7 @@ public class ChatAPIService {
 				+ "&dnd=" + nointerruption;
 		RequestParams params = ((MyApplication) context.getApplicationContext())
 				.getHttpRequestParams(completeUrl);
-		x.http().request(HttpMethod.PUT, params, new APICallback(context,completeUrl) {
+		x.http().request(HttpMethod.PUT, params, new APICallback(context, completeUrl) {
 
 			@Override
 			public void callbackTokenExpire() {
@@ -703,11 +772,17 @@ public class ChatAPIService {
 				new OauthUtils(new OauthCallBack() {
 
 					@Override
-					public void execute() {
+					public void reExecute() {
 						// TODO Auto-generated method stub
 						updateDnd(cid, nointerruption);
 					}
-				}, context).refreshTocken(completeUrl);
+
+					@Override
+					public void executeFailCallback() {
+						callbackFail("",-1);
+					}
+
+				}, context).refreshToken(completeUrl);
 			}
 
 			@Override
@@ -719,27 +794,27 @@ public class ChatAPIService {
 			@Override
 			public void callbackFail(String error, int responseCode) {
 				// TODO Auto-generated method stub
-				apiInterface.returnDndFail(error);
+				apiInterface.returnDndFail(error, responseCode);
 			}
 		});
 	}
 
 	/**
 	 * 会议邀请卡片的应答
-	 * 
+	 *
 	 * @param rid
 	 * @param mpid
 	 * @param state
 	 */
 	public void sendMeetingReply(final String rid, final String mpid,
-			final String state) {
+								 final String state) {
 		final String completeUrl = UriUtils.getMeetingReply() + "?";
 		RequestParams params = ((MyApplication) context.getApplicationContext())
 				.getHttpRequestParams(completeUrl);
 		params.addQueryStringParameter("rid", rid);
 		params.addQueryStringParameter("mpid", mpid);
 		params.addQueryStringParameter("state", state);
-		x.http().request(HttpMethod.PUT, params, new APICallback(context,completeUrl) {
+		x.http().request(HttpMethod.PUT, params, new APICallback(context, completeUrl) {
 
 			@Override
 			public void callbackTokenExpire() {
@@ -747,10 +822,16 @@ public class ChatAPIService {
 				new OauthUtils(new OauthCallBack() {
 
 					@Override
-					public void execute() {
+					public void reExecute() {
 						sendMeetingReply(rid, mpid, state);
 					}
-				}, context).refreshTocken(completeUrl);
+
+					@Override
+					public void executeFailCallback() {
+						callbackFail("",-1);
+					}
+
+				}, context).refreshToken(completeUrl);
 			}
 
 			@Override
@@ -764,7 +845,7 @@ public class ChatAPIService {
 			@Override
 			public void callbackFail(String error, int responseCode) {
 				// TODO Auto-generated method stub
-				apiInterface.returnGetMeetingReplyFail(error);
+				apiInterface.returnGetMeetingReplyFail(error, responseCode);
 			}
 		});
 
@@ -772,7 +853,7 @@ public class ChatAPIService {
 
 	/**
 	 * 创建群组
-	 * 
+	 *
 	 * @param name
 	 * @param members
 	 */
@@ -791,7 +872,7 @@ public class ChatAPIService {
 			e.printStackTrace();
 		}
 
-		x.http().post(params, new APICallback(context,completeUrl) {
+		x.http().post(params, new APICallback(context, completeUrl) {
 
 			@Override
 			public void callbackTokenExpire() {
@@ -799,10 +880,16 @@ public class ChatAPIService {
 				new OauthUtils(new OauthCallBack() {
 
 					@Override
-					public void execute() {
+					public void reExecute() {
 						createGroupChannel(name, members);
 					}
-				}, context).refreshTocken(completeUrl);
+
+					@Override
+					public void executeFailCallback() {
+						callbackFail("",-1);
+					}
+
+				}, context).refreshToken(completeUrl);
 			}
 
 			@Override
@@ -815,18 +902,18 @@ public class ChatAPIService {
 			@Override
 			public void callbackFail(String error, int responseCode) {
 				// TODO Auto-generated method stub
-				apiInterface.returnCreateChannelGroupFail(error);
+				apiInterface.returnCreateChannelGroupFail(error, responseCode);
 			}
 		});
 
 	}
 
-	public void getMsgCommentCount(final String mid){
+	public void getMsgCommentCount(final String mid) {
 		final String completeUrl = UriUtils.getHttpApiUri("message/" + mid
 				+ "/comment/count");
 		RequestParams params = ((MyApplication) context.getApplicationContext())
 				.getHttpRequestParams(completeUrl);
-		x.http().get(params, new APICallback(context,completeUrl) {
+		x.http().get(params, new APICallback(context, completeUrl) {
 
 			@Override
 			public void callbackTokenExpire() {
@@ -834,22 +921,28 @@ public class ChatAPIService {
 				new OauthUtils(new OauthCallBack() {
 
 					@Override
-					public void execute() {
+					public void reExecute() {
 						getMsgCommentCount(mid);
 					}
-				}, context).refreshTocken(completeUrl);
+
+					@Override
+					public void executeFailCallback() {
+						callbackFail("",-1);
+					}
+
+				}, context).refreshToken(completeUrl);
 			}
 
 			@Override
 			public void callbackSuccess(String arg0) {
 				// TODO Auto-generated method stub
-				apiInterface.returnMsgCommentCountSuccess(new GetMsgCommentCountResult(arg0),mid);
+				apiInterface.returnMsgCommentCountSuccess(new GetMsgCommentCountResult(arg0), mid);
 			}
 
 			@Override
 			public void callbackFail(String error, int responseCode) {
 				// TODO Auto-generated method stub
-				apiInterface.returnMsgCommentCountFail(error);
+				apiInterface.returnMsgCommentCountFail(error, responseCode);
 			}
 		});
 	}
@@ -857,14 +950,14 @@ public class ChatAPIService {
 	/**
 	 * 新闻批示接口，传入内容为批示内容
 	 * @param instruction
-     */
-	public void sendNewsInstruction(final String newsId, final String instruction){
+	 */
+	public void sendNewsInstruction(final String newsId, final String instruction) {
 		final String completeUrl = APIUri.getNewsInstruction(newsId);
 		RequestParams params = ((MyApplication) context.getApplicationContext())
 				.getHttpRequestParams(completeUrl);
-		params.setHeader("Content-Type","url-encoded-form");
-		params.addQueryStringParameter("comment",instruction);
-		x.http().post(params, new APICallback(context,completeUrl) {
+		params.setHeader("Content-Type", "url-encoded-form");
+		params.addQueryStringParameter("comment", instruction);
+		x.http().post(params, new APICallback(context, completeUrl) {
 			@Override
 			public void callbackSuccess(String arg0) {
 				apiInterface.returnNewsInstructionSuccess(new GetNewsInstructionResult(arg0));
@@ -872,19 +965,25 @@ public class ChatAPIService {
 
 			@Override
 			public void callbackFail(String error, int responseCode) {
-				apiInterface.returnNewsInstructionFail(error);
+				apiInterface.returnNewsInstructionFail(error, responseCode);
 			}
 
 			@Override
 			public void callbackTokenExpire() {
 				new OauthUtils(new OauthCallBack() {
 					@Override
-					public void execute() {
-						sendNewsInstruction(newsId,instruction);
+					public void reExecute() {
+						sendNewsInstruction(newsId, instruction);
 					}
-				}, context).refreshTocken(completeUrl);
+
+					@Override
+					public void executeFailCallback() {
+						callbackFail("",-1);
+					}
+
+				}, context).refreshToken(completeUrl);
 			}
 		});
 	}
-	
+
 }

@@ -137,6 +137,34 @@ public class ChannelGroupCacheUtils {
             ChannelGroup channelGroup = DbCacheUtils.getDb(context).findById(ChannelGroup.class, cid);
             if (channelGroup != null) {
                 List<String>  allMemberList = channelGroup.getMemberList();
+                int size = allMemberList.size();
+                if (limit <= 0 || limit > size){
+                    limit = size;
+                }
+                List<String>  limitMemberList = allMemberList.subList(0,limit-1);
+                userList.addAll(limitMemberList);
+            }
+
+        }catch (Exception e) {
+            // TODO: handle exception
+            e.printStackTrace();
+        }
+        return  userList;
+    }
+
+    /**
+     * 获取群组成员
+     * @param context
+     * @param channelGroup
+     * @param limit
+     * @return
+     */
+    public static List<String> getMemberUidList(Context context,  ChannelGroup channelGroup,
+                                                int limit) {
+        List<String> userList = new ArrayList<String>();
+        try {
+            if (channelGroup != null) {
+                List<String>  allMemberList = channelGroup.getMemberList();
                 if (limit == 0 ){
                     userList.addAll(allMemberList);
                 }else {

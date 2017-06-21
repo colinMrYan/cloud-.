@@ -34,13 +34,15 @@ import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.bean.GetCreateSingleChannelResult;
 import com.inspur.emmcloud.bean.GetNewsInstructionResult;
 import com.inspur.emmcloud.bean.GetSendMsgResult;
+import com.inspur.emmcloud.bean.NewsIntrcutionUpdateEvent;
 import com.inspur.emmcloud.config.MyAppWebConfig;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.util.ChatCreateUtils;
 import com.inspur.emmcloud.util.ChatCreateUtils.OnCreateDirectChannelListener;
 import com.inspur.emmcloud.util.DensityUtil;
+import com.inspur.emmcloud.util.HtmlRegexpUtil;
 import com.inspur.emmcloud.util.NetUtils;
-import com.inspur.emmcloud.util.PreferencesByUserUtils;
+import com.inspur.emmcloud.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.StateBarColor;
 import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.ToastUtils;
@@ -50,6 +52,7 @@ import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.ProgressWebView;
 import com.inspur.emmcloud.widget.SwitchView;
 
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -93,6 +96,10 @@ public class NewsWebDetailActivity extends BaseActivity {
     private SwitchView nightModeSwitchBtn;
     private GradientDrawable lightChooseFontBtnBackgroundDrawable;
     private String newsId = "";
+    private String instruction  = "";
+    private String approvedDate = "";
+    private boolean editorCommentCreated = false;
+    private String originalEditorComment = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -127,7 +134,7 @@ public class NewsWebDetailActivity extends BaseActivity {
      */
     private void initWebView() {
         webView = (ProgressWebView) findViewById(R.id.news_webdetail_webview);
-        String model = PreferencesByUserUtils.getString(NewsWebDetailActivity.this, "app_news_webview_model", "");
+        String model = PreferencesByUserAndTanentUtils.getString(NewsWebDetailActivity.this, "app_news_webview_model", "");
         if (model.equals(darkMode)) {
             webView.setBackgroundColor(ContextCompat.getColor(NewsWebDetailActivity.this, R.color.app_news_night_color));
         } else {
@@ -144,7 +151,7 @@ public class NewsWebDetailActivity extends BaseActivity {
      * 初始化是否夜间日间模式
      */
     private void initWebViewModel() {
-        String model = PreferencesByUserUtils.getString(NewsWebDetailActivity.this, "app_news_webview_model", "");
+        String model = PreferencesByUserAndTanentUtils.getString(NewsWebDetailActivity.this, "app_news_webview_model", "");
         if (StringUtils.isBlank(model)) {
             changeWebViewModel(lightMode);
         } else {
@@ -179,7 +186,7 @@ public class NewsWebDetailActivity extends BaseActivity {
      * 初始化WebView的字体大小
      */
     private void initWebViewTextSize() {
-        textSize = PreferencesByUserUtils.getInt(NewsWebDetailActivity.this, "app_news_text_size", MyAppWebConfig.NORMAL);
+        textSize = PreferencesByUserAndTanentUtils.getInt(NewsWebDetailActivity.this, "app_news_text_size", MyAppWebConfig.NORMAL);
         switch (textSize) {
             case MyAppWebConfig.SMALLESET:
                 textSize = MyAppWebConfig.SMALLESET;
@@ -233,6 +240,16 @@ public class NewsWebDetailActivity extends BaseActivity {
         if(intent.hasExtra("news_id")){
             this.newsId = intent.getStringExtra("news_id");
         }
+        if(intent.hasExtra("approvedDate")){
+            this.approvedDate = intent.getStringExtra("approvedDate");
+        }
+        if(intent.hasExtra("editorCommentCreated")){
+            this.editorCommentCreated = intent.getBooleanExtra("editorCommentCreated",false);
+        }
+        if(intent.hasExtra("originalEditorComment")){
+            this.originalEditorComment = intent.getStringExtra("originalEditorComment");
+        }
+
     }
 
     /**
@@ -262,7 +279,7 @@ public class NewsWebDetailActivity extends BaseActivity {
         // 设置点击外围解散
         dialog.setCanceledOnTouchOutside(true);
         initDialogFontSize();
-        String model = PreferencesByUserUtils.getString(NewsWebDetailActivity.this, "app_news_webview_model", "");
+        String model = PreferencesByUserAndTanentUtils.getString(NewsWebDetailActivity.this, "app_news_webview_model", "");
         if(model.equals(darkMode)){
             changeDialogModelToNight();
         }else {
@@ -275,7 +292,7 @@ public class NewsWebDetailActivity extends BaseActivity {
      * Dialog字体按钮控制
      */
     private void initDialogFontSize() {
-        String model = PreferencesByUserUtils.getString(NewsWebDetailActivity.this, "app_news_webview_model", "");
+        String model = PreferencesByUserAndTanentUtils.getString(NewsWebDetailActivity.this, "app_news_webview_model", "");
         switch (textSize) {
             case MyAppWebConfig.SMALLESET:
                 chooseNormalFont(model);
@@ -311,7 +328,7 @@ public class NewsWebDetailActivity extends BaseActivity {
         instructionsBtn = (Button)view.findViewById(R.id.app_news_instructions_btn);
         if(!getIntent().getBooleanExtra("hasExtraPermission",false)){
             instructionsBtn.setVisibility(View.GONE);
-            shareBtn.setPadding(DensityUtil.dip2px(NewsWebDetailActivity.this,139),0,0,0);
+            shareBtn.setPadding(getIconLeftSize(),0,0,0);
         }
         shareBtn.setText(getString(R.string.news_share_text));
         dayOrNightModeText = (TextView) view.findViewById(R.id.app_news_mode_night_text);
@@ -335,7 +352,7 @@ public class NewsWebDetailActivity extends BaseActivity {
         nightModeSwitchBtn = (SwitchView) view.findViewById(R.id.app_news_mode_switch);
         nightModeSwitchBtn.setPaintColorOn(0x7E000000);
         nightModeSwitchBtn.setPaintCircleBtnColor(0x1A666666);
-        String model = PreferencesByUserUtils.getString(NewsWebDetailActivity.this, "app_news_webview_model", lightMode);
+        String model = PreferencesByUserAndTanentUtils.getString(NewsWebDetailActivity.this, "app_news_webview_model", lightMode);
         if(model.equals(darkMode)){
             nightModeSwitchBtn.setOpened(true);
         }else{
@@ -344,7 +361,7 @@ public class NewsWebDetailActivity extends BaseActivity {
         nightModeSwitchBtn.setOnStateChangedListener(new SwitchView.OnStateChangedListener() {
             @Override
             public void toggleToOn(View view) {
-                PreferencesByUserUtils.putString(NewsWebDetailActivity.this, "app_news_webview_model", darkMode);
+                PreferencesByUserAndTanentUtils.putString(NewsWebDetailActivity.this, "app_news_webview_model", darkMode);
                 changeDialogModelToNight();
                 changeWebViewModel(darkMode);
                 nightModeSwitchBtn.toggleSwitch(true);
@@ -353,13 +370,25 @@ public class NewsWebDetailActivity extends BaseActivity {
 
             @Override
             public void toggleToOff(View view) {
-                PreferencesByUserUtils.putString(NewsWebDetailActivity.this, "app_news_webview_model", lightMode);
+                PreferencesByUserAndTanentUtils.putString(NewsWebDetailActivity.this, "app_news_webview_model", lightMode);
                 changeDialogModelToDay();
                 changeWebViewModel(lightMode);
                 nightModeSwitchBtn.toggleSwitch(false);
                 reRender();
             }
         });
+    }
+
+    /**
+     * 获取分享图标左侧大小
+     * @return
+     */
+    private int getIconLeftSize() {
+        WindowManager wm = (WindowManager) this
+                .getSystemService(Context.WINDOW_SERVICE);
+        int width = wm.getDefaultDisplay().getWidth();
+        float leftSize = (float) (width * 0.34);
+        return Math.round(leftSize);
     }
 
     /**
@@ -370,7 +399,7 @@ public class NewsWebDetailActivity extends BaseActivity {
      */
     private void changeNewsFontSize(WebSettings settings, int textZoom) {
         settings.setTextZoom(textZoom);
-        PreferencesByUserUtils.putInt(NewsWebDetailActivity.this, "app_news_text_size", textZoom);
+        PreferencesByUserAndTanentUtils.putInt(NewsWebDetailActivity.this, "app_news_text_size", textZoom);
         textSize = textZoom;
         reRender();
     }
@@ -380,7 +409,7 @@ public class NewsWebDetailActivity extends BaseActivity {
      */
     private void reRender() {
         //这里为了解决一个改变字体时的bug，很奇怪
-        String model = PreferencesByUserUtils.getString(NewsWebDetailActivity.this, "app_news_webview_model", "");
+        String model = PreferencesByUserAndTanentUtils.getString(NewsWebDetailActivity.this, "app_news_webview_model", "");
         GradientDrawable drawable = new GradientDrawable();
         drawable.setCornerRadius(DensityUtil.dip2px(NewsWebDetailActivity.this, 5));
 
@@ -407,7 +436,7 @@ public class NewsWebDetailActivity extends BaseActivity {
     }
 
     public void onClick(View v) {
-        String model = PreferencesByUserUtils.getString(NewsWebDetailActivity.this, "app_news_webview_model", "");
+        String model = PreferencesByUserAndTanentUtils.getString(NewsWebDetailActivity.this, "app_news_webview_model", "");
         switch (v.getId()) {
             case R.id.back_layout:
                 finish();
@@ -425,11 +454,22 @@ public class NewsWebDetailActivity extends BaseActivity {
                 break;
             case R.id.app_news_share_btn:
                 shareNewsToFrinds();
+//                showHasInstruceionDialog();
                 break;
             case R.id.app_news_instructions_btn:
                 //批示逻辑
                 dialog.dismiss();
-                showInstruceionDialog();
+                if (!StringUtils.isBlank(approvedDate)){
+                    if(getIntent().hasExtra("instruction")){
+                        instruction  = getIntent().getStringExtra("instruction");
+                    }
+                    showHasInstruceionDialog();
+                }else if(editorCommentCreated == true){
+                    instruction = originalEditorComment;
+                    showHasInstruceionDialog();
+                }else{
+                    showInstruceionDialog();
+                }
                 break;
             case R.id.app_news_font_normal_btn:
                 changeNewsFontSize(webSettings, MyAppWebConfig.SMALLER);
@@ -454,6 +494,47 @@ public class NewsWebDetailActivity extends BaseActivity {
     }
 
     /**
+     * 展示已经批示过的新闻
+     */
+    private void showHasInstruceionDialog() {
+        final Dialog hasIntrcutionDialog = new Dialog(NewsWebDetailActivity.this,
+                R.style.transparentFrameWindowStyle);
+        hasIntrcutionDialog.setCanceledOnTouchOutside(true);
+        View  view = getLayoutInflater().inflate(R.layout.app_news_has_instruction_dialog, null);
+        hasIntrcutionDialog.setContentView(view);
+        final EditText editText = (EditText) view.findViewById(R.id.news_instrcution_text);
+        editText.setFocusable(false);
+        editText.setEnabled(false);
+        instruction = handleInstruction(instruction);
+        editText.setText(instruction);
+        Button okBtn = (Button) view.findViewById(R.id.ok_btn);
+        okBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                hasIntrcutionDialog.dismiss();
+            }
+        });
+        Window window = hasIntrcutionDialog.getWindow();
+        WindowManager.LayoutParams wl = window.getAttributes();
+        wl.dimAmount = 0.31f;
+        hasIntrcutionDialog.getWindow().setAttributes(wl);
+        hasIntrcutionDialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+        hasIntrcutionDialog.show();
+    }
+
+    /**
+     * 如果批示里含有html标签，需要处理，如果不含则没有影响
+     * @param instruction
+     * @return
+     */
+    private String handleInstruction(String instruction) {
+        instruction = instruction.replace("<(br|BR)\\\\s*/?>(\\\\s*</(br|BR)>)?","\n").replace(" ","");
+        instruction = HtmlRegexpUtil.filterHtml(instruction);
+        return instruction;
+    }
+
+
+    /**
      * 展示审批
      */
     private void showInstruceionDialog(){
@@ -476,6 +557,7 @@ public class NewsWebDetailActivity extends BaseActivity {
             public void onClick(View v) {
                 String instructions = editText.getText().toString();
                 if(!StringUtils.isBlank(instructions)){
+                    originalEditorComment = instructions;
                     sendInstructions(instructions);
                     intrcutionDialog.dismiss();
                 }else{
@@ -612,7 +694,7 @@ public class NewsWebDetailActivity extends BaseActivity {
             relativeLayout.setBackgroundColor(ContextCompat.getColor(NewsWebDetailActivity.this, R.color.header_bg));
             webView.loadUrl(url + model);
         }
-        PreferencesByUserUtils.putString(NewsWebDetailActivity.this, "app_news_webview_model", model);
+        PreferencesByUserAndTanentUtils.putString(NewsWebDetailActivity.this, "app_news_webview_model", model);
     }
 
     /**
@@ -687,7 +769,7 @@ public class NewsWebDetailActivity extends BaseActivity {
      * 当改变日夜间模式的时候字体按钮对应改变
      */
     private void changeFontSizeBtn() {
-        String model = PreferencesByUserUtils.getString(NewsWebDetailActivity.this, "app_news_webview_model", "");
+        String model = PreferencesByUserAndTanentUtils.getString(NewsWebDetailActivity.this, "app_news_webview_model", "");
         switch (textSize){
             case MyAppWebConfig.SMALLER:
                 chooseNormalFont(model);
@@ -871,7 +953,7 @@ public class NewsWebDetailActivity extends BaseActivity {
         }
 
         @Override
-        public void returnSendMsgFail(String error, String fakeMessageId) {
+        public void returnSendMsgFail(String error, String fakeMessageId,int errorCode) {
             // TODO Auto-generated method stub
             if (loadingDlg != null && loadingDlg.isShowing()) {
                 loadingDlg.dismiss();
@@ -884,18 +966,33 @@ public class NewsWebDetailActivity extends BaseActivity {
             if(loadingDlg != null && loadingDlg.isShowing()){
                 loadingDlg.dismiss();
             }
+            editorCommentCreated = true;
+            sendInstructionEvent();
             Toast.makeText(NewsWebDetailActivity.this,
                     getString(R.string.news_instructions_success_text), Toast.LENGTH_SHORT)
                     .show();
         }
 
         @Override
-        public void returnNewsInstructionFail(String error) {
+        public void returnNewsInstructionFail(String error,int errorCode) {
             if(loadingDlg != null && loadingDlg.isShowing()){
                 loadingDlg.dismiss();
             }
-            WebServiceMiddleUtils.hand(NewsWebDetailActivity.this,error);
+            editorCommentCreated = false;
+            originalEditorComment = "";
+            WebServiceMiddleUtils.hand(NewsWebDetailActivity.this,error,errorCode);
         }
+    }
+
+    /**
+     * 发送批示成功事件
+     */
+    private void sendInstructionEvent() {
+        NewsIntrcutionUpdateEvent groupEvent = new NewsIntrcutionUpdateEvent();
+        groupEvent.setId(newsId);
+        groupEvent.setEditorCommentCreated(true);
+        groupEvent.setOriginalEditorComment(originalEditorComment);
+        EventBus.getDefault().post(groupEvent);
     }
 
     protected void onPause() {

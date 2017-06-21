@@ -182,7 +182,6 @@
                     android:layout_marginLeft="12dp"
                     android:layout_marginRight="10dp"
                     android:layout_marginTop="6dp"
-                    android:background="#ffffff"
                     android:padding="0.5dp"
                     android:src="@drawable/icon_set" />
 
@@ -296,60 +295,17 @@
                 android:src="@drawable/icon_arrow_right" />
         </RelativeLayout>
 
-        <!-- 细线 -->
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="#dadadd" />
-        
-        
-                <RelativeLayout
-            android:id="@+id/about_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-             android:layout_marginTop="10dp"
-            android:background="@drawable/text_layout_selector"
-            android:clickable="true" >
-             <com.inspur.emmcloud.widget.CircleImageView
-                        android:id="@+id/about_img"
-                        android:layout_width="33dp"
-                        android:layout_height="33dp"
-                        android:layout_centerVertical="true"
-                        android:layout_marginBottom="6dp"
-                        android:layout_marginLeft="12dp"
-                        android:layout_marginRight="10dp"
-                        android:layout_marginTop="6dp"
-                        android:padding="0.5dp"
-                        android:src="@drawable/icon_circle_logo"/>
-
-
-            <TextView
-                android:id="@+id/about_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_toRightOf="@id/about_img"
-                android:text="@string/settings_aboutIMP"
-                android:textSize="@dimen/content_normal_textsize" />
-
-            <ImageView
-                android:id="@+id/about_arrowImg"
-                style="@style/arrow_right"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="10dp"
-                android:src="@drawable/icon_arrow_right" />
-        </RelativeLayout>
 
         <RelativeLayout
             android:id="@+id/more_invite_friends_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
+            android:visibility="gone"
             android:background="@drawable/text_layout_selector"
             android:clickable="true"
-            android:visibility="gone" >
+             >
 
             <!-- 细线 -->
 
@@ -393,6 +349,102 @@
             android:layout_height="0.5dp"
             android:background="#dadadd"
             android:visibility="gone" />
+        <!--android:layout_marginLeft="48dp"-->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_marginTop="-0.5dp"
+            android:background="#dadadd" />
+
+        <RelativeLayout
+            android:id="@+id/scan_login_desktop_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/text_layout_selector"
+            android:visibility="gone"
+            android:clickable="true"
+            >
+
+            <!-- 细线 -->
+
+
+
+            <ImageView
+                android:id="@+id/scan_login_desktop_img"
+                android:layout_width="33dp"
+                android:layout_height="33dp"
+                android:layout_centerVertical="true"
+                android:layout_marginBottom="6dp"
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="6dp"
+                android:padding="0.5dp"
+                android:src="@drawable/icon_home" />
+
+            <TextView
+                android:id="@+id/scan_login_desktop_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@id/scan_login_desktop_img"
+                android:text="扫一扫登录桌面版"
+                android:textSize="@dimen/content_normal_textsize" />
+
+            <ImageView
+                android:id="@+id/scan_login_desktop_arrowImg"
+                style="@style/arrow_right"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="10dp"
+                android:src="@drawable/icon_arrow_right" />
+        </RelativeLayout>
+
+
+        <!-- 细线 -->
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="#dadadd" />
+
+
+        <RelativeLayout
+            android:id="@+id/about_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/text_layout_selector"
+            android:clickable="true" >
+            <com.inspur.emmcloud.widget.CircleImageView
+                android:id="@+id/about_img"
+                android:layout_width="33dp"
+                android:layout_height="33dp"
+                android:layout_centerVertical="true"
+                android:layout_marginBottom="6dp"
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="6dp"
+                android:padding="0.5dp"
+                android:src="@drawable/icon_circle_logo"/>
+
+
+            <TextView
+                android:id="@+id/about_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@id/about_img"
+                android:text="@string/settings_aboutIMP"
+                android:textSize="@dimen/content_normal_textsize" />
+
+            <ImageView
+                android:id="@+id/about_arrowImg"
+                style="@style/arrow_right"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="10dp"
+                android:src="@drawable/icon_arrow_right" />
+        </RelativeLayout>
     </LinearLayout>
 
 </RelativeLayout>

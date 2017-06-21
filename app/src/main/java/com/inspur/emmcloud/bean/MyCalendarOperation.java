@@ -1,7 +1,9 @@
 package com.inspur.emmcloud.bean;
 
 import com.lidroid.xutils.db.annotation.Id;
+import com.lidroid.xutils.db.annotation.Table;
 
+@Table(name="MyCalendarOperation")
 public class MyCalendarOperation {
 	@Id
 	private String myCalendarId = "";

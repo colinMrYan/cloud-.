@@ -169,6 +169,8 @@
                 </LinearLayout>
 
                 <RelativeLayout
+                    android:id="@+id/check_layout"
+                    android:onClick="onClick"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content" >
 
@@ -181,6 +183,7 @@
                         android:layout_toLeftOf="@+id/check_text"
                         android:button="@drawable/feedback_checkbox_bg"
                         android:focusable="false"
+                        android:clickable="false"
                         android:focusableInTouchMode="false" />
 
                     <TextView

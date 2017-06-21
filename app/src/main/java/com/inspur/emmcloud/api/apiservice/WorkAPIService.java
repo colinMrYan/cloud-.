@@ -30,7 +30,7 @@ import com.inspur.emmcloud.bean.GetTaskAddResult;
 import com.inspur.emmcloud.bean.GetTaskListResult;
 import com.inspur.emmcloud.bean.SearchModel;
 import com.inspur.emmcloud.bean.TaskResult;
-import com.inspur.emmcloud.util.OauthCallBack;
+import com.inspur.emmcloud.callback.OauthCallBack;
 import com.inspur.emmcloud.util.OauthUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.UriUtils;
@@ -81,10 +81,15 @@ public class WorkAPIService {
 				new OauthUtils(new OauthCallBack() {
 
 					@Override
-					public void execute() {
+					public void reExecute() {
 						getMeetings(day);
 					}
-				}, context).refreshTocken(completeUrl);
+
+					@Override
+					public void executeFailCallback() {
+						callbackFail("", -1);
+					}
+				}, context).refreshToken(completeUrl);
 			}
 
 			@Override
@@ -97,7 +102,7 @@ public class WorkAPIService {
 			@Override
 			public void callbackFail(String error, int responseCode) {
 				// TODO Auto-generated method stub
-				apiInterface.returnMeetingsFail(error);
+				apiInterface.returnMeetingsFail(error,responseCode);
 			}
 		});
 
@@ -118,10 +123,15 @@ public class WorkAPIService {
 				new OauthUtils(new OauthCallBack() {
 
 					@Override
-					public void execute() {
+					public void reExecute() {
 						getMeetingRooms();
 					}
-				}, context).refreshTocken(completeUrl);
+
+					@Override
+					public void executeFailCallback() {
+						callbackFail("", -1);
+					}
+				}, context).refreshToken(completeUrl);
 			}
 
 			@Override
@@ -135,7 +145,7 @@ public class WorkAPIService {
 			@Override
 			public void callbackFail(String error, int responseCode) {
 				// TODO Auto-generated method stub
-				apiInterface.returnMeetingRoomsFail(error);
+				apiInterface.returnMeetingRoomsFail(error,responseCode);
 			}
 		});
 	}
@@ -174,11 +184,16 @@ public class WorkAPIService {
 				new OauthUtils(new OauthCallBack() {
 
 					@Override
-					public void execute() {
+					public void reExecute() {
 						getFiltMeetingRooms(start, end, commonOfficeIdList,
 								isFilte);
 					}
-				}, context).refreshTocken(completeUrl);
+
+					@Override
+					public void executeFailCallback() {
+						callbackFail("", -1);
+					}
+				}, context).refreshToken(completeUrl);
 			}
 
 			@Override
@@ -191,7 +206,7 @@ public class WorkAPIService {
 			@Override
 			public void callbackFail(String error, int responseCode) {
 				// TODO Auto-generated method stub
-				apiInterface.returnMeetingRoomsFail(error);
+				apiInterface.returnMeetingRoomsFail(error,responseCode);
 			}
 		});
 	}
@@ -221,11 +236,16 @@ public class WorkAPIService {
 				new OauthUtils(new OauthCallBack() {
 
 					@Override
-					public void execute() {
+					public void reExecute() {
 						// TODO Auto-generated method stub
 						getHistoryMeetingList(keyword, page, limit, isLoadMore);
 					}
-				}, context).refreshTocken(completeUrl);
+
+					@Override
+					public void executeFailCallback() {
+						callbackFail("", -1);
+					}
+				}, context).refreshToken(completeUrl);
 			}
 
 			@Override
@@ -238,7 +258,7 @@ public class WorkAPIService {
 			@Override
 			public void callbackFail(String error, int responseCode) {
 				// TODO Auto-generated method stub
-				apiInterface.returnMeetingsFail(error);
+				apiInterface.returnMeetingsFail(error,responseCode);
 			}
 		});
 	}
@@ -261,10 +281,15 @@ public class WorkAPIService {
 				new OauthUtils(new OauthCallBack() {
 
 					@Override
-					public void execute() {
+					public void reExecute() {
 						getIsAdmin(cid);
 					}
-				}, context).refreshTocken(completeUrl);
+
+					@Override
+					public void executeFailCallback() {
+						callbackFail("", -1);
+					}
+				}, context).refreshToken(completeUrl);
 			}
 			
 			@Override
@@ -276,7 +301,7 @@ public class WorkAPIService {
 			@Override
 			public void callbackFail(String error, int responseCode) {
 				// TODO Auto-generated method stub
-				apiInterface.returnIsAdminFail(error);
+				apiInterface.returnIsAdminFail(error,responseCode);
 			}
 		});
 	}
@@ -353,12 +378,17 @@ public class WorkAPIService {
 				new OauthUtils(new OauthCallBack() {
 
 					@Override
-					public void execute() {
+					public void reExecute() {
 						updateMeeting(topic, roomid, name, alert, notice,
 								bookDate, from, to, organizer, cids, pids,
 								attendant, id);
 					}
-				}, context).refreshTocken(completeUrl);
+
+					@Override
+					public void executeFailCallback() {
+						callbackFail("", -1);
+					}
+				}, context).refreshToken(completeUrl);
 			}
 			
 			@Override
@@ -388,7 +418,6 @@ public class WorkAPIService {
 	 * @param name
 	 * @param alert
 	 * @param notice
-	 * @param bookDate
 	 * @param from
 	 * @param to
 	 * @param organizer
@@ -448,11 +477,16 @@ public class WorkAPIService {
 				new OauthUtils(new OauthCallBack() {
 
 					@Override
-					public void execute() {
+					public void reExecute() {
 						getBookingRoom(topic, roomid, name, alert, notice,
 								from, to, organizer, cids, pids, attendant);
 					}
-				}, context).refreshTocken(completeUrl);
+
+					@Override
+					public void executeFailCallback() {
+						callbackFail("", -1);
+					}
+				}, context).refreshToken(completeUrl);
 			}
 
 			@Override
@@ -498,10 +532,15 @@ public class WorkAPIService {
 				new OauthUtils(new OauthCallBack() {
 
 					@Override
-					public void execute() {
+					public void reExecute() {
 						creatGroupChannel(name, members);
 					}
-				}, context).refreshTocken(completeUrl);
+
+					@Override
+					public void executeFailCallback() {
+						callbackFail("", -1);
+					}
+				}, context).refreshToken(completeUrl);
 			}
 
 			@Override
@@ -514,7 +553,7 @@ public class WorkAPIService {
 			@Override
 			public void callbackFail(String error, int responseCode) {
 				// TODO Auto-generated method stub
-				apiInterface.returnCreateChannelGroupFail(error);
+				apiInterface.returnCreateChannelGroupFail(error,responseCode);
 			}
 		});
 	}
@@ -590,10 +629,15 @@ public class WorkAPIService {
 				new OauthUtils(new OauthCallBack() {
 
 					@Override
-					public void execute() {
+					public void reExecute() {
 						getRoomMeetingList(bid);
 					}
-				}, context).refreshTocken(completeUrl);
+
+					@Override
+					public void executeFailCallback() {
+						callbackFail("", -1);
+					}
+				}, context).refreshToken(completeUrl);
 			}
 
 			@Override
@@ -604,7 +648,7 @@ public class WorkAPIService {
 			@Override
 			public void callbackFail(String error, int responseCode) {
 				// TODO Auto-generated method stub
-				apiInterface.returnMeetingListFail(error);
+				apiInterface.returnMeetingListFail(error,responseCode);
 			}
 		});
 	}
@@ -624,10 +668,15 @@ public class WorkAPIService {
 				new OauthUtils(new OauthCallBack() {
 
 					@Override
-					public void execute() {
+					public void reExecute() {
 						getLoction();
 					}
-				}, context).refreshTocken(completeUrl);
+
+					@Override
+					public void executeFailCallback() {
+						callbackFail("", -1);
+					}
+				}, context).refreshToken(completeUrl);
 			}
 
 			@Override
@@ -640,7 +689,7 @@ public class WorkAPIService {
 			@Override
 			public void callbackFail(String error, int responseCode) {
 				// TODO Auto-generated method stub
-				apiInterface.returnLoctionResultFail(error);
+				apiInterface.returnLoctionResultFail(error,responseCode);
 			}
 		});
 
@@ -665,7 +714,7 @@ public class WorkAPIService {
 			@Override
 			public void callbackFail(String error, int responseCode) {
 				// TODO Auto-generated method stub
-				apiInterface.returnOfficeResultFail(error);
+				apiInterface.returnOfficeResultFail(error,responseCode);
 			}
 
 			@Override
@@ -674,10 +723,15 @@ public class WorkAPIService {
 				new OauthUtils(new OauthCallBack() {
 
 					@Override
-					public void execute() {
+					public void reExecute() {
 						getOffice();
 					}
-				}, context).refreshTocken(completeUrl);
+
+					@Override
+					public void executeFailCallback() {
+						callbackFail("", -1);
+					}
+				}, context).refreshToken(completeUrl);
 			}
 		});
 	}
@@ -686,7 +740,7 @@ public class WorkAPIService {
 	 * 创建常用办公地点
 	 * 
 	 * @param name
-	 * @param buildingid
+	 * @param buildingId
 	 */
 	public void creatOffice(final String name, final String buildingId) {
 		final String completeUrl = UriUtils.addOffice();
@@ -711,10 +765,15 @@ public class WorkAPIService {
 				new OauthUtils(new OauthCallBack() {
 
 					@Override
-					public void execute() {
+					public void reExecute() {
 						creatOffice(name, buildingId);
 					}
-				}, context).refreshTocken(completeUrl);
+
+					@Override
+					public void executeFailCallback() {
+						callbackFail("", -1);
+					}
+				}, context).refreshToken(completeUrl);
 			}
 
 			@Override
@@ -728,7 +787,7 @@ public class WorkAPIService {
 			@Override
 			public void callbackFail(String error, int responseCode) {
 				// TODO Auto-generated method stub
-				apiInterface.returnCreatOfficeFail(error);
+				apiInterface.returnCreatOfficeFail(error,responseCode);
 			}
 		});
 	}
@@ -751,10 +810,15 @@ public class WorkAPIService {
 				new OauthUtils(new OauthCallBack() {
 
 					@Override
-					public void execute() {
+					public void reExecute() {
 						deleteMeeting(rid);
 					}
-				}, context).refreshTocken(completeUrl);
+
+					@Override
+					public void executeFailCallback() {
+						callbackFail("", -1);
+					}
+				}, context).refreshToken(completeUrl);
 			}
 			
 			@Override
@@ -766,7 +830,7 @@ public class WorkAPIService {
 			@Override
 			public void callbackFail(String error, int responseCode) {
 				// TODO Auto-generated method stub
-				apiInterface.returnDelMeetingFail(error);
+				apiInterface.returnDelMeetingFail(error,responseCode);
 			}
 		});
 	}
@@ -789,10 +853,15 @@ public class WorkAPIService {
 				new OauthUtils(new OauthCallBack() {
 
 					@Override
-					public void execute() {
+					public void reExecute() {
 						deleteOffice(buildingId);
 					}
-				}, context).refreshTocken(completeUrl);
+
+					@Override
+					public void executeFailCallback() {
+						callbackFail("", -1);
+					}
+				}, context).refreshToken(completeUrl);
 			}
 
 			@Override
@@ -804,7 +873,7 @@ public class WorkAPIService {
 			@Override
 			public void callbackFail(String error, int responseCode) {
 				// TODO Auto-generated method stub
-				apiInterface.returnDeleteOfficeFail(error);
+				apiInterface.returnDeleteOfficeFail(error,responseCode);
 			}
 		});
 
@@ -834,10 +903,15 @@ public class WorkAPIService {
 				new OauthUtils(new OauthCallBack() {
 
 					@Override
-					public void execute() {
+					public void reExecute() {
 						getOfficeMeetingRooms(oidList, day);
 					}
-				}, context).refreshTocken(completeUrl);
+
+					@Override
+					public void executeFailCallback() {
+						callbackFail("", -1);
+					}
+				}, context).refreshToken(completeUrl);
 			}
 
 			@Override
@@ -851,7 +925,7 @@ public class WorkAPIService {
 			@Override
 			public void callbackFail(String error, int responseCode) {
 				// TODO Auto-generated method stub
-				apiInterface.returnMeetingRoomsFail(error);
+				apiInterface.returnMeetingRoomsFail(error,responseCode);
 			}
 		});
 	}
@@ -881,10 +955,15 @@ public class WorkAPIService {
 				new OauthUtils(new OauthCallBack() {
 
 					@Override
-					public void execute() {
+					public void reExecute() {
 						getAvailableRooms(oids, start, end);
 					}
-				}, context).refreshTocken(completeUrl);
+
+					@Override
+					public void executeFailCallback() {
+						callbackFail("", -1);
+					}
+				}, context).refreshToken(completeUrl);
 			}
 
 			@Override
@@ -898,7 +977,7 @@ public class WorkAPIService {
 			@Override
 			public void callbackFail(String error, int responseCode) {
 				// TODO Auto-generated method stub
-				apiInterface.returnMeetingRoomsFail(error);
+				apiInterface.returnMeetingRoomsFail(error,responseCode);
 			}
 		});
 	}
@@ -925,10 +1004,15 @@ public class WorkAPIService {
 				new OauthUtils(new OauthCallBack() {
 
 					@Override
-					public void execute() {
+					public void reExecute() {
 						getRecentTasks(orderBy, orderType);
 					}
-				}, context).refreshTocken(completeUrl);
+
+					@Override
+					public void executeFailCallback() {
+						callbackFail("", -1);
+					}
+				}, context).refreshToken(completeUrl);
 			}
 
 			@Override
@@ -941,7 +1025,7 @@ public class WorkAPIService {
 			@Override
 			public void callbackFail(String error, int responseCode) {
 				// TODO Auto-generated method stub
-				apiInterface.returnRecentTasksFail(error);
+				apiInterface.returnRecentTasksFail(error,responseCode);
 			}
 		});
 
@@ -965,10 +1049,15 @@ public class WorkAPIService {
 				new OauthUtils(new OauthCallBack() {
 
 					@Override
-					public void execute() {
+					public void reExecute() {
 						getTask(id);
 					}
-				}, context).refreshTocken(completeUrl);
+
+					@Override
+					public void executeFailCallback() {
+						callbackFail("", -1);
+					}
+				}, context).refreshToken(completeUrl);
 			}
 			
 			@Override
@@ -981,7 +1070,7 @@ public class WorkAPIService {
 			@Override
 			public void callbackFail(String error, int responseCode) {
 				// TODO Auto-generated method stub
-				apiInterface.returnGetTasksFail(error);
+				apiInterface.returnGetTasksFail(error,responseCode);
 			}
 		});
 	}
@@ -1009,10 +1098,15 @@ public class WorkAPIService {
 				new OauthUtils(new OauthCallBack() {
 
 					@Override
-					public void execute() {
+					public void reExecute() {
 						getAllTasks(page, limit, state);
 					}
-				}, context).refreshTocken(completeUrl);
+
+					@Override
+					public void executeFailCallback() {
+						callbackFail("", -1);
+					}
+				}, context).refreshToken(completeUrl);
 			}
 
 			@Override
@@ -1025,7 +1119,7 @@ public class WorkAPIService {
 			@Override
 			public void callbackFail(String error, int responseCode) {
 				// TODO Auto-generated method stub
-				apiInterface.returnRecentTasksFail(error);
+				apiInterface.returnRecentTasksFail(error,responseCode);
 			}
 		});
 	}
@@ -1046,10 +1140,15 @@ public class WorkAPIService {
 				// TODO Auto-generated method stub
 				new OauthUtils(new OauthCallBack() {
 					@Override
-					public void execute() {
+					public void reExecute() {
 						getInvolvedTasks(orderBy,orderType);
 					}
-				}, context).refreshTocken(completeUrl);
+
+					@Override
+					public void executeFailCallback() {
+						callbackFail("", -1);
+					}
+				}, context).refreshToken(completeUrl);
 			}
 
 			@Override
@@ -1062,7 +1161,7 @@ public class WorkAPIService {
 			@Override
 			public void callbackFail(String error, int responseCode) {
 				// TODO Auto-generated method stub
-				apiInterface.returnRecentTasksFail(error);
+				apiInterface.returnRecentTasksFail(error,responseCode);
 			}
 		});
 	}
@@ -1085,10 +1184,15 @@ public class WorkAPIService {
 				new OauthUtils(new OauthCallBack() {
 
 					@Override
-					public void execute() {
+					public void reExecute() {
 						getFocusedTasks(orderBy,orderType);
 					}
-				}, context).refreshTocken(completeUrl);
+
+					@Override
+					public void executeFailCallback() {
+						callbackFail("", -1);
+					}
+				}, context).refreshToken(completeUrl);
 			}
 
 			@Override
@@ -1101,7 +1205,7 @@ public class WorkAPIService {
 			@Override
 			public void callbackFail(String error, int responseCode) {
 				// TODO Auto-generated method stub
-				apiInterface.returnRecentTasksFail(error);
+				apiInterface.returnRecentTasksFail(error,responseCode);
 			}
 		});
 	}
@@ -1122,10 +1226,15 @@ public class WorkAPIService {
 				new OauthUtils(new OauthCallBack() {
 
 					@Override
-					public void execute() {
+					public void reExecute() {
 						createTasks(mession);
 					}
-				}, context).refreshTocken(completeUrl);
+
+					@Override
+					public void executeFailCallback() {
+						callbackFail("", -1);
+					}
+				}, context).refreshToken(completeUrl);
 			}
 
 			@Override
@@ -1138,7 +1247,7 @@ public class WorkAPIService {
 			@Override
 			public void callbackFail(String error, int responseCode) {
 				// TODO Auto-generated method stub
-				apiInterface.returnCreateTaskFail(error);
+				apiInterface.returnCreateTaskFail(error,responseCode);
 			}
 		});
 
@@ -1161,10 +1270,15 @@ public class WorkAPIService {
 				new OauthUtils(new OauthCallBack() {
 
 					@Override
-					public void execute() {
+					public void reExecute() {
 						deleteTasks(id);
 					}
-				}, context).refreshTocken(completeUrl);
+
+					@Override
+					public void executeFailCallback() {
+						callbackFail("", -1);
+					}
+				}, context).refreshToken(completeUrl);
 			}
 
 			@Override
@@ -1176,7 +1290,7 @@ public class WorkAPIService {
 			@Override
 			public void callbackFail(String error, int responseCode) {
 				// TODO Auto-generated method stub
-				apiInterface.returnDeleteTaskFail(error);
+				apiInterface.returnDeleteTaskFail(error,responseCode);
 			}
 		});
 	}
@@ -1196,10 +1310,15 @@ public class WorkAPIService {
 				new OauthUtils(new OauthCallBack() {
 
 					@Override
-					public void execute() {
+					public void reExecute() {
 						getTodayTasks();
 					}
-				}, context).refreshTocken(completeUrl);
+
+					@Override
+					public void executeFailCallback() {
+						callbackFail("", -1);
+					}
+				}, context).refreshToken(completeUrl);
 			}
 
 			@Override
@@ -1212,7 +1331,7 @@ public class WorkAPIService {
 			@Override
 			public void callbackFail(String error, int responseCode) {
 				// TODO Auto-generated method stub
-				apiInterface.returnRecentTasksFail(error);
+				apiInterface.returnRecentTasksFail(error,responseCode);
 			}
 		});
 
@@ -1235,11 +1354,15 @@ public class WorkAPIService {
 				new OauthUtils(new OauthCallBack() {
 
 					@Override
-					public void execute() {
+					public void reExecute() {
 						getSigleTask(id);
-
 					}
-				}, context).refreshTocken(completeUrl);
+
+					@Override
+					public void executeFailCallback() {
+						callbackFail("", -1);
+					}
+				}, context).refreshToken(completeUrl);
 			}
 
 			@Override
@@ -1251,7 +1374,7 @@ public class WorkAPIService {
 			@Override
 			public void callbackFail(String error, int responseCode) {
 				// TODO Auto-generated method stub
-				apiInterface.returnAttachmentFail(error);
+				apiInterface.returnAttachmentFail(error,responseCode);
 			}
 		});
 	}
@@ -1275,10 +1398,15 @@ public class WorkAPIService {
 				new OauthUtils(new OauthCallBack() {
 
 					@Override
-					public void execute() {
+					public void reExecute() {
 						updateTask(taskJson);
 					}
-				}, context).refreshTocken(completeUrl);
+
+					@Override
+					public void executeFailCallback() {
+						callbackFail("", -1);
+					}
+				}, context).refreshToken(completeUrl);
 			}
 
 			@Override
@@ -1290,7 +1418,7 @@ public class WorkAPIService {
 			@Override
 			public void callbackFail(String error, int responseCode) {
 				// TODO Auto-generated method stub
-				apiInterface.returnUpdateTaskFail(error);
+				apiInterface.returnUpdateTaskFail(error,responseCode);
 			}
 		});
 	}
@@ -1316,10 +1444,15 @@ public class WorkAPIService {
 				new OauthUtils(new OauthCallBack() {
 
 					@Override
-					public void execute() {
+					public void reExecute() {
 						inviteMateForTask(taskId, uidArray);
 					}
-				}, context).refreshTocken(completeUrl);
+
+					@Override
+					public void executeFailCallback() {
+						callbackFail("", -1);
+					}
+				}, context).refreshToken(completeUrl);
 			}
 
 			@Override
@@ -1332,7 +1465,7 @@ public class WorkAPIService {
 			@Override
 			public void callbackFail(String error, int responseCode) {
 				// TODO Auto-generated method stub
-				apiInterface.returnInviteMateForTaskFail(error);
+				apiInterface.returnInviteMateForTaskFail(error,responseCode);
 			}
 		});
 	}
@@ -1358,10 +1491,15 @@ public class WorkAPIService {
 				new OauthUtils(new OauthCallBack() {
 
 					@Override
-					public void execute() {
+					public void reExecute() {
 						deleteMateForTask(taskId, uidArray);
 					}
-				}, context).refreshTocken(completeUrl);
+
+					@Override
+					public void executeFailCallback() {
+						callbackFail("", -1);
+					}
+				}, context).refreshToken(completeUrl);
 			}
 
 			@Override
@@ -1373,7 +1511,7 @@ public class WorkAPIService {
 			@Override
 			public void callbackFail(String error, int responseCode) {
 				// TODO Auto-generated method stub
-				apiInterface.returnDelTaskMemFail(error);
+				apiInterface.returnDelTaskMemFail(error,responseCode);
 			}
 		});
 	}
@@ -1394,10 +1532,15 @@ public class WorkAPIService {
 				new OauthUtils(new OauthCallBack() {
 
 					@Override
-					public void execute() {
+					public void reExecute() {
 						getTags();
 					}
-				}, context).refreshTocken(completeUrl);
+
+					@Override
+					public void executeFailCallback() {
+						callbackFail("", -1);
+					}
+				}, context).refreshToken(completeUrl);
 			}
 
 			@Override
@@ -1409,7 +1552,7 @@ public class WorkAPIService {
 			@Override
 			public void callbackFail(String error, int responseCode) {
 				// TODO Auto-generated method stub
-				apiInterface.returnGetTagResultFail(error);
+				apiInterface.returnGetTagResultFail(error,responseCode);
 			}
 		});
 
@@ -1447,10 +1590,15 @@ public class WorkAPIService {
 				new OauthUtils(new OauthCallBack() {
 
 					@Override
-					public void execute() {
+					public void reExecute() {
 						changeTag(id, title, color, owner);
 					}
-				}, context).refreshTocken(completeUrl);
+
+					@Override
+					public void executeFailCallback() {
+						callbackFail("", -1);
+					}
+				}, context).refreshToken(completeUrl);
 			}
 
 			@Override
@@ -1462,7 +1610,7 @@ public class WorkAPIService {
 			@Override
 			public void callbackFail(String error, int responseCode) {
 				// TODO Auto-generated method stub
-				apiInterface.returnCreateTagFail(error);
+				apiInterface.returnCreateTagFail(error,responseCode);
 			}
 		});
 
@@ -1486,10 +1634,15 @@ public class WorkAPIService {
 				new OauthUtils(new OauthCallBack() {
 
 					@Override
-					public void execute() {
+					public void reExecute() {
 						deleteTag(id);
 					}
-				}, context).refreshTocken(completeUrl);
+
+					@Override
+					public void executeFailCallback() {
+						callbackFail("", -1);
+					}
+				}, context).refreshToken(completeUrl);
 			}
 
 			@Override
@@ -1501,7 +1654,7 @@ public class WorkAPIService {
 			@Override
 			public void callbackFail(String error, int responseCode) {
 				// TODO Auto-generated method stub
-				apiInterface.returnDeleteTagFail(error);
+				apiInterface.returnDeleteTagFail(error,responseCode);
 			}
 		});
 
@@ -1526,10 +1679,15 @@ public class WorkAPIService {
 				// TODO Auto-generated method stub
 				new OauthUtils(new OauthCallBack() {
 					@Override
-					public void execute() {
+					public void reExecute() {
 						createTag(title, color);
 					}
-				}, context).refreshTocken(completeUrl);
+
+					@Override
+					public void executeFailCallback() {
+						callbackFail("", -1);
+					}
+				}, context).refreshToken(completeUrl);
 			}
 
 			@Override
@@ -1541,7 +1699,7 @@ public class WorkAPIService {
 			@Override
 			public void callbackFail(String error, int responseCode) {
 				// TODO Auto-generated method stub
-				apiInterface.returnCreateTagFail(error);
+				apiInterface.returnCreateTagFail(error,responseCode);
 			}
 		});
 	}
@@ -1568,10 +1726,15 @@ public class WorkAPIService {
 				new OauthUtils(new OauthCallBack() {
 
 					@Override
-					public void execute() {
+					public void reExecute() {
 						changeMessionOwner(id, newOwner);
 					}
-				}, context).refreshTocken(completeUrl);
+
+					@Override
+					public void executeFailCallback() {
+						callbackFail("", -1);
+					}
+				}, context).refreshToken(completeUrl);
 			}
 			
 			@Override
@@ -1583,7 +1746,7 @@ public class WorkAPIService {
 			@Override
 			public void callbackFail(String error, int responseCode) {
 				// TODO Auto-generated method stub
-				apiInterface.returnChangeMessionOwnerFail(error);
+				apiInterface.returnChangeMessionOwnerFail(error,responseCode);
 			}
 		});
 		
@@ -1609,10 +1772,15 @@ public class WorkAPIService {
 				new OauthUtils(new OauthCallBack() {
 
 					@Override
-					public void execute() {
+					public void reExecute() {
 						changeMessionTag(id, tags);
 					}
-				}, context).refreshTocken(completeUrl);
+
+					@Override
+					public void executeFailCallback() {
+						callbackFail("", -1);
+					}
+				}, context).refreshToken(completeUrl);
 			}
 			
 			@Override
@@ -1624,7 +1792,7 @@ public class WorkAPIService {
 			@Override
 			public void callbackFail(String error, int responseCode) {
 				// TODO Auto-generated method stub
-				apiInterface.returnChangeMessionTagFail(error);
+				apiInterface.returnChangeMessionTagFail(error,responseCode);
 			}
 		});
 		
@@ -1658,11 +1826,15 @@ public class WorkAPIService {
 				new OauthUtils(new OauthCallBack() {
 
 					@Override
-					public void execute() {
+					public void reExecute() {
 						// TODO Auto-generated method stub
 						addAttachments(id, attachments);
 					}
-				}, context).refreshTocken(completeUrl);
+					@Override
+					public void executeFailCallback() {
+						callbackFail("", -1);
+					}
+				}, context).refreshToken(completeUrl);
 			}
 
 			@Override
@@ -1674,7 +1846,7 @@ public class WorkAPIService {
 			@Override
 			public void callbackFail(String error, int responseCode) {
 				// TODO Auto-generated method stub
-				apiInterface.returnAddAttachMentFail(error);
+				apiInterface.returnAddAttachMentFail(error,responseCode);
 			}
 		});
 	}
@@ -1704,11 +1876,16 @@ public class WorkAPIService {
 				// TODO Auto-generated method stub
 				new OauthUtils(new OauthCallBack() {
 					@Override
-					public void execute() {
+					public void reExecute() {
 						// TODO Auto-generated method stub
 						addAttachments(id, attachments);
 					}
-				}, context).refreshTocken(completeUrl);
+
+					@Override
+					public void executeFailCallback() {
+						callbackFail("", -1);
+					}
+				}, context).refreshToken(completeUrl);
 			}
 
 			@Override
@@ -1720,7 +1897,7 @@ public class WorkAPIService {
 			@Override
 			public void callbackFail(String error, int responseCode) {
 				// TODO Auto-generated method stub
-				apiInterface.returnDelAttachmentFail(error);
+				apiInterface.returnDelAttachmentFail(error,responseCode);
 			}
 		});
 	}
@@ -1748,10 +1925,15 @@ public class WorkAPIService {
 				new OauthUtils(new OauthCallBack() {
 
 					@Override
-					public void execute() {
+					public void reExecute() {
 						getMyCalendar(page, limit);
 					}
-				}, context).refreshTocken(completeUrl);
+
+					@Override
+					public void executeFailCallback() {
+						callbackFail("", -1);
+					}
+				}, context).refreshToken(completeUrl);
 			}
 			
 			@Override
@@ -1764,7 +1946,7 @@ public class WorkAPIService {
 			@Override
 			public void callbackFail(String error, int responseCode) {
 				// TODO Auto-generated method stub
-				apiInterface.returnMyCalendarFail(error);
+				apiInterface.returnMyCalendarFail(error,responseCode);
 			}
 		});
 		
@@ -1790,10 +1972,15 @@ public class WorkAPIService {
 				new OauthUtils(new OauthCallBack() {
 
 					@Override
-					public void execute() {
+					public void reExecute() {
 						delelteCalendarById(id);
 					}
-				}, context).refreshTocken(completeUrl);
+
+					@Override
+					public void executeFailCallback() {
+						callbackFail("", -1);
+					}
+				}, context).refreshToken(completeUrl);
 			}
 			
 			@Override
@@ -1805,7 +1992,7 @@ public class WorkAPIService {
 			@Override
 			public void callbackFail(String error, int responseCode) {
 				// TODO Auto-generated method stub
-				apiInterface.returnDelelteCalendarByIdFail(error);
+				apiInterface.returnDelelteCalendarByIdFail(error,responseCode);
 			}
 		});
 		
@@ -1814,7 +2001,7 @@ public class WorkAPIService {
 	/**
 	 * 更新日历数据
 	 * 
-	 * @param ticketInfos
+	 * @param calendarJson
 	 */
 	public void updateCalendar(final String calendarJson) {
 		final String completeUrl = UriUtils.getCalendarUri() + "/calendar";
@@ -1830,10 +2017,15 @@ public class WorkAPIService {
 				new OauthUtils(new OauthCallBack() {
 
 					@Override
-					public void execute() {
+					public void reExecute() {
 						updateCalendar(calendarJson);
 					}
-				}, context).refreshTocken(completeUrl);
+
+					@Override
+					public void executeFailCallback() {
+						callbackFail("", -1);
+					}
+				}, context).refreshToken(completeUrl);
 			}
 			
 			@Override
@@ -1845,7 +2037,7 @@ public class WorkAPIService {
 			@Override
 			public void callbackFail(String error, int responseCode) {
 				// TODO Auto-generated method stub
-				apiInterface.returnUpdateCalendarFail(error);
+				apiInterface.returnUpdateCalendarFail(error,responseCode);
 			}
 		});
 	}
@@ -1855,7 +2047,7 @@ public class WorkAPIService {
 	 * 指定日历内添加事件
 	 * 
 	 * @param calendarId
-	 * @param title
+	 * @param eventJson
 	 */
 	public void addCalEvent(final String calendarId, final String eventJson) {
 
@@ -1873,11 +2065,16 @@ public class WorkAPIService {
 				new OauthUtils(new OauthCallBack() {
 
 					@Override
-					public void execute() {
+					public void reExecute() {
 						// TODO Auto-generated method stub
 						addCalEvent(calendarId, eventJson);
 					}
-				}, context).refreshTocken(completeUrl);
+
+					@Override
+					public void executeFailCallback() {
+						callbackFail("", -1);
+					}
+				}, context).refreshToken(completeUrl);
 			}
 			
 			@Override
@@ -1890,7 +2087,7 @@ public class WorkAPIService {
 			@Override
 			public void callbackFail(String error, int responseCode) {
 				// TODO Auto-generated method stub
-				apiInterface.returnAddCalEventFail(error);
+				apiInterface.returnAddCalEventFail(error,responseCode);
 			}
 		});
 	}
@@ -1917,11 +2114,16 @@ public class WorkAPIService {
 				new OauthUtils(new OauthCallBack() {
 
 					@Override
-					public void execute() {
+					public void reExecute() {
 						// TODO Auto-generated method stub
 						updateCalEvent(calEventJson);
 					}
-				}, context).refreshTocken(completeUrl);
+
+					@Override
+					public void executeFailCallback() {
+						callbackFail("", -1);
+					}
+				}, context).refreshToken(completeUrl);
 			}
 			
 			@Override
@@ -1933,7 +2135,7 @@ public class WorkAPIService {
 			@Override
 			public void callbackFail(String error, int responseCode) {
 				// TODO Auto-generated method stub
-				apiInterface.returnUpdateCalEventFail(error);
+				apiInterface.returnUpdateCalEventFail(error,responseCode);
 			}
 		});
 	}
@@ -1981,12 +2183,17 @@ public class WorkAPIService {
 				new OauthUtils(new OauthCallBack() {
 
 					@Override
-					public void execute() {
+					public void reExecute() {
 						// TODO Auto-generated method stub
 						getAllCalEvents(calendarIdList, afterCalendar,
 								beforCalendar, limit, page, isRefresh);
 					}
-				}, context).refreshTocken(completeUrl);
+
+					@Override
+					public void executeFailCallback() {
+						callbackFail("", -1);
+					}
+				}, context).refreshToken(completeUrl);
 			}
 			
 			@Override
@@ -2000,7 +2207,7 @@ public class WorkAPIService {
 			@Override
 			public void callbackFail(String error, int responseCode) {
 				// TODO Auto-generated method stub
-				apiInterface.returnCalEventsFail(error, isRefresh);
+				apiInterface.returnCalEventsFail(error, isRefresh,responseCode);
 			}
 		});
 		
@@ -2024,10 +2231,15 @@ public class WorkAPIService {
 				new OauthUtils(new OauthCallBack() {
 
 					@Override
-					public void execute() {
+					public void reExecute() {
 						deleteCalEvent(calEventId);
 					}
-				}, context).refreshTocken(completeUrl);
+
+					@Override
+					public void executeFailCallback() {
+						callbackFail("", -1);
+					}
+				}, context).refreshToken(completeUrl);
 			}
 			
 			@Override
@@ -2039,7 +2251,7 @@ public class WorkAPIService {
 			@Override
 			public void callbackFail(String error, int responseCode) {
 				// TODO Auto-generated method stub
-				apiInterface.returnDeleteCalEventFail(error);
+				apiInterface.returnDeleteCalEventFail(error,responseCode);
 			}
 		});
 		

@@ -16,8 +16,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="33dp"
-            android:layout_marginTop="33dp"
+            android:layout_marginBottom="36dp"
+            android:layout_marginTop="56dp"
             android:gravity="center_horizontal"
             android:orientation="horizontal"
             android:weightSum="100" >
@@ -27,14 +27,14 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="22" >
 
-                <com.inspur.emmcloud.widget.CircleImageView
+                <ImageView
                     android:id="@+id/photo_img"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:src="@drawable/icon_circle_logo"
+                    android:src="@drawable/ic_login_logo"
                     app:border_color="#d2e6f0"
                     app:border_width="0dp" >
-                </com.inspur.emmcloud.widget.CircleImageView>
+                </ImageView>
             </com.inspur.emmcloud.widget.SquareLayout>
         </LinearLayout>
 
@@ -146,23 +146,10 @@
             <RelativeLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="35dp"
                 android:layout_weight="90" >
-                <!-- 隐藏忘记密码 -->
-                  <TextView
-                    android:id="@+id/forget_pw_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:clickable="true"
-                    android:paddingBottom="15dp"
-                    android:layout_alignParentRight="true"
-                    android:paddingTop="10dp"
-                    android:text="@string/forgetpwd"
-                    android:visibility="invisible"
-                    android:textColor="#38a4f0"
-                    android:textSize="@dimen/content_normal_textsize" />
                 <Button
                 android:id="@+id/login_btn"
-                android:layout_below="@id/forget_pw_text"
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
                 android:background="@drawable/bg_login_btn_unable"

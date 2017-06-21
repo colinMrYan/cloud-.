@@ -1,11 +1,7 @@
 package com.inspur.emmcloud.widget;
 
-import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.util.LogUtils;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Paint;
@@ -16,6 +12,9 @@ import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
+
+import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.util.LogUtils;
 
 /**
  * Created by .

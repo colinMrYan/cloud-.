@@ -598,4 +598,65 @@ public class APIUri {
 	public static String getReactNativeWriteBackUrl(String appModule){
 		return getEcmTanentUrl() + "/api/v0/app/"+appModule+"/update";
 	}
+
+	/**
+	 * 获取我的信息
+	 * @return
+     */
+	public static String getUserProfileUrl(){
+		return emmBaseUrl +"userprofile/displayconfig";
+	}
+
+	/**
+	 * app闪屏页面
+	 * @return
+     */
+	public static String getSplashPageUrl(){
+		return getEcmTanentUrl()+"/api/v0/preference/launch-screen/latest";
+	}
+
+	/**
+	 *
+	 * @return
+     */
+	public static String getUploadSplashPageWriteBackLogUrl(){
+		return getEcmTanentUrl()+"/api/v0/preference/launch-screen/update";
+	}
+
+
+	/**
+	 * 获取解绑设备url
+	 * @return
+	 */
+	public static String getUnBindDeviceUrl(){return  emmBaseUrl+"device/unbind";}
+
+	public static String getBindingDevicesUrl(){return  emmBaseUrl+"device/getUserDevices";}
+
+	/**
+	 * 获取MDM启用状态
+	 * @return
+	 */
+	public static String getMDMStateUrl(){return  emmBaseUrl+"userprofile/mdm_state";}
+
+	/**
+	 * 上传设备管理所需token和设备ID
+	 * @return
+	 */
+	public static String getUploadMDMInfoUrl(){return  emmBaseUrl+"mdm/mdm_check";}
+
+	/**
+	 * 扫码登录url
+	 * @return
+     */
+	public static String getLoginDesktopCloudPlusUrl(){
+		return "";
+	}
+
+	/**
+	 * 获取分享二维码的url
+	 * @return
+     */
+	public static String getShareCloudPlusUrl(){
+		return "";
+	}
 }

@@ -1,8 +1,5 @@
 package com.inspur.emmcloud.ui.login;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -18,6 +15,9 @@ import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.ToastUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * 填写重置密码的新密码
@@ -76,7 +76,7 @@ public class FillNewPwdActivity extends BaseActivity{
 	
 	/**
 	 * 修改密码方法
-	 * @param newPsd
+	 * @param newPwd
 	 */
 	private void resetPwd(String newPwd) {
 		if(NetUtils.isNetworkConnected(FillNewPwdActivity.this)){
@@ -108,11 +108,11 @@ public class FillNewPwdActivity extends BaseActivity{
 		}
 		
 		@Override
-		public void returnUpdatePwdBySMSCodeFail(String error) {
+		public void returnUpdatePwdBySMSCodeFail(String error,int errorCode) {
 			if(loadingDialog != null && loadingDialog.isShowing()){
 				loadingDialog.dismiss();
 			}
-			WebServiceMiddleUtils.hand(FillNewPwdActivity.this, error);
+			WebServiceMiddleUtils.hand(FillNewPwdActivity.this, error,errorCode);
 		}
 	}
 

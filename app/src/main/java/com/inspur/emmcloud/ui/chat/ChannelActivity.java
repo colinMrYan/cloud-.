@@ -133,83 +133,7 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
         super.onNewIntent(intent);
         setIntent(intent);
         init();
-
-
     }
-
-    /**
-     * 分享
-     *
-     * @param intent
-     */
-    private void handleShareFromOtherApps(Intent intent) {
-        String type = intent.getType();
-        LogUtils.YfcDebug("传入的type：" + type);
-        if (Intent.ACTION_SEND.equals(action) && type != null) {
-            if ("text/plain".equals(type)) {
-                dealTextMessage(intent);
-            } else if (type.startsWith("image/")) {
-                LogUtils.YfcDebug("启动分享到Image");
-                dealPicStream(intent);
-            }
-        } else if (Intent.ACTION_SEND_MULTIPLE.equals(action) && type != null) {
-            if (type.startsWith("image/")) {
-                dealMultiplePicStream(intent);
-            }
-        }
-    }
-
-    /**
-     * 适配分享文本
-     *
-     * @param intent
-     */
-    private void dealTextMessage(Intent intent) {
-        String share = intent.getStringExtra(Intent.EXTRA_TEXT);
-        String title = intent.getStringExtra(Intent.EXTRA_TITLE);
-    }
-
-    /**
-     * 处理图片
-     *
-     * @param intent
-     */
-    private void dealPicStream(Intent intent) {
-        Uri uri = intent.getParcelableExtra(Intent.EXTRA_STREAM);
-        String imgPath = getImagePath(uri, null);
-        LogUtils.YfcDebug("imagePath:" + imgPath);
-        EditImageActivity.start(ChannelActivity.this, imgPath, MyAppConfig.LOCAL_IMG_CREATE_PATH);
-    }
-
-    /**
-     * 处理多个
-     *
-     * @param intent
-     */
-    private void dealMultiplePicStream(Intent intent) {
-        ArrayList<Uri> arrayList = intent.getParcelableArrayListExtra(intent.EXTRA_STREAM);
-    }
-
-    /**
-     * uri转path
-     *
-     * @param uri
-     * @param selection
-     * @return
-     */
-    private String getImagePath(Uri uri, String selection) {
-        String path = null;
-        Cursor cursor = getContentResolver().query(uri, null, selection, null, null);
-        if (cursor != null) {
-            if (cursor.moveToFirst()) {
-                path = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));
-            }
-
-            cursor.close();
-        }
-        return path;
-    }
-
 
     private void init() {
         initData();
@@ -220,15 +144,12 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
      * 初始化界面数据
      */
     private void initData() {
-//            handleShareFromOtherApps(getIntent());
-
         channelId = getIntent().getExtras().getString("channelId");
 
         channelType = getIntent().getExtras().getString("channelType");
         msgList = MsgCacheUtil.getHistoryMsgList(getApplicationContext(),
-                channelId, "", 10);
+                channelId, "", 15);
         title = getIntent().getExtras().getString("title");
-        LogUtils.jasonDebug("title=" + title);
         if (channelType.equals("DIRECT")) {
             String myUid = ((MyApplication)getApplicationContext()).getUid();
             if (title.contains(myUid) && title.contains("-")){
@@ -356,7 +277,6 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
             @Override
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
-                LogUtils.debug("jason", "onItemClick-------");
                 Bundle bundle = new Bundle();
                 Msg msg = msgList.get(position);
                 String msgType = msg.getType();
@@ -620,7 +540,7 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
 
         ArrayList<String> urlList = URLMatcher.getUrls(content);
         JSONObject richTextObj = new JSONObject();
-        String source = HandleMsgTextUtils.handleMentionAndURL(content,
+        String source = HandleMsgTextUtils.handleMentionAndURL(chatInputMenu.getEdit(),content,
                 mentionsUserNameList, mentionsUidList);
         JSONArray mentionArray = JSONUtils.toJSONArray(mentionsUidList);
         JSONArray urlArray = JSONUtils.toJSONArray(urlList);
@@ -851,7 +771,7 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
                 senderPhotoImg.setVisibility(View.INVISIBLE);
             } else {
                 senderPhotoImg.setVisibility(View.VISIBLE);
-                String iconUrl = UriUtils.getChannelImgUri(msg.getUid());
+                String iconUrl = UriUtils.getChannelImgUri(ChannelActivity.this,msg.getUid());
                 if (channelType.equals("SERVICE")) {
                     iconUrl = UriUtils.getRobotIconUri(RobotCacheUtils
                             .getRobotById(ChannelActivity.this, msg.getUid())
@@ -937,11 +857,11 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
     @Override
     public void onRefresh(PullToRefreshLayout pullToRefreshLayout) {
         if (MsgCacheUtil.isDataInLocal(ChannelActivity.this, channelId, msgList
-                .get(0).getMid(), 20)) {
+                .get(0).getMid(), 15)) {
             pullToRefreshLayout.refreshFinish(PullToRefreshLayout.SUCCEED);
             List<Msg> historyMsgList = MsgCacheUtil.getHistoryMsgList(
                     ChannelActivity.this, channelId, msgList.get(0).getMid(),
-                    20);
+                    15);
             msgList.addAll(0, historyMsgList);
             adapter.notifyDataSetChanged();
             ListViewUtils.setSelection(msgListView, historyMsgList.size() - 1);
@@ -954,7 +874,7 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
      * 获取新消息
      */
     private void getNewsMsg() {
-        apiService.getNewMsgs(channelId, msgList.get(0).getMid(), 20);
+        apiService.getNewMsgs(channelId, msgList.get(0).getMid(), 15);
     }
 
     @Override
@@ -971,8 +891,8 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
         }
 
         @Override
-        public void returnSendMsgFail(String error, String fakeMessageId) {
-            WebServiceMiddleUtils.hand(ChannelActivity.this, error);
+        public void returnSendMsgFail(String error, String fakeMessageId,int errorCode) {
+            WebServiceMiddleUtils.hand(ChannelActivity.this, error,errorCode);
             setMsgSendFail(fakeMessageId);
         }
 
@@ -984,8 +904,8 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
         }
 
         @Override
-        public void returnUploadMsgImgFail(String error) {
-            WebServiceMiddleUtils.hand(ChannelActivity.this, error);
+        public void returnUploadMsgImgFail(String error,int errorCode) {
+            WebServiceMiddleUtils.hand(ChannelActivity.this, error,errorCode);
         }
 
         @Override
@@ -1007,9 +927,9 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
         }
 
         @Override
-        public void returnNewMsgsFail(String error) {
+        public void returnNewMsgsFail(String error,int errorCode) {
             pullToRefreshLayout.refreshFinish(PullToRefreshLayout.FAIL);
-            WebServiceMiddleUtils.hand(ChannelActivity.this, error);
+            WebServiceMiddleUtils.hand(ChannelActivity.this, error,errorCode);
         }
 
         @Override
@@ -1022,8 +942,8 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
         }
 
         @Override
-        public void returnMsgFail(String error) {
-            WebServiceMiddleUtils.hand(ChannelActivity.this, error);
+        public void returnMsgFail(String error,int errorCode) {
+            WebServiceMiddleUtils.hand(ChannelActivity.this, error,errorCode);
         }
 
         @Override
@@ -1034,8 +954,8 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
         }
 
         @Override
-        public void returnFileUpLoadFail(String error) {
-            WebServiceMiddleUtils.hand(ChannelActivity.this, error);
+        public void returnFileUpLoadFail(String error,int errorCode) {
+            WebServiceMiddleUtils.hand(ChannelActivity.this, error,errorCode);
         }
 
         @Override
@@ -1045,8 +965,8 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
         }
 
         @Override
-        public void returnGetMeetingReplyFail(String error) {
-            super.returnGetMeetingReplyFail(error);
+        public void returnGetMeetingReplyFail(String error,int errorCode) {
+            super.returnGetMeetingReplyFail(error,errorCode);
         }
 
     }

@@ -54,6 +54,10 @@ public class ModifyChannelGroupNameActivity extends BaseActivity {
 				ToastUtils.show(getApplicationContext(), R.string.group_name_cannot_null);
 				return;
 			}
+			if (name.length()>20){
+				ToastUtils.show(getApplicationContext(), R.string.group_name_longth_valid);
+				return;
+			}
 			if (NetUtils.isNetworkConnected(getApplicationContext())) {
 				loadingDlg.show();
 				ChatAPIService apiService = new ChatAPIService(ModifyChannelGroupNameActivity.this);
@@ -92,12 +96,12 @@ public class ModifyChannelGroupNameActivity extends BaseActivity {
 		}
 
 		@Override
-		public void returnUpdateChannelGroupNameFail(String error) {
+		public void returnUpdateChannelGroupNameFail(String error,int errorCode) {
 			// TODO Auto-generated method stub
 			if (loadingDlg != null && loadingDlg.isShowing()) {
 				loadingDlg.dismiss();
 			}
-			WebServiceMiddleUtils.hand(ModifyChannelGroupNameActivity.this, error);
+			WebServiceMiddleUtils.hand(ModifyChannelGroupNameActivity.this, error,errorCode);
 		}
 		
 	}

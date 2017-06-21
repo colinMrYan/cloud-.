@@ -14,40 +14,53 @@
         android:visibility="gone">
 
         <RelativeLayout
-            android:id="@+id/back_layout"
+            android:id="@+id/function_layout"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_centerVertical="true"
-            android:onClick="onClick"
             android:paddingLeft="10dp"
-            android:paddingRight="10dp">
-
-            <ImageView
-                android:id="@+id/back_btn"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
+            >
+            <RelativeLayout
+                android:id="@+id/back_layout"
+                android:onClick="onClick"
+                android:paddingRight="10dp"
                 android:layout_centerVertical="true"
-                android:background="@null"
-                android:paddingRight="3dp"
-                android:scaleType="centerInside"
-                android:src="@drawable/selector_back_btn"/>
-
-            <Button
-                android:id="@+id/imp_back_btn"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_toRightOf="@id/back_btn"
-                android:background="@null"
-                android:text="@string/back"
-                android:textColor="#ffffff"/>
+                android:layout_height="match_parent">
+                <ImageView
+                    android:id="@+id/back_btn"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_centerVertical="true"
+                    android:background="@null"
+                    android:paddingRight="3dp"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/selector_back_btn"/>
 
-            <Button
+                <TextView
+                    android:id="@+id/imp_back_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:layout_toRightOf="@id/back_btn"
+                    android:background="@null"
+                    android:paddingRight="3dp"
+                    android:textSize="16sp"
+                    android:text="@string/back"
+                    android:textColor="#ffffff"/>
+            </RelativeLayout>
+
+
+            <TextView
                 android:id="@+id/imp_close_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_toRightOf="@id/imp_back_btn"
+                android:gravity="center"
+                android:layout_toRightOf="@id/back_layout"
+                android:clickable="true"
                 android:background="@null"
-                android:paddingLeft="8dp"
+                android:paddingRight="13dp"
+                android:textSize="16sp"
                 android:text="@string/close"
                 android:textColor="#ffffff"
                 android:visibility="gone"/>
@@ -57,12 +70,11 @@
             android:id="@+id/header_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
+            android:layout_toRightOf="@id/function_layout"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="90dp"
-            android:layout_marginRight="90dp"
-            android:ellipsize="middle"
-            android:gravity="center_horizontal"
+            android:layout_marginRight="30dp"
+            android:ellipsize="end"
+            android:gravity="left"
             android:singleLine="true"
             android:text="@string/about_text"
             android:textColor="@color/header_text"

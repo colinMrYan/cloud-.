@@ -1,8 +1,5 @@
 package com.inspur.emmcloud.ui.work.meeting;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,6 +28,9 @@ import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.pullableview.PullableExpandableListView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 创建常用办公地点
@@ -215,11 +215,11 @@ public class CreateCommonOfficeSpaceActivity extends BaseActivity {
 		}
 
 		@Override
-		public void returnLoctionResultFail(String error) {
+		public void returnLoctionResultFail(String error,int errorCode) {
 			if ((loadingDlg != null) && (loadingDlg.isShowing())) {
 				loadingDlg.dismiss();
 			}
-			WebServiceMiddleUtils.hand(CreateCommonOfficeSpaceActivity.this, error);
+			WebServiceMiddleUtils.hand(CreateCommonOfficeSpaceActivity.this, error,errorCode);
 		}
 
 		@Override
@@ -235,12 +235,11 @@ public class CreateCommonOfficeSpaceActivity extends BaseActivity {
 		}
 
 		@Override
-		public void returnCreatOfficeFail(String error) {
-			super.returnCreatOfficeFail(error);
+		public void returnCreatOfficeFail(String error,int errorCode) {
 			if ((loadingDlg != null) && (loadingDlg.isShowing())) {
 				loadingDlg.dismiss();
 			}
-			WebServiceMiddleUtils.hand(CreateCommonOfficeSpaceActivity.this, error);
+			WebServiceMiddleUtils.hand(CreateCommonOfficeSpaceActivity.this, error,errorCode);
 		}
 
 	}

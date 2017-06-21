@@ -1,10 +1,10 @@
 package com.inspur.emmcloud.bean;
 
-import java.io.Serializable;
+import com.lidroid.xutils.db.annotation.Table;
 
 import org.json.JSONObject;
 
-import android.R.integer;
+import java.io.Serializable;
 
 /**
  * 
@@ -13,6 +13,7 @@ import android.R.integer;
  "name":"生活日历","color":"ORANGE","owner":66666}
  *
  */
+@Table(name = "MyCalendar")
 public class MyCalendar implements Serializable{
 	private String id;
 	private String name;

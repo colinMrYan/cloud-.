@@ -4,15 +4,51 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
+    android:background="#ffffff"
     tools:context=".MainActivity" >
 
     <ImageView
         android:id="@+id/splash_image"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:src="@drawable/splash"
+        android:layout_height="wrap_content"
+        android:src="@drawable/splash_page_bottom"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="30dp"
+        android:adjustViewBounds="true"
         android:scaleType="fitXY"
          />
+
+    <pl.droidsonroids.gif.GifImageView
+        android:id="@+id/splash_img_top"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/splash_image"
+        android:scaleType="centerCrop"
+        />
+
+    <LinearLayout
+        android:id="@+id/splash_skip_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:orientation="vertical"
+        android:layout_marginTop="22dp"
+        android:layout_marginRight="10dp"
+        android:padding="6dp">
+        <Button
+            android:id="@+id/splash_skip_btn"
+            android:layout_width="60dp"
+            android:layout_height="26dp"
+            android:layout_alignParentRight="true"
+            android:visibility="gone"
+            android:paddingTop="22dp"
+            android:paddingBottom="5dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="19dp"
+            android:background="@drawable/icon_splash_skip"
+            android:textColor="#ffffff"
+            android:onClick="onClick"/>
+    </LinearLayout>
 
     <com.inspur.emmcloud.widget.CircularProgress
         android:layout_width="45dp"
@@ -20,6 +56,7 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="180dp"
+        android:visibility="gone"
         app:borderWidth="3dp" />
 
 </RelativeLayout>

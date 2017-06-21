@@ -1,14 +1,11 @@
 package com.inspur.emmcloud.ui.app;
 
-import java.util.List;
-
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -36,6 +33,8 @@ import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.mylistview.MyListView;
 import com.inspur.emmcloud.widget.mylistview.MyListView.IXListViewListener;
 
+import java.util.List;
+
 /**
  * 应用搜索界面
  * 
@@ -46,7 +45,6 @@ public class AppSearchActivity extends BaseActivity implements IXListViewListene
 
 
 
-	private static final int GET_SEARCH_MORE_APP_FAIL = 5;
 	private static final String ACTION_NAME = "add_app";
 	private ClearEditText searchEdit;
 	private List<App> searchList;
@@ -73,30 +71,10 @@ public class AppSearchActivity extends BaseActivity implements IXListViewListene
 		searchListView.setPullRefreshEnable(false);
 		searchListView.setPullLoadEnable(false);
 		loadingDlg = new LoadingDialog(AppSearchActivity.this);
-		handMessage();
 		registerReceiver();
 
 	}
 
-	private void handMessage() {
-		// TODO Auto-generated method stub
-		handler = new Handler() {
-
-			@Override
-			public void handleMessage(Message msg) {
-				// TODO Auto-generated method stub
-				switch (msg.what) {
-				case GET_SEARCH_MORE_APP_FAIL:
-					searchListView.stopLoadMore();
-					break;
-
-				default:
-					break;
-				}
-			}
-
-		};
-	}
 
 	private void registerReceiver() {
 		// TODO Auto-generated method stub
@@ -190,12 +168,12 @@ public class AppSearchActivity extends BaseActivity implements IXListViewListene
 		}
 
 		@Override
-		public void returnSearchAppFail(String error) {
+		public void returnSearchAppFail(String error,int errorCode) {
 			// TODO Auto-generated method stub
 			if (loadingDlg != null && loadingDlg.isShowing()) {
 				loadingDlg.dismiss();
 			}
-			WebServiceMiddleUtils.hand(AppSearchActivity.this, error);
+			WebServiceMiddleUtils.hand(AppSearchActivity.this, error,errorCode);
 		}
 
 		@Override
@@ -233,11 +211,11 @@ public class AppSearchActivity extends BaseActivity implements IXListViewListene
 		}
 
 		@Override
-		public void returnSearchAppMoreFail(String error) {
+		public void returnSearchAppMoreFail(String error,int errorCode) {
 			// TODO Auto-generated method stub
 			WebServiceMiddleUtils.hand(AppSearchActivity.this,
-					error, handler,
-					GET_SEARCH_MORE_APP_FAIL);
+					error,errorCode);
+			searchListView.stopLoadMore();
 		}
 
 	}

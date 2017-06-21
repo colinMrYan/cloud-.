@@ -53,6 +53,7 @@
     <string name="more_work_place">More work places...</string>
     <string name="cancel_filter">Cancle filter</string>
     <string name="only_free">Only free</string>
+    <string name="invite_friends_text">Recommend Cloud+ to friends</string>
 
     <!-- 公共部分 -->
     <string name="year">Year</string>
@@ -214,6 +215,7 @@
     <string name="group_album">Group Photos</string>
     <string name="group_file">Group Files</string>
     <string name="authorization_expired">Authorization Expired</string>
+    <string name="cant_login_with_sms">Your account is not allowed to log on with SMS</string>
 
     <!-- 消息部分 -->
     <string name="msgcontent_cannot_null">Please type message content</string>
@@ -257,6 +259,11 @@
     <string name="friend_list">Friends List</string>
     <string name="join_discuss">Join discussion</string>
     <string name="add_new_comment">Add new comments</string>
+    <string name="socket_connecting">Connecting</string>
+    <string name="socket_close">Disconnect</string>
+    <string name="chat_file_download_success">File has been downloaded successfully, click again to open</string>
+    <string name="group_name_longth_valid">Group name, word overrun (no more than 20 characters)</string>
+
 
     <!-- 会议卡片 -->
     <string name="meeting_has_confirmed">Confirmed</string>
@@ -283,8 +290,8 @@
     <string name="work_lunar">According to the lunar calendar in August eighth day, Sunday</string>
     <string name="work_festval_date">From the National Day, 10 days </string>
     <string name="work_nomeeting_text">No meetings </string>
-    <string name="work_notask_text">No backlog</string>
-    <string name="work_nocal_text">No todo</string>
+    <string name="work_notask_text">No todo</string>
+    <string name="work_nocal_text">No agenda</string>
     <string name="time">Time</string>
     <string name="work_meeting_text">Meeting</string>
     <string name="work_calendar_text">Enterprise calendar</string>
@@ -338,6 +345,8 @@
     <string name="app_password_encrypt_error">Password encryption error</string>
     <string name="app_recommand">Recommend</string>
     <string name="app_classification">Classification</string>
+    <string name="app_create_shortcut_no_more_remind">No more reminders</string>
+    <string name="app_commonly_use_app">Do you want to add mobile registration to desktop shortcuts, one click sign in? </string>
 
     <!-- 我的页面部分 -->
     <string name="data_clear_success">Clear success</string>
@@ -394,6 +403,23 @@
     <string name="my_setting_tips_quit">Sure to clear all cache? App will close after clear</string>
     <string name="get_language_error">Not available to the language package, please contact the administrator</string>
     <string name="app_customer">Cloud+ Customer</string>
+    <string name="settings_device_manager">Equipment safety and management</string>
+    <string name="device_unbind_sucess">Device unbound successfully!</string>
+    <string name="device_other_unbind_warning">After binding, log on from %1$s, you need to re register the device</string>
+    <string name="device_current_unbind_warning">After binding, you need to log in again and register your device</string>
+    <string name="current_device">Current device</string>
+    <string name="device_bind_time_title">Binding time: </string>
+    <string name="device_bind_time">Binding time</string>
+    <string name="device_info">Device details</string>
+    <string name="device_id">Device ID</string>
+    <string name="unbind_this_device">Unbound this device</string>
+    <string name="sure_switch_to">Make sure to switch to %1$s</string>
+    <string name="fail_to_switch_enterprise">Failed to switch enterprise!</string>
+    <string name="select_enterprise">Select enterprise</string>
+    <string name="switch_enterprise">Switch</string>
+    <string name="current_enterprise">Current enterprise</string>
+
+
 
     <!-- 修改密码部分 -->
     <string name="modify_input_user_new_password">Enter a new password</string>
@@ -432,7 +458,7 @@
     <string name="resend_code">Resend(51)</string>
     <string name="modify_user_info">Modify user info</string>
     <string name="modify_modify">Modify</string>
-    <string name="user_info_my_info">My Information</string>
+    <string name="user_info_my_info">Profile</string>
     <string name="user_info_organ">Inspur</string>
     <string name="user_info_phone_number">Phone Number</string>
     <string name="user_no_storage">No Storage</string>
@@ -453,7 +479,10 @@
     <string name="news_font_name_text">Font Size</string>
     <string name="news_read_mode">Reading Mode</string>
     <string name="new_instructions_text">instruction</string>
+    <string name="news_instructions">Directive opinion</string>
     <string name="news_instructions_success_text">Sending Success</string>
+    <string name="news_has_instructions_news">You have instructed this news</string>
+    <string name="news_has_instructions_known">Understand</string>
 
     <!-- 审批页面 -->
     <string name="onekey_approval_text">Approval</string>
@@ -663,7 +692,7 @@
     <string name="load_fail">Loading Failed</string>
     <string name="see_more">More</string>
     <string name="pull_down_loading_history">Drop load history message</string>
-    <string name="license_agreement">1、本协议是用户 (自然人、法人或社会团体)与浪潮通用软件有限公司之间关于“浪潮云+”软件产品（以下
+    <string name="license_agreement">1、本协议是用户 (自然人、法人或社会团体)与浪潮通用软件有限公司之间关于“云+”软件产品（以下
 
 简称“本软件产品”）的法律协议。一旦安装、复制或以其他方式使用本软件产品，即表示同意接受协议各项条件的约束。如果用户
 
@@ -720,7 +749,7 @@
     <string name="download_fail">Download Failed</string>
     <string name="download_success">Download Success</string>
     <string name="file_downloading">In the download, please later...</string>
-    <string name="file_download_success">File has been downloaded successfully, click again to open</string>
+    <string name="file_download_success">Has the file been downloaded, is it open?</string>
     <string name="has_downloaded">Downloaded</string>
     <string name="imp_content">Content</string>
     <string name="file_ok">Confirm</string>
@@ -747,5 +776,8 @@
 
     <string name="react_native_app_open_failed">Application open failure</string>
     <string name="react_native_app_update_failed">Update packet breakage </string>
+
+    <!--闪屏页文字资源-->
+    <string name="splash_skip">Enter immediately</string>
 
 </resources>

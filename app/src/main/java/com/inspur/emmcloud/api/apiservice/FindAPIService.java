@@ -16,9 +16,8 @@ import com.inspur.emmcloud.bean.GetFindMixSearchResult;
 import com.inspur.emmcloud.bean.GetFindSearchResult;
 import com.inspur.emmcloud.bean.GetKnowledgeInfo;
 import com.inspur.emmcloud.bean.GetTripArriveCity;
-import com.inspur.emmcloud.bean.GetTripResult;
 import com.inspur.emmcloud.bean.Trip;
-import com.inspur.emmcloud.util.OauthCallBack;
+import com.inspur.emmcloud.callback.OauthCallBack;
 import com.inspur.emmcloud.util.OauthUtils;
 import com.inspur.emmcloud.util.UriUtils;
 
@@ -56,10 +55,15 @@ public class FindAPIService {
 				new OauthUtils(new OauthCallBack() {
 
 					@Override
-					public void execute() {
+					public void reExecute() {
 						getTripInfo(tripId);
 					}
-				}, context).refreshTocken(completeUrl);
+
+					@Override
+					public void executeFailCallback() {
+						callbackFail("", -1);
+					}
+				}, context).refreshToken(completeUrl);
 			}
 			
 			@Override
@@ -71,7 +75,7 @@ public class FindAPIService {
 			@Override
 			public void callbackFail(String error, int responseCode) {
 				// TODO Auto-generated method stub
-				apiInterface.returnTripFail(error);
+				apiInterface.returnTripFail(error,responseCode);
 			}
 		});
 	}
@@ -97,10 +101,15 @@ public class FindAPIService {
 				new OauthUtils(new OauthCallBack() {
 
 					@Override
-					public void execute() {
+					public void reExecute() {
 						deleteTripByIds(tripId);
 					}
-				}, context).refreshTocken(completeUrl);
+
+					@Override
+					public void executeFailCallback() {
+						callbackFail("", -1);
+					}
+				}, context).refreshToken(completeUrl);
 			}
 			
 			@Override
@@ -112,7 +121,7 @@ public class FindAPIService {
 			@Override
 			public void callbackFail(String error, int responseCode) {
 				// TODO Auto-generated method stub
-				apiInterface.returnDelTripFail(error);
+				apiInterface.returnDelTripFail(error,responseCode);
 			}
 		});
 
@@ -138,10 +147,15 @@ public class FindAPIService {
 				new OauthUtils(new OauthCallBack() {
 
 					@Override
-					public void execute() {
+					public void reExecute() {
 						uploadTrainTicket(ticketInfos);
 					}
-				}, context).refreshTocken(completeUrl);
+
+					@Override
+					public void executeFailCallback() {
+						callbackFail("", -1);
+					}
+				}, context).refreshToken(completeUrl);
 			}
 			
 			@Override
@@ -153,7 +167,7 @@ public class FindAPIService {
 			@Override
 			public void callbackFail(String error, int responseCode) {
 				// TODO Auto-generated method stub
-				apiInterface.returnUploadTrainTicketFail(error);
+				apiInterface.returnUploadTrainTicketFail(error,responseCode);
 			}
 		});
 	}
@@ -177,10 +191,15 @@ public class FindAPIService {
 				new OauthUtils(new OauthCallBack() {
 
 					@Override
-					public void execute() {
+					public void reExecute() {
 						updateTrainTicket(ticketInfos);
 					}
-				}, context).refreshTocken(completeUrl);
+
+					@Override
+					public void executeFailCallback() {
+						callbackFail("", -1);
+					}
+				}, context).refreshToken(completeUrl);
 			}
 			
 			@Override
@@ -192,7 +211,7 @@ public class FindAPIService {
 			@Override
 			public void callbackFail(String error, int responseCode) {
 				// TODO Auto-generated method stub
-				apiInterface.returnUploadTrainTicketFail(error);
+				apiInterface.returnUploadTrainTicketFail(error,responseCode);
 			}
 		});
 	}
@@ -214,10 +233,15 @@ public class FindAPIService {
 				new OauthUtils(new OauthCallBack() {
 
 					@Override
-					public void execute() {
+					public void reExecute() {
 						getLastUploadTrip();
 					}
-				}, context).refreshTocken(completeUrl);
+
+					@Override
+					public void executeFailCallback() {
+						callbackFail("", -1);
+					}
+				}, context).refreshToken(completeUrl);
 			}
 			
 			@Override
@@ -229,7 +253,7 @@ public class FindAPIService {
 			@Override
 			public void callbackFail(String error, int responseCode) {
 				// TODO Auto-generated method stub
-				apiInterface.returnLastUploadTripFail(error);
+				apiInterface.returnLastUploadTripFail(error,responseCode);
 			}
 		});
 		
@@ -253,10 +277,15 @@ public class FindAPIService {
 				new OauthUtils(new OauthCallBack() {
 
 					@Override
-					public void execute() {
+					public void reExecute() {
 						getArriveCity(station);
 					}
-				}, context).refreshTocken(completeUrl);
+
+					@Override
+					public void executeFailCallback() {
+						callbackFail("", -1);
+					}
+				}, context).refreshToken(completeUrl);
 			}
 			
 			@Override
@@ -269,7 +298,7 @@ public class FindAPIService {
 			@Override
 			public void callbackFail(String error, int responseCode) {
 				// TODO Auto-generated method stub
-				apiInterface.retrunTripArriveFail(error);
+				apiInterface.retrunTripArriveFail(error,responseCode);
 			}
 		});
 	}
@@ -288,11 +317,16 @@ public class FindAPIService {
 				new OauthUtils(new OauthCallBack() {
 
 					@Override
-					public void execute() {
+					public void reExecute() {
 						// TODO Auto-generated method stub
 						getKnowledgeList();
 					}
-				}, context).refreshTocken(completeUrl);
+
+					@Override
+					public void executeFailCallback() {
+						callbackFail("", -1);
+					}
+				}, context).refreshToken(completeUrl);
 			}
 			
 			@Override
@@ -305,7 +339,7 @@ public class FindAPIService {
 			@Override
 			public void callbackFail(String error, int responseCode) {
 				// TODO Auto-generated method stub
-				apiInterface.returnKnowledgeListFail(error);
+				apiInterface.returnKnowledgeListFail(error,responseCode);
 			}
 		});
 	}
@@ -334,10 +368,15 @@ public class FindAPIService {
 				new OauthUtils(new OauthCallBack() {
 
 					@Override
-					public void execute() {
+					public void reExecute() {
 						findSearch(keyword, datatype, page, num, start);
 					}
-				}, context).refreshTocken(completeUrl);
+
+					@Override
+					public void executeFailCallback() {
+						callbackFail("", -1);
+					}
+				}, context).refreshToken(completeUrl);
 			}
 			
 			@Override
@@ -350,7 +389,7 @@ public class FindAPIService {
 			@Override
 			public void callbackFail(String error, int responseCode) {
 				// TODO Auto-generated method stub
-				apiInterface.returnFindSearchFail(error);
+				apiInterface.returnFindSearchFail(error,responseCode);
 			}
 		});
 	}
@@ -359,8 +398,7 @@ public class FindAPIService {
 	 * 发现界面的搜索
 	 *
 	 * @param keyword
-	 * @param datatype
-	 * @param page
+	 * @param keyword
 	 */
 	public void findMixSearch(final String keyword) {
 		final String completeUrl = UriUtils.getFindMixSearch() + keyword;
@@ -373,10 +411,15 @@ public class FindAPIService {
 				new OauthUtils(new OauthCallBack() {
 
 					@Override
-					public void execute() {
+					public void reExecute() {
 						findMixSearch(keyword);
 					}
-				}, context).refreshTocken(completeUrl);
+
+					@Override
+					public void executeFailCallback() {
+						callbackFail("", -1);
+					}
+				}, context).refreshToken(completeUrl);
 			}
 			
 			@Override
@@ -390,7 +433,7 @@ public class FindAPIService {
 			@Override
 			public void callbackFail(String error, int responseCode) {
 				// TODO Auto-generated method stub
-				apiInterface.returnFindMixSearchFail(error);
+				apiInterface.returnFindMixSearchFail(error,responseCode);
 			}
 		});
 	}

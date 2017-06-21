@@ -18,6 +18,9 @@ public class GetAllContactResult {
 	public GetAllContactResult(String response) {
 		try {
 			JSONObject obj = new JSONObject(response);
+			if (obj.has("lastQueryTime")) {
+				lastUpdateTime = obj.getString("lastQueryTime");
+			}
 			if (obj.has("contacts")) {
 				JSONArray contactArray = obj.getJSONArray("contacts");
 				for (int i = 0; i < contactArray.length(); i++) {
@@ -29,7 +32,7 @@ public class GetAllContactResult {
 				JSONArray modifyArray = obj.getJSONArray("changed");
 				for (int i = 0; i < modifyArray.length(); i++) {
 					modifyContactList.add(new Contact(modifyArray
-							.getJSONObject(i)));
+							.getJSONObject(i),lastUpdateTime));
 				}
 			}
 			if(obj.has("deleted")){
@@ -42,9 +45,7 @@ public class GetAllContactResult {
 			if (obj.has("deleted")) {
 				deleteIdArray = obj.getJSONArray("deleted");
 			}
-			if (obj.has("lastQueryTime")) {
-				lastUpdateTime = obj.getString("lastQueryTime");
-			}
+
 			if (obj.has("unitID")) {
 				unitID = obj.getString("unitID");
 			}
@@ -62,11 +63,11 @@ public class GetAllContactResult {
 	public String getLastUpdateTime() {
 		return lastUpdateTime;
 	}
-	
+
 	public List<Contact> getModifyContactList(){
 		return modifyContactList;
 	}
-	
+
 	public JSONArray getDeleteIdArray(){
 		return deleteIdArray;
 	}

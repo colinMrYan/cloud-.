@@ -6,9 +6,11 @@ import com.facebook.react.bridge.ReadableMap;
 import com.inspur.emmcloud.util.ContactCacheUtils;
 import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.UriUtils;
+import com.lidroid.xutils.db.annotation.Table;
 
 import java.io.Serializable;
 
+@Table(name = "SearchModel")
 public class SearchModel implements Serializable {
 	private String id = "";
 	private String name = "";
@@ -116,14 +118,14 @@ public class SearchModel implements Serializable {
 		return heat;
 	}
 
-	public String getIcon() {
+	public String getIcon(Context context) {
 		if (!icon.startsWith("http")) {
 			if (type.equals("GROUP")) {
 				return UriUtils.getPreviewUri(icon);
 			} else if (type.equals("DIRECT")) {
 				return UriUtils.getUserInfoPhotoUri(icon);
 			} else if (type.equals("USER")) {
-				return UriUtils.getChannelImgUri(id);
+				return UriUtils.getChannelImgUri(context,id);
 			} else {
 				return null;
 			}

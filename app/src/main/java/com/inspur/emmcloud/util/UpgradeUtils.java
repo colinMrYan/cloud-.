@@ -1,6 +1,7 @@
 package com.inspur.emmcloud.util;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Environment;
@@ -30,6 +31,7 @@ import java.text.DecimalFormat;
 public class UpgradeUtils extends APIInterfaceInstance {
 
 	protected static final int SHOW_PEOGRESS_LAODING_DLG = 0;
+	private static  final  int notUpdateInterval = 86400000;
 	private static final int DOWNLOAD = 3;
 	private static final int DOWNLOAD_FINISH = 4;
 	private static final int DOWNLOAD_FAIL = 5;
@@ -43,7 +45,7 @@ public class UpgradeUtils extends APIInterfaceInstance {
 			.getExternalStorageDirectory() + "/IMP-Cloud/download/";
 	private static final String TAG = "UpgradeUtils";
 	private GetUpgradeResult getUpgradeResult;
-	private Activity activity;
+	private Context context;
 	private Handler upgradeHandler;
 	private Handler handler;
 	private int upgradeCode;
@@ -58,11 +60,14 @@ public class UpgradeUtils extends APIInterfaceInstance {
 	private String downloadPercent;
 	private LoadingDialog loadingDlg;
 	private Cancelable cancelable;
+	private boolean isManualCheck;
 
-	public UpgradeUtils(Activity activity, Handler handler) {
-		this.activity = activity;
+	//isManualCheck 是否在关于中手动检查更新
+	public UpgradeUtils(Context context,Handler handler,boolean isManualCheck) {
+		this.context = context;
 		this.handler = handler;
-		loadingDlg = new LoadingDialog(activity);
+		this.isManualCheck = isManualCheck;
+		loadingDlg = new LoadingDialog(context);
 		handMessage();
 	}
 
@@ -75,7 +80,9 @@ public class UpgradeUtils extends APIInterfaceInstance {
 				// TODO Auto-generated method stub
 				switch (msg.what) {
 				case UPGRADE_FAIL:
-					handler.sendEmptyMessage(UPGRADE_FAIL);
+					if (handler != null){
+						handler.sendEmptyMessage(UPGRADE_FAIL);
+					}
 					break;
 				case DOWNLOAD:
 					downloadPercent = getPercent(progress);
@@ -90,16 +97,15 @@ public class UpgradeUtils extends APIInterfaceInstance {
 						mDownloadDialog.dismiss();
 					}
 					installApk();
-
-					if (activity instanceof MainActivity) {
-						activity.finish();
+					if (context instanceof MainActivity) {
+						((Activity)context).finish();
 					}
 					break;
 
 				case DOWNLOAD_FAIL:
-					ToastUtils.show(activity,
-							activity.getString(R.string.update_fail));
-					if (activity != null) {
+					ToastUtils.show(context,
+							context.getString(R.string.update_fail));
+					if (context != null) {
 						if (upgradeCode == 2) {
 							showForceUpgradeDlg();
 						} else {
@@ -120,11 +126,11 @@ public class UpgradeUtils extends APIInterfaceInstance {
 	}
 
 	public void checkUpdate(boolean isShowLoadingDlg) {
-		if (NetUtils.isNetworkConnected(activity, isShowLoadingDlg)) {
+		if (NetUtils.isNetworkConnected(context, isShowLoadingDlg)) {
 				loadingDlg.show(isShowLoadingDlg);
-			AppAPIService apiService = new AppAPIService(activity);
+			AppAPIService apiService = new AppAPIService(context);
 			apiService.setAPIInterface(UpgradeUtils.this);
-			apiService.checkUpgrade();
+			apiService.checkUpgrade(isManualCheck);
 		} else if (handler != null) {
 			handler.sendEmptyMessage(UPGRADE_FAIL);
 		}
@@ -144,14 +150,16 @@ public class UpgradeUtils extends APIInterfaceInstance {
 			handler.sendEmptyMessage(NO_NEED_UPGRADE);
 			break;
 		case 1: // 可选升级
-			if (activity != null) {
-				showSelectUpgradeDlg();
-			}
+				long appNotUpdateTime = PreferencesUtils.getLong(context,"appNotUpdateTime");
+				if (isManualCheck || System.currentTimeMillis()-appNotUpdateTime>notUpdateInterval){
+					showSelectUpgradeDlg();
+				}else {
+					handler.sendEmptyMessage(NO_NEED_UPGRADE);
+				}
+
 			break;
 		case 2: // 必须升级
-			if (activity != null) {
 				showForceUpgradeDlg();
-			}
 			break;
 
 		default:
@@ -161,17 +169,17 @@ public class UpgradeUtils extends APIInterfaceInstance {
 
 	private void showSelectUpgradeDlg() {
 		// TODO Auto-generated method stub
-		final MyDialog dialog = new MyDialog(activity,
+		final MyDialog dialog = new MyDialog(context,
 				R.layout.dialog_two_buttons);
 		dialog.setCancelable(false);
 		Button okBt = (Button) dialog.findViewById(R.id.ok_btn);
-		okBt.setText(activity.getString(R.string.upgrade));
+		okBt.setText(context.getString(R.string.upgrade));
 		TextView text = (TextView) dialog.findViewById(R.id.text);
 		text.setText(upgradeMsg);
 		TextView appUpdateTitle = (TextView) dialog.findViewById(R.id.app_update_title);
 		TextView appUpdateVersion = (TextView) dialog.findViewById(R.id.app_update_version);
-		appUpdateTitle.setText(activity.getString(R.string.app_update_remind));
-		appUpdateVersion.setText(activity.getString(R.string.app_last_version)+"("+getUpgradeResult.getLatestVersion()+")");
+		appUpdateTitle.setText(context.getString(R.string.app_update_remind));
+		appUpdateVersion.setText(context.getString(R.string.app_last_version)+"("+getUpgradeResult.getLatestVersion()+")");
 		okBt.setOnClickListener(new View.OnClickListener() {
 
 			@Override
@@ -183,19 +191,20 @@ public class UpgradeUtils extends APIInterfaceInstance {
 
 		});
 		Button cancelBt = (Button) dialog.findViewById(R.id.cancel_btn);
-		cancelBt.setText(activity.getString(R.string.not_upgrade));
+		cancelBt.setText(context.getString(R.string.not_upgrade));
 		cancelBt.setOnClickListener(new View.OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				dialog.dismiss();
+				PreferencesUtils.putLong(context,"appNotUpdateTime",System.currentTimeMillis());
 				if (handler != null) {
 					handler.sendEmptyMessage(DONOT_UPGRADE);
 				}
 			}
 		});
-		if (activity != null) {
+		if (context != null) {
 			dialog.show();
 		}
 
@@ -203,13 +212,17 @@ public class UpgradeUtils extends APIInterfaceInstance {
 
 	private void showForceUpgradeDlg() {
 		// TODO Auto-generated method stub
-		final MyDialog dialog = new MyDialog(activity,
+		final MyDialog dialog = new MyDialog(context,
 				R.layout.dialog_two_buttons);
 		dialog.setCancelable(false);
 		Button okBt = (Button) dialog.findViewById(R.id.ok_btn);
-		okBt.setText(activity.getString(R.string.upgrade));
+		okBt.setText(context.getString(R.string.upgrade));
 		TextView text = (TextView) dialog.findViewById(R.id.text);
 		text.setText(upgradeMsg);
+		TextView appUpdateTitle = (TextView) dialog.findViewById(R.id.app_update_title);
+		appUpdateTitle.setText(context.getString(R.string.app_update_remind));
+		TextView appUpdateVersion = (TextView) dialog.findViewById(R.id.app_update_version);
+		appUpdateVersion.setText(context.getString(R.string.app_last_version)+"("+getUpgradeResult.getLatestVersion()+")");
 		okBt.setOnClickListener(new View.OnClickListener() {
 
 			@Override
@@ -220,17 +233,17 @@ public class UpgradeUtils extends APIInterfaceInstance {
 			}
 		});
 		Button cancelBt = (Button) dialog.findViewById(R.id.cancel_btn);
-		cancelBt.setText(activity.getString(R.string.exit));
+		cancelBt.setText(context.getString(R.string.exit));
 		cancelBt.setOnClickListener(new View.OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				dialog.dismiss();
-				((MyApplication) activity.getApplicationContext()).exit();
+				((MyApplication) context.getApplicationContext()).exit();
 			}
 		});
-		if (activity != null) {
+		if (context != null) {
 			dialog.show();
 		}
 	}
@@ -238,7 +251,7 @@ public class UpgradeUtils extends APIInterfaceInstance {
 	private void showDownloadDialog() {
 		// TODO Auto-generated method stub
 		cancelUpdate = false;
-		mDownloadDialog = new MyDialog(activity,
+		mDownloadDialog = new MyDialog(context,
 				R.layout.dialog_app_update_progress);
 		mDownloadDialog.setCancelable(false);
 		ratioText = (TextView) mDownloadDialog.findViewById(R.id.ratio_text);
@@ -255,13 +268,13 @@ public class UpgradeUtils extends APIInterfaceInstance {
 				// 设置取消状态
 				cancelUpdate = true;
 				if (upgradeCode == 2) { // 强制升级时
-					((MyApplication) activity.getApplicationContext()).exit();
+					((MyApplication) context.getApplicationContext()).exit();
 				} else if (handler != null) {
 					handler.sendEmptyMessage(DONOT_UPGRADE);
 				}
 			}
 		});
-		if (activity != null) {
+		if (context != null) {
 			// 下载文件
 			downloadApk();
 		}
@@ -294,7 +307,7 @@ public class UpgradeUtils extends APIInterfaceInstance {
 						@Override
 						public void onFinished() {
 							// TODO Auto-generated method stub
-							
+
 						}
 
 						@Override
@@ -339,7 +352,7 @@ public class UpgradeUtils extends APIInterfaceInstance {
 	public void installApk() {
 		File apkfile = new File(DOWNLOAD_PATH, "update.apk");
 		if (!apkfile.exists()) {
-			ToastUtils.show(activity, R.string.update_fail);
+			ToastUtils.show(context, R.string.update_fail);
 			return;
 		}
 		// 通过Intent安装APK文件
@@ -348,7 +361,7 @@ public class UpgradeUtils extends APIInterfaceInstance {
 		i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		i.setDataAndType(Uri.parse("file://" + apkfile.toString()),
 				"application/vnd.android.package-archive");
-		activity.startActivity(i);
+		context.startActivity(i);
 	}
 
 	/** 获取百分率 **/
@@ -360,9 +373,9 @@ public class UpgradeUtils extends APIInterfaceInstance {
 	/** 格式化数据 **/
 	private String setFormat(long data) {
 		// TODO Auto-generated method stub
-		if (data < 1024) {
+		if (data < KBDATA) {
 			return data + "B";
-		} else if (data < 1024 * 1024) {
+		} else if (data < MBDATA) {
 			return new DecimalFormat(("####0.00")).format(data / KBDATA) + "KB";
 		} else {
 			return new DecimalFormat(("####0.00")).format(data / MBDATA) + "MB";
@@ -370,7 +383,7 @@ public class UpgradeUtils extends APIInterfaceInstance {
 	}
 
 	@Override
-	public void returnUpgradeSuccess(GetUpgradeResult getUpgradeResult) {
+	public void returnUpgradeSuccess(GetUpgradeResult getUpgradeResult,boolean isManualCheck) {
 		// TODO Auto-generated method stub
 		if (loadingDlg != null && loadingDlg.isShowing()) {
 			loadingDlg.dismiss();
@@ -380,13 +393,15 @@ public class UpgradeUtils extends APIInterfaceInstance {
 	}
 
 	@Override
-	public void returnUpgradeFail(String error) {
+	public void returnUpgradeFail(String error,boolean isManualCheck,int errorCode) {
 		// TODO Auto-generated method stub
 		if (loadingDlg != null && loadingDlg.isShowing()) {
 			loadingDlg.dismiss();
 		}
-		WebServiceMiddleUtils.hand(activity, error, upgradeHandler,
-				UPGRADE_FAIL);
+		upgradeHandler.sendEmptyMessage(UPGRADE_FAIL);
+		WebServiceMiddleUtils.hand(context,error,errorCode);
+//		WebServiceMiddleUtils.hand(context, error, upgradeHandler,
+//				UPGRADE_FAIL);
 	}
 
 }

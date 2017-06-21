@@ -1,5 +1,4 @@
 /**
- * 
  * MineAPIService.java
  * classes : com.inspur.emmcloud.api.apiservice.MineAPIService
  * V 1.0.0
@@ -12,13 +11,17 @@ import android.content.Context;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.api.APICallback;
 import com.inspur.emmcloud.api.APIInterface;
+import com.inspur.emmcloud.api.APIUri;
+import com.inspur.emmcloud.bean.GetBindingDeviceResult;
 import com.inspur.emmcloud.bean.GetBoolenResult;
 import com.inspur.emmcloud.bean.GetCardPackageListResult;
 import com.inspur.emmcloud.bean.GetLanguageResult;
+import com.inspur.emmcloud.bean.GetMDMStateResult;
 import com.inspur.emmcloud.bean.GetUploadMyHeadResult;
+import com.inspur.emmcloud.bean.UserProfileInfoBean;
+import com.inspur.emmcloud.callback.OauthCallBack;
 import com.inspur.emmcloud.util.AppUtils;
 import com.inspur.emmcloud.util.LogUtils;
-import com.inspur.emmcloud.util.OauthCallBack;
 import com.inspur.emmcloud.util.OauthUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.UriUtils;
@@ -48,7 +51,7 @@ public class MineAPIService {
 
 	/**
 	 * 修改用户头像
-	 * 
+	 *
 	 * @param
 	 */
 	public void updateUserHead(final String filePath) {
@@ -57,23 +60,27 @@ public class MineAPIService {
 		final String completeUrl = baseUrl + "module=" + module + "&method="
 				+ method;
 
-		LogUtils.jasonDebug("filePath="+filePath);
 		RequestParams params = ((MyApplication) context.getApplicationContext())
 				.getHttpRequestParams(completeUrl);
 		File file = new File(filePath);
 		params.setMultipart(true);// 有上传文件时使用multipart表单, 否则上传原始文件流.
 		params.addBodyParameter("head", file);
-		x.http().post(params, new APICallback(context,completeUrl) {
+		x.http().post(params, new APICallback(context, completeUrl) {
 
 			@Override
 			public void callbackTokenExpire() {
 				// TODO Auto-generated method stub
 				new OauthUtils(new OauthCallBack() {
 					@Override
-					public void execute() {
+					public void reExecute() {
 						updateUserHead(filePath);
 					}
-				}, context).refreshTocken(completeUrl);
+
+					@Override
+					public void executeFailCallback() {
+						callbackFail("", -1);
+					}
+				}, context).refreshToken(completeUrl);
 			}
 
 			@Override
@@ -87,7 +94,7 @@ public class MineAPIService {
 			@Override
 			public void callbackFail(String error, int responseCode) {
 				// TODO Auto-generated method stub
-				apiInterface.returnUploadMyHeadFail(error);
+				apiInterface.returnUploadMyHeadFail(error,responseCode);
 			}
 		});
 
@@ -95,7 +102,7 @@ public class MineAPIService {
 
 	/**
 	 * 修改用户信息
-	 * 
+	 *
 	 * @param key
 	 * @param value
 	 */
@@ -111,7 +118,7 @@ public class MineAPIService {
 				.getHttpRequestParams(completeUrl);
 		params.addParameter("key", key);
 		params.addParameter("value", value);
-		x.http().post(params, new APICallback(context,completeUrl) {
+		x.http().post(params, new APICallback(context, completeUrl) {
 
 			@Override
 			public void callbackTokenExpire() {
@@ -119,10 +126,15 @@ public class MineAPIService {
 				new OauthUtils(new OauthCallBack() {
 
 					@Override
-					public void execute() {
+					public void reExecute() {
 						modifyUserInfo(key, value);
 					}
-				}, context).refreshTocken(completeUrl);
+
+					@Override
+					public void executeFailCallback() {
+						callbackFail("", -1);
+					}
+				}, context).refreshToken(completeUrl);
 			}
 
 			@Override
@@ -135,7 +147,7 @@ public class MineAPIService {
 			@Override
 			public void callbackFail(String error, int responseCode) {
 				// TODO Auto-generated method stub
-				apiInterface.returnModifyUserInfoFail(error);
+				apiInterface.returnModifyUserInfoFail(error,responseCode);
 
 			}
 		});
@@ -144,13 +156,13 @@ public class MineAPIService {
 
 	/**
 	 * 上传反馈和建议接口
-	 * 
+	 *
 	 * @param content
 	 * @param contact
 	 * @param userName
 	 */
 	public void uploadFeedback(final String content, final String contact,
-			final String userName) {
+							   final String userName) {
 		final String completeUrl = "http://u.inspur.com/analytics/RestFulServiceForIMP.ashx?resource=Feedback&method=AddECMFeedback";
 		RequestParams params = ((MyApplication) context.getApplicationContext())
 				.getHttpRequestParams(completeUrl);
@@ -170,7 +182,7 @@ public class MineAPIService {
 		params.addParameter("Email", "");
 		params.addParameter("Telephone", "");
 		params.addParameter("UUID", UUID);
-		x.http().post(params, new APICallback(context,completeUrl) {
+		x.http().post(params, new APICallback(context, completeUrl) {
 
 			@Override
 			public void callbackTokenExpire() {
@@ -200,7 +212,7 @@ public class MineAPIService {
 		final String completeUrl = UriUtils.getHttpApiUri("wallet");
 		RequestParams params = ((MyApplication) context.getApplicationContext())
 				.getHttpRequestParams(completeUrl);
-		x.http().get(params, new APICallback(context,completeUrl) {
+		x.http().get(params, new APICallback(context, completeUrl) {
 
 			@Override
 			public void callbackTokenExpire() {
@@ -208,11 +220,16 @@ public class MineAPIService {
 				new OauthUtils(new OauthCallBack() {
 
 					@Override
-					public void execute() {
+					public void reExecute() {
 						// TODO Auto-generated method stub
 						getCardPackageList();
 					}
-				}, context).refreshTocken(completeUrl);
+
+					@Override
+					public void executeFailCallback() {
+						callbackFail("", -1);
+					}
+				}, context).refreshToken(completeUrl);
 			}
 
 			@Override
@@ -226,7 +243,7 @@ public class MineAPIService {
 			@Override
 			public void callbackFail(String error, int responseCode) {
 				// TODO Auto-generated method stub
-				apiInterface.returnCardPackageListFail(error);
+				apiInterface.returnCardPackageListFail(error,responseCode);
 			}
 		});
 	}
@@ -239,7 +256,7 @@ public class MineAPIService {
 		final String completeUrl = UriUtils.getHttpApiUri("settings/lang");
 		RequestParams params = ((MyApplication) context.getApplicationContext())
 				.getHttpRequestParams(completeUrl);
-		x.http().get(params, new APICallback(context,completeUrl) {
+		x.http().get(params, new APICallback(context, completeUrl) {
 
 			@Override
 			public void callbackTokenExpire() {
@@ -247,10 +264,15 @@ public class MineAPIService {
 				new OauthUtils(new OauthCallBack() {
 
 					@Override
-					public void execute() {
+					public void reExecute() {
 						getLanguage();
 					}
-				}, context).refreshTocken(completeUrl);
+
+					@Override
+					public void executeFailCallback() {
+						callbackFail("", -1);
+					}
+				}, context).refreshToken(completeUrl);
 			}
 
 			@Override
@@ -262,98 +284,162 @@ public class MineAPIService {
 			@Override
 			public void callbackFail(String error, int responseCode) {
 				// TODO Auto-generated method stub
-				apiInterface.returnLanguageFail(error);
+				apiInterface.returnLanguageFail(error,responseCode);
 			}
 		});
 	}
 
-	// /**
-	// * 保存用户头像
-	// *
-	// * @param userHead
-	// */
-	// public void saveUserHead(final String userHead) {
-	//
-	// String module = "";
-	// String method = "";
-	// final String completeUrl = baseUrl + "module=" + module + "&method="
-	// + method;
-	//
-	// RequestParams params =
-	// ((MyApplication)context.getApplicationContext()).getHttpRequestParams(completeUrl);
-	// params.addParameter("userHead", userHead);
-	// x.http().post(params, new APICallback(context,completeUrl) {
-	//
-	// @Override
-	// public void callbackTokenExpire() {
-	// // TODO Auto-generated method stub
-	// new OauthUtils(new OauthCallBack() {
-	//
-	// @Override
-	// public void execute() {
-	// saveUserHead(userHead);
-	// }
-	// }, context).refreshTocken(completeUrl);
-	// }
-	//
-	// @Override
-	// public void callbackSuccess(String arg0) {
-	// // TODO Auto-generated method stub
-	// apiInterface
-	// .returnUserHeadUploadSuccess(new GetUserHeadUploadResult(
-	// arg0));
-	// }
-	//
-	// @Override
-	// public void callbackFail(String error, int responseCode) {
-	// // TODO Auto-generated method stub
-	// apiInterface.returnUserHeadUploadFail(error);
-	// }
-	// });
-	// }
+	/**
+	 * 获取我的信息
+	 */
+	public void getUserProfileInfo(){
+		final String completeUrl = APIUri.getUserProfileUrl();
+		RequestParams params = ((MyApplication) context.getApplicationContext())
+				.getHttpRequestParams(completeUrl);
+		x.http().get(params, new APICallback(context,completeUrl) {
+			@Override
+			public void callbackSuccess(String arg0) {
+				apiInterface.returnUserProfileSuccess(new UserProfileInfoBean(arg0));
+			}
 
-	// /**
-	// * 获取人员信息
-	// *
-	// * @param inspurID
-	// */
-	// public void getUserInfo(final String inspurID) {
-	// String module = "user";
-	// String method = "get_user_by_inspurid";
-	// final String completeUrl = baseUrl + "module=" + module + "&method="
-	// + method;
-	// RequestParams params = new RequestParams();
-	// params.add("inspur_id", inspurID);
-	// // client.addHeader("Authorization",
-	// // ((MyApplication) context.getApplicationContext()).getToken());
-	// AsyncHttpResponseHandler asyncHttpResponseHandler = new
-	// AsyncHttpResponseHandler() {
-	//
-	// @Override
-	// public void onSuccess(int arg0, Header[] arg1, byte[] arg2) {
-	// apiInterface.returnUserInfoSuccess(new GetUserInfoResult(
-	// new String(arg2)));
-	// }
-	//
-	// @Override
-	// public void onFailure(int arg0, Header[] arg1, byte[] arg2,
-	// Throwable arg3) {
-	// apiInterface.returnUserInfoFail(new String(arg2));
-	// }
-	//
-	// @Override
-	// public void onTokenExpire() {
-	// new OauthUtils(new OauthCallBack() {
-	//
-	// @Override
-	// public void execute() {
-	// getUserInfo(inspurID);
-	// }
-	// }, context).refreshTocken(completeUrl);
-	// }
-	//
-	// };
-	// asyncHttpResponseHandler.setIsDebug(LogUtils.isDebug);
-	// client.post(completeUrl, params, asyncHttpResponseHandler);
-	// }
+			@Override
+			public void callbackFail(String error, int responseCode) {
+				apiInterface.returnUserProfileFail(error,responseCode);
+			}
+
+			@Override
+			public void callbackTokenExpire() {
+				new OauthUtils(new OauthCallBack() {
+
+					@Override
+					public void reExecute() {
+						getUserProfileInfo();
+					}
+
+					@Override
+					public void executeFailCallback() {
+						callbackFail("", -1);
+					}
+				}, context).refreshToken(completeUrl);
+			}
+		});
+	}
+
+
+	/**
+	 * 获取当前绑定设备列表
+	 */
+	public void getBindingDeviceList() {
+		final String completeUrl = APIUri.getBindingDevicesUrl();
+		RequestParams params =
+				((MyApplication) context.getApplicationContext()).getHttpRequestParams(completeUrl);
+		x.http().get(params, new APICallback(context, completeUrl) {
+
+			@Override
+			public void callbackTokenExpire() {
+				// TODO Auto-generated method stub
+				new OauthUtils(new OauthCallBack() {
+
+					@Override
+					public void reExecute() {
+						getBindingDeviceList();
+					}
+
+					@Override
+					public void executeFailCallback() {
+						callbackFail("", -1);
+					}
+				}, context).refreshToken(completeUrl);
+			}
+
+			@Override
+			public void callbackSuccess(String arg0) {
+				// TODO Auto-generated method stub
+				apiInterface
+						.returnBindingDeviceListSuccess(new GetBindingDeviceResult(
+								arg0));
+			}
+
+			@Override
+			public void callbackFail(String error, int responseCode) {
+				// TODO Auto-generated method stub
+				apiInterface.returnBindingDeviceListFail(error,responseCode);
+			}
+		});
+	}
+
+	/**
+	 * 解绑设备
+	 * @param udid
+	 */
+	public void unBindDevice(final String udid){
+		final String completeUrl = APIUri.getUnBindDeviceUrl();
+		RequestParams params = ((MyApplication) context.getApplicationContext())
+				.getHttpRequestParams(completeUrl);
+		params.addParameter("udid",udid);
+		x.http().post(params, new APICallback(context,completeUrl) {
+			@Override
+			public void callbackSuccess(String arg0) {
+				apiInterface.returnUnBindDeviceSuccess();
+			}
+
+			@Override
+			public void callbackFail(String error, int responseCode) {
+					apiInterface.returnUnBindDeviceFail(error,responseCode);
+			}
+
+			@Override
+			public void callbackTokenExpire() {
+				new OauthUtils(new OauthCallBack() {
+
+					@Override
+					public void reExecute() {
+						unBindDevice(udid);
+					}
+
+					@Override
+					public void executeFailCallback() {
+						callbackFail("", -1);
+					}
+				}, context).refreshToken(completeUrl);
+			}
+		});
+	}
+
+	/**
+	 * 获取是否启动MDM
+	 */
+	public void getMDMState(){
+		final String completeUrl = APIUri.getMDMStateUrl();
+		RequestParams params = ((MyApplication) context.getApplicationContext())
+				.getHttpRequestParams(completeUrl);
+		x.http().get(params, new APICallback(context,completeUrl) {
+			@Override
+			public void callbackSuccess(String arg0) {
+				apiInterface.returnMDMStateSuccess(new GetMDMStateResult(arg0));
+			}
+
+			@Override
+			public void callbackFail(String error, int responseCode) {
+				apiInterface.returnMDMStateFail(error,responseCode);
+			}
+
+			@Override
+			public void callbackTokenExpire() {
+				new OauthUtils(new OauthCallBack() {
+
+					@Override
+					public void reExecute() {
+						getMDMState();
+					}
+
+					@Override
+					public void executeFailCallback() {
+						callbackFail("", -1);
+					}
+				}, context).refreshToken(completeUrl);
+			}
+		});
+	}
+
 }

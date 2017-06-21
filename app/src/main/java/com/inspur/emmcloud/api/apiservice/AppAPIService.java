@@ -16,14 +16,18 @@ import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.bean.GetAppTabAutoResult;
 import com.inspur.emmcloud.bean.GetAppTabsResult;
 import com.inspur.emmcloud.bean.GetClientIdRsult;
+import com.inspur.emmcloud.bean.GetDeviceCheckResult;
 import com.inspur.emmcloud.bean.GetExceptionResult;
 import com.inspur.emmcloud.bean.GetUpgradeResult;
-import com.inspur.emmcloud.bean.ReactNativeClientIdErrorBean;
+import com.inspur.emmcloud.bean.LoginDesktopCloudPlusBean;
 import com.inspur.emmcloud.bean.ReactNativeUpdateBean;
+import com.inspur.emmcloud.bean.SplashPageBean;
+import com.inspur.emmcloud.callback.OauthCallBack;
 import com.inspur.emmcloud.util.AppUtils;
 import com.inspur.emmcloud.util.LogUtils;
-import com.inspur.emmcloud.util.OauthCallBack;
 import com.inspur.emmcloud.util.OauthUtils;
+import com.inspur.emmcloud.util.PreferencesByUserAndTanentUtils;
+import com.inspur.emmcloud.util.PreferencesUtils;
 
 import org.json.JSONObject;
 import org.xutils.http.HttpMethod;
@@ -38,11 +42,10 @@ import org.xutils.x;
 public class AppAPIService {
 	private Context context;
 	private APIInterface apiInterface;
-	private String baseUrl = "https://emm.inspur.com/api?";
 
 	public AppAPIService(Context context) {
 		this.context = context;
-		
+
 	}
 
 	public void setAPIInterface(APIInterface apiInterface) {
@@ -51,9 +54,9 @@ public class AppAPIService {
 
 	/**
 	 * 获取版本更新信息
-	 * 
+	 * @param isManualCheck shi
 	 */
-	public void checkUpgrade() {
+	public void checkUpgrade(final boolean isManualCheck) {
 		String completeUrl = APIUri.checkUpgrade();
 		String clientVersion = AppUtils.getVersion(context);
 		RequestParams params = ((MyApplication) context.getApplicationContext())
@@ -70,19 +73,19 @@ public class AppAPIService {
 			@Override
 			public void callbackTokenExpire() {
 				// TODO Auto-generated method stub
-				apiInterface.returnUpgradeFail(new String(""));
+				apiInterface.returnUpgradeFail(new String(""),isManualCheck,-1);
 			}
 
 			@Override
 			public void callbackSuccess(String arg0) {
 				// TODO Auto-generated method stub
-				apiInterface.returnUpgradeSuccess(new GetUpgradeResult(arg0));
+				apiInterface.returnUpgradeSuccess(new GetUpgradeResult(arg0),isManualCheck);
 			}
 
 			@Override
 			public void callbackFail(String error, int responseCode) {
 				// TODO Auto-generated method stub
-				apiInterface.returnUpgradeFail(error);
+				apiInterface.returnUpgradeFail(error,isManualCheck,responseCode);
 			}
 		});
 
@@ -92,7 +95,7 @@ public class AppAPIService {
 	 * 获取ClientId
 	 * @param deviceId
 	 * @param deviceName
-     */
+	 */
 	public void getClientId(final String deviceId, final String deviceName){
 		final String completeUrl = APIUri.getClientId();
 		RequestParams params = ((MyApplication) context.getApplicationContext())
@@ -107,59 +110,31 @@ public class AppAPIService {
 
 			@Override
 			public void callbackFail(String error, int responseCode) {
-				apiInterface.returnGetClientIdResultFail(error);
+				apiInterface.returnGetClientIdResultFail(error,responseCode);
 			}
 
 			@Override
 			public void callbackTokenExpire() {
 				new OauthUtils(new OauthCallBack() {
 					@Override
-					public void execute() {
+					public void reExecute() {
 						getClientId(deviceId,deviceName);
 					}
-				},context).refreshTocken(completeUrl);
+					@Override
+					public void executeFailCallback() {
+						callbackFail("",-1);
+					}
+				},context).refreshToken(completeUrl);
 			}
 		});
 	}
 
 
-//	/**
-//	 * 获取ReactNative更新版本
-//	 * @param version
-//	 * @param lastCreationDate
-//	 */
-//	public void getReactNativeUpdate (final int version, final long lastCreationDate){
-//		final String completeUrl = APIUri.getReactNativeUpdate()+"version="+version+"&lastCreationDate=" + lastCreationDate;
-//		RequestParams params = ((MyApplication) context.getApplicationContext())
-//				.getHttpRequestParams(completeUrl);
-//		x.http().get(params, new APICallback(context,completeUrl) {
-//			@Override
-//			public void callbackSuccess(String arg0) {
-//				apiInterface.returnReactNativeUpdateSuccess(new ReactNativeUpdateBean(arg0));
-//			}
-//
-//			@Override
-//			public void callbackFail(String error, int responseCode) {
-//				apiInterface.returnReactNativeUpdateFail(error);
-//			}
-//
-//			@Override
-//			public void callbackTokenExpire() {
-//				new OauthUtils(new OauthCallBack() {
-//					@Override
-//					public void execute() {
-//						getReactNativeUpdate(version,lastCreationDate);
-//					}
-//				},context).refreshTocken(completeUrl);
-//			}
-//		});
-//	}
-
 	/**
 	 * 获取ReactNative更新版本
 	 * @param version
 	 * @param lastCreationDate
-     */
+	 */
 	public void getReactNativeUpdate (final String version, final long lastCreationDate, final String clientId){
 		final String completeUrl = APIUri.getReactNativeUpdate()+"version="+version+"&lastCreationDate=" + lastCreationDate
 				+"&clientId="+clientId;
@@ -168,23 +143,26 @@ public class AppAPIService {
 		x.http().get(params, new APICallback(context,completeUrl) {
 			@Override
 			public void callbackSuccess(String arg0) {
-				LogUtils.YfcDebug("");
 				apiInterface.returnReactNativeUpdateSuccess(new ReactNativeUpdateBean(arg0));
 			}
 
 			@Override
 			public void callbackFail(String error, int responseCode) {
-				apiInterface.returnReactNativeUpdateFail(new ReactNativeClientIdErrorBean(error));
+				apiInterface.returnReactNativeUpdateFail(error,responseCode);
 			}
 
 			@Override
 			public void callbackTokenExpire() {
 				new OauthUtils(new OauthCallBack() {
 					@Override
-					public void execute() {
+					public void reExecute() {
 						getReactNativeUpdate(version,lastCreationDate,clientId);
 					}
-				},context).refreshTocken(completeUrl);
+					@Override
+					public void executeFailCallback() {
+						callbackFail("",-1);
+					}
+				},context).refreshToken(completeUrl);
 			}
 		});
 	}
@@ -195,7 +173,7 @@ public class AppAPIService {
 	 * @param command
 	 * @param version
 	 * @param clientId
-     */
+	 */
 	public void sendBackReactNativeUpdateLog(final String command, final String version, final String clientId){
 		final String completeUrl = APIUri.getClientLog()+"command=" + command+"&version="+version
 				+"&clientId="+clientId;
@@ -215,19 +193,23 @@ public class AppAPIService {
 			public void callbackTokenExpire() {
 				new OauthUtils(new OauthCallBack() {
 					@Override
-					public void execute() {
+					public void reExecute() {
 						sendBackReactNativeUpdateLog(command,version,clientId);
 					}
-				},context).refreshTocken(completeUrl);
+					@Override
+					public void executeFailCallback() {
+						callbackFail("",-1);
+					}
+				},context).refreshToken(completeUrl);
 			}
 		});
 	}
 
 
-	
+
 	/**
 	 * 异常上传
-	 * 
+	 *
 	 * @param exception
 	 */
 	public void uploadException(final JSONObject exception) {
@@ -237,29 +219,29 @@ public class AppAPIService {
 		params.setAsJsonContent(true);
 		params.setBodyContent(exception.toString());
 		x.http().post(params, new APICallback(context,completeUrl) {
-			
+
 			@Override
 			public void callbackTokenExpire() {
 				// TODO Auto-generated method stub
-				apiInterface.returnUploadExceptionFail(new String(""));
+				apiInterface.returnUploadExceptionFail(new String(""),-1);
 			}
-			
+
 			@Override
 			public void callbackSuccess(String arg0) {
 				// TODO Auto-generated method stub
 				apiInterface
-				.returnUploadExceptionSuccess(new GetExceptionResult(
-						arg0));
+						.returnUploadExceptionSuccess(new GetExceptionResult(
+								arg0));
 			}
-			
+
 			@Override
 			public void callbackFail(String error, int responseCode) {
 				// TODO Auto-generated method stub
-				apiInterface.returnUploadExceptionFail(error);
+				apiInterface.returnUploadExceptionFail(error,responseCode);
 			}
 		});
 	}
-	
+
 	/**
 	 * 获取显示tab页的接口
 	 */
@@ -271,22 +253,26 @@ public class AppAPIService {
 			@Override
 			public void callbackTokenExpire() {
 				new OauthUtils(new OauthCallBack() {
-					
+
 					@Override
-					public void execute() {
+					public void reExecute() {
 						getAppTabs();
 					}
-				}, context).refreshTocken(completeUrl);
+					@Override
+					public void executeFailCallback() {
+						callbackFail("",-1);
+					}
+				}, context).refreshToken(completeUrl);
 			}
-			
+
 			@Override
 			public void callbackSuccess(String arg0) {
 				apiInterface.returnGetAppTabsSuccess(new GetAppTabsResult(arg0));
 			}
-			
+
 			@Override
 			public void callbackFail(String error, int responseCode) {
-				apiInterface.returnAddAppFail(error);
+				apiInterface.returnAddAppFail(error,responseCode);
 			}
 		});
 	}
@@ -305,10 +291,14 @@ public class AppAPIService {
 				new OauthUtils(new OauthCallBack() {
 
 					@Override
-					public void execute() {
+					public void reExecute() {
 						getAppNewTabs(version,clientId);
 					}
-				}, context).refreshTocken(completeUrl);
+					@Override
+					public void executeFailCallback() {
+						callbackFail("",-1);
+					}
+				}, context).refreshToken(completeUrl);
 			}
 
 			@Override
@@ -318,7 +308,7 @@ public class AppAPIService {
 
 			@Override
 			public void callbackFail(String error, int responseCode) {
-				apiInterface.returnAppTabAutoFail(error);
+				apiInterface.returnAppTabAutoFail(error,responseCode);
 			}
 		});
 	}
@@ -327,7 +317,7 @@ public class AppAPIService {
 	/**
 	 * 手机应用PV信息（web应用）
 	 * @param collectInfo
-     */
+	 */
 	public void uploadPVCollect(String collectInfo){
 		String  completeUrl = "http://u.inspur.com/analytics/api/ECMPV/Post";
 		RequestParams params = new RequestParams(completeUrl);
@@ -341,7 +331,7 @@ public class AppAPIService {
 
 			@Override
 			public void callbackFail(String error, int responseCode) {
-				apiInterface.returnUploadCollectFail();
+				apiInterface.returnUploadCollectFail(error,responseCode);
 			}
 
 			@Override
@@ -367,21 +357,174 @@ public class AppAPIService {
 				if (arg0.equals("登录成功")){
 					apiInterface.returnVeriryApprovalPasswordSuccess(password);
 				}else{
-					apiInterface.returnVeriryApprovalPasswordFail("");
+					apiInterface.returnVeriryApprovalPasswordFail("",-1);
 				}
 
 			}
 
 			@Override
 			public void callbackFail(String error, int responseCode) {
-				apiInterface.returnVeriryApprovalPasswordFail(error);
+				apiInterface.returnVeriryApprovalPasswordFail(error,responseCode);
 			}
 
 			@Override
 			public void callbackTokenExpire() {
-				apiInterface.returnVeriryApprovalPasswordFail("");
+				apiInterface.returnVeriryApprovalPasswordFail("",-1);
 			}
 		});
 
 	}
+
+	/**
+	 * 上传设备管理需要的一些信息
+	 */
+	public void uploadMDMInfo(){
+		final String completeUrl = APIUri.getUploadMDMInfoUrl();
+		RequestParams params = ((MyApplication) context.getApplicationContext())
+				.getHttpRequestParams(completeUrl);
+		params.addParameter("udid",AppUtils.getMyUUID(context));
+		String refreshToken = PreferencesUtils.getString(context, "refreshToken", "");
+		params.addParameter("refresh_token",refreshToken);
+		x.http().post(params, new APICallback(context,completeUrl) {
+			@Override
+			public void callbackSuccess(String arg0) {
+			}
+
+			@Override
+			public void callbackFail(String error, int responseCode) {
+			}
+
+			@Override
+			public void callbackTokenExpire() {
+
+				new OauthUtils(new OauthCallBack() {
+					@Override
+					public void reExecute() {
+						uploadMDMInfo();
+					}
+
+					@Override
+					public void executeFailCallback() {
+						callbackFail("",-1);
+					}
+				}, context).refreshToken(completeUrl);
+			}
+		});
+	}
+
+	/**
+	 * 获取闪屏页信息
+	 * 采用新式数据解析方法
+	 * @param clientId
+	 * @param versionCode
+	 */
+	public void getSplashPageInfo(final String clientId, final String versionCode) {
+		final String completeUrl = APIUri.getSplashPageUrl() + "?version=" + versionCode + "&clientId=" + clientId;
+		RequestParams params = ((MyApplication) context.getApplicationContext())
+				.getHttpRequestParams(completeUrl);
+		x.http().get(params, new APICallback(context, completeUrl) {
+			@Override
+			public void callbackSuccess(String arg0) {
+				SplashPageBean splashPageBean = new SplashPageBean(arg0);
+				if (splashPageBean.getCommand().equals("FORWARD")) {
+					String splashPageInfoOld = PreferencesByUserAndTanentUtils.getString(context,"splash_page_info","");
+					PreferencesByUserAndTanentUtils.putString(context,"splash_page_info_old",splashPageInfoOld);
+					PreferencesByUserAndTanentUtils.putString(context, "splash_page_info", arg0);
+				}
+				apiInterface.returnSplashPageInfoSuccess(splashPageBean);
+			}
+
+			@Override
+			public void callbackFail(String error, int responseCode) {
+				apiInterface.returnSplashPageInfoFail(error, responseCode);
+			}
+
+			@Override
+			public void callbackTokenExpire() {
+				new OauthUtils(new OauthCallBack() {
+					@Override
+					public void reExecute() {
+						getSplashPageInfo(clientId, versionCode);
+					}
+					@Override
+					public void executeFailCallback() {
+						callbackFail("",-1);
+					}
+				}, context).refreshToken(completeUrl);
+			}
+		});
+	}
+
+	public void sendLoginDesktopCloudPlusInfo(){
+		final String completeUrl = APIUri.getLoginDesktopCloudPlusUrl();
+		RequestParams params = ((MyApplication) context.getApplicationContext())
+				.getHttpRequestParams(completeUrl);
+		x.http().post(params, new APICallback(context,completeUrl) {
+			@Override
+			public void callbackSuccess(String arg0) {
+				apiInterface.returnLoginDesktopCloudPlusSuccess(new LoginDesktopCloudPlusBean());
+			}
+
+			@Override
+			public void callbackFail(String error, int responseCode) {
+				apiInterface.returnLoginDesktopCloudPlusFail(error,responseCode);
+			}
+
+			@Override
+			public void callbackTokenExpire() {
+				new OauthUtils(new OauthCallBack() {
+					@Override
+					public void reExecute() {
+						sendLoginDesktopCloudPlusInfo();
+					}
+
+					@Override
+					public void executeFailCallback() {
+						callbackFail("",-1);
+					}
+				},context).refreshToken(completeUrl);
+			}
+		});
+	}
+
+	/**
+	 * 设备检查
+	 * @param tenantId
+	 * @param userCode
+	 */
+	public void deviceCheck(String tenantId, String userCode) {
+		// TODO Auto-generated method stub
+		String baseUrl = "https://emm.inspur.com/api?";
+		String module = "mdm";
+		String method = "check_state";
+		String completeUrl = baseUrl + "module=" + module + "&method=" + method;
+		String uuid = AppUtils.getMyUUID(context);
+		RequestParams params = new RequestParams(completeUrl);
+		params.addBodyParameter("udid", uuid);
+		params.addBodyParameter("tenant_id", tenantId);
+		params.addBodyParameter("mdm_user_auth_type", "IDMUser");
+		params.addBodyParameter("user_code", userCode);
+		// params.addBodyParameter("app_mdm_id", "imp"); // 和ios约定的appid
+		x.http().post(params, new APICallback(context,completeUrl) {
+			@Override
+			public void callbackSuccess(String arg0) {
+				apiInterface.returnDeviceCheckSuccess(new GetDeviceCheckResult(
+						arg0));
+			}
+
+			@Override
+			public void callbackFail(String error, int responseCode) {
+				apiInterface.returnDeviceCheckFail(error,responseCode);
+			}
+
+			@Override
+			public void callbackTokenExpire() {
+				apiInterface.returnDeviceCheckFail("",-1);
+			}
+		});
+
+
+	}
+
+
 }

@@ -9,9 +9,9 @@ import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.bean.GetClientIdRsult;
 import com.inspur.emmcloud.bean.ReactNativeDownloadUrlBean;
 import com.inspur.emmcloud.bean.ReactNativeInstallUriBean;
+import com.inspur.emmcloud.callback.OauthCallBack;
 import com.inspur.emmcloud.util.DownLoaderUtils;
 import com.inspur.emmcloud.util.LogUtils;
-import com.inspur.emmcloud.util.OauthCallBack;
 import com.inspur.emmcloud.util.OauthUtils;
 
 import org.xutils.common.Callback;
@@ -53,17 +53,22 @@ public class ReactNativeAPIService {
 
             @Override
             public void callbackFail(String error, int responseCode) {
-                apiInterface.returnGetClientIdResultFail(error);
+                apiInterface.returnGetClientIdResultFail(error,responseCode);
             }
 
             @Override
             public void callbackTokenExpire() {
                 new OauthUtils(new OauthCallBack() {
                     @Override
-                    public void execute() {
+                    public void reExecute() {
                         getClientId(deviceId,deviceName);
                     }
-                },context).refreshTocken(completeUrl);
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                },context).refreshToken(completeUrl);
             }
         });
     }
@@ -85,7 +90,7 @@ public class ReactNativeAPIService {
 
             @Override
             public void callbackFail(String error, int responseCode) {
-                apiInterface.returnGetReactNativeInstallUrlFail(error);
+                apiInterface.returnGetReactNativeInstallUrlFail(error,responseCode);
             }
 
             @Override
@@ -93,10 +98,15 @@ public class ReactNativeAPIService {
 
                 new OauthUtils(new OauthCallBack() {
                     @Override
-                    public void execute() {
+                    public void reExecute() {
                         getReactNativeInstallUrl(uri);
                     }
-                },context).refreshTocken(completeUrl);
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                },context).refreshToken(completeUrl);
             }
         });
     }
@@ -129,10 +139,15 @@ public class ReactNativeAPIService {
             public void callbackTokenExpire() {
                 new OauthUtils(new OauthCallBack() {
                     @Override
-                    public void execute() {
+                    public void reExecute() {
                         writeBackVersionChange(preVersion,currentVersion,clientId, command,appId);
                     }
-                },context).refreshTocken(completeUrl);
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                },context).refreshToken(completeUrl);
             }
         });
     }
@@ -158,7 +173,7 @@ public class ReactNativeAPIService {
 
             @Override
             public void callbackFail(String error, int responseCode) {
-                apiInterface.returnGetDownloadReactNativeUrlFail(error);
+                apiInterface.returnGetDownloadReactNativeUrlFail(error,responseCode);
             }
 
             @Override
@@ -166,10 +181,15 @@ public class ReactNativeAPIService {
 
                 new OauthUtils(new OauthCallBack() {
                     @Override
-                    public void execute() {
+                    public void reExecute() {
                         getDownLoadUrl(context,findDownloadUrl,clientId,currentVersion);
                     }
-                },context).refreshTocken(completeUrl);
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                },context).refreshToken(completeUrl);
             }
         });
     }
@@ -185,6 +205,45 @@ public class ReactNativeAPIService {
         downLoaderUtils.startDownLoad(fromUri,filePath,progressCallback);
     }
 
+    /**
+     * 写回闪屏日志
+     * @param preVersion
+     * @param currentVersion
+     * @param clientId
+     * @param command
+     */
+    public void writeBackSplashPageVersionChange(final String preVersion, final String currentVersion, final String clientId, final String command){
+        final String completeUrl = APIUri.getUploadSplashPageWriteBackLogUrl()+"?preVersion="+preVersion+"&currentVersion="+currentVersion+"&clientId="+clientId+
+                "&command="+command;
+        RequestParams params = ((MyApplication) context.getApplicationContext())
+                .getHttpRequestParams(completeUrl);
+        x.http().post(params, new APICallback(context,completeUrl) {
+            @Override
+            public void callbackSuccess(String arg0) {
+                LogUtils.YfcDebug("闪屏写回成功，不需要后续处理");
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                LogUtils.YfcDebug("闪屏写回失败，不需要后续处理"+error+responseCode);
+            }
+
+            @Override
+            public void callbackTokenExpire() {
+                new OauthUtils(new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        writeBackSplashPageVersionChange(preVersion,currentVersion,clientId, command);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                },context).refreshToken(completeUrl);
+            }
+        });
+    }
 
 
 }

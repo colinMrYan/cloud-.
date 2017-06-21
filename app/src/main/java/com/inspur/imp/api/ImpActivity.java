@@ -14,16 +14,13 @@ import android.view.View.OnTouchListener;
 import android.view.WindowManager;
 import android.webkit.ValueCallback;
 import android.webkit.WebSettings;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.util.AppUtils;
-import com.inspur.emmcloud.util.LogUtils;
+import com.inspur.emmcloud.util.MDM.MDM;
 import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.imp.engine.webview.ImpWebChromeClient;
 import com.inspur.imp.engine.webview.ImpWebView;
@@ -48,10 +45,9 @@ public class ImpActivity extends ImpBaseActivity {
 	private int FILEEXPLOER_RESULTCODE = 4;
 	private RelativeLayout progressLayout;
 	private Map<String, String> extraHeaders;
-	private Button buttonBack;
-	private Button buttonClose;
 	private TextView headerText;
 	private LinearLayout loadFailLayout;
+	private boolean isMDM = false;//mdm页面
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +55,14 @@ public class ImpActivity extends ImpBaseActivity {
 		super.onCreate(savedInstanceState);
 		((MyApplication) getApplicationContext()).addActivity(this);
 		setContentView(Res.getLayoutID("activity_imp"));
+		initViews();
+	}
+
+
+	/**
+	 * 初始化Views
+	 */
+	private void initViews() {
 		progressLayout = (RelativeLayout) findViewById(Res
 				.getWidgetID("progress_layout"));
 		loadFailLayout = (LinearLayout)findViewById(Res.getWidgetID("load_error_layout")) ;
@@ -68,25 +72,34 @@ public class ImpActivity extends ImpBaseActivity {
 						| WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 		String url = "";
 		Uri uri = getIntent().getData();
+		boolean isUriHasTitle = false;
+		String title = "";
 		if (uri != null){
 			String host = uri.getHost();
 			url = "https://emm.inspur.com/ssohandler/gs_msg/"+host;
+			String openMode = uri.getQueryParameter("openMode");
+			isUriHasTitle = (openMode != null && openMode.equals("1"))?true:false;
 		}else{
 			url = getIntent().getExtras().getString("uri");
 		}
-		if (getIntent().hasExtra("appName")) {
+		if (getIntent().hasExtra("appName")){
+			isUriHasTitle = true;
+			title = getIntent().getExtras().getString("appName");
+		}
+		if (isUriHasTitle) {
 			headerText = (TextView) findViewById(Res.getWidgetID("header_text"));
 			webView.setProperty(progressLayout,headerText,loadFailLayout);
 			initWebViewGoBackOrClose();
 			( findViewById(Res.getWidgetID("header_layout")))
 					.setVisibility(View.VISIBLE);
-			headerText.setText(getIntent().getExtras().getString("appName"));
+			headerText.setText(title);
 		}else {
 			webView.setProperty(progressLayout,null,loadFailLayout);
 		}
 
 		String token = ((MyApplication)getApplicationContext())
 				.getToken();
+		isMDM = getIntent().hasExtra("function")&&getIntent().getStringExtra("function").equals("mdm");
 		setOauthHeader(token);
 		setLangHeader(UriUtils.getLanguageCookie(this));
 		setUserAgent("/emmcloud/" + AppUtils.getVersion(this));
@@ -112,9 +125,9 @@ public class ImpActivity extends ImpBaseActivity {
 				webView.reload();
 			}
 		});
-
 		webView.loadUrl(url, extraHeaders);
 		progressLayout.setVisibility(View.VISIBLE);
+
 	}
 
 	/**
@@ -122,14 +135,8 @@ public class ImpActivity extends ImpBaseActivity {
 	 * （不是GS应用，GS应用有重定向，不容易实现返回）
 	 */
 	private void initWebViewGoBackOrClose() {
-		buttonBack = (Button) findViewById(Res.getWidgetID("imp_back_btn"));
-		buttonClose = (Button) findViewById(Res.getWidgetID("imp_close_btn"));
-		buttonBack.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				goBack();
-			}
-		});
+		final  TextView buttonBack = (TextView) findViewById(Res.getWidgetID("imp_back_btn"));
+		final  TextView buttonClose = (TextView) findViewById(Res.getWidgetID("imp_close_btn"));
 		buttonClose.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -140,7 +147,7 @@ public class ImpActivity extends ImpBaseActivity {
 				new ImpWebChromeClient.OnFinishLoadUrlListener() {
 					@Override
 					public void OnFinishLoadUrlListener(boolean isFinish) {
-						((RelativeLayout) findViewById(Res
+						( findViewById(Res
 								.getWidgetID("header_layout")))
 								.setVisibility(View.VISIBLE);
 						if (webView.canGoBack()) {
@@ -159,7 +166,14 @@ public class ImpActivity extends ImpBaseActivity {
 		if (webView.canGoBack()) {
 			webView.goBack();// 返回上一页面
 		} else {
-			finish();// 退出程序
+			finishActivity();
+		}
+	}
+
+	private void finishActivity(){
+		finish();// 退出程序
+		if (getIntent().hasExtra("function")&&getIntent().getStringExtra("function").equals("mdm")){
+			new MDM().getMDMListener().MDMStatusNoPass();
 		}
 	}
 
@@ -197,8 +211,9 @@ public class ImpActivity extends ImpBaseActivity {
 	}
 
 	private void setOauthHeader(String OauthHeader) {
-		extraHeaders = new HashMap<String, String>();
+		extraHeaders = new HashMap<>();
 		extraHeaders.put("Authorization", OauthHeader);
+		extraHeaders.put("X-ECC-Current-Enterprise", ((MyApplication)getApplicationContext()).getCurrentEnterprise().getId());
 	}
 
 	private void setLangHeader(String langHeader){
@@ -214,12 +229,10 @@ public class ImpActivity extends ImpBaseActivity {
 		// TODO Auto-generated method stub
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
 			if (webView.canGoBack()) {
-				LogUtils.jasonDebug("canGoBack");
 				webView.goBack();// 返回上一页面
 				return true;
 			} else {
-				LogUtils.jasonDebug("not------canGoBack");
-				finish();// 退出程序
+				finishActivity();// 退出程序
 			}
 		}
 		return super.onKeyDown(keyCode, event);
@@ -238,15 +251,6 @@ public class ImpActivity extends ImpBaseActivity {
 	}
 
 
-	/**
-	 * 自定义WebViewClient在应用中打开页面
-	 */
-	private class webViewClient extends WebViewClient {
-		public boolean shouldOverrideUrlLoading(WebView view, String url) {
-			view.loadUrl(url);
-			return true;
-		}
-	}
 
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (PublicWay.photoService != null) {

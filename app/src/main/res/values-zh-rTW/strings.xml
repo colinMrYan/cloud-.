@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">浪潮雲+</string>
+    <string name="app_name">雲+</string>
     <string name="reclick_to_desktop">再按一次退出程式</string>
     <string name="Network_Mobile">已經連接到到移動網路</string>
     <string name="Network_WIFI">已經連接到WIFI</string>
@@ -54,6 +54,7 @@
     <string name="only_free">僅顯示空閒 </string>
     <string name="file_no_identifiable">不能识别的文件类型</string>
     <string name="login_code_login_text">验证码登录</string>
+    <string name="invite_friends_text">把雲+推薦給朋友</string>
 
     <!-- 公共部分 -->
     <string name="year">年</string>
@@ -215,6 +216,7 @@
     <string name="group_album"> 群相冊</string>
     <string name="group_file">群文件</string>
     <string name="authorization_expired">授權過期，請重新登錄</string>
+    <string name="cant_login_with_sms">您的賬號不允許使用短信登錄</string>
 
     <!-- 消息部分 -->
     <string name="msgcontent_cannot_null">請輸入消息內容</string>
@@ -257,6 +259,11 @@
     <string name="friend_list">好友列表</string>
     <string name="join_discuss">加入討論吧</string>
     <string name="add_new_comment">添加新評論</string>
+    <string name="socket_connecting">連接中</string>
+    <string name="socket_close">已斷開</string>
+    <string name="chat_file_download_success">檔案已下載成功，再次點擊進行打開</string>
+    <string name="group_name_longth_valid">群名稱字數超限（不超過20個字元）</string>
+
 
     <!-- 會議卡片 -->
     <string name="meeting_has_confirmed">已確認</string>
@@ -339,6 +346,8 @@
     <string name="app_password_encrypt_error">密碼加密出錯</string>
     <string name="app_recommand">推薦</string>
     <string name="app_classification">分類</string>
+    <string name="app_create_shortcut_no_more_remind">不再提醒</string>
+    <string name="app_commonly_use_app">是否將移動簽到添加到案頭快捷方式，一鍵簽到？ </string>
 
     <!-- 我的頁面部分 -->
     <string name="data_clear_success">清除成功</string>
@@ -395,6 +404,24 @@
     <string name="my_setting_tips_quit">確定清除應用內所有緩存數據？清除后將退出應用</string>
     <string name="get_language_error">未獲取到可用的語言包，請聯繫管理員</string>
     <string name="app_customer">雲+客服</string>
+    <string name="settings_device_manager">設備安全與管理</string>
+    <string name="device_unbind_sucess">設備解綁成功！</string>
+    <string name="device_other_unbind_warning">解綁後，從%1$s上登錄，您需要重新註冊設備</string>
+    <string name="device_current_unbind_warning">解綁後，您需要重新登入並注册設備</string>
+    <string name="current_device">當前設備</string>
+    <string name="device_bind_time_title">綁定時間: </string>
+    <string name="device_bind_time">綁定時間</string>
+    <string name="device_info">設備詳情</string>
+    <string name="device_id">設備ID</string>
+    <string name="unbind_this_device">解綁此設備</string>
+    <string name="sure_switch_to">確定切換到%1$s</string>
+    <string name="fail_to_switch_enterprise">企業切換失敗！</string>
+    <string name="select_enterprise">選擇企業</string>
+    <string name="switch_enterprise">切換企業</string>
+    <string name="current_enterprise">當前企業</string>
+
+
+
 
 
     <!-- 修改密碼部分 -->
@@ -417,8 +444,8 @@
     <string name="modify_user_password_success">通行證密碼修改成功，請使用新密碼登錄</string>
     <string name="modify_user_password_fail">設置密碼失敗，您是否繼續設置</string>
     <string name="modify_jump">跳過</string>
-    <string name="modify_welcom_user_cloud">歡迎使用浪潮雲+</string>
-    <string name="modify_first_use">這是您第一次使用浪潮雲+，是否設置浪潮通行證密碼，以方便下次登錄</string>
+    <string name="modify_welcom_user_cloud">歡迎使用雲+</string>
+    <string name="modify_first_use">這是您第一次使用雲+，是否設置通行證密碼，以方便下次登錄</string>
 
     <!-- 使用者資訊頁面部分 -->
     <string name="user_info_text">個人資訊</string>
@@ -434,7 +461,7 @@
     <string name="resend_code">重新發送(51)</string>
     <string name="modify_user_info">修改資訊</string>
     <string name="modify_modify">修改</string>
-    <string name="user_info_my_info">我的個人資訊</string>
+    <string name="user_info_my_info">個人資訊</string>
     <string name="user_info_organ">浪潮國際</string>
     <string name="user_info_phone_number">聯繫方式</string>
     <string name="user_no_storage">沒有存放裝置</string>
@@ -455,7 +482,11 @@
     <string name="news_font_name_text">字體</string>
     <string name="news_read_mode">閱讀模式</string>
     <string name="new_instructions_text">批示</string>
+    <string name="news_instructions">批示意見</string>
     <string name="news_instructions_success_text">發送成功</string>
+    <string name="news_no_news">暫無新聞</string>
+    <string name="news_has_instructions_news">您已批示過此新聞</string>
+    <string name="news_has_instructions_known">瞭解了</string>
 
     <!-- 審批頁面 -->
     <string name="onekey_approval_text">審批</string>
@@ -664,7 +695,7 @@
     <string name="load_fail">載入失敗</string>
     <string name="see_more">查看更多</string>
     <string name="pull_down_loading_history">下拉載入歷史消息</string>
-    <string name="license_agreement">1、本協議是使用者 (自然人、法人或社會團體)與浪潮通用軟體有限公司之間關於“浪潮雲+”軟體產品（以下
+    <string name="license_agreement">1、本協議是使用者 (自然人、法人或社會團體)與浪潮通用軟體有限公司之間關於“雲+”軟體產品（以下
 
 簡稱“本軟體產品”）的法律協定。一旦安裝、複製或以其他方式使用本軟體產品，即表示同意接受協議各項條件的約束。如果用戶
 
@@ -721,7 +752,7 @@
     <string name="download_fail">下載失敗</string>
     <string name="download_success">下載成功</string>
     <string name="file_downloading">文件下載中，請稍候...</string>
-    <string name="file_download_success">檔案已下載成功，再次點擊進行打開</string>
+    <string name="file_download_success">檔案已下載成功，是否打開？</string>
     <string name="has_downloaded">已下載</string>
     <string name="imp_content">內容</string>
     <string name="file_ok">確定</string>
@@ -747,5 +778,8 @@
 
     <string name="react_native_app_open_failed">應用打開失敗 </string>
     <string name="react_native_app_update_failed">更新包失敗 </string>
+
+    <!--闪屏页文字资源-->
+    <string name="splash_skip">立即進入</string>
 
 </resources>

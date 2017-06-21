@@ -1,8 +1,6 @@
 package com.inspur.emmcloud.ui;
 
 import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -14,13 +12,14 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TabHost;
 import android.widget.TabHost.OnTabChangeListener;
 import android.widget.TextView;
 
-import com.alibaba.fastjson.JSON;
 import com.inspur.emmcloud.BaseFragmentActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
@@ -28,6 +27,7 @@ import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.AppAPIService;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.api.apiservice.ContactAPIService;
+import com.inspur.emmcloud.api.apiservice.ReactNativeAPIService;
 import com.inspur.emmcloud.bean.AndroidBundleBean;
 import com.inspur.emmcloud.bean.AppTabAutoBean;
 import com.inspur.emmcloud.bean.ChannelGroup;
@@ -35,12 +35,12 @@ import com.inspur.emmcloud.bean.Contact;
 import com.inspur.emmcloud.bean.GetAllContactResult;
 import com.inspur.emmcloud.bean.GetAllRobotsResult;
 import com.inspur.emmcloud.bean.GetAppTabAutoResult;
-import com.inspur.emmcloud.bean.GetAppTabsResult;
 import com.inspur.emmcloud.bean.GetClientIdRsult;
 import com.inspur.emmcloud.bean.GetSearchChannelGroupResult;
 import com.inspur.emmcloud.bean.Language;
-import com.inspur.emmcloud.bean.ReactNativeClientIdErrorBean;
 import com.inspur.emmcloud.bean.ReactNativeUpdateBean;
+import com.inspur.emmcloud.bean.SplashPageBean;
+import com.inspur.emmcloud.callback.CommonCallBack;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.interf.OnTabReselectListener;
 import com.inspur.emmcloud.interf.OnWorkFragmentDataChanged;
@@ -57,11 +57,13 @@ import com.inspur.emmcloud.util.AppUtils;
 import com.inspur.emmcloud.util.ChannelGroupCacheUtils;
 import com.inspur.emmcloud.util.ContactCacheUtils;
 import com.inspur.emmcloud.util.DbCacheUtils;
+import com.inspur.emmcloud.util.DownLoaderUtils;
+import com.inspur.emmcloud.util.FileSafeCode;
 import com.inspur.emmcloud.util.FileUtils;
 import com.inspur.emmcloud.util.ImageDisplayUtils;
 import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.NetUtils;
-import com.inspur.emmcloud.util.PreferencesByUserUtils;
+import com.inspur.emmcloud.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.RNCacheViewManager;
 import com.inspur.emmcloud.util.RobotCacheUtils;
@@ -75,6 +77,9 @@ import com.inspur.emmcloud.widget.WeakHandler;
 import com.inspur.emmcloud.widget.tipsview.TipsView;
 import com.inspur.reactnative.ReactNativeFlow;
 
+import org.greenrobot.eventbus.EventBus;
+import org.xutils.common.Callback;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -85,9 +90,11 @@ import java.util.List;
  * @author Administrator
  */
 public class IndexActivity extends BaseFragmentActivity implements
-        OnTabChangeListener, OnTouchListener {
+        OnTabChangeListener, OnTouchListener,CommonCallBack {
     private static final int SYNC_ALL_BASE_DATA_SUCCESS = 0;
     private static final int SYNC_CONTACT_SUCCESS = 1;
+    private static final int CHANGE_TAB = 2;
+    private static final int RELOAD_WEB = 3;
     private long lastBackTime;
     public MyFragmentTabHost mTabHost;
     private static TextView newMessageTipsText;
@@ -105,6 +112,9 @@ public class IndexActivity extends BaseFragmentActivity implements
     private boolean isReactNativeClientUpdateFail = false;
     private boolean isGetTab = false;
     private String notSupportTitle = "";
+    private boolean isSplash = false;
+    private WebView webView;
+    private boolean isCommunicationRunning =false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -128,9 +138,11 @@ public class IndexActivity extends BaseFragmentActivity implements
 
         /**从服务端获取显示tab**/
         getAppTabs();
+        updateSplashPage();
 		startUploadPVCollectService();
         registerReactNativeReceiver();
         startCoreService();
+        setPreloadWebApp();
     }
 
 
@@ -182,6 +194,30 @@ public class IndexActivity extends BaseFragmentActivity implements
         startService(intent);
     }
 
+    /**
+     * 为了使打开报销web应用更快，进行预加载
+     */
+    private void setPreloadWebApp(){
+        if (UriUtils.tanent.equals("inspur_esg")){
+            webView = (WebView) findViewById(R.id.preload_webview);
+            webView.getSettings().setJavaScriptEnabled(true);
+            webView.setWebViewClient(new WebViewClient(){
+                @Override
+                public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                    // TODO Auto-generated method stub
+                    view.loadUrl(url);
+                    return true;
+                }
+            });
+            webView.loadUrl("http://baoxiao.inspur.com/loadres.html");
+            handler.sendEmptyMessageDelayed(RELOAD_WEB,1000);
+        }
+    }
+
+    public WeakHandler getHandler(){
+        return  handler;
+    }
+
 
     /**
      * 检查clientId是否存在
@@ -228,7 +264,7 @@ public class IndexActivity extends BaseFragmentActivity implements
         apiService.setAPIInterface(new WebService());
         if (NetUtils.isNetworkConnected(getApplicationContext(), false)) {
 //            apiService.getAppTabs();
-            String version = PreferencesByUserUtils.getString(IndexActivity.this,"app_tabbar_version","");;
+            String version = PreferencesByUserAndTanentUtils.getString(IndexActivity.this,"app_tabbar_version","");;
             String clientid = PreferencesUtils.getString(IndexActivity.this, UriUtils.tanent + userId + "react_native_clientid","");
             if(!StringUtils.isBlank(clientid)){
                 apiService.getAppNewTabs(version,clientid);
@@ -270,6 +306,14 @@ public class IndexActivity extends BaseFragmentActivity implements
                         break;
                     case SYNC_CONTACT_SUCCESS:
                         getAllChannelGroup();
+                        break;
+                    case CHANGE_TAB:
+                        mTabHost.setCurrentTab(getTabIndex());
+                        break;
+                    case RELOAD_WEB:
+                        if (webView != null){
+                            webView.reload();
+                        }
                         break;
                     default:
                         break;
@@ -379,7 +423,7 @@ public class IndexActivity extends BaseFragmentActivity implements
      */
     private MainTabBean[] handleAppTabs() {
         MainTabBean[] mainTabs = null;
-        String appTabs = PreferencesByUserUtils.getString(IndexActivity.this,"app_tabbar_info_current","");
+        String appTabs = PreferencesByUserAndTanentUtils.getString(IndexActivity.this,"app_tabbar_info_current","");
         if (!StringUtils.isBlank(appTabs)) {
             String languageJson = PreferencesUtils.getString(
                     getApplicationContext(), UriUtils.tanent + "appLanguageObj");
@@ -388,7 +432,11 @@ public class IndexActivity extends BaseFragmentActivity implements
                 Language language = new Language(languageJson);
                 environmentLanguage = language.getIana();
             }
-            ArrayList<AppTabAutoBean.PayloadBean.TabsBean> appTabList = (ArrayList<AppTabAutoBean.PayloadBean.TabsBean>) new AppTabAutoBean(appTabs).getPayload().getTabs();
+            AppTabAutoBean appTabAutoBean = new AppTabAutoBean(appTabs);
+            if(appTabAutoBean != null){
+                EventBus.getDefault().post(appTabAutoBean);
+            }
+            ArrayList<AppTabAutoBean.PayloadBean.TabsBean> appTabList = (ArrayList<AppTabAutoBean.PayloadBean.TabsBean>)appTabAutoBean.getPayload().getTabs();
             if (appTabList != null && appTabList.size() > 0) {
                 mainTabs = new MainTabBean[appTabList.size()];
                 for (int i = 0; i < appTabList.size(); i++) {
@@ -470,15 +518,33 @@ public class IndexActivity extends BaseFragmentActivity implements
             mTabHost.setOnTabChangedListener(this);
         }
         int tabSize = tabs.length;
+        int communicateLocation = -1;
         for (int i = 0; i < tabSize; i++){
             if(tabs[i].getCommpant().equals("communicate")){
-                mTabHost.setCurrentTab(tabs[i].getIdx());
+                communicateLocation = tabs[i].getIdx();
                 break;
             }
         }
-        mTabHost.setCurrentTab(getTabIndex());
+        if(communicateLocation != -1 && isCommunicationRunning == false){
+            mTabHost.setCurrentTab(communicateLocation);
+        }else {
+            mTabHost.setCurrentTab(getTabIndex());
+        }
     }
 
+    @Override
+    public void execute() {
+        try {
+            isCommunicationRunning = true;
+            int targetTabIndex = getTabIndex();
+            boolean isOpenNotify = getIntent().hasExtra("command") && getIntent().getStringExtra("command").equals("open_notification");
+            if (mTabHost!=null && mTabHost.getCurrentTab() != targetTabIndex && !isOpenNotify){
+                mTabHost.setCurrentTab(targetTabIndex);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
 
     /**
      * 当没有数据的时候返回内容
@@ -573,7 +639,7 @@ public class IndexActivity extends BaseFragmentActivity implements
      */
     private int getTabIndex() {
         int tabIndex = 0;
-        String appTabs = PreferencesByUserUtils.getString(IndexActivity.this,"app_tabbar_info_current","");
+        String appTabs = PreferencesByUserAndTanentUtils.getString(IndexActivity.this,"app_tabbar_info_current","");
         ArrayList<AppTabAutoBean.PayloadBean.TabsBean> appTabList;
         if (!StringUtils.isBlank(appTabs)) {
             appTabList = (ArrayList<AppTabAutoBean.PayloadBean.TabsBean>) new AppTabAutoBean(appTabs).getPayload().getTabs();
@@ -654,31 +720,18 @@ public class IndexActivity extends BaseFragmentActivity implements
         return consumed;
     }
 
-    /**
-     * 添加Fragment
-     *
-     * @param fragment
-     */
-    private void addFragment(Fragment fragment) {
-        FragmentManager fragmentManager = getFragmentManager();
-        FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.attach(fragment);
-        transaction.add(fragment, "");
-        transaction.commit();
-    }
 
     @Override
     public void onTabChanged(String tabId) {
         notSupportTitle = tabId;
-        String lastUpdateTime = PreferencesUtils.getString(IndexActivity.this,"react_native_lastupdatetime","");
         if (tabId.equals(getString(R.string.communicate))) {
             tipsView.setCanTouch(true);
         } else {
             tipsView.setCanTouch(false);
         }
-//        if(ReactNativeFlow.moreThanHalfHour(lastUpdateTime)){
+        if(tabId.equals(getString(R.string.find))){
             updateReactNative();
-//        }
+        }
     }
 
     private Fragment getCurrentFragment() {
@@ -708,6 +761,29 @@ public class IndexActivity extends BaseFragmentActivity implements
             }
         }
 
+    }
+
+    /**
+     * 检查闪屏页更新
+     */
+    private void updateSplashPage() {
+        //这里并不是实时更新所以不加dialog
+//        String splashInfoOld = PreferencesByUserAndTanentUtils.getString(IndexActivity.this,"splash_page_info_old","");
+        if (NetUtils.isNetworkConnected(IndexActivity.this)) {
+            String splashInfo = PreferencesByUserAndTanentUtils.getString(IndexActivity.this, "splash_page_info","");
+            SplashPageBean splashPageBean = new SplashPageBean(splashInfo);
+//            if(splashPageBean == null){
+//                splashPageBean = new SplashPageBean("");
+//            }
+            String clientId = PreferencesUtils.getString(IndexActivity.this, UriUtils.tanent + ((MyApplication) getApplication()).getUid() + "react_native_clientid", "");
+            if (!StringUtils.isBlank(clientId)) {
+                appApiService.getSplashPageInfo(clientId, splashPageBean.getId().getVersion());
+            } else {
+                //没有clientId首先将获取ClientId然后再检查更新
+                isSplash = true;
+                getReactNativeClientId();
+            }
+        }
     }
 
     public void setOnWorkFragmentDataChanged(OnWorkFragmentDataChanged l) {
@@ -750,10 +826,10 @@ public class IndexActivity extends BaseFragmentActivity implements
         }
 
         @Override
-        public void returnAllContactFail(String error) {
+        public void returnAllContactFail(String error,int errorCode) {
             // TODO Auto-generated method stub
             getAllChannelGroup();
-            WebServiceMiddleUtils.hand(IndexActivity.this, error);
+            WebServiceMiddleUtils.hand(IndexActivity.this, error,errorCode);
         }
 
         @Override
@@ -769,8 +845,8 @@ public class IndexActivity extends BaseFragmentActivity implements
         }
 
         @Override
-        public void returnSearchChannelGroupFail(String error) {
-            super.returnSearchChannelGroupFail(error);
+        public void returnSearchChannelGroupFail(String error,int errorCode) {
+            super.returnSearchChannelGroupFail(error,errorCode);
             // 无论成功或者失败都返回成功都能进入应用
             handler.sendEmptyMessage(SYNC_ALL_BASE_DATA_SUCCESS);
         }
@@ -783,25 +859,11 @@ public class IndexActivity extends BaseFragmentActivity implements
         }
 
         @Override
-        public void returnAllRobotsFail(String error) {
+        public void returnAllRobotsFail(String error,int errorCode) {
             //暂时去掉机器人错误
 //			WebServiceMiddleUtils.hand(IndexActivity.this, error);
         }
 
-        @Override
-        public void returnGetAppTabsSuccess(GetAppTabsResult getAppTabsResult) {
-            PreferencesUtils.putString(IndexActivity.this,
-                    UriUtils.tanent + userId + "appTabs", JSON.toJSONString(getAppTabsResult.getAppTabBeanList()));
-            if(!StringUtils.isBlank(JSON.toJSONString(getAppTabsResult.getAppTabBeanList()))){
-                mTabHost.clearAllTabs();
-                handleAppTabs();
-            }
-        }
-
-        @Override
-        public void returnGetAppTabsFail(String error) {
-            WebServiceMiddleUtils.hand(IndexActivity.this, error);
-        }
 
 
         @Override
@@ -812,7 +874,7 @@ public class IndexActivity extends BaseFragmentActivity implements
         }
 
         @Override
-        public void returnReactNativeUpdateFail(ReactNativeClientIdErrorBean reactNativeClientIdErrorBean) {
+        public void returnReactNativeUpdateFail(String error,int errorCode) {
             isReactNativeClientUpdateFail = true;
             if(!checkClientIdNotExit()){
                 getReactNativeClientId();
@@ -822,20 +884,23 @@ public class IndexActivity extends BaseFragmentActivity implements
         @Override
         public void returnGetClientIdResultSuccess(GetClientIdRsult getClientIdRsult) {
             super.returnGetClientIdResultSuccess(getClientIdRsult);
-            isReactNativeClientUpdateFail = false;
             PreferencesUtils.putString(IndexActivity.this, UriUtils.tanent + userId + "react_native_clientid", getClientIdRsult.getClientId());
             if(isReactNativeClientUpdateFail){
                 updateReactNative();
+                isReactNativeClientUpdateFail = false;
             }
             if(isGetTab){
                 getAppTabs();
                 isGetTab = false;
             }
+            if(isSplash){
+                updateSplashPage();
+                isSplash = false;
+            }
         }
 
         @Override
-        public void returnGetClientIdResultFail(String error) {
-            super.returnGetClientIdResultFail(error);
+        public void returnGetClientIdResultFail(String error,int errorCode) {
         }
 
         @Override
@@ -844,9 +909,144 @@ public class IndexActivity extends BaseFragmentActivity implements
         }
 
         @Override
-        public void returnAppTabAutoFail(String error) {
-//            WebServiceMiddleUtils.hand(IndexActivity.this, error);
+        public void returnAppTabAutoFail(String error,int errorCode) {
         }
+
+        @Override
+        public void returnSplashPageInfoSuccess(SplashPageBean splashPageBean) {
+            updateSplashPageWithOrder(splashPageBean);
+            super.returnSplashPageInfoSuccess(splashPageBean);
+        }
+
+        @Override
+        public void returnSplashPageInfoFail(String error, int errorCode) {
+            super.returnSplashPageInfoFail(error, errorCode);
+            isGetTab = true;
+            if(!checkClientIdNotExit()){
+                getReactNativeClientId();
+            }
+        }
+    }
+
+    /**
+     * 根据命令更新闪屏页
+     *
+     * @param splashPageBean
+     */
+    private void updateSplashPageWithOrder(SplashPageBean splashPageBean) {
+        String command = splashPageBean.getCommand();
+        if (command.equals("FORWARD")) {
+            String screenType = AppUtils.getScreenType(IndexActivity.this);
+            SplashPageBean.PayloadBean.ResourceBean.DefaultBean defaultBean = splashPageBean.getPayload()
+                    .getResource().getDefaultX();
+            if(screenType.equals("2k")){
+                downloadSplashPage(UriUtils.getPreviewUri(defaultBean.getXxxhdpi()),defaultBean.getXxxhdpi());
+            }else if(screenType.equals("xxxhdpi")){
+                downloadSplashPage(UriUtils.getPreviewUri(defaultBean.getXxhdpi()),defaultBean.getXxhdpi());
+            }else if(screenType.equals("xxhdpi")){
+                downloadSplashPage(UriUtils.getPreviewUri(defaultBean.getXhdpi()),defaultBean.getXhdpi());
+            }else{
+                downloadSplashPage(UriUtils.getPreviewUri(defaultBean.getHdpi()),defaultBean.getHdpi());
+            }
+
+        } else if (command.equals("ROLLBACK")) {
+            ReactNativeFlow.moveFolder(MyAppConfig.getSplashPageImageLastVersionPath(IndexActivity.this,userId),
+                    MyAppConfig.getSplashPageImageShowPath(IndexActivity.this,
+                            userId, "splash"));
+        } else if (command.equals("STANDBY")) {
+        } else {
+            LogUtils.YfcDebug("当做STANDBY");
+        }
+
+    }
+
+
+    /**
+     * 下载闪屏页
+     *
+     * @param url
+     */
+    private void downloadSplashPage(String url, String fileName) {
+        LogUtils.YfcDebug("下载文件名称："+fileName);
+        DownLoaderUtils downloaderUtils = new DownLoaderUtils();
+        LogUtils.YfcDebug("下载到的路径：" + MyAppConfig.getSplashPageImageShowPath(IndexActivity.this,
+                ((MyApplication) getApplication()).getUid(), "splash/" + fileName));
+        downloaderUtils.startDownLoad(url, MyAppConfig.getSplashPageImageShowPath(IndexActivity.this,
+                ((MyApplication) getApplication()).getUid(), "splash/" + fileName), new Callback.ProgressCallback<File>() {
+            @Override
+            public void onWaiting() {
+
+            }
+
+            @Override
+            public void onStarted() {
+
+            }
+
+            @Override
+            public void onLoading(long l, long l1, boolean b) {
+
+            }
+
+            @Override
+            public void onSuccess(File file) {
+                String splashInfoOld = PreferencesByUserAndTanentUtils.getString(IndexActivity.this,"splash_page_info_old","");
+                SplashPageBean splashPageBeanLocalOld = new SplashPageBean(splashInfoOld);
+                String splashInfoShowing = PreferencesByUserAndTanentUtils.getString(IndexActivity.this,"splash_page_info","");
+                SplashPageBean splashPageBeanLocalShowing = new SplashPageBean(splashInfoShowing);
+//                ReactNativeFlow.moveFolder(MyAppConfig.getSplashPageImageShowPath(IndexActivity.this,
+//                        userId, "splash"),MyAppConfig.getSplashPageImageLastVersionPath(IndexActivity.this,userId)
+//                );
+                if(file.exists()){
+                    String filelSha256 =  FileSafeCode.getFileSHA256(file);
+                    String screenType = AppUtils.getScreenType(IndexActivity.this);
+                    String sha256Code = "";
+                    if(screenType.equals("2k")){
+                        sha256Code = splashPageBeanLocalShowing.getPayload().getXxxhdpiHash().split(":")[1];
+                    }else if(screenType.equals("xxxhdpi")){
+                        sha256Code = splashPageBeanLocalShowing.getPayload().getXxhdpiHash().split(":")[1];
+                    }else if(screenType.equals("xxhdpi")){
+                        sha256Code = splashPageBeanLocalShowing.getPayload().getXhdpiHash().split(":")[1];
+                    }else{
+                        sha256Code = splashPageBeanLocalShowing.getPayload().getHdpiHash().split(":")[1];
+                    }
+                    if(filelSha256.equals(sha256Code)){
+                        writeBackSplashPageLog("FORWARD",splashPageBeanLocalOld.getId().getVersion()
+                                ,splashPageBeanLocalShowing.getId().getVersion());
+                    }else {
+                        LogUtils.YfcDebug("Sha256验证出错："+filelSha256+"获取到的sha256"+sha256Code);
+                    }
+
+                }
+            }
+
+            @Override
+            public void onError(Throwable throwable, boolean b) {
+
+            }
+
+            @Override
+            public void onCancelled(CancelledException e) {
+
+            }
+
+            @Override
+            public void onFinished() {
+
+            }
+        });
+    }
+
+    /**
+     * 写回闪屏日志
+     * @param s
+     */
+    private void writeBackSplashPageLog(String s,String preversion,String currentVersion) {
+        String clientId = PreferencesUtils.getString(IndexActivity.this, UriUtils.tanent + userId +
+                "react_native_clientid", "");
+        ReactNativeAPIService reactNativeAPIService = new ReactNativeAPIService(IndexActivity.this);
+        reactNativeAPIService.setAPIInterface(new WebService());
+        reactNativeAPIService.writeBackSplashPageVersionChange(preversion,currentVersion,clientId,s);
     }
 
     /**
@@ -856,12 +1056,12 @@ public class IndexActivity extends BaseFragmentActivity implements
     private void updateTabbarWithOrder(GetAppTabAutoResult getAppTabAutoResult) {
         String command = getAppTabAutoResult.getCommand();
         if(command.equals("FORWARD")){
-            PreferencesByUserUtils.putString(IndexActivity.this,"app_tabbar_version",getAppTabAutoResult.getVersion());
-            PreferencesByUserUtils.putString(IndexActivity.this,"app_tabbar_info_current",getAppTabAutoResult.getAppTabInfo());
+            PreferencesByUserAndTanentUtils.putString(IndexActivity.this,"app_tabbar_version",getAppTabAutoResult.getVersion());
+            PreferencesByUserAndTanentUtils.putString(IndexActivity.this,"app_tabbar_info_current",getAppTabAutoResult.getAppTabInfo());
             updateTabbar();
         }else if(command.equals("STANDBY")){
-            updateTabbar();
-            LogUtils.YfcDebug("收到保持现状指令");
+//            updateTabbar();
+//            LogUtils.YfcDebug("收到保持现状指令");
         }else{
             LogUtils.YfcDebug("收到不支持的指令");
         }
@@ -908,7 +1108,7 @@ public class IndexActivity extends BaseFragmentActivity implements
             FindFragment.hasUpdated = true;
         } else if (state == ReactNativeFlow.REACT_NATIVE_NO_UPDATE) {
             //没有更新什么也不做
-                LogUtils.YfcDebug("Standy");
+//                LogUtils.YfcDebug("Standy");
         }
         if(FindFragment.hasUpdated){
             RNCacheViewManager.init(IndexActivity.this);

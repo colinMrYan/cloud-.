@@ -8,7 +8,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="600dp"
         android:paddingBottom="20dp"
         >
 
@@ -25,7 +25,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/bigger_textsize"
-                android:text="批示意见"
+                android:text="@string/news_instructions"
                 android:gravity="center_horizontal"
                 android:textColor="@color/app_dialog_title_color"
                 android:paddingTop="23dp"
@@ -38,8 +38,9 @@
                 android:layout_marginBottom="43dp"
                 android:layout_marginLeft="18dp"
                 android:layout_marginRight="18dp"
+                android:maxHeight="500dp"
+                android:maxLines="10"
                 android:layout_marginTop="33dp"
-                android:lineSpacingMultiplier="1.1"
                 android:background="@null"
                 android:hint="批示意见"
                 android:textColor="@color/app_dialog_title_color"

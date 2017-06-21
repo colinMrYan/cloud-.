@@ -1,9 +1,5 @@
 package com.inspur.emmcloud.ui.work.task;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-
 import android.content.BroadcastReceiver;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -45,6 +41,10 @@ import com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout;
 import com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout.OnRefreshListener;
 import com.inspur.emmcloud.widget.pullableview.PullableListView;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * 任务列表页
  */
@@ -67,9 +67,8 @@ public class MessionListActivity extends BaseActivity implements
 	private String orderBy = "PRIORITY";
 	private String orderType = "ASC";
 	private SegmentControl segmentControl;
-	// private String[] tags;
 	private LinearLayout noSearchResultLayout;
-	private ImageView noResultImg;
+	private TextView noResultText;
 	private int deletePosition = -1;
 	private boolean isNeedRefresh = false;
 	private BroadcastReceiver taskEventReceiver;
@@ -126,7 +125,7 @@ public class MessionListActivity extends BaseActivity implements
 		adapter = new MessionListAdapter();
 		noSearchResultLayout = (LinearLayout) findViewById(R.id.nosearch_result_layout);
 		pullToRefreshLayout = (PullToRefreshLayout) findViewById(R.id.refresh_view);
-		noResultImg = (ImageView) findViewById(R.id.noresult_img);
+		noResultText = (TextView) findViewById(R.id.mession_no_result_text);
 		final RelativeLayout addLayout = (RelativeLayout) findViewById(R.id.mession_add_layout);
 		pullToRefreshLayout.setOnRefreshListener(MessionListActivity.this);
 		loadingDialog = new LoadingDialog(MessionListActivity.this);
@@ -174,7 +173,7 @@ public class MessionListActivity extends BaseActivity implements
 	/**
 	 * 获取关注的任务
 	 * 
-	 * @param index
+	 * @param isDialogShow
 	 */
 	protected void getFocusedMessions(boolean isDialogShow) {
 		if (NetUtils.isNetworkConnected(MessionListActivity.this)) {
@@ -186,7 +185,7 @@ public class MessionListActivity extends BaseActivity implements
 	/**
 	 * 获取我参与的任务
 	 * 
-	 * @param index
+	 * @param isDialogShow
 	 */
 	protected void getInvolvedMessions(boolean isDialogShow) {
 		if (NetUtils.isNetworkConnected(MessionListActivity.this)) {
@@ -198,7 +197,7 @@ public class MessionListActivity extends BaseActivity implements
 	/**
 	 * 获取我的任务
 	 * 
-	 * @param index
+	 * @param isDialogShow
 	 */
 	protected void getMineMessions(boolean isDialogShow) {
 		if (NetUtils.isNetworkConnected(MessionListActivity.this)) {
@@ -433,7 +432,7 @@ public class MessionListActivity extends BaseActivity implements
 			if (loadingDialog.isShowing()) {
 				loadingDialog.dismiss();
 			}
-			noResultImg.setVisibility(View.GONE);
+			noResultText.setVisibility(View.GONE);
 			pullToRefreshLayout.setVisibility(View.VISIBLE);
 			TaskResult taskResult = new TaskResult();
 			taskResult.setTitle(messionAddEdit.getText().toString());
@@ -448,12 +447,11 @@ public class MessionListActivity extends BaseActivity implements
 		}
 
 		@Override
-		public void returnCreateTaskFail(String error) {
-			super.returnCreateTaskFail(error);
+		public void returnCreateTaskFail(String error,int errorCode) {
 			if (loadingDialog.isShowing()) {
 				loadingDialog.dismiss();
 			}
-			WebServiceMiddleUtils.hand(MessionListActivity.this, error);
+			WebServiceMiddleUtils.hand(MessionListActivity.this, error,errorCode);
 		}
 
 		@Override
@@ -483,12 +481,11 @@ public class MessionListActivity extends BaseActivity implements
 		}
 
 		@Override
-		public void returnRecentTasksFail(String error) {
-			super.returnRecentTasksFail(error);
+		public void returnRecentTasksFail(String error,int errorCode) {
 			if (loadingDialog.isShowing()) {
 				loadingDialog.dismiss();
 			}
-			WebServiceMiddleUtils.hand(MessionListActivity.this, error);
+			WebServiceMiddleUtils.hand(MessionListActivity.this, error,errorCode);
 		}
 
 		@Override
@@ -501,16 +498,18 @@ public class MessionListActivity extends BaseActivity implements
 				taskList.remove(deletePosition);
 				adapter.notifyDataSetChanged();
 			}
+			if(taskList.size() == 0){
+				noResultText.setVisibility(View.VISIBLE);
+			}
 			isNeedRefresh = true;
 		}
 
 		@Override
-		public void returnDeleteTaskFail(String error) {
-			super.returnDeleteTaskFail(error);
+		public void returnDeleteTaskFail(String error,int errorCode) {
 			if (loadingDialog.isShowing()) {
 				loadingDialog.dismiss();
 			}
-			WebServiceMiddleUtils.hand(MessionListActivity.this, error);
+			WebServiceMiddleUtils.hand(MessionListActivity.this, error,errorCode);
 		}
 
 	}
@@ -534,15 +533,14 @@ public class MessionListActivity extends BaseActivity implements
 	/**
 	 * 处理
 	 * 
-	 * @param taskList2
 	 * @param chooseTags
 	 */
 	public void handleResultUI(ArrayList<String> chooseTags) {
 		if (taskList.size() == 0 && chooseTags.size() == 0) {
-			noResultImg.setVisibility(View.VISIBLE);
+			noResultText.setVisibility(View.VISIBLE);
 		} else {
 			pullToRefreshLayout.setVisibility(View.VISIBLE);
-			noResultImg.setVisibility(View.GONE);
+			noResultText.setVisibility(View.GONE);
 		}
 	}
 
@@ -550,7 +548,7 @@ public class MessionListActivity extends BaseActivity implements
 	 * 整理任务列表
 	 * 
 	 * @param getTaskListResult
-	 * @param chooseTags
+	 * @param chooseTagList
 	 * @return
 	 */
 	public ArrayList<TaskResult> handleTaskList(
@@ -578,7 +576,7 @@ public class MessionListActivity extends BaseActivity implements
 				}
 			}
 			if (taskList.size() == 0) {
-				noResultImg.setVisibility(View.GONE);
+				noResultText.setVisibility(View.VISIBLE);
 				noSearchResultLayout.setVisibility(View.VISIBLE);
 			} else {
 				noSearchResultLayout.setVisibility(View.GONE);

@@ -39,8 +39,8 @@ android {
         applicationId "com.inspur.emmcloud"
         minSdkVersion 16
         targetSdkVersion 22
-        versionCode 27
-        versionName "1.1.9"
+        versionCode 31
+        versionName "1.2.2"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         ndk {
             abiFilters "armeabi-v7a", "x86"
@@ -111,6 +111,7 @@ android {
         }
     }
     // applicationVariants are e.g. debug, release
+    //android studio对于jni调用及运行闪退无法加载库的问题解决方案
     applicationVariants.all { variant ->
         variant.outputs.each { output ->
             // For each separate APK per architecture, set a unique version code as described here:
@@ -155,10 +156,13 @@ dependencies {
         exclude module: 'support-compat'
         exclude module: 'support-core-utils'
     }
-
+    compile 'org.greenrobot:eventbus:3.0.0'
+    compile 'javax.annotation:javax.annotation-api:1.2'
+    compile 'org.projectlombok:lombok:1.16.6'
     compile 'com.readystatesoftware.systembartint:systembartint:1.0.3'
     compile 'uk.co.chrisjenx:calligraphy:2.2.0'
     compile 'com.fashare2015:HoverView:1.0.1'
+    compile 'pl.droidsonroids.gif:android-gif-drawable:1.2.7'
 
 
     // React Naive Components
@@ -181,5 +185,5 @@ dependencies {
     compile 'commons-codec:commons-codec:20041127.091804'
     compile files('src/libs/jpush-android_v3.0.3.jar')
     compile files('src/libs/jcore-android_v1.1.1.jar')
-    compile files('src/libs/mdm.jar')
+    //compile files('src/libs/mdm.jar')
 }

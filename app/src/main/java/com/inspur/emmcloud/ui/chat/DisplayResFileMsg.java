@@ -133,7 +133,7 @@ public class DisplayResFileMsg {
 								fileDownLoadImg.setVisibility(View.GONE);
 								ToastUtils.show(
 										context,
-										context.getString(R.string.file_download_success));
+										context.getString(R.string.chat_file_download_success));
 							}
 
 							@Override

@@ -1,5 +1,6 @@
 package com.inspur.emmcloud.util;
 
+import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningServiceInfo;
 import android.content.ContentResolver;
@@ -15,6 +16,7 @@ import android.graphics.Paint.FontMetrics;
 import android.net.Uri;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
 
 import com.inspur.emmcloud.R;
 
@@ -205,17 +207,22 @@ try{
 	public static String getMyUUID(Context context) {
 		final TelephonyManager tm = (TelephonyManager) context
 				.getSystemService(Context.TELEPHONY_SERVICE);
-		final String tmDevice, tmSerial, tmPhone, androidId;
-		tmDevice = "" + tm.getDeviceId();
-		tmSerial = "" + tm.getSimSerialNumber();
-		androidId = ""
-				+ android.provider.Settings.Secure.getString(
-						context.getContentResolver(),
-						android.provider.Settings.Secure.ANDROID_ID);
-		UUID deviceUuid = new UUID(androidId.hashCode(),
-				((long) tmDevice.hashCode() << 32) | tmSerial.hashCode());
-		String uniqueId = deviceUuid.toString();
-		return uniqueId;
+		String uuid = PreferencesUtils.getString(context,"device_uuid","");
+		if (StringUtils.isBlank(uuid)){
+			String tmDevice, tmSerial,androidId;
+			tmDevice = "" + tm.getDeviceId();
+			tmSerial = "" + tm.getSimSerialNumber();
+			androidId = ""
+					+ android.provider.Settings.Secure.getString(
+					context.getContentResolver(),
+					android.provider.Settings.Secure.ANDROID_ID);
+			UUID deviceUuid = new UUID(androidId.hashCode(),
+					((long) tmDevice.hashCode() << 32) | tmSerial.hashCode());
+			uuid = deviceUuid.toString();
+			PreferencesUtils.putString(context,"device_uuid",uuid);
+		}
+
+		return uuid;
 
 	}
 
@@ -326,4 +333,45 @@ try{
 		context.startActivity(intent);
 	}
 
+	/**
+	 * 获取手机dpi的方法 返回整型值
+	 * @return
+	 */
+	public static int getScreenDpi(Activity activity){
+		DisplayMetrics metric = new DisplayMetrics();
+		activity.getWindowManager().getDefaultDisplay().getMetrics(metric);
+		return metric.densityDpi;
+	}
+
+	/**
+	 * 获取屏幕密度的方法 返回浮点值
+	 * @param activity
+	 * @return
+     */
+	public static float getDensity(Activity activity){
+		DisplayMetrics metrics = new DisplayMetrics();
+		activity.getWindowManager().getDefaultDisplay().getMetrics(metrics);
+		return  metrics.density;
+	}
+
+	/**
+	 * 获取屏幕类型
+	 * @param activity
+	 * @return
+     */
+	public static String getScreenType(Activity activity) {
+		int kkhdpi = 2560*1600;
+		int xxHdpi = 1920 * 1080;
+		int xhdpi = 1080 * 720;
+		int screenSize =ResolutionUtils.getResolution(activity);
+		if(screenSize >= kkhdpi){
+			return "2k";
+		}else if(screenSize >= xxHdpi ){
+			return "xxhdpi";
+		}else if(screenSize >= xhdpi){
+			return "xhdpi";
+		}else{
+			return "hdpi";
+		}
+	}
 }

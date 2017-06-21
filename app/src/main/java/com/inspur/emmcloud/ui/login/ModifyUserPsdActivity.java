@@ -1,11 +1,5 @@
 package com.inspur.emmcloud.ui.login;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -23,6 +17,12 @@ import com.inspur.emmcloud.api.apiservice.LoginAPIService;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.widget.ClearEditText;
 import com.inspur.emmcloud.widget.LoadingDialog;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ModifyUserPsdActivity extends BaseActivity {
 
@@ -108,8 +108,7 @@ public class ModifyUserPsdActivity extends BaseActivity {
 		}
 
 		@Override
-		public void returnModifyPsdFail(String error) {
-			super.returnModifyPsdFail(error);
+		public void returnModifyPsdFail(String error,int errorCode) {
 			if(loadingDialog.isShowing()){
 				loadingDialog.dismiss();
 			}

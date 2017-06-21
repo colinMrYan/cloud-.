@@ -172,13 +172,14 @@ public class ECMChatInputMenu extends LinearLayout {
 		inputEdit.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if (isSetWindowListener) {
-					if (addMenuLayout.isShown()) {
-						lockContentHeight();
-						hideAddItemLayout(true);
-						unlockContentHeight();
-					}
-				}
+//				LogUtils.jasonDebug("isSetWindowListener="+isSetWindowListener);
+//				if (isSetWindowListener) {
+//					if (addMenuLayout.isShown()) {
+//						lockContentHeight();
+//						hideAddItemLayout(true);
+//						unlockContentHeight();
+//					}
+//				}
 			}
 		});
 		inputEdit.setOnTouchListener(new OnTouchListener() {
@@ -186,6 +187,15 @@ public class ECMChatInputMenu extends LinearLayout {
 			public boolean onTouch(View v, MotionEvent event) {
 				if (event.getAction() == MotionEvent.ACTION_DOWN) {
 					handMentions();
+				}
+
+				if (isSetWindowListener) {
+					if (event.getAction() == MotionEvent.ACTION_UP
+							&& addMenuLayout.isShown()) {
+						lockContentHeight();
+						hideAddItemLayout(true);
+						unlockContentHeight();
+					}
 				}
 				return false;
 			}
@@ -503,7 +513,6 @@ public class ECMChatInputMenu extends LinearLayout {
 			boolean isContentBlank = StringUtils.isEmpty(inputContent);
 			sendMsgBtn.setEnabled(!isContentBlank);
 			sendMsgBtn.setBackgroundResource(isContentBlank ? R.drawable.bg_chat_input_send_btn_disable : R.drawable.bg_chat_input_send_btn_enable);
-			LogUtils.jasonDebug("isChannelGroup=" + isChannelGroup);
 			if (isChannelGroup) {
 				int inputContentLength = inputContent.length();
 				if (canMention&&!isContentBlank

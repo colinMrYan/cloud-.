@@ -39,6 +39,7 @@ import com.inspur.emmcloud.util.IntentUtils;
 import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.ToastUtils;
+import com.inspur.emmcloud.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.CircularProgress;
 import com.inspur.emmcloud.widget.DecoratorViewPager;
 import com.inspur.emmcloud.widget.ECMSpaceItemDecoration;
@@ -221,11 +222,12 @@ public class AppCenterActivity extends BaseActivity {
             categoriesAppAdapter = new CategoriesAppAdapter();
         }
 
-        @Override
-        public void returnAllAppsFail(String error) {
-            recommandCircleProgress.setVisibility(View.GONE);
-            classCircleProgress.setVisibility(View.GONE);
-        }
+		@Override
+		public void returnAllAppsFail(String error,int errorCode) {
+			WebServiceMiddleUtils.hand(AppCenterActivity.this,error,errorCode);
+			recommandCircleProgress.setVisibility(View.GONE);
+			classCircleProgress.setVisibility(View.GONE);
+		}
 
     }
 

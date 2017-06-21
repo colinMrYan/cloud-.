@@ -119,8 +119,10 @@ public class LanguageChangeActivity extends BaseActivity {
 				} else {
 					languageName = language.getIso();
 				}
+                LogUtils.jasonDebug("00000000000000000000000000");
 				if (!currentLanguageName.equals(languageName)) {
 					showChangeLanguageDlg(position);
+                    LogUtils.jasonDebug("1111111111");
 				}
 			}
 		});
@@ -147,7 +149,6 @@ public class LanguageChangeActivity extends BaseActivity {
 					} else {
 						languageName = language.getIso();
 					}
-					LogUtils.debug("jason", "language="+languageName);
 					PreferencesUtils.putString(getApplicationContext(),
 							UriUtils.tanent + "language", languageName);
 					PreferencesUtils.putString(getApplicationContext(),
@@ -156,7 +157,7 @@ public class LanguageChangeActivity extends BaseActivity {
 
 //					Configuration config = getResources().getConfiguration();
 					((MyApplication) getApplicationContext())
-							.onConfigurationChanged(null);
+							.setAppLanguageAndFontScale();
 					Intent intentLog = new Intent(LanguageChangeActivity.this,
 							IndexActivity.class);
 					intentLog.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
@@ -168,11 +169,13 @@ public class LanguageChangeActivity extends BaseActivity {
 			}
 
 		};
+        LogUtils.jasonDebug("333333333333");
 		EasyDialog.showDialog(LanguageChangeActivity.this,
 				getString(R.string.prompt),
 				getString(R.string.confirm_modify_language),
 				getString(R.string.ok), getString(R.string.cancel), listener,
 				true);
+        LogUtils.jasonDebug("444444444444444");
 	}
 
 	public void onClick(View v) {
@@ -236,7 +239,6 @@ public class LanguageChangeActivity extends BaseActivity {
 
 			String languageName = PreferencesUtils.getString(
 					getApplicationContext(), UriUtils.tanent + "language", "");
-			LogUtils.debug("jason", "languageName="+languageName);
 			if (position == 0) {
 				holder.flagImg.setVisibility(View.INVISIBLE);
 				holder.tvName.setText(getString(R.string.follow_system));

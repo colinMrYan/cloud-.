@@ -19,11 +19,9 @@ import android.widget.TextView;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.util.LogUtils;
-import com.inspur.emmcloud.util.PreferencesByUserUtils;
+import com.inspur.emmcloud.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.UpgradeUtils;
-
-import static com.inspur.emmcloud.R.id.on;
 
 /**
  * 如果有不支持的功能时显示这个界面
@@ -58,7 +56,7 @@ public class NotSupportFragment extends Fragment {
      */
     private void setTabTitle(){
         LogUtils.YfcDebug("不支持页面获取到的标题："+((IndexActivity)getActivity()).getNotSupportString());
-        String appTabs = PreferencesByUserUtils.getString(getActivity(),"app_tabbar_info_current","");
+        String appTabs = PreferencesByUserAndTanentUtils.getString(getActivity(),"app_tabbar_info_current","");
         if(!StringUtils.isBlank(appTabs)){
             String title = ((IndexActivity)getActivity()).getNotSupportString();
             titleText.setText(title);
@@ -96,7 +94,7 @@ public class NotSupportFragment extends Fragment {
         View.OnClickListener l = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                UpgradeUtils upgradeUtils = new UpgradeUtils(getActivity(),handler);
+                UpgradeUtils upgradeUtils = new UpgradeUtils(getActivity(),handler,false);
                 upgradeUtils.checkUpdate(false);
             }
         };

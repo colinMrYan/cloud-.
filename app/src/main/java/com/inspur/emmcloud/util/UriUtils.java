@@ -7,14 +7,16 @@ import android.os.Bundle;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.api.APICallback;
 import com.inspur.emmcloud.bean.App;
+import com.inspur.emmcloud.bean.Contact;
 import com.inspur.emmcloud.bean.PVCollectModel;
+import com.inspur.emmcloud.callback.OauthCallBack;
 import com.inspur.emmcloud.ui.app.ReactNativeAppActivity;
 import com.inspur.emmcloud.ui.app.groupnews.GroupNewsActivity;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.imp.api.ImpActivity;
 
-import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
 import org.xutils.x;
 
@@ -26,7 +28,6 @@ public class UriUtils {
     public static void openApp(Activity activity, App app) {
         String uri = app.getUri();
         int appType = app.getAppType();
-        String appName = app.getAppName();
         Intent intent = new Intent();
         switch (appType) {
             case 0:
@@ -45,10 +46,12 @@ public class UriUtils {
                 break;
             case 3:
             case 4:
-                if (uri.startsWith("https://emm.inspur.com:443/ssohandler/gs/")) {
+                if (uri.startsWith("https://emm.inspur.com:443/ssohandler/gs/") || uri.startsWith("https://emm.inspur.com/ssohandler/gs/")) {
                     uri = uri.replace("/gs/","/gs_uri/");
                     if (NetUtils.isNetworkConnected(activity)){
-                        getReallyUrl(activity,uri,app);
+                        LoadingDialog loadingDialog = new LoadingDialog(activity);
+                        loadingDialog.show();
+                        getGSWebReallyUrl(activity,uri,app,loadingDialog);
                     }
                 }else {
                     openWebApp(activity,uri,app);
@@ -90,32 +93,49 @@ public class UriUtils {
         activity.startActivity(intent);
     }
 
-    private static void getReallyUrl(final Activity activity, String url,final App app) {
-       final LoadingDialog loadingDialog = new LoadingDialog(activity);
-        loadingDialog.show();
+    /**
+     * 获取web页面真实url地址
+     * @param activity
+     * @param url
+     * @param app
+     * @param loadingDialog
+     */
+    private static void getGSWebReallyUrl(final Activity activity, final String url, final App app, final LoadingDialog loadingDialog) {
         RequestParams params = ((MyApplication) activity.getApplicationContext()).getHttpRequestParams(url);
-        x.http().get(params, new Callback.CommonCallback<String>() {
+        x.http().get(params, new APICallback(activity,url) {
             @Override
-            public void onSuccess(String s) {
-                String reallyUrl = JSONUtils.getString(s,"uri","");
+            public void callbackSuccess(String arg0) {
+                if (loadingDialog != null && loadingDialog.isShowing()){
+                    loadingDialog.dismiss();
+                }
+                String reallyUrl = JSONUtils.getString(arg0,"uri","");
                 openWebApp(activity,reallyUrl,app);
             }
 
             @Override
-            public void onError(Throwable throwable, boolean b) {
-                ToastUtils.show(activity, "应用打开失败");
+            public void callbackFail(String error, int responseCode) {
+                if (loadingDialog != null && loadingDialog.isShowing()){
+                    loadingDialog.dismiss();
+                }
+                ToastUtils.show(activity, R.string.react_native_app_open_failed);
             }
 
             @Override
-            public void onCancelled(CancelledException e) {
+            public void callbackTokenExpire() {
+                new OauthUtils(new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        getGSWebReallyUrl(activity, url, app, loadingDialog);
+                    }
 
-            }
-
-            @Override
-            public void onFinished() {
-                loadingDialog.dismiss();
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                },activity).refreshToken(url);
             }
         });
+
     }
 
     /**
@@ -200,10 +220,19 @@ public class UriUtils {
     /**
      * 频道页面头像显示图片
      **/
-    public static String getChannelImgUri(String inspurID) {
+    public static String getChannelImgUri(Context context,String inspurID) {
+        String headImgUrl = null;
         if (StringUtils.isBlank(inspurID) || inspurID.equals("null"))
             return null;
-        return "https://emm.inspur.com/img/userhead/" + inspurID;
+        Contact contact = ContactCacheUtils.getUserContact(context,inspurID);
+        if(contact != null){
+            headImgUrl = "https://emm.inspur.com/img/userhead/" + inspurID;
+            String lastUpdateTime = contact.getLastUpdateTime();
+            if(!StringUtils.isBlank(lastUpdateTime)&&(!lastUpdateTime.equals("null"))){
+                headImgUrl = headImgUrl + "?"+lastUpdateTime;
+            }
+        }
+        return headImgUrl;
     }
 
     /**

@@ -100,7 +100,7 @@ public class JpushReceiver extends BroadcastReceiver {
 
 				Intent indexLogin = new Intent(context, IndexActivity.class);
 				indexLogin.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-
+				indexLogin.putExtra("command","open_notification");
 				context.startActivity(indexLogin);
 			}else {
 				Intent loginIntent = new Intent(context, LoginActivity.class);

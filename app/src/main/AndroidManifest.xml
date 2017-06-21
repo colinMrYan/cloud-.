@@ -2,11 +2,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.inspur.emmcloud"
     android:configChanges="locale|layoutDirection"
-    android:versionCode="27"
-    android:versionName="1.1.9">
+    android:versionCode="31"
+    android:versionName="1.2.2">
 
     <uses-sdk
-        android:minSdkVersion="14"
+        android:minSdkVersion="16"
         android:targetSdkVersion="22" />
 
     <!-- 极光推送权限配置开始 -->
@@ -56,7 +56,11 @@
 
     <!-- 创建快捷键 -->
     <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
+    <uses-permission android:name="com.android.launcher.permission.UNINSTALL_SHORTCUT"/>  
     <uses-permission android:name="com.android.launcher.permission.READ_SETTINGS" />
+    <uses-permission android:name="com.android.launcher2.permission.READ_SETTINGS"/>
+    <uses-permission android:name="com.android.launcher3.permission.READ_SETTINGS"/>
+
 
     <!-- 插件：网络信息 -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -107,8 +111,11 @@
         android:label="@string/app_name"
         android:largeHeap="true"
         android:theme="@android:style/Theme.Light.NoTitleBar">
+        <!--android:theme="@style/SplashTheme"-->
         <activity
             android:name=".MainActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/SplashTheme"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -125,6 +132,13 @@
             android:name=".ui.mine.setting.GuideActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".ui.mine.setting.SwitchEnterpriseActivity"
+            android:theme="@android:style/Theme.Holo.Light.NoActionBar"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"></activity>
+
+
         <activity
             android:name=".ui.login.LoginActivity"
             android:launchMode="singleTask"
@@ -174,21 +188,7 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|stateHidden">
-            <intent-filter>
-                <action android:name="android.intent.action.SEND" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <data android:mimeType="image/*" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="android.intent.action.SEND" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <data android:mimeType="text/plain" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="android.intent.action.SEND_MULTIPLE" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <data android:mimeType="image/*" />
-            </intent-filter>
+
         </activity>
         <activity
             android:name=".ui.chat.ChannelInfoActivity"
@@ -215,6 +215,14 @@
             android:name=".ui.mine.setting.SettingActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.mine.setting.DeviceManagerActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".ui.mine.setting.DeviceInfoActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".ui.contact.UserInfoActivity"
             android:launchMode="singleTask"
@@ -519,10 +527,25 @@
         <activity
             android:name=".ui.find.FindSearchMoreActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:theme="@style/dialog_activity"
+            android:name=".ui.app.AppUpgradeNotifyActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity android:name=".ui.app.ShortCutFunctionActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+            </intent-filter>
+        </activity>
         <service android:name=".service.PVCollectService"></service>
         <service android:name=".service.CoreService"></service>
         <service android:name=".service.CoreInnerService"></service>
         <service android:name=".service.AppExceptionService"></service>
+        <service android:name=".service.AppUpgradeService"></service>
 
 
         <!-- ImagePicker -->
@@ -554,6 +577,7 @@
         <activity
             android:name="com.inspur.imp.api.ImpActivity"
             android:configChanges="orientation|screenSize"
+            android:theme="@android:style/Theme.Holo.Light.NoActionBar"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -578,21 +602,10 @@
             android:name="com.inspur.imp.plugin.filetransfer.TextFileShowActivity"
             android:theme="@android:style/Theme.NoTitleBar"></activity>
 
-        <service
-            android:name=".service.WebSocketService"
-            android:enabled="true"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="com.inspur.emmcloud.service.WebSocketService" />
-            </intent-filter>
-        </service>
         <service android:name="com.amap.api.location.APSService"></service>
         <!-- MDM设备管理 -->
         <activity
-            android:name="com.inspur.mdm.ui.DeviceRegisterActivity"
-            android:screenOrientation="portrait"></activity>
-        <activity
-            android:name="com.inspur.mdm.ui.DeviceRegisterFailDetailActivity"
+            android:name="com.inspur.emmcloud.ui.mdm.DeviceRegisterFailDetailActivity"
             android:screenOrientation="portrait"></activity>
 
         <!-- imp插件 -->
