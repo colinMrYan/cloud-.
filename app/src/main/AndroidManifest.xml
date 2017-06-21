@@ -40,6 +40,13 @@
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
     <!-- 极光推送权限配置结束 -->
 
+    <!--华为推送权限配置开始-->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <!--华为推送权限配置结束-->
+
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.GET_TASKS" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -48,18 +55,18 @@
     <uses-permission android:name="android.permission.DOWNLOAD_WITHOUT_NOTIFICATION" />
     <uses-permission android:name="android.permission.CHANGE_CONFIGURATION" />
     <uses-permission android:name="android.permission.REORDER_TASKS" />
-    <uses-permission android:name="android.permission.WRITE_SMS"/>
-    <uses-permission android:name="android.permission.READ_SMS"/>
+    <uses-permission android:name="android.permission.WRITE_SMS" />
+    <uses-permission android:name="android.permission.READ_SMS" />
 
     <!-- 闪光灯 -->
     <uses-permission android:name="android.permission.FLASHLIGHT" />
 
     <!-- 创建快捷键 -->
     <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
-    <uses-permission android:name="com.android.launcher.permission.UNINSTALL_SHORTCUT"/>  
+    <uses-permission android:name="com.android.launcher.permission.UNINSTALL_SHORTCUT" />  
     <uses-permission android:name="com.android.launcher.permission.READ_SETTINGS" />
-    <uses-permission android:name="com.android.launcher2.permission.READ_SETTINGS"/>
-    <uses-permission android:name="com.android.launcher3.permission.READ_SETTINGS"/>
+    <uses-permission android:name="com.android.launcher2.permission.READ_SETTINGS" />
+    <uses-permission android:name="com.android.launcher3.permission.READ_SETTINGS" />
 
 
     <!-- 插件：网络信息 -->
@@ -114,9 +121,9 @@
         <!--android:theme="@style/SplashTheme"-->
         <activity
             android:name=".MainActivity"
+            android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/SplashTheme"
-            android:label="@string/app_name">
+            android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -134,9 +141,9 @@
             android:screenOrientation="portrait"></activity>
         <activity
             android:name=".ui.mine.setting.SwitchEnterpriseActivity"
-            android:theme="@android:style/Theme.Holo.Light.NoActionBar"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Holo.Light.NoActionBar"></activity>
 
 
         <activity
@@ -266,8 +273,8 @@
             android:name=".ui.app.groupnews.NewsWebDetailActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan"
-            android:theme="@android:style/Theme.Holo.Light.NoActionBar">
+            android:theme="@android:style/Theme.Holo.Light.NoActionBar"
+            android:windowSoftInputMode="adjustPan">
 
         </activity>
         <activity
@@ -303,17 +310,17 @@
             android:theme="@android:style/Theme.Holo.Light.NoActionBar" />
         <activity
             android:name=".ui.contact.ContactSearchMoreActivity"
-            android:screenOrientation="portrait"
             android:launchMode="singleTask"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".ui.chat.MentionActivty"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.chat.ImagePagerActivity"
+            android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
-            android:windowSoftInputMode="adjustPan"
-            android:screenOrientation="portrait" />
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".ui.chat.MembersActivity"
             android:screenOrientation="portrait" />
@@ -354,19 +361,18 @@
                     android:scheme="ecc-component" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.app.ReactNativeAppActivity"
-            android:theme="@android:style/Theme.Holo.Light.NoActionBar"
-
+        <activity
+            android:name=".ui.app.ReactNativeAppActivity"
             android:screenOrientation="portrait"
-            >
+
+            android:theme="@android:style/Theme.Holo.Light.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
-                <data
-                    android:scheme="ecc-app-react-native" />
+                <data android:scheme="ecc-app-react-native" />
             </intent-filter>
         </activity>
         <activity
@@ -528,19 +534,24 @@
             android:name=".ui.find.FindSearchMoreActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:theme="@style/dialog_activity"
             android:name=".ui.app.AppUpgradeNotifyActivity"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait" />
-        <activity android:name=".ui.app.ShortCutFunctionActivity"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/dialog_activity" />
+        <activity
+            android:name=".ui.app.ShortCutFunctionActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
+                <!--为防止报错添加一个scheme-->
+                <data android:scheme="http12233444"></data>
             </intent-filter>
         </activity>
+
         <service android:name=".service.PVCollectService"></service>
         <service android:name=".service.CoreService"></service>
         <service android:name=".service.CoreInnerService"></service>
@@ -577,16 +588,15 @@
         <activity
             android:name="com.inspur.imp.api.ImpActivity"
             android:configChanges="orientation|screenSize"
-            android:theme="@android:style/Theme.Holo.Light.NoActionBar"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Holo.Light.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
-                <data
-                    android:scheme="gs-msg" />
+                <data android:scheme="gs-msg" />
             </intent-filter>
 
         </activity>
@@ -618,7 +628,7 @@
             </intent-filter>
         </receiver>
 
-        <receiver android:name=".broadcastreceiver.ActionReceiver" >
+        <receiver android:name=".broadcastreceiver.ActionReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="android.intent.action.USER_PRESENT" />
@@ -637,8 +647,7 @@
         <!-- Rich push 核心功能 since 2.0.6-->
         <activity
             android:name="cn.jpush.android.ui.PopWinActivity"
-            android:exported="false">
-        </activity>
+            android:exported="false"></activity>
 
         <!-- Required SDK核心功能-->
         <activity
@@ -746,6 +755,42 @@
             android:value="ce5858e0369f8d806f93994a" />
         -->
         <!-- 极光推送结束 -->
+
+        <!--华为推送开始-->
+        <meta-data
+            android:name="com.huawei.hms.client.appid"
+            android:value="需要修改为华为appID"></meta-data>
+        <provider
+            android:name="com.huawei.hms.update.provider.UpdateProvider"
+            android:authorities="com.inspur.emmcloud.hms.update.provider"
+            android:exported="false"
+            android:grantUriPermissions="true"></provider>
+
+
+        <!-- 第三方相关 :接收Push消息（注册、Push消息、Push连接状态）广播 -->
+        <receiver android:name="com.inspur.emmcloud.broadcastreceiver.HuaWeiPushReceiver">
+            <intent-filter>
+                <!-- 必须,用于接收token -->
+                <action android:name="com.huawei.android.push.intent.REGISTRATION" />
+                <!-- 必须，用于接收消息 -->
+                <action android:name="com.huawei.android.push.intent.RECEIVE" />
+                <!-- 可选，用于点击通知栏或通知栏上的按钮后触发onEvent回调 -->
+                <action android:name="com.huawei.android.push.intent.CLICK" />
+                <!-- 可选，查看push通道是否连接，不查看则不需要 -->
+                <action android:name="com.huawei.intent.action.PUSH_STATE" />
+            </intent-filter>
+            <meta-data
+                android:name="CS_cloud_ablitity"
+                android:value="@string/app_name" />
+        </receiver>
+        <receiver android:name="com.huawei.hms.support.api.push.PushEventReceiver">
+
+            <intent-filter> <!-- 接收通道发来的通知栏消息，兼容老版本Push -->
+                <action android:name="com.huawei.intent.action.PUSH" />
+            </intent-filter>
+        </receiver>
+
+        <!--华为推送结束-->
 
 
         <!-- 配置应用是否为开发版 -->
