@@ -59,6 +59,10 @@ import com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout;
 import com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout.OnRefreshListener;
 import com.inspur.emmcloud.widget.pullableview.PullableListView;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -88,8 +92,6 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
     private PopupWindow popupWindow;
     private boolean isNeedCommonlyUseApp = false;
     private List<String> shortCutAppList = new ArrayList<>();
-    //    private SwitchView switchView;
-//    private View contentView;
     private TextView titleText;
 
     @Override
@@ -100,6 +102,14 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
         rootView = inflater.inflate(R.layout.fragment_app, null);
         initViews();
         registerReceiver();
+        EventBus.getDefault().register(this);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void updateCommonlyUse(App app) {
+        if(app != null){
+            saveOrChangeCommonlyUseAppList(app, appListAdapter.getAppAdapterList());
+        }
     }
 
     /**
@@ -137,7 +147,7 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
         });
         titleText = (TextView) rootView.findViewById(R.id.header_text);
         OnAppCenterClickListener listener = new OnAppCenterClickListener();
-        ((RelativeLayout) rootView.findViewById(R.id.appcenter_layout)).setOnClickListener(listener);
+        (rootView.findViewById(R.id.appcenter_layout)).setOnClickListener(listener);
         getMyApp(true);
         setTabTitle();
         shortCutAppList.add("mobile_checkin_hcm");
@@ -708,6 +718,7 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
             getActivity().unregisterReceiver(mBroadcastReceiver);
             mBroadcastReceiver = null;
         }
+        EventBus.getDefault().unregister(this);
     }
 
     /**
