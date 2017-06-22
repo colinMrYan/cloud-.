@@ -759,7 +759,7 @@
         <!--华为推送开始-->
         <meta-data
             android:name="com.huawei.hms.client.appid"
-            android:value="需要修改为华为appID"></meta-data>
+            android:value="10772129"></meta-data>
         <provider
             android:name="com.huawei.hms.update.provider.UpdateProvider"
             android:authorities="com.inspur.emmcloud.hms.update.provider"
