@@ -53,42 +53,43 @@ public class HandleMsgTextUtils {
                                              List<String> userNameList, List<String> uidList
     ) {
         String temp = "";
-            temp = content;
-            StringBuilder mentionStringBuilder = new StringBuilder(content);
-            ForeColorSpan[] mSpans = editText.getText().getSpans(0, editText.length(), ForeColorSpan.class);
-            if ((mSpans != null) && (mSpans.length > 0) && userNameList.size() > 0) {
-                int offset = 0;
-                for (int i = 0; i < userNameList.size(); i++) {
-                    SpannableStringBuilder spanStr = (SpannableStringBuilder) editText.getText();
-                    int spanStart = spanStr.getSpanStart(mSpans[i]) + offset;
-                    int spanEnd = spanStr.getSpanEnd(mSpans[i]) + offset;
-                    String replaceStr =
-                            "[" + userNameList.get(i) + "]"
-                                    + ProtocolUtils.getMentionProtoUtils(uidList
-                                    .get(i));
-                    mentionStringBuilder.replace(spanStart,spanEnd,
-                            replaceStr);
-                    offset = offset + replaceStr.length() - userNameList.get(i).length();
-                }
-            }
-            temp = mentionStringBuilder.toString();
-//		Pattern pattern = Pattern.compile("(https?://)?\\w+(\\.\\w+)+(/\\S+)?");
-            Pattern pattern = Pattern.compile("(https?://)?[a-zA-Z0-9]*[a-zA-z]+[a-zA-Z0-9]*(\\.\\w+)+(/\\S+)?");
-            Matcher matcher = pattern.matcher(temp);
+        temp = content;
+        StringBuilder mentionStringBuilder = new StringBuilder(content);
+        ForeColorSpan[] mSpans = editText.getText().getSpans(0, editText.length(), ForeColorSpan.class);
+        if ((mSpans != null) && (mSpans.length > 0) && userNameList.size() > 0) {
             int offset = 0;
-            while (matcher.find()) {
-                String replaceUrl = matcher.group(0);
-                StringBuilder sb = new StringBuilder(temp);
-                int replaceUrlBeginLocation = sb.indexOf(replaceUrl, offset);
-                String matchedUrl = matcher.group(0);
-                if (matchedUrl.startsWith("http://") || matchedUrl.startsWith("https://")) {
-                    temp = sb.replace(replaceUrlBeginLocation, replaceUrlBeginLocation + replaceUrl.length(), "[" + matcher.group(0) + "]" + "(" + matcher.group(0) + ")").toString();
-                    offset = replaceUrlBeginLocation + replaceUrl.length() * 2 + 4;//4代表两个中小括号
-                } else {
-                    temp = sb.replace(replaceUrlBeginLocation, replaceUrlBeginLocation + replaceUrl.length(), "[" + matcher.group(0) + "]" + "(http://" + matcher.group(0) + ")").toString();
-                    offset = replaceUrlBeginLocation + replaceUrl.length() * 2 + 4 + 7;//4代表两个中小括号,7代表http://
-                }
+            for (int i = 0; i < userNameList.size(); i++) {
+                SpannableStringBuilder spanStr = (SpannableStringBuilder) editText.getText();
+                int spanStart = spanStr.getSpanStart(mSpans[i]) + offset;
+                int spanEnd = spanStr.getSpanEnd(mSpans[i]) + offset;
+                String replaceStr =
+                        "[" + userNameList.get(i) + "]"
+                                + ProtocolUtils.getMentionProtoUtils(uidList
+                                .get(i));
+                mentionStringBuilder.replace(spanStart, spanEnd,
+                        replaceStr);
+                offset = offset + replaceStr.length() - userNameList.get(i).length();
             }
+        }
+        temp = mentionStringBuilder.toString();
+//		Pattern pattern = Pattern.compile("(https?://)?\\w+(\\.\\w+)+(/\\S+)?");
+//            Pattern pattern = Pattern.compile("(https?://)?[a-zA-Z0-9]*[a-zA-z]+[a-zA-Z0-9]*(\\.\\w+)+(/\\S+)?");
+        Pattern pattern = Pattern.compile(URLMatcher.URL_PATTERN);
+        Matcher matcher = pattern.matcher(temp);
+        int offset = 0;
+        while (matcher.find()) {
+            String replaceUrl = matcher.group(0);
+            StringBuilder sb = new StringBuilder(temp);
+            int replaceUrlBeginLocation = sb.indexOf(replaceUrl, offset);
+            String matchedUrl = matcher.group(0);
+            if (matchedUrl.startsWith("http://") || matchedUrl.startsWith("https://")) {
+                temp = sb.replace(replaceUrlBeginLocation, replaceUrlBeginLocation + replaceUrl.length(), "[" + matcher.group(0) + "]" + "(" + matcher.group(0) + ")").toString();
+                offset = replaceUrlBeginLocation + replaceUrl.length() * 2 + 4;//4代表两个中小括号
+            } else {
+                temp = sb.replace(replaceUrlBeginLocation, replaceUrlBeginLocation + replaceUrl.length(), "[" + matcher.group(0) + "]" + "(http://" + matcher.group(0) + ")").toString();
+                offset = replaceUrlBeginLocation + replaceUrl.length() * 2 + 4 + 7;//4代表两个中小括号,7代表http://
+            }
+        }
 
         return temp;
     }
