@@ -50,7 +50,8 @@ public class HuaWeiPushReceiver extends PushReceiver{
     }
 
     /**
-     * 自定义的消息的回调方法
+     * 自定义的消息的回调方法，自定义消息的字数应该是没有限制，目前测试到160字
+     * 通知文本的内容有字数限制80字
      *
      * @param context
      * @param event

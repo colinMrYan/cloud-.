@@ -144,7 +144,7 @@ public class IndexActivity extends BaseFragmentActivity implements
         registerReactNativeReceiver();
         startCoreService();
         setPreloadWebApp();
-        HuaWeiPushMangerUtils huaWeiPushMangerUtils = new HuaWeiPushMangerUtils(IndexActivity.this);
+        new HuaWeiPushMangerUtils(IndexActivity.this);
     }
 
 

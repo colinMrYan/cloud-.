@@ -12,6 +12,7 @@ import com.huawei.hms.support.api.push.TokenResult;
 
 /**
  * Created by yufuchang on 2017/6/20.
+ * 华为推送模块，单独模块封装
  */
 
 public class HuaWeiPushMangerUtils implements HuaweiApiClient.ConnectionCallbacks, HuaweiApiClient.OnConnectionFailedListener,
@@ -20,6 +21,7 @@ public class HuaWeiPushMangerUtils implements HuaweiApiClient.ConnectionCallback
     private boolean mResolvingError = false;
     private static final int REQUEST_RESOLVE_ERROR = 1001;
     private Activity activityLocal;
+
     public HuaWeiPushMangerUtils(Activity activity) {
         activityLocal = activity;
 //        HuaweiIdSignInOptions options = new HuaweiIdSignInOptions.Builder(HuaweiIdSignInOptions.DEFAULT_SIGN_IN)
@@ -50,7 +52,10 @@ public class HuaWeiPushMangerUtils implements HuaweiApiClient.ConnectionCallback
     public void onConnected() {
         LogUtils.YfcDebug("华为推送连接成功");
         getToken();
+        setPassByMsg(true);
     }
+
+
 
     @Override
     public void onConnectionSuspended(int i) {
@@ -59,7 +64,7 @@ public class HuaWeiPushMangerUtils implements HuaweiApiClient.ConnectionCallback
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-        LogUtils.YfcDebug("华为推送连接失败"+connectionResult.getErrorCode());
+        LogUtils.YfcDebug("华为推送连接失败" + connectionResult.getErrorCode());
         if (mResolvingError) {
             return;
         }
@@ -72,6 +77,17 @@ public class HuaWeiPushMangerUtils implements HuaweiApiClient.ConnectionCallback
         }
     }
 
+    /**
+     * 设置是否接收透传消息
+     * @param flag
+     */
+    private void setPassByMsg(boolean flag) {
+        HuaweiPush.HuaweiPushApi.enableReceiveNormalMsg(client, flag);
+    }
+
+    /**
+     * 获取Token
+     */
     private void getToken() {
         if (!isConnected()) {
 //            tv.setText("get token failed, HMS is disconnect.");
@@ -97,11 +113,14 @@ public class HuaWeiPushMangerUtils implements HuaweiApiClient.ConnectionCallback
         }
     }
 
+
+
     /**
      * 获取华为推送client
+     *
      * @return
      */
-    public HuaweiApiClient getHuaWeiPushClient(){
+    public HuaweiApiClient getHuaWeiPushClient() {
         return client;
     }
 }

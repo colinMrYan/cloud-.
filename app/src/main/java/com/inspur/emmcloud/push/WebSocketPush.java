@@ -139,8 +139,8 @@ public class WebSocketPush {
      */
 	private String getPushIdByChangeShang(String pushid) {
 		if(AppUtils.GetChangShang().toLowerCase().startsWith("huawei")){
-//					pushid = "";
-			LogUtils.YfcDebug("厂商是华为");
+			//需要对华为单独推送的时候解开这里
+//			pushid = AppUtils.getIMEICode(context)+"@push.huawei.com";
 		}
 		return pushid;
 	}
