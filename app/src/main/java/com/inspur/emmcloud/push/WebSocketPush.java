@@ -66,6 +66,9 @@ public class WebSocketPush {
 				String username = PreferencesUtils.getString(context, "userRealName");
 				String uuid = AppUtils.getMyUUID(context);
 				String pushid = PreferencesUtils.getString(context, "JpushRegId", "");
+				LogUtils.YfcDebug("走到连接Socket"+AppUtils.GetChangShang().toLowerCase());
+				pushid = getPushIdByChangeShang(pushid);
+
 				boolean isTelbet = AppUtils.isTablet(context);
 				String name;
 				if (isTelbet) {
@@ -127,6 +130,19 @@ public class WebSocketPush {
 		}
 
 
+	}
+
+	/**
+	 * 通过厂商确定pushid
+	 * @param pushid
+	 * @return
+     */
+	private String getPushIdByChangeShang(String pushid) {
+		if(AppUtils.GetChangShang().toLowerCase().startsWith("huawei")){
+//					pushid = "";
+			LogUtils.YfcDebug("厂商是华为");
+		}
+		return pushid;
 	}
 
 	/**

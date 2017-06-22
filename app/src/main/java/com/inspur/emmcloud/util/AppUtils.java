@@ -257,6 +257,10 @@ try{
 		return android.os.Build.VERSION.RELEASE;
 	}
 
+	/**
+	 * 获取厂商名称如HUAWEI，Xiaomi
+	 * @return
+     */
 	public static String GetChangShang() {
 
 		String manString = android.os.Build.MANUFACTURER;
@@ -266,6 +270,10 @@ try{
 		return manString;
 	}
 
+	/**
+	 * 获取手机型号如华为下某型号（MHA-AL00）
+	 * @return
+     */
 	public static String GetModel() {
 		String modelStr = android.os.Build.MODEL;
 		modelStr = modelStr.replace(" ", "-");
