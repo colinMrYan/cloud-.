@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
@@ -49,6 +51,8 @@ import com.zhy.magicviewpager.transformer.ScaleInTransformer;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * 应用中心页面 com.inspur.emmcloud.ui.AppCenterActivity create at 2016年8月31日
@@ -57,6 +61,7 @@ import java.util.List;
 public class AppCenterActivity extends BaseActivity {
 
     private static final String ACTION_NAME = "add_app";
+    private static final int UPTATE_VIEWPAGER = 1;
     private MyAppAPIService apiService;
     private ViewPager viewPager;
     private CircularProgress recommandCircleProgress, classCircleProgress;
@@ -66,6 +71,7 @@ public class AppCenterActivity extends BaseActivity {
     private BaseAdapter recommandAppAdapter;
     private BaseAdapter categoriesAppAdapter;
     private BroadcastReceiver addAppReceiver;
+    private int autoCurrIndex = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -257,7 +263,7 @@ public class AppCenterActivity extends BaseActivity {
                 convertView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.my_app_recommand_app_item_view, null);
                 RecyclerView recomandRecyclerView = (RecyclerView) convertView.findViewById(R.id.app_center_recomand_recycleview);
                 LinearLayoutManager linearLayoutManager = new LinearLayoutManager(AppCenterActivity.this);
-                recomandRecyclerView.addItemDecoration(new ECMSpaceItemDecoration(15));
+                recomandRecyclerView.addItemDecoration(new ECMSpaceItemDecoration(30));
                 linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
                 recomandRecyclerView.setLayoutManager(linearLayoutManager);
                 RecommandAppListAdapter recommandAppListAdapter = new RecommandAppListAdapter(AppCenterActivity.this,null);
@@ -362,6 +368,11 @@ public class AppCenterActivity extends BaseActivity {
 //        mViewPager.setLayoutParams(params);
         //为ViewPager设置PagerAdapter
         mViewPager.setAdapter(new RecommandAppPagerAdapter());
+
+        startAutoSlide(mViewPager);
+        if(recommandAppList != null && recommandAppList.size() > 1){
+            mViewPager.setCurrentItem(1);
+        }
         //设置ViewPager切换效果，即实现画廊效果
 //        mViewPager.setPageTransformer(true, new ZoomOutPageTransformer());
 //        //设置预加载数量
@@ -382,6 +393,38 @@ public class AppCenterActivity extends BaseActivity {
 
 
     }
+
+    /**
+     * ViewPager自动滚动
+     * @param mViewPager
+     */
+    private void startAutoSlide(final ViewPager mViewPager) {
+        if(!(mViewPager.getAdapter().getCount() > 2)){
+            return;
+        }
+        //定时轮播图片，需要在主线程里面修改 UI
+        final Handler mHandler = new Handler() {
+            public void handleMessage(Message msg) {
+                switch (msg.what) {
+                    case UPTATE_VIEWPAGER:
+                        mViewPager.setCurrentItem(mViewPager.getCurrentItem() + 1);
+                        break;
+                }
+            }
+        };
+        Timer timer = new Timer();
+        TimerTask timerTask = new TimerTask() {
+            @Override
+            public void run() {
+                mHandler.sendEmptyMessage(UPTATE_VIEWPAGER);
+            }
+        };
+        timer.schedule(timerTask,3000,3000);
+    }
+
+
+
+
 
 
     class RecommandAppPagerAdapter extends PagerAdapter {
