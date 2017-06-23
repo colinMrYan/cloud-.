@@ -3,9 +3,7 @@ package com.inspur.imp.plugin.photo;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Environment;
-import android.provider.MediaStore;
 import android.widget.Toast;
 
 import com.inspur.emmcloud.config.MyAppConfig;
@@ -20,6 +18,7 @@ import com.inspur.imp.plugin.camera.editimage.EditImageActivity;
 import com.inspur.imp.plugin.camera.imagepicker.ImagePicker;
 import com.inspur.imp.plugin.camera.imagepicker.bean.ImageItem;
 import com.inspur.imp.plugin.camera.imagepicker.ui.ImageGridActivity;
+import com.inspur.imp.plugin.camera.mycamera.MyCameraActivity;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -99,6 +98,7 @@ public class PhotoService extends ImpPlugin {
 	private void takePhotoAndUpload() {
 		// TODO Auto-generated method stub
 		try {
+			LogUtils.jasonDebug("paramsObject="+paramsObject.toString());
 			if (!paramsObject.isNull("success"))
 				successCb = paramsObject.getString("success");
 			if (!paramsObject.isNull("fail"))
@@ -115,7 +115,6 @@ public class PhotoService extends ImpPlugin {
 
 	private void openCamera(int encodingType) {
 		// TODO Auto-generated method stub
-		Intent intentFromCapture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 		// 判断存储卡是否可以用，可用进行存储
 		if (Environment.getExternalStorageState().equals(
 				android.os.Environment.MEDIA_MOUNTED)) {
@@ -127,10 +126,11 @@ public class PhotoService extends ImpPlugin {
 			// 指定文件名字
 			String fileName = PhotoNameUtils.getFileName(getActivity(),encodingType);
 			takePhotoImgPath = MyAppConfig.LOCAL_IMG_CREATE_PATH + fileName;
-			intentFromCapture.putExtra(MediaStore.EXTRA_OUTPUT,
-					Uri.fromFile(new File(appDir, fileName)));
-			((Activity) context).startActivityForResult(intentFromCapture,
-					RESULT_CAMERA);
+			Intent intent = new Intent(getActivity(), MyCameraActivity.class);
+			intent.putExtra(MyCameraActivity.PHOTO_DIRECTORY_PATH,MyAppConfig.LOCAL_IMG_CREATE_PATH);
+			intent.putExtra(MyCameraActivity.PHOTO_NAME,fileName);
+			intent.putExtra(MyCameraActivity.PHOTO_PARAM,paramsObject.toString());
+			getActivity().startActivityForResult(intent,RESULT_CAMERA);
 		} else {
 			Toast.makeText(context,
 					Res.getStringID("filetransfer_sd_not_exist"),
@@ -140,22 +140,38 @@ public class PhotoService extends ImpPlugin {
 
 	public void onActivityResult(int requestCode, int resultCode, Intent intent) {
 		PublicWay.uploadPhotoService = null;
+		LogUtils.jasonDebug("requestCode="+requestCode);
+		LogUtils.jasonDebug("resultCode="+resultCode);
 		if (requestCode == RESULT_CAMERA) {
-			if (resultCode == getActivity().RESULT_OK) {
-				PublicWay.uploadPhotoService = this;
-				EditImageActivity.start(getActivity(), takePhotoImgPath,
-						MyAppConfig.LOCAL_IMG_CREATE_PATH, true,
-						paramsObject.toString());
-			} else {
-				this.failPicture(Res.getString("cancel_camera"));
-			}
-		} else if (requestCode == EditImageActivity.ACTION_REQUEST_EDITIMAGE) {
 			if (resultCode == getActivity().RESULT_OK) {
 				try {
 					JSONObject jsonObject = new JSONObject();
 					String uploadResult = intent.getStringExtra("uploadResult");
 					String imagePath = intent.getStringExtra("save_file_path");
 					File file = new File(imagePath);
+					JSONObject contextObj = new JSONObject(uploadResult);
+					jsonObject.put("context", contextObj);
+
+					Bitmap bitmap = Bimp.revitionImageSize(imagePath);
+					String bitmapBase64 = Bimp.bitmapToBase64(bitmap);
+					jsonObject.put("thumbnailData", bitmapBase64);
+					String returnData = jsonObject.toString();
+					// LogUtils.jasonDebug("returnData="+returnData);
+					this.jsCallback(successCb, returnData);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			} else {
+				this.failPicture(Res.getString("cancel_camera"));
+			}
+			clearImgCache();
+		} else if (requestCode == EditImageActivity.ACTION_REQUEST_EDITIMAGE) {
+			if (resultCode == getActivity().RESULT_OK) {
+				try {
+					JSONObject jsonObject = new JSONObject();
+					String uploadResult = intent.getStringExtra("uploadResult");
+					String imagePath = intent.getStringExtra("save_file_path");
 					JSONObject contextObj = new JSONObject(uploadResult);
 					jsonObject.put("context", contextObj);
 

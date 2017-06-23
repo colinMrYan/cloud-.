@@ -26,7 +26,7 @@ public class CropImageView extends View {
 	private static int STATUS_MOVE = 2;// 移动状态
 	private static int STATUS_SCALE = 3;// 缩放状态
 
-	private int CIRCLE_WIDTH = 46;
+	private int CIRCLE_WIDTH = 40;
 	private float oldx, oldy;
 	private int status = STATUS_IDLE;
 	private int selectedControllerCicle;
