@@ -502,11 +502,11 @@ public class NewsWebDetailActivity extends BaseActivity {
         hasIntrcutionDialog.setCanceledOnTouchOutside(true);
         View  view = getLayoutInflater().inflate(R.layout.app_news_has_instruction_dialog, null);
         hasIntrcutionDialog.setContentView(view);
-        final EditText editText = (EditText) view.findViewById(R.id.news_instrcution_text);
-        editText.setFocusable(false);
-        editText.setEnabled(false);
+        final TextView instrcutionText = (TextView) view.findViewById(R.id.news_has_instrcution_text);
+        instrcutionText.setFocusable(false);
+        instrcutionText.setEnabled(false);
         instruction = handleInstruction(instruction);
-        editText.setText(instruction);
+        instrcutionText.setText(instruction);
         Button okBtn = (Button) view.findViewById(R.id.ok_btn);
         okBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -532,6 +532,8 @@ public class NewsWebDetailActivity extends BaseActivity {
         instruction = HtmlRegexpUtil.filterHtml(instruction);
         return instruction;
     }
+
+
 
 
     /**
