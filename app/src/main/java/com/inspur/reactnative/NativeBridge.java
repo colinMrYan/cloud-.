@@ -22,7 +22,6 @@ import com.inspur.emmcloud.util.ContactCacheUtils;
 import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.StringUtils;
-import com.inspur.emmcloud.util.ToastUtils;
 
 import org.json.JSONObject;
 
@@ -81,8 +80,6 @@ public class NativeBridge extends ReactContextBaseJavaModule implements Activity
      */
     @ReactMethod
     public void getOAuth20AccessToken(Promise promise) {
-        ToastUtils.show(getCurrentActivity(),"调用获取token方法："+getToken());
-        LogUtils.YfcDebug("Rn调用获取Token方法");
         try {
             promise.resolve(getToken());
         } catch (IllegalViewOperationException e) {
@@ -97,16 +94,11 @@ public class NativeBridge extends ReactContextBaseJavaModule implements Activity
      */
     @ReactMethod
     public void getCurrentUserProfie(Promise promise) {
-        ToastUtils.show(getCurrentActivity(),"调用获取Profile方法：");
-        LogUtils.YfcDebug("调用getCurrentUserProfie");
         String myInfo = PreferencesUtils.getString(getReactApplicationContext(),
                 "myInfo", "");
-        LogUtils.YfcDebug("获取到profile"+myInfo);
         try {
-            JSONObject myprofile = new JSONObject(myInfo);
-            promise.resolve(myprofile);
+            promise.resolve(myInfo);
         } catch (Exception e) {
-            LogUtils.YfcDebug("调用出现异常："+e.getMessage());
             promise.reject(e);
         }
     }
