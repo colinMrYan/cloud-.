@@ -499,6 +499,9 @@ public class NewsWebDetailActivity extends BaseActivity {
     private void showHasInstruceionDialog() {
         final Dialog hasIntrcutionDialog = new Dialog(NewsWebDetailActivity.this,
                 R.style.transparentFrameWindowStyle);
+        Window window = hasIntrcutionDialog.getWindow();
+        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE | WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+        window.getDecorView().setPadding(DensityUtil.dip2px(NewsWebDetailActivity.this,20), 0, DensityUtil.dip2px(NewsWebDetailActivity.this,20), 0);
         hasIntrcutionDialog.setCanceledOnTouchOutside(true);
         View  view = getLayoutInflater().inflate(R.layout.app_news_has_instruction_dialog, null);
         hasIntrcutionDialog.setContentView(view);
@@ -514,9 +517,11 @@ public class NewsWebDetailActivity extends BaseActivity {
                 hasIntrcutionDialog.dismiss();
             }
         });
-        Window window = hasIntrcutionDialog.getWindow();
+
         WindowManager.LayoutParams wl = window.getAttributes();
         wl.dimAmount = 0.31f;
+        wl.width = WindowManager.LayoutParams.MATCH_PARENT;   //设置宽度充满屏幕
+        wl.height = WindowManager.LayoutParams.WRAP_CONTENT;
         hasIntrcutionDialog.getWindow().setAttributes(wl);
         hasIntrcutionDialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
         hasIntrcutionDialog.show();
@@ -541,7 +546,10 @@ public class NewsWebDetailActivity extends BaseActivity {
      */
     private void showInstruceionDialog(){
         final Dialog intrcutionDialog = new Dialog(NewsWebDetailActivity.this,
-                R.style.transparentFrameWindowStyle);
+                R.style.transparentFrameWindowStyleForIntrcution);
+        Window window = intrcutionDialog.getWindow();
+        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE | WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+        window.getDecorView().setPadding(DensityUtil.dip2px(NewsWebDetailActivity.this,20), 0, DensityUtil.dip2px(NewsWebDetailActivity.this,20), 0);
         intrcutionDialog.setCanceledOnTouchOutside(true);
         View  view = getLayoutInflater().inflate(R.layout.app_news_instruction_dialog, null);
         intrcutionDialog.setContentView(view);
@@ -568,10 +576,12 @@ public class NewsWebDetailActivity extends BaseActivity {
             }
         });
 
-        Window window = intrcutionDialog.getWindow();
+
         WindowManager.LayoutParams wl = window.getAttributes();
 //        wl.alpha = 0.31f;
         wl.dimAmount = 0.31f;
+        wl.width = WindowManager.LayoutParams.MATCH_PARENT;   //设置宽度充满屏幕
+        wl.height = WindowManager.LayoutParams.WRAP_CONTENT;
         intrcutionDialog.getWindow().setAttributes(wl);
         intrcutionDialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
         intrcutionDialog.show();

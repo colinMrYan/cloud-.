@@ -481,8 +481,9 @@
     <string name="new_instructions_text">instruction</string>
     <string name="news_instructions">Directive opinion</string>
     <string name="news_instructions_success_text">Sending Success</string>
-    <string name="news_has_instructions_news">You have instructed this news</string>
+    <string name="news_has_instructions_news">You have instructed this news!</string>
     <string name="news_has_instructions_known">Understand</string>
+    <string name="news_please_instruction">Please enter your instructions </string>
 
     <!-- 审批页面 -->
     <string name="onekey_approval_text">Approval</string>
