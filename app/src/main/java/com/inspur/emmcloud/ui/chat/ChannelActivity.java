@@ -4,7 +4,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -56,7 +55,6 @@ import com.inspur.emmcloud.util.ImageDisplayUtils;
 import com.inspur.emmcloud.util.IntentUtils;
 import com.inspur.emmcloud.util.JSONUtils;
 import com.inspur.emmcloud.util.ListViewUtils;
-import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.MsgCacheUtil;
 import com.inspur.emmcloud.util.MsgRecourceUploadUtils;
 import com.inspur.emmcloud.util.NetUtils;
@@ -85,7 +83,6 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static android.R.attr.action;
 import static android.R.attr.path;
 
 /**
