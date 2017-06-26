@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.hardware.Camera;
 import android.net.Uri;
@@ -206,7 +207,9 @@ public class MyCameraActivity extends Activity implements View.OnClickListener, 
             Camera.Size previewSize = CameraUtils.getInstance(this).getPreviewSize(previewSizeList, 700);
             parameters.setPreviewSize(previewSize.width, previewSize.height);
             parameters.setFlashMode(cameraFlashModel);
-            parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);//连续对焦
+            List<String> focusModes = parameters.getSupportedFocusModes();
+            if (focusModes.contains(parameters.FOCUS_MODE_CONTINUOUS_PICTURE))
+                parameters.setFocusMode(parameters.FOCUS_MODE_CONTINUOUS_PICTURE);//连续对焦
             mCamera.setParameters(parameters);
             mCamera.startPreview();
             mCamera.cancelAutoFocus();// 如果要实现连续的自动对焦，这一句必须加上，这句必须要在startPreview后面加上去
@@ -257,7 +260,7 @@ public class MyCameraActivity extends Activity implements View.OnClickListener, 
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.take_bt:
-                takePicture();
+                takePicture(currentOrientation);
                 break;
             case R.id.three_four_bt:
                 previewSFV.setCropMode(FocusSurfaceView.CropMode.RATIO_3_4);
@@ -302,24 +305,30 @@ public class MyCameraActivity extends Activity implements View.OnClickListener, 
     /**
      * 拍照
      */
-    private void takePicture() {
+    private void takePicture(final int currentOrientation) {
         mCamera.cancelAutoFocus();
         mCamera.takePicture(new Camera.ShutterCallback() {
             @Override
             public void onShutter() {
             }
         }, null, null, new Camera.PictureCallback() {
+
+
             @Override
             public void onPictureTaken(byte[] data, Camera camera) {
-                detectScreenOrientation.disable();
-                //  Bitmap originBitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
-                //前置摄像头和后置摄像头拍照后图像角度旋转
-                Bitmap cropBitmap = previewSFV.getPicture(data);
-                if (currentCameraFacing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
-                    currentOrientation = (540 - currentOrientation) % 360;
+                int orientation = currentOrientation;
+                Bitmap originBitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
+                boolean isSamSungType = originBitmap.getWidth()>originBitmap.getHeight();
+                if (isSamSungType){
+                    originBitmap = rotaingImageView(90, originBitmap);
                 }
-                if (currentOrientation != 0) {
-                    cropBitmap = rotaingImageView(currentOrientation, cropBitmap);
+                //前置摄像头和后置摄像头拍照后图像角度旋转
+                Bitmap cropBitmap = previewSFV.getPicture(originBitmap);
+                if (currentCameraFacing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
+                    orientation = (540 - orientation) % 360;
+                }
+                if (orientation != 0) {
+                    cropBitmap = rotaingImageView(orientation, cropBitmap);
                 }
                 File photoDir = null;
                 if (photoSaveDirectoryPath != null) {
@@ -336,10 +345,23 @@ public class MyCameraActivity extends Activity implements View.OnClickListener, 
                }
                 String imgPath = photoDir.getAbsolutePath()+"/"+photoName;
                 BitmapUtils.saveBitmap(cropBitmap, imgPath,100,0);
-                //refreshGallery(imgPath);
+                recycleBitmap(originBitmap);
+                recycleBitmap(cropBitmap);
                 EditImageActivity.start(MyCameraActivity.this, imgPath, MyAppConfig.LOCAL_IMG_CREATE_PATH,true,extraParam);
             }
         });
+    }
+
+    /**
+     * 回收Bitmap
+     * @param bitmap
+     */
+    public void recycleBitmap(Bitmap bitmap){
+        if(bitmap != null && !bitmap.isRecycled()){
+            bitmap.recycle();
+            bitmap = null;
+        }
+        System.gc();
     }
 
 
