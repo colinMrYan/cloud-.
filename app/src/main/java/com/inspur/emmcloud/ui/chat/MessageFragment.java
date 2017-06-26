@@ -715,8 +715,22 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 		IndexActivity.showNotifyIcon(unReadCount);
 	}
 
+
+	private static class ViewHolder {
+		RelativeLayout mainLayout;
+		CircleFrameLayout channelPhotoLayout;
+		TextView channelContentText;
+		TextView channelTitleText;
+		TextView channelTimeText;
+		RelativeLayout channelNotReadCountLayout;
+		TextView channelNotReadCountText;
+		ImageView dndImg;
+	}
+
+
 	private class Adapter extends BaseAdapter {
 
+		ViewHolder holder;
 
 		@Override
 		public int getCount() {
@@ -739,19 +753,51 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
 			// TODO Auto-generated method stub
-			convertView = LayoutInflater.from(getActivity()).inflate(R.layout.msg_item_view, null);
+			if (convertView == null) {
+				LayoutInflater mInflater = (LayoutInflater) getActivity()
+						.getSystemService(getActivity().LAYOUT_INFLATER_SERVICE);
+				convertView = mInflater.inflate(R.layout.msg_item_view, null);
+				holder = new ViewHolder();
+				initHolderView(convertView);
+				convertView.setTag(holder);
+			} else {
+				holder = (ViewHolder) convertView.getTag();
+			}
 			Channel channel = displayChannelList.get(position);
-			setChannelBg(channel, convertView);
-			setChannelIcon(channel, convertView);
+			setChannelBg(channel);
+			setChannelIcon(channel);
 			setChannelTitle(channel, convertView);
-			setChannelMsgReadStateUI(channel, convertView);
+			setChannelMsgReadStateUI(channel);
 			// 显示channel是否免打扰状态
 			boolean isChannelNotDisturb = ChannelCacheUtils.isChannelNotDisturb(getActivity(),
 					channel.getCid());
-			ImageView dndImg = (ImageView) convertView
-					.findViewById(R.id.msg_dnd_img);
-			dndImg.setVisibility(isChannelNotDisturb ? View.VISIBLE : View.GONE);
+			holder.dndImg.setVisibility(isChannelNotDisturb ? View.VISIBLE : View.GONE);
 			return convertView;
+		}
+
+		/**
+		 * 初始化View
+		 *
+		 * @param convertView
+		 */
+		private void initHolderView(View convertView) {
+			// TODO Auto-generated method stub
+			holder.mainLayout = (RelativeLayout) convertView
+					.findViewById(R.id.main_layout);
+			holder.channelPhotoLayout = (CircleFrameLayout) convertView
+					.findViewById(R.id.channel_photo_layout);
+			holder.channelTitleText = (TextView) convertView
+					.findViewById(R.id.name_text);
+			holder.channelContentText = (TextView) convertView
+					.findViewById(R.id.content_text);
+			holder.channelTimeText = (TextView) convertView
+					.findViewById(R.id.time_text);
+			holder.channelNotReadCountLayout = (RelativeLayout) convertView
+					.findViewById(R.id.msg_new_layout);
+			holder.channelNotReadCountText = (TextView) convertView
+					.findViewById(R.id.msg_new_text);
+			holder.dndImg = (ImageView) convertView
+					.findViewById(R.id.msg_dnd_img);
 		}
 
 
@@ -760,14 +806,12 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 		 * 
 		 * @param channel
 		 */
-		private void setChannelIcon(Channel channel, View convertView) {
+		private void setChannelIcon(Channel channel) {
 			// TODO Auto-generated method stub
-			CircleFrameLayout channelPhotoLayout = (CircleFrameLayout) convertView
-					.findViewById(R.id.channel_photo_layout);
-			Integer defaultIcon = -1; // 默认显示图标
 			if (channel.getType().equals("GROUP")) {
-				DisplayChannelGroupIcon.show(getActivity(),channel.getCid(),channelPhotoLayout);
+				DisplayChannelGroupIcon.show(getActivity(),channel.getCid(),holder.channelPhotoLayout);
 			} else {
+				Integer defaultIcon = -1; // 默认显示图标
 				String iconUrl = "";// Channel头像的uri
 				View channelPhotoView = LayoutInflater.from(getActivity()).inflate(R.layout.chat_msg_session_photo_one, null);
 				ImageView photoImg = (ImageView) channelPhotoView.findViewById(R.id.photo_img1);
@@ -784,7 +828,7 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 				}
 				new ImageDisplayUtils(getActivity(), defaultIcon).display(
 						photoImg, iconUrl);
-				channelPhotoLayout.addView(channelPhotoView);
+				holder.channelPhotoLayout.addView(channelPhotoView);
 			}
 
 
@@ -794,18 +838,15 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 		 * 设置频道的背景色
 		 *
 		 * @param channel
-		 * @param convertView
 		 */
-		private void setChannelBg(Channel channel, View convertView) {
+		private void setChannelBg(Channel channel) {
 			// TODO Auto-generated method stub
-			RelativeLayout mainLayout = (RelativeLayout) convertView
-					.findViewById(R.id.main_layout);
 			if (ChannelOperationCacheUtils.isChannelSetTop(getActivity(),
 					channel.getCid())) {
-				mainLayout
+				holder.mainLayout
 						.setBackgroundResource(R.drawable.selector_set_top_msg_list);
 			} else {
-				mainLayout
+				holder.mainLayout
 						.setBackgroundResource(R.drawable.selector_list);
 			}
 		}
@@ -817,8 +858,6 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 		 * @param convertView
 		 */
 		private void setChannelTitle(Channel channel, View convertView) {
-			TextView channelTitleText = (TextView) convertView
-					.findViewById(R.id.name_text);
 			String title = "";
 			if (channel.getType().equals("DIRECT")) {
 				title = DirectChannelUtils.getDirectChannelTitle(getActivity(),
@@ -828,7 +867,7 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 			} else {
 				title = channel.getTitle();
 			}
-			channelTitleText.setText(title);
+			holder.channelTitleText.setText(title);
 		}
 
 		/**
@@ -836,43 +875,33 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 		 *
 		 * @param channel
 		 */
-		private void setChannelMsgReadStateUI(final Channel channel, View convertView) {
+		private void setChannelMsgReadStateUI(final Channel channel) {
 			// TODO Auto-generated method stub
-			TextView channelTimeText = (TextView) convertView
-					.findViewById(R.id.time_text);
-			RelativeLayout channelNotReadCountLayout = (RelativeLayout) convertView
-					.findViewById(R.id.msg_new_layout);
-			TextView channelNotReadCountText = (TextView) convertView
-					.findViewById(R.id.msg_new_text);
-			TextView channelTitleText = (TextView) convertView
-					.findViewById(R.id.name_text);
-			TextView channelContentText = (TextView) convertView
-					.findViewById(R.id.content_text);
 			int unReadCount = MsgReadIDCacheUtils.getNotReadMsgCount(
 					getActivity(), channel.getCid());
-			channelTimeText.setText(TimeUtils.getDisplayTime(
+			holder.channelTimeText.setText(TimeUtils.getDisplayTime(
 					getActivity(), channel.getLastUpdate()));
-			channelContentText.setText(channel
+			holder.channelContentText.setText(channel
 					.getNewestMsgContent(getActivity()));
-			TransHtmlToTextUtils.stripUnderlines(channelContentText,
+			TransHtmlToTextUtils.stripUnderlines(holder.channelContentText,
 					R.color.msg_content_color);
 			if (unReadCount == 0) {
-				channelNotReadCountLayout.setVisibility(View.INVISIBLE);
-				channelTitleText.getPaint().setFakeBoldText(false);
-				channelContentText.setTextColor(getResources().getColor(
+				holder.channelNotReadCountLayout.setVisibility(View.INVISIBLE);
+				holder.channelTitleText.getPaint().setFakeBoldText(false);
+				holder.channelContentText.setTextColor(getResources().getColor(
 						R.color.msg_content_color));
-				channelTimeText.setTextColor(getResources().getColor(
+				holder.channelTimeText.setTextColor(getResources().getColor(
 						R.color.msg_content_color));
 			} else {
-				channelNotReadCountLayout.setVisibility(View.VISIBLE);
-				channelTitleText.getPaint().setFakeBoldText(true);
-				channelContentText.setTextColor(getResources().getColor(
+				holder.channelNotReadCountLayout.setVisibility(View.VISIBLE);
+				holder.channelTitleText.getPaint().setFakeBoldText(true);
+				holder.channelContentText.setTextColor(getResources().getColor(
 						R.color.black));
-				channelTimeText.setTextColor(getResources().getColor(
+				holder.channelTimeText.setTextColor(getResources().getColor(
 						R.color.msg_time_color));
-				channelNotReadCountText.setText(unReadCount > 99 ? "99+" : "" + unReadCount);
+				holder.channelNotReadCountText.setText(unReadCount > 99 ? "99+" : "" + unReadCount);
 			}
-			TipsView.attach(channelNotReadCountLayout,
+			TipsView.attach(holder.channelNotReadCountLayout,
 					new TipsView.Listener() {
 
 						@Override

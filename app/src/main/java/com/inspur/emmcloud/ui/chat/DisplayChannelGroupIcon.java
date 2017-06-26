@@ -22,10 +22,11 @@ public class DisplayChannelGroupIcon {
 	public static void show(Context context, String cid,CircleFrameLayout channelPhotoLayout){
 		int defaultIcon = R.drawable.icon_person_default;
 		View channelPhotoView = null;
-		ChannelGroup channelGroup = ChannelGroupCacheUtils.getChannelGroupById(context, cid);
-		if (channelGroup != null) {
-			List<String> memberUidList = ChannelGroupCacheUtils.getMemberUidList(context, cid, 4);
-			int groupNumSize = memberUidList.size();
+//		ChannelGroup channelGroup = ChannelGroupCacheUtils.getChannelGroupById(context, cid);
+//		if (channelGroup != null) {
+		List<String> memberUidList = ChannelGroupCacheUtils.getMemberUidList(context, cid, 4);
+		int groupNumSize = memberUidList.size();
+		if(groupNumSize >0){
 			if (groupNumSize == 1) {
 				channelPhotoView = LayoutInflater.from(context).inflate(R.layout.chat_msg_session_photo_one, null);
 				ImageView photoImg = (ImageView) channelPhotoView.findViewById(R.id.photo_img1);
@@ -50,7 +51,7 @@ public class DisplayChannelGroupIcon {
 						photoImg2, UriUtils.getChannelImgUri(context,memberUidList.get(1)));
 				new ImageDisplayUtils(context, defaultIcon).display(
 						photoImg3, UriUtils.getChannelImgUri(context,memberUidList.get(2)));
-			} else if (groupNumSize == 4) {
+			} else {
 				channelPhotoView = LayoutInflater.from(context).inflate(R.layout.chat_msg_session_photo_four, null);
 				ImageView photoImg1 = (ImageView) channelPhotoView.findViewById(R.id.photo_img1);
 				ImageView photoImg2 = (ImageView) channelPhotoView.findViewById(R.id.photo_img2);
@@ -65,9 +66,7 @@ public class DisplayChannelGroupIcon {
 				new ImageDisplayUtils(context, defaultIcon).display(
 						photoImg4, UriUtils.getChannelImgUri(context,memberUidList.get(3)));
 			}
-			if (channelPhotoView != null){
 				channelPhotoLayout.addView(channelPhotoView);
-			}
 		}else {
 			channelPhotoLayout.setBackgroundResource(R.drawable.icon_channel_group_default);
 		}

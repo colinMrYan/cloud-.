@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.os.Environment;
 import android.os.Parcelable;
 import android.support.multidex.MultiDexApplication;
@@ -109,7 +110,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
                 "isContactReady", false);
         uid = PreferencesUtils.getString(getApplicationContext(), "userID");
         accessToken = PreferencesUtils.getString(getApplicationContext(), "accessToken", "");
-        onConfigurationChanged(null);
+        setAppLanguageAndFontScale();
         removeAllSessionCookie();
         //修改字体方案预留
 //        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
@@ -407,70 +408,78 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
 
 
     @Override
-    public void onConfigurationChanged(Configuration config) {
-        // TODO Auto-generated method stub
-        if (config != null) {
+	public void onConfigurationChanged(Configuration config) {
+		// TODO Auto-generated method stub
+        if (config != null){
             super.onConfigurationChanged(config);
         }
-        String languageJson = PreferencesUtils
-                .getString(getApplicationContext(), UriUtils.tanent
-                        + "appLanguageObj");
-        if (languageJson != null) {
-            String language = PreferencesUtils.getString(
-                    getApplicationContext(), UriUtils.tanent + "language");
-            // 当系统语言选择为跟随系统的时候，要检查当前系统的语言是不是在commonList中，重新赋值
-            if (language.equals("followSys")) {
-                String commonLanguageListJson = PreferencesUtils.getString(
-                        getApplicationContext(), UriUtils.tanent
-                                + "commonLanguageList");
-                if (commonLanguageListJson != null) {
-                    List<Language> commonLanguageList = (List) JSON
-                            .parseArray(commonLanguageListJson,
-                                    Language.class);
-                    boolean isContainDefault = false;
-                    for (int i = 0; i < commonLanguageList.size(); i++) {
-                        Language commonLanguage = commonLanguageList.get(i);
-                        if (commonLanguage.getIso().contains(
-                                Locale.getDefault().getCountry())) {
-                            PreferencesUtils.putString(
-                                    getApplicationContext(),
+        setAppLanguageAndFontScale();
+	}
+
+    /**
+     * 设置App的语言
+     */
+	public void setAppLanguageAndFontScale(){
+
+            String languageJson = PreferencesUtils
+                    .getString(getApplicationContext(), UriUtils.tanent
+                            + "appLanguageObj");
+        Configuration config = getResources().getConfiguration();
+            if (languageJson != null) {
+                String language = PreferencesUtils.getString(
+                        getApplicationContext(), UriUtils.tanent + "language");
+                // 当系统语言选择为跟随系统的时候，要检查当前系统的语言是不是在commonList中，重新赋值
+                if (language.equals("followSys")) {
+                    String commonLanguageListJson = PreferencesUtils.getString(
+                            getApplicationContext(), UriUtils.tanent
+                                    + "commonLanguageList");
+                    if (commonLanguageListJson != null) {
+                        List<Language> commonLanguageList = (List) JSON
+                                .parseArray(commonLanguageListJson,
+                                        Language.class);
+                        boolean isContainDefault = false;
+                        for (int i = 0; i < commonLanguageList.size(); i++) {
+                            Language commonLanguage = commonLanguageList.get(i);
+                            if (commonLanguage.getIso().contains(
+                                    Resources.getSystem().getConfiguration().locale.getCountry())) {
+                                PreferencesUtils.putString(
+                                        getApplicationContext(),
+                                        UriUtils.tanent + "appLanguageObj",
+                                        commonLanguage.toString());
+                                languageJson = commonLanguage.toString();
+                                isContainDefault = true;
+                                break;
+                            }
+                        }
+                        if (!isContainDefault) {
+                            PreferencesUtils.putString(getApplicationContext(),
                                     UriUtils.tanent + "appLanguageObj",
-                                    commonLanguage.toString());
-                            languageJson = commonLanguage.toString();
-                            isContainDefault = true;
-                            break;
+                                    commonLanguageList.get(0).toString());
+                            languageJson = commonLanguageList.get(0).toString();
                         }
                     }
-                    if (!isContainDefault) {
-                        PreferencesUtils.putString(getApplicationContext(),
-                                UriUtils.tanent + "appLanguageObj",
-                                commonLanguageList.get(0).toString());
-                        languageJson = commonLanguageList.get(0).toString();
-                    }
-                }
 
+                }
+                // 将iso字符串分割成系统的设置语言
+                String[] array = new Language(languageJson).getIso().split("-");
+                String country = "";
+                String variant = "";
+                try {
+                    country = array[0];
+                    variant = array[1];
+                } catch (Exception e) {
+                    // TODO: handle exception
+                    e.printStackTrace();
+                }
+                Locale locale =  new Locale(country, variant);
+                config.locale = locale;
             }
-            // 将iso字符串分割成系统的设置语言
-            String[] array = new Language(languageJson).getIso().split("-");
-            String country = "";
-            String variant = "";
-            try {
-                country = array[0];
-                variant = array[1];
-            } catch (Exception e) {
-                // TODO: handle exception
-                e.printStackTrace();
-            }
-            Locale locale = new Locale(country, variant);
-            Locale.setDefault(locale);
-            config = getResources().getConfiguration();
-            config.locale = locale;
-            if (getApplicationContext() != null) {
-                getApplicationContext().getResources().updateConfiguration(config,
-                        getResources().getDisplayMetrics());
-            }
-        }
+            config.fontScale = 1.0f;
+        getResources().updateConfiguration(config,
+                getResources().getDisplayMetrics());
+
     }
+
 
     /**
      * init ImageLoader
