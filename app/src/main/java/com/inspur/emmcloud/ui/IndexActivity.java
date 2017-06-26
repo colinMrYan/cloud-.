@@ -123,6 +123,7 @@ public class IndexActivity extends BaseFragmentActivity implements
         ((MyApplication) getApplicationContext()).addActivity(this);
         ((MyApplication) getApplicationContext()).setIndexActvityRunning(true);
         ((MyApplication) getApplicationContext()).closeAllDb();
+        ((MyApplication)getApplicationContext()).clearUserPhotoMap();
         DbCacheUtils.initDb(getApplicationContext());
         userId = ((MyApplication) getApplication()).getUid();
         initReactNative();
@@ -538,7 +539,7 @@ public class IndexActivity extends BaseFragmentActivity implements
             isCommunicationRunning = true;
             int targetTabIndex = getTabIndex();
             boolean isOpenNotify = getIntent().hasExtra("command") && getIntent().getStringExtra("command").equals("open_notification");
-            if ( mTabHost.getCurrentTab() != targetTabIndex && !isOpenNotify){
+            if (mTabHost!=null && mTabHost.getCurrentTab() != targetTabIndex && !isOpenNotify){
                 mTabHost.setCurrentTab(targetTabIndex);
             }
         }catch (Exception e){

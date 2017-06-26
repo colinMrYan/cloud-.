@@ -6,9 +6,11 @@ import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.os.Environment;
 import android.os.Parcelable;
 import android.support.multidex.MultiDexApplication;
+import android.support.v4.util.ArrayMap;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 
@@ -55,6 +57,7 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import cn.jpush.android.api.JPushInterface;
 
@@ -78,6 +81,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
     private String uid;
     private String accessToken;
     private Enterprise currentEnterprise;
+    private Map<String,String> userPhotoUrlMap = new ArrayMap<>();
 
 
     private final ReactNativeHost mReactNativeHost = new ReactNativeHost(this) {
@@ -109,7 +113,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
                 "isContactReady", false);
         uid = PreferencesUtils.getString(getApplicationContext(), "userID");
         accessToken = PreferencesUtils.getString(getApplicationContext(), "accessToken", "");
-        onConfigurationChanged(null);
+        setAppLanguageAndFontScale();
         removeAllSessionCookie();
         //修改字体方案预留
 //        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
@@ -381,6 +385,31 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         return currentEnterprise;
     }
 
+    /*****************************通讯录头像缓存********************************************/
+    public String getUserPhotoUrl(String uid){
+        String photoUrl = null;
+        if (!StringUtils.isBlank(uid) && userPhotoUrlMap.containsKey(uid)){
+            photoUrl = userPhotoUrlMap.get(uid);
+        }
+        return photoUrl;
+    }
+
+    public void setUsesrPhotoUrl(String uid,String url){
+        if (!StringUtils.isBlank(uid) && !StringUtils.isBlank(url)){
+            userPhotoUrlMap.put(uid,url);
+        }
+    }
+
+    public void clearUserPhotoMap(){
+        userPhotoUrlMap.clear();
+    }
+
+    public void clearUserPhotoUrl(String uid){
+        if (!StringUtils.isBlank(uid) && userPhotoUrlMap.containsKey(uid)){
+            userPhotoUrlMap.remove(uid);
+        }
+    }
+
     /*************************************************************************/
 
     /***
@@ -406,15 +435,25 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
     }
 
 
+
     @Override
-    public void onConfigurationChanged(Configuration config) {
-        // TODO Auto-generated method stub
-        if (config == null) {
-            config = getResources().getConfiguration();
+	public void onConfigurationChanged(Configuration config) {
+		// TODO Auto-generated method stub
+        if (config != null){
+            super.onConfigurationChanged(config);
+        }
+        setAppLanguageAndFontScale();
+	}
+
+    /**
+     * 设置App的语言
+     */
+	public void setAppLanguageAndFontScale(){
 
             String languageJson = PreferencesUtils
                     .getString(getApplicationContext(), UriUtils.tanent
                             + "appLanguageObj");
+        Configuration config = getResources().getConfiguration();
             if (languageJson != null) {
                 String language = PreferencesUtils.getString(
                         getApplicationContext(), UriUtils.tanent + "language");
@@ -431,7 +470,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
                         for (int i = 0; i < commonLanguageList.size(); i++) {
                             Language commonLanguage = commonLanguageList.get(i);
                             if (commonLanguage.getIso().contains(
-                                    Locale.getDefault().getCountry())) {
+                                    Resources.getSystem().getConfiguration().locale.getCountry())) {
                                 PreferencesUtils.putString(
                                         getApplicationContext(),
                                         UriUtils.tanent + "appLanguageObj",
@@ -461,17 +500,15 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
                     // TODO: handle exception
                     e.printStackTrace();
                 }
-                config.locale = new Locale(country, variant);
+                Locale locale =  new Locale(country, variant);
+                config.locale = locale;
             }
-            if(getApplicationContext() != null){
-                getApplicationContext().getResources().updateConfiguration(config,
-                        getResources().getDisplayMetrics());
-            }
-        } else {
-            super.onConfigurationChanged(config);
-        }
+            config.fontScale = 1.0f;
+        getResources().updateConfiguration(config,
+                getResources().getDisplayMetrics());
 
     }
+
 
     /**
      * init ImageLoader

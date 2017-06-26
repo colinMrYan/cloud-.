@@ -178,19 +178,19 @@ public class JpushReceiver extends BroadcastReceiver {
 		return sb.toString();
 	}
 
-	// send msg to MainActivity
+	// send msg to MyCameraActivity
 	private void processCustomMessage(Context context, Bundle bundle) {
 		// 这段代码用来把透传消息发送到主Activity上去
-		// if (MainActivity.isForeground) {
+		// if (MyCameraActivity.isForeground) {
 		// String message = bundle.getString(JPushInterface.EXTRA_MESSAGE);
 		// String extras = bundle.getString(JPushInterface.EXTRA_EXTRA);
-		// Intent msgIntent = new Intent(MainActivity.MESSAGE_RECEIVED_ACTION);
-		// msgIntent.putExtra(MainActivity.KEY_MESSAGE, message);
+		// Intent msgIntent = new Intent(MyCameraActivity.MESSAGE_RECEIVED_ACTION);
+		// msgIntent.putExtra(MyCameraActivity.KEY_MESSAGE, message);
 		// if (!ExampleUtil.isEmpty(extras)) {
 		// try {
 		// JSONObject extraJson = new JSONObject(extras);
 		// if (null != extraJson && extraJson.length() > 0) {
-		// msgIntent.putExtra(MainActivity.KEY_EXTRAS, extras);
+		// msgIntent.putExtra(MyCameraActivity.KEY_EXTRAS, extras);
 		// }
 		// } catch (JSONException e) {
 		//

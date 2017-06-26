@@ -450,10 +450,6 @@ public class SegmentControl extends View {
 
                 //draw texts
                 canvas.drawText(mTexts[i], mCacheBounds[i].left + (mSingleChildWidth - mTextBounds[i].width()) / 2, mCacheBounds[i].top + (mSingleChildHeight-mPaint.ascent()-mPaint.descent()) / 2, mPaint);
-                LogUtils.jasonDebug("mCacheBounds[i].left="+mCacheBounds[i].left);
-                LogUtils.jasonDebug("mSingleChildWidth="+mSingleChildWidth);
-                LogUtils.jasonDebug("mTextBounds[i].width()="+mTextBounds[i].width());
-                LogUtils.jasonDebug("x="+(mCacheBounds[i].left + (mSingleChildWidth - mTextBounds[i].width()) / 2));
             }
         }
 

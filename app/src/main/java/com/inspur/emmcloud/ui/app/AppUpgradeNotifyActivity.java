@@ -164,6 +164,15 @@ public class AppUpgradeNotifyActivity extends BaseActivity {
 		dialog.setCancelable(false);
 		Button okBt = (Button) dialog.findViewById(R.id.ok_btn);
 		okBt.setText(R.string.upgrade);
+		okBt.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				dialog.dismiss();
+				showDownloadDialog();
+			}
+		});
 		TextView text = (TextView) dialog.findViewById(R.id.text);
 		text.setText(upgradeMsg);
 		TextView appUpdateTitle = (TextView) dialog.findViewById(R.id.app_update_title);
