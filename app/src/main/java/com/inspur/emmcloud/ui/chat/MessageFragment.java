@@ -327,13 +327,13 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 			//将没有消息的单聊和没有消息的但不是自己创建的群聊隐藏掉
 			while (it.hasNext()) {
 				Channel channel = it.next();
+				channel.setIsSetTop(false);
 				if (channel.getNewMsgList().size() == 0){
 					if (channel.getType().equals("DIRECT")){
 						it.remove();
 					}else if(channel.getType().equals("GROUP")){
 						ChannelGroup channelGroup = ChannelGroupCacheUtils.getChannelGroupById(getActivity(),channel.getCid());
-						String myUid = PreferencesUtils.getString(getActivity(),
-								"userID");
+						String myUid = ((MyApplication)getActivity().getApplicationContext()).getUid();
 						if (channelGroup != null && !channelGroup.getOwner().equals(myUid)){
 							it.remove();
 						}
@@ -372,7 +372,9 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 					String cid = setTopChannelOpList.get(i).getCid();
 					int index = channelList.indexOf(new Channel(cid));
 					if (index != -1) {
-						setTopChannelList.add(channelList.get(index));
+						Channel setTopChannel = channelList.get(index);
+						setTopChannel.setIsSetTop(true);
+						setTopChannelList.add(setTopChannel);
 						channelList.remove(index);
 					}
 				}
@@ -399,8 +401,7 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 				List<Msg> newMsgList = getNewMsgsResult.getNewMsgList(cid);
 				if (newMsgList.size() > 0) {
 					MsgCacheUtil.saveMsgList(getActivity(), newMsgList, ""); // 获取的消息需要缓存
-					String myUid = PreferencesUtils.getString(getActivity(),
-							"userID");
+					String myUid = ((MyApplication)getActivity().getApplicationContext()).getUid();
 					// 当会话中最后一条消息为自己发出的时候，将此消息存入已读消息列表，解决最新消息为自己发出，仍识别为未读的问题
 					if (newMsgList.get(newMsgList.size() - 1).getUid()
 							.equals(myUid)) {
@@ -766,12 +767,12 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 			Channel channel = displayChannelList.get(position);
 			setChannelBg(channel);
 			setChannelIcon(channel);
-			setChannelTitle(channel, convertView);
+			setChannelTitle(channel);
 			setChannelMsgReadStateUI(channel);
 			// 显示channel是否免打扰状态
-			boolean isChannelNotDisturb = ChannelCacheUtils.isChannelNotDisturb(getActivity(),
-					channel.getCid());
-			holder.dndImg.setVisibility(isChannelNotDisturb ? View.VISIBLE : View.GONE);
+//			boolean isChannelNotDisturb = ChannelCacheUtils.isChannelNotDisturb(getActivity(),
+//					channel.getCid());
+			holder.dndImg.setVisibility(channel.getDnd() ? View.VISIBLE : View.GONE);
 			return convertView;
 		}
 
@@ -841,8 +842,7 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 		 */
 		private void setChannelBg(Channel channel) {
 			// TODO Auto-generated method stub
-			if (ChannelOperationCacheUtils.isChannelSetTop(getActivity(),
-					channel.getCid())) {
+			if (channel.getIsSetTop()) {
 				holder.mainLayout
 						.setBackgroundResource(R.drawable.selector_set_top_msg_list);
 			} else {
@@ -855,9 +855,8 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 		 * 设置Channel的title
 		 *
 		 * @param channel
-		 * @param convertView
 		 */
-		private void setChannelTitle(Channel channel, View convertView) {
+		private void setChannelTitle(Channel channel) {
 			String title = "";
 			if (channel.getType().equals("DIRECT")) {
 				title = DirectChannelUtils.getDirectChannelTitle(getActivity(),

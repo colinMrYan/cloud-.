@@ -141,7 +141,7 @@ public class ChannelGroupCacheUtils {
                 if (limit <= 0 || limit > size){
                     limit = size;
                 }
-                List<String>  limitMemberList = allMemberList.subList(0,limit-1);
+                List<String>  limitMemberList = allMemberList.subList(0,limit);
                 userList.addAll(limitMemberList);
             }
 

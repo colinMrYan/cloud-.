@@ -190,6 +190,7 @@ public class MyInfoActivity extends BaseActivity {
 		Contact contact = ContactCacheUtils.getUserContact(MyInfoActivity.this,((MyApplication)getApplication()).getUid());
 		contact.setLastUpdateTime(System.currentTimeMillis()+"");
 		ContactCacheUtils.saveContact(MyInfoActivity.this,contact);
+		((MyApplication)getApplicationContext()).clearUserPhotoUrl(((MyApplication)getApplication()).getUid());
 	}
 
 	/**

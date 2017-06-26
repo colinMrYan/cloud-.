@@ -31,13 +31,8 @@ public class DirectChannelUtils {
 	 * @return
 	 */
 	public static String getDirectChannelIcon(Context context, String msgTitle) {
-		String channelIcon = "";
-		Contact otherContact = getDirctChannelOtherContact(context, msgTitle);
-		if (otherContact != null) {
-			String otherInspurID = otherContact.getInspurID();
-			channelIcon = UriUtils.getChannelImgUri(context,otherInspurID);
-		}
-		return channelIcon;
+		String otherUid = getDirctChannelOtherUid(context, msgTitle);
+		return  UriUtils.getChannelImgUri(context,otherUid);
 	}
 	
 	/**
@@ -80,6 +75,30 @@ public class DirectChannelUtils {
 			e.printStackTrace();
 		}
 		return contact;
+	}
+
+	/**获取单聊对方的uid
+	 *
+	 * @param context
+	 * @param title
+	 * @return
+	 */
+	public static String getDirctChannelOtherUid(Context context,
+												 String title){
+		String otherUid = "";
+		try {
+			String[] uidArray = title.split("-");
+			String myUid = PreferencesUtils.getString(context, "userID");
+			if (uidArray[0].equals(myUid)) {
+				otherUid = uidArray[1];
+			} else {
+				otherUid = uidArray[0];
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		return  otherUid;
 	}
 	
 	/**
