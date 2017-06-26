@@ -73,10 +73,10 @@ public class CameraUtils {
         //按升序排列
         public int compare(Size lhs, Size rhs) {
             // TODO Auto-generated method stub
-            if(lhs.width == rhs.width){
+            if(lhs.width == rhs.width && lhs.height == rhs.height){
                 return 0;
             }
-            else if(lhs.width > rhs.width){
+            else if(lhs.width > rhs.width || (lhs.width == rhs.width && lhs.height > rhs.height)){
                 return 1;
             }
             else{

@@ -33,7 +33,7 @@ public class FocusSurfaceView extends SurfaceView {
     private static final int MIN_FRAME_SIZE_IN_DP = 50;
     private static final int FRAME_STROKE_WEIGHT_IN_DP = 1;
     private static final int GUIDE_STROKE_WEIGHT_IN_DP = 1;
-    private static final float DEFAULT_INITIAL_FRAME_SCALE = 0.85f;
+    private static final float DEFAULT_INITIAL_FRAME_SCALE = 0.8f;
     private static final int DEFAULT_ANIMATION_DURATION_MILLIS = 10;
 
     private static final int TRANSPARENT = 0x00000000;
@@ -1208,18 +1208,15 @@ public class FocusSurfaceView extends SurfaceView {
         //预览界面的宽高
         float preWidth = getWidth();
         float preHeight = getHeight();
-
         //预览界面和照片的比例
         float preRW = picWidth / preWidth;
         float preRH = picHeight / preHeight;
-
         //裁剪框的位置和宽高
         RectF frameRect = getFrameRect();
         float frameLeft = frameRect.left;
         float frameTop = frameRect.top;
         float frameWidth = frameRect.width();
         float frameHeight = frameRect.height();
-
         int cropLeft = (int) (frameLeft * preRW);
         int cropTop = (int) (frameTop * preRH);
         int cropWidth = (int) (frameWidth * preRW);

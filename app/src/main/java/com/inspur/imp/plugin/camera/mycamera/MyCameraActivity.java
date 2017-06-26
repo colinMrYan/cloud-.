@@ -15,7 +15,6 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 import android.view.OrientationEventListener;
 import android.view.Surface;
 import android.view.SurfaceHolder;
@@ -203,13 +202,9 @@ public class MyCameraActivity extends Activity implements View.OnClickListener, 
             List<Camera.Size> PictureSizeList = parameters.getSupportedPictureSizes();
             Camera.Size pictureSize = CameraUtils.getInstance(this).getPictureSize(PictureSizeList, 700);
             parameters.setPictureSize(pictureSize.width, pictureSize.height);
-            Log.d("jason", "pictureSize.width=" + pictureSize.width);
-            Log.d("jason", "pictureSize.height=" + pictureSize.height);
             List<Camera.Size> previewSizeList = parameters.getSupportedPreviewSizes();
             Camera.Size previewSize = CameraUtils.getInstance(this).getPreviewSize(previewSizeList, 700);
             parameters.setPreviewSize(previewSize.width, previewSize.height);
-            Log.d("jason", "previewSize.width=" + previewSize.width);
-            Log.d("jason", "previewSize.height=" + previewSize.height);
             parameters.setFlashMode(cameraFlashModel);
             parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);//连续对焦
             mCamera.setParameters(parameters);
@@ -316,7 +311,6 @@ public class MyCameraActivity extends Activity implements View.OnClickListener, 
         }, null, null, new Camera.PictureCallback() {
             @Override
             public void onPictureTaken(byte[] data, Camera camera) {
-                Log.d("jason", "data.size=" + data.length / 1024.0);
                 detectScreenOrientation.disable();
                 //  Bitmap originBitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
                 //前置摄像头和后置摄像头拍照后图像角度旋转
