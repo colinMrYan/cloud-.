@@ -14,10 +14,7 @@ import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.StringUtils;
 
-import org.json.JSONException;
 import org.json.JSONObject;
-
-import cn.jpush.android.api.JPushInterface;
 
 /**
  * Created by yufuchang on 2017/6/20.
@@ -86,24 +83,25 @@ public class HuaWeiPushReceiver extends PushReceiver{
         String accessToken = PreferencesUtils.getString(context,
                 "accessToken", "");
         if(!StringUtils.isBlank(accessToken)){
-            String extra = "";
-            if (extras.containsKey(JPushInterface.EXTRA_EXTRA)) {
-                extra = extras.getString(JPushInterface.EXTRA_EXTRA);
-            }
-            if (!StringUtils.isBlank(extra)) {
-                try {
-                    JSONObject extraObj = new JSONObject(extra);
-                    if (extraObj.has("calEvent")) {
-                        String json = extraObj.getString("calEvent");
-                        JSONObject calEventObj = new JSONObject(json);
-                        openCalEvent(context, calEventObj);
-                        return;
-                    }
-                } catch (JSONException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
-            }
+            //此处以下
+//            String extra = "";
+//            if (extras.containsKey(JPushInterface.EXTRA_EXTRA)) {
+//                extra = extras.getString(JPushInterface.EXTRA_EXTRA);
+//            }
+//            if (!StringUtils.isBlank(extra)) {
+//                try {
+//                    JSONObject extraObj = new JSONObject(extra);
+//                    if (extraObj.has("calEvent")) {
+//                        String json = extraObj.getString("calEvent");
+//                        JSONObject calEventObj = new JSONObject(json);
+//                        openCalEvent(context, calEventObj);
+//                        return;
+//                    }
+//                } catch (JSONException e) {
+//                    // TODO Auto-generated catch block
+//                    e.printStackTrace();
+//                }
+//            }
             startIndexActivity(context);
         }else{
             statLoginActivity(context);
