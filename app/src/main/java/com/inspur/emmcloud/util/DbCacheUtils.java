@@ -41,12 +41,17 @@ public class DbCacheUtils {
 						arg0.dropTable(Channel.class);
 						arg0.dropTable(ChannelGroup.class);
 						arg0.dropTable(AppCommonlyUse.class);
+//						arg0.dropTable(PVCollectModel.class);
 					}else if(oldVersion == 2){
 						arg0.dropTable(ChannelGroup.class);
 						arg0.dropTable(Channel.class);
 						arg0.dropTable(AppCommonlyUse.class);
+//						arg0.dropTable(PVCollectModel.class);
 					}else if(oldVersion == 3||oldVersion == 4){
 						arg0.dropTable(AppCommonlyUse.class);
+//						arg0.dropTable(PVCollectModel.class);
+					} else if(oldVersion == 5 || oldVersion == 6){
+//						arg0.dropTable(PVCollectModel.class);
 					}
 					if (oldVersion <6 ){
 						if (tableIsExist("com_inspur_emmcloud_bean_Contact",arg0.getDatabase())){
