@@ -26,4 +26,19 @@ public class MyAppWebConfig {
      * 云+Web 超大字体
      */
     public static final int LARGEST = 150;
+
+    /**
+     * CRM大字体
+     */
+    public static final int CRM_BIG = 115;
+
+    /**
+     * CRM更大字体
+     */
+    public static final int CRM_BIGGER = 130;
+
+    /**
+     * CRM超大字体
+     */
+    public static final int CRM_BIGGEST = 150;
 }
