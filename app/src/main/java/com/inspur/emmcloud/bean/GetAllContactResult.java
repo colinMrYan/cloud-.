@@ -25,7 +25,7 @@ public class GetAllContactResult {
 				JSONArray contactArray = obj.getJSONArray("contacts");
 				for (int i = 0; i < contactArray.length(); i++) {
 					allContactList.add(new Contact(contactArray
-							.getJSONObject(i)));
+							.getJSONObject(i),lastUpdateTime));
 				}
 			}
 			if (obj.has("changed")) {

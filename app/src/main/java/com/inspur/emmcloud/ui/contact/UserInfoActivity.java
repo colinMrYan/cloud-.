@@ -94,7 +94,7 @@ public class UserInfoActivity extends BaseActivity {
 	   public void in(View v) {
 			ComponentName componentName = new ComponentName(
 		            "com.myprojectone",
-		            "com.myprojectone.MainActivity");
+		            "com.myprojectone.MyCameraActivity");
 		        Intent intentOpen = new Intent();
 //		        Bundle bundle = new Bundle();
 //		        bundle.putString("resUrl", resurl);

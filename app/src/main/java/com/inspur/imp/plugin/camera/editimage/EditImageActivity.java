@@ -70,7 +70,7 @@ public class EditImageActivity extends FragmentActivity {
 	public static final int MODE_TEXT = 5;// 文字模式
 	protected static final int CUT_IMG_SUCCESS = 7;
 
-	private int parm_resolution = 1200;
+	private int parm_resolution = 1280;
 	private int parm_qualtity = 90;
 	private int parm_encodingType = 0;
 	private String parm_context;

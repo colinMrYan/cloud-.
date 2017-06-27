@@ -123,6 +123,7 @@ public class IndexActivity extends BaseFragmentActivity implements
         ((MyApplication) getApplicationContext()).addActivity(this);
         ((MyApplication) getApplicationContext()).setIndexActvityRunning(true);
         ((MyApplication) getApplicationContext()).closeAllDb();
+        ((MyApplication)getApplicationContext()).clearUserPhotoMap();
         DbCacheUtils.initDb(getApplicationContext());
         userId = ((MyApplication) getApplication()).getUid();
         initReactNative();

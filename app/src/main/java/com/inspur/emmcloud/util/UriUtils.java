@@ -226,12 +226,16 @@ public class UriUtils {
         String headImgUrl = null;
         if (StringUtils.isBlank(inspurID) || inspurID.equals("null"))
             return null;
-        Contact contact = ContactCacheUtils.getUserContact(context,inspurID);
-        if(contact != null){
-            headImgUrl = "https://emm.inspur.com/img/userhead/" + inspurID;
-            String lastUpdateTime = contact.getLastUpdateTime();
-            if(!StringUtils.isBlank(lastUpdateTime)&&(!lastUpdateTime.equals("null"))){
-                headImgUrl = headImgUrl + "?"+lastUpdateTime;
+        headImgUrl = ((MyApplication)context.getApplicationContext()).getUserPhotoUrl(inspurID);
+        if (headImgUrl == null){
+            Contact contact = ContactCacheUtils.getUserContact(context,inspurID);
+            if(contact != null){
+                headImgUrl = "https://emm.inspur.com/img/userhead/" + inspurID;
+                String lastUpdateTime = contact.getLastUpdateTime();
+                if(!StringUtils.isBlank(lastUpdateTime)&&(!lastUpdateTime.equals("null"))){
+                    headImgUrl = headImgUrl + "?"+lastUpdateTime;
+                }
+                ((MyApplication)context.getApplicationContext()).setUsesrPhotoUrl(inspurID,headImgUrl);
             }
         }
         return headImgUrl;

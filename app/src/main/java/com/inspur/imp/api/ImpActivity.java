@@ -30,7 +30,6 @@ import com.inspur.emmcloud.util.AppUtils;
 import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.MDM.MDM;
 import com.inspur.emmcloud.util.PreferencesByUsersUtils;
-import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.imp.engine.webview.ImpWebChromeClient;
 import com.inspur.imp.engine.webview.ImpWebView;
@@ -126,9 +125,6 @@ public class ImpActivity extends ImpBaseActivity {
         String token = ((MyApplication) getApplicationContext())
                 .getToken();
         isMDM = getIntent().hasExtra("function") && getIntent().getStringExtra("function").equals("mdm");
-        if (isMDM) {
-            token = PreferencesUtils.getString(this, "mdm_accessToken");
-        }
         setOauthHeader(token);
         setLangHeader(UriUtils.getLanguageCookie(this));
         setUserAgent("/emmcloud/" + AppUtils.getVersion(this));
