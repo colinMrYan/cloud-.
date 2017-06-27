@@ -34,6 +34,7 @@ public class MyAppConfig {
 	public static final String ERROR_FILE_PATH = Environment
 			.getExternalStorageDirectory() + "/IMP-Cloud/";
 	public static final String[] clientLanguages = { "zh-CN", "en-US", "zh-TW" };
+	public static final boolean isUseMarkdown = true;
 
 	public static Map<String, String> getLocalLanguageMap() {
 		Map<String, String> languageMap = new HashMap<String, String>();
