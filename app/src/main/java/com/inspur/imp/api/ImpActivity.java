@@ -29,7 +29,6 @@ import com.inspur.emmcloud.config.MyAppWebConfig;
 import com.inspur.emmcloud.util.AppUtils;
 import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.MDM.MDM;
-import com.inspur.emmcloud.util.StateBarColor;
 import com.inspur.emmcloud.util.PreferencesByUsersUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.UriUtils;
@@ -90,6 +89,8 @@ public class ImpActivity extends ImpBaseActivity {
             }else if(isZoomable == 1){
                 findViewById(R.id.imp_change_font_size_btn).setVisibility(View.VISIBLE);
             }
+        }else {
+            findViewById(R.id.imp_change_font_size_btn).setVisibility(View.GONE);
         }
         getWindow().setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
