@@ -29,6 +29,7 @@ import com.inspur.emmcloud.bean.GetMsgCommentResult;
 import com.inspur.emmcloud.bean.GetMsgResult;
 import com.inspur.emmcloud.bean.GetSendMsgResult;
 import com.inspur.emmcloud.bean.Msg;
+import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
 import com.inspur.emmcloud.util.ChannelCacheUtils;
 import com.inspur.emmcloud.util.FileUtils;
@@ -53,6 +54,11 @@ import com.inspur.emmcloud.widget.ScrollViewWithListView;
 import com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout;
 import com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout.OnRefreshListener;
 import com.inspur.emmcloud.widget.pullableview.PullableScrollView;
+import com.zzhoujay.richtext.LinkHolder;
+import com.zzhoujay.richtext.RichText;
+import com.zzhoujay.richtext.RichType;
+import com.zzhoujay.richtext.callback.LinkFixCallback;
+import com.zzhoujay.richtext.callback.OnUrlClickListener;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -453,21 +459,41 @@ public class ChannelMsgDetailActivity extends BaseActivity implements
 					.findViewById(R.id.msg_img);
 			final Comment comment = commentList.get(position);
 			userNameText.setText(comment.getTitle());
-			contentText.setMovementMethod(LinkMovementMethod.getInstance());
 			String source = comment.getSource();
-//			String content = MentionsMatcher.handleMentioin(source);
-//			contentText.setText(Html.fromHtml(content));
-			String mentionsString = comment.getMentions();
-			String urlsString = comment.getUrls();
-			String[] mentions = mentionsString.replace("[", "").replace("]", "").split(",");
-			String[] urls = urlsString.replace("[", "").replace("]", "").split(",");
-			List<String> mentionList = Arrays.asList(mentions);
-			List<String> urlList = Arrays.asList(urls);
-			SpannableString spannableString = MentionsAndUrlShowUtils.handleMentioin(source, mentionList, urlList);
-			contentText.setText(spannableString);
-			TransHtmlToTextUtils.stripUnderlines(contentText,
-					Color.parseColor("#0f7bca"));
-
+			if (MyAppConfig.isUseMarkdown){
+				RichText.from(source)
+						.type(RichType.MARKDOWN)
+						.linkFix(new LinkFixCallback() {
+							@Override
+							public void fix(LinkHolder holder) {
+								holder.setUnderLine(false);
+								holder.setColor(Color.parseColor("#0f7bca"));
+							}
+						})
+						.urlClick(new OnUrlClickListener() {
+							@Override
+							public boolean urlClicked(String url) {
+								if (url.startsWith("http")){
+									UriUtils.openUrl(ChannelMsgDetailActivity.this,url,"");
+									return  true;
+								}
+								return false;
+							}
+						})
+						.into(contentText);
+			}else{
+				contentText.setMovementMethod(LinkMovementMethod.getInstance());
+				String mentionsString = comment.getMentions();
+				String urlsString = comment.getUrls();
+				String[] mentions = mentionsString.replace("[", "").replace("]", "").split(",");
+				String[] urls = urlsString.replace("[", "").replace("]", "").split(",");
+				List<String> mentionList = Arrays.asList(mentions);
+				List<String> urlList = Arrays.asList(urls);
+				SpannableString spannableString = MentionsAndUrlShowUtils.handleMentioin(source, mentionList, urlList);
+				contentText.setText(spannableString);
+				TransHtmlToTextUtils.stripUnderlines(contentText,
+						Color.parseColor("#0f7bca"));
+			}
 			String time = TimeUtils.getDisplayTime(getApplicationContext(),
 					comment.getTimestamp());
 			sendTimeText.setText(time);
