@@ -6,8 +6,11 @@ import android.os.Handler;
 import android.os.IBinder;
 
 import com.alibaba.fastjson.JSONObject;
+import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.AppAPIService;
+import com.inspur.emmcloud.util.ContactCacheUtils;
+import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.PVCollectModelCacheUtils;
 
@@ -51,11 +54,15 @@ public class PVCollectService extends Service {
 						String collectInfo = PVCollectModelCacheUtils.getCollectModelListJson(getApplicationContext());
 						JSONObject jsonObject = new JSONObject();
 						jsonObject.put("userContent",collectInfo);
-						jsonObject.put("","");
-						if (collectInfo != null) {
-							apiService.uploadPVCollect(collectInfo);
-							return;
-						}
+						String userId = ((MyApplication)getApplication()).getUid();
+						jsonObject.put("userID", userId);
+						jsonObject.put("userName", ContactCacheUtils.getUserContact(PVCollectService.this,userId).getName());
+						LogUtils.YfcDebug("记录的信息："+jsonObject.toString());
+						//当需要上传时打开这里并修改上传接口
+//						if (collectInfo != null) {
+//							apiService.uploadPVCollect(collectInfo);
+//							return;
+//						}
 					}
 					continueToRun();
 				}

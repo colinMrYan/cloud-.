@@ -38,6 +38,7 @@ import com.inspur.emmcloud.bean.GetAppTabAutoResult;
 import com.inspur.emmcloud.bean.GetClientIdRsult;
 import com.inspur.emmcloud.bean.GetSearchChannelGroupResult;
 import com.inspur.emmcloud.bean.Language;
+import com.inspur.emmcloud.bean.PVCollectModel;
 import com.inspur.emmcloud.bean.ReactNativeUpdateBean;
 import com.inspur.emmcloud.bean.SplashPageBean;
 import com.inspur.emmcloud.callback.CommonCallBack;
@@ -63,6 +64,7 @@ import com.inspur.emmcloud.util.FileUtils;
 import com.inspur.emmcloud.util.ImageDisplayUtils;
 import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.NetUtils;
+import com.inspur.emmcloud.util.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.RNCacheViewManager;
@@ -733,6 +735,32 @@ public class IndexActivity extends BaseFragmentActivity implements
         if(tabId.equals(getString(R.string.find))){
             updateReactNative();
         }
+        recordOpenTab(tabId);
+    }
+
+    /**
+     * 记录打开的tab页
+     * @param tabId
+     */
+    private void recordOpenTab(String tabId) {
+        if(tabId.equals(getString(R.string.communicate))){
+            tabId = "communicate";
+        }else if(tabId.equals(getString(R.string.work))){
+            tabId = "work";
+        }else if(tabId.equals(getString(R.string.find))){
+            tabId = "find";
+        }else if(tabId.equals(getString(R.string.application))){
+            tabId = "application";
+        }else if(tabId.equals(getString(R.string.mine))){
+            tabId = "mine";
+        }else{
+            tabId = "";
+        }
+        PVCollectModel pvCollectModel = new PVCollectModel();
+        pvCollectModel.setFunctionID(tabId);
+        pvCollectModel.setFunctionType(tabId);
+        pvCollectModel.setCollectTime(System.currentTimeMillis());
+        PVCollectModelCacheUtils.saveCollectModel(IndexActivity.this,pvCollectModel);
     }
 
     private Fragment getCurrentFragment() {
