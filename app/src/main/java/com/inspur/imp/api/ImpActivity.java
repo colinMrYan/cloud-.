@@ -30,7 +30,6 @@ import com.inspur.emmcloud.util.AppUtils;
 import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.MDM.MDM;
 import com.inspur.emmcloud.util.PreferencesByUsersUtils;
-import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.imp.engine.webview.ImpWebChromeClient;
 import com.inspur.imp.engine.webview.ImpWebView;
@@ -126,9 +125,6 @@ public class ImpActivity extends ImpBaseActivity {
         String token = ((MyApplication) getApplicationContext())
                 .getToken();
         isMDM = getIntent().hasExtra("function") && getIntent().getStringExtra("function").equals("mdm");
-        if (isMDM) {
-            token = PreferencesUtils.getString(this, "mdm_accessToken");
-        }
         setOauthHeader(token);
         setLangHeader(UriUtils.getLanguageCookie(this));
         setUserAgent("/emmcloud/" + AppUtils.getVersion(this));
@@ -261,16 +257,16 @@ public class ImpActivity extends ImpBaseActivity {
                 showChangeFontSizeDialog();
                 break;
             case R.id.app_imp_crm_font_normal_btn:
-                changeNewsFontSize(MyAppWebConfig.SMALLER);
-                break;
-            case R.id.app_imp_crm_font_middle_btn:
                 changeNewsFontSize(MyAppWebConfig.NORMAL);
                 break;
+            case R.id.app_imp_crm_font_middle_btn:
+                changeNewsFontSize(MyAppWebConfig.CRM_BIG);
+                break;
             case R.id.app_imp_crm_font_big_btn:
-                changeNewsFontSize(MyAppWebConfig.LARGER);
+                changeNewsFontSize(MyAppWebConfig.CRM_BIGGER);
                 break;
             case R.id.app_imp_crm_font_biggest_btn:
-                changeNewsFontSize(MyAppWebConfig.LARGEST);
+                changeNewsFontSize(MyAppWebConfig.CRM_BIGGEST);
                 break;
             default:
                 goBack();
@@ -316,9 +312,9 @@ public class ImpActivity extends ImpBaseActivity {
      */
     private void initFontSizeDialogViews(View view) {
         normalBtn = (Button) view.findViewById(R.id.app_imp_crm_font_normal_btn);
-        normalBtn.setText(getString(R.string.news_font_smaller));
+        normalBtn.setText(getString(R.string.news_font_normal));
         middleBtn = (Button) view.findViewById(R.id.app_imp_crm_font_middle_btn);
-        middleBtn.setText(getString(R.string.news_font_normal));
+        middleBtn.setText(getString(R.string.news_font_middle));
         bigBtn = (Button) view.findViewById(R.id.app_imp_crm_font_big_btn);
         bigBtn.setText(getString(R.string.news_font_big_text));
         biggestBtn = (Button) view.findViewById(R.id.app_imp_crm_font_biggest_btn);
@@ -349,16 +345,16 @@ public class ImpActivity extends ImpBaseActivity {
             case MyAppWebConfig.SMALLESET:
                 chooseNormalFont();
                 break;
-            case MyAppWebConfig.SMALLER:
+            case MyAppWebConfig.NORMAL:
                 chooseNormalFont();
                 break;
-            case MyAppWebConfig.NORMAL:
+            case MyAppWebConfig.CRM_BIG:
                 chooseMiddleFont();
                 break;
-            case MyAppWebConfig.LARGER:
+            case MyAppWebConfig.CRM_BIGGER:
                 chooseBigFont();
                 break;
-            case MyAppWebConfig.LARGEST:
+            case MyAppWebConfig.CRM_BIGGEST:
                 chooseBiggestFont();
                 break;
             default:

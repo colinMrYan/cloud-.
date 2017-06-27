@@ -1204,7 +1204,6 @@ public class FocusSurfaceView extends SurfaceView {
         //原始照片的宽高
         float picWidth = originBitmap.getWidth();
         float picHeight = originBitmap.getHeight();
-
         //预览界面的宽高
         float preWidth = getWidth();
         float preHeight = getHeight();
@@ -1233,6 +1232,42 @@ public class FocusSurfaceView extends SurfaceView {
         return cropBitmap;
     }
 
+    /**
+     * 获取照片
+     * @param originBitmap
+     * @return
+     */
+    public Bitmap getPicture(Bitmap originBitmap) {
+        //原始照片的宽高
+        float picWidth = originBitmap.getWidth();
+        float picHeight = originBitmap.getHeight();
+        //预览界面的宽高
+        float preWidth = getWidth();
+        float preHeight = getHeight();
+        //预览界面和照片的比例
+        float preRW = picWidth / preWidth;
+        float preRH = picHeight / preHeight;
+        //裁剪框的位置和宽高
+        RectF frameRect = getFrameRect();
+        float frameLeft = frameRect.left;
+        float frameTop = frameRect.top;
+        float frameWidth = frameRect.width();
+        float frameHeight = frameRect.height();
+        int cropLeft = (int) (frameLeft * preRW);
+        int cropTop = (int) (frameTop * preRH);
+        int cropWidth = (int) (frameWidth * preRW);
+        int cropHeight = (int) (frameHeight * preRH);
+        //当没有裁剪框时裁剪bitmap返回原图
+        if (cropHeight ==0 || cropWidth == 0){
+            return  originBitmap;
+        }
+        Bitmap cropBitmap = Bitmap.createBitmap(originBitmap, cropLeft, cropTop, cropWidth, cropHeight);
+
+        if (mCropMode == CropMode.CIRCLE) {
+            cropBitmap = getCircularBitmap(cropBitmap);
+        }
+        return cropBitmap;
+    }
     /**
      * 获取圆形图片
      */

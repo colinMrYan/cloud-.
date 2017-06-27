@@ -474,6 +474,7 @@
     <string name="news_share_text">Share</string>
     <string name="news_font_smaller">Small</string>
     <string name="news_font_normal">Normal</string>
+    <string name="news_font_middle">Middle</string>
     <string name="news_font_big_text">Large</string>
     <string name="news_font_biggest_text">Extra</string>
     <string name="news_font_name_text">Font Size</string>

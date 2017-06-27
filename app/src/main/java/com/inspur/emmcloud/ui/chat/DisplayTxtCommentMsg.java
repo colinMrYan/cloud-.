@@ -18,6 +18,7 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.bean.Msg;
+import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.util.DensityUtil;
 import com.inspur.emmcloud.util.IntentUtils;
 import com.inspur.emmcloud.util.JSONUtils;
@@ -28,6 +29,12 @@ import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.TimeUtils;
 import com.inspur.emmcloud.util.ToastUtils;
 import com.inspur.emmcloud.util.TransHtmlToTextUtils;
+import com.inspur.emmcloud.util.UriUtils;
+import com.zzhoujay.richtext.LinkHolder;
+import com.zzhoujay.richtext.RichText;
+import com.zzhoujay.richtext.RichType;
+import com.zzhoujay.richtext.callback.LinkFixCallback;
+import com.zzhoujay.richtext.callback.OnUrlClickListener;
 
 import java.util.Arrays;
 import java.util.List;
@@ -49,43 +56,12 @@ public class DisplayTxtCommentMsg {
 	public static void displayCommentMsg(final Activity context,
 			View convertView, final Msg msg, ChatAPIService apiService) {
 		String msgBody = msg.getBody();
-		boolean isMyMsg = msg.getUid().equals(
+		final boolean isMyMsg = msg.getUid().equals(
 				((MyApplication) context.getApplicationContext()).getUid());
 		final TextView commentContentText = (TextView) convertView
 				.findViewById(R.id.comment_text);
 		TextView commentTitleText = (TextView) convertView
 				.findViewById(R.id.comment_title_text);
-
-		String commentContent = JSONUtils.getString(msgBody, "source", "");
-		String[] mentions = JSONUtils.getString(msgBody, "mentions", "")
-				.replace("[", "").replace("]", "").split(",");
-		String[] urls = JSONUtils.getString(msgBody, "urlList", "")
-				.replace("[", "").replace("]", "").split(",");
-		List<String> mentionList = Arrays.asList(mentions);
-		List<String> urlList = Arrays.asList(urls);
-
-		if (StringUtils.isBlank(commentContent)) {
-			commentContent = msg.getCommentContent();
-		}
-		// 为了兼容原来的评论类型的消息
-		if (StringUtils.isBlank(commentContent)) {
-			commentContent = JSONUtils.getString(msgBody, "content", "");
-		}
-		SpannableString spannableString = MentionsAndUrlShowUtils
-				.handleMentioin(commentContent, mentionList, urlList);
-//		JSONArray mentionArray = JSONUtils.getJSONArray(msgBody, "mentions",
-//				new JSONArray());
-//		JSONArray urlArray = JSONUtils.getJSONArray(msgBody, "urlList",
-//				new JSONArray());
-			// TextView设置此属性会让点击事件不响应，所有当没有@ url时不进行设置
-			commentContentText.setMovementMethod(LinkMovementMethod
-					.getInstance());
-		commentContentText.setText(spannableString);
-		TransHtmlToTextUtils.stripUnderlines(
-				commentContentText,
-				context.getResources().getColor(
-						isMyMsg ? R.color.hightlight_in_blue_bg
-								: R.color.header_bg));
 		// 取出评论消息的id
 		Msg commentedMsg = MsgCacheUtil.getCacheMsg(context,
 				msg.getCommentMid());
@@ -114,15 +90,7 @@ public class DisplayTxtCommentMsg {
 			rootLayout.setPadding(normalPadding + arrowPadding, normalPadding,
 					normalPadding, normalPadding);
 		}
-		commentContentText.setOnLongClickListener(new View.OnLongClickListener() {
-			@Override
-			public boolean onLongClick(View v) {
-				ClipboardManager cmb = (ClipboardManager)context.getSystemService(Context.CLIPBOARD_SERVICE);
-				cmb.setPrimaryClip(ClipData.newPlainText(null, commentContentText.getText()));
-				ToastUtils.show(context,R.string.copyed_to_paste_board);
-				return true;
-			}
-		});
+		String commentContent = JSONUtils.getString(msgBody, "source", "");
 		commentContentText.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -133,6 +101,70 @@ public class DisplayTxtCommentMsg {
 						ChannelMsgDetailActivity.class, bundle);
 			}
 		});
+		if (MyAppConfig.isUseMarkdown){
+			RichText.from(commentContent)
+					.type(RichType.MARKDOWN)
+					.linkFix(new LinkFixCallback() {
+						@Override
+						public void fix(LinkHolder holder) {
+							holder.setUnderLine(false);
+							holder.setColor(context.getResources().getColor(
+									isMyMsg ? R.color.hightlight_in_blue_bg
+											: R.color.header_bg));
+						}
+					})
+					.urlClick(new OnUrlClickListener() {
+						@Override
+						public boolean urlClicked(String url) {
+							if (url.startsWith("http")){
+								UriUtils.openUrl(context,url,"");
+								return  true;
+							}
+							return false;
+						}
+					})
+					.into(commentContentText);
+		}else {
+			String[] mentions = JSONUtils.getString(msgBody, "mentions", "")
+					.replace("[", "").replace("]", "").split(",");
+			String[] urls = JSONUtils.getString(msgBody, "urlList", "")
+					.replace("[", "").replace("]", "").split(",");
+			List<String> mentionList = Arrays.asList(mentions);
+			List<String> urlList = Arrays.asList(urls);
+
+			if (StringUtils.isBlank(commentContent)) {
+				commentContent = msg.getCommentContent();
+			}
+			// 为了兼容原来的评论类型的消息
+			if (StringUtils.isBlank(commentContent)) {
+				commentContent = JSONUtils.getString(msgBody, "content", "");
+			}
+			SpannableString spannableString = MentionsAndUrlShowUtils
+					.handleMentioin(commentContent, mentionList, urlList);
+			// TextView设置此属性会让点击事件不响应，所有当没有@ url时不进行设置
+			commentContentText.setMovementMethod(LinkMovementMethod
+					.getInstance());
+			commentContentText.setText(spannableString);
+			TransHtmlToTextUtils.stripUnderlines(
+					commentContentText,
+					context.getResources().getColor(
+							isMyMsg ? R.color.hightlight_in_blue_bg
+									: R.color.header_bg));
+
+			commentContentText.setOnLongClickListener(new View.OnLongClickListener() {
+				@Override
+				public boolean onLongClick(View v) {
+					ClipboardManager cmb = (ClipboardManager)context.getSystemService(Context.CLIPBOARD_SERVICE);
+					cmb.setPrimaryClip(ClipData.newPlainText(null, commentContentText.getText()));
+					ToastUtils.show(context,R.string.copyed_to_paste_board);
+					return true;
+				}
+			});
+
+		}
+
+
+
 
 	}
 
@@ -179,17 +211,5 @@ public class DisplayTxtCommentMsg {
 		commentTitleText.setText(style);
 	}
 
-	/**
-	 * 
-	 *
-	 * @param context
-	 * @param msg
-	 */
-	protected static void goDetail(Activity context, Msg msg) {
-		Bundle bundle = new Bundle();
-		bundle.putSerializable("mid", msg.getCommentMid());
-		IntentUtils.startActivity(context, ChannelMsgDetailActivity.class,
-				bundle);
-	}
 
 }
