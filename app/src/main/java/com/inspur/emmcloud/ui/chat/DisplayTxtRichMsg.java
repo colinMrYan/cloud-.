@@ -18,6 +18,7 @@ import com.inspur.emmcloud.util.MentionsAndUrlShowUtils;
 import com.inspur.emmcloud.util.ToastUtils;
 import com.inspur.emmcloud.util.TransHtmlToTextUtils;
 import com.inspur.emmcloud.util.UriUtils;
+import com.zzhoujay.richtext.CacheType;
 import com.zzhoujay.richtext.LinkHolder;
 import com.zzhoujay.richtext.RichText;
 import com.zzhoujay.richtext.RichType;
@@ -82,6 +83,7 @@ public class DisplayTxtRichMsg {
 							return false;
 						}
 					})
+					.cache(CacheType.ALL)
 					.into(richText);
 		}else{
 			String[] mentions = JSONUtils.getString(msgBody, "mentions", "")

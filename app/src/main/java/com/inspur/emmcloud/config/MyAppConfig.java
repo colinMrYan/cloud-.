@@ -31,8 +31,8 @@ public class MyAppConfig {
 			.getExternalStorageDirectory() + "/IMP-Cloud/cache/";
 	public static final String LOCAL_DOWNLOAD_PATH = Environment
 			.getExternalStorageDirectory() + "/IMP-Cloud/download/";
-	public static final String ERROR_FILE_PATH = Environment
-			.getExternalStorageDirectory() + "/IMP-Cloud/";
+	public static final String LOCAL_CACHE_MARKDOWN_PATH = Environment
+			.getExternalStorageDirectory() + "/IMP-Cloud/cache/Markdown/";
 	public static final String[] clientLanguages = { "zh-CN", "en-US", "zh-TW" };
 	public static final boolean isUseMarkdown = true;
 
