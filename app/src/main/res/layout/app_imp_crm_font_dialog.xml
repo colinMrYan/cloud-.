@@ -45,7 +45,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/news_font_name_text"
-                android:textColor="#ff1D2128"
+                android:textColor="#ff666666"
                 android:textSize="@dimen/content_smaller_textsize" />
 
             <View
