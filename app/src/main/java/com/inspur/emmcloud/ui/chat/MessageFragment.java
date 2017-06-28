@@ -121,16 +121,7 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 		return rootView;
 	}
 
-	/**
-	 * 记录用户点击的频道
-	 */
-	private void recordUserClickChannel() {
-		PVCollectModel pvCollectModel = new PVCollectModel();
-		pvCollectModel.setFunctionID("channel");
-		pvCollectModel.setFunctionType("communicate");
-		pvCollectModel.setCollectTime(System.currentTimeMillis());
-		PVCollectModelCacheUtils.saveCollectModel(getActivity(),pvCollectModel);
-	}
+
 
 	@Override
 	public void onAttach(Context context) {
@@ -609,7 +600,6 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 				}
 				setChannelAllMsgRead(channel);
 				refreshIndexNotify();
-				recordUserClickChannel();
 			}
 
 		});
