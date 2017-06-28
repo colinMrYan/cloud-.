@@ -35,8 +35,7 @@ public class PVCollectModelCacheUtils {
 		return collectModelList;
 	}
 
-	public static String getCollectModelListJson(Context context){
-		String CollectModelListJson = null;
+	public static JSONArray getCollectModelListJson(Context context){
 		JSONArray array = new JSONArray();
 		List<PVCollectModel> collectModelList = getCollectModelList(context);
 		if (collectModelList.size()>0){
@@ -45,16 +44,8 @@ public class PVCollectModelCacheUtils {
 				JSONObject obj = pvCollectModel.getObj();
 				array.put(obj);
 			}
-			JSONObject allObj = new JSONObject();
-			try {
-				allObj.put("PVList",array);
-				CollectModelListJson = allObj.toString();
-			}catch (Exception e){
-				e.printStackTrace();
-			}
-
 		}
-		return  CollectModelListJson;
+		return  array;
 	}
 	
 	
