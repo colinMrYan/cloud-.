@@ -33,7 +33,7 @@ public class FocusSurfaceView extends SurfaceView {
     private static final int MIN_FRAME_SIZE_IN_DP = 50;
     private static final int FRAME_STROKE_WEIGHT_IN_DP = 1;
     private static final int GUIDE_STROKE_WEIGHT_IN_DP = 1;
-    private static final float DEFAULT_INITIAL_FRAME_SCALE = 0.8f;
+    private static final float DEFAULT_INITIAL_FRAME_SCALE = 0.85f;
     private static final int DEFAULT_ANIMATION_DURATION_MILLIS = 10;
 
     private static final int TRANSPARENT = 0x00000000;

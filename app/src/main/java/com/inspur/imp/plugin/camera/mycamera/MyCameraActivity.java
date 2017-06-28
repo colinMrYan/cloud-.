@@ -13,7 +13,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.view.OrientationEventListener;
@@ -24,6 +23,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.config.MyAppConfig;
@@ -145,9 +145,12 @@ public class MyCameraActivity extends Activity implements View.OnClickListener, 
         if (checkPermission()) {
             try {
                 mCamera = Camera.open(currentCameraFacing);//1:采集指纹的摄像头. 0:拍照的摄像头.
+
+                Camera.Parameters mParameters = mCamera.getParameters();
+                mCamera.setParameters(mParameters);
                 mCamera.setPreviewDisplay(mHolder);
             } catch (Exception e) {
-                Snackbar.make(mTakeBT, "camera open failed!", Snackbar.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(),R.string.open_camera_fail_by_perminssion,Toast.LENGTH_LONG).show();
                 finish();
                 e.printStackTrace();
             }
@@ -172,9 +175,11 @@ public class MyCameraActivity extends Activity implements View.OnClickListener, 
                     if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                         initCamera();
                         setCameraParams();
+                        break;
                     }
                 }
-
+                Toast.makeText(getApplicationContext(),R.string.open_camera_fail_by_perminssion,Toast.LENGTH_LONG).show();
+                finish();
                 break;
         }
     }
@@ -201,14 +206,17 @@ public class MyCameraActivity extends Activity implements View.OnClickListener, 
             parameters.setRotation(rotateAngle);
 
             List<Camera.Size> PictureSizeList = parameters.getSupportedPictureSizes();
-            Camera.Size pictureSize = CameraUtils.getInstance(this).getPictureSize(PictureSizeList, 700);
+            Camera.Size pictureSize = CameraUtils.getInstance(this).getPictureSize(PictureSizeList, 1000);
             parameters.setPictureSize(pictureSize.width, pictureSize.height);
             List<Camera.Size> previewSizeList = parameters.getSupportedPreviewSizes();
-            Camera.Size previewSize = CameraUtils.getInstance(this).getPreviewSize(previewSizeList, 700);
+            Camera.Size previewSize = CameraUtils.getInstance(this).getPreviewSize(previewSizeList, 1300);
             parameters.setPreviewSize(previewSize.width, previewSize.height);
-            parameters.setFlashMode(cameraFlashModel);
-            List<String> focusModes = parameters.getSupportedFocusModes();
-            if (focusModes.contains(parameters.FOCUS_MODE_CONTINUOUS_PICTURE))
+            List<String> modelList = parameters.getSupportedFlashModes();
+            if (modelList != null && modelList.contains(cameraFlashModel)){
+                parameters.setFlashMode(cameraFlashModel);
+            }
+            List<String> focusModeList = parameters.getSupportedFocusModes();
+            if (focusModeList != null && focusModeList.contains(parameters.FOCUS_MODE_CONTINUOUS_PICTURE))
                 parameters.setFocusMode(parameters.FOCUS_MODE_CONTINUOUS_PICTURE);//连续对焦
             mCamera.setParameters(parameters);
             mCamera.startPreview();
@@ -245,15 +253,22 @@ public class MyCameraActivity extends Activity implements View.OnClickListener, 
 
     @Override
     public void surfaceDestroyed(SurfaceHolder surfaceHolder) {
+        surfaceHolder.removeCallback(this);
         releaseCamera();
     }
 
     private void releaseCamera() {
-        if (mCamera != null) {
-            mCamera.stopPreview();
-            mCamera.release();
-            mCamera = null;
+        try {
+            if (mCamera != null) {
+                mCamera.setPreviewCallback(null);
+                mCamera.stopPreview();
+                mCamera.release();
+                mCamera = null;
+            }
+        }catch (Exception e){
+            e.printStackTrace();
         }
+
     }
 
     @Override
@@ -281,7 +296,6 @@ public class MyCameraActivity extends Activity implements View.OnClickListener, 
                 setCameraParams();
                 break;
             case R.id.close_camera_btn:
-                releaseCamera();
                 finish();
                 break;
             case R.id.camera_light_switch_btn:
