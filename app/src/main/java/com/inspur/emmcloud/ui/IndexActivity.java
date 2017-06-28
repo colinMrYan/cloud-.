@@ -117,6 +117,7 @@ public class IndexActivity extends BaseFragmentActivity implements
     private boolean isSplash = false;
     private WebView webView;
     private boolean isCommunicationRunning =false;
+    private boolean isSystemChangeTag = true;//控制如果是系统切换的tab则不计入用户行为
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -312,6 +313,7 @@ public class IndexActivity extends BaseFragmentActivity implements
                         break;
                     case CHANGE_TAB:
                         mTabHost.setCurrentTab(getTabIndex());
+                        isSystemChangeTag = true;
                         break;
                     case RELOAD_WEB:
                         if (webView != null){
@@ -533,6 +535,7 @@ public class IndexActivity extends BaseFragmentActivity implements
         }else {
             mTabHost.setCurrentTab(getTabIndex());
         }
+        isSystemChangeTag = true;
     }
 
     @Override
@@ -543,6 +546,7 @@ public class IndexActivity extends BaseFragmentActivity implements
             boolean isOpenNotify = getIntent().hasExtra("command") && getIntent().getStringExtra("command").equals("open_notification");
             if (mTabHost!=null && mTabHost.getCurrentTab() != targetTabIndex && !isOpenNotify){
                 mTabHost.setCurrentTab(targetTabIndex);
+                isSystemChangeTag = true;
             }
         }catch (Exception e){
             e.printStackTrace();
@@ -711,6 +715,7 @@ public class IndexActivity extends BaseFragmentActivity implements
         boolean consumed = false;
         if (event.getAction() == MotionEvent.ACTION_DOWN
                 && v.equals(mTabHost.getCurrentTabView())) {
+            LogUtils.YfcDebug("点击TabHost:"+mTabHost.getCurrentTabTag());
             Fragment currentFragment = getCurrentFragment();
 //            addFragment(currentFragment);
             if (currentFragment != null
@@ -720,6 +725,7 @@ public class IndexActivity extends BaseFragmentActivity implements
                 consumed = true;
             }
         }
+        isSystemChangeTag = false;
         return consumed;
     }
 
@@ -735,7 +741,9 @@ public class IndexActivity extends BaseFragmentActivity implements
         if(tabId.equals(getString(R.string.find))){
             updateReactNative();
         }
-        recordOpenTab(tabId);
+        if(!isSystemChangeTag){
+            recordOpenTab(tabId);
+        }
     }
 
     /**

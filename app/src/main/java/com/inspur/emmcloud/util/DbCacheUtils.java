@@ -107,6 +107,14 @@ public class DbCacheUtils {
 		db.configDebug(false);
 	}
 
+	/**
+	 * 判断数据库是否为空
+	 * @return
+     */
+	public static boolean isDbNull(){
+		return db == null;
+	}
+
 	private static  boolean tableIsExist(String tabName, SQLiteDatabase db) {
 		boolean result = false;
 		if (tabName == null) {
@@ -114,7 +122,6 @@ public class DbCacheUtils {
 		}
 		Cursor cursor = null;
 		try {
-
 			String sql = "select count(*) as c from sqlite_master where type ='table' and name ='" + tabName.trim() + "' ";
 			cursor = db.rawQuery(sql, null);
 			if (cursor.moveToNext()) {
