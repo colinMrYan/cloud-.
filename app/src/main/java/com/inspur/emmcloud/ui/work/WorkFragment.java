@@ -31,6 +31,7 @@ import com.inspur.emmcloud.bean.GetTaskListResult;
 import com.inspur.emmcloud.bean.Language;
 import com.inspur.emmcloud.bean.Meeting;
 import com.inspur.emmcloud.bean.MyCalendar;
+import com.inspur.emmcloud.bean.PVCollectModel;
 import com.inspur.emmcloud.bean.TaskResult;
 import com.inspur.emmcloud.ui.work.WorkFragment.MyAdapter.ExpandViewHolder;
 import com.inspur.emmcloud.ui.work.calendar.CalActivity;
@@ -49,6 +50,7 @@ import com.inspur.emmcloud.util.IntentUtils;
 import com.inspur.emmcloud.util.MyCalendarCacheUtils;
 import com.inspur.emmcloud.util.MyCalendarOperationCacheUtils;
 import com.inspur.emmcloud.util.NetUtils;
+import com.inspur.emmcloud.util.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.TimeUtils;
@@ -861,16 +863,52 @@ public class WorkFragment extends Fragment implements OnRefreshListener {
 			if (groupPosition == 0) {
 				intent.setClass(getActivity(), MeetingListActivity.class);
 				startActivityForResult(intent, 0);
+				recordUserClickMeeting();
 			} else if (groupPosition == 1) {
 				intent.setClass(getActivity(), CalActivity.class);
 				startActivity(intent);
+				recordUserClickCal();
 			} else if (groupPosition == 2) {
 				intent.setClass(getActivity(), MessionListActivity.class);
 				startActivityForResult(intent, 0);
+				recordUserClickTodo();
 			}
 			return false;
 		}
 
+	}
+
+	/**
+	 * 记录用户点击会议功能
+	 */
+	private void recordUserClickMeeting() {
+		PVCollectModel pvCollectModel = new PVCollectModel();
+		pvCollectModel.setFunctionID("meeting");
+		pvCollectModel.setFunctionType("work");
+		pvCollectModel.setCollectTime(System.currentTimeMillis());
+		PVCollectModelCacheUtils.saveCollectModel(getActivity(),pvCollectModel);
+	}
+
+	/**
+	 * 记录用户点击日历功能
+	 */
+	private void recordUserClickCal() {
+		PVCollectModel pvCollectModel = new PVCollectModel();
+		pvCollectModel.setFunctionID("calendar");
+		pvCollectModel.setFunctionType("work");
+		pvCollectModel.setCollectTime(System.currentTimeMillis());
+		PVCollectModelCacheUtils.saveCollectModel(getActivity(),pvCollectModel);
+	}
+
+	/**
+	 * 记录用户点击待办功能
+	 */
+	private void recordUserClickTodo() {
+		PVCollectModel pvCollectModel = new PVCollectModel();
+		pvCollectModel.setFunctionID("todo");
+		pvCollectModel.setFunctionType("work");
+		pvCollectModel.setCollectTime(System.currentTimeMillis());
+		PVCollectModelCacheUtils.saveCollectModel(getActivity(),pvCollectModel);
 	}
 
 	class WorkChildClickListener implements OnChildClickListener {
@@ -885,6 +923,7 @@ public class WorkFragment extends Fragment implements OnRefreshListener {
 					intent.setClass(getActivity(), CalEventAddActivity.class);
 					startActivity(intent);
 				}
+				recordUserClickCal();
 			} else if (groupPosition == 2) {
 				if (taskList != null && taskList.size() != 0) {
 					intent.putExtra("task",
@@ -892,6 +931,7 @@ public class WorkFragment extends Fragment implements OnRefreshListener {
 					intent.setClass(getActivity(), MessionDetailActivity.class);
 					startActivity(intent);
 				}
+				recordUserClickTodo();
 			} else if (groupPosition == 0) {
 				if (getMeetingResult != null &&getMeetingResult.getMeetingsList().size() > 0) {
 						Meeting meeting = getMeetingResult.getMeetingsList().get(childPosition);
@@ -903,6 +943,7 @@ public class WorkFragment extends Fragment implements OnRefreshListener {
 					IntentUtils.startActivity(getActivity(),
 							MeetingBookingActivity.class);
 				}
+				recordUserClickMeeting();
 			}
 			return false;
 		}

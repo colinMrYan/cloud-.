@@ -70,10 +70,22 @@ public class UriUtils {
                         activity.getString(R.string.not_support_app_type));
                 break;
         }
+        saveAPPPVCollect(activity,app);
+    }
 
+    /**
+     * pv收集,新闻应用目前为强识别
+     * @param app
+     */
+    private static void saveAPPPVCollect(Activity activity,App app) {
         //web应用PV收集
-        PVCollectModel collectModel = new PVCollectModel(activity, app.getAppID(), "webApp", app.getAppName());
-        PVCollectModelCacheUtils.saveCollectModel(activity, collectModel);
+        if(app != null && app.getAppID().equals("inspur_news_esg")){
+            PVCollectModel pvCollectModel = new PVCollectModel(activity,"news","application",app.getAppName());
+            PVCollectModelCacheUtils.saveCollectModel(activity,pvCollectModel);
+        }else{
+            PVCollectModel collectModel = new PVCollectModel(activity, app.getAppID(), "application", app.getAppName());
+            PVCollectModelCacheUtils.saveCollectModel(activity, collectModel);
+        }
     }
 
     public  static  void  openWebApp(Activity activity,String uri,App app){

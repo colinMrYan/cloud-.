@@ -37,11 +37,13 @@ import com.inspur.emmcloud.bean.AppCommonlyUse;
 import com.inspur.emmcloud.bean.AppGroupBean;
 import com.inspur.emmcloud.bean.AppOrder;
 import com.inspur.emmcloud.bean.GetAppGroupResult;
+import com.inspur.emmcloud.bean.PVCollectModel;
 import com.inspur.emmcloud.util.AppCacheUtils;
 import com.inspur.emmcloud.util.AppTitleUtils;
 import com.inspur.emmcloud.util.IntentUtils;
 import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.NetUtils;
+import com.inspur.emmcloud.util.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.ShortCutUtils;
@@ -195,7 +197,19 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
         @Override
         public void onClick(View v) {
             IntentUtils.startActivity(getActivity(), AppCenterActivity.class);
+            recordUserClickAppCenter();
         }
+    }
+
+    /**
+     * 记录用户使用了应用中心功能
+     */
+    private void recordUserClickAppCenter(){
+        PVCollectModel pvCollectModel = new PVCollectModel();
+        pvCollectModel.setCollectTime(System.currentTimeMillis());
+        pvCollectModel.setFunctionID("appcenter");
+        pvCollectModel.setFunctionType("application");
+        PVCollectModelCacheUtils.saveCollectModel(getActivity(),pvCollectModel);
     }
 
     @Override

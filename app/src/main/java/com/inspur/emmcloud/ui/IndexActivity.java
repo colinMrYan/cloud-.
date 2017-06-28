@@ -38,6 +38,7 @@ import com.inspur.emmcloud.bean.GetAppTabAutoResult;
 import com.inspur.emmcloud.bean.GetClientIdRsult;
 import com.inspur.emmcloud.bean.GetSearchChannelGroupResult;
 import com.inspur.emmcloud.bean.Language;
+import com.inspur.emmcloud.bean.PVCollectModel;
 import com.inspur.emmcloud.bean.ReactNativeUpdateBean;
 import com.inspur.emmcloud.bean.SplashPageBean;
 import com.inspur.emmcloud.callback.CommonCallBack;
@@ -63,6 +64,7 @@ import com.inspur.emmcloud.util.FileUtils;
 import com.inspur.emmcloud.util.ImageDisplayUtils;
 import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.NetUtils;
+import com.inspur.emmcloud.util.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.RNCacheViewManager;
@@ -115,6 +117,7 @@ public class IndexActivity extends BaseFragmentActivity implements
     private boolean isSplash = false;
     private WebView webView;
     private boolean isCommunicationRunning =false;
+    private boolean isSystemChangeTag = true;//控制如果是系统切换的tab则不计入用户行为
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -717,6 +720,8 @@ public class IndexActivity extends BaseFragmentActivity implements
                 listener.onTabReselect();
                 consumed = true;
             }
+        }else {
+            isSystemChangeTag = false;
         }
         return consumed;
     }
@@ -733,6 +738,36 @@ public class IndexActivity extends BaseFragmentActivity implements
         if(tabId.equals(getString(R.string.find))){
             updateReactNative();
         }
+        if(!isSystemChangeTag){
+            recordOpenTab(tabId);
+            isSystemChangeTag = true;
+        }
+    }
+
+    /**
+     * 记录打开的tab页
+     * @param tabId
+     */
+    private void recordOpenTab(String tabId) {
+        if(tabId.equals(getString(R.string.communicate))){
+            tabId = "communicate";
+        }else if(tabId.equals(getString(R.string.work))){
+            tabId = "work";
+        }else if(tabId.equals(getString(R.string.find))){
+            tabId = "find";
+        }else if(tabId.equals(getString(R.string.application))){
+            tabId = "application";
+        }else if(tabId.equals(getString(R.string.mine))){
+            tabId = "mine";
+        }else{
+            tabId = "";
+        }
+        PVCollectModel pvCollectModel = new PVCollectModel();
+        pvCollectModel.setFunctionID(tabId);
+        pvCollectModel.setFunctionType(tabId);
+        pvCollectModel.setCollectTime(System.currentTimeMillis());
+        PVCollectModelCacheUtils.saveCollectModel(IndexActivity.this,pvCollectModel);
+
     }
 
     private Fragment getCurrentFragment() {
