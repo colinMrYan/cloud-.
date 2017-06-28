@@ -32,35 +32,108 @@ public class CameraUtils {
         }
     }
 
+    /**
+     * 获取preview的size
+     * @param list
+     * @param th  最大尺寸
+     * @return
+     */
     public  Size getPreviewSize(List<Size> list, int th){
         Collections.sort(list, sizeComparator);
-
-        int i = 0;
+        Collections.reverse(list);
+        Size size = null;
         for(Size s:list){
-            if((s.width > th) && (s.height > th) && equalRate(s, rate)){
+            if((s.width < th) && (s.height < th) && equalRateLevel0(s, rate)){
+                size = s;
                 break;
             }
-            i++;
+        }
+        if (size == null){
+            for(Size s:list){
+                if((s.width < th) && (s.height < th) && equalRateLevel1(s, rate)){
+                    size = s;
+                    break;
+                }
+            }
         }
 
-        return list.get(i);
+        if (size == null){
+            for(Size s:list){
+                if((s.width < th) && (s.height < th) && equalRateLevel2(s, rate)){
+                    size = s;
+                    break;
+                }
+            }
+        }
+        if(size == null){
+            return  list.get(0);
+        }
+        return size;
     }
+
+    /**
+     * 获取图片的大小
+     * @param list
+     * @param th  最小尺寸
+     * @return
+     */
     public Size getPictureSize(List<Size> list, int th){
         Collections.sort(list, sizeComparator);
-        int i = 0;
+        Size size = null;
         for(Size s:list){
-            if((s.width > th) && (s.height > th) && equalRate(s, rate)){
+            if((s.width > th) && (s.height > th) && equalRateLevel0(s, rate)){
+                size = s;
                 break;
             }
-            i++;
+        }
+        if (size == null){
+            for(Size s:list) {
+                if ((s.width > th) && (s.height > th) && equalRateLevel1(s, rate)) {
+                    size = s;
+                    break;
+                }
+            }
         }
 
-        return list.get(i);
+        if (size == null){
+            for(Size s:list) {
+                if ((s.width > th) && (s.height > th) && equalRateLevel2(s, rate)) {
+                    size = s;
+                    break;
+                }
+            }
+        }
+        if(size == null){
+            return  list.get(0);
+        }
+        return size;
     }
 
-    public boolean equalRate(Size s, float rate){
+    public boolean equalRateLevel0(Size s, float rate){
+        float r = (float)(s.width)/(float)(s.height);
+        if(Math.abs(r - rate) <= 0.01)
+        {
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
+    public boolean equalRateLevel1(Size s, float rate){
         float r = (float)(s.width)/(float)(s.height);
         if(Math.abs(r - rate) <= 0.2)
+        {
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
+    public boolean equalRateLevel2(Size s, float rate){
+        float r = (float)(s.width)/(float)(s.height);
+        if(Math.abs(r - rate) <= 0.5)
         {
             return true;
         }
