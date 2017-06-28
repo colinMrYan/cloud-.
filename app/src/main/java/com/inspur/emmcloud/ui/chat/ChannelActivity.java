@@ -122,7 +122,6 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
         handMessage();
         registeMsgReceiver();
         registeRefreshNameReceiver();
-        recordUserClickChannel();
     }
 
     // Activity在SingleTask的启动模式下多次打开传递Intent无效，用此方法解决
@@ -132,6 +131,7 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
         super.onNewIntent(intent);
         setIntent(intent);
         init();
+        recordUserClickChannel();
     }
 
     /**
