@@ -313,7 +313,6 @@ public class IndexActivity extends BaseFragmentActivity implements
                         break;
                     case CHANGE_TAB:
                         mTabHost.setCurrentTab(getTabIndex());
-                        isSystemChangeTag = true;
                         break;
                     case RELOAD_WEB:
                         if (webView != null){
@@ -535,7 +534,6 @@ public class IndexActivity extends BaseFragmentActivity implements
         }else {
             mTabHost.setCurrentTab(getTabIndex());
         }
-        isSystemChangeTag = true;
     }
 
     @Override
@@ -546,7 +544,6 @@ public class IndexActivity extends BaseFragmentActivity implements
             boolean isOpenNotify = getIntent().hasExtra("command") && getIntent().getStringExtra("command").equals("open_notification");
             if (mTabHost!=null && mTabHost.getCurrentTab() != targetTabIndex && !isOpenNotify){
                 mTabHost.setCurrentTab(targetTabIndex);
-                isSystemChangeTag = true;
             }
         }catch (Exception e){
             e.printStackTrace();
@@ -715,7 +712,6 @@ public class IndexActivity extends BaseFragmentActivity implements
         boolean consumed = false;
         if (event.getAction() == MotionEvent.ACTION_DOWN
                 && v.equals(mTabHost.getCurrentTabView())) {
-            LogUtils.YfcDebug("点击TabHost:"+mTabHost.getCurrentTabTag());
             Fragment currentFragment = getCurrentFragment();
 //            addFragment(currentFragment);
             if (currentFragment != null
@@ -724,8 +720,9 @@ public class IndexActivity extends BaseFragmentActivity implements
                 listener.onTabReselect();
                 consumed = true;
             }
+        }else {
+            isSystemChangeTag = false;
         }
-        isSystemChangeTag = false;
         return consumed;
     }
 
@@ -743,6 +740,7 @@ public class IndexActivity extends BaseFragmentActivity implements
         }
         if(!isSystemChangeTag){
             recordOpenTab(tabId);
+            isSystemChangeTag = true;
         }
     }
 
@@ -769,6 +767,7 @@ public class IndexActivity extends BaseFragmentActivity implements
         pvCollectModel.setFunctionType(tabId);
         pvCollectModel.setCollectTime(System.currentTimeMillis());
         PVCollectModelCacheUtils.saveCollectModel(IndexActivity.this,pvCollectModel);
+
     }
 
     private Fragment getCurrentFragment() {
