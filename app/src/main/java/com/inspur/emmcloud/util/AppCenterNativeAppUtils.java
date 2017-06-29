@@ -35,8 +35,14 @@ public class AppCenterNativeAppUtils {
 	public void InstallOrOpen(Activity context, App app) {
 		this.context = context;
 		this.app = app;
+		if (app.getPackageName().equals("cn.knowhowsoft.khmap5")){
+			app.setPackageName("com.knowhowsoft.khmap5");
+			app.setInstallUri("http://10.24.12.66:8080/test/KHMAP5-PUB-Client-Inspur_newc.apk");
+			app.setMainActivityName("com.knowhowsoft.khmap5.WhatsnewActivity");
+		}
+		LogUtils.jasonDebug("app="+app.getPackageName());
 		if (AppUtils.isAppInstalled(context, app.getPackageName())) {
-			if (app.getPackageName().equals("cn.knowhowsoft.khmap5")) {
+			if (app.getPackageName().equals("com.knowhowsoft.khmap5")) {
 				getApprovalPassword();
 			} else {
 				openNativeApp();
