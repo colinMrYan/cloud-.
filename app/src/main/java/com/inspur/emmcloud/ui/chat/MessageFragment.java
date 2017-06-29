@@ -121,7 +121,16 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 		return rootView;
 	}
 
-
+	/**
+	 * 记录用户点击的频道
+	 */
+	private void recordUserClickContact() {
+		PVCollectModel pvCollectModel = new PVCollectModel();
+		pvCollectModel.setFunctionID("contact");
+		pvCollectModel.setFunctionType("communicate");
+		pvCollectModel.setCollectTime(System.currentTimeMillis());
+		PVCollectModelCacheUtils.saveCollectModel(getActivity(),pvCollectModel);
+	}
 
 	@Override
 	public void onAttach(Context context) {
@@ -251,6 +260,7 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 						getActivity().getString(R.string.adress_list));
 				IntentUtils.startActivity(getActivity(),
 						ContactSearchActivity.class, bundle);
+				recordUserClickContact();
 				break;
 			case R.id.add_img:
 				Intent intent = new Intent();

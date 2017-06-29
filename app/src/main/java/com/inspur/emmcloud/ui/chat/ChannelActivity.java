@@ -122,6 +122,7 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
         handMessage();
         registeMsgReceiver();
         registeRefreshNameReceiver();
+        recordUserClickChannel();
     }
 
     // Activity在SingleTask的启动模式下多次打开传递Intent无效，用此方法解决
@@ -131,18 +132,25 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
         super.onNewIntent(intent);
         setIntent(intent);
         init();
+        //当从群成员选择进入沟通频道的时候执行这里的记录
         recordUserClickChannel();
     }
 
     /**
-     * 记录用户点击的频道
+     * 记录用户点击的频道，修改不是云+客服的时候才记录频道点击事件170629
      */
     private void recordUserClickChannel() {
-        PVCollectModel pvCollectModel = new PVCollectModel();
-        pvCollectModel.setFunctionID("channel");
-        pvCollectModel.setFunctionType("communicate");
-        pvCollectModel.setCollectTime(System.currentTimeMillis());
-        PVCollectModelCacheUtils.saveCollectModel(ChannelActivity.this,pvCollectModel);
+        String from = "";
+        if(getIntent().hasExtra("from")){
+            from = getIntent().getStringExtra("from");
+        }
+        if(!from.equals("customer")){
+            PVCollectModel pvCollectModel = new PVCollectModel();
+            pvCollectModel.setFunctionID("channel");
+            pvCollectModel.setFunctionType("communicate");
+            pvCollectModel.setCollectTime(System.currentTimeMillis());
+            PVCollectModelCacheUtils.saveCollectModel(ChannelActivity.this,pvCollectModel);
+        }
     }
 
     private void init() {
