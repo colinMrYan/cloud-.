@@ -1,9 +1,9 @@
 package com.inspur.emmcloud.util;
 
 import android.content.Context;
+import android.content.res.Configuration;
 
 import com.inspur.emmcloud.bean.AppTabAutoBean;
-import com.inspur.emmcloud.bean.Language;
 
 import java.util.ArrayList;
 
@@ -21,14 +21,16 @@ public class AppTitleUtils {
         if(tab == null){
             return "";
         }
-        String environmentLanguage = "";
-        String languageJson = PreferencesUtils.getString(
-                context, UriUtils.tanent + "appLanguageObj");
-        if (languageJson != null) {
-            Language language = new Language(languageJson);
-            environmentLanguage = language.getIana();
-        }
-        if(environmentLanguage.toLowerCase().equals("zh-Hans".toLowerCase())){
+//        String environmentLanguage = "";
+//        String languageJson = PreferencesUtils.getString(
+//                context, UriUtils.tanent + "appLanguageObj");
+//        if (languageJson != null) {
+//            Language language = new Language(languageJson);
+//            environmentLanguage = language.getIana();
+//        }
+        Configuration config = context.getResources().getConfiguration();
+        String environmentLanguage = config.locale.getLanguage();
+        if(environmentLanguage.toLowerCase().equals("zh")||environmentLanguage.toLowerCase().equals("zh-Hans".toLowerCase())){
             return tab.getTitle().getZhHans();
         }else if(environmentLanguage.toLowerCase().equals("zh-Hant".toLowerCase())){
             return tab.getTitle().getZhHant();
