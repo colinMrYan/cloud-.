@@ -41,6 +41,7 @@ import com.inspur.emmcloud.bean.GetNewMsgsResult;
 import com.inspur.emmcloud.bean.GetNewsImgResult;
 import com.inspur.emmcloud.bean.GetSendMsgResult;
 import com.inspur.emmcloud.bean.Msg;
+import com.inspur.emmcloud.bean.PVCollectModel;
 import com.inspur.emmcloud.broadcastreceiver.MsgReceiver;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.ui.app.groupnews.NewsWebDetailActivity;
@@ -58,6 +59,7 @@ import com.inspur.emmcloud.util.ListViewUtils;
 import com.inspur.emmcloud.util.MsgCacheUtil;
 import com.inspur.emmcloud.util.MsgRecourceUploadUtils;
 import com.inspur.emmcloud.util.NetUtils;
+import com.inspur.emmcloud.util.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.RobotCacheUtils;
 import com.inspur.emmcloud.util.StringUtils;
@@ -120,7 +122,6 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
         handMessage();
         registeMsgReceiver();
         registeRefreshNameReceiver();
-
     }
 
     // Activity在SingleTask的启动模式下多次打开传递Intent无效，用此方法解决
@@ -130,6 +131,18 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
         super.onNewIntent(intent);
         setIntent(intent);
         init();
+        recordUserClickChannel();
+    }
+
+    /**
+     * 记录用户点击的频道
+     */
+    private void recordUserClickChannel() {
+        PVCollectModel pvCollectModel = new PVCollectModel();
+        pvCollectModel.setFunctionID("channel");
+        pvCollectModel.setFunctionType("communicate");
+        pvCollectModel.setCollectTime(System.currentTimeMillis());
+        PVCollectModelCacheUtils.saveCollectModel(ChannelActivity.this,pvCollectModel);
     }
 
     private void init() {

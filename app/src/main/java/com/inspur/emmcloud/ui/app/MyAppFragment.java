@@ -37,10 +37,12 @@ import com.inspur.emmcloud.bean.AppCommonlyUse;
 import com.inspur.emmcloud.bean.AppGroupBean;
 import com.inspur.emmcloud.bean.AppOrder;
 import com.inspur.emmcloud.bean.GetAppGroupResult;
+import com.inspur.emmcloud.bean.PVCollectModel;
 import com.inspur.emmcloud.util.AppCacheUtils;
 import com.inspur.emmcloud.util.AppTitleUtils;
 import com.inspur.emmcloud.util.IntentUtils;
 import com.inspur.emmcloud.util.NetUtils;
+import com.inspur.emmcloud.util.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.ShortCutUtils;
@@ -90,7 +92,10 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
     private BroadcastReceiver mBroadcastReceiver;
     private PopupWindow popupWindow;
     private boolean isNeedCommonlyUseApp = false;
-//    private List<String> shortCutAppList = new ArrayList<>();快捷方式相关
+    private List<String> shortCutAppList = new ArrayList<>();
+    //    private SwitchView switchView;
+//    private View contentView;
+    private TextView titleText;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -150,6 +155,7 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
                 }
             }
         });
+        titleText = (TextView) rootView.findViewById(R.id.header_text);
         OnAppCenterClickListener listener = new OnAppCenterClickListener();
         (rootView.findViewById(R.id.appcenter_layout)).setOnClickListener(listener);
         getMyApp(true);
@@ -203,12 +209,26 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
      * 在应用详情里添加应用时对应在我的应用里改变常用应用
      * @param app
      */
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void updateCommonlyUse(App app) {
         if(app != null){
             saveOrChangeCommonlyUseAppList(app, appListAdapter.getAppAdapterList());
         }
     }
+
+
+    /**
+     * 记录用户使用了应用中心功能
+     */
+    private void recordUserClickAppCenter(){
+        PVCollectModel pvCollectModel = new PVCollectModel();
+        pvCollectModel.setCollectTime(System.currentTimeMillis());
+        pvCollectModel.setFunctionID("appcenter");
+        pvCollectModel.setFunctionType("application");
+        PVCollectModelCacheUtils.saveCollectModel(getActivity(),pvCollectModel);
+    }
+
 
     /**
      * App组列表Adapter
@@ -374,6 +394,8 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
             return this.canEdit;
         }
     }
+
+
 
     /**
      * 点击应用后处理常用应用
@@ -725,59 +747,6 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
     }
 
     /**
-     * 创建快捷方式的Dialog，目前没有用上，原因是不同手机型号上生成快捷方式和删除快捷方式定制过深
-     * 不容易可控制，且多租户状态下不容易控制
-     * @param app
-     * @param appType
-     * @param clz
-     * @param icon
-     */
-    private void showCreateShortCutDialog(final App app, final String appType, final Class clz, final int icon,final Bitmap bitmap) {
-        final Dialog hasIntrcutionDialog = new Dialog(getActivity(),
-                R.style.transparentFrameWindowStyle);
-        hasIntrcutionDialog.setCanceledOnTouchOutside(true);
-        View view = getActivity().getLayoutInflater().inflate(R.layout.app_create_shortcut_dialog, null);
-        hasIntrcutionDialog.setContentView(view);
-        final TextView textView = (TextView) view.findViewById(R.id.news_has_instrcution_text);
-        final CheckBox checkBox = (CheckBox) view.findViewById(R.id.shortcut_dialog_checkbox);
-        textView.setMovementMethod(ScrollingMovementMethod.getInstance());
-        textView.setText(getString(R.string.app_commonly_use_app));
-        Button okBtn = (Button) view.findViewById(R.id.ok_btn);
-        okBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(icon == 0){
-                    ShortCutUtils.createShortCut(getActivity(), clz,
-                            app.getAppName(), app.getUri(), appType, bitmap);
-                }
-                if(bitmap == null){
-                    ShortCutUtils.createShortCut(getActivity(), clz,
-                            app.getAppName(), app.getUri(), appType, icon);
-                }
-                UriUtils.openApp(getActivity(),app);
-                hasIntrcutionDialog.dismiss();
-            }
-        });
-        Button cancelBtn = (Button) view.findViewById(R.id.cancel_btn);
-        cancelBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (checkBox.isChecked()) {
-                    PreferencesByUserAndTanentUtils.putBoolean(getActivity(), "need_create_shortcut" + app.getAppID(), false);
-                }
-                UriUtils.openApp(getActivity(),app);
-                hasIntrcutionDialog.dismiss();
-            }
-        });
-        Window window = hasIntrcutionDialog.getWindow();
-        WindowManager.LayoutParams wl = window.getAttributes();
-        wl.dimAmount = 0.31f;
-        hasIntrcutionDialog.getWindow().setAttributes(wl);
-        hasIntrcutionDialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-        hasIntrcutionDialog.show();
-    }
-
-    /**
      * 应用顺序排序接口，比较orderId
      */
     public class SortAppClass implements Comparator {
@@ -875,5 +844,57 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
             pullToRefreshLayout.refreshFinish(PullToRefreshLayout.FAIL);
             WebServiceMiddleUtils.hand(getActivity(), error,errorCode);
         }
+    }
+
+    /**
+     * 创建快捷方式的Dialog
+     * @param app
+     * @param appType
+     * @param clz
+     * @param icon
+     */
+    private void showCreateShortCutDialog(final App app, final String appType, final Class clz, final int icon,final Bitmap bitmap) {
+        final Dialog hasIntrcutionDialog = new Dialog(getActivity(),
+                R.style.transparentFrameWindowStyle);
+        hasIntrcutionDialog.setCanceledOnTouchOutside(true);
+        View view = getActivity().getLayoutInflater().inflate(R.layout.app_create_shortcut_dialog, null);
+        hasIntrcutionDialog.setContentView(view);
+        final TextView textView = (TextView) view.findViewById(R.id.news_has_instrcution_text);
+        final CheckBox checkBox = (CheckBox) view.findViewById(R.id.shortcut_dialog_checkbox);
+        textView.setMovementMethod(ScrollingMovementMethod.getInstance());
+        textView.setText(getString(R.string.app_commonly_use_app));
+        Button okBtn = (Button) view.findViewById(R.id.ok_btn);
+        okBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(icon == 0){
+                    ShortCutUtils.createShortCut(getActivity(), clz,
+                            app.getAppName(), app.getUri(), appType, bitmap);
+                }
+                if(bitmap == null){
+                    ShortCutUtils.createShortCut(getActivity(), clz,
+                            app.getAppName(), app.getUri(), appType, icon);
+                }
+                UriUtils.openApp(getActivity(),app);
+                hasIntrcutionDialog.dismiss();
+            }
+        });
+        Button cancelBtn = (Button) view.findViewById(R.id.cancel_btn);
+        cancelBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (checkBox.isChecked()) {
+                    PreferencesByUserAndTanentUtils.putBoolean(getActivity(), "need_create_shortcut" + app.getAppID(), false);
+                }
+                UriUtils.openApp(getActivity(),app);
+                hasIntrcutionDialog.dismiss();
+            }
+        });
+        Window window = hasIntrcutionDialog.getWindow();
+        WindowManager.LayoutParams wl = window.getAttributes();
+        wl.dimAmount = 0.31f;
+        hasIntrcutionDialog.getWindow().setAttributes(wl);
+        hasIntrcutionDialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+        hasIntrcutionDialog.show();
     }
 }

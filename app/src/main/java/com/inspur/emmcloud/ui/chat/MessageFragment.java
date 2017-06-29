@@ -33,6 +33,7 @@ import com.inspur.emmcloud.bean.GetNewMsgsResult;
 import com.inspur.emmcloud.bean.GetSearchChannelGroupResult;
 import com.inspur.emmcloud.bean.MatheSet;
 import com.inspur.emmcloud.bean.Msg;
+import com.inspur.emmcloud.bean.PVCollectModel;
 import com.inspur.emmcloud.broadcastreceiver.MsgReceiver;
 import com.inspur.emmcloud.callback.CommonCallBack;
 import com.inspur.emmcloud.ui.IndexActivity;
@@ -50,6 +51,7 @@ import com.inspur.emmcloud.util.MsgCacheUtil;
 import com.inspur.emmcloud.util.MsgMatheSetCacheUtils;
 import com.inspur.emmcloud.util.MsgReadIDCacheUtils;
 import com.inspur.emmcloud.util.NetUtils;
+import com.inspur.emmcloud.util.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.StringUtils;
@@ -119,6 +121,8 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 		setTabTitle();
 		return rootView;
 	}
+
+
 
 	@Override
 	public void onAttach(Context context) {
@@ -598,7 +602,6 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 				}
 				setChannelAllMsgRead(channel);
 				refreshIndexNotify();
-
 			}
 
 		});

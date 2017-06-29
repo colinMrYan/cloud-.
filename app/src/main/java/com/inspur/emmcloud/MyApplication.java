@@ -45,6 +45,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
+import com.zzhoujay.richtext.RichText;
 
 import org.xutils.http.RequestParams;
 import org.xutils.x;
@@ -60,6 +61,8 @@ import java.util.Locale;
 import java.util.Map;
 
 import cn.jpush.android.api.JPushInterface;
+
+import static com.inspur.emmcloud.config.MyAppConfig.LOCAL_CACHE_MARKDOWN_PATH;
 
 
 /**
@@ -134,6 +137,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         initJPush();
         initImageLoader();
         initTanent();
+        RichText.initCacheDir(new File(LOCAL_CACHE_MARKDOWN_PATH));
     }
 
     /**
