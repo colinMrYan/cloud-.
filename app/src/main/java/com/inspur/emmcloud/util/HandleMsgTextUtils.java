@@ -53,7 +53,6 @@ public class HandleMsgTextUtils {
                                              List<String> userNameList, List<String> uidList
     ) {
         String temp = "";
-        temp = content;
         StringBuilder mentionStringBuilder = new StringBuilder(content);
         ForeColorSpan[] mSpans = editText.getText().getSpans(0, editText.length(), ForeColorSpan.class);
         if ((mSpans != null) && (mSpans.length > 0) && userNameList.size() > 0) {

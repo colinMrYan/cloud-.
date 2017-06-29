@@ -18,7 +18,7 @@
             android:layout_marginTop="20dp"
             android:layout_marginBottom="20dp"
             android:layout_centerInParent="true"
-            android:background="@drawable/shape_upgrade_dialog"
+            android:background="@drawable/shape_news_instruction_dialog"
             android:orientation="vertical">
             <TextView
                 android:id="@+id/news_instruction_title"

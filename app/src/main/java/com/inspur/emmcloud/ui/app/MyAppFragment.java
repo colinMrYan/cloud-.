@@ -60,10 +60,6 @@ import com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout;
 import com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout.OnRefreshListener;
 import com.inspur.emmcloud.widget.pullableview.PullableListView;
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -102,7 +98,6 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
         rootView = inflater.inflate(R.layout.fragment_app, null);
         initViews();
         registerReceiver();
-        EventBus.getDefault().register(this);
     }
 
     @Override
@@ -200,19 +195,6 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
         // 注册广播
         getActivity().registerReceiver(mBroadcastReceiver, myIntentFilter);
     }
-
-    /**
-     * 在应用详情里添加应用时对应在我的应用里改变常用应用
-     * @param app
-     */
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void updateCommonlyUse(App app) {
-        if(app != null){
-            saveOrChangeCommonlyUseAppList(app, appListAdapter.getAppAdapterList());
-        }
-    }
-
 
     /**
      * 记录用户使用了应用中心功能
@@ -549,7 +531,6 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
             getActivity().unregisterReceiver(mBroadcastReceiver);
             mBroadcastReceiver = null;
         }
-        EventBus.getDefault().unregister(this);
     }
 
     /**
@@ -812,6 +793,7 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
         @Override
         public void onClick(View v) {
             IntentUtils.startActivity(getActivity(), AppCenterActivity.class);
+            recordUserClickAppCenter();
         }
     }
 
