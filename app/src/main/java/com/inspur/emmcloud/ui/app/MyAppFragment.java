@@ -93,9 +93,6 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
     private PopupWindow popupWindow;
     private boolean isNeedCommonlyUseApp = false;
     private List<String> shortCutAppList = new ArrayList<>();
-    //    private SwitchView switchView;
-//    private View contentView;
-    private TextView titleText;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -155,7 +152,6 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
                 }
             }
         });
-        titleText = (TextView) rootView.findViewById(R.id.header_text);
         OnAppCenterClickListener listener = new OnAppCenterClickListener();
         (rootView.findViewById(R.id.appcenter_layout)).setOnClickListener(listener);
         getMyApp(true);
