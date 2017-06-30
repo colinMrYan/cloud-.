@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
+import android.text.Spanned;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -65,6 +66,7 @@ import com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout;
 import com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout.OnRefreshListener;
 import com.inspur.emmcloud.widget.pullableview.PullableListView;
 import com.inspur.emmcloud.widget.tipsview.TipsView;
+import com.zzhoujay.markdown.MarkDown;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -894,8 +896,13 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 					getActivity(), channel.getCid());
 			holder.channelTimeText.setText(TimeUtils.getDisplayTime(
 					getActivity(), channel.getLastUpdate()));
-			holder.channelContentText.setText(channel
-					.getNewestMsgContent(getActivity()));
+			String content = channel
+					.getNewestMsgContent(getActivity());
+			Spanned spanned = MarkDown.fromMarkdown(content, null, holder.channelContentText);
+			if (spanned != null){
+				content = spanned.toString();
+			}
+			holder.channelContentText.setText(content);
 			TransHtmlToTextUtils.stripUnderlines(holder.channelContentText,
 					R.color.msg_content_color);
 			if (unReadCount == 0) {
