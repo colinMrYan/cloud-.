@@ -97,8 +97,7 @@ public class NativeBridge extends ReactContextBaseJavaModule implements Activity
         String myInfo = PreferencesUtils.getString(getReactApplicationContext(),
                 "myInfo", "");
         try {
-            JSONObject myprofile = new JSONObject(myInfo);
-            promise.resolve(myprofile);
+            promise.resolve(myInfo);
         } catch (Exception e) {
             promise.reject(e);
         }
