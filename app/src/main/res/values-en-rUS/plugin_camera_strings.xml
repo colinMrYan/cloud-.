@@ -43,4 +43,5 @@
     <string name="rotate">Rotate</string>
     <string name="img_upload_fail">Picture upload failed, please try again</string>
     <string name="img_decode_fail">Picture decoded fail</string>
+    <string name="open_camera_fail_by_perminssion">The camera failed to start. Please try to open the permissions in the application authority management of the mobile phone</string>
 </resources>

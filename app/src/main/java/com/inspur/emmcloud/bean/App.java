@@ -1,5 +1,6 @@
 package com.inspur.emmcloud.bean;
 
+import com.inspur.emmcloud.util.JSONUtils;
 import com.inspur.emmcloud.util.LogUtils;
 
 import org.json.JSONArray;
@@ -34,7 +35,10 @@ public class App implements Serializable {
 	private long lastUpdateTime = 0L;
 	private double weight = 0;
 	private String installUri = "";
-	
+
+	//应用功能扩展字段
+	private int isZoomable = 0;
+
 	public App(){}
 	public App(JSONObject obj) {
 		try {
@@ -103,7 +107,7 @@ public class App implements Serializable {
 			if(obj.has("install_uri")){
 				this.installUri = obj.getString("install_uri");
 			}
-
+			isZoomable = JSONUtils.getInt(obj,"is_zoomable",0);
 		} catch (Exception e) {
 			// TODO: handle exception
 			LogUtils.exceptionDebug(TAG, e.toString());
@@ -279,6 +283,13 @@ public class App implements Serializable {
 		this.MainActivityName = mainActivityName;
 	}
 
+	public int getIsZoomable() {
+		return isZoomable;
+	}
+
+	public void setIsZoomable(int isZoomable) {
+		this.isZoomable = isZoomable;
+	}
 
 	@Override
 	public boolean equals(Object other) {

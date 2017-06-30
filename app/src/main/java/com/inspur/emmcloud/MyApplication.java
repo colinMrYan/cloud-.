@@ -6,9 +6,11 @@ import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.os.Environment;
 import android.os.Parcelable;
 import android.support.multidex.MultiDexApplication;
+import android.support.v4.util.ArrayMap;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 
@@ -43,8 +45,8 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
+import com.zzhoujay.richtext.RichText;
 
-import org.apache.commons.lang3.SystemUtils;
 import org.xutils.http.RequestParams;
 import org.xutils.x;
 
@@ -56,8 +58,11 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import cn.jpush.android.api.JPushInterface;
+
+import static com.inspur.emmcloud.config.MyAppConfig.LOCAL_CACHE_MARKDOWN_PATH;
 
 
 /**
@@ -79,6 +84,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
     private String uid;
     private String accessToken;
     private Enterprise currentEnterprise;
+    private Map<String,String> userPhotoUrlMap = new ArrayMap<>();
 
 
     private final ReactNativeHost mReactNativeHost = new ReactNativeHost(this) {
@@ -110,7 +116,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
                 "isContactReady", false);
         uid = PreferencesUtils.getString(getApplicationContext(), "userID");
         accessToken = PreferencesUtils.getString(getApplicationContext(), "accessToken", "");
-        onConfigurationChanged(null);
+        setAppLanguageAndFontScale();
         removeAllSessionCookie();
         //修改字体方案预留
 //        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
@@ -131,6 +137,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         initJPush();
         initImageLoader();
         initTanent();
+        RichText.initCacheDir(new File(LOCAL_CACHE_MARKDOWN_PATH));
     }
 
     /**
@@ -382,6 +389,31 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         return currentEnterprise;
     }
 
+    /*****************************通讯录头像缓存********************************************/
+    public String getUserPhotoUrl(String uid){
+        String photoUrl = null;
+        if (!StringUtils.isBlank(uid) && userPhotoUrlMap.containsKey(uid)){
+            photoUrl = userPhotoUrlMap.get(uid);
+        }
+        return photoUrl;
+    }
+
+    public void setUsesrPhotoUrl(String uid,String url){
+        if (!StringUtils.isBlank(uid) && !StringUtils.isBlank(url)){
+            userPhotoUrlMap.put(uid,url);
+        }
+    }
+
+    public void clearUserPhotoMap(){
+        userPhotoUrlMap.clear();
+    }
+
+    public void clearUserPhotoUrl(String uid){
+        if (!StringUtils.isBlank(uid) && userPhotoUrlMap.containsKey(uid)){
+            userPhotoUrlMap.remove(uid);
+        }
+    }
+
     /*************************************************************************/
 
     /***
@@ -407,22 +439,28 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
     }
 
 
+
     @Override
-    public void onConfigurationChanged(Configuration config) {
-        // TODO Auto-generated method stub
-        LogUtils.YfcDebug("刚进入时的语言："+Locale.getDefault().getCountry());
-        LogUtils.YfcDebug("刚进入时语言切换Resources："+getResources().getConfiguration().locale.getCountry());
-        try {
-//            super.onConfigurationChanged(null);
-            config = getResources().getConfiguration();
+	public void onConfigurationChanged(Configuration config) {
+		// TODO Auto-generated method stub
+        if (config != null){
+            super.onConfigurationChanged(config);
+        }
+        setAppLanguageAndFontScale();
+	}
+
+    /**
+     * 设置App的语言
+     */
+	public void setAppLanguageAndFontScale(){
 
             String languageJson = PreferencesUtils
                     .getString(getApplicationContext(), UriUtils.tanent
                             + "appLanguageObj");
+        Configuration config = getResources().getConfiguration();
             if (languageJson != null) {
                 String language = PreferencesUtils.getString(
                         getApplicationContext(), UriUtils.tanent + "language");
-                LogUtils.YfcDebug("language:"+language);
                 // 当系统语言选择为跟随系统的时候，要检查当前系统的语言是不是在commonList中，重新赋值
                 if (language.equals("followSys")) {
                     String commonLanguageListJson = PreferencesUtils.getString(
@@ -436,7 +474,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
                         for (int i = 0; i < commonLanguageList.size(); i++) {
                             Language commonLanguage = commonLanguageList.get(i);
                             if (commonLanguage.getIso().contains(
-                                    Locale.getDefault().getCountry())) {
+                                    Resources.getSystem().getConfiguration().locale.getCountry())) {
                                 PreferencesUtils.putString(
                                         getApplicationContext(),
                                         UriUtils.tanent + "appLanguageObj",
@@ -466,49 +504,15 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
                     // TODO: handle exception
                     e.printStackTrace();
                 }
-
-                LogUtils.YfcDebug("改变语言前language："+language);
-                LogUtils.YfcDebug("操作系统语言："+ SystemUtils.USER_LANGUAGE);
-                if(language.equals("followSys")){
-                    country =  Locale.getDefault().getCountry();
-                }
-                LogUtils.YfcDebug("最终的country："+country);
-                LogUtils.YfcDebug("最终的variant："+variant);
-
-                if(country.contains("en") || country.contains("US")){
-                    Locale locale = new Locale("en","US");
-                    Locale.setDefault(locale);
-                    config.locale = locale;
-                    LogUtils.YfcDebug("设置英文");
-                    PreferencesUtils.putString(getApplicationContext(),
-                            UriUtils.tanent + "appLanguageObj",
-                            "{\"label\":\"English(US)\",\"iso\":\"en-US\",\"iana\":\"en\",\"gsp\":\"en-US\",\"gsp60\":\"en-US\"}\n");
-                }else if(country.contains("zh") || country.contains("CN")){
-                    Locale.setDefault(Locale.SIMPLIFIED_CHINESE);
-                    config.locale = Locale.SIMPLIFIED_CHINESE;
-                    LogUtils.YfcDebug("设置中文简体");
-                    PreferencesUtils.putString(getApplicationContext(),
-                            UriUtils.tanent + "appLanguageObj",
-                            "{\"label\":\"中文简体\",\"iso\":\"zh-CN\",\"iana\":\"zh-Hans\",\"gsp\":\"zh-CN\",\"gsp60\":\"zh-CN\"}");
-                }else if(country.contains("TW")){
-                    Locale.setDefault(Locale.TRADITIONAL_CHINESE);
-                    config.locale = Locale.TRADITIONAL_CHINESE;
-                    LogUtils.YfcDebug("设置中文繁体");
-                    PreferencesUtils.putString(getApplicationContext(),
-                            UriUtils.tanent + "appLanguageObj",
-                            "{\"label\":\"中文繁体\",\"iso\":\"zh-TW\",\"iana\":\"zh-Hant\",\"gsp\":\"zh-TW\",\"gsp60\":\"zh-TW\"}");
-                }
-                LogUtils.YfcDebug("切换语言后的local："+config.locale.toString());
+                Locale locale =  new Locale(country, variant);
+                config.locale = locale;
             }
-            if (getApplicationContext() != null) {
-                getApplicationContext().getResources().updateConfiguration(config,
-                        getResources().getDisplayMetrics());
-            }
-        }catch (Exception e){
-            LogUtils.YfcDebug("捕获到异常："+e.getMessage());
-            e.printStackTrace();
-        }
+            config.fontScale = 1.0f;
+        getResources().updateConfiguration(config,
+                getResources().getDisplayMetrics());
+
     }
+
 
     /**
      * init ImageLoader

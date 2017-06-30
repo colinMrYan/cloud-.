@@ -123,7 +123,9 @@ public class ReactNativeAppActivity extends BaseActivity implements DefaultHardw
      * 初始化RN App
      */
     private void initReactNativeApp() {
-        loadingDialog.show();
+        if(NetUtils.isNetworkConnected(ReactNativeAppActivity.this)){
+            loadingDialog.show();
+        }
         boolean needCheckUpdate = true;
         appModule = ReactNativeFlow.getAppModuleFromScheme(reactNativeApp);
         reactAppFilePath = MyAppConfig.getReactAppFilePath(ReactNativeAppActivity.this,

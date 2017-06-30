@@ -1,5 +1,6 @@
 package com.inspur.emmcloud.util;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -10,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.inspur.emmcloud.MainActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
@@ -95,7 +97,9 @@ public class UpgradeUtils extends APIInterfaceInstance {
 						mDownloadDialog.dismiss();
 					}
 					installApk();
-
+					if (context instanceof MainActivity) {
+						((Activity)context).finish();
+					}
 					break;
 
 				case DOWNLOAD_FAIL:
@@ -147,8 +151,10 @@ public class UpgradeUtils extends APIInterfaceInstance {
 			break;
 		case 1: // 可选升级
 				long appNotUpdateTime = PreferencesUtils.getLong(context,"appNotUpdateTime");
-				if (System.currentTimeMillis()-appNotUpdateTime>notUpdateInterval){
+				if (isManualCheck || System.currentTimeMillis()-appNotUpdateTime>notUpdateInterval){
 					showSelectUpgradeDlg();
+				}else {
+					handler.sendEmptyMessage(NO_NEED_UPGRADE);
 				}
 
 			break;
@@ -301,7 +307,7 @@ public class UpgradeUtils extends APIInterfaceInstance {
 						@Override
 						public void onFinished() {
 							// TODO Auto-generated method stub
-							
+
 						}
 
 						@Override

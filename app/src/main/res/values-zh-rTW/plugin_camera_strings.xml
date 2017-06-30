@@ -43,4 +43,5 @@
     <string name="rotate">旋轉</string>
     <string name="img_upload_fail">圖片上傳失敗，請重試</string>
     <string name="img_decode_fail">圖片解析失敗</string>
+    <string name="open_camera_fail_by_perminssion">攝像頭啟動失敗，請嘗試在手機應用許可權管理中打開許可權</string>
 </resources>

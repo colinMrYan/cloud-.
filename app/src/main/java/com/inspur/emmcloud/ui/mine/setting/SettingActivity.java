@@ -326,9 +326,11 @@ public class SettingActivity extends BaseActivity {
 		CookieManager cookieManager = CookieManager.getInstance();
 		cookieManager.removeAllCookie();
 		((MyApplication)getApplicationContext()).removeAllCookie();
+		((MyApplication)getApplicationContext()).clearUserPhotoMap();
 		JPushInterface.stopPush(getApplicationContext());
 		PreferencesUtils.putString(SettingActivity.this, "tokenType", "");
 		PreferencesUtils.putString(SettingActivity.this, "accessToken", "");
+		((MyApplication)getApplicationContext()).setAccessToken("");
 		Intent intent = new Intent();
 		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
 		intent.setClass(this, LoginActivity.class);
