@@ -486,8 +486,9 @@
     <string name="news_instructions">批示意見</string>
     <string name="news_instructions_success_text">發送成功</string>
     <string name="news_no_news">暫無新聞</string>
-    <string name="news_has_instructions_news">您已批示過此新聞</string>
+    <string name="news_has_instructions_news">您已批示過此新聞！</string>
     <string name="news_has_instructions_known">瞭解了</string>
+    <string name="news_please_instruction">請您輸入批示內容 </string>
 
     <!-- 審批頁面 -->
     <string name="onekey_approval_text">審批</string>

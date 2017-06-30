@@ -118,10 +118,20 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 		if (parent != null) {
 			parent.removeView(rootView);
 		}
+		setTabTitle();
 		return rootView;
 	}
 
-
+	/**
+	 * 记录用户点击的频道
+	 */
+	private void recordUserClickContact() {
+		PVCollectModel pvCollectModel = new PVCollectModel();
+		pvCollectModel.setFunctionID("contact");
+		pvCollectModel.setFunctionType("communicate");
+		pvCollectModel.setCollectTime(System.currentTimeMillis());
+		PVCollectModelCacheUtils.saveCollectModel(getActivity(),pvCollectModel);
+	}
 
 	@Override
 	public void onAttach(Context context) {
@@ -192,9 +202,11 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
                 AppTabAutoBean.PayloadBean.TabsBean.Property property = appTabList.get(i).getProperty();
                 if (property != null) {
                     if (!property.isCanCreate()) {
+						rootView.findViewById(R.id.find_friends_btn).setVisibility(View.GONE);
                         rootView.findViewById(R.id.add_img).setVisibility(View.GONE);
                     }
                     if (!property.isCanContact()) {
+						rootView.findViewById(R.id.find_friends_btn).setVisibility(View.GONE);
                         rootView.findViewById(R.id.address_list_img).setVisibility(View.GONE);
                     }
                 }
@@ -222,7 +234,6 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 				.setOnClickListener(onViewClickListener);
 		TipsView = (TipsView) rootView.findViewById(R.id.tip);
 		titleText = (TextView)rootView.findViewById(R.id.header_text);
-		setTabTitle();
 	}
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -251,6 +262,7 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 						getActivity().getString(R.string.adress_list));
 				IntentUtils.startActivity(getActivity(),
 						ContactSearchActivity.class, bundle);
+				recordUserClickContact();
 				break;
 			case R.id.add_img:
 				Intent intent = new Intent();

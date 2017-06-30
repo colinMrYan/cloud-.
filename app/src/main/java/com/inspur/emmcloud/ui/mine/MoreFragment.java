@@ -206,6 +206,8 @@ public class MoreFragment extends Fragment {
                         bundle.putString("title", customerChannel.getTitle());
                         bundle.putString("channelId", customerChannel.getCid());
                         bundle.putString("channelType", customerChannel.getType());
+                        //为区分来自云+客服添加一个from值，在ChannelActivity里使用
+                        bundle.putString("from","customer");
                         IntentUtils.startActivity(getActivity(),
                                 ChannelActivity.class, bundle);
                         recordUserClickCustomservice();
