@@ -279,7 +279,13 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
             msgListView.setCanPullDown(false);
         }
         msgListView.setAdapter(adapter);
-        msgListView.setSelection(msgList.size() - 1);
+        msgListView.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                // Select the last row so it will scroll into view...
+                msgListView.setSelection(adapter.getCount()-1);
+            }
+        },30);
         pullToRefreshLayout.setOnRefreshListener(ChannelActivity.this);
         msgListView.smoothScrollToPosition(adapter.getCount());
         // 设置点击每个Item时跳转到详情
@@ -340,6 +346,20 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
             }
         });
 
+    }
+
+    /**
+     * 设置ListView的刷新和滚动到最下方
+     */
+    private void setListViewNotifyAndScrollEnd(){
+        adapter.notifyDataSetChanged();
+        msgListView.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                // Select the last row so it will scroll into view...
+                msgListView.setSelection(adapter.getCount()-1);
+            }
+        },30);
     }
 
 
@@ -428,7 +448,7 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
                                 && !msgList.contains(pushMsg)&& !pushMsg.getTmpId().equals(AppUtils.getMyUUID(getApplicationContext()))) {
                             msgList.add(pushMsg);
                             msgListView.setCanPullDown(true);
-                            adapter.notifyDataSetChanged();
+                            setListViewNotifyAndScrollEnd();
                         }
                         break;
 
@@ -580,8 +600,7 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
             //本地添加的消息设置为正在发送状态
             msg.setSendStatus(0);
             msgList.add(msg);
-            adapter.notifyDataSetChanged();
-            msgListView.setSelection(msgList.size() - 1);
+            setListViewNotifyAndScrollEnd();
             msgListView.setCanPullDown(true);
         }
     }
