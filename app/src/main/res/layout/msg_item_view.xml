@@ -16,7 +16,6 @@
         android:layout_marginRight="10dp"
         android:layout_marginTop="10dp"
         app:radius="25dp"
-        android:background="@color/white"
        ></com.inspur.emmcloud.widget.CircleFrameLayout>
 
 

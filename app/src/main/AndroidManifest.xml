@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.inspur.emmcloud"
     android:configChanges="locale|layoutDirection"
-    android:versionCode="31"
-    android:versionName="1.2.2">
+    android:versionCode="32"
+    android:versionName="1.2.3">
 
     <uses-sdk
         android:minSdkVersion="16"
@@ -121,9 +121,9 @@
         <!--android:theme="@style/SplashTheme"-->
         <activity
             android:name=".MainActivity"
-            android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/SplashTheme">
+            android:theme="@style/SplashTheme"
+            android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -310,17 +310,17 @@
             android:theme="@android:style/Theme.Holo.Light.NoActionBar" />
         <activity
             android:name=".ui.contact.ContactSearchMoreActivity"
-            android:launchMode="singleTask"
             android:screenOrientation="portrait"
+            android:launchMode="singleTask"
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".ui.chat.MentionActivty"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.chat.ImagePagerActivity"
-            android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
-            android:windowSoftInputMode="adjustPan" />
+            android:windowSoftInputMode="adjustPan"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.chat.MembersActivity"
             android:screenOrientation="portrait" />
@@ -361,18 +361,19 @@
                     android:scheme="ecc-component" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".ui.app.ReactNativeAppActivity"
-            android:screenOrientation="portrait"
+        <activity android:name=".ui.app.ReactNativeAppActivity"
+            android:theme="@android:style/Theme.Holo.Light.NoActionBar"
 
-            android:theme="@android:style/Theme.Holo.Light.NoActionBar">
+            android:screenOrientation="portrait"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
-                <data android:scheme="ecc-app-react-native" />
+                <data
+                    android:scheme="ecc-app-react-native" />
             </intent-filter>
         </activity>
         <activity
@@ -534,14 +535,13 @@
             android:name=".ui.find.FindSearchMoreActivity"
             android:screenOrientation="portrait" />
         <activity
+            android:theme="@style/dialog_activity"
             android:name=".ui.app.AppUpgradeNotifyActivity"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait"
-            android:theme="@style/dialog_activity" />
-        <activity
-            android:name=".ui.app.ShortCutFunctionActivity"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar">
+            android:screenOrientation="portrait" />
+        <activity android:name=".ui.app.ShortCutFunctionActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -551,7 +551,6 @@
                 <data android:scheme="http12233444"></data>
             </intent-filter>
         </activity>
-
         <service android:name=".service.PVCollectService"></service>
         <service android:name=".service.CoreService"></service>
         <service android:name=".service.CoreInnerService"></service>
@@ -596,7 +595,8 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
-                <data android:scheme="gs-msg" />
+                <data
+                    android:scheme="gs-msg" />
             </intent-filter>
 
         </activity>
@@ -606,6 +606,16 @@
             android:screenOrientation="portrait"
             android:stateNotNeeded="true"
             android:theme="@android:style/Theme.NoTitleBar"></activity>
+
+        <activity
+            android:name="com.inspur.imp.plugin.camera.mycamera.MyCameraActivity"
+            android:supportsRtl="true"
+            android:theme="@style/SplashTheme"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:stateNotNeeded="true"
+           ></activity>
+
 
 
         <activity
@@ -628,7 +638,7 @@
             </intent-filter>
         </receiver>
 
-        <receiver android:name=".broadcastreceiver.ActionReceiver">
+        <receiver android:name=".broadcastreceiver.ActionReceiver" >
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="android.intent.action.USER_PRESENT" />
@@ -647,7 +657,8 @@
         <!-- Rich push 核心功能 since 2.0.6-->
         <activity
             android:name="cn.jpush.android.ui.PopWinActivity"
-            android:exported="false"></activity>
+            android:exported="false">
+        </activity>
 
         <!-- Required SDK核心功能-->
         <activity

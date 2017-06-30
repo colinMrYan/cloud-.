@@ -16,6 +16,7 @@ import com.inspur.emmcloud.bean.AppCommonlyUse;
 import com.inspur.emmcloud.bean.Channel;
 import com.inspur.emmcloud.bean.ChannelGroup;
 import com.inspur.emmcloud.bean.Contact;
+import com.inspur.emmcloud.bean.PVCollectModel;
 import com.lidroid.xutils.DbUtils;
 import com.lidroid.xutils.DbUtils.DbUpgradeListener;
 
@@ -31,7 +32,7 @@ public class DbCacheUtils {
 		String dbCachePath = "/data/data/" + context.getPackageName()
 				+ "/databases/" + userID + "/" + tanentID + "/" + "db/";
 		//db = DbUtils.create(context, dbCachePath, "emm.db");
-		db = DbUtils.create(context, dbCachePath, "emm.db", 6, new DbUpgradeListener() {
+		db = DbUtils.create(context, dbCachePath, "emm.db", 7, new DbUpgradeListener() {
 			@Override
 			public void onUpgrade(DbUtils arg0, int oldVersion, int newVersion) {
 				// TODO Auto-generated method stub
@@ -41,12 +42,17 @@ public class DbCacheUtils {
 						arg0.dropTable(Channel.class);
 						arg0.dropTable(ChannelGroup.class);
 						arg0.dropTable(AppCommonlyUse.class);
+						arg0.dropTable(PVCollectModel.class);
 					}else if(oldVersion == 2){
 						arg0.dropTable(ChannelGroup.class);
 						arg0.dropTable(Channel.class);
 						arg0.dropTable(AppCommonlyUse.class);
+						arg0.dropTable(PVCollectModel.class);
 					}else if(oldVersion == 3||oldVersion == 4){
 						arg0.dropTable(AppCommonlyUse.class);
+						arg0.dropTable(PVCollectModel.class);
+					} else if(oldVersion == 5 || oldVersion == 6){
+						arg0.dropTable(PVCollectModel.class);
 					}
 					if (oldVersion <6 ){
 						if (tableIsExist("com_inspur_emmcloud_bean_Contact",arg0.getDatabase())){
@@ -101,6 +107,14 @@ public class DbCacheUtils {
 		db.configDebug(false);
 	}
 
+	/**
+	 * 判断数据库是否为空
+	 * @return
+     */
+	public static boolean isDbNull(){
+		return db == null;
+	}
+
 	private static  boolean tableIsExist(String tabName, SQLiteDatabase db) {
 		boolean result = false;
 		if (tabName == null) {
@@ -108,7 +122,6 @@ public class DbCacheUtils {
 		}
 		Cursor cursor = null;
 		try {
-
 			String sql = "select count(*) as c from sqlite_master where type ='table' and name ='" + tabName.trim() + "' ";
 			cursor = db.rawQuery(sql, null);
 			if (cursor.moveToNext()) {

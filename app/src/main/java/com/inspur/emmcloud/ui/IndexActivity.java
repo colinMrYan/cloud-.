@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Message;
 import android.view.KeyEvent;
@@ -38,6 +39,7 @@ import com.inspur.emmcloud.bean.GetAppTabAutoResult;
 import com.inspur.emmcloud.bean.GetClientIdRsult;
 import com.inspur.emmcloud.bean.GetSearchChannelGroupResult;
 import com.inspur.emmcloud.bean.Language;
+import com.inspur.emmcloud.bean.PVCollectModel;
 import com.inspur.emmcloud.bean.ReactNativeUpdateBean;
 import com.inspur.emmcloud.bean.SplashPageBean;
 import com.inspur.emmcloud.callback.CommonCallBack;
@@ -60,10 +62,10 @@ import com.inspur.emmcloud.util.DbCacheUtils;
 import com.inspur.emmcloud.util.DownLoaderUtils;
 import com.inspur.emmcloud.util.FileSafeCode;
 import com.inspur.emmcloud.util.FileUtils;
-import com.inspur.emmcloud.util.HuaWeiPushMangerUtils;
 import com.inspur.emmcloud.util.ImageDisplayUtils;
 import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.NetUtils;
+import com.inspur.emmcloud.util.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.RNCacheViewManager;
@@ -79,6 +81,8 @@ import com.inspur.emmcloud.widget.tipsview.TipsView;
 import com.inspur.reactnative.ReactNativeFlow;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.xutils.common.Callback;
 
 import java.io.File;
@@ -116,6 +120,7 @@ public class IndexActivity extends BaseFragmentActivity implements
     private boolean isSplash = false;
     private WebView webView;
     private boolean isCommunicationRunning =false;
+    private boolean isSystemChangeTag = true;//控制如果是系统切换的tab则不计入用户行为
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -124,6 +129,7 @@ public class IndexActivity extends BaseFragmentActivity implements
         ((MyApplication) getApplicationContext()).addActivity(this);
         ((MyApplication) getApplicationContext()).setIndexActvityRunning(true);
         ((MyApplication) getApplicationContext()).closeAllDb();
+        ((MyApplication)getApplicationContext()).clearUserPhotoMap();
         DbCacheUtils.initDb(getApplicationContext());
         userId = ((MyApplication) getApplication()).getUid();
         initReactNative();
@@ -140,11 +146,11 @@ public class IndexActivity extends BaseFragmentActivity implements
         /**从服务端获取显示tab**/
         getAppTabs();
         updateSplashPage();
-		startUploadPVCollectService();
+        startUploadPVCollectService();
         registerReactNativeReceiver();
         startCoreService();
         setPreloadWebApp();
-        new HuaWeiPushMangerUtils(IndexActivity.this);
+        EventBus.getDefault().register(this);
     }
 
 
@@ -417,6 +423,13 @@ public class IndexActivity extends BaseFragmentActivity implements
         handleAppTabs();
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void updateTabBarLanguage(Language language) {
+        if(language != null){
+            handleAppTabs();
+        }
+    }
+
 
     /**
      * 处理tab数组
@@ -427,13 +440,8 @@ public class IndexActivity extends BaseFragmentActivity implements
         MainTabBean[] mainTabs = null;
         String appTabs = PreferencesByUserAndTanentUtils.getString(IndexActivity.this,"app_tabbar_info_current","");
         if (!StringUtils.isBlank(appTabs)) {
-            String languageJson = PreferencesUtils.getString(
-                    getApplicationContext(), UriUtils.tanent + "appLanguageObj");
-            String environmentLanguage = "";
-            if (languageJson != null) {
-                Language language = new Language(languageJson);
-                environmentLanguage = language.getIana();
-            }
+            Configuration config = getResources().getConfiguration();
+            String environmentLanguage = config.locale.getLanguage();
             AppTabAutoBean appTabAutoBean = new AppTabAutoBean(appTabs);
             if(appTabAutoBean != null){
                 EventBus.getDefault().post(appTabAutoBean);
@@ -589,7 +597,7 @@ public class IndexActivity extends BaseFragmentActivity implements
      * @return
      */
     private MainTabBean internationalMainLanguage(AppTabAutoBean.PayloadBean.TabsBean tabsBean, String environmentLanguage,MainTabBean mainTab) {
-        if(environmentLanguage.toLowerCase().equals("zh-Hans".toLowerCase())){
+        if(environmentLanguage.toLowerCase().equals("zh")||environmentLanguage.toLowerCase().equals("zh-Hans".toLowerCase())){
             mainTab.setConfigureName(tabsBean.getTitle().getZhHans());
         }else if(environmentLanguage.toLowerCase().equals("zh-Hant".toLowerCase())){
             mainTab.setConfigureName(tabsBean.getTitle().getZhHant());
@@ -702,6 +710,7 @@ public class IndexActivity extends BaseFragmentActivity implements
             unregisterReceiver(reactNativeReceiver);
             reactNativeReceiver = null;
         }
+        EventBus.getDefault().unregister(this);
     }
 
     @Override
@@ -718,6 +727,8 @@ public class IndexActivity extends BaseFragmentActivity implements
                 listener.onTabReselect();
                 consumed = true;
             }
+        }else {
+            isSystemChangeTag = false;
         }
         return consumed;
     }
@@ -734,6 +745,36 @@ public class IndexActivity extends BaseFragmentActivity implements
         if(tabId.equals(getString(R.string.find))){
             updateReactNative();
         }
+        if(!isSystemChangeTag){
+            recordOpenTab(tabId);
+            isSystemChangeTag = true;
+        }
+    }
+
+    /**
+     * 记录打开的tab页
+     * @param tabId
+     */
+    private void recordOpenTab(String tabId) {
+        if(tabId.equals(getString(R.string.communicate))){
+            tabId = "communicate";
+        }else if(tabId.equals(getString(R.string.work))){
+            tabId = "work";
+        }else if(tabId.equals(getString(R.string.find))){
+            tabId = "find";
+        }else if(tabId.equals(getString(R.string.application))){
+            tabId = "application";
+        }else if(tabId.equals(getString(R.string.mine))){
+            tabId = "mine";
+        }else{
+            tabId = "";
+        }
+        PVCollectModel pvCollectModel = new PVCollectModel();
+        pvCollectModel.setFunctionID(tabId);
+        pvCollectModel.setFunctionType(tabId);
+        pvCollectModel.setCollectTime(System.currentTimeMillis());
+        PVCollectModelCacheUtils.saveCollectModel(IndexActivity.this,pvCollectModel);
+
     }
 
     private Fragment getCurrentFragment() {
@@ -1082,10 +1123,10 @@ public class IndexActivity extends BaseFragmentActivity implements
      */
     private void updateReactNativeWithOrder() {
         int state = ReactNativeFlow.checkReactNativeOperation(reactNativeUpdateBean.getCommand());
-            String reactNatviveTempPath = MyAppConfig.getReactTempFilePath(IndexActivity.this,userId);
-            if (state == ReactNativeFlow.REACT_NATIVE_RESET) {
-                //删除current和temp目录，重新解压assets下的zip
-                resetReactNative();
+        String reactNatviveTempPath = MyAppConfig.getReactTempFilePath(IndexActivity.this,userId);
+        if (state == ReactNativeFlow.REACT_NATIVE_RESET) {
+            //删除current和temp目录，重新解压assets下的zip
+            resetReactNative();
             FindFragment.hasUpdated = true;
         } else if (state == ReactNativeFlow.REACT_NATIVE_ROLLBACK) {
             //拷贝temp下的current到app内部current目录下
@@ -1100,7 +1141,7 @@ public class IndexActivity extends BaseFragmentActivity implements
             }
             FindFragment.hasUpdated = true;
         } else if (state == ReactNativeFlow.REACT_NATIVE_FORWORD) {
-                LogUtils.YfcDebug("Forword");
+            LogUtils.YfcDebug("Forword");
             //下载zip包并检查是否完整，完整则解压，不完整则重新下载,完整则把current移动到temp下，把新包解压到current
             ReactNativeFlow.downLoadZipFile(IndexActivity.this, reactNativeUpdateBean, userId);
         } else if (state == ReactNativeFlow.REACT_NATIVE_UNKNOWN) {
