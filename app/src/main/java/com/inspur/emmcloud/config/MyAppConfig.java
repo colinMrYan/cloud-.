@@ -34,7 +34,7 @@ public class MyAppConfig {
 	public static final String LOCAL_CACHE_MARKDOWN_PATH = Environment
 			.getExternalStorageDirectory() + "/IMP-Cloud/cache/Markdown/";
 	public static final String[] clientLanguages = { "zh-CN", "en-US", "zh-TW" };
-	public static final boolean isUseMarkdown = true;
+	public static final boolean isUseMarkdown = false;
 
 	public static Map<String, String> getLocalLanguageMap() {
 		Map<String, String> languageMap = new HashMap<String, String>();
