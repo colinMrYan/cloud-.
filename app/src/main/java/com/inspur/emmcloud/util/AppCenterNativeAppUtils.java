@@ -37,7 +37,7 @@ public class AppCenterNativeAppUtils {
 		this.app = app;
 		if (app.getPackageName().equals("cn.knowhowsoft.khmap5")){
 			app.setPackageName("com.knowhowsoft.khmap5");
-			app.setInstallUri("http://10.24.12.66:8080/test/KHMAP5-PUB-Client-Inspur_newc.apk");
+			app.setInstallUri("http://office8.inspur.com:8082/inspur/file/apknew/KHMAP5-PUB-Client-Inspur_newc.apk");
 			app.setMainActivityName("com.knowhowsoft.khmap5.WhatsnewActivity");
 		}
 		LogUtils.jasonDebug("app="+app.getPackageName());
