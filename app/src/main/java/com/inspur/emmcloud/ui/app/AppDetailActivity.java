@@ -30,6 +30,8 @@ import com.inspur.emmcloud.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.HorizontalListView;
 import com.inspur.emmcloud.widget.LoadingDialog;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.List;
 
 /**
@@ -113,6 +115,7 @@ public class AppDetailActivity extends BaseActivity {
 		if (app.getUseStatus() == 0) {
 			addApp(statusBtn, app.getAppID());
 		} else if (app.getUseStatus() == 1) {
+			EventBus.getDefault().post(app);
 			if (app.getAppType() == 2){
 				new AppCenterNativeAppUtils().InstallOrOpen(AppDetailActivity.this,app);
 			}else {

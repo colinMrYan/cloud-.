@@ -70,10 +70,22 @@ public class UriUtils {
                         activity.getString(R.string.not_support_app_type));
                 break;
         }
+        saveAPPPVCollect(activity,app);
+    }
 
+    /**
+     * pv收集,新闻应用目前为强识别
+     * @param app
+     */
+    private static void saveAPPPVCollect(Activity activity,App app) {
         //web应用PV收集
-        PVCollectModel collectModel = new PVCollectModel(activity, app.getAppID(), "webApp", app.getAppName());
-        PVCollectModelCacheUtils.saveCollectModel(activity, collectModel);
+        if(app != null && app.getAppID().equals("inspur_news_esg")){
+            PVCollectModel pvCollectModel = new PVCollectModel(activity,"news","application",app.getAppName());
+            PVCollectModelCacheUtils.saveCollectModel(activity,pvCollectModel);
+        }else{
+            PVCollectModel collectModel = new PVCollectModel(activity, app.getAppID(), "application", app.getAppName());
+            PVCollectModelCacheUtils.saveCollectModel(activity, collectModel);
+        }
     }
 
     public  static  void  openWebApp(Activity activity,String uri,App app){
@@ -90,6 +102,8 @@ public class UriUtils {
         if (app.getAppType() == 3) {
             intent.putExtra("appName", app.getAppName());
         }
+        intent.putExtra("is_zoomable", app.getIsZoomable());
+        intent.putExtra("appId",app.getAppID());
         activity.startActivity(intent);
     }
 
@@ -224,12 +238,16 @@ public class UriUtils {
         String headImgUrl = null;
         if (StringUtils.isBlank(inspurID) || inspurID.equals("null"))
             return null;
-        Contact contact = ContactCacheUtils.getUserContact(context,inspurID);
-        if(contact != null){
-            headImgUrl = "https://emm.inspur.com/img/userhead/" + inspurID;
-            String lastUpdateTime = contact.getLastUpdateTime();
-            if(!StringUtils.isBlank(lastUpdateTime)&&(!lastUpdateTime.equals("null"))){
-                headImgUrl = headImgUrl + "?"+lastUpdateTime;
+        headImgUrl = ((MyApplication)context.getApplicationContext()).getUserPhotoUrl(inspurID);
+        if (headImgUrl == null){
+            Contact contact = ContactCacheUtils.getUserContact(context,inspurID);
+            if(contact != null){
+                headImgUrl = "https://emm.inspur.com/img/userhead/" + inspurID;
+                String lastUpdateTime = contact.getLastUpdateTime();
+                if(!StringUtils.isBlank(lastUpdateTime)&&(!lastUpdateTime.equals("null"))){
+                    headImgUrl = headImgUrl + "?"+lastUpdateTime;
+                }
+                ((MyApplication)context.getApplicationContext()).setUsesrPhotoUrl(inspurID,headImgUrl);
             }
         }
         return headImgUrl;

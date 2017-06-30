@@ -67,6 +67,12 @@
         <item name="android:windowNoTitle">true</item>
     </style>
 
+    <!-- 增加加号部分的style -->
+    <style name="transparentFrameWindowStyleForIntrcution" parent="android:style/Theme.Dialog">
+        <item name="android:windowBackground">@drawable/photo_choose_bg</item>
+        <item name="android:background">@android:color/transparent</item>
+    </style>
+
 
 
 

@@ -20,6 +20,7 @@ import com.inspur.emmcloud.api.apiservice.AppAPIService;
 import com.inspur.emmcloud.bean.Channel;
 import com.inspur.emmcloud.bean.GetMyInfoResult;
 import com.inspur.emmcloud.bean.LoginDesktopCloudPlusBean;
+import com.inspur.emmcloud.bean.PVCollectModel;
 import com.inspur.emmcloud.ui.chat.ChannelActivity;
 import com.inspur.emmcloud.ui.mine.feedback.FeedBackActivity;
 import com.inspur.emmcloud.ui.mine.myinfo.MyInfoActivity;
@@ -31,6 +32,7 @@ import com.inspur.emmcloud.util.ImageDisplayUtils;
 import com.inspur.emmcloud.util.IntentUtils;
 import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.NetUtils;
+import com.inspur.emmcloud.util.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.StringUtils;
@@ -170,15 +172,18 @@ public class MoreFragment extends Fragment {
                 case R.id.more_set_layout:
                     intent.setClass(getActivity(), SettingActivity.class);
                     startActivity(intent);
+                    recordUserClickSetting();
                     break;
                 case R.id.more_userhead_layout:
                     intent.setClass(getActivity(), MyInfoActivity.class);
                     intent.putExtra("getMyInfoResult", (Serializable) getMyInfoResult);
                     startActivity(intent);
+                    recordUserClickProfile();
                     break;
                 case R.id.more_help_layout:
 				    intent.setClass(getActivity(), FeedBackActivity.class);
 				    startActivity(intent);
+                    recordUserClickFeedback();
                     break;
                 case R.id.more_message_layout:
                     ToastUtils.show(getActivity(), R.string.function_not_implemented);
@@ -192,6 +197,7 @@ public class MoreFragment extends Fragment {
                 case R.id.about_layout:
                     IntentUtils.startActivity(getActivity(),
                             AboutActivity.class);
+                    recordUserClickAbout();
                     break;
                 case R.id.customer_layout:
                     Channel customerChannel = ChannelCacheUtils.getCustomerChannel(getActivity());
@@ -200,8 +206,11 @@ public class MoreFragment extends Fragment {
                         bundle.putString("title", customerChannel.getTitle());
                         bundle.putString("channelId", customerChannel.getCid());
                         bundle.putString("channelType", customerChannel.getType());
+                        //为区分来自云+客服添加一个from值，在ChannelActivity里使用
+                        bundle.putString("from","customer");
                         IntentUtils.startActivity(getActivity(),
                                 ChannelActivity.class, bundle);
+                        recordUserClickCustomservice();
                     }
                     break;
                 default:
@@ -211,6 +220,60 @@ public class MoreFragment extends Fragment {
         }
     };
 
+    /**
+     * 记录用户使用了我的信息功能
+     */
+    private void recordUserClickProfile(){
+        PVCollectModel pvCollectModel = new PVCollectModel();
+        pvCollectModel.setCollectTime(System.currentTimeMillis());
+        pvCollectModel.setFunctionID("profile");
+        pvCollectModel.setFunctionType("mine");
+        PVCollectModelCacheUtils.saveCollectModel(getActivity(),pvCollectModel);
+    }
+
+    /**
+     * 记录用户使用了设置功能
+     */
+    private void recordUserClickSetting(){
+        PVCollectModel pvCollectModel = new PVCollectModel();
+        pvCollectModel.setCollectTime(System.currentTimeMillis());
+        pvCollectModel.setFunctionID("setting");
+        pvCollectModel.setFunctionType("mine");
+        PVCollectModelCacheUtils.saveCollectModel(getActivity(),pvCollectModel);
+    }
+
+    /**
+     * 记录用户使用了反馈功能
+     */
+    private void recordUserClickFeedback(){
+        PVCollectModel pvCollectModel = new PVCollectModel();
+        pvCollectModel.setCollectTime(System.currentTimeMillis());
+        pvCollectModel.setFunctionID("feedback");
+        pvCollectModel.setFunctionType("mine");
+        PVCollectModelCacheUtils.saveCollectModel(getActivity(),pvCollectModel);
+    }
+
+    /**
+     * 记录用户使用了云+功能
+     */
+    private void recordUserClickCustomservice(){
+        PVCollectModel pvCollectModel = new PVCollectModel();
+        pvCollectModel.setCollectTime(System.currentTimeMillis());
+        pvCollectModel.setFunctionID("customservice");
+        pvCollectModel.setFunctionType("mine");
+        PVCollectModelCacheUtils.saveCollectModel(getActivity(),pvCollectModel);
+    }
+
+    /**
+     * 记录用户使用了关于功能
+     */
+    private void recordUserClickAbout(){
+        PVCollectModel pvCollectModel = new PVCollectModel();
+        pvCollectModel.setCollectTime(System.currentTimeMillis());
+        pvCollectModel.setFunctionID("about");
+        pvCollectModel.setFunctionType("mine");
+        PVCollectModelCacheUtils.saveCollectModel(getActivity(),pvCollectModel);
+    }
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

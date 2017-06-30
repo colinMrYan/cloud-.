@@ -10,6 +10,7 @@ import android.content.res.Resources;
 import android.os.Environment;
 import android.os.Parcelable;
 import android.support.multidex.MultiDexApplication;
+import android.support.v4.util.ArrayMap;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 
@@ -44,6 +45,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
+import com.zzhoujay.richtext.RichText;
 
 import org.xutils.http.RequestParams;
 import org.xutils.x;
@@ -56,8 +58,11 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import cn.jpush.android.api.JPushInterface;
+
+import static com.inspur.emmcloud.config.MyAppConfig.LOCAL_CACHE_MARKDOWN_PATH;
 
 
 /**
@@ -79,6 +84,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
     private String uid;
     private String accessToken;
     private Enterprise currentEnterprise;
+    private Map<String,String> userPhotoUrlMap = new ArrayMap<>();
 
 
     private final ReactNativeHost mReactNativeHost = new ReactNativeHost(this) {
@@ -131,6 +137,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         initJPush();
         initImageLoader();
         initTanent();
+        RichText.initCacheDir(new File(LOCAL_CACHE_MARKDOWN_PATH));
     }
 
     /**
@@ -382,6 +389,31 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         return currentEnterprise;
     }
 
+    /*****************************通讯录头像缓存********************************************/
+    public String getUserPhotoUrl(String uid){
+        String photoUrl = null;
+        if (!StringUtils.isBlank(uid) && userPhotoUrlMap.containsKey(uid)){
+            photoUrl = userPhotoUrlMap.get(uid);
+        }
+        return photoUrl;
+    }
+
+    public void setUsesrPhotoUrl(String uid,String url){
+        if (!StringUtils.isBlank(uid) && !StringUtils.isBlank(url)){
+            userPhotoUrlMap.put(uid,url);
+        }
+    }
+
+    public void clearUserPhotoMap(){
+        userPhotoUrlMap.clear();
+    }
+
+    public void clearUserPhotoUrl(String uid){
+        if (!StringUtils.isBlank(uid) && userPhotoUrlMap.containsKey(uid)){
+            userPhotoUrlMap.remove(uid);
+        }
+    }
+
     /*************************************************************************/
 
     /***
@@ -405,6 +437,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         return false;
 
     }
+
 
 
     @Override

@@ -62,6 +62,22 @@ public class ResolutionUtils {
 		}
 		return width * height;
 	}
+
+	/**
+	 * 获取屏幕长宽比比例
+	 * @param context
+	 * @return
+	 */
+	public static float getResolutionRate(Activity context){
+		DisplayMetrics displayMetrics = new DisplayMetrics();
+		context.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+		int width = displayMetrics.widthPixels;
+		int height = getHeight(context);
+		if (height == 0) {
+			height = displayMetrics.heightPixels;
+		}
+		return height*1.0f/width;
+	}
 	
 	/**
 	 * 支持带有虚拟按键手机屏幕高度的计算

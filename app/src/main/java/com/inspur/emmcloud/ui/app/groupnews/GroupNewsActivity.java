@@ -16,9 +16,11 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
 import com.inspur.emmcloud.bean.GetNewsTitleResult;
+import com.inspur.emmcloud.bean.PVCollectModel;
 import com.inspur.emmcloud.bean.Titles;
 import com.inspur.emmcloud.ui.login.LoginActivity;
 import com.inspur.emmcloud.util.NetUtils;
+import com.inspur.emmcloud.util.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.ToastUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
@@ -47,6 +49,21 @@ public class GroupNewsActivity extends BaseFragmentActivity implements
 		setContentView(R.layout.activity_group_news);
 		init();
 		getNewTitles();
+		//当应用打开方式为scheme方式时才记录，如果从应用打开新闻，由应用记录
+		if(getIntent().getScheme() != null  && getIntent().getScheme().equals("ecc-component")){
+			recordUserClickNews();
+		}
+	}
+
+	/**
+	 * 记录用户点击新闻功能
+	 */
+	private void recordUserClickNews() {
+		PVCollectModel pvCollectModel = new PVCollectModel();
+		pvCollectModel.setFunctionID("news");
+		pvCollectModel.setFunctionType("find");
+		pvCollectModel.setCollectTime(System.currentTimeMillis());
+		PVCollectModelCacheUtils.saveCollectModel(GroupNewsActivity.this,pvCollectModel);
 	}
 
 	/**
