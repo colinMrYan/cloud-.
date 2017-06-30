@@ -122,6 +122,7 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
         handMessage();
         registeMsgReceiver();
         registeRefreshNameReceiver();
+        recordUserClickChannel();
     }
 
     // Activity在SingleTask的启动模式下多次打开传递Intent无效，用此方法解决
@@ -131,18 +132,25 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
         super.onNewIntent(intent);
         setIntent(intent);
         init();
+        //当从群成员选择进入沟通频道的时候执行这里的记录
         recordUserClickChannel();
     }
 
     /**
-     * 记录用户点击的频道
+     * 记录用户点击的频道，修改不是云+客服的时候才记录频道点击事件170629
      */
     private void recordUserClickChannel() {
-        PVCollectModel pvCollectModel = new PVCollectModel();
-        pvCollectModel.setFunctionID("channel");
-        pvCollectModel.setFunctionType("communicate");
-        pvCollectModel.setCollectTime(System.currentTimeMillis());
-        PVCollectModelCacheUtils.saveCollectModel(ChannelActivity.this,pvCollectModel);
+        String from = "";
+        if(getIntent().hasExtra("from")){
+            from = getIntent().getStringExtra("from");
+        }
+        if(!from.equals("customer")){
+            PVCollectModel pvCollectModel = new PVCollectModel();
+            pvCollectModel.setFunctionID("channel");
+            pvCollectModel.setFunctionType("communicate");
+            pvCollectModel.setCollectTime(System.currentTimeMillis());
+            PVCollectModelCacheUtils.saveCollectModel(ChannelActivity.this,pvCollectModel);
+        }
     }
 
     private void init() {
@@ -279,7 +287,13 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
             msgListView.setCanPullDown(false);
         }
         msgListView.setAdapter(adapter);
-        msgListView.setSelection(msgList.size() - 1);
+        msgListView.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                // Select the last row so it will scroll into view...
+                msgListView.setSelection(adapter.getCount()-1);
+            }
+        },30);
         pullToRefreshLayout.setOnRefreshListener(ChannelActivity.this);
         msgListView.smoothScrollToPosition(adapter.getCount());
         // 设置点击每个Item时跳转到详情
@@ -340,6 +354,20 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
             }
         });
 
+    }
+
+    /**
+     * 设置ListView的刷新和滚动到最下方
+     */
+    private void setListViewNotifyAndScrollEnd(){
+        adapter.notifyDataSetChanged();
+        msgListView.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                // Select the last row so it will scroll into view...
+                msgListView.setSelection(adapter.getCount()-1);
+            }
+        },30);
     }
 
 
@@ -428,7 +456,7 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
                                 && !msgList.contains(pushMsg)&& !pushMsg.getTmpId().equals(AppUtils.getMyUUID(getApplicationContext()))) {
                             msgList.add(pushMsg);
                             msgListView.setCanPullDown(true);
-                            adapter.notifyDataSetChanged();
+                            setListViewNotifyAndScrollEnd();
                         }
                         break;
 
@@ -580,8 +608,7 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
             //本地添加的消息设置为正在发送状态
             msg.setSendStatus(0);
             msgList.add(msg);
-            adapter.notifyDataSetChanged();
-            msgListView.setSelection(msgList.size() - 1);
+            setListViewNotifyAndScrollEnd();
             msgListView.setCanPullDown(true);
         }
     }

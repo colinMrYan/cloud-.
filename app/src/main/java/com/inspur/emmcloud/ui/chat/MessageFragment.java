@@ -85,7 +85,7 @@ import io.socket.client.Socket;
 
 /**
  * 消息页面 com.inspur.emmcloud.ui.MessageFragment
- * 
+ *
  * @author Jason Chen; create at 2016年8月23日 下午2:59:39
  */
 public class MessageFragment extends Fragment implements OnRefreshListener {
@@ -109,7 +109,7 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
+							 Bundle savedInstanceState) {
 		if (rootView == null) {
 			rootView = inflater.inflate(R.layout.fragment_message, container,
 					false);
@@ -118,10 +118,20 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 		if (parent != null) {
 			parent.removeView(rootView);
 		}
+		setTabTitle();
 		return rootView;
 	}
 
-
+	/**
+	 * 记录用户点击的频道
+	 */
+	private void recordUserClickContact() {
+		PVCollectModel pvCollectModel = new PVCollectModel();
+		pvCollectModel.setFunctionID("contact");
+		pvCollectModel.setFunctionType("communicate");
+		pvCollectModel.setCollectTime(System.currentTimeMillis());
+		PVCollectModelCacheUtils.saveCollectModel(getActivity(),pvCollectModel);
+	}
 
 	@Override
 	public void onAttach(Context context) {
@@ -139,7 +149,7 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 			titleText.setText(AppTitleUtils.getTabTitle(getActivity(),getClass().getSimpleName()));
 		}
 	}
-	
+
 
 	@Override
 	public void onResume() {
@@ -147,61 +157,63 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 		super.onResume();
 		channelIdInOpen = "";// 清空id
 	}
-	
+
 	@Override
 	public void onPause() {
 		super.onPause();
 		pullToRefreshLayout.refreshFinish(PullToRefreshLayout.FAIL);
 	}
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
-        super.onCreate(savedInstanceState);
-        initView();
-        handMessage();
-        registerMessageFragmentReceiver();
-        getChannelContent();
-        showMessageButtons();
-        EventBus.getDefault().register(this);
-    }
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
+		super.onCreate(savedInstanceState);
+		initView();
+		handMessage();
+		registerMessageFragmentReceiver();
+		getChannelContent();
+		showMessageButtons();
+		EventBus.getDefault().register(this);
+	}
 
-    /**
-     * 展示创建
-     */
-    private void showMessageButtons() {
-        String tabBarInfo = PreferencesByUserAndTanentUtils.getString(getActivity(), "app_tabbar_info_current", "");
-        AppTabAutoBean appTabAutoBean = new AppTabAutoBean(tabBarInfo);
-        if(appTabAutoBean != null) {
-            AppTabAutoBean.PayloadBean payloadBean = appTabAutoBean.getPayload();
-            if (payloadBean != null) {
-                showCreateGroupOrFindContact(payloadBean);
-            }
-        }
-    }
+	/**
+	 * 展示创建
+	 */
+	private void showMessageButtons() {
+		String tabBarInfo = PreferencesByUserAndTanentUtils.getString(getActivity(), "app_tabbar_info_current", "");
+		AppTabAutoBean appTabAutoBean = new AppTabAutoBean(tabBarInfo);
+		if(appTabAutoBean != null) {
+			AppTabAutoBean.PayloadBean payloadBean = appTabAutoBean.getPayload();
+			if (payloadBean != null) {
+				showCreateGroupOrFindContact(payloadBean);
+			}
+		}
+	}
 
-    /**
-     * 如果数据没有问题则决定展示或者不展示加号，以及通讯录
-     * @param payloadBean
-     */
-    private void showCreateGroupOrFindContact(AppTabAutoBean.PayloadBean payloadBean){
-        ArrayList<AppTabAutoBean.PayloadBean.TabsBean> appTabList =
-                (ArrayList<AppTabAutoBean.PayloadBean.TabsBean>) payloadBean.getTabs();
-        for (int i = 0; i < appTabList.size(); i++) {
-            if (appTabList.get(i).getComponent().equals("communicate")) {
-                AppTabAutoBean.PayloadBean.TabsBean.Property property = appTabList.get(i).getProperty();
-                if (property != null) {
-                    if (!property.isCanCreate()) {
-                        rootView.findViewById(R.id.add_img).setVisibility(View.GONE);
-                    }
-                    if (!property.isCanContact()) {
-                        rootView.findViewById(R.id.address_list_img).setVisibility(View.GONE);
-                    }
-                }
-            }
-        }
+	/**
+	 * 如果数据没有问题则决定展示或者不展示加号，以及通讯录
+	 * @param payloadBean
+	 */
+	private void showCreateGroupOrFindContact(AppTabAutoBean.PayloadBean payloadBean){
+		ArrayList<AppTabAutoBean.PayloadBean.TabsBean> appTabList =
+				(ArrayList<AppTabAutoBean.PayloadBean.TabsBean>) payloadBean.getTabs();
+		for (int i = 0; i < appTabList.size(); i++) {
+			if (appTabList.get(i).getComponent().equals("communicate")) {
+				AppTabAutoBean.PayloadBean.TabsBean.Property property = appTabList.get(i).getProperty();
+				if (property != null) {
+					if (!property.isCanCreate()) {
+						rootView.findViewById(R.id.find_friends_btn).setVisibility(View.GONE);
+						rootView.findViewById(R.id.add_img).setVisibility(View.GONE);
+					}
+					if (!property.isCanContact()) {
+						rootView.findViewById(R.id.find_friends_btn).setVisibility(View.GONE);
+						rootView.findViewById(R.id.address_list_img).setVisibility(View.GONE);
+					}
+				}
+			}
+		}
 
-    }
+	}
 
 	private void initView() {
 		// TODO Auto-generated method stub
@@ -222,47 +234,47 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 				.setOnClickListener(onViewClickListener);
 		TipsView = (TipsView) rootView.findViewById(R.id.tip);
 		titleText = (TextView)rootView.findViewById(R.id.header_text);
-		setTabTitle();
 	}
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void updateMessageUI(AppTabAutoBean appTabAutoBean) {
-        if(appTabAutoBean != null){
-            AppTabAutoBean.PayloadBean payloadBean = appTabAutoBean.getPayload();
-            if(payloadBean != null){
-                showCreateGroupOrFindContact(payloadBean);
-            }
-        }
+	@Subscribe(threadMode = ThreadMode.MAIN)
+	public void updateMessageUI(AppTabAutoBean appTabAutoBean) {
+		if(appTabAutoBean != null){
+			AppTabAutoBean.PayloadBean payloadBean = appTabAutoBean.getPayload();
+			if(payloadBean != null){
+				showCreateGroupOrFindContact(payloadBean);
+			}
+		}
 
-    }
+	}
 
-    private OnClickListener onViewClickListener = new OnClickListener() {
+	private OnClickListener onViewClickListener = new OnClickListener() {
 
 		@Override
 		public void onClick(View v) {
 			// TODO Auto-generated method stub
 			switch (v.getId()) {
-			case R.id.address_list_img:
-			case R.id.find_friends_btn:
-				Bundle bundle = new Bundle();
-				bundle.putInt("select_content", 4);
-				bundle.putBoolean("isMulti_select", false);
-				bundle.putString("title",
-						getActivity().getString(R.string.adress_list));
-				IntentUtils.startActivity(getActivity(),
-						ContactSearchActivity.class, bundle);
-				break;
-			case R.id.add_img:
-				Intent intent = new Intent();
-				intent.putExtra("select_content", 2);
-				intent.putExtra("isMulti_select", true);
-				intent.putExtra("title",
-						getActivity().getString(R.string.creat_group));
-				intent.setClass(getActivity(), ContactSearchActivity.class);
-				startActivityForResult(intent, CREAT_CHANNEL_GROUP);
-				break;
-			default:
-				break;
+				case R.id.address_list_img:
+				case R.id.find_friends_btn:
+					Bundle bundle = new Bundle();
+					bundle.putInt("select_content", 4);
+					bundle.putBoolean("isMulti_select", false);
+					bundle.putString("title",
+							getActivity().getString(R.string.adress_list));
+					IntentUtils.startActivity(getActivity(),
+							ContactSearchActivity.class, bundle);
+					recordUserClickContact();
+					break;
+				case R.id.add_img:
+					Intent intent = new Intent();
+					intent.putExtra("select_content", 2);
+					intent.putExtra("isMulti_select", true);
+					intent.putExtra("title",
+							getActivity().getString(R.string.creat_group));
+					intent.setClass(getActivity(), ContactSearchActivity.class);
+					startActivityForResult(intent, CREAT_CHANNEL_GROUP);
+					break;
+				default:
+					break;
 			}
 		}
 	};
@@ -355,8 +367,8 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 						Channel channel = channelList.get(index);
 						if (channel.getNewestMid() != null
 								&& !MsgReadIDCacheUtils.isMsgHaveRead(
-										getActivity(), cid,
-										channel.getNewestMid())) {
+								getActivity(), cid,
+								channel.getNewestMid())) {
 							ChannelOperationCacheUtils.setChannelHide(
 									getActivity(), cid, false);
 						} else {
@@ -392,7 +404,7 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 
 	/**
 	 * 缓存从服务器获取的最新消息
-	 * 
+	 *
 	 * @param getNewMsgsResult
 	 */
 	private void cacheNewMsgs(GetNewMsgsResult getNewMsgsResult) {
@@ -456,30 +468,30 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 			public void handleMessage(Message msg) {
 				// TODO Auto-generated method stub
 				switch (msg.what) {
-				case RECEIVE_MSG:
-					/** 接收到新的消息 **/
-					Msg receivedMsg = (Msg) msg.obj;
-					Channel receiveMsgChannel = ChannelCacheUtils.getChannel(
-							getActivity(), receivedMsg.getCid());
-					if (receiveMsgChannel == null) {
-						getChannelContent();
-					} else {
-						cacheReceiveMsg(receiveMsgChannel, receivedMsg);
-						addChannelToList(receivedMsg, receiveMsgChannel);
-						sortChannelList(displayChannelList);
-						adapter.notifyDataSetChanged();
-						refreshIndexNotify();
-					}
+					case RECEIVE_MSG:
+						/** 接收到新的消息 **/
+						Msg receivedMsg = (Msg) msg.obj;
+						Channel receiveMsgChannel = ChannelCacheUtils.getChannel(
+								getActivity(), receivedMsg.getCid());
+						if (receiveMsgChannel == null) {
+							getChannelContent();
+						} else {
+							cacheReceiveMsg(receiveMsgChannel, receivedMsg);
+							addChannelToList(receivedMsg, receiveMsgChannel);
+							sortChannelList(displayChannelList);
+							adapter.notifyDataSetChanged();
+							refreshIndexNotify();
+						}
 
-					break;
-				case RERESH_GROUP_ICON:
-					if (adapter != null) {
-						adapter.notifyDataSetChanged();
-					}
-					break;
+						break;
+					case RERESH_GROUP_ICON:
+						if (adapter != null) {
+							adapter.notifyDataSetChanged();
+						}
+						break;
 
-				default:
-					break;
+					default:
+						break;
 				}
 
 			}
@@ -582,7 +594,7 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
-					int position, long id) {
+									int position, long id) {
 				// TODO Auto-generated method stub
 				Channel channel = displayChannelList.get(position);
 				channelIdInOpen = channel.getCid();
@@ -608,7 +620,7 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 
 			@Override
 			public boolean onItemLongClick(AdapterView<?> parent, View view,
-					int position, long id) {
+										   int position, long id) {
 				// TODO Auto-generated method stub
 				showChannelOperationDlg(position);
 				return true;
@@ -620,7 +632,7 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 
 	/**
 	 * 将频道的消息置为已读
-	 * 
+	 *
 	 * @param channel
 	 */
 	private void setChannelAllMsgRead(Channel channel) {
@@ -651,7 +663,7 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 
 	/**
 	 * 弹出频道操作选择框
-	 * 
+	 *
 	 * @param position
 	 */
 	private void showChannelOperationDlg(final int position) {
@@ -806,7 +818,7 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 
 		/**
 		 * 设置Channel的Icon
-		 * 
+		 *
 		 * @param channel
 		 */
 		private void setChannelIcon(Channel channel) {
@@ -997,7 +1009,7 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 
 	/**
 	 * 接受创建群组头像的icon
-	 * 
+	 *
 	 * @author Administrator
 	 */
 	public class MessageFragmentReceiver extends BroadcastReceiver {
@@ -1048,7 +1060,7 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 
 	/**
 	 * 更新Channel的input信息
-	 * 
+	 *
 	 * @param searchChannelGroupList
 	 */
 	public void saveChannelInfo(List<ChannelGroup> searchChannelGroupList) {
@@ -1071,7 +1083,7 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 
 	/**
 	 * 根据cid数组获取Channel信息
-	 * 
+	 *
 	 * @param channelList
 	 */
 	public void getChannelInfoResult(List<Channel> channelList) {
@@ -1115,11 +1127,11 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 			messageFragmentReceiver = null;
 		}
 
-        if (handler != null) {
-            handler = null;
-        }
-        EventBus.getDefault().unregister(this);
-    }
+		if (handler != null) {
+			handler = null;
+		}
+		EventBus.getDefault().unregister(this);
+	}
 
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -1149,7 +1161,7 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 
 	/**
 	 * 创建群组
-	 * 
+	 *
 	 * @param peopleArray
 	 */
 	private void creatGroupChannel(JSONArray peopleArray) {

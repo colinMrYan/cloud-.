@@ -88,6 +88,8 @@ public class ImpActivity extends ImpBaseActivity {
             }else if(isZoomable == 1){
                 findViewById(R.id.imp_change_font_size_btn).setVisibility(View.VISIBLE);
             }
+        }else {
+            findViewById(R.id.imp_change_font_size_btn).setVisibility(View.GONE);
         }
         getWindow().setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
