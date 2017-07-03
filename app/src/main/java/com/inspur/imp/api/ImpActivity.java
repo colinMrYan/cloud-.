@@ -19,6 +19,7 @@ import android.view.WindowManager;
 import android.webkit.ValueCallback;
 import android.webkit.WebSettings;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -62,6 +63,7 @@ public class ImpActivity extends ImpBaseActivity {
     private int lightModeFontColor;
     private int isZoomable = 0;
     private String appId = "";
+    private FrameLayout frameLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +81,7 @@ public class ImpActivity extends ImpBaseActivity {
     private void initViews() {
         progressLayout = (RelativeLayout) findViewById(Res
                 .getWidgetID("progress_layout"));
+        frameLayout = (FrameLayout) findViewById(Res.getWidgetID("videoContainer"));
         loadFailLayout = (LinearLayout) findViewById(Res.getWidgetID("load_error_layout"));
         webView = (ImpWebView) findViewById(Res.getWidgetID("webview"));
         if(getIntent().hasExtra("is_zoomable")){
@@ -115,13 +118,13 @@ public class ImpActivity extends ImpBaseActivity {
         }
         if (isUriHasTitle) {
             headerText = (TextView) findViewById(Res.getWidgetID("header_text"));
-            webView.setProperty(progressLayout, headerText, loadFailLayout);
+            webView.setProperty(progressLayout, headerText, loadFailLayout,frameLayout);
             initWebViewGoBackOrClose();
             (findViewById(Res.getWidgetID("header_layout")))
                     .setVisibility(View.VISIBLE);
             headerText.setText(title);
         } else {
-            webView.setProperty(progressLayout, null, loadFailLayout);
+            webView.setProperty(progressLayout, null, loadFailLayout,frameLayout);
         }
 
         String token = ((MyApplication) getApplicationContext())
@@ -152,6 +155,7 @@ public class ImpActivity extends ImpBaseActivity {
                 webView.reload();
             }
         });
+        LogUtils.YfcDebug("加载的url："+url);
         webView.loadUrl(url, extraHeaders);
         progressLayout.setVisibility(View.VISIBLE);
         lightModeFontColor = ContextCompat.getColor(ImpActivity.this, R.color.app_dialog_day_font_color);
