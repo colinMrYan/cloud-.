@@ -10,7 +10,7 @@
         android:id="@+id/content_img"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:maxWidth="288dp"
+        android:maxWidth="287dp"
         android:maxHeight="210dp"
         android:adjustViewBounds="true"
         android:scaleType="centerCrop"
