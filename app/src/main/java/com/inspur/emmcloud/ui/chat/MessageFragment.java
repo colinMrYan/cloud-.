@@ -895,7 +895,7 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 			holder.channelTimeText.setText(TimeUtils.getDisplayTime(
 					getActivity(), channel.getLastUpdate()));
 			holder.channelContentText.setText(channel
-					.getNewestMsgContent(getActivity()));
+					.getNewestMsgContent(getActivity(),holder.channelContentText));
 			TransHtmlToTextUtils.stripUnderlines(holder.channelContentText,
 					R.color.msg_content_color);
 			if (unReadCount == 0) {

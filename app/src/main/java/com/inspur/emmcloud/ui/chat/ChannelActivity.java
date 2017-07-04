@@ -642,6 +642,7 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
             convertView = vi.inflate(R.layout.chat_msg_card_parent_view, null);
             RelativeLayout cardLayout = (RelativeLayout) convertView
                     .findViewById(R.id.card_layout);
+            showCommonView(convertView, position, cardLayout);
             View childView = null;
             if (type.equals("txt_comment") || type.equals("comment")) {
                 childView = vi.inflate(
@@ -702,7 +703,6 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
                         childView, msg);
             }
             cardLayout.addView(childView);
-            showCommonView(convertView, position, cardLayout);
             return convertView;
         }
 
