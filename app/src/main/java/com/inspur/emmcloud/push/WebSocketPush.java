@@ -7,6 +7,7 @@ import android.util.Log;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.util.AppUtils;
 import com.inspur.emmcloud.util.LogUtils;
+import com.inspur.emmcloud.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 
 import java.net.URISyntaxException;
@@ -84,6 +85,11 @@ public class WebSocketPush {
 				query.put("device.id", uuid);
 				query.put("device.name", name);
 				query.put("device.push", pushid);
+				LogUtils.YfcDebug("上传的pushid："+pushid);
+				if(AppUtils.GetChangShang().toLowerCase().startsWith("huawei")){
+					query.put("device.token", PreferencesByUserAndTanentUtils.getString(context,"huawei_push_token",""));
+					LogUtils.YfcDebug("上传的token："+PreferencesByUserAndTanentUtils.getString(context,"huawei_push_token",""));
+				}
 				// opts.transports = new String[] { Polling.NAME };
 				opts.path = path;
 				LogUtils.debug(TAG, "query.toString()=" + ParseQS.encode(query));
@@ -140,7 +146,7 @@ public class WebSocketPush {
 	private String getPushIdByChangeShang(String pushid) {
 		if(AppUtils.GetChangShang().toLowerCase().startsWith("huawei")){
 			//需要对华为单独推送的时候解开这里
-//			pushid = AppUtils.getIMEICode(context)+"@push.huawei.com";
+			pushid = AppUtils.getIMEICode(context)+"@push.huawei.com";
 		}
 		return pushid;
 	}

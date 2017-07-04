@@ -11,6 +11,7 @@ import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.ui.login.LoginActivity;
 import com.inspur.emmcloud.ui.work.calendar.CalEventAddActivity;
 import com.inspur.emmcloud.util.LogUtils;
+import com.inspur.emmcloud.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.StringUtils;
 
@@ -34,9 +35,10 @@ public class HuaWeiPushReceiver extends PushReceiver{
      */
     @Override
     public void onToken(Context context, String token, Bundle extras) {
-        String belongId = extras.getString("belongId");
-        String content = "get token and belongId successful, token = " + token + ",belongId = " + belongId;
-        LogUtils.YfcDebug(content);
+//        String belongId = extras.getString("belongId");
+//        String content = "get token and belongId successful, token = " + token + ",belongId = " + belongId;
+//        LogUtils.YfcDebug(content);
+        PreferencesByUserAndTanentUtils.putString(context,"huawei_push_token",token);
     }
 
     /**

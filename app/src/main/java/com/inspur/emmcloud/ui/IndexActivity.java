@@ -62,6 +62,7 @@ import com.inspur.emmcloud.util.DbCacheUtils;
 import com.inspur.emmcloud.util.DownLoaderUtils;
 import com.inspur.emmcloud.util.FileSafeCode;
 import com.inspur.emmcloud.util.FileUtils;
+import com.inspur.emmcloud.util.HuaWeiPushMangerUtils;
 import com.inspur.emmcloud.util.ImageDisplayUtils;
 import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.NetUtils;
@@ -151,6 +152,7 @@ public class IndexActivity extends BaseFragmentActivity implements
         startCoreService();
         setPreloadWebApp();
         EventBus.getDefault().register(this);
+        new HuaWeiPushMangerUtils(IndexActivity.this);
     }
 
 

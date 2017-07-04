@@ -2,6 +2,7 @@ package com.inspur.emmcloud.util;
 
 import android.app.Activity;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 
 import com.huawei.hms.api.ConnectionResult;
 import com.huawei.hms.api.HuaweiApiAvailability;
@@ -51,11 +52,11 @@ public class HuaWeiPushMangerUtils implements HuaweiApiClient.ConnectionCallback
     @Override
     public void onConnected() {
         LogUtils.YfcDebug("华为推送连接成功");
-        getToken();
+        if(StringUtils.isBlank(PreferencesByUserAndTanentUtils.getString(activityLocal,""))){
+            getToken();
+        }
         setPassByMsg(true);
     }
-
-
 
     @Override
     public void onConnectionSuspended(int i) {
@@ -79,6 +80,7 @@ public class HuaWeiPushMangerUtils implements HuaweiApiClient.ConnectionCallback
 
     /**
      * 设置是否接收透传消息
+     *
      * @param flag
      */
     private void setPassByMsg(boolean flag) {
@@ -90,10 +92,8 @@ public class HuaWeiPushMangerUtils implements HuaweiApiClient.ConnectionCallback
      */
     private void getToken() {
         if (!isConnected()) {
-//            tv.setText("get token failed, HMS is disconnect.");
             return;
         }
-
         // 同步调用方式，不会返回token,通过广播的形式返回。
         new Thread(new Runnable() {
             @Override
@@ -105,6 +105,11 @@ public class HuaWeiPushMangerUtils implements HuaweiApiClient.ConnectionCallback
     }
 
 
+    /**
+     * 判断是否连接
+     *
+     * @return
+     */
     public boolean isConnected() {
         if (client != null && client.isConnected()) {
             return true;
@@ -113,6 +118,42 @@ public class HuaWeiPushMangerUtils implements HuaweiApiClient.ConnectionCallback
         }
     }
 
+    /**
+     * 注销token
+     */
+    private void delToken() {
+        new Thread() {
+            @Override
+            public void run() {
+                try {
+                    String deltoken = PreferencesByUserAndTanentUtils.getString(activityLocal, "");
+                    if (!TextUtils.isEmpty(deltoken) && null != client) {
+                        HuaweiPush.HuaweiPushApi.deleteToken(client, deltoken);
+                    } else {
+                        LogUtils.YfcDebug("delete token's params is invalid.");
+                    }
+                } catch (Exception e) {
+                    LogUtils.YfcDebug("delete token exception, " + e.toString());
+                }
+            }
+        }.start();
+    }
+
+    /**
+     * 获取状态
+     */
+    private void getState() {
+        if (!isConnected()) {
+            return;
+        }
+        new Thread() {
+            @Override
+            public void run() {
+                // 状态结果通过广播返回
+                HuaweiPush.HuaweiPushApi.getPushState(client);
+            }
+        }.start();
+    }
 
 
     /**
@@ -123,4 +164,5 @@ public class HuaWeiPushMangerUtils implements HuaweiApiClient.ConnectionCallback
     public HuaweiApiClient getHuaWeiPushClient() {
         return client;
     }
+
 }
