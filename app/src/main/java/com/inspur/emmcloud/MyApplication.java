@@ -31,6 +31,7 @@ import com.inspur.emmcloud.push.WebSocketPush;
 import com.inspur.emmcloud.util.AppUtils;
 import com.inspur.emmcloud.util.CrashHandler;
 import com.inspur.emmcloud.util.DbCacheUtils;
+import com.inspur.emmcloud.util.HuaWeiPushMangerUtils;
 import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.PreferencesByUsersUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
@@ -135,6 +136,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         SoLoader.init(this, false);
         Res.init(this); // 注册imp的资源文件类
         initJPush();
+        new HuaWeiPushMangerUtils(this);
         initImageLoader();
         initTanent();
         RichText.initCacheDir(new File(LOCAL_CACHE_MARKDOWN_PATH));

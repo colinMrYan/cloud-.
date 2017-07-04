@@ -1,6 +1,7 @@
 package com.inspur.emmcloud.util;
 
 import android.app.Activity;
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
@@ -21,10 +22,10 @@ public class HuaWeiPushMangerUtils implements HuaweiApiClient.ConnectionCallback
     private HuaweiApiClient client;
     private boolean mResolvingError = false;
     private static final int REQUEST_RESOLVE_ERROR = 1001;
-    private Activity activityLocal;
+    private Context contextLocal;
 
-    public HuaWeiPushMangerUtils(Activity activity) {
-        activityLocal = activity;
+    public HuaWeiPushMangerUtils(Context context) {
+        contextLocal = context;
 //        HuaweiIdSignInOptions options = new HuaweiIdSignInOptions.Builder(HuaweiIdSignInOptions.DEFAULT_SIGN_IN)
 //                .build();
 //            client = new HuaweiApiClient.Builder(activity) //
@@ -34,7 +35,7 @@ public class HuaWeiPushMangerUtils implements HuaweiApiClient.ConnectionCallback
 //                    .addOnConnectionFailedListener(this) //
 //                    .build();
         LogUtils.YfcDebug("创建client");
-        client = new HuaweiApiClient.Builder(activity)
+        client = new HuaweiApiClient.Builder(context)
                 .addApi(HuaweiPush.PUSH_API)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
@@ -52,7 +53,7 @@ public class HuaWeiPushMangerUtils implements HuaweiApiClient.ConnectionCallback
     @Override
     public void onConnected() {
         LogUtils.YfcDebug("华为推送连接成功");
-        if(StringUtils.isBlank(PreferencesByUserAndTanentUtils.getString(activityLocal,""))){
+        if(StringUtils.isBlank(PreferencesByUserAndTanentUtils.getString(contextLocal,""))){
             getToken();
         }
         setPassByMsg(true);
@@ -69,12 +70,11 @@ public class HuaWeiPushMangerUtils implements HuaweiApiClient.ConnectionCallback
         if (mResolvingError) {
             return;
         }
-
         int errorCode = connectionResult.getErrorCode();
         HuaweiApiAvailability availability = HuaweiApiAvailability.getInstance();
         if (availability.isUserResolvableError(errorCode)) {
             mResolvingError = true;
-            availability.resolveError(activityLocal, errorCode, REQUEST_RESOLVE_ERROR, this);
+            availability.resolveError((Activity) contextLocal, errorCode, REQUEST_RESOLVE_ERROR, this);
         }
     }
 
@@ -126,7 +126,7 @@ public class HuaWeiPushMangerUtils implements HuaweiApiClient.ConnectionCallback
             @Override
             public void run() {
                 try {
-                    String deltoken = PreferencesByUserAndTanentUtils.getString(activityLocal, "");
+                    String deltoken = PreferencesByUserAndTanentUtils.getString(contextLocal, "");
                     if (!TextUtils.isEmpty(deltoken) && null != client) {
                         HuaweiPush.HuaweiPushApi.deleteToken(client, deltoken);
                     } else {

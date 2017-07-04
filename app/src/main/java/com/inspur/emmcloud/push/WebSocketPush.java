@@ -68,7 +68,7 @@ public class WebSocketPush {
 				String uuid = AppUtils.getMyUUID(context);
 				String pushid = PreferencesUtils.getString(context, "JpushRegId", "");
 				LogUtils.YfcDebug("走到连接Socket"+AppUtils.GetChangShang().toLowerCase());
-				pushid = getPushIdByChangeShang(pushid);
+//				pushid = getPushIdByChangeShang(pushid);
 
 				boolean isTelbet = AppUtils.isTablet(context);
 				String name;
@@ -85,10 +85,8 @@ public class WebSocketPush {
 				query.put("device.id", uuid);
 				query.put("device.name", name);
 				query.put("device.push", pushid);
-				LogUtils.YfcDebug("上传的pushid："+pushid);
 				if(AppUtils.GetChangShang().toLowerCase().startsWith("huawei")){
-					query.put("device.token", PreferencesByUserAndTanentUtils.getString(context,"huawei_push_token",""));
-					LogUtils.YfcDebug("上传的token："+PreferencesByUserAndTanentUtils.getString(context,"huawei_push_token",""));
+					query.put("device.hwtoken", PreferencesByUserAndTanentUtils.getString(context,"huawei_push_token",""));
 				}
 				// opts.transports = new String[] { Polling.NAME };
 				opts.path = path;
@@ -138,18 +136,18 @@ public class WebSocketPush {
 
 	}
 
-	/**
-	 * 通过厂商确定pushid
-	 * @param pushid
-	 * @return
-     */
-	private String getPushIdByChangeShang(String pushid) {
-		if(AppUtils.GetChangShang().toLowerCase().startsWith("huawei")){
-			//需要对华为单独推送的时候解开这里
-			pushid = AppUtils.getIMEICode(context)+"@push.huawei.com";
-		}
-		return pushid;
-	}
+//	/**
+//	 * 通过厂商确定pushid
+//	 * @param pushid
+//	 * @return
+//     */
+//	private String getPushIdByChangeShang(String pushid) {
+//		if(AppUtils.GetChangShang().toLowerCase().startsWith("huawei")){
+//			//需要对华为单独推送的时候解开这里
+//			pushid = AppUtils.getIMEICode(context)+"@push.huawei.com";
+//		}
+//		return pushid;
+//	}
 
 	/**
 	 * 判断websocket是否已连接
