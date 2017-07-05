@@ -69,7 +69,7 @@ public class WebSocketPush {
 				String uuid = AppUtils.getMyUUID(context);
 				String pushid = PreferencesUtils.getString(context, "JpushRegId", "");
 				LogUtils.YfcDebug("走到连接Socket"+AppUtils.GetChangShang().toLowerCase());
-//				pushid = getPushIdByChangeShang(pushid);
+				pushid = getPushIdByChangeShang(pushid);
 
 				boolean isTelbet = AppUtils.isTablet(context);
 				String name;
@@ -86,12 +86,12 @@ public class WebSocketPush {
 				query.put("device.id", uuid);
 				query.put("device.name", name);
 				query.put("device.push", pushid);
-				if(AppUtils.GetChangShang().toLowerCase().startsWith("huawei")){
-					String hwtoken = PreferencesByUserAndTanentUtils.getString(context,"huawei_push_token","");
-					if(!StringUtils.isBlank(hwtoken)){
-						query.put("device.hwtoken", hwtoken);
-					}
-				}
+//				if(AppUtils.GetChangShang().toLowerCase().startsWith("huawei")){
+//					String hwtoken = PreferencesByUserAndTanentUtils.getString(context,"huawei_push_token","");
+//					if(!StringUtils.isBlank(hwtoken)){
+//						query.put("device.hwtoken", hwtoken);
+//					}
+//				}
 				// opts.transports = new String[] { Polling.NAME };
 				opts.path = path;
 				LogUtils.debug(TAG, "query.toString()=" + ParseQS.encode(query));
@@ -140,18 +140,23 @@ public class WebSocketPush {
 
 	}
 
-//	/**
-//	 * 通过厂商确定pushid
-//	 * @param pushid
-//	 * @return
-//     */
-//	private String getPushIdByChangeShang(String pushid) {
-//		if(AppUtils.GetChangShang().toLowerCase().startsWith("huawei")){
-//			//需要对华为单独推送的时候解开这里
+	/**
+	 * 通过厂商确定pushid
+	 * @param pushid
+	 * @return
+     */
+	private String getPushIdByChangeShang(String pushid) {
+		if(AppUtils.GetChangShang().toLowerCase().startsWith("huawei")){
+			//需要对华为单独推送的时候解开这里
+			String hwtoken = PreferencesByUserAndTanentUtils.getString(context,"huawei_push_token","");
 //			pushid = AppUtils.getIMEICode(context)+"@push.huawei.com";
-//		}
-//		return pushid;
-//	}
+			if(!StringUtils.isBlank(hwtoken)){
+				pushid = hwtoken + "@push.huawei.com";
+				LogUtils.YfcDebug("华为手机的pushid："+pushid);
+			}
+		}
+		return pushid;
+	}
 
 	/**
 	 * 判断websocket是否已连接
