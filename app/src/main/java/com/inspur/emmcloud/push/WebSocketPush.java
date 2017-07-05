@@ -9,6 +9,7 @@ import com.inspur.emmcloud.util.AppUtils;
 import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
+import com.inspur.emmcloud.util.StringUtils;
 
 import java.net.URISyntaxException;
 import java.util.Arrays;
@@ -86,7 +87,10 @@ public class WebSocketPush {
 				query.put("device.name", name);
 				query.put("device.push", pushid);
 				if(AppUtils.GetChangShang().toLowerCase().startsWith("huawei")){
-					query.put("device.hwtoken", PreferencesByUserAndTanentUtils.getString(context,"huawei_push_token",""));
+					String hwtoken = PreferencesByUserAndTanentUtils.getString(context,"huawei_push_token","");
+					if(!StringUtils.isBlank(hwtoken)){
+						query.put("device.hwtoken", hwtoken);
+					}
 				}
 				// opts.transports = new String[] { Polling.NAME };
 				opts.path = path;
