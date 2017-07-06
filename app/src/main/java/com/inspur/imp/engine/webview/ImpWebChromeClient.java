@@ -82,7 +82,6 @@ public class ImpWebChromeClient extends WebChromeClient {
 	@Override
 	public void onShowCustomView(View view, CustomViewCallback callback) {
 		super.onShowCustomView(view, callback);
-		LogUtils.YfcDebug("回调onShowCustomView");
 		fullScreen();
 		mWebView.setVisibility(View.GONE);
 		mVideoContainer.setVisibility(View.VISIBLE);
@@ -101,7 +100,6 @@ public class ImpWebChromeClient extends WebChromeClient {
 		mVideoContainer.removeAllViews();
 		mVideoContainer.setVisibility(View.GONE);
 		super.onHideCustomView();
-		LogUtils.YfcDebug("回调onHideCustomView");
 	}
 
 	private void fullScreen() {

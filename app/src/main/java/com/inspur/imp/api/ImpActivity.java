@@ -155,7 +155,6 @@ public class ImpActivity extends ImpBaseActivity {
                 webView.reload();
             }
         });
-        LogUtils.YfcDebug("加载的url："+url);
         webView.loadUrl(url, extraHeaders);
         progressLayout.setVisibility(View.VISIBLE);
         lightModeFontColor = ContextCompat.getColor(ImpActivity.this, R.color.app_dialog_day_font_color);
