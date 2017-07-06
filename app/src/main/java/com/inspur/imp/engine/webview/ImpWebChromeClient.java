@@ -9,6 +9,8 @@ import android.content.DialogInterface.OnCancelListener;
 import android.content.DialogInterface.OnClickListener;
 import android.content.DialogInterface.OnKeyListener;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Message;
@@ -22,8 +24,11 @@ import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 
+import com.inspur.emmcloud.util.LogUtils;
+import com.inspur.imp.api.ImpActivity;
 import com.inspur.imp.api.Res;
 import com.inspur.imp.api.iLog;
 
@@ -43,11 +48,16 @@ public class ImpWebChromeClient extends WebChromeClient {
 	private ValueCallback<Uri> mUploadMessage;// 回调图片选择，4.4以下
 	private ValueCallback<Uri[]> mUploadCallbackAboveL;// 回调图片选择，5.0以上
 	private OnFinishLoadUrlListener listener;
+	private WebView mWebView;
+	private FrameLayout mVideoContainer;
+	private CustomViewCallback mCallBack;
 
-	public ImpWebChromeClient(Context context, RelativeLayout progressLayout) {
+	public ImpWebChromeClient(Context context, RelativeLayout progressLayout, WebView webView, FrameLayout frameLayout) {
 		// TODO Auto-generated constructor stub
 		this.context = context;
 		this.progressLayout = progressLayout;
+		this.mWebView = webView;
+		this.mVideoContainer = frameLayout;
 	}
 
 	public void onGeolocationPermissionsShowPrompt(String origin,
@@ -67,6 +77,37 @@ public class ImpWebChromeClient extends WebChromeClient {
 	public boolean onCreateWindow(WebView view, boolean dialog,
 			boolean userGesture, Message resultMsg) {
 		return super.onCreateWindow(view, dialog, userGesture, resultMsg);
+	}
+
+	@Override
+	public void onShowCustomView(View view, CustomViewCallback callback) {
+		super.onShowCustomView(view, callback);
+		fullScreen();
+		mWebView.setVisibility(View.GONE);
+		mVideoContainer.setVisibility(View.VISIBLE);
+		mVideoContainer.addView(view);
+		mCallBack=callback;
+		super.onShowCustomView(view, callback);
+	}
+
+	@Override
+	public void onHideCustomView() {
+		fullScreen();
+		if (mCallBack!=null){
+			mCallBack.onCustomViewHidden();
+		}
+		mWebView.setVisibility(View.VISIBLE);
+		mVideoContainer.removeAllViews();
+		mVideoContainer.setVisibility(View.GONE);
+		super.onHideCustomView();
+	}
+
+	private void fullScreen() {
+		if (context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+			((ImpActivity)context).setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+		} else {
+			((ImpActivity)context).setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+		}
 	}
 
 	/**
