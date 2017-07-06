@@ -135,12 +135,23 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         x.Ext.setDebug(LogUtils.isDebug);
         SoLoader.init(this, false);
         Res.init(this); // 注册imp的资源文件类
-        initJPush();
-        new HuaWeiPushMangerUtils(this);
+        initPush();
         initImageLoader();
         initTanent();
         RichText.initCacheDir(new File(LOCAL_CACHE_MARKDOWN_PATH));
     }
+
+    /**
+     * 初始化推送，以后如需定制小米等厂家的推送服务可从这里定制
+     */
+    private void initPush() {
+        if(AppUtils.getIsHuaWei()){
+            new HuaWeiPushMangerUtils(this);
+        }else{
+            initJPush();
+        }
+    }
+
 
     /**
      * 初始化极光推送

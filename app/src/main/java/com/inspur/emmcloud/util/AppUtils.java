@@ -295,6 +295,15 @@ public class AppUtils {
     }
 
     /**
+     * 获取是否华为手机
+     *
+     * @return
+     */
+    public static boolean getIsHuaWei() {
+        return  AppUtils.GetChangShang().toLowerCase().startsWith("huawei");
+    }
+
+    /**
      * 获取手机型号如华为下某型号（MHA-AL00）
      *
      * @return

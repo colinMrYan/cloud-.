@@ -145,7 +145,7 @@ public class WebSocketPush {
 	 * @return
      */
 	private String getPushIdByChangeShang(String pushid) {
-		if(AppUtils.GetChangShang().toLowerCase().startsWith("huawei")){
+		if(AppUtils.getIsHuaWei()){
 			//需要对华为单独推送的时候解开这里
 			String hwtoken = PreferencesByUserAndTanentUtils.getString(context,"huawei_push_token","");
 //			pushid = AppUtils.getIMEICode(context)+"@push.huawei.com";
