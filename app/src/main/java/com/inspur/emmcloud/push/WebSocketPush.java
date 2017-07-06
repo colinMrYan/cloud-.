@@ -68,7 +68,6 @@ public class WebSocketPush {
 				String username = PreferencesUtils.getString(context, "userRealName");
 				String uuid = AppUtils.getMyUUID(context);
 				String pushid = PreferencesUtils.getString(context, "JpushRegId", "");
-				LogUtils.YfcDebug("走到连接Socket"+AppUtils.GetChangShang().toLowerCase());
 				pushid = getPushIdByChangeShang(pushid);
 
 				boolean isTelbet = AppUtils.isTablet(context);
@@ -152,7 +151,6 @@ public class WebSocketPush {
 //			pushid = AppUtils.getIMEICode(context)+"@push.huawei.com";
 			if(!StringUtils.isBlank(hwtoken)){
 				pushid = hwtoken + "@push.huawei.com";
-				LogUtils.YfcDebug("华为手机的pushid："+pushid);
 			}
 		}
 		return pushid;
