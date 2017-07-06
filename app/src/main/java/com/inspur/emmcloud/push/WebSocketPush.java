@@ -7,7 +7,9 @@ import android.util.Log;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.util.AppUtils;
 import com.inspur.emmcloud.util.LogUtils;
+import com.inspur.emmcloud.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
+import com.inspur.emmcloud.util.StringUtils;
 
 import java.net.URISyntaxException;
 import java.util.Arrays;
@@ -66,6 +68,8 @@ public class WebSocketPush {
 				String username = PreferencesUtils.getString(context, "userRealName");
 				String uuid = AppUtils.getMyUUID(context);
 				String pushid = PreferencesUtils.getString(context, "JpushRegId", "");
+				pushid = getPushIdByChangeShang(pushid);
+
 				boolean isTelbet = AppUtils.isTablet(context);
 				String name;
 				if (isTelbet) {
@@ -81,6 +85,12 @@ public class WebSocketPush {
 				query.put("device.id", uuid);
 				query.put("device.name", name);
 				query.put("device.push", pushid);
+//				if(AppUtils.GetChangShang().toLowerCase().startsWith("huawei")){
+//					String hwtoken = PreferencesByUserAndTanentUtils.getString(context,"huawei_push_token","");
+//					if(!StringUtils.isBlank(hwtoken)){
+//						query.put("device.hwtoken", hwtoken);
+//					}
+//				}
 				// opts.transports = new String[] { Polling.NAME };
 				opts.path = path;
 				LogUtils.debug(TAG, "query.toString()=" + ParseQS.encode(query));
@@ -127,6 +137,23 @@ public class WebSocketPush {
 		}
 
 
+	}
+
+	/**
+	 * 通过厂商确定pushid
+	 * @param pushid
+	 * @return
+     */
+	private String getPushIdByChangeShang(String pushid) {
+		if(AppUtils.getIsHuaWei()){
+			//需要对华为单独推送的时候解开这里
+			String hwtoken = PreferencesByUserAndTanentUtils.getString(context,"huawei_push_token","");
+//			pushid = AppUtils.getIMEICode(context)+"@push.huawei.com";
+			if(!StringUtils.isBlank(hwtoken)){
+				pushid = hwtoken + "@push.huawei.com";
+			}
+		}
+		return pushid;
 	}
 
 	/**
