@@ -134,12 +134,12 @@ public class HuaWeiPushMangerUtils implements HuaweiApiClient.ConnectionCallback
     /**
      * 注销token
      */
-    private void delToken() {
+    public  void delToken() {
         new Thread() {
             @Override
             public void run() {
                 try {
-                    String deltoken = PreferencesByUserAndTanentUtils.getString(contextLocal, "");
+                    String deltoken = PreferencesUtils.getString(contextLocal, "huawei_push_token","");
                     if (!TextUtils.isEmpty(deltoken) && null != client) {
                         HuaweiPush.HuaweiPushApi.deleteToken(client, deltoken);
                     } else {
