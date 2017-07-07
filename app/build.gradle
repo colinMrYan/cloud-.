@@ -39,8 +39,8 @@ android {
         applicationId "com.inspur.emmcloud"
         minSdkVersion 16
         targetSdkVersion 22
-        versionCode 32
-        versionName "1.2.3"
+        versionCode 33
+        versionName "1.2.4"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         ndk {
             abiFilters "armeabi-v7a", "x86"
@@ -164,7 +164,8 @@ dependencies {
     compile 'com.fashare2015:HoverView:1.0.1'
     compile 'pl.droidsonroids.gif:android-gif-drawable:1.2.7'
     compile(name: 'HMS-SDK-2.4.0.300', ext: 'aar')
-    compile 'com.zzhoujay.richtext:richtext:2.5.2'
+    compile 'com.zzhoujay.markdown:markdown:1.0.5'
+    compile 'com.jakewharton:disklrucache:2.0.2' //Markdown引入 缓存
 
 
     // React Naive Components

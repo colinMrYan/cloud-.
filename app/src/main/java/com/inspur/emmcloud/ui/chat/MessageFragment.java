@@ -13,10 +13,9 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -30,23 +29,25 @@ import com.inspur.emmcloud.bean.ChannelGroup;
 import com.inspur.emmcloud.bean.ChannelOperationInfo;
 import com.inspur.emmcloud.bean.GetChannelListResult;
 import com.inspur.emmcloud.bean.GetNewMsgsResult;
-import com.inspur.emmcloud.bean.GetSearchChannelGroupResult;
 import com.inspur.emmcloud.bean.MatheSet;
 import com.inspur.emmcloud.bean.Msg;
 import com.inspur.emmcloud.bean.PVCollectModel;
 import com.inspur.emmcloud.broadcastreceiver.MsgReceiver;
 import com.inspur.emmcloud.callback.CommonCallBack;
+import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.util.AppTitleUtils;
 import com.inspur.emmcloud.util.ChannelCacheUtils;
 import com.inspur.emmcloud.util.ChannelGroupCacheUtils;
+import com.inspur.emmcloud.util.ChannelGroupIconUtils;
 import com.inspur.emmcloud.util.ChannelOperationCacheUtils;
 import com.inspur.emmcloud.util.ChatCreateUtils;
 import com.inspur.emmcloud.util.ChatCreateUtils.OnCreateGroupChannelListener;
 import com.inspur.emmcloud.util.DirectChannelUtils;
 import com.inspur.emmcloud.util.ImageDisplayUtils;
 import com.inspur.emmcloud.util.IntentUtils;
+import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.MsgCacheUtil;
 import com.inspur.emmcloud.util.MsgMatheSetCacheUtils;
 import com.inspur.emmcloud.util.MsgReadIDCacheUtils;
@@ -58,13 +59,13 @@ import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.TimeUtils;
 import com.inspur.emmcloud.util.ToastUtils;
 import com.inspur.emmcloud.util.TransHtmlToTextUtils;
+import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
-import com.inspur.emmcloud.widget.CircleFrameLayout;
+import com.inspur.emmcloud.widget.CircleImageView;
 import com.inspur.emmcloud.widget.dialogs.MyDialog;
 import com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout;
 import com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout.OnRefreshListener;
 import com.inspur.emmcloud.widget.pullableview.PullableListView;
-import com.inspur.emmcloud.widget.tipsview.TipsView;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -73,13 +74,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import io.socket.client.Socket;
 
@@ -90,22 +90,23 @@ import io.socket.client.Socket;
  */
 public class MessageFragment extends Fragment implements OnRefreshListener {
 
-	private static final int RECEIVE_MSG = 1;
-	private static final int CREAT_CHANNEL_GROUP = 1;
-	private static final int RERESH_GROUP_ICON = 2;
-	private View rootView;
-	private LayoutInflater inflater;
-	private PullableListView msgListView;
-	private ChatAPIService apiService;
-	private List<Channel> displayChannelList = new ArrayList<Channel>();
-	private Adapter adapter;
-	private MsgReceiver msgReceiver;
-	private Handler handler;
-	private String channelIdInOpen = ""; // 当前正在查看的频道的id,为了标示各频道未读消息条数
-	private PullToRefreshLayout pullToRefreshLayout;
-	private MessageFragmentReceiver messageFragmentReceiver;
-	private TipsView TipsView;
-	private TextView titleText;
+    private static final int RECEIVE_MSG = 1;
+    private static final int CREAT_CHANNEL_GROUP = 1;
+    private static final int RERESH_GROUP_ICON = 2;
+    private View rootView;
+    private LayoutInflater inflater;
+    private PullableListView msgListView;
+    private PullToRefreshLayout pullToRefreshLayout;
+    private ChatAPIService apiService;
+    private List<Channel> displayChannelList = new ArrayList<Channel>();
+    private Adapter adapter;
+    private MsgReceiver msgReceiver;
+    private Handler handler;
+    private String channelIdInOpen = ""; // 当前正在查看的频道的id,为了标示各频道未读消息条数
+    //private PullToRefreshLayout pullToRefreshLayout;
+    private MessageFragmentReceiver messageFragmentReceiver;
+    private TextView titleText;
+    private boolean isHaveCreatGroupIcon = false;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -164,17 +165,16 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 		pullToRefreshLayout.refreshFinish(PullToRefreshLayout.FAIL);
 	}
 
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
-		super.onCreate(savedInstanceState);
-		initView();
-		handMessage();
-		registerMessageFragmentReceiver();
-		getChannelContent();
-		showMessageButtons();
-		EventBus.getDefault().register(this);
-	}
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        // TODO Auto-generated method stub
+        super.onCreate(savedInstanceState);
+        initView();
+        registerMessageFragmentReceiver();
+        getChannelContent();
+        showMessageButtons();
+        EventBus.getDefault().register(this);
+    }
 
 	/**
 	 * 展示创建
@@ -215,26 +215,64 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 
 	}
 
-	private void initView() {
-		// TODO Auto-generated method stub
-		apiService = new ChatAPIService(getActivity());
-		apiService.setAPIInterface(new WebService());
-		inflater = (LayoutInflater) getActivity().getSystemService(
-				getActivity().LAYOUT_INFLATER_SERVICE);
-		rootView = inflater.inflate(R.layout.fragment_message, null);
-		pullToRefreshLayout = (PullToRefreshLayout) rootView
-				.findViewById(R.id.refresh_view);
-		pullToRefreshLayout.setOnRefreshListener(MessageFragment.this);
-		msgListView = (PullableListView) rootView.findViewById(R.id.msg_list);
-		(rootView.findViewById(R.id.address_list_img))
-				.setOnClickListener(onViewClickListener);
-		(rootView.findViewById(R.id.add_img))
-				.setOnClickListener(onViewClickListener);
-		(rootView.findViewById(R.id.find_friends_btn))
-				.setOnClickListener(onViewClickListener);
-		TipsView = (TipsView) rootView.findViewById(R.id.tip);
-		titleText = (TextView)rootView.findViewById(R.id.header_text);
-	}
+    private void initView() {
+        // TODO Auto-generated method stub
+        apiService = new ChatAPIService(getActivity());
+        apiService.setAPIInterface(new WebService());
+        inflater = (LayoutInflater) getActivity().getSystemService(
+                getActivity().LAYOUT_INFLATER_SERVICE);
+        rootView = inflater.inflate(R.layout.fragment_message, null);
+        (rootView.findViewById(R.id.address_list_img))
+                .setOnClickListener(onViewClickListener);
+        (rootView.findViewById(R.id.add_img))
+                .setOnClickListener(onViewClickListener);
+        (rootView.findViewById(R.id.find_friends_btn))
+                .setOnClickListener(onViewClickListener);
+        titleText = (TextView) rootView.findViewById(R.id.header_text);
+        pullToRefreshLayout = (PullToRefreshLayout) rootView
+                .findViewById(R.id.refresh_view);
+        pullToRefreshLayout.setOnRefreshListener(MessageFragment.this);
+        msgListView = (PullableListView) rootView.findViewById(R.id.msg_list);
+        msgListView = (PullableListView) rootView.findViewById(R.id.msg_list);
+        msgListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view,
+                                    int position, long id) {
+                // TODO Auto-generated method stub
+                Channel channel = displayChannelList.get(position);
+                channelIdInOpen = channel.getCid();
+                String channelType = channel.getType();
+                Bundle bundle = new Bundle();
+                bundle.putString("title", channel.getTitle());
+                bundle.putString("channelId", channel.getCid());
+                bundle.putString("channelType", channelType);
+                if (channelType.equals("GROUP") || channelType.equals("DIRECT") || channelType.equals("SERVICE")) {
+                    IntentUtils.startActivity(getActivity(),
+                            ChannelActivity.class, bundle);
+                } else {
+                    ToastUtils.show(getActivity(),
+                            R.string.not_support_open_channel);
+                }
+                setChannelAllMsgRead(channel);
+                refreshIndexNotify();
+            }
+
+        });
+
+        msgListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view,
+                                           int position, long id) {
+                // TODO Auto-generated method stub
+                showChannelOperationDlg(position);
+                return true;
+            }
+
+        });
+        handMessage();
+    }
 
 	@Subscribe(threadMode = ThreadMode.MAIN)
 	public void updateMessageUI(AppTabAutoBean appTabAutoBean) {
@@ -319,42 +357,72 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 		return channelList;
 	}
 
-	/**
-	 * 处理获得的数据
-	 */
-	private void handData() {
-		// TODO Auto-generated method stub
-		List<Channel> channelList = getCacheData();// 获取缓存中的数据
-		getGroupInfo();//获取缓存中没有的群组信息（群成员，为群组头像生成提供数据）
-		sortChannelList(channelList);// 对Channel 进行排序
-		displayData();// 展示数据
-		registerMsgReceiver();// 注册接收消息的广播
-		((MyApplication)getActivity().getApplication()).startWebSocket();// 启动webSocket推送
-	}
+    /**
+     * 处理获得的数据
+     */
+    private void handData() {
+        // TODO Auto-generated method stub
+        List<Channel> channelList = getCacheData();// 获取缓存中的数据
+        if (!isHaveCreatGroupIcon) {
+            createAllGroupIcon();
+        }
+        sortChannelList(channelList);// 对Channel 进行排序
+        displayData();// 展示数据
+        registerMsgReceiver();// 注册接收消息的广播
+        ((MyApplication) getActivity().getApplication()).startWebSocket();// 启动webSocket推送
+    }
 
-	/**
-	 * channel 显示排序
-	 */
-	private void sortChannelList(List<Channel> channelList) {
-		// TODO Auto-generated method stub
-		if (channelList.size() > 0) {
-			Iterator<Channel> it = channelList.iterator();
-			//将没有消息的单聊和没有消息的但不是自己创建的群聊隐藏掉
-			while (it.hasNext()) {
-				Channel channel = it.next();
-				channel.setIsSetTop(false);
-				if (channel.getNewMsgList().size() == 0){
-					if (channel.getType().equals("DIRECT")){
-						it.remove();
-					}else if(channel.getType().equals("GROUP")){
-						ChannelGroup channelGroup = ChannelGroupCacheUtils.getChannelGroupById(getActivity(),channel.getCid());
-						String myUid = ((MyApplication)getActivity().getApplicationContext()).getUid();
-						if (channelGroup != null && !channelGroup.getOwner().equals(myUid)){
-							it.remove();
-						}
-					}
-				}
-			}
+    /**
+     * 为群组创建头像
+     */
+    private void createAllGroupIcon() {
+        // TODO Auto-generated method stub
+        List<Channel> channelList = getCacheData();// 获取缓存中的数据
+        if (((MyApplication) getActivity().getApplicationContext()).getIsContactReady()) {
+            isHaveCreatGroupIcon = true;
+            ChannelGroupIconUtils.getInstance().create(getActivity(), channelList,
+                    handler);
+        }
+    }
+
+    /**
+     * 为单个群组创建头像
+     * @param channel
+     */
+    private void createGroupIcon(Channel channel) {
+        if (((MyApplication) getActivity().getApplicationContext()).getIsContactReady()) {
+            ChannelGroupIconUtils.getInstance().create(getActivity(), channel,
+                    handler);
+        }
+    }
+
+    /**
+     * channel 显示排序
+     */
+    private void sortChannelList(List<Channel> channelList) {
+        // TODO Auto-generated method stub
+        if (channelList.size() > 0) {
+            Iterator<Channel> it = channelList.iterator();
+            //将没有消息的单聊和没有消息的但不是自己创建的群聊隐藏掉
+            while (it.hasNext()) {
+                Channel channel = it.next();
+                channel.setIsSetTop(false);
+                int unReadCount = MsgReadIDCacheUtils.getNotReadMsgCount(
+                        getActivity(), channel.getCid());
+                channel.setUnReadCount(unReadCount);
+                setChannelDisplayTitle(channel);
+                if (channel.getNewMsgList().size() == 0) {
+                    if (channel.getType().equals("DIRECT")) {
+                        it.remove();
+                    } else if (channel.getType().equals("GROUP")) {
+                        ChannelGroup channelGroup = ChannelGroupCacheUtils.getChannelGroupById(getActivity(), channel.getCid());
+                        String myUid = ((MyApplication) getActivity().getApplicationContext()).getUid();
+                        if (channelGroup != null && !channelGroup.getOwner().equals(myUid)) {
+                            it.remove();
+                        }
+                    }
+                }
+            }
 
 			List<ChannelOperationInfo> hideChannelOpList = ChannelOperationCacheUtils
 					.getHideChannelOpList(getActivity());
@@ -402,86 +470,72 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 		displayChannelList = channelList;
 	}
 
-	/**
-	 * 缓存从服务器获取的最新消息
-	 *
-	 * @param getNewMsgsResult
-	 */
-	private void cacheNewMsgs(GetNewMsgsResult getNewMsgsResult) {
-		// TODO Auto-generated method stub
-		if (getNewMsgsResult != null) {
-			List<Channel> channelList = getCacheData();
-			for (int i = 0; i < channelList.size(); i++) {
-				String cid = channelList.get(i).getCid();
-				List<Msg> newMsgList = getNewMsgsResult.getNewMsgList(cid);
-				if (newMsgList.size() > 0) {
-					MsgCacheUtil.saveMsgList(getActivity(), newMsgList, ""); // 获取的消息需要缓存
-					String myUid = ((MyApplication)getActivity().getApplicationContext()).getUid();
-					// 当会话中最后一条消息为自己发出的时候，将此消息存入已读消息列表，解决最新消息为自己发出，仍识别为未读的问题
-					if (newMsgList.get(newMsgList.size() - 1).getUid()
-							.equals(myUid)) {
-						MsgReadIDCacheUtils.saveReadedMsg(getActivity(), cid,
-								newMsgList.get(newMsgList.size() - 1).getMid());
-					}
-				}
-			}
-		}
-	}
+    /**
+     * 设置session的显示名称
+     *
+     * @param channel
+     */
+    private void setChannelDisplayTitle(Channel channel) {
+        String title = "";
+        if (channel.getType().equals("DIRECT")) {
+            title = DirectChannelUtils.getDirectChannelTitle(getActivity(),
+                    channel.getTitle());
+        } else if (channel.getType().equals("SERVICE")) {
+            title = DirectChannelUtils.getRobotInfo(getActivity(), channel.getTitle()).getName();
+        } else {
+            title = channel.getTitle();
+        }
+        channel.setDisplayTitle(title);
+    }
 
-	/**
-	 * 获取缓存中不存在的群组信息
-	 */
-	private void getGroupInfo() {
-		// TODO Auto-generated method stub
-		if (NetUtils.isNetworkConnected(getActivity())){
-			List<Channel> channelList = getCacheData();// 获取缓存中的数据
-			if (channelList.size() > 0 && ((MyApplication) getActivity().getApplicationContext()).getIsContactReady()) {
-				List<ChannelGroup> currentChannelGroupList = new ArrayList<ChannelGroup>();
-				for (int i = 0; i < channelList.size(); i++) {
-					Channel channel = channelList.get(i);
-					if (channel.getType().equals("GROUP")) {
-						ChannelGroup channelGroup = new ChannelGroup(channel);
-						currentChannelGroupList.add(channelGroup);
-					}
-				}
-				List<ChannelGroup> cacheChannelGroupList = ChannelGroupCacheUtils
-						.getAllChannelGroupList(getActivity());
-				currentChannelGroupList.removeAll(cacheChannelGroupList);
-				if (currentChannelGroupList.size() > 0) {
-					String[] cidArray = new String[currentChannelGroupList.size()];
-					for (int i = 0; i < currentChannelGroupList.size(); i++) {
-						cidArray[i] = currentChannelGroupList.get(i).getCid();
-					}
-					ChatAPIService apiService = new ChatAPIService(getActivity());
-					apiService.setAPIInterface(new WebService());
-					apiService.getChannelGroupList(cidArray);
-				}
-			}
-		}
-	}
+    /**
+     * 缓存从服务器获取的最新消息
+     *
+     * @param getNewMsgsResult
+     */
+    private void cacheNewMsgs(GetNewMsgsResult getNewMsgsResult) {
+        // TODO Auto-generated method stub
+        if (getNewMsgsResult != null) {
+            List<Channel> channelList = getCacheData();
+            for (int i = 0; i < channelList.size(); i++) {
+                String cid = channelList.get(i).getCid();
+                List<Msg> newMsgList = getNewMsgsResult.getNewMsgList(cid);
+                if (newMsgList.size() > 0) {
+                    MsgCacheUtil.saveMsgList(getActivity(), newMsgList, ""); // 获取的消息需要缓存
+                    String myUid = ((MyApplication) getActivity().getApplicationContext()).getUid();
+                    // 当会话中最后一条消息为自己发出的时候，将此消息存入已读消息列表，解决最新消息为自己发出，仍识别为未读的问题
+                    if (newMsgList.get(newMsgList.size() - 1).getUid()
+                            .equals(myUid)) {
+                        MsgReadIDCacheUtils.saveReadedMsg(getActivity(), cid,
+                                newMsgList.get(newMsgList.size() - 1).getMid());
+                    }
+                }
+            }
+        }
+    }
+
 
 	private void handMessage() {
 		// TODO Auto-generated method stub
 		handler = new Handler() {
 
-			@Override
-			public void handleMessage(Message msg) {
-				// TODO Auto-generated method stub
-				switch (msg.what) {
-					case RECEIVE_MSG:
-						/** 接收到新的消息 **/
-						Msg receivedMsg = (Msg) msg.obj;
-						Channel receiveMsgChannel = ChannelCacheUtils.getChannel(
-								getActivity(), receivedMsg.getCid());
-						if (receiveMsgChannel == null) {
-							getChannelContent();
-						} else {
-							cacheReceiveMsg(receiveMsgChannel, receivedMsg);
-							addChannelToList(receivedMsg, receiveMsgChannel);
-							sortChannelList(displayChannelList);
-							adapter.notifyDataSetChanged();
-							refreshIndexNotify();
-						}
+            @Override
+            public void handleMessage(Message msg) {
+                // TODO Auto-generated method stub
+                switch (msg.what) {
+                    case RECEIVE_MSG:
+                        /** 接收到新的消息 **/
+                        Msg receivedMsg = (Msg) msg.obj;
+                        Channel receiveMsgChannel = ChannelCacheUtils.getChannel(
+                                getActivity(), receivedMsg.getCid());
+                        if (receiveMsgChannel == null) {
+                            getChannelContent();
+                        } else {
+                            cacheReceiveMsg(receiveMsgChannel, receivedMsg);
+                            addChannelToList(receivedMsg, receiveMsgChannel);
+                            sortChannelList(displayChannelList);
+                            displayData();
+                        }
 
 						break;
 					case RERESH_GROUP_ICON:
@@ -529,36 +583,41 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 
 	}
 
-	/**
-	 * 将推送消息所属的channel添加到channelList
-	 *
-	 * @param receivedMsg
-	 * @param receiveMsgChannel
-	 */
-	private void addChannelToList(Msg receivedMsg, Channel receiveMsgChannel) {
-		// TODO Auto-generated method stub
-		boolean isInChannelList = false;
-		for (int i = 0; i < displayChannelList.size(); i++) {
-			Channel channel = displayChannelList.get(i);
-			if (receivedMsg.getCid().equals(channel.getCid())) {
-				isInChannelList = true;
-				receiveMsgChannel = channel;
-				break;
-			}
-		}
-		if (!isInChannelList) {// channel没在当前channelList中
-			receiveMsgChannel = ChannelCacheUtils.getChannel(getActivity(),
-					receivedMsg.getCid());
-			List<Msg> newMsgList = MsgCacheUtil.getHistoryMsgList(
-					getActivity(), receivedMsg.getCid(), "", 15);
-			receiveMsgChannel.setNewMsgList(newMsgList);
-			ChannelOperationCacheUtils.setChannelHide(getActivity(),
-					receivedMsg.getCid(), false);
-			displayChannelList.add(receiveMsgChannel);
-		} else {
-			receiveMsgChannel.addReceivedNewMsg(receivedMsg);
-		}
-	}
+    /**
+     * 将推送消息所属的channel添加到channelList
+     *
+     * @param receivedMsg
+     * @param receiveMsgChannel
+     */
+    private void addChannelToList(Msg receivedMsg, Channel receiveMsgChannel) {
+        // TODO Auto-generated method stub
+        boolean isInChannelList = false;
+        for (int i = 0; i < displayChannelList.size(); i++) {
+            Channel channel = displayChannelList.get(i);
+            if (receivedMsg.getCid().equals(channel.getCid())) {
+                isInChannelList = true;
+                receiveMsgChannel = channel;
+                break;
+            }
+        }
+        if (!isInChannelList) {// channel没在当前channelList中
+            receiveMsgChannel = ChannelCacheUtils.getChannel(getActivity(),
+                    receivedMsg.getCid());
+            List<Msg> newMsgList = MsgCacheUtil.getHistoryMsgList(
+                    getActivity(), receivedMsg.getCid(), "", 15);
+            receiveMsgChannel.setNewMsgList(newMsgList);
+            ChannelOperationCacheUtils.setChannelHide(getActivity(),
+                    receivedMsg.getCid(), false);
+            displayChannelList.add(receiveMsgChannel);
+            // 当频道显示时先创建下群组头像
+            if (receiveMsgChannel.getType().equals("GROUP")) {
+                createGroupIcon(receiveMsgChannel);
+            }
+
+        } else {
+            receiveMsgChannel.addReceivedNewMsg(receivedMsg);
+        }
+    }
 
 	/**
 	 * 注册接收消息的广播
@@ -573,93 +632,52 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 		}
 	}
 
-	/**
-	 * 显示获取的数据
-	 */
-	private void displayData() {
-		RelativeLayout noChatLayout = (RelativeLayout) rootView
-				.findViewById(R.id.no_chat_layout);
-		if (displayChannelList.size() == 0) {
-			noChatLayout.setVisibility(View.VISIBLE);
-		} else {
-			noChatLayout.setVisibility(View.GONE);
-		}
-		if (adapter == null) {
-			adapter = new Adapter();
-			msgListView.setAdapter(adapter);
-		} else {
-			adapter.notifyDataSetChanged();
-		}
-		msgListView.setOnItemClickListener(new OnItemClickListener() {
+    /**
+     * 显示获取的数据
+     */
+    private void displayData() {
+        ((LinearLayout) rootView
+                .findViewById(R.id.no_chat_layout)).setVisibility((displayChannelList.size() == 0) ? View.VISIBLE : View.GONE);
+        if (adapter == null) {
+            adapter = new Adapter();
+            msgListView.setAdapter(adapter);
+        } else {
+            adapter.notifyDataSetChanged();
+        }
+        refreshIndexNotify();
+    }
 
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view,
-									int position, long id) {
-				// TODO Auto-generated method stub
-				Channel channel = displayChannelList.get(position);
-				channelIdInOpen = channel.getCid();
-				String channelType = channel.getType();
-				Bundle bundle = new Bundle();
-				bundle.putString("title", channel.getTitle());
-				bundle.putString("channelId", channel.getCid());
-				bundle.putString("channelType", channelType);
-				if (channelType.equals("GROUP") || channelType.equals("DIRECT") || channelType.equals("SERVICE")) {
-					IntentUtils.startActivity(getActivity(),
-							ChannelActivity.class, bundle);
-				}else {
-					ToastUtils.show(getActivity(),
-							R.string.not_support_open_channel);
-				}
-				setChannelAllMsgRead(channel);
-				refreshIndexNotify();
-			}
+    /**
+     * 将频道的消息置为已读
+     *
+     * @param channel
+     */
+    private void setChannelAllMsgRead(Channel channel) {
+        // TODO Auto-generated method stub
+        MsgReadIDCacheUtils.saveReadedMsg(getActivity(),
+                channel.getCid(), channel.getNewestMid());
+        int position = displayChannelList.indexOf(channel);
+        displayChannelList.get(position).setUnReadCount(0);
+        View childAt = msgListView.getChildAt(position
+                - msgListView.getFirstVisiblePosition());
+        if (childAt != null) {
+            TextView channelTitleText = (TextView) childAt
+                    .findViewById(R.id.name_text);
+            TextView channelContentText = (TextView) childAt
+                    .findViewById(R.id.content_text);
+            TextView channelTimeText = (TextView) childAt
+                    .findViewById(R.id.time_text);
+            RelativeLayout channelNotReadCountLayout = (RelativeLayout) childAt
+                    .findViewById(R.id.msg_new_layout);
 
-		});
-
-		msgListView.setOnItemLongClickListener(new OnItemLongClickListener() {
-
-			@Override
-			public boolean onItemLongClick(AdapterView<?> parent, View view,
-										   int position, long id) {
-				// TODO Auto-generated method stub
-				showChannelOperationDlg(position);
-				return true;
-			}
-
-		});
-		refreshIndexNotify();
-	}
-
-	/**
-	 * 将频道的消息置为已读
-	 *
-	 * @param channel
-	 */
-	private void setChannelAllMsgRead(Channel channel) {
-		// TODO Auto-generated method stub
-		MsgReadIDCacheUtils.saveReadedMsg(getActivity(),
-				channel.getCid(), channel.getNewestMid());
-		int position = displayChannelList.indexOf(channel);
-		View childAt = msgListView.getChildAt(position
-				- msgListView.getFirstVisiblePosition());
-		if (childAt != null) {
-			TextView channelTitleText = (TextView) childAt
-					.findViewById(R.id.name_text);
-			TextView channelContentText = (TextView) childAt
-					.findViewById(R.id.content_text);
-			TextView channelTimeText = (TextView) childAt
-					.findViewById(R.id.time_text);
-			RelativeLayout channelNotReadCountLayout = (RelativeLayout) childAt
-					.findViewById(R.id.msg_new_layout);
-
-			channelNotReadCountLayout.setVisibility(View.INVISIBLE);
-			channelTitleText.getPaint().setFakeBoldText(false);
-			channelContentText.setTextColor(getResources().getColor(
-					R.color.msg_content_color));
-			channelTimeText.setTextColor(getResources().getColor(
-					R.color.msg_content_color));
-		}
-	}
+            channelNotReadCountLayout.setVisibility(View.INVISIBLE);
+            channelTitleText.getPaint().setFakeBoldText(false);
+            channelContentText.setTextColor(getResources().getColor(
+                    R.color.msg_content_color));
+            channelTimeText.setTextColor(getResources().getColor(
+                    R.color.msg_content_color));
+        }
+    }
 
 	/**
 	 * 弹出频道操作选择框
@@ -696,51 +714,49 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 		(oprationDlg.findViewById(R.id.hide_text))
 				.setOnClickListener(new OnClickListener() {
 
-					@Override
-					public void onClick(View v) {
-						// TODO Auto-generated method stub
-						oprationDlg.dismiss();
-						ChannelOperationCacheUtils.setChannelHide(
-								getActivity(), displayChannelList.get(position)
-										.getCid(), true);
-						// 当隐藏会话时，把该会话的所有消息置为已读
-						MsgReadIDCacheUtils
-								.saveReadedMsg(getActivity(),
-										displayChannelList.get(position)
-												.getCid(), displayChannelList
-												.get(position).getNewestMid());
-						displayChannelList.remove(position);
-						adapter.notifyDataSetChanged();
-					}
-				});
-		oprationDlg.show();
-	}
+                    @Override
+                    public void onClick(View v) {
+                        // TODO Auto-generated method stub
+                        oprationDlg.dismiss();
+                        ChannelOperationCacheUtils.setChannelHide(
+                                getActivity(), displayChannelList.get(position)
+                                        .getCid(), true);
+                        // 当隐藏会话时，把该会话的所有消息置为已读
+                        MsgReadIDCacheUtils
+                                .saveReadedMsg(getActivity(),
+                                        displayChannelList.get(position)
+                                                .getCid(), displayChannelList
+                                                .get(position).getNewestMid());
+                        displayChannelList.remove(position);
+                        displayData();
+                    }
+                });
+        oprationDlg.show();
+    }
 
-	/**
-	 * 设置消息tab页面的小红点（未读消息提醒）的显示
-	 */
-	private void refreshIndexNotify() {
-		int unReadCount = 0;
-		if (displayChannelList != null) {
-			for (int i = 0; i < displayChannelList.size(); i++) {
-				unReadCount += MsgReadIDCacheUtils.getNotReadMsgCount(
-						getActivity(), displayChannelList.get(i).getCid());
-			}
-		}
-		IndexActivity.showNotifyIcon(unReadCount);
-	}
+    /**
+     * 设置消息tab页面的小红点（未读消息提醒）的显示
+     */
+    private void refreshIndexNotify() {
+        int unReadCount = 0;
+        if (displayChannelList != null) {
+            for (int i = 0; i < displayChannelList.size(); i++) {
+                unReadCount += displayChannelList.get(i).getUnReadCount();
+            }
+        }
+        IndexActivity.showNotifyIcon(unReadCount);
+    }
 
-
-	private static class ViewHolder {
-		RelativeLayout mainLayout;
-		CircleFrameLayout channelPhotoLayout;
-		TextView channelContentText;
-		TextView channelTitleText;
-		TextView channelTimeText;
-		RelativeLayout channelNotReadCountLayout;
-		TextView channelNotReadCountText;
-		ImageView dndImg;
-	}
+    static class ViewHolder {
+        RelativeLayout mainLayout;
+        CircleImageView channelPhotoImg;
+        TextView channelContentText;
+        TextView channelTitleText;
+        TextView channelTimeText;
+        RelativeLayout channelNotReadCountLayout;
+        TextView channelNotReadCountText;
+        ImageView dndImg;
+    }
 
 
 	private class Adapter extends BaseAdapter {
@@ -765,181 +781,103 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 			return 0;
 		}
 
-		@Override
-		public View getView(int position, View convertView, ViewGroup parent) {
-			// TODO Auto-generated method stub
-			if (convertView == null) {
-				LayoutInflater mInflater = (LayoutInflater) getActivity()
-						.getSystemService(getActivity().LAYOUT_INFLATER_SERVICE);
-				convertView = mInflater.inflate(R.layout.msg_item_view, null);
-				holder = new ViewHolder();
-				initHolderView(convertView);
-				convertView.setTag(holder);
-			} else {
-				holder = (ViewHolder) convertView.getTag();
-			}
-			Channel channel = displayChannelList.get(position);
-			setChannelBg(channel);
-			setChannelIcon(channel);
-			setChannelTitle(channel);
-			setChannelMsgReadStateUI(channel);
-			// 显示channel是否免打扰状态
-//			boolean isChannelNotDisturb = ChannelCacheUtils.isChannelNotDisturb(getActivity(),
-//					channel.getCid());
-			holder.dndImg.setVisibility(channel.getDnd() ? View.VISIBLE : View.GONE);
-			return convertView;
-		}
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            // TODO Auto-generated method stub
+            ViewHolder holder;
+            if (convertView == null) {
+                holder = new ViewHolder();
+                convertView = LayoutInflater.from(getActivity()).inflate(R.layout.msg_item_view, null);
+                holder.mainLayout = (RelativeLayout) convertView
+                        .findViewById(R.id.main_layout);
+                holder.channelPhotoImg = (CircleImageView) convertView
+                        .findViewById(R.id.msg_img);
+                holder.channelTitleText = (TextView) convertView
+                        .findViewById(R.id.name_text);
+                holder.channelContentText = (TextView) convertView
+                        .findViewById(R.id.content_text);
+                holder.channelTimeText = (TextView) convertView
+                        .findViewById(R.id.time_text);
+                holder.channelNotReadCountLayout = (RelativeLayout) convertView
+                        .findViewById(R.id.msg_new_layout);
+                holder.channelNotReadCountText = (TextView) convertView
+                        .findViewById(R.id.msg_new_text);
+                holder.dndImg = (ImageView) convertView
+                        .findViewById(R.id.msg_dnd_img);
+                convertView.setTag(holder);
+            } else {
+                holder = (ViewHolder) convertView.getTag();
+            }
+            Channel channel = displayChannelList.get(position);
+            setChannelIcon(channel, holder.channelPhotoImg);
+            setChannelMsgReadStateUI(channel, holder);
+            holder.channelTitleText.setText(channel.getDisplayTitle());
+            holder.dndImg.setVisibility(channel.getDnd() ? View.VISIBLE : View.GONE);
+            holder.mainLayout
+                    .setBackgroundResource(channel.getIsSetTop() ? R.drawable.selector_set_top_msg_list : R.drawable.selector_list);
+            return convertView;
+        }
 
-		/**
-		 * 初始化View
-		 *
-		 * @param convertView
-		 */
-		private void initHolderView(View convertView) {
-			// TODO Auto-generated method stub
-			holder.mainLayout = (RelativeLayout) convertView
-					.findViewById(R.id.main_layout);
-			holder.channelPhotoLayout = (CircleFrameLayout) convertView
-					.findViewById(R.id.channel_photo_layout);
-			holder.channelTitleText = (TextView) convertView
-					.findViewById(R.id.name_text);
-			holder.channelContentText = (TextView) convertView
-					.findViewById(R.id.content_text);
-			holder.channelTimeText = (TextView) convertView
-					.findViewById(R.id.time_text);
-			holder.channelNotReadCountLayout = (RelativeLayout) convertView
-					.findViewById(R.id.msg_new_layout);
-			holder.channelNotReadCountText = (TextView) convertView
-					.findViewById(R.id.msg_new_text);
-			holder.dndImg = (ImageView) convertView
-					.findViewById(R.id.msg_dnd_img);
-		}
-
-
-		/**
-		 * 设置Channel的Icon
-		 *
-		 * @param channel
-		 */
-		private void setChannelIcon(Channel channel) {
-			// TODO Auto-generated method stub
-			if (channel.getType().equals("GROUP")) {
-				DisplayChannelGroupIcon.show(getActivity(),channel.getCid(),holder.channelPhotoLayout);
-			} else {
-				Integer defaultIcon = -1; // 默认显示图标
-				String iconUrl = "";// Channel头像的uri
-				View channelPhotoView = LayoutInflater.from(getActivity()).inflate(R.layout.chat_msg_session_photo_one, null);
-				ImageView photoImg = (ImageView) channelPhotoView.findViewById(R.id.photo_img1);
-				if (channel.getType().equals("DIRECT")) {
-					defaultIcon = R.drawable.icon_person_default;
-					iconUrl = DirectChannelUtils.getDirectChannelIcon(
-							getActivity(), channel.getTitle());
-				} else if (channel.getType().equals("SERVICE")) {
-					defaultIcon = R.drawable.icon_person_default;
-					iconUrl = DirectChannelUtils.getRobotIcon(getActivity(), channel.getTitle());
-				} else {
-					defaultIcon = R.drawable.icon_channel_group_default;
-					iconUrl = channel.getIcon();
-				}
-				new ImageDisplayUtils(getActivity(), defaultIcon).display(
-						photoImg, iconUrl);
-				holder.channelPhotoLayout.addView(channelPhotoView);
-			}
+        /**
+         * 设置Channel的Icon
+         *
+         * @param channel
+         */
+        private void setChannelIcon(Channel channel, CircleImageView channelPhotoImg) {
+            // TODO Auto-generated method stub
+            Integer defaultIcon = R.drawable.icon_channel_group_default; // 默认显示图标
+            String iconUrl = channel.getIcon();// Channel头像的uri
+            if (channel.getType().equals("GROUP")) {
+                File file = new File(MyAppConfig.LOCAL_CACHE_PHOTO_PATH,
+                        UriUtils.tanent + channel.getCid() + "_100.png1");
+                if (file.exists()) {
+                    iconUrl = "file://" + file.getAbsolutePath();
+                    new ImageDisplayUtils().displayNoCachePic(channelPhotoImg, iconUrl, defaultIcon);
+                    return;
+                }
+            } else if (channel.getType().equals("DIRECT")) {
+                defaultIcon = R.drawable.icon_person_default;
+                iconUrl = DirectChannelUtils.getDirectChannelIcon(
+                        getActivity(), channel.getTitle());
+            } else if (channel.getType().equals("SERVICE")) {
+                defaultIcon = R.drawable.icon_person_default;
+                iconUrl = DirectChannelUtils.getRobotIcon(getActivity(), channel.getTitle());
+            }
+            new ImageDisplayUtils(getActivity(), defaultIcon).display(
+                    channelPhotoImg, iconUrl);
 
 
 		}
 
-		/**
-		 * 设置频道的背景色
-		 *
-		 * @param channel
-		 */
-		private void setChannelBg(Channel channel) {
-			// TODO Auto-generated method stub
-			if (channel.getIsSetTop()) {
-				holder.mainLayout
-						.setBackgroundResource(R.drawable.selector_set_top_msg_list);
-			} else {
-				holder.mainLayout
-						.setBackgroundResource(R.drawable.selector_list);
-			}
-		}
 
-		/**
-		 * 设置Channel的title
-		 *
-		 * @param channel
-		 */
-		private void setChannelTitle(Channel channel) {
-			String title = "";
-			if (channel.getType().equals("DIRECT")) {
-				title = DirectChannelUtils.getDirectChannelTitle(getActivity(),
-						channel.getTitle());
-			} else if (channel.getType().equals("SERVICE")) {
-				title = DirectChannelUtils.getRobotInfo(getActivity(), channel.getTitle()).getName();
-			} else {
-				title = channel.getTitle();
-			}
-			holder.channelTitleText.setText(title);
-		}
-
-		/**
-		 * 设置频道未读和已读消息的显示
-		 *
-		 * @param channel
-		 */
-		private void setChannelMsgReadStateUI(final Channel channel) {
-			// TODO Auto-generated method stub
-			int unReadCount = MsgReadIDCacheUtils.getNotReadMsgCount(
-					getActivity(), channel.getCid());
-			holder.channelTimeText.setText(TimeUtils.getDisplayTime(
-					getActivity(), channel.getLastUpdate()));
-			holder.channelContentText.setText(channel
-					.getNewestMsgContent(getActivity()));
-			TransHtmlToTextUtils.stripUnderlines(holder.channelContentText,
-					R.color.msg_content_color);
-			if (unReadCount == 0) {
-				holder.channelNotReadCountLayout.setVisibility(View.INVISIBLE);
-				holder.channelTitleText.getPaint().setFakeBoldText(false);
-				holder.channelContentText.setTextColor(getResources().getColor(
-						R.color.msg_content_color));
-				holder.channelTimeText.setTextColor(getResources().getColor(
-						R.color.msg_content_color));
-			} else {
-				holder.channelNotReadCountLayout.setVisibility(View.VISIBLE);
-				holder.channelTitleText.getPaint().setFakeBoldText(true);
-				holder.channelContentText.setTextColor(getResources().getColor(
-						R.color.black));
-				holder.channelTimeText.setTextColor(getResources().getColor(
-						R.color.msg_time_color));
-				holder.channelNotReadCountText.setText(unReadCount > 99 ? "99+" : "" + unReadCount);
-			}
-			TipsView.attach(holder.channelNotReadCountLayout,
-					new TipsView.Listener() {
-
-						@Override
-						public void onStart() {
-							// TODO Auto-generated method stub
-							pullToRefreshLayout.setCanTouch(false);
-						}
-
-						@Override
-						public void onComplete() {
-							// TODO Auto-generated method stub
-							pullToRefreshLayout.setCanTouch(true);
-							setChannelAllMsgRead(channel);
-							refreshIndexNotify();
-						}
-
-						@Override
-						public void onCancel() {
-							// TODO Auto-generated method stub
-							pullToRefreshLayout.setCanTouch(true);
-
-						}
-					});
-		}
-	}
+        /**
+         * 设置频道未读和已读消息的显示
+         *
+         * @param channel
+         */
+        private void setChannelMsgReadStateUI(final Channel channel, ViewHolder holder) {
+            // TODO Auto-generated method stub
+            int unReadCount = channel.getUnReadCount();
+            holder.channelTimeText.setText(TimeUtils.getDisplayTime(
+                    getActivity(), channel.getLastUpdate()));
+            holder.channelContentText.setText(channel
+                    .getNewestMsgContent(getActivity(),holder.channelContentText));
+            TransHtmlToTextUtils.stripUnderlines(holder.channelContentText,
+                    R.color.msg_content_color);
+            boolean isHasUnReadMsg = (unReadCount != 0);
+            holder.channelNotReadCountLayout.setVisibility(isHasUnReadMsg ? View.VISIBLE : View.INVISIBLE);
+            holder.channelTitleText.getPaint().setFakeBoldText(isHasUnReadMsg);
+            holder.channelContentText.setTextColor(isHasUnReadMsg ? getResources().getColor(
+                    R.color.black) : getResources().getColor(
+                    R.color.msg_content_color));
+            holder.channelTimeText.setTextColor(isHasUnReadMsg ? getResources().getColor(
+                    R.color.msg_time_color) : getResources().getColor(
+                    R.color.msg_content_color));
+            if (isHasUnReadMsg) {
+                holder.channelNotReadCountText.setText(unReadCount > 99 ? "99+" : "" + unReadCount);
+            }
+        }
+    }
 
 
 	class WebService extends APIInterfaceInstance {
@@ -970,27 +908,14 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 
 		}
 
-		@Override
-		public void returnSearchChannelGroupSuccess(
-				GetSearchChannelGroupResult getSearchChannelGroupResult) {
-			saveChannelInfo(getSearchChannelGroupResult
-					.getSearchChannelGroupList());
-			//为了刷新群组头像
-			adapter.notifyDataSetChanged();
-		}
-
-		@Override
-		public void returnSearchChannelGroupFail(String error,int errorCode) {
-		}
-
-		@Override
-		public void returnNewMsgsSuccess(GetNewMsgsResult getNewMsgsResult) {
-			// TODO Auto-generated method stub
-			if (getActivity() != null) {
-				pullToRefreshLayout.refreshFinish(PullToRefreshLayout.SUCCEED);
-				cacheNewMsgs(getNewMsgsResult);
-				handData();
-			}
+        @Override
+        public void returnNewMsgsSuccess(GetNewMsgsResult getNewMsgsResult) {
+            // TODO Auto-generated method stub
+            if (getActivity() != null) {
+                pullToRefreshLayout.refreshFinish(PullToRefreshLayout.SUCCEED);
+                cacheNewMsgs(getNewMsgsResult);
+                handData();
+            }
 
 		}
 
@@ -1014,22 +939,25 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 	 */
 	public class MessageFragmentReceiver extends BroadcastReceiver {
 
-		@Override
-		public void onReceive(Context context, Intent intent) {
-			// TODO Auto-generated method stub
-			String command = intent.getExtras().getString("command");
-			if (command.equals("refresh_session_list")) {
-				getChannelContent();
-			} else if (command.equals("sort_session_list")) {
-				sortChannelList(displayChannelList);
-				adapter.notifyDataSetChanged();
-			} else if (command.equals("set_all_message_read")) {
-				setAllChannelMsgRead();
-			} else if (command.equals("websocket_status")) {
-				String socketStatus = intent.getExtras().getString("status");
-				showSocketStatusInTitle(socketStatus);
-
-			}
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            // TODO Auto-generated method stub
+            String command = intent.getExtras().getString("command");
+            if (command.equals("creat_group_icon")) {
+                createAllGroupIcon();
+            } else if (command.equals("refresh_session_list")) {
+                getChannelContent();
+            } else if (command.equals("sort_session_list")) {
+                LogUtils.jasonDebug("sort_session_list-------------");
+                createAllGroupIcon();
+                sortChannelList(displayChannelList);
+                adapter.notifyDataSetChanged();
+            } else if (command.equals("set_all_message_read")) {
+                setAllChannelMsgRead();
+            } else if (command.equals("websocket_status")) {
+                String socketStatus = intent.getExtras().getString("status");
+                showSocketStatusInTitle(socketStatus);
+            }
 
 		}
 
@@ -1045,52 +973,30 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 		}
 	}
 
-	/**
-	 * 将所有频道的消息置为已读
-	 */
-	private void setAllChannelMsgRead() {
-		// TODO Auto-generated method stub
-		for (int i = 0; i < displayChannelList.size(); i++) {
-			Channel channel = displayChannelList.get(i);
-			MsgReadIDCacheUtils.saveReadedMsg(getActivity(), channel.getCid(),
-					channel.getNewestMid());
-		}
-		adapter.notifyDataSetChanged();
-	}
+    /**
+     * 将所有频道的消息置为已读
+     */
+    private void setAllChannelMsgRead() {
+        // TODO Auto-generated method stub
+        for (int i = 0; i < displayChannelList.size(); i++) {
+            Channel channel = displayChannelList.get(i);
+            MsgReadIDCacheUtils.saveReadedMsg(getActivity(), channel.getCid(),
+                    channel.getNewestMid());
+            channel.setUnReadCount(0);
+        }
+        adapter.notifyDataSetChanged();
+    }
 
-	/**
-	 * 更新Channel的input信息
-	 *
-	 * @param searchChannelGroupList
-	 */
-	public void saveChannelInfo(List<ChannelGroup> searchChannelGroupList) {
-		Map<String, String> channelMap = new HashMap<String, String>();
-		for (int i = 0; i < searchChannelGroupList.size(); i++) {
-			ChannelGroup channelGroup = searchChannelGroupList.get(i);
-			channelMap.put(channelGroup.getCid(), channelGroup.getInputs());
-			if (channelGroup.getType().equals("GROUP")){
-				ChannelGroupCacheUtils.saveChannelGroup(getActivity(),channelGroup);
-			}
-		}
-		List<Channel> channelList = ChannelCacheUtils
-				.getCacheChannelList(getActivity());
-		for (int i = 0; i < channelList.size(); i++) {
-			Channel channel = channelList.get(i);
-			channel.setInputs(channelMap.get(channel.getCid()));
-		}
-		ChannelCacheUtils.saveChannelList(getActivity(), channelList);
-	}
-
-	/**
-	 * 根据cid数组获取Channel信息
-	 *
-	 * @param channelList
-	 */
-	public void getChannelInfoResult(List<Channel> channelList) {
-		String[] cidArray = new String[channelList.size()];
-		for (int i = 0; i < channelList.size(); i++) {
-			cidArray[i] = channelList.get(i).getCid();
-		}
+    /**
+     * 根据cid数组获取Channel信息
+     *
+     * @param channelList
+     */
+    public void getChannelInfoResult(List<Channel> channelList) {
+        String[] cidArray = new String[channelList.size()];
+        for (int i = 0; i < channelList.size(); i++) {
+            cidArray[i] = channelList.get(i).getCid();
+        }
 
 		apiService.getChannelGroupList(cidArray);
 	}

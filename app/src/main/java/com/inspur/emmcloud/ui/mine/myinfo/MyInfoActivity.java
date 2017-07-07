@@ -310,6 +310,10 @@ public class MyInfoActivity extends BaseActivity {
 			msg.what = UPDATE_MY_HEAD;
 			msg.obj = userHeadImgUrl;
 			MoreFragment.handler.sendMessage(msg);
+			// 通知消息页面重新创建群组头像
+			Intent intent = new Intent("message_notify");
+			intent.putExtra("command", "creat_group_icon");
+			sendBroadcast(intent);
 		}
 
 		@Override

@@ -19,7 +19,6 @@ import com.inspur.emmcloud.ui.chat.ImagePagerActivity;
 import com.inspur.emmcloud.util.DensityUtil;
 import com.inspur.emmcloud.util.FileUtils;
 import com.inspur.emmcloud.util.InputMethodUtils;
-import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.ToastUtils;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -103,7 +102,6 @@ public class ImageDetailFragment extends Fragment {
 			@Override
 			public void onTransformComplete(int mode) {
 				if (mode == 2) {
-					LogUtils.jasonDebug("finshi----------------------------");
 					getActivity().finish();
 					getActivity().overridePendingTransition(0, 0);
 				}
@@ -119,7 +117,9 @@ public class ImageDetailFragment extends Fragment {
 
 			@Override
 			public void onOutsidePhotoTap() {
-				((ImagePagerActivity)getActivity()).onPhotoTap();
+				if (getActivity() != null){
+					((ImagePagerActivity)getActivity()).onPhotoTap();
+				}
 			}
 		});
 		mAttacher.setOnSingleFlingListener(new PhotoViewAttacher.OnSingleFlingListener() {

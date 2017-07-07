@@ -11,7 +11,6 @@ import android.content.res.Resources;
 import android.os.Environment;
 import android.os.Parcelable;
 import android.support.multidex.MultiDexApplication;
-import android.support.v4.util.ArrayMap;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 
@@ -38,6 +37,7 @@ import com.inspur.emmcloud.util.PreferencesByUsersUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.UriUtils;
+import com.inspur.emmcloud.util.richtext.RichText;
 import com.inspur.imp.api.Res;
 import com.inspur.reactnative.AuthorizationManagerPackage;
 import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiskCache;
@@ -47,7 +47,6 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
-import com.zzhoujay.richtext.RichText;
 
 import org.xutils.http.RequestParams;
 import org.xutils.x;
@@ -57,6 +56,7 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
@@ -86,7 +86,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
     private String uid;
     private String accessToken;
     private Enterprise currentEnterprise;
-    private Map<String,String> userPhotoUrlMap = new ArrayMap<>();
+    private Map<String,String> userPhotoUrlMap ;
 
 
     private final ReactNativeHost mReactNativeHost = new ReactNativeHost(this) {
@@ -120,11 +120,6 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         accessToken = PreferencesUtils.getString(getApplicationContext(), "accessToken", "");
         setAppLanguageAndFontScale();
         removeAllSessionCookie();
-        //修改字体方案预留
-//        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
-//                .setDefaultFontPath("fonts/xiaozhuan.ttf")
-//
-
     }
 
 
@@ -140,6 +135,15 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         initImageLoader();
         initTanent();
         RichText.initCacheDir(new File(LOCAL_CACHE_MARKDOWN_PATH));
+        userPhotoUrlMap = new LinkedHashMap<String,String>(){
+            @Override
+            protected boolean removeEldestEntry(Entry<String, String> eldest) {
+                // TODO Auto-generated method stub
+                return size() > 40;
+
+            }
+        };
+
     }
 
     /**
@@ -406,10 +410,17 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
     /*****************************通讯录头像缓存********************************************/
     public String getUserPhotoUrl(String uid){
         String photoUrl = null;
-        if (!StringUtils.isBlank(uid) && userPhotoUrlMap.containsKey(uid)){
+        if (!StringUtils.isBlank(uid)){
             photoUrl = userPhotoUrlMap.get(uid);
         }
         return photoUrl;
+    }
+
+    public boolean isKeysContainUid(String uid){
+        if (!StringUtils.isBlank(uid)){
+            return  userPhotoUrlMap.containsKey(uid);
+        }
+        return  false;
     }
 
     public void setUsesrPhotoUrl(String uid,String url){
