@@ -10,7 +10,6 @@ import android.content.res.Resources;
 import android.os.Environment;
 import android.os.Parcelable;
 import android.support.multidex.MultiDexApplication;
-import android.support.v4.util.ArrayMap;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 
@@ -55,6 +54,7 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
@@ -84,7 +84,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
     private String uid;
     private String accessToken;
     private Enterprise currentEnterprise;
-    private Map<String,String> userPhotoUrlMap = new ArrayMap<>();
+    private Map<String,String> userPhotoUrlMap ;
 
 
     private final ReactNativeHost mReactNativeHost = new ReactNativeHost(this) {
@@ -118,11 +118,6 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         accessToken = PreferencesUtils.getString(getApplicationContext(), "accessToken", "");
         setAppLanguageAndFontScale();
         removeAllSessionCookie();
-        //修改字体方案预留
-//        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
-//                .setDefaultFontPath("fonts/xiaozhuan.ttf")
-//
-
     }
 
 
@@ -138,6 +133,15 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         initImageLoader();
         initTanent();
         RichText.initCacheDir(new File(LOCAL_CACHE_MARKDOWN_PATH));
+        userPhotoUrlMap = new LinkedHashMap<String,String>(){
+            @Override
+            protected boolean removeEldestEntry(Entry<String, String> eldest) {
+                // TODO Auto-generated method stub
+                return size() > 40;
+
+            }
+        };
+
     }
 
     /**
@@ -392,10 +396,17 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
     /*****************************通讯录头像缓存********************************************/
     public String getUserPhotoUrl(String uid){
         String photoUrl = null;
-        if (!StringUtils.isBlank(uid) && userPhotoUrlMap.containsKey(uid)){
+        if (!StringUtils.isBlank(uid)){
             photoUrl = userPhotoUrlMap.get(uid);
         }
         return photoUrl;
+    }
+
+    public boolean isKeysContainUid(String uid){
+        if (!StringUtils.isBlank(uid)){
+            return  userPhotoUrlMap.containsKey(uid);
+        }
+        return  false;
     }
 
     public void setUsesrPhotoUrl(String uid,String url){

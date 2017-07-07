@@ -17,9 +17,7 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.MineAPIService;
-import com.inspur.emmcloud.bean.Enterprise;
 import com.inspur.emmcloud.bean.GetMDMStateResult;
-import com.inspur.emmcloud.bean.GetMyInfoResult;
 import com.inspur.emmcloud.bean.Language;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.ui.IndexActivity;
@@ -36,8 +34,6 @@ import com.inspur.emmcloud.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.dialogs.EasyDialog;
 import com.inspur.emmcloud.widget.dialogs.MyDialog;
-
-import java.util.List;
 
 import cn.jpush.android.api.JPushInterface;
 
@@ -121,6 +117,11 @@ public class SettingActivity extends BaseActivity {
 				// TODO Auto-generated method stub
 				ToastUtils.show(getApplicationContext(),
 						R.string.data_clear_success);
+				// 通知消息页面重新创建群组头像
+				Intent intent = new Intent("message_notify");
+				intent.putExtra("command", "creat_group_icon");
+				sendBroadcast(intent);
+
 			}
 
 		};

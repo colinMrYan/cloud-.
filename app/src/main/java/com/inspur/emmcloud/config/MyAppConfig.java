@@ -29,6 +29,8 @@ public class MyAppConfig {
 			.getExternalStorageDirectory() + "/IMP-Cloud/cache/img_create/";
 	public static final String LOCAL_CACHE_PATH = Environment
 			.getExternalStorageDirectory() + "/IMP-Cloud/cache/";
+	public static final String LOCAL_CACHE_PHOTO_PATH = Environment
+			.getExternalStorageDirectory() + "/IMP-Cloud/cache/photo";
 	public static final String LOCAL_DOWNLOAD_PATH = Environment
 			.getExternalStorageDirectory() + "/IMP-Cloud/download/";
 	public static final String LOCAL_CACHE_MARKDOWN_PATH = Environment
