@@ -30,6 +30,7 @@ import com.inspur.emmcloud.push.WebSocketPush;
 import com.inspur.emmcloud.util.AppUtils;
 import com.inspur.emmcloud.util.CrashHandler;
 import com.inspur.emmcloud.util.DbCacheUtils;
+import com.inspur.emmcloud.util.HuaWeiPushMangerUtils;
 import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.PreferencesByUsersUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
@@ -129,7 +130,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         x.Ext.setDebug(LogUtils.isDebug);
         SoLoader.init(this, false);
         Res.init(this); // 注册imp的资源文件类
-        initJPush();
+        initPush();
         initImageLoader();
         initTanent();
         RichText.initCacheDir(new File(LOCAL_CACHE_MARKDOWN_PATH));
@@ -145,9 +146,21 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
     }
 
     /**
+     * 初始化推送，以后如需定制小米等厂家的推送服务可从这里定制
+     */
+    public void initPush() {
+        if(AppUtils.getIsHuaWei()){
+            HuaWeiPushMangerUtils.getInstance(this).connect();
+        }else{
+            initJPush();
+        }
+    }
+
+
+    /**
      * 初始化极光推送
      */
-    public void initJPush() {
+    private void initJPush() {
         // TODO Auto-generated method stub
         // 设置开启日志,发布时请关闭日志
         JPushInterface.setDebugMode(true);

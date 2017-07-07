@@ -23,6 +23,7 @@ import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.ui.login.LoginActivity;
 import com.inspur.emmcloud.util.DataCleanManager;
+import com.inspur.emmcloud.util.HuaWeiPushMangerUtils;
 import com.inspur.emmcloud.util.ImageDisplayUtils;
 import com.inspur.emmcloud.util.IntentUtils;
 import com.inspur.emmcloud.util.NetUtils;
@@ -332,6 +333,7 @@ public class SettingActivity extends BaseActivity {
 		PreferencesUtils.putString(SettingActivity.this, "tokenType", "");
 		PreferencesUtils.putString(SettingActivity.this, "accessToken", "");
 		((MyApplication)getApplicationContext()).setAccessToken("");
+		HuaWeiPushMangerUtils.getInstance(SettingActivity.this).delToken();
 		Intent intent = new Intent();
 		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
 		intent.setClass(this, LoginActivity.class);

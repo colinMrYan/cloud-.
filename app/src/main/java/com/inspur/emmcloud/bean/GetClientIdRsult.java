@@ -15,7 +15,6 @@ public class GetClientIdRsult {
     private String clientId = "";
 
     public GetClientIdRsult(String clientId){
-        LogUtils.YfcDebug("传回来的数据："+clientId);
         try {
             JSONObject jsonObject = new JSONObject(clientId);
             if(jsonObject.has("clientId")){
