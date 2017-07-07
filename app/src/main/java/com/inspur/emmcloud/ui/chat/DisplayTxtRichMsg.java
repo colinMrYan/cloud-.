@@ -18,13 +18,13 @@ import com.inspur.emmcloud.util.MentionsAndUrlShowUtils;
 import com.inspur.emmcloud.util.ToastUtils;
 import com.inspur.emmcloud.util.TransHtmlToTextUtils;
 import com.inspur.emmcloud.util.UriUtils;
+import com.inspur.emmcloud.util.richtext.CacheType;
+import com.inspur.emmcloud.util.richtext.LinkHolder;
+import com.inspur.emmcloud.util.richtext.RichText;
+import com.inspur.emmcloud.util.richtext.RichType;
+import com.inspur.emmcloud.util.richtext.callback.LinkFixCallback;
+import com.inspur.emmcloud.util.richtext.callback.OnUrlClickListener;
 import com.inspur.emmcloud.widget.LinkMovementClickMethod;
-import com.zzhoujay.richtext.CacheType;
-import com.zzhoujay.richtext.LinkHolder;
-import com.zzhoujay.richtext.RichText;
-import com.zzhoujay.richtext.RichType;
-import com.zzhoujay.richtext.callback.LinkFixCallback;
-import com.zzhoujay.richtext.callback.OnUrlClickListener;
 
 import java.util.Arrays;
 import java.util.List;
@@ -53,8 +53,8 @@ public class DisplayTxtRichMsg {
 				isMyMsg ? R.color.header_bg : R.color.white));
 		richText.setTextColor(context.getResources().getColor(
 				isMyMsg ? R.color.white : R.color.black));
-		int normalPadding = DensityUtil.dip2px(context, 10);
-		int arrowPadding = DensityUtil.dip2px(context, 8);
+		int normalPadding = DensityUtil.dip2px(context, 9);
+		int arrowPadding = DensityUtil.dip2px(context, 7);
 		if (isMyMsg) {
 			richText.setPadding(normalPadding, normalPadding, normalPadding+arrowPadding, normalPadding);
 		}else {

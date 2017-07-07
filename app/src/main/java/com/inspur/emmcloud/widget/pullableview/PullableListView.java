@@ -2,7 +2,6 @@ package com.inspur.emmcloud.widget.pullableview;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.widget.ListView;
 
 public class PullableListView extends ListView implements Pullable {
