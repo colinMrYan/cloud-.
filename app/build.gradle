@@ -163,6 +163,7 @@ dependencies {
     compile 'uk.co.chrisjenx:calligraphy:2.2.0'
     compile 'com.fashare2015:HoverView:1.0.1'
     compile 'pl.droidsonroids.gif:android-gif-drawable:1.2.7'
+    compile(name: 'HMS-SDK-2.4.0.300', ext: 'aar')
     compile 'com.zzhoujay.markdown:markdown:1.0.5'
     compile 'com.jakewharton:disklrucache:2.0.2' //Markdown引入 缓存
 
@@ -189,3 +190,4 @@ dependencies {
     compile files('src/libs/jcore-android_v1.1.1.jar')
     //compile files('src/libs/mdm.jar')
 }
+repositories { flatDir { dirs 'aars' } }
