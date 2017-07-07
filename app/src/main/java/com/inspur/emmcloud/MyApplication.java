@@ -144,9 +144,9 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
     /**
      * 初始化推送，以后如需定制小米等厂家的推送服务可从这里定制
      */
-    private void initPush() {
+    public void initPush() {
         if(AppUtils.getIsHuaWei()){
-            new HuaWeiPushMangerUtils(this);
+            HuaWeiPushMangerUtils.getInstance(this).connect();
         }else{
             initJPush();
         }
@@ -156,7 +156,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
     /**
      * 初始化极光推送
      */
-    public void initJPush() {
+    private void initJPush() {
         // TODO Auto-generated method stub
         // 设置开启日志,发布时请关闭日志
         JPushInterface.setDebugMode(true);

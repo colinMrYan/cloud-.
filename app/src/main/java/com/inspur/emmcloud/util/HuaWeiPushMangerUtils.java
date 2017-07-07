@@ -23,8 +23,21 @@ public class HuaWeiPushMangerUtils implements HuaweiApiClient.ConnectionCallback
     private boolean mResolvingError = false;
     private static final int REQUEST_RESOLVE_ERROR = 1001;
     private Context contextLocal;
+    private static HuaWeiPushMangerUtils huaWeiPushMangerUtils;
 
-    public HuaWeiPushMangerUtils(Context context) {
+
+    public static HuaWeiPushMangerUtils getInstance(Context context){
+        if(huaWeiPushMangerUtils == null){
+            synchronized (HuaWeiPushMangerUtils.class){
+                if(huaWeiPushMangerUtils == null){
+                    huaWeiPushMangerUtils = new HuaWeiPushMangerUtils(context);
+                }
+            }
+        }
+        return huaWeiPushMangerUtils;
+    }
+
+    private HuaWeiPushMangerUtils(Context context) {
         contextLocal = context;
 //        HuaweiIdSignInOptions options = new HuaweiIdSignInOptions.Builder(HuaweiIdSignInOptions.DEFAULT_SIGN_IN)
 //                .build();
@@ -40,6 +53,12 @@ public class HuaWeiPushMangerUtils implements HuaweiApiClient.ConnectionCallback
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .build();
+    }
+
+    /**
+     * 连接方法单列
+     */
+    public void connect() {
         client.connect();
     }
 
@@ -53,7 +72,7 @@ public class HuaWeiPushMangerUtils implements HuaweiApiClient.ConnectionCallback
     @Override
     public void onConnected() {
         LogUtils.YfcDebug("华为推送连接成功");
-        if(StringUtils.isBlank(PreferencesByUserAndTanentUtils.getString(contextLocal,""))){
+        if(StringUtils.isBlank(PreferencesUtils.getString(contextLocal,""))){
             getToken();
         }
         setPassByMsg(true);
@@ -121,14 +140,16 @@ public class HuaWeiPushMangerUtils implements HuaweiApiClient.ConnectionCallback
     /**
      * 注销token
      */
-    private void delToken() {
+    public  void delToken() {
         new Thread() {
             @Override
             public void run() {
                 try {
-                    String deltoken = PreferencesByUserAndTanentUtils.getString(contextLocal, "");
+                    String deltoken = PreferencesUtils.getString(contextLocal, "huawei_push_token","");
                     if (!TextUtils.isEmpty(deltoken) && null != client) {
                         HuaweiPush.HuaweiPushApi.deleteToken(client, deltoken);
+                        //清除本地token
+                        PreferencesUtils.putString(contextLocal, "huawei_push_token","");
                     } else {
                         LogUtils.YfcDebug("delete token's params is invalid.");
                     }
