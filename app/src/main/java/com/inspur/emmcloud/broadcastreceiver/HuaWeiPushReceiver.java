@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.huawei.hms.support.api.push.PushReceiver;
+import com.inspur.emmcloud.MyApplication;
+import com.inspur.emmcloud.push.WebSocketPush;
 import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.ui.login.LoginActivity;
 import com.inspur.emmcloud.util.LogUtils;
@@ -34,6 +36,9 @@ public class HuaWeiPushReceiver extends PushReceiver{
 //        String content = "get token and belongId successful, token = " + token + ",belongId = " + belongId;
 //        LogUtils.YfcDebug(content);
         PreferencesUtils.putString(context,"huawei_push_token",token);
+        if(((MyApplication)context.getApplicationContext()).isIndexActivityRunning() ){
+            WebSocketPush.getInstance(context).start();
+        }
     }
 
     /**
