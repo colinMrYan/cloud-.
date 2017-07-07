@@ -6,15 +6,11 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.huawei.hms.support.api.push.PushReceiver;
-import com.inspur.emmcloud.bean.CalendarEvent;
 import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.ui.login.LoginActivity;
-import com.inspur.emmcloud.ui.work.calendar.CalEventAddActivity;
 import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.StringUtils;
-
-import org.json.JSONObject;
 
 /**
  * Created by yufuchang on 2017/6/20.
@@ -69,40 +65,23 @@ public class HuaWeiPushReceiver extends PushReceiver{
      */
     @Override
     public void onEvent(Context context, PushReceiver.Event event, Bundle extras) {
-        LogUtils.YfcDebug("pushkey："+extras.getString(BOUND_KEY.pushMsgKey));
+//        LogUtils.YfcDebug("pushkey："+extras.getString(BOUND_KEY.pushMsgKey));
         if (Event.NOTIFICATION_OPENED.equals(event) || Event.NOTIFICATION_CLICK_BTN.equals(event)) {
-            int notifyId = extras.getInt(BOUND_KEY.pushNotifyId, 0);
-            if (0 != notifyId) {
-                NotificationManager manager = (NotificationManager) context
-                        .getSystemService(Context.NOTIFICATION_SERVICE);
-                manager.cancel(notifyId);
-            }
-            String content = "--------receive extented notification message: " + extras.getString
-                    (BOUND_KEY.pushMsgKey);
-            LogUtils.YfcDebug(content);
+            NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+            manager.cancelAll();
+//            int notifyId = extras.getInt(BOUND_KEY.pushNotifyId, 0);
+//            if (0 != notifyId) {
+//                NotificationManager manager = (NotificationManager) context
+//                        .getSystemService(Context.NOTIFICATION_SERVICE);
+//                manager.cancel(notifyId);
+//            }
+//            String content = "--------receive extented notification message: " + extras.getString
+//                    (BOUND_KEY.pushMsgKey);
+//            LogUtils.YfcDebug(content);
         }
         String accessToken = PreferencesUtils.getString(context,
                 "accessToken", "");
         if(!StringUtils.isBlank(accessToken)){
-            //此处以下
-//            String extra = "";
-//            if (extras.containsKey(JPushInterface.EXTRA_EXTRA)) {
-//                extra = extras.getString(JPushInterface.EXTRA_EXTRA);
-//            }
-//            if (!StringUtils.isBlank(extra)) {
-//                try {
-//                    JSONObject extraObj = new JSONObject(extra);
-//                    if (extraObj.has("calEvent")) {
-//                        String json = extraObj.getString("calEvent");
-//                        JSONObject calEventObj = new JSONObject(json);
-//                        openCalEvent(context, calEventObj);
-//                        return;
-//                    }
-//                } catch (JSONException e) {
-//                    // TODO Auto-generated catch block
-//                    e.printStackTrace();
-//                }
-//            }
             startIndexActivity(context);
         }else{
             statLoginActivity(context);
@@ -129,22 +108,6 @@ public class HuaWeiPushReceiver extends PushReceiver{
         Intent loginIntent = new Intent(context, LoginActivity.class);
         loginIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(loginIntent);
-    }
-
-
-    /**
-     * 打开
-     * @param context
-     * @param jsonObject
-     */
-    private void openCalEvent(Context context, JSONObject jsonObject) {
-        // TODO Auto-generated method stub
-        CalendarEvent calendarEvent = new CalendarEvent(jsonObject);
-        Intent intent = new Intent();
-        intent.setClass(context, CalEventAddActivity.class);
-        intent.putExtra("calEvent", calendarEvent);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        context.startActivity(intent);
     }
 
     /**
