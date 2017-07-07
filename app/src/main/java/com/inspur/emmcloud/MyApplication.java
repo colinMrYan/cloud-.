@@ -146,7 +146,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
      */
     public void initPush() {
         if(AppUtils.getIsHuaWei()){
-            HuaWeiPushMangerUtils.getInstance(this);
+            HuaWeiPushMangerUtils.getInstance(this).connect();
         }else{
             initJPush();
         }

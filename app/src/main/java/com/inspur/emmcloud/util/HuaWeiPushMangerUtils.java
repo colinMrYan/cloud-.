@@ -53,6 +53,12 @@ public class HuaWeiPushMangerUtils implements HuaweiApiClient.ConnectionCallback
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .build();
+    }
+
+    /**
+     * 连接方法单列
+     */
+    public void connect() {
         client.connect();
     }
 
@@ -66,7 +72,7 @@ public class HuaWeiPushMangerUtils implements HuaweiApiClient.ConnectionCallback
     @Override
     public void onConnected() {
         LogUtils.YfcDebug("华为推送连接成功");
-        if(StringUtils.isBlank(PreferencesByUserAndTanentUtils.getString(contextLocal,""))){
+        if(StringUtils.isBlank(PreferencesUtils.getString(contextLocal,""))){
             getToken();
         }
         setPassByMsg(true);
@@ -142,6 +148,8 @@ public class HuaWeiPushMangerUtils implements HuaweiApiClient.ConnectionCallback
                     String deltoken = PreferencesUtils.getString(contextLocal, "huawei_push_token","");
                     if (!TextUtils.isEmpty(deltoken) && null != client) {
                         HuaweiPush.HuaweiPushApi.deleteToken(client, deltoken);
+                        //清除本地token
+                        PreferencesUtils.putString(contextLocal, "huawei_push_token","");
                     } else {
                         LogUtils.YfcDebug("delete token's params is invalid.");
                     }
