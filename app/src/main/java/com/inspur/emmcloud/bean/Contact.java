@@ -19,7 +19,7 @@ import java.io.Serializable;
  "parent_id":"inspur_dev000100040007239","head":"/img/headimg/d6858120-f6e7-11e5-9cad-850d114ad5ec",
  "sort_order":1,"type":"user"}
  */
-@Table(name = "Contact")
+@Table(name = "Contact",execAfterTableCreated = "CREATE INDEX contactindex ON Contact(inspurID)")
 public class Contact implements Serializable{
 	private String id;
 	private String parentId = "";

@@ -32,7 +32,7 @@ public class DbCacheUtils {
 		String dbCachePath = "/data/data/" + context.getPackageName()
 				+ "/databases/" + userID + "/" + tanentID + "/" + "db/";
 		//db = DbUtils.create(context, dbCachePath, "emm.db");
-		db = DbUtils.create(context, dbCachePath, "emm.db", 7, new DbUpgradeListener() {
+		db = DbUtils.create(context, dbCachePath, "emm.db", 8, new DbUpgradeListener() {
 			@Override
 			public void onUpgrade(DbUtils arg0, int oldVersion, int newVersion) {
 				// TODO Auto-generated method stub
@@ -98,13 +98,19 @@ public class DbCacheUtils {
 						}
 
 					}
+					if (oldVersion<8){
+						if (tableIsExist("Contact",arg0.getDatabase())){
+							arg0.execNonQuery("CREATE INDEX contactindex ON Contact(inspurID)");
+						}
+
+					}
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
 		});
 		db.configAllowTransaction(true);
-		db.configDebug(false);
+		db.configDebug(true);
 	}
 
 	/**

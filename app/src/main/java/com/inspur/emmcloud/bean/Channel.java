@@ -3,13 +3,13 @@ package com.inspur.emmcloud.bean;
 import android.content.Context;
 import android.text.SpannableString;
 
+import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.util.DirectChannelUtils;
 import com.inspur.emmcloud.util.HandMentionsMsgUtils;
 import com.inspur.emmcloud.util.JSONUtils;
 import com.inspur.emmcloud.util.MentionsAndUrlShowUtils;
 import com.inspur.emmcloud.util.PinyinUtils;
-import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.TimeUtils;
 import com.inspur.emmcloud.util.UriUtils;
 import com.lidroid.xutils.db.annotation.Id;
@@ -45,8 +45,11 @@ public class Channel implements Serializable {
 	// Transient使这个列被忽略，不存入数据库
 	@Transient
 	private List<Msg> newMsgList = new ArrayList<Msg>();
+	@Transient
+	private int unReadCount = 0;
+	@Transient
+	private String displayTitle="";//session显示的名字
 
-	// private Msg newestMsg;
 	public Channel() {
 
 	}
@@ -147,7 +150,7 @@ public class Channel implements Serializable {
 		if (newMsgList.size() > 0) {
 			Msg msg = newMsgList.get(newMsgList.size() - 1);
 			String title = msg.getTitle();
-			String uid = PreferencesUtils.getString(context, "userID");
+			String uid = ((MyApplication)context.getApplicationContext()).getUid();
 			if (type.equals("DIRECT") || ((!type.equals("DIRECT"))&& uid.equals(msg.getUid()))) {
 				title = "";
 			}else{
@@ -320,6 +323,20 @@ public class Channel implements Serializable {
 
 	public void setInputs(String inputs) {
 		this.inputs = inputs;
+	}
+
+	public int getUnReadCount(){
+		return  unReadCount;
+	}
+	public void setUnReadCount(int unReadCount){
+		this.unReadCount = unReadCount;
+	}
+
+	public String getDisplayTitle(){
+		return  displayTitle;
+	}
+	public void setDisplayTitle(String displayTitle){
+		this.displayTitle = displayTitle;
 	}
 
 	/*
