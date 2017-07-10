@@ -29,6 +29,7 @@ import com.inspur.emmcloud.bean.ChannelGroup;
 import com.inspur.emmcloud.bean.ChannelOperationInfo;
 import com.inspur.emmcloud.bean.GetChannelListResult;
 import com.inspur.emmcloud.bean.GetNewMsgsResult;
+import com.inspur.emmcloud.bean.GetSearchChannelGroupResult;
 import com.inspur.emmcloud.bean.MatheSet;
 import com.inspur.emmcloud.bean.Msg;
 import com.inspur.emmcloud.bean.PVCollectModel;
@@ -77,8 +78,10 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import io.socket.client.Socket;
 
@@ -921,6 +924,18 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 		}
 
 		@Override
+		public void returnSearchChannelGroupSuccess(
+				GetSearchChannelGroupResult getSearchChannelGroupResult) {
+			saveChannelInfo(getSearchChannelGroupResult
+					.getSearchChannelGroupList());
+		}
+
+		@Override
+		public void returnSearchChannelGroupFail(String error,int errorCode) {
+		}
+
+
+		@Override
 		public void returnNewMsgsFail(String error,int errorCode) {
 			// TODO Auto-generated method stub
 			if (getActivity() != null) {
@@ -986,16 +1001,39 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
         adapter.notifyDataSetChanged();
     }
 
-    /**
-     * 根据cid数组获取Channel信息
-     *
-     * @param channelList
-     */
-    public void getChannelInfoResult(List<Channel> channelList) {
-        String[] cidArray = new String[channelList.size()];
-        for (int i = 0; i < channelList.size(); i++) {
-            cidArray[i] = channelList.get(i).getCid();
-        }
+	/**
+	 * 更新Channel的input信息
+	 *
+	 * @param searchChannelGroupList
+	 */
+	public void saveChannelInfo(List<ChannelGroup> searchChannelGroupList) {
+		Map<String, String> channelMap = new HashMap<String, String>();
+		for (int i = 0; i < searchChannelGroupList.size(); i++) {
+			ChannelGroup channelGroup = searchChannelGroupList.get(i);
+			channelMap.put(channelGroup.getCid(), channelGroup.getInputs());
+			if (channelGroup.getType().equals("GROUP")){
+				ChannelGroupCacheUtils.saveChannelGroup(getActivity(),channelGroup);
+			}
+		}
+		List<Channel> channelList = ChannelCacheUtils
+				.getCacheChannelList(getActivity());
+		for (int i = 0; i < channelList.size(); i++) {
+			Channel channel = channelList.get(i);
+			channel.setInputs(channelMap.get(channel.getCid()));
+		}
+		ChannelCacheUtils.saveChannelList(getActivity(), channelList);
+	}
+
+	/**
+	 * 根据cid数组获取Channel信息
+	 *
+	 * @param channelList
+	 */
+	public void getChannelInfoResult(List<Channel> channelList) {
+		String[] cidArray = new String[channelList.size()];
+		for (int i = 0; i < channelList.size(); i++) {
+			cidArray[i] = channelList.get(i).getCid();
+		}
 
 		apiService.getChannelGroupList(cidArray);
 	}
