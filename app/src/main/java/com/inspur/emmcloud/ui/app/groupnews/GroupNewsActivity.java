@@ -50,7 +50,7 @@ public class GroupNewsActivity extends BaseFragmentActivity implements
 		init();
 		getNewTitles();
 		//当应用打开方式为scheme方式时才记录，如果从应用打开新闻，由应用记录
-		if(getIntent().getScheme() != null  && getIntent().getScheme().equals("ecc-component")){
+		if(getIntent().getScheme() != null){
 			recordUserClickNews();
 		}
 	}
