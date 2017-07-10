@@ -58,6 +58,7 @@ import com.inspur.emmcloud.util.JSONUtils;
 import com.inspur.emmcloud.util.ListViewUtils;
 import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.MsgCacheUtil;
+import com.inspur.emmcloud.util.MsgReadIDCacheUtils;
 import com.inspur.emmcloud.util.MsgRecourceUploadUtils;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.PVCollectModelCacheUtils;
@@ -453,12 +454,17 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
                 switch (msg.what) {
                     case HAND_CALLBACK_MESSAGE: // 接收推送的消息·
                         Msg pushMsg = (Msg) msg.obj;
-                        if (channelId.equals(pushMsg.getCid())
-                                && !msgList.contains(pushMsg)&& !pushMsg.getTmpId().equals(AppUtils.getMyUUID(getApplicationContext()))) {
-                            msgList.add(pushMsg);
-                            msgListView.setCanPullDown(true);
-                            setListViewNotifyAndScrollEnd();
+                        if (channelId.equals(pushMsg.getCid())){
+                            MsgReadIDCacheUtils.saveReadedMsg(ChannelActivity.this,
+                                    pushMsg.getCid(), pushMsg.getMid());
+                            if (!msgList.contains(pushMsg)&& !pushMsg.getTmpId().equals(AppUtils.getMyUUID(getApplicationContext()))) {
+                                msgList.add(pushMsg);
+                                msgListView.setCanPullDown(true);
+                                setListViewNotifyAndScrollEnd();
+                            }
                         }
+
+
                         break;
 
                     default:
