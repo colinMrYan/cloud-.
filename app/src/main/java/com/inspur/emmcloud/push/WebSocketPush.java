@@ -64,12 +64,15 @@ public class WebSocketPush {
 		synchronized (this) {
 			if (!isSocketConnect()){
 				sendWebSocketStatusBroadcaset("socket_connecting");
+				String pushid = getPushIdByChangeShang();
+				//统一判断如果没有pushid则不连接socket
+				if(StringUtils.isBlank(pushid)){
+					return;
+				}
 				String username = PreferencesUtils.getString(context, "userRealName");
 				String uuid = AppUtils.getMyUUID(context);
 //				String pushid = PreferencesUtils.getString(context, "JpushRegId", "");
 //				pushid = getPushIdByChangeShang(pushid);
-				String pushid = getPushIdByChangeShang();
-
 				boolean isTelbet = AppUtils.isTablet(context);
 				String name;
 				if (isTelbet) {

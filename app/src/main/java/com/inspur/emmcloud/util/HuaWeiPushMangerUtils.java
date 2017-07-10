@@ -11,6 +11,8 @@ import com.huawei.hms.api.HuaweiApiClient;
 import com.huawei.hms.support.api.client.PendingResult;
 import com.huawei.hms.support.api.push.HuaweiPush;
 import com.huawei.hms.support.api.push.TokenResult;
+import com.inspur.emmcloud.MyApplication;
+import com.inspur.emmcloud.push.WebSocketPush;
 
 /**
  * Created by yufuchang on 2017/6/20.
@@ -72,8 +74,12 @@ public class HuaWeiPushMangerUtils implements HuaweiApiClient.ConnectionCallback
     @Override
     public void onConnected() {
         LogUtils.YfcDebug("华为推送连接成功");
-        if(StringUtils.isBlank(PreferencesUtils.getString(contextLocal,""))){
+        if(StringUtils.isBlank(PreferencesUtils.getString(contextLocal,"huawei_push_token",""))){
             getToken();
+        }else{
+            if(((MyApplication)contextLocal.getApplicationContext()).isIndexActivityRunning() ){
+                WebSocketPush.getInstance(contextLocal).start();
+            }
         }
         setPassByMsg(true);
     }

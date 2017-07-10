@@ -1,6 +1,7 @@
 package com.inspur.emmcloud;
 
 import android.app.Activity;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
@@ -706,7 +707,12 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
     }
 
     public void clearNotification() {
-        JPushInterface.clearAllNotifications(this);
+        if(AppUtils.getIsHuaWei()){
+            NotificationManager manager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
+            manager.cancelAll();
+        }else{
+            JPushInterface.clearAllNotifications(this);
+        }
     }
 
 }
