@@ -9,6 +9,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -16,6 +17,7 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -293,14 +295,15 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 			switch (v.getId()) {
 				case R.id.address_list_img:
 				case R.id.find_friends_btn:
-					Bundle bundle = new Bundle();
-					bundle.putInt("select_content", 4);
-					bundle.putBoolean("isMulti_select", false);
-					bundle.putString("title",
-							getActivity().getString(R.string.adress_list));
-					IntentUtils.startActivity(getActivity(),
-							ContactSearchActivity.class, bundle);
+//					Bundle bundle = new Bundle();
+//					bundle.putInt("select_content", 4);
+//					bundle.putBoolean("isMulti_select", false);
+//					bundle.putString("title",
+//							getActivity().getString(R.string.adress_list));
+//					IntentUtils.startActivity(getActivity(),
+//							ContactSearchActivity.class, bundle);
 					recordUserClickContact();
+					showPopupWindow(rootView.findViewById(R.id.address_list_img));
 					break;
 				case R.id.add_img:
 					Intent intent = new Intent();
@@ -316,6 +319,58 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 			}
 		}
 	};
+
+	/**
+	 * 变更会议，取消会议下拉框
+	 *
+	 * @param view
+	 */
+	private void showPopupWindow(View view) {
+		// 一个自定义的布局，作为显示的内容
+		View contentView = LayoutInflater.from(getActivity())
+				.inflate(R.layout.pop_message_window_view, null);
+		// 设置按钮的点击事件
+		final PopupWindow popupWindow = new PopupWindow(contentView,
+				LinearLayout.LayoutParams.WRAP_CONTENT,
+				LinearLayout.LayoutParams.WRAP_CONTENT, true);
+		popupWindow.setTouchable(true);
+		popupWindow.setTouchInterceptor(new View.OnTouchListener() {
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				return false;
+				// 这里如果返回true的话，touch事件将被拦截
+				// 拦截后 PopupWindow的onTouchEvent不被调用，这样点击外部区域无法dismiss
+			}
+		});
+
+		RelativeLayout createGroupLayout = (RelativeLayout) contentView
+				.findViewById(R.id.message_create_group_layout);
+		createGroupLayout.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+
+				popupWindow.dismiss();
+			}
+		});
+
+		RelativeLayout contactLayout = (RelativeLayout) contentView
+				.findViewById(R.id.message_contact_layout);
+		contactLayout.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+
+				popupWindow.dismiss();
+			}
+		});
+
+		// 如果不设置PopupWindow的背景，无论是点击外部区域还是Back键都无法dismiss弹框
+		// 我觉得这里是API的一个bug
+		popupWindow.setBackgroundDrawable(getResources().getDrawable(
+				R.drawable.pop_window_view_tran));
+		// 设置好参数之后再show
+		popupWindow.showAsDropDown(view);
+
+	}
 
 	/**
 	 * 注册接收消息的广播
