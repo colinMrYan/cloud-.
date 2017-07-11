@@ -17,9 +17,7 @@ import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.api.apiservice.ReactNativeAPIService;
 import com.inspur.emmcloud.bean.AndroidBundleBean;
-import com.inspur.emmcloud.bean.Enterprise;
 import com.inspur.emmcloud.bean.GetClientIdRsult;
-import com.inspur.emmcloud.bean.GetMyInfoResult;
 import com.inspur.emmcloud.bean.ReactNativeDownloadUrlBean;
 import com.inspur.emmcloud.bean.ReactNativeInstallUriBean;
 import com.inspur.emmcloud.config.MyAppConfig;
@@ -216,16 +214,21 @@ public class ReactNativeAppActivity extends BaseActivity implements DefaultHardw
         Bundle bundle = new Bundle();
         String myInfo = PreferencesUtils.getString(ReactNativeAppActivity.this,
                 "myInfo", "");
-        GetMyInfoResult getMyInfoResult = new GetMyInfoResult(myInfo);
-        bundle.putString("id",getMyInfoResult.getID());
-        bundle.putString("code",getMyInfoResult.getCode());
-        bundle.putString("name",getMyInfoResult.getName());
-        bundle.putString("mail",getMyInfoResult.getMail());
-        bundle.putString("avatar",getMyInfoResult.getAvatar());
-        Enterprise currentEnterprise = ((MyApplication)getApplicationContext()).getCurrentEnterprise();
-        bundle.putString("enterpriseCode",currentEnterprise.getCode());
-        bundle.putString("enterpriseName",currentEnterprise.getName());
-        bundle.putString("enterpriseId",currentEnterprise.getId());
+        LogUtils.YfcDebug("用户信息："+myInfo);
+        LogUtils.YfcDebug("换成传profile");
+//        GetMyInfoResult getMyInfoResult = new GetMyInfoResult(myInfo);
+//        bundle.putString("id",getMyInfoResult.getID());
+//        bundle.putString("code",getMyInfoResult.getCode());
+//        bundle.putString("name",getMyInfoResult.getName());
+//        bundle.putString("mail",getMyInfoResult.getMail());
+//        bundle.putString("avatar",getMyInfoResult.getAvatar());
+//        Enterprise currentEnterprise = ((MyApplication)getApplicationContext()).getCurrentEnterprise();
+//        bundle.putString("enterpriseCode",currentEnterprise.getCode());
+//        bundle.putString("enterpriseName",currentEnterprise.getName());
+//        bundle.putString("enterpriseId",currentEnterprise.getId());
+        bundle.putString("profile",myInfo);
+
+
         return bundle;
     }
 
