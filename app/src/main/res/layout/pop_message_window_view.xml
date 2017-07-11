@@ -6,7 +6,7 @@
 
     <RelativeLayout
         android:layout_width="125dp"
-        android:layout_height="122dp"
+        android:layout_height="82dp"
         android:layout_marginRight="9dp"
         android:background="@drawable/pop_window_view"
         android:orientation="vertical" >
@@ -22,7 +22,7 @@
                 android:layout_width="18dp"
                 android:layout_height="16dp"
                 android:layout_centerVertical="true"
-                android:src="@drawable/icon_meeting_change"/>
+                android:src="@drawable/icon_add"/>
             <Button
             android:id="@+id/message_create_group_btn"
             android:layout_width="wrap_content"
@@ -48,7 +48,7 @@
                 android:layout_width="18dp"
                 android:layout_height="16dp"
                 android:layout_centerVertical="true"
-                android:src="@drawable/icon_meeting_cancle"/>
+                android:src="@drawable/selector_people_btn"/>
             <Button
             android:id="@+id/message_contact_btn"
             android:layout_width="wrap_content"

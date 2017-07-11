@@ -68,6 +68,7 @@ import com.inspur.emmcloud.widget.dialogs.MyDialog;
 import com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout;
 import com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout.OnRefreshListener;
 import com.inspur.emmcloud.widget.pullableview.PullableListView;
+import com.inspur.imp.plugin.barcode.scan.CaptureActivity;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -85,6 +86,8 @@ import java.util.List;
 
 import io.socket.client.Socket;
 
+import static android.app.Activity.RESULT_OK;
+
 /**
  * 消息页面 com.inspur.emmcloud.ui.MessageFragment
  *
@@ -95,6 +98,7 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
     private static final int RECEIVE_MSG = 1;
     private static final int CREAT_CHANNEL_GROUP = 1;
     private static final int RERESH_GROUP_ICON = 2;
+	private static final int SCAN_LOGIN_QRCODE_RESULT = 5;
     private View rootView;
     private LayoutInflater inflater;
     private PullableListView msgListView;
@@ -302,17 +306,17 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 //							getActivity().getString(R.string.adress_list));
 //					IntentUtils.startActivity(getActivity(),
 //							ContactSearchActivity.class, bundle);
-					recordUserClickContact();
+//					recordUserClickContact();
 					showPopupWindow(rootView.findViewById(R.id.address_list_img));
 					break;
 				case R.id.add_img:
-					Intent intent = new Intent();
-					intent.putExtra("select_content", 2);
-					intent.putExtra("isMulti_select", true);
-					intent.putExtra("title",
-							getActivity().getString(R.string.creat_group));
-					intent.setClass(getActivity(), ContactSearchActivity.class);
-					startActivityForResult(intent, CREAT_CHANNEL_GROUP);
+//					Intent intent = new Intent();
+//					intent.putExtra("select_content", 2);
+//					intent.putExtra("isMulti_select", true);
+//					intent.putExtra("title",
+//							getActivity().getString(R.string.creat_group));
+//					intent.setClass(getActivity(), ContactSearchActivity.class);
+//					startActivityForResult(intent, CREAT_CHANNEL_GROUP);
 					break;
 				default:
 					break;
@@ -321,7 +325,7 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 	};
 
 	/**
-	 * 变更会议，取消会议下拉框
+	 * 通讯录和创建群组，扫一扫合并
 	 *
 	 * @param view
 	 */
@@ -348,7 +352,13 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 		createGroupLayout.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-
+				Intent intent = new Intent();
+				intent.putExtra("select_content", 2);
+				intent.putExtra("isMulti_select", true);
+				intent.putExtra("title",
+						getActivity().getString(R.string.creat_group));
+				intent.setClass(getActivity(), ContactSearchActivity.class);
+				startActivityForResult(intent, CREAT_CHANNEL_GROUP);
 				popupWindow.dismiss();
 			}
 		});
@@ -358,6 +368,25 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 		contactLayout.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				Bundle bundle = new Bundle();
+				bundle.putInt("select_content", 4);
+				bundle.putBoolean("isMulti_select", false);
+				bundle.putString("title", getActivity().getString(R.string.adress_list));
+				IntentUtils.startActivity(getActivity(),
+							ContactSearchActivity.class, bundle);
+				recordUserClickContact();
+				popupWindow.dismiss();
+			}
+		});
+
+		RelativeLayout scanLayout = (RelativeLayout) contentView.findViewById(R.id.message_scan_layout);
+		scanLayout.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent();
+				intent.setClass(getActivity(), CaptureActivity.class);
+				intent.putExtra("from","MoreFragment");
+				startActivityForResult(intent,SCAN_LOGIN_QRCODE_RESULT);
 
 				popupWindow.dismiss();
 			}
@@ -1117,7 +1146,30 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 				ToastUtils.show(getActivity(),
 						getActivity().getString(R.string.creat_group_fail));
 			}
+		}else if((resultCode == RESULT_OK) && (requestCode == SCAN_LOGIN_QRCODE_RESULT)){
+			if(data.hasExtra("isDecodeSuccess")){
+				boolean isDecodeSuccess = data.getBooleanExtra("isDecodeSuccess",false);
+				if(isDecodeSuccess){
+					String msg = data.getStringExtra("msg");
+					LogUtils.YfcDebug("解析到的信息："+msg);
+					loginDesktopCloudPlus(msg);
+				}else{
+					LogUtils.YfcDebug("解析失败");
+				}
+			}
 		}
+	}
+
+	/**
+	 * 登录云+桌面版
+	 * @param msg
+	 */
+	private void loginDesktopCloudPlus(String msg) {
+//		if(!登录接口){
+//			弹出解析文字Toast
+//		}else{
+//			登录桌面版
+//		}
 	}
 
 	/**
