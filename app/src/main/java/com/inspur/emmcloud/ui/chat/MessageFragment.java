@@ -172,6 +172,7 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
         initView();
         registerMessageFragmentReceiver();
         getChannelContent();
+		sortChannelList(getCacheData());// 对Channel 进行排序
         showMessageButtons();
         EventBus.getDefault().register(this);
     }
@@ -336,7 +337,6 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 		if (NetUtils.isNetworkConnected(getActivity())) {
 			apiService.getChannelList();
 		}
-		handData();
 	}
 
 	/**
@@ -356,16 +356,6 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 		return channelList;
 	}
 
-    /**
-     * 处理获得的数据
-     */
-    private void handData() {
-        // TODO Auto-generated method stub
-        if (!isHaveCreatGroupIcon) {
-            createAllGroupIcon();
-        }
-		sortChannelList(getCacheData());// 对Channel 进行排序
-    }
 
     /**
      * 为群组创建头像
@@ -384,9 +374,9 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
      * 为单个群组创建头像
      * @param channel
      */
-    private void createGroupIcon(Channel channel) {
+    private void createGroupIcon(List<Channel> channelList) {
         if (((MyApplication) getActivity().getApplicationContext()).getIsContactReady()) {
-            ChannelGroupIconUtils.getInstance().create(getActivity(), channel,
+            ChannelGroupIconUtils.getInstance().create(getActivity(), channelList,
                     handler);
         }
     }
@@ -540,7 +530,8 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 
 						break;
 					case RERESH_GROUP_ICON:
-						if (adapter != null) {
+						boolean isCreateNewGroupIcon = (Boolean) msg.obj;
+						if (adapter != null && isCreateNewGroupIcon) {
 							adapter.notifyDataSetChanged();
 						}
 						break;
@@ -614,11 +605,6 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
             ChannelOperationCacheUtils.setChannelHide(getActivity(),
                     receivedMsg.getCid(), false);
             displayChannelList.add(receiveMsgChannel);
-            // 当频道显示时先创建下群组头像
-            if (receiveMsgChannel.getType().equals("GROUP")) {
-                createGroupIcon(receiveMsgChannel);
-            }
-
         } else {
             receiveMsgChannel.addReceivedNewMsg(receivedMsg);
         }
@@ -893,10 +879,18 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 			if (getActivity() != null) {
 				List<Channel> channelList = getChannelListResult
 						.getChannelList();
+				List<Channel> cacheChannelList = ChannelCacheUtils
+						.getCacheChannelList(getActivity());
 				ChannelCacheUtils.clearChannel(getActivity());
 				ChannelCacheUtils.saveChannelList(getActivity(), channelList);
 				getChannelInfoResult(channelList);
 				apiService.getNewMsgs();
+				if (!isHaveCreatGroupIcon){
+					createAllGroupIcon();
+				}else {
+					channelList.removeAll(cacheChannelList);
+					createGroupIcon(channelList);
+				}
 			}
 
 		}
@@ -907,7 +901,7 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 			if (getActivity() != null) {
 				pullToRefreshLayout.refreshFinish(PullToRefreshLayout.FAIL);
 				WebServiceMiddleUtils.hand(getActivity(), error,errorCode);
-				handData();
+				sortChannelList(getCacheData());// 对Channel 进行排序
 			}
 
 		}
@@ -918,7 +912,7 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
             if (getActivity() != null) {
                 pullToRefreshLayout.refreshFinish(PullToRefreshLayout.SUCCEED);
                 cacheNewMsgs(getNewMsgsResult);
-                handData();
+                sortChannelList(getCacheData());// 对Channel 进行排序
             }
 
 		}
@@ -940,7 +934,7 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 			// TODO Auto-generated method stub
 			if (getActivity() != null) {
 				pullToRefreshLayout.refreshFinish(PullToRefreshLayout.FAIL);
-				handData();
+				sortChannelList(getCacheData());// 对Channel 进行排序
 				WebServiceMiddleUtils.hand(getActivity(), error,errorCode);
 			}
 
