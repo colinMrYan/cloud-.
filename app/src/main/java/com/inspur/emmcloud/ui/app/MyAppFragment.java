@@ -200,10 +200,7 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
      * 记录用户使用了应用中心功能
      */
     private void recordUserClickAppCenter(){
-        PVCollectModel pvCollectModel = new PVCollectModel();
-        pvCollectModel.setCollectTime(System.currentTimeMillis());
-        pvCollectModel.setFunctionID("appcenter");
-        pvCollectModel.setFunctionType("application");
+        PVCollectModel pvCollectModel = new PVCollectModel("appcenter","application");
         PVCollectModelCacheUtils.saveCollectModel(getActivity(),pvCollectModel);
     }
 
