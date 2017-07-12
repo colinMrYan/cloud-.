@@ -769,12 +769,8 @@ public class IndexActivity extends BaseFragmentActivity implements
         }else{
             tabId = "";
         }
-        PVCollectModel pvCollectModel = new PVCollectModel();
-        pvCollectModel.setFunctionID(tabId);
-        pvCollectModel.setFunctionType(tabId);
-        pvCollectModel.setCollectTime(System.currentTimeMillis());
+        PVCollectModel pvCollectModel = new PVCollectModel(tabId,tabId);
         PVCollectModelCacheUtils.saveCollectModel(IndexActivity.this,pvCollectModel);
-
     }
 
     private Fragment getCurrentFragment() {

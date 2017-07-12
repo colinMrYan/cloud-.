@@ -56,6 +56,7 @@ import com.inspur.emmcloud.util.ImageDisplayUtils;
 import com.inspur.emmcloud.util.IntentUtils;
 import com.inspur.emmcloud.util.JSONUtils;
 import com.inspur.emmcloud.util.ListViewUtils;
+import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.MsgCacheUtil;
 import com.inspur.emmcloud.util.MsgRecourceUploadUtils;
 import com.inspur.emmcloud.util.NetUtils;
@@ -143,13 +144,10 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
         String from = "";
         if(getIntent().hasExtra("from")){
             from = getIntent().getStringExtra("from");
-        }
-        if(!from.equals("customer")){
-            PVCollectModel pvCollectModel = new PVCollectModel();
-            pvCollectModel.setFunctionID("channel");
-            pvCollectModel.setFunctionType("communicate");
-            pvCollectModel.setCollectTime(System.currentTimeMillis());
-            PVCollectModelCacheUtils.saveCollectModel(ChannelActivity.this,pvCollectModel);
+            if(!from.equals("customer")){
+                PVCollectModel pvCollectModel = new PVCollectModel("channel","communicate");
+                PVCollectModelCacheUtils.saveCollectModel(ChannelActivity.this,pvCollectModel);
+            }
         }
     }
 
@@ -163,7 +161,6 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
      */
     private void initData() {
         channelId = getIntent().getExtras().getString("channelId");
-
         channelType = getIntent().getExtras().getString("channelType");
         msgList = MsgCacheUtil.getHistoryMsgList(getApplicationContext(),
                 channelId, "", 15);
@@ -497,16 +494,32 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
         // 如果list中已经有了这个真实的消息，就要去掉假消息，防止重复
         if (msgList.contains(realMsg)) {
             msgList.remove(fakeMsg);
+            adapter.notifyDataSetChanged();
         } else { // 如果list中没有这真是的消息，就要替换成真实消息
             int fakeMsgIndex = msgList.indexOf(fakeMsg);
             if (fakeMsgIndex != -1) {
                 msgList.remove(fakeMsgIndex);
                 msgList.add(fakeMsgIndex,realMsg);
+                /**第一个可见的位置**/
+                int firstVisiblePosition = msgListView.getFirstVisiblePosition();
+                /**最后一个可见的位置**/
+                int lastVisiblePosition = msgListView.getLastVisiblePosition();
+                if (fakeMsgIndex >= firstVisiblePosition && fakeMsgIndex <= lastVisiblePosition  ){
+                    View childAt = msgListView.getChildAt(fakeMsgIndex
+                            - firstVisiblePosition);
+                    if (childAt != null) {
+                        ImageView refreshingImg = (ImageView) childAt.findViewById(R.id.refreshing_img);
+                        refreshingImg.clearAnimation();
+                        refreshingImg.setVisibility(View.GONE);
+                    }
+                }
+
             } else {
                 msgList.add(realMsg);
+                adapter.notifyDataSetChanged();
             }
         }
-        adapter.notifyDataSetChanged();
+
 
     }
 
@@ -625,6 +638,7 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
             convertView = vi.inflate(R.layout.chat_msg_card_parent_view, null);
             RelativeLayout cardLayout = (RelativeLayout) convertView
                     .findViewById(R.id.card_layout);
+            showCommonView(convertView, position, cardLayout);
             View childView = null;
             if (type.equals("txt_comment") || type.equals("comment")) {
                 childView = vi.inflate(
@@ -685,7 +699,6 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
                         childView, msg);
             }
             cardLayout.addView(childView);
-            showCommonView(convertView, position, cardLayout);
             return convertView;
         }
 
@@ -711,6 +724,8 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
          * @param msg
          */
         private void showRefreshingImg(View convertView, Msg msg) {
+            LogUtils.jasonDebug("msg="+msg.getBody());
+            LogUtils.jasonDebug("msg.getSendStatus()="+msg.getSendStatus());
             ImageView refreshingImg = (ImageView) convertView.findViewById(R.id.refreshing_img);
             if (msg.getSendStatus() == 0) {
                 RotateAnimation refreshingAnimation = (RotateAnimation) AnimationUtils.loadAnimation(

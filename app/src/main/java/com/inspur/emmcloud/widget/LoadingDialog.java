@@ -3,9 +3,12 @@ package com.inspur.emmcloud.widget;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.os.Bundle;
+import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.WindowManager.LayoutParams;
 import android.widget.TextView;
 
@@ -66,6 +69,20 @@ public class LoadingDialog extends Dialog {
 		if (isShow) {
 			show();
 		}
+	}
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		WindowManager m = getWindow().getWindowManager();
+		Display d = m.getDefaultDisplay();
+		int width = d.getWidth();
+		WindowManager.LayoutParams p = getWindow().getAttributes();
+		p.x = 0;
+		p.y = 0;
+		p.width = (int) (width * 0.73);
+		this.getWindow().setAttributes(
+				(WindowManager.LayoutParams) p);
 	}
 
 	public void setText(String text) {

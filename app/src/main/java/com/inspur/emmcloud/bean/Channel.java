@@ -1,17 +1,17 @@
 package com.inspur.emmcloud.bean;
 
 import android.content.Context;
-import android.text.SpannableString;
+import android.text.Spanned;
+import android.widget.TextView;
 
+import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.util.DirectChannelUtils;
-import com.inspur.emmcloud.util.HandMentionsMsgUtils;
 import com.inspur.emmcloud.util.JSONUtils;
-import com.inspur.emmcloud.util.MentionsAndUrlShowUtils;
 import com.inspur.emmcloud.util.PinyinUtils;
-import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.TimeUtils;
 import com.inspur.emmcloud.util.UriUtils;
+import com.inspur.emmcloud.util.richtext.markdown.MarkDown;
 import com.lidroid.xutils.db.annotation.Id;
 import com.lidroid.xutils.db.annotation.Table;
 import com.lidroid.xutils.db.annotation.Transient;
@@ -20,7 +20,6 @@ import org.json.JSONObject;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
@@ -45,8 +44,11 @@ public class Channel implements Serializable {
 	// Transient使这个列被忽略，不存入数据库
 	@Transient
 	private List<Msg> newMsgList = new ArrayList<Msg>();
+	@Transient
+	private int unReadCount = 0;
+	@Transient
+	private String displayTitle="";//session显示的名字
 
-	// private Msg newestMsg;
 	public Channel() {
 
 	}
@@ -142,12 +144,12 @@ public class Channel implements Serializable {
 		}
 	}
 
-	public String getNewestMsgContent(Context context) {
+	public String getNewestMsgContent(Context context, TextView textView) {
 		String newestMsgContent = "";
 		if (newMsgList.size() > 0) {
 			Msg msg = newMsgList.get(newMsgList.size() - 1);
 			String title = msg.getTitle();
-			String uid = PreferencesUtils.getString(context, "userID");
+			String uid = ((MyApplication)context.getApplicationContext()).getUid();
 			if (type.equals("DIRECT") || ((!type.equals("DIRECT"))&& uid.equals(msg.getUid()))) {
 				title = "";
 			}else{
@@ -171,23 +173,12 @@ public class Channel implements Serializable {
 			} else if (msg.getType().equals("act_meeting")) {
 				newestMsgContent =  title +context.getString(R.string.send_a_meeting_invitation);
 			} else if (msg.getType().equals("txt_rich")) {
-				if (type.equals("DIRECT")) {
-					newestMsgContent = HandMentionsMsgUtils.getRichText(msg);
-				}else if(type.equals("SERVICE")){
-					String msgBody = msg.getBody();
-					String source = JSONUtils.getString(msgBody, "source", "");
-					String[] mentions = JSONUtils.getString(msgBody, "mentions", "")
-							.replace("[", "").replace("]", "").split(",");
-					String[] urls = JSONUtils.getString(msgBody, "urls", "")
-							.replace("[", "").replace("]", "").split(",");
-					List<String> mentionList = Arrays.asList(mentions);
-					List<String> urlList = Arrays.asList(urls);
-					SpannableString spannableString = MentionsAndUrlShowUtils
-							.handleMentioin(source, mentionList, urlList);
-					newestMsgContent = spannableString.toString();
-				} else {
-					newestMsgContent = ( title + HandMentionsMsgUtils
-							.getRichText(msg));
+				String msgBody = msg.getBody();
+				String source = JSONUtils.getString(msgBody, "source", "");
+				Spanned spanned = MarkDown.fromMarkdown(source,null,textView);
+				newestMsgContent = spanned.toString();
+				if (type.equals("GROUP")){
+					newestMsgContent = title + newestMsgContent;
 				}
 			} else if (msg.getType().equals("act_meeting_cancel")) {
 				newestMsgContent =  title +context.getString(R.string.cancel_a_meeting);
@@ -320,6 +311,20 @@ public class Channel implements Serializable {
 
 	public void setInputs(String inputs) {
 		this.inputs = inputs;
+	}
+
+	public int getUnReadCount(){
+		return  unReadCount;
+	}
+	public void setUnReadCount(int unReadCount){
+		this.unReadCount = unReadCount;
+	}
+
+	public String getDisplayTitle(){
+		return  displayTitle;
+	}
+	public void setDisplayTitle(String displayTitle){
+		this.displayTitle = displayTitle;
 	}
 
 	/*

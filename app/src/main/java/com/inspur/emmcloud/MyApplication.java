@@ -1,6 +1,7 @@
 package com.inspur.emmcloud;
 
 import android.app.Activity;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
@@ -10,7 +11,6 @@ import android.content.res.Resources;
 import android.os.Environment;
 import android.os.Parcelable;
 import android.support.multidex.MultiDexApplication;
-import android.support.v4.util.ArrayMap;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 
@@ -31,11 +31,13 @@ import com.inspur.emmcloud.push.WebSocketPush;
 import com.inspur.emmcloud.util.AppUtils;
 import com.inspur.emmcloud.util.CrashHandler;
 import com.inspur.emmcloud.util.DbCacheUtils;
+import com.inspur.emmcloud.util.HuaWeiPushMangerUtils;
 import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.PreferencesByUsersUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.UriUtils;
+import com.inspur.emmcloud.util.richtext.RichText;
 import com.inspur.imp.api.Res;
 import com.inspur.reactnative.AuthorizationManagerPackage;
 import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiskCache;
@@ -45,7 +47,6 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
-import com.zzhoujay.richtext.RichText;
 
 import org.xutils.http.RequestParams;
 import org.xutils.x;
@@ -55,6 +56,7 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
@@ -84,7 +86,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
     private String uid;
     private String accessToken;
     private Enterprise currentEnterprise;
-    private Map<String,String> userPhotoUrlMap = new ArrayMap<>();
+    private Map<String,String> userPhotoUrlMap ;
 
 
     private final ReactNativeHost mReactNativeHost = new ReactNativeHost(this) {
@@ -118,11 +120,6 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         accessToken = PreferencesUtils.getString(getApplicationContext(), "accessToken", "");
         setAppLanguageAndFontScale();
         removeAllSessionCookie();
-        //修改字体方案预留
-//        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
-//                .setDefaultFontPath("fonts/xiaozhuan.ttf")
-//
-
     }
 
 
@@ -134,16 +131,37 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         x.Ext.setDebug(LogUtils.isDebug);
         SoLoader.init(this, false);
         Res.init(this); // 注册imp的资源文件类
-        initJPush();
+        initPush();
         initImageLoader();
         initTanent();
         RichText.initCacheDir(new File(LOCAL_CACHE_MARKDOWN_PATH));
+        userPhotoUrlMap = new LinkedHashMap<String,String>(){
+            @Override
+            protected boolean removeEldestEntry(Entry<String, String> eldest) {
+                // TODO Auto-generated method stub
+                return size() > 40;
+
+            }
+        };
+
     }
+
+    /**
+     * 初始化推送，以后如需定制小米等厂家的推送服务可从这里定制
+     */
+    public void initPush() {
+        if(AppUtils.getIsHuaWei()){
+            HuaWeiPushMangerUtils.getInstance(this).connect();
+        }else{
+            initJPush();
+        }
+    }
+
 
     /**
      * 初始化极光推送
      */
-    public void initJPush() {
+    private void initJPush() {
         // TODO Auto-generated method stub
         // 设置开启日志,发布时请关闭日志
         JPushInterface.setDebugMode(true);
@@ -392,10 +410,17 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
     /*****************************通讯录头像缓存********************************************/
     public String getUserPhotoUrl(String uid){
         String photoUrl = null;
-        if (!StringUtils.isBlank(uid) && userPhotoUrlMap.containsKey(uid)){
+        if (!StringUtils.isBlank(uid)){
             photoUrl = userPhotoUrlMap.get(uid);
         }
         return photoUrl;
+    }
+
+    public boolean isKeysContainUid(String uid){
+        if (!StringUtils.isBlank(uid)){
+            return  userPhotoUrlMap.containsKey(uid);
+        }
+        return  false;
     }
 
     public void setUsesrPhotoUrl(String uid,String url){
@@ -682,7 +707,12 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
     }
 
     public void clearNotification() {
-        JPushInterface.clearAllNotifications(this);
+        if(AppUtils.getIsHuaWei()){
+            NotificationManager manager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
+            manager.cancelAll();
+        }else{
+            JPushInterface.clearAllNotifications(this);
+        }
     }
 
 }

@@ -811,4 +811,7 @@
     <!--闪屏页文字资源-->
     <string name="splash_skip">立即进入</string>
 
+    <!--华为推送-->
+    <string name="hwpush_ability_value" translatable="false">successRateAnalytics</string>
+
 </resources>

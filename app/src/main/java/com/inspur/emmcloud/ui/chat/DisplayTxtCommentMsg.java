@@ -105,8 +105,8 @@ public class DisplayTxtCommentMsg {
                 isMyMsg ? R.color.white : R.color.black));
         commentTitleText.setTextColor(context.getResources().getColor(
                 isMyMsg ? R.color.white : R.color.black));
-        int normalPadding = DensityUtil.dip2px(context, 10);
-        int arrowPadding = DensityUtil.dip2px(context, 8);
+        int normalPadding = DensityUtil.dip2px(context, 9);
+        int arrowPadding = DensityUtil.dip2px(context, 7);
         if (isMyMsg) {
             rootLayout.setPadding(normalPadding, normalPadding, normalPadding
                     + arrowPadding, normalPadding);
