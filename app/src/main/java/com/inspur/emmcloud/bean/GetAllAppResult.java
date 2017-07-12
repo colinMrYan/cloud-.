@@ -1,18 +1,13 @@
 package com.inspur.emmcloud.bean;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import android.annotation.SuppressLint;
-import android.text.TextUtils;
-
 import com.inspur.emmcloud.util.JSONUtils;
 import com.inspur.emmcloud.util.LogUtils;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 获取应用中心所有应用数据解析类
@@ -26,6 +21,7 @@ public class GetAllAppResult {
 	private List<AppGroupBean> categoriesGroupBeanList = new ArrayList<AppGroupBean>();
 	
 	public GetAllAppResult(String response) {
+
 		try {
 			JSONArray array = JSONUtils.getJSONArray(response, "recommend",
 					new JSONArray());
@@ -36,6 +32,7 @@ public class GetAllAppResult {
 			JSONArray arrayCategories = JSONUtils.getJSONArray(response, "categories", new JSONArray());
 			for (int i = 0; i < arrayCategories.length(); i++) {
 				JSONObject obj = arrayCategories.getJSONObject(i);
+				LogUtils.YfcDebug("应用中的一个分组："+obj);
 				AppGroupBean groupBean = new AppGroupBean(obj);
 				categoriesGroupBeanList.add(groupBean);
 			}
