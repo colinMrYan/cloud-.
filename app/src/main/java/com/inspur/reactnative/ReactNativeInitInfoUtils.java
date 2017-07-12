@@ -5,9 +5,11 @@ import android.content.Context;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.bean.AndroidBundleBean;
 import com.inspur.emmcloud.bean.Enterprise;
+import com.inspur.emmcloud.bean.Language;
 import com.inspur.emmcloud.util.AppUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.StringUtils;
+import com.inspur.emmcloud.util.UriUtils;
 
 /**
  * Created by yufuchang on 2017/7/11.
@@ -32,16 +34,23 @@ public class ReactNativeInitInfoUtils {
      * @param context
      * @return
      */
-//    public static String getSystemVersion(Context context){
-//        return AppUtils.
-//    }
+    public static String getSystemVersion(Context context){
+        return AppUtils.getSystemVersion();
+    }
 
     /**
-     * 获取系统语言
+     * 获取当前应用语言
+     * @param context
      * @return
      */
-    public static String getLocalLanguage(){
-        return "";
+    public static String getLocalLanguage(Context context){
+        String languageJson = PreferencesUtils.getString(
+                context, UriUtils.tanent + "appLanguageObj");
+        if (!StringUtils.isBlank(languageJson)) {
+            Language language = new Language(languageJson);
+            return language.getIana();
+        }
+        return "UNKNOWN";
     }
 
     /**
