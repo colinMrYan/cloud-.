@@ -133,10 +133,7 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 	 * 记录用户点击的频道
 	 */
 	private void recordUserClickContact() {
-		PVCollectModel pvCollectModel = new PVCollectModel();
-		pvCollectModel.setFunctionID("contact");
-		pvCollectModel.setFunctionType("communicate");
-		pvCollectModel.setCollectTime(System.currentTimeMillis());
+		PVCollectModel pvCollectModel = new PVCollectModel("contact","communicate");
 		PVCollectModelCacheUtils.saveCollectModel(getActivity(),pvCollectModel);
 	}
 
