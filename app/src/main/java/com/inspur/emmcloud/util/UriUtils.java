@@ -80,10 +80,10 @@ public class UriUtils {
     private static void saveAPPPVCollect(Activity activity,App app) {
         //web应用PV收集
         if(app != null && app.getAppID().equals("inspur_news_esg")){
-            PVCollectModel pvCollectModel = new PVCollectModel(activity,"news","application",app.getAppName());
+            PVCollectModel pvCollectModel = new PVCollectModel("news","application");
             PVCollectModelCacheUtils.saveCollectModel(activity,pvCollectModel);
         }else{
-            PVCollectModel collectModel = new PVCollectModel(activity, app.getAppID(), "application", app.getAppName());
+            PVCollectModel collectModel = new PVCollectModel(app.getAppID(), "application");
             PVCollectModelCacheUtils.saveCollectModel(activity, collectModel);
         }
     }

@@ -144,13 +144,10 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
         String from = "";
         if(getIntent().hasExtra("from")){
             from = getIntent().getStringExtra("from");
-        }
-        if(!from.equals("customer")){
-            PVCollectModel pvCollectModel = new PVCollectModel();
-            pvCollectModel.setFunctionID("channel");
-            pvCollectModel.setFunctionType("communicate");
-            pvCollectModel.setCollectTime(System.currentTimeMillis());
-            PVCollectModelCacheUtils.saveCollectModel(ChannelActivity.this,pvCollectModel);
+            if(!from.equals("customer")){
+                PVCollectModel pvCollectModel = new PVCollectModel("channel","communicate");
+                PVCollectModelCacheUtils.saveCollectModel(ChannelActivity.this,pvCollectModel);
+            }
         }
     }
 
@@ -164,7 +161,6 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
      */
     private void initData() {
         channelId = getIntent().getExtras().getString("channelId");
-
         channelType = getIntent().getExtras().getString("channelType");
         msgList = MsgCacheUtil.getHistoryMsgList(getApplicationContext(),
                 channelId, "", 15);
