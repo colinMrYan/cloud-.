@@ -50,10 +50,6 @@ public class ImageDisplayUtils  implements ImagePickerLoader {
 		L.disableLogging(); // 关闭imageloader的疯狂的log
 	}
 
-	public  ImageLoader getImageLoader(){
-		return imageLoader;
-	}
-	
 	public ImageDisplayUtils() {
 		if (imageLoader == null) {
 			imageLoader = ImageLoader.getInstance();
@@ -64,8 +60,20 @@ public class ImageDisplayUtils  implements ImagePickerLoader {
 		if (!StringUtils.isBlank(uri) && !uri.startsWith("http") && !uri.startsWith("file:")&& !uri.startsWith("content:")&& !uri.startsWith("assets:")&& !uri.startsWith("drawable:")) {
 			uri = "file://" + uri;
 		}
-//		LogUtils.YfcDebug("访问路径："+uri);
 		imageLoader.displayImage(uri, imageView, options);
+	}
+
+	public void displayNoCachePic(final ImageView imageView, String uri,Integer defaultDrawableId){
+		options = new DisplayImageOptions.Builder()
+				.showImageForEmptyUri(defaultDrawableId)
+				.showImageOnFail(defaultDrawableId)
+				.showImageOnLoading(defaultDrawableId)
+				// 设置图片的解码类型
+				.bitmapConfig(Bitmap.Config.RGB_565)
+				.cacheInMemory(false)
+				.cacheOnDisk(false)
+				.build();
+		imageLoader.displayImage(uri,imageView,options);
 	}
 
 	/**

@@ -80,10 +80,10 @@ public class UriUtils {
     private static void saveAPPPVCollect(Activity activity,App app) {
         //web应用PV收集
         if(app != null && app.getAppID().equals("inspur_news_esg")){
-            PVCollectModel pvCollectModel = new PVCollectModel(activity,"news","application",app.getAppName());
+            PVCollectModel pvCollectModel = new PVCollectModel("news","application");
             PVCollectModelCacheUtils.saveCollectModel(activity,pvCollectModel);
         }else{
-            PVCollectModel collectModel = new PVCollectModel(activity, app.getAppID(), "application", app.getAppName());
+            PVCollectModel collectModel = new PVCollectModel(app.getAppID(), "application");
             PVCollectModelCacheUtils.saveCollectModel(activity, collectModel);
         }
     }
@@ -239,7 +239,7 @@ public class UriUtils {
         if (StringUtils.isBlank(inspurID) || inspurID.equals("null"))
             return null;
         headImgUrl = ((MyApplication)context.getApplicationContext()).getUserPhotoUrl(inspurID);
-        if (headImgUrl == null){
+        if (headImgUrl == null && !((MyApplication)context.getApplicationContext()).isKeysContainUid(inspurID)){
             Contact contact = ContactCacheUtils.getUserContact(context,inspurID);
             if(contact != null){
                 headImgUrl = "https://emm.inspur.com/img/userhead/" + inspurID;
@@ -248,6 +248,9 @@ public class UriUtils {
                     headImgUrl = headImgUrl + "?"+lastUpdateTime;
                 }
                 ((MyApplication)context.getApplicationContext()).setUsesrPhotoUrl(inspurID,headImgUrl);
+            }else if(((MyApplication)context.getApplicationContext())
+                    .getIsContactReady()){
+                ((MyApplication)context.getApplicationContext()).setUsesrPhotoUrl(inspurID,null);
             }
         }
         return headImgUrl;

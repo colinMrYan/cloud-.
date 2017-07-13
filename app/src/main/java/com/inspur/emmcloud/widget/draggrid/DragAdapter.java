@@ -268,7 +268,11 @@ public class DragAdapter extends BaseAdapter {
 				commonlyUseListener.onNotifyCommonlyUseApp(app);
 				notifyDataSetChanged();
 				if (app.getAppType() == 2){
-					uninstallNativeApp(app.getPackageName());
+					String packageName = app.getPackageName();
+					if (packageName.equals("cn.knowhowsoft.khmap5")){
+						packageName = "com.knowhowsoft.khmap5";
+					}
+					uninstallNativeApp(packageName);
 				}
 
 			}

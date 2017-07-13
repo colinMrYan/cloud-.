@@ -18,6 +18,7 @@ import android.webkit.WebHistoryItem;
 import android.webkit.WebSettings;
 import android.webkit.WebSettings.LayoutAlgorithm;
 import android.webkit.WebView;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -71,16 +72,18 @@ public class ImpWebView extends WebView {
 	private TextView titleText;
 	private LinearLayout loadFailLayout;
 	private Handler handler;
+	private FrameLayout frameLayout;
 
 	public ImpWebView(Context context, AttributeSet attrs) {
 		super(context,attrs);
 		this.context = context;
 	}
 	
-	public void setProperty(RelativeLayout progressLayout, TextView titleText, LinearLayout loadFailLayout){
+	public void setProperty(RelativeLayout progressLayout, TextView titleText, LinearLayout loadFailLayout,FrameLayout layout){
 		this.progressLayout = progressLayout;
 		this.titleText =titleText;
 		this.loadFailLayout = loadFailLayout;
+		this.frameLayout = layout;
 		this.setWebView();
 		this.setWebSetting();
 		handMessage();
@@ -170,7 +173,7 @@ public class ImpWebView extends WebView {
 		this.setBackgroundColor(Color.WHITE);
 		this.setWebViewClient(new ImpWebViewClient(loadFailLayout));
 		// 使WebView支持弹出框
-		impWebChromeClient = new ImpWebChromeClient(context,progressLayout);
+		impWebChromeClient = new ImpWebChromeClient(context,progressLayout,this,frameLayout);
 		this.setWebChromeClient(impWebChromeClient);
 		// 兼容2.3版本
 		this.setOnTouchListener(new OnTouchListener() {
