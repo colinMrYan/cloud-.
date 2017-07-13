@@ -863,15 +863,15 @@ public class WorkFragment extends Fragment implements OnRefreshListener {
 			if (groupPosition == 0) {
 				intent.setClass(getActivity(), MeetingListActivity.class);
 				startActivityForResult(intent, 0);
-				recordUserClickMeeting();
+				recordUserClickWorkFunction("meeting");
 			} else if (groupPosition == 1) {
 				intent.setClass(getActivity(), CalActivity.class);
 				startActivity(intent);
-				recordUserClickCal();
+				recordUserClickWorkFunction("calendar");
 			} else if (groupPosition == 2) {
 				intent.setClass(getActivity(), MessionListActivity.class);
 				startActivityForResult(intent, 0);
-				recordUserClickTodo();
+				recordUserClickWorkFunction("todo");
 			}
 			return false;
 		}
@@ -879,35 +879,11 @@ public class WorkFragment extends Fragment implements OnRefreshListener {
 	}
 
 	/**
-	 * 记录用户点击会议功能
+	 * 记录用户点击
+	 * @param functionId
 	 */
-	private void recordUserClickMeeting() {
-		PVCollectModel pvCollectModel = new PVCollectModel();
-		pvCollectModel.setFunctionID("meeting");
-		pvCollectModel.setFunctionType("work");
-		pvCollectModel.setCollectTime(System.currentTimeMillis());
-		PVCollectModelCacheUtils.saveCollectModel(getActivity(),pvCollectModel);
-	}
-
-	/**
-	 * 记录用户点击日历功能
-	 */
-	private void recordUserClickCal() {
-		PVCollectModel pvCollectModel = new PVCollectModel();
-		pvCollectModel.setFunctionID("calendar");
-		pvCollectModel.setFunctionType("work");
-		pvCollectModel.setCollectTime(System.currentTimeMillis());
-		PVCollectModelCacheUtils.saveCollectModel(getActivity(),pvCollectModel);
-	}
-
-	/**
-	 * 记录用户点击待办功能
-	 */
-	private void recordUserClickTodo() {
-		PVCollectModel pvCollectModel = new PVCollectModel();
-		pvCollectModel.setFunctionID("todo");
-		pvCollectModel.setFunctionType("work");
-		pvCollectModel.setCollectTime(System.currentTimeMillis());
+	private void recordUserClickWorkFunction(String functionId){
+		PVCollectModel pvCollectModel = new PVCollectModel(functionId,"work");
 		PVCollectModelCacheUtils.saveCollectModel(getActivity(),pvCollectModel);
 	}
 
@@ -922,16 +898,16 @@ public class WorkFragment extends Fragment implements OnRefreshListener {
 							(Serializable) calEventList.get(childPosition));
 					intent.setClass(getActivity(), CalEventAddActivity.class);
 					startActivity(intent);
+					recordUserClickWorkFunction("calendar");
 				}
-				recordUserClickCal();
 			} else if (groupPosition == 2) {
-				if (taskList != null && taskList.size() != 0) {
+				if (taskList.size() != 0) {
 					intent.putExtra("task",
 							(Serializable) taskList.get(childPosition));
 					intent.setClass(getActivity(), MessionDetailActivity.class);
 					startActivity(intent);
+					recordUserClickWorkFunction("todo");
 				}
-				recordUserClickTodo();
 			} else if (groupPosition == 0) {
 				if (getMeetingResult != null &&getMeetingResult.getMeetingsList().size() > 0) {
 						Meeting meeting = getMeetingResult.getMeetingsList().get(childPosition);
@@ -943,7 +919,7 @@ public class WorkFragment extends Fragment implements OnRefreshListener {
 					IntentUtils.startActivity(getActivity(),
 							MeetingBookingActivity.class);
 				}
-				recordUserClickMeeting();
+				recordUserClickWorkFunction("meeting");
 			}
 			return false;
 		}

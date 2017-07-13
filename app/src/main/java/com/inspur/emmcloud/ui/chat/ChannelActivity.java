@@ -141,15 +141,12 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
      */
     private void recordUserClickChannel() {
         String from = "";
-        if (getIntent().hasExtra("from")) {
+        if(getIntent().hasExtra("from")){
             from = getIntent().getStringExtra("from");
-        }
-        if (!from.equals("customer")) {
-            PVCollectModel pvCollectModel = new PVCollectModel();
-            pvCollectModel.setFunctionID("channel");
-            pvCollectModel.setFunctionType("communicate");
-            pvCollectModel.setCollectTime(System.currentTimeMillis());
-            PVCollectModelCacheUtils.saveCollectModel(ChannelActivity.this, pvCollectModel);
+            if(!from.equals("customer")){
+                PVCollectModel pvCollectModel = new PVCollectModel("channel","communicate");
+                PVCollectModelCacheUtils.saveCollectModel(ChannelActivity.this,pvCollectModel);
+            }
         }
     }
 
@@ -198,7 +195,6 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
         }
         ((TextView) findViewById(R.id.header_text)).setText(title);
     }
-
 
     /**
      * 处理chatInputMenu是否显示，以及显示几个Menu上的item
@@ -288,9 +284,9 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
             @Override
             public void run() {
                 // Select the last row so it will scroll into view...
-                msgListView.setSelection(adapter.getCount() - 1);
+                msgListView.setSelection(adapter.getCount()-1);
             }
-        }, 30);
+        },30);
         pullToRefreshLayout.setOnRefreshListener(ChannelActivity.this);
         msgListView.smoothScrollToPosition(adapter.getCount());
         // 设置点击每个Item时跳转到详情
@@ -356,15 +352,15 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
     /**
      * 设置ListView的刷新和滚动到最下方
      */
-    private void setListViewNotifyAndScrollEnd() {
+    private void setListViewNotifyAndScrollEnd(){
         adapter.notifyDataSetChanged();
         msgListView.postDelayed(new Runnable() {
             @Override
             public void run() {
                 // Select the last row so it will scroll into view...
-                msgListView.setSelection(adapter.getCount() - 1);
+                msgListView.setSelection(adapter.getCount()-1);
             }
-        }, 30);
+        },30);
     }
 
 
@@ -395,7 +391,7 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
             } else if (requestCode == CAMERA_RESULT
                     && NetUtils.isNetworkConnected(getApplicationContext())) {
                 String cameraImgPath = Environment.getExternalStorageDirectory() + "/DCIM/" + PreferencesUtils.getString(ChannelActivity.this, "capturekey");
-                refreshGallery(ChannelActivity.this, cameraImgPath);
+                refreshGallery(ChannelActivity.this,cameraImgPath);
                 EditImageActivity.start(ChannelActivity.this, cameraImgPath, MyAppConfig.LOCAL_IMG_CREATE_PATH);
                 //拍照后图片编辑返回
             } else if (requestCode == EditImageActivity.ACTION_REQUEST_EDITIMAGE) {
@@ -413,7 +409,7 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
                 if (data != null && requestCode == GELLARY_RESULT) {
                     ArrayList<ImageItem> imageItemList = (ArrayList<ImageItem>) data
                             .getSerializableExtra(ImagePicker.EXTRA_RESULT_ITEMS);
-                    for (int i = 0; i < imageItemList.size(); i++) {
+                    for (int i = 0;i<imageItemList.size();i++){
                         Msg localMsg = MsgRecourceUploadUtils.uploadMsgImg(
                                 ChannelActivity.this, imageItemList.get(i).path, apiService);
                         addLocalMessage(localMsg);
@@ -428,7 +424,7 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
      * @param context
      * @param cameraPath
      */
-    private void refreshGallery(Context context, String cameraPath) {
+    private  void refreshGallery(Context context, String cameraPath) {
         File file = new File(cameraPath);
         // 其次把文件插入到系统图库
         try {
@@ -1018,13 +1014,12 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
                 }
             }
 
-
         }
 
         @Override
-        public void returnNewMsgsFail(String error, int errorCode) {
+        public void returnNewMsgsFail(String error,int errorCode) {
             pullToRefreshLayout.refreshFinish(PullToRefreshLayout.FAIL);
-            WebServiceMiddleUtils.hand(ChannelActivity.this, error, errorCode);
+            WebServiceMiddleUtils.hand(ChannelActivity.this, error,errorCode);
         }
 
         @Override
@@ -1037,8 +1032,8 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
         }
 
         @Override
-        public void returnMsgFail(String error, int errorCode) {
-            WebServiceMiddleUtils.hand(ChannelActivity.this, error, errorCode);
+        public void returnMsgFail(String error,int errorCode) {
+            WebServiceMiddleUtils.hand(ChannelActivity.this, error,errorCode);
         }
 
         @Override
