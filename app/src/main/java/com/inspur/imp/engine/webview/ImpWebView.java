@@ -121,9 +121,7 @@ public class ImpWebView extends WebView {
 	public void init() {
 		this.addJavascriptInterface(new JsInterface(), method);
 		//显示webview网页标题
-		if (titleText != null){
-			this.addJavascriptInterface(new GetTitle(), "getTitle");
-		}
+		this.addJavascriptInterface(new GetTitle(), "getTitle");
 		initPlugin();
 	}
 
