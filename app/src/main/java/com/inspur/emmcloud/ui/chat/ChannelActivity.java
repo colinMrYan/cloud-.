@@ -1018,8 +1018,15 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
 
         @Override
         public void returnNewMsgsFail(String error,int errorCode) {
-            pullToRefreshLayout.refreshFinish(PullToRefreshLayout.FAIL);
-            WebServiceMiddleUtils.hand(ChannelActivity.this, error,errorCode);
+            if (pullToRefreshLayout == null){
+                if (loadingDlg != null && loadingDlg.isShowing()){
+                    loadingDlg.dismiss();
+                }
+                initViews();
+            }else {
+                pullToRefreshLayout.refreshFinish(PullToRefreshLayout.FAIL);
+                WebServiceMiddleUtils.hand(ChannelActivity.this, error,errorCode);
+            }
         }
 
         @Override

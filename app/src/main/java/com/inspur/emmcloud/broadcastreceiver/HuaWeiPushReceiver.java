@@ -73,6 +73,7 @@ public class HuaWeiPushReceiver extends PushReceiver{
      */
     @Override
     public void onEvent(Context context, PushReceiver.Event event, Bundle extras) {
+        super.onEvent(context, event, extras);
         if (Event.NOTIFICATION_OPENED.equals(event) || Event.NOTIFICATION_CLICK_BTN.equals(event)) {
             NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
             manager.cancelAll();
@@ -93,6 +94,7 @@ public class HuaWeiPushReceiver extends PushReceiver{
                             targetIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         }
                         if (targetIntent != null ){
+                            LogUtils.jasonDebug("start---target-------------");
                             context.startActivity(targetIntent);
                         }
                     }catch (Exception e){
@@ -107,7 +109,6 @@ public class HuaWeiPushReceiver extends PushReceiver{
 
 
         }
-        super.onEvent(context, event, extras);
     }
 
     /**
