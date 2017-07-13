@@ -59,7 +59,7 @@ public class AppExceptionService extends Service {
 //			}
 //
 //		}
-		if (NetUtils.isNetworkConnected(AppExceptionService.this) && !AppUtils.isApkDebugable(AppExceptionService.this)) {
+		if (NetUtils.isNetworkConnected(AppExceptionService.this,false) && !AppUtils.isApkDebugable(AppExceptionService.this)) {
 			List<AppException> appExceptionList = AppExceptionCacheUtils.getAppExceptionList(AppExceptionService.this);
 			if (appExceptionList.size() != 0) {
 				JSONObject uploadContentJSONObj = getUploadContentJSONObj(appExceptionList);

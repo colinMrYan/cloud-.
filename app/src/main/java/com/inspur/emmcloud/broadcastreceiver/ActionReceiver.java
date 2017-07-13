@@ -16,7 +16,9 @@ public class ActionReceiver extends BroadcastReceiver {
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		// TODO Auto-generated method stub
-		((MyApplication)context.getApplicationContext()).initPush();
+		if(((MyApplication)context.getApplicationContext()).isHaveLogin()){
+			((MyApplication)context.getApplicationContext()).startPush();
+		}
 	}
 
 }

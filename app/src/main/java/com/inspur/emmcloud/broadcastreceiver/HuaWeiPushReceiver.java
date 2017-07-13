@@ -3,16 +3,19 @@ package com.inspur.emmcloud.broadcastreceiver;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 
 import com.huawei.hms.support.api.push.PushReceiver;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.push.WebSocketPush;
-import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.ui.login.LoginActivity;
 import com.inspur.emmcloud.util.LogUtils;
+import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
-import com.inspur.emmcloud.util.StringUtils;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 /**
  * Created by yufuchang on 2017/6/20.
@@ -70,49 +73,41 @@ public class HuaWeiPushReceiver extends PushReceiver{
      */
     @Override
     public void onEvent(Context context, PushReceiver.Event event, Bundle extras) {
-//        LogUtils.YfcDebug("pushkey："+extras.getString(BOUND_KEY.pushMsgKey));
         if (Event.NOTIFICATION_OPENED.equals(event) || Event.NOTIFICATION_CLICK_BTN.equals(event)) {
             NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
             manager.cancelAll();
-//            int notifyId = extras.getInt(BOUND_KEY.pushNotifyId, 0);
-//            if (0 != notifyId) {
-//                NotificationManager manager = (NotificationManager) context
-//                        .getSystemService(Context.NOTIFICATION_SERVICE);
-//                manager.cancel(notifyId);
-//            }
-//            String content = "--------receive extented notification message: " + extras.getString
-//                    (BOUND_KEY.pushMsgKey);
-//            LogUtils.YfcDebug(content);
-        }
-        String accessToken = PreferencesUtils.getString(context,
-                "accessToken", "");
-        if(!StringUtils.isBlank(accessToken)){
-            startIndexActivity(context);
-        }else{
-            statLoginActivity(context);
+            if (((MyApplication)context.getApplicationContext()).isHaveLogin()){
+               if(NetUtils.isNetworkConnected(context,false)){
+                    String content = extras.getString
+                            (BOUND_KEY.pushMsgKey);
+                    try {
+                        JSONArray array = new JSONArray(content);
+                        JSONObject msgObj = array.getJSONObject(0);
+                        JSONObject actionObj = msgObj.getJSONObject("action");
+                        String type = actionObj.getString("type");
+                        Intent targetIntent = null;
+                        if (type.equals("open-url")){
+                            String scheme = actionObj.getString("url");
+                            targetIntent =new Intent(Intent.ACTION_VIEW);
+                            targetIntent.setData(Uri.parse(scheme));
+                            targetIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        }
+                        if (targetIntent != null ){
+                            context.startActivity(targetIntent);
+                        }
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+                }
+            }else {
+                Intent loginIntent = new Intent(context, LoginActivity.class);
+                loginIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(loginIntent);
+            }
+
+
         }
         super.onEvent(context, event, extras);
-    }
-
-    /**
-     * 打开应用首页
-     * @param context
-     */
-    private void startIndexActivity(Context context) {
-        Intent indexLogin = new Intent(context, IndexActivity.class);
-        indexLogin.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        indexLogin.putExtra("command","open_notification");
-        context.startActivity(indexLogin);
-    }
-
-    /**
-     * 打开登录
-     * @param context
-     */
-    private void statLoginActivity(Context context) {
-        Intent loginIntent = new Intent(context, LoginActivity.class);
-        loginIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        context.startActivity(loginIntent);
     }
 
     /**

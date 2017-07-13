@@ -48,6 +48,7 @@ import com.inspur.emmcloud.util.ChatCreateUtils.OnCreateGroupChannelListener;
 import com.inspur.emmcloud.util.DirectChannelUtils;
 import com.inspur.emmcloud.util.ImageDisplayUtils;
 import com.inspur.emmcloud.util.IntentUtils;
+import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.MsgCacheUtil;
 import com.inspur.emmcloud.util.MsgMatheSetCacheUtils;
 import com.inspur.emmcloud.util.MsgReadIDCacheUtils;
@@ -218,6 +219,7 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 
     private void initView() {
         // TODO Auto-generated method stub
+		handMessage();
         apiService = new ChatAPIService(getActivity());
         apiService.setAPIInterface(new WebService());
         inflater = (LayoutInflater) getActivity().getSystemService(
@@ -245,7 +247,7 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
                 String channelType = channel.getType();
                 Bundle bundle = new Bundle();
                 bundle.putString("title", channel.getTitle());
-                bundle.putString("channelId", channel.getCid());
+                bundle.putString("cid", channel.getCid());
                 bundle.putString("channelType", channelType);
                 if (channelType.equals("GROUP") || channelType.equals("DIRECT") || channelType.equals("SERVICE")) {
                     IntentUtils.startActivity(getActivity(),
@@ -271,7 +273,6 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
             }
 
         });
-        handMessage();
     }
 
 	@Subscribe(threadMode = ThreadMode.MAIN)
@@ -334,7 +335,7 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 	 */
 	private void getChannelContent() {
 		// TODO Auto-generated method stub
-		if (NetUtils.isNetworkConnected(getActivity())) {
+		if (NetUtils.isNetworkConnected(getActivity(),false)) {
 			apiService.getChannelList();
 		}
 	}
@@ -389,6 +390,8 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
+				Channel channelss = new Channel();
+				channelss.setCid("611");
 				if (channelList.size() > 0) {
 					Iterator<Channel> it = channelList.iterator();
 					//将没有消息的单聊和没有消息的但不是自己创建的群聊隐藏掉
@@ -959,7 +962,7 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
                 getChannelContent();
             } else if (command.equals("sort_session_list")) {
                 createAllGroupIcon();
-                sortChannelList(displayChannelList);
+                sortChannelList(getCacheData());
             } else if (command.equals("set_all_message_read")) {
                 setAllChannelMsgRead();
             } else if (command.equals("websocket_status")) {
@@ -1013,9 +1016,12 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 				.getCacheChannelList(getActivity());
 		for (int i = 0; i < channelList.size(); i++) {
 			Channel channel = channelList.get(i);
-			channel.setInputs(channelMap.get(channel.getCid()));
+			if (channel.getType().equals("SERVICE")){
+				int channelGroupIndex = searchChannelGroupList.indexOf(new ChannelGroup(channel));
+				channel.setInputs(searchChannelGroupList.get(channelGroupIndex).getInputs());
+				ChannelCacheUtils.saveChannel(getActivity(),channel);
+			}
 		}
-		ChannelCacheUtils.saveChannelList(getActivity(), channelList);
 	}
 
 	/**
@@ -1026,9 +1032,11 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 	public void getChannelInfoResult(List<Channel> channelList) {
 		String[] cidArray = new String[channelList.size()];
 		for (int i = 0; i < channelList.size(); i++) {
-			cidArray[i] = channelList.get(i).getCid();
+			Channel channel = channelList.get(i);
+			if (channel.getType().equals("SERVICE")){
+				cidArray[i] = channelList.get(i).getCid();
+			}
 		}
-
 		apiService.getChannelGroupList(cidArray);
 	}
 
@@ -1111,7 +1119,7 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 							ChannelGroup channelGroup) {
 						// TODO Auto-generated method stub
 						Bundle bundle = new Bundle();
-						bundle.putString("channelId", channelGroup.getCid());
+						bundle.putString("cid", channelGroup.getCid());
 						bundle.putString("channelType", channelGroup.getType());
 						bundle.putString("title", channelGroup.getChannelName());
 						IntentUtils.startActivity(getActivity(),

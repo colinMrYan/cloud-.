@@ -50,29 +50,22 @@ public class WebSocketPush {
 	 */
 	public void start() {
 		// TODO Auto-generated method stub
+		String pushid = getPushIdByChangeShang();
+		if(((MyApplication)context.getApplicationContext()).isHaveLogin() && !StringUtils.isBlank(pushid)){
 			String url = "https://ecm.inspur.com/";
 			String enterpriseCode = ((MyApplication)context.getApplicationContext()).getCurrentEnterprise().getCode();
 			String path = "/"+enterpriseCode+"/socket/handshake";
-			WebSocketConnect(url, path);
+			WebSocketConnect(url, path,pushid);
+		}
 	}
 
 
-	public void WebSocketConnect(String url, String path) {
-		if (((MyApplication)context.getApplicationContext()).getToken() == null) {
-			return;
-		}
+	public void WebSocketConnect(String url, String path,String pushid) {
 		synchronized (this) {
 			if (!isSocketConnect()){
 				sendWebSocketStatusBroadcaset("socket_connecting");
-				String pushid = getPushIdByChangeShang();
-				//统一判断如果没有pushid则不连接socket
-				if(StringUtils.isBlank(pushid)){
-					return;
-				}
 				String username = PreferencesUtils.getString(context, "userRealName");
 				String uuid = AppUtils.getMyUUID(context);
-//				String pushid = PreferencesUtils.getString(context, "JpushRegId", "");
-//				pushid = getPushIdByChangeShang(pushid);
 				boolean isTelbet = AppUtils.isTablet(context);
 				String name;
 				if (isTelbet) {
@@ -170,7 +163,6 @@ public class WebSocketPush {
 
 	public void sendActivedMsg() {
 		if (mSocket != null && isSocketConnect()) {
-			Log.d(TAG, "send----------actived");
 			mSocket.emit("state", "ACTIVED");
 		}else {
 			start();
@@ -179,7 +171,6 @@ public class WebSocketPush {
 
 	public void sendFrozenMsg() {
 		if (mSocket != null) {
-			Log.d(TAG, "send----------frozen");
 			mSocket.emit("state", "FROZEN");
 	}
 	}
@@ -286,6 +277,7 @@ public class WebSocketPush {
 	}
 
 	public void closeSocket() {
+		Log.d(TAG, "closeSocket------00");
 		if (mSocket != null) {
 			Log.d(TAG, "closeSocket------");
 			mSocket.disconnect();

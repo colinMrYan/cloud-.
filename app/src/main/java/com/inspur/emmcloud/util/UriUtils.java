@@ -79,10 +79,7 @@ public class UriUtils {
      */
     private static void saveAPPPVCollect(Activity activity,App app) {
         //web应用PV收集
-        if(app != null && app.getAppID().equals("inspur_news_esg")){
-            PVCollectModel pvCollectModel = new PVCollectModel(activity,"news","application",app.getAppName());
-            PVCollectModelCacheUtils.saveCollectModel(activity,pvCollectModel);
-        }else{
+        if(app != null && !app.getAppID().equals("inspur_news_esg")){
             PVCollectModel collectModel = new PVCollectModel(activity, app.getAppID(), "application", app.getAppName());
             PVCollectModelCacheUtils.saveCollectModel(activity, collectModel);
         }
@@ -92,13 +89,6 @@ public class UriUtils {
         Intent intent = new Intent();
         intent.setClass(activity, ImpActivity.class);
         intent.putExtra("uri", uri);
-        String token = ((MyApplication) activity.getApplicationContext())
-                .getToken();
-        intent.putExtra("Authorization", token);
-        intent.putExtra("userAgentExtra",
-                "/emmcloud/" + AppUtils.getVersion(activity));
-        String webLanguageCookie = getLanguageCookie(activity);
-        intent.putExtra("cookie", webLanguageCookie);
         if (app.getAppType() == 3) {
             intent.putExtra("appName", app.getAppName());
         }

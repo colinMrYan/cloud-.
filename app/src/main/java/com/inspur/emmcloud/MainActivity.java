@@ -3,8 +3,6 @@ package com.inspur.emmcloud;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -146,7 +144,7 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
 		UpgradeUtils upgradeUtils = new UpgradeUtils(MainActivity.this,
 				handler, false);
 		upgradeUtils.checkUpdate(false);
-//        getServerLanguage();
+
 	}
 
 	public void onClick(View v) {
@@ -245,7 +243,6 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
 			startApp();
 		}
 	}
-
 	/**
 	 * 开启应用
 	 */

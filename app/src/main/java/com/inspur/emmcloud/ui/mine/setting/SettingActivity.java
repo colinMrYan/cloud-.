@@ -8,7 +8,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.webkit.CookieManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -22,8 +21,8 @@ import com.inspur.emmcloud.bean.Language;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.ui.login.LoginActivity;
+import com.inspur.emmcloud.util.CalEventNotificationUtils;
 import com.inspur.emmcloud.util.DataCleanManager;
-import com.inspur.emmcloud.util.HuaWeiPushMangerUtils;
 import com.inspur.emmcloud.util.ImageDisplayUtils;
 import com.inspur.emmcloud.util.IntentUtils;
 import com.inspur.emmcloud.util.NetUtils;
@@ -35,8 +34,6 @@ import com.inspur.emmcloud.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.dialogs.EasyDialog;
 import com.inspur.emmcloud.widget.dialogs.MyDialog;
-
-import cn.jpush.android.api.JPushInterface;
 
 import static com.inspur.emmcloud.R.id.device_manager_layout;
 
@@ -280,7 +277,6 @@ public class SettingActivity extends BaseActivity {
 	 */
 	private void showClearCacheWarningDlg() {
 		// TODO Auto-generated method stub
-		final String userId = ((MyApplication)getApplication()).getUid();
 		DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
 
 			@Override
@@ -324,16 +320,15 @@ public class SettingActivity extends BaseActivity {
 			((MyApplication) getApplicationContext()).getWebSocketPush()
 			.webSocketSignout();
 		}
+		//清除日历提醒极光推送本地通知
+		CalEventNotificationUtils.cancelAllCalEventNotification(SettingActivity.this);
+		((MyApplication)getApplicationContext()).stopPush();
 		((MyApplication)getApplicationContext()).clearNotification();
-		CookieManager cookieManager = CookieManager.getInstance();
-		cookieManager.removeAllCookie();
 		((MyApplication)getApplicationContext()).removeAllCookie();
 		((MyApplication)getApplicationContext()).clearUserPhotoMap();
-		JPushInterface.stopPush(getApplicationContext());
 		PreferencesUtils.putString(SettingActivity.this, "tokenType", "");
 		PreferencesUtils.putString(SettingActivity.this, "accessToken", "");
 		((MyApplication)getApplicationContext()).setAccessToken("");
-		HuaWeiPushMangerUtils.getInstance(SettingActivity.this).delToken();
 		Intent intent = new Intent();
 		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
 		intent.setClass(this, LoginActivity.class);

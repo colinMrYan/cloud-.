@@ -49,10 +49,7 @@ public class GroupNewsActivity extends BaseFragmentActivity implements
 		setContentView(R.layout.activity_group_news);
 		init();
 		getNewTitles();
-		//当应用打开方式为scheme方式时才记录，如果从应用打开新闻，由应用记录
-		if(getIntent().getScheme() != null){
-			recordUserClickNews();
-		}
+		recordUserClickNews();
 	}
 
 	/**
