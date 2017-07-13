@@ -62,9 +62,12 @@ public class Enterprise implements Serializable {
 		return obj;
 	}
 
+	/**
+	 * 为初始化RN bundle准备的，需要序列化
+	 * @return
+	 */
 	public ReactNativeWritableNativeMap enterPrise2ReactNativeWritableNativeMap(){
 		ReactNativeWritableNativeMap map = new ReactNativeWritableNativeMap();
-
 		map.putString("code",code);
 		map.putInt("id",Integer.valueOf(id));
 		map.putString("name",name);
@@ -72,10 +75,13 @@ public class Enterprise implements Serializable {
 		map.putString("ent_license_copy",entLicenseCopy);
 		map.putString("ent_license_sn",entLicenseSn);
 		map.putDouble("last_update",Double.valueOf(lastUpdate));
-
 		return  map;
 	}
 
+	/**
+	 * 为RN内部自己调用准备的，不能序列化，否则报异常
+	 * @return
+	 */
 	public WritableNativeMap enterPrise2WritableNativeMap(){
 		WritableNativeMap map = new WritableNativeMap();
 		map.putString("code",code);
@@ -85,7 +91,6 @@ public class Enterprise implements Serializable {
 		map.putString("ent_license_copy",entLicenseCopy);
 		map.putString("ent_license_sn",entLicenseSn);
 		map.putDouble("last_update",Double.valueOf(lastUpdate));
-
 		return  map;
 	}
 }

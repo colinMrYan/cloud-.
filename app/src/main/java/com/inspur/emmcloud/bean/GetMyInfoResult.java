@@ -32,10 +32,8 @@ public class GetMyInfoResult implements Serializable {
 	//private String enterpriseId ;
 	private List<Enterprise> enterpriseList = new ArrayList<>();
 	private Enterprise defaultEnterprise;
-
-//	private ReactNativeWritableArray reactNativeWritableArray = new ReactNativeWritableArray();
-	private ReactNativeWritableNativeMap reactNativeWritableNativeMap = new ReactNativeWritableNativeMap();
-	private WritableNativeMap writableNativeMap = new WritableNativeMap();
+	private ReactNativeWritableNativeMap reactNativeWritableNativeMap = new ReactNativeWritableNativeMap();//RN的bundle使用
+	private WritableNativeMap writableNativeMap = new WritableNativeMap();//RN内部自己使用
 
 	public GetMyInfoResult(String response) {
 		this.response = response;
@@ -85,7 +83,7 @@ public class GetMyInfoResult implements Serializable {
 	}
 
 	/**
-	 * 为NativeBridge方法
+	 * 为NativeBridge方法，不能序列化否则报异常
 	 * @return
 	 */
 	public WritableNativeMap getUserProfile2WritableNativeMap(){
