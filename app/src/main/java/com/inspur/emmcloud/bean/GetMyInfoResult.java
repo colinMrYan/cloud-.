@@ -1,6 +1,10 @@
 package com.inspur.emmcloud.bean;
 
+import com.facebook.react.bridge.WritableNativeArray;
+import com.facebook.react.bridge.WritableNativeMap;
 import com.inspur.emmcloud.util.JSONUtils;
+import com.inspur.reactnative.ReactNativeWritableArray;
+import com.inspur.reactnative.ReactNativeWritableNativeMap;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -29,6 +33,10 @@ public class GetMyInfoResult implements Serializable {
 	private List<Enterprise> enterpriseList = new ArrayList<>();
 	private Enterprise defaultEnterprise;
 
+//	private ReactNativeWritableArray reactNativeWritableArray = new ReactNativeWritableArray();
+	private ReactNativeWritableNativeMap reactNativeWritableNativeMap = new ReactNativeWritableNativeMap();
+	private WritableNativeMap writableNativeMap = new WritableNativeMap();
+
 	public GetMyInfoResult(String response) {
 		this.response = response;
 		JSONObject jObject = JSONUtils.getJSONObject(response, "enterprise", new JSONObject());
@@ -43,13 +51,47 @@ public class GetMyInfoResult implements Serializable {
 		this.phoneNumber = JSONUtils.getString(response, "phone", "");
 		this.hasPassord = JSONUtils.getBoolean(response, "has_password", false);
 		JSONArray enterpriseArray = JSONUtils.getJSONArray(response, "enterprises", new JSONArray());
+		ReactNativeWritableArray reactNativeWritableArray = new ReactNativeWritableArray();
+		WritableNativeArray writableNativeArray = new WritableNativeArray();
 		for (int i = 0; i < enterpriseArray.length(); i++) {
 			JSONObject obj = JSONUtils.getJSONObject(enterpriseArray, i, null);
 			if (obj != null) {
-				enterpriseList.add(new Enterprise(obj));
+				Enterprise enterprise = new Enterprise(obj);
+				enterpriseList.add(enterprise);
+				reactNativeWritableArray.pushMap(enterprise.enterPrise2ReactNativeWritableNativeMap());
+				writableNativeArray.pushMap(enterprise.enterPrise2WritableNativeMap());
 			}
 		}
+		reactNativeWritableNativeMap.putArray("enterprises",reactNativeWritableArray);
+		writableNativeMap.putArray("enterprises",writableNativeArray);
+	}
 
+	public ReactNativeWritableNativeMap getUserProfile2ReactNativeWritableNativeMap(){
+		reactNativeWritableNativeMap.putMap("enterprise",defaultEnterprise.enterPrise2ReactNativeWritableNativeMap());
+		reactNativeWritableNativeMap.putString("avatar",avatar);
+		reactNativeWritableNativeMap.putString("code",code);
+		reactNativeWritableNativeMap.putDouble("creation_date",Double.valueOf(creationDate));
+		reactNativeWritableNativeMap.putString("first_name",firstName);
+		reactNativeWritableNativeMap.putString("last_name",lastName);
+		reactNativeWritableNativeMap.putInt("id",Integer.valueOf(id));
+		reactNativeWritableNativeMap.putString("mail",mail);
+		reactNativeWritableNativeMap.putString("phone",phoneNumber);
+		reactNativeWritableNativeMap.putBoolean("has_password",hasPassord);
+		return reactNativeWritableNativeMap;
+	}
+
+	public WritableNativeMap getUserProfile2WritableNativeMap(){
+		writableNativeMap.putMap("enterprise",defaultEnterprise.enterPrise2ReactNativeWritableNativeMap());
+		writableNativeMap.putString("avatar",avatar);
+		writableNativeMap.putString("code",code);
+		writableNativeMap.putDouble("creation_date",Double.valueOf(creationDate));
+		writableNativeMap.putString("first_name",firstName);
+		writableNativeMap.putString("last_name",lastName);
+		writableNativeMap.putInt("id",Integer.valueOf(id));
+		writableNativeMap.putString("mail",mail);
+		writableNativeMap.putString("phone",phoneNumber);
+		writableNativeMap.putBoolean("has_password",hasPassord);
+		return writableNativeMap;
 	}
 
 	public void setAvatar(String avatar) {

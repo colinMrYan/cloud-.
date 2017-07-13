@@ -234,11 +234,11 @@ public class ReactNativeAppActivity extends BaseActivity implements DefaultHardw
         bundle.putString("systemVersion",ReactNativeInitInfoUtils.getSystemVersion(ReactNativeAppActivity.this));
         bundle.putString("locale",ReactNativeInitInfoUtils.getLocalLanguage(ReactNativeAppActivity.this));
         bundle.putString("reactNativeVersion",ReactNativeInitInfoUtils.getReactNativeVersion(reactAppFilePath));
-        bundle.putString("userProfile",myInfo);
+        bundle.putSerializable("userProfile",getMyInfoResult.getUserProfile2ReactNativeWritableNativeMap());
         bundle.putString("accessToken",ReactNativeInitInfoUtils.getAppToken(ReactNativeAppActivity.this));
-        bundle.putString("currentEnterprise",ReactNativeInitInfoUtils.getCurrentEnterprise(ReactNativeAppActivity.this).toJSONObject().toString());
         bundle.putString("pushId",ReactNativeInitInfoUtils.getPushId(ReactNativeAppActivity.this));
         bundle.putString("pushType",ReactNativeInitInfoUtils.getPushType());
+        bundle.putSerializable("currentEnterprise", ReactNativeInitInfoUtils.getCurrentEnterprise(ReactNativeAppActivity.this).enterPrise2ReactNativeWritableNativeMap());
         return bundle;
     }
 
