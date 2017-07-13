@@ -116,6 +116,9 @@ public class ImpWebViewClient extends WebViewClient {
 		//为了获取网页的title
 		view.loadUrl("javascript:window.getTitle.onGetTitle("
 				+ "document.getElementsByTagName('title')[0].innerHTML" + ");");
+		//为了获取网页的html内容
+		view.loadUrl("javascript:window.getTitle.onGetHtmlContent("
+				+ "document.getElementsByTagName('html')[0].innerHTML" + ");");
 		webview.loadUrl(F_UEX_SCRIPT_SELF_FINISH);
 		String c = CookieManager.getInstance().getCookie(url);
 		PreferencesUtils.putString(view.getContext(), "web_cookie", c);
