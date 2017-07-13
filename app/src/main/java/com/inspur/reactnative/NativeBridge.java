@@ -112,22 +112,11 @@ public class NativeBridge extends ReactContextBaseJavaModule implements Activity
     public void getCurrentEnterprise(Promise promise) {
         Enterprise enterprise = ((MyApplication)getReactApplicationContext().getApplicationContext()).getCurrentEnterprise();
         try {
-            LogUtils.YfcDebug("调用getCurrentEnterprise"+enterprise.enterPrise2WritableNativeMap().toString());
             promise.resolve(enterprise.enterPrise2WritableNativeMap());
-//            promise.resolve("11111111111111tyftyftyfyiftyut");
         } catch (Exception e) {
-            LogUtils.YfcDebug("e:"+e.getMessage());
             promise.reject(e);
         }
 
-//        String myInfo = PreferencesUtils.getString(getReactApplicationContext(),
-//                "myInfo", "");
-//        GetMyInfoResult getMyInfoResult = new GetMyInfoResult(myInfo);
-//        try {
-//            promise.resolve(getMyInfoResult.getUserProfile2WritableNativeMap());
-//        } catch (Exception e) {
-//            promise.reject(e);
-//        }
     }
 
     /**

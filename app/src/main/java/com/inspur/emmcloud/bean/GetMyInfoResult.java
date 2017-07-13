@@ -66,6 +66,10 @@ public class GetMyInfoResult implements Serializable {
 		writableNativeMap.putArray("enterprises",writableNativeArray);
 	}
 
+	/**
+	 * 为初始化RN写的方法，需要序列化
+	 * @return
+	 */
 	public ReactNativeWritableNativeMap getUserProfile2ReactNativeWritableNativeMap(){
 		reactNativeWritableNativeMap.putMap("enterprise",defaultEnterprise.enterPrise2ReactNativeWritableNativeMap());
 		reactNativeWritableNativeMap.putString("avatar",avatar);
@@ -80,6 +84,10 @@ public class GetMyInfoResult implements Serializable {
 		return reactNativeWritableNativeMap;
 	}
 
+	/**
+	 * 为NativeBridge方法
+	 * @return
+	 */
 	public WritableNativeMap getUserProfile2WritableNativeMap(){
 		writableNativeMap.putMap("enterprise",defaultEnterprise.enterPrise2ReactNativeWritableNativeMap());
 		writableNativeMap.putString("avatar",avatar);
