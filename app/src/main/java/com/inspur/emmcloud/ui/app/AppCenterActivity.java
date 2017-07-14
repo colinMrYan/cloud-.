@@ -214,27 +214,7 @@ public class AppCenterActivity extends BaseActivity {
         registerReceiver(addAppReceiver, myIntentFilter);
     }
 
-    public class WebService extends APIInterfaceInstance {
-        @Override
-        public void returnAllAppsSuccess(GetAllAppResult getAllAppResult) {
-            recommandCircleProgress.setVisibility(View.GONE);
-            classCircleProgress.setVisibility(View.GONE);
-            recommandAppList = getAllAppResult.getRecommandAppList();
-            recommandAppAdapter = new RecommondAppAdapter();
-            recommandListView.setAdapter(recommandAppAdapter);
-            recommandAppAdapter.notifyDataSetChanged();
-            categorieAppList = getAllAppResult.getCategoriesGroupBeanList();
-            categoriesAppAdapter = new CategoriesAppAdapter();
-        }
 
-		@Override
-		public void returnAllAppsFail(String error,int errorCode) {
-			WebServiceMiddleUtils.hand(AppCenterActivity.this,error,errorCode);
-			recommandCircleProgress.setVisibility(View.GONE);
-			classCircleProgress.setVisibility(View.GONE);
-		}
-
-    }
 
     class RecommondAppAdapter extends BaseAdapter {
         @Override
@@ -573,6 +553,29 @@ public class AppCenterActivity extends BaseActivity {
 
     public interface OnRecommandItemClickListener{
         void onRecommandItemClick(View view,int position);
+    }
+
+
+    public class WebService extends APIInterfaceInstance {
+        @Override
+        public void returnAllAppsSuccess(GetAllAppResult getAllAppResult) {
+            recommandCircleProgress.setVisibility(View.GONE);
+            classCircleProgress.setVisibility(View.GONE);
+            recommandAppList = getAllAppResult.getRecommandAppList();
+            recommandAppAdapter = new RecommondAppAdapter();
+            recommandListView.setAdapter(recommandAppAdapter);
+            recommandAppAdapter.notifyDataSetChanged();
+            categorieAppList = getAllAppResult.getCategoriesGroupBeanList();
+            categoriesAppAdapter = new CategoriesAppAdapter();
+        }
+
+        @Override
+        public void returnAllAppsFail(String error,int errorCode) {
+            WebServiceMiddleUtils.hand(AppCenterActivity.this,error,errorCode);
+            recommandCircleProgress.setVisibility(View.GONE);
+            classCircleProgress.setVisibility(View.GONE);
+        }
+
     }
 
 }
