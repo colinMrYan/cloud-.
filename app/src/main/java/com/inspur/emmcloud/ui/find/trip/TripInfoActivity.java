@@ -1,7 +1,6 @@
 package com.inspur.emmcloud.ui.find.trip;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
@@ -33,10 +32,8 @@ public class TripInfoActivity extends BaseActivity{
 		super.onCreate(savedInstanceState);
 		((MyApplication) getApplicationContext()).addActivity(this);
 		setContentView(R.layout.activity_trip_info);
-		Uri uri = getIntent().getData();
-		if (uri != null) {
-			String path = uri.getPath();
-			String tripId = path.split("/")[1];
+		if (getIntent().getExtras().containsKey("tripId")) {
+			String tripId = getIntent().getExtras().getString("tripId");
 			getTripInfo(tripId);
 		}else {
 			trip = (Trip) getIntent().getExtras().getSerializable("tripInfo");

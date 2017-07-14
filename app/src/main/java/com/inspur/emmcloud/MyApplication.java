@@ -29,6 +29,7 @@ import com.inspur.emmcloud.callback.OauthCallBack;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.push.WebSocketPush;
 import com.inspur.emmcloud.util.AppUtils;
+import com.inspur.emmcloud.util.CalEventNotificationUtils;
 import com.inspur.emmcloud.util.CrashHandler;
 import com.inspur.emmcloud.util.DbCacheUtils;
 import com.inspur.emmcloud.util.HuaWeiPushMangerUtils;
@@ -86,7 +87,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
     private String uid;
     private String accessToken;
     private Enterprise currentEnterprise;
-    private Map<String,String> userPhotoUrlMap ;
+    private Map<String, String> userPhotoUrlMap;
 
 
     private final ReactNativeHost mReactNativeHost = new ReactNativeHost(this) {
@@ -131,11 +132,10 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         x.Ext.setDebug(LogUtils.isDebug);
         SoLoader.init(this, false);
         Res.init(this); // 注册imp的资源文件类
-        initPush();
         initImageLoader();
         initTanent();
         RichText.initCacheDir(new File(LOCAL_CACHE_MARKDOWN_PATH));
-        userPhotoUrlMap = new LinkedHashMap<String,String>(){
+        userPhotoUrlMap = new LinkedHashMap<String, String>() {
             @Override
             protected boolean removeEldestEntry(Entry<String, String> eldest) {
                 // TODO Auto-generated method stub
@@ -145,37 +145,44 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         };
 
     }
-
+/****************************通知相关（极光和华为推送）******************************************/
     /**
      * 初始化推送，以后如需定制小米等厂家的推送服务可从这里定制
      */
-    public void initPush() {
-        if(AppUtils.getIsHuaWei()){
+    public void startPush() {
+        if (AppUtils.getIsHuaWei()) {
             HuaWeiPushMangerUtils.getInstance(this).connect();
-        }else{
-            initJPush();
+        } else {
+            // 设置开启日志,发布时请关闭日志
+            JPushInterface.setDebugMode(true);
+            // 初始化 JPush
+            JPushInterface.init(this);
+            // 获取和存储RegId
+            String pushRegId = JPushInterface
+                    .getRegistrationID(getApplicationContext());
+            if (!StringUtils.isBlank(pushRegId)) {
+                PreferencesUtils.putString(getApplicationContext(), "JpushRegId",
+                        pushRegId);
+            }
+            if (JPushInterface.isPushStopped(this)) {
+                JPushInterface.resumePush(this);
+            }
         }
     }
-
 
     /**
-     * 初始化极光推送
+     * 关闭推送
      */
-    private void initJPush() {
-        // TODO Auto-generated method stub
-        // 设置开启日志,发布时请关闭日志
-        JPushInterface.setDebugMode(true);
-        // 初始化 JPush
-        JPushInterface.init(this);
-        // 获取和存储RegId
-        String pushRegId = JPushInterface
-                .getRegistrationID(getApplicationContext());
-        if (!StringUtils.isBlank(pushRegId)) {
-            PreferencesUtils.putString(getApplicationContext(), "JpushRegId",
-                    pushRegId);
+    public void stopPush() {
+        if (AppUtils.getIsHuaWei()) {
+            HuaWeiPushMangerUtils.getInstance(this).delToken();
+        } else {
+            JPushInterface.stopPush(this);
         }
-        JPushInterface.resumePush(this);
+        //清除日历提醒极光推送本地通知
+        CalEventNotificationUtils.cancelAllCalEventNotification(getApplicationContext());
     }
+
 
 /************************ Cookie相关 *****************************/
     /**
@@ -331,12 +338,8 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
      * 开启推送
      */
     public void startWebSocket() {
-        String myInfo = PreferencesUtils.getString(getApplicationContext(),
-                "myInfo", "");
-        boolean isHaveLogined = !StringUtils.isBlank(myInfo)
-                && getToken() != null;
         webSocketPush = WebSocketPush.getInstance(getApplicationContext());
-        if (isHaveLogined && !webSocketPush.isSocketConnect()) {
+        if (((MyApplication) getApplicationContext()).isHaveLogin() && !webSocketPush.isSocketConnect()) {
             webSocketPush.start();
         }
     }
@@ -408,33 +411,33 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
     }
 
     /*****************************通讯录头像缓存********************************************/
-    public String getUserPhotoUrl(String uid){
+    public String getUserPhotoUrl(String uid) {
         String photoUrl = null;
-        if (!StringUtils.isBlank(uid)){
+        if (!StringUtils.isBlank(uid)) {
             photoUrl = userPhotoUrlMap.get(uid);
         }
         return photoUrl;
     }
 
-    public boolean isKeysContainUid(String uid){
-        if (!StringUtils.isBlank(uid)){
-            return  userPhotoUrlMap.containsKey(uid);
+    public boolean isKeysContainUid(String uid) {
+        if (!StringUtils.isBlank(uid)) {
+            return userPhotoUrlMap.containsKey(uid);
         }
-        return  false;
+        return false;
     }
 
-    public void setUsesrPhotoUrl(String uid,String url){
-        if (!StringUtils.isBlank(uid) && !StringUtils.isBlank(url)){
-            userPhotoUrlMap.put(uid,url);
+    public void setUsesrPhotoUrl(String uid, String url) {
+        if (!StringUtils.isBlank(uid) && !StringUtils.isBlank(url)) {
+            userPhotoUrlMap.put(uid, url);
         }
     }
 
-    public void clearUserPhotoMap(){
+    public void clearUserPhotoMap() {
         userPhotoUrlMap.clear();
     }
 
-    public void clearUserPhotoUrl(String uid){
-        if (!StringUtils.isBlank(uid) && userPhotoUrlMap.containsKey(uid)){
+    public void clearUserPhotoUrl(String uid) {
+        if (!StringUtils.isBlank(uid) && userPhotoUrlMap.containsKey(uid)) {
             userPhotoUrlMap.remove(uid);
         }
     }
@@ -463,76 +466,89 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
 
     }
 
-
+/**************************************************************************/
+    /**
+     * 判断是否已登录
+     *
+     * @return
+     */
+    public boolean isHaveLogin() {
+        String accessToken = PreferencesUtils.getString(this,
+                "accessToken", "");
+        String myInfo = PreferencesUtils.getString(getApplicationContext(),
+                "myInfo", "");
+        boolean isMDMStatusPass = PreferencesUtils.getBoolean(getApplicationContext(), "isMDMStatusPass", true);
+        return (!StringUtils.isBlank(accessToken) && !StringUtils.isBlank(myInfo) && isMDMStatusPass);
+    }
 
     @Override
-	public void onConfigurationChanged(Configuration config) {
-		// TODO Auto-generated method stub
-        if (config != null){
+    public void onConfigurationChanged(Configuration config) {
+        // TODO Auto-generated method stub
+        if (config != null) {
             super.onConfigurationChanged(config);
         }
         setAppLanguageAndFontScale();
-	}
+    }
 
     /**
      * 设置App的语言
      */
-	public void setAppLanguageAndFontScale(){
+    public void setAppLanguageAndFontScale() {
 
-            String languageJson = PreferencesUtils
-                    .getString(getApplicationContext(), UriUtils.tanent
-                            + "appLanguageObj");
+        String languageJson = PreferencesUtils
+                .getString(getApplicationContext(), UriUtils.tanent
+                        + "appLanguageObj");
         Configuration config = getResources().getConfiguration();
-            if (languageJson != null) {
-                String language = PreferencesUtils.getString(
-                        getApplicationContext(), UriUtils.tanent + "language");
-                // 当系统语言选择为跟随系统的时候，要检查当前系统的语言是不是在commonList中，重新赋值
-                if (language.equals("followSys")) {
-                    String commonLanguageListJson = PreferencesUtils.getString(
-                            getApplicationContext(), UriUtils.tanent
-                                    + "commonLanguageList");
-                    if (commonLanguageListJson != null) {
-                        List<Language> commonLanguageList = (List) JSON
-                                .parseArray(commonLanguageListJson,
-                                        Language.class);
-                        boolean isContainDefault = false;
-                        for (int i = 0; i < commonLanguageList.size(); i++) {
-                            Language commonLanguage = commonLanguageList.get(i);
-                            if (commonLanguage.getIso().contains(
-                                    Resources.getSystem().getConfiguration().locale.getCountry())) {
-                                PreferencesUtils.putString(
-                                        getApplicationContext(),
-                                        UriUtils.tanent + "appLanguageObj",
-                                        commonLanguage.toString());
-                                languageJson = commonLanguage.toString();
-                                isContainDefault = true;
-                                break;
-                            }
-                        }
-                        if (!isContainDefault) {
-                            PreferencesUtils.putString(getApplicationContext(),
+        if (languageJson != null) {
+            String language = PreferencesUtils.getString(
+                    getApplicationContext(), UriUtils.tanent + "language");
+            // 当系统语言选择为跟随系统的时候，要检查当前系统的语言是不是在commonList中，重新赋值
+            if (language.equals("followSys")) {
+                String commonLanguageListJson = PreferencesUtils.getString(
+                        getApplicationContext(), UriUtils.tanent
+                                + "commonLanguageList");
+                if (commonLanguageListJson != null) {
+                    List<Language> commonLanguageList = (List) JSON
+                            .parseArray(commonLanguageListJson,
+                                    Language.class);
+                    boolean isContainDefault = false;
+                    for (int i = 0; i < commonLanguageList.size(); i++) {
+                        Language commonLanguage = commonLanguageList.get(i);
+                        if (commonLanguage.getIso().contains(
+                                Resources.getSystem().getConfiguration().locale.getCountry())) {
+                            PreferencesUtils.putString(
+                                    getApplicationContext(),
                                     UriUtils.tanent + "appLanguageObj",
-                                    commonLanguageList.get(0).toString());
-                            languageJson = commonLanguageList.get(0).toString();
+                                    commonLanguage.toString());
+                            languageJson = commonLanguage.toString();
+                            isContainDefault = true;
+                            break;
                         }
                     }
+                    if (!isContainDefault) {
+                        PreferencesUtils.putString(getApplicationContext(),
+                                UriUtils.tanent + "appLanguageObj",
+                                commonLanguageList.get(0).toString());
+                        languageJson = commonLanguageList.get(0).toString();
+                    }
+                }
 
-                }
-                // 将iso字符串分割成系统的设置语言
-                String[] array = new Language(languageJson).getIso().split("-");
-                String country = "";
-                String variant = "";
-                try {
-                    country = array[0];
-                    variant = array[1];
-                } catch (Exception e) {
-                    // TODO: handle exception
-                    e.printStackTrace();
-                }
-                Locale locale =  new Locale(country, variant);
-                config.locale = locale;
             }
-            config.fontScale = 1.0f;
+            // 将iso字符串分割成系统的设置语言
+            String[] array = new Language(languageJson).getIso().split("-");
+            String country = "";
+            String variant = "";
+            try {
+                country = array[0];
+                variant = array[1];
+            } catch (Exception e) {
+                // TODO: handle exception
+                e.printStackTrace();
+            }
+            Locale locale = new Locale(country, variant);
+            config.locale = locale;
+        }
+        config.fontScale = 1.0f;
         getResources().updateConfiguration(config,
                 getResources().getDisplayMetrics());
 
@@ -707,12 +723,8 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
     }
 
     public void clearNotification() {
-        if(AppUtils.getIsHuaWei()){
-            NotificationManager manager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
-            manager.cancelAll();
-        }else{
-            JPushInterface.clearAllNotifications(this);
-        }
+        NotificationManager manager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
+        manager.cancelAll();
     }
 
 }

@@ -34,11 +34,12 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.bean.Channel;
+import com.inspur.emmcloud.bean.ChannelGroup;
 import com.inspur.emmcloud.bean.GetFileUploadResult;
-import com.inspur.emmcloud.bean.GetMeetingReplyResult;
 import com.inspur.emmcloud.bean.GetMsgResult;
 import com.inspur.emmcloud.bean.GetNewMsgsResult;
 import com.inspur.emmcloud.bean.GetNewsImgResult;
+import com.inspur.emmcloud.bean.GetSearchChannelGroupResult;
 import com.inspur.emmcloud.bean.GetSendMsgResult;
 import com.inspur.emmcloud.bean.Msg;
 import com.inspur.emmcloud.bean.PVCollectModel;
@@ -56,8 +57,8 @@ import com.inspur.emmcloud.util.ImageDisplayUtils;
 import com.inspur.emmcloud.util.IntentUtils;
 import com.inspur.emmcloud.util.JSONUtils;
 import com.inspur.emmcloud.util.ListViewUtils;
-import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.MsgCacheUtil;
+import com.inspur.emmcloud.util.MsgReadIDCacheUtils;
 import com.inspur.emmcloud.util.MsgRecourceUploadUtils;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.PVCollectModelCacheUtils;
@@ -70,6 +71,7 @@ import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.ECMChatInputMenu;
 import com.inspur.emmcloud.widget.ECMChatInputMenu.ChatInputMenuListener;
+import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout;
 import com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout.OnRefreshListener;
 import com.inspur.emmcloud.widget.pullableview.PullableListView;
@@ -103,15 +105,14 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
     private PullableListView msgListView;
     private List<Msg> msgList;
     private Handler handler;
-    private String channelId;
     private MsgReceiver msgResvier;
     private ChatAPIService apiService;
     private PullToRefreshLayout pullToRefreshLayout;
-    private String channelType = "";
     private BroadcastReceiver refreshNameReceiver;
-    private String title = "";
-    private String uid = "";
+    private Channel channel;
+    private String cid;
     private ECMChatInputMenu chatInputMenu;
+    private LoadingDialog loadingDlg;
 
 
     @Override
@@ -120,8 +121,6 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
         setContentView(R.layout.activity_channel);
         ((MyApplication) getApplicationContext()).addActivity(this);
         init();
-        handMessage();
-        registeMsgReceiver();
         registeRefreshNameReceiver();
         recordUserClickChannel();
     }
@@ -142,40 +141,27 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
      */
     private void recordUserClickChannel() {
         String from = "";
-        if(getIntent().hasExtra("from")){
+        if (getIntent().hasExtra("from")) {
             from = getIntent().getStringExtra("from");
-            if(!from.equals("customer")){
-                PVCollectModel pvCollectModel = new PVCollectModel("channel","communicate");
-                PVCollectModelCacheUtils.saveCollectModel(ChannelActivity.this,pvCollectModel);
+            if (!from.equals("customer")) {
+                PVCollectModel pvCollectModel = new PVCollectModel("channel", "communicate");
+                PVCollectModelCacheUtils.saveCollectModel(ChannelActivity.this, pvCollectModel);
             }
         }
     }
 
     private void init() {
-        initData();
-        initViews();
-    }
-
-    /**
-     * 初始化界面数据
-     */
-    private void initData() {
-        channelId = getIntent().getExtras().getString("channelId");
-        channelType = getIntent().getExtras().getString("channelType");
-        msgList = MsgCacheUtil.getHistoryMsgList(getApplicationContext(),
-                channelId, "", 15);
-        title = getIntent().getExtras().getString("title");
-        if (channelType.equals("DIRECT")) {
-            String myUid = ((MyApplication)getApplicationContext()).getUid();
-            if (title.contains(myUid) && title.contains("-")){
-                title = DirectChannelUtils.getDirectChannelTitle(
-                        getApplicationContext(), title);
-            }
-        } else if (channelType.equals("SERVICE")) {
-            uid = DirectChannelUtils.getRobotInfo(getApplicationContext(),
-                    title).getId();
-            title = DirectChannelUtils.getRobotInfo(getApplicationContext(),
-                    title).getName();
+        loadingDlg = new LoadingDialog(this);
+        apiService = new ChatAPIService(ChannelActivity.this);
+        apiService.setAPIInterface(new WebService());
+        cid = getIntent().getExtras().getString("cid");
+        channel = ChannelCacheUtils.getChannel(this, cid);
+        if (channel == null) {
+            getChannelInfo();
+        } else if (getIntent().hasExtra("get_new_msg")) {//通过scheme打开的频道
+            getNewMsgOfChannel(true);
+        } else {
+            initViews();
         }
     }
 
@@ -183,11 +169,40 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
      * 初始化Views
      */
     private void initViews() {
-        apiService = new ChatAPIService(ChannelActivity.this);
-        apiService.setAPIInterface(new WebService());
+        pullToRefreshLayout = (PullToRefreshLayout) findViewById(R.id.refresh_view);
+        pullToRefreshLayout.setOnRefreshListener(this);
+        handleChatInputMenu();
+        setChannelTitle();
+        initMsgListView();
+        handMessage();
+        registeMsgReceiver();
+    }
+
+    /**
+     * 显示聊天频道的title
+     */
+    private void setChannelTitle() {
+        String title = channel.getTitle();
+        if (channel.getType().equals("DIRECT")) {
+            String myUid = ((MyApplication) getApplicationContext()).getUid();
+            if (title.contains(myUid) && title.contains("-")) {
+                title = DirectChannelUtils.getDirectChannelTitle(
+                        getApplicationContext(), title);
+            }
+        } else if (channel.getType().equals("SERVICE")) {
+            title = DirectChannelUtils.getRobotInfo(getApplicationContext(),
+                    title).getName();
+        }
+        ((TextView) findViewById(R.id.header_text)).setText(title);
+    }
+
+    /**
+     * 处理chatInputMenu是否显示，以及显示几个Menu上的item
+     */
+    private void handleChatInputMenu() {
         chatInputMenu = (ECMChatInputMenu) findViewById(R.id.chat_input_menu);
-        if (channelType.equals("GROUP")) {
-            chatInputMenu.setIsChannelGroup(true, channelId);
+        if (channel.getType().equals("GROUP")) {
+            chatInputMenu.setIsChannelGroup(true, cid);
         }
         chatInputMenu.setChatInputMenuListener(new ChatInputMenuListener() {
 
@@ -216,21 +231,7 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
                 sendTextMessage(content, mentionsUidList, mentionsUserNameList);
             }
         });
-        handleChatInputMenu();
-        pullToRefreshLayout = (PullToRefreshLayout) findViewById(R.id.refresh_view);
-        ((TextView) findViewById(R.id.header_text)).setText(title);
-        pullToRefreshLayout.setOnRefreshListener(this);
-        initMsgListView();
-    }
-
-    /**
-     * 处理chatInputMenu是否显示，以及显示几个Menu上的item
-     */
-    private void handleChatInputMenu() {
-        Channel channel = ChannelCacheUtils.getChannel(ChannelActivity.this,
-                channelId);
         if ((channel != null) && channel.getInputs().equals("0")) {
-            // shareMsg();
             chatInputMenu.setVisibility(View.GONE);
         } else {
             chatInputMenu.updateMenuGrid(handleShowItems());
@@ -242,17 +243,10 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
      * 计算inputs的二进制
      */
     private String handleShowItems() {
-        String result = "";
-        Channel channel = ChannelCacheUtils.getChannel(ChannelActivity.this,
-                channelId);
-        String inputs = "";
-        if (channel != null) {
-            inputs = channel.getInputs();
-        }
+        String result = "-1";
+        String inputs = channel.getInputs();
         if (!StringUtils.isBlank(inputs)) {
             result = Integer.toBinaryString(Integer.parseInt(inputs));
-        } else {
-            result = "-1";
         }
         return result;
     }
@@ -279,6 +273,8 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
     private void initMsgListView() {
         msgListView = (PullableListView) findViewById(R.id.msg_list);
         msgListView.setCanSelectBottom(true);
+        msgList = MsgCacheUtil.getHistoryMsgList(getApplicationContext(),
+                cid, "", 15);
         // 如果没有消息就不让ListView刷新
         if (msgList.size() == 0) {
             msgListView.setCanPullDown(false);
@@ -288,9 +284,9 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
             @Override
             public void run() {
                 // Select the last row so it will scroll into view...
-                msgListView.setSelection(adapter.getCount()-1);
+                msgListView.setSelection(adapter.getCount() - 1);
             }
-        },30);
+        }, 30);
         pullToRefreshLayout.setOnRefreshListener(ChannelActivity.this);
         msgListView.smoothScrollToPosition(adapter.getCount());
         // 设置点击每个Item时跳转到详情
@@ -356,15 +352,15 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
     /**
      * 设置ListView的刷新和滚动到最下方
      */
-    private void setListViewNotifyAndScrollEnd(){
+    private void setListViewNotifyAndScrollEnd() {
         adapter.notifyDataSetChanged();
         msgListView.postDelayed(new Runnable() {
             @Override
             public void run() {
                 // Select the last row so it will scroll into view...
-                msgListView.setSelection(adapter.getCount()-1);
+                msgListView.setSelection(adapter.getCount() - 1);
             }
-        },30);
+        }, 30);
     }
 
 
@@ -373,10 +369,12 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
      */
     private void registeMsgReceiver() {
         // TODO Auto-generated method stub
-        msgResvier = new MsgReceiver(ChannelActivity.this, handler);
-        IntentFilter filter = new IntentFilter();
-        filter.addAction("com.inspur.msg");
-        registerReceiver(msgResvier, filter);
+        if (msgResvier == null) {
+            msgResvier = new MsgReceiver(ChannelActivity.this, handler);
+            IntentFilter filter = new IntentFilter();
+            filter.addAction("com.inspur.msg");
+            registerReceiver(msgResvier, filter);
+        }
     }
 
     @Override
@@ -393,7 +391,7 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
             } else if (requestCode == CAMERA_RESULT
                     && NetUtils.isNetworkConnected(getApplicationContext())) {
                 String cameraImgPath = Environment.getExternalStorageDirectory() + "/DCIM/" + PreferencesUtils.getString(ChannelActivity.this, "capturekey");
-                refreshGallery(ChannelActivity.this,cameraImgPath);
+                refreshGallery(ChannelActivity.this, cameraImgPath);
                 EditImageActivity.start(ChannelActivity.this, cameraImgPath, MyAppConfig.LOCAL_IMG_CREATE_PATH);
                 //拍照后图片编辑返回
             } else if (requestCode == EditImageActivity.ACTION_REQUEST_EDITIMAGE) {
@@ -411,7 +409,7 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
                 if (data != null && requestCode == GELLARY_RESULT) {
                     ArrayList<ImageItem> imageItemList = (ArrayList<ImageItem>) data
                             .getSerializableExtra(ImagePicker.EXTRA_RESULT_ITEMS);
-                    for (int i = 0;i<imageItemList.size();i++){
+                    for (int i = 0; i < imageItemList.size(); i++) {
                         Msg localMsg = MsgRecourceUploadUtils.uploadMsgImg(
                                 ChannelActivity.this, imageItemList.get(i).path, apiService);
                         addLocalMessage(localMsg);
@@ -422,10 +420,11 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
 
     /**
      * 保存并显示把图片展示出来
+     *
      * @param context
      * @param cameraPath
      */
-    private  void refreshGallery(Context context, String cameraPath) {
+    private void refreshGallery(Context context, String cameraPath) {
         File file = new File(cameraPath);
         // 其次把文件插入到系统图库
         try {
@@ -449,11 +448,14 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
                 switch (msg.what) {
                     case HAND_CALLBACK_MESSAGE: // 接收推送的消息·
                         Msg pushMsg = (Msg) msg.obj;
-                        if (channelId.equals(pushMsg.getCid())
-                                && !msgList.contains(pushMsg)&& !pushMsg.getTmpId().equals(AppUtils.getMyUUID(getApplicationContext()))) {
-                            msgList.add(pushMsg);
-                            msgListView.setCanPullDown(true);
-                            setListViewNotifyAndScrollEnd();
+                        if (cid.equals(pushMsg.getCid())) {
+                            MsgReadIDCacheUtils.saveReadedMsg(ChannelActivity.this,
+                                    pushMsg.getCid(), pushMsg.getMid());
+                            if (!msgList.contains(pushMsg) && !pushMsg.getTmpId().equals(AppUtils.getMyUUID(getApplicationContext()))) {
+                                msgList.add(pushMsg);
+                                msgListView.setCanPullDown(true);
+                                setListViewNotifyAndScrollEnd();
+                            }
                         }
                         break;
 
@@ -475,7 +477,7 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
      */
     protected void sendMsg(String content, String type, String fakeMessageId) {
         if (NetUtils.isNetworkConnected(getApplicationContext())) {
-            apiService.sendMsg(channelId, content, type, fakeMessageId);
+            apiService.sendMsg(cid, content, type, fakeMessageId);
         }
     }
 
@@ -499,12 +501,12 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
             int fakeMsgIndex = msgList.indexOf(fakeMsg);
             if (fakeMsgIndex != -1) {
                 msgList.remove(fakeMsgIndex);
-                msgList.add(fakeMsgIndex,realMsg);
+                msgList.add(fakeMsgIndex, realMsg);
                 /**第一个可见的位置**/
                 int firstVisiblePosition = msgListView.getFirstVisiblePosition();
                 /**最后一个可见的位置**/
                 int lastVisiblePosition = msgListView.getLastVisiblePosition();
-                if (fakeMsgIndex >= firstVisiblePosition && fakeMsgIndex <= lastVisiblePosition  ){
+                if (fakeMsgIndex >= firstVisiblePosition && fakeMsgIndex <= lastVisiblePosition) {
                     View childAt = msgListView.getChildAt(fakeMsgIndex
                             - firstVisiblePosition);
                     if (childAt != null) {
@@ -547,7 +549,7 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.back_layout:
-                finish();
+                finishActivity();
                 break;
 
             case R.id.channel_info_img:
@@ -559,22 +561,28 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
     }
 
     /**
+     * 关闭此页面
+     */
+    private void finishActivity() {
+        if (loadingDlg != null && loadingDlg.isShowing()) {
+            loadingDlg.dismiss();
+        }
+        finish();
+    }
+
+    /**
      * 展示群组或个人信息
      */
     private void showChannelInfo() {
         Bundle bundle = new Bundle();
-        bundle.putString("cid", channelId);
-        // Channel channel = ChannelCacheUtils.getChannel(ChannelActivity.this,
-        // channelId);
-        // String inputs = channel.getInputs();
-        // if(StringUtils.isBlank(inputs) || Integer.parseInt(inputs) == 0){
-        //
-        // }
-        if (channelType.equals("GROUP")) {
+        bundle.putString("cid", cid);
+        if (channel.getType().equals("GROUP")) {
             IntentUtils.startActivity(ChannelActivity.this,
                     ChannelInfoActivity.class, bundle);
-        } else if (channelType.equals("SERVICE")) {
-            bundle.putString("uid", uid);
+        } else if (channel.getType().equals("SERVICE")) {
+            String botUid = DirectChannelUtils.getRobotInfo(getApplicationContext(),
+                    channel.getTitle()).getId();
+            bundle.putString("uid", botUid);
             IntentUtils.startActivity(ChannelActivity.this,
                     RobotInfoActivity.class, bundle);
         } else {
@@ -591,7 +599,7 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
 
         ArrayList<String> urlList = URLMatcher.getUrls(content);
         JSONObject richTextObj = new JSONObject();
-        String source = HandleMsgTextUtils.handleMentionAndURL(chatInputMenu.getEdit(),content,
+        String source = HandleMsgTextUtils.handleMentionAndURL(chatInputMenu.getEdit(), content,
                 mentionsUserNameList, mentionsUidList);
         JSONArray mentionArray = JSONUtils.toJSONArray(mentionsUidList);
         JSONArray urlArray = JSONUtils.toJSONArray(urlList);
@@ -724,8 +732,6 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
          * @param msg
          */
         private void showRefreshingImg(View convertView, Msg msg) {
-            LogUtils.jasonDebug("msg="+msg.getBody());
-            LogUtils.jasonDebug("msg.getSendStatus()="+msg.getSendStatus());
             ImageView refreshingImg = (ImageView) convertView.findViewById(R.id.refreshing_img);
             if (msg.getSendStatus() == 0) {
                 RotateAnimation refreshingAnimation = (RotateAnimation) AnimationUtils.loadAnimation(
@@ -798,7 +804,7 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
             // TODO Auto-generated method stub
             TextView senderNameText = (TextView) convertView
                     .findViewById(R.id.sender_name_text);
-            if (channelType.equals("GROUP") && !isMyMsg(msg)) {
+            if (channel.getType().equals("GROUP") && !isMyMsg(msg)) {
                 senderNameText.setVisibility(View.VISIBLE);
                 senderNameText.setText(msg.getTitle());
             } else {
@@ -816,15 +822,13 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
             // TODO Auto-generated method stub
             ImageView senderPhotoImg = (ImageView) convertView
                     .findViewById(R.id.sender_photo_img);
-            ImageView robotSuperscriptImg = (ImageView) convertView
-                    .findViewById(R.id.msg_superscript_img);
             if (msg.getUid().equals(
                     ((MyApplication) getApplicationContext()).getUid())) {
                 senderPhotoImg.setVisibility(View.INVISIBLE);
             } else {
                 senderPhotoImg.setVisibility(View.VISIBLE);
-                String iconUrl = UriUtils.getChannelImgUri(ChannelActivity.this,msg.getUid());
-                if (channelType.equals("SERVICE")) {
+                String iconUrl = UriUtils.getChannelImgUri(ChannelActivity.this, msg.getUid());
+                if (channel.getType().equals("SERVICE")) {
                     iconUrl = UriUtils.getRobotIconUri(RobotCacheUtils
                             .getRobotById(ChannelActivity.this, msg.getUid())
                             .getAvatar());
@@ -838,7 +842,7 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
                         Bundle bundle = new Bundle();
                         String uid = msg.getUid();
                         bundle.putString("uid", uid);
-                        if (channelType.endsWith("SERVICE")) {
+                        if (channel.getType().endsWith("SERVICE")) {
                             IntentUtils.startActivity(ChannelActivity.this,
                                     RobotInfoActivity.class, bundle);
                         } else {
@@ -847,13 +851,6 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
                         }
                     }
                 });
-
-                // 去掉机器人角标
-                // if (channelType.equals("SERVICE")&&!isMyMsg(msg)) {
-                // robotSuperscriptImg.setVisibility(View.VISIBLE);
-                // } else {
-                // robotSuperscriptImg.setVisibility(View.GONE);
-                // }
             }
         }
 
@@ -908,11 +905,11 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
 
     @Override
     public void onRefresh(PullToRefreshLayout pullToRefreshLayout) {
-        if (MsgCacheUtil.isDataInLocal(ChannelActivity.this, channelId, msgList
+        if (MsgCacheUtil.isDataInLocal(ChannelActivity.this, cid, msgList
                 .get(0).getMid(), 15)) {
             pullToRefreshLayout.refreshFinish(PullToRefreshLayout.SUCCEED);
             List<Msg> historyMsgList = MsgCacheUtil.getHistoryMsgList(
-                    ChannelActivity.this, channelId, msgList.get(0).getMid(),
+                    ChannelActivity.this, cid, msgList.get(0).getMid(),
                     15);
             msgList.addAll(0, historyMsgList);
             adapter.notifyDataSetChanged();
@@ -926,13 +923,38 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
      * 获取新消息
      */
     private void getNewsMsg() {
-        apiService.getNewMsgs(channelId, msgList.get(0).getMid(), 15);
+        apiService.getNewMsgs(cid, msgList.get(0).getMid(), 15);
     }
 
     @Override
     public void onLoadMore(PullToRefreshLayout pullToRefreshLayout) {
     }
 
+    /**
+     * 获取频道信息
+     */
+    private void getChannelInfo() {
+        if (NetUtils.isNetworkConnected(this)) {
+            loadingDlg.show();
+            String[] cidArray = {cid};
+            apiService.getChannelGroupList(cidArray);
+        } else {
+            finishActivity();
+        }
+
+    }
+
+    /**
+     * 获取此频道的最新消息
+     */
+    private void getNewMsgOfChannel(boolean isShowDlg) {
+        if (NetUtils.isNetworkConnected(this, false)) {
+            loadingDlg.show(isShowDlg);
+            apiService.getNewMsgs(cid, "", 15);
+        } else {
+            initViews();
+        }
+    }
 
 
     private class WebService extends APIInterfaceInstance {
@@ -943,8 +965,8 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
         }
 
         @Override
-        public void returnSendMsgFail(String error, String fakeMessageId,int errorCode) {
-            WebServiceMiddleUtils.hand(ChannelActivity.this, error,errorCode);
+        public void returnSendMsgFail(String error, String fakeMessageId, int errorCode) {
+            WebServiceMiddleUtils.hand(ChannelActivity.this, error, errorCode);
             setMsgSendFail(fakeMessageId);
         }
 
@@ -956,32 +978,53 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
         }
 
         @Override
-        public void returnUploadMsgImgFail(String error,int errorCode) {
-            WebServiceMiddleUtils.hand(ChannelActivity.this, error,errorCode);
+        public void returnUploadMsgImgFail(String error, int errorCode) {
+            if (pullToRefreshLayout == null) {
+                if (loadingDlg != null && loadingDlg.isShowing()) {
+                    loadingDlg.dismiss();
+                }
+                initViews();
+            }
+
+            WebServiceMiddleUtils.hand(ChannelActivity.this, error, errorCode);
         }
 
         @Override
         public void returnNewMsgsSuccess(GetNewMsgsResult getNewMsgsResult) {
-            pullToRefreshLayout.refreshFinish(PullToRefreshLayout.SUCCEED);
-            final List<Msg> historyMsgList = getNewMsgsResult
-                    .getNewMsgList(channelId);
-            MsgCacheUtil.saveMsgList(ChannelActivity.this, historyMsgList,
-                    msgList.get(0).getMid());
-            if (historyMsgList != null && historyMsgList.size() > 1) {
-                msgList.addAll(0, historyMsgList);
-                adapter.notifyDataSetChanged();
-                ListViewUtils.setSelection(msgListView,
-                        historyMsgList.size() - 1);
+            if (loadingDlg != null && loadingDlg.isShowing()) {
+                loadingDlg.dismiss();
+                List<Msg> msgList = getNewMsgsResult.getNewMsgList(cid);
+                MsgCacheUtil.saveMsgList(ChannelActivity.this, msgList, "");
+                initViews();
             } else {
-                msgListView.setCanPullDown(false);
+                pullToRefreshLayout.refreshFinish(PullToRefreshLayout.SUCCEED);
+                final List<Msg> historyMsgList = getNewMsgsResult
+                        .getNewMsgList(cid);
+                MsgCacheUtil.saveMsgList(ChannelActivity.this, historyMsgList,
+                        msgList.get(0).getMid());
+                if (historyMsgList != null && historyMsgList.size() > 1) {
+                    msgList.addAll(0, historyMsgList);
+                    adapter.notifyDataSetChanged();
+                    ListViewUtils.setSelection(msgListView,
+                            historyMsgList.size() - 1);
+                } else {
+                    msgListView.setCanPullDown(false);
+                }
             }
 
         }
 
         @Override
-        public void returnNewMsgsFail(String error,int errorCode) {
-            pullToRefreshLayout.refreshFinish(PullToRefreshLayout.FAIL);
-            WebServiceMiddleUtils.hand(ChannelActivity.this, error,errorCode);
+        public void returnNewMsgsFail(String error, int errorCode) {
+            if (pullToRefreshLayout == null) {
+                if (loadingDlg != null && loadingDlg.isShowing()) {
+                    loadingDlg.dismiss();
+                }
+                initViews();
+            } else {
+                pullToRefreshLayout.refreshFinish(PullToRefreshLayout.FAIL);
+                WebServiceMiddleUtils.hand(ChannelActivity.this, error, errorCode);
+            }
         }
 
         @Override
@@ -994,8 +1037,8 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
         }
 
         @Override
-        public void returnMsgFail(String error,int errorCode) {
-            WebServiceMiddleUtils.hand(ChannelActivity.this, error,errorCode);
+        public void returnMsgFail(String error, int errorCode) {
+            WebServiceMiddleUtils.hand(ChannelActivity.this, error, errorCode);
         }
 
         @Override
@@ -1006,21 +1049,32 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
         }
 
         @Override
-        public void returnFileUpLoadFail(String error,int errorCode) {
-            WebServiceMiddleUtils.hand(ChannelActivity.this, error,errorCode);
+        public void returnFileUpLoadFail(String error, int errorCode) {
+            WebServiceMiddleUtils.hand(ChannelActivity.this, error, errorCode);
         }
 
         @Override
-        public void returnGetMeetingReplySuccess(
-                GetMeetingReplyResult getMeettingReplyResult) {
-            super.returnGetMeetingReplySuccess(getMeettingReplyResult);
+        public void returnSearchChannelGroupSuccess(
+                GetSearchChannelGroupResult getSearchChannelGroupResult) {
+            List<ChannelGroup> channelGroupList = getSearchChannelGroupResult.getSearchChannelGroupList();
+            if (channelGroupList.size() != 0) {
+                channel = new Channel(channelGroupList.get(0));
+                getNewMsgOfChannel(false);
+            } else {
+                finishActivity();
+            }
+
         }
 
         @Override
-        public void returnGetMeetingReplyFail(String error,int errorCode) {
-            super.returnGetMeetingReplyFail(error,errorCode);
+        public void returnSearchChannelGroupFail(String error, int errorCode) {
+            channel = ChannelCacheUtils.getChannel(getApplicationContext(), cid);
+            if (channel == null) {
+                finishActivity();
+            } else {
+                getNewMsgOfChannel(false);
+            }
         }
-
     }
 
 }

@@ -468,7 +468,7 @@ public class ContactSearchActivity extends BaseActivity {
         } else {
             intent.setClass(getApplicationContext(), ChannelActivity.class);
             intent.putExtra("title", searchModel.getName());
-            intent.putExtra("channelId", searchModel.getId());
+            intent.putExtra("cid", searchModel.getId());
             intent.putExtra("channelType", searchModel.getType());
             startActivity(intent);
         }
@@ -1498,7 +1498,7 @@ public class ContactSearchActivity extends BaseActivity {
         } else {
             Bundle bundle = new Bundle();
             bundle.putString("title", searchModel.getName());
-            bundle.putString("channelId", searchModel.getId());
+            bundle.putString("cid", searchModel.getId());
             bundle.putString("channelType", searchModel.getType());
             IntentUtils.startActivity(ContactSearchActivity.this,
                     ChannelActivity.class, bundle);
@@ -1523,7 +1523,7 @@ public class ContactSearchActivity extends BaseActivity {
                                 GetCreateSingleChannelResult getCreateSingleChannelResult) {
                             // TODO Auto-generated method stub
                             Bundle bundle = new Bundle();
-                            bundle.putString("channelId",
+                            bundle.putString("cid",
                                     getCreateSingleChannelResult.getCid());
                             bundle.putString("channelType",
                                     getCreateSingleChannelResult.getType());

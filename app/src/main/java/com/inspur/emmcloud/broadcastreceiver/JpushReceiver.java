@@ -1,22 +1,21 @@
 package com.inspur.emmcloud.broadcastreceiver;
 
-import android.app.ActivityManager;
-import android.app.ActivityManager.RunningTaskInfo;
 import android.content.BroadcastReceiver;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.text.TextUtils;
 import android.util.Log;
 
+import com.inspur.emmcloud.MainActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.bean.CalendarEvent;
 import com.inspur.emmcloud.ui.IndexActivity;
+import com.inspur.emmcloud.ui.chat.ChannelActivity;
 import com.inspur.emmcloud.ui.login.LoginActivity;
 import com.inspur.emmcloud.ui.work.calendar.CalEventAddActivity;
+import com.inspur.emmcloud.util.JSONUtils;
+import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.StringUtils;
 
@@ -24,7 +23,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Iterator;
-import java.util.List;
 
 import cn.jpush.android.api.JPushInterface;
 
@@ -36,8 +34,6 @@ import cn.jpush.android.api.JPushInterface;
 public class JpushReceiver extends BroadcastReceiver {
 	private static final String TAG = "JPush";
 
-	private boolean isAppRunning;
-	private Handler handler;
 	private static final int LOGIN_SUCCESS = 0;
 	private static final int LOGIN_FAIL = 1;
 
@@ -46,7 +42,6 @@ public class JpushReceiver extends BroadcastReceiver {
 		Bundle bundle = intent.getExtras();
 		Log.d(TAG, "[MyReceiver] onReceive - " + intent.getAction()
 				+ ", extras: " + printBundle(bundle));
-		handMessage(context);
 		if (JPushInterface.ACTION_REGISTRATION_ID.equals(intent.getAction())) {
 			String regId = bundle
 					.getString(JPushInterface.EXTRA_REGISTRATION_ID);
@@ -74,35 +69,66 @@ public class JpushReceiver extends BroadcastReceiver {
 				.getAction())) {
 			Log.d(TAG, "[MyReceiver] 用户点击打开了通知");
 			Log.d(TAG, "extra=" + bundle.getString(JPushInterface.EXTRA_EXTRA));
-			String accessToken = PreferencesUtils.getString(context,
-					"accessToken", "");
 			((MyApplication)context.getApplicationContext()).clearNotification();
-			if (!StringUtils.isBlank(accessToken)) {
+			if (((MyApplication)context.getApplicationContext()).isHaveLogin()){
 				String extra = "";
 				if (bundle.containsKey(JPushInterface.EXTRA_EXTRA)) {
 					extra = bundle.getString(JPushInterface.EXTRA_EXTRA);
 				}
+				if (!((MyApplication) context.getApplicationContext()).getIsActive()){
+					Intent indexIntent = new Intent(context, IndexActivity.class);
+					Intent targetIntent = null;
+					indexIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+					if (!StringUtils.isBlank(extra)) {
+						try {
+							JSONObject extraObj = new JSONObject(extra);
+							if (extraObj.has("calEvent")) {
+								String json = extraObj.getString("calEvent");
+								JSONObject calEventObj = new JSONObject(json);
+								CalendarEvent calendarEvent = new CalendarEvent(calEventObj);
+								targetIntent = new Intent(context, CalEventAddActivity.class);
+								targetIntent.putExtra("calEvent", calendarEvent);
+								targetIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+							}else{
+								if (extraObj.has("action")){
+									JSONObject actionObj = extraObj.getJSONObject("action");
+									String type = actionObj.getString("type");
+									if (type.equals("open-url")){
+										String scheme = actionObj.getString("url");
+										targetIntent =new Intent(Intent.ACTION_VIEW);
+										targetIntent.setData(Uri.parse(scheme));
+										targetIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+										context.startActivity(targetIntent);
+										return;
+									}
+								}else if(extraObj.has("channel")){
+									String cid = JSONUtils.getString(extraObj,"channel","");
+									if (!StringUtils.isBlank(cid)){
+										targetIntent = new Intent(context, ChannelActivity.class);
+										targetIntent.putExtra("get_new_msg",true);
+										targetIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+									}
+								}
 
-				if (!StringUtils.isBlank(extra)) {
-					try {
-						JSONObject extraObj = new JSONObject(extra);
-						if (extraObj.has("calEvent")) {
-							String json = extraObj.getString("calEvent");
-							JSONObject calEventObj = new JSONObject(json);
-							openCalEvent(context, calEventObj);
-							return;
+							}
+						} catch (JSONException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
 						}
-					} catch (JSONException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+					}
+					if (!((MyApplication)context.getApplicationContext()).isIndexActivityRunning()){
+						indexIntent.putExtra("command","open_notification");
+					}else {
+						indexIntent.setClass(context,MainActivity.class);
+					}
+					context.startActivity(indexIntent);
+					if (targetIntent != null && NetUtils.isNetworkConnected(context,false)){
+						context.startActivity(targetIntent);
 					}
 				}
 
-				Intent indexLogin = new Intent(context, IndexActivity.class);
-				indexLogin.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-				indexLogin.putExtra("command","open_notification");
-				context.startActivity(indexLogin);
 			}else {
+
 				Intent loginIntent = new Intent(context, LoginActivity.class);
 				loginIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 				context.startActivity(loginIntent);
@@ -127,21 +153,6 @@ public class JpushReceiver extends BroadcastReceiver {
 		}
 	}
 
-	/**
-	 * 打开
-	 * @param context
-	 * @param jsonObject
-     */
-	private void openCalEvent(Context context, JSONObject jsonObject) {
-		// TODO Auto-generated method stub
-		CalendarEvent calendarEvent = new CalendarEvent(jsonObject);
-		Intent intent = new Intent();
-		intent.setClass(context, CalEventAddActivity.class);
-		intent.putExtra("calEvent", calendarEvent);
-		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-		context.startActivity(intent);
-
-	}
 
 	// 打印所有的 intent extra 数据
 	private static String printBundle(Bundle bundle) {
@@ -203,97 +214,8 @@ public class JpushReceiver extends BroadcastReceiver {
 		String message = bundle.getString(JPushInterface.EXTRA_MESSAGE);
 	}
 
-	/**
-	 * 判断应用是否运行
-	 * 
-	 * @param context
-	 * @return
-	 */
-	public boolean getIsAppRunning(Context context) {
-		// boolean flag = false;
-		ActivityManager am = (ActivityManager) context
-				.getSystemService(Context.ACTIVITY_SERVICE);
 
-		List<RunningTaskInfo> list = am.getRunningTasks(100);
 
-		for (RunningTaskInfo info : list) {
-
-			if (info.topActivity.getPackageName().equals("com.inspur.emmcloud")
-					&& info.baseActivity.getPackageName().equals(
-							"com.inspur.emmcloud")) {
-				isAppRunning = true;
-				break;
-			}
-
-		}
-		return isAppRunning;
-	}
-
-	/**
-	 * 判断某个界面是否在前台
-	 * 
-	 * @param context
-	 * @param className
-	 *            某个界面名称
-	 */
-	private boolean isForeground(Context context, String className) {
-		if (context == null || TextUtils.isEmpty(className)) {
-			return false;
-		}
-
-		ActivityManager am = (ActivityManager) context
-				.getSystemService(Context.ACTIVITY_SERVICE);
-		List<RunningTaskInfo> list = am.getRunningTasks(1);
-		if (list != null && list.size() > 0) {
-			ComponentName cpn = list.get(0).topActivity;
-			if (className.equals(cpn.getClassName())) {
-				return true;
-			}
-		}
-
-		return false;
-	}
-
-	/**
-	 * 跳转登录界面
-	 */
-	private void goLogin(Context context) {
-		Intent intent = new Intent(context, LoginActivity.class);
-		context.startActivity(intent);
-	}
-
-	/**
-	 * 跳转主界面
-	 */
-	private void goIndex(Context context) {
-		Intent intent = new Intent(context, IndexActivity.class);
-		context.startActivity(intent);
-	}
-
-	private void handMessage(final Context context) {
-		// TODO Auto-generated method stub
-		handler = new Handler() {
-
-			@Override
-			public void handleMessage(Message msg) {
-				// TODO Auto-generated method stub
-				switch (msg.what) {
-				case LOGIN_SUCCESS:
-					goIndex(context);
-					break;
-
-				case LOGIN_FAIL:
-
-					goLogin(context);
-					break;
-
-				default:
-					break;
-				}
-			}
-
-		};
-	}
 
 	// public void buildNotification(){
 	// BasicPushNotificationBuilder builder = new

@@ -97,6 +97,13 @@ public class Channel implements Serializable {
 		}
 	}
 
+	public Channel(ChannelGroup channelGroup){
+		this.cid = channelGroup.getCid();
+		this.title = channelGroup.getChannelName();
+		this.type = channelGroup.getType();
+		this.inputs = channelGroup.getInputs();
+	}
+
 	public void setNewMsgList(List<Msg> msgList) {
 		newMsgList.clear();
 		if (msgList != null) {

@@ -92,13 +92,6 @@ public class UriUtils {
         Intent intent = new Intent();
         intent.setClass(activity, ImpActivity.class);
         intent.putExtra("uri", uri);
-        String token = ((MyApplication) activity.getApplicationContext())
-                .getToken();
-        intent.putExtra("Authorization", token);
-        intent.putExtra("userAgentExtra",
-                "/emmcloud/" + AppUtils.getVersion(activity));
-        String webLanguageCookie = getLanguageCookie(activity);
-        intent.putExtra("cookie", webLanguageCookie);
         if (app.getAppType() == 3) {
             intent.putExtra("appName", app.getAppName());
         }

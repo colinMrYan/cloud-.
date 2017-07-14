@@ -292,7 +292,7 @@ public class ContactSearchMoreActivity extends BaseActivity implements OnRefresh
 		} else {
 			intent.setClass(getApplicationContext(), ChannelActivity.class);
 			intent.putExtra("title", searchModel.getName());
-			intent.putExtra("channelId", searchModel.getId());
+			intent.putExtra("cid", searchModel.getId());
 			intent.putExtra("channelType", searchModel.getType());
 			startActivity(intent);
 		}
