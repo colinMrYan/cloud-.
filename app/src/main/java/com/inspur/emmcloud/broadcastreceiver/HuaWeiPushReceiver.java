@@ -7,14 +7,18 @@ import android.net.Uri;
 import android.os.Bundle;
 
 import com.huawei.hms.support.api.push.PushReceiver;
+import com.inspur.emmcloud.MainActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.push.WebSocketPush;
+import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.ui.login.LoginActivity;
 import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
+import com.inspur.emmcloud.util.StringUtils;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
@@ -77,37 +81,48 @@ public class HuaWeiPushReceiver extends PushReceiver{
         if (Event.NOTIFICATION_OPENED.equals(event) || Event.NOTIFICATION_CLICK_BTN.equals(event)) {
             NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
             manager.cancelAll();
+
+
             if (((MyApplication)context.getApplicationContext()).isHaveLogin()){
-               if(NetUtils.isNetworkConnected(context,false)){
+                if (!((MyApplication) context.getApplicationContext()).getIsActive()){
+                    Intent indexIntent = new Intent(context, IndexActivity.class);
+                    Intent targetIntent = null;
+                    indexIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     String content = extras.getString
                             (BOUND_KEY.pushMsgKey);
-                    try {
-                        JSONArray array = new JSONArray(content);
-                        JSONObject msgObj = array.getJSONObject(0);
-                        JSONObject actionObj = msgObj.getJSONObject("action");
-                        String type = actionObj.getString("type");
-                        Intent targetIntent = null;
-                        if (type.equals("open-url")){
-                            String scheme = actionObj.getString("url");
-                            targetIntent =new Intent(Intent.ACTION_VIEW);
-                            targetIntent.setData(Uri.parse(scheme));
-                            targetIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    if (!StringUtils.isBlank(content)) {
+                        try {
+                            JSONArray array = new JSONArray(content);
+                            JSONObject msgObj = array.getJSONObject(0);
+                            JSONObject actionObj = msgObj.getJSONObject("action");
+                            String type = actionObj.getString("type");
+                            if (type.equals("open-url")){
+                                String scheme = actionObj.getString("url");
+                                targetIntent =new Intent(Intent.ACTION_VIEW);
+                                targetIntent.setData(Uri.parse(scheme));
+                                targetIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            }
+                        } catch (JSONException e) {
+                            // TODO Auto-generated catch block
+                            e.printStackTrace();
                         }
-                        if (targetIntent != null ){
-                            LogUtils.jasonDebug("start---target-------------");
-                            context.startActivity(targetIntent);
-                        }
-                    }catch (Exception e){
-                        e.printStackTrace();
+                    }
+                    if (!((MyApplication)context.getApplicationContext()).isIndexActivityRunning()){
+                        indexIntent.putExtra("command","open_notification");
+                    }else {
+                        indexIntent.setClass(context,MainActivity.class);
+                    }
+                    context.startActivity(indexIntent);
+                    if (targetIntent != null && NetUtils.isNetworkConnected(context,false)){
+                        context.startActivity(targetIntent);
                     }
                 }
+
             }else {
                 Intent loginIntent = new Intent(context, LoginActivity.class);
                 loginIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(loginIntent);
             }
-
-
         }
     }
 
