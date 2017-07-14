@@ -17,6 +17,7 @@ import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
 import com.inspur.emmcloud.bean.AppRedirectResult;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
+import com.inspur.imp.api.ImpActivity;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -109,6 +110,8 @@ public class ImpWebViewClient extends WebViewClient {
 			mHandler.removeCallbacks(runnable);
 			runnable = null;
 		}
+
+		((ImpActivity)(view.getContext())).initWebViewGoBackOrClose();
 		ImpWebView webview = (ImpWebView) view;
 		if (webview.destroyed || url.contains("error")) {
 			return;
@@ -136,6 +139,7 @@ public class ImpWebViewClient extends WebViewClient {
 			mHandler.removeCallbacks(runnable);
 			runnable = null;
 		}
+		((ImpActivity)view.getContext()).dimissLoadingDlg();
 		loadFailLayout.setVisibility(View.VISIBLE);
 //		final ImpWebView webview = (ImpWebView) view;
 //		removeAllSessionCookie();

@@ -21,18 +21,16 @@ import android.webkit.WebSettings;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.config.MyAppWebConfig;
 import com.inspur.emmcloud.util.AppUtils;
-import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.MDM.MDM;
 import com.inspur.emmcloud.util.PreferencesByUsersUtils;
 import com.inspur.emmcloud.util.UriUtils;
-import com.inspur.imp.engine.webview.ImpWebChromeClient;
+import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.imp.engine.webview.ImpWebView;
 import com.inspur.imp.plugin.camera.PublicWay;
 import com.inspur.imp.plugin.file.FileService;
@@ -53,7 +51,7 @@ public class ImpActivity extends ImpBaseActivity {
     private ImpWebView webView;
     // 浏览文件resultCode
     private int FILEEXPLOER_RESULTCODE = 4;
-    private RelativeLayout progressLayout;
+    //private RelativeLayout progressLayout;
     private Map<String, String> extraHeaders;
     private TextView headerText;
     private LinearLayout loadFailLayout;
@@ -64,6 +62,8 @@ public class ImpActivity extends ImpBaseActivity {
     private int isZoomable = 0;
     private String appId = "";
     private FrameLayout frameLayout;
+    private LoadingDialog loadingDlg;
+    private TextView buttonCloseText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,19 +79,20 @@ public class ImpActivity extends ImpBaseActivity {
      * 初始化Views
      */
     private void initViews() {
-        progressLayout = (RelativeLayout) findViewById(Res
-                .getWidgetID("progress_layout"));
+        loadingDlg = new LoadingDialog(this);
+        showLoadingDlg();
+        buttonCloseText = (TextView) findViewById(Res.getWidgetID("imp_close_btn"));
         frameLayout = (FrameLayout) findViewById(Res.getWidgetID("videoContainer"));
         loadFailLayout = (LinearLayout) findViewById(Res.getWidgetID("load_error_layout"));
         webView = (ImpWebView) findViewById(Res.getWidgetID("webview"));
-        if(getIntent().hasExtra("is_zoomable")){
-            isZoomable = getIntent().getIntExtra("is_zoomable",0);
-            if(isZoomable == 0){
+        if (getIntent().hasExtra("is_zoomable")) {
+            isZoomable = getIntent().getIntExtra("is_zoomable", 0);
+            if (isZoomable == 0) {
                 findViewById(R.id.imp_change_font_size_btn).setVisibility(View.GONE);
-            }else if(isZoomable == 1){
+            } else if (isZoomable == 1) {
                 findViewById(R.id.imp_change_font_size_btn).setVisibility(View.VISIBLE);
             }
-        }else {
+        } else {
             findViewById(R.id.imp_change_font_size_btn).setVisibility(View.GONE);
         }
         getWindow().setSoftInputMode(
@@ -113,18 +114,18 @@ public class ImpActivity extends ImpBaseActivity {
             isUriHasTitle = true;
             title = getIntent().getExtras().getString("appName");
         }
-        if(getIntent().hasExtra("appId")){
+        if (getIntent().hasExtra("appId")) {
             appId = getIntent().getExtras().getString("appId");
         }
         if (isUriHasTitle) {
             headerText = (TextView) findViewById(Res.getWidgetID("header_text"));
-            webView.setProperty(progressLayout, headerText, loadFailLayout,frameLayout);
+            webView.setProperty(headerText, loadFailLayout, frameLayout);
             initWebViewGoBackOrClose();
             (findViewById(Res.getWidgetID("header_layout")))
                     .setVisibility(View.VISIBLE);
             headerText.setText(title);
         } else {
-            webView.setProperty(progressLayout, null, loadFailLayout,frameLayout);
+            webView.setProperty(null, loadFailLayout, frameLayout);
         }
 
         String token = ((MyApplication) getApplicationContext())
@@ -155,14 +156,14 @@ public class ImpActivity extends ImpBaseActivity {
                 webView.reload();
             }
         });
+        //url="http://10.24.14.62/cwbase/webapp/webapiTest/lang.html";
         webView.loadUrl(url, extraHeaders);
-        progressLayout.setVisibility(View.VISIBLE);
         lightModeFontColor = ContextCompat.getColor(ImpActivity.this, R.color.app_dialog_day_font_color);
         blackFontColor = ContextCompat.getColor(ImpActivity.this, R.color.black);
-        int textSize = PreferencesByUsersUtils.getInt(ImpActivity.this, "app_crm_font_size_"+appId, MyAppWebConfig.NORMAL);
-        if(isZoomable == 0){
+        int textSize = PreferencesByUsersUtils.getInt(ImpActivity.this, "app_crm_font_size_" + appId, MyAppWebConfig.NORMAL);
+        if (isZoomable == 0) {
             webView.getSettings().setTextZoom(MyAppWebConfig.NORMAL);
-        }else {
+        } else {
             webView.getSettings().setTextZoom(textSize);
         }
     }
@@ -171,29 +172,10 @@ public class ImpActivity extends ImpBaseActivity {
      * 初始化原生WebView的返回和关闭
      * （不是GS应用，GS应用有重定向，不容易实现返回）
      */
-    private void initWebViewGoBackOrClose() {
-        final TextView buttonBack = (TextView) findViewById(Res.getWidgetID("imp_back_btn"));
-        final TextView buttonClose = (TextView) findViewById(Res.getWidgetID("imp_close_btn"));
-        buttonClose.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
-        webView.getWebChromeClient().setOnFinishLoadUrlListener(
-                new ImpWebChromeClient.OnFinishLoadUrlListener() {
-                    @Override
-                    public void OnFinishLoadUrlListener(boolean isFinish) {
-                        (findViewById(Res
-                                .getWidgetID("header_layout")))
-                                .setVisibility(View.VISIBLE);
-                        if (webView.canGoBack()) {
-                            buttonClose.setVisibility(View.VISIBLE);
-                        } else {
-                            buttonClose.setVisibility(View.GONE);
-                        }
-                    }
-                });
+    public void initWebViewGoBackOrClose() {
+        if (headerText != null) {
+                buttonCloseText.setVisibility(webView.canGoBack()?View.VISIBLE:View.GONE);
+        }
     }
 
     /**
@@ -207,23 +189,15 @@ public class ImpActivity extends ImpBaseActivity {
         }
     }
 
-    private void finishActivity() {
-        finish();// 退出程序
+    public void finishActivity() {
         if (getIntent().hasExtra("function") && getIntent().getStringExtra("function").equals("mdm")) {
             new MDM().getMDMListener().MDMStatusNoPass();
         }
+        finish();// 退出程序
     }
 
-//	/**
-//	 * 设置cookie
-//	 */
-//	private void setCookies(String url, String cookie) {
-//		// TODO Auto-generated method stub
-//		CookieManager cookieManager = CookieManager.getInstance();
-//		cookieManager.setAcceptCookie(true);
-//		cookieManager.acceptCookie();
-//		cookieManager.setCookie(url, cookie);
-//	}
+
+
 
     private void setUserAgent(String userAgentExtra) {
         // TODO Auto-generated method stub
@@ -273,8 +247,13 @@ public class ImpActivity extends ImpBaseActivity {
             case R.id.app_imp_crm_font_biggest_btn:
                 changeNewsFontSize(MyAppWebConfig.CRM_BIGGEST);
                 break;
-            default:
+            case R.id.back_layout:
                 goBack();
+                break;
+            case R.id.imp_close_btn:
+                finishActivity();
+                break;
+            default:
                 break;
         }
 
@@ -333,7 +312,7 @@ public class ImpActivity extends ImpBaseActivity {
      */
     private void changeNewsFontSize(int textZoom) {
         WebSettings webSettings = webView.getSettings();
-        PreferencesByUsersUtils.putInt(ImpActivity.this, "app_crm_font_size_"+appId, textZoom);
+        PreferencesByUsersUtils.putInt(ImpActivity.this, "app_crm_font_size_" + appId, textZoom);
         webSettings.setTextZoom(textZoom);
         initWebViewTextSize(textZoom);
     }
@@ -342,8 +321,8 @@ public class ImpActivity extends ImpBaseActivity {
      * 初始化WebView的字体大小
      */
     private void initWebViewTextSize(int textZoom) {
-        int textSize = PreferencesByUsersUtils.getInt(ImpActivity.this, "app_crm_font_size_"+appId, MyAppWebConfig.NORMAL);
-        if(textZoom != 0){
+        int textSize = PreferencesByUsersUtils.getInt(ImpActivity.this, "app_crm_font_size_" + appId, MyAppWebConfig.NORMAL);
+        if (textZoom != 0) {
             textSize = textZoom;
         }
         switch (textSize) {
@@ -418,11 +397,9 @@ public class ImpActivity extends ImpBaseActivity {
         // TODO Auto-generated method stub
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             if (webView.canGoBack()) {
-                LogUtils.jasonDebug("canGoBack");
                 webView.goBack();// 返回上一页面
                 return true;
             } else {
-                LogUtils.jasonDebug("not------canGoBack");
                 finishActivity();// 退出程序
             }
         }
@@ -433,6 +410,7 @@ public class ImpActivity extends ImpBaseActivity {
     @Override
     protected void onDestroy() {
         // TODO Auto-generated method stub
+        dimissLoadingDlg();
         super.onDestroy();
         if (webView != null) {
             webView.removeAllViews();
@@ -440,6 +418,18 @@ public class ImpActivity extends ImpBaseActivity {
         }
     }
 
+
+    public void showLoadingDlg() {
+        if (loadingDlg != null){
+            loadingDlg.show();
+        }
+    }
+
+    public void dimissLoadingDlg(){
+        if (loadingDlg != null && loadingDlg.isShowing()){
+            loadingDlg.dismiss();
+        }
+    }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (PublicWay.photoService != null) {
