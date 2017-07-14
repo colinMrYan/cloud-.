@@ -16,7 +16,7 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.Contact;
 import com.inspur.emmcloud.bean.Enterprise;
-import com.inspur.emmcloud.bean.GetMyInfoResult;
+import com.inspur.emmcloud.bean.GetMyInfoResultWithoutSerializable;
 import com.inspur.emmcloud.bean.SearchModel;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.util.ContactCacheUtils;
@@ -95,7 +95,7 @@ public class NativeBridge extends ReactContextBaseJavaModule implements Activity
     public void getCurrentUserProfie(Promise promise) {
         String myInfo = PreferencesUtils.getString(getReactApplicationContext(),
                 "myInfo", "");
-        GetMyInfoResult getMyInfoResult = new GetMyInfoResult(myInfo);
+        GetMyInfoResultWithoutSerializable getMyInfoResult = new GetMyInfoResultWithoutSerializable(myInfo);
         try {
             promise.resolve(getMyInfoResult.getUserProfile2WritableNativeMap());
         } catch (Exception e) {

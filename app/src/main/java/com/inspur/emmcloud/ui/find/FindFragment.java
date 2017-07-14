@@ -21,6 +21,7 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.bean.Enterprise;
 import com.inspur.emmcloud.bean.GetMyInfoResult;
 import com.inspur.emmcloud.config.MyAppConfig;
+import com.inspur.emmcloud.util.AppUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.reactnative.AuthorizationManagerPackage;
 import com.inspur.reactnative.ReactNativeFlow;
@@ -129,7 +130,7 @@ public class FindFragment extends Fragment implements DefaultHardwareBackBtnHand
         bundle.putString("pushId",ReactNativeInitInfoUtils.getPushId(getActivity()));
         bundle.putString("pushType",ReactNativeInitInfoUtils.getPushType());
         bundle.putSerializable("currentEnterprise", ReactNativeInitInfoUtils.getCurrentEnterprise(getActivity()).enterPrise2ReactNativeWritableNativeMap());
-
+        bundle.putString("appVersion", AppUtils.getVersion(getActivity()));
         return bundle;
     }
 
