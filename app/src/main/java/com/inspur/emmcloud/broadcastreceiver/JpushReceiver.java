@@ -98,6 +98,8 @@ public class JpushReceiver extends BroadcastReceiver {
 										targetIntent =new Intent(Intent.ACTION_VIEW);
 										targetIntent.setData(Uri.parse(scheme));
 										targetIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+										context.startActivity(targetIntent);
+										return;
 									}
 								}else if(extraObj.has("channel")){
 									String cid = JSONUtils.getString(extraObj,"channel","");

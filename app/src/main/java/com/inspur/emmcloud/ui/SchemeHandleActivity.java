@@ -1,6 +1,7 @@
 package com.inspur.emmcloud.ui;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -16,7 +17,6 @@ import com.inspur.emmcloud.ui.find.KnowledgeActivity;
 import com.inspur.emmcloud.ui.find.trip.TripInfoActivity;
 import com.inspur.emmcloud.ui.login.LoginActivity;
 import com.inspur.emmcloud.util.IntentUtils;
-import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.imp.api.ImpActivity;
 
 /**
@@ -28,6 +28,14 @@ public class SchemeHandleActivity extends Activity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if(((MyApplication)getApplicationContext()).isHaveLogin()){
+            if (!((MyApplication)getApplicationContext()).isIndexActivityRunning()){
+              IntentUtils.startActivity(this,IndexActivity.class);
+            }else if(!((MyApplication)getApplicationContext()).getIsActive()){
+                Intent indexIntent = new Intent(this, IndexActivity.class);
+                indexIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+                        | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+                startActivity(indexIntent);
+            }
             Uri uri = getIntent().getData();
             String scheme = uri.getScheme();
             String host = uri.getHost();
@@ -65,7 +73,6 @@ public class SchemeHandleActivity extends Activity {
                     break;
             }
         }else {
-            LogUtils.jasonDebug("4444444444444");
            IntentUtils.startActivity(this, LoginActivity.class);
         }
         finish();

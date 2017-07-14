@@ -200,8 +200,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
-                <data android:scheme="ecm-contact"
-                    />
+                <data android:scheme="ecm-contact" />
             </intent-filter>
 
             <intent-filter>
@@ -210,8 +209,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
-                <data android:scheme="ecc-component"
-                    />
+                <data android:scheme="ecc-component" />
             </intent-filter>
 
 
@@ -221,8 +219,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
-                <data android:scheme="ecm-contact"
-                    />
+                <data android:scheme="ecm-contact" />
             </intent-filter>
 
             <intent-filter>
@@ -231,8 +228,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
-                <data android:scheme="gs-msg"
-                    />
+                <data android:scheme="gs-msg" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -240,8 +236,17 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
-                <data android:scheme="ecc-channel"
-                    />
+                <data android:scheme="ecc-channel" />
+            </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data
+                    android:host="com.huawei.pushtest"
+                    android:scheme="customscheme" />
             </intent-filter>
         </activity>
 
@@ -572,8 +577,7 @@
             android:name="com.inspur.imp.api.ImpActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Holo.Light.NoActionBar">
-        </activity>
+            android:theme="@android:style/Theme.Holo.Light.NoActionBar"></activity>
         <activity
             android:name="com.inspur.imp.plugin.barcode.scan.CaptureActivity"
             android:label="@string/app_name"

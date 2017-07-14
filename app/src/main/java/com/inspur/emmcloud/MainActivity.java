@@ -62,6 +62,10 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
 		StateBarColor.hideStatusBar(this);
 		setContentView(R.layout.activity_main);
 		init();
+//		Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("ecc-channel://662"));
+//		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//		String intentUri = intent.toUri(Intent.URI_INTENT_SCHEME);
+//		LogUtils.jasonDebug("intentUri="+intentUri);
 	}
 
 
