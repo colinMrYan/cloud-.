@@ -16,16 +16,8 @@ public class ConbineMsg {
 	public static Msg conbineMsg(Context context,String body, String title, String type,String fakeMessageId) {
 		String userID = ((MyApplication)context.getApplicationContext()).getUid();
 		Msg msgSend = new Msg();
-//		int num = adapternum + 1;
-//		String msgID = fakeMessageId;
-
-		String myUserID = PreferencesUtils.getString(context,
-				"userID");
-		if (myUserID.equals(userID)) {
-			title = PreferencesUtils.getString(context,
+		title = PreferencesUtils.getString(context,
 					"userRealName");
-		}
-
 		msgSend.setMid(fakeMessageId);
 		msgSend.setTitle(title);
 		if (type.equals("text")) {

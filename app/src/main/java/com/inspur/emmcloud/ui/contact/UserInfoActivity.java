@@ -240,7 +240,7 @@ public class UserInfoActivity extends BaseActivity {
 							GetCreateSingleChannelResult getCreateSingleChannelResult) {
 						// TODO Auto-generated method stub
 						Bundle bundle = new Bundle();
-						bundle.putString("channelId",
+						bundle.putString("cid",
 								getCreateSingleChannelResult.getCid());
 						bundle.putString("channelType",
 								getCreateSingleChannelResult.getType());

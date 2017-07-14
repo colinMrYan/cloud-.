@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.graphics.Matrix;
 import android.os.Environment;
 import android.os.Handler;
+import android.os.Message;
 import android.util.TypedValue;
 
 import com.inspur.emmcloud.R;
@@ -121,9 +122,11 @@ public class ChannelGroupIconUtils {
                         .cacheInMemory(true)
                         .cacheOnDisk(true)
                         .build();
+                boolean isCreateNewGroupIcon = false;
                 for (int i = 0; i < channelList.size(); i++) {
                     Channel channel = channelList.get(i);
                     if (channel.getType().equals("GROUP")) {
+                        isCreateNewGroupIcon = true;
                         List<String> memberUidList = ChannelGroupCacheUtils.getMemberUidList(context, channel.getCid(), 4);
                         List<Bitmap> bitmapList = new ArrayList<Bitmap>();
                         for (int j = 0; j < memberUidList.size(); j++) {
@@ -145,7 +148,10 @@ public class ChannelGroupIconUtils {
                     }
                 }
                 if (handler != null) {
-                    handler.sendEmptyMessage(RERESH_GROUP_ICON);
+                    Message msg = new Message();
+                    msg.what=RERESH_GROUP_ICON;
+                    msg.obj = isCreateNewGroupIcon;
+                    handler.sendMessage(msg);
                 }
             }
         }
