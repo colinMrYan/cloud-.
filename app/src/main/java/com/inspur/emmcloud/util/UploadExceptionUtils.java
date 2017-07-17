@@ -24,7 +24,7 @@ public class UploadExceptionUtils {
 	}
 
 	public void upload() {
-		if (NetUtils.isNetworkConnected(mContext)&&!AppUtils.isApkDebugable(mContext)) {
+		if (NetUtils.isNetworkConnected(mContext,false)&&!AppUtils.isApkDebugable(mContext)) {
 			List<AppException> appExceptionList = AppExceptionCacheUtils.getAppExceptionList(mContext);
 			if (appExceptionList.size() == 0) {
 				return;

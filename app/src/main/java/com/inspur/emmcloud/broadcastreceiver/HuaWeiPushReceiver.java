@@ -2,17 +2,13 @@ package com.inspur.emmcloud.broadcastreceiver;
 
 import android.app.NotificationManager;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 
 import com.huawei.hms.support.api.push.PushReceiver;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.push.WebSocketPush;
-import com.inspur.emmcloud.ui.IndexActivity;
-import com.inspur.emmcloud.ui.login.LoginActivity;
 import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
-import com.inspur.emmcloud.util.StringUtils;
 
 /**
  * Created by yufuchang on 2017/6/20.
@@ -70,49 +66,11 @@ public class HuaWeiPushReceiver extends PushReceiver{
      */
     @Override
     public void onEvent(Context context, PushReceiver.Event event, Bundle extras) {
-//        LogUtils.YfcDebug("pushkey："+extras.getString(BOUND_KEY.pushMsgKey));
+        super.onEvent(context, event, extras);
         if (Event.NOTIFICATION_OPENED.equals(event) || Event.NOTIFICATION_CLICK_BTN.equals(event)) {
             NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
             manager.cancelAll();
-//            int notifyId = extras.getInt(BOUND_KEY.pushNotifyId, 0);
-//            if (0 != notifyId) {
-//                NotificationManager manager = (NotificationManager) context
-//                        .getSystemService(Context.NOTIFICATION_SERVICE);
-//                manager.cancel(notifyId);
-//            }
-//            String content = "--------receive extented notification message: " + extras.getString
-//                    (BOUND_KEY.pushMsgKey);
-//            LogUtils.YfcDebug(content);
         }
-        String accessToken = PreferencesUtils.getString(context,
-                "accessToken", "");
-        if(!StringUtils.isBlank(accessToken)){
-            startIndexActivity(context);
-        }else{
-            statLoginActivity(context);
-        }
-        super.onEvent(context, event, extras);
-    }
-
-    /**
-     * 打开应用首页
-     * @param context
-     */
-    private void startIndexActivity(Context context) {
-        Intent indexLogin = new Intent(context, IndexActivity.class);
-        indexLogin.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        indexLogin.putExtra("command","open_notification");
-        context.startActivity(indexLogin);
-    }
-
-    /**
-     * 打开登录
-     * @param context
-     */
-    private void statLoginActivity(Context context) {
-        Intent loginIntent = new Intent(context, LoginActivity.class);
-        loginIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        context.startActivity(loginIntent);
     }
 
     /**

@@ -1,18 +1,19 @@
 package com.inspur.emmcloud.util;
 
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Map;
-
-import org.json.JSONObject;
-
 import android.content.Context;
-import cn.jpush.android.api.JPushInterface;
-import cn.jpush.android.data.JPushLocalNotification;
 
 import com.alibaba.fastjson.JSON;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.CalendarEvent;
+
+import org.json.JSONObject;
+
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
+
+import cn.jpush.android.api.JPushInterface;
+import cn.jpush.android.data.JPushLocalNotification;
 
 public class CalEventNotificationUtils {
 	/**
@@ -46,5 +47,13 @@ public class CalEventNotificationUtils {
 				JPushInterface.addLocalNotification(context, ln);
 			}
 		}
+	}
+
+	/**
+	 * 清除本地日历通知
+	 * @param context
+	 */
+	public static void cancelAllCalEventNotification(Context context){
+		JPushInterface.clearLocalNotifications(context);
 	}
 }
