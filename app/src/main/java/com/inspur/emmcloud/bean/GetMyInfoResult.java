@@ -31,7 +31,6 @@ public class GetMyInfoResult implements Serializable {
 	private List<Enterprise> enterpriseList = new ArrayList<>();
 	private Enterprise defaultEnterprise;
 	private ReactNativeWritableNativeMap reactNativeWritableNativeMap = new ReactNativeWritableNativeMap();//RN的bundle使用
-//	private WritableNativeMap writableNativeMap = new WritableNativeMap();//RN内部自己使用
 
 	public GetMyInfoResult(String response) {
 		this.response = response;
@@ -48,18 +47,15 @@ public class GetMyInfoResult implements Serializable {
 		this.hasPassord = JSONUtils.getBoolean(response, "has_password", false);
 		JSONArray enterpriseArray = JSONUtils.getJSONArray(response, "enterprises", new JSONArray());
 		ReactNativeWritableArray reactNativeWritableArray = new ReactNativeWritableArray();
-//		WritableNativeArray writableNativeArray = new WritableNativeArray();
 		for (int i = 0; i < enterpriseArray.length(); i++) {
 			JSONObject obj = JSONUtils.getJSONObject(enterpriseArray, i, null);
 			if (obj != null) {
 				Enterprise enterprise = new Enterprise(obj);
 				enterpriseList.add(enterprise);
 				reactNativeWritableArray.pushMap(enterprise.enterPrise2ReactNativeWritableNativeMap());
-//				writableNativeArray.pushMap(enterprise.enterPrise2WritableNativeMap());
 			}
 		}
 		reactNativeWritableNativeMap.putArray("enterprises",reactNativeWritableArray);
-//		writableNativeMap.putArray("enterprises",writableNativeArray);
 	}
 
 
@@ -81,23 +77,6 @@ public class GetMyInfoResult implements Serializable {
 		return reactNativeWritableNativeMap;
 	}
 
-//	/**
-//	 * 为NativeBridge方法，不能序列化否则报异常
-//	 * @return
-//	 */
-//	public WritableNativeMap getUserProfile2WritableNativeMap(){
-//		writableNativeMap.putMap("enterprise",defaultEnterprise.enterPrise2ReactNativeWritableNativeMap());
-//		writableNativeMap.putString("avatar",avatar);
-//		writableNativeMap.putString("code",code);
-//		writableNativeMap.putDouble("creation_date",Double.valueOf(creationDate));
-//		writableNativeMap.putString("first_name",firstName);
-//		writableNativeMap.putString("last_name",lastName);
-//		writableNativeMap.putInt("id",Integer.valueOf(id));
-//		writableNativeMap.putString("mail",mail);
-//		writableNativeMap.putString("phone",phoneNumber);
-//		writableNativeMap.putBoolean("has_password",hasPassord);
-//		return writableNativeMap;
-//	}
 
 	public void setAvatar(String avatar) {
 		this.avatar = avatar;
