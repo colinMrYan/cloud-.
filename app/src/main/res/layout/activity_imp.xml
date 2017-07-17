@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:fitsSystemWindows="true">
@@ -139,4 +140,43 @@
             android:layout_width="wrap_content"
             android:layout_height="34dp"/>
     </LinearLayout>
+    <LinearLayout
+        android:id="@+id/loading_layout"
+        android:layout_below="@id/header_layout"
+        android:background="#1e000000"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:weightSum="1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.73"
+            android:background="@color/white"
+            android:orientation="horizontal"
+            android:paddingBottom="20dp"
+            android:gravity="center"
+            android:paddingTop="20dp" >
+
+            <com.inspur.emmcloud.widget.CircularProgress
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginRight="25dp"
+                app:borderWidth="1dp" />
+
+            <TextView
+                android:id="@+id/loading_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="@string/loading_text"
+                android:paddingRight="30dp"
+                android:textColor="#333333"
+                android:textSize="@dimen/content_normal_textsize" />
+
+        </LinearLayout>
+    </LinearLayout>
+
 </RelativeLayout>

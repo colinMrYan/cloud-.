@@ -30,7 +30,6 @@ import com.inspur.emmcloud.util.AppUtils;
 import com.inspur.emmcloud.util.MDM.MDM;
 import com.inspur.emmcloud.util.PreferencesByUsersUtils;
 import com.inspur.emmcloud.util.UriUtils;
-import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.imp.engine.webview.ImpWebView;
 import com.inspur.imp.plugin.camera.PublicWay;
 import com.inspur.imp.plugin.file.FileService;
@@ -62,8 +61,8 @@ public class ImpActivity extends ImpBaseActivity {
     private int isZoomable = 0;
     private String appId = "";
     private FrameLayout frameLayout;
-    private LoadingDialog loadingDlg;
     private TextView buttonCloseText;
+    private LinearLayout loadingLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,12 +78,12 @@ public class ImpActivity extends ImpBaseActivity {
      * 初始化Views
      */
     private void initViews() {
-        loadingDlg = new LoadingDialog(this);
-        showLoadingDlg();
+        loadingLayout = (LinearLayout)findViewById(Res.getWidgetID("loading_layout"));
         buttonCloseText = (TextView) findViewById(Res.getWidgetID("imp_close_btn"));
         frameLayout = (FrameLayout) findViewById(Res.getWidgetID("videoContainer"));
         loadFailLayout = (LinearLayout) findViewById(Res.getWidgetID("load_error_layout"));
         webView = (ImpWebView) findViewById(Res.getWidgetID("webview"));
+        showLoadingDlg();
         if(getIntent().hasExtra("is_zoomable")){
             isZoomable = getIntent().getIntExtra("is_zoomable",0);
             if(isZoomable == 0){
@@ -395,7 +394,6 @@ public class ImpActivity extends ImpBaseActivity {
     @Override
     protected void onDestroy() {
         // TODO Auto-generated method stub
-        dimissLoadingDlg();
         super.onDestroy();
         if (webView != null) {
             webView.removeAllViews();
@@ -405,15 +403,11 @@ public class ImpActivity extends ImpBaseActivity {
 
 
     public void showLoadingDlg() {
-        if (loadingDlg != null){
-            loadingDlg.show();
-        }
+        loadingLayout.setVisibility(View.VISIBLE);
     }
 
     public void dimissLoadingDlg(){
-        if (loadingDlg != null && loadingDlg.isShowing()){
-            loadingDlg.dismiss();
-        }
+        loadingLayout.setVisibility(View.GONE);
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
