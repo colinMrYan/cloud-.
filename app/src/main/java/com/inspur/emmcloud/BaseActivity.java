@@ -73,7 +73,7 @@ public class BaseActivity extends Activity {
      * 上传MDM需要的设备信息
      */
     private void uploadMDMInfo() {
-        if (NetUtils.isNetworkConnected(this)) {
+        if (NetUtils.isNetworkConnected(this,false)) {
             new AppAPIService(this).uploadMDMInfo();
         }
 

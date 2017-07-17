@@ -119,7 +119,7 @@ public class FileTransferService extends ImpPlugin {
 					//key = "http://10.24.14.63:8080/test/inspur_cloud_mobileclient_1.0.0.apk";
 					JSONObject jsonObject = new JSONObject();
 					jsonObject.put("url", key);
-					jsonObject.put("filePath", "/imp/download/");
+					jsonObject.put("filePath", "/IMP-Cloud/download/");
 					execute("download", jsonObject);
 				} catch (JSONException e) {
 					e.printStackTrace();
@@ -145,6 +145,7 @@ public class FileTransferService extends ImpPlugin {
 				downloadSucCB = jsonObject.getString("successCallback");
 			if (!jsonObject.isNull("errorCallback"))
 				downloadFailCB = jsonObject.getString("errorCallback");
+			filepath ="/IMP-Cloud/download/";
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}

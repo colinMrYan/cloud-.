@@ -290,6 +290,12 @@ public class ChatAPIService {
 			} else {
 				paramObj.put("msg", new JSONObject(msgContent));
 			}
+			JSONObject actionObj = new JSONObject();
+			actionObj.put("type","open-url");
+			actionObj.put("url","ecc-channel://"+channelId);
+			JSONObject extrasObj = new JSONObject();
+			extrasObj.put("action",actionObj);
+			paramObj.put("extras",extrasObj);
 			params.setBodyContent(paramObj.toString());
 			params.setAsJsonContent(true);
 		} catch (Exception e) {
@@ -476,8 +482,6 @@ public class ChatAPIService {
 			@Override
 			public void callbackSuccess(String arg0) {
 				// TODO Auto-generated method stub
-				// FileUtils.writeFile(Environment.getExternalStorageDirectory()
-				// + "/IMP-Cloud/contact.txt", new String(arg2));
 				apiInterface
 						.returnSearchChannelGroupSuccess(new GetSearchChannelGroupResult(
 								arg0));

@@ -84,49 +84,34 @@ public class ImpActivity extends ImpBaseActivity {
         frameLayout = (FrameLayout) findViewById(Res.getWidgetID("videoContainer"));
         loadFailLayout = (LinearLayout) findViewById(Res.getWidgetID("load_error_layout"));
         webView = (ImpWebView) findViewById(Res.getWidgetID("webview"));
-        if(getIntent().hasExtra("is_zoomable")){
-            isZoomable = getIntent().getIntExtra("is_zoomable",0);
-            if(isZoomable == 0){
+        if (getIntent().hasExtra("is_zoomable")) {
+            isZoomable = getIntent().getIntExtra("is_zoomable", 0);
+            if (isZoomable == 0) {
                 findViewById(R.id.imp_change_font_size_btn).setVisibility(View.GONE);
-            }else if(isZoomable == 1){
+            } else if (isZoomable == 1) {
                 findViewById(R.id.imp_change_font_size_btn).setVisibility(View.VISIBLE);
             }
-        }else {
+        } else {
             findViewById(R.id.imp_change_font_size_btn).setVisibility(View.GONE);
         }
         getWindow().setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
                         | WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-        String url = "";
-        Uri uri = getIntent().getData();
-        boolean isUriHasTitle = false;
-        String title = "";
-        if (uri != null) {
-            String host = uri.getHost();
-            url = "https://emm.inspur.com/ssohandler/gs_msg/" + host;
-            String openMode = uri.getQueryParameter("openMode");
-            isUriHasTitle = (openMode != null && openMode.equals("1")) ? true : false;
-        } else {
-            url = getIntent().getExtras().getString("uri");
-        }
-        if (getIntent().hasExtra("appName")) {
-            isUriHasTitle = true;
-            title = getIntent().getExtras().getString("appName");
-        }
-        if(getIntent().hasExtra("appId")){
+        if (getIntent().hasExtra("appId")) {
             appId = getIntent().getExtras().getString("appId");
         }
-        if (isUriHasTitle) {
+        String url = getIntent().getExtras().getString("uri");
+        if (getIntent().hasExtra("appName")) {
+            String title = getIntent().getExtras().getString("appName");
             headerText = (TextView) findViewById(Res.getWidgetID("header_text"));
-            webView.setProperty(progressLayout, headerText, loadFailLayout,frameLayout);
+            webView.setProperty(progressLayout, headerText, loadFailLayout, frameLayout);
             initWebViewGoBackOrClose();
             (findViewById(Res.getWidgetID("header_layout")))
                     .setVisibility(View.VISIBLE);
             headerText.setText(title);
-        } else {
-            webView.setProperty(progressLayout, null, loadFailLayout,frameLayout);
+        }else {
+            webView.setProperty(progressLayout, null, loadFailLayout, frameLayout);
         }
-
         String token = ((MyApplication) getApplicationContext())
                 .getToken();
         isMDM = getIntent().hasExtra("function") && getIntent().getStringExtra("function").equals("mdm");
@@ -159,10 +144,10 @@ public class ImpActivity extends ImpBaseActivity {
         progressLayout.setVisibility(View.VISIBLE);
         lightModeFontColor = ContextCompat.getColor(ImpActivity.this, R.color.app_dialog_day_font_color);
         blackFontColor = ContextCompat.getColor(ImpActivity.this, R.color.black);
-        int textSize = PreferencesByUsersUtils.getInt(ImpActivity.this, "app_crm_font_size_"+appId, MyAppWebConfig.NORMAL);
-        if(isZoomable == 0){
+        int textSize = PreferencesByUsersUtils.getInt(ImpActivity.this, "app_crm_font_size_" + appId, MyAppWebConfig.NORMAL);
+        if (isZoomable == 0) {
             webView.getSettings().setTextZoom(MyAppWebConfig.NORMAL);
-        }else {
+        } else {
             webView.getSettings().setTextZoom(textSize);
         }
     }
@@ -333,7 +318,7 @@ public class ImpActivity extends ImpBaseActivity {
      */
     private void changeNewsFontSize(int textZoom) {
         WebSettings webSettings = webView.getSettings();
-        PreferencesByUsersUtils.putInt(ImpActivity.this, "app_crm_font_size_"+appId, textZoom);
+        PreferencesByUsersUtils.putInt(ImpActivity.this, "app_crm_font_size_" + appId, textZoom);
         webSettings.setTextZoom(textZoom);
         initWebViewTextSize(textZoom);
     }
@@ -342,8 +327,8 @@ public class ImpActivity extends ImpBaseActivity {
      * 初始化WebView的字体大小
      */
     private void initWebViewTextSize(int textZoom) {
-        int textSize = PreferencesByUsersUtils.getInt(ImpActivity.this, "app_crm_font_size_"+appId, MyAppWebConfig.NORMAL);
-        if(textZoom != 0){
+        int textSize = PreferencesByUsersUtils.getInt(ImpActivity.this, "app_crm_font_size_" + appId, MyAppWebConfig.NORMAL);
+        if (textZoom != 0) {
             textSize = textZoom;
         }
         switch (textSize) {
