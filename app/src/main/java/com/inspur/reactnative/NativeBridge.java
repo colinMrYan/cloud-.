@@ -16,14 +16,13 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.Contact;
 import com.inspur.emmcloud.bean.Enterprise;
+import com.inspur.emmcloud.bean.GetMyInfoResultWithoutSerializable;
 import com.inspur.emmcloud.bean.SearchModel;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.util.ContactCacheUtils;
 import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.StringUtils;
-
-import org.json.JSONObject;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -96,8 +95,9 @@ public class NativeBridge extends ReactContextBaseJavaModule implements Activity
     public void getCurrentUserProfie(Promise promise) {
         String myInfo = PreferencesUtils.getString(getReactApplicationContext(),
                 "myInfo", "");
+        GetMyInfoResultWithoutSerializable getMyInfoResult = new GetMyInfoResultWithoutSerializable(myInfo);
         try {
-            promise.resolve(myInfo);
+            promise.resolve(getMyInfoResult.getUserProfile2WritableNativeMap());
         } catch (Exception e) {
             promise.reject(e);
         }
@@ -112,14 +112,11 @@ public class NativeBridge extends ReactContextBaseJavaModule implements Activity
     public void getCurrentEnterprise(Promise promise) {
         Enterprise enterprise = ((MyApplication)getReactApplicationContext().getApplicationContext()).getCurrentEnterprise();
         try {
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.put("id", enterprise.getId());
-            jsonObject.put("name", enterprise.getName());
-            jsonObject.put("code", enterprise.getCode());
-            promise.resolve(jsonObject);
+            promise.resolve(enterprise.enterPrise2WritableNativeMap());
         } catch (Exception e) {
             promise.reject(e);
         }
+
     }
 
     /**
