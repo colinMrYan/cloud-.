@@ -29,6 +29,7 @@ import com.inspur.emmcloud.config.MyAppWebConfig;
 import com.inspur.emmcloud.util.AppUtils;
 import com.inspur.emmcloud.util.MDM.MDM;
 import com.inspur.emmcloud.util.PreferencesByUsersUtils;
+import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.imp.engine.webview.ImpWebView;
 import com.inspur.imp.plugin.camera.PublicWay;
@@ -63,6 +64,7 @@ public class ImpActivity extends ImpBaseActivity {
     private FrameLayout frameLayout;
     private TextView buttonCloseText;
     private LinearLayout loadingLayout;
+    private TextView loadingText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,20 +80,21 @@ public class ImpActivity extends ImpBaseActivity {
      * 初始化Views
      */
     private void initViews() {
-        loadingLayout = (LinearLayout)findViewById(Res.getWidgetID("loading_layout"));
+        loadingLayout = (LinearLayout) findViewById(Res.getWidgetID("loading_layout"));
+        loadingText = (TextView)findViewById(Res.getWidgetID("loading_text"));
         buttonCloseText = (TextView) findViewById(Res.getWidgetID("imp_close_btn"));
         frameLayout = (FrameLayout) findViewById(Res.getWidgetID("videoContainer"));
         loadFailLayout = (LinearLayout) findViewById(Res.getWidgetID("load_error_layout"));
         webView = (ImpWebView) findViewById(Res.getWidgetID("webview"));
-        showLoadingDlg();
-        if(getIntent().hasExtra("is_zoomable")){
-            isZoomable = getIntent().getIntExtra("is_zoomable",0);
-            if(isZoomable == 0){
+        showLoadingDlg("");
+        if (getIntent().hasExtra("is_zoomable")) {
+            isZoomable = getIntent().getIntExtra("is_zoomable", 0);
+            if (isZoomable == 0) {
                 findViewById(R.id.imp_change_font_size_btn).setVisibility(View.GONE);
-            }else if(isZoomable == 1){
+            } else if (isZoomable == 1) {
                 findViewById(R.id.imp_change_font_size_btn).setVisibility(View.VISIBLE);
             }
-        }else {
+        } else {
             findViewById(R.id.imp_change_font_size_btn).setVisibility(View.GONE);
         }
         getWindow().setSoftInputMode(
@@ -144,10 +147,10 @@ public class ImpActivity extends ImpBaseActivity {
         webView.loadUrl(url, extraHeaders);
         lightModeFontColor = ContextCompat.getColor(ImpActivity.this, R.color.app_dialog_day_font_color);
         blackFontColor = ContextCompat.getColor(ImpActivity.this, R.color.black);
-        int textSize = PreferencesByUsersUtils.getInt(ImpActivity.this, "app_crm_font_size_"+appId, MyAppWebConfig.NORMAL);
-        if(isZoomable == 0){
+        int textSize = PreferencesByUsersUtils.getInt(ImpActivity.this, "app_crm_font_size_" + appId, MyAppWebConfig.NORMAL);
+        if (isZoomable == 0) {
             webView.getSettings().setTextZoom(MyAppWebConfig.NORMAL);
-        }else {
+        } else {
             webView.getSettings().setTextZoom(textSize);
         }
     }
@@ -158,7 +161,7 @@ public class ImpActivity extends ImpBaseActivity {
      */
     public void initWebViewGoBackOrClose() {
         if (headerText != null) {
-                buttonCloseText.setVisibility(webView.canGoBack()?View.VISIBLE:View.GONE);
+            buttonCloseText.setVisibility(webView.canGoBack() ? View.VISIBLE : View.GONE);
         }
     }
 
@@ -179,8 +182,6 @@ public class ImpActivity extends ImpBaseActivity {
         }
         finish();// 退出程序
     }
-
-
 
 
     private void setUserAgent(String userAgentExtra) {
@@ -296,7 +297,7 @@ public class ImpActivity extends ImpBaseActivity {
      */
     private void changeNewsFontSize(int textZoom) {
         WebSettings webSettings = webView.getSettings();
-        PreferencesByUsersUtils.putInt(ImpActivity.this, "app_crm_font_size_"+appId, textZoom);
+        PreferencesByUsersUtils.putInt(ImpActivity.this, "app_crm_font_size_" + appId, textZoom);
         webSettings.setTextZoom(textZoom);
         initWebViewTextSize(textZoom);
     }
@@ -305,8 +306,8 @@ public class ImpActivity extends ImpBaseActivity {
      * 初始化WebView的字体大小
      */
     private void initWebViewTextSize(int textZoom) {
-        int textSize = PreferencesByUsersUtils.getInt(ImpActivity.this, "app_crm_font_size_"+appId, MyAppWebConfig.NORMAL);
-        if(textZoom != 0){
+        int textSize = PreferencesByUsersUtils.getInt(ImpActivity.this, "app_crm_font_size_" + appId, MyAppWebConfig.NORMAL);
+        if (textZoom != 0) {
             textSize = textZoom;
         }
         switch (textSize) {
@@ -402,11 +403,14 @@ public class ImpActivity extends ImpBaseActivity {
     }
 
 
-    public void showLoadingDlg() {
+    public void showLoadingDlg(String content) {
+        if (!StringUtils.isBlank(content)){
+            loadingText.setText(content);
+        }
         loadingLayout.setVisibility(View.VISIBLE);
     }
 
-    public void dimissLoadingDlg(){
+    public void dimissLoadingDlg() {
         loadingLayout.setVisibility(View.GONE);
     }
 

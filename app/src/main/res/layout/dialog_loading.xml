@@ -10,11 +10,11 @@
     android:paddingTop="20dp" >
 
     <com.inspur.emmcloud.widget.CircularProgress
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
         android:layout_gravity="center_vertical"
         android:layout_marginRight="25dp"
-        app:borderWidth="1dp" />
+        app:borderWidth="1.5dp" />
 
     <TextView
         android:id="@+id/loading_text"
