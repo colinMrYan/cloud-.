@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="#FFFFFF" >
+
+<ImageView
+    android:id="@+id/app_center_categories_icon_img"
+    android:layout_width="40dp"
+    android:layout_height="40dp"
+    android:layout_margin="15dp"
+    android:src="@drawable/icon_default"/>
+    <TextView
+        android:id="@+id/app_center_categories_item_txt"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@id/app_center_categories_icon_img"
+        android:text="协同效率"/>
+
+    <ImageView
+        android:layout_width="22dp"
+        android:layout_height="22dp"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="12dp"
+        android:src="@drawable/icon_arrow_right"/>
+
+</RelativeLayout>

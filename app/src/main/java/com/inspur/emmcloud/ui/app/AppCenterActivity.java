@@ -44,8 +44,6 @@ import com.inspur.emmcloud.util.ToastUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.CircularProgress;
 import com.inspur.emmcloud.widget.ECMSpaceItemDecoration;
-import com.inspur.emmcloud.widget.draggrid.AppCenterDragAdapter;
-import com.inspur.emmcloud.widget.draggrid.DragGridView;
 import com.zhy.magicviewpager.transformer.ScaleInTransformer;
 
 import java.io.Serializable;
@@ -152,6 +150,14 @@ public class AppCenterActivity extends BaseActivity {
                 recommandListView.setAdapter(recommandAppAdapter);
             } else if (arg0 == 1) {
                 classListView.setAdapter(categoriesAppAdapter);
+                classListView.setOnItemClickListener(new OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable("appList", (Serializable) categorieAppList.get(position).getAppItemList());
+                        IntentUtils.startActivity(AppCenterActivity.this, AppCenterMoreActivity.class, bundle);
+                    }
+                });
             }
         }
     }
@@ -215,7 +221,6 @@ public class AppCenterActivity extends BaseActivity {
     }
 
 
-
     class RecommondAppAdapter extends BaseAdapter {
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
@@ -226,17 +231,17 @@ public class AppCenterActivity extends BaseActivity {
                 ViewPager viewPager = (ViewPager) convertView.findViewById(R.id.app_center_banner_viewpager);
                 viewPager.setOffscreenPageLimit(3);
                 viewPager.getParent().requestDisallowInterceptTouchEvent(true);
-                int pagerWidth= (int) (getResources().getDisplayMetrics().widthPixels*5.0f/5.0f);
-                ViewGroup.LayoutParams lp=viewPager.getLayoutParams();
-                if (lp==null){
-                    lp=new ViewGroup.LayoutParams(pagerWidth, ViewGroup.LayoutParams.MATCH_PARENT);
-                }else {
-                    lp.width=pagerWidth;
+                int pagerWidth = (int) (getResources().getDisplayMetrics().widthPixels * 5.0f / 5.0f);
+                ViewGroup.LayoutParams lp = viewPager.getLayoutParams();
+                if (lp == null) {
+                    lp = new ViewGroup.LayoutParams(pagerWidth, ViewGroup.LayoutParams.MATCH_PARENT);
+                } else {
+                    lp.width = pagerWidth;
                 }
                 viewPager.setLayoutParams(lp);
                 viewPager.setPageMargin(-90);
                 viewPager.setClipChildren(false);
-                viewPager.setPageTransformer(true,new ScaleInTransformer());
+                viewPager.setPageTransformer(true, new ScaleInTransformer());
 //                viewPager.setNestedpParent((ViewGroup) viewPager.getParent());
                 initRecomandViewPager(appRecomandLayout, viewPager);
             } else {
@@ -246,11 +251,11 @@ public class AppCenterActivity extends BaseActivity {
                 recomandRecyclerView.addItemDecoration(new ECMSpaceItemDecoration(30));
                 linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
                 recomandRecyclerView.setLayoutManager(linearLayoutManager);
-                RecommandAppListAdapter recommandAppListAdapter = new RecommandAppListAdapter(AppCenterActivity.this,null);
-                recommandAppListAdapter.setOnRecommandItemClickListener( new OnRecommandItemClickListener() {
+                RecommandAppListAdapter recommandAppListAdapter = new RecommandAppListAdapter(AppCenterActivity.this, null);
+                recommandAppListAdapter.setOnRecommandItemClickListener(new OnRecommandItemClickListener() {
                     @Override
                     public void onRecommandItemClick(View view, int position) {
-                        ToastUtils.show(AppCenterActivity.this,"点击了第"+position+"个应用");
+                        ToastUtils.show(AppCenterActivity.this, "点击了第" + position + "个应用");
                     }
                 });
                 recomandRecyclerView.setAdapter(recommandAppListAdapter);
@@ -280,28 +285,32 @@ public class AppCenterActivity extends BaseActivity {
     class CategoriesAppAdapter extends BaseAdapter {
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
-            convertView = LayoutInflater.from(AppCenterActivity.this).inflate(R.layout.app_center_drag_item, null);
-            TextView appGroupNameText = (TextView) convertView.findViewById(R.id.app_center_title_text);
-            appGroupNameText.setText(categorieAppList.get(position).getCategoryName());
-            TextView appGroupMoreText = (TextView) convertView.findViewById(R.id.app_center_more_text);
-            if (categorieAppList.get(position).getAppItemList().size() > 4) {
-                appGroupMoreText.setVisibility(View.VISIBLE);
-            } else {
-                appGroupMoreText.setVisibility(View.GONE);
-            }
-            AppCenterDragAdapter dragGridViewAdapter = new AppCenterDragAdapter(
-                    AppCenterActivity.this, categorieAppList.get(position).getAppItemList());
-            DragGridView dragGridView = (DragGridView) convertView
-                    .findViewById(R.id.app_list_draggrid);
-            dragGridView.setAdapter(dragGridViewAdapter);
-            appGroupMoreText.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Bundle bundle = new Bundle();
-                    bundle.putSerializable("appList", (Serializable) categorieAppList.get(position).getAppItemList());
-                    IntentUtils.startActivity(AppCenterActivity.this, AppCenterMoreActivity.class, bundle);
-                }
-            });
+            //原来的应用中心分类
+//            convertView = LayoutInflater.from(AppCenterActivity.this).inflate(R.layout.app_center_drag_item, null);
+//            TextView appGroupNameText = (TextView) convertView.findViewById(R.id.app_center_title_text);
+//            appGroupNameText.setText(categorieAppList.get(position).getCategoryName());
+//            TextView appGroupMoreText = (TextView) convertView.findViewById(R.id.app_center_more_text);
+//            if (categorieAppList.get(position).getAppItemList().size() > 4) {
+//                appGroupMoreText.setVisibility(View.VISIBLE);
+//            } else {
+//                appGroupMoreText.setVisibility(View.GONE);
+//            }
+//            AppCenterDragAdapter dragGridViewAdapter = new AppCenterDragAdapter(
+//                    AppCenterActivity.this, categorieAppList.get(position).getAppItemList());
+//            DragGridView dragGridView = (DragGridView) convertView
+//                    .findViewById(R.id.app_list_draggrid);
+//            dragGridView.setAdapter(dragGridViewAdapter);
+//            appGroupMoreText.setOnClickListener(new OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    Bundle bundle = new Bundle();
+//                    bundle.putSerializable("appList", (Serializable) categorieAppList.get(position).getAppItemList());
+//                    IntentUtils.startActivity(AppCenterActivity.this, AppCenterMoreActivity.class, bundle);
+//                }
+//            });
+
+            convertView = LayoutInflater.from(AppCenterActivity.this).inflate(R.layout.app_center_category_item, null);
+            ((TextView) convertView.findViewById(R.id.app_center_categories_item_txt)).setText(categorieAppList.get(position).getCategoryName());
             return convertView;
         }
 
@@ -350,7 +359,7 @@ public class AppCenterActivity extends BaseActivity {
         mViewPager.setAdapter(new RecommandAppPagerAdapter());
 
         startAutoSlide(mViewPager);
-        if(recommandAppList != null && recommandAppList.size() > 1){
+        if (recommandAppList != null && recommandAppList.size() > 1) {
             mViewPager.setCurrentItem(1);
         }
         //设置ViewPager切换效果，即实现画廊效果
@@ -376,10 +385,11 @@ public class AppCenterActivity extends BaseActivity {
 
     /**
      * ViewPager自动滚动
+     *
      * @param mViewPager
      */
     private void startAutoSlide(final ViewPager mViewPager) {
-        if(!(mViewPager.getAdapter().getCount() > 2)){
+        if (!(mViewPager.getAdapter().getCount() > 2)) {
             return;
         }
         //定时轮播图片，需要在主线程里面修改 UI
@@ -399,12 +409,8 @@ public class AppCenterActivity extends BaseActivity {
                 mHandler.sendEmptyMessage(UPTATE_VIEWPAGER);
             }
         };
-        timer.schedule(timerTask,3000,3000);
+        timer.schedule(timerTask, 3000, 3000);
     }
-
-
-
-
 
 
     class RecommandAppPagerAdapter extends PagerAdapter {
@@ -412,7 +418,7 @@ public class AppCenterActivity extends BaseActivity {
         @Override
         public int getCount() {
             //return viewList==null?0:viewList.size();
-            if(recommandAppList == null){
+            if (recommandAppList == null) {
                 return 0;
             }
             return Integer.MAX_VALUE;
@@ -500,21 +506,23 @@ public class AppCenterActivity extends BaseActivity {
 //
 //    }
 
-    public class RecommandAppListAdapter extends RecyclerView.Adapter<RecommandAppListAdapter.RecommandViewHolder>{
+    public class RecommandAppListAdapter extends RecyclerView.Adapter<RecommandAppListAdapter.RecommandViewHolder> {
 
         private LayoutInflater inflater;
-        public RecommandAppListAdapter(Context context,List<App> recommandList){
+
+        public RecommandAppListAdapter(Context context, List<App> recommandList) {
             inflater = LayoutInflater.from(context);
         }
+
         private OnRecommandItemClickListener onRecommandItemClickListener;
 
-        public void setOnRecommandItemClickListener(OnRecommandItemClickListener l){
+        public void setOnRecommandItemClickListener(OnRecommandItemClickListener l) {
             this.onRecommandItemClickListener = l;
         }
 
         @Override
         public RecommandViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View view = inflater.inflate(R.layout.app_center_recommand_app_item,null);
+            View view = inflater.inflate(R.layout.app_center_recommand_app_item, null);
             RecommandViewHolder viewHolder = new RecommandViewHolder(view);
             viewHolder.recommandAppImg = (ImageView) view.findViewById(R.id.app_center_recommand_app_img);
             viewHolder.recommandAppText = (TextView) view.findViewById(R.id.app_center_recommand_app_text);
@@ -525,11 +533,11 @@ public class AppCenterActivity extends BaseActivity {
         public void onBindViewHolder(final RecommandViewHolder holder, final int position) {
             holder.recommandAppImg.setImageResource(R.drawable.ic_launcher);
             holder.recommandAppText.setText("App名称");
-            if(onRecommandItemClickListener != null){
+            if (onRecommandItemClickListener != null) {
                 holder.itemView.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        onRecommandItemClickListener.onRecommandItemClick(holder.itemView,position);
+                        onRecommandItemClickListener.onRecommandItemClick(holder.itemView, position);
                     }
                 });
             }
@@ -541,9 +549,10 @@ public class AppCenterActivity extends BaseActivity {
             return 10;
         }
 
-        public  class RecommandViewHolder extends RecyclerView.ViewHolder{
+        public class RecommandViewHolder extends RecyclerView.ViewHolder {
             ImageView recommandAppImg;
             TextView recommandAppText;
+
             public RecommandViewHolder(View itemView) {
                 super(itemView);
             }
@@ -551,8 +560,8 @@ public class AppCenterActivity extends BaseActivity {
 
     }
 
-    public interface OnRecommandItemClickListener{
-        void onRecommandItemClick(View view,int position);
+    public interface OnRecommandItemClickListener {
+        void onRecommandItemClick(View view, int position);
     }
 
 
@@ -570,8 +579,8 @@ public class AppCenterActivity extends BaseActivity {
         }
 
         @Override
-        public void returnAllAppsFail(String error,int errorCode) {
-            WebServiceMiddleUtils.hand(AppCenterActivity.this,error,errorCode);
+        public void returnAllAppsFail(String error, int errorCode) {
+            WebServiceMiddleUtils.hand(AppCenterActivity.this, error, errorCode);
             recommandCircleProgress.setVisibility(View.GONE);
             classCircleProgress.setVisibility(View.GONE);
         }
