@@ -9,6 +9,7 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.util.DirectChannelUtils;
 import com.inspur.emmcloud.util.JSONUtils;
 import com.inspur.emmcloud.util.PinyinUtils;
+import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.TimeUtils;
 import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.emmcloud.util.richtext.markdown.MarkDown;
@@ -182,8 +183,11 @@ public class Channel implements Serializable {
 			} else if (msg.getType().equals("txt_rich")) {
 				String msgBody = msg.getBody();
 				String source = JSONUtils.getString(msgBody, "source", "");
-				Spanned spanned = MarkDown.fromMarkdown(source,null,textView);
-				newestMsgContent = spanned.toString();
+				newestMsgContent = source;
+				if (!StringUtils.isBlank(source)){
+					Spanned spanned = MarkDown.fromMarkdown(source,null,textView);
+					newestMsgContent = spanned.toString();
+				}
 				if (type.equals("GROUP")){
 					newestMsgContent = title + newestMsgContent;
 				}
