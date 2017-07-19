@@ -189,5 +189,28 @@ public class PluginMgr {
 				plugin.onDestroy();
 			}
 		}
+		entries.clear();
+	}
+
+	/**
+	 * activity onResume事件
+	 */
+	public static  void onResume(){
+		for (IPlugin plugin : entries.values()) {
+			if (plugin != null) {
+				plugin.onActivityResume();
+			}
+		}
+	}
+
+	/**
+	 * activity onPause事件
+	 */
+	public static  void onPause(){
+		for (IPlugin plugin : entries.values()) {
+			if (plugin != null) {
+				plugin.onActivityPause();
+			}
+		}
 	}
 }

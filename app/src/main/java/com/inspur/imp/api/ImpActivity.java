@@ -32,6 +32,7 @@ import com.inspur.emmcloud.util.PreferencesByUsersUtils;
 import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.imp.engine.webview.ImpWebView;
+import com.inspur.imp.plugin.PluginMgr;
 import com.inspur.imp.plugin.camera.PublicWay;
 import com.inspur.imp.plugin.file.FileService;
 
@@ -396,6 +397,7 @@ public class ImpActivity extends ImpBaseActivity {
     protected void onDestroy() {
         // TODO Auto-generated method stub
         super.onDestroy();
+        PluginMgr.onDestroy();
         if (webView != null) {
             webView.removeAllViews();
             webView.destroy();
