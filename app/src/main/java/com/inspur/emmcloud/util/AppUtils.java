@@ -14,6 +14,7 @@ import android.database.Cursor;
 import android.graphics.Paint;
 import android.graphics.Paint.FontMetrics;
 import android.net.Uri;
+import android.os.Build;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
@@ -420,5 +421,22 @@ public class AppUtils {
         } else {
             return "hdpi";
         }
+    }
+
+    /**
+     * 获取当前手机系统版本号如6.0,7.0
+     *
+     * @return  系统版本号
+     */
+    public static String getSystemVersion() {
+        return android.os.Build.VERSION.RELEASE;
+    }
+
+    /**
+     * 获取sdk版本如19,24等
+     * @return
+     */
+    public static int getSDKVersion(){
+        return Build.VERSION.SDK_INT;
     }
 }
