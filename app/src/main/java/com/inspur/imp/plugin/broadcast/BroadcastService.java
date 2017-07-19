@@ -85,6 +85,9 @@ public class BroadcastService extends ImpPlugin {
                 }
                 String result =object.toString();
                 BroadcastService.this.jsCallback(callback,result);
+                getActivity().unregisterReceiver(receiver);
+                receiver = null;
+
             }
         };
         IntentFilter filter = new IntentFilter(action);
