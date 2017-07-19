@@ -952,7 +952,12 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
             } else if (command.equals("websocket_status")) {
                 String socketStatus = intent.getExtras().getString("status");
                 showSocketStatusInTitle(socketStatus);
-            }
+            } else if(command.equals("set_channel_message_read")){
+				LogUtils.jasonDebug("set_channel_message_read----------------");
+				String cid =  intent.getExtras().getString("cid");
+				String mid =  intent.getExtras().getString("mid");
+				setChannelMsgRead(cid,mid);
+			}
 
 		}
 
@@ -986,6 +991,26 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
         }
         adapter.notifyDataSetChanged();
     }
+
+	/**
+	 * 将单个频道消息置为已读
+	 * @param cid
+	 * @param mid
+	 */
+	private void setChannelMsgRead(String cid,String mid){
+		LogUtils.jasonDebug("setChannelMsgRead0000000000000----------------");
+		MsgReadIDCacheUtils.saveReadedMsg(getActivity(), cid,
+				mid);
+		for (int i = 0; i < displayChannelList.size(); i++) {
+			Channel channel = displayChannelList.get(i);
+			if (channel.getCid().equals(cid)){
+				LogUtils.jasonDebug("setChannelMsgRead1111111111111----------------");
+				channel.setUnReadCount(0);
+				break;
+			}
+		}
+		adapter.notifyDataSetChanged();
+	}
 
 	/**
 	 * 更新Channel的input信息
