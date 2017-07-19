@@ -44,7 +44,6 @@ import com.inspur.emmcloud.util.ToastUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.CircularProgress;
 import com.inspur.emmcloud.widget.ECMSpaceItemDecoration;
-import com.zhy.magicviewpager.transformer.ScaleInTransformer;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -155,6 +154,7 @@ public class AppCenterActivity extends BaseActivity {
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         Bundle bundle = new Bundle();
                         bundle.putSerializable("appList", (Serializable) categorieAppList.get(position).getAppItemList());
+                        bundle.putString("category_name",categorieAppList.get(position).getCategoryName());
                         IntentUtils.startActivity(AppCenterActivity.this, AppCenterMoreActivity.class, bundle);
                     }
                 });
@@ -225,26 +225,27 @@ public class AppCenterActivity extends BaseActivity {
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
 //			App app = recommandAppList.get(position);
-            if (recommandAppList.size() > 0 && position == 0) {
-                convertView = LayoutInflater.from(AppCenterActivity.this).inflate(R.layout.my_app_recommand_banner_app_item_view, null);
-                RelativeLayout appRecomandLayout = (RelativeLayout) convertView.findViewById(R.id.app_center_recomand_viewpager_layout);
-                ViewPager viewPager = (ViewPager) convertView.findViewById(R.id.app_center_banner_viewpager);
-                viewPager.setOffscreenPageLimit(3);
-                viewPager.getParent().requestDisallowInterceptTouchEvent(true);
-                int pagerWidth = (int) (getResources().getDisplayMetrics().widthPixels * 5.0f / 5.0f);
-                ViewGroup.LayoutParams lp = viewPager.getLayoutParams();
-                if (lp == null) {
-                    lp = new ViewGroup.LayoutParams(pagerWidth, ViewGroup.LayoutParams.MATCH_PARENT);
-                } else {
-                    lp.width = pagerWidth;
-                }
-                viewPager.setLayoutParams(lp);
-                viewPager.setPageMargin(-90);
-                viewPager.setClipChildren(false);
-                viewPager.setPageTransformer(true, new ScaleInTransformer());
-//                viewPager.setNestedpParent((ViewGroup) viewPager.getParent());
-                initRecomandViewPager(appRecomandLayout, viewPager);
-            } else {
+            //先不加顶部banner，如果需要加banner则打开此处的代码
+//            if (recommandAppList.size() > 0 && position == 0) {
+//                convertView = LayoutInflater.from(AppCenterActivity.this).inflate(R.layout.my_app_recommand_banner_app_item_view, null);
+//                RelativeLayout appRecomandLayout = (RelativeLayout) convertView.findViewById(R.id.app_center_recomand_viewpager_layout);
+//                ViewPager viewPager = (ViewPager) convertView.findViewById(R.id.app_center_banner_viewpager);
+//                viewPager.setOffscreenPageLimit(3);
+//                viewPager.getParent().requestDisallowInterceptTouchEvent(true);
+//                int pagerWidth = (int) (getResources().getDisplayMetrics().widthPixels * 5.0f / 5.0f);
+//                ViewGroup.LayoutParams lp = viewPager.getLayoutParams();
+//                if (lp == null) {
+//                    lp = new ViewGroup.LayoutParams(pagerWidth, ViewGroup.LayoutParams.MATCH_PARENT);
+//                } else {
+//                    lp.width = pagerWidth;
+//                }
+//                viewPager.setLayoutParams(lp);
+//                viewPager.setPageMargin(-90);
+//                viewPager.setClipChildren(false);
+//                viewPager.setPageTransformer(true, new ScaleInTransformer());
+////                viewPager.setNestedpParent((ViewGroup) viewPager.getParent());
+//                initRecomandViewPager(appRecomandLayout, viewPager);
+//            } else {
                 convertView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.my_app_recommand_app_item_view, null);
                 RecyclerView recomandRecyclerView = (RecyclerView) convertView.findViewById(R.id.app_center_recomand_recycleview);
                 LinearLayoutManager linearLayoutManager = new LinearLayoutManager(AppCenterActivity.this);
@@ -259,7 +260,7 @@ public class AppCenterActivity extends BaseActivity {
                     }
                 });
                 recomandRecyclerView.setAdapter(recommandAppListAdapter);
-            }
+//            }
             return convertView;
         }
 

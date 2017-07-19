@@ -134,6 +134,7 @@
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
+                android:visibility="gone"
                 android:layout_below="@id/header_layout"
                 android:orientation="horizontal" >
 
@@ -185,22 +186,23 @@
                     android:layout_width="0dp"
                     android:layout_height="2dp"
                     android:layout_weight="50"
-                    android:background="#4990E2"
                     android:visibility="visible" />
+                <!--android:background="#4990E2"-->
 
                 <View
                     android:id="@+id/class_tab_footer_view"
                     android:layout_width="0dp"
                     android:layout_height="2dp"
                     android:layout_weight="50"
-                    android:background="#4990E2"
                     android:visibility="invisible" />
+                <!-- android:background="#4990E2"-->
             </LinearLayout>
         </LinearLayout>
             <View
                 android:layout_width="fill_parent"
                 android:layout_height="1px"
-                android:background="#c8d3dc" />
+                android:background="#c8d3dc"
+                android:visibility="gone"/>
 
             <com.inspur.emmcloud.widget.HorizontalListView
                 android:id="@+id/intr_img_list"
@@ -216,11 +218,13 @@
                 android:id="@+id/division_line_view"
                 android:layout_width="fill_parent"
                 android:layout_height="1px"
+                android:visibility="gone"
                 android:background="#c8d3dc" />
             <android.support.v4.view.ViewPager
                 android:id="@+id/app_detail_viewpager"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+                android:layout_height="match_parent"
+                android:visibility="gone"/>
 
             <TextView
                 android:layout_width="match_parent"
