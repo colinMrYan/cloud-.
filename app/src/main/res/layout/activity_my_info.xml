@@ -464,11 +464,12 @@
 
             <LinearLayout
                 android:id="@+id/myinfo_usercompanylayout_layout"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
+                android:layout_toRightOf="@id/myinfo_usercompony_text"
+                android:layout_marginLeft="30dp"
                 android:layout_centerVertical="true"
-                android:gravity="center_vertical"
+                android:gravity="right|center_vertical"
                 android:orientation="horizontal"
                 android:paddingRight="15dp" >
 
