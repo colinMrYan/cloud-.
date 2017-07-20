@@ -1,80 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ecf1f4" >
-
-    <!-- android:background="@drawable/icon_work" -->
+    android:background="@color/header_bg" >
 
     <RelativeLayout
         android:id="@+id/header_layout"
         android:layout_width="match_parent"
-        android:layout_height="102dp"
-        android:layout_alignParentTop="true" >
-
-        <ImageView
-            android:id="@+id/header_bg_img"
-            android:scaleType="fitXY"
-            android:src="@drawable/work_navi_back"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
-
+        android:layout_height="wrap_content"
+        android:paddingTop="10dp"
+        android:paddingBottom="14dp"
+        android:paddingLeft="10dp"
+        >
         <RelativeLayout
             android:id="@+id/calendar_layout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:paddingBottom="14dp"
+            android:layout_height="wrap_content"
            >
-
             <TextView
                 android:id="@+id/work_date_text"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_alignParentLeft="true"
-                android:clickable="true"
-                android:paddingLeft="11dp"
-                android:text="@string/work_date_text"
-                android:layout_above="@+id/work_chinesedate_text"
-                android:gravity="bottom"
+                android:layout_height="wrap_content"
+                android:text="7月18日"
                 android:layout_marginBottom="7dp"
                 android:textColor="@color/white"
-                android:textSize="28sp" />
+                android:textSize="20sp" />
+            <ImageView
+                android:id="@+id/work_config_img"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:padding="5dp"
+                android:layout_alignParentRight="true"
+                android:src="@drawable/hotball" />
 
             <TextView
                 android:id="@+id/work_chinesedate_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentBottom="true"
+                android:layout_below="@id/work_date_text"
                 android:clickable="true"
-                android:paddingLeft="11dp"
-                android:text="@string/work_lunar"
+                android:text="农历六月二十五 星期二"
                 android:textColor="@color/white"
-                android:textSize="14sp" />
+                android:textSize="13sp" />
 
             <TextView
                 android:id="@+id/work_festvaldate_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:layout_alignTop="@id/work_chinesedate_text"
-                android:layout_alignParentBottom="true"
-                android:paddingRight="11dp"
-                android:text="@string/work_festval_date"
+                android:layout_alignBaseline="@id/work_chinesedate_text"
+                android:paddingRight="10dp"
+                android:text="距端午节还有32天"
                 android:textColor="@color/white"
                 android:textSize="14sp" />
 
-            <ImageView
-                android:id="@+id/work_timediff_img"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_alignParentBottom="true"
-                android:layout_marginRight="3dp"
-                android:layout_marginTop="5dp"
-                android:layout_toLeftOf="@id/work_festvaldate_text"
-                android:src="@drawable/hotball" />
         </RelativeLayout>
     </RelativeLayout>
 
@@ -82,19 +61,18 @@
         android:id="@+id/refresh_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/content_bg"
         android:layout_below="@id/header_layout" >
 
         <include layout="@layout/pull_refresh_head" />
 
         <com.inspur.emmcloud.widget.pullableview.PullableExpandableListView
-            android:id="@+id/expandableListView"
+            android:id="@+id/listView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/content_bg"
-            android:childDivider="#33000000"
-            android:divider="#33000000"
-            android:dividerHeight="0.5dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:divider="#00000000"
+            android:dividerHeight="10dp"
             android:listSelector="#00000000" />
 
         <include layout="@layout/pull_load_more" />

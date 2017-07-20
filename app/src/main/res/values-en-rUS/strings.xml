@@ -286,9 +286,6 @@
     <string name="work_national_day">Nation Day</string>
     <string name="work_moon_festival">Moon Day</string>
     <string name="work_day">Days</string>
-    <string name="work_date_text">On September 20</string>
-    <string name="work_lunar">According to the lunar calendar in August eighth day, Sunday</string>
-    <string name="work_festval_date">From the National Day, 10 days </string>
     <string name="work_nomeeting_text">No meetings </string>
     <string name="work_notask_text">No todo</string>
     <string name="work_nocal_text">No agenda</string>

@@ -288,9 +288,6 @@
     <string name="work_national_day">距国庆节</string>
     <string name="work_moon_festival">距中秋节</string>
     <string name="work_day">天</string>
-    <string name="work_date_text">9月20日</string>
-    <string name="work_lunar">农历八月初八 · 星期日</string>
-    <string name="work_festval_date">距元旦 · 10天</string>
     <string name="work_nomeeting_text">暂无会议</string>
     <string name="work_notask_text">暂无待办</string>
     <string name="work_nocal_text">暂无日程</string>
