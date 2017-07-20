@@ -478,6 +478,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingRight="10dp"
+                    android:singleLine="true"
+                    android:ellipsize="end"
                     android:text="@string/user_info_organ"
                     android:textColor="@color/onekey_content_text"
                     android:textSize="@dimen/content_normal_textsize" />
