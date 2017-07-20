@@ -10,16 +10,15 @@
         android:background="@color/header_bg">
 
         <ImageView
-            android:id="@+id/add_img"
+            android:id="@+id/contact_list_img"
             android:layout_width="52dp"
             android:layout_height="match_parent"
             android:layout_centerVertical="true"
             android:clickable="true"
             android:paddingLeft="15dp"
             android:paddingRight="15dp"
-            android:visibility="gone"
             android:scaleType="centerInside"
-            android:src="@drawable/icon_add" />
+            android:src="@drawable/selector_people_btn" />
 
         <TextView
             android:id="@+id/header_text"
