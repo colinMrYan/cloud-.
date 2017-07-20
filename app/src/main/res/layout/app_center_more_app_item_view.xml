@@ -23,6 +23,7 @@
         android:layout_alignTop="@id/app_icon_img"
         android:layout_gravity="center_vertical"
         android:layout_toRightOf="@id/app_icon_img"
+        android:layout_centerVertical="true"
         android:ellipsize="end"
         android:singleLine="true"
         android:textColor="@color/text_black"
@@ -36,6 +37,7 @@
         android:layout_alignBottom="@id/app_icon_img"
         android:layout_gravity="center_vertical"
         android:layout_toRightOf="@id/app_icon_img"
+        android:visibility="gone"
         android:background="@drawable/shape_appcenter_round_arrow"
         android:ellipsize="end"
         android:gravity="center"
@@ -52,6 +54,7 @@
         android:layout_marginLeft="8dp"
         android:layout_toRightOf="@id/app_name_text"
         android:background="@drawable/shape_appcenter_round_with_color"
+        android:layout_centerVertical="true"
         android:paddingLeft="3dp"
         android:paddingRight="3dp"
         android:text="官方" />
