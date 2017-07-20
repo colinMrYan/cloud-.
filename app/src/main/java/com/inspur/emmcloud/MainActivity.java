@@ -355,10 +355,10 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
 		if (screenType.equals("2k")) {
 			name = MyAppConfig.getSplashPageImageShowPath(MainActivity.this,
 					((MyApplication) getApplication()).getUid(), "splash/" + defaultBean.getXxxhdpi());
-		} else if (screenType.equals("xxxhdpi")) {
+		} else if (screenType.equals("xxhdpi")) {
 			name = MyAppConfig.getSplashPageImageShowPath(MainActivity.this,
 					((MyApplication) getApplication()).getUid(), "splash/" + defaultBean.getXxhdpi());
-		} else if (screenType.equals("xxhdpi")) {
+		} else if (screenType.equals("xhdpi")) {
 			name = MyAppConfig.getSplashPageImageShowPath(MainActivity.this,
 					((MyApplication) getApplication()).getUid(), "splash/" + defaultBean.getXhdpi());
 		} else {
