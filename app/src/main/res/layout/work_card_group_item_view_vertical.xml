@@ -1,0 +1,55 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@drawable/bg_corner_fill_white_no_border"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingBottom="18dp"
+    tools:context=".MainActivity" >
+
+    <RelativeLayout
+        android:id="@+id/group_header_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_corner_part_top"
+        android:paddingTop="14dp"
+        android:paddingBottom="14dp"
+        android:paddingLeft="14dp"
+        android:paddingRight="5dp"
+       >
+        <ImageView
+            android:id="@+id/group_icon_img"
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_launcher"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:layout_width="19dp"
+            android:layout_height="19dp" />
+
+        <TextView
+            android:id="@+id/group_title_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/group_icon_img"
+            android:layout_centerVertical="true"
+            android:textColor="#3CBAFF"
+            android:textSize="12sp" />
+
+        <ImageView
+            android:id="@+id/work_right_img"
+            android:layout_width="wrap_content"
+            android:layout_height="15dp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/right_arrow" />
+    </RelativeLayout>
+    <com.inspur.emmcloud.widget.ScrollViewWithListView
+        android:id="@+id/list"
+        android:dividerHeight="0dp"
+        android:divider="#00000000"
+        android:listSelector="#00000000"
+        android:layout_below="@id/group_header_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    </com.inspur.emmcloud.widget.ScrollViewWithListView>
+</RelativeLayout>
