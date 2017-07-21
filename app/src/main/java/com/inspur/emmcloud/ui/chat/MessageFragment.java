@@ -13,6 +13,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
@@ -39,7 +40,6 @@ import com.inspur.emmcloud.callback.CommonCallBack;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
-import com.inspur.emmcloud.ui.find.ScanResultActivity;
 import com.inspur.emmcloud.util.AppTitleUtils;
 import com.inspur.emmcloud.util.ChannelCacheUtils;
 import com.inspur.emmcloud.util.ChannelGroupCacheUtils;
@@ -58,6 +58,7 @@ import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
+import com.inspur.emmcloud.util.ScanQrCodeUtils;
 import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.TimeUtils;
 import com.inspur.emmcloud.util.ToastUtils;
@@ -114,6 +115,7 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
     private MessageFragmentReceiver messageFragmentReceiver;
     private TextView titleText;
     private boolean isHaveCreatGroupIcon = false;
+    private PopupWindow popupWindow;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -167,6 +169,9 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
     public void onPause() {
         super.onPause();
         pullToRefreshLayout.refreshFinish(PullToRefreshLayout.FAIL);
+        if (popupWindow != null && popupWindow.isShowing()) {
+            popupWindow.dismiss();
+        }
     }
 
     @Override
@@ -342,7 +347,7 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
         View contentView = LayoutInflater.from(getActivity())
                 .inflate(R.layout.pop_message_window_view, null);
         // 设置按钮的点击事件
-        final PopupWindow popupWindow = new PopupWindow(contentView,
+        popupWindow = new PopupWindow(contentView,
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT, true);
         popupWindow.setTouchable(true);
@@ -352,6 +357,13 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
                 return false;
                 // 这里如果返回true的话，touch事件将被拦截
                 // 拦截后 PopupWindow的onTouchEvent不被调用，这样点击外部区域无法dismiss
+            }
+        });
+
+        popupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+                backgroundAlpha(1.0f);
             }
         });
 
@@ -395,7 +407,6 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
                 intent.setClass(getActivity(), CaptureActivity.class);
                 intent.putExtra("from", "MoreFragment");
                 startActivityForResult(intent, SCAN_LOGIN_QRCODE_RESULT);
-
                 popupWindow.dismiss();
             }
         });
@@ -404,9 +415,21 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
         // 我觉得这里是API的一个bug
         popupWindow.setBackgroundDrawable(getResources().getDrawable(
                 R.drawable.pop_window_view_tran));
+        backgroundAlpha(0.8f);
         // 设置好参数之后再show
         popupWindow.showAsDropDown(view);
 
+    }
+
+    /**
+     * 设置添加屏幕的背景透明度
+     *
+     * @param bgAlpha
+     */
+    public void backgroundAlpha(float bgAlpha) {
+        WindowManager.LayoutParams lp = getActivity().getWindow().getAttributes();
+        lp.alpha = bgAlpha; //0.0-1.0
+        getActivity().getWindow().setAttributes(lp);
     }
 
     /**
@@ -1160,40 +1183,12 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
                 if (isDecodeSuccess) {
                     String msg = data.getStringExtra("msg");
                     LogUtils.YfcDebug("解析到的信息：" + msg);
-                    handleActionWithMsg(msg);
+                    ScanQrCodeUtils.getScanQrCodeUtilsInstance(getActivity()).handleActionWithMsg(msg);
                 } else {
                     LogUtils.YfcDebug("解析失败");
                 }
             }
         }
-    }
-
-    /**
-     * 根据二维码信息作出相应操作
-     * @param msg
-     */
-    private void handleActionWithMsg(String msg) {
-//        if(符合登录桌面版接口){
-//            loginDesktopCloudPlus(msg);
-//        }else if(符合打开某个应用){
-//            UriUtils.openApp(getActivity(),app);
-//        }else{
-//            ToastUtils.show(getActivity(),msg);
-//        }
-//        ToastUtils.show(getActivity(),"扫描到的信息是："+msg);
-        Intent intent = new Intent();
-        intent.putExtra("result",msg);
-        intent.setClass(getActivity(), ScanResultActivity.class);
-        startActivity(intent);
-    }
-
-    /**
-     * 登录云+桌面版
-     *
-     * @param msg
-     */
-    private void loginDesktopCloudPlus(String msg) {
-
     }
 
     /**
