@@ -39,6 +39,7 @@ import com.inspur.emmcloud.callback.CommonCallBack;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
+import com.inspur.emmcloud.ui.find.ScanResultActivity;
 import com.inspur.emmcloud.util.AppTitleUtils;
 import com.inspur.emmcloud.util.ChannelCacheUtils;
 import com.inspur.emmcloud.util.ChannelGroupCacheUtils;
@@ -1179,7 +1180,11 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 //        }else{
 //            ToastUtils.show(getActivity(),msg);
 //        }
-        ToastUtils.show(getActivity(),"扫描到的信息是："+msg);
+//        ToastUtils.show(getActivity(),"扫描到的信息是："+msg);
+        Intent intent = new Intent();
+        intent.putExtra("result",msg);
+        intent.setClass(getActivity(), ScanResultActivity.class);
+        startActivity(intent);
     }
 
     /**
