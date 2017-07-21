@@ -28,6 +28,7 @@ import com.inspur.emmcloud.ui.work.calendar.CalActivity;
 import com.inspur.emmcloud.ui.work.meeting.MeetingListActivity;
 import com.inspur.emmcloud.ui.work.task.MessionListActivity;
 import com.inspur.emmcloud.util.CalEventNotificationUtils;
+import com.inspur.emmcloud.util.DensityUtil;
 import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.MyCalendarCacheUtils;
 import com.inspur.emmcloud.util.MyCalendarOperationCacheUtils;
@@ -223,7 +224,8 @@ public class WorkFragment extends Fragment implements OnRefreshListener {
             });
             ScrollViewWithListView GroupListView = (ScrollViewWithListView) convertView.findViewById(R.id.list);
             if (position == 0) {
-                groupTitleText.setText("企业日历");
+                groupIconImg.setImageResource(R.drawable.ic_work_calendar);
+                groupTitleText.setText(R.string.work_calendar_text);
                 if (calendarChildAdapter == null){
                     calendarChildAdapter = new ChildAdapter(TYPE_CALENDAR);
                     GroupListView.setAdapter(calendarChildAdapter);
@@ -231,7 +233,8 @@ public class WorkFragment extends Fragment implements OnRefreshListener {
                     calendarChildAdapter.notifyDataSetChanged();
                 }
             } else if (position == 1) {
-                groupTitleText.setText("会议");
+                groupIconImg.setImageResource(R.drawable.ic_work_meeting);
+                groupTitleText.setText(R.string.work_meeting_text);
                 if (meetingChildAdapter == null){
                     meetingChildAdapter = new ChildAdapter(TYPE_MEETING);
                     GroupListView.setAdapter(meetingChildAdapter);
@@ -240,7 +243,8 @@ public class WorkFragment extends Fragment implements OnRefreshListener {
                 }
 
             } else {
-                groupTitleText.setText("待办任务");
+                groupIconImg.setImageResource(R.drawable.ic_work_task);
+                groupTitleText.setText(R.string.work_task_text);
                 if (taskChildAdapter == null){
                     taskChildAdapter = new ChildAdapter(TYPE_TASK);
                     GroupListView.setAdapter(taskChildAdapter);
@@ -286,22 +290,33 @@ public class WorkFragment extends Fragment implements OnRefreshListener {
             convertView = LayoutInflater.from(getActivity()).inflate(R.layout.work_card_child_item_view_vertical, null);
             TextView countDownText = (TextView) convertView.findViewById(R.id.count_down_text);
             TextView dateText = (TextView) convertView.findViewById(R.id.date_text);
-            String countDown, content, date;
+            String countDown = "";
+            String content = "";
+            String date = "";
             switch (type) {
                 case TYPE_MEETING:
-                    content = meetingList.get(position).getTopic();
+                    Meeting meeting =  meetingList.get(position);
+                    content =meeting.getTopic();
+                    countDown = TimeUtils.getCountdown(getActivity(),meeting.getFrom());
                     break;
                 case TYPE_TASK:
-                    content = taskList.get(position).getTitle();
+                    TaskResult task = taskList.get(position);
+                    content = task.getTitle();
+                    ViewGroup.LayoutParams param = countDownText.getLayoutParams();
+                    param.height = DensityUtil.dip2px(getActivity(),8);
+                    param.width = param.height;
+                    countDownText.setLayoutParams(param);
                     break;
                 case TYPE_CALENDAR:
-                    content = calEventList.get(position).getTitle();
+                    CalendarEvent calendarEvent = calEventList.get(position);
+                    content = calendarEvent.getTitle();
+                    countDown = TimeUtils.getCountdown(getActivity(),calendarEvent.getLocalStartDate());
                     break;
                 default:
-                    content = "";
                     break;
             }
             ((TextView) convertView.findViewById(R.id.content_text)).setText(content);
+            countDownText.setText(countDown);
             return convertView;
         }
     }

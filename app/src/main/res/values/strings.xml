@@ -87,9 +87,10 @@
     <string name="format_year_month_day_hour_minute">yyyy\'年\'MM\'月\'dd\'日\' HH:mm</string>
     <string name="format_year_month">yyyy\'年\'MM\'月\'</string>
     <string name="time_null">无</string>
-    <string name="cutdown_now">今天</string>
-    <string name="cutdown_tomorrow">明天</string>
+    <string name="cutdown_now">今</string>
+    <string name="cutdown_tomorrow">明</string>
     <string name="cutdown_day">天</string>
+    <string name="cutdown_yestoday">昨</string>
     <string name="cutdown_month">月</string>
     <string name="notice">通知</string>
     <string name="close">关闭</string>

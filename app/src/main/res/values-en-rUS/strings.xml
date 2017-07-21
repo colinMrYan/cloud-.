@@ -86,7 +86,8 @@
     <string name="format_year_month">yyyy-MM</string>
     <string name="time_null">null</string>
     <string name="cutdown_now">now</string>
-    <string name="cutdown_tomorrow">1d</string>
+    <string name="cutdown_tomorrow">tmr</string>
+    <string name="cutdown_yestoday">ytd</string>
     <string name="cutdown_day">d</string>
     <string name="cutdown_month">m</string>
     <string name="notice">Notice</string>

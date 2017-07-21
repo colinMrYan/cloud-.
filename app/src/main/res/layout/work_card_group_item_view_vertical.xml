@@ -19,7 +19,6 @@
         <ImageView
             android:id="@+id/group_icon_img"
             android:scaleType="fitXY"
-            android:src="@drawable/ic_launcher"
             android:layout_centerVertical="true"
             android:layout_marginRight="10dp"
             android:layout_width="19dp"

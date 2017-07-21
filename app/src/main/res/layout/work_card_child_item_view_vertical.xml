@@ -23,8 +23,9 @@
 			android:textSize="13sp"
 			android:layout_centerVertical="true"
 			android:layout_alignParentRight="true"
+			android:gravity="center"
 			android:layout_width="wrap_content"
-			android:layout_height="wrap_content" />
+			android:layout_height="40dp" />
 		<TextView
 			android:id="@+id/content_text"
 			android:textColor="#333333"
@@ -39,8 +40,8 @@
 			android:layout_height="wrap_content" />
 		<View
 			android:layout_toRightOf="@id/count_down_text"
-			android:layout_below="@id/count_down_text"
+			android:layout_below="@id/date_text"
 			android:layout_width="match_parent"
 			android:background="#dddddd"
-			android:layout_height="0.6dp"></View>
+			android:layout_height="0.5dp"></View>
 </RelativeLayout>
