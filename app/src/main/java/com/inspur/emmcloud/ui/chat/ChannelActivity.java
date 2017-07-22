@@ -828,7 +828,7 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
             } else {
                 senderPhotoImg.setVisibility(View.VISIBLE);
                 String iconUrl = UriUtils.getChannelImgUri(ChannelActivity.this, msg.getUid());
-                if (channel.getType().equals("SERVICE")) {
+                if (msg.getUid().startsWith("BOT") || channel.getType().equals("SERVICE")) {
                     iconUrl = UriUtils.getRobotIconUri(RobotCacheUtils
                             .getRobotById(ChannelActivity.this, msg.getUid())
                             .getAvatar());
@@ -842,7 +842,7 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
                         Bundle bundle = new Bundle();
                         String uid = msg.getUid();
                         bundle.putString("uid", uid);
-                        if (channel.getType().endsWith("SERVICE")) {
+                        if (uid.startsWith("BOT") || channel.getType().endsWith("SERVICE")) {
                             IntentUtils.startActivity(ChannelActivity.this,
                                     RobotInfoActivity.class, bundle);
                         } else {
