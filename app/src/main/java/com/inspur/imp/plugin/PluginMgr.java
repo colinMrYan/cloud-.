@@ -54,8 +54,11 @@ public class PluginMgr {
 	 * @param params
 	 *            操作参数
 	 */
-	public static void execute(final String serviceName, final String action,
+	public static void execute(String serviceName, final String action,
 			final String params) {
+		if (serviceName.equals("LoadingDialogService")){
+			serviceName = "com.inspur.imp.plugin.loadingdialog."+serviceName;
+		}
 		Log.d("jason", "serviceName="+serviceName);
 		Log.d("jason", "action="+action);
 		IPlugin plugin = null;

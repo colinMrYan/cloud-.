@@ -44,6 +44,8 @@ import java.lang.reflect.Method;
  */
 @SuppressLint("NewApi")
 public class ImpWebView extends WebView {
+	private static final int SET_TITLE = 1;
+	private static final int DIMISS_LOADING = 2;
 	// 当前webview名称
 	private String viewname;
 
@@ -91,8 +93,17 @@ public class ImpWebView extends WebView {
 		handler = new Handler(){
 			@Override
 			public void handleMessage(Message msg) {
-				String title =(String) msg.obj;
-				titleText.setText(title);
+				switch (msg.what){
+					case SET_TITLE:
+						String title =(String) msg.obj;
+						titleText.setText(title);
+						break;
+					case DIMISS_LOADING:
+						((ImpActivity)getContext()).dimissLoadingDlg();
+						break;
+					default:
+						break;
+				}
 			}
 		};
 
@@ -113,11 +124,10 @@ public class ImpWebView extends WebView {
 	public class GetTitle {
 		@JavascriptInterface
 		public void onGetTitle(final String title) {
-			LogUtils.jasonDebug("title="+title);
 			// 参数title即为网页的标题，可在这里面进行相应的title的处理
 			if (titleText != null && !StringUtils.isBlank(title)){
 				Message msg = new Message();
-				msg.what = 1;
+				msg.what = SET_TITLE;
 				msg.obj = title;
 				handler.sendMessage(msg);
 			}
@@ -135,7 +145,7 @@ public class ImpWebView extends WebView {
 				}
 			}
 			if (!isWebControlLoading){
-				((ImpActivity)getContext()).dimissLoadingDlg();
+				handler.sendEmptyMessage(DIMISS_LOADING);
 			}
 		}
 	}

@@ -7,6 +7,7 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 
 import com.inspur.emmcloud.util.JSONUtils;
+import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.imp.plugin.ImpPlugin;
 
@@ -25,7 +26,7 @@ public class BroadcastService extends ImpPlugin {
 
     @Override
     public void execute(String action, JSONObject paramsObject) {
-        if ("send".equals(action)) {
+        if ("open".equals(action)) {
             sendBroadcast(paramsObject);
         } else if ("receive".equals(action)) {
             this.paramsObject = paramsObject;
@@ -84,6 +85,7 @@ public class BroadcastService extends ImpPlugin {
                     }
                 }
                 String result =object.toString();
+                LogUtils.YfcDebug("result="+result);
                 BroadcastService.this.jsCallback(callback,result);
                 getActivity().unregisterReceiver(receiver);
                 receiver = null;
