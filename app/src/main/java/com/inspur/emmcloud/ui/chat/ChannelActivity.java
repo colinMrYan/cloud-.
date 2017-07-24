@@ -583,6 +583,7 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
             String botUid = DirectChannelUtils.getRobotInfo(getApplicationContext(),
                     channel.getTitle()).getId();
             bundle.putString("uid", botUid);
+            bundle.putString("type",channel.getType());
             IntentUtils.startActivity(ChannelActivity.this,
                     RobotInfoActivity.class, bundle);
         } else {
@@ -843,6 +844,7 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
                         String uid = msg.getUid();
                         bundle.putString("uid", uid);
                         if (uid.startsWith("BOT") || channel.getType().endsWith("SERVICE")) {
+                            bundle.putString("type",channel.getType());
                             IntentUtils.startActivity(ChannelActivity.this,
                                     RobotInfoActivity.class, bundle);
                         } else {
