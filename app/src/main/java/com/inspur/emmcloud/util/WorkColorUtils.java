@@ -1,40 +1,40 @@
 package com.inspur.emmcloud.util;
 
-import android.widget.ImageView;
+import android.view.View;
 
 import com.inspur.emmcloud.R;
 
 public class WorkColorUtils {
 
-	public static void showDayOfWeek(ImageView imageView, 
+	public static void showDayOfWeek(View view,
 			int countDown) {
 		if (countDown < 0) {
 			countDown = 0;
 		}
 		switch (countDown%7) {
 		case 1:
-			imageView.setImageResource(R.drawable.sunday);
+			view.setBackgroundResource(R.drawable.sunday);
 			break;
 		case 2:
-			imageView.setImageResource(R.drawable.monday);
+			view.setBackgroundResource(R.drawable.monday);
 			break;
 		case 3:
-			imageView.setImageResource(R.drawable.tuesday);
+			view.setBackgroundResource(R.drawable.tuesday);
 			break;
 		case 4:
-			imageView.setImageResource(R.drawable.wednesday);
+			view.setBackgroundResource(R.drawable.wednesday);
 			break;
 		case 5:
-			imageView.setImageResource(R.drawable.thursday);
+			view.setBackgroundResource(R.drawable.thursday);
 			break;
 		case 6:
-			imageView.setImageResource(R.drawable.friday);
+			view.setBackgroundResource(R.drawable.friday);
 			break;
 		case 7:
-			imageView.setImageResource(R.drawable.saturday);
+			view.setBackgroundResource(R.drawable.saturday);
 			break;
 		default:
-			imageView.setImageResource(R.drawable.saturday);
+			view.setBackgroundResource(R.drawable.saturday);
 			break;
 		}
 	}

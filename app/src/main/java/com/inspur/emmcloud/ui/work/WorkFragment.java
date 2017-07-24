@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.R;
@@ -36,6 +37,7 @@ import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.TimeUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
+import com.inspur.emmcloud.util.WorkColorUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.ScrollViewWithListView;
 import com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout;
@@ -106,6 +108,7 @@ public class WorkFragment extends Fragment implements OnRefreshListener {
     private void initViews() {
         listView = (PullableListView) rootView
                 .findViewById(R.id.list);
+        listView.setCanPullDown(false);
         pullToRefreshLayout = (PullToRefreshLayout) rootView
                 .findViewById(R.id.refresh_view);
         pullToRefreshLayout.setOnRefreshListener(WorkFragment.this);
@@ -180,15 +183,17 @@ public class WorkFragment extends Fragment implements OnRefreshListener {
         getActivity().registerReceiver(meetingAndTaskReceiver, myIntentFilter);
     }
 
-
+    static class ViewHolder {
+        ImageView groupIconImg;
+        TextView groupTitleText;
+        RelativeLayout groupHeaderlayout;
+        ScrollViewWithListView GroupListView;
+    }
     private class Adapter extends BaseAdapter {
-        public Adapter() {
-            super();
-        }
 
         @Override
         public int getCount() {
-            return 3;
+            return 4;
         }
 
         @Override
@@ -203,56 +208,58 @@ public class WorkFragment extends Fragment implements OnRefreshListener {
 
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
-            convertView = LayoutInflater.from(getActivity()).inflate(R.layout.work_card_group_item_view_vertical, null);
-            ImageView groupIconImg = (ImageView) convertView.findViewById(R.id.group_icon_img);
-            TextView groupTitleText = (TextView) convertView.findViewById(R.id.group_title_text);
-            (convertView.findViewById(R.id.group_header_layout)).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent();
-                    if (position == 0) {
-                        intent.setClass(getActivity(), CalActivity.class);
-                        startActivityForResult(intent, 0);
-                    } else if (position == 1) {
-                        intent.setClass(getActivity(), MeetingListActivity.class);
-                        startActivity(intent);
-                    } else if (position == 2) {
-                        intent.setClass(getActivity(), MessionListActivity.class);
-                        startActivityForResult(intent, 0);
+            ViewHolder holder;
+            if (position<getCount()-1){
+                if (convertView == null){
+                    holder = new ViewHolder();
+                    convertView = LayoutInflater.from(getActivity()).inflate(R.layout.work_card_group_item_view_vertical, null);
+                    holder.groupIconImg = (ImageView) convertView.findViewById(R.id.group_icon_img);
+                    holder.groupTitleText = (TextView) convertView.findViewById(R.id.group_title_text);
+                    holder.groupHeaderlayout = (RelativeLayout) convertView.findViewById(R.id.group_header_layout);
+                    holder.GroupListView = (ScrollViewWithListView) convertView.findViewById(R.id.list);
+                    convertView.setTag(holder);
+                }else {
+                    holder = (ViewHolder) convertView.getTag();
+                }
+                holder.groupHeaderlayout.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent();
+                        if (position == 0) {
+                            intent.setClass(getActivity(), CalActivity.class);
+                            startActivityForResult(intent, 0);
+                        } else if (position == 1) {
+                            intent.setClass(getActivity(), MeetingListActivity.class);
+                            startActivity(intent);
+                        } else if (position == 2) {
+                            intent.setClass(getActivity(), MessionListActivity.class);
+                            startActivityForResult(intent, 0);
+                        }
                     }
-                }
-            });
-            ScrollViewWithListView GroupListView = (ScrollViewWithListView) convertView.findViewById(R.id.list);
-            if (position == 0) {
-                groupIconImg.setImageResource(R.drawable.ic_work_calendar);
-                groupTitleText.setText(R.string.work_calendar_text);
-                if (calendarChildAdapter == null){
+                });
+                if (position == 0) {
+                    holder.groupIconImg.setImageResource(R.drawable.ic_work_calendar);
+                    holder.groupTitleText.setText(R.string.work_calendar_text);
                     calendarChildAdapter = new ChildAdapter(TYPE_CALENDAR);
-                    GroupListView.setAdapter(calendarChildAdapter);
-                }else {
-                    calendarChildAdapter.notifyDataSetChanged();
-                }
-            } else if (position == 1) {
-                groupIconImg.setImageResource(R.drawable.ic_work_meeting);
-                groupTitleText.setText(R.string.work_meeting_text);
-                if (meetingChildAdapter == null){
+                    holder.GroupListView.setAdapter(calendarChildAdapter);
+                } else if (position == 1) {
+                    holder.groupIconImg.setImageResource(R.drawable.ic_work_meeting);
+                    holder.groupTitleText.setText(R.string.work_meeting_text);
                     meetingChildAdapter = new ChildAdapter(TYPE_MEETING);
-                    GroupListView.setAdapter(meetingChildAdapter);
-                }else {
-                    meetingChildAdapter.notifyDataSetChanged();
-                }
+                    holder.GroupListView.setAdapter(meetingChildAdapter);
 
-            } else {
-                groupIconImg.setImageResource(R.drawable.ic_work_task);
-                groupTitleText.setText(R.string.work_task_text);
-                if (taskChildAdapter == null){
+                } else {
+                    holder.groupIconImg.setImageResource(R.drawable.ic_work_task);
+                    holder.groupTitleText.setText(R.string.work_task_text);
                     taskChildAdapter = new ChildAdapter(TYPE_TASK);
-                    GroupListView.setAdapter(taskChildAdapter);
-                }else {
-                    taskChildAdapter.notifyDataSetChanged();
+                    holder.GroupListView.setAdapter(taskChildAdapter);
                 }
+                return convertView;
+            }else {
+                View view = new View(getActivity());
+                view.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, DensityUtil.dip2px(getActivity(),50)));
+                return view;
             }
-            return convertView;
         }
     }
 
@@ -298,19 +305,29 @@ public class WorkFragment extends Fragment implements OnRefreshListener {
                     Meeting meeting =  meetingList.get(position);
                     content =meeting.getTopic();
                     countDown = TimeUtils.getCountdown(getActivity(),meeting.getFrom());
+                    WorkColorUtils.showDayOfWeek( countDownText,
+                            TimeUtils
+                                    .getCountdownNum(meeting.getFrom()));
                     break;
                 case TYPE_TASK:
+                    LogUtils.jasonDebug("task-------------------------");
                     TaskResult task = taskList.get(position);
                     content = task.getTitle();
                     ViewGroup.LayoutParams param = countDownText.getLayoutParams();
                     param.height = DensityUtil.dip2px(getActivity(),8);
                     param.width = param.height;
                     countDownText.setLayoutParams(param);
+                    WorkColorUtils.showDayOfWeek( countDownText,
+                            TimeUtils
+                                    .getCountdownNum(task.getCreationDate()));
                     break;
                 case TYPE_CALENDAR:
                     CalendarEvent calendarEvent = calEventList.get(position);
                     content = calendarEvent.getTitle();
                     countDown = TimeUtils.getCountdown(getActivity(),calendarEvent.getLocalStartDate());
+                    WorkColorUtils.showDayOfWeek( countDownText,
+                            TimeUtils
+                                    .getCountdownNum(calendarEvent.getLocalStartDate()));
                     break;
                 default:
                     break;
@@ -437,9 +454,7 @@ public class WorkFragment extends Fragment implements OnRefreshListener {
                 loadingDialog.dismiss();
             }
             taskList = getTaskListResult.getTaskList();
-            if (taskChildAdapter != null) {
                 taskChildAdapter.notifyDataSetChanged();
-            }
         }
 
         @Override

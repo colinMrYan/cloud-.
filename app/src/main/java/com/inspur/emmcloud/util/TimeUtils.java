@@ -704,6 +704,17 @@ public class TimeUtils {
     /**
      * 获取倒计时天数
      *
+     * @param calendarString
+     * @return
+     */
+    public static  int getCountdownNum(String calendarString){
+        Calendar calendar = timeString2Calendar(calendarString);
+        return  getCountdownNum(calendar);
+    }
+
+    /**
+     * 获取倒计时天数
+     *
      * @param calendar
      * @return
      */
