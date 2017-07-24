@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -24,16 +25,23 @@ import com.inspur.emmcloud.bean.GetMyCalendarResult;
 import com.inspur.emmcloud.bean.GetTaskListResult;
 import com.inspur.emmcloud.bean.Meeting;
 import com.inspur.emmcloud.bean.MyCalendar;
+import com.inspur.emmcloud.bean.PVCollectModel;
 import com.inspur.emmcloud.bean.TaskResult;
 import com.inspur.emmcloud.ui.work.calendar.CalActivity;
+import com.inspur.emmcloud.ui.work.calendar.CalEventAddActivity;
+import com.inspur.emmcloud.ui.work.meeting.MeetingBookingActivity;
+import com.inspur.emmcloud.ui.work.meeting.MeetingDetailActivity;
 import com.inspur.emmcloud.ui.work.meeting.MeetingListActivity;
+import com.inspur.emmcloud.ui.work.task.MessionDetailActivity;
 import com.inspur.emmcloud.ui.work.task.MessionListActivity;
 import com.inspur.emmcloud.util.CalEventNotificationUtils;
 import com.inspur.emmcloud.util.DensityUtil;
+import com.inspur.emmcloud.util.IntentUtils;
 import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.MyCalendarCacheUtils;
 import com.inspur.emmcloud.util.MyCalendarOperationCacheUtils;
 import com.inspur.emmcloud.util.NetUtils;
+import com.inspur.emmcloud.util.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.TimeUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
@@ -44,11 +52,16 @@ import com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout;
 import com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout.OnRefreshListener;
 import com.inspur.emmcloud.widget.pullableview.PullableListView;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+
+import static com.inspur.emmcloud.R.id.parent;
+import static com.inspur.emmcloud.R.id.view;
+import static com.inspur.emmcloud.util.TimeUtils.FORMAT_MONTH_DAY;
 
 /**
  * 工作页面
@@ -108,7 +121,6 @@ public class WorkFragment extends Fragment implements OnRefreshListener {
     private void initViews() {
         listView = (PullableListView) rootView
                 .findViewById(R.id.list);
-        listView.setCanPullDown(false);
         pullToRefreshLayout = (PullToRefreshLayout) rootView
                 .findViewById(R.id.refresh_view);
         pullToRefreshLayout.setOnRefreshListener(WorkFragment.this);
@@ -193,7 +205,7 @@ public class WorkFragment extends Fragment implements OnRefreshListener {
 
         @Override
         public int getCount() {
-            return 4;
+            return 3;
         }
 
         @Override
@@ -209,7 +221,7 @@ public class WorkFragment extends Fragment implements OnRefreshListener {
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
             ViewHolder holder;
-            if (position<getCount()-1){
+  //          if (position<getCount()-1){
                 if (convertView == null){
                     holder = new ViewHolder();
                     convertView = LayoutInflater.from(getActivity()).inflate(R.layout.work_card_group_item_view_vertical, null);
@@ -237,6 +249,12 @@ public class WorkFragment extends Fragment implements OnRefreshListener {
                         }
                     }
                 });
+            holder.GroupListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                }
+            });
                 if (position == 0) {
                     holder.groupIconImg.setImageResource(R.drawable.ic_work_calendar);
                     holder.groupTitleText.setText(R.string.work_calendar_text);
@@ -255,11 +273,11 @@ public class WorkFragment extends Fragment implements OnRefreshListener {
                     holder.GroupListView.setAdapter(taskChildAdapter);
                 }
                 return convertView;
-            }else {
-                View view = new View(getActivity());
-                view.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, DensityUtil.dip2px(getActivity(),50)));
-                return view;
-            }
+//            }else {
+//                View view = new View(getActivity());
+//                view.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, DensityUtil.dip2px(getActivity(),50)));
+//                return view;
+//            }
         }
     }
 
@@ -294,6 +312,7 @@ public class WorkFragment extends Fragment implements OnRefreshListener {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
+            LogUtils.jasonDebug("type="+type);
             convertView = LayoutInflater.from(getActivity()).inflate(R.layout.work_card_child_item_view_vertical, null);
             TextView countDownText = (TextView) convertView.findViewById(R.id.count_down_text);
             TextView dateText = (TextView) convertView.findViewById(R.id.date_text);
@@ -308,9 +327,10 @@ public class WorkFragment extends Fragment implements OnRefreshListener {
                     WorkColorUtils.showDayOfWeek( countDownText,
                             TimeUtils
                                     .getCountdownNum(meeting.getFrom()));
+                    String time = getMeetingTime(meeting);
+                    dateText.setText(time);
                     break;
                 case TYPE_TASK:
-                    LogUtils.jasonDebug("task-------------------------");
                     TaskResult task = taskList.get(position);
                     content = task.getTitle();
                     ViewGroup.LayoutParams param = countDownText.getLayoutParams();
@@ -320,6 +340,10 @@ public class WorkFragment extends Fragment implements OnRefreshListener {
                     WorkColorUtils.showDayOfWeek( countDownText,
                             TimeUtils
                                     .getCountdownNum(task.getCreationDate()));
+                    Calendar dueDate = task.getLocalDueDate();
+                    if (dueDate != null){
+                        dateText.setText(TimeUtils.calendar2FormatString(getActivity(),dueDate,FORMAT_MONTH_DAY));
+                    }
                     break;
                 case TYPE_CALENDAR:
                     CalendarEvent calendarEvent = calEventList.get(position);
@@ -328,6 +352,7 @@ public class WorkFragment extends Fragment implements OnRefreshListener {
                     WorkColorUtils.showDayOfWeek( countDownText,
                             TimeUtils
                                     .getCountdownNum(calendarEvent.getLocalStartDate()));
+                    dateText.setText(TimeUtils.getCalEventTimeSelection(getActivity(),calendarEvent));
                     break;
                 default:
                     break;
@@ -336,6 +361,63 @@ public class WorkFragment extends Fragment implements OnRefreshListener {
             countDownText.setText(countDown);
             return convertView;
         }
+    }
+
+    private class ListOnItemClickListener implements AdapterView.OnItemClickListener{
+        private int type;
+        public ListOnItemClickListener(int type) {
+            this.type = type;
+        }
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            //				if (calEventList.size() != 0) {
+            if (position == 0)
+					intent.putExtra("calEvent",
+							(Serializable) calEventList.get(childPosition));
+					intent.setClass(getActivity(), CalEventAddActivity.class);
+					startActivity(intent);
+					recordUserClickWorkFunction("calendar");
+				}
+			} else if (groupPosition == 2) {
+				if (taskList.size() != 0) {
+					intent.putExtra("task",
+							(Serializable) taskList.get(childPosition));
+					intent.setClass(getActivity(), MessionDetailActivity.class);
+					startActivity(intent);
+					recordUserClickWorkFunction("todo");
+				}
+			} else if (groupPosition == 0) {
+				if (getMeetingResult != null &&getMeetingResult.getMeetingsList().size() > 0) {
+						Meeting meeting = getMeetingResult.getMeetingsList().get(childPosition);
+						Bundle bundle = new Bundle();
+						bundle.putSerializable("meeting", meeting);
+						IntentUtils.startActivity(getActivity(),
+								MeetingDetailActivity.class, bundle);
+				}else {
+					IntentUtils.startActivity(getActivity(),
+							MeetingBookingActivity.class);
+				}
+				recordUserClickWorkFunction("meeting");
+			}
+        }
+    }
+
+
+    /**
+     * 获取会议时间
+     * @param meeting
+     * @return
+     */
+    private String getMeetingTime(Meeting meeting){
+        String from = meeting.getFrom();
+        String meetingFromTime = TimeUtils.calendar2FormatString(
+                getActivity(), TimeUtils.timeString2Calendar(from),
+                TimeUtils.FORMAT_HOUR_MINUTE);
+        String to = meeting.getTo();
+        String meetingToTime = TimeUtils.calendar2FormatString(
+                getActivity(), TimeUtils.timeString2Calendar(to),
+                TimeUtils.FORMAT_HOUR_MINUTE);
+        return meetingFromTime + " - " + meetingToTime;
     }
 
     @Override
@@ -543,14 +625,15 @@ public class WorkFragment extends Fragment implements OnRefreshListener {
 //		return festivalDate;
 //	}
 
-//	/**
-//	 * 记录用户点击
-//	 * @param functionId
-//	 */
-//	private void recordUserClickWorkFunction(String functionId){
-//		PVCollectModel pvCollectModel = new PVCollectModel(functionId,"work");
-//		PVCollectModelCacheUtils.saveCollectModel(getActivity(),pvCollectModel);
-//	}
+	/**
+	 * 记录用户点击
+	 * @param functionId
+	 */
+	private void recordUserClickWorkFunction(String functionId){
+		PVCollectModel pvCollectModel = new PVCollectModel(functionId,"work");
+		PVCollectModelCacheUtils.saveCollectModel(getActivity(),pvCollectModel);
+	}
+
 
 //	class WorkChildClickListener implements OnChildClickListener {
 //		@Override

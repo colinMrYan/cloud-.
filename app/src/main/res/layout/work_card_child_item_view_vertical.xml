@@ -13,7 +13,6 @@
 			android:gravity="center"
 			android:text="1天"
 			android:layout_marginRight="12dp"
-			android:background="@drawable/monday"
 			android:textColor="@color/white"
 			android:layout_centerVertical="true"
 			android:textSize="12sp" />
