@@ -59,6 +59,7 @@ import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
+import com.inspur.emmcloud.util.ScanQrCodeUtils;
 import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.TimeUtils;
 import com.inspur.emmcloud.util.ToastUtils;
@@ -89,6 +90,8 @@ import java.util.List;
 import java.util.Map;
 
 import io.socket.client.Socket;
+
+import static android.app.Activity.RESULT_OK;
 
 /**
  * 消息页面 com.inspur.emmcloud.ui.MessageFragment
@@ -208,7 +211,7 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 				if (property != null) {
 					if (!property.isCanCreate()) {
 						rootView.findViewById(R.id.find_friends_btn).setVisibility(View.GONE);
-						rootView.findViewById(R.id.add_img).setVisibility(View.GONE);
+						rootView.findViewById(R.id.contact_list_img).setVisibility(View.GONE);
 					}
 					if (!property.isCanContact()) {
 						rootView.findViewById(R.id.find_friends_btn).setVisibility(View.GONE);
@@ -230,7 +233,7 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
         rootView = inflater.inflate(R.layout.fragment_message, null);
         (rootView.findViewById(R.id.address_list_img))
                 .setOnClickListener(onViewClickListener);
-        (rootView.findViewById(R.id.add_img))
+        (rootView.findViewById(R.id.contact_list_img))
                 .setOnClickListener(onViewClickListener);
         (rootView.findViewById(R.id.find_friends_btn))
                 .setOnClickListener(onViewClickListener);
@@ -306,25 +309,25 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 //							ContactSearchActivity.class, bundle);
 //					recordUserClickContact();
                     showPopupWindow(rootView.findViewById(R.id.address_list_img));
-//                    break;
-//                case R.id.contact_list_img:
-////					Intent intent = new Intent();
-////					intent.putExtra("select_content", 2);
-////					intent.putExtra("isMulti_select", true);
-////					intent.putExtra("title",
-////							getActivity().getString(R.string.creat_group));
-////					intent.setClass(getActivity(), ContactSearchActivity.class);
-////					startActivityForResult(intent, CREAT_CHANNEL_GROUP);
-//
-//                    Bundle bundle = new Bundle();
-//                    bundle.putInt("select_content", 4);
-//                    bundle.putBoolean("isMulti_select", false);
-//                    bundle.putString("title",
-//                            getActivity().getString(R.string.adress_list));
-//                    IntentUtils.startActivity(getActivity(),
-//                            ContactSearchActivity.class, bundle);
-//                    recordUserClickContact();
-//                    break;
+                    break;
+                case R.id.contact_list_img:
+//					Intent intent = new Intent();
+//					intent.putExtra("select_content", 2);
+//					intent.putExtra("isMulti_select", true);
+//					intent.putExtra("title",
+//							getActivity().getString(R.string.creat_group));
+//					intent.setClass(getActivity(), ContactSearchActivity.class);
+//					startActivityForResult(intent, CREAT_CHANNEL_GROUP);
+
+                    Bundle bundle = new Bundle();
+                    bundle.putInt("select_content", 4);
+                    bundle.putBoolean("isMulti_select", false);
+                    bundle.putString("title",
+                            getActivity().getString(R.string.adress_list));
+                    IntentUtils.startActivity(getActivity(),
+                            ContactSearchActivity.class, bundle);
+                    recordUserClickContact();
+                    break;
 				default:
 					break;
 			}
@@ -1227,12 +1230,22 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 						&& NetUtils.isNetworkConnected(getActivity())) {
 					creatGroupChannel(peopleArray);
 				}
-
 			} catch (JSONException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 				ToastUtils.show(getActivity(),
 						getActivity().getString(R.string.creat_group_fail));
+			}
+		} else if ((resultCode == RESULT_OK) && (requestCode == SCAN_LOGIN_QRCODE_RESULT)) {
+			if (data.hasExtra("isDecodeSuccess")) {
+				boolean isDecodeSuccess = data.getBooleanExtra("isDecodeSuccess", false);
+				if (isDecodeSuccess) {
+					String msg = data.getStringExtra("msg");
+					LogUtils.YfcDebug("解析到的信息：" + msg);
+					ScanQrCodeUtils.getScanQrCodeUtilsInstance(getActivity()).handleActionWithMsg(msg);
+				} else {
+					LogUtils.YfcDebug("解析失败");
+				}
 			}
 		}
 	}
