@@ -27,7 +27,7 @@ public class LoadingDialogService extends ImpPlugin {
 
 	private void showDlg(JSONObject paramsObject){
 		String content = null;
-		if (!paramsObject.isNull("content")) {
+		if (paramsObject != null && !paramsObject.isNull("content")) {
 			content = JSONUtils.getString(paramsObject,"content","");
 		}
 		((ImpActivity)getActivity()).showLoadingDlg(content);

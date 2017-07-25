@@ -145,6 +145,7 @@
         android:layout_below="@id/header_layout"
         android:background="#3e000000"
         android:orientation="horizontal"
+        android:clickable="true"
         android:gravity="center"
         android:weightSum="1"
         android:layout_width="match_parent"
