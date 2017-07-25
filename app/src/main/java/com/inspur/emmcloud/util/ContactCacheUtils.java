@@ -3,6 +3,8 @@ package com.inspur.emmcloud.util;
 import android.content.Context;
 
 import com.inspur.emmcloud.bean.Contact;
+import com.inspur.emmcloud.bean.PersonDto;
+import com.inspur.emmcloud.bean.Robot;
 import com.lidroid.xutils.db.sqlite.Selector;
 import com.lidroid.xutils.db.sqlite.WhereBuilder;
 
@@ -10,6 +12,7 @@ import org.json.JSONArray;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -501,58 +504,155 @@ public class ContactCacheUtils {
 		return inspurID;
 	}
 
+//	/**
+//	 * 通过id List获取contact对象的List
+//	 *
+//	 * @param context
+//	 * @param uidArray
+//	 * @return
+//	 */
+//	public static List<Contact> getUserList(Context context, JSONArray uidArray) {
+//		List<Contact> userList = new ArrayList<Contact>();
+//		try {
+//
+//			List<String> uidList = new ArrayList<String>();
+//			for (int i = 0; i < uidArray.length(); i++) {
+//				uidList.add(uidArray.getString(i));
+//			}
+//
+//			userList = DbCacheUtils.getDb(context).findAll(Selector.from(Contact.class).where("inspurID",
+//					"in", uidList));
+//		} catch (Exception e) {
+//			// TODO: handle exception
+//			e.printStackTrace();
+//
+//		}
+//		if (userList == null) {
+//			userList = new ArrayList<Contact>();
+//		}
+//		return userList;
+//
+//	}
+
 	/**
-	 * 通过id List获取contact对象的List
+	 * 通过id List获取PersonDto对象的List
 	 *
 	 * @param context
 	 * @param uidArray
 	 * @return
 	 */
-	public static List<Contact> getUserList(Context context, JSONArray uidArray) {
-		List<Contact> userList = new ArrayList<Contact>();
+	public static List<PersonDto> getShowMemberList(Context context, JSONArray uidArray) {
+		List<String> uidList = new ArrayList<String>();
 		try {
-
-			List<String> uidList = new ArrayList<String>();
 			for (int i = 0; i < uidArray.length(); i++) {
 				uidList.add(uidArray.getString(i));
 			}
-
-			userList = DbCacheUtils.getDb(context).findAll(Selector.from(Contact.class).where("inspurID",
-					"in", uidList));
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
 
 		}
-		if (userList == null) {
-			userList = new ArrayList<Contact>();
-		}
-		return userList;
-
+		return getShowMemberList(context,uidList);
 	}
 
 
+//	/**
+//	 * 通过id List获取contact对象的List
+//	 *
+//	 * @param context
+//	 * @param uidList
+//	 * @return
+//	 */
+//	public static List<Contact> getUserList(Context context, List<String> uidList) {
+//		List<Contact> userList = new ArrayList<Contact>();
+//		List<Robot> robotList = new ArrayList<>();
+//		List<Contact> robot2UserList = new ArrayList<>();
+//		try {
+//			userList = DbCacheUtils.getDb(context).findAll(Selector.from(Contact.class).where("inspurID",
+//					"in", uidList));
+//			robotList = DbCacheUtils.getDb(context).findAll(Selector.from(Robot.class).where("id",
+//					"in", uidList));
+//		} catch (Exception e) {
+//			// TODO: handle exception
+//			e.printStackTrace();
+//
+//		}
+//		if(robotList !=null && (robotList.size() > 0)){
+//			LogUtils.YfcDebug("执行查询机器人");
+//			for(int i = 0; i < robotList.size(); i++){
+//				Contact contact = new Contact();
+//				Robot robot = robotList.get(i);
+//				contact.setId(robot.getId());
+//				contact.setHead(robot.getAvatar());
+//				contact.setName(robot.getName());
+//				contact.setRealName("客服浪小花");
+//				contact.setPinyin("kefulangxiaohua");
+//				robot2UserList.add(contact);
+//			}
+//			userList.addAll(robot2UserList);
+//		}
+//		LogUtils.YfcDebug("最终返回的用户列表大小："+userList.size());
+//		if (userList == null) {
+//			userList = new ArrayList<Contact>();
+//		}
+//		return userList;
+//
+//	}
+
+
 	/**
-	 * 通过id List获取contact对象的List
+	 * 通过id List获取PersonDto对象的List
 	 *
 	 * @param context
 	 * @param uidList
 	 * @return
 	 */
-	public static List<Contact> getUserList(Context context, List<String> uidList) {
+	public static List<PersonDto> getShowMemberList(Context context, List<String> uidList) {
 		List<Contact> userList = new ArrayList<Contact>();
+		List<Robot> robotList = new ArrayList<>();
+		List<PersonDto> unitMemberList = new ArrayList<>();
 		try {
 			userList = DbCacheUtils.getDb(context).findAll(Selector.from(Contact.class).where("inspurID",
+					"in", uidList));
+			robotList = DbCacheUtils.getDb(context).findAll(Selector.from(Robot.class).where("id",
 					"in", uidList));
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
 
 		}
-		if (userList == null) {
-			userList = new ArrayList<Contact>();
+
+		Iterator<Contact> contactListIterator = userList.iterator();
+		while (contactListIterator.hasNext()) {
+			Contact contact = contactListIterator.next();
+			PersonDto personDto = new PersonDto();
+			personDto.setName(contact.getRealName());
+			personDto.setUid(contact.getInspurID());
+			personDto.setSortLetters(contact.getPinyin().substring(0, 1));
+			personDto.setPinyinFull(contact.getPinyin());
+			personDto.setSuoxie(PinyinUtils.getPinYinHeadChar(contact
+					.getRealName()));
+			personDto.setUtype("contact");
+			unitMemberList.add(personDto);
 		}
-		return userList;
+
+		Iterator<Robot> robotListIterator = robotList.iterator();
+		while (robotListIterator.hasNext()) {
+			Robot robot = robotListIterator.next();
+			PersonDto personDto = new PersonDto();
+			personDto.setName(robot.getName());
+			personDto.setUid(robot.getId());
+			personDto.setSortLetters(PinyinUtils.getPingYin(robot.getName()).substring(0, 1));
+			personDto.setPinyinFull(PinyinUtils.getPingYin(robot.getName()));
+			personDto.setSuoxie(PinyinUtils.getPinYinHeadChar(robot.getName()));
+			personDto.setUtype("robot");
+			unitMemberList.add(personDto);
+		}
+
+		if (unitMemberList == null) {
+			unitMemberList = new ArrayList<PersonDto>();
+		}
+		return unitMemberList;
 
 	}
 

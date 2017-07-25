@@ -51,6 +51,7 @@ public class DeviceService extends ImpPlugin {
 
 				// 获取设备国际唯一标识码
 				jsonObject.put("uuid", String.valueOf(this.getUuid()));
+				jsonObject.put("model", getModel());
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}

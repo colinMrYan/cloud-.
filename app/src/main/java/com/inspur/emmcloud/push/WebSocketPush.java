@@ -56,6 +56,8 @@ public class WebSocketPush {
 			String enterpriseCode = ((MyApplication)context.getApplicationContext()).getCurrentEnterprise().getCode();
 			String path = "/"+enterpriseCode+"/socket/handshake";
 			WebSocketConnect(url, path,pushid);
+		}else {
+			sendWebSocketStatusBroadcaset(Socket.EVENT_DISCONNECT);
 		}
 	}
 

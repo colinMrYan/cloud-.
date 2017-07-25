@@ -170,7 +170,8 @@ public class IndexActivity extends BaseFragmentActivity implements
      * 初始化ReactNative
      */
     private void initReactNative() {
-        RNCacheViewManager.init(IndexActivity.this);
+        //这里希望能做一个预加载的管理器，目前不成熟
+//        RNCacheViewManager.init(IndexActivity.this);
         reactNativeCurrentPath = MyAppConfig.getReactAppFilePath(IndexActivity.this,userId,"discover");
         if (checkClientIdNotExit()) {
             getReactNativeClientId();
