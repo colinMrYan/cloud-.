@@ -4,8 +4,15 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.inspur.emmcloud.api.APIInterfaceInstance;
+import com.inspur.emmcloud.api.apiservice.AppAPIService;
 import com.inspur.emmcloud.bean.LoginDesktopCloudPlusBean;
 import com.inspur.emmcloud.ui.find.ScanResultActivity;
+import com.inspur.emmcloud.widget.LoadingDialog;
+import com.inspur.imp.api.ImpActivity;
+
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.regex.Pattern;
 
 /**
  * Created by yufuchang on 2017/7/21.
@@ -15,6 +22,7 @@ import com.inspur.emmcloud.ui.find.ScanResultActivity;
 public class ScanQrCodeUtils {
     private static ScanQrCodeUtils scanQrCodeUtils;
     private Context context;
+    private LoadingDialog loadingDialog;
     public static ScanQrCodeUtils getScanQrCodeUtilsInstance(Context context){
         if(scanQrCodeUtils == null){
             synchronized (ScanQrCodeUtils.class){
@@ -28,9 +36,11 @@ public class ScanQrCodeUtils {
 
     private ScanQrCodeUtils(Context context){
         this.context = context;
+        loadingDialog = new LoadingDialog(context);
     }
 
     public void handleActionWithMsg(String msg){
+        String urlHost = "";
 //        ToastUtils.show(context,"扫描到的信息是："+msg);
 //        if(符合登录桌面版接口){
 //            loginDesktopCloudPlus(msg);
@@ -40,7 +50,23 @@ public class ScanQrCodeUtils {
 //            ToastUtils.show(getActivity(),msg);
 //        }
 //        ToastUtils.show(getActivity(),"扫描到的信息是："+msg);
-        showUnKnownMsg(msg);
+        try {
+            URL url = new URL(msg);
+            urlHost = url.getHost();
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+        Pattern pattern = Pattern.compile(URLMatcher.URL_PATTERN);
+        if(!StringUtils.isBlank(urlHost)&&urlHost.equals("id.inspur.com")){
+            loginDesktopCloudPlus(msg);
+        }else if(pattern.matcher(msg).matches()){
+            Intent intent = new Intent();
+            intent.setClass(context, ImpActivity.class);
+            intent.putExtra("uri",msg);
+            context.startActivity(intent);
+        }else {
+            showUnKnownMsg(msg);
+        }
     }
 
     /**
@@ -49,11 +75,12 @@ public class ScanQrCodeUtils {
      * @param msg
      */
     private void loginDesktopCloudPlus(String msg) {
-//        AppAPIService appAPIService = new AppAPIService(context);
-//        appAPIService.setAPIInterface(new WebService());
-//        if(NetUtils.isNetworkConnected(context)){
-//            appAPIService.sendLoginDesktopCloudPlusInfo();
-//        }
+        AppAPIService appAPIService = new AppAPIService(context);
+        appAPIService.setAPIInterface(new WebService());
+        if(NetUtils.isNetworkConnected(context)){
+            loadingDialog.show();
+            appAPIService.sendLoginDesktopCloudPlusInfo(msg);
+        }
     }
 
     /**
@@ -70,12 +97,18 @@ public class ScanQrCodeUtils {
     class WebService extends APIInterfaceInstance{
         @Override
         public void returnLoginDesktopCloudPlusSuccess(LoginDesktopCloudPlusBean loginDesktopCloudPlusBean) {
-            super.returnLoginDesktopCloudPlusSuccess(loginDesktopCloudPlusBean);
+            if(loadingDialog != null && loadingDialog.isShowing()){
+                loadingDialog.dismiss();
+            }
+            ToastUtils.show(context,"登录成功");
         }
 
         @Override
         public void returnLoginDesktopCloudPlusFail(String error, int errorCode) {
-            super.returnLoginDesktopCloudPlusFail(error, errorCode);
+            if(loadingDialog != null && loadingDialog.isShowing()){
+                loadingDialog.dismiss();
+            }
+            WebServiceMiddleUtils.hand(context,error,errorCode);
         }
     }
 }
