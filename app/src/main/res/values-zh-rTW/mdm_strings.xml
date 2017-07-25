@@ -21,7 +21,7 @@
     <string name="mdm_sure">確定</string>
     <string name="mdm_cancel">取消</string>
     <string name="mdm_tips">提示</string>
-   <string name="loading_text">正在載入...</string>
+   <string name="loading_text">正在載入中...</string>
      <string name="network_exception">網路不可用，請檢查您的網路設置</string>
     <string name="network_timeout">網絡超時，請檢查您的網絡設定</string>
       <string name="net_request_failed">服務未能正確回應</string>

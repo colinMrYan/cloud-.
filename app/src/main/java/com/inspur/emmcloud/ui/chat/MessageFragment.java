@@ -48,7 +48,6 @@ import com.inspur.emmcloud.util.ChatCreateUtils.OnCreateGroupChannelListener;
 import com.inspur.emmcloud.util.DirectChannelUtils;
 import com.inspur.emmcloud.util.ImageDisplayUtils;
 import com.inspur.emmcloud.util.IntentUtils;
-import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.MsgCacheUtil;
 import com.inspur.emmcloud.util.MsgMatheSetCacheUtils;
 import com.inspur.emmcloud.util.MsgReadIDCacheUtils;
@@ -121,7 +120,6 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 		if (parent != null) {
 			parent.removeView(rootView);
 		}
-		setTabTitle();
 		return rootView;
 	}
 
@@ -139,17 +137,6 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 		CommonCallBack callBack = (CommonCallBack)context;
 		callBack.execute();
 	}
-
-	/**
-	 * 设置标题
-	 */
-	private void setTabTitle(){
-		String appTabs = PreferencesByUserAndTanentUtils.getString(getActivity(),"app_tabbar_info_current","");
-		if(!StringUtils.isBlank(appTabs)){
-			titleText.setText(AppTitleUtils.getTabTitle(getActivity(),getClass().getSimpleName()));
-		}
-	}
-
 
 	@Override
 	public void onResume() {
@@ -966,7 +953,6 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
                 String socketStatus = intent.getExtras().getString("status");
                 showSocketStatusInTitle(socketStatus);
             } else if(command.equals("set_channel_message_read")){
-				LogUtils.jasonDebug("set_channel_message_read----------------");
 				String cid =  intent.getExtras().getString("cid");
 				String mid =  intent.getExtras().getString("mid");
 				setChannelMsgRead(cid,mid);
@@ -980,7 +966,12 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 		if (socketStatus.equals("socket_connecting")){
 			titleText.setText(R.string.socket_connecting);
 		}else if (socketStatus.equals(Socket.EVENT_CONNECT)){
-			titleText.setText(R.string.communicate);
+			String appTabs = PreferencesByUserAndTanentUtils.getString(getActivity(),"app_tabbar_info_current","");
+			if(!StringUtils.isBlank(appTabs)){
+				titleText.setText(AppTitleUtils.getTabTitle(getActivity(),getClass().getSimpleName()));
+			}else {
+				titleText.setText(R.string.communicate);
+			}
 		}else if(socketStatus.equals(Socket.EVENT_DISCONNECT) || socketStatus.equals(Socket.EVENT_CONNECT_ERROR)){
 			titleText.setText(R.string.socket_close);
 		}
@@ -1006,13 +997,11 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 	 * @param mid
 	 */
 	private void setChannelMsgRead(String cid,String mid){
-		LogUtils.jasonDebug("setChannelMsgRead0000000000000----------------");
 		MsgReadIDCacheUtils.saveReadedMsg(getActivity(), cid,
 				mid);
 		for (int i = 0; i < displayChannelList.size(); i++) {
 			Channel channel = displayChannelList.get(i);
 			if (channel.getCid().equals(cid)){
-				LogUtils.jasonDebug("setChannelMsgRead1111111111111----------------");
 				channel.setUnReadCount(0);
 				break;
 			}
