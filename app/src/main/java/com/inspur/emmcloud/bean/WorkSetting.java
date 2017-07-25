@@ -1,5 +1,6 @@
 package com.inspur.emmcloud.bean;
 
+import com.lidroid.xutils.db.annotation.Id;
 import com.lidroid.xutils.db.annotation.Table;
 
 /**
@@ -7,17 +8,21 @@ import com.lidroid.xutils.db.annotation.Table;
  */
 @Table(name = "WorkSetting")
 public class WorkSetting {
+    @Id
     private String id;
     private boolean isOpen;
     private int sort;
-    public WorkSetting(){
+    private String name;
+
+    public WorkSetting() {
 
     }
 
-    public WorkSetting(String id,boolean isOpen,int sort){
-        this.id= id;
+    public WorkSetting(String id, String name, boolean isOpen, int sort) {
+        this.id = id;
         this.isOpen = isOpen;
         this.sort = sort;
+        this.name = name;
     }
 
     public String getId() {
@@ -42,5 +47,13 @@ public class WorkSetting {
 
     public void setSort(int sort) {
         this.sort = sort;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

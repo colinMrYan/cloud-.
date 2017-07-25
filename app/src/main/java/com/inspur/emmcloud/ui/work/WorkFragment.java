@@ -29,6 +29,7 @@ import com.inspur.emmcloud.bean.Meeting;
 import com.inspur.emmcloud.bean.MyCalendar;
 import com.inspur.emmcloud.bean.PVCollectModel;
 import com.inspur.emmcloud.bean.TaskResult;
+import com.inspur.emmcloud.bean.WorkSetting;
 import com.inspur.emmcloud.ui.work.calendar.CalActivity;
 import com.inspur.emmcloud.ui.work.calendar.CalEventAddActivity;
 import com.inspur.emmcloud.ui.work.meeting.MeetingDetailActivity;
@@ -51,6 +52,7 @@ import com.inspur.emmcloud.util.TimeUtils;
 import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.util.WorkColorUtils;
+import com.inspur.emmcloud.util.WorkSettingCacheUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.ScrollViewWithListView;
 import com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout;
@@ -73,10 +75,10 @@ import static com.inspur.emmcloud.util.TimeUtils.FORMAT_MONTH_DAY;
  */
 public class WorkFragment extends Fragment implements OnRefreshListener {
 
-    private static final int TYPE_CALENDAR = 0;
-    private static final int TYPE_APPROVAL = 1;
-    private static final int TYPE_MEETING = 2;
-    private static final int TYPE_TASK = 3;
+    private static final String TYPE_CALENDAR = "calendar";
+    private static final String TYPE_APPROVAL = "approval";
+    private static final String TYPE_MEETING = "meeting";
+    private static final String TYPE_TASK = "task";
     private View rootView;
     private WorkAPIService apiService;
     private LoadingDialog loadingDialog;
@@ -90,6 +92,7 @@ public class WorkFragment extends Fragment implements OnRefreshListener {
     private BroadcastReceiver meetingAndTaskReceiver;
     private List<String> calendarIdList = new ArrayList<>();
     private ChildAdapter calendarChildAdapter, meetingChildAdapter, taskChildAdapter;
+    private List<WorkSetting> workSettingList =new ArrayList<>();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -112,10 +115,23 @@ public class WorkFragment extends Fragment implements OnRefreshListener {
         LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(
                 getActivity().LAYOUT_INFLATER_SERVICE);
         rootView = inflater.inflate(R.layout.fragment_work, null);
+        getWorkSettingData();
         initViews();
-        getData();
+        getWorkData();
         registerCalEventReceiver();
         registerMeetingAndTaskReceiver();
+    }
+
+    private void getWorkSettingData(){
+        workSettingList = WorkSettingCacheUtils.getOpenWorkSettingList(getActivity());
+        LogUtils.jasonDebug("workSettingList="+workSettingList.size());
+        if (workSettingList.size() == 0){
+            workSettingList.add(new WorkSetting(TYPE_MEETING,"会议",true,0));
+            workSettingList.add(new WorkSetting(TYPE_CALENDAR,"企业日历",true,1));
+            workSettingList.add(new WorkSetting(TYPE_TASK,"待办事项",true,2));
+            WorkSettingCacheUtils.saveWorkSettingList(getActivity(),workSettingList);
+            LogUtils.jasonDebug("save------------");
+        }
     }
 
     /**
@@ -143,7 +159,7 @@ public class WorkFragment extends Fragment implements OnRefreshListener {
     /**
      * 获取数据
      */
-    private void getData() {
+    private void getWorkData() {
         getMeetings();
         getCalendarEvent();
         getTasks();
@@ -216,7 +232,7 @@ public class WorkFragment extends Fragment implements OnRefreshListener {
 
         @Override
         public int getCount() {
-            return 3;
+            return workSettingList.size();
         }
 
         @Override
@@ -244,69 +260,52 @@ public class WorkFragment extends Fragment implements OnRefreshListener {
             } else {
                 holder = (ViewHolder) convertView.getTag();
             }
+            WorkSetting workSetting = workSettingList.get(position);
+            final String id = workSetting.getId();
             holder.groupHeaderlayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent();
-                    if (position == 0) {
-                        intent.setClass(getActivity(), CalActivity.class);
-                        startActivityForResult(intent, 0);
-                    } else if (position == 1) {
-                        intent.setClass(getActivity(), MeetingListActivity.class);
-                        startActivity(intent);
-                    } else if (position == 2) {
-                        intent.setClass(getActivity(), MessionListActivity.class);
-                        startActivityForResult(intent, 0);
+                    if (id.equals(TYPE_CALENDAR)) {
+                        IntentUtils.startActivity(getActivity(), CalActivity.class);
+                    } else if (id.equals(TYPE_MEETING)) {
+                        IntentUtils.startActivity(getActivity(), MeetingListActivity.class);
+                    } else if (id.equals(TYPE_TASK)) {
+                        IntentUtils.startActivity(getActivity(), MessionListActivity.class);
                     }
                 }
             });
-            holder.GroupListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                }
-            });
-            if (position == 0) {
+            if (id.equals(TYPE_CALENDAR)) {
                 holder.groupIconImg.setImageResource(R.drawable.ic_work_calendar);
-                holder.groupTitleText.setText(R.string.work_calendar_text);
                 calendarChildAdapter = new ChildAdapter(TYPE_CALENDAR);
                 holder.GroupListView.setAdapter(calendarChildAdapter);
-                holder.GroupListView.setOnItemClickListener(new ListOnItemClickListener(TYPE_CALENDAR));
-            } else if (position == 1) {
+            } else if (id.equals(TYPE_MEETING)) {
                 holder.groupIconImg.setImageResource(R.drawable.ic_work_meeting);
-                holder.groupTitleText.setText(R.string.work_meeting_text);
                 meetingChildAdapter = new ChildAdapter(TYPE_MEETING);
                 holder.GroupListView.setAdapter(meetingChildAdapter);
-                holder.GroupListView.setOnItemClickListener(new ListOnItemClickListener(TYPE_MEETING));
             } else {
                 holder.groupIconImg.setImageResource(R.drawable.ic_work_task);
-                holder.groupTitleText.setText(R.string.work_task_text);
                 taskChildAdapter = new ChildAdapter(TYPE_TASK);
                 holder.GroupListView.setAdapter(taskChildAdapter);
-                holder.GroupListView.setOnItemClickListener(new ListOnItemClickListener(TYPE_TASK));
             }
+            holder.groupTitleText.setText(workSetting.getName());
+            holder.GroupListView.setOnItemClickListener(new ListOnItemClickListener(id));
             return convertView;
-//            }else {
-//                View view = new View(getActivity());
-//                view.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, DensityUtil.dip2px(getActivity(),50)));
-//                return view;
-//            }
         }
     }
 
     private class ChildAdapter extends BaseAdapter {
-        private int type;
+        private String type;
 
-        public ChildAdapter(int type) {
+        public ChildAdapter(String type) {
             this.type = type;
         }
 
         @Override
         public int getCount() {
-            if (type == TYPE_CALENDAR) {
+            if (type.equals(TYPE_CALENDAR)) {
                 return calEventList.size();
             }
-            if (type == TYPE_MEETING) {
+            if (type.equals(TYPE_MEETING)) {
                 return meetingList.size();
             }
             return taskList.size();
@@ -376,25 +375,25 @@ public class WorkFragment extends Fragment implements OnRefreshListener {
     }
 
     private class ListOnItemClickListener implements AdapterView.OnItemClickListener {
-        private int type;
+        private String type;
 
-        public ListOnItemClickListener(int type) {
+        public ListOnItemClickListener(String type) {
             this.type = type;
         }
 
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             Bundle bundle = new Bundle();
-            if (type == TYPE_CALENDAR) {
+            if (type.equals(TYPE_CALENDAR) ) {
                 bundle.putSerializable("calEvent",
                         calEventList.get(position));
                 IntentUtils.startActivity(getActivity(), CalEventAddActivity.class, bundle);
                 recordUserClickWorkFunction("calendar");
-            } else if (type == TYPE_TASK) {
+            } else if (type.equals(TYPE_TASK)) {
                 bundle.putSerializable("task",
                         taskList.get(position));
                 IntentUtils.startActivity(getActivity(), MessionDetailActivity.class, bundle);
-            } else if (type == TYPE_MEETING) {
+            } else if (type.equals(TYPE_MEETING)) {
                 Meeting meeting = meetingList.get(position);
                 bundle.putSerializable("meeting", meeting);
                 IntentUtils.startActivity(getActivity(),
@@ -663,7 +662,7 @@ public class WorkFragment extends Fragment implements OnRefreshListener {
     @Override
     public void onRefresh(PullToRefreshLayout pullToRefreshLayout) {
         if (NetUtils.isNetworkConnected(getActivity())) {
-            getData();
+            getWorkData();
         } else {
             pullToRefreshLayout.refreshFinish(PullToRefreshLayout.FAIL);
         }

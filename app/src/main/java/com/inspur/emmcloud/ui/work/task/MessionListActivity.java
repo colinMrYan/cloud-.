@@ -246,9 +246,6 @@ public class MessionListActivity extends BaseActivity implements
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.back_layout:
-			if (isNeedRefresh) {
-				setResult(RESULT_OK);
-			}
 			finish();
 			break;
 		case R.id.mession_settiing_img:
