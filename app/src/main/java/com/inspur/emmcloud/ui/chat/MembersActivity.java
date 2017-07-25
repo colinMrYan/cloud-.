@@ -18,13 +18,12 @@ import android.widget.Toast;
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.ChannelMemberListAdapter;
-import com.inspur.emmcloud.bean.Contact;
 import com.inspur.emmcloud.bean.PersonDto;
+import com.inspur.emmcloud.ui.contact.RobotInfoActivity;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
 import com.inspur.emmcloud.util.ChannelGroupCacheUtils;
 import com.inspur.emmcloud.util.ContactCacheUtils;
 import com.inspur.emmcloud.util.LogUtils;
-import com.inspur.emmcloud.util.PinyinUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.ToastUtils;
@@ -52,16 +51,13 @@ public class MembersActivity extends BaseActivity implements
     private EditText mSearchInput;
     private CharacterParser characterParser;// 汉字转拼音
     private PinyinComparator pinyinComparator;// 根据拼音来排列ListView里面的数据类
-    private List<PersonDto> channelDataList = new ArrayList<PersonDto>();
     private ChannelMemberListAdapter mAdapter;
     private JSONObject jsonResult;
     private String channelID = "";
-//    private List<Map<String, String>> memList;
-//    private RelativeLayout mSearchLayout;
     private Handler handler;
     private LoadingDialog loadingDlg;
     private List<PersonDto> filterList = new ArrayList<PersonDto>();
-    private List<Contact> contactList = new ArrayList<Contact>();
+    private List<PersonDto> personDtoList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,21 +83,17 @@ public class MembersActivity extends BaseActivity implements
             public void run() {
 
                 if (!StringUtils.isBlank(channelID)) {
-                    List<String> uidList = ChannelGroupCacheUtils.getMemberUidList(MembersActivity.this,channelID,0);
-                    contactList = ContactCacheUtils.getUserList( MembersActivity.this,uidList);
+                    List<String> uidList = ChannelGroupCacheUtils.getMemberUidList(MembersActivity.this, channelID, 0);
+                    personDtoList = ContactCacheUtils.getShowMemberList(MembersActivity.this,uidList);
                 } else if (getIntent().getStringArrayListExtra("uids") != null) {
-                        contactList = ContactCacheUtils.getUserList(
-                                MembersActivity.this, getIntent().getStringArrayListExtra("uids"));
-
+                    personDtoList = ContactCacheUtils.getShowMemberList(MembersActivity.this,getIntent().getStringArrayListExtra("uids"));
                 }
 
-                //修复迭代器问题
-                Iterator<Contact> sListIterator = contactList.iterator();
-                while (sListIterator.hasNext()) {
-                    Contact contact = sListIterator.next();
-                    if (contact.getInspurID().contains(userid)
-                            && (!getIntent().hasExtra("search"))) {
-                        sListIterator.remove();
+                Iterator<PersonDto> personDtoIterator = personDtoList.iterator();
+                while (personDtoIterator.hasNext()){
+                    PersonDto personDto = personDtoIterator.next();
+                    if(personDto.getUid().contains(userid) && (!getIntent().hasExtra("search"))){
+                        personDtoIterator.remove();
                     }
                 }
 
@@ -151,12 +143,16 @@ public class MembersActivity extends BaseActivity implements
                     if (mSearchInput.getText().toString().length() > 0) {
                         uid = filterList.get(position).getUid();
                     } else {
-                        uid = channelDataList.get(position).getUid();
+                        uid = personDtoList.get(position).getUid();
                     }
                     Intent intent = new Intent();
                     intent.putExtra("uid", uid);
-                    intent.setClass(getApplicationContext(),
-                            UserInfoActivity.class);
+                    if(uid.startsWith("BOT")){
+                        intent.setClass(getApplicationContext(), RobotInfoActivity.class);
+                    }else{
+                        intent.setClass(getApplicationContext(),
+                                UserInfoActivity.class);
+                    }
                     startActivity(intent);
                 }
             });
@@ -176,8 +172,8 @@ public class MembersActivity extends BaseActivity implements
                             peopleObject.put("cid", uid);
                             peopleObject.put("name", name);
                         } else {
-                            String uid = channelDataList.get(position).getUid();
-                            String name = channelDataList.get(position)
+                            String uid = personDtoList.get(position).getUid();
+                            String name = personDtoList.get(position)
                                     .getName();
                             peopleObject.put("cid", uid);
                             peopleObject.put("name", name);
@@ -203,40 +199,13 @@ public class MembersActivity extends BaseActivity implements
         // 实例化汉字转拼音类
         characterParser = CharacterParser.getInstance();
         pinyinComparator = new PinyinComparator();
-
-        for (int i = 0; i < contactList.size(); i++) {
-            // String uid = "", name = "";
-            // Iterator it = memList.get(i).entrySet().iterator();
-            // Entry entry = (Entry) it.next();
-            // uid = (String) entry.getKey();
-            // name = (String) entry.getValue();
-
-            PersonDto user = new PersonDto();
-            user.setName(contactList.get(i).getRealName());
-            user.setUid(contactList.get(i).getInspurID());
-            // characterParser.getSelling(name);
-            // characterParser.getFirstSpell(name).substring(0, 1);
-            user.setSortLetters(contactList.get(i).getPinyin().substring(0, 1));
-            user.setPinyinFull(contactList.get(i).getPinyin());
-            user.setSuoxie(PinyinUtils.getPinYinHeadChar(contactList.get(i)
-                    .getRealName()));
-            // PinyinUtils.getPinYinHeadChar(contactList.get(i).getRealName());
-
-            channelDataList.add(user);
-        }
-
-        fillData(channelDataList);
-
+        fillData(personDtoList);
         // 根据a-z进行排序源数据
-        Collections.sort(channelDataList, pinyinComparator);
-
+        Collections.sort(personDtoList, pinyinComparator);
         mAdapter = new ChannelMemberListAdapter(MembersActivity.this,
-                channelDataList);
-
+                personDtoList);
         mListView.setAdapter(mAdapter);
-
         mSearchInput.addTextChangedListener(this);
-
     }
 
     @Override
@@ -255,11 +224,10 @@ public class MembersActivity extends BaseActivity implements
     public void onTextChanged(CharSequence s, int start, int before, int count) {
         // 当输入框里面的值为空，更新为原来的列表，否则为过滤数据列表
         loadingDlg.show();
-        filterData(s.toString(), channelDataList);
+        filterData(s.toString(), personDtoList);
         if (loadingDlg.isShowing()) {
             loadingDlg.dismiss();
         }
-
     }
 
     @Override
@@ -280,7 +248,6 @@ public class MembersActivity extends BaseActivity implements
      */
     private void filterData(String filterStr, List<PersonDto> list) {
         List<PersonDto> filterDateList = new ArrayList<PersonDto>();
-
         if (TextUtils.isEmpty(filterStr)) {
             filterDateList = list;
         } else {

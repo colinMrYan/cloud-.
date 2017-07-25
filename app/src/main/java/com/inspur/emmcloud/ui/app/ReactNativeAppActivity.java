@@ -36,6 +36,7 @@ import com.inspur.emmcloud.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.dialogs.ECMCustomIOSDialog;
 import com.inspur.reactnative.AuthorizationManagerPackage;
 import com.inspur.reactnative.ReactNativeFlow;
+import com.inspur.reactnative.ReactNativeInitInfoUtils;
 import com.reactnativecomponent.swiperefreshlayout.RCTSwipeRefreshLayoutPackage;
 
 import org.xutils.common.Callback;
@@ -226,6 +227,19 @@ public class ReactNativeAppActivity extends BaseActivity implements DefaultHardw
         bundle.putString("enterpriseCode",currentEnterprise.getCode());
         bundle.putString("enterpriseName",currentEnterprise.getName());
         bundle.putString("enterpriseId",currentEnterprise.getId());
+
+        //这里与IOS传值有所不同，建议是保留原来版本即上面的传值方式，下面是IOS传值方式
+        //bundle.putString("profile",myInfo);
+        bundle.putString("systemName", ReactNativeInitInfoUtils.SYSTEM);
+        bundle.putString("systemVersion",ReactNativeInitInfoUtils.getSystemVersion(ReactNativeAppActivity.this));
+        bundle.putString("locale",ReactNativeInitInfoUtils.getLocalLanguage(ReactNativeAppActivity.this));
+        bundle.putString("reactNativeVersion",ReactNativeInitInfoUtils.getReactNativeVersion(reactAppFilePath));
+        bundle.putSerializable("userProfile",getMyInfoResult.getUserProfile2ReactNativeWritableNativeMap());
+        bundle.putString("accessToken",ReactNativeInitInfoUtils.getAppToken(ReactNativeAppActivity.this));
+        bundle.putString("pushId",ReactNativeInitInfoUtils.getPushId(ReactNativeAppActivity.this));
+        bundle.putString("pushType",ReactNativeInitInfoUtils.getPushType());
+        bundle.putSerializable("currentEnterprise", ReactNativeInitInfoUtils.getCurrentEnterprise(ReactNativeAppActivity.this).enterPrise2ReactNativeWritableNativeMap());
+        bundle.putString("appVersion",AppUtils.getVersion(ReactNativeAppActivity.this));
         return bundle;
     }
 

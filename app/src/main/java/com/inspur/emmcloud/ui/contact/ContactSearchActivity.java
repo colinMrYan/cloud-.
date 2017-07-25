@@ -29,7 +29,6 @@ import android.widget.TextView;
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.bean.Channel;
 import com.inspur.emmcloud.bean.ChannelGroup;
 import com.inspur.emmcloud.bean.Contact;
 import com.inspur.emmcloud.bean.FirstGroupTextModel;
@@ -37,7 +36,6 @@ import com.inspur.emmcloud.bean.GetCreateSingleChannelResult;
 import com.inspur.emmcloud.bean.SearchModel;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.ui.chat.ChannelActivity;
-import com.inspur.emmcloud.util.ChannelCacheUtils;
 import com.inspur.emmcloud.util.ChannelGroupCacheUtils;
 import com.inspur.emmcloud.util.ChatCreateUtils;
 import com.inspur.emmcloud.util.ChatCreateUtils.OnCreateDirectChannelListener;
@@ -112,19 +110,14 @@ public class ContactSearchActivity extends BaseActivity {
     private String title;
     private List<ChannelGroup> searchChannelGroupList = new ArrayList<ChannelGroup>(); // 群组搜索结果
     private List<Contact> searchContactList = new ArrayList<Contact>(); // 通讯录搜索结果
-    private List<Channel> searchRecentList = new ArrayList<Channel>();// 常用联系人搜索结果
 
     // popupWindow中的控件与数据
-    private LinearLayout popFirstGrouplayou;
     private LinearLayout popSecondGrouplayou;
     private LinearLayout popThirdGrouplayou;
-    private ListView popFirstGroupListView;
     private ListView popSecondGroupListView;
     private ListView popThirdGroupListView;
-    private popAdapter popFirstGroupAdapter;
     private popAdapter popSecondGroupAdapter;
     private popAdapter popThirdGroupAdapter;
-    private TextView popFirstGroupMoreText;
     private TextView popSecondGroupMoreText;
     private TextView popThirdGroupMoreText;
     private NoHorScrollView popLayout;
@@ -534,32 +527,16 @@ public class ContactSearchActivity extends BaseActivity {
                         searchContactList = ContactCacheUtils.getSearchContact(
                                 getApplicationContext(), searchText, null,
                                 4);
-                        searchRecentList = ChannelCacheUtils.getSearchChannelList(
-                                getApplicationContext(), searchText, searchContent);
                         break;
                     case SEARCH_CHANNELGROUP:
                         searchChannelGroupList = ChannelGroupCacheUtils
                                 .getSearchChannelGroupList(getApplicationContext(),
                                         searchText);
-                        if (!isSearchSingle) {
-                            searchRecentList = ChannelCacheUtils
-                                    .getSearchChannelList(getApplicationContext(),
-                                            searchText, searchContent);
-                        }
-                        break;
-                    case SEARCH_RECENT:
-                        searchRecentList = ChannelCacheUtils.getSearchChannelList(
-                                getApplicationContext(), searchText, searchContent);
                         break;
                     case SEARCH_CONTACT:
                         searchContactList = ContactCacheUtils.getSearchContact(
                                 getApplicationContext(), searchText, null,
                                 4);
-                        if (!isSearchSingle) {
-                            searchRecentList = ChannelCacheUtils
-                                    .getSearchChannelList(getApplicationContext(),
-                                            searchText, searchContent);
-                        }
                         break;
 
                     default:
@@ -633,18 +610,6 @@ public class ContactSearchActivity extends BaseActivity {
                 showAllChannelGroup();
                 break;
 
-            case R.id.pop_first_group_more_text:
-                List<FirstGroupTextModel> titleList = new ArrayList<FirstGroupTextModel>();
-                titleList.add(new FirstGroupTextModel(getString(R.string.recent),
-                        "", ""));
-                intent.putExtra("groupTextList", (Serializable) titleList);
-                intent.putExtra("selectMemList", (Serializable) selectMemList);
-                intent.putExtra("groupPosition", 1);
-                intent.putExtra("searchContent", searchContent);
-                intent.putExtra("searchText", searchEdit.getText().toString());
-                intent.putExtra("isMultiSelect", isMultiSelect);
-                startActivityForResult(intent, SEARCH_MORE);
-                break;
             case R.id.pop_second_group_more_text:
                 intent.putExtra("groupTextList",
                         (Serializable) popSecondGroupTextList);
@@ -733,13 +698,10 @@ public class ContactSearchActivity extends BaseActivity {
     private void initPopView() {
         // TODO Auto-generated method stub
         popLayout = (NoHorScrollView) findViewById(R.id.pop_layout);
-        popFirstGrouplayou = (LinearLayout) findViewById(R.id.pop_first_group_layout);
         popSecondGrouplayou = (LinearLayout) findViewById(R.id.pop_second_group_layout);
         popThirdGrouplayou = (LinearLayout) findViewById(R.id.pop_third_group_layout);
-        popFirstGroupListView = (ListView) findViewById(R.id.pop_first_group_list);
         popSecondGroupListView = (ListView) findViewById(R.id.pop_second_group_list);
         popThirdGroupListView = (ListView) findViewById(R.id.pop_third_group_list);
-        popFirstGroupMoreText = (TextView) findViewById(R.id.pop_first_group_more_text);
         popSecondGroupMoreText = (TextView) findViewById(R.id.pop_second_group_more_text);
         popThirdGroupMoreText = (TextView) findViewById(R.id.pop_third_group_more_text);
         popSecondGroupTitleListView = (RecyclerView) findViewById(R.id.pop_second_title_list);
@@ -755,24 +717,11 @@ public class ContactSearchActivity extends BaseActivity {
         popSecondGroupTitleListView.setAdapter(popSecondGroupTitleAdapter);
         popThirdGroupTitleListView.setAdapter(popThirdGroupTitleAdapter);
 
-        popFirstGroupAdapter = new popAdapter(1);
         popSecondGroupAdapter = new popAdapter(2);
         popThirdGroupAdapter = new popAdapter(3);
-        popFirstGroupListView.setAdapter(popFirstGroupAdapter);
         popSecondGroupListView.setAdapter(popSecondGroupAdapter);
         popThirdGroupListView.setAdapter(popThirdGroupAdapter);
 
-        popFirstGroupListView.setOnItemClickListener(new OnItemClickListener() {
-
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view,
-                                    int position, long id) {
-                // TODO Auto-generated method stub
-                SearchModel searchModel = new SearchModel(searchRecentList
-                        .get(position));
-                changeMembers(searchModel);
-            }
-        });
         popSecondGroupListView
                 .setOnItemClickListener(new OnItemClickListener() {
 
@@ -809,11 +758,6 @@ public class ContactSearchActivity extends BaseActivity {
         popLayout.setVisibility(View.VISIBLE);
         if (searchArea == SEARCH_ALL) {
             // 控制“更多”按钮的显示和隐藏 当全选时三个group的进行设置
-            if (searchRecentList.size() > 3) {
-                popFirstGroupMoreText.setVisibility(View.VISIBLE);
-            } else {
-                popFirstGroupMoreText.setVisibility(View.GONE);
-            }
             if (searchChannelGroupList.size() > 3) {
                 popSecondGroupMoreText.setVisibility(View.VISIBLE);
             } else {
@@ -824,18 +768,11 @@ public class ContactSearchActivity extends BaseActivity {
             } else {
                 popThirdGroupMoreText.setVisibility(View.GONE);
             }
-            popFirstGrouplayou.setVisibility(View.VISIBLE);
             popSecondGrouplayou.setVisibility(View.VISIBLE);
             popThirdGrouplayou.setVisibility(View.VISIBLE);
-            refreshListView(popFirstGroupListView, popFirstGroupAdapter);
             refreshListView(popSecondGroupListView, popSecondGroupAdapter);
             refreshListView(popThirdGroupListView, popThirdGroupAdapter);
         } else if (!isSearchSingle) {
-            if (searchRecentList.size() > 3) {
-                popFirstGroupMoreText.setVisibility(View.VISIBLE);
-            } else {
-                popFirstGroupMoreText.setVisibility(View.GONE);
-            }
             if (searchArea == SEARCH_CONTACT) {
                 if (searchContactList.size() > 3) {
                     popThirdGroupMoreText.setVisibility(View.VISIBLE);
@@ -857,7 +794,6 @@ public class ContactSearchActivity extends BaseActivity {
                 popThirdGrouplayou.setVisibility(View.GONE);
                 popSecondGroupAdapter.notifyDataSetChanged();
             }
-            popFirstGrouplayou.setVisibility(View.VISIBLE);
             refreshListView(popSecondGroupListView, popSecondGroupAdapter);
         } else {
             if (searchArea == SEARCH_CONTACT) {
@@ -866,31 +802,18 @@ public class ContactSearchActivity extends BaseActivity {
                 } else {
                     popThirdGroupMoreText.setVisibility(View.GONE);
                 }
-                popFirstGrouplayou.setVisibility(View.GONE);// 当对某一类选择时隐藏更多按钮
                 popSecondGrouplayou.setVisibility(View.GONE);
                 popThirdGrouplayou.setVisibility(View.VISIBLE);
                 refreshListView(popThirdGroupListView, popThirdGroupAdapter);
-            } else if (searchArea == SEARCH_CHANNELGROUP) {
+            } else {
                 if (searchChannelGroupList.size() > 3) {
                     popSecondGroupMoreText.setVisibility(View.VISIBLE);
                 } else {
                     popSecondGroupMoreText.setVisibility(View.GONE);
                 }
-                popFirstGrouplayou.setVisibility(View.GONE);// 当对某一类选择时隐藏更多按钮
                 popSecondGrouplayou.setVisibility(View.VISIBLE);
                 popThirdGrouplayou.setVisibility(View.GONE);
                 refreshListView(popSecondGroupListView, popSecondGroupAdapter);
-            } else if (searchArea == SEARCH_RECENT) {
-                if (searchRecentList.size() > 3) {
-                    popFirstGroupMoreText.setVisibility(View.VISIBLE);
-                } else {
-                    popFirstGroupMoreText.setVisibility(View.GONE);
-                }
-                popFirstGrouplayou.setVisibility(View.VISIBLE);// 当对某一类选择时隐藏更多按钮
-                popSecondGrouplayou.setVisibility(View.GONE);
-                popThirdGrouplayou.setVisibility(View.GONE);
-                popFirstGroupAdapter.notifyDataSetChanged();
-                refreshListView(popFirstGroupListView, popFirstGroupAdapter);
             }
         }
         // notifyPopFirstGroupText(openGroupTextList);
@@ -939,9 +862,6 @@ public class ContactSearchActivity extends BaseActivity {
      * 刷新pop页面的list数据
      */
     private void notifyPopDataChanged() {
-        if (popFirstGroupAdapter != null) {
-            refreshListView(popFirstGroupListView, popFirstGroupAdapter);
-        }
         if (popSecondGroupAdapter != null) {
             refreshListView(popSecondGroupListView, popSecondGroupAdapter);
         }
@@ -1176,21 +1096,7 @@ public class ContactSearchActivity extends BaseActivity {
         @Override
         public int getCount() { // 当筛选的结果比较多时先默认显示其中的三项
             // TODO Auto-generated method stub
-            if (groupPosition == 1) {
-                if (isSearchSingle) {
-                    if (searchArea == SEARCH_CHANNELGROUP) {
-                        return getListDisplayCount(searchChannelGroupList);
-                    } else if (searchArea == SEARCH_CONTACT) {
-                        return getListDisplayCount(searchContactList);
-                    } else {
-                        return getListDisplayCount(searchRecentList);
-                    }
-
-                } else {
-                    return getListDisplayCount(searchRecentList);
-
-                }
-            } else if (groupPosition == 2) {
+            if (groupPosition == 2) {
                 return getListDisplayCount(searchChannelGroupList);
             } else {
                 return getListDisplayCount(searchContactList);
@@ -1233,25 +1139,6 @@ public class ContactSearchActivity extends BaseActivity {
                 ChannelGroup channelGroup = searchChannelGroupList
                         .get(position);
                 searchModel = new SearchModel(channelGroup);
-            } else if ((groupPosition == 1)) {
-                if (isSearchSingle) {
-                    if (searchArea == SEARCH_CHANNELGROUP) {
-                        ChannelGroup channelGroup = searchChannelGroupList
-                                .get(position);
-                        searchModel = new SearchModel(channelGroup);
-                    } else if (searchArea == SEARCH_CONTACT) {
-                        Contact contact = searchContactList.get(position);
-                        searchModel = new SearchModel(contact);
-                    } else {
-                        Channel channel = searchRecentList.get(position);
-                        searchModel = new SearchModel(channel);
-                    }
-
-                } else {
-                    Channel channel = searchRecentList.get(position);
-                    searchModel = new SearchModel(channel);
-                }
-
             } else {
                 Contact contact = searchContactList.get(position);
                 searchModel = new SearchModel(contact);

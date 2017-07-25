@@ -62,6 +62,14 @@ public class RobotInfoActivity extends BaseActivity implements OnStateChangedLis
 				this, cid);
 		setTopSwitch.setOpened(isSetTop);
 		setTopSwitch.setOnStateChangedListener(this);
+		if(!getIntent().hasExtra("type") ){
+			findViewById(R.id.support_top_layout).setVisibility(View.GONE);
+		}else {
+			//预留，以后类型增加的时候在这里编写UI逻辑，入如显示需要展示哪些信息等
+			if(!getIntent().getStringExtra("type").equals("SERVICE")){
+				findViewById(R.id.support_top_layout).setVisibility(View.GONE);
+			}
+		}
 		
 	}
 	

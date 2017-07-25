@@ -307,16 +307,15 @@
             android:layout_height="match_parent"
             android:layout_below="@id/view1"
             android:background="#f4f4f4"
-            android:scrollbars="@null"
+            android:scrollbars="none"
             android:visibility="gone" >
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical" >
-
                 <LinearLayout
-                    android:id="@+id/pop_first_group_layout"
+                    android:id="@+id/pop_third_group_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical" >
@@ -331,19 +330,15 @@
                         android:layout_height="39dp"
                         android:background="#efeff4" >
 
-                        <TextView
-                            android:id="@+id/pop_first_title_text"
-                            android:layout_width="wrap_content"
+                        <android.support.v7.widget.RecyclerView
+                            android:id="@+id/pop_third_title_list"
+                            android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:background="#efeff4"
-                            android:gravity="center_vertical"
-                            android:paddingLeft="10dp"
-                            android:text="@string/recent"
-                            android:textColor="#8f8e94"
-                            android:textSize="@dimen/content_title_textsize" />
+                            android:layout_toLeftOf="@+id/pop_third_group_more_text" >
+                        </android.support.v7.widget.RecyclerView>
 
                         <TextView
-                            android:id="@+id/pop_first_group_more_text"
+                            android:id="@+id/pop_third_group_more_text"
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
                             android:layout_alignParentRight="true"
@@ -389,7 +384,7 @@
                         </LinearLayout>
 
                         <ListView
-                            android:id="@+id/pop_first_group_list"
+                            android:id="@+id/pop_third_group_list"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:divider="@null" >
@@ -468,84 +463,6 @@
 
                         <ListView
                             android:id="@+id/pop_second_group_list"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:divider="@null" >
-                        </ListView>
-                    </RelativeLayout>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/pop_third_group_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical" >
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="0.5dp"
-                        android:background="#dadadd" />
-
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="39dp"
-                        android:background="#efeff4" >
-
-                        <android.support.v7.widget.RecyclerView
-                            android:id="@+id/pop_third_title_list"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_toLeftOf="@+id/pop_third_group_more_text" >
-                        </android.support.v7.widget.RecyclerView>
-
-                        <TextView
-                            android:id="@+id/pop_third_group_more_text"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:layout_alignParentRight="true"
-                            android:clickable="true"
-                            android:gravity="center_vertical"
-                            android:onClick="onClick"
-                            android:paddingLeft="10dp"
-                            android:paddingRight="10dp"
-                            android:text="@string/more"
-                            android:textColor="#0F7BCA"
-                            android:textSize="@dimen/content_title_textsize"
-                            android:visibility="gone" />
-                    </RelativeLayout>
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="0.5dp"
-                        android:background="#dadadd" />
-
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content" >
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical" >
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="40dp"
-                                android:layout_centerVertical="true"
-                                android:background="#F4F4F4"
-                                android:gravity="center"
-                                android:text="@string/no_search_term"
-                                android:textColor="#030303"
-                                android:textSize="@dimen/content_title_textsize" />
-
-                            <View
-                                android:layout_width="match_parent"
-                                android:layout_height="0.5dp"
-                                android:background="#dadadd" />
-                        </LinearLayout>
-
-                        <ListView
-                            android:id="@+id/pop_third_group_list"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:divider="@null" >
