@@ -19,23 +19,27 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.WorkAPIService;
 import com.inspur.emmcloud.bean.CalendarEvent;
+import com.inspur.emmcloud.bean.FestivalDate;
 import com.inspur.emmcloud.bean.GetCalendarEventsResult;
 import com.inspur.emmcloud.bean.GetMeetingsResult;
 import com.inspur.emmcloud.bean.GetMyCalendarResult;
 import com.inspur.emmcloud.bean.GetTaskListResult;
+import com.inspur.emmcloud.bean.Language;
 import com.inspur.emmcloud.bean.Meeting;
 import com.inspur.emmcloud.bean.MyCalendar;
 import com.inspur.emmcloud.bean.PVCollectModel;
 import com.inspur.emmcloud.bean.TaskResult;
 import com.inspur.emmcloud.ui.work.calendar.CalActivity;
 import com.inspur.emmcloud.ui.work.calendar.CalEventAddActivity;
-import com.inspur.emmcloud.ui.work.meeting.MeetingBookingActivity;
 import com.inspur.emmcloud.ui.work.meeting.MeetingDetailActivity;
 import com.inspur.emmcloud.ui.work.meeting.MeetingListActivity;
 import com.inspur.emmcloud.ui.work.task.MessionDetailActivity;
 import com.inspur.emmcloud.ui.work.task.MessionListActivity;
 import com.inspur.emmcloud.util.CalEventNotificationUtils;
+import com.inspur.emmcloud.util.CalendarUtil;
+import com.inspur.emmcloud.util.DbCacheUtils;
 import com.inspur.emmcloud.util.DensityUtil;
+import com.inspur.emmcloud.util.FestivalCacheUtils;
 import com.inspur.emmcloud.util.IntentUtils;
 import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.MyCalendarCacheUtils;
@@ -44,6 +48,7 @@ import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.TimeUtils;
+import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.util.WorkColorUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
@@ -51,16 +56,14 @@ import com.inspur.emmcloud.widget.ScrollViewWithListView;
 import com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout;
 import com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout.OnRefreshListener;
 import com.inspur.emmcloud.widget.pullableview.PullableListView;
+import com.lidroid.xutils.exception.DbException;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import static com.inspur.emmcloud.R.id.parent;
-import static com.inspur.emmcloud.R.id.view;
 import static com.inspur.emmcloud.util.TimeUtils.FORMAT_MONTH_DAY;
 
 /**
@@ -86,7 +89,7 @@ public class WorkFragment extends Fragment implements OnRefreshListener {
     private BroadcastReceiver calEventReceiver;
     private BroadcastReceiver meetingAndTaskReceiver;
     private List<String> calendarIdList = new ArrayList<>();
-    private ChildAdapter calendarChildAdapter,meetingChildAdapter,taskChildAdapter;
+    private ChildAdapter calendarChildAdapter, meetingChildAdapter, taskChildAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -129,6 +132,12 @@ public class WorkFragment extends Fragment implements OnRefreshListener {
         loadingDialog = new LoadingDialog(getActivity());
         adapter = new Adapter();
         listView.setAdapter(adapter);
+        (rootView.findViewById(R.id.work_config_img)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                IntentUtils.startActivity(getActivity(),WorkSettingActivity.class);
+            }
+        });
     }
 
     /**
@@ -138,6 +147,7 @@ public class WorkFragment extends Fragment implements OnRefreshListener {
         getMeetings();
         getCalendarEvent();
         getTasks();
+        handHeaderDate();
     }
 
 
@@ -201,6 +211,7 @@ public class WorkFragment extends Fragment implements OnRefreshListener {
         RelativeLayout groupHeaderlayout;
         ScrollViewWithListView GroupListView;
     }
+
     private class Adapter extends BaseAdapter {
 
         @Override
@@ -221,58 +232,60 @@ public class WorkFragment extends Fragment implements OnRefreshListener {
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
             ViewHolder holder;
-  //          if (position<getCount()-1){
-                if (convertView == null){
-                    holder = new ViewHolder();
-                    convertView = LayoutInflater.from(getActivity()).inflate(R.layout.work_card_group_item_view_vertical, null);
-                    holder.groupIconImg = (ImageView) convertView.findViewById(R.id.group_icon_img);
-                    holder.groupTitleText = (TextView) convertView.findViewById(R.id.group_title_text);
-                    holder.groupHeaderlayout = (RelativeLayout) convertView.findViewById(R.id.group_header_layout);
-                    holder.GroupListView = (ScrollViewWithListView) convertView.findViewById(R.id.list);
-                    convertView.setTag(holder);
-                }else {
-                    holder = (ViewHolder) convertView.getTag();
-                }
-                holder.groupHeaderlayout.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent();
-                        if (position == 0) {
-                            intent.setClass(getActivity(), CalActivity.class);
-                            startActivityForResult(intent, 0);
-                        } else if (position == 1) {
-                            intent.setClass(getActivity(), MeetingListActivity.class);
-                            startActivity(intent);
-                        } else if (position == 2) {
-                            intent.setClass(getActivity(), MessionListActivity.class);
-                            startActivityForResult(intent, 0);
-                        }
+            //          if (position<getCount()-1){
+            if (convertView == null) {
+                holder = new ViewHolder();
+                convertView = LayoutInflater.from(getActivity()).inflate(R.layout.work_card_group_item_view_vertical, null);
+                holder.groupIconImg = (ImageView) convertView.findViewById(R.id.group_icon_img);
+                holder.groupTitleText = (TextView) convertView.findViewById(R.id.group_title_text);
+                holder.groupHeaderlayout = (RelativeLayout) convertView.findViewById(R.id.group_header_layout);
+                holder.GroupListView = (ScrollViewWithListView) convertView.findViewById(R.id.list);
+                convertView.setTag(holder);
+            } else {
+                holder = (ViewHolder) convertView.getTag();
+            }
+            holder.groupHeaderlayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent();
+                    if (position == 0) {
+                        intent.setClass(getActivity(), CalActivity.class);
+                        startActivityForResult(intent, 0);
+                    } else if (position == 1) {
+                        intent.setClass(getActivity(), MeetingListActivity.class);
+                        startActivity(intent);
+                    } else if (position == 2) {
+                        intent.setClass(getActivity(), MessionListActivity.class);
+                        startActivityForResult(intent, 0);
                     }
-                });
+                }
+            });
             holder.GroupListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
                 }
             });
-                if (position == 0) {
-                    holder.groupIconImg.setImageResource(R.drawable.ic_work_calendar);
-                    holder.groupTitleText.setText(R.string.work_calendar_text);
-                    calendarChildAdapter = new ChildAdapter(TYPE_CALENDAR);
-                    holder.GroupListView.setAdapter(calendarChildAdapter);
-                } else if (position == 1) {
-                    holder.groupIconImg.setImageResource(R.drawable.ic_work_meeting);
-                    holder.groupTitleText.setText(R.string.work_meeting_text);
-                    meetingChildAdapter = new ChildAdapter(TYPE_MEETING);
-                    holder.GroupListView.setAdapter(meetingChildAdapter);
-
-                } else {
-                    holder.groupIconImg.setImageResource(R.drawable.ic_work_task);
-                    holder.groupTitleText.setText(R.string.work_task_text);
-                    taskChildAdapter = new ChildAdapter(TYPE_TASK);
-                    holder.GroupListView.setAdapter(taskChildAdapter);
-                }
-                return convertView;
+            if (position == 0) {
+                holder.groupIconImg.setImageResource(R.drawable.ic_work_calendar);
+                holder.groupTitleText.setText(R.string.work_calendar_text);
+                calendarChildAdapter = new ChildAdapter(TYPE_CALENDAR);
+                holder.GroupListView.setAdapter(calendarChildAdapter);
+                holder.GroupListView.setOnItemClickListener(new ListOnItemClickListener(TYPE_CALENDAR));
+            } else if (position == 1) {
+                holder.groupIconImg.setImageResource(R.drawable.ic_work_meeting);
+                holder.groupTitleText.setText(R.string.work_meeting_text);
+                meetingChildAdapter = new ChildAdapter(TYPE_MEETING);
+                holder.GroupListView.setAdapter(meetingChildAdapter);
+                holder.GroupListView.setOnItemClickListener(new ListOnItemClickListener(TYPE_MEETING));
+            } else {
+                holder.groupIconImg.setImageResource(R.drawable.ic_work_task);
+                holder.groupTitleText.setText(R.string.work_task_text);
+                taskChildAdapter = new ChildAdapter(TYPE_TASK);
+                holder.GroupListView.setAdapter(taskChildAdapter);
+                holder.GroupListView.setOnItemClickListener(new ListOnItemClickListener(TYPE_TASK));
+            }
+            return convertView;
 //            }else {
 //                View view = new View(getActivity());
 //                view.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, DensityUtil.dip2px(getActivity(),50)));
@@ -296,7 +309,6 @@ public class WorkFragment extends Fragment implements OnRefreshListener {
             if (type == TYPE_MEETING) {
                 return meetingList.size();
             }
-            LogUtils.jasonDebug("taskList.size()="+taskList.size());
             return taskList.size();
         }
 
@@ -312,7 +324,7 @@ public class WorkFragment extends Fragment implements OnRefreshListener {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            LogUtils.jasonDebug("type="+type);
+            LogUtils.jasonDebug("type=" + type);
             convertView = LayoutInflater.from(getActivity()).inflate(R.layout.work_card_child_item_view_vertical, null);
             TextView countDownText = (TextView) convertView.findViewById(R.id.count_down_text);
             TextView dateText = (TextView) convertView.findViewById(R.id.date_text);
@@ -321,10 +333,10 @@ public class WorkFragment extends Fragment implements OnRefreshListener {
             String date = "";
             switch (type) {
                 case TYPE_MEETING:
-                    Meeting meeting =  meetingList.get(position);
-                    content =meeting.getTopic();
-                    countDown = TimeUtils.getCountdown(getActivity(),meeting.getFrom());
-                    WorkColorUtils.showDayOfWeek( countDownText,
+                    Meeting meeting = meetingList.get(position);
+                    content = meeting.getTopic();
+                    countDown = TimeUtils.getCountdown(getActivity(), meeting.getFrom());
+                    WorkColorUtils.showDayOfWeek(countDownText,
                             TimeUtils
                                     .getCountdownNum(meeting.getFrom()));
                     String time = getMeetingTime(meeting);
@@ -334,25 +346,25 @@ public class WorkFragment extends Fragment implements OnRefreshListener {
                     TaskResult task = taskList.get(position);
                     content = task.getTitle();
                     ViewGroup.LayoutParams param = countDownText.getLayoutParams();
-                    param.height = DensityUtil.dip2px(getActivity(),8);
+                    param.height = DensityUtil.dip2px(getActivity(), 8);
                     param.width = param.height;
                     countDownText.setLayoutParams(param);
-                    WorkColorUtils.showDayOfWeek( countDownText,
+                    WorkColorUtils.showDayOfWeek(countDownText,
                             TimeUtils
                                     .getCountdownNum(task.getCreationDate()));
                     Calendar dueDate = task.getLocalDueDate();
-                    if (dueDate != null){
-                        dateText.setText(TimeUtils.calendar2FormatString(getActivity(),dueDate,FORMAT_MONTH_DAY));
+                    if (dueDate != null) {
+                        dateText.setText(TimeUtils.calendar2FormatString(getActivity(), dueDate, FORMAT_MONTH_DAY));
                     }
                     break;
                 case TYPE_CALENDAR:
                     CalendarEvent calendarEvent = calEventList.get(position);
                     content = calendarEvent.getTitle();
-                    countDown = TimeUtils.getCountdown(getActivity(),calendarEvent.getLocalStartDate());
-                    WorkColorUtils.showDayOfWeek( countDownText,
+                    countDown = TimeUtils.getCountdown(getActivity(), calendarEvent.getLocalStartDate());
+                    WorkColorUtils.showDayOfWeek(countDownText,
                             TimeUtils
                                     .getCountdownNum(calendarEvent.getLocalStartDate()));
-                    dateText.setText(TimeUtils.getCalEventTimeSelection(getActivity(),calendarEvent));
+                    dateText.setText(TimeUtils.getCalEventTimeSelection(getActivity(), calendarEvent));
                     break;
                 default:
                     break;
@@ -363,52 +375,43 @@ public class WorkFragment extends Fragment implements OnRefreshListener {
         }
     }
 
-    private class ListOnItemClickListener implements AdapterView.OnItemClickListener{
+    private class ListOnItemClickListener implements AdapterView.OnItemClickListener {
         private int type;
+
         public ListOnItemClickListener(int type) {
             this.type = type;
         }
+
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            //				if (calEventList.size() != 0) {
-            if (position == 0)
-					intent.putExtra("calEvent",
-							(Serializable) calEventList.get(childPosition));
-					intent.setClass(getActivity(), CalEventAddActivity.class);
-					startActivity(intent);
-					recordUserClickWorkFunction("calendar");
-				}
-			} else if (groupPosition == 2) {
-				if (taskList.size() != 0) {
-					intent.putExtra("task",
-							(Serializable) taskList.get(childPosition));
-					intent.setClass(getActivity(), MessionDetailActivity.class);
-					startActivity(intent);
-					recordUserClickWorkFunction("todo");
-				}
-			} else if (groupPosition == 0) {
-				if (getMeetingResult != null &&getMeetingResult.getMeetingsList().size() > 0) {
-						Meeting meeting = getMeetingResult.getMeetingsList().get(childPosition);
-						Bundle bundle = new Bundle();
-						bundle.putSerializable("meeting", meeting);
-						IntentUtils.startActivity(getActivity(),
-								MeetingDetailActivity.class, bundle);
-				}else {
-					IntentUtils.startActivity(getActivity(),
-							MeetingBookingActivity.class);
-				}
-				recordUserClickWorkFunction("meeting");
-			}
+            Bundle bundle = new Bundle();
+            if (type == TYPE_CALENDAR) {
+                bundle.putSerializable("calEvent",
+                        calEventList.get(position));
+                IntentUtils.startActivity(getActivity(), CalEventAddActivity.class, bundle);
+                recordUserClickWorkFunction("calendar");
+            } else if (type == TYPE_TASK) {
+                bundle.putSerializable("task",
+                        taskList.get(position));
+                IntentUtils.startActivity(getActivity(), MessionDetailActivity.class, bundle);
+            } else if (type == TYPE_MEETING) {
+                Meeting meeting = meetingList.get(position);
+                bundle.putSerializable("meeting", meeting);
+                IntentUtils.startActivity(getActivity(),
+                        MeetingDetailActivity.class, bundle);
+                recordUserClickWorkFunction("meeting");
+            }
         }
-    }
 
+    }
 
     /**
      * 获取会议时间
+     *
      * @param meeting
      * @return
      */
-    private String getMeetingTime(Meeting meeting){
+    private String getMeetingTime(Meeting meeting) {
         String from = meeting.getFrom();
         String meetingFromTime = TimeUtils.calendar2FormatString(
                 getActivity(), TimeUtils.timeString2Calendar(from),
@@ -419,6 +422,69 @@ public class WorkFragment extends Fragment implements OnRefreshListener {
                 TimeUtils.FORMAT_HOUR_MINUTE);
         return meetingFromTime + " - " + meetingToTime;
     }
+
+    /**
+     * 设置头部节假日等信息
+     */
+    private void handHeaderDate() {
+        FestivalDate festivalDate = initFestivalDate();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(festivalDate.getFestivalTime());
+        int betweenQM = 0;
+        betweenQM = TimeUtils.getCountdownNum(calendar);
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        String date = TimeUtils.calendar2FormatString(getActivity(), calendar, TimeUtils.FORMAT_MONTH_DAY);
+        if (date.startsWith("0")) {
+            date = date.substring(1,date.length());
+        }
+        ((TextView) (rootView.findViewById(R.id.work_date_text)))
+                .setText(date);
+        String appLanguageObj = PreferencesUtils.getString(
+                getActivity(), UriUtils.tanent + "appLanguageObj", "");
+        Language language = new Language(appLanguageObj);
+        if (language.getIso().equals("zh-CN")
+                || language.equals("zh-TW")
+                || language.equals("followSys")) {
+            ((TextView) (rootView.findViewById(R.id.work_chinesedate_text)))
+                    .setText(CalendarUtil.getChineseToday()
+                            + TimeUtils.getWeekDay(getContext(), calendar));
+        } else if (language.getIso().equals("en-US")) {
+            ((TextView) (rootView.findViewById(R.id.work_chinesedate_text)))
+                    .setText(TimeUtils.calendar2FormatString(getActivity(),
+                            calendar, TimeUtils.FORMAT_MONTH_DAY)
+                            + "  "
+                            + TimeUtils.getWeekDay(getContext(), calendar));
+        }
+
+        String festivalDateTips = FestivalCacheUtils.getFestivalTips(getActivity(), festivalDate.getFestivalKey());
+        ((TextView) (rootView.findViewById(R.id.work_festvaldate_text)))
+                .setText(festivalDateTips + "  " + betweenQM
+                        + " " + getString(R.string.work_day));
+        if (betweenQM < 0) {
+            ((TextView) (rootView.findViewById(R.id.work_festvaldate_text)))
+                    .setText(festivalDateTips + 0
+                            + getString(R.string.work_day));
+        }
+    }
+
+    /**
+     * 初始化节日
+     *
+     * @return
+     */
+    private FestivalDate initFestivalDate() {
+        FestivalDate festivalDate = null;
+        try {
+            if (!DbCacheUtils.getDb(getActivity()).tableIsExist(FestivalDate.class)) {
+                FestivalCacheUtils.saveFestivalList(getActivity());
+            }
+            festivalDate = FestivalCacheUtils.getFestival(getActivity());
+        } catch (DbException e) {
+            e.printStackTrace();
+        }
+        return festivalDate;
+    }
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -536,7 +602,7 @@ public class WorkFragment extends Fragment implements OnRefreshListener {
                 loadingDialog.dismiss();
             }
             taskList = getTaskListResult.getTaskList();
-                taskChildAdapter.notifyDataSetChanged();
+            taskChildAdapter.notifyDataSetChanged();
         }
 
         @Override
@@ -608,71 +674,15 @@ public class WorkFragment extends Fragment implements OnRefreshListener {
     }
 
 
-//	/**
-//	 * 初始化节日
-//	 * @return
-//	 */
-//	private FestivalDate initFestivalDate(){
-//		FestivalDate festivalDate = null;
-//		try {
-//			if (!DbCacheUtils.getDb(getActivity()).tableIsExist(FestivalDate.class)) {
-//				FestivalCacheUtils.saveFestivalList(getActivity());
-//			}
-//			festivalDate = FestivalCacheUtils.getFestival(getActivity());
-//		} catch (DbException e) {
-//			e.printStackTrace();
-//		}
-//		return festivalDate;
-//	}
-
-	/**
-	 * 记录用户点击
-	 * @param functionId
-	 */
-	private void recordUserClickWorkFunction(String functionId){
-		PVCollectModel pvCollectModel = new PVCollectModel(functionId,"work");
-		PVCollectModelCacheUtils.saveCollectModel(getActivity(),pvCollectModel);
-	}
-
-
-//	class WorkChildClickListener implements OnChildClickListener {
-//		@Override
-//		public boolean onChildClick(ExpandableListView parent, View v,
-//				int groupPosition, int childPosition, long id) {
-//			Intent intent = new Intent();
-//			if (groupPosition == 1) {
-//				if (calEventList.size() != 0) {
-//					intent.putExtra("calEvent",
-//							(Serializable) calEventList.get(childPosition));
-//					intent.setClass(getActivity(), CalEventAddActivity.class);
-//					startActivity(intent);
-//					recordUserClickWorkFunction("calendar");
-//				}
-//			} else if (groupPosition == 2) {
-//				if (taskList.size() != 0) {
-//					intent.putExtra("task",
-//							(Serializable) taskList.get(childPosition));
-//					intent.setClass(getActivity(), MessionDetailActivity.class);
-//					startActivity(intent);
-//					recordUserClickWorkFunction("todo");
-//				}
-//			} else if (groupPosition == 0) {
-//				if (getMeetingResult != null &&getMeetingResult.getMeetingsList().size() > 0) {
-//						Meeting meeting = getMeetingResult.getMeetingsList().get(childPosition);
-//						Bundle bundle = new Bundle();
-//						bundle.putSerializable("meeting", meeting);
-//						IntentUtils.startActivity(getActivity(),
-//								MeetingDetailActivity.class, bundle);
-//				}else {
-//					IntentUtils.startActivity(getActivity(),
-//							MeetingBookingActivity.class);
-//				}
-//				recordUserClickWorkFunction("meeting");
-//			}
-//			return false;
-//		}
-//	}
-
+    /**
+     * 记录用户点击
+     *
+     * @param functionId
+     */
+    private void recordUserClickWorkFunction(String functionId) {
+        PVCollectModel pvCollectModel = new PVCollectModel(functionId, "work");
+        PVCollectModelCacheUtils.saveCollectModel(getActivity(), pvCollectModel);
+    }
 
     @Override
     public void onPause() {

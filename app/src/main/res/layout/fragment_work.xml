@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingBottom="14dp"
-        android:paddingLeft="10dp"
+        android:paddingLeft="14dp"
         android:paddingTop="10dp">
 
         <RelativeLayout
@@ -22,7 +22,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="7dp"
-                android:text="7月18日"
+                android:paddingLeft="2dp"
                 android:textColor="@color/white"
                 android:textSize="20sp" />
 
@@ -40,7 +40,6 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/work_date_text"
                 android:clickable="true"
-                android:text="农历六月二十五 星期二"
                 android:textColor="@color/white"
                 android:textSize="13sp" />
 
@@ -50,8 +49,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignBaseline="@id/work_chinesedate_text"
                 android:layout_alignParentRight="true"
-                android:paddingRight="10dp"
-                android:text="距端午节还有32天"
+                android:paddingRight="17dp"
                 android:textColor="@color/white"
                 android:textSize="14sp" />
 
