@@ -57,6 +57,7 @@ import com.inspur.emmcloud.util.ImageDisplayUtils;
 import com.inspur.emmcloud.util.IntentUtils;
 import com.inspur.emmcloud.util.JSONUtils;
 import com.inspur.emmcloud.util.ListViewUtils;
+import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.MsgCacheUtil;
 import com.inspur.emmcloud.util.MsgReadIDCacheUtils;
 import com.inspur.emmcloud.util.MsgRecourceUploadUtils;
@@ -583,6 +584,7 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
             String botUid = DirectChannelUtils.getRobotInfo(getApplicationContext(),
                     channel.getTitle()).getId();
             bundle.putString("uid", botUid);
+            bundle.putString("type",channel.getType());
             IntentUtils.startActivity(ChannelActivity.this,
                     RobotInfoActivity.class, bundle);
         } else {
@@ -828,7 +830,7 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
             } else {
                 senderPhotoImg.setVisibility(View.VISIBLE);
                 String iconUrl = UriUtils.getChannelImgUri(ChannelActivity.this, msg.getUid());
-                if (channel.getType().equals("SERVICE")) {
+                if (msg.getUid().startsWith("BOT") || channel.getType().equals("SERVICE")) {
                     iconUrl = UriUtils.getRobotIconUri(RobotCacheUtils
                             .getRobotById(ChannelActivity.this, msg.getUid())
                             .getAvatar());
@@ -842,7 +844,8 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
                         Bundle bundle = new Bundle();
                         String uid = msg.getUid();
                         bundle.putString("uid", uid);
-                        if (channel.getType().endsWith("SERVICE")) {
+                        if (uid.startsWith("BOT") || channel.getType().endsWith("SERVICE")) {
+                            bundle.putString("type",channel.getType());
                             IntentUtils.startActivity(ChannelActivity.this,
                                     RobotInfoActivity.class, bundle);
                         } else {
@@ -879,6 +882,21 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
     private boolean isMyMsg(Msg msg) {
         String uid = ((MyApplication) getApplication()).getUid();
         return msg.getUid().equals(uid);
+    }
+
+    /**
+     * 通知message页将本频道消息置为已读
+     */
+    private void setChannelMsgRead(){
+        LogUtils.jasonDebug("setChannelMsgRead0000000000000");
+        if (msgList != null && msgList.size()>0){
+            Intent intent = new Intent("message_notify");
+            intent.putExtra("command", "set_channel_message_read");
+            intent.putExtra("cid", cid);
+            intent.putExtra("mid", msgList.get(msgList.size()-1).getMid());
+            sendBroadcast(intent);
+            LogUtils.jasonDebug("setChannelMsgRead1111111111111111");
+        }
     }
 
     @Override
@@ -994,8 +1012,14 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
             if (loadingDlg != null && loadingDlg.isShowing()) {
                 loadingDlg.dismiss();
                 List<Msg> msgList = getNewMsgsResult.getNewMsgList(cid);
-                MsgCacheUtil.saveMsgList(ChannelActivity.this, msgList, "");
+                if (msgList.size() >0){
+                    MsgCacheUtil.saveMsgList(ChannelActivity.this, msgList, "");
+                    String lastMsgMid =msgList.get(msgList.size()-1).getMid();
+                    MsgReadIDCacheUtils.saveReadedMsg(ChannelActivity.this, cid,
+                            lastMsgMid);
+                }
                 initViews();
+                setChannelMsgRead();
             } else {
                 pullToRefreshLayout.refreshFinish(PullToRefreshLayout.SUCCEED);
                 final List<Msg> historyMsgList = getNewMsgsResult

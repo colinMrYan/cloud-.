@@ -24,6 +24,7 @@ import com.inspur.emmcloud.bean.GetAddMembersSuccessResult;
 import com.inspur.emmcloud.bean.GetChannelInfoResult;
 import com.inspur.emmcloud.bean.SearchModel;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
+import com.inspur.emmcloud.ui.contact.RobotInfoActivity;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
 import com.inspur.emmcloud.util.ChannelCacheUtils;
 import com.inspur.emmcloud.util.ChannelGroupCacheUtils;
@@ -34,6 +35,8 @@ import com.inspur.emmcloud.util.IntentUtils;
 import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.PinyinUtils;
+import com.inspur.emmcloud.util.RobotCacheUtils;
+import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.CircleImageView;
@@ -202,6 +205,14 @@ public class ChannelInfoActivity extends BaseActivity {
 				startActivityForResult(intent, ADD_MEMBER);
 
 			} else {
+				String uid = memberList.get(position);
+				if(!StringUtils.isBlank(uid) && uid.startsWith("BOT")){
+					Bundle bundle = new Bundle();
+					bundle.putString("uid",uid);
+					IntentUtils.startActivity(ChannelInfoActivity.this,
+							RobotInfoActivity.class, bundle);
+					return;
+				}
 				intent.putExtra("uid", memberList.get(position));
 				intent.setClass(getApplicationContext(), UserInfoActivity.class);
 				startActivity(intent);
@@ -373,9 +384,21 @@ public class ChannelInfoActivity extends BaseActivity {
 				String uid = memberList.get(position);
 				viewHolder.nameText.setText(ContactCacheUtils.getUserName(
 						ChannelInfoActivity.this, uid));
-				userPhotoUrl = UriUtils.getChannelImgUri(ChannelInfoActivity.this,uid);
-				userName = ContactCacheUtils.getUserName(
-						ChannelInfoActivity.this, uid);
+				if(uid.startsWith("BOT")){
+					userPhotoUrl = UriUtils.getRobotIconUri(RobotCacheUtils
+							.getRobotById(ChannelInfoActivity.this, uid)
+							.getAvatar());
+				}else{
+					userPhotoUrl = UriUtils.getChannelImgUri(ChannelInfoActivity.this,uid);
+				}
+				if(uid.startsWith("BOT")){
+					userName = RobotCacheUtils
+							.getRobotById(ChannelInfoActivity.this, uid)
+							.getName();
+				}else{
+					userName = ContactCacheUtils.getUserName(
+							ChannelInfoActivity.this, uid);
+				}
 				imageDisplayUtils.display(viewHolder.memberHeadImg,
 						UriUtils.getChannelImgUri(ChannelInfoActivity.this,uid));
 			}
