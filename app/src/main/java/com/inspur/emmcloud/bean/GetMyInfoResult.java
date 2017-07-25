@@ -1,6 +1,8 @@
 package com.inspur.emmcloud.bean;
 
 import com.inspur.emmcloud.util.JSONUtils;
+import com.inspur.reactnative.ReactNativeWritableArray;
+import com.inspur.reactnative.ReactNativeWritableNativeMap;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -28,6 +30,7 @@ public class GetMyInfoResult implements Serializable {
 	//private String enterpriseId ;
 	private List<Enterprise> enterpriseList = new ArrayList<>();
 	private Enterprise defaultEnterprise;
+	private ReactNativeWritableNativeMap reactNativeWritableNativeMap = new ReactNativeWritableNativeMap();//RN的bundle使用
 
 	public GetMyInfoResult(String response) {
 		this.response = response;
@@ -43,14 +46,37 @@ public class GetMyInfoResult implements Serializable {
 		this.phoneNumber = JSONUtils.getString(response, "phone", "");
 		this.hasPassord = JSONUtils.getBoolean(response, "has_password", false);
 		JSONArray enterpriseArray = JSONUtils.getJSONArray(response, "enterprises", new JSONArray());
+		ReactNativeWritableArray reactNativeWritableArray = new ReactNativeWritableArray();
 		for (int i = 0; i < enterpriseArray.length(); i++) {
 			JSONObject obj = JSONUtils.getJSONObject(enterpriseArray, i, null);
 			if (obj != null) {
-				enterpriseList.add(new Enterprise(obj));
+				Enterprise enterprise = new Enterprise(obj);
+				enterpriseList.add(enterprise);
+				reactNativeWritableArray.pushMap(enterprise.enterPrise2ReactNativeWritableNativeMap());
 			}
 		}
-
+		reactNativeWritableNativeMap.putArray("enterprises",reactNativeWritableArray);
 	}
+
+
+	/**
+	 * 为初始化RN写的方法，需要序列化
+	 * @return
+	 */
+	public ReactNativeWritableNativeMap getUserProfile2ReactNativeWritableNativeMap(){
+		reactNativeWritableNativeMap.putMap("enterprise",defaultEnterprise.enterPrise2ReactNativeWritableNativeMap());
+		reactNativeWritableNativeMap.putString("avatar",avatar);
+		reactNativeWritableNativeMap.putString("code",code);
+		reactNativeWritableNativeMap.putDouble("creation_date",Double.valueOf(creationDate));
+		reactNativeWritableNativeMap.putString("first_name",firstName);
+		reactNativeWritableNativeMap.putString("last_name",lastName);
+		reactNativeWritableNativeMap.putInt("id",Integer.valueOf(id));
+		reactNativeWritableNativeMap.putString("mail",mail);
+		reactNativeWritableNativeMap.putString("phone",phoneNumber);
+		reactNativeWritableNativeMap.putBoolean("has_password",hasPassord);
+		return reactNativeWritableNativeMap;
+	}
+
 
 	public void setAvatar(String avatar) {
 		this.avatar = avatar;

@@ -25,12 +25,15 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.util.LogUtils;
+import com.inspur.emmcloud.util.ParseHtmlUtils;
 import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.imp.api.JsInterface;
 import com.inspur.imp.api.Res;
 import com.inspur.imp.api.iLog;
 import com.inspur.imp.plugin.PluginMgr;
 import com.inspur.imp.util.DeviceInfo;
+
+import org.jsoup.select.Elements;
 
 import java.lang.reflect.Method;
 
@@ -121,9 +124,7 @@ public class ImpWebView extends WebView {
 	public void init() {
 		this.addJavascriptInterface(new JsInterface(), method);
 		//显示webview网页标题
-		if (titleText != null){
-			this.addJavascriptInterface(new GetTitle(), "getTitle");
-		}
+		this.addJavascriptInterface(new GetTitle(), "getTitle");
 		initPlugin();
 	}
 
@@ -137,6 +138,15 @@ public class ImpWebView extends WebView {
 				msg.what = 1;
 				msg.obj = title;
 				handler.sendMessage(msg);
+			}
+		}
+
+		@JavascriptInterface
+		public void onGetHtmlContent(String html){
+//			LogUtils.YfcDebug("获取到的html文本："+html);
+			Elements elements = ParseHtmlUtils.getDataFromHtml(html,"meta");
+			for (int i = 0; i < elements.size(); i++){
+				LogUtils.YfcDebug("解析到的content："+elements.get(i).attr("content"));
 			}
 		}
 	}

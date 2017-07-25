@@ -119,7 +119,7 @@ public class IndexActivity extends BaseFragmentActivity implements
     private String notSupportTitle = "";
     private boolean isSplash = false;
     private WebView webView;
-    private boolean isCommunicationRunning =false;
+    private boolean isCommunicationRunning = false;
     private boolean isSystemChangeTag = true;//控制如果是系统切换的tab则不计入用户行为
 
     @Override
@@ -129,8 +129,9 @@ public class IndexActivity extends BaseFragmentActivity implements
         ((MyApplication) getApplicationContext()).addActivity(this);
         ((MyApplication) getApplicationContext()).setIndexActvityRunning(true);
         ((MyApplication) getApplicationContext()).closeAllDb();
-        ((MyApplication)getApplicationContext()).clearUserPhotoMap();
         DbCacheUtils.initDb(getApplicationContext());
+        ((MyApplication) getApplicationContext()).clearUserPhotoMap();
+        ((MyApplication) getApplicationContext()).startPush();
         userId = ((MyApplication) getApplication()).getUid();
         initReactNative();
         loadingDlg = new LoadingDialog(IndexActivity.this, getString(R.string.app_init));
@@ -153,7 +154,6 @@ public class IndexActivity extends BaseFragmentActivity implements
         EventBus.getDefault().register(this);
     }
 
-
     /**
      * 注册刷新广播
      */
@@ -170,7 +170,8 @@ public class IndexActivity extends BaseFragmentActivity implements
      * 初始化ReactNative
      */
     private void initReactNative() {
-        RNCacheViewManager.init(IndexActivity.this);
+        //这里希望能做一个预加载的管理器，目前不成熟
+//        RNCacheViewManager.init(IndexActivity.this);
         reactNativeCurrentPath = MyAppConfig.getReactAppFilePath(IndexActivity.this,userId,"discover");
         if (checkClientIdNotExit()) {
             getReactNativeClientId();
@@ -188,7 +189,7 @@ public class IndexActivity extends BaseFragmentActivity implements
     private void getReactNativeClientId() {
         AppAPIService appAPIService = new AppAPIService(IndexActivity.this);
         appAPIService.setAPIInterface(new WebService());
-        if (NetUtils.isNetworkConnected(IndexActivity.this)) {
+        if (NetUtils.isNetworkConnected(IndexActivity.this,false)) {
             appAPIService.getClientId(AppUtils.getMyUUID(IndexActivity.this), AppUtils.GetChangShang());
         }
     }
@@ -246,7 +247,7 @@ public class IndexActivity extends BaseFragmentActivity implements
         String clientId = PreferencesUtils.getString(IndexActivity.this, UriUtils.tanent + userId + "react_native_clientid", "");
         StringBuilder describeVersionAndTime = FileUtils.readFile(reactNativeCurrentPath +"/bundle.json", "UTF-8");
         AndroidBundleBean androidBundleBean = new AndroidBundleBean(describeVersionAndTime.toString());
-        if (NetUtils.isNetworkConnected(IndexActivity.this)) {
+        if (NetUtils.isNetworkConnected(IndexActivity.this,false)) {
             appApiService.getReactNativeUpdate(androidBundleBean.getVersion(), androidBundleBean.getCreationDate(), clientId);
         }
     }
@@ -488,6 +489,7 @@ public class IndexActivity extends BaseFragmentActivity implements
 
     /**
      * 根据定制展示App
+     *
      * @param tabs
      */
     private void displayMainTabs(MainTabBean[] tabs) {
@@ -544,6 +546,7 @@ public class IndexActivity extends BaseFragmentActivity implements
 
     @Override
     public void execute() {
+        //IndexActiveX首先打开MessageFragment,然后打开其他tab
         try {
             isCommunicationRunning = true;
             int targetTabIndex = getTabIndex();
@@ -676,17 +679,13 @@ public class IndexActivity extends BaseFragmentActivity implements
     public boolean onKeyDown(int keyCode, KeyEvent event) {
 
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-
             if ((System.currentTimeMillis() - lastBackTime) > 2000) {
-
                 ToastUtils.show(IndexActivity.this,
                         getString(R.string.reclick_to_desktop));
                 lastBackTime = System.currentTimeMillis();
-
             } else {
                 ((MyApplication) getApplicationContext()).exit();
             }
-
             return true;
         }
         return super.onKeyDown(keyCode, event);
@@ -807,13 +806,9 @@ public class IndexActivity extends BaseFragmentActivity implements
      */
     private void updateSplashPage() {
         //这里并不是实时更新所以不加dialog
-//        String splashInfoOld = PreferencesByUserAndTanentUtils.getString(IndexActivity.this,"splash_page_info_old","");
-        if (NetUtils.isNetworkConnected(IndexActivity.this)) {
+        if (NetUtils.isNetworkConnected(IndexActivity.this,false)) {
             String splashInfo = PreferencesByUserAndTanentUtils.getString(IndexActivity.this, "splash_page_info","");
             SplashPageBean splashPageBean = new SplashPageBean(splashInfo);
-//            if(splashPageBean == null){
-//                splashPageBean = new SplashPageBean("");
-//            }
             String clientId = PreferencesUtils.getString(IndexActivity.this, UriUtils.tanent + ((MyApplication) getApplication()).getUid() + "react_native_clientid", "");
             if (!StringUtils.isBlank(clientId)) {
                 appApiService.getSplashPageInfo(clientId, splashPageBean.getId().getVersion());

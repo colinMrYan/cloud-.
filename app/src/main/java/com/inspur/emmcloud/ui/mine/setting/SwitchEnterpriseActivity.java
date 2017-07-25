@@ -19,7 +19,6 @@ import com.inspur.emmcloud.bean.Enterprise;
 import com.inspur.emmcloud.bean.GetMyInfoResult;
 import com.inspur.emmcloud.util.PreferencesByUsersUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
-import com.inspur.emmcloud.util.ToastUtils;
 import com.inspur.emmcloud.widget.dialogs.EasyDialog;
 
 import java.util.List;
@@ -84,21 +83,22 @@ public class SwitchEnterpriseActivity extends BaseActivity {
 	 * @param enterprise
 	 */
 	private void switchToEnterprise(Enterprise enterprise){
-		try {
+			if (((MyApplication) getApplicationContext()).getWebSocketPush() != null) {
+				((MyApplication) getApplicationContext()).getWebSocketPush()
+						.webSocketSignout();
+			}
 			PreferencesByUsersUtils.putString(getApplicationContext(),"current_enterprise_id",enterprise.getId());
 			((MyApplication)getApplicationContext()).initTanent();
-			((MyApplication)getApplicationContext()).stopWebSocket();
+			((MyApplication)getApplicationContext()).stopPush();
 			((MyApplication)getApplicationContext()).clearNotification();
+			((MyApplication)getApplicationContext()).removeAllCookie();
+			((MyApplication)getApplicationContext()).clearUserPhotoMap();
 			PreferencesUtils.putBoolean(SwitchEnterpriseActivity.this, "isMDMStatusPass", false);
 			Intent intent = new Intent(SwitchEnterpriseActivity.this,
 					MainActivity.class);
 			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
 					| Intent.FLAG_ACTIVITY_CLEAR_TASK);
 			startActivity(intent);
-		}catch (Exception e){
-			e.printStackTrace();
-			ToastUtils.show(getApplicationContext(),R.string.fail_to_switch_enterprise);
-		}
 	}
 
 	public void onClick(View v){

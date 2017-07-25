@@ -3,7 +3,6 @@ package com.inspur.emmcloud.util;
 import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.text.TextUtils;
 
 import com.huawei.hms.api.ConnectionResult;
 import com.huawei.hms.api.HuaweiApiAvailability;
@@ -21,12 +20,11 @@ import com.inspur.emmcloud.push.WebSocketPush;
 
 public class HuaWeiPushMangerUtils implements HuaweiApiClient.ConnectionCallbacks, HuaweiApiClient.OnConnectionFailedListener,
         HuaweiApiAvailability.OnUpdateListener {
-    private HuaweiApiClient client;
     private boolean mResolvingError = false;
     private static final int REQUEST_RESOLVE_ERROR = 1001;
-    private Context contextLocal;
     private static HuaWeiPushMangerUtils huaWeiPushMangerUtils;
-
+    private HuaweiApiClient client;
+    private Context contextLocal;
 
     public static HuaWeiPushMangerUtils getInstance(Context context){
         if(huaWeiPushMangerUtils == null){
@@ -38,7 +36,6 @@ public class HuaWeiPushMangerUtils implements HuaweiApiClient.ConnectionCallback
         }
         return huaWeiPushMangerUtils;
     }
-
     private HuaWeiPushMangerUtils(Context context) {
         contextLocal = context;
 //        HuaweiIdSignInOptions options = new HuaweiIdSignInOptions.Builder(HuaweiIdSignInOptions.DEFAULT_SIGN_IN)
@@ -49,7 +46,6 @@ public class HuaWeiPushMangerUtils implements HuaweiApiClient.ConnectionCallback
 //                    .addConnectionCallbacks(this) //
 //                    .addOnConnectionFailedListener(this) //
 //                    .build();
-        LogUtils.YfcDebug("创建client");
         client = new HuaweiApiClient.Builder(context)
                 .addApi(HuaweiPush.PUSH_API)
                 .addConnectionCallbacks(this)
@@ -73,7 +69,6 @@ public class HuaWeiPushMangerUtils implements HuaweiApiClient.ConnectionCallback
 
     @Override
     public void onConnected() {
-        LogUtils.YfcDebug("华为推送连接成功");
         if(StringUtils.isBlank(PreferencesUtils.getString(contextLocal,"huawei_push_token",""))){
             getToken();
         }else{
@@ -91,7 +86,6 @@ public class HuaWeiPushMangerUtils implements HuaweiApiClient.ConnectionCallback
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-        LogUtils.YfcDebug("华为推送连接失败" + connectionResult.getErrorCode());
         if (mResolvingError) {
             return;
         }
@@ -136,11 +130,7 @@ public class HuaWeiPushMangerUtils implements HuaweiApiClient.ConnectionCallback
      * @return
      */
     public boolean isConnected() {
-        if (client != null && client.isConnected()) {
-            return true;
-        } else {
-            return false;
-        }
+        return (client != null && client.isConnected());
     }
 
     /**
@@ -152,15 +142,13 @@ public class HuaWeiPushMangerUtils implements HuaweiApiClient.ConnectionCallback
             public void run() {
                 try {
                     String deltoken = PreferencesUtils.getString(contextLocal, "huawei_push_token","");
-                    if (!TextUtils.isEmpty(deltoken) && null != client) {
+                    if (!StringUtils.isEmpty(deltoken) && null != client) {
                         HuaweiPush.HuaweiPushApi.deleteToken(client, deltoken);
                         //清除本地token
                         PreferencesUtils.putString(contextLocal, "huawei_push_token","");
-                    } else {
-                        LogUtils.YfcDebug("delete token's params is invalid.");
                     }
                 } catch (Exception e) {
-                    LogUtils.YfcDebug("delete token exception, " + e.toString());
+                    e.printStackTrace();
                 }
             }
         }.start();

@@ -3,8 +3,6 @@ package com.inspur.emmcloud;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -64,6 +62,10 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
 		StateBarColor.hideStatusBar(this);
 		setContentView(R.layout.activity_main);
 		init();
+//		Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("ecc-channel://662"));
+//		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//		String intentUri = intent.toUri(Intent.URI_INTENT_SCHEME);
+//		LogUtils.jasonDebug("intentUri="+intentUri);
 	}
 
 
@@ -146,7 +148,7 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
 		UpgradeUtils upgradeUtils = new UpgradeUtils(MainActivity.this,
 				handler, false);
 		upgradeUtils.checkUpdate(false);
-//        getServerLanguage();
+
 	}
 
 	public void onClick(View v) {
@@ -245,7 +247,6 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
 			startApp();
 		}
 	}
-
 	/**
 	 * 开启应用
 	 */
@@ -354,10 +355,10 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
 		if (screenType.equals("2k")) {
 			name = MyAppConfig.getSplashPageImageShowPath(MainActivity.this,
 					((MyApplication) getApplication()).getUid(), "splash/" + defaultBean.getXxxhdpi());
-		} else if (screenType.equals("xxxhdpi")) {
+		} else if (screenType.equals("xxhdpi")) {
 			name = MyAppConfig.getSplashPageImageShowPath(MainActivity.this,
 					((MyApplication) getApplication()).getUid(), "splash/" + defaultBean.getXxhdpi());
-		} else if (screenType.equals("xxhdpi")) {
+		} else if (screenType.equals("xhdpi")) {
 			name = MyAppConfig.getSplashPageImageShowPath(MainActivity.this,
 					((MyApplication) getApplication()).getUid(), "splash/" + defaultBean.getXhdpi());
 		} else {
