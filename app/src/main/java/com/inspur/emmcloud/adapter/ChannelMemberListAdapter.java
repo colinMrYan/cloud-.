@@ -14,10 +14,10 @@ import android.widget.TextView;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.PersonDto;
 import com.inspur.emmcloud.util.ImageDisplayUtils;
+import com.inspur.emmcloud.util.RobotCacheUtils;
 import com.inspur.emmcloud.util.UriUtils;
 
 import java.util.List;
-
 
 
 /**
@@ -98,8 +98,16 @@ public class ChannelMemberListAdapter extends BaseAdapter implements SectionInde
 				holder.line.setVisibility(View.GONE);
 			}
 			holder.username.setText(dto.getName());
-			imageDisplayUtils.display(holder.headimg, 
-					UriUtils.getChannelImgUri(mActivity,dto.getUid()));
+			if(dto.getUtype().equals("robot")){
+				imageDisplayUtils.display(holder.headimg,
+						UriUtils.getRobotIconUri(RobotCacheUtils
+								.getRobotById(mActivity, dto.getUid())
+								.getAvatar()));
+			}else{
+				imageDisplayUtils.display(holder.headimg,
+						UriUtils.getChannelImgUri(mActivity,dto.getUid()));
+			}
+
 		}
 		return convertView;
 	}
