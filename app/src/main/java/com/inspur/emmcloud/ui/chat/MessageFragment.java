@@ -484,7 +484,6 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 
     /**
      * 为单个群组创建头像
-     * @param channel
      */
     private void createGroupIcon(List<Channel> channelList) {
         if (((MyApplication) getActivity().getApplicationContext()).getIsContactReady()) {
@@ -496,13 +495,13 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
     /**
      * channel 显示排序
      */
-    private void sortChannelList(final List<Channel> channelList) {
+    private void sortChannelList(final List<Channel> orginChannelList) {
         // TODO Auto-generated method stub
+		final List<Channel> channelList = new ArrayList<>();
+		channelList.addAll(orginChannelList);
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
-				Channel channelss = new Channel();
-				channelss.setCid("611");
 				if (channelList.size() > 0) {
 					Iterator<Channel> it = channelList.iterator();
 					//将没有消息的单聊和没有消息的但不是自己创建的群聊隐藏掉
