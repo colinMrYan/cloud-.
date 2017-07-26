@@ -18,7 +18,7 @@ public class WorkSetting {
 
     }
 
-    public WorkSetting(String id, String name, boolean isOpen, int sort) {
+    public WorkSetting(String id, String name, Boolean isOpen, Integer sort) {
         this.id = id;
         this.isOpen = isOpen;
         this.sort = sort;
@@ -55,5 +55,23 @@ public class WorkSetting {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    /*
+ * 重写equals方法修饰符必须是public,因为是重写的Object的方法. 2.参数类型必须是Object.
+ */
+    public boolean equals(Object other) { // 重写equals方法，后面最好重写hashCode方法
+
+        if (this == other) // 先检查是否其自反性，后比较other是否为空。这样效率高
+            return true;
+        if (other == null)
+            return false;
+        if (!(other instanceof WorkSetting))
+            return false;
+
+        final WorkSetting workSetting = (WorkSetting) other;
+        if (!getId().equals(workSetting.getId()))
+            return false;
+        return true;
     }
 }

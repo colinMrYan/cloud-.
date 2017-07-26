@@ -67,7 +67,7 @@ public class WorkSettingCacheUtils {
 	public static List<WorkSetting> getOpenWorkSettingList(Context context){
 		List<WorkSetting> workSettingList = null;
 		try {
-			workSettingList = DbCacheUtils.getDb(context).findAll(Selector.from(WorkSetting.class).where("isOpen","=","true").orderBy("sort"));
+			workSettingList = DbCacheUtils.getDb(context).findAll(Selector.from(WorkSetting.class).where("isOpen","=",true).orderBy("sort"));
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();

@@ -123,14 +123,14 @@ public class WorkFragment extends Fragment implements OnRefreshListener {
     }
 
     private void getWorkSettingData(){
-        workSettingList = WorkSettingCacheUtils.getOpenWorkSettingList(getActivity());
-        LogUtils.jasonDebug("workSettingList="+workSettingList.size());
-        if (workSettingList.size() == 0){
+       List<WorkSetting> allWorkSettingList = WorkSettingCacheUtils.getAllWorkSettingList(getActivity());
+        if (allWorkSettingList.size() == 0){
             workSettingList.add(new WorkSetting(TYPE_MEETING,"会议",true,0));
             workSettingList.add(new WorkSetting(TYPE_CALENDAR,"企业日历",true,1));
             workSettingList.add(new WorkSetting(TYPE_TASK,"待办事项",true,2));
             WorkSettingCacheUtils.saveWorkSettingList(getActivity(),workSettingList);
-            LogUtils.jasonDebug("save------------");
+        }else {
+            workSettingList = WorkSettingCacheUtils.getOpenWorkSettingList(getActivity());
         }
     }
 
@@ -151,7 +151,8 @@ public class WorkFragment extends Fragment implements OnRefreshListener {
         (rootView.findViewById(R.id.work_config_img)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                IntentUtils.startActivity(getActivity(),WorkSettingActivity.class);
+                Intent intent = new Intent(getActivity(),WorkSettingActivity.class);
+              //  startActivityForResult(intent,WORK_SETTING);
             }
         });
     }
@@ -166,11 +167,20 @@ public class WorkFragment extends Fragment implements OnRefreshListener {
         handHeaderDate();
     }
 
+    /**
+     * 判断工作中是否开启此卡片
+     * @param type
+     * @return
+     */
+    private boolean isContainWork(String type){
+        return  (workSettingList.size()>0 && workSettingList.contains(new WorkSetting(type,null,null,null)));
+    }
 
     /**
      * 注册关于CalendarEvent广播，便于更新数据
      */
     private void registerCalEventReceiver() {
+        if (isContainWork(TYPE_CALENDAR))
         calEventReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -526,7 +536,7 @@ public class WorkFragment extends Fragment implements OnRefreshListener {
      * 获取会议
      */
     private void getMeetings() {
-        if (NetUtils.isNetworkConnected(getActivity())) {
+        if (NetUtils.isNetworkConnected(getActivity() && )) {
             apiService.getMeetings(7);
         }
     }

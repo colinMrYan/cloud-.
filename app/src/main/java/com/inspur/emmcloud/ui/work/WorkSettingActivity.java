@@ -10,9 +10,10 @@ import android.widget.TextView;
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.WorkSetting;
-import com.inspur.emmcloud.util.LogUtils;
+import com.inspur.emmcloud.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.WorkSettingCacheUtils;
 import com.inspur.emmcloud.widget.SwitchView;
+import com.inspur.emmcloud.widget.dragsortlistview.DragSortController;
 import com.inspur.emmcloud.widget.dragsortlistview.DragSortListView;
 
 import java.util.ArrayList;
@@ -23,16 +24,45 @@ import java.util.List;
  */
 
 public class WorkSettingActivity extends BaseActivity {
+    private static final String TYPE_CALENDAR = "calendar";
+    private static final String TYPE_APPROVAL = "approval";
+    private static final String TYPE_MEETING = "meeting";
+    private static final String TYPE_TASK = "task";
+    private static final String TYPE_DATE = "date";
     private DragSortListView listView;
-    private List<WorkSetting> workSettingList =new ArrayList<>();
+    private List<WorkSetting> workSettingList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_work_setting);
-        listView = (DragSortListView)findViewById(R.id.work_setting_list);
+        ((SwitchView) findViewById(R.id.date_open_switch)).setOnStateChangedListener(new StateChangedListener(null));
+        listView = (DragSortListView) findViewById(R.id.work_setting_list);
         workSettingList = WorkSettingCacheUtils.getAllWorkSettingList(this);
         listView.setAdapter(adapter);
+        DragSortController controller = new DragSortController(listView);
+        controller.setDragHandleId(R.id.handle_img);
+        controller.setSortEnabled(true);
+        controller.setDragInitMode(0);
+        listView.setFloatViewManager(controller);
+        listView.setOnTouchListener(controller);
+        listView.setDragEnabled(true);
+        listView.setDropListener(new DragSortListView.DropListener() {
+            @Override
+            public void drop(int from, int to) {
+                if (from != to) {
+                    WorkSetting item = workSettingList.get(from);
+                    workSettingList.remove(item);
+                    workSettingList.add(to, item);
+                    adapter.notifyDataSetChanged();
+                    for (int i =0;i<workSettingList.size();i++){
+                        WorkSetting workSetting = workSettingList.get(i);
+                        workSetting.setSort(i);
+                    }
+                    WorkSettingCacheUtils.saveWorkSettingList(getApplicationContext(),workSettingList);
+                }
+            }
+        });
     }
 
     private BaseAdapter adapter = new BaseAdapter() {
@@ -53,15 +83,53 @@ public class WorkSettingActivity extends BaseActivity {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            convertView = LayoutInflater.from(WorkSettingActivity.this).inflate(R.layout.work_setting_item_view,null);
+            convertView = LayoutInflater.from(WorkSettingActivity.this).inflate(R.layout.work_setting_item_view, null);
             WorkSetting workSetting = workSettingList.get(position);
-            ((TextView)convertView.findViewById(R.id.text)).setText(workSetting.getName());
-            ((SwitchView)convertView.findViewById(R.id.open_switch)).setOpened(workSetting.isOpen());
+            ((TextView) convertView.findViewById(R.id.text)).setText(workSetting.getName());
+            SwitchView switchView = (SwitchView) convertView.findViewById(R.id.open_switch);
+            switchView.setOpened(workSetting.isOpen());
+            switchView.setOnStateChangedListener(new StateChangedListener(workSetting));
             return convertView;
         }
     };
 
-    public void onClick(View v){
+    public void onClick(View v) {
         finish();
     }
+
+
+    private class StateChangedListener implements SwitchView.OnStateChangedListener {
+        private WorkSetting workSetting;
+
+        public StateChangedListener(WorkSetting workSetting) {
+            this.workSetting = workSetting;
+        }
+
+        @Override
+        public void toggleToOn(View view) {
+            // TODO Auto-generated method stub
+            if (workSetting == null) {
+                PreferencesByUserAndTanentUtils.putBoolean(getApplicationContext(), "work_open_date", true);
+            } else{
+                workSetting.setOpen(true);
+                WorkSettingCacheUtils.saveWorkSetting(getApplicationContext(),workSetting);
+            }
+            ((SwitchView)view).setOpened(true);
+        }
+
+        @Override
+        public void toggleToOff(View view) {
+            // TODO Auto-generated method stub
+            if (workSetting == null) {
+                PreferencesByUserAndTanentUtils.putBoolean(getApplicationContext(), "work_open_date", false);
+            } else{
+                workSetting.setOpen(false);
+                WorkSettingCacheUtils.saveWorkSetting(getApplicationContext(),workSetting);
+            }
+            ((SwitchView)view).setOpened(false);
+
+        }
+    }
+
+    ;
 }
