@@ -50,15 +50,23 @@ public class ScanQrCodeUtils {
 //            ToastUtils.show(getActivity(),msg);
 //        }
 //        ToastUtils.show(getActivity(),"扫描到的信息是："+msg);
+
+
         try {
             URL url = new URL(msg);
             urlHost = url.getHost();
+            LogUtils.YfcDebug("url的host："+url.getHost());
+            LogUtils.YfcDebug("url的protocol："+url.getProtocol());
         } catch (MalformedURLException e) {
+            LogUtils.YfcDebug("解析出现异常："+e.getMessage());
             e.printStackTrace();
         }
+
         Pattern pattern = Pattern.compile(URLMatcher.URL_PATTERN);
-        if(!StringUtils.isBlank(urlHost)&&urlHost.equals("id.inspur.com")){
-            loginDesktopCloudPlus(msg);
+//        !StringUtils.isBlank(urlHost)&&urlHost.equals("id.inspur.com")
+        if(msg.startsWith("ecc-compont://auth")){
+            LogUtils.YfcDebug("扫描到登录桌面版的路径");
+//            loginDesktopCloudPlus(msg);
         }else if(pattern.matcher(msg).matches()){
             Intent intent = new Intent();
             intent.setClass(context, ImpActivity.class);
