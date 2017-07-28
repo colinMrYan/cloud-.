@@ -151,6 +151,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
      */
     public void startPush() {
         if (AppUtils.getIsHuaWei()) {
+            JPushInterface.stopPush(this);
             HuaWeiPushMangerUtils.getInstance(this).connect();
         } else {
             // 设置开启日志,发布时请关闭日志

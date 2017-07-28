@@ -10,6 +10,7 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.ui.app.ReactNativeAppActivity;
 import com.inspur.emmcloud.ui.app.groupnews.GroupNewsActivity;
 import com.inspur.emmcloud.ui.chat.ChannelActivity;
+import com.inspur.emmcloud.ui.contact.RobotInfoActivity;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
 import com.inspur.emmcloud.ui.find.AnalysisActivity;
 import com.inspur.emmcloud.ui.find.DocumentActivity;
@@ -43,7 +44,11 @@ public class SchemeHandleActivity extends Activity {
             switch (scheme) {
                 case "ecm-contact":
                     bundle.putString("uid",host);
-                    IntentUtils.startActivity(this, UserInfoActivity.class,bundle);
+                    if(host.startsWith("BOT")){
+                        IntentUtils.startActivity(this, RobotInfoActivity.class,bundle);
+                    }else{
+                        IntentUtils.startActivity(this, UserInfoActivity.class,bundle);
+                    }
                     break;
                 case "ecc-component":
                     openComponentScheme(uri,host);

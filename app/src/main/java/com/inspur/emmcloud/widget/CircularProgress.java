@@ -17,6 +17,7 @@ import android.view.animation.Interpolator;
 import android.view.animation.LinearInterpolator;
 
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.util.DensityUtil;
 
 public class CircularProgress extends View {
 
@@ -56,7 +57,7 @@ public class CircularProgress extends View {
  //       TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.MDMCircularProgress, defStyleAttr, 0);
 //        mBorderWidth = a.getDimension(R.styleable.MDMCircularProgress_borderWidth,
 //                DEFAULT_BORDER_WIDTH * density);
-        mBorderWidth = 10f;
+        mBorderWidth = DensityUtil.dip2px(context,3);
 //        a.recycle();
         mColors = new int[1];
         mColors[0] = context.getResources().getColor(R.color.progress_grey);
