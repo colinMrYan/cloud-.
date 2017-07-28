@@ -240,7 +240,7 @@ public class MessionListActivity extends BaseActivity implements
 		orderBy = PreferencesUtils.getString(MessionListActivity.this,
 				"order_by", "PRIORITY");
 		orderType = PreferencesUtils.getString(MessionListActivity.this,
-				"order_type", "ASC");
+				"order_type", "DESC");
 	}
 
 	public void onClick(View v) {

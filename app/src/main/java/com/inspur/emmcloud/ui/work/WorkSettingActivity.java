@@ -31,12 +31,16 @@ public class WorkSettingActivity extends BaseActivity {
     private static final String TYPE_DATE = "date";
     private DragSortListView listView;
     private List<WorkSetting> workSettingList = new ArrayList<>();
+    private boolean isChangeSetting = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_work_setting);
-        ((SwitchView) findViewById(R.id.date_open_switch)).setOnStateChangedListener(new StateChangedListener(null));
+        boolean isShowDate = PreferencesByUserAndTanentUtils.getBoolean(getApplicationContext(), "work_open_date", true);
+        SwitchView switchView = (SwitchView) findViewById(R.id.date_open_switch);
+        switchView.setOpened(isShowDate);
+        switchView.setOnStateChangedListener(new StateChangedListener(null));
         listView = (DragSortListView) findViewById(R.id.work_setting_list);
         workSettingList = WorkSettingCacheUtils.getAllWorkSettingList(this);
         listView.setAdapter(adapter);
@@ -51,6 +55,7 @@ public class WorkSettingActivity extends BaseActivity {
             @Override
             public void drop(int from, int to) {
                 if (from != to) {
+                    isChangeSetting = true;
                     WorkSetting item = workSettingList.get(from);
                     workSettingList.remove(item);
                     workSettingList.add(to, item);
@@ -94,9 +99,19 @@ public class WorkSettingActivity extends BaseActivity {
     };
 
     public void onClick(View v) {
+        if (isChangeSetting){
+            setResult(RESULT_OK);
+        }
         finish();
     }
 
+    @Override
+    public void onBackPressed() {
+        if (isChangeSetting){
+            setResult(RESULT_OK);
+        }
+        finish();
+    }
 
     private class StateChangedListener implements SwitchView.OnStateChangedListener {
         private WorkSetting workSetting;
@@ -108,6 +123,7 @@ public class WorkSettingActivity extends BaseActivity {
         @Override
         public void toggleToOn(View view) {
             // TODO Auto-generated method stub
+            isChangeSetting = true;
             if (workSetting == null) {
                 PreferencesByUserAndTanentUtils.putBoolean(getApplicationContext(), "work_open_date", true);
             } else{
@@ -120,6 +136,7 @@ public class WorkSettingActivity extends BaseActivity {
         @Override
         public void toggleToOff(View view) {
             // TODO Auto-generated method stub
+            isChangeSetting = true;
             if (workSetting == null) {
                 PreferencesByUserAndTanentUtils.putBoolean(getApplicationContext(), "work_open_date", false);
             } else{

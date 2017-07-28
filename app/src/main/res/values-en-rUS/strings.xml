@@ -619,6 +619,7 @@
     <string name="one_day_ago">One day before</string>
     <string name="two_days_ago">Two day before</string>
     <string name="a_week_ago">1 week ago</string>
+    <string name="add_calendar">Add calendar</string>
 
     <!-- 待办任务部分 -->
     <string name="mession_detial_doing">Processing</string>
@@ -677,6 +678,7 @@
     <string name="mession_color_tag">Color</string>
     <string name="mession_delete_the_tag">Delete Tag</string>
     <string name="mession_manage_tag">Tag</string>
+    <string name="add_mession">Add task</string>
 
     <!-- ListView自定义控件部分 -->
     <string name="xlistview_header_last_time">Last Update Time:</string>

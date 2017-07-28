@@ -32,6 +32,7 @@ import com.inspur.emmcloud.bean.TaskResult;
 import com.inspur.emmcloud.bean.WorkSetting;
 import com.inspur.emmcloud.ui.work.calendar.CalActivity;
 import com.inspur.emmcloud.ui.work.calendar.CalEventAddActivity;
+import com.inspur.emmcloud.ui.work.meeting.MeetingBookingActivity;
 import com.inspur.emmcloud.ui.work.meeting.MeetingDetailActivity;
 import com.inspur.emmcloud.ui.work.meeting.MeetingListActivity;
 import com.inspur.emmcloud.ui.work.task.MessionDetailActivity;
@@ -47,13 +48,13 @@ import com.inspur.emmcloud.util.MyCalendarCacheUtils;
 import com.inspur.emmcloud.util.MyCalendarOperationCacheUtils;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.PVCollectModelCacheUtils;
+import com.inspur.emmcloud.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.TimeUtils;
 import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.util.WorkColorUtils;
 import com.inspur.emmcloud.util.WorkSettingCacheUtils;
-import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.ScrollViewWithListView;
 import com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout;
 import com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout.OnRefreshListener;
@@ -79,9 +80,9 @@ public class WorkFragment extends Fragment implements OnRefreshListener {
     private static final String TYPE_APPROVAL = "approval";
     private static final String TYPE_MEETING = "meeting";
     private static final String TYPE_TASK = "task";
+    private static final int WORK_SETTING = 1;
     private View rootView;
     private WorkAPIService apiService;
-    private LoadingDialog loadingDialog;
     private PullableListView listView;
     private BaseAdapter adapter;
     private PullToRefreshLayout pullToRefreshLayout;
@@ -122,12 +123,22 @@ public class WorkFragment extends Fragment implements OnRefreshListener {
         registerMeetingAndTaskReceiver();
     }
 
+    /**
+     * 当工作页面配置发生改变后进行数据和layout的刷新
+     */
+    private void refreshWorkLayout(){
+        setHeadLayout();
+        getWorkSettingData();
+        adapter.notifyDataSetChanged();
+        getWorkData();
+    }
+
     private void getWorkSettingData(){
        List<WorkSetting> allWorkSettingList = WorkSettingCacheUtils.getAllWorkSettingList(getActivity());
         if (allWorkSettingList.size() == 0){
-            workSettingList.add(new WorkSetting(TYPE_MEETING,"会议",true,0));
-            workSettingList.add(new WorkSetting(TYPE_CALENDAR,"企业日历",true,1));
-            workSettingList.add(new WorkSetting(TYPE_TASK,"待办事项",true,2));
+            workSettingList.add(new WorkSetting(TYPE_MEETING,getString(R.string.meeting),true,0));
+            workSettingList.add(new WorkSetting(TYPE_CALENDAR,getString(R.string.work_calendar_text),true,1));
+            workSettingList.add(new WorkSetting(TYPE_TASK,getString(R.string.work_task_text),true,2));
             WorkSettingCacheUtils.saveWorkSettingList(getActivity(),workSettingList);
         }else {
             workSettingList = WorkSettingCacheUtils.getOpenWorkSettingList(getActivity());
@@ -138,6 +149,7 @@ public class WorkFragment extends Fragment implements OnRefreshListener {
      * 初始化views
      */
     private void initViews() {
+        setHeadLayout();
         listView = (PullableListView) rootView
                 .findViewById(R.id.list);
         pullToRefreshLayout = (PullToRefreshLayout) rootView
@@ -145,16 +157,28 @@ public class WorkFragment extends Fragment implements OnRefreshListener {
         pullToRefreshLayout.setOnRefreshListener(WorkFragment.this);
         apiService = new WorkAPIService(getActivity());
         apiService.setAPIInterface(new WebService());
-        loadingDialog = new LoadingDialog(getActivity());
         adapter = new Adapter();
         listView.setAdapter(adapter);
         (rootView.findViewById(R.id.work_config_img)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(),WorkSettingActivity.class);
-              //  startActivityForResult(intent,WORK_SETTING);
+                startActivityForResult(intent,WORK_SETTING);
             }
         });
+        (rootView.findViewById(R.id.work_config_img2)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(),WorkSettingActivity.class);
+                startActivityForResult(intent,WORK_SETTING);
+            }
+        });
+    }
+
+    private void setHeadLayout(){
+        boolean isShowDate = PreferencesByUserAndTanentUtils.getBoolean(getActivity(), "work_open_date", true);
+        (rootView.findViewById(R.id.work_header_layout)).setVisibility(isShowDate?View.GONE:View.VISIBLE);
+        (rootView.findViewById(R.id.calendar_layout)).setVisibility(isShowDate?View.VISIBLE:View.GONE);
     }
 
     /**
@@ -173,42 +197,42 @@ public class WorkFragment extends Fragment implements OnRefreshListener {
      * @return
      */
     private boolean isContainWork(String type){
-        return  (workSettingList.size()>0 && workSettingList.contains(new WorkSetting(type,null,null,null)));
+        return  (workSettingList.size()>0 && workSettingList.contains(new WorkSetting(type,"",true,0)));
     }
 
     /**
      * 注册关于CalendarEvent广播，便于更新数据
      */
     private void registerCalEventReceiver() {
-        if (isContainWork(TYPE_CALENDAR))
-        calEventReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                if (intent.hasExtra("addCalEvent")
-                        || intent.hasExtra("editCalEvent")
-                        || intent.hasExtra("editCalendar")) {
-                    getCalendarEvent();
-                } else if (intent.hasExtra("deleteCalEvent")) {
-                    CalendarEvent deleteCalEvent = (CalendarEvent) intent
-                            .getSerializableExtra("deleteCalEvent");
-                    // 修复迭代问题
-                    Iterator<CalendarEvent> sListIterator = calEventList
-                            .iterator();
-                    while (sListIterator.hasNext()) {
-                        CalendarEvent cal = sListIterator.next();
-                        if (cal.getId().equals(deleteCalEvent.getId())) {
-                            sListIterator.remove();
+            calEventReceiver = new BroadcastReceiver() {
+                @Override
+                public void onReceive(Context context, Intent intent) {
+                    if(isContainWork(TYPE_CALENDAR)){
+                        if (intent.hasExtra("addCalEvent")
+                                || intent.hasExtra("editCalEvent")
+                                || intent.hasExtra("editCalendar")) {
+                            getCalendarEvent();
+                        } else if (intent.hasExtra("deleteCalEvent")) {
+                            CalendarEvent deleteCalEvent = (CalendarEvent) intent
+                                    .getSerializableExtra("deleteCalEvent");
+                            // 修复迭代问题
+                            Iterator<CalendarEvent> sListIterator = calEventList
+                                    .iterator();
+                            while (sListIterator.hasNext()) {
+                                CalendarEvent cal = sListIterator.next();
+                                if (cal.getId().equals(deleteCalEvent.getId())) {
+                                    sListIterator.remove();
+                                }
+                            }
+                            calendarChildAdapter.notifyDataSetChanged();
                         }
                     }
-                    calendarChildAdapter.notifyDataSetChanged();
                 }
 
-            }
-
-        };
-        IntentFilter myIntentFilter = new IntentFilter();
-        myIntentFilter.addAction("editcalendar_event");
-        getActivity().registerReceiver(calEventReceiver, myIntentFilter);
+            };
+            IntentFilter myIntentFilter = new IntentFilter();
+            myIntentFilter.addAction("editcalendar_event");
+            getActivity().registerReceiver(calEventReceiver, myIntentFilter);
     }
 
     /**
@@ -233,9 +257,10 @@ public class WorkFragment extends Fragment implements OnRefreshListener {
 
     static class ViewHolder {
         ImageView groupIconImg;
-        TextView groupTitleText;
+        TextView groupTitleText,workAddText;
         RelativeLayout groupHeaderlayout;
         ScrollViewWithListView GroupListView;
+        RelativeLayout wordAddLayout;
     }
 
     private class Adapter extends BaseAdapter {
@@ -258,7 +283,7 @@ public class WorkFragment extends Fragment implements OnRefreshListener {
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
             ViewHolder holder;
-            //          if (position<getCount()-1){
+            if (position<getCount()-1){}
             if (convertView == null) {
                 holder = new ViewHolder();
                 convertView = LayoutInflater.from(getActivity()).inflate(R.layout.work_card_group_item_view_vertical, null);
@@ -266,10 +291,13 @@ public class WorkFragment extends Fragment implements OnRefreshListener {
                 holder.groupTitleText = (TextView) convertView.findViewById(R.id.group_title_text);
                 holder.groupHeaderlayout = (RelativeLayout) convertView.findViewById(R.id.group_header_layout);
                 holder.GroupListView = (ScrollViewWithListView) convertView.findViewById(R.id.list);
+                holder.wordAddLayout=(RelativeLayout)convertView.findViewById(R.id.work_add_layout);
+                holder.workAddText = (TextView)convertView.findViewById(R.id.work_add_text);
                 convertView.setTag(holder);
             } else {
                 holder = (ViewHolder) convertView.getTag();
             }
+            convertView.findViewById(R.id.blank_view).setVisibility((position==getCount()-1)?View.VISIBLE:View.GONE);
             WorkSetting workSetting = workSettingList.get(position);
             final String id = workSetting.getId();
             holder.groupHeaderlayout.setOnClickListener(new View.OnClickListener() {
@@ -284,15 +312,30 @@ public class WorkFragment extends Fragment implements OnRefreshListener {
                     }
                 }
             });
+            holder.wordAddLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (id.equals(TYPE_CALENDAR)) {
+                        IntentUtils.startActivity(getActivity(), CalEventAddActivity.class);
+                    } else if (id.equals(TYPE_MEETING)) {
+                        IntentUtils.startActivity(getActivity(), MeetingBookingActivity.class);
+                    } else if (id.equals(TYPE_TASK)) {
+                        IntentUtils.startActivity(getActivity(), MessionListActivity.class);
+                    }
+                }
+            });
             if (id.equals(TYPE_CALENDAR)) {
+                holder.workAddText.setText(R.string.add_calendar);
                 holder.groupIconImg.setImageResource(R.drawable.ic_work_calendar);
                 calendarChildAdapter = new ChildAdapter(TYPE_CALENDAR);
                 holder.GroupListView.setAdapter(calendarChildAdapter);
             } else if (id.equals(TYPE_MEETING)) {
+                holder.workAddText.setText(R.string.meeting_add_meeting);
                 holder.groupIconImg.setImageResource(R.drawable.ic_work_meeting);
                 meetingChildAdapter = new ChildAdapter(TYPE_MEETING);
                 holder.GroupListView.setAdapter(meetingChildAdapter);
             } else {
+                holder.workAddText.setText(R.string.add_mession);
                 holder.groupIconImg.setImageResource(R.drawable.ic_work_task);
                 taskChildAdapter = new ChildAdapter(TYPE_TASK);
                 holder.GroupListView.setAdapter(taskChildAdapter);
@@ -318,7 +361,7 @@ public class WorkFragment extends Fragment implements OnRefreshListener {
             if (type.equals(TYPE_MEETING)) {
                 return meetingList.size();
             }
-            return taskList.size();
+            return taskList.size()<5?taskList.size():5;
         }
 
         @Override
@@ -333,13 +376,11 @@ public class WorkFragment extends Fragment implements OnRefreshListener {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            LogUtils.jasonDebug("type=" + type);
             convertView = LayoutInflater.from(getActivity()).inflate(R.layout.work_card_child_item_view_vertical, null);
             TextView countDownText = (TextView) convertView.findViewById(R.id.count_down_text);
             TextView dateText = (TextView) convertView.findViewById(R.id.date_text);
             String countDown = "";
             String content = "";
-            String date = "";
             switch (type) {
                 case TYPE_MEETING:
                     Meeting meeting = meetingList.get(position);
@@ -499,11 +540,9 @@ public class WorkFragment extends Fragment implements OnRefreshListener {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == getActivity().RESULT_OK) {
-            if (NetUtils.isNetworkConnected(getActivity())) {
-                getMeetings();
-                getTasks();
-            }
-
+           if (requestCode == WORK_SETTING){
+               refreshWorkLayout();
+           }
         }
     }
 
@@ -512,7 +551,7 @@ public class WorkFragment extends Fragment implements OnRefreshListener {
      * 获取日历中Event
      */
     private void getCalendarEvent() {
-        if (NetUtils.isNetworkConnected(getActivity())) {
+        if (NetUtils.isNetworkConnected(getActivity()) && isContainWork(TYPE_CALENDAR)) {
             apiService.getMyCalendar(0, 30);
         }
     }
@@ -522,11 +561,13 @@ public class WorkFragment extends Fragment implements OnRefreshListener {
      * 获取任务
      */
     private void getTasks() {
-        if (NetUtils.isNetworkConnected(getActivity())) {
+        if (NetUtils.isNetworkConnected(getActivity())&& isContainWork(TYPE_TASK)) {
             String orderBy = PreferencesUtils.getString(getActivity(),
                     "order_by", "PRIORITY");
             String orderType = PreferencesUtils.getString(getActivity(),
-                    "order_type", "ASC");
+                    "order_type", "DESC");
+            LogUtils.jasonDebug("orderBy="+orderBy);
+            LogUtils.jasonDebug("orderType="+orderType);
             apiService.getRecentTasks(orderBy, orderType);
         }
     }
@@ -536,7 +577,7 @@ public class WorkFragment extends Fragment implements OnRefreshListener {
      * 获取会议
      */
     private void getMeetings() {
-        if (NetUtils.isNetworkConnected(getActivity() && )) {
+        if (NetUtils.isNetworkConnected(getActivity()) && isContainWork(TYPE_MEETING)) {
             apiService.getMeetings(7);
         }
     }
@@ -587,9 +628,6 @@ public class WorkFragment extends Fragment implements OnRefreshListener {
     class WebService extends APIInterfaceInstance {
         @Override
         public void returnMeetingsSuccess(GetMeetingsResult getMeetingsResult) {
-            if (loadingDialog != null && loadingDialog.isShowing()) {
-                loadingDialog.dismiss();
-            }
             pullToRefreshLayout.refreshFinish(PullToRefreshLayout.SUCCEED);
             WorkFragment.this.meetingList = getMeetingsResult.getMeetingsList();
             Collections.sort(WorkFragment.this.meetingList, new Meeting());
@@ -598,33 +636,27 @@ public class WorkFragment extends Fragment implements OnRefreshListener {
 
         @Override
         public void returnMeetingsFail(String error, int errorCode) {
-            if (loadingDialog != null && loadingDialog.isShowing()) {
-                loadingDialog.dismiss();
-            }
             pullToRefreshLayout.refreshFinish(PullToRefreshLayout.FAIL);
             WebServiceMiddleUtils.hand(getActivity(), error, errorCode);
         }
 
         @Override
         public void returnRecentTasksSuccess(GetTaskListResult getTaskListResult) {
-            if (loadingDialog != null && loadingDialog.isShowing()) {
-                loadingDialog.dismiss();
-            }
+            pullToRefreshLayout.refreshFinish(PullToRefreshLayout.SUCCEED);
             taskList = getTaskListResult.getTaskList();
             taskChildAdapter.notifyDataSetChanged();
         }
 
         @Override
         public void returnRecentTasksFail(String error, int errorCode) {
-            if (loadingDialog != null && loadingDialog.isShowing()) {
-                loadingDialog.dismiss();
-            }
+            pullToRefreshLayout.refreshFinish(PullToRefreshLayout.FAIL);
             WebServiceMiddleUtils.hand(getActivity(), error, errorCode);
         }
 
         @Override
         public void returnMyCalendarSuccess(
                 GetMyCalendarResult getMyCalendarResult) {
+            pullToRefreshLayout.refreshFinish(PullToRefreshLayout.SUCCEED);
             List<MyCalendar> calendarList = getMyCalendarResult
                     .getCalendarList();
             MyCalendarCacheUtils
@@ -642,6 +674,7 @@ public class WorkFragment extends Fragment implements OnRefreshListener {
 
         @Override
         public void returnMyCalendarFail(String error, int errorCode) {
+            pullToRefreshLayout.refreshFinish(PullToRefreshLayout.FAIL);
             WebServiceMiddleUtils.hand(getActivity(), error, errorCode);
         }
 
@@ -661,9 +694,6 @@ public class WorkFragment extends Fragment implements OnRefreshListener {
 
         @Override
         public void returnCalEventsFail(String error, boolean isRefresh, int errorCode) {
-            if (loadingDialog != null && loadingDialog.isShowing()) {
-                loadingDialog.dismiss();
-            }
             WebServiceMiddleUtils.hand(getActivity(), error, errorCode);
         }
 

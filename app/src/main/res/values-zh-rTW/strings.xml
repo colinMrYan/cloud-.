@@ -622,6 +622,7 @@
     <string name="one_day_ago">1天前</string>
     <string name="two_days_ago">2天前</string>
     <string name="a_week_ago">1周前</string>
+    <string name="add_calendar">添加行事曆</string>
 
     <!-- 待辦任務部分 -->
     <string name="mession_detial_doing">進行中</string>
@@ -680,6 +681,7 @@
     <string name="mession_color_tag">顏色</string>
     <string name="mession_delete_the_tag">刪除標籤</string>
     <string name="mession_manage_tag">管理標籤</string>
+    <string name="add_mession">加任務</string>
 
     <!-- ListView自訂控制項部分 -->
     <string name="xlistview_header_last_time">上次更新時間:</string>
