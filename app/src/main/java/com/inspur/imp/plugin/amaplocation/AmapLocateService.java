@@ -1,7 +1,5 @@
 package com.inspur.imp.plugin.amaplocation;
 
-import android.util.Log;
-
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
@@ -78,7 +76,8 @@ public class AmapLocateService extends ImpPlugin implements
         mLocationOption = new AMapLocationClientOption();
         mLocationOption.setOnceLocation(true);
         // 设置定位模式为低功耗定位
-        mLocationOption.setLocationMode(AMapLocationMode.Battery_Saving);
+        mLocationOption.setLocationMode(AMapLocationMode.Hight_Accuracy);
+        mLocationOption.setOnceLocationLatest(true);
         // 设置定位回调监听
         mlocationClient.setLocationListener(this);
         // 设置定位参数
