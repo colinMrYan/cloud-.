@@ -112,8 +112,8 @@
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
         android:layout_alignParentBottom="true"
-        android:layout_marginLeft="60dp"
+        android:layout_marginLeft="59dp"
         android:layout_marginTop="9dp"
-        android:background="#c7c7cd"/>
+        android:background="#DCDCDC"/>
 
 </RelativeLayout>
