@@ -293,7 +293,8 @@
     <string name="time">時間</string>
     <string name="work_meeting_text">會議</string>
     <string name="work_calendar_text">企業日曆</string>
-    <string name="work_task_text">待辦事項</string>
+    <string name="work_task_text">我的任務</string>
+    <string name="work_info_text">資訊</string>
 
     <!-- 發現部分 -->
     <string name="find">發現</string>

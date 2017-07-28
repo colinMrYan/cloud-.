@@ -293,7 +293,8 @@
     <string name="time">Time</string>
     <string name="work_meeting_text">Meeting</string>
     <string name="work_calendar_text">Enterprise calendar</string>
-    <string name="work_task_text">Todo</string>
+    <string name="work_task_text">My mission</string>
+    <string name="work_info_text">Information</string>
 
     <!-- 发现部分 -->
     <string name="find">Discover</string>

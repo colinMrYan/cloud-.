@@ -154,6 +154,7 @@ public class WorkFragment extends Fragment implements OnRefreshListener {
                 .findViewById(R.id.list);
         pullToRefreshLayout = (PullToRefreshLayout) rootView
                 .findViewById(R.id.refresh_view);
+        pullToRefreshLayout.setInDarkBackgroud(true);
         pullToRefreshLayout.setOnRefreshListener(WorkFragment.this);
         apiService = new WorkAPIService(getActivity());
         apiService.setAPIInterface(new WebService());
@@ -176,7 +177,7 @@ public class WorkFragment extends Fragment implements OnRefreshListener {
     }
 
     private void setHeadLayout(){
-        boolean isShowDate = PreferencesByUserAndTanentUtils.getBoolean(getActivity(), "work_open_date", true);
+        boolean isShowDate = PreferencesByUserAndTanentUtils.getBoolean(getActivity(), "work_open_info", true);
         (rootView.findViewById(R.id.work_header_layout)).setVisibility(isShowDate?View.GONE:View.VISIBLE);
         (rootView.findViewById(R.id.calendar_layout)).setVisibility(isShowDate?View.VISIBLE:View.GONE);
     }
@@ -324,23 +325,26 @@ public class WorkFragment extends Fragment implements OnRefreshListener {
                     }
                 }
             });
+
             if (id.equals(TYPE_CALENDAR)) {
                 holder.workAddText.setText(R.string.add_calendar);
                 holder.groupIconImg.setImageResource(R.drawable.ic_work_calendar);
                 calendarChildAdapter = new ChildAdapter(TYPE_CALENDAR);
                 holder.GroupListView.setAdapter(calendarChildAdapter);
+                holder.groupTitleText.setText(R.string.work_calendar_text);
             } else if (id.equals(TYPE_MEETING)) {
-                holder.workAddText.setText(R.string.meeting_add_meeting);
+                holder.workAddText.setText(R.string.meeting);
                 holder.groupIconImg.setImageResource(R.drawable.ic_work_meeting);
                 meetingChildAdapter = new ChildAdapter(TYPE_MEETING);
                 holder.GroupListView.setAdapter(meetingChildAdapter);
+                holder.groupTitleText.setText(R.string.meeting);
             } else {
                 holder.workAddText.setText(R.string.add_mession);
                 holder.groupIconImg.setImageResource(R.drawable.ic_work_task);
                 taskChildAdapter = new ChildAdapter(TYPE_TASK);
                 holder.GroupListView.setAdapter(taskChildAdapter);
+                holder.groupTitleText.setText(R.string.work_task_text);
             }
-            holder.groupTitleText.setText(workSetting.getName());
             holder.GroupListView.setOnItemClickListener(new ListOnItemClickListener(id));
             return convertView;
         }
@@ -702,7 +706,11 @@ public class WorkFragment extends Fragment implements OnRefreshListener {
     @Override
     public void onRefresh(PullToRefreshLayout pullToRefreshLayout) {
         if (NetUtils.isNetworkConnected(getActivity())) {
-            getWorkData();
+            if (workSettingList.size()>0){
+                getWorkData();
+            }else {
+                pullToRefreshLayout.refreshFinish(PullToRefreshLayout.SUCCEED);
+            }
         } else {
             pullToRefreshLayout.refreshFinish(PullToRefreshLayout.FAIL);
         }

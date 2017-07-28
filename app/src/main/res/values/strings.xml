@@ -295,7 +295,8 @@
     <string name="time">时间</string>
     <string name="work_meeting_text">会议</string>
     <string name="work_calendar_text">企业日历</string>
-    <string name="work_task_text">待办事项</string>
+    <string name="work_task_text">我的任务</string>
+    <string name="work_info_text">信息</string>
 
     <!-- 发现部分 -->
     <string name="find">发现</string>

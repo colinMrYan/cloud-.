@@ -37,7 +37,7 @@ public class WorkSettingActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_work_setting);
-        boolean isShowDate = PreferencesByUserAndTanentUtils.getBoolean(getApplicationContext(), "work_open_date", true);
+        boolean isShowDate = PreferencesByUserAndTanentUtils.getBoolean(getApplicationContext(), "work_open_info", true);
         SwitchView switchView = (SwitchView) findViewById(R.id.date_open_switch);
         switchView.setOpened(isShowDate);
         switchView.setOnStateChangedListener(new StateChangedListener(null));
@@ -90,7 +90,14 @@ public class WorkSettingActivity extends BaseActivity {
         public View getView(int position, View convertView, ViewGroup parent) {
             convertView = LayoutInflater.from(WorkSettingActivity.this).inflate(R.layout.work_setting_item_view, null);
             WorkSetting workSetting = workSettingList.get(position);
-            ((TextView) convertView.findViewById(R.id.text)).setText(workSetting.getName());
+            String id = workSetting.getId();
+            if (id.equals(TYPE_CALENDAR)) {
+                ((TextView) convertView.findViewById(R.id.text)).setText(R.string.work_calendar_text);
+            } else if (id.equals(TYPE_MEETING)) {
+                ((TextView) convertView.findViewById(R.id.text)).setText(R.string.meeting);
+            } else {
+                ((TextView) convertView.findViewById(R.id.text)).setText(R.string.work_task_text);
+            }
             SwitchView switchView = (SwitchView) convertView.findViewById(R.id.open_switch);
             switchView.setOpened(workSetting.isOpen());
             switchView.setOnStateChangedListener(new StateChangedListener(workSetting));
@@ -125,7 +132,7 @@ public class WorkSettingActivity extends BaseActivity {
             // TODO Auto-generated method stub
             isChangeSetting = true;
             if (workSetting == null) {
-                PreferencesByUserAndTanentUtils.putBoolean(getApplicationContext(), "work_open_date", true);
+                PreferencesByUserAndTanentUtils.putBoolean(getApplicationContext(), "work_open_info", true);
             } else{
                 workSetting.setOpen(true);
                 WorkSettingCacheUtils.saveWorkSetting(getApplicationContext(),workSetting);
@@ -138,7 +145,7 @@ public class WorkSettingActivity extends BaseActivity {
             // TODO Auto-generated method stub
             isChangeSetting = true;
             if (workSetting == null) {
-                PreferencesByUserAndTanentUtils.putBoolean(getApplicationContext(), "work_open_date", false);
+                PreferencesByUserAndTanentUtils.putBoolean(getApplicationContext(), "work_open_info", false);
             } else{
                 workSetting.setOpen(false);
                 WorkSettingCacheUtils.saveWorkSetting(getApplicationContext(),workSetting);

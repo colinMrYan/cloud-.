@@ -64,7 +64,7 @@
             android:ellipsize="end"
             android:gravity="center_vertical"
             android:maxLines="1"
-            android:text="@string/calendar"
+            android:text="@string/work_info_text"
             android:paddingRight="25dp"
             android:textColor="#333333"
             android:textSize="17sp" />
