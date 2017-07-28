@@ -3,15 +3,11 @@ package com.inspur.emmcloud.util;
 import android.content.Context;
 import android.content.Intent;
 
-import com.inspur.emmcloud.api.APIInterfaceInstance;
-import com.inspur.emmcloud.api.apiservice.AppAPIService;
-import com.inspur.emmcloud.bean.LoginDesktopCloudPlusBean;
 import com.inspur.emmcloud.ui.find.ScanResultActivity;
+import com.inspur.emmcloud.ui.login.ScanQrCodeLoginActivity;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.imp.api.ImpActivity;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.regex.Pattern;
 
 /**
@@ -52,20 +48,24 @@ public class ScanQrCodeUtils {
 //        ToastUtils.show(getActivity(),"扫描到的信息是："+msg);
 
 
-        try {
-            URL url = new URL(msg);
-            urlHost = url.getHost();
-            LogUtils.YfcDebug("url的host："+url.getHost());
-            LogUtils.YfcDebug("url的protocol："+url.getProtocol());
-        } catch (MalformedURLException e) {
-            LogUtils.YfcDebug("解析出现异常："+e.getMessage());
-            e.printStackTrace();
-        }
+//        try {
+//            URL url = new URL(msg);
+//            urlHost = url.getHost();
+//            LogUtils.YfcDebug("url的host："+url.getHost());
+//            LogUtils.YfcDebug("url的protocol："+url.getProtocol());
+//        } catch (MalformedURLException e) {
+//            LogUtils.YfcDebug("解析出现异常："+e.getMessage());
+//            e.printStackTrace();
+//        }
 
         Pattern pattern = Pattern.compile(URLMatcher.URL_PATTERN);
 //        !StringUtils.isBlank(urlHost)&&urlHost.equals("id.inspur.com")
         if(msg.startsWith("ecc-compont://auth")){
             LogUtils.YfcDebug("扫描到登录桌面版的路径");
+            Intent intent = new Intent();
+            intent.setClass(context, ScanQrCodeLoginActivity.class);
+            intent.putExtra("scanMsg",msg);
+            context.startActivity(intent);
 //            loginDesktopCloudPlus(msg);
         }else if(pattern.matcher(msg).matches()){
             Intent intent = new Intent();
@@ -77,19 +77,19 @@ public class ScanQrCodeUtils {
         }
     }
 
-    /**
-     * 登录云+桌面版
-     *
-     * @param msg
-     */
-    private void loginDesktopCloudPlus(String msg) {
-        AppAPIService appAPIService = new AppAPIService(context);
-        appAPIService.setAPIInterface(new WebService());
-        if(NetUtils.isNetworkConnected(context)){
-            loadingDialog.show();
-            appAPIService.sendLoginDesktopCloudPlusInfo(msg);
-        }
-    }
+//    /**
+//     * 登录云+桌面版
+//     *
+//     * @param msg
+//     */
+//    private void loginDesktopCloudPlus(String msg) {
+//        AppAPIService appAPIService = new AppAPIService(context);
+//        appAPIService.setAPIInterface(new WebService());
+//        if(NetUtils.isNetworkConnected(context)){
+//            loadingDialog.show();
+//            appAPIService.sendLoginDesktopCloudPlusInfo(msg);
+//        }
+//    }
 
     /**
      * 展示扫描到的信息
@@ -102,21 +102,21 @@ public class ScanQrCodeUtils {
         context.startActivity(intent);
     }
 
-    class WebService extends APIInterfaceInstance{
-        @Override
-        public void returnLoginDesktopCloudPlusSuccess(LoginDesktopCloudPlusBean loginDesktopCloudPlusBean) {
-            if(loadingDialog != null && loadingDialog.isShowing()){
-                loadingDialog.dismiss();
-            }
-            ToastUtils.show(context,"登录成功");
-        }
-
-        @Override
-        public void returnLoginDesktopCloudPlusFail(String error, int errorCode) {
-            if(loadingDialog != null && loadingDialog.isShowing()){
-                loadingDialog.dismiss();
-            }
-            WebServiceMiddleUtils.hand(context,error,errorCode);
-        }
-    }
+//    class WebService extends APIInterfaceInstance{
+//        @Override
+//        public void returnLoginDesktopCloudPlusSuccess(LoginDesktopCloudPlusBean loginDesktopCloudPlusBean) {
+//            if(loadingDialog != null && loadingDialog.isShowing()){
+//                loadingDialog.dismiss();
+//            }
+//            ToastUtils.show(context,"登录成功");
+//        }
+//
+//        @Override
+//        public void returnLoginDesktopCloudPlusFail(String error, int errorCode) {
+//            if(loadingDialog != null && loadingDialog.isShowing()){
+//                loadingDialog.dismiss();
+//            }
+//            WebServiceMiddleUtils.hand(context,error,errorCode);
+//        }
+//    }
 }
