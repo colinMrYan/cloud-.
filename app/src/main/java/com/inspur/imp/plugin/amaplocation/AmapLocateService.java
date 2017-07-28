@@ -77,6 +77,7 @@ public class AmapLocateService extends ImpPlugin implements
         mLocationOption.setOnceLocation(true);
         // 设置定位模式为低功耗定位
         mLocationOption.setLocationMode(AMapLocationMode.Hight_Accuracy);
+        mLocationOption.setWifiScan(true);
         mLocationOption.setOnceLocationLatest(true);
         // 设置定位回调监听
         mlocationClient.setLocationListener(this);
