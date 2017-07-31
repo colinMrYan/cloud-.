@@ -393,7 +393,7 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
             public void onClick(View v) {
                 Intent intent = new Intent();
                 intent.setClass(getActivity(), CaptureActivity.class);
-                intent.putExtra("from", "MoreFragment");
+                intent.putExtra("from", "MessageFragment");
                 startActivityForResult(intent, SCAN_LOGIN_QRCODE_RESULT);
                 popupWindow.dismiss();
             }

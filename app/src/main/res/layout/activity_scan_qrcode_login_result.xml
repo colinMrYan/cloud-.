@@ -72,6 +72,7 @@
         android:background="@drawable/shape_stroke_blue_layout"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="433dp"
+        android:onClick="onClick"
         android:textColor="@color/comment_file_color"
         android:text="登录"/>
     <Button

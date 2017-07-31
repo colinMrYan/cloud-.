@@ -1,9 +1,12 @@
 package com.inspur.emmcloud.ui.login;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
+import android.widget.Button;
+import android.widget.TextView;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
@@ -16,6 +19,7 @@ import com.inspur.emmcloud.util.StateBarColor;
 import com.inspur.emmcloud.util.ToastUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
+import com.inspur.imp.plugin.barcode.scan.CaptureActivity;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -27,6 +31,9 @@ import java.lang.reflect.Method;
 
 public class ScanQrCodeLoginActivity extends BaseActivity {
     private LoadingDialog loadingDialog;
+    private TextView scanLoginSysType;
+    private boolean isLogin = true;
+    private static final int SCAN_LOGIN_QRCODE_RESULT = 5;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +47,8 @@ public class ScanQrCodeLoginActivity extends BaseActivity {
 
     private void initViews() {
         loadingDialog = new LoadingDialog(ScanQrCodeLoginActivity.this);
+        scanLoginSysType = (TextView) findViewById(R.id.scan_login_desktop_sys_type_text);
+        changeLoginUI();
     }
 
     private void closeLoginInActivity() {
@@ -64,16 +73,36 @@ public class ScanQrCodeLoginActivity extends BaseActivity {
     /**
      * 登录云+桌面版
      *
-     * @param msg
      */
 
-    private void loginDesktopCloudPlus(String msg) {
+    private void loginDesktopCloudPlus() {
+        String msg = "";
+        if(getIntent().hasExtra("scanMsg")){
+            msg = getIntent().getStringExtra("scanMsg");
+        }
+        LogUtils.YfcDebug("msg:"+msg);
         AppAPIService appAPIService = new AppAPIService(ScanQrCodeLoginActivity.this);
         appAPIService.setAPIInterface(new WebService());
         if (NetUtils.isNetworkConnected(ScanQrCodeLoginActivity.this)) {
             loadingDialog.show();
             appAPIService.sendLoginDesktopCloudPlusInfo(msg);
         }
+    }
+
+    /**
+     * 登录失败修改ui
+     */
+    private void loginFailUI(){
+        scanLoginSysType.setText("登录请求已过期，请尝试重新扫码");
+        ((Button)findViewById(R.id.scan_login_desktop_button)).setText("重新登录");
+    }
+
+    /**
+     * 扫描成功修改
+     */
+    private void scanSuccess(){
+        scanLoginSysType.setText("Windows云＋登录确认");
+        ((Button)findViewById(R.id.scan_login_desktop_button)).setText("登录");
     }
 
     public void onClick(View view) {
@@ -83,11 +112,36 @@ public class ScanQrCodeLoginActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.scan_login_desktop_button:
-//                setStatusBarIconDark(false);
-                setMiuiStatusBarDarkMode(this,false);
+                if(!isLogin){
+                    Intent intent = new Intent();
+                    intent.setClass(ScanQrCodeLoginActivity.this, CaptureActivity.class);
+                    intent.putExtra("from", "ScanQrCodeLoginActivity");
+                    startActivityForResult(intent, SCAN_LOGIN_QRCODE_RESULT);
+                    return;
+                }
+                loginDesktopCloudPlus();
                 break;
         }
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if ((resultCode == RESULT_OK) && (requestCode == SCAN_LOGIN_QRCODE_RESULT)) {
+            if (data.hasExtra("isDecodeSuccess")) {
+                boolean isDecodeSuccess = data.getBooleanExtra("isDecodeSuccess", false);
+                if (isDecodeSuccess) {
+                    String msg = data.getStringExtra("msg");
+                    LogUtils.YfcDebug("解析到的信息：" + msg);
+//                    ScanQrCodeUtils.getScanQrCodeUtilsInstance(ScanQrCodeLoginActivity.this).handleActionWithMsg(msg);
+                    isLogin = true;
+                    scanSuccess();
+                } else {
+                    LogUtils.YfcDebug("解析失败");
+                }
+            }
+        }
     }
 
     public static boolean setMiuiStatusBarDarkMode(Activity activity, boolean darkmode) {
@@ -120,6 +174,8 @@ public class ScanQrCodeLoginActivity extends BaseActivity {
             if (loadingDialog != null && loadingDialog.isShowing()) {
                 loadingDialog.dismiss();
             }
+            loginFailUI();
+            isLogin = false;
             WebServiceMiddleUtils.hand(ScanQrCodeLoginActivity.this, error, errorCode);
         }
     }
