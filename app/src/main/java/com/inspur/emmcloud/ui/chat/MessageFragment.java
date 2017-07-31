@@ -48,6 +48,7 @@ import com.inspur.emmcloud.util.ChatCreateUtils.OnCreateGroupChannelListener;
 import com.inspur.emmcloud.util.DirectChannelUtils;
 import com.inspur.emmcloud.util.ImageDisplayUtils;
 import com.inspur.emmcloud.util.IntentUtils;
+import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.MsgCacheUtil;
 import com.inspur.emmcloud.util.MsgMatheSetCacheUtils;
 import com.inspur.emmcloud.util.MsgReadIDCacheUtils;
@@ -167,6 +168,9 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 	 */
 	private void showMessageButtons() {
 		String tabBarInfo = PreferencesByUserAndTanentUtils.getString(getActivity(), "app_tabbar_info_current", "");
+		if(tabBarInfo == null){
+			return;
+		}
 		AppTabAutoBean appTabAutoBean = new AppTabAutoBean(tabBarInfo);
 		if(appTabAutoBean != null) {
 			AppTabAutoBean.PayloadBean payloadBean = appTabAutoBean.getPayload();
