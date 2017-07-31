@@ -51,6 +51,7 @@ import com.inspur.emmcloud.util.ChatCreateUtils.OnCreateGroupChannelListener;
 import com.inspur.emmcloud.util.DirectChannelUtils;
 import com.inspur.emmcloud.util.ImageDisplayUtils;
 import com.inspur.emmcloud.util.IntentUtils;
+import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.MsgCacheUtil;
 import com.inspur.emmcloud.util.MsgMatheSetCacheUtils;
 import com.inspur.emmcloud.util.MsgReadIDCacheUtils;
@@ -157,6 +158,9 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 	public void onPause() {
 		super.onPause();
 		pullToRefreshLayout.refreshFinish(PullToRefreshLayout.FAIL);
+		if(popupWindow != null && popupWindow.isShowing()){
+			popupWindow.dismiss();
+		}
 	}
 
     @Override
