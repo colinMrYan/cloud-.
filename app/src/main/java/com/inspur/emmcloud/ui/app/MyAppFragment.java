@@ -252,7 +252,8 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
                 public void onChange(int listPosition, int from, int to) {
                     handAppOrderChange(appGroupItemList, from, to);
                     dragGridViewAdapter.notifyDataSetChanged();
-                    appListAdapter.notifyDataSetChanged();
+                    //去掉在排序完成之后的刷新，这里不影响删除应用相关的逻辑
+//                    appListAdapter.notifyDataSetChanged();
                     saveAppChangeOrder(listPosition);
                 }
             });

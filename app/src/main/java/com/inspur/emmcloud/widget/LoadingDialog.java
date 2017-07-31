@@ -23,7 +23,6 @@ public class LoadingDialog extends Dialog {
 	private TextView loadtext;
 	private LayoutParams lp;
 	private Context context;
-
 	public LoadingDialog(Context context, String text) {
 		// TODO Auto-generated constructor stub
 		super(context, R.style.dialog_progressbar);

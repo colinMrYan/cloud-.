@@ -23,12 +23,12 @@ public class Enterprise implements Serializable {
 	public Enterprise(){};
 	public Enterprise(JSONObject object){
 		code = JSONUtils.getString(object,"code","");
-		id = JSONUtils.getString(object,"id","");
+		id = JSONUtils.getString(object,"id","0");
 		name = JSONUtils.getString(object,"name","");
-		creationDate = JSONUtils.getString(object,"creation_date","");
+		creationDate = JSONUtils.getString(object,"creation_date","0");
 		entLicenseCopy = JSONUtils.getString(object,"ent_license_copy","");
 		entLicenseSn = JSONUtils.getString(object,"ent_license_sn","");
-		lastUpdate = JSONUtils.getString(object,"last_update","");
+		lastUpdate = JSONUtils.getString(object,"last_update","0");
 
 	}
 
