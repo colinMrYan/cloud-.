@@ -43,7 +43,6 @@ import com.inspur.emmcloud.util.DbCacheUtils;
 import com.inspur.emmcloud.util.DensityUtil;
 import com.inspur.emmcloud.util.FestivalCacheUtils;
 import com.inspur.emmcloud.util.IntentUtils;
-import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.MyCalendarCacheUtils;
 import com.inspur.emmcloud.util.MyCalendarOperationCacheUtils;
 import com.inspur.emmcloud.util.NetUtils;
@@ -64,7 +63,6 @@ import com.lidroid.xutils.exception.DbException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
 import static com.inspur.emmcloud.util.TimeUtils.FORMAT_MONTH_DAY;
@@ -119,8 +117,7 @@ public class WorkFragment extends Fragment implements OnRefreshListener {
         getWorkSettingData();
         initViews();
         getWorkData();
-        registerCalEventReceiver();
-        registerMeetingAndTaskReceiver();
+        registerWorkNotifyReceiver();
     }
 
     /**
@@ -187,7 +184,7 @@ public class WorkFragment extends Fragment implements OnRefreshListener {
      */
     private void getWorkData() {
         getMeetings();
-        getCalendarEvent();
+        getMyCalendar();
         getTasks();
         handHeaderDate();
     }
@@ -201,45 +198,11 @@ public class WorkFragment extends Fragment implements OnRefreshListener {
         return  (workSettingList.size()>0 && workSettingList.contains(new WorkSetting(type,"",true,0)));
     }
 
-    /**
-     * 注册关于CalendarEvent广播，便于更新数据
-     */
-    private void registerCalEventReceiver() {
-            calEventReceiver = new BroadcastReceiver() {
-                @Override
-                public void onReceive(Context context, Intent intent) {
-                    if(isContainWork(TYPE_CALENDAR)){
-                        if (intent.hasExtra("addCalEvent")
-                                || intent.hasExtra("editCalEvent")
-                                || intent.hasExtra("editCalendar")) {
-                            getCalendarEvent();
-                        } else if (intent.hasExtra("deleteCalEvent")) {
-                            CalendarEvent deleteCalEvent = (CalendarEvent) intent
-                                    .getSerializableExtra("deleteCalEvent");
-                            // 修复迭代问题
-                            Iterator<CalendarEvent> sListIterator = calEventList
-                                    .iterator();
-                            while (sListIterator.hasNext()) {
-                                CalendarEvent cal = sListIterator.next();
-                                if (cal.getId().equals(deleteCalEvent.getId())) {
-                                    sListIterator.remove();
-                                }
-                            }
-                            calendarChildAdapter.notifyDataSetChanged();
-                        }
-                    }
-                }
-
-            };
-            IntentFilter myIntentFilter = new IntentFilter();
-            myIntentFilter.addAction("editcalendar_event");
-            getActivity().registerReceiver(calEventReceiver, myIntentFilter);
-    }
 
     /**
      * 注册刷新任务和会议的广播
      */
-    private void registerMeetingAndTaskReceiver() {
+    private void registerWorkNotifyReceiver() {
         meetingAndTaskReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -247,6 +210,8 @@ public class WorkFragment extends Fragment implements OnRefreshListener {
                     getTasks();
                 } else if (intent.hasExtra("refreshMeeting")) {
                     getMeetings();
+                }else if(intent.hasExtra("refreshCalendar")){
+                    getMyCalendar();
                 }
             }
         };
@@ -409,6 +374,8 @@ public class WorkFragment extends Fragment implements OnRefreshListener {
                     Calendar dueDate = task.getLocalDueDate();
                     if (dueDate != null) {
                         dateText.setText(TimeUtils.calendar2FormatString(getActivity(), dueDate, FORMAT_MONTH_DAY));
+                    }else {
+                        dateText.setText(R.string.not_set);
                     }
                     break;
                 case TYPE_CALENDAR:
@@ -554,7 +521,7 @@ public class WorkFragment extends Fragment implements OnRefreshListener {
     /**
      * 获取日历中Event
      */
-    private void getCalendarEvent() {
+    private void getMyCalendar() {
         if (NetUtils.isNetworkConnected(getActivity()) && isContainWork(TYPE_CALENDAR)) {
             apiService.getMyCalendar(0, 30);
         }
@@ -570,8 +537,6 @@ public class WorkFragment extends Fragment implements OnRefreshListener {
                     "order_by", "PRIORITY");
             String orderType = PreferencesUtils.getString(getActivity(),
                     "order_type", "DESC");
-            LogUtils.jasonDebug("orderBy="+orderBy);
-            LogUtils.jasonDebug("orderType="+orderType);
             apiService.getRecentTasks(orderBy, orderType);
         }
     }
@@ -672,8 +637,8 @@ public class WorkFragment extends Fragment implements OnRefreshListener {
                         getActivity(), myCalendar.getId())) {
                     calendarIdList.add(calendarList.get(i).getId());
                 }
-                getCalEventsForTwoDays();
             }
+            getCalEventsForTwoDays();
         }
 
         @Override

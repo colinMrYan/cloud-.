@@ -527,6 +527,7 @@ public class IndexActivity extends BaseFragmentActivity implements
 
             mTabHost.addTab(tab, mainTab.getClz(), null);
             mTabHost.getTabWidget().getChildAt(i).setOnTouchListener(this);
+            mTabHost.getTabWidget().setDividerDrawable(android.R.color.transparent);
             mTabHost.setOnTabChangedListener(this);
         }
         int tabSize = tabs.length;

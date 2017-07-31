@@ -3,7 +3,7 @@
 
     <stroke
         android:width="1px"
-        android:color="#a5a8aa" />
+        android:color="#dcdcdc" />
  <!-- 边框颜色 -->
     <solid android:color="#fafafa" />
  <!-- 填充色 -->
