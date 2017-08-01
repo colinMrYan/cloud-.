@@ -34,6 +34,7 @@ import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.bean.GetCreateSingleChannelResult;
 import com.inspur.emmcloud.bean.GetNewsInstructionResult;
 import com.inspur.emmcloud.bean.GetSendMsgResult;
+import com.inspur.emmcloud.bean.GroupNews;
 import com.inspur.emmcloud.bean.NewsIntrcutionUpdateEvent;
 import com.inspur.emmcloud.config.MyAppWebConfig;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
@@ -45,6 +46,7 @@ import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.StateBarColor;
 import com.inspur.emmcloud.util.StringUtils;
+import com.inspur.emmcloud.util.TimeUtils;
 import com.inspur.emmcloud.util.ToastUtils;
 import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
@@ -220,34 +222,25 @@ public class NewsWebDetailActivity extends BaseActivity {
         blackFontColor = ContextCompat.getColor(NewsWebDetailActivity.this,R.color.black);
         whiteFontColor = ContextCompat.getColor(NewsWebDetailActivity.this,R.color.white);
         Intent intent = getIntent();
-        if (intent.hasExtra("url")) {
-            url = intent.getStringExtra("url");
+        GroupNews groupNews = (GroupNews) intent.getSerializableExtra("groupNews");
+        if (groupNews != null) {
+            String posttime = groupNews.getCreationDate();
+            if(!StringUtils.isBlank(groupNews.getUrl())){
+                url = groupNews.getUrl();
+            }else{
+                url = TimeUtils.getNewsTimePathIn(posttime)
+                        + groupNews.getResource();
+            }
+            poster = groupNews.getPoster();
+            title = groupNews.getTitle();
+            digest = groupNews.getDigest();
+            pagerTitle = getString(R.string.group_news);
+            newsId = groupNews.getId();
+            approvedDate = groupNews.getApprovedDate();
+            editorCommentCreated = groupNews.isEditorCommentCreated();
+            originalEditorComment = groupNews.getOriginalEditorComment();
         } else {
             url = getIntent().getDataString();
-        }
-        if (intent.hasExtra("poster")) {
-            poster = intent.getStringExtra("poster");
-        }
-        if (intent.hasExtra("title")) {
-            title = intent.getStringExtra("title");
-        }
-        if (intent.hasExtra("digest")) {
-            digest = intent.getStringExtra("digest");
-        }
-        if(intent.hasExtra("pager_title")){
-            this.pagerTitle = intent.getStringExtra("pager_title");
-        }
-        if(intent.hasExtra("news_id")){
-            this.newsId = intent.getStringExtra("news_id");
-        }
-        if(intent.hasExtra("approvedDate")){
-            this.approvedDate = intent.getStringExtra("approvedDate");
-        }
-        if(intent.hasExtra("editorCommentCreated")){
-            this.editorCommentCreated = intent.getBooleanExtra("editorCommentCreated",false);
-        }
-        if(intent.hasExtra("originalEditorComment")){
-            this.originalEditorComment = intent.getStringExtra("originalEditorComment");
         }
 
     }
@@ -326,7 +319,7 @@ public class NewsWebDetailActivity extends BaseActivity {
         dayOrNightLayout = (LinearLayout) view.findViewById(R.id.app_news_mode_layout);
         shareBtn = (Button) view.findViewById(R.id.app_news_share_btn);
         instructionsBtn = (Button)view.findViewById(R.id.app_news_instructions_btn);
-        if(!getIntent().getBooleanExtra("hasExtraPermission",false)){
+        if(!((GroupNews)getIntent().getSerializableExtra("groupNews")).isHasExtraPermission()){
             instructionsBtn.setVisibility(View.GONE);
             shareBtn.setPadding(getIconLeftSize(),0,0,0);
         }
@@ -460,8 +453,9 @@ public class NewsWebDetailActivity extends BaseActivity {
                 //批示逻辑
                 dialog.dismiss();
                 if (!StringUtils.isBlank(approvedDate)){
-                    if(getIntent().hasExtra("instruction")){
-                        instruction  = getIntent().getStringExtra("instruction");
+                    String content = ((GroupNews)getIntent().getSerializableExtra("groupNews")).getEditorComment();
+                    if(!StringUtils.isBlank(content)){
+                        instruction  = content;
                     }
                     showHasInstruceionDialog();
                 }else if(editorCommentCreated == true){

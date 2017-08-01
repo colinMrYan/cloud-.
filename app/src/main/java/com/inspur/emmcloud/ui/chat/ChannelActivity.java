@@ -41,6 +41,7 @@ import com.inspur.emmcloud.bean.GetNewMsgsResult;
 import com.inspur.emmcloud.bean.GetNewsImgResult;
 import com.inspur.emmcloud.bean.GetSearchChannelGroupResult;
 import com.inspur.emmcloud.bean.GetSendMsgResult;
+import com.inspur.emmcloud.bean.GroupNews;
 import com.inspur.emmcloud.bean.Msg;
 import com.inspur.emmcloud.bean.PVCollectModel;
 import com.inspur.emmcloud.broadcastreceiver.MsgReceiver;
@@ -322,11 +323,12 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
                     String linkDigest = JSONUtils.getString(msgBody, "digest", "");
                     String linkUrl = JSONUtils.getString(msgBody, "url", "");
                     String linkPoster = JSONUtils.getString(msgBody, "poster", "");
-                    bundle.putString("url", linkUrl);
-                    bundle.putString("title", linkTitle);
-                    bundle.putString("digest", linkDigest);
-                    bundle.putString("poster", linkPoster);
-                    bundle.putBoolean("tran", true);
+                    GroupNews groupNews = new GroupNews();
+                    groupNews.setTitle(linkTitle);
+                    groupNews.setDigest(linkDigest);
+                    groupNews.setUrl(linkUrl);
+                    groupNews.setPoster(linkPoster);
+                    bundle.putSerializable("groupNews",groupNews);
                     IntentUtils.startActivity(ChannelActivity.this,
                             NewsWebDetailActivity.class, bundle);
                 }

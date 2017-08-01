@@ -20,7 +20,6 @@ import com.inspur.emmcloud.bean.GetGroupNewsDetailResult;
 import com.inspur.emmcloud.bean.GroupNews;
 import com.inspur.emmcloud.bean.NewsIntrcutionUpdateEvent;
 import com.inspur.emmcloud.util.NetUtils;
-import com.inspur.emmcloud.util.TimeUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout;
@@ -132,28 +131,9 @@ public class GroupNewsCardFragment extends Fragment implements
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position,
                                 long id) {
-            String posttime = groupnNewsList.get(position).getCreationDate();
             Intent intent = new Intent();
             intent.setClass(getActivity(), NewsWebDetailActivity.class);
-            try {
-                intent.putExtra("poster", groupnNewsList.get(position)
-                        .getPoster());
-                intent.putExtra("title", groupnNewsList.get(position)
-                        .getTitle());
-                intent.putExtra("digest", groupnNewsList.get(position)
-                        .getSummary());
-                intent.putExtra("url", TimeUtils.getNewsTimePathIn(posttime)
-                        + groupnNewsList.get(position).getResource());
-                intent.putExtra("news_id", groupnNewsList.get(position).getId());
-                intent.putExtra("pager_title", pagerTitle);
-                intent.putExtra("instruction", groupnNewsList.get(position).getEditorComment());
-                intent.putExtra("approvedDate", groupnNewsList.get(position).getApprovedDate());
-                intent.putExtra("editorCommentCreated", groupnNewsList.get(position).isEditorCommentCreated());
-                intent.putExtra("originalEditorComment", groupnNewsList.get(position).getOriginalEditorComment());
-                intent.putExtra("hasExtraPermission", groupnNewsList.get(position).isHasExtraPermission());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            intent.putExtra("groupNews",groupnNewsList.get(position));
             startActivity(intent);
         }
 
