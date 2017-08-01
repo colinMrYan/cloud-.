@@ -215,6 +215,7 @@ public class ImpWebView extends WebView {
 
 	// 设置websettings属性
 	public void setWebSetting() {
+		setHCMMapProperty();
 		// 支持js相关方法
 		setJSConfig();
 		// 页面效果设置
@@ -244,6 +245,14 @@ public class ImpWebView extends WebView {
 		settings.setBuiltInZoomControls(false);
 	}
 
+	/**
+	 * 设置HCM地图相关属性
+	 */
+	private void setHCMMapProperty() {
+		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP ){
+			getSettings().setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
+		}
+	}
 	/* 页面效果设置 */
 	private void setPageStyle() {
 		//设置自适应屏幕

@@ -180,6 +180,10 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 	 */
 	private void showMessageButtons() {
 		String tabBarInfo = PreferencesByUserAndTanentUtils.getString(getActivity(), "app_tabbar_info_current", "");
+		//第一次登录时有tabBarInfo会为“”，会导致JSON waring
+		if(StringUtils.isBlank(tabBarInfo)){
+			return;
+		}
 		AppTabAutoBean appTabAutoBean = new AppTabAutoBean(tabBarInfo);
 		if(appTabAutoBean != null) {
 			AppTabAutoBean.PayloadBean payloadBean = appTabAutoBean.getPayload();
@@ -1123,7 +1127,9 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 				break;
 			}
 		}
-		adapter.notifyDataSetChanged();
+		if (adapter != null){
+			adapter.notifyDataSetChanged();
+		}
 	}
 
 	/**

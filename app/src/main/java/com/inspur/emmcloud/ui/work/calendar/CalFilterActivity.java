@@ -154,6 +154,7 @@ public class CalFilterActivity extends BaseActivity {
 						@Override
 						public void toggleToOn(View view) {
 							// TODO Auto-generated method stub
+							sendBoradcastReceiver();
 							statusSwitch.toggleSwitch(true);
 							MyCalendarOperationCacheUtils.saveMyCalendarOperation(getApplicationContext(), calendar.getId(), false);
 						}
@@ -161,6 +162,7 @@ public class CalFilterActivity extends BaseActivity {
 						@Override
 						public void toggleToOff(View view) {
 							// TODO Auto-generated method stub
+							sendBoradcastReceiver();
 							statusSwitch.toggleSwitch(false);
 							MyCalendarOperationCacheUtils.saveMyCalendarOperation(getApplicationContext(), calendar.getId(), true);
 						}
@@ -179,8 +181,8 @@ public class CalFilterActivity extends BaseActivity {
 	 * 发送Calendar变化通知
 	 */
 	public void sendBoradcastReceiver() {
-		Intent mIntent = new Intent("editcalendar_event");
-		mIntent.putExtra("editCalendar", "");
+		Intent mIntent = new Intent("com.inspur.calendar");
+		mIntent.putExtra("refreshCalendar", "");
 		sendBroadcast(mIntent);
 	}
 

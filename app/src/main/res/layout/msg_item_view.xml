@@ -1,37 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/main_layout"
                 android:layout_width="match_parent"
-                android:layout_height="70dp"
+                android:layout_height="67dp"
                 android:background="@drawable/selector_list"
                 android:paddingLeft="10dp">
 
     <com.inspur.emmcloud.widget.CircleImageView
         android:id="@+id/msg_img"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="49dp"
+        android:layout_height="49dp"
         android:layout_centerVertical="true"
-        android:layout_marginBottom="10dp"
+        android:layout_marginBottom="8dp"
         android:layout_marginRight="10dp"
-        android:layout_marginTop="10dp"
-        android:padding="1dp" />
-
-
-
-    <ImageView
-        android:id="@+id/msg_superscript_img"
-        android:layout_width="15dp"
-        android:layout_height="15dp"
-        android:layout_marginLeft="36dp"
-        android:layout_marginTop="43dp"
-        android:src="@drawable/icon_robot_superscript"
-        android:visibility="gone"/>
-
+        android:layout_marginTop="11dp"
+         />
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_toRightOf="@id/msg_img"
+        android:paddingTop="4dp"
         android:orientation="vertical">
 
         <RelativeLayout
@@ -63,7 +53,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp">
+            android:layout_marginTop="3dp">
 
             <TextView
                 android:id="@+id/content_text"
@@ -122,8 +112,8 @@
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
         android:layout_alignParentBottom="true"
-        android:layout_marginLeft="60dp"
+        android:layout_marginLeft="59dp"
         android:layout_marginTop="9dp"
-        android:background="#c7c7cd"/>
+        android:background="#DCDCDC"/>
 
 </RelativeLayout>

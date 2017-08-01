@@ -57,7 +57,6 @@ import com.inspur.emmcloud.util.ImageDisplayUtils;
 import com.inspur.emmcloud.util.IntentUtils;
 import com.inspur.emmcloud.util.JSONUtils;
 import com.inspur.emmcloud.util.ListViewUtils;
-import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.MsgCacheUtil;
 import com.inspur.emmcloud.util.MsgReadIDCacheUtils;
 import com.inspur.emmcloud.util.MsgRecourceUploadUtils;
@@ -888,14 +887,14 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
      * 通知message页将本频道消息置为已读
      */
     private void setChannelMsgRead(){
-        LogUtils.jasonDebug("setChannelMsgRead0000000000000");
         if (msgList != null && msgList.size()>0){
+            MsgReadIDCacheUtils.saveReadedMsg(this, cid,
+                    msgList.get(msgList.size()-1).getMid());
             Intent intent = new Intent("message_notify");
             intent.putExtra("command", "set_channel_message_read");
             intent.putExtra("cid", cid);
             intent.putExtra("mid", msgList.get(msgList.size()-1).getMid());
             sendBroadcast(intent);
-            LogUtils.jasonDebug("setChannelMsgRead1111111111111111");
         }
     }
 

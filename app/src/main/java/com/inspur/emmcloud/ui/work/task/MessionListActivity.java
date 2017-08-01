@@ -240,15 +240,12 @@ public class MessionListActivity extends BaseActivity implements
 		orderBy = PreferencesUtils.getString(MessionListActivity.this,
 				"order_by", "PRIORITY");
 		orderType = PreferencesUtils.getString(MessionListActivity.this,
-				"order_type", "ASC");
+				"order_type", "DESC");
 	}
 
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.back_layout:
-			if (isNeedRefresh) {
-				setResult(RESULT_OK);
-			}
 			finish();
 			break;
 		case R.id.mession_settiing_img:

@@ -8,6 +8,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
+        android:paddingTop="7dp"
+        android:paddingBottom="4dp"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
         android:gravity="center_horizontal"
@@ -15,14 +17,15 @@
 
         <ImageView
             android:id="@+id/imageview"
-            android:layout_width="38dp"
-            android:layout_height="38dp"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
             android:focusable="false"
-            android:scaleType="centerInside" >
+            android:scaleType="fitXY" >
         </ImageView>
 
         <TextView
             android:id="@+id/textview"
+            android:layout_marginTop="3dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@drawable/seclector_footer_text"
