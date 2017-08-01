@@ -36,246 +36,198 @@ import java.util.List;
 
 /**
  * 新闻列表页面
- * 
- * @author sunqx
  *
+ * @author sunqx
  */
 @SuppressLint("ValidFragment")
 public class GroupNewsCardFragment extends Fragment implements
-		OnRefreshListener {
+        OnRefreshListener {
+    private static final String ARG_POSITION = "position";
+    private View v;
+    private LayoutInflater inflater;
+    private LoadingDialog loadingDlg;
+    private MyAppAPIService apiService;
+    private ListAdapter adapter;
+    private PullableListView myListView;
+    private PullToRefreshLayout pullToRefreshLayout;
+    private int page = 0;
+    private boolean haveData = false;
+    private boolean isPullup = true;
+    private List<GroupNews> groupnNewsList = new ArrayList<GroupNews>();
+    private String pagerTitle = "";
 
-	private static final String ARG_POSITION = "position";
+    public GroupNewsCardFragment() {
+    }
 
-	private View v;
-	private LayoutInflater inflater;
-	private LoadingDialog loadingDlg;
-	private MyAppAPIService apiService;
+    public GroupNewsCardFragment(int position, String catagoryid, String title, boolean hasExtraPermission) {
+        // TODO Auto-generated constructor stub
+        Bundle b = new Bundle();
+        b.putInt(ARG_POSITION, position);
+        b.putString("catagoryid", catagoryid);
+        b.putBoolean("hasExtraPermission", hasExtraPermission);
+        this.setArguments(b);
+        this.pagerTitle = title;
+    }
 
-	private ListAdapter adapter;
-	private PullableListView myListView;
-	private PullToRefreshLayout pullToRefreshLayout;
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        inflater = (LayoutInflater) getActivity().getSystemService(
+                getActivity().LAYOUT_INFLATER_SERVICE);
+        v = inflater.inflate(R.layout.fragment_news, null);
+        loadingDlg = new LoadingDialog(getActivity());
+        apiService = new MyAppAPIService(getActivity());
+        apiService.setAPIInterface(new WebService());
+        pullToRefreshLayout = (PullToRefreshLayout) v
+                .findViewById(R.id.refresh_view);
+        pullToRefreshLayout.setOnRefreshListener(this);
+        myListView = (PullableListView) v.findViewById(R.id.news_listView);
+        myListView.setVerticalScrollBarEnabled(false);
+        myListView.setCanPullUp(true);
+        myListView.setOnItemClickListener(new ListItemOnClickListener());
+        getGroupNewsList(getArguments().getString("catagoryid"),0);
+        EventBus.getDefault().register(this);
+    }
 
-	private int page = 0;
-	private boolean havedata = false;
-	private boolean isPullup = true;
-	private List<GroupNews> groupnNewsList = new ArrayList<GroupNews>();
-	private String pagerTitle = "";
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void updateNewsDataById(NewsIntrcutionUpdateEvent messageEvent) {
+        for (int i = 0; i < groupnNewsList.size(); i++) {
+            if (groupnNewsList.get(i).getId().equals(messageEvent.getId())) {
+                groupnNewsList.get(i).setOriginalEditorComment(messageEvent.getOriginalEditorComment());
+                groupnNewsList.get(i).setEditorCommentCreated(messageEvent.isEditorCommentCreated());
+                break;
+            }
+        }
+    }
 
-	public GroupNewsCardFragment(){
+    /**
+     * 获取每个标题下的新闻列表
+     */
+    private void getGroupNewsList(String catagoryid,int page) {
+        // TODO Auto-generated method stub
+        if (NetUtils.isNetworkConnected(getActivity())) {
+            loadingDlg.show();
+            apiService.getGroupNewsDetail(catagoryid, page);
+        } else {
+            if (pullToRefreshLayout != null) {
+                pullToRefreshLayout.refreshFinish(PullToRefreshLayout.FAIL);
+            }
+        }
+    }
 
-	}
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        if (v == null) {
+            v = inflater.inflate(R.layout.fragment_work, container, false);
+        }
+        ViewGroup parent = (ViewGroup) v.getParent();
+        if (parent != null) {
+            parent.removeView(v);
+        }
+        return v;
+    }
 
-	public GroupNewsCardFragment(int position, String catagoryid,String title,boolean hasExtraPermission) {
-		// TODO Auto-generated constructor stub
-		Bundle b = new Bundle();
-		b.putInt(ARG_POSITION, position);
-		b.putString("catagoryid", catagoryid);
-		b.putBoolean("hasExtraPermission",hasExtraPermission);
-		this.setArguments(b);
-		this.pagerTitle = title;
-	}
+    class ListItemOnClickListener implements OnItemClickListener {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position,
+                                long id) {
+            String posttime = groupnNewsList.get(position).getCreationDate();
+            Intent intent = new Intent();
+            intent.setClass(getActivity(), NewsWebDetailActivity.class);
+            try {
+                intent.putExtra("poster", groupnNewsList.get(position)
+                        .getPoster());
+                intent.putExtra("title", groupnNewsList.get(position)
+                        .getTitle());
+                intent.putExtra("digest", groupnNewsList.get(position)
+                        .getSummary());
+                intent.putExtra("url", TimeUtils.getNewsTimePathIn(posttime)
+                        + groupnNewsList.get(position).getResource());
+                intent.putExtra("news_id", groupnNewsList.get(position).getId());
+                intent.putExtra("pager_title", pagerTitle);
+                intent.putExtra("instruction", groupnNewsList.get(position).getEditorComment());
+                intent.putExtra("approvedDate", groupnNewsList.get(position).getApprovedDate());
+                intent.putExtra("editorCommentCreated", groupnNewsList.get(position).isEditorCommentCreated());
+                intent.putExtra("originalEditorComment", groupnNewsList.get(position).getOriginalEditorComment());
+                intent.putExtra("hasExtraPermission", groupnNewsList.get(position).isHasExtraPermission());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            startActivity(intent);
+        }
 
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		inflater = (LayoutInflater) getActivity().getSystemService(
-				getActivity().LAYOUT_INFLATER_SERVICE);
-		v = inflater.inflate(R.layout.fragment_news, null);
-		loadingDlg = new LoadingDialog(getActivity());
-		apiService = new MyAppAPIService(getActivity());
-		apiService.setAPIInterface(new WebService());
-		pullToRefreshLayout = (PullToRefreshLayout) v
-				.findViewById(R.id.refresh_view);
-		pullToRefreshLayout.setOnRefreshListener(this);
+    }
 
-		myListView = (PullableListView) v.findViewById(R.id.news_listView);
-		myListView.setVerticalScrollBarEnabled(false);
-		myListView.setCanPullUp(true);
+    class WebService extends APIInterfaceInstance {
+        @Override
+        public void returnGroupNewsDetailSuccess(
+                GetGroupNewsDetailResult getGroupNewsDetailResult) {
+            if (!isPullup) {
+                groupnNewsList.clear();
+            }
+            groupnNewsList.addAll(getGroupNewsDetailResult.getGroupNews());
+            if (groupnNewsList != null && groupnNewsList.size() > 0) {
+                adapter = new NewsListAdapter(getActivity(), groupnNewsList);
+                if (getGroupNewsDetailResult.getGroupNews().size() < 20) {
+                    haveData = false;
+                } else {
+                    haveData = true;
+                }
+                myListView.setAdapter(adapter);
+                if (groupnNewsList.size() <= 20) {
+                    myListView.setSelection(0);
+                } else {
+                    myListView.setSelection(groupnNewsList.size() - (getGroupNewsDetailResult.getGroupNews()
+                            .size() + 4));
+                }
+            }
+            pullToRefreshLayout.refreshFinish(PullToRefreshLayout.SUCCEED);
+            if (loadingDlg.isShowing()) {
+                loadingDlg.dismiss();
+            }
+        }
 
-		myListView.setOnItemClickListener(new ListItemOnClickListener());
-		getGroupNewsList(getArguments().getString("catagoryid"));
-		EventBus.getDefault().register(this);
-	}
+        @Override
+        public void returnGroupNewsDetailFail(String error, int errorCode) {
+            if (loadingDlg.isShowing()) {
+                loadingDlg.dismiss();
+            }
+            WebServiceMiddleUtils.hand(getActivity(), error, errorCode);
+        }
 
-	@Subscribe(threadMode = ThreadMode.MAIN)
-	public void updateNewsDataById(NewsIntrcutionUpdateEvent messageEvent) {
-		for(int i = 0; i< groupnNewsList.size(); i++){
-			if(groupnNewsList.get(i).getId().equals(messageEvent.getId())){
-				groupnNewsList.get(i).setOriginalEditorComment(messageEvent.getOriginalEditorComment());
-				groupnNewsList.get(i).setEditorCommentCreated(messageEvent.isEditorCommentCreated());
-				break;
-			}
-		}
-	}
+    }
 
-	/**
-	 * 获取每个标题下的新闻列表
-	 * 
-	 */
-	private void getGroupNewsList(String catagoryid) {
-		// TODO Auto-generated method stub
-		if (NetUtils.isNetworkConnected(getActivity())) {
-			loadingDlg.show();
-			apiService.getGroupNewsDetail(getArguments()
-					.getString("catagoryid"), 0);
-		}
-	}
+    @Override
+    public void onRefresh(PullToRefreshLayout pullToRefreshLayout) {
+        if (NetUtils.isNetworkConnected(getActivity())) {
+            isPullup = false;
+            getGroupNewsList(getArguments().getString("catagoryid"),0);
+            page = 0;
+        } else {
+            pullToRefreshLayout.refreshFinish(PullToRefreshLayout.FAIL);
+        }
+    }
 
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
-		if (v == null) {
-			v = inflater.inflate(R.layout.fragment_work, container, false);
-		}
+    @Override
+    public void onLoadMore(PullToRefreshLayout pullToRefreshLayout) {
+        // TODO Auto-generated method stub
+        isPullup = true;
+        if (haveData) {
+            page = page + 1;
+            getGroupNewsList(getArguments().getString("catagoryid"), page);
+        } else {
+            Toast.makeText(getActivity(),
+                    getString(R.string.no_more_data),
+                    Toast.LENGTH_SHORT).show();
+            pullToRefreshLayout.refreshFinish(PullToRefreshLayout.SUCCEED);
+        }
 
-		ViewGroup parent = (ViewGroup) v.getParent();
-		if (parent != null) {
-			parent.removeView(v);
-		}
-		return v;
-	}
+    }
 
-	class ListItemOnClickListener implements OnItemClickListener {
-
-		@Override
-		public void onItemClick(AdapterView<?> parent, View view, int position,
-				long id) {
-//			String posttime = groupnNewsList.get(position).getPosttime();
-			String posttime = groupnNewsList.get(position).getCreationDate();
-//			posttime = TimeUtils.Calendar2TimeString(TimeUtils.timeLong2Calendar(Long.parseLong(posttime)),TimeUtils.getFormat(getActivity(),TimeUtils.FORMAT_DEFAULT_DATE));
-			Intent intent = new Intent();
-			intent.setClass(getActivity(), NewsWebDetailActivity.class);
-			try {
-				intent.putExtra("poster", groupnNewsList.get(position)
-						.getPoster());
-				intent.putExtra("title", groupnNewsList.get(position)
-						.getTitle());
-				intent.putExtra("digest", groupnNewsList.get(position)
-						.getSummary());
-				intent.putExtra("url", TimeUtils.getNewsTimePathIn(posttime)
-						+ groupnNewsList.get(position).getResource());
-				intent.putExtra("news_id",groupnNewsList.get(position).getId());
-				intent.putExtra("pager_title",pagerTitle);
-				intent.putExtra("instruction",groupnNewsList.get(position).getEditorComment());
-				intent.putExtra("approvedDate", groupnNewsList.get(position).getApprovedDate());
-				intent.putExtra("editorCommentCreated",groupnNewsList.get(position).isEditorCommentCreated());
-				intent.putExtra("originalEditorComment",groupnNewsList.get(position).getOriginalEditorComment());
-				intent.putExtra("hasExtraPermission",groupnNewsList.get(position).isHasExtraPermission());
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-
-			startActivity(intent);
-		}
-
-	}
-
-	class WebService extends APIInterfaceInstance {
-
-		@Override
-		public void returnGroupNewsDetailSuccess(
-				GetGroupNewsDetailResult getGroupNewsDetailResult) {
-
-			if (!isPullup) {
-				groupnNewsList.clear();
-			}
-			groupnNewsList.addAll(getGroupNewsDetailResult.getGroupNews());
-			if (groupnNewsList != null && groupnNewsList.size() > 0) {
-				adapter = new NewsListAdapter(getActivity(), groupnNewsList);
-				if (getGroupNewsDetailResult.getGroupNews().size() < 20) {
-					havedata = false;
-				} else {
-					havedata = true;
-				}
-
-				myListView.setAdapter(adapter);
-
-				if (groupnNewsList.size() <= 20) {
-					myListView.setSelection(0);
-				} else {
-					myListView
-							.setSelection(groupnNewsList.size()
-									- (getGroupNewsDetailResult.getGroupNews()
-											.size() + 4));
-				}
-
-			}
-
-			// if(!isPullup){
-			// nidafter =
-			// getGroupNewsDetailResult.getGroupNews().get(0).getNid();
-			// if (nidafter.equals(nidbefore)) {
-			// Toast.makeText(getActivity(),
-			// getString(R.string.groupnews_toast_text),
-			// Toast.LENGTH_SHORT).show();
-			// }
-			// nidbefore = nidafter;
-			// }
-			// if(pullToRefreshLayout.isActivated()){
-			pullToRefreshLayout.refreshFinish(PullToRefreshLayout.SUCCEED);
-			// }
-
-			if (loadingDlg.isShowing()) {
-				loadingDlg.dismiss();
-			}
-		}
-
-		@Override
-		public void returnGroupNewsDetailFail(String error,int errorCode) {
-			if (loadingDlg.isShowing()) {
-				loadingDlg.dismiss();
-			}
-			WebServiceMiddleUtils.hand(getActivity(), error,errorCode);
-		}
-
-	}
-
-	@Override
-	public void onRefresh(PullToRefreshLayout pullToRefreshLayout) {
-		// TODO Auto-generated method stub
-
-		if (NetUtils.isNetworkConnected(getActivity())) {
-			// loadingDlg.show();
-			isPullup = false;
-
-			// page = page - 1;
-			// if(page <= 0){
-			if (NetUtils.isNetworkConnected(getActivity())) {
-				apiService.getGroupNewsDetail(
-						getArguments().getString("catagoryid"), 0);
-				page = 0;
-				// }
-				// }else {
-				// if(NetUtils.isNetworkConnected(getActivity())){
-				// apiService.getGroupNewsDetail(getArguments().getString("catagoryid"),page);
-				// }
-			}
-
-		}
-	}
-
-	@Override
-	public void onLoadMore(PullToRefreshLayout pullToRefreshLayout) {
-		// TODO Auto-generated method stub
-		isPullup = true;
-		if (havedata) {
-			page = page + 1;
-			if (NetUtils.isNetworkConnected(getActivity())) {
-				apiService.getGroupNewsDetail(
-						getArguments().getString("catagoryid"), page);
-			}
-		} else {
-			Toast.makeText(getActivity(),
-					getString(R.string.no_more_data),
-					Toast.LENGTH_SHORT).show();
-			pullToRefreshLayout.refreshFinish(PullToRefreshLayout.SUCCEED);
-		}
-
-	}
-
-	@Override
-	public void onDestroy() {
-		EventBus.getDefault().unregister(this);
-		super.onDestroy();
-	}
+    @Override
+    public void onDestroy() {
+        EventBus.getDefault().unregister(this);
+        super.onDestroy();
+    }
 }

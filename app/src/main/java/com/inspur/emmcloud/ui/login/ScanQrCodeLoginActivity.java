@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.BaseActivity;
+import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.AppAPIService;
@@ -42,6 +43,7 @@ public class ScanQrCodeLoginActivity extends BaseActivity {
 //        setStatusBarIconDark(true);
         setMiuiStatusBarDarkMode(this,true);
         setContentView(R.layout.activity_scan_qrcode_login_result);
+        ((MyApplication) getApplicationContext()).addActivity(this);
         initViews();
     }
 
@@ -55,6 +57,9 @@ public class ScanQrCodeLoginActivity extends BaseActivity {
         finish();
     }
 
+    /**
+     * 识别到不同系统的pc客户端显示不同的样式
+     */
     private void changeLoginUI() {
 
     }
@@ -74,7 +79,6 @@ public class ScanQrCodeLoginActivity extends BaseActivity {
      * 登录云+桌面版
      *
      */
-
     private void loginDesktopCloudPlus() {
         String msg = "";
         if(getIntent().hasExtra("scanMsg")){
