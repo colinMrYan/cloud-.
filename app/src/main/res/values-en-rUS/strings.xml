@@ -86,7 +86,8 @@
     <string name="format_year_month">yyyy-MM</string>
     <string name="time_null">null</string>
     <string name="cutdown_now">now</string>
-    <string name="cutdown_tomorrow">1d</string>
+    <string name="cutdown_tomorrow">tmr</string>
+    <string name="cutdown_yestoday">ytd</string>
     <string name="cutdown_day">d</string>
     <string name="cutdown_month">m</string>
     <string name="notice">Notice</string>
@@ -286,16 +287,14 @@
     <string name="work_national_day">Nation Day</string>
     <string name="work_moon_festival">Moon Day</string>
     <string name="work_day">Days</string>
-    <string name="work_date_text">On September 20</string>
-    <string name="work_lunar">According to the lunar calendar in August eighth day, Sunday</string>
-    <string name="work_festval_date">From the National Day, 10 days </string>
     <string name="work_nomeeting_text">No meetings </string>
     <string name="work_notask_text">No todo</string>
     <string name="work_nocal_text">No agenda</string>
     <string name="time">Time</string>
     <string name="work_meeting_text">Meeting</string>
     <string name="work_calendar_text">Enterprise calendar</string>
-    <string name="work_task_text">Todo</string>
+    <string name="work_task_text">My mission</string>
+    <string name="work_info_text">Info bar</string>
 
     <!-- 发现部分 -->
     <string name="find">Discover</string>
@@ -621,6 +620,7 @@
     <string name="one_day_ago">One day before</string>
     <string name="two_days_ago">Two day before</string>
     <string name="a_week_ago">1 week ago</string>
+    <string name="add_calendar">Add calendar</string>
 
     <!-- 待办任务部分 -->
     <string name="mession_detial_doing">Processing</string>
@@ -679,6 +679,7 @@
     <string name="mession_color_tag">Color</string>
     <string name="mession_delete_the_tag">Delete Tag</string>
     <string name="mession_manage_tag">Tag</string>
+    <string name="add_mession">Add task</string>
 
     <!-- ListView自定义控件部分 -->
     <string name="xlistview_header_last_time">Last Update Time:</string>

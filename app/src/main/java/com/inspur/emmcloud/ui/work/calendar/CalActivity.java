@@ -474,8 +474,8 @@ public class CalActivity extends BaseActivity implements OnRefreshListener {
 		Calendar startLocalDate = deleteCalEvent.getLocalStartDate();
 		// 判断是否是今天的日历，如果是今天才发送广播
 		if (TimeUtils.isCalendarToday(startLocalDate)) {
-			Intent mIntent = new Intent("editcalendar_event");
-			mIntent.putExtra("deleteCalEvent", (Serializable) deleteCalEvent);
+			Intent mIntent = new Intent("com.inspur.calendar");
+			mIntent.putExtra("refreshCalendar", "");
 			// 发送广播
 			sendBroadcast(mIntent);
 		}

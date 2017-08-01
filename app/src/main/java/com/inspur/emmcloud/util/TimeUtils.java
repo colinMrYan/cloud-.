@@ -1,17 +1,16 @@
 package com.inspur.emmcloud.util;
 
-import java.sql.Time;
+import android.content.Context;
+
+import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.bean.CalendarEvent;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.TimeZone;
-
-import android.content.Context;
-
-import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.bean.CalendarEvent;
 
 /**
  * TimeUtils
@@ -151,6 +150,9 @@ public class TimeUtils {
      * @return
      */
     public static Calendar timeString2Calendar(String timeLong) {
+        if (StringUtils.isBlank(timeLong)){
+            return null;
+        }
         long time = Long.parseLong(timeLong);
         Calendar calendar = timeLong2Calendar(time);
         return calendar;
@@ -646,14 +648,26 @@ public class TimeUtils {
     }
 
     /**
-     * 获取倒计时text
-     *
+     * 获取工作相关倒计时text
+     * @param context
+     * @param calendarString
+     * @return
+     */
+    public static String getCountdown(Context context, String calendarString){
+        Calendar calendar = timeString2Calendar(calendarString);
+        return getCountdown(context,calendar);
+    }
+
+    /**
+     * 获取工作相关倒计时text
+     * @param context
      * @param calendar
      * @return
      */
     public static String getCountdown(Context context, Calendar calendar) {
-
-        int dayCount = 0;
+        if (calendar == null){
+            return "";
+        }
         String countdown = "";
         Calendar targetCalendar = Calendar.getInstance();
         Calendar currentCalendar = Calendar.getInstance();
@@ -668,51 +682,34 @@ public class TimeUtils {
         targetCalendar.set(Calendar.MILLISECOND, 0);
         long currentSec = currentCalendar.getTimeInMillis();
         long targetSec = targetCalendar.getTimeInMillis();
-        dayCount = (int) ((targetSec - currentSec) / 1000 / 60 / 60 / 24);
-
-        int currentYear = currentCalendar.get(Calendar.YEAR);
-        int targetYear = targetCalendar.get(Calendar.YEAR);
-        int currentDay = currentCalendar.get(Calendar.DAY_OF_YEAR);
-        int targetDay = targetCalendar.get(Calendar.DAY_OF_YEAR);
-        if (targetYear == currentYear) {
-            if (currentDay > targetDay) {
-                SimpleDateFormat format = new SimpleDateFormat(
-                        context.getString(R.string.format_task_month_day));
-                countdown = calendar2FormatString(context,
-                        targetCalendar.getTime(), format);
-                return countdown;
-            }
-        }
-
-        if (dayCount < 0) {
-            SimpleDateFormat format = new SimpleDateFormat(
-                    context.getString(R.string.format_task_month_day));
-            String monthDay = calendar2FormatString(context,
-                    targetCalendar.getTime(), format);
-            return monthDay;
-        }
-
-        if ((targetSec - currentSec) < 0) {
+        int dayCount = (int) ((targetSec - currentSec) / 1000 / 60 / 60 / 24);
+        if (dayCount == -1) {
+            countdown =  context.getString(R.string.cutdown_yestoday);
+        } else if (dayCount == 0) {
+            countdown = context.getString(R.string.cutdown_now);
+        } else if (dayCount == 1) {
+            countdown = context.getString(R.string.cutdown_tomorrow);
+        }else {
             SimpleDateFormat format = new SimpleDateFormat(
                     context.getString(R.string.format_task_month_day));
             countdown = calendar2FormatString(context,
-                    currentCalendar.getTime(), format);
+                    targetCalendar.getTime(), format);
+            if (countdown.startsWith("0")){
+                countdown = countdown.substring(1,countdown.length());
+            }
         }
-        if (dayCount < 1) {
-            return context.getString(R.string.cutdown_now);
-        }
-        if (dayCount < 2) {
-            return context.getString(R.string.cutdown_tomorrow);
-        }
-        if (dayCount >= 30) {
-            int monthCount = dayCount / 30;
-            countdown = monthCount + context.getString(R.string.cutdown_month);
-        } else {
-            countdown = dayCount + context.getString(R.string.cutdown_day);
-        }
+        return  countdown;
+    }
 
-
-        return countdown;
+    /**
+     * 获取倒计时天数
+     *
+     * @param calendarString
+     * @return
+     */
+    public static  int getCountdownNum(String calendarString){
+        Calendar calendar = timeString2Calendar(calendarString);
+        return  getCountdownNum(calendar);
     }
 
     /**

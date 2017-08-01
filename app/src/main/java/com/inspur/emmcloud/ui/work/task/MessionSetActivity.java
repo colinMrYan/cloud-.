@@ -104,10 +104,10 @@ public class MessionSetActivity extends BaseActivity {
 					int position, long id) {
 				if (position == 0) {
 					PreferencesUtils.putString(MessionSetActivity.this,
-							"order_type", "ASC");
+							"order_type", "DESC");
 				} else if (position == 1) {
 					PreferencesUtils.putString(MessionSetActivity.this,
-							"order_type", "DESC");
+							"order_type", "ASC");
 				}
 				PreferencesUtils.putInt(MessionSetActivity.this, "order",
 						position);
