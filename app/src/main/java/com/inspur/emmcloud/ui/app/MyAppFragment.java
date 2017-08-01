@@ -429,8 +429,8 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
         }
         Collections.sort(appCommonlyUseAddCountList, new SortCommonlyUseApp());
         AppCacheUtils.saveAppCommonlyUseList(getActivity(), appCommonlyUseAddCountList);
-        if (appCommonlyUseAddCountList.size() > 4) {
-            appCommonlyUseList = appCommonlyUseAddCountList.subList(0, 4);
+        if (appCommonlyUseAddCountList.size() > 8) {
+            appCommonlyUseList = appCommonlyUseAddCountList.subList(0, 8);
             return appCommonlyUseList;
         }
         return appCommonlyUseAddCountList;
@@ -701,8 +701,8 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
             }
             //先排序再取前四个
             Collections.sort(myCommonlyUseAppList, new SortCommonlyUseAppClass());
-            if (myCommonlyUseAppList.size() > 4) {
-                myCommonlyUseAppList = myCommonlyUseAppList.subList(0, 4);
+            if (myCommonlyUseAppList.size() > 8) {
+                myCommonlyUseAppList = myCommonlyUseAppList.subList(0, 8);
             }
             //取完前四个再排序一次
             Collections.sort(myCommonlyUseAppList, new SortCommonlyUseAppClass());
