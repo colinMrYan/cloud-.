@@ -356,7 +356,7 @@ public class ChannelGroupIconUtils {
         }
         try {
             FileOutputStream out = new FileOutputStream(file);
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
+            bitmap.compress(Bitmap.CompressFormat.PNG, 50, out);
             out.flush();
             out.close();
         } catch (Exception e) {

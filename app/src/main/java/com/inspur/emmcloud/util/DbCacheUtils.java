@@ -110,7 +110,7 @@ public class DbCacheUtils {
 			}
 		});
 		db.configAllowTransaction(true);
-		db.configDebug(false);
+		db.configDebug(true);
 	}
 
 	/**

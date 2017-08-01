@@ -67,7 +67,7 @@ public class ImageDisplayUtils  implements ImagePickerLoader {
 		options = new DisplayImageOptions.Builder()
 				.showImageForEmptyUri(defaultDrawableId)
 				.showImageOnFail(defaultDrawableId)
-				//.showImageOnLoading(defaultDrawableId)
+				.showImageOnLoading(defaultDrawableId)
 				// 设置图片的解码类型
 				.bitmapConfig(Bitmap.Config.RGB_565)
 				.cacheInMemory(false)

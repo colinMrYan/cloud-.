@@ -10,12 +10,23 @@ import org.json.JSONObject;
 
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import cn.jpush.android.api.JPushInterface;
 import cn.jpush.android.data.JPushLocalNotification;
 
 public class CalEventNotificationUtils {
+
+	public static void setCalEventNotification(Context context, List<CalendarEvent> calEventList){
+		if (calEventList == null || calEventList.size() == 0){
+			return;
+		}
+		for(CalendarEvent calEvent : calEventList){
+			setCalEventNotification(context,calEvent);
+		}
+	}
+
 	/**
 	 * 为Event设置通知提醒
 	 * @param calEvent

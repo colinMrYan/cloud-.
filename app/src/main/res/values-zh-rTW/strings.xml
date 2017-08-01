@@ -87,8 +87,9 @@
     <string name="format_year_month_day_hour_minute">yyyy\'年\'MM\'月\'dd\'日\' HH:mm</string>
     <string name="format_year_month">yyyy\'年\'MM\'月\'</string>
     <string name="time_null">無</string>
-    <string name="cutdown_now">今天</string>
-    <string name="cutdown_tomorrow">明天</string>
+    <string name="cutdown_now">今</string>
+    <string name="cutdown_tomorrow">明</string>
+    <string name="cutdown_yestoday">昨</string>
     <string name="cutdown_day">天</string>
     <string name="cutdown_month">月</string>
     <string name="notice">通知</string>
@@ -286,16 +287,14 @@
     <string name="work_national_day">距國慶日</string>
     <string name="work_moon_festival">距中秋節</string>
     <string name="work_day">天</string>
-    <string name="work_date_text">9月20日</string>
-    <string name="work_lunar">農曆八月初八 • 星期日</string>
-    <string name="work_festval_date">距國慶日 • 10天</string>
     <string name="work_nomeeting_text">暫無會議</string>
     <string name="work_notask_text">暫無待辦</string>
     <string name="work_nocal_text">暫無日程</string>
     <string name="time">時間</string>
     <string name="work_meeting_text">會議</string>
     <string name="work_calendar_text">企業日曆</string>
-    <string name="work_task_text">待辦事項</string>
+    <string name="work_task_text">我的任務</string>
+    <string name="work_info_text">資訊欄</string>
 
     <!-- 發現部分 -->
     <string name="find">發現</string>
@@ -624,6 +623,7 @@
     <string name="one_day_ago">1天前</string>
     <string name="two_days_ago">2天前</string>
     <string name="a_week_ago">1周前</string>
+    <string name="add_calendar">添加行事曆</string>
 
     <!-- 待辦任務部分 -->
     <string name="mession_detial_doing">進行中</string>
@@ -682,6 +682,7 @@
     <string name="mession_color_tag">顏色</string>
     <string name="mession_delete_the_tag">刪除標籤</string>
     <string name="mession_manage_tag">管理標籤</string>
+    <string name="add_mession">加任務</string>
 
     <!-- ListView自訂控制項部分 -->
     <string name="xlistview_header_last_time">上次更新時間:</string>

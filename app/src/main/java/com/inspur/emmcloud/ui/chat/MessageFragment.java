@@ -1006,7 +1006,9 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 				break;
 			}
 		}
-		adapter.notifyDataSetChanged();
+		if (adapter != null){
+			adapter.notifyDataSetChanged();
+		}
 	}
 
 	/**
