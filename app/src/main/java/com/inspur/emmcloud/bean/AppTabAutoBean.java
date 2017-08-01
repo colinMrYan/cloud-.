@@ -5,7 +5,6 @@ import com.inspur.emmcloud.util.JSONUtils;
 import com.inspur.emmcloud.util.StringUtils;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -39,7 +38,7 @@ public class AppTabAutoBean {
             if (jsonObject.has("command")) {
                 this.command = jsonObject.getString("command");
             }
-        } catch (JSONException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -91,7 +90,7 @@ public class AppTabAutoBean {
                 if (jsonObject.has("version")) {
                     this.version = jsonObject.getString("version");
                 }
-            } catch (JSONException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
@@ -164,7 +163,7 @@ public class AppTabAutoBean {
                     }
                 }
 
-            } catch (JSONException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
@@ -389,7 +388,7 @@ public class AppTabAutoBean {
                         if (jsonObject.has("en-US")) {
                             this.enUS = jsonObject.getString("en-US");
                         }
-                    } catch (JSONException e) {
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
