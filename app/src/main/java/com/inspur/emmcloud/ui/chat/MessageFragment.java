@@ -48,7 +48,6 @@ import com.inspur.emmcloud.util.ChatCreateUtils.OnCreateGroupChannelListener;
 import com.inspur.emmcloud.util.DirectChannelUtils;
 import com.inspur.emmcloud.util.ImageDisplayUtils;
 import com.inspur.emmcloud.util.IntentUtils;
-import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.MsgCacheUtil;
 import com.inspur.emmcloud.util.MsgMatheSetCacheUtils;
 import com.inspur.emmcloud.util.MsgReadIDCacheUtils;
@@ -168,7 +167,8 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 	 */
 	private void showMessageButtons() {
 		String tabBarInfo = PreferencesByUserAndTanentUtils.getString(getActivity(), "app_tabbar_info_current", "");
-		if(tabBarInfo == null){
+		//第一次登录时有tabBarInfo会为“”，会导致JSON waring
+		if(StringUtils.isBlank(tabBarInfo)){
 			return;
 		}
 		AppTabAutoBean appTabAutoBean = new AppTabAutoBean(tabBarInfo);
@@ -361,7 +361,6 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 
     /**
      * 为单个群组创建头像
-     * @param channel
      */
     private void createGroupIcon(List<Channel> channelList) {
         if (((MyApplication) getActivity().getApplicationContext()).getIsContactReady()) {

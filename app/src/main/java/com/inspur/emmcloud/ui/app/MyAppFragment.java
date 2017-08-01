@@ -25,7 +25,6 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.MyApplication;
@@ -573,8 +572,8 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
                 }
             }
         });
-        RelativeLayout changeOrderLayout = (RelativeLayout) contentView.findViewById(R.id.app_change_layout);
-        changeOrderLayout.setOnClickListener(new OnClickListener() {
+        Button changeOrderBtn = (Button) contentView.findViewById(R.id.app_change_btn);
+        changeOrderBtn.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (appListAdapter != null) {

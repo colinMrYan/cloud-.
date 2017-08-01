@@ -132,6 +132,15 @@ public class IndexActivity extends BaseFragmentActivity implements
         DbCacheUtils.initDb(getApplicationContext());
         ((MyApplication) getApplicationContext()).clearUserPhotoMap();
         ((MyApplication) getApplicationContext()).startPush();
+        init();
+    }
+
+    /**
+     * 初始化
+     */
+    private void init() {
+        appApiService = new AppAPIService(IndexActivity.this);
+        appApiService.setAPIInterface(new WebService());
         userId = ((MyApplication) getApplication()).getUid();
         initReactNative();
         loadingDlg = new LoadingDialog(IndexActivity.this, getString(R.string.app_init));
@@ -242,8 +251,7 @@ public class IndexActivity extends BaseFragmentActivity implements
      * 更新ReactNative
      */
     private void updateReactNative() {
-        appApiService = new AppAPIService(IndexActivity.this);
-        appApiService.setAPIInterface(new WebService());
+
         String clientId = PreferencesUtils.getString(IndexActivity.this, UriUtils.tanent + userId + "react_native_clientid", "");
         StringBuilder describeVersionAndTime = FileUtils.readFile(reactNativeCurrentPath +"/bundle.json", "UTF-8");
         AndroidBundleBean androidBundleBean = new AndroidBundleBean(describeVersionAndTime.toString());
