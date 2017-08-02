@@ -7,7 +7,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.inspur.emmcloud.MainActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.bean.CalendarEvent;
 import com.inspur.emmcloud.ui.IndexActivity;
@@ -106,6 +105,7 @@ public class JpushReceiver extends BroadcastReceiver {
 									if (!StringUtils.isBlank(cid)){
 										targetIntent = new Intent(context, ChannelActivity.class);
 										targetIntent.putExtra("get_new_msg",true);
+										targetIntent.putExtra("cid",cid);
 										targetIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 									}
 								}
@@ -117,18 +117,18 @@ public class JpushReceiver extends BroadcastReceiver {
 						}
 					}
 					if (!((MyApplication)context.getApplicationContext()).isIndexActivityRunning()){
-						indexIntent.putExtra("command","open_notification");
-					}else {
-						indexIntent.setClass(context,MainActivity.class);
+						context.startActivity(indexIntent);
+					}else if(!((MyApplication)context.getApplicationContext()).getIsActive()){
+						indexIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+								| Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+						context.startActivity(indexIntent);
 					}
-					context.startActivity(indexIntent);
 					if (targetIntent != null && NetUtils.isNetworkConnected(context,false)){
 						context.startActivity(targetIntent);
 					}
 				}
 
 			}else {
-
 				Intent loginIntent = new Intent(context, LoginActivity.class);
 				loginIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 				context.startActivity(loginIntent);

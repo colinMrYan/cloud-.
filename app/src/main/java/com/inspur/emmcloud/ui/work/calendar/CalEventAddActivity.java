@@ -491,19 +491,10 @@ public class CalEventAddActivity extends BaseActivity {
 	 * @param isAdd
 	 */
 	public void sendBoradcastReceiver(boolean isAdd) {
-		Intent mIntent = new Intent("editcalendar_event");
-		if (isAdd) {
-			Calendar startLocalDate = addCalendarEvent.getLocalStartDate();
-			// 判断是否是今天的日历，如果是今天才发送广播
-			if (TimeUtils.isCalendarToday(startLocalDate)) {
-				mIntent.putExtra("addCalEvent", (Serializable) addCalendarEvent);
-				// 发送广播
-				sendBroadcast(mIntent);
-			}
-		} else {
-			mIntent.putExtra("editCalEvent", (Serializable) calEvent);
-			sendBroadcast(mIntent);
-		}
+		Intent mIntent = new Intent("com.inspur.calendar");
+		mIntent.putExtra("refreshCalendar", (Serializable) addCalendarEvent);
+		// 发送广播
+		sendBroadcast(mIntent);
 	}
 
 	@Override

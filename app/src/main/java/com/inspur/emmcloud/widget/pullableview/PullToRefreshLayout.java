@@ -1,6 +1,7 @@
 package com.inspur.emmcloud.widget.pullableview;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
@@ -11,6 +12,7 @@ import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -81,7 +83,7 @@ public class PullToRefreshLayout extends RelativeLayout
 	// 下拉的箭头
 	private View pullView;
 	// 正在刷新的图标
-	private View refreshingView;
+	private ImageView refreshingView;
 	// 刷新结果图标
 	private View refreshStateImageView;
 	// 刷新结果：成功或失败
@@ -106,6 +108,7 @@ public class PullToRefreshLayout extends RelativeLayout
 
 	private Context mContext;
 	boolean isCanTouch = true;
+	private boolean isInDarkBackground = false;
 
 	/**
 	 * 执行自动回滚的handler
@@ -222,7 +225,7 @@ public class PullToRefreshLayout extends RelativeLayout
 			return;
 		}
 		refreshingView.clearAnimation();
-		refreshingView.setVisibility(View.GONE);
+		refreshingView.setVisibility(View.INVISIBLE);
 		switch (refreshResult)
 		{
 		case SUCCEED:
@@ -252,7 +255,7 @@ public class PullToRefreshLayout extends RelativeLayout
 					changeState(DONE);
 					hide();
 				}
-			}.sendEmptyMessageDelayed(0, 100);
+			}.sendEmptyMessageDelayed(0, 500);
 		} else
 		{
 			changeState(DONE);
@@ -567,6 +570,11 @@ public class PullToRefreshLayout extends RelativeLayout
 			mListener.onLoadMore(this);
 	}
 
+
+	public void setInDarkBackgroud(boolean isInDarkBackground){
+		this.isInDarkBackground = isInDarkBackground;
+	}
+
 	private void initView()
 	{
 //		if (!((Pullable) pullableView).canPullDown()) {
@@ -579,13 +587,18 @@ public class PullToRefreshLayout extends RelativeLayout
 		pullView = refreshView.findViewById(R.id.pull_icon);
 		refreshStateTextView = (TextView) refreshView
 				.findViewById(R.id.state_tv);
-		refreshingView = refreshView.findViewById(R.id.refreshing_icon);
+		refreshingView = (ImageView) refreshView.findViewById(R.id.refreshing_icon);
 		refreshStateImageView = refreshView.findViewById(R.id.state_iv);
 		// 初始化上拉布局
 		loadStateTextView = (TextView) loadmoreView
 				.findViewById(R.id.loadstate_tv);
 		loadingView = loadmoreView.findViewById(R.id.loading_icon);
 		loadStateImageView = loadmoreView.findViewById(R.id.loadstate_iv);
+		if (isInDarkBackground){
+			refreshStateTextView.setTextColor(Color.parseColor("#ffffff"));
+			((ImageView)refreshView.findViewById(R.id.pull_icon)).setImageResource(R.drawable.pull_icon_arrow_white);
+			refreshingView.setImageResource(R.drawable.pull_loading_white);
+		}
 	}
 
 	@Override

@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
@@ -21,18 +20,18 @@ import android.webkit.WebView;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.ParseHtmlUtils;
 import com.inspur.emmcloud.util.StringUtils;
+import com.inspur.imp.api.ImpActivity;
 import com.inspur.imp.api.JsInterface;
-import com.inspur.imp.api.Res;
 import com.inspur.imp.api.iLog;
 import com.inspur.imp.plugin.PluginMgr;
 import com.inspur.imp.util.DeviceInfo;
 
+import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.lang.reflect.Method;
@@ -45,6 +44,8 @@ import java.lang.reflect.Method;
  */
 @SuppressLint("NewApi")
 public class ImpWebView extends WebView {
+	private static final int SET_TITLE = 1;
+	private static final int DIMISS_LOADING = 2;
 	// 当前webview名称
 	private String viewname;
 
@@ -67,7 +68,6 @@ public class ImpWebView extends WebView {
 			+ "(KHTML, like Gecko) Version/4.0 Chrome/51.0.2704.81 Mobile Safari/533.1";
 	private ProgressBar progressbar;
 	private static final String TAG = "ImpWebView";
-	private RelativeLayout progressLayout;
 	private ImpWebChromeClient impWebChromeClient;
 	private TextView titleText;
 	private LinearLayout loadFailLayout;
@@ -79,8 +79,7 @@ public class ImpWebView extends WebView {
 		this.context = context;
 	}
 	
-	public void setProperty(RelativeLayout progressLayout, TextView titleText, LinearLayout loadFailLayout,FrameLayout layout){
-		this.progressLayout = progressLayout;
+	public void setProperty( TextView titleText, LinearLayout loadFailLayout,FrameLayout layout){
 		this.titleText =titleText;
 		this.loadFailLayout = loadFailLayout;
 		this.frameLayout = layout;
@@ -94,26 +93,20 @@ public class ImpWebView extends WebView {
 		handler = new Handler(){
 			@Override
 			public void handleMessage(Message msg) {
-				String title =(String) msg.obj;
-				titleText.setText(title);
+				switch (msg.what){
+					case SET_TITLE:
+						String title =(String) msg.obj;
+						titleText.setText(title);
+						break;
+					case DIMISS_LOADING:
+						((ImpActivity)getContext()).dimissLoadingDlg();
+						break;
+					default:
+						break;
+				}
 			}
 		};
 
-	}
-	
-	/**添加顶部加载进度条**/
-	private void addProgressBar() {
-		// TODO Auto-generated method stub
-		progressbar = new ProgressBar(context, null,
-				android.R.attr.progressBarStyleHorizontal);
-		progressbar.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT,
-				7, 0, 0));
-
-		Drawable drawable = context.getResources().getDrawable(
-				Res.getDrawableID("imp_progress_bar_states")
-		);
-		progressbar.setProgressDrawable(drawable);
-		addView(progressbar);
 	}
 	
 	//imp修改处
@@ -131,11 +124,10 @@ public class ImpWebView extends WebView {
 	public class GetTitle {
 		@JavascriptInterface
 		public void onGetTitle(final String title) {
-			LogUtils.jasonDebug("title="+title);
 			// 参数title即为网页的标题，可在这里面进行相应的title的处理
 			if (titleText != null && !StringUtils.isBlank(title)){
 				Message msg = new Message();
-				msg.what = 1;
+				msg.what = SET_TITLE;
 				msg.obj = title;
 				handler.sendMessage(msg);
 			}
@@ -143,10 +135,17 @@ public class ImpWebView extends WebView {
 
 		@JavascriptInterface
 		public void onGetHtmlContent(String html){
-//			LogUtils.YfcDebug("获取到的html文本："+html);
 			Elements elements = ParseHtmlUtils.getDataFromHtml(html,"meta");
+			boolean isWebControlLoading = false;
 			for (int i = 0; i < elements.size(); i++){
-				LogUtils.YfcDebug("解析到的content："+elements.get(i).attr("content"));
+				Element element = elements.get(i);
+				if (element.attr("name").equals("x-imp-plus") && element.attr("content").equals("ani-load")){
+					isWebControlLoading = true;
+					break;
+				}
+			}
+			if (!isWebControlLoading){
+				handler.sendEmptyMessage(DIMISS_LOADING);
 			}
 		}
 	}
@@ -171,7 +170,7 @@ public class ImpWebView extends WebView {
 		this.setBackgroundColor(Color.WHITE);
 		this.setWebViewClient(new ImpWebViewClient(loadFailLayout));
 		// 使WebView支持弹出框
-		impWebChromeClient = new ImpWebChromeClient(context,progressLayout,this,frameLayout);
+		impWebChromeClient = new ImpWebChromeClient(context,this,frameLayout);
 		this.setWebChromeClient(impWebChromeClient);
 		// 兼容2.3版本
 		this.setOnTouchListener(new OnTouchListener() {
@@ -216,6 +215,7 @@ public class ImpWebView extends WebView {
 
 	// 设置websettings属性
 	public void setWebSetting() {
+		setHCMMapProperty();
 		// 支持js相关方法
 		setJSConfig();
 		// 页面效果设置
@@ -245,6 +245,14 @@ public class ImpWebView extends WebView {
 		settings.setBuiltInZoomControls(false);
 	}
 
+	/**
+	 * 设置HCM地图相关属性
+	 */
+	private void setHCMMapProperty() {
+		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP ){
+			getSettings().setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
+		}
+	}
 	/* 页面效果设置 */
 	private void setPageStyle() {
 		//设置自适应屏幕

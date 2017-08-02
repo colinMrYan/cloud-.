@@ -73,4 +73,8 @@ public interface IPlugin {
 	 * activity关闭之前调用方法
 	 */
 	public void onDestroy();
+
+	public void onActivityResume();
+
+	public void onActivityPause();
 }

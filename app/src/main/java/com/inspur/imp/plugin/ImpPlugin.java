@@ -100,7 +100,16 @@ public abstract class ImpPlugin implements IPlugin {
 				+ jsonArray.toString() + ")");
 	}
 
-	
+	@Override
+	public void onActivityResume() {
+
+	}
+
+	@Override
+	public void onActivityPause() {
+
+	}
+
 	public Activity getActivity() {
 		return (Activity) this.context;
 	}

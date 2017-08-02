@@ -87,14 +87,15 @@
     <string name="format_year_month_day_hour_minute">yyyy\'年\'MM\'月\'dd\'日\' HH:mm</string>
     <string name="format_year_month">yyyy\'年\'MM\'月\'</string>
     <string name="time_null">无</string>
-    <string name="cutdown_now">今天</string>
-    <string name="cutdown_tomorrow">明天</string>
+    <string name="cutdown_now">今</string>
+    <string name="cutdown_tomorrow">明</string>
     <string name="cutdown_day">天</string>
+    <string name="cutdown_yestoday">昨</string>
     <string name="cutdown_month">月</string>
     <string name="notice">通知</string>
     <string name="close">关闭</string>
     <string name="commoly_use_app">常用</string>
-    <string name="app_init">正在初始化中...</string>
+    <string name="app_init">正在初始化...</string>
     <string name="news_content_cant_empty">内容不能为空</string>
 
     <!-- 新添加部分 -->
@@ -288,16 +289,14 @@
     <string name="work_national_day">距国庆节</string>
     <string name="work_moon_festival">距中秋节</string>
     <string name="work_day">天</string>
-    <string name="work_date_text">9月20日</string>
-    <string name="work_lunar">农历八月初八 · 星期日</string>
-    <string name="work_festval_date">距元旦 · 10天</string>
     <string name="work_nomeeting_text">暂无会议</string>
     <string name="work_notask_text">暂无待办</string>
     <string name="work_nocal_text">暂无日程</string>
     <string name="time">时间</string>
     <string name="work_meeting_text">会议</string>
     <string name="work_calendar_text">企业日历</string>
-    <string name="work_task_text">待办事项</string>
+    <string name="work_task_text">我的任务</string>
+    <string name="work_info_text">信息栏</string>
 
     <!-- 发现部分 -->
     <string name="find">发现</string>
@@ -628,6 +627,7 @@
     <string name="one_day_ago">1天前</string>
     <string name="two_days_ago">2天前</string>
     <string name="a_week_ago">1周前</string>
+    <string name="add_calendar">添加日历</string>
 
     <!-- 待办任务部分 -->
     <string name="mession_detial_doing">进行中</string>
@@ -686,6 +686,7 @@
     <string name="mession_color_tag">颜色</string>
     <string name="mession_delete_the_tag">删除标签</string>
     <string name="mession_manage_tag">管理标签</string>
+    <string name="add_mession">添加任务</string>
 
     <!-- ListView自定义控件部分 -->
     <string name="xlistview_header_last_time">上次更新时间:</string>

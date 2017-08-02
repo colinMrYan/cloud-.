@@ -209,7 +209,6 @@ public class MeetingListActivity extends BaseActivity implements
 		Intent intent = new Intent();
 		switch (v.getId()) {
 		case R.id.back_layout:
-			setResult(RESULT_OK);
 			finish();
 			break;
 		case R.id.meeting_list_add_img:

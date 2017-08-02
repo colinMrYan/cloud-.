@@ -35,10 +35,10 @@ public class GetMyInfoResultWithoutSerializable{
 		defaultEnterprise = new Enterprise(jObject);
 		this.avatar = JSONUtils.getString(response, "avatar", "");
 		this.code = JSONUtils.getString(response, "code", "");
-		this.creationDate = JSONUtils.getString(response, "creation_date", "");
+		this.creationDate = JSONUtils.getString(response, "creation_date", "0");
 		this.firstName = JSONUtils.getString(response, "first_name", "");
 		this.lastName = JSONUtils.getString(response, "last_name", "");
-		this.id = JSONUtils.getString(response, "id", "");
+		this.id = JSONUtils.getString(response, "id", "0");
 		this.mail = JSONUtils.getString(response, "mail", "");
 		this.phoneNumber = JSONUtils.getString(response, "phone", "");
 		this.hasPassord = JSONUtils.getBoolean(response, "has_password", false);

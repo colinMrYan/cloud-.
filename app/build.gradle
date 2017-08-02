@@ -141,7 +141,7 @@ dependencies {
     // 3rd parts
     compile 'org.apache.commons:commons-lang3:3.5'
     //    compile 'cn.jpush.api:jpush-client:3.2.16'
-    compile 'com.amap.api:location:3.3.0'
+    compile 'com.amap.api:location:3.4.1'
     compile 'com.baidu.mapapi:location:6.13'
     compile 'com.google.code.gson:gson:2.8.0'
     compile 'com.alibaba:fastjson:1.2.24'

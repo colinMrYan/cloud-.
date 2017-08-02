@@ -25,7 +25,6 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.widget.EditText;
 import android.widget.FrameLayout;
-import android.widget.RelativeLayout;
 
 import com.inspur.imp.api.ImpActivity;
 import com.inspur.imp.api.Res;
@@ -40,21 +39,18 @@ import com.inspur.imp.api.iLog;
  */
 public class ImpWebChromeClient extends WebChromeClient {
 
-	private RelativeLayout progressLayout;
 	private Context context;
 	// File Chooser
 	public static final int FILE_CHOOSER_RESULT_CODE = 5173;
 	private ValueCallback<Uri> mUploadMessage;// 回调图片选择，4.4以下
 	private ValueCallback<Uri[]> mUploadCallbackAboveL;// 回调图片选择，5.0以上
-	private OnFinishLoadUrlListener listener;
 	private WebView mWebView;
 	private FrameLayout mVideoContainer;
 	private CustomViewCallback mCallBack;
 
-	public ImpWebChromeClient(Context context, RelativeLayout progressLayout, WebView webView, FrameLayout frameLayout) {
+	public ImpWebChromeClient(Context context,  WebView webView, FrameLayout frameLayout) {
 		// TODO Auto-generated constructor stub
 		this.context = context;
-		this.progressLayout = progressLayout;
 		this.mWebView = webView;
 		this.mVideoContainer = frameLayout;
 	}
@@ -290,20 +286,12 @@ public class ImpWebChromeClient extends WebChromeClient {
 		return mUploadCallbackAboveL;
 	}
 
-	/********************/
 
 	/*
 	 * 根据网页加载速度更改进度条显示进度
 	 */
 	@Override
 	public void onProgressChanged(WebView view, int newProgress) {
-
-		if (newProgress == 100) {
-			progressLayout.setVisibility(View.GONE);
-			if(listener != null){
-				listener.OnFinishLoadUrlListener(true);
-			}
-		}
 		super.onProgressChanged(view, newProgress);
 
 	}
@@ -323,12 +311,5 @@ public class ImpWebChromeClient extends WebChromeClient {
 		super.onRequestFocus(view);
 	}
 	
-	public interface OnFinishLoadUrlListener{
-		void OnFinishLoadUrlListener(boolean isFinish);
-	}
-	
-	public void setOnFinishLoadUrlListener(OnFinishLoadUrlListener l){
-		this.listener = l;
-	}
-	
+
 }

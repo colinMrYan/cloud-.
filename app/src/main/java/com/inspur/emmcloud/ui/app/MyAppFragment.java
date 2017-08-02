@@ -252,7 +252,8 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
                 public void onChange(int listPosition, int from, int to) {
                     handAppOrderChange(appGroupItemList, from, to);
                     dragGridViewAdapter.notifyDataSetChanged();
-                    appListAdapter.notifyDataSetChanged();
+                    //去掉在排序完成之后的刷新，这里不影响删除应用相关的逻辑
+//                    appListAdapter.notifyDataSetChanged();
                     saveAppChangeOrder(listPosition);
                 }
             });
@@ -428,8 +429,8 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
         }
         Collections.sort(appCommonlyUseAddCountList, new SortCommonlyUseApp());
         AppCacheUtils.saveAppCommonlyUseList(getActivity(), appCommonlyUseAddCountList);
-        if (appCommonlyUseAddCountList.size() > 4) {
-            appCommonlyUseList = appCommonlyUseAddCountList.subList(0, 4);
+        if (appCommonlyUseAddCountList.size() > 8) {
+            appCommonlyUseList = appCommonlyUseAddCountList.subList(0, 8);
             return appCommonlyUseList;
         }
         return appCommonlyUseAddCountList;
@@ -700,8 +701,8 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
             }
             //先排序再取前四个
             Collections.sort(myCommonlyUseAppList, new SortCommonlyUseAppClass());
-            if (myCommonlyUseAppList.size() > 4) {
-                myCommonlyUseAppList = myCommonlyUseAppList.subList(0, 4);
+            if (myCommonlyUseAppList.size() > 8) {
+                myCommonlyUseAppList = myCommonlyUseAppList.subList(0, 8);
             }
             //取完前四个再排序一次
             Collections.sort(myCommonlyUseAppList, new SortCommonlyUseAppClass());

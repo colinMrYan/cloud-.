@@ -4,17 +4,13 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.BaseExpandableListAdapter;
-import android.widget.ExpandableListView;
-import android.widget.ExpandableListView.OnChildClickListener;
-import android.widget.ExpandableListView.OnGroupClickListener;
+import android.widget.AdapterView;
+import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -33,7 +29,7 @@ import com.inspur.emmcloud.bean.Meeting;
 import com.inspur.emmcloud.bean.MyCalendar;
 import com.inspur.emmcloud.bean.PVCollectModel;
 import com.inspur.emmcloud.bean.TaskResult;
-import com.inspur.emmcloud.ui.work.WorkFragment.MyAdapter.ExpandViewHolder;
+import com.inspur.emmcloud.bean.WorkSetting;
 import com.inspur.emmcloud.ui.work.calendar.CalActivity;
 import com.inspur.emmcloud.ui.work.calendar.CalEventAddActivity;
 import com.inspur.emmcloud.ui.work.meeting.MeetingBookingActivity;
@@ -44,898 +40,679 @@ import com.inspur.emmcloud.ui.work.task.MessionListActivity;
 import com.inspur.emmcloud.util.CalEventNotificationUtils;
 import com.inspur.emmcloud.util.CalendarUtil;
 import com.inspur.emmcloud.util.DbCacheUtils;
+import com.inspur.emmcloud.util.DensityUtil;
 import com.inspur.emmcloud.util.FestivalCacheUtils;
-import com.inspur.emmcloud.util.ImageDisplayUtils;
 import com.inspur.emmcloud.util.IntentUtils;
 import com.inspur.emmcloud.util.MyCalendarCacheUtils;
 import com.inspur.emmcloud.util.MyCalendarOperationCacheUtils;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.PVCollectModelCacheUtils;
+import com.inspur.emmcloud.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
-import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.TimeUtils;
 import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.util.WorkColorUtils;
-import com.inspur.emmcloud.widget.LoadingDialog;
+import com.inspur.emmcloud.util.WorkSettingCacheUtils;
+import com.inspur.emmcloud.widget.ScrollViewWithListView;
 import com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout;
 import com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout.OnRefreshListener;
-import com.inspur.emmcloud.widget.pullableview.PullableExpandableListView;
+import com.inspur.emmcloud.widget.pullableview.PullableListView;
 import com.lidroid.xutils.exception.DbException;
 
-import java.io.Serializable;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Iterator;
+import java.util.Collections;
 import java.util.List;
+
+import static com.inspur.emmcloud.util.TimeUtils.FORMAT_MONTH_DAY;
 
 /**
  * 工作页面
- * 
- * @author Administrator
  *
+ * @author Administrator
  */
 public class WorkFragment extends Fragment implements OnRefreshListener {
 
-	private static final int MEETING = 0;
-	private static final int CAL = 1;
-	private static final int TASK = 2;
-	private static final int MEETING_MAX_SIZE = 3;//如果两天的会议不足时，补足三条
-	private View rootView;
-	private WorkAPIService apiService;
-	private LoadingDialog loadingDialog;
-	private PullableExpandableListView expandListView;
-	private List<String> workGroup = new ArrayList<String>();;
-	private MyAdapter adapter;
-	private GetMeetingsResult getMeetingResult;
-	private PullToRefreshLayout pullToRefreshLayout;
-	private List<List<Meeting>> meetingList = new ArrayList<List<Meeting>>();;
-	private ArrayList<TaskResult> taskList = new ArrayList<TaskResult>();
-	private List<CalendarEvent> calEventList = new ArrayList<CalendarEvent>();
-	private BroadcastReceiver calEventReceiver;
-	private BroadcastReceiver meetingAndTaskReceiver;
-	private List<String> calendarIdList = new ArrayList<String>();
-	private String orderBy = "PRIORITY";
-	private String orderType = "ASC";
+    private static final String TYPE_CALENDAR = "calendar";
+    private static final String TYPE_APPROVAL = "approval";
+    private static final String TYPE_MEETING = "meeting";
+    private static final String TYPE_TASK = "task";
+    private static final int WORK_SETTING = 1;
+    private View rootView;
+    private WorkAPIService apiService;
+    private PullableListView listView;
+    private BaseAdapter adapter;
+    private PullToRefreshLayout pullToRefreshLayout;
+    private List<Meeting> meetingList = new ArrayList<>();
+    private ArrayList<TaskResult> taskList = new ArrayList<>();
+    private List<CalendarEvent> calEventList = new ArrayList<>();
+    private BroadcastReceiver calEventReceiver;
+    private BroadcastReceiver meetingAndTaskReceiver;
+    private List<String> calendarIdList = new ArrayList<>();
+    private ChildAdapter calendarChildAdapter, meetingChildAdapter, taskChildAdapter;
+    private List<WorkSetting> workSettingList =new ArrayList<>();
 
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
-		if (rootView == null) {
-			rootView = inflater.inflate(R.layout.fragment_work, container,
-					false);
-		}
-		ViewGroup parent = (ViewGroup) rootView.getParent();
-		if (parent != null) {
-			parent.removeView(rootView);
-		}
-		return rootView;
-	}
-	
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        if (rootView == null) {
+            rootView = inflater.inflate(R.layout.fragment_work, container,
+                    false);
+        }
+        ViewGroup parent = (ViewGroup) rootView.getParent();
+        if (parent != null) {
+            parent.removeView(rootView);
+        }
+        return rootView;
+    }
 
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(
-				getActivity().LAYOUT_INFLATER_SERVICE);
-		rootView = inflater.inflate(R.layout.fragment_work, null);
-		initData();
-		initViews();
-		getMeetings();
-		getCalendarEvent();
-		getTasks();
-		headDate();
-		registerCalEventReceiver();
-		registerMeetingAndTaskReceiver();
-		getOrder();
-	}
-	
-	@Override
-	public void onPause() {
-		super.onPause();
-		pullToRefreshLayout.refreshFinish(PullToRefreshLayout.FAIL);
-	}
-	
-	/**
-	 * 获取缓存的排序规则
-	 */
-	private void getOrder() {
-		orderBy = PreferencesUtils.getString(getActivity(),
-				"order_by","PRIORITY");
-		orderType = PreferencesUtils.getString(getActivity(),
-				"order_type","ASC");
-	}
-	
 
-	/**
-	 * 注册关于CalendarEvent广播，便于更新数据
-	 */
-	private void registerCalEventReceiver() {
-		calEventReceiver = new BroadcastReceiver() {
-			@Override
-			public void onReceive(Context context, Intent intent) {
-				if (intent.hasExtra("addCalEvent")
-						|| intent.hasExtra("editCalEvent")
-						|| intent.hasExtra("editCalendar")) {
-					getCalendarEvent();
-				} else if (intent.hasExtra("deleteCalEvent")) {
-					CalendarEvent deleteCalEvent = (CalendarEvent) intent
-							.getSerializableExtra("deleteCalEvent");
-					// 修复迭代问题
-					Iterator<CalendarEvent> sListIterator = calEventList
-							.iterator();
-					while (sListIterator.hasNext()) {
-						CalendarEvent cal = sListIterator.next();
-						if (cal.getId().equals(deleteCalEvent.getId())) {
-							sListIterator.remove();
-						}
-					}
-					adapter.notifyDataSetChanged();
-				}
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(
+                getActivity().LAYOUT_INFLATER_SERVICE);
+        rootView = inflater.inflate(R.layout.fragment_work, null);
+        getWorkSettingData();
+        initViews();
+        getWorkData();
+        registerWorkNotifyReceiver();
+    }
 
-			}
+    /**
+     * 当工作页面配置发生改变后进行数据和layout的刷新
+     */
+    private void refreshWorkLayout(){
+        setHeadLayout();
+        getWorkSettingData();
+        adapter.notifyDataSetChanged();
+        getWorkData();
+    }
 
-		};
-		IntentFilter myIntentFilter = new IntentFilter();
-		myIntentFilter.addAction("editcalendar_event");
-		getActivity().registerReceiver(calEventReceiver, myIntentFilter);
-	}
+    private void getWorkSettingData(){
+       List<WorkSetting> allWorkSettingList = WorkSettingCacheUtils.getAllWorkSettingList(getActivity());
+        if (allWorkSettingList.size() == 0){
+            workSettingList.add(new WorkSetting(TYPE_MEETING,getString(R.string.meeting),true,0));
+            workSettingList.add(new WorkSetting(TYPE_CALENDAR,getString(R.string.work_calendar_text),true,1));
+            workSettingList.add(new WorkSetting(TYPE_TASK,getString(R.string.work_task_text),true,2));
+            WorkSettingCacheUtils.saveWorkSettingList(getActivity(),workSettingList);
+        }else {
+            workSettingList = WorkSettingCacheUtils.getOpenWorkSettingList(getActivity());
+        }
+    }
 
-	/**
-	 * 注册刷新任务和会议的广播
-	 */
-	private void registerMeetingAndTaskReceiver() {
-		meetingAndTaskReceiver = new BroadcastReceiver() {
-			@Override
-			public void onReceive(Context context, Intent intent) {
-				if (intent.hasExtra("refreshTask")) {
-					if (NetUtils.isNetworkConnected(getActivity())) {
-						getOrder();
-						apiService.getRecentTasks(orderBy, orderType);
-					}
-				} else if (intent.hasExtra("refreshMeeting")) {
-					if (NetUtils.isNetworkConnected(getActivity())) {
-						apiService.getMeetings(7);
-					}
-				}
-			}
-		};
-		IntentFilter myIntentFilter = new IntentFilter();
-		myIntentFilter.addAction("com.inspur.meeting");
-		myIntentFilter.addAction("com.inspur.task");
-		getActivity().registerReceiver(meetingAndTaskReceiver, myIntentFilter);
-	}
+    /**
+     * 初始化views
+     */
+    private void initViews() {
+        setHeadLayout();
+        listView = (PullableListView) rootView
+                .findViewById(R.id.list);
+        pullToRefreshLayout = (PullToRefreshLayout) rootView
+                .findViewById(R.id.refresh_view);
+        pullToRefreshLayout.setInDarkBackgroud(true);
+        pullToRefreshLayout.setOnRefreshListener(WorkFragment.this);
+        apiService = new WorkAPIService(getActivity());
+        apiService.setAPIInterface(new WebService());
+        adapter = new Adapter();
+        listView.setAdapter(adapter);
+        (rootView.findViewById(R.id.work_config_img)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(),WorkSettingActivity.class);
+                startActivityForResult(intent,WORK_SETTING);
+            }
+        });
+        (rootView.findViewById(R.id.work_config_img2)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(),WorkSettingActivity.class);
+                startActivityForResult(intent,WORK_SETTING);
+            }
+        });
+    }
 
-	/**
-	 * 获取日历中Event
-	 */
-	private void getCalendarEvent() {
-		if (NetUtils.isNetworkConnected(getActivity())) {
-			apiService.getMyCalendar(0, 100);
-		}
-	}
+    private void setHeadLayout(){
+        boolean isShowDate = PreferencesByUserAndTanentUtils.getBoolean(getActivity(), "work_open_info", true);
+        (rootView.findViewById(R.id.work_header_layout)).setVisibility(isShowDate?View.GONE:View.VISIBLE);
+        (rootView.findViewById(R.id.calendar_layout)).setVisibility(isShowDate?View.VISIBLE:View.GONE);
+    }
 
-	/**
-	 * 获取今明两天所有日历的所有event
-	 */
-	private void getTwoDaysCalEvents() {
-		if (NetUtils.isNetworkConnected(getActivity())) {
-			Calendar afterCalendar = Calendar.getInstance();
-			Calendar beforeCalendar = Calendar.getInstance();
-			beforeCalendar.set(beforeCalendar.get(Calendar.YEAR),
-					beforeCalendar.get(Calendar.MONTH),
-					beforeCalendar.get(Calendar.DAY_OF_MONTH) + 2, 0, 0, 0);
-			afterCalendar.set(afterCalendar.get(Calendar.YEAR),
-					afterCalendar.get(Calendar.MONTH),
-					afterCalendar.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
-			afterCalendar = TimeUtils.localCalendar2UTCCalendar(afterCalendar);
-			beforeCalendar = TimeUtils.localCalendar2UTCCalendar(beforeCalendar);
-			apiService.getAllCalEvents(calendarIdList, afterCalendar,
-					beforeCalendar, 5, 0, true);
-		}
-	}
+    /**
+     * 获取数据
+     */
+    private void getWorkData() {
+        getMeetings();
+        getMyCalendar();
+        getTasks();
+        handHeaderDate();
+    }
 
-	/**
-	 * 获取三条Event
-	 */
-	private void getCalEventsFor3() {
-		if (NetUtils.isNetworkConnected(getActivity())) {
-			Calendar afterCalendar = Calendar.getInstance();
-			Calendar beforeCalendar = Calendar.getInstance();
-			beforeCalendar.set(beforeCalendar.get(Calendar.YEAR) + 1,
-					beforeCalendar.get(Calendar.MONTH),
-					beforeCalendar.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
-			afterCalendar.set(afterCalendar.get(Calendar.YEAR),
-					afterCalendar.get(Calendar.MONTH),
-					afterCalendar.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
-			afterCalendar = TimeUtils.localCalendar2UTCCalendar(afterCalendar);
-			beforeCalendar = TimeUtils.localCalendar2UTCCalendar(beforeCalendar);
-			apiService.getAllCalEvents(calendarIdList, afterCalendar,
-					beforeCalendar, 3, 0, false);
-		}
+    /**
+     * 判断工作中是否开启此卡片
+     * @param type
+     * @return
+     */
+    private boolean isContainWork(String type){
+        return  (workSettingList.size()>0 && workSettingList.contains(new WorkSetting(type,"",true,0)));
+    }
 
-	}
 
-	/**
-	 * 刷新会议
-	 */
-	private void getMeetings() {
-		if (NetUtils.isNetworkConnected(getActivity())) {
-			apiService.getMeetings(7);
-		}				
-	}
+    /**
+     * 注册刷新任务和会议的广播
+     */
+    private void registerWorkNotifyReceiver() {
+        meetingAndTaskReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if (intent.hasExtra("refreshTask")) {
+                    getTasks();
+                } else if (intent.hasExtra("refreshMeeting")) {
+                    getMeetings();
+                }else if(intent.hasExtra("refreshCalendar")){
+                    getMyCalendar();
+                }
+            }
+        };
+        IntentFilter myIntentFilter = new IntentFilter();
+        myIntentFilter.addAction("com.inspur.meeting");
+        myIntentFilter.addAction("com.inspur.task");
+        getActivity().registerReceiver(meetingAndTaskReceiver, myIntentFilter);
+    }
 
-	/**
-	 * 头部时间处理节假日部分
-	 */
-	private void headDate() {
-		FestivalDate festivalDate = initFestivalDate();
-		Calendar calendar = Calendar.getInstance();
-//		calendar.set(2017, 0, 27);
-		calendar.setTimeInMillis(festivalDate.getFestivalTime());
-		int betweenQM = 0;
-		betweenQM = TimeUtils.getCountdownNum(calendar);
-		calendar.setTimeInMillis(System.currentTimeMillis());
-		((TextView) (rootView.findViewById(R.id.work_date_text)))
-				.setText(TimeUtils.calendar2FormatString(getActivity(), calendar, TimeUtils.FORMAT_MONTH_DAY));
-		String appLanguageObj = PreferencesUtils.getString(
-				getActivity(), UriUtils.tanent+"appLanguageObj","");
-		Language language = new Language(appLanguageObj);
-		if (language.getIso().equals("zh-CN")
-				|| language.equals("zh-TW")
-				|| language.equals("followSys")) {
-			((TextView) (rootView.findViewById(R.id.work_chinesedate_text)))
-					.setText(CalendarUtil.getChineseToday()
-							+ TimeUtils.getWeekDay(getContext(), calendar));
-		} else if (language.getIso().equals("en-US")) {
-			((TextView) (rootView.findViewById(R.id.work_chinesedate_text)))
-					.setText(TimeUtils.calendar2FormatString(getActivity(),
-							calendar, TimeUtils.FORMAT_MONTH_DAY)
-							+ "  "
-							+ TimeUtils.getWeekDay(getContext(), calendar));
-		}
+    static class ViewHolder {
+        ImageView groupIconImg;
+        TextView groupTitleText,workAddText;
+        RelativeLayout groupHeaderlayout;
+        ScrollViewWithListView GroupListView;
+        RelativeLayout wordAddLayout;
+    }
 
-		String festivalDateTips = FestivalCacheUtils.getFestivalTips(getActivity(), festivalDate.getFestivalKey());
-		((TextView) (rootView.findViewById(R.id.work_festvaldate_text)))
-				.setText(festivalDateTips +"  "+ betweenQM
-						+" "+ getString(R.string.work_day));
-		if (betweenQM < 0) {
-			((TextView) (rootView.findViewById(R.id.work_festvaldate_text)))
-					.setText(festivalDateTips + 0
-							+ getString(R.string.work_day));
-		}
-	}
+    private class Adapter extends BaseAdapter {
 
-	/**
-	 * 刷新任务
-	 */
-	private void getTasks() {
-		if (NetUtils.isNetworkConnected(getActivity())) {
-			loadingDialog.show();
-			getOrder();
-			apiService.getRecentTasks(orderBy, orderType);
-		}
-	}
+        @Override
+        public int getCount() {
+            return workSettingList.size();
+        }
 
-	/**
-	 * 初始化views
-	 */
-	private void initViews() {
-		ImageView img = (ImageView) rootView.findViewById(R.id.header_bg_img);
-		String imageUri = "drawable://" + R.drawable.work_navi_back;
-		new ImageDisplayUtils(getContext(), R.drawable.bg_corner).display(img,
-				imageUri);
-		expandListView = (PullableExpandableListView) rootView
-				.findViewById(R.id.expandableListView);
-		pullToRefreshLayout = (PullToRefreshLayout) rootView
-				.findViewById(R.id.refresh_view);
-		pullToRefreshLayout.setOnRefreshListener(WorkFragment.this);
-		apiService = new WorkAPIService(getActivity());
-		apiService.setAPIInterface(new WebService());
-		loadingDialog = new LoadingDialog(getActivity());
-		expandListView.setGroupIndicator(null);
-		expandListView.setVerticalScrollBarEnabled(false);
-		expandListView.setHeaderDividersEnabled(false);
-		expandListView.setCanpullup(false);
-		expandListView.setCanpulldown(true);
-		expandListView.setOnGroupClickListener(new WorkGroupListener());
-		expandListView.setOnChildClickListener(new WorkChildClickListener());
-		adapter = new MyAdapter();
-		expandListView.setAdapter(adapter);
-	}
+        @Override
+        public Object getItem(int position) {
+            return null;
+        }
 
-	/**
-	 * expandableListView适配器
-	 *
-	 */
-	public class MyAdapter extends BaseExpandableListAdapter {
-		public MyAdapter() {
-		}
+        @Override
+        public long getItemId(int position) {
+            return 0;
+        }
 
-		@Override
-		public int getGroupCount() {
-			return 3;
-		}
+        @Override
+        public View getView(final int position, View convertView, ViewGroup parent) {
+            ViewHolder holder;
+            if (position<getCount()-1){}
+            if (convertView == null) {
+                holder = new ViewHolder();
+                convertView = LayoutInflater.from(getActivity()).inflate(R.layout.work_card_group_item_view_vertical, null);
+                holder.groupIconImg = (ImageView) convertView.findViewById(R.id.group_icon_img);
+                holder.groupTitleText = (TextView) convertView.findViewById(R.id.group_title_text);
+                holder.groupHeaderlayout = (RelativeLayout) convertView.findViewById(R.id.group_header_layout);
+                holder.GroupListView = (ScrollViewWithListView) convertView.findViewById(R.id.list);
+                holder.wordAddLayout=(RelativeLayout)convertView.findViewById(R.id.work_add_layout);
+                holder.workAddText = (TextView)convertView.findViewById(R.id.work_add_text);
+                convertView.setTag(holder);
+            } else {
+                holder = (ViewHolder) convertView.getTag();
+            }
+            convertView.findViewById(R.id.blank_view).setVisibility((position==getCount()-1)?View.VISIBLE:View.GONE);
+            WorkSetting workSetting = workSettingList.get(position);
+            final String id = workSetting.getId();
+            holder.groupHeaderlayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (id.equals(TYPE_CALENDAR)) {
+                        IntentUtils.startActivity(getActivity(), CalActivity.class);
+                    } else if (id.equals(TYPE_MEETING)) {
+                        IntentUtils.startActivity(getActivity(), MeetingListActivity.class);
+                    } else if (id.equals(TYPE_TASK)) {
+                        IntentUtils.startActivity(getActivity(), MessionListActivity.class);
+                    }
+                }
+            });
+            holder.wordAddLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (id.equals(TYPE_CALENDAR)) {
+                        IntentUtils.startActivity(getActivity(), CalEventAddActivity.class);
+                    } else if (id.equals(TYPE_MEETING)) {
+                        IntentUtils.startActivity(getActivity(), MeetingBookingActivity.class);
+                    } else if (id.equals(TYPE_TASK)) {
+                        IntentUtils.startActivity(getActivity(), MessionListActivity.class);
+                    }
+                }
+            });
 
-		@Override
-		public int getChildrenCount(int groupPosition) {
-			if (groupPosition == 0) {
-				if (meetingList != null && meetingList.size() > 0
-						&& meetingList.get(groupPosition).size() > 0) {
-					return meetingList.get(0).size();
-				} else {
-					return 1;
-				}
-			} else if (groupPosition == 2) {
-				if (taskList.size() == 0) {
-					return 1;
-				}
-				if (taskList.size() < 5) {
-					return taskList.size();
-				} else {
-					return 5;
-				}
-			} else {
-				if (calEventList.size() == 0) { // 暂无日程
-					return 1;
-				}
-				return calEventList.size();
-			}
+            if (id.equals(TYPE_CALENDAR)) {
+                holder.workAddText.setText(R.string.add_calendar);
+                holder.groupIconImg.setImageResource(R.drawable.ic_work_calendar);
+                calendarChildAdapter = new ChildAdapter(TYPE_CALENDAR);
+                holder.GroupListView.setAdapter(calendarChildAdapter);
+                holder.groupTitleText.setText(R.string.work_calendar_text);
+            } else if (id.equals(TYPE_MEETING)) {
+                holder.workAddText.setText(R.string.meeting);
+                holder.groupIconImg.setImageResource(R.drawable.ic_work_meeting);
+                meetingChildAdapter = new ChildAdapter(TYPE_MEETING);
+                holder.GroupListView.setAdapter(meetingChildAdapter);
+                holder.groupTitleText.setText(R.string.meeting);
+            } else {
+                holder.workAddText.setText(R.string.add_mession);
+                holder.groupIconImg.setImageResource(R.drawable.ic_work_task);
+                taskChildAdapter = new ChildAdapter(TYPE_TASK);
+                holder.GroupListView.setAdapter(taskChildAdapter);
+                holder.groupTitleText.setText(R.string.work_task_text);
+            }
+            holder.GroupListView.setOnItemClickListener(new ListOnItemClickListener(id));
+            return convertView;
+        }
+    }
 
-		}
+    private class ChildAdapter extends BaseAdapter {
+        private String type;
 
-		@Override
-		public Object getGroup(int groupPosition) {
-			return 0;
-		}
+        public ChildAdapter(String type) {
+            this.type = type;
+        }
 
-		@Override
-		public Object getChild(int groupPosition, int childPosition) {
-			return 0;
-		}
+        @Override
+        public int getCount() {
+            if (type.equals(TYPE_CALENDAR)) {
+                return calEventList.size();
+            }
+            if (type.equals(TYPE_MEETING)) {
+                return meetingList.size();
+            }
+            return taskList.size()<5?taskList.size():5;
+        }
 
-		@Override
-		public long getGroupId(int groupPosition) {
-			return groupPosition;
-		}
+        @Override
+        public Object getItem(int position) {
+            return null;
+        }
 
-		@Override
-		public long getChildId(int groupPosition, int childPosition) {
-			return childPosition;
-		}
+        @Override
+        public long getItemId(int position) {
+            return 0;
+        }
 
-		@Override
-		public boolean hasStableIds() {
-			return false;
-		}
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            convertView = LayoutInflater.from(getActivity()).inflate(R.layout.work_card_child_item_view_vertical, null);
+            TextView countDownText = (TextView) convertView.findViewById(R.id.count_down_text);
+            TextView dateText = (TextView) convertView.findViewById(R.id.date_text);
+            String countDown = "";
+            String content = "";
+            switch (type) {
+                case TYPE_MEETING:
+                    Meeting meeting = meetingList.get(position);
+                    content = meeting.getTopic();
+                    countDown = TimeUtils.getCountdown(getActivity(), meeting.getFrom());
+                    WorkColorUtils.showDayOfWeek(countDownText,
+                            TimeUtils
+                                    .getCountdownNum(meeting.getFrom()));
+                    String time = getMeetingTime(meeting);
+                    dateText.setText(time);
+                    break;
+                case TYPE_TASK:
+                    TaskResult task = taskList.get(position);
+                    content = task.getTitle();
+                    ViewGroup.LayoutParams param = countDownText.getLayoutParams();
+                    param.height = DensityUtil.dip2px(getActivity(), 8);
+                    param.width = param.height;
+                    countDownText.setLayoutParams(param);
+                    WorkColorUtils.showDayOfWeek(countDownText,
+                            TimeUtils
+                                    .getCountdownNum(task.getCreationDate()));
+                    Calendar dueDate = task.getLocalDueDate();
+                    if (dueDate != null) {
+                        dateText.setText(TimeUtils.calendar2FormatString(getActivity(), dueDate, FORMAT_MONTH_DAY));
+                    }else {
+                        dateText.setText(R.string.not_set);
+                    }
+                    break;
+                case TYPE_CALENDAR:
+                    CalendarEvent calendarEvent = calEventList.get(position);
+                    content = calendarEvent.getTitle();
+                    countDown = TimeUtils.getCountdown(getActivity(), calendarEvent.getLocalStartDate());
+                    WorkColorUtils.showDayOfWeek(countDownText,
+                            TimeUtils
+                                    .getCountdownNum(calendarEvent.getLocalStartDate()));
+                    dateText.setText(TimeUtils.getCalEventTimeSelection(getActivity(), calendarEvent));
+                    break;
+                default:
+                    break;
+            }
+            ((TextView) convertView.findViewById(R.id.content_text)).setText(content);
+            countDownText.setText(countDown);
+            return convertView;
+        }
+    }
 
-		/**
-		 * 显示：group
-		 */
-		@Override
-		public View getGroupView(final int groupPosition, boolean isExpanded,
-				View convertView, ViewGroup parent) {
-			PullableExpandableListView expandableListView = (PullableExpandableListView) parent;
-			expandableListView.expandGroup(groupPosition);
-			ViewHolder holder;
-			if (convertView == null) {
-				convertView = LayoutInflater.from(getActivity()).inflate(
-						R.layout.expand_list, null);
-				holder = new ViewHolder();
-				holder.textView = (TextView) convertView
-						.findViewById(R.id.textView);
-				holder.imageView = (ImageView) convertView
-						.findViewById(R.id.work_right_img);
-				convertView.setTag(holder);
-			} else {
-				holder = (ViewHolder) convertView.getTag();
-			}
-			holder.textView.setText(workGroup.get(groupPosition));
-			holder.imageView.setOnClickListener(new OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					Intent intent = new Intent();
-					if (groupPosition == 0) {
-						intent.setClass(getActivity(),
-								MeetingListActivity.class);
-						startActivityForResult(intent, 0);
-					} else if (groupPosition == 1) {
-						intent.setClass(getActivity(), CalActivity.class);
-						startActivity(intent);
-					} else if (groupPosition == 2) {
-						intent.setClass(getActivity(),
-								MessionListActivity.class);
-						startActivity(intent);
-					}
-				}
-			});
-			return convertView;
-		}
+    private class ListOnItemClickListener implements AdapterView.OnItemClickListener {
+        private String type;
 
-		/**
-		 * 显示：child
-		 */
-		@Override
-		public View getChildView(final int groupPosition,
-				final int childPosition, boolean isLastChild, View convertView,
-				ViewGroup parent) {
-			ExpandViewHolder holder;
-			if (convertView == null) {
-				convertView = LayoutInflater.from(getActivity()).inflate(
-						R.layout.list_item, null);
-				holder = new ExpandViewHolder();
-				holder.textView = (TextView) convertView
-						.findViewById(R.id.textView);
-				holder.textViewdate = (TextView) convertView
-						.findViewById(R.id.work_icontext_text);
-				holder.imageView = (ImageView) convertView
-						.findViewById(R.id.work_icon_img);
-				holder.relativeLayout = (RelativeLayout) convertView
-						.findViewById(R.id.work_expand_layout);
-				holder.meetingTime = (TextView) convertView
-						.findViewById(R.id.work_meetingtime_text);
-				holder.iconLayout = (RelativeLayout) convertView
-						.findViewById(R.id.work_icon_layout);
-				holder.addImg = (ImageView) convertView
-						.findViewById(R.id.add_img);
-				convertView.setTag(holder);
-			} else {
-				holder = (ExpandViewHolder) convertView.getTag();
-			}
-			if (groupPosition == MEETING) {
-				if (getMeetingResult == null
-						|| getMeetingResult.getMeetingsList().size() == 0) {
-					holder.meetingTime.setVisibility(View.INVISIBLE);
-					holder.iconLayout.setVisibility(View.INVISIBLE);
-					holder.addImg.setVisibility(View.VISIBLE);
-					holder.textView
-							.setText(getString(R.string.meeting_add_meeting));
-					holder.textView.setTextColor(Color.parseColor("#4a90e2"));
-				} else {
-					holder.textView.setTextColor(Color.parseColor("#333333"));
-					holder.addImg.setVisibility(View.INVISIBLE);
-					holder.iconLayout.setVisibility(View.VISIBLE);
-					holder.meetingTime.setVisibility(View.VISIBLE);
-					String meetingFrom = getMeetingResult.getMeetingsList()
-							.get(childPosition).getFrom();
-					if (!StringUtils.isBlank(meetingFrom)) {
-						initMeetingItems(holder,
-								groupPosition, childPosition);
-					}
-					Calendar cal = TimeUtils
-							.timeString2Calendar(getMeetingResult
-									.getMeetingsList().get(childPosition)
-									.getFrom());
-					holder.textViewdate.setTextSize(12);
-					if (cal != null) {
-						holder.textViewdate.setText(TimeUtils.getCountdown(
-								getActivity(), cal));
-					}
-				}
-			} else if (groupPosition == CAL) {
-				String calEventTimeSection = "";
-				holder.textViewdate.setTextSize(12);
-				if (calEventList.size() == 0) {
-					holder.textView
-							.setText(getString(R.string.work_nocal_text));
-					holder.iconLayout.setVisibility(View.INVISIBLE);
-				} else {
-					CalendarEvent calEvent = calEventList.get(childPosition);
-					holder.textView.setText(calEvent.getTitle());
-					calEventTimeSection = TimeUtils
-							.getCalEventTimeSelection(getActivity(),calEvent);
-					holder.iconLayout.setVisibility(View.VISIBLE);
-					WorkColorUtils.showDayOfWeek( holder.imageView,
-							 TimeUtils
-									.getCountdownNum(calEvent
-											.getLocalStartDate()));
-					holder.textViewdate.setText(TimeUtils.getCountdown(getActivity(),calEvent
-							.getLocalStartDate()));
-				}
-				holder.meetingTime.setText(calEventTimeSection);
-			} else if (groupPosition == TASK) {
-				int taskCountdown = 0;
-				if (taskList.size() == 0) {
-					holder.textView
-							.setText(getString(R.string.work_notask_text));
-					holder.iconLayout.setVisibility(View.INVISIBLE);
-				} else if (taskList.size() > 0) {
-					holder.textView.setText(taskList.get(childPosition)
-							.getTitle());
-					holder.iconLayout.setVisibility(View.VISIBLE);
-						try {
-							taskCountdown = TimeUtils.daysBetweenToday(taskList.get(
-									childPosition).getCreationDate());
-						} catch (ParseException e) {
-							e.printStackTrace();
-						}
-					WorkColorUtils.showDayOfWeek(holder.imageView,
-							Math.abs(taskCountdown));
-					Calendar calendar = taskList.get(childPosition).getDueDate();
-					holder.textViewdate.setTextSize(10);
-					if (calendar != null) {
-						if (!StringUtils.isEmpty(TimeUtils
-								.getCountdown(getActivity(),calendar))) {
-							holder.textViewdate.setText(TimeUtils
-									.getCountdown(getActivity(),calendar));
-						}
-						holder.meetingTime.setText(calendar.get(Calendar.YEAR)
-								+ "-" + (calendar.get(Calendar.MONTH) + 1)
-								+ "-" + calendar.get(Calendar.DAY_OF_MONTH));
-					} else {
-						holder.textViewdate
-								.setText(TimeUtils.getTime(taskList.get(childPosition).getCreationDate()));
-						holder.meetingTime
-								.setText("");
-					}
+        public ListOnItemClickListener(String type) {
+            this.type = type;
+        }
 
-				}
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            Bundle bundle = new Bundle();
+            if (type.equals(TYPE_CALENDAR) ) {
+                bundle.putSerializable("calEvent",
+                        calEventList.get(position));
+                IntentUtils.startActivity(getActivity(), CalEventAddActivity.class, bundle);
+                recordUserClickWorkFunction("calendar");
+            } else if (type.equals(TYPE_TASK)) {
+                bundle.putSerializable("task",
+                        taskList.get(position));
+                IntentUtils.startActivity(getActivity(), MessionDetailActivity.class, bundle);
+            } else if (type.equals(TYPE_MEETING)) {
+                Meeting meeting = meetingList.get(position);
+                bundle.putSerializable("meeting", meeting);
+                IntentUtils.startActivity(getActivity(),
+                        MeetingDetailActivity.class, bundle);
+                recordUserClickWorkFunction("meeting");
+            }
+        }
 
-			}
-			return convertView;
-		}
+    }
 
-		class ViewHolder {
-			TextView textView;
-			ImageView imageView;
-		}
+    /**
+     * 获取会议时间
+     *
+     * @param meeting
+     * @return
+     */
+    private String getMeetingTime(Meeting meeting) {
+        String from = meeting.getFrom();
+        String meetingFromTime = TimeUtils.calendar2FormatString(
+                getActivity(), TimeUtils.timeString2Calendar(from),
+                TimeUtils.FORMAT_HOUR_MINUTE);
+        String to = meeting.getTo();
+        String meetingToTime = TimeUtils.calendar2FormatString(
+                getActivity(), TimeUtils.timeString2Calendar(to),
+                TimeUtils.FORMAT_HOUR_MINUTE);
+        return meetingFromTime + " - " + meetingToTime;
+    }
 
-		class ExpandViewHolder {
-			TextView textView;
-			ImageView imageView;
-			TextView textViewdate;
-			TextView meetingTime;
-			RelativeLayout relativeLayout;
-			View lineview;
-			RelativeLayout iconLayout;
-			ImageView addImg;
-		}
+    /**
+     * 设置头部节假日等信息
+     */
+    private void handHeaderDate() {
+        FestivalDate festivalDate = initFestivalDate();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(festivalDate.getFestivalTime());
+        int betweenQM = 0;
+        betweenQM = TimeUtils.getCountdownNum(calendar);
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        String date = TimeUtils.calendar2FormatString(getActivity(), calendar, TimeUtils.FORMAT_MONTH_DAY);
+        if (date.startsWith("0")) {
+            date = date.substring(1,date.length());
+        }
+        ((TextView) (rootView.findViewById(R.id.work_date_text)))
+                .setText(date);
+        String appLanguageObj = PreferencesUtils.getString(
+                getActivity(), UriUtils.tanent + "appLanguageObj", "");
+        Language language = new Language(appLanguageObj);
+        if (language.getIso().equals("zh-CN")
+                || language.equals("zh-TW")
+                || language.equals("followSys")) {
+            ((TextView) (rootView.findViewById(R.id.work_chinesedate_text)))
+                    .setText(CalendarUtil.getChineseToday()
+                            + TimeUtils.getWeekDay(getContext(), calendar));
+        } else if (language.getIso().equals("en-US")) {
+            ((TextView) (rootView.findViewById(R.id.work_chinesedate_text)))
+                    .setText(TimeUtils.calendar2FormatString(getActivity(),
+                            calendar, TimeUtils.FORMAT_MONTH_DAY)
+                            + "  "
+                            + TimeUtils.getWeekDay(getContext(), calendar));
+        }
 
-		@Override
-		public boolean isChildSelectable(int groupPosition, int childPosition) {
-			return true;
-		}
+        String festivalDateTips = FestivalCacheUtils.getFestivalTips(getActivity(), festivalDate.getFestivalKey());
+        ((TextView) (rootView.findViewById(R.id.work_festvaldate_text)))
+                .setText(festivalDateTips + "  " + betweenQM
+                        + " " + getString(R.string.work_day));
+        if (betweenQM < 0) {
+            ((TextView) (rootView.findViewById(R.id.work_festvaldate_text)))
+                    .setText(festivalDateTips + 0
+                            + getString(R.string.work_day));
+        }
+    }
 
-	}
+    /**
+     * 初始化节日
+     *
+     * @return
+     */
+    private FestivalDate initFestivalDate() {
+        FestivalDate festivalDate = null;
+        try {
+            if (!DbCacheUtils.getDb(getActivity()).tableIsExist(FestivalDate.class)) {
+                FestivalCacheUtils.saveFestivalList(getActivity());
+            }
+            festivalDate = FestivalCacheUtils.getFestival(getActivity());
+        } catch (DbException e) {
+            e.printStackTrace();
+        }
+        return festivalDate;
+    }
 
-	@Override
-	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
-		if (resultCode == getActivity().RESULT_OK) {
-			if (NetUtils.isNetworkConnected(getActivity())) {
-				loadingDialog.show();
-				apiService.getMeetings(7);
-				getOrder();
-				apiService.getRecentTasks(orderBy, orderType);
-			}
 
-		}
-	}
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == getActivity().RESULT_OK) {
+           if (requestCode == WORK_SETTING){
+               refreshWorkLayout();
+           }
+        }
+    }
 
-	/**
-	 * 会议条目内容
-	 * @param holder
-	 * @param groupPosition
-	 * @param childPosition
-	 */
-	public void initMeetingItems(
-			ExpandViewHolder holder, final int groupPosition,
-			final int childPosition) {
-		if (groupPosition == 0) {
-			holder.textView.setText(getMeetingResult.getMeetingsList()
-					.get(childPosition).getTopic());
-			String timeFrom = getMeetingResult.getMeetingsList()
-					.get(childPosition).getFrom();
-			if (!StringUtils.isBlank(timeFrom)) {
-				Calendar calendar = TimeUtils.timeString2Calendar(timeFrom);
-				holder.textViewdate.setText(TimeUtils.getCountdown(
-						getActivity(), calendar));
-				WorkColorUtils.showDayOfWeek(holder.imageView,
-						TimeUtils.getCountdownNum(calendar));
-			}else {
-				holder.textViewdate.setText(getString(R.string.time_null));
-			}
-			if (getMeetingResult.getMeetingsList().size() != 0) {
-				String from = getMeetingResult.getMeetingsList()
-						.get(childPosition).getFrom();
-				String meetingFromTime = TimeUtils.calendar2FormatString(
-						getActivity(), TimeUtils.timeString2Calendar(from),
-						TimeUtils.FORMAT_HOUR_MINUTE);
-				String to = getMeetingResult.getMeetingsList()
-						.get(childPosition).getTo();
-				String meetingToTime = TimeUtils.calendar2FormatString(
-						getActivity(), TimeUtils.timeString2Calendar(to),
-						TimeUtils.FORMAT_HOUR_MINUTE);
-				String meetingTime = meetingFromTime + " - " + meetingToTime;
-				holder.meetingTime.setText(meetingTime);
-			}
-		}
-		
-	}
 
-	/**
-	 * 初始化工作组数据
-	 */
-	private void initData(){
-		
-		addWorkItem(getString(R.string.work_meeting_text));
-		addWorkItem(getString(R.string.work_calendar_text));
-		addWorkItem(getString(R.string.work_task_text));
-	}
-	
-	/**
-	 * 初始化节日
-	 * @return
-	 */
-	private FestivalDate initFestivalDate(){
-		FestivalDate festivalDate = null;
-		try {
-			if (!DbCacheUtils.getDb(getActivity()).tableIsExist(FestivalDate.class)) {
-				FestivalCacheUtils.saveFestivalList(getActivity());
-			} 
-			festivalDate = FestivalCacheUtils.getFestival(getActivity());
-		} catch (DbException e) {
-			e.printStackTrace();
-		}
-		return festivalDate;
-	}
+    /**
+     * 获取日历中Event
+     */
+    private void getMyCalendar() {
+        if (NetUtils.isNetworkConnected(getActivity()) && isContainWork(TYPE_CALENDAR)) {
+            apiService.getMyCalendar(0, 30);
+        }
+    }
 
-	/**
-	 * 添加工作条目
-	 * @param workItemName
-	 */
-	private void addWorkItem(String workItemName) {
-		workGroup.add(workItemName);
-	}
 
-	/**
-	 * 初始化会议信息
-	 * 
-	 * @param getMeetingsResult
-	 */
-	private void initDataSize(GetMeetingsResult getMeetingsResult) {
-		meetingList = new ArrayList<List<Meeting>>();
-		// 四个会议的list，分别是今，明，后，三天
-		List<Meeting> meetingToday, meetingTomorrow, meetingAfter, meetingOther;
-		meetingToday = new ArrayList<Meeting>();
-		meetingTomorrow = new ArrayList<Meeting>();
-		meetingAfter = new ArrayList<Meeting>();
-		meetingOther = new ArrayList<Meeting>();
-		for (int i = 0; i < getMeetingsResult.getMeetingsList().size(); i++) {
-			String from = getMeetingsResult.getMeetingsList().get(i)
-					.getFrom();
-			int between = -1;
-			between = TimeUtils.getCountdownNum(TimeUtils.timeString2Calendar(from));
-			switch (between) {
-			case 0:
-				meetingToday.add(getMeetingsResult.getMeetingsList().get(i));
-				break;
-			case 1:
-				meetingTomorrow.add(getMeetingsResult.getMeetingsList().get(
-						i));
-				break;
-			// case 2:
-			// meettingAfter.add(getMeettingsResult.getMeettingsList().get(i));
-			// break;
-			default:
-				meetingOther.add(getMeetingsResult.getMeetingsList().get(i));
-				break;
-			}
-		}
-		meetingToday.addAll(meetingTomorrow);
-		if(meetingToday.size()>=MEETING_MAX_SIZE){
-			meetingList.add(meetingToday);
-		}else {
-			ArrayList<Meeting>  meetingAdd = new ArrayList<Meeting>();
-			int count = MEETING_MAX_SIZE - meetingToday.size();
-			if(meetingOther.size()>=count){
-				for (int i = 0; i < count; i++) {
-					meetingAdd.add(meetingOther.get(i));
-				}
-			}else {
-				meetingAdd.addAll(meetingOther);
-			}
-			meetingToday.addAll(meetingAdd);
-			meetingList.add(meetingToday);
-		}
-		adapter.notifyDataSetChanged();
-	}
+    /**
+     * 获取任务
+     */
+    private void getTasks() {
+        if (NetUtils.isNetworkConnected(getActivity())&& isContainWork(TYPE_TASK)) {
+            String orderBy = PreferencesUtils.getString(getActivity(),
+                    "order_by", "PRIORITY");
+            String orderType = PreferencesUtils.getString(getActivity(),
+                    "order_type", "DESC");
+            apiService.getRecentTasks(orderBy, orderType);
+        }
+    }
 
-	class WebService extends APIInterfaceInstance {
-		@Override
-		public void returnMeetingsSuccess(GetMeetingsResult getMeetingsResult) {
-			if (loadingDialog != null && loadingDialog.isShowing()) {
-				loadingDialog.dismiss();
-			}
-			pullToRefreshLayout.refreshFinish(PullToRefreshLayout.SUCCEED);
-			WorkFragment.this.getMeetingResult = getMeetingsResult;
-			initDataSize(getMeetingsResult);
-		}
 
-		@Override
-		public void returnMeetingsFail(String error,int errorCode) {
-			if (loadingDialog != null && loadingDialog.isShowing()) {
-				loadingDialog.dismiss();
-			}
-			pullToRefreshLayout.refreshFinish(PullToRefreshLayout.FAIL);
-			WebServiceMiddleUtils.hand(getActivity(), error,errorCode);
-		}
+    /**
+     * 获取会议
+     */
+    private void getMeetings() {
+        if (NetUtils.isNetworkConnected(getActivity()) && isContainWork(TYPE_MEETING)) {
+            apiService.getMeetings(7);
+        }
+    }
 
-		@Override
-		public void returnRecentTasksSuccess(GetTaskListResult getTaskListResult) {
-			if (loadingDialog != null && loadingDialog.isShowing()) {
-				loadingDialog.dismiss();
-			}
-			taskList = getTaskListResult.getTaskList();
-			if (taskList.size() > 0 && (adapter != null)) {
-				adapter.notifyDataSetChanged();
-			}
-		}
+    /**
+     * 获取三条Event
+     */
+    private void getCalEventsFor3() {
+        if (NetUtils.isNetworkConnected(getActivity()) && calendarIdList.size() > 0) {
+            Calendar afterCalendar = Calendar.getInstance();
+            Calendar beforeCalendar = Calendar.getInstance();
+            beforeCalendar.set(beforeCalendar.get(Calendar.YEAR) + 1,
+                    beforeCalendar.get(Calendar.MONTH),
+                    beforeCalendar.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
+            afterCalendar.set(afterCalendar.get(Calendar.YEAR),
+                    afterCalendar.get(Calendar.MONTH),
+                    afterCalendar.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
+            afterCalendar = TimeUtils.localCalendar2UTCCalendar(afterCalendar);
+            beforeCalendar = TimeUtils.localCalendar2UTCCalendar(beforeCalendar);
+            apiService.getAllCalEvents(calendarIdList, afterCalendar,
+                    beforeCalendar, 3, 0, false);
+        }
 
-		@Override
-		public void returnRecentTasksFail(String error,int errorCode) {
-			if (loadingDialog != null && loadingDialog.isShowing()) {
-				loadingDialog.dismiss();
-			}
-			WebServiceMiddleUtils.hand(getActivity(), error,errorCode);
-		}
+    }
 
-		@Override
-		public void returnMyCalendarSuccess(
-				GetMyCalendarResult getMyCalendarResult) {
-			List<MyCalendar> calendarList = getMyCalendarResult
-					.getCalendarList();
-			MyCalendarCacheUtils
-					.saveMyCalendarList(getActivity(), calendarList);
-			if (calendarList != null && calendarList.size() > 0) {
-				for (int i = 0; i < calendarList.size(); i++) {
-					MyCalendar myCalendar = calendarList.get(i);
-					if (!myCalendar.getState().equals("REMOVED")
-							&& !MyCalendarOperationCacheUtils.getIsHide(
-									getActivity(), myCalendar.getId())) {
-						calendarIdList.add(calendarList.get(i).getId());
-					}
-				}
-				getTwoDaysCalEvents();
-			}
-		}
 
-		@Override
-		public void returnMyCalendarFail(String error,int errorCode) {
-			WebServiceMiddleUtils.hand(getActivity(), error,errorCode);
-		}
+    /**
+     * 获取今明两天所有日历的所有event
+     */
+    private void getCalEventsForTwoDays() {
+        if (NetUtils.isNetworkConnected(getActivity()) && calendarIdList.size() > 0) {
+            Calendar afterCalendar = Calendar.getInstance();
+            Calendar beforeCalendar = Calendar.getInstance();
+            beforeCalendar.set(beforeCalendar.get(Calendar.YEAR),
+                    beforeCalendar.get(Calendar.MONTH),
+                    beforeCalendar.get(Calendar.DAY_OF_MONTH) + 2, 0, 0, 0);
+            afterCalendar.set(afterCalendar.get(Calendar.YEAR),
+                    afterCalendar.get(Calendar.MONTH),
+                    afterCalendar.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
+            afterCalendar = TimeUtils.localCalendar2UTCCalendar(afterCalendar);
+            beforeCalendar = TimeUtils.localCalendar2UTCCalendar(beforeCalendar);
+            apiService.getAllCalEvents(calendarIdList, afterCalendar,
+                    beforeCalendar, 5, 0, true);
+        }
+    }
 
-		@Override
-		public void returnCalEventsSuccess(
-				GetCalendarEventsResult getCalendarEventsResult,
-				boolean isRefresh) {
-			calEventList = new ArrayList<CalendarEvent>();
-			calEventList = getCalendarEventsResult.getCalEventList();
-			for (int i = 0; i < calEventList.size(); i++) {
-				CalendarEvent calEvent = calEventList.get(i);
-				CalEventNotificationUtils.setCalEventNotification(
-						getActivity().getApplicationContext(), calEvent);
-			}
-			if (isRefresh && (calEventList.size() < 3)) { // 获取今明两天的日历不足3条
-				getCalEventsFor3();
-			} else {
-				if (loadingDialog != null && loadingDialog.isShowing()) {
-					loadingDialog.dismiss();
-				}
-				adapter.notifyDataSetChanged();
-			}
 
-		}
+    class WebService extends APIInterfaceInstance {
+        @Override
+        public void returnMeetingsSuccess(GetMeetingsResult getMeetingsResult) {
+            pullToRefreshLayout.refreshFinish(PullToRefreshLayout.SUCCEED);
+            WorkFragment.this.meetingList = getMeetingsResult.getMeetingsList();
+            Collections.sort(WorkFragment.this.meetingList, new Meeting());
+            meetingChildAdapter.notifyDataSetChanged();
+        }
 
-		@Override
-		public void returnCalEventsFail(String error, boolean isRefresh,int errorCode) {
-			if (loadingDialog != null && loadingDialog.isShowing()) {
-				loadingDialog.dismiss();
-			}
-			WebServiceMiddleUtils.hand(getActivity(), error,errorCode);
-		}
+        @Override
+        public void returnMeetingsFail(String error, int errorCode) {
+            pullToRefreshLayout.refreshFinish(PullToRefreshLayout.FAIL);
+            WebServiceMiddleUtils.hand(getActivity(), error, errorCode);
+        }
 
-	}
+        @Override
+        public void returnRecentTasksSuccess(GetTaskListResult getTaskListResult) {
+            pullToRefreshLayout.refreshFinish(PullToRefreshLayout.SUCCEED);
+            taskList = getTaskListResult.getTaskList();
+            taskChildAdapter.notifyDataSetChanged();
+        }
 
-	@Override
-	public void onRefresh(PullToRefreshLayout pullToRefreshLayout) {
-		if (NetUtils.isNetworkConnected(getActivity())) {
-			apiService.getMeetings(7);
-			getOrder();
-			apiService.getMyCalendar(0, 30);
-			apiService.getRecentTasks(orderBy, orderType);
-		} else {
-			pullToRefreshLayout.refreshFinish(PullToRefreshLayout.FAIL);
-		}
-	}
+        @Override
+        public void returnRecentTasksFail(String error, int errorCode) {
+            pullToRefreshLayout.refreshFinish(PullToRefreshLayout.FAIL);
+            WebServiceMiddleUtils.hand(getActivity(), error, errorCode);
+        }
 
-	@Override
-	public void onLoadMore(PullToRefreshLayout pullToRefreshLayout) {
-	}
+        @Override
+        public void returnMyCalendarSuccess(
+                GetMyCalendarResult getMyCalendarResult) {
+            pullToRefreshLayout.refreshFinish(PullToRefreshLayout.SUCCEED);
+            List<MyCalendar> calendarList = getMyCalendarResult
+                    .getCalendarList();
+            MyCalendarCacheUtils
+                    .saveMyCalendarList(getActivity(), calendarList);
+            for (int i = 0; i < calendarList.size(); i++) {
+                MyCalendar myCalendar = calendarList.get(i);
+                if (!myCalendar.getState().equals("REMOVED")
+                        && !MyCalendarOperationCacheUtils.getIsHide(
+                        getActivity(), myCalendar.getId())) {
+                    calendarIdList.add(calendarList.get(i).getId());
+                }
+            }
+            getCalEventsForTwoDays();
+        }
 
-	class WorkGroupListener implements OnGroupClickListener {
+        @Override
+        public void returnMyCalendarFail(String error, int errorCode) {
+            pullToRefreshLayout.refreshFinish(PullToRefreshLayout.FAIL);
+            WebServiceMiddleUtils.hand(getActivity(), error, errorCode);
+        }
 
-		@Override
-		public boolean onGroupClick(ExpandableListView parent, View v,
-				int groupPosition, long id) {
-			Intent intent = new Intent();
-			if (groupPosition == 0) {
-				intent.setClass(getActivity(), MeetingListActivity.class);
-				startActivityForResult(intent, 0);
-				recordUserClickWorkFunction("meeting");
-			} else if (groupPosition == 1) {
-				intent.setClass(getActivity(), CalActivity.class);
-				startActivity(intent);
-				recordUserClickWorkFunction("calendar");
-			} else if (groupPosition == 2) {
-				intent.setClass(getActivity(), MessionListActivity.class);
-				startActivityForResult(intent, 0);
-				recordUserClickWorkFunction("todo");
-			}
-			return false;
-		}
+        @Override
+        public void returnCalEventsSuccess(
+                GetCalendarEventsResult getCalendarEventsResult,
+                boolean isRefresh) {
+            calEventList = getCalendarEventsResult.getCalEventList();
+            CalEventNotificationUtils.setCalEventNotification(getActivity().getApplicationContext(), calEventList);
+            if (isRefresh && (calEventList.size() < 3)) { // 获取今明两天的日历不足3条
+                getCalEventsFor3();
+            } else {
+                calendarChildAdapter.notifyDataSetChanged();
+            }
 
-	}
+        }
 
-	/**
-	 * 记录用户点击
-	 * @param functionId
-	 */
-	private void recordUserClickWorkFunction(String functionId){
-		PVCollectModel pvCollectModel = new PVCollectModel(functionId,"work");
-		PVCollectModelCacheUtils.saveCollectModel(getActivity(),pvCollectModel);
-	}
+        @Override
+        public void returnCalEventsFail(String error, boolean isRefresh, int errorCode) {
+            WebServiceMiddleUtils.hand(getActivity(), error, errorCode);
+        }
 
-	class WorkChildClickListener implements OnChildClickListener {
-		@Override
-		public boolean onChildClick(ExpandableListView parent, View v,
-				int groupPosition, int childPosition, long id) {
-			Intent intent = new Intent();
-			if (groupPosition == 1) {
-				if (calEventList.size() != 0) {
-					intent.putExtra("calEvent",
-							(Serializable) calEventList.get(childPosition));
-					intent.setClass(getActivity(), CalEventAddActivity.class);
-					startActivity(intent);
-					recordUserClickWorkFunction("calendar");
-				}
-			} else if (groupPosition == 2) {
-				if (taskList.size() != 0) {
-					intent.putExtra("task",
-							(Serializable) taskList.get(childPosition));
-					intent.setClass(getActivity(), MessionDetailActivity.class);
-					startActivity(intent);
-					recordUserClickWorkFunction("todo");
-				}
-			} else if (groupPosition == 0) {
-				if (getMeetingResult != null &&getMeetingResult.getMeetingsList().size() > 0) {
-						Meeting meeting = getMeetingResult.getMeetingsList().get(childPosition);
-						Bundle bundle = new Bundle();
-						bundle.putSerializable("meeting", meeting);
-						IntentUtils.startActivity(getActivity(),
-								MeetingDetailActivity.class, bundle);
-				}else {
-					IntentUtils.startActivity(getActivity(),
-							MeetingBookingActivity.class);
-				}
-				recordUserClickWorkFunction("meeting");
-			}
-			return false;
-		}
-	}
+    }
 
-	@Override
-	public void onDestroy() {
-		super.onDestroy();
-		if (calEventReceiver != null) {
-			getActivity().unregisterReceiver(calEventReceiver);
-			calEventReceiver = null;
-		}
-		if (meetingAndTaskReceiver != null) {
-			getActivity().unregisterReceiver(meetingAndTaskReceiver);
-			meetingAndTaskReceiver = null;
-		}
-	}
+    @Override
+    public void onRefresh(PullToRefreshLayout pullToRefreshLayout) {
+        if (NetUtils.isNetworkConnected(getActivity())) {
+            if (workSettingList.size()>0){
+                getWorkData();
+            }else {
+                pullToRefreshLayout.refreshFinish(PullToRefreshLayout.SUCCEED);
+            }
+        } else {
+            pullToRefreshLayout.refreshFinish(PullToRefreshLayout.FAIL);
+        }
+    }
+
+    @Override
+    public void onLoadMore(PullToRefreshLayout pullToRefreshLayout) {
+    }
+
+
+    /**
+     * 记录用户点击
+     *
+     * @param functionId
+     */
+    private void recordUserClickWorkFunction(String functionId) {
+        PVCollectModel pvCollectModel = new PVCollectModel(functionId, "work");
+        PVCollectModelCacheUtils.saveCollectModel(getActivity(), pvCollectModel);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        pullToRefreshLayout.refreshFinish(PullToRefreshLayout.FAIL);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (calEventReceiver != null) {
+            getActivity().unregisterReceiver(calEventReceiver);
+            calEventReceiver = null;
+        }
+        if (meetingAndTaskReceiver != null) {
+            getActivity().unregisterReceiver(meetingAndTaskReceiver);
+            meetingAndTaskReceiver = null;
+        }
+    }
 
 }
