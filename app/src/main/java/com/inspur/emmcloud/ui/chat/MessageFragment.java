@@ -372,13 +372,13 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
     /**
      * channel 显示排序
      */
-    private void sortChannelList(final List<Channel> channelList) {
+    private void sortChannelList(final List<Channel> originChannelList) {
         // TODO Auto-generated method stub
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
-				Channel channelss = new Channel();
-				channelss.setCid("611");
+				List<Channel> channelList = new ArrayList<Channel>();
+				channelList.addAll(originChannelList);
 				if (channelList.size() > 0) {
 					Iterator<Channel> it = channelList.iterator();
 					//将没有消息的单聊和没有消息的但不是自己创建的群聊隐藏掉
@@ -445,8 +445,10 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 					Collections.sort(channelList, new SortComparator());
 					channelList.addAll(0, setTopChannelList);
 				}
-				displayChannelList = channelList;
-				handler.sendEmptyMessage(SORT_CHANNEL_COMPLETE);
+				Message message = new Message();
+				message.obj = channelList;
+				message.what =SORT_CHANNEL_COMPLETE;
+				handler.sendMessage(message);
 			}
 		}).start();
 
@@ -526,6 +528,9 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 						}
 						break;
 					case SORT_CHANNEL_COMPLETE:
+						List<Channel> channelList = (List<Channel>)msg.obj;
+						displayChannelList.clear();
+						displayChannelList.addAll(channelList);
 						displayData();// 展示数据
 						registerMsgReceiver();// 注册接收消息的广播
 						((MyApplication) getActivity().getApplication()).startWebSocket();// 启动webSocket推送
