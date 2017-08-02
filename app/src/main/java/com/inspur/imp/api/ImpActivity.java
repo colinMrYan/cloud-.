@@ -29,6 +29,7 @@ import com.inspur.emmcloud.config.MyAppWebConfig;
 import com.inspur.emmcloud.util.AppUtils;
 import com.inspur.emmcloud.util.MDM.MDM;
 import com.inspur.emmcloud.util.PreferencesByUsersUtils;
+import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.imp.engine.webview.ImpWebView;
 import com.inspur.imp.plugin.PluginMgr;
@@ -406,7 +407,14 @@ public class ImpActivity extends ImpBaseActivity {
 
     public void showLoadingDlg(String content) {
         if (content != null){
+            if (StringUtils.isBlank(content)){
+                loadingText.setVisibility(View.GONE);
+            }else {
+                loadingText.setVisibility(View.VISIBLE);
+            }
             loadingText.setText(content);
+        }else {
+            loadingText.setVisibility(View.VISIBLE);
         }
         loadingLayout.setVisibility(View.VISIBLE);
     }
