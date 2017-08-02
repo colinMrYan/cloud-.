@@ -440,12 +440,18 @@ public class AppCenterActivity extends BaseActivity {
         }
 
         @Override
-        public Object instantiateItem(ViewGroup container, int position) {
+        public Object instantiateItem(ViewGroup container, final int position) {
             int newPosition = position % recommandAppList.size();
             App app = recommandAppList.get(newPosition);
             ImageView imageView = new ImageView(AppCenterActivity.this);
             new ImageDisplayUtils(getApplicationContext(), R.drawable.icon_empty_icon).display(imageView, app.getAppIcon());
             ((ViewPager) container).addView(imageView);
+            imageView.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ToastUtils.show(AppCenterActivity.this,"点击了banner第"+(position%8)+"个");
+                }
+            });
             return imageView;
 
         }
@@ -453,30 +459,6 @@ public class AppCenterActivity extends BaseActivity {
         @Override
         public void destroyItem(ViewGroup container, int position, Object object) {
             ((ViewPager) container).removeView((ImageView) object);
-        }
-    }
-
-    public class MyOnPageChangeListener implements ViewPager.OnPageChangeListener {
-        private RelativeLayout mViewPagerContainer;
-
-        public MyOnPageChangeListener(RelativeLayout mViewPagerContainer) {
-            this.mViewPagerContainer = mViewPagerContainer;
-        }
-
-        @Override
-        public void onPageSelected(int position) {
-            //这里做切换ViewPager时，底部RadioButton的操作
-        }
-
-        @Override
-        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-            if (mViewPagerContainer != null) {
-                mViewPagerContainer.invalidate();
-            }
-        }
-
-        @Override
-        public void onPageScrollStateChanged(int arg0) {
         }
     }
 
