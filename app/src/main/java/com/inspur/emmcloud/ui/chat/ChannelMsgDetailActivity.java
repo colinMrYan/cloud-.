@@ -29,6 +29,7 @@ import com.inspur.emmcloud.bean.GetMsgCommentResult;
 import com.inspur.emmcloud.bean.GetMsgResult;
 import com.inspur.emmcloud.bean.GetSendMsgResult;
 import com.inspur.emmcloud.bean.Msg;
+import com.inspur.emmcloud.ui.contact.RobotInfoActivity;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
 import com.inspur.emmcloud.util.ChannelCacheUtils;
 import com.inspur.emmcloud.util.FileUtils;
@@ -41,6 +42,7 @@ import com.inspur.emmcloud.util.MentionsAndUrlShowUtils;
 import com.inspur.emmcloud.util.MsgCacheUtil;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
+import com.inspur.emmcloud.util.RobotCacheUtils;
 import com.inspur.emmcloud.util.TimeUtils;
 import com.inspur.emmcloud.util.TransHtmlToTextUtils;
 import com.inspur.emmcloud.util.URLMatcher;
@@ -322,8 +324,16 @@ public class ChannelMsgDetailActivity extends BaseActivity implements
      * 展示通用的部分
      */
     private void disPlayCommonInfo() {
-        imageDisplayUtils.display(senderHeadImg,
-                UriUtils.getChannelImgUri(ChannelMsgDetailActivity.this, msg.getUid()));
+        //机器人进群修改处
+        if(msg.getUid().startsWith("BOT")){
+            String iconUrl = UriUtils.getRobotIconUri(RobotCacheUtils
+                    .getRobotById(ChannelMsgDetailActivity.this, msg.getUid())
+                    .getAvatar());
+            imageDisplayUtils.display(senderHeadImg,iconUrl);
+        }else{
+            imageDisplayUtils.display(senderHeadImg,
+                    UriUtils.getChannelImgUri(ChannelMsgDetailActivity.this, msg.getUid()));
+        }
         senderHeadImg.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -469,9 +479,21 @@ public class ChannelMsgDetailActivity extends BaseActivity implements
                     comment.getTimestamp());
             sendTimeText.setText(time);
 
-            new ImageDisplayUtils(ChannelMsgDetailActivity.this,
-                    R.drawable.icon_person_default).display(photoImg,
-                    UriUtils.getChannelImgUri(ChannelMsgDetailActivity.this, comment.getUid()));
+//            new ImageDisplayUtils(ChannelMsgDetailActivity.this,
+//                    R.drawable.icon_person_default).display(photoImg,
+//                    UriUtils.getChannelImgUri(ChannelMsgDetailActivity.this, comment.getUid()));
+            //机器人进群修改处
+            ImageDisplayUtils imageDisplayUtils = new ImageDisplayUtils(ChannelMsgDetailActivity.this,
+                    R.drawable.icon_person_default);
+            if(comment.getUid().startsWith("BOT")){
+                String iconUrl = UriUtils.getRobotIconUri(RobotCacheUtils
+                        .getRobotById(ChannelMsgDetailActivity.this, comment.getUid())
+                        .getAvatar());
+                imageDisplayUtils.display(photoImg,iconUrl);
+            }else{
+                imageDisplayUtils.display(photoImg,
+                        UriUtils.getChannelImgUri(ChannelMsgDetailActivity.this, comment.getUid()));
+            }
             photoImg.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -491,8 +513,13 @@ public class ChannelMsgDetailActivity extends BaseActivity implements
     private void openUserInfo(String uid) {
         Bundle bundle = new Bundle();
         bundle.putString("uid", uid);
-        IntentUtils.startActivity(ChannelMsgDetailActivity.this,
-                UserInfoActivity.class, bundle);
+        //机器人进群修改处
+        if(uid.startsWith("BOT")){
+            IntentUtils.startActivity(ChannelMsgDetailActivity.this, RobotInfoActivity.class,bundle);
+        }else{
+            IntentUtils.startActivity(ChannelMsgDetailActivity.this,
+                    UserInfoActivity.class, bundle);
+        }
     }
 
     @Override
