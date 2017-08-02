@@ -29,7 +29,6 @@ import com.inspur.emmcloud.config.MyAppWebConfig;
 import com.inspur.emmcloud.util.AppUtils;
 import com.inspur.emmcloud.util.MDM.MDM;
 import com.inspur.emmcloud.util.PreferencesByUsersUtils;
-import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.imp.engine.webview.ImpWebView;
 import com.inspur.imp.plugin.PluginMgr;
@@ -87,7 +86,7 @@ public class ImpActivity extends ImpBaseActivity {
         frameLayout = (FrameLayout) findViewById(Res.getWidgetID("videoContainer"));
         loadFailLayout = (LinearLayout) findViewById(Res.getWidgetID("load_error_layout"));
         webView = (ImpWebView) findViewById(Res.getWidgetID("webview"));
-        showLoadingDlg("");
+        showLoadingDlg(null);
         if (getIntent().hasExtra("is_zoomable")) {
             isZoomable = getIntent().getIntExtra("is_zoomable", 0);
             if (isZoomable == 0) {
@@ -406,7 +405,7 @@ public class ImpActivity extends ImpBaseActivity {
 
 
     public void showLoadingDlg(String content) {
-        if (!StringUtils.isBlank(content)){
+        if (content != null){
             loadingText.setText(content);
         }
         loadingLayout.setVisibility(View.VISIBLE);
