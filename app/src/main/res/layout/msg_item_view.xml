@@ -1,19 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/main_layout"
                 android:layout_width="match_parent"
                 android:layout_height="67dp"
                 android:background="@drawable/selector_list"
-                android:paddingLeft="10dp">
+                android:paddingLeft="11dp">
 
     <com.inspur.emmcloud.widget.CircleImageView
         android:id="@+id/msg_img"
-        android:layout_width="49dp"
-        android:layout_height="49dp"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
         android:layout_centerVertical="true"
         android:layout_marginBottom="8dp"
-        android:layout_marginRight="10dp"
+        android:layout_marginRight="12dp"
         android:layout_marginTop="11dp"
          />
     <LinearLayout
@@ -35,8 +34,7 @@
                 android:layout_alignParentRight="true"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
-                android:textColor="@color/msg_time_color"
-                android:textSize="15sp"/>
+                android:textSize="14sp"/>
 
             <TextView
                 android:id="@+id/name_text"
@@ -46,8 +44,8 @@
                 android:ellipsize="end"
                 android:paddingRight="20dp"
                 android:singleLine="true"
-                android:textColor="@color/text_black"
-                android:textSize="@dimen/content_title_textsize"/>
+                android:textColor="#222222"
+                android:textSize="17sp"/>
         </RelativeLayout>
 
         <RelativeLayout
@@ -63,7 +61,7 @@
                 android:ellipsize="end"
                 android:singleLine="true"
                 android:textColor="#000000"
-                android:textSize="@dimen/content_normal_textsize"/>
+                android:textSize="15sp"/>
 
             <RelativeLayout
                 android:id="@+id/right_layout"
