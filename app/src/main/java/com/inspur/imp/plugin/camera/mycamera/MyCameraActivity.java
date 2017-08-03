@@ -135,6 +135,8 @@ public class MyCameraActivity extends Activity implements View.OnClickListener, 
     public void surfaceCreated(SurfaceHolder surfaceHolder) {
         if (ratioX != null){
             previewSFV.setCustomRatio(ratioX,ratioY);
+        }else {
+            previewSFV.setCropEnabled(false);
         }
         currentCameraFacing = hasBackFacingCamera() ? Camera.CameraInfo.CAMERA_FACING_BACK : Camera.CameraInfo.CAMERA_FACING_FRONT;
         initCamera();
