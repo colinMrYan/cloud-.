@@ -218,6 +218,7 @@ public class WorkFragment extends Fragment implements OnRefreshListener {
         IntentFilter myIntentFilter = new IntentFilter();
         myIntentFilter.addAction("com.inspur.meeting");
         myIntentFilter.addAction("com.inspur.task");
+        myIntentFilter.addAction("com.inspur.calendar");
         getActivity().registerReceiver(meetingAndTaskReceiver, myIntentFilter);
     }
 
@@ -270,10 +271,13 @@ public class WorkFragment extends Fragment implements OnRefreshListener {
                 @Override
                 public void onClick(View v) {
                     if (id.equals(TYPE_CALENDAR)) {
+                        recordUserClickWorkFunction("calendar");
                         IntentUtils.startActivity(getActivity(), CalActivity.class);
                     } else if (id.equals(TYPE_MEETING)) {
+                        recordUserClickWorkFunction("meeting");
                         IntentUtils.startActivity(getActivity(), MeetingListActivity.class);
                     } else if (id.equals(TYPE_TASK)) {
+                        recordUserClickWorkFunction("task");
                         IntentUtils.startActivity(getActivity(), MessionListActivity.class);
                     }
                 }
@@ -282,10 +286,13 @@ public class WorkFragment extends Fragment implements OnRefreshListener {
                 @Override
                 public void onClick(View v) {
                     if (id.equals(TYPE_CALENDAR)) {
+                        recordUserClickWorkFunction("calendar");
                         IntentUtils.startActivity(getActivity(), CalEventAddActivity.class);
                     } else if (id.equals(TYPE_MEETING)) {
+                        recordUserClickWorkFunction("meeting");
                         IntentUtils.startActivity(getActivity(), MeetingBookingActivity.class);
                     } else if (id.equals(TYPE_TASK)) {
+                        recordUserClickWorkFunction("task");
                         IntentUtils.startActivity(getActivity(), MessionListActivity.class);
                     }
                 }
@@ -415,6 +422,7 @@ public class WorkFragment extends Fragment implements OnRefreshListener {
                 bundle.putSerializable("task",
                         taskList.get(position));
                 IntentUtils.startActivity(getActivity(), MessionDetailActivity.class, bundle);
+                recordUserClickWorkFunction("task");
             } else if (type.equals(TYPE_MEETING)) {
                 Meeting meeting = meetingList.get(position);
                 bundle.putSerializable("meeting", meeting);
@@ -577,20 +585,26 @@ public class WorkFragment extends Fragment implements OnRefreshListener {
      * 获取今明两天所有日历的所有event
      */
     private void getCalEventsForTwoDays() {
-        if (NetUtils.isNetworkConnected(getActivity()) && calendarIdList.size() > 0) {
-            Calendar afterCalendar = Calendar.getInstance();
-            Calendar beforeCalendar = Calendar.getInstance();
-            beforeCalendar.set(beforeCalendar.get(Calendar.YEAR),
-                    beforeCalendar.get(Calendar.MONTH),
-                    beforeCalendar.get(Calendar.DAY_OF_MONTH) + 2, 0, 0, 0);
-            afterCalendar.set(afterCalendar.get(Calendar.YEAR),
-                    afterCalendar.get(Calendar.MONTH),
-                    afterCalendar.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
-            afterCalendar = TimeUtils.localCalendar2UTCCalendar(afterCalendar);
-            beforeCalendar = TimeUtils.localCalendar2UTCCalendar(beforeCalendar);
-            apiService.getAllCalEvents(calendarIdList, afterCalendar,
-                    beforeCalendar, 5, 0, true);
+        if (calendarIdList.size()>0){
+            if (NetUtils.isNetworkConnected(getActivity())) {
+                Calendar afterCalendar = Calendar.getInstance();
+                Calendar beforeCalendar = Calendar.getInstance();
+                beforeCalendar.set(beforeCalendar.get(Calendar.YEAR),
+                        beforeCalendar.get(Calendar.MONTH),
+                        beforeCalendar.get(Calendar.DAY_OF_MONTH) + 2, 0, 0, 0);
+                afterCalendar.set(afterCalendar.get(Calendar.YEAR),
+                        afterCalendar.get(Calendar.MONTH),
+                        afterCalendar.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
+                afterCalendar = TimeUtils.localCalendar2UTCCalendar(afterCalendar);
+                beforeCalendar = TimeUtils.localCalendar2UTCCalendar(beforeCalendar);
+                apiService.getAllCalEvents(calendarIdList, afterCalendar,
+                        beforeCalendar, 5, 0, true);
+            }
+        }else {
+            calEventList.clear();
+            calendarChildAdapter.notifyDataSetChanged();
         }
+
     }
 
 
@@ -630,9 +644,10 @@ public class WorkFragment extends Fragment implements OnRefreshListener {
                     .getCalendarList();
             MyCalendarCacheUtils
                     .saveMyCalendarList(getActivity(), calendarList);
+            calendarIdList.clear();
             for (int i = 0; i < calendarList.size(); i++) {
                 MyCalendar myCalendar = calendarList.get(i);
-                if (!myCalendar.getState().equals("REMOVED")
+                if (myCalendar.getState() != null && !myCalendar.getState().equals("REMOVED")
                         && !MyCalendarOperationCacheUtils.getIsHide(
                         getActivity(), myCalendar.getId())) {
                     calendarIdList.add(calendarList.get(i).getId());

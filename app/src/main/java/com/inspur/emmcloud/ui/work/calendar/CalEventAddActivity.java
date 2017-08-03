@@ -490,9 +490,9 @@ public class CalEventAddActivity extends BaseActivity {
 	 * 
 	 * @param isAdd
 	 */
-	public void sendBoradcastReceiver(boolean isAdd) {
+	public void sendBoradcastReceiver() {
 		Intent mIntent = new Intent("com.inspur.calendar");
-		mIntent.putExtra("refreshCalendar", (Serializable) addCalendarEvent);
+		mIntent.putExtra("refreshCalendar","");
 		// 发送广播
 		sendBroadcast(mIntent);
 	}
@@ -538,7 +538,7 @@ public class CalEventAddActivity extends BaseActivity {
 			}
 			ToastUtils.show(getApplicationContext(), R.string.add_success);
 			addCalendarEvent.setId(getIDResult.getId());
-			sendBoradcastReceiver(true);
+			sendBoradcastReceiver();
 			Intent intent = new Intent();
 			intent.putExtra("addCalendarEvent", addCalendarEvent);
 			setResult(RESULT_OK, intent);
@@ -560,7 +560,7 @@ public class CalEventAddActivity extends BaseActivity {
 			if (loadingDlg != null && loadingDlg.isShowing()) {
 				loadingDlg.dismiss();
 			}
-			sendBoradcastReceiver(false);
+			sendBoradcastReceiver();
 			ToastUtils.show(getApplicationContext(),
 					getString(R.string.modify_success));
 			Intent intent = new Intent();

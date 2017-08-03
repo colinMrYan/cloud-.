@@ -14,7 +14,7 @@ import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.OnChildClickListener;
-import android.widget.RelativeLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.BaseActivity;
@@ -68,7 +68,7 @@ public class MeetingListActivity extends BaseActivity implements
 	private LoadingDialog loadingDlg;
 	private WorkAPIService apiService;
 	private PullToRefreshLayout pullToRefreshLayout;
-	private RelativeLayout relNullLayout;
+	private LinearLayout relNullLayout;
 	private int groupIdCancel, childIdCancel;
 	private Map<String, List<Meeting>> meetingMap = new HashMap<String, List<Meeting>>();
 	private List<String> meetingGroupList = new ArrayList<String>();
@@ -124,7 +124,7 @@ public class MeetingListActivity extends BaseActivity implements
 		loadingDlg = new LoadingDialog(MeetingListActivity.this);
 		pullToRefreshLayout = (PullToRefreshLayout) findViewById(R.id.meeting_expandlistview_layout);
 		pullToRefreshLayout.setOnRefreshListener(MeetingListActivity.this);
-		relNullLayout = (RelativeLayout) findViewById(R.id.meeting_list_out_layout);
+		relNullLayout = (LinearLayout) findViewById(R.id.meeting_list_out_layout);
 		expandListView = (PullableExpandableListView) findViewById(R.id.meeting_expandablelistview);
 		expandListView.setGroupIndicator(null);
 		expandListView.setVerticalScrollBarEnabled(false);
