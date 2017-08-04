@@ -210,6 +210,7 @@ public class MessionListActivity extends BaseActivity implements
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (resultCode == RESULT_OK) {
+			isNeedRefresh = true;
 			nowIndex = segmentControl.getCurrentIndex();
 			if (requestCode == MESSION_SET) {
 				noSearchResultLayout.setVisibility(View.GONE);

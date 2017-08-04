@@ -62,12 +62,13 @@
     </RelativeLayout>
 
     <ScrollView
+        android:id="@+id/set_radio_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|center"
-        android:visibility="gone"
         android:layout_marginBottom="90dp"
         android:background="#99000000"
+        android:visibility="gone"
         android:scrollbars="none">
 
         <include layout="@layout/plugin_camera_crop_mode_layout"/>

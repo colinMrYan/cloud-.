@@ -29,6 +29,7 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.util.JSONUtils;
 import com.inspur.emmcloud.util.StateBarColor;
+import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.ToastUtils;
 import com.inspur.imp.plugin.camera.editimage.EditImageActivity;
 import com.inspur.imp.plugin.camera.editimage.utils.BitmapUtils;
@@ -92,7 +93,7 @@ public class MyCameraActivity extends Activity implements View.OnClickListener, 
         extraParam = getIntent().getStringExtra(PHOTO_PARAM);
         JSONObject optionsObj = JSONUtils.getJSONObject(extraParam,"options",new JSONObject());
         String rectScale = JSONUtils.getString(optionsObj,"rectScale",null);
-        if (rectScale != null){
+        if (!StringUtils.isBlank(rectScale) && !rectScale.equals("null")){
             String[] ratios = rectScale.split(":");
             if (ratios.length == 2){
                 int ratio0 = Integer.parseInt(ratios[0]);
@@ -101,6 +102,8 @@ public class MyCameraActivity extends Activity implements View.OnClickListener, 
                 ratioY = ratio0>ratio1?ratio0:ratio1;
             }
 
+        }else {
+            (findViewById(R.id.set_radio_layout)).setVisibility(View.VISIBLE);
         }
     }
 
@@ -135,8 +138,6 @@ public class MyCameraActivity extends Activity implements View.OnClickListener, 
     public void surfaceCreated(SurfaceHolder surfaceHolder) {
         if (ratioX != null){
             previewSFV.setCustomRatio(ratioX,ratioY);
-        }else {
-            previewSFV.setCropEnabled(false);
         }
         currentCameraFacing = hasBackFacingCamera() ? Camera.CameraInfo.CAMERA_FACING_BACK : Camera.CameraInfo.CAMERA_FACING_FRONT;
         initCamera();

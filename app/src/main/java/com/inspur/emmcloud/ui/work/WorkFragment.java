@@ -381,8 +381,6 @@ public class WorkFragment extends Fragment implements OnRefreshListener {
                     Calendar dueDate = task.getLocalDueDate();
                     if (dueDate != null) {
                         dateText.setText(TimeUtils.calendar2FormatString(getActivity(), dueDate, FORMAT_MONTH_DAY));
-                    }else {
-                        dateText.setText(R.string.not_set);
                     }
                     break;
                 case TYPE_CALENDAR:
