@@ -247,7 +247,7 @@ public class MessionListActivity extends BaseActivity implements
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.back_layout:
-			finish();
+			onBackPressed();
 			break;
 		case R.id.mession_settiing_img:
 			Intent intent = new Intent();
