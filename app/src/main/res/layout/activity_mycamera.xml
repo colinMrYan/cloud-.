@@ -19,7 +19,7 @@
         app:focus_guide_stroke_weight="1dp"
         app:focus_handle_color="@android:color/white"
         app:focus_handle_show_mode="show_always"
-        app:focus_handle_size="6dp"
+        app:focus_handle_size="5dp"
         app:focus_min_frame_size="50dp"
         app:focus_overlay_color="#86000000"
         app:focus_touch_padding="8dp"/>

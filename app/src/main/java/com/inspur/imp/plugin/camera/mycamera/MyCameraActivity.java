@@ -79,6 +79,11 @@ public class MyCameraActivity extends Activity implements View.OnClickListener, 
         setContentView(R.layout.activity_mycamera);
 
         initData();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         initView();
         setListener();
     }
@@ -102,8 +107,6 @@ public class MyCameraActivity extends Activity implements View.OnClickListener, 
                 ratioY = ratio0>ratio1?ratio0:ratio1;
             }
 
-        }else {
-            (findViewById(R.id.set_radio_layout)).setVisibility(View.VISIBLE);
         }
     }
 
@@ -284,13 +287,13 @@ public class MyCameraActivity extends Activity implements View.OnClickListener, 
                 previewSFV.setCropMode(FocusSurfaceView.CropMode.RATIO_3_4);
                 break;
             case R.id.four_three_bt:
-                previewSFV.setCropMode(FocusSurfaceView.CropMode.RATIO_4_3);
+                previewSFV.setCropMode(FocusSurfaceView.CropMode.RATIO_3_4);
                 break;
             case R.id.nine_sixteen_bt:
                 previewSFV.setCropMode(FocusSurfaceView.CropMode.RATIO_9_16);
                 break;
             case R.id.sixteen_nine_bt:
-                previewSFV.setCropMode(FocusSurfaceView.CropMode.RATIO_16_9);
+                previewSFV.setCropMode(FocusSurfaceView.CropMode.RATIO_9_16);
                 break;
             case R.id.switch_camera_btn:
                 currentCameraFacing = 1 - currentCameraFacing;
@@ -385,10 +388,13 @@ public class MyCameraActivity extends Activity implements View.OnClickListener, 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK && requestCode == ACTION_REQUEST_EDITIMAGE){
-            setResult(RESULT_OK,data);
+        if (requestCode == ACTION_REQUEST_EDITIMAGE){
+            if (resultCode == RESULT_OK ){
+                setResult(RESULT_OK,data);
+            }
             finish();
         }
+
     }
 
     public Bitmap rotaingImageView(int angle, Bitmap bitmap) {

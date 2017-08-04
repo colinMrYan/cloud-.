@@ -151,7 +151,6 @@ public class WorkFragment extends Fragment implements OnRefreshListener {
                 .findViewById(R.id.list);
         pullToRefreshLayout = (PullToRefreshLayout) rootView
                 .findViewById(R.id.refresh_view);
-        pullToRefreshLayout.setInDarkBackgroud(true);
         pullToRefreshLayout.setOnRefreshListener(WorkFragment.this);
         apiService = new WorkAPIService(getActivity());
         apiService.setAPIInterface(new WebService());
@@ -250,7 +249,6 @@ public class WorkFragment extends Fragment implements OnRefreshListener {
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
             ViewHolder holder;
-            if (position<getCount()-1){}
             if (convertView == null) {
                 holder = new ViewHolder();
                 convertView = LayoutInflater.from(getActivity()).inflate(R.layout.work_card_group_item_view_vertical, null);
@@ -264,7 +262,7 @@ public class WorkFragment extends Fragment implements OnRefreshListener {
             } else {
                 holder = (ViewHolder) convertView.getTag();
             }
-            convertView.findViewById(R.id.blank_view).setVisibility((position==getCount()-1)?View.VISIBLE:View.GONE);
+            convertView.findViewById(R.id.bottom_blank_view).setVisibility((position==getCount()-1)?View.VISIBLE:View.GONE);
             WorkSetting workSetting = workSettingList.get(position);
             final String id = workSetting.getId();
             holder.groupHeaderlayout.setOnClickListener(new View.OnClickListener() {
