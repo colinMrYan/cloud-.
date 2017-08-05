@@ -50,7 +50,7 @@ public class DisplayTxtRichMsg {
 		final TextView richText = (TextView) convertView
 				.findViewById(R.id.content_text);
 		richText.setBackgroundColor(context.getResources().getColor(
-				isMyMsg ? R.color.header_bg : R.color.white));
+				isMyMsg ? R.color.bg_my_card : R.color.white));
 		richText.setTextColor(context.getResources().getColor(
 				isMyMsg ? R.color.white : R.color.black));
 		int normalPadding = DensityUtil.dip2px(context, 9);

@@ -4,6 +4,7 @@
     <color name="progress_grey">#c1c1c1</color>
     <color name="content_border">#c8c7cc</color>
     <color name="header_bg">#0F7BCA</color>
+    <color name="bg_my_card">#0F7BCA</color>
     <color name="statebar_color">#0C68AB</color>
     <!-- 导航栏原来色值#1596d2 -->
     <color name="header_text">#ffffff</color>
@@ -82,7 +83,7 @@
 
 
     -->
-    <color name="msg_content_color">#8f8e94</color>
+    <color name="msg_content_color">#888888</color>
     <color name="msg_time_color">#4f87a2</color>
     <color name="msg_sendtime_color">#8f8e94</color>
     <color name="msg_name_color">#383838</color>

@@ -28,6 +28,8 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.SurfaceHolder;
 
+import com.inspur.emmcloud.util.LogUtils;
+
 import java.io.IOException;
 
 
@@ -285,11 +287,11 @@ public final class CameraManager {
 
 			/* ɨ����޸� */
 			DisplayMetrics metrics = context.getResources().getDisplayMetrics();
-			int width = (int) (metrics.widthPixels * 0.6);
+			int width = (int) (metrics.widthPixels * 0.55);
 			int height = (int) (width * 0.9);
 
 			int leftOffset = (screenResolution.x - width) / 2;
-			int topOffset = (screenResolution.y - height) / 3;
+			int topOffset = (int)((screenResolution.y - height) / 2.5);
 			framingRect = new Rect(leftOffset, topOffset, leftOffset + width,
 					topOffset + height);
 			Log.d(TAG, "Calculated framing rect: " + framingRect);
@@ -312,12 +314,22 @@ public final class CameraManager {
 			// rect.top = rect.top * cameraResolution.y / screenResolution.y;
 			// rect.bottom = rect.bottom * cameraResolution.y /
 			// screenResolution.y;
-
-			rect.left = rect.left * cameraResolution.y / screenResolution.x;
-			rect.right = rect.right * cameraResolution.y / screenResolution.x;
-			rect.top = rect.top * cameraResolution.x / screenResolution.y;
-			rect.bottom = rect.bottom * cameraResolution.x / screenResolution.y;
-
+			LogUtils.jasonDebug("rect.left="+rect.left);
+			LogUtils.jasonDebug("rect.right="+rect.right);
+			LogUtils.jasonDebug("rect.top="+rect.top);
+			LogUtils.jasonDebug("rect.bottom="+rect.bottom);
+			LogUtils.jasonDebug("rect.width="+rect.width());
+			LogUtils.jasonDebug("rect.height="+rect.height());
+			rect.left = rect.left * cameraResolution.y / screenResolution.x-100;
+			rect.right = rect.right * cameraResolution.y / screenResolution.x+100;
+			rect.top = rect.top * cameraResolution.x / screenResolution.y-100;
+			rect.bottom = rect.bottom * cameraResolution.x / screenResolution.y+100;
+			LogUtils.jasonDebug("rect.left="+rect.left);
+			LogUtils.jasonDebug("rect.right="+rect.right);
+			LogUtils.jasonDebug("rect.top="+rect.top);
+			LogUtils.jasonDebug("rect.bottom="+rect.bottom);
+			LogUtils.jasonDebug("rect.width="+rect.width());
+			LogUtils.jasonDebug("rect.height="+rect.height());
 			framingRectInPreview = rect;
 		}
 		return framingRectInPreview;

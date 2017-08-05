@@ -87,7 +87,7 @@ public class ImpActivity extends ImpBaseActivity {
         frameLayout = (FrameLayout) findViewById(Res.getWidgetID("videoContainer"));
         loadFailLayout = (LinearLayout) findViewById(Res.getWidgetID("load_error_layout"));
         webView = (ImpWebView) findViewById(Res.getWidgetID("webview"));
-        showLoadingDlg("");
+        showLoadingDlg(null);
         if (getIntent().hasExtra("is_zoomable")) {
             isZoomable = getIntent().getIntExtra("is_zoomable", 0);
             if (isZoomable == 0) {
@@ -406,8 +406,15 @@ public class ImpActivity extends ImpBaseActivity {
 
 
     public void showLoadingDlg(String content) {
-        if (!StringUtils.isBlank(content)){
+        if (content != null){
+            if (StringUtils.isBlank(content)){
+                loadingText.setVisibility(View.GONE);
+            }else {
+                loadingText.setVisibility(View.VISIBLE);
+            }
             loadingText.setText(content);
+        }else {
+            loadingText.setVisibility(View.VISIBLE);
         }
         loadingLayout.setVisibility(View.VISIBLE);
     }

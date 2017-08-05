@@ -156,7 +156,7 @@ final class CameraConfigurationManager {
 
   private Point findBestPreviewSizeValue(Camera.Parameters parameters,
 			Point screenResolution) {
-
+LogUtils.jasonDebug("findBestPreviewSizeValue--------------");
 		List<Camera.Size> rawSupportedSizes = parameters
 				.getSupportedPreviewSizes();
 		if (rawSupportedSizes == null) {

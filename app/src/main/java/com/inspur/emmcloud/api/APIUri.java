@@ -408,28 +408,8 @@ public class APIUri {
 		return oauthBaseUrl + "/token";
 	}
 	
-	/*******************************************Emm模块接口**************************************/
-	
-//	/**
-//	 * 获取emm相关的模块方法组合
-//	 * @param module
-//	 * @param method
-//	 * @return
-//	 */
-//	public static String getEmmUrl(String module,String method){
-//		return emmBaseUrl + "module=" + module + "&method=" + method;
-//	}
-//	
-//	/**
-//	 * 获取升级检测的Url
-//	 * @param module
-//	 * @param method
-//	 * @return
-//	 */
-//	public static String getCheckUpgrade(String module,String method){
-//		return "https://emm.inspur.com/api/" + module + "/" + method;
-//	}
-	
+
+
 	/******************************************底座应用接口*********************************/
 	/**
 	 * 获取appTab的顺序和可显示性
@@ -517,7 +497,7 @@ public class APIUri {
 	 * @return
 	 */
 	public static String checkUpgrade(){
-		return emmBaseUrl + "upgrade/checkVersion";
+        return emmBaseUrl + "v1/upgrade/checkVersion";
 	}
 	
 	/**

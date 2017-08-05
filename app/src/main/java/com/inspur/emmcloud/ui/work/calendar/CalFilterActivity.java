@@ -96,6 +96,7 @@ public class CalFilterActivity extends BaseActivity {
 
 	private void returnCalList() {
 		// TODO Auto-generated method stub
+		sendBoradcastReceiver();
 		Intent intent = new Intent();
 		intent.putExtra("calendarList", (Serializable) calendarList);
 		setResult(RESULT_OK, intent);
@@ -154,7 +155,6 @@ public class CalFilterActivity extends BaseActivity {
 						@Override
 						public void toggleToOn(View view) {
 							// TODO Auto-generated method stub
-							sendBoradcastReceiver();
 							statusSwitch.toggleSwitch(true);
 							MyCalendarOperationCacheUtils.saveMyCalendarOperation(getApplicationContext(), calendar.getId(), false);
 						}
@@ -162,7 +162,6 @@ public class CalFilterActivity extends BaseActivity {
 						@Override
 						public void toggleToOff(View view) {
 							// TODO Auto-generated method stub
-							sendBoradcastReceiver();
 							statusSwitch.toggleSwitch(false);
 							MyCalendarOperationCacheUtils.saveMyCalendarOperation(getApplicationContext(), calendar.getId(), true);
 						}
