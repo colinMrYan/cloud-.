@@ -57,9 +57,12 @@ public class ScanQrCodeUtils {
 //            LogUtils.YfcDebug("解析出现异常："+e.getMessage());
 //            e.printStackTrace();
 //        }
+        ToastUtils.show(context,msg);
+        LogUtils.YfcDebug("扫描到的信息是："+msg);
 
         Pattern pattern = Pattern.compile(URLMatcher.URL_PATTERN);
 //        !StringUtils.isBlank(urlHost)&&urlHost.equals("id.inspur.com")
+        msg = msg.trim();
         if(msg.startsWith("ecc-compont://auth")){
             LogUtils.YfcDebug("扫描到登录桌面版的路径");
             Intent intent = new Intent();
@@ -67,7 +70,8 @@ public class ScanQrCodeUtils {
             intent.putExtra("scanMsg",msg);
             context.startActivity(intent);
 //            loginDesktopCloudPlus(msg);
-        }else if(pattern.matcher(msg).matches()){
+//            pattern.matcher(msg).matches()
+        }else if(msg.startsWith("http")){
             Intent intent = new Intent();
             intent.setClass(context, ImpActivity.class);
             intent.putExtra("uri",msg);
