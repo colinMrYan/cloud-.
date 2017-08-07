@@ -143,6 +143,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
 
             }
         };
+        PreferencesUtils.putString(this,"pushFlag","");
 
     }
 /****************************通知相关（极光和华为推送）******************************************/
@@ -150,14 +151,17 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
      * 初始化推送，以后如需定制小米等厂家的推送服务可从这里定制
      */
     public void startPush() {
-        if (AppUtils.getIsHuaWei()) {
+        if (AppUtils.getIsHuaWei()&&canConnectHuawei()) {
             JPushInterface.stopPush(this);
             HuaWeiPushMangerUtils.getInstance(this).connect();
         } else {
-            // 设置开启日志,发布时请关闭日志
-            JPushInterface.setDebugMode(true);
             // 初始化 JPush
             JPushInterface.init(this);
+            if (JPushInterface.isPushStopped(this)) {
+                JPushInterface.resumePush(this);
+            }
+            // 设置开启日志,发布时请关闭日志
+            JPushInterface.setDebugMode(true);
             // 获取和存储RegId
             String pushRegId = JPushInterface
                     .getRegistrationID(getApplicationContext());
@@ -165,10 +169,19 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
                 PreferencesUtils.putString(getApplicationContext(), "JpushRegId",
                         pushRegId);
             }
-            if (JPushInterface.isPushStopped(this)) {
-                JPushInterface.resumePush(this);
-            }
         }
+    }
+
+    /**
+     * 判断是否可以连接华为推了送
+     * @return
+     */
+    private boolean canConnectHuawei() {
+        String pushFlag = PreferencesUtils.getString(this,"pushFlag","");
+        if(StringUtils.isBlank(pushFlag) || pushFlag.equals("huawei")){
+            return true;
+        }
+        return false;
     }
 
     /**

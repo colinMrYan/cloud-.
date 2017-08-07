@@ -47,9 +47,8 @@ public class JpushReceiver extends BroadcastReceiver {
 			Log.d(TAG, "[MyReceiver] 接收Registration Id : " + regId);
 			PreferencesUtils.putString(context, "JpushRegId", regId);
 			// send the Registration Id to your server...
-
 			// PreferencesUtils.put
-
+			((MyApplication)context.getApplicationContext()).startWebSocket();
 		} else if (JPushInterface.ACTION_MESSAGE_RECEIVED.equals(intent
 				.getAction())) {
 			Log.d(TAG,
