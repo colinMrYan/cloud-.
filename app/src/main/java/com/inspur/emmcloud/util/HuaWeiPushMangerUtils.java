@@ -118,6 +118,7 @@ public class HuaWeiPushMangerUtils implements HuaweiApiClient.ConnectionCallback
      */
     private void startJpush() {
         if (client != null) {
+            delToken();
             client.disconnect();
         }
         PreferencesUtils.putString(contextLocal, "pushFlag", "Jpush");
