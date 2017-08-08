@@ -43,6 +43,7 @@ public class SchemeHandleActivity extends Activity {
             Bundle bundle = new Bundle();
             switch (scheme) {
                 case "ecc-contact":
+                case "ecm-contact":
                     bundle.putString("uid",host);
                     if(host.startsWith("BOT")){
                         IntentUtils.startActivity(this, RobotInfoActivity.class,bundle);
