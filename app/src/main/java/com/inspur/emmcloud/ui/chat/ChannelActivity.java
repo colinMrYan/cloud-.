@@ -302,7 +302,6 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
                 if (msg.getSendStatus() != 1) {
                     return;
                 }
-
                 if (msgType.equals("res_file")) {
                     mid = msg.getMid();
                     bundle.putString("mid", mid);
@@ -510,12 +509,9 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
                     View childAt = msgListView.getChildAt(fakeMsgIndex
                             - firstVisiblePosition);
                     if (childAt != null) {
-                        ImageView refreshingImg = (ImageView) childAt.findViewById(R.id.refreshing_img);
-                        refreshingImg.clearAnimation();
-                        refreshingImg.setVisibility(View.GONE);
+                        adapter.getView(fakeMsgIndex,childAt,msgListView);
                     }
                 }
-
             } else {
                 msgList.add(realMsg);
                 adapter.notifyDataSetChanged();
@@ -639,14 +635,19 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
      * 显示adapter
      */
     private BaseAdapter adapter = new BaseAdapter() {
+
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             final Msg msg = msgList.get(position);
             String type = msg.getType();
             LayoutInflater vi = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
-            convertView = vi.inflate(R.layout.chat_msg_card_parent_view, null);
+            if (convertView == null) {
+                convertView = vi.inflate(R.layout.chat_msg_card_parent_view, null);
+            }
             RelativeLayout cardLayout = (RelativeLayout) convertView
                     .findViewById(R.id.card_layout);
+            cardLayout.removeAllViewsInLayout();
+            cardLayout.removeAllViews();
             showCommonView(convertView, position, cardLayout);
             View childView = null;
             if (type.equals("txt_comment") || type.equals("comment")) {
@@ -743,8 +744,12 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
                 refreshingImg.setVisibility(View.VISIBLE);
                 refreshingImg.startAnimation(refreshingAnimation);
             } else if (msg.getSendStatus() == 2) {
+                refreshingImg.clearAnimation();
                 refreshingImg.setVisibility(View.VISIBLE);
                 refreshingImg.setImageResource(R.drawable.ic_chat_msg_send_fail);
+            }else {
+                refreshingImg.clearAnimation();
+                refreshingImg.setVisibility(View.GONE);
             }
 
         }
@@ -762,6 +767,8 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
                     ((MyApplication) getApplicationContext()).getUid());
             ((View) convertView.findViewById(R.id.card_cover_view)).setBackgroundResource(isMyMsg ? R.drawable.ic_chat_msg_img_cover_arrow_right : R.drawable.ic_chat_msg_img_cover_arrow_left);
             LayoutParams params = (LayoutParams) cardLayout.getLayoutParams();
+            params.removeRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+            params.removeRule(RelativeLayout.ALIGN_LEFT);
             params.addRule(isMyMsg ? RelativeLayout.ALIGN_PARENT_RIGHT : RelativeLayout.ALIGN_LEFT);
             cardLayout.setLayoutParams(params);
         }
