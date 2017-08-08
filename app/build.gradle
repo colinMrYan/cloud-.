@@ -166,6 +166,7 @@ dependencies {
     compile 'org.jsoup:jsoup:1.9.2'
     compile 'com.zzhoujay.markdown:markdown:1.0.5'
     compile 'com.jakewharton:disklrucache:2.0.2' //Markdown引入 缓存
+    compile 'com.android.support:multidex:1.0.1'
 
 
     // React Naive Components
