@@ -177,7 +177,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
-                <data android:scheme="ecm-contact" />
+                <data android:scheme="ecc-contact" />
             </intent-filter>
 
             <intent-filter>
