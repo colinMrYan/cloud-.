@@ -5,8 +5,9 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 
 import com.huawei.hms.api.ConnectionResult;
-import com.huawei.hms.api.HuaweiApiAvailability;
 import com.huawei.hms.api.HuaweiApiClient;
+import com.huawei.hms.api.HuaweiApiClient.ConnectionCallbacks;
+import com.huawei.hms.api.HuaweiApiClient.OnConnectionFailedListener;
 import com.huawei.hms.support.api.client.PendingResult;
 import com.huawei.hms.support.api.push.HuaweiPush;
 import com.huawei.hms.support.api.push.TokenResult;
@@ -20,8 +21,7 @@ import static android.os.Looper.getMainLooper;
  * 华为推送模块，单独模块封装
  */
 
-public class HuaWeiPushMangerUtils implements HuaweiApiClient.ConnectionCallbacks, HuaweiApiClient.OnConnectionFailedListener,
-        HuaweiApiAvailability.OnUpdateListener {
+public class HuaWeiPushMangerUtils implements ConnectionCallbacks, OnConnectionFailedListener {
     private boolean mResolvingError = false;
     private static final int REQUEST_RESOLVE_ERROR = 1001;
     private static HuaWeiPushMangerUtils huaWeiPushMangerUtils;
@@ -65,12 +65,6 @@ public class HuaWeiPushMangerUtils implements HuaweiApiClient.ConnectionCallback
         client.connect();
     }
 
-
-    @Override
-    public void onUpdateFailed(@NonNull ConnectionResult connectionResult) {
-        // TODO: 处理result.getErrorCode()
-        mResolvingError = false;
-    }
 
     @Override
     public void onConnected() {

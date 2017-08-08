@@ -23,7 +23,7 @@ def enableProguardInReleaseBuilds = false
 
 android {
     compileSdkVersion 23
-    buildToolsVersion "23.0.3"
+    buildToolsVersion "25.0.0"
     aaptOptions.cruncherEnabled = false
     aaptOptions.useNewCruncher = false
 
@@ -164,7 +164,6 @@ dependencies {
     compile 'com.fashare2015:HoverView:1.0.1'
     compile 'pl.droidsonroids.gif:android-gif-drawable:1.2.7'
     compile 'org.jsoup:jsoup:1.9.2'
-    compile(name: 'HMS-SDK-2.4.0.300', ext: 'aar')
     compile 'com.zzhoujay.markdown:markdown:1.0.5'
     compile 'com.jakewharton:disklrucache:2.0.2' //Markdown引入 缓存
 
@@ -189,6 +188,6 @@ dependencies {
     compile 'commons-codec:commons-codec:20041127.091804'
     compile files('src/libs/jpush-android_v3.0.3.jar')
     compile files('src/libs/jcore-android_v1.1.1.jar')
-    //compile files('src/libs/mdm.jar')
+    compile files('src/libs/HMSSdkBase_2.5.2.300.jar')
+    compile files('src/libs/HMSSdkPush_2.5.2.300.jar')
 }
-repositories { flatDir { dirs 'aars' } }
