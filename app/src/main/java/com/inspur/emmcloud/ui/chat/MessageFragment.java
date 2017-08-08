@@ -49,6 +49,7 @@ import com.inspur.emmcloud.util.ChatCreateUtils.OnCreateGroupChannelListener;
 import com.inspur.emmcloud.util.DirectChannelUtils;
 import com.inspur.emmcloud.util.ImageDisplayUtils;
 import com.inspur.emmcloud.util.IntentUtils;
+import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.MsgCacheUtil;
 import com.inspur.emmcloud.util.MsgMatheSetCacheUtils;
 import com.inspur.emmcloud.util.MsgReadIDCacheUtils;
@@ -520,7 +521,6 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
                             addChannelToList(receivedMsg, receiveMsgChannel);
                             sortChannelList(displayChannelList);
                         }
-
 						break;
 					case RERESH_GROUP_ICON:
 						boolean isCreateNewGroupIcon = (Boolean) msg.obj;
@@ -1015,6 +1015,7 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 				break;
 			}
 		}
+		refreshIndexNotify();
 		if (adapter != null){
 			adapter.notifyDataSetChanged();
 		}
