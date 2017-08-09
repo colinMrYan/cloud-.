@@ -36,6 +36,7 @@ public class ScanQrCodeUtils {
     }
 
     public void handleActionWithMsg(String msg){
+        //暂时保留此处作为方案参考
 //        String urlHost = "";
 //        try {
 //            URL url = new URL(msg);
@@ -48,12 +49,10 @@ public class ScanQrCodeUtils {
 //        }
 //        ToastUtils.show(context,msg);
         LogUtils.YfcDebug("扫描到的信息是："+msg);
-
         Pattern pattern = Pattern.compile(URLMatcher.URL_PATTERN);
 //        !StringUtils.isBlank(urlHost)&&urlHost.equals("id.inspur.com")
         msg = msg.trim();
-        if(msg.startsWith("ecc-compont://auth")){
-            LogUtils.YfcDebug("扫描到登录桌面版的路径");
+//        if(msg.startsWith("ecc-compont://auth")){
 //            Intent intent = new Intent();
 //            intent.setClass(context, ScanQrCodeLoginActivity.class);
 //            intent.putExtra("scanMsg",msg);
@@ -61,7 +60,8 @@ public class ScanQrCodeUtils {
 //            loginDesktopCloudPlus(msg);
 //            pattern.matcher(msg).matches()
 //            msg.startsWith("http")
-        }else if(msg.startsWith("ecm-contact")){
+//        }else
+        if(isMatchCloudPlusProtrol(msg)){
             Uri uri = Uri.parse(msg);
             Intent intent = new Intent(Intent.ACTION_VIEW, uri);
             context.startActivity(intent);
@@ -73,6 +73,20 @@ public class ScanQrCodeUtils {
         }else {
             showUnKnownMsg(msg);
         }
+    }
+
+    /**
+     * 判断是否符合云+的协议栈
+     * @param msg
+     * @return
+     */
+    private boolean isMatchCloudPlusProtrol(String msg) {
+        if(msg.startsWith("ecm-contact")||msg.startsWith("ecc-component")||
+                msg.startsWith("ecc-app-react-native")||msg.startsWith("gs-msg")
+                ||msg.startsWith("ecc-channel")){
+            return true;
+        }
+        return false;
     }
 
 
