@@ -69,12 +69,9 @@ public class HuaWeiPushMangerUtils implements ConnectionCallbacks, OnConnectionF
     @Override
     public void onConnected() {
         PreferencesUtils.putString(contextLocal, "pushFlag", "huawei");
-        if (StringUtils.isBlank(PreferencesUtils.getString(contextLocal, "huawei_push_token", ""))) {
-            getToken();
-        } else {
-            if (((MyApplication) contextLocal.getApplicationContext()).isIndexActivityRunning()) {
-                WebSocketPush.getInstance(contextLocal).start();
-            }
+        getToken();
+        if (((MyApplication) contextLocal.getApplicationContext()).isIndexActivityRunning()) {
+            WebSocketPush.getInstance(contextLocal).start();
         }
         setPassByMsg(true);
     }
