@@ -2,9 +2,9 @@ package com.inspur.emmcloud.util;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 
 import com.inspur.emmcloud.ui.find.ScanResultActivity;
-import com.inspur.emmcloud.ui.login.ScanQrCodeLoginActivity;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.imp.api.ImpActivity;
 
@@ -36,18 +36,7 @@ public class ScanQrCodeUtils {
     }
 
     public void handleActionWithMsg(String msg){
-        String urlHost = "";
-//        ToastUtils.show(context,"扫描到的信息是："+msg);
-//        if(符合登录桌面版接口){
-//            loginDesktopCloudPlus(msg);
-//        }else if(符合打开某个应用){
-//            UriUtils.openApp(getActivity(),app);
-//        }else{
-//            ToastUtils.show(getActivity(),msg);
-//        }
-//        ToastUtils.show(getActivity(),"扫描到的信息是："+msg);
-
-
+//        String urlHost = "";
 //        try {
 //            URL url = new URL(msg);
 //            urlHost = url.getHost();
@@ -57,7 +46,7 @@ public class ScanQrCodeUtils {
 //            LogUtils.YfcDebug("解析出现异常："+e.getMessage());
 //            e.printStackTrace();
 //        }
-        ToastUtils.show(context,msg);
+//        ToastUtils.show(context,msg);
         LogUtils.YfcDebug("扫描到的信息是："+msg);
 
         Pattern pattern = Pattern.compile(URLMatcher.URL_PATTERN);
@@ -65,13 +54,18 @@ public class ScanQrCodeUtils {
         msg = msg.trim();
         if(msg.startsWith("ecc-compont://auth")){
             LogUtils.YfcDebug("扫描到登录桌面版的路径");
-            Intent intent = new Intent();
-            intent.setClass(context, ScanQrCodeLoginActivity.class);
-            intent.putExtra("scanMsg",msg);
-            context.startActivity(intent);
+//            Intent intent = new Intent();
+//            intent.setClass(context, ScanQrCodeLoginActivity.class);
+//            intent.putExtra("scanMsg",msg);
+//            context.startActivity(intent);
 //            loginDesktopCloudPlus(msg);
 //            pattern.matcher(msg).matches()
-        }else if(msg.startsWith("http")){
+//            msg.startsWith("http")
+        }else if(msg.startsWith("ecm-contact")){
+            Uri uri = Uri.parse(msg);
+            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+            context.startActivity(intent);
+        }else if(pattern.matcher(msg).matches()){
             Intent intent = new Intent();
             intent.setClass(context, ImpActivity.class);
             intent.putExtra("uri",msg);
@@ -81,19 +75,6 @@ public class ScanQrCodeUtils {
         }
     }
 
-//    /**
-//     * 登录云+桌面版
-//     *
-//     * @param msg
-//     */
-//    private void loginDesktopCloudPlus(String msg) {
-//        AppAPIService appAPIService = new AppAPIService(context);
-//        appAPIService.setAPIInterface(new WebService());
-//        if(NetUtils.isNetworkConnected(context)){
-//            loadingDialog.show();
-//            appAPIService.sendLoginDesktopCloudPlusInfo(msg);
-//        }
-//    }
 
     /**
      * 展示扫描到的信息
@@ -106,21 +87,5 @@ public class ScanQrCodeUtils {
         context.startActivity(intent);
     }
 
-//    class WebService extends APIInterfaceInstance{
-//        @Override
-//        public void returnLoginDesktopCloudPlusSuccess(LoginDesktopCloudPlusBean loginDesktopCloudPlusBean) {
-//            if(loadingDialog != null && loadingDialog.isShowing()){
-//                loadingDialog.dismiss();
-//            }
-//            ToastUtils.show(context,"登录成功");
-//        }
-//
-//        @Override
-//        public void returnLoginDesktopCloudPlusFail(String error, int errorCode) {
-//            if(loadingDialog != null && loadingDialog.isShowing()){
-//                loadingDialog.dismiss();
-//            }
-//            WebServiceMiddleUtils.hand(context,error,errorCode);
-//        }
-//    }
+
 }
