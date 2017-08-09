@@ -5,7 +5,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:background="@drawable/message_popwindow_list"
-    android:orientation="vertical"
+    android:paddingTop="8dp"
     android:paddingLeft="22dp"
     android:paddingRight="20dp">
 
@@ -13,8 +13,8 @@
         android:id="@+id/message_create_group_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="9dp"
-        android:layout_marginTop="15dp">
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="10dp">
 
         <ImageView
             android:id="@+id/message_create_group_img"
@@ -71,7 +71,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_toRightOf="@id/message_scan_img"
-            android:layout_marginLeft="12dp"
+            android:layout_marginLeft="15dp"
             android:background="@color/transparent"
             android:clickable="false"
             android:gravity="center"
