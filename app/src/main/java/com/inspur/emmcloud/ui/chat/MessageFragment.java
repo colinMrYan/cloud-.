@@ -376,22 +376,6 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
             }
         });
 
-		//暂时没有用上的代码，布局上没有显示出来，通讯录相关
-//        RelativeLayout contactLayout = (RelativeLayout) contentView
-//                .findViewById(R.id.message_contact_layout);
-//        contactLayout.setOnClickListener(new OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Bundle bundle = new Bundle();
-//                bundle.putInt("select_content", 4);
-//                bundle.putBoolean("isMulti_select", false);
-//                bundle.putString("title", getActivity().getString(R.string.adress_list));
-//                IntentUtils.startActivity(getActivity(),
-//                        ContactSearchActivity.class, bundle);
-//                recordUserClickContact();
-//                popupWindow.dismiss();
-//            }
-//        });
 
         RelativeLayout scanLayout = (RelativeLayout) contentView.findViewById(R.id.message_scan_layout);
         scanLayout.setOnClickListener(new OnClickListener() {
