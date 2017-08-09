@@ -137,7 +137,7 @@ public class WebSocketPush {
      */
 	private String getPushIdByChangeShang() {
 		String pushid = "";
-		if(AppUtils.getIsHuaWei()){
+		if(AppUtils.getIsHuaWei()&&canConnectHuawei()){
 			//需要对华为单独推送的时候解开这里
 			String hwtoken = PreferencesUtils.getString(context,"huawei_push_token","");
 			if(!StringUtils.isBlank(hwtoken)){
@@ -147,6 +147,18 @@ public class WebSocketPush {
 			pushid = PreferencesUtils.getString(context, "JpushRegId", "");
 		}
 		return pushid;
+	}
+
+	/**
+	 * 判断是否可以连接华为推了送
+	 * @return
+	 */
+	private boolean canConnectHuawei() {
+		String pushFlag = PreferencesUtils.getString(context,"pushFlag","");
+		if(StringUtils.isBlank(pushFlag) || pushFlag.equals("huawei")){
+			return true;
+		}
+		return false;
 	}
 
 	/**

@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -975,8 +976,8 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
                     R.color.black) : getResources().getColor(
                     R.color.msg_content_color));
             holder.channelTimeText.setTextColor(isHasUnReadMsg ? getResources().getColor(
-                    R.color.msg_time_color) : getResources().getColor(
-                    R.color.msg_content_color));
+                    R.color.msg_time_color) :
+					Color.parseColor("#b8b8b8"));
             if (isHasUnReadMsg) {
                 holder.channelNotReadCountText.setText(unReadCount > 99 ? "99+" : "" + unReadCount);
             }

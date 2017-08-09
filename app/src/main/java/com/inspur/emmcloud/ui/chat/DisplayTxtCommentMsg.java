@@ -100,7 +100,7 @@ public class DisplayTxtCommentMsg {
         RelativeLayout rootLayout = (RelativeLayout) convertView
                 .findViewById(R.id.root_layout);
         rootLayout.setBackgroundColor(context.getResources().getColor(
-                isMyMsg ? R.color.header_bg : R.color.white));
+                isMyMsg ? R.color.bg_my_card : R.color.white));
         commentContentText.setTextColor(context.getResources().getColor(
                 isMyMsg ? R.color.white : R.color.black));
         commentTitleText.setTextColor(context.getResources().getColor(

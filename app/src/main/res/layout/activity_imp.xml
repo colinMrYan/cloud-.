@@ -164,7 +164,6 @@
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_gravity="center_vertical"
-                android:layout_marginRight="25dp"
                 app:borderWidth="1dp" />
 
             <TextView
@@ -172,8 +171,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
+                android:paddingLeft="25dp"
                 android:text="@string/loading_text"
-                android:paddingRight="30dp"
                 android:textColor="#333333"
                 android:textSize="@dimen/content_normal_textsize" />
 

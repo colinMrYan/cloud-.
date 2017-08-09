@@ -2,13 +2,13 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/ic_work_bg"
     >
 
     <RelativeLayout
         android:id="@+id/header_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/header_bg"
         >
 
 
@@ -16,7 +16,7 @@
             android:id="@+id/work_header_layout"
             android:layout_width="match_parent"
             android:layout_height="@dimen/header_height"
-            android:background="@color/header_bg" >
+           >
 
             <ImageView
                 android:id="@+id/work_config_img2"
@@ -104,6 +104,7 @@
         android:id="@+id/refresh_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/content_bg"
         android:layout_below="@id/header_layout">
 
         <include layout="@layout/pull_refresh_head" />
@@ -114,7 +115,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:divider="#00000000"
-            android:dividerHeight="10dp"
+            android:dividerHeight="0dp"
             android:listSelector="#00000000"
             android:paddingLeft="10dp"
             android:paddingRight="10dp" />
