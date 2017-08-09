@@ -12,7 +12,6 @@ import com.huawei.hms.support.api.client.PendingResult;
 import com.huawei.hms.support.api.push.HuaweiPush;
 import com.huawei.hms.support.api.push.TokenResult;
 import com.inspur.emmcloud.MyApplication;
-import com.inspur.emmcloud.push.WebSocketPush;
 
 import static android.os.Looper.getMainLooper;
 
@@ -70,9 +69,6 @@ public class HuaWeiPushMangerUtils implements ConnectionCallbacks, OnConnectionF
     public void onConnected() {
         PreferencesUtils.putString(contextLocal, "pushFlag", "huawei");
         getToken();
-        if (((MyApplication) contextLocal.getApplicationContext()).isIndexActivityRunning()) {
-            WebSocketPush.getInstance(contextLocal).start();
-        }
         setPassByMsg(true);
     }
 
