@@ -42,6 +42,7 @@ public class SchemeHandleActivity extends Activity {
             String host = uri.getHost();
             Bundle bundle = new Bundle();
             switch (scheme) {
+                case "ecc-contact":
                 case "ecm-contact":
                     bundle.putString("uid",host);
                     if(host.startsWith("BOT")){

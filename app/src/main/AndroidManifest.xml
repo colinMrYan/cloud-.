@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.inspur.emmcloud"
     android:configChanges="locale|layoutDirection"
-    android:versionCode="33"
-    android:versionName="1.2.4">
+    android:versionCode="34"
+    android:versionName="1.2.5">
 
     <uses-sdk
         android:minSdkVersion="16"
@@ -179,8 +179,18 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
+                <data android:scheme="ecc-contact" />
+            </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
                 <data android:scheme="ecm-contact" />
             </intent-filter>
+
 
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />

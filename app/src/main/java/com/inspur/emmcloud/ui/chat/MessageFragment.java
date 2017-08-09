@@ -623,7 +623,6 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
                             addChannelToList(receivedMsg, receiveMsgChannel);
                             sortChannelList(displayChannelList);
                         }
-
 						break;
 					case RERESH_GROUP_ICON:
 						boolean isCreateNewGroupIcon = (Boolean) msg.obj;
@@ -1118,6 +1117,7 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 				break;
 			}
 		}
+		refreshIndexNotify();
 		if (adapter != null){
 			adapter.notifyDataSetChanged();
 		}
