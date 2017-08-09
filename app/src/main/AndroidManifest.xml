@@ -127,6 +127,8 @@
             android:name=".ui.login.LoginActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"></activity>
+        <activity android:name=".ui.login.ScanQrCodeLoginActivity"
+            android:screenOrientation="portrait"/>
         <activity
             android:name="ui.login.NewUserActivity"
             android:launchMode="singleTask"

@@ -529,6 +529,9 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
             getActivity().unregisterReceiver(mBroadcastReceiver);
             mBroadcastReceiver = null;
         }
+        if(popupWindow != null && popupWindow.isShowing()){
+            popupWindow.dismiss();
+        }
     }
 
     /**

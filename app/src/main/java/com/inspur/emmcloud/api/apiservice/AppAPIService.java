@@ -456,8 +456,13 @@ public class AppAPIService {
 		});
 	}
 
-	public void sendLoginDesktopCloudPlusInfo(){
-		final String completeUrl = APIUri.getLoginDesktopCloudPlusUrl();
+	/**
+	 * 扫一扫登录
+	 * @param url
+	 */
+	public void sendLoginDesktopCloudPlusInfo(final String url){
+//		final String completeUrl = APIUri.getLoginDesktopCloudPlusUrl();
+		final String completeUrl = url;
 		RequestParams params = ((MyApplication) context.getApplicationContext())
 				.getHttpRequestParams(completeUrl);
 		x.http().post(params, new APICallback(context,completeUrl) {
@@ -476,7 +481,7 @@ public class AppAPIService {
 				new OauthUtils(new OauthCallBack() {
 					@Override
 					public void reExecute() {
-						sendLoginDesktopCloudPlusInfo();
+						sendLoginDesktopCloudPlusInfo(url);
 					}
 
 					@Override
