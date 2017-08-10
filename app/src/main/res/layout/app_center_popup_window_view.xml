@@ -2,7 +2,25 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="@drawable/message_popwindow_list">
+    >
+    <ImageView
+        android:id="@+id/meesage_popwindow_arrow_img"
+        android:layout_width="12dp"
+        android:layout_height="8dp"
+        android:layout_marginRight="22dp"
+        android:layout_alignParentRight="true"
+        android:adjustViewBounds="true"
+        android:scaleType="fitXY"
+        android:src="@drawable/message_popwindow_list_arrow" />
+
+    <RelativeLayout
+        android:id="@+id/message_popwindow_outsize_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="10dp"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/meesage_popwindow_arrow_img"
+        android:background="@drawable/shape_message_pop_round_blue_layout">
     <TextView
         android:id="@+id/app_change_btn"
         android:layout_width="wrap_content"
@@ -10,6 +28,9 @@
         android:layout_marginLeft="8dp"
         android:layout_marginTop="6dp"
         android:layout_marginBottom="6dp"
+        android:paddingTop="5dp"
+        android:paddingBottom="4dp"
+        android:paddingLeft="3dp"
         android:clickable="true"
         android:paddingRight="80dp"
         android:text="@string/edit"
@@ -22,6 +43,7 @@
         android:layout_below="@id/app_change_btn"
         android:layout_marginLeft="6dp"
         android:layout_marginTop="6dp"
+        android:layout_marginRight="10dp"
         android:layout_marginBottom="6dp"
         android:orientation="horizontal">
         <Button
@@ -53,5 +75,5 @@
         android:layout_alignRight="@id/app_hide_layout"
         android:layout_below="@id/app_change_btn"
         android:background="#3895D9" />
-
+</RelativeLayout>
 </RelativeLayout>

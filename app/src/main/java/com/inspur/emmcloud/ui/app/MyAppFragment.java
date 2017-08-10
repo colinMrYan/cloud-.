@@ -552,6 +552,13 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
                 LinearLayout.LayoutParams.WRAP_CONTENT, true);
         popupWindow.setTouchable(true);
 
+        popupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+                backgroundAlpha(1.0f);
+            }
+        });
+
         switchView.setOnStateChangedListener(new OnStateChangedListener() {
             @Override
             public void toggleToOn(View view) {
@@ -593,9 +600,22 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
         // 这里是API的一个bug
         popupWindow.setBackgroundDrawable(getResources().getDrawable(
                 R.drawable.pop_window_view_tran));
+        backgroundAlpha(0.8f);
         // 设置好参数之后再show
         popupWindow.showAsDropDown(view);
     }
+
+    /**
+     * 设置添加屏幕的背景透明度
+     *
+     * @param bgAlpha
+     */
+    public void backgroundAlpha(float bgAlpha) {
+        WindowManager.LayoutParams lp = getActivity().getWindow().getAttributes();
+        lp.alpha = bgAlpha; //0.0-1.0
+        getActivity().getWindow().setAttributes(lp);
+    }
+
 
     /**
      * 存储是否需要显示常用app
