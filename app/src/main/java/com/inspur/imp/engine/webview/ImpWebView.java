@@ -3,7 +3,9 @@ package com.inspur.imp.engine.webview;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
@@ -11,6 +13,7 @@ import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.webkit.DownloadListener;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebBackForwardList;
 import android.webkit.WebHistoryItem;
@@ -22,6 +25,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.inspur.emmcloud.bean.FinishActivityBean;
 import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.ParseHtmlUtils;
 import com.inspur.emmcloud.util.StringUtils;
@@ -31,6 +35,7 @@ import com.inspur.imp.api.iLog;
 import com.inspur.imp.plugin.PluginMgr;
 import com.inspur.imp.util.DeviceInfo;
 
+import org.greenrobot.eventbus.EventBus;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
@@ -38,9 +43,9 @@ import java.lang.reflect.Method;
 
 /**
  * WebView控件类
- * 
+ *
  * @author 浪潮移动应用平台(IMP)产品组
- * 
+ *
  */
 @SuppressLint("NewApi")
 public class ImpWebView extends WebView {
@@ -78,7 +83,7 @@ public class ImpWebView extends WebView {
 		super(context,attrs);
 		this.context = context;
 	}
-	
+
 	public void setProperty( TextView titleText, LinearLayout loadFailLayout,FrameLayout layout){
 		this.titleText =titleText;
 		this.loadFailLayout = loadFailLayout;
@@ -108,7 +113,7 @@ public class ImpWebView extends WebView {
 		};
 
 	}
-	
+
 	//imp修改处
 	public ImpWebChromeClient getWebChromeClient(){
 		return impWebChromeClient;
@@ -119,6 +124,19 @@ public class ImpWebView extends WebView {
 		//显示webview网页标题
 		this.addJavascriptInterface(new GetTitle(), "getTitle");
 		initPlugin();
+		setDownloadListener(new MyWebViewDownLoadListener());
+	}
+
+	private class MyWebViewDownLoadListener implements DownloadListener {
+
+		@Override
+		public void onDownloadStart(String url, String userAgent, String contentDisposition, String mimetype,
+									long contentLength) {
+			Uri uri = Uri.parse(url);
+			Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+			getContext().startActivity(intent);
+			EventBus.getDefault().post(new FinishActivityBean("webview"));
+		}
 	}
 
 	public class GetTitle {
@@ -179,26 +197,26 @@ public class ImpWebView extends WebView {
 				int x = (int) event.getX();
 				int y = (int) event.getY();
 				switch (event.getAction()) {
-				case MotionEvent.ACTION_DOWN:
-					mLastMotionX = x;
-					mLastMotionY = y;
-					break;
-				case MotionEvent.ACTION_UP:
-					if(mLastMotionX-80>event.getX()){
-						loadUrl("javascript:if(window.showRight){window.showRight();}");
-					}else if(mLastMotionX<event.getX()-80){
-						loadUrl("javascript:if(window.showLeft){window.showLeft();}");
-					}
-					if (!v.hasFocus()) {
-						v.requestFocus();
-					}
-					break;
+					case MotionEvent.ACTION_DOWN:
+						mLastMotionX = x;
+						mLastMotionY = y;
+						break;
+					case MotionEvent.ACTION_UP:
+						if(mLastMotionX-80>event.getX()){
+							loadUrl("javascript:if(window.showRight){window.showRight();}");
+						}else if(mLastMotionX<event.getX()-80){
+							loadUrl("javascript:if(window.showLeft){window.showLeft();}");
+						}
+						if (!v.hasFocus()) {
+							v.requestFocus();
+						}
+						break;
 				}
 				return false;
 			}
 		});
 	}
-	
+
 	@Override
 	public void loadUrl(String url) {
 		super.loadUrl(url);
@@ -418,7 +436,7 @@ public class ImpWebView extends WebView {
 	public void setViewname(String viewname) {
 		this.viewname = viewname;
 	}
-	
+
 	@Override
 	protected void onScrollChanged(int l, int t, int oldl, int oldt) {
 //		LayoutParams lp = (LayoutParams) progressbar.getLayoutParams();
@@ -427,6 +445,7 @@ public class ImpWebView extends WebView {
 //		progressbar.setLayoutParams(lp);
 		super.onScrollChanged(l, t, oldl, oldt);
 	}
+
 
 
 }
