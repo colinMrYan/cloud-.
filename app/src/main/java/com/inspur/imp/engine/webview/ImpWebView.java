@@ -132,18 +132,10 @@ public class ImpWebView extends WebView {
 		@Override
 		public void onDownloadStart(String url, String userAgent, String contentDisposition, String mimetype,
 									long contentLength) {
-			LogUtils.YfcDebug( "url="+url);
-			LogUtils.YfcDebug( "userAgent="+userAgent);
-			LogUtils.YfcDebug( "contentDisposition="+contentDisposition);
-			LogUtils.YfcDebug( "mimetype="+mimetype);
-			LogUtils.YfcDebug("contentLength="+contentLength);
 			Uri uri = Uri.parse(url);
 			Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-			intent.setClassName("com.android.browser","com.android.browser.BrowserActivity");
 			getContext().startActivity(intent);
 			EventBus.getDefault().post(new FinishActivityBean("webview"));
-			LogUtils.YfcDebug("下载链接的scheme："+uri.getScheme());
-
 		}
 	}
 
