@@ -134,27 +134,27 @@ public class SettingActivity extends BaseActivity {
 			finish();
 			break;
 		case R.id.signout_layout:
-			DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
-
-				@Override
-				public void onClick(DialogInterface dialog, int which) {
-					// TODO Auto-generated method stub
-					if (which == -1) {
-						signout();
-					}
-				}
-			};
-			EasyDialog.showDialog(SettingActivity.this,
-					getString(R.string.prompt),
-					getString(R.string.if_confirm_signout),
-					getString(R.string.ok), getString(R.string.cancel),
-					dialogClickListener, true);
+//			DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+//
+//				@Override
+//				public void onClick(DialogInterface dialog, int which) {
+//					// TODO Auto-generated method stub
+//					if (which == -1) {
+//						signout();
+//					}
+//				}
+//			};
+//			EasyDialog.showDialog(SettingActivity.this,
+//					getString(R.string.prompt),
+//					getString(R.string.if_confirm_signout),
+//					getString(R.string.ok), getString(R.string.cancel),
+//					dialogClickListener, true);
 
 
 //			intent.setClass(SettingActivity.this, GestureLoginActivity.class);
 //			startActivity(intent);
-//            intent.setClass(SettingActivity.this, CreateGestureActivity.class);
-//            startActivity(intent);
+            intent.setClass(SettingActivity.this, CreateGestureActivity.class);
+            startActivity(intent);
 
 
 			break;
