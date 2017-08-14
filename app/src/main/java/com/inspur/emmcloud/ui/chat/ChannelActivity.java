@@ -653,6 +653,7 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
             showCommonView(convertView, position, cardLayout);
             View childView = null;
             if (type.equals("txt_comment") || type.equals("comment")) {
+                (convertView.findViewById(R.id.card_cover_view)).setVisibility(View.GONE);
                 childView = vi.inflate(
                         R.layout.chat_msg_card_child_text_comment_view, null);
                 DisplayTxtCommentMsg.displayCommentMsg(ChannelActivity.this,
@@ -700,6 +701,7 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
                 DisplayResFileMsg.displayResFileMsg(ChannelActivity.this,
                         childView, msg);
             } else if (type.equals("txt_rich")) {
+                (convertView.findViewById(R.id.card_cover_view)).setVisibility(View.GONE);
                 childView = vi.inflate(
                         R.layout.chat_msg_card_child_text_rich_view, null);
                 DisplayTxtRichMsg.displayRichTextMsg(ChannelActivity.this,
@@ -767,6 +769,7 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
             // TODO Auto-generated method stub
             boolean isMyMsg = msg.getUid().equals(
                     ((MyApplication) getApplicationContext()).getUid());
+            (convertView.findViewById(R.id.card_cover_view)).setVisibility(View.VISIBLE);
             ((View) convertView.findViewById(R.id.card_cover_view)).setBackgroundResource(isMyMsg ? R.drawable.ic_chat_msg_img_cover_arrow_right : R.drawable.ic_chat_msg_img_cover_arrow_left);
             LayoutParams params = (LayoutParams) cardLayout.getLayoutParams();
             params.removeRule(RelativeLayout.ALIGN_PARENT_RIGHT);
