@@ -984,9 +984,9 @@ public class IndexActivity extends BaseFragmentActivity implements
                     .getResource().getDefaultX();
             if(screenType.equals("2k")){
                 downloadSplashPage(UriUtils.getPreviewUri(defaultBean.getXxxhdpi()),defaultBean.getXxxhdpi());
-            }else if(screenType.equals("xxxhdpi")){
-                downloadSplashPage(UriUtils.getPreviewUri(defaultBean.getXxhdpi()),defaultBean.getXxhdpi());
             }else if(screenType.equals("xxhdpi")){
+                downloadSplashPage(UriUtils.getPreviewUri(defaultBean.getXxhdpi()),defaultBean.getXxhdpi());
+            }else if(screenType.equals("xhdpi")){
                 downloadSplashPage(UriUtils.getPreviewUri(defaultBean.getXhdpi()),defaultBean.getXhdpi());
             }else{
                 downloadSplashPage(UriUtils.getPreviewUri(defaultBean.getHdpi()),defaultBean.getHdpi());
