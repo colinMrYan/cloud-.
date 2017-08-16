@@ -196,7 +196,11 @@ public class JpushReceiver extends BroadcastReceiver {
         }
     }
 
-    // 打印所有的 intent extra 数据
+    /**
+     * 打印所有的 intent extra 数据
+     * @param bundle
+     * @return
+     */
     private static String printBundle(Bundle bundle) {
         StringBuilder sb = new StringBuilder();
         for (String key : bundle.keySet()) {

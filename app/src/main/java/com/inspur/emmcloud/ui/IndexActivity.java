@@ -45,7 +45,6 @@ import com.inspur.emmcloud.bean.SplashPageBean;
 import com.inspur.emmcloud.callback.CommonCallBack;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.interf.OnTabReselectListener;
-import com.inspur.emmcloud.interf.OnWorkFragmentDataChanged;
 import com.inspur.emmcloud.service.CoreService;
 import com.inspur.emmcloud.service.PVCollectService;
 import com.inspur.emmcloud.ui.app.MyAppFragment;
@@ -104,7 +103,6 @@ public class IndexActivity extends BaseFragmentActivity implements
     public MyFragmentTabHost mTabHost;
     private static TextView newMessageTipsText;
     private static RelativeLayout newMessageTipsLayout;
-    private OnWorkFragmentDataChanged workFragmentListener;
     private WeakHandler handler;
     private boolean isHasCacheContact = false;
     private TipsView tipsView;
@@ -428,7 +426,6 @@ public class IndexActivity extends BaseFragmentActivity implements
         tipsView = (TipsView) findViewById(R.id.tip);
         mTabHost = (MyFragmentTabHost) findViewById(android.R.id.tabhost);
         mTabHost.setup(this, getSupportFragmentManager(), R.id.realtabcontent);
-//        MainTab[] tabs = handleAppTabs();
         handleAppTabs();
     }
 
@@ -786,30 +783,6 @@ public class IndexActivity extends BaseFragmentActivity implements
                 mTabHost.getCurrentTabTag());
     }
 
-    @Override
-    protected void onActivityResult(int arg0, int arg1, Intent arg2) {
-        // TODO Auto-generated method stub
-        super.onActivityResult(arg0, arg1, arg2);
-        if (arg1 == RESULT_OK) {
-
-            switch (arg0) {
-                case 3:
-                    Fragment currentFragment = getCurrentFragment();
-                    if (currentFragment != null && workFragmentListener != null) {
-                        workFragmentListener.onWorkFragmentDataChanged();
-                    }
-                    break;
-                case 4:
-//				MyAppFragment myAppFragment = (MyAppFragment) getCurrentFragment();
-//				myAppFragment.onActivityResult(arg0, arg1, arg2);
-                    break;
-                default:
-                    break;
-            }
-        }
-
-    }
-
     /**
      * 检查闪屏页更新
      */
@@ -829,10 +802,6 @@ public class IndexActivity extends BaseFragmentActivity implements
         }
     }
 
-    public void setOnWorkFragmentDataChanged(OnWorkFragmentDataChanged l) {
-        this.workFragmentListener = l;
-    }
-
 
     public class WebService extends APIInterfaceInstance {
 
@@ -848,13 +817,11 @@ public class IndexActivity extends BaseFragmentActivity implements
                             .getAllContactList();
                     List<Contact> modifyContactLsit = getAllContactResult
                             .getModifyContactList();
-//					JSONArray deleteIdArray = getAllContactResult.getDeleteIdArray();
                     List<String> deleteContactIdList = getAllContactResult.getDeleteContactIdList();
                     ContactCacheUtils.saveContactList(getApplicationContext(),
                             allContactList);
                     ContactCacheUtils.saveContactList(getApplicationContext(),
                             modifyContactLsit);
-//					ContactCacheUtils.deleteContact(IndexActivity.this, deleteIdArray);
                     ContactCacheUtils.deleteContact(IndexActivity.this, deleteContactIdList);
                     ContactCacheUtils.saveLastUpdateTime(getApplicationContext(),
                             getAllContactResult.getLastUpdateTime());
@@ -1037,9 +1004,6 @@ public class IndexActivity extends BaseFragmentActivity implements
                 SplashPageBean splashPageBeanLocalOld = new SplashPageBean(splashInfoOld);
                 String splashInfoShowing = PreferencesByUserAndTanentUtils.getString(IndexActivity.this,"splash_page_info","");
                 SplashPageBean splashPageBeanLocalShowing = new SplashPageBean(splashInfoShowing);
-//                ReactNativeFlow.moveFolder(MyAppConfig.getSplashPageImageShowPath(IndexActivity.this,
-//                        userId, "splash"),MyAppConfig.getSplashPageImageLastVersionPath(IndexActivity.this,userId)
-//                );
                 if(file.exists()){
                     String filelSha256 =  FileSafeCode.getFileSHA256(file);
                     String screenType = AppUtils.getScreenType(IndexActivity.this);
