@@ -152,8 +152,6 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
      */
     public void startPush() {
         if (AppUtils.getIsHuaWei()&&canConnectHuawei()) {
-            //去掉了此处
-//            JPushInterface.stopPush(this);
             HuaWeiPushMangerUtils.getInstance(this).connect();
         } else {
             // 初始化 JPush

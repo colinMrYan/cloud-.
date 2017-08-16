@@ -13,12 +13,7 @@ import com.inspur.emmcloud.util.PreferencesUtils;
 /**
  * Created by yufuchang on 2017/6/20.
  */
-
-public class HuaWeiPushReceiver extends PushReceiver{
-    private static final String TAG = "HuaWei PushReceiver";
-
-
-
+public class HuaWeiPushReceiver extends PushReceiver {
     /**
      * 连接上华为服务时会调用,可以获取token值
      *
@@ -28,11 +23,8 @@ public class HuaWeiPushReceiver extends PushReceiver{
      */
     @Override
     public void onToken(Context context, String token, Bundle extras) {
-//        String belongId = extras.getString("belongId");
-//        String content = "get token and belongId successful, token = " + token + ",belongId = " + belongId;
-//        LogUtils.YfcDebug(content);
-        PreferencesUtils.putString(context,"huawei_push_token",token);
-        if(((MyApplication)context.getApplicationContext()).isIndexActivityRunning() ){
+        PreferencesUtils.putString(context, "huawei_push_token", token);
+        if (((MyApplication) context.getApplicationContext()).isIndexActivityRunning()) {
             WebSocketPush.getInstance(context).start();
         }
     }
@@ -48,8 +40,7 @@ public class HuaWeiPushReceiver extends PushReceiver{
     @Override
     public boolean onPushMsg(Context context, byte[] msg, Bundle bundle) {
         try {
-            String content = "-------Receive a Push pass-by message： " + new String(msg, "UTF-8");
-            LogUtils.YfcDebug(content);
+            LogUtils.YfcDebug("接收到华为透传消息： " + new String(msg, "UTF-8"));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -81,13 +72,8 @@ public class HuaWeiPushReceiver extends PushReceiver{
      */
     @Override
     public void onPushState(Context context, boolean pushState) {
-        try {
-            String content = "---------The current push status： " + (pushState ? "Connected" :
-                    "Disconnected");
-            LogUtils.YfcDebug(content);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        LogUtils.YfcDebug("连接状态发生改变是否处于连接状态： " + (pushState ? "Connected" :
+                "Disconnected"));
     }
 
 }

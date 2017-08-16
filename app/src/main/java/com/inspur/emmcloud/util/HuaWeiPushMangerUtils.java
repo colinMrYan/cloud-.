@@ -19,10 +19,7 @@ import static android.os.Looper.getMainLooper;
  * Created by yufuchang on 2017/6/20.
  * 华为推送模块，单独模块封装
  */
-
 public class HuaWeiPushMangerUtils implements ConnectionCallbacks, OnConnectionFailedListener {
-    private boolean mResolvingError = false;
-    private static final int REQUEST_RESOLVE_ERROR = 1001;
     private static HuaWeiPushMangerUtils huaWeiPushMangerUtils;
     private HuaweiApiClient client;
     private Context contextLocal;
@@ -32,7 +29,6 @@ public class HuaWeiPushMangerUtils implements ConnectionCallbacks, OnConnectionF
             synchronized (HuaWeiPushMangerUtils.class) {
                 if (huaWeiPushMangerUtils == null) {
                     huaWeiPushMangerUtils = new HuaWeiPushMangerUtils(context);
-
                 }
             }
         }
@@ -41,15 +37,6 @@ public class HuaWeiPushMangerUtils implements ConnectionCallbacks, OnConnectionF
 
     private HuaWeiPushMangerUtils(final Context context) {
         contextLocal = context;
-//        HuaweiIdSignInOptions options = new HuaweiIdSignInOptions.Builder(HuaweiIdSignInOptions.DEFAULT_SIGN_IN)
-//                .build();
-//            client = new HuaweiApiClient.Builder(activity) //
-//                    .addApi(HuaweiId.SIGN_IN_API, options) //
-//                    .addScope(HuaweiId.HUAEWEIID_BASE_SCOPE) //
-//                    .addConnectionCallbacks(this) //
-//                    .addOnConnectionFailedListener(this) //
-//                    .build();
-
         client = new HuaweiApiClient.Builder(context)
                 .addApi(HuaweiPush.PUSH_API)
                 .addConnectionCallbacks(this)
@@ -58,12 +45,11 @@ public class HuaWeiPushMangerUtils implements ConnectionCallbacks, OnConnectionF
     }
 
     /**
-     * 连接方法单列
+     * 华为建立连接方法
      */
     public void connect() {
         client.connect();
     }
-
 
     @Override
     public void onConnected() {
@@ -79,16 +65,13 @@ public class HuaWeiPushMangerUtils implements ConnectionCallbacks, OnConnectionF
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-        int errorCode = connectionResult.getErrorCode();
-        LogUtils.YfcDebug("huaweiErrorCode" + errorCode);
         new Handler(getMainLooper()).post(new Runnable() {
             @Override
             public void run() {
                 startJpush();
             }
         });
-
-//        保留下来做参照的代码
+//        保留下来做参照的代码，这里如果华为没有连上，华为SDK有一个处理，这里改为自己处理
 //        if (mResolvingError) {
 //            return;
 //        }
@@ -160,8 +143,6 @@ public class HuaWeiPushMangerUtils implements ConnectionCallbacks, OnConnectionF
                     String deltoken = PreferencesUtils.getString(contextLocal, "huawei_push_token", "");
                     if (!StringUtils.isEmpty(deltoken) && null != client) {
                         HuaweiPush.HuaweiPushApi.deleteToken(client, deltoken);
-//                        //清除本地token
-//                        PreferencesUtils.putString(contextLocal, "huawei_push_token","");
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
