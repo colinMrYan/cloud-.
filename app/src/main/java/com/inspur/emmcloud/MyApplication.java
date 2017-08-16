@@ -89,28 +89,6 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
     private Enterprise currentEnterprise;
     private Map<String, String> userPhotoUrlMap;
 
-
-    private final ReactNativeHost mReactNativeHost = new ReactNativeHost(this) {
-        @Override
-        public boolean getUseDeveloperSupport() {
-            return com.facebook.react.BuildConfig.DEBUG;
-        }
-
-        @Override
-        protected List<ReactPackage> getPackages() {
-            return Arrays.<ReactPackage>asList(
-                    new MainReactPackage(),
-                    new AuthorizationManagerPackage(),
-                    new PickerViewPackage()
-            );
-        }
-    };
-
-    @Override
-    public ReactNativeHost getReactNativeHost() {
-        return mReactNativeHost;
-    }
-
     public void onCreate() {
         super.onCreate();
         init();
@@ -130,7 +108,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         crashHandler.init(getApplicationContext());
         x.Ext.init(MyApplication.this);
         x.Ext.setDebug(LogUtils.isDebug);
-        SoLoader.init(this, false);
+        SoLoader.init(this, false);//ReactNative相关初始化
         Res.init(this); // 注册imp的资源文件类
         initImageLoader();
         initTanent();
@@ -738,6 +716,34 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
     public void clearNotification() {
         NotificationManager manager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
         manager.cancelAll();
+    }
+
+    /**
+     * ReactNative相关代码
+     */
+    private final ReactNativeHost mReactNativeHost = new ReactNativeHost(this) {
+        @Override
+        public boolean getUseDeveloperSupport() {
+            return com.facebook.react.BuildConfig.DEBUG;
+        }
+
+        @Override
+        protected List<ReactPackage> getPackages() {
+            return Arrays.<ReactPackage>asList(
+                    new MainReactPackage(),
+                    new AuthorizationManagerPackage(),
+                    new PickerViewPackage()
+            );
+        }
+    };
+
+    /**
+     * ReactNative相关代码
+     * @return
+     */
+    @Override
+    public ReactNativeHost getReactNativeHost() {
+        return mReactNativeHost;
     }
 
 }
