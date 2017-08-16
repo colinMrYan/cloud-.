@@ -14,7 +14,7 @@ import com.inspur.emmcloud.ui.chat.ChannelActivity;
 import com.inspur.emmcloud.ui.login.LoginActivity;
 import com.inspur.emmcloud.ui.work.calendar.CalEventAddActivity;
 import com.inspur.emmcloud.util.JSONUtils;
-import com.inspur.emmcloud.util.NetUtils;
+import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.StringUtils;
 
@@ -27,203 +27,208 @@ import cn.jpush.android.api.JPushInterface;
 
 /**
  * 自定义接收器
- * 
+ * <p>
  * 如果不定义这个 Receiver，则： 1) 默认用户会打开主界面 2) 接收不到自定义消息
  */
 public class JpushReceiver extends BroadcastReceiver {
-	private static final String TAG = "JPush";
+    private static final String TAG = "JPush";
 
-	private static final int LOGIN_SUCCESS = 0;
-	private static final int LOGIN_FAIL = 1;
+    @Override
+    public void onReceive(Context context, Intent intent) {
+        Bundle bundle = intent.getExtras();
+        LogUtils.debug(TAG, "[MyReceiver] onReceive - " + intent.getAction()
+                + ", extras: " + printBundle(bundle));
+        if (JPushInterface.ACTION_REGISTRATION_ID.equals(intent.getAction())) {
+            String regId = bundle
+                    .getString(JPushInterface.EXTRA_REGISTRATION_ID);
+            LogUtils.debug(TAG, "[MyReceiver] 接收Registration Id : " + regId);
+            PreferencesUtils.putString(context, "JpushRegId", regId);
+            ((MyApplication) context.getApplicationContext()).startWebSocket();
+        } else if (JPushInterface.ACTION_MESSAGE_RECEIVED.equals(intent
+                .getAction())) {
+            LogUtils.debug(TAG,
+                    "[MyReceiver] 接收到推送下来的自定义消息: "
+                            + bundle.getString(JPushInterface.EXTRA_MESSAGE));
 
-	@Override
-	public void onReceive(Context context, Intent intent) {
-		Bundle bundle = intent.getExtras();
-		Log.d(TAG, "[MyReceiver] onReceive - " + intent.getAction()
-				+ ", extras: " + printBundle(bundle));
-		if (JPushInterface.ACTION_REGISTRATION_ID.equals(intent.getAction())) {
-			String regId = bundle
-					.getString(JPushInterface.EXTRA_REGISTRATION_ID);
-			Log.d(TAG, "[MyReceiver] 接收Registration Id : " + regId);
-			PreferencesUtils.putString(context, "JpushRegId", regId);
-			// send the Registration Id to your server...
-			// PreferencesUtils.put
-			((MyApplication)context.getApplicationContext()).startWebSocket();
-		} else if (JPushInterface.ACTION_MESSAGE_RECEIVED.equals(intent
-				.getAction())) {
-			Log.d(TAG,
-					"[MyReceiver] 接收到推送下来的自定义消息: "
-							+ bundle.getString(JPushInterface.EXTRA_MESSAGE));
-			processCustomMessage(context, bundle);
+        } else if (JPushInterface.ACTION_NOTIFICATION_RECEIVED.equals(intent
+                .getAction())) {
+            int notifactionId = bundle
+                    .getInt(JPushInterface.EXTRA_NOTIFICATION_ID);
+            LogUtils.debug(TAG, "[MyReceiver] 接收到推送下来的通知的ID: " + notifactionId);
 
-		} else if (JPushInterface.ACTION_NOTIFICATION_RECEIVED.equals(intent
-				.getAction())) {
-			Log.d(TAG, "[MyReceiver] 接收到推送下来的通知");
-			int notifactionId = bundle
-					.getInt(JPushInterface.EXTRA_NOTIFICATION_ID);
-			Log.d(TAG, "[MyReceiver] 接收到推送下来的通知的ID: " + notifactionId);
+        } else if (JPushInterface.ACTION_NOTIFICATION_OPENED.equals(intent
+                .getAction())) {
+            LogUtils.debug(TAG, "[MyReceiver] 用户点击打开了通知");
+            LogUtils.debug(TAG, "extra=" + bundle.getString(JPushInterface.EXTRA_EXTRA));
+            //点击打开通知进入应用时清空所有的通知
+            ((MyApplication) context.getApplicationContext()).clearNotification();
+            //点击通知进入时判断当前是否已登录
+            if (!((MyApplication) context.getApplicationContext()).isHaveLogin()) {
+                loginApp(context);
+                return;
+            }
+            //如果应用正在前台运行，不处理点击通知的动作
+            if (((MyApplication) context.getApplicationContext()).getIsActive()) {
+                return;
+            }
+            openNotifycation(context,bundle);
+        } else if (JPushInterface.ACTION_RICHPUSH_CALLBACK.equals(intent
+                .getAction())) {
+            LogUtils.debug(TAG,
+                    "[MyReceiver] 用户收到到RICH PUSH CALLBACK: "
+                            + bundle.getString(JPushInterface.EXTRA_EXTRA));
+        } else if (JPushInterface.ACTION_CONNECTION_CHANGE.equals(intent
+                .getAction())) {
+            boolean connected = intent.getBooleanExtra(
+                    JPushInterface.EXTRA_CONNECTION_CHANGE, false);
+            Log.w(TAG, "[MyReceiver]" + intent.getAction()
+                    + " connected state change to " + connected);
+        } else {
+            LogUtils.debug(TAG, "[MyReceiver] Unhandled intent - " + intent.getAction());
+        }
+    }
 
-		} else if (JPushInterface.ACTION_NOTIFICATION_OPENED.equals(intent
-				.getAction())) {
-			Log.d(TAG, "[MyReceiver] 用户点击打开了通知");
-			Log.d(TAG, "extra=" + bundle.getString(JPushInterface.EXTRA_EXTRA));
-			((MyApplication)context.getApplicationContext()).clearNotification();
-			if (((MyApplication)context.getApplicationContext()).isHaveLogin()){
-				String extra = "";
-				if (bundle.containsKey(JPushInterface.EXTRA_EXTRA)) {
-					extra = bundle.getString(JPushInterface.EXTRA_EXTRA);
-				}
-				if (!((MyApplication) context.getApplicationContext()).getIsActive()){
-					Intent indexIntent = new Intent(context, IndexActivity.class);
-					Intent targetIntent = null;
-					indexIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-					if (!StringUtils.isBlank(extra)) {
-						try {
-							JSONObject extraObj = new JSONObject(extra);
-							if (extraObj.has("calEvent")) {
-								String json = extraObj.getString("calEvent");
-								JSONObject calEventObj = new JSONObject(json);
-								CalendarEvent calendarEvent = new CalendarEvent(calEventObj);
-								targetIntent = new Intent(context, CalEventAddActivity.class);
-								targetIntent.putExtra("calEvent", calendarEvent);
-								targetIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-							}else{
-								if (extraObj.has("action")){
-									JSONObject actionObj = extraObj.getJSONObject("action");
-									String type = actionObj.getString("type");
-									if (type.equals("open-url")){
-										String scheme = actionObj.getString("url");
-										targetIntent =new Intent(Intent.ACTION_VIEW);
-										targetIntent.setData(Uri.parse(scheme));
-										targetIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-										context.startActivity(targetIntent);
-										return;
-									}
-								}else if(extraObj.has("channel")){
-									String cid = JSONUtils.getString(extraObj,"channel","");
-									if (!StringUtils.isBlank(cid)){
-										targetIntent = new Intent(context, ChannelActivity.class);
-										targetIntent.putExtra("get_new_msg",true);
-										targetIntent.putExtra("cid",cid);
-										targetIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-									}
-								}
+    /**
+     * 登录应用
+     *
+     * @param context
+     */
+    private void loginApp(Context context) {
+        Intent loginIntent = new Intent(context, LoginActivity.class);
+        loginIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(loginIntent);
+    }
 
-							}
-						} catch (Exception e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-					}
-					if (!((MyApplication)context.getApplicationContext()).isIndexActivityRunning()){
-						context.startActivity(indexIntent);
-					}else if(!((MyApplication)context.getApplicationContext()).getIsActive()){
-						indexIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
-								| Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
-						context.startActivity(indexIntent);
-					}
-					if (targetIntent != null && NetUtils.isNetworkConnected(context,false)){
-						context.startActivity(targetIntent);
-					}
-				}
+    /**
+     * 打开通知相应的界面
+     * @param context
+     * @param bundle
+     */
+    private  void openNotifycation(Context context,Bundle bundle){
+        openIndexActivity(context);
+        String extra = "";
+        if (bundle.containsKey(JPushInterface.EXTRA_EXTRA)) {
+            extra = bundle.getString(JPushInterface.EXTRA_EXTRA);
+        }
+        if (!StringUtils.isBlank(extra)) {
+            try {
+                JSONObject extraObj = new JSONObject(extra);
+                //日历提醒的通知
+                if (extraObj.has("calEvent")) {
+                    openCalEvent(context, extraObj);
+                } else if (extraObj.has("action")) {//用scheme打开相应的页面
+                    openScheme(context, extraObj);
+                } else if (extraObj.has("channel")) {
+                    openChannel(context, extraObj);
+                }
+            } catch (Exception e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+    }
 
-			}else {
-				Intent loginIntent = new Intent(context, LoginActivity.class);
-				loginIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-				context.startActivity(loginIntent);
-			}
+    /**
+     * 打开主tab页
+     *
+     * @param context
+     */
+    private void openIndexActivity(Context context) {
+        Intent indexIntent = new Intent(context, IndexActivity.class);
+        if (!((MyApplication) context.getApplicationContext()).isIndexActivityRunning()) {
+            indexIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(indexIntent);
+        } else if (!((MyApplication) context.getApplicationContext()).getIsActive()) {
+            indexIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+                    | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+            context.startActivity(indexIntent);
+        }
+    }
 
-		} else if (JPushInterface.ACTION_RICHPUSH_CALLBACK.equals(intent
-				.getAction())) {
-			Log.d(TAG,
-					"[MyReceiver] 用户收到到RICH PUSH CALLBACK: "
-							+ bundle.getString(JPushInterface.EXTRA_EXTRA));
-			// 在这里根据 JPushInterface.EXTRA_EXTRA 的内容处理代码，比如打开新的Activity，
-			// 打开一个网页等..
+    /**
+     * 打开日历详情
+     *
+     * @param context
+     * @param extraObj
+     */
+    private void openCalEvent(Context context, JSONObject extraObj) throws Exception {
+        String json = extraObj.getString("calEvent");
+        JSONObject calEventObj = new JSONObject(json);
+        CalendarEvent calendarEvent = new CalendarEvent(calEventObj);
+        Intent intent = new Intent(context, CalEventAddActivity.class);
+        intent.putExtra("calEvent", calendarEvent);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent);
+    }
 
-		} else if (JPushInterface.ACTION_CONNECTION_CHANGE.equals(intent
-				.getAction())) {
-			boolean connected = intent.getBooleanExtra(
-					JPushInterface.EXTRA_CONNECTION_CHANGE, false);
-			Log.w(TAG, "[MyReceiver]" + intent.getAction()
-					+ " connected state change to " + connected);
-		} else {
-			Log.d(TAG, "[MyReceiver] Unhandled intent - " + intent.getAction());
-		}
-	}
+    /**
+     * 打开scheme
+     *
+     * @param context
+     * @param extraObj
+     */
+    private void openScheme(Context context, JSONObject extraObj) throws Exception {
+        JSONObject actionObj = extraObj.getJSONObject("action");
+        String type = actionObj.getString("type");
+        if (type.equals("open-url")) {
+            String scheme = actionObj.getString("url");
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setData(Uri.parse(scheme));
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(intent);
+        }
+    }
 
+    /**
+     * 打开频道聊天页面
+     *
+     * @param context
+     * @param extraObj
+     */
+    private void openChannel(Context context, JSONObject extraObj) {
+        String cid = JSONUtils.getString(extraObj, "channel", "");
+        if (!StringUtils.isBlank(cid)) {
+            Intent intent = new Intent(context, ChannelActivity.class);
+            intent.putExtra("get_new_msg", true);
+            intent.putExtra("cid", cid);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(intent);
+        }
+    }
 
-	// 打印所有的 intent extra 数据
-	private static String printBundle(Bundle bundle) {
-		StringBuilder sb = new StringBuilder();
-		for (String key : bundle.keySet()) {
-			if (key.equals(JPushInterface.EXTRA_NOTIFICATION_ID)) {
-				sb.append("\nkey:" + key + ", value:" + bundle.getInt(key));
-			} else if (key.equals(JPushInterface.EXTRA_CONNECTION_CHANGE)) {
-				sb.append("\nkey:" + key + ", value:" + bundle.getBoolean(key));
-			} else if (key.equals(JPushInterface.EXTRA_EXTRA)) {
-				if (bundle.getString(JPushInterface.EXTRA_EXTRA).isEmpty()) {
-					Log.i(TAG, "This message has no Extra data");
-					continue;
-				}
+    // 打印所有的 intent extra 数据
+    private static String printBundle(Bundle bundle) {
+        StringBuilder sb = new StringBuilder();
+        for (String key : bundle.keySet()) {
+            if (key.equals(JPushInterface.EXTRA_NOTIFICATION_ID)) {
+                sb.append("\nkey:" + key + ", value:" + bundle.getInt(key));
+            } else if (key.equals(JPushInterface.EXTRA_CONNECTION_CHANGE)) {
+                sb.append("\nkey:" + key + ", value:" + bundle.getBoolean(key));
+            } else if (key.equals(JPushInterface.EXTRA_EXTRA)) {
+                if (bundle.getString(JPushInterface.EXTRA_EXTRA).isEmpty()) {
+                    Log.i(TAG, "This message has no Extra data");
+                    continue;
+                }
 
-				try {
-					JSONObject json = new JSONObject(
-							bundle.getString(JPushInterface.EXTRA_EXTRA));
-					Iterator<String> it = json.keys();
+                try {
+                    JSONObject json = new JSONObject(
+                            bundle.getString(JPushInterface.EXTRA_EXTRA));
+                    Iterator<String> it = json.keys();
 
-					while (it.hasNext()) {
-						String myKey = it.next().toString();
-						sb.append("\nkey:" + key + ", value: [" + myKey + " - "
-								+ json.optString(myKey) + "]");
-					}
-				} catch (JSONException e) {
-					Log.e(TAG, "Get message extra JSON error!");
-				}
+                    while (it.hasNext()) {
+                        String myKey = it.next().toString();
+                        sb.append("\nkey:" + key + ", value: [" + myKey + " - "
+                                + json.optString(myKey) + "]");
+                    }
+                } catch (JSONException e) {
+                    Log.e(TAG, "Get message extra JSON error!");
+                }
 
-			} else {
-				sb.append("\nkey:" + key + ", value:" + bundle.getString(key));
-			}
-		}
-		return sb.toString();
-	}
+            } else {
+                sb.append("\nkey:" + key + ", value:" + bundle.getString(key));
+            }
+        }
+        return sb.toString();
+    }
 
-	// send msg to MyCameraActivity
-	private void processCustomMessage(Context context, Bundle bundle) {
-		// 这段代码用来把透传消息发送到主Activity上去
-		// if (MyCameraActivity.isForeground) {
-		// String message = bundle.getString(JPushInterface.EXTRA_MESSAGE);
-		// String extras = bundle.getString(JPushInterface.EXTRA_EXTRA);
-		// Intent msgIntent = new Intent(MyCameraActivity.MESSAGE_RECEIVED_ACTION);
-		// msgIntent.putExtra(MyCameraActivity.KEY_MESSAGE, message);
-		// if (!ExampleUtil.isEmpty(extras)) {
-		// try {
-		// JSONObject extraJson = new JSONObject(extras);
-		// if (null != extraJson && extraJson.length() > 0) {
-		// msgIntent.putExtra(MyCameraActivity.KEY_EXTRAS, extras);
-		// }
-		// } catch (JSONException e) {
-		//
-		// }
-		//
-		// }
-		// context.sendBroadcast(msgIntent);
-		// }
-
-		String message = bundle.getString(JPushInterface.EXTRA_MESSAGE);
-	}
-
-
-
-
-	// public void buildNotification(){
-	// BasicPushNotificationBuilder builder = new
-	// BasicPushNotificationBuilder(context);
-	// // builder.statusBarDrawable = R.drawable.jpush_notification_icon;
-	// builder.notificationFlags = Notification.FLAG_AUTO_CANCEL; //设置为自动消失
-	// builder.notificationDefaults = Notification.DEFAULT_SOUND ｜
-	// Notification.DEFAULT_VIBRATE | Notification.DEFAULT_LIGHTS; // 设置为铃声与震动都要
-	// JPushInterface.setPushNotificationBuilder(1, builder);
-	//
-	// }
 }
