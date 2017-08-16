@@ -10,6 +10,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -57,7 +58,6 @@ import com.inspur.emmcloud.util.HandleMsgTextUtils;
 import com.inspur.emmcloud.util.ImageDisplayUtils;
 import com.inspur.emmcloud.util.IntentUtils;
 import com.inspur.emmcloud.util.JSONUtils;
-import com.inspur.emmcloud.util.ListViewUtils;
 import com.inspur.emmcloud.util.MsgCacheUtil;
 import com.inspur.emmcloud.util.MsgReadIDCacheUtils;
 import com.inspur.emmcloud.util.MsgRecourceUploadUtils;
@@ -73,9 +73,7 @@ import com.inspur.emmcloud.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.ECMChatInputMenu;
 import com.inspur.emmcloud.widget.ECMChatInputMenu.ChatInputMenuListener;
 import com.inspur.emmcloud.widget.LoadingDialog;
-import com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout;
-import com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout.OnRefreshListener;
-import com.inspur.emmcloud.widget.pullableview.PullableListView;
+import com.inspur.emmcloud.widget.SizeChangeListView;
 import com.inspur.imp.plugin.camera.editimage.EditImageActivity;
 import com.inspur.imp.plugin.camera.imagepicker.ImagePicker;
 import com.inspur.imp.plugin.camera.imagepicker.bean.ImageItem;
@@ -96,19 +94,19 @@ import static android.R.attr.path;
  *
  * @author Fortune Yu; create at 2016年8月29日
  */
-public class ChannelActivity extends BaseActivity implements OnRefreshListener {
+public class ChannelActivity extends BaseActivity{
 
     private static final int HAND_CALLBACK_MESSAGE = 1;
     private static final int GELLARY_RESULT = 2;
     private static final int CAMERA_RESULT = 3;
     private static final int MENTIONS_RESULT = 5;
     private static final int CHOOSE_FILE = 4;
-    private PullableListView msgListView;
+    private SizeChangeListView msgListView;
     private List<Msg> msgList;
     private Handler handler;
     private MsgReceiver msgResvier;
     private ChatAPIService apiService;
-    private PullToRefreshLayout pullToRefreshLayout;
+    private SwipeRefreshLayout swipeRefreshLayout;
     private BroadcastReceiver refreshNameReceiver;
     private Channel channel;
     private String cid;
@@ -170,8 +168,7 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
      * 初始化Views
      */
     private void initViews() {
-        pullToRefreshLayout = (PullToRefreshLayout) findViewById(R.id.refresh_view);
-        pullToRefreshLayout.setOnRefreshListener(this);
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh_layout);
         handleChatInputMenu();
         setChannelTitle();
         initMsgListView();
@@ -210,10 +207,10 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
             @Override
             public void onSetContentViewHeight(boolean isLock) {
                 // TODO Auto-generated method stub
-                final LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) pullToRefreshLayout
+                final LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) swipeRefreshLayout
                         .getLayoutParams();
                 if (isLock) {
-                    params.height = pullToRefreshLayout.getHeight();
+                    params.height = swipeRefreshLayout.getHeight();
                     params.weight = 0.0F;
                 } else {
                     new Handler().post(new Runnable() {
@@ -272,14 +269,9 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
      * 初始化消息列表UI
      */
     private void initMsgListView() {
-        msgListView = (PullableListView) findViewById(R.id.msg_list);
-        msgListView.setCanSelectBottom(true);
+        msgListView = (SizeChangeListView) findViewById(R.id.msg_list);
         msgList = MsgCacheUtil.getHistoryMsgList(getApplicationContext(),
                 cid, "", 15);
-        // 如果没有消息就不让ListView刷新
-        if (msgList.size() == 0) {
-            msgListView.setCanPullDown(false);
-        }
         msgListView.setAdapter(adapter);
         msgListView.postDelayed(new Runnable() {
             @Override
@@ -288,7 +280,24 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
                 msgListView.setSelection(adapter.getCount() - 1);
             }
         }, 30);
-        pullToRefreshLayout.setOnRefreshListener(ChannelActivity.this);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                if (MsgCacheUtil.isDataInLocal(ChannelActivity.this, cid, msgList
+                        .get(0).getMid(), 15)) {
+                    List<Msg> historyMsgList = MsgCacheUtil.getHistoryMsgList(
+                            ChannelActivity.this, cid, msgList.get(0).getMid(),
+                            15);
+                    msgList.addAll(0, historyMsgList);
+                    swipeRefreshLayout.setRefreshing(false);
+                    adapter.notifyDataSetChanged();
+                    msgListView.setSelection(historyMsgList.size()-1);
+                    //ListViewUtils.setSelection(msgListView, historyMsgList.size() - 1);
+                } else {
+                    getNewsMsg();
+                }
+            }
+        });
         msgListView.smoothScrollToPosition(adapter.getCount());
         // 设置点击每个Item时跳转到详情
         msgListView.setOnItemClickListener(new OnItemClickListener() {
@@ -454,7 +463,6 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
                                     pushMsg.getCid(), pushMsg.getMid());
                             if (!msgList.contains(pushMsg) && !pushMsg.getTmpId().equals(AppUtils.getMyUUID(getApplicationContext()))) {
                                 msgList.add(pushMsg);
-                                msgListView.setCanPullDown(true);
                                 setListViewNotifyAndScrollEnd();
                             }
                         }
@@ -629,7 +637,6 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
             msg.setSendStatus(0);
             msgList.add(msg);
             setListViewNotifyAndScrollEnd();
-            msgListView.setCanPullDown(true);
         }
     }
 
@@ -929,21 +936,6 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
         super.onDestroy();
     }
 
-    @Override
-    public void onRefresh(PullToRefreshLayout pullToRefreshLayout) {
-        if (MsgCacheUtil.isDataInLocal(ChannelActivity.this, cid, msgList
-                .get(0).getMid(), 15)) {
-            pullToRefreshLayout.refreshFinish(PullToRefreshLayout.SUCCEED);
-            List<Msg> historyMsgList = MsgCacheUtil.getHistoryMsgList(
-                    ChannelActivity.this, cid, msgList.get(0).getMid(),
-                    15);
-            msgList.addAll(0, historyMsgList);
-            adapter.notifyDataSetChanged();
-            ListViewUtils.setSelection(msgListView, historyMsgList.size() - 1);
-        } else {
-            getNewsMsg();
-        }
-    }
 
     /**
      * 获取新消息
@@ -952,9 +944,6 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
         apiService.getNewMsgs(cid, msgList.get(0).getMid(), 15);
     }
 
-    @Override
-    public void onLoadMore(PullToRefreshLayout pullToRefreshLayout) {
-    }
 
     /**
      * 获取频道信息
@@ -1005,7 +994,7 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
 
         @Override
         public void returnUploadMsgImgFail(String error, int errorCode) {
-            if (pullToRefreshLayout == null) {
+            if (swipeRefreshLayout == null) {
                 if (loadingDlg != null && loadingDlg.isShowing()) {
                     loadingDlg.dismiss();
                 }
@@ -1029,7 +1018,7 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
                 initViews();
                 setChannelMsgRead();
             } else {
-                pullToRefreshLayout.refreshFinish(PullToRefreshLayout.SUCCEED);
+                swipeRefreshLayout.setRefreshing(false);
                 final List<Msg> historyMsgList = getNewMsgsResult
                         .getNewMsgList(cid);
                 MsgCacheUtil.saveMsgList(ChannelActivity.this, historyMsgList,
@@ -1037,10 +1026,9 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
                 if (historyMsgList != null && historyMsgList.size() > 1) {
                     msgList.addAll(0, historyMsgList);
                     adapter.notifyDataSetChanged();
-                    ListViewUtils.setSelection(msgListView,
-                            historyMsgList.size() - 1);
-                } else {
-                    msgListView.setCanPullDown(false);
+                    msgListView.setSelection(historyMsgList.size()-1);
+//                    ListViewUtils.setSelection(msgListView,
+//                            historyMsgList.size()-1 );
                 }
             }
 
@@ -1048,13 +1036,12 @@ public class ChannelActivity extends BaseActivity implements OnRefreshListener {
 
         @Override
         public void returnNewMsgsFail(String error, int errorCode) {
-            if (pullToRefreshLayout == null) {
+            if (swipeRefreshLayout == null) {
                 if (loadingDlg != null && loadingDlg.isShowing()) {
                     loadingDlg.dismiss();
                 }
                 initViews();
             } else {
-                pullToRefreshLayout.refreshFinish(PullToRefreshLayout.FAIL);
                 WebServiceMiddleUtils.hand(ChannelActivity.this, error, errorCode);
             }
         }

@@ -21,7 +21,6 @@ import com.inspur.emmcloud.bean.GetUploadMyHeadResult;
 import com.inspur.emmcloud.bean.UserProfileInfoBean;
 import com.inspur.emmcloud.callback.OauthCallBack;
 import com.inspur.emmcloud.util.AppUtils;
-import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.OauthUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.UriUtils;
@@ -329,7 +328,7 @@ public class MineAPIService {
 	/**
 	 * 获取当前绑定设备列表
 	 */
-	public void getBindingDeviceList() {
+	public void getBindingDeviceListAndLogs() {
 		final String completeUrl = APIUri.getBindingDevicesUrl();
 		RequestParams params =
 				((MyApplication) context.getApplicationContext()).getHttpRequestParams(completeUrl);
@@ -342,7 +341,7 @@ public class MineAPIService {
 
 					@Override
 					public void reExecute() {
-						getBindingDeviceList();
+						getBindingDeviceListAndLogs();
 					}
 
 					@Override
