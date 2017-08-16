@@ -1,6 +1,7 @@
 package com.inspur.emmcloud.ui;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -29,14 +30,7 @@ public class SchemeHandleActivity extends Activity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if(((MyApplication)getApplicationContext()).isHaveLogin()){
-            if (!((MyApplication)getApplicationContext()).isIndexActivityRunning()){
-              IntentUtils.startActivity(this,IndexActivity.class);
-            }else if(!((MyApplication)getApplicationContext()).getIsActive()){
-                Intent indexIntent = new Intent(this, IndexActivity.class);
-                indexIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
-                        | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
-                startActivity(indexIntent);
-            }
+            openIndexActivity(this);
             Uri uri = getIntent().getData();
             String scheme = uri.getScheme();
             String host = uri.getHost();
@@ -84,7 +78,22 @@ public class SchemeHandleActivity extends Activity {
         finish();
     }
 
-
+    /**
+     * 打开主tab页
+     *
+     * @param context
+     */
+    private void openIndexActivity(Context context) {
+        Intent indexIntent = new Intent(context, IndexActivity.class);
+        if (!((MyApplication) context.getApplicationContext()).isIndexActivityRunning()) {
+            indexIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(indexIntent);
+        } else if (!((MyApplication) context.getApplicationContext()).getIsActive()) {
+            indexIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+                    | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+            context.startActivity(indexIntent);
+        }
+    }
 
     private void openComponentScheme(Uri uri,String host){
         Bundle bundle = new Bundle();

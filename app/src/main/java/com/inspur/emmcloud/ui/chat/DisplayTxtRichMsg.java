@@ -12,7 +12,6 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.Msg;
 import com.inspur.emmcloud.config.MyAppConfig;
-import com.inspur.emmcloud.util.DensityUtil;
 import com.inspur.emmcloud.util.JSONUtils;
 import com.inspur.emmcloud.util.MentionsAndUrlShowUtils;
 import com.inspur.emmcloud.util.ToastUtils;
@@ -49,17 +48,11 @@ public class DisplayTxtRichMsg {
 				((MyApplication) context.getApplicationContext()).getUid());
 		final TextView richText = (TextView) convertView
 				.findViewById(R.id.content_text);
-		richText.setBackgroundColor(context.getResources().getColor(
+		(convertView.findViewById(R.id.card_layout)).setBackgroundColor(context.getResources().getColor(
 				isMyMsg ? R.color.bg_my_card : R.color.white));
 		richText.setTextColor(context.getResources().getColor(
 				isMyMsg ? R.color.white : R.color.black));
-		int normalPadding = DensityUtil.dip2px(context, 9);
-		int arrowPadding = DensityUtil.dip2px(context, 7);
-		if (isMyMsg) {
-			richText.setPadding(normalPadding, normalPadding, normalPadding+arrowPadding, normalPadding);
-		}else {
-			richText.setPadding(normalPadding+arrowPadding, normalPadding,normalPadding , normalPadding);
-		}
+			richText.setBackgroundResource(isMyMsg?R.drawable.ic_chat_msg_img_cover_arrow_right:R.drawable.ic_chat_msg_img_cover_arrow_left);
 		String msgBody = msg.getBody();
 		String source = JSONUtils.getString(msgBody, "source", "");
 		if (MyAppConfig.isUseMarkdown){
