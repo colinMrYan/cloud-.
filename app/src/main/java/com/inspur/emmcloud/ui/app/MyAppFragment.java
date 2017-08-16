@@ -27,6 +27,7 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
+import com.alibaba.fastjson.JSON;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
@@ -40,6 +41,7 @@ import com.inspur.emmcloud.bean.PVCollectModel;
 import com.inspur.emmcloud.util.AppCacheUtils;
 import com.inspur.emmcloud.util.AppTitleUtils;
 import com.inspur.emmcloud.util.IntentUtils;
+import com.inspur.emmcloud.util.MyAppCacheUtils;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.util.PreferencesByUserAndTanentUtils;
@@ -126,6 +128,7 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
         appListView = (PullableListView) rootView
                 .findViewById(R.id.my_app_list);
         appListView.setCanPullDown(true);
+        initAppListView();
         editBtn = (ImageView) rootView.findViewById(R.id.app_edit_btn);
         editBtn.setOnClickListener(new OnClickListener() {
             @Override
@@ -152,6 +155,18 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
         setTabTitle();
 //        shortCutAppList.add("mobile_checkin_hcm");
 //        shortCutAppList.add("inspur_news_esg");//目前，除在此处添加id还需要为每个需要生成快捷方式的应用配置图标
+    }
+
+    /**
+     * 初始化AppListView
+     */
+    private void initAppListView() {
+        hasCommonlyApp = MyAppCacheUtils.getHasCommonlyApp(getActivity());
+        List<AppGroupBean> appGroupList = new ArrayList<>();
+        appGroupList = MyAppCacheUtils.getMyApps(getContext());
+        appListAdapter = new AppListAdapter(appGroupList);
+        appListView.setAdapter(appListAdapter);
+        appListAdapter.notifyDataSetChanged();
     }
 
     /**
@@ -356,6 +371,13 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
         }
 
         /**
+         * 设置AppAdapter
+         */
+        public void setAppAdapterList(List<AppGroupBean> list){
+            appAdapterList = list;
+        }
+
+        /**
          * 设置是否可以删除
          */
         public void setCanEdit(boolean canDelete) {
@@ -406,8 +428,10 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
             appGroupBean.setAppItemList(commonlyUseAppList);
             appAdapterList.add(0, appGroupBean);
             hasCommonlyApp = true;
+            MyAppCacheUtils.saveHasCommonlyApp(getActivity(),hasCommonlyApp);
             appListAdapter.notifyDataSetChanged();
         }
+
     }
 
     /**
@@ -480,6 +504,7 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
                 appGroupBeanList.remove();
             }
         }
+        refreshAppList(appAdapterList);
     }
 
     /**
@@ -580,6 +605,7 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
                     appListAdapter.getAppAdapterList().remove(0);
                     appListAdapter.notifyDataSetChanged();
                     hasCommonlyApp = false;
+                    MyAppCacheUtils.saveHasCommonlyApp(getActivity(),hasCommonlyApp);
                 }
             }
         });
@@ -737,11 +763,13 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
                 appGroupBean.setAppItemList(myCommonlyUseAppList);
                 appGroupList.add(0, appGroupBean);
                 hasCommonlyApp = true;
+                MyAppCacheUtils.saveHasCommonlyApp(getActivity(),hasCommonlyApp);
             }
         }
         if (isNeedRefresh) {
             appListAdapter.notifyDataSetChanged();
         }
+        MyAppCacheUtils.saveMyApps(getActivity(),JSON.toJSONString(appListAdapter.getAppAdapterList()));
     }
 
     /**
@@ -829,9 +857,8 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
             }
             List<AppGroupBean> appGroupList = handleAppList(getAppGroupResult
                     .getAppGroupBeanList());
-            appListAdapter = new AppListAdapter(appGroupList);
-            appListView.setAdapter(appListAdapter);
-            appListAdapter.notifyDataSetChanged();
+            MyAppCacheUtils.saveMyApps(getActivity(),JSON.toJSONString(appGroupList));
+            refreshAppList(appGroupList);
             pullToRefreshLayout.refreshFinish(PullToRefreshLayout.SUCCEED);
         }
 
@@ -844,6 +871,16 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
             WebServiceMiddleUtils.hand(getActivity(), error,errorCode);
         }
     }
+
+    /**
+     * 更新List
+     * @param appGroupList
+     */
+    private void refreshAppList(List<AppGroupBean> appGroupList) {
+        appListAdapter.setAppAdapterList(appGroupList);
+        appListAdapter.notifyDataSetChanged();
+    }
+
 
     /**
      * 创建快捷方式的Dialog
