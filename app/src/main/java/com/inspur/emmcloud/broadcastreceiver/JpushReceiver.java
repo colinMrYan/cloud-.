@@ -99,6 +99,11 @@ public class JpushReceiver extends BroadcastReceiver {
         context.startActivity(loginIntent);
     }
 
+    /**
+     * 打开通知相应的界面
+     * @param context
+     * @param bundle
+     */
     private  void openNotifycation(Context context,Bundle bundle){
         openIndexActivity(context);
         String extra = "";
