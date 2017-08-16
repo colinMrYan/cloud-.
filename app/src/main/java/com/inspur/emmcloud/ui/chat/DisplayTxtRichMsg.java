@@ -23,6 +23,7 @@ import com.inspur.emmcloud.util.richtext.RichText;
 import com.inspur.emmcloud.util.richtext.RichType;
 import com.inspur.emmcloud.util.richtext.callback.LinkFixCallback;
 import com.inspur.emmcloud.util.richtext.callback.OnUrlClickListener;
+import com.inspur.emmcloud.util.richtext.callback.OnUrlLongClickListener;
 import com.inspur.emmcloud.widget.LinkMovementClickMethod;
 
 import java.util.Arrays;
@@ -77,6 +78,13 @@ public class DisplayTxtRichMsg {
 							return false;
 						}
 					})
+					.urlLongClick(new OnUrlLongClickListener() {
+						@Override
+						public boolean urlLongClick(String url) {
+							copyContentToPasteBoard(context,richText);
+							return true;
+						}
+					})
 					.cache(CacheType.ALL)
 					.into(richText);
 		}else{
@@ -95,17 +103,20 @@ public class DisplayTxtRichMsg {
 					context.getResources().getColor(
 							isMyMsg ? R.color.hightlight_in_blue_bg
 									: R.color.header_bg));
-			richText.setOnLongClickListener(new View.OnLongClickListener() {
-				@Override
-				public boolean onLongClick(View v) {
-					ClipboardManager cmb = (ClipboardManager)context.getSystemService(Context.CLIPBOARD_SERVICE);
-					cmb.setPrimaryClip(ClipData.newPlainText(null, richText.getText()));
-					ToastUtils.show(context,R.string.copyed_to_paste_board);
-					return true;
-				}
-			});
-		}
 
+		}
+		richText.setOnLongClickListener(new View.OnLongClickListener() {
+			@Override
+			public boolean onLongClick(View v) {
+				copyContentToPasteBoard(context,richText);
+				return true;
+			}
+		});
 	}
 
+	public static void copyContentToPasteBoard(Context context,TextView textView){
+		ClipboardManager cmb = (ClipboardManager)context.getSystemService(Context.CLIPBOARD_SERVICE);
+		cmb.setPrimaryClip(ClipData.newPlainText(null, textView.getText().toString()));
+		ToastUtils.show(context,R.string.copyed_to_paste_board);
+	}
 }

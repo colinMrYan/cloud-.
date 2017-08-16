@@ -34,7 +34,7 @@ public class SwitchEnterpriseActivity extends BaseActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_setting_device_manager);
+		setContentView(R.layout.activity_switch_enterprise);
 		getEnterpriseList();
 		initView();
 	}
