@@ -829,10 +829,6 @@ public class IndexActivity extends BaseFragmentActivity implements
         }
     }
 
-    public void setOnWorkFragmentDataChanged(OnWorkFragmentDataChanged l) {
-        this.workFragmentListener = l;
-    }
-
 
     public class WebService extends APIInterfaceInstance {
 
@@ -848,13 +844,11 @@ public class IndexActivity extends BaseFragmentActivity implements
                             .getAllContactList();
                     List<Contact> modifyContactLsit = getAllContactResult
                             .getModifyContactList();
-//					JSONArray deleteIdArray = getAllContactResult.getDeleteIdArray();
                     List<String> deleteContactIdList = getAllContactResult.getDeleteContactIdList();
                     ContactCacheUtils.saveContactList(getApplicationContext(),
                             allContactList);
                     ContactCacheUtils.saveContactList(getApplicationContext(),
                             modifyContactLsit);
-//					ContactCacheUtils.deleteContact(IndexActivity.this, deleteIdArray);
                     ContactCacheUtils.deleteContact(IndexActivity.this, deleteContactIdList);
                     ContactCacheUtils.saveLastUpdateTime(getApplicationContext(),
                             getAllContactResult.getLastUpdateTime());
@@ -1037,9 +1031,6 @@ public class IndexActivity extends BaseFragmentActivity implements
                 SplashPageBean splashPageBeanLocalOld = new SplashPageBean(splashInfoOld);
                 String splashInfoShowing = PreferencesByUserAndTanentUtils.getString(IndexActivity.this,"splash_page_info","");
                 SplashPageBean splashPageBeanLocalShowing = new SplashPageBean(splashInfoShowing);
-//                ReactNativeFlow.moveFolder(MyAppConfig.getSplashPageImageShowPath(IndexActivity.this,
-//                        userId, "splash"),MyAppConfig.getSplashPageImageLastVersionPath(IndexActivity.this,userId)
-//                );
                 if(file.exists()){
                     String filelSha256 =  FileSafeCode.getFileSHA256(file);
                     String screenType = AppUtils.getScreenType(IndexActivity.this);
