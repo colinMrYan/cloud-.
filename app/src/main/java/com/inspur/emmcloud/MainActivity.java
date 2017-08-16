@@ -98,17 +98,6 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
 		startService(intent);
 	}
 
-//    /**
-//     * 启动app版本升级检查服务
-//     */
-//    private void startUpgradeServcie() {
-//        Intent intent = new Intent();
-//        intent.setClass(getApplicationContext(), AppUpgradeService.class);
-//        startService(intent);
-//
-//    }
-
-
 	/**
 	 * 显示分辨率不符合条件的提示框
 	 **/
@@ -306,16 +295,6 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
 		}
 		return ifUpgraded;
 	}
-
-
-//	@Override
-//	public Resources getResources() {
-//		Resources res = super.getResources();
-//		Configuration config = new Configuration();
-//		config.setToDefaults();
-//		res.updateConfiguration(config, res.getDisplayMetrics());
-//		return res;
-//	}
 
 	/**
 	 * 展示最新splash   需要添加是否已过期的逻辑
