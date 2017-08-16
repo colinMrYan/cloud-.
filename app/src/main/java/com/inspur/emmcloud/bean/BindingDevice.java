@@ -2,9 +2,12 @@ package com.inspur.emmcloud.bean;
 
 import com.inspur.emmcloud.util.JSONUtils;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Administrator on 2017/5/10.
@@ -14,6 +17,7 @@ public class BindingDevice implements Serializable{
 	private String deviceId;
 	private String deviceModel;
 	private long deviceBindTime;
+	private List<BindingDeviceLog> bindingDeviceLogList = new ArrayList<>();
 
 	public BindingDevice(){
 
@@ -23,6 +27,12 @@ public class BindingDevice implements Serializable{
 		deviceId = JSONUtils.getString(obj, "udid", "");
 		deviceModel = JSONUtils.getString(obj, "device_model", "");
 		deviceBindTime=JSONUtils.getLong(obj,"create_time",0L);
+		JSONArray array = JSONUtils.getJSONArray(obj,"logs",new JSONArray());
+		for(int i=0;i<array.length();i++){
+			JSONObject jsonObject = JSONUtils.getJSONObject(array,i,new JSONObject());
+			BindingDeviceLog bindingDeviceLog = new BindingDeviceLog(jsonObject);
+			bindingDeviceLogList.add(bindingDeviceLog);
+		}
 	}
 
 	public String getDeviceId(){

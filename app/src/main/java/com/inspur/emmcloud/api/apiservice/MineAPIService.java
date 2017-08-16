@@ -20,7 +20,9 @@ import com.inspur.emmcloud.bean.GetMDMStateResult;
 import com.inspur.emmcloud.bean.GetUploadMyHeadResult;
 import com.inspur.emmcloud.bean.UserProfileInfoBean;
 import com.inspur.emmcloud.callback.OauthCallBack;
+import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.util.AppUtils;
+import com.inspur.emmcloud.util.FileUtils;
 import com.inspur.emmcloud.util.OauthUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.UriUtils;
@@ -354,6 +356,7 @@ public class MineAPIService {
 			@Override
 			public void callbackSuccess(String arg0) {
 				// TODO Auto-generated method stub
+				FileUtils.writeFile(MyAppConfig.LOCAL_DOWNLOAD_PATH+"device.txt",arg0);
 				apiInterface
 						.returnBindingDeviceListSuccess(new GetBindingDeviceResult(
 								arg0));

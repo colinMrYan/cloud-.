@@ -149,6 +149,7 @@
             android:text="@string/unbind_this_device"
             android:padding="10dp"
             android:gravity="center"
+            android:visibility="gone"
             android:textColor="#ff3c3c"
             android:background="@color/white"
             android:layout_width="match_parent"

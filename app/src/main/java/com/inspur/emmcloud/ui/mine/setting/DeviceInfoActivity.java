@@ -49,6 +49,9 @@ public class DeviceInfoActivity extends BaseActivity {
 			String bindingTime = TimeUtils.getTime(bindingDevice.getDeviceBindTime(),TimeUtils.getFormat(DeviceInfoActivity.this,TimeUtils.FORMAT_DEFAULT_DATE));
 			((TextView) findViewById(R.id.device_bind_time_text)).setText(bindingTime);
 		}
+		if (getIntent().getBooleanExtra("isCurrentBind",false)){
+			findViewById(R.id.device_unbound_btn).setVisibility(View.VISIBLE);
+		}
 
 	}
 

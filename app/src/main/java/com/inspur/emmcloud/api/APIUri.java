@@ -610,7 +610,7 @@ public class APIUri {
 	 */
 	public static String getUnBindDeviceUrl(){return  emmBaseUrl+"device/unbind";}
 
-	public static String getBindingDevicesUrl(){return  emmBaseUrl+"device/getUserDevicesWithLogs";}
+	public static String getBindingDevicesUrl(){return  emmBaseUrl+"v1/device/getUserDevicesWithLogs";}
 
 	/**
 	 * 获取MDM启用状态

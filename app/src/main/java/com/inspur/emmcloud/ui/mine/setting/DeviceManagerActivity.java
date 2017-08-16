@@ -18,7 +18,6 @@ import com.inspur.emmcloud.bean.BindingDevice;
 import com.inspur.emmcloud.bean.GetBindingDeviceResult;
 import com.inspur.emmcloud.util.AppUtils;
 import com.inspur.emmcloud.util.NetUtils;
-import com.inspur.emmcloud.util.TimeUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 
@@ -32,10 +31,11 @@ import java.util.List;
 public class DeviceManagerActivity extends BaseActivity {
 
     private final static int UNBIND_DEVICE = 1;
-    private ListView deviceListView;
+    private ListView currentDeviceListView,historyDeviceListView;
+    private  Adapter currentDeviceAdapter,historyDeviceAdapter;
     private LoadingDialog loadingDlg;
-    private List<BindingDevice> bindingDeviceList = new ArrayList<>();
-
+    private List<BindingDevice> currentBindingDeviceList = new ArrayList<>();
+    private List<BindingDevice> historyBindingDeviceList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,13 +47,27 @@ public class DeviceManagerActivity extends BaseActivity {
 
     private void initView() {
         loadingDlg = new LoadingDialog(this);
-        deviceListView = (ListView) findViewById(R.id.device_list);
-        deviceListView.setAdapter(adapter);
-        deviceListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        currentDeviceListView = (ListView) findViewById(R.id.current_device_list);
+       historyDeviceListView = (ListView) findViewById(R.id.history_device_list);
+        currentDeviceAdapter = new Adapter(true);
+        historyDeviceAdapter = new Adapter(false);
+        currentDeviceListView.setAdapter(currentDeviceAdapter);
+        historyDeviceListView.setAdapter(historyDeviceAdapter);
+        currentDeviceListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(getApplicationContext(), DeviceInfoActivity.class);
-                intent.putExtra("binding_device", bindingDeviceList.get(position));
+                intent.putExtra("binding_device", currentBindingDeviceList.get(position));
+                intent.putExtra("isCurrentBind",true);
+                startActivityForResult(intent, UNBIND_DEVICE);
+            }
+        });
+        historyDeviceListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(getApplicationContext(), DeviceInfoActivity.class);
+                intent.putExtra("binding_device", historyBindingDeviceList.get(position));
+                intent.putExtra("isCurrentBind",false);
                 startActivityForResult(intent, UNBIND_DEVICE);
             }
         });
@@ -86,15 +100,19 @@ public class DeviceManagerActivity extends BaseActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == UNBIND_DEVICE && resultCode == RESULT_OK) {
             BindingDevice bindingDevice = (BindingDevice) data.getSerializableExtra("binding_device");
-            bindingDeviceList.remove(bindingDevice);
-            adapter.notifyDataSetChanged();
+            currentBindingDeviceList.remove(bindingDevice);
+            currentDeviceAdapter.notifyDataSetChanged();
         }
     }
 
-    private BaseAdapter adapter = new BaseAdapter() {
+    private class Adapter extends BaseAdapter {
+        private boolean isCurrent;
+        public Adapter(boolean isCurrent){
+            this.isCurrent = isCurrent;
+        }
         @Override
         public int getCount() {
-            return bindingDeviceList.size();
+            return isCurrent?currentBindingDeviceList.size():historyBindingDeviceList.size();
         }
 
         @Override
@@ -109,14 +127,12 @@ public class DeviceManagerActivity extends BaseActivity {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            BindingDevice bindingDevice = bindingDeviceList.get(position);
+            BindingDevice bindingDevice = isCurrent?currentBindingDeviceList.get(position):historyBindingDeviceList.get(position);;
             convertView = LayoutInflater.from(DeviceManagerActivity.this).inflate(R.layout.mine_setting_binding_devcie_item_view, null);
             ((TextView) convertView.findViewById(R.id.device_text)).setText(bindingDevice.getDeviceModel());
-            if (bindingDevice.getDeviceId().equals(AppUtils.getMyUUID(DeviceManagerActivity.this))) {
+            if (isCurrent && bindingDevice.getDeviceId().equals(AppUtils.getMyUUID(DeviceManagerActivity.this))) {
                 (convertView.findViewById(R.id.current_device_text)).setVisibility(View.VISIBLE);
             }
-            String bindingTime = TimeUtils.getTime(bindingDevice.getDeviceBindTime(), TimeUtils.getFormat(DeviceManagerActivity.this, TimeUtils.FORMAT_DEFAULT_DATE));
-            ((TextView) convertView.findViewById(R.id.device_bind_time_text)).setText(bindingTime);
             return convertView;
         }
     };
@@ -127,8 +143,16 @@ public class DeviceManagerActivity extends BaseActivity {
             if (loadingDlg != null && loadingDlg.isShowing()) {
                 loadingDlg.dismiss();
             }
-            bindingDeviceList = getBindingDeviceResult.getBindingDeviceList();
-            adapter.notifyDataSetChanged();
+            currentBindingDeviceList = getBindingDeviceResult.getCurrentDeviceList();
+            historyBindingDeviceList = getBindingDeviceResult.getHistoryDeviceList();
+            if (currentBindingDeviceList.size()>0){
+                findViewById(R.id.current_text).setVisibility(View.VISIBLE);
+            }
+           if (historyBindingDeviceList.size()>0){
+               findViewById(R.id.history_text).setVisibility(View.VISIBLE);
+           }
+            currentDeviceAdapter.notifyDataSetChanged();
+            historyDeviceAdapter.notifyDataSetChanged();
         }
 
         @Override

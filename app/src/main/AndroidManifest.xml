@@ -96,7 +96,7 @@
         android:theme="@android:style/Theme.Light.NoTitleBar">
         <!--android:theme="@style/SplashTheme"-->
         <activity
-            android:name=".MainActivity"
+            android:name=".ui.mine.setting.DeviceManagerActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/SplashTheme">
@@ -274,7 +274,7 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.mine.setting.DeviceManagerActivity"
+            android:name=".ui.mine.setting.DeviceManagerActivitys"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"></activity>
         <activity
