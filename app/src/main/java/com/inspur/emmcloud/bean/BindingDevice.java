@@ -14,9 +14,9 @@ import java.util.List;
  */
 
 public class BindingDevice implements Serializable{
-	private String deviceId;
-	private String deviceModel;
-	private long deviceBindTime;
+	private String deviceId="";
+	private String deviceModel="";
+	private long deviceBindTime=0L;
 	private List<BindingDeviceLog> bindingDeviceLogList = new ArrayList<>();
 
 	public BindingDevice(){
@@ -41,6 +41,10 @@ public class BindingDevice implements Serializable{
 
 	public String getDeviceModel(){
 		return deviceModel;
+	}
+
+	public List<BindingDeviceLog> getBindingDeviceLogList() {
+		return bindingDeviceLogList;
 	}
 
 	public long getDeviceBindTime(){return  deviceBindTime;}

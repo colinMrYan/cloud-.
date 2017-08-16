@@ -94,7 +94,7 @@ import static android.R.attr.path;
  *
  * @author Fortune Yu; create at 2016年8月29日
  */
-public class ChannelActivity extends BaseActivity{
+public class ChannelActivity extends BaseActivity {
 
     private static final int HAND_CALLBACK_MESSAGE = 1;
     private static final int GELLARY_RESULT = 2;
@@ -291,7 +291,7 @@ public class ChannelActivity extends BaseActivity{
                     msgList.addAll(0, historyMsgList);
                     swipeRefreshLayout.setRefreshing(false);
                     adapter.notifyDataSetChanged();
-                    msgListView.setSelection(historyMsgList.size()-1);
+                    msgListView.setSelection(historyMsgList.size() - 1);
                     //ListViewUtils.setSelection(msgListView, historyMsgList.size() - 1);
                 } else {
                     getNewsMsg();
@@ -336,7 +336,7 @@ public class ChannelActivity extends BaseActivity{
                     groupNews.setDigest(linkDigest);
                     groupNews.setUrl(linkUrl);
                     groupNews.setPoster(linkPoster);
-                    bundle.putSerializable("groupNews",groupNews);
+                    bundle.putSerializable("groupNews", groupNews);
                     IntentUtils.startActivity(ChannelActivity.this,
                             NewsWebDetailActivity.class, bundle);
                 }
@@ -519,7 +519,7 @@ public class ChannelActivity extends BaseActivity{
                     View childAt = msgListView.getChildAt(fakeMsgIndex
                             - firstVisiblePosition);
                     if (childAt != null) {
-                        adapter.getView(fakeMsgIndex,childAt,msgListView);
+                        adapter.getView(fakeMsgIndex, childAt, msgListView);
                     }
                 }
             } else {
@@ -589,7 +589,7 @@ public class ChannelActivity extends BaseActivity{
             String botUid = DirectChannelUtils.getRobotInfo(getApplicationContext(),
                     channel.getTitle()).getId();
             bundle.putString("uid", botUid);
-            bundle.putString("type",channel.getType());
+            bundle.putString("type", channel.getType());
             IntentUtils.startActivity(ChannelActivity.this,
                     RobotInfoActivity.class, bundle);
         } else {
@@ -758,7 +758,7 @@ public class ChannelActivity extends BaseActivity{
                 refreshingImg.clearAnimation();
                 refreshingImg.setVisibility(View.VISIBLE);
                 refreshingImg.setImageResource(R.drawable.ic_chat_msg_send_fail);
-            }else {
+            } else {
                 refreshingImg.clearAnimation();
                 refreshingImg.setVisibility(View.GONE);
             }
@@ -863,7 +863,7 @@ public class ChannelActivity extends BaseActivity{
                         String uid = msg.getUid();
                         bundle.putString("uid", uid);
                         if (uid.startsWith("BOT") || channel.getType().endsWith("SERVICE")) {
-                            bundle.putString("type",channel.getType());
+                            bundle.putString("type", channel.getType());
                             IntentUtils.startActivity(ChannelActivity.this,
                                     RobotInfoActivity.class, bundle);
                         } else {
@@ -905,14 +905,14 @@ public class ChannelActivity extends BaseActivity{
     /**
      * 通知message页将本频道消息置为已读
      */
-    private void setChannelMsgRead(){
-        if (msgList != null && msgList.size()>0){
+    private void setChannelMsgRead() {
+        if (msgList != null && msgList.size() > 0) {
             MsgReadIDCacheUtils.saveReadedMsg(this, cid,
-                    msgList.get(msgList.size()-1).getMid());
+                    msgList.get(msgList.size() - 1).getMid());
             Intent intent = new Intent("message_notify");
             intent.putExtra("command", "set_channel_message_read");
             intent.putExtra("cid", cid);
-            intent.putExtra("mid", msgList.get(msgList.size()-1).getMid());
+            intent.putExtra("mid", msgList.get(msgList.size() - 1).getMid());
             sendBroadcast(intent);
         }
     }
@@ -1012,9 +1012,9 @@ public class ChannelActivity extends BaseActivity{
             if (loadingDlg != null && loadingDlg.isShowing()) {
                 loadingDlg.dismiss();
                 List<Msg> msgList = getNewMsgsResult.getNewMsgList(cid);
-                if (msgList.size() >0){
+                if (msgList.size() > 0) {
                     MsgCacheUtil.saveMsgList(ChannelActivity.this, msgList, "");
-                    String lastMsgMid =msgList.get(msgList.size()-1).getMid();
+                    String lastMsgMid = msgList.get(msgList.size() - 1).getMid();
                     MsgReadIDCacheUtils.saveReadedMsg(ChannelActivity.this, cid,
                             lastMsgMid);
                 }
@@ -1029,7 +1029,7 @@ public class ChannelActivity extends BaseActivity{
                 if (historyMsgList != null && historyMsgList.size() > 1) {
                     msgList.addAll(0, historyMsgList);
                     adapter.notifyDataSetChanged();
-                    msgListView.setSelection(historyMsgList.size()-1);
+                    msgListView.setSelection(historyMsgList.size() - 1);
 //                    ListViewUtils.setSelection(msgListView,
 //                            historyMsgList.size()-1 );
                 }

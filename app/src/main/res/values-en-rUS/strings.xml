@@ -409,6 +409,7 @@
     <string name="device_current_unbind_warning">After binding, you need to log in again and register your device</string>
     <string name="current_device">Current device</string>
     <string name="history_device">History device</string>
+    <string name="device_history_use">Historical use</string>
     <string name="device_bind_time_title">Binding time: </string>
     <string name="device_bind_time">Binding time</string>
     <string name="device_info">Device details</string>
