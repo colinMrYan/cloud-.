@@ -5,7 +5,6 @@ import android.content.Context;
 import android.os.Bundle;
 
 import com.huawei.hms.support.api.push.PushReceiver;
-import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.push.WebSocketPush;
 import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
@@ -24,9 +23,7 @@ public class HuaWeiPushReceiver extends PushReceiver {
     @Override
     public void onToken(Context context, String token, Bundle extras) {
         PreferencesUtils.putString(context, "huawei_push_token", token);
-        if (((MyApplication) context.getApplicationContext()).isIndexActivityRunning()) {
-            WebSocketPush.getInstance(context).start();
-        }
+        WebSocketPush.getInstance(context).start();
     }
 
     /**
@@ -72,8 +69,7 @@ public class HuaWeiPushReceiver extends PushReceiver {
      */
     @Override
     public void onPushState(Context context, boolean pushState) {
-        LogUtils.YfcDebug("连接状态发生改变是否处于连接状态： " + (pushState ? "Connected" :
-                "Disconnected"));
+
     }
 
 }

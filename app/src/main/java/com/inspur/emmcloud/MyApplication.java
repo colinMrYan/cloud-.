@@ -718,6 +718,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         manager.cancelAll();
     }
 
+
     /**
      * ReactNative相关代码
      */

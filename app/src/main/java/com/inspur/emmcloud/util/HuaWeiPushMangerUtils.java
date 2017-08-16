@@ -151,30 +151,4 @@ public class HuaWeiPushMangerUtils implements ConnectionCallbacks, OnConnectionF
         }.start();
     }
 
-    /**
-     * 获取状态
-     */
-    private void getState() {
-        if (!isConnected()) {
-            return;
-        }
-        new Thread() {
-            @Override
-            public void run() {
-                // 状态结果通过广播返回
-                HuaweiPush.HuaweiPushApi.getPushState(client);
-            }
-        }.start();
-    }
-
-
-    /**
-     * 获取华为推送client
-     *
-     * @return
-     */
-    public HuaweiApiClient getHuaWeiPushClient() {
-        return client;
-    }
-
 }
