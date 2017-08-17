@@ -133,13 +133,6 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
             }
             // 设置开启日志,发布时请关闭日志
             JPushInterface.setDebugMode(true);
-            // 获取和存储RegId
-            String pushRegId = JPushInterface
-                    .getRegistrationID(getApplicationContext());
-            if (!StringUtils.isBlank(pushRegId)) {
-                PreferencesUtils.putString(getApplicationContext(), "JpushRegId",
-                        pushRegId);
-            }
         }
     }
 
