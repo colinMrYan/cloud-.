@@ -23,6 +23,7 @@ import com.inspur.emmcloud.bean.GetChannelListResult;
 import com.inspur.emmcloud.bean.GetClientIdRsult;
 import com.inspur.emmcloud.bean.GetCreateOfficeResult;
 import com.inspur.emmcloud.bean.GetCreateSingleChannelResult;
+import com.inspur.emmcloud.bean.GetDeviceLogResult;
 import com.inspur.emmcloud.bean.GetExceptionResult;
 import com.inspur.emmcloud.bean.GetFileUploadResult;
 import com.inspur.emmcloud.bean.GetFindMixSearchResult;
@@ -523,5 +524,7 @@ public interface APIInterface {
 			GetDeviceCheckResult getDeviceCheckResult);
 
 	void returnDeviceCheckFail(String error,int errorCode);
+	void returnDeviceLogListSuccess(GetDeviceLogResult getDeviceLogResult);
+	void returnDeviceLogListFail(String error,int errorCode);
 
 }

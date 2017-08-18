@@ -25,10 +25,8 @@ import android.widget.TextView;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.bean.FinishActivityBean;
 import com.inspur.emmcloud.config.MyAppWebConfig;
 import com.inspur.emmcloud.util.AppUtils;
-import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.MDM.MDM;
 import com.inspur.emmcloud.util.PreferencesByUsersUtils;
 import com.inspur.emmcloud.util.StringUtils;
@@ -37,10 +35,6 @@ import com.inspur.imp.engine.webview.ImpWebView;
 import com.inspur.imp.plugin.PluginMgr;
 import com.inspur.imp.plugin.camera.PublicWay;
 import com.inspur.imp.plugin.file.FileService;
-
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -80,17 +74,7 @@ public class ImpActivity extends ImpBaseActivity {
         ((MyApplication) getApplicationContext()).addActivity(this);
         setContentView(Res.getLayoutID("activity_imp"));
         initViews();
-        EventBus.getDefault().register(this);
     }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void finishWebViewActivity(FinishActivityBean finishActivityBean) {
-        if(finishActivityBean.getFinishType().equals("webview")){
-            LogUtils.YfcDebug("结束WebView的Activity");
-            finish();
-        }
-    }
-
 
     /**
      * 初始化Views
@@ -417,7 +401,6 @@ public class ImpActivity extends ImpBaseActivity {
             webView.removeAllViews();
             webView.destroy();
         }
-        EventBus.getDefault().unregister(this);
     }
 
 

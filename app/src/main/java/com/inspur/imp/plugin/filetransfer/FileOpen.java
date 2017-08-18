@@ -344,6 +344,7 @@ public class FileOpen {
 			AlertDialog alertDialog = new AlertDialog.Builder(context,
 					android.R.style.Theme_Holo_Light_Dialog)
 					.setMessage(Res.getStringID("file_download_success"))
+					.setTitle(Res.getStringID("tips"))
 					.setCancelable(false)
 					.setPositiveButton(Res.getStringID("file_ok"),
 							new DialogInterface.OnClickListener() {

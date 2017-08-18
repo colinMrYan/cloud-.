@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.webkit.DownloadListener;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -36,12 +37,15 @@ import com.inspur.emmcloud.bean.GetNewsInstructionResult;
 import com.inspur.emmcloud.bean.GetSendMsgResult;
 import com.inspur.emmcloud.bean.GroupNews;
 import com.inspur.emmcloud.bean.NewsIntrcutionUpdateEvent;
+import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.config.MyAppWebConfig;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.util.ChatCreateUtils;
 import com.inspur.emmcloud.util.ChatCreateUtils.OnCreateDirectChannelListener;
 import com.inspur.emmcloud.util.DensityUtil;
+import com.inspur.emmcloud.util.DownLoaderUtils;
 import com.inspur.emmcloud.util.HtmlRegexpUtil;
+import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.StateBarColor;
@@ -53,11 +57,17 @@ import com.inspur.emmcloud.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.ProgressWebView;
 import com.inspur.emmcloud.widget.SwitchView;
+import com.inspur.imp.util.StrUtil;
 
 import org.greenrobot.eventbus.EventBus;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.xutils.common.Callback;
+
+import java.io.File;
+import java.net.URLDecoder;
+import java.util.UUID;
 
 
 public class NewsWebDetailActivity extends BaseActivity {
@@ -147,6 +157,93 @@ public class NewsWebDetailActivity extends BaseActivity {
         initWebViewTextSize();
         initWebViewSettings();
         initWebViewModel();
+        webView.setDownloadListener(new DownloadListener() {
+            @Override
+            public void onDownloadStart(String url, String userAgent, String contentDisposition, String mimetype, long contentLength) {
+                LogUtils.jasonDebug("url="+url);
+                LogUtils.jasonDebug("userAgent="+userAgent);
+                LogUtils.jasonDebug("contentDisposition="+contentDisposition);LogUtils.jasonDebug("mimetype="+mimetype);
+                String fileName = getFileName(contentDisposition,url);
+                try {
+                    fileName = URLDecoder.decode(fileName,"UTF-8");   //防止文件名乱码
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+
+
+                new DownLoaderUtils().startDownLoad(url, MyAppConfig.LOCAL_DOWNLOAD_PATH+fileName, new Callback.ProgressCallback<File>() {
+                    @Override
+                    public void onWaiting() {
+
+                    }
+
+                    @Override
+                    public void onStarted() {
+                        LogUtils.jasonDebug("onStarted------------");
+                    }
+
+                    @Override
+                    public void onLoading(long l, long l1, boolean b) {
+                        LogUtils.jasonDebug("progress------------="+(l1/l*100));
+                    }
+
+                    @Override
+                    public void onSuccess(File file) {
+                        LogUtils.jasonDebug("success------------");
+                    }
+
+                    @Override
+                    public void onError(Throwable throwable, boolean b) {
+                        LogUtils.jasonDebug("onError------------="+throwable.getMessage());
+                    }
+
+                    @Override
+                    public void onCancelled(CancelledException e) {
+
+                    }
+
+                    @Override
+                    public void onFinished() {
+
+                    }
+                });
+            }
+        });
+    }
+
+
+    // 在url中获取文件名
+    private String getFileName(String contentDisposition,
+                               String url) {
+        try {
+            String filename = null;
+            if (!StringUtils.isBlank(contentDisposition)) {
+                filename = contentDisposition.split("filename=")[1];
+                //有些下载链接检测到的文件名带双引号，此处给去掉
+                try {
+                    if (filename.length()>2 && filename.startsWith("\"") && filename.endsWith("\"")){
+                        filename = filename.substring(1,filename.length()-1);
+                    }
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+                return filename;
+            }
+            filename = url;
+            if (filename.contains("/")) {
+                String[] array = filename.split("/");
+                filename = array[array.length-1];
+
+            }
+            if (!StrUtil.strIsNotNull(filename)) {
+                // 默认取一个文件名
+                filename = UUID.randomUUID() + ".tmp";
+            }
+            return filename;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     /**

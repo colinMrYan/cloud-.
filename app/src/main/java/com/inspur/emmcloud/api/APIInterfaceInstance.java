@@ -24,6 +24,7 @@ import com.inspur.emmcloud.bean.GetClientIdRsult;
 import com.inspur.emmcloud.bean.GetCreateOfficeResult;
 import com.inspur.emmcloud.bean.GetCreateSingleChannelResult;
 import com.inspur.emmcloud.bean.GetDeviceCheckResult;
+import com.inspur.emmcloud.bean.GetDeviceLogResult;
 import com.inspur.emmcloud.bean.GetExceptionResult;
 import com.inspur.emmcloud.bean.GetFileUploadResult;
 import com.inspur.emmcloud.bean.GetFindMixSearchResult;
@@ -1422,6 +1423,16 @@ public class APIInterfaceInstance implements APIInterface{
 
 	@Override
 	public void returnLoginDesktopCloudPlusFail(String error, int errorCode) {
+
+	}
+
+	@Override
+	public void returnDeviceLogListSuccess(GetDeviceLogResult getDeviceLogResult) {
+
+	}
+
+	@Override
+	public void returnDeviceLogListFail(String error, int errorCode) {
 
 	}
 }

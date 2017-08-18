@@ -18,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.inspur.emmcloud.util.NetUtils;
+import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.imp.api.Res;
 import com.inspur.imp.plugin.ImpPlugin;
 import com.inspur.imp.util.StrUtil;
@@ -431,8 +432,16 @@ public class FileTransferService extends ImpPlugin {
 		try {
 			String filename = null;
 			String headField = urlConnection.getHeaderField("Content-Disposition");
-			if (headField != null) {
+			if (!StringUtils.isBlank(headField)) {
 				filename = headField.split("filename=")[1];
+				//有些下载链接检测到的文件名带双引号，此处给去掉
+				try {
+					if (filename.length()>2 && filename.startsWith("\"") && filename.endsWith("\"")){
+						filename = filename.substring(1,filename.length()-1);
+					}
+				}catch (Exception e){
+					e.printStackTrace();
+				}
 				return filename;
 			}
 			filename = urlConnection.getURL().getFile();
