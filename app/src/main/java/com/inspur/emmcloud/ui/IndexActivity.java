@@ -846,9 +846,9 @@ public class IndexActivity extends BaseFragmentActivity implements
         public void returnSearchChannelGroupSuccess(
                 GetSearchChannelGroupResult getSearchChannelGroupResult) {
             // TODO Auto-generated method stub
-            super.returnSearchChannelGroupSuccess(getSearchChannelGroupResult);
             List<ChannelGroup> channelGroupList = getSearchChannelGroupResult
                     .getSearchChannelGroupList();
+            ChannelGroupCacheUtils.clearChannelGroupList(getApplicationContext());
             ChannelGroupCacheUtils.saveChannelGroupList(
                     getApplicationContext(), channelGroupList);
             handler.sendEmptyMessage(SYNC_ALL_BASE_DATA_SUCCESS);
@@ -865,6 +865,7 @@ public class IndexActivity extends BaseFragmentActivity implements
         @Override
         public void returnAllRobotsSuccess(
                 GetAllRobotsResult getAllBotInfoResult) {
+            RobotCacheUtils.clearRobotList(IndexActivity.this);
             RobotCacheUtils.saveOrUpdateRobotList(IndexActivity.this, getAllBotInfoResult.getRobotList());
         }
 
