@@ -4,7 +4,10 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     tools:context=".MainActivity">
-
+    <View
+        android:id="@+id/top_blank_view"
+        android:layout_width="match_parent"
+        android:layout_height="10dp"></View>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -24,8 +27,8 @@
 
             <ImageView
                 android:id="@+id/group_icon_img"
-                android:layout_width="19dp"
-                android:layout_height="19dp"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="10dp"
                 android:scaleType="fitXY" />
@@ -37,12 +40,12 @@
                 android:layout_centerVertical="true"
                 android:layout_toRightOf="@id/group_icon_img"
                 android:textColor="#3CBAFF"
-                android:textSize="12sp" />
+                android:textSize="14sp" />
 
             <ImageView
                 android:id="@+id/work_right_img"
                 android:layout_width="wrap_content"
-                android:layout_height="15dp"
+                android:layout_height="16dp"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:src="@drawable/right_arrow" />
@@ -61,8 +64,8 @@
                     android:id="@+id/add_img"
                     android:layout_width="26dp"
                     android:layout_height="26dp"
-                    android:layout_marginTop="7dp"
-                    android:layout_marginBottom="7dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginBottom="2dp"
                     android:gravity="center"
                     android:scaleType="fitXY"
                     android:src="@drawable/ic_work_add"
@@ -78,7 +81,6 @@
                     android:layout_centerVertical="true"
                     android:layout_toRightOf="@id/add_img"
                     android:paddingRight="20dp"
-                    android:text="添加会议"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
                 <View
@@ -103,7 +105,7 @@
     </LinearLayout>
 
     <View
-        android:id="@+id/blank_view"
+        android:id="@+id/bottom_blank_view"
         android:layout_width="match_parent"
         android:layout_height="50dp"></View>
 </LinearLayout>

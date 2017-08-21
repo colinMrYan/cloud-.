@@ -8,16 +8,16 @@ import java.io.Serializable;
 
 public class GroupNews implements Serializable{
 
-	private String author;
-	private String category;
-	private String digest;
-	private String needpush;
-	private String nid;
-	private String posttime;
-	private String publisher;
-	private String title;
-//	private String url;
-	private String poster;
+	private String author = "";
+	private String category = "";
+	private String digest = "";
+	private String needpush = "";
+	private String nid = "";
+	private String posttime = "0";
+	private String publisher = "";
+	private String title = "";
+	private String url = "";
+	private String poster = "";
 	private boolean important = false;
 	private String summary = "";
 	private String creationDate = "";
@@ -28,6 +28,8 @@ public class GroupNews implements Serializable{
 	private String approvedDate = "";
 	private boolean editorCommentCreated = false;
 	private String originalEditorComment = "";
+
+	public GroupNews(){}
 
 	public GroupNews(JSONObject jsonObject) {
 		try {
@@ -97,6 +99,14 @@ public class GroupNews implements Serializable{
 		}
 	}
 
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
+	}
+
 	public String getAuthor() {
 		return author;
 	}
@@ -129,6 +139,14 @@ public class GroupNews implements Serializable{
 		return title;
 	}
 
+	public void setDigest(String digest) {
+		this.digest = digest;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
 	public String getEditorComment() {
 		return editorComment;
 	}
@@ -149,6 +167,10 @@ public class GroupNews implements Serializable{
 			poster = "";
 		}
 		return poster;
+	}
+
+	public void setPoster(String poster) {
+		this.poster = poster;
 	}
 
 	public boolean isImportant() {

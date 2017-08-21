@@ -12,7 +12,6 @@ import com.inspur.emmcloud.util.FileSafeCode;
 import com.inspur.emmcloud.util.FileUtils;
 import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.PreferencesByUserAndTanentUtils;
-import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.UnZipAssets;
 import com.inspur.emmcloud.util.ZipUtils;
@@ -59,7 +58,7 @@ public class ReactNativeFlow {
         if (!isBundleExist) {
             try {
                 UnZipAssets.unZip(context, "bundle-v0.1.0.android.zip", reactCurrentFilePath, true);
-                PreferencesUtils.putString(context, "react_native_lastupdatetime", System.currentTimeMillis() + "");
+//                PreferencesUtils.putString(context, "react_native_lastupdatetime", System.currentTimeMillis() + "");//隔半小时检查逻辑
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -179,15 +178,13 @@ public class ReactNativeFlow {
             deleteOldVersionFile(reactCurrentPath);
             ZipUtils.upZipFile(reactZipFilePath, reactCurrentPath);
             FileUtils.deleteFile(reactZipFilePath);
-            PreferencesUtils.putString(context, "react_native_lastupdatetime", "" + System.currentTimeMillis());
+//            PreferencesUtils.putString(context, "react_native_lastupdatetime", "" + System.currentTimeMillis());//隔半小时检查更新逻辑相关
             FindFragment.hasUpdated = true;
             Intent intent = new Intent("com.inspur.react.success");
             context.sendBroadcast(intent);
             LogUtils.YfcDebug("更新成功");
         } else {
             LogUtils.YfcDebug("包不完整，更新失败");
-//            FileUtils.deleteFile(reactZipFilePath);
-//            ToastUtils.show(context,context.getString(R.string.react_native_app_update_failed));
         }
     }
 

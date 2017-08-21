@@ -29,6 +29,7 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.util.JSONUtils;
 import com.inspur.emmcloud.util.StateBarColor;
+import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.ToastUtils;
 import com.inspur.imp.plugin.camera.editimage.EditImageActivity;
 import com.inspur.imp.plugin.camera.editimage.utils.BitmapUtils;
@@ -78,6 +79,11 @@ public class MyCameraActivity extends Activity implements View.OnClickListener, 
         setContentView(R.layout.activity_mycamera);
 
         initData();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         initView();
         setListener();
     }
@@ -92,7 +98,7 @@ public class MyCameraActivity extends Activity implements View.OnClickListener, 
         extraParam = getIntent().getStringExtra(PHOTO_PARAM);
         JSONObject optionsObj = JSONUtils.getJSONObject(extraParam,"options",new JSONObject());
         String rectScale = JSONUtils.getString(optionsObj,"rectScale",null);
-        if (rectScale != null){
+        if (!StringUtils.isBlank(rectScale) && !rectScale.equals("null")){
             String[] ratios = rectScale.split(":");
             if (ratios.length == 2){
                 int ratio0 = Integer.parseInt(ratios[0]);
@@ -281,13 +287,13 @@ public class MyCameraActivity extends Activity implements View.OnClickListener, 
                 previewSFV.setCropMode(FocusSurfaceView.CropMode.RATIO_3_4);
                 break;
             case R.id.four_three_bt:
-                previewSFV.setCropMode(FocusSurfaceView.CropMode.RATIO_4_3);
+                previewSFV.setCropMode(FocusSurfaceView.CropMode.RATIO_3_4);
                 break;
             case R.id.nine_sixteen_bt:
                 previewSFV.setCropMode(FocusSurfaceView.CropMode.RATIO_9_16);
                 break;
             case R.id.sixteen_nine_bt:
-                previewSFV.setCropMode(FocusSurfaceView.CropMode.RATIO_16_9);
+                previewSFV.setCropMode(FocusSurfaceView.CropMode.RATIO_9_16);
                 break;
             case R.id.switch_camera_btn:
                 currentCameraFacing = 1 - currentCameraFacing;
@@ -382,10 +388,13 @@ public class MyCameraActivity extends Activity implements View.OnClickListener, 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK && requestCode == ACTION_REQUEST_EDITIMAGE){
-            setResult(RESULT_OK,data);
+        if (requestCode == ACTION_REQUEST_EDITIMAGE){
+            if (resultCode == RESULT_OK ){
+                setResult(RESULT_OK,data);
+            }
             finish();
         }
+
     }
 
     public Bitmap rotaingImageView(int angle, Bitmap bitmap) {

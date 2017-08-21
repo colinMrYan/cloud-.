@@ -20,12 +20,6 @@ public class BaseFragmentActivity extends FragmentActivity {
         StateBarColor.changeStateBarColor(this);
     }
 
-    //修改字体方案预留
-//	@Override
-//	protected void attachBaseContext(Context newBase) {
-//		super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
-//	}
-
     @Override
     protected void onStop() {
         // TODO Auto-generated method stub
@@ -66,15 +60,6 @@ public class BaseFragmentActivity extends FragmentActivity {
         }
 
     }
-
-//	@Override
-//	public Resources getResources() {
-//	    Resources res = super.getResources();
-//	    Configuration config=new Configuration();
-//	    config.setToDefaults();
-//	    res.updateConfiguration(config,res.getDisplayMetrics() );
-//	    return res;
-//	}
 
     /**
      * 上传MDM需要的设备信息

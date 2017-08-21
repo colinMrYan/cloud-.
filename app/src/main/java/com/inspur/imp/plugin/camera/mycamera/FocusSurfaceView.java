@@ -153,7 +153,7 @@ public class FocusSurfaceView extends SurfaceView {
             mMinFrameSize = ta.getDimensionPixelSize(R.styleable.FocusSurfaceView_focus_min_frame_size, (int) (MIN_FRAME_SIZE_IN_DP * mDensity));
             mFrameStrokeWeight = ta.getDimensionPixelSize(R.styleable.FocusSurfaceView_focus_frame_stroke_weight, (int) (FRAME_STROKE_WEIGHT_IN_DP * mDensity));
             mGuideStrokeWeight = ta.getDimensionPixelSize(R.styleable.FocusSurfaceView_focus_guide_stroke_weight, (int) (GUIDE_STROKE_WEIGHT_IN_DP * mDensity));
-            mIsCropEnabled = ta.getBoolean(R.styleable.FocusSurfaceView_focus_crop_enabled, true);
+            mIsCropEnabled = ta.getBoolean(R.styleable.FocusSurfaceView_focus_crop_enabled, false);
             mInitialFrameScale = constrain(ta.getFloat(R.styleable.FocusSurfaceView_focus_initial_frame_scale, DEFAULT_INITIAL_FRAME_SCALE),
                     0.01f, 1.0f, DEFAULT_INITIAL_FRAME_SCALE);
             mIsAnimationEnabled = ta.getBoolean(R.styleable.FocusSurfaceView_focus_animation_enabled, true);
@@ -941,6 +941,7 @@ public class FocusSurfaceView extends SurfaceView {
      * 设置裁剪模式
      */
     public void setCropMode(CropMode mode) {
+        setCropEnabled(true);
         setCropMode(mode, mAnimationDurationMillis);
     }
 
@@ -953,6 +954,11 @@ public class FocusSurfaceView extends SurfaceView {
      */
     public void setCustomRatio(int ratioX, int ratioY, int durationMillis) {
         if (ratioX == 0 || ratioY == 0) return;
+        int ratio0 =ratioX;
+        int ratio1 = ratioY;
+        ratioX = ratio0<=ratio1?ratio0:ratio1;
+        ratioY = ratio0>ratio1?ratio0:ratio1;
+        setCropEnabled(true);
         mCropMode = CropMode.CUSTOM;
         mCustomRatio.set(ratioX, ratioY);
         recalculateFrameRect(durationMillis);

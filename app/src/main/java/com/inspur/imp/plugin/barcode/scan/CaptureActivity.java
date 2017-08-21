@@ -1,5 +1,6 @@
 package com.inspur.imp.plugin.barcode.scan;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
 import android.graphics.Bitmap;
@@ -14,13 +15,14 @@ import android.view.SurfaceHolder.Callback;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.Result;
-import com.inspur.imp.api.ImpBaseActivity;
+import com.inspur.emmcloud.util.StateBarColor;
 import com.inspur.imp.api.Res;
 import com.inspur.imp.plugin.barcode.camera.CameraManager;
 import com.inspur.imp.plugin.barcode.decoding.CaptureActivityHandler;
@@ -31,7 +33,7 @@ import java.io.IOException;
 import java.util.Vector;
 
 
-public class CaptureActivity extends ImpBaseActivity implements Callback {
+public class CaptureActivity extends Activity implements Callback {
 
 	private CaptureActivityHandler handler;
 	private ViewfinderView viewfinderView;
@@ -52,7 +54,10 @@ public class CaptureActivity extends ImpBaseActivity implements Callback {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		requestWindowFeature(Window.FEATURE_NO_TITLE);//没有标题
+		StateBarColor.hideStatusBar(this);
 		setContentView(Res.getLayoutID("plugin_barcode_capture"));
+		this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);//设置全屏
 		CameraManager.init(this);
 		btn_torch = (Button)findViewById(Res.getWidgetID("btn_torch"));
 		viewfinderView = (ViewfinderView) findViewById(Res.getWidgetID("viewfinder_view"));
@@ -60,7 +65,7 @@ public class CaptureActivity extends ImpBaseActivity implements Callback {
 		lampText = (TextView) findViewById(Res.getWidgetID("lamp_text"));
 		hasSurface = false;
 		inactivityTimer = new InactivityTimer(this);
-		((RelativeLayout)findViewById(Res.getWidgetID("back_layout"))).setOnClickListener(new OnClickListener() {
+		(findViewById(Res.getWidgetID("close_camera_btn"))).setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {

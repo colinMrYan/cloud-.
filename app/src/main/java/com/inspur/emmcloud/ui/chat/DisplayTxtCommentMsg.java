@@ -11,14 +11,12 @@ import android.text.SpannableStringBuilder;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ForegroundColorSpan;
 import android.view.View;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.bean.Msg;
-import com.inspur.emmcloud.util.DensityUtil;
 import com.inspur.emmcloud.util.IntentUtils;
 import com.inspur.emmcloud.util.JSONUtils;
 import com.inspur.emmcloud.util.MentionsAndUrlShowUtils;
@@ -97,23 +95,17 @@ public class DisplayTxtCommentMsg {
             apiService.getMsg(msg.getCommentMid());
         }
 
-        RelativeLayout rootLayout = (RelativeLayout) convertView
-                .findViewById(R.id.root_layout);
-        rootLayout.setBackgroundColor(context.getResources().getColor(
-                isMyMsg ? R.color.header_bg : R.color.white));
+        (convertView
+                .findViewById(R.id.root_layout)).setBackgroundColor(context.getResources().getColor(
+                isMyMsg ? R.color.bg_my_card : R.color.white));
+
+        (convertView
+                .findViewById(R.id.card_layout)).setBackgroundResource(isMyMsg?R.drawable.ic_chat_msg_img_cover_arrow_right:R.drawable.ic_chat_msg_img_cover_arrow_left);;
+
         commentContentText.setTextColor(context.getResources().getColor(
                 isMyMsg ? R.color.white : R.color.black));
         commentTitleText.setTextColor(context.getResources().getColor(
                 isMyMsg ? R.color.white : R.color.black));
-        int normalPadding = DensityUtil.dip2px(context, 9);
-        int arrowPadding = DensityUtil.dip2px(context, 7);
-        if (isMyMsg) {
-            rootLayout.setPadding(normalPadding, normalPadding, normalPadding
-                    + arrowPadding, normalPadding);
-        } else {
-            rootLayout.setPadding(normalPadding + arrowPadding, normalPadding,
-                    normalPadding, normalPadding);
-        }
         commentContentText.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {

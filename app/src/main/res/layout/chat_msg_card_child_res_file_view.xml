@@ -38,9 +38,9 @@
 
     <View
         android:id="@+id/line_view"
-        android:background="@color/content_bg"
+        android:background="@color/grey_line_color"
         android:layout_width="match_parent"
-        android:layout_height="1dp" />
+        android:layout_height="0.5dp" />
 
     <LinearLayout
         android:id="@+id/bottom_layout"
