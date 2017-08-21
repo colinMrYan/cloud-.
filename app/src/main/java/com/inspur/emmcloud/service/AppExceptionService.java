@@ -45,20 +45,6 @@ public class AppExceptionService extends Service {
 	}
 
 	public void uploadException() {
-//		if (!NetUtils.isNetworkConnected(AppExceptionService.this) || AppUtils.isApkDebugable(AppExceptionService.this)) {
-//			onDestroy();
-//		}else {
-//			List<AppException> appExceptionList = AppExceptionCacheUtils.getAppExceptionList(AppExceptionService.this);
-//			if (appExceptionList.size() != 0) {
-//				JSONObject uploadContentJSONObj = getUploadContentJSONObj(appExceptionList);
-//				AppAPIService apiService = new AppAPIService(AppExceptionService.this);
-//				apiService.setAPIInterface(new WebService());
-//				apiService.uploadException(uploadContentJSONObj);
-//			}else {
-//				onDestroy();
-//			}
-//
-//		}
 		if (NetUtils.isNetworkConnected(AppExceptionService.this,false) && !AppUtils.isApkDebugable(AppExceptionService.this)) {
 			List<AppException> appExceptionList = AppExceptionCacheUtils.getAppExceptionList(AppExceptionService.this);
 			if (appExceptionList.size() != 0) {
@@ -69,7 +55,7 @@ public class AppExceptionService extends Service {
 				return;
 			}
 		}
-		onDestroy();
+		stopSelf();
 	}
 
 	/**
@@ -110,12 +96,12 @@ public class AppExceptionService extends Service {
 		public void returnUploadExceptionSuccess(
 				GetExceptionResult getExceptionResult) {
 			AppExceptionCacheUtils.clearAppException(AppExceptionService.this);
-			onDestroy();
+			stopSelf();
 		}
 
 		@Override
 		public void returnUploadExceptionFail(String error,int errorCode) {
-			onDestroy();
+			stopSelf();
 		}
 	}
 }
