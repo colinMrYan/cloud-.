@@ -20,7 +20,7 @@
         android:layout_height="wrap_content"
         android:layout_marginRight="9dp"
         android:layout_marginTop="13dp"
-        android:text="更多应用"
+        android:text="@string/app_center_more_apps"
         android:textColor="#999999"
         android:layout_alignParentRight="true"
         android:textSize="@dimen/content_normal_textsize" />

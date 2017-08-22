@@ -2,6 +2,8 @@ package com.inspur.emmcloud.ui.app;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -35,19 +37,18 @@ import com.inspur.emmcloud.bean.AppAdsBean;
 import com.inspur.emmcloud.bean.AppGroupBean;
 import com.inspur.emmcloud.bean.GetAllAppResult;
 import com.inspur.emmcloud.util.DensityUtil;
-import com.inspur.emmcloud.util.DeviceUtils;
 import com.inspur.emmcloud.util.ImageDisplayUtils;
 import com.inspur.emmcloud.util.IntentUtils;
 import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.StringUtils;
-import com.inspur.emmcloud.util.ToastUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.CircularProgress;
 import com.inspur.emmcloud.widget.ECMSpaceItemDecoration;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -57,22 +58,18 @@ import java.util.TimerTask;
  * 下午2:54:47
  */
 public class AppCenterActivity extends BaseActivity {
-
     private static final String ACTION_NAME = "add_app";
     private static final int UPTATE_VIEWPAGER = 1;
     private MyAppAPIService apiService;
     private ViewPager viewPager;
     private CircularProgress recommandCircleProgress, classCircleProgress;
     private ListView recommandListView, classListView;
-//    private List<App> recommandAppList = new ArrayList<App>();
-    private List<App> hotRecommandList = new ArrayList<>();
-    private List<App> classicRecommandList = new ArrayList<>();
     private List<AppAdsBean> adsList = new ArrayList<>();
     private List<AppGroupBean> categorieAppList = new ArrayList<AppGroupBean>();
+    private List<List<App>> appList = new ArrayList<>();
     private BaseAdapter recommandAppAdapter;
     private BaseAdapter categoriesAppAdapter;
     private BroadcastReceiver addAppReceiver;
-    private int autoCurrIndex = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,7 +79,7 @@ public class AppCenterActivity extends BaseActivity {
                 .addActivity(AppCenterActivity.this);
         initView();
         getAllApp();
-//        registerReceiver(addAppReceiver);
+        registerReceiver();
     }
 
     /**
@@ -108,15 +105,6 @@ public class AppCenterActivity extends BaseActivity {
         viewList.add(classView);
         viewPager.setAdapter(new MyViewPagerAdapter(viewList, null));
         viewPager.addOnPageChangeListener(new PageChangeListener());
-//        recommandListView.setOnItemClickListener(new OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view,
-//                                    int position, long id) {
-//                Bundle bundle = new Bundle();
-//                bundle.putSerializable("app", recommandAppList.get(position));
-//                IntentUtils.startActivity(AppCenterActivity.this, AppDetailActivity.class, bundle);
-//            }
-//        });
     }
 
     private class PageChangeListener implements OnPageChangeListener {
@@ -195,43 +183,46 @@ public class AppCenterActivity extends BaseActivity {
         }
     }
 
-    //暂时屏蔽还要打开
-//    /**
-//     * 注册添加应用检测广播
-//     */
-//    private void registerReceiver() {
-//        addAppReceiver = new BroadcastReceiver() {
-//            @Override
-//            public void onReceive(Context context, Intent intent) {
-//                String action = intent.getAction();
-//                if (action.equals(ACTION_NAME)) {
-//                    App addApp = (App) intent.getExtras()
-//                            .getSerializable("app");
-//                    int recommandAppIndex = recommandAppList.indexOf(addApp);
-//                    if (recommandAppIndex != -1) {
-//                        recommandAppList.get(recommandAppIndex).setUseStatus(1);
-//                    }
-//                    for (int i = 0; i < categorieAppList.size(); i++) {
-//                        int categoriesAppIndex = categorieAppList.get(i).getAppItemList().indexOf(addApp);
-//                        if (categoriesAppIndex != -1) {
-//                            categorieAppList.get(i).getAppItemList().get(categoriesAppIndex).setUseStatus(1);
-//                        }
-//                    }
-//                }
-//            }
-//        };
-//        IntentFilter myIntentFilter = new IntentFilter();
-//        myIntentFilter.addAction(ACTION_NAME);
-//        registerReceiver(addAppReceiver, myIntentFilter);
-//    }
-
+    /**
+     * 注册添加应用检测广播
+     */
+    private void registerReceiver() {
+        addAppReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                String action = intent.getAction();
+                if (action.equals(ACTION_NAME)) {
+                    App addApp = (App) intent.getExtras()
+                            .getSerializable("app");
+                    int recommandAppIndex = -1,groupIndex = 0;
+                    Iterator<List<App>> appItemList = appList.listIterator();
+                    while (appItemList.hasNext()){
+                        recommandAppIndex = appItemList.next().indexOf(addApp);
+                        groupIndex = groupIndex + 1;
+                    }
+                    if (recommandAppIndex != -1) {
+                        appList.get(groupIndex).get(recommandAppIndex).setUseStatus(1);
+                    }
+                    for (int i = 0; i < categorieAppList.size(); i++) {
+                        int categoriesAppIndex = categorieAppList.get(i).getAppItemList().indexOf(addApp);
+                        if (categoriesAppIndex != -1) {
+                            categorieAppList.get(i).getAppItemList().get(categoriesAppIndex).setUseStatus(1);
+                        }
+                    }
+                }
+            }
+        };
+        IntentFilter myIntentFilter = new IntentFilter();
+        myIntentFilter.addAction(ACTION_NAME);
+        registerReceiver(addAppReceiver, myIntentFilter);
+    }
 
     class RecommondAppAdapter extends BaseAdapter {
         @Override
         public View getView(final int listPosition, View convertView, ViewGroup parent) {
 //			App app = recommandAppList.get(position);
             //先不加顶部banner，如果需要加banner则打开此处的代码
-            if (listPosition == 0) {
+            if ((adsList != null && adsList.size()>0)&&listPosition == 0) {
                 convertView = LayoutInflater.from(AppCenterActivity.this).inflate(R.layout.my_app_recommand_banner_app_item_view, null);
                 RelativeLayout appRecomandLayout = (RelativeLayout) convertView.findViewById(R.id.app_center_recomand_viewpager_layout);
                 ViewPager viewPager = (ViewPager) convertView.findViewById(R.id.app_center_banner_viewpager);
@@ -253,17 +244,32 @@ public class AppCenterActivity extends BaseActivity {
                 initRecomandViewPager(appRecomandLayout, viewPager);
             } else {
                 convertView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.my_app_recommand_app_item_view, null);
+                final int size = adsList.size() == 0 ? listPosition : (listPosition -1);
+                List<App> appItemList = appList.get(size);
+                if(appList.size() > 0 && appItemList != null && appItemList.size() > 0){
+                    ((TextView)convertView.findViewById(R.id.app_center_recommand_text)).setText(appList.get(size).get(0).getCategoryName());
+                }
+                convertView.findViewById(R.id.app_center_more_text).setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable("appList", (Serializable) appList.get(size));
+                        bundle.putString("category_name",appList.get(size).get(0).getCategoryName());
+                        IntentUtils.startActivity(AppCenterActivity.this, AppCenterMoreActivity.class, bundle);
+                    }
+                });
                 RecyclerView recomandRecyclerView = (RecyclerView) convertView.findViewById(R.id.app_center_recomand_recycleview);
                 LinearLayoutManager linearLayoutManager = new LinearLayoutManager(AppCenterActivity.this);
                 recomandRecyclerView.addItemDecoration(new ECMSpaceItemDecoration(30));
                 linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
                 recomandRecyclerView.setLayoutManager(linearLayoutManager);
-                LogUtils.YfcDebug("传入的listPositon："+listPosition);
                 RecommandAppListAdapter recommandAppListAdapter = new RecommandAppListAdapter(AppCenterActivity.this, null,listPosition);
                 recommandAppListAdapter.setOnRecommandItemClickListener(new OnRecommandItemClickListener() {
                     @Override
                     public void onRecommandItemClick(View view, int position) {
-                        ToastUtils.show(AppCenterActivity.this, "点击了第"+listPosition+"组中的第" + position + "个应用");
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable("app", appList.get(size).get(position));
+                        IntentUtils.startActivity(AppCenterActivity.this, AppDetailActivity.class, bundle);
                     }
                 });
                 recomandRecyclerView.setAdapter(recommandAppListAdapter);
@@ -283,41 +289,27 @@ public class AppCenterActivity extends BaseActivity {
 
         @Override
         public int getCount() {
-            return 3;
+            int hasdataSize = getAppListHasData();
+            return (adsList.size() == 0? appList.size():(hasdataSize + 1));
+        }
+
+        private int getAppListHasData() {
+            int size = 0;
+            for(int i = 0; i < appList.size(); i++){
+                if(appList.get(i).size() > 0){
+                    size = size + 1;
+                }
+            }
+            return size ;
         }
 
 
     }
 
-
     class CategoriesAppAdapter extends BaseAdapter {
         ImageDisplayUtils imageDisplayUtils = new ImageDisplayUtils(AppCenterActivity.this,R.drawable.icon_app_center_categories);
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
-            //原来的应用中心分类
-//            convertView = LayoutInflater.from(AppCenterActivity.this).inflate(R.layout.app_center_drag_item, null);
-//            TextView appGroupNameText = (TextView) convertView.findViewById(R.id.app_center_title_text);
-//            appGroupNameText.setText(categorieAppList.get(position).getCategoryName());
-//            TextView appGroupMoreText = (TextView) convertView.findViewById(R.id.app_center_more_text);
-//            if (categorieAppList.get(position).getAppItemList().size() > 4) {
-//                appGroupMoreText.setVisibility(View.VISIBLE);
-//            } else {
-//                appGroupMoreText.setVisibility(View.GONE);
-//            }
-//            AppCenterDragAdapter dragGridViewAdapter = new AppCenterDragAdapter(
-//                    AppCenterActivity.this, categorieAppList.get(position).getAppItemList());
-//            DragGridView dragGridView = (DragGridView) convertView
-//                    .findViewById(R.id.app_list_draggrid);
-//            dragGridView.setAdapter(dragGridViewAdapter);
-//            appGroupMoreText.setOnClickListener(new OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    Bundle bundle = new Bundle();
-//                    bundle.putSerializable("appList", (Serializable) categorieAppList.get(position).getAppItemList());
-//                    IntentUtils.startActivity(AppCenterActivity.this, AppCenterMoreActivity.class, bundle);
-//                }
-//            });
-
             convertView = LayoutInflater.from(AppCenterActivity.this).inflate(R.layout.app_center_category_item, null);
             ((TextView) convertView.findViewById(R.id.app_center_categories_item_txt)).setText(categorieAppList.get(position).getCategoryName());
             ImageView appCenterCategoryIcon = (ImageView) convertView.findViewById(R.id.app_center_categories_icon_img);
@@ -344,8 +336,6 @@ public class AppCenterActivity extends BaseActivity {
         }
     }
 
-    ;
-
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -355,44 +345,21 @@ public class AppCenterActivity extends BaseActivity {
         }
     }
 
-
     private void initRecomandViewPager(RelativeLayout mViewPagerContainer, final ViewPager mViewPager) {
-        //设置ViewPager的布局
-        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
-                DeviceUtils.getWindowWidth(this) * 8 / 10,
-                DeviceUtils.getWindowHeight(this) * 2 / 10);
-        /**** 重要部分  ******/
-        //clipChild用来定义他的子控件是否要在他应有的边界内进行绘制。 默认情况下，clipChild被设置为true。 也就是不允许进行扩展绘制。
-//        mViewPager.setClipChildren(false);
-//        //父容器一定要设置这个，否则看不出效果
-//        mViewPagerContainer.setClipChildren(false);
-//        mViewPager.setLayoutParams(params);
-        //为ViewPager设置PagerAdapter
         mViewPager.setAdapter(new RecommandAppPagerAdapter());
-
         startAutoSlide(mViewPager);
         if (adsList != null && adsList.size() > 1) {
             mViewPager.setCurrentItem(1);
         }
-        //设置ViewPager切换效果，即实现画廊效果
-//        mViewPager.setPageTransformer(true, new ZoomOutPageTransformer());
-//        //设置预加载数量
-//        mViewPager.setOffscreenPageLimit(2);
-//        //设置每页之间的左右间隔
-//        mViewPager.setPageMargin(-90);
-
         //将容器的触摸事件反馈给ViewPager
         mViewPagerContainer.setOnTouchListener(new View.OnTouchListener() {
 
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                // dispatch the events to the ViewPager, to solve the problem that we can swipe only the middle view.
                 return mViewPager.dispatchTouchEvent(event);
             }
 
         });
-
-
     }
 
     /**
@@ -429,12 +396,10 @@ public class AppCenterActivity extends BaseActivity {
 
         @Override
         public int getCount() {
-            //return viewList==null?0:viewList.size();
             if (adsList == null ) {
                 return 0;
             }
             return Integer.MAX_VALUE;
-//            return recommandAppList == null?0:recommandAppList.size();//ViewPager里的个数
         }
 
         @Override
@@ -453,11 +418,11 @@ public class AppCenterActivity extends BaseActivity {
             imageView.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ToastUtils.show(AppCenterActivity.this,"点击了banner第"+(position%8)+"个");
+//                    ToastUtils.show(AppCenterActivity.this,"点击了banner第"+(position%(adsList.size()))+"个");
+                    LogUtils.YfcDebug("点击了banner第"+(position%(adsList.size()))+"个");//需要对广告banner处理点击事件时在此处编写代码
                 }
             });
             return imageView;
-
         }
 
         @Override
@@ -465,41 +430,6 @@ public class AppCenterActivity extends BaseActivity {
             ((ViewPager) container).removeView((ImageView) object);
         }
     }
-
-//    /**
-//     * 实现的原理是，在当前显示页面放大至原来的MAX_SCALE
-//     * 其他页面才是正常的的大小MIN_SCALE
-//     */
-//    class ZoomOutPageTransformer implements ViewPager.PageTransformer {
-//        private static final float MAX_SCALE = 1.2f;
-//        private static final float MIN_SCALE = 1.0f;//0.85f
-//
-//        @Override
-//        public void transformPage(View view, float position) {
-//            //setScaleY只支持api11以上
-//            if (position < -1) {
-//                view.setScaleX(MIN_SCALE);
-//                view.setScaleY(MIN_SCALE);
-//            } else if (position <= 1) //a页滑动至b页 ； a页从 0.0 -1 ；b页从1 ~ 0.0
-//            { // [-1,1]
-//                float scaleFactor = MIN_SCALE + (1 - Math.abs(position)) * (MAX_SCALE - MIN_SCALE);
-//                view.setScaleX(scaleFactor);
-//                //每次滑动后进行微小的移动目的是为了防止在三星的某些手机上出现两边的页面为显示的情况
-//                if (position > 0) {
-//                    view.setTranslationX(-scaleFactor * 2);
-//                } else if (position < 0) {
-//                    view.setTranslationX(scaleFactor * 2);
-//                }
-//                view.setScaleY(scaleFactor);
-//
-//            } else { // (1,+Infinity]
-//                view.setScaleX(MIN_SCALE);
-//                view.setScaleY(MIN_SCALE);
-//            }
-//
-//        }
-//
-//    }
 
     public class RecommandAppListAdapter extends RecyclerView.Adapter<RecommandAppListAdapter.RecommandViewHolder> {
 
@@ -510,9 +440,7 @@ public class AppCenterActivity extends BaseActivity {
             inflater = LayoutInflater.from(context);
             this.listPosition = listPosition;
         }
-
         private OnRecommandItemClickListener onRecommandItemClickListener;
-
         public void setOnRecommandItemClickListener(OnRecommandItemClickListener l) {
             this.onRecommandItemClickListener = l;
         }
@@ -528,18 +456,9 @@ public class AppCenterActivity extends BaseActivity {
 
         @Override
         public void onBindViewHolder(final RecommandViewHolder holder, final int position) {
-//            holder.recommandAppImg.setImageResource(R.drawable.ic_launcher);
-//            LogUtils.YfcDebug("appIcon:"+classicRecommandList.get(position).getAppIcon());
-
-            LogUtils.YfcDebug("position："+position);
-            if(listPosition == 1){
-                new ImageDisplayUtils().display(holder.recommandAppImg,hotRecommandList.get(position).getAppIcon());
-                holder.recommandAppText.setText(hotRecommandList.get(position).getAppName());
-            }else if(listPosition == 2){
-                new ImageDisplayUtils().display(holder.recommandAppImg,classicRecommandList.get(position).getAppIcon());
-                holder.recommandAppText.setText(classicRecommandList.get(position).getAppName());
-            }
-
+            int size = adsList.size() == 0 ? listPosition:(listPosition - 1);
+            new ImageDisplayUtils().display(holder.recommandAppImg,appList.get(size).get(position).getAppIcon());
+                holder.recommandAppText.setText(appList.get(size).get(position).getAppName());
             if (onRecommandItemClickListener != null) {
                 holder.itemView.setOnClickListener(new OnClickListener() {
                     @Override
@@ -552,24 +471,17 @@ public class AppCenterActivity extends BaseActivity {
 
         @Override
         public int getItemCount() {
-//            return recommandAppList == null? 0:recommandAppList.size();
-            if(listPosition == 1){
-                return hotRecommandList.size();
-            }else if(listPosition == 2){
-                return classicRecommandList.size();
-            }
-            return 0;
+            int size = (adsList.size() == 0? listPosition:(listPosition -1));
+            return appList.get(size).size();
         }
 
         public class RecommandViewHolder extends RecyclerView.ViewHolder {
             ImageView recommandAppImg;
             TextView recommandAppText;
-
             public RecommandViewHolder(View itemView) {
                 super(itemView);
             }
         }
-
     }
 
     public interface OnRecommandItemClickListener {
@@ -582,9 +494,7 @@ public class AppCenterActivity extends BaseActivity {
         public void returnAllAppsSuccess(GetAllAppResult getAllAppResult) {
             recommandCircleProgress.setVisibility(View.GONE);
             classCircleProgress.setVisibility(View.GONE);
-//            recommandAppList = getAllAppResult.getRecommandAppList();
-            hotRecommandList = getAllAppResult.getHotRecommendList();
-            classicRecommandList = getAllAppResult.getClassicalRecommendList();
+            appList = getAllAppResult.getRecommendList();
             adsList = getAllAppResult.getAdsList();
             recommandAppAdapter = new RecommondAppAdapter();
             recommandListView.setAdapter(recommandAppAdapter);
