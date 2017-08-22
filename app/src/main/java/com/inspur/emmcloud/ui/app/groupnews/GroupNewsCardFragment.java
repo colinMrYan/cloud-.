@@ -54,6 +54,7 @@ public class GroupNewsCardFragment extends Fragment implements
     private boolean isPullup = true;
     private List<GroupNews> groupnNewsList = new ArrayList<GroupNews>();
     private String pagerTitle = "";
+    private boolean isFirstTimeLoad = false;
 
     public GroupNewsCardFragment() {
     }
@@ -84,6 +85,7 @@ public class GroupNewsCardFragment extends Fragment implements
         myListView.setVerticalScrollBarEnabled(false);
         myListView.setCanPullUp(true);
         myListView.setOnItemClickListener(new ListItemOnClickListener());
+        isFirstTimeLoad = true;
         getGroupNewsList(getArguments().getString("catagoryid"),0);
         EventBus.getDefault().register(this);
     }
@@ -105,7 +107,10 @@ public class GroupNewsCardFragment extends Fragment implements
     private void getGroupNewsList(String catagoryid,int page) {
         // TODO Auto-generated method stub
         if (NetUtils.isNetworkConnected(getActivity())) {
-            loadingDlg.show();
+            if(isFirstTimeLoad){
+                loadingDlg.show();
+                isFirstTimeLoad = false;
+            }
             apiService.getGroupNewsDetail(catagoryid, page);
         } else {
             if (pullToRefreshLayout != null) {
@@ -173,6 +178,7 @@ public class GroupNewsCardFragment extends Fragment implements
             if (loadingDlg.isShowing()) {
                 loadingDlg.dismiss();
             }
+            pullToRefreshLayout.refreshFinish(PullToRefreshLayout.FAIL);
             WebServiceMiddleUtils.hand(getActivity(), error, errorCode);
         }
 
