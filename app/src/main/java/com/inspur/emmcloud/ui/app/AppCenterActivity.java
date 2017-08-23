@@ -107,6 +107,9 @@ public class AppCenterActivity extends BaseActivity {
         viewPager.addOnPageChangeListener(new PageChangeListener());
     }
 
+    /**
+     * 最外层两个tab的监听器
+     */
     private class PageChangeListener implements OnPageChangeListener {
         @Override
         public void onPageScrollStateChanged(int arg0) {
@@ -217,11 +220,12 @@ public class AppCenterActivity extends BaseActivity {
         registerReceiver(addAppReceiver, myIntentFilter);
     }
 
+    /**
+     * 推荐的adapter
+     */
     class RecommondAppAdapter extends BaseAdapter {
         @Override
         public View getView(final int listPosition, View convertView, ViewGroup parent) {
-//			App app = recommandAppList.get(position);
-            //先不加顶部banner，如果需要加banner则打开此处的代码
             if ((adsList != null && adsList.size()>0)&&listPosition == 0) {
                 convertView = LayoutInflater.from(AppCenterActivity.this).inflate(R.layout.my_app_recommand_banner_app_item_view, null);
                 RelativeLayout appRecomandLayout = (RelativeLayout) convertView.findViewById(R.id.app_center_recomand_viewpager_layout);
@@ -260,10 +264,10 @@ public class AppCenterActivity extends BaseActivity {
                 });
                 RecyclerView recomandRecyclerView = (RecyclerView) convertView.findViewById(R.id.app_center_recomand_recycleview);
                 LinearLayoutManager linearLayoutManager = new LinearLayoutManager(AppCenterActivity.this);
-                recomandRecyclerView.addItemDecoration(new ECMSpaceItemDecoration(30));
+                recomandRecyclerView.addItemDecoration(new ECMSpaceItemDecoration(DensityUtil.dip2px(AppCenterActivity.this,15)));
                 linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
                 recomandRecyclerView.setLayoutManager(linearLayoutManager);
-                RecommandAppListAdapter recommandAppListAdapter = new RecommandAppListAdapter(AppCenterActivity.this, null,listPosition);
+                RecommandAppListAdapter recommandAppListAdapter = new RecommandAppListAdapter(AppCenterActivity.this, listPosition);
                 recommandAppListAdapter.setOnRecommandItemClickListener(new OnRecommandItemClickListener() {
                     @Override
                     public void onRecommandItemClick(View view, int position) {
@@ -306,6 +310,9 @@ public class AppCenterActivity extends BaseActivity {
 
     }
 
+    /**
+     * 分类的adapter
+     */
     class CategoriesAppAdapter extends BaseAdapter {
         ImageDisplayUtils imageDisplayUtils = new ImageDisplayUtils(AppCenterActivity.this,R.drawable.icon_app_center_categories);
         @Override
@@ -345,6 +352,11 @@ public class AppCenterActivity extends BaseActivity {
         }
     }
 
+    /**
+     * 初始化banner
+     * @param mViewPagerContainer
+     * @param mViewPager
+     */
     private void initRecomandViewPager(RelativeLayout mViewPagerContainer, final ViewPager mViewPager) {
         mViewPager.setAdapter(new RecommandAppPagerAdapter());
         startAutoSlide(mViewPager);
@@ -392,8 +404,10 @@ public class AppCenterActivity extends BaseActivity {
     }
 
 
+    /**
+     * banner的adapter
+     */
     class RecommandAppPagerAdapter extends PagerAdapter {
-
         @Override
         public int getCount() {
             if (adsList == null ) {
@@ -418,7 +432,6 @@ public class AppCenterActivity extends BaseActivity {
             imageView.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-//                    ToastUtils.show(AppCenterActivity.this,"点击了banner第"+(position%(adsList.size()))+"个");
                     LogUtils.YfcDebug("点击了banner第"+(position%(adsList.size()))+"个");//需要对广告banner处理点击事件时在此处编写代码
                 }
             });
@@ -431,12 +444,15 @@ public class AppCenterActivity extends BaseActivity {
         }
     }
 
+    /**
+     * 推荐应用的Adapter
+     */
     public class RecommandAppListAdapter extends RecyclerView.Adapter<RecommandAppListAdapter.RecommandViewHolder> {
 
         private LayoutInflater inflater;
         private int listPosition;
 
-        public RecommandAppListAdapter(Context context, List<App> recommandList,int listPosition) {
+        public RecommandAppListAdapter(Context context,int listPosition) {
             inflater = LayoutInflater.from(context);
             this.listPosition = listPosition;
         }
