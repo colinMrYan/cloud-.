@@ -264,7 +264,7 @@ public class AppCenterActivity extends BaseActivity {
                 });
                 RecyclerView recomandRecyclerView = (RecyclerView) convertView.findViewById(R.id.app_center_recomand_recycleview);
                 LinearLayoutManager linearLayoutManager = new LinearLayoutManager(AppCenterActivity.this);
-                recomandRecyclerView.addItemDecoration(new ECMSpaceItemDecoration(DensityUtil.dip2px(AppCenterActivity.this,15)));
+                recomandRecyclerView.addItemDecoration(new ECMSpaceItemDecoration(DensityUtil.dip2px(AppCenterActivity.this,11)));
                 linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
                 recomandRecyclerView.setLayoutManager(linearLayoutManager);
                 RecommandAppListAdapter recommandAppListAdapter = new RecommandAppListAdapter(AppCenterActivity.this, listPosition);
