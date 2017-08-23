@@ -309,7 +309,9 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
 //                        }else{
 //                            UriUtils.openApp(getActivity(), app);
 //                        }
-                        UriUtils.openApp(getActivity(), app);
+                        if(NetUtils.isNetworkConnected(getActivity())){
+                            UriUtils.openApp(getActivity(), app);
+                        }
                         if (getNeedCommonlyUseApp()) {
                             saveOrChangeCommonlyUseAppList(app, appAdapterList);
                         }
