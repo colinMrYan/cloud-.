@@ -32,9 +32,11 @@ public class App implements Serializable {
 	
 	private int orderId = -1;
 	private String categoryID = "";
+	private String categoryName = "";
 	private long lastUpdateTime = 0L;
 	private double weight = 0;
 	private String installUri = "";
+	private String helpUrl = "";
 
 	//应用功能扩展字段
 	private int isZoomable = 0;
@@ -108,6 +110,9 @@ public class App implements Serializable {
 				this.installUri = obj.getString("install_uri");
 			}
 			isZoomable = JSONUtils.getInt(obj,"is_zoomable",0);
+			categoryID = JSONUtils.getString(obj,"category_id","");
+			categoryName = JSONUtils.getString(obj,"category_name","");
+			helpUrl = JSONUtils.getString(obj,"help_url","");
 		} catch (Exception e) {
 			// TODO: handle exception
 			LogUtils.exceptionDebug(TAG, e.toString());
@@ -289,6 +294,14 @@ public class App implements Serializable {
 
 	public void setIsZoomable(int isZoomable) {
 		this.isZoomable = isZoomable;
+	}
+
+	public String getCategoryName() {
+		return categoryName;
+	}
+
+	public String getHelpUrl() {
+		return helpUrl;
 	}
 
 	@Override

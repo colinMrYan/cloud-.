@@ -440,7 +440,7 @@ public class APIUri {
 	 * @return
 	 */
 	public static String getNewAllApps(){
-		return emmBaseUrl+"imp_app/appCenterList";
+		return emmBaseUrl+"v1/imp_app/appCenterList";
 	}
 
 	/**

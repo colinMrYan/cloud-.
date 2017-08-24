@@ -1,7 +1,5 @@
 package com.inspur.emmcloud.ui.app;
 
-import java.util.List;
-
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +17,8 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.App;
 import com.inspur.emmcloud.util.ImageDisplayUtils;
 import com.inspur.emmcloud.util.IntentUtils;
+
+import java.util.List;
 
 public class AppCenterMoreActivity extends BaseActivity{
 
@@ -40,19 +40,22 @@ public class AppCenterMoreActivity extends BaseActivity{
 		appCenterMoreListView = (ListView) findViewById(R.id.app_center_more_apps);
 		if(getIntent().hasExtra("appList")){
 			appList = (List<App>) getIntent().getSerializableExtra("appList");
+			if(appList != null){
+				AppMoreAdapter adapter = new AppMoreAdapter();
+				appCenterMoreListView.setAdapter(adapter);
+				appCenterMoreListView.setOnItemClickListener(new OnItemClickListener() {
+					@Override
+					public void onItemClick(AdapterView<?> parent, View view,
+											int position, long id) {
+						Bundle bundle = new Bundle();
+						bundle.putSerializable("app", appList.get(position));
+						IntentUtils.startActivity(AppCenterMoreActivity.this, AppDetailActivity.class, bundle);
+					}
+				});
+			}
 		}
-		if(appList != null){
-			AppMoreAdapter adapter = new AppMoreAdapter();
-			appCenterMoreListView.setAdapter(adapter);
-			appCenterMoreListView.setOnItemClickListener(new OnItemClickListener() {
-				@Override
-				public void onItemClick(AdapterView<?> parent, View view,
-						int position, long id) {
-					Bundle bundle = new Bundle();
-					bundle.putSerializable("app", appList.get(position));
-					IntentUtils.startActivity(AppCenterMoreActivity.this, AppDetailActivity.class, bundle);
-				}
-			});
+		if(getIntent().hasExtra("category_name")){
+			((TextView)findViewById(R.id.header_text)).setText(getIntent().getStringExtra("category_name"));
 		}
 	}
 	
@@ -92,6 +95,7 @@ public class AppCenterMoreActivity extends BaseActivity{
 			TextView appNameText = (TextView) convertView.findViewById(R.id.app_name_text);
 			new ImageDisplayUtils(getApplicationContext(), R.drawable.icon_empty_icon).display(appIconImg, app.getAppIcon());
 			appNameText.setText(app.getAppName());
+            ((TextView)convertView.findViewById(R.id.app_group_name_text)).setText(app.getAppName());
 			return convertView;
 		}
 		

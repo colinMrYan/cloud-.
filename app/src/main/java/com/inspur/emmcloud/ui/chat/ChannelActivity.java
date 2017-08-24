@@ -281,6 +281,7 @@ public class ChannelActivity extends BaseActivity {
                 msgListView.setSelection(adapter.getCount() - 1);
             }
         }, 30);
+        swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary,R.color.colorAccent, R.color.colorPrimaryDark);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {

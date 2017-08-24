@@ -15,6 +15,7 @@
         android:background="@drawable/app_news_dialog_day_background"
         android:orientation="vertical">
 
+
         <Button
             android:id="@+id/app_news_share_btn"
             android:layout_width="match_parent"
