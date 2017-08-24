@@ -474,7 +474,11 @@ public class AppCenterActivity extends BaseActivity {
         public void onBindViewHolder(final RecommandViewHolder holder, final int position) {
             int size = adsList.size() == 0 ? listPosition:(listPosition - 1);
             new ImageDisplayUtils().display(holder.recommandAppImg,appList.get(size).get(position).getAppIcon());
+            if(position != 1){
                 holder.recommandAppText.setText(appList.get(size).get(position).getAppName());
+            }else {
+                holder.recommandAppText.setText("已审任务审批");
+            }
             if (onRecommandItemClickListener != null) {
                 holder.itemView.setOnClickListener(new OnClickListener() {
                     @Override
