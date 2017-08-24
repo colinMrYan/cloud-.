@@ -42,5 +42,8 @@ public class CoreService extends Service{
 			NotificationManager mManager = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
 			mManager.cancel(GRAY_SERVICE_ID);
 		}
+		// 重启自己
+		Intent intent = new Intent(getApplicationContext(),CoreService.class);
+		startService(intent);
 	}
 }

@@ -132,7 +132,6 @@ public class IndexActivity extends BaseFragmentActivity implements
         ((MyApplication) getApplicationContext()).startPush();
         init();
     }
-
     /**
      * 初始化
      */

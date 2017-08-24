@@ -533,14 +533,53 @@
                 <data android:scheme="http12233444"></data>
             </intent-filter>
         </activity>
-
+        <!-- service -->
+        <service android:name=".service.LocationService"></service>
         <service android:name=".service.PVCollectService"></service>
         <service android:name=".service.CoreService"></service>
         <service android:name=".service.CoreInnerService"></service>
         <service android:name=".service.AppExceptionService"></service>
-        <service android:name=".service.AppUpgradeService"></service>
+        <!--AliveJobService需要BIND_JOB_SERVICE权限-->
+        <service android:name=".service.PlayerMusicService"></service>
 
+        <!-- receiver -->
+        <receiver
+            android:name=".broadcastreceiver.NetworkChangeReceiver"
+            android:label="NetworkConnection">
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name=".broadcastreceiver.ActionReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
 
+            <intent-filter>
+                <action android:name="android.intent.action.ACTION_SCREEN_OFF" />
+                <action android:name="android.intent.action.ACTION_SCREEN_ON" />
+            </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.intent.action.USER_PRESENT" />
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+            <!-- Optional -->
+            <intent-filter>
+                <action android:name="android.intent.action.PACKAGE_ADDED" />
+                <action android:name="android.intent.action.PACKAGE_REMOVED" />
+
+                <data android:scheme="package" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="com.inspur.emmcloud.TIMER_ACTION_REPEATING" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
         <!-- ImagePicker -->
 
         <activity
@@ -599,28 +638,6 @@
 
         <!-- imp插件 -->
 
-        <receiver
-            android:name=".broadcastreceiver.NetworkChangeReceiver"
-            android:label="NetworkConnection">
-            <intent-filter>
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
-            </intent-filter>
-        </receiver>
-
-        <receiver android:name=".broadcastreceiver.ActionReceiver">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-                <action android:name="android.intent.action.USER_PRESENT" />
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
-            </intent-filter>
-            <!-- Optional -->
-            <intent-filter>
-                <action android:name="android.intent.action.PACKAGE_ADDED" />
-                <action android:name="android.intent.action.PACKAGE_REMOVED" />
-
-                <data android:scheme="package" />
-            </intent-filter>
-        </receiver>
 
         <!-- 极光推送开始 -->
         <!-- Rich push 核心功能 since 2.0.6-->

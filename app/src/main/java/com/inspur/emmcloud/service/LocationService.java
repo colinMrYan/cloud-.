@@ -10,8 +10,9 @@ import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationClientOption.AMapLocationMode;
 import com.amap.api.location.AMapLocationListener;
-import com.inspur.emmcloud.util.NetUtils;
+import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
+import com.inspur.emmcloud.util.TimeUtils;
 
 public class LocationService extends Service implements AMapLocationListener {
 
@@ -31,8 +32,14 @@ public class LocationService extends Service implements AMapLocationListener {
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		// TODO Auto-generated method stub
 		String minutes = PreferencesUtils.getString(LocationService.this,
-				"GPSInterval", "5");
+				"GPSInterval", "1");
 		microSeconds = Integer.valueOf(minutes) * 60000;
+//		AlarmTimerUtils.cancelAlarmTimer(LocationService.this,
+//				"com.inspur.emmcloud.TIMER_ACTION_REPEATING");
+//		AlarmTimerUtils.setRepeatingAlarmTimer(LocationService.this,
+//				System.currentTimeMillis(), 3 *1000,
+//				"com.inspur.emmcloud.TIMER_ACTION_REPEATING",
+//				AlarmManager.RTC_WAKEUP);
 		if (handler != null) {
 			handler.removeCallbacks(runnable);
 			handler = null;
@@ -42,21 +49,21 @@ public class LocationService extends Service implements AMapLocationListener {
 			@Override
 			public void run() {
 				// TODO Auto-generated method stub
-				// TODO Auto-generated method stub
-				if (NetUtils.isNetworkConnected(LocationService.this)
-						) {
-					initLocation();
-					mlocationClient.startLocation();
-				} else {
-					if (handler != null) {
-						handler.postDelayed(runnable, microSeconds);
-					}
-				}
+				LogUtils.jasonDebug("time="+ TimeUtils.getCurrentTimeInString(LocationService.this,TimeUtils.FORMAT_DEFAULT_DATE));
+				handler.postDelayed(runnable, microSeconds);
+//				if (NetUtils.isNetworkConnected(LocationService.this)
+//						) {
+//					initLocation();
+//					mlocationClient.startLocation();
+//				} else {
+//					if (handler != null) {
+//						handler.postDelayed(runnable, microSeconds);
+//					}
+//				}
 			}
 		};
 		handler.postDelayed(runnable, 0);// 开启Service的时候即执行一次
-		// flags = START_REDELIVER_INTENT;
-		return super.onStartCommand(intent, flags, startId);
+		return START_STICKY;
 	}
 
 	/**
@@ -84,10 +91,10 @@ public class LocationService extends Service implements AMapLocationListener {
 			handler.removeCallbacks(runnable);
 			handler = null;
 		}
-		if (mlocationClient.isStarted()) {
-			mlocationClient.stopLocation();
-			mlocationClient.onDestroy();
-		}
+//		if (mlocationClient.isStarted()) {
+//			mlocationClient.stopLocation();
+//			mlocationClient.onDestroy();
+//		}
 		super.onDestroy();
 	}
 

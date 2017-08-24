@@ -439,4 +439,24 @@ public class AppUtils {
     public static int getSDKVersion(){
         return Build.VERSION.SDK_INT;
     }
+
+    /**
+     * 判断应用是否已经启动
+     * @param context 一个context
+     * @param packageName 要判断应用的包名
+     * @return boolean
+     */
+    public static boolean isAppAlive(Context context, String packageName){
+        ActivityManager activityManager =
+                (ActivityManager)context.getSystemService(Context.ACTIVITY_SERVICE);
+        List<ActivityManager.RunningAppProcessInfo> processInfos
+                = activityManager.getRunningAppProcesses();
+        for(int i = 0; i < processInfos.size(); i++){
+            if(processInfos.get(i).processName.equals(packageName)){
+                return true;
+            }
+        }
+        return false;
+    }
+
 }
