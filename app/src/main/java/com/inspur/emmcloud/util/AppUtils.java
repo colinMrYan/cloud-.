@@ -156,7 +156,7 @@ public class AppUtils {
             try {
                 String saveVersionCode = getNormalVersionCode(savedArray[2]);
                 savedArray[2] = saveVersionCode;
-                String currentVersionCode = getNormalVersionCode(savedArray[2]);
+                String currentVersionCode = getNormalVersionCode(currentArray[2]);
                 currentArray[2] = currentVersionCode;
             } catch (Exception e) {
                 LogUtils.YfcDebug("捕获版本异常：" + e.getMessage());
