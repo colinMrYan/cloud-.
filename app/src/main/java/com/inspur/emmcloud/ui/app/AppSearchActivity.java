@@ -35,7 +35,6 @@ import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.mylistview.MyListView;
 import com.inspur.emmcloud.widget.mylistview.MyListView.IXListViewListener;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -292,19 +291,24 @@ public class AppSearchActivity extends BaseActivity implements IXListViewListene
 	 * @param s
 	 */
 	private void handleSearchApp(CharSequence s) {
-		if(searchList  == null){
-			return;
+		if(StringUtils.isBlank(s.toString())){
+			searchList.clear();
+			searchAdapter.notifyDataSetChanged();
 		}
-		List<App> localSearchList = new ArrayList<>();
-		for (int i = 0; i < searchList.size(); i++){
-			App app = searchList.get(i);
-			if(!StringUtils.isBlank(s.toString())&&app.getAppName().contains(s)){
-				localSearchList.add(app);
-			}
-		}
-		searchList.clear();
-		searchList.addAll(localSearchList);
-		searchAdapter.notifyDataSetChanged();
+		//本地搜索逻辑，目前先不用本地搜索
+//		if(searchList  == null){
+//			return;
+//		}
+//		List<App> localSearchList = new ArrayList<>();
+//		for (int i = 0; i < searchList.size(); i++){
+//			App app = searchList.get(i);
+//			if(!StringUtils.isBlank(s.toString())&&app.getAppName().contains(s)){
+//				localSearchList.add(app);
+//			}
+//		}
+//		searchList.clear();
+//		searchList.addAll(localSearchList);
+//		searchAdapter.notifyDataSetChanged();
 	}
 
 }

@@ -169,7 +169,7 @@
                     android:onClick="onClick"
                     android:paddingBottom="7dp"
                     android:paddingTop="7dp"
-                    android:text="评论"
+                    android:text="@string/comment"
                     android:textColor="#999999"
                     android:background="#f9f9f9"
                     android:textSize="@dimen/content_normal_textsize" />

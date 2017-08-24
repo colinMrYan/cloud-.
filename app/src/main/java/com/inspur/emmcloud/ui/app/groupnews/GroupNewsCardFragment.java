@@ -54,7 +54,6 @@ public class GroupNewsCardFragment extends Fragment implements
     private boolean isPullup = true;
     private List<GroupNews> groupnNewsList = new ArrayList<GroupNews>();
     private String pagerTitle = "";
-    private boolean isFirstTimeLoad = false;
 
     public GroupNewsCardFragment() {
     }
@@ -85,8 +84,7 @@ public class GroupNewsCardFragment extends Fragment implements
         myListView.setVerticalScrollBarEnabled(false);
         myListView.setCanPullUp(true);
         myListView.setOnItemClickListener(new ListItemOnClickListener());
-        isFirstTimeLoad = true;
-        getGroupNewsList(getArguments().getString("catagoryid"),0);
+        getGroupNewsList(getArguments().getString("catagoryid"),0,true);
         EventBus.getDefault().register(this);
     }
 
@@ -104,13 +102,10 @@ public class GroupNewsCardFragment extends Fragment implements
     /**
      * 获取每个标题下的新闻列表
      */
-    private void getGroupNewsList(String catagoryid,int page) {
+    private void getGroupNewsList(String catagoryid,int page,boolean needShowDialog) {
         // TODO Auto-generated method stub
         if (NetUtils.isNetworkConnected(getActivity())) {
-            if(isFirstTimeLoad){
-                loadingDlg.show();
-                isFirstTimeLoad = false;
-            }
+            loadingDlg.show(needShowDialog);
             apiService.getGroupNewsDetail(catagoryid, page);
         } else {
             if (pullToRefreshLayout != null) {
@@ -188,7 +183,7 @@ public class GroupNewsCardFragment extends Fragment implements
     public void onRefresh(PullToRefreshLayout pullToRefreshLayout) {
         if (NetUtils.isNetworkConnected(getActivity())) {
             isPullup = false;
-            getGroupNewsList(getArguments().getString("catagoryid"),0);
+            getGroupNewsList(getArguments().getString("catagoryid"),0,false);
             page = 0;
         } else {
             pullToRefreshLayout.refreshFinish(PullToRefreshLayout.FAIL);
@@ -201,7 +196,7 @@ public class GroupNewsCardFragment extends Fragment implements
         isPullup = true;
         if (haveData) {
             page = page + 1;
-            getGroupNewsList(getArguments().getString("catagoryid"), page);
+            getGroupNewsList(getArguments().getString("catagoryid"), page,false);
         } else {
             Toast.makeText(getActivity(),
                     getString(R.string.no_more_data),
