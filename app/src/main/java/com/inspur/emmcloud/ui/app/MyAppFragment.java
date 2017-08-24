@@ -112,6 +112,10 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
         if (parent != null) {
             parent.removeView(rootView);
         }
+        boolean isRefreshFromNet = PreferencesByUserAndTanentUtils.getBoolean(getActivity(),"isRefreshFromNet",false);
+        if(isRefreshFromNet){
+            initAppListView();
+        }
         return rootView;
     }
 
@@ -184,7 +188,7 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
      */
     private void getMyApp(boolean isShowDlg) {
         if (NetUtils.isNetworkConnected(getActivity())) {
-            loadingDialog.show(isShowDlg);
+//            loadingDialog.show(isShowDlg);
             apiService.getUserApps();
         } else {
             pullToRefreshLayout.refreshFinish(PullToRefreshLayout.FAIL);
@@ -854,21 +858,22 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
     class WebService extends APIInterfaceInstance {
         @Override
         public void returnUserAppsSuccess(GetAppGroupResult getAppGroupResult) {
-            if (loadingDialog.isShowing()) {
-                loadingDialog.dismiss();
-            }
+//            if (loadingDialog.isShowing()) {
+//                loadingDialog.dismiss();
+//            }
             List<AppGroupBean> appGroupList = handleAppList(getAppGroupResult
                     .getAppGroupBeanList());
             MyAppCacheUtils.saveMyApps(getActivity(),JSON.toJSONString(appGroupList));
+            PreferencesByUserAndTanentUtils.putBoolean(getActivity(),"isRefreshFromNet",true);
             refreshAppList(appGroupList);
             pullToRefreshLayout.refreshFinish(PullToRefreshLayout.SUCCEED);
         }
 
         @Override
         public void returnUserAppsFail(String error,int errorCode) {
-            if (loadingDialog.isShowing()) {
-                loadingDialog.dismiss();
-            }
+//            if (loadingDialog.isShowing()) {
+//                loadingDialog.dismiss();
+//            }
             pullToRefreshLayout.refreshFinish(PullToRefreshLayout.FAIL);
             WebServiceMiddleUtils.hand(getActivity(), error,errorCode);
         }
