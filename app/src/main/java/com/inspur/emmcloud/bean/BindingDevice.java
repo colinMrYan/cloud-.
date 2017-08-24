@@ -2,12 +2,9 @@ package com.inspur.emmcloud.bean;
 
 import com.inspur.emmcloud.util.JSONUtils;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Administrator on 2017/5/10.
@@ -16,8 +13,7 @@ import java.util.List;
 public class BindingDevice implements Serializable{
 	private String deviceId="";
 	private String deviceModel="";
-	private long deviceBindTime=0L;
-	private List<BindingDeviceLog> bindingDeviceLogList = new ArrayList<>();
+	private long deviceLastUserTime =0L;
 
 	public BindingDevice(){
 
@@ -26,13 +22,7 @@ public class BindingDevice implements Serializable{
 	public BindingDevice(JSONObject obj) {
 		deviceId = JSONUtils.getString(obj, "udid", "");
 		deviceModel = JSONUtils.getString(obj, "device_model", "");
-		deviceBindTime=JSONUtils.getLong(obj,"create_time",0L);
-		JSONArray array = JSONUtils.getJSONArray(obj,"logs",new JSONArray());
-		for(int i=0;i<array.length();i++){
-			JSONObject jsonObject = JSONUtils.getJSONObject(array,i,new JSONObject());
-			BindingDeviceLog bindingDeviceLog = new BindingDeviceLog(jsonObject);
-			bindingDeviceLogList.add(bindingDeviceLog);
-		}
+		deviceLastUserTime =JSONUtils.getLong(obj,"last_use_time",0L);
 	}
 
 	public String getDeviceId(){
@@ -43,11 +33,7 @@ public class BindingDevice implements Serializable{
 		return deviceModel;
 	}
 
-	public List<BindingDeviceLog> getBindingDeviceLogList() {
-		return bindingDeviceLogList;
-	}
-
-	public long getDeviceBindTime(){return  deviceBindTime;}
+	public long getDeviceLastUserTime(){return deviceLastUserTime;}
 	@Override
 	public boolean equals(Object other) {
 		if(this == other){

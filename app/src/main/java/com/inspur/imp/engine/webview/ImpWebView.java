@@ -3,9 +3,7 @@ package com.inspur.imp.engine.webview;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
@@ -25,7 +23,6 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.inspur.emmcloud.bean.FinishActivityBean;
 import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.ParseHtmlUtils;
 import com.inspur.emmcloud.util.StringUtils;
@@ -35,7 +32,7 @@ import com.inspur.imp.api.iLog;
 import com.inspur.imp.plugin.PluginMgr;
 import com.inspur.imp.util.DeviceInfo;
 
-import org.greenrobot.eventbus.EventBus;
+import org.json.JSONObject;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
@@ -132,10 +129,15 @@ public class ImpWebView extends WebView {
 		@Override
 		public void onDownloadStart(String url, String userAgent, String contentDisposition, String mimetype,
 									long contentLength) {
-			Uri uri = Uri.parse(url);
-			Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-			getContext().startActivity(intent);
-			EventBus.getDefault().post(new FinishActivityBean("webview"));
+			LogUtils.jasonDebug("url="+url);
+			try {
+				JSONObject object = new JSONObject();
+				object.put("url",url);
+				PluginMgr.execute("FileTransferService","download",object.toString());
+			}catch (Exception e){
+				e.printStackTrace();
+			}
+
 		}
 	}
 
@@ -233,7 +235,6 @@ public class ImpWebView extends WebView {
 
 	// 设置websettings属性
 	public void setWebSetting() {
-		setHCMMapProperty();
 		// 支持js相关方法
 		setJSConfig();
 		// 页面效果设置
@@ -261,16 +262,12 @@ public class ImpWebView extends WebView {
 		settings.setUseWideViewPort(true);
 		settings.setSupportZoom(false);
 		settings.setBuiltInZoomControls(false);
-	}
-
-	/**
-	 * 设置HCM地图相关属性
-	 */
-	private void setHCMMapProperty() {
+		//解决在安卓5.0以上跨域链接无法访问的问题
 		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP ){
-			getSettings().setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
+			settings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
 		}
 	}
+
 	/* 页面效果设置 */
 	private void setPageStyle() {
 		//设置自适应屏幕

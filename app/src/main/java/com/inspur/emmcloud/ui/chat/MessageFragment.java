@@ -481,78 +481,84 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
-				List<Channel> channelList = new ArrayList<Channel>();
-				channelList.addAll(originChannelList);
-				if (channelList.size() > 0) {
-					Iterator<Channel> it = channelList.iterator();
-					//将没有消息的单聊和没有消息的但不是自己创建的群聊隐藏掉
-					while (it.hasNext()) {
-						Channel channel = it.next();
-						channel.setIsSetTop(false);
-						int unReadCount = MsgReadIDCacheUtils.getNotReadMsgCount(
-								getActivity(), channel.getCid());
-						channel.setUnReadCount(unReadCount);
-						setChannelDisplayTitle(channel);
-						if (channel.getNewMsgList().size() == 0) {
-							if (channel.getType().equals("DIRECT")) {
-								it.remove();
-							} else if (channel.getType().equals("GROUP")) {
-								ChannelGroup channelGroup = ChannelGroupCacheUtils.getChannelGroupById(getActivity(), channel.getCid());
-								String myUid = ((MyApplication) getActivity().getApplicationContext()).getUid();
-								if (channelGroup != null && !channelGroup.getOwner().equals(myUid)) {
+				//解决刚打开页面就退出应用找不到上下文的问题
+				try {
+					List<Channel> channelList = new ArrayList<Channel>();
+					channelList.addAll(originChannelList);
+					if (channelList.size() > 0) {
+						Iterator<Channel> it = channelList.iterator();
+						//将没有消息的单聊和没有消息的但不是自己创建的群聊隐藏掉
+						while (it.hasNext()) {
+							Channel channel = it.next();
+							channel.setIsSetTop(false);
+							int unReadCount = MsgReadIDCacheUtils.getNotReadMsgCount(
+									getActivity(), channel.getCid());
+							channel.setUnReadCount(unReadCount);
+							setChannelDisplayTitle(channel);
+							if (channel.getNewMsgList().size() == 0) {
+								if (channel.getType().equals("DIRECT")) {
 									it.remove();
+								} else if (channel.getType().equals("GROUP")) {
+									ChannelGroup channelGroup = ChannelGroupCacheUtils.getChannelGroupById(getActivity(), channel.getCid());
+									String myUid = ((MyApplication) getActivity().getApplicationContext()).getUid();
+									if (channelGroup != null && !channelGroup.getOwner().equals(myUid)) {
+										it.remove();
+									}
 								}
 							}
 						}
-					}
 
-					List<ChannelOperationInfo> hideChannelOpList = ChannelOperationCacheUtils
-							.getHideChannelOpList(getActivity());
-					// 如果隐藏的频道中有未读消息则取消隐藏
-					if (hideChannelOpList != null) {
-						for (int i = 0; i < hideChannelOpList.size(); i++) {
-							String cid = hideChannelOpList.get(i).getCid();
-							int index = channelList.indexOf(new Channel(cid));
-							if (index != -1) {
-								Channel channel = channelList.get(index);
-								if (channel.getNewestMid() != null
-										&& !MsgReadIDCacheUtils.isMsgHaveRead(
-										getActivity(), cid,
-										channel.getNewestMid())) {
-									ChannelOperationCacheUtils.setChannelHide(
-											getActivity(), cid, false);
-								} else {
-									channelList.remove(index); // 如果没有未读消息则删除
+						List<ChannelOperationInfo> hideChannelOpList = ChannelOperationCacheUtils
+								.getHideChannelOpList(getActivity());
+						// 如果隐藏的频道中有未读消息则取消隐藏
+						if (hideChannelOpList != null) {
+							for (int i = 0; i < hideChannelOpList.size(); i++) {
+								String cid = hideChannelOpList.get(i).getCid();
+								int index = channelList.indexOf(new Channel(cid));
+								if (index != -1) {
+									Channel channel = channelList.get(index);
+									if (channel.getNewestMid() != null
+											&& !MsgReadIDCacheUtils.isMsgHaveRead(
+											getActivity(), cid,
+											channel.getNewestMid())) {
+										ChannelOperationCacheUtils.setChannelHide(
+												getActivity(), cid, false);
+									} else {
+										channelList.remove(index); // 如果没有未读消息则删除
+									}
 								}
 							}
 						}
-					}
 
-					// 处理置顶的频道
-					List<ChannelOperationInfo> setTopChannelOpList = ChannelOperationCacheUtils
-							.getSetTopChannelOpList(getActivity());
-					List<Channel> setTopChannelList = new ArrayList<Channel>();
-					if (setTopChannelOpList != null) {
-						for (int i = 0; i < setTopChannelOpList.size(); i++) {
-							String cid = setTopChannelOpList.get(i).getCid();
-							int index = channelList.indexOf(new Channel(cid));
-							if (index != -1) {
-								Channel setTopChannel = channelList.get(index);
-								setTopChannel.setIsSetTop(true);
-								setTopChannelList.add(setTopChannel);
-								channelList.remove(index);
+						// 处理置顶的频道
+						List<ChannelOperationInfo> setTopChannelOpList = ChannelOperationCacheUtils
+								.getSetTopChannelOpList(getActivity());
+						List<Channel> setTopChannelList = new ArrayList<Channel>();
+						if (setTopChannelOpList != null) {
+							for (int i = 0; i < setTopChannelOpList.size(); i++) {
+								String cid = setTopChannelOpList.get(i).getCid();
+								int index = channelList.indexOf(new Channel(cid));
+								if (index != -1) {
+									Channel setTopChannel = channelList.get(index);
+									setTopChannel.setIsSetTop(true);
+									setTopChannelList.add(setTopChannel);
+									channelList.remove(index);
+								}
 							}
 						}
-					}
 
-					// 所有显得的频道进行统一排序
-					Collections.sort(channelList, new SortComparator());
-					channelList.addAll(0, setTopChannelList);
+						// 所有显得的频道进行统一排序
+						Collections.sort(channelList, new SortComparator());
+						channelList.addAll(0, setTopChannelList);
+					}
+					Message message = new Message();
+					message.obj = channelList;
+					message.what =SORT_CHANNEL_COMPLETE;
+					handler.sendMessage(message);
+				}catch (Exception e){
+					e.printStackTrace();
 				}
-				Message message = new Message();
-				message.obj = channelList;
-				message.what =SORT_CHANNEL_COMPLETE;
-				handler.sendMessage(message);
+
 			}
 		}).start();
 

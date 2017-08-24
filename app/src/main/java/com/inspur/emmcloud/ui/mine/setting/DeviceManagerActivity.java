@@ -18,6 +18,7 @@ import com.inspur.emmcloud.bean.BindingDevice;
 import com.inspur.emmcloud.bean.GetBindingDeviceResult;
 import com.inspur.emmcloud.util.AppUtils;
 import com.inspur.emmcloud.util.NetUtils;
+import com.inspur.emmcloud.util.TimeUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 
@@ -81,7 +82,7 @@ public class DeviceManagerActivity extends BaseActivity {
             loadingDlg.show();
             MineAPIService apiService = new MineAPIService(DeviceManagerActivity.this);
             apiService.setAPIInterface(new WebService());
-            apiService.getBindingDeviceListAndLogs();
+            apiService.getBindingDeviceList();
         }
     }
 
@@ -130,7 +131,10 @@ public class DeviceManagerActivity extends BaseActivity {
             BindingDevice bindingDevice = isCurrent?currentBindingDeviceList.get(position):historyBindingDeviceList.get(position);;
             convertView = LayoutInflater.from(DeviceManagerActivity.this).inflate(R.layout.mine_setting_binding_devcie_item_view, null);
             ((TextView) convertView.findViewById(R.id.device_text)).setText(bindingDevice.getDeviceModel());
-            if (isCurrent && bindingDevice.getDeviceId().equals(AppUtils.getMyUUID(DeviceManagerActivity.this))) {
+            String deviceLastUserTime = TimeUtils.getTime(bindingDevice.getDeviceLastUserTime(), TimeUtils.getFormat(DeviceManagerActivity.this, TimeUtils.FORMAT_YEAR_MONTH_DAY_HOUR_MINUTE));
+
+            ((TextView) convertView.findViewById(R.id.device_last_use_time_text)).setText(deviceLastUserTime);
+            if (bindingDevice.getDeviceId().equals(AppUtils.getMyUUID(DeviceManagerActivity.this))) {
                 (convertView.findViewById(R.id.current_device_text)).setVisibility(View.VISIBLE);
             }
             return convertView;

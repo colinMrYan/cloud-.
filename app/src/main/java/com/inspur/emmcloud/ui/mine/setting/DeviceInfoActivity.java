@@ -20,6 +20,7 @@ import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.MineAPIService;
 import com.inspur.emmcloud.bean.BindingDevice;
 import com.inspur.emmcloud.bean.BindingDeviceLog;
+import com.inspur.emmcloud.bean.GetDeviceLogResult;
 import com.inspur.emmcloud.ui.login.LoginActivity;
 import com.inspur.emmcloud.util.AppUtils;
 import com.inspur.emmcloud.util.NetUtils;
@@ -43,6 +44,8 @@ public class DeviceInfoActivity extends BaseActivity {
 
     private BindingDevice bindingDevice;
     private LoadingDialog loadingDialog;
+    private ScrollViewWithListView deviceLogListView;
+    private MineAPIService apiService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,17 +55,18 @@ public class DeviceInfoActivity extends BaseActivity {
         bindingDevice = (BindingDevice) getIntent().getSerializableExtra("binding_device");
         ((TextView) findViewById(R.id.device_model_text)).setText(bindingDevice.getDeviceModel());
         ((TextView) findViewById(R.id.device_id_text)).setText(bindingDevice.getDeviceId());
-        String bindingTime = TimeUtils.getTime(bindingDevice.getDeviceBindTime(), TimeUtils.getFormat(DeviceInfoActivity.this, TimeUtils.FORMAT_DEFAULT_DATE));
-        ((TextView) findViewById(R.id.device_bind_time_text)).setText(bindingTime);
+        String deviceLastUserTime = TimeUtils.getTime(bindingDevice.getDeviceLastUserTime(), TimeUtils.getFormat(DeviceInfoActivity.this, TimeUtils.FORMAT_YEAR_MONTH_DAY_HOUR_MINUTE));
+        ((TextView) findViewById(R.id.device_last_use_time_text)).setText(deviceLastUserTime);
         if (getIntent().getBooleanExtra("isCurrentBind", false)) {
             findViewById(R.id.device_unbound_btn).setVisibility(View.VISIBLE);
         }
-        List<BindingDeviceLog> bindingDeviceLogList = bindingDevice.getBindingDeviceLogList();
-        if (bindingDeviceLogList.size() > 0) {
-            (findViewById(R.id.history_text)).setVisibility(View.VISIBLE);
-        }
-        ScrollViewWithListView deviceLogListView = (ScrollViewWithListView) findViewById(R.id.device_log_list);
-        deviceLogListView.setAdapter(new Adapter(bindingDeviceLogList));
+        deviceLogListView = (ScrollViewWithListView) findViewById(R.id.device_log_list);
+        apiService = new MineAPIService(this);
+        apiService.setAPIInterface(new WebService());
+        getDeviceLog();
+
+
+
 
     }
 
@@ -160,11 +164,19 @@ public class DeviceInfoActivity extends BaseActivity {
         }
     }
 
+    private void getDeviceLog(){
+        if (NetUtils.isNetworkConnected(getApplicationContext())) {
+            loadingDialog.show();
+            apiService.getDeviceLogList(bindingDevice.getDeviceId());
+        }
+    }
+
+    /**
+     *解绑设备
+     */
     private void unbindDevice() {
         if (NetUtils.isNetworkConnected(getApplicationContext())) {
             loadingDialog.show();
-            MineAPIService apiService = new MineAPIService(this);
-            apiService.setAPIInterface(new WebService());
             apiService.unBindDevice(bindingDevice.getDeviceId());
         }
     }
@@ -191,5 +203,28 @@ public class DeviceInfoActivity extends BaseActivity {
             }
             WebServiceMiddleUtils.hand(getApplicationContext(), error, errorCode);
         }
+
+        @Override
+        public void returnDeviceLogListSuccess(GetDeviceLogResult getDeviceLogResult) {
+            if (loadingDialog != null && loadingDialog.isShowing()) {
+                loadingDialog.dismiss();
+            }
+            List<BindingDeviceLog> bindingDeviceLogList = getDeviceLogResult.getBindingDeviceLogList();
+        if (bindingDeviceLogList.size() > 0) {
+            (findViewById(R.id.history_text)).setVisibility(View.VISIBLE);
+        }
+
+            deviceLogListView.setAdapter(new Adapter(bindingDeviceLogList));
+        }
+
+        @Override
+        public void returnDeviceLogListFail(String error, int errorCode) {
+            if (loadingDialog != null && loadingDialog.isShowing()) {
+                loadingDialog.dismiss();
+            }
+            WebServiceMiddleUtils.hand(getApplicationContext(), error, errorCode);
+        }
     }
+
+
 }
