@@ -1,10 +1,12 @@
 package com.inspur.emmcloud.bean;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.inspur.emmcloud.util.JSONUtils;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -17,6 +19,7 @@ public class AppGroupBean {
 	private String categoryName = "";
 //	private List<App> appList = new ArrayList<App>();
 	private List<App> appItemList = new ArrayList<App>();
+	private String categoryIco = "";
 
 	public AppGroupBean() {
 	}
@@ -40,6 +43,7 @@ public class AppGroupBean {
 					appItemList.add(app);
 				}
 			}
+			categoryIco = JSONUtils.getString(response,"category_ico","");
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -99,4 +103,11 @@ public class AppGroupBean {
 		this.appItemList = appItemList;
 	}
 
+	public String getCategoryIco() {
+		return categoryIco;
+	}
+
+	public void setCategoryIco(String categoryIco) {
+		this.categoryIco = categoryIco;
+	}
 }
