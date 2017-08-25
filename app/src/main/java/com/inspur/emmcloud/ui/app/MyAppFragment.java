@@ -50,7 +50,6 @@ import com.inspur.emmcloud.util.ShortCutUtils;
 import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
-import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.SwitchView;
 import com.inspur.emmcloud.widget.SwitchView.OnStateChangedListener;
 import com.inspur.emmcloud.widget.draggrid.DragAdapter;
@@ -83,13 +82,13 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
     private ImageView editBtn;
     private Button editBtnFinish;
     private MyAppAPIService apiService;
-    private LoadingDialog loadingDialog;
     private boolean hasCommonlyApp = false;
     private PullToRefreshLayout pullToRefreshLayout;
     private BroadcastReceiver mBroadcastReceiver;
     private PopupWindow popupWindow;
     private boolean isNeedCommonlyUseApp = false;
     private List<String> shortCutAppList = new ArrayList<>();
+    private boolean isAddNewApp = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -125,7 +124,6 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
      * 初始化Views
      */
     private void initViews() {
-        loadingDialog = new LoadingDialog(getActivity());
         apiService = new MyAppAPIService(getActivity());
         apiService.setAPIInterface(new WebService());
         pullToRefreshLayout = (PullToRefreshLayout) rootView
@@ -190,7 +188,6 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
      */
     private void getMyApp(boolean isShowDlg) {
         if (NetUtils.isNetworkConnected(getActivity())) {
-//            loadingDialog.show(isShowDlg);
             apiService.getUserApps();
         } else {
             pullToRefreshLayout.refreshFinish(PullToRefreshLayout.FAIL);
@@ -206,6 +203,7 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
             public void onReceive(Context context, Intent intent) {
                 String action = intent.getAction();
                 if (action.equals(ACTION_NAME)) {
+                    isAddNewApp = true;
                     getMyApp(true);
                     (rootView.findViewById(R.id.app_edit_finish)).setVisibility(View.GONE);
                     editBtn.setVisibility(View.VISIBLE);
@@ -351,6 +349,7 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
                             handCommonlyUseAppChange(appAdapterList, app);
                             appListAdapter.notifyDataSetChanged();
                             dragGridViewAdapter.notifyDataSetChanged();
+                            MyAppCacheUtils.saveMyApps(getActivity(),JSON.toJSONString(appListAdapter.getAppAdapterList()));
                         }
                     });
             if (canEdit) {
@@ -856,37 +855,7 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
         }
     }
 
-    /**
-     * 网络请求处理类，一般放最后
-     */
-    class WebService extends APIInterfaceInstance {
-        @Override
-        public void returnUserAppsSuccess(GetAppGroupResult getAppGroupResult) {
-//            if (loadingDialog.isShowing()) {
-//                loadingDialog.dismiss();
-//            }
-            List<AppGroupBean> appGroupList = handleAppList(getAppGroupResult
-                    .getAppGroupBeanList());
-            PreferencesByUserAndTanentUtils.putBoolean(getActivity(),"isRefreshFromNet",true);
-            //当第一次安装，第一次打开时，没有缓存的时候需要刷新appAdapter，其余时候只存（并且存储一个是否有网络数据的标志）不刷
-            //这里返回空的形式时null字符串，需要特别小心
-            String appCache = MyAppCacheUtils.getMyAppsData(getActivity());
-            if(appCache.equals("null")||StringUtils.isBlank(appCache)){
-                refreshAppList(appGroupList);
-            }
-            MyAppCacheUtils.saveMyApps(getActivity(),JSON.toJSONString(appGroupList));
-            pullToRefreshLayout.refreshFinish(PullToRefreshLayout.SUCCEED);
-        }
 
-        @Override
-        public void returnUserAppsFail(String error,int errorCode) {
-//            if (loadingDialog.isShowing()) {
-//                loadingDialog.dismiss();
-//            }
-            pullToRefreshLayout.refreshFinish(PullToRefreshLayout.FAIL);
-            WebServiceMiddleUtils.hand(getActivity(), error,errorCode);
-        }
-    }
 
     /**
      * 更新List
@@ -948,5 +917,45 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
         hasIntrcutionDialog.getWindow().setAttributes(wl);
         hasIntrcutionDialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
         hasIntrcutionDialog.show();
+    }
+
+    /**
+     * 网络请求处理类，一般放最后
+     */
+    class WebService extends APIInterfaceInstance {
+        @Override
+        public void returnUserAppsSuccess(GetAppGroupResult getAppGroupResult) {
+            List<AppGroupBean> appGroupList = handleAppList(getAppGroupResult
+                    .getAppGroupBeanList());
+            PreferencesByUserAndTanentUtils.putBoolean(getActivity(),"isRefreshFromNet",true);
+            //当第一次安装，第一次打开时，没有缓存的时候需要刷新appAdapter，其余时候只存（并且存储一个是否有网络数据的标志）不刷
+            //这里返回空的形式时null字符串，需要特别小心
+            String appCache = MyAppCacheUtils.getMyAppsData(getActivity());
+            if(appCache.equals("null")||StringUtils.isBlank(appCache)){
+                refreshAppList(appGroupList);
+            }
+            handleAddApp(appGroupList);
+            MyAppCacheUtils.saveMyApps(getActivity(),JSON.toJSONString(appGroupList));
+            pullToRefreshLayout.refreshFinish(PullToRefreshLayout.SUCCEED);
+        }
+
+        @Override
+        public void returnUserAppsFail(String error,int errorCode) {
+            pullToRefreshLayout.refreshFinish(PullToRefreshLayout.FAIL);
+            WebServiceMiddleUtils.hand(getActivity(), error,errorCode);
+        }
+        /**
+         * 处理添加新的app的逻辑
+         * @param appGroupList
+         */
+        private void handleAddApp(List<AppGroupBean> appGroupList) {
+            if(isAddNewApp){
+                appListAdapter = new AppListAdapter(appGroupList);
+                appListView.setAdapter(appListAdapter);
+                appListAdapter.notifyDataSetChanged();
+                MyAppCacheUtils.saveMyApps(getActivity(),JSON.toJSONString(appGroupList));
+                isAddNewApp = false;
+            }
+        }
     }
 }
