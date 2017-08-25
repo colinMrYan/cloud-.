@@ -23,6 +23,14 @@ public class MyAppCacheUtils {
     }
 
     /**
+     * 获取常用应用数据，字符串形式
+     * @param context
+     */
+    public static String getMyAppsData(Context context){
+        return PreferencesByUserAndTanentUtils.getString(context,"myapps","");
+    }
+
+    /**
      * 获取常用应用列表
      * @param context
      * @return
