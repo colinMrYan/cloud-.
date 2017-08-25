@@ -186,6 +186,8 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
                 String action = intent.getAction();
                 if (action.equals(ACTION_NAME)) {
                     getMyApp(true);
+                    (rootView.findViewById(R.id.app_edit_finish)).setVisibility(View.GONE);
+                    editBtn.setVisibility(View.VISIBLE);
                 }
             }
         };

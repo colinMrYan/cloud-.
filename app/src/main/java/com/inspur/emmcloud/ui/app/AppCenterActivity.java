@@ -253,7 +253,10 @@ public class AppCenterActivity extends BaseActivity {
                 if(appList.size() > 0 && appItemList != null && appItemList.size() > 0){
                     ((TextView)convertView.findViewById(R.id.app_center_recommand_text)).setText(appList.get(size).get(0).getCategoryName());
                 }
-                convertView.findViewById(R.id.app_center_more_text).setOnClickListener(new OnClickListener() {
+                if(appItemList.size() <= 5){
+                    (convertView.findViewById(R.id.app_center_more_text)).setVisibility(View.GONE);
+                }
+                convertView.findViewById(R.id.app_center_recommand_layout).setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         Bundle bundle = new Bundle();
@@ -427,7 +430,7 @@ public class AppCenterActivity extends BaseActivity {
             AppAdsBean app = adsList.get(newPosition);
             ImageView imageView = new ImageView(AppCenterActivity.this);
             imageView.setScaleType(ImageView.ScaleType.FIT_XY);
-            new ImageDisplayUtils(getApplicationContext(), R.drawable.icon_empty_icon).display(imageView, app.getLegend());
+            new ImageDisplayUtils(getApplicationContext(), R.drawable.app_center_banner).display(imageView, app.getLegend());
             ((ViewPager) container).addView(imageView);
             imageView.setOnClickListener(new OnClickListener() {
                 @Override

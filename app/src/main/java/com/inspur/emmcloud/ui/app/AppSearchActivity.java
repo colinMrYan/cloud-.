@@ -292,8 +292,10 @@ public class AppSearchActivity extends BaseActivity implements IXListViewListene
 	 */
 	private void handleSearchApp(CharSequence s) {
 		if(StringUtils.isBlank(s.toString())){
-			searchList.clear();
-			searchAdapter.notifyDataSetChanged();
+			if(searchList != null && searchAdapter != null){
+				searchList.clear();
+                searchAdapter.notifyDataSetChanged();
+			}
 		}
 		//本地搜索逻辑，目前先不用本地搜索
 //		if(searchList  == null){
