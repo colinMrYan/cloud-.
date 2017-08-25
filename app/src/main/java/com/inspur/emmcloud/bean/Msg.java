@@ -10,7 +10,7 @@ import org.json.JSONObject;
 
 import java.io.Serializable;
 
-@Table(name = "Msg")
+@Table(name = "Msg",execAfterTableCreated = "CREATE INDEX msgindex ON Msg(cid)")
 public class Msg implements Serializable {
     private static final String TAG = "Msg";
     // @Id 如果主键没有命名名为id或_id的时，需要为主键添加此注解

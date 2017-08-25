@@ -169,6 +169,7 @@ public class ChannelActivity extends BaseActivity {
      */
     private void initViews() {
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh_layout);
+        swipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.header_bg), getResources().getColor(R.color.header_bg));
         handleChatInputMenu();
         setChannelTitle();
         initMsgListView();
@@ -280,7 +281,6 @@ public class ChannelActivity extends BaseActivity {
                 msgListView.setSelection(adapter.getCount() - 1);
             }
         }, 30);
-        swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary,R.color.colorAccent, R.color.colorPrimaryDark);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -294,7 +294,7 @@ public class ChannelActivity extends BaseActivity {
                     adapter.notifyDataSetChanged();
                     msgListView.setSelection(historyMsgList.size() - 1);
                     //ListViewUtils.setSelection(msgListView, historyMsgList.size() - 1);
-                } else {
+                } else{
                     getNewsMsg();
                 }
             }
@@ -945,7 +945,12 @@ public class ChannelActivity extends BaseActivity {
      * 获取新消息
      */
     private void getNewsMsg() {
-        apiService.getNewMsgs(cid, msgList.get(0).getMid(), 15);
+        if (NetUtils.isNetworkConnected(ChannelActivity.this)) {
+            apiService.getNewMsgs(cid, msgList.get(0).getMid(), 15);
+        } else {
+            swipeRefreshLayout.setRefreshing(false);
+        }
+
     }
 
 

@@ -80,7 +80,7 @@
                     android:layout_height="wrap_content">
 
                     <TextView
-                        android:id="@+id/device_bind_time_title_text"
+                        android:id="@+id/device_last_use_time_title_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
@@ -89,16 +89,16 @@
                         android:paddingBottom="10dp"
                         android:paddingRight="10dp"
                         android:paddingTop="10dp"
-                        android:text="@string/device_bind_time"
+                        android:text="@string/last_use_time"
                         android:textColor="#333333"
                         android:textSize="17sp" />
 
                     <TextView
-                        android:id="@+id/device_bind_time_text"
+                        android:id="@+id/device_last_use_time_text"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:layout_toRightOf="@+id/device_bind_time_title_text"
+                        android:layout_toRightOf="@+id/device_last_use_time_title_text"
                         android:ellipsize="end"
                         android:gravity="right"
                         android:maxLines="1"
@@ -166,8 +166,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/white"
+                android:listSelector="@color/transparent"
                 android:divider="#c8c7cc"
-                android:dividerHeight="0.6dp"
+                android:dividerHeight="0.5dp"
                 android:paddingLeft="20dp"></com.inspur.emmcloud.widget.ScrollViewWithListView>
 
             <Button
@@ -180,6 +181,7 @@
                 android:onClick="onClick"
                 android:padding="10dp"
                 android:text="@string/unbind_this_device"
+                android:layout_marginBottom="50dp"
                 android:textColor="#ff3c3c"
                 android:visibility="gone" />
 
