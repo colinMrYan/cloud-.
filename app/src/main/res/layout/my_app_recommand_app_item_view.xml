@@ -2,61 +2,42 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#ffffff" >
+    android:background="#ffffff">
 
-    <ImageView
-        android:id="@+id/app_icon_img"
-        android:layout_width="43dp"
-        android:layout_height="43dp"
-        android:layout_centerVertical="true"
-        android:layout_marginBottom="9dp"
-        android:layout_marginLeft="11dp"
-        android:layout_marginRight="13dp"
-        android:layout_marginTop="9dp"
-        android:scaleType="fitXY" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/app_center_recommand_text"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_toLeftOf="@+id/arrow_img"
-        android:layout_toRightOf="@id/app_icon_img"
-        android:orientation="vertical" >
+        android:layout_marginLeft="14dp"
+        android:layout_marginTop="13dp"
+        android:text="热门推荐"
+        android:textColor="#000000"
+        android:textSize="@dimen/content_normal_textsize" />
 
-        <TextView
-            android:id="@+id/app_name_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="4dp"
-            android:ellipsize="end"
-            android:singleLine="true"
-            android:textColor="@color/text_black"
-            android:textSize="15sp" />
-
-        <TextView
-            android:id="@+id/app_note_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:singleLine="true"
-            android:textColor="#6a7d84"
-            android:textSize="12sp" />
-    </LinearLayout>
-
-    <ImageView
-        android:id="@+id/arrow_img"
-        style="@style/arrow_right"
+    <TextView
+        android:id="@+id/app_center_more_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="9dp"
+        android:layout_marginTop="13dp"
+        android:text="@string/app_center_more_apps"
+        android:textColor="#999999"
         android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:src="@drawable/icon_arrow_right" />
+        android:textSize="@dimen/content_normal_textsize" />
 
-    <View
-        android:background="@color/content_bg"
-        android:layout_below="@id/app_icon_img"
-        android:layout_toRightOf="@id/app_icon_img"
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/app_center_recomand_recycleview"
         android:layout_width="match_parent"
-        android:layout_height="0.8dp" />
+        android:layout_height="120dp"
+        android:layout_below="@id/app_center_recommand_text"
+        android:overScrollMode="never"
+        android:scrollbars="none">
+    </android.support.v7.widget.RecyclerView>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_below="@id/app_center_recomand_recycleview"
+        android:background="#C8C7CC"/>
 
 </RelativeLayout>

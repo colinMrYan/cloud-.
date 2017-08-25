@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:fitsSystemWindows="true">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
 
     <RelativeLayout
         android:id="@+id/header_layout"
@@ -27,7 +27,7 @@
                 android:background="@null"
                 android:paddingRight="5dp"
                 android:scaleType="centerInside"
-                android:src="@drawable/selector_back_btn"/>
+                android:src="@drawable/selector_back_btn" />
         </RelativeLayout>
 
         <TextView
@@ -38,123 +38,155 @@
             android:layout_centerVertical="true"
             android:text="@string/device_info"
             android:textColor="@color/header_text"
-            android:textSize="@dimen/header_textsize"/>
+            android:textSize="@dimen/header_textsize" />
     </RelativeLayout>
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/header_layout"
-        android:background="@color/content_bg"
-        android:orientation="vertical"
-        >
-
-        <TextView
-            android:id="@+id/device_model_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:background="@color/white"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:paddingLeft="20dp"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            android:text="iphone 6 Plus"
-            android:textColor="#333333"
-            android:textSize="17sp"/>
+        android:background="@color/content_bg">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/white"
-            android:orientation="vertical"
-            android:layout_marginTop="10dp"
-            android:paddingLeft="20dp"
-           >
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-            <RelativeLayout
+            <TextView
+                android:id="@+id/device_model_text"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <TextView
-                    android:id="@+id/device_bind_time_title_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:paddingRight="10dp"
-                    android:ellipsize="end"
-                    android:maxLines="1"
-                    android:paddingTop="10dp"
-                    android:paddingBottom="10dp"
-                    android:text="@string/device_bind_time"
-                    android:textColor="#333333"
-                    android:textSize="17sp"/>
-                <TextView
-                    android:id="@+id/device_bind_time_text"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="right"
-                    android:layout_toRightOf="@+id/device_bind_time_title_text"
-                    android:layout_centerVertical="true"
-                    android:paddingRight="10dp"
-                    android:ellipsize="end"
-                    android:maxLines="1"
-                    android:paddingTop="10dp"
-                    android:paddingBottom="10dp"
-                    android:textColor="#999999"
-                    android:textSize="16sp"/>
-            </RelativeLayout>
-            <View
-                android:layout_width="fill_parent"
-                android:layout_height="0.5dp"
-                android:background="#c8c7cc" />
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@color/white"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:paddingBottom="10dp"
+                android:paddingLeft="20dp"
+                android:paddingTop="10dp"
+                android:text="iphone 6 Plus"
+                android:textColor="#333333"
+                android:textSize="17sp" />
 
-            <RelativeLayout
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <TextView
-                    android:id="@+id/device_id_title_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingRight="10dp"
-                    android:ellipsize="end"
-                    android:maxLines="1"
-                    android:paddingTop="10dp"
-                    android:paddingBottom="10dp"
-                    android:text="@string/device_id"
-                    android:textColor="#333333"
-                    android:textSize="17sp"/>
-                <TextView
-                    android:id="@+id/device_id_text"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@color/white"
+                android:orientation="vertical"
+                android:paddingLeft="20dp">
+
+                <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="right"
-                    android:paddingRight="10dp"
-                    android:clickable="true"
-                    android:layout_toRightOf="@+id/device_id_title_text"
-                    android:paddingLeft="15dp"
-                    android:onClick="onClick"
-                    android:paddingTop="10dp"
-                    android:paddingBottom="10dp"
-                    android:textColor="#999999"
-                    android:textSize="16sp"/>
-            </RelativeLayout>
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/device_last_use_time_title_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:paddingBottom="10dp"
+                        android:paddingRight="10dp"
+                        android:paddingTop="10dp"
+                        android:text="@string/last_use_time"
+                        android:textColor="#333333"
+                        android:textSize="17sp" />
+
+                    <TextView
+                        android:id="@+id/device_last_use_time_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_toRightOf="@+id/device_last_use_time_title_text"
+                        android:ellipsize="end"
+                        android:gravity="right"
+                        android:maxLines="1"
+                        android:paddingBottom="10dp"
+                        android:paddingRight="10dp"
+                        android:paddingTop="10dp"
+                        android:textColor="#999999"
+                        android:textSize="16sp" />
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="fill_parent"
+                    android:layout_height="0.5dp"
+                    android:background="#c8c7cc" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/device_id_title_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:paddingBottom="10dp"
+                        android:paddingRight="10dp"
+                        android:paddingTop="10dp"
+                        android:text="@string/device_id"
+                        android:textColor="#333333"
+                        android:textSize="17sp" />
+
+                    <TextView
+                        android:id="@+id/device_id_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_toRightOf="@+id/device_id_title_text"
+                        android:clickable="true"
+                        android:gravity="right"
+                        android:onClick="onClick"
+                        android:paddingBottom="10dp"
+                        android:paddingLeft="15dp"
+                        android:paddingRight="10dp"
+                        android:paddingTop="10dp"
+                        android:textColor="#999999"
+                        android:textSize="16sp" />
+                </RelativeLayout>
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/history_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingBottom="10dp"
+                android:paddingLeft="15dp"
+                android:paddingTop="10dp"
+                android:text="@string/device_history_use"
+                android:textColor="#333333"
+                android:textSize="15sp"
+                android:visibility="gone" />
+
+            <com.inspur.emmcloud.widget.ScrollViewWithListView
+                android:id="@+id/device_log_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:listSelector="@color/transparent"
+                android:divider="#c8c7cc"
+                android:dividerHeight="0.5dp"
+                android:paddingLeft="20dp"></com.inspur.emmcloud.widget.ScrollViewWithListView>
+
+            <Button
+                android:id="@+id/device_unbound_btn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@color/white"
+                android:gravity="center"
+                android:onClick="onClick"
+                android:padding="10dp"
+                android:text="@string/unbind_this_device"
+                android:layout_marginBottom="50dp"
+                android:textColor="#ff3c3c"
+                android:visibility="gone" />
 
         </LinearLayout>
+    </ScrollView>
 
-        <Button
-            android:id="@+id/device_unbound_btn"
-            android:onClick="onClick"
-            android:layout_marginTop="10dp"
-            android:text="@string/unbind_this_device"
-            android:padding="10dp"
-            android:gravity="center"
-            android:textColor="#ff3c3c"
-            android:background="@color/white"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-
-
-    </LinearLayout>
 
 </RelativeLayout>

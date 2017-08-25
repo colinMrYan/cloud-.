@@ -1,5 +1,13 @@
 package com.inspur.emmcloud.util;
 
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
+import android.text.TextUtils;
+import android.webkit.MimeTypeMap;
+
+import com.inspur.emmcloud.R;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -14,15 +22,6 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-
-import com.inspur.emmcloud.R;
-
-import android.content.Context;
-import android.content.Intent;
-import android.media.MediaMetadataRetriever;
-import android.net.Uri;
-import android.text.TextUtils;
-import android.webkit.MimeTypeMap;
 
 /**
  * File Utils
@@ -685,14 +684,24 @@ public class FileUtils {
 
     /**
      * 获取文件大小
+     * @param fileSize
+     * @return
+     */
+    public static String formatFileSize(String fileSize){
+        long size = Long.parseLong(fileSize);
+        return formatFileSize(size);
+    }
+
+    /**
+     * 获取文件大小
      *
      * @param fileSize
      * @return
      */
-    public static String formatFileSize(String fileSize) {
+    public static String formatFileSize(long fileSize) {
         float MBDATA = (float) 1048576.0;
         long GBDATA = 1073741824L;
-        float size = Long.parseLong(fileSize);
+        float size = fileSize;
         DecimalFormat df = new DecimalFormat("#.0");
         if (size < 1023) {
             String tempSize = df.format(size);

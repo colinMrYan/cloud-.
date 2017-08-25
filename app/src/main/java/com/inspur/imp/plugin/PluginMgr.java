@@ -56,8 +56,11 @@ public class PluginMgr {
 	 */
 	public static void execute(String serviceName, final String action,
 			final String params) {
-		if (serviceName.equals("LoadingDialogService")){
+		if (serviceName.endsWith("LoadingDialogService")){
 			serviceName = "com.inspur.imp.plugin.loadingdialog."+serviceName;
+		}
+		if (serviceName.endsWith("FileTransferService")){
+			serviceName = "com.inspur.imp.plugin.filetransfer."+serviceName;
 		}
 		Log.d("jason", "serviceName="+serviceName);
 		Log.d("jason", "action="+action);
@@ -102,7 +105,6 @@ public class PluginMgr {
 		if (!entries.containsKey(serviceName)) {
 			plugin = createPlugin(serviceName);
 			entries.put(serviceName, plugin);
-			Log.d("jason", "0---");
 		} else {
 			plugin = getPlugin(serviceName);
 		}
