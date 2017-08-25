@@ -256,7 +256,7 @@ public class AppCenterActivity extends BaseActivity {
                 if(appItemList.size() <= 5){
                     (convertView.findViewById(R.id.app_center_more_text)).setVisibility(View.GONE);
                 }
-                convertView.findViewById(R.id.app_center_more_text).setOnClickListener(new OnClickListener() {
+                convertView.findViewById(R.id.app_center_recommand_layout).setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         Bundle bundle = new Bundle();
