@@ -118,6 +118,7 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
         LogUtils.YfcDebug("走OnCreateView"+isRefreshFromNet);
         if(isRefreshFromNet){
             LogUtils.YfcDebug("根据网络数据状态进行刷新");
+
             initAppListView();
             PreferencesByUserAndTanentUtils.putBoolean(getActivity(),"isRefreshFromNet",false);
         }
