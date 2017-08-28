@@ -7,7 +7,6 @@ package com.inspur.emmcloud.service;
 import android.app.Notification;
 import android.app.Service;
 import android.content.Intent;
-import android.os.Handler;
 import android.os.IBinder;
 
 /**
@@ -16,14 +15,12 @@ import android.os.IBinder;
 public class CoreInnerService extends Service {
 
 	private final static int GRAY_SERVICE_ID = 1001;
-	private Handler handler;
-	private Runnable runnable;
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		startForeground(GRAY_SERVICE_ID, new Notification());
 		stopForeground(true);
 		stopSelf();
-		return Service.START_REDELIVER_INTENT;
+		return Service.START_STICKY;
 	}
 	@Override
 	public IBinder onBind(Intent intent) {

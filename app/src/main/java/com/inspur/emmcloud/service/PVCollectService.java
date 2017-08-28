@@ -8,7 +8,6 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.AppAPIService;
 import com.inspur.emmcloud.util.ContactCacheUtils;
-import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.PVCollectModelCacheUtils;
 
@@ -25,11 +24,11 @@ public class PVCollectService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        init();
-        return START_REDELIVER_INTENT;
+        uploadPV();
+        return super.onStartCommand(intent, flags, startId);
     }
 
-    private void init() {
+    private void uploadPV() {
 
         if (apiService == null) {
             apiService = new AppAPIService(getApplicationContext());
@@ -54,7 +53,7 @@ public class PVCollectService extends Service {
                 return;
             }
         }
-        onDestroy();
+        stopSelf();
     }
 
 
@@ -64,12 +63,12 @@ public class PVCollectService extends Service {
         @Override
         public void returnUploadCollectSuccess() {
             PVCollectModelCacheUtils.deleteAllCollectModel(getApplicationContext());
-            onDestroy();
+            stopSelf();
         }
 
         @Override
         public void returnUploadCollectFail(String error, int errorCode) {
-            onDestroy();
+            stopSelf();
         }
 
     }

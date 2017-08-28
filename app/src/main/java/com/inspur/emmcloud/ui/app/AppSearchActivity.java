@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -63,6 +65,15 @@ public class AppSearchActivity extends BaseActivity implements IXListViewListene
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_app_search);
+		initViews();
+
+
+	}
+
+	/**
+	 * 初始化views
+	 */
+	private void initViews() {
 		((MyApplication) getApplicationContext())
 				.addActivity(AppSearchActivity.this);
 		searchEdit = (ClearEditText) findViewById(R.id.search_edit);
@@ -71,8 +82,8 @@ public class AppSearchActivity extends BaseActivity implements IXListViewListene
 		searchListView.setPullRefreshEnable(false);
 		searchListView.setPullLoadEnable(false);
 		loadingDlg = new LoadingDialog(AppSearchActivity.this);
+		searchEdit.addTextChangedListener(new SearchWatcher());
 		registerReceiver();
-
 	}
 
 
@@ -255,6 +266,51 @@ public class AppSearchActivity extends BaseActivity implements IXListViewListene
 			unregisterReceiver(mBroadcastReceiver);
 			mBroadcastReceiver = null;
 		}
+	}
+
+	class SearchWatcher implements TextWatcher{
+
+		@Override
+		public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+		}
+
+		@Override
+		public void onTextChanged(CharSequence s, int start, int before, int count) {
+			handleSearchApp(s);
+		}
+
+		@Override
+		public void afterTextChanged(Editable s) {
+
+		}
+	}
+
+	/**
+	 * 处理本地文字变化之后的列表显示
+	 * @param s
+	 */
+	private void handleSearchApp(CharSequence s) {
+		if(StringUtils.isBlank(s.toString())){
+			if(searchList != null && searchAdapter != null){
+				searchList.clear();
+                searchAdapter.notifyDataSetChanged();
+			}
+		}
+		//本地搜索逻辑，目前先不用本地搜索
+//		if(searchList  == null){
+//			return;
+//		}
+//		List<App> localSearchList = new ArrayList<>();
+//		for (int i = 0; i < searchList.size(); i++){
+//			App app = searchList.get(i);
+//			if(!StringUtils.isBlank(s.toString())&&app.getAppName().contains(s)){
+//				localSearchList.add(app);
+//			}
+//		}
+//		searchList.clear();
+//		searchList.addAll(localSearchList);
+//		searchAdapter.notifyDataSetChanged();
 	}
 
 }

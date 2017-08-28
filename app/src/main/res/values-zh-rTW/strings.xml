@@ -408,7 +408,11 @@
     <string name="device_unbind_sucess">設備解綁成功！</string>
     <string name="device_other_unbind_warning">解綁後，從%1$s上登錄，您需要重新註冊設備</string>
     <string name="device_current_unbind_warning">解綁後，您需要重新登入並注册設備</string>
+    <string name="last_use_time">上次使用時間</string>
+    <string name="bind_device">綁定設備</string>
     <string name="current_device">當前設備</string>
+    <string name="history_device">歷史設備</string>
+    <string name="device_history_use">歷史使用</string>
     <string name="device_bind_time_title">綁定時間: </string>
     <string name="device_bind_time">綁定時間</string>
     <string name="device_info">設備詳情</string>

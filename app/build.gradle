@@ -39,8 +39,8 @@ android {
         applicationId "com.inspur.emmcloud"
         minSdkVersion 16
         targetSdkVersion 22
-        versionCode 34
-        versionName "1.2.5"
+        versionCode 35
+        versionName "1.2.6"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         ndk {
             abiFilters "armeabi-v7a", "x86"
@@ -158,11 +158,11 @@ dependencies {
     }
     compile 'org.greenrobot:eventbus:3.0.0'
     compile 'javax.annotation:javax.annotation-api:1.2'
-    compile 'org.projectlombok:lombok:1.16.6'
     compile 'com.readystatesoftware.systembartint:systembartint:1.0.3'
     compile 'uk.co.chrisjenx:calligraphy:2.2.0'
     compile 'com.fashare2015:HoverView:1.0.1'
     compile 'pl.droidsonroids.gif:android-gif-drawable:1.2.7'
+    compile 'com.zhy:magic-viewpager:1.0.1'
     compile 'org.jsoup:jsoup:1.9.2'
     compile 'com.zzhoujay.markdown:markdown:1.0.5'
     compile 'com.jakewharton:disklrucache:2.0.2' //Markdown引入 缓存
