@@ -256,11 +256,9 @@
 
 
         <RelativeLayout
-            android:id="@+id/about_layout"
+            android:id="@+id/setting_gesture_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="gone"
-            android:layout_marginTop="10dp"
             android:background="@drawable/text_layout_selector"
             android:onClick="onClick" >
 
@@ -272,14 +270,14 @@
                 android:background="#dadadd" />
 
             <TextView
-                android:id="@+id/about_text"
+                android:id="@+id/setting_gesture_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="12dp"
                 android:paddingBottom="10dp"
                 android:paddingTop="10dp"
-                android:text="@string/settings_aboutIMP"
+                android:text="手势解锁设置"
                 android:textSize="@dimen/content_normal_textsize" />
 
             <TextView
@@ -288,7 +286,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_toLeftOf="@+id/about_img"
-                android:layout_toRightOf="@id/about_text"
+                android:layout_toRightOf="@id/setting_gesture_text"
                 android:gravity="right"
                 android:paddingBottom="10dp"
                 android:paddingTop="10dp"
