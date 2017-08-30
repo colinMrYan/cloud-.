@@ -31,7 +31,7 @@
             android:textSize="@dimen/header_textsize" />
 
         <ImageView
-            android:id="@+id/address_list_img"
+            android:id="@+id/more_function_list_img"
             android:layout_width="52dp"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
