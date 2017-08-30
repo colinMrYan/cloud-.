@@ -8,9 +8,8 @@ import android.view.View;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.util.IntentUtils;
-import com.inspur.emmcloud.util.LogUtils;
-import com.inspur.emmcloud.util.ninelock.cache.ACache;
-import com.inspur.emmcloud.util.ninelock.constant.Constant;
+import com.inspur.emmcloud.util.PreferencesByUserAndTanentUtils;
+import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.widget.SwitchView;
 
 /**
@@ -38,19 +37,18 @@ public class SwitchGestureActivity extends Activity {
      * @return
      */
     private boolean getHasGesturePassword() {
-        byte[] gesturePassword = ACache.get(SwitchGestureActivity.this).getAsBinary(Constant.GESTURE_PASSWORD);
-        return  (gesturePassword == null);
+        String gestureCode = PreferencesByUserAndTanentUtils.getString(SwitchGestureActivity.this,"gesture_code");
+//        byte[] gesturePassword = ACache.get(SwitchGestureActivity.this).getAsBinary(Constant.GESTURE_PASSWORD);
+        return !StringUtils.isBlank(gestureCode);
     }
 
     /**
      * 初始化Views
      */
     private void init() {
-        final boolean isHasGensturePassword = getHasGesturePassword();
-        LogUtils.YfcDebug("是否存在手势密码："+isHasGensturePassword);
-//        initShowResetGesturePassWord(isHasGensturePassword);
+        String gestureCode = PreferencesByUserAndTanentUtils.getString(SwitchGestureActivity.this,"gesture_code");
         SwitchView switchView = ((SwitchView)findViewById(R.id.switch_gesture_switchview));
-        if(isHasGensturePassword){
+        if(getHasGesturePassword()){
             switchView.toggleSwitch(true);
         }else{
             switchView.toggleSwitch(false);
@@ -59,24 +57,28 @@ public class SwitchGestureActivity extends Activity {
             @Override
             public void toggleToOn(View view) {
                 ((SwitchView)view).setOpened(true);
-                if(!isHasGensturePassword){
+                if(!getHasGesturePassword()){
+                    PreferencesByUserAndTanentUtils.putBoolean(SwitchGestureActivity.this,"gesture_code_isopen",true);
                     IntentUtils.startActivity(SwitchGestureActivity.this,CreateGestureActivity.class);
                 }else{
-                    IntentUtils.startActivity(SwitchGestureActivity.this,GestureLoginActivity.class);
+//                    IntentUtils.startActivity(SwitchGestureActivity.this,GestureLoginActivity.class);
+                    PreferencesByUserAndTanentUtils.putBoolean(SwitchGestureActivity.this,"gesture_code_isopen",false);
+                    findViewById(R.id.switch_gesture_change_code_layout).setVisibility(View.VISIBLE);
                 }
             }
 
             @Override
             public void toggleToOff(View view) {
-                LogUtils.YfcDebug("关闭按钮");
                 ((SwitchView)view).setOpened(false);
+                findViewById(R.id.switch_gesture_change_code_layout).setVisibility(View.GONE);
+
             }
         });
         findViewById(R.id.switch_gesture_change_code_layout).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Bundle bundle = new Bundle();
-                bundle.putString("gesture_code","reset");
+                bundle.putString("gesture_code_change","reset");
                 IntentUtils.startActivity(SwitchGestureActivity.this,GestureLoginActivity.class,bundle);
             }
         });
@@ -88,9 +90,9 @@ public class SwitchGestureActivity extends Activity {
      */
     private void initShowResetGesturePassWord(boolean isHasGesturePassword) {
         if(isHasGesturePassword){
-            findViewById(R.id.switch_gesture_change_code_layout).setVisibility(View.GONE);
-        }else{
             findViewById(R.id.switch_gesture_change_code_layout).setVisibility(View.VISIBLE);
+        }else{
+            findViewById(R.id.switch_gesture_change_code_layout).setVisibility(View.GONE);
         }
     }
 
@@ -99,9 +101,7 @@ public class SwitchGestureActivity extends Activity {
             case R.id.back_layout:
                 finish();
                 break;
-            case R.id.switch_gesture_switchview:
 
-                break;
             default:
                 break;
         }

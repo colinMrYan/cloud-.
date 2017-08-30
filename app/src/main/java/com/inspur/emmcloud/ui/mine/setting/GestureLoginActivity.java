@@ -9,10 +9,11 @@ import android.widget.Toast;
 
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.util.IntentUtils;
+import com.inspur.emmcloud.util.LogUtils;
+import com.inspur.emmcloud.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.ninelock.LockPatternUtil;
 import com.inspur.emmcloud.util.ninelock.LockPatternView;
 import com.inspur.emmcloud.util.ninelock.cache.ACache;
-import com.inspur.emmcloud.util.ninelock.constant.Constant;
 
 import java.util.List;
 
@@ -37,7 +38,7 @@ public class GestureLoginActivity extends Activity {
 
     private ACache aCache;
     private static final long DELAYTIME = 600l;
-    private byte[] gesturePassword;
+    private String gesturePassword;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +51,12 @@ public class GestureLoginActivity extends Activity {
     private void init() {
         aCache = ACache.get(GestureLoginActivity.this);
         //得到当前用户的手势密码
-        gesturePassword = aCache.getAsBinary(Constant.GESTURE_PASSWORD);
+//        gesturePassword = aCache.getAsBinary(Constant.GESTURE_PASSWORD);
+
+            gesturePassword = PreferencesByUserAndTanentUtils.getString(GestureLoginActivity.this,"gesture_code");
+
+        String gestureCode = PreferencesByUserAndTanentUtils.getString(GestureLoginActivity.this,"gesture_code");
+        LogUtils.YfcDebug("存储的密码是："+gestureCode);
         lockPatternView.setOnPatternListener(patternListener);
         updateStatus(Status.DEFAULT);
     }
@@ -67,8 +73,8 @@ public class GestureLoginActivity extends Activity {
             if(pattern != null){
                 if(LockPatternUtil.checkPattern(pattern, gesturePassword)) {
                     updateStatus(Status.CORRECT);
-                    if(getIntent().hasExtra("gesture_code")){
-                        String command = getIntent().getStringExtra("gesture_code");
+                    if(getIntent().hasExtra("gesture_code_change")){
+                        String command = getIntent().getStringExtra("gesture_code_change");
                         if(command.equals("reset")){
                             IntentUtils.startActivity(GestureLoginActivity.this,CreateGestureActivity.class);
                             finish();

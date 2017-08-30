@@ -2,6 +2,8 @@ package com.inspur.emmcloud.util.ninelock;
 
 import android.content.Context;
 
+import com.inspur.emmcloud.util.LogUtils;
+import com.inspur.emmcloud.util.StringUtils;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -124,17 +126,44 @@ public class LockPatternUtil {
             for (int i = 0; i < size; i++) {
                 LockPatternView.Cell cell = pattern.get(i);
                 res[i] = (byte) cell.getIndex();
+                LogUtils.YfcDebug("index:"+cell.getIndex());
             }
             MessageDigest md = null;
             try {
                 md = MessageDigest.getInstance("SHA-1");
-                return md.digest(res);
+                return res;
             } catch (NoSuchAlgorithmException e) {
                 e.printStackTrace();
                 return res;
             }
         }
     }
+
+    /**
+     * Generate an SHA-1 hash for the pattern. Not the most secure, but it is at
+     * least a second level of protection. First level is that the file is in a
+     * location only readable by the system process.
+     *
+     * @param pattern
+     * @return the hash of the pattern in a byte array.
+     */
+    public static String patternToString(List<LockPatternView.Cell> pattern) {
+        String gestureCode = "";
+        if (pattern == null) {
+            return null;
+        } else {
+            int size = pattern.size();
+            byte[] res = new byte[size];
+            for (int i = 0; i < size; i++) {
+                LockPatternView.Cell cell = pattern.get(i);
+                res[i] = (byte) cell.getIndex();
+                gestureCode = gestureCode+cell.getIndex();
+            }
+            return gestureCode;
+        }
+    }
+
+
 
     /**
      * Check to see if a pattern matches the saved pattern. If no pattern
@@ -149,7 +178,25 @@ public class LockPatternUtil {
             return false;
         } else {
             byte[] bytes2 = patternToHash(pattern);
+            LogUtils.YfcDebug("bytes2:"+bytes2.toString());
+            LogUtils.YfcDebug("bytes:"+bytes.toString());
             return Arrays.equals(bytes, bytes2);
+        }
+    }
+
+    /**
+     * Check to see if a pattern matches the saved pattern. If no pattern
+     * exists, always returns true.
+     *
+     * @param pattern
+     * @param gestureCode
+     * @return Whether the pattern matches the stored one.
+     */
+    public static boolean checkPattern(List<LockPatternView.Cell> pattern, String gestureCode) {
+        if (pattern == null || StringUtils.isBlank(gestureCode)) {
+            return false;
+        } else {
+            return patternToString(pattern).equals(gestureCode);
         }
     }
 }

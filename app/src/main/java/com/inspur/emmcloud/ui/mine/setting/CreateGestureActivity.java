@@ -7,11 +7,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.util.LogUtils;
+import com.inspur.emmcloud.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.ninelock.LockPatternIndicator;
 import com.inspur.emmcloud.util.ninelock.LockPatternUtil;
 import com.inspur.emmcloud.util.ninelock.LockPatternView;
 import com.inspur.emmcloud.util.ninelock.cache.ACache;
-import com.inspur.emmcloud.util.ninelock.constant.Constant;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -144,14 +145,19 @@ public class CreateGestureActivity extends Activity {
      */
 	private void setLockPatternSuccess() {
 		Toast.makeText(this, "create gesture success", Toast.LENGTH_SHORT).show();
+		finish();
 	}
 
 	/**
 	 * 保存手势密码
 	 */
 	private void saveChosenPattern(List<LockPatternView.Cell> cells) {
-		byte[] bytes = LockPatternUtil.patternToHash(cells);
-		aCache.put(Constant.GESTURE_PASSWORD, bytes);
+//		byte[] bytes = LockPatternUtil.patternToHash(cells);
+//		aCache.put(Constant.GESTURE_PASSWORD, bytes);
+
+		String gestureCode = LockPatternUtil.patternToString(cells);
+			PreferencesByUserAndTanentUtils.putString(CreateGestureActivity.this,"gesture_code",gestureCode);
+		LogUtils.YfcDebug("存储的文字是："+gestureCode);
 	}
 
 	private enum Status {
