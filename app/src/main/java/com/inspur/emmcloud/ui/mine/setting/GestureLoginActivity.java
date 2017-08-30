@@ -8,6 +8,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.util.IntentUtils;
 import com.inspur.emmcloud.util.ninelock.LockPatternUtil;
 import com.inspur.emmcloud.util.ninelock.LockPatternView;
 import com.inspur.emmcloud.util.ninelock.cache.ACache;
@@ -66,6 +67,13 @@ public class GestureLoginActivity extends Activity {
             if(pattern != null){
                 if(LockPatternUtil.checkPattern(pattern, gesturePassword)) {
                     updateStatus(Status.CORRECT);
+                    if(getIntent().hasExtra("gesture_code")){
+                        String command = getIntent().getStringExtra("gesture_code");
+                        if(command.equals("reset")){
+                            IntentUtils.startActivity(GestureLoginActivity.this,CreateGestureActivity.class);
+                            finish();
+                        }
+                    }
                 } else {
                     updateStatus(Status.ERROR);
                 }
