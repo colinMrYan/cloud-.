@@ -206,12 +206,10 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 				AppTabAutoBean.PayloadBean.TabsBean.Property property = appTabList.get(i).getProperty();
 				if (property != null) {
 					if (!property.isCanCreate()) {
-						rootView.findViewById(R.id.contact_img).setVisibility(View.GONE);
 						rootView.findViewById(R.id.more_function_list_img).setVisibility(View.GONE);
 					}
 					if (!property.isCanContact()) {
 						rootView.findViewById(R.id.contact_img).setVisibility(View.GONE);
-						rootView.findViewById(R.id.more_function_list_img).setVisibility(View.GONE);
 					}
 				}
 			}
