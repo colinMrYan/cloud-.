@@ -10,7 +10,7 @@
         android:background="@color/header_bg">
 
         <ImageView
-            android:id="@+id/contact_list_img"
+            android:id="@+id/contact_img"
             android:layout_width="52dp"
             android:layout_height="match_parent"
             android:layout_centerVertical="true"
