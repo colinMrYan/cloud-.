@@ -9,6 +9,7 @@ import android.widget.Toast;
 
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.util.IntentUtils;
+import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.StateBarColor;
 import com.inspur.emmcloud.util.ninelock.LockPatternUtil;
@@ -37,6 +38,7 @@ public class GestureLoginActivity extends Activity {
 
     private static final long DELAYTIME = 600l;
     private String gesturePassword;
+    private boolean isLogin = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +54,12 @@ public class GestureLoginActivity extends Activity {
         gesturePassword = PreferencesByUserAndTanentUtils.getString(GestureLoginActivity.this, "gesture_code");
         lockPatternView.setOnPatternListener(patternListener);
         updateStatus(Status.DEFAULT);
+        if (getIntent().hasExtra("gesture_code_change")) {
+            String command = getIntent().getStringExtra("gesture_code_change");
+            if(command.equals("login")){
+                isLogin = true;
+            }
+        }
     }
 
     private LockPatternView.OnPatternListener patternListener = new LockPatternView.OnPatternListener() {
@@ -66,12 +74,20 @@ public class GestureLoginActivity extends Activity {
             if (pattern != null) {
                 if (LockPatternUtil.checkPattern(pattern, gesturePassword)) {
                     updateStatus(Status.CORRECT);
+
                     if (getIntent().hasExtra("gesture_code_change")) {
                         String command = getIntent().getStringExtra("gesture_code_change");
+                        LogUtils.YfcDebug("command："+command);
                         if (command.equals("reset")) {
                             IntentUtils.startActivity(GestureLoginActivity.this, CreateGestureActivity.class);
                             finish();
                         } else if (command.equals("login")) {
+                            isLogin = true;
+                            finish();
+                        } else if(command.equals("close")){
+                            LogUtils.YfcDebug("进入LoginClose");
+                            PreferencesByUserAndTanentUtils.putBoolean(GestureLoginActivity.this,"gesture_code_isopen",false);
+                            PreferencesByUserAndTanentUtils.putString(GestureLoginActivity.this, "gesture_code","");
                             finish();
                         }
                     }
@@ -134,8 +150,16 @@ public class GestureLoginActivity extends Activity {
             this.strId = strId;
             this.colorId = colorId;
         }
-
         private int strId;
         private int colorId;
+    }
+
+    @Override
+    public void onBackPressed() {
+//        super.onBackPressed();
+        LogUtils.YfcDebug("点返回键的状态："+isLogin);
+        if(!isLogin){
+            finish();
+        }
     }
 }

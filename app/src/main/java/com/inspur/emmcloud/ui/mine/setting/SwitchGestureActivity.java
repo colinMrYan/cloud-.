@@ -61,13 +61,17 @@ public class SwitchGestureActivity extends BaseActivity {
 //                }else{
 //                    findViewById(R.id.switch_gesture_change_code_layout).setVisibility(View.VISIBLE);
 //                }
+
             }
 
             @Override
             public void toggleToOff(View view) {
-                ((SwitchView)view).setOpened(false);
-                findViewById(R.id.switch_gesture_change_code_layout).setVisibility(View.GONE);
-                PreferencesByUserAndTanentUtils.putBoolean(SwitchGestureActivity.this,"gesture_code_isopen",false);
+//                ((SwitchView)view).setOpened(false);
+                Bundle bundle = new Bundle();
+                bundle.putString("gesture_code_change","close");
+                IntentUtils.startActivity(SwitchGestureActivity.this,GestureLoginActivity.class,bundle);
+//                findViewById(R.id.switch_gesture_change_code_layout).setVisibility(View.GONE);
+//                PreferencesByUserAndTanentUtils.putBoolean(SwitchGestureActivity.this,"gesture_code_isopen",false);
             }
         });
         findViewById(R.id.switch_gesture_change_code_layout).setOnClickListener(new View.OnClickListener() {

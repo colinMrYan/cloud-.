@@ -51,6 +51,8 @@ public class LockPatternView extends View {
 	private static final String TAG = "LockPatternView";
 	private static final double CONSTANT_COS_30 = Math.cos(Math.toRadians(30));
 
+	public boolean openArrow = false;
+
 	public LockPatternView(Context context) {
 		this(context, null);
 	}
@@ -414,36 +416,38 @@ public class LockPatternView extends View {
      * @param paint
      */
 	private void drawNewTriangle(Cell preCell, Cell nextCell, Canvas canvas, Paint paint) {
-		float distance = LockPatternUtil.getDistanceBetweenTwoPoints
-				(preCell.getX(), preCell.getY(), nextCell.getX(), nextCell.getY());
-		float x = preCell.getX();
-		float y = preCell.getY() - this.cellInnerRadius * 2;
+		if(openArrow){
+			float distance = LockPatternUtil.getDistanceBetweenTwoPoints
+					(preCell.getX(), preCell.getY(), nextCell.getX(), nextCell.getY());
+			float x = preCell.getX();
+			float y = preCell.getY() - this.cellInnerRadius * 2;
 
-		float x1 = x - this.cellInnerRadius / 2;
-		float y1 = y + (float)(this.cellInnerRadius * CONSTANT_COS_30);
-		float x2 = x + this.cellInnerRadius / 2 ;
-		float y2 = y1;
+			float x1 = x - this.cellInnerRadius / 2;
+			float y1 = y + (float)(this.cellInnerRadius * CONSTANT_COS_30);
+			float x2 = x + this.cellInnerRadius / 2 ;
+			float y2 = y1;
 
-		float angleX = LockPatternUtil.getAngleLineIntersectX(
-				preCell.getX(), preCell.getY(), nextCell.getX(), nextCell.getY(), distance);
-		float angleY = LockPatternUtil.getAngleLineIntersectY(
-				preCell.getX(), preCell.getY(), nextCell.getX(), nextCell.getY(), distance);
+			float angleX = LockPatternUtil.getAngleLineIntersectX(
+					preCell.getX(), preCell.getY(), nextCell.getX(), nextCell.getY(), distance);
+			float angleY = LockPatternUtil.getAngleLineIntersectY(
+					preCell.getX(), preCell.getY(), nextCell.getX(), nextCell.getY(), distance);
 
-		trianglePath.reset();
-		trianglePath.moveTo(x, y);
-		trianglePath.lineTo(x1, y1);
-		trianglePath.lineTo(x2, y2);
-		trianglePath.close();
-		//slide right down and right up
-		if (angleX >= 0 && angleX <= 90 ) {
-			triangleMatrix.setRotate(180 - angleY, preCell.getX(), preCell.getY());
+			trianglePath.reset();
+			trianglePath.moveTo(x, y);
+			trianglePath.lineTo(x1, y1);
+			trianglePath.lineTo(x2, y2);
+			trianglePath.close();
+			//slide right down and right up
+			if (angleX >= 0 && angleX <= 90 ) {
+				triangleMatrix.setRotate(180 - angleY, preCell.getX(), preCell.getY());
+			}
+			//slide left up and left down
+			else {
+				triangleMatrix.setRotate(angleY - 180, preCell.getX(), preCell.getY());
+			}
+			trianglePath.transform(triangleMatrix);
+			canvas.drawPath(trianglePath, paint);
 		}
-		//slide left up and left down
-		else {
-			triangleMatrix.setRotate(angleY - 180, preCell.getX(), preCell.getY());
-		}
-		trianglePath.transform(triangleMatrix);
-		canvas.drawPath(trianglePath, paint);
 	}
 
 	@SuppressLint("ClickableViewAccessibility")

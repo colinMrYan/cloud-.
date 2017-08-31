@@ -10,7 +10,7 @@
         android:layout_width="@dimen/_30dp"
         android:layout_height="@dimen/_30dp"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="@dimen/_50dp" />
+        android:layout_marginTop="150dp" />
 
     <TextView
         android:id="@+id/messageTv"
