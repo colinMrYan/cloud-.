@@ -454,6 +454,7 @@ public class AppCenterActivity extends BaseActivity {
 
         private LayoutInflater inflater;
         private int listPosition;
+        ImageDisplayUtils imageDisplayUtils = new ImageDisplayUtils(AppCenterActivity.this,R.drawable.icon_empty_icon);
 
         public RecommandAppListAdapter(Context context,int listPosition) {
             inflater = LayoutInflater.from(context);
@@ -476,8 +477,8 @@ public class AppCenterActivity extends BaseActivity {
         @Override
         public void onBindViewHolder(final RecommandViewHolder holder, final int position) {
             int size = adsList.size() == 0 ? listPosition:(listPosition - 1);
-            new ImageDisplayUtils().display(holder.recommandAppImg,appList.get(size).get(position).getAppIcon());
-                holder.recommandAppText.setText(appList.get(size).get(position).getAppName());
+            imageDisplayUtils.display(holder.recommandAppImg,appList.get(size).get(position).getAppIcon());
+            holder.recommandAppText.setText(appList.get(size).get(position).getAppName());
             if (onRecommandItemClickListener != null) {
                 holder.itemView.setOnClickListener(new OnClickListener() {
                     @Override
