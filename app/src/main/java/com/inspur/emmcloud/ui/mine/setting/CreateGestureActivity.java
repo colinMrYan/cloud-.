@@ -7,8 +7,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.PreferencesByUserAndTanentUtils;
+import com.inspur.emmcloud.util.StateBarColor;
 import com.inspur.emmcloud.util.ninelock.LockPatternIndicator;
 import com.inspur.emmcloud.util.ninelock.LockPatternUtil;
 import com.inspur.emmcloud.util.ninelock.LockPatternView;
@@ -45,6 +45,7 @@ public class CreateGestureActivity extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		StateBarColor.changeStateBarColor(this, R.color.grey_f6f6f6);
 		setContentView(R.layout.activity_create_gesture);
 		ButterKnife.bind(this);
 		this.init();
@@ -145,6 +146,7 @@ public class CreateGestureActivity extends Activity {
      */
 	private void setLockPatternSuccess() {
 		Toast.makeText(this, "create gesture success", Toast.LENGTH_SHORT).show();
+		PreferencesByUserAndTanentUtils.putBoolean(CreateGestureActivity.this,"gesture_code_isopen",true);
 		finish();
 	}
 
@@ -152,12 +154,8 @@ public class CreateGestureActivity extends Activity {
 	 * 保存手势密码
 	 */
 	private void saveChosenPattern(List<LockPatternView.Cell> cells) {
-//		byte[] bytes = LockPatternUtil.patternToHash(cells);
-//		aCache.put(Constant.GESTURE_PASSWORD, bytes);
-
 		String gestureCode = LockPatternUtil.patternToString(cells);
 			PreferencesByUserAndTanentUtils.putString(CreateGestureActivity.this,"gesture_code",gestureCode);
-		LogUtils.YfcDebug("存储的文字是："+gestureCode);
 	}
 
 	private enum Status {

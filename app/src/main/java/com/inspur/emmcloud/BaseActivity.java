@@ -6,10 +6,14 @@ import android.os.Bundle;
 
 import com.inspur.emmcloud.api.apiservice.AppAPIService;
 import com.inspur.emmcloud.service.PVCollectService;
+import com.inspur.emmcloud.ui.mine.setting.GestureLoginActivity;
 import com.inspur.emmcloud.util.AppUtils;
 import com.inspur.emmcloud.util.DbCacheUtils;
+import com.inspur.emmcloud.util.IntentUtils;
 import com.inspur.emmcloud.util.NetUtils;
+import com.inspur.emmcloud.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.StateBarColor;
+import com.inspur.emmcloud.util.StringUtils;
 
 public class BaseActivity extends Activity {
 
@@ -56,8 +60,23 @@ public class BaseActivity extends Activity {
                 ((MyApplication) getApplicationContext()).clearNotification();
                 uploadMDMInfo();
                 ((MyApplication) getApplicationContext()).sendActivedWSMsg();
+                if(getIsNeedGestureCode()){
+                    Bundle bundle = new Bundle();
+                    bundle.putString("gesture_code_change","login");
+                    IntentUtils.startActivity(this, GestureLoginActivity.class,bundle);
+                }
             }
         }
+    }
+
+    /**
+     * 判断收需要打开手势解锁
+     * @return
+     */
+    private boolean getIsNeedGestureCode() {
+        String gestureCode = PreferencesByUserAndTanentUtils.getString(this,"gesture_code");
+        boolean gestureCodeOpen = PreferencesByUserAndTanentUtils.getBoolean(this,"gesture_code_isopen",false);
+        return !StringUtils.isBlank(gestureCode) && gestureCodeOpen;
     }
 
     /**

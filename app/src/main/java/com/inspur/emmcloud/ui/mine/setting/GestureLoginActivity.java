@@ -9,11 +9,10 @@ import android.widget.Toast;
 
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.util.IntentUtils;
-import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.PreferencesByUserAndTanentUtils;
+import com.inspur.emmcloud.util.StateBarColor;
 import com.inspur.emmcloud.util.ninelock.LockPatternUtil;
 import com.inspur.emmcloud.util.ninelock.LockPatternView;
-import com.inspur.emmcloud.util.ninelock.cache.ACache;
 
 import java.util.List;
 
@@ -36,27 +35,21 @@ public class GestureLoginActivity extends Activity {
     @Bind(R.id.forgetGestureBtn)
     Button forgetGestureBtn;
 
-    private ACache aCache;
     private static final long DELAYTIME = 600l;
     private String gesturePassword;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        StateBarColor.changeStateBarColor(this, R.color.grey_f6f6f6);
         setContentView(R.layout.activity_gesture_login);
         ButterKnife.bind(this);
         this.init();
     }
 
     private void init() {
-        aCache = ACache.get(GestureLoginActivity.this);
         //得到当前用户的手势密码
-//        gesturePassword = aCache.getAsBinary(Constant.GESTURE_PASSWORD);
-
-            gesturePassword = PreferencesByUserAndTanentUtils.getString(GestureLoginActivity.this,"gesture_code");
-
-        String gestureCode = PreferencesByUserAndTanentUtils.getString(GestureLoginActivity.this,"gesture_code");
-        LogUtils.YfcDebug("存储的密码是："+gestureCode);
+        gesturePassword = PreferencesByUserAndTanentUtils.getString(GestureLoginActivity.this, "gesture_code");
         lockPatternView.setOnPatternListener(patternListener);
         updateStatus(Status.DEFAULT);
     }
@@ -70,13 +63,15 @@ public class GestureLoginActivity extends Activity {
 
         @Override
         public void onPatternComplete(List<LockPatternView.Cell> pattern) {
-            if(pattern != null){
-                if(LockPatternUtil.checkPattern(pattern, gesturePassword)) {
+            if (pattern != null) {
+                if (LockPatternUtil.checkPattern(pattern, gesturePassword)) {
                     updateStatus(Status.CORRECT);
-                    if(getIntent().hasExtra("gesture_code_change")){
+                    if (getIntent().hasExtra("gesture_code_change")) {
                         String command = getIntent().getStringExtra("gesture_code_change");
-                        if(command.equals("reset")){
-                            IntentUtils.startActivity(GestureLoginActivity.this,CreateGestureActivity.class);
+                        if (command.equals("reset")) {
+                            IntentUtils.startActivity(GestureLoginActivity.this, CreateGestureActivity.class);
+                            finish();
+                        } else if (command.equals("login")) {
                             finish();
                         }
                     }
@@ -89,6 +84,7 @@ public class GestureLoginActivity extends Activity {
 
     /**
      * 更新状态
+     *
      * @param status
      */
     private void updateStatus(Status status) {
@@ -138,6 +134,7 @@ public class GestureLoginActivity extends Activity {
             this.strId = strId;
             this.colorId = colorId;
         }
+
         private int strId;
         private int colorId;
     }

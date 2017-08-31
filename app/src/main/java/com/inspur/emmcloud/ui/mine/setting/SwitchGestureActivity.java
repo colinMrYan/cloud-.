@@ -1,10 +1,10 @@
 package com.inspur.emmcloud.ui.mine.setting;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
 
+import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.util.IntentUtils;
@@ -16,7 +16,7 @@ import com.inspur.emmcloud.widget.SwitchView;
  * Created by yufuchang on 2017/8/29.
  */
 
-public class SwitchGestureActivity extends Activity {
+public class SwitchGestureActivity extends BaseActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -54,13 +54,13 @@ public class SwitchGestureActivity extends Activity {
         switchView.setOnStateChangedListener(new SwitchView.OnStateChangedListener() {
             @Override
             public void toggleToOn(View view) {
-                PreferencesByUserAndTanentUtils.putBoolean(SwitchGestureActivity.this,"gesture_code_isopen",true);
                 ((SwitchView)view).setOpened(true);
-                if(!getHasGesturePassword()){
-                    IntentUtils.startActivity(SwitchGestureActivity.this,CreateGestureActivity.class);
-                }else{
-                    findViewById(R.id.switch_gesture_change_code_layout).setVisibility(View.VISIBLE);
-                }
+                IntentUtils.startActivity(SwitchGestureActivity.this,CreateGestureActivity.class);
+//                if(!getHasGesturePassword()){
+//                    IntentUtils.startActivity(SwitchGestureActivity.this,CreateGestureActivity.class);
+//                }else{
+//                    findViewById(R.id.switch_gesture_change_code_layout).setVisibility(View.VISIBLE);
+//                }
             }
 
             @Override
