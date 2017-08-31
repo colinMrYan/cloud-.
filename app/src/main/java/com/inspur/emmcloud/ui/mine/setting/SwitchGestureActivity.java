@@ -29,7 +29,7 @@ public class SwitchGestureActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-        initShowResetGesturePassWord(getHasGesturePassword());
+        initShowResetGesturePassWord(getHasGesturePassword()&&getGestureCodeIsOpen());
     }
 
     /**
@@ -38,7 +38,6 @@ public class SwitchGestureActivity extends Activity {
      */
     private boolean getHasGesturePassword() {
         String gestureCode = PreferencesByUserAndTanentUtils.getString(SwitchGestureActivity.this,"gesture_code");
-//        byte[] gesturePassword = ACache.get(SwitchGestureActivity.this).getAsBinary(Constant.GESTURE_PASSWORD);
         return !StringUtils.isBlank(gestureCode);
     }
 
@@ -46,23 +45,20 @@ public class SwitchGestureActivity extends Activity {
      * 初始化Views
      */
     private void init() {
-        String gestureCode = PreferencesByUserAndTanentUtils.getString(SwitchGestureActivity.this,"gesture_code");
         SwitchView switchView = ((SwitchView)findViewById(R.id.switch_gesture_switchview));
-        if(getHasGesturePassword()){
-            switchView.toggleSwitch(true);
+        if(getHasGesturePassword() && getGestureCodeIsOpen()){
+            switchView.setOpened(true);
         }else{
-            switchView.toggleSwitch(false);
+            switchView.setOpened(false);
         }
         switchView.setOnStateChangedListener(new SwitchView.OnStateChangedListener() {
             @Override
             public void toggleToOn(View view) {
+                PreferencesByUserAndTanentUtils.putBoolean(SwitchGestureActivity.this,"gesture_code_isopen",true);
                 ((SwitchView)view).setOpened(true);
                 if(!getHasGesturePassword()){
-                    PreferencesByUserAndTanentUtils.putBoolean(SwitchGestureActivity.this,"gesture_code_isopen",true);
                     IntentUtils.startActivity(SwitchGestureActivity.this,CreateGestureActivity.class);
                 }else{
-//                    IntentUtils.startActivity(SwitchGestureActivity.this,GestureLoginActivity.class);
-                    PreferencesByUserAndTanentUtils.putBoolean(SwitchGestureActivity.this,"gesture_code_isopen",false);
                     findViewById(R.id.switch_gesture_change_code_layout).setVisibility(View.VISIBLE);
                 }
             }
@@ -71,7 +67,7 @@ public class SwitchGestureActivity extends Activity {
             public void toggleToOff(View view) {
                 ((SwitchView)view).setOpened(false);
                 findViewById(R.id.switch_gesture_change_code_layout).setVisibility(View.GONE);
-
+                PreferencesByUserAndTanentUtils.putBoolean(SwitchGestureActivity.this,"gesture_code_isopen",false);
             }
         });
         findViewById(R.id.switch_gesture_change_code_layout).setOnClickListener(new View.OnClickListener() {
@@ -82,6 +78,15 @@ public class SwitchGestureActivity extends Activity {
                 IntentUtils.startActivity(SwitchGestureActivity.this,GestureLoginActivity.class,bundle);
             }
         });
+        findViewById(R.id.switch_gesture_change_code_layout).setVisibility(getGestureCodeIsOpen()?View.VISIBLE:View.GONE);
+    }
+
+    /**
+     * 获取是否打开了重置手势密码
+     * @return
+     */
+    public boolean getGestureCodeIsOpen(){
+       return PreferencesByUserAndTanentUtils.getBoolean(SwitchGestureActivity.this,"gesture_code_isopen",false);
     }
 
     /**
@@ -89,11 +94,9 @@ public class SwitchGestureActivity extends Activity {
      * @param isHasGesturePassword
      */
     private void initShowResetGesturePassWord(boolean isHasGesturePassword) {
-        if(isHasGesturePassword){
-            findViewById(R.id.switch_gesture_change_code_layout).setVisibility(View.VISIBLE);
-        }else{
-            findViewById(R.id.switch_gesture_change_code_layout).setVisibility(View.GONE);
-        }
+        findViewById(R.id.switch_gesture_change_code_layout).setVisibility(isHasGesturePassword?View.VISIBLE:View.GONE);
+        SwitchView switchView = ((SwitchView)findViewById(R.id.switch_gesture_switchview));
+        switchView.setOpened((getHasGesturePassword()&&getGestureCodeIsOpen())?true:false);
     }
 
     public void onClick(View view) {
@@ -101,7 +104,6 @@ public class SwitchGestureActivity extends Activity {
             case R.id.back_layout:
                 finish();
                 break;
-
             default:
                 break;
         }
