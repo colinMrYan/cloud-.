@@ -1,44 +1,59 @@
 package com.inspur.emmcloud.bean;
 
 import com.inspur.emmcloud.util.LogUtils;
-import com.lidroid.xutils.db.annotation.Id;
-import com.lidroid.xutils.db.annotation.Table;
-import com.lidroid.xutils.db.annotation.Transient;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.xutils.db.annotation.Column;
+import org.xutils.db.annotation.Table;
 
 import java.io.Serializable;
 
-@Table(name = "Msg",execAfterTableCreated = "CREATE INDEX msgindex ON Msg(cid)")
+@Table(name = "Msg",onCreated = "CREATE INDEX msgindex ON Msg(cid)")
 public class Msg implements Serializable {
     private static final String TAG = "Msg";
-    // @Id 如果主键没有命名名为id或_id的时，需要为主键添加此注解
-    //  @NoAutoIncrement  int,long类型的id默认自增，不想使用自增时添加此注解
-    @Id
+    @Column(name = "mid",isId = true)
     private String mid = "";
+    @Column(name = "time")
     private String time = "";
+    @Column(name = "type")
     private String type = "";
+    @Column(name = "body")
     private String body = "";
+    @Column(name = "uid")
     private String uid = "";
+    @Column(name = "title")
     private String title = "";
+    @Column(name = "avatar")
     private String avatar = "";
+    @Column(name = "commentContent")
     private String commentContent = "";
+    @Column(name = "originalMsgMid")
     private String originalMsgMid = "";
+    @Column(name = "originalMsgPreview")
     private String originalMsgPreview = "";
+    @Column(name = "cid")
     private String cid = "";  //channel id
+    @Column(name = "nid")
     private String nid = "";
+    @Column(name = "nTitle")
     private String nTitle = "";
+    @Column(name = "nDigest")
     private String nDigest = "";
+    @Column(name = "nAuthor")
     private String nAuthor = "";
+    @Column(name = "nUrl")
     private String nUrl = "";
+    @Column(name = "nPublisher")
     private String nPublisher = "";
+    @Column(name = "nPostTime")
     private String nPostTime = "";
+    @Column(name = "isHaveRead")
     private boolean isHaveRead = false;
+    @Column(name = "privates")
     private String privates = "";
-    @Transient
+
     private int sendStatus = 1;//0 发送中  1发送成功  2发送失败
-    @Transient
     private String tmpId = "";
 
     public Msg() {

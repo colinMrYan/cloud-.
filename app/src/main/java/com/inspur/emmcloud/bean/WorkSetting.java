@@ -1,17 +1,21 @@
 package com.inspur.emmcloud.bean;
 
-import com.lidroid.xutils.db.annotation.Id;
-import com.lidroid.xutils.db.annotation.Table;
+
+import org.xutils.db.annotation.Column;
+import org.xutils.db.annotation.Table;
 
 /**
  * Created by chenmch on 2017/7/25.
  */
 @Table(name = "WorkSetting")
 public class WorkSetting {
-    @Id
+    @Column(name = "id" ,isId = true)
     private String id;
+    @Column(name = "isOpen")
     private boolean isOpen;
+    @Column(name = "sort")
     private int sort;
+    @Column(name = "name")
     private String name;
 
     public WorkSetting() {

@@ -34,7 +34,6 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.WorkAPIService;
 import com.inspur.emmcloud.bean.Contact;
-import com.inspur.emmcloud.bean.GetBookingRoomResult;
 import com.inspur.emmcloud.bean.Meeting;
 import com.inspur.emmcloud.bean.Room;
 import com.inspur.emmcloud.bean.SearchModel;
@@ -55,12 +54,6 @@ import com.inspur.emmcloud.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.CircleImageView;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.MyDatePickerDialog;
-
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Locale;
 
 /**
  * 会议详情，这里是每个会议的详情内容
@@ -770,7 +763,7 @@ public class MeetingDetailActivity extends BaseActivity {
 	class WebService extends APIInterfaceInstance {
 		@Override
 		public void returnBookingRoomSuccess(
-				GetBookingRoomResult getBookingRoomResult) {
+				) {
 			if (loadingDialog.isShowing()) {
 				loadingDialog.dismiss();
 			}

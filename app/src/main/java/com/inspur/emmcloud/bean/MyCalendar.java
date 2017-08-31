@@ -1,8 +1,9 @@
 package com.inspur.emmcloud.bean;
 
-import com.lidroid.xutils.db.annotation.Table;
 
 import org.json.JSONObject;
+import org.xutils.db.annotation.Column;
+import org.xutils.db.annotation.Table;
 
 import java.io.Serializable;
 
@@ -15,11 +16,17 @@ import java.io.Serializable;
  */
 @Table(name = "MyCalendar")
 public class MyCalendar implements Serializable{
+	@Column(name = "id",isId = true)
 	private String id;
+	@Column(name = "name")
 	private String name;
+	@Column(name = "color")
 	private String color;
+	@Column(name = "owner")
 	private String owner;
+	@Column(name = "state")
 	private String state;
+	@Column(name = "community")
 	private boolean community;
 	
 	public MyCalendar(){

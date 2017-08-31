@@ -138,7 +138,6 @@ public class IndexActivity extends BaseFragmentActivity implements
         appApiService = new AppAPIService(IndexActivity.this);
         appApiService.setAPIInterface(new WebService());
         userId = ((MyApplication) getApplication()).getUid();
-        initReactNative();
         loadingDlg = new LoadingDialog(IndexActivity.this, getString(R.string.app_init));
         handMessage();
         getIsHasCacheContact();
@@ -148,7 +147,7 @@ public class IndexActivity extends BaseFragmentActivity implements
         getAllContact();
         getAllRobots();
         initTabView();
-
+        initReactNative();
         /**从服务端获取显示tab**/
         getAppTabs();
         updateSplashPage();
@@ -813,8 +812,12 @@ public class IndexActivity extends BaseFragmentActivity implements
                     List<Contact> modifyContactLsit = getAllContactResult
                             .getModifyContactList();
                     List<String> deleteContactIdList = getAllContactResult.getDeleteContactIdList();
+                    LogUtils.jasonDebug("size="+allContactList.size());
+                    long a =System.currentTimeMillis();
                     ContactCacheUtils.saveContactList(getApplicationContext(),
                             allContactList);
+                    long b = System.currentTimeMillis();
+                    LogUtils.jasonDebug("b-a="+(b-a)*1.0/1000);
                     ContactCacheUtils.saveContactList(getApplicationContext(),
                             modifyContactLsit);
                     ContactCacheUtils.deleteContact(IndexActivity.this, deleteContactIdList);

@@ -1,14 +1,19 @@
 package com.inspur.emmcloud.bean;
 
-import com.lidroid.xutils.db.annotation.Table;
 
 import org.json.JSONObject;
+import org.xutils.db.annotation.Column;
+import org.xutils.db.annotation.Table;
 
 @Table(name = "WebPVCollect")
 public class PVCollectModel {
+    @Column(name = "id",isId = true)
     private int id;
+    @Column(name = "functionID")
     private String functionID = "";
+    @Column(name = "functionType")
     private String functionType = "";
+    @Column(name = "collectTime")
     private long collectTime = 0L;
 
     public PVCollectModel() {
