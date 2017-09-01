@@ -1,11 +1,11 @@
 package com.inspur.emmcloud.ui.mine.setting;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.StateBarColor;
@@ -26,7 +26,7 @@ import butterknife.OnClick;
  * create gesture activity
  * Created by Sym on 2015/12/23.
  */
-public class CreateGestureActivity extends Activity {
+public class CreateGestureActivity extends BaseActivity {
 
 	@Bind(R.id.lockPatterIndicator)
 	LockPatternIndicator lockPatternIndicator;
