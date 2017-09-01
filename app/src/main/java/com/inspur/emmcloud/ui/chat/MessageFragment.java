@@ -206,12 +206,10 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 				AppTabAutoBean.PayloadBean.TabsBean.Property property = appTabList.get(i).getProperty();
 				if (property != null) {
 					if (!property.isCanCreate()) {
-						rootView.findViewById(R.id.find_friends_btn).setVisibility(View.GONE);
-						rootView.findViewById(R.id.contact_list_img).setVisibility(View.GONE);
+						rootView.findViewById(R.id.more_function_list_img).setVisibility(View.GONE);
 					}
 					if (!property.isCanContact()) {
-						rootView.findViewById(R.id.find_friends_btn).setVisibility(View.GONE);
-						rootView.findViewById(R.id.address_list_img).setVisibility(View.GONE);
+						rootView.findViewById(R.id.contact_img).setVisibility(View.GONE);
 					}
 				}
 			}
@@ -227,9 +225,9 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
         inflater = (LayoutInflater) getActivity().getSystemService(
                 getActivity().LAYOUT_INFLATER_SERVICE);
         rootView = inflater.inflate(R.layout.fragment_message, null);
-        (rootView.findViewById(R.id.address_list_img))
+        (rootView.findViewById(R.id.more_function_list_img))
                 .setOnClickListener(onViewClickListener);
-        (rootView.findViewById(R.id.contact_list_img))
+        (rootView.findViewById(R.id.contact_img))
                 .setOnClickListener(onViewClickListener);
         (rootView.findViewById(R.id.find_friends_btn))
                 .setOnClickListener(onViewClickListener);
@@ -294,27 +292,11 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 		public void onClick(View v) {
 			// TODO Auto-generated method stub
             switch (v.getId()) {
-                case R.id.address_list_img:
-                case R.id.find_friends_btn:
-//					Bundle bundle = new Bundle();
-//					bundle.putInt("select_content", 4);
-//					bundle.putBoolean("isMulti_select", false);
-//					bundle.putString("title",
-//							getActivity().getString(R.string.adress_list));
-//					IntentUtils.startActivity(getActivity(),
-//							ContactSearchActivity.class, bundle);
-//					recordUserClickContact();
-                    showPopupWindow(rootView.findViewById(R.id.address_list_img));
+                case R.id.more_function_list_img:
+                    showPopupWindow(rootView.findViewById(R.id.more_function_list_img));
                     break;
-                case R.id.contact_list_img:
-//					Intent intent = new Intent();
-//					intent.putExtra("select_content", 2);
-//					intent.putExtra("isMulti_select", true);
-//					intent.putExtra("title",
-//							getActivity().getString(R.string.creat_group));
-//					intent.setClass(getActivity(), ContactSearchActivity.class);
-//					startActivityForResult(intent, CREAT_CHANNEL_GROUP);
-
+                case R.id.contact_img:
+				case R.id.find_friends_btn:
                     Bundle bundle = new Bundle();
                     bundle.putInt("select_content", 4);
                     bundle.putBoolean("isMulti_select", false);
