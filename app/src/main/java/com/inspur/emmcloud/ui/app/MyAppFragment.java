@@ -41,7 +41,6 @@ import com.inspur.emmcloud.bean.PVCollectModel;
 import com.inspur.emmcloud.util.AppCacheUtils;
 import com.inspur.emmcloud.util.AppTitleUtils;
 import com.inspur.emmcloud.util.IntentUtils;
-import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.MyAppCacheUtils;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.PVCollectModelCacheUtils;
@@ -114,13 +113,10 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
         }
 
         //每次createView如果有上一次存下来的缓存数据则刷新并修改缓存状态
-        boolean isRefreshFromNet = PreferencesByUserAndTanentUtils.getBoolean(getActivity(),"isRefreshFromNet",false);
-        LogUtils.YfcDebug("走OnCreateView"+isRefreshFromNet);
-        if(isRefreshFromNet){
-            LogUtils.YfcDebug("根据网络数据状态进行刷新");
-
+        boolean isRefreshFromNet = PreferencesByUserAndTanentUtils.getBoolean(getActivity(), "isRefreshFromNet", false);
+        if (isRefreshFromNet) {
             initAppListView();
-            PreferencesByUserAndTanentUtils.putBoolean(getActivity(),"isRefreshFromNet",false);
+            PreferencesByUserAndTanentUtils.putBoolean(getActivity(), "isRefreshFromNet", false);
         }
         return rootView;
     }
@@ -160,7 +156,7 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
         });
         OnAppCenterClickListener listener = new OnAppCenterClickListener();
         (rootView.findViewById(R.id.appcenter_layout)).setOnClickListener(listener);
-        getMyApp(true);
+        getMyApp();
         setTabTitle();
 //        shortCutAppList.add("mobile_checkin_hcm");
 //        shortCutAppList.add("inspur_news_esg");//目前，除在此处添加id还需要为每个需要生成快捷方式的应用配置图标
@@ -171,8 +167,7 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
      */
     private void initAppListView() {
         hasCommonlyApp = MyAppCacheUtils.getHasCommonlyApp(getActivity());
-        List<AppGroupBean> appGroupList = new ArrayList<>();
-        appGroupList = MyAppCacheUtils.getMyApps(getContext());
+        List<AppGroupBean> appGroupList = MyAppCacheUtils.getMyApps(getContext());
         appListAdapter = new AppListAdapter(appGroupList);
         appListView.setAdapter(appListAdapter);
         appListAdapter.notifyDataSetChanged();
@@ -191,7 +186,7 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
     /**
      * 获取我的apps
      */
-    private void getMyApp(boolean isShowDlg) {
+    private void getMyApp() {
         if (NetUtils.isNetworkConnected(getActivity())) {
             apiService.getUserApps();
         } else {
@@ -209,9 +204,11 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
                 String action = intent.getAction();
                 if (action.equals(ACTION_NAME)) {
                     isNeedRefreshApp = true;
-                    getMyApp(true);
+                    getMyApp();
                     (rootView.findViewById(R.id.app_edit_finish)).setVisibility(View.GONE);
                     editBtn.setVisibility(View.VISIBLE);
+                    appListAdapter.setCanEdit(false);
+                    appListAdapter.notifyDataSetChanged();
                 }
             }
         };
@@ -224,9 +221,9 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
     /**
      * 记录用户使用了应用中心功能
      */
-    private void recordUserClickAppCenter(){
-        PVCollectModel pvCollectModel = new PVCollectModel("appcenter","application");
-        PVCollectModelCacheUtils.saveCollectModel(getActivity(),pvCollectModel);
+    private void recordUserClickAppCenter() {
+        PVCollectModel pvCollectModel = new PVCollectModel("appcenter", "application");
+        PVCollectModelCacheUtils.saveCollectModel(getActivity(), pvCollectModel);
     }
 
 
@@ -319,7 +316,7 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
 //                        }else{
 //                            UriUtils.openApp(getActivity(), app);
 //                        }
-                        if(NetUtils.isNetworkConnected(getActivity())){
+                        if (NetUtils.isNetworkConnected(getActivity())) {
                             UriUtils.openApp(getActivity(), app);
                         }
                         if (getNeedCommonlyUseApp()) {
@@ -353,7 +350,7 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
                             handCommonlyUseAppChange(appAdapterList, app);
                             appListAdapter.notifyDataSetChanged();
                             dragGridViewAdapter.notifyDataSetChanged();
-                            MyAppCacheUtils.saveMyApps(getActivity(),JSON.toJSONString(appListAdapter.getAppAdapterList()));
+                            MyAppCacheUtils.saveMyApps(getActivity(), JSON.toJSONString(appListAdapter.getAppAdapterList()));
                         }
                     });
             if (canEdit) {
@@ -386,7 +383,7 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
         /**
          * 设置AppAdapter
          */
-        public void setAppAdapterList(List<AppGroupBean> list){
+        public void setAppAdapterList(List<AppGroupBean> list) {
             appAdapterList = list;
         }
 
@@ -404,7 +401,6 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
             return this.canEdit;
         }
     }
-
 
 
     /**
@@ -441,7 +437,7 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
             appGroupBean.setAppItemList(commonlyUseAppList);
             appAdapterList.add(0, appGroupBean);
             hasCommonlyApp = true;
-            MyAppCacheUtils.saveHasCommonlyApp(getActivity(),hasCommonlyApp);
+            MyAppCacheUtils.saveHasCommonlyApp(getActivity(), hasCommonlyApp);
             appListAdapter.notifyDataSetChanged();
         }
 
@@ -522,6 +518,7 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
 
     /**
      * 排序之后进行的操作
+     *
      * @param appGroupItemList
      * @param from
      * @param to
@@ -544,7 +541,7 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
     @Override
     public void onRefresh(PullToRefreshLayout pullToRefreshLayout) {
         isNeedRefreshApp = true;
-        getMyApp(false);
+        getMyApp();
         editBtn.setVisibility(View.VISIBLE);
         editBtnFinish.setVisibility(View.GONE);
     }
@@ -567,16 +564,17 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
             getActivity().unregisterReceiver(mBroadcastReceiver);
             mBroadcastReceiver = null;
         }
-        if(popupWindow != null && popupWindow.isShowing()){
+        if (popupWindow != null && popupWindow.isShowing()) {
             popupWindow.dismiss();
         }
-        PreferencesByUserAndTanentUtils.putBoolean(getActivity(),"isRefreshFromNet",false);
+        PreferencesByUserAndTanentUtils.putBoolean(getActivity(), "isRefreshFromNet", false);
     }
 
     /**
      * 应用操作窗口
      * 包括编辑应用（点击后在非必装应用上显示叉号，点叉号删除，长按挪动位置）
      * 和是否显示常用应用
+     *
      * @param view
      */
     private void showPopupWindow(View view) {
@@ -607,6 +605,7 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
                 saveNeedCommonlyUseApp(true);
                 handCommonlyUseAppData(appListAdapter.getAppAdapterList(), true);
             }
+
             @Override
             public void toggleToOff(View view) {
                 if (view == null || switchView == null) {
@@ -618,7 +617,7 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
                     appListAdapter.getAppAdapterList().remove(0);
                     appListAdapter.notifyDataSetChanged();
                     hasCommonlyApp = false;
-                    MyAppCacheUtils.saveHasCommonlyApp(getActivity(),hasCommonlyApp);
+                    MyAppCacheUtils.saveHasCommonlyApp(getActivity(), hasCommonlyApp);
                 }
             }
         });
@@ -776,13 +775,13 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
                 appGroupBean.setAppItemList(myCommonlyUseAppList);
                 appGroupList.add(0, appGroupBean);
                 hasCommonlyApp = true;
-                MyAppCacheUtils.saveHasCommonlyApp(getActivity(),hasCommonlyApp);
+                MyAppCacheUtils.saveHasCommonlyApp(getActivity(), hasCommonlyApp);
             }
         }
         if (isNeedRefresh) {
             appListAdapter.notifyDataSetChanged();
         }
-        MyAppCacheUtils.saveMyApps(getActivity(),JSON.toJSONString(appListAdapter.getAppAdapterList()));
+        MyAppCacheUtils.saveMyApps(getActivity(), JSON.toJSONString(appListAdapter.getAppAdapterList()));
     }
 
     /**
@@ -860,9 +859,9 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
     }
 
 
-
     /**
      * 更新List
+     *
      * @param appGroupList
      */
     private void refreshAppList(List<AppGroupBean> appGroupList) {
@@ -873,12 +872,13 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
 
     /**
      * 创建快捷方式的Dialog
+     *
      * @param app
      * @param appType
      * @param clz
      * @param icon
      */
-    private void showCreateShortCutDialog(final App app, final String appType, final Class clz, final int icon,final Bitmap bitmap) {
+    private void showCreateShortCutDialog(final App app, final String appType, final Class clz, final int icon, final Bitmap bitmap) {
         final Dialog hasIntrcutionDialog = new Dialog(getActivity(),
                 R.style.transparentFrameWindowStyle);
         hasIntrcutionDialog.setCanceledOnTouchOutside(true);
@@ -892,15 +892,15 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
         okBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(icon == 0){
+                if (icon == 0) {
                     ShortCutUtils.createShortCut(getActivity(), clz,
                             app.getAppName(), app.getUri(), appType, bitmap);
                 }
-                if(bitmap == null){
+                if (bitmap == null) {
                     ShortCutUtils.createShortCut(getActivity(), clz,
                             app.getAppName(), app.getUri(), appType, icon);
                 }
-                UriUtils.openApp(getActivity(),app);
+                UriUtils.openApp(getActivity(), app);
                 hasIntrcutionDialog.dismiss();
             }
         });
@@ -911,7 +911,7 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
                 if (checkBox.isChecked()) {
                     PreferencesByUserAndTanentUtils.putBoolean(getActivity(), "need_create_shortcut" + app.getAppID(), false);
                 }
-                UriUtils.openApp(getActivity(),app);
+                UriUtils.openApp(getActivity(), app);
                 hasIntrcutionDialog.dismiss();
             }
         });
@@ -924,7 +924,6 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
     }
 
 
-
     /**
      * 网络请求处理类，一般放最后
      */
@@ -933,35 +932,34 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
         public void returnUserAppsSuccess(GetAppGroupResult getAppGroupResult) {
             List<AppGroupBean> appGroupList = handleAppList(getAppGroupResult
                     .getAppGroupBeanList());
-            PreferencesByUserAndTanentUtils.putBoolean(getActivity(),"isRefreshFromNet",true);
-            LogUtils.YfcDebug("得到网络数据");
+            PreferencesByUserAndTanentUtils.putBoolean(getActivity(), "isRefreshFromNet", true);
             //当第一次安装，第一次打开时，没有缓存的时候需要刷新appAdapter，其余时候只存（并且存储一个是否有网络数据的标志）不刷
             //这里返回空的形式时null字符串，需要特别小心
             String appCache = MyAppCacheUtils.getMyAppsData(getActivity());
-            if(appCache.equals("null")||StringUtils.isBlank(appCache)||isNeedRefreshApp){
+            if (appCache.equals("null") || StringUtils.isBlank(appCache) || isNeedRefreshApp) {
                 handleRefreshApp(appGroupList);
                 isNeedRefreshApp = false;
             }
-            MyAppCacheUtils.saveMyApps(getActivity(),JSON.toJSONString(appGroupList));
+            MyAppCacheUtils.saveMyApps(getActivity(), JSON.toJSONString(appGroupList));
             pullToRefreshLayout.refreshFinish(PullToRefreshLayout.SUCCEED);
         }
 
         @Override
-        public void returnUserAppsFail(String error,int errorCode) {
+        public void returnUserAppsFail(String error, int errorCode) {
             pullToRefreshLayout.refreshFinish(PullToRefreshLayout.FAIL);
-            WebServiceMiddleUtils.hand(getActivity(), error,errorCode);
+            WebServiceMiddleUtils.hand(getActivity(), error, errorCode);
         }
 
         /**
          * 处理添加新的app的逻辑
+         *
          * @param appGroupList
          */
         private void handleRefreshApp(List<AppGroupBean> appGroupList) {
-                appListAdapter = new AppListAdapter(appGroupList);
-                appListView.setAdapter(appListAdapter);
-                appListAdapter.notifyDataSetChanged();
-                MyAppCacheUtils.saveMyApps(getActivity(),JSON.toJSONString(appGroupList));
-                isNeedRefreshApp = false;
+            appListAdapter.setAppAdapterList(appGroupList);
+            appListAdapter.notifyDataSetChanged();
+            MyAppCacheUtils.saveMyApps(getActivity(), JSON.toJSONString(appGroupList));
+            isNeedRefreshApp = false;
         }
     }
 }
