@@ -16,10 +16,13 @@ public class MyAppCacheUtils {
     /**
      * 保存常用应用数据
      * @param context
-     * @param appsString
+     * @param appGroupList
      */
-    public static void saveMyApps(Context context, String appsString){
-        PreferencesByUserAndTanentUtils.putString(context,"myapps",appsString);
+    public static void saveMyAppList(Context context, List<AppGroupBean> appGroupList){
+        String appList = JSON.toJSONString(appGroupList);
+        if(!appList.equals("null") && !StringUtils.isBlank(appList)){
+            PreferencesByUserAndTanentUtils.putString(context,"my_app_list",appList);
+        }
     }
 
     /**
@@ -27,7 +30,7 @@ public class MyAppCacheUtils {
      * @param context
      */
     public static String getMyAppsData(Context context){
-        return PreferencesByUserAndTanentUtils.getString(context,"myapps","");
+        return PreferencesByUserAndTanentUtils.getString(context,"my_app_list","");
     }
 
     /**
@@ -36,7 +39,7 @@ public class MyAppCacheUtils {
      * @return
      */
     public static List<AppGroupBean> getMyApps(Context context){
-        String appsString = PreferencesByUserAndTanentUtils.getString(context,"myapps","");
+        String appsString = PreferencesByUserAndTanentUtils.getString(context,"my_app_list","");
         return JSON.parseArray(appsString,AppGroupBean.class);
     }
 
@@ -45,7 +48,7 @@ public class MyAppCacheUtils {
      * @param hasCommonlyApp
      */
     public static void saveHasCommonlyApp(Context context,boolean hasCommonlyApp){
-        PreferencesByUserAndTanentUtils.putBoolean(context,"isHasCommonlyApp",hasCommonlyApp);
+        PreferencesByUserAndTanentUtils.putBoolean(context,"is_has_commonly_app",hasCommonlyApp);
     }
 
     /**
@@ -54,6 +57,6 @@ public class MyAppCacheUtils {
      * @return
      */
     public  static boolean getHasCommonlyApp(Context context){
-        return PreferencesByUserAndTanentUtils.getBoolean(context,"isHasCommonlyApp",false);
+        return PreferencesByUserAndTanentUtils.getBoolean(context,"is_has_commonly_app",false);
     }
 }
