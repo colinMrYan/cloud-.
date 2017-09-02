@@ -790,4 +790,27 @@
     <!--闪屏页文字资源-->
     <string name="splash_skip">立即進入</string>
 
+
+    <!--安全中心-->
+    <string name="setting_safe_center">安全中心</string>
+    <string name="safe_center_gesture">手勢</string>
+    <string name="safe_center_finger_print">指紋</string>
+    <string name="switch_gesture_unlock">手勢解鎖</string>
+    <string name="switch_gesture_reset_unlock">重置手勢解鎖</string>
+    <!--九宮格-->
+    <!-- Gesture login activity -->
+    <string name="gesture_forget_gesture">忘記手勢密碼</string>
+    <string name="gesture_default">請輸入手勢密碼</string>
+    <string name="gesture_error">手勢密碼輸入錯誤</string>
+    <string name="gesture_correct">輸入正確</string>
+
+    <!-- Create gesture activity -->
+    <string name="create_gesture_default">繪製解鎖圖案</string>
+    <string name="create_gesture_correct">再次繪製解鎖圖案</string>
+    <string name="create_gesture_less_error">至少連接4個點，請重新輸入</string>
+    <string name="create_gesture_confirm_error">與上一次繪製不一致，請重新繪製</string>
+    <string name="create_gesture_confirm_correct">設置成功</string>
+    <string name="create_gesture_reset">重新設置</string>
+
+
 </resources>

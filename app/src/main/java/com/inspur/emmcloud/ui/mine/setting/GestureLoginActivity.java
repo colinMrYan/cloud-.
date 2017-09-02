@@ -57,7 +57,6 @@ public class GestureLoginActivity extends BaseActivity {
     }
 
     private void init() {
-
         //得到当前用户的手势密码
         gesturePassword = PreferencesByUserAndTanentUtils.getString(GestureLoginActivity.this, "gesture_code");
         lockPatternView.setOnPatternListener(patternListener);
@@ -68,11 +67,6 @@ public class GestureLoginActivity extends BaseActivity {
                 isLogin = true;
             }
         }
-//        FingerPrintUtils fingerPrintUiHelper = new FingerPrintUtils(this);
-//        if(fingerPrintUiHelper.isSatisfactionFingerprint()){
-//            fingerPrintUiHelper.setFingerPrintListener();
-//        }
-
         initFingerPrint();
     }
 
@@ -80,6 +74,10 @@ public class GestureLoginActivity extends BaseActivity {
         FingerprintIdentify cloudFingerprintIdentify = new FingerprintIdentify(this);
         if(!isFingerPrintAvaiable(cloudFingerprintIdentify)){
             LogUtils.YfcDebug("设备指纹不可用");
+            return;
+        }
+        if(!PreferencesByUserAndTanentUtils.getBoolean(GestureLoginActivity.this,SafeCenterActivity.FINGER_PRINT_STATE,false)){
+            LogUtils.YfcDebug("用户没有开启指纹解锁");
             return;
         }
         cloudFingerprintIdentify.startIdentify(10, new BaseFingerprint.FingerprintIdentifyListener() {
@@ -124,7 +122,7 @@ public class GestureLoginActivity extends BaseActivity {
     }
 
     /**
-     *
+     * 判断是否设置了指纹
      * @param cloudFingerprintIdentify
      * @return
      */
@@ -160,7 +158,6 @@ public class GestureLoginActivity extends BaseActivity {
             if (pattern != null) {
                 if (LockPatternUtil.checkPattern(pattern, gesturePassword)) {
                     updateStatus(Status.CORRECT);
-
                     if (getIntent().hasExtra("gesture_code_change")) {
                         String command = getIntent().getStringExtra("gesture_code_change");
                         LogUtils.YfcDebug("command："+command);

@@ -820,8 +820,13 @@
     <!--华为推送-->
     <string name="hwpush_ability_value" translatable="false">successRateAnalytics</string>
 
+    <!--安全中心-->
+    <string name="setting_safe_center">安全中心</string>
+    <string name="safe_center_gesture">手势</string>
+    <string name="safe_center_finger_print">指纹</string>
+    <string name="switch_gesture_unlock">手势解锁</string>
+    <string name="switch_gesture_reset_unlock">重置手势解锁</string>
     <!--九宫格-->
-
     <!-- Gesture login activity -->
     <string name="gesture_forget_gesture">忘记手势密码</string>
     <string name="gesture_default">请输入手势密码</string>
@@ -829,7 +834,6 @@
     <string name="gesture_correct">输入正确</string>
 
     <!-- Create gesture activity -->
-    <string name="create_gesture_activity">CreateGestureActivity</string>
     <string name="create_gesture_default">绘制解锁图案</string>
     <string name="create_gesture_correct">再次绘制解锁图案</string>
     <string name="create_gesture_less_error">至少连接4个点，请重新输入</string>

@@ -292,6 +292,9 @@
         <activity android:name=".ui.mine.setting.SwitchGestureActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"/>
+        <activity android:name=".ui.mine.setting.SafeCenterActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"/>
 
         <activity
             android:name=".ui.mine.setting.DeviceManagerActivity"

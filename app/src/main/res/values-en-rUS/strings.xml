@@ -788,4 +788,25 @@
     <!--闪屏页文字资源-->
     <string name="splash_skip">Enter immediately</string>
 
+    <!--安全中心-->
+    <string name="setting_safe_center">Security Center</string>
+    <string name="safe_center_gesture">Gesture</string>
+    <string name="safe_center_finger_print">Fingerprint</string>
+    <string name="switch_gesture_unlock">Gesture unlock</string>
+    <string name="switch_gesture_reset_unlock">Reset gesture unlock</string>
+    <!--九宫格-->
+    <!-- Gesture login activity -->
+    <string name="gesture_forget_gesture">Forget gesture code</string>
+    <string name="gesture_default">Please enter a gesture password</string>
+    <string name="gesture_error">Gesture password input error</string>
+    <string name="gesture_correct">Input correct</string>
+
+    <!-- Create gesture activity -->
+    <string name="create_gesture_default">Draw unlock patterns</string>
+    <string name="create_gesture_correct">Draw the unlock pattern again</string>
+    <string name="create_gesture_less_error">Connect at least 4 points. Please re-enter</string>
+    <string name="create_gesture_confirm_error">Inconsistent with previous drawing, please redraw</string>
+    <string name="create_gesture_confirm_correct">Set successfully</string>
+    <string name="create_gesture_reset">Reset</string>
+
 </resources>

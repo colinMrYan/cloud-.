@@ -36,20 +36,21 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:text="@string/switch_gesture_unlock"
+            android:text="@string/setting_safe_center"
             android:textColor="@color/header_text"
             android:textSize="@dimen/header_textsize" />
     </RelativeLayout>
 
 
     <RelativeLayout
-        android:id="@+id/switch_gesture_layout"
+        android:id="@+id/safe_center_gesture_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/header_layout"
+        android:layout_marginTop="10dp"
+        android:onClick="onClick"
         android:background="@color/white"
-        android:orientation="vertical"
-        android:layout_marginTop="10dp">
+        android:orientation="vertical">
 
         <View
             android:layout_width="match_parent"
@@ -63,42 +64,42 @@
             android:paddingBottom="10dp"
             android:paddingLeft="12dp"
             android:paddingTop="10dp"
-            android:text="@string/switch_gesture_unlock"
+            android:text="@string/safe_center_gesture"
+            android:textSize="@dimen/content_normal_textsize" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/safe_center_finger_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/safe_center_gesture_layout"
+        android:background="@color/white"
+        android:orientation="vertical"
+        >
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="#dadadd" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:paddingBottom="10dp"
+            android:paddingLeft="12dp"
+            android:paddingTop="10dp"
+            android:text="@string/safe_center_finger_print"
             android:textSize="@dimen/content_normal_textsize" />
 
-
         <com.inspur.emmcloud.widget.SwitchView
-            android:id="@+id/switch_gesture_switchview"
+            android:id="@+id/safe_center_finger_switchview"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp" />
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:id="@+id/switch_gesture_change_code_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        android:layout_below="@id/switch_gesture_layout"
-        android:background="@color/white"
-        android:orientation="vertical">
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="#dadadd" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:paddingBottom="10dp"
-            android:paddingLeft="12dp"
-            android:paddingTop="10dp"
-            android:text="@string/switch_gesture_reset_unlock"
-            android:textSize="@dimen/content_normal_textsize" />
     </RelativeLayout>
 
 

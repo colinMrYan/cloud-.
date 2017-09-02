@@ -179,9 +179,9 @@ public class SettingActivity extends BaseActivity {
                 IntentUtils.startActivity(SettingActivity.this, SwitchEnterpriseActivity.class);
                 break;
             case R.id.setting_gesture_layout:
-                Intent intentGesture = new Intent();
-                intentGesture.setClass(this,SwitchGestureActivity.class);
-                startActivity(intentGesture);
+                Intent intentSafeCenter = new Intent();
+                intentSafeCenter.setClass(this,SafeCenterActivity.class);
+                startActivity(intentSafeCenter);
                 break;
             default:
                 break;
