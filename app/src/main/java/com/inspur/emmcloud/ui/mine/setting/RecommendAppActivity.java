@@ -75,12 +75,7 @@ public class RecommendAppActivity extends BaseActivity {
 
 
     private void ShareWeb() {
-        //UMShareAPI.get(this).getPlatformInfo(this,share_media, authListener);
-        UMImage thumb = new UMImage(this, R.drawable.ic_launcher_share);
-        UMWeb web = new UMWeb("https://ecm.inspur.com/");
-        web.setThumb(thumb);
-        web.setDescription("智能化的企业移动办公平台");
-        web.setTitle("云+");
+
         mShareListener = new CustomShareListener(this);
         new ShareAction(RecommendAppActivity.this).setDisplayList(
                 SHARE_MEDIA.WEIXIN, SHARE_MEDIA.WEIXIN_CIRCLE,
@@ -94,11 +89,20 @@ public class RecommendAppActivity extends BaseActivity {
                                     .setPlatform(share_media)
                                     .setCallback(mShareListener)
                                     .share();
+                        }else {
+                            UMImage thumb = new UMImage(RecommendAppActivity.this, R.drawable.ic_launcher_share);
+                            UMWeb web = new UMWeb("https://ecm.inspur.com/");
+                            web.setThumb(thumb);
+                            web.setDescription("智能化的企业移动办公平台");
+                            web.setTitle("云+");
+                            new ShareAction(RecommendAppActivity.this).withMedia(web)
+                                    .setPlatform(share_media)
+                                    .setCallback(mShareListener)
+                                    .share();
                         }
                     }
                 })
-                .withMedia(web)
-                .setCallback(new CustomShareListener(this)).open();
+               .open();
 
     }
 
