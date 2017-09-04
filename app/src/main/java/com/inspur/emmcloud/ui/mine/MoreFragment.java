@@ -101,8 +101,8 @@ public class MoreFragment extends Fragment {
         String photoUri = UriUtils.getChannelImgUri(getActivity(),inspurId);
         imageDisplayUtils.display(moreHeadImg, photoUri);
         String userName = PreferencesUtils.getString(getActivity(), "userRealName", getString(R.string.not_set));
-        ((TextView) rootView.findViewById(R.id.more_head_textup)).setText(userName);
-        ((TextView) rootView.findViewById(R.id.more_head_textdown)).setText(((MyApplication)getActivity().getApplicationContext()).getCurrentEnterprise().getName());
+        ((TextView) rootView.findViewById(R.id.more_head_name_text)).setText(userName);
+        ((TextView) rootView.findViewById(R.id.more_head_enterprise_text)).setText(((MyApplication)getActivity().getApplicationContext()).getCurrentEnterprise().getName());
     }
 
 
