@@ -37,11 +37,12 @@
         <Button
             android:id="@+id/resetBtn"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/_40dp"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/_20dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="@dimen/_20dp"
             android:onClick="onClick"
-            android:background="@drawable/layout_grey_bg"
+            android:background="@null"
             android:text="@string/create_gesture_reset"
             android:textColor="@color/grey_a5a5a5"
             android:textSize="@dimen/_16sp" />

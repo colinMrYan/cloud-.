@@ -42,8 +42,8 @@ public class GestureLoginActivity extends BaseActivity {
 
     @Bind(R.id.lockPatternView)
     LockPatternView lockPatternView;
-    @Bind(R.id.messageTv)
-    TextView messageTv;
+    @Bind(R.id.gestrue_message_text)
+    TextView gestureMessage;
     @Bind(R.id.forgetGestureBtn)
     Button forgetGestureBtn;
     private static final long DELAYTIME = 600l;
@@ -206,8 +206,8 @@ public class GestureLoginActivity extends BaseActivity {
      * @param status
      */
     private void updateStatus(Status status) {
-        messageTv.setText(status.strId);
-        messageTv.setTextColor(getResources().getColor(status.colorId));
+        gestureMessage.setText(status.strId);
+        gestureMessage.setTextColor(getResources().getColor(status.colorId));
         switch (status) {
             case DEFAULT:
                 lockPatternView.setPattern(LockPatternView.DisplayMode.DEFAULT);
