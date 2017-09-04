@@ -7,19 +7,20 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.inspur.emmcloud.BaseActivity;
+import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.ui.login.LoginActivity;
+import com.inspur.emmcloud.util.CalEventNotificationUtils;
 import com.inspur.emmcloud.util.IntentUtils;
 import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.PreferencesByUserAndTanentUtils;
+import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.StateBarColor;
+import com.inspur.emmcloud.util.ToastUtils;
 import com.inspur.emmcloud.util.ninelock.LockPatternUtil;
 import com.inspur.emmcloud.util.ninelock.LockPatternView;
 import com.wei.android.lib.fingerprintidentify.FingerprintIdentify;
 import com.wei.android.lib.fingerprintidentify.base.BaseFingerprint;
-
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.List;
 
@@ -51,9 +52,10 @@ public class GestureLoginActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         StateBarColor.changeStateBarColor(this, R.color.grey_f6f6f6);
         setContentView(R.layout.activity_gesture_login);
+        ((MyApplication) getApplicationContext()).addActivity(this);
         ButterKnife.bind(this);
         this.init();
-        EventBus.getDefault().register(this);
+//        EventBus.getDefault().register(this);
     }
 
     private void init() {
@@ -67,9 +69,13 @@ public class GestureLoginActivity extends BaseActivity {
                 isLogin = true;
             }
         }
-        initFingerPrint();
+        //由于机型，系统等问题，目前不开启指纹识别功能
+//        initFingerPrint();
     }
 
+    /**
+     * 初始化指纹识别
+     */
     private void initFingerPrint() {
         FingerprintIdentify cloudFingerprintIdentify = new FingerprintIdentify(this);
         if(!isFingerPrintAvaiable(cloudFingerprintIdentify)){
@@ -84,7 +90,8 @@ public class GestureLoginActivity extends BaseActivity {
             @Override
             public void onSucceed() {
                 // 验证成功，自动结束指纹识别
-                EventBus.getDefault().post("success");
+//                EventBus.getDefault().post("success");
+                finish();
                 LogUtils.YfcDebug("指纹识别成功");
             }
 
@@ -92,6 +99,10 @@ public class GestureLoginActivity extends BaseActivity {
             public void onNotMatch(int availableTimes) {
                 // 指纹不匹配，并返回可用剩余次数并自动继续验证
                 LogUtils.YfcDebug("指纹识别剩余次数："+availableTimes);
+                ToastUtils.show(GestureLoginActivity.this,"指纹认证失败，您还可以尝试"+availableTimes+"次");
+                if(availableTimes == 0){
+                    ToastUtils.show(GestureLoginActivity.this,"您的识别次数用尽，请尝试手势解锁，或者一段时间后重试");
+                }
             }
 
             @Override
@@ -139,12 +150,12 @@ public class GestureLoginActivity extends BaseActivity {
     }
 
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onFingerPrintSuccess(String fingerPrintSuccess){
-        if(fingerPrintSuccess.equals("success")){
-            finish();
-        }
-    }
+//    @Subscribe(threadMode = ThreadMode.MAIN)
+//    public void onFingerPrintSuccess(String fingerPrintSuccess){
+//        if(fingerPrintSuccess.equals("success")){
+//            finish();
+//        }
+//    }
 
     private LockPatternView.OnPatternListener patternListener = new LockPatternView.OnPatternListener() {
 
@@ -168,8 +179,7 @@ public class GestureLoginActivity extends BaseActivity {
                             isLogin = true;
                             finish();
                         } else if(command.equals("close")){
-                            PreferencesByUserAndTanentUtils.putBoolean(GestureLoginActivity.this,"gesture_code_isopen",false);
-                            PreferencesByUserAndTanentUtils.putString(GestureLoginActivity.this, "gesture_code","");
+                            clearGestureInfo();
                             finish();
                         }
                     }
@@ -215,9 +225,17 @@ public class GestureLoginActivity extends BaseActivity {
      */
     @OnClick(R.id.forgetGestureBtn)
     void forgetGesturePasswrod() {
-        Intent intent = new Intent(GestureLoginActivity.this, CreateGestureActivity.class);
-        startActivity(intent);
-        this.finish();
+        signout();
+        clearGestureInfo();
+        finish();
+    }
+
+    /**
+     * 清理手势信息
+     */
+    private void clearGestureInfo() {
+        PreferencesByUserAndTanentUtils.putBoolean(GestureLoginActivity.this,"gesture_code_isopen",false);
+        PreferencesByUserAndTanentUtils.putString(GestureLoginActivity.this, "gesture_code","");
     }
 
     private enum Status {
@@ -238,9 +256,9 @@ public class GestureLoginActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-//        super.onBackPressed();
-        LogUtils.YfcDebug("点返回键的状态："+isLogin);
-        if(!isLogin){
+        if(isLogin){
+            ((MyApplication)getApplication()).exit();
+        }else {
             finish();
         }
     }
@@ -248,6 +266,29 @@ public class GestureLoginActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        EventBus.getDefault().unregister(this);
+//        EventBus.getDefault().unregister(this);
+    }
+
+    //登出逻辑
+    private void signout() {
+        // TODO Auto-generated method stub
+        if (((MyApplication) getApplicationContext()).getWebSocketPush() != null) {
+            ((MyApplication) getApplicationContext()).getWebSocketPush()
+                    .webSocketSignout();
+        }
+        //清除日历提醒极光推送本地通知
+        CalEventNotificationUtils.cancelAllCalEventNotification(GestureLoginActivity.this);
+        ((MyApplication) getApplicationContext()).stopPush();
+        ((MyApplication) getApplicationContext()).clearNotification();
+        ((MyApplication) getApplicationContext()).removeAllCookie();
+        ((MyApplication) getApplicationContext()).clearUserPhotoMap();
+        PreferencesUtils.putString(GestureLoginActivity.this, "tokenType", "");
+        PreferencesUtils.putString(GestureLoginActivity.this, "accessToken", "");
+        ((MyApplication) getApplicationContext()).setAccessToken("");
+        Intent intent = new Intent();
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.setClass(this, LoginActivity.class);
+        startActivity(intent);
+        this.finish();
     }
 }

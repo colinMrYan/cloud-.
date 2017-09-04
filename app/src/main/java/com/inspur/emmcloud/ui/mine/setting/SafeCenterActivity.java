@@ -33,7 +33,8 @@ public class SafeCenterActivity extends BaseActivity {
      * 初始化
      */
     private void init() {
-        initFingerPrintState();
+        //因为机型，系统等问题暂时不开启指纹识别功能
+//        initFingerPrintState();
     }
 
     /**
@@ -41,9 +42,12 @@ public class SafeCenterActivity extends BaseActivity {
      */
     private void initFingerPrintState() {
         FingerprintIdentify cloudFingerprintIdentify = new FingerprintIdentify(this);
-        checkIsFingerAvaiable(cloudFingerprintIdentify);
-        checkIsHasFingerPrint(cloudFingerprintIdentify);
-        handleFingerPrintSwitchView(cloudFingerprintIdentify);
+        boolean isFingerHardwareAvaiable = getIsHardwareEnable(cloudFingerprintIdentify);
+        findViewById(R.id.safe_center_finger_layout).setVisibility(isFingerHardwareAvaiable?View.VISIBLE:View.GONE);
+        //有可用指纹硬件的情况下处理下面情况，没有则忽略，避免过度执行无用代码
+        if(isFingerHardwareAvaiable){
+            handleFingerPrintSwitchView(cloudFingerprintIdentify);
+        }
     }
 
     /**
@@ -58,20 +62,24 @@ public class SafeCenterActivity extends BaseActivity {
         switchView.setOnStateChangedListener(new SwitchView.OnStateChangedListener() {
             @Override
             public void toggleToOn(View view) {
-                ((SwitchView)view).setOpened(true);
                 if(!isHasFingerPrint){
+                    ((SwitchView)view).setOpened(false);
                     LogUtils.YfcDebug("没有指纹，提示设置指纹");
-                    ToastUtils.show(SafeCenterActivity.this,"没有指纹，提示设置指纹");
-                    PreferencesByUserAndTanentUtils.putBoolean(SafeCenterActivity.this,FINGER_PRINT_STATE,true);
-                }else {
-                    cloudFingerprintIdentify.cancelIdentify();
+                    ToastUtils.show(SafeCenterActivity.this,"您的设备还未设置指纹，请先在手机设置里为设备设置指纹");
                     PreferencesByUserAndTanentUtils.putBoolean(SafeCenterActivity.this,FINGER_PRINT_STATE,false);
+                }else {
+                    ((SwitchView)view).setOpened(true);
+                    cloudFingerprintIdentify.cancelIdentify();
+                    PreferencesByUserAndTanentUtils.putBoolean(SafeCenterActivity.this,FINGER_PRINT_STATE,true);
+                    ToastUtils.show(SafeCenterActivity.this,"您的指纹解锁服务已经开启，下次可以使用指纹解锁进入应用");
                 }
             }
 
             @Override
             public void toggleToOff(View view) {
                 ((SwitchView)view).setOpened(false);
+                PreferencesByUserAndTanentUtils.putBoolean(SafeCenterActivity.this,FINGER_PRINT_STATE,false);
+                ToastUtils.show(SafeCenterActivity.this,"您的指纹解锁服务已经关闭");
             }
         });
     }
@@ -85,21 +93,6 @@ public class SafeCenterActivity extends BaseActivity {
         if(!getIsFingerprintEnable(cloudFingerprintIdentify)){
             ToastUtils.show(SafeCenterActivity.this,"未设置指纹",Toast.LENGTH_SHORT);
             LogUtils.YfcDebug("未设置指纹");
-        }
-        return true;
-    }
-
-    /**
-     * 检测指纹是否可用
-     * @param cloudFingerprintIdentify
-     * @return
-     */
-    private boolean checkIsFingerAvaiable(FingerprintIdentify cloudFingerprintIdentify) {
-        if (isFingerPrintAvaiable(cloudFingerprintIdentify)) {
-            ToastUtils.show(SafeCenterActivity.this,"指纹服务不可用",Toast.LENGTH_SHORT);
-            LogUtils.YfcDebug("指纹服务不可用");
-            findViewById(R.id.safe_center_finger_layout).setVisibility(View.GONE);
-            return false;
         }
         return true;
     }
