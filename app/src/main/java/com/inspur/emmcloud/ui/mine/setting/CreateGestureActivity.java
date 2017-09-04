@@ -13,28 +13,30 @@ import com.inspur.emmcloud.util.ninelock.LockPatternIndicator;
 import com.inspur.emmcloud.util.ninelock.LockPatternUtil;
 import com.inspur.emmcloud.util.ninelock.LockPatternView;
 
+import org.xutils.view.annotation.ContentView;
+import org.xutils.view.annotation.Event;
+import org.xutils.view.annotation.ViewInject;
+import org.xutils.x;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import butterknife.Bind;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 
 /**
  * create gesture activity
  * Created by Sym on 2015/12/23.
  */
+@ContentView(R.layout.activity_create_gesture)
 public class CreateGestureActivity extends BaseActivity {
 
-	@Bind(R.id.lockPatterIndicator)
+	@ViewInject(R.id.lockPatterIndicator)
 	LockPatternIndicator lockPatternIndicator;
-	@Bind(R.id.lockPatternView)
+	@ViewInject(R.id.lockPatternView)
 	LockPatternView lockPatternView;
-	@Bind(R.id.resetBtn)
+	@ViewInject(R.id.gesture_reset_btn)
 	Button resetBtn;
-	@Bind(R.id.messageTv)
-	TextView messageTv;
+	@ViewInject(R.id.gesture_message_text)
+	TextView gestrueMessage;
 
 	private List<LockPatternView.Cell> mChosenPattern = null;
 	private static final long DELAYTIME = 600L;
@@ -44,9 +46,8 @@ public class CreateGestureActivity extends BaseActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		StateBarColor.changeStateBarColor(this, R.color.grey_f6f6f6);
-		setContentView(R.layout.activity_create_gesture);
-		ButterKnife.bind(this);
-		this.init();
+		x.view().inject(this);
+		init();
 	}
 
 	/**
@@ -92,8 +93,8 @@ public class CreateGestureActivity extends BaseActivity {
 	 * @param pattern
      */
 	private void updateStatus(Status status, List<LockPatternView.Cell> pattern) {
-		messageTv.setTextColor(getResources().getColor(status.colorId));
-		messageTv.setText(status.strId);
+		gestrueMessage.setTextColor(getResources().getColor(status.colorId));
+		gestrueMessage.setText(status.strId);
 		switch (status) {
 			case DEFAULT:
 				lockPatternView.setPattern(LockPatternView.DisplayMode.DEFAULT);
@@ -129,7 +130,7 @@ public class CreateGestureActivity extends BaseActivity {
 	/**
 	 * 重新设置手势
 	 */
-	@OnClick(R.id.resetBtn)
+	@Event(R.id.gesture_reset_btn)
 	public void onClick() {
 		mChosenPattern = null;
 		lockPatternIndicator.setDefaultIndicator();

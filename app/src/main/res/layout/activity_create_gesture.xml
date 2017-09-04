@@ -13,7 +13,7 @@
         android:layout_marginTop="150dp" />
 
     <TextView
-        android:id="@+id/messageTv"
+        android:id="@+id/gesture_message_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
@@ -35,7 +35,7 @@
             android:layout_height="@dimen/_270dp" />
 
         <Button
-            android:id="@+id/resetBtn"
+            android:id="@+id/gesture_reset_btn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="@dimen/_20dp"

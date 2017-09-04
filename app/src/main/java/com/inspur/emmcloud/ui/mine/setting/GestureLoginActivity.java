@@ -2,6 +2,7 @@ package com.inspur.emmcloud.ui.mine.setting;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -24,11 +25,12 @@ import com.inspur.emmcloud.widget.CircleImageView;
 import com.wei.android.lib.fingerprintidentify.FingerprintIdentify;
 import com.wei.android.lib.fingerprintidentify.base.BaseFingerprint;
 
-import java.util.List;
+import org.xutils.view.annotation.ContentView;
+import org.xutils.view.annotation.Event;
+import org.xutils.view.annotation.ViewInject;
+import org.xutils.x;
 
-import butterknife.Bind;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
+import java.util.List;
 
 
 
@@ -36,15 +38,14 @@ import butterknife.OnClick;
 /**
  * Created by Sym on 2015/12/24.
  */
+@ContentView(R.layout.activity_gesture_login)
 public class GestureLoginActivity extends BaseActivity {
 
-    private static final String TAG = "LoginGestureActivity";
-
-    @Bind(R.id.lockPatternView)
+    @ViewInject(R.id.lockPatternView)
     LockPatternView lockPatternView;
-    @Bind(R.id.gestrue_message_text)
+    @ViewInject(R.id.gestrue_message_text)
     TextView gestureMessage;
-    @Bind(R.id.forgetGestureBtn)
+    @ViewInject(R.id.forget_gesture_btn)
     Button forgetGestureBtn;
     private static final long DELAYTIME = 600l;
     private String gesturePassword;
@@ -55,10 +56,9 @@ public class GestureLoginActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         StateBarColor.changeStateBarColor(this, R.color.grey_f6f6f6);
-        setContentView(R.layout.activity_gesture_login);
         ((MyApplication) getApplicationContext()).addActivity(this);
-        ButterKnife.bind(this);
-        this.init();
+        x.view().inject(this);
+        init();
 //        EventBus.getDefault().register(this);
     }
 
@@ -181,7 +181,6 @@ public class GestureLoginActivity extends BaseActivity {
                     updateStatus(Status.CORRECT);
                     if (getIntent().hasExtra("gesture_code_change")) {
                         String command = getIntent().getStringExtra("gesture_code_change");
-                        LogUtils.YfcDebug("command："+command);
                         if (command.equals("reset")) {
                             IntentUtils.startActivity(GestureLoginActivity.this, CreateGestureActivity.class);
                             finish();
@@ -233,11 +232,18 @@ public class GestureLoginActivity extends BaseActivity {
     /**
      * 忘记手势密码（去账号登录界面）
      */
-    @OnClick(R.id.forgetGestureBtn)
-    void forgetGesturePasswrod() {
-        signout();
-        clearGestureInfo();
-        finish();
+    @Event(R.id.forget_gesture_btn)
+    private void forgetGesturePasswrod(View view) {
+        switch (view.getId()){
+            case R.id.forget_gesture_btn:
+                signout();
+                clearGestureInfo();
+                finish();
+                break;
+            default:
+                break;
+        }
+
     }
 
     /**
