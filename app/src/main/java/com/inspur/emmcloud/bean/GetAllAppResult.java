@@ -41,13 +41,15 @@ public class GetAllAppResult {
 				while (keySet.hasNext()){
 					String key = keySet.next();
 					JSONArray jsonArray = recommendJsonObj.getJSONArray(key);
-					List<App> appList = new ArrayList<>();
-					for(int i = 0; i < jsonArray.length(); i++){
-						JSONObject obj = jsonArray.getJSONObject(i);
-						App app = new App(obj);
-						appList.add(app);
+					if(jsonArray != null && (jsonArray.length() > 0)){
+						List<App> appList = new ArrayList<>();
+						for(int i = 0; i < jsonArray.length(); i++){
+							JSONObject obj = jsonArray.getJSONObject(i);
+							App app = new App(obj);
+							appList.add(app);
+						}
+						recommendList.add(appList);
 					}
-					recommendList.add(appList);
 				}
 			}
 		} catch (Exception e) {

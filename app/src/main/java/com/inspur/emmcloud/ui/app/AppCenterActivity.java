@@ -199,12 +199,15 @@ public class AppCenterActivity extends BaseActivity {
                             .getSerializable("app");
                     int recommandAppIndex = -1,groupIndex = 0;
                     Iterator<List<App>> appItemList = appList.listIterator();
-                    while (appItemList.hasNext()){
+                    while (appItemList !=null && appItemList.hasNext()){
                         recommandAppIndex = appItemList.next().indexOf(addApp);
                         groupIndex = groupIndex + 1;
                     }
                     if (recommandAppIndex != -1) {
-                        appList.get(groupIndex).get(recommandAppIndex).setUseStatus(1);
+                        List<App> recommendAppItemList = appList.get(groupIndex);
+                        if(recommendAppItemList != null){
+                            recommendAppItemList.get(recommandAppIndex).setUseStatus(1);
+                        }
                     }
                     for (int i = 0; i < categorieAppList.size(); i++) {
                         int categoriesAppIndex = categorieAppList.get(i).getAppItemList().indexOf(addApp);
