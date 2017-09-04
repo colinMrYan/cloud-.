@@ -822,7 +822,7 @@
 
     <!--安全中心-->
     <string name="setting_safe_center">安全中心</string>
-    <string name="safe_center_gesture">手势</string>
+    <string name="safe_center_gesture">手势密码锁定</string>
     <string name="safe_center_finger_print">指纹</string>
     <string name="switch_gesture_unlock">手势解锁</string>
     <string name="switch_gesture_reset_unlock">重置手势解锁</string>
@@ -840,5 +840,8 @@
     <string name="create_gesture_confirm_error">与上一次绘制不一致，请重新绘制</string>
     <string name="create_gesture_confirm_correct">设置成功</string>
     <string name="create_gesture_reset">重新设置</string>
+    <string name="safe_center_enable">已启用</string>
+    <string name="safe_center_unenable">未启用</string>
+
 
 </resources>

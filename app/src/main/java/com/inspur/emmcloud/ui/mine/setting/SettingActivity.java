@@ -35,8 +35,6 @@ import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.dialogs.EasyDialog;
 import com.inspur.emmcloud.widget.dialogs.MyDialog;
 
-import static com.inspur.emmcloud.R.id.device_manager_layout;
-
 public class SettingActivity extends BaseActivity {
 
     private LoadingDialog loadingDlg;
@@ -153,11 +151,7 @@ public class SettingActivity extends BaseActivity {
 
 
                 break;
-            case device_manager_layout:
-                intent.setClass(SettingActivity.this,
-                        DeviceManagerActivity.class);
-                startActivity(intent);
-                break;
+
             case R.id.msg_notify_layout:
                 // ToastUtils.show(getApplicationContext(),
                 // R.string.function_not_implemented);

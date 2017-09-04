@@ -793,7 +793,7 @@
 
     <!--安全中心-->
     <string name="setting_safe_center">安全中心</string>
-    <string name="safe_center_gesture">手勢</string>
+    <string name="safe_center_gesture">手勢密碼鎖定</string>
     <string name="safe_center_finger_print">指紋</string>
     <string name="switch_gesture_unlock">手勢解鎖</string>
     <string name="switch_gesture_reset_unlock">重置手勢解鎖</string>
@@ -811,6 +811,8 @@
     <string name="create_gesture_confirm_error">與上一次繪製不一致，請重新繪製</string>
     <string name="create_gesture_confirm_correct">設置成功</string>
     <string name="create_gesture_reset">重新設置</string>
+    <string name="safe_center_enable">已啟用</string>
+    <string name="safe_center_unenable">未啟用</string>
 
 
 </resources>
