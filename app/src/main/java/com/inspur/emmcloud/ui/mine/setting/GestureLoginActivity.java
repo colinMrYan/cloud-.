@@ -4,21 +4,23 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.ui.login.LoginActivity;
 import com.inspur.emmcloud.util.CalEventNotificationUtils;
+import com.inspur.emmcloud.util.ImageDisplayUtils;
 import com.inspur.emmcloud.util.IntentUtils;
 import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.StateBarColor;
 import com.inspur.emmcloud.util.ToastUtils;
+import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.emmcloud.util.ninelock.LockPatternUtil;
 import com.inspur.emmcloud.util.ninelock.LockPatternView;
+import com.inspur.emmcloud.widget.CircleImageView;
 import com.wei.android.lib.fingerprintidentify.FingerprintIdentify;
 import com.wei.android.lib.fingerprintidentify.base.BaseFingerprint;
 
@@ -27,6 +29,8 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
+
 
 
 /**
@@ -69,6 +73,12 @@ public class GestureLoginActivity extends BaseActivity {
                 isLogin = true;
             }
         }
+        String userHeadImgUri = UriUtils
+                .getChannelImgUri(GestureLoginActivity.this,((MyApplication)getApplication()).getUid());
+        CircleImageView circleImageView = (CircleImageView) findViewById(R.id.gesture_login_user_head_img);
+        new ImageDisplayUtils(GestureLoginActivity.this,
+                R.drawable.icon_person_default).display(circleImageView,
+                userHeadImgUri);
         //由于机型，系统等问题，目前不开启指纹识别功能
 //        initFingerPrint();
     }
@@ -214,10 +224,10 @@ public class GestureLoginActivity extends BaseActivity {
     }
 
     /**
-     * 手势登录成功（去首页）
+     * 手势登录成功
      */
     private void loginGestureSuccess() {
-        Toast.makeText(GestureLoginActivity.this, "success", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(GestureLoginActivity.this, "success", Toast.LENGTH_SHORT).show();
     }
 
     /**

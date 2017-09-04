@@ -5,12 +5,19 @@
     android:background="@color/grey_f6f6f6"
     android:orientation="vertical">
 
+    <com.inspur.emmcloud.widget.CircleImageView
+        android:id="@+id/gesture_login_user_head_img"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="100dp"/>
+
     <TextView
         android:id="@+id/messageTv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="20dp"
         android:textSize="@dimen/_16sp" />
 
     <LinearLayout
@@ -31,12 +38,13 @@
             android:id="@+id/forgetGestureBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="50dp"
             android:layout_centerHorizontal="true"
             android:background="@null"
+            android:textColor="@color/header_bg"
             android:paddingLeft="@dimen/_5dp"
             android:paddingRight="@dimen/_5dp"
-            android:text="@string/gesture_forget_gesture"
+            android:text="@string/forgetpwd"
             android:textSize="@dimen/_14sp" />
 
 

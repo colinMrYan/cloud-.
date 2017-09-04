@@ -12,7 +12,6 @@ import com.inspur.emmcloud.util.StateBarColor;
 import com.inspur.emmcloud.util.ninelock.LockPatternIndicator;
 import com.inspur.emmcloud.util.ninelock.LockPatternUtil;
 import com.inspur.emmcloud.util.ninelock.LockPatternView;
-import com.inspur.emmcloud.util.ninelock.cache.ACache;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +37,6 @@ public class CreateGestureActivity extends BaseActivity {
 	TextView messageTv;
 
 	private List<LockPatternView.Cell> mChosenPattern = null;
-	private ACache aCache;
 	private static final long DELAYTIME = 600L;
 	private static final String TAG = "CreateGestureActivity";
 
@@ -51,12 +49,10 @@ public class CreateGestureActivity extends BaseActivity {
 		this.init();
 	}
 
+	/**
+	 * 初始化
+	 */
 	private void init() {
-		aCache = ACache.get(CreateGestureActivity.this);
-//		lockPatternIndicator = (LockPatternIndicator) findViewById(R.id.lockPatterIndicator);
-//		lockPatternView = (LockPatternView)findViewById(R.id.lockPatternView);
-//		resetBtn = (Button) findViewById(R.id.resetBtn);
-//		messageTv = (TextView) findViewById(R.id.messageTv);
 		lockPatternView.setOnPatternListener(patternListener);
 	}
 
@@ -145,7 +141,7 @@ public class CreateGestureActivity extends BaseActivity {
 	 * 成功设置了手势密码(跳到首页)
      */
 	private void setLockPatternSuccess() {
-		Toast.makeText(this, "create gesture success", Toast.LENGTH_SHORT).show();
+		Toast.makeText(this, getString(R.string.create_gesture_confirm_correct), Toast.LENGTH_SHORT).show();
 		PreferencesByUserAndTanentUtils.putBoolean(CreateGestureActivity.this,"gesture_code_isopen",true);
 		finish();
 	}

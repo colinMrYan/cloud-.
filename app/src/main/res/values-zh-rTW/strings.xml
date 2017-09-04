@@ -800,7 +800,7 @@
     <!--九宮格-->
     <!-- Gesture login activity -->
     <string name="gesture_forget_gesture">忘記手勢密碼</string>
-    <string name="gesture_default">請輸入手勢密碼</string>
+    <string name="gesture_default">請繪製手勢密碼</string>
     <string name="gesture_error">手勢密碼輸入錯誤</string>
     <string name="gesture_correct">輸入正確</string>
 
