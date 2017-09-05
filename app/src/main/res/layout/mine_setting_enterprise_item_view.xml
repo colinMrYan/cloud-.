@@ -29,7 +29,7 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:ellipsize="end"
-            android:visibility="gone"
+            android:visibility="invisible"
             android:text="@string/current_enterprise"
             android:layout_marginLeft="12dp"
             android:maxLines="1"
