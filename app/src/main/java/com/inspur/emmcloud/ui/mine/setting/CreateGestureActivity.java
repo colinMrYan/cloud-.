@@ -29,6 +29,8 @@ import java.util.List;
 @ContentView(R.layout.activity_create_gesture)
 public class CreateGestureActivity extends BaseActivity {
 
+	public static final String GESTURE_CODE = "gesture_code";
+	public static final String GESTURE_CODE_ISOPEN = "gesture_code_isopen";
 	@ViewInject(R.id.lockPatterIndicator)
 	LockPatternIndicator lockPatternIndicator;
 	@ViewInject(R.id.lockPatternView)
@@ -37,10 +39,8 @@ public class CreateGestureActivity extends BaseActivity {
 	Button resetBtn;
 	@ViewInject(R.id.gesture_message_text)
 	TextView gestrueMessage;
-
 	private List<LockPatternView.Cell> mChosenPattern = null;
 	private static final long DELAYTIME = 600L;
-	private static final String TAG = "CreateGestureActivity";
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -143,7 +143,7 @@ public class CreateGestureActivity extends BaseActivity {
      */
 	private void setLockPatternSuccess() {
 		Toast.makeText(this, getString(R.string.create_gesture_confirm_correct), Toast.LENGTH_SHORT).show();
-		PreferencesByUserAndTanentUtils.putBoolean(CreateGestureActivity.this,"gesture_code_isopen",true);
+		PreferencesByUserAndTanentUtils.putBoolean(CreateGestureActivity.this,GESTURE_CODE_ISOPEN,true);
 		finish();
 	}
 
@@ -152,7 +152,7 @@ public class CreateGestureActivity extends BaseActivity {
 	 */
 	private void saveChosenPattern(List<LockPatternView.Cell> cells) {
 		String gestureCode = LockPatternUtil.patternToString(cells);
-			PreferencesByUserAndTanentUtils.putString(CreateGestureActivity.this,"gesture_code",gestureCode);
+		PreferencesByUserAndTanentUtils.putString(CreateGestureActivity.this,GESTURE_CODE,gestureCode);
 	}
 
 	private enum Status {

@@ -64,7 +64,7 @@ public class GestureLoginActivity extends BaseActivity {
 
     private void init() {
         //得到当前用户的手势密码
-        gesturePassword = PreferencesByUserAndTanentUtils.getString(GestureLoginActivity.this, "gesture_code");
+        gesturePassword = PreferencesByUserAndTanentUtils.getString(GestureLoginActivity.this, CreateGestureActivity.GESTURE_CODE);
         lockPatternView.setOnPatternListener(patternListener);
         updateStatus(Status.DEFAULT);
         if (getIntent().hasExtra("gesture_code_change")) {
@@ -250,8 +250,8 @@ public class GestureLoginActivity extends BaseActivity {
      * 清理手势信息
      */
     private void clearGestureInfo() {
-        PreferencesByUserAndTanentUtils.putBoolean(GestureLoginActivity.this,"gesture_code_isopen",false);
-        PreferencesByUserAndTanentUtils.putString(GestureLoginActivity.this, "gesture_code","");
+        PreferencesByUserAndTanentUtils.putBoolean(GestureLoginActivity.this,CreateGestureActivity.GESTURE_CODE_ISOPEN,false);
+        PreferencesByUserAndTanentUtils.putString(GestureLoginActivity.this, CreateGestureActivity.GESTURE_CODE,"");
     }
 
     private enum Status {

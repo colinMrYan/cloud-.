@@ -167,8 +167,7 @@ dependencies {
     compile 'com.zzhoujay.markdown:markdown:1.0.5'
     compile 'com.jakewharton:disklrucache:2.0.2' //Markdown引入 缓存
     compile 'com.android.support:multidex:1.0.1'
-    compile 'com.jakewharton:butterknife:7.0.1'
-    compile 'com.wei.android.lib:fingerprintidentify:1.2.1'
+    compile 'com.wei.android.lib:fingerprintidentify:1.2.1'//指纹识别库暂未启用
 
 
     // React Naive Components
