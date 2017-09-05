@@ -28,6 +28,7 @@ import com.inspur.emmcloud.util.EditTextUtils;
 import com.inspur.emmcloud.util.FomatUtils;
 import com.inspur.emmcloud.util.InputMethodUtils;
 import com.inspur.emmcloud.util.JSONUtils;
+import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.LoginUtils;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
@@ -323,9 +324,23 @@ public class CaptchasLoginActivity extends BaseActivity {
     // 跳转到主页面
     private void goIndex() {
         Intent intent = new Intent();
-        intent.setClass(CaptchasLoginActivity.this, IndexActivity.class);
+        if (!PreferencesUtils.getBoolean(CaptchasLoginActivity.this, "hasPassword")) {
+            intent.setClass(CaptchasLoginActivity.this,
+                    ModifyUserFirstPsdActivity.class);
+        } else {
+            boolean hasPassWord = false;
+            hasPassWord = PreferencesUtils.getBoolean(CaptchasLoginActivity.this,"hasPassword",false);
+            if(hasPassWord){
+                LogUtils.YfcDebug("CaptchasLoginActivity有haspassword");
+                intent.setClass(CaptchasLoginActivity.this, IndexActivity.class);
+            }else{
+                LogUtils.YfcDebug("CaptchasLoginActivity没有haspassword");
+                intent.setClass(CaptchasLoginActivity.this,
+                        ModifyUserFirstPsdActivity.class);
+            }
+        }
         startActivity(intent);
-        finish();
+        CaptchasLoginActivity.this.finish();
     }
 
     @Override
