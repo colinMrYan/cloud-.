@@ -2,6 +2,7 @@ package com.inspur.emmcloud;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
 
 import com.inspur.emmcloud.api.apiservice.AppAPIService;
@@ -61,14 +62,20 @@ public class BaseFragmentActivity extends FragmentActivity {
                 uploadMDMInfo();
                 ((MyApplication) getApplicationContext()).sendActivedWSMsg();
                 if(getIsNeedGestureCode()){
-                    Bundle bundle = new Bundle();
-                    bundle.putString("gesture_code_change","login");
-                    IntentUtils.startActivity(this, GestureLoginActivity.class,bundle);
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            Bundle bundle = new Bundle();
+                            bundle.putString("gesture_code_change","login");
+                            IntentUtils.startActivity(BaseFragmentActivity.this, GestureLoginActivity.class,bundle);
+                        }
+                    },200);
                 }
             }
         }
 
     }
+
     /**
      * 判断收需要打开手势解锁
      * @return

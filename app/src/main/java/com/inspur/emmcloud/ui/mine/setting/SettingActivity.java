@@ -14,9 +14,6 @@ import android.widget.TextView;
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.api.APIInterfaceInstance;
-import com.inspur.emmcloud.api.apiservice.MineAPIService;
-import com.inspur.emmcloud.bean.GetMDMStateResult;
 import com.inspur.emmcloud.bean.Language;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.ui.IndexActivity;
@@ -25,19 +22,15 @@ import com.inspur.emmcloud.util.CalEventNotificationUtils;
 import com.inspur.emmcloud.util.DataCleanManager;
 import com.inspur.emmcloud.util.ImageDisplayUtils;
 import com.inspur.emmcloud.util.IntentUtils;
-import com.inspur.emmcloud.util.NetUtils;
-import com.inspur.emmcloud.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.ToastUtils;
 import com.inspur.emmcloud.util.UriUtils;
-import com.inspur.emmcloud.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.dialogs.EasyDialog;
 import com.inspur.emmcloud.widget.dialogs.MyDialog;
 
 public class SettingActivity extends BaseActivity {
 
-    private LoadingDialog loadingDlg;
     private static final int DATA_CLEAR_SUCCESS = 0;
     private Handler handler;
     private TextView languageText;
@@ -48,11 +41,9 @@ public class SettingActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
         ((MyApplication) getApplicationContext()).addActivity(this);
-        loadingDlg = new LoadingDialog(this);
         languageText = (TextView) findViewById(R.id.msg_languagechg_result_text);
         setLanguage();
         handMessage();
-        getMDMState();
     }
 
     /**
@@ -87,16 +78,7 @@ public class SettingActivity extends BaseActivity {
         ((ImageView) findViewById(R.id.msg_language_flag_img)).setImageResource(id);
     }
 
-    private void getMDMState() {
-        if (NetUtils.isNetworkConnected(this)) {
-            loadingDlg.show();
-            MineAPIService apiService = new MineAPIService(this);
-            apiService.setAPIInterface(new Webservice());
-            apiService.getMDMState();
-        } else {
-            setMDMLayoutState(null);
-        }
-    }
+
 
 
     @Override
@@ -182,17 +164,6 @@ public class SettingActivity extends BaseActivity {
         }
     }
 
-    /**
-     * 设置设备管理layout显示状态
-     *
-     * @param mdmState
-     */
-    private void setMDMLayoutState(Integer mdmState) {
-        if (mdmState == null) {
-            mdmState = PreferencesByUserAndTanentUtils.getInt(getApplicationContext(), "mdm_state", 1);
-        }
-        (findViewById(R.id.device_manager_layout)).setVisibility((mdmState == 1) ? View.VISIBLE : View.GONE);
-    }
 
     /**
      * 弹出清除缓存选项提示框
@@ -339,30 +310,6 @@ public class SettingActivity extends BaseActivity {
         this.finish();
     }
 
-    private class Webservice extends APIInterfaceInstance {
-
-        @Override
-        public void returnMDMStateSuccess(GetMDMStateResult getMDMStateResult) {
-            if (loadingDlg != null && loadingDlg.isShowing()) {
-                loadingDlg.dismiss();
-            }
-            int mdmState = getMDMStateResult.getMdmState();
-            PreferencesByUserAndTanentUtils.putInt(getApplicationContext(), "mdm_state", mdmState);
-            setMDMLayoutState(mdmState);
-
-        }
-
-        @Override
-        public void returnMDMStateFail(String error, int errorCode) {
-            if (loadingDlg != null && loadingDlg.isShowing()) {
-                loadingDlg.dismiss();
-            }
-            setMDMLayoutState(null);
-            WebServiceMiddleUtils.hand(SettingActivity.this, error, errorCode);
-        }
-
-
-    }
 
     @Override
     protected void onDestroy() {

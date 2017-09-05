@@ -3,6 +3,7 @@ package com.inspur.emmcloud;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 
 import com.inspur.emmcloud.api.apiservice.AppAPIService;
 import com.inspur.emmcloud.service.PVCollectService;
@@ -61,9 +62,14 @@ public class BaseActivity extends Activity {
                 uploadMDMInfo();
                 ((MyApplication) getApplicationContext()).sendActivedWSMsg();
                 if(getIsNeedGestureCode()){
-                    Bundle bundle = new Bundle();
-                    bundle.putString("gesture_code_change","login");
-                    IntentUtils.startActivity(this, GestureLoginActivity.class,bundle);
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            Bundle bundle = new Bundle();
+                            bundle.putString("gesture_code_change","login");
+                            IntentUtils.startActivity(BaseActivity.this, GestureLoginActivity.class,bundle);
+                        }
+                    },200);
                 }
             }
         }

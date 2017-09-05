@@ -9,10 +9,16 @@ import android.widget.Toast;
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.api.APIInterfaceInstance;
+import com.inspur.emmcloud.api.apiservice.MineAPIService;
+import com.inspur.emmcloud.bean.GetMDMStateResult;
 import com.inspur.emmcloud.util.LogUtils;
+import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.ToastUtils;
+import com.inspur.emmcloud.util.WebServiceMiddleUtils;
+import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.SwitchView;
 import com.wei.android.lib.fingerprintidentify.FingerprintIdentify;
 
@@ -23,7 +29,7 @@ import com.wei.android.lib.fingerprintidentify.FingerprintIdentify;
 public class SafeCenterActivity extends BaseActivity {
 
     public static final String FINGER_PRINT_STATE = "finger_print_state";
-
+    private LoadingDialog loadingDlg;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,6 +44,32 @@ public class SafeCenterActivity extends BaseActivity {
     private void init() {
         //因为机型，系统等问题暂时不开启指纹识别功能
 //        initFingerPrintState();
+        loadingDlg = new LoadingDialog(this);
+        getMDMState();
+    }
+
+    private void getMDMState() {
+        if (NetUtils.isNetworkConnected(this)) {
+            loadingDlg.show();
+            MineAPIService apiService = new MineAPIService(this);
+            apiService.setAPIInterface(new Webservice());
+            apiService.getMDMState();
+        } else {
+            setMDMLayoutState(null);
+        }
+    }
+
+
+    /**
+     * 设置设备管理layout显示状态
+     *
+     * @param mdmState
+     */
+    private void setMDMLayoutState(Integer mdmState) {
+        if (mdmState == null) {
+            mdmState = PreferencesByUserAndTanentUtils.getInt(getApplicationContext(), "mdm_state", 1);
+        }
+        (findViewById(R.id.device_manager_layout)).setVisibility((mdmState == 1) ? View.VISIBLE : View.GONE);
     }
 
     @Override
@@ -176,5 +208,31 @@ public class SafeCenterActivity extends BaseActivity {
             default:
                 break;
         }
+    }
+
+
+    private class Webservice extends APIInterfaceInstance {
+
+        @Override
+        public void returnMDMStateSuccess(GetMDMStateResult getMDMStateResult) {
+            if (loadingDlg != null && loadingDlg.isShowing()) {
+                loadingDlg.dismiss();
+            }
+            int mdmState = getMDMStateResult.getMdmState();
+            PreferencesByUserAndTanentUtils.putInt(getApplicationContext(), "mdm_state", mdmState);
+            setMDMLayoutState(mdmState);
+
+        }
+
+        @Override
+        public void returnMDMStateFail(String error, int errorCode) {
+            if (loadingDlg != null && loadingDlg.isShowing()) {
+                loadingDlg.dismiss();
+            }
+            setMDMLayoutState(null);
+            WebServiceMiddleUtils.hand(SafeCenterActivity.this, error, errorCode);
+        }
+
+
     }
 }
