@@ -38,8 +38,7 @@ public class GroupAlbumActivity extends BaseActivity {
 		setContentView(R.layout.activity_group_album);
 		cid = getIntent().getExtras().getString("cid");
 		getImgMsgList();
-		imageDisplayUtils = new ImageDisplayUtils(getApplicationContext(),
-				R.drawable.icon_photo_default);
+		imageDisplayUtils = new ImageDisplayUtils(R.drawable.icon_photo_default);
 		albumGrid = (GridView)findViewById(R.id.album_grid);
 		albumGrid.setAdapter(new Adapter());
 		albumGrid.setOnItemClickListener(new OnItemClickListener() {
@@ -121,7 +120,7 @@ public class GroupAlbumActivity extends BaseActivity {
 				}else {
 					holder = (ViewHolder) convertView.getTag();
 				}
-				imageDisplayUtils.display(holder.albumImg, imgUrlList.get(position));
+				imageDisplayUtils.displayImage(holder.albumImg, imgUrlList.get(position));
 			return convertView;
 		}
 		

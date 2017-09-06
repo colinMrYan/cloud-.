@@ -104,7 +104,7 @@ public final class Intents {
 
   public static final class Encode {
     /**
-     * Send this intent to encode a piece of data as a QR code and display it full screen, so
+     * Send this intent to encode a piece of data as a QR code and displayImage it full screen, so
      * that another person can scan the barcode from your screen.
      */
     public static final String ACTION = "com.google.zxing.client.android.ENCODE";

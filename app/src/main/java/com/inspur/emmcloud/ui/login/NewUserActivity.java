@@ -73,7 +73,7 @@ public class NewUserActivity extends BaseActivity {
 //		setContentView(R.layout.activity_new_user);
 //		phoneNumEdit = (ClearEditText) findViewById(R.id.phone_num_edit);
 //		phoneNumEdit.addTextChangedListener(new EditWatcher());
-//		InputMethodUtils.display(NewUserActivity.this, phoneNumEdit);
+//		InputMethodUtils.displayImage(NewUserActivity.this, phoneNumEdit);
 //		((RelativeLayout) findViewById(R.id.main_layout))
 //				.setOnTouchListener(new OnTouchListener() {
 //

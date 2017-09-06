@@ -36,8 +36,7 @@ public class ChannelMemberListAdapter extends BaseAdapter implements SectionInde
 	public ChannelMemberListAdapter(Activity mActivity, List<PersonDto> sortDataList) {
 		this.mActivity = mActivity;
 		this.list = sortDataList;
-		imageDisplayUtils = new ImageDisplayUtils(mActivity,
-				R.drawable.icon_person_default);
+		imageDisplayUtils = new ImageDisplayUtils(R.drawable.icon_person_default);
 	}
 
 	/**
@@ -99,12 +98,12 @@ public class ChannelMemberListAdapter extends BaseAdapter implements SectionInde
 			}
 			holder.username.setText(dto.getName());
 			if(dto.getUtype().equals("robot")){
-				imageDisplayUtils.display(holder.headimg,
+				imageDisplayUtils.displayImage(holder.headimg,
 						UriUtils.getRobotIconUri(RobotCacheUtils
 								.getRobotById(mActivity, dto.getUid())
 								.getAvatar()));
 			}else{
-				imageDisplayUtils.display(holder.headimg,
+				imageDisplayUtils.displayImage(holder.headimg,
 						UriUtils.getChannelImgUri(mActivity,dto.getUid()));
 			}
 

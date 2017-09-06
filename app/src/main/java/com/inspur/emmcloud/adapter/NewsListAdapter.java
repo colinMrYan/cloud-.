@@ -35,7 +35,7 @@ public class NewsListAdapter extends BaseAdapter {
         // TODO Auto-generated constructor stub
         this.context = context;
         this.groupNewsList = groupNewsList;
-        imageDisplayUtils = new ImageDisplayUtils(context, R.drawable.ic_app_news_default_icon);
+        imageDisplayUtils = new ImageDisplayUtils(R.drawable.ic_app_news_default_icon);
     }
 
     @Override
@@ -75,7 +75,7 @@ public class NewsListAdapter extends BaseAdapter {
             holder = (NewsHolder) convertView.getTag();
         }
         String uri = handlePoster(position);
-        imageDisplayUtils.displayNewsPic(holder.imageView, uri);
+        imageDisplayUtils.displayImage(holder.imageView, uri);
         if (groupNewsList.get(position).isImportant()) {
             holder.title.setTextColor(Color.RED);
             holder.title.setText(groupNewsList.get(position).getTitle());
