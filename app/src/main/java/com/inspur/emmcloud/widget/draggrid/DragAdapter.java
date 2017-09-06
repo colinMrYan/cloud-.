@@ -56,8 +56,7 @@ public class DragAdapter extends BaseAdapter {
 		this.context = context;
 		this.appList = appList;
 		this.groupPosition = position;
-		imageDisplayUtils = new ImageDisplayUtils(context,
-				R.drawable.icon_empty_icon);
+		imageDisplayUtils = new ImageDisplayUtils(R.drawable.icon_empty_icon);
 		loadingDialog = new LoadingDialog(context);
 		apiService = new MyAppAPIService(context);
 		apiService.setAPIInterface(new WebService());
@@ -106,7 +105,7 @@ public class DragAdapter extends BaseAdapter {
 //			LogUtils.YfcDebug("常用的weight："+app.getWeight()+"---------"+app.getAppName());
 //		}
 		nameText.setText(app.getAppName());
-		imageDisplayUtils.display(iconImg, app.getAppIcon());
+		imageDisplayUtils.displayImage(iconImg, app.getAppIcon());
 		if (canEdit) {
 			if(!app.getIsMustHave()){
 				deleteImg.setVisibility(View.VISIBLE);

@@ -44,8 +44,7 @@ public class ChannelMembersDelActivity extends BaseActivity {
 		setContentView(R.layout.activity_channelmem_del);
 		((MyApplication) getApplicationContext()).addActivity(this);
 		channelMemberListView = (ListView) findViewById(R.id.channel_mem_del);
-		imageDisplayUtils = new ImageDisplayUtils(getApplicationContext(),
-				R.drawable.icon_person_default);
+		imageDisplayUtils = new ImageDisplayUtils(R.drawable.icon_person_default);
 		memberList = ChannelGroupCacheUtils.getMembersList(
 				ChannelMembersDelActivity.this,
 				getIntent().getStringExtra("cid"));
@@ -92,7 +91,7 @@ public class ChannelMembersDelActivity extends BaseActivity {
 			convertView = vi.inflate(R.layout.channel_member_list_item, null);
 			CircleImageView circleImageView = (CircleImageView) convertView
 					.findViewById(R.id.head);
-			imageDisplayUtils.display(circleImageView, UriUtils
+			imageDisplayUtils.displayImage(circleImageView, UriUtils
 					.getChannelImgUri(ChannelMembersDelActivity.this,memberList.get(position).getInspurID()));
 			((TextView) convertView.findViewById(R.id.title))
 					.setText(memberList.get(position).getName());

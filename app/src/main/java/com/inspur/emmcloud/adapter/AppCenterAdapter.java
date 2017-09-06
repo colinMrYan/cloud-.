@@ -37,7 +37,7 @@ public class AppCenterAdapter extends BaseAdapter {
 
 	public AppCenterAdapter(Activity activity, List<App> appList) {
 		// TODO Auto-generated constructor stub
-		imageDisplayUtils = new ImageDisplayUtils(activity, R.drawable.icon_empty_icon);
+		imageDisplayUtils = new ImageDisplayUtils(R.drawable.icon_empty_icon);
 		this.appList = appList;
 		this.activity = activity;
 		loadingDialog = new LoadingDialog(activity);
@@ -107,7 +107,7 @@ public class AppCenterAdapter extends BaseAdapter {
 		final App app = appList.get(position);
 		
 		final String appID = app.getAppID();
-		imageDisplayUtils.display(holder.iconImg, app.getAppIcon());
+		imageDisplayUtils.displayImage(holder.iconImg, app.getAppIcon());
 		holder.nameText.setText(app.getAppName());
 		if (app.getUseStatus() == 1) {
 			holder.statusBtn.setText(activity.getString(R.string.open));

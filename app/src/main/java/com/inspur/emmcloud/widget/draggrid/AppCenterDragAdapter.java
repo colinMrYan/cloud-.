@@ -2,33 +2,21 @@ package com.inspur.emmcloud.widget.draggrid;
 
 import java.util.List;
 
-import android.R.integer;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.api.APIInterfaceInstance;
-import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
 import com.inspur.emmcloud.bean.App;
-import com.inspur.emmcloud.bean.GetRemoveAppResult;
 import com.inspur.emmcloud.ui.app.AppDetailActivity;
-import com.inspur.emmcloud.util.AppCacheUtils;
 import com.inspur.emmcloud.util.DensityUtil;
 import com.inspur.emmcloud.util.ImageDisplayUtils;
-import com.inspur.emmcloud.util.LogUtils;
-import com.inspur.emmcloud.util.NetUtils;
-import com.inspur.emmcloud.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.ImageViewRound;
-import com.inspur.emmcloud.widget.LoadingDialog;
 
 public class AppCenterDragAdapter extends BaseAdapter {
 
@@ -39,8 +27,7 @@ public class AppCenterDragAdapter extends BaseAdapter {
 	public AppCenterDragAdapter(Context context, List<App> appList) {
 		this.context = context;
 		this.appList = appList;
-		imageDisplayUtils = new ImageDisplayUtils(context,
-				R.drawable.icon_empty_icon);
+		imageDisplayUtils = new ImageDisplayUtils(R.drawable.icon_empty_icon);
 	}
 
 	public AppCenterDragAdapter(Context context, List<App> appList, int position) {
@@ -81,7 +68,7 @@ public class AppCenterDragAdapter extends BaseAdapter {
 		iconImg.setRoundRadius(DensityUtil.dip2px(context, 10));
 		TextView nameText = (TextView) convertView.findViewById(R.id.name_text);
 		nameText.setText(app.getAppName());
-		imageDisplayUtils.display(iconImg, app.getAppIcon());
+		imageDisplayUtils.displayImage(iconImg, app.getAppIcon());
 		iconImg.setOnClickListener(new OnClickListener() {
 			
 			@Override

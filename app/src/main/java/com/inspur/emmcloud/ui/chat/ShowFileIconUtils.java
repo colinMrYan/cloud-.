@@ -35,8 +35,7 @@ public class ShowFileIconUtils {
 		} else {
 			imageName = R.drawable.icon_file_unknown;
 		}
-		ImageDisplayUtils imageDisplayUtils = new ImageDisplayUtils(context,
-				R.drawable.icon_file_unknown);
-		imageDisplayUtils.display(iconImageView, "drawable://"+imageName);
+		ImageDisplayUtils imageDisplayUtils = new ImageDisplayUtils(R.drawable.icon_file_unknown);
+		imageDisplayUtils.displayImage(iconImageView, "drawable://"+imageName);
 	}
 }

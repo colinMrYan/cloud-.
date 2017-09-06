@@ -1318,7 +1318,7 @@ public class ContactSearchActivity extends BaseActivity {
                     UriUtils.tanent + searchModel.getId() + "_100.png1");
             if (file.exists()) {
                 icon = "file://" + file.getAbsolutePath();
-                new ImageDisplayUtils().displayNoCachePic(photoImg, icon, defaultIcon);
+                new ImageDisplayUtils().displayImageNoCache(photoImg, icon, defaultIcon);
                 return;
             }
         } else if (type.equals("STRUCT")) {
@@ -1330,7 +1330,7 @@ public class ContactSearchActivity extends BaseActivity {
             }
 
         }
-        new ImageDisplayUtils(getApplicationContext(), defaultIcon).display(
+        new ImageDisplayUtils(defaultIcon).displayImage(
                 photoImg, icon);
 
 

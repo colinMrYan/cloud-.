@@ -230,10 +230,8 @@ public class SettingActivity extends BaseActivity {
 						DataCleanManager.cleanApplicationData(
 								SettingActivity.this, msgCachePath,
 								imgCachePath);
-						ImageDisplayUtils imageDisplayUtils = new ImageDisplayUtils(
-								getApplicationContext(),
-								R.drawable.icon_photo_default);
-						imageDisplayUtils.clearCache();
+						ImageDisplayUtils imageDisplayUtils = new ImageDisplayUtils(R.drawable.icon_photo_default);
+						imageDisplayUtils.clearAllCache();
 						handler.sendEmptyMessage(DATA_CLEAR_SUCCESS);
 					}
 				}).start();
@@ -292,9 +290,8 @@ public class SettingActivity extends BaseActivity {
 					DataCleanManager.cleanApplicationData(SettingActivity.this,
 							msgCachePath, imgCachePath);
 					ImageDisplayUtils imageDisplayUtils = new ImageDisplayUtils(
-							getApplicationContext(),
 							R.drawable.icon_photo_default);
-					imageDisplayUtils.clearCache();
+					imageDisplayUtils.clearAllCache();
 					//清除全部缓存时是否需要清除掉小程序，如果需要，解开下面一行的注释
 //					ReactNativeFlow.deleteReactNativeInstallDir(MyAppConfig.getReactInstallPath(SettingActivity.this,userId));
 					ToastUtils.show(getApplicationContext(),

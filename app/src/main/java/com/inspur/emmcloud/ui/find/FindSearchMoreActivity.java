@@ -214,8 +214,7 @@ public class FindSearchMoreActivity extends BaseActivity implements
 						.findViewById(R.id.timet_text);
 				String imgUrl = UriUtils.getPreviewUri(findSearchNews
 						.getPoster());
-				new ImageDisplayUtils(getApplicationContext(),
-						R.drawable.group_news_ic).display(newsImg, imgUrl);
+				new ImageDisplayUtils(R.drawable.group_news_ic).displayImage(newsImg, imgUrl);
 				newsTitleText.setText(findSearchNews.getTitle());
 				publisherText.setText(findSearchNews.getPublisher());
 				timeText.setText(findSearchNews.getPostTime());
@@ -234,8 +233,7 @@ public class FindSearchMoreActivity extends BaseActivity implements
 				FindSearchContacts findSearchContacts = findSearchContactList
 						.get(position);
 				String inspurId = findSearchContacts.getInspurId();
-				new ImageDisplayUtils(getApplicationContext(),
-						R.drawable.icon_person_default).display(photoImg,
+				new ImageDisplayUtils(R.drawable.icon_person_default).displayImage(photoImg,
 						UriUtils.getChannelImgUri(FindSearchMoreActivity.this,inspurId));
 				titleText.setText(findSearchContacts.getName());
 				String mobile = findSearchContacts.getMobile();

@@ -63,7 +63,7 @@ final class CameraConfigurationManager {
 		Display display = manager.getDefaultDisplay();
 		int width = display.getWidth();
 		int height = display.getHeight();
-		// We're landscape-only, and have apparently seen issues with display
+		// We're landscape-only, and have apparently seen issues with displayImage
 		// thinking it's portrait
 		// when waking from sleep. If it's not landscape, assume it's mistaken
 		// and reverse them:
