@@ -61,6 +61,7 @@ public class ImpActivity extends ImpBaseActivity {
     private int blackFontColor;
     private int lightModeFontColor;
     private int isZoomable = 0;
+    private String helpUrl = "";
     private String appId = "";
     private FrameLayout frameLayout;
     private TextView buttonCloseText;
@@ -81,28 +82,24 @@ public class ImpActivity extends ImpBaseActivity {
      */
     private void initViews() {
         loadingLayout = (LinearLayout) findViewById(Res.getWidgetID("loading_layout"));
-        loadingText = (TextView)findViewById(Res.getWidgetID("loading_text"));
+        loadingText = (TextView) findViewById(Res.getWidgetID("loading_text"));
         buttonCloseText = (TextView) findViewById(Res.getWidgetID("imp_close_btn"));
         frameLayout = (FrameLayout) findViewById(Res.getWidgetID("videoContainer"));
         loadFailLayout = (LinearLayout) findViewById(Res.getWidgetID("load_error_layout"));
         webView = (ImpWebView) findViewById(Res.getWidgetID("webview"));
         showLoadingDlg(null);
-        if (getIntent().hasExtra("is_zoomable")) {
+        getHelpUrl();
+        if (!StringUtils.isBlank(helpUrl) || getIntent().hasExtra("is_zoomable")) {
             isZoomable = getIntent().getIntExtra("is_zoomable", 0);
-            if (isZoomable == 0) {
+            if ((isZoomable == 0) && (StringUtils.isBlank(helpUrl))) {
                 findViewById(R.id.imp_change_font_size_btn).setVisibility(View.GONE);
-            } else if (isZoomable == 1) {
+            } else if ((isZoomable == 1) || !StringUtils.isBlank(helpUrl)) {
                 findViewById(R.id.imp_change_font_size_btn).setVisibility(View.VISIBLE);
             }
         } else {
             findViewById(R.id.imp_change_font_size_btn).setVisibility(View.GONE);
         }
-        if(getIntent().hasExtra("help_url")){
-            String helpUrl = getIntent().getStringExtra("help_url");
-            if(!StringUtils.isBlank(helpUrl)){
-                //显示帮助按钮，并监听相关事件
-            }
-        }
+
         getWindow().setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
                         | WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
@@ -158,6 +155,17 @@ public class ImpActivity extends ImpBaseActivity {
             webView.getSettings().setTextZoom(MyAppWebConfig.NORMAL);
         } else {
             webView.getSettings().setTextZoom(textSize);
+        }
+    }
+
+    /**
+     * 获取helpurl
+     *
+     * @return
+     */
+    private void getHelpUrl() {
+        if (getIntent().hasExtra("help_url")) {
+            helpUrl = getIntent().getStringExtra("help_url");
         }
     }
 
@@ -258,6 +266,7 @@ public class ImpActivity extends ImpBaseActivity {
         Dialog dialog = new Dialog(this, R.style.transparentFrameWindowStyle);
         dialog.setContentView(view, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT));
+        initHelpUrlViews(dialog,view);
         initFontSizeDialogViews(view);
         Window window = dialog.getWindow();
         // 设置显示动画
@@ -281,19 +290,42 @@ public class ImpActivity extends ImpBaseActivity {
     }
 
     /**
+     * 初始化帮助view
+     */
+    private void initHelpUrlViews(final Dialog dialog , View view) {
+        view.findViewById(R.id.app_imp_crm_help_layout).setVisibility(StringUtils.isBlank(helpUrl)?View.GONE:View.VISIBLE);
+        view.findViewById(R.id.app_news_share_btn).setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.setClass(ImpActivity.this, ImpActivity.class);
+                intent.putExtra("uri",helpUrl);
+                startActivity(intent);
+                dialog.dismiss();
+            }
+        });
+    }
+
+    /**
      * 初始化Dialog的Views
      *
      * @param view
      */
     private void initFontSizeDialogViews(View view) {
-        normalBtn = (Button) view.findViewById(R.id.app_imp_crm_font_normal_btn);
-        normalBtn.setText(getString(R.string.news_font_normal));
-        middleBtn = (Button) view.findViewById(R.id.app_imp_crm_font_middle_btn);
-        middleBtn.setText(getString(R.string.news_font_middle));
-        bigBtn = (Button) view.findViewById(R.id.app_imp_crm_font_big_btn);
-        bigBtn.setText(getString(R.string.news_font_big_text));
-        biggestBtn = (Button) view.findViewById(R.id.app_imp_crm_font_biggest_btn);
-        biggestBtn.setText(getString(R.string.news_font_biggest_text));
+        if(isZoomable == 1){
+            normalBtn = (Button) view.findViewById(R.id.app_imp_crm_font_normal_btn);
+            normalBtn.setText(getString(R.string.news_font_normal));
+            middleBtn = (Button) view.findViewById(R.id.app_imp_crm_font_middle_btn);
+            middleBtn.setText(getString(R.string.news_font_middle));
+            bigBtn = (Button) view.findViewById(R.id.app_imp_crm_font_big_btn);
+            bigBtn.setText(getString(R.string.news_font_big_text));
+            biggestBtn = (Button) view.findViewById(R.id.app_imp_crm_font_biggest_btn);
+            biggestBtn.setText(getString(R.string.news_font_biggest_text));
+        }else {
+            view.findViewById(R.id.app_imp_crm_font_text).setVisibility(View.GONE);
+            view.findViewById(R.id.app_imp_crm_font_layout).setVisibility(View.GONE);
+        }
+
     }
 
     /**
@@ -411,14 +443,14 @@ public class ImpActivity extends ImpBaseActivity {
 
 
     public void showLoadingDlg(String content) {
-        if (content != null){
-            if (StringUtils.isBlank(content)){
+        if (content != null) {
+            if (StringUtils.isBlank(content)) {
                 loadingText.setVisibility(View.GONE);
-            }else {
+            } else {
                 loadingText.setVisibility(View.VISIBLE);
             }
             loadingText.setText(content);
-        }else {
+        } else {
             loadingText.setVisibility(View.VISIBLE);
         }
         loadingLayout.setVisibility(View.VISIBLE);
