@@ -138,5 +138,6 @@
     <color name="subscribe_seperate_line">#ffcdcdcd</color>
 
     <color name="react_native_big_bg">#B2FFFFFF</color>
+    <color name="scan_result_color">#E8E8E8</color>
 
 </resources>

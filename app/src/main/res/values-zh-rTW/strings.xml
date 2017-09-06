@@ -263,7 +263,8 @@
     <string name="socket_connecting">連接中</string>
     <string name="socket_close">已斷開</string>
     <string name="chat_file_download_success">檔案已下載成功，再次點擊進行打開</string>
-    <string name="group_name_longth_valid">群名稱字數超限（不超過20個字元）</string>
+    <string name="group_name_longth_valid">群名稱字數超限（不超過40個字元）</string>
+    <string name="message_create_group">發起群聊</string>
 
 
     <!-- 會議卡片 -->
@@ -407,7 +408,11 @@
     <string name="device_unbind_sucess">設備解綁成功！</string>
     <string name="device_other_unbind_warning">解綁後，從%1$s上登錄，您需要重新註冊設備</string>
     <string name="device_current_unbind_warning">解綁後，您需要重新登入並注册設備</string>
+    <string name="last_use_time">上次使用時間</string>
+    <string name="bind_device">綁定設備</string>
     <string name="current_device">當前設備</string>
+    <string name="history_device">歷史設備</string>
+    <string name="device_history_use">歷史使用</string>
     <string name="device_bind_time_title">綁定時間: </string>
     <string name="device_bind_time">綁定時間</string>
     <string name="device_info">設備詳情</string>

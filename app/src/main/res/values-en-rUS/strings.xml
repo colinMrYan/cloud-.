@@ -263,7 +263,8 @@
     <string name="socket_connecting">Connecting</string>
     <string name="socket_close">Disconnect</string>
     <string name="chat_file_download_success">File has been downloaded successfully, click again to open</string>
-    <string name="group_name_longth_valid">Group name, word overrun (no more than 20 characters)</string>
+    <string name="group_name_longth_valid">Group name, word overrun (no more than 40 characters)</string>
+    <string name="message_create_group">Group Chat</string>
 
 
     <!-- 会议卡片 -->
@@ -406,7 +407,11 @@
     <string name="device_unbind_sucess">Device unbound successfully!</string>
     <string name="device_other_unbind_warning">After binding, log on from %1$s, you need to re register the device</string>
     <string name="device_current_unbind_warning">After binding, you need to log in again and register your device</string>
+    <string name="last_use_time">Last use time</string>
+    <string name="bind_device">Bind device</string>
     <string name="current_device">Current device</string>
+    <string name="history_device">History device</string>
+    <string name="device_history_use">Historical use</string>
     <string name="device_bind_time_title">Binding time: </string>
     <string name="device_bind_time">Binding time</string>
     <string name="device_info">Device details</string>

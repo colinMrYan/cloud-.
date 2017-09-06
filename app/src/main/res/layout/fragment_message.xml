@@ -10,15 +10,15 @@
         android:background="@color/header_bg">
 
         <ImageView
-            android:id="@+id/add_img"
+            android:id="@+id/contact_img"
             android:layout_width="52dp"
             android:layout_height="match_parent"
             android:layout_centerVertical="true"
             android:clickable="true"
-            android:paddingLeft="15dp"
+            android:paddingLeft="12dp"
             android:paddingRight="15dp"
             android:scaleType="centerInside"
-            android:src="@drawable/icon_add" />
+            android:src="@drawable/selector_people_btn" />
 
         <TextView
             android:id="@+id/header_text"
@@ -31,16 +31,17 @@
             android:textSize="@dimen/header_textsize" />
 
         <ImageView
-            android:id="@+id/address_list_img"
+            android:id="@+id/more_function_list_img"
             android:layout_width="52dp"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:clickable="true"
-            android:paddingLeft="12dp"
-            android:paddingRight="15dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
             android:scaleType="centerInside"
-            android:src="@drawable/selector_people_btn" />
+            android:src="@drawable/icon_add" />
+        <!--android:src="@drawable/selector_people_btn"-->
     </RelativeLayout>
 
 

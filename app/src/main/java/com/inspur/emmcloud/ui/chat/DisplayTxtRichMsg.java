@@ -12,7 +12,6 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.Msg;
 import com.inspur.emmcloud.config.MyAppConfig;
-import com.inspur.emmcloud.util.DensityUtil;
 import com.inspur.emmcloud.util.JSONUtils;
 import com.inspur.emmcloud.util.MentionsAndUrlShowUtils;
 import com.inspur.emmcloud.util.ToastUtils;
@@ -24,6 +23,7 @@ import com.inspur.emmcloud.util.richtext.RichText;
 import com.inspur.emmcloud.util.richtext.RichType;
 import com.inspur.emmcloud.util.richtext.callback.LinkFixCallback;
 import com.inspur.emmcloud.util.richtext.callback.OnUrlClickListener;
+import com.inspur.emmcloud.util.richtext.callback.OnUrlLongClickListener;
 import com.inspur.emmcloud.widget.LinkMovementClickMethod;
 
 import java.util.Arrays;
@@ -49,17 +49,11 @@ public class DisplayTxtRichMsg {
 				((MyApplication) context.getApplicationContext()).getUid());
 		final TextView richText = (TextView) convertView
 				.findViewById(R.id.content_text);
-		richText.setBackgroundColor(context.getResources().getColor(
+		(convertView.findViewById(R.id.card_layout)).setBackgroundColor(context.getResources().getColor(
 				isMyMsg ? R.color.bg_my_card : R.color.white));
 		richText.setTextColor(context.getResources().getColor(
 				isMyMsg ? R.color.white : R.color.black));
-		int normalPadding = DensityUtil.dip2px(context, 9);
-		int arrowPadding = DensityUtil.dip2px(context, 7);
-		if (isMyMsg) {
-			richText.setPadding(normalPadding, normalPadding, normalPadding+arrowPadding, normalPadding);
-		}else {
-			richText.setPadding(normalPadding+arrowPadding, normalPadding,normalPadding , normalPadding);
-		}
+			richText.setBackgroundResource(isMyMsg?R.drawable.ic_chat_msg_img_cover_arrow_right:R.drawable.ic_chat_msg_img_cover_arrow_left);
 		String msgBody = msg.getBody();
 		String source = JSONUtils.getString(msgBody, "source", "");
 		if (MyAppConfig.isUseMarkdown){
@@ -84,6 +78,13 @@ public class DisplayTxtRichMsg {
 							return false;
 						}
 					})
+					.urlLongClick(new OnUrlLongClickListener() {
+						@Override
+						public boolean urlLongClick(String url) {
+							copyContentToPasteBoard(context,richText);
+							return true;
+						}
+					})
 					.cache(CacheType.ALL)
 					.into(richText);
 		}else{
@@ -102,17 +103,20 @@ public class DisplayTxtRichMsg {
 					context.getResources().getColor(
 							isMyMsg ? R.color.hightlight_in_blue_bg
 									: R.color.header_bg));
-			richText.setOnLongClickListener(new View.OnLongClickListener() {
-				@Override
-				public boolean onLongClick(View v) {
-					ClipboardManager cmb = (ClipboardManager)context.getSystemService(Context.CLIPBOARD_SERVICE);
-					cmb.setPrimaryClip(ClipData.newPlainText(null, richText.getText()));
-					ToastUtils.show(context,R.string.copyed_to_paste_board);
-					return true;
-				}
-			});
-		}
 
+		}
+		richText.setOnLongClickListener(new View.OnLongClickListener() {
+			@Override
+			public boolean onLongClick(View v) {
+				copyContentToPasteBoard(context,richText);
+				return true;
+			}
+		});
 	}
 
+	public static void copyContentToPasteBoard(Context context,TextView textView){
+		ClipboardManager cmb = (ClipboardManager)context.getSystemService(Context.CLIPBOARD_SERVICE);
+		cmb.setPrimaryClip(ClipData.newPlainText(null, textView.getText().toString()));
+		ToastUtils.show(context,R.string.copyed_to_paste_board);
+	}
 }

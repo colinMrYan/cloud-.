@@ -11,6 +11,7 @@ import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.webkit.DownloadListener;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebBackForwardList;
 import android.webkit.WebHistoryItem;
@@ -31,6 +32,7 @@ import com.inspur.imp.api.iLog;
 import com.inspur.imp.plugin.PluginMgr;
 import com.inspur.imp.util.DeviceInfo;
 
+import org.json.JSONObject;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
@@ -38,9 +40,9 @@ import java.lang.reflect.Method;
 
 /**
  * WebView控件类
- * 
+ *
  * @author 浪潮移动应用平台(IMP)产品组
- * 
+ *
  */
 @SuppressLint("NewApi")
 public class ImpWebView extends WebView {
@@ -78,7 +80,7 @@ public class ImpWebView extends WebView {
 		super(context,attrs);
 		this.context = context;
 	}
-	
+
 	public void setProperty( TextView titleText, LinearLayout loadFailLayout,FrameLayout layout){
 		this.titleText =titleText;
 		this.loadFailLayout = loadFailLayout;
@@ -108,7 +110,7 @@ public class ImpWebView extends WebView {
 		};
 
 	}
-	
+
 	//imp修改处
 	public ImpWebChromeClient getWebChromeClient(){
 		return impWebChromeClient;
@@ -119,6 +121,24 @@ public class ImpWebView extends WebView {
 		//显示webview网页标题
 		this.addJavascriptInterface(new GetTitle(), "getTitle");
 		initPlugin();
+		setDownloadListener(new MyWebViewDownLoadListener());
+	}
+
+	private class MyWebViewDownLoadListener implements DownloadListener {
+
+		@Override
+		public void onDownloadStart(String url, String userAgent, String contentDisposition, String mimetype,
+									long contentLength) {
+			LogUtils.jasonDebug("url="+url);
+			try {
+				JSONObject object = new JSONObject();
+				object.put("url",url);
+				PluginMgr.execute("FileTransferService","download",object.toString());
+			}catch (Exception e){
+				e.printStackTrace();
+			}
+
+		}
 	}
 
 	public class GetTitle {
@@ -179,26 +199,26 @@ public class ImpWebView extends WebView {
 				int x = (int) event.getX();
 				int y = (int) event.getY();
 				switch (event.getAction()) {
-				case MotionEvent.ACTION_DOWN:
-					mLastMotionX = x;
-					mLastMotionY = y;
-					break;
-				case MotionEvent.ACTION_UP:
-					if(mLastMotionX-80>event.getX()){
-						loadUrl("javascript:if(window.showRight){window.showRight();}");
-					}else if(mLastMotionX<event.getX()-80){
-						loadUrl("javascript:if(window.showLeft){window.showLeft();}");
-					}
-					if (!v.hasFocus()) {
-						v.requestFocus();
-					}
-					break;
+					case MotionEvent.ACTION_DOWN:
+						mLastMotionX = x;
+						mLastMotionY = y;
+						break;
+					case MotionEvent.ACTION_UP:
+						if(mLastMotionX-80>event.getX()){
+							loadUrl("javascript:if(window.showRight){window.showRight();}");
+						}else if(mLastMotionX<event.getX()-80){
+							loadUrl("javascript:if(window.showLeft){window.showLeft();}");
+						}
+						if (!v.hasFocus()) {
+							v.requestFocus();
+						}
+						break;
 				}
 				return false;
 			}
 		});
 	}
-	
+
 	@Override
 	public void loadUrl(String url) {
 		super.loadUrl(url);
@@ -215,7 +235,6 @@ public class ImpWebView extends WebView {
 
 	// 设置websettings属性
 	public void setWebSetting() {
-		setHCMMapProperty();
 		// 支持js相关方法
 		setJSConfig();
 		// 页面效果设置
@@ -243,16 +262,12 @@ public class ImpWebView extends WebView {
 		settings.setUseWideViewPort(true);
 		settings.setSupportZoom(false);
 		settings.setBuiltInZoomControls(false);
-	}
-
-	/**
-	 * 设置HCM地图相关属性
-	 */
-	private void setHCMMapProperty() {
+		//解决在安卓5.0以上跨域链接无法访问的问题
 		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP ){
-			getSettings().setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
+			settings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
 		}
 	}
+
 	/* 页面效果设置 */
 	private void setPageStyle() {
 		//设置自适应屏幕
@@ -418,7 +433,7 @@ public class ImpWebView extends WebView {
 	public void setViewname(String viewname) {
 		this.viewname = viewname;
 	}
-	
+
 	@Override
 	protected void onScrollChanged(int l, int t, int oldl, int oldt) {
 //		LayoutParams lp = (LayoutParams) progressbar.getLayoutParams();
@@ -427,6 +442,7 @@ public class ImpWebView extends WebView {
 //		progressbar.setLayoutParams(lp);
 		super.onScrollChanged(l, t, oldl, oldt);
 	}
+
 
 
 }

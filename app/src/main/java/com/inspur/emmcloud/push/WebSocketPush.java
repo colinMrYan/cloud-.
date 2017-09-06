@@ -137,7 +137,7 @@ public class WebSocketPush {
      */
 	private String getPushIdByChangeShang() {
 		String pushid = "";
-		if(AppUtils.getIsHuaWei()){
+		if(AppUtils.getIsHuaWei()&&canConnectHuawei()){
 			//需要对华为单独推送的时候解开这里
 			String hwtoken = PreferencesUtils.getString(context,"huawei_push_token","");
 			if(!StringUtils.isBlank(hwtoken)){
@@ -147,6 +147,18 @@ public class WebSocketPush {
 			pushid = PreferencesUtils.getString(context, "JpushRegId", "");
 		}
 		return pushid;
+	}
+
+	/**
+	 * 判断是否可以连接华为推了送
+	 * @return
+	 */
+	private boolean canConnectHuawei() {
+		String pushFlag = PreferencesUtils.getString(context,"pushFlag","");
+		if(StringUtils.isBlank(pushFlag) || pushFlag.equals("huawei")){
+			return true;
+		}
+		return false;
 	}
 
 	/**
@@ -165,6 +177,7 @@ public class WebSocketPush {
 
 	public void sendActivedMsg() {
 		if (mSocket != null && isSocketConnect()) {
+			LogUtils.debug(TAG,"sendActivedMsg----");
 			mSocket.emit("state", "ACTIVED");
 		}else {
 			start();
@@ -173,12 +186,14 @@ public class WebSocketPush {
 
 	public void sendFrozenMsg() {
 		if (mSocket != null) {
+			LogUtils.debug(TAG,"sendFrozenMsg----");
 			mSocket.emit("state", "FROZEN");
 	}
 	}
 	
 	public void webSocketSignout(){
 		if (mSocket != null) {
+			LogUtils.debug(TAG,"webSocketSignout----");
 			mSocket.emit("state", "SIGNOUT");
 			closeSocket();
 		}
@@ -234,11 +249,6 @@ public class WebSocketPush {
 			public void call(Object... arg0) {
 				// TODO Auto-generated method stub
 				LogUtils.debug(TAG, "debug:" + arg0[0].toString());
-
-				// Intent intent = new Intent();
-				// intent.setAction("com.inspur.msg");
-				// intent.putExtra("push", arg0[0].toString());
-				// context.sendBroadcast(intent);
 			}
 		});
 		mSocket.on("command", new Emitter.Listener() {
@@ -247,11 +257,6 @@ public class WebSocketPush {
 			public void call(Object... arg0) {
 				// TODO Auto-generated method stub
 				LogUtils.debug(TAG, "command" + arg0[0].toString());
-//
-//				String content = arg0[0].toString();
-//				Intent intent = new Intent("com.inspur.command");
-//				intent.putExtra("command", content);
-//				context.sendBroadcast(intent);
 			}
 		});
 

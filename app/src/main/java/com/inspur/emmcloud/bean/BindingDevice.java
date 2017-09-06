@@ -11,9 +11,9 @@ import java.io.Serializable;
  */
 
 public class BindingDevice implements Serializable{
-	private String deviceId;
-	private String deviceModel;
-	private long deviceBindTime;
+	private String deviceId="";
+	private String deviceModel="";
+	private long deviceLastUserTime =0L;
 
 	public BindingDevice(){
 
@@ -22,7 +22,7 @@ public class BindingDevice implements Serializable{
 	public BindingDevice(JSONObject obj) {
 		deviceId = JSONUtils.getString(obj, "udid", "");
 		deviceModel = JSONUtils.getString(obj, "device_model", "");
-		deviceBindTime=JSONUtils.getLong(obj,"create_time",0L);
+		deviceLastUserTime =JSONUtils.getLong(obj,"last_use_time",0L);
 	}
 
 	public String getDeviceId(){
@@ -33,7 +33,7 @@ public class BindingDevice implements Serializable{
 		return deviceModel;
 	}
 
-	public long getDeviceBindTime(){return  deviceBindTime;}
+	public long getDeviceLastUserTime(){return deviceLastUserTime;}
 	@Override
 	public boolean equals(Object other) {
 		if(this == other){

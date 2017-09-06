@@ -10,13 +10,16 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -49,6 +52,7 @@ import com.inspur.emmcloud.util.ChatCreateUtils.OnCreateGroupChannelListener;
 import com.inspur.emmcloud.util.DirectChannelUtils;
 import com.inspur.emmcloud.util.ImageDisplayUtils;
 import com.inspur.emmcloud.util.IntentUtils;
+import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.MsgCacheUtil;
 import com.inspur.emmcloud.util.MsgMatheSetCacheUtils;
 import com.inspur.emmcloud.util.MsgReadIDCacheUtils;
@@ -56,6 +60,7 @@ import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
+import com.inspur.emmcloud.util.ScanQrCodeUtils;
 import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.TimeUtils;
 import com.inspur.emmcloud.util.ToastUtils;
@@ -67,6 +72,7 @@ import com.inspur.emmcloud.widget.dialogs.MyDialog;
 import com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout;
 import com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout.OnRefreshListener;
 import com.inspur.emmcloud.widget.pullableview.PullableListView;
+import com.inspur.imp.plugin.barcode.scan.CaptureActivity;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -86,6 +92,8 @@ import java.util.Map;
 
 import io.socket.client.Socket;
 
+import static android.app.Activity.RESULT_OK;
+
 /**
  * 消息页面 com.inspur.emmcloud.ui.MessageFragment
  *
@@ -97,6 +105,7 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
     private static final int CREAT_CHANNEL_GROUP = 1;
     private static final int RERESH_GROUP_ICON = 2;
 	private static final int SORT_CHANNEL_COMPLETE= 3;
+    private static final int SCAN_LOGIN_QRCODE_RESULT = 5;
     private View rootView;
     private LayoutInflater inflater;
     private PullableListView msgListView;
@@ -109,6 +118,7 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
     private MessageFragmentReceiver messageFragmentReceiver;
     private TextView titleText;
     private boolean isHaveCreatGroupIcon = false;
+    private PopupWindow popupWindow;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -149,6 +159,9 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 	public void onPause() {
 		super.onPause();
 		pullToRefreshLayout.refreshFinish(PullToRefreshLayout.FAIL);
+		if(popupWindow != null && popupWindow.isShowing()){
+			popupWindow.dismiss();
+		}
 	}
 
     @Override
@@ -193,12 +206,10 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 				AppTabAutoBean.PayloadBean.TabsBean.Property property = appTabList.get(i).getProperty();
 				if (property != null) {
 					if (!property.isCanCreate()) {
-						rootView.findViewById(R.id.find_friends_btn).setVisibility(View.GONE);
-						rootView.findViewById(R.id.add_img).setVisibility(View.GONE);
+						rootView.findViewById(R.id.more_function_list_img).setVisibility(View.GONE);
 					}
 					if (!property.isCanContact()) {
-						rootView.findViewById(R.id.find_friends_btn).setVisibility(View.GONE);
-						rootView.findViewById(R.id.address_list_img).setVisibility(View.GONE);
+						rootView.findViewById(R.id.contact_img).setVisibility(View.GONE);
 					}
 				}
 			}
@@ -214,9 +225,9 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
         inflater = (LayoutInflater) getActivity().getSystemService(
                 getActivity().LAYOUT_INFLATER_SERVICE);
         rootView = inflater.inflate(R.layout.fragment_message, null);
-        (rootView.findViewById(R.id.address_list_img))
+        (rootView.findViewById(R.id.more_function_list_img))
                 .setOnClickListener(onViewClickListener);
-        (rootView.findViewById(R.id.add_img))
+        (rootView.findViewById(R.id.contact_img))
                 .setOnClickListener(onViewClickListener);
         (rootView.findViewById(R.id.find_friends_btn))
                 .setOnClickListener(onViewClickListener);
@@ -280,32 +291,106 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 		@Override
 		public void onClick(View v) {
 			// TODO Auto-generated method stub
-			switch (v.getId()) {
-				case R.id.address_list_img:
+            switch (v.getId()) {
+                case R.id.more_function_list_img:
+                    showPopupWindow(rootView.findViewById(R.id.more_function_list_img));
+                    break;
+                case R.id.contact_img:
 				case R.id.find_friends_btn:
-					Bundle bundle = new Bundle();
-					bundle.putInt("select_content", 4);
-					bundle.putBoolean("isMulti_select", false);
-					bundle.putString("title",
-							getActivity().getString(R.string.adress_list));
-					IntentUtils.startActivity(getActivity(),
-							ContactSearchActivity.class, bundle);
-					recordUserClickContact();
-					break;
-				case R.id.add_img:
-					Intent intent = new Intent();
-					intent.putExtra("select_content", 2);
-					intent.putExtra("isMulti_select", true);
-					intent.putExtra("title",
-							getActivity().getString(R.string.creat_group));
-					intent.setClass(getActivity(), ContactSearchActivity.class);
-					startActivityForResult(intent, CREAT_CHANNEL_GROUP);
-					break;
+                    Bundle bundle = new Bundle();
+                    bundle.putInt("select_content", 4);
+                    bundle.putBoolean("isMulti_select", false);
+                    bundle.putString("title",
+                            getActivity().getString(R.string.adress_list));
+                    IntentUtils.startActivity(getActivity(),
+                            ContactSearchActivity.class, bundle);
+                    recordUserClickContact();
+                    break;
 				default:
 					break;
 			}
 		}
 	};
+
+    /**
+     * 通讯录和创建群组，扫一扫合并
+     *
+     * @param view
+     */
+    private void showPopupWindow(View view) {
+        // 一个自定义的布局，作为显示的内容
+        View contentView = LayoutInflater.from(getActivity())
+                .inflate(R.layout.pop_message_window_view, null);
+        // 设置按钮的点击事件
+        popupWindow = new PopupWindow(contentView,
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT, true);
+        popupWindow.setTouchable(true);
+        popupWindow.setTouchInterceptor(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return false;
+                // 这里如果返回true的话，touch事件将被拦截
+                // 拦截后 PopupWindow的onTouchEvent不被调用，这样点击外部区域无法dismiss
+            }
+        });
+
+        popupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+                backgroundAlpha(1.0f);
+            }
+        });
+
+        RelativeLayout createGroupLayout = (RelativeLayout) contentView
+                .findViewById(R.id.message_create_group_layout);
+        createGroupLayout.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.putExtra("select_content", 2);
+                intent.putExtra("isMulti_select", true);
+                intent.putExtra("title",
+                        getActivity().getString(R.string.creat_group));
+                intent.setClass(getActivity(), ContactSearchActivity.class);
+                startActivityForResult(intent, CREAT_CHANNEL_GROUP);
+                popupWindow.dismiss();
+            }
+        });
+
+
+        RelativeLayout scanLayout = (RelativeLayout) contentView.findViewById(R.id.message_scan_layout);
+        scanLayout.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.setClass(getActivity(), CaptureActivity.class);
+                intent.putExtra("from", "MessageFragment");
+                startActivityForResult(intent, SCAN_LOGIN_QRCODE_RESULT);
+                popupWindow.dismiss();
+            }
+        });
+
+        // 如果不设置PopupWindow的背景，无论是点击外部区域还是Back键都无法dismiss弹框
+        // 我觉得这里是API的一个bug
+        popupWindow.setBackgroundDrawable(getResources().getDrawable(
+                R.drawable.pop_window_view_tran));
+        backgroundAlpha(0.8f);
+        // 设置好参数之后再show
+        popupWindow.showAsDropDown(view);
+
+    }
+
+    /**
+     * 设置添加屏幕的背景透明度
+     *
+     * @param bgAlpha
+     */
+    public void backgroundAlpha(float bgAlpha) {
+        WindowManager.LayoutParams lp = getActivity().getWindow().getAttributes();
+        lp.alpha = bgAlpha; //0.0-1.0
+        getActivity().getWindow().setAttributes(lp);
+    }
 
 	/**
 	 * 注册接收消息的广播
@@ -378,78 +463,84 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
-				List<Channel> channelList = new ArrayList<Channel>();
-				channelList.addAll(originChannelList);
-				if (channelList.size() > 0) {
-					Iterator<Channel> it = channelList.iterator();
-					//将没有消息的单聊和没有消息的但不是自己创建的群聊隐藏掉
-					while (it.hasNext()) {
-						Channel channel = it.next();
-						channel.setIsSetTop(false);
-						int unReadCount = MsgReadIDCacheUtils.getNotReadMsgCount(
-								getActivity(), channel.getCid());
-						channel.setUnReadCount(unReadCount);
-						setChannelDisplayTitle(channel);
-						if (channel.getNewMsgList().size() == 0) {
-							if (channel.getType().equals("DIRECT")) {
-								it.remove();
-							} else if (channel.getType().equals("GROUP")) {
-								ChannelGroup channelGroup = ChannelGroupCacheUtils.getChannelGroupById(getActivity(), channel.getCid());
-								String myUid = ((MyApplication) getActivity().getApplicationContext()).getUid();
-								if (channelGroup != null && !channelGroup.getOwner().equals(myUid)) {
+				//解决刚打开页面就退出应用找不到上下文的问题
+				try {
+					List<Channel> channelList = new ArrayList<Channel>();
+					channelList.addAll(originChannelList);
+					if (channelList.size() > 0) {
+						Iterator<Channel> it = channelList.iterator();
+						//将没有消息的单聊和没有消息的但不是自己创建的群聊隐藏掉
+						while (it.hasNext()) {
+							Channel channel = it.next();
+							channel.setIsSetTop(false);
+							int unReadCount = MsgReadIDCacheUtils.getNotReadMsgCount(
+									getActivity(), channel.getCid());
+							channel.setUnReadCount(unReadCount);
+							setChannelDisplayTitle(channel);
+							if (channel.getNewMsgList().size() == 0) {
+								if (channel.getType().equals("DIRECT")) {
 									it.remove();
+								} else if (channel.getType().equals("GROUP")) {
+									ChannelGroup channelGroup = ChannelGroupCacheUtils.getChannelGroupById(getActivity(), channel.getCid());
+									String myUid = ((MyApplication) getActivity().getApplicationContext()).getUid();
+									if (channelGroup != null && !channelGroup.getOwner().equals(myUid)) {
+										it.remove();
+									}
 								}
 							}
 						}
-					}
 
-					List<ChannelOperationInfo> hideChannelOpList = ChannelOperationCacheUtils
-							.getHideChannelOpList(getActivity());
-					// 如果隐藏的频道中有未读消息则取消隐藏
-					if (hideChannelOpList != null) {
-						for (int i = 0; i < hideChannelOpList.size(); i++) {
-							String cid = hideChannelOpList.get(i).getCid();
-							int index = channelList.indexOf(new Channel(cid));
-							if (index != -1) {
-								Channel channel = channelList.get(index);
-								if (channel.getNewestMid() != null
-										&& !MsgReadIDCacheUtils.isMsgHaveRead(
-										getActivity(), cid,
-										channel.getNewestMid())) {
-									ChannelOperationCacheUtils.setChannelHide(
-											getActivity(), cid, false);
-								} else {
-									channelList.remove(index); // 如果没有未读消息则删除
+						List<ChannelOperationInfo> hideChannelOpList = ChannelOperationCacheUtils
+								.getHideChannelOpList(getActivity());
+						// 如果隐藏的频道中有未读消息则取消隐藏
+						if (hideChannelOpList != null) {
+							for (int i = 0; i < hideChannelOpList.size(); i++) {
+								String cid = hideChannelOpList.get(i).getCid();
+								int index = channelList.indexOf(new Channel(cid));
+								if (index != -1) {
+									Channel channel = channelList.get(index);
+									if (channel.getNewestMid() != null
+											&& !MsgReadIDCacheUtils.isMsgHaveRead(
+											getActivity(), cid,
+											channel.getNewestMid())) {
+										ChannelOperationCacheUtils.setChannelHide(
+												getActivity(), cid, false);
+									} else {
+										channelList.remove(index); // 如果没有未读消息则删除
+									}
 								}
 							}
 						}
-					}
 
-					// 处理置顶的频道
-					List<ChannelOperationInfo> setTopChannelOpList = ChannelOperationCacheUtils
-							.getSetTopChannelOpList(getActivity());
-					List<Channel> setTopChannelList = new ArrayList<Channel>();
-					if (setTopChannelOpList != null) {
-						for (int i = 0; i < setTopChannelOpList.size(); i++) {
-							String cid = setTopChannelOpList.get(i).getCid();
-							int index = channelList.indexOf(new Channel(cid));
-							if (index != -1) {
-								Channel setTopChannel = channelList.get(index);
-								setTopChannel.setIsSetTop(true);
-								setTopChannelList.add(setTopChannel);
-								channelList.remove(index);
+						// 处理置顶的频道
+						List<ChannelOperationInfo> setTopChannelOpList = ChannelOperationCacheUtils
+								.getSetTopChannelOpList(getActivity());
+						List<Channel> setTopChannelList = new ArrayList<Channel>();
+						if (setTopChannelOpList != null) {
+							for (int i = 0; i < setTopChannelOpList.size(); i++) {
+								String cid = setTopChannelOpList.get(i).getCid();
+								int index = channelList.indexOf(new Channel(cid));
+								if (index != -1) {
+									Channel setTopChannel = channelList.get(index);
+									setTopChannel.setIsSetTop(true);
+									setTopChannelList.add(setTopChannel);
+									channelList.remove(index);
+								}
 							}
 						}
-					}
 
-					// 所有显得的频道进行统一排序
-					Collections.sort(channelList, new SortComparator());
-					channelList.addAll(0, setTopChannelList);
+						// 所有显得的频道进行统一排序
+						Collections.sort(channelList, new SortComparator());
+						channelList.addAll(0, setTopChannelList);
+					}
+					Message message = new Message();
+					message.obj = channelList;
+					message.what =SORT_CHANNEL_COMPLETE;
+					handler.sendMessage(message);
+				}catch (Exception e){
+					e.printStackTrace();
 				}
-				Message message = new Message();
-				message.obj = channelList;
-				message.what =SORT_CHANNEL_COMPLETE;
-				handler.sendMessage(message);
+
 			}
 		}).start();
 
@@ -520,7 +611,6 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
                             addChannelToList(receivedMsg, receiveMsgChannel);
                             sortChannelList(displayChannelList);
                         }
-
 						break;
 					case RERESH_GROUP_ICON:
 						boolean isCreateNewGroupIcon = (Boolean) msg.obj;
@@ -1015,6 +1105,7 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 				break;
 			}
 		}
+		refreshIndexNotify();
 		if (adapter != null){
 			adapter.notifyDataSetChanged();
 		}
@@ -1116,12 +1207,22 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 						&& NetUtils.isNetworkConnected(getActivity())) {
 					creatGroupChannel(peopleArray);
 				}
-
 			} catch (JSONException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 				ToastUtils.show(getActivity(),
 						getActivity().getString(R.string.creat_group_fail));
+			}
+		} else if ((resultCode == RESULT_OK) && (requestCode == SCAN_LOGIN_QRCODE_RESULT)) {
+			if (data.hasExtra("isDecodeSuccess")) {
+				boolean isDecodeSuccess = data.getBooleanExtra("isDecodeSuccess", false);
+				if (isDecodeSuccess) {
+					String msg = data.getStringExtra("msg");
+					LogUtils.YfcDebug("解析到的信息：" + msg);
+					ScanQrCodeUtils.getScanQrCodeUtilsInstance(getActivity()).handleActionWithMsg(msg);
+				} else {
+					LogUtils.YfcDebug("解析失败");
+				}
 			}
 		}
 	}

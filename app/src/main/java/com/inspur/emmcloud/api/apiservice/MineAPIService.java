@@ -15,13 +15,13 @@ import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.bean.GetBindingDeviceResult;
 import com.inspur.emmcloud.bean.GetBoolenResult;
 import com.inspur.emmcloud.bean.GetCardPackageListResult;
+import com.inspur.emmcloud.bean.GetDeviceLogResult;
 import com.inspur.emmcloud.bean.GetLanguageResult;
 import com.inspur.emmcloud.bean.GetMDMStateResult;
 import com.inspur.emmcloud.bean.GetUploadMyHeadResult;
 import com.inspur.emmcloud.bean.UserProfileInfoBean;
 import com.inspur.emmcloud.callback.OauthCallBack;
 import com.inspur.emmcloud.util.AppUtils;
-import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.OauthUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.UriUtils;
@@ -364,6 +364,50 @@ public class MineAPIService {
 			public void callbackFail(String error, int responseCode) {
 				// TODO Auto-generated method stub
 				apiInterface.returnBindingDeviceListFail(error,responseCode);
+			}
+		});
+	}
+
+
+	/**
+	 * 获取当前绑定设备列表
+	 */
+	public void getDeviceLogList(final String udid) {
+		final String completeUrl = APIUri.getDeviceLogUrl();
+		RequestParams params =
+				((MyApplication) context.getApplicationContext()).getHttpRequestParams(completeUrl);
+		params.addParameter("udid",udid);
+		x.http().post(params, new APICallback(context, completeUrl) {
+
+			@Override
+			public void callbackTokenExpire() {
+				// TODO Auto-generated method stub
+				new OauthUtils(new OauthCallBack() {
+
+					@Override
+					public void reExecute() {
+						getDeviceLogList(udid);
+					}
+
+					@Override
+					public void executeFailCallback() {
+						callbackFail("", -1);
+					}
+				}, context).refreshToken(completeUrl);
+			}
+
+			@Override
+			public void callbackSuccess(String arg0) {
+				// TODO Auto-generated method stub
+				apiInterface
+						.returnDeviceLogListSuccess(new GetDeviceLogResult(
+								arg0));
+			}
+
+			@Override
+			public void callbackFail(String error, int responseCode) {
+				// TODO Auto-generated method stub
+				apiInterface.returnDeviceLogListFail(error,responseCode);
 			}
 		});
 	}

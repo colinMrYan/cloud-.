@@ -41,6 +41,19 @@ public class ChannelGroupCacheUtils {
     }
 
     /**
+     * 清除ChannelGroup信息
+     * @param context
+     */
+    public static void clearChannelGroupList(final Context context){
+        try {
+            DbCacheUtils.getDb(context).deleteAll(ChannelGroup.class);
+        } catch (Exception e) {
+            // TODO: handle exception
+            e.printStackTrace();
+        }
+    }
+
+    /**
      * 存储群组信息
      *
      * @param context

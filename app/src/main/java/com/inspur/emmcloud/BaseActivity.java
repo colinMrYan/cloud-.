@@ -38,7 +38,7 @@ public class BaseActivity extends Activity {
      */
     private void startUploadPVCollectService() {
         // TODO Auto-generated method stub
-        if (!AppUtils.isServiceWork(getApplicationContext(), "com.inspur.emmcloud.service.CollectService")&& (!DbCacheUtils.isDbNull())) {
+        if (!AppUtils.isServiceWork(getApplicationContext(), "com.inspur.emmcloud.service.CollectService") && (!DbCacheUtils.isDbNull())) {
             Intent intent = new Intent();
             intent.setClass(this, PVCollectService.class);
             startService(intent);
@@ -60,32 +60,15 @@ public class BaseActivity extends Activity {
         }
     }
 
-//	@Override
-//	public Resources getResources() {
-//	    Resources res = super.getResources();
-//	    Configuration config=new Configuration();
-//	    config.setToDefaults();
-//	    res.updateConfiguration(config,res.getDisplayMetrics() );
-//	    return res;
-//	}
-
     /**
      * 上传MDM需要的设备信息
      */
     private void uploadMDMInfo() {
-        if (NetUtils.isNetworkConnected(this,false)) {
+        if (NetUtils.isNetworkConnected(this, false)) {
             new AppAPIService(this).uploadMDMInfo();
         }
 
     }
-
-
-    //修改本地字体方案预留
-//	@Override
-//	protected void attachBaseContext(Context newBase) {
-//		super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
-//
-//	}
 
 
 }

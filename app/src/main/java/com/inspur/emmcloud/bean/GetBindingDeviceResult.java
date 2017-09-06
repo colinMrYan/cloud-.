@@ -1,6 +1,9 @@
 package com.inspur.emmcloud.bean;
 
+import com.inspur.emmcloud.util.JSONUtils;
+
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,20 +13,28 @@ import java.util.List;
  */
 
 public class GetBindingDeviceResult {
-	private List<BindingDevice> bindingDeviceList = new ArrayList<>();
-	public  GetBindingDeviceResult(String response){
-		try {
-			JSONArray array = new JSONArray(response);
-			for (int i=0;i<array.length();i++){
-				bindingDeviceList.add(new BindingDevice(array.getJSONObject(i)));
-			}
-		}catch (Exception e){
-			e.printStackTrace();
-		}
+    private List<BindingDevice> currentDeviceList = new ArrayList<>();
+    private List<BindingDevice> historyDeviceList = new ArrayList<>();
 
-	}
+    public GetBindingDeviceResult(String response) {
+        JSONArray currentDeviceArray = JSONUtils.getJSONArray(response, "currentDevices", new JSONArray());
+        JSONArray historyDeviceArray = JSONUtils.getJSONArray(response, "historyDevices", new JSONArray());
+        for (int i = 0; i < currentDeviceArray.length(); i++) {
+            JSONObject obj = JSONUtils.getJSONObject(currentDeviceArray, i, new JSONObject());
+            currentDeviceList.add(new BindingDevice(obj));
+        }
+        for (int i = 0; i < historyDeviceArray.length(); i++) {
+            JSONObject obj = JSONUtils.getJSONObject(historyDeviceArray, i, new JSONObject());
+            historyDeviceList.add(new BindingDevice(obj));
+        }
 
-	public List<BindingDevice> getBindingDeviceList(){
-		return  bindingDeviceList;
-	}
+    }
+
+    public List<BindingDevice> getCurrentDeviceList() {
+        return currentDeviceList;
+    }
+
+    public List<BindingDevice> getHistoryDeviceList() {
+        return historyDeviceList;
+    }
 }

@@ -1,13 +1,12 @@
 package com.inspur.emmcloud.util;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.content.Context;
 
 import com.inspur.emmcloud.bean.Robot;
 import com.lidroid.xutils.db.sqlite.Selector;
-import com.lidroid.xutils.exception.DbException;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 机器人增删改查
@@ -28,6 +27,18 @@ public class RobotCacheUtils {
 		}
 		try {
 			DbCacheUtils.getDb(context).saveOrUpdateAll(robotList);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * 清空机器人信息
+	 * @param context
+	 */
+	public static void clearRobotList(Context context){
+		try {
+			DbCacheUtils.getDb(context).deleteAll(Robot.class);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

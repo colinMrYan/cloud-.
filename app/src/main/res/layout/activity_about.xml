@@ -47,7 +47,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/header_layout"
-        android:layout_marginTop="15dp"
+        android:paddingTop="15dp"
+        android:paddingBottom="15dp"
+        android:background="@color/content_bg"
         android:gravity="center"
         android:orientation="vertical">
 
@@ -70,43 +72,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/header_image_layout"
-        android:layout_marginTop="15dp"
-        android:background="#ffffff"
+        android:background="@color/content_bg"
         android:orientation="vertical">
-        <!-- 
-<View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="#dadadd" />
-        <RelativeLayout
-            android:id="@+id/welcome_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:onClick="onClick"
-            android:paddingLeft="12dp"
-            android:background="@drawable/text_layout_selector" >
-
-            <TextView
-                android:id="@+id/welcome_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:paddingBottom="10dp"
-                android:paddingTop="10dp"
-                android:text="@string/about_welcome_text"
-                android:textSize="@dimen/content_normal_textsize" />
-            <ImageView
-                android:id="@+id/msg_notify_img"
-                android:layout_width="15dp"
-                android:layout_height="15dp"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:src="@drawable/icon_arrow_right" />
-        </RelativeLayout>
-         -->
-        <!-- 细线 -->
 
         <View
             android:layout_width="match_parent"

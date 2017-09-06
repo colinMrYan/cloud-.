@@ -47,14 +47,12 @@ import com.nostra13.universalimageloader.cache.memory.impl.UsingFreqLimitedMemor
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
-import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
+import com.nostra13.universalimageloader.utils.L;
 
 import org.xutils.http.RequestParams;
 import org.xutils.x;
 
 import java.io.File;
-import java.io.IOException;
-import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
@@ -74,14 +72,10 @@ import static com.inspur.emmcloud.config.MyAppConfig.LOCAL_CACHE_MARKDOWN_PATH;
 public class MyApplication extends MultiDexApplication implements ReactApplication {
     private static final String TAG = "MyApplication";
     private List<Activity> activityList = new LinkedList<Activity>();
-    private List<Activity> contactActivityList = new LinkedList<Activity>();
-
     private boolean isIndexActivityRunning = false;
     private boolean isActive = false;
-    private boolean isChannelActivityRunning = false;
     private WebSocketPush webSocketPush;
     private static boolean isContactReady = false;
-
     private boolean isTokenRefreshing = false;
     private List<OauthCallBack> callBackList = new ArrayList<OauthCallBack>();
     private String uid;
@@ -89,36 +83,9 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
     private Enterprise currentEnterprise;
     private Map<String, String> userPhotoUrlMap;
 
-
-    private final ReactNativeHost mReactNativeHost = new ReactNativeHost(this) {
-        @Override
-        public boolean getUseDeveloperSupport() {
-            return com.facebook.react.BuildConfig.DEBUG;
-        }
-
-        @Override
-        protected List<ReactPackage> getPackages() {
-            return Arrays.<ReactPackage>asList(
-                    new MainReactPackage(),
-                    new AuthorizationManagerPackage(),
-                    new PickerViewPackage()
-            );
-        }
-    };
-
-    @Override
-    public ReactNativeHost getReactNativeHost() {
-        return mReactNativeHost;
-    }
-
     public void onCreate() {
         super.onCreate();
         init();
-        isActive = false;
-        isContactReady = PreferencesUtils.getBoolean(getApplicationContext(),
-                "isContactReady", false);
-        uid = PreferencesUtils.getString(getApplicationContext(), "userID");
-        accessToken = PreferencesUtils.getString(getApplicationContext(), "accessToken", "");
         setAppLanguageAndFontScale();
         removeAllSessionCookie();
     }
@@ -130,7 +97,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         crashHandler.init(getApplicationContext());
         x.Ext.init(MyApplication.this);
         x.Ext.setDebug(LogUtils.isDebug);
-        SoLoader.init(this, false);
+        SoLoader.init(this, false);//ReactNative相关初始化
         Res.init(this); // 注册imp的资源文件类
         initImageLoader();
         initTanent();
@@ -143,6 +110,12 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
 
             }
         };
+        PreferencesUtils.putString(this, "pushFlag", "");
+        isActive = false;
+        isContactReady = PreferencesUtils.getBoolean(getApplicationContext(),
+                "isContactReady", false);
+        uid = PreferencesUtils.getString(getApplicationContext(), "userID");
+        accessToken = PreferencesUtils.getString(getApplicationContext(), "accessToken", "");
 
     }
 /****************************通知相关（极光和华为推送）******************************************/
@@ -150,25 +123,27 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
      * 初始化推送，以后如需定制小米等厂家的推送服务可从这里定制
      */
     public void startPush() {
-        if (AppUtils.getIsHuaWei()) {
-            JPushInterface.stopPush(this);
+        if (AppUtils.getIsHuaWei()&&canConnectHuawei()) {
             HuaWeiPushMangerUtils.getInstance(this).connect();
         } else {
-            // 设置开启日志,发布时请关闭日志
-            JPushInterface.setDebugMode(true);
             // 初始化 JPush
             JPushInterface.init(this);
-            // 获取和存储RegId
-            String pushRegId = JPushInterface
-                    .getRegistrationID(getApplicationContext());
-            if (!StringUtils.isBlank(pushRegId)) {
-                PreferencesUtils.putString(getApplicationContext(), "JpushRegId",
-                        pushRegId);
-            }
             if (JPushInterface.isPushStopped(this)) {
                 JPushInterface.resumePush(this);
             }
+            // 设置开启日志,发布时请关闭日志
+            JPushInterface.setDebugMode(true);
         }
+    }
+
+    /**
+     * 判断是否可以连接华为推了送
+     *
+     * @return
+     */
+    private boolean canConnectHuawei() {
+        String pushFlag = PreferencesUtils.getString(this, "pushFlag", "");
+        return (StringUtils.isBlank(pushFlag) || pushFlag.equals("huawei"));
     }
 
     /**
@@ -347,15 +322,6 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
 
     public WebSocketPush getWebSocketPush() {
         return webSocketPush;
-    }
-
-    /**
-     * 关闭推送
-     */
-    public void stopWebSocket() {
-        if (webSocketPush != null) {
-            webSocketPush.closeSocket();
-        }
     }
 
     /**
@@ -567,8 +533,6 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
             config = new ImageLoaderConfiguration.Builder(
                     getApplicationContext())
                     .memoryCacheExtraOptions(1200, 1200)
-                    .imageDownloader(
-                            new CustomImageDownloader(getApplicationContext()))
                     .threadPoolSize(6)
                     .threadPriority(Thread.NORM_PRIORITY - 1)
                     .denyCacheImageMultipleSizesInMemory()
@@ -588,8 +552,6 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
             config = new ImageLoaderConfiguration.Builder(
                     getApplicationContext())
                     .memoryCacheExtraOptions(1200, 1200)
-                    .imageDownloader(
-                            new CustomImageDownloader(getApplicationContext()))
                     .threadPoolSize(6)
                     .threadPriority(Thread.NORM_PRIORITY - 1)
                     .denyCacheImageMultipleSizesInMemory()
@@ -603,31 +565,11 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
                     .diskCacheFileNameGenerator(new HashCodeFileNameGenerator())
                     .build();
         }
-        // L.disableLogging(); // 关闭imageloader的疯狂的log
+        L.disableLogging(); // 关闭imageloader的疯狂的log
         ImageLoader.getInstance().init(config);
 
     }
 
-    public class CustomImageDownloader extends BaseImageDownloader {// universal
-
-        // image
-        // loader获取图片时,若需要cookie，
-        // 需在application中进行配置添加此类。
-        public CustomImageDownloader(Context context) {
-            super(context);
-        }
-
-        @Override
-        protected HttpURLConnection createConnection(String url, Object extra)
-                throws IOException {
-            // Super...
-            HttpURLConnection connection = super.createConnection(url, extra);
-            // connection.setRequestProperty("Authorization", getToken());
-            connection.setRequestProperty("Connection", "keep-Alive");
-            connection.setRequestProperty("User-Agent", "jsgdMobile");
-            return connection;
-        }
-    }
 
     /**
      * 添加桌面快捷方式
@@ -660,26 +602,6 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         context.sendBroadcast(shortcutIntent);
     }
 
-    /**
-     * 添加通讯录Activity的实例
-     */
-    public void addContactActivity(Activity activity) {
-        contactActivityList.add(activity);
-    }
-
-    /**
-     * 关闭通讯录Activity的实例
-     */
-    public void closeContactActivity() {
-        try {
-            for (Activity activity : contactActivityList) {
-                if (activity != null)
-                    activity.finish();
-            }
-        } catch (Exception e) {
-            LogUtils.exceptionDebug(TAG, e.toString());
-        }
-    }
 
     // 判断IndexActivity是否存在的标志
     public boolean isIndexActivityRunning() {
@@ -690,14 +612,6 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         isIndexActivityRunning = running;
     }
 
-    // 判断会话窗口ChannelActivity是否存在的标志
-    public boolean isChannelActivityRunning() {
-        return isChannelActivityRunning;
-    }
-
-    public void setChannelActivityRunning(boolean isChannelActivityRunning) {
-        this.isChannelActivityRunning = isChannelActivityRunning;
-    }
 
     public void addActivity(Activity activity) {
         activityList.add(activity);
@@ -723,9 +637,41 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         System.gc();
     }
 
+    /**
+     * 清除app所有的通知
+     */
     public void clearNotification() {
         NotificationManager manager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
         manager.cancelAll();
+    }
+
+
+    /**
+     * ReactNative相关代码
+     */
+    private final ReactNativeHost mReactNativeHost = new ReactNativeHost(this) {
+        @Override
+        public boolean getUseDeveloperSupport() {
+            return com.facebook.react.BuildConfig.DEBUG;
+        }
+
+        @Override
+        protected List<ReactPackage> getPackages() {
+            return Arrays.<ReactPackage>asList(
+                    new MainReactPackage(),
+                    new AuthorizationManagerPackage(),
+                    new PickerViewPackage()
+            );
+        }
+    };
+
+    /**
+     * ReactNative相关代码
+     * @return
+     */
+    @Override
+    public ReactNativeHost getReactNativeHost() {
+        return mReactNativeHost;
     }
 
 }

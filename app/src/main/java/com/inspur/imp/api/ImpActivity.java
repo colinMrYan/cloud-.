@@ -76,7 +76,6 @@ public class ImpActivity extends ImpBaseActivity {
         initViews();
     }
 
-
     /**
      * 初始化Views
      */
@@ -97,6 +96,12 @@ public class ImpActivity extends ImpBaseActivity {
             }
         } else {
             findViewById(R.id.imp_change_font_size_btn).setVisibility(View.GONE);
+        }
+        if(getIntent().hasExtra("help_url")){
+            String helpUrl = getIntent().getStringExtra("help_url");
+            if(!StringUtils.isBlank(helpUrl)){
+                //显示帮助按钮，并监听相关事件
+            }
         }
         getWindow().setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE

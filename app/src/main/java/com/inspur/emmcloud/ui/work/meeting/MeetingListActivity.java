@@ -512,7 +512,13 @@ public class MeetingListActivity extends BaseActivity implements
 
 	@Override
 	public void onRefresh(PullToRefreshLayout pullToRefreshLayout) {
-		getMeetings(false);
+		if(NetUtils.isNetworkConnected(MeetingListActivity.this)){
+			getMeetings(false);
+		}else {
+			if(pullToRefreshLayout != null){
+				pullToRefreshLayout.refreshFinish(PullToRefreshLayout.FAIL);
+			}
+		}
 	}
 
 	@Override
