@@ -814,5 +814,7 @@
     <string name="safe_center_enable">已啟用</string>
     <string name="safe_center_unenable">未啟用</string>
 
+    <string name="qr_code_analysis_fail">二維碼解析失敗</string>
+
 
 </resources>

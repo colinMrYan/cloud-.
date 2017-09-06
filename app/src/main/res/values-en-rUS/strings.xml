@@ -811,4 +811,7 @@
     <string name="safe_center_enable">Enabled</string>
     <string name="safe_center_unenable">Not enabled</string>
 
+    <string name="qr_code_analysis_fail">Qr code parsing failed</string>
+
+
 </resources>

@@ -35,6 +35,10 @@ public class ScanQrCodeUtils {
         loadingDialog = new LoadingDialog(context);
     }
 
+    /**
+     * 处理扫描到的信息
+     * @param msg
+     */
     public void handleActionWithMsg(String msg){
         //暂时保留此处作为方案参考
 //        String urlHost = "";
@@ -48,19 +52,8 @@ public class ScanQrCodeUtils {
 //            e.printStackTrace();
 //        }
 //        ToastUtils.show(context,msg);
-        LogUtils.YfcDebug("扫描到的信息是："+msg);
         Pattern pattern = Pattern.compile(URLMatcher.URL_PATTERN);
-//        !StringUtils.isBlank(urlHost)&&urlHost.equals("id.inspur.com")
         msg = msg.trim();
-//        if(msg.startsWith("ecc-compont://auth")){
-//            Intent intent = new Intent();
-//            intent.setClass(context, ScanQrCodeLoginActivity.class);
-//            intent.putExtra("scanMsg",msg);
-//            context.startActivity(intent);
-//            loginDesktopCloudPlus(msg);
-//            pattern.matcher(msg).matches()
-//            msg.startsWith("http")
-//        }else
         if(isMatchCloudPlusProtrol(msg)){
             Uri uri = Uri.parse(msg);
             Intent intent = new Intent(Intent.ACTION_VIEW, uri);

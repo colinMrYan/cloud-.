@@ -844,4 +844,6 @@
     <string name="safe_center_unenable">未启用</string>
 
 
+    <string name="qr_code_analysis_fail">二维码解析失败</string>
+
 </resources>
