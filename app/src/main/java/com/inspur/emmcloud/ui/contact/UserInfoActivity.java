@@ -62,8 +62,7 @@ public class UserInfoActivity extends BaseActivity {
 		phoneNumText = (TextView) findViewById(R.id.phone_num_text);
 		photoImg = (ImageView) findViewById(R.id.photo_img);
 		nameText = (TextView) findViewById(R.id.name_text);
-		imageDisplayUtils = new ImageDisplayUtils(getApplicationContext(),
-				R.drawable.icon_person_default);
+		imageDisplayUtils = new ImageDisplayUtils(R.drawable.icon_person_default);
 		apiService = new ChatAPIService(UserInfoActivity.this);
 		apiService.setAPIInterface(new Webservice());
 		loadingDlg = new LoadingDialog(UserInfoActivity.this);
@@ -161,7 +160,7 @@ public class UserInfoActivity extends BaseActivity {
 		} else {
 			nameText.setText(name);
 		}
-		imageDisplayUtils.display(photoImg, headUrl);
+		imageDisplayUtils.displayImage(photoImg, headUrl);
 		String myUid = ((MyApplication)getApplicationContext()).getUid();
 		if (StringUtils.isBlank(inspurID)|| inspurID.equals(myUid)) {
 			(findViewById(R.id.start_chat_img))

@@ -89,7 +89,7 @@ public class MoreFragment extends Fragment {
         (rootView.findViewById(R.id.customer_layout)).setOnClickListener(onClickListener);
         (rootView.findViewById(R.id.scan_login_desktop_layout)).setOnClickListener(onClickListener);
         moreHeadImg = (ImageView) rootView.findViewById(R.id.more_head_img);
-        imageDisplayUtils = new ImageDisplayUtils(getActivity(), R.drawable.icon_photo_default);
+        imageDisplayUtils = new ImageDisplayUtils(R.drawable.icon_photo_default);
     }
 
 
@@ -99,7 +99,7 @@ public class MoreFragment extends Fragment {
         getMyInfoResult = new GetMyInfoResult(myInfo);
         String inspurId = getMyInfoResult.getID();
         String photoUri = UriUtils.getChannelImgUri(getActivity(),inspurId);
-        imageDisplayUtils.display(moreHeadImg, photoUri);
+        imageDisplayUtils.displayImage(moreHeadImg, photoUri);
         String userName = PreferencesUtils.getString(getActivity(), "userRealName", getString(R.string.not_set));
         ((TextView) rootView.findViewById(R.id.more_head_name_text)).setText(userName);
         ((TextView) rootView.findViewById(R.id.more_head_enterprise_text)).setText(((MyApplication)getActivity().getApplicationContext()).getCurrentEnterprise().getName());
@@ -117,7 +117,7 @@ public class MoreFragment extends Fragment {
                     case UPDATE_MY_HEAD:
                         getMyInfoResult.setAvatar((String) msg.obj);
                         String userheadUrl = "https://mob.inspur.com" + getMyInfoResult.getAvatar();
-                        imageDisplayUtils.display(moreHeadImg, userheadUrl);
+                        imageDisplayUtils.displayImage(moreHeadImg, userheadUrl);
                         break;
                     default:
                         break;

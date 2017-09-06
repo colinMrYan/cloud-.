@@ -28,7 +28,7 @@ import android.widget.ImageView;
 /**
  * An easy adapter to map columns from a cursor to TextViews or ImageViews
  * defined in an XML file. You can specify which columns you want, which
- * views you want to display the columns, and the XML file that defines
+ * views you want to displayImage the columns, and the XML file that defines
  * the appearance of these views.
  *
  * Binding occurs in two phases. First, if a
@@ -96,7 +96,7 @@ public class SimpleDragSortCursorAdapter extends ResourceDragSortCursorAdapter {
      * @param c The database cursor.  Can be null if the cursor is not available yet.
      * @param from A list of column names representing the data to bind to the UI.  Can be null 
      *            if the cursor is not available yet.
-     * @param to The views that should display column in the "from" parameter.
+     * @param to The views that should displayImage column in the "from" parameter.
      *            These should all be TextViews. The first N views in this list
      *            are given the values of the first N columns in the from
      *            parameter.  Can be null if the cursor is not available yet.
@@ -356,7 +356,7 @@ public class SimpleDragSortCursorAdapter extends ResourceDragSortCursorAdapter {
      * @param c The database cursor.  Can be null if the cursor is not available yet.
      * @param from A list of column names representing the data to bind to the UI.  Can be null 
      *            if the cursor is not available yet.
-     * @param to The views that should display column in the "from" parameter.
+     * @param to The views that should displayImage column in the "from" parameter.
      *            These should all be TextViews. The first N views in this list
      *            are given the values of the first N columns in the from
      *            parameter.  Can be null if the cursor is not available yet.

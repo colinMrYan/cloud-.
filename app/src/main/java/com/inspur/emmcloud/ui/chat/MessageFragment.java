@@ -907,7 +907,7 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
                         UriUtils.tanent + channel.getCid() + "_100.png1");
                 if (file.exists()) {
                     iconUrl = "file://" + file.getAbsolutePath();
-                    new ImageDisplayUtils().displayNoCachePic(channelPhotoImg, iconUrl, defaultIcon);
+                    new ImageDisplayUtils().displayImageNoCache(channelPhotoImg, iconUrl, defaultIcon);
                     return;
                 }
             } else if (channel.getType().equals("DIRECT")) {
@@ -918,7 +918,7 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
                 defaultIcon = R.drawable.icon_person_default;
                 iconUrl = DirectChannelUtils.getRobotIcon(getActivity(), channel.getTitle());
             }
-            new ImageDisplayUtils(getActivity(), defaultIcon).display(
+            new ImageDisplayUtils(defaultIcon).displayImage(
                     channelPhotoImg, iconUrl);
 
 
