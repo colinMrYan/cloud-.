@@ -85,7 +85,7 @@ public class SafeCenterActivity extends BaseActivity {
      * @return
      */
     private boolean getHasGesturePassword() {
-        String gestureCode = PreferencesByUserAndTanentUtils.getString(SafeCenterActivity.this,"gesture_code");
+        String gestureCode = CreateGestureActivity.getGestureCodeByUser(SafeCenterActivity.this);
         return !StringUtils.isBlank(gestureCode);
     }
 
@@ -94,7 +94,7 @@ public class SafeCenterActivity extends BaseActivity {
      * @return
      */
     public boolean getGestureCodeIsOpen(){
-        return PreferencesByUserAndTanentUtils.getBoolean(SafeCenterActivity.this,"gesture_code_isopen",false);
+        return CreateGestureActivity.getGestureCodeIsOpenByUser(SafeCenterActivity.this);
     }
 
     /**

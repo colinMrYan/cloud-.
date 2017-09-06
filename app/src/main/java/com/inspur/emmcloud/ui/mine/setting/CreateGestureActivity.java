@@ -1,5 +1,6 @@
 package com.inspur.emmcloud.ui.mine.setting;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.TextView;
@@ -7,7 +8,7 @@ import android.widget.Toast;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.util.PreferencesByUserAndTanentUtils;
+import com.inspur.emmcloud.util.PreferencesByUsersUtils;
 import com.inspur.emmcloud.util.StateBarColor;
 import com.inspur.emmcloud.util.ninelock.LockPatternIndicator;
 import com.inspur.emmcloud.util.ninelock.LockPatternUtil;
@@ -143,7 +144,7 @@ public class CreateGestureActivity extends BaseActivity {
      */
 	private void setLockPatternSuccess() {
 		Toast.makeText(this, getString(R.string.create_gesture_confirm_correct), Toast.LENGTH_SHORT).show();
-		PreferencesByUserAndTanentUtils.putBoolean(CreateGestureActivity.this,GESTURE_CODE_ISOPEN,true);
+		putGestureCodeIsOpenByUser(CreateGestureActivity.this,true);
 		finish();
 	}
 
@@ -152,7 +153,7 @@ public class CreateGestureActivity extends BaseActivity {
 	 */
 	private void saveChosenPattern(List<LockPatternView.Cell> cells) {
 		String gestureCode = LockPatternUtil.patternToString(cells);
-		PreferencesByUserAndTanentUtils.putString(CreateGestureActivity.this,GESTURE_CODE,gestureCode);
+		putGestureCodeByUser(CreateGestureActivity.this,gestureCode);
 	}
 
 	private enum Status {
@@ -173,5 +174,39 @@ public class CreateGestureActivity extends BaseActivity {
 		}
 		private int strId;
 		private int colorId;
+	}
+
+	/**
+	 * 根据用户获取gesturecode
+	 * @param context
+	 * @return
+	 */
+	public static String getGestureCodeByUser(Context context){
+		return PreferencesByUsersUtils.getString(context, CreateGestureActivity.GESTURE_CODE);
+	}
+
+	/**
+	 * 根据用户获取是否打开了gesturecode
+	 * @param context
+	 * @return
+	 */
+	public static boolean getGestureCodeIsOpenByUser(Context context){
+		return PreferencesByUsersUtils.getBoolean(context,CreateGestureActivity.GESTURE_CODE_ISOPEN,false);
+	}
+
+	/**
+	 * 根据用户存储gesturecode
+	 * @param context
+	 */
+	public static void putGestureCodeByUser(Context context,String gestureCode){
+		PreferencesByUsersUtils.putString(context,GESTURE_CODE,gestureCode);
+	}
+
+	/**
+	 * 根据用户存储gesturecode是否打开
+	 * @param context
+	 */
+	public static void putGestureCodeIsOpenByUser(Context context,boolean isGestureCodeOpen){
+		PreferencesByUsersUtils.putBoolean(context,GESTURE_CODE_ISOPEN,isGestureCodeOpen);
 	}
 }

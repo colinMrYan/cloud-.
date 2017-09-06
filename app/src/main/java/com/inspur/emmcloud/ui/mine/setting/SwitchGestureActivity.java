@@ -8,7 +8,6 @@ import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.util.IntentUtils;
-import com.inspur.emmcloud.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.widget.SwitchView;
 
@@ -37,7 +36,7 @@ public class SwitchGestureActivity extends BaseActivity {
      * @return
      */
     private boolean getHasGesturePassword() {
-        String gestureCode = PreferencesByUserAndTanentUtils.getString(SwitchGestureActivity.this,"gesture_code");
+        String gestureCode = CreateGestureActivity.getGestureCodeByUser(SwitchGestureActivity.this);
         return !StringUtils.isBlank(gestureCode);
     }
 
@@ -90,7 +89,7 @@ public class SwitchGestureActivity extends BaseActivity {
      * @return
      */
     public boolean getGestureCodeIsOpen(){
-       return PreferencesByUserAndTanentUtils.getBoolean(SwitchGestureActivity.this,"gesture_code_isopen",false);
+       return CreateGestureActivity.getGestureCodeIsOpenByUser(SwitchGestureActivity.this);
     }
 
     /**
