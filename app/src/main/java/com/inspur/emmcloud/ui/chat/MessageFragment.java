@@ -170,7 +170,6 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
         super.onCreate(savedInstanceState);
         initView();
         registerMessageFragmentReceiver();
-        getChannelContent();
 		sortChannelList(getCacheData());// 对Channel 进行排序
         showMessageButtons();
         EventBus.getDefault().register(this);
@@ -1065,6 +1064,7 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 		if (socketStatus.equals("socket_connecting")){
 			titleText.setText(R.string.socket_connecting);
 		}else if (socketStatus.equals(Socket.EVENT_CONNECT)){
+			getChannelContent();
 			String appTabs = PreferencesByUserAndTanentUtils.getString(getActivity(),"app_tabbar_info_current","");
 			if(!StringUtils.isBlank(appTabs)){
 				titleText.setText(AppTitleUtils.getTabTitle(getActivity(),getClass().getSimpleName()));

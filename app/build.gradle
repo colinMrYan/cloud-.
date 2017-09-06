@@ -74,7 +74,7 @@ android {
     configurations.all {
         // React Native依赖的findbugs版本更高
         resolutionStrategy.force 'com.google.code.findbugs:jsr305:3.0.0',
-                'com.squareup.okhttp3:okhttp-ws:3.8.1'
+                'com.squareup.okhttp3:okhttp-ws:3.4.1'
     }
     lintOptions {
         lintConfig file("lint.xml")
