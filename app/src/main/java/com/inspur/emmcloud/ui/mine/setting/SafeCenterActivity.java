@@ -29,6 +29,7 @@ import com.wei.android.lib.fingerprintidentify.FingerprintIdentify;
 public class SafeCenterActivity extends BaseActivity {
 
     public static final String FINGER_PRINT_STATE = "finger_print_state";
+
     private LoadingDialog loadingDlg;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -197,8 +198,13 @@ public class SafeCenterActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.safe_center_gesture_layout:
-                intent.setClass(this, SwitchGestureActivity.class);
-                startActivity(intent);
+                if(getHasGesturePassword()&&getGestureCodeIsOpen()){
+                    intent.setClass(this, SwitchGestureActivity.class);
+                    startActivity(intent);
+                }else{
+                    intent.setClass(this, CreateGestureCodeGuidActivity.class);
+                    startActivity(intent);
+                }
                 break;
             case R.id.device_manager_layout:
                 intent.setClass(SafeCenterActivity.this,
@@ -209,6 +215,7 @@ public class SafeCenterActivity extends BaseActivity {
                 break;
         }
     }
+
 
 
     private class Webservice extends APIInterfaceInstance {

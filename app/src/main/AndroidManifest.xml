@@ -131,6 +131,9 @@
             android:name=".ui.mine.setting.CreateGestureActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"></activity>
+        <activity android:name=".ui.mine.setting.CreateGestureCodeGuidActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"></activity>
 
         <activity
             android:name=".ui.mine.setting.GestureLoginActivity"

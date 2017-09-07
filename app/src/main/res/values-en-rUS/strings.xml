@@ -811,6 +811,8 @@
     <string name="create_gesture_confirm_error">Inconsistent with previous drawing, please redraw</string>
     <string name="create_gesture_confirm_correct">Set successfully</string>
     <string name="create_gesture_reset">Reset</string>
+    <string name="create_gesture_code">Create gesture password</string>
+    <string name="create_gesture_guid">You can create a pattern to unlock</string>
     <string name="safe_center_enable">Enabled</string>
     <string name="safe_center_unenable">Not enabled</string>
 

@@ -8,12 +8,14 @@ import android.widget.Toast;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.util.IntentUtils;
 import com.inspur.emmcloud.util.PreferencesByUsersUtils;
 import com.inspur.emmcloud.util.StateBarColor;
 import com.inspur.emmcloud.util.ninelock.LockPatternIndicator;
 import com.inspur.emmcloud.util.ninelock.LockPatternUtil;
 import com.inspur.emmcloud.util.ninelock.LockPatternView;
 
+import org.greenrobot.eventbus.EventBus;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.Event;
 import org.xutils.view.annotation.ViewInject;
@@ -32,6 +34,7 @@ public class CreateGestureActivity extends BaseActivity {
 
 	public static final String GESTURE_CODE = "gesture_code";
 	public static final String GESTURE_CODE_ISOPEN = "gesture_code_isopen";
+	public static final String CREATE_GESTURE_CODE_SUCCESS = "create_gesture_code_success";
 	@ViewInject(R.id.lockPatterIndicator)
 	LockPatternIndicator lockPatternIndicator;
 	@ViewInject(R.id.lockPatternView)
@@ -145,7 +148,9 @@ public class CreateGestureActivity extends BaseActivity {
 	private void setLockPatternSuccess() {
 		Toast.makeText(this, getString(R.string.create_gesture_confirm_correct), Toast.LENGTH_SHORT).show();
 		putGestureCodeIsOpenByUser(CreateGestureActivity.this,true);
+		EventBus.getDefault().post(CREATE_GESTURE_CODE_SUCCESS);
 		finish();
+		IntentUtils.startActivity(CreateGestureActivity.this,SwitchGestureActivity.class);
 	}
 
 	/**

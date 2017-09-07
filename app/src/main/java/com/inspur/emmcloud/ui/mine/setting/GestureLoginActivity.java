@@ -287,27 +287,5 @@ public class GestureLoginActivity extends BaseActivity {
         super.onDestroy();
 //        EventBus.getDefault().unregister(this);
     }
-//
-//    //登出逻辑
-//    private void signout() {
-//        // TODO Auto-generated method stub
-//        if (((MyApplication) getApplicationContext()).getWebSocketPush() != null) {
-//            ((MyApplication) getApplicationContext()).getWebSocketPush()
-//                    .webSocketSignout();
-//        }
-//        //清除日历提醒极光推送本地通知
-//        CalEventNotificationUtils.cancelAllCalEventNotification(GestureLoginActivity.this);
-//        ((MyApplication) getApplicationContext()).stopPush();
-//        ((MyApplication) getApplicationContext()).clearNotification();
-//        ((MyApplication) getApplicationContext()).removeAllCookie();
-//        ((MyApplication) getApplicationContext()).clearUserPhotoMap();
-//        PreferencesUtils.putString(GestureLoginActivity.this, "tokenType", "");
-//        PreferencesUtils.putString(GestureLoginActivity.this, "accessToken", "");
-//        ((MyApplication) getApplicationContext()).setAccessToken("");
-//        Intent intent = new Intent();
-//        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//        intent.setClass(this, LoginActivity.class);
-//        startActivity(intent);
-//        this.finish();
-//    }
+
 }

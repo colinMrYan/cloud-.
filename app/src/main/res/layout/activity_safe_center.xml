@@ -125,7 +125,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:visibility="gone"
-        android:layout_below="@id/safe_center_gesture_layout"
+        android:layout_below="@id/device_manager_layout"
         android:background="@color/white"
         android:orientation="vertical"
         >
