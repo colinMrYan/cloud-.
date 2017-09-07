@@ -498,7 +498,7 @@ public class ContactSearchMoreActivity extends BaseActivity implements OnRefresh
 					UriUtils.tanent + searchModel.getId() + "_100.png1");
 			if (file.exists()) {
 				icon = "file://" + file.getAbsolutePath();
-				new ImageDisplayUtils().displayNoCachePic(photoImg, icon, defaultIcon);
+				new ImageDisplayUtils().displayImageNoCache(photoImg, icon, defaultIcon);
 				return;
 			}
 		} else if (type.equals("STRUCT")) {
@@ -510,7 +510,7 @@ public class ContactSearchMoreActivity extends BaseActivity implements OnRefresh
 			}
 
 		}
-		new ImageDisplayUtils(getApplicationContext(), defaultIcon).display(
+		new ImageDisplayUtils(defaultIcon).displayImage(
 				photoImg, icon);
 
 

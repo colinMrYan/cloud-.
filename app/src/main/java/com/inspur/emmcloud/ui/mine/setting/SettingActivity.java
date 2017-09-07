@@ -25,7 +25,6 @@ import com.inspur.emmcloud.util.IntentUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.ToastUtils;
 import com.inspur.emmcloud.util.UriUtils;
-import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.dialogs.EasyDialog;
 import com.inspur.emmcloud.widget.dialogs.MyDialog;
 
@@ -194,27 +193,25 @@ public class SettingActivity extends BaseActivity {
                 // TODO Auto-generated method stub
                 new Thread(new Runnable() {
 
-                    @Override
-                    public void run() {
-                        // TODO Auto-generated method stub
-                        String msgCachePath = Environment
-                                .getExternalStorageDirectory()
-                                + "/IMP-Cloud/download/";
-                        String imgCachePath = MyAppConfig.LOCAL_CACHE_PATH;
-                        DataCleanManager.cleanApplicationData(
-                                SettingActivity.this, msgCachePath,
-                                imgCachePath);
-                        ImageDisplayUtils imageDisplayUtils = new ImageDisplayUtils(
-                                getApplicationContext(),
-                                R.drawable.icon_photo_default);
-                        imageDisplayUtils.clearCache();
-                        handler.sendEmptyMessage(DATA_CLEAR_SUCCESS);
-                    }
-                }).start();
-                clearCacheDlg.dismiss();
-            }
-        });
-        clearWebCacheText.setOnClickListener(new OnClickListener() {
+					@Override
+					public void run() {
+						// TODO Auto-generated method stub
+						String msgCachePath = Environment
+								.getExternalStorageDirectory()
+								+ "/IMP-Cloud/download/";
+						String imgCachePath = MyAppConfig.LOCAL_CACHE_PATH;
+						DataCleanManager.cleanApplicationData(
+								SettingActivity.this, msgCachePath,
+								imgCachePath);
+						ImageDisplayUtils imageDisplayUtils = new ImageDisplayUtils(R.drawable.icon_photo_default);
+						imageDisplayUtils.clearAllCache();
+						handler.sendEmptyMessage(DATA_CLEAR_SUCCESS);
+					}
+				}).start();
+				clearCacheDlg.dismiss();
+			}
+		});
+		clearWebCacheText.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -253,23 +250,22 @@ public class SettingActivity extends BaseActivity {
         // TODO Auto-generated method stub
         DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
 
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                // TODO Auto-generated method stub
-                if (which == -1) {
-                    DataCleanManager.cleanWebViewCache(SettingActivity.this);
-                    ((MyApplication) getApplicationContext()).deleteAllDb();
-                    String msgCachePath = Environment
-                            .getExternalStorageDirectory()
-                            + "/IMP-Cloud/download/";
-                    String imgCachePath = MyAppConfig.LOCAL_CACHE_PATH;
-                    DataCleanManager.cleanApplicationData(SettingActivity.this,
-                            msgCachePath, imgCachePath);
-                    ImageDisplayUtils imageDisplayUtils = new ImageDisplayUtils(
-                            getApplicationContext(),
-                            R.drawable.icon_photo_default);
-                    imageDisplayUtils.clearCache();
-                    //清除全部缓存时是否需要清除掉小程序，如果需要，解开下面一行的注释
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				// TODO Auto-generated method stub
+				if (which == -1) {
+					DataCleanManager.cleanWebViewCache(SettingActivity.this);
+					((MyApplication) getApplicationContext()).deleteAllDb();
+					String msgCachePath = Environment
+							.getExternalStorageDirectory()
+							+ "/IMP-Cloud/download/";
+					String imgCachePath = MyAppConfig.LOCAL_CACHE_PATH;
+					DataCleanManager.cleanApplicationData(SettingActivity.this,
+							msgCachePath, imgCachePath);
+					ImageDisplayUtils imageDisplayUtils = new ImageDisplayUtils(
+							R.drawable.icon_photo_default);
+					imageDisplayUtils.clearAllCache();
+					//清除全部缓存时是否需要清除掉小程序，如果需要，解开下面一行的注释
 //					ReactNativeFlow.deleteReactNativeInstallDir(MyAppConfig.getReactInstallPath(SettingActivity.this,userId));
                     ToastUtils.show(getApplicationContext(),
                             R.string.data_clear_success);

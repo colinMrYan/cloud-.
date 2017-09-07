@@ -76,8 +76,8 @@ public class GestureLoginActivity extends BaseActivity {
         String userHeadImgUri = UriUtils
                 .getChannelImgUri(GestureLoginActivity.this,((MyApplication)getApplication()).getUid());
         CircleImageView circleImageView = (CircleImageView) findViewById(R.id.gesture_login_user_head_img);
-        new ImageDisplayUtils(GestureLoginActivity.this,
-                R.drawable.icon_person_default).display(circleImageView,
+        new ImageDisplayUtils(
+                R.drawable.icon_person_default).displayImage(circleImageView,
                 userHeadImgUri);
         //由于机型，系统等问题，目前不开启指纹识别功能
 //        initFingerPrint();

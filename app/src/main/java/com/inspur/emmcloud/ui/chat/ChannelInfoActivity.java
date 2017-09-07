@@ -84,8 +84,7 @@ public class ChannelInfoActivity extends BaseActivity {
 		channelMemberNumText = (TextView) findViewById(R.id.channel_member_text);
 		apiService = new ChatAPIService(ChannelInfoActivity.this);
 		apiService.setAPIInterface(new WebService());
-		imageDisplayUtils = new ImageDisplayUtils(getApplicationContext(),
-				R.drawable.icon_photo_default);
+		imageDisplayUtils = new ImageDisplayUtils(R.drawable.icon_photo_default);
 		cid = getIntent().getExtras().getString("cid");
 		loadingDlg = new LoadingDialog(ChannelInfoActivity.this);
 		handMessage();
@@ -399,11 +398,11 @@ public class ChannelInfoActivity extends BaseActivity {
 					userName = ContactCacheUtils.getUserName(
 							ChannelInfoActivity.this, uid);
 				}
-				imageDisplayUtils.display(viewHolder.memberHeadImg,
+				imageDisplayUtils.displayImage(viewHolder.memberHeadImg,
 						UriUtils.getChannelImgUri(ChannelInfoActivity.this,uid));
 			}
 			viewHolder.nameText.setText(userName);
-			imageDisplayUtils.display(viewHolder.memberHeadImg, userPhotoUrl);
+			imageDisplayUtils.displayImage(viewHolder.memberHeadImg, userPhotoUrl);
 			return convertView;
 		}
 	}

@@ -3,7 +3,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/text_layout_selector"
-                android:paddingLeft="20dp">
+                android:paddingLeft="10dp">
 
     <RelativeLayout
         android:layout_toLeftOf="@id/img"
@@ -14,7 +14,9 @@
             android:id="@+id/enterprise_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_toLeftOf="@+id/current_device_text"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:layout_toLeftOf="@+id/current_enterprise_text"
             android:paddingBottom="10dp"
             android:paddingTop="10dp"
             android:textColor="#333333"
@@ -22,13 +24,14 @@
         <TextView
             android:id="@+id/current_enterprise_text"
             android:layout_width="wrap_content"
+
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:ellipsize="end"
-            android:visibility="gone"
+            android:visibility="invisible"
             android:text="@string/current_enterprise"
-            android:layout_marginLeft="20dp"
+            android:layout_marginLeft="12dp"
             android:maxLines="1"
             android:textColor="#0F7BCA"
             android:textSize="14sp"/>

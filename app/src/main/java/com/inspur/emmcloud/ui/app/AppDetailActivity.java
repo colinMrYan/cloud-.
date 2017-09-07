@@ -58,7 +58,7 @@ public class AppDetailActivity extends BaseActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_app_detail);
 		((MyApplication) getApplicationContext()).addActivity(this);
-		imageDisplayUtils = new ImageDisplayUtils(getApplicationContext(), R.drawable.icon_empty_icon);
+		imageDisplayUtils = new ImageDisplayUtils(R.drawable.icon_empty_icon);
 		app = (App) getIntent().getExtras().getSerializable("app");
 		initView();
 		apiService = new MyAppAPIService(this);
@@ -71,7 +71,7 @@ public class AppDetailActivity extends BaseActivity {
 		// TODO Auto-generated method stub
 		loadingDlg = new LoadingDialog(AppDetailActivity.this);
 		appIconImg = (ImageView) findViewById(R.id.app_icon_img);
-		imageDisplayUtils.display(appIconImg, app.getAppIcon());
+		imageDisplayUtils.displayImage(appIconImg, app.getAppIcon());
 		statusBtn = (Button) findViewById(R.id.app_status_btn);
 		intrImgListView = (HorizontalListView) findViewById(R.id.intr_img_list);
 		if (app.getLegends() != null) {
@@ -175,7 +175,7 @@ public class AppDetailActivity extends BaseActivity {
 			LayoutInflater vi = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
 			convertView = vi.inflate(R.layout.app__intr_img_view, null);
 			ImageView image = (ImageView) convertView.findViewById(R.id.detail_img);
-			imageDisplayUtils.display(image, legends.get(position));
+			imageDisplayUtils.displayImage(image, legends.get(position));
 			return convertView;
 		}
 

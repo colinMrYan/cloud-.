@@ -27,7 +27,6 @@ import org.xutils.common.Callback.ProgressCallback;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class GroupFileActivity extends BaseActivity {
@@ -45,8 +44,7 @@ public class GroupFileActivity extends BaseActivity {
 		setContentView(R.layout.activity_group_file);
 		cid = getIntent().getExtras().getString("cid");
 		getFileMsgList();
-		imageDisplayUtils = new ImageDisplayUtils(getApplicationContext(),
-				R.drawable.icon_file_unknown);
+		imageDisplayUtils = new ImageDisplayUtils(R.drawable.icon_file_unknown);
 		fileListView = (ListView) findViewById(R.id.file_list);
 		fileListView.setAdapter(new Adapter());
 	}
@@ -124,31 +122,31 @@ public class GroupFileActivity extends BaseActivity {
 		fileOwnerText.setText(groupFileInfo.getOwner());
 		fileTimeText.setText(groupFileInfo.getTime(getApplicationContext()));
 		if (fileName.endsWith("doc") || fileName.endsWith("docx")) {
-			imageDisplayUtils.display(fileImg, "drawable://"
+			imageDisplayUtils.displayImage(fileImg, "drawable://"
 					+ R.drawable.icon_file_word);
 		} else if (fileName.endsWith("xls") || fileName.endsWith("xlsx")) {
-			imageDisplayUtils.display(fileImg, "drawable://"
+			imageDisplayUtils.displayImage(fileImg, "drawable://"
 					+ R.drawable.icon_file_excel);
 		} else if (fileName.endsWith("ppt") || fileName.endsWith("pptx")) {
-			imageDisplayUtils.display(fileImg, "drawable://"
+			imageDisplayUtils.displayImage(fileImg, "drawable://"
 					+ R.drawable.icon_file_ppt);
 		} else if (fileName.endsWith("pdf")) {
-			imageDisplayUtils.display(fileImg, "drawable://"
+			imageDisplayUtils.displayImage(fileImg, "drawable://"
 					+ R.drawable.icon_file_pdf);
 		} else if (fileName.endsWith("txt")) {
-			imageDisplayUtils.display(fileImg, "drawable://"
+			imageDisplayUtils.displayImage(fileImg, "drawable://"
 					+ R.drawable.icon_txt);
 		} else if (fileName.endsWith("zip")) {
-			imageDisplayUtils.display(fileImg, "drawable://"
+			imageDisplayUtils.displayImage(fileImg, "drawable://"
 					+ R.drawable.icon_file_zip);
 		} else if (fileName.endsWith("rar")) {
-			imageDisplayUtils.display(fileImg, "drawable://"
+			imageDisplayUtils.displayImage(fileImg, "drawable://"
 					+ R.drawable.icon_file_rar);
 		} else if (fileName.contains("jpg") || fileName.contains("png")) {
-			imageDisplayUtils.display(fileImg, "drawable://"
+			imageDisplayUtils.displayImage(fileImg, "drawable://"
 					+ R.drawable.icon_file_photos);
 		} else {
-			imageDisplayUtils.display(fileImg, "drawable://"
+			imageDisplayUtils.displayImage(fileImg, "drawable://"
 					+ R.drawable.icon_file_unknown);
 		}
 		convertView.setOnClickListener(new OnClickListener() {

@@ -144,7 +144,7 @@ public abstract class ImageViewTouchBase extends ImageView {
 	}
 
 	/**
-	 * Change the display type
+	 * Change the displayImage type
 	 */
 	public void setDisplayType(DisplayType type) {
 		if (type != mScaleType) {
@@ -242,7 +242,7 @@ public abstract class ImageViewTouchBase extends ImageView {
 				if (mBitmapChanged || mScaleTypeChanged) {
 
 					if (LOG_ENABLED) {
-						Log.d(LOG_TAG, "display type: " + mScaleType);
+						Log.d(LOG_TAG, "displayImage type: " + mScaleType);
 					}
 
 					if (mNextMatrix != null) {
@@ -331,7 +331,7 @@ public abstract class ImageViewTouchBase extends ImageView {
 	}
 
 	/**
-	 * Restore the original display
+	 * Restore the original displayImage
 	 * 
 	 */
 	public void resetDisplay() {
@@ -358,10 +358,10 @@ public abstract class ImageViewTouchBase extends ImageView {
 	}
 
 	/**
-	 * {@inheritDoc} Set the new image to display and reset the internal matrix.
+	 * {@inheritDoc} Set the new image to displayImage and reset the internal matrix.
 	 * 
 	 * @param bitmap
-	 *            the {@link Bitmap} to display
+	 *            the {@link Bitmap} to displayImage
 	 * @see {@link ImageView#setImageBitmap(Bitmap)}
 	 */
 	@Override
@@ -399,7 +399,7 @@ public abstract class ImageViewTouchBase extends ImageView {
 	 * @param drawable
 	 *            the new drawable
 	 * @param initial_matrix
-	 *            the optional initial display matrix
+	 *            the optional initial displayImage matrix
 	 * @param min_zoom
 	 *            the optional minimum scale, pass {@link #ZOOM_INVALID} to use
 	 *            the default min_zoom
@@ -627,7 +627,7 @@ public abstract class ImageViewTouchBase extends ImageView {
 	}
 
 	/**
-	 * Returns the current image display matrix.<br />
+	 * Returns the current image displayImage matrix.<br />
 	 * This matrix can be used in the next call to the
 	 * {@link #setImageDrawable(Drawable, Matrix, float, float)} to restore the
 	 * same view state of the previous {@link Bitmap}.<br />

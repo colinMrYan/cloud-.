@@ -511,8 +511,8 @@ public class IndexActivity extends BaseFragmentActivity implements
                 tabText.setText(getString(mainTab.getResName()));
             }
             if(!StringUtils.isBlank(mainTab.getConfigureIcon())){
-                ImageDisplayUtils imageDisplayUtils  = new ImageDisplayUtils(getApplicationContext(), R.drawable.icon_empty_icon);
-                imageDisplayUtils.displayPic(tabImg,mainTab.getConfigureIcon());
+                ImageDisplayUtils imageDisplayUtils  = new ImageDisplayUtils(R.drawable.icon_empty_icon);
+                imageDisplayUtils.displayImage(tabImg,mainTab.getConfigureIcon());
             }else{
                 tabImg.setImageResource(mainTab.getResIcon());
             }
