@@ -832,6 +832,9 @@
     <string name="gesture_default">请绘制手势密码</string>
     <string name="gesture_error">手势密码输入错误</string>
     <string name="gesture_correct">输入正确</string>
+    <string name="gesture_code_error">密码错误，还可以再试</string>
+    <string name="gesture_code_time">次</string>
+    <string name="gesture_code_tips">5次失败后，需要重新登录</string>
 
     <!-- Create gesture activity -->
     <string name="create_gesture_default">绘制解锁图案</string>
@@ -844,6 +847,10 @@
     <string name="safe_center_unenable">未启用</string>
 
 
+
+
     <string name="qr_code_analysis_fail">二维码解析失败</string>
+
+
 
 </resources>

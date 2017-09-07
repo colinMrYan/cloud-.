@@ -3,6 +3,8 @@ package com.inspur.emmcloud.ui.mine.setting;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -41,6 +43,7 @@ import java.util.List;
 @ContentView(R.layout.activity_gesture_login)
 public class GestureLoginActivity extends BaseActivity {
 
+    private static final int GESTURE_CODE_TIMES = 5;
     @ViewInject(R.id.lockPatternView)
     LockPatternView lockPatternView;
     @ViewInject(R.id.gestrue_message_text)
@@ -50,6 +53,7 @@ public class GestureLoginActivity extends BaseActivity {
     private static final long DELAYTIME = 600l;
     private String gesturePassword;
     private boolean isLogin = false;
+    private int errorTime = 0;
 
 
     @Override
@@ -191,8 +195,10 @@ public class GestureLoginActivity extends BaseActivity {
                             clearGestureInfo();
                             finish();
                         }
+                        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                     }
                 } else {
+                    errorTime = errorTime + 1;
                     updateStatus(Status.ERROR);
                 }
             }
@@ -212,21 +218,24 @@ public class GestureLoginActivity extends BaseActivity {
                 lockPatternView.setPattern(LockPatternView.DisplayMode.DEFAULT);
                 break;
             case ERROR:
+                gestureMessage.setText(getString(R.string.gesture_code_error)+
+                        (GESTURE_CODE_TIMES-errorTime)+getString(R.string.gesture_code_time));
+                findViewById(R.id.gesture_code_tips).setVisibility(View.VISIBLE);
+                Animation shake = AnimationUtils.loadAnimation(this, R.anim.left_right_shake);
+                gestureMessage.startAnimation(shake);
                 lockPatternView.setPattern(LockPatternView.DisplayMode.ERROR);
                 lockPatternView.postClearPatternRunnable(DELAYTIME);
+                if((GESTURE_CODE_TIMES - errorTime)==0){
+                    clearGestureInfo();
+                    signout();
+                    finish();
+                }
                 break;
             case CORRECT:
                 lockPatternView.setPattern(LockPatternView.DisplayMode.DEFAULT);
-                loginGestureSuccess();
+
                 break;
         }
-    }
-
-    /**
-     * 手势登录成功
-     */
-    private void loginGestureSuccess() {
-//        Toast.makeText(GestureLoginActivity.this, "success", Toast.LENGTH_SHORT).show();
     }
 
     /**
@@ -236,8 +245,8 @@ public class GestureLoginActivity extends BaseActivity {
     private void forgetGesturePasswrod(View view) {
         switch (view.getId()){
             case R.id.forget_gesture_btn:
-                signout();
                 clearGestureInfo();
+                signout();
                 finish();
                 break;
             default:

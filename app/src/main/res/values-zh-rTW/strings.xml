@@ -803,6 +803,9 @@
     <string name="gesture_default">請繪製手勢密碼</string>
     <string name="gesture_error">手勢密碼輸入錯誤</string>
     <string name="gesture_correct">輸入正確</string>
+    <string name="gesture_code_error">密碼錯誤，還可以再試</string>
+    <string name="gesture_code_time">次</string>
+    <string name="gesture_code_tips">5次失敗後，需要重新登入</string>
 
     <!-- Create gesture activity -->
     <string name="create_gesture_default">繪製解鎖圖案</string>
@@ -813,6 +816,7 @@
     <string name="create_gesture_reset">重新設置</string>
     <string name="safe_center_enable">已啟用</string>
     <string name="safe_center_unenable">未啟用</string>
+
 
     <string name="qr_code_analysis_fail">二維碼解析失敗</string>
 

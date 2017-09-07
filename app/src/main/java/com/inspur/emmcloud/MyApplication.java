@@ -28,6 +28,7 @@ import com.inspur.emmcloud.bean.Language;
 import com.inspur.emmcloud.callback.OauthCallBack;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.push.WebSocketPush;
+import com.inspur.emmcloud.ui.login.LoginActivity;
 import com.inspur.emmcloud.util.AppUtils;
 import com.inspur.emmcloud.util.CalEventNotificationUtils;
 import com.inspur.emmcloud.util.CrashHandler;
@@ -117,6 +118,30 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         uid = PreferencesUtils.getString(getApplicationContext(), "userID");
         accessToken = PreferencesUtils.getString(getApplicationContext(), "accessToken", "");
 
+    }
+
+/**************************************登出逻辑相关********************************************************/
+    //登出逻辑
+    private void signout() {
+        // TODO Auto-generated method stub
+        if (((MyApplication) getApplicationContext()).getWebSocketPush() != null) {
+            ((MyApplication) getApplicationContext()).getWebSocketPush()
+                    .webSocketSignout();
+        }
+        //清除日历提醒极光推送本地通知
+        CalEventNotificationUtils.cancelAllCalEventNotification(this);
+        ((MyApplication) getApplicationContext()).stopPush();
+        ((MyApplication) getApplicationContext()).clearNotification();
+        ((MyApplication) getApplicationContext()).removeAllCookie();
+        ((MyApplication) getApplicationContext()).clearUserPhotoMap();
+        PreferencesUtils.putString(this, "tokenType", "");
+        PreferencesUtils.putString(this, "accessToken", "");
+        ((MyApplication) getApplicationContext()).setAccessToken("");
+        Intent intent = new Intent();
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.setClass(this, LoginActivity.class);
+        startActivity(intent);
+        exit();
     }
 /****************************通知相关（极光和华为推送）******************************************/
     /**
