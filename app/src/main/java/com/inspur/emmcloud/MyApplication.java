@@ -122,7 +122,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
 
 /**************************************登出逻辑相关********************************************************/
     //登出逻辑
-    private void signout() {
+    public void signout() {
         // TODO Auto-generated method stub
         if (((MyApplication) getApplicationContext()).getWebSocketPush() != null) {
             ((MyApplication) getApplicationContext()).getWebSocketPush()

@@ -1,6 +1,5 @@
 package com.inspur.emmcloud.ui.mine.setting;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.animation.Animation;
@@ -11,13 +10,10 @@ import android.widget.TextView;
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.ui.login.LoginActivity;
-import com.inspur.emmcloud.util.CalEventNotificationUtils;
 import com.inspur.emmcloud.util.ImageDisplayUtils;
 import com.inspur.emmcloud.util.IntentUtils;
 import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.PreferencesByUserAndTanentUtils;
-import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.StateBarColor;
 import com.inspur.emmcloud.util.ToastUtils;
 import com.inspur.emmcloud.util.UriUtils;
@@ -227,8 +223,7 @@ public class GestureLoginActivity extends BaseActivity {
                 lockPatternView.postClearPatternRunnable(DELAYTIME);
                 if((GESTURE_CODE_TIMES - errorTime)==0){
                     clearGestureInfo();
-                    signout();
-                    finish();
+                    ((MyApplication)getApplication()).signout();
                 }
                 break;
             case CORRECT:
@@ -246,8 +241,7 @@ public class GestureLoginActivity extends BaseActivity {
         switch (view.getId()){
             case R.id.forget_gesture_btn:
                 clearGestureInfo();
-                signout();
-                finish();
+                ((MyApplication)getApplication()).signout();
                 break;
             default:
                 break;
@@ -293,27 +287,27 @@ public class GestureLoginActivity extends BaseActivity {
         super.onDestroy();
 //        EventBus.getDefault().unregister(this);
     }
-
-    //登出逻辑
-    private void signout() {
-        // TODO Auto-generated method stub
-        if (((MyApplication) getApplicationContext()).getWebSocketPush() != null) {
-            ((MyApplication) getApplicationContext()).getWebSocketPush()
-                    .webSocketSignout();
-        }
-        //清除日历提醒极光推送本地通知
-        CalEventNotificationUtils.cancelAllCalEventNotification(GestureLoginActivity.this);
-        ((MyApplication) getApplicationContext()).stopPush();
-        ((MyApplication) getApplicationContext()).clearNotification();
-        ((MyApplication) getApplicationContext()).removeAllCookie();
-        ((MyApplication) getApplicationContext()).clearUserPhotoMap();
-        PreferencesUtils.putString(GestureLoginActivity.this, "tokenType", "");
-        PreferencesUtils.putString(GestureLoginActivity.this, "accessToken", "");
-        ((MyApplication) getApplicationContext()).setAccessToken("");
-        Intent intent = new Intent();
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        intent.setClass(this, LoginActivity.class);
-        startActivity(intent);
-        this.finish();
-    }
+//
+//    //登出逻辑
+//    private void signout() {
+//        // TODO Auto-generated method stub
+//        if (((MyApplication) getApplicationContext()).getWebSocketPush() != null) {
+//            ((MyApplication) getApplicationContext()).getWebSocketPush()
+//                    .webSocketSignout();
+//        }
+//        //清除日历提醒极光推送本地通知
+//        CalEventNotificationUtils.cancelAllCalEventNotification(GestureLoginActivity.this);
+//        ((MyApplication) getApplicationContext()).stopPush();
+//        ((MyApplication) getApplicationContext()).clearNotification();
+//        ((MyApplication) getApplicationContext()).removeAllCookie();
+//        ((MyApplication) getApplicationContext()).clearUserPhotoMap();
+//        PreferencesUtils.putString(GestureLoginActivity.this, "tokenType", "");
+//        PreferencesUtils.putString(GestureLoginActivity.this, "accessToken", "");
+//        ((MyApplication) getApplicationContext()).setAccessToken("");
+//        Intent intent = new Intent();
+//        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//        intent.setClass(this, LoginActivity.class);
+//        startActivity(intent);
+//        this.finish();
+//    }
 }

@@ -17,8 +17,6 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.Language;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.ui.IndexActivity;
-import com.inspur.emmcloud.ui.login.LoginActivity;
-import com.inspur.emmcloud.util.CalEventNotificationUtils;
 import com.inspur.emmcloud.util.DataCleanManager;
 import com.inspur.emmcloud.util.ImageDisplayUtils;
 import com.inspur.emmcloud.util.IntentUtils;
@@ -119,7 +117,7 @@ public class SettingActivity extends BaseActivity {
 				public void onClick(DialogInterface dialog, int which) {
 					// TODO Auto-generated method stub
 					if (which == -1) {
-						signout();
+                        ((MyApplication)getApplication()).signout();
 					}
 				}
 			};
@@ -128,9 +126,6 @@ public class SettingActivity extends BaseActivity {
 					getString(R.string.if_confirm_signout),
 					getString(R.string.ok), getString(R.string.cancel),
 					dialogClickListener, true);
-
-
-
                 break;
 
             case R.id.msg_notify_layout:
@@ -284,27 +279,27 @@ public class SettingActivity extends BaseActivity {
                 dialogClickListener, true);
     }
 
-    private void signout() {
-        // TODO Auto-generated method stub
-        if (((MyApplication) getApplicationContext()).getWebSocketPush() != null) {
-            ((MyApplication) getApplicationContext()).getWebSocketPush()
-                    .webSocketSignout();
-        }
-        //清除日历提醒极光推送本地通知
-        CalEventNotificationUtils.cancelAllCalEventNotification(SettingActivity.this);
-        ((MyApplication) getApplicationContext()).stopPush();
-        ((MyApplication) getApplicationContext()).clearNotification();
-        ((MyApplication) getApplicationContext()).removeAllCookie();
-        ((MyApplication) getApplicationContext()).clearUserPhotoMap();
-        PreferencesUtils.putString(SettingActivity.this, "tokenType", "");
-        PreferencesUtils.putString(SettingActivity.this, "accessToken", "");
-        ((MyApplication) getApplicationContext()).setAccessToken("");
-        Intent intent = new Intent();
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        intent.setClass(this, LoginActivity.class);
-        startActivity(intent);
-        this.finish();
-    }
+//    private void signout() {
+//        // TODO Auto-generated method stub
+//        if (((MyApplication) getApplicationContext()).getWebSocketPush() != null) {
+//            ((MyApplication) getApplicationContext()).getWebSocketPush()
+//                    .webSocketSignout();
+//        }
+//        //清除日历提醒极光推送本地通知
+//        CalEventNotificationUtils.cancelAllCalEventNotification(SettingActivity.this);
+//        ((MyApplication) getApplicationContext()).stopPush();
+//        ((MyApplication) getApplicationContext()).clearNotification();
+//        ((MyApplication) getApplicationContext()).removeAllCookie();
+//        ((MyApplication) getApplicationContext()).clearUserPhotoMap();
+//        PreferencesUtils.putString(SettingActivity.this, "tokenType", "");
+//        PreferencesUtils.putString(SettingActivity.this, "accessToken", "");
+//        ((MyApplication) getApplicationContext()).setAccessToken("");
+//        Intent intent = new Intent();
+//        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//        intent.setClass(this, LoginActivity.class);
+//        startActivity(intent);
+//        this.finish();
+//    }
 
 
     @Override
