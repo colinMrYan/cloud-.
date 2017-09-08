@@ -120,11 +120,11 @@
         android:layout_height="match_parent"
         android:layout_below="@id/view_layout2" >
 
-        <com.inspur.emmcloud.widget.mylistview.MyListView
+        <ListView
             android:id="@+id/search_app_list"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
-        </com.inspur.emmcloud.widget.mylistview.MyListView>
+            android:layout_height="match_parent" >
+        </ListView>
     </RelativeLayout>
 
 </RelativeLayout>

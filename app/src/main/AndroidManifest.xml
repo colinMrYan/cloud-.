@@ -366,7 +366,7 @@
         <activity
             android:name=".ui.chat.ImagePagerActivity"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:theme="@style/SplashTheme"
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".ui.chat.MembersActivity"

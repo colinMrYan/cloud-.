@@ -26,14 +26,12 @@ import java.util.List;
 
 public class AppCenterAdapter extends BaseAdapter {
 
-	private static final int ADD_APP_FAIL = 3;
 	private static final String ACTION_NAME = "add_app";
 	private ImageDisplayUtils imageDisplayUtils;
 	private List<App> appList;
 	private Activity activity;
 	private LoadingDialog loadingDialog;
 	private MyAppAPIService apiService;
-	private GetAddAppResult getAddAppResult;
 
 	public AppCenterAdapter(Activity activity, List<App> appList) {
 		// TODO Auto-generated constructor stub
@@ -63,8 +61,9 @@ public class AppCenterAdapter extends BaseAdapter {
 		AppCenterAdapter.this.notifyDataSetChanged();
 	}
 
-	public void setListData(List<App> AppList) {
+	public void notifyListData(List<App> AppList) {
 		this.appList = AppList;
+		notifyDataSetChanged();
 	}
 
 	@Override
@@ -159,7 +158,6 @@ public class AppCenterAdapter extends BaseAdapter {
 		@Override
 		public void returnAddAppSuccess(GetAddAppResult getAddAppResult) {
 			// TODO Auto-generated method stub
-			AppCenterAdapter.this.getAddAppResult = getAddAppResult;
 			if (loadingDialog != null && loadingDialog.isShowing()) {
 				loadingDialog.dismiss();
 			}

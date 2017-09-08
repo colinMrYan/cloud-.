@@ -48,6 +48,7 @@ import com.inspur.emmcloud.util.IntentUtils;
 import com.inspur.emmcloud.util.ListViewUtils;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
+import com.inspur.emmcloud.util.StateBarColor;
 import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.ToastUtils;
 import com.inspur.emmcloud.util.UriUtils;
@@ -137,6 +138,7 @@ public class ContactSearchActivity extends BaseActivity {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contact_search);
+        StateBarColor.changeStateBarColor(this,Color.parseColor("#EFEFF4"));
         ((MyApplication) getApplicationContext()).addActivity(this);
         rootContact = ContactCacheUtils
                 .getRootContact(ContactSearchActivity.this);
