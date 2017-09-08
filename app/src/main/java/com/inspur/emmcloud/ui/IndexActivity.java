@@ -127,6 +127,7 @@ public class IndexActivity extends BaseFragmentActivity implements
         ((MyApplication) getApplicationContext()).setIndexActvityRunning(true);
         ((MyApplication) getApplicationContext()).closeAllDb();
         DbCacheUtils.initDb(getApplicationContext());
+        ((MyApplication) getApplicationContext()).closeWebSocket();
         ((MyApplication) getApplicationContext()).clearUserPhotoMap();
         ((MyApplication) getApplicationContext()).startPush();
         init();
