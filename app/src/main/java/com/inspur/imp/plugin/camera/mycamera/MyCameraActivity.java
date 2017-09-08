@@ -31,6 +31,7 @@ import com.inspur.emmcloud.util.JSONUtils;
 import com.inspur.emmcloud.util.StateBarColor;
 import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.ToastUtils;
+import com.inspur.imp.api.ImpBaseActivity;
 import com.inspur.imp.plugin.camera.editimage.EditImageActivity;
 import com.inspur.imp.plugin.camera.editimage.utils.BitmapUtils;
 
@@ -44,7 +45,7 @@ import static android.Manifest.permission.CAMERA;
 import static android.R.attr.path;
 import static com.inspur.imp.plugin.camera.editimage.EditImageActivity.ACTION_REQUEST_EDITIMAGE;
 
-public class MyCameraActivity extends Activity implements View.OnClickListener, SurfaceHolder.Callback {
+public class MyCameraActivity extends ImpBaseActivity implements View.OnClickListener, SurfaceHolder.Callback {
 
     public static final String PHOTO_DIRECTORY_PATH = "save_derectory_path";
     public static final String PHOTO_NAME = "photo_name";
@@ -66,9 +67,8 @@ public class MyCameraActivity extends Activity implements View.OnClickListener, 
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);//没有标题
-        StateBarColor.hideStatusBar(this);
+        super.onCreate(savedInstanceState);
         if (!Environment.getExternalStorageState().equals(
                 Environment.MEDIA_MOUNTED)) {
             ToastUtils.show(this, R.string.filetransfer_sd_not_exist);

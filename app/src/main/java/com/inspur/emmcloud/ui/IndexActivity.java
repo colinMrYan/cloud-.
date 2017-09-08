@@ -68,6 +68,7 @@ import com.inspur.emmcloud.util.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.RobotCacheUtils;
+import com.inspur.emmcloud.util.StateBarColor;
 import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.ToastUtils;
 import com.inspur.emmcloud.util.UriUtils;
@@ -122,11 +123,13 @@ public class IndexActivity extends BaseFragmentActivity implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        StateBarColor.changeStateBarColor(this);
         setContentView(R.layout.activity_index);
         ((MyApplication) getApplicationContext()).addActivity(this);
         ((MyApplication) getApplicationContext()).setIndexActvityRunning(true);
         ((MyApplication) getApplicationContext()).closeAllDb();
         DbCacheUtils.initDb(getApplicationContext());
+        ((MyApplication) getApplicationContext()).closeWebSocket();
         ((MyApplication) getApplicationContext()).clearUserPhotoMap();
         ((MyApplication) getApplicationContext()).startPush();
         init();

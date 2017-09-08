@@ -41,6 +41,7 @@ import com.inspur.emmcloud.util.DensityUtil;
 import com.inspur.emmcloud.util.EditTextUtils;
 import com.inspur.emmcloud.util.ImageDisplayUtils;
 import com.inspur.emmcloud.util.InputMethodUtils;
+import com.inspur.emmcloud.util.StateBarColor;
 import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.ToastUtils;
 import com.inspur.emmcloud.util.UriUtils;
@@ -91,6 +92,7 @@ public class ContactSearchMoreActivity extends BaseActivity implements OnRefresh
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
+		StateBarColor.changeStateBarColor(this,R.color.contact_header_bg);
 		setContentView(R.layout.activity_contact_search_more);
 		((MyApplication) getApplicationContext()).addActivity(this);
 		handMessage();

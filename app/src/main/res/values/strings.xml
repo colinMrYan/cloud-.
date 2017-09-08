@@ -268,7 +268,6 @@
     <string name="message_create_group">发起群聊</string>
 
 
-
     <!-- 会议卡片 -->
     <string name="meeting_has_confirmed">已确认</string>
     <string name="meeting_has_refused">已拒绝</string>
@@ -426,8 +425,6 @@
     <string name="select_enterprise">选择企业</string>
     <string name="switch_enterprise">切换企业</string>
     <string name="current_enterprise">当前企业</string>
-
-
 
 
     <!-- 修改密码部分 -->
@@ -855,4 +852,7 @@
 
 
 
+    //tag标签
+    <item name="tag_first" type="id"></item>
+    <item name="tag_second" type="id"></item>
 </resources>

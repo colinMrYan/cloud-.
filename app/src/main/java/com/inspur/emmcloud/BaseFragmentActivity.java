@@ -22,7 +22,7 @@ public class BaseFragmentActivity extends FragmentActivity {
     @Override
     protected void onCreate(Bundle arg0) {
         super.onCreate(arg0);
-        StateBarColor.changeStateBarColor(this);
+
     }
 
     @Override

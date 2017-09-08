@@ -1,6 +1,5 @@
 package com.inspur.imp.plugin.barcode.scan;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
 import android.graphics.Bitmap;
@@ -23,6 +22,7 @@ import android.widget.TextView;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.Result;
 import com.inspur.emmcloud.util.StateBarColor;
+import com.inspur.imp.api.ImpBaseActivity;
 import com.inspur.imp.api.Res;
 import com.inspur.imp.plugin.barcode.camera.CameraManager;
 import com.inspur.imp.plugin.barcode.decoding.CaptureActivityHandler;
@@ -33,7 +33,7 @@ import java.io.IOException;
 import java.util.Vector;
 
 
-public class CaptureActivity extends Activity implements Callback {
+public class CaptureActivity extends ImpBaseActivity implements Callback {
 
 	private CaptureActivityHandler handler;
 	private ViewfinderView viewfinderView;
@@ -53,9 +53,8 @@ public class CaptureActivity extends Activity implements Callback {
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);//没有标题
-		StateBarColor.hideStatusBar(this);
+		super.onCreate(savedInstanceState);
 		setContentView(Res.getLayoutID("plugin_barcode_capture"));
 		this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);//设置全屏
 		CameraManager.init(this);
