@@ -1,5 +1,6 @@
 package com.inspur.emmcloud.ui.find.trip;
 
+import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
 
 import android.app.Activity;
@@ -11,7 +12,7 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.SeekBar;
 
-public class TravelStarsActivity extends Activity{
+public class TravelStarsActivity extends BaseActivity{
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

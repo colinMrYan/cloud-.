@@ -8,6 +8,7 @@ import com.inspur.emmcloud.api.apiservice.AppAPIService;
 import com.inspur.emmcloud.service.PVCollectService;
 import com.inspur.emmcloud.util.AppUtils;
 import com.inspur.emmcloud.util.DbCacheUtils;
+import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.StateBarColor;
 
@@ -17,7 +18,11 @@ public class BaseActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
-        StateBarColor.changeStateBarColor(this);
+        String className = this.getClass().getCanonicalName();
+        LogUtils.jasonDebug("className="+className);
+        if (!className.equals("com.inspur.imp.plugin.barcode.scan.CaptureActivity") &&!className.equals("com.inspur.imp.plugin.camera.mycamera.MyCameraActivity") ){
+            StateBarColor.changeStateBarColor(this);
+        }
     }
 
     @Override

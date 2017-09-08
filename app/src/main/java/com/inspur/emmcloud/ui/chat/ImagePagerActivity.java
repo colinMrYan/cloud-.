@@ -1,9 +1,11 @@
 package com.inspur.emmcloud.ui.chat;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.util.ArrayMap;
@@ -77,11 +79,12 @@ public class ImagePagerActivity extends BaseFragmentActivity {
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
+		requestWindowFeature(Window.FEATURE_NO_TITLE);//没有标题
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_image_pager);
+		this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);//设置全屏
 		((MyApplication) getApplicationContext())
 				.addActivity(this);
-		StateBarColor.changeStateBarColor(this, R.color.black);
 		init();
 	}
 
