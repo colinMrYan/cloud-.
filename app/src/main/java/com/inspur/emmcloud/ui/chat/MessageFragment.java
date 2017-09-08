@@ -52,7 +52,6 @@ import com.inspur.emmcloud.util.ChatCreateUtils.OnCreateGroupChannelListener;
 import com.inspur.emmcloud.util.DirectChannelUtils;
 import com.inspur.emmcloud.util.ImageDisplayUtils;
 import com.inspur.emmcloud.util.IntentUtils;
-import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.MsgCacheUtil;
 import com.inspur.emmcloud.util.MsgMatheSetCacheUtils;
 import com.inspur.emmcloud.util.MsgReadIDCacheUtils;
@@ -1064,7 +1063,6 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
     }
 
     private void showSocketStatusInTitle(String socketStatus) {
-        LogUtils.jasonDebug("socketStatus==="+socketStatus);
         if (socketStatus.equals("socket_connecting")) {
             titleText.setText(R.string.socket_connecting);
         } else if (socketStatus.equals(Socket.EVENT_CONNECT)) {
@@ -1212,29 +1210,28 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
                 JSONObject searchResultObj = new JSONObject(searchResult);
                 JSONArray peopleArray = searchResultObj.getJSONArray("people");
 
-                if (peopleArray.length() > 0
-                        && NetUtils.isNetworkConnected(getActivity())) {
-                    creatGroupChannel(peopleArray);
-                }
-            } catch (JSONException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-                ToastUtils.show(getActivity(),
-                        getActivity().getString(R.string.creat_group_fail));
-            }
-        } else if ((resultCode == RESULT_OK) && (requestCode == SCAN_LOGIN_QRCODE_RESULT)) {
-            if (data.hasExtra("isDecodeSuccess")) {
-                boolean isDecodeSuccess = data.getBooleanExtra("isDecodeSuccess", false);
-                if (isDecodeSuccess) {
-                    String msg = data.getStringExtra("msg");
-                    LogUtils.YfcDebug("解析到的信息：" + msg);
-                    ScanQrCodeUtils.getScanQrCodeUtilsInstance(getActivity()).handleActionWithMsg(msg);
-                } else {
-                    LogUtils.YfcDebug("解析失败");
-                }
-            }
-        }
-    }
+				if (peopleArray.length() > 0
+						&& NetUtils.isNetworkConnected(getActivity())) {
+					creatGroupChannel(peopleArray);
+				}
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				ToastUtils.show(getActivity(),
+						getActivity().getString(R.string.creat_group_fail));
+			}
+		} else if ((resultCode == RESULT_OK) && (requestCode == SCAN_LOGIN_QRCODE_RESULT)) {
+			if (data.hasExtra("isDecodeSuccess")) {
+				boolean isDecodeSuccess = data.getBooleanExtra("isDecodeSuccess", false);
+				if (isDecodeSuccess) {
+					String msg = data.getStringExtra("msg");
+					ScanQrCodeUtils.getScanQrCodeUtilsInstance(getActivity()).handleActionWithMsg(msg);
+				} else {
+					ToastUtils.show(getActivity(),getString(R.string.qr_code_analysis_fail));
+				}
+			}
+		}
+	}
 
     /**
      * 创建群组
