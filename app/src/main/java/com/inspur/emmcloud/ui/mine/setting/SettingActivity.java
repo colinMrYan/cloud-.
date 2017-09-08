@@ -297,6 +297,10 @@ public class SettingActivity extends BaseActivity {
 					ToastUtils.show(getApplicationContext(),
 							R.string.data_clear_success);
 					((MyApplication) getApplicationContext()).exit();
+					if (((MyApplication) getApplicationContext()).getWebSocketPush() != null) {
+						((MyApplication) getApplicationContext()).getWebSocketPush()
+								.closeSocket();
+					}
 					Intent intentLog = new Intent(SettingActivity.this,
 							IndexActivity.class);
 					intentLog.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK

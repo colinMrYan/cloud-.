@@ -119,6 +119,7 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
     private TextView titleText;
     private boolean isHaveCreatGroupIcon = false;
     private PopupWindow popupWindow;
+    private boolean isFirstConnectWebsockt = true;//判断是否第一次连上websockt
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -170,6 +171,7 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
         super.onCreate(savedInstanceState);
         initView();
         registerMessageFragmentReceiver();
+        getChannelContent();
         sortChannelList(getCacheData());// 对Channel 进行排序
         showMessageButtons();
         EventBus.getDefault().register(this);
@@ -885,7 +887,7 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
                 holder = (ViewHolder) convertView.getTag();
             }
             Channel channel = displayChannelList.get(position);
-            setChannelIcon(channel, holder.channelPhotoImg);
+            setChannelIcon(channel, holder.channelPhotoImg,position);
             setChannelMsgReadStateUI(channel, holder);
             holder.channelTitleText.setText(channel.getDisplayTitle());
             holder.dndImg.setVisibility(channel.getDnd() ? View.VISIBLE : View.GONE);
@@ -899,7 +901,7 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
          *
          * @param channel
          */
-        private void setChannelIcon(Channel channel, CircleImageView channelPhotoImg) {
+        private void setChannelIcon(Channel channel, CircleImageView channelPhotoImg,int position) {
             // TODO Auto-generated method stub
             Integer defaultIcon = R.drawable.icon_channel_group_default; // 默认显示图标
             String iconUrl = channel.getIcon();// Channel头像的uri
@@ -919,8 +921,8 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
                 defaultIcon = R.drawable.icon_person_default;
                 iconUrl = DirectChannelUtils.getRobotIcon(getActivity(), channel.getTitle());
             }
-            new ImageDisplayUtils(defaultIcon).displayImage(
-                    channelPhotoImg, iconUrl);
+            new ImageDisplayUtils(defaultIcon).displayImageByTag(
+                    channelPhotoImg, iconUrl,defaultIcon);
 
 
         }
@@ -1062,10 +1064,15 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
     }
 
     private void showSocketStatusInTitle(String socketStatus) {
+        LogUtils.jasonDebug("socketStatus==="+socketStatus);
         if (socketStatus.equals("socket_connecting")) {
             titleText.setText(R.string.socket_connecting);
         } else if (socketStatus.equals(Socket.EVENT_CONNECT)) {
-            getChannelContent();
+            //当断开以后连接成功(非第一次连接上)后重新拉取一遍消息
+            if (!isFirstConnectWebsockt){
+                getChannelContent();
+            }
+            isFirstConnectWebsockt = false;
             String appTabs = PreferencesByUserAndTanentUtils.getString(getActivity(), "app_tabbar_info_current", "");
             if (!StringUtils.isBlank(appTabs)) {
                 titleText.setText(AppTitleUtils.getTabTitle(getActivity(), getClass().getSimpleName()));

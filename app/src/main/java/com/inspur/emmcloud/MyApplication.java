@@ -311,12 +311,21 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
     /******************************Websocket********************************************/
 
     /**
-     * 开启推送
+     * 开启websocket推送
      */
     public void startWebSocket() {
         webSocketPush = WebSocketPush.getInstance(getApplicationContext());
-        if (((MyApplication) getApplicationContext()).isHaveLogin() && !webSocketPush.isSocketConnect()) {
+        if (isHaveLogin() && !webSocketPush.isSocketConnect()) {
             webSocketPush.start();
+        }
+    }
+
+    /**
+     * 关闭websocket推送
+     */
+    public void closeWebSocket(){
+        if (webSocketPush != null) {
+            webSocketPush.webSocketSignout();
         }
     }
 
@@ -537,7 +546,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
                     .threadPriority(Thread.NORM_PRIORITY - 1)
                     .denyCacheImageMultipleSizesInMemory()
                     .memoryCache(
-                            new UsingFreqLimitedMemoryCache(2 * 1024 * 1024))
+                            new UsingFreqLimitedMemoryCache(3 * 1024 * 1024))
                     .diskCacheSize(50 * 1024 * 1024)
                     // You can pass your own memory cache implementation
                     .tasksProcessingOrder(QueueProcessingType.LIFO)
@@ -556,7 +565,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
                     .threadPriority(Thread.NORM_PRIORITY - 1)
                     .denyCacheImageMultipleSizesInMemory()
                     .memoryCache(
-                            new UsingFreqLimitedMemoryCache(2 * 1024 * 1024))
+                            new UsingFreqLimitedMemoryCache(3 * 1024 * 1024))
                     .diskCacheSize(50 * 1024 * 1024)
                     // You can pass your own memory cache implementation
                     .tasksProcessingOrder(QueueProcessingType.LIFO)
