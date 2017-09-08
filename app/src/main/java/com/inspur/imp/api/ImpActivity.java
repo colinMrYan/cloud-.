@@ -25,10 +25,12 @@ import android.widget.TextView;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.bean.Language;
 import com.inspur.emmcloud.config.MyAppWebConfig;
 import com.inspur.emmcloud.util.AppUtils;
 import com.inspur.emmcloud.util.MDM.MDM;
 import com.inspur.emmcloud.util.PreferencesByUsersUtils;
+import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.imp.engine.webview.ImpWebView;
@@ -219,6 +221,12 @@ public class ImpActivity extends ImpBaseActivity {
 
     private void setLangHeader(String langHeader) {
         extraHeaders.put("lang", langHeader);
+        String languageJson = PreferencesUtils.getString(
+                getApplicationContext(), UriUtils.tanent + "appLanguageObj");
+        if (languageJson != null) {
+            Language language = new Language(languageJson);
+            extraHeaders.put("Accept-Language", language.getIana());
+        }
     }
 
     public void onClick(View v) {
