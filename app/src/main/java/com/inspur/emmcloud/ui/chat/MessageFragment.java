@@ -754,7 +754,7 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
             channelContentText.setTextColor(getResources().getColor(
                     R.color.msg_content_color));
             channelTimeText.setTextColor(getResources().getColor(
-                    R.color.msg_content_color));
+                    R.color.msg_time_color));
         }
     }
 
