@@ -2,6 +2,7 @@ package com.inspur.emmcloud.ui.mine.setting;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -135,11 +136,24 @@ public class CreateGestureActivity extends BaseActivity {
 	 * 重新设置手势
 	 */
 	@Event(R.id.gesture_reset_btn)
-	public void onClick() {
-		mChosenPattern = null;
-		lockPatternIndicator.setDefaultIndicator();
-		updateStatus(Status.DEFAULT, null);
-		lockPatternView.setPattern(LockPatternView.DisplayMode.DEFAULT);
+	private void resetGesture(View view) {
+		switch (view.getId()){
+			case R.id.gesture_reset_btn:
+				mChosenPattern = null;
+				lockPatternIndicator.setDefaultIndicator();
+				updateStatus(Status.DEFAULT, null);
+				lockPatternView.setPattern(LockPatternView.DisplayMode.DEFAULT);
+				break;
+		}
+
+	}
+
+	public void onClick(View view){
+		switch (view.getId()){
+			case R.id.back_layout:
+				finish();
+				break;
+		}
 	}
 
 	/**
