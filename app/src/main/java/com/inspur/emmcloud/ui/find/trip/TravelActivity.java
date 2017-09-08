@@ -1,5 +1,6 @@
 package com.inspur.emmcloud.ui.find.trip;
 
+import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.util.LogUtils;
 
@@ -14,7 +15,7 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 
-public class TravelActivity extends Activity {
+public class TravelActivity extends BaseActivity {
 
 	private ListView travelListView;
 

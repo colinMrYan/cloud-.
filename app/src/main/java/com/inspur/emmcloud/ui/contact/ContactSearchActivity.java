@@ -137,8 +137,8 @@ public class ContactSearchActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
+        StateBarColor.changeStateBarColor(this,R.color.contact_header_bg);
         setContentView(R.layout.activity_contact_search);
-        StateBarColor.changeStateBarColor(this,Color.parseColor("#EFEFF4"));
         ((MyApplication) getApplicationContext()).addActivity(this);
         rootContact = ContactCacheUtils
                 .getRootContact(ContactSearchActivity.this);
