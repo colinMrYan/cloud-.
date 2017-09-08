@@ -407,7 +407,7 @@
     <string name="my_setting_tips_quit">确定清除应用内所有缓存数据？清除后将退出应用</string>
     <string name="get_language_error">未获取到可用的语言包，请联系管理员</string>
     <string name="app_customer">云+客服</string>
-    <string name="settings_device_manager">设备安全与管理</string>
+    <string name="settings_device_manager">设备查看与管理</string>
     <string name="device_unbind_sucess">设备解绑成功！</string>
     <string name="device_other_unbind_warning">解绑后，从%1$s上登录，您需要重新注册设备</string>
     <string name="device_current_unbind_warning">解绑后，您需要重新登录并注册设备</string>
@@ -821,7 +821,7 @@
     <string name="hwpush_ability_value" translatable="false">successRateAnalytics</string>
 
     <!--安全中心-->
-    <string name="setting_safe_center">安全中心</string>
+    <string name="setting_safe_center">账号、设备安全</string>
     <string name="safe_center_gesture">手势密码锁定</string>
     <string name="safe_center_finger_print">指纹</string>
     <string name="switch_gesture_unlock">手势解锁</string>
@@ -844,7 +844,7 @@
     <string name="create_gesture_confirm_correct">设置成功</string>
     <string name="create_gesture_reset">重新设置</string>
     <string name="create_gesture_code">创建手势密码</string>
-    <string name="create_gesture_guid">您可以创建一个图案解锁</string>
+    <string name="create_gesture_guid">您可以创建一个云+图案解锁图案，这样他人在借用你的手机时，将无法打开云+</string>
     <string name="safe_center_enable">已启用</string>
     <string name="safe_center_unenable">未启用</string>
 

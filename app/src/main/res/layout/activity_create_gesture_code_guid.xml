@@ -57,10 +57,11 @@
             android:src="@drawable/gesture_code_img" />
 
         <TextView
-            android:layout_width="match_parent"
-            android:layout_height="21dp"
+            android:layout_width="320dp"
+            android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:gravity="center_horizontal"
+            android:gravity="center|center_horizontal"
+            android:maxLines="2"
             android:layout_gravity="center_horizontal"
             android:text="@string/create_gesture_guid"
             android:textSize="@dimen/content_normal_textsize" />

@@ -403,7 +403,7 @@
     <string name="my_setting_tips_quit">Sure to clear all cache? App will close after clear</string>
     <string name="get_language_error">Not available to the language package, please contact the administrator</string>
     <string name="app_customer">Cloud+ Customer</string>
-    <string name="settings_device_manager">Equipment safety and management</string>
+    <string name="settings_device_manager">Device view and management</string>
     <string name="device_unbind_sucess">Device unbound successfully!</string>
     <string name="device_other_unbind_warning">After binding, log on from %1$s, you need to re register the device</string>
     <string name="device_current_unbind_warning">After binding, you need to log in again and register your device</string>
@@ -789,7 +789,7 @@
     <string name="splash_skip">Enter immediately</string>
 
     <!--安全中心-->
-    <string name="setting_safe_center">Security Center</string>
+    <string name="setting_safe_center">Account and device security</string>
     <string name="safe_center_gesture">Gesture password locking</string>
     <string name="safe_center_finger_print">Fingerprint</string>
     <string name="switch_gesture_unlock">Gesture unlock</string>
@@ -812,7 +812,7 @@
     <string name="create_gesture_confirm_correct">Set successfully</string>
     <string name="create_gesture_reset">Reset</string>
     <string name="create_gesture_code">Create gesture password</string>
-    <string name="create_gesture_guid">You can create a pattern to unlock</string>
+    <string name="create_gesture_guid">You can create a cloud + pattern unlock pattern so that others can\'t open the cloud when they borrow your cell phone</string>
     <string name="safe_center_enable">Enabled</string>
     <string name="safe_center_unenable">Not enabled</string>
 
