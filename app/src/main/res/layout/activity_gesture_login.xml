@@ -43,20 +43,24 @@
             android:layout_width="@dimen/_270dp"
             android:layout_height="@dimen/_270dp"
             android:layout_gravity="center_horizontal" />
-
-
-        <Button
-            android:id="@+id/forget_gesture_btn"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:layout_centerHorizontal="true"
-            android:background="@null"
-            android:textColor="@color/header_bg"
-            android:padding="@dimen/_20dp"
-            android:text="@string/forgetpwd"
-            android:textSize="@dimen/_14sp" />
-
+            android:layout_height="match_parent"
+            >
+            <Button
+                android:id="@+id/forget_gesture_btn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_gravity="bottom"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:background="@null"
+                android:textColor="@color/header_bg"
+                android:paddingBottom="@dimen/_20dp"
+                android:text="@string/forgetpwd"
+                android:textSize="@dimen/_14sp" />
+        </RelativeLayout>
 
     </LinearLayout>
 </LinearLayout>
