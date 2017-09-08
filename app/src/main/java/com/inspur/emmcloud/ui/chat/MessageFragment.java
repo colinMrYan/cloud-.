@@ -1063,7 +1063,6 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
     }
 
     private void showSocketStatusInTitle(String socketStatus) {
-        LogUtils.jasonDebug("socketStatus==="+socketStatus);
         if (socketStatus.equals("socket_connecting")) {
             titleText.setText(R.string.socket_connecting);
         } else if (socketStatus.equals(Socket.EVENT_CONNECT)) {

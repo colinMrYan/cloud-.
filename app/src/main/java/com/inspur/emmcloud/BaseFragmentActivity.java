@@ -13,7 +13,6 @@ import com.inspur.emmcloud.util.AppUtils;
 import com.inspur.emmcloud.util.DbCacheUtils;
 import com.inspur.emmcloud.util.IntentUtils;
 import com.inspur.emmcloud.util.NetUtils;
-import com.inspur.emmcloud.util.StateBarColor;
 import com.inspur.emmcloud.util.StringUtils;
 
 public class BaseFragmentActivity extends FragmentActivity {
@@ -61,7 +60,7 @@ public class BaseFragmentActivity extends FragmentActivity {
                 ((MyApplication) getApplicationContext()).clearNotification();
                 uploadMDMInfo();
                 ((MyApplication) getApplicationContext()).sendActivedWSMsg();
-                if(getIsNeedGestureCode()){
+                if(getIsNeedGestureCode()){//这里两处登录均不走这个方法，如果以后集成单点登录，需要集成BaseActivity，或者BaseFragmentActivity
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
