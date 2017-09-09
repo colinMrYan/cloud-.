@@ -8,6 +8,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.os.Bundle;
 import android.os.Environment;
 import android.os.Parcelable;
 import android.support.multidex.MultiDexApplication;
@@ -29,6 +30,7 @@ import com.inspur.emmcloud.callback.OauthCallBack;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.push.WebSocketPush;
 import com.inspur.emmcloud.ui.login.LoginActivity;
+import com.inspur.emmcloud.ui.mine.setting.GestureLoginActivity;
 import com.inspur.emmcloud.util.AppUtils;
 import com.inspur.emmcloud.util.CalEventNotificationUtils;
 import com.inspur.emmcloud.util.CrashHandler;
@@ -120,6 +122,16 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
 
     }
 
+    public void startGestureLoginActivity(){
+        Bundle bundle = new Bundle();
+        bundle.putString("gesture_code_change","login");
+//        IntentUtils.startActivity(getApplicationContext(), GestureLoginActivity.class,bundle);
+        Intent intent = new Intent();
+        intent.setClass(getApplicationContext(), GestureLoginActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+    }
+
 /**************************************登出逻辑相关********************************************************/
     //登出逻辑
     public void signout() {
@@ -139,6 +151,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         ((MyApplication) getApplicationContext()).setAccessToken("");
         Intent intent = new Intent();
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.setClass(this, LoginActivity.class);
         startActivity(intent);
         exit();
