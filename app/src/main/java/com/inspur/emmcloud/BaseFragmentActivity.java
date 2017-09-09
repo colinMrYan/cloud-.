@@ -68,7 +68,7 @@ public class BaseFragmentActivity extends FragmentActivity {
                             bundle.putString("gesture_code_change","login");
                             IntentUtils.startActivity(BaseFragmentActivity.this, GestureLoginActivity.class,bundle);
                         }
-                    },200);
+                    },100);
                 }
             }
         }
