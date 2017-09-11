@@ -118,7 +118,7 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
     private TextView titleText;
     private boolean isHaveCreatGroupIcon = false;
     private PopupWindow popupWindow;
-    private boolean isFirstConnectWebsockt = true;//判断是否第一次连上websockt
+    //private boolean isFirstConnectWebsockt = true;//判断是否第一次连上websockt
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -1066,11 +1066,11 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
         if (socketStatus.equals("socket_connecting")) {
             titleText.setText(R.string.socket_connecting);
         } else if (socketStatus.equals(Socket.EVENT_CONNECT)) {
-            //当断开以后连接成功(非第一次连接上)后重新拉取一遍消息
-            if (!isFirstConnectWebsockt){
-                getChannelContent();
-            }
-            isFirstConnectWebsockt = false;
+//            //当断开以后连接成功(非第一次连接上)后重新拉取一遍消息
+//            if (!isFirstConnectWebsockt){
+//                getChannelContent();
+//            }
+//            isFirstConnectWebsockt = false;
             String appTabs = PreferencesByUserAndTanentUtils.getString(getActivity(), "app_tabbar_info_current", "");
             if (!StringUtils.isBlank(appTabs)) {
                 titleText.setText(AppTitleUtils.getTabTitle(getActivity(), getClass().getSimpleName()));
