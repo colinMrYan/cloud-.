@@ -268,7 +268,6 @@
     <string name="message_create_group">发起群聊</string>
 
 
-
     <!-- 会议卡片 -->
     <string name="meeting_has_confirmed">已确认</string>
     <string name="meeting_has_refused">已拒绝</string>
@@ -407,7 +406,7 @@
     <string name="my_setting_tips_quit">确定清除应用内所有缓存数据？清除后将退出应用</string>
     <string name="get_language_error">未获取到可用的语言包，请联系管理员</string>
     <string name="app_customer">云+客服</string>
-    <string name="settings_device_manager">设备安全与管理</string>
+    <string name="settings_device_manager">设备查看与管理</string>
     <string name="device_unbind_sucess">设备解绑成功！</string>
     <string name="device_other_unbind_warning">解绑后，从%1$s上登录，您需要重新注册设备</string>
     <string name="device_current_unbind_warning">解绑后，您需要重新登录并注册设备</string>
@@ -426,8 +425,6 @@
     <string name="select_enterprise">选择企业</string>
     <string name="switch_enterprise">切换企业</string>
     <string name="current_enterprise">当前企业</string>
-
-
 
 
     <!-- 修改密码部分 -->
@@ -820,4 +817,42 @@
     <!--华为推送-->
     <string name="hwpush_ability_value" translatable="false">successRateAnalytics</string>
 
+    <!--安全中心-->
+    <string name="setting_safe_center">账号、设备安全</string>
+    <string name="safe_center_gesture">手势密码锁定</string>
+    <string name="safe_center_finger_print">指纹</string>
+    <string name="switch_gesture_unlock">手势解锁</string>
+    <string name="switch_gesture_reset_unlock">重置手势解锁</string>
+    <!--九宫格-->
+    <!-- Gesture login activity -->
+    <string name="gesture_forget_gesture">忘记手势密码</string>
+    <string name="gesture_default">请输入手势密码</string>
+    <string name="gesture_error">手势密码输入错误</string>
+    <string name="gesture_correct">输入正确</string>
+    <string name="gesture_code_error">密码错误，还可以再试</string>
+    <string name="gesture_code_time">次</string>
+    <string name="gesture_code_tips">5次失败后，需要重新登录</string>
+
+    <!-- Create gesture activity -->
+    <string name="create_gesture_default">绘制解锁图案</string>
+    <string name="create_gesture_correct">再次绘制解锁图案</string>
+    <string name="create_gesture_less_error">至少连接4个点，请重新输入</string>
+    <string name="create_gesture_confirm_error">与上一次绘制不一致，请重新绘制</string>
+    <string name="create_gesture_confirm_correct">设置成功</string>
+    <string name="create_gesture_reset">重新设置</string>
+    <string name="create_gesture_code">创建手势密码</string>
+    <string name="create_gesture_guid">您可以创建一个云+图案解锁图案，这样他人在借用你的手机时，将无法打开云+</string>
+    <string name="safe_center_enable">已启用</string>
+    <string name="safe_center_unenable">未启用</string>
+
+
+
+
+    <string name="qr_code_analysis_fail">二维码解析失败</string>
+
+
+
+    //tag标签
+    <item name="tag_first" type="id"></item>
+    <item name="tag_second" type="id"></item>
 </resources>

@@ -104,8 +104,7 @@ public class KnowledgeActivity extends BaseActivity {
 			ImageView knowledgeImageView = (ImageView) convertView.findViewById(R.id.knowledge_img);
 			nameText.setText(knowledgeList.get(position).getName());
 
-			new ImageDisplayUtils(getApplicationContext(),
-					R.drawable.icon_photo_default).display(knowledgeImageView, UriUtils.getPreviewUri(knowledgeList.get(position).getIcon()));
+			new ImageDisplayUtils(R.drawable.icon_photo_default).displayImage(knowledgeImageView, UriUtils.getPreviewUri(knowledgeList.get(position).getIcon()));
 			return convertView;
 		}
 

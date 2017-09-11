@@ -403,7 +403,7 @@
     <string name="my_setting_tips_quit">Sure to clear all cache? App will close after clear</string>
     <string name="get_language_error">Not available to the language package, please contact the administrator</string>
     <string name="app_customer">Cloud+ Customer</string>
-    <string name="settings_device_manager">Equipment safety and management</string>
+    <string name="settings_device_manager">Device view and management</string>
     <string name="device_unbind_sucess">Device unbound successfully!</string>
     <string name="device_other_unbind_warning">After binding, log on from %1$s, you need to re register the device</string>
     <string name="device_current_unbind_warning">After binding, you need to log in again and register your device</string>
@@ -787,5 +787,37 @@
 
     <!--闪屏页文字资源-->
     <string name="splash_skip">Enter immediately</string>
+
+    <!--安全中心-->
+    <string name="setting_safe_center">Account and device security</string>
+    <string name="safe_center_gesture">Gesture password locking</string>
+    <string name="safe_center_finger_print">Fingerprint</string>
+    <string name="switch_gesture_unlock">Gesture unlock</string>
+    <string name="switch_gesture_reset_unlock">Reset gesture unlock</string>
+    <!--九宫格-->
+    <!-- Gesture login activity -->
+    <string name="gesture_forget_gesture">Forget gesture code</string>
+    <string name="gesture_default">Please enter a gesture password</string>
+    <string name="gesture_error">Gesture password input error</string>
+    <string name="gesture_correct">Input correct</string>
+    <string name="gesture_code_error">Password error, you can try again</string>
+    <string name="gesture_code_time">times</string>
+    <string name="gesture_code_tips">After 5 failures, you need to log in again</string>
+
+    <!-- Create gesture activity -->
+    <string name="create_gesture_default">Draw unlock patterns</string>
+    <string name="create_gesture_correct">Draw the unlock pattern again</string>
+    <string name="create_gesture_less_error">Connect at least 4 points. Please re-enter</string>
+    <string name="create_gesture_confirm_error">Inconsistent with previous drawing, please redraw</string>
+    <string name="create_gesture_confirm_correct">Set successfully</string>
+    <string name="create_gesture_reset">Reset</string>
+    <string name="create_gesture_code">Create gesture password</string>
+    <string name="create_gesture_guid">You can create a cloud + pattern unlock pattern so that others can\'t open the cloud when they borrow your cell phone</string>
+    <string name="safe_center_enable">Enabled</string>
+    <string name="safe_center_unenable">Not enabled</string>
+
+
+    <string name="qr_code_analysis_fail">Qr code parsing failed</string>
+
 
 </resources>

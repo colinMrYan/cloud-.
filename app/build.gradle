@@ -53,7 +53,7 @@ android {
     configurations.all {
         // React Native依赖的findbugs版本更高
         resolutionStrategy.force 'com.google.code.findbugs:jsr305:3.0.0',
-                'com.squareup.okhttp3:okhttp:3.4.1'
+                'com.squareup.okhttp3:okhttp-ws:3.4.1'
     }
     lintOptions {
         lintConfig file("lint.xml")
@@ -140,6 +140,10 @@ dependencies {
     compile 'com.jakewharton:disklrucache:2.0.2'
     //Markdown引入 缓存
     compile 'com.android.support:multidex:1.0.1'
+    compile 'com.wei.android.lib:fingerprintidentify:1.2.1'//指纹识别库暂未启用
+
+
+    // React Naive Components
     compile project(':react-native-smart-swipe-refresh-layout')
     compile project(':react-native-picker')
     testCompile 'junit:junit:4.12'

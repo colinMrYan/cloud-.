@@ -199,12 +199,15 @@ public class AppCenterActivity extends BaseActivity {
                             .getSerializable("app");
                     int recommandAppIndex = -1,groupIndex = 0;
                     Iterator<List<App>> appItemList = appList.listIterator();
-                    while (appItemList.hasNext()){
+                    while (appItemList !=null && appItemList.hasNext()){
                         recommandAppIndex = appItemList.next().indexOf(addApp);
                         groupIndex = groupIndex + 1;
                     }
                     if (recommandAppIndex != -1) {
-                        appList.get(groupIndex).get(recommandAppIndex).setUseStatus(1);
+                        List<App> recommendAppItemList = appList.get(groupIndex);
+                        if(recommendAppItemList != null){
+                            recommendAppItemList.get(recommandAppIndex).setUseStatus(1);
+                        }
                     }
                     for (int i = 0; i < categorieAppList.size(); i++) {
                         int categoriesAppIndex = categorieAppList.get(i).getAppItemList().indexOf(addApp);
@@ -317,7 +320,7 @@ public class AppCenterActivity extends BaseActivity {
      * 分类的adapter
      */
     class CategoriesAppAdapter extends BaseAdapter {
-        ImageDisplayUtils imageDisplayUtils = new ImageDisplayUtils(AppCenterActivity.this,R.drawable.icon_app_center_categories);
+        ImageDisplayUtils imageDisplayUtils = new ImageDisplayUtils(R.drawable.icon_app_center_categories);
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
             convertView = LayoutInflater.from(AppCenterActivity.this).inflate(R.layout.app_center_category_item, null);
@@ -325,7 +328,7 @@ public class AppCenterActivity extends BaseActivity {
             ImageView appCenterCategoryIcon = (ImageView) convertView.findViewById(R.id.app_center_categories_icon_img);
             String appCenterCategoryIconUrl = categorieAppList.get(position).getCategoryIco();
             if(!StringUtils.isBlank(appCenterCategoryIconUrl)){
-                imageDisplayUtils.display(appCenterCategoryIcon,appCenterCategoryIconUrl);
+                imageDisplayUtils.displayImage(appCenterCategoryIcon,appCenterCategoryIconUrl);
             }
             return convertView;
         }
@@ -430,7 +433,7 @@ public class AppCenterActivity extends BaseActivity {
             AppAdsBean app = adsList.get(newPosition);
             ImageView imageView = new ImageView(AppCenterActivity.this);
             imageView.setScaleType(ImageView.ScaleType.FIT_XY);
-            new ImageDisplayUtils(getApplicationContext(), R.drawable.app_center_banner).display(imageView, app.getLegend());
+            new ImageDisplayUtils(R.drawable.app_center_banner).displayImage(imageView, app.getLegend());
             ((ViewPager) container).addView(imageView);
             imageView.setOnClickListener(new OnClickListener() {
                 @Override
@@ -476,7 +479,7 @@ public class AppCenterActivity extends BaseActivity {
         @Override
         public void onBindViewHolder(final RecommandViewHolder holder, final int position) {
             int size = adsList.size() == 0 ? listPosition:(listPosition - 1);
-            new ImageDisplayUtils().display(holder.recommandAppImg,appList.get(size).get(position).getAppIcon());
+            new ImageDisplayUtils().displayImage(holder.recommandAppImg,appList.get(size).get(position).getAppIcon());
                 holder.recommandAppText.setText(appList.get(size).get(position).getAppName());
             if (onRecommandItemClickListener != null) {
                 holder.itemView.setOnClickListener(new OnClickListener() {

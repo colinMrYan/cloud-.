@@ -5,7 +5,6 @@ import java.util.List;
 
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.Attachment;
-import com.inspur.emmcloud.bean.TaskResult;
 import com.inspur.emmcloud.util.ImageDisplayUtils;
 
 import android.content.Context;
@@ -13,7 +12,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -31,8 +29,7 @@ public class MyGridViewAdapter extends BaseAdapter {
 	public MyGridViewAdapter(Context context, List<Attachment> attachments, int page) {
 		this.context = context;
 		
-		imageDisplayUtils = new ImageDisplayUtils(context,
-				R.drawable.icon_photo_default);
+		imageDisplayUtils = new ImageDisplayUtils(R.drawable.icon_photo_default);
 		mLists = new ArrayList<Attachment>();
 		int i = page *PAGE_SIZE;
 		int end = i +PAGE_SIZE;
@@ -78,25 +75,25 @@ public class MyGridViewAdapter extends BaseAdapter {
 		
 		if(position < mLists.size()){
 			if(mLists.get(position).getType().equals("JPEG")){
-				imageDisplayUtils.display(_Holder.btn_gv_item, "drawable://"
+				imageDisplayUtils.displayImage(_Holder.btn_gv_item, "drawable://"
 						+ R.drawable.icon_file_photos);
 			}else if (mLists.get(position).getType().equals("MS_WORD")) {
-				imageDisplayUtils.display(_Holder.btn_gv_item, "drawable://"
+				imageDisplayUtils.displayImage(_Holder.btn_gv_item, "drawable://"
 						+ R.drawable.icon_file_word);
 			}else if (mLists.get(position).getType().equals("MS_EXCEL")) {
-				imageDisplayUtils.display(_Holder.btn_gv_item, "drawable://"
+				imageDisplayUtils.displayImage(_Holder.btn_gv_item, "drawable://"
 						+ R.drawable.icon_file_excel);
 			}else if (mLists.get(position).getType().equals("MS_PPT")) {
-				imageDisplayUtils.display(_Holder.btn_gv_item, "drawable://"
+				imageDisplayUtils.displayImage(_Holder.btn_gv_item, "drawable://"
 						+ R.drawable.icon_file_ppt);
 			}else if (mLists.get(position).getType().equals("TEXT")) {
-				imageDisplayUtils.display(_Holder.btn_gv_item, "drawable://"
+				imageDisplayUtils.displayImage(_Holder.btn_gv_item, "drawable://"
 						+ R.drawable.icon_file_word);
 			}	
 			_Holder.textView.setText(mLists.get(position).getName());
 		}else {
 			
-				imageDisplayUtils.display(_Holder.btn_gv_item, "drawable://"
+				imageDisplayUtils.displayImage(_Holder.btn_gv_item, "drawable://"
 						+ R.drawable.icon_member_add);
 				_Holder.textView.setText(context.getString(R.string.add));
 				

@@ -230,20 +230,19 @@ public class MyAppAPIService {
      * 应用搜索
      *
      */
-    public void searchApp(final String keyword, final int pageNumber) {
+    public void searchApp(final String keyword) {
         final String completeUrl = APIUri.getAllApps();
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
         params.addParameter("keyword", keyword);
         params.addParameter("clientType", 0);
-        params.addParameter("pageNumber", pageNumber);
         x.http().post(params, new APICallback(context,completeUrl) {
             @Override
             public void callbackTokenExpire() {
                 new OauthUtils(new OauthCallBack() {
                     @Override
                     public void reExecute() {
-                        searchApp(keyword, pageNumber);
+                        searchApp(keyword);
                     }
 
                     @Override
@@ -255,22 +254,13 @@ public class MyAppAPIService {
 
             @Override
             public void callbackSuccess(String arg0) {
-                if (pageNumber > 1) {
                     apiInterface.returnSearchAppSuccess(new GetSearchAppResult(
                             arg0));
-                } else {
-                    apiInterface.returnSearchAppSuccess(new GetSearchAppResult(
-                            arg0));
-                }
             }
 
             @Override
             public void callbackFail(String error, int responseCode) {
-                if (pageNumber > 1) {
-                    apiInterface.returnSearchAppMoreFail(error,responseCode);
-                } else {
                     apiInterface.returnSearchAppFail(error,responseCode);
-                }
             }
         });
 
