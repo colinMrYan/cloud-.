@@ -74,7 +74,7 @@ public class BaseActivity extends Activity {
                             bundle.putString("gesture_code_change","login");
                             IntentUtils.startActivity(BaseActivity.this, GestureLoginActivity.class,bundle);
                         }
-                    },200);
+                    },100);
                 }
             }
         }
