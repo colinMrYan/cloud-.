@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 
 import com.inspur.emmcloud.MyApplication;
@@ -71,7 +72,7 @@ public class JpushReceiver extends BroadcastReceiver {
             if (((MyApplication) context.getApplicationContext()).getIsActive()) {
                 return;
             }
-            openNotifycation(context,bundle);
+            openNotifycation(context, bundle);
         } else if (JPushInterface.ACTION_RICHPUSH_CALLBACK.equals(intent
                 .getAction())) {
             LogUtils.debug(TAG,
@@ -101,30 +102,32 @@ public class JpushReceiver extends BroadcastReceiver {
 
     /**
      * 打开通知相应的界面
+     *
      * @param context
      * @param bundle
      */
-    private  void openNotifycation(Context context,Bundle bundle){
-        openIndexActivity(context);
+    private void openNotifycation(final Context context, Bundle bundle) {
         String extra = "";
         if (bundle.containsKey(JPushInterface.EXTRA_EXTRA)) {
             extra = bundle.getString(JPushInterface.EXTRA_EXTRA);
         }
         if (!StringUtils.isBlank(extra)) {
             try {
-                JSONObject extraObj = new JSONObject(extra);
+                final JSONObject extraObj = new JSONObject(extra);
                 //日历提醒的通知
                 if (extraObj.has("calEvent")) {
+                    openIndexActivity(context);
                     openCalEvent(context, extraObj);
                 } else if (extraObj.has("action")) {//用scheme打开相应的页面
                     openScheme(context, extraObj);
                 } else if (extraObj.has("channel")) {
+                    openIndexActivity(context);
                     openChannel(context, extraObj);
                 }
             } catch (Exception e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
+
         }
     }
 
@@ -151,14 +154,25 @@ public class JpushReceiver extends BroadcastReceiver {
      * @param context
      * @param extraObj
      */
-    private void openCalEvent(Context context, JSONObject extraObj) throws Exception {
-        String json = extraObj.getString("calEvent");
-        JSONObject calEventObj = new JSONObject(json);
-        CalendarEvent calendarEvent = new CalendarEvent(calEventObj);
-        Intent intent = new Intent(context, CalEventAddActivity.class);
-        intent.putExtra("calEvent", calendarEvent);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        context.startActivity(intent);
+    private void openCalEvent(final Context context, final JSONObject extraObj) {
+        //此处加延时操作，为了让打开通知时IndexActivity走onCreate()方法
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    String json = extraObj.getString("calEvent");
+                    JSONObject calEventObj = new JSONObject(json);
+                    CalendarEvent calendarEvent = new CalendarEvent(calEventObj);
+                    Intent intent = new Intent(context, CalEventAddActivity.class);
+                    intent.putExtra("calEvent", calendarEvent);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    context.startActivity(intent);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }, 1);
+
     }
 
     /**
@@ -167,15 +181,19 @@ public class JpushReceiver extends BroadcastReceiver {
      * @param context
      * @param extraObj
      */
-    private void openScheme(Context context, JSONObject extraObj) throws Exception {
-        JSONObject actionObj = extraObj.getJSONObject("action");
-        String type = actionObj.getString("type");
-        if (type.equals("open-url")) {
-            String scheme = actionObj.getString("url");
-            Intent intent = new Intent(Intent.ACTION_VIEW);
-            intent.setData(Uri.parse(scheme));
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            context.startActivity(intent);
+    private void openScheme(Context context, JSONObject extraObj) {
+        try {
+            JSONObject actionObj = extraObj.getJSONObject("action");
+            String type = actionObj.getString("type");
+            if (type.equals("open-url")) {
+                String scheme = actionObj.getString("url");
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(Uri.parse(scheme));
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(intent);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -185,19 +203,27 @@ public class JpushReceiver extends BroadcastReceiver {
      * @param context
      * @param extraObj
      */
-    private void openChannel(Context context, JSONObject extraObj) {
-        String cid = JSONUtils.getString(extraObj, "channel", "");
-        if (!StringUtils.isBlank(cid)) {
-            Intent intent = new Intent(context, ChannelActivity.class);
-            intent.putExtra("get_new_msg", true);
-            intent.putExtra("cid", cid);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            context.startActivity(intent);
-        }
+    private void openChannel(final Context context, final JSONObject extraObj) {
+        //此处加延时操作，为了让打开通知时IndexActivity走onCreate()方法
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                String cid = JSONUtils.getString(extraObj, "channel", "");
+                if (!StringUtils.isBlank(cid)) {
+                    Intent intent = new Intent(context, ChannelActivity.class);
+                    intent.putExtra("get_new_msg", true);
+                    intent.putExtra("cid", cid);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    context.startActivity(intent);
+                }
+            }
+        },1);
+
     }
 
     /**
      * 打印所有的 intent extra 数据
+     *
      * @param bundle
      * @return
      */

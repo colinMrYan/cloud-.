@@ -24,7 +24,7 @@ public class BaseActivity extends Activity {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
         String className = this.getClass().getCanonicalName();
-        LogUtils.jasonDebug("className="+className);
+        LogUtils.jasonDebug("className="+className+"onCreate----");
         if (!className.equals("com.inspur.imp.plugin.barcode.scan.CaptureActivity") &&!className.equals("com.inspur.imp.plugin.camera.mycamera.MyCameraActivity") ){
             StateBarColor.changeStateBarColor(this);
         }
@@ -59,6 +59,8 @@ public class BaseActivity extends Activity {
     protected void onResume() {
         // TODO Auto-generated method stub
         super.onResume();
+        String className = this.getClass().getCanonicalName();
+        LogUtils.jasonDebug("className="+className+"onResume----");
         if (!((MyApplication) getApplicationContext()).getIsActive()) {
             if (((MyApplication) getApplicationContext())
                     .isIndexActivityRunning()) {
@@ -67,14 +69,20 @@ public class BaseActivity extends Activity {
                 uploadMDMInfo();
                 ((MyApplication) getApplicationContext()).sendActivedWSMsg();
                 if(getIsNeedGestureCode()){//这里两处登录均不走这个方法，如果以后集成单点登录，需要集成BaseActivity，或者BaseFragmentActivity
-                    new Handler().postDelayed(new Runnable() {
+                    new Thread(new Runnable() {
                         @Override
                         public void run() {
-                            Bundle bundle = new Bundle();
-                            bundle.putString("gesture_code_change","login");
-                            IntentUtils.startActivity(BaseActivity.this, GestureLoginActivity.class,bundle);
+                            try {
+                                Thread.sleep(10);
+                                Bundle bundle = new Bundle();
+                                bundle.putString("gesture_code_change","login");
+                                IntentUtils.startActivity(BaseActivity.this, GestureLoginActivity.class,bundle);
+                            }catch (Exception e){
+                                e.printStackTrace();
+                            }
+
                         }
-                    },100);
+                    }).start();
                 }
             }
         }

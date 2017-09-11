@@ -61,14 +61,20 @@ public class BaseFragmentActivity extends FragmentActivity {
                 uploadMDMInfo();
                 ((MyApplication) getApplicationContext()).sendActivedWSMsg();
                 if(getIsNeedGestureCode()){//这里两处登录均不走这个方法，如果以后集成单点登录，需要集成BaseActivity，或者BaseFragmentActivity
-                    new Handler().postDelayed(new Runnable() {
+                    new Thread(new Runnable() {
                         @Override
                         public void run() {
-                            Bundle bundle = new Bundle();
-                            bundle.putString("gesture_code_change","login");
-                            IntentUtils.startActivity(BaseFragmentActivity.this, GestureLoginActivity.class,bundle);
+                            try {
+                                Thread.sleep(10);
+                                Bundle bundle = new Bundle();
+                                bundle.putString("gesture_code_change","login");
+                                IntentUtils.startActivity(BaseFragmentActivity.this, GestureLoginActivity.class,bundle);
+                            }catch (Exception e){
+                                e.printStackTrace();
+                            }
+
                         }
-                    },100);
+                    }).start();
                 }
             }
         }
