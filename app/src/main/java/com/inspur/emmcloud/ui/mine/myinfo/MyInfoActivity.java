@@ -80,8 +80,7 @@ public class MyInfoActivity extends BaseActivity {
 		userHeadImg = (ImageView) findViewById(R.id.myinfo_userheadimg_img);
 		userMailText = (TextView) findViewById(R.id.myinfo_usermail_text);
 		resetLayout = (RelativeLayout) findViewById(R.id.myinfo_reset_layout);
-		imageDisplayUtils = new ImageDisplayUtils(getApplicationContext(),
-				R.drawable.icon_photo_default);
+		imageDisplayUtils = new ImageDisplayUtils(R.drawable.icon_photo_default);
 		apiService = new MineAPIService(MyInfoActivity.this);
 		apiService.setAPIInterface(new WebService());
 	}
@@ -93,7 +92,7 @@ public class MyInfoActivity extends BaseActivity {
 		if (getMyInfoResult != null) {
 			String photoUri = UriUtils
 					.getChannelImgUri(MyInfoActivity.this,getMyInfoResult.getID());
-			imageDisplayUtils.display(userHeadImg, photoUri);
+			imageDisplayUtils.displayImage(userHeadImg, photoUri);
 			String userName = getMyInfoResult.getName();
 			((TextView) findViewById(R.id.myinfo_username_text)).setText(userName.equals("null") ? getString(R.string.not_set) : userName);
 			String mail = getMyInfoResult.getMail();
@@ -305,7 +304,7 @@ public class MyInfoActivity extends BaseActivity {
 			 * 向更多页面发送消息修改头像
 			 */
 			String userHeadImgUrl = getUploadMyHeadResult.getUrl();
-			imageDisplayUtils.display(userHeadImg, photoLocalPath);
+			imageDisplayUtils.displayImage(userHeadImg, photoLocalPath);
 			Message msg = new Message();
 			msg.what = UPDATE_MY_HEAD;
 			msg.obj = userHeadImgUrl;

@@ -47,8 +47,7 @@ public class MentionActivty extends BaseActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_mentions_mem);
 		mentionListView = (ListView) findViewById(R.id.mentions_mem_list);
-		imageDisplayUtils = new ImageDisplayUtils(MentionActivty.this,
-				R.drawable.ic_launcher);
+		imageDisplayUtils = new ImageDisplayUtils(R.drawable.ic_launcher);
 
 		channelID = getIntent().getStringExtra("cid");
 
@@ -58,13 +57,6 @@ public class MentionActivty extends BaseActivity {
 			memList = ChannelGroupCacheUtils.getMembersMapList(
 					MentionActivty.this, channelID);
 		}
-
-//		for (int i = 0; i < memList.size(); i++) {
-//			if (memList.get(i).containsKey(userid)) {
-//				memList.remove(i);
-//			}
-//		}
-		
 		//迭代问题修复
 		 Iterator<Map<String, String>> sListIterator = memList.iterator();
 		    while(sListIterator.hasNext()){
@@ -155,7 +147,7 @@ public class MentionActivty extends BaseActivity {
 			name = (String) entry.getValue();
 
 			imageDisplayUtils
-					.display(headImage, UriUtils.getChannelImgUri(MentionActivty.this,uid));
+					.displayImage(headImage, UriUtils.getChannelImgUri(MentionActivty.this,uid));
 
 			nameTextView.setText(name);
 			return convertView;

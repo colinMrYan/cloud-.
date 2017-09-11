@@ -854,8 +854,7 @@ public class ChannelActivity extends BaseActivity {
                             .getRobotById(ChannelActivity.this, msg.getUid())
                             .getAvatar());
                 }
-                new ImageDisplayUtils(ChannelActivity.this,
-                        R.drawable.icon_person_default).display(senderPhotoImg,
+                new ImageDisplayUtils(R.drawable.icon_person_default).displayImage(senderPhotoImg,
                         iconUrl);
                 senderPhotoImg.setOnClickListener(new OnClickListener() {
                     @Override

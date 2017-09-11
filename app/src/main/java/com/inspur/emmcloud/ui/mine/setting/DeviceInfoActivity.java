@@ -4,12 +4,10 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.CookieManager;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
@@ -21,10 +19,8 @@ import com.inspur.emmcloud.api.apiservice.MineAPIService;
 import com.inspur.emmcloud.bean.BindingDevice;
 import com.inspur.emmcloud.bean.BindingDeviceLog;
 import com.inspur.emmcloud.bean.GetDeviceLogResult;
-import com.inspur.emmcloud.ui.login.LoginActivity;
 import com.inspur.emmcloud.util.AppUtils;
 import com.inspur.emmcloud.util.NetUtils;
-import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.TimeUtils;
 import com.inspur.emmcloud.util.ToastUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
@@ -33,8 +29,6 @@ import com.inspur.emmcloud.widget.ScrollViewWithListView;
 import com.inspur.emmcloud.widget.dialogs.EasyDialog;
 
 import java.util.List;
-
-import cn.jpush.android.api.JPushInterface;
 
 /**
  * Created by Administrator on 2017/5/15.
@@ -108,28 +102,28 @@ public class DeviceInfoActivity extends BaseActivity {
     }
 
 
-    /**
-     * 注销登录
-     */
-    private void signout() {
-        // TDO Auto-generated method stub
-        if (((MyApplication) getApplicationContext()).getWebSocketPush() != null) {
-            ((MyApplication) getApplicationContext()).getWebSocketPush()
-                    .webSocketSignout();
-        }
-        ((MyApplication) getApplicationContext()).clearNotification();
-        CookieManager cookieManager = CookieManager.getInstance();
-        cookieManager.removeAllCookie();
-        ((MyApplication) getApplicationContext()).removeAllCookie();
-        JPushInterface.stopPush(getApplicationContext());
-        PreferencesUtils.putString(DeviceInfoActivity.this, "tokenType", "");
-        PreferencesUtils.putString(DeviceInfoActivity.this, "accessToken", "");
-        Intent intent = new Intent();
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        intent.setClass(this, LoginActivity.class);
-        startActivity(intent);
-        this.finish();
-    }
+//    /**
+//     * 注销登录
+//     */
+//    private void signout() {
+//        // TDO Auto-generated method stub
+//        if (((MyApplication) getApplicationContext()).getWebSocketPush() != null) {
+//            ((MyApplication) getApplicationContext()).getWebSocketPush()
+//                    .webSocketSignout();
+//        }
+//        ((MyApplication) getApplicationContext()).clearNotification();
+//        CookieManager cookieManager = CookieManager.getInstance();
+//        cookieManager.removeAllCookie();
+//        ((MyApplication) getApplicationContext()).removeAllCookie();
+//        JPushInterface.stopPush(getApplicationContext());
+//        PreferencesUtils.putString(DeviceInfoActivity.this, "tokenType", "");
+//        PreferencesUtils.putString(DeviceInfoActivity.this, "accessToken", "");
+//        Intent intent = new Intent();
+//        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//        intent.setClass(this, LoginActivity.class);
+//        startActivity(intent);
+//        this.finish();
+//    }
 
     private class Adapter extends BaseAdapter {
         private List<BindingDeviceLog> bindingDeviceLogList;
@@ -189,7 +183,7 @@ public class DeviceInfoActivity extends BaseActivity {
             }
             ToastUtils.show(getApplicationContext(), R.string.device_unbind_sucess);
             if (bindingDevice.getDeviceId().equals(AppUtils.getMyUUID(getApplicationContext()))) {
-                signout();
+                ((MyApplication)getApplication()).signout();
             } else {
                 setResult(RESULT_OK, getIntent());
             }

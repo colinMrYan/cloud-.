@@ -26,18 +26,16 @@ import java.util.List;
 
 public class AppCenterAdapter extends BaseAdapter {
 
-	private static final int ADD_APP_FAIL = 3;
 	private static final String ACTION_NAME = "add_app";
 	private ImageDisplayUtils imageDisplayUtils;
 	private List<App> appList;
 	private Activity activity;
 	private LoadingDialog loadingDialog;
 	private MyAppAPIService apiService;
-	private GetAddAppResult getAddAppResult;
 
 	public AppCenterAdapter(Activity activity, List<App> appList) {
 		// TODO Auto-generated constructor stub
-		imageDisplayUtils = new ImageDisplayUtils(activity, R.drawable.icon_empty_icon);
+		imageDisplayUtils = new ImageDisplayUtils(R.drawable.icon_empty_icon);
 		this.appList = appList;
 		this.activity = activity;
 		loadingDialog = new LoadingDialog(activity);
@@ -63,8 +61,9 @@ public class AppCenterAdapter extends BaseAdapter {
 		AppCenterAdapter.this.notifyDataSetChanged();
 	}
 
-	public void setListData(List<App> AppList) {
+	public void notifyListData(List<App> AppList) {
 		this.appList = AppList;
+		notifyDataSetChanged();
 	}
 
 	@Override
@@ -107,7 +106,7 @@ public class AppCenterAdapter extends BaseAdapter {
 		final App app = appList.get(position);
 		
 		final String appID = app.getAppID();
-		imageDisplayUtils.display(holder.iconImg, app.getAppIcon());
+		imageDisplayUtils.displayImage(holder.iconImg, app.getAppIcon());
 		holder.nameText.setText(app.getAppName());
 		if (app.getUseStatus() == 1) {
 			holder.statusBtn.setText(activity.getString(R.string.open));
@@ -159,7 +158,6 @@ public class AppCenterAdapter extends BaseAdapter {
 		@Override
 		public void returnAddAppSuccess(GetAddAppResult getAddAppResult) {
 			// TODO Auto-generated method stub
-			AppCenterAdapter.this.getAddAppResult = getAddAppResult;
 			if (loadingDialog != null && loadingDialog.isShowing()) {
 				loadingDialog.dismiss();
 			}

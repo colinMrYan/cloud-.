@@ -386,7 +386,7 @@ package com.inspur.emmcloud.widget.mentionview;//package com.inspur.emmcloud.wid
 //     * Locale token view for the object
 //     *
 //     * @param object the object selected by the user from the list
-//     * @return a view to display a token in the text field for the object
+//     * @return a view to displayImage a token in the text field for the object
 //     */
 //    abstract protected View getViewForObject(T object);
 //
@@ -1054,7 +1054,7 @@ package com.inspur.emmcloud.widget.mentionview;//package com.inspur.emmcloud.wid
 //                    return;//hint already visible
 //                }
 //
-//                //We need to display the hint manually
+//                //We need to displayImage the hint manually
 //                Typeface tf = getTypeface();
 //                int style = Typeface.NORMAL;
 //                if (tf != null) {
@@ -1337,7 +1337,7 @@ package com.inspur.emmcloud.widget.mentionview;//package com.inspur.emmcloud.wid
 //            post(new Runnable() {
 //                @Override
 //                public void run() {
-//                    //Resize the view and display the +x if appropriate
+//                    //Resize the view and displayImage the +x if appropriate
 //                    performCollapse(isFocused());
 //                }
 //            });

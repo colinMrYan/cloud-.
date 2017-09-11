@@ -130,8 +130,7 @@ public class MessionDetailActivity extends BaseActivity {
 		handleTags();
 		handleManager();
 		handleDeadline();
-		imageDisplayUtils = new ImageDisplayUtils(getApplicationContext(),
-				R.drawable.icon_default_photo);
+		imageDisplayUtils = new ImageDisplayUtils(R.drawable.icon_default_photo);
 	}
 
 	/**
@@ -601,7 +600,7 @@ public class MessionDetailActivity extends BaseActivity {
 				displayAttachments(position, holder.attachmentImg);
 				holder.textView.setText(attachments.get(position).getName());
 			} else if (position == attachments.size()) {
-				imageDisplayUtils.display(holder.attachmentImg, "drawable://"
+				imageDisplayUtils.displayImage(holder.attachmentImg, "drawable://"
 						+ R.drawable.icon_member_add);
 				holder.textView.setText(getString(R.string.add));
 			}
@@ -642,7 +641,7 @@ public class MessionDetailActivity extends BaseActivity {
 		} else {
 			displayImg = displayImg + R.drawable.icon_file_unknown;
 		}
-		imageDisplayUtils.display(attachmentImg, displayImg);
+		imageDisplayUtils.displayImage(attachmentImg, displayImg);
 	}
 
 	private static class Holder {
@@ -965,7 +964,7 @@ public class MessionDetailActivity extends BaseActivity {
 				// getApplicationContext(), memids.get(i));
 				//
 				// membersImg[i].setVisibility(View.VISIBLE);
-				// imageDisplayUtils.display(membersImg[i],
+				// imageDisplayUtils.displayImage(membersImg[i],
 				// UriUtils.getChannelImgUri(inspurID));
 				memebers = memebers
 						+ ContactCacheUtils.getUserName(

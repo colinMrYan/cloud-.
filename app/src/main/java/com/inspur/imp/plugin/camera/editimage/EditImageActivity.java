@@ -38,6 +38,7 @@ import com.inspur.imp.plugin.camera.editimage.view.LabelTextView;
 import com.inspur.imp.plugin.camera.editimage.view.RotateImageView;
 import com.inspur.imp.plugin.camera.editimage.view.imagezoom.ImageViewTouch;
 import com.inspur.imp.plugin.camera.editimage.view.imagezoom.ImageViewTouchBase;
+import com.inspur.imp.plugin.camera.imagepicker.ui.ImageBaseActivity;
 import com.inspur.imp.plugin.photo.PhotoNameUtils;
 import com.inspur.imp.plugin.photo.UploadPhoto;
 import com.inspur.imp.plugin.photo.UploadPhoto.OnUploadPhotoListener;
@@ -55,7 +56,7 @@ import java.io.File;
  *         <p/>
  *         包含 1.贴图 2.滤镜 3.剪裁 4.底图旋转 5.添加艺术字 功能
  */
-public class EditImageActivity extends FragmentActivity {
+public class EditImageActivity extends ImageBaseActivity {
 	public static final String FILE_PATH = "file_path";
 	public static final String EXTRA_OUTPUT = "extra_output";
 	public static final String EXTRA_NEED_UPLOAD = "is_need_upload";

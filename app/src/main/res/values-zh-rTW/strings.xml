@@ -405,7 +405,7 @@
     <string name="my_setting_tips_quit">確定清除應用內所有緩存數據？清除后將退出應用</string>
     <string name="get_language_error">未獲取到可用的語言包，請聯繫管理員</string>
     <string name="app_customer">雲+客服</string>
-    <string name="settings_device_manager">設備安全與管理</string>
+    <string name="settings_device_manager">設備查看與管理</string>
     <string name="device_unbind_sucess">設備解綁成功！</string>
     <string name="device_other_unbind_warning">解綁後，從%1$s上登錄，您需要重新註冊設備</string>
     <string name="device_current_unbind_warning">解綁後，您需要重新登入並注册設備</string>
@@ -790,5 +790,38 @@
 
     <!--闪屏页文字资源-->
     <string name="splash_skip">立即進入</string>
+
+
+    <!--安全中心-->
+    <string name="setting_safe_center">帳號、設備安全</string>
+    <string name="safe_center_gesture">手勢密碼鎖定</string>
+    <string name="safe_center_finger_print">指紋</string>
+    <string name="switch_gesture_unlock">手勢解鎖</string>
+    <string name="switch_gesture_reset_unlock">重置手勢解鎖</string>
+    <!--九宮格-->
+    <!-- Gesture login activity -->
+    <string name="gesture_forget_gesture">忘記手勢密碼</string>
+    <string name="gesture_default">請繪製手勢密碼</string>
+    <string name="gesture_error">手勢密碼輸入錯誤</string>
+    <string name="gesture_correct">輸入正確</string>
+    <string name="gesture_code_error">密碼錯誤，還可以再試</string>
+    <string name="gesture_code_time">次</string>
+    <string name="gesture_code_tips">5次失敗後，需要重新登入</string>
+
+    <!-- Create gesture activity -->
+    <string name="create_gesture_default">繪製解鎖圖案</string>
+    <string name="create_gesture_correct">再次繪製解鎖圖案</string>
+    <string name="create_gesture_less_error">至少連接4個點，請重新輸入</string>
+    <string name="create_gesture_confirm_error">與上一次繪製不一致，請重新繪製</string>
+    <string name="create_gesture_confirm_correct">設置成功</string>
+    <string name="create_gesture_reset">重新設置</string>
+    <string name="create_gesture_code">創建手勢密碼</string>
+    <string name="create_gesture_guid">您可以創建一個雲+圖案解鎖圖案，這樣他人在借用你的手機時，將無法可打開雲+</string>
+    <string name="safe_center_enable">已啟用</string>
+    <string name="safe_center_unenable">未啟用</string>
+
+
+    <string name="qr_code_analysis_fail">二維碼解析失敗</string>
+
 
 </resources>
