@@ -120,6 +120,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
 
     }
 
+
 /**************************************登出逻辑相关********************************************************/
     //登出逻辑
     public void signout() {
@@ -139,6 +140,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         ((MyApplication) getApplicationContext()).setAccessToken("");
         Intent intent = new Intent();
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.setClass(this, LoginActivity.class);
         startActivity(intent);
         exit();
