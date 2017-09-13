@@ -3,6 +3,7 @@ package com.inspur.imp.plugin.audio;
 import android.content.Intent;
 import android.net.Uri;
 
+import com.inspur.imp.api.ImpActivity;
 import com.inspur.imp.api.Res;
 import com.inspur.imp.plugin.ImpPlugin;
 
@@ -101,7 +102,7 @@ public class AudioService extends ImpPlugin {
 			//设置intent的data和Type属性。
 			intent.setDataAndType(/*uri*/Uri.fromFile(file), type);
 			//跳转
-			this.context.startActivity(intent);
+            getActivity().startActivityForResult(intent, ImpActivity.DO_NOTHING_RESULTCODE);
 		}else{
 			 this.jsCallback("fileError", Res.getString("file_error"));
 		}

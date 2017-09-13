@@ -137,7 +137,7 @@ public class CameraService extends ImpPlugin {
 		if (state.equals(Environment.MEDIA_MOUNTED)) {
 			PublicWay.file = createCaptureFile(encodingType);
 			PublicWay.photoService = this;
-			Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
+			Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 			this.imageUri = Uri.fromFile(PublicWay.file);
 			intent.putExtra(MediaStore.EXTRA_OUTPUT,
 					Uri.fromFile(PublicWay.file));

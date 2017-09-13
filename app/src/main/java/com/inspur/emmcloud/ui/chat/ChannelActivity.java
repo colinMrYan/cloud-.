@@ -58,6 +58,7 @@ import com.inspur.emmcloud.util.HandleMsgTextUtils;
 import com.inspur.emmcloud.util.ImageDisplayUtils;
 import com.inspur.emmcloud.util.IntentUtils;
 import com.inspur.emmcloud.util.JSONUtils;
+import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.MsgCacheUtil;
 import com.inspur.emmcloud.util.MsgReadIDCacheUtils;
 import com.inspur.emmcloud.util.MsgRecourceUploadUtils;
@@ -391,6 +392,7 @@ public class ChannelActivity extends BaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode,
                                     final Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             // 文件管理器返回
             if (requestCode == CHOOSE_FILE

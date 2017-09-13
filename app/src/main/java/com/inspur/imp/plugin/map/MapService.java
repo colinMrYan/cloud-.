@@ -9,6 +9,7 @@ import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
 import com.inspur.emmcloud.util.LogUtils;
+import com.inspur.imp.api.ImpActivity;
 import com.inspur.imp.plugin.ImpPlugin;
 
 import org.json.JSONArray;
@@ -166,7 +167,7 @@ public class MapService extends ImpPlugin {
 				String uri = "androidamap://keywordNavi?sourceApplication="+packageName+"&keyword="+destination+"&style=2";
 				intent.setData(Uri.parse(uri));
 				intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-				context.startActivity(intent);
+				getActivity().startActivityForResult(intent, ImpActivity.DO_NOTHING_RESULTCODE);
 				this.jsCallback(successCb, "地图打开成功");
 			}else {
 				this.jsCallback(failCb, "未安装此地图");
@@ -283,7 +284,7 @@ public class MapService extends ImpPlugin {
 		if (isInstallByread("com.baidu.BaiduMap")) {
 			Uri uri = Uri.parse("geo:" + jindu + "," + weidu + "");
 			Intent it = new Intent(Intent.ACTION_VIEW, uri);
-			this.context.startActivity(it);
+            getActivity().startActivityForResult(it, ImpActivity.DO_NOTHING_RESULTCODE);
 		} else {
 			this.jsCallback(failCb, "没有安装地图客户端");
 		}

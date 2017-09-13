@@ -189,6 +189,7 @@ public class ImagePreviewActivity extends ImagePreviewBaseActivity implements
 	@Override
 	protected void onActivityResult(int arg0, int arg1, Intent arg2) {
 		// TODO Auto-generated method stub
+        super.onActivityResult(arg0, arg1, arg2);
 		if (arg1 == RESULT_OK && arg0 == EDIT_IMG) {
 			ImageItem imageItem = (ImageItem) arg2
 					.getSerializableExtra("ImageItem");

@@ -1163,7 +1163,7 @@ public class FileService extends ImpPlugin {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		Intent intent = new Intent(context, FileBrowerApp.class);
+		Intent intent = new Intent(context, FileBrowerAppActivity.class);
 		((ImpActivity) context).startActivityForResult(intent, 4);
 	}
 

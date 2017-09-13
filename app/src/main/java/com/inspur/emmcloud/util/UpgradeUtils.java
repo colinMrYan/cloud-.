@@ -19,6 +19,7 @@ import com.inspur.emmcloud.api.apiservice.AppAPIService;
 import com.inspur.emmcloud.bean.GetUpgradeResult;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.dialogs.MyDialog;
+import com.inspur.imp.api.ImpActivity;
 
 import org.xutils.common.Callback;
 import org.xutils.common.Callback.Cancelable;
@@ -45,7 +46,7 @@ public class UpgradeUtils extends APIInterfaceInstance {
 			.getExternalStorageDirectory() + "/IMP-Cloud/download/";
 	private static final String TAG = "UpgradeUtils";
 	private GetUpgradeResult getUpgradeResult;
-	private Context context;
+	private Activity context;
 	private Handler upgradeHandler;
 	private Handler handler;
 	private int upgradeCode;
@@ -63,7 +64,7 @@ public class UpgradeUtils extends APIInterfaceInstance {
 	private boolean isManualCheck;
 
 	//isManualCheck 是否在关于中手动检查更新
-	public UpgradeUtils(Context context,Handler handler,boolean isManualCheck) {
+	public UpgradeUtils(Activity context,Handler handler,boolean isManualCheck) {
 		this.context = context;
 		this.handler = handler;
 		this.isManualCheck = isManualCheck;
@@ -361,7 +362,7 @@ public class UpgradeUtils extends APIInterfaceInstance {
 		i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		i.setDataAndType(Uri.parse("file://" + apkfile.toString()),
 				"application/vnd.android.package-archive");
-		context.startActivity(i);
+		context.startActivityForResult(i, ImpActivity.DO_NOTHING_RESULTCODE);
 	}
 
 	/** 获取百分率 **/
