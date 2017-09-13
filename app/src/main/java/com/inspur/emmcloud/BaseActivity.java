@@ -105,10 +105,11 @@ public class BaseActivity extends Activity {
 
     }
 
+
+    //解决调用系统应用后会弹出手势解锁的问题
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         ((MyApplication) getApplicationContext()).setIsActive(true);
-        LogUtils.jasonDebug("0000000000000000000011");
     }
 }
