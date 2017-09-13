@@ -402,8 +402,7 @@ public class FindSearchActivity extends BaseActivity implements
 				lineView = (View) convertView.findViewById(R.id.line_view);
 				String imgUrl = UriUtils.getPreviewUri(findSearchNews
 						.getPoster());
-				new ImageDisplayUtils(getApplicationContext(),
-						R.drawable.group_news_ic).display(newsImg, imgUrl);
+				new ImageDisplayUtils(R.drawable.group_news_ic).displayImage(newsImg, imgUrl);
 				newsTitleText.setText(findSearchNews.getTitle());
 				publisherText.setText(findSearchNews.getPublisher());
 				timeText.setText(findSearchNews.getPostTime());
@@ -425,8 +424,7 @@ public class FindSearchActivity extends BaseActivity implements
 					FindSearchContacts findSearchContacts = findSearchContactList
 							.get(childPosition);
 					String inspurId = findSearchContacts.getInspurId();
-					new ImageDisplayUtils(getApplicationContext(),
-							R.drawable.icon_person_default).display(photoImg,
+					new ImageDisplayUtils(R.drawable.icon_person_default).displayImage(photoImg,
 							UriUtils.getChannelImgUri(FindSearchActivity.this,inspurId));
 					titleText.setText(findSearchContacts.getName());
 					String mobile = findSearchContacts.getMobile();
@@ -492,7 +490,7 @@ public class FindSearchActivity extends BaseActivity implements
 			defaultIcon = R.drawable.icon_channel_group_default;
 			iconUrl = channel.getIcon();
 		}
-		new ImageDisplayUtils(getApplicationContext(), defaultIcon).display(
+		new ImageDisplayUtils(defaultIcon).displayImage(
 				channelImg, iconUrl);
 
 	}

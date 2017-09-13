@@ -31,8 +31,7 @@ public class ChannelMemActivity extends BaseActivity {
 		String title = getIntent().getStringExtra("title");
 		((TextView)findViewById(R.id.header_text)).setText(title);
 		memberArray = getIntent().getStringArrayExtra("members");
-		imageDisplayUtils = new ImageDisplayUtils(getApplicationContext(),
-				R.drawable.icon_photo_default);
+		imageDisplayUtils = new ImageDisplayUtils(R.drawable.icon_photo_default);
 		if (memberArray != null && memberArray.length > 0) {
 			GridView memberGrid = (GridView) findViewById(R.id.member_grid);
 			memberGrid.setAdapter(new Adapter());
@@ -97,7 +96,7 @@ public class ChannelMemActivity extends BaseActivity {
 
 			String uid = "";
 			uid = memberArray[position];
-			imageDisplayUtils.display(viewHolder.memberHeadImg,
+			imageDisplayUtils.displayImage(viewHolder.memberHeadImg,
 					UriUtils.getChannelImgUri(ChannelMemActivity.this,uid));
 			viewHolder.nameText.setText("");
 			return convertView;

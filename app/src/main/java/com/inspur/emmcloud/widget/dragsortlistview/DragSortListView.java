@@ -2484,7 +2484,7 @@ public class DragSortListView extends ListView {
 		 *            {@link ListView#getChildAt(int)}, you will need to add
 		 *            {@link ListView#getHeaderViewsCount()} to the index).
 		 *
-		 * @return The View you wish to display as the floating View.
+		 * @return The View you wish to displayImage as the floating View.
 		 */
 		public View onCreateFloatView(int position);
 

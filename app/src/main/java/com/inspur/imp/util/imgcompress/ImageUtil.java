@@ -125,7 +125,7 @@ public class ImageUtil {
 		canvas.setMatrix(scaleMatrix);
 		canvas.drawBitmap(bmp, 0, 0, new Paint(Paint.FILTER_BITMAP_FLAG));
 
-		//check the rotation of the image and display it properly
+		//check the rotation of the image and displayImage it properly
 		ExifInterface exif;
 		try {
 			exif = new ExifInterface(filePath);

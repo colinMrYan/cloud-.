@@ -106,7 +106,7 @@ public class MeetingDetailActivity extends BaseActivity {
 	// private void showConferenceMember() {
 	// if (!StringUtils.isEmpty(attendant)) {
 	// conferenceImg.setVisibility(View.VISIBLE);
-	// imageDisplayUtils.display(conferenceImg,
+	// imageDisplayUtils.displayImage(conferenceImg,
 	// UriUtils.getChannelImgUri(attendant));
 	// }
 	// }
@@ -123,7 +123,7 @@ public class MeetingDetailActivity extends BaseActivity {
 			String memberId = participantList.get(participantList.size() - i
 					- 1);
 			if (!StringUtils.isBlank(memberId)) {
-				imageDisplayUtils.display(circleImg[i],
+				imageDisplayUtils.displayImage(circleImg[i],
 						UriUtils.getChannelImgUri(MeetingDetailActivity.this,memberId));
 			}
 		}
@@ -191,8 +191,7 @@ public class MeetingDetailActivity extends BaseActivity {
 	 * 初始化views
 	 */
 	private void initViews() {
-		imageDisplayUtils = new ImageDisplayUtils(getApplicationContext(),
-				R.drawable.icon_person_default);
+		imageDisplayUtils = new ImageDisplayUtils(R.drawable.icon_person_default);
 		roomText = ((TextView) findViewById(R.id.meeting_detail_room_name_text));
 		beginDateText = ((TextView) findViewById(R.id.meeting_detail_begin_date_text));
 		endDateText = ((TextView) findViewById(R.id.meeting_detail_end_date_text));
@@ -558,7 +557,7 @@ public class MeetingDetailActivity extends BaseActivity {
 	private void showSelectMembers(int memberCount) {
 		for (int i = 0; i < memberCount; i++) {
 			circleImg[i].setVisibility(View.VISIBLE);
-			imageDisplayUtils.display(circleImg[i],
+			imageDisplayUtils.displayImage(circleImg[i],
 					selectMemList.get(selectMemList.size() - i - 1).getIcon(MeetingDetailActivity.this));
 		}
 	}

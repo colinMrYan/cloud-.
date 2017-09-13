@@ -1,8 +1,5 @@
 package com.inspur.emmcloud.ui.mine.setting;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
@@ -24,8 +21,12 @@ import com.inspur.emmcloud.util.IntentUtils;
 import com.inspur.emmcloud.util.LoginUtils;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
+import com.inspur.emmcloud.util.StateBarColor;
 import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 功能介绍页面 com.inspur.emmcloud.ui.GuideActivity
@@ -44,6 +45,7 @@ public class GuideActivity extends BaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
+		StateBarColor.changeStateBarColor(this,R.color.white);
 		setContentView(R.layout.activity_guide);
 		((MyApplication) getApplicationContext())
 				.addActivity(GuideActivity.this);

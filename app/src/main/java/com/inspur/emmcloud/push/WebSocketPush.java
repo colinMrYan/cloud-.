@@ -78,7 +78,7 @@ public class WebSocketPush {
 //		final BlockingQueue<Object> values = new LinkedBlockingQueue<Object>();
 				IO.Options opts = new IO.Options();
 				opts.reconnectionAttempts = 4; // 设置websocket重连次数
-				opts.forceNew = true;
+				//opts.forceNew = true;
 				Map<String, String> query = new HashMap<String, String>();
 				query.put("device.id", uuid);
 				query.put("device.name", name);

@@ -47,8 +47,8 @@ public class DisplayResLinkMsg {
 		ImageView linkImageview = (ImageView) convertView
 				.findViewById(R.id.news_card_content_img);
 		if (!StringUtils.isBlank(linkPoster)) {
-			new ImageDisplayUtils(context, R.drawable.icon_photo_default)
-					.display(linkImageview, UriUtils.getPreviewUri(linkPoster));
+			new ImageDisplayUtils(R.drawable.icon_photo_default)
+					.displayImage(linkImageview, UriUtils.getPreviewUri(linkPoster));
 		} else {
 			linkImageview.setVisibility(View.GONE);
 		}

@@ -18,7 +18,7 @@ import com.inspur.imp.plugin.camera.imagepicker.ImagePicker;
 import com.inspur.imp.plugin.camera.imagepicker.bean.ImageItem;
 import com.inspur.imp.plugin.camera.imagepicker.view.SuperCheckBox;
 
-public class ImagePreviewActivity extends com.inspur.imp.plugin.camera.imagepicker.ui.ImagePreviewBaseActivity implements
+public class ImagePreviewActivity extends ImagePreviewBaseActivity implements
 		ImagePicker.OnImageSelectedListener, View.OnClickListener {
 
 	public static final String ISORIGIN = "isOrigin";
