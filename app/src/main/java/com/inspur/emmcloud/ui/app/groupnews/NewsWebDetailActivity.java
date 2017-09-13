@@ -858,6 +858,7 @@ public class NewsWebDetailActivity extends BaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         // TODO Auto-generated method stub
+        super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == SHARE_SEARCH_RUEST_CODE && resultCode == RESULT_OK
                 && NetUtils.isNetworkConnected(getApplicationContext())) {
             String result = data.getStringExtra("searchResult");

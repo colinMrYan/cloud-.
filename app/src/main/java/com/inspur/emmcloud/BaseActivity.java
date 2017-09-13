@@ -24,7 +24,6 @@ public class BaseActivity extends Activity {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
         String className = this.getClass().getCanonicalName();
-        LogUtils.jasonDebug("className="+className+"onCreate----");
         if (!className.equals("com.inspur.imp.plugin.barcode.scan.CaptureActivity") &&!className.equals("com.inspur.imp.plugin.camera.mycamera.MyCameraActivity") ){
             StateBarColor.changeStateBarColor(this);
         }
@@ -59,8 +58,6 @@ public class BaseActivity extends Activity {
     protected void onResume() {
         // TODO Auto-generated method stub
         super.onResume();
-        String className = this.getClass().getCanonicalName();
-        LogUtils.jasonDebug("className="+className+"onResume----");
         if (!((MyApplication) getApplicationContext()).getIsActive()) {
             if (((MyApplication) getApplicationContext())
                     .isIndexActivityRunning()) {
@@ -109,4 +106,10 @@ public class BaseActivity extends Activity {
     }
 
 
+    //解决调用系统应用后会弹出手势解锁的问题
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        ((MyApplication) getApplicationContext()).setIsActive(true);
+    }
 }
