@@ -19,9 +19,6 @@ public class ParseHtmlUtils {
     public static Elements getDataFromHtml(String html,String metaLable){
         Document doc = Jsoup.parse(html);
         Elements metas = doc.select(metaLable);
-        for (int i = 0; i < metas.size(); i++) {
-            LogUtils.YfcDebug( "content："+metas.get(i).attr("content"));
-        }
         return metas;
     }
 }
