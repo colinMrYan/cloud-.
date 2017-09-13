@@ -169,7 +169,9 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
     private void refreshAppListView() {
         hasCommonlyApp = MyAppCacheUtils.getHasCommonlyApp(getActivity());
         List<AppGroupBean> appGroupList = MyAppCacheUtils.getMyApps(getContext());
-        LogUtils.YfcDebug(appGroupList.get(0).getAppItemList().get(0).getAppName()+"refreshAppListView"+appGroupList.get(0).getAppItemList().get(0).getHelpUrl());
+        if(appGroupList != null){
+            LogUtils.YfcDebug(appGroupList.get(0).getAppItemList().get(0).getAppName()+"refreshAppListView"+appGroupList.get(0).getAppItemList().get(0).getHelpUrl());
+        }
         appListAdapter = new AppListAdapter(appGroupList);
         appListView.setAdapter(appListAdapter);
         appListAdapter.notifyDataSetChanged();
@@ -940,7 +942,6 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
                 isNeedRefreshApp = false;
                 isHasCacheNotRefresh = false;
             }
-            LogUtils.YfcDebug("网络请求回来存储时数据："+appGroupList.get(0).getAppItemList().get(0).getHelpUrl());
             MyAppCacheUtils.saveMyAppList(getActivity(), appGroupList);
             MyAppCacheUtils.getMyApps(getActivity());
             pullToRefreshLayout.refreshFinish(PullToRefreshLayout.SUCCEED);
