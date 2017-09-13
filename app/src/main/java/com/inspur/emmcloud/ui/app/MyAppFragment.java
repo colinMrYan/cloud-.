@@ -40,6 +40,7 @@ import com.inspur.emmcloud.bean.PVCollectModel;
 import com.inspur.emmcloud.util.AppCacheUtils;
 import com.inspur.emmcloud.util.AppTitleUtils;
 import com.inspur.emmcloud.util.IntentUtils;
+import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.MyAppCacheUtils;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.PVCollectModelCacheUtils;
@@ -132,6 +133,7 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
         appListView = (PullableListView) rootView
                 .findViewById(R.id.my_app_list);
         appListView.setCanPullDown(true);
+        LogUtils.YfcDebug("初始化Views");
         refreshAppListView();
         editBtn = (ImageView) rootView.findViewById(R.id.app_edit_btn);
         editBtn.setOnClickListener(new OnClickListener() {
@@ -167,6 +169,7 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
     private void refreshAppListView() {
         hasCommonlyApp = MyAppCacheUtils.getHasCommonlyApp(getActivity());
         List<AppGroupBean> appGroupList = MyAppCacheUtils.getMyApps(getContext());
+        LogUtils.YfcDebug(appGroupList.get(0).getAppItemList().get(0).getAppName()+"refreshAppListView"+appGroupList.get(0).getAppItemList().get(0).getHelpUrl());
         appListAdapter = new AppListAdapter(appGroupList);
         appListView.setAdapter(appListAdapter);
         appListAdapter.notifyDataSetChanged();
@@ -316,6 +319,7 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
 //                            UriUtils.openApp(getActivity(), app);
 //                        }
                         if (NetUtils.isNetworkConnected(getActivity())) {
+                            LogUtils.YfcDebug("相应点击事件");
                             UriUtils.openApp(getActivity(), app);
                         }
                         if (getNeedCommonlyUseApp()) {
@@ -936,7 +940,9 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
                 isNeedRefreshApp = false;
                 isHasCacheNotRefresh = false;
             }
+            LogUtils.YfcDebug("网络请求回来存储时数据："+appGroupList.get(0).getAppItemList().get(0).getHelpUrl());
             MyAppCacheUtils.saveMyAppList(getActivity(), appGroupList);
+            MyAppCacheUtils.getMyApps(getActivity());
             pullToRefreshLayout.refreshFinish(PullToRefreshLayout.SUCCEED);
         }
 
@@ -954,7 +960,6 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
         private void handleRefreshApp(List<AppGroupBean> appGroupList) {
             appListAdapter.setAppAdapterList(appGroupList);
             appListAdapter.notifyDataSetChanged();
-            MyAppCacheUtils.saveMyAppList(getActivity(), appGroupList);
         }
     }
 }

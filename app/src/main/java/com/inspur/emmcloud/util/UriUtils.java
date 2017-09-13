@@ -95,7 +95,9 @@ public class UriUtils {
         if (app.getAppType() == 3) {
             intent.putExtra("appName", app.getAppName());
         }
+        LogUtils.YfcDebug("调用OpenWebApp");
         intent.putExtra("is_zoomable", app.getIsZoomable());
+        intent.putExtra("help_url",app.getHelpUrl());
         intent.putExtra("appId",app.getAppID());
         activity.startActivity(intent);
     }

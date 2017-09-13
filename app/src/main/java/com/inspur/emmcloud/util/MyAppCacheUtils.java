@@ -3,8 +3,6 @@ package com.inspur.emmcloud.util;
 import android.content.Context;
 
 import com.alibaba.fastjson.JSON;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.inspur.emmcloud.bean.AppGroupBean;
 import com.inspur.emmcloud.config.MyAppConfig;
 
@@ -24,17 +22,10 @@ public class MyAppCacheUtils {
      * @param appGroupList
      */
     public static void saveMyAppList(Context context, List<AppGroupBean> appGroupList){
-        Gson gson=new Gson();
-        String gsonString = gson.toJson(appGroupList);
-//        String appList = JSON.toJSONString(appGroupList);
-        LogUtils.YfcDebug("存储的应用文字信息："+appGroupList.get(2).getAppItemList().get(0).toString());
-        writeData2File(gsonString,"before.txt");
-        if(!gsonString.equals("null") && !StringUtils.isBlank(gsonString)){
-            PreferencesByUserAndTanentUtils.putString(context,"my_app_list",gsonString);
+        String appList = JSON.toJSONString(appGroupList);
+        if(!appList.equals("null") && !StringUtils.isBlank(appList)){
+            PreferencesByUserAndTanentUtils.putString(context,"my_app_list",appList);
         }
-
-
-
     }
 
     /**
@@ -52,10 +43,6 @@ public class MyAppCacheUtils {
      */
     public static List<AppGroupBean> getMyApps(Context context){
         String appsString = PreferencesByUserAndTanentUtils.getString(context,"my_app_list","");
-        Gson gson = new Gson();
-//        gson.fromJson(appsString,AppGroupBean.class);
-        List<AppGroupBean> appGroupBeenList = gson.fromJson(appsString, new TypeToken<List<AppGroupBean>>(){}.getType());
-        writeData2File(appsString,"after.txt");
         return JSON.parseArray(appsString,AppGroupBean.class);
     }
 

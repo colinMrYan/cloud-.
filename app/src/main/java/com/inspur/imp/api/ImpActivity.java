@@ -102,6 +102,10 @@ public class ImpActivity extends ImpBaseActivity {
             findViewById(R.id.imp_change_font_size_btn).setVisibility(View.GONE);
         }
 
+        if(!StringUtils.isBlank(helpUrl)){
+            findViewById(R.id.imp_change_font_size_btn).setVisibility(View.VISIBLE);
+        }
+
         getWindow().setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
                         | WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
@@ -293,7 +297,9 @@ public class ImpActivity extends ImpBaseActivity {
         dialog.onWindowAttributesChanged(wl);
         // 设置点击外围解散
         dialog.setCanceledOnTouchOutside(true);
-        initWebViewTextSize(0);
+        if(isZoomable == 1){
+            initWebViewTextSize(0);
+        }
         dialog.show();
     }
 
