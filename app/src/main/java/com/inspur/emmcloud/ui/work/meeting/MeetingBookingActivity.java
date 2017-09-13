@@ -394,7 +394,7 @@ public class MeetingBookingActivity extends BaseActivity {
 			} else {
 				defaultIcon = R.drawable.icon_person_default;
 			}
-			new ImageDisplayUtils(getApplicationContext(), defaultIcon).display(
+			new ImageDisplayUtils(defaultIcon).displayImage(
 					circleHeadImageView[count - i -1], icon);
 
 		}
