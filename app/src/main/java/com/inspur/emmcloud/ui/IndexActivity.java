@@ -569,7 +569,8 @@ public class IndexActivity extends BaseFragmentActivity implements
      * @return
      */
     private MainTabBean[] addNoDataTabs() {
-        MainTabBean[] mainTabs = new MainTabBean[5];
+        //无数据改为显示两个tab，数组变为2
+        MainTabBean[] mainTabs = new MainTabBean[2];
         MainTabBean mainTabBeanCommunicate = new MainTabBean(0,R.string.communicate,R.drawable.selector_tab_message_btn,
                 MessageFragment.class);
         mainTabBeanCommunicate.setCommpant("communicate");
@@ -581,11 +582,14 @@ public class IndexActivity extends BaseFragmentActivity implements
                 MyAppFragment.class);
         MainTabBean mainTabBeanMine = new MainTabBean(4, R.string.mine, R.drawable.selector_tab_more_btn,
                 MoreFragment.class);
-        mainTabs[0] = mainTabBeanCommunicate;
-        mainTabs[1] = mainTabBeanWork;
-        mainTabs[2] = mainTabBeanFind;
-        mainTabs[3] = mainTabBeanApp;
-        mainTabs[4] = mainTabBeanMine;
+//        mainTabs[0] = mainTabBeanCommunicate;
+//        mainTabs[1] = mainTabBeanWork;
+//        mainTabs[2] = mainTabBeanFind;
+//        mainTabs[3] = mainTabBeanApp;
+//        mainTabs[4] = mainTabBeanMine;
+        //无数据改为显示两个tab
+        mainTabs[0] = mainTabBeanApp;
+        mainTabs[1] = mainTabBeanMine;
         return mainTabs;
     }
 
