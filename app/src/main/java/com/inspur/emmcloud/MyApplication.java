@@ -276,6 +276,13 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
      */
     public void setIsActive(boolean isActive) {
         this.isActive = isActive;
+        if(webSocketPush != null){
+            if(isActive){
+                webSocketPush.sendActivedMsg();
+            }else{
+                webSocketPush.sendFrozenMsg();
+            }
+        }
     }
 
     public boolean getIsActive() {
@@ -360,23 +367,23 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         return webSocketPush;
     }
 
-    /**
-     * WebScoket发送应用切到前台信息
-     */
-    public void sendActivedWSMsg() {
-        if (webSocketPush != null) {
-            webSocketPush.sendActivedMsg();
-        }
-    }
-
-    /**
-     * WebScoket发送应用切到后台信息
-     */
-    public void sendFrozenWSMsg() {
-        if (webSocketPush != null) {
-            webSocketPush.sendFrozenMsg();
-        }
-    }
+//    /**
+//     * WebScoket发送应用切到前台信息
+//     */
+//    public void sendActivedWSMsg() {
+//        if (webSocketPush != null) {
+//            webSocketPush.sendActivedMsg();
+//        }
+//    }
+//
+//    /**
+//     * WebScoket发送应用切到后台信息
+//     */
+//    public void sendFrozenWSMsg() {
+//        if (webSocketPush != null) {
+//            webSocketPush.sendFrozenMsg();
+//        }
+//    }
 
     /******************************租户信息*******************************************/
 
