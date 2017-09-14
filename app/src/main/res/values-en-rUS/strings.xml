@@ -800,8 +800,8 @@
     <string name="gesture_default">Please enter a gesture password</string>
     <string name="gesture_error">Gesture password input error</string>
     <string name="gesture_correct">Input correct</string>
-    <string name="gesture_code_error">Password error, you can try again</string>
-    <string name="gesture_code_time">times</string>
+    <string name="gesture_code_error">Password error, you can try again </string>
+    <string name="gesture_code_time"> times</string>
     <string name="gesture_code_tips">After 5 failures, you need to log in again</string>
 
     <!-- Create gesture activity -->
