@@ -90,9 +90,9 @@ public class LockPatternView extends View {
 		this.width = getMeasuredWidth();
 		this.height = getMeasuredHeight();
 		//Log.e(TAG, "(width: " + width + "  ,  height" + height + ")");
-		if (width != height) {
-			throw new IllegalArgumentException("the width must be equals height");
-		}
+//		if (width != height) {
+//			throw new IllegalArgumentException("the width must be equals height");
+//		}
 		this.initCellSize();
 		this.set9CellsSize();
 		this.invalidate();
