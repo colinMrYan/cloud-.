@@ -812,7 +812,7 @@
     <string name="create_gesture_confirm_correct">Set successfully</string>
     <string name="create_gesture_reset">Reset</string>
     <string name="create_gesture_code">Create gesture password</string>
-    <string name="create_gesture_guid">You can create a cloud + pattern unlock pattern so that others can\'t open the cloud when they borrow your cell phone</string>
+    <string name="create_gesture_guid">You can create a cloud +  unlock pattern so that others can\'t open the cloud when they borrow your cell phone</string>
     <string name="safe_center_enable">Enabled</string>
     <string name="safe_center_unenable">Not enabled</string>
 
