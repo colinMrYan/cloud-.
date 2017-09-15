@@ -31,7 +31,8 @@ public class BaseActivity extends Activity {
     protected void onStop() {
         // TODO Auto-generated method stub
         super.onStop();
-        if (!AppUtils.isAppOnForeground(getApplicationContext())) {
+        if (((MyApplication) getApplicationContext())
+                .isIndexActivityRunning() && !AppUtils.isAppOnForeground(getApplicationContext())) {
             // app 进入后台
             ((MyApplication) getApplicationContext()).setIsActive(false);
             startUploadPVCollectService();
