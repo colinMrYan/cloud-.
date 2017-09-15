@@ -279,11 +279,12 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         if(webSocketPush != null){
             if(isActive){
                 webSocketPush.sendActivedMsg();
-                clearNotification();
+
             }else{
                 webSocketPush.sendFrozenMsg();
             }
         }
+        clearNotification();
     }
 
     public boolean getIsActive() {
