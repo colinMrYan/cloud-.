@@ -86,7 +86,7 @@ public class AppSearchActivity extends BaseActivity {
                         intent.setClass(getApplicationContext(),
                                 AppDetailActivity.class);
                         intent.putExtra("app",
-                                searchAppList.get(position - 1));
+                                searchAppList.get(position));
                         startActivity(intent);
                     }
                 });
