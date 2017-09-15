@@ -314,6 +314,7 @@
         <activity
             android:name=".ui.contact.UserInfoActivity"
             android:launchMode="singleTask"
+            android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait"></activity>
         <activity
             android:name=".ui.contact.RobotInfoActivity"
@@ -394,8 +395,9 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.chat.ImagePagerActivity"
-            android:screenOrientation="portrait"
             android:theme="@style/SplashTheme"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="sensor"
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".ui.chat.MembersActivity"
@@ -633,7 +635,7 @@
         <activity
             android:name="com.inspur.imp.api.ImpActivity"
             android:configChanges="orientation|screenSize"
-            android:screenOrientation="portrait"
+            android:screenOrientation="sensor"
             android:theme="@android:style/Theme.Holo.Light.NoActionBar"></activity>
         <activity
             android:name="com.inspur.imp.plugin.barcode.scan.CaptureActivity"
