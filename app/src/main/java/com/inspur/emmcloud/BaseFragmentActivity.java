@@ -2,7 +2,6 @@ package com.inspur.emmcloud;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
 
 import com.inspur.emmcloud.api.apiservice.AppAPIService;
@@ -31,8 +30,6 @@ public class BaseFragmentActivity extends FragmentActivity {
         if (!AppUtils.isAppOnForeground(getApplicationContext())) {
             // app 进入后台
             ((MyApplication) getApplicationContext()).setIsActive(false);
-            // 全局变量isActive = false 记录当前已经进入后台
-            ((MyApplication) getApplicationContext()).sendFrozenWSMsg();
             startUploadPVCollectService();
         }
     }
@@ -57,9 +54,7 @@ public class BaseFragmentActivity extends FragmentActivity {
             if (((MyApplication) getApplicationContext())
                     .isIndexActivityRunning()) {
                 ((MyApplication) getApplicationContext()).setIsActive(true);
-                ((MyApplication) getApplicationContext()).clearNotification();
                 uploadMDMInfo();
-                ((MyApplication) getApplicationContext()).sendActivedWSMsg();
                 if(getIsNeedGestureCode()){//这里两处登录均不走这个方法，如果以后集成单点登录，需要集成BaseActivity，或者BaseFragmentActivity
                     new Thread(new Runnable() {
                         @Override

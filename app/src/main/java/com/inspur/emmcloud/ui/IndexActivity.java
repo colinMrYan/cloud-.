@@ -51,6 +51,7 @@ import com.inspur.emmcloud.ui.app.MyAppFragment;
 import com.inspur.emmcloud.ui.chat.MessageFragment;
 import com.inspur.emmcloud.ui.find.FindFragment;
 import com.inspur.emmcloud.ui.mine.MoreFragment;
+import com.inspur.emmcloud.ui.mine.setting.LanguageChangeActivity;
 import com.inspur.emmcloud.ui.notsupport.NotSupportFragment;
 import com.inspur.emmcloud.ui.work.MainTabBean;
 import com.inspur.emmcloud.ui.work.WorkFragment;
@@ -94,7 +95,7 @@ import java.util.List;
  * @author Administrator
  */
 public class IndexActivity extends BaseFragmentActivity implements
-        OnTabChangeListener, OnTouchListener,CommonCallBack {
+        OnTabChangeListener, OnTouchListener,CommonCallBack,MyAppFragment.AppLanguageState {
     private static final int SYNC_ALL_BASE_DATA_SUCCESS = 0;
     private static final int SYNC_CONTACT_SUCCESS = 1;
     private static final int CHANGE_TAB = 2;
@@ -569,7 +570,8 @@ public class IndexActivity extends BaseFragmentActivity implements
      * @return
      */
     private MainTabBean[] addNoDataTabs() {
-        MainTabBean[] mainTabs = new MainTabBean[5];
+        //无数据改为显示两个tab，数组变为2
+        MainTabBean[] mainTabs = new MainTabBean[2];
         MainTabBean mainTabBeanCommunicate = new MainTabBean(0,R.string.communicate,R.drawable.selector_tab_message_btn,
                 MessageFragment.class);
         mainTabBeanCommunicate.setCommpant("communicate");
@@ -581,11 +583,14 @@ public class IndexActivity extends BaseFragmentActivity implements
                 MyAppFragment.class);
         MainTabBean mainTabBeanMine = new MainTabBean(4, R.string.mine, R.drawable.selector_tab_more_btn,
                 MoreFragment.class);
-        mainTabs[0] = mainTabBeanCommunicate;
-        mainTabs[1] = mainTabBeanWork;
-        mainTabs[2] = mainTabBeanFind;
-        mainTabs[3] = mainTabBeanApp;
-        mainTabs[4] = mainTabBeanMine;
+//        mainTabs[0] = mainTabBeanCommunicate;
+//        mainTabs[1] = mainTabBeanWork;
+//        mainTabs[2] = mainTabBeanFind;
+//        mainTabs[3] = mainTabBeanApp;
+//        mainTabs[4] = mainTabBeanMine;
+        //无数据改为显示两个tab
+        mainTabs[0] = mainTabBeanApp;
+        mainTabs[1] = mainTabBeanMine;
         return mainTabs;
     }
 
@@ -800,6 +805,15 @@ public class IndexActivity extends BaseFragmentActivity implements
                 getReactNativeClientId();
             }
         }
+    }
+
+    //修改语言时状态接口
+    @Override
+    public boolean getAppLanguageState() {
+        if(getIntent().hasExtra(LanguageChangeActivity.LANGUAGE_CHANGE)){
+            return getIntent().getBooleanExtra(LanguageChangeActivity.LANGUAGE_CHANGE,false);
+        }
+        return false;
     }
 
 

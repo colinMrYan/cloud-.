@@ -120,6 +120,19 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
         return rootView;
     }
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        isNeedRefreshApp = ((AppLanguageState) context).getAppLanguageState();
+    }
+
+    /**
+     * 修改语言时的接口
+     */
+    public interface AppLanguageState{
+        public boolean getAppLanguageState();
+    }
+
     /**
      * 初始化Views
      */
