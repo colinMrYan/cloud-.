@@ -9,6 +9,7 @@ import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.util.LogUtils;
+import com.inspur.emmcloud.util.ToastUtils;
 import com.inspur.emmcloud.widget.ProgressWebView;
 import com.umeng.socialize.Config;
 import com.umeng.socialize.PlatformConfig;
@@ -85,7 +86,7 @@ public class RecommendAppActivity extends BaseActivity {
                     @Override
                     public void onclick(SnsPlatform snsPlatform, SHARE_MEDIA share_media) {
                         if(share_media == SHARE_MEDIA.SMS) {
-                            new ShareAction(RecommendAppActivity.this).withText("云+ 智能化的企业移动办公平台  https://ecm.inspur.com/")
+                            new ShareAction(RecommendAppActivity.this).withText("欢迎使用【云+】  https://ecm.inspur.com/")
                                     .setPlatform(share_media)
                                     .setCallback(mShareListener)
                                     .share();
@@ -93,8 +94,8 @@ public class RecommendAppActivity extends BaseActivity {
                             UMImage thumb = new UMImage(RecommendAppActivity.this, R.drawable.ic_launcher_share);
                             UMWeb web = new UMWeb("https://ecm.inspur.com/");
                             web.setThumb(thumb);
-                            web.setDescription("智能化的企业移动办公平台");
-                            web.setTitle("云+");
+                            web.setDescription("云+ -智能化的企业协同平台");
+                            web.setTitle("欢迎使用【云+】");
                             new ShareAction(RecommendAppActivity.this).withMedia(web)
                                     .setPlatform(share_media)
                                     .setCallback(mShareListener)
@@ -122,14 +123,12 @@ public class RecommendAppActivity extends BaseActivity {
 
         @Override
         public void onResult(SHARE_MEDIA platform) {
-
-            Toast.makeText(mActivity.get(), platform + " 分享成功啦", Toast.LENGTH_SHORT).show();
+            ToastUtils.show(mActivity.get(),R.string.news_share_success);
         }
 
         @Override
         public void onError(SHARE_MEDIA platform, Throwable t) {
-
-            Toast.makeText(mActivity.get(), platform + " 分享失败啦", Toast.LENGTH_SHORT).show();
+            ToastUtils.show(mActivity.get(),R.string.news_share_fail);
             if (t != null) {
                 LogUtils.jasonDebug("throw:" + t.getMessage());
             }
@@ -139,7 +138,6 @@ public class RecommendAppActivity extends BaseActivity {
         @Override
         public void onCancel(SHARE_MEDIA platform) {
 
-            Toast.makeText(mActivity.get(), platform + " 分享取消了", Toast.LENGTH_SHORT).show();
         }
     }
 }
