@@ -368,24 +368,6 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         return webSocketPush;
     }
 
-//    /**
-//     * WebScoket发送应用切到前台信息
-//     */
-//    public void sendActivedWSMsg() {
-//        if (webSocketPush != null) {
-//            webSocketPush.sendActivedMsg();
-//        }
-//    }
-//
-//    /**
-//     * WebScoket发送应用切到后台信息
-//     */
-//    public void sendFrozenWSMsg() {
-//        if (webSocketPush != null) {
-//            webSocketPush.sendFrozenMsg();
-//        }
-//    }
-
     /******************************租户信息*******************************************/
 
     public void initTanent() {
