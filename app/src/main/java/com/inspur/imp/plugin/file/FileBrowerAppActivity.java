@@ -29,7 +29,7 @@ import java.util.List;
  * @author 浪潮移动应用平台(IMP)产品组
  * 
  */
-public class FileBrowerApp extends ListActivity {
+public class FileBrowerAppActivity extends ListActivity {
 	
 	private TextView _filePath;
 	private List<FileInfo> _files = new ArrayList<FileInfo>();
@@ -137,7 +137,7 @@ public class FileBrowerApp extends ListActivity {
  //显示不可读对话框
    public void showFileCanNOTReadMyDialog()
    {
-  	 new AlertDialog.Builder(FileBrowerApp.this)
+  	 new AlertDialog.Builder(FileBrowerAppActivity.this)
        .setIcon(Res.getDrawable("plugin_file_dialogtitle_icon"))
        .setMessage(getResources().getString(Res.getStringID("nopermission")))
        .setTitle(getResources().getString(Res.getStringID("dialogtitle")))

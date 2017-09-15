@@ -20,6 +20,7 @@ import android.text.TextUtils;
 import android.util.DisplayMetrics;
 
 import com.inspur.emmcloud.R;
+import com.inspur.imp.api.ImpActivity;
 
 import java.io.File;
 import java.util.List;
@@ -369,13 +370,13 @@ public class AppUtils {
      * @param context
      * @param file
      */
-    public static void openAPKFile(Context context, File file) {
+    public static void openAPKFile(Activity context, File file) {
         Intent intent = new Intent();
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.setAction(android.content.Intent.ACTION_VIEW);
         intent.setDataAndType(Uri.fromFile(file),
                 "application/vnd.android.package-archive");
-        context.startActivity(intent);
+        context.startActivityForResult(intent, ImpActivity.DO_NOTHING_RESULTCODE);
     }
 
     /**

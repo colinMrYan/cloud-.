@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.telephony.SmsManager;
 import android.widget.Toast;
 
+import com.inspur.imp.api.ImpActivity;
 import com.inspur.imp.plugin.ImpPlugin;
 import com.inspur.imp.util.StrUtil;
 
@@ -78,7 +79,7 @@ public class SmsService extends ImpPlugin {
 		Intent sendIntent = new Intent(Intent.ACTION_SENDTO);
 		sendIntent.setData(Uri.parse("smsto:" + tel));
 		sendIntent.putExtra("sms_body", msg);
-		this.context.startActivity(sendIntent);
+		((Activity)this.context).startActivityForResult(sendIntent, ImpActivity.DO_NOTHING_RESULTCODE);
 	}
 
 	/**

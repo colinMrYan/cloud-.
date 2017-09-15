@@ -123,6 +123,7 @@ public class IndexActivity extends BaseFragmentActivity implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        LogUtils.jasonDebug("IndexActivity----crate-----------------");
         StateBarColor.changeStateBarColor(this);
         setContentView(R.layout.activity_index);
         ((MyApplication) getApplicationContext()).addActivity(this);
@@ -699,6 +700,7 @@ public class IndexActivity extends BaseFragmentActivity implements
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        LogUtils.jasonDebug("onDestroy-----------");
         ((MyApplication) getApplicationContext()).setIndexActvityRunning(false);
         if (handler != null){
             handler = null;

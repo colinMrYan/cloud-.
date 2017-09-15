@@ -45,6 +45,7 @@ import com.inspur.emmcloud.util.EditTextUtils;
 import com.inspur.emmcloud.util.FileUtils;
 import com.inspur.emmcloud.util.ImageDisplayUtils;
 import com.inspur.emmcloud.util.JSONUtils;
+import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.SendFileUtils;
 import com.inspur.emmcloud.util.StringUtils;
@@ -430,6 +431,7 @@ public class MessionDetailActivity extends BaseActivity {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
+		LogUtils.jasonDebug("0000000000000000000022");
 		if (resultCode == RESULT_OK) {
 			switch (requestCode) {
 			case TAG_TYPE:
@@ -1158,10 +1160,10 @@ public class MessionDetailActivity extends BaseActivity {
 			
 			if (FileUtils.isFileExist(fileUri)) {
 				fileProgressbar.setVisibility(View.INVISIBLE);
-				FileUtils.openFile(getApplicationContext(), fileUri);
+				FileUtils.openFile(MessionDetailActivity.this, fileUri);
 			}else if (FileUtils.isFileExist(target)) {
 				fileProgressbar.setVisibility(View.INVISIBLE);
-				FileUtils.openFile(getApplicationContext(), target);
+				FileUtils.openFile(MessionDetailActivity.this, target);
 			}else {
 				new DownLoaderUtils().startDownLoad(downlaodSource, target,
 						progressCallback);
