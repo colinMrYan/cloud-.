@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.v4.app.Fragment;
@@ -932,31 +933,32 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
         hasIntrcutionDialog.show();
     }
 
-
     /**
-     * 网络请求处理类，一般放最后
+     * 网络请求回来的App数据整理，保存放到单独的task，提升性能体验
      */
-    class WebService extends APIInterfaceInstance {
+    class MyAppCacheTask extends AsyncTask{
+
         @Override
-        public void returnUserAppsSuccess(GetAppGroupResult getAppGroupResult) {
-            List<AppGroupBean> appGroupList = handleAppList(getAppGroupResult
-                    .getAppGroupBeanList());
-            isHasCacheNotRefresh = true;
-            //当第一次安装，第一次打开时，没有缓存的时候需要刷新appAdapter，其余时候只存（并且存储一个是否有网络数据的标志）不刷
+        protected Object doInBackground(Object[] params) {
             String appCache = MyAppCacheUtils.getMyAppsData(getActivity());
-            if (StringUtils.isBlank(appCache) || isNeedRefreshApp) {
-                handleRefreshApp(appGroupList);
-                isNeedRefreshApp = false;
-                isHasCacheNotRefresh = false;
-            }
+            isNeedRefreshApp = StringUtils.isBlank(appCache);
+            List<AppGroupBean> appGroupList = handleAppList(((GetAppGroupResult)(params[0]))
+                    .getAppGroupBeanList());
             MyAppCacheUtils.saveMyAppList(getActivity(), appGroupList);
-            pullToRefreshLayout.refreshFinish(PullToRefreshLayout.SUCCEED);
+            return appGroupList;
         }
 
         @Override
-        public void returnUserAppsFail(String error, int errorCode) {
-            pullToRefreshLayout.refreshFinish(PullToRefreshLayout.FAIL);
-            WebServiceMiddleUtils.hand(getActivity(), error, errorCode);
+        protected void onPostExecute(Object result) {
+            super.onPostExecute(result);
+            isHasCacheNotRefresh = true;
+            //当第一次安装，第一次打开时，没有缓存的时候需要刷新appAdapter，其余时候只存（并且存储一个是否有网络数据的标志）不刷
+            if (isNeedRefreshApp) {
+                handleRefreshApp((List<AppGroupBean>) result);
+                isNeedRefreshApp = false;
+                isHasCacheNotRefresh = false;
+            }
+            pullToRefreshLayout.refreshFinish(PullToRefreshLayout.SUCCEED);
         }
 
         /**
@@ -967,7 +969,25 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
         private void handleRefreshApp(List<AppGroupBean> appGroupList) {
             appListAdapter.setAppAdapterList(appGroupList);
             appListAdapter.notifyDataSetChanged();
-            MyAppCacheUtils.saveMyAppList(getActivity(), appGroupList);
         }
+    }
+
+
+    /**
+     * 网络请求处理类，一般放最后
+     */
+    class WebService extends APIInterfaceInstance {
+        @Override
+        public void returnUserAppsSuccess(GetAppGroupResult getAppGroupResult) {
+            MyAppCacheTask myAppCacheTask = new MyAppCacheTask();
+            myAppCacheTask.execute(getAppGroupResult);
+        }
+
+        @Override
+        public void returnUserAppsFail(String error, int errorCode) {
+            pullToRefreshLayout.refreshFinish(PullToRefreshLayout.FAIL);
+            WebServiceMiddleUtils.hand(getActivity(), error, errorCode);
+        }
+
     }
 }
