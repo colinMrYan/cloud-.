@@ -933,44 +933,6 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
         hasIntrcutionDialog.show();
     }
 
-    /**
-     * 网络请求回来的App数据整理，保存放到单独的task，提升性能体验
-     */
-    class MyAppCacheTask extends AsyncTask{
-
-        @Override
-        protected Object doInBackground(Object[] params) {
-            String appCache = MyAppCacheUtils.getMyAppsData(getActivity());
-            isNeedRefreshApp = StringUtils.isBlank(appCache);
-            List<AppGroupBean> appGroupList = handleAppList(((GetAppGroupResult)(params[0]))
-                    .getAppGroupBeanList());
-            MyAppCacheUtils.saveMyAppList(getActivity(), appGroupList);
-            return appGroupList;
-        }
-
-        @Override
-        protected void onPostExecute(Object result) {
-            super.onPostExecute(result);
-            isHasCacheNotRefresh = true;
-            //当第一次安装，第一次打开时，没有缓存的时候需要刷新appAdapter，其余时候只存（并且存储一个是否有网络数据的标志）不刷
-            if (isNeedRefreshApp) {
-                handleRefreshApp((List<AppGroupBean>) result);
-                isNeedRefreshApp = false;
-                isHasCacheNotRefresh = false;
-            }
-            pullToRefreshLayout.refreshFinish(PullToRefreshLayout.SUCCEED);
-        }
-
-        /**
-         * 处理添加新的app的逻辑
-         *
-         * @param appGroupList
-         */
-        private void handleRefreshApp(List<AppGroupBean> appGroupList) {
-            appListAdapter.setAppAdapterList(appGroupList);
-            appListAdapter.notifyDataSetChanged();
-        }
-    }
 
 
     /**
@@ -978,9 +940,31 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
      */
     class WebService extends APIInterfaceInstance {
         @Override
-        public void returnUserAppsSuccess(GetAppGroupResult getAppGroupResult) {
-            MyAppCacheTask myAppCacheTask = new MyAppCacheTask();
-            myAppCacheTask.execute(getAppGroupResult);
+        public void returnUserAppsSuccess(final GetAppGroupResult getAppGroupResult) {
+            new AsyncTask<Void,Void,List<AppGroupBean>>(){
+                @Override
+                protected void onPostExecute(List<AppGroupBean> appGroupBeen) {
+                    isHasCacheNotRefresh = true;
+                    //当第一次安装，第一次打开时，没有缓存的时候需要刷新appAdapter，其余时候只存（并且存储一个是否有网络数据的标志）不刷
+                    if (isNeedRefreshApp) {
+                        isNeedRefreshApp = false;
+                        isHasCacheNotRefresh = false;
+                        appListAdapter.setAppAdapterList(appGroupBeen);
+                        appListAdapter.notifyDataSetChanged();
+                    }
+                    pullToRefreshLayout.refreshFinish(PullToRefreshLayout.SUCCEED);
+                }
+
+                @Override
+                protected List<AppGroupBean> doInBackground(Void... params) {
+                    String appCache = MyAppCacheUtils.getMyAppsData(getActivity());
+                    isNeedRefreshApp = StringUtils.isBlank(appCache);
+                    List<AppGroupBean> appGroupList = handleAppList(getAppGroupResult
+                            .getAppGroupBeanList());
+                    MyAppCacheUtils.saveMyAppList(getActivity(), appGroupList);
+                    return appGroupList;
+                }
+            }.execute();
         }
 
         @Override
