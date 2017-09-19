@@ -440,7 +440,7 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
      * 为单个群组创建头像
      */
     private void createGroupIcon(List<Channel> channelList) {
-        if (((MyApplication) getActivity().getApplicationContext()).getIsContactReady()) {
+        if (((MyApplication) getActivity().getApplicationContext()).getIsContactReady() && NetUtils.isNetworkConnected(getActivity(),false)) {
             isHaveCreatGroupIcon = true;
             ChannelGroupIconUtils.getInstance().create(getActivity(), channelList,
                     handler);
@@ -1099,6 +1099,7 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
             // TODO Auto-generated method stub
             String command = intent.getExtras().getString("command");
             if (command.equals("creat_group_icon")) {
+                isHaveCreatGroupIcon =false;
                 createGroupIcon(null);
             } else if (command.equals("refresh_session_list")) {
                 getChannelContent();
