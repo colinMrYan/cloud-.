@@ -962,8 +962,9 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
         }
     }
 
-    class CacheChannelTask extends AsyncTask<GetChannelListResult,Void, List<Channel>>{
+    class CacheChannelTask extends AsyncTask<GetChannelListResult, Void, List<Channel>> {
         private List<Channel> allchannelList = new ArrayList<>();
+
         @Override
         protected void onPostExecute(List<Channel> addchannelList) {
             if (!isHaveCreatGroupIcon) {
@@ -990,7 +991,7 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
         }
     }
 
-    class CacheNewMsgTask extends AsyncTask<GetNewMsgsResult,Void,Void>{
+    class CacheNewMsgTask extends AsyncTask<GetNewMsgsResult, Void, Void> {
         @Override
         protected void onPostExecute(Void aVoid) {
             sortChannelList();
@@ -1000,7 +1001,7 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
         protected Void doInBackground(GetNewMsgsResult... params) {
             try {
                 GetNewMsgsResult getNewMsgsResult = params[0];
-                if (getNewMsgsResult != null){
+                if (getNewMsgsResult != null) {
                     String myUid = ((MyApplication) getActivity().getApplicationContext()).getUid();
                     List<Channel> channelList = getCacheData();
                     for (int i = 0; i < channelList.size(); i++) {
@@ -1255,11 +1256,11 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
     public void onDestroy() {
         // TODO Auto-generated method stub
         super.onDestroy();
-        if (cacheChannelTask != null &&!cacheChannelTask.isCancelled() && cacheChannelTask.getStatus() == AsyncTask.Status.RUNNING) {
+        if (cacheChannelTask != null && !cacheChannelTask.isCancelled() && cacheChannelTask.getStatus() == AsyncTask.Status.RUNNING) {
             cacheChannelTask.cancel(true);
             cacheChannelTask = null;
         }
-        if (cacheMsgAsyncTask != null &&!cacheMsgAsyncTask.isCancelled() && cacheMsgAsyncTask.getStatus() == AsyncTask.Status.RUNNING) {
+        if (cacheMsgAsyncTask != null && !cacheMsgAsyncTask.isCancelled() && cacheMsgAsyncTask.getStatus() == AsyncTask.Status.RUNNING) {
             cacheMsgAsyncTask.cancel(true);
             cacheMsgAsyncTask = null;
         }
