@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Configuration;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Message;
 import android.view.KeyEvent;
@@ -77,6 +78,7 @@ import com.inspur.emmcloud.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.MyFragmentTabHost;
 import com.inspur.emmcloud.widget.WeakHandler;
+import com.inspur.emmcloud.widget.WeakThread;
 import com.inspur.emmcloud.widget.tipsview.TipsView;
 import com.inspur.reactnative.ReactNativeFlow;
 
@@ -97,7 +99,6 @@ import java.util.List;
 public class IndexActivity extends BaseFragmentActivity implements
         OnTabChangeListener, OnTouchListener,CommonCallBack,MyAppFragment.AppLanguageState {
     private static final int SYNC_ALL_BASE_DATA_SUCCESS = 0;
-    private static final int SYNC_CONTACT_SUCCESS = 1;
     private static final int CHANGE_TAB = 2;
     private static final int RELOAD_WEB = 3;
     private long lastBackTime;
@@ -120,11 +121,11 @@ public class IndexActivity extends BaseFragmentActivity implements
     private WebView webView;
     private boolean isCommunicationRunning = false;
     private boolean isSystemChangeTag = true;//控制如果是系统切换的tab则不计入用户行为
+    private AsyncTask<Void,Void,Void> cacheContactAsyncTask;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        LogUtils.jasonDebug("IndexActivity----crate-----------------");
         StateBarColor.changeStateBarColor(this);
         setContentView(R.layout.activity_index);
         ((MyApplication) getApplicationContext()).addActivity(this);
@@ -317,10 +318,7 @@ public class IndexActivity extends BaseFragmentActivity implements
 
                         ((MyApplication) getApplicationContext())
                                 .setIsContactReady(true);
-                        sendCreatChannelGroupIconBroadCaset();
-                        break;
-                    case SYNC_CONTACT_SUCCESS:
-                        getAllChannelGroup();
+                        refreshSessionData();
                         break;
                     case CHANGE_TAB:
                         mTabHost.setCurrentTab(getTabIndex());
@@ -340,11 +338,11 @@ public class IndexActivity extends BaseFragmentActivity implements
     /**
      * 通讯录完成时发送广播
      */
-    private void sendCreatChannelGroupIconBroadCaset() {
+    private void refreshSessionData() {
         // TODO Auto-generated method stub
         //当通讯录完成时需要刷新头像
         Intent intent = new Intent("message_notify");
-        intent.putExtra("command", "sort_session_list");
+        intent.putExtra("command", "sync_all_base_data_success");
         sendBroadcast(intent);
 
     }
@@ -703,27 +701,6 @@ public class IndexActivity extends BaseFragmentActivity implements
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        LogUtils.jasonDebug("onDestroy-----------");
-        ((MyApplication) getApplicationContext()).setIndexActvityRunning(false);
-        if (handler != null){
-            handler = null;
-        }
-        if (newMessageTipsText != null) {
-            newMessageTipsText = null;
-        }
-        if (newMessageTipsLayout != null) {
-            newMessageTipsLayout = null;
-        }
-        if(reactNativeReceiver != null){
-            unregisterReceiver(reactNativeReceiver);
-            reactNativeReceiver = null;
-        }
-        EventBus.getDefault().unregister(this);
-    }
-
-    @Override
     public boolean onTouch(View v, MotionEvent event) {
         super.onTouchEvent(event);
         boolean consumed = false;
@@ -816,36 +793,61 @@ public class IndexActivity extends BaseFragmentActivity implements
         return false;
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        ((MyApplication) getApplicationContext()).setIndexActvityRunning(false);
+        if (cacheContactAsyncTask != null &&!cacheContactAsyncTask.isCancelled() && cacheContactAsyncTask.getStatus() == AsyncTask.Status.RUNNING){
+            cacheContactAsyncTask.cancel(true);
+            cacheContactAsyncTask = null;
+        }
+        if (handler != null){
+            handler = null;
+        }
+        if (newMessageTipsText != null) {
+            newMessageTipsText = null;
+        }
+        if (newMessageTipsLayout != null) {
+            newMessageTipsLayout = null;
+        }
+        if(reactNativeReceiver != null){
+            unregisterReceiver(reactNativeReceiver);
+            reactNativeReceiver = null;
+        }
+        EventBus.getDefault().unregister(this);
+    }
+
 
     public class WebService extends APIInterfaceInstance {
 
         @Override
         public void returnAllContactSuccess(
                 final GetAllContactResult getAllContactResult) {
-            new Thread(new Runnable() {
-
-                @Override
-                public void run() {
-                    // TODO Auto-generated method stub
-                    List<Contact> allContactList = getAllContactResult
-                            .getAllContactList();
-                    List<Contact> modifyContactLsit = getAllContactResult
-                            .getModifyContactList();
-                    List<String> deleteContactIdList = getAllContactResult.getDeleteContactIdList();
-                    ContactCacheUtils.saveContactList(getApplicationContext(),
-                            allContactList);
-                    ContactCacheUtils.saveContactList(getApplicationContext(),
-                            modifyContactLsit);
-                    ContactCacheUtils.deleteContact(IndexActivity.this, deleteContactIdList);
-                    ContactCacheUtils.saveLastUpdateTime(getApplicationContext(),
-                            getAllContactResult.getLastUpdateTime());
-                    ContactCacheUtils.saveLastUpdateunitID(IndexActivity.this,getAllContactResult.getUnitID());
-                    if(handler != null){
-                        handler.sendEmptyMessage(SYNC_CONTACT_SUCCESS);
+            cacheContactAsyncTask =  new AsyncTask<Void,Void,Void>(){
+                    @Override
+                    protected void onPostExecute(Void aVoid) {
+                        getAllChannelGroup();
                     }
 
-                }
-            }).start();
+                    @Override
+                    protected Void doInBackground(Void... params) {
+                        List<Contact> allContactList = getAllContactResult
+                                .getAllContactList();
+                        List<Contact> modifyContactLsit = getAllContactResult
+                                .getModifyContactList();
+                        List<String> deleteContactIdList = getAllContactResult.getDeleteContactIdList();
+                        ContactCacheUtils.saveContactList(getApplicationContext(),
+                                allContactList);
+                        ContactCacheUtils.saveContactList(getApplicationContext(),
+                                modifyContactLsit);
+                        ContactCacheUtils.deleteContact(IndexActivity.this, deleteContactIdList);
+                        ContactCacheUtils.saveLastUpdateTime(getApplicationContext(),
+                                getAllContactResult.getLastUpdateTime());
+                        ContactCacheUtils.saveLastUpdateunitID(IndexActivity.this,getAllContactResult.getUnitID());
+                        return null;
+                    }
+                };
+            cacheContactAsyncTask.execute();
 
         }
 
@@ -858,14 +860,28 @@ public class IndexActivity extends BaseFragmentActivity implements
 
         @Override
         public void returnSearchChannelGroupSuccess(
-                GetSearchChannelGroupResult getSearchChannelGroupResult) {
+                final GetSearchChannelGroupResult getSearchChannelGroupResult) {
             // TODO Auto-generated method stub
-            List<ChannelGroup> channelGroupList = getSearchChannelGroupResult
-                    .getSearchChannelGroupList();
-            ChannelGroupCacheUtils.clearChannelGroupList(getApplicationContext());
-            ChannelGroupCacheUtils.saveChannelGroupList(
-                    getApplicationContext(), channelGroupList);
-            handler.sendEmptyMessage(SYNC_ALL_BASE_DATA_SUCCESS);
+            WeakThread weakThread = new WeakThread(IndexActivity.this){
+                @Override
+                public void run() {
+                    super.run();
+                    try {
+                        List<ChannelGroup> channelGroupList = getSearchChannelGroupResult
+                                .getSearchChannelGroupList();
+                        ChannelGroupCacheUtils.clearChannelGroupList(getApplicationContext());
+                        ChannelGroupCacheUtils.saveChannelGroupList(
+                                getApplicationContext(), channelGroupList);
+                        if (handler != null){
+                            handler.sendEmptyMessage(SYNC_ALL_BASE_DATA_SUCCESS);
+                        }
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+
+                }
+            };
+            weakThread.start();
         }
 
         @Override
@@ -878,9 +894,15 @@ public class IndexActivity extends BaseFragmentActivity implements
 
         @Override
         public void returnAllRobotsSuccess(
-                GetAllRobotsResult getAllBotInfoResult) {
-            RobotCacheUtils.clearRobotList(IndexActivity.this);
-            RobotCacheUtils.saveOrUpdateRobotList(IndexActivity.this, getAllBotInfoResult.getRobotList());
+               final GetAllRobotsResult getAllBotInfoResult) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    RobotCacheUtils.clearRobotList(IndexActivity.this);
+                    RobotCacheUtils.saveOrUpdateRobotList(IndexActivity.this, getAllBotInfoResult.getRobotList());
+                }
+            }).start();
+
         }
 
         @Override

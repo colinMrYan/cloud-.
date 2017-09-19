@@ -34,7 +34,7 @@ public class ChannelGroupIconUtils {
     private static final int RERESH_GROUP_ICON = 2;
     private static int PADDING = 2;
     private static int rangetWidth;
-    private List<Channel> channelList;
+    private List<Channel> channelTypeGroupList = new ArrayList<>();
     private Context context;
     private Handler handler;
     private NetThread netThread;
@@ -54,30 +54,33 @@ public class ChannelGroupIconUtils {
     private ChannelGroupIconUtils() {
     }
 
-    public void create(Context context,Channel channel,
-                       Handler handler){
-        List<Channel> channelList = new ArrayList<>();
-        channelList.add(channel);
-        create(context,channelList,handler);
-    }
 
     public void create(Context context, List<Channel> channelList,
                        Handler handler) {
         // TODO Auto-generated method stub
         if (!Environment.getExternalStorageState().equals(
-                Environment.MEDIA_MOUNTED) || !NetUtils.isNetworkConnected(context,false) || channelList == null || channelList.size() == 0 ) {
+                Environment.MEDIA_MOUNTED) || !NetUtils.isNetworkConnected(context, false)) {
             return;
         }
-        this.channelList = channelList;
+
+        if (channelList == null) {
+            channelTypeGroupList = ChannelCacheUtils.getChannelList(context, "GROUP");
+        } else {
+            channelTypeGroupList.clear();
+            for (int i = 0; i < channelList.size(); i++) {
+                channelTypeGroupList.add(channelList.get(i));
+            }
+        }
+        if (channelTypeGroupList.size() == 0) {
+            return;
+        }
         this.context = context;
         this.handler = handler;
         List<ChannelGroup> currentChannelGroupList = new ArrayList<ChannelGroup>();
-        for (int i = 0; i < channelList.size(); i++) {
-            Channel channel = channelList.get(i);
-            if (channel.getType().equals("GROUP")) {
-                ChannelGroup channelGroup = new ChannelGroup(channel);
-                currentChannelGroupList.add(channelGroup);
-            }
+        for (int i = 0; i < channelTypeGroupList.size(); i++) {
+            Channel channel = channelTypeGroupList.get(i);
+            ChannelGroup channelGroup = new ChannelGroup(channel);
+            currentChannelGroupList.add(channelGroup);
         }
         List<ChannelGroup> cacheChannelGroupList = ChannelGroupCacheUtils
                 .getAllChannelGroupList(context);
@@ -123,33 +126,31 @@ public class ChannelGroupIconUtils {
                         .cacheOnDisk(true)
                         .build();
                 boolean isCreateNewGroupIcon = false;
-                for (int i = 0; i < channelList.size(); i++) {
-                    Channel channel = channelList.get(i);
-                    if (channel.getType().equals("GROUP")) {
-                        isCreateNewGroupIcon = true;
-                        List<String> memberUidList = ChannelGroupCacheUtils.getMemberUidList(context, channel.getCid(), 4);
-                        List<Bitmap> bitmapList = new ArrayList<Bitmap>();
-                        for (int j = 0; j < memberUidList.size(); j++) {
-                            String pid = memberUidList.get(j);
-                            Bitmap bitmap = null;
-                            if (!StringUtils.isBlank(pid) && !pid.equals("null")) {
-                                bitmap = ImageLoader.getInstance().loadImageSync(UriUtils.getChannelImgUri(context, pid), options);
-                            }
-                            if (bitmap == null) {
-                                bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.icon_person_default);
-                            }
-                            bitmapList.add(bitmap);
+                for (int i = 0; i < channelTypeGroupList.size(); i++) {
+                    Channel channel = channelTypeGroupList.get(i);
+                    isCreateNewGroupIcon = true;
+                    List<String> memberUidList = ChannelGroupCacheUtils.getMemberUidList(context, channel.getCid(), 4);
+                    List<Bitmap> bitmapList = new ArrayList<Bitmap>();
+                    for (int j = 0; j < memberUidList.size(); j++) {
+                        String pid = memberUidList.get(j);
+                        Bitmap bitmap = null;
+                        if (!StringUtils.isBlank(pid) && !pid.equals("null")) {
+                            bitmap = ImageLoader.getInstance().loadImageSync(UriUtils.getChannelImgUri(context, pid), options);
                         }
-                        Bitmap combineBitmap = createGroupFace(context, bitmapList);
+                        if (bitmap == null) {
+                            bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.icon_person_default);
+                        }
+                        bitmapList.add(bitmap);
+                    }
+                    Bitmap combineBitmap = createGroupFace(context, bitmapList);
 
-                        if (combineBitmap != null) {
-                            saveBitmap(channel.getCid(), combineBitmap);
-                        }
+                    if (combineBitmap != null) {
+                        saveBitmap(channel.getCid(), combineBitmap);
                     }
                 }
                 if (handler != null) {
                     Message msg = new Message();
-                    msg.what=RERESH_GROUP_ICON;
+                    msg.what = RERESH_GROUP_ICON;
                     msg.obj = isCreateNewGroupIcon;
                     handler.sendMessage(msg);
                 }
@@ -178,6 +179,7 @@ public class ChannelGroupIconUtils {
 
     /**
      * 当出现群组中只有一个人的情况
+     *
      * @param paramList
      * @param context
      * @return
