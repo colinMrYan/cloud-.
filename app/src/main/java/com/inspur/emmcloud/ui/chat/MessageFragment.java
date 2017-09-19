@@ -120,8 +120,8 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
     private TextView titleText;
     private boolean isHaveCreatGroupIcon = false;
     private PopupWindow popupWindow;
-    private AsyncTask<Void, Void, Void> cacheMsgAsyncTask;
-    private AsyncTask<Void, Void, List<Channel>> cacheChannelAsyncTask;
+    private CacheNewMsgTask cacheMsgAsyncTask;
+    private CacheChannelTask cacheChannelTask;
     //private boolean isFirstConnectWebsockt = true;//判断是否第一次连上websockt
 
     @Override
@@ -962,6 +962,67 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
         }
     }
 
+    class CacheChannelTask extends AsyncTask<GetChannelListResult,Void, List<Channel>>{
+        private List<Channel> allchannelList = new ArrayList<>();
+        @Override
+        protected void onPostExecute(List<Channel> addchannelList) {
+            if (!isHaveCreatGroupIcon) {
+                createGroupIcon(allchannelList);
+            } else {
+                createGroupIcon(addchannelList);
+            }
+            getChannelInfoResult(allchannelList);
+            apiService.getNewMsgs();
+        }
+
+        @Override
+        protected List<Channel> doInBackground(GetChannelListResult... params) {
+            List<Channel> allchannelList = params[0].getChannelList();
+            this.allchannelList = allchannelList;
+            List<Channel> cacheChannelList = ChannelCacheUtils
+                    .getCacheChannelList(getActivity());
+            List<Channel> addchannelList = new ArrayList<>();
+            addchannelList.addAll(allchannelList);
+            addchannelList.removeAll(cacheChannelList);
+            ChannelCacheUtils.clearChannel(getActivity());
+            ChannelCacheUtils.saveChannelList(getActivity(), allchannelList);
+            return addchannelList;
+        }
+    }
+
+    class CacheNewMsgTask extends AsyncTask<GetNewMsgsResult,Void,Void>{
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            sortChannelList();
+        }
+
+        @Override
+        protected Void doInBackground(GetNewMsgsResult... params) {
+            try {
+                GetNewMsgsResult getNewMsgsResult = params[0];
+                if (getNewMsgsResult != null){
+                    String myUid = ((MyApplication) getActivity().getApplicationContext()).getUid();
+                    List<Channel> channelList = getCacheData();
+                    for (int i = 0; i < channelList.size(); i++) {
+                        String cid = channelList.get(i).getCid();
+                        List<Msg> newMsgList = getNewMsgsResult.getNewMsgList(cid);
+                        if (newMsgList.size() > 0) {
+                            MsgCacheUtil.saveMsgList(getActivity(), newMsgList, ""); // 获取的消息需要缓存
+                            // 当会话中最后一条消息为自己发出的时候，将此消息存入已读消息列表，解决最新消息为自己发出，仍识别为未读的问题
+                            if (newMsgList.get(newMsgList.size() - 1).getUid()
+                                    .equals(myUid)) {
+                                MsgReadIDCacheUtils.saveReadedMsg(getActivity(), cid,
+                                        newMsgList.get(newMsgList.size() - 1).getMid());
+                            }
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+    }
 
     class WebService extends APIInterfaceInstance {
 
@@ -970,36 +1031,8 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
                 GetChannelListResult getChannelListResult) {
             // TODO Auto-generated method stub
             if (getActivity() != null) {
-                final List<Channel> channelList = getChannelListResult
-                        .getChannelList();
-
-                cacheChannelAsyncTask = new AsyncTask<Void, Void, List<Channel>>() {
-                    @Override
-                    protected void onPostExecute(List<Channel> addchannelList) {
-
-                        if (!isHaveCreatGroupIcon) {
-                            createGroupIcon(channelList);
-                        } else {
-                            createGroupIcon(addchannelList);
-                        }
-                        getChannelInfoResult(channelList);
-                        apiService.getNewMsgs();
-                    }
-
-                    @Override
-                    protected List<Channel> doInBackground(Void... params) {
-                        List<Channel> cacheChannelList = ChannelCacheUtils
-                                .getCacheChannelList(getActivity());
-                        List<Channel> addchannelList = new ArrayList<>();
-                        addchannelList.addAll(channelList);
-                        addchannelList.removeAll(cacheChannelList);
-                        ChannelCacheUtils.clearChannel(getActivity());
-                        ChannelCacheUtils.saveChannelList(getActivity(), channelList);
-                        return addchannelList;
-                    }
-                };
-
-                cacheChannelAsyncTask.execute();
+                cacheChannelTask = new CacheChannelTask();
+                cacheChannelTask.execute(getChannelListResult);
 
             }
 
@@ -1021,23 +1054,8 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
             // TODO Auto-generated method stub
             if (getActivity() != null) {
                 pullToRefreshLayout.refreshFinish(PullToRefreshLayout.SUCCEED);
-                cacheMsgAsyncTask = new AsyncTask<Void, Void, Void>() {
-                    @Override
-                    protected void onPostExecute(Void aVoid) {
-                        sortChannelList();// 对Channel 进行排序
-                    }
-
-                    @Override
-                    protected Void doInBackground(Void... params) {
-                        try {
-                            cacheNewMsgs(getNewMsgsResult);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        return null;
-                    }
-                }.execute();
-                cacheMsgAsyncTask.execute();
+                cacheMsgAsyncTask = new CacheNewMsgTask();
+                cacheMsgAsyncTask.execute(getNewMsgsResult);
 
             }
 
@@ -1237,9 +1255,9 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
     public void onDestroy() {
         // TODO Auto-generated method stub
         super.onDestroy();
-        if (cacheChannelAsyncTask != null &&!cacheChannelAsyncTask.isCancelled() &&cacheChannelAsyncTask.getStatus() == AsyncTask.Status.RUNNING) {
-            cacheChannelAsyncTask.cancel(true);
-            cacheChannelAsyncTask = null;
+        if (cacheChannelTask != null &&!cacheChannelTask.isCancelled() && cacheChannelTask.getStatus() == AsyncTask.Status.RUNNING) {
+            cacheChannelTask.cancel(true);
+            cacheChannelTask = null;
         }
         if (cacheMsgAsyncTask != null &&!cacheMsgAsyncTask.isCancelled() && cacheMsgAsyncTask.getStatus() == AsyncTask.Status.RUNNING) {
             cacheMsgAsyncTask.cancel(true);

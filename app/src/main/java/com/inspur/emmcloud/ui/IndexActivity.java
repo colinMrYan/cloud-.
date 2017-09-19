@@ -121,7 +121,7 @@ public class IndexActivity extends BaseFragmentActivity implements
     private WebView webView;
     private boolean isCommunicationRunning = false;
     private boolean isSystemChangeTag = true;//控制如果是系统切换的tab则不计入用户行为
-    private AsyncTask<Void,Void,Void> cacheContactAsyncTask;
+    private ContactSaveTask contactSaveTask;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -793,13 +793,14 @@ public class IndexActivity extends BaseFragmentActivity implements
         return false;
     }
 
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
         ((MyApplication) getApplicationContext()).setIndexActvityRunning(false);
-        if (cacheContactAsyncTask != null &&!cacheContactAsyncTask.isCancelled() && cacheContactAsyncTask.getStatus() == AsyncTask.Status.RUNNING){
-            cacheContactAsyncTask.cancel(true);
-            cacheContactAsyncTask = null;
+        if (contactSaveTask != null &&!contactSaveTask.isCancelled() && contactSaveTask.getStatus() == AsyncTask.Status.RUNNING){
+            contactSaveTask.cancel(true);
+            contactSaveTask = null;
         }
         if (handler != null){
             handler = null;
@@ -817,38 +818,39 @@ public class IndexActivity extends BaseFragmentActivity implements
         EventBus.getDefault().unregister(this);
     }
 
+    class ContactSaveTask extends AsyncTask<GetAllContactResult,Void,Void>{
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            getAllChannelGroup();
+        }
+
+        @Override
+        protected Void doInBackground(GetAllContactResult... params) {
+            GetAllContactResult getAllContactResult = params[0];
+            List<Contact> allContactList = getAllContactResult
+                    .getAllContactList();
+            List<Contact> modifyContactLsit = getAllContactResult
+                    .getModifyContactList();
+            List<String> deleteContactIdList = getAllContactResult.getDeleteContactIdList();
+            ContactCacheUtils.saveContactList(getApplicationContext(),
+                    allContactList);
+            ContactCacheUtils.saveContactList(getApplicationContext(),
+                    modifyContactLsit);
+            ContactCacheUtils.deleteContact(IndexActivity.this, deleteContactIdList);
+            ContactCacheUtils.saveLastUpdateTime(getApplicationContext(),
+                    getAllContactResult.getLastUpdateTime());
+            ContactCacheUtils.saveLastUpdateunitID(IndexActivity.this,getAllContactResult.getUnitID());
+            return null;
+        }
+    }
 
     public class WebService extends APIInterfaceInstance {
 
         @Override
         public void returnAllContactSuccess(
                 final GetAllContactResult getAllContactResult) {
-            cacheContactAsyncTask =  new AsyncTask<Void,Void,Void>(){
-                    @Override
-                    protected void onPostExecute(Void aVoid) {
-                        getAllChannelGroup();
-                    }
-
-                    @Override
-                    protected Void doInBackground(Void... params) {
-                        List<Contact> allContactList = getAllContactResult
-                                .getAllContactList();
-                        List<Contact> modifyContactLsit = getAllContactResult
-                                .getModifyContactList();
-                        List<String> deleteContactIdList = getAllContactResult.getDeleteContactIdList();
-                        ContactCacheUtils.saveContactList(getApplicationContext(),
-                                allContactList);
-                        ContactCacheUtils.saveContactList(getApplicationContext(),
-                                modifyContactLsit);
-                        ContactCacheUtils.deleteContact(IndexActivity.this, deleteContactIdList);
-                        ContactCacheUtils.saveLastUpdateTime(getApplicationContext(),
-                                getAllContactResult.getLastUpdateTime());
-                        ContactCacheUtils.saveLastUpdateunitID(IndexActivity.this,getAllContactResult.getUnitID());
-                        return null;
-                    }
-                };
-            cacheContactAsyncTask.execute();
-
+            contactSaveTask = new ContactSaveTask();
+            contactSaveTask.execute(getAllContactResult);
         }
 
         @Override
