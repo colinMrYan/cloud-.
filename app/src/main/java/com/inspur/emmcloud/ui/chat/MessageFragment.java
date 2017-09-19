@@ -1237,11 +1237,13 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
     public void onDestroy() {
         // TODO Auto-generated method stub
         super.onDestroy();
-        if (cacheChannelAsyncTask != null && cacheChannelAsyncTask.getStatus() == AsyncTask.Status.RUNNING) {
+        if (cacheChannelAsyncTask != null &&!cacheChannelAsyncTask.isCancelled() &&cacheChannelAsyncTask.getStatus() == AsyncTask.Status.RUNNING) {
             cacheChannelAsyncTask.cancel(true);
+            cacheChannelAsyncTask = null;
         }
-        if (cacheMsgAsyncTask != null && cacheMsgAsyncTask.getStatus() == AsyncTask.Status.RUNNING) {
+        if (cacheMsgAsyncTask != null &&!cacheMsgAsyncTask.isCancelled() && cacheMsgAsyncTask.getStatus() == AsyncTask.Status.RUNNING) {
             cacheMsgAsyncTask.cancel(true);
+            cacheMsgAsyncTask = null;
         }
         if (msgReceiver != null) {
             getActivity().unregisterReceiver(msgReceiver);

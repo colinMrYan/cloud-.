@@ -797,8 +797,9 @@ public class IndexActivity extends BaseFragmentActivity implements
     protected void onDestroy() {
         super.onDestroy();
         ((MyApplication) getApplicationContext()).setIndexActvityRunning(false);
-        if (cacheContactAsyncTask != null && cacheContactAsyncTask.getStatus() == AsyncTask.Status.RUNNING){
+        if (cacheContactAsyncTask != null &&!cacheContactAsyncTask.isCancelled() && cacheContactAsyncTask.getStatus() == AsyncTask.Status.RUNNING){
             cacheContactAsyncTask.cancel(true);
+            cacheContactAsyncTask = null;
         }
         if (handler != null){
             handler = null;

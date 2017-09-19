@@ -66,7 +66,7 @@ public class MyInfoActivity extends BaseActivity {
         ((MyApplication) getApplicationContext()).addActivity(this);
         setContentView(R.layout.activity_my_info);
         initView();
-        //getUserProfile();
+        getUserProfile();
         getUserInfoConfig();
         showMyInfo();
 
@@ -75,8 +75,8 @@ public class MyInfoActivity extends BaseActivity {
     private void initView() {
         // TODO Auto-generated method stub
         loadingDlg = new LoadingDialog(MyInfoActivity.this);
-        getMyInfoResult = (GetMyInfoResult) getIntent().getExtras()
-                .getSerializable("getMyInfoResult");
+        String myInfo = PreferencesUtils.getString(this, "myInfo", "");
+        getMyInfoResult = new GetMyInfoResult(myInfo);
         userHeadImg = (ImageView) findViewById(R.id.myinfo_userheadimg_img);
         userMailText = (TextView) findViewById(R.id.myinfo_usermail_text);
         resetLayout = (RelativeLayout) findViewById(R.id.myinfo_reset_layout);
@@ -237,11 +237,7 @@ public class MyInfoActivity extends BaseActivity {
     /**
      * 设置多企业切换按钮的显示和隐藏
      */
-    private void setSwitchEnterpriseState(GetMyInfoResult getMyInfoResult) {
-        if (getMyInfoResult == null) {
-            String myInfo = PreferencesUtils.getString(this, "myInfo", "");
-            getMyInfoResult = new GetMyInfoResult(myInfo);
-        }
+    private void setSwitchEnterpriseState() {
         List<Enterprise> enterpriseList = getMyInfoResult.getEnterpriseList();
         if (enterpriseList.size() > 1) {
             (findViewById(R.id.switch_enterprese_text)).setVisibility(View.VISIBLE);
@@ -273,7 +269,7 @@ public class MyInfoActivity extends BaseActivity {
             apiServices.getMyInfo();
         } else {
             dimissDlg();
-            setSwitchEnterpriseState(null);
+            setSwitchEnterpriseState();
         }
     }
 
@@ -285,7 +281,6 @@ public class MyInfoActivity extends BaseActivity {
             loadingDlg.show();
             apiService.getUserProfileInfo();
         } else {
-            setSwitchEnterpriseState(null);
             setUserInfoConfig(null);
         }
     }
@@ -338,15 +333,17 @@ public class MyInfoActivity extends BaseActivity {
         public void returnMyInfoSuccess(GetMyInfoResult getMyInfoResult) {
             // TODO Auto-generated method stub
             dimissDlg();
+            MyInfoActivity.this.getMyInfoResult = getMyInfoResult;
             PreferencesUtils.putString(MyInfoActivity.this, "myInfo", getMyInfoResult.getResponse());
-            setSwitchEnterpriseState(getMyInfoResult);
+            showMyInfo();
+            setSwitchEnterpriseState();
         }
 
         @Override
         public void returnMyInfoFail(String error, int errorCode) {
             // TODO Auto-generated method stub
             dimissDlg();
-            setSwitchEnterpriseState(null);
+            setSwitchEnterpriseState();
         }
     }
 
