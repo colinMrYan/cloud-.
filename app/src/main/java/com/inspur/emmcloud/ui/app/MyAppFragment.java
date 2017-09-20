@@ -131,7 +131,7 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
     /**
      * 修改语言时的接口
      */
-    public interface AppLanguageState{
+    public interface AppLanguageState {
         public boolean getAppLanguageState();
     }
 
@@ -579,8 +579,8 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
             getActivity().unregisterReceiver(mBroadcastReceiver);
             mBroadcastReceiver = null;
         }
-        if(myAppSaveTask != null && !myAppSaveTask.isCancelled()
-                && myAppSaveTask.getStatus() == AsyncTask.Status.RUNNING){
+        if (myAppSaveTask != null && !myAppSaveTask.isCancelled()
+                && myAppSaveTask.getStatus() == AsyncTask.Status.RUNNING) {
             myAppSaveTask.cancel(true);
             myAppSaveTask = null;
         }
@@ -940,7 +940,7 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
     }
 
 
-    class MyAppSaveTask extends AsyncTask<GetAppGroupResult,Void,List<AppGroupBean>>{
+    class MyAppSaveTask extends AsyncTask<GetAppGroupResult, Void, List<AppGroupBean>> {
 
         @Override
         protected List<AppGroupBean> doInBackground(GetAppGroupResult... params) {
@@ -951,7 +951,7 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
                         .getAppGroupBeanList());
                 MyAppCacheUtils.saveMyAppList(getActivity(), appGroupList);
                 return appGroupList;
-            }catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
                 return new ArrayList<AppGroupBean>();
             }
