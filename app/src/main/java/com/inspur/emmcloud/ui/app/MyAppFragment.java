@@ -946,7 +946,7 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
         protected List<AppGroupBean> doInBackground(GetAppGroupResult... params) {
             try {
                 String appCache = MyAppCacheUtils.getMyAppsData(getActivity());
-                isNeedRefreshApp = StringUtils.isBlank(appCache);
+                isNeedRefreshApp = (StringUtils.isBlank(appCache) || isNeedRefreshApp);
                 List<AppGroupBean> appGroupList = handleAppList((params[0])
                         .getAppGroupBeanList());
                 MyAppCacheUtils.saveMyAppList(getActivity(), appGroupList);
