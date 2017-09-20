@@ -815,12 +815,6 @@ public class TimeUtils {
         Calendar displayCalendar = Calendar.getInstance();
         displayCalendar.setTimeInMillis(timeLong);
         String time= getDisplayTime(context, displayCalendar);
-        if (time.startsWith("1970")){
-            LogUtils.jasonDebug("time="+time);
-            LogUtils.jasonDebug("UTCStringTime="+UTCStringTime);
-            LogUtils.jasonDebug("timeLong="+timeLong);
-        }
-
         return time;
 
     }

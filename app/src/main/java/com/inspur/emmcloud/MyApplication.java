@@ -143,7 +143,6 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.setClass(this, LoginActivity.class);
         startActivity(intent);
-        exit();
     }
 /****************************通知相关（极光和华为推送）******************************************/
     /**
@@ -656,6 +655,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         } catch (Exception e) {
             LogUtils.exceptionDebug(TAG, e.toString());
         }
+        setIsActive(false);
     }
 
     @Override
