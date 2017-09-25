@@ -54,6 +54,7 @@ public class ImpActivity extends ImpBaseActivity {
     private ImpWebView webView;
     // 浏览文件resultCode
     private int FILEEXPLOER_RESULTCODE = 4;
+    public static final int DO_NOTHING_RESULTCODE = 5;
     //private RelativeLayout progressLayout;
     private Map<String, String> extraHeaders;
     private TextView headerText;
@@ -474,7 +475,9 @@ public class ImpActivity extends ImpBaseActivity {
         loadingLayout.setVisibility(View.GONE);
     }
 
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         if (PublicWay.photoService != null) {
             PublicWay.photoService.onActivityResult(requestCode, -2, data);
             return;

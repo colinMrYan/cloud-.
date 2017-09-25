@@ -19,10 +19,11 @@ public class ScanQrCodeUtils {
     private static ScanQrCodeUtils scanQrCodeUtils;
     private Context context;
     private LoadingDialog loadingDialog;
-    public static ScanQrCodeUtils getScanQrCodeUtilsInstance(Context context){
-        if(scanQrCodeUtils == null){
-            synchronized (ScanQrCodeUtils.class){
-                if(scanQrCodeUtils == null){
+
+    public static ScanQrCodeUtils getScanQrCodeUtilsInstance(Context context) {
+        if (scanQrCodeUtils == null) {
+            synchronized (ScanQrCodeUtils.class) {
+                if (scanQrCodeUtils == null) {
                     scanQrCodeUtils = new ScanQrCodeUtils(context);
                 }
             }
@@ -30,16 +31,17 @@ public class ScanQrCodeUtils {
         return scanQrCodeUtils;
     }
 
-    private ScanQrCodeUtils(Context context){
+    private ScanQrCodeUtils(Context context) {
         this.context = context;
         loadingDialog = new LoadingDialog(context);
     }
 
     /**
      * 处理扫描到的信息
+     *
      * @param msg
      */
-    public void handleActionWithMsg(String msg){
+    public void handleActionWithMsg(String msg) {
         //暂时保留此处作为方案参考
 //        String urlHost = "";
 //        try {
@@ -54,29 +56,31 @@ public class ScanQrCodeUtils {
 //        ToastUtils.show(context,msg);
         Pattern pattern = Pattern.compile(URLMatcher.URL_PATTERN);
         msg = msg.trim();
-        if(isMatchCloudPlusProtrol(msg)){
+//        pattern.matcher(msg).matches();//原来验证是否符合URL的规则
+        if (isMatchCloudPlusProtrol(msg)) {
             Uri uri = Uri.parse(msg);
             Intent intent = new Intent(Intent.ACTION_VIEW, uri);
             context.startActivity(intent);
-        }else if(pattern.matcher(msg).matches()){
+        } else if (msg.startsWith("http")) {
             Intent intent = new Intent();
             intent.setClass(context, ImpActivity.class);
-            intent.putExtra("uri",msg);
+            intent.putExtra("uri", msg);
             context.startActivity(intent);
-        }else {
+        } else {
             showUnKnownMsg(msg);
         }
     }
 
     /**
      * 判断是否符合云+的协议栈
+     *
      * @param msg
      * @return
      */
     private boolean isMatchCloudPlusProtrol(String msg) {
-        if(msg.startsWith("ecm-contact")||msg.startsWith("ecc-component")||
-                msg.startsWith("ecc-app-react-native")||msg.startsWith("gs-msg")
-                ||msg.startsWith("ecc-channel")){
+        if (msg.startsWith("ecm-contact") || msg.startsWith("ecc-component") ||
+                msg.startsWith("ecc-app-react-native") || msg.startsWith("gs-msg")
+                || msg.startsWith("ecc-channel")) {
             return true;
         }
         return false;
@@ -85,11 +89,12 @@ public class ScanQrCodeUtils {
 
     /**
      * 展示扫描到的信息
+     *
      * @param msg
      */
-    private void showUnKnownMsg(String msg){
+    private void showUnKnownMsg(String msg) {
         Intent intent = new Intent();
-        intent.putExtra("result",msg);
+        intent.putExtra("result", msg);
         intent.setClass(context, ScanResultActivity.class);
         context.startActivity(intent);
     }

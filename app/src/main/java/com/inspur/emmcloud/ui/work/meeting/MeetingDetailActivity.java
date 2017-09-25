@@ -445,6 +445,7 @@ public class MeetingDetailActivity extends BaseActivity {
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
 		if (resultCode == RESULT_OK) {
 			if (requestCode == MEETTING_CHOOSE_MEM) {
 				chooseMember(data);

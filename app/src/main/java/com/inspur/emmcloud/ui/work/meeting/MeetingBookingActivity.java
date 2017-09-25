@@ -336,6 +336,7 @@ public class MeetingBookingActivity extends BaseActivity {
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
 		if (resultCode == RESULT_OK) {
 			if (requestCode == SELECT_MEETING_ROOM) {
 				getRoomAvailableTime(data);

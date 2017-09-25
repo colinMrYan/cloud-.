@@ -280,6 +280,7 @@ public class ChannelInfoActivity extends BaseActivity {
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
 		if (resultCode == RESULT_OK) {
 			switch (requestCode) {
 			case MODIFY_NAME:
@@ -315,6 +316,7 @@ public class ChannelInfoActivity extends BaseActivity {
 	 */
 	private void ModifyChannelGroupName(Intent data) {
 		String name = data.getStringExtra("name");
+		this.name = name;
 		((TextView) findViewById(R.id.channel_name_text)).setText(name);
 		String pyFull = PinyinUtils.getPingYin(name);
 		String pyShort = PinyinUtils.getPinYinHeadChar(name);

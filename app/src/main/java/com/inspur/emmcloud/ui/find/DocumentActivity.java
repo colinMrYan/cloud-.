@@ -243,7 +243,7 @@ public class DocumentActivity extends BaseActivity {
 					};
 					
 					if (FileUtils.isFileExist(target)) {
-						FileUtils.openFile(getApplicationContext(), target);
+						FileUtils.openFile(DocumentActivity.this, target);
 					} else {
 						new DownLoaderUtils().startDownLoad(source, target, progressCallback);
 					}

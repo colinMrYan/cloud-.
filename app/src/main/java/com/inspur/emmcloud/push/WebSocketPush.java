@@ -29,6 +29,7 @@ public class WebSocketPush {
 	 private static WebSocketPush webSocketPush=null;
 	private  Socket mSocket = null;
 	private Context context;
+	private boolean isWebsocketConnnecting =false;
 
 	public WebSocketPush(Context context) {
 		this.context = context;
@@ -63,8 +64,8 @@ public class WebSocketPush {
 
 
 	public void WebSocketConnect(String url, String path,String pushid) {
-		synchronized (this) {
-			if (!isSocketConnect()){
+			if (!isSocketConnect() && !isWebsocketConnnecting){
+				isWebsocketConnnecting = true;
 				sendWebSocketStatusBroadcaset("socket_connecting");
 				String username = PreferencesUtils.getString(context, "userRealName");
 				String uuid = AppUtils.getMyUUID(context);
@@ -78,7 +79,7 @@ public class WebSocketPush {
 //		final BlockingQueue<Object> values = new LinkedBlockingQueue<Object>();
 				IO.Options opts = new IO.Options();
 				opts.reconnectionAttempts = 4; // 设置websocket重连次数
-				//opts.forceNew = true;
+				opts.forceNew = true;
 				Map<String, String> query = new HashMap<String, String>();
 				query.put("device.id", uuid);
 				query.put("device.name", name);
@@ -125,8 +126,8 @@ public class WebSocketPush {
 						mSocket = null;
 					}
 				}
+				isWebsocketConnnecting = false;
 			}
-		}
 
 
 	}
