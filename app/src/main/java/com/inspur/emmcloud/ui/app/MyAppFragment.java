@@ -133,7 +133,6 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
         appListView = (PullableListView) rootView
                 .findViewById(R.id.my_app_list);
         appListView.setCanPullDown(true);
-        LogUtils.YfcDebug("初始化Views");
         refreshAppListView();
         editBtn = (ImageView) rootView.findViewById(R.id.app_edit_btn);
         editBtn.setOnClickListener(new OnClickListener() {
@@ -167,14 +166,20 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
      * 初始化AppListView
      */
     private void refreshAppListView() {
+        LogUtils.YfcDebug("刷新我的应用列表");
         hasCommonlyApp = MyAppCacheUtils.getHasCommonlyApp(getActivity());
         List<AppGroupBean> appGroupList = MyAppCacheUtils.getMyApps(getContext());
         if(appGroupList != null){
             LogUtils.YfcDebug(appGroupList.get(0).getAppItemList().get(0).getAppName()+"refreshAppListView"+appGroupList.get(0).getAppItemList().get(0).getHelpUrl());
         }
-        appListAdapter = new AppListAdapter(appGroupList);
-        appListView.setAdapter(appListAdapter);
-        appListAdapter.notifyDataSetChanged();
+        if(appListAdapter != null){
+            appListAdapter.setAppAdapterList(appGroupList);
+            appListAdapter.notifyDataSetChanged();
+        }else{
+            appListAdapter = new AppListAdapter(appGroupList);
+            appListView.setAdapter(appListAdapter);
+            appListAdapter.notifyDataSetChanged();
+        }
     }
 
     /**
@@ -959,6 +964,7 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
          * @param appGroupList
          */
         private void handleRefreshApp(List<AppGroupBean> appGroupList) {
+            LogUtils.YfcDebug("从网络请求回数据后刷新数据");
             appListAdapter.setAppAdapterList(appGroupList);
             appListAdapter.notifyDataSetChanged();
         }

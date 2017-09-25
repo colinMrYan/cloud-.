@@ -4,7 +4,6 @@ import android.content.Context;
 
 import com.alibaba.fastjson.JSON;
 import com.inspur.emmcloud.bean.AppGroupBean;
-import com.inspur.emmcloud.config.MyAppConfig;
 
 import java.util.List;
 
@@ -21,7 +20,7 @@ public class MyAppCacheUtils {
      */
     public static void saveMyAppList(Context context, List<AppGroupBean> appGroupList){
         String appList = JSON.toJSONString(appGroupList);
-        WriteLongLog2FileUtils.writeTxtToFile(appList, MyAppConfig.LOCAL_CACHE_PATH+"appcache/","save.txt");
+//        WriteLongLog2FileUtils.writeTxtToFile(appList, MyAppConfig.LOCAL_CACHE_PATH+"appcache/","save.txt");
         if(!appList.equals("null") && !StringUtils.isBlank(appList)){
             PreferencesByUserAndTanentUtils.putString(context,"my_app_list",appList);
         }
@@ -42,7 +41,7 @@ public class MyAppCacheUtils {
      */
     public static List<AppGroupBean> getMyApps(Context context){
         String appsString = PreferencesByUserAndTanentUtils.getString(context,"my_app_list","");
-        WriteLongLog2FileUtils.writeTxtToFile(appsString, MyAppConfig.LOCAL_CACHE_PATH+"appcache/","get.txt");
+//        WriteLongLog2FileUtils.writeTxtToFile(appsString, MyAppConfig.LOCAL_CACHE_PATH+"appcache/","get.txt");
         return JSON.parseArray(appsString,AppGroupBean.class);
     }
 
