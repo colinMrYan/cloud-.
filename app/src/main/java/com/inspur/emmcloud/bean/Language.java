@@ -94,7 +94,7 @@ public class Language implements Serializable {
 		return label;
 	}
 
-	public void setLebal(String label) {
+	public void setLabel(String label) {
 		this.label = label;
 	}
 
@@ -149,7 +149,7 @@ public class Language implements Serializable {
 			jsonObject.put("iana", iana);
 			jsonObject.put("gsp", gsp);
 			jsonObject.put("gsp60", gsp60);
-			jsonObject.put("gsp60", gsp60);
+			jsonObject.put("gsp61", gsp61);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

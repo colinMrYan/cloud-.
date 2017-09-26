@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.v4.app.Fragment;
@@ -89,6 +90,7 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
     private List<String> shortCutAppList = new ArrayList<>();
     private boolean isNeedRefreshApp = false;//下拉刷新和从应用中心添加应用 删除应用时刷新标志
     private boolean isHasCacheNotRefresh = false;
+    private MyAppSaveTask myAppSaveTask;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -129,7 +131,7 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
     /**
      * 修改语言时的接口
      */
-    public interface AppLanguageState{
+    public interface AppLanguageState {
         public boolean getAppLanguageState();
     }
 
@@ -577,6 +579,11 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
             getActivity().unregisterReceiver(mBroadcastReceiver);
             mBroadcastReceiver = null;
         }
+        if (myAppSaveTask != null && !myAppSaveTask.isCancelled()
+                && myAppSaveTask.getStatus() == AsyncTask.Status.RUNNING) {
+            myAppSaveTask.cancel(true);
+            myAppSaveTask = null;
+        }
     }
 
     /**
@@ -933,24 +940,47 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
     }
 
 
+    class MyAppSaveTask extends AsyncTask<GetAppGroupResult, Void, List<AppGroupBean>> {
+
+        @Override
+        protected List<AppGroupBean> doInBackground(GetAppGroupResult... params) {
+            try {
+                String appCache = MyAppCacheUtils.getMyAppsData(getActivity());
+                isNeedRefreshApp = (StringUtils.isBlank(appCache) || isNeedRefreshApp);
+                List<AppGroupBean> appGroupList = handleAppList((params[0])
+                        .getAppGroupBeanList());
+                MyAppCacheUtils.saveMyAppList(getActivity(), appGroupList);
+                return appGroupList;
+            } catch (Exception e) {
+                e.printStackTrace();
+                return new ArrayList<AppGroupBean>();
+            }
+
+        }
+
+        @Override
+        protected void onPostExecute(List<AppGroupBean> appGroupBeen) {
+            super.onPostExecute(appGroupBeen);
+            isHasCacheNotRefresh = true;
+            //当第一次安装，第一次打开时，没有缓存的时候需要刷新appAdapter，其余时候只存（并且存储一个是否有网络数据的标志）不刷
+            if (isNeedRefreshApp) {
+                isNeedRefreshApp = false;
+                isHasCacheNotRefresh = false;
+                appListAdapter.setAppAdapterList(appGroupBeen);
+                appListAdapter.notifyDataSetChanged();
+            }
+            pullToRefreshLayout.refreshFinish(PullToRefreshLayout.SUCCEED);
+        }
+    }
+
     /**
      * 网络请求处理类，一般放最后
      */
     class WebService extends APIInterfaceInstance {
         @Override
-        public void returnUserAppsSuccess(GetAppGroupResult getAppGroupResult) {
-            List<AppGroupBean> appGroupList = handleAppList(getAppGroupResult
-                    .getAppGroupBeanList());
-            isHasCacheNotRefresh = true;
-            //当第一次安装，第一次打开时，没有缓存的时候需要刷新appAdapter，其余时候只存（并且存储一个是否有网络数据的标志）不刷
-            String appCache = MyAppCacheUtils.getMyAppsData(getActivity());
-            if (StringUtils.isBlank(appCache) || isNeedRefreshApp) {
-                handleRefreshApp(appGroupList);
-                isNeedRefreshApp = false;
-                isHasCacheNotRefresh = false;
-            }
-            MyAppCacheUtils.saveMyAppList(getActivity(), appGroupList);
-            pullToRefreshLayout.refreshFinish(PullToRefreshLayout.SUCCEED);
+        public void returnUserAppsSuccess(final GetAppGroupResult getAppGroupResult) {
+            myAppSaveTask = new MyAppSaveTask();
+            myAppSaveTask.execute(getAppGroupResult);
         }
 
         @Override
@@ -959,15 +989,5 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
             WebServiceMiddleUtils.hand(getActivity(), error, errorCode);
         }
 
-        /**
-         * 处理添加新的app的逻辑
-         *
-         * @param appGroupList
-         */
-        private void handleRefreshApp(List<AppGroupBean> appGroupList) {
-            appListAdapter.setAppAdapterList(appGroupList);
-            appListAdapter.notifyDataSetChanged();
-            MyAppCacheUtils.saveMyAppList(getActivity(), appGroupList);
-        }
     }
 }
