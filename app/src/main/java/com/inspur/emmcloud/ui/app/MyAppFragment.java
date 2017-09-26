@@ -30,6 +30,7 @@ import android.widget.TextView;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.adapter.DragAdapter;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
 import com.inspur.emmcloud.bean.App;
@@ -52,8 +53,6 @@ import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.SwitchView;
 import com.inspur.emmcloud.widget.SwitchView.OnStateChangedListener;
-import com.inspur.emmcloud.widget.draggrid.DragAdapter;
-import com.inspur.emmcloud.widget.draggrid.DragAdapter.NotifyCommonlyUseListener;
 import com.inspur.emmcloud.widget.draggrid.DragGridView;
 import com.inspur.emmcloud.widget.draggrid.DragGridView.OnChanageListener;
 import com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout;
@@ -358,7 +357,7 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
                 }
             });
             dragGridViewAdapter
-                    .setNotifyCommonlyUseListener(new NotifyCommonlyUseListener() {
+                    .setNotifyCommonlyUseListener(new DragAdapter.NotifyCommonlyUseListener() {
                         @Override
                         public void onNotifyCommonlyUseApp(App app) {
                             handCommonlyUseAppChange(appAdapterList, app);

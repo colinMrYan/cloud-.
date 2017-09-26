@@ -110,4 +110,23 @@ public class AppGroupBean {
 	public void setCategoryIco(String categoryIco) {
 		this.categoryIco = categoryIco;
 	}
+
+	@Override
+	public boolean equals(Object other) {
+		if(this == other){
+			return true;
+		}
+		if(other == null){
+			return false;
+		}
+		if(!(other instanceof AppGroupBean)){
+			return false;
+		}
+		AppGroupBean appGroupBean = (AppGroupBean) other;
+		//此处从==判断是否相等  改为equals
+		if(!(getCategoryID().equals(appGroupBean.getCategoryID()))){
+			return false;
+		}
+		return true;
+	}
 }

@@ -16,7 +16,7 @@ public class AppAdsBean {
      * id : bb24bc90-861d-11e7-9d0e-59f9f22b2862
      * ads_name : 应用中心banner
      * ads_loc_id : top
-     * url : https://ecm.inspur.com
+     * uri : https://ecm.inspur.com
      * status : 1
      * ads_category : ads_app
      * sort_order : 1
@@ -26,7 +26,7 @@ public class AppAdsBean {
     private String id = "";
     private String ads_name = "";
     private String ads_loc_id = "";
-    private String url = "";
+    private String uri = "";
     private int status = 0;
     private String ads_category = "";
     private int sort_order = 0;
@@ -39,7 +39,7 @@ public class AppAdsBean {
         id = JSONUtils.getString(obj, "id", "");
         ads_name = JSONUtils.getString(obj, "ads_name", "");
         ads_loc_id = JSONUtils.getString(obj, "ads_loc_id", "");
-        url = JSONUtils.getString(obj, "url", "");
+        uri = JSONUtils.getString(obj, "uri", "");
         status = JSONUtils.getInt(obj, "status", 0);
         ads_category = JSONUtils.getString(obj, "ads_category", "");
         sort_order = JSONUtils.getInt(obj, "sort_order", 0);
@@ -70,12 +70,12 @@ public class AppAdsBean {
         this.ads_loc_id = ads_loc_id;
     }
 
-    public String getUrl() {
-        return url;
+    public String getUri() {
+        return uri;
     }
 
-    public void setUrl(String url) {
-        this.url = url;
+    public void setUri(String uri) {
+        this.uri = uri;
     }
 
     public int getStatus() {
