@@ -1,14 +1,10 @@
 package com.inspur.emmcloud.ui.chat;
 
 import android.app.Activity;
-import android.content.ClipData;
-import android.content.ClipboardManager;
 import android.content.Context;
-import android.os.Bundle;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
-import android.text.method.LinkMovementMethod;
 import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.widget.TextView;
@@ -17,15 +13,14 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.bean.Msg;
-import com.inspur.emmcloud.util.IntentUtils;
 import com.inspur.emmcloud.util.JSONUtils;
 import com.inspur.emmcloud.util.MentionsAndUrlShowUtils;
 import com.inspur.emmcloud.util.MsgCacheUtil;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.TimeUtils;
-import com.inspur.emmcloud.util.ToastUtils;
 import com.inspur.emmcloud.util.TransHtmlToTextUtils;
+import com.inspur.emmcloud.widget.TextViewWithSpan;
 
 import java.util.Arrays;
 import java.util.List;
@@ -49,7 +44,7 @@ public class DisplayTxtCommentMsg {
         String msgBody = msg.getBody();
         boolean isMyMsg = msg.getUid().equals(
                 ((MyApplication) context.getApplicationContext()).getUid());
-        final TextView commentContentText = (TextView) convertView
+        final TextViewWithSpan commentContentText = (TextViewWithSpan) convertView
                 .findViewById(R.id.comment_text);
         TextView commentTitleText = (TextView) convertView
                 .findViewById(R.id.comment_title_text);
@@ -71,13 +66,6 @@ public class DisplayTxtCommentMsg {
         }
         SpannableString spannableString = MentionsAndUrlShowUtils
                 .handleMentioin(commentContent, mentionList, urlList);
-//		JSONArray mentionArray = JSONUtils.getJSONArray(msgBody, "mentions",
-//				new JSONArray());
-//		JSONArray urlArray = JSONUtils.getJSONArray(msgBody, "urlList",
-//				new JSONArray());
-        // TextView设置此属性会让点击事件不响应，所有当没有@ url时不进行设置
-        commentContentText.setMovementMethod(LinkMovementMethod
-                .getInstance());
         commentContentText.setText(spannableString);
         TransHtmlToTextUtils.stripUnderlines(
                 commentContentText,
@@ -106,25 +94,25 @@ public class DisplayTxtCommentMsg {
                 isMyMsg ? R.color.white : R.color.black));
         commentTitleText.setTextColor(context.getResources().getColor(
                 isMyMsg ? R.color.white : R.color.black));
-        commentContentText.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                ClipboardManager cmb = (ClipboardManager)context.getSystemService(Context.CLIPBOARD_SERVICE);
-                cmb.setPrimaryClip(ClipData.newPlainText(null, commentContentText.getText()));
-                ToastUtils.show(context,R.string.copyed_to_paste_board);
-                return true;
-            }
-        });
-        commentContentText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Bundle bundle = new Bundle();
-                bundle.putString("cid", msg.getCid());
-                bundle.putString("mid", msg.getCommentMid());
-                IntentUtils.startActivity(context,
-                        ChannelMsgDetailActivity.class, bundle);
-            }
-        });
+//        commentContentText.setOnLongClickListener(new View.OnLongClickListener() {
+//            @Override
+//            public boolean onLongClick(View v) {
+//                ClipboardManager cmb = (ClipboardManager)context.getSystemService(Context.CLIPBOARD_SERVICE);
+//                cmb.setPrimaryClip(ClipData.newPlainText(null, commentContentText.getText()));
+//                ToastUtils.show(context,R.string.copyed_to_paste_board);
+//                return true;
+//            }
+//        });
+//        commentContentText.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Bundle bundle = new Bundle();
+//                bundle.putString("cid", msg.getCid());
+//                bundle.putString("mid", msg.getCommentMid());
+//                IntentUtils.startActivity(context,
+//                        ChannelMsgDetailActivity.class, bundle);
+//            }
+//        });
 
     }
 
@@ -171,17 +159,5 @@ public class DisplayTxtCommentMsg {
         commentTitleText.setText(style);
     }
 
-    /**
-     *
-     *
-     * @param context
-     * @param msg
-     */
-    protected static void goDetail(Activity context, Msg msg) {
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("mid", msg.getCommentMid());
-        IntentUtils.startActivity(context, ChannelMsgDetailActivity.class,
-                bundle);
-    }
 
 }

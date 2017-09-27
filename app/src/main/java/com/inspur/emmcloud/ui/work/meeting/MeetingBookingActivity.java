@@ -72,7 +72,6 @@ public class MeetingBookingActivity extends BaseActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		((MyApplication) getApplicationContext()).addActivity(this);
 		setContentView(R.layout.activity_meeting_booking);
 		initViews();
 		getIsAdmin();

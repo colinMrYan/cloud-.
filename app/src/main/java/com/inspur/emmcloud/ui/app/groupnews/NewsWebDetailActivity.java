@@ -107,7 +107,6 @@ public class NewsWebDetailActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((MyApplication) getApplicationContext()).addActivity(this);
         setContentView(R.layout.activity_newsweb_detail);
         initData();
         initViews();

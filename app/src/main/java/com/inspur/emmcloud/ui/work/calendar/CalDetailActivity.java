@@ -13,7 +13,6 @@ public class CalDetailActivity extends BaseActivity {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_cal_detail);
-		((MyApplication)getApplicationContext()).addActivity(CalDetailActivity.this);
 	}
 	
 

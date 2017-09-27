@@ -139,6 +139,11 @@ public class DbCacheUtils {
 
         } catch (Exception e) {
             // TODO: handle exception
+            e.printStackTrace();
+        } finally {
+            if (cursor != null){
+                cursor.close();
+            }
         }
         return result;
     }

@@ -77,7 +77,6 @@ public class MessionListActivity extends BaseActivity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_mession_list);
-		((MyApplication) getApplicationContext()).addActivity(this);
 		initViews();
 		// registerTaskReceiver();
 	}

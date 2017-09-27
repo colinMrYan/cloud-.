@@ -33,7 +33,6 @@ public class AlertTimeActivity extends BaseActivity {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_alert_time);
-		((MyApplication) getApplicationContext()).addActivity(this);
 		final String[] alertTimeArray = {
 				getString(R.string.when_event_occurs),
 				getString(R.string.five_minite_ago),

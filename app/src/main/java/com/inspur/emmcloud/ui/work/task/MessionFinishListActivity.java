@@ -53,7 +53,6 @@ public class MessionFinishListActivity extends BaseActivity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_messionfinish_list);
-		((MyApplication) getApplicationContext()).addActivity(this);
 		initViews();
 	}
 

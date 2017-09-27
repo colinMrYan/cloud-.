@@ -44,8 +44,6 @@ public class CalFilterActivity extends BaseActivity {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_cal_filter);
-		((MyApplication) getApplicationContext())
-				.addActivity(CalFilterActivity.this);
 		calendarListView = (ScrollViewWithListView) findViewById(R.id.calendar_list);
 		loadingDlg = new LoadingDialog(this);
 		apiService = new WorkAPIService(CalFilterActivity.this);

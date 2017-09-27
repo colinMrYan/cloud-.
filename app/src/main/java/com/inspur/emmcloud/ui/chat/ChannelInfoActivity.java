@@ -80,7 +80,6 @@ public class ChannelInfoActivity extends BaseActivity {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_channel_info);
-		((MyApplication) getApplicationContext()).addActivity(this);
 		channelMemberNumText = (TextView) findViewById(R.id.channel_member_text);
 		apiService = new ChatAPIService(ChannelInfoActivity.this);
 		apiService.setAPIInterface(new WebService());

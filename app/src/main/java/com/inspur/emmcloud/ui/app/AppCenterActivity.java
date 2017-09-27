@@ -84,8 +84,6 @@ public class AppCenterActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_app_center);
-        ((MyApplication) getApplicationContext())
-                .addActivity(AppCenterActivity.this);
         initView();
         getAllApp();
         registerReceiver();
