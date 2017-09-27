@@ -31,7 +31,6 @@ public class AboutActivity extends BaseActivity {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_about);
-		((MyApplication) getApplicationContext()).addActivity(this);
 		((TextView) findViewById(R.id.app_version_text))
 				.setText(getString(R.string.app_name)+"  "
 						+ AppUtils.getVersion(this));

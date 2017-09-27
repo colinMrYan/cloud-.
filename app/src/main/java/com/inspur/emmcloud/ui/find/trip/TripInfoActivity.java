@@ -30,7 +30,6 @@ public class TripInfoActivity extends BaseActivity{
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		((MyApplication) getApplicationContext()).addActivity(this);
 		setContentView(R.layout.activity_trip_info);
 		if (getIntent().getExtras().containsKey("tripId")) {
 			String tripId = getIntent().getExtras().getString("tripId");

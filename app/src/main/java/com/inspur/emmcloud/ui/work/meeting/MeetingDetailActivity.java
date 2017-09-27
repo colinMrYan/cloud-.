@@ -95,7 +95,6 @@ public class MeetingDetailActivity extends BaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_meeting_detail);
-		((MyApplication) getApplicationContext()).addActivity(this);
 		initViews();
 		initData();
 	}

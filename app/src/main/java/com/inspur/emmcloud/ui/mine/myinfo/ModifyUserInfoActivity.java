@@ -31,7 +31,6 @@ public class ModifyUserInfoActivity extends BaseActivity {
 		super.onCreate(savedInstanceState);
 		
 		setContentView(R.layout.activity_modify_userinfo);
-		((MyApplication)getApplicationContext()).addActivity(this);
 		modifyEditText = (ClearEditText) findViewById(R.id.modifyinfo_edit);
 		modifyButton = (Button) findViewById(R.id.get_modifyinfo_btn);
 		backLayout = (RelativeLayout) findViewById(R.id.back_layout);

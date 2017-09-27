@@ -40,7 +40,6 @@ public class GroupFileActivity extends BaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		((MyApplication) getApplicationContext()).addActivity(this);
 		setContentView(R.layout.activity_group_file);
 		cid = getIntent().getExtras().getString("cid");
 		getFileMsgList();

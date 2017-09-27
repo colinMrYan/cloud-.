@@ -63,7 +63,6 @@ public class MyInfoActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
-        ((MyApplication) getApplicationContext()).addActivity(this);
         setContentView(R.layout.activity_my_info);
         initView();
         getUserProfile();

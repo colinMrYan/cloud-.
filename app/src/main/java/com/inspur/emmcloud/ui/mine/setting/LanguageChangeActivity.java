@@ -49,7 +49,6 @@ public class LanguageChangeActivity extends BaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		((MyApplication) getApplicationContext()).addActivity(this);
 		setContentView(R.layout.activity_language_change);
 		listView = (ListView) findViewById(R.id.language_change_list);
 		loadingDlg = new LoadingDialog(this);

@@ -31,8 +31,6 @@ public class FeedBackActivity extends BaseActivity {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_feedback);
-        ((MyApplication) getApplicationContext())
-                .addActivity(FeedBackActivity.this);
         contentEdit = (EditText) findViewById(R.id.feedback_edit);
         anonymouscheck = (CheckBox) findViewById(R.id.checkbox);
         textCountText = (TextView) findViewById(R.id.text_count_text);

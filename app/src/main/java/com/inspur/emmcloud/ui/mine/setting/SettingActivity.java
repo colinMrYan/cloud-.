@@ -37,7 +37,6 @@ public class SettingActivity extends BaseActivity {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
-        ((MyApplication) getApplicationContext()).addActivity(this);
         languageText = (TextView) findViewById(R.id.msg_languagechg_result_text);
         setLanguage();
         handMessage();

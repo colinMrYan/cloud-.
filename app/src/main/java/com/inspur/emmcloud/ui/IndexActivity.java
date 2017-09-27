@@ -128,7 +128,6 @@ public class IndexActivity extends BaseFragmentActivity implements
         super.onCreate(savedInstanceState);
         StateBarColor.changeStateBarColor(this);
         setContentView(R.layout.activity_index);
-        ((MyApplication) getApplicationContext()).addActivity(this);
         ((MyApplication) getApplicationContext()).setIndexActvityRunning(true);
         ((MyApplication) getApplicationContext()).closeAllDb();
         DbCacheUtils.initDb(getApplicationContext());

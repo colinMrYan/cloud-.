@@ -55,8 +55,6 @@ public class FillCaptchasActivity extends BaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		((MyApplication) getApplicationContext())
-				.addActivity(FillCaptchasActivity.this);
 		setContentView(R.layout.activity_fill_captchas);
 		((RelativeLayout) findViewById(R.id.main_layout))
 				.setOnTouchListener(new OnTouchListener() {

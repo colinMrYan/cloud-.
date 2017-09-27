@@ -43,7 +43,6 @@ public class ScanQrCodeLoginActivity extends BaseActivity {
 //        setStatusBarIconDark(true);
         setMiuiStatusBarDarkMode(this,true);
         setContentView(R.layout.activity_scan_qrcode_login_result);
-        ((MyApplication) getApplicationContext()).addActivity(this);
         initViews();
     }
 

@@ -69,7 +69,6 @@ public class TripDetailActivity extends BaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		((MyApplication) getApplicationContext()).addActivity(this);
 		setContentView(R.layout.activity_trip_detail);
 		initView();
 		initData();

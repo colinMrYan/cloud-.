@@ -86,7 +86,6 @@ public class FindSearchActivity extends BaseActivity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		((MyApplication) getApplicationContext()).addActivity(this);
 		setContentView(R.layout.activity_find_search);
 		initViews();
 	}
