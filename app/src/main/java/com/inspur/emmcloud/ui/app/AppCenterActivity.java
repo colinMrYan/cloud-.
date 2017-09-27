@@ -28,7 +28,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.BaseActivity;
-import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.MyViewPagerAdapter;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
@@ -40,7 +39,6 @@ import com.inspur.emmcloud.bean.GetAllAppResult;
 import com.inspur.emmcloud.util.DensityUtil;
 import com.inspur.emmcloud.util.ImageDisplayUtils;
 import com.inspur.emmcloud.util.IntentUtils;
-import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
@@ -449,7 +447,6 @@ public class AppCenterActivity extends BaseActivity {
                 @Override
                 public void onClick(View v) {
                     String uri = adsList.get(position%(adsList.size())).getUri();
-                    LogUtils.YfcDebug("广告栏的Uri："+uri);
                     openDetailByUri(uri);
                 }
             });
@@ -475,11 +472,11 @@ public class AppCenterActivity extends BaseActivity {
                 startActivity(intent);
             }else if(uri.startsWith(APP_CENTER_APP_NAME_PROTOCOL)){
                 Uri appUri = Uri.parse(uri);
-                String appId = appUri.getPathSegments().get(0);
+                String appId = appUri.getPathSegments().get(1);
                 openAppDetailByAppId(appId);
             }else if(uri.startsWith(APP_CENTER_CATEGORY_PROTOCOL)){
                 Uri categoryIdUri = Uri.parse(uri);
-                String categoryId = categoryIdUri.getPathSegments().get(0);
+                String categoryId = categoryIdUri.getPathSegments().get(1);
                 openCategoryDetailByCategoryId(categoryId);
             }
         }
