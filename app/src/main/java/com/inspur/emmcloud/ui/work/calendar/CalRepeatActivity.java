@@ -16,7 +16,6 @@ public class CalRepeatActivity extends BaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		((MyApplication) getApplicationContext()).addActivity(this);
 		setContentView(R.layout.activity_cal_repeat);
 		repeatType = getIntent().getExtras().getString("repeatType");
 		if (repeatType.equals(getString(R.string.never))) {

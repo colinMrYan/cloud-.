@@ -139,7 +139,6 @@ public class ContactSearchActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         StateBarColor.changeStateBarColor(this,R.color.contact_header_bg);
         setContentView(R.layout.activity_contact_search);
-        ((MyApplication) getApplicationContext()).addActivity(this);
         rootContact = ContactCacheUtils
                 .getRootContact(ContactSearchActivity.this);
         getIntentData();
@@ -912,6 +911,7 @@ public class ContactSearchActivity extends BaseActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         if ((resultCode == RESULT_OK) && (requestCode == SEARCH_MORE)) {
             selectMemList = (List<SearchModel>) data
                     .getSerializableExtra("selectMemList");

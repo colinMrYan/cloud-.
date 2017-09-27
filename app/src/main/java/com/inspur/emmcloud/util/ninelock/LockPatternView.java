@@ -90,9 +90,9 @@ public class LockPatternView extends View {
 		this.width = getMeasuredWidth();
 		this.height = getMeasuredHeight();
 		//Log.e(TAG, "(width: " + width + "  ,  height" + height + ")");
-		if (width != height) {
-			throw new IllegalArgumentException("the width must be equals height");
-		}
+//		if (width != height) {
+//			throw new IllegalArgumentException("the width must be equals height");
+//		}
 		this.initCellSize();
 		this.set9CellsSize();
 		this.invalidate();
@@ -534,7 +534,7 @@ public class LockPatternView extends View {
 		for (int i = 0; i < mCells.length; i++) {
 			for (int j = 0; j < mCells[i].length; j++) {
 				Cell cell = mCells[i][j];
-				if (LockPatternUtil.checkInRound(cell.x, cell.y, 80, x, y, this.cellRadius/4)) {
+				if (LockPatternUtil.checkInRound(cell.x, cell.y, (cellRadius+5), x, y, this.cellRadius/4)) {
 					return cell;
 				}
 			}

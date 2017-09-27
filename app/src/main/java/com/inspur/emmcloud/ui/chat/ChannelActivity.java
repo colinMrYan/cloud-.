@@ -58,6 +58,7 @@ import com.inspur.emmcloud.util.HandleMsgTextUtils;
 import com.inspur.emmcloud.util.ImageDisplayUtils;
 import com.inspur.emmcloud.util.IntentUtils;
 import com.inspur.emmcloud.util.JSONUtils;
+import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.MsgCacheUtil;
 import com.inspur.emmcloud.util.MsgReadIDCacheUtils;
 import com.inspur.emmcloud.util.MsgRecourceUploadUtils;
@@ -118,7 +119,6 @@ public class ChannelActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_channel);
-        ((MyApplication) getApplicationContext()).addActivity(this);
         init();
         registeRefreshNameReceiver();
         recordUserClickChannel();
@@ -305,6 +305,7 @@ public class ChannelActivity extends BaseActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
+                LogUtils.jasonDebug("onItemClick----------------------");
                 Bundle bundle = new Bundle();
                 Msg msg = msgList.get(position);
                 String msgType = msg.getType();
@@ -320,10 +321,12 @@ public class ChannelActivity extends BaseActivity {
                     IntentUtils.startActivity(ChannelActivity.this,
                             ChannelMsgDetailActivity.class, bundle);
                 } else if (msgType.equals("comment")
-                        || msgType.equals("text_comment")) {
+                        || msgType.equals("txt_comment")) {
                     mid = msg.getCommentMid();
                     bundle.putString("mid", mid);
                     bundle.putString("cid", msg.getCid());
+                    LogUtils.jasonDebug("orimid0="+msg.getMid());
+                    LogUtils.jasonDebug("mid0="+mid);
                     IntentUtils.startActivity(ChannelActivity.this,
                             ChannelMsgDetailActivity.class, bundle);
                 } else if (msgType.equals("res_link")) {
@@ -391,6 +394,7 @@ public class ChannelActivity extends BaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode,
                                     final Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             // 文件管理器返回
             if (requestCode == CHOOSE_FILE
@@ -666,18 +670,6 @@ public class ChannelActivity extends BaseActivity {
                         R.layout.chat_msg_card_child_text_comment_view, null);
                 DisplayTxtCommentMsg.displayCommentMsg(ChannelActivity.this,
                         childView, msg, apiService);
-                convertView.setOnClickListener(new OnClickListener() {
-
-                    @Override
-                    public void onClick(View v) {
-                        // TODO Auto-generated method stub
-                        Bundle bundle = new Bundle();
-                        bundle.putString("cid", msg.getCid());
-                        bundle.putString("mid", msg.getCommentMid());
-                        IntentUtils.startActivity(ChannelActivity.this,
-                                ChannelMsgDetailActivity.class, bundle);
-                    }
-                });
             } else if (type.equals("res_image") || type.equals("image")) {
                 childView = vi.inflate(
                         R.layout.chat_msg_card_child_res_img_view, null);

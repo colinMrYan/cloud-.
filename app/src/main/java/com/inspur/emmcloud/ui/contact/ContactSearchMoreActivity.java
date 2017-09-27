@@ -94,7 +94,6 @@ public class ContactSearchMoreActivity extends BaseActivity implements OnRefresh
 		super.onCreate(savedInstanceState);
 		StateBarColor.changeStateBarColor(this,R.color.contact_header_bg);
 		setContentView(R.layout.activity_contact_search_more);
-		((MyApplication) getApplicationContext()).addActivity(this);
 		handMessage();
 		initView();
 		getIntentData();

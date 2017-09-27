@@ -59,6 +59,7 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		((MyApplication) getApplicationContext()).addActivity(this);
 		StateBarColor.hideStatusBar(this);
 		setContentView(R.layout.activity_main);
 		init();
@@ -78,7 +79,6 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
 		activitySplashShowTime = System.currentTimeMillis();
 		//进行app异常上传
 		startUploadExceptionService();
-		((MyApplication) getApplicationContext()).addActivity(this);
 		// 检测分辨率、网络环境
 		if (!ResolutionUtils.isFitResolution(MainActivity.this)) {
 			showResolutionDialog();
@@ -341,5 +341,14 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
 					((MyApplication) getApplication()).getUid(), "splash/" + defaultBean.getHdpi());
 		}
 		return name;
+	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		((MyApplication) getApplicationContext()).removeActivity(this);
+		if(handler != null){
+			handler = null;
+		}
 	}
 }

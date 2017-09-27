@@ -42,7 +42,6 @@ public class ChannelMembersDelActivity extends BaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_channelmem_del);
-		((MyApplication) getApplicationContext()).addActivity(this);
 		channelMemberListView = (ListView) findViewById(R.id.channel_mem_del);
 		imageDisplayUtils = new ImageDisplayUtils(R.drawable.icon_person_default);
 		memberList = ChannelGroupCacheUtils.getMembersList(

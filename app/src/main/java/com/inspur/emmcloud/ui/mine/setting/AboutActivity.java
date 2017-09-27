@@ -1,6 +1,5 @@
 package com.inspur.emmcloud.ui.mine.setting;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -32,7 +31,6 @@ public class AboutActivity extends BaseActivity {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_about);
-		((MyApplication) getApplicationContext()).addActivity(this);
 		((TextView) findViewById(R.id.app_version_text))
 				.setText(getString(R.string.app_name)+"  "
 						+ AppUtils.getVersion(this));
@@ -61,11 +59,7 @@ public class AboutActivity extends BaseActivity {
 				upgradeUtils.checkUpdate(true);
 				break;
 			case R.id.invite_friends_layout:
-				Intent intent = new Intent();
-				intent.setClass(AboutActivity.this, ImpActivity.class);
-				intent.putExtra("uri","https://emm.inspur.com/admin/share_qr");
-				intent.putExtra("appName",getString(R.string.invite_friends_text));
-				startActivity(intent);
+				IntentUtils.startActivity(AboutActivity.this,RecommendAppActivity.class);
 				break;
 			default:
 				break;

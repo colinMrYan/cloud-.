@@ -75,8 +75,6 @@ public class CalEventAddActivity extends BaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		((MyApplication) getApplicationContext())
-				.addActivity(CalEventAddActivity.this);
 		setContentView(R.layout.activity_calevent_add);
 		initView();
 		initData();
@@ -500,6 +498,7 @@ public class CalEventAddActivity extends BaseActivity {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		// TODO Auto-generated method stub
+        super.onActivityResult(requestCode, resultCode, data);
 		if (resultCode == RESULT_OK) {
 			switch (requestCode) {
 			case REPEAT_TYPE_REQUEST_CODE:

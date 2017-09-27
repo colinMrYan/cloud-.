@@ -39,7 +39,6 @@ public class ModifyUserPsdActivity extends BaseActivity {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_modify_userpsd);
-		((MyApplication)getApplicationContext()).addActivity(this);
 		apiService = new LoginAPIService(ModifyUserPsdActivity.this);
 		apiService.setAPIInterface(new WebService());
 		confirmModifyButton = (Button) findViewById(R.id.modifyuserpsd_button);

@@ -3,7 +3,6 @@ package com.inspur.emmcloud;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 
 import com.inspur.emmcloud.api.apiservice.AppAPIService;
 import com.inspur.emmcloud.service.PVCollectService;
@@ -12,7 +11,6 @@ import com.inspur.emmcloud.ui.mine.setting.GestureLoginActivity;
 import com.inspur.emmcloud.util.AppUtils;
 import com.inspur.emmcloud.util.DbCacheUtils;
 import com.inspur.emmcloud.util.IntentUtils;
-import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.StateBarColor;
 import com.inspur.emmcloud.util.StringUtils;
@@ -23,8 +21,8 @@ public class BaseActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
+        ((MyApplication)getApplicationContext()).addActivity(this);
         String className = this.getClass().getCanonicalName();
-        LogUtils.jasonDebug("className="+className);
         if (!className.equals("com.inspur.imp.plugin.barcode.scan.CaptureActivity") &&!className.equals("com.inspur.imp.plugin.camera.mycamera.MyCameraActivity") ){
             StateBarColor.changeStateBarColor(this);
         }
@@ -34,11 +32,10 @@ public class BaseActivity extends Activity {
     protected void onStop() {
         // TODO Auto-generated method stub
         super.onStop();
-        if (!AppUtils.isAppOnForeground(getApplicationContext())) {
+        if (((MyApplication) getApplicationContext())
+                .isIndexActivityRunning() && !AppUtils.isAppOnForeground(getApplicationContext())) {
             // app 进入后台
             ((MyApplication) getApplicationContext()).setIsActive(false);
-            // 全局变量isActive = false 记录当前已经进入后台
-            ((MyApplication) getApplicationContext()).sendFrozenWSMsg();
             startUploadPVCollectService();
         }
     }
@@ -63,18 +60,22 @@ public class BaseActivity extends Activity {
             if (((MyApplication) getApplicationContext())
                     .isIndexActivityRunning()) {
                 ((MyApplication) getApplicationContext()).setIsActive(true);
-                ((MyApplication) getApplicationContext()).clearNotification();
                 uploadMDMInfo();
-                ((MyApplication) getApplicationContext()).sendActivedWSMsg();
                 if(getIsNeedGestureCode()){//这里两处登录均不走这个方法，如果以后集成单点登录，需要集成BaseActivity，或者BaseFragmentActivity
-                    new Handler().postDelayed(new Runnable() {
+                    new Thread(new Runnable() {
                         @Override
                         public void run() {
-                            Bundle bundle = new Bundle();
-                            bundle.putString("gesture_code_change","login");
-                            IntentUtils.startActivity(BaseActivity.this, GestureLoginActivity.class,bundle);
+                            try {
+                                Thread.sleep(10);
+                                Bundle bundle = new Bundle();
+                                bundle.putString("gesture_code_change","login");
+                                IntentUtils.startActivity(BaseActivity.this, GestureLoginActivity.class,bundle);
+                            }catch (Exception e){
+                                e.printStackTrace();
+                            }
+
                         }
-                    },100);
+                    }).start();
                 }
             }
         }
@@ -101,4 +102,16 @@ public class BaseActivity extends Activity {
     }
 
 
+    //解决调用系统应用后会弹出手势解锁的问题
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        ((MyApplication) getApplicationContext()).setIsActive(true);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        ((MyApplication)getApplicationContext()).removeActivity(this);
+    }
 }

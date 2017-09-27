@@ -99,6 +99,7 @@ public class DeviceManagerActivity extends BaseActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == UNBIND_DEVICE && resultCode == RESULT_OK) {
             BindingDevice bindingDevice = (BindingDevice) data.getSerializableExtra("binding_device");
             currentBindingDeviceList.remove(bindingDevice);

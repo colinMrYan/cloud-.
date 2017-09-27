@@ -19,7 +19,6 @@ public class BuildingActivity extends BaseActivity{
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_meeting_building);
-		((MyApplication) getApplicationContext()).addActivity(this);
 		((TextView)(findViewById(R.id.header_text))).setText(getIntent().getStringExtra("building"));
 	}
 	

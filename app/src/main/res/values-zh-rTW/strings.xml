@@ -815,7 +815,7 @@
     <string name="create_gesture_confirm_correct">設置成功</string>
     <string name="create_gesture_reset">重新設置</string>
     <string name="create_gesture_code">創建手勢密碼</string>
-    <string name="create_gesture_guid">您可以創建一個雲+圖案解鎖圖案，這樣他人在借用你的手機時，將無法可打開雲+</string>
+    <string name="create_gesture_guid">您可以創建一個雲+解鎖圖案，這樣他人在借用您的手機時，將無法可打開雲+</string>
     <string name="safe_center_enable">已啟用</string>
     <string name="safe_center_unenable">未啟用</string>
 

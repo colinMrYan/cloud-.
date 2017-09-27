@@ -56,7 +56,6 @@ public class GestureLoginActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         StateBarColor.changeStateBarColor(this, R.color.grey_f6f6f6);
-        ((MyApplication) getApplicationContext()).addActivity(this);
         x.view().inject(this);
         init();
 //        EventBus.getDefault().register(this);
@@ -214,8 +213,8 @@ public class GestureLoginActivity extends BaseActivity {
                 lockPatternView.setPattern(LockPatternView.DisplayMode.DEFAULT);
                 break;
             case ERROR:
-                gestureMessage.setText(getString(R.string.gesture_code_error)+
-                        (GESTURE_CODE_TIMES-errorTime)+getString(R.string.gesture_code_time));
+                gestureMessage.setText(getString(R.string.gesture_code_error)+" "+
+                        (GESTURE_CODE_TIMES-errorTime)+" "+getString(R.string.gesture_code_time));
                 findViewById(R.id.gesture_code_tips).setVisibility(View.VISIBLE);
                 Animation shake = AnimationUtils.loadAnimation(this, R.anim.left_right_shake);
                 gestureMessage.startAnimation(shake);

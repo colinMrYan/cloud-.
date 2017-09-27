@@ -1,5 +1,6 @@
 package com.inspur.imp.engine.webview;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -185,7 +186,7 @@ public class ImpWebViewClient extends WebViewClient {
 		}
 		if (url.startsWith("mailto:") || url.startsWith("geo:") ||url.startsWith("tel:")) {
 			Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-			myWebView.getContext().startActivity(intent);
+			((Activity)myWebView.getContext()).startActivityForResult(intent,ImpActivity.DO_NOTHING_RESULTCODE);
 			return true;
 		}
 		return super.shouldOverrideUrlLoading(view, url);

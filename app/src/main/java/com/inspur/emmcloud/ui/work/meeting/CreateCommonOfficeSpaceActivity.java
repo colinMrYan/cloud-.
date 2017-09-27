@@ -50,7 +50,6 @@ public class CreateCommonOfficeSpaceActivity extends BaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		((MyApplication) getApplicationContext()).addActivity(this);
 		setContentView(R.layout.activity_create_common_office_space);
 		initView();
 		getAllCommonOfficeIdList();

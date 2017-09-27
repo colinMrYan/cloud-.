@@ -56,7 +56,6 @@ public class UserInfoActivity extends BaseActivity {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_user_info);
-		((MyApplication) getApplicationContext()).addActivity(this);
 		departmentText = (TextView) findViewById(R.id.department_text);
 		mailText = (TextView) findViewById(R.id.mail_text);
 		phoneNumText = (TextView) findViewById(R.id.phone_num_text);
@@ -266,7 +265,7 @@ public class UserInfoActivity extends BaseActivity {
 	private void sendSMS(String phoneNum) {
 		Uri smsToUri = Uri.parse("smsto:" + phoneNum);
 		Intent intent = new Intent(Intent.ACTION_SENDTO, smsToUri);
-		startActivity(intent);
+		startActivityForResult(intent,1);
 
 	}
 
@@ -274,7 +273,7 @@ public class UserInfoActivity extends BaseActivity {
 		Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:"
 				+ phoneNum));
 
-		startActivity(intent);
+		startActivityForResult(intent,1);
 
 	}
 
@@ -313,9 +312,10 @@ public class UserInfoActivity extends BaseActivity {
 	private void sendMail(String mail) {
 		Uri uri = Uri.parse("mailto:" + mail);
 		Intent intent = new Intent(Intent.ACTION_SENDTO, uri);
-		startActivity(Intent.createChooser(intent,
-				getString(R.string.please_select_app_of_mail)));
+		startActivityForResult(Intent.createChooser(intent,
+				getString(R.string.please_select_app_of_mail)),1);
 	}
+
 
 	public void dimissDlg() {
 		if (loadingDlg != null && loadingDlg.isShowing()) {

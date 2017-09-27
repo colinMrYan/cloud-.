@@ -40,7 +40,6 @@ public class DocumentActivity extends BaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		((MyApplication) getApplicationContext()).addActivity(this);
 		setContentView(R.layout.activity_group_file);
 		((TextView) findViewById(R.id.header_text))
 				.setText(getString(R.string.docunment));
@@ -243,7 +242,7 @@ public class DocumentActivity extends BaseActivity {
 					};
 					
 					if (FileUtils.isFileExist(target)) {
-						FileUtils.openFile(getApplicationContext(), target);
+						FileUtils.openFile(DocumentActivity.this, target);
 					} else {
 						new DownLoaderUtils().startDownLoad(source, target, progressCallback);
 					}

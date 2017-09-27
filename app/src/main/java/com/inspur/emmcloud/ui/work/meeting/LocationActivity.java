@@ -25,8 +25,7 @@ public class LocationActivity extends BaseActivity{
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_meeting_location);
-		((MyApplication) getApplicationContext()).addActivity(this);
-		
+
 		roomName = getIntent().getStringExtra("room");
 		
 		if(!TextUtils.isEmpty(roomName)){

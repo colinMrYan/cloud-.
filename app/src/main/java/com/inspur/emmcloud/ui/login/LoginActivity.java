@@ -58,8 +58,6 @@ public class LoginActivity extends BaseActivity {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
-		((MyApplication) getApplicationContext())
-				.addActivity(LoginActivity.this);
 		initView();
 		handMessage();
 	}

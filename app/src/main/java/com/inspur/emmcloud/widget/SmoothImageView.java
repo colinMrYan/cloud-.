@@ -67,7 +67,6 @@ public class SmoothImageView extends ImageView {
         mOriginalHeight = height;
         mOriginalLocationX = locationX;
         mOriginalLocationY = locationY;
-        LogUtils.jasonDebug("statusBarHeight="+getStatusBarHeight(getContext()));
         mOriginalLocationY = mOriginalLocationY - getStatusBarHeight(getContext());
     }
 
@@ -92,7 +91,6 @@ public class SmoothImageView extends ImageView {
 
     public void transformIn() {
         if (mOriginalLocationX != 0 || mOriginalWidth != 0){
-            LogUtils.jasonDebug("transformIn---------------------------");
             mState = STATE_TRANSFORM_IN;
             mTransformStart = true;
             invalidate();

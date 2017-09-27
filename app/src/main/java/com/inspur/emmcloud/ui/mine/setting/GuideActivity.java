@@ -47,8 +47,6 @@ public class GuideActivity extends BaseActivity {
 		super.onCreate(savedInstanceState);
 		StateBarColor.changeStateBarColor(this,R.color.white);
 		setContentView(R.layout.activity_guide);
-		((MyApplication) getApplicationContext())
-				.addActivity(GuideActivity.this);
 		// 存入当前版本号,方便判断新功能介绍显示的时机
 		String appVersion = AppUtils.getVersion(GuideActivity.this);
 		PreferencesUtils.putString(getApplicationContext(), "previousVersion",

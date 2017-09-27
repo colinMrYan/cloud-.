@@ -14,7 +14,6 @@ public class ScanResultActivity extends BaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		((MyApplication)getApplicationContext()).addActivity(this);
 		setContentView(R.layout.activity_scan_result);
 		String result = getIntent().getExtras().getString("result");
 		((TextView)findViewById(R.id.scan_result_text)).setText(result);

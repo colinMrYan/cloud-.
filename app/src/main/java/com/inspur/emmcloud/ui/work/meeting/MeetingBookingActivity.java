@@ -18,6 +18,7 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.WorkAPIService;
+import com.inspur.emmcloud.bean.GetBookingRoomResult;
 import com.inspur.emmcloud.bean.GetIsAdmin;
 import com.inspur.emmcloud.bean.SearchModel;
 import com.inspur.emmcloud.config.MyAppConfig;
@@ -44,38 +45,37 @@ import java.util.Locale;
 
 /**
  * 会议室预定Activity
+ *
  */
 public class MeetingBookingActivity extends BaseActivity {
 
-    private static final int SELECT_MEETING_ROOM = 0;
-    private static final int MEETTING_CHOOSE_MEM = 1;
-    private static final int MEETTING_LOG_MEM = 2;
-    private static final int MEETING_BEGIN_TIME = 3;
-    private static final int MEETING_END_TIME = 4;
-    private WorkAPIService apiService;
-    private LoadingDialog loadingDlg;
-    private TextView meetingRoomText, meetingBeginDateText, meetingBeginTimeText, meetingEndDateText, meetingEndTimeText;
-    private EditText topicEdit, noticeEdit;
-    private String meetingRoomId = "";
-    private Calendar meetingBeginCalendar = Calendar.getInstance();
-    private Calendar meetingEndCalendar = Calendar.getInstance();
-    private String meetingRoomName = "";
-    private String meetingRoomFlour = "";
-    private List<SearchModel> selectMemList = new ArrayList<SearchModel>();
-    private CircleImageView[] circleHeadImageView = new CircleImageView[5];
-    private String userId = "";
-    private int maxAhead = 0;
-    private int maxDuration = 0;
-    private boolean isSetTime = false;//用户是否人为的修改过时间
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        ((MyApplication) getApplicationContext()).addActivity(this);
-        setContentView(R.layout.activity_meeting_booking);
-        initViews();
-        getIsAdmin();
-    }
+	private static final int SELECT_MEETING_ROOM = 0;
+	private static final int MEETTING_CHOOSE_MEM = 1;
+	private static final int MEETTING_LOG_MEM = 2;
+	private static final int MEETING_BEGIN_TIME = 3;
+	private static final int MEETING_END_TIME = 4;
+	private WorkAPIService apiService;
+	private LoadingDialog loadingDlg;
+	private TextView meetingRoomText, meetingBeginDateText, meetingBeginTimeText, meetingEndDateText, meetingEndTimeText;
+	private EditText topicEdit, noticeEdit;
+	private String meetingRoomId = "";
+	private Calendar meetingBeginCalendar = Calendar.getInstance();
+	private Calendar meetingEndCalendar= Calendar.getInstance();
+	private String meetingRoomName = "";
+	private String meetingRoomFlour = "";
+	private List<SearchModel> selectMemList = new ArrayList<SearchModel>();
+	private CircleImageView[] circleHeadImageView = new CircleImageView[5];
+	private String userId = "";
+	private int maxAhead = 0;
+	private int maxDuration = 0;
+	private boolean isSetTime = false;//用户是否人为的修改过时间
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_meeting_booking);
+		initViews();
+		getIsAdmin();
+	}
 
 	/**
 	 * 判断当前用户是否会议室管理员，并存储
@@ -335,6 +335,7 @@ public class MeetingBookingActivity extends BaseActivity {
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
 		if (resultCode == RESULT_OK) {
 			if (requestCode == SELECT_MEETING_ROOM) {
 				getRoomAvailableTime(data);

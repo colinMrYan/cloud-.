@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.inspur.emmcloud"
     android:configChanges="locale|layoutDirection"
-    android:versionCode="35"
-    android:versionName="1.2.6">
+    android:versionCode="38"
+    android:versionName="1.2.9">
 
     <uses-sdk
         android:minSdkVersion="16"
@@ -39,9 +39,9 @@
     <uses-permission android:name="android.permission.FLASHLIGHT" />、
 
     <!--指纹识别-->
-    <uses-permission android:name="android.permission.USE_FINGERPRINT"/>
-    <uses-permission android:name="com.fingerprints.service.ACCESS_FINGERPRINT_MANAGER"/>
-    <uses-permission android:name="com.samsung.android.providers.context.permission.WRITE_USE_APP_FEATURE_SURVEY"/>
+    <uses-permission android:name="android.permission.USE_FINGERPRINT" />
+    <uses-permission android:name="com.fingerprints.service.ACCESS_FINGERPRINT_MANAGER" />
+    <uses-permission android:name="com.samsung.android.providers.context.permission.WRITE_USE_APP_FEATURE_SURVEY" />
 
     <!-- 创建快捷键 -->
     <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
@@ -131,7 +131,8 @@
             android:name=".ui.mine.setting.CreateGestureActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"></activity>
-        <activity android:name=".ui.mine.setting.CreateGestureCodeGuidActivity"
+        <activity
+            android:name=".ui.mine.setting.CreateGestureCodeGuidActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"></activity>
 
@@ -191,7 +192,8 @@
         <activity
             android:name=".ui.SchemeHandleActivity"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -292,12 +294,14 @@
             android:name=".ui.mine.setting.SettingActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
-        <activity android:name=".ui.mine.setting.SwitchGestureActivity"
+        <activity
+            android:name=".ui.mine.setting.SwitchGestureActivity"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".ui.mine.setting.SafeCenterActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.mine.setting.SafeCenterActivity"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".ui.mine.setting.DeviceManagerActivity"
@@ -337,6 +341,10 @@
             android:name=".ui.mine.setting.AboutActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.mine.setting.RecommendAppActivity"
+            android:screenOrientation="portrait" />
+
         <activity
             android:name=".ui.app.groupnews.NewsWebDetailActivity"
             android:launchMode="singleTask"
@@ -417,14 +425,6 @@
             android:theme="@android:style/Theme.Holo.Light.NoActionBar"></activity>
         <activity
             android:name=".ui.chat.ModifyChannelGroupNameActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.mine.cardpackage.CardPackageListActivity"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.mine.cardpackage.CardPackageDetailActivity"
-            android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.find.trip.TravelActivity"
@@ -541,11 +541,6 @@
             android:name=".ui.find.FindSearchMoreActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.app.AppUpgradeNotifyActivity"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait"
-            android:theme="@style/dialog_activity" />
-        <activity
             android:name=".ui.app.ShortCutFunctionActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar">
@@ -651,6 +646,7 @@
             android:supportsRtl="true"
             android:theme="@style/SplashTheme"></activity>
 
+        <activity android:name="com.inspur.imp.plugin.file.FileBrowerAppActivity"></activity>
 
         <activity
             android:name="com.inspur.imp.plugin.filetransfer.TextFileShowActivity"
@@ -827,6 +823,49 @@
             android:name="com.amap.api.v2.apikey"
             android:value="6fec0bde62bb59a08712ac15d02f8774" />
 
+
+        <!--社交分享-->
+
+        <meta-data
+            android:name="UMENG_APPKEY"
+            android:value="59aa1f8f76661373290010d3" >
+        </meta-data>
+        <activity
+            android:name="com.umeng.socialize.media.WBShareCallBackActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:exported="false"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".wxapi.WXEntryActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+        <activity
+            android:name="com.umeng.qq.tencent.AuthActivity"
+            android:launchMode="singleTask"
+            android:noHistory="true" >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="tencent1105561850" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.umeng.qq.tencent.AssistActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:configChanges="orientation|keyboardHidden|screenSize"/>
+        <activity
+            android:name="com.umeng.socialize.editorpage.ShareActivity"
+            android:theme="@style/Theme.UMDefault"
+            android:excludeFromRecents="true"
+            />
     </application>
 
 </manifest>
