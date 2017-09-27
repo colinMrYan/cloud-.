@@ -53,8 +53,6 @@ public class MessionTagActivity extends BaseActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		((MyApplication) getApplicationContext())
-				.addActivity(MessionTagActivity.this);
 		setContentView(R.layout.activity_mession_tag);
 		initViews();
 	}

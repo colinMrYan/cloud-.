@@ -34,7 +34,6 @@ public class ModifyChannelGroupNameActivity extends BaseActivity {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_modify_channel_group_name);
-		((MyApplication)getApplication()).addActivity(ModifyChannelGroupNameActivity.this);
 		editText = (ClearEditText)findViewById(R.id.edit);
 		String name = getIntent().getStringExtra("name");
 		cid = getIntent().getStringExtra("cid");

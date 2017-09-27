@@ -28,8 +28,6 @@ public class CalSingleMonthActivity extends BaseActivity implements SimpleMonthV
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		((MyApplication) getApplicationContext())
-				.addActivity(CalSingleMonthActivity.this);
 		setContentView(R.layout.activity_cal_single_month);
 		initView();
 

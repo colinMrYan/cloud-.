@@ -18,7 +18,7 @@
         android:textColor="#8f8e94"
         android:textSize="@dimen/content_smaller_textsize" />
 
-    <TextView
+    <com.inspur.emmcloud.widget.TextViewWithSpan
         android:id="@+id/comment_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

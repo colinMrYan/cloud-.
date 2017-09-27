@@ -67,7 +67,6 @@ public class ImpActivity extends ImpBaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
-        ((MyApplication) getApplicationContext()).addActivity(this);
         setContentView(Res.getLayoutID("activity_imp"));
         getWindow().setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE

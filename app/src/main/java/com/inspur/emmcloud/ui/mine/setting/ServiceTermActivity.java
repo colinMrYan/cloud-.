@@ -19,7 +19,6 @@ public class ServiceTermActivity extends BaseActivity {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_service_term);
-		((MyApplication)getApplicationContext()).addActivity(ServiceTermActivity.this);
 	}
 	
 	public void onBack(View v){

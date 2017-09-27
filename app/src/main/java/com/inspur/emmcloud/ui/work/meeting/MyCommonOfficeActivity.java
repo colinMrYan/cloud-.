@@ -66,7 +66,6 @@ public class MyCommonOfficeActivity extends BaseActivity implements
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		((MyApplication) getApplicationContext()).addActivity(this);
 		setContentView(R.layout.activity_my_common_office);
 		initViews();
 		getOffice();

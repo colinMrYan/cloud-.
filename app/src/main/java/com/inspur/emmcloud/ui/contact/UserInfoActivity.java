@@ -56,7 +56,6 @@ public class UserInfoActivity extends BaseActivity {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_user_info);
-		((MyApplication) getApplicationContext()).addActivity(this);
 		departmentText = (TextView) findViewById(R.id.department_text);
 		mailText = (TextView) findViewById(R.id.mail_text);
 		phoneNumText = (TextView) findViewById(R.id.phone_num_text);

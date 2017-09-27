@@ -643,6 +643,10 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         activityList.add(activity);
     }
 
+    public void removeActivity(Activity activity){
+        activityList.remove(activity);
+    }
+
     /**
      * exit Activity
      **/
@@ -652,6 +656,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
                 if (activity != null)
                     activity.finish();
             }
+            activityList.clear();
         } catch (Exception e) {
             LogUtils.exceptionDebug(TAG, e.toString());
         }
@@ -700,5 +705,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
     public ReactNativeHost getReactNativeHost() {
         return mReactNativeHost;
     }
+
+
 
 }

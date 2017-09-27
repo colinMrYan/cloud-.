@@ -57,7 +57,6 @@ public class AppDetailActivity extends BaseActivity {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_app_detail);
-		((MyApplication) getApplicationContext()).addActivity(this);
 		imageDisplayUtils = new ImageDisplayUtils(R.drawable.icon_empty_icon);
 		app = (App) getIntent().getExtras().getSerializable("app");
 		initView();

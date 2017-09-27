@@ -44,7 +44,6 @@ public class RecommendAppActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((MyApplication) getApplicationContext()).addActivity(this);
         x.view().inject(this);
         webView.loadUrl(RECOMMAND_APP_URL);
         Config.DEBUG = true;
