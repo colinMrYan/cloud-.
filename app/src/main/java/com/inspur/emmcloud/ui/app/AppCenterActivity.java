@@ -274,13 +274,8 @@ public class AppCenterActivity extends BaseActivity {
                 });
                 RecyclerView recomandRecyclerView = (RecyclerView) convertView.findViewById(R.id.app_center_recomand_recycleview);
                 recomandRecyclerView.addItemDecoration(new ECMSpaceItemDecoration(DensityUtil.dip2px(AppCenterActivity.this,11)));
-                //修改前用LinearLayout管理的代码
-//                LinearLayoutManager linearLayoutManager = new LinearLayoutManager(AppCenterActivity.this);
-//                linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-//                recomandRecyclerView.setLayoutManager(linearLayoutManager);
                 GridLayoutManager gridLayoutManager = new GridLayoutManager(AppCenterActivity.this,5);
                 recomandRecyclerView.setLayoutManager(gridLayoutManager);
-
                 RecommandAppListAdapter recommandAppListAdapter = new RecommandAppListAdapter(AppCenterActivity.this, listPosition);
                 recommandAppListAdapter.setOnRecommandItemClickListener(new OnRecommandItemClickListener() {
                     @Override
