@@ -379,31 +379,35 @@ public class ContactCacheUtils {
 
 		}
 
-		Iterator<Contact> contactListIterator = userList.iterator();
-		while (contactListIterator.hasNext()) {
-			Contact contact = contactListIterator.next();
-			PersonDto personDto = new PersonDto();
-			personDto.setName(contact.getRealName());
-			personDto.setUid(contact.getInspurID());
-			personDto.setSortLetters(contact.getPinyin().substring(0, 1));
-			personDto.setPinyinFull(contact.getPinyin());
-			personDto.setSuoxie(PinyinUtils.getPinYinHeadChar(contact
-					.getRealName()));
-			personDto.setUtype("contact");
-			unitMemberList.add(personDto);
+		if(userList != null){
+			Iterator<Contact> contactListIterator = userList.iterator();
+			while (contactListIterator.hasNext()) {
+				Contact contact = contactListIterator.next();
+				PersonDto personDto = new PersonDto();
+				personDto.setName(contact.getRealName());
+				personDto.setUid(contact.getInspurID());
+				personDto.setSortLetters(contact.getPinyin().substring(0, 1));
+				personDto.setPinyinFull(contact.getPinyin());
+				personDto.setSuoxie(PinyinUtils.getPinYinHeadChar(contact
+						.getRealName()));
+				personDto.setUtype("contact");
+				unitMemberList.add(personDto);
+			}
 		}
 
-		Iterator<Robot> robotListIterator = robotList.iterator();
-		while (robotListIterator.hasNext()) {
-			Robot robot = robotListIterator.next();
-			PersonDto personDto = new PersonDto();
-			personDto.setName(robot.getName());
-			personDto.setUid(robot.getId());
-			personDto.setSortLetters(PinyinUtils.getPingYin(robot.getName()).substring(0, 1));
-			personDto.setPinyinFull(PinyinUtils.getPingYin(robot.getName()));
-			personDto.setSuoxie(PinyinUtils.getPinYinHeadChar(robot.getName()));
-			personDto.setUtype("robot");
-			unitMemberList.add(personDto);
+		if(robotList != null){
+			Iterator<Robot> robotListIterator = robotList.iterator();
+			while (robotListIterator.hasNext()) {
+				Robot robot = robotListIterator.next();
+				PersonDto personDto = new PersonDto();
+				personDto.setName(robot.getName());
+				personDto.setUid(robot.getId());
+				personDto.setSortLetters(PinyinUtils.getPingYin(robot.getName()).substring(0, 1));
+				personDto.setPinyinFull(PinyinUtils.getPingYin(robot.getName()));
+				personDto.setSuoxie(PinyinUtils.getPinYinHeadChar(robot.getName()));
+				personDto.setUtype("robot");
+				unitMemberList.add(personDto);
+			}
 		}
 
 		if (unitMemberList == null) {
