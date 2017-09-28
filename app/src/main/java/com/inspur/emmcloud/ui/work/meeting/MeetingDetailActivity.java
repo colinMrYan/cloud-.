@@ -34,7 +34,6 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.WorkAPIService;
 import com.inspur.emmcloud.bean.Contact;
-import com.inspur.emmcloud.bean.GetBookingRoomResult;
 import com.inspur.emmcloud.bean.Meeting;
 import com.inspur.emmcloud.bean.Room;
 import com.inspur.emmcloud.bean.SearchModel;
@@ -763,7 +762,7 @@ public class MeetingDetailActivity extends BaseActivity {
 	class WebService extends APIInterfaceInstance {
 		@Override
 		public void returnBookingRoomSuccess(
-				GetBookingRoomResult getBookingRoomResult) {
+				) {
 			if (loadingDialog.isShowing()) {
 				loadingDialog.dismiss();
 			}

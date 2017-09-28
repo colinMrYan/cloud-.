@@ -4,10 +4,10 @@ import android.content.Context;
 
 import com.inspur.emmcloud.bean.ChannelGroup;
 import com.inspur.emmcloud.bean.Contact;
-import com.lidroid.xutils.db.sqlite.Selector;
-import com.lidroid.xutils.db.sqlite.WhereBuilder;
 
 import org.json.JSONArray;
+import org.xutils.common.util.KeyValue;
+import org.xutils.db.sqlite.WhereBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +32,7 @@ public class ChannelGroupCacheUtils {
             if (channelGroupList == null || channelGroupList.size() == 0) {
                 return;
             }
-            DbCacheUtils.getDb(context).saveOrUpdateAll(channelGroupList);
+            DbCacheUtils.getDb(context).saveOrUpdate(channelGroupList);
         } catch (Exception e) {
             // TODO: handle exception
             e.printStackTrace();
@@ -46,7 +46,7 @@ public class ChannelGroupCacheUtils {
      */
     public static void clearChannelGroupList(final Context context){
         try {
-            DbCacheUtils.getDb(context).deleteAll(ChannelGroup.class);
+            DbCacheUtils.getDb(context).delete(ChannelGroup.class);
         } catch (Exception e) {
             // TODO: handle exception
             e.printStackTrace();
@@ -127,10 +127,10 @@ public class ChannelGroupCacheUtils {
                         searchStr += "%" + searchText.charAt(i) + "%";
                     }
                 }
-                searchChannelGroupList = DbCacheUtils.getDb(context).findAll(Selector
-                        .from(ChannelGroup.class)
+                searchChannelGroupList = DbCacheUtils.getDb(context).selector
+                        (ChannelGroup.class)
                         .where("pyFull", "like", searchStr)
-                        .or("pyShort", "like", searchStr).or("channelName", "like", searchStr));
+                        .or("pyShort", "like", searchStr).or("channelName", "like", searchStr).findAll();
             } catch (Exception e) {
                 // TODO: handle exception
                 e.printStackTrace();
@@ -276,11 +276,7 @@ public class ChannelGroupCacheUtils {
      */
     public static void updateChannelGroupName(Context context, String cid, String name) {
         try {
-            ChannelGroup channelGroup = DbCacheUtils.getDb(context).findById(ChannelGroup.class, cid);
-            if (channelGroup != null) {
-                channelGroup.setChannelName(name);
-                DbCacheUtils.getDb(context).update(channelGroup, WhereBuilder.b("cid", "=", cid), "channelName");
-            }
+            DbCacheUtils.getDb(context).update(ChannelGroup.class, WhereBuilder.b("cid", "=", cid),new KeyValue("channelName",name));
         } catch (Exception e) {
             // TODO: handle exception
             e.printStackTrace();
@@ -292,15 +288,12 @@ public class ChannelGroupCacheUtils {
      *
      * @param context
      * @param cid
-     * @param name
+     * @param pyFull
      */
-    public static void updateChannelGroupNameFull(Context context, String cid, String name) {
+    public static void updateChannelGroupNameFull(Context context, String cid, String pyFull) {
         try {
-            ChannelGroup channelGroup = DbCacheUtils.getDb(context).findById(ChannelGroup.class, cid);
-            if (channelGroup != null) {
-                channelGroup.setChannelName(name);
-                DbCacheUtils.getDb(context).update(channelGroup, WhereBuilder.b("cid", "=", cid), "pyFull");
-            }
+
+            DbCacheUtils.getDb(context).update(ChannelGroup.class, WhereBuilder.b("cid", "=", cid),new KeyValue("pyFull",pyFull));
         } catch (Exception e) {
             // TODO: handle exception
             e.printStackTrace();
@@ -312,15 +305,11 @@ public class ChannelGroupCacheUtils {
      *
      * @param context
      * @param cid
-     * @param name
+     * @param pyShort
      */
-    public static void updateChannelGroupNameShort(Context context, String cid, String name) {
+    public static void updateChannelGroupNameShort(Context context, String cid, String pyShort) {
         try {
-            ChannelGroup channelGroup = DbCacheUtils.getDb(context).findById(ChannelGroup.class, cid);
-            if (channelGroup != null) {
-                channelGroup.setChannelName(name);
-                DbCacheUtils.getDb(context).update(channelGroup, WhereBuilder.b("cid", "=", cid), "pyShort");
-            }
+            DbCacheUtils.getDb(context).update(ChannelGroup.class, WhereBuilder.b("cid", "=", cid),new KeyValue("pyShort",pyShort));
         } catch (Exception e) {
             // TODO: handle exception
             e.printStackTrace();
@@ -336,12 +325,7 @@ public class ChannelGroupCacheUtils {
      */
     public static void updateChannelGroupMembers(Context context, String cid, String members) {
         try {
-            ChannelGroup channelGroup = DbCacheUtils.getDb(context).findById(ChannelGroup.class, cid);
-            if (channelGroup != null) {
-                channelGroup.setMembers(members);
-                ;
-                DbCacheUtils.getDb(context).update(channelGroup, WhereBuilder.b("cid", "=", cid), "members");
-            }
+            DbCacheUtils.getDb(context).update(ChannelGroup.class, WhereBuilder.b("cid", "=", cid),new KeyValue("members",members));
         } catch (Exception e) {
             // TODO: handle exception
             e.printStackTrace();

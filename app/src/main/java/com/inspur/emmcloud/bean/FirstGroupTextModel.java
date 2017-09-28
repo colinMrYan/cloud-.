@@ -10,12 +10,10 @@ import java.io.Serializable;
 public class FirstGroupTextModel implements Serializable{
 	private String name;
 	private String id;
-	private String fullPath;
 
-	public FirstGroupTextModel(String name, String id,String fullPath) {
+	public FirstGroupTextModel(String name, String id) {
 		this.name = name;
 		this.id = id;
-		this.fullPath = fullPath;
 	}
 
 	public String getId() {
@@ -26,7 +24,4 @@ public class FirstGroupTextModel implements Serializable{
 		return name;
 	}
 	
-	public String getFullPath(){
-		return fullPath;
-	}
 }

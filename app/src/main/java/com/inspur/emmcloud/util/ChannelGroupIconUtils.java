@@ -23,6 +23,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -356,8 +357,9 @@ public class ChannelGroupIconUtils {
         if (file.exists()) {
             file.delete();
         }
+        FileOutputStream out = null;
         try {
-            FileOutputStream out = new FileOutputStream(file);
+            out = new FileOutputStream(file);
             bitmap.compress(Bitmap.CompressFormat.PNG, 50, out);
             out.flush();
             out.close();
@@ -366,6 +368,19 @@ public class ChannelGroupIconUtils {
             e.printStackTrace();
             if (file.exists()) {
                 file.delete();
+            }
+        } finally {
+            if (out != null){
+                try {
+                    out.close();
+                } catch (IOException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+            }
+            if (!bitmap.isRecycled()){
+                bitmap.recycle();
+                bitmap = null;
             }
         }
 

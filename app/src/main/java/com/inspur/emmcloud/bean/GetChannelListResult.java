@@ -4,13 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.inspur.emmcloud.util.LogUtils;
-import com.inspur.emmcloud.util.UriUtils;
-import com.lidroid.xutils.db.annotation.Id;
-import com.lidroid.xutils.db.annotation.Transient;
 
 public class GetChannelListResult {
 	private static final String TAG = "GetSessionListResult";

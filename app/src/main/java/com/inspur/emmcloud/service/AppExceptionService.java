@@ -8,7 +8,6 @@ import android.support.annotation.Nullable;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.AppAPIService;
 import com.inspur.emmcloud.bean.AppException;
-import com.inspur.emmcloud.bean.GetExceptionResult;
 import com.inspur.emmcloud.util.AppExceptionCacheUtils;
 import com.inspur.emmcloud.util.AppUtils;
 import com.inspur.emmcloud.util.NetUtils;
@@ -93,8 +92,7 @@ public class AppExceptionService extends Service {
 
 	private class WebService extends APIInterfaceInstance {
 		@Override
-		public void returnUploadExceptionSuccess(
-				GetExceptionResult getExceptionResult) {
+		public void returnUploadExceptionSuccess() {
 			AppExceptionCacheUtils.clearAppException(AppExceptionService.this);
 			stopSelf();
 		}
