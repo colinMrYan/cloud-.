@@ -6,17 +6,23 @@ import com.facebook.react.bridge.ReadableMap;
 import com.inspur.emmcloud.util.ContactCacheUtils;
 import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.UriUtils;
-import com.lidroid.xutils.db.annotation.Table;
+
+import org.xutils.db.annotation.Column;
+import org.xutils.db.annotation.Table;
 
 import java.io.Serializable;
 
 @Table(name = "SearchModel")
 public class SearchModel implements Serializable {
+	@Column(name = "id",isId = true)
 	private String id = "";
+	@Column(name = "name")
 	private String name = "";
+	@Column(name = "type")
 	private String type = ""; // 单人：user 组织：struct 群组：channelGroup
+	@Column(name = "icon")
 	private String icon = "";
-	//private String inspurID= "";
+	@Column(name = "heat")
 	private int heat = 0;
 
 	public SearchModel() {

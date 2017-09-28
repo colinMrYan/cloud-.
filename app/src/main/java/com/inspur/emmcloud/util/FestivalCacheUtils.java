@@ -7,8 +7,6 @@ import java.util.List;
 import android.content.Context;
 
 import com.inspur.emmcloud.bean.FestivalDate;
-import com.lidroid.xutils.db.sqlite.Selector;
-import com.lidroid.xutils.exception.DbException;
 
 /**
  * classes : com.inspur.emmcloud.util.FestivalUtils
@@ -68,26 +66,13 @@ public class FestivalCacheUtils {
 		FestivalDate moonFestival = new FestivalDate("work_moon_festival", cal.getTimeInMillis());
 		festivalDateList.add(moonFestival);
 		try {
-			DbCacheUtils.getDb(context).saveOrUpdateAll(festivalDateList);
+			DbCacheUtils.getDb(context).saveOrUpdate(festivalDateList);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 	
-	/**
-	 * 存储节日列表
-	 * @param context
-	 * @param festivalDateList
-	 */
-	public void saveFestivalList(Context context,List<FestivalDate> festivalDateList){
-		try {
-			DbCacheUtils.getDb(context).saveOrUpdateAll(festivalDateList);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	
+
 	/**
 	 * 通过时间获取节日
 	 * @param context
@@ -98,7 +83,7 @@ public class FestivalCacheUtils {
 		FestivalDate festivalDate = null;
 		try {
 			Calendar cal = Calendar.getInstance();
-			festivalDate = DbCacheUtils.getDb(context).findFirst(Selector.from(FestivalDate.class).where("festivalTime", ">", cal.getTimeInMillis()).orderBy("festivalTime", false));
+			festivalDate = DbCacheUtils.getDb(context).selector(FestivalDate.class).where("festivalTime", ">", cal.getTimeInMillis()).orderBy("festivalTime", false).findFirst();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

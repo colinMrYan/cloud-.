@@ -41,7 +41,6 @@ public class ModifyUserFirstPsdActivity extends BaseActivity {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_modify_firstuserpsd);
-		((MyApplication)getApplicationContext()).addActivity(this);
 		apiService = new LoginAPIService(ModifyUserFirstPsdActivity.this);
 		apiService.setAPIInterface(new WebService());
 		confirmModifyButton = (Button) findViewById(R.id.modifyuserpsd_button);

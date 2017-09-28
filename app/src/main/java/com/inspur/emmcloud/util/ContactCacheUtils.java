@@ -5,10 +5,9 @@ import android.content.Context;
 import com.inspur.emmcloud.bean.Contact;
 import com.inspur.emmcloud.bean.PersonDto;
 import com.inspur.emmcloud.bean.Robot;
-import com.lidroid.xutils.db.sqlite.Selector;
-import com.lidroid.xutils.db.sqlite.WhereBuilder;
 
 import org.json.JSONArray;
+import org.xutils.db.sqlite.WhereBuilder;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -31,7 +30,7 @@ public class ContactCacheUtils {
 		}
 		try {
 
-			DbCacheUtils.getDb(context).saveOrUpdateAll(contactList);
+			DbCacheUtils.getDb(context).saveOrUpdate(contactList);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -154,11 +153,11 @@ public class ContactCacheUtils {
 			String unitID = "";
 			if (!StringUtils.isBlank(PreferencesByUserAndTanentUtils.getString(context, "unitID", ""))) {
 				unitID = PreferencesByUserAndTanentUtils.getString(context, "unitID", "");
-				contact = DbCacheUtils.getDb(context).findFirst(Selector.from(Contact.class).where(
-						"id", "=", unitID));
+				contact =  DbCacheUtils.getDb(context).selector(Contact.class).where(
+						"id", "=", unitID).findFirst();
 			} else {
-				contact = DbCacheUtils.getDb(context).findFirst(Selector.from(Contact.class).where(
-						"parentId", "=", "root"));
+				contact =  DbCacheUtils.getDb(context).selector(Contact.class).where(
+						"parentId", "=", "root").findFirst();
 			}
 		} catch (Exception e) {
 			// TODO: handle exception
@@ -179,14 +178,14 @@ public class ContactCacheUtils {
 		try {
 
 			// 组织下的组织架构列表
-			List<Contact> childStructList = DbCacheUtils.getDb(context).findAll(Selector
-					.from(Contact.class).where("parentId", "=", contactId)
-					.and("type", "=", "").orderBy("sortOrder"));
+			List<Contact> childStructList = DbCacheUtils.getDb(context).selector
+					(Contact.class).where("parentId", "=", contactId)
+					.and("type", "=", "").orderBy("sortOrder").findAll();
 			// 组织下的人员列表
-			List<Contact> childUserList = DbCacheUtils.getDb(context).findAll(Selector
-					.from(Contact.class).where("parentId", "=", contactId)
+			List<Contact> childUserList = DbCacheUtils.getDb(context).selector
+					(Contact.class).where("parentId", "=", contactId)
 					.and("type", "=", "user")
-					.orderBy("sortOrder"));
+					.orderBy("sortOrder").findAll();
 			if (childStructList != null && childUserList != null) {
 				childStructList.addAll(childUserList);
 				childContactList = childStructList;
@@ -205,80 +204,6 @@ public class ContactCacheUtils {
 		return childContactList;
 	}
 
-	// /**
-	// * 搜索通讯录
-	// *
-	// * @param context
-	// * @param searchText
-	// * @return
-	// */
-	// public static List<Contact> getSearchContact(Context context,
-	// String searchText) {
-	// // String searchStr ="%"+searchText+"%";
-	// String searchStr = "";
-	// for (int i = 0; i < searchText.length(); i++) {
-	// if (i < searchText.length() - 1) {
-	// searchStr += "%" + searchText.charAt(i);
-	// } else {
-	// searchStr += "%" + searchText.charAt(i) + "%";
-	// }
-	// }
-	// List<Contact> resultContactList = null;
-	// try {
-	// 
-	// resultContactList = DbCacheUtils.getDb(context).findAll(Selector.from(Contact.class)
-	// .where("pinyin", "like", searchStr)
-	// .or("code", "like", searchStr)
-	// .or("realName", "like", searchStr));
-	// } catch (Exception e) {
-	// // TODO: handle exception
-	// e.printStackTrace();
-	// }
-	// if (resultContactList == null) {
-	// resultContactList = new ArrayList<Contact>();
-	// }
-	// return resultContactList;
-	// }
-	//
-
-	/**
-	 * 搜索子目录中符合条件的通讯录
-	 *
-	 * @param context
-	 * @param searchText
-	 * @return
-	 */
-	public static List<Contact> getSearchContact(Context context,
-												 String searchText, int offset, int limit) {
-		String searchStr = "";
-		for (int i = 0; i < searchText.length(); i++) {
-			if (i < searchText.length() - 1) {
-				searchStr += "%" + searchText.charAt(i);
-			} else {
-				searchStr += "%" + searchText.charAt(i) + "%";
-			}
-		}
-		List<Contact> resultContactList = null;
-		try {
-			resultContactList = DbCacheUtils.getDb(context).findAll(Selector
-					.from(Contact.class)
-					.where("type", "=", "user")
-					.and(WhereBuilder.b("pinyin", "like", searchStr)
-							.or("realName", "like", searchStr)
-							.or("globalName", "like", searchStr)
-							.or("code", "like", searchStr)).offset(offset)
-					.limit(limit));
-
-		} catch (Exception e) {
-			// TODO: handle exception
-			e.printStackTrace();
-		}
-		if (resultContactList == null) {
-			resultContactList = new ArrayList<Contact>();
-		}
-		return resultContactList;
-	}
-
 
 	/**
 	 * 搜索子目录中符合条件的通讯录
@@ -294,58 +219,58 @@ public class ContactCacheUtils {
 		noInSql = getNoInSql(noInSql,haveSearchContactList);
 		List<Contact> searchContactList = new ArrayList<>();
 		try {
-			List<Contact> searchContactList1 = DbCacheUtils.getDb(context).findAll(Selector
-					.from(Contact.class)
+			List<Contact> searchContactList1 = DbCacheUtils.getDb(context).selector
+					(Contact.class)
 					.where("type", "=", "user")
 					.and(WhereBuilder.b("pinyin", "=", searchStr)
 							.or("realName", "=", searchStr)
 							.or("globalName", "=", searchStr)
 							.or("code", "=", searchStr))
 					.and(WhereBuilder.b().expr("id not in" +noInSql))
-					.limit(limit));
+					.limit(limit).findAll();
 			searchContactList.addAll(searchContactList1);
 			noInSql = getNoInSql(noInSql,searchContactList);
 			if (limit == -1 || searchContactList.size() < limit) {
 				searchStr = searchText + "%";
-				List<Contact> searchContactList2 = DbCacheUtils.getDb(context).findAll(Selector
-						.from(Contact.class)
+				List<Contact> searchContactList2 = DbCacheUtils.getDb(context).selector
+						(Contact.class)
 						.where("type", "=", "user")
 						.and(WhereBuilder.b("pinyin", "like", searchStr)
 								.or("realName", "like", searchStr)
 								.or("globalName", "like", searchStr)
 								.or("code", "like", searchStr))
 						.and(WhereBuilder.b().expr("id not in" +noInSql))
-						.limit(limit-searchContactList.size()));
+						.limit(limit-searchContactList.size()).findAll();
 				searchContactList.addAll(searchContactList.size(), searchContactList2);
 				noInSql = getNoInSql(noInSql,searchContactList);
 			}
 
 			if (limit == -1 || searchContactList.size() < limit) {
 				searchStr = "%" + searchText;
-				List<Contact> searchContactList3 = DbCacheUtils.getDb(context).findAll(Selector
-						.from(Contact.class)
+				List<Contact> searchContactList3 = DbCacheUtils.getDb(context).selector
+						(Contact.class)
 						.where("type", "=", "user")
 						.and(WhereBuilder.b("pinyin", "like", searchStr)
 								.or("realName", "like", searchStr)
 								.or("globalName", "like", searchStr)
 								.or("code", "like", searchStr))
 						.and(WhereBuilder.b().expr("id not in" + noInSql))
-						.limit(limit-searchContactList.size()));
+						.limit(limit-searchContactList.size()).findAll();
 				searchContactList.addAll(searchContactList.size(), searchContactList3);
 				noInSql = getNoInSql(noInSql,searchContactList);
 			}
 
 			if (limit == -1 || searchContactList.size() < limit) {
 				searchStr = "%" + searchText + "%";
-				List<Contact> searchContactList4 = DbCacheUtils.getDb(context).findAll(Selector
-						.from(Contact.class)
+				List<Contact> searchContactList4 = DbCacheUtils.getDb(context).selector
+						(Contact.class)
 						.where("type", "=", "user")
 						.and(WhereBuilder.b("pinyin", "like", searchStr)
 								.or("realName", "like", searchStr)
 								.or("globalName", "like", searchStr)
 								.or("code", "like", searchStr))
 						.and(WhereBuilder.b().expr("id not in" +noInSql))
-						.limit(limit-searchContactList.size()));
+						.limit(limit-searchContactList.size()).findAll();
 				searchContactList.addAll(searchContactList.size(), searchContactList4);
 				noInSql = getNoInSql(noInSql,searchContactList);
 			}
@@ -359,15 +284,15 @@ public class ContactCacheUtils {
 						searchStr += "%" + searchText.charAt(i) + "%";
 					}
 				}
-				List<Contact> searchContactList5 = DbCacheUtils.getDb(context).findAll(Selector
-						.from(Contact.class)
+				List<Contact> searchContactList5 = DbCacheUtils.getDb(context).selector
+						(Contact.class)
 						.where("type", "=", "user")
 						.and(WhereBuilder.b("pinyin", "like", searchStr)
 								.or("realName", "like", searchStr)
 								.or("globalName", "like", searchStr)
 								.or("code", "like", searchStr))
 						.and(WhereBuilder.b().expr("id not in" + noInSql))
-						.limit(limit-searchContactList.size()));
+						.limit(limit-searchContactList.size()).findAll();
 				searchContactList.addAll(searchContactList.size(), searchContactList5);
 			}
 		} catch (Exception e) {
@@ -404,57 +329,6 @@ public class ContactCacheUtils {
 	}
 
 
-	/**
-	 * 获取用户名列表
-	 *
-	 * @param context
-	 * @param uidArray
-	 * @return
-	 */
-	public static JSONArray getUsersName(Context context, JSONArray uidArray) {
-		JSONArray jsonArray = new JSONArray();
-		try {
-
-			for (int i = 0; i < uidArray.length(); i++) {
-				Contact contact = DbCacheUtils.getDb(context).findFirst(Selector.from(Contact.class)
-						.where("inspurID", "=", uidArray.getString(i)));
-				String name = contact.getRealName();
-				jsonArray.put(i, name);
-			}
-		} catch (Exception e) {
-			// TODO: handle exception
-			e.printStackTrace();
-		}
-
-		return jsonArray;
-	}
-
-
-	/**
-	 * 获取用户名列表
-	 *
-	 * @param context
-	 * @param uidList
-	 * @return
-	 */
-	public static List<String> getUsersName(Context context, List<String> uidList) {
-		List<String> userNameList = new ArrayList<String>();
-		try {
-
-			for (int i = 0; i < uidList.size(); i++) {
-				Contact contact = DbCacheUtils.getDb(context).findFirst(Selector.from(Contact.class)
-						.where("inspurID", "=", uidList.get(i)));
-				String name = contact.getRealName();
-				userNameList.add(name);
-			}
-		} catch (Exception e) {
-			// TODO: handle exception
-			e.printStackTrace();
-		}
-
-		return userNameList;
-	}
-
 
 	/**
 	 * 获取用户名
@@ -466,9 +340,8 @@ public class ContactCacheUtils {
 	public static String getUserName(Context context, String uid) {
 		String name = "";
 		try {
-
-			Contact contact = DbCacheUtils.getDb(context).findFirst(Selector.from(Contact.class).where(
-					"inspurID", "=", uid));
+			Contact contact = DbCacheUtils.getDb(context).selector(Contact.class).where(
+					"inspurID", "=", uid).findFirst();
 			if (contact != null) {
 				name = contact.getRealName();
 			}
@@ -481,123 +354,7 @@ public class ContactCacheUtils {
 		return name;
 	}
 
-	/**
-	 * 获取用户名
-	 *
-	 * @param context
-	 * @param uid
-	 * @return
-	 */
-	public static String getUserInspurID(Context context, String uid) {
-		String inspurID = "";
-		try {
 
-			Contact contact = DbCacheUtils.getDb(context).findFirst(Selector.from(Contact.class).where(
-					"inspurID", "=", uid));
-			inspurID = contact.getInspurID();
-
-		} catch (Exception e) {
-			// TODO: handle exception
-			e.printStackTrace();
-		}
-
-		return inspurID;
-	}
-
-//	/**
-//	 * 通过id List获取contact对象的List
-//	 *
-//	 * @param context
-//	 * @param uidArray
-//	 * @return
-//	 */
-//	public static List<Contact> getUserList(Context context, JSONArray uidArray) {
-//		List<Contact> userList = new ArrayList<Contact>();
-//		try {
-//
-//			List<String> uidList = new ArrayList<String>();
-//			for (int i = 0; i < uidArray.length(); i++) {
-//				uidList.add(uidArray.getString(i));
-//			}
-//
-//			userList = DbCacheUtils.getDb(context).findAll(Selector.from(Contact.class).where("inspurID",
-//					"in", uidList));
-//		} catch (Exception e) {
-//			// TODO: handle exception
-//			e.printStackTrace();
-//
-//		}
-//		if (userList == null) {
-//			userList = new ArrayList<Contact>();
-//		}
-//		return userList;
-//
-//	}
-
-	/**
-	 * 通过id List获取PersonDto对象的List
-	 *
-	 * @param context
-	 * @param uidArray
-	 * @return
-	 */
-	public static List<PersonDto> getShowMemberList(Context context, JSONArray uidArray) {
-		List<String> uidList = new ArrayList<String>();
-		try {
-			for (int i = 0; i < uidArray.length(); i++) {
-				uidList.add(uidArray.getString(i));
-			}
-		} catch (Exception e) {
-			// TODO: handle exception
-			e.printStackTrace();
-
-		}
-		return getShowMemberList(context,uidList);
-	}
-
-
-//	/**
-//	 * 通过id List获取contact对象的List
-//	 *
-//	 * @param context
-//	 * @param uidList
-//	 * @return
-//	 */
-//	public static List<Contact> getUserList(Context context, List<String> uidList) {
-//		List<Contact> userList = new ArrayList<Contact>();
-//		List<Robot> robotList = new ArrayList<>();
-//		List<Contact> robot2UserList = new ArrayList<>();
-//		try {
-//			userList = DbCacheUtils.getDb(context).findAll(Selector.from(Contact.class).where("inspurID",
-//					"in", uidList));
-//			robotList = DbCacheUtils.getDb(context).findAll(Selector.from(Robot.class).where("id",
-//					"in", uidList));
-//		} catch (Exception e) {
-//			// TODO: handle exception
-//			e.printStackTrace();
-//
-//		}
-//		if(robotList !=null && (robotList.size() > 0)){
-//			LogUtils.YfcDebug("执行查询机器人");
-//			for(int i = 0; i < robotList.size(); i++){
-//				Contact contact = new Contact();
-//				Robot robot = robotList.get(i);
-//				contact.setId(robot.getId());
-//				contact.setHead(robot.getAvatar());
-//				contact.setName(robot.getName());
-//				contact.setRealName("客服浪小花");
-//				contact.setPinyin("kefulangxiaohua");
-//				robot2UserList.add(contact);
-//			}
-//			userList.addAll(robot2UserList);
-//		}
-//		LogUtils.YfcDebug("最终返回的用户列表大小："+userList.size());
-//		if (userList == null) {
-//			userList = new ArrayList<Contact>();
-//		}
-//		return userList;
-//
-//	}
 
 
 	/**
@@ -612,10 +369,10 @@ public class ContactCacheUtils {
 		List<Robot> robotList = new ArrayList<>();
 		List<PersonDto> unitMemberList = new ArrayList<>();
 		try {
-			userList = DbCacheUtils.getDb(context).findAll(Selector.from(Contact.class).where("inspurID",
-					"in", uidList));
-			robotList = DbCacheUtils.getDb(context).findAll(Selector.from(Robot.class).where("id",
-					"in", uidList));
+			userList = DbCacheUtils.getDb(context).selector(Contact.class).where("inspurID",
+					"in", uidList).findAll();
+			robotList = DbCacheUtils.getDb(context).selector(Robot.class).where("id",
+					"in", uidList).findAll();
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
@@ -720,8 +477,8 @@ public class ContactCacheUtils {
 
 			for (int i = 0; i < uidArray.length(); i++) {
 				String uid = uidArray.getString(i);
-				Contact contact = DbCacheUtils.getDb(context).findFirst(Selector.from(Contact.class)
-						.where("inspurID", "=", uid));
+				Contact contact = DbCacheUtils.getDb(context).selector(Contact.class)
+						.where("inspurID", "=", uid).findFirst();
 				if (contact != null) {
 					String name = contact.getRealName();
 					Map<String, String> userMap = new HashMap<String, String>();
@@ -752,9 +509,8 @@ public class ContactCacheUtils {
 	public static Contact getUserContact(Context context, String uid) {
 		Contact contact = null;
 		try {
-
-			contact = DbCacheUtils.getDb(context).findFirst(Selector.from(Contact.class).where("inspurID",
-					"=", uid));
+			contact = DbCacheUtils.getDb(context).selector(Contact.class).where("inspurID",
+					"=", uid).findFirst();
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
@@ -765,8 +521,8 @@ public class ContactCacheUtils {
 	public static Contact getStructContact(Context context, String structId) {
 		Contact contact = null;
 		try {
-			contact = DbCacheUtils.getDb(context).findFirst(Selector.from(Contact.class).where("id",
-					"=", structId).and("type", "!=", "user"));
+			contact = DbCacheUtils.getDb(context).selector(Contact.class).where("id",
+					"=", structId).and("type", "!=", "user").findFirst();
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
@@ -785,8 +541,8 @@ public class ContactCacheUtils {
 	public static Contact getContactByEmail(Context context, String email) {
 		Contact contact = null;
 		try {
-			contact = DbCacheUtils.getDb(context).findFirst(Selector.from(Contact.class).where("email",
-					"=", email));
+			contact = DbCacheUtils.getDb(context).selector(Contact.class).where("email",
+					"=", email).findFirst();
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();

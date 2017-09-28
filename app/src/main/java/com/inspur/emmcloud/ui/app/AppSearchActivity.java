@@ -67,8 +67,6 @@ public class AppSearchActivity extends BaseActivity {
      * 初始化views
      */
     private void initViews() {
-        ((MyApplication) getApplicationContext())
-                .addActivity(AppSearchActivity.this);
         searchEdit = (ClearEditText) findViewById(R.id.search_edit);
         searchEdit.setOnEditorActionListener(onEditorActionListener);
         searchListView = (ListView) findViewById(R.id.search_app_list);
@@ -86,7 +84,7 @@ public class AppSearchActivity extends BaseActivity {
                         intent.setClass(getApplicationContext(),
                                 AppDetailActivity.class);
                         intent.putExtra("app",
-                                searchAppList.get(position - 1));
+                                searchAppList.get(position));
                         startActivity(intent);
                     }
                 });

@@ -23,5 +23,9 @@ public class BaseFragmentActivity extends FragmentActivity {
         super.onActivityResult(requestCode, resultCode, data);
         ((MyApplication) getApplicationContext()).setIsActive(true);
     }
-
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        ((MyApplication)getApplicationContext()).removeActivity(this);
+    }
 }

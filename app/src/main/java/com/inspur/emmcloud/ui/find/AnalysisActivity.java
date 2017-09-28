@@ -35,7 +35,6 @@ public class AnalysisActivity extends BaseActivity {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_analysis);
-		((MyApplication) getApplicationContext()).addActivity(this);
 
 		analysisList.add(new AnalysisModel(getString(R.string.travel_analysis)));
 		analysisListView = (ListView) findViewById(R.id.analysis_list);

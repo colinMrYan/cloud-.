@@ -15,6 +15,17 @@ import java.io.InputStream;
  */
 public class MarkDown {
 
+    public static String fromMarkdown(String source){
+        MarkDownParser parser = new MarkDownParser(source, new StyleBuilderImpl(null, null));
+        try {
+            Spanned spanned =  parser.parse();
+            return spanned.toString();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return source;
+    }
+
     /**
      * 解析markdown文本并返回spanned
      *

@@ -1,15 +1,12 @@
 package com.inspur.emmcloud.util;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
 
-import com.inspur.emmcloud.bean.Channel;
 import com.inspur.emmcloud.bean.ChannelOperationInfo;
-import com.lidroid.xutils.db.sqlite.Selector;
-import com.lidroid.xutils.db.sqlite.WhereBuilder;
-import com.lidroid.xutils.db.table.DbModel;
+
+import org.xutils.db.sqlite.WhereBuilder;
 
 /**
  * 频道列表缓存处理类
@@ -48,7 +45,7 @@ public class ChannelOperationCacheUtils {
 					opInfo.setTopTime(System.currentTimeMillis());
 				}
 				DbCacheUtils.getDb(context).update(opInfo,
-						WhereBuilder.b("cid", "=", cid), "isSetTop",
+						 "isSetTop",
 						"setTopTime");
 			}
 
@@ -104,7 +101,7 @@ public class ChannelOperationCacheUtils {
 			} else {
 				opInfo.setIsHide(isChanelHide);
 				DbCacheUtils.getDb(context).update(opInfo,
-						WhereBuilder.b("cid", "=", cid), "isHide");
+						 "isHide");
 			}
 
 		} catch (Exception e) {
@@ -123,11 +120,10 @@ public class ChannelOperationCacheUtils {
 			Context context) {
 		List<ChannelOperationInfo> setTopChannelOpList = null;
 		try {
-			setTopChannelOpList = DbCacheUtils.getDb(context).findAll(
-					Selector.from(ChannelOperationInfo.class)
+			setTopChannelOpList = DbCacheUtils.getDb(context).selector(ChannelOperationInfo.class)
 							.where("isSetTop", "=", true)
 							.and("isHide", "=", false)
-							.orderBy("setTopTime", true));
+							.orderBy("setTopTime", true).findAll();
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
@@ -135,34 +131,6 @@ public class ChannelOperationCacheUtils {
 		return setTopChannelOpList;
 	}
 
-//	/**
-//	 * 获得置顶的频道列表
-//	 * 
-//	 * @param context
-//	 * @return
-//	 */
-//	public static List<Channel> getSetTopChannelList(Context context) {
-//		List<Channel> setTopChannelList = new ArrayList<Channel>();
-//		try {
-//			List<DbModel> dbModelList = DbCacheUtils.getDb(context)
-//					.findDbModelAll(
-//							Selector.from(ChannelOperationInfo.class)
-//									.select("cid").where("isSetTop", "=", true)
-//									.and("isHide", "=", false)
-//									.orderBy("setTopTime", true));
-//			for (int i = 0; i < dbModelList.size(); i++) {
-//				Channel channel = ChannelCacheUtils.getChannel(context,
-//						dbModelList.get(i).getString("cid"));
-//				if (channel != null) {
-//					setTopChannelList.add(channel);
-//				}
-//			}
-//		} catch (Exception e) {
-//			// TODO: handle exception
-//			e.printStackTrace();
-//		}
-//		return setTopChannelList;
-//	}
 
 	/**
 	 * 获取隐藏的频道操作信息列表
@@ -174,51 +142,13 @@ public class ChannelOperationCacheUtils {
 			Context context) {
 		List<ChannelOperationInfo> hideChannelOpList = null;
 		try {
-			hideChannelOpList = DbCacheUtils.getDb(context).findAll(
-					Selector.from(ChannelOperationInfo.class).where("isHide",
-							"=", true));
+			hideChannelOpList = DbCacheUtils.getDb(context).selector(ChannelOperationInfo.class).where("isHide",
+							"=", true).findAll();
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
 		}
 		return hideChannelOpList;
 	}
-
-//	/**
-//	 * 获取隐藏的频道列表
-//	 * 
-//	 * @param context
-//	 * @return
-//	 */
-//	public static List<Channel> getHideChannelList(Context context) {
-//		List<Channel> hideChannelList = new ArrayList<Channel>();
-//		try {
-//			List<DbModel> dbModelList = DbCacheUtils.getDb(context)
-//					.findDbModelAll(
-//							Selector.from(ChannelOperationInfo.class)
-//									.select("cid").where("isHide", "=", true));
-//
-//			for (int i = 0; i < dbModelList.size(); i++) {
-//				String cid = dbModelList.get(i).getString("cid");
-//				Channel channel = ChannelCacheUtils.getChannel(context, cid);
-//
-//				if (channel != null) {
-//					// 如果隐藏的频道中有未读消息则取消隐藏
-//					if (channel.getNewestMid() != null
-//							&& !MsgReadIDCacheUtils.isMsgHaveRead(context, cid,
-//									channel.getNewestMid())) {
-//						setChannelHide(context, cid, false);
-//					} else {
-//						hideChannelList.add(channel);
-//					}
-//				}
-//
-//			}
-//		} catch (Exception e) {
-//			// TODO: handle exception
-//			e.printStackTrace();
-//		}
-//		return hideChannelList;
-//	}
 
 }

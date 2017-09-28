@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Configuration;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Message;
 import android.view.KeyEvent;
@@ -51,6 +52,7 @@ import com.inspur.emmcloud.ui.app.MyAppFragment;
 import com.inspur.emmcloud.ui.chat.MessageFragment;
 import com.inspur.emmcloud.ui.find.FindFragment;
 import com.inspur.emmcloud.ui.mine.MoreFragment;
+import com.inspur.emmcloud.ui.mine.setting.LanguageChangeActivity;
 import com.inspur.emmcloud.ui.notsupport.NotSupportFragment;
 import com.inspur.emmcloud.ui.work.MainTabBean;
 import com.inspur.emmcloud.ui.work.WorkFragment;
@@ -76,6 +78,7 @@ import com.inspur.emmcloud.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.MyFragmentTabHost;
 import com.inspur.emmcloud.widget.WeakHandler;
+import com.inspur.emmcloud.widget.WeakThread;
 import com.inspur.emmcloud.widget.tipsview.TipsView;
 import com.inspur.reactnative.ReactNativeFlow;
 
@@ -94,9 +97,8 @@ import java.util.List;
  * @author Administrator
  */
 public class IndexActivity extends BaseFragmentActivity implements
-        OnTabChangeListener, OnTouchListener,CommonCallBack {
+        OnTabChangeListener, OnTouchListener, CommonCallBack, MyAppFragment.AppLanguageState {
     private static final int SYNC_ALL_BASE_DATA_SUCCESS = 0;
-    private static final int SYNC_CONTACT_SUCCESS = 1;
     private static final int CHANGE_TAB = 2;
     private static final int RELOAD_WEB = 3;
     private long lastBackTime;
@@ -119,14 +121,13 @@ public class IndexActivity extends BaseFragmentActivity implements
     private WebView webView;
     private boolean isCommunicationRunning = false;
     private boolean isSystemChangeTag = true;//控制如果是系统切换的tab则不计入用户行为
+    private ContactSaveTask contactSaveTask;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        LogUtils.jasonDebug("IndexActivity----crate-----------------");
         StateBarColor.changeStateBarColor(this);
         setContentView(R.layout.activity_index);
-        ((MyApplication) getApplicationContext()).addActivity(this);
         ((MyApplication) getApplicationContext()).setIndexActvityRunning(true);
         ((MyApplication) getApplicationContext()).closeAllDb();
         DbCacheUtils.initDb(getApplicationContext());
@@ -135,6 +136,7 @@ public class IndexActivity extends BaseFragmentActivity implements
         ((MyApplication) getApplicationContext()).startPush();
         init();
     }
+
     /**
      * 初始化
      */
@@ -179,12 +181,12 @@ public class IndexActivity extends BaseFragmentActivity implements
      * 初始化ReactNative
      */
     private void initReactNative() {
-        reactNativeCurrentPath = MyAppConfig.getReactAppFilePath(IndexActivity.this,userId,"discover");
+        reactNativeCurrentPath = MyAppConfig.getReactAppFilePath(IndexActivity.this, userId, "discover");
         if (checkClientIdNotExit()) {
             getReactNativeClientId();
         }
         if (!ReactNativeFlow.checkBundleFileIsExist(reactNativeCurrentPath + "/index.android.bundle")) {
-            ReactNativeFlow.initReactNative(IndexActivity.this,userId);
+            ReactNativeFlow.initReactNative(IndexActivity.this, userId);
         } else {
             updateReactNative();
         }
@@ -196,7 +198,7 @@ public class IndexActivity extends BaseFragmentActivity implements
     private void getReactNativeClientId() {
         AppAPIService appAPIService = new AppAPIService(IndexActivity.this);
         appAPIService.setAPIInterface(new WebService());
-        if (NetUtils.isNetworkConnected(IndexActivity.this,false)) {
+        if (NetUtils.isNetworkConnected(IndexActivity.this, false)) {
             appAPIService.getClientId(AppUtils.getMyUUID(IndexActivity.this), AppUtils.GetChangShang());
         }
     }
@@ -204,7 +206,7 @@ public class IndexActivity extends BaseFragmentActivity implements
     /**
      * 打开保活服务
      */
-    private void startCoreService(){
+    private void startCoreService() {
         Intent intent = new Intent();
         intent.setClass(this, CoreService.class);
         startService(intent);
@@ -213,11 +215,11 @@ public class IndexActivity extends BaseFragmentActivity implements
     /**
      * 为了使打开报销web应用更快，进行预加载
      */
-    private void setPreloadWebApp(){
-        if (UriUtils.tanent.equals("inspur_esg")){
+    private void setPreloadWebApp() {
+        if (UriUtils.tanent.equals("inspur_esg")) {
             webView = (WebView) findViewById(R.id.preload_webview);
             webView.getSettings().setJavaScriptEnabled(true);
-            webView.setWebViewClient(new WebViewClient(){
+            webView.setWebViewClient(new WebViewClient() {
                 @Override
                 public boolean shouldOverrideUrlLoading(WebView view, String url) {
                     // TODO Auto-generated method stub
@@ -226,12 +228,12 @@ public class IndexActivity extends BaseFragmentActivity implements
                 }
             });
             webView.loadUrl("http://baoxiao.inspur.com/loadres.html");
-            handler.sendEmptyMessageDelayed(RELOAD_WEB,1000);
+            handler.sendEmptyMessageDelayed(RELOAD_WEB, 1000);
         }
     }
 
-    public WeakHandler getHandler(){
-        return  handler;
+    public WeakHandler getHandler() {
+        return handler;
     }
 
 
@@ -250,9 +252,9 @@ public class IndexActivity extends BaseFragmentActivity implements
      */
     private void updateReactNative() {
         String clientId = PreferencesUtils.getString(IndexActivity.this, UriUtils.tanent + userId + "react_native_clientid", "");
-        StringBuilder describeVersionAndTime = FileUtils.readFile(reactNativeCurrentPath +"/bundle.json", "UTF-8");
+        StringBuilder describeVersionAndTime = FileUtils.readFile(reactNativeCurrentPath + "/bundle.json", "UTF-8");
         AndroidBundleBean androidBundleBean = new AndroidBundleBean(describeVersionAndTime.toString());
-        if (NetUtils.isNetworkConnected(IndexActivity.this,false)) {
+        if (NetUtils.isNetworkConnected(IndexActivity.this, false)) {
             appApiService.getReactNativeUpdate(androidBundleBean.getVersion(), androidBundleBean.getCreationDate(), clientId);
         }
     }
@@ -278,11 +280,12 @@ public class IndexActivity extends BaseFragmentActivity implements
         apiService.setAPIInterface(new WebService());
         if (NetUtils.isNetworkConnected(getApplicationContext(), false)) {
 //            apiService.getAppTabs();
-            String version = PreferencesByUserAndTanentUtils.getString(IndexActivity.this,"app_tabbar_version","");;
-            String clientid = PreferencesUtils.getString(IndexActivity.this, UriUtils.tanent + userId + "react_native_clientid","");
-            if(!StringUtils.isBlank(clientid)){
-                apiService.getAppNewTabs(version,clientid);
-            }else{
+            String version = PreferencesByUserAndTanentUtils.getString(IndexActivity.this, "app_tabbar_version", "");
+            ;
+            String clientid = PreferencesUtils.getString(IndexActivity.this, UriUtils.tanent + userId + "react_native_clientid", "");
+            if (!StringUtils.isBlank(clientid)) {
+                apiService.getAppNewTabs(version, clientid);
+            } else {
                 isGetTabFail = true;
                 getReactNativeClientId();
             }
@@ -316,16 +319,13 @@ public class IndexActivity extends BaseFragmentActivity implements
 
                         ((MyApplication) getApplicationContext())
                                 .setIsContactReady(true);
-                        sendCreatChannelGroupIconBroadCaset();
-                        break;
-                    case SYNC_CONTACT_SUCCESS:
-                        getAllChannelGroup();
+                        refreshSessionData();
                         break;
                     case CHANGE_TAB:
                         mTabHost.setCurrentTab(getTabIndex());
                         break;
                     case RELOAD_WEB:
-                        if (webView != null){
+                        if (webView != null) {
                             webView.reload();
                         }
                         break;
@@ -339,11 +339,11 @@ public class IndexActivity extends BaseFragmentActivity implements
     /**
      * 通讯录完成时发送广播
      */
-    private void sendCreatChannelGroupIconBroadCaset() {
+    private void refreshSessionData() {
         // TODO Auto-generated method stub
         //当通讯录完成时需要刷新头像
         Intent intent = new Intent("message_notify");
-        intent.putExtra("command", "sort_session_list");
+        intent.putExtra("command", "sync_all_base_data_success");
         sendBroadcast(intent);
 
     }
@@ -430,7 +430,7 @@ public class IndexActivity extends BaseFragmentActivity implements
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void updateTabBarLanguage(Language language) {
-        if(language != null){
+        if (language != null) {
             handleAppTabs();
         }
     }
@@ -443,42 +443,42 @@ public class IndexActivity extends BaseFragmentActivity implements
      */
     private MainTabBean[] handleAppTabs() {
         MainTabBean[] mainTabs = null;
-        String appTabs = PreferencesByUserAndTanentUtils.getString(IndexActivity.this,"app_tabbar_info_current","");
+        String appTabs = PreferencesByUserAndTanentUtils.getString(IndexActivity.this, "app_tabbar_info_current", "");
         if (!StringUtils.isBlank(appTabs)) {
             Configuration config = getResources().getConfiguration();
             String environmentLanguage = config.locale.getLanguage();
             AppTabAutoBean appTabAutoBean = new AppTabAutoBean(appTabs);
-            if(appTabAutoBean != null){
+            if (appTabAutoBean != null) {
                 EventBus.getDefault().post(appTabAutoBean);
             }
-            ArrayList<AppTabAutoBean.PayloadBean.TabsBean> appTabList = (ArrayList<AppTabAutoBean.PayloadBean.TabsBean>)appTabAutoBean.getPayload().getTabs();
+            ArrayList<AppTabAutoBean.PayloadBean.TabsBean> appTabList = (ArrayList<AppTabAutoBean.PayloadBean.TabsBean>) appTabAutoBean.getPayload().getTabs();
             if (appTabList != null && appTabList.size() > 0) {
                 mainTabs = new MainTabBean[appTabList.size()];
                 for (int i = 0; i < appTabList.size(); i++) {
                     if (appTabList.get(i).getComponent().equals("communicate")) {
-                        MainTabBean mainTabBean = new MainTabBean(i,R.string.communicate,R.drawable.selector_tab_message_btn,MessageFragment.class);
+                        MainTabBean mainTabBean = new MainTabBean(i, R.string.communicate, R.drawable.selector_tab_message_btn, MessageFragment.class);
                         mainTabBean.setCommpant(appTabList.get(i).getComponent());
-                        mainTabs[i] = internationalMainLanguage(appTabList.get(i),environmentLanguage,mainTabBean);
+                        mainTabs[i] = internationalMainLanguage(appTabList.get(i), environmentLanguage, mainTabBean);
                     } else if (appTabList.get(i).getComponent().equals("work")) {
                         MainTabBean mainTabBean = new MainTabBean(i, R.string.work, R.drawable.selector_tab_work_btn,
                                 WorkFragment.class);
-                        mainTabs[i] = internationalMainLanguage(appTabList.get(i),environmentLanguage,mainTabBean);
+                        mainTabs[i] = internationalMainLanguage(appTabList.get(i), environmentLanguage, mainTabBean);
                     } else if (appTabList.get(i).getComponent().equals("find")) {
                         MainTabBean mainTabBean = new MainTabBean(i, R.string.find, R.drawable.selector_tab_find_btn,
                                 FindFragment.class);
-                        mainTabs[i] = internationalMainLanguage(appTabList.get(i),environmentLanguage,mainTabBean);
+                        mainTabs[i] = internationalMainLanguage(appTabList.get(i), environmentLanguage, mainTabBean);
                     } else if (appTabList.get(i).getComponent().equals("application")) {
                         MainTabBean mainTabBean = new MainTabBean(i, R.string.application, R.drawable.selector_tab_app_btn,
                                 MyAppFragment.class);
-                        mainTabs[i] = internationalMainLanguage(appTabList.get(i),environmentLanguage,mainTabBean);
+                        mainTabs[i] = internationalMainLanguage(appTabList.get(i), environmentLanguage, mainTabBean);
                     } else if (appTabList.get(i).getComponent().equals("mine")) {
                         MainTabBean mainTabBean = new MainTabBean(i, R.string.mine, R.drawable.selector_tab_more_btn,
                                 MoreFragment.class);
-                        mainTabs[i] = internationalMainLanguage(appTabList.get(i),environmentLanguage,mainTabBean);
-                    }else{
+                        mainTabs[i] = internationalMainLanguage(appTabList.get(i), environmentLanguage, mainTabBean);
+                    } else {
                         MainTabBean mainTabBean = new MainTabBean(i, R.string.unknown, R.drawable.selector_tab_unknown_btn,
                                 NotSupportFragment.class);
-                        mainTabs[i] = internationalMainLanguage(appTabList.get(i),environmentLanguage,mainTabBean);
+                        mainTabs[i] = internationalMainLanguage(appTabList.get(i), environmentLanguage, mainTabBean);
                     }
                 }
             } else {
@@ -509,15 +509,15 @@ public class IndexActivity extends BaseFragmentActivity implements
 
                 handleTipsView(tabView);
             }
-            if(!StringUtils.isBlank(mainTab.getConfigureName())){
+            if (!StringUtils.isBlank(mainTab.getConfigureName())) {
                 tabText.setText(mainTab.getConfigureName());
-            }else{
+            } else {
                 tabText.setText(getString(mainTab.getResName()));
             }
-            if(!StringUtils.isBlank(mainTab.getConfigureIcon())){
-                ImageDisplayUtils imageDisplayUtils  = new ImageDisplayUtils(R.drawable.icon_empty_icon);
-                imageDisplayUtils.displayImage(tabImg,mainTab.getConfigureIcon());
-            }else{
+            if (!StringUtils.isBlank(mainTab.getConfigureIcon())) {
+                ImageDisplayUtils imageDisplayUtils = new ImageDisplayUtils(R.drawable.icon_empty_icon);
+                imageDisplayUtils.displayImage(tabImg, mainTab.getConfigureIcon());
+            } else {
                 tabImg.setImageResource(mainTab.getResIcon());
             }
             tab.setIndicator(tabView);
@@ -536,15 +536,15 @@ public class IndexActivity extends BaseFragmentActivity implements
         }
         int tabSize = tabs.length;
         int communicateLocation = -1;
-        for (int i = 0; i < tabSize; i++){
-            if(tabs[i].getCommpant().equals("communicate")){
+        for (int i = 0; i < tabSize; i++) {
+            if (tabs[i].getCommpant().equals("communicate")) {
                 communicateLocation = tabs[i].getIdx();
                 break;
             }
         }
-        if(communicateLocation != -1 && isCommunicationRunning == false){
+        if (communicateLocation != -1 && isCommunicationRunning == false) {
             mTabHost.setCurrentTab(communicateLocation);
-        }else {
+        } else {
             mTabHost.setCurrentTab(getTabIndex());
         }
     }
@@ -556,21 +556,23 @@ public class IndexActivity extends BaseFragmentActivity implements
             isCommunicationRunning = true;
             int targetTabIndex = getTabIndex();
             boolean isOpenNotify = getIntent().hasExtra("command") && getIntent().getStringExtra("command").equals("open_notification");
-            if (mTabHost!=null && mTabHost.getCurrentTab() != targetTabIndex && !isOpenNotify){
+            if (mTabHost != null && mTabHost.getCurrentTab() != targetTabIndex && !isOpenNotify) {
                 mTabHost.setCurrentTab(targetTabIndex);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     /**
      * 当没有数据的时候返回内容
+     *
      * @return
      */
     private MainTabBean[] addNoDataTabs() {
-        MainTabBean[] mainTabs = new MainTabBean[5];
-        MainTabBean mainTabBeanCommunicate = new MainTabBean(0,R.string.communicate,R.drawable.selector_tab_message_btn,
+        //无数据改为显示两个tab，数组变为2
+        MainTabBean[] mainTabs = new MainTabBean[2];
+        MainTabBean mainTabBeanCommunicate = new MainTabBean(0, R.string.communicate, R.drawable.selector_tab_message_btn,
                 MessageFragment.class);
         mainTabBeanCommunicate.setCommpant("communicate");
         MainTabBean mainTabBeanWork = new MainTabBean(1, R.string.work, R.drawable.selector_tab_work_btn,
@@ -581,38 +583,43 @@ public class IndexActivity extends BaseFragmentActivity implements
                 MyAppFragment.class);
         MainTabBean mainTabBeanMine = new MainTabBean(4, R.string.mine, R.drawable.selector_tab_more_btn,
                 MoreFragment.class);
-        mainTabs[0] = mainTabBeanCommunicate;
-        mainTabs[1] = mainTabBeanWork;
-        mainTabs[2] = mainTabBeanFind;
-        mainTabs[3] = mainTabBeanApp;
-        mainTabs[4] = mainTabBeanMine;
+//        mainTabs[0] = mainTabBeanCommunicate;
+//        mainTabs[1] = mainTabBeanWork;
+//        mainTabs[2] = mainTabBeanFind;
+//        mainTabs[3] = mainTabBeanApp;
+//        mainTabs[4] = mainTabBeanMine;
+        //无数据改为显示两个tab
+        mainTabs[0] = mainTabBeanApp;
+        mainTabs[1] = mainTabBeanMine;
         return mainTabs;
     }
 
     /**
      * 暴露当前页面标题接口
+     *
      * @return
      */
-    public String getNotSupportString(){
+    public String getNotSupportString() {
         return notSupportTitle;
     }
 
 
     /**
      * 根据语言设置tab，扩展语言从这里扩展
+     *
      * @param tabsBean
      * @param environmentLanguage
      * @return
      */
-    private MainTabBean internationalMainLanguage(AppTabAutoBean.PayloadBean.TabsBean tabsBean, String environmentLanguage,MainTabBean mainTab) {
-        if(environmentLanguage.toLowerCase().equals("zh")||environmentLanguage.toLowerCase().equals("zh-Hans".toLowerCase())){
+    private MainTabBean internationalMainLanguage(AppTabAutoBean.PayloadBean.TabsBean tabsBean, String environmentLanguage, MainTabBean mainTab) {
+        if (environmentLanguage.toLowerCase().equals("zh") || environmentLanguage.toLowerCase().equals("zh-Hans".toLowerCase())) {
             mainTab.setConfigureName(tabsBean.getTitle().getZhHans());
-        }else if(environmentLanguage.toLowerCase().equals("zh-Hant".toLowerCase())){
+        } else if (environmentLanguage.toLowerCase().equals("zh-Hant".toLowerCase())) {
             mainTab.setConfigureName(tabsBean.getTitle().getZhHant());
-        }else if(environmentLanguage.toLowerCase().equals("en-US".toLowerCase())||
-                environmentLanguage.toLowerCase().equals("en".toLowerCase())){
+        } else if (environmentLanguage.toLowerCase().equals("en-US".toLowerCase()) ||
+                environmentLanguage.toLowerCase().equals("en".toLowerCase())) {
             mainTab.setConfigureName(tabsBean.getTitle().getEnUS());
-        }else{
+        } else {
             mainTab.setConfigureName(tabsBean.getTitle().getZhHans());
         }
         return mainTab;
@@ -620,9 +627,10 @@ public class IndexActivity extends BaseFragmentActivity implements
 
     /**
      * 处理小红点的逻辑
+     *
      * @param tabView
      */
-    private void handleTipsView(View tabView){
+    private void handleTipsView(View tabView) {
         newMessageTipsText = (TextView) tabView
                 .findViewById(R.id.new_message_tips_text);
         newMessageTipsLayout = (RelativeLayout) tabView.findViewById(R.id.new_message_tips_layout);
@@ -657,7 +665,7 @@ public class IndexActivity extends BaseFragmentActivity implements
      */
     private int getTabIndex() {
         int tabIndex = 0;
-        String appTabs = PreferencesByUserAndTanentUtils.getString(IndexActivity.this,"app_tabbar_info_current","");
+        String appTabs = PreferencesByUserAndTanentUtils.getString(IndexActivity.this, "app_tabbar_info_current", "");
         ArrayList<AppTabAutoBean.PayloadBean.TabsBean> appTabList;
         if (!StringUtils.isBlank(appTabs)) {
             appTabList = (ArrayList<AppTabAutoBean.PayloadBean.TabsBean>) new AppTabAutoBean(appTabs).getPayload().getTabs();
@@ -674,7 +682,6 @@ public class IndexActivity extends BaseFragmentActivity implements
         }
         return tabIndex;
     }
-
 
 
     /**
@@ -698,27 +705,6 @@ public class IndexActivity extends BaseFragmentActivity implements
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        LogUtils.jasonDebug("onDestroy-----------");
-        ((MyApplication) getApplicationContext()).setIndexActvityRunning(false);
-        if (handler != null){
-            handler = null;
-        }
-        if (newMessageTipsText != null) {
-            newMessageTipsText = null;
-        }
-        if (newMessageTipsLayout != null) {
-            newMessageTipsLayout = null;
-        }
-        if(reactNativeReceiver != null){
-            unregisterReceiver(reactNativeReceiver);
-            reactNativeReceiver = null;
-        }
-        EventBus.getDefault().unregister(this);
-    }
-
-    @Override
     public boolean onTouch(View v, MotionEvent event) {
         super.onTouchEvent(event);
         boolean consumed = false;
@@ -732,7 +718,7 @@ public class IndexActivity extends BaseFragmentActivity implements
                 listener.onTabReselect();
                 consumed = true;
             }
-        }else {
+        } else {
             isSystemChangeTag = false;
         }
         return consumed;
@@ -747,10 +733,10 @@ public class IndexActivity extends BaseFragmentActivity implements
         } else {
             tipsView.setCanTouch(false);
         }
-        if(tabId.equals(getString(R.string.find))){
+        if (tabId.equals(getString(R.string.find))) {
             updateReactNative();
         }
-        if(!isSystemChangeTag){
+        if (!isSystemChangeTag) {
             recordOpenTab(tabId);
             isSystemChangeTag = true;
         }
@@ -758,24 +744,25 @@ public class IndexActivity extends BaseFragmentActivity implements
 
     /**
      * 记录打开的tab页
+     *
      * @param tabId
      */
     private void recordOpenTab(String tabId) {
-        if(tabId.equals(getString(R.string.communicate))){
+        if (tabId.equals(getString(R.string.communicate))) {
             tabId = "communicate";
-        }else if(tabId.equals(getString(R.string.work))){
+        } else if (tabId.equals(getString(R.string.work))) {
             tabId = "work";
-        }else if(tabId.equals(getString(R.string.find))){
+        } else if (tabId.equals(getString(R.string.find))) {
             tabId = "find";
-        }else if(tabId.equals(getString(R.string.application))){
+        } else if (tabId.equals(getString(R.string.application))) {
             tabId = "application";
-        }else if(tabId.equals(getString(R.string.mine))){
+        } else if (tabId.equals(getString(R.string.mine))) {
             tabId = "mine";
-        }else{
+        } else {
             tabId = "";
         }
-        PVCollectModel pvCollectModel = new PVCollectModel(tabId,tabId);
-        PVCollectModelCacheUtils.saveCollectModel(IndexActivity.this,pvCollectModel);
+        PVCollectModel pvCollectModel = new PVCollectModel(tabId, tabId);
+        PVCollectModelCacheUtils.saveCollectModel(IndexActivity.this, pvCollectModel);
     }
 
     private Fragment getCurrentFragment() {
@@ -788,8 +775,8 @@ public class IndexActivity extends BaseFragmentActivity implements
      */
     private void updateSplashPage() {
         //这里并不是实时更新所以不加dialog
-        if (NetUtils.isNetworkConnected(IndexActivity.this,false)) {
-            String splashInfo = PreferencesByUserAndTanentUtils.getString(IndexActivity.this, "splash_page_info","");
+        if (NetUtils.isNetworkConnected(IndexActivity.this, false)) {
+            String splashInfo = PreferencesByUserAndTanentUtils.getString(IndexActivity.this, "splash_page_info", "");
             SplashPageBean splashPageBean = new SplashPageBean(splashInfo);
             String clientId = PreferencesUtils.getString(IndexActivity.this, UriUtils.tanent + ((MyApplication) getApplication()).getUid() + "react_native_clientid", "");
             if (!StringUtils.isBlank(clientId)) {
@@ -802,61 +789,111 @@ public class IndexActivity extends BaseFragmentActivity implements
         }
     }
 
+    //修改语言时状态接口
+    @Override
+    public boolean getAppLanguageState() {
+        if (getIntent().hasExtra(LanguageChangeActivity.LANGUAGE_CHANGE)) {
+            return getIntent().getBooleanExtra(LanguageChangeActivity.LANGUAGE_CHANGE, false);
+        }
+        return false;
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        ((MyApplication) getApplicationContext()).setIndexActvityRunning(false);
+        if (contactSaveTask != null && !contactSaveTask.isCancelled() && contactSaveTask.getStatus() == AsyncTask.Status.RUNNING) {
+            contactSaveTask.cancel(true);
+            contactSaveTask = null;
+        }
+        if (handler != null) {
+            handler = null;
+        }
+        if (newMessageTipsText != null) {
+            newMessageTipsText = null;
+        }
+        if (newMessageTipsLayout != null) {
+            newMessageTipsLayout = null;
+        }
+        if (reactNativeReceiver != null) {
+            unregisterReceiver(reactNativeReceiver);
+            reactNativeReceiver = null;
+        }
+        EventBus.getDefault().unregister(this);
+    }
+
+    class ContactSaveTask extends AsyncTask<GetAllContactResult, Void, Void> {
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            getAllChannelGroup();
+        }
+
+        @Override
+        protected Void doInBackground(GetAllContactResult... params) {
+            GetAllContactResult getAllContactResult = params[0];
+            List<Contact> allContactList = getAllContactResult
+                    .getAllContactList();
+            List<Contact> modifyContactLsit = getAllContactResult
+                    .getModifyContactList();
+            List<String> deleteContactIdList = getAllContactResult.getDeleteContactIdList();
+            ContactCacheUtils.saveContactList(getApplicationContext(),
+                    allContactList);
+            ContactCacheUtils.saveContactList(getApplicationContext(),
+                    modifyContactLsit);
+            ContactCacheUtils.deleteContact(IndexActivity.this, deleteContactIdList);
+            ContactCacheUtils.saveLastUpdateTime(getApplicationContext(),
+                    getAllContactResult.getLastUpdateTime());
+            ContactCacheUtils.saveLastUpdateunitID(IndexActivity.this, getAllContactResult.getUnitID());
+            return null;
+        }
+    }
 
     public class WebService extends APIInterfaceInstance {
 
         @Override
         public void returnAllContactSuccess(
                 final GetAllContactResult getAllContactResult) {
-            new Thread(new Runnable() {
-
-                @Override
-                public void run() {
-                    // TODO Auto-generated method stub
-                    List<Contact> allContactList = getAllContactResult
-                            .getAllContactList();
-                    List<Contact> modifyContactLsit = getAllContactResult
-                            .getModifyContactList();
-                    List<String> deleteContactIdList = getAllContactResult.getDeleteContactIdList();
-                    ContactCacheUtils.saveContactList(getApplicationContext(),
-                            allContactList);
-                    ContactCacheUtils.saveContactList(getApplicationContext(),
-                            modifyContactLsit);
-                    ContactCacheUtils.deleteContact(IndexActivity.this, deleteContactIdList);
-                    ContactCacheUtils.saveLastUpdateTime(getApplicationContext(),
-                            getAllContactResult.getLastUpdateTime());
-                    ContactCacheUtils.saveLastUpdateunitID(IndexActivity.this,getAllContactResult.getUnitID());
-                    if(handler != null){
-                        handler.sendEmptyMessage(SYNC_CONTACT_SUCCESS);
-                    }
-
-                }
-            }).start();
-
+            contactSaveTask = new ContactSaveTask();
+            contactSaveTask.execute(getAllContactResult);
         }
 
         @Override
-        public void returnAllContactFail(String error,int errorCode) {
+        public void returnAllContactFail(String error, int errorCode) {
             // TODO Auto-generated method stub
             getAllChannelGroup();
-            WebServiceMiddleUtils.hand(IndexActivity.this, error,errorCode);
+            WebServiceMiddleUtils.hand(IndexActivity.this, error, errorCode);
         }
 
         @Override
         public void returnSearchChannelGroupSuccess(
-                GetSearchChannelGroupResult getSearchChannelGroupResult) {
+                final GetSearchChannelGroupResult getSearchChannelGroupResult) {
             // TODO Auto-generated method stub
-            List<ChannelGroup> channelGroupList = getSearchChannelGroupResult
-                    .getSearchChannelGroupList();
-            ChannelGroupCacheUtils.clearChannelGroupList(getApplicationContext());
-            ChannelGroupCacheUtils.saveChannelGroupList(
-                    getApplicationContext(), channelGroupList);
-            handler.sendEmptyMessage(SYNC_ALL_BASE_DATA_SUCCESS);
+            WeakThread weakThread = new WeakThread(IndexActivity.this) {
+                @Override
+                public void run() {
+                    super.run();
+                    try {
+                        List<ChannelGroup> channelGroupList = getSearchChannelGroupResult
+                                .getSearchChannelGroupList();
+                        ChannelGroupCacheUtils.clearChannelGroupList(getApplicationContext());
+                        ChannelGroupCacheUtils.saveChannelGroupList(
+                                getApplicationContext(), channelGroupList);
+                        if (handler != null) {
+                            handler.sendEmptyMessage(SYNC_ALL_BASE_DATA_SUCCESS);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                }
+            };
+            weakThread.start();
         }
 
         @Override
-        public void returnSearchChannelGroupFail(String error,int errorCode) {
-            super.returnSearchChannelGroupFail(error,errorCode);
+        public void returnSearchChannelGroupFail(String error, int errorCode) {
+            super.returnSearchChannelGroupFail(error, errorCode);
             // 无论成功或者失败都返回成功都能进入应用
             handler.sendEmptyMessage(SYNC_ALL_BASE_DATA_SUCCESS);
         }
@@ -864,15 +901,20 @@ public class IndexActivity extends BaseFragmentActivity implements
 
         @Override
         public void returnAllRobotsSuccess(
-                GetAllRobotsResult getAllBotInfoResult) {
-            RobotCacheUtils.clearRobotList(IndexActivity.this);
-            RobotCacheUtils.saveOrUpdateRobotList(IndexActivity.this, getAllBotInfoResult.getRobotList());
+                final GetAllRobotsResult getAllBotInfoResult) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    RobotCacheUtils.clearRobotList(IndexActivity.this);
+                    RobotCacheUtils.saveOrUpdateRobotList(IndexActivity.this, getAllBotInfoResult.getRobotList());
+                }
+            }).start();
+
         }
 
         @Override
-        public void returnAllRobotsFail(String error,int errorCode) {
+        public void returnAllRobotsFail(String error, int errorCode) {
         }
-
 
 
         @Override
@@ -884,9 +926,9 @@ public class IndexActivity extends BaseFragmentActivity implements
         }
 
         @Override
-        public void returnReactNativeUpdateFail(String error,int errorCode) {
+        public void returnReactNativeUpdateFail(String error, int errorCode) {
             isReactNativeClientUpdateFail = true;
-            if(!checkClientIdNotExit()){
+            if (!checkClientIdNotExit()) {
                 getReactNativeClientId();
             }
         }
@@ -895,22 +937,22 @@ public class IndexActivity extends BaseFragmentActivity implements
         public void returnGetClientIdResultSuccess(GetClientIdRsult getClientIdRsult) {
             super.returnGetClientIdResultSuccess(getClientIdRsult);
             PreferencesUtils.putString(IndexActivity.this, UriUtils.tanent + userId + "react_native_clientid", getClientIdRsult.getClientId());
-            if(isReactNativeClientUpdateFail){
+            if (isReactNativeClientUpdateFail) {
                 updateReactNative();
                 isReactNativeClientUpdateFail = false;
             }
-            if(isGetTabFail){
+            if (isGetTabFail) {
                 getAppTabs();
                 isGetTabFail = false;
             }
-            if(isGetSplashFail){
+            if (isGetSplashFail) {
                 updateSplashPage();
                 isGetSplashFail = false;
             }
         }
 
         @Override
-        public void returnGetClientIdResultFail(String error,int errorCode) {
+        public void returnGetClientIdResultFail(String error, int errorCode) {
         }
 
         @Override
@@ -919,7 +961,7 @@ public class IndexActivity extends BaseFragmentActivity implements
         }
 
         @Override
-        public void returnAppTabAutoFail(String error,int errorCode) {
+        public void returnAppTabAutoFail(String error, int errorCode) {
         }
 
         @Override
@@ -932,7 +974,7 @@ public class IndexActivity extends BaseFragmentActivity implements
         public void returnSplashPageInfoFail(String error, int errorCode) {
             super.returnSplashPageInfoFail(error, errorCode);
             isGetTabFail = true;
-            if(!checkClientIdNotExit()){
+            if (!checkClientIdNotExit()) {
                 getReactNativeClientId();
             }
         }
@@ -949,14 +991,14 @@ public class IndexActivity extends BaseFragmentActivity implements
             String screenType = AppUtils.getScreenType(IndexActivity.this);
             SplashPageBean.PayloadBean.ResourceBean.DefaultBean defaultBean = splashPageBean.getPayload()
                     .getResource().getDefaultX();
-            if(screenType.equals("2k")){
-                downloadSplashPage(UriUtils.getPreviewUri(defaultBean.getXxxhdpi()),defaultBean.getXxxhdpi());
-            }else if(screenType.equals("xxhdpi")){
-                downloadSplashPage(UriUtils.getPreviewUri(defaultBean.getXxhdpi()),defaultBean.getXxhdpi());
-            }else if(screenType.equals("xhdpi")){
-                downloadSplashPage(UriUtils.getPreviewUri(defaultBean.getXhdpi()),defaultBean.getXhdpi());
-            }else{
-                downloadSplashPage(UriUtils.getPreviewUri(defaultBean.getHdpi()),defaultBean.getHdpi());
+            if (screenType.equals("2k")) {
+                downloadSplashPage(UriUtils.getPreviewUri(defaultBean.getXxxhdpi()), defaultBean.getXxxhdpi());
+            } else if (screenType.equals("xxhdpi")) {
+                downloadSplashPage(UriUtils.getPreviewUri(defaultBean.getXxhdpi()), defaultBean.getXxhdpi());
+            } else if (screenType.equals("xhdpi")) {
+                downloadSplashPage(UriUtils.getPreviewUri(defaultBean.getXhdpi()), defaultBean.getXhdpi());
+            } else {
+                downloadSplashPage(UriUtils.getPreviewUri(defaultBean.getHdpi()), defaultBean.getHdpi());
             }
         } else if (command.equals("ROLLBACK")) {
 //            ReactNativeFlow.moveFolder(MyAppConfig.getSplashPageImageLastVersionPath(IndexActivity.this,userId),
@@ -976,7 +1018,7 @@ public class IndexActivity extends BaseFragmentActivity implements
      * @param url
      */
     private void downloadSplashPage(String url, String fileName) {
-        LogUtils.YfcDebug("下载文件名称："+fileName);
+        LogUtils.YfcDebug("下载文件名称：" + fileName);
         DownLoaderUtils downloaderUtils = new DownLoaderUtils();
         LogUtils.YfcDebug("下载到的路径：" + MyAppConfig.getSplashPageImageShowPath(IndexActivity.this,
                 ((MyApplication) getApplication()).getUid(), "splash/" + fileName));
@@ -999,28 +1041,28 @@ public class IndexActivity extends BaseFragmentActivity implements
 
             @Override
             public void onSuccess(File file) {
-                String splashInfoOld = PreferencesByUserAndTanentUtils.getString(IndexActivity.this,"splash_page_info_old","");
+                String splashInfoOld = PreferencesByUserAndTanentUtils.getString(IndexActivity.this, "splash_page_info_old", "");
                 SplashPageBean splashPageBeanLocalOld = new SplashPageBean(splashInfoOld);
-                String splashInfoShowing = PreferencesByUserAndTanentUtils.getString(IndexActivity.this,"splash_page_info","");
+                String splashInfoShowing = PreferencesByUserAndTanentUtils.getString(IndexActivity.this, "splash_page_info", "");
                 SplashPageBean splashPageBeanLocalShowing = new SplashPageBean(splashInfoShowing);
-                if(file.exists()){
-                    String filelSha256 =  FileSafeCode.getFileSHA256(file);
+                if (file.exists()) {
+                    String filelSha256 = FileSafeCode.getFileSHA256(file);
                     String screenType = AppUtils.getScreenType(IndexActivity.this);
                     String sha256Code = "";
-                    if(screenType.equals("2k")){
+                    if (screenType.equals("2k")) {
                         sha256Code = splashPageBeanLocalShowing.getPayload().getXxxhdpiHash().split(":")[1];
-                    }else if(screenType.equals("xxhdpi")){
+                    } else if (screenType.equals("xxhdpi")) {
                         sha256Code = splashPageBeanLocalShowing.getPayload().getXxhdpiHash().split(":")[1];
-                    }else if(screenType.equals("xhdpi")){
+                    } else if (screenType.equals("xhdpi")) {
                         sha256Code = splashPageBeanLocalShowing.getPayload().getXhdpiHash().split(":")[1];
-                    }else{
+                    } else {
                         sha256Code = splashPageBeanLocalShowing.getPayload().getHdpiHash().split(":")[1];
                     }
-                    if(filelSha256.equals(sha256Code)){
-                        writeBackSplashPageLog("FORWARD",splashPageBeanLocalOld.getId().getVersion()
-                                ,splashPageBeanLocalShowing.getId().getVersion());
-                    }else {
-                        LogUtils.YfcDebug("Sha256验证出错："+filelSha256+"从更新信息获取到的sha256"+sha256Code);
+                    if (filelSha256.equals(sha256Code)) {
+                        writeBackSplashPageLog("FORWARD", splashPageBeanLocalOld.getId().getVersion()
+                                , splashPageBeanLocalShowing.getId().getVersion());
+                    } else {
+                        LogUtils.YfcDebug("Sha256验证出错：" + filelSha256 + "从更新信息获取到的sha256" + sha256Code);
                     }
 
                 }
@@ -1045,30 +1087,32 @@ public class IndexActivity extends BaseFragmentActivity implements
 
     /**
      * 写回闪屏日志
+     *
      * @param s
      */
-    private void writeBackSplashPageLog(String s,String preversion,String currentVersion) {
+    private void writeBackSplashPageLog(String s, String preversion, String currentVersion) {
         String clientId = PreferencesUtils.getString(IndexActivity.this, UriUtils.tanent + userId +
                 "react_native_clientid", "");
         ReactNativeAPIService reactNativeAPIService = new ReactNativeAPIService(IndexActivity.this);
         reactNativeAPIService.setAPIInterface(new WebService());
-        reactNativeAPIService.writeBackSplashPageVersionChange(preversion,currentVersion,clientId,s);
+        reactNativeAPIService.writeBackSplashPageVersionChange(preversion, currentVersion, clientId, s);
     }
 
     /**
      * 根据命令升级Tabbar
+     *
      * @param getAppTabAutoResult
      */
     private void updateTabbarWithOrder(GetAppTabAutoResult getAppTabAutoResult) {
         String command = getAppTabAutoResult.getCommand();
-        if(command.equals("FORWARD")){
-            PreferencesByUserAndTanentUtils.putString(IndexActivity.this,"app_tabbar_version",getAppTabAutoResult.getVersion());
-            PreferencesByUserAndTanentUtils.putString(IndexActivity.this,"app_tabbar_info_current",getAppTabAutoResult.getAppTabInfo());
+        if (command.equals("FORWARD")) {
+            PreferencesByUserAndTanentUtils.putString(IndexActivity.this, "app_tabbar_version", getAppTabAutoResult.getVersion());
+            PreferencesByUserAndTanentUtils.putString(IndexActivity.this, "app_tabbar_info_current", getAppTabAutoResult.getAppTabInfo());
             updateTabbar();
-        }else if(command.equals("STANDBY")){
+        } else if (command.equals("STANDBY")) {
 //            updateTabbar();
 //            LogUtils.YfcDebug("收到保持现状指令");
-        }else{
+        } else {
             LogUtils.YfcDebug("收到不支持的指令");
         }
     }
@@ -1076,7 +1120,7 @@ public class IndexActivity extends BaseFragmentActivity implements
     /**
      * 更新tabbar
      */
-    private void updateTabbar(){
+    private void updateTabbar() {
         mTabHost.clearAllTabs();
         handleAppTabs();
     }
@@ -1086,7 +1130,7 @@ public class IndexActivity extends BaseFragmentActivity implements
      */
     private void updateReactNativeWithOrder() {
         int state = ReactNativeFlow.checkReactNativeOperation(reactNativeUpdateBean.getCommand());
-        String reactNatviveTempPath = MyAppConfig.getReactTempFilePath(IndexActivity.this,userId);
+        String reactNatviveTempPath = MyAppConfig.getReactTempFilePath(IndexActivity.this, userId);
         if (state == ReactNativeFlow.REACT_NATIVE_RESET) {
             //删除current和temp目录，重新解压assets下的zip
             resetReactNative();
@@ -1094,13 +1138,13 @@ public class IndexActivity extends BaseFragmentActivity implements
         } else if (state == ReactNativeFlow.REACT_NATIVE_ROLLBACK) {
             //拷贝temp下的current到app内部current目录下
             File file = new File(reactNatviveTempPath);
-            if(file.exists()){
+            if (file.exists()) {
                 ReactNativeFlow.moveFolder(reactNatviveTempPath, reactNativeCurrentPath);
-                LogUtils.YfcDebug("回滚时temp："+reactNatviveTempPath);
-                LogUtils.YfcDebug("回滚时current："+reactNativeCurrentPath);
+                LogUtils.YfcDebug("回滚时temp：" + reactNatviveTempPath);
+                LogUtils.YfcDebug("回滚时current：" + reactNativeCurrentPath);
                 FileUtils.deleteFile(reactNatviveTempPath);
-            }else {
-                ReactNativeFlow.initReactNative(IndexActivity.this,userId);
+            } else {
+                ReactNativeFlow.initReactNative(IndexActivity.this, userId);
             }
             FindFragment.hasUpdated = true;
         } else if (state == ReactNativeFlow.REACT_NATIVE_FORWORD) {
@@ -1121,10 +1165,10 @@ public class IndexActivity extends BaseFragmentActivity implements
      * 重新整理目录恢复状态
      */
     private void resetReactNative() {
-        String reactNatviveTempPath = MyAppConfig.getReactTempFilePath(IndexActivity.this,userId);
+        String reactNatviveTempPath = MyAppConfig.getReactTempFilePath(IndexActivity.this, userId);
         FileUtils.deleteFile(reactNatviveTempPath);
         FileUtils.deleteFile(reactNativeCurrentPath);
-        ReactNativeFlow.initReactNative(IndexActivity.this,userId);
+        ReactNativeFlow.initReactNative(IndexActivity.this, userId);
     }
 
     /**

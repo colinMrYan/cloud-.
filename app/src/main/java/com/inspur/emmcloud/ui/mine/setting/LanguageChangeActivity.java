@@ -1,10 +1,5 @@
 package com.inspur.emmcloud.ui.mine.setting;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -33,6 +28,11 @@ import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.dialogs.EasyDialog;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+
 public class LanguageChangeActivity extends BaseActivity {
 
 	private static final int GET_LANGUAGE_SUCCESS = 3;
@@ -43,12 +43,12 @@ public class LanguageChangeActivity extends BaseActivity {
 	private Handler handler;
 	private List<Language> commonLanguageList = new ArrayList<Language>();
 	private LoadingDialog loadingDlg;
+	public static final String LANGUAGE_CHANGE = "change_language";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		((MyApplication) getApplicationContext()).addActivity(this);
 		setContentView(R.layout.activity_language_change);
 		listView = (ListView) findViewById(R.id.language_change_list);
 		loadingDlg = new LoadingDialog(this);
@@ -162,6 +162,7 @@ public class LanguageChangeActivity extends BaseActivity {
 							IndexActivity.class);
 					intentLog.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
 							| Intent.FLAG_ACTIVITY_CLEAR_TASK);
+					intentLog.putExtra(LANGUAGE_CHANGE,true);
 					startActivity(intentLog);
 
 				}

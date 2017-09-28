@@ -58,7 +58,6 @@ import com.inspur.emmcloud.widget.ScrollViewWithListView;
 import com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout;
 import com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout.OnRefreshListener;
 import com.inspur.emmcloud.widget.pullableview.PullableListView;
-import com.lidroid.xutils.exception.DbException;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -500,11 +499,11 @@ public class WorkFragment extends Fragment implements OnRefreshListener {
     private FestivalDate initFestivalDate() {
         FestivalDate festivalDate = null;
         try {
-            if (!DbCacheUtils.getDb(getActivity()).tableIsExist(FestivalDate.class)) {
+            if (!DbCacheUtils.tableIsExist("com_inspur_emmcloud_bean_FestivalDate")) {
                 FestivalCacheUtils.saveFestivalList(getActivity());
             }
             festivalDate = FestivalCacheUtils.getFestival(getActivity());
-        } catch (DbException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return festivalDate;

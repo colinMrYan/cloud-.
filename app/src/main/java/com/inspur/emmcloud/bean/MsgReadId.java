@@ -1,12 +1,14 @@
 package com.inspur.emmcloud.bean;
 
-import com.lidroid.xutils.db.annotation.Id;
-import com.lidroid.xutils.db.annotation.Table;
+
+import org.xutils.db.annotation.Column;
+import org.xutils.db.annotation.Table;
 
 @Table(name = "MsgReadId")
 public class MsgReadId {
-	@Id
+	@Column(name = "channelId",isId = true)
 	private String channelId = "";
+	@Column(name = "msgReadId")
 	private String msgReadId = ""; //已读最新消息的id
 	public MsgReadId(){
 		

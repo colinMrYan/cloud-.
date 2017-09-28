@@ -29,8 +29,6 @@ public class AppCenterMoreActivity extends BaseActivity{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_app_center_more);
 		initView();
-		((MyApplication) getApplicationContext())
-				.addActivity(AppCenterMoreActivity.this);
 	}
 
 	/**

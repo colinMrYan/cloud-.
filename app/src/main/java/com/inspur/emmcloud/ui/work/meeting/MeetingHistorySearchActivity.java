@@ -70,7 +70,6 @@ public class MeetingHistorySearchActivity extends BaseActivity implements
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		((MyApplication) getApplicationContext()).addActivity(this);
 		setContentView(R.layout.activity_meeting_history_search);
 		initViews();
 	}

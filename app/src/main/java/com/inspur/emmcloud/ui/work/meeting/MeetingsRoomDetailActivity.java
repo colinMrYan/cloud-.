@@ -76,7 +76,6 @@ public class MeetingsRoomDetailActivity extends BaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		((MyApplication) getApplicationContext()).addActivity(this);
 		setContentView(R.layout.activity_meeting_room_detail);
 		initView();
 		getMeetingList(true);

@@ -29,8 +29,8 @@ public class TimeUtils {
     //
     public static final SimpleDateFormat DATE_FORMAT_HOUR_MINUTE = new SimpleDateFormat(
             "HH:mm");
-    public static final SimpleDateFormat utcFormat = new SimpleDateFormat(
-            "yyyy-MM-dd'T'HH:mm:ss'.'SSS'Z'");
+//    public static final SimpleDateFormat utcFormat = new SimpleDateFormat(
+//            "yyyy-MM-dd'T'HH:mm:ss'.'SSS'Z'");
 
     public static final int FORMAT_DEFAULT_DATE = 1;
     public static final int FORMAT_YEAR_MONTH_DAY = 2;
@@ -327,6 +327,8 @@ public class TimeUtils {
      * @return
      */
     public static String UTCCalendar2UTCTimeString(Calendar UTCCalendar) {
+        SimpleDateFormat utcFormat = new SimpleDateFormat(
+                "yyyy-MM-dd'T'HH:mm:ss'.'SSS'Z'");
         TimeZone timezone = TimeZone.getTimeZone("Etc/GMT+0");
         utcFormat.setTimeZone(timezone);
         return Calendar2TimeString(UTCCalendar, utcFormat);
@@ -502,14 +504,13 @@ public class TimeUtils {
      * @return
      */
     public static long UTCString2Long(String UTCTime) {
+        SimpleDateFormat utcFormat = new SimpleDateFormat(
+                "yyyy-MM-dd'T'HH:mm:ss'.'SSS'Z'");
         long timeLong = 0L;
         try {
             TimeZone timezone = TimeZone.getTimeZone("Etc/GMT+0");
             utcFormat.setTimeZone(timezone);
-            Date date = new Date(utcFormat.parse(UTCTime).getTime());
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(date);
-            timeLong = calendar.getTimeInMillis();
+            timeLong = utcFormat.parse(UTCTime).getTime();
         } catch (ParseException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -813,7 +814,8 @@ public class TimeUtils {
         long timeLong = UTCString2Long(UTCStringTime);
         Calendar displayCalendar = Calendar.getInstance();
         displayCalendar.setTimeInMillis(timeLong);
-        return getDisplayTime(context, displayCalendar);
+        String time= getDisplayTime(context, displayCalendar);
+        return time;
 
     }
 
@@ -943,6 +945,8 @@ public class TimeUtils {
      * @return
      */
     public static Date UTCString2LocalDate(String UTCTime) {
+        SimpleDateFormat utcFormat = new SimpleDateFormat(
+                "yyyy-MM-dd'T'HH:mm:ss'.'SSS'Z'");
         SimpleDateFormat format = null;
         if (UTCTime.contains(".")) {
             String[] UTCTimeArray = UTCTime.split("\\.");

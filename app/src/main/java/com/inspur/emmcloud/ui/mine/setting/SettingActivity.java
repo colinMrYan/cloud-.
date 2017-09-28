@@ -37,7 +37,6 @@ public class SettingActivity extends BaseActivity {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
-        ((MyApplication) getApplicationContext()).addActivity(this);
         languageText = (TextView) findViewById(R.id.msg_languagechg_result_text);
         setLanguage();
         handMessage();
@@ -264,7 +263,7 @@ public class SettingActivity extends BaseActivity {
 //					ReactNativeFlow.deleteReactNativeInstallDir(MyAppConfig.getReactInstallPath(SettingActivity.this,userId));
                     ToastUtils.show(getApplicationContext(),
                             R.string.data_clear_success);
-                    ((MyApplication) getApplicationContext()).exit();
+                    //((MyApplication) getApplicationContext()).exit();
                     Intent intentLog = new Intent(SettingActivity.this,
                             IndexActivity.class);
                     intentLog.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK

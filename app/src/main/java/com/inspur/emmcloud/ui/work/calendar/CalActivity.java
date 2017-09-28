@@ -64,7 +64,6 @@ public class CalActivity extends BaseActivity implements OnRefreshListener {
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		((MyApplication) getApplicationContext()).addActivity(CalActivity.this);
 		setContentView(R.layout.activity_cal);
 		loadingDlg = new LoadingDialog(this);
 		apiService = new WorkAPIService(this);

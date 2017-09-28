@@ -52,7 +52,6 @@ public class MessionSetActivity extends BaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_mession_set);
-		((MyApplication) getApplicationContext()).addActivity(this);
 		initViews();
 		getTags();
 	}

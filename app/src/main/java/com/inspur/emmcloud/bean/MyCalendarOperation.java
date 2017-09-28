@@ -1,12 +1,14 @@
 package com.inspur.emmcloud.bean;
 
-import com.lidroid.xutils.db.annotation.Id;
-import com.lidroid.xutils.db.annotation.Table;
+
+import org.xutils.db.annotation.Column;
+import org.xutils.db.annotation.Table;
 
 @Table(name="MyCalendarOperation")
 public class MyCalendarOperation {
-	@Id
+	@Column(name = "myCalendarId",isId = true)
 	private String myCalendarId = "";
+	@Column(name = "isHide")
 	private boolean isHide = false;
 
 	public MyCalendarOperation() {

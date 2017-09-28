@@ -1,9 +1,9 @@
 package com.inspur.emmcloud.bean;
 
-import com.lidroid.xutils.db.annotation.Id;
-import com.lidroid.xutils.db.annotation.Table;
 
 import org.json.JSONObject;
+import org.xutils.db.annotation.Column;
+import org.xutils.db.annotation.Table;
 
 import java.io.Serializable;
 
@@ -14,13 +14,19 @@ import java.io.Serializable;
 
 @Table(name = "AppException")
 public class AppException implements Serializable {
-	@Id
+	@Column(name = "Id",isId = true)
 	private int Id;
+	@Column(name = "HappenTime")
 	private long HappenTime = 0L;
+	@Column(name = "AppVersion")
 	private String AppVersion = "";
+	@Column(name = "ErrorLevel")
 	private int ErrorLevel = 3;
+	@Column(name = "ErrorUrl")
 	private String ErrorUrl = "";
+	@Column(name = "ErrorInfo")
 	private String ErrorInfo = "";
+	@Column(name = "ErrorCode")
 	private int ErrorCode = -1;
 
 	public AppException() {

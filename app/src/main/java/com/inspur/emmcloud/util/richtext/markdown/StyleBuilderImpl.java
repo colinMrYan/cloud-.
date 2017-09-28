@@ -52,7 +52,11 @@ public class StyleBuilderImpl implements StyleBuilder {
     public StyleBuilderImpl(TextView textView, Html.ImageGetter imageGetter) {
         this.textViewWeakReference = new WeakReference<>(textView);
         this.imageGetter = imageGetter;
-        int textColor = textView.getCurrentTextColor();
+        //Jason修改 防止textview为空的时候报错
+        int textColor = Color.parseColor("#333333");
+        if (textView != null){
+            textColor = textView.getCurrentTextColor();
+        }
         h1_color = textColor;
         h6_color = textColor;
         quota_color = textColor;

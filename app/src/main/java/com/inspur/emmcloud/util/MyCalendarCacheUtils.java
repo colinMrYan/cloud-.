@@ -29,8 +29,8 @@ public class MyCalendarCacheUtils {
 			if (myCalendarList == null || myCalendarList.size() == 0) {
 				return;
 			}
-			DbCacheUtils.getDb(context).deleteAll(MyCalendar.class);
-			DbCacheUtils.getDb(context).saveOrUpdateAll(myCalendarList);
+			DbCacheUtils.getDb(context).delete(MyCalendar.class);
+			DbCacheUtils.getDb(context).saveOrUpdate(myCalendarList);
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();

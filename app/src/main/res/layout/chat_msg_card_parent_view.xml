@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingBottom="7dp"
@@ -55,7 +54,7 @@
                 android:layout_alignParentRight="true"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
-                android:singleLine="true"
+                android:maxLines="1"
                 android:text="@string/comment"
                 android:textColor="#1596d2"
                 android:textSize="@dimen/content_normal_textsize"
@@ -67,7 +66,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="6dp"
                 android:layout_marginLeft="5dp"
-                android:singleLine="true"
+                android:maxLines="1"
                 android:textColor="#666666"
                 android:textSize="@dimen/content_normal_textsize" />
 

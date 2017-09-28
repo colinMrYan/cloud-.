@@ -18,7 +18,6 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.WorkAPIService;
-import com.inspur.emmcloud.bean.GetBookingRoomResult;
 import com.inspur.emmcloud.bean.GetIsAdmin;
 import com.inspur.emmcloud.bean.SearchModel;
 import com.inspur.emmcloud.config.MyAppConfig;
@@ -72,7 +71,6 @@ public class MeetingBookingActivity extends BaseActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		((MyApplication) getApplicationContext()).addActivity(this);
 		setContentView(R.layout.activity_meeting_booking);
 		initViews();
 		getIsAdmin();
@@ -454,18 +452,17 @@ public class MeetingBookingActivity extends BaseActivity {
 		}
 	}
 
-	class WebService extends APIInterfaceInstance {
-		@Override
-		public void returnBookingRoomSuccess(
-				GetBookingRoomResult getBookingRoomResult) {
-			if (loadingDlg != null && loadingDlg.isShowing() ) {
-				loadingDlg.dismiss();
-			}
-			ToastUtils.show(MeetingBookingActivity.this,
-					getString(R.string.meeting_booking_success));
-			setBroadCast();
-			MeetingBookingActivity.this.finish();
-		}
+    class WebService extends APIInterfaceInstance {
+        @Override
+        public void returnBookingRoomSuccess() {
+            if (loadingDlg != null && loadingDlg.isShowing()) {
+                loadingDlg.dismiss();
+            }
+            ToastUtils.show(MeetingBookingActivity.this,
+                    getString(R.string.meeting_booking_success));
+            setBroadCast();
+            MeetingBookingActivity.this.finish();
+        }
 
 		@Override
 		public void returnBookingRoomFail(String error,int errorCode) {

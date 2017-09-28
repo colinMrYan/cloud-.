@@ -145,7 +145,6 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.setClass(this, LoginActivity.class);
         startActivity(intent);
-        exit();
     }
 /****************************通知相关（极光和华为推送）******************************************/
     /**
@@ -278,6 +277,15 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
      */
     public void setIsActive(boolean isActive) {
         this.isActive = isActive;
+        if(webSocketPush != null){
+            if(isActive){
+                webSocketPush.sendActivedMsg();
+
+            }else{
+                webSocketPush.sendFrozenMsg();
+            }
+        }
+        clearNotification();
     }
 
     public boolean getIsActive() {
@@ -360,24 +368,6 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
 
     public WebSocketPush getWebSocketPush() {
         return webSocketPush;
-    }
-
-    /**
-     * WebScoket发送应用切到前台信息
-     */
-    public void sendActivedWSMsg() {
-        if (webSocketPush != null) {
-            webSocketPush.sendActivedMsg();
-        }
-    }
-
-    /**
-     * WebScoket发送应用切到后台信息
-     */
-    public void sendFrozenWSMsg() {
-        if (webSocketPush != null) {
-            webSocketPush.sendFrozenMsg();
-        }
     }
 
     /******************************租户信息*******************************************/
@@ -655,6 +645,10 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         activityList.add(activity);
     }
 
+    public void removeActivity(Activity activity){
+        activityList.remove(activity);
+    }
+
     /**
      * exit Activity
      **/
@@ -664,9 +658,11 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
                 if (activity != null)
                     activity.finish();
             }
+            activityList.clear();
         } catch (Exception e) {
             LogUtils.exceptionDebug(TAG, e.toString());
         }
+        setIsActive(false);
     }
 
     @Override
@@ -711,5 +707,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
     public ReactNativeHost getReactNativeHost() {
         return mReactNativeHost;
     }
+
+
 
 }

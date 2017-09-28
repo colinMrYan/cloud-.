@@ -94,7 +94,6 @@ public class ChannelMsgDetailActivity extends BaseActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_channel_msg_detail);
-        ((MyApplication) getApplicationContext()).addActivity(this);
         initView();
         initData();
     }
@@ -324,12 +323,12 @@ public class ChannelMsgDetailActivity extends BaseActivity implements
      */
     private void disPlayCommonInfo() {
         //机器人进群修改处
-        if(msg.getUid().startsWith("BOT")){
+        if (msg.getUid().startsWith("BOT")) {
             String iconUrl = UriUtils.getRobotIconUri(RobotCacheUtils
                     .getRobotById(ChannelMsgDetailActivity.this, msg.getUid())
                     .getAvatar());
-            imageDisplayUtils.displayImage(senderHeadImg,iconUrl);
-        }else{
+            imageDisplayUtils.displayImage(senderHeadImg, iconUrl);
+        } else {
             imageDisplayUtils.displayImage(senderHeadImg,
                     UriUtils.getChannelImgUri(ChannelMsgDetailActivity.this, msg.getUid()));
         }
@@ -456,7 +455,7 @@ public class ChannelMsgDetailActivity extends BaseActivity implements
                     .findViewById(R.id.name_text);
             TextView sendTimeText = (TextView) convertView
                     .findViewById(R.id.commentdetail_time_text);
-            TextView contentText = (TextView) convertView
+            final TextView contentText = (TextView) convertView
                     .findViewById(R.id.comment_text);
             ImageView photoImg = (ImageView) convertView
                     .findViewById(R.id.msg_img);
@@ -480,12 +479,12 @@ public class ChannelMsgDetailActivity extends BaseActivity implements
 
             //机器人进群修改处
             ImageDisplayUtils imageDisplayUtils = new ImageDisplayUtils(R.drawable.icon_person_default);
-            if(comment.getUid().startsWith("BOT")){
+            if (comment.getUid().startsWith("BOT")) {
                 String iconUrl = UriUtils.getRobotIconUri(RobotCacheUtils
                         .getRobotById(ChannelMsgDetailActivity.this, comment.getUid())
                         .getAvatar());
-                imageDisplayUtils.displayImage(photoImg,iconUrl);
-            }else{
+                imageDisplayUtils.displayImage(photoImg, iconUrl);
+            } else {
                 imageDisplayUtils.displayImage(photoImg,
                         UriUtils.getChannelImgUri(ChannelMsgDetailActivity.this, comment.getUid()));
             }
@@ -509,9 +508,9 @@ public class ChannelMsgDetailActivity extends BaseActivity implements
         Bundle bundle = new Bundle();
         bundle.putString("uid", uid);
         //机器人进群修改处
-        if(uid.startsWith("BOT")){
-            IntentUtils.startActivity(ChannelMsgDetailActivity.this, RobotInfoActivity.class,bundle);
-        }else{
+        if (uid.startsWith("BOT")) {
+            IntentUtils.startActivity(ChannelMsgDetailActivity.this, RobotInfoActivity.class, bundle);
+        } else {
             IntentUtils.startActivity(ChannelMsgDetailActivity.this,
                     UserInfoActivity.class, bundle);
         }
