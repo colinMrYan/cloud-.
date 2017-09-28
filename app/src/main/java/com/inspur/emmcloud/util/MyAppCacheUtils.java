@@ -22,7 +22,6 @@ public class MyAppCacheUtils {
      */
     public static void saveMyAppList(Context context, List<AppGroupBean> appGroupList){
         String appList = new Gson().toJson(appGroupList);
-//        String appList = JSON.toJSONString(appGroupList);
         if(!appList.equals("null") && !StringUtils.isBlank(appList)){
             PreferencesByUserAndTanentUtils.putString(context,"my_app_list",appList);
         }
@@ -43,7 +42,6 @@ public class MyAppCacheUtils {
      */
     public static List<AppGroupBean> getMyApps(Context context){
         String appsString = PreferencesByUserAndTanentUtils.getString(context,"my_app_list","");
-//        List<AppGroupBean> appGroupList = JSON.parseArray(appsString,AppGroupBean.class);
         List<AppGroupBean> appGroupList = new Gson().fromJson(appsString,new TypeToken<ArrayList<AppGroupBean>>(){}.getType());
         return appGroupList;
     }
