@@ -38,6 +38,7 @@ public class DeviceRegisterFailDetailActivity extends BaseActivity {
 			bundle.putString("uri", "https://emm.inspur.com/mdm/loadForRegister?udid="+ AppUtils.getMyUUID(this));
 			intent.putExtras(bundle);
 			startActivity(intent);
+			finish();
 		}
 	}
 

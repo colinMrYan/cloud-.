@@ -56,7 +56,6 @@ public class GestureLoginActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         StateBarColor.changeStateBarColor(this, R.color.grey_f6f6f6);
-        ((MyApplication) getApplicationContext()).addActivity(this);
         x.view().inject(this);
         init();
 //        EventBus.getDefault().register(this);

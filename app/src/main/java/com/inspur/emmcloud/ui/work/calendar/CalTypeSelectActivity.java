@@ -34,8 +34,6 @@ public class CalTypeSelectActivity extends BaseActivity {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_cal_type_select);
-		((MyApplication) getApplicationContext())
-				.addActivity(this);
 		calendarListView = (ListView) findViewById(R.id.calendar_list);
 		initView();
 	}

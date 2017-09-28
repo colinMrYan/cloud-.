@@ -62,8 +62,6 @@ public class CaptchasLoginActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
-        ((MyApplication) getApplicationContext())
-                .addActivity(CaptchasLoginActivity.this);
         setContentView(R.layout.activity_captchas_login);
         InputMethodUtils.display(CaptchasLoginActivity.this, phoneNumEdit);
         phoneNumEdit = (EditText) findViewById(R.id.phone_num_edit);

@@ -373,7 +373,6 @@ public class ImpWebView extends WebView {
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
-			LogUtils.jasonDebug("onKeyDown---result="+(!(startOfHistory())));
 			return !(startOfHistory());
 		}
 		return super.onKeyDown(keyCode, event);

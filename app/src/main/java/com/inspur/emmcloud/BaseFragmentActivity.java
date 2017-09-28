@@ -20,6 +20,7 @@ public class BaseFragmentActivity extends FragmentActivity {
     @Override
     protected void onCreate(Bundle arg0) {
         super.onCreate(arg0);
+        ((MyApplication)getApplicationContext()).addActivity(this);
 
     }
 
@@ -104,5 +105,9 @@ public class BaseFragmentActivity extends FragmentActivity {
         super.onActivityResult(requestCode, resultCode, data);
         ((MyApplication) getApplicationContext()).setIsActive(true);
     }
-
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        ((MyApplication)getApplicationContext()).removeActivity(this);
+    }
 }

@@ -26,8 +26,6 @@ public class CalBrowseActivity extends BaseActivity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		((MyApplication) getApplicationContext())
-				.addActivity(CalBrowseActivity.this);
 		setContentView(R.layout.activity_calbrowse);
 		dayPickerView = (DayPickerView) findViewById(R.id.pickerView);
 		dayPickerView.setController(this);

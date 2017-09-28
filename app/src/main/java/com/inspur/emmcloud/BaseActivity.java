@@ -21,6 +21,7 @@ public class BaseActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
+        ((MyApplication)getApplicationContext()).addActivity(this);
         String className = this.getClass().getCanonicalName();
         if (!className.equals("com.inspur.imp.plugin.barcode.scan.CaptureActivity") &&!className.equals("com.inspur.imp.plugin.camera.mycamera.MyCameraActivity") ){
             StateBarColor.changeStateBarColor(this);
@@ -106,5 +107,11 @@ public class BaseActivity extends Activity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         ((MyApplication) getApplicationContext()).setIsActive(true);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        ((MyApplication)getApplicationContext()).removeActivity(this);
     }
 }

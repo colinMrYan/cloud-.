@@ -91,7 +91,6 @@ public class MeetingRoomListActivity extends BaseActivity implements
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		((MyApplication) getApplicationContext()).addActivity(this);
 		setContentView(R.layout.activity_meeting_rooms);
 		initViews();
 		getCommonOfficeSpace(true);

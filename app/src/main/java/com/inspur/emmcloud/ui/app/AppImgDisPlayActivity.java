@@ -33,7 +33,6 @@ public class AppImgDisPlayActivity extends BaseActivity {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_guide);
-		((MyApplication)getApplicationContext()).addActivity(AppImgDisPlayActivity.this);
 		initView();
 	}
 

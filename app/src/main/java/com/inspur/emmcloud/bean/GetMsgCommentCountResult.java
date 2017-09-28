@@ -11,7 +11,6 @@ import org.json.JSONObject;
 public class GetMsgCommentCountResult {
 	private int count = 0;
 	public GetMsgCommentCountResult(String response ){
-		LogUtils.jasonDebug("response="+response);
 		try {
 			JSONObject obj = new JSONObject(response);
 			if (obj.has("count")){

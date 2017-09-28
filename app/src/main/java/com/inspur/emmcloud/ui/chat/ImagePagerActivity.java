@@ -83,8 +83,6 @@ public class ImagePagerActivity extends BaseFragmentActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_image_pager);
 		this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);//设置全屏
-		((MyApplication) getApplicationContext())
-				.addActivity(this);
 		init();
 	}
 
