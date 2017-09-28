@@ -29,10 +29,6 @@ public class MsgReceiver extends BroadcastReceiver{
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		// TODO Auto-generated method stub
-//		String action = intent.getAction();
-//		if(action.equals(ACTION_NAME)){
-//			LogUtils.debug("yfcLog", intent.getStringExtra("push"));
-//		}
 		JSONObject jsonObject;
 		try {
 			jsonObject = new JSONObject(intent.getStringExtra("push"));

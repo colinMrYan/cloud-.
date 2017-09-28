@@ -340,8 +340,8 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
                         }
                         if (getNeedCommonlyUseApp()) {
                             saveOrChangeCommonlyUseAppList(app, appAdapterList);
+                            MyAppCacheUtils.saveMyAppList(getContext(),appAdapterList);
                         }
-                        MyAppCacheUtils.saveMyAppList(getContext(),appAdapterList);
                     }
                 }
             });

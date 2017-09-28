@@ -127,7 +127,6 @@ public class ImpActivity extends ImpBaseActivity {
                 findViewById(R.id.imp_change_font_size_btn).setVisibility(View.VISIBLE);
             }
             if (isZoomable == 1) {
-//                findViewById(R.id.imp_change_font_size_btn).setVisibility(View.VISIBLE);
                 int textSize = PreferencesByUsersUtils.getInt(ImpActivity.this, "app_crm_font_size_" + appId, MyAppWebConfig.NORMAL);
                 webView.getSettings().setTextZoom(textSize);
             }
@@ -350,8 +349,6 @@ public class ImpActivity extends ImpBaseActivity {
         biggestBtn.setTextColor((textSize==MyAppWebConfig.CRM_BIGGEST)?lightModeFontColor:blackFontColor);
     }
 
-
-
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         // TODO Auto-generated method stub
@@ -365,7 +362,6 @@ public class ImpActivity extends ImpBaseActivity {
         }
         return super.onKeyDown(keyCode, event);
     }
-
 
     @Override
     protected void onDestroy() {
