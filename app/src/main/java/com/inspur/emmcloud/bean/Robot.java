@@ -1,17 +1,23 @@
 package com.inspur.emmcloud.bean;
 
-import com.lidroid.xutils.db.annotation.Table;
 
 import org.json.JSONObject;
+import org.xutils.db.annotation.Column;
+import org.xutils.db.annotation.Table;
 
 @Table(name = "Robot")
 public class Robot {
-
+	@Column(name = "id",isId = true)
 	private String id = "";
+	@Column(name = "name")
 	private String name = "";
+	@Column(name = "avatar")
 	private String avatar = "";
+	@Column(name = "support")
 	private String support = "";
+	@Column(name = "title")
 	private String title = "";
+	@Column(name = "mode")
 	private String mode = "";
 	
 	public Robot(){}

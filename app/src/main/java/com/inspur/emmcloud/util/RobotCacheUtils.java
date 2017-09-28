@@ -3,7 +3,6 @@ package com.inspur.emmcloud.util;
 import android.content.Context;
 
 import com.inspur.emmcloud.bean.Robot;
-import com.lidroid.xutils.db.sqlite.Selector;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +25,7 @@ public class RobotCacheUtils {
 			return;
 		}
 		try {
-			DbCacheUtils.getDb(context).saveOrUpdateAll(robotList);
+			DbCacheUtils.getDb(context).saveOrUpdate(robotList);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -38,30 +37,12 @@ public class RobotCacheUtils {
 	 */
 	public static void clearRobotList(Context context){
 		try {
-			DbCacheUtils.getDb(context).deleteAll(Robot.class);
+			DbCacheUtils.getDb(context).delete(Robot.class);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	/**
-	 * 获取所有Robot
-	 * 
-	 * @return
-	 */
-	public static List<Robot> getRobotList(Context context) {
-		List<Robot> robotList = null;
-		try {
-			robotList = DbCacheUtils.getDb(context).findAll(
-					Selector.from(Robot.class));
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		if (robotList == null) {
-			robotList = new ArrayList<Robot>();
-		}
-		return robotList;
-	}
 
 	/**
 	 * 根据id获得机器人，如果为空到父方法处理
@@ -73,80 +54,12 @@ public class RobotCacheUtils {
 	public static Robot getRobotById(Context context, String id) {
 		Robot robot = null;
 		try {
-			robot = DbCacheUtils.getDb(context).findFirst(
-					Selector.from(Robot.class).where("id", "=", id));
+			robot = DbCacheUtils.getDb(context).selector(Robot.class).where("id", "=", id).findFirst();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return robot;
 	}
 
-	/**
-	 * 搜索robot，提供与通讯录同类型方法，
-	 * 传参数与通讯录相同，由于robot信息较少所以
-	 * @param context
-	 * @param searchString
-	 * @param currentId
-	 * @param offset
-	 * @param limit
-	 * @return
-	 */
-	public static List<Robot> getSearchRobotList(Context context,
-			String searchString, String currentId, int offset, int limit) {
-		List<Robot> robotList = null;
-		String search = "";
-		for (int i = 0; i < searchString.length(); i++) {
-			if (i < searchString.length() - 1) {
-				search = search + "%" + searchString.charAt(i);
-			} else {
-				search = search + "%" + searchString + "%";
-			}
-		}
-		try {
-			if (StringUtils.isBlank(currentId)) {
-				robotList = DbCacheUtils.getDb(context).findAll(
-						Selector.from(Robot.class)
-								.where("name", "like", search).offset(offset)
-								.limit(limit));
-			} else {
-				robotList = DbCacheUtils.getDb(context).findAll(
-						Selector.from(Robot.class)
-								.where("name", "like", search));
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		if (robotList == null) {
-			robotList = new ArrayList<Robot>();
-		}
-		return robotList;
-	}
-	
-	/**
-	 * 删除一个机器人
-	 * @param context
-	 * @param robotId
-	 */
-	public static void deleteRobotById(Context context,String robotId){
-		try {
-			DbCacheUtils.getDb(context).deleteById(Robot.class, robotId);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-	
-	/**
-	 * 删除一组机器人，参数是需要删除的Robot的Idlist
-	 * @param context
-	 * @param idList
-	 */
-	public static void deleteRobotByIdList(Context context,ArrayList<String> idList){
-		for (int i = 0; i < idList.size(); i++) {
-			try {
-				DbCacheUtils.getDb(context).deleteById(Robot.class, idList.get(i));
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-	}
+
 }

@@ -1,21 +1,8 @@
 package com.inspur.emmcloud.util;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-
-
-
-
 import android.content.Context;
 
-import com.inspur.emmcloud.bean.MyCalendar;
 import com.inspur.emmcloud.bean.MyCalendarOperation;
-import com.lidroid.xutils.DbUtils;
-import com.lidroid.xutils.DbUtils.DbUpgradeListener;
-import com.lidroid.xutils.db.sqlite.Selector;
-import com.lidroid.xutils.db.sqlite.WhereBuilder;
-import com.lidroid.xutils.db.table.Table;
 
 /**
  * 频道列表缓存处理类

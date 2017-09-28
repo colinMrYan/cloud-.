@@ -3,7 +3,6 @@ package com.inspur.emmcloud.util;
 import android.content.Context;
 
 import com.inspur.emmcloud.bean.AppException;
-import com.lidroid.xutils.DbUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +14,6 @@ import java.util.List;
  *
  */
 public class AppExceptionCacheUtils {
-	private static DbUtils db;
 
 
 	/**
@@ -60,7 +58,7 @@ public class AppExceptionCacheUtils {
 	 */
 	public static void clearAppException(Context context) {
 		try {
-			DbCacheUtils.getDb(context).deleteAll(AppException.class);
+			DbCacheUtils.getDb(context).delete(AppException.class);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
