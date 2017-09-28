@@ -51,7 +51,7 @@ public class PVCollectModelCacheUtils {
 	
 	public static void deleteAllCollectModel(Context context){
 		try {
-			DbCacheUtils.getDb(context).deleteAll(PVCollectModel.class);
+			DbCacheUtils.getDb(context).delete(PVCollectModel.class);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

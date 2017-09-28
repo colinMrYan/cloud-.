@@ -430,7 +430,7 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
             String cid = channelList.get(i).getCid();
             List<Msg> newMsgList = MsgCacheUtil.getHistoryMsgList(getActivity(), cid, "",
                     15);
-            channelList.get(i).setNewMsgList(newMsgList);
+            channelList.get(i).setNewMsgList(getActivity().getApplicationContext(),newMsgList);
         }
         return channelList;
     }
@@ -562,34 +562,6 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 
 
     }
-
-
-    /**
-     * 缓存从服务器获取的最新消息
-     *
-     * @param getNewMsgsResult
-     */
-    private void cacheNewMsgs(GetNewMsgsResult getNewMsgsResult) {
-        // TODO Auto-generated method stub
-        if (getNewMsgsResult != null) {
-            String myUid = ((MyApplication) getActivity().getApplicationContext()).getUid();
-            List<Channel> channelList = getCacheData();
-            for (int i = 0; i < channelList.size(); i++) {
-                String cid = channelList.get(i).getCid();
-                List<Msg> newMsgList = getNewMsgsResult.getNewMsgList(cid);
-                if (newMsgList.size() > 0) {
-                    MsgCacheUtil.saveMsgList(getActivity(), newMsgList, ""); // 获取的消息需要缓存
-                    // 当会话中最后一条消息为自己发出的时候，将此消息存入已读消息列表，解决最新消息为自己发出，仍识别为未读的问题
-                    if (newMsgList.get(newMsgList.size() - 1).getUid()
-                            .equals(myUid)) {
-                        MsgReadIDCacheUtils.saveReadedMsg(getActivity(), cid,
-                                newMsgList.get(newMsgList.size() - 1).getMid());
-                    }
-                }
-            }
-        }
-    }
-
 
     private void handMessage() {
         // TODO Auto-generated method stub
@@ -944,7 +916,7 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
             holder.channelTimeText.setText(TimeUtils.getDisplayTime(
                     getActivity(), channel.getLastUpdate()));
             holder.channelContentText.setText(channel
-                    .getNewestMsgContent(getActivity(), holder.channelContentText));
+                    .getNewMsgContent());
             TransHtmlToTextUtils.stripUnderlines(holder.channelContentText,
                     R.color.msg_content_color);
             boolean isHasUnReadMsg = (unReadCount != 0);

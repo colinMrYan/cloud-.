@@ -13,7 +13,6 @@ import com.inspur.emmcloud.api.APICallback;
 import com.inspur.emmcloud.api.APIInterface;
 import com.inspur.emmcloud.bean.Attachment;
 import com.inspur.emmcloud.bean.ChannelGroup;
-import com.inspur.emmcloud.bean.GetBookingRoomResult;
 import com.inspur.emmcloud.bean.GetCalendarEventsResult;
 import com.inspur.emmcloud.bean.GetCreateOfficeResult;
 import com.inspur.emmcloud.bean.GetIDResult;
@@ -393,8 +392,7 @@ public class WorkAPIService {
             @Override
             public void callbackSuccess(String arg0) {
                 // TODO Auto-generated method stub
-                apiInterface.returnBookingRoomSuccess(new GetBookingRoomResult(
-                        arg0));
+                apiInterface.returnBookingRoomSuccess();
             }
 
             @Override
@@ -490,8 +488,7 @@ public class WorkAPIService {
             @Override
             public void callbackSuccess(String arg0) {
                 // TODO Auto-generated method stub
-                apiInterface.returnBookingRoomSuccess(new GetBookingRoomResult(
-                        arg0));
+                apiInterface.returnBookingRoomSuccess();
             }
 
             @Override

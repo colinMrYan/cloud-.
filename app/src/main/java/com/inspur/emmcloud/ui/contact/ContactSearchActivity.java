@@ -327,8 +327,8 @@ public class ContactSearchActivity extends BaseActivity {
                     .get(position);
             openGroupTextList = openGroupTextList.subList(0, position);
             openContact(firstGroupTextModel.getId(),
-                    firstGroupTextModel.getName(),
-                    firstGroupTextModel.getFullPath());
+                    firstGroupTextModel.getName()
+            );
         }
     }
 
@@ -348,8 +348,7 @@ public class ContactSearchActivity extends BaseActivity {
                     getString(R.string.contact_exception));
             return;
         }
-        openContact(currentStruct.getId(), currentStruct.getName(),
-                currentStruct.getFullPath());
+        openContact(currentStruct.getId(), currentStruct.getName());
     }
 
     /**
@@ -358,12 +357,12 @@ public class ContactSearchActivity extends BaseActivity {
      * @param id
      * @param name
      */
-    private void openContact(String id, String name, String fullPath) {
+    private void openContact(String id, String name) {
         if (openGroupTextList.size() == 0) {
             openGroupTextList.add(new FirstGroupTextModel(
-                    getString(R.string.all), "", ""));
+                    getString(R.string.all), ""));
         }
-        openGroupTextList.add(new FirstGroupTextModel(name, id, fullPath));
+        openGroupTextList.add(new FirstGroupTextModel(name, id));
         openGroupContactList = ContactCacheUtils.getChildContactList(
                 getApplicationContext(), id);
         orginCurrentArea = SEARCH_CONTACT;
@@ -379,9 +378,9 @@ public class ContactSearchActivity extends BaseActivity {
         openGroupChannelList = ChannelGroupCacheUtils
                 .getAllChannelGroupList(getApplicationContext());
         openGroupTextList.add(new FirstGroupTextModel(getString(R.string.all),
-                "", ""));
+                ""));
         openGroupTextList.add(new FirstGroupTextModel(
-                getString(R.string.channel_group), "", ""));
+                getString(R.string.channel_group), ""));
         orginCurrentArea = SEARCH_CHANNELGROUP;
         isSearchSingle = true;
         displayOpenLayout();
@@ -622,7 +621,7 @@ public class ContactSearchActivity extends BaseActivity {
                 startActivityForResult(intent, SEARCH_MORE);
                 break;
             case R.id.pop_third_group_more_text:
-                FirstGroupTextModel groupTextModel = new FirstGroupTextModel(getString(R.string.origanization_struct), "", "");
+                FirstGroupTextModel groupTextModel = new FirstGroupTextModel(getString(R.string.origanization_struct), "");
                 List<FirstGroupTextModel> popGroupTextList = new ArrayList<>();
                 popGroupTextList.add(groupTextModel);
                 intent.putExtra("groupTextList",
@@ -880,7 +879,7 @@ public class ContactSearchActivity extends BaseActivity {
         popSecondGroupTextList.clear();
         if (list.size() == 0) {
             popSecondGroupTextList.add(new FirstGroupTextModel(
-                    getString(R.string.channel_group), "", ""));
+                    getString(R.string.channel_group), ""));
         } else {
             popSecondGroupTextList.addAll(list);
         }
@@ -899,7 +898,7 @@ public class ContactSearchActivity extends BaseActivity {
         popThirdGroupTextList.clear();
         if (list.size() == 0) {
             popThirdGroupTextList.add(new FirstGroupTextModel(
-                    getString(R.string.origanization_struct), "", ""));
+                    getString(R.string.origanization_struct), ""));
         } else {
             popThirdGroupTextList.addAll(list);
         }
@@ -1001,7 +1000,7 @@ public class ContactSearchActivity extends BaseActivity {
 
             }
             if (searchModel != null) {
-                displayImg(searchModel,viewHolder.photoImg);
+                displayImg(searchModel, viewHolder.photoImg);
             }
             if (searchModel != null && selectMemList.contains(searchModel)) {
                 viewHolder.selectedImg.setVisibility(View.VISIBLE);

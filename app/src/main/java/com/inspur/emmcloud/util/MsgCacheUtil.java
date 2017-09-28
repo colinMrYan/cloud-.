@@ -4,9 +4,8 @@ import android.content.Context;
 
 import com.inspur.emmcloud.bean.MatheSet;
 import com.inspur.emmcloud.bean.Msg;
-import com.lidroid.xutils.db.sqlite.Selector;
-import com.lidroid.xutils.db.sqlite.WhereBuilder;
-import com.lidroid.xutils.exception.DbException;
+
+import org.xutils.db.sqlite.WhereBuilder;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -29,19 +28,6 @@ public class MsgCacheUtil {
 		try {
 			
 			DbCacheUtils.getDb(context).saveOrUpdate(msg); // 存储消息
-			// String cid = msg.getCid();
-			// String msgStarId = msg.getMid();
-			// String channelMsgStar = PreferencesUtils.getString(context,
-			// "msgIDSet", "");
-			// if (!StringUtils.isBlank(channelMsgStar)) {
-			// JSONObject jsonObject = new JSONObject(channelMsgStar);
-			// if (jsonObject.has(cid)
-			// && !StringUtils.isBlank(jsonObject.getString(cid))) {
-			// msgStarId = jsonObject.getString(cid);
-			// }
-			// }
-			// MsgMatheSetCacheUtils.add(context, cid,
-			// new MatheSet(msgStarId, msg.getMid())); // 存储消息id片段
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -67,7 +53,7 @@ public class MsgCacheUtil {
 						return;
 					}
 					
-					DbCacheUtils.getDb(context).saveOrUpdateAll(msgList);
+					DbCacheUtils.getDb(context).saveOrUpdate(msgList);
 					MatheSet matheSet = new MatheSet();
 					if (StringUtils.isBlank(targetMsgId)) {
 						matheSet.setStart(msgList.get(0).getMid());
@@ -106,13 +92,13 @@ public class MsgCacheUtil {
 		try {
 			
 			if (StringUtils.isBlank(targetID)) {
-				msgList = DbCacheUtils.getDb(context).findAll(Selector.from(Msg.class)
+				msgList = DbCacheUtils.getDb(context).selector(Msg.class)
 						.where("cid", "=", channelID).orderBy("mid", true)
-						.limit(num));
+						.limit(num).findAll();
 			} else {
-				msgList = DbCacheUtils.getDb(context).findAll(Selector.from(Msg.class)
+				msgList = DbCacheUtils.getDb(context).selector(Msg.class)
 						.where("mid", "<", targetID).and("cid", "=", channelID)
-						.orderBy("mid", true).limit(num));
+						.orderBy("mid", true).limit(num).findAll();
 			}
 			if (msgList != null && msgList.size() > 1) {
 				Collections.reverse(msgList);
@@ -139,8 +125,8 @@ public class MsgCacheUtil {
 		Msg msg = null;
 		try {
 			
-			 msg = DbCacheUtils.getDb(context).findFirst(Selector.from(Msg.class)
-					.where("cid", "=", channelID).orderBy("mid", true));
+			 msg = DbCacheUtils.getDb(context).selector(Msg.class)
+					.where("cid", "=", channelID).orderBy("mid", true).findFirst();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -171,11 +157,13 @@ public class MsgCacheUtil {
 			}
 			long mathSetStart = matheSet.getStart();
 			// 此处获取count后减1，因为要获取targetID以前的数据不能包含自己
-			long continuousCount = DbCacheUtils.getDb(context).count(Selector
-					.from(Msg.class)
+			long continuousCount = DbCacheUtils.getDb(context).selector
+					(Msg.class)
 					.where("mid", "between",
 							new String[] { mathSetStart + "", targetId })
-					.and("mid", "!=", targetId).and("cid", "=", channelID));
+					.and("mid", "!=", targetId).and("cid", "=", channelID).count();
+
+
 			if (continuousCount >= num) {
 				return true;
 			}
@@ -218,8 +206,8 @@ public class MsgCacheUtil {
 		int count = 0;
 		try {
 			
-			count = (int) DbCacheUtils.getDb(context).count(Selector.from(Msg.class)
-					.where("mid", ">", mid).and("cid", "=", cid));
+			count = (int) DbCacheUtils.getDb(context).selector(Msg.class)
+					.where("mid", ">", mid).and("cid", "=", cid).count();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -252,11 +240,11 @@ public class MsgCacheUtil {
 		List<Msg> imgTypeMsgList = null;
 		try {
 
-			imgTypeMsgList = DbCacheUtils.getDb(context).findAll(Selector
-					.from(Msg.class)
+			imgTypeMsgList = DbCacheUtils.getDb(context).selector
+					(Msg.class)
 					.where("cid", "=", cid)
 					.and(WhereBuilder.b("type", "=", "image").or("type", "=",
-							"res_image")).orderBy("mid", desc));
+							"res_image")).orderBy("mid", desc).findAll();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -278,9 +266,9 @@ public class MsgCacheUtil {
 		List<Msg> fileTypeMsgList = null;
 		try {
 			
-			fileTypeMsgList = DbCacheUtils.getDb(context).findAll(Selector.from(Msg.class)
+			fileTypeMsgList = DbCacheUtils.getDb(context).selector(Msg.class)
 					.where("cid", "=", cid).and("type", "=", "res_file")
-					.orderBy("mid", true));
+					.orderBy("mid", true).findAll();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

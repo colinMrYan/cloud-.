@@ -3,8 +3,6 @@ package com.inspur.emmcloud.util;
 import android.content.Context;
 
 import com.inspur.emmcloud.bean.WorkSetting;
-import com.lidroid.xutils.DbUtils;
-import com.lidroid.xutils.db.sqlite.Selector;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +14,6 @@ import java.util.List;
  *
  */
 public class WorkSettingCacheUtils {
-	private static DbUtils db;
 
 
 	/**
@@ -33,7 +30,7 @@ public class WorkSettingCacheUtils {
 			if (workSettingList == null || workSettingList.size() == 0) {
 				return;
 			}
-			DbCacheUtils.getDb(context).saveOrUpdateAll(workSettingList);
+			DbCacheUtils.getDb(context).saveOrUpdate(workSettingList);
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
@@ -48,7 +45,7 @@ public class WorkSettingCacheUtils {
 	public static List<WorkSetting> getAllWorkSettingList(Context context){
 		List<WorkSetting> workSettingList = null;
 		try {
-			workSettingList = DbCacheUtils.getDb(context).findAll(Selector.from(WorkSetting.class).orderBy("sort"));
+			workSettingList = DbCacheUtils.getDb(context).selector(WorkSetting.class).orderBy("sort").findAll();
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
@@ -67,7 +64,7 @@ public class WorkSettingCacheUtils {
 	public static List<WorkSetting> getOpenWorkSettingList(Context context){
 		List<WorkSetting> workSettingList = null;
 		try {
-			workSettingList = DbCacheUtils.getDb(context).findAll(Selector.from(WorkSetting.class).where("isOpen","=",true).orderBy("sort"));
+			workSettingList = DbCacheUtils.getDb(context).selector(WorkSetting.class).where("isOpen","=",true).orderBy("sort").findAll();
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
@@ -80,18 +77,6 @@ public class WorkSettingCacheUtils {
 
 
 	
-	/**
-	 * 清除工作配置表信息
-	 * @param context
-	 */
-	public static void clearWorkSetting(Context context) {
-		try {
-			DbCacheUtils.getDb(context).deleteAll(WorkSetting.class);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
 
 	/**
 	 * 存储工作配置列表

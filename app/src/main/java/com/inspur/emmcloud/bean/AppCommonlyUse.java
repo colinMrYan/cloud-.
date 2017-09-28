@@ -1,25 +1,22 @@
 package com.inspur.emmcloud.bean;
 
-import com.lidroid.xutils.db.annotation.Id;
 
-/**
- * classes : com.inspur.emmcloud.widget.DragGrid.AppItem Create at 2016年12月15日
- * 上午8:59:08
- */
+import org.xutils.db.annotation.Column;
+import org.xutils.db.annotation.Table;
+
+@Table(name = "com_inspur_emmcloud_bean_AppCommonlyUse")
 public class AppCommonlyUse {
 
-	@Id
+	@Column(name = "appID",isId = true)
 	private String appID = "";
+	@Column(name = "lastUpdateTime")
 	private long lastUpdateTime = 0L;
+	@Column(name = "clickCount")
 	private int clickCount = 0;
+	@Column(name = "weight")
 	private double weight = 0;
 
 	public AppCommonlyUse() {
-	}
-	
-	public AppCommonlyUse(AppItem app){
-		appID = app.getAppID();
-		lastUpdateTime = app.getLastUpdateTime();
 	}
 
 	public String getAppID() {

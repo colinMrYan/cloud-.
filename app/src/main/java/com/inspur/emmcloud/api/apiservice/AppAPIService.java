@@ -17,7 +17,6 @@ import com.inspur.emmcloud.bean.GetAppTabAutoResult;
 import com.inspur.emmcloud.bean.GetAppTabsResult;
 import com.inspur.emmcloud.bean.GetClientIdRsult;
 import com.inspur.emmcloud.bean.GetDeviceCheckResult;
-import com.inspur.emmcloud.bean.GetExceptionResult;
 import com.inspur.emmcloud.bean.GetUpgradeResult;
 import com.inspur.emmcloud.bean.LoginDesktopCloudPlusBean;
 import com.inspur.emmcloud.bean.ReactNativeUpdateBean;
@@ -230,8 +229,7 @@ public class AppAPIService {
 			public void callbackSuccess(String arg0) {
 				// TODO Auto-generated method stub
 				apiInterface
-						.returnUploadExceptionSuccess(new GetExceptionResult(
-								arg0));
+						.returnUploadExceptionSuccess();
 			}
 
 			@Override

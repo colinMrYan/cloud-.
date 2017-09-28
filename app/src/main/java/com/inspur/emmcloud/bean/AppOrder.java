@@ -1,7 +1,8 @@
-package com.inspur.emmcloud.bean; 
+package com.inspur.emmcloud.bean;
 
-import com.lidroid.xutils.db.annotation.Id;
-import com.lidroid.xutils.db.annotation.Table;
+
+import org.xutils.db.annotation.Column;
+import org.xutils.db.annotation.Table;
 
 /**
  * classes : com.inspur.emmcloud.bean.AppOrder
@@ -10,46 +11,56 @@ import com.lidroid.xutils.db.annotation.Table;
 @Table(name = "AppOrder")
 public class AppOrder {
 
-	@Id
-	private String appID = "";
-	private String orderId = "";
-	private String categoryID = "";
-	public AppOrder() {
-	}
-	public String getAppID() {
-		return appID;
-	}
-	public void setAppID(String appID) {
-		this.appID = appID;
-	}
-	public String getOrderId() {
-		return orderId;
-	}
-	public void setOrderId(String orderId) {
-		this.orderId = orderId;
-	}
-	public String getCategoryID() {
-		return categoryID;
-	}
-	public void setCategoryID(String categoryID) {
-		this.categoryID = categoryID;
-	}
-	@Override
-	public boolean equals(Object other) {
-		if(this == other){
-			return true;
-		}
-		if(other == null){
-			return false;
-		}
-		if(!(other instanceof AppOrder)){
-			return false;
-		}
-		AppOrder appOrder = (AppOrder) other;
-		if(!getAppID().equals(appOrder.getAppID())){
-			return false;
-		}
-		return true;
-	}
+    @Column(name = "appID", isId = true)
+    private String appID = "";
+    @Column(name = "orderId")
+    private String orderId = "";
+    @Column(name = "categoryID")
+    private String categoryID = "";
+
+    public AppOrder() {
+    }
+
+    public String getAppID() {
+        return appID;
+    }
+
+    public void setAppID(String appID) {
+        this.appID = appID;
+    }
+
+    public String getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(String orderId) {
+        this.orderId = orderId;
+    }
+
+    public String getCategoryID() {
+        return categoryID;
+    }
+
+    public void setCategoryID(String categoryID) {
+        this.categoryID = categoryID;
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (this == other) {
+            return true;
+        }
+        if (other == null) {
+            return false;
+        }
+        if (!(other instanceof AppOrder)) {
+            return false;
+        }
+        AppOrder appOrder = (AppOrder) other;
+        if (!getAppID().equals(appOrder.getAppID())) {
+            return false;
+        }
+        return true;
+    }
 }
  
