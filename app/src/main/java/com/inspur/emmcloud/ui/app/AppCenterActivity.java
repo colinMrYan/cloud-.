@@ -53,6 +53,9 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import static com.inspur.emmcloud.ui.app.AppCenterMoreActivity.APP_CENTER_APPLIST;
+import static com.inspur.emmcloud.ui.app.AppCenterMoreActivity.APP_CENTER_CATEGORY_NAME;
+
 /**
  * 应用中心页面 com.inspur.emmcloud.ui.AppCenterActivity create at 2016年8月31日
  * 下午2:54:47
@@ -60,11 +63,6 @@ import java.util.TimerTask;
 public class AppCenterActivity extends BaseActivity {
     private static final String ACTION_NAME = "add_app";
     private static final int UPTATE_VIEWPAGER = 1;
-    private static final String APP_CENTER_HTTP = "http";
-    private static final String APP_CENTER_URI = "uri";
-    private static final String APP_CENTER_APP = "app";
-    private static final String APP_CENTER_APPLIST = "appList";
-    private static final String APP_CENTER_CATEGORY_NAME = "category_name";
     private static final String APP_CENTER_CATEGORY_PROTOCOL = "ecc-app-store://category";
     private static final String APP_CENTER_APP_NAME_PROTOCOL = "ecc-app-store://app";
     private MyAppAPIService apiService;
@@ -152,8 +150,8 @@ public class AppCenterActivity extends BaseActivity {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         Bundle bundle = new Bundle();
-                        bundle.putSerializable(APP_CENTER_APPLIST, (Serializable) categorieAppList.get(position).getAppItemList());
-                        bundle.putString(APP_CENTER_CATEGORY_NAME,categorieAppList.get(position).getCategoryName());
+                        bundle.putSerializable(AppCenterMoreActivity.APP_CENTER_APPLIST, (Serializable) categorieAppList.get(position).getAppItemList());
+                        bundle.putString(AppCenterMoreActivity.APP_CENTER_CATEGORY_NAME,categorieAppList.get(position).getCategoryName());
                         IntentUtils.startActivity(AppCenterActivity.this, AppCenterMoreActivity.class, bundle);
                     }
                 });
@@ -200,12 +198,15 @@ public class AppCenterActivity extends BaseActivity {
                 String action = intent.getAction();
                 if (action.equals(ACTION_NAME)) {
                     App addApp = (App) intent.getExtras()
-                            .getSerializable(APP_CENTER_APP);
+                            .getSerializable("app");
                     int recommandAppIndex = -1,groupIndex = 0;
                     Iterator<List<App>> appItemList = appList.listIterator();
                     while (appItemList !=null && appItemList.hasNext()){
                         recommandAppIndex = appItemList.next().indexOf(addApp);
                         groupIndex = groupIndex + 1;
+                        if(recommandAppIndex != -1){
+                            break;
+                        }
                     }
                     if (recommandAppIndex != -1) {
                         List<App> recommendAppItemList = appList.get(groupIndex);
@@ -281,7 +282,7 @@ public class AppCenterActivity extends BaseActivity {
                     @Override
                     public void onRecommandItemClick(View view, int position) {
                         Bundle bundle = new Bundle();
-                        bundle.putSerializable(APP_CENTER_APP, appList.get(size).get(position));
+                        bundle.putSerializable("app", appList.get(size).get(position));
                         IntentUtils.startActivity(AppCenterActivity.this, AppDetailActivity.class, bundle);
                     }
                 });
@@ -302,10 +303,14 @@ public class AppCenterActivity extends BaseActivity {
 
         @Override
         public int getCount() {
-            int hasdataSize = getAppListHasData();
-            return (adsList.size() == 0? appList.size():(hasdataSize + 1));
+            int hasDataSize = getAppListHasData();
+            return (adsList.size() == 0? appList.size():(hasDataSize + 1));
         }
 
+        /**
+         * 计算有多少真正有推荐应用的推荐分组
+         * @return
+         */
         private int getAppListHasData() {
             int size = 0;
             for(int i = 0; i < appList.size(); i++){
@@ -374,7 +379,6 @@ public class AppCenterActivity extends BaseActivity {
         }
         //将容器的触摸事件反馈给ViewPager
         mViewPagerContainer.setOnTouchListener(new View.OnTouchListener() {
-
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 return mViewPager.dispatchTouchEvent(event);
@@ -461,9 +465,9 @@ public class AppCenterActivity extends BaseActivity {
     private void openDetailByUri(String uri) {
         if(!StringUtils.isBlank(uri)){
             Intent intent = new Intent();
-            if(uri.startsWith(APP_CENTER_HTTP)){
+            if(uri.startsWith("http")){
                 intent.setClass(AppCenterActivity.this, ImpActivity.class);
-                intent.putExtra(APP_CENTER_URI,uri);
+                intent.putExtra("uri",uri);
                 startActivity(intent);
             }else if(uri.startsWith(APP_CENTER_APP_NAME_PROTOCOL)){
                 Uri appUri = Uri.parse(uri);
@@ -488,7 +492,7 @@ public class AppCenterActivity extends BaseActivity {
             int appIndex = categorieAppList.get(i).getAppItemList().indexOf(appWithId);
             if(appIndex != -1){
                 Bundle bundle = new Bundle();
-                bundle.putSerializable(APP_CENTER_APP, categorieAppList.get(i).getAppItemList().get(appIndex));
+                bundle.putSerializable("app", categorieAppList.get(i).getAppItemList().get(appIndex));
                 IntentUtils.startActivity(AppCenterActivity.this, AppDetailActivity.class, bundle);
                 break;
             }

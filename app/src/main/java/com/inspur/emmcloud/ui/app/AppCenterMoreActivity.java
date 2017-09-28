@@ -12,7 +12,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.BaseActivity;
-import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.App;
 import com.inspur.emmcloud.util.ImageDisplayUtils;
@@ -24,6 +23,8 @@ public class AppCenterMoreActivity extends BaseActivity{
 
 	private ListView appCenterMoreListView;
 	private List<App> appList;
+	public static final String APP_CENTER_APPLIST = "appList";
+	public static final String APP_CENTER_CATEGORY_NAME = "category_name";
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
