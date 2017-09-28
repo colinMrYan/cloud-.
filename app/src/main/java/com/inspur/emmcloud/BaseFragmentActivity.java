@@ -1,19 +1,7 @@
 package com.inspur.emmcloud;
 
 import android.content.Intent;
-import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
-
-import com.inspur.emmcloud.api.apiservice.AppAPIService;
-import com.inspur.emmcloud.service.PVCollectService;
-import com.inspur.emmcloud.ui.mine.setting.CreateGestureActivity;
-import com.inspur.emmcloud.ui.mine.setting.GestureLoginActivity;
-import com.inspur.emmcloud.util.AppUtils;
-import com.inspur.emmcloud.util.DbCacheUtils;
-import com.inspur.emmcloud.util.IntentUtils;
-import com.inspur.emmcloud.util.NetUtils;
-import com.inspur.emmcloud.util.StringUtils;
 
 public class BaseFragmentActivity extends FragmentActivity {
 
@@ -23,9 +11,5 @@ public class BaseFragmentActivity extends FragmentActivity {
         super.onActivityResult(requestCode, resultCode, data);
         ((MyApplication) getApplicationContext()).setIsActive(true);
     }
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        ((MyApplication)getApplicationContext()).removeActivity(this);
-    }
+
 }

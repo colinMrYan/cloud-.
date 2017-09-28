@@ -24,30 +24,19 @@ public class MyActivityLifecycleCallbacks implements Application.ActivityLifecyc
     public int count = 0;
     @Override
     public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
-
+        ((MyApplication)activity.getApplicationContext()).addActivity(activity);
     }
 
     @Override
     public void onActivityStarted(Activity activity) {
-
-
-
         if (!((MyApplication) activity.getApplicationContext()).getIsActive()) {
-            if (count == 0) {
-                if (((MyApplication) activity.getApplicationContext())
-                        .isIndexActivityRunning()) {
-                    ((MyApplication) activity.getApplicationContext()).clearNotification();
-                    uploadMDMInfo(activity.getApplicationContext());
-                    ((MyApplication) activity.getApplicationContext()).sendActivedWSMsg();
-                    //这里两处登录均不走这个方法
-                    if(getIsNeedGestureCode(activity.getApplicationContext())){
-                        showGestureVerification(activity.getApplicationContext());
-                    }
-                }
+            if (((MyApplication) activity.getApplicationContext())
+                    .isIndexActivityRunning()) {
+                ((MyApplication) activity.getApplicationContext()).setIsActive(true);
+                uploadMDMInfo(activity);
+                showGestureVerification(activity);
             }
         }
-
-        count++;
     }
 
     @Override
@@ -62,11 +51,11 @@ public class MyActivityLifecycleCallbacks implements Application.ActivityLifecyc
 
     @Override
     public void onActivityStopped(Activity activity) {
-        count--;
-        if (count == 0) {
+        if (((MyApplication) activity.getApplicationContext())
+                .isIndexActivityRunning() && !AppUtils.isAppOnForeground(activity.getApplicationContext())) {
+            // app 进入后台
             ((MyApplication) activity.getApplicationContext()).setIsActive(false);
-            ((MyApplication) activity.getApplicationContext()).sendFrozenWSMsg();
-            startUploadPVCollectService(activity.getApplicationContext());
+            startUploadPVCollectService(activity);
         }
     }
 
@@ -77,7 +66,7 @@ public class MyActivityLifecycleCallbacks implements Application.ActivityLifecyc
 
     @Override
     public void onActivityDestroyed(Activity activity) {
-
+        ((MyApplication)activity.getApplicationContext()).removeActivity(activity);
     }
 
     /**
@@ -85,20 +74,22 @@ public class MyActivityLifecycleCallbacks implements Application.ActivityLifecyc
      * @param context
      */
     private void showGestureVerification(final Context context) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Thread.sleep(10);
-                    Intent intent = new Intent(context,GestureLoginActivity.class);
-                    intent.putExtra("gesture_code_change","login");
-                    context.startActivity(intent);
-                }catch (Exception e){
-                    e.printStackTrace();
-                }
+        if (getIsNeedGestureCode(context)){
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        Thread.sleep(10);
+                        Intent intent = new Intent(context,GestureLoginActivity.class);
+                        intent.putExtra("gesture_code_change","login");
+                        context.startActivity(intent);
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
 
-            }
-        }).start();
+                }
+            }).start();
+        }
     }
 
     /**
