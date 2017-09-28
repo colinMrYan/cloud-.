@@ -1,8 +1,6 @@
 package com.inspur.emmcloud.bean;
 
 import android.content.Context;
-import android.text.Spanned;
-import android.widget.TextView;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
@@ -55,10 +53,10 @@ public class Channel implements Serializable {
     private boolean dnd = false;
     @Column(name = "inputs")
     private String inputs = "";
-    // Transient使这个列被忽略，不存入数据库
     private List<Msg> newMsgList = new ArrayList<Msg>();
     private int unReadCount = 0;
     private String displayTitle = "";//session显示的名字
+    private String newMsgContent = "";
 
     public Channel() {
 
@@ -115,7 +113,7 @@ public class Channel implements Serializable {
         this.inputs = channelGroup.getInputs();
     }
 
-    public void setNewMsgList(List<Msg> msgList) {
+    public void setNewMsgList(Context context, List<Msg> msgList) {
         newMsgList.clear();
         if (msgList != null) {
             newMsgList.addAll(msgList);
@@ -126,6 +124,7 @@ public class Channel implements Serializable {
             lastMsgTime = msg.getTime();
         }
         setMsgLastUpdate(TimeUtils.UTCString2Long(lastMsgTime));
+        setNewMsgContent(context);
     }
 
     public void setMsgLastUpdate(long time) {
@@ -162,8 +161,12 @@ public class Channel implements Serializable {
         }
     }
 
-    public String getNewestMsgContent(Context context, TextView textView) {
-        String newestMsgContent = "";
+    public String getNewMsgContent() {
+        return newMsgContent;
+    }
+
+
+    public void setNewMsgContent(Context context) {
         if (newMsgList.size() > 0) {
             Msg msg = newMsgList.get(newMsgList.size() - 1);
             String title = msg.getTitle();
@@ -174,54 +177,53 @@ public class Channel implements Serializable {
                 title = title + "：";
             }
             if (msg.getType().equals("text")) {
-                newestMsgContent = title + msg.getBody();
+                newMsgContent = title + msg.getBody();
             } else if (msg.getType().equals("image")
                     || msg.getType().equals("res_image")) {
-                newestMsgContent = title + context.getString(R.string.send_a_picture);
+                newMsgContent = title + context.getString(R.string.send_a_picture);
             } else if (msg.getType().equals("txt_comment")
                     || msg.getType().equals("comment")) {
-                newestMsgContent = title + context.getString(R.string.send_a_comment);
+                newMsgContent = title + context.getString(R.string.send_a_comment);
             } else if (msg.getType().equals("file")
                     || msg.getType().equals("res_file")) {
-                newestMsgContent = title + context.getString(R.string.send_a_file);
+                newMsgContent = title + context.getString(R.string.send_a_file);
             } else if (msg.getType().equals("news")) {
-                newestMsgContent = msg.getNTitle();
+                newMsgContent = msg.getNTitle();
             } else if (msg.getType().equals("res_link")) {
-                newestMsgContent = title + context.getString(R.string.share_a_link);
+                newMsgContent = title + context.getString(R.string.share_a_link);
             } else if (msg.getType().equals("act_meeting")) {
-                newestMsgContent = title + context.getString(R.string.send_a_meeting_invitation);
+                newMsgContent = title + context.getString(R.string.send_a_meeting_invitation);
             } else if (msg.getType().equals("txt_rich")) {
                 String msgBody = msg.getBody();
                 String source = JSONUtils.getString(msgBody, "source", "");
-                newestMsgContent = source;
+                newMsgContent = source;
                 if (!StringUtils.isBlank(source)) {
-                    Spanned spanned = MarkDown.fromMarkdown(source, null, textView);
-                    newestMsgContent = spanned.toString();
+                    newMsgContent = MarkDown.fromMarkdown(source);
                 }
                 if (type.equals("GROUP")) {
-                    newestMsgContent = title + newestMsgContent;
+                    newMsgContent = title + newMsgContent;
                 }
             } else if (msg.getType().equals("act_meeting_cancel")) {
-                newestMsgContent = title + context.getString(R.string.cancel_a_meeting);
+                newMsgContent = title + context.getString(R.string.cancel_a_meeting);
             } else if (msg.getType().equals("act_meeting_approve")) {
-                newestMsgContent = title + context.getString(R.string.send_a_meeting_request);
+                newMsgContent = title + context.getString(R.string.send_a_meeting_request);
             } else {
-                newestMsgContent = title + context
+                newMsgContent = title + context
                         .getString(R.string.send_a_message_of_unknown_type);
             }
         } else {
             if (type.equals("SERVICE")) {
-                newestMsgContent = context
+                newMsgContent = context
                         .getString(R.string.welcome_to_attention) + " " + DirectChannelUtils.getRobotInfo(context, title).getName();
             } else if (type.equals("GROUP")) {
-                newestMsgContent = context.getString(
+                newMsgContent = context.getString(
                         R.string.group_no_message);
             } else {
-                newestMsgContent = context.getString(
+                newMsgContent = context.getString(
                         R.string.direct_no_message);
             }
         }
-        return newestMsgContent;
+
     }
 
     public String getCid() {
@@ -350,9 +352,18 @@ public class Channel implements Serializable {
         this.displayTitle = displayTitle;
     }
 
+    public String getPyFull() {
+        return pyFull;
+    }
+
+    public void setPyFull(String pyFull) {
+        this.pyFull = pyFull;
+    }
+
+
     /*
-     * 重写equals方法修饰符必须是public,因为是重写的Object的方法. 2.参数类型必须是Object.
-     */
+         * 重写equals方法修饰符必须是public,因为是重写的Object的方法. 2.参数类型必须是Object.
+         */
     public boolean equals(Object other) { // 重写equals方法，后面最好重写hashCode方法
 
         if (this == other) // 先检查是否其自反性，后比较other是否为空。这样效率高

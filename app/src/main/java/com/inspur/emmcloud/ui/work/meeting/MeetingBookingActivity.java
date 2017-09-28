@@ -18,7 +18,6 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.WorkAPIService;
-import com.inspur.emmcloud.bean.GetBookingRoomResult;
 import com.inspur.emmcloud.bean.GetIsAdmin;
 import com.inspur.emmcloud.bean.SearchModel;
 import com.inspur.emmcloud.config.MyAppConfig;

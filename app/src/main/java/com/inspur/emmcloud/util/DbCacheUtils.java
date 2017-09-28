@@ -14,7 +14,6 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.bean.AppCommonlyUse;
 import com.inspur.emmcloud.bean.Channel;
 import com.inspur.emmcloud.bean.ChannelGroup;
-import com.inspur.emmcloud.bean.Contact;
 import com.inspur.emmcloud.bean.PVCollectModel;
 
 import org.xutils.DbManager;
@@ -39,7 +38,7 @@ public class DbCacheUtils {
                 .setDbName("emm.db")
                 // 不设置dbDir时, 默认存储在app的私有目录.
                 .setDbDir(new File(dbCachePath))
-                .setDbVersion(9)
+                .setDbVersion(8)
                 .setAllowTransaction(true)
                 .setDbOpenListener(new DbManager.DbOpenListener() {
                     @Override
@@ -150,6 +149,11 @@ public class DbCacheUtils {
 
         } catch (Exception e) {
             // TODO: handle exception
+            e.printStackTrace();
+        }finally {
+            if (cursor != null){
+                cursor.close();
+            }
         }
         return result;
     }
