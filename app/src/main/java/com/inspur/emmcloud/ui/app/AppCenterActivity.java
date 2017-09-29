@@ -247,7 +247,7 @@ public class AppCenterActivity extends BaseActivity {
                 convertView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.my_app_recommand_app_item_view, null);
                 final int appListIndex = adsList.size() == 0 ? listPosition : (listPosition -1);
                 List<App> appItemList = appList.get(appListIndex);
-                if(appItemList != null && appItemList.size() > 0){
+                if(appItemList.size() > 0){
                     ((TextView)convertView.findViewById(R.id.app_center_recommand_text)).setText(appItemList.get(0).getCategoryName());
                 }
                 if(appItemList.size() <= 10){
@@ -267,6 +267,7 @@ public class AppCenterActivity extends BaseActivity {
                 GridLayoutManager gridLayoutManager = new GridLayoutManager(AppCenterActivity.this,5);
                 recomandRecyclerView.setLayoutManager(gridLayoutManager);
                 RecommandAppListAdapter recommandAppListAdapter = new RecommandAppListAdapter(AppCenterActivity.this, listPosition);
+                recomandRecyclerView.setAdapter(recommandAppListAdapter);
                 recommandAppListAdapter.setOnRecommandItemClickListener(new OnRecommandItemClickListener() {
                     @Override
                     public void onRecommandItemClick(View view, int position) {
@@ -275,7 +276,6 @@ public class AppCenterActivity extends BaseActivity {
                         IntentUtils.startActivity(AppCenterActivity.this, AppDetailActivity.class, bundle);
                     }
                 });
-                recomandRecyclerView.setAdapter(recommandAppListAdapter);
             }
             return convertView;
         }
@@ -318,11 +318,13 @@ public class AppCenterActivity extends BaseActivity {
         ImageDisplayUtils imageDisplayUtils = new ImageDisplayUtils(R.drawable.icon_app_center_categories);
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
-            convertView = LayoutInflater.from(AppCenterActivity.this).inflate(R.layout.app_center_category_item, null);
-            ((TextView) convertView.findViewById(R.id.app_center_categories_item_txt)).setText(categorieAppList.get(position).getCategoryName());
-            ImageView appCenterCategoryIcon = (ImageView) convertView.findViewById(R.id.app_center_categories_icon_img);
-            String appCenterCategoryIconUrl = categorieAppList.get(position).getCategoryIco();
-            imageDisplayUtils.displayImage(appCenterCategoryIcon,appCenterCategoryIconUrl);
+            convertView = LayoutInflater.from(AppCenterActivity.this).
+                    inflate(R.layout.app_center_category_item, null);
+            ((TextView) convertView.findViewById(R.id.app_center_categories_item_txt)).
+                    setText(categorieAppList.get(position).getCategoryName());
+            imageDisplayUtils.displayImage((ImageView) convertView.
+                    findViewById(R.id.app_center_categories_icon_img),
+                    categorieAppList.get(position).getCategoryIco());
             return convertView;
         }
 
@@ -339,15 +341,6 @@ public class AppCenterActivity extends BaseActivity {
         @Override
         public int getCount() {
             return categorieAppList.size();
-        }
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        if (addAppReceiver != null) {
-            unregisterReceiver(addAppReceiver);
-            addAppReceiver = null;
         }
     }
 
@@ -417,20 +410,20 @@ public class AppCenterActivity extends BaseActivity {
         }
 
         @Override
-        public Object instantiateItem(ViewGroup container, final int position) {
-            int newPosition = position % (adsList.size() == 0 ? 1:adsList.size());
+        public Object instantiateItem(ViewGroup container, int position) {
+            final int newPosition = position % (adsList.size() == 0 ? 1:adsList.size());
             AppAdsBean appAdsBean = adsList.get(newPosition);
             ImageView imageView = new ImageView(AppCenterActivity.this);
             imageView.setScaleType(ImageView.ScaleType.FIT_XY);
             imageDisplayUtils.displayImage(imageView, appAdsBean.getLegend());
-            container.addView(imageView);
             imageView.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    String uri = adsList.get(position%(adsList.size() == 0? 1:adsList.size())).getUri();
+                    String uri = adsList.get(newPosition).getUri();
                     openDetailByUri(uri);
                 }
             });
+            container.addView(imageView);
             return imageView;
         }
 
@@ -503,13 +496,10 @@ public class AppCenterActivity extends BaseActivity {
     public class RecommandAppListAdapter extends RecyclerView.Adapter<RecommandAppListAdapter.RecommandViewHolder> {
         private LayoutInflater inflater;
         private int listPosition;
+        private OnRecommandItemClickListener onRecommandItemClickListener;
         public RecommandAppListAdapter(Context context,int listPosition) {
             inflater = LayoutInflater.from(context);
             this.listPosition = listPosition;
-        }
-        private OnRecommandItemClickListener onRecommandItemClickListener;
-        public void setOnRecommandItemClickListener(OnRecommandItemClickListener l) {
-            this.onRecommandItemClickListener = l;
         }
 
         @Override
@@ -542,6 +532,10 @@ public class AppCenterActivity extends BaseActivity {
             return (appList.get(size).size()>10?10:appList.get(size).size());
         }
 
+        public void setOnRecommandItemClickListener(OnRecommandItemClickListener l) {
+            this.onRecommandItemClickListener = l;
+        }
+
         public class RecommandViewHolder extends RecyclerView.ViewHolder {
             ImageView recommandAppImg;
             TextView recommandAppText;
@@ -553,6 +547,15 @@ public class AppCenterActivity extends BaseActivity {
 
     public interface OnRecommandItemClickListener {
         void onRecommandItemClick(View view, int position);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (addAppReceiver != null) {
+            unregisterReceiver(addAppReceiver);
+            addAppReceiver = null;
+        }
     }
 
     public class WebService extends APIInterfaceInstance {
