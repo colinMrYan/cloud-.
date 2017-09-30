@@ -21,7 +21,6 @@ import com.inspur.emmcloud.util.StringUtils;
  */
 
 public class MyActivityLifecycleCallbacks implements Application.ActivityLifecycleCallbacks {
-    public int count = 0;
     @Override
     public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
         ((MyApplication)activity.getApplicationContext()).addActivity(activity);

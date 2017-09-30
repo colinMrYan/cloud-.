@@ -284,7 +284,7 @@ public class ChannelActivity extends BaseActivity {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                if (MsgCacheUtil.isDataInLocal(ChannelActivity.this, cid, msgList
+                if (msgList.size()>0 && MsgCacheUtil.isDataInLocal(ChannelActivity.this, cid, msgList
                         .get(0).getMid(), 15)) {
                     List<Msg> historyMsgList = MsgCacheUtil.getHistoryMsgList(
                             ChannelActivity.this, cid, msgList.get(0).getMid(),
@@ -305,7 +305,6 @@ public class ChannelActivity extends BaseActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
-                LogUtils.jasonDebug("onItemClick----------------------");
                 Bundle bundle = new Bundle();
                 Msg msg = msgList.get(position);
                 String msgType = msg.getType();
@@ -937,7 +936,8 @@ public class ChannelActivity extends BaseActivity {
      */
     private void getNewsMsg() {
         if (NetUtils.isNetworkConnected(ChannelActivity.this)) {
-            apiService.getNewMsgs(cid, msgList.get(0).getMid(), 15);
+            String newMsgMid = msgList.size()>0?msgList.get(0).getMid():"";
+            apiService.getNewMsgs(cid, newMsgMid, 15);
         } else {
             swipeRefreshLayout.setRefreshing(false);
         }
