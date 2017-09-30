@@ -1,6 +1,7 @@
 package com.inspur.emmcloud.api;
 
 
+import com.inspur.emmcloud.bean.App;
 import com.inspur.emmcloud.bean.AppRedirectResult;
 import com.inspur.emmcloud.bean.Attachment;
 import com.inspur.emmcloud.bean.ChannelGroup;
@@ -1417,6 +1418,16 @@ public class APIInterfaceInstance implements APIInterface {
 
     @Override
     public void returnDeviceLogListFail(String error, int errorCode) {
+
+    }
+
+    @Override
+    public void returnAppInfoSuccess(App app) {
+
+    }
+
+    @Override
+    public void returnAppInfoFail(String error, int errorCode) {
 
     }
 }

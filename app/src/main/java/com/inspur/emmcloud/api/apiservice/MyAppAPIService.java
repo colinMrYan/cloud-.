@@ -13,6 +13,7 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.api.APICallback;
 import com.inspur.emmcloud.api.APIInterface;
 import com.inspur.emmcloud.api.APIUri;
+import com.inspur.emmcloud.bean.App;
 import com.inspur.emmcloud.bean.AppRedirectResult;
 import com.inspur.emmcloud.bean.GetAddAppResult;
 import com.inspur.emmcloud.bean.GetAllAppResult;
@@ -27,6 +28,7 @@ import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.OauthUtils;
 import com.inspur.emmcloud.util.UriUtils;
 
+import org.json.JSONObject;
 import org.xutils.http.RequestParams;
 import org.xutils.x;
 
@@ -479,6 +481,45 @@ public class MyAppAPIService {
     }
 
     /**
+     * 根据应用id获取应用的详细信息
+     * @param appId
+     */
+    public void getAppInfo(final String appId){
+        final String completeUrl = APIUri.getAppInfo() +"?appID="+appId;
+        RequestParams params = ((MyApplication)context.getApplicationContext()).getHttpRequestParams(completeUrl);
+        x.http().get(params, new APICallback(context,completeUrl) {
+            @Override
+            public void callbackSuccess(String arg0) {
+                try {
+                    apiInterface.returnAppInfoSuccess(new App(new JSONObject(arg0)));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                apiInterface.returnAppInfoFail(error,responseCode);
+            }
+
+            @Override
+            public void callbackTokenExpire() {
+                new OauthUtils(new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        getAppInfo(appId);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                },context).refreshToken(completeUrl);
+            }
+        });
+    }
+
+    /**
      * 获取真实的url地址
      * @param url
      */
@@ -507,5 +548,7 @@ public class MyAppAPIService {
 //            }
 //        });
     }
+
+
 
 }

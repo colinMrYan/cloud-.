@@ -7,6 +7,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 public class App implements Serializable {
@@ -28,7 +29,7 @@ public class App implements Serializable {
 	private String identifiers = "";// 应用的包名，当原生应用时才有意义，对web应用来说该值没有任何意义
 	private String packageName = "";
 	private String MainActivityName = "";
-	private List<String> legends;
+	private List<String> legends = new ArrayList<>();
 	
 	private int orderId = -1;
 	private String categoryID = "";

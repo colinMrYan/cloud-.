@@ -649,4 +649,12 @@ public class APIUri {
 	public static String getShareCloudPlusUrl(){
 		return "";
 	}
+
+	/**
+	 * 根据appId获取appInfo
+	 * @return
+	 */
+	public static String getAppInfoUrl(){
+		return emmBaseUrl + "imp_app/getAppInfo";
+	}
 }
