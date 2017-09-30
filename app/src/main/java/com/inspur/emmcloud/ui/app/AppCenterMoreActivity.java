@@ -12,7 +12,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.BaseActivity;
-import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.App;
 import com.inspur.emmcloud.util.ImageDisplayUtils;
@@ -24,6 +23,8 @@ public class AppCenterMoreActivity extends BaseActivity{
 
 	private ListView appCenterMoreListView;
 	private List<App> appList;
+	public static final String APP_CENTER_APPLIST = "appList";
+	public static final String APP_CENTER_CATEGORY_NAME = "category_name";
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -67,6 +68,7 @@ public class AppCenterMoreActivity extends BaseActivity{
 	
 	class AppMoreAdapter extends BaseAdapter{
 
+		private ImageDisplayUtils imageDisplayUtils = new ImageDisplayUtils(R.drawable.icon_empty_icon);
 		@Override
 		public int getCount() {
 			// TODO Auto-generated method stub
@@ -91,7 +93,7 @@ public class AppCenterMoreActivity extends BaseActivity{
 			convertView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.app_center_more_app_item_view, null);
 			ImageView appIconImg = (ImageView)convertView.findViewById(R.id.app_icon_img);
 			TextView appNameText = (TextView) convertView.findViewById(R.id.app_name_text);
-			new ImageDisplayUtils(R.drawable.icon_empty_icon).displayImage(appIconImg, app.getAppIcon());
+			imageDisplayUtils.displayImage(appIconImg, app.getAppIcon());
 			appNameText.setText(app.getAppName());
             ((TextView)convertView.findViewById(R.id.app_group_name_text)).setText(app.getAppName());
 			return convertView;
