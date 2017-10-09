@@ -1,6 +1,5 @@
 package com.inspur.imp.engine.webview;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -10,8 +9,6 @@ import android.os.Message;
 import android.view.View;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
-import android.webkit.WebResourceRequest;
-import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.LinearLayout;
@@ -141,7 +138,7 @@ public class ImpWebViewClient extends WebViewClient {
 	/*
 	 * 网页加载失败，取消加载，并清理当前的view
 	 */
-	@SuppressWarnings("deprecation")
+//	@SuppressWarnings("deprecation")
 	@Override
 	public void onReceivedError(WebView view, int errorCode,
 								String description, String failingUrl) {
@@ -154,20 +151,20 @@ public class ImpWebViewClient extends WebViewClient {
 	}
 
 
-	@TargetApi(android.os.Build.VERSION_CODES.M)
-	@Override
-	public void onReceivedHttpError(WebView view, WebResourceRequest request, WebResourceResponse errorResponse) {
-		onReceivedError(view,errorResponse.getStatusCode(), errorResponse.getReasonPhrase(), request.getUrl().toString());
+//	@TargetApi(android.os.Build.VERSION_CODES.M)
+//	@Override
+//	public void onReceivedHttpError(WebView view, WebResourceRequest request, WebResourceResponse errorResponse) {
+//		onReceivedError(view,errorResponse.getStatusCode(), errorResponse.getReasonPhrase(), request.getUrl().toString());
+//
+//	}
+//
+//	@TargetApi(android.os.Build.VERSION_CODES.LOLLIPOP)
+//	@Override
+//	public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+//		return shouldOverrideUrlLoading(view, request.getUrl().toString());
+//	}
 
-	}
-
-	@TargetApi(android.os.Build.VERSION_CODES.LOLLIPOP)
-	@Override
-	public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
-		return shouldOverrideUrlLoading(view, request.getUrl().toString());
-	}
-
-	@SuppressWarnings("deprecation")
+//	@SuppressWarnings("deprecation")
 	@Override
 	public boolean shouldOverrideUrlLoading(WebView view, String url) {
 		if (runnable != null){
