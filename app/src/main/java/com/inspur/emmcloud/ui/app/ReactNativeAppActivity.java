@@ -13,6 +13,7 @@ import com.facebook.react.shell.MainReactPackage;
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.api.APIDownloadCallBack;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.api.apiservice.ReactNativeAPIService;
@@ -38,8 +39,6 @@ import com.inspur.reactnative.AuthorizationManagerPackage;
 import com.inspur.reactnative.ReactNativeFlow;
 import com.inspur.reactnative.ReactNativeInitInfoUtils;
 import com.reactnativecomponent.swiperefreshlayout.RCTSwipeRefreshLayoutPackage;
-
-import org.xutils.common.Callback;
 
 import java.io.File;
 
@@ -357,8 +356,6 @@ public class ReactNativeAppActivity extends BaseActivity implements DefaultHardw
         if(NetUtils.isNetworkConnected(ReactNativeAppActivity.this)){
             String clientId = PreferencesByUserAndTanentUtils.getString(ReactNativeAppActivity.this,"react_native_clientid", "");
             if(!StringUtils.isBlank(clientId)){
-
-//                StringBuilder describeVersionAndTime = FileUtils.readFile(reactAppFilePath +"/bundle.json", "UTF-8");
                 StringBuilder describeVersionAndTime = ReactNativeFlow.getBundleDotJsonFromFile(reactAppFilePath);
                 AndroidBundleBean androidBundleBean = new AndroidBundleBean(describeVersionAndTime.toString());
                 reactNativeAPIService.getDownLoadUrl(ReactNativeAppActivity.this,reactNativeInstallUriBean.getInstallUri(),clientId,androidBundleBean.getVersion());
@@ -373,25 +370,9 @@ public class ReactNativeAppActivity extends BaseActivity implements DefaultHardw
      * @param reactNativeDownloadUrlBean
      */
     private void downloadReactNativeZip(final ReactNativeDownloadUrlBean reactNativeDownloadUrlBean) {
-//        final String userId = ((MyApplication)getApplication()).getUid();
         final String reactZipDownloadFromUri = APIUri.getZipUrl() + reactNativeDownloadUrlBean.getUri();
         final String reactZipFilePath = MyAppConfig.LOCAL_DOWNLOAD_PATH  + userId + "/" + reactNativeDownloadUrlBean.getUri() ;
-        LogUtils.YfcDebug("reactZipFilePath:"+reactZipFilePath);
-        Callback.ProgressCallback<File> progressCallback = new Callback.ProgressCallback<File>() {
-            @Override
-            public void onWaiting() {
-
-            }
-
-            @Override
-            public void onStarted() {
-                LogUtils.YfcDebug("下载开始");
-            }
-
-            @Override
-            public void onLoading(long l, long l1, boolean b) {
-            }
-
+        APIDownloadCallBack progressCallback = new APIDownloadCallBack(ReactNativeAppActivity.this,reactZipDownloadFromUri){
             @Override
             public void onSuccess(File file) {
                 if(loadingDialog != null && loadingDialog.isShowing()){
@@ -403,7 +384,6 @@ public class ReactNativeAppActivity extends BaseActivity implements DefaultHardw
                 ReactNativeFlow.deleteOldVersionFile(reactAppFilePath);
                 ReactNativeFlow.unZipFile(reactZipFilePath,reactAppFilePath);
                 ReactNativeFlow.deleteReactNativeDownloadZipFile(reactZipFilePath);
-//                FileUtils.deleteFile(reactZipFilePath);
                 createReactRootView(reactAppFilePath,appModule);
                 setContentView(mReactRootView);
                 String currentVersion = getAppBundleBean().getVersion();
@@ -412,6 +392,7 @@ public class ReactNativeAppActivity extends BaseActivity implements DefaultHardw
 
             @Override
             public void onError(Throwable throwable, boolean b) {
+                super.onError(throwable,b);
                 if(loadingDialog != null && loadingDialog.isShowing()){
                     loadingDialog.dismiss();
                 }
@@ -420,14 +401,10 @@ public class ReactNativeAppActivity extends BaseActivity implements DefaultHardw
 
             @Override
             public void onCancelled(CancelledException e) {
+                super.onCancelled(e);
                 if(loadingDialog != null && loadingDialog.isShowing()){
                     loadingDialog.dismiss();
                 }
-            }
-
-            @Override
-            public void onFinished() {
-
             }
         };
         reactNativeAPIService.downloadReactNativeModuleZipPackage(reactZipDownloadFromUri,reactZipFilePath,progressCallback);

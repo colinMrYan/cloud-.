@@ -1,11 +1,5 @@
 package com.inspur.emmcloud.ui.find;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.xutils.common.Callback.ProgressCallback;
-
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,14 +11,18 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.BaseActivity;
-import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.api.APIDownloadCallBack;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.util.DownLoaderUtils;
 import com.inspur.emmcloud.util.FileUtils;
 import com.inspur.emmcloud.util.ImageDisplayUtils;
 import com.inspur.emmcloud.util.ToastUtils;
 import com.inspur.emmcloud.widget.HorizontalProgressBarWithNumber;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 文档页面 com.inspur.emmcloud.ui.DocumentActivity create at 2016年9月5日 上午10:03:42
@@ -175,58 +173,11 @@ public class DocumentActivity extends BaseActivity {
 							&& (progressBar.getProgress() < 100)) {
 						return;
 					}
-					
-					
-					ProgressCallback<File> progressCallback = new ProgressCallback<File>() {
 
-						@Override
-						public void onCancelled(CancelledException arg0) {
-							// TODO Auto-generated method stub
-							
-						}
-
-						@Override
-						public void onError(Throwable arg0, boolean arg1) {
-							// TODO Auto-generated method stub
-							progressBar.setVisibility(View.GONE);
-							ToastUtils.show(getApplicationContext(), R.string.filetransfer_download_failed);
-						}
-
-						@Override
-						public void onFinished() {
-							// TODO Auto-generated method stub
-							
-						}
-
-						@Override
-						public void onSuccess(File arg0) {
-							// TODO Auto-generated method stub
-							progressBar.setVisibility(View.GONE);
-							ToastUtils.show(getApplicationContext(), R.string.filetransfer_download_success);
-						}
-
-						@Override
-						public void onLoading(long total, long current,
-								boolean isUploading) {
-							// TODO Auto-generated method stub
-							if (total == 0) {
-								total = 1;
-							}
-							int progress = (int) ((current * 100) / total);
-
-							if (!(progressBar.getVisibility() == View.VISIBLE)) {
-								progressBar.setVisibility(View.VISIBLE);
-							}
-							progressBar.setProgress(progress);
-							progressBar.refreshDrawableState();
-						}
-
-						@Override
+					APIDownloadCallBack progressCallback = new APIDownloadCallBack(DocumentActivity.this,source){
 						public void onStarted() {
-							// TODO Auto-generated method stub
 							if ((progressBar.getTag() != null)
 									&& (progressBar.getTag() == target)) {
-
 								progressBar.setVisibility(View.VISIBLE);
 							} else {
 								progressBar.setVisibility(View.GONE);
@@ -234,11 +185,30 @@ public class DocumentActivity extends BaseActivity {
 						}
 
 						@Override
-						public void onWaiting() {
-							// TODO Auto-generated method stub
-							
+						public void onSuccess(File arg0) {
+							progressBar.setVisibility(View.GONE);
+							ToastUtils.show(getApplicationContext(), R.string.filetransfer_download_success);
 						}
-						
+
+						@Override
+						public void onLoading(long total, long current,
+											  boolean isUploading) {
+							if (total == 0) {
+								total = 1;
+							}
+							int progress = (int) ((current * 100) / total);
+							if (!(progressBar.getVisibility() == View.VISIBLE)) {
+								progressBar.setVisibility(View.VISIBLE);
+							}
+							progressBar.setProgress(progress);
+							progressBar.refreshDrawableState();
+						}
+
+						public void onError(Throwable arg0, boolean arg1) {
+							super.onError(arg0,arg1);
+							progressBar.setVisibility(View.GONE);
+							ToastUtils.show(getApplicationContext(), R.string.filetransfer_download_failed);
+						}
 					};
 					
 					if (FileUtils.isFileExist(target)) {
@@ -246,7 +216,6 @@ public class DocumentActivity extends BaseActivity {
 					} else {
 						new DownLoaderUtils().startDownLoad(source, target, progressCallback);
 					}
-
 				}
 			});
 

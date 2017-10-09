@@ -27,6 +27,7 @@ import com.alibaba.fastjson.JSON;
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.api.APIDownloadCallBack;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.api.apiservice.WorkAPIService;
@@ -63,7 +64,6 @@ import com.inspur.emmcloud.widget.dialogs.EasyDialog;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.xutils.common.Callback.ProgressCallback;
 
 import java.io.File;
 import java.io.Serializable;
@@ -1095,50 +1095,8 @@ public class MessionDetailActivity extends BaseActivity {
 					&& (fileProgressbar.getProgress() < 100)) {
 				return;
 			}
-			
-			ProgressCallback<File> progressCallback = new ProgressCallback<File>() {
 
-				@Override
-				public void onCancelled(CancelledException arg0) {
-					// TODO Auto-generated method stub
-					
-				}
-
-				@Override
-				public void onError(Throwable arg0, boolean arg1) {
-					fileProgressbar.setVisibility(View.GONE);
-					ToastUtils.show(MessionDetailActivity.this,
-							getString(R.string.download_fail));
-				}
-
-				@Override
-				public void onFinished() {
-					// TODO Auto-generated method stub
-					
-				}
-
-				@Override
-				public void onSuccess(File arg0) {
-					// TODO Auto-generated method stub
-					fileProgressbar.setVisibility(View.GONE);
-					ToastUtils.show(MessionDetailActivity.this,
-							getString(R.string.download_success));
-				}
-
-				@Override
-				public void onLoading(long total, long current,
-						boolean isUploading) {
-					if (total == 0) {
-						total = 1;
-					}
-					int progress = (int) ((current * 100) / total);
-					if (!(fileProgressbar.getVisibility() == View.VISIBLE)) {
-						fileProgressbar.setVisibility(View.VISIBLE);
-					}
-					fileProgressbar.setProgress(progress);
-					fileProgressbar.refreshDrawableState();
-				}
-
+			APIDownloadCallBack progressCallback = new APIDownloadCallBack(MessionDetailActivity.this,downlaodSource){
 				@Override
 				public void onStarted() {
 					// TODO Auto-generated method stub
@@ -1151,9 +1109,33 @@ public class MessionDetailActivity extends BaseActivity {
 				}
 
 				@Override
-				public void onWaiting() {
+				public void onLoading(long total, long current,
+									  boolean isUploading) {
+					if (total == 0) {
+						total = 1;
+					}
+					int progress = (int) ((current * 100) / total);
+					if (!(fileProgressbar.getVisibility() == View.VISIBLE)) {
+						fileProgressbar.setVisibility(View.VISIBLE);
+					}
+					fileProgressbar.setProgress(progress);
+					fileProgressbar.refreshDrawableState();
+				}
+
+				@Override
+				public void onSuccess(File arg0) {
 					// TODO Auto-generated method stub
-					
+					fileProgressbar.setVisibility(View.GONE);
+					ToastUtils.show(MessionDetailActivity.this,
+							getString(R.string.download_success));
+				}
+
+				@Override
+				public void onError(Throwable arg0, boolean arg1) {
+					super.onError(arg0,arg1);
+					fileProgressbar.setVisibility(View.GONE);
+					ToastUtils.show(MessionDetailActivity.this,
+							getString(R.string.download_fail));
 				}
 			};
 			

@@ -4,10 +4,10 @@ import android.content.Context;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.api.APIDownloadCallBack;
 import com.inspur.emmcloud.bean.Msg;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.util.DownLoaderUtils;
@@ -68,8 +68,7 @@ public class DisplayResFileMsg {
 				.findViewById(R.id.file_download_progressbar);
 		fileProgressBar.setTag(target);
 		fileProgressBar.setVisibility(View.VISIBLE);
-
-		((RelativeLayout) convertView.findViewById(R.id.header_layout))
+		convertView.findViewById(R.id.header_layout)
 				.setOnClickListener(new OnClickListener() {
 					@Override
 					public void onClick(View v) {
@@ -77,32 +76,17 @@ public class DisplayResFileMsg {
 								&& (fileProgressBar.getProgress() < 100)) {
 							return;
 						}
-
-						ProgressCallback<File> progressCallback = new ProgressCallback<File>() {
-
-							@Override
-							public void onCancelled(CancelledException arg0) {
-								// TODO Auto-generated method stub
-
-							}
-
+						APIDownloadCallBack progressCallback = new APIDownloadCallBack(context,downloadUri){
 							@Override
 							public void onError(Throwable arg0, boolean arg1) {
-								// TODO Auto-generated method stub
+								super.onError(arg0,arg1);
 								fileProgressBar.setVisibility(View.GONE);
 								ToastUtils.show(context, context
 										.getString(R.string.download_fail));
 							}
 
 							@Override
-							public void onFinished() {
-								// TODO Auto-generated method stub
-
-							}
-
-							@Override
 							public void onSuccess(File arg0) {
-								// TODO Auto-generated method stub
 								fileProgressBar.setVisibility(View.INVISIBLE);
 								fileDownLoadImg.setVisibility(View.GONE);
 								ToastUtils.show(
@@ -113,7 +97,6 @@ public class DisplayResFileMsg {
 							@Override
 							public void onLoading(long total, long current,
 									boolean arg2) {
-								// TODO Auto-generated method stub
 								if (total == 0) {
 									total = 1;
 								}
@@ -127,7 +110,6 @@ public class DisplayResFileMsg {
 
 							@Override
 							public void onStarted() {
-								// TODO Auto-generated method stub
 								if ((fileProgressBar.getTag() != null)
 										&& (fileProgressBar.getTag() == target)) {
 									fileProgressBar.setVisibility(View.VISIBLE);
@@ -135,12 +117,6 @@ public class DisplayResFileMsg {
 									fileProgressBar
 											.setVisibility(View.INVISIBLE);
 								}
-							}
-
-							@Override
-							public void onWaiting() {
-								// TODO Auto-generated method stub
-
 							}
 						};
 						showOrDownLoadFile(context, downloadUri, target,

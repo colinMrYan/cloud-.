@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.EditText;
 
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.api.APIDownloadCallBack;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.AppAPIService;
 import com.inspur.emmcloud.bean.App;
@@ -15,8 +16,6 @@ import com.inspur.emmcloud.bean.GetMyInfoResult;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.dialogs.MyDialog;
-
-import org.xutils.common.Callback;
 
 import java.io.File;
 
@@ -151,12 +150,7 @@ public class AppCenterNativeAppUtils {
 			loadingDlg.show();
 			loadingDlg.setText("");
 			final String downloadStr = context.getString(R.string.app_download);
-			Callback.ProgressCallback<File> progressCallback = new Callback.ProgressCallback<File>() {
-				@Override
-				public void onWaiting() {
-
-				}
-
+			APIDownloadCallBack progressCallback = new APIDownloadCallBack(context,app.getInstallUri()){
 				@Override
 				public void onStarted() {
 					loadingDlg.setText(downloadStr + "%0");
@@ -184,20 +178,11 @@ public class AppCenterNativeAppUtils {
 
 				@Override
 				public void onError(Throwable throwable, boolean b) {
+					super.onError(throwable,b);
 					if (loadingDlg != null && loadingDlg.isShowing()) {
 						loadingDlg.dismiss();
 					}
 					ToastUtils.show(context, R.string.download_fail);
-				}
-
-				@Override
-				public void onCancelled(CancelledException e) {
-
-				}
-
-				@Override
-				public void onFinished() {
-
 				}
 			};
 			new DownLoaderUtils().startDownLoad(app.getInstallUri(), MyAppConfig.LOCAL_DOWNLOAD_PATH + app.getAppID() + ".apk", progressCallback);

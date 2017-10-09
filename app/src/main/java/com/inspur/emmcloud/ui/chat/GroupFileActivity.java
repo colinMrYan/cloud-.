@@ -11,8 +11,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.BaseActivity;
-import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.api.APIDownloadCallBack;
 import com.inspur.emmcloud.bean.GroupFileInfo;
 import com.inspur.emmcloud.bean.Msg;
 import com.inspur.emmcloud.config.MyAppConfig;
@@ -22,8 +22,6 @@ import com.inspur.emmcloud.util.ImageDisplayUtils;
 import com.inspur.emmcloud.util.MsgCacheUtil;
 import com.inspur.emmcloud.util.ToastUtils;
 import com.inspur.emmcloud.widget.HorizontalProgressBarWithNumber;
-
-import org.xutils.common.Callback.ProgressCallback;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -160,54 +158,9 @@ public class GroupFileActivity extends BaseActivity {
 						&& (progressBar.getProgress() < 100)) {
 					return;
 				}
-				
-				ProgressCallback<File> progressCallback = new ProgressCallback<File>() {
 
-					@Override
-					public void onCancelled(CancelledException arg0) {
-						// TODO Auto-generated method stub
-						
-					}
-
-					@Override
-					public void onError(Throwable arg0, boolean arg1) {
-						// TODO Auto-generated method stub
-						progressBar.setVisibility(View.GONE);
-						ToastUtils.show(getApplicationContext(), R.string.filetransfer_download_failed);
-					}
-
-					@Override
-					public void onFinished() {
-						// TODO Auto-generated method stub
-						
-					}
-
-					@Override
-					public void onSuccess(File arg0) {
-						// TODO Auto-generated method stub
-						progressBar.setVisibility(View.GONE);
-						ToastUtils.show(getApplicationContext(), R.string.filetransfer_download_success);
-					}
-
-					@Override
-					public void onLoading(long total, long current,
-							boolean isUploading) {
-						// TODO Auto-generated method stub
-						if (total == 0) {
-							total = 1;
-						}
-						int progress = (int) ((current * 100) / total);
-
-						if (!(progressBar.getVisibility() == View.VISIBLE)) {
-							progressBar.setVisibility(View.VISIBLE);
-						}
-						progressBar.setProgress(progress);
-						progressBar.refreshDrawableState();
-					}
-
-					@Override
+				APIDownloadCallBack progressCallback = new APIDownloadCallBack(GroupFileActivity.this,fileUrl){
 					public void onStarted() {
-						// TODO Auto-generated method stub
 						if ((progressBar.getTag() != null)
 								&& (progressBar.getTag() == fileLocalPath)) {
 
@@ -218,11 +171,30 @@ public class GroupFileActivity extends BaseActivity {
 					}
 
 					@Override
-					public void onWaiting() {
-						// TODO Auto-generated method stub
-						
+					public void onSuccess(File arg0) {
+						progressBar.setVisibility(View.GONE);
+						ToastUtils.show(getApplicationContext(), R.string.filetransfer_download_success);
 					}
-					
+
+					@Override
+					public void onLoading(long total, long current,
+							boolean isUploading) {
+						if (total == 0) {
+							total = 1;
+						}
+						int progress = (int) ((current * 100) / total);
+						if (!(progressBar.getVisibility() == View.VISIBLE)) {
+							progressBar.setVisibility(View.VISIBLE);
+						}
+						progressBar.setProgress(progress);
+						progressBar.refreshDrawableState();
+					}
+
+					public void onError(Throwable arg0, boolean arg1) {
+						super.onError(arg0,arg1);
+						progressBar.setVisibility(View.GONE);
+						ToastUtils.show(getApplicationContext(), R.string.filetransfer_download_failed);
+					}
 				};
 				if (FileUtils.isFileExist(fileLocalPath)) {
 					FileUtils.openFile(getApplicationContext(), fileLocalPath);
@@ -230,12 +202,7 @@ public class GroupFileActivity extends BaseActivity {
 					new DownLoaderUtils().startDownLoad(fileUrl, fileLocalPath,
 							progressCallback);
 				}
-				
-
 			}
 		});
 	}
-
-
-
 }
