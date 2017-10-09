@@ -1,6 +1,5 @@
 package com.inspur.imp.engine.webview;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -10,8 +9,6 @@ import android.os.Message;
 import android.view.View;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
-import android.webkit.WebResourceRequest;
-import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.LinearLayout;
@@ -116,9 +113,11 @@ public class ImpWebViewClient extends WebViewClient {
 
 		((ImpActivity)(view.getContext())).initWebViewGoBackOrClose();
 		ImpWebView webview = (ImpWebView) view;
+
 		if (webview.destroyed || url.contains("error")) {
 			return;
 		}
+		webview.setVisibility(View.VISIBLE);
 		//为了获取网页的title
 		view.loadUrl("javascript:window.getTitle.onGetTitle("
 				+ "document.getElementsByTagName('title')[0].innerHTML" + ");");
@@ -153,19 +152,19 @@ public class ImpWebViewClient extends WebViewClient {
 		loadFailLayout.setVisibility(View.VISIBLE);
 	}
 
-
-	@TargetApi(android.os.Build.VERSION_CODES.M)
-	@Override
-	public void onReceivedHttpError(WebView view, WebResourceRequest request, WebResourceResponse errorResponse) {
-		onReceivedError(view,errorResponse.getStatusCode(), errorResponse.getReasonPhrase(), request.getUrl().toString());
-
-	}
-
-	@TargetApi(android.os.Build.VERSION_CODES.LOLLIPOP)
-	@Override
-	public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
-		return shouldOverrideUrlLoading(view, request.getUrl().toString());
-	}
+//	@TargetApi(android.os.Build.VERSION_CODES.M)
+//	@Override
+//	public void onReceivedHttpError(WebView view, WebResourceRequest request, WebResourceResponse errorResponse) {
+//		onReceivedError(view,errorResponse.getStatusCode(), errorResponse.getReasonPhrase(), request.getUrl().toString());
+//
+//	}
+//
+//
+//	@TargetApi(android.os.Build.VERSION_CODES.LOLLIPOP)
+//	@Override
+//	public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+//		return shouldOverrideUrlLoading(view, request.getUrl().toString());
+//	}
 
 	@SuppressWarnings("deprecation")
 	@Override

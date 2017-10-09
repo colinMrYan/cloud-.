@@ -236,8 +236,10 @@ public class ImpActivity extends ImpBaseActivity {
                 finishActivity();
                 break;
             case R.id.refresh_text:
-                loadFailLayout.setVisibility(View.GONE);
+                showLoadingDlg(getString(Res.getStringID("@string/loading_text")));
                 webView.reload();
+                webView.setVisibility(View.INVISIBLE);
+                loadFailLayout.setVisibility(View.GONE);
                 break;
             default:
                 break;
