@@ -284,7 +284,7 @@ public class ChannelActivity extends BaseActivity {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                if (msgList.size()>0 && MsgCacheUtil.isDataInLocal(ChannelActivity.this, cid, msgList
+                if (msgList.size() > 0 && MsgCacheUtil.isDataInLocal(ChannelActivity.this, cid, msgList
                         .get(0).getMid(), 15)) {
                     List<Msg> historyMsgList = MsgCacheUtil.getHistoryMsgList(
                             ChannelActivity.this, cid, msgList.get(0).getMid(),
@@ -294,7 +294,7 @@ public class ChannelActivity extends BaseActivity {
                     adapter.notifyDataSetChanged();
                     msgListView.setSelection(historyMsgList.size() - 1);
                     //ListViewUtils.setSelection(msgListView, historyMsgList.size() - 1);
-                } else{
+                } else {
                     getNewsMsg();
                 }
             }
@@ -324,8 +324,8 @@ public class ChannelActivity extends BaseActivity {
                     mid = msg.getCommentMid();
                     bundle.putString("mid", mid);
                     bundle.putString("cid", msg.getCid());
-                    LogUtils.jasonDebug("orimid0="+msg.getMid());
-                    LogUtils.jasonDebug("mid0="+mid);
+                    LogUtils.jasonDebug("orimid0=" + msg.getMid());
+                    LogUtils.jasonDebug("mid0=" + mid);
                     IntentUtils.startActivity(ChannelActivity.this,
                             ChannelMsgDetailActivity.class, bundle);
                 } else if (msgType.equals("res_link")) {
@@ -863,6 +863,24 @@ public class ChannelActivity extends BaseActivity {
                         }
                     }
                 });
+                senderPhotoImg.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+                        if (channel.getType().equals("GROUP")) {
+                            Intent intent = new Intent();
+                            intent.setClass(ChannelActivity.this, MembersActivity.class);
+                            intent.putExtra("title", getString(R.string.friend_list));
+                            intent.putExtra("cid", cid);
+                            overridePendingTransition(
+                                    R.anim.activity_open, 0);
+
+                            startActivityForResult(intent,
+                                    MENTIONS_RESULT);
+                        }
+                        return false;
+                    }
+                });
+
             }
         }
 
@@ -936,7 +954,7 @@ public class ChannelActivity extends BaseActivity {
      */
     private void getNewsMsg() {
         if (NetUtils.isNetworkConnected(ChannelActivity.this)) {
-            String newMsgMid = msgList.size()>0?msgList.get(0).getMid():"";
+            String newMsgMid = msgList.size() > 0 ? msgList.get(0).getMid() : "";
             apiService.getNewMsgs(cid, newMsgMid, 15);
         } else {
             swipeRefreshLayout.setRefreshing(false);

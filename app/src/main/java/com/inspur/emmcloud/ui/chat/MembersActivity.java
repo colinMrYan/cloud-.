@@ -23,7 +23,6 @@ import com.inspur.emmcloud.ui.contact.RobotInfoActivity;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
 import com.inspur.emmcloud.util.ChannelGroupCacheUtils;
 import com.inspur.emmcloud.util.ContactCacheUtils;
-import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.ToastUtils;
@@ -288,7 +287,6 @@ public class MembersActivity extends BaseActivity implements
                 indexList.add(sortString);
 //                mSideBar.setIndexArray(indexList);
 //                mSideBar.invalidate();
-                LogUtils.debug("jason", "sortString=" + sortString);
                 if ("1".equals(cUserInfoDto.getUtype())) {// 判断是否是管理员
                     cUserInfoDto.setSortLetters("☆");
                 } else if (sortString.matches("[A-Z]")) {// 正则表达式，判断首字母是否是英文字母   jason修改crash

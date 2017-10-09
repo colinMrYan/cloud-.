@@ -42,6 +42,7 @@ import com.inspur.emmcloud.ui.chat.MembersActivity;
 import com.inspur.emmcloud.util.ChannelMentions;
 import com.inspur.emmcloud.util.DensityUtil;
 import com.inspur.emmcloud.util.ImageDisplayUtils;
+import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.StringUtils;
@@ -54,7 +55,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
 
 
 /**
@@ -403,7 +403,7 @@ public class ECMChatInputMenu extends LinearLayout {
         }
     }
 
-    private void openMention(){
+    private void openMention() {
         Intent intent = new Intent();
         intent.setClass(context, MembersActivity.class);
         intent.putExtra("title", context.getString(R.string.friend_list));
@@ -458,7 +458,7 @@ public class ECMChatInputMenu extends LinearLayout {
      * @param binaryString
      */
     public void updateMenuGrid(String binaryString) {
-        int[] imgArray = {R.drawable.ic_chat_input_add_gallery,R.drawable.ic_chat_input_add_camera,R.drawable.ic_chat_input_add_file,R.drawable.ic_chat_input_add_mention};
+        int[] imgArray = {R.drawable.ic_chat_input_add_gallery, R.drawable.ic_chat_input_add_camera, R.drawable.ic_chat_input_add_file, R.drawable.ic_chat_input_add_mention};
         String[] functionNameArray = {context.getString(R.string.album), context.getString(R.string.take_photo), context.getString(R.string.file), "@"};
         imgList.clear();
         List<String> textList = new ArrayList<>();
@@ -477,7 +477,7 @@ public class ECMChatInputMenu extends LinearLayout {
             }
         }
         //如果是群组的话添加@功能
-        if (isChannelGroup){
+        if (isChannelGroup) {
             imgList.add(imgArray[3]);
             textList.add(functionNameArray[3]);
         }
@@ -495,7 +495,18 @@ public class ECMChatInputMenu extends LinearLayout {
         @Override
         public void onTextChanged(CharSequence s, int start, int before,
                                   int count) {
-            if (isChannelGroup) {
+            String content = s.toString();
+            boolean isContentBlank = StringUtils.isEmpty(content);
+            sendMsgBtn.setEnabled(!isContentBlank);
+            sendMsgBtn.setBackgroundResource(isContentBlank ? R.drawable.bg_chat_input_send_btn_disable : R.drawable.bg_chat_input_send_btn_enable);
+
+
+            LogUtils.jasonDebug("s=" + s.toString());
+            LogUtils.jasonDebug("start=" + start);
+            LogUtils.jasonDebug("before=" + before);
+            LogUtils.jasonDebug("count=" + count);
+
+            if (isChannelGroup &&  before>0 && !isContentBlank) {
                 beginMentions = start;
                 endMentions = start + count;
                 changeContent = s.toString().substring(beginMentions, endMentions);
@@ -522,25 +533,21 @@ public class ECMChatInputMenu extends LinearLayout {
                     }
 
                 }
-            }
-        }
 
-        @Override
-        public void afterTextChanged(Editable s) {
-            String inputContent = s.toString();
-            boolean isContentBlank = StringUtils.isEmpty(inputContent);
-            sendMsgBtn.setEnabled(!isContentBlank);
-            sendMsgBtn.setBackgroundResource(isContentBlank ? R.drawable.bg_chat_input_send_btn_disable : R.drawable.bg_chat_input_send_btn_enable);
-            if (isChannelGroup) {
-                int inputContentLength = inputContent.length();
+
+                int inputContentLength = s.toString().length();
                 if (canMention && !isContentBlank
-                        && (inputContent.substring(inputContentLength - 1, inputContentLength).equals("@") || changeContent
+                        && (content.substring(inputContentLength - 1, inputContentLength).equals("@") || changeContent
                         .equals("@"))) {
                     openMention();
 
                 }
                 canMention = true;
             }
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
 
         }
     }
