@@ -1013,8 +1013,19 @@ public class IndexActivity extends BaseFragmentActivity implements
         DownLoaderUtils downloaderUtils = new DownLoaderUtils();
         downloaderUtils.startDownLoad(url, MyAppConfig.getSplashPageImageShowPath(IndexActivity.this,
                 ((MyApplication) getApplication()).getUid(), "splash/" + fileName), new APIDownloadCallBack(IndexActivity.this,url) {
+
             @Override
-            public void onSuccess(File file) {
+            public void callbackStart() {
+
+            }
+
+            @Override
+            public void callbackLoading(long total, long current, boolean isUploading) {
+
+            }
+
+            @Override
+            public void callbackSuccess(File file) {
                 String splashInfoOld = PreferencesByUserAndTanentUtils.getString(IndexActivity.this, "splash_page_info_old", "");
                 SplashPageBean splashPageBeanLocalOld = new SplashPageBean(splashInfoOld);
                 String splashInfoShowing = PreferencesByUserAndTanentUtils.getString(IndexActivity.this, "splash_page_info", "");
@@ -1040,6 +1051,16 @@ public class IndexActivity extends BaseFragmentActivity implements
                     }
 
                 }
+            }
+
+            @Override
+            public void callbackError(Throwable arg0, boolean arg1) {
+
+            }
+
+            @Override
+            public void callbackCanceled(CancelledException e) {
+
             }
         });
     }

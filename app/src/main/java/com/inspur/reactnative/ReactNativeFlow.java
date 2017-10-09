@@ -118,8 +118,28 @@ public class ReactNativeFlow {
         String reactZipFilePath = MyAppConfig.LOCAL_DOWNLOAD_PATH + "/" + userId + "/" + reactNativeUpdateBean.getBundle().getAndroidUri();
         APIDownloadCallBack progressCallback = new APIDownloadCallBack(context,APIUri.getZipUrl()){
             @Override
-            public void onSuccess(File file) {
+            public void callbackStart() {
+
+            }
+
+            @Override
+            public void callbackLoading(long total, long current, boolean isUploading) {
+
+            }
+
+            @Override
+            public void callbackSuccess(File file) {
                 updateNewVersion(context, reactNativeUpdateBean, userId);
+            }
+
+            @Override
+            public void callbackError(Throwable arg0, boolean arg1) {
+
+            }
+
+            @Override
+            public void callbackCanceled(CancelledException e) {
+
             }
         };
         downLoaderUtils.startDownLoad(APIUri.getZipUrl() + reactNativeUpdateBean.getBundle().getAndroidUri(),

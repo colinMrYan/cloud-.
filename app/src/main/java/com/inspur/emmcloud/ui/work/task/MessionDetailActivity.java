@@ -1097,9 +1097,9 @@ public class MessionDetailActivity extends BaseActivity {
 			}
 
 			APIDownloadCallBack progressCallback = new APIDownloadCallBack(MessionDetailActivity.this,downlaodSource){
+
 				@Override
-				public void onStarted() {
-					// TODO Auto-generated method stub
+				public void callbackStart() {
 					if ((fileProgressbar.getTag() != null)
 							&& (fileProgressbar.getTag() == target)) {
 						fileProgressbar.setVisibility(View.VISIBLE);
@@ -1109,8 +1109,8 @@ public class MessionDetailActivity extends BaseActivity {
 				}
 
 				@Override
-				public void onLoading(long total, long current,
-									  boolean isUploading) {
+				public void callbackLoading(long total, long current,
+											boolean isUploading) {
 					if (total == 0) {
 						total = 1;
 					}
@@ -1123,19 +1123,22 @@ public class MessionDetailActivity extends BaseActivity {
 				}
 
 				@Override
-				public void onSuccess(File arg0) {
-					// TODO Auto-generated method stub
+				public void callbackSuccess(File file) {
 					fileProgressbar.setVisibility(View.GONE);
 					ToastUtils.show(MessionDetailActivity.this,
 							getString(R.string.download_success));
 				}
 
 				@Override
-				public void onError(Throwable arg0, boolean arg1) {
-					super.onError(arg0,arg1);
+				public void callbackError(Throwable arg0, boolean arg1) {
 					fileProgressbar.setVisibility(View.GONE);
 					ToastUtils.show(MessionDetailActivity.this,
 							getString(R.string.download_fail));
+				}
+
+				@Override
+				public void callbackCanceled(CancelledException e) {
+
 				}
 			};
 			

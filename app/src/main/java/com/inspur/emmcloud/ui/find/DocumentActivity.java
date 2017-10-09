@@ -175,7 +175,9 @@ public class DocumentActivity extends BaseActivity {
 					}
 
 					APIDownloadCallBack progressCallback = new APIDownloadCallBack(DocumentActivity.this,source){
-						public void onStarted() {
+
+						@Override
+						public void callbackStart() {
 							if ((progressBar.getTag() != null)
 									&& (progressBar.getTag() == target)) {
 								progressBar.setVisibility(View.VISIBLE);
@@ -185,14 +187,7 @@ public class DocumentActivity extends BaseActivity {
 						}
 
 						@Override
-						public void onSuccess(File arg0) {
-							progressBar.setVisibility(View.GONE);
-							ToastUtils.show(getApplicationContext(), R.string.filetransfer_download_success);
-						}
-
-						@Override
-						public void onLoading(long total, long current,
-											  boolean isUploading) {
+						public void callbackLoading(long total, long current, boolean isUploading) {
 							if (total == 0) {
 								total = 1;
 							}
@@ -204,10 +199,21 @@ public class DocumentActivity extends BaseActivity {
 							progressBar.refreshDrawableState();
 						}
 
-						public void onError(Throwable arg0, boolean arg1) {
-							super.onError(arg0,arg1);
+						@Override
+						public void callbackSuccess(File file) {
+							progressBar.setVisibility(View.GONE);
+							ToastUtils.show(getApplicationContext(), R.string.filetransfer_download_success);
+						}
+
+						@Override
+						public void callbackError(Throwable arg0, boolean arg1) {
 							progressBar.setVisibility(View.GONE);
 							ToastUtils.show(getApplicationContext(), R.string.filetransfer_download_failed);
+						}
+
+						@Override
+						public void callbackCanceled(CancelledException e) {
+
 						}
 					};
 					

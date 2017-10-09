@@ -374,7 +374,17 @@ public class ReactNativeAppActivity extends BaseActivity implements DefaultHardw
         final String reactZipFilePath = MyAppConfig.LOCAL_DOWNLOAD_PATH  + userId + "/" + reactNativeDownloadUrlBean.getUri() ;
         APIDownloadCallBack progressCallback = new APIDownloadCallBack(ReactNativeAppActivity.this,reactZipDownloadFromUri){
             @Override
-            public void onSuccess(File file) {
+            public void callbackStart() {
+
+            }
+
+            @Override
+            public void callbackLoading(long total, long current, boolean isUploading) {
+
+            }
+
+            @Override
+            public void callbackSuccess(File file) {
                 if(loadingDialog != null && loadingDialog.isShowing()){
                     loadingDialog.dismiss();
                 }
@@ -391,8 +401,7 @@ public class ReactNativeAppActivity extends BaseActivity implements DefaultHardw
             }
 
             @Override
-            public void onError(Throwable throwable, boolean b) {
-                super.onError(throwable,b);
+            public void callbackError(Throwable arg0, boolean arg1) {
                 if(loadingDialog != null && loadingDialog.isShowing()){
                     loadingDialog.dismiss();
                 }
@@ -400,8 +409,7 @@ public class ReactNativeAppActivity extends BaseActivity implements DefaultHardw
             }
 
             @Override
-            public void onCancelled(CancelledException e) {
-                super.onCancelled(e);
+            public void callbackCanceled(CancelledException e) {
                 if(loadingDialog != null && loadingDialog.isShowing()){
                     loadingDialog.dismiss();
                 }

@@ -78,25 +78,18 @@ public class DisplayResFileMsg {
 						}
 						APIDownloadCallBack progressCallback = new APIDownloadCallBack(context,downloadUri){
 							@Override
-							public void onError(Throwable arg0, boolean arg1) {
-								super.onError(arg0,arg1);
-								fileProgressBar.setVisibility(View.GONE);
-								ToastUtils.show(context, context
-										.getString(R.string.download_fail));
+							public void callbackStart() {
+								if ((fileProgressBar.getTag() != null)
+										&& (fileProgressBar.getTag() == target)) {
+									fileProgressBar.setVisibility(View.VISIBLE);
+								} else {
+									fileProgressBar
+											.setVisibility(View.INVISIBLE);
+								}
 							}
 
 							@Override
-							public void onSuccess(File arg0) {
-								fileProgressBar.setVisibility(View.INVISIBLE);
-								fileDownLoadImg.setVisibility(View.GONE);
-								ToastUtils.show(
-										context,
-										context.getString(R.string.chat_file_download_success));
-							}
-
-							@Override
-							public void onLoading(long total, long current,
-									boolean arg2) {
+							public void callbackLoading(long total, long current, boolean isUploading) {
 								if (total == 0) {
 									total = 1;
 								}
@@ -109,15 +102,26 @@ public class DisplayResFileMsg {
 							}
 
 							@Override
-							public void onStarted() {
-								if ((fileProgressBar.getTag() != null)
-										&& (fileProgressBar.getTag() == target)) {
-									fileProgressBar.setVisibility(View.VISIBLE);
-								} else {
-									fileProgressBar
-											.setVisibility(View.INVISIBLE);
-								}
+							public void callbackSuccess(File file) {
+								fileProgressBar.setVisibility(View.INVISIBLE);
+								fileDownLoadImg.setVisibility(View.GONE);
+								ToastUtils.show(
+										context,
+										context.getString(R.string.chat_file_download_success));
 							}
+
+							@Override
+							public void callbackError(Throwable arg0, boolean arg1) {
+								fileProgressBar.setVisibility(View.GONE);
+								ToastUtils.show(context, context
+										.getString(R.string.download_fail));
+							}
+
+							@Override
+							public void callbackCanceled(CancelledException e) {
+
+							}
+
 						};
 						showOrDownLoadFile(context, downloadUri, target,
 								fileDownLoadImg, progressCallback);

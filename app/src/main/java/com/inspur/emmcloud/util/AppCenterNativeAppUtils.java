@@ -184,6 +184,44 @@ public class AppCenterNativeAppUtils {
 					}
 					ToastUtils.show(context, R.string.download_fail);
 				}
+
+				@Override
+				public void callbackStart() {
+					loadingDlg.setText(downloadStr + "%0");
+				}
+
+				@Override
+				public void callbackLoading(long total, long current, boolean isUploading) {
+					if (loadingDlg != null && loadingDlg.isShowing()) {
+						if (total == 0) {
+							total = 1;
+						}
+						loadingDlg.setHint(downloadStr + "100%");
+						int progress = (int) ((current * 100) / total);
+						loadingDlg.setText(downloadStr + progress + "%");
+					}
+				}
+
+				@Override
+				public void callbackSuccess(File file) {
+					if (loadingDlg != null && loadingDlg.isShowing()) {
+						loadingDlg.dismiss();
+					}
+					AppUtils.openAPKFile(context, file);
+				}
+
+				@Override
+				public void callbackError(Throwable arg0, boolean arg1) {
+					if (loadingDlg != null && loadingDlg.isShowing()) {
+						loadingDlg.dismiss();
+					}
+					ToastUtils.show(context, R.string.download_fail);
+				}
+
+				@Override
+				public void callbackCanceled(CancelledException e) {
+
+				}
 			};
 			new DownLoaderUtils().startDownLoad(app.getInstallUri(), MyAppConfig.LOCAL_DOWNLOAD_PATH + app.getAppID() + ".apk", progressCallback);
 		}

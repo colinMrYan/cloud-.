@@ -22,7 +22,7 @@ import java.util.concurrent.TimeoutException;
  * 下载过程中出现问题统一封装，记录下载失败状态
  */
 
-public class APIDownloadCallBack implements Callback.ProgressCallback<File>{
+public abstract class APIDownloadCallBack implements Callback.ProgressCallback<File>{
 
     private String url = "";
     private Context context;
@@ -37,17 +37,17 @@ public class APIDownloadCallBack implements Callback.ProgressCallback<File>{
 
     @Override
     public void onStarted() {
-
+        callbackStart();
     }
 
     @Override
     public void onLoading(long l, long l1, boolean b) {
-
+        callbackLoading(l,l1,b);
     }
 
     @Override
     public void onSuccess(File file) {
-
+        callbackSuccess(file);
     }
 
     @Override
@@ -76,11 +76,14 @@ public class APIDownloadCallBack implements Callback.ProgressCallback<File>{
             // TODO: handle exception
             e.printStackTrace();
         }
+        callbackError(arg0,arg1);
     }
 
     @Override
     public void onCancelled(CancelledException e) {
+        LogUtils.YfcDebug("调用Cancel方法");
         saveNetException("download cancel",0,3);
+        callbackCanceled(e);
     }
 
     @Override
@@ -113,4 +116,16 @@ public class APIDownloadCallBack implements Callback.ProgressCallback<File>{
             AppExceptionCacheUtils.saveAppException(context, appException);
         }
     }
+
+    public abstract void callbackStart();
+
+    public abstract void callbackLoading(long total, long current,
+                                         boolean isUploading);
+
+    public abstract void callbackSuccess(File file);
+
+    public abstract void callbackError(Throwable arg0, boolean arg1);
+
+    public abstract void callbackCanceled(CancelledException e);
+
 }
