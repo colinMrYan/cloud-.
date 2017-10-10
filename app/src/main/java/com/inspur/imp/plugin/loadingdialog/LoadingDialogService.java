@@ -1,7 +1,6 @@
 package com.inspur.imp.plugin.loadingdialog;
 
 import com.inspur.emmcloud.util.JSONUtils;
-import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.imp.api.ImpActivity;
 import com.inspur.imp.plugin.ImpPlugin;
 
@@ -19,7 +18,6 @@ public class LoadingDialogService extends ImpPlugin {
     @Override
     public void execute(String action, JSONObject paramsObject) {
         if ("show".equals(action)) {
-            LogUtils.jasonDebug("paramsObject=" + paramsObject.toString());
             showDlg(paramsObject);
         } else if ("hide".equals(action)) {
             hideDlg();
