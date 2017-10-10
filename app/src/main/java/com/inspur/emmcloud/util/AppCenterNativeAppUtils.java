@@ -151,39 +151,6 @@ public class AppCenterNativeAppUtils {
 			loadingDlg.setText("");
 			final String downloadStr = context.getString(R.string.app_download);
 			APIDownloadCallBack progressCallback = new APIDownloadCallBack(context,app.getInstallUri()){
-				@Override
-				public void onStarted() {
-					loadingDlg.setText(downloadStr + "%0");
-				}
-
-				@Override
-				public void onLoading(long total, long current, boolean b) {
-					if (loadingDlg != null && loadingDlg.isShowing()) {
-						if (total == 0) {
-							total = 1;
-						}
-						loadingDlg.setHint(downloadStr + "100%");
-						int progress = (int) ((current * 100) / total);
-						loadingDlg.setText(downloadStr + progress + "%");
-					}
-				}
-
-				@Override
-				public void onSuccess(File file) {
-					if (loadingDlg != null && loadingDlg.isShowing()) {
-						loadingDlg.dismiss();
-					}
-					AppUtils.openAPKFile(context, file);
-				}
-
-				@Override
-				public void onError(Throwable throwable, boolean b) {
-					super.onError(throwable,b);
-					if (loadingDlg != null && loadingDlg.isShowing()) {
-						loadingDlg.dismiss();
-					}
-					ToastUtils.show(context, R.string.download_fail);
-				}
 
 				@Override
 				public void callbackStart() {

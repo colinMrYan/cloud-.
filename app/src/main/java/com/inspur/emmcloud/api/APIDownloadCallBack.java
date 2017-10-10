@@ -81,7 +81,6 @@ public abstract class APIDownloadCallBack implements Callback.ProgressCallback<F
 
     @Override
     public void onCancelled(CancelledException e) {
-        LogUtils.YfcDebug("调用Cancel方法");
         saveNetException("download cancel",0,3);
         callbackCanceled(e);
     }
