@@ -23,7 +23,7 @@ public class ChannelMentions {
 	 * @param msgEdit
 	 */
 	public static  void addMentions(String result,ArrayList<String> keywords,ArrayList<String> useridkey,
-			EditText msgEdit,int beginStr,int endStr) {
+			EditText msgEdit,int beginStr) {
 
 		JSONObject jsonObject;
 		try {
@@ -66,10 +66,11 @@ public class ChannelMentions {
 			StringBuffer buffer = new StringBuffer(oldstr);
 			
 			SpannableString ss = null;
+			//重组edittext的字符串
 			if (!havekey) {
 //				ss = new SpannableString(oldstr + pname + " ");
 //				ss = new SpannableString(oldstr.replaceFirst("@", "@"+pname+" "));
-				ss = new SpannableString(buffer.replace(beginStr, endStr, "@"+pname+" "));
+				ss = new SpannableString(buffer.replace(beginStr, beginStr+1, "@"+pname+" "));
 			} else {
 				ss = new SpannableString(oldstr.subSequence(0,
 						oldstr.length() - 1));

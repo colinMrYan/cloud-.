@@ -16,12 +16,9 @@ import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.text.Editable;
-import android.text.Spannable;
-import android.text.Spanned;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -47,7 +44,6 @@ import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.ToastUtils;
-import com.inspur.emmcloud.widget.spans.ForeColorSpan;
 import com.inspur.imp.plugin.camera.imagepicker.ImagePicker;
 import com.inspur.imp.plugin.camera.imagepicker.ui.ImageGridActivity;
 
@@ -75,10 +71,9 @@ public class ECMChatInputMenu extends LinearLayout {
     private LinearLayout rootLayout;
     private boolean canMention = false;
     private boolean isChannelGroup = false;
-    private int editWordsLenth = 0;
     private ArrayList<String> mentionsUserNameList = new ArrayList<String>();
     private ArrayList<String> mentionsUidList = new ArrayList<String>();
-    private int beginMentions = 0;
+    private int mentionPosition = 0;
     private int endMentions = 0;
     private String cid = "";
     private InputMethodManager mInputManager;
@@ -197,9 +192,8 @@ public class ECMChatInputMenu extends LinearLayout {
                 return false;
             }
         });
-        inputEdit.addTextChangedListener(new TextChangedListener());
-        inputEdit.setOnKeyListener(new OnMentionsListener());
 
+        inputEdit.addTextChangedListener(new TextChangedListener());
     }
 
     public void setWindowListener(boolean isSetWindowListener) {
@@ -435,7 +429,7 @@ public class ECMChatInputMenu extends LinearLayout {
         String result = data.getStringExtra("searchResult");
         PreferencesUtils.putString(context, cid, "");
         ChannelMentions.addMentions(result, mentionsUserNameList,
-                mentionsUidList, inputEdit, beginMentions, endMentions);
+                mentionsUidList, inputEdit, mentionPosition);
     }
 
     public void setIsChannelGroup(boolean isChannelGroup, String cid) {
@@ -485,8 +479,6 @@ public class ECMChatInputMenu extends LinearLayout {
     }
 
     class TextChangedListener implements TextWatcher {
-        String changeContent = "";
-
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count,
                                       int after) {
@@ -506,44 +498,46 @@ public class ECMChatInputMenu extends LinearLayout {
             LogUtils.jasonDebug("before=" + before);
             LogUtils.jasonDebug("count=" + count);
 
-            if (isChannelGroup &&  before>0 && !isContentBlank) {
-                beginMentions = start;
-                endMentions = start + count;
-                changeContent = s.toString().substring(beginMentions, endMentions);
-                if (s.toString().length() > editWordsLenth) {
-                    canMention = true;
-                }
-                ForeColorSpan[] spans = ((Spanned) s).getSpans(0, s.length(),
-                        ForeColorSpan.class);
-                int which = -1;
-                for (int i = 0; i < mentionsUserNameList.size(); i++) {
-                    if (!s.toString().contains(mentionsUserNameList.get(i))) {
-                        which = i;
-                        mentionsUserNameList.remove(i);
-                        mentionsUidList.remove(i);
-                        i--;
-                    }
-                }
-                int spanslen = spans.length;
-                for (int i = 0; i < spanslen; i++) {
-                    if (which == i) {
-                        int started = ((Spannable) s).getSpanStart(spans[i]);
-                        int end = ((Spannable) s).getSpanEnd(spans[i]);
-                        inputEdit.getText().delete(started, end);
-                    }
-
-                }
-
-
-                int inputContentLength = s.toString().length();
-                if (canMention && !isContentBlank
-                        && (content.substring(inputContentLength - 1, inputContentLength).equals("@") || changeContent
-                        .equals("@"))) {
+            if (isChannelGroup && count == 1) {
+                mentionPosition = start;
+                String inputWord = s.toString().substring(start, start + count);
+                if (inputWord.equals("@")) {
                     openMention();
-
                 }
-                canMention = true;
             }
+
+
+
+
+//                ForeColorSpan[] spans = ((Spanned) s).getSpans(0, s.length(),
+//                        ForeColorSpan.class);
+//                int which = -1;
+//                for (int i = 0; i < mentionsUserNameList.size(); i++) {
+//                    if (!s.toString().contains(mentionsUserNameList.get(i))) {
+//                        which = i;
+//                        mentionsUserNameList.remove(i);
+//                        mentionsUidList.remove(i);
+//                        i--;
+//                    }
+//                }
+//                int spanslen = spans.length;
+//                for (int i = 0; i < spanslen; i++) {
+//                    if (which == i) {
+//                        int started = ((Spannable) s).getSpanStart(spans[i]);
+//                        int end = ((Spannable) s).getSpanEnd(spans[i]);
+//                        inputEdit.getText().delete(started, end);
+//                    }
+//
+//                }
+
+
+//                int inputContentLength = s.toString().length();
+//                if ((content.substring(inputContentLength - 1, inputContentLength).equals("@") || changeContent
+//                        .equals("@"))) {
+//                    openMention();
+//
+//                }
+//                canMention = true;
         }
 
         @Override
@@ -552,24 +546,4 @@ public class ECMChatInputMenu extends LinearLayout {
         }
     }
 
-    class OnMentionsListener implements OnKeyListener {
-        @Override
-        public boolean onKey(View v, int keyCode, KeyEvent event) {
-            if (isChannelGroup) {
-                String str = inputEdit.getText().toString();
-                editWordsLenth = str.length();
-                if (StringUtils.isBlank(inputEdit.getText().toString())) {
-                    canMention = true;
-                    return false;
-                }
-                if (keyCode == 67) {
-                    canMention = false;
-                } else {
-                    canMention = true;
-                }
-            }
-            return false;
-        }
-
-    }
 }
