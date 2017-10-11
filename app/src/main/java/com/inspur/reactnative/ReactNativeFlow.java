@@ -3,20 +3,21 @@ package com.inspur.reactnative;
 import android.content.Context;
 import android.content.Intent;
 
+import com.inspur.emmcloud.api.APIDownloadCallBack;
 import com.inspur.emmcloud.api.APIUri;
+import com.inspur.emmcloud.bean.AppException;
 import com.inspur.emmcloud.bean.ReactNativeUpdateBean;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.ui.find.FindFragment;
+import com.inspur.emmcloud.util.AppExceptionCacheUtils;
+import com.inspur.emmcloud.util.AppUtils;
 import com.inspur.emmcloud.util.DownLoaderUtils;
 import com.inspur.emmcloud.util.FileSafeCode;
 import com.inspur.emmcloud.util.FileUtils;
-import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.UnZipAssets;
 import com.inspur.emmcloud.util.ZipUtils;
-
-import org.xutils.common.Callback;
 
 import java.io.File;
 import java.io.IOException;
@@ -118,38 +119,29 @@ public class ReactNativeFlow {
     public static void downLoadZipFile(final Context context, final ReactNativeUpdateBean reactNativeUpdateBean, final String userId) {
         final DownLoaderUtils downLoaderUtils = new DownLoaderUtils();
         String reactZipFilePath = MyAppConfig.LOCAL_DOWNLOAD_PATH + "/" + userId + "/" + reactNativeUpdateBean.getBundle().getAndroidUri();
-        Callback.ProgressCallback<File> progressCallback = new Callback.ProgressCallback<File>() {
+        APIDownloadCallBack progressCallback = new APIDownloadCallBack(context,APIUri.getZipUrl()){
             @Override
-            public void onWaiting() {
+            public void callbackStart() {
 
             }
 
             @Override
-            public void onStarted() {
-                LogUtils.YfcDebug("下载开始");
+            public void callbackLoading(long total, long current, boolean isUploading) {
+
             }
 
             @Override
-            public void onLoading(long l, long l1, boolean b) {
-            }
-
-            @Override
-            public void onSuccess(File file) {
+            public void callbackSuccess(File file) {
                 updateNewVersion(context, reactNativeUpdateBean, userId);
             }
 
             @Override
-            public void onError(Throwable throwable, boolean b) {
+            public void callbackError(Throwable arg0, boolean arg1) {
 
             }
 
             @Override
-            public void onCancelled(CancelledException e) {
-
-            }
-
-            @Override
-            public void onFinished() {
+            public void callbackCanceled(CancelledException e) {
 
             }
         };
@@ -170,9 +162,10 @@ public class ReactNativeFlow {
         String reactTempPath = MyAppConfig.getReactTempFilePath(context, userId);
         String reactZipFilePath = MyAppConfig.LOCAL_DOWNLOAD_PATH  + userId + "/" +
                 reactNativeUpdateBean.getBundle().getAndroidUri();
-        LogUtils.YfcDebug("reactZipFilepath："+reactZipFilePath);
-        LogUtils.YfcDebug("网络返回的hash："+reactNativeUpdateBean.getBundle().getAndroidHash());
-        LogUtils.YfcDebug("文件目录下的hash："+FileSafeCode.getFileSHA256(new File(reactZipFilePath)));
+        //出现文件问题和hash值验证问题时打开这里调试
+//        LogUtils.YfcDebug("reactZipFilepath："+reactZipFilePath);
+//        LogUtils.YfcDebug("网络返回的hash："+reactNativeUpdateBean.getBundle().getAndroidHash());
+//        LogUtils.YfcDebug("文件目录下的hash："+FileSafeCode.getFileSHA256(new File(reactZipFilePath)));
         if (ReactNativeFlow.isCompleteZip(reactNativeUpdateBean.getBundle().getAndroidHash(), reactZipFilePath)) {
             moveFolder(reactCurrentPath, reactTempPath);
             deleteOldVersionFile(reactCurrentPath);
@@ -182,9 +175,23 @@ public class ReactNativeFlow {
             FindFragment.hasUpdated = true;
             Intent intent = new Intent("com.inspur.react.success");
             context.sendBroadcast(intent);
-            LogUtils.YfcDebug("更新成功");
         } else {
-            LogUtils.YfcDebug("包不完整，更新失败");
+            saveFileCheckException(context,reactZipFilePath,"discover download not compelete error",3);
+        }
+    }
+
+    /**
+     * 记录文件下载后验证异常
+     *
+     * @param context
+     * @param url
+     * @param error
+     * @param errorLevel
+     */
+    private static void saveFileCheckException(Context context, String url, String error, int errorLevel) {
+        if (!AppUtils.isApkDebugable(context)) {
+            AppException appException = new AppException(System.currentTimeMillis(), AppUtils.getVersion(context), errorLevel, url, error, 0);
+            AppExceptionCacheUtils.saveAppException(context, appException);
         }
     }
 
