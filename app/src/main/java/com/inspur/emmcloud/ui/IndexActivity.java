@@ -32,6 +32,7 @@ import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.api.apiservice.ContactAPIService;
 import com.inspur.emmcloud.api.apiservice.ReactNativeAPIService;
 import com.inspur.emmcloud.bean.AndroidBundleBean;
+import com.inspur.emmcloud.bean.AppException;
 import com.inspur.emmcloud.bean.AppTabAutoBean;
 import com.inspur.emmcloud.bean.ChannelGroup;
 import com.inspur.emmcloud.bean.Contact;
@@ -57,6 +58,7 @@ import com.inspur.emmcloud.ui.mine.setting.LanguageChangeActivity;
 import com.inspur.emmcloud.ui.notsupport.NotSupportFragment;
 import com.inspur.emmcloud.ui.work.MainTabBean;
 import com.inspur.emmcloud.ui.work.WorkFragment;
+import com.inspur.emmcloud.util.AppExceptionCacheUtils;
 import com.inspur.emmcloud.util.AppUtils;
 import com.inspur.emmcloud.util.ChannelGroupCacheUtils;
 import com.inspur.emmcloud.util.ContactCacheUtils;
@@ -1047,7 +1049,7 @@ public class IndexActivity extends BaseFragmentActivity implements
                         writeBackSplashPageLog("FORWARD", splashPageBeanLocalOld.getId().getVersion()
                                 , splashPageBeanLocalShowing.getId().getVersion());
                     } else {
-                        APIDownloadCallBack.saveFileCheckException(IndexActivity.this,url,"splash sha256 Error",2);
+                        saveFileCheckException(IndexActivity.this,url,"splash sha256 Error",2);
                     }
 
                 }
@@ -1063,6 +1065,21 @@ public class IndexActivity extends BaseFragmentActivity implements
 
             }
         });
+    }
+
+    /**
+     * 记录文件下载后验证异常
+     *
+     * @param context
+     * @param url
+     * @param error
+     * @param errorLevel
+     */
+    private void saveFileCheckException(Context context, String url, String error, int errorLevel) {
+        if (!AppUtils.isApkDebugable(context)) {
+            AppException appException = new AppException(System.currentTimeMillis(), AppUtils.getVersion(context), errorLevel, url, error, 0);
+            AppExceptionCacheUtils.saveAppException(context, appException);
+        }
     }
 
     /**

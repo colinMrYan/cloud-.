@@ -22,14 +22,16 @@ import java.util.concurrent.TimeoutException;
  * 下载过程中出现问题统一封装，记录下载失败状态
  */
 
-public abstract class APIDownloadCallBack implements Callback.ProgressCallback<File>{
+public abstract class APIDownloadCallBack implements Callback.ProgressCallback<File> {
 
     private String url = "";
     private Context context;
-    public APIDownloadCallBack(Context context,String url){
+
+    public APIDownloadCallBack(Context context, String url) {
         this.context = context;
         this.url = url;
     }
+
     @Override
     public void onWaiting() {
 
@@ -42,12 +44,19 @@ public abstract class APIDownloadCallBack implements Callback.ProgressCallback<F
 
     @Override
     public void onLoading(long l, long l1, boolean b) {
-        callbackLoading(l,l1,b);
+        callbackLoading(l, l1, b);
     }
 
     @Override
     public void onSuccess(File file) {
-        callbackSuccess(file);
+        LogUtils.debug("HttpUtil", "result=");
+        //Callback回调到回调处，出异常，则可能既调onSuccess又调OnError，加try为了将异常在此处捕获防止异常被吞，无法查找
+        try {
+            callbackSuccess(file);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     @Override
@@ -59,7 +68,7 @@ public abstract class APIDownloadCallBack implements Callback.ProgressCallback<F
             //connect timed out
             if (arg0 instanceof TimeoutException || arg0 instanceof SocketTimeoutException || arg0 instanceof UnknownHostException) {
                 errorLevel = 3;
-                error = "download error";
+                error = "download time out";
             } else if (arg0 instanceof HttpException) {
                 HttpException httpEx = (HttpException) arg0;
                 error = httpEx.getResult();
@@ -71,17 +80,17 @@ public abstract class APIDownloadCallBack implements Callback.ProgressCallback<F
                 error = "未知错误";
             }
             LogUtils.debug("HttpUtil", "result=" + error);
-            saveNetException(error, responseCode,errorLevel);
+            saveNetException(error, responseCode, errorLevel);
         } catch (Exception e) {
             // TODO: handle exception
             e.printStackTrace();
         }
-        callbackError(arg0,arg1);
+        callbackError(arg0, arg1);
     }
 
     @Override
     public void onCancelled(CancelledException e) {
-        saveNetException("download cancel",0,3);
+        saveNetException("download cancel", 0, 3);
         callbackCanceled(e);
     }
 
@@ -92,29 +101,17 @@ public abstract class APIDownloadCallBack implements Callback.ProgressCallback<F
 
     /**
      * 处理异常网络请求
+     *
      * @param error
      * @param responseCode
      */
-    private void saveNetException(String error, int responseCode,int errorLevel) {
+    private void saveNetException(String error, int responseCode, int errorLevel) {
         if (!AppUtils.isApkDebugable(context)) {
             AppException appException = new AppException(System.currentTimeMillis(), AppUtils.getVersion(context), errorLevel, url, error, responseCode);
             AppExceptionCacheUtils.saveAppException(context, appException);
         }
     }
 
-    /**
-     * 记录文件下载后验证异常
-     * @param context
-     * @param url
-     * @param error
-     * @param errorLevel
-     */
-    public static void saveFileCheckException(Context context,String url,String error,int errorLevel) {
-        if (!AppUtils.isApkDebugable(context)) {
-            AppException appException = new AppException(System.currentTimeMillis(), AppUtils.getVersion(context), errorLevel, url, error, 0);
-            AppExceptionCacheUtils.saveAppException(context, appException);
-        }
-    }
 
     public abstract void callbackStart();
 

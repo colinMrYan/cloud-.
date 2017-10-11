@@ -5,9 +5,12 @@ import android.content.Intent;
 
 import com.inspur.emmcloud.api.APIDownloadCallBack;
 import com.inspur.emmcloud.api.APIUri;
+import com.inspur.emmcloud.bean.AppException;
 import com.inspur.emmcloud.bean.ReactNativeUpdateBean;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.ui.find.FindFragment;
+import com.inspur.emmcloud.util.AppExceptionCacheUtils;
+import com.inspur.emmcloud.util.AppUtils;
 import com.inspur.emmcloud.util.DownLoaderUtils;
 import com.inspur.emmcloud.util.FileSafeCode;
 import com.inspur.emmcloud.util.FileUtils;
@@ -173,7 +176,22 @@ public class ReactNativeFlow {
             Intent intent = new Intent("com.inspur.react.success");
             context.sendBroadcast(intent);
         } else {
-            APIDownloadCallBack.saveFileCheckException(context,reactZipFilePath,"discover download not compelete error",3);
+            saveFileCheckException(context,reactZipFilePath,"discover download not compelete error",3);
+        }
+    }
+
+    /**
+     * 记录文件下载后验证异常
+     *
+     * @param context
+     * @param url
+     * @param error
+     * @param errorLevel
+     */
+    private static void saveFileCheckException(Context context, String url, String error, int errorLevel) {
+        if (!AppUtils.isApkDebugable(context)) {
+            AppException appException = new AppException(System.currentTimeMillis(), AppUtils.getVersion(context), errorLevel, url, error, 0);
+            AppExceptionCacheUtils.saveAppException(context, appException);
         }
     }
 
