@@ -85,9 +85,8 @@ import java.util.List;
  * @author Administrator
  */
 public class IndexActivity extends BaseFragmentActivity implements
-        OnTabChangeListener, OnTouchListener, CommonCallBack, MyAppFragment.AppLanguageState {
+        OnTabChangeListener, OnTouchListener, MyAppFragment.AppLanguageState {
     private static final int SYNC_ALL_BASE_DATA_SUCCESS = 0;
-    private static final int CHANGE_TAB = 2;
     private static final int RELOAD_WEB = 3;
     private long lastBackTime;
     public MyFragmentTabHost mTabHost;
@@ -173,10 +172,6 @@ public class IndexActivity extends BaseFragmentActivity implements
         }
     }
 
-    public WeakHandler getHandler() {
-        return handler;
-    }
-
 
     /***
      * 打开app应用行为分析上传的Service;
@@ -238,10 +233,7 @@ public class IndexActivity extends BaseFragmentActivity implements
 
                         ((MyApplication) getApplicationContext())
                                 .setIsContactReady(true);
-                        refreshSessionData();
-                        break;
-                    case CHANGE_TAB:
-                        mTabHost.setCurrentTab(getTabIndex());
+                        notifySyncAllBaseDataSuccess();
                         break;
                     case RELOAD_WEB:
                         if (webView != null) {
@@ -258,7 +250,7 @@ public class IndexActivity extends BaseFragmentActivity implements
     /**
      * 通讯录完成时发送广播
      */
-    private void refreshSessionData() {
+    private void notifySyncAllBaseDataSuccess() {
         // TODO Auto-generated method stub
         //当通讯录完成时需要刷新头像
         Intent intent = new Intent("message_notify");
@@ -325,7 +317,6 @@ public class IndexActivity extends BaseFragmentActivity implements
             newMessageTipsLayout.setVisibility(View.GONE);
         } else {
             String shoWNum = "";
-
             if (num > 99) {
                 shoWNum = "99+";
             } else {
@@ -334,7 +325,6 @@ public class IndexActivity extends BaseFragmentActivity implements
             newMessageTipsLayout.setVisibility(View.VISIBLE);
             newMessageTipsText.setText(shoWNum);
         }
-
     }
 
     /**
@@ -374,36 +364,38 @@ public class IndexActivity extends BaseFragmentActivity implements
             if (appTabList != null && appTabList.size() > 0) {
                 mainTabs = new MainTabBean[appTabList.size()];
                 for (int i = 0; i < appTabList.size(); i++) {
-                    if (appTabList.get(i).getComponent().equals("communicate")) {
-                        MainTabBean mainTabBean = new MainTabBean(i, R.string.communicate, R.drawable.selector_tab_message_btn, MessageFragment.class);
-                        mainTabBean.setCommpant(appTabList.get(i).getComponent());
-                        mainTabs[i] = internationalMainLanguage(appTabList.get(i), environmentLanguage, mainTabBean);
-                    } else if (appTabList.get(i).getComponent().equals("work")) {
-                        MainTabBean mainTabBean = new MainTabBean(i, R.string.work, R.drawable.selector_tab_work_btn,
-                                WorkFragment.class);
-                        mainTabs[i] = internationalMainLanguage(appTabList.get(i), environmentLanguage, mainTabBean);
-                    } else if (appTabList.get(i).getComponent().equals("find")) {
-                        MainTabBean mainTabBean = new MainTabBean(i, R.string.find, R.drawable.selector_tab_find_btn,
-                                FindFragment.class);
-                        mainTabs[i] = internationalMainLanguage(appTabList.get(i), environmentLanguage, mainTabBean);
-                    } else if (appTabList.get(i).getComponent().equals("application")) {
-                        MainTabBean mainTabBean = new MainTabBean(i, R.string.application, R.drawable.selector_tab_app_btn,
-                                MyAppFragment.class);
-                        mainTabs[i] = internationalMainLanguage(appTabList.get(i), environmentLanguage, mainTabBean);
-                    } else if (appTabList.get(i).getComponent().equals("mine")) {
-                        MainTabBean mainTabBean = new MainTabBean(i, R.string.mine, R.drawable.selector_tab_more_btn,
-                                MoreFragment.class);
-                        mainTabs[i] = internationalMainLanguage(appTabList.get(i), environmentLanguage, mainTabBean);
-                    } else {
-                        MainTabBean mainTabBean = new MainTabBean(i, R.string.unknown, R.drawable.selector_tab_unknown_btn,
-                                NotSupportFragment.class);
-                        mainTabs[i] = internationalMainLanguage(appTabList.get(i), environmentLanguage, mainTabBean);
+                    MainTabBean mainTabBean = null;
+                    switch (appTabList.get(i).getComponent()) {
+                        case "communicate":
+                            mainTabBean = new MainTabBean(i, R.string.communicate, R.drawable.selector_tab_message_btn, MessageFragment.class);
+                            mainTabBean.setCommpant(appTabList.get(i).getComponent());
+                            break;
+                        case "work":
+                            mainTabBean = new MainTabBean(i, R.string.work, R.drawable.selector_tab_work_btn,
+                                    WorkFragment.class);
+                            break;
+                        case "find":
+                            mainTabBean = new MainTabBean(i, R.string.find, R.drawable.selector_tab_find_btn,
+                                    FindFragment.class);
+                            break;
+                        case "application":
+                            mainTabBean = new MainTabBean(i, R.string.application, R.drawable.selector_tab_app_btn,
+                                    MyAppFragment.class);
+                            break;
+                        case "mine":
+                            mainTabBean = new MainTabBean(i, R.string.mine, R.drawable.selector_tab_more_btn,
+                                    MoreFragment.class);
+                            break;
+                        default:
+                            mainTabBean = new MainTabBean(i, R.string.unknown, R.drawable.selector_tab_unknown_btn,
+                                    NotSupportFragment.class);
+                            break;
                     }
+                    mainTabs[i] = internationalMainLanguage(appTabList.get(i), environmentLanguage, mainTabBean);
                 }
-            } else {
-                mainTabs = addNoDataTabs();
             }
-        } else {
+        }
+        if (mainTabs == null){
             mainTabs = addNoDataTabs();
         }
         displayMainTabs(mainTabs);
@@ -468,9 +460,10 @@ public class IndexActivity extends BaseFragmentActivity implements
         }
     }
 
-    @Override
-    public void execute() {
-        //IndexActiveX首先打开MessageFragment,然后打开其他tab
+    /**
+     * IndexActiveX首先打开MessageFragment,然后打开其他tab
+     */
+    public void openTargetFragment() {
         try {
             isCommunicationRunning = true;
             int targetTabIndex = getTabIndex();
@@ -823,21 +816,13 @@ public class IndexActivity extends BaseFragmentActivity implements
         if (command.equals("FORWARD")) {
             PreferencesByUserAndTanentUtils.putString(IndexActivity.this, "app_tabbar_version", getAppTabAutoResult.getVersion());
             PreferencesByUserAndTanentUtils.putString(IndexActivity.this, "app_tabbar_info_current", getAppTabAutoResult.getAppTabInfo());
-            updateTabbar();
+            mTabHost.clearAllTabs(); //更新tabbar
+            handleAppTabs();
         } else if (command.equals("STANDBY")) {
-//            updateTabbar();
 //            LogUtils.YfcDebug("收到保持现状指令");
         } else {
             LogUtils.YfcDebug("收到不支持的指令");
         }
-    }
-
-    /**
-     * 更新tabbar
-     */
-    private void updateTabbar() {
-        mTabHost.clearAllTabs();
-        handleAppTabs();
     }
 
 

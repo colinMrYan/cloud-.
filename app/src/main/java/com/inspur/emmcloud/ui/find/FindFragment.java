@@ -1,9 +1,5 @@
 package com.inspur.emmcloud.ui.find;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -36,7 +32,6 @@ public class FindFragment extends Fragment implements DefaultHardwareBackBtnHand
     private ReactRootView mReactRootView;
     private ReactInstanceManager mReactInstanceManager;
     private String reactCurrentFilePath;
-    private RefreshReactNativeReceiver reactNativeReceiver;
     private String userId = "";
     public static boolean hasUpdated = false;
 
@@ -90,13 +85,11 @@ public class FindFragment extends Fragment implements DefaultHardwareBackBtnHand
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         userId = ((MyApplication) getActivity().getApplication()).getUid();
-        reactNativeReceiver = new RefreshReactNativeReceiver();
 //        reactCurrentFilePath = MyAppConfig.getReactCurrentFilePath(getActivity(), userId);
         reactCurrentFilePath = MyAppConfig.getReactAppFilePath(getActivity(),userId,"discover");
         if (!ReactNativeFlow.checkBundleFileIsExist(reactCurrentFilePath + "/index.android.bundle")) {
             ReactNativeFlow.unZipFile(getActivity(), "bundle-v0.1.0.android.zip", reactCurrentFilePath, true);
         }
-        registerReactNativeReceiver();
     }
 
 
@@ -135,38 +128,16 @@ public class FindFragment extends Fragment implements DefaultHardwareBackBtnHand
     }
 
 
-    /**
-     * 注册刷新广播
-     */
-    private void registerReactNativeReceiver() {
-        IntentFilter filter = new IntentFilter();
-        filter.addAction("com.inspur.react.success");
-        getActivity().registerReceiver(reactNativeReceiver, filter);
-    }
 
     @Override
     public void invokeDefaultOnBackPressed() {
         getActivity().onBackPressed();
     }
 
-    class RefreshReactNativeReceiver extends BroadcastReceiver {
-        private static final String ACTION_REFRESH = "com.inspur.react.success";
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String action = intent.getAction();
-            if (action.equals(ACTION_REFRESH)) {
-                createReactNativeView(true);
-            }
-        }
-    }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (reactNativeReceiver != null) {
-            getActivity().unregisterReceiver(reactNativeReceiver);
-            reactNativeReceiver = null;
-        }
         hasUpdated = false;
     }
 

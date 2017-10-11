@@ -39,7 +39,6 @@ import com.inspur.emmcloud.bean.MatheSet;
 import com.inspur.emmcloud.bean.Msg;
 import com.inspur.emmcloud.bean.PVCollectModel;
 import com.inspur.emmcloud.broadcastreceiver.MsgReceiver;
-import com.inspur.emmcloud.callback.CommonCallBack;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
@@ -149,8 +148,7 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        CommonCallBack callBack = (CommonCallBack) context;
-        callBack.execute();
+        ((IndexActivity)getActivity()).openTargetFragment();
     }
 
     @Override
