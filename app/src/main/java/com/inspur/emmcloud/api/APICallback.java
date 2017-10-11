@@ -68,6 +68,7 @@ public abstract class APICallback implements CommonCallback<String> {
 			if (StringUtils.isBlank(error)) {
 				error = "未知错误";
 			}
+			LogUtils.debug("HttpUtil", "url=" + url);
 			LogUtils.debug("HttpUtil", "result=" + error);
 
 			if (responseCode == 401) {
@@ -109,6 +110,7 @@ public abstract class APICallback implements CommonCallback<String> {
 	@Override
 	public void onSuccess(String arg0) {
 		// TODO Auto-generated method stub
+		LogUtils.debug("HttpUtil", "url=" + url);
 		LogUtils.debug("HttpUtil", "result=" + arg0);
 		//Callback回调到回调处，出异常，则可能既调onSuccess又调OnError，加try为了将异常在此处捕获防止异常被吞，无法查找
 		try {
