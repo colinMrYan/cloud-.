@@ -14,22 +14,22 @@ public class AppAdsBean {
 
     /**
      * id : bb24bc90-861d-11e7-9d0e-59f9f22b2862
-     * ads_name : 应用中心banner
-     * ads_loc_id : top
-     * url : https://ecm.inspur.com
+     * adsName : 应用中心banner
+     * adsLocId : top
+     * uri : https://ecm.inspur.com
      * status : 1
-     * ads_category : ads_app
-     * sort_order : 1
+     * adsCategory : ads_app
+     * sortOrder : 1
      * legend : https://emm.inspur.com:443/img/headimg/bb174f10-861d-11e7-a296-91fc4ed6daaa
      */
 
     private String id = "";
-    private String ads_name = "";
-    private String ads_loc_id = "";
-    private String url = "";
+    private String adsName = "";
+    private String adsLocId = "";
+    private String uri = "";
     private int status = 0;
-    private String ads_category = "";
-    private int sort_order = 0;
+    private String adsCategory = "";
+    private int sortOrder = 0;
     private String legend = "";
 
     public AppAdsBean() {
@@ -37,12 +37,12 @@ public class AppAdsBean {
 
     public AppAdsBean(JSONObject obj) {
         id = JSONUtils.getString(obj, "id", "");
-        ads_name = JSONUtils.getString(obj, "ads_name", "");
-        ads_loc_id = JSONUtils.getString(obj, "ads_loc_id", "");
-        url = JSONUtils.getString(obj, "url", "");
+        adsName = JSONUtils.getString(obj, "adsName", "");
+        adsLocId = JSONUtils.getString(obj, "adsLocId", "");
+        uri = JSONUtils.getString(obj, "uri", "");
         status = JSONUtils.getInt(obj, "status", 0);
-        ads_category = JSONUtils.getString(obj, "ads_category", "");
-        sort_order = JSONUtils.getInt(obj, "sort_order", 0);
+        adsCategory = JSONUtils.getString(obj, "adsCategory", "");
+        sortOrder = JSONUtils.getInt(obj, "sortOrder", 0);
         legend = JSONUtils.getString(obj, "legend", "");
     }
 
@@ -54,28 +54,28 @@ public class AppAdsBean {
         this.id = id;
     }
 
-    public String getAds_name() {
-        return ads_name;
+    public String getAdsName() {
+        return adsName;
     }
 
-    public void setAds_name(String ads_name) {
-        this.ads_name = ads_name;
+    public void setAdsName(String adsName) {
+        this.adsName = adsName;
     }
 
-    public String getAds_loc_id() {
-        return ads_loc_id;
+    public String getAdsLocId() {
+        return adsLocId;
     }
 
-    public void setAds_loc_id(String ads_loc_id) {
-        this.ads_loc_id = ads_loc_id;
+    public void setAdsLocId(String adsLocId) {
+        this.adsLocId = adsLocId;
     }
 
-    public String getUrl() {
-        return url;
+    public String getUri() {
+        return uri;
     }
 
-    public void setUrl(String url) {
-        this.url = url;
+    public void setUri(String uri) {
+        this.uri = uri;
     }
 
     public int getStatus() {
@@ -86,20 +86,20 @@ public class AppAdsBean {
         this.status = status;
     }
 
-    public String getAds_category() {
-        return ads_category;
+    public String getAdsCategory() {
+        return adsCategory;
     }
 
-    public void setAds_category(String ads_category) {
-        this.ads_category = ads_category;
+    public void setAdsCategory(String adsCategory) {
+        this.adsCategory = adsCategory;
     }
 
-    public int getSort_order() {
-        return sort_order;
+    public int getSortOrder() {
+        return sortOrder;
     }
 
-    public void setSort_order(int sort_order) {
-        this.sort_order = sort_order;
+    public void setSortOrder(int sortOrder) {
+        this.sortOrder = sortOrder;
     }
 
     public String getLegend() {

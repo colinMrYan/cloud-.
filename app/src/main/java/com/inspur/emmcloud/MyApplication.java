@@ -25,6 +25,7 @@ import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.bean.Enterprise;
 import com.inspur.emmcloud.bean.GetMyInfoResult;
 import com.inspur.emmcloud.bean.Language;
+import com.inspur.emmcloud.callback.MyActivityLifecycleCallbacks;
 import com.inspur.emmcloud.callback.OauthCallBack;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.push.WebSocketPush;
@@ -89,6 +90,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         init();
         setAppLanguageAndFontScale();
         removeAllSessionCookie();
+        registerActivityLifecycleCallbacks(new MyActivityLifecycleCallbacks());
     }
 
 

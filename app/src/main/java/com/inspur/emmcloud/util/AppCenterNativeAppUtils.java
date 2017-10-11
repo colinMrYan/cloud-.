@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.EditText;
 
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.api.APIDownloadCallBack;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.AppAPIService;
 import com.inspur.emmcloud.bean.App;
@@ -15,8 +16,6 @@ import com.inspur.emmcloud.bean.GetMyInfoResult;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.dialogs.MyDialog;
-
-import org.xutils.common.Callback;
 
 import java.io.File;
 
@@ -151,19 +150,15 @@ public class AppCenterNativeAppUtils {
 			loadingDlg.show();
 			loadingDlg.setText("");
 			final String downloadStr = context.getString(R.string.app_download);
-			Callback.ProgressCallback<File> progressCallback = new Callback.ProgressCallback<File>() {
-				@Override
-				public void onWaiting() {
-
-				}
+			APIDownloadCallBack progressCallback = new APIDownloadCallBack(context,app.getInstallUri()){
 
 				@Override
-				public void onStarted() {
+				public void callbackStart() {
 					loadingDlg.setText(downloadStr + "%0");
 				}
 
 				@Override
-				public void onLoading(long total, long current, boolean b) {
+				public void callbackLoading(long total, long current, boolean isUploading) {
 					if (loadingDlg != null && loadingDlg.isShowing()) {
 						if (total == 0) {
 							total = 1;
@@ -175,7 +170,7 @@ public class AppCenterNativeAppUtils {
 				}
 
 				@Override
-				public void onSuccess(File file) {
+				public void callbackSuccess(File file) {
 					if (loadingDlg != null && loadingDlg.isShowing()) {
 						loadingDlg.dismiss();
 					}
@@ -183,7 +178,7 @@ public class AppCenterNativeAppUtils {
 				}
 
 				@Override
-				public void onError(Throwable throwable, boolean b) {
+				public void callbackError(Throwable arg0, boolean arg1) {
 					if (loadingDlg != null && loadingDlg.isShowing()) {
 						loadingDlg.dismiss();
 					}
@@ -191,12 +186,7 @@ public class AppCenterNativeAppUtils {
 				}
 
 				@Override
-				public void onCancelled(CancelledException e) {
-
-				}
-
-				@Override
-				public void onFinished() {
+				public void callbackCanceled(CancelledException e) {
 
 				}
 			};

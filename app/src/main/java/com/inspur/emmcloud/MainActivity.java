@@ -16,13 +16,12 @@ import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.ui.login.LoginActivity;
 import com.inspur.emmcloud.ui.mine.setting.GuideActivity;
 import com.inspur.emmcloud.util.AppUtils;
-import com.inspur.emmcloud.util.FileUtils;
 import com.inspur.emmcloud.util.IntentUtils;
-import com.inspur.emmcloud.util.LanguageUtils;
 import com.inspur.emmcloud.util.LoginUtils;
 import com.inspur.emmcloud.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.ResolutionUtils;
+import com.inspur.emmcloud.util.SplashPageUtils;
 import com.inspur.emmcloud.util.StateBarColor;
 import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.UpgradeUtils;
@@ -41,7 +40,7 @@ import pl.droidsonroids.gif.GifImageView;
  *
  * @author Administrator
  */
-public class MainActivity extends Activity { // 此处不能继承BaseActivity 推送会有问题
+public class MainActivity extends Activity{ // 此处不能继承BaseActivity 推送会有问题
 
 	private static final int LOGIN_SUCCESS = 0;
 	private static final int LOGIN_FAIL = 1;
@@ -51,7 +50,6 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
 	private static final int DONOT_UPGRADE = 12;
 	private static final long SPLASH_PAGE_TIME = 2500;
 	private Handler handler;
-	private LanguageUtils languageUtils;
 	private long activitySplashShowTime = 0;
 	private Timer timer;
 
@@ -59,7 +57,6 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		((MyApplication) getApplicationContext()).addActivity(this);
 		StateBarColor.hideStatusBar(this);
 		setContentView(R.layout.activity_main);
 		init();
@@ -229,7 +226,7 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
 				startApp();
 			}
 		};
-		if (checkIfShowSplashPage() && (leftTime > 0)) {
+		if (new SplashPageUtils(MainActivity.this).checkIfShowSplashPage() && (leftTime > 0)) {
 			showSkipButton();
 			timer = new Timer();
 			timer.schedule(task, leftTime);
@@ -257,28 +254,6 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
 						true);
 			}
 		}
-	}
-
-	/**
-	 * 检查是否有可以展示的图片
-	 *
-	 * @return
-	 */
-	private boolean checkIfShowSplashPage() {
-		boolean flag = false;
-		String splashInfo = PreferencesByUserAndTanentUtils.getString(MainActivity.this, "splash_page_info");
-		if (!StringUtils.isBlank(splashInfo)) {
-			SplashPageBean splashPageBeanLoacal = new SplashPageBean(splashInfo);
-			SplashPageBean.PayloadBean.ResourceBean.DefaultBean defaultBean = splashPageBeanLoacal.getPayload()
-					.getResource().getDefaultX();
-			String splashImgPath = getSplashPagePath(defaultBean);
-			long startTime = splashPageBeanLoacal.getPayload().getEffectiveDate();
-			long endTime = splashPageBeanLoacal.getPayload().getExpireDate();
-			long nowTime = System.currentTimeMillis();
-			flag = FileUtils.isFileExist(splashImgPath) &&
-					((nowTime > startTime) && (nowTime < endTime));
-		}
-		return flag;
 	}
 
 
@@ -322,7 +297,6 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
 		}
 	}
 
-
 	/**
 	 * 闪屏文件路径
 	 *
@@ -348,10 +322,10 @@ public class MainActivity extends Activity { // 此处不能继承BaseActivity �
 		return name;
 	}
 
+
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		((MyApplication) getApplicationContext()).removeActivity(this);
 		if(handler != null){
 			handler = null;
 		}

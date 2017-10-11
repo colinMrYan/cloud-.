@@ -1,11 +1,11 @@
 package com.inspur.emmcloud.adapter;
 
-import java.util.List;
-
 import android.content.Context;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.View;
+
+import java.util.List;
 /**
  * 实现ViewPager页卡
  *
@@ -20,14 +20,12 @@ public class MyViewPagerAdapter extends PagerAdapter{
 	public MyViewPagerAdapter(Context context, List<View> array) {
 		this.mLists=array;
 	}
+
 	@Override
 	public int getCount() {
 		return mLists.size();
 	}
 
-	
-	
-	
 	@Override
 	public CharSequence getPageTitle(int position) {
 		// TODO Auto-generated method stub

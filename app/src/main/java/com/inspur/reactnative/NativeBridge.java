@@ -20,7 +20,6 @@ import com.inspur.emmcloud.bean.GetMyInfoResultWithoutSerializable;
 import com.inspur.emmcloud.bean.SearchModel;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.util.ContactCacheUtils;
-import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.StringUtils;
 
@@ -133,7 +132,6 @@ public class NativeBridge extends ReactContextBaseJavaModule implements Activity
             for (int i = 0; i < arraySize; i++) {
                 try {
                     SearchModel searchModel = new SearchModel(array.getMap(i));
-                    LogUtils.YfcDebug("searchModel："+searchModel.toString());
                     searchModelList.add(searchModel);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -187,11 +185,7 @@ public class NativeBridge extends ReactContextBaseJavaModule implements Activity
                         promise.resolve(writableNativeArray);
                     } else {
                         WritableNativeMap map = contactList.get(0).contact2Map(getCurrentActivity());
-                        LogUtils.YfcDebug("选择审批人："+map.toString());
-//                        array.pushMap(map);
                         promise.resolve(map);
-//                        promise.resolve(array);
-
                     }
 
                 } else if (resultCode == RESULT_CANCELED) {
