@@ -558,6 +558,23 @@ public class JSONUtils {
     }
 
     /**
+     * String转为JSONObject
+     * @param jsonData
+     * @return
+     */
+    public static JSONObject getJSONObject(String jsonData){
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject = new JSONObject(jsonData);
+        } catch (JSONException e) {
+            if (isPrintException) {
+                e.printStackTrace();
+            }
+        }
+        return jsonObject;
+    }
+
+    /**
      * get JSONObject from jsonObject
      * 
      * @param jsonObject

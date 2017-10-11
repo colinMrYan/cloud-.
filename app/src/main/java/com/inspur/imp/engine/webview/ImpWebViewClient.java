@@ -34,6 +34,7 @@ public class ImpWebViewClient extends WebViewClient {
 	private String urlparam = "";
 	private final String F_UEX_SCRIPT_SELF_FINISH = "javascript:if(window.init){window.init();}";
 	private ImpWebView myWebView;
+	private String errolUrl = "file:///android_asset/error/error.html";
 	private LinearLayout loadFailLayout;
 	private Handler mHandler = null;
 	private Runnable runnable = null;
@@ -113,7 +114,6 @@ public class ImpWebViewClient extends WebViewClient {
 
 		((ImpActivity)(view.getContext())).initWebViewGoBackOrClose();
 		ImpWebView webview = (ImpWebView) view;
-
 		if (webview.destroyed || url.contains("error")) {
 			return;
 		}
@@ -130,12 +130,6 @@ public class ImpWebViewClient extends WebViewClient {
 		CookieSyncManager.getInstance().sync();
 		webview.initPlugin();
 	}
-
-
-
-
-
-
 
 	/*
 	 * 网页加载失败，取消加载，并清理当前的view
