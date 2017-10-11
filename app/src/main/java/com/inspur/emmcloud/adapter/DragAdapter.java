@@ -2,6 +2,7 @@ package com.inspur.emmcloud.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,9 +25,9 @@ import com.inspur.emmcloud.util.DensityUtil;
 import com.inspur.emmcloud.util.ImageDisplayUtils;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
+import com.inspur.emmcloud.widget.GradientDrawableBuilder;
 import com.inspur.emmcloud.widget.ImageViewRound;
 import com.inspur.emmcloud.widget.LoadingDialog;
-
 
 import java.util.List;
 
@@ -72,6 +73,12 @@ public class DragAdapter extends BaseAdapter {
                 R.layout.my_app_item_view, null);
         ImageViewRound iconImg = (ImageViewRound) convertView
                 .findViewById(R.id.icon_image);
+        TextView unhandledNotification = (TextView) convertView.findViewById(R.id.unhandled_notification);
+        GradientDrawable gradientDrawable = new GradientDrawableBuilder()
+                .setCornerRadius(DensityUtil.dip2px(context,40))
+                .setBackgroundColor(0xFFFF0033)
+                .setStrokeColor(0xFFFF0033).build();
+        unhandledNotification.setBackground(gradientDrawable);
         iconImg.setType(ImageViewRound.TYPE_ROUND);
         iconImg.setRoundRadius(DensityUtil.dip2px(context, 10));
         TextView nameText = (TextView) convertView.findViewById(R.id.name_text);
@@ -82,8 +89,6 @@ public class DragAdapter extends BaseAdapter {
         if (canEdit) {
             if (!app.getIsMustHave()) {
                 deleteImg.setVisibility(View.VISIBLE);
-            } else {
-                deleteImg.setVisibility(View.GONE);
             }
             startAnimation(convertView, position);
         } else {
