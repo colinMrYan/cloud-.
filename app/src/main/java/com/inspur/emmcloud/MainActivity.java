@@ -139,7 +139,6 @@ public class MainActivity extends Activity{ // 此处不能继承BaseActivity �
 			case R.id.splash_skip_btn:
 				if (timer != null) {
 					timer.cancel();
-					timer = null;
 					startApp();
 				}
 				break;
@@ -221,7 +220,6 @@ public class MainActivity extends Activity{ // 此处不能继承BaseActivity �
 			public void run() {
 				if(timer != null){
 					timer.cancel();
-					timer = null;
 				}
 				startApp();
 			}
@@ -328,6 +326,9 @@ public class MainActivity extends Activity{ // 此处不能继承BaseActivity �
 		super.onDestroy();
 		if(handler != null){
 			handler = null;
+		}
+		if(timer != null){
+			timer = null;
 		}
 	}
 }

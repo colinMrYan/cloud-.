@@ -259,7 +259,9 @@ public class ImpActivity extends ImpBaseActivity {
         Dialog dialog = new Dialog(this, R.style.transparentFrameWindowStyle);
         dialog.setContentView(view, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT));
-        initHelpUrlViews(dialog,view);
+        if(!StringUtils.isBlank(helpUrl)){
+            initHelpUrlViews(dialog,view);
+        }
         initFontSizeDialogViews(view);
         Window window = dialog.getWindow();
         // 设置显示动画
@@ -288,7 +290,7 @@ public class ImpActivity extends ImpBaseActivity {
      * 初始化帮助view
      */
     private void initHelpUrlViews(final Dialog dialog , View view) {
-        view.findViewById(R.id.app_imp_crm_help_layout).setVisibility(StringUtils.isBlank(helpUrl)?View.GONE:View.VISIBLE);
+        view.findViewById(R.id.app_imp_crm_help_layout).setVisibility(View.VISIBLE);
         view.findViewById(R.id.app_news_share_btn).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {

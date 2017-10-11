@@ -180,7 +180,7 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
      */
     private void refreshAppListView() {
         hasCommonlyApp = MyAppCacheUtils.getHasCommonlyApp(getActivity());
-        List<AppGroupBean> appGroupList = MyAppCacheUtils.getMyApps(getContext());
+        List<AppGroupBean> appGroupList = MyAppCacheUtils.getMyAppList(getContext());
         if(appListAdapter != null){
             appListAdapter.setAppAdapterList(appGroupList);
             appListAdapter.notifyDataSetChanged();
@@ -950,7 +950,7 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
         @Override
         protected List<AppGroupBean> doInBackground(GetAppGroupResult... params) {
             try {
-                String appCache = MyAppCacheUtils.getMyAppsData(getActivity());
+                String appCache = MyAppCacheUtils.getMyAppListJson(getActivity());
                 isNeedRefreshApp = (StringUtils.isBlank(appCache) || isNeedRefreshApp);
                 List<AppGroupBean> appGroupList = handleAppList((params[0])
                         .getAppGroupBeanList());
