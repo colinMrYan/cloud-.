@@ -25,12 +25,14 @@ import android.widget.TextView;
 import com.inspur.emmcloud.BaseFragmentActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.api.APIDownloadCallBack;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.AppAPIService;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.api.apiservice.ContactAPIService;
 import com.inspur.emmcloud.api.apiservice.ReactNativeAPIService;
 import com.inspur.emmcloud.bean.AndroidBundleBean;
+import com.inspur.emmcloud.bean.AppException;
 import com.inspur.emmcloud.bean.AppTabAutoBean;
 import com.inspur.emmcloud.bean.ChannelGroup;
 import com.inspur.emmcloud.bean.Contact;
@@ -56,6 +58,7 @@ import com.inspur.emmcloud.ui.mine.setting.LanguageChangeActivity;
 import com.inspur.emmcloud.ui.notsupport.NotSupportFragment;
 import com.inspur.emmcloud.ui.work.MainTabBean;
 import com.inspur.emmcloud.ui.work.WorkFragment;
+import com.inspur.emmcloud.util.AppExceptionCacheUtils;
 import com.inspur.emmcloud.util.AppUtils;
 import com.inspur.emmcloud.util.ChannelGroupCacheUtils;
 import com.inspur.emmcloud.util.ContactCacheUtils;
@@ -85,7 +88,6 @@ import com.inspur.reactnative.ReactNativeFlow;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.xutils.common.Callback;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -1000,15 +1002,7 @@ public class IndexActivity extends BaseFragmentActivity implements
             } else {
                 downloadSplashPage(UriUtils.getPreviewUri(defaultBean.getHdpi()), defaultBean.getHdpi());
             }
-        } else if (command.equals("ROLLBACK")) {
-//            ReactNativeFlow.moveFolder(MyAppConfig.getSplashPageImageLastVersionPath(IndexActivity.this,userId),
-//                    MyAppConfig.getSplashPageImageShowPath(IndexActivity.this,
-//                            userId, "splash"));
-        } else if (command.equals("STANDBY")) {
-        } else {
-            LogUtils.YfcDebug("当做STANDBY");
         }
-
     }
 
 
@@ -1017,30 +1011,23 @@ public class IndexActivity extends BaseFragmentActivity implements
      *
      * @param url
      */
-    private void downloadSplashPage(String url, String fileName) {
-        LogUtils.YfcDebug("下载文件名称：" + fileName);
+    private void downloadSplashPage(final String url, String fileName) {
         DownLoaderUtils downloaderUtils = new DownLoaderUtils();
-        LogUtils.YfcDebug("下载到的路径：" + MyAppConfig.getSplashPageImageShowPath(IndexActivity.this,
-                ((MyApplication) getApplication()).getUid(), "splash/" + fileName));
         downloaderUtils.startDownLoad(url, MyAppConfig.getSplashPageImageShowPath(IndexActivity.this,
-                ((MyApplication) getApplication()).getUid(), "splash/" + fileName), new Callback.ProgressCallback<File>() {
+                ((MyApplication) getApplication()).getUid(), "splash/" + fileName), new APIDownloadCallBack(IndexActivity.this,url) {
+
             @Override
-            public void onWaiting() {
+            public void callbackStart() {
 
             }
 
             @Override
-            public void onStarted() {
+            public void callbackLoading(long total, long current, boolean isUploading) {
 
             }
 
             @Override
-            public void onLoading(long l, long l1, boolean b) {
-
-            }
-
-            @Override
-            public void onSuccess(File file) {
+            public void callbackSuccess(File file) {
                 String splashInfoOld = PreferencesByUserAndTanentUtils.getString(IndexActivity.this, "splash_page_info_old", "");
                 SplashPageBean splashPageBeanLocalOld = new SplashPageBean(splashInfoOld);
                 String splashInfoShowing = PreferencesByUserAndTanentUtils.getString(IndexActivity.this, "splash_page_info", "");
@@ -1062,40 +1049,50 @@ public class IndexActivity extends BaseFragmentActivity implements
                         writeBackSplashPageLog("FORWARD", splashPageBeanLocalOld.getId().getVersion()
                                 , splashPageBeanLocalShowing.getId().getVersion());
                     } else {
-                        LogUtils.YfcDebug("Sha256验证出错：" + filelSha256 + "从更新信息获取到的sha256" + sha256Code);
+                        saveFileCheckException(IndexActivity.this,url,"splash sha256 Error",2);
                     }
 
                 }
             }
 
             @Override
-            public void onError(Throwable throwable, boolean b) {
+            public void callbackError(Throwable arg0, boolean arg1) {
 
             }
 
             @Override
-            public void onCancelled(CancelledException e) {
-
-            }
-
-            @Override
-            public void onFinished() {
+            public void callbackCanceled(CancelledException e) {
 
             }
         });
     }
 
     /**
+     * 记录文件下载后验证异常
+     *
+     * @param context
+     * @param url
+     * @param error
+     * @param errorLevel
+     */
+    private void saveFileCheckException(Context context, String url, String error, int errorLevel) {
+        if (!AppUtils.isApkDebugable(context)) {
+            AppException appException = new AppException(System.currentTimeMillis(), AppUtils.getVersion(context), errorLevel, url, error, 0);
+            AppExceptionCacheUtils.saveAppException(context, appException);
+        }
+    }
+
+    /**
      * 写回闪屏日志
      *
-     * @param s
+     * @param command
      */
-    private void writeBackSplashPageLog(String s, String preversion, String currentVersion) {
+    private void writeBackSplashPageLog(String command, String preversion, String currentVersion) {
         String clientId = PreferencesUtils.getString(IndexActivity.this, UriUtils.tanent + userId +
                 "react_native_clientid", "");
         ReactNativeAPIService reactNativeAPIService = new ReactNativeAPIService(IndexActivity.this);
         reactNativeAPIService.setAPIInterface(new WebService());
-        reactNativeAPIService.writeBackSplashPageVersionChange(preversion, currentVersion, clientId, s);
+        reactNativeAPIService.writeBackSplashPageVersionChange(preversion, currentVersion, clientId, command);
     }
 
     /**
@@ -1109,11 +1106,6 @@ public class IndexActivity extends BaseFragmentActivity implements
             PreferencesByUserAndTanentUtils.putString(IndexActivity.this, "app_tabbar_version", getAppTabAutoResult.getVersion());
             PreferencesByUserAndTanentUtils.putString(IndexActivity.this, "app_tabbar_info_current", getAppTabAutoResult.getAppTabInfo());
             updateTabbar();
-        } else if (command.equals("STANDBY")) {
-//            updateTabbar();
-//            LogUtils.YfcDebug("收到保持现状指令");
-        } else {
-            LogUtils.YfcDebug("收到不支持的指令");
         }
     }
 

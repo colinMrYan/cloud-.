@@ -170,7 +170,6 @@ public class FileSafeCode {
                 code = "0"+code;
             }
         }
-        LogUtils.YfcDebug("监控到现在zip文件的code："+code);
         return code;
     }
 }

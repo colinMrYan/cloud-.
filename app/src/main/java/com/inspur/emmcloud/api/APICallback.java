@@ -110,6 +110,7 @@ public abstract class APICallback implements CommonCallback<String> {
 	public void onSuccess(String arg0) {
 		// TODO Auto-generated method stub
 		LogUtils.debug("HttpUtil", "result=" + arg0);
+		//Callback回调到回调处，出异常，则可能既调onSuccess又调OnError，加try为了将异常在此处捕获防止异常被吞，无法查找
 		try {
 			callbackSuccess(arg0);
 		} catch (Exception e) {
