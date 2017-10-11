@@ -651,13 +651,6 @@ public class APIUri {
 		return "";
 	}
 
-	/**
-	 * 根据appId获取appInfo
-	 * @return
-	 */
-	public static String getAppInfoUrl(){
-		return URL_BASE_EMM + "imp_app/getAppInfo";
-	}
 
 	public static String getAppConfigUrl(){return  URL_BASE_APP_CONFIG+"?key=WebAutoRotate&key=CommonFunctions";}
 }

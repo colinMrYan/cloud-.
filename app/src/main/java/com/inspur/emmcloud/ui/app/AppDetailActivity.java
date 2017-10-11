@@ -157,6 +157,9 @@ public class AppDetailActivity extends BaseActivity {
         if (NetUtils.isNetworkConnected(AppDetailActivity.this)) {
             loadingDlg.show();
             apiService.getAppInfo(appId);
+        }else{
+            app = (App) getIntent().getExtras().getSerializable("app");
+            initView(app);
         }
     }
 
