@@ -53,7 +53,6 @@ import com.inspur.emmcloud.util.ClientIDUtils;
 import com.inspur.emmcloud.util.ContactCacheUtils;
 import com.inspur.emmcloud.util.DbCacheUtils;
 import com.inspur.emmcloud.util.ImageDisplayUtils;
-import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.util.PreferencesByUserAndTanentUtils;
@@ -396,7 +395,7 @@ public class IndexActivity extends BaseFragmentActivity implements
             }
         }
         if (mainTabs == null){
-            mainTabs = addNoDataTabs();
+            mainTabs = addDefaultTabs();
         }
         displayMainTabs(mainTabs);
         return mainTabs;
@@ -481,7 +480,7 @@ public class IndexActivity extends BaseFragmentActivity implements
      *
      * @return
      */
-    private MainTabBean[] addNoDataTabs() {
+    private MainTabBean[] addDefaultTabs() {
         //无数据改为显示两个tab，数组变为2
         MainTabBean[] mainTabs = new MainTabBean[2];
         MainTabBean mainTabBeanCommunicate = new MainTabBean(0, R.string.communicate, R.drawable.selector_tab_message_btn,
@@ -818,10 +817,6 @@ public class IndexActivity extends BaseFragmentActivity implements
             PreferencesByUserAndTanentUtils.putString(IndexActivity.this, "app_tabbar_info_current", getAppTabAutoResult.getAppTabInfo());
             mTabHost.clearAllTabs(); //更新tabbar
             handleAppTabs();
-        } else if (command.equals("STANDBY")) {
-//            LogUtils.YfcDebug("收到保持现状指令");
-        } else {
-            LogUtils.YfcDebug("收到不支持的指令");
         }
     }
 

@@ -1,16 +1,17 @@
 package com.inspur.emmcloud.util;
 
 import android.app.Activity;
+import android.content.Context;
 
 import com.inspur.emmcloud.MyApplication;
+import com.inspur.emmcloud.api.APIDownloadCallBack;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.AppAPIService;
 import com.inspur.emmcloud.api.apiservice.ReactNativeAPIService;
+import com.inspur.emmcloud.bean.AppException;
 import com.inspur.emmcloud.bean.SplashPageBean;
 import com.inspur.emmcloud.callback.CommonCallBack;
 import com.inspur.emmcloud.config.MyAppConfig;
-
-import org.xutils.common.Callback;
 
 import java.io.File;
 
@@ -49,7 +50,6 @@ public class SplashPageUtils {
      * @param splashPageBean
      */
     private void updateSplashPageWithOrder(SplashPageBean splashPageBean) {
-        try {
             String command = splashPageBean.getCommand();
             if (command.equals("FORWARD")) {
                 String screenType = AppUtils.getScreenType(context);
@@ -64,19 +64,7 @@ public class SplashPageUtils {
                 } else {
                     downloadSplashPage(UriUtils.getPreviewUri(defaultBean.getHdpi()), defaultBean.getHdpi());
                 }
-            } else if (command.equals("ROLLBACK")) {
-//            ReactNativeFlow.moveFolder(MyAppConfig.getSplashPageImageLastVersionPath(context,userId),
-//                    MyAppConfig.getSplashPageImageShowPath(context,
-//                            userId, "splash"));
-            } else if (command.equals("STANDBY")) {
-            } else {
-                LogUtils.YfcDebug("当做STANDBY");
             }
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-
-
     }
 
     /**
@@ -84,30 +72,23 @@ public class SplashPageUtils {
      *
      * @param url
      */
-    private void downloadSplashPage(String url, String fileName) {
-        LogUtils.YfcDebug("下载文件名称：" + fileName);
+    private void downloadSplashPage(final String url, String fileName) {
         DownLoaderUtils downloaderUtils = new DownLoaderUtils();
-        LogUtils.YfcDebug("下载到的路径：" + MyAppConfig.getSplashPageImageShowPath(context,
-                ((MyApplication) context.getApplication()).getUid(), "splash/" + fileName));
         downloaderUtils.startDownLoad(url, MyAppConfig.getSplashPageImageShowPath(context,
-                ((MyApplication) context.getApplication()).getUid(), "splash/" + fileName), new Callback.ProgressCallback<File>() {
+                ((MyApplication) context.getApplicationContext()).getUid(), "splash/" + fileName), new APIDownloadCallBack(context, url) {
+
             @Override
-            public void onWaiting() {
+            public void callbackStart() {
 
             }
 
             @Override
-            public void onStarted() {
+            public void callbackLoading(long total, long current, boolean isUploading) {
 
             }
 
             @Override
-            public void onLoading(long l, long l1, boolean b) {
-
-            }
-
-            @Override
-            public void onSuccess(File file) {
+            public void callbackSuccess(File file) {
                 String splashInfoOld = PreferencesByUserAndTanentUtils.getString(context, "splash_page_info_old", "");
                 SplashPageBean splashPageBeanLocalOld = new SplashPageBean(splashInfoOld);
                 String splashInfoShowing = PreferencesByUserAndTanentUtils.getString(context, "splash_page_info", "");
@@ -129,24 +110,19 @@ public class SplashPageUtils {
                         writeBackSplashPageLog("FORWARD", splashPageBeanLocalOld.getId().getVersion()
                                 , splashPageBeanLocalShowing.getId().getVersion());
                     } else {
-                        LogUtils.YfcDebug("Sha256验证出错：" + filelSha256 + "从更新信息获取到的sha256" + sha256Code);
+                        saveFileCheckException(context, url, "splash sha256 Error", 2);
                     }
 
                 }
             }
 
             @Override
-            public void onError(Throwable throwable, boolean b) {
+            public void callbackError(Throwable arg0, boolean arg1) {
 
             }
 
             @Override
-            public void onCancelled(CancelledException e) {
-
-            }
-
-            @Override
-            public void onFinished() {
+            public void callbackCanceled(CancelledException e) {
 
             }
         });
@@ -213,6 +189,22 @@ public class SplashPageUtils {
         }
         return name;
     }
+
+    /**
+     * 记录文件下载后验证异常
+     *
+     * @param context
+     * @param url
+     * @param error
+     * @param errorLevel
+     */
+    private void saveFileCheckException(Context context, String url, String error, int errorLevel) {
+        if (!AppUtils.isApkDebugable(context)) {
+            AppException appException = new AppException(System.currentTimeMillis(), AppUtils.getVersion(context), errorLevel, url, error, 0);
+            AppExceptionCacheUtils.saveAppException(context, appException);
+        }
+    }
+
 
     private class WebService extends APIInterfaceInstance {
         @Override
