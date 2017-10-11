@@ -656,7 +656,7 @@ public class APIUri {
 	 * @return
 	 */
 	public static String getAppInfoUrl(){
-		return emmBaseUrl + "imp_app/getAppInfo";
+		return URL_BASE_EMM + "imp_app/getAppInfo";
 	}
 
 	public static String getAppConfigUrl(){return  URL_BASE_APP_CONFIG+"?key=WebAutoRotate&key=CommonFunctions";}
