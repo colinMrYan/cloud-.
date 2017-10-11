@@ -180,10 +180,15 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
      */
     private void refreshAppListView() {
         hasCommonlyApp = MyAppCacheUtils.getHasCommonlyApp(getActivity());
-        List<AppGroupBean> appGroupList = MyAppCacheUtils.getMyApps(getContext());
-        appListAdapter = new AppListAdapter(appGroupList);
-        appListView.setAdapter(appListAdapter);
-        appListAdapter.notifyDataSetChanged();
+        List<AppGroupBean> appGroupList = MyAppCacheUtils.getMyAppList(getContext());
+        if(appListAdapter != null){
+            appListAdapter.setAppAdapterList(appGroupList);
+            appListAdapter.notifyDataSetChanged();
+        }else{
+            appListAdapter = new AppListAdapter(appGroupList);
+            appListView.setAdapter(appListAdapter);
+            appListAdapter.notifyDataSetChanged();
+        }
     }
 
     /**
@@ -334,6 +339,7 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
                         }
                         if (getNeedCommonlyUseApp()) {
                             saveOrChangeCommonlyUseAppList(app, appAdapterList);
+                            MyAppCacheUtils.saveMyAppList(getContext(),appAdapterList);
                         }
                     }
                 }
@@ -795,8 +801,8 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
         }
         if (isNeedRefresh) {
             appListAdapter.notifyDataSetChanged();
+            MyAppCacheUtils.saveMyAppList(getActivity(), appListAdapter.getAppAdapterList());
         }
-        MyAppCacheUtils.saveMyAppList(getActivity(), appListAdapter.getAppAdapterList());
     }
 
     /**
@@ -944,7 +950,7 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
         @Override
         protected List<AppGroupBean> doInBackground(GetAppGroupResult... params) {
             try {
-                String appCache = MyAppCacheUtils.getMyAppsData(getActivity());
+                String appCache = MyAppCacheUtils.getMyAppListJson(getActivity());
                 isNeedRefreshApp = (StringUtils.isBlank(appCache) || isNeedRefreshApp);
                 List<AppGroupBean> appGroupList = handleAppList((params[0])
                         .getAppGroupBeanList());
@@ -958,14 +964,14 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
         }
 
         @Override
-        protected void onPostExecute(List<AppGroupBean> appGroupBeen) {
-            super.onPostExecute(appGroupBeen);
+        protected void onPostExecute(List<AppGroupBean> appGroupList) {
+            super.onPostExecute(appGroupList);
             isHasCacheNotRefresh = true;
             //当第一次安装，第一次打开时，没有缓存的时候需要刷新appAdapter，其余时候只存（并且存储一个是否有网络数据的标志）不刷
             if (isNeedRefreshApp) {
                 isNeedRefreshApp = false;
                 isHasCacheNotRefresh = false;
-                appListAdapter.setAppAdapterList(appGroupBeen);
+                appListAdapter.setAppAdapterList(appGroupList);
                 appListAdapter.notifyDataSetChanged();
             }
             pullToRefreshLayout.refreshFinish(PullToRefreshLayout.SUCCEED);

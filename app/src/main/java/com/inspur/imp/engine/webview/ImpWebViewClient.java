@@ -34,7 +34,6 @@ public class ImpWebViewClient extends WebViewClient {
 	private String urlparam = "";
 	private final String F_UEX_SCRIPT_SELF_FINISH = "javascript:if(window.init){window.init();}";
 	private ImpWebView myWebView;
-	private String errolUrl = "file:///android_asset/error/error.html";
 	private LinearLayout loadFailLayout;
 	private Handler mHandler = null;
 	private Runnable runnable = null;
@@ -130,9 +129,16 @@ public class ImpWebViewClient extends WebViewClient {
 		webview.initPlugin();
 	}
 
+
+
+
+
+
+
 	/*
 	 * 网页加载失败，取消加载，并清理当前的view
 	 */
+//	@SuppressWarnings("deprecation")
 	@Override
 	public void onReceivedError(WebView view, int errorCode,
 								String description, String failingUrl) {
@@ -142,38 +148,23 @@ public class ImpWebViewClient extends WebViewClient {
 		}
 		((ImpActivity)view.getContext()).dimissLoadingDlg();
 		loadFailLayout.setVisibility(View.VISIBLE);
-//		final ImpWebView webview = (ImpWebView) view;
-//		removeAllSessionCookie();
-		//延迟一秒钟解决无法清除历史的问题
-//		webview.postDelayed(new Runnable() {
-//			@Override
-//			public void run() {
-//				// 清理缓存
-//				webview.clearCache(true);
-//				webview.clearHistory();
-//			}
-//		}, 600);
-//		 webview.loadUrl(errolUrl);
-	}
-
-	/**
-	 * 清除所有的SessionCookie
-	 */
-	public void removeAllSessionCookie() {
-		if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-			CookieManager.getInstance().removeSessionCookies(null);
-			CookieManager.getInstance().flush();
-		} else {
-			CookieSyncManager cookieSyncMngr =
-					CookieSyncManager.createInstance(myWebView.getContext());
-			CookieManager.getInstance().removeSessionCookie();
-		}
 	}
 
 
-	/*
-			 * 对网页中超链接按钮的响应
-			 */
+//	@TargetApi(android.os.Build.VERSION_CODES.M)
+//	@Override
+//	public void onReceivedHttpError(WebView view, WebResourceRequest request, WebResourceResponse errorResponse) {
+//		onReceivedError(view,errorResponse.getStatusCode(), errorResponse.getReasonPhrase(), request.getUrl().toString());
+//
+//	}
+//
+//	@TargetApi(android.os.Build.VERSION_CODES.LOLLIPOP)
+//	@Override
+//	public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+//		return shouldOverrideUrlLoading(view, request.getUrl().toString());
+//	}
+
+//	@SuppressWarnings("deprecation")
 	@Override
 	public boolean shouldOverrideUrlLoading(WebView view, String url) {
 		if (runnable != null){

@@ -5,22 +5,23 @@ import com.inspur.emmcloud.util.UriUtils;
 
 /**
  * 本类中包含4个常量，分别是
- * 域名的Url：ecmBaseUrl
+ * 域名的Url：URL_BASE_ECM
  * 其次，每个模块下有一个获取基础Url的方法
  * 整体有一个getEcmTanent的方法，获取到tanent这一级
  */
 public class APIUri {
 	public static String tanent;
-	private static String ecmBaseUrl = "https://ecm.inspur.com/";
-	private static String emmBaseUrl = "https://emm.inspur.com/api/";
-	private static String oauthBaseUrl = "https://id.inspur.com/oauth2.0/token";
-	private static String smsLoginBaseUrl = "https://id.inspur.com/api/v1/passcode?phone=";
+	private static final String URL_BASE_ECM = "https://ecm.inspur.com/";
+	private static final String URL_BASE_EMM = "https://emm.inspur.com/api/";
+	private static final String URL_BASE_OAUTH = "https://id.inspur.com/oauth2.0/token";
+	private static final String URL_BASE_SMS_LOGIN = "https://id.inspur.com/api/v1/passcode?phone=";
+	private static final String URL_BASE_APP_CONFIG ="https://emm.inspur.com/v3.0/api/app/config";
 	/**
 	 * 获取到租户级的URL
 	 * @return
 	 */
 	private static String getEcmTanentUrl(){
-		return ecmBaseUrl+tanent;
+		return URL_BASE_ECM +tanent;
 	}
 	
     /*****************************************聊天，异常，语言，修改密码接口*********************************************/
@@ -77,7 +78,7 @@ public class APIUri {
 	 * @return
 	 */
 	public static String getGroupNewsUrl(String url) {
-		return ecmBaseUrl + url;
+		return URL_BASE_ECM + url;
 	};
 
 	/**
@@ -96,7 +97,7 @@ public class APIUri {
 	 * @return
 	 */
 	private static String getMeetingBaseUrl(){
-		return ecmBaseUrl + tanent + "/meeting/";
+		return URL_BASE_ECM + tanent + "/meeting/";
 	}
 	
 	/**
@@ -246,7 +247,7 @@ public class APIUri {
 	 * @return
 	 */
 	private static String getToDoBaseUrl(){
-		return ecmBaseUrl + tanent + "/api/v0/todo/";
+		return URL_BASE_ECM + tanent + "/api/v0/todo/";
 	}
 	
 	/**
@@ -388,8 +389,8 @@ public class APIUri {
 	 * 获取oauth认证的基础
 	 * @return
 	 */
-	public static String getOauthBaseUrl(){
-		return oauthBaseUrl;
+	public static String getUrlBaseOauth(){
+		return URL_BASE_OAUTH;
 	}
 	
 	/**
@@ -397,7 +398,7 @@ public class APIUri {
 	 * @return
 	 */
 	public static String getOauthMyInfoUrl(){
-		return oauthBaseUrl+"/profile";
+		return URL_BASE_OAUTH +"/profile";
 	}
 	
 	/**
@@ -405,7 +406,7 @@ public class APIUri {
 	 * @return
 	 */
 	public static String getRefreshToken(){
-		return oauthBaseUrl + "/token";
+		return URL_BASE_OAUTH + "/token";
 	}
 	
 
@@ -432,7 +433,7 @@ public class APIUri {
 	 * @return
 	 */
 	public static String getAllApps(){
-		return emmBaseUrl+"imp_app/getAllApps";
+		return URL_BASE_EMM +"imp_app/getAllApps";
 	}
 	
 	/**
@@ -440,7 +441,7 @@ public class APIUri {
 	 * @return
 	 */
 	public static String getNewAllApps(){
-		return emmBaseUrl+"v1/imp_app/appCenterList";
+		return URL_BASE_EMM +"v1/imp_app/appCenterList";
 	}
 
 	/**
@@ -457,7 +458,7 @@ public class APIUri {
 	 * @return
 	 */
 	public static String getUserApps(){
-		return emmBaseUrl+"imp_app/userApps";
+		return URL_BASE_EMM +"imp_app/userApps";
 	}
 	
 	/**
@@ -465,7 +466,7 @@ public class APIUri {
 	 * @return
 	 */
 	public static String getMyApp(){
-		return emmBaseUrl+"imp_app/getUserApps";
+		return URL_BASE_EMM +"imp_app/getUserApps";
 	}
 	
 	/**
@@ -473,7 +474,7 @@ public class APIUri {
 	 * @return
 	 */
 	public static String getAppInfo(){
-		return emmBaseUrl + "imp_app/getAppInfo";
+		return URL_BASE_EMM + "imp_app/getAppInfo";
 	}
 	
 	/**
@@ -481,7 +482,7 @@ public class APIUri {
 	 * @returnsunqx
 	 */
 	public static String addApp(){
-		return emmBaseUrl + "imp_app/installApp";
+		return URL_BASE_EMM + "imp_app/installApp";
 	}
 	
 	/**
@@ -489,7 +490,7 @@ public class APIUri {
 	 * @return
 	 */
 	public static String removeApp(){
-		return emmBaseUrl + "imp_app/uninstallApp";
+		return URL_BASE_EMM + "imp_app/uninstallApp";
 	}
 	
 	/**
@@ -497,7 +498,7 @@ public class APIUri {
 	 * @return
 	 */
 	public static String checkUpgrade(){
-        return emmBaseUrl + "v1/upgrade/checkVersion";
+        return URL_BASE_EMM + "v1/upgrade/checkVersion";
 	}
 	
 	/**
@@ -505,7 +506,7 @@ public class APIUri {
 	 * @return
 	 */
 	public static String getAllContact(){
-		return emmBaseUrl + "contacts/get_all";
+		return URL_BASE_EMM + "contacts/get_all";
 	}
 	
 	
@@ -516,7 +517,7 @@ public class APIUri {
 	 * 通过短信验证码重置密码
 	 */
 	public static String getUpdatePwdBySMSCode(){
-		return ecmBaseUrl+"";
+		return URL_BASE_ECM +"";
 	}
 	
 	/******************************************短信调用接口**************************************/
@@ -526,7 +527,7 @@ public class APIUri {
 	 * @return
 	 */
 	public static String getSMSLogin(){
-		return smsLoginBaseUrl;
+		return URL_BASE_SMS_LOGIN;
 	}
 
 	/*****************************************ReactNative**************************************/
@@ -584,7 +585,7 @@ public class APIUri {
 	 * @return
      */
 	public static String getUserProfileUrl(){
-		return emmBaseUrl +"userprofile/displayconfig";
+		return URL_BASE_EMM +"userprofile/displayconfig";
 	}
 
 	/**
@@ -608,31 +609,31 @@ public class APIUri {
 	 * 获取解绑设备url
 	 * @return
 	 */
-	public static String getUnBindDeviceUrl(){return  emmBaseUrl+"device/unbind";}
+	public static String getUnBindDeviceUrl(){return  URL_BASE_EMM +"device/unbind";}
 
 	/**
 	 * 获取绑定设备
 	 * @return
 	 */
-	public static String getBindingDevicesUrl(){return  emmBaseUrl+"v1/device/getUserDevices";}
+	public static String getBindingDevicesUrl(){return  URL_BASE_EMM +"v1/device/getUserDevices";}
 
 	/**
 	 * 获取绑定设备
 	 * @return
 	 */
-	public static String getDeviceLogUrl(){return  emmBaseUrl+"v1/device/getDeviceLogs";}
+	public static String getDeviceLogUrl(){return  URL_BASE_EMM +"v1/device/getDeviceLogs";}
 
 	/**
 	 * 获取MDM启用状态
 	 * @return
 	 */
-	public static String getMDMStateUrl(){return  emmBaseUrl+"userprofile/mdm_state";}
+	public static String getMDMStateUrl(){return  URL_BASE_EMM +"userprofile/mdm_state";}
 
 	/**
 	 * 上传设备管理所需token和设备ID
 	 * @return
 	 */
-	public static String getUploadMDMInfoUrl(){return  emmBaseUrl+"mdm/mdm_check";}
+	public static String getUploadMDMInfoUrl(){return  URL_BASE_EMM +"mdm/mdm_check";}
 
 	/**
 	 * 扫码登录url
@@ -657,4 +658,6 @@ public class APIUri {
 	public static String getAppInfoUrl(){
 		return emmBaseUrl + "imp_app/getAppInfo";
 	}
+
+	public static String getAppConfigUrl(){return  URL_BASE_APP_CONFIG+"?key=WebAutoRotate&key=CommonFunctions";}
 }
