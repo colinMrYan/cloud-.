@@ -34,9 +34,11 @@ import com.inspur.emmcloud.adapter.DragAdapter;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
 import com.inspur.emmcloud.bean.App;
+import com.inspur.emmcloud.bean.AppBadgeBean;
 import com.inspur.emmcloud.bean.AppCommonlyUse;
 import com.inspur.emmcloud.bean.AppGroupBean;
 import com.inspur.emmcloud.bean.AppOrder;
+import com.inspur.emmcloud.bean.GetAppBadgeResult;
 import com.inspur.emmcloud.bean.GetAppGroupResult;
 import com.inspur.emmcloud.bean.PVCollectModel;
 import com.inspur.emmcloud.util.AppCacheUtils;
@@ -561,6 +563,16 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
     public void onRefresh(PullToRefreshLayout pullToRefreshLayout) {
         isNeedRefreshApp = true;
         getMyApp();
+
+    }
+
+    /**
+     * 获取appBadge
+     */
+    private void getAppBadgeNum() {
+        if(NetUtils.isNetworkConnected(getActivity())){
+            apiService.getAppBadgeNum();
+        }
     }
 
     @Override
@@ -974,8 +986,31 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
                 appListAdapter.setAppAdapterList(appGroupList);
                 appListAdapter.notifyDataSetChanged();
             }
+            getAppBadgeNum();
             pullToRefreshLayout.refreshFinish(PullToRefreshLayout.SUCCEED);
         }
+    }
+
+    /**
+     * 展示appBadge个数
+     * @param getAppBadgeResult
+     */
+    private void showAppBadageNum(GetAppBadgeResult getAppBadgeResult) {
+        List<AppGroupBean> appGroupBeanList = appListAdapter.getAppAdapterList();
+        Iterator<AppGroupBean> appGroupBeanIterator = appGroupBeanList.iterator();
+        App app = new App();
+        while (appGroupBeanIterator.hasNext()){
+            List<App> appList = appGroupBeanIterator.next().getAppItemList();
+            for(int i = 0; i < getAppBadgeResult.getAppBadgeList().size(); i++){
+                AppBadgeBean appBadgeBean = getAppBadgeResult.getAppBadgeList().get(i);
+                app.setAppID(appBadgeBean.getAppId());
+                int appIndex = appList.indexOf(app);
+                if(appIndex != -1){
+                    appList.get(appIndex).setBadge(appBadgeBean.getBadgeNum());
+                }
+            }
+        }
+        appListAdapter.notifyDataSetChanged();
     }
 
     /**
@@ -994,5 +1029,18 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
             WebServiceMiddleUtils.hand(getActivity(), error, errorCode);
         }
 
+        @Override
+        public void returnGetAppBadgeResultSuccess(GetAppBadgeResult getAppBadgeResult) {
+            pullToRefreshLayout.refreshFinish(PullToRefreshLayout.SUCCEED);
+            showAppBadageNum(getAppBadgeResult);
+        }
+
+        @Override
+        public void returnGetAppBadgeResultFail(String error, int errorCode) {
+            pullToRefreshLayout.refreshFinish(PullToRefreshLayout.FAIL);
+            WebServiceMiddleUtils.hand(getActivity(), error, errorCode);
+        }
     }
+
+
 }

@@ -6,7 +6,6 @@ import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -40,6 +39,7 @@ public class DragAdapter extends BaseAdapter {
     private ImageDisplayUtils imageDisplayUtils;
     private LoadingDialog loadingDialog;
     private int deletePosition = -1;
+
     public DragAdapter(Context context, List<App> appList, int position) {
         this.context = context;
         this.appList = appList;
@@ -74,14 +74,18 @@ public class DragAdapter extends BaseAdapter {
         ImageViewRound iconImg = (ImageViewRound) convertView
                 .findViewById(R.id.icon_image);
         TextView unhandledNotification = (TextView) convertView.findViewById(R.id.unhandled_notification);
-        GradientDrawable gradientDrawable = new GradientDrawableBuilder()
-                .setCornerRadius(DensityUtil.dip2px(context,40))
-                .setBackgroundColor(0xFFFF0033)
-                .setStrokeColor(0xFFFF0033).build();
-        unhandledNotification.setBackground(gradientDrawable);
         iconImg.setType(ImageViewRound.TYPE_ROUND);
         iconImg.setRoundRadius(DensityUtil.dip2px(context, 10));
         TextView nameText = (TextView) convertView.findViewById(R.id.name_text);
+        if (app.getBadge() != 0) {
+            unhandledNotification.setVisibility(View.VISIBLE);
+            GradientDrawable gradientDrawable = new GradientDrawableBuilder()
+                    .setCornerRadius(DensityUtil.dip2px(context, 40))
+                    .setBackgroundColor(0xFFFF0033)
+                    .setStrokeColor(0xFFFF0033).build();
+            unhandledNotification.setBackground(gradientDrawable);
+            unhandledNotification.setText(app.getBadge() + "");
+        }
         ImageView deleteImg = (ImageView) convertView
                 .findViewById(R.id.delete_markView);
         nameText.setText(app.getAppName());
@@ -91,17 +95,17 @@ public class DragAdapter extends BaseAdapter {
                 deleteImg.setVisibility(View.VISIBLE);
             }
             startAnimation(convertView, position);
+            deleteImg.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    deletePosition = position;
+                    removeApp(app);
+                }
+            });
         } else {
             deleteImg.setVisibility(View.GONE);
             stopAnimation(convertView);
         }
-        deleteImg.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                deletePosition = position;
-                removeApp(app);
-            }
-        });
         return convertView;
     }
 

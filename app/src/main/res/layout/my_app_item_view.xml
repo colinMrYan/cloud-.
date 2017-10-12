@@ -54,6 +54,7 @@
         android:textSize="10sp"
         android:textColor="@color/white"
         android:text="99"
+        android:visibility="gone"
         android:scaleType="centerInside"
         />
 
