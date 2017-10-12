@@ -65,12 +65,7 @@ public class HuaWeiPushMangerUtils implements ConnectionCallbacks, OnConnectionF
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-        new Handler(getMainLooper()).post(new Runnable() {
-            @Override
-            public void run() {
-                startJpush();
-            }
-        });
+        startJpushInMainThread();
 //        保留下来做参照的代码，这里如果华为没有连上，华为SDK有一个处理，这里改为自己处理
 //        if (mResolvingError) {
 //            return;
@@ -92,7 +87,7 @@ public class HuaWeiPushMangerUtils implements ConnectionCallbacks, OnConnectionF
             client.disconnect();
         }
         PreferencesUtils.putString(contextLocal, "pushFlag", "Jpush");
-        ((MyApplication) contextLocal.getApplicationContext()).startPush();
+        ((MyApplication) contextLocal.getApplicationContext()).startJPush();
     }
 
 
@@ -117,9 +112,25 @@ public class HuaWeiPushMangerUtils implements ConnectionCallbacks, OnConnectionF
             @Override
             public void run() {
                 PendingResult<TokenResult> token = HuaweiPush.HuaweiPushApi.getToken(client);
-                token.await();
+                TokenResult tokenResult = token.await();
+                //处理connect成功，获取token失败的情况
+                if(tokenResult.getTokenRes().getRetCode() != 0){
+                    startJpushInMainThread();
+                }
             }
         }).start();
+    }
+
+    /**
+     * 从主线程启动Jpush
+     */
+    private void startJpushInMainThread(){
+        new Handler(getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                startJpush();
+            }
+        });
     }
 
 

@@ -151,17 +151,24 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
      * 初始化推送，以后如需定制小米等厂家的推送服务可从这里定制
      */
     public void startPush() {
-        if (AppUtils.getIsHuaWei()&&canConnectHuawei()) {
+        if (AppUtils.getIsHuaWei() && canConnectHuawei()) {
             HuaWeiPushMangerUtils.getInstance(this).connect();
         } else {
-            // 初始化 JPush
-            JPushInterface.init(this);
-            if (JPushInterface.isPushStopped(this)) {
-                JPushInterface.resumePush(this);
-            }
-            // 设置开启日志,发布时请关闭日志
-            JPushInterface.setDebugMode(true);
+            startJPush();
         }
+    }
+
+    /**
+     * 开启极光推送
+     */
+    public void startJPush() {
+        // 初始化 JPush
+        JPushInterface.init(this);
+        if (JPushInterface.isPushStopped(this)) {
+            JPushInterface.resumePush(this);
+        }
+        // 设置开启日志,发布时请关闭日志
+        JPushInterface.setDebugMode(true);
     }
 
     /**
@@ -178,7 +185,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
      * 关闭推送
      */
     public void stopPush() {
-        if (AppUtils.getIsHuaWei()) {
+        if (AppUtils.getIsHuaWei() && canConnectHuawei()) {
             HuaWeiPushMangerUtils.getInstance(this).delToken();
         } else {
             JPushInterface.stopPush(this);
