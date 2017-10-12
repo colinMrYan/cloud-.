@@ -10,6 +10,7 @@ import com.inspur.emmcloud.bean.GetAdressUsersResult;
 import com.inspur.emmcloud.bean.GetAllAppResult;
 import com.inspur.emmcloud.bean.GetAllContactResult;
 import com.inspur.emmcloud.bean.GetAllRobotsResult;
+import com.inspur.emmcloud.bean.GetAppBadgeResult;
 import com.inspur.emmcloud.bean.GetAppGroupResult;
 import com.inspur.emmcloud.bean.GetAppTabAutoResult;
 import com.inspur.emmcloud.bean.GetAppTabsResult;
@@ -1417,6 +1418,16 @@ public class APIInterfaceInstance implements APIInterface {
 
     @Override
     public void returnDeviceLogListFail(String error, int errorCode) {
+
+    }
+
+    @Override
+    public void returnGetAppBadgeResultSuccess(GetAppBadgeResult getAppBadgeResult) {
+
+    }
+
+    @Override
+    public void returnGetAppBadgeResultFail(String error, int errorCode) {
 
     }
 }

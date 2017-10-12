@@ -40,6 +40,8 @@ public class App implements Serializable {
 
 	//应用功能扩展字段
 	private int isZoomable = 0;
+	//扩展appBadge
+	private int badge = 0;
 
 	public App(){}
 	public App(JSONObject obj) {
@@ -302,6 +304,14 @@ public class App implements Serializable {
 
 	public String getHelpUrl() {
 		return helpUrl;
+	}
+
+	public int getBadge() {
+		return badge;
+	}
+
+	public void setBadge(int badge) {
+		this.badge = badge;
 	}
 
 	@Override
