@@ -15,8 +15,6 @@ import android.net.Uri;
 import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -34,15 +32,14 @@ import android.widget.RelativeLayout;
 
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.MsgInputAddItemAdapter;
-import com.inspur.emmcloud.bean.MentionBean;
+import com.inspur.emmcloud.bean.InsertModel;
 import com.inspur.emmcloud.ui.chat.MembersActivity;
-import com.inspur.emmcloud.util.ChannelMentions;
 import com.inspur.emmcloud.util.DensityUtil;
 import com.inspur.emmcloud.util.ImageDisplayUtils;
+import com.inspur.emmcloud.util.JSONUtils;
 import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
-import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.ToastUtils;
 import com.inspur.imp.plugin.camera.imagepicker.ImagePicker;
 import com.inspur.imp.plugin.camera.imagepicker.ui.ImageGridActivity;
@@ -68,13 +65,7 @@ public class ECMChatInputMenu extends LinearLayout {
     private ImageView addImg;
     private Button sendMsgBtn;
     private RelativeLayout addMenuLayout;
-    private LinearLayout rootLayout;
-    private boolean canMention = false;
     private boolean isChannelGroup = false;
-    private ArrayList<String> mentionsUserNameList = new ArrayList<String>();
-    private ArrayList<String> mentionsUidList = new ArrayList<String>();
-    private int mentionPosition = 0;
-    private int endMentions = 0;
     private String cid = "";
     private InputMethodManager mInputManager;
     private ChatInputMenuListener chatInputMenuListener;
@@ -113,10 +104,8 @@ public class ECMChatInputMenu extends LinearLayout {
             layoutInflater.inflate(R.layout.ecm_widget_chat_input_menu, this);
         }
         a.recycle();
-        inputEdit = (ChatInputEdit) findViewById(R.id.input_edit);
-        inputEdit.setIsOpen(true);
-        rootLayout = (LinearLayout) findViewById(R.id.root_layout);
-        inputEdit = (ChatInputEdit) findViewById(R.id.input_edit);
+        mInputManager = (InputMethodManager) context
+                .getSystemService(context.INPUT_METHOD_SERVICE);
         addImg = (ImageView) findViewById(R.id.add_img);
         addMenuLayout = (RelativeLayout) findViewById(R.id.add_menu_layout);
         sendMsgBtn = (Button) findViewById(R.id.send_msg_btn);
@@ -127,12 +116,16 @@ public class ECMChatInputMenu extends LinearLayout {
             public void onClick(View v) {
                 // TODO Auto-generated method stub
                 String content = inputEdit.getText().toString();
-                if (StringUtils.isEmpty(content)) {
-                    ToastUtils.show(context,
-                            context.getString(R.string.msgcontent_cannot_null));
-                } else if (NetUtils.isNetworkConnected(context)) {
-                    chatInputMenuListener.onSendMsg(content, mentionsUidList,
-                            mentionsUserNameList);
+                if (NetUtils.isNetworkConnected(context)) {
+                    List<String> mentionsUidList = new ArrayList<>();
+                    List<String> mentionsUNameList = new ArrayList<>();
+                    List<InsertModel> insertModelList = inputEdit.getRichInsertList();
+                    for (int i = 0;i<insertModelList.size();i++){
+                        InsertModel insertModel = insertModelList.get(i);
+                        mentionsUidList.add(insertModel.getInsertId());
+                        mentionsUNameList.add(insertModel.getInsertContent());
+                    }
+                    chatInputMenuListener.onSendMsg(content,mentionsUidList, mentionsUNameList);
                     inputEdit.setText("");
                 }
             }
@@ -155,32 +148,19 @@ public class ECMChatInputMenu extends LinearLayout {
                 }
             }
         });
-
-        msgInputAddItemAdapter = new MsgInputAddItemAdapter(context);
+        initInputEdit();
         initMenuGrid();
-        mInputManager = (InputMethodManager) context
-                .getSystemService(context.INPUT_METHOD_SERVICE);
-        //防止长按输入框进行粘贴的事件被消化掉
-        inputEdit.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-//				LogUtils.jasonDebug("isSetWindowListener="+isSetWindowListener);
-//				if (isSetWindowListener) {
-//					if (addMenuLayout.isShown()) {
-//						lockContentHeight();
-//						hideAddItemLayout(true);
-//						unlockContentHeight();
-//					}
-//				}
-            }
-        });
+
+    }
+
+    public void initInputEdit() {
+        inputEdit = (ChatInputEdit) findViewById(R.id.input_edit);
+        inputEdit.setFocusable(true);
+        inputEdit.setFocusableInTouchMode(true);
+        inputEdit.requestFocus();
         inputEdit.setOnTouchListener(new OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    handMentions();
-                }
-
                 if (isSetWindowListener) {
                     if (event.getAction() == MotionEvent.ACTION_UP
                             && addMenuLayout.isShown()) {
@@ -192,8 +172,20 @@ public class ECMChatInputMenu extends LinearLayout {
                 return false;
             }
         });
-
-        inputEdit.addTextChangedListener(new TextChangedListener());
+        inputEdit.setInputWatcher(new ChatInputEdit.InputWatcher() {
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                boolean isContentBlank = (s.length() == 0);
+                sendMsgBtn.setEnabled(!isContentBlank);
+                sendMsgBtn.setBackgroundResource(isContentBlank ? R.drawable.bg_chat_input_send_btn_disable : R.drawable.bg_chat_input_send_btn_enable);
+                if (isChannelGroup && count == 1) {
+                    String inputWord = s.toString().substring(start, start + count);
+                    if (inputWord.equals("@")) {
+                        openMention();
+                    }
+                }
+            }
+        });
     }
 
     public void setWindowListener(boolean isSetWindowListener) {
@@ -204,27 +196,6 @@ public class ECMChatInputMenu extends LinearLayout {
         return inputEdit;
     }
 
-    /**
-     * 处理mentions点击人，不让光标落在人名中
-     */
-    private void handMentions() {
-        if (isChannelGroup) {
-            ArrayList<MentionBean> mentionBeenList = new ArrayList<MentionBean>();
-            String inputContent = inputEdit.getText().toString();
-            for (int i = 0; i < mentionsUserNameList.size(); i++) {
-                String mentionName = mentionsUserNameList.get(i);
-                int mentionNameStart = inputContent.indexOf(mentionName);
-                int mentionNameEnd = mentionNameStart + mentionName.length();
-                MentionBean mentionBean = new MentionBean();
-                mentionBean.setMentionStart(mentionNameStart);
-                mentionBean.setMentioinEnd(mentionNameEnd);
-                mentionBean.setMentionName(mentionName);
-                mentionBeenList.add(mentionBean);
-            }
-            inputEdit.setIsOpen(true);
-            inputEdit.setMentionBeenList(mentionBeenList);
-        }
-    }
 
     private void lockContentHeight() {
         chatInputMenuListener.onSetContentViewHeight(true);
@@ -303,6 +274,7 @@ public class ECMChatInputMenu extends LinearLayout {
      */
     private void initMenuGrid() {
         GridView addItemGrid = (GridView) findViewById(R.id.add_menu_grid);
+        msgInputAddItemAdapter = new MsgInputAddItemAdapter(context);
         addItemGrid.setAdapter(msgInputAddItemAdapter);
         addItemGrid.setOnItemClickListener(new OnItemClickListener() {
             @Override
@@ -418,18 +390,19 @@ public class ECMChatInputMenu extends LinearLayout {
     public interface ChatInputMenuListener {
         void onSetContentViewHeight(boolean isLock);
 
-        void onSendMsg(String content, List<String> mentionsUidList,
-                       List<String> mentionsUserNameList);
+		void onSendMsg(String content, List<String> mentionsUidList,
+					   List<String> mentionsUserNameList);
 
     }
 
-    ;
 
     public void setMentionData(Intent data) {
         String result = data.getStringExtra("searchResult");
-        PreferencesUtils.putString(context, cid, "");
-        ChannelMentions.addMentions(result, mentionsUserNameList,
-                mentionsUidList, inputEdit, mentionPosition);
+        String uid = JSONUtils.getString(result, "uid", null);
+        String name = JSONUtils.getString(result, "name", null);
+        if (uid != null && name != null) {
+            inputEdit.insertSpecialStr(new InsertModel("@", uid, name, "#0f7bca"));
+        }
     }
 
     public void setIsChannelGroup(boolean isChannelGroup, String cid) {
@@ -477,73 +450,4 @@ public class ECMChatInputMenu extends LinearLayout {
         }
         msgInputAddItemAdapter.updateGridView(imgList, textList);
     }
-
-    class TextChangedListener implements TextWatcher {
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count,
-                                      int after) {
-        }
-
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before,
-                                  int count) {
-            String content = s.toString();
-            boolean isContentBlank = StringUtils.isEmpty(content);
-            sendMsgBtn.setEnabled(!isContentBlank);
-            sendMsgBtn.setBackgroundResource(isContentBlank ? R.drawable.bg_chat_input_send_btn_disable : R.drawable.bg_chat_input_send_btn_enable);
-
-
-            LogUtils.jasonDebug("s=" + s.toString());
-            LogUtils.jasonDebug("start=" + start);
-            LogUtils.jasonDebug("before=" + before);
-            LogUtils.jasonDebug("count=" + count);
-
-            if (isChannelGroup && count == 1) {
-                mentionPosition = start;
-                String inputWord = s.toString().substring(start, start + count);
-                if (inputWord.equals("@")) {
-                    openMention();
-                }
-            }
-
-
-
-
-//                ForeColorSpan[] spans = ((Spanned) s).getSpans(0, s.length(),
-//                        ForeColorSpan.class);
-//                int which = -1;
-//                for (int i = 0; i < mentionsUserNameList.size(); i++) {
-//                    if (!s.toString().contains(mentionsUserNameList.get(i))) {
-//                        which = i;
-//                        mentionsUserNameList.remove(i);
-//                        mentionsUidList.remove(i);
-//                        i--;
-//                    }
-//                }
-//                int spanslen = spans.length;
-//                for (int i = 0; i < spanslen; i++) {
-//                    if (which == i) {
-//                        int started = ((Spannable) s).getSpanStart(spans[i]);
-//                        int end = ((Spannable) s).getSpanEnd(spans[i]);
-//                        inputEdit.getText().delete(started, end);
-//                    }
-//
-//                }
-
-
-//                int inputContentLength = s.toString().length();
-//                if ((content.substring(inputContentLength - 1, inputContentLength).equals("@") || changeContent
-//                        .equals("@"))) {
-//                    openMention();
-//
-//                }
-//                canMention = true;
-        }
-
-        @Override
-        public void afterTextChanged(Editable s) {
-
-        }
-    }
-
 }

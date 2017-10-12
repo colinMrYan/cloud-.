@@ -31,7 +31,6 @@ import com.inspur.emmcloud.widget.slidebar.CharacterParser;
 import com.inspur.emmcloud.widget.slidebar.PinyinComparator;
 import com.inspur.emmcloud.widget.slidebar.SideBar;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -162,23 +161,20 @@ public class MembersActivity extends BaseActivity implements
                 public void onItemClick(AdapterView<?> parent, View view,
                                         int position, long id) {
                     JSONObject peopleObject = new JSONObject();
-                    JSONArray jsonArray = new JSONArray();
                     jsonResult = new JSONObject();
                     try {
                         if (filterList.size() != 0) {
                             String uid = filterList.get(position).getUid();
                             String name = filterList.get(position).getName();
-                            peopleObject.put("cid", uid);
-                            peopleObject.put("name", name);
+                            jsonResult.put("uid", uid);
+                            jsonResult.put("name", name);
                         } else {
                             String uid = personDtoList.get(position).getUid();
                             String name = personDtoList.get(position)
                                     .getName();
-                            peopleObject.put("cid", uid);
-                            peopleObject.put("name", name);
+                            jsonResult.put("uid", uid);
+                            jsonResult.put("name", name);
                         }
-                        jsonArray.put(peopleObject);
-                        jsonResult.put("people", jsonArray);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
