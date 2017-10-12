@@ -66,4 +66,13 @@ public class MyAppCacheUtils {
         return PreferencesByUserAndTanentUtils.getBoolean(context,"is_has_commonly_app",false);
     }
 
+    /**
+     * 清除常用应用缓存
+     * @param context
+     * @return
+     */
+    public static boolean clearMyAppList(Context context){
+        return PreferencesByUserAndTanentUtils.putString(context,"my_app_list","");
+    }
+
 }
