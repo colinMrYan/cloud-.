@@ -111,12 +111,19 @@ public class HuaWeiPushMangerUtils implements ConnectionCallbacks, OnConnectionF
         new Thread(new Runnable() {
             @Override
             public void run() {
-                PendingResult<TokenResult> token = HuaweiPush.HuaweiPushApi.getToken(client);
-                TokenResult tokenResult = token.await();
-                //处理connect成功，获取token失败的情况
-                if(tokenResult.getTokenRes().getRetCode() != 0){
+                //由于华为推送不稳定，此处加trycatch增强程序稳定性
+                try {
+                    PendingResult<TokenResult> token = HuaweiPush.HuaweiPushApi.getToken(client);
+                    TokenResult tokenResult = token.await();
+                    //处理connect成功，获取token失败的情况
+                    if(tokenResult.getTokenRes().getRetCode() != 0){
+                        startJpushInMainThread();
+                    }
+                }catch (Exception e){
+                    e.printStackTrace();
                     startJpushInMainThread();
                 }
+
             }
         }).start();
     }
