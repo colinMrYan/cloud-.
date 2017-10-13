@@ -1012,7 +1012,7 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
         @Override
         public void returnGetAppBadgeResultSuccess(GetAppBadgeResult getAppBadgeResult) {
             pullToRefreshLayout.refreshFinish(PullToRefreshLayout.SUCCEED);
-            appBadgeBeanMap.putAll(getAppBadgeResult.getAppBadgeBeanMap());
+            appBadgeBeanMap = getAppBadgeResult.getAppBadgeBeanMap();
             appListAdapter.notifyDataSetChanged();
         }
 
