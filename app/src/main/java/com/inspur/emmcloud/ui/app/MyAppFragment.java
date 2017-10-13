@@ -441,7 +441,9 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
     private void saveOrChangeCommonlyUseAppList(App app, List<AppGroupBean> appAdapterList) {
         List<AppCommonlyUse> appCommonlyUseAddCountList = addClickCount(app);
         calculateAppWeight(appCommonlyUseAddCountList);
-        showCommonlyUseApps(app,  appAdapterList);
+        if(hasCommonlyApp){
+            showCommonlyUseApps(app,  appAdapterList);
+        }
     }
 
     /**
@@ -453,7 +455,7 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
     private void showCommonlyUseApps(App app,
                                      List<AppGroupBean> appAdapterList) {
         int commonlyUseAppListSize = AppCacheUtils.getCommonlyUseAppList(getActivity()).size();
-        if (hasCommonlyApp && commonlyUseAppListSize>1) {
+        if (commonlyUseAppListSize>1) {
             //如果已经有了常用app则需要先移除掉第一组
             appAdapterList.remove(0);
             handCommonlyUseAppData(appAdapterList, true);
