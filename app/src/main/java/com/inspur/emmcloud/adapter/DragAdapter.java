@@ -17,6 +17,7 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
 import com.inspur.emmcloud.bean.App;
+import com.inspur.emmcloud.bean.AppBadgeBean;
 import com.inspur.emmcloud.bean.GetRemoveAppResult;
 import com.inspur.emmcloud.util.AppCacheUtils;
 import com.inspur.emmcloud.util.AppUtils;
@@ -28,7 +29,9 @@ import com.inspur.emmcloud.widget.GradientDrawableBuilder;
 import com.inspur.emmcloud.widget.ImageViewRound;
 import com.inspur.emmcloud.widget.LoadingDialog;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class DragAdapter extends BaseAdapter {
     private Context context;
@@ -39,13 +42,15 @@ public class DragAdapter extends BaseAdapter {
     private ImageDisplayUtils imageDisplayUtils;//由于Adapter里需要多次调用getView方法，所以创建一个全局ImageDisplayUtils不要每次调用都创建造成内存泄漏
     private LoadingDialog loadingDialog;
     private int deletePosition = -1;
+    private Map<String,AppBadgeBean> appBadgeBeanMap = new HashMap<>();
 
-    public DragAdapter(Context context, List<App> appList, int position) {
+    public DragAdapter(Context context, List<App> appList, int position, Map<String,AppBadgeBean> appBadgeBeanMap) {
         this.context = context;
         this.appList = appList;
         this.groupPosition = position;
         imageDisplayUtils = new ImageDisplayUtils(R.drawable.icon_empty_icon);
         loadingDialog = new LoadingDialog(context);
+        this.appBadgeBeanMap.putAll(appBadgeBeanMap);
     }
 
     @Override
@@ -74,13 +79,13 @@ public class DragAdapter extends BaseAdapter {
         //应用图标
         ImageViewRound appIconImg = (ImageViewRound) convertView
                 .findViewById(R.id.icon_image);
-        handleAppIconImg(app,appIconImg);
+        setAppIconImg(app,appIconImg);
         //应用名称
         TextView appNameText = (TextView) convertView.findViewById(R.id.name_text);
         appNameText.setText(app.getAppName());
         //未处理消息条数
-        TextView unhandledBadges = (TextView) convertView.findViewById(R.id.unhandled_badges);
-        handleUnHandledBadgesDisplay(app,unhandledBadges);
+        TextView unhandledBadges = (TextView) convertView.findViewById(R.id.unhandled_badges_text);
+        setUnHandledBadgesDisplay(app,unhandledBadges);
         //删除图标显示和监听事件处理
         handleAppDeleteImg(app,position,convertView);
         return convertView;
@@ -91,7 +96,7 @@ public class DragAdapter extends BaseAdapter {
      * @param app
      * @param appIconImg
      */
-    private void handleAppIconImg(App app, ImageViewRound appIconImg) {
+    private void setAppIconImg(App app, ImageViewRound appIconImg) {
         appIconImg.setType(ImageViewRound.TYPE_ROUND);
         appIconImg.setRoundRadius(DensityUtil.dip2px(context, 10));
         imageDisplayUtils.displayImage(appIconImg, app.getAppIcon());
@@ -105,7 +110,7 @@ public class DragAdapter extends BaseAdapter {
      */
     private void handleAppDeleteImg(final App app, final int position, View convertView) {
         ImageView deleteImg = (ImageView) convertView
-                .findViewById(R.id.delete_markView);
+                .findViewById(R.id.delete_markview_text);
         if (canEdit) {
             if (!app.getIsMustHave()) {
                 deleteImg.setVisibility(View.VISIBLE);
@@ -128,15 +133,16 @@ public class DragAdapter extends BaseAdapter {
      * @param app
      * @param unhandledBadges
      */
-    private void handleUnHandledBadgesDisplay(App app, TextView unhandledBadges) {
-        if (app.getBadge() != 0) {
+    private void setUnHandledBadgesDisplay(App app, TextView unhandledBadges) {
+        AppBadgeBean appBadgeBean = appBadgeBeanMap.get(app.getAppID());
+        if (appBadgeBean != null && appBadgeBean.getBadgeNum() > 0) {
             unhandledBadges.setVisibility(View.VISIBLE);
             GradientDrawable gradientDrawable = new GradientDrawableBuilder()
                     .setCornerRadius(DensityUtil.dip2px(context, 40))
                     .setBackgroundColor(0xFFFF0033)
                     .setStrokeColor(0xFFFF0033).build();
             unhandledBadges.setBackground(gradientDrawable);
-            unhandledBadges.setText(app.getBadge() + "");
+            unhandledBadges.setText(appBadgeBean.getBadgeNum() + "");
         }
     }
 

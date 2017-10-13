@@ -64,8 +64,10 @@ import com.inspur.emmcloud.widget.pullableview.PullableListView;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import static com.inspur.emmcloud.util.AppCacheUtils.getCommonlyUseAppList;
 
@@ -92,6 +94,7 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
     private boolean isNeedRefreshApp = false;//下拉刷新和从应用中心添加应用 删除应用时刷新标志
     private boolean isHasCacheNotRefresh = false;
     private MyAppSaveTask myAppSaveTask;
+    private Map<String,AppBadgeBean> appBadgeBeanMap = new HashMap<>();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -119,10 +122,7 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
             refreshAppListView();
             isHasCacheNotRefresh = false;
         }
-        //有缓存才获取badge，防止第一次安装，第一次进入时刷新两次
-        if(MyAppCacheUtils.getMyAppList(getActivity()).size()>0){
-            getAppBadgeNum();
-        }
+        getAppBadgeNum();
         return rootView;
     }
 
@@ -287,7 +287,7 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
             final List<App> appGroupItemList = appAdapterList.get(
                     listPosition).getAppItemList();
             final DragAdapter dragGridViewAdapter = new DragAdapter(
-                    getActivity(), appGroupItemList, listPosition);
+                    getActivity(), appGroupItemList, listPosition,appBadgeBeanMap);
             dragGridView.setCanScroll(false);
             dragGridView.setPosition(listPosition);
             dragGridView.setPullToRefreshLayout(pullToRefreshLayout);
@@ -566,6 +566,7 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
     public void onRefresh(PullToRefreshLayout pullToRefreshLayout) {
         isNeedRefreshApp = true;
         getMyApp();
+        getAppBadgeNum();
     }
 
     /**
@@ -987,35 +988,8 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
                 isHasCacheNotRefresh = false;
                 appListAdapter.setAppAdapterList(appGroupList);
                 appListAdapter.notifyDataSetChanged();
-                getAppBadgeNum();
             }
             pullToRefreshLayout.refreshFinish(PullToRefreshLayout.SUCCEED);
-        }
-    }
-
-    /**
-     * 展示appBadge个数
-     * @param getAppBadgeResult
-     */
-    private void showAppBadageNum(GetAppBadgeResult getAppBadgeResult) {
-        List<AppGroupBean> appGroupBeanList = appListAdapter.getAppAdapterList();
-        Iterator<AppGroupBean> appGroupBeanIterator = appGroupBeanList.iterator();
-        App app = new App();
-        boolean isNeedRefreshBadge = false;
-        for(int i = 0; i < getAppBadgeResult.getAppBadgeList().size(); i++){
-            AppBadgeBean appBadgeBean = getAppBadgeResult.getAppBadgeList().get(i);
-            app.setAppID(appBadgeBean.getAppId());
-            while (appGroupBeanIterator.hasNext()){
-                List<App> appList = appGroupBeanIterator.next().getAppItemList();
-                int appIndex = appList.indexOf(app);
-                if(appIndex != -1){
-                    appList.get(appIndex).setBadge(appBadgeBean.getBadgeNum());
-                    isNeedRefreshBadge = true;
-                }
-            }
-        }
-        if(isNeedRefreshBadge){
-            appListAdapter.notifyDataSetChanged();
         }
     }
 
@@ -1038,7 +1012,8 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
         @Override
         public void returnGetAppBadgeResultSuccess(GetAppBadgeResult getAppBadgeResult) {
             pullToRefreshLayout.refreshFinish(PullToRefreshLayout.SUCCEED);
-            showAppBadageNum(getAppBadgeResult);
+            appBadgeBeanMap.putAll(getAppBadgeResult.getAppBadgeBeanMap());
+            appListAdapter.notifyDataSetChanged();
         }
 
         @Override

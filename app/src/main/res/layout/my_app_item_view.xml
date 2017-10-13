@@ -27,7 +27,7 @@
         android:textSize="@dimen/content_smaller_textsize" />
 
     <ImageView
-        android:id="@+id/delete_markView"
+        android:id="@+id/delete_markview_text"
         android:layout_width="20dip"
         android:layout_height="20dip"
         android:paddingLeft="5dp"
@@ -40,7 +40,7 @@
         android:visibility="gone" />
 
     <TextView
-        android:id="@+id/unhandled_badges"
+        android:id="@+id/unhandled_badges_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingTop="2dp"

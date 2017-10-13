@@ -2,8 +2,8 @@ package com.inspur.emmcloud.bean;
 
 import org.json.JSONArray;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by yufuchang on 2017/10/11.
@@ -11,23 +11,24 @@ import java.util.List;
  */
 
 public class GetAppBadgeResult {
-    private List<AppBadgeBean> appBadgeList = new ArrayList<>();
+    private Map<String,AppBadgeBean> appBadgeBeanMap = new HashMap<>();
     public GetAppBadgeResult(String response){
         try {
             JSONArray jsonArray = new JSONArray(response);
             for (int i = 0; i < jsonArray.length(); i++){
-                appBadgeList.add(new AppBadgeBean(jsonArray.getJSONObject(i)));
+                AppBadgeBean appBadgeBean = new AppBadgeBean(jsonArray.getJSONObject(i));
+                appBadgeBeanMap.put(appBadgeBean.getAppId(),appBadgeBean);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public List<AppBadgeBean> getAppBadgeList() {
-        return appBadgeList;
+    public Map<String, AppBadgeBean> getAppBadgeBeanMap() {
+        return appBadgeBeanMap;
     }
 
-    public void setAppBadgeList(List<AppBadgeBean> appBadgeList) {
-        this.appBadgeList = appBadgeList;
+    public void setAppBadgeBeanMap(Map<String, AppBadgeBean> appBadgeBeanMap) {
+        this.appBadgeBeanMap = appBadgeBeanMap;
     }
 }
