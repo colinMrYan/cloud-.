@@ -20,6 +20,7 @@ import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.util.DataCleanManager;
 import com.inspur.emmcloud.util.ImageDisplayUtils;
 import com.inspur.emmcloud.util.IntentUtils;
+import com.inspur.emmcloud.util.MyAppCacheUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.ToastUtils;
 import com.inspur.emmcloud.util.UriUtils;
@@ -256,6 +257,7 @@ public class SettingActivity extends BaseActivity {
 					String imgCachePath = MyAppConfig.LOCAL_CACHE_PATH;
 					DataCleanManager.cleanApplicationData(SettingActivity.this,
 							msgCachePath, imgCachePath);
+                    MyAppCacheUtils.clearMyAppList(SettingActivity.this);
 					ImageDisplayUtils imageDisplayUtils = new ImageDisplayUtils(
 							R.drawable.icon_photo_default);
 					imageDisplayUtils.clearAllCache();
