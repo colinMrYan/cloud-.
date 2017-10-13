@@ -29,7 +29,6 @@ import com.inspur.emmcloud.widget.GradientDrawableBuilder;
 import com.inspur.emmcloud.widget.ImageViewRound;
 import com.inspur.emmcloud.widget.LoadingDialog;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -42,7 +41,7 @@ public class DragAdapter extends BaseAdapter {
     private ImageDisplayUtils imageDisplayUtils;//由于Adapter里需要多次调用getView方法，所以创建一个全局ImageDisplayUtils不要每次调用都创建造成内存泄漏
     private LoadingDialog loadingDialog;
     private int deletePosition = -1;
-    private Map<String,AppBadgeBean> appBadgeBeanMap = new HashMap<>();
+    private Map<String,AppBadgeBean> appBadgeBeanMap;
 
     public DragAdapter(Context context, List<App> appList, int position, Map<String,AppBadgeBean> appBadgeBeanMap) {
         this.context = context;
@@ -50,7 +49,7 @@ public class DragAdapter extends BaseAdapter {
         this.groupPosition = position;
         imageDisplayUtils = new ImageDisplayUtils(R.drawable.icon_empty_icon);
         loadingDialog = new LoadingDialog(context);
-        this.appBadgeBeanMap.putAll(appBadgeBeanMap);
+        this.appBadgeBeanMap = appBadgeBeanMap;
     }
 
     @Override
@@ -142,7 +141,7 @@ public class DragAdapter extends BaseAdapter {
                     .setBackgroundColor(0xFFFF0033)
                     .setStrokeColor(0xFFFF0033).build();
             unhandledBadges.setBackground(gradientDrawable);
-            unhandledBadges.setText(appBadgeBean.getBadgeNum() + "");
+            unhandledBadges.setText(appBadgeBean.getBadgeNum() > 99 ? "99+":(appBadgeBean.getBadgeNum() + ""));
         }
     }
 
