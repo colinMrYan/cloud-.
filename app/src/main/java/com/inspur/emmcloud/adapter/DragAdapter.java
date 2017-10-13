@@ -2,10 +2,10 @@ package com.inspur.emmcloud.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -17,6 +17,7 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
 import com.inspur.emmcloud.bean.App;
+import com.inspur.emmcloud.bean.AppBadgeBean;
 import com.inspur.emmcloud.bean.GetRemoveAppResult;
 import com.inspur.emmcloud.util.AppCacheUtils;
 import com.inspur.emmcloud.util.AppUtils;
@@ -24,27 +25,31 @@ import com.inspur.emmcloud.util.DensityUtil;
 import com.inspur.emmcloud.util.ImageDisplayUtils;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
+import com.inspur.emmcloud.widget.GradientDrawableBuilder;
 import com.inspur.emmcloud.widget.ImageViewRound;
 import com.inspur.emmcloud.widget.LoadingDialog;
 
-
 import java.util.List;
+import java.util.Map;
 
 public class DragAdapter extends BaseAdapter {
     private Context context;
     private List<App> appList;
     private int groupPosition = -1;
     private NotifyCommonlyUseListener commonlyUseListener;
-    private boolean canEdit = false;
-    private ImageDisplayUtils imageDisplayUtils;
+    private boolean canEdit = false;//表示排序和删除两个状态
+    private ImageDisplayUtils imageDisplayUtils;//由于Adapter里需要多次调用getView方法，所以创建一个全局ImageDisplayUtils不要每次调用都创建造成内存泄漏
     private LoadingDialog loadingDialog;
     private int deletePosition = -1;
-    public DragAdapter(Context context, List<App> appList, int position) {
+    private Map<String,AppBadgeBean> appBadgeBeanMap;
+
+    public DragAdapter(Context context, List<App> appList, int position, Map<String,AppBadgeBean> appBadgeBeanMap) {
         this.context = context;
         this.appList = appList;
         this.groupPosition = position;
         imageDisplayUtils = new ImageDisplayUtils(R.drawable.icon_empty_icon);
         loadingDialog = new LoadingDialog(context);
+        this.appBadgeBeanMap = appBadgeBeanMap;
     }
 
     @Override
@@ -70,34 +75,74 @@ public class DragAdapter extends BaseAdapter {
         final App app = getItem(position);
         convertView = LayoutInflater.from(context).inflate(
                 R.layout.my_app_item_view, null);
-        ImageViewRound iconImg = (ImageViewRound) convertView
+        //应用图标
+        ImageViewRound appIconImg = (ImageViewRound) convertView
                 .findViewById(R.id.icon_image);
-        iconImg.setType(ImageViewRound.TYPE_ROUND);
-        iconImg.setRoundRadius(DensityUtil.dip2px(context, 10));
-        TextView nameText = (TextView) convertView.findViewById(R.id.name_text);
+        setAppIconImg(app,appIconImg);
+        //应用名称
+        TextView appNameText = (TextView) convertView.findViewById(R.id.name_text);
+        appNameText.setText(app.getAppName());
+        //未处理消息条数
+        TextView unhandledBadges = (TextView) convertView.findViewById(R.id.unhandled_badges_text);
+        setUnHandledBadgesDisplay(app,unhandledBadges);
+        //删除图标显示和监听事件处理
+        handleAppDeleteImg(app,position,convertView);
+        return convertView;
+    }
+
+    /**
+     * 处理应用图标显示
+     * @param app
+     * @param appIconImg
+     */
+    private void setAppIconImg(App app, ImageViewRound appIconImg) {
+        appIconImg.setType(ImageViewRound.TYPE_ROUND);
+        appIconImg.setRoundRadius(DensityUtil.dip2px(context, 10));
+        imageDisplayUtils.displayImage(appIconImg, app.getAppIcon());
+    }
+
+    /**
+     * 处理删除按钮显示和事件监听
+     * @param app
+     * @param position
+     * @param convertView
+     */
+    private void handleAppDeleteImg(final App app, final int position, View convertView) {
         ImageView deleteImg = (ImageView) convertView
-                .findViewById(R.id.delete_markView);
-        nameText.setText(app.getAppName());
-        imageDisplayUtils.displayImage(iconImg, app.getAppIcon());
+                .findViewById(R.id.delete_markview_text);
         if (canEdit) {
             if (!app.getIsMustHave()) {
                 deleteImg.setVisibility(View.VISIBLE);
-            } else {
-                deleteImg.setVisibility(View.GONE);
+                deleteImg.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        deletePosition = position;
+                        removeApp(app);
+                    }
+                });
             }
             startAnimation(convertView, position);
         } else {
-            deleteImg.setVisibility(View.GONE);
             stopAnimation(convertView);
         }
-        deleteImg.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                deletePosition = position;
-                removeApp(app);
-            }
-        });
-        return convertView;
+    }
+
+    /**
+     * 处理未处理消息个数的显示
+     * @param app
+     * @param unhandledBadges
+     */
+    private void setUnHandledBadgesDisplay(App app, TextView unhandledBadges) {
+        AppBadgeBean appBadgeBean = appBadgeBeanMap.get(app.getAppID());
+        if (appBadgeBean != null && appBadgeBean.getBadgeNum() > 0) {
+            unhandledBadges.setVisibility(View.VISIBLE);
+            GradientDrawable gradientDrawable = new GradientDrawableBuilder()
+                    .setCornerRadius(DensityUtil.dip2px(context, 40))
+                    .setBackgroundColor(0xFFFF0033)
+                    .setStrokeColor(0xFFFF0033).build();
+            unhandledBadges.setBackground(gradientDrawable);
+            unhandledBadges.setText(appBadgeBean.getBadgeNum() > 99 ? "99+":(appBadgeBean.getBadgeNum() + ""));
+        }
     }
 
     /**
@@ -114,6 +159,10 @@ public class DragAdapter extends BaseAdapter {
         }
     }
 
+    /**
+     * 卸载应用
+     * @param packageName
+     */
     private void uninstallNativeApp(String packageName) {
         if (AppUtils.isAppInstalled(context, packageName)) {
             Intent intent = new Intent();

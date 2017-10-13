@@ -34,9 +34,11 @@ import com.inspur.emmcloud.adapter.DragAdapter;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
 import com.inspur.emmcloud.bean.App;
+import com.inspur.emmcloud.bean.AppBadgeBean;
 import com.inspur.emmcloud.bean.AppCommonlyUse;
 import com.inspur.emmcloud.bean.AppGroupBean;
 import com.inspur.emmcloud.bean.AppOrder;
+import com.inspur.emmcloud.bean.GetAppBadgeResult;
 import com.inspur.emmcloud.bean.GetAppGroupResult;
 import com.inspur.emmcloud.bean.PVCollectModel;
 import com.inspur.emmcloud.util.AppCacheUtils;
@@ -62,8 +64,10 @@ import com.inspur.emmcloud.widget.pullableview.PullableListView;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import static com.inspur.emmcloud.util.AppCacheUtils.getCommonlyUseAppList;
 
@@ -90,6 +94,7 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
     private boolean isNeedRefreshApp = false;//下拉刷新和从应用中心添加应用 删除应用时刷新标志
     private boolean isHasCacheNotRefresh = false;
     private MyAppSaveTask myAppSaveTask;
+    private Map<String,AppBadgeBean> appBadgeBeanMap = new HashMap<>();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -112,13 +117,18 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
         if (parent != null) {
             parent.removeView(rootView);
         }
-
         //每次createView如果有上一次存下来的缓存数据则刷新并修改缓存状态
         if (isHasCacheNotRefresh) {
             refreshAppListView();
             isHasCacheNotRefresh = false;
         }
         return rootView;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getAppBadgeNum();
     }
 
     @Override
@@ -282,7 +292,7 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
             final List<App> appGroupItemList = appAdapterList.get(
                     listPosition).getAppItemList();
             final DragAdapter dragGridViewAdapter = new DragAdapter(
-                    getActivity(), appGroupItemList, listPosition);
+                    getActivity(), appGroupItemList, listPosition,appBadgeBeanMap);
             dragGridView.setCanScroll(false);
             dragGridView.setPosition(listPosition);
             dragGridView.setPullToRefreshLayout(pullToRefreshLayout);
@@ -561,6 +571,16 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
     public void onRefresh(PullToRefreshLayout pullToRefreshLayout) {
         isNeedRefreshApp = true;
         getMyApp();
+        getAppBadgeNum();
+    }
+
+    /**
+     * 获取appBadge
+     */
+    private void getAppBadgeNum() {
+        if(NetUtils.isNetworkConnected(getActivity())){
+            apiService.getAppBadgeNum();
+        }
     }
 
     @Override
@@ -994,5 +1014,17 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
             WebServiceMiddleUtils.hand(getActivity(), error, errorCode);
         }
 
+        @Override
+        public void returnGetAppBadgeResultSuccess(GetAppBadgeResult getAppBadgeResult) {
+            pullToRefreshLayout.refreshFinish(PullToRefreshLayout.SUCCEED);
+            appBadgeBeanMap = getAppBadgeResult.getAppBadgeBeanMap();
+            appListAdapter.notifyDataSetChanged();
+        }
+
+        @Override
+        public void returnGetAppBadgeResultFail(String error, int errorCode) {
+            pullToRefreshLayout.refreshFinish(PullToRefreshLayout.FAIL);
+            WebServiceMiddleUtils.hand(getActivity(), error, errorCode);
+        }
     }
 }
