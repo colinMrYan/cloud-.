@@ -40,7 +40,7 @@
         android:visibility="gone" />
 
     <TextView
-        android:id="@+id/unhandled_notification"
+        android:id="@+id/unhandled_badges"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingTop="2dp"
@@ -53,9 +53,7 @@
         android:gravity="center"
         android:textSize="10sp"
         android:textColor="@color/white"
-        android:text="99"
         android:visibility="gone"
-        android:scaleType="centerInside"
         />
 
 </RelativeLayout>

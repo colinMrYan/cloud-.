@@ -1,7 +1,5 @@
 package com.inspur.emmcloud.bean;
 
-import com.inspur.emmcloud.util.LogUtils;
-
 import org.json.JSONArray;
 
 import java.util.ArrayList;
@@ -9,6 +7,7 @@ import java.util.List;
 
 /**
  * Created by yufuchang on 2017/10/11.
+ * [{"appId":"inspur_news_esg","badge":2}]
  */
 
 public class GetAppBadgeResult {

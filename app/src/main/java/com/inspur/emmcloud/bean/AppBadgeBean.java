@@ -6,6 +6,7 @@ import org.json.JSONObject;
 
 /**
  * Created by yufuchang on 2017/10/11.
+ * {"appId":"inspur_news_esg","badge":2}
  */
 
 public class AppBadgeBean {

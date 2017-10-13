@@ -479,6 +479,9 @@ public class MyAppAPIService {
         });
     }
 
+    /**
+     * 获取所有app的未处理消息
+     */
     public void getAppBadgeNum(){
         final String completeUrl = APIUri.getAppBadgeNumUrl();
         RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(completeUrl);

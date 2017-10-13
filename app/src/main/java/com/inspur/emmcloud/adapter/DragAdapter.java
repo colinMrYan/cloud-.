@@ -35,8 +35,8 @@ public class DragAdapter extends BaseAdapter {
     private List<App> appList;
     private int groupPosition = -1;
     private NotifyCommonlyUseListener commonlyUseListener;
-    private boolean canEdit = false;
-    private ImageDisplayUtils imageDisplayUtils;
+    private boolean canEdit = false;//表示排序和删除两个状态
+    private ImageDisplayUtils imageDisplayUtils;//由于Adapter里需要多次调用getView方法，所以创建一个全局ImageDisplayUtils不要每次调用都创建造成内存泄漏
     private LoadingDialog loadingDialog;
     private int deletePosition = -1;
 
@@ -71,42 +71,73 @@ public class DragAdapter extends BaseAdapter {
         final App app = getItem(position);
         convertView = LayoutInflater.from(context).inflate(
                 R.layout.my_app_item_view, null);
-        ImageViewRound iconImg = (ImageViewRound) convertView
+        //应用图标
+        ImageViewRound appIconImg = (ImageViewRound) convertView
                 .findViewById(R.id.icon_image);
-        TextView unhandledNotification = (TextView) convertView.findViewById(R.id.unhandled_notification);
-        iconImg.setType(ImageViewRound.TYPE_ROUND);
-        iconImg.setRoundRadius(DensityUtil.dip2px(context, 10));
-        TextView nameText = (TextView) convertView.findViewById(R.id.name_text);
+        handleAppIconImg(app,appIconImg);
+        //应用名称
+        TextView appNameText = (TextView) convertView.findViewById(R.id.name_text);
+        appNameText.setText(app.getAppName());
+        //未处理消息条数
+        TextView unhandledBadges = (TextView) convertView.findViewById(R.id.unhandled_badges);
+        handleUnHandledBadgesDisplay(app,unhandledBadges);
+        //删除图标显示和监听事件处理
+        handleAppDeleteImg(app,position,convertView);
+        return convertView;
+    }
+
+    /**
+     * 处理应用图标显示
+     * @param app
+     * @param appIconImg
+     */
+    private void handleAppIconImg(App app, ImageViewRound appIconImg) {
+        appIconImg.setType(ImageViewRound.TYPE_ROUND);
+        appIconImg.setRoundRadius(DensityUtil.dip2px(context, 10));
+        imageDisplayUtils.displayImage(appIconImg, app.getAppIcon());
+    }
+
+    /**
+     * 处理删除按钮显示和事件监听
+     * @param app
+     * @param position
+     * @param convertView
+     */
+    private void handleAppDeleteImg(final App app, final int position, View convertView) {
+        ImageView deleteImg = (ImageView) convertView
+                .findViewById(R.id.delete_markView);
+        if (canEdit) {
+            if (!app.getIsMustHave()) {
+                deleteImg.setVisibility(View.VISIBLE);
+                deleteImg.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        deletePosition = position;
+                        removeApp(app);
+                    }
+                });
+            }
+            startAnimation(convertView, position);
+        } else {
+            stopAnimation(convertView);
+        }
+    }
+
+    /**
+     * 处理未处理消息个数的显示
+     * @param app
+     * @param unhandledBadges
+     */
+    private void handleUnHandledBadgesDisplay(App app, TextView unhandledBadges) {
         if (app.getBadge() != 0) {
-            unhandledNotification.setVisibility(View.VISIBLE);
+            unhandledBadges.setVisibility(View.VISIBLE);
             GradientDrawable gradientDrawable = new GradientDrawableBuilder()
                     .setCornerRadius(DensityUtil.dip2px(context, 40))
                     .setBackgroundColor(0xFFFF0033)
                     .setStrokeColor(0xFFFF0033).build();
-            unhandledNotification.setBackground(gradientDrawable);
-            unhandledNotification.setText(app.getBadge() + "");
+            unhandledBadges.setBackground(gradientDrawable);
+            unhandledBadges.setText(app.getBadge() + "");
         }
-        ImageView deleteImg = (ImageView) convertView
-                .findViewById(R.id.delete_markView);
-        nameText.setText(app.getAppName());
-        imageDisplayUtils.displayImage(iconImg, app.getAppIcon());
-        if (canEdit) {
-            if (!app.getIsMustHave()) {
-                deleteImg.setVisibility(View.VISIBLE);
-            }
-            startAnimation(convertView, position);
-            deleteImg.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    deletePosition = position;
-                    removeApp(app);
-                }
-            });
-        } else {
-            deleteImg.setVisibility(View.GONE);
-            stopAnimation(convertView);
-        }
-        return convertView;
     }
 
     /**
@@ -123,6 +154,10 @@ public class DragAdapter extends BaseAdapter {
         }
     }
 
+    /**
+     * 卸载应用
+     * @param packageName
+     */
     private void uninstallNativeApp(String packageName) {
         if (AppUtils.isAppInstalled(context, packageName)) {
             Intent intent = new Intent();

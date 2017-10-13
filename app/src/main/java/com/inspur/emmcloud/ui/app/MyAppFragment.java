@@ -114,11 +114,14 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
         if (parent != null) {
             parent.removeView(rootView);
         }
-
         //每次createView如果有上一次存下来的缓存数据则刷新并修改缓存状态
         if (isHasCacheNotRefresh) {
             refreshAppListView();
             isHasCacheNotRefresh = false;
+        }
+        //有缓存才获取badge，防止第一次安装，第一次进入时刷新两次
+        if(MyAppCacheUtils.getMyAppList(getActivity()).size()>0){
+            getAppBadgeNum();
         }
         return rootView;
     }
@@ -563,7 +566,6 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
     public void onRefresh(PullToRefreshLayout pullToRefreshLayout) {
         isNeedRefreshApp = true;
         getMyApp();
-
     }
 
     /**
@@ -985,8 +987,8 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
                 isHasCacheNotRefresh = false;
                 appListAdapter.setAppAdapterList(appGroupList);
                 appListAdapter.notifyDataSetChanged();
+                getAppBadgeNum();
             }
-            getAppBadgeNum();
             pullToRefreshLayout.refreshFinish(PullToRefreshLayout.SUCCEED);
         }
     }
@@ -999,18 +1001,22 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
         List<AppGroupBean> appGroupBeanList = appListAdapter.getAppAdapterList();
         Iterator<AppGroupBean> appGroupBeanIterator = appGroupBeanList.iterator();
         App app = new App();
-        while (appGroupBeanIterator.hasNext()){
-            List<App> appList = appGroupBeanIterator.next().getAppItemList();
-            for(int i = 0; i < getAppBadgeResult.getAppBadgeList().size(); i++){
-                AppBadgeBean appBadgeBean = getAppBadgeResult.getAppBadgeList().get(i);
-                app.setAppID(appBadgeBean.getAppId());
+        boolean isNeedRefreshBadge = false;
+        for(int i = 0; i < getAppBadgeResult.getAppBadgeList().size(); i++){
+            AppBadgeBean appBadgeBean = getAppBadgeResult.getAppBadgeList().get(i);
+            app.setAppID(appBadgeBean.getAppId());
+            while (appGroupBeanIterator.hasNext()){
+                List<App> appList = appGroupBeanIterator.next().getAppItemList();
                 int appIndex = appList.indexOf(app);
                 if(appIndex != -1){
                     appList.get(appIndex).setBadge(appBadgeBean.getBadgeNum());
+                    isNeedRefreshBadge = true;
                 }
             }
         }
-        appListAdapter.notifyDataSetChanged();
+        if(isNeedRefreshBadge){
+            appListAdapter.notifyDataSetChanged();
+        }
     }
 
     /**
@@ -1041,6 +1047,4 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
             WebServiceMiddleUtils.hand(getActivity(), error, errorCode);
         }
     }
-
-
 }
