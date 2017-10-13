@@ -16,6 +16,7 @@ public class APIUri {
 	private static final String URL_BASE_OAUTH = "https://id.inspur.com/oauth2.0/token";
 	private static final String URL_BASE_SMS_LOGIN = "https://id.inspur.com/api/v1/passcode?phone=";
 	private static final String URL_BASE_APP_CONFIG ="https://emm.inspur.com/v3.0/api/app/config";
+	private static final String URL_BASE_APP_V3 = "https://emm.inspur.com/v3.0/";
 	/**
 	 * 获取到租户级的URL
 	 * @return
@@ -652,4 +653,12 @@ public class APIUri {
 	}
 
 	public static String getAppConfigUrl(){return  URL_BASE_APP_CONFIG+"?key=WebAutoRotate&key=CommonFunctions";}
+
+	/**
+	 * 获取应用未处理消息条数的URL
+	 * @return
+	 */
+	public static String getAppBadgeNumUrl(){
+		return URL_BASE_APP_V3 + "api/app/badge";
+	}
 }

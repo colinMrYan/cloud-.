@@ -304,6 +304,7 @@ public class App implements Serializable {
 		return helpUrl;
 	}
 
+
 	@Override
 	public boolean equals(Object other) {
 		if(this == other){
