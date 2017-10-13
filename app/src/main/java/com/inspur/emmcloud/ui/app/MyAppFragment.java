@@ -122,8 +122,13 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
             refreshAppListView();
             isHasCacheNotRefresh = false;
         }
-        getAppBadgeNum();
         return rootView;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getAppBadgeNum();
     }
 
     @Override
