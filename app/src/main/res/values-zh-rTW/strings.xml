@@ -97,6 +97,7 @@
     <string name="commoly_use_app">常用</string>
     <string name="app_init">正在初始化...</string>
     <string name="news_content_cant_empty">內容不能為空</string>
+    <string name="help">幫助</string>
 
     <!-- 新添加部分 -->
     <string name="alert">提醒</string>

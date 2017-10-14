@@ -12,6 +12,7 @@ import android.support.v4.content.ContextCompat;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -65,6 +66,7 @@ public class ImpActivity extends ImpBaseActivity {
     private FrameLayout frameLayout;
     private LinearLayout loadingLayout;
     private TextView loadingText;
+    private String helpUrl = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,16 +87,15 @@ public class ImpActivity extends ImpBaseActivity {
      */
     private void initViews() {
         loadingLayout = (LinearLayout) findViewById(Res.getWidgetID("loading_layout"));
-        loadingText = (TextView) findViewById(Res.getWidgetID("loading_text"));
+        loadingText = (TextView)findViewById(Res.getWidgetID("loading_text"));
         frameLayout = (FrameLayout) findViewById(Res.getWidgetID("videoContainer"));
         loadFailLayout = (LinearLayout) findViewById(Res.getWidgetID("load_error_layout"));
         webView = (ImpWebView) findViewById(Res.getWidgetID("webview"));
         showLoadingDlg(getString(Res.getStringID("@string/loading_text")));
-        setWebViewFontZoom();
-        if (getIntent().hasExtra("help_url")) {
+        if(getIntent().hasExtra("help_url")){
             String helpUrl = getIntent().getStringExtra("help_url");
-            if (!StringUtils.isBlank(helpUrl)) {
-                //显示帮助按钮，并监听相关事件
+            if(!StringUtils.isBlank(helpUrl)){
+                this.helpUrl = helpUrl;
             }
         }
         if (getIntent().hasExtra("appId")) {
@@ -119,16 +120,19 @@ public class ImpActivity extends ImpBaseActivity {
             }
         });
         webView.loadUrl(url, webViewHeaders);
+        setWebViewFontZoom();
     }
 
     /**
      * 设置Webview字体缩放是否显示
      */
-    private void setWebViewFontZoom() {
+    private void setWebViewFontZoom(){
         if (getIntent().hasExtra("is_zoomable")) {
             int isZoomable = getIntent().getIntExtra("is_zoomable", 0);
-            if (isZoomable == 1) {
+            if (isZoomable == 1 || !StringUtils.isBlank(helpUrl)) {
                 findViewById(R.id.imp_change_font_size_btn).setVisibility(View.VISIBLE);
+            }
+            if (isZoomable == 1) {
                 int textSize = PreferencesByUsersUtils.getInt(ImpActivity.this, "app_crm_font_size_" + appId, MyAppWebConfig.NORMAL);
                 webView.getSettings().setTextZoom(textSize);
             }
@@ -138,7 +142,7 @@ public class ImpActivity extends ImpBaseActivity {
     /**
      * 初始化webview haader layout
      */
-    private void initWebViewHeaderLayout() {
+    private void initWebViewHeaderLayout(){
         if (getIntent().hasExtra("appName")) {
             String title = getIntent().getExtras().getString("appName");
             headerText = (TextView) findViewById(Res.getWidgetID("header_text"));
@@ -206,7 +210,7 @@ public class ImpActivity extends ImpBaseActivity {
         webViewHeaders = new HashMap<>();
         String token = ((MyApplication) getApplicationContext())
                 .getToken();
-        if (token != null) {
+        if (token != null){
             webViewHeaders.put("Authorization", token);
         }
         webViewHeaders.put("X-ECC-Current-Enterprise", ((MyApplication) getApplicationContext()).getCurrentEnterprise().getId());
@@ -260,6 +264,9 @@ public class ImpActivity extends ImpBaseActivity {
         Dialog dialog = new Dialog(this, R.style.transparentFrameWindowStyle);
         dialog.setContentView(view, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT));
+        if(!StringUtils.isBlank(helpUrl)){
+            initHelpUrlViews(dialog,view);
+        }
         initFontSizeDialogViews(view);
         Window window = dialog.getWindow();
         // 设置显示动画
@@ -278,8 +285,27 @@ public class ImpActivity extends ImpBaseActivity {
         dialog.onWindowAttributesChanged(wl);
         // 设置点击外围解散
         dialog.setCanceledOnTouchOutside(true);
-        initWebViewTextSize(0);
+        if(getIntent().hasExtra("is_zoomable") && (getIntent().getIntExtra("is_zoomable", 0)==1)){
+            initWebViewTextSize(0);
+        }
         dialog.show();
+    }
+
+    /**
+     * 初始化帮助view
+     */
+    private void initHelpUrlViews(final Dialog dialog , View view) {
+        view.findViewById(R.id.app_imp_crm_help_layout).setVisibility(View.VISIBLE);
+        view.findViewById(R.id.app_news_share_btn).setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.setClass(ImpActivity.this, ImpActivity.class);
+                intent.putExtra("uri",helpUrl);
+                startActivity(intent);
+                dialog.dismiss();
+            }
+        });
     }
 
     /**
@@ -288,14 +314,20 @@ public class ImpActivity extends ImpBaseActivity {
      * @param view
      */
     private void initFontSizeDialogViews(View view) {
-        normalBtn = (Button) view.findViewById(R.id.app_imp_crm_font_normal_btn);
-        normalBtn.setText(getString(R.string.news_font_normal));
-        middleBtn = (Button) view.findViewById(R.id.app_imp_crm_font_middle_btn);
-        middleBtn.setText(getString(R.string.news_font_middle));
-        bigBtn = (Button) view.findViewById(R.id.app_imp_crm_font_big_btn);
-        bigBtn.setText(getString(R.string.news_font_big_text));
-        biggestBtn = (Button) view.findViewById(R.id.app_imp_crm_font_biggest_btn);
-        biggestBtn.setText(getString(R.string.news_font_biggest_text));
+        if(getIntent().hasExtra("is_zoomable") &&  (getIntent().getIntExtra("is_zoomable", 0)== 1)){
+            normalBtn = (Button) view.findViewById(R.id.app_imp_crm_font_normal_btn);
+            normalBtn.setText(getString(R.string.news_font_normal));
+            middleBtn = (Button) view.findViewById(R.id.app_imp_crm_font_middle_btn);
+            middleBtn.setText(getString(R.string.news_font_middle));
+            bigBtn = (Button) view.findViewById(R.id.app_imp_crm_font_big_btn);
+            bigBtn.setText(getString(R.string.news_font_big_text));
+            biggestBtn = (Button) view.findViewById(R.id.app_imp_crm_font_biggest_btn);
+            biggestBtn.setText(getString(R.string.news_font_biggest_text));
+        }else {
+            view.findViewById(R.id.app_imp_crm_font_text).setVisibility(View.GONE);
+            view.findViewById(R.id.app_imp_crm_font_layout).setVisibility(View.GONE);
+        }
+
     }
 
     /**
@@ -326,7 +358,6 @@ public class ImpActivity extends ImpBaseActivity {
         normalBtn.setTextColor((textSize == MyAppWebConfig.CRM_BIGGEST) ? lightModeFontColor : blackFontColor);
 
     }
-
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
