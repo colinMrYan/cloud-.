@@ -25,6 +25,7 @@ import com.inspur.emmcloud.util.AppConfigCacheUtils;
 import com.inspur.emmcloud.util.DataCleanManager;
 import com.inspur.emmcloud.util.ImageDisplayUtils;
 import com.inspur.emmcloud.util.IntentUtils;
+import com.inspur.emmcloud.util.MyAppCacheUtils;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.ToastUtils;
@@ -272,6 +273,7 @@ public class SettingActivity extends BaseActivity {
                     ImageDisplayUtils imageDisplayUtils = new ImageDisplayUtils(
                             R.drawable.icon_photo_default);
                     imageDisplayUtils.clearAllCache();
+                    MyAppCacheUtils.clearMyAppList(SettingActivity.this);
                     //清除全部缓存时是否需要清除掉小程序，如果需要，解开下面一行的注释
 //					ReactNativeFlow.deleteReactNativeInstallDir(MyAppConfig.getReactInstallPath(SettingActivity.this,userId));
                     ToastUtils.show(getApplicationContext(),
