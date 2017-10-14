@@ -12,6 +12,7 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.api.APICallback;
 import com.inspur.emmcloud.api.APIInterface;
 import com.inspur.emmcloud.api.APIUri;
+import com.inspur.emmcloud.bean.GetAppConfigResult;
 import com.inspur.emmcloud.bean.GetAppTabAutoResult;
 import com.inspur.emmcloud.bean.GetAppTabsResult;
 import com.inspur.emmcloud.bean.GetClientIdRsult;
@@ -538,24 +539,71 @@ public class AppAPIService {
      * 获取应用的配置信息
      */
     public void getAppConfig() {
-        String url = APIUri.getAppConfigUrl();
+        final String url = APIUri.getAppConfigUrl();
         RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
         x.http().get(params, new APICallback(context, url) {
             @Override
             public void callbackSuccess(String arg0) {
-
+                apiInterface.returnAppConfigSuccess(new GetAppConfigResult(arg0));
             }
 
             @Override
             public void callbackFail(String error, int responseCode) {
-
+                apiInterface.returnAppConfigFail(error,responseCode);
             }
 
             @Override
             public void callbackTokenExpire() {
+                new OauthUtils(new OauthCallBack() {
 
+                    @Override
+                    public void reExecute() {
+                        getAppConfig();
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                }, context).refreshToken(url);
             }
         });
     }
 
+    /**
+     * 保存webview是否自动旋转配置项
+     * @param isWebAutoRotate
+     */
+    public void saveWebAutoRotateConfig(final boolean isWebAutoRotate){
+        final String url = APIUri.saveAppConfigUrl("WebAutoRotate");
+        RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
+        params.setBodyContent(isWebAutoRotate+"");
+        x.http().post(params, new APICallback(context,url) {
+            @Override
+            public void callbackSuccess(String arg0) {
+                apiInterface.returnSaveWebAutoRotateConfigSuccess(isWebAutoRotate);
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                apiInterface.returnSaveWebAutoRotateConfigFail(error,responseCode);
+            }
+
+            @Override
+            public void callbackTokenExpire() {
+                new OauthUtils(new OauthCallBack() {
+
+                    @Override
+                    public void reExecute() {
+                        saveWebAutoRotateConfig(isWebAutoRotate);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                }, context).refreshToken(url);
+            }
+        });
+    }
 }

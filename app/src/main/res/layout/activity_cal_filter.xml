@@ -45,7 +45,7 @@
    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scrollbars="@null"
+        android:scrollbars="none"
         android:layout_below="@id/header_layout"
         android:background="@color/content_bg" >
         <LinearLayout
@@ -111,8 +111,8 @@
 
                 <ImageView
                     android:id="@+id/quarter_select_img"
-                    android:layout_width="13dp"
-                    android:layout_height="10dp"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="17dp"
@@ -145,8 +145,8 @@
 
                 <ImageView
                     android:id="@+id/month_select_img"
-                    android:layout_width="13dp"
-                    android:layout_height="10dp"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="17dp"

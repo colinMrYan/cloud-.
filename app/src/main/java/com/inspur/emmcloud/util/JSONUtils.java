@@ -688,6 +688,27 @@ public class JSONUtils {
     }
 
     /**
+     * JSONArray字符串转为JSONArray
+     * @param jsonArrayData
+     * @param defaultValue
+     * @return
+     */
+    public static JSONArray getJSONArray(String jsonArrayData, JSONArray defaultValue){
+        if (StringUtils.isEmpty(jsonArrayData)) {
+            return defaultValue;
+        }
+        try {
+            JSONArray jsonArray = new JSONArray(jsonArrayData);
+            return jsonArray;
+        } catch (JSONException e) {
+            if (isPrintException) {
+                e.printStackTrace();
+            }
+            return defaultValue;
+        }
+    }
+
+    /**
      * get Boolean from jsonObject
      * 
      * @param jsonObject

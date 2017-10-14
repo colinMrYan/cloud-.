@@ -10,6 +10,7 @@ import com.inspur.emmcloud.bean.GetAdressUsersResult;
 import com.inspur.emmcloud.bean.GetAllAppResult;
 import com.inspur.emmcloud.bean.GetAllContactResult;
 import com.inspur.emmcloud.bean.GetAllRobotsResult;
+import com.inspur.emmcloud.bean.GetAppConfigResult;
 import com.inspur.emmcloud.bean.GetAppBadgeResult;
 import com.inspur.emmcloud.bean.GetAppGroupResult;
 import com.inspur.emmcloud.bean.GetAppTabAutoResult;
@@ -1418,6 +1419,26 @@ public class APIInterfaceInstance implements APIInterface {
 
     @Override
     public void returnDeviceLogListFail(String error, int errorCode) {
+
+    }
+
+    @Override
+    public void returnAppConfigSuccess(GetAppConfigResult getAppConfigResult) {
+
+    }
+
+    @Override
+    public void returnAppConfigFail(String error, int errorCode) {
+
+    }
+
+    @Override
+    public void returnSaveWebAutoRotateConfigSuccess(boolean isWebAutoRotate) {
+
+    }
+
+    @Override
+    public void returnSaveWebAutoRotateConfigFail(String error, int errorCode) {
 
     }
 
