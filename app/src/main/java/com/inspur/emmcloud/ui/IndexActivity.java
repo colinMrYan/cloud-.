@@ -47,6 +47,7 @@ import com.inspur.emmcloud.ui.mine.setting.LanguageChangeActivity;
 import com.inspur.emmcloud.ui.notsupport.NotSupportFragment;
 import com.inspur.emmcloud.ui.work.MainTabBean;
 import com.inspur.emmcloud.ui.work.WorkFragment;
+import com.inspur.emmcloud.util.AppConfigUtils;
 import com.inspur.emmcloud.util.AppUtils;
 import com.inspur.emmcloud.util.ChannelGroupCacheUtils;
 import com.inspur.emmcloud.util.ClientIDUtils;
@@ -122,7 +123,6 @@ public class IndexActivity extends BaseFragmentActivity implements
     private void init() {
         appApiService = new AppAPIService(IndexActivity.this);
         appApiService.setAPIInterface(new WebService());
-        new ReactNativeUtils(IndexActivity.this).init(); //初始化和更新react
         loadingDlg = new LoadingDialog(IndexActivity.this, getString(R.string.app_init));
         handMessage();
         getIsHasCacheContact();
@@ -136,6 +136,8 @@ public class IndexActivity extends BaseFragmentActivity implements
         /**从服务端获取显示tab**/
         getAppTabs();
         new SplashPageUtils(IndexActivity.this).update();//更新闪屏页面
+        new ReactNativeUtils(IndexActivity.this).init(); //初始化和更新react
+        new AppConfigUtils(IndexActivity.this).getAppConfig();
         startUploadPVCollectService();
         startCoreService();
         setPreloadWebApp();

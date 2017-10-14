@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    >
+    android:layout_height="wrap_content">
+
     <ImageView
         android:id="@+id/meesage_popwindow_arrow_img"
         android:layout_width="12dp"
         android:layout_height="8dp"
-        android:layout_marginRight="22dp"
         android:layout_alignParentRight="true"
+        android:layout_marginRight="22dp"
         android:adjustViewBounds="true"
         android:scaleType="fitXY"
         android:src="@drawable/message_popwindow_list_arrow" />
@@ -17,63 +17,62 @@
         android:id="@+id/message_popwindow_outsize_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginRight="10dp"
         android:layout_alignParentRight="true"
         android:layout_below="@id/meesage_popwindow_arrow_img"
-        android:background="@drawable/shape_message_pop_round_blue_layout">
-    <TextView
-        android:id="@+id/app_change_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="6dp"
-        android:layout_marginBottom="6dp"
-        android:paddingTop="5dp"
-        android:paddingBottom="4dp"
-        android:paddingLeft="3dp"
-        android:clickable="true"
-        android:paddingRight="80dp"
-        android:text="@string/edit"
-        android:textColor="#ffffff"
-        android:textSize="14sp" />
-    <LinearLayout
-        android:id="@+id/app_hide_layout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/app_change_btn"
-        android:layout_marginLeft="6dp"
-        android:layout_marginTop="6dp"
         android:layout_marginRight="10dp"
-        android:layout_marginBottom="6dp"
-        android:orientation="horizontal">
-        <Button
-            android:id="@+id/app_hide_btn"
+        android:background="@drawable/shape_message_pop_round_blue_layout">
+
+        <TextView
+            android:id="@+id/app_change_btn"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_centerVertical="true"
-            android:background="@color/transparent"
-            android:clickable="false"
-            android:text="@string/app_commonly_use"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/app_hide_layout"
+            android:layout_alignRight="@+id/app_hide_layout"
+            android:clickable="true"
+            android:padding="10dp"
+            android:text="@string/edit"
             android:textColor="#ffffff"
             android:textSize="14sp" />
-        <com.inspur.emmcloud.widget.SwitchView
-            android:id="@+id/app_hide_switch"
-            android:layout_width="40dp"
-            android:layout_height="24dp"
-            android:layout_centerVertical="true"
-            android:layout_marginTop="3dp"
-            android:layout_marginLeft="5dp"
-            android:layout_toRightOf="@id/app_hide_btn" />
-    </LinearLayout>
 
-    <View
-        android:id="@+id/app_myapp_line"
-        android:layout_width="wrap_content"
-        android:layout_height="0.5dp"
-        android:layout_marginRight="6dp"
-        android:layout_alignLeft="@id/app_hide_layout"
-        android:layout_alignRight="@id/app_hide_layout"
-        android:layout_below="@id/app_change_btn"
-        android:background="#3895D9" />
-</RelativeLayout>
+        <LinearLayout
+            android:id="@+id/app_hide_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/app_change_btn"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/app_hide_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/transparent"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:clickable="false"
+                android:text="@string/app_commonly_use"
+                android:textColor="#ffffff"
+                android:textSize="14sp" />
+
+            <com.inspur.emmcloud.widget.SwitchView
+                android:id="@+id/app_hide_switch"
+                android:layout_width="37dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                 />
+        </LinearLayout>
+
+        <View
+            android:id="@+id/app_myapp_line"
+            android:layout_width="wrap_content"
+            android:layout_height="0.5dp"
+            android:layout_alignLeft="@id/app_hide_layout"
+            android:layout_alignRight="@id/app_hide_layout"
+            android:layout_below="@id/app_change_btn"
+            android:layout_marginRight="6dp"
+            android:layout_marginLeft="6dp"
+            android:background="#3895D9" />
+    </RelativeLayout>
 </RelativeLayout>

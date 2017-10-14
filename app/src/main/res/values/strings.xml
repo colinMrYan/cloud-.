@@ -425,6 +425,8 @@
     <string name="select_enterprise">选择企业</string>
     <string name="switch_enterprise">切换企业</string>
     <string name="current_enterprise">当前企业</string>
+    <string name="web_app_auto_rotate">Web应用支持旋转</string>
+
 
 
     <!-- 修改密码部分 -->

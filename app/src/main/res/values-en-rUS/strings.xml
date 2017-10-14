@@ -422,7 +422,7 @@
     <string name="select_enterprise">Select enterprise</string>
     <string name="switch_enterprise">Switch</string>
     <string name="current_enterprise">Current enterprise</string>
-
+    <string name="web_app_auto_rotate">Web App support rotation</string>
 
 
     <!-- 修改密码部分 -->

@@ -26,7 +26,9 @@ import android.widget.TextView;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.Language;
+import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.config.MyAppWebConfig;
+import com.inspur.emmcloud.util.AppConfigCacheUtils;
 import com.inspur.emmcloud.util.AppUtils;
 import com.inspur.emmcloud.util.MDM.MDM;
 import com.inspur.emmcloud.util.PreferencesByUsersUtils;
@@ -68,7 +70,9 @@ public class ImpActivity extends ImpBaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
+        boolean isWebAutoRotate = Boolean.parseBoolean(AppConfigCacheUtils.getAppConfigValue(this,Constant.CONCIG_WEB_AUTO_ROTATE,"false"));
+        //设置是否开启webview自动旋转
+        setRequestedOrientation(isWebAutoRotate ? ActivityInfo.SCREEN_ORIENTATION_SENSOR : ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(Res.getLayoutID("activity_imp"));
         getWindow().setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
@@ -81,15 +85,15 @@ public class ImpActivity extends ImpBaseActivity {
      */
     private void initViews() {
         loadingLayout = (LinearLayout) findViewById(Res.getWidgetID("loading_layout"));
-        loadingText = (TextView)findViewById(Res.getWidgetID("loading_text"));
+        loadingText = (TextView) findViewById(Res.getWidgetID("loading_text"));
         frameLayout = (FrameLayout) findViewById(Res.getWidgetID("videoContainer"));
         loadFailLayout = (LinearLayout) findViewById(Res.getWidgetID("load_error_layout"));
         webView = (ImpWebView) findViewById(Res.getWidgetID("webview"));
         showLoadingDlg(getString(Res.getStringID("@string/loading_text")));
         setWebViewFontZoom();
-        if(getIntent().hasExtra("help_url")){
+        if (getIntent().hasExtra("help_url")) {
             String helpUrl = getIntent().getStringExtra("help_url");
-            if(!StringUtils.isBlank(helpUrl)){
+            if (!StringUtils.isBlank(helpUrl)) {
                 //显示帮助按钮，并监听相关事件
             }
         }
@@ -120,7 +124,7 @@ public class ImpActivity extends ImpBaseActivity {
     /**
      * 设置Webview字体缩放是否显示
      */
-    private void setWebViewFontZoom(){
+    private void setWebViewFontZoom() {
         if (getIntent().hasExtra("is_zoomable")) {
             int isZoomable = getIntent().getIntExtra("is_zoomable", 0);
             if (isZoomable == 1) {
@@ -134,7 +138,7 @@ public class ImpActivity extends ImpBaseActivity {
     /**
      * 初始化webview haader layout
      */
-    private void initWebViewHeaderLayout(){
+    private void initWebViewHeaderLayout() {
         if (getIntent().hasExtra("appName")) {
             String title = getIntent().getExtras().getString("appName");
             headerText = (TextView) findViewById(Res.getWidgetID("header_text"));
@@ -147,6 +151,7 @@ public class ImpActivity extends ImpBaseActivity {
             webView.setProperty(null, loadFailLayout, frameLayout);
         }
     }
+
     /**
      * 初始化原生WebView的返回和关闭
      * （不是GS应用，GS应用有重定向，不容易实现返回）
@@ -201,7 +206,7 @@ public class ImpActivity extends ImpBaseActivity {
         webViewHeaders = new HashMap<>();
         String token = ((MyApplication) getApplicationContext())
                 .getToken();
-        if (token != null){
+        if (token != null) {
             webViewHeaders.put("Authorization", token);
         }
         webViewHeaders.put("X-ECC-Current-Enterprise", ((MyApplication) getApplicationContext()).getCurrentEnterprise().getId());
@@ -315,13 +320,12 @@ public class ImpActivity extends ImpBaseActivity {
         }
         int lightModeFontColor = ContextCompat.getColor(ImpActivity.this, R.color.app_dialog_day_font_color);
         int blackFontColor = ContextCompat.getColor(ImpActivity.this, R.color.black);
-        normalBtn.setTextColor((textSize==MyAppWebConfig.NORMAL)?lightModeFontColor:blackFontColor);
-        bigBtn.setTextColor((textSize==MyAppWebConfig.CRM_BIG)?lightModeFontColor:blackFontColor);
-        biggestBtn.setTextColor((textSize==MyAppWebConfig.CRM_BIGGER)?lightModeFontColor:blackFontColor);
-        normalBtn.setTextColor((textSize==MyAppWebConfig.CRM_BIGGEST)?lightModeFontColor:blackFontColor);
+        normalBtn.setTextColor((textSize == MyAppWebConfig.NORMAL) ? lightModeFontColor : blackFontColor);
+        bigBtn.setTextColor((textSize == MyAppWebConfig.CRM_BIG) ? lightModeFontColor : blackFontColor);
+        biggestBtn.setTextColor((textSize == MyAppWebConfig.CRM_BIGGER) ? lightModeFontColor : blackFontColor);
+        normalBtn.setTextColor((textSize == MyAppWebConfig.CRM_BIGGEST) ? lightModeFontColor : blackFontColor);
 
     }
-
 
 
     @Override
@@ -352,9 +356,9 @@ public class ImpActivity extends ImpBaseActivity {
 
 
     public void showLoadingDlg(String content) {
-        if (StringUtils.isBlank(content)){
+        if (StringUtils.isBlank(content)) {
             loadingText.setVisibility(View.GONE);
-        }else {
+        } else {
             loadingText.setText(content);
             loadingText.setVisibility(View.VISIBLE);
         }

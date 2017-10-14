@@ -3,13 +3,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:clipToPadding="true"
-    android:fitsSystemWindows="true" >
+    android:fitsSystemWindows="true">
 
     <RelativeLayout
         android:id="@+id/header_layout"
         android:layout_width="match_parent"
         android:layout_height="@dimen/header_height"
-        android:background="@color/header_bg" >
+        android:background="@color/header_bg">
 
         <RelativeLayout
             android:id="@+id/back_layout"
@@ -18,7 +18,7 @@
             android:layout_centerVertical="true"
             android:onClick="onClick"
             android:paddingLeft="12dp"
-            android:paddingRight="12dp" >
+            android:paddingRight="12dp">
 
             <ImageView
                 android:id="@+id/back_btn"
@@ -48,25 +48,58 @@
         android:layout_below="@id/header_layout"
         android:background="@color/content_bg"
         android:orientation="vertical"
-        android:paddingTop="10dp" >
-
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="#dadadd"
-            android:visibility="gone" />
+        android:paddingTop="10dp">
 
         <View
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
             android:background="#dadadd" />
 
+        <RelativeLayout
+            android:id="@+id/setting_gesture_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/text_layout_selector"
+            android:onClick="onClick">
+
+            <TextView
+                android:id="@+id/setting_gesture_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="12dp"
+                android:paddingBottom="10dp"
+                android:paddingTop="10dp"
+                android:text="@string/setting_safe_center"
+                android:textSize="@dimen/content_normal_textsize" />
+
+            <ImageView
+                android:id="@+id/about_img"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:src="@drawable/icon_arrow_right" />
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="#dadadd" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_marginTop="10dp"
+            android:background="#dadadd" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="#ffffff"
-            android:orientation="vertical" >
+            android:orientation="vertical">
 
             <RelativeLayout
                 android:id="@+id/msg_languagechg_layout"
@@ -74,7 +107,7 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/text_layout_selector"
                 android:onClick="onClick"
-                android:paddingLeft="12dp" >
+                android:paddingLeft="12dp">
 
                 <TextView
                     android:id="@+id/msg_languagechg_text"
@@ -91,8 +124,8 @@
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:layout_centerVertical="true"
-                    android:layout_toLeftOf="@+id/msg_languagechg_result_text"
                     android:layout_marginRight="15dp"
+                    android:layout_toLeftOf="@+id/msg_languagechg_result_text"
                     android:scaleType="fitXY" />
 
                 <TextView
@@ -116,61 +149,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
-                    android:src="@drawable/icon_arrow_right"
-                     />
-            </RelativeLayout>
-
-            <!-- 细线 -->
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0.5dp"
-                android:visibility="gone"
-                android:background="#dadadd" />
-
-            <RelativeLayout
-                android:id="@+id/msg_notify_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/text_layout_selector"
-                android:onClick="onClick"
-                android:visibility="gone"
-                android:paddingLeft="12dp" >
-
-                <TextView
-                    android:id="@+id/msg_notify_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:paddingBottom="10dp"
-                    android:paddingTop="10dp"
-                    android:text="@string/settings_message_alert"
-                    android:textSize="@dimen/content_normal_textsize" />
-
-                <TextView
-                    android:id="@+id/msg_notify_result_text"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_toLeftOf="@+id/msg_notify_img"
-                    android:layout_toRightOf="@id/msg_notify_text"
-                    android:gravity="right"
-                    android:paddingBottom="10dp"
-                    android:paddingTop="10dp"
-                    android:text="@string/settings_open_msg"
-                    android:textColor="@color/set_protected"
-                    android:textSize="@dimen/content_normal_textsize" />
-
-                <ImageView
-                    android:id="@+id/msg_notify_img"
-                    android:layout_width="15dp"
-                    android:layout_height="15dp"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    android:src="@drawable/icon_arrow_right"
-                    android:visibility="invisible" />
+                    android:src="@drawable/icon_arrow_right" />
             </RelativeLayout>
 
             <View
@@ -184,7 +163,7 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/text_layout_selector"
                 android:onClick="onClick"
-                android:paddingLeft="12dp" >
+                android:paddingLeft="12dp">
 
                 <TextView
                     android:id="@+id/clear_cache_text"
@@ -196,19 +175,6 @@
                     android:text="@string/settings_clear_cache"
                     android:textSize="@dimen/content_normal_textsize" />
 
-                <TextView
-                    android:id="@+id/buffer_num_text"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_toLeftOf="@+id/clear_cache_img"
-                    android:layout_toRightOf="@id/clear_cache_text"
-                    android:gravity="right"
-                    android:paddingBottom="10dp"
-                    android:paddingTop="10dp"
-                    android:textColor="@color/set_protected"
-                    android:textSize="@dimen/content_normal_textsize"
-                    android:visibility="invisible" />
 
                 <ImageView
                     android:id="@+id/clear_cache_img"
@@ -223,55 +189,34 @@
         </LinearLayout>
 
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="#dadadd" />
+
         <RelativeLayout
-            android:id="@+id/setting_gesture_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/text_layout_selector"
-            android:onClick="onClick" >
-
-            <!-- 细线 -->
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0.5dp"
-                android:background="#dadadd" />
+            android:background="@drawable/text_layout_selector">
 
             <TextView
-                android:id="@+id/setting_gesture_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="12dp"
                 android:paddingBottom="10dp"
                 android:paddingTop="10dp"
-                android:text="@string/setting_safe_center"
+                android:text="@string/web_app_auto_rotate"
                 android:textSize="@dimen/content_normal_textsize" />
 
-            <TextView
-                android:id="@+id/version_text"
-                android:layout_width="match_parent"
+            <com.inspur.emmcloud.widget.SwitchView
+                android:id="@+id/web_auto_rotate_switch"
+                android:layout_width="37dp"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_toLeftOf="@+id/about_img"
-                android:layout_toRightOf="@id/setting_gesture_text"
-                android:gravity="right"
-                android:paddingBottom="10dp"
-                android:paddingTop="10dp"
-                android:textColor="@color/set_protected"
-                android:textSize="@dimen/content_normal_textsize" />
-
-            <ImageView
-                android:id="@+id/about_img"
-                android:layout_width="15dp"
-                android:layout_height="15dp"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:src="@drawable/icon_arrow_right" />
+                android:layout_marginRight="20dp" />
         </RelativeLayout>
-        <!-- 细线 -->
 
         <View
             android:layout_width="match_parent"
@@ -284,7 +229,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:background="@drawable/text_layout_selector"
-            android:onClick="onClick" >
+            android:onClick="onClick">
 
             <!-- 细线 -->
 

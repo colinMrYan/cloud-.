@@ -10,6 +10,7 @@ import com.inspur.emmcloud.bean.GetAdressUsersResult;
 import com.inspur.emmcloud.bean.GetAllAppResult;
 import com.inspur.emmcloud.bean.GetAllContactResult;
 import com.inspur.emmcloud.bean.GetAllRobotsResult;
+import com.inspur.emmcloud.bean.GetAppConfigResult;
 import com.inspur.emmcloud.bean.GetAppGroupResult;
 import com.inspur.emmcloud.bean.GetAppTabAutoResult;
 import com.inspur.emmcloud.bean.GetAppTabsResult;
@@ -524,5 +525,13 @@ public interface APIInterface {
     void returnDeviceLogListSuccess(GetDeviceLogResult getDeviceLogResult);
 
     void returnDeviceLogListFail(String error, int errorCode);
+
+    void returnAppConfigSuccess(GetAppConfigResult getAppConfigResult);
+
+    void returnAppConfigFail(String error, int errorCode);
+
+    void returnSaveWebAutoRotateConfigSuccess(boolean isWebAutoRotate);
+
+    void returnSaveWebAutoRotateConfigFail(String error, int errorCode);
 
 }
