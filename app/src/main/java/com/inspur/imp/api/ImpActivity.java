@@ -229,16 +229,16 @@ public class ImpActivity extends ImpBaseActivity {
                 showChangeFontSizeDialog();
                 break;
             case R.id.app_imp_crm_font_normal_btn:
-                changeNewsFontSize(MyAppWebConfig.NORMAL);
+                setNewsFontSize(MyAppWebConfig.NORMAL);
                 break;
             case R.id.app_imp_crm_font_middle_btn:
-                changeNewsFontSize(MyAppWebConfig.CRM_BIG);
+                setNewsFontSize(MyAppWebConfig.CRM_BIG);
                 break;
             case R.id.app_imp_crm_font_big_btn:
-                changeNewsFontSize(MyAppWebConfig.CRM_BIGGER);
+                setNewsFontSize(MyAppWebConfig.CRM_BIGGER);
                 break;
             case R.id.app_imp_crm_font_biggest_btn:
-                changeNewsFontSize(MyAppWebConfig.CRM_BIGGEST);
+                setNewsFontSize(MyAppWebConfig.CRM_BIGGEST);
                 break;
             case R.id.back_layout:
                 goBack();
@@ -286,7 +286,7 @@ public class ImpActivity extends ImpBaseActivity {
         // 设置点击外围解散
         dialog.setCanceledOnTouchOutside(true);
         if (getIntent().hasExtra("is_zoomable") && (getIntent().getIntExtra("is_zoomable", 0) == 1)) {
-            changeWebViewButtonTextColor(0);
+            setWebViewButtonTextColor(0);
         }
         dialog.show();
     }
@@ -329,22 +329,23 @@ public class ImpActivity extends ImpBaseActivity {
 
     }
 
+
     /**
      * 改变WebView字体大小
      *
      * @param textZoom
      */
-    private void changeNewsFontSize(int textZoom) {
+    private void setNewsFontSize(int textZoom) {
         WebSettings webSettings = webView.getSettings();
         PreferencesByUsersUtils.putInt(ImpActivity.this, "app_crm_font_size_" + appId, textZoom);
         webSettings.setTextZoom(textZoom);
-        changeWebViewButtonTextColor(textZoom);
+        setWebViewButtonTextColor(textZoom);
     }
 
     /**
      * 初始化WebView的字体大小
      */
-    private void changeWebViewButtonTextColor(int textZoom) {
+    private void setWebViewButtonTextColor(int textZoom) {
         int textSize = PreferencesByUsersUtils.getInt(ImpActivity.this, "app_crm_font_size_" + appId, MyAppWebConfig.NORMAL);
         if (textZoom != 0) {
             textSize = textZoom;
