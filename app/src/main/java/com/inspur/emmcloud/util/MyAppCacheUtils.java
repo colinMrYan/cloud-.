@@ -2,8 +2,7 @@ package com.inspur.emmcloud.util;
 
 import android.content.Context;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+import com.alibaba.fastjson.JSON;
 import com.inspur.emmcloud.bean.AppGroupBean;
 
 import java.util.ArrayList;
@@ -21,7 +20,7 @@ public class MyAppCacheUtils {
      * @param appGroupList
      */
     public static void saveMyAppList(Context context, List<AppGroupBean> appGroupList){
-        String appListJson = new Gson().toJson(appGroupList);
+        String appListJson = JSON.toJSONString(appGroupList);
         if(!appListJson.equals("null") && !StringUtils.isBlank(appListJson)){
             PreferencesByUserAndTanentUtils.putString(context,"my_app_list",appListJson);
         }
@@ -42,7 +41,7 @@ public class MyAppCacheUtils {
      */
     public static List<AppGroupBean> getMyAppList(Context context){
         String appListJson = PreferencesByUserAndTanentUtils.getString(context,"my_app_list","");
-        List<AppGroupBean> appGroupList = new Gson().fromJson(appListJson,new TypeToken<ArrayList<AppGroupBean>>(){}.getType());
+        List<AppGroupBean> appGroupList = JSON.parseArray(appListJson,AppGroupBean.class);
         if(appGroupList == null){
             appGroupList = new ArrayList<>();
         }

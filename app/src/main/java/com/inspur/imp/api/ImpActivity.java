@@ -120,13 +120,13 @@ public class ImpActivity extends ImpBaseActivity {
             }
         });
         webView.loadUrl(url, webViewHeaders);
-        setWebViewFontZoom();
+        setWebViewFunctionVisiable();
     }
 
     /**
-     * 设置Webview字体缩放是否显示
+     * 设置Webview自定义功能是否显示
      */
-    private void setWebViewFontZoom() {
+    private void setWebViewFunctionVisiable() {
         if (getIntent().hasExtra("is_zoomable")) {
             int isZoomable = getIntent().getIntExtra("is_zoomable", 0);
             if (isZoomable == 1 || !StringUtils.isBlank(helpUrl)) {
@@ -315,6 +315,8 @@ public class ImpActivity extends ImpBaseActivity {
      */
     private void initFontSizeDialogViews(View view) {
         if (getIntent().hasExtra("is_zoomable") && (getIntent().getIntExtra("is_zoomable", 0) == 1)) {
+            view.findViewById(R.id.app_imp_crm_font_text).setVisibility(View.VISIBLE);
+            view.findViewById(R.id.app_imp_crm_font_layout).setVisibility(View.VISIBLE);
             normalBtn = (Button) view.findViewById(R.id.app_imp_crm_font_normal_btn);
             normalBtn.setText(getString(R.string.news_font_normal));
             middleBtn = (Button) view.findViewById(R.id.app_imp_crm_font_middle_btn);
@@ -323,9 +325,6 @@ public class ImpActivity extends ImpBaseActivity {
             bigBtn.setText(getString(R.string.news_font_big_text));
             biggestBtn = (Button) view.findViewById(R.id.app_imp_crm_font_biggest_btn);
             biggestBtn.setText(getString(R.string.news_font_biggest_text));
-        } else {
-            view.findViewById(R.id.app_imp_crm_font_text).setVisibility(View.GONE);
-            view.findViewById(R.id.app_imp_crm_font_layout).setVisibility(View.GONE);
         }
 
     }
@@ -353,10 +352,9 @@ public class ImpActivity extends ImpBaseActivity {
         int lightModeFontColor = ContextCompat.getColor(ImpActivity.this, R.color.app_dialog_day_font_color);
         int blackFontColor = ContextCompat.getColor(ImpActivity.this, R.color.black);
         normalBtn.setTextColor((textSize == MyAppWebConfig.NORMAL) ? lightModeFontColor : blackFontColor);
-        bigBtn.setTextColor((textSize == MyAppWebConfig.CRM_BIG) ? lightModeFontColor : blackFontColor);
-        biggestBtn.setTextColor((textSize == MyAppWebConfig.CRM_BIGGER) ? lightModeFontColor : blackFontColor);
-        normalBtn.setTextColor((textSize == MyAppWebConfig.CRM_BIGGEST) ? lightModeFontColor : blackFontColor);
-
+        middleBtn.setTextColor((textSize == MyAppWebConfig.CRM_BIG) ? lightModeFontColor : blackFontColor);
+        bigBtn.setTextColor((textSize == MyAppWebConfig.CRM_BIGGER) ? lightModeFontColor : blackFontColor);
+        biggestBtn.setTextColor((textSize == MyAppWebConfig.CRM_BIGGEST) ? lightModeFontColor : blackFontColor);
     }
 
     @Override
