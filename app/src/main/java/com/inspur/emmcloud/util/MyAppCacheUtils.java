@@ -50,14 +50,6 @@ public class MyAppCacheUtils {
     }
 
     /**
-     * 保存是否含有常用应用标志
-     * @param hasCommonlyApp
-     */
-    public static void saveHasCommonlyApp(Context context,boolean hasCommonlyApp){
-        PreferencesByUserAndTanentUtils.putBoolean(context,"is_has_commonly_app",hasCommonlyApp);
-    }
-
-    /**
      * 获取是否含有常用应用标志
      * @param context
      * @return
