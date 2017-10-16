@@ -14,15 +14,25 @@ import android.widget.TextView;
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.api.APIInterfaceInstance;
+import com.inspur.emmcloud.api.apiservice.AppAPIService;
+import com.inspur.emmcloud.bean.AppConfig;
 import com.inspur.emmcloud.bean.Language;
+import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.ui.IndexActivity;
+import com.inspur.emmcloud.util.AppConfigCacheUtils;
 import com.inspur.emmcloud.util.DataCleanManager;
 import com.inspur.emmcloud.util.ImageDisplayUtils;
 import com.inspur.emmcloud.util.IntentUtils;
+import com.inspur.emmcloud.util.MyAppCacheUtils;
+import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.ToastUtils;
 import com.inspur.emmcloud.util.UriUtils;
+import com.inspur.emmcloud.util.WebServiceMiddleUtils;
+import com.inspur.emmcloud.widget.LoadingDialog;
+import com.inspur.emmcloud.widget.SwitchView;
 import com.inspur.emmcloud.widget.dialogs.EasyDialog;
 import com.inspur.emmcloud.widget.dialogs.MyDialog;
 
@@ -30,16 +40,23 @@ public class SettingActivity extends BaseActivity {
 
     private static final int DATA_CLEAR_SUCCESS = 0;
     private Handler handler;
-    private TextView languageText;
-
+    private LoadingDialog loadingDlg;
+    private SwitchView webAutoRotateSwitch;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
-        languageText = (TextView) findViewById(R.id.msg_languagechg_result_text);
+        initView();
         setLanguage();
         handMessage();
+    }
+
+    private void initView(){
+        loadingDlg = new LoadingDialog(this);
+        webAutoRotateSwitch = (SwitchView)findViewById(R.id.web_auto_rotate_switch);
+        setWebAutoRotateState();
+        webAutoRotateSwitch.setOnStateChangedListener(onStateChangedListener);
     }
 
     /**
@@ -47,6 +64,7 @@ public class SettingActivity extends BaseActivity {
      */
     private void setLanguage() {
         // TODO Auto-generated method stub
+        TextView languageText = (TextView) findViewById(R.id.msg_languagechg_result_text);
         String languageName = PreferencesUtils.getString(
                 getApplicationContext(), UriUtils.tanent + "language", "");
         String languageJson = PreferencesUtils
@@ -54,33 +72,36 @@ public class SettingActivity extends BaseActivity {
         if (languageJson != null && !languageName.equals("followSys")) {
             Language language = new Language(languageJson);
             languageText.setText(new Language(languageJson).getLabel());
-            setLanguageFlagImg(language);
+            String iso = language.getIso();
+            iso = iso.replace("-", "_");
+            iso = iso.toLowerCase();
+            int id = getResources().getIdentifier(iso, "drawable", getApplicationContext().getPackageName());
+            //设置语言国旗标志
+            ((ImageView) findViewById(R.id.msg_language_flag_img)).setImageResource(id);
         } else {
             languageText.setText(getString(R.string.follow_system));
         }
     }
 
-    /**
-     * 语言设置国旗
-     *
-     * @param language
-     */
-    private void setLanguageFlagImg(Language language) {
-        // TODO Auto-generated method stub
-        String iso = language.getIso();
-        iso = iso.replace("-", "_");
-        iso = iso.toLowerCase();
-        int id = getResources().getIdentifier(iso, "drawable", getApplicationContext().getPackageName());
-        ((ImageView) findViewById(R.id.msg_language_flag_img)).setImageResource(id);
+    private void setWebAutoRotateState(){
+        boolean isWebAutoRotate = Boolean.parseBoolean(AppConfigCacheUtils.getAppConfigValue(this,Constant.CONCIG_WEB_AUTO_ROTATE,"false"));
+        webAutoRotateSwitch.setOpened(isWebAutoRotate);
     }
 
+    private SwitchView.OnStateChangedListener onStateChangedListener = new SwitchView.OnStateChangedListener() {
 
+        @Override
+        public void toggleToOn(View view) {
+            // TODO Auto-generated method stub
+            saveWebAutoRotateConfig(true);
+        }
 
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
+        @Override
+        public void toggleToOff(View view) {
+            // TODO Auto-generated method stub
+            saveWebAutoRotateConfig(false);
+        }
+    };
 
     private void handMessage() {
         // TODO Auto-generated method stub
@@ -103,40 +124,16 @@ public class SettingActivity extends BaseActivity {
 
     public void onClick(View v) {
         // TODO Auto-generated method stub
-
-        Intent intent = new Intent();
         switch (v.getId()) {
             case R.id.back_layout:
                 finish();
                 break;
             case R.id.signout_layout:
-			DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
-
-				@Override
-				public void onClick(DialogInterface dialog, int which) {
-					// TODO Auto-generated method stub
-					if (which == -1) {
-                        ((MyApplication)getApplication()).signout();
-					}
-				}
-			};
-			EasyDialog.showDialog(SettingActivity.this,
-					getString(R.string.prompt),
-					getString(R.string.if_confirm_signout),
-					getString(R.string.ok), getString(R.string.cancel),
-					dialogClickListener, true);
-                break;
-
-            case R.id.msg_notify_layout:
-                // ToastUtils.show(getApplicationContext(),
-                // R.string.function_not_implemented);
+                showSignoutDlg();
                 break;
             case R.id.about_layout:
-                intent.setClass(SettingActivity.this, AboutActivity.class);
-                startActivity(intent);
-
+                IntentUtils.startActivity(SettingActivity.this, AboutActivity.class);
                 break;
-
             case R.id.msg_languagechg_layout:
                 IntentUtils.startActivity(SettingActivity.this,
                         LanguageChangeActivity.class);
@@ -148,13 +145,32 @@ public class SettingActivity extends BaseActivity {
                 IntentUtils.startActivity(SettingActivity.this, SwitchEnterpriseActivity.class);
                 break;
             case R.id.setting_gesture_layout:
-                Intent intentSafeCenter = new Intent();
-                intentSafeCenter.setClass(this,SafeCenterActivity.class);
-                startActivity(intentSafeCenter);
+                IntentUtils.startActivity(SettingActivity.this, SafeCenterActivity.class);
                 break;
             default:
                 break;
         }
+    }
+
+    /**
+     * 弹出注销提示框
+     */
+    private void showSignoutDlg() {
+        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // TODO Auto-generated method stub
+                if (which == -1) {
+                    ((MyApplication) getApplication()).signout();
+                }
+            }
+        };
+        EasyDialog.showDialog(SettingActivity.this,
+                getString(R.string.prompt),
+                getString(R.string.if_confirm_signout),
+                getString(R.string.ok), getString(R.string.cancel),
+                dialogClickListener, true);
     }
 
 
@@ -168,8 +184,6 @@ public class SettingActivity extends BaseActivity {
                 R.layout.dialog_four_item, R.style.userhead_dialog_bg, radio);
         TextView clearImgAndFileText = (TextView) clearCacheDlg
                 .findViewById(R.id.text1);
-        // String imgAndFileSize = DataCleanManager
-        // .getAllCacheSize(SettingActivity.this);
         clearImgAndFileText
                 .setText(getString(R.string.settings_clean_imgae_attachment));
         TextView clearWebCacheText = (TextView) clearCacheDlg
@@ -187,25 +201,25 @@ public class SettingActivity extends BaseActivity {
                 // TODO Auto-generated method stub
                 new Thread(new Runnable() {
 
-					@Override
-					public void run() {
-						// TODO Auto-generated method stub
-						String msgCachePath = Environment
-								.getExternalStorageDirectory()
-								+ "/IMP-Cloud/download/";
-						String imgCachePath = MyAppConfig.LOCAL_CACHE_PATH;
-						DataCleanManager.cleanApplicationData(
-								SettingActivity.this, msgCachePath,
-								imgCachePath);
-						ImageDisplayUtils imageDisplayUtils = new ImageDisplayUtils(R.drawable.icon_photo_default);
-						imageDisplayUtils.clearAllCache();
-						handler.sendEmptyMessage(DATA_CLEAR_SUCCESS);
-					}
-				}).start();
-				clearCacheDlg.dismiss();
-			}
-		});
-		clearWebCacheText.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void run() {
+                        // TODO Auto-generated method stub
+                        String msgCachePath = Environment
+                                .getExternalStorageDirectory()
+                                + "/IMP-Cloud/download/";
+                        String imgCachePath = MyAppConfig.LOCAL_CACHE_PATH;
+                        DataCleanManager.cleanApplicationData(
+                                SettingActivity.this, msgCachePath,
+                                imgCachePath);
+                        ImageDisplayUtils imageDisplayUtils = new ImageDisplayUtils(R.drawable.icon_photo_default);
+                        imageDisplayUtils.clearAllCache();
+                        handler.sendEmptyMessage(DATA_CLEAR_SUCCESS);
+                    }
+                }).start();
+                clearCacheDlg.dismiss();
+            }
+        });
+        clearWebCacheText.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -244,22 +258,23 @@ public class SettingActivity extends BaseActivity {
         // TODO Auto-generated method stub
         DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
 
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				// TODO Auto-generated method stub
-				if (which == -1) {
-					DataCleanManager.cleanWebViewCache(SettingActivity.this);
-					((MyApplication) getApplicationContext()).deleteAllDb();
-					String msgCachePath = Environment
-							.getExternalStorageDirectory()
-							+ "/IMP-Cloud/download/";
-					String imgCachePath = MyAppConfig.LOCAL_CACHE_PATH;
-					DataCleanManager.cleanApplicationData(SettingActivity.this,
-							msgCachePath, imgCachePath);
-					ImageDisplayUtils imageDisplayUtils = new ImageDisplayUtils(
-							R.drawable.icon_photo_default);
-					imageDisplayUtils.clearAllCache();
-					//清除全部缓存时是否需要清除掉小程序，如果需要，解开下面一行的注释
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // TODO Auto-generated method stub
+                if (which == -1) {
+                    DataCleanManager.cleanWebViewCache(SettingActivity.this);
+                    ((MyApplication) getApplicationContext()).deleteAllDb();
+                    String msgCachePath = Environment
+                            .getExternalStorageDirectory()
+                            + "/IMP-Cloud/download/";
+                    String imgCachePath = MyAppConfig.LOCAL_CACHE_PATH;
+                    DataCleanManager.cleanApplicationData(SettingActivity.this,
+                            msgCachePath, imgCachePath);
+                    ImageDisplayUtils imageDisplayUtils = new ImageDisplayUtils(
+                            R.drawable.icon_photo_default);
+                    imageDisplayUtils.clearAllCache();
+                    MyAppCacheUtils.clearMyAppList(SettingActivity.this);
+                    //清除全部缓存时是否需要清除掉小程序，如果需要，解开下面一行的注释
 //					ReactNativeFlow.deleteReactNativeInstallDir(MyAppConfig.getReactInstallPath(SettingActivity.this,userId));
                     ToastUtils.show(getApplicationContext(),
                             R.string.data_clear_success);
@@ -278,35 +293,45 @@ public class SettingActivity extends BaseActivity {
                 dialogClickListener, true);
     }
 
-//    private void signout() {
-//        // TODO Auto-generated method stub
-//        if (((MyApplication) getApplicationContext()).getWebSocketPush() != null) {
-//            ((MyApplication) getApplicationContext()).getWebSocketPush()
-//                    .webSocketSignout();
-//        }
-//        //清除日历提醒极光推送本地通知
-//        CalEventNotificationUtils.cancelAllCalEventNotification(SettingActivity.this);
-//        ((MyApplication) getApplicationContext()).stopPush();
-//        ((MyApplication) getApplicationContext()).clearNotification();
-//        ((MyApplication) getApplicationContext()).removeAllCookie();
-//        ((MyApplication) getApplicationContext()).clearUserPhotoMap();
-//        PreferencesUtils.putString(SettingActivity.this, "tokenType", "");
-//        PreferencesUtils.putString(SettingActivity.this, "accessToken", "");
-//        ((MyApplication) getApplicationContext()).setAccessToken("");
-//        Intent intent = new Intent();
-//        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//        intent.setClass(this, LoginActivity.class);
-//        startActivity(intent);
-//        this.finish();
-//    }
-
-
     @Override
     protected void onDestroy() {
         // TODO Auto-generated method stub
         super.onDestroy();
         if (handler != null) {
             handler = null;
+        }
+    }
+
+
+    private void saveWebAutoRotateConfig(boolean isWebAutoRotate){
+        if (NetUtils.isNetworkConnected(this)){
+            loadingDlg.show();
+            AppAPIService apiService = new AppAPIService(this);
+            apiService.setAPIInterface(new WebService());
+            apiService.saveWebAutoRotateConfig(isWebAutoRotate);
+        }else {
+            setWebAutoRotateState();
+        }
+    }
+
+    private class WebService extends APIInterfaceInstance {
+        @Override
+        public void returnSaveWebAutoRotateConfigSuccess(boolean isWebAutoRotate) {
+            if (loadingDlg != null && loadingDlg.isShowing()){
+                loadingDlg.dismiss();
+            }
+            AppConfig appConfig = new AppConfig(Constant.CONCIG_WEB_AUTO_ROTATE,isWebAutoRotate+"");
+            AppConfigCacheUtils.saveAppConfig(SettingActivity.this,appConfig);
+            setWebAutoRotateState();
+        }
+
+        @Override
+        public void returnSaveWebAutoRotateConfigFail(String error, int errorCode) {
+            if (loadingDlg != null && loadingDlg.isShowing()){
+                loadingDlg.dismiss();
+            }
+            setWebAutoRotateState();
+            WebServiceMiddleUtils.hand(SettingActivity.this,error,errorCode);
         }
     }
 

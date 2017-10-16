@@ -15,6 +15,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 
+import com.inspur.emmcloud.util.LogUtils;
+
 /**
  * For details, please see <b>http://blog.csdn.net/bfbx5173/article/details/45191147<b>
  *
@@ -30,9 +32,9 @@ public class SwitchView extends View {
 	private RadialGradient shadowGradient;
 	private boolean isEnable = true;
 	private final AccelerateInterpolator aInterpolator = new AccelerateInterpolator(2);
-	private int paintColorOn = 0xff4ada60;
+	private int paintColorOn = 0xff7fc5f6;
 	private int paintColorOff = 0xffe3e3e3;
-	private int paintCircleBtnColor = 0xffffffff;
+	private int paintCircleBtnColor = 0xff008cee;
 
 	/**
 	 * state switch on
@@ -87,7 +89,7 @@ public class SwitchView extends View {
 	@Override
 	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 		int widthSize = MeasureSpec.getSize(widthMeasureSpec);
-		int heightSize = (int) (widthSize * 0.65f);
+		int heightSize = (int) (widthSize * 0.9f);
 		setMeasuredDimension(widthSize, heightSize);
 	}
 
@@ -97,9 +99,10 @@ public class SwitchView extends View {
 		mWidth = w;
 		mHeight = h;
 
-		sLeft = sTop = 0;
+		sLeft =  0;
+        sTop = 0.3f*mHeight;
 		sRight = mWidth;
-		sBottom = mHeight * 0.91f;
+		sBottom = mHeight*0.7f ;
 		sWidth = sRight - sLeft;
 		sHeight = sBottom - sTop;
 		sCenterX = (sRight + sLeft) / 2;
@@ -107,12 +110,14 @@ public class SwitchView extends View {
 
 		shadowHeight = mHeight - sBottom;
 
-		bLeft = bTop = 0;
-		bRight = bBottom = sBottom;
+		bLeft =0;
+        bTop = 0.19f*mHeight;
+		bRight = 0.62f*mHeight;
+        bBottom = 0.81f*mHeight;
 		bWidth = bRight - bLeft;
 		final float halfHeightOfS = (sBottom - sTop) / 2;
-		bRadius = halfHeightOfS * 0.95f;
-		bOffset = bRadius * 0.2f;
+		bRadius = halfHeightOfS ;
+		bOffset = bRadius;
 		bStrokeWidth = (halfHeightOfS - bRadius) * 2;
 
 		bOnLeftX = sWidth - bWidth;
@@ -122,11 +127,11 @@ public class SwitchView extends View {
 
 		sScale = 1 - bStrokeWidth / sHeight;
 
-		RectF sRectF = new RectF(sLeft, sTop, sBottom, sBottom);
-		sPath.arcTo(sRectF, 90, 180);
-		sRectF.left = sRight - sBottom;
+		RectF sRectF = new RectF(sLeft, sTop, sLeft+sHeight, sTop+sHeight);
+		sPath.arcTo(sRectF, 90, 180);  //左侧跑道圆弧
+		sRectF.left = sRight - sLeft-sHeight;
 		sRectF.right = sRight;
-		sPath.arcTo(sRectF, 270, 180);
+		sPath.arcTo(sRectF, 270, 180);  //右侧跑道圆弧
 		sPath.close();
 
 		bRectF.left = bLeft;
@@ -134,7 +139,7 @@ public class SwitchView extends View {
 		bRectF.top = bTop + bStrokeWidth / 2;
 		bRectF.bottom = bBottom - bStrokeWidth / 2;
 
-		shadowGradient = new RadialGradient(bWidth / 2, bWidth / 2, bWidth / 2, 0xff000000, 0x00000000, Shader.TileMode.CLAMP);
+		shadowGradient = new RadialGradient(bWidth / 2, bWidth / 2, bWidth / 2, 0x00000000, 0x00000000, Shader.TileMode.CLAMP);
 	}
 
 	public void setEnable(boolean isEnable){
@@ -154,6 +159,7 @@ public class SwitchView extends View {
 	private float calcBTranslate(float percent) {
 		float result = 0;
 		int wich = state - lastState;
+		LogUtils.jasonDebug("wich="+wich);
 		switch (wich) {
 			case 1:
 				// off -> off2
@@ -233,7 +239,7 @@ public class SwitchView extends View {
 		final float scaleOffset = (bOnLeftX + bRadius - sCenterX) * (isOn ? 1 - dsAnim : dsAnim);
 		canvas.save();
 		canvas.scale(scale, scale, sCenterX + scaleOffset, sCenterY);
-		paint.setColor(0xffffffff);
+		paint.setColor(0xffb2b2b2);
 		canvas.drawPath(sPath, paint);
 		canvas.restore();
 		// draw center bar
@@ -256,7 +262,7 @@ public class SwitchView extends View {
 		if(isOn){
 			btnFrontGroundColor = getPaintCircleBtnColor();
 		}else {
-			btnFrontGroundColor = 0xffffffff;
+			btnFrontGroundColor = 0xffe7e7e7;
 		}
 //		paint.setColor(btnBackGroundColor);
 		paint.setColor(btnFrontGroundColor);
@@ -269,7 +275,7 @@ public class SwitchView extends View {
 		if(isOn){
 			btnShadowGroundColor = getPaintCircleBtnColor();
 		}else {
-			btnShadowGroundColor = 0xffbfbfbf;
+			btnShadowGroundColor = 0xffe7e7e7;
 		}
 		paint.setColor(btnShadowGroundColor);
 		canvas.drawPath(bPath, paint);
@@ -349,7 +355,7 @@ public class SwitchView extends View {
 			public void run() {
 				toggleSwitch(isOpened ? STATE_SWITCH_ON : STATE_SWITCH_OFF);
 			}
-		}, 300);
+		}, 0);
 	}
 
 	private synchronized void toggleSwitch(int wich) {

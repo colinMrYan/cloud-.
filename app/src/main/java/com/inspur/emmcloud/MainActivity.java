@@ -218,6 +218,9 @@ public class MainActivity extends Activity{ // 此处不能继承BaseActivity �
 		long leftTime = SPLASH_PAGE_TIME - betweenTime;
 		TimerTask task = new TimerTask() {
 			public void run() {
+				if(timer != null){
+					timer.cancel();
+				}
 				startApp();
 			}
 		};
@@ -323,6 +326,9 @@ public class MainActivity extends Activity{ // 此处不能继承BaseActivity �
 		super.onDestroy();
 		if(handler != null){
 			handler = null;
+		}
+		if(timer != null){
+			timer = null;
 		}
 	}
 }

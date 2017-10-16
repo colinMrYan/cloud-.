@@ -304,6 +304,7 @@ public class App implements Serializable {
 		return helpUrl;
 	}
 
+
 	@Override
 	public boolean equals(Object other) {
 		if(this == other){
@@ -339,12 +340,17 @@ public class App implements Serializable {
 				", appType=" + appType +
 				", version='" + version + '\'' +
 				", identifiers='" + identifiers + '\'' +
+				", packageName='" + packageName + '\'' +
+				", MainActivityName='" + MainActivityName + '\'' +
 				", legends=" + legends +
 				", orderId=" + orderId +
 				", categoryID='" + categoryID + '\'' +
+				", categoryName='" + categoryName + '\'' +
 				", lastUpdateTime=" + lastUpdateTime +
 				", weight=" + weight +
 				", installUri='" + installUri + '\'' +
+				", helpUrl='" + helpUrl + '\'' +
+				", isZoomable=" + isZoomable +
 				'}';
 	}
 }

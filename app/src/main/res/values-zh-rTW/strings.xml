@@ -97,6 +97,7 @@
     <string name="commoly_use_app">常用</string>
     <string name="app_init">正在初始化...</string>
     <string name="news_content_cant_empty">內容不能為空</string>
+    <string name="help">幫助</string>
 
     <!-- 新添加部分 -->
     <string name="alert">提醒</string>
@@ -423,7 +424,7 @@
     <string name="select_enterprise">選擇企業</string>
     <string name="switch_enterprise">切換企業</string>
     <string name="current_enterprise">當前企業</string>
-
+    <string name="web_app_auto_rotate">Web應用支持旋轉</string>
 
 
 
