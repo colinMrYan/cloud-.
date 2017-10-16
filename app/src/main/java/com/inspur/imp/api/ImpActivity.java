@@ -286,7 +286,7 @@ public class ImpActivity extends ImpBaseActivity {
         // 设置点击外围解散
         dialog.setCanceledOnTouchOutside(true);
         if (getIntent().hasExtra("is_zoomable") && (getIntent().getIntExtra("is_zoomable", 0) == 1)) {
-            initWebViewTextSize(0);
+            initWebViewButtonTextColor(0);
         }
         dialog.show();
     }
@@ -338,13 +338,13 @@ public class ImpActivity extends ImpBaseActivity {
         WebSettings webSettings = webView.getSettings();
         PreferencesByUsersUtils.putInt(ImpActivity.this, "app_crm_font_size_" + appId, textZoom);
         webSettings.setTextZoom(textZoom);
-        initWebViewTextSize(textZoom);
+        initWebViewButtonTextColor(textZoom);
     }
 
     /**
      * 初始化WebView的字体大小
      */
-    private void initWebViewTextSize(int textZoom) {
+    private void initWebViewButtonTextColor(int textZoom) {
         int textSize = PreferencesByUsersUtils.getInt(ImpActivity.this, "app_crm_font_size_" + appId, MyAppWebConfig.NORMAL);
         if (textZoom != 0) {
             textSize = textZoom;
