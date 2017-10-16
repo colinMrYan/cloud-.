@@ -44,7 +44,6 @@ import com.inspur.emmcloud.bean.PVCollectModel;
 import com.inspur.emmcloud.util.AppCacheUtils;
 import com.inspur.emmcloud.util.AppTitleUtils;
 import com.inspur.emmcloud.util.IntentUtils;
-import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.MyAppCacheUtils;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.PVCollectModelCacheUtils;
@@ -477,7 +476,6 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
     private boolean getNeedRemoveFirstGroup() {
         int clickCount = 0;
         List<AppCommonlyUse> appCommonlyUseList = AppCacheUtils.getCommonlyUseAppList(getActivity());
-        LogUtils.YfcDebug("commonlyUseAppListSize:"+appCommonlyUseList.size());
         if(appCommonlyUseList.size() == 1){
             AppCommonlyUse appCommonlyUse = appCommonlyUseList.get(0);
             clickCount = appCommonlyUse.getClickCount();
