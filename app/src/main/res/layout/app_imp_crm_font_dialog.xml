@@ -18,6 +18,7 @@
             android:id="@+id/app_imp_crm_help_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:visibility="gone"
             android:orientation="vertical">
             <ImageView
                 android:layout_width="20dp"
