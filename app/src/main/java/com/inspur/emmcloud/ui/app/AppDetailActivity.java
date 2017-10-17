@@ -16,12 +16,11 @@ import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
-import com.inspur.emmcloud.api.apiservice.ReactNativeAPIService;
 import com.inspur.emmcloud.bean.App;
 import com.inspur.emmcloud.bean.GetAddAppResult;
+import com.inspur.emmcloud.ui.chat.ImagePagerActivity;
 import com.inspur.emmcloud.util.AppCenterNativeAppUtils;
 import com.inspur.emmcloud.util.ImageDisplayUtils;
-import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.UriUtils;
@@ -39,7 +38,6 @@ import java.util.List;
  * @author Administrator
  */
 public class AppDetailActivity extends BaseActivity {
-
     private static final String ACTION_NAME = "add_app";
     private ImageView appIconImg;
     private Button statusBtn;
@@ -47,33 +45,21 @@ public class AppDetailActivity extends BaseActivity {
     private ImageDisplayUtils imageDisplayUtils;
     private LoadingDialog loadingDlg;
     private MyAppAPIService apiService;
-    private ReactNativeAPIService reactNativeApiService;
     private App app;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_app_detail);
-        try{
-            imageDisplayUtils = new ImageDisplayUtils(R.drawable.icon_empty_icon);
-            loadingDlg = new LoadingDialog(AppDetailActivity.this);
-            String appId = ((App) getIntent().getExtras().getSerializable("app")).getAppID();
-            apiService = new MyAppAPIService(this);
-            apiService.setAPIInterface(new WebService());
-            reactNativeApiService = new ReactNativeAPIService(AppDetailActivity.this);
-            reactNativeApiService.setAPIInterface(new WebService());
-            getAppInfoById(appId);
-        }catch(Exception e){
-            e.printStackTrace();
-            LogUtils.YfcDebug("报错信息："+e.getMessage());
-        }
-
-
+        imageDisplayUtils = new ImageDisplayUtils(R.drawable.icon_empty_icon);
+        loadingDlg = new LoadingDialog(AppDetailActivity.this);
+        app = ((App) getIntent().getExtras().getSerializable("app"));
+        apiService = new MyAppAPIService(this);
+        apiService.setAPIInterface(new WebService());
+        initView();
+        getAppInfoById(app.getAppID());
     }
 
-    private void initView(final App app) {
-        // TODO Auto-generated method stub
+    private void initView() {
         appIconImg = (ImageView) findViewById(R.id.app_icon_img);
         imageDisplayUtils.displayImage(appIconImg, app.getAppIcon());
         statusBtn = (Button) findViewById(R.id.app_status_btn);
@@ -81,15 +67,15 @@ public class AppDetailActivity extends BaseActivity {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(AppDetailActivity.this);
         linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         intrImgListView.setLayoutManager(linearLayoutManager);
-        AppDetailImageAdapter appDetailImageAdapter = new AppDetailImageAdapter(AppDetailActivity.this,app.getLegends());
+        AppDetailImageAdapter appDetailImageAdapter = new AppDetailImageAdapter(AppDetailActivity.this, app.getLegendList());
         appDetailImageAdapter.setOnRecommandItemClickListener(new OnAppDetailImageItemClickListener() {
             @Override
             public void onAppDetailImageItemClick(View view, int position) {
                 Intent intent = new Intent();
-					intent.setClass(getApplicationContext(), AppImgDisPlayActivity.class);
-					intent.putExtra("currentIndex", position);
-                    intent.putStringArrayListExtra("legends", (ArrayList<String>) app.getLegends());
-					startActivity(intent);
+                intent.setClass(getApplicationContext(), ImagePagerActivity.class);
+                intent.putExtra(ImagePagerActivity.EXTRA_IMAGE_INDEX,position);
+                intent.putExtra(ImagePagerActivity.EXTRA_IMAGE_URLS,(ArrayList<String>) app.getLegendList());
+                startActivity(intent);
             }
         });
         intrImgListView.setAdapter(appDetailImageAdapter);
@@ -108,12 +94,13 @@ public class AppDetailActivity extends BaseActivity {
     public class AppDetailImageAdapter extends RecyclerView.Adapter<AppDetailImageAdapter.AppDetailImageViewHolder> {
         private LayoutInflater inflater;
         private OnAppDetailImageItemClickListener onAppDetailImageItemClickListener;
-        private List<String> legends;
+        private List<String> legendList;
         private ImageDisplayUtils imageDisplayUtils;
-        public AppDetailImageAdapter(Context context,List<String> legends) {
+
+        public AppDetailImageAdapter(Context context, List<String> legendList) {
             inflater = LayoutInflater.from(context);
             imageDisplayUtils = new ImageDisplayUtils();
-            this.legends = legends;
+            this.legendList = legendList;
         }
 
         @Override
@@ -126,7 +113,7 @@ public class AppDetailActivity extends BaseActivity {
 
         @Override
         public void onBindViewHolder(final AppDetailImageViewHolder holder, final int position) {
-            imageDisplayUtils.displayImage(holder.appDetailImg,legends.get(position));
+            imageDisplayUtils.displayImage(holder.appDetailImg, legendList.get(position));
             if (onAppDetailImageItemClickListener != null) {
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -139,7 +126,7 @@ public class AppDetailActivity extends BaseActivity {
 
         @Override
         public int getItemCount() {
-            return legends.size();
+            return legendList.size();
         }
 
         public void setOnRecommandItemClickListener(OnAppDetailImageItemClickListener l) {
@@ -163,11 +150,7 @@ public class AppDetailActivity extends BaseActivity {
      */
     private void getAppInfoById(String appId) {
         if (NetUtils.isNetworkConnected(AppDetailActivity.this)) {
-            loadingDlg.show();
             apiService.getAppInfo(appId);
-        }else{
-            app = (App) getIntent().getExtras().getSerializable("app");
-            initView(app);
         }
     }
 
@@ -199,6 +182,7 @@ public class AppDetailActivity extends BaseActivity {
 
     /**
      * 封装网络请求的方法
+     *
      * @param statusBtn
      * @param appID
      */
@@ -245,19 +229,12 @@ public class AppDetailActivity extends BaseActivity {
 
         @Override
         public void returnAppInfoSuccess(App app) {
-            if (loadingDlg != null && loadingDlg.isShowing()) {
-                loadingDlg.dismiss();
-            }
             AppDetailActivity.this.app = app;
-            initView(app);
+            initView();
         }
 
         @Override
         public void returnAppInfoFail(String error, int errorCode) {
-            if (loadingDlg != null && loadingDlg.isShowing()) {
-                loadingDlg.dismiss();
-            }
-            app = (App) getIntent().getExtras().getSerializable("app");
             WebServiceMiddleUtils.hand(AppDetailActivity.this, error, errorCode);
         }
     }

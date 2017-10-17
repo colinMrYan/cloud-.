@@ -29,7 +29,6 @@ import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.OauthUtils;
 import com.inspur.emmcloud.util.UriUtils;
 
-import org.json.JSONObject;
 import org.xutils.http.RequestParams;
 import org.xutils.x;
 
@@ -491,11 +490,7 @@ public class MyAppAPIService {
         x.http().get(params, new APICallback(context,completeUrl) {
             @Override
             public void callbackSuccess(String arg0) {
-                try {
-                    apiInterface.returnAppInfoSuccess(new App(new JSONObject(arg0)));
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                apiInterface.returnAppInfoSuccess(new App(arg0));
             }
 
             @Override
