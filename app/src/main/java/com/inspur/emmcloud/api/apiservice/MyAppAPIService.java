@@ -17,6 +17,7 @@ import com.inspur.emmcloud.bean.App;
 import com.inspur.emmcloud.bean.AppRedirectResult;
 import com.inspur.emmcloud.bean.GetAddAppResult;
 import com.inspur.emmcloud.bean.GetAllAppResult;
+import com.inspur.emmcloud.bean.GetAppBadgeResult;
 import com.inspur.emmcloud.bean.GetAppGroupResult;
 import com.inspur.emmcloud.bean.GetGroupNewsDetailResult;
 import com.inspur.emmcloud.bean.GetMyAppResult;
@@ -514,6 +515,40 @@ public class MyAppAPIService {
                     public void executeFailCallback() {
                         callbackFail("", -1);
                     }
+                }, context).refreshToken(completeUrl);
+            }
+        });
+    }
+
+    /**
+     * 获取所有app的未处理消息
+     */
+    public void getAppBadgeNum(){
+        final String completeUrl = APIUri.getAppBadgeNumUrl();
+        RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(completeUrl);
+        x.http().get(params, new APICallback(context,completeUrl) {
+            @Override
+            public void callbackSuccess(String arg0) {
+                apiInterface.returnGetAppBadgeResultSuccess(new GetAppBadgeResult(arg0));
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                apiInterface.returnGetAppBadgeResultFail(error,responseCode);
+            }
+
+            @Override
+            public void callbackTokenExpire() {
+                new OauthUtils(new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        getAppBadgeNum();
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
                 },context).refreshToken(completeUrl);
             }
         });
@@ -548,7 +583,5 @@ public class MyAppAPIService {
 //            }
 //        });
     }
-
-
 
 }

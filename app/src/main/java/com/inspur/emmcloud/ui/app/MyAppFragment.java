@@ -34,9 +34,11 @@ import com.inspur.emmcloud.adapter.DragAdapter;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
 import com.inspur.emmcloud.bean.App;
+import com.inspur.emmcloud.bean.AppBadgeBean;
 import com.inspur.emmcloud.bean.AppCommonlyUse;
 import com.inspur.emmcloud.bean.AppGroupBean;
 import com.inspur.emmcloud.bean.AppOrder;
+import com.inspur.emmcloud.bean.GetAppBadgeResult;
 import com.inspur.emmcloud.bean.GetAppGroupResult;
 import com.inspur.emmcloud.bean.PVCollectModel;
 import com.inspur.emmcloud.util.AppCacheUtils;
@@ -62,8 +64,10 @@ import com.inspur.emmcloud.widget.pullableview.PullableListView;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import static com.inspur.emmcloud.util.AppCacheUtils.getCommonlyUseAppList;
 
@@ -81,7 +85,6 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
     private ImageView editBtn;
     private Button editBtnFinish;
     private MyAppAPIService apiService;
-    private boolean hasCommonlyApp = false;
     private PullToRefreshLayout pullToRefreshLayout;
     private BroadcastReceiver mBroadcastReceiver;
     private PopupWindow popupWindow;
@@ -90,6 +93,7 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
     private boolean isNeedRefreshApp = false;//下拉刷新和从应用中心添加应用 删除应用时刷新标志
     private boolean isHasCacheNotRefresh = false;
     private MyAppSaveTask myAppSaveTask;
+    private Map<String,AppBadgeBean> appBadgeBeanMap = new HashMap<>();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -112,13 +116,18 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
         if (parent != null) {
             parent.removeView(rootView);
         }
-
         //每次createView如果有上一次存下来的缓存数据则刷新并修改缓存状态
         if (isHasCacheNotRefresh) {
             refreshAppListView();
             isHasCacheNotRefresh = false;
         }
         return rootView;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getAppBadgeNum();
     }
 
     @Override
@@ -176,10 +185,9 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
     }
 
     /**
-     * 初始化AppListView
+     * 初始化AppListView，加载缓存数据
      */
     private void refreshAppListView() {
-        hasCommonlyApp = MyAppCacheUtils.getHasCommonlyApp(getActivity());
         List<AppGroupBean> appGroupList = MyAppCacheUtils.getMyAppList(getContext());
         if(appListAdapter != null){
             appListAdapter.setAppAdapterList(appGroupList);
@@ -282,7 +290,7 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
             final List<App> appGroupItemList = appAdapterList.get(
                     listPosition).getAppItemList();
             final DragAdapter dragGridViewAdapter = new DragAdapter(
-                    getActivity(), appGroupItemList, listPosition);
+                    getActivity(), appGroupItemList, listPosition,appBadgeBeanMap);
             dragGridView.setCanScroll(false);
             dragGridView.setPosition(listPosition);
             dragGridView.setPullToRefreshLayout(pullToRefreshLayout);
@@ -373,7 +381,7 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
                         }
                     });
             if (canEdit) {
-                if (hasCommonlyApp && (listPosition == 0)) {
+                if (getNeedCommonlyUseApp() && (listPosition == 0)) {
                     //如果应用列表可以编辑，并且有常用应用分组，则把常用应用的可编辑属性设置false（也就是第0行设为false）
                     dragGridViewAdapter.setCanEdit(false);
                 } else {
@@ -430,20 +438,21 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
      */
     private void saveOrChangeCommonlyUseAppList(App app, List<AppGroupBean> appAdapterList) {
         List<AppCommonlyUse> appCommonlyUseAddCountList = addClickCount(app);
-        List<AppCommonlyUse> appCommonlyUseList = calculateAppWeight(appCommonlyUseAddCountList);
-        showCommonlyUseApps(app, appCommonlyUseList, appAdapterList);
+        calculateAppWeight(appCommonlyUseAddCountList);
+        if(getNeedCommonlyUseApp()){
+            showCommonlyUseApps(app,  appAdapterList);
+        }
     }
 
     /**
      * 展示常用应用
      *
      * @param app
-     * @param appCommonlyUseList
      * @param appAdapterList
      */
-    private void showCommonlyUseApps(App app, List<AppCommonlyUse> appCommonlyUseList,
+    private void showCommonlyUseApps(App app,
                                      List<AppGroupBean> appAdapterList) {
-        if (hasCommonlyApp) {
+        if (getNeedRemoveFirstGroup()) {
             //如果已经有了常用app则需要先移除掉第一组
             appAdapterList.remove(0);
             handCommonlyUseAppData(appAdapterList, true);
@@ -455,11 +464,24 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
             commonlyUseAppList.add(app);
             appGroupBean.setAppItemList(commonlyUseAppList);
             appAdapterList.add(0, appGroupBean);
-            hasCommonlyApp = true;
-            MyAppCacheUtils.saveHasCommonlyApp(getActivity(), hasCommonlyApp);
             appListAdapter.notifyDataSetChanged();
         }
 
+    }
+
+    /**
+     * 判断是否需要移除第一组
+     * @return
+     */
+    private boolean getNeedRemoveFirstGroup() {
+        int clickCount = 0;
+        List<AppCommonlyUse> appCommonlyUseList = AppCacheUtils.getCommonlyUseAppList(getActivity());
+        if(appCommonlyUseList.size() == 1){
+            AppCommonlyUse appCommonlyUse = appCommonlyUseList.get(0);
+            clickCount = appCommonlyUse.getClickCount();
+
+        }
+        return (appCommonlyUseList.size()>1 || clickCount > 1);
     }
 
     /**
@@ -522,7 +544,7 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
                                           App app) {
         List<App> commonlyAppItemList = appAdapterList.get(0)
                 .getAppItemList();
-        if (hasCommonlyApp && (commonlyAppItemList.indexOf(app) != -1)) {
+        if (getNeedCommonlyUseApp() && (commonlyAppItemList.indexOf(app) != -1)) {
             commonlyAppItemList.remove(app);
         }
         Iterator<AppGroupBean> appGroupBeanList = appAdapterList.iterator();
@@ -532,7 +554,8 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
                 appGroupBeanList.remove();
             }
         }
-        refreshAppList(appAdapterList);
+        appListAdapter.setAppAdapterList(appAdapterList);
+        appListAdapter.notifyDataSetChanged();
     }
 
     /**
@@ -561,6 +584,16 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
     public void onRefresh(PullToRefreshLayout pullToRefreshLayout) {
         isNeedRefreshApp = true;
         getMyApp();
+        getAppBadgeNum();
+    }
+
+    /**
+     * 获取appBadge
+     */
+    private void getAppBadgeNum() {
+        if(NetUtils.isNetworkConnected(getActivity(),false)){
+            apiService.getAppBadgeNum();
+        }
     }
 
     @Override
@@ -633,13 +666,11 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
                     return;
                 }
                 switchView.toggleSwitch(false);
-                saveNeedCommonlyUseApp(false);
-                if (hasCommonlyApp) {
+                if (getNeedCommonlyUseApp() && AppCacheUtils.getCommonlyUseAppList(getActivity()).size() > 0) {
                     appListAdapter.getAppAdapterList().remove(0);
                     appListAdapter.notifyDataSetChanged();
-                    hasCommonlyApp = false;
-                    MyAppCacheUtils.saveHasCommonlyApp(getActivity(), hasCommonlyApp);
                 }
+                saveNeedCommonlyUseApp(false);
             }
         });
         TextView changeOrderLayout = (TextView) contentView.findViewById(R.id.app_change_btn);
@@ -795,8 +826,7 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
             if (myCommonlyUseAppList.size() > 0) {
                 appGroupBean.setAppItemList(myCommonlyUseAppList);
                 appGroupList.add(0, appGroupBean);
-                hasCommonlyApp = true;
-                MyAppCacheUtils.saveHasCommonlyApp(getActivity(), hasCommonlyApp);
+                saveNeedCommonlyUseApp(true);
             }
         }
         if (isNeedRefresh) {
@@ -877,17 +907,6 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
             IntentUtils.startActivity(getActivity(), AppCenterActivity.class);
             recordUserClickAppCenter();
         }
-    }
-
-
-    /**
-     * 更新List
-     *
-     * @param appGroupList
-     */
-    private void refreshAppList(List<AppGroupBean> appGroupList) {
-        appListAdapter.setAppAdapterList(appGroupList);
-        appListAdapter.notifyDataSetChanged();
     }
 
 
@@ -994,5 +1013,17 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
             WebServiceMiddleUtils.hand(getActivity(), error, errorCode);
         }
 
+        @Override
+        public void returnGetAppBadgeResultSuccess(GetAppBadgeResult getAppBadgeResult) {
+            pullToRefreshLayout.refreshFinish(PullToRefreshLayout.SUCCEED);
+            appBadgeBeanMap = getAppBadgeResult.getAppBadgeBeanMap();
+            appListAdapter.notifyDataSetChanged();
+        }
+
+        @Override
+        public void returnGetAppBadgeResultFail(String error, int errorCode) {
+            pullToRefreshLayout.refreshFinish(PullToRefreshLayout.FAIL);
+            WebServiceMiddleUtils.hand(getActivity(), error, errorCode);
+        }
     }
 }

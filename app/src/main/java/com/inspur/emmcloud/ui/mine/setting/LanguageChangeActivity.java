@@ -50,7 +50,7 @@ public class LanguageChangeActivity extends BaseActivity {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_language_change);
-		listView = (ListView) findViewById(R.id.language_change_list);
+		listView = (ListView) findViewById(R.id.list);
 		loadingDlg = new LoadingDialog(this);
 		handMessage();
 		getLanguageList();
@@ -119,7 +119,6 @@ public class LanguageChangeActivity extends BaseActivity {
 				} else {
 					languageName = language.getIso();
 				}
-                LogUtils.jasonDebug("00000000000000000000000000");
 				if (!currentLanguageName.equals(languageName)) {
 					showChangeLanguageDlg(position);
                     LogUtils.jasonDebug("1111111111");
@@ -170,13 +169,11 @@ public class LanguageChangeActivity extends BaseActivity {
 			}
 
 		};
-        LogUtils.jasonDebug("333333333333");
 		EasyDialog.showDialog(LanguageChangeActivity.this,
 				getString(R.string.prompt),
 				getString(R.string.confirm_modify_language),
 				getString(R.string.ok), getString(R.string.cancel), listener,
 				true);
-        LogUtils.jasonDebug("444444444444444");
 	}
 
 	public void onClick(View v) {

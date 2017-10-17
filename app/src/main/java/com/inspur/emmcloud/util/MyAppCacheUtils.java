@@ -2,8 +2,7 @@ package com.inspur.emmcloud.util;
 
 import android.content.Context;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+import com.alibaba.fastjson.JSON;
 import com.inspur.emmcloud.bean.AppGroupBean;
 
 import java.util.ArrayList;
@@ -21,7 +20,7 @@ public class MyAppCacheUtils {
      * @param appGroupList
      */
     public static void saveMyAppList(Context context, List<AppGroupBean> appGroupList){
-        String appListJson = new Gson().toJson(appGroupList);
+        String appListJson = JSON.toJSONString(appGroupList);
         if(!appListJson.equals("null") && !StringUtils.isBlank(appListJson)){
             PreferencesByUserAndTanentUtils.putString(context,"my_app_list",appListJson);
         }
@@ -42,19 +41,11 @@ public class MyAppCacheUtils {
      */
     public static List<AppGroupBean> getMyAppList(Context context){
         String appListJson = PreferencesByUserAndTanentUtils.getString(context,"my_app_list","");
-        List<AppGroupBean> appGroupList = new Gson().fromJson(appListJson,new TypeToken<ArrayList<AppGroupBean>>(){}.getType());
+        List<AppGroupBean> appGroupList = JSON.parseArray(appListJson,AppGroupBean.class);
         if(appGroupList == null){
             appGroupList = new ArrayList<>();
         }
         return appGroupList;
-    }
-
-    /**
-     * 保存是否含有常用应用标志
-     * @param hasCommonlyApp
-     */
-    public static void saveHasCommonlyApp(Context context,boolean hasCommonlyApp){
-        PreferencesByUserAndTanentUtils.putBoolean(context,"is_has_commonly_app",hasCommonlyApp);
     }
 
     /**
@@ -64,6 +55,15 @@ public class MyAppCacheUtils {
      */
     public  static boolean getHasCommonlyApp(Context context){
         return PreferencesByUserAndTanentUtils.getBoolean(context,"is_has_commonly_app",false);
+    }
+
+    /**
+     * 清除常用应用缓存
+     * @param context
+     * @return
+     */
+    public static boolean clearMyAppList(Context context){
+        return PreferencesByUserAndTanentUtils.putString(context,"my_app_list","");
     }
 
 }

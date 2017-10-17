@@ -114,6 +114,10 @@ public class App implements Serializable {
 			categoryID = JSONUtils.getString(obj,"category_id","");
 			categoryName = JSONUtils.getString(obj,"category_name","");
 			helpUrl = JSONUtils.getString(obj,"help_url","");
+			//对helpUrl特殊处理，因为服务端有时返回""，有时返回null返回null时fastJson会把此字段解析为字符串"null",需要特殊处理
+			if(helpUrl.equals("null")){
+				helpUrl = "";
+			}
 		} catch (Exception e) {
 			// TODO: handle exception
 			LogUtils.exceptionDebug(TAG, e.toString());
@@ -303,6 +307,18 @@ public class App implements Serializable {
 
 	public String getHelpUrl() {
 		return helpUrl;
+	}
+
+	public Boolean getMustHave() {
+		return isMustHave;
+	}
+
+	public void setCategoryName(String categoryName) {
+		this.categoryName = categoryName;
+	}
+
+	public void setHelpUrl(String helpUrl) {
+		this.helpUrl = helpUrl;
 	}
 
 	@Override
