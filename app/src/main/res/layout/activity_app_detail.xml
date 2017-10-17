@@ -225,15 +225,7 @@
                 android:background="#c8d3dc"
                 android:visibility="gone"/>
 
-            <com.inspur.emmcloud.widget.HorizontalListView
-                android:id="@+id/intr_img_list"
-                android:layout_width="match_parent"
-                android:visibility="gone"
-                android:layout_marginTop="10dp"
-                android:layout_marginLeft="18dp"
-                android:layout_marginBottom="20dp"
-                android:layout_height="380dp" >
-            </com.inspur.emmcloud.widget.HorizontalListView>
+
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/intr_app_img_list"
                 android:layout_width="match_parent"

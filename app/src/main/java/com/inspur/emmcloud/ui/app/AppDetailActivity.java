@@ -21,6 +21,7 @@ import com.inspur.emmcloud.bean.App;
 import com.inspur.emmcloud.bean.GetAddAppResult;
 import com.inspur.emmcloud.util.AppCenterNativeAppUtils;
 import com.inspur.emmcloud.util.ImageDisplayUtils;
+import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.UriUtils;
@@ -54,14 +55,21 @@ public class AppDetailActivity extends BaseActivity {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_app_detail);
-        imageDisplayUtils = new ImageDisplayUtils(R.drawable.icon_empty_icon);
-        loadingDlg = new LoadingDialog(AppDetailActivity.this);
-        String appId = ((App) getIntent().getExtras().getSerializable("app")).getAppID();
-        apiService = new MyAppAPIService(this);
-        apiService.setAPIInterface(new WebService());
-        reactNativeApiService = new ReactNativeAPIService(AppDetailActivity.this);
-        reactNativeApiService.setAPIInterface(new WebService());
-        getAppInfoById(appId);
+        try{
+            imageDisplayUtils = new ImageDisplayUtils(R.drawable.icon_empty_icon);
+            loadingDlg = new LoadingDialog(AppDetailActivity.this);
+            String appId = ((App) getIntent().getExtras().getSerializable("app")).getAppID();
+            apiService = new MyAppAPIService(this);
+            apiService.setAPIInterface(new WebService());
+            reactNativeApiService = new ReactNativeAPIService(AppDetailActivity.this);
+            reactNativeApiService.setAPIInterface(new WebService());
+            getAppInfoById(appId);
+        }catch(Exception e){
+            e.printStackTrace();
+            LogUtils.YfcDebug("报错信息："+e.getMessage());
+        }
+
+
     }
 
     private void initView(final App app) {
