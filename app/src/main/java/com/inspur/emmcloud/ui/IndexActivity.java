@@ -47,6 +47,7 @@ import com.inspur.emmcloud.ui.mine.setting.LanguageChangeActivity;
 import com.inspur.emmcloud.ui.notsupport.NotSupportFragment;
 import com.inspur.emmcloud.ui.work.MainTabBean;
 import com.inspur.emmcloud.ui.work.WorkFragment;
+import com.inspur.emmcloud.util.AppConfigCacheUtils;
 import com.inspur.emmcloud.util.AppConfigUtils;
 import com.inspur.emmcloud.util.AppUtils;
 import com.inspur.emmcloud.util.ChannelGroupCacheUtils;
@@ -108,40 +109,60 @@ public class IndexActivity extends BaseFragmentActivity implements
         super.onCreate(savedInstanceState);
         StateBarColor.changeStateBarColor(this);
         setContentView(R.layout.activity_index);
+        initAppEnvironment();
+        initView();
+        getData();
+        startService();
+
+    }
+
+    /**
+     * 初始化app的运行环境
+     */
+    private void initAppEnvironment(){
         ((MyApplication) getApplicationContext()).setIndexActvityRunning(true);
         ((MyApplication) getApplicationContext()).closeAllDb();
         DbCacheUtils.initDb(getApplicationContext());
         ((MyApplication) getApplicationContext()).closeWebSocket();
         ((MyApplication) getApplicationContext()).clearUserPhotoMap();
         ((MyApplication) getApplicationContext()).startPush();
-        init();
+    }
+
+    private void initView() {
+        appApiService = new AppAPIService(IndexActivity.this);
+        appApiService.setAPIInterface(new WebService());
+        loadingDlg = new LoadingDialog(IndexActivity.this, getString(R.string.app_init));
+        handMessage();
+        initTabView();
+        setPreloadWebApp();
     }
 
     /**
      * 初始化
      */
-    private void init() {
-        appApiService = new AppAPIService(IndexActivity.this);
-        appApiService.setAPIInterface(new WebService());
-        loadingDlg = new LoadingDialog(IndexActivity.this, getString(R.string.app_init));
-        handMessage();
-        getIsHasCacheContact();
+    private void getData() {
+        String contactLastUpdateTime = ContactCacheUtils
+                .getLastUpdateTime(IndexActivity.this);
+        isHasCacheContact = !StringUtils.isBlank(contactLastUpdateTime);
         if (!isHasCacheContact) {
             loadingDlg.show();
         }
-        getAllContact();
-        getAllRobots();
-        initTabView();
-
-        /**从服务端获取显示tab**/
-        getAppTabs();
+        getContactInfo();
+        getAllRobotInfo();
+        getAppTabInfo();  //从服务端获取显示tab
         new SplashPageUtils(IndexActivity.this).update();//更新闪屏页面
-        new ReactNativeUtils(IndexActivity.this).init(); //初始化和更新react
-        new AppConfigUtils(IndexActivity.this).getAppConfig();
+        new ReactNativeUtils(IndexActivity.this).init(); //更新react
+        new AppConfigUtils(IndexActivity.this).getAppConfig(); //获取整个应用的配置信息
+        EventBus.getDefault().register(this);
+    }
+
+    /**
+     * 启动服务
+     */
+    private void startService() {
         startUploadPVCollectService();
         startCoreService();
-        setPreloadWebApp();
-        EventBus.getDefault().register(this);
+        if (AppConfigCacheUtils.)
     }
 
     /**
@@ -189,7 +210,7 @@ public class IndexActivity extends BaseFragmentActivity implements
     /**
      * 获取应用显示tab
      */
-    private void getAppTabs() {
+    private void getAppTabInfo() {
         new ClientIDUtils(IndexActivity.this, new CommonCallBack() {
             @Override
             public void execute() {
@@ -211,7 +232,7 @@ public class IndexActivity extends BaseFragmentActivity implements
     /**
      * 获取所有的Robot
      */
-    private void getAllRobots() {
+    private void getAllRobotInfo() {
         ContactAPIService apiService = new ContactAPIService(IndexActivity.this);
         apiService.setAPIInterface(new WebService());
         if (NetUtils.isNetworkConnected(getApplicationContext(), false)) {
@@ -261,17 +282,6 @@ public class IndexActivity extends BaseFragmentActivity implements
     }
 
     /**
-     * 判断通讯录是否已经缓存过
-     */
-    private void getIsHasCacheContact() {
-        // TODO Auto-generated method stub
-        String contactLastUpdateTime = ContactCacheUtils
-                .getLastUpdateTime(IndexActivity.this);
-        isHasCacheContact = StringUtils.isBlank(contactLastUpdateTime) ? false
-                : true;
-    }
-
-    /**
      * 获取所有的群组信息
      */
     private void getAllChannelGroup() {
@@ -289,7 +299,7 @@ public class IndexActivity extends BaseFragmentActivity implements
     /**
      * 获取通讯录信息
      */
-    private void getAllContact() {
+    private void getContactInfo() {
         // TODO Auto-generated method stub
         ContactAPIService apiService = new ContactAPIService(IndexActivity.this);
         apiService.setAPIInterface(new WebService());
@@ -396,7 +406,7 @@ public class IndexActivity extends BaseFragmentActivity implements
                 }
             }
         }
-        if (mainTabs == null){
+        if (mainTabs == null) {
             mainTabs = addDefaultTabs();
         }
         displayMainTabs(mainTabs);
