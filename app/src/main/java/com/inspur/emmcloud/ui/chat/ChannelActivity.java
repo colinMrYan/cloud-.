@@ -54,7 +54,6 @@ import com.inspur.emmcloud.util.AppUtils;
 import com.inspur.emmcloud.util.ChannelCacheUtils;
 import com.inspur.emmcloud.util.ConbineMsg;
 import com.inspur.emmcloud.util.DirectChannelUtils;
-import com.inspur.emmcloud.util.HandleMsgTextUtils;
 import com.inspur.emmcloud.util.ImageDisplayUtils;
 import com.inspur.emmcloud.util.IntentUtils;
 import com.inspur.emmcloud.util.JSONUtils;
@@ -68,7 +67,6 @@ import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.RobotCacheUtils;
 import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.TimeUtils;
-import com.inspur.emmcloud.util.URLMatcher;
 import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.ECMChatInputMenu;
@@ -224,10 +222,9 @@ public class ChannelActivity extends BaseActivity {
             }
 
             @Override
-            public void onSendMsg(String content, List<String> mentionsUidList,
-                                  List<String> mentionsUserNameList) {
+            public void onSendMsg(String content, List<String> mentionsUidList,List<String> urlList) {
                 // TODO Auto-generated method stub
-                sendTextMessage(content, mentionsUidList, mentionsUserNameList);
+                sendTextMessage(content, mentionsUidList,urlList);
             }
         });
         if ((channel != null) && channel.getInputs().equals("0")) {
@@ -415,7 +412,11 @@ public class ChannelActivity extends BaseActivity {
                 addLocalMessage(localMsg);
             } else if (requestCode == MENTIONS_RESULT) {
                 // @返回
-                chatInputMenu.setMentionData(data);
+                String result = data.getStringExtra("searchResult");
+                String uid = JSONUtils.getString(result, "uid", null);
+                String name = JSONUtils.getString(result, "name", null);
+                boolean isInputKeyWord = data.getBooleanExtra("isInputKeyWord",false);
+                chatInputMenu.addMentions(uid,name,isInputKeyWord);
             }
         } else {
             // 图库选择图片返回
@@ -605,17 +606,12 @@ public class ChannelActivity extends BaseActivity {
     /**
      * 点击发送按钮后发送消息的逻辑
      */
-    private void sendTextMessage(String content, List<String> mentionsUidList,
-                                 List<String> mentionsUserNameList) {
-
-        ArrayList<String> urlList = URLMatcher.getUrls(content);
+    private void sendTextMessage(String content, List<String> mentionsUidList,List<String> urlList) {
         JSONObject richTextObj = new JSONObject();
-        String source = HandleMsgTextUtils.handleMentionAndURL(chatInputMenu.getEdit(), content,
-                mentionsUserNameList, mentionsUidList);
         JSONArray mentionArray = JSONUtils.toJSONArray(mentionsUidList);
         JSONArray urlArray = JSONUtils.toJSONArray(urlList);
         try {
-            richTextObj.put("source", source);
+            richTextObj.put("source", content);
             richTextObj.put("mentions", mentionArray);
             richTextObj.put("urls", urlArray);
             richTextObj.put("tmpId", AppUtils.getMyUUID(ChannelActivity.this));
@@ -867,17 +863,9 @@ public class ChannelActivity extends BaseActivity {
                     @Override
                     public boolean onLongClick(View v) {
                         if (channel.getType().equals("GROUP")) {
-                            Intent intent = new Intent();
-                            intent.setClass(ChannelActivity.this, MembersActivity.class);
-                            intent.putExtra("title", getString(R.string.friend_list));
-                            intent.putExtra("cid", cid);
-                            overridePendingTransition(
-                                    R.anim.activity_open, 0);
-
-                            startActivityForResult(intent,
-                                    MENTIONS_RESULT);
+                            chatInputMenu.addMentions(msg.getUid(),msg.getTitle(),false);
                         }
-                        return false;
+                        return true;
                     }
                 });
 

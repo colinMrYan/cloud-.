@@ -82,15 +82,15 @@ public class MembersActivity extends BaseActivity implements
 
                 if (!StringUtils.isBlank(channelID)) {
                     List<String> uidList = ChannelGroupCacheUtils.getMemberUidList(MembersActivity.this, channelID, 0);
-                    personDtoList = ContactCacheUtils.getShowMemberList(MembersActivity.this,uidList);
+                    personDtoList = ContactCacheUtils.getShowMemberList(MembersActivity.this, uidList);
                 } else if (getIntent().getStringArrayListExtra("uids") != null) {
-                    personDtoList = ContactCacheUtils.getShowMemberList(MembersActivity.this,getIntent().getStringArrayListExtra("uids"));
+                    personDtoList = ContactCacheUtils.getShowMemberList(MembersActivity.this, getIntent().getStringArrayListExtra("uids"));
                 }
 
                 Iterator<PersonDto> personDtoIterator = personDtoList.iterator();
-                while (personDtoIterator.hasNext()){
+                while (personDtoIterator.hasNext()) {
                     PersonDto personDto = personDtoIterator.next();
-                    if(personDto.getUid().contains(userid) && (!getIntent().hasExtra("search"))){
+                    if (personDto.getUid().contains(userid) && (!getIntent().hasExtra("search"))) {
                         personDtoIterator.remove();
                     }
                 }
@@ -145,9 +145,9 @@ public class MembersActivity extends BaseActivity implements
                     }
                     Intent intent = new Intent();
                     intent.putExtra("uid", uid);
-                    if(uid.startsWith("BOT")){
+                    if (uid.startsWith("BOT")) {
                         intent.setClass(getApplicationContext(), RobotInfoActivity.class);
-                    }else{
+                    } else {
                         intent.setClass(getApplicationContext(),
                                 UserInfoActivity.class);
                     }
@@ -160,26 +160,20 @@ public class MembersActivity extends BaseActivity implements
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view,
                                         int position, long id) {
-                    JSONObject peopleObject = new JSONObject();
                     jsonResult = new JSONObject();
                     try {
-                        if (filterList.size() != 0) {
-                            String uid = filterList.get(position).getUid();
-                            String name = filterList.get(position).getName();
-                            jsonResult.put("uid", uid);
-                            jsonResult.put("name", name);
-                        } else {
-                            String uid = personDtoList.get(position).getUid();
-                            String name = personDtoList.get(position)
-                                    .getName();
-                            jsonResult.put("uid", uid);
-                            jsonResult.put("name", name);
-                        }
+                        String uid, name;
+                        uid = (filterList.size() != 0) ? filterList.get(position).getUid() : personDtoList.get(position).getUid();
+                        name = (filterList.size() != 0) ? filterList.get(position).getName() : personDtoList.get(position).getName();
+                        jsonResult.put("uid", uid);
+                        jsonResult.put("name", name);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
                     Intent intent = new Intent();
                     intent.putExtra("searchResult", jsonResult.toString());
+                    boolean isInputKeyWord = getIntent().getBooleanExtra("isInputKeyWord",false);
+                    intent.putExtra("isInputKeyWord",isInputKeyWord);
                     setResult(RESULT_OK, intent);
                     finish();
                 }

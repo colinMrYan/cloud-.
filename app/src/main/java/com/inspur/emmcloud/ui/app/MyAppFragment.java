@@ -117,17 +117,17 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
         if (parent != null) {
             parent.removeView(rootView);
         }
-        //每次createView如果有上一次存下来的缓存数据则刷新并修改缓存状态
-        if (isHasCacheNotRefresh) {
-            refreshAppListView();
-            isHasCacheNotRefresh = false;
-        }
         return rootView;
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        //每次createView如果有上一次存下来的缓存数据则刷新并修改缓存状态
+        if (isHasCacheNotRefresh) {
+            refreshAppListView();
+            isHasCacheNotRefresh = false;
+        }
         getAppBadgeNum();
     }
 

@@ -33,11 +33,10 @@ import android.widget.RelativeLayout;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.MsgInputAddItemAdapter;
 import com.inspur.emmcloud.bean.InsertModel;
+import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.ui.chat.MembersActivity;
 import com.inspur.emmcloud.util.DensityUtil;
 import com.inspur.emmcloud.util.ImageDisplayUtils;
-import com.inspur.emmcloud.util.JSONUtils;
-import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.ToastUtils;
@@ -48,6 +47,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 /**
@@ -115,17 +116,11 @@ public class ECMChatInputMenu extends LinearLayout {
             @Override
             public void onClick(View v) {
                 // TODO Auto-generated method stub
-                String content = inputEdit.getText().toString();
                 if (NetUtils.isNetworkConnected(context)) {
-                    List<String> mentionsUidList = new ArrayList<>();
-                    List<String> mentionsUNameList = new ArrayList<>();
-                    List<InsertModel> insertModelList = inputEdit.getRichInsertList();
-                    for (int i = 0;i<insertModelList.size();i++){
-                        InsertModel insertModel = insertModelList.get(i);
-                        mentionsUidList.add(insertModel.getInsertId());
-                        mentionsUNameList.add(insertModel.getInsertContent());
-                    }
-                    chatInputMenuListener.onSendMsg(content,mentionsUidList, mentionsUNameList);
+                    List<String> urlList =  getContentUrlList(inputEdit.getText().toString());
+                    String content = inputEdit.getRichContent();
+                    List<String> mentionsUidList = getContentMentionUidList();
+                    chatInputMenuListener.onSendMsg(content, mentionsUidList,urlList);
                     inputEdit.setText("");
                 }
             }
@@ -151,6 +146,35 @@ public class ECMChatInputMenu extends LinearLayout {
         initInputEdit();
         initMenuGrid();
 
+    }
+
+    /**
+     * 获取mentions Uid List
+     * @return
+     */
+    private List<String> getContentMentionUidList(){
+        List<String> mentionsUidList = new ArrayList<>();
+        List<InsertModel> insertModelList = inputEdit.getRichInsertList();
+        for (int i = 0; i < insertModelList.size(); i++) {
+            InsertModel insertModel = insertModelList.get(i);
+            mentionsUidList.add(insertModel.getInsertId());
+        }
+        return  mentionsUidList;
+    }
+
+    /**
+     * 获取content中urlList
+     * @param content
+     * @return
+     */
+    private List<String> getContentUrlList(String content){
+        Pattern pattern = Pattern.compile(Constant.PATTERN_URL);
+        ArrayList<String> urlList = new ArrayList<>();
+        Matcher matcher = pattern.matcher(content);
+        while (matcher.find()) {
+            urlList.add(matcher.group(0));
+        }
+        return urlList;
     }
 
     public void initInputEdit() {
@@ -181,7 +205,7 @@ public class ECMChatInputMenu extends LinearLayout {
                 if (isChannelGroup && count == 1) {
                     String inputWord = s.toString().substring(start, start + count);
                     if (inputWord.equals("@")) {
-                        openMention();
+                        openMention(true);
                     }
                 }
             }
@@ -292,7 +316,7 @@ public class ECMChatInputMenu extends LinearLayout {
                         openFileSystem();
                         break;
                     case R.drawable.ic_chat_input_add_mention:
-                        openMention();
+                        openMention(false);
                         break;
                     default:
                         break;
@@ -369,11 +393,17 @@ public class ECMChatInputMenu extends LinearLayout {
         }
     }
 
-    private void openMention() {
+    /**
+     * 是否是输入了关键字@字符打开mention页
+     *
+     * @param isInputKeyWord
+     */
+    private void openMention(boolean isInputKeyWord) {
         Intent intent = new Intent();
         intent.setClass(context, MembersActivity.class);
         intent.putExtra("title", context.getString(R.string.friend_list));
         intent.putExtra("cid", cid);
+        intent.putExtra("isInputKeyWord", isInputKeyWord);
         ((Activity) context).overridePendingTransition(
                 R.anim.activity_open, 0);
 
@@ -390,18 +420,21 @@ public class ECMChatInputMenu extends LinearLayout {
     public interface ChatInputMenuListener {
         void onSetContentViewHeight(boolean isLock);
 
-		void onSendMsg(String content, List<String> mentionsUidList,
-					   List<String> mentionsUserNameList);
+        void onSendMsg(String content, List<String> mentionsUidList,List<String> urlList);
 
     }
 
 
-    public void setMentionData(Intent data) {
-        String result = data.getStringExtra("searchResult");
-        String uid = JSONUtils.getString(result, "uid", null);
-        String name = JSONUtils.getString(result, "name", null);
+    /**
+     * 添加mentions
+     *
+     * @param uid
+     * @param name
+     * @param isInputKeyWord
+     */
+    public void addMentions(String uid, String name, boolean isInputKeyWord) {
         if (uid != null && name != null) {
-            inputEdit.insertSpecialStr(new InsertModel("@", uid, name, "#0f7bca"));
+            inputEdit.insertSpecialStr(isInputKeyWord, new InsertModel("@", uid, name, "#99CCFF"));
         }
     }
 

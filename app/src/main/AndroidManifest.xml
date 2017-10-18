@@ -394,9 +394,6 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name=".ui.chat.MentionActivty"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".ui.chat.ImagePagerActivity"
             android:screenOrientation="portrait"
             android:theme="@style/SplashTheme"
