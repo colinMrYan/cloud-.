@@ -34,7 +34,6 @@ public class AppCenterAdapter extends BaseAdapter {
 	private MyAppAPIService apiService;
 
 	public AppCenterAdapter(Activity activity, List<App> appList) {
-		// TODO Auto-generated constructor stub
 		imageDisplayUtils = new ImageDisplayUtils(R.drawable.icon_empty_icon);
 		this.appList = appList;
 		this.activity = activity;
@@ -43,7 +42,10 @@ public class AppCenterAdapter extends BaseAdapter {
 		apiService.setAPIInterface(new WebService());
 	}
 
-
+	/**
+	 * 添加应用
+	 * @param app
+	 */
 	public void addApp(App app){
 		int addPosition = -1;
 		for (int i = 0; i < appList.size(); i++) {
@@ -68,25 +70,21 @@ public class AppCenterAdapter extends BaseAdapter {
 
 	@Override
 	public int getCount() {
-		// TODO Auto-generated method stub
 		return appList.size();
 	}
 
 	@Override
 	public Object getItem(int position) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public long getItemId(int position) {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
 	public View getView(final int position, View convertView, ViewGroup parent) {
-		// TODO Auto-generated method stub
 		 Holder holder = null;
 		if(convertView == null){
 			holder = new Holder();
@@ -119,7 +117,6 @@ public class AppCenterAdapter extends BaseAdapter {
 
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
 				int type = app.getAppType();
 				if (app.getUseStatus() == 0) {
 					installApp(type, appID, (Button)v);
@@ -136,7 +133,6 @@ public class AppCenterAdapter extends BaseAdapter {
 	}
 
 	private void installApp(int type, String appID, Button statusBtn) {
-		// TODO Auto-generated method stub
 		switch (type) {
 		case 2:
 		case 3:
@@ -157,7 +153,6 @@ public class AppCenterAdapter extends BaseAdapter {
 
 		@Override
 		public void returnAddAppSuccess(GetAddAppResult getAddAppResult) {
-			// TODO Auto-generated method stub
 			if (loadingDialog != null && loadingDialog.isShowing()) {
 				loadingDialog.dismiss();
 			}
@@ -182,15 +177,12 @@ public class AppCenterAdapter extends BaseAdapter {
 
 		@Override
 		public void returnAddAppFail(String error,int errorCode) {
-			// TODO Auto-generated method stub
 			if (loadingDialog != null && loadingDialog.isShowing()) {
 				loadingDialog.dismiss();
 			}
 			WebServiceMiddleUtils.hand(activity,error,errorCode);
 			AppCenterAdapter.this.notifyDataSetChanged();
 		}
-
-
 	}
 	
 	public static class Holder {

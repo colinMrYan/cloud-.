@@ -56,13 +56,13 @@ public class SplashPageUtils {
                 SplashPageBean.PayloadBean.ResourceBean.DefaultBean defaultBean = splashPageBean.getPayload()
                         .getResource().getDefaultX();
                 if (screenType.equals("2k")) {
-                    downloadSplashPage(UriUtils.getPreviewUri(defaultBean.getXxxhdpi()), defaultBean.getXxxhdpi());
+                    downloadSplashPage(UriUtils.getPreviewUri(defaultBean.getXxxhdpi()), defaultBean.getXxxhdpi(),splashPageBean);
                 } else if (screenType.equals("xxhdpi")) {
-                    downloadSplashPage(UriUtils.getPreviewUri(defaultBean.getXxhdpi()), defaultBean.getXxhdpi());
+                    downloadSplashPage(UriUtils.getPreviewUri(defaultBean.getXxhdpi()), defaultBean.getXxhdpi(),splashPageBean);
                 } else if (screenType.equals("xhdpi")) {
-                    downloadSplashPage(UriUtils.getPreviewUri(defaultBean.getXhdpi()), defaultBean.getXhdpi());
+                    downloadSplashPage(UriUtils.getPreviewUri(defaultBean.getXhdpi()), defaultBean.getXhdpi(),splashPageBean);
                 } else {
-                    downloadSplashPage(UriUtils.getPreviewUri(defaultBean.getHdpi()), defaultBean.getHdpi());
+                    downloadSplashPage(UriUtils.getPreviewUri(defaultBean.getHdpi()), defaultBean.getHdpi(),splashPageBean);
                 }
             }
     }
@@ -72,7 +72,7 @@ public class SplashPageUtils {
      *
      * @param url
      */
-    private void downloadSplashPage(final String url, String fileName) {
+    private void downloadSplashPage(final String url, String fileName, final SplashPageBean splashPageBean) {
         DownLoaderUtils downloaderUtils = new DownLoaderUtils();
         downloaderUtils.startDownLoad(url, MyAppConfig.getSplashPageImageShowPath(context,
                 ((MyApplication) context.getApplicationContext()).getUid(), "splash/" + fileName), new APIDownloadCallBack(context, url) {
@@ -89,26 +89,31 @@ public class SplashPageUtils {
 
             @Override
             public void callbackSuccess(File file) {
-                String splashInfoOld = PreferencesByUserAndTanentUtils.getString(context, "splash_page_info_old", "");
-                SplashPageBean splashPageBeanLocalOld = new SplashPageBean(splashInfoOld);
-                String splashInfoShowing = PreferencesByUserAndTanentUtils.getString(context, "splash_page_info", "");
-                SplashPageBean splashPageBeanLocalShowing = new SplashPageBean(splashInfoShowing);
                 if (file.exists()) {
                     String filelSha256 = FileSafeCode.getFileSHA256(file);
                     String screenType = AppUtils.getScreenType(context);
                     String sha256Code = "";
                     if (screenType.equals("2k")) {
-                        sha256Code = splashPageBeanLocalShowing.getPayload().getXxxhdpiHash().split(":")[1];
+                        sha256Code = splashPageBean.getPayload().getXxxhdpiHash().split(":")[1];
                     } else if (screenType.equals("xxhdpi")) {
-                        sha256Code = splashPageBeanLocalShowing.getPayload().getXxhdpiHash().split(":")[1];
+                        sha256Code = splashPageBean.getPayload().getXxhdpiHash().split(":")[1];
                     } else if (screenType.equals("xhdpi")) {
-                        sha256Code = splashPageBeanLocalShowing.getPayload().getXhdpiHash().split(":")[1];
+                        sha256Code = splashPageBean.getPayload().getXhdpiHash().split(":")[1];
                     } else {
-                        sha256Code = splashPageBeanLocalShowing.getPayload().getHdpiHash().split(":")[1];
+                        sha256Code = splashPageBean.getPayload().getHdpiHash().split(":")[1];
                     }
                     if (filelSha256.equals(sha256Code)) {
+                        String splashInfoOld = PreferencesByUserAndTanentUtils.getString(context, "splash_page_info_old", "");
+                        SplashPageBean splashPageBeanLocalOld = new SplashPageBean(splashInfoOld);
                         writeBackSplashPageLog("FORWARD", splashPageBeanLocalOld.getId().getVersion()
-                                , splashPageBeanLocalShowing.getId().getVersion());
+                                ,splashPageBean.getId().getVersion());
+                        if (splashPageBean.getCommand().equals("FORWARD")) {
+                            //先把上次的信息取出来，作为旧版数据存储
+                            String splashPageInfoOld = PreferencesByUserAndTanentUtils.getString(context, "splash_page_info", "");
+                            PreferencesByUserAndTanentUtils.putString(context, "splash_page_info_old", splashPageInfoOld);
+                            //存完旧数据后把本次数据存到更新里
+                            PreferencesByUserAndTanentUtils.putString(context, "splash_page_info", splashPageBean.getResponse());
+                        }
                     } else {
                         saveFileCheckException(context, url, "splash sha256 Error", 2);
                     }
@@ -118,12 +123,10 @@ public class SplashPageUtils {
 
             @Override
             public void callbackError(Throwable arg0, boolean arg1) {
-
             }
 
             @Override
             public void callbackCanceled(CancelledException e) {
-
             }
         });
     }

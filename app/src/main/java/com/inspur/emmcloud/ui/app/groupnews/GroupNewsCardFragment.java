@@ -46,7 +46,6 @@ public class GroupNewsCardFragment extends Fragment implements
     private LayoutInflater inflater;
     private LoadingDialog loadingDlg;
     private MyAppAPIService apiService;
-    private ListAdapter adapter;
     private PullableListView myListView;
     private PullToRefreshLayout pullToRefreshLayout;
     private int page = 0;
@@ -136,7 +135,6 @@ public class GroupNewsCardFragment extends Fragment implements
             intent.putExtra("groupNews",groupnNewsList.get(position));
             startActivity(intent);
         }
-
     }
 
     class WebService extends APIInterfaceInstance {
@@ -148,7 +146,7 @@ public class GroupNewsCardFragment extends Fragment implements
             }
             groupnNewsList.addAll(getGroupNewsDetailResult.getGroupNews());
             if (groupnNewsList != null && groupnNewsList.size() > 0) {
-                adapter = new NewsListAdapter(getActivity(), groupnNewsList);
+                ListAdapter adapter = new NewsListAdapter(getActivity(), groupnNewsList);
                 if (getGroupNewsDetailResult.getGroupNews().size() < 20) {
                     haveData = false;
                 } else {
