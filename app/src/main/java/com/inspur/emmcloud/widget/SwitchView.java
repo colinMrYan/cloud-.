@@ -15,8 +15,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 
-import com.inspur.emmcloud.util.LogUtils;
-
 /**
  * For details, please see <b>http://blog.csdn.net/bfbx5173/article/details/45191147<b>
  *
@@ -159,7 +157,6 @@ public class SwitchView extends View {
 	private float calcBTranslate(float percent) {
 		float result = 0;
 		int wich = state - lastState;
-		LogUtils.jasonDebug("wich="+wich);
 		switch (wich) {
 			case 1:
 				// off -> off2

@@ -36,7 +36,9 @@ import com.inspur.emmcloud.bean.GetSearchChannelGroupResult;
 import com.inspur.emmcloud.bean.Language;
 import com.inspur.emmcloud.bean.PVCollectModel;
 import com.inspur.emmcloud.callback.CommonCallBack;
+import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.interf.OnTabReselectListener;
+import com.inspur.emmcloud.service.BackgroundService;
 import com.inspur.emmcloud.service.CoreService;
 import com.inspur.emmcloud.service.PVCollectService;
 import com.inspur.emmcloud.ui.app.MyAppFragment;
@@ -47,7 +49,6 @@ import com.inspur.emmcloud.ui.mine.setting.LanguageChangeActivity;
 import com.inspur.emmcloud.ui.notsupport.NotSupportFragment;
 import com.inspur.emmcloud.ui.work.MainTabBean;
 import com.inspur.emmcloud.ui.work.WorkFragment;
-import com.inspur.emmcloud.util.AppConfigCacheUtils;
 import com.inspur.emmcloud.util.AppConfigUtils;
 import com.inspur.emmcloud.util.AppUtils;
 import com.inspur.emmcloud.util.ChannelGroupCacheUtils;
@@ -162,8 +163,24 @@ public class IndexActivity extends BaseFragmentActivity implements
     private void startService() {
         startUploadPVCollectService();
         startCoreService();
-        if (AppConfigCacheUtils.)
+        boolean isAppSetRunBackground = PreferencesUtils.getBoolean(getApplicationContext(),Constant.PREF_APP_RUN_BACKGROUND,false);
+        if (isAppSetRunBackground){
+            startBackgroudService();
+        }
     }
+
+    /***
+     * 打开app应用行为分析上传的Service;
+     */
+    private void startUploadPVCollectService() {
+        // TODO Auto-generated method stub
+        if (!AppUtils.isServiceWork(getApplicationContext(), "com.inspur.emmcloud.service.CollectService")) {
+            Intent intent = new Intent();
+            intent.setClass(this, PVCollectService.class);
+            startService(intent);
+        }
+    }
+
 
     /**
      * 打开保活服务
@@ -171,6 +188,12 @@ public class IndexActivity extends BaseFragmentActivity implements
     private void startCoreService() {
         Intent intent = new Intent();
         intent.setClass(this, CoreService.class);
+        startService(intent);
+    }
+
+    private void startBackgroudService(){
+        Intent intent = new Intent();
+        intent.setClass(this, BackgroundService.class);
         startService(intent);
     }
 
@@ -194,18 +217,6 @@ public class IndexActivity extends BaseFragmentActivity implements
         }
     }
 
-
-    /***
-     * 打开app应用行为分析上传的Service;
-     */
-    private void startUploadPVCollectService() {
-        // TODO Auto-generated method stub
-        if (!AppUtils.isServiceWork(getApplicationContext(), "com.inspur.emmcloud.service.CollectService")) {
-            Intent intent = new Intent();
-            intent.setClass(this, PVCollectService.class);
-            startService(intent);
-        }
-    }
 
     /**
      * 获取应用显示tab

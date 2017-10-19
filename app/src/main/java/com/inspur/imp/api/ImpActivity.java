@@ -47,12 +47,6 @@ import java.util.Map;
 
 public class ImpActivity extends ImpBaseActivity {
 
-    public static final String USERAGENT = "Mozilla/5.0 (Linux; U; isInImp; Android "
-            + Build.VERSION.RELEASE
-            + "; en-us; "
-            + Build.MODEL
-            + " Build/FRF91) AppleWebKit/533.1 "
-            + "(KHTML, like Gecko) Version/4.0 Mobile Safari/533.1";
     public static final int FILE_CHOOSER_RESULT_CODE = 5173;
     private ImpWebView webView;
     // 浏览文件resultCode

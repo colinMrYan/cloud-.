@@ -560,7 +560,7 @@
         <service android:name=".service.CoreInnerService"></service>
         <service android:name=".service.AppExceptionService"></service>
         <!--AliveJobService需要BIND_JOB_SERVICE权限-->
-        <service android:name=".service.PlayerMusicService"></service>
+        <service android:name=".service.BackgroundService"></service>
 
         <!-- receiver -->
         <receiver
