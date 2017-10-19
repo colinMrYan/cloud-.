@@ -427,8 +427,7 @@ public class AppAPIService {
         x.http().get(params, new APICallback(context, completeUrl) {
             @Override
             public void callbackSuccess(String arg0) {
-                SplashPageBean splashPageBean = new SplashPageBean(arg0);
-                apiInterface.returnSplashPageInfoSuccess(splashPageBean);
+                apiInterface.returnSplashPageInfoSuccess(new SplashPageBean(arg0));
             }
 
             @Override

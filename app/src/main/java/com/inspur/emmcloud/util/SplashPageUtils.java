@@ -117,15 +117,11 @@ public class SplashPageUtils {
                         PreferencesByUserAndTanentUtils.putString(context, "splash_page_info", splashPageBean.getResponse());
                         List<String> protectedFileNameList = new ArrayList<String>();
                         protectedFileNameList.add(getCurrentSplashFileName(splashPageBean.getPayload().getResource().getDefaultX()));
-                        List<String>  delList = FileUtils.delFilesExceptNameList(MyAppConfig.getSplashPageImageShowPath(context,
+                        FileUtils.delFilesExceptNameList(MyAppConfig.getSplashPageImageShowPath(context,
                                 ((MyApplication) context.getApplicationContext()).getUid(), "splash/"),protectedFileNameList);
-                        for (int i = 0; i < delList.size(); i++){
-                            LogUtils.YfcDebug("删除文件的名称："+delList.get(i));
-                        }
                     } else {
                         saveFileCheckException(context, url, "splash sha256 Error", 2);
                     }
-
                 }
             }
 
