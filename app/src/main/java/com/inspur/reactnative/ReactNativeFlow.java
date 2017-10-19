@@ -14,7 +14,6 @@ import com.inspur.emmcloud.util.AppUtils;
 import com.inspur.emmcloud.util.DownLoaderUtils;
 import com.inspur.emmcloud.util.FileSafeCode;
 import com.inspur.emmcloud.util.FileUtils;
-import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.ZipUtils;
@@ -270,7 +269,6 @@ public class ReactNativeFlow {
         try {
             in = context.getResources().getAssets().open(assetsFileName);
         } catch (Exception e) {
-            LogUtils.YfcDebug("异常信息：" + e.getMessage());
             e.printStackTrace();
         }
         return in != null;
