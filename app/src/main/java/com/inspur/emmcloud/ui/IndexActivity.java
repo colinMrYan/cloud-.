@@ -40,6 +40,7 @@ import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.interf.OnTabReselectListener;
 import com.inspur.emmcloud.service.BackgroundService;
 import com.inspur.emmcloud.service.CoreService;
+import com.inspur.emmcloud.service.LocationService;
 import com.inspur.emmcloud.service.PVCollectService;
 import com.inspur.emmcloud.ui.app.MyAppFragment;
 import com.inspur.emmcloud.ui.chat.MessageFragment;
@@ -167,6 +168,7 @@ public class IndexActivity extends BaseFragmentActivity implements
         if (isAppSetRunBackground){
             startBackgroudService();
         }
+        startLocationService();
     }
 
     /***
@@ -191,11 +193,24 @@ public class IndexActivity extends BaseFragmentActivity implements
         startService(intent);
     }
 
+    /**
+     * 打开后台保活服务
+     */
     private void startBackgroudService(){
         Intent intent = new Intent();
         intent.setClass(this, BackgroundService.class);
         startService(intent);
     }
+
+    /**
+     * 打开位置收集服务
+     */
+    private void startLocationService(){
+        Intent intent = new Intent();
+        intent.setClass(this, LocationService.class);
+        startService(intent);
+    }
+
 
     /**
      * 为了使打开报销web应用更快，进行预加载

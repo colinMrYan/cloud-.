@@ -1451,4 +1451,9 @@ public class APIInterfaceInstance implements APIInterface {
     public void returnGetAppBadgeResultFail(String error, int errorCode) {
 
     }
+
+    @Override
+    public void returnUploadPositionSuccess() {
+
+    }
 }
