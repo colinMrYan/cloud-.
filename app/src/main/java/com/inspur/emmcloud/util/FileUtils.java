@@ -828,6 +828,32 @@ public class FileUtils {
         return isOk;
     }
 
+    /**
+     * 传入目录名称，忽略删除的文件名
+     * 返回成功删除的文件名列表
+     * 只处理文件夹下没有目录的情况
+     * @param src
+     * @param protectedFileNameList
+     * @return
+     */
+    public static List<String> delFilesExceptNameList(String src, List<String> protectedFileNameList){
+        List<String> delSuccessFileNameList = new ArrayList<>();
+        try{
+            File[] files = new File(src).listFiles();
+            if(files != null && files.length > 0){
+                for(int i = 0; i < files.length; i++){
+                    String fileName = files[i].getName();
+                    if(protectedFileNameList.indexOf(fileName) == -1){
+                        files[i].delete();
+                        delSuccessFileNameList.add(fileName);
+                    }
+                }
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return delSuccessFileNameList;
+    }
 
 
 }

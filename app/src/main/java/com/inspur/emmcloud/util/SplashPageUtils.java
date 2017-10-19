@@ -14,6 +14,8 @@ import com.inspur.emmcloud.callback.CommonCallBack;
 import com.inspur.emmcloud.config.MyAppConfig;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by chenmch on 2017/10/10.
@@ -21,11 +23,12 @@ import java.io.File;
 
 public class SplashPageUtils {
     private Activity context;
-    public SplashPageUtils(Activity context){
+
+    public SplashPageUtils(Activity context) {
         this.context = context;
     }
 
-    public void update(){
+    public void update() {
         new ClientIDUtils(context, new CommonCallBack() {
             @Override
             public void execute() {
@@ -34,7 +37,7 @@ public class SplashPageUtils {
                     apiService.setAPIInterface(new WebService());
                     String splashInfo = PreferencesByUserAndTanentUtils.getString(context, "splash_page_info", "");
                     SplashPageBean splashPageBean = new SplashPageBean(splashInfo);
-                    String clientId = PreferencesUtils.getString(context, UriUtils.tanent + ((MyApplication)context.getApplicationContext()).getUid() + "react_native_clientid", "");
+                    String clientId = PreferencesUtils.getString(context, UriUtils.tanent + ((MyApplication) context.getApplicationContext()).getUid() + "react_native_clientid", "");
                     apiService.getSplashPageInfo(clientId, splashPageBean.getId().getVersion());
 
                 }
@@ -50,21 +53,21 @@ public class SplashPageUtils {
      * @param splashPageBean
      */
     private void updateSplashPageWithOrder(SplashPageBean splashPageBean) {
-            String command = splashPageBean.getCommand();
-            if (command.equals("FORWARD")) {
-                String screenType = AppUtils.getScreenType(context);
-                SplashPageBean.PayloadBean.ResourceBean.DefaultBean defaultBean = splashPageBean.getPayload()
-                        .getResource().getDefaultX();
-                if (screenType.equals("2k")) {
-                    downloadSplashPage(UriUtils.getPreviewUri(defaultBean.getXxxhdpi()), defaultBean.getXxxhdpi(),splashPageBean);
-                } else if (screenType.equals("xxhdpi")) {
-                    downloadSplashPage(UriUtils.getPreviewUri(defaultBean.getXxhdpi()), defaultBean.getXxhdpi(),splashPageBean);
-                } else if (screenType.equals("xhdpi")) {
-                    downloadSplashPage(UriUtils.getPreviewUri(defaultBean.getXhdpi()), defaultBean.getXhdpi(),splashPageBean);
-                } else {
-                    downloadSplashPage(UriUtils.getPreviewUri(defaultBean.getHdpi()), defaultBean.getHdpi(),splashPageBean);
-                }
+        String command = splashPageBean.getCommand();
+        if (command.equals("FORWARD")) {
+            String screenType = AppUtils.getScreenType(context);
+            SplashPageBean.PayloadBean.ResourceBean.DefaultBean defaultBean = splashPageBean.getPayload()
+                    .getResource().getDefaultX();
+            if (screenType.equals("2k")) {
+                downloadSplashPage(UriUtils.getPreviewUri(defaultBean.getXxxhdpi()), defaultBean.getXxxhdpi(), splashPageBean);
+            } else if (screenType.equals("xxhdpi")) {
+                downloadSplashPage(UriUtils.getPreviewUri(defaultBean.getXxhdpi()), defaultBean.getXxhdpi(), splashPageBean);
+            } else if (screenType.equals("xhdpi")) {
+                downloadSplashPage(UriUtils.getPreviewUri(defaultBean.getXhdpi()), defaultBean.getXhdpi(), splashPageBean);
+            } else {
+                downloadSplashPage(UriUtils.getPreviewUri(defaultBean.getHdpi()), defaultBean.getHdpi(), splashPageBean);
             }
+        }
     }
 
     /**
@@ -106,13 +109,18 @@ public class SplashPageUtils {
                         String splashInfoOld = PreferencesByUserAndTanentUtils.getString(context, "splash_page_info_old", "");
                         SplashPageBean splashPageBeanLocalOld = new SplashPageBean(splashInfoOld);
                         writeBackSplashPageLog("FORWARD", splashPageBeanLocalOld.getId().getVersion()
-                                ,splashPageBean.getId().getVersion());
-                        if (splashPageBean.getCommand().equals("FORWARD")) {
-                            //先把上次的信息取出来，作为旧版数据存储
-                            String splashPageInfoOld = PreferencesByUserAndTanentUtils.getString(context, "splash_page_info", "");
-                            PreferencesByUserAndTanentUtils.putString(context, "splash_page_info_old", splashPageInfoOld);
-                            //存完旧数据后把本次数据存到更新里
-                            PreferencesByUserAndTanentUtils.putString(context, "splash_page_info", splashPageBean.getResponse());
+                                , splashPageBean.getId().getVersion());
+                        //先把上次的信息取出来，作为旧版数据存储
+                        String splashPageInfoOld = PreferencesByUserAndTanentUtils.getString(context, "splash_page_info", "");
+                        PreferencesByUserAndTanentUtils.putString(context, "splash_page_info_old", splashPageInfoOld);
+                        //存完旧数据后把本次数据存到更新里
+                        PreferencesByUserAndTanentUtils.putString(context, "splash_page_info", splashPageBean.getResponse());
+                        List<String> protectedFileNameList = new ArrayList<String>();
+                        protectedFileNameList.add(getCurrentSplashFileName(splashPageBean.getPayload().getResource().getDefaultX()));
+                        List<String>  delList = FileUtils.delFilesExceptNameList(MyAppConfig.getSplashPageImageShowPath(context,
+                                ((MyApplication) context.getApplicationContext()).getUid(), "splash/"),protectedFileNameList);
+                        for (int i = 0; i < delList.size(); i++){
+                            LogUtils.YfcDebug("删除文件的名称："+delList.get(i));
                         }
                     } else {
                         saveFileCheckException(context, url, "splash sha256 Error", 2);
@@ -130,14 +138,36 @@ public class SplashPageUtils {
             }
         });
     }
+
+    /**
+     * 闪屏文件路径
+     *
+     * @param defaultBean
+     * @return
+     */
+    private String getCurrentSplashFileName(SplashPageBean.PayloadBean.ResourceBean.DefaultBean defaultBean) {
+        String screenType = AppUtils.getScreenType(context);
+        String name = "";
+        if (screenType.equals("2k")) {
+            name = defaultBean.getXxxhdpi();
+        } else if (screenType.equals("xxhdpi")) {
+            name = defaultBean.getXxhdpi();
+        } else if (screenType.equals("xhdpi")) {
+            name = defaultBean.getXhdpi();
+        } else {
+            name = defaultBean.getHdpi();
+        }
+        return name;
+    }
+
     /**
      * 写回闪屏日志
      *
      * @param s
      */
     private void writeBackSplashPageLog(String s, String preversion, String currentVersion) {
-        if (NetUtils.isNetworkConnected(context,false)){
-            String uid = ((MyApplication)context.getApplicationContext()).getUid();
+        if (NetUtils.isNetworkConnected(context, false)) {
+            String uid = ((MyApplication) context.getApplicationContext()).getUid();
             String clientId = PreferencesUtils.getString(context, UriUtils.tanent + uid +
                     "react_native_clientid", "");
             ReactNativeAPIService reactNativeAPIService = new ReactNativeAPIService(context);
