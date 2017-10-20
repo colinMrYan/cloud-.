@@ -18,9 +18,10 @@ import com.inspur.emmcloud.bean.Enterprise;
 import com.inspur.emmcloud.bean.GetMyInfoResult;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.util.AppUtils;
+import com.inspur.emmcloud.util.FileUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
+import com.inspur.emmcloud.util.ZipUtils;
 import com.inspur.reactnative.AuthorizationManagerPackage;
-import com.inspur.reactnative.ReactNativeFlow;
 import com.inspur.reactnative.ReactNativeInitInfoUtils;
 import com.reactnativecomponent.swiperefreshlayout.RCTSwipeRefreshLayoutPackage;
 
@@ -87,8 +88,8 @@ public class FindFragment extends Fragment implements DefaultHardwareBackBtnHand
         userId = ((MyApplication) getActivity().getApplication()).getUid();
 //        reactCurrentFilePath = MyAppConfig.getReactCurrentFilePath(getActivity(), userId);
         reactCurrentFilePath = MyAppConfig.getReactAppFilePath(getActivity(),userId,"discover");
-        if (!ReactNativeFlow.checkBundleFileIsExist(reactCurrentFilePath + "/index.android.bundle")) {
-            ReactNativeFlow.unZipFile(getActivity(), "bundle-v0.1.0.android.zip", reactCurrentFilePath, true);
+        if (!FileUtils.isFileExist(reactCurrentFilePath + "/index.android.bundle")) {
+            ZipUtils.unZip(getActivity(), "bundle-v0.1.0.android.zip", reactCurrentFilePath, true);
         }
     }
 

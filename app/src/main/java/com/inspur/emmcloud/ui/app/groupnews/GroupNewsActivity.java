@@ -77,7 +77,6 @@ public class GroupNewsActivity extends BaseFragmentActivity implements
 		tabs.setTextColor(R.drawable.selector_viewpager_tab_text);
 		pager = (ViewPager) findViewById(R.id.pager);
 		tabs.setOnPageChangeListener(this);
-
 	}
 
 	/**
@@ -98,7 +97,6 @@ public class GroupNewsActivity extends BaseFragmentActivity implements
 	 *获取新闻类别
 	 */
 	private void getNewTitles() {
-		// TODO Auto-generated method stub
 		if (NetUtils.isNetworkConnected(GroupNewsActivity.this)) {
 			loadingDlg.show();
 			MyAppAPIService apiService = new MyAppAPIService(GroupNewsActivity.this);
@@ -108,7 +106,6 @@ public class GroupNewsActivity extends BaseFragmentActivity implements
 	}
 
 	public class MyPagerAdapter extends FragmentPagerAdapter {
-
 		public MyPagerAdapter(FragmentManager fm) {
 			super(fm);
 		}
@@ -137,31 +134,25 @@ public class GroupNewsActivity extends BaseFragmentActivity implements
 
 	@Override
 	public void onPageScrollStateChanged(int arg0) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void onPageScrolled(int arg0, float arg1, int arg2) {
-		// TODO Auto-generated method stub
 	}
 
 	@Override
 	public void onPageSelected(int arg0) {
-		// TODO Auto-generated method stub
 		adapter.getItem(arg0);
 		adapter.notifyDataSetChanged();
 	}
 
 	class WebService extends APIInterfaceInstance {
-
 		@Override
 		public void returnGroupNewsTitleSuccess(
 				GetNewsTitleResult getNewsTitleResult) {
 			if (loadingDlg != null && loadingDlg.isShowing()) {
 				loadingDlg.dismiss();
 			}
-
 			titles = getNewsTitleResult.getTitlesList();
 			if(titles.size() == 0){
 				ToastUtils.show(GroupNewsActivity.this,R.string.news_no_news);
@@ -179,25 +170,20 @@ public class GroupNewsActivity extends BaseFragmentActivity implements
 //			}
 			adapter = new MyPagerAdapter(getSupportFragmentManager());
 			pager.setAdapter(adapter);
-
 			int pageMargin = (int) TypedValue.applyDimension(
 					TypedValue.COMPLEX_UNIT_DIP, 4, getResources()
 							.getDisplayMetrics());
 			pager.setPageMargin(pageMargin);
-
 			tabs.setViewPager(pager);
 			adapter.notifyDataSetChanged();
 		}
 
 		@Override
 		public void returnGroupNewsTitleFail(String error,int errorCode) {
-
 			if (loadingDlg != null && loadingDlg.isShowing()) {
 				loadingDlg.dismiss();
 			}
 			WebServiceMiddleUtils.hand(GroupNewsActivity.this, error,errorCode);
 		}
-
 	}
-
 }

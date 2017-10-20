@@ -13,22 +13,19 @@ import org.json.JSONObject;
 public class MsgReceiver extends BroadcastReceiver{
 
 	private static final String ACTION_NAME = "com.inspur.msg";
-	
 	private Handler handler;
 	public static MsgReceiver instance;
-	
+
 	public MsgReceiver(){
-		
+
 	}
-	
 
 	public MsgReceiver(Context context,Handler handler) {
-		
 		this.handler = handler;
 	}
+
 	@Override
 	public void onReceive(Context context, Intent intent) {
-		// TODO Auto-generated method stub
 		JSONObject jsonObject;
 		try {
 			jsonObject = new JSONObject(intent.getStringExtra("push"));
@@ -38,7 +35,6 @@ public class MsgReceiver extends BroadcastReceiver{
 			msg.obj = pushMsg;
 			handler.sendMessage(msg);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

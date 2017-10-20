@@ -37,8 +37,8 @@ public class AppCenterMoreActivity extends BaseActivity{
 	 */
 	private void initView() {
 		appCenterMoreListView = (ListView) findViewById(R.id.app_center_more_apps);
-		if(getIntent().hasExtra("appList")){
-			appList = (List<App>) getIntent().getSerializableExtra("appList");
+		if(getIntent().hasExtra(APP_CENTER_APPLIST)){
+			appList = (List<App>) getIntent().getSerializableExtra(APP_CENTER_APPLIST);
 			if(appList != null){
 				AppMoreAdapter adapter = new AppMoreAdapter();
 				appCenterMoreListView.setAdapter(adapter);
@@ -53,8 +53,8 @@ public class AppCenterMoreActivity extends BaseActivity{
 				});
 			}
 		}
-		if(getIntent().hasExtra("category_name")){
-			((TextView)findViewById(R.id.header_text)).setText(getIntent().getStringExtra("category_name"));
+		if(getIntent().hasExtra(APP_CENTER_CATEGORY_NAME)){
+			((TextView)findViewById(R.id.header_text)).setText(getIntent().getStringExtra(APP_CENTER_CATEGORY_NAME));
 		}
 	}
 	
@@ -71,19 +71,16 @@ public class AppCenterMoreActivity extends BaseActivity{
 		private ImageDisplayUtils imageDisplayUtils = new ImageDisplayUtils(R.drawable.icon_empty_icon);
 		@Override
 		public int getCount() {
-			// TODO Auto-generated method stub
 			return appList.size();
 		}
 
 		@Override
 		public Object getItem(int position) {
-			// TODO Auto-generated method stub
 			return null;
 		}
 
 		@Override
 		public long getItemId(int position) {
-			// TODO Auto-generated method stub
 			return 0;
 		}
 

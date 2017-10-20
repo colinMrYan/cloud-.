@@ -1,6 +1,5 @@
 package com.inspur.emmcloud.bean;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
@@ -73,7 +72,7 @@ public class AndroidBundleBean {
                 this.update = jsonAndroid.getString("update");
             }
 
-        } catch (JSONException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
