@@ -43,7 +43,6 @@ import java.util.List;
  */
 public class AppSearchActivity extends BaseActivity {
 
-
     private static final String ACTION_NAME = "add_app";
     private ClearEditText searchEdit;
     private List<App> searchAppList = new ArrayList<>();
@@ -59,8 +58,6 @@ public class AppSearchActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_app_search);
         initViews();
-
-
     }
 
     /**

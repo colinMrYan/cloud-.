@@ -14,14 +14,10 @@ import com.inspur.emmcloud.util.AppUtils;
 import com.inspur.emmcloud.util.DownLoaderUtils;
 import com.inspur.emmcloud.util.FileSafeCode;
 import com.inspur.emmcloud.util.FileUtils;
-import com.inspur.emmcloud.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.StringUtils;
-import com.inspur.emmcloud.util.UnZipAssets;
 import com.inspur.emmcloud.util.ZipUtils;
 
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
 
 /**
  * Created by yufuchang on 2017/2/21.
@@ -55,14 +51,10 @@ public class ReactNativeFlow {
      */
     public static void initReactNative(Context context, String userId) {
         boolean isBundleExist = checkIsBundleExist(context, userId);
-        String reactCurrentFilePath = MyAppConfig.getReactAppFilePath(context, userId,"discover");
+        String reactCurrentFilePath = MyAppConfig.getReactAppFilePath(context, userId, "discover");
         if (!isBundleExist) {
-            try {
-                UnZipAssets.unZip(context, "bundle-v0.1.0.android.zip", reactCurrentFilePath, true);
+            ZipUtils.unZip(context, "bundle-v0.1.0.android.zip", reactCurrentFilePath, true);
 //                PreferencesUtils.putString(context, "react_native_lastupdatetime", System.currentTimeMillis() + "");//隔半小时检查逻辑
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
         }
     }
 
@@ -70,7 +62,7 @@ public class ReactNativeFlow {
      * 检查bundle文件是否存在
      */
     private static boolean checkIsBundleExist(Context context, String userId) {
-        String filePath = MyAppConfig.getReactAppFilePath(context, userId,"discover");
+        String filePath = MyAppConfig.getReactAppFilePath(context, userId, "discover");
         File file = new File(filePath + "/index.android.bundle");
         if (file.exists()) {
             return true;
@@ -119,7 +111,7 @@ public class ReactNativeFlow {
     public static void downLoadZipFile(final Context context, final ReactNativeUpdateBean reactNativeUpdateBean, final String userId) {
         final DownLoaderUtils downLoaderUtils = new DownLoaderUtils();
         String reactZipFilePath = MyAppConfig.LOCAL_DOWNLOAD_PATH + "/" + userId + "/" + reactNativeUpdateBean.getBundle().getAndroidUri();
-        APIDownloadCallBack progressCallback = new APIDownloadCallBack(context,APIUri.getZipUrl()){
+        APIDownloadCallBack progressCallback = new APIDownloadCallBack(context, APIUri.getZipUrl()) {
             @Override
             public void callbackStart() {
 
@@ -158,17 +150,17 @@ public class ReactNativeFlow {
      * @param userId
      */
     private static void updateNewVersion(Context context, ReactNativeUpdateBean reactNativeUpdateBean, String userId) {
-        String reactCurrentPath = MyAppConfig.getReactAppFilePath(context, userId,"discover");
+        String reactCurrentPath = MyAppConfig.getReactAppFilePath(context, userId, "discover");
         String reactTempPath = MyAppConfig.getReactTempFilePath(context, userId);
-        String reactZipFilePath = MyAppConfig.LOCAL_DOWNLOAD_PATH  + userId + "/" +
+        String reactZipFilePath = MyAppConfig.LOCAL_DOWNLOAD_PATH + userId + "/" +
                 reactNativeUpdateBean.getBundle().getAndroidUri();
         //出现文件问题和hash值验证问题时打开这里调试
 //        LogUtils.YfcDebug("reactZipFilepath："+reactZipFilePath);
 //        LogUtils.YfcDebug("网络返回的hash："+reactNativeUpdateBean.getBundle().getAndroidHash());
 //        LogUtils.YfcDebug("文件目录下的hash："+FileSafeCode.getFileSHA256(new File(reactZipFilePath)));
         if (ReactNativeFlow.isCompleteZip(reactNativeUpdateBean.getBundle().getAndroidHash(), reactZipFilePath)) {
-            moveFolder(reactCurrentPath, reactTempPath);
-            deleteOldVersionFile(reactCurrentPath);
+            FileUtils.copyFolder(reactCurrentPath, reactTempPath);
+            FileUtils.deleteFile(reactCurrentPath);
             ZipUtils.upZipFile(reactZipFilePath, reactCurrentPath);
             FileUtils.deleteFile(reactZipFilePath);
 //            PreferencesUtils.putString(context, "react_native_lastupdatetime", "" + System.currentTimeMillis());//隔半小时检查更新逻辑相关
@@ -176,7 +168,7 @@ public class ReactNativeFlow {
             Intent intent = new Intent("com.inspur.react.success");
             context.sendBroadcast(intent);
         } else {
-            saveFileCheckException(context,reactZipFilePath,"discover download not compelete error",3);
+            saveFileCheckException(context, reactZipFilePath, "discover download not compelete error", 3);
         }
     }
 
@@ -193,17 +185,6 @@ public class ReactNativeFlow {
             AppException appException = new AppException(System.currentTimeMillis(), AppUtils.getVersion(context), errorLevel, url, error, 0);
             AppExceptionCacheUtils.saveAppException(context, appException);
         }
-    }
-
-    /**
-     * 移动目录
-     *
-     * @param srcDirName
-     * @param destDirName
-     * @return
-     */
-    public static boolean moveFolder(String srcDirName, String destDirName) {
-        return FileUtils.copyFolder(srcDirName, destDirName);
     }
 
 
@@ -227,126 +208,24 @@ public class ReactNativeFlow {
     }
 
     /**
-     * 检测bundle文件是否存在
-     *
-     * @param bundleFilePath
-     * @return
-     */
-    public static boolean checkBundleFileIsExist(String bundleFilePath) {
-        File file = new File(bundleFilePath);
-        return file.exists();
-    }
-
-    /**
-     * 解压文件
-     *
-     * @param zipFile
-     * @param folderPath
-     * @return
-     */
-    public static boolean unZipFile(String zipFile, String folderPath) {
-        return ZipUtils.upZipFile(zipFile, folderPath);
-    }
-
-
-    /**
-     * 解压assets下文件
-     *
-     * @param context
-     * @param assetName
-     * @param outputDirectory
-     * @param isReWrite
-     * @return
-     */
-    public static boolean unZipFile(Context context, String assetName,
-                                    String outputDirectory, boolean isReWrite) {
-        boolean unZipSuccess = false;
-        try {
-            UnZipAssets.unZip(context, assetName, outputDirectory, isReWrite);
-            unZipSuccess = true;
-        } catch (IOException e) {
-            unZipSuccess = false;
-            e.printStackTrace();
-        }
-        return unZipSuccess;
-    }
-
-    /**
-     * 检查assets目录下文件是否存在
-     * @param context
-     * @param assetsFileName
-     * @return
-     */
-    public static boolean checkAssetsFileExits(Context context, String assetsFileName) {
-        InputStream in = null;
-        try {
-            in = context.getResources().getAssets().open(assetsFileName);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return in != null;
-    }
-
-
-    /**
-     * 删除原来版本文件
-     *
-     * @param deletePath
-     * @return
-     */
-    public static boolean deleteOldVersionFile(String deletePath) {
-        return FileUtils.deleteFile(deletePath);
-    }
-
-    /**
-     * 检查clientID是否存在
-     *
-     * @param context
-     * @return
-     */
-    public static boolean checkClientIdExist(Context context) {
-        String clientId = PreferencesByUserAndTanentUtils.getString(context, "react_native_clientid", "");
-        if (StringUtils.isBlank(clientId)) {
-            return false;
-        }
-        return true;
-    }
-
-    /**
      * 以UTF-8编码读取传入文件夹下bundle.json文件里的信息
+     *
      * @param reactAppFilePath
      * @return
      */
-    public static StringBuilder getBundleDotJsonFromFile(String reactAppFilePath){
-        return FileUtils.readFile(reactAppFilePath +"/bundle.json", "UTF-8");
+    public static StringBuilder getBundleDotJsonFromFile(String reactAppFilePath) {
+        return FileUtils.readFile(reactAppFilePath + "/bundle.json", "UTF-8");
     }
 
     /**
      * 从Scheme里获取app的module
      * scheme形式：'ecc-app-react-native: //10002'
+     *
      * @param reactNativeApp
      * @return
      */
-    public static String getAppModuleFromScheme(String reactNativeApp){
-       return reactNativeApp.split("//")[1];
-    }
-
-    /**
-     * 删除下载的zip文件
-     * @param deleteZipFilePath 删除路径如xxx/xxx/ECA.zip
-     * @return
-     */
-    public static boolean deleteReactNativeDownloadZipFile(String deleteZipFilePath){
-        return FileUtils.deleteFile(deleteZipFilePath);
-    }
-
-    /**
-     * 清除ReactNative缓存
-     * @param reactNativeInstallDir
-     * @return
-     */
-    public static boolean deleteReactNativeInstallDir(String reactNativeInstallDir){
-        return FileUtils.deleteFile(reactNativeInstallDir);
+    public static String getAppModuleFromScheme(String reactNativeApp) {
+        return reactNativeApp.split("//")[1];
     }
 
 

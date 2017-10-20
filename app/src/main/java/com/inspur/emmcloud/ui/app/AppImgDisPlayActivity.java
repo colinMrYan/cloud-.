@@ -13,8 +13,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.inspur.emmcloud.BaseActivity;
-import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.util.DensityUtil;
+import com.inspur.emmcloud.util.ImageDisplayUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,47 +26,44 @@ import java.util.List;
  *
  */
 public class AppImgDisPlayActivity extends BaseActivity {
-
 	private ImageView[] pointImgs;
-	private List<View> intrList;
+	private List<View> intrList = new ArrayList<View>();
+	private ArrayList<String> legendList = new ArrayList<String>();
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_guide);
 		initView();
 	}
 
+	/**
+	 * 初始化View
+	 */
 	private void initView() {
-		// TODO Auto-generated method stub
-		intrList = new ArrayList<View>();
 		LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
 		ViewGroup pointGroup = (ViewGroup) findViewById(R.id.viewgroup);
-		int pageNum = 5;
+		legendList = getIntent().getStringArrayListExtra("legends");
+		int pageNum = legendList.size();
 		for (int i = 0; i < pageNum; i++) {
 			View view = layoutInflater.inflate(R.layout.guide_page1, null);
-			((ImageView)view.findViewById(R.id.skip_btn)).setVisibility(View.GONE);
-
-			((ImageView)view.findViewById(R.id.intr_img)).setOnClickListener(new OnClickListener() {
-				
+			view.findViewById(R.id.skip_btn).setVisibility(View.GONE);
+			view.findViewById(R.id.intr_img).setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					// TODO Auto-generated method stub
 					finish();
 				}
 			});
 			intrList.add(view);
 		}
 		pointImgs = new ImageView[intrList.size()];
-		int POINTSIZE = 15;
+		int POINTSIZE = DensityUtil.dip2px(AppImgDisPlayActivity.this,5);
 		for (int i = 0; i < intrList.size(); i++) {
 			ImageView pointImg = new ImageView(this);
 			LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
 					POINTSIZE, POINTSIZE);
 			lp.setMargins(POINTSIZE, 0, POINTSIZE, 0);
 			pointImg.setLayoutParams(lp);
-
 			if (i == 0) {
 				pointImg.setBackgroundResource(R.drawable.icon_indicator_sel);
 			} else {
@@ -76,12 +74,14 @@ public class AppImgDisPlayActivity extends BaseActivity {
 		}
 		int currentIndex = getIntent().getExtras().getInt("currentIndex");
 		viewPager.setAdapter(new MyPagerAdapter());
-		viewPager.setOnPageChangeListener(pageChangeListener);
+		viewPager.addOnPageChangeListener(pageChangeListener);
 		viewPager.setCurrentItem(currentIndex);
 	}
-	
-	private OnPageChangeListener pageChangeListener = new OnPageChangeListener() {
 
+	/**
+	 * 底部圆点
+	 */
+	private OnPageChangeListener pageChangeListener = new OnPageChangeListener() {
 		public void onPageSelected(int arg0) {
 			for (int i = 0; i < pointImgs.length; i++) {
 				if (i == arg0) {
@@ -96,45 +96,38 @@ public class AppImgDisPlayActivity extends BaseActivity {
 
 		@Override
 		public void onPageScrolled(int arg0, float arg1, int arg2) {
-			// TODO Auto-generated method stub
-
 		}
 
 		@Override
 		public void onPageScrollStateChanged(int arg0) {
-			// TODO Auto-generated method stub
-
 		}
 	};
 
 	private class MyPagerAdapter extends PagerAdapter {
-
+		private ImageDisplayUtils imageDisplayUtils = new ImageDisplayUtils(R.drawable.icon_guide1);
 		@Override
 		public void destroyItem(ViewGroup container, int position, Object object) {
-			// TODO Auto-generated method stub
 			container.removeView(intrList.get(position));
 		}
 
 		@Override
 		public int getCount() {
-			// TODO Auto-generated method stub
 			return intrList.size();
 		}
 
 		@Override
 		public boolean isViewFromObject(View arg0, Object arg1) {
-			// TODO Auto-generated method stub
 			return arg0 == arg1;
 		}
 
 		@Override
 		public Object instantiateItem(ViewGroup container, int position) {
 			// TODO Auto-generated method stub
-			container.addView(intrList.get(position));
+			View view = intrList.get(position);
+			ImageView imageView = (ImageView) view.findViewById(R.id.intr_img);
+			imageDisplayUtils.displayImage(imageView,legendList.get(position));
+			container.addView(view);
 			return intrList.get(position);
 		}
-
 	}
-
-
 }

@@ -27,47 +27,38 @@ import java.util.List;
 public class NewsListAdapter extends BaseAdapter {
 
     private Context context;
-
     private List<GroupNews> groupNewsList;
 
     public NewsListAdapter(Context context, List<GroupNews> groupNewsList) {
-        // TODO Auto-generated constructor stub
         this.context = context;
         this.groupNewsList = groupNewsList;
     }
 
     @Override
     public int getCount() {
-        // TODO Auto-generated method stub
         return groupNewsList.size();
     }
 
     @Override
     public Object getItem(int position) {
-        // TODO Auto-generated method stub
         return groupNewsList.get(position);
     }
 
     @Override
     public long getItemId(int position) {
-        // TODO Auto-generated method stub
         return position;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        // TODO Auto-generated method stub
-
         LayoutInflater inflater = LayoutInflater.from(context);
         NewsHolder holder = new NewsHolder();
         if (convertView == null) {
-
             convertView = inflater.inflate(R.layout.news_fragment_listitem, null);
             holder.imageView = (ImageView) convertView.findViewById(R.id.news_leftImg_img);
             holder.title = (TextView) convertView.findViewById(R.id.news_middleUp_text);
             holder.content = (TextView) convertView.findViewById(R.id.news_middleDown_text);
             holder.textposer = (TextView) convertView.findViewById(R.id.news_middlemid_text);
-
             convertView.setTag(holder);
         } else {
             holder = (NewsHolder) convertView.getTag();
@@ -81,7 +72,6 @@ public class NewsListAdapter extends BaseAdapter {
             holder.title.setTextColor(0xff203b4f);
             holder.title.setText(groupNewsList.get(position).getTitle());
         }
-
         holder.content.setText(groupNewsList.get(position).getSummary());
         String postTime = groupNewsList.get(position).getCreationDate();
         postTime = TimeUtils.Calendar2TimeString(TimeUtils.timeLong2Calendar(Long.parseLong(postTime)), TimeUtils.getFormat(context, TimeUtils.FORMAT_DEFAULT_DATE));
@@ -108,5 +98,4 @@ public class NewsListAdapter extends BaseAdapter {
         TextView content;
         TextView textposer;
     }
-
 }

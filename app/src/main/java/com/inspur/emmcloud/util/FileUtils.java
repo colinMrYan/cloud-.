@@ -2,6 +2,7 @@ package com.inspur.emmcloud.util;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.AssetManager;
 import android.net.Uri;
 import android.text.TextUtils;
 import android.webkit.MimeTypeMap;
@@ -684,7 +685,6 @@ public class FileUtils {
 
     /**
      * 获取文件大小
-     *
      * @param fileSize
      * @return
      */
@@ -819,7 +819,6 @@ public class FileUtils {
 
     /**
      * 文件夹改名
-     *
      * @param src
      * @param dest
      * @return
@@ -854,6 +853,52 @@ public class FileUtils {
             imageIconId = R.drawable.icon_file_photos;
         }
         return imageIconId;
+    }
+    /**
+     * 传入目录名称，忽略删除的文件名
+     * 返回成功删除的文件名列表
+     * 只处理文件夹下没有目录的情况
+     * @param src
+     * @param protectedFileNameList
+     * @return
+     */
+    public static List<String> delFilesExceptNameList(String src, List<String> protectedFileNameList){
+        List<String> delSuccessFileNameList = new ArrayList<>();
+        try{
+            File[] files = new File(src).listFiles();
+            if(files != null && files.length > 0){
+                for(int i = 0; i < files.length; i++){
+                    String fileName = files[i].getName();
+                    if(protectedFileNameList.indexOf(fileName) == -1){
+                        files[i].delete();
+                        delSuccessFileNameList.add(fileName);
+                    }
+                }
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return delSuccessFileNameList;
+    }
+
+    /** 
+      * 判断assets文件夹下的文件是否存在 
+      * 
+      * @return false 不存在    true 存在 
+      */
+    public static boolean isAssetsFileExist(Context context,String fileName){
+        AssetManager assetManager = context.getAssets();
+        try {
+            String[] fileNames = assetManager.list("");
+            for(int i = 0; i < fileNames.length; i++){
+                if(fileNames[i].equals(fileName.trim())){
+                    return true;
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
 }

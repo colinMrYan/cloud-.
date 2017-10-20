@@ -1,6 +1,7 @@
 package com.inspur.emmcloud.api;
 
 
+import com.inspur.emmcloud.bean.App;
 import com.inspur.emmcloud.bean.AppRedirectResult;
 import com.inspur.emmcloud.bean.Attachment;
 import com.inspur.emmcloud.bean.ChannelGroup;
@@ -24,6 +25,7 @@ import com.inspur.emmcloud.bean.GetChannelListResult;
 import com.inspur.emmcloud.bean.GetClientIdRsult;
 import com.inspur.emmcloud.bean.GetCreateOfficeResult;
 import com.inspur.emmcloud.bean.GetCreateSingleChannelResult;
+import com.inspur.emmcloud.bean.GetDeviceCheckResult;
 import com.inspur.emmcloud.bean.GetDeviceLogResult;
 import com.inspur.emmcloud.bean.GetFileUploadResult;
 import com.inspur.emmcloud.bean.GetFindMixSearchResult;
@@ -526,6 +528,9 @@ public interface APIInterface {
     void returnDeviceLogListSuccess(GetDeviceLogResult getDeviceLogResult);
 
     void returnDeviceLogListFail(String error, int errorCode);
+
+    void returnAppInfoSuccess(App app);
+    void returnAppInfoFail(String error,int errorCode);
 
     void returnAppConfigSuccess(GetAppConfigResult getAppConfigResult);
 

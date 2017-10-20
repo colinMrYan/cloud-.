@@ -25,7 +25,6 @@ import com.inspur.emmcloud.callback.OauthCallBack;
 import com.inspur.emmcloud.util.AppUtils;
 import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.OauthUtils;
-import com.inspur.emmcloud.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 
 import org.json.JSONObject;
@@ -428,13 +427,7 @@ public class AppAPIService {
         x.http().get(params, new APICallback(context, completeUrl) {
             @Override
             public void callbackSuccess(String arg0) {
-                SplashPageBean splashPageBean = new SplashPageBean(arg0);
-                if (splashPageBean.getCommand().equals("FORWARD")) {
-                    String splashPageInfoOld = PreferencesByUserAndTanentUtils.getString(context, "splash_page_info", "");
-                    PreferencesByUserAndTanentUtils.putString(context, "splash_page_info_old", splashPageInfoOld);
-                    PreferencesByUserAndTanentUtils.putString(context, "splash_page_info", arg0);
-                }
-                apiInterface.returnSplashPageInfoSuccess(splashPageBean);
+                apiInterface.returnSplashPageInfoSuccess(new SplashPageBean(arg0));
             }
 
             @Override

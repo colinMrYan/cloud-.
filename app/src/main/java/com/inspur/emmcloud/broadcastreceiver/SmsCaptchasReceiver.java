@@ -35,7 +35,6 @@ public class SmsCaptchasReceiver extends ContentObserver {
 	@SuppressWarnings("deprecation")
 	@Override
 	public void onChange(boolean selfChange) {
-
 		super.onChange(selfChange);
 		// 读取收件箱中指定号码的短信
 		cursor = context.managedQuery(Uri.parse("content://sms/inbox"), new String[] {
@@ -54,7 +53,6 @@ public class SmsCaptchasReceiver extends ContentObserver {
 			if (handler != null) {
 				handler.sendMessage(msg);
 			}
-
 		}
 
 		// 在用managedQuery的时候，不能主动调用close()方法， 否则在Android 4.0+的系统上， 会发生崩溃
@@ -62,5 +60,4 @@ public class SmsCaptchasReceiver extends ContentObserver {
 			cursor.close();
 		}
 	}
-
 }

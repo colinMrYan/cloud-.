@@ -33,7 +33,6 @@ import com.inspur.emmcloud.bean.GetAllContactResult;
 import com.inspur.emmcloud.bean.GetAllRobotsResult;
 import com.inspur.emmcloud.bean.GetAppTabAutoResult;
 import com.inspur.emmcloud.bean.GetSearchChannelGroupResult;
-import com.inspur.emmcloud.bean.Language;
 import com.inspur.emmcloud.bean.PVCollectModel;
 import com.inspur.emmcloud.callback.CommonCallBack;
 import com.inspur.emmcloud.interf.OnTabReselectListener;
@@ -73,8 +72,6 @@ import com.inspur.emmcloud.widget.WeakThread;
 import com.inspur.emmcloud.widget.tipsview.TipsView;
 
 import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -141,7 +138,6 @@ public class IndexActivity extends BaseFragmentActivity implements
         startUploadPVCollectService();
         startCoreService();
         setPreloadWebApp();
-        EventBus.getDefault().register(this);
     }
 
     /**
@@ -198,8 +194,8 @@ public class IndexActivity extends BaseFragmentActivity implements
                     apiService.setAPIInterface(new WebService());
                     String uid = ((MyApplication) getApplication()).getUid();
                     String version = PreferencesByUserAndTanentUtils.getString(IndexActivity.this, "app_tabbar_version", "");
-                    String clientid = PreferencesUtils.getString(IndexActivity.this, UriUtils.tanent + uid + "react_native_clientid", "");
-                    apiService.getAppNewTabs(version, clientid);
+                    String clientId = PreferencesUtils.getString(IndexActivity.this, UriUtils.tanent + uid + "react_native_clientid", "");
+                    apiService.getAppNewTabs(version, clientId);
 
                 }
             }
@@ -337,14 +333,6 @@ public class IndexActivity extends BaseFragmentActivity implements
         mTabHost.setup(this, getSupportFragmentManager(), R.id.realtabcontent);
         handleAppTabs();
     }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void updateTabBarLanguage(Language language) {
-        if (language != null) {
-            handleAppTabs();
-        }
-    }
-
 
     /**
      * 处理tab数组
@@ -697,7 +685,6 @@ public class IndexActivity extends BaseFragmentActivity implements
         if (newMessageTipsLayout != null) {
             newMessageTipsLayout = null;
         }
-        EventBus.getDefault().unregister(this);
     }
 
     class ContactSaveTask extends AsyncTask<GetAllContactResult, Void, Void> {
