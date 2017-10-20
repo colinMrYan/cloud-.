@@ -304,6 +304,7 @@ public class ImpActivity extends ImpBaseActivity {
                 Intent intent = new Intent();
                 intent.setClass(ImpActivity.this, ImpActivity.class);
                 intent.putExtra("uri", helpUrl);
+                intent.putExtra("appName","");
                 startActivity(intent);
                 dialog.dismiss();
             }
