@@ -87,6 +87,10 @@ public class GroupNewsCardFragment extends Fragment implements
         EventBus.getDefault().register(this);
     }
 
+    /**
+     * 根据新闻Id更新新闻批示
+     * @param messageEvent
+     */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void updateNewsDataById(NewsIntrcutionUpdateEvent messageEvent) {
         for (int i = 0; i < groupnNewsList.size(); i++) {

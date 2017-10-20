@@ -159,6 +159,9 @@ public class GestureLoginActivity extends BaseActivity {
     }
 
 
+//    /**
+//     * 判断指纹识别成功，识别成功后关闭锁屏Activity
+//     */
 //    @Subscribe(threadMode = ThreadMode.MAIN)
 //    public void onFingerPrintSuccess(String fingerPrintSuccess){
 //        if(fingerPrintSuccess.equals("success")){
