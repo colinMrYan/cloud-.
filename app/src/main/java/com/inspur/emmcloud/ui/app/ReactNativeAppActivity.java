@@ -162,7 +162,6 @@ public class ReactNativeAppActivity extends BaseActivity implements DefaultHardw
                     StringBuilder describeVersionAndTime = ReactNativeFlow.getBundleDotJsonFromFile(reactAppFilePath);
                     AndroidBundleBean androidBundleBean = new AndroidBundleBean(describeVersionAndTime.toString());
                     String clientId = PreferencesUtils.getString(ReactNativeAppActivity.this, UriUtils.tanent + ((MyApplication)getApplicationContext()).getUid() + "react_native_clientid", "");
-//                    String clientId = PreferencesByUserAndTanentUtils.getString(ReactNativeAppActivity.this,"react_native_clientid", "");
                     reactNativeAPIService.getDownLoadUrl(ReactNativeAppActivity.this,androidBundleBean.getUpdate(),clientId,androidBundleBean.getVersion());
                 }
             }).getClientID();
