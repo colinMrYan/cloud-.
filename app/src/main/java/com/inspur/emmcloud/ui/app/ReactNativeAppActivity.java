@@ -136,7 +136,6 @@ public class ReactNativeAppActivity extends BaseActivity implements DefaultHardw
         } else if (!StringUtils.isBlank(reactNativeAppScheme)
                 && !ReactNativeFlow.checkBundleFileIsExist(reactAppFilePath + "/index.android.bundle")) {
             //从网络获取应用
-            LogUtils.YfcDebug("网络获取");
             getReactNativeAppFromNet();
             needCheckUpdate = false;
         } else {
@@ -144,7 +143,6 @@ public class ReactNativeAppActivity extends BaseActivity implements DefaultHardw
             finish();
         }
         if (needCheckUpdate) {
-            LogUtils.YfcDebug("检查更新");
             //如果应用从网络获取而来则认为已经是最新版本，否则在完成显示之后需要检查更新
             checkReactNativeUpdate();
         }
@@ -158,7 +156,6 @@ public class ReactNativeAppActivity extends BaseActivity implements DefaultHardw
             if (!loadingDialog.isShowing()) {
                 loadingDialog.show();
             }
-            LogUtils.YfcDebug("检查更新checkReactNativeUpdate");
             new ClientIDUtils(ReactNativeAppActivity.this, new CommonCallBack() {
                 @Override
                 public void execute() {
