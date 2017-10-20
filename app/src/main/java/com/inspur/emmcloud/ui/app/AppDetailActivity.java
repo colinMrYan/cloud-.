@@ -13,7 +13,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.BaseActivity;
-import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
@@ -22,7 +21,6 @@ import com.inspur.emmcloud.bean.App;
 import com.inspur.emmcloud.bean.GetAddAppResult;
 import com.inspur.emmcloud.util.AppCenterNativeAppUtils;
 import com.inspur.emmcloud.util.ImageDisplayUtils;
-import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.UriUtils;
@@ -41,11 +39,10 @@ import java.util.List;
  */
 public class AppDetailActivity extends BaseActivity {
 
-	private static final int ADD_APP_FAIL = 3;
 	private static final String ACTION_NAME = "add_app";
 	private ImageView appIconImg;
 	private Button statusBtn;
-	private HorizontalListView intrImgListView;
+	private HorizontalListView introduceImgListView;
 	private ImageDisplayUtils imageDisplayUtils;
 	private LoadingDialog loadingDlg;
 	private MyAppAPIService apiService;
@@ -54,7 +51,6 @@ public class AppDetailActivity extends BaseActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_app_detail);
 		imageDisplayUtils = new ImageDisplayUtils(R.drawable.icon_empty_icon);
@@ -66,21 +62,22 @@ public class AppDetailActivity extends BaseActivity {
 		reactNativeApiService.setAPIInterface(new WebService());
 	}
 
+	/**
+	 * 初始化应用详情Views
+	 */
 	private void initView() {
-		// TODO Auto-generated method stub
 		loadingDlg = new LoadingDialog(AppDetailActivity.this);
 		appIconImg = (ImageView) findViewById(R.id.app_icon_img);
 		imageDisplayUtils.displayImage(appIconImg, app.getAppIcon());
 		statusBtn = (Button) findViewById(R.id.app_status_btn);
-		intrImgListView = (HorizontalListView) findViewById(R.id.intr_img_list);
+		introduceImgListView = (HorizontalListView) findViewById(R.id.intr_img_list);
 		if (app.getLegends() != null) {
-			intrImgListView.setAdapter(new Adapter(app.getLegends()));
-			intrImgListView.setOnItemClickListener(new OnItemClickListener() {
+			introduceImgListView.setAdapter(new Adapter(app.getLegends()));
+			introduceImgListView.setOnItemClickListener(new OnItemClickListener() {
 
 				@Override
 				public void onItemClick(AdapterView<?> parent, View view,
 										int position, long id) {
-					// TODO Auto-generated method stub
 					Intent intent = new Intent();
 					intent.setClass(getApplicationContext(), AppImgDisPlayActivity.class);
 					intent.putExtra("currentIndex", position);
@@ -182,9 +179,6 @@ public class AppDetailActivity extends BaseActivity {
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		LogUtils.jasonDebug("requestCode="+requestCode);
-		LogUtils.jasonDebug("resultCode="+resultCode);
-		LogUtils.jasonDebug("data="+data.getDataString());
 		super.onActivityResult(requestCode, resultCode, data);
 	}
 

@@ -13,7 +13,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.inspur.emmcloud.BaseActivity;
-import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 
 import java.util.ArrayList;
@@ -27,7 +26,7 @@ import java.util.List;
 public class AppImgDisPlayActivity extends BaseActivity {
 
 	private ImageView[] pointImgs;
-	private List<View> intrList;
+	private List<View> introduceList;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -38,7 +37,7 @@ public class AppImgDisPlayActivity extends BaseActivity {
 
 	private void initView() {
 		// TODO Auto-generated method stub
-		intrList = new ArrayList<View>();
+		introduceList = new ArrayList<View>();
 		LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
 		ViewGroup pointGroup = (ViewGroup) findViewById(R.id.viewgroup);
@@ -55,11 +54,11 @@ public class AppImgDisPlayActivity extends BaseActivity {
 					finish();
 				}
 			});
-			intrList.add(view);
+			introduceList.add(view);
 		}
-		pointImgs = new ImageView[intrList.size()];
+		pointImgs = new ImageView[introduceList.size()];
 		int POINTSIZE = 15;
-		for (int i = 0; i < intrList.size(); i++) {
+		for (int i = 0; i < introduceList.size(); i++) {
 			ImageView pointImg = new ImageView(this);
 			LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
 					POINTSIZE, POINTSIZE);
@@ -112,13 +111,13 @@ public class AppImgDisPlayActivity extends BaseActivity {
 		@Override
 		public void destroyItem(ViewGroup container, int position, Object object) {
 			// TODO Auto-generated method stub
-			container.removeView(intrList.get(position));
+			container.removeView(introduceList.get(position));
 		}
 
 		@Override
 		public int getCount() {
 			// TODO Auto-generated method stub
-			return intrList.size();
+			return introduceList.size();
 		}
 
 		@Override
@@ -130,8 +129,8 @@ public class AppImgDisPlayActivity extends BaseActivity {
 		@Override
 		public Object instantiateItem(ViewGroup container, int position) {
 			// TODO Auto-generated method stub
-			container.addView(intrList.get(position));
-			return intrList.get(position);
+			container.addView(introduceList.get(position));
+			return introduceList.get(position);
 		}
 
 	}

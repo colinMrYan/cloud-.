@@ -194,8 +194,8 @@ public class IndexActivity extends BaseFragmentActivity implements
                     apiService.setAPIInterface(new WebService());
                     String uid = ((MyApplication) getApplication()).getUid();
                     String version = PreferencesByUserAndTanentUtils.getString(IndexActivity.this, "app_tabbar_version", "");
-                    String clientid = PreferencesUtils.getString(IndexActivity.this, UriUtils.tanent + uid + "react_native_clientid", "");
-                    apiService.getAppNewTabs(version, clientid);
+                    String clientId = PreferencesUtils.getString(IndexActivity.this, UriUtils.tanent + uid + "react_native_clientid", "");
+                    apiService.getAppNewTabs(version, clientId);
 
                 }
             }
