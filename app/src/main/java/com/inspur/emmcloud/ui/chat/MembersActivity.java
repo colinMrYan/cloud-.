@@ -23,7 +23,6 @@ import com.inspur.emmcloud.ui.contact.RobotInfoActivity;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
 import com.inspur.emmcloud.util.ChannelGroupCacheUtils;
 import com.inspur.emmcloud.util.ContactCacheUtils;
-import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.ToastUtils;
@@ -32,7 +31,6 @@ import com.inspur.emmcloud.widget.slidebar.CharacterParser;
 import com.inspur.emmcloud.widget.slidebar.PinyinComparator;
 import com.inspur.emmcloud.widget.slidebar.SideBar;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -84,15 +82,15 @@ public class MembersActivity extends BaseActivity implements
 
                 if (!StringUtils.isBlank(channelID)) {
                     List<String> uidList = ChannelGroupCacheUtils.getMemberUidList(MembersActivity.this, channelID, 0);
-                    personDtoList = ContactCacheUtils.getShowMemberList(MembersActivity.this,uidList);
+                    personDtoList = ContactCacheUtils.getShowMemberList(MembersActivity.this, uidList);
                 } else if (getIntent().getStringArrayListExtra("uids") != null) {
-                    personDtoList = ContactCacheUtils.getShowMemberList(MembersActivity.this,getIntent().getStringArrayListExtra("uids"));
+                    personDtoList = ContactCacheUtils.getShowMemberList(MembersActivity.this, getIntent().getStringArrayListExtra("uids"));
                 }
 
                 Iterator<PersonDto> personDtoIterator = personDtoList.iterator();
-                while (personDtoIterator.hasNext()){
+                while (personDtoIterator.hasNext()) {
                     PersonDto personDto = personDtoIterator.next();
-                    if(personDto.getUid().contains(userid) && (!getIntent().hasExtra("search"))){
+                    if (personDto.getUid().contains(userid) && (!getIntent().hasExtra("search"))) {
                         personDtoIterator.remove();
                     }
                 }
@@ -147,9 +145,9 @@ public class MembersActivity extends BaseActivity implements
                     }
                     Intent intent = new Intent();
                     intent.putExtra("uid", uid);
-                    if(uid.startsWith("BOT")){
+                    if (uid.startsWith("BOT")) {
                         intent.setClass(getApplicationContext(), RobotInfoActivity.class);
-                    }else{
+                    } else {
                         intent.setClass(getApplicationContext(),
                                 UserInfoActivity.class);
                     }
@@ -162,29 +160,20 @@ public class MembersActivity extends BaseActivity implements
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view,
                                         int position, long id) {
-                    JSONObject peopleObject = new JSONObject();
-                    JSONArray jsonArray = new JSONArray();
                     jsonResult = new JSONObject();
                     try {
-                        if (filterList.size() != 0) {
-                            String uid = filterList.get(position).getUid();
-                            String name = filterList.get(position).getName();
-                            peopleObject.put("cid", uid);
-                            peopleObject.put("name", name);
-                        } else {
-                            String uid = personDtoList.get(position).getUid();
-                            String name = personDtoList.get(position)
-                                    .getName();
-                            peopleObject.put("cid", uid);
-                            peopleObject.put("name", name);
-                        }
-                        jsonArray.put(peopleObject);
-                        jsonResult.put("people", jsonArray);
+                        String uid, name;
+                        uid = (filterList.size() != 0) ? filterList.get(position).getUid() : personDtoList.get(position).getUid();
+                        name = (filterList.size() != 0) ? filterList.get(position).getName() : personDtoList.get(position).getName();
+                        jsonResult.put("uid", uid);
+                        jsonResult.put("name", name);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
                     Intent intent = new Intent();
                     intent.putExtra("searchResult", jsonResult.toString());
+                    boolean isInputKeyWord = getIntent().getBooleanExtra("isInputKeyWord",false);
+                    intent.putExtra("isInputKeyWord",isInputKeyWord);
                     setResult(RESULT_OK, intent);
                     finish();
                 }
@@ -288,7 +277,6 @@ public class MembersActivity extends BaseActivity implements
                 indexList.add(sortString);
 //                mSideBar.setIndexArray(indexList);
 //                mSideBar.invalidate();
-                LogUtils.debug("jason", "sortString=" + sortString);
                 if ("1".equals(cUserInfoDto.getUtype())) {// 判断是否是管理员
                     cUserInfoDto.setSortLetters("☆");
                 } else if (sortString.matches("[A-Z]")) {// 正则表达式，判断首字母是否是英文字母   jason修改crash

@@ -15,14 +15,13 @@ import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
 import com.inspur.emmcloud.BaseActivity;
-import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.WorkAPIService;
 import com.inspur.emmcloud.bean.GetTaskListResult;
 import com.inspur.emmcloud.bean.TaskResult;
 import com.inspur.emmcloud.util.NetUtils;
-import com.inspur.emmcloud.util.TagColorUtils;
+import com.inspur.emmcloud.util.MessionTagColorUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.dialogs.EasyDialog;
@@ -136,7 +135,7 @@ public class MessionFinishListActivity extends BaseActivity implements
 			((TextView) convertView.findViewById(R.id.mession_text))
 					.setText(taskList.get(position).getTitle());
 			if (taskList.get(position).getTags().size() > 0) {
-				TagColorUtils.setTagColorImg((ImageView) convertView
+				MessionTagColorUtils.setTagColorImg((ImageView) convertView
 						.findViewById(R.id.mession_color),
 						taskList.get(position).getTags().get(0).getColor());
 			}

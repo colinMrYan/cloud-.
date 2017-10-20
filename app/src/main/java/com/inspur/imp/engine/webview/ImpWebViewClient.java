@@ -34,6 +34,7 @@ public class ImpWebViewClient extends WebViewClient {
 	private String urlparam = "";
 	private final String F_UEX_SCRIPT_SELF_FINISH = "javascript:if(window.init){window.init();}";
 	private ImpWebView myWebView;
+	private String errolUrl = "file:///android_asset/error/error.html";
 	private LinearLayout loadFailLayout;
 	private Handler mHandler = null;
 	private Runnable runnable = null;
@@ -116,6 +117,7 @@ public class ImpWebViewClient extends WebViewClient {
 		if (webview.destroyed || url.contains("error")) {
 			return;
 		}
+		webview.setVisibility(View.VISIBLE);
 		//为了获取网页的title
 		view.loadUrl("javascript:window.getTitle.onGetTitle("
 				+ "document.getElementsByTagName('title')[0].innerHTML" + ");");
@@ -129,16 +131,10 @@ public class ImpWebViewClient extends WebViewClient {
 		webview.initPlugin();
 	}
 
-
-
-
-
-
-
 	/*
 	 * 网页加载失败，取消加载，并清理当前的view
 	 */
-//	@SuppressWarnings("deprecation")
+	@SuppressWarnings("deprecation")
 	@Override
 	public void onReceivedError(WebView view, int errorCode,
 								String description, String failingUrl) {
@@ -150,7 +146,6 @@ public class ImpWebViewClient extends WebViewClient {
 		loadFailLayout.setVisibility(View.VISIBLE);
 	}
 
-
 //	@TargetApi(android.os.Build.VERSION_CODES.M)
 //	@Override
 //	public void onReceivedHttpError(WebView view, WebResourceRequest request, WebResourceResponse errorResponse) {
@@ -158,13 +153,14 @@ public class ImpWebViewClient extends WebViewClient {
 //
 //	}
 //
+//
 //	@TargetApi(android.os.Build.VERSION_CODES.LOLLIPOP)
 //	@Override
 //	public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
 //		return shouldOverrideUrlLoading(view, request.getUrl().toString());
 //	}
 
-//	@SuppressWarnings("deprecation")
+	@SuppressWarnings("deprecation")
 	@Override
 	public boolean shouldOverrideUrlLoading(WebView view, String url) {
 		if (runnable != null){

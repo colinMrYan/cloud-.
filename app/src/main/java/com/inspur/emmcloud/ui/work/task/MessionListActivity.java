@@ -27,10 +27,10 @@ import com.inspur.emmcloud.bean.GetTaskAddResult;
 import com.inspur.emmcloud.bean.GetTaskListResult;
 import com.inspur.emmcloud.bean.TaskColorTag;
 import com.inspur.emmcloud.bean.TaskResult;
+import com.inspur.emmcloud.util.MessionTagColorUtils;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.StringUtils;
-import com.inspur.emmcloud.util.TagColorUtils;
 import com.inspur.emmcloud.util.ToastUtils;
 import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
@@ -339,12 +339,12 @@ public class MessionListActivity extends BaseActivity implements
 			((TextView) convertView.findViewById(R.id.mession_text))
 					.setText(taskList.get(position).getTitle());
 			if (taskList.get(position).getTags().size() > 0) {
-				TagColorUtils.setTagColorImg((ImageView) convertView
+				MessionTagColorUtils.setTagColorImg((ImageView) convertView
 						.findViewById(R.id.mession_color),
 						taskList.get(position).getTags().get(0).getColor());
 			} else {
 				// 如果没有tag，显示默认tag
-				TagColorUtils.setTagColorImg((ImageView) convertView
+				MessionTagColorUtils.setTagColorImg((ImageView) convertView
 						.findViewById(R.id.mession_color), "YELLOW");
 			}
 			if (taskList.get(position).getPriority() == 1) {
