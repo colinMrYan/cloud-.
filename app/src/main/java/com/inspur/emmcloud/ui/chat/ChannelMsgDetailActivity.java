@@ -33,7 +33,6 @@ import com.inspur.emmcloud.ui.contact.RobotInfoActivity;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
 import com.inspur.emmcloud.util.ChannelCacheUtils;
 import com.inspur.emmcloud.util.FileUtils;
-import com.inspur.emmcloud.util.HandleMsgTextUtils;
 import com.inspur.emmcloud.util.ImageDisplayUtils;
 import com.inspur.emmcloud.util.InputMethodUtils;
 import com.inspur.emmcloud.util.IntentUtils;
@@ -45,7 +44,6 @@ import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.RobotCacheUtils;
 import com.inspur.emmcloud.util.TimeUtils;
 import com.inspur.emmcloud.util.TransHtmlToTextUtils;
-import com.inspur.emmcloud.util.URLMatcher;
 import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.CircleImageView;
@@ -158,10 +156,9 @@ public class ChannelMsgDetailActivity extends BaseActivity implements
             }
 
             @Override
-            public void onSendMsg(String content, List<String> mentionsUidList,
-                                  List<String> mentionsUserNameList) {
+            public void onSendMsg(String content, List<String> mentionsUidList,List<String> urlList) {
                 // TODO Auto-generated method stub
-                sendComment(content, mentionsUidList, mentionsUserNameList);
+                sendComment(content, mentionsUidList,urlList);
             }
         });
     }
@@ -351,7 +348,11 @@ public class ChannelMsgDetailActivity extends BaseActivity implements
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode != RESULT_CANCELED && requestCode == RESULT_MENTIONS) {
-            chatInputMenu.setMentionData(data);
+            String result = data.getStringExtra("searchResult");
+            String uid = JSONUtils.getString(result, "uid", null);
+            String name = JSONUtils.getString(result, "name", null);
+            boolean isInputKeyWord = data.getBooleanExtra("isInputKeyWord", false);
+            chatInputMenu.addMentions(uid, name, isInputKeyWord);
         }
     }
 
@@ -385,11 +386,10 @@ public class ChannelMsgDetailActivity extends BaseActivity implements
     /**
      * 发出评论
      */
-    private void sendComment(String commentContent, List<String> mentionsUidList,
-                             List<String> mentionsUserNameList) {
+    private void sendComment(String commentContent, List<String> mentionsUidList,List<String> urlList) {
 
         if (NetUtils.isNetworkConnected(getApplicationContext())) {
-            String commentConbineResult = getConbineComment(commentContent, mentionsUidList, mentionsUserNameList);
+            String commentConbineResult = getConbineComment(commentContent, mentionsUidList,urlList);
             apiService.sendMsg(cid, commentConbineResult, "txt_comment",
                     msg.getMid(), "");
             Comment newComment = combineComment(commentConbineResult);
@@ -530,17 +530,12 @@ public class ChannelMsgDetailActivity extends BaseActivity implements
     }
 
 
-    public String getConbineComment(String content, List<String> mentionsUidList,
-                                    List<String> mentionsUserNameList) {
-        String source = "";
-        ArrayList<String> urlList = URLMatcher.getUrls(content);
+    public String getConbineComment(String content, List<String> mentionsUidList,List<String> urlList) {
         JSONObject richTextObj = new JSONObject();
-        source = HandleMsgTextUtils.handleMentionAndURL(chatInputMenu.getEdit(), content, mentionsUserNameList,
-                mentionsUidList);
         JSONArray mentionArray = JSONUtils.toJSONArray(mentionsUidList);
         JSONArray urlArray = JSONUtils.toJSONArray(urlList);
         try {
-            richTextObj.put("source", source);
+            richTextObj.put("source", content);
             richTextObj.put("mentions", mentionArray);
             richTextObj.put("urlList", urlArray);
         } catch (Exception e) {

@@ -179,6 +179,7 @@
                     android:id="@+id/meeting_detail_room_name_layout"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_toRightOf="@id/meetting_room_text"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="31dp"
@@ -191,6 +192,8 @@
                         android:layout_marginLeft="15dp"
                         android:background="@null"
                         android:clickable="true"
+                        android:maxLines="1"
+                        android:ellipsize="end"
                         android:gravity="center_vertical"
                         android:onClick="onClick"
                         android:textSize="@dimen/content_title_textsize" />

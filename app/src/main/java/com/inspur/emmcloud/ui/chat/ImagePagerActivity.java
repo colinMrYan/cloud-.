@@ -1,11 +1,9 @@
 package com.inspur.emmcloud.ui.chat;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.util.ArrayMap;
@@ -18,20 +16,15 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.BaseFragmentActivity;
-import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.bean.GetMsgCommentCountResult;
 import com.inspur.emmcloud.bean.Msg;
 import com.inspur.emmcloud.util.ChannelCacheUtils;
-import com.inspur.emmcloud.util.HandleMsgTextUtils;
 import com.inspur.emmcloud.util.IntentUtils;
 import com.inspur.emmcloud.util.JSONUtils;
-import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.NetUtils;
-import com.inspur.emmcloud.util.StateBarColor;
-import com.inspur.emmcloud.util.URLMatcher;
 import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.emmcloud.widget.ECMChatInputMenu;
 import com.inspur.emmcloud.widget.HackyViewPager;
@@ -210,9 +203,8 @@ public class ImagePagerActivity extends BaseFragmentActivity {
 			}
 
 			@Override
-			public void onSendMsg(String content, List<String> mentionsUidList,
-								  List<String> mentionsUserNameList) {
-				sendComment(content, mentionsUidList, mentionsUserNameList);
+			public void onSendMsg(String content, List<String> mentionsUidList,List<String> urlList) {
+				sendComment(content, mentionsUidList,urlList);
 				if (commentInputDlg != null && commentInputDlg.isShowing()) {
 					commentInputDlg.dismiss();
 				}
@@ -316,16 +308,12 @@ public class ImagePagerActivity extends BaseFragmentActivity {
 	 * @param content
 	 * @return
 	 */
-	public String getConbineCommentSendText(String content, List<String> mentionsUidList, List<String> mentionsUserNameList) {
-		String source = "";
-		ArrayList<String> urlList = URLMatcher.getUrls(content);
+	public String getConbineCommentSendText(String content, List<String> mentionsUidList, List<String> urlList) {
 		JSONObject richTextObj = new JSONObject();
-		source = HandleMsgTextUtils.handleMentionAndURL(ecmChatInputMenu.getEdit(),content, mentionsUserNameList,
-				mentionsUidList);
 		JSONArray mentionArray = JSONUtils.toJSONArray(mentionsUidList);
 		JSONArray urlArray = JSONUtils.toJSONArray(urlList);
 		try {
-			richTextObj.put("source", source);
+			richTextObj.put("source", content);
 			richTextObj.put("mentions", mentionArray);
 			richTextObj.put("urlList", urlArray);
 		} catch (Exception e) {
@@ -348,7 +336,11 @@ public class ImagePagerActivity extends BaseFragmentActivity {
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (resultCode != RESULT_CANCELED && requestCode == RESULT_MENTIONS) {
-			ecmChatInputMenu.setMentionData(data);
+			String result = data.getStringExtra("searchResult");
+			String uid = JSONUtils.getString(result, "uid", null);
+			String name = JSONUtils.getString(result, "name", null);
+			boolean isInputKeyWord = data.getBooleanExtra("isInputKeyWord",false);
+			ecmChatInputMenu.addMentions(uid,name,isInputKeyWord);
 		}else if (resultCode == RESULT_OK && requestCode == CHECK_IMG_COMMENT){
 			String mid = data.getStringExtra("mid");
 			int commentCount = data.getIntExtra("commentCount",0);
@@ -407,11 +399,11 @@ public class ImagePagerActivity extends BaseFragmentActivity {
 	}
 
 
-	private void sendComment(String content, List<String> mentionsUidList, List<String> mentionsUserNameList) {
+	private void sendComment(String content, List<String> mentionsUidList,List<String> urlList) {
 		if (NetUtils.isNetworkConnected(getApplicationContext())) {
 			ChatAPIService apiService = new ChatAPIService(getApplicationContext());
 			apiService.setAPIInterface(new WebService());
-			String commentConbineSendText = getConbineCommentSendText(content, mentionsUidList, mentionsUserNameList);
+			String commentConbineSendText = getConbineCommentSendText(content, mentionsUidList,urlList);
 			apiService.sendMsg(cid, commentConbineSendText, "txt_comment",
 					imgTypeMsgList.get(pagerPosition).getMid(), "");
 			Integer commentCount = commentCountMap.get(imgTypeMsgList.get(pagerPosition).getMid());

@@ -47,10 +47,10 @@ import com.inspur.emmcloud.util.FileUtils;
 import com.inspur.emmcloud.util.ImageDisplayUtils;
 import com.inspur.emmcloud.util.JSONUtils;
 import com.inspur.emmcloud.util.LogUtils;
+import com.inspur.emmcloud.util.MessionTagColorUtils;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.SendFileUtils;
 import com.inspur.emmcloud.util.StringUtils;
-import com.inspur.emmcloud.util.TagColorUtils;
 import com.inspur.emmcloud.util.TimeUtils;
 import com.inspur.emmcloud.util.ToastUtils;
 import com.inspur.emmcloud.util.UriUtils;
@@ -196,7 +196,7 @@ public class MessionDetailActivity extends BaseActivity {
 			}
 			for (int i = 0; i < tagSize; i++) {
 				tagImgs[i].setVisibility(View.VISIBLE);
-				TagColorUtils.setTagColorImg(tagImgs[i], tagList.get(i)
+				MessionTagColorUtils.setTagColorImg(tagImgs[i], tagList.get(i)
 						.getColor());
 			}
 		}
@@ -212,7 +212,7 @@ public class MessionDetailActivity extends BaseActivity {
 //			}
 //			for (int i = 0; i < tagSize; i++) {
 //				tagImgs[i].setVisibility(View.VISIBLE);
-//				TagColorUtils.setTagColorImg(tagImgs[i], tagList.get(i)
+//				MessionTagColorUtils.setTagColorImg(tagImgs[i], tagList.get(i)
 //						.getColor());
 //			}
 //		}
@@ -531,7 +531,7 @@ public class MessionDetailActivity extends BaseActivity {
 		}
 		for (int i = 0; i < tagNumber; i++) {
 			tagImgs[i].setVisibility(View.VISIBLE);
-			TagColorUtils.setTagColorImg(tagImgs[i], addTags.get(i).getColor());
+			MessionTagColorUtils.setTagColorImg(tagImgs[i], addTags.get(i).getColor());
 		}
 		tagList.clear();
 		tagList.addAll(addTags);
