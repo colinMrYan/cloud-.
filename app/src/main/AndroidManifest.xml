@@ -183,11 +183,6 @@
             android:name=".ui.app.AppDetailActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"></activity>
-        <activity
-            android:name=".ui.app.AppImgDisPlayActivity"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait"></activity>
-
 
         <activity
             android:name=".ui.SchemeHandleActivity"
