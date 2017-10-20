@@ -42,6 +42,7 @@ public class SettingActivity extends BaseActivity {
     private Handler handler;
     private LoadingDialog loadingDlg;
     private SwitchView webAutoRotateSwitch;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
@@ -52,9 +53,9 @@ public class SettingActivity extends BaseActivity {
         handMessage();
     }
 
-    private void initView(){
+    private void initView() {
         loadingDlg = new LoadingDialog(this);
-        webAutoRotateSwitch = (SwitchView)findViewById(R.id.web_auto_rotate_switch);
+        webAutoRotateSwitch = (SwitchView) findViewById(R.id.web_auto_rotate_switch);
         setWebAutoRotateState();
         webAutoRotateSwitch.setOnStateChangedListener(onStateChangedListener);
     }
@@ -83,8 +84,8 @@ public class SettingActivity extends BaseActivity {
         }
     }
 
-    private void setWebAutoRotateState(){
-        boolean isWebAutoRotate = Boolean.parseBoolean(AppConfigCacheUtils.getAppConfigValue(this,Constant.CONCIG_WEB_AUTO_ROTATE,"false"));
+    private void setWebAutoRotateState() {
+        boolean isWebAutoRotate = Boolean.parseBoolean(AppConfigCacheUtils.getAppConfigValue(this, Constant.CONCIG_WEB_AUTO_ROTATE, "false"));
         webAutoRotateSwitch.setOpened(isWebAutoRotate);
     }
 
@@ -211,8 +212,7 @@ public class SettingActivity extends BaseActivity {
                         DataCleanManager.cleanApplicationData(
                                 SettingActivity.this, msgCachePath,
                                 imgCachePath);
-                        ImageDisplayUtils imageDisplayUtils = new ImageDisplayUtils(R.drawable.icon_photo_default);
-                        imageDisplayUtils.clearAllCache();
+                        ImageDisplayUtils.getInstance().clearAllCache();
                         handler.sendEmptyMessage(DATA_CLEAR_SUCCESS);
                     }
                 }).start();
@@ -270,9 +270,7 @@ public class SettingActivity extends BaseActivity {
                     String imgCachePath = MyAppConfig.LOCAL_CACHE_PATH;
                     DataCleanManager.cleanApplicationData(SettingActivity.this,
                             msgCachePath, imgCachePath);
-                    ImageDisplayUtils imageDisplayUtils = new ImageDisplayUtils(
-                            R.drawable.icon_photo_default);
-                    imageDisplayUtils.clearAllCache();
+                    ImageDisplayUtils.getInstance().clearAllCache();
                     MyAppCacheUtils.clearMyAppList(SettingActivity.this);
                     //清除全部缓存时是否需要清除掉小程序，如果需要，解开下面一行的注释
 //					ReactNativeFlow.deleteReactNativeInstallDir(MyAppConfig.getReactInstallPath(SettingActivity.this,userId));
@@ -303,13 +301,13 @@ public class SettingActivity extends BaseActivity {
     }
 
 
-    private void saveWebAutoRotateConfig(boolean isWebAutoRotate){
-        if (NetUtils.isNetworkConnected(this)){
+    private void saveWebAutoRotateConfig(boolean isWebAutoRotate) {
+        if (NetUtils.isNetworkConnected(this)) {
             loadingDlg.show();
             AppAPIService apiService = new AppAPIService(this);
             apiService.setAPIInterface(new WebService());
             apiService.saveWebAutoRotateConfig(isWebAutoRotate);
-        }else {
+        } else {
             setWebAutoRotateState();
         }
     }
@@ -317,21 +315,21 @@ public class SettingActivity extends BaseActivity {
     private class WebService extends APIInterfaceInstance {
         @Override
         public void returnSaveWebAutoRotateConfigSuccess(boolean isWebAutoRotate) {
-            if (loadingDlg != null && loadingDlg.isShowing()){
+            if (loadingDlg != null && loadingDlg.isShowing()) {
                 loadingDlg.dismiss();
             }
-            AppConfig appConfig = new AppConfig(Constant.CONCIG_WEB_AUTO_ROTATE,isWebAutoRotate+"");
-            AppConfigCacheUtils.saveAppConfig(SettingActivity.this,appConfig);
+            AppConfig appConfig = new AppConfig(Constant.CONCIG_WEB_AUTO_ROTATE, isWebAutoRotate + "");
+            AppConfigCacheUtils.saveAppConfig(SettingActivity.this, appConfig);
             setWebAutoRotateState();
         }
 
         @Override
         public void returnSaveWebAutoRotateConfigFail(String error, int errorCode) {
-            if (loadingDlg != null && loadingDlg.isShowing()){
+            if (loadingDlg != null && loadingDlg.isShowing()) {
                 loadingDlg.dismiss();
             }
             setWebAutoRotateState();
-            WebServiceMiddleUtils.hand(SettingActivity.this,error,errorCode);
+            WebServiceMiddleUtils.hand(SettingActivity.this, error, errorCode);
         }
     }
 

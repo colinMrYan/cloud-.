@@ -56,7 +56,6 @@ public class MyInfoActivity extends BaseActivity {
     private LoadingDialog loadingDlg;
     private RelativeLayout resetLayout;
     private String photoLocalPath;
-    private ImageDisplayUtils imageDisplayUtils;
     private GetMyInfoResult getMyInfoResult;
 
     @Override
@@ -79,7 +78,6 @@ public class MyInfoActivity extends BaseActivity {
         userHeadImg = (ImageView) findViewById(R.id.myinfo_userheadimg_img);
         userMailText = (TextView) findViewById(R.id.myinfo_usermail_text);
         resetLayout = (RelativeLayout) findViewById(R.id.myinfo_reset_layout);
-        imageDisplayUtils = new ImageDisplayUtils(R.drawable.icon_photo_default);
         apiService = new MineAPIService(MyInfoActivity.this);
         apiService.setAPIInterface(new WebService());
     }
@@ -91,7 +89,7 @@ public class MyInfoActivity extends BaseActivity {
         if (getMyInfoResult != null) {
             String photoUri = UriUtils
                     .getChannelImgUri(MyInfoActivity.this, getMyInfoResult.getID());
-            imageDisplayUtils.displayImage(userHeadImg, photoUri);
+            ImageDisplayUtils.getInstance().displayImage(userHeadImg, photoUri, R.drawable.icon_photo_default);
             String userName = getMyInfoResult.getName();
             ((TextView) findViewById(R.id.myinfo_username_text)).setText(userName.equals("null") ? getString(R.string.not_set) : userName);
             String mail = getMyInfoResult.getMail();
@@ -170,7 +168,7 @@ public class MyInfoActivity extends BaseActivity {
      */
     private void initImagePicker() {
         ImagePicker imagePicker = ImagePicker.getInstance();
-        imagePicker.setImageLoader(new ImageDisplayUtils()); // 设置图片加载器
+        imagePicker.setImageLoader(ImageDisplayUtils.getInstance()); // 设置图片加载器
         imagePicker.setShowCamera(true); // 显示拍照按钮
         imagePicker.setCrop(true); // 允许裁剪（单选才有效）
         imagePicker.setSaveRectangle(true); // 是否按矩形区域保存
@@ -297,7 +295,7 @@ public class MyInfoActivity extends BaseActivity {
              * 向更多页面发送消息修改头像
              */
             String userHeadImgUrl = getUploadMyHeadResult.getUrl();
-            imageDisplayUtils.displayImage(userHeadImg, photoLocalPath);
+            ImageDisplayUtils.getInstance().displayImage(userHeadImg, photoLocalPath);
             Message msg = new Message();
             msg.what = UPDATE_MY_HEAD;
             msg.obj = userHeadImgUrl;

@@ -30,8 +30,6 @@ import java.util.List;
 public class DocumentActivity extends BaseActivity {
 
 	private ListView fileListView;
-	private String cid;
-	private ImageDisplayUtils imageDisplayUtils;
 	private List<DocumentInfo> documentInfoList = new ArrayList<DocumentInfo>();
 
 	@Override
@@ -42,7 +40,6 @@ public class DocumentActivity extends BaseActivity {
 		((TextView) findViewById(R.id.header_text))
 				.setText(getString(R.string.docunment));
 		setDocumentList();
-		imageDisplayUtils = new ImageDisplayUtils(R.drawable.icon_file_unknown);
 		fileListView = (ListView) findViewById(R.id.file_list);
 		fileListView.setAdapter(new Adapter());
 	}
@@ -128,35 +125,7 @@ public class DocumentActivity extends BaseActivity {
 			final String fileName = documentInfo.getFileName();
 			final String source = documentInfo.getUri();
 			fileNameText.setText(fileName);
-
-			if (fileName.endsWith("doc") || fileName.endsWith("docx")) {
-				imageDisplayUtils.displayImage(fileImg, "drawable://"
-						+ R.drawable.icon_file_word);
-			} else if (fileName.endsWith("xls") || fileName.endsWith("xlsx")) {
-				imageDisplayUtils.displayImage(fileImg, "drawable://"
-						+ R.drawable.icon_file_excel);
-			} else if (fileName.endsWith("ppt") || fileName.endsWith("pptx")) {
-				imageDisplayUtils.displayImage(fileImg, "drawable://"
-						+ R.drawable.icon_file_ppt);
-			} else if (fileName.endsWith("pdf")) {
-				imageDisplayUtils.displayImage(fileImg, "drawable://"
-						+ R.drawable.icon_file_pdf);
-			} else if (fileName.endsWith("txt")) {
-				imageDisplayUtils.displayImage(fileImg, "drawable://"
-						+ R.drawable.icon_txt);
-			} else if (fileName.endsWith("zip")) {
-				imageDisplayUtils.displayImage(fileImg, "drawable://"
-						+ R.drawable.icon_file_zip);
-			} else if (fileName.endsWith("rar")) {
-				imageDisplayUtils.displayImage(fileImg, "drawable://"
-						+ R.drawable.icon_file_rar);
-			} else if (fileName.contains("jpg") || fileName.contains("png")) {
-				imageDisplayUtils.displayImage(fileImg, "drawable://"
-						+ R.drawable.icon_file_photos);
-			} else {
-				imageDisplayUtils.displayImage(fileImg, "drawable://"
-						+ R.drawable.icon_file_unknown);
-			}
+			ImageDisplayUtils.getInstance().displayImage(fileImg, "drawable://" + FileUtils.getIconResId(fileName));
 			convertView.setOnClickListener(new OnClickListener() {
 
 				@Override

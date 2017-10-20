@@ -13,7 +13,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.BaseActivity;
-import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.Contact;
 import com.inspur.emmcloud.util.ChannelGroupCacheUtils;
@@ -35,7 +34,6 @@ public class ChannelMembersDelActivity extends BaseActivity {
 	private ListView channelMemberListView;
 	private List<Contact> memberList;
 	private ChannelMemDelAdapter adapter;
-	private ImageDisplayUtils imageDisplayUtils;
 	private ArrayList<String> delMemberList = new ArrayList<String>();
 
 	@Override
@@ -43,7 +41,6 @@ public class ChannelMembersDelActivity extends BaseActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_channelmem_del);
 		channelMemberListView = (ListView) findViewById(R.id.channel_mem_del);
-		imageDisplayUtils = new ImageDisplayUtils(R.drawable.icon_person_default);
 		memberList = ChannelGroupCacheUtils.getMembersList(
 				ChannelMembersDelActivity.this,
 				getIntent().getStringExtra("cid"));
@@ -90,8 +87,8 @@ public class ChannelMembersDelActivity extends BaseActivity {
 			convertView = vi.inflate(R.layout.channel_member_list_item, null);
 			CircleImageView circleImageView = (CircleImageView) convertView
 					.findViewById(R.id.head);
-			imageDisplayUtils.displayImage(circleImageView, UriUtils
-					.getChannelImgUri(ChannelMembersDelActivity.this,memberList.get(position).getInspurID()));
+			ImageDisplayUtils.getInstance().displayImage(circleImageView, UriUtils
+					.getChannelImgUri(ChannelMembersDelActivity.this, memberList.get(position).getInspurID()),R.drawable.icon_person_default);
 			((TextView) convertView.findViewById(R.id.title))
 					.setText(memberList.get(position).getName());
 			((CheckBox) convertView.findViewById(R.id.choose_check))

@@ -45,7 +45,6 @@ public class MoreFragment extends Fragment {
     private View rootView;
     private LayoutInflater inflater;
     private ImageView moreHeadImg;
-    private ImageDisplayUtils imageDisplayUtils;
     private GetMyInfoResult getMyInfoResult;
 
     @Override
@@ -89,7 +88,6 @@ public class MoreFragment extends Fragment {
         (rootView.findViewById(R.id.customer_layout)).setOnClickListener(onClickListener);
         (rootView.findViewById(R.id.scan_login_desktop_layout)).setOnClickListener(onClickListener);
         moreHeadImg = (ImageView) rootView.findViewById(R.id.more_head_img);
-        imageDisplayUtils = new ImageDisplayUtils(R.drawable.icon_photo_default);
     }
 
 
@@ -98,11 +96,11 @@ public class MoreFragment extends Fragment {
         String myInfo = PreferencesUtils.getString(getActivity(), "myInfo", "");
         getMyInfoResult = new GetMyInfoResult(myInfo);
         String inspurId = getMyInfoResult.getID();
-        String photoUri = UriUtils.getChannelImgUri(getActivity(),inspurId);
-        imageDisplayUtils.displayImage(moreHeadImg, photoUri);
+        String photoUri = UriUtils.getChannelImgUri(getActivity(), inspurId);
+        ImageDisplayUtils.getInstance().displayImage(moreHeadImg, photoUri, R.drawable.icon_photo_default);
         String userName = PreferencesUtils.getString(getActivity(), "userRealName", getString(R.string.not_set));
         ((TextView) rootView.findViewById(R.id.more_head_name_text)).setText(userName);
-        ((TextView) rootView.findViewById(R.id.more_head_enterprise_text)).setText(((MyApplication)getActivity().getApplicationContext()).getCurrentEnterprise().getName());
+        ((TextView) rootView.findViewById(R.id.more_head_enterprise_text)).setText(((MyApplication) getActivity().getApplicationContext()).getCurrentEnterprise().getName());
     }
 
 
@@ -117,7 +115,7 @@ public class MoreFragment extends Fragment {
                     case UPDATE_MY_HEAD:
                         getMyInfoResult.setAvatar((String) msg.obj);
                         String userheadUrl = "https://mob.inspur.com" + getMyInfoResult.getAvatar();
-                        imageDisplayUtils.displayImage(moreHeadImg, userheadUrl);
+                        ImageDisplayUtils.getInstance().displayImage(moreHeadImg, userheadUrl, R.drawable.icon_photo_default);
                         break;
                     default:
                         break;
@@ -146,8 +144,8 @@ public class MoreFragment extends Fragment {
                     recordUserClick("profile");
                     break;
                 case R.id.more_help_layout:
-				    intent.setClass(getActivity(), FeedBackActivity.class);
-				    startActivity(intent);
+                    intent.setClass(getActivity(), FeedBackActivity.class);
+                    startActivity(intent);
                     recordUserClick("feedback");
                     break;
                 case R.id.more_message_layout:
@@ -160,13 +158,13 @@ public class MoreFragment extends Fragment {
                     break;
                 case R.id.customer_layout:
                     Channel customerChannel = ChannelCacheUtils.getCustomerChannel(getActivity());
-                    if (customerChannel != null ){
+                    if (customerChannel != null) {
                         Bundle bundle = new Bundle();
                         bundle.putString("title", customerChannel.getTitle());
                         bundle.putString("cid", customerChannel.getCid());
                         bundle.putString("channelType", customerChannel.getType());
                         //为区分来自云+客服添加一个from值，在ChannelActivity里使用
-                        bundle.putString("from","customer");
+                        bundle.putString("from", "customer");
                         IntentUtils.startActivity(getActivity(),
                                 ChannelActivity.class, bundle);
                         recordUserClick("customservice");
@@ -181,11 +179,12 @@ public class MoreFragment extends Fragment {
 
     /**
      * 记录用户点击的functionId
+     *
      * @param functionId
      */
-    private void recordUserClick(String functionId){
-        PVCollectModel pvCollectModel = new PVCollectModel(functionId,"mine");
-        PVCollectModelCacheUtils.saveCollectModel(getActivity(),pvCollectModel);
+    private void recordUserClick(String functionId) {
+        PVCollectModel pvCollectModel = new PVCollectModel(functionId, "mine");
+        PVCollectModelCacheUtils.saveCollectModel(getActivity(), pvCollectModel);
     }
 
     @Override
@@ -193,7 +192,7 @@ public class MoreFragment extends Fragment {
         super.onResume();
         Channel customerChannel = ChannelCacheUtils.getCustomerChannel(getActivity());
         //如果找不到云+客服频道就隐藏
-        if (customerChannel == null){
+        if (customerChannel == null) {
             (rootView.findViewById(R.id.customer_layout)).setVisibility(View.GONE);
         }
     }
@@ -201,10 +200,10 @@ public class MoreFragment extends Fragment {
     /**
      * 设置标题
      */
-    private void setTabTitle(){
-        String appTabs = PreferencesByUserAndTanentUtils.getString(getActivity(),"app_tabbar_info_current","");
-        if(!StringUtils.isBlank(appTabs)){
-            ((TextView) rootView.findViewById(R.id.header_text)).setText(AppTitleUtils.getTabTitle(getActivity(),getClass().getSimpleName()));
+    private void setTabTitle() {
+        String appTabs = PreferencesByUserAndTanentUtils.getString(getActivity(), "app_tabbar_info_current", "");
+        if (!StringUtils.isBlank(appTabs)) {
+            ((TextView) rootView.findViewById(R.id.header_text)).setText(AppTitleUtils.getTabTitle(getActivity(), getClass().getSimpleName()));
         }
     }
 

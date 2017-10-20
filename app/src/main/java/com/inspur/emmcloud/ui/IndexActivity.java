@@ -396,7 +396,7 @@ public class IndexActivity extends BaseFragmentActivity implements
                 }
             }
         }
-        if (mainTabs == null){
+        if (mainTabs == null) {
             mainTabs = addDefaultTabs();
         }
         displayMainTabs(mainTabs);
@@ -427,8 +427,7 @@ public class IndexActivity extends BaseFragmentActivity implements
                 tabText.setText(getString(mainTab.getResName()));
             }
             if (!StringUtils.isBlank(mainTab.getConfigureIcon())) {
-                ImageDisplayUtils imageDisplayUtils = new ImageDisplayUtils(R.drawable.icon_empty_icon);
-                imageDisplayUtils.displayImage(tabImg, mainTab.getConfigureIcon());
+                ImageDisplayUtils.getInstance().displayImage(tabImg, mainTab.getConfigureIcon(), R.drawable.ic_app_default);
             } else {
                 tabImg.setImageResource(mainTab.getResIcon());
             }

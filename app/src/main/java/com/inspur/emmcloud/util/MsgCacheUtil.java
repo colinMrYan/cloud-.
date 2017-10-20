@@ -49,14 +49,9 @@ public class MsgCacheUtil {
 
             DbCacheUtils.getDb(context).saveOrUpdate(msgList);
             MatheSet matheSet = new MatheSet();
-            if (StringUtils.isBlank(targetMsgId)) {
-                matheSet.setStart(msgList.get(0).getMid());
-                matheSet.setEnd(msgList.get(msgList.size() - 1)
-                        .getMid());
-            } else {
-                matheSet.setStart(msgList.get(0).getMid());
-                matheSet.setEnd(targetMsgId);
-            }
+            matheSet.setStart(msgList.get(0).getMid());
+            matheSet.setEnd(StringUtils.isBlank(targetMsgId)?msgList.get(msgList.size() - 1)
+                    .getMid():targetMsgId);
             MsgMatheSetCacheUtils.add(context, msgList.get(0).getCid(),
                     matheSet);
         } catch (Exception e) {

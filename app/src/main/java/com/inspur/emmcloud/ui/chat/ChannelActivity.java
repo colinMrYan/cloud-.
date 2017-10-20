@@ -57,7 +57,6 @@ import com.inspur.emmcloud.util.DirectChannelUtils;
 import com.inspur.emmcloud.util.ImageDisplayUtils;
 import com.inspur.emmcloud.util.IntentUtils;
 import com.inspur.emmcloud.util.JSONUtils;
-import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.MsgCacheUtil;
 import com.inspur.emmcloud.util.MsgReadIDCacheUtils;
 import com.inspur.emmcloud.util.MsgRecourceUploadUtils;
@@ -222,9 +221,9 @@ public class ChannelActivity extends BaseActivity {
             }
 
             @Override
-            public void onSendMsg(String content, List<String> mentionsUidList,List<String> urlList) {
+            public void onSendMsg(String content, List<String> mentionsUidList, List<String> urlList) {
                 // TODO Auto-generated method stub
-                sendTextMessage(content, mentionsUidList,urlList);
+                sendTextMessage(content, mentionsUidList, urlList);
             }
         });
         if ((channel != null) && channel.getInputs().equals("0")) {
@@ -290,7 +289,6 @@ public class ChannelActivity extends BaseActivity {
                     swipeRefreshLayout.setRefreshing(false);
                     adapter.notifyDataSetChanged();
                     msgListView.setSelection(historyMsgList.size() - 1);
-                    //ListViewUtils.setSelection(msgListView, historyMsgList.size() - 1);
                 } else {
                     getNewsMsg();
                 }
@@ -302,14 +300,14 @@ public class ChannelActivity extends BaseActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
-                Bundle bundle = new Bundle();
                 Msg msg = msgList.get(position);
-                String msgType = msg.getType();
-                String mid = "";
                 //当消息处于发送中状态时无法点击
                 if (msg.getSendStatus() != 1) {
                     return;
                 }
+                String msgType = msg.getType();
+                String mid = "";
+                Bundle bundle = new Bundle();
                 if (msgType.equals("res_file")) {
                     mid = msg.getMid();
                     bundle.putString("mid", mid);
@@ -321,8 +319,6 @@ public class ChannelActivity extends BaseActivity {
                     mid = msg.getCommentMid();
                     bundle.putString("mid", mid);
                     bundle.putString("cid", msg.getCid());
-                    LogUtils.jasonDebug("orimid0=" + msg.getMid());
-                    LogUtils.jasonDebug("mid0=" + mid);
                     IntentUtils.startActivity(ChannelActivity.this,
                             ChannelMsgDetailActivity.class, bundle);
                 } else if (msgType.equals("res_link")) {
@@ -415,8 +411,8 @@ public class ChannelActivity extends BaseActivity {
                 String result = data.getStringExtra("searchResult");
                 String uid = JSONUtils.getString(result, "uid", null);
                 String name = JSONUtils.getString(result, "name", null);
-                boolean isInputKeyWord = data.getBooleanExtra("isInputKeyWord",false);
-                chatInputMenu.addMentions(uid,name,isInputKeyWord);
+                boolean isInputKeyWord = data.getBooleanExtra("isInputKeyWord", false);
+                chatInputMenu.addMentions(uid, name, isInputKeyWord);
             }
         } else {
             // 图库选择图片返回
@@ -606,7 +602,7 @@ public class ChannelActivity extends BaseActivity {
     /**
      * 点击发送按钮后发送消息的逻辑
      */
-    private void sendTextMessage(String content, List<String> mentionsUidList,List<String> urlList) {
+    private void sendTextMessage(String content, List<String> mentionsUidList, List<String> urlList) {
         JSONObject richTextObj = new JSONObject();
         JSONArray mentionArray = JSONUtils.toJSONArray(mentionsUidList);
         JSONArray urlArray = JSONUtils.toJSONArray(urlList);
@@ -812,7 +808,9 @@ public class ChannelActivity extends BaseActivity {
             // TODO Auto-generated method stub
             TextView senderNameText = (TextView) convertView
                     .findViewById(R.id.sender_name_text);
-            if (channel.getType().equals("GROUP") && !isMyMsg(msg)) {
+            boolean isMyMsg = msg.getUid().equals(
+                    ((MyApplication) getApplicationContext()).getUid());
+            if (channel.getType().equals("GROUP") && !isMyMsg) {
                 senderNameText.setVisibility(View.VISIBLE);
                 senderNameText.setText(msg.getTitle());
             } else {
@@ -841,8 +839,8 @@ public class ChannelActivity extends BaseActivity {
                             .getRobotById(ChannelActivity.this, msg.getUid())
                             .getAvatar());
                 }
-                new ImageDisplayUtils(R.drawable.icon_person_default).displayImage(senderPhotoImg,
-                        iconUrl);
+                ImageDisplayUtils.getInstance().displayImage(senderPhotoImg,
+                        iconUrl, R.drawable.icon_person_default);
                 senderPhotoImg.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -863,7 +861,7 @@ public class ChannelActivity extends BaseActivity {
                     @Override
                     public boolean onLongClick(View v) {
                         if (channel.getType().equals("GROUP")) {
-                            chatInputMenu.addMentions(msg.getUid(),msg.getTitle(),false);
+                            chatInputMenu.addMentions(msg.getUid(), msg.getTitle(), false);
                         }
                         return true;
                     }
@@ -887,17 +885,6 @@ public class ChannelActivity extends BaseActivity {
             return msgList.size();
         }
     };
-
-    /**
-     * 判断是否自己的消息
-     *
-     * @param msg
-     * @return
-     */
-    private boolean isMyMsg(Msg msg) {
-        String uid = ((MyApplication) getApplication()).getUid();
-        return msg.getUid().equals(uid);
-    }
 
     /**
      * 通知message页将本频道消息置为已读
@@ -924,6 +911,7 @@ public class ChannelActivity extends BaseActivity {
 
     @Override
     protected void onDestroy() {
+        super.onDestroy();
         if (handler != null) {
             handler = null;
         }
@@ -933,7 +921,6 @@ public class ChannelActivity extends BaseActivity {
         if (refreshNameReceiver != null) {
             unregisterReceiver(refreshNameReceiver);
         }
-        super.onDestroy();
     }
 
 

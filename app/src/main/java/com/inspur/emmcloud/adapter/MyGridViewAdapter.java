@@ -1,12 +1,5 @@
 package com.inspur.emmcloud.adapter;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.bean.Attachment;
-import com.inspur.emmcloud.util.ImageDisplayUtils;
-
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +7,13 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.bean.Attachment;
+import com.inspur.emmcloud.util.ImageDisplayUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 废弃
@@ -25,12 +25,9 @@ public class MyGridViewAdapter extends BaseAdapter {
 	private Context context;
 	private List<Attachment> mLists;
 	public static final int PAGE_SIZE = 4; // 每一屏幕显示4个
-	private ImageDisplayUtils imageDisplayUtils;
 	public MyGridViewAdapter(Context context, List<Attachment> attachments, int page) {
 		this.context = context;
-		
-		imageDisplayUtils = new ImageDisplayUtils(R.drawable.icon_photo_default);
-		mLists = new ArrayList<Attachment>();
+		mLists = new ArrayList<>();
 		int i = page *PAGE_SIZE;
 		int end = i +PAGE_SIZE;
 		while ((i < attachments.size()) && (i < end)) {
@@ -75,26 +72,26 @@ public class MyGridViewAdapter extends BaseAdapter {
 		
 		if(position < mLists.size()){
 			if(mLists.get(position).getType().equals("JPEG")){
-				imageDisplayUtils.displayImage(_Holder.btn_gv_item, "drawable://"
-						+ R.drawable.icon_file_photos);
+				ImageDisplayUtils.getInstance().displayImage(_Holder.btn_gv_item, "drawable://"
+						+ R.drawable.icon_file_photos,R.drawable.icon_photo_default);
 			}else if (mLists.get(position).getType().equals("MS_WORD")) {
-				imageDisplayUtils.displayImage(_Holder.btn_gv_item, "drawable://"
-						+ R.drawable.icon_file_word);
+				ImageDisplayUtils.getInstance().displayImage(_Holder.btn_gv_item, "drawable://"
+						+ R.drawable.icon_file_word,R.drawable.icon_photo_default);
 			}else if (mLists.get(position).getType().equals("MS_EXCEL")) {
-				imageDisplayUtils.displayImage(_Holder.btn_gv_item, "drawable://"
-						+ R.drawable.icon_file_excel);
+				ImageDisplayUtils.getInstance().displayImage(_Holder.btn_gv_item, "drawable://"
+						+ R.drawable.icon_file_excel,R.drawable.icon_photo_default);
 			}else if (mLists.get(position).getType().equals("MS_PPT")) {
-				imageDisplayUtils.displayImage(_Holder.btn_gv_item, "drawable://"
-						+ R.drawable.icon_file_ppt);
+				ImageDisplayUtils.getInstance().displayImage(_Holder.btn_gv_item, "drawable://"
+						+ R.drawable.icon_file_ppt,R.drawable.icon_photo_default);
 			}else if (mLists.get(position).getType().equals("TEXT")) {
-				imageDisplayUtils.displayImage(_Holder.btn_gv_item, "drawable://"
-						+ R.drawable.icon_file_word);
+				ImageDisplayUtils.getInstance().displayImage(_Holder.btn_gv_item, "drawable://"
+						+ R.drawable.icon_file_word,R.drawable.icon_photo_default);
 			}	
 			_Holder.textView.setText(mLists.get(position).getName());
 		}else {
-			
-				imageDisplayUtils.displayImage(_Holder.btn_gv_item, "drawable://"
-						+ R.drawable.icon_member_add);
+
+			ImageDisplayUtils.getInstance().displayImage(_Holder.btn_gv_item, "drawable://"
+						+ R.drawable.icon_member_add,R.drawable.icon_photo_default);
 				_Holder.textView.setText(context.getString(R.string.add));
 				
 		}
