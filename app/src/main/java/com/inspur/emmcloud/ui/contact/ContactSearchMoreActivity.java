@@ -24,7 +24,6 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.BaseActivity;
-import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.Channel;
 import com.inspur.emmcloud.bean.ChannelGroup;
@@ -499,7 +498,7 @@ public class ContactSearchMoreActivity extends BaseActivity implements OnRefresh
 					UriUtils.tanent + searchModel.getId() + "_100.png1");
 			if (file.exists()) {
 				icon = "file://" + file.getAbsolutePath();
-				new ImageDisplayUtils().displayImageNoCache(photoImg, icon, defaultIcon);
+				ImageDisplayUtils.getInstance().displayImageNoCache(photoImg, icon, defaultIcon);
 				return;
 			}
 		} else if (type.equals("STRUCT")) {
@@ -511,8 +510,8 @@ public class ContactSearchMoreActivity extends BaseActivity implements OnRefresh
 			}
 
 		}
-		new ImageDisplayUtils(defaultIcon).displayImage(
-				photoImg, icon);
+		ImageDisplayUtils.getInstance().displayImage(
+				photoImg, icon,defaultIcon);
 
 
 	}

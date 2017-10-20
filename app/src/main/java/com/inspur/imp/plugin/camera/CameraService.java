@@ -1,19 +1,5 @@
 package com.inspur.imp.plugin.camera;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.Date;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Intent;
@@ -24,7 +10,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
 import android.net.Uri;
-import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Base64;
@@ -39,6 +24,20 @@ import com.inspur.imp.plugin.camera.imagepicker.ImagePicker;
 import com.inspur.imp.plugin.camera.imagepicker.bean.ImageItem;
 import com.inspur.imp.plugin.camera.imagepicker.ui.ImageGridActivity;
 import com.inspur.imp.plugin.camera.imagepicker.view.CropImageView;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * 进入相册选择图片进行上传
@@ -209,7 +208,7 @@ public class CameraService extends ImpPlugin {
 	 */
 	private void initImagePicker() {
 		ImagePicker imagePicker = ImagePicker.getInstance();
-		imagePicker.setImageLoader(new ImageDisplayUtils()); // 设置图片加载器
+		imagePicker.setImageLoader(ImageDisplayUtils.getInstance()); // 设置图片加载器
 		imagePicker.setShowCamera(false); // 显示拍照按钮
 		imagePicker.setCrop(false); // 允许裁剪（单选才有效）
 		imagePicker.setSaveRectangle(true); // 是否按矩形区域保存

@@ -27,8 +27,6 @@ import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 
-import org.greenrobot.eventbus.EventBus;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,15 +40,14 @@ public class AppDetailActivity extends BaseActivity {
     private ImageView appIconImg;
     private Button statusBtn;
     private RecyclerView intrImgListView;
-    private ImageDisplayUtils imageDisplayUtils;
     private LoadingDialog loadingDlg;
     private MyAppAPIService apiService;
     private App app;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_app_detail);
-        imageDisplayUtils = new ImageDisplayUtils(R.drawable.icon_empty_icon);
         loadingDlg = new LoadingDialog(AppDetailActivity.this);
         app = ((App) getIntent().getExtras().getSerializable("app"));
         apiService = new MyAppAPIService(this);
@@ -61,7 +58,7 @@ public class AppDetailActivity extends BaseActivity {
 
     private void initView() {
         appIconImg = (ImageView) findViewById(R.id.app_icon_img);
-        imageDisplayUtils.displayImage(appIconImg, app.getAppIcon());
+        ImageDisplayUtils.getInstance().displayImage(appIconImg, app.getAppIcon(), R.drawable.ic_app_default);
         statusBtn = (Button) findViewById(R.id.app_status_btn);
         intrImgListView = (RecyclerView) findViewById(R.id.intr_app_img_list);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(AppDetailActivity.this);
@@ -73,8 +70,8 @@ public class AppDetailActivity extends BaseActivity {
             public void onAppDetailImageItemClick(View view, int position) {
                 Intent intent = new Intent();
                 intent.setClass(getApplicationContext(), ImagePagerActivity.class);
-                intent.putExtra(ImagePagerActivity.EXTRA_IMAGE_INDEX,position);
-                intent.putExtra(ImagePagerActivity.EXTRA_IMAGE_URLS,(ArrayList<String>) app.getLegendList());
+                intent.putExtra(ImagePagerActivity.EXTRA_IMAGE_INDEX, position);
+                intent.putExtra(ImagePagerActivity.EXTRA_IMAGE_URLS, (ArrayList<String>) app.getLegendList());
                 startActivity(intent);
             }
         });
@@ -95,11 +92,9 @@ public class AppDetailActivity extends BaseActivity {
         private LayoutInflater inflater;
         private OnAppDetailImageItemClickListener onAppDetailImageItemClickListener;
         private List<String> legendList;
-        private ImageDisplayUtils imageDisplayUtils;
 
         public AppDetailImageAdapter(Context context, List<String> legendList) {
             inflater = LayoutInflater.from(context);
-            imageDisplayUtils = new ImageDisplayUtils();
             this.legendList = legendList;
         }
 
@@ -113,7 +108,7 @@ public class AppDetailActivity extends BaseActivity {
 
         @Override
         public void onBindViewHolder(final AppDetailImageViewHolder holder, final int position) {
-            imageDisplayUtils.displayImage(holder.appDetailImg, legendList.get(position));
+            ImageDisplayUtils.getInstance().displayImage(holder.appDetailImg, legendList.get(position), R.drawable.ic_app_default);
             if (onAppDetailImageItemClickListener != null) {
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -135,6 +130,7 @@ public class AppDetailActivity extends BaseActivity {
 
         public class AppDetailImageViewHolder extends RecyclerView.ViewHolder {
             ImageView appDetailImg;
+
             public AppDetailImageViewHolder(View itemView) {
                 super(itemView);
             }
@@ -171,7 +167,6 @@ public class AppDetailActivity extends BaseActivity {
         if (app.getUseStatus() == 0) {
             addApp(statusBtn, app.getAppID());
         } else if (app.getUseStatus() == 1) {
-            EventBus.getDefault().post(app);
             if (app.getAppType() == 2) {
                 new AppCenterNativeAppUtils().InstallOrOpen(AppDetailActivity.this, app);
             } else {

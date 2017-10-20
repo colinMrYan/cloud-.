@@ -61,6 +61,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.inspur.emmcloud.util.UriUtils.getChannelImgUri;
+
 /**
  * 消息详情页面
  *
@@ -71,7 +73,6 @@ public class ChannelMsgDetailActivity extends BaseActivity implements
 
     private static final int RESULT_MENTIONS = 5;
     private ScrollViewWithListView commentListView;
-    private ImageDisplayUtils imageDisplayUtils;
     private Msg msg;
     private ChatAPIService apiService;
     private List<Comment> commentList;
@@ -106,7 +107,6 @@ public class ChannelMsgDetailActivity extends BaseActivity implements
         apiService = new ChatAPIService(this);
         apiService.setAPIInterface(new WebService());
         commentList = new ArrayList<Comment>();
-        imageDisplayUtils = new ImageDisplayUtils(R.drawable.icon_photo_default);
         commentScrollView = (PullableScrollView) findViewById(R.id.xscrollview);
         inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
         View msgDetailLayout = inflater.inflate(R.layout.msg_parent_detail,
@@ -156,9 +156,9 @@ public class ChannelMsgDetailActivity extends BaseActivity implements
             }
 
             @Override
-            public void onSendMsg(String content, List<String> mentionsUidList,List<String> urlList) {
+            public void onSendMsg(String content, List<String> mentionsUidList, List<String> urlList) {
                 // TODO Auto-generated method stub
-                sendComment(content, mentionsUidList,urlList);
+                sendComment(content, mentionsUidList, urlList);
             }
         });
     }
@@ -243,10 +243,10 @@ public class ChannelMsgDetailActivity extends BaseActivity implements
      */
     private void displayImage(String fileName) {
         if (msg.getType().equals("res_image")) {
-            imageDisplayUtils.displayImage(msgContentImg,
-                    UriUtils.getPreviewUri(fileName));
+            ImageDisplayUtils.getInstance().displayImage(msgContentImg,
+                    UriUtils.getPreviewUri(fileName), R.drawable.icon_photo_default);
         } else {
-            displayFileIcon(fileName);
+            ImageDisplayUtils.getInstance().displayImage(msgContentImg, "drawable://" + FileUtils.getIconResId(fileName));
         }
     }
 
@@ -280,55 +280,19 @@ public class ChannelMsgDetailActivity extends BaseActivity implements
     }
 
     /**
-     * 展示文件Icon
-     */
-    private void displayFileIcon(String fileName) {
-        if (fileName.startsWith("file")) {
-            imageDisplayUtils.displayImage(msgContentImg, fileName);
-        } else if (fileName.endsWith("pdf")) {
-            imageDisplayUtils.displayImage(msgContentImg, "drawable://"
-                    + R.drawable.icon_file_pdf);
-        } else if (fileName.endsWith("doc") || fileName.endsWith("docx")) {
-            imageDisplayUtils.displayImage(msgContentImg, "drawable://"
-                    + R.drawable.icon_file_word);
-        } else if (fileName.endsWith("xls")) {
-            imageDisplayUtils.displayImage(msgContentImg, "drawable://"
-                    + R.drawable.icon_file_excel);
-        } else if (fileName.endsWith("ppt")) {
-            imageDisplayUtils.displayImage(msgContentImg, "drawable://"
-                    + R.drawable.icon_file_ppt);
-        } else if (fileName.endsWith("rar")) {
-            imageDisplayUtils.displayImage(msgContentImg, "drawable://"
-                    + R.drawable.icon_file_rar);
-        } else if (fileName.endsWith("zip")) {
-            imageDisplayUtils.displayImage(msgContentImg, "drawable://"
-                    + R.drawable.icon_file_zip);
-        } else if (fileName.contains("txt")) {
-            imageDisplayUtils.displayImage(msgContentImg, "drawable://"
-                    + R.drawable.icon_txt);
-        } else if (fileName.endsWith("jpeg") || fileName.endsWith("jpg")
-                || fileName.endsWith("png")) {
-            imageDisplayUtils.displayImage(msgContentImg, "drawable://"
-                    + R.drawable.icon_file_photos);
-        } else {
-            imageDisplayUtils.displayImage(msgContentImg, fileName);
-        }
-    }
-
-    /**
      * 展示通用的部分
      */
     private void disPlayCommonInfo() {
         //机器人进群修改处
+        String iconUrl = "";
         if (msg.getUid().startsWith("BOT")) {
-            String iconUrl = UriUtils.getRobotIconUri(RobotCacheUtils
+            iconUrl = UriUtils.getRobotIconUri(RobotCacheUtils
                     .getRobotById(ChannelMsgDetailActivity.this, msg.getUid())
                     .getAvatar());
-            imageDisplayUtils.displayImage(senderHeadImg, iconUrl);
         } else {
-            imageDisplayUtils.displayImage(senderHeadImg,
-                    UriUtils.getChannelImgUri(ChannelMsgDetailActivity.this, msg.getUid()));
+            iconUrl = UriUtils.getChannelImgUri(ChannelMsgDetailActivity.this, msg.getUid());
         }
+        ImageDisplayUtils.getInstance().displayImage(senderHeadImg, iconUrl, R.drawable.icon_photo_default);
         senderHeadImg.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -386,10 +350,10 @@ public class ChannelMsgDetailActivity extends BaseActivity implements
     /**
      * 发出评论
      */
-    private void sendComment(String commentContent, List<String> mentionsUidList,List<String> urlList) {
+    private void sendComment(String commentContent, List<String> mentionsUidList, List<String> urlList) {
 
         if (NetUtils.isNetworkConnected(getApplicationContext())) {
-            String commentConbineResult = getConbineComment(commentContent, mentionsUidList,urlList);
+            String commentConbineResult = getConbineComment(commentContent, mentionsUidList, urlList);
             apiService.sendMsg(cid, commentConbineResult, "txt_comment",
                     msg.getMid(), "");
             Comment newComment = combineComment(commentConbineResult);
@@ -478,16 +442,16 @@ public class ChannelMsgDetailActivity extends BaseActivity implements
             sendTimeText.setText(time);
 
             //机器人进群修改处
-            ImageDisplayUtils imageDisplayUtils = new ImageDisplayUtils(R.drawable.icon_person_default);
+            String iconUrl = "";
             if (comment.getUid().startsWith("BOT")) {
-                String iconUrl = UriUtils.getRobotIconUri(RobotCacheUtils
+                iconUrl = UriUtils.getRobotIconUri(RobotCacheUtils
                         .getRobotById(ChannelMsgDetailActivity.this, comment.getUid())
                         .getAvatar());
-                imageDisplayUtils.displayImage(photoImg, iconUrl);
             } else {
-                imageDisplayUtils.displayImage(photoImg,
-                        UriUtils.getChannelImgUri(ChannelMsgDetailActivity.this, comment.getUid()));
+                iconUrl =
+                        getChannelImgUri(ChannelMsgDetailActivity.this, comment.getUid());
             }
+            ImageDisplayUtils.getInstance().displayImage(photoImg, iconUrl, R.drawable.icon_person_default);
             photoImg.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -530,7 +494,7 @@ public class ChannelMsgDetailActivity extends BaseActivity implements
     }
 
 
-    public String getConbineComment(String content, List<String> mentionsUidList,List<String> urlList) {
+    public String getConbineComment(String content, List<String> mentionsUidList, List<String> urlList) {
         JSONObject richTextObj = new JSONObject();
         JSONArray mentionArray = JSONUtils.toJSONArray(mentionsUidList);
         JSONArray urlArray = JSONUtils.toJSONArray(urlList);

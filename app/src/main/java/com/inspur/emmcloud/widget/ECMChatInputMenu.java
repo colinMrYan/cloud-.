@@ -117,10 +117,10 @@ public class ECMChatInputMenu extends LinearLayout {
             public void onClick(View v) {
                 // TODO Auto-generated method stub
                 if (NetUtils.isNetworkConnected(context)) {
-                    List<String> urlList =  getContentUrlList(inputEdit.getText().toString());
+                    List<String> urlList = getContentUrlList(inputEdit.getText().toString());
                     String content = inputEdit.getRichContent();
                     List<String> mentionsUidList = getContentMentionUidList();
-                    chatInputMenuListener.onSendMsg(content, mentionsUidList,urlList);
+                    chatInputMenuListener.onSendMsg(content, mentionsUidList, urlList);
                     inputEdit.setText("");
                 }
             }
@@ -150,24 +150,26 @@ public class ECMChatInputMenu extends LinearLayout {
 
     /**
      * 获取mentions Uid List
+     *
      * @return
      */
-    private List<String> getContentMentionUidList(){
+    private List<String> getContentMentionUidList() {
         List<String> mentionsUidList = new ArrayList<>();
         List<InsertModel> insertModelList = inputEdit.getRichInsertList();
         for (int i = 0; i < insertModelList.size(); i++) {
             InsertModel insertModel = insertModelList.get(i);
             mentionsUidList.add(insertModel.getInsertId());
         }
-        return  mentionsUidList;
+        return mentionsUidList;
     }
 
     /**
      * 获取content中urlList
+     *
      * @param content
      * @return
      */
-    private List<String> getContentUrlList(String content){
+    private List<String> getContentUrlList(String content) {
         Pattern pattern = Pattern.compile(Constant.PATTERN_URL);
         ArrayList<String> urlList = new ArrayList<>();
         Matcher matcher = pattern.matcher(content);
@@ -354,7 +356,7 @@ public class ECMChatInputMenu extends LinearLayout {
      */
     private void initImagePicker() {
         ImagePicker imagePicker = ImagePicker.getInstance();
-        imagePicker.setImageLoader(new ImageDisplayUtils()); // 设置图片加载器
+        imagePicker.setImageLoader(ImageDisplayUtils.getInstance()); // 设置图片加载器
         imagePicker.setShowCamera(false); // 显示拍照按钮
         imagePicker.setCrop(false); // 允许裁剪（单选才有效）
         imagePicker.setSelectLimit(5);
@@ -420,7 +422,7 @@ public class ECMChatInputMenu extends LinearLayout {
     public interface ChatInputMenuListener {
         void onSetContentViewHeight(boolean isLock);
 
-        void onSendMsg(String content, List<String> mentionsUidList,List<String> urlList);
+        void onSendMsg(String content, List<String> mentionsUidList, List<String> urlList);
 
     }
 

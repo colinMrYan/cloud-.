@@ -84,9 +84,7 @@ public class MessionDetailActivity extends BaseActivity {
 	private int segmentIndex = 1;
 	private TextView messionEndTime;
 	private TextView messionStatus;
-//	private ImageView typeImg;// 一个默认的类别图片
 	private TextView memberText;
-	private ImageDisplayUtils imageDisplayUtils;
 	private List<SearchModel> selectMemList = new ArrayList<SearchModel>();
 	private List<SearchModel> addMemList = new ArrayList<SearchModel>();
 	private List<SearchModel> deleteMemList = new ArrayList<SearchModel>();
@@ -130,7 +128,6 @@ public class MessionDetailActivity extends BaseActivity {
 		handleTags();
 		handleManager();
 		handleDeadline();
-		imageDisplayUtils = new ImageDisplayUtils(R.drawable.icon_default_photo);
 	}
 
 	/**
@@ -601,8 +598,8 @@ public class MessionDetailActivity extends BaseActivity {
 				displayAttachments(position, holder.attachmentImg);
 				holder.textView.setText(attachments.get(position).getName());
 			} else if (position == attachments.size()) {
-				imageDisplayUtils.displayImage(holder.attachmentImg, "drawable://"
-						+ R.drawable.icon_member_add);
+				ImageDisplayUtils.getInstance().displayImage(holder.attachmentImg, "drawable://"
+						+ R.drawable.icon_member_add,R.drawable.icon_default_photo);
 				holder.textView.setText(getString(R.string.add));
 			}
 			return convertView;
@@ -642,7 +639,7 @@ public class MessionDetailActivity extends BaseActivity {
 		} else {
 			displayImg = displayImg + R.drawable.icon_file_unknown;
 		}
-		imageDisplayUtils.displayImage(attachmentImg, displayImg);
+		ImageDisplayUtils.getInstance().displayImage(attachmentImg, displayImg,R.drawable.icon_default_photo);
 	}
 
 	private static class Holder {

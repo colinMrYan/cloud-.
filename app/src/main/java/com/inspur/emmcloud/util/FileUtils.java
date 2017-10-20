@@ -9,8 +9,6 @@ import android.webkit.MimeTypeMap;
 
 import com.inspur.emmcloud.R;
 
-import org.xutils.common.util.LogUtil;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -690,7 +688,7 @@ public class FileUtils {
      * @param fileSize
      * @return
      */
-    public static String formatFileSize(String fileSize){
+    public static String formatFileSize(String fileSize) {
         long size = Long.parseLong(fileSize);
         return formatFileSize(size);
     }
@@ -831,6 +829,31 @@ public class FileUtils {
         return isOk;
     }
 
+    /**
+     * 获取文件标识图片
+     * @param fileName
+     */
+    public static int getIconResId(String fileName) {
+        int imageIconId = R.drawable.icon_file_unknown;
+        if (fileName.endsWith("doc") || fileName.endsWith("docx")) {
+            imageIconId = R.drawable.icon_file_word;
+        } else if (fileName.endsWith("xls") || fileName.endsWith("xlsx")) {
+            imageIconId = R.drawable.icon_file_excel;
+        } else if (fileName.endsWith("ppt") || fileName.endsWith("pptx")) {
+            imageIconId = R.drawable.icon_file_ppt;
+        } else if (fileName.endsWith("pdf")) {
+            imageIconId = R.drawable.icon_file_pdf;
+        } else if (fileName.endsWith("txt")) {
+            imageIconId = R.drawable.icon_txt;
+        } else if (fileName.endsWith("zip")) {
+            imageIconId = R.drawable.icon_file_zip;
+        } else if (fileName.endsWith("rar")) {
+            imageIconId = R.drawable.icon_file_rar;
+        } else if (fileName.contains("jpg") || fileName.contains("png")) {
+            imageIconId = R.drawable.icon_file_photos;
+        }
+        return imageIconId;
+    }
     /**
      * 传入目录名称，忽略删除的文件名
      * 返回成功删除的文件名列表

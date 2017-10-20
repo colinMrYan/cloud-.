@@ -862,7 +862,7 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
                 holder = (ViewHolder) convertView.getTag();
             }
             Channel channel = dataList.get(position);
-            setChannelIcon(channel, holder.channelPhotoImg, position);
+            setChannelIcon(channel, holder.channelPhotoImg);
             setChannelMsgReadStateUI(channel, holder);
             holder.channelTitleText.setText(channel.getDisplayTitle());
             holder.dndImg.setVisibility(channel.getDnd() ? View.VISIBLE : View.GONE);
@@ -876,7 +876,7 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
          *
          * @param channel
          */
-        private void setChannelIcon(Channel channel, CircleImageView channelPhotoImg, int position) {
+        private void setChannelIcon(Channel channel, CircleImageView channelPhotoImg) {
             // TODO Auto-generated method stub
             Integer defaultIcon = R.drawable.icon_channel_group_default; // 默认显示图标
             String iconUrl = channel.getIcon();// Channel头像的uri
@@ -885,7 +885,7 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
                         UriUtils.tanent + channel.getCid() + "_100.png1");
                 if (file.exists()) {
                     iconUrl = "file://" + file.getAbsolutePath();
-                    new ImageDisplayUtils().displayImageNoCache(channelPhotoImg, iconUrl, defaultIcon);
+                    ImageDisplayUtils.getInstance().displayImageNoCache(channelPhotoImg, iconUrl, defaultIcon);
                     return;
                 }
             } else if (channel.getType().equals("DIRECT")) {
@@ -896,7 +896,7 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
                 defaultIcon = R.drawable.icon_person_default;
                 iconUrl = DirectChannelUtils.getRobotIcon(getActivity(), channel.getTitle());
             }
-            new ImageDisplayUtils(defaultIcon).displayImageByTag(
+            ImageDisplayUtils.getInstance().displayImageByTag(
                     channelPhotoImg, iconUrl, defaultIcon);
 
 

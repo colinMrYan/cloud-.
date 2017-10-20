@@ -12,7 +12,7 @@
         android:layout_width="45dp"
         android:layout_height="45dp"
         android:layout_centerHorizontal="true"
-        android:src="@drawable/icon_empty_icon" />
+        android:src="@drawable/ic_app_default" />
 
     <TextView
         android:id="@+id/name_text"

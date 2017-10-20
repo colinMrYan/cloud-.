@@ -28,12 +28,10 @@ public class NewsListAdapter extends BaseAdapter {
 
     private Context context;
     private List<GroupNews> groupNewsList;
-    private ImageDisplayUtils imageDisplayUtils;
 
     public NewsListAdapter(Context context, List<GroupNews> groupNewsList) {
         this.context = context;
         this.groupNewsList = groupNewsList;
-        imageDisplayUtils = new ImageDisplayUtils(R.drawable.ic_app_news_default_icon);
     }
 
     @Override
@@ -66,7 +64,7 @@ public class NewsListAdapter extends BaseAdapter {
             holder = (NewsHolder) convertView.getTag();
         }
         String uri = handlePoster(position);
-        imageDisplayUtils.displayImage(holder.imageView, uri);
+        ImageDisplayUtils.getInstance().displayImage(holder.imageView, uri, R.drawable.ic_app_news_default_icon);
         if (groupNewsList.get(position).isImportant()) {
             holder.title.setTextColor(Color.RED);
             holder.title.setText(groupNewsList.get(position).getTitle());
