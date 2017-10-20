@@ -8,8 +8,6 @@ import com.inspur.emmcloud.ui.find.ScanResultActivity;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.imp.api.ImpActivity;
 
-import java.util.regex.Pattern;
-
 /**
  * Created by yufuchang on 2017/7/21.
  * 封装扫描处理模块，用来处理扫一扫功能
@@ -54,9 +52,7 @@ public class ScanQrCodeUtils {
 //            e.printStackTrace();
 //        }
 //        ToastUtils.show(context,msg);
-        Pattern pattern = Pattern.compile(URLMatcher.URL_PATTERN);
         msg = msg.trim();
-//        pattern.matcher(msg).matches();//原来验证是否符合URL的规则
         if (isMatchCloudPlusProtrol(msg)) {
             Uri uri = Uri.parse(msg);
             Intent intent = new Intent(Intent.ACTION_VIEW, uri);
