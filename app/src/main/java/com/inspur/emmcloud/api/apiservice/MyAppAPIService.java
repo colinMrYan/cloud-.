@@ -13,6 +13,7 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.api.APICallback;
 import com.inspur.emmcloud.api.APIInterface;
 import com.inspur.emmcloud.api.APIUri;
+import com.inspur.emmcloud.bean.App;
 import com.inspur.emmcloud.bean.AppRedirectResult;
 import com.inspur.emmcloud.bean.GetAddAppResult;
 import com.inspur.emmcloud.bean.GetAllAppResult;
@@ -468,6 +469,41 @@ public class MyAppAPIService {
                     @Override
                     public void reExecute() {
                         getAuthCode(urlParams);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                }, context).refreshToken(completeUrl);
+            }
+        });
+    }
+
+    /**
+     * 根据应用id获取应用的详细信息
+     * @param appId
+     */
+    public void getAppInfo(final String appId){
+        final String completeUrl = APIUri.getAppInfo() +"?appID="+appId;
+        RequestParams params = ((MyApplication)context.getApplicationContext()).getHttpRequestParams(completeUrl);
+        x.http().get(params, new APICallback(context,completeUrl) {
+            @Override
+            public void callbackSuccess(String arg0) {
+                apiInterface.returnAppInfoSuccess(new App(arg0));
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                apiInterface.returnAppInfoFail(error,responseCode);
+            }
+
+            @Override
+            public void callbackTokenExpire() {
+                new OauthUtils(new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        getAppInfo(appId);
                     }
 
                     @Override
