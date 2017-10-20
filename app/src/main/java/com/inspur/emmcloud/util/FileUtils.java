@@ -2,11 +2,14 @@ package com.inspur.emmcloud.util;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.AssetManager;
 import android.net.Uri;
 import android.text.TextUtils;
 import android.webkit.MimeTypeMap;
 
 import com.inspur.emmcloud.R;
+
+import org.xutils.common.util.LogUtil;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -855,5 +858,24 @@ public class FileUtils {
         return delSuccessFileNameList;
     }
 
+    /** 
+      * 判断assets文件夹下的文件是否存在 
+      * 
+      * @return false 不存在    true 存在 
+      */
+    public static boolean isAssetsFileExist(Context context,String fileName){
+        AssetManager assetManager = context.getAssets();
+        try {
+            String[] fileNames = assetManager.list("");
+            for(int i = 0; i < fileNames.length; i++){
+                if(fileNames[i].equals(fileName.trim())){
+                    return true;
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 
 }

@@ -29,7 +29,7 @@ import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.util.AppExceptionCacheUtils;
 import com.inspur.emmcloud.util.AppUtils;
 import com.inspur.emmcloud.util.ClientIDUtils;
-import com.inspur.emmcloud.util.LogUtils;
+import com.inspur.emmcloud.util.FileUtils;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
@@ -38,6 +38,7 @@ import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.ToastUtils;
 import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
+import com.inspur.emmcloud.util.ZipUtils;
 import com.inspur.emmcloud.widget.dialogs.ECMCustomIOSDialog;
 import com.inspur.reactnative.AuthorizationManagerPackage;
 import com.inspur.reactnative.ReactNativeFlow;
@@ -89,6 +90,7 @@ public class ReactNativeAppActivity extends BaseActivity implements DefaultHardw
         if (StringUtils.isBlank(token)) {
             ToastUtils.show(ReactNativeAppActivity.this, ReactNativeAppActivity.this.getString(R.string.authorization_expired));
             ((MyApplication) getApplicationContext()).signout();
+            return;
         }
     }
 
@@ -98,12 +100,9 @@ public class ReactNativeAppActivity extends BaseActivity implements DefaultHardw
      * 2，从其他Activity跳转而来以extras传来
      */
     private void checkSource() {
-        String scheme = getIntent().getDataString();
-        if (scheme != null) {
-            //从网页，消息，快捷方式等唤起应用时从这里获取协议和应用编号
-            scheme = getIntent().getDataString();//'ecc-app-react-native: //1000'
-            reactNativeAppScheme = scheme;
-        } else if (getIntent().hasExtra("ecc-app-react-native")) {
+        //从网页，消息，快捷方式等唤起应用时从这里获取协议和应用编号
+        reactNativeAppScheme = getIntent().getDataString();
+        if (reactNativeAppScheme == null && getIntent().hasExtra("ecc-app-react-native")) {
             //从其他Activity启动时从这启动
             reactNativeAppScheme = getIntent().getStringExtra("ecc-app-react-native");
         } else {
@@ -126,15 +125,15 @@ public class ReactNativeAppActivity extends BaseActivity implements DefaultHardw
         appModule = ReactNativeFlow.getAppModuleFromScheme(reactNativeAppScheme);
         reactAppFilePath = MyAppConfig.getReactAppFilePath(ReactNativeAppActivity.this,
                 ((MyApplication) getApplication()).getUid(), appModule);
-        if (!StringUtils.isBlank(appModule) && ReactNativeFlow.checkBundleFileIsExist(reactAppFilePath + "/index.android.bundle")) {
+        if (!StringUtils.isBlank(appModule) && FileUtils.isFileExist(reactAppFilePath + "/index.android.bundle")) {
             //已安装应用
             createReactRootView(reactAppFilePath);
-        } else if (!StringUtils.isBlank(appModule) && ReactNativeFlow.checkAssetsFileExits(ReactNativeAppActivity.this, appModule + ".zip")) {
+        } else if (!StringUtils.isBlank(appModule) && FileUtils.isAssetsFileExist(ReactNativeAppActivity.this, appModule + ".zip")) {
             //预置应用
-            ReactNativeFlow.unZipFile(ReactNativeAppActivity.this, appModule + ".zip", reactAppFilePath, true);
+            ZipUtils.unZip(ReactNativeAppActivity.this, appModule + ".zip", reactAppFilePath, true);
             createReactRootView(reactAppFilePath);
         } else if (!StringUtils.isBlank(reactNativeAppScheme)
-                && !ReactNativeFlow.checkBundleFileIsExist(reactAppFilePath + "/index.android.bundle")) {
+                && !FileUtils.isFileExist(reactAppFilePath + "/index.android.bundle")) {
             //从网络获取应用
             getReactNativeAppFromNet();
             needCheckUpdate = false;
@@ -186,7 +185,7 @@ public class ReactNativeAppActivity extends BaseActivity implements DefaultHardw
      * @param reactAppFilePath
      */
     private void createReactRootView(String reactAppFilePath) {
-        if (!ReactNativeFlow.checkBundleFileIsExist(reactAppFilePath + "/index.android.bundle")) {
+        if (!FileUtils.isFileExist(reactAppFilePath + "/index.android.bundle")) {
             ToastUtils.show(ReactNativeAppActivity.this, getString(R.string.react_native_app_open_failed));
             finish();
         }
@@ -270,17 +269,16 @@ public class ReactNativeAppActivity extends BaseActivity implements DefaultHardw
             File file = new File(reactNatviveTempPath);
             if (file.exists()) {
                 preVersion = getAppBundleBean().getVersion();
-                ReactNativeFlow.moveFolder(reactNatviveTempPath + "/" + appModule, reactAppFilePath);
+                FileUtils.copyFolder(reactNatviveTempPath + "/" + appModule, reactAppFilePath);
                 currentVersion = getAppBundleBean().getVersion();
                 createReactRootView(reactAppFilePath);
                 writeBackVersion(preVersion, currentVersion, "ROLLBACK");
-                ReactNativeFlow.deleteOldVersionFile(reactNatviveTempPath + "/" + appModule);
+                FileUtils.deleteFile(reactNatviveTempPath + "/" + appModule);
             }
         } else if (state == ReactNativeFlow.REACT_NATIVE_FORWORD) {
             downloadReactNativeZip(reactNativeDownloadUrlBean);
-        } else if (state == ReactNativeFlow.REACT_NATIVE_UNKNOWN) {
         } else if (state == ReactNativeFlow.REACT_NATIVE_NO_UPDATE) {
-            if (!ReactNativeFlow.checkBundleFileIsExist(reactAppFilePath + "/index.android.bundle")) {
+            if (!FileUtils.isFileExist(reactAppFilePath + "/index.android.bundle")) {
                 ToastUtils.show(ReactNativeAppActivity.this, getString(R.string.react_native_app_open_failed));
                 finish();
             }
@@ -335,10 +333,10 @@ public class ReactNativeAppActivity extends BaseActivity implements DefaultHardw
                 if (ReactNativeFlow.isCompleteZip(reactNativeDownloadUrlBean.getHash(), reactZipFilePath)) {
                     String preVersion = getAppBundleBean().getVersion();
                     String reactAppTempPath = MyAppConfig.getReactTempFilePath(ReactNativeAppActivity.this, userId);
-                    ReactNativeFlow.moveFolder(reactAppFilePath, reactAppTempPath + "/" + appModule);
-                    ReactNativeFlow.deleteOldVersionFile(reactAppFilePath);
-                    ReactNativeFlow.unZipFile(reactZipFilePath, reactAppFilePath);
-                    ReactNativeFlow.deleteReactNativeDownloadZipFile(reactZipFilePath);
+                    FileUtils.copyFolder(reactAppFilePath, reactAppTempPath + "/" + appModule);
+                    FileUtils.deleteFile(reactAppFilePath);
+                    ZipUtils.upZipFile(reactZipFilePath, reactAppFilePath);
+                    FileUtils.deleteFile(reactZipFilePath);
                     createReactRootView(reactAppFilePath);
                     String currentVersion = getAppBundleBean().getVersion();
                     writeBackVersion(preVersion, currentVersion, "FORWARD");
@@ -397,25 +395,6 @@ public class ReactNativeAppActivity extends BaseActivity implements DefaultHardw
         StringBuilder describeVersionAndTime = ReactNativeFlow.getBundleDotJsonFromFile(reactAppFilePath);
         AndroidBundleBean androidBundleBean = new AndroidBundleBean(describeVersionAndTime.toString());
         return androidBundleBean;
-    }
-
-
-    /**
-     * 获取到ClientId
-     */
-    private void installReactNativeApp() {
-        if (NetUtils.isNetworkConnected(ReactNativeAppActivity.this)) {
-            new ClientIDUtils(ReactNativeAppActivity.this, new CommonCallBack() {
-                @Override
-                public void execute() {
-                    LogUtils.YfcDebug("installReactNativeApp");
-                    StringBuilder describeVersionAndTime = ReactNativeFlow.getBundleDotJsonFromFile(reactAppFilePath);
-                    AndroidBundleBean androidBundleBean = new AndroidBundleBean(describeVersionAndTime.toString());
-                    String clientId = PreferencesByUserAndTanentUtils.getString(ReactNativeAppActivity.this, "react_native_clientid", "");
-                    reactNativeAPIService.getDownLoadUrl(ReactNativeAppActivity.this, installUri, clientId, androidBundleBean.getVersion());
-                }
-            }).getClientID();
-        }
     }
 
     class WebService extends APIInterfaceInstance {

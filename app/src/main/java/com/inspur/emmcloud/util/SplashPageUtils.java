@@ -106,9 +106,8 @@ public class SplashPageUtils {
                         sha256Code = splashPageBean.getPayload().getHdpiHash().split(":")[1];
                     }
                     if (filelSha256.equals(sha256Code)) {
-                        String splashInfoOld = PreferencesByUserAndTanentUtils.getString(context, "splash_page_info_old", "");
-                        SplashPageBean splashPageBeanLocalOld = new SplashPageBean(splashInfoOld);
-                        writeBackSplashPageLog("FORWARD", splashPageBeanLocalOld.getId().getVersion()
+
+                        writeBackSplashPageLog("FORWARD"
                                 , splashPageBean.getId().getVersion());
                         //先把上次的信息取出来，作为旧版数据存储
                         String splashPageInfoOld = PreferencesByUserAndTanentUtils.getString(context, "splash_page_info", "");
@@ -161,14 +160,16 @@ public class SplashPageUtils {
      *
      * @param s
      */
-    private void writeBackSplashPageLog(String s, String preversion, String currentVersion) {
+    private void writeBackSplashPageLog(String s,  String currentVersion) {
         if (NetUtils.isNetworkConnected(context, false)) {
+            String splashInfoOld = PreferencesByUserAndTanentUtils.getString(context, "splash_page_info_old", "");
+            SplashPageBean splashPageBeanLocalOld = new SplashPageBean(splashInfoOld);
             String uid = ((MyApplication) context.getApplicationContext()).getUid();
             String clientId = PreferencesUtils.getString(context, UriUtils.tanent + uid +
                     "react_native_clientid", "");
             ReactNativeAPIService reactNativeAPIService = new ReactNativeAPIService(context);
             reactNativeAPIService.setAPIInterface(new WebService());
-            reactNativeAPIService.writeBackSplashPageVersionChange(preversion, currentVersion, clientId, s);
+            reactNativeAPIService.writeBackSplashPageVersionChange(splashPageBeanLocalOld.getId().getVersion(), currentVersion, clientId, s);
         }
     }
 
@@ -189,7 +190,7 @@ public class SplashPageUtils {
             long endTime = splashPageBeanLoacal.getPayload().getExpireDate();
             long nowTime = System.currentTimeMillis();
             flag = FileUtils.isFileExist(splashImgPath) &&
-                    ((nowTime > startTime) && (nowTime < endTime));
+                    ((nowTime >= startTime) && (nowTime <= endTime));
         }
         return flag;
     }
