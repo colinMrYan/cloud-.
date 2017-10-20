@@ -41,6 +41,7 @@ import com.inspur.emmcloud.bean.AppOrder;
 import com.inspur.emmcloud.bean.GetAppBadgeResult;
 import com.inspur.emmcloud.bean.GetAppGroupResult;
 import com.inspur.emmcloud.bean.PVCollectModel;
+import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.util.AppCacheUtils;
 import com.inspur.emmcloud.util.AppTitleUtils;
 import com.inspur.emmcloud.util.IntentUtils;
@@ -127,7 +128,13 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
             refreshAppListView();
             isHasCacheNotRefresh = false;
         }
-        getAppBadgeNum();
+        //隔五分钟刷一次badge
+        long badgeUpdateTime = PreferencesByUserAndTanentUtils.getLong(getActivity(),
+                Constant.APP_BADGE_UPDATE_TIME,0l);
+        long badgeUpdateTimeBetween = System.currentTimeMillis() - badgeUpdateTime;
+        if(badgeUpdateTime == 0 || badgeUpdateTimeBetween>=Constant.FIVE_MINUTES_LONG){
+            getAppBadgeNum();
+        }
     }
 
     @Override
@@ -1018,12 +1025,14 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
             pullToRefreshLayout.refreshFinish(PullToRefreshLayout.SUCCEED);
             appBadgeBeanMap = getAppBadgeResult.getAppBadgeBeanMap();
             appListAdapter.notifyDataSetChanged();
+            PreferencesByUserAndTanentUtils.putLong(getActivity(), Constant.APP_BADGE_UPDATE_TIME,System.currentTimeMillis());
         }
 
         @Override
         public void returnGetAppBadgeResultFail(String error, int errorCode) {
             pullToRefreshLayout.refreshFinish(PullToRefreshLayout.FAIL);
-            WebServiceMiddleUtils.hand(getActivity(), error, errorCode);
+//            WebServiceMiddleUtils.hand(getActivity(), error, errorCode);
+            PreferencesByUserAndTanentUtils.putLong(getActivity(), Constant.APP_BADGE_UPDATE_TIME,0l);
         }
     }
 }
