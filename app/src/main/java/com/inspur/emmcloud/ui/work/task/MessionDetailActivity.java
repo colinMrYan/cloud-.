@@ -62,6 +62,7 @@ import com.inspur.emmcloud.widget.SegmentControl;
 import com.inspur.emmcloud.widget.SegmentControl.OnSegmentControlClickListener;
 import com.inspur.emmcloud.widget.dialogs.EasyDialog;
 
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -913,6 +914,7 @@ public class MessionDetailActivity extends BaseActivity {
 			attachments = taskResult.getAttachments();
 			task.setAttachments(attachments);
 			initAttachments();
+			EventBus.getDefault().post(task);
 			ToastUtils.show(MessionDetailActivity.this,
 					getString(R.string.mession_upload_attachment_success));
 		}

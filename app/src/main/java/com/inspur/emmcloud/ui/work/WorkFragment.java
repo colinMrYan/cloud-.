@@ -59,6 +59,10 @@ import com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout;
 import com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout.OnRefreshListener;
 import com.inspur.emmcloud.widget.pullableview.PullableListView;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -117,6 +121,7 @@ public class WorkFragment extends Fragment implements OnRefreshListener {
         initViews();
         getWorkData();
         registerWorkNotifyReceiver();
+        EventBus.getDefault().register(this);
     }
 
     /**
@@ -226,6 +231,23 @@ public class WorkFragment extends Fragment implements OnRefreshListener {
         RelativeLayout groupHeaderlayout;
         ScrollViewWithListView GroupListView;
         RelativeLayout wordAddLayout;
+    }
+
+    /**
+     * 更新附件信息
+     * @param taskResult
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void updateTaskData(TaskResult taskResult){
+        if(taskResult != null){
+            int index = taskList.indexOf(taskResult);
+            if(index != -1){
+//                taskList.get(index).setAttachments(taskResult.getAttachments());
+                taskList.remove(index);
+                taskList.add(index,taskResult);
+                taskChildAdapter.notifyDataSetChanged();
+            }
+        }
     }
 
     private class Adapter extends BaseAdapter {
@@ -723,6 +745,7 @@ public class WorkFragment extends Fragment implements OnRefreshListener {
             getActivity().unregisterReceiver(meetingAndTaskReceiver);
             meetingAndTaskReceiver = null;
         }
+        EventBus.getDefault().unregister(this);
     }
 
 }
