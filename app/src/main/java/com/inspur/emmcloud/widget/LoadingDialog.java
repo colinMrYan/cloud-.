@@ -4,11 +4,9 @@ package com.inspur.emmcloud.widget;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
-import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.WindowManager;
 import android.view.WindowManager.LayoutParams;
 import android.widget.TextView;
 
@@ -46,21 +44,7 @@ public class LoadingDialog extends Dialog {
 
 	public LoadingDialog(Context context) {
 		// TODO Auto-generated constructor stub
-		super(context, R.style.dialog_progressbar);
-		this.context = context;
-		this.setCanceledOnTouchOutside(false);
-		this.setCancelable(false);
-		inflater = (LayoutInflater) context
-				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		View view = inflater.inflate(R.layout.dialog_loading, null);
-		loadtext = (TextView) view.findViewById(R.id.loading_text);
-		setContentView(view);
-		// 设置window属性
-		lp = getWindow().getAttributes();
-		lp.gravity = Gravity.CENTER;
-		lp.dimAmount = 0.5f; // 去背景遮盖
-		lp.alpha = 1.0f;
-		getWindow().setAttributes(lp);
+		this(context,context.getString(R.string.loading_text));
 
 	}
 
@@ -73,15 +57,6 @@ public class LoadingDialog extends Dialog {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		WindowManager m = getWindow().getWindowManager();
-		Display d = m.getDefaultDisplay();
-		int width = d.getWidth();
-		WindowManager.LayoutParams p = getWindow().getAttributes();
-		p.x = 0;
-		p.y = 0;
-		p.width = (int) (width * 0.73);
-		this.getWindow().setAttributes(
-				(WindowManager.LayoutParams) p);
 	}
 
 	public void setText(String text) {

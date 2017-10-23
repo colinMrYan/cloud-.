@@ -94,7 +94,7 @@
     <string name="close">Close</string>
     <string name="commoly_use_app">Commonly</string>
     <string name="function_not_implemented">During closed beta, it will not open</string>
-    <string name="app_init">init...</string>
+    <string name="app_init">init</string>
     <string name="news_content_cant_empty">Content cannot be empty</string>
     <string name="help">Help</string>
 
