@@ -39,6 +39,7 @@ import com.inspur.emmcloud.util.DensityUtil;
 import com.inspur.emmcloud.util.ImageDisplayUtils;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
+import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.ToastUtils;
 import com.inspur.imp.plugin.camera.imagepicker.ImagePicker;
 import com.inspur.imp.plugin.camera.imagepicker.ui.ImageGridActivity;
@@ -459,7 +460,11 @@ public class ECMChatInputMenu extends LinearLayout {
      *
      * @param binaryString
      */
-    public void updateMenuGrid(String binaryString) {
+    public void updateMenuGrid(String inputs) {
+        String binaryString  = "-1";
+        if (!StringUtils.isBlank(inputs)) {
+            binaryString = Integer.toBinaryString(Integer.parseInt(inputs));
+        }
         int[] imgArray = {R.drawable.ic_chat_input_add_gallery, R.drawable.ic_chat_input_add_camera, R.drawable.ic_chat_input_add_file, R.drawable.ic_chat_input_add_mention};
         String[] functionNameArray = {context.getString(R.string.album), context.getString(R.string.take_photo), context.getString(R.string.file), "@"};
         imgList.clear();

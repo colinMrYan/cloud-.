@@ -1,21 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:id="@+id/main_layout"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:fitsSystemWindows="true"
-              android:orientation="horizontal">
+    android:id="@+id/main_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:orientation="horizontal">
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        >
+        android:layout_height="match_parent">
 
         <com.inspur.emmcloud.widget.HackyViewPager
             android:id="@+id/pager"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            />
+            android:layout_height="match_parent" />
 
         <RelativeLayout
             android:id="@+id/function_layout"
@@ -41,7 +39,7 @@
                     android:paddingTop="15dp"
                     android:scaleType="fitXY"
                     android:src="@drawable/ic_chat_enter_channel_imgs"
-                    android:visibility="gone"/>
+                    android:visibility="gone" />
 
                 <ImageView
                     android:id="@+id/close_img"
@@ -53,7 +51,7 @@
                     android:paddingRight="15dp"
                     android:paddingTop="15dp"
                     android:scaleType="centerInside"
-                    android:src="@drawable/ic_chat_img_display_close"/>
+                    android:src="@drawable/ic_chat_img_display_close" />
             </RelativeLayout>
 
 
@@ -82,15 +80,15 @@
                         android:layout_width="200dp"
                         android:layout_height="30dp"
                         android:layout_centerVertical="true"
-                        android:drawableLeft="@drawable/ic_chat_img_comment_edit_logo"
                         android:background="@drawable/bg_chat_img_comment_input"
-                        android:gravity="center_vertical"
+                        android:drawableLeft="@drawable/ic_chat_img_comment_edit_logo"
                         android:drawablePadding="6dp"
+                        android:gravity="center_vertical"
                         android:maxLines="1"
                         android:paddingLeft="9dp"
                         android:text="@string/join_discuss"
                         android:textColor="#e0ffffff"
-                        android:textSize="16sp"/>
+                        android:textSize="16sp" />
 
 
                 </RelativeLayout>
@@ -108,7 +106,7 @@
                     android:padding="5dp"
                     android:textColor="@color/white"
                     android:textSize="16sp"
-                    android:visibility="gone"/>
+                    android:visibility="gone" />
 
                 <ImageView
                     android:id="@+id/download_img"
@@ -119,7 +117,7 @@
                     android:onClick="onClick"
                     android:padding="5dp"
                     android:scaleType="fitXY"
-                    android:src="@drawable/ic_chat_img_display_download"/>
+                    android:src="@drawable/ic_chat_img_display_download" />
 
             </LinearLayout>
 
@@ -135,7 +133,7 @@
             android:text="%1$d/%2$d"
             android:textColor="@android:color/white"
             android:textSize="18sp"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
     </FrameLayout>
 
