@@ -21,6 +21,7 @@ import com.inspur.emmcloud.bean.Titles;
 import com.inspur.emmcloud.ui.login.LoginActivity;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.PVCollectModelCacheUtils;
+import com.inspur.emmcloud.util.StateBarColor;
 import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.ToastUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
@@ -45,6 +46,7 @@ public class GroupNewsActivity extends BaseFragmentActivity implements
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		StateBarColor.changeStateBarColor(this);
 		setContentView(R.layout.activity_group_news);
 		init();
 		getNewTitles();
