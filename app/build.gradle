@@ -139,7 +139,6 @@ dependencies {
     compile 'com.jakewharton:disklrucache:2.0.2' //Markdown引入 缓存
     compile 'com.android.support:multidex:1.0.1'
     compile 'com.wei.android.lib:fingerprintidentify:1.2.1'//指纹识别库暂未启用
-    compile 'com.qmuiteam:qmui:1.0.4' //引入腾讯开源UI项目  QMUI
 
     // React Naive Components
     compile project(':react-native-smart-swipe-refresh-layout')
@@ -152,6 +151,7 @@ dependencies {
         exclude module: 'support-annotations'
     }
     compile(name: 'xutils-3.5.0', ext: 'aar')
+    compile(name: 'qmui-1.0.4', ext: 'aar')
     compile 'commons-codec:commons-codec:20041127.091804'
     compile files('libs/jpush-android_v3.0.3.jar')
     compile files('libs/jcore-android_v1.1.1.jar')

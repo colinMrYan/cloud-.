@@ -278,6 +278,11 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
         });
     }
 
+    /**
+     * 根据tabbar信息更新加号UI，这里显示信息附在Tabbar信息里
+     * 所以没有数据请求回来，MessageFragment不存在的情况
+     * @param appTabAutoBean
+     */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void updateMessageUI(AppTabAutoBean appTabAutoBean) {
         if (appTabAutoBean != null) {

@@ -71,7 +71,7 @@
             android:layout_marginLeft="20dp"
             android:textSize="@dimen/content_smaller_textsize"
             android:textColor="#ff1D2128"
-            android:text="阅读模式"/>
+            android:text="@string/news_read_mode"/>
 
         <LinearLayout
             android:id="@+id/app_news_mode_layout"
@@ -130,7 +130,7 @@
                 android:layout_marginLeft="45dp"
                 android:textColor="@color/white"
                 android:textSize="@dimen/content_title_textsize"
-                android:text="@string/news_night_mode_text"/>
+                android:text="@string/news_read_mode"/>
             <ImageView
                 android:id="@+id/app_news_mode_sun_img"
                 android:layout_width="21dp"
