@@ -116,7 +116,7 @@ public class ChannelActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_channel);
-        init();
+        initData();
         registeRefreshNameReceiver();
         recordUserClickChannel();
     }
@@ -127,26 +127,12 @@ public class ChannelActivity extends BaseActivity {
         // TODO Auto-generated method stub
         super.onNewIntent(intent);
         setIntent(intent);
-        init();
+        initData();
         //当从群成员选择进入沟通频道的时候执行这里的记录
         recordUserClickChannel();
     }
 
-    /**
-     * 记录用户点击的频道，修改不是云+客服的时候才记录频道点击事件170629
-     */
-    private void recordUserClickChannel() {
-        String from = "";
-        if (getIntent().hasExtra("from")) {
-            from = getIntent().getStringExtra("from");
-            if (!from.equals("customer")) {
-                PVCollectModel pvCollectModel = new PVCollectModel("channel", "communicate");
-                PVCollectModelCacheUtils.saveCollectModel(ChannelActivity.this, pvCollectModel);
-            }
-        }
-    }
-
-    private void init() {
+    private void initData() {
         loadingDlg = new LoadingDialog(this);
         apiService = new ChatAPIService(ChannelActivity.this);
         apiService.setAPIInterface(new WebService());
@@ -167,7 +153,7 @@ public class ChannelActivity extends BaseActivity {
     private void initViews() {
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh_layout);
         swipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.header_bg), getResources().getColor(R.color.header_bg));
-        handleChatInputMenu();
+        initChatInputMenu();
         setChannelTitle();
         initMsgListView();
         handMessage();
@@ -195,7 +181,7 @@ public class ChannelActivity extends BaseActivity {
     /**
      * 处理chatInputMenu是否显示，以及显示几个Menu上的item
      */
-    private void handleChatInputMenu() {
+    private void initChatInputMenu() {
         chatInputMenu = (ECMChatInputMenu) findViewById(R.id.chat_input_menu);
         if (channel.getType().equals("GROUP")) {
             chatInputMenu.setIsChannelGroup(true, cid);
@@ -229,22 +215,10 @@ public class ChannelActivity extends BaseActivity {
         if ((channel != null) && channel.getInputs().equals("0")) {
             chatInputMenu.setVisibility(View.GONE);
         } else {
-            chatInputMenu.updateMenuGrid(handleShowItems());
+            chatInputMenu.updateMenuGrid(channel.getInputs());
         }
     }
 
-
-    /**
-     * 计算inputs的二进制
-     */
-    private String handleShowItems() {
-        String result = "-1";
-        String inputs = channel.getInputs();
-        if (!StringUtils.isBlank(inputs)) {
-            result = Integer.toBinaryString(Integer.parseInt(inputs));
-        }
-        return result;
-    }
 
     /**
      * 注册更改频道名称广播
@@ -363,7 +337,6 @@ public class ChannelActivity extends BaseActivity {
         msgListView.postDelayed(new Runnable() {
             @Override
             public void run() {
-                // Select the last row so it will scroll into view...
                 msgListView.setSelection(adapter.getCount() - 1);
             }
         }, 30);
@@ -479,19 +452,6 @@ public class ChannelActivity extends BaseActivity {
     }
 
     /**
-     * 发送消息
-     *
-     * @param content
-     * @param type
-     * @param fakeMessageId
-     */
-    protected void sendMsg(String content, String type, String fakeMessageId) {
-        if (NetUtils.isNetworkConnected(getApplicationContext())) {
-            apiService.sendMsg(cid, content, type, fakeMessageId);
-        }
-    }
-
-    /**
      * 当推送消息是自己的消息时修改消息id
      *
      * @param fakeMessageId
@@ -532,21 +492,6 @@ public class ChannelActivity extends BaseActivity {
 
     }
 
-    /**
-     * 设置消息发送失败
-     *
-     * @param fakeMessageId
-     */
-    private void setMsgSendFail(String fakeMessageId) {
-        Msg fakeMsg = new Msg();
-        fakeMsg.setMid(fakeMessageId);
-        int fakeMsgIndex = msgList.indexOf(fakeMsg);
-        if (fakeMsgIndex != -1) {
-            msgList.get(fakeMsgIndex).setSendStatus(2);
-            adapter.notifyDataSetChanged();
-        }
-
-    }
 
     /**
      * 控件点击事件
@@ -901,6 +846,18 @@ public class ChannelActivity extends BaseActivity {
         }
     }
 
+
+    /**
+     * 记录用户点击的频道，修改不是云+客服的时候才记录频道点击事件170629
+     */
+    private void recordUserClickChannel() {
+        String from = getIntent().getExtras().getString("from","");
+        if (!from.equals("customer")) {
+            PVCollectModel pvCollectModel = new PVCollectModel("channel", "communicate");
+            PVCollectModelCacheUtils.saveCollectModel(ChannelActivity.this, pvCollectModel);
+        }
+    }
+
     @Override
     public void onBackPressed() {
         // TODO Auto-generated method stub
@@ -917,11 +874,27 @@ public class ChannelActivity extends BaseActivity {
         }
         if (msgResvier != null) {
             unregisterReceiver(msgResvier);
+            msgResvier = null;
         }
         if (refreshNameReceiver != null) {
             unregisterReceiver(refreshNameReceiver);
+            refreshNameReceiver = null;
         }
     }
+
+    /**
+     * 发送消息
+     *
+     * @param content
+     * @param type
+     * @param fakeMessageId
+     */
+    protected void sendMsg(String content, String type, String fakeMessageId) {
+        if (NetUtils.isNetworkConnected(getApplicationContext())) {
+            apiService.sendMsg(cid, content, type, fakeMessageId);
+        }
+    }
+
 
 
     /**
@@ -974,8 +947,16 @@ public class ChannelActivity extends BaseActivity {
 
         @Override
         public void returnSendMsgFail(String error, String fakeMessageId, int errorCode) {
+            //消息发送失败处理
+            Msg fakeMsg = new Msg();
+            fakeMsg.setMid(fakeMessageId);
+            int fakeMsgIndex = msgList.indexOf(fakeMsg);
+            if (fakeMsgIndex != -1) {
+                msgList.get(fakeMsgIndex).setSendStatus(2);
+                adapter.notifyDataSetChanged();
+            }
             WebServiceMiddleUtils.hand(ChannelActivity.this, error, errorCode);
-            setMsgSendFail(fakeMessageId);
+
         }
 
         @Override

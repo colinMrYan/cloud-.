@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:fitsSystemWindows="true">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
 
     <RelativeLayout
         android:id="@+id/header_layout"
@@ -17,15 +17,16 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_centerVertical="true"
-            android:paddingLeft="10dp"
-            >
+            android:paddingLeft="10dp">
+
             <RelativeLayout
                 android:id="@+id/back_layout"
-                android:onClick="onClick"
-                android:paddingRight="10dp"
-                android:layout_centerVertical="true"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:layout_centerVertical="true"
+                android:onClick="onClick"
+                android:paddingRight="10dp">
+
                 <ImageView
                     android:id="@+id/back_btn"
                     android:layout_width="20dp"
@@ -34,19 +35,19 @@
                     android:background="@null"
                     android:paddingRight="3dp"
                     android:scaleType="centerInside"
-                    android:src="@drawable/selector_back_btn"/>
+                    android:src="@drawable/selector_back_btn" />
 
                 <TextView
                     android:id="@+id/imp_back_btn"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:gravity="center"
                     android:layout_toRightOf="@id/back_btn"
                     android:background="@null"
+                    android:gravity="center"
                     android:paddingRight="3dp"
-                    android:textSize="16sp"
                     android:text="@string/back"
-                    android:textColor="#ffffff"/>
+                    android:textColor="#ffffff"
+                    android:textSize="16sp" />
             </RelativeLayout>
 
 
@@ -54,31 +55,31 @@
                 android:id="@+id/imp_close_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:gravity="center"
                 android:layout_toRightOf="@id/back_layout"
-                android:clickable="true"
                 android:background="@null"
-                android:paddingRight="13dp"
-                android:textSize="16sp"
+                android:clickable="true"
+                android:gravity="center"
                 android:onClick="onClick"
+                android:paddingRight="13dp"
                 android:text="@string/close"
                 android:textColor="#ffffff"
-                android:visibility="gone"/>
+                android:textSize="16sp"
+                android:visibility="gone" />
         </RelativeLayout>
 
         <TextView
             android:id="@+id/header_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/function_layout"
             android:layout_centerVertical="true"
             android:layout_marginRight="30dp"
+            android:layout_toRightOf="@id/function_layout"
             android:ellipsize="end"
             android:gravity="left"
             android:singleLine="true"
             android:text="@string/about_text"
             android:textColor="@color/header_text"
-            android:textSize="@dimen/header_textsize"/>
+            android:textSize="@dimen/header_textsize" />
 
         <ImageView
             android:id="@+id/imp_change_font_size_btn"
@@ -90,95 +91,100 @@
             android:onClick="onClick"
             android:paddingLeft="12dp"
             android:paddingRight="15dp"
-            android:visibility="gone"
             android:scaleType="centerInside"
             android:src="@drawable/app_news_setting"
-            />
+            android:visibility="gone" />
     </RelativeLayout>
 
     <com.inspur.imp.engine.webview.ImpWebView
         android:id="@+id/webview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/header_layout"/>
+        android:layout_below="@id/header_layout" />
+
     <FrameLayout
         android:id="@+id/videoContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 
     <LinearLayout
         android:id="@+id/load_error_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@id/header_layout"
         android:background="@color/content_bg"
         android:gravity="center"
-        android:visibility="gone"
-        android:layout_below="@id/header_layout"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:visibility="gone">
+
         <ImageView
-            android:src="@drawable/imp_load_fail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginBottom="30dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:src="@drawable/imp_load_fail" />
+
         <TextView
-            android:textSize="16sp"
-            android:textColor="#929292"
-            android:text="@string/web_load_fail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginBottom="15dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:text="@string/web_load_fail"
+            android:textColor="#929292"
+            android:textSize="16sp" />
+
         <TextView
-            android:gravity="center"
-            android:textColor="#3299FE"
-            android:textSize="15sp"
-            android:text="@string/web_reload"
             android:id="@+id/refresh_text"
-            android:onClick="onClick"
+            android:layout_width="wrap_content"
+            android:layout_height="34dp"
             android:layout_marginBottom="100dp"
+            android:background="@drawable/imp_bg_webview_reload_btn"
+            android:gravity="center"
+            android:onClick="onClick"
             android:paddingLeft="25dp"
             android:paddingRight="25dp"
-            android:background="@drawable/imp_bg_webview_reload_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="34dp"/>
+            android:text="@string/web_reload"
+            android:textColor="#3299FE"
+            android:textSize="15sp" />
     </LinearLayout>
-    <LinearLayout
-        android:id="@+id/loading_layout"
-        android:layout_below="@id/header_layout"
-        android:background="#3e000000"
-        android:orientation="horizontal"
-        android:clickable="true"
-        android:gravity="center"
-        android:weightSum="1"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.73"
-            android:background="@color/white"
-            android:orientation="horizontal"
-            android:paddingBottom="20dp"
-            android:gravity="center"
-            android:paddingTop="20dp" >
 
-            <com.inspur.emmcloud.widget.CircularProgress
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_gravity="center_vertical"
-                app:borderWidth="1dp" />
+    <RelativeLayout
+        android:id="@+id/loading_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/header_layout"
+        android:background="#3e000000">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minWidth="120dp"
+            android:minHeight="56dp"
+            android:layout_centerInParent="true"
+            android:padding="16dp"
+            android:layout_gravity="center"
+            android:background="@drawable/qmui_tip_dialog_bg"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <com.qmuiteam.qmui.widget.QMUILoadingView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:color="#ffffff"
+                app:qmui_loading_view_size="32dp"/>
 
             <TextView
                 android:id="@+id/loading_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:paddingLeft="25dp"
-                android:text="@string/loading_text"
-                android:textColor="#333333"
-                android:textSize="@dimen/content_normal_textsize" />
-
+                android:maxWidth="200dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="12dp"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:textColor="#ffffff"
+                android:textSize="@dimen/content_small_textsize" />
         </LinearLayout>
-    </LinearLayout>
+
+    </RelativeLayout>
 
 </RelativeLayout>
