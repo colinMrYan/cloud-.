@@ -58,25 +58,29 @@ public class NewsListAdapter extends BaseAdapter {
             holder.imageView = (ImageView) convertView.findViewById(R.id.news_leftImg_img);
             holder.title = (TextView) convertView.findViewById(R.id.news_middleUp_text);
             holder.content = (TextView) convertView.findViewById(R.id.news_middleDown_text);
-            holder.textposer = (TextView) convertView.findViewById(R.id.news_middlemid_text);
+            holder.textPoser = (TextView) convertView.findViewById(R.id.news_middlemid_text);
             convertView.setTag(holder);
         } else {
             holder = (NewsHolder) convertView.getTag();
         }
         String uri = handlePoster(position);
         ImageDisplayUtils.getInstance().displayImage(holder.imageView, uri, R.drawable.ic_app_news_default_icon);
-        if (groupNewsList.get(position).isImportant()) {
-            holder.title.setTextColor(Color.RED);
-            holder.title.setText(groupNewsList.get(position).getTitle());
-        } else {
-            holder.title.setTextColor(0xff203b4f);
-            holder.title.setText(groupNewsList.get(position).getTitle());
-        }
+        holder.title.setTextColor(groupNewsList.get(position).isImportant()? Color.RED:0xff203b4f);
+        holder.title.setText(groupNewsList.get(position).getTitle());
         holder.content.setText(groupNewsList.get(position).getSummary());
         String postTime = groupNewsList.get(position).getCreationDate();
         postTime = TimeUtils.Calendar2TimeString(TimeUtils.timeLong2Calendar(Long.parseLong(postTime)), TimeUtils.getFormat(context, TimeUtils.FORMAT_DEFAULT_DATE));
-        holder.textposer.setText(groupNewsList.get(position).getAuthor() + "  " + postTime);
+        holder.textPoser.setText(groupNewsList.get(position).getAuthor() + "  " + postTime);
         return convertView;
+    }
+
+    /**
+     * 刷新新闻列表
+     * @param groupNewsList
+     */
+    public void reFreshNewsList(List<GroupNews> groupNewsList){
+        this.groupNewsList = groupNewsList;
+        notifyDataSetChanged();
     }
 
     /**
@@ -96,6 +100,6 @@ public class NewsListAdapter extends BaseAdapter {
         ImageView imageView;
         TextView title;
         TextView content;
-        TextView textposer;
+        TextView textPoser;
     }
 }

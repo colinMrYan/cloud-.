@@ -351,13 +351,13 @@ public class MyAppAPIService {
                 // TODO Auto-generated method stub
                 apiInterface
                         .returnGroupNewsDetailSuccess(new GetGroupNewsDetailResult(
-                                arg0));
+                                arg0),page);
             }
 
             @Override
             public void callbackFail(String error, int responseCode) {
                 // TODO Auto-generated method stub
-                apiInterface.returnGroupNewsDetailFail(error,responseCode);
+                apiInterface.returnGroupNewsDetailFail(error,responseCode,page);
             }
         });
 

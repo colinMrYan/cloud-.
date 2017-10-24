@@ -1,7 +1,5 @@
 package com.inspur.emmcloud.bean;
 
-import com.inspur.emmcloud.util.LogUtils;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -11,36 +9,21 @@ import java.util.List;
 
 public class GetNewsTitleResult implements Serializable{
 
-	private static final String TAG = "GetNewsTitleResult";
-	private JSONArray jsonArray;
-	private JSONObject jsonObject;
-	private List<Titles> titlesList;
+	private List<NewsTitle> titleList = new ArrayList<>();
 	
 	public GetNewsTitleResult(String response){
 		try {
-			jsonArray = new JSONArray(response);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-	
-	public List<Titles> getTitlesList(){
-		
-		titlesList = new ArrayList<Titles>();
-		try {
-
-			
+			JSONArray jsonArray = new JSONArray(response);
 			for (int i = 0; i < jsonArray.length(); i++) {
-				jsonObject = new JSONObject();
-				jsonObject = jsonArray.getJSONObject(i);
-				titlesList.add(new Titles(jsonObject));
+				JSONObject jsonObject = jsonArray.getJSONObject(i);
+				titleList.add(new NewsTitle(jsonObject));
 			}
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return titlesList;
 	}
 	
-	
+	public List<NewsTitle> getTitleList(){
+		return titleList;
+	}
 }
