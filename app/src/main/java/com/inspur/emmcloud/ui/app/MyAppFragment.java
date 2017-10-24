@@ -187,6 +187,7 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
         (rootView.findViewById(R.id.appcenter_layout)).setOnClickListener(listener);
         getMyApp();
         setTabTitle();
+        getAppBadgeNum();
 //        shortCutAppList.add("mobile_checkin_hcm");
 //        shortCutAppList.add("inspur_news_esg");//目前，除在此处添加id还需要为每个需要生成快捷方式的应用配置图标
     }
