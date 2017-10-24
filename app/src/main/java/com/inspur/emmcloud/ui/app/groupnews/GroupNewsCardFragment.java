@@ -164,18 +164,18 @@ public class GroupNewsCardFragment extends Fragment implements
         if (page == 0) {
             groupnNewsList.clear();
         }
+        List<GroupNews> groupNewsList = getGroupNewsDetailResult.getGroupNews();
         //添加新数据，如果page是0则重新添加，不是0则在末尾继续添加
-        groupnNewsList.addAll(getGroupNewsDetailResult.getGroupNews());
+        groupnNewsList.addAll(groupNewsList);
         //刷新数据
         newsAdapter.reFreshNewsList(groupnNewsList);
         //设置显示位置
         if (groupnNewsList.size() > 20) {
-            newsListView.setSelection(groupnNewsList.size() - (getGroupNewsDetailResult.getGroupNews()
-                    .size() + 4));
+            newsListView.setSelection(groupnNewsList.size() - (groupNewsList.size() + 4));
         }
         //返回结果少于20时，说明服务端暂时没有更新数据，则禁止上拉加载，并提示，减少向服务端发送无效请求
-        if (getGroupNewsDetailResult.getGroupNews().size() < 20) {
-            newsListView.setCanPullUp(false);
+        if (groupNewsList.size() == 0) {
+            page = page - 1;
             ToastUtils.show(getActivity(),getString(R.string.no_more_data));
         }
         pullToRefreshLayout.refreshFinish(PullToRefreshLayout.SUCCEED);

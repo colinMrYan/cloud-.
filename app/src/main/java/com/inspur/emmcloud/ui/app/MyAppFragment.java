@@ -79,6 +79,7 @@ import static com.inspur.emmcloud.util.AppCacheUtils.getCommonlyUseAppList;
 public class MyAppFragment extends Fragment implements OnRefreshListener {
 
     private static final String ACTION_NAME = "add_app";
+    private static final long GET_BADGE_DELAY = 5 * 60 * 60;
     private View rootView;
     private LayoutInflater inflater;
     private PullableListView appListView;
@@ -130,9 +131,9 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
         }
         //隔五分钟刷一次badge
         long badgeUpdateTime = PreferencesByUserAndTanentUtils.getLong(getActivity(),
-                Constant.APP_BADGE_UPDATE_TIME,0l);
+                Constant.PREF_APP_BADGE_UPDATE_TIME,0l);
         long badgeUpdateTimeBetween = System.currentTimeMillis() - badgeUpdateTime;
-        if(badgeUpdateTime == 0 || badgeUpdateTimeBetween>=Constant.FIVE_MINUTES_LONG){
+        if(badgeUpdateTimeBetween>=GET_BADGE_DELAY){
             getAppBadgeNum();
         }
     }
@@ -1026,14 +1027,14 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
             pullToRefreshLayout.refreshFinish(PullToRefreshLayout.SUCCEED);
             appBadgeBeanMap = getAppBadgeResult.getAppBadgeBeanMap();
             appListAdapter.notifyDataSetChanged();
-            PreferencesByUserAndTanentUtils.putLong(getActivity(), Constant.APP_BADGE_UPDATE_TIME,System.currentTimeMillis());
+            PreferencesByUserAndTanentUtils.putLong(getActivity(), Constant.PREF_APP_BADGE_UPDATE_TIME,System.currentTimeMillis());
         }
 
         @Override
         public void returnGetAppBadgeResultFail(String error, int errorCode) {
             pullToRefreshLayout.refreshFinish(PullToRefreshLayout.FAIL);
 //            WebServiceMiddleUtils.hand(getActivity(), error, errorCode);
-            PreferencesByUserAndTanentUtils.putLong(getActivity(), Constant.APP_BADGE_UPDATE_TIME,0l);
+            PreferencesByUserAndTanentUtils.putLong(getActivity(), Constant.PREF_APP_BADGE_UPDATE_TIME,0l);
         }
     }
 }
