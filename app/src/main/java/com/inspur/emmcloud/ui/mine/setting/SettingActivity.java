@@ -7,7 +7,6 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -33,7 +32,6 @@ import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.SwitchView;
-import com.inspur.emmcloud.widget.dialogs.MyDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
 
@@ -191,10 +189,23 @@ public class SettingActivity extends BaseActivity {
                         dialog.dismiss();
                         switch (which){
                             case 0:
+                                String msgCachePath = Environment
+                                        .getExternalStorageDirectory()
+                                        + "/IMP-Cloud/download/";
+                                String imgCachePath = MyAppConfig.LOCAL_CACHE_PATH;
+                                DataCleanManager.cleanApplicationData(
+                                        SettingActivity.this, msgCachePath,
+                                        imgCachePath);
+                                ImageDisplayUtils.getInstance().clearAllCache();
+                                handler.sendEmptyMessage(DATA_CLEAR_SUCCESS);
                                 break;
                             case 1:
+                                DataCleanManager.cleanWebViewCache(SettingActivity.this);
+                                ToastUtils.show(getApplicationContext(),
+                                        R.string.data_clear_success);
                                 break;
                             case 2:
+                                showClearCacheWarningDlg();
                                 break;
                             default:
                                 break;
@@ -202,85 +213,6 @@ public class SettingActivity extends BaseActivity {
                     }
                 })
                 .show();
-
-
-
-
-
-
-
-
-
-
-        float radio = 0.850f;
-        final MyDialog clearCacheDlg = new MyDialog(SettingActivity.this,
-                R.layout.dialog_four_item, R.style.userhead_dialog_bg, radio);
-        TextView clearImgAndFileText = (TextView) clearCacheDlg
-                .findViewById(R.id.text1);
-        clearImgAndFileText
-                .setText(getString(R.string.settings_clean_imgae_attachment));
-        TextView clearWebCacheText = (TextView) clearCacheDlg
-                .findViewById(R.id.text2);
-        clearWebCacheText.setText(getString(R.string.settings_clean_web));
-        TextView clearAllCacheText = (TextView) clearCacheDlg
-                .findViewById(R.id.text3);
-        clearAllCacheText.setText(getString(R.string.settings_clean_all));
-        TextView cancelText = (TextView) clearCacheDlg.findViewById(R.id.text4);
-        cancelText.setText(getString(R.string.button_cancel));
-        clearImgAndFileText.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                // TODO Auto-generated method stub
-                new Thread(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        // TODO Auto-generated method stub
-                        String msgCachePath = Environment
-                                .getExternalStorageDirectory()
-                                + "/IMP-Cloud/download/";
-                        String imgCachePath = MyAppConfig.LOCAL_CACHE_PATH;
-                        DataCleanManager.cleanApplicationData(
-                                SettingActivity.this, msgCachePath,
-                                imgCachePath);
-                        ImageDisplayUtils.getInstance().clearAllCache();
-                        handler.sendEmptyMessage(DATA_CLEAR_SUCCESS);
-                    }
-                }).start();
-                clearCacheDlg.dismiss();
-            }
-        });
-        clearWebCacheText.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                // TODO Auto-generated method stub
-                clearCacheDlg.dismiss();
-                DataCleanManager.cleanWebViewCache(SettingActivity.this);
-                ToastUtils.show(getApplicationContext(),
-                        R.string.data_clear_success);
-            }
-        });
-        clearAllCacheText.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                // TODO Auto-generated method stub
-                clearCacheDlg.dismiss();
-                showClearCacheWarningDlg();
-            }
-
-        });
-        cancelText.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                // TODO Auto-generated method stub
-                clearCacheDlg.dismiss();
-            }
-        });
-        clearCacheDlg.show();
     }
 
     /**
