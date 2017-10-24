@@ -31,14 +31,14 @@ import java.util.List;
 
 /**
  * DisplayTxtRichMsg
- * 
+ *
  * @author sunqx 展示富文本卡片 2016-08-19
  */
 public class DisplayTxtRichMsg {
 
 	/**
 	 * 富文本卡片
-	 * 
+	 *
 	 * @param context
 	 * @param convertView
 	 * @param msg

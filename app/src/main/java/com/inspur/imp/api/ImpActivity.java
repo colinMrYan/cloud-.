@@ -22,6 +22,7 @@ import android.webkit.WebSettings;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.MyApplication;
@@ -64,7 +65,7 @@ public class ImpActivity extends ImpBaseActivity {
     private Button normalBtn, middleBtn, bigBtn, biggestBtn;
     private String appId = "";
     private FrameLayout frameLayout;
-    private LinearLayout loadingLayout;
+    private RelativeLayout loadingLayout;
     private TextView loadingText;
     private String helpUrl = "";
 
@@ -86,7 +87,7 @@ public class ImpActivity extends ImpBaseActivity {
      * 初始化Views
      */
     private void initViews() {
-        loadingLayout = (LinearLayout) findViewById(Res.getWidgetID("loading_layout"));
+        loadingLayout = (RelativeLayout) findViewById(Res.getWidgetID("loading_layout"));
         loadingText = (TextView) findViewById(Res.getWidgetID("loading_text"));
         frameLayout = (FrameLayout) findViewById(Res.getWidgetID("videoContainer"));
         loadFailLayout = (LinearLayout) findViewById(Res.getWidgetID("load_error_layout"));
