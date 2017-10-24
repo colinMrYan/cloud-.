@@ -2,26 +2,26 @@ package com.inspur.emmcloud.ui.mine;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.Channel;
-import com.inspur.emmcloud.bean.GetMyInfoResult;
 import com.inspur.emmcloud.bean.PVCollectModel;
+import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.ui.chat.ChannelActivity;
 import com.inspur.emmcloud.ui.mine.feedback.FeedBackActivity;
 import com.inspur.emmcloud.ui.mine.myinfo.MyInfoActivity;
 import com.inspur.emmcloud.ui.mine.setting.AboutActivity;
 import com.inspur.emmcloud.ui.mine.setting.SettingActivity;
+import com.inspur.emmcloud.util.AppConfigCacheUtils;
 import com.inspur.emmcloud.util.AppTitleUtils;
 import com.inspur.emmcloud.util.ChannelCacheUtils;
 import com.inspur.emmcloud.util.ImageDisplayUtils;
@@ -30,34 +30,28 @@ import com.inspur.emmcloud.util.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.StringUtils;
-import com.inspur.emmcloud.util.ToastUtils;
 import com.inspur.emmcloud.util.UriUtils;
 
-import java.io.Serializable;
+import static android.app.Activity.RESULT_OK;
 
 /**
  * 更多页面
  */
 public class MoreFragment extends Fragment {
 
-    private static final int UPDATE_MY_HEAD = 3;
-    public static Handler handler;
+    private static final int REQUEST_CODE_UPDATE_USER_PHOTO = 3;
     private View rootView;
-    private LayoutInflater inflater;
     private ImageView moreHeadImg;
-    private GetMyInfoResult getMyInfoResult;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
-        inflater = (LayoutInflater) getActivity().getSystemService(
+        LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(
                 getActivity().LAYOUT_INFLATER_SERVICE);
         rootView = inflater.inflate(R.layout.fragment_mine, null);
-        handMessage();
         initViews();
-        getMyInfo();
-        setTabTitle();
+        setMyInfo();
     }
 
     @Override
@@ -75,28 +69,48 @@ public class MoreFragment extends Fragment {
         return rootView;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        Channel customerChannel = ChannelCacheUtils.getCustomerChannel(getActivity());
+        //如果找不到云+客服频道就隐藏
+        if (customerChannel == null) {
+            (rootView.findViewById(R.id.customer_layout)).setVisibility(View.GONE);
+        }
+    }
+
     /**
      * 初始化views
      */
     private void initViews() {
+        setTabTitle();
+        String isShowFeedback = AppConfigCacheUtils.getAppConfigValue(getContext(), Constant.CONCIG_SHOW_FEEDBACK, "true");
+        String isShowCustomerService = AppConfigCacheUtils.getAppConfigValue(getContext(), Constant.CONCIG_SHOW_CUSTOMER_SERVICE, "true");
+        RelativeLayout feedbackLayout = (RelativeLayout) rootView.findViewById(R.id.more_feedback_layout);
+        if (isShowFeedback.equals("true")) {
+            feedbackLayout.setVisibility(View.VISIBLE);
+            feedbackLayout.setOnClickListener(onClickListener);
+        }
+        RelativeLayout customerLayout = (RelativeLayout) rootView.findViewById(R.id.customer_layout);
+        if (isShowCustomerService.equals("true")) {
+            customerLayout.setVisibility(View.VISIBLE);
+            customerLayout.setOnClickListener(onClickListener);
+        }
+        if (isShowCustomerService.equals("false") && isShowFeedback.equals("false")){
+            (rootView.findViewById(R.id.blank_layout)).setVisibility(View.GONE);
+        }
         rootView.findViewById(R.id.more_set_layout).setOnClickListener(onClickListener);
         rootView.findViewById(R.id.more_userhead_layout).setOnClickListener(onClickListener);
-        (rootView.findViewById(R.id.more_help_layout)).setOnClickListener(onClickListener);
-        (rootView.findViewById(R.id.more_message_layout)).setOnClickListener(onClickListener);
-        (rootView.findViewById(R.id.more_invite_friends_layout)).setOnClickListener(onClickListener);
         (rootView.findViewById(R.id.about_layout)).setOnClickListener(onClickListener);
-        (rootView.findViewById(R.id.customer_layout)).setOnClickListener(onClickListener);
         (rootView.findViewById(R.id.scan_login_desktop_layout)).setOnClickListener(onClickListener);
         moreHeadImg = (ImageView) rootView.findViewById(R.id.more_head_img);
     }
 
 
-    private void getMyInfo() {
+    private void setMyInfo() {
         // TODO Auto-generated method stub
-        String myInfo = PreferencesUtils.getString(getActivity(), "myInfo", "");
-        getMyInfoResult = new GetMyInfoResult(myInfo);
-        String inspurId = getMyInfoResult.getID();
-        String photoUri = UriUtils.getChannelImgUri(getActivity(), inspurId);
+        String uid = ((MyApplication)getActivity().getApplicationContext()).getUid();
+        String photoUri = UriUtils.getChannelImgUri(getActivity(), uid);
         ImageDisplayUtils.getInstance().displayImage(moreHeadImg, photoUri, R.drawable.icon_photo_default);
         String userName = PreferencesUtils.getString(getActivity(), "userRealName", getString(R.string.not_set));
         ((TextView) rootView.findViewById(R.id.more_head_name_text)).setText(userName);
@@ -104,25 +118,14 @@ public class MoreFragment extends Fragment {
     }
 
 
-    private void handMessage() {
-        // TODO Auto-generated method stub
-        handler = new Handler() {
-
-            @Override
-            public void handleMessage(Message msg) {
-                // TODO Auto-generated method stub
-                switch (msg.what) {
-                    case UPDATE_MY_HEAD:
-                        getMyInfoResult.setAvatar((String) msg.obj);
-                        String userheadUrl = "https://mob.inspur.com" + getMyInfoResult.getAvatar();
-                        ImageDisplayUtils.getInstance().displayImage(moreHeadImg, userheadUrl, R.drawable.icon_photo_default);
-                        break;
-                    default:
-                        break;
-                }
-            }
-
-        };
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK && requestCode == REQUEST_CODE_UPDATE_USER_PHOTO) {
+            String uid = ((MyApplication)getActivity().getApplicationContext()).getUid();
+            String photoUri = UriUtils.getChannelImgUri(getActivity(),uid);
+            ImageDisplayUtils.getInstance().displayImage(moreHeadImg, photoUri, R.drawable.icon_photo_default);
+        }
     }
 
     private OnClickListener onClickListener = new OnClickListener() {
@@ -130,26 +133,20 @@ public class MoreFragment extends Fragment {
         @Override
         public void onClick(View v) {
             // TODO Auto-generated method stub
-            Intent intent = new Intent();
             switch (v.getId()) {
                 case R.id.more_set_layout:
-                    intent.setClass(getActivity(), SettingActivity.class);
-                    startActivity(intent);
+                    IntentUtils.startActivity(getActivity(), SettingActivity.class);
                     recordUserClick("setting");
                     break;
                 case R.id.more_userhead_layout:
+                    Intent intent = new Intent();
                     intent.setClass(getActivity(), MyInfoActivity.class);
-                    intent.putExtra("getMyInfoResult", (Serializable) getMyInfoResult);
-                    startActivity(intent);
+                    startActivityForResult(intent, REQUEST_CODE_UPDATE_USER_PHOTO);
                     recordUserClick("profile");
                     break;
-                case R.id.more_help_layout:
-                    intent.setClass(getActivity(), FeedBackActivity.class);
-                    startActivity(intent);
+                case R.id.more_feedback_layout:
+                    IntentUtils.startActivity(getActivity(), FeedBackActivity.class);
                     recordUserClick("feedback");
-                    break;
-                case R.id.more_message_layout:
-                    ToastUtils.show(getActivity(), R.string.function_not_implemented);
                     break;
                 case R.id.about_layout:
                     IntentUtils.startActivity(getActivity(),
@@ -158,17 +155,12 @@ public class MoreFragment extends Fragment {
                     break;
                 case R.id.customer_layout:
                     Channel customerChannel = ChannelCacheUtils.getCustomerChannel(getActivity());
-                    if (customerChannel != null) {
-                        Bundle bundle = new Bundle();
-                        bundle.putString("title", customerChannel.getTitle());
-                        bundle.putString("cid", customerChannel.getCid());
-                        bundle.putString("channelType", customerChannel.getType());
-                        //为区分来自云+客服添加一个from值，在ChannelActivity里使用
-                        bundle.putString("from", "customer");
-                        IntentUtils.startActivity(getActivity(),
-                                ChannelActivity.class, bundle);
-                        recordUserClick("customservice");
-                    }
+                    Bundle bundle = new Bundle();
+                    bundle.putString("cid", customerChannel.getCid());
+                    //为区分来自云+客服添加一个from值，在ChannelActivity里使用
+                    bundle.putString("from", "customer");
+                    IntentUtils.startActivity(getActivity(), ChannelActivity.class, bundle);
+                    recordUserClick("customservice");
                     break;
                 default:
                     break;
@@ -187,15 +179,6 @@ public class MoreFragment extends Fragment {
         PVCollectModelCacheUtils.saveCollectModel(getActivity(), pvCollectModel);
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        Channel customerChannel = ChannelCacheUtils.getCustomerChannel(getActivity());
-        //如果找不到云+客服频道就隐藏
-        if (customerChannel == null) {
-            (rootView.findViewById(R.id.customer_layout)).setVisibility(View.GONE);
-        }
-    }
 
     /**
      * 设置标题
@@ -207,20 +190,5 @@ public class MoreFragment extends Fragment {
         }
     }
 
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
-        super.onActivityCreated(savedInstanceState);
-    }
-
-    @Override
-    public void onDestroy() {
-        // TODO Auto-generated method stub
-        super.onDestroy();
-        if (handler != null) {
-            handler = null;
-        }
-    }
 
 }

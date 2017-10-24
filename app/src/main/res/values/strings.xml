@@ -363,7 +363,7 @@
     <string name="follow_system">跟随系统</string>
     <string name="more_message">消息通知</string>
     <string name="more_allApps">所有应用</string>
-    <string name="more_help">意见反馈</string>
+    <string name="more_feedback">意见反馈</string>
     <string name="more_pushlist_text">推送列表</string>
     <string name="more_invitefriend_text">邀请好友使用Cloud</string>
     <string name="account_security_head">账号与安全</string>

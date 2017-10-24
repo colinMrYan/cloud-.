@@ -360,7 +360,7 @@
     <string name="follow_system">Follow system</string>
     <string name="more_message">Message notice</string>
     <string name="more_allApps">All Apps</string>
-    <string name="more_help">Feedback</string>
+    <string name="more_feedback">Feedback</string>
     <string name="more_pushlist_text">Push List</string>
     <string name="more_invitefriend_text">Invite your friends to Cloud</string>
     <string name="account_security_head">Account Security</string>
