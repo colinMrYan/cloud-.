@@ -389,7 +389,7 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
                         }
                     });
             if (canEdit) {
-                if (getNeedCommonlyUseApp() && (listPosition == 0)) {
+                if (getNeedCommonlyUseApp() && AppCacheUtils.getCommonlyUseAppList(getActivity()).size() > 0 && (listPosition == 0)) {
                     //如果应用列表可以编辑，并且有常用应用分组，则把常用应用的可编辑属性设置false（也就是第0行设为false）
                     dragGridViewAdapter.setCanEdit(false);
                 } else {
