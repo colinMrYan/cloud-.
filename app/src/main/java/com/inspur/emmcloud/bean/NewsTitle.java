@@ -2,7 +2,7 @@ package com.inspur.emmcloud.bean;
 
 import org.json.JSONObject;
 
-public class Titles {
+public class NewsTitle {
 
 	private static final String TAG = "GetNewsTitleResult";
 	private String ncid = "";
@@ -15,7 +15,7 @@ public class Titles {
 	private String type = "";
 	private boolean hasExtraPermission = false;
 	
-	public Titles(JSONObject jsonObject){
+	public NewsTitle(JSONObject jsonObject){
 		try {
 			
 			if(jsonObject.has("id")){

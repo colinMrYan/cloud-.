@@ -1809,7 +1809,7 @@ public class WorkAPIService {
             jsonArray.put(jsonObject);
             params.setBodyContent(jsonArray.toString());
             params.setAsJsonContent(true);
-        } catch (JSONException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 

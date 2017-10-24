@@ -41,6 +41,7 @@ import com.inspur.emmcloud.bean.AppOrder;
 import com.inspur.emmcloud.bean.GetAppBadgeResult;
 import com.inspur.emmcloud.bean.GetAppGroupResult;
 import com.inspur.emmcloud.bean.PVCollectModel;
+import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.util.AppCacheUtils;
 import com.inspur.emmcloud.util.AppTitleUtils;
 import com.inspur.emmcloud.util.IntentUtils;
@@ -78,6 +79,7 @@ import static com.inspur.emmcloud.util.AppCacheUtils.getCommonlyUseAppList;
 public class MyAppFragment extends Fragment implements OnRefreshListener {
 
     private static final String ACTION_NAME = "add_app";
+    private static final long GET_BADGE_DELAY = 5 * 60 * 60;
     private View rootView;
     private LayoutInflater inflater;
     private PullableListView appListView;
@@ -127,7 +129,13 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
             refreshAppListView();
             isHasCacheNotRefresh = false;
         }
-        getAppBadgeNum();
+        //隔五分钟刷一次badge
+        long badgeUpdateTime = PreferencesByUserAndTanentUtils.getLong(getActivity(),
+                Constant.PREF_APP_BADGE_UPDATE_TIME,0l);
+        long badgeUpdateTimeBetween = System.currentTimeMillis() - badgeUpdateTime;
+        if(badgeUpdateTimeBetween>=GET_BADGE_DELAY){
+            getAppBadgeNum();
+        }
     }
 
     @Override
@@ -180,6 +188,7 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
         (rootView.findViewById(R.id.appcenter_layout)).setOnClickListener(listener);
         getMyApp();
         setTabTitle();
+        getAppBadgeNum();
 //        shortCutAppList.add("mobile_checkin_hcm");
 //        shortCutAppList.add("inspur_news_esg");//目前，除在此处添加id还需要为每个需要生成快捷方式的应用配置图标
     }
@@ -381,7 +390,7 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
                         }
                     });
             if (canEdit) {
-                if (getNeedCommonlyUseApp() && (listPosition == 0)) {
+                if (getNeedCommonlyUseApp() && AppCacheUtils.getCommonlyUseAppList(getActivity()).size() > 0 && (listPosition == 0)) {
                     //如果应用列表可以编辑，并且有常用应用分组，则把常用应用的可编辑属性设置false（也就是第0行设为false）
                     dragGridViewAdapter.setCanEdit(false);
                 } else {
@@ -1018,12 +1027,14 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
             pullToRefreshLayout.refreshFinish(PullToRefreshLayout.SUCCEED);
             appBadgeBeanMap = getAppBadgeResult.getAppBadgeBeanMap();
             appListAdapter.notifyDataSetChanged();
+            PreferencesByUserAndTanentUtils.putLong(getActivity(), Constant.PREF_APP_BADGE_UPDATE_TIME,System.currentTimeMillis());
         }
 
         @Override
         public void returnGetAppBadgeResultFail(String error, int errorCode) {
             pullToRefreshLayout.refreshFinish(PullToRefreshLayout.FAIL);
-            WebServiceMiddleUtils.hand(getActivity(), error, errorCode);
+//            WebServiceMiddleUtils.hand(getActivity(), error, errorCode);
+            PreferencesByUserAndTanentUtils.putLong(getActivity(), Constant.PREF_APP_BADGE_UPDATE_TIME,0l);
         }
     }
 }

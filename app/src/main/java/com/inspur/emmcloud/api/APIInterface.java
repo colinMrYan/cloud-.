@@ -11,8 +11,8 @@ import com.inspur.emmcloud.bean.GetAdressUsersResult;
 import com.inspur.emmcloud.bean.GetAllAppResult;
 import com.inspur.emmcloud.bean.GetAllContactResult;
 import com.inspur.emmcloud.bean.GetAllRobotsResult;
-import com.inspur.emmcloud.bean.GetAppConfigResult;
 import com.inspur.emmcloud.bean.GetAppBadgeResult;
+import com.inspur.emmcloud.bean.GetAppConfigResult;
 import com.inspur.emmcloud.bean.GetAppGroupResult;
 import com.inspur.emmcloud.bean.GetAppTabAutoResult;
 import com.inspur.emmcloud.bean.GetAppTabsResult;
@@ -79,7 +79,6 @@ import com.inspur.emmcloud.bean.SplashPageBean;
 import com.inspur.emmcloud.bean.TaskResult;
 import com.inspur.emmcloud.bean.Trip;
 import com.inspur.emmcloud.bean.UserProfileInfoBean;
-import com.inspur.emmcloud.bean.GetDeviceCheckResult;
 
 
 public interface APIInterface {
@@ -195,9 +194,9 @@ public interface APIInterface {
 
     void returnGroupNewsTitleFail(String error, int errorCode);
 
-    void returnGroupNewsDetailSuccess(GetGroupNewsDetailResult getGroupNewsDetailResult);
+    void returnGroupNewsDetailSuccess(GetGroupNewsDetailResult getGroupNewsDetailResult,int page);
 
-    void returnGroupNewsDetailFail(String error, int errorCode);
+    void returnGroupNewsDetailFail(String error, int errorCode,int page);
 
     void returnMeetingsSuccess(GetMeetingsResult getMeetingsResult);
 

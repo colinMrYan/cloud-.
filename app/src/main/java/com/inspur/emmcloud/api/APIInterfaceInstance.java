@@ -408,13 +408,13 @@ public class APIInterfaceInstance implements APIInterface {
 
     @Override
     public void returnGroupNewsDetailSuccess(
-            GetGroupNewsDetailResult getGroupNewsDetailResult) {
+            GetGroupNewsDetailResult getGroupNewsDetailResult,int page) {
         // TODO Auto-generated method stub
 
     }
 
     @Override
-    public void returnGroupNewsDetailFail(String error, int errorCode) {
+    public void returnGroupNewsDetailFail(String error, int errorCode,int page) {
         // TODO Auto-generated method stub
 
     }
