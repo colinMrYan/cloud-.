@@ -25,7 +25,7 @@
     <string name="file">文件</string>
     <string name="next_step">下一步</string>
     <string name="pull_down_load_history">下拉載入歷史消息</string>
-    <string name="if_confirm_signout">確定退出當前帳號？</string>
+    <string name="if_confirm_signout">您確定要退出登錄嗎？</string>
     <string name="exit">退出</string>
     <string name="open">打開</string>
     <string name="add">添加</string>
