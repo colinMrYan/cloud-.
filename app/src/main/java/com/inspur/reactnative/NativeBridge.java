@@ -199,6 +199,10 @@ public class NativeBridge extends ReactContextBaseJavaModule implements Activity
 
     /**
      * 根据email查找联系人接口
+     * 2017/10/24修改
+     * 把抛出异常改为返回null
+     * 修改原因是当RN传空字符串（如离职人员会产生空字符串）
+     * 保证不阻挡继续执行
      *
      * @param email
      * @param promise
@@ -206,7 +210,8 @@ public class NativeBridge extends ReactContextBaseJavaModule implements Activity
     @ReactMethod
     public void findContactByMail(String email, Promise promise) {
         if(StringUtils.isBlank(email) || email.equals("null")){
-            promise.reject(new Exception("no contact found by email"));
+//            promise.reject(new Exception("no contact found by email"));
+            promise.resolve(null);
             return;
         }
         Contact contact = ContactCacheUtils.getContactByEmail(getCurrentActivity(), email);
@@ -214,7 +219,8 @@ public class NativeBridge extends ReactContextBaseJavaModule implements Activity
             WritableNativeMap map = contact.contact2Map(getCurrentActivity());
             promise.resolve(map);
         } else {
-            promise.reject(new Exception("no contact found by email"));
+//            promise.reject(new Exception("no contact found by email"));
+            promise.resolve(null);
         }
     }
 
