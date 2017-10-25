@@ -1,6 +1,5 @@
 package com.inspur.emmcloud.ui.mine.setting;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
@@ -32,6 +31,7 @@ import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.SwitchView;
+import com.qmuiteam.qmui.widget.dialog.QMUIBottomSheet;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
 
@@ -181,21 +181,19 @@ public class SettingActivity extends BaseActivity {
     private void showClearCacheDlg() {
         // TODO Auto-generated method stub
 
-        final String[] items = new String[]{getString(R.string.settings_clean_imgae_attachment), getString(R.string.settings_clean_web), getString(R.string.settings_clean_all),getString(R.string.button_cancel)};
-        new QMUIDialog.MenuDialogBuilder(SettingActivity.this)
-                .addItems(items, new DialogInterface.OnClickListener() {
+        new QMUIBottomSheet.BottomListSheetBuilder(SettingActivity.this)
+                .addItem(getString(R.string.settings_clean_imgae_attachment))
+                .addItem(getString(R.string.settings_clean_web))
+                .addItem(getString(R.string.settings_clean_all))
+                .setOnSheetItemClickListener(new QMUIBottomSheet.BottomListSheetBuilder.OnSheetItemClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which) {
+                    public void onClick(QMUIBottomSheet dialog, View itemView, int position, String tag) {
                         dialog.dismiss();
-                        switch (which){
+                        switch (position){
                             case 0:
-                                String msgCachePath = Environment
-                                        .getExternalStorageDirectory()
-                                        + "/IMP-Cloud/download/";
-                                String imgCachePath = MyAppConfig.LOCAL_CACHE_PATH;
                                 DataCleanManager.cleanApplicationData(
-                                        SettingActivity.this, msgCachePath,
-                                        imgCachePath);
+                                        SettingActivity.this, MyAppConfig.LOCAL_DOWNLOAD_PATH,
+                                        MyAppConfig.LOCAL_CACHE_PATH);
                                 ImageDisplayUtils.getInstance().clearAllCache();
                                 handler.sendEmptyMessage(DATA_CLEAR_SUCCESS);
                                 break;
@@ -212,6 +210,7 @@ public class SettingActivity extends BaseActivity {
                         }
                     }
                 })
+                .build()
                 .show();
     }
 

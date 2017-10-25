@@ -413,7 +413,7 @@
         <activity
             android:name=".ui.app.ReactNativeAppActivity"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Holo.Light.NoActionBar"></activity>
+            ></activity>
         <activity
             android:name=".ui.chat.ModifyChannelGroupNameActivity"
             android:screenOrientation="portrait" />
