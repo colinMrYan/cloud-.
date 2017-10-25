@@ -434,16 +434,20 @@ public class FileTransferService extends ImpPlugin {
         String filename = null;
         String headField = urlConnection.getHeaderField("Content-Disposition");
         if (!StringUtils.isBlank(headField)) {
-            filename = headField.split("filename=")[1];
-            //有些下载链接检测到的文件名带双引号，此处给去掉
-            try {
-                if (filename.length() > 2 && filename.startsWith("\"") && filename.endsWith("\"")) {
-                    filename = filename.substring(1, filename.length() - 1);
+            headField = headField.toLowerCase();
+            if (headField.contains("filename=")){
+                //有些下载链接检测到的文件名带双引号，此处给去掉
+                try {
+                    filename = headField.split("filename=")[1];
+                    if (filename.length() > 2 && filename.startsWith("\"") && filename.endsWith("\"")) {
+                        filename = filename.substring(1, filename.length() - 1);
+                    }
+                    return filename;
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
             }
-            return filename;
+
         }
         filename = urlConnection.getURL().getFile();
         if (filename.contains("/")) {
