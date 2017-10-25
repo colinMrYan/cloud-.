@@ -1,7 +1,6 @@
 package com.inspur.emmcloud.bean;
 
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
@@ -16,7 +15,7 @@ public class ReactNativeInstallUriBean {
             if(jsonObject.has("install_uri")){
                 this.installUri = jsonObject.getString("install_uri");
             }
-        } catch (JSONException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

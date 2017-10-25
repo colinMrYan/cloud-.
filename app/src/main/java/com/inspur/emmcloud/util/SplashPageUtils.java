@@ -11,6 +11,7 @@ import com.inspur.emmcloud.api.apiservice.ReactNativeAPIService;
 import com.inspur.emmcloud.bean.AppException;
 import com.inspur.emmcloud.bean.SplashPageBean;
 import com.inspur.emmcloud.callback.CommonCallBack;
+import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.config.MyAppConfig;
 
 import java.io.File;
@@ -37,7 +38,7 @@ public class SplashPageUtils {
                     apiService.setAPIInterface(new WebService());
                     String splashInfo = PreferencesByUserAndTanentUtils.getString(context, "splash_page_info", "");
                     SplashPageBean splashPageBean = new SplashPageBean(splashInfo);
-                    String clientId = PreferencesUtils.getString(context, UriUtils.tanent + ((MyApplication) context.getApplicationContext()).getUid() + "react_native_clientid", "");
+                    String clientId = PreferencesByUserAndTanentUtils.getString(context, Constant.PREF_REACT_NATIVE_CLIENTID, "");
                     apiService.getSplashPageInfo(clientId, splashPageBean.getId().getVersion());
 
                 }
@@ -164,9 +165,7 @@ public class SplashPageUtils {
         if (NetUtils.isNetworkConnected(context, false)) {
             String splashInfoOld = PreferencesByUserAndTanentUtils.getString(context, "splash_page_info_old", "");
             SplashPageBean splashPageBeanLocalOld = new SplashPageBean(splashInfoOld);
-            String uid = ((MyApplication) context.getApplicationContext()).getUid();
-            String clientId = PreferencesUtils.getString(context, UriUtils.tanent + uid +
-                    "react_native_clientid", "");
+            String clientId = PreferencesByUserAndTanentUtils.getString(context, Constant.PREF_REACT_NATIVE_CLIENTID, "");
             ReactNativeAPIService reactNativeAPIService = new ReactNativeAPIService(context);
             reactNativeAPIService.setAPIInterface(new WebService());
             reactNativeAPIService.writeBackSplashPageVersionChange(splashPageBeanLocalOld.getId().getVersion(), currentVersion, clientId, s);

@@ -35,6 +35,7 @@ import com.inspur.emmcloud.bean.GetAppTabAutoResult;
 import com.inspur.emmcloud.bean.GetSearchChannelGroupResult;
 import com.inspur.emmcloud.bean.PVCollectModel;
 import com.inspur.emmcloud.callback.CommonCallBack;
+import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.interf.OnTabReselectListener;
 import com.inspur.emmcloud.service.CoreService;
 import com.inspur.emmcloud.service.PVCollectService;
@@ -56,7 +57,6 @@ import com.inspur.emmcloud.util.ImageDisplayUtils;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.util.PreferencesByUserAndTanentUtils;
-import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.ReactNativeUtils;
 import com.inspur.emmcloud.util.RobotCacheUtils;
 import com.inspur.emmcloud.util.SplashPageUtils;
@@ -192,9 +192,8 @@ public class IndexActivity extends BaseFragmentActivity implements
                 if (NetUtils.isNetworkConnected(getApplicationContext(), false)) {
                     AppAPIService apiService = new AppAPIService(IndexActivity.this);
                     apiService.setAPIInterface(new WebService());
-                    String uid = ((MyApplication) getApplication()).getUid();
                     String version = PreferencesByUserAndTanentUtils.getString(IndexActivity.this, "app_tabbar_version", "");
-                    String clientId = PreferencesUtils.getString(IndexActivity.this, UriUtils.tanent + uid + "react_native_clientid", "");
+                    String clientId = PreferencesByUserAndTanentUtils.getString(IndexActivity.this, Constant.PREF_REACT_NATIVE_CLIENTID, "");
                     apiService.getAppNewTabs(version, clientId);
 
                 }

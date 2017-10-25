@@ -25,18 +25,19 @@ import com.inspur.emmcloud.bean.GetMyInfoResult;
 import com.inspur.emmcloud.bean.ReactNativeDownloadUrlBean;
 import com.inspur.emmcloud.bean.ReactNativeInstallUriBean;
 import com.inspur.emmcloud.callback.CommonCallBack;
+import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.util.AppExceptionCacheUtils;
 import com.inspur.emmcloud.util.AppUtils;
 import com.inspur.emmcloud.util.ClientIDUtils;
 import com.inspur.emmcloud.util.FileUtils;
+import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.StateBarColor;
 import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.ToastUtils;
-import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.util.ZipUtils;
 import com.inspur.emmcloud.widget.dialogs.ECMCustomIOSDialog;
@@ -58,7 +59,7 @@ public class ReactNativeAppActivity extends BaseActivity implements DefaultHardw
     private String reactAppFilePath;
     private ECMCustomIOSDialog loadingDialog;
     private String appModule;
-    private String installUri = "";
+//    private String installUri = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -160,7 +161,7 @@ public class ReactNativeAppActivity extends BaseActivity implements DefaultHardw
                 public void execute() {
                     StringBuilder describeVersionAndTime = ReactNativeFlow.getBundleDotJsonFromFile(reactAppFilePath);
                     AndroidBundleBean androidBundleBean = new AndroidBundleBean(describeVersionAndTime.toString());
-                    String clientId = PreferencesUtils.getString(ReactNativeAppActivity.this, UriUtils.tanent + ((MyApplication)getApplicationContext()).getUid() + "react_native_clientid", "");
+                    String clientId = PreferencesByUserAndTanentUtils.getString(ReactNativeAppActivity.this, Constant.PREF_REACT_NATIVE_CLIENTID, "");
                     reactNativeAPIService.getDownLoadUrl(ReactNativeAppActivity.this,androidBundleBean.getUpdate(),clientId,androidBundleBean.getVersion());
                 }
             }).getClientID();
@@ -296,7 +297,8 @@ public class ReactNativeAppActivity extends BaseActivity implements DefaultHardw
             new ClientIDUtils(ReactNativeAppActivity.this, new CommonCallBack() {
                 @Override
                 public void execute() {
-                    String clientId = PreferencesByUserAndTanentUtils.getString(ReactNativeAppActivity.this, "react_native_clientid", "");
+                    String clientId = PreferencesByUserAndTanentUtils.getString(ReactNativeAppActivity.this, Constant.PREF_REACT_NATIVE_CLIENTID, "");
+                    LogUtils.YfcDebug("获取下载地址时的clientId："+clientId);
                     StringBuilder describeVersionAndTime = ReactNativeFlow.getBundleDotJsonFromFile(reactAppFilePath);
                     AndroidBundleBean androidBundleBean = new AndroidBundleBean(describeVersionAndTime.toString());
                     reactNativeAPIService.getDownLoadUrl(ReactNativeAppActivity.this, reactNativeInstallUriBean.getInstallUri(), clientId, androidBundleBean.getVersion());
@@ -382,7 +384,7 @@ public class ReactNativeAppActivity extends BaseActivity implements DefaultHardw
      * 向服务端写回目前版本
      */
     private void writeBackVersion(String preVersion, String currentVersion, String command) {
-        String clientId = PreferencesByUserAndTanentUtils.getString(ReactNativeAppActivity.this, "react_native_clientid", "");
+        String clientId = PreferencesByUserAndTanentUtils.getString(ReactNativeAppActivity.this, Constant.PREF_REACT_NATIVE_CLIENTID, "");
         reactNativeAPIService.writeBackVersionChange(preVersion, currentVersion, clientId, command, appModule);
     }
 
@@ -405,7 +407,7 @@ public class ReactNativeAppActivity extends BaseActivity implements DefaultHardw
             if (loadingDialog != null && loadingDialog.isShowing()) {
                 loadingDialog.dismiss();
             }
-            installUri = reactNativeInstallUriBean.getInstallUri();
+//            installUri = reactNativeInstallUriBean.getInstallUri();
             getDownlaodUrl(reactNativeInstallUriBean);
         }
 

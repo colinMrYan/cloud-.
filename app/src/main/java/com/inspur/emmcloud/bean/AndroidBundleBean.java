@@ -1,5 +1,6 @@
 package com.inspur.emmcloud.bean;
 
+import com.inspur.emmcloud.util.JSONUtils;
 import com.inspur.emmcloud.util.StringUtils;
 
 import org.json.JSONObject;
@@ -46,34 +47,15 @@ public class AndroidBundleBean {
     public AndroidBundleBean(String androidBundleBean){
         try {
             JSONObject jsonAndroid = StringUtils.isBlank(androidBundleBean)? new JSONObject(): new JSONObject(androidBundleBean);
-            if(jsonAndroid.has("domain")){
-                this.domain = jsonAndroid.getString("domain");
-            }
-            if(jsonAndroid.has("version")){
-                this.version = jsonAndroid.getString("version");
-            }
-            if(jsonAndroid.has("creationDate")){
-                this.creationDate = jsonAndroid.getLong("creationDate");
-            }
-            if(jsonAndroid.has("platform")){
-                this.platform = jsonAndroid.getString("platform");
-            }
-            if(jsonAndroid.has("type")){
-                this.type = jsonAndroid.getString("type");
-            }
-            if(jsonAndroid.has("source")){
-                this.source = jsonAndroid.getString("source");
-            }
-            if(jsonAndroid.has("namespace")){
-                this.namespace = jsonAndroid.getString("namespace");
-            }
-            if(jsonAndroid.has("mainComponent")){
-                this.mainComponent = jsonAndroid.getString("mainComponent");
-            }
-            if(jsonAndroid.has("update")){
-                this.update = jsonAndroid.getString("update");
-            }
-
+            this.domain = JSONUtils.getString(jsonAndroid,"domain","");
+            this.version = JSONUtils.getString(jsonAndroid,"version","");
+            this.creationDate = JSONUtils.getLong(jsonAndroid,"creationDate",0);
+            this.platform = JSONUtils.getString(jsonAndroid,"platform","");
+            this.type = JSONUtils.getString(jsonAndroid,"type","");
+            this.source = JSONUtils.getString(jsonAndroid,"source","");
+            this.namespace = JSONUtils.getString(jsonAndroid,"namespace","");
+            this.mainComponent = JSONUtils.getString(jsonAndroid,"mainComponent","");
+            this.update = JSONUtils.getString(jsonAndroid,"update","");
         } catch (Exception e) {
             e.printStackTrace();
         }

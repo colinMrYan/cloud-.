@@ -65,7 +65,6 @@ public class AppCenterActivity extends BaseActivity {
     private static final int UPTATE_VIEWPAGER = 1;
     private static final String APP_CENTER_CATEGORY_PROTOCOL = "ecc-app-store://category";
     private static final String APP_CENTER_APP_NAME_PROTOCOL = "ecc-app-store://app";
-    private MyAppAPIService apiService;
     private ViewPager viewPager;
     private CircularProgress recommandCircleProgress, classCircleProgress;
     private ListView recommandListView, classListView;
@@ -89,8 +88,6 @@ public class AppCenterActivity extends BaseActivity {
      * 初始化视图
      */
     private void initView() {
-        apiService = new MyAppAPIService(AppCenterActivity.this);
-        apiService.setAPIInterface(new WebService());
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         View recommendView = LayoutInflater.from(this).inflate(
                 R.layout.app_recommend_layout, null);
@@ -98,7 +95,6 @@ public class AppCenterActivity extends BaseActivity {
                 R.layout.app_categories_layout, null);
         recommandListView = (ListView) recommendView.findViewById(R.id.list);
         classListView = (ListView) classView.findViewById(R.id.app_center_categories_list);
-        recommandListView.setAdapter(recommandAppAdapter);
         recommandCircleProgress = (CircularProgress) recommendView
                 .findViewById(R.id.circle_progress);
         classCircleProgress = (CircularProgress) classView
@@ -184,6 +180,8 @@ public class AppCenterActivity extends BaseActivity {
      */
     private void getAllApp() {
         if (NetUtils.isNetworkConnected(getApplicationContext())) {
+            MyAppAPIService apiService = new MyAppAPIService(AppCenterActivity.this);
+            apiService.setAPIInterface(new WebService());
             apiService.getNewAllApps();
         }
     }
@@ -351,7 +349,7 @@ public class AppCenterActivity extends BaseActivity {
      * @param mViewPager
      */
     private void initRecomandViewPager(RelativeLayout mViewPagerContainer, final ViewPager mViewPager) {
-        mViewPager.setAdapter(new RecommandAppPagerAdapter());
+        mViewPager.setAdapter(new AdsAppPagerAdapter());
         startAutoSlide(mViewPager);
         if (adsList.size() > 1) {
             mViewPager.setCurrentItem(1);
@@ -398,7 +396,7 @@ public class AppCenterActivity extends BaseActivity {
     /**
      * banner的adapter
      */
-    class RecommandAppPagerAdapter extends PagerAdapter {
+    class AdsAppPagerAdapter extends PagerAdapter {
         @Override
         public int getCount() {
             return adsList.size() == 0 ? 0 : Integer.MAX_VALUE;
