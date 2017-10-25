@@ -1,5 +1,6 @@
 package com.inspur.emmcloud.ui.app.groupnews;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -16,11 +17,9 @@ import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
 import com.inspur.emmcloud.bean.GetNewsTitleResult;
 import com.inspur.emmcloud.bean.NewsTitle;
 import com.inspur.emmcloud.bean.PVCollectModel;
-import com.inspur.emmcloud.util.DensityUtil;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.util.StateBarColor;
-import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.ToastUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
@@ -109,6 +108,7 @@ public class GroupNewsActivity extends BaseFragmentActivity implements
 	@Override
 	public void onPageSelected(int arg0) {
 		pagerAdapter.getItem(arg0);
+		pagerAdapter.notifyDataSetChanged();
 	}
 
 	/**
@@ -132,9 +132,9 @@ public class GroupNewsActivity extends BaseFragmentActivity implements
 		//获取PagerSlidingTabStrip，并初始化设置
 		PagerSlidingTabStrip pagerSlidingTabStrip = (PagerSlidingTabStrip) findViewById(R.id.tabs);
 		pagerSlidingTabStrip.setDividerColor(getResources().getColor(R.color.content_border));
-		pagerSlidingTabStrip.setIndicatorColor(getResources().getColor(R.color.header_bg));
-		pagerSlidingTabStrip.setTextSize(DensityUtil.sp2px(getApplicationContext(),6));
-		pagerSlidingTabStrip.setTextColor(R.drawable.selector_viewpager_tab_text);
+		pagerSlidingTabStrip.setIndicatorColor(Color.parseColor("#0F7BCA"));
+		pagerSlidingTabStrip.setTextSize(17);
+		pagerSlidingTabStrip.setTextColorStateList(R.color.news_viewpager_tab_text_color);
 		pagerSlidingTabStrip.setOnPageChangeListener(this);
 		//设置导航器和viewPager关联
 		pagerSlidingTabStrip.setViewPager(viewPager);
