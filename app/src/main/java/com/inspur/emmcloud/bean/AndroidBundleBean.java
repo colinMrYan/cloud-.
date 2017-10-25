@@ -1,5 +1,7 @@
 package com.inspur.emmcloud.bean;
 
+import com.inspur.emmcloud.util.StringUtils;
+
 import org.json.JSONObject;
 
 /**
@@ -43,7 +45,7 @@ public class AndroidBundleBean {
 
     public AndroidBundleBean(String androidBundleBean){
         try {
-            JSONObject jsonAndroid = new JSONObject(androidBundleBean);
+            JSONObject jsonAndroid = StringUtils.isBlank(androidBundleBean)? new JSONObject(): new JSONObject(androidBundleBean);
             if(jsonAndroid.has("domain")){
                 this.domain = jsonAndroid.getString("domain");
             }
