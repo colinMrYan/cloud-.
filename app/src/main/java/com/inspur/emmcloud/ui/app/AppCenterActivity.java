@@ -23,7 +23,6 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -39,11 +38,14 @@ import com.inspur.emmcloud.bean.GetAllAppResult;
 import com.inspur.emmcloud.util.DensityUtil;
 import com.inspur.emmcloud.util.ImageDisplayUtils;
 import com.inspur.emmcloud.util.IntentUtils;
+import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.CircularProgress;
 import com.inspur.emmcloud.widget.ECMSpaceItemDecoration;
+import com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout;
+import com.inspur.emmcloud.widget.pullableview.PullableListView;
 import com.inspur.imp.api.ImpActivity;
 
 import java.io.Serializable;
@@ -60,14 +62,15 @@ import static com.inspur.emmcloud.ui.app.AppCenterMoreActivity.APP_CENTER_CATEGO
  * 应用中心页面 com.inspur.emmcloud.ui.AppCenterActivity create at 2016年8月31日
  * 下午2:54:47
  */
-public class AppCenterActivity extends BaseActivity {
+public class AppCenterActivity extends BaseActivity  implements PullToRefreshLayout.OnRefreshListener {
     private static final String ACTION_NAME = "add_app";
     private static final int UPTATE_VIEWPAGER = 1;
     private static final String APP_CENTER_CATEGORY_PROTOCOL = "ecc-app-store://category";
     private static final String APP_CENTER_APP_NAME_PROTOCOL = "ecc-app-store://app";
     private ViewPager viewPager;
     private CircularProgress recommandCircleProgress, classCircleProgress;
-    private ListView recommandListView, classListView;
+    private PullableListView recommandListView,classListView;
+    private PullToRefreshLayout recommandPullToRefreshLayout, classPullToRefreshLayout;
     private List<AppAdsBean> adsList = new ArrayList<>();
     private List<AppGroupBean> categorieAppList = new ArrayList<AppGroupBean>();
     private List<List<App>> appList = new ArrayList<>();
@@ -93,8 +96,17 @@ public class AppCenterActivity extends BaseActivity {
                 R.layout.app_recommend_layout, null);
         View classView = LayoutInflater.from(this).inflate(
                 R.layout.app_categories_layout, null);
-        recommandListView = (ListView) recommendView.findViewById(R.id.list);
-        classListView = (ListView) classView.findViewById(R.id.app_center_categories_list);
+        recommandPullToRefreshLayout = (PullToRefreshLayout) recommendView
+                .findViewById(R.id.refresh_view);
+        recommandPullToRefreshLayout.setOnRefreshListener(AppCenterActivity.this);
+        classPullToRefreshLayout = (PullToRefreshLayout) classView
+                .findViewById(R.id.refresh_view);
+        classPullToRefreshLayout.setOnRefreshListener(AppCenterActivity.this);
+        recommandListView = (PullableListView) recommendView.findViewById(R.id.list);
+        classListView = (PullableListView) classView.findViewById(R.id.app_center_categories_list);
+        recommandAppAdapter = new RecommondAppAdapter();
+        recommandListView.setAdapter(recommandAppAdapter);
+        categoriesAppAdapter = new CategoriesAppAdapter();
         recommandCircleProgress = (CircularProgress) recommendView
                 .findViewById(R.id.circle_progress);
         classCircleProgress = (CircularProgress) classView
@@ -104,6 +116,17 @@ public class AppCenterActivity extends BaseActivity {
         viewList.add(classView);
         viewPager.setAdapter(new MyViewPagerAdapter(viewList, null));
         viewPager.addOnPageChangeListener(new PageChangeListener());
+    }
+
+    @Override
+    public void onRefresh(PullToRefreshLayout pullToRefreshLayout) {
+        LogUtils.YfcDebug("调用刷新");
+        getAllApp();
+    }
+
+    @Override
+    public void onLoadMore(PullToRefreshLayout pullToRefreshLayout) {
+
     }
 
     /**
@@ -568,11 +591,11 @@ public class AppCenterActivity extends BaseActivity {
             classCircleProgress.setVisibility(View.GONE);
             appList = getAllAppResult.getRecommendList();
             adsList = getAllAppResult.getAdsList();
-            recommandAppAdapter = new RecommondAppAdapter();
-            recommandListView.setAdapter(recommandAppAdapter);
-            recommandAppAdapter.notifyDataSetChanged();
             categorieAppList = getAllAppResult.getCategoriesGroupBeanList();
-            categoriesAppAdapter = new CategoriesAppAdapter();
+//            recommandAppAdapter.notifyDataSetChanged();
+//            categoriesAppAdapter.notifyDataSetChanged();
+            recommandPullToRefreshLayout.refreshFinish(PullToRefreshLayout.SUCCEED);
+            classPullToRefreshLayout.refreshFinish(PullToRefreshLayout.SUCCEED);
         }
 
         @Override
@@ -580,6 +603,8 @@ public class AppCenterActivity extends BaseActivity {
             WebServiceMiddleUtils.hand(AppCenterActivity.this, error, errorCode);
             recommandCircleProgress.setVisibility(View.GONE);
             classCircleProgress.setVisibility(View.GONE);
+            recommandPullToRefreshLayout.refreshFinish(PullToRefreshLayout.FAIL);
+            classPullToRefreshLayout.refreshFinish(PullToRefreshLayout.FAIL);
         }
 
     }
