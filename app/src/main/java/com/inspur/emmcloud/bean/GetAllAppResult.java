@@ -48,7 +48,9 @@ public class GetAllAppResult {
 							App app = new App(obj);
 							appList.add(app);
 						}
-						recommendList.add(appList);
+						if(appList.size()>0){
+							recommendList.add(appList);
+						}
 					}
 				}
 			}
