@@ -1024,7 +1024,7 @@ public class APIInterfaceInstance implements APIInterface {
     }
 
     @Override
-    public void returnChangeMessionOwnerSuccess() {
+    public void returnChangeMessionOwnerSuccess(String managerName) {
         // TODO Auto-generated method stub
 
     }

@@ -1705,7 +1705,7 @@ public class WorkAPIService {
      * @param id
      * @param newOwner
      */
-    public void changeMessionOwner(final String id, final String newOwner) {
+    public void changeMessionOwner(final String id, final String newOwner, final String managerName) {
 
         final String completeUrl = UriUtils.changeMessionOwner() + id
                 + "?";
@@ -1721,7 +1721,7 @@ public class WorkAPIService {
 
                     @Override
                     public void reExecute() {
-                        changeMessionOwner(id, newOwner);
+                        changeMessionOwner(id, newOwner,managerName);
                     }
 
                     @Override
@@ -1734,7 +1734,7 @@ public class WorkAPIService {
             @Override
             public void callbackSuccess(String arg0) {
                 // TODO Auto-generated method stub
-                apiInterface.returnChangeMessionOwnerSuccess();
+                apiInterface.returnChangeMessionOwnerSuccess(managerName);
             }
 
             @Override

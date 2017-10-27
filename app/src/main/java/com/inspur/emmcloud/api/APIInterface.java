@@ -400,7 +400,7 @@ public interface APIInterface {
 
     void returnDelAttachmentFail(String error, int errorCode);
 
-    void returnChangeMessionOwnerSuccess();
+    void returnChangeMessionOwnerSuccess(String managerName);
 
     void returnChangeMessionOwnerFail(String error, int errorCode);
 

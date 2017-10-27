@@ -46,7 +46,6 @@ import com.inspur.emmcloud.util.EditTextUtils;
 import com.inspur.emmcloud.util.FileUtils;
 import com.inspur.emmcloud.util.ImageDisplayUtils;
 import com.inspur.emmcloud.util.JSONUtils;
-import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.MessionTagColorUtils;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.SendFileUtils;
@@ -270,19 +269,19 @@ public class MessionDetailActivity extends BaseActivity {
 		key = JSONUtils.getString((String)msg.obj, "key", "");
 		extName = FileUtils.getExtensionName(name);
 		type = extName;
-		if (type.equals("jpg") || type.equals("png")) {
+		if (type.equals("jpg") || "png".equals(type)) {
 			type = "JPEG";
 			category = "IMAGE";
-		} else if (type.equals("doc") || type.equals("docx")) {
+		} else if ("doc".equals(type) || "docx".equals(type)) {
 			type = "MS_WORD";
 			category = "DOCUMENT";
-		} else if (type.equals("xls") || type.equals("xlsx")) {
+		} else if ("xls".equals(type) || "xlsx".equals(type)) {
 			type = "MS_EXCEL";
 			category = "DOCUMENT";
-		} else if (type.equals("ppt") || type.equals("pptx")) {
+		} else if ("ppt".equals(type) || "pptx".equals(type)) {
 			type = "MS_PPT";
 			category = "DOCUMENT";
-		} else if (type.equals("txt")) {
+		} else if ("txt".equals(type)) {
 			type = "TEXT";
 			category = "DOCUMENT";
 		} else {
@@ -428,7 +427,6 @@ public class MessionDetailActivity extends BaseActivity {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		LogUtils.jasonDebug("0000000000000000000022");
 		if (resultCode == RESULT_OK) {
 			switch (requestCode) {
 			case TAG_TYPE:
@@ -493,8 +491,8 @@ public class MessionDetailActivity extends BaseActivity {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				if (which == -1) {
-					changeMessionOwner(managerID);
-					managerText.setText(managerName);
+					changeMessionOwner(managerID,managerName);
+
 				} else {
 					dialog.dismiss();
 				}
@@ -541,10 +539,10 @@ public class MessionDetailActivity extends BaseActivity {
 	 * 
 	 * @param managerID
 	 */
-	protected void changeMessionOwner(String managerID) {
+	protected void changeMessionOwner(String managerID,String managerName) {
 		if (NetUtils.isNetworkConnected(MessionDetailActivity.this)) {
 			loadingDlg.show();
-			apiService.changeMessionOwner(task.getId(), managerID);
+			apiService.changeMessionOwner(task.getId(), managerID,managerName);
 		}
 	}
 
@@ -627,20 +625,20 @@ public class MessionDetailActivity extends BaseActivity {
 	 */
 	public void displayAttachments(int position, ImageView attachmentImg) {
 		String displayImg = "drawable://";
-		if (attachments.get(position).getType().equals("JPEG")) {
+		if ("JPEG".equals(attachments.get(position).getType())) {
 			displayImg = displayImg + R.drawable.icon_file_photos;
-		} else if (attachments.get(position).getType().equals("MS_WORD")) {
+		} else if ("MS_WORD".equals(attachments.get(position).getType())) {
 			displayImg = displayImg + R.drawable.icon_file_word;
-		} else if (attachments.get(position).getType().equals("MS_EXCEL")) {
+		} else if ("MS_EXCEL".equals(attachments.get(position).getType())) {
 			displayImg = displayImg + R.drawable.icon_file_excel;
-		} else if (attachments.get(position).getType().equals("MS_PPT")) {
+		} else if ("MS_PPT".equals(attachments.get(position).getType())) {
 			displayImg = displayImg + R.drawable.icon_file_ppt;
-		} else if (attachments.get(position).getType().equals("TEXT")) {
+		} else if ("TEXT".equals(attachments.get(position).getType())) {
 			displayImg = displayImg + R.drawable.icon_file_unknown;
 		} else {
 			displayImg = displayImg + R.drawable.icon_file_unknown;
 		}
-		ImageDisplayUtils.getInstance().displayImage(attachmentImg, displayImg,R.drawable.icon_default_photo);
+		ImageDisplayUtils.getInstance().displayImage(attachmentImg, displayImg,R.drawable.icon_file_unknown);
 	}
 
 	private static class Holder {
@@ -1021,11 +1019,12 @@ public class MessionDetailActivity extends BaseActivity {
 		}
 
 		@Override
-		public void returnChangeMessionOwnerSuccess() {
-			super.returnChangeMessionOwnerSuccess();
+		public void returnChangeMessionOwnerSuccess(String managerName) {
+			super.returnChangeMessionOwnerSuccess(managerName);
 			if (loadingDlg != null && loadingDlg.isShowing()) {
 				loadingDlg.dismiss();
 			}
+			managerText.setText(managerName);
 			// 这里这样写的原因是修改完负责人，需要跳转到我关注的任务，如果从任务列表进入则可以直接finish
 			// 如果从工作进入则不可以直接finish
 			Intent intent = new Intent();
