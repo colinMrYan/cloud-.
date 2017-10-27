@@ -835,11 +835,10 @@ public class WorkAPIService {
      *
      * @param buildingId
      */
-    public void deleteOffice(final String buildingId) {
-        final String completeUrl = UriUtils.addOffice();
+    public void deleteOffice(final String buildingId, final int position) {
+        final String completeUrl = UriUtils.addOffice()+"?id="+buildingId;
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
-        params.addParameter("id", buildingId);
         x.http().request(HttpMethod.DELETE, params, new APICallback(context, completeUrl) {
 
             @Override
@@ -849,7 +848,7 @@ public class WorkAPIService {
 
                     @Override
                     public void reExecute() {
-                        deleteOffice(buildingId);
+                        deleteOffice(buildingId,position);
                     }
 
                     @Override
@@ -862,7 +861,7 @@ public class WorkAPIService {
             @Override
             public void callbackSuccess(String arg0) {
                 // TODO Auto-generated method stub
-                apiInterface.returnDeleteOfficeSuccess();
+                apiInterface.returnDeleteOfficeSuccess(position);
             }
 
             @Override

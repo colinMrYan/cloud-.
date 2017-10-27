@@ -413,7 +413,7 @@ public interface APIInterface {
 
     void returnCardPackageListFail(String error, int errorCode);
 
-    void returnDeleteOfficeSuccess();
+    void returnDeleteOfficeSuccess(int position);
 
     void returnDeleteOfficeFail(String error, int errorCode);
 

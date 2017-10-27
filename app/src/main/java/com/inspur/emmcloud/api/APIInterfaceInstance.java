@@ -1062,7 +1062,7 @@ public class APIInterfaceInstance implements APIInterface {
     }
 
     @Override
-    public void returnDeleteOfficeSuccess() {
+    public void returnDeleteOfficeSuccess(int position) {
         // TODO Auto-generated method stub
 
     }
