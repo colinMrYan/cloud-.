@@ -7,6 +7,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -19,6 +20,8 @@ import com.inspur.emmcloud.bean.AppConfig;
 import com.inspur.emmcloud.bean.Language;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.config.MyAppConfig;
+import com.inspur.emmcloud.service.BackgroundService;
+import com.inspur.emmcloud.service.CoreService;
 import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.util.AppConfigCacheUtils;
 import com.inspur.emmcloud.util.DataCleanManager;
@@ -41,7 +44,7 @@ public class SettingActivity extends BaseActivity {
     private Handler handler;
     private LoadingDialog loadingDlg;
     private SwitchView webAutoRotateSwitch;
-
+    private SwitchView backgroundRunSwitch;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
@@ -52,11 +55,20 @@ public class SettingActivity extends BaseActivity {
         handMessage();
     }
 
-    private void initView() {
+    private void initView(){
         loadingDlg = new LoadingDialog(this);
-        webAutoRotateSwitch = (SwitchView) findViewById(R.id.web_auto_rotate_switch);
+        webAutoRotateSwitch = (SwitchView)findViewById(R.id.web_auto_rotate_switch);
         setWebAutoRotateState();
         webAutoRotateSwitch.setOnStateChangedListener(onStateChangedListener);
+        backgroundRunSwitch = (SwitchView)findViewById(R.id.background_run_switch);
+        boolean isAppSetRunBackground = PreferencesUtils.getBoolean(getApplicationContext(),Constant.PREF_APP_RUN_BACKGROUND,false);
+        backgroundRunSwitch.setOpened(isAppSetRunBackground);
+        backgroundRunSwitch.setOnStateChangedListener(onStateChangedListener);
+    }
+
+    private void setWebAutoRotateState(){
+        boolean isWebAutoRotate = Boolean.parseBoolean(AppConfigCacheUtils.getAppConfigValue(this,Constant.CONCIG_WEB_AUTO_ROTATE,"false"));
+        webAutoRotateSwitch.setOpened(isWebAutoRotate);
     }
 
     /**
@@ -83,25 +95,46 @@ public class SettingActivity extends BaseActivity {
         }
     }
 
-    private void setWebAutoRotateState() {
-        boolean isWebAutoRotate = Boolean.parseBoolean(AppConfigCacheUtils.getAppConfigValue(this, Constant.CONCIG_WEB_AUTO_ROTATE, "false"));
-        webAutoRotateSwitch.setOpened(isWebAutoRotate);
-    }
-
     private SwitchView.OnStateChangedListener onStateChangedListener = new SwitchView.OnStateChangedListener() {
 
         @Override
         public void toggleToOn(View view) {
             // TODO Auto-generated method stub
-            saveWebAutoRotateConfig(true);
+            if (view.getId() != R.id.background_run_switch){
+                saveWebAutoRotateConfig(true);
+            }else {
+                setAppRunBackground(true);
+            }
+
         }
 
         @Override
         public void toggleToOff(View view) {
             // TODO Auto-generated method stub
-            saveWebAutoRotateConfig(false);
+            if (view.getId() != R.id.background_run_switch){
+                saveWebAutoRotateConfig(false);
+            }else {
+                setAppRunBackground(false);
+            }
+
         }
     };
+
+    /**
+     * 设置app是否运行在后台
+     * @param isAppSetRunBackground
+     */
+    private void setAppRunBackground(boolean isAppSetRunBackground){
+        PreferencesUtils.putBoolean(getApplicationContext(),Constant.PREF_APP_RUN_BACKGROUND,isAppSetRunBackground);
+        backgroundRunSwitch.setOpened(isAppSetRunBackground);
+        Intent intent = new Intent();
+        intent.setClass(SettingActivity.this, BackgroundService.class);
+        if (isAppSetRunBackground){
+            startService(intent);
+        }else {
+            stopService(intent);
+        }
+    }
 
     private void handMessage() {
         // TODO Auto-generated method stub
@@ -169,9 +202,18 @@ public class SettingActivity extends BaseActivity {
                     public void onClick(QMUIDialog dialog, int index) {
                         dialog.dismiss();
                         ((MyApplication) getApplication()).signout();
+                        stopAppService();
                     }
                 })
                 .show();
+    }
+
+    /**
+     * 关闭服务
+     */
+    private void stopAppService(){
+        stopService(new Intent(getApplicationContext(),CoreService.class));
+        stopService(new Intent(getApplicationContext(),BackgroundService.class));
     }
 
 

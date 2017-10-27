@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.inspur.emmcloud"
-    android:configChanges="locale|layoutDirection"
-    android:versionCode="39"
-    android:versionName="1.2.10">
+    android:configChanges="locale|layoutDirection">
 
     <uses-sdk
         android:minSdkVersion="16"
@@ -538,7 +536,8 @@
         <service android:name=".service.CoreInnerService"></service>
         <service android:name=".service.AppExceptionService"></service>
         <!--AliveJobService需要BIND_JOB_SERVICE权限-->
-        <service android:name=".service.PlayerMusicService"></service>
+        <service android:name=".service.BackgroundService"></service>
+
 
         <!-- receiver -->
         <receiver
@@ -807,12 +806,6 @@
             android:name="UMENG_APPKEY"
             android:value="59aa1f8f76661373290010d3"></meta-data>
 
-        <activity
-            android:name="com.umeng.socialize.media.WBShareCallBackActivity"
-            android:configChanges="keyboardHidden|orientation"
-            android:exported="false"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"></activity>
         <activity
             android:name=".wxapi.WXEntryActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
