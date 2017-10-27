@@ -1,5 +1,6 @@
 package com.inspur.emmcloud.ui.mine.setting;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
@@ -31,7 +32,6 @@ import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.SwitchView;
-import com.qmuiteam.qmui.widget.dialog.QMUIBottomSheet;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
 
@@ -157,14 +157,14 @@ public class SettingActivity extends BaseActivity {
      */
     private void showSignoutDlg() {
         new QMUIDialog.MessageDialogBuilder(SettingActivity.this)
-                .setMessage( getString(R.string.if_confirm_signout))
-                .addAction(getString(R.string.cancel), new QMUIDialogAction.ActionListener() {
+                .setMessage(R.string.if_confirm_signout)
+                .addAction(R.string.cancel, new QMUIDialogAction.ActionListener() {
                     @Override
                     public void onClick(QMUIDialog dialog, int index) {
                         dialog.dismiss();
                     }
                 })
-                .addAction(getString(R.string.ok), new QMUIDialogAction.ActionListener() {
+                .addAction(R.string.ok, new QMUIDialogAction.ActionListener() {
                     @Override
                     public void onClick(QMUIDialog dialog, int index) {
                         dialog.dismiss();
@@ -180,16 +180,13 @@ public class SettingActivity extends BaseActivity {
      */
     private void showClearCacheDlg() {
         // TODO Auto-generated method stub
-
-        new QMUIBottomSheet.BottomListSheetBuilder(SettingActivity.this)
-                .addItem(getString(R.string.settings_clean_imgae_attachment))
-                .addItem(getString(R.string.settings_clean_web))
-                .addItem(getString(R.string.settings_clean_all))
-                .setOnSheetItemClickListener(new QMUIBottomSheet.BottomListSheetBuilder.OnSheetItemClickListener() {
+        final String[] items = new String[]{getString(R.string.settings_clean_imgae_attachment), getString(R.string.settings_clean_web), getString(R.string.settings_clean_all)};
+        new QMUIDialog.MenuDialogBuilder(SettingActivity.this)
+                .addItems(items, new DialogInterface.OnClickListener() {
                     @Override
-                    public void onClick(QMUIBottomSheet dialog, View itemView, int position, String tag) {
+                    public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
-                        switch (position){
+                        switch (which) {
                             case 0:
                                 DataCleanManager.cleanApplicationData(
                                         SettingActivity.this, MyAppConfig.LOCAL_DOWNLOAD_PATH,
@@ -210,7 +207,6 @@ public class SettingActivity extends BaseActivity {
                         }
                     }
                 })
-                .build()
                 .show();
     }
 
@@ -220,7 +216,7 @@ public class SettingActivity extends BaseActivity {
     private void showClearCacheWarningDlg() {
         // TODO Auto-generated method stub
         new QMUIDialog.MessageDialogBuilder(SettingActivity.this)
-                .setMessage( getString(R.string.my_setting_tips_quit))
+                .setMessage(getString(R.string.my_setting_tips_quit))
                 .addAction(getString(R.string.cancel), new QMUIDialogAction.ActionListener() {
                     @Override
                     public void onClick(QMUIDialog dialog, int index) {

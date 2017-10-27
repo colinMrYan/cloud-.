@@ -1,7 +1,6 @@
 package com.inspur.emmcloud.ui.work.task;
 
 import android.content.BroadcastReceiver;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -36,10 +35,11 @@ import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.SegmentControl;
-import com.inspur.emmcloud.widget.dialogs.EasyDialog;
 import com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout;
 import com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout.OnRefreshListener;
 import com.inspur.emmcloud.widget.pullableview.PullableListView;
+import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
+import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -373,21 +373,23 @@ public class MessionListActivity extends BaseActivity implements
 		public boolean onItemLongClick(AdapterView<?> parent, View view,
 				final int position, long id) {
 			if (nowIndex == 0 || nowIndex == 1) {
-				DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						if (which == -2) {
-						} else {
-							deleteTasks(position);
-						}
+                new QMUIDialog.MessageDialogBuilder(MessionListActivity.this)
+                        .setMessage(R.string.mession_set_finish)
+                        .addAction(getString(R.string.cancel), new QMUIDialogAction.ActionListener() {
+                            @Override
+                            public void onClick(QMUIDialog dialog, int index) {
+                                dialog.dismiss();
+                            }
+                        })
+                        .addAction(getString(R.string.ok), new QMUIDialogAction.ActionListener() {
+                            @Override
+                            public void onClick(QMUIDialog dialog, int index) {
+                                dialog.dismiss();
+                                deleteTasks(position);
+                            }
+                        })
+                        .show();
 
-					}
-				};
-				EasyDialog.showDialog(MessionListActivity.this,
-						getString(R.string.prompt),
-						getString(R.string.mession_set_finish),
-						getString(R.string.ok), getString(R.string.cancel),
-						listener, false);
 			}
 			return true;
 		}

@@ -2,6 +2,7 @@ package com.inspur.emmcloud.ui.chat;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
@@ -68,11 +69,11 @@ import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.CircleImageView;
 import com.inspur.emmcloud.widget.WeakThread;
-import com.inspur.emmcloud.widget.dialogs.MyDialog;
 import com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout;
 import com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout.OnRefreshListener;
 import com.inspur.emmcloud.widget.pullableview.PullableListView;
 import com.inspur.imp.plugin.barcode.scan.CaptureActivity;
+import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -740,51 +741,35 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
      */
     private void showChannelOperationDlg(final int position) {
         // TODO Auto-generated method stub
-        final MyDialog oprationDlg = new MyDialog(getActivity(),
-                R.layout.dialog_channel_operation, R.style.userhead_dialog_bg);
         final boolean isChannelSetTop = ChannelOperationCacheUtils
                 .isChannelSetTop(getActivity(), displayChannelList
                         .get(position).getCid());
-        TextView setTopChannelText = (TextView) oprationDlg
-                .findViewById(R.id.set_top_text);
-        if (isChannelSetTop) {
-            setTopChannelText.setText(getActivity().getString(
-                    R.string.cancel_top));
-        }
-        setTopChannelText.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                // TODO Auto-generated method stub
-                oprationDlg.dismiss();
-                boolean isSetTop = !isChannelSetTop;
-                ChannelOperationCacheUtils.setChannelTop(getActivity(),
-                        displayChannelList.get(position).getCid(), isSetTop);
-                sortChannelList();
-            }
-        });
-
-        (oprationDlg.findViewById(R.id.hide_text))
-                .setOnClickListener(new OnClickListener() {
-
+        final String[] items = new String[]{getString(isChannelSetTop?R.string.chanel_cancel_top :R.string.channel_set_top), getString(R.string.channel_hide_chat)};
+        new QMUIDialog.MenuDialogBuilder(getActivity())
+                .addItems(items, new DialogInterface.OnClickListener() {
                     @Override
-                    public void onClick(View v) {
-                        // TODO Auto-generated method stub
-                        oprationDlg.dismiss();
-                        ChannelOperationCacheUtils.setChannelHide(
-                                getActivity(), displayChannelList.get(position)
-                                        .getCid(), true);
-                        // 当隐藏会话时，把该会话的所有消息置为已读
-                        MsgReadIDCacheUtils
-                                .saveReadedMsg(getActivity(),
-                                        displayChannelList.get(position)
-                                                .getCid(), displayChannelList
-                                                .get(position).getNewestMid());
-                        displayChannelList.remove(position);
-                        displayData();
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        if (which == 0){
+                            ChannelOperationCacheUtils.setChannelTop(getActivity(),
+                                    displayChannelList.get(position).getCid(), !isChannelSetTop);
+                            sortChannelList();
+                        }else {
+                            ChannelOperationCacheUtils.setChannelHide(
+                                    getActivity(), displayChannelList.get(position)
+                                            .getCid(), true);
+                            // 当隐藏会话时，把该会话的所有消息置为已读
+                            MsgReadIDCacheUtils
+                                    .saveReadedMsg(getActivity(),
+                                            displayChannelList.get(position)
+                                                    .getCid(), displayChannelList
+                                                    .get(position).getNewestMid());
+                            displayChannelList.remove(position);
+                            displayData();
+                        }
                     }
-                });
-        oprationDlg.show();
+                })
+                .show();
     }
 
     /**
