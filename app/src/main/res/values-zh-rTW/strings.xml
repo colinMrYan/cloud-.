@@ -25,7 +25,7 @@
     <string name="file">文件</string>
     <string name="next_step">下一步</string>
     <string name="pull_down_load_history">下拉載入歷史消息</string>
-    <string name="if_confirm_signout">確定退出當前帳號？</string>
+    <string name="if_confirm_signout">您確定要退出登錄嗎？</string>
     <string name="exit">退出</string>
     <string name="open">打開</string>
     <string name="add">添加</string>
@@ -244,7 +244,7 @@
     <string name="welcome_to_attention">歡迎關注</string>
     <string name="not_support_open_channel"> 暫不支援此類型</string>
     <string name="top"> 置頂</string>
-    <string name="cancel_top"> 取消置頂</string>
+    <string name="chanel_cancel_top"> 取消置頂</string>
     <string name="creat_group">創建群組</string>
     <string name="creat_group_fail">群組創建失敗</string>
     <string name="all_group_member">全部群成員</string>

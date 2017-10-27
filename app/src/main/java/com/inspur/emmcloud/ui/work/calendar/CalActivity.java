@@ -1,5 +1,6 @@
 package com.inspur.emmcloud.ui.work.calendar;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -12,7 +13,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.BaseActivity;
-import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.WorkAPIService;
@@ -31,10 +31,10 @@ import com.inspur.emmcloud.util.TimeUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.CircleTextImageView;
 import com.inspur.emmcloud.widget.LoadingDialog;
-import com.inspur.emmcloud.widget.dialogs.MyDialog;
 import com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout;
 import com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout.OnRefreshListener;
 import com.inspur.emmcloud.widget.pullableview.PullableExpandableListView;
+import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -223,33 +223,19 @@ public class CalActivity extends BaseActivity implements OnRefreshListener {
 	 */
 	private void showOperationDlg(final CalendarEvent calEvent) {
 		// TODO Auto-generated method stub
-		final MyDialog oprationDlg = new MyDialog(CalActivity.this,
-				R.layout.dialog_channel_operation, R.style.userhead_dialog_bg);
-		oprationDlg.show();
-		TextView deleteText = (TextView) oprationDlg
-				.findViewById(R.id.set_top_text);
-		TextView cancelText = (TextView) oprationDlg
-				.findViewById(R.id.hide_text);
-		deleteText.setText(getString(R.string.delete));
-		cancelText.setText(getString(R.string.cancel));
-		deleteText.setOnClickListener(new OnClickListener() {
 
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				oprationDlg.dismiss();
-				deleteCalEvent(calEvent);
-			}
-
-		});
-		cancelText.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				oprationDlg.dismiss();
-			}
-		});
+		final String[] items = new String[]{getString(R.string.delete), getString(R.string.cancel)};
+		new QMUIDialog.MenuDialogBuilder(this)
+				.addItems(items, new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.dismiss();
+                        if (which == 0){
+                            deleteCalEvent(calEvent);
+                        }
+					}
+				})
+				.show();
 	}
 
 	/**

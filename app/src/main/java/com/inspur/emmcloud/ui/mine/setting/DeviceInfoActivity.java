@@ -3,7 +3,6 @@ package com.inspur.emmcloud.ui.mine.setting;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,7 +25,8 @@ import com.inspur.emmcloud.util.ToastUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.ScrollViewWithListView;
-import com.inspur.emmcloud.widget.dialogs.EasyDialog;
+import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
+import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
 
 import java.util.List;
 
@@ -71,7 +71,7 @@ public class DeviceInfoActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.device_unbound_btn:
-                showUnbindDeviceWarningDlg();
+                showUnbindDevicePromptDlg();
                 break;
             case R.id.device_id_text:
                 ClipboardManager cmb = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
@@ -83,47 +83,28 @@ public class DeviceInfoActivity extends BaseActivity {
         }
     }
 
-    private void showUnbindDeviceWarningDlg() {
-        DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                if (which == -1) {
-                    unbindDevice();
-                }
-                dialog.dismiss();
-            }
-        };
+    /**
+     * 弹出解绑设备提示框
+     */
+    private void showUnbindDevicePromptDlg() {
         String warningText = bindingDevice.getDeviceId().equals(AppUtils.getMyUUID(getApplicationContext())) ? getString(R.string.device_current_unbind_warning) : getString(R.string.device_other_unbind_warning, bindingDevice.getDeviceModel());
-        EasyDialog.showDialog(DeviceInfoActivity.this,
-                getString(R.string.prompt),
-                warningText,
-                getString(R.string.ok), getString(R.string.cancel),
-                listener, true);
+        new QMUIDialog.MessageDialogBuilder(DeviceInfoActivity.this)
+                .setMessage(warningText)
+                .addAction(R.string.cancel, new QMUIDialogAction.ActionListener() {
+                    @Override
+                    public void onClick(QMUIDialog dialog, int index) {
+                        dialog.dismiss();
+                    }
+                })
+                .addAction(R.string.ok, new QMUIDialogAction.ActionListener() {
+                    @Override
+                    public void onClick(QMUIDialog dialog, int index) {
+                        dialog.dismiss();
+                        unbindDevice();
+                    }
+                })
+                .show();
     }
-
-
-//    /**
-//     * 注销登录
-//     */
-//    private void signout() {
-//        // TDO Auto-generated method stub
-//        if (((MyApplication) getApplicationContext()).getWebSocketPush() != null) {
-//            ((MyApplication) getApplicationContext()).getWebSocketPush()
-//                    .webSocketSignout();
-//        }
-//        ((MyApplication) getApplicationContext()).clearNotification();
-//        CookieManager cookieManager = CookieManager.getInstance();
-//        cookieManager.removeAllCookie();
-//        ((MyApplication) getApplicationContext()).removeAllCookie();
-//        JPushInterface.stopPush(getApplicationContext());
-//        PreferencesUtils.putString(DeviceInfoActivity.this, "tokenType", "");
-//        PreferencesUtils.putString(DeviceInfoActivity.this, "accessToken", "");
-//        Intent intent = new Intent();
-//        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//        intent.setClass(this, LoginActivity.class);
-//        startActivity(intent);
-//        this.finish();
-//    }
 
     private class Adapter extends BaseAdapter {
         private List<BindingDeviceLog> bindingDeviceLogList;

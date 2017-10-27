@@ -140,7 +140,6 @@ dependencies {
     compile 'com.android.support:multidex:1.0.1'
     compile 'com.wei.android.lib:fingerprintidentify:1.2.1'//指纹识别库暂未启用
 
-
     // React Naive Components
     compile project(':react-native-smart-swipe-refresh-layout')
     compile project(':react-native-picker')

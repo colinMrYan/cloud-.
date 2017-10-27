@@ -96,8 +96,7 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:largeHeap="true"
-        android:theme="@android:style/Theme.Light.NoTitleBar">
-        <!--android:theme="@style/SplashTheme"-->
+        android:theme="@style/AppTheme">
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
@@ -113,7 +112,6 @@
         <activity
             android:name=".ui.IndexActivity"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Holo.Light.NoActionBar"
             android:windowSoftInputMode="adjustNothing"></activity>
         <activity
             android:name=".ui.mine.setting.GuideActivity"
@@ -122,8 +120,7 @@
         <activity
             android:name=".ui.mine.setting.SwitchEnterpriseActivity"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Holo.Light.NoActionBar"></activity>
+            android:screenOrientation="portrait"></activity>
 
         <activity
             android:name=".ui.mine.setting.CreateGestureActivity"
@@ -410,8 +407,7 @@
             android:screenOrientation="portrait"></activity>
         <activity
             android:name=".ui.app.ReactNativeAppActivity"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Holo.Light.NoActionBar"></activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".ui.chat.ModifyChannelGroupNameActivity"
             android:screenOrientation="portrait" />

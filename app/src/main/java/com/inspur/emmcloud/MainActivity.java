@@ -78,7 +78,7 @@ public class MainActivity extends Activity{ // 此处不能继承BaseActivity �
 		startUploadExceptionService();
 		// 检测分辨率、网络环境
 		if (!ResolutionUtils.isFitResolution(MainActivity.this)) {
-			showResolutionDialog();
+			showResolutionValiadDlg();
 		} else {
 			initEnvironment();
 		}
@@ -98,7 +98,7 @@ public class MainActivity extends Activity{ // 此处不能继承BaseActivity �
 	/**
 	 * 显示分辨率不符合条件的提示框
 	 **/
-	private void showResolutionDialog() {
+	private void showResolutionValiadDlg() {
 		// TODO Auto-generated method stub
 		DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
 
