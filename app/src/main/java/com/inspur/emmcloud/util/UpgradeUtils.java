@@ -105,6 +105,9 @@ public class UpgradeUtils extends APIInterfaceInstance {
                         break;
 
                     case DOWNLOAD_FAIL:
+                        if (mDownloadDialog != null && mDownloadDialog.isShowing()) {
+                            mDownloadDialog.dismiss();
+                        }
                         ToastUtils.show(context,
                                 context.getString(R.string.update_fail));
                         if (context != null) {
@@ -290,7 +293,7 @@ public class UpgradeUtils extends APIInterfaceInstance {
         // 判断SD卡是否存在，并且是否具有读写权限
         if (Environment.getExternalStorageState().equals(
                 Environment.MEDIA_MOUNTED)) {
-            RequestParams params = new RequestParams(upgradeUrl);
+            RequestParams params = new RequestParams("http://www.fdklfkdlkfs.com");
             params.setSaveFilePath(DOWNLOAD_PATH + "update.apk");
             cancelable = x.http().get(params,
                     new Callback.ProgressCallback<File>() {
@@ -321,7 +324,6 @@ public class UpgradeUtils extends APIInterfaceInstance {
                         @Override
                         public void onLoading(long arg0, long arg1, boolean arg2) {
                             // TODO Auto-generated method stub
-                            LogUtils.debug("jason", "onLoading");
                             totalSize = arg0;
                             downloadSize = arg1;
                             progress = (int) (((float) arg1 / arg0) * 100);

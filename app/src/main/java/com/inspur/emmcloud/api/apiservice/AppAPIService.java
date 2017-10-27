@@ -52,6 +52,7 @@ public class AppAPIService {
 
     /**
      * 获取版本更新信息
+     *
      * @param isManualCheck shi
      */
     public void checkUpgrade(final boolean isManualCheck) {
@@ -91,6 +92,7 @@ public class AppAPIService {
 
     /**
      * 获取ClientId
+     *
      * @param deviceId
      * @param deviceName
      */
@@ -131,6 +133,7 @@ public class AppAPIService {
 
     /**
      * 获取ReactNative更新版本
+     *
      * @param version
      * @param lastCreationDate
      */
@@ -170,6 +173,7 @@ public class AppAPIService {
 
     /**
      * 回写ReactNative日志接口
+     *
      * @param command
      * @param version
      * @param clientId
@@ -317,6 +321,7 @@ public class AppAPIService {
 
     /**
      * 手机应用PV信息（web应用）
+     *
      * @param collectInfo
      */
     public void uploadPVCollect(String collectInfo) {
@@ -346,6 +351,7 @@ public class AppAPIService {
 
     /**
      * 验证行政审批密码
+     *
      * @param password
      */
     public void veriryApprovalPassword(String userName, final String password) {
@@ -417,6 +423,7 @@ public class AppAPIService {
     /**
      * 获取闪屏页信息
      * 采用新式数据解析方法
+     *
      * @param clientId
      * @param versionCode
      */
@@ -454,6 +461,7 @@ public class AppAPIService {
 
     /**
      * 扫一扫登录
+     *
      * @param url
      */
     public void sendLoginDesktopCloudPlusInfo(final String url) {
@@ -491,6 +499,7 @@ public class AppAPIService {
 
     /**
      * 设备检查
+     *
      * @param tenantId
      * @param userCode
      */
@@ -542,7 +551,7 @@ public class AppAPIService {
 
             @Override
             public void callbackFail(String error, int responseCode) {
-                apiInterface.returnAppConfigFail(error,responseCode);
+                apiInterface.returnAppConfigFail(error, responseCode);
             }
 
             @Override
@@ -565,13 +574,14 @@ public class AppAPIService {
 
     /**
      * 保存webview是否自动旋转配置项
+     *
      * @param isWebAutoRotate
      */
-    public void saveWebAutoRotateConfig(final boolean isWebAutoRotate){
+    public void saveWebAutoRotateConfig(final boolean isWebAutoRotate) {
         final String url = APIUri.saveAppConfigUrl("WebAutoRotate");
         RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
-        params.setBodyContent(isWebAutoRotate+"");
-        x.http().post(params, new APICallback(context,url) {
+        params.setBodyContent(isWebAutoRotate + "");
+        x.http().post(params, new APICallback(context, url) {
             @Override
             public void callbackSuccess(String arg0) {
                 apiInterface.returnSaveWebAutoRotateConfigSuccess(isWebAutoRotate);
@@ -579,7 +589,7 @@ public class AppAPIService {
 
             @Override
             public void callbackFail(String error, int responseCode) {
-                apiInterface.returnSaveWebAutoRotateConfigFail(error,responseCode);
+                apiInterface.returnSaveWebAutoRotateConfigFail(error, responseCode);
             }
 
             @Override
@@ -596,6 +606,44 @@ public class AppAPIService {
                         callbackFail("", -1);
                     }
                 }, context).refreshToken(url);
+            }
+        });
+    }
+
+    /**
+     * 上传位置信息
+     *
+     * @param positionJson
+     */
+    public void uploadPosition(final String positionJson) {
+        final String url = APIUri.getUploadPositionUrl();
+        RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
+        params.setBodyContent(positionJson);
+        params.setAsJsonContent(true);
+        x.http().post(params, new APICallback(context, url) {
+            @Override
+            public void callbackSuccess(String arg0) {
+                apiInterface.returnUploadPositionSuccess();
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                apiInterface.returnUploadPositionSuccess();
+            }
+
+            @Override
+            public void callbackTokenExpire() {
+                new OauthUtils(new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        uploadPosition(positionJson);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                },context).refreshToken(url);
             }
         });
     }

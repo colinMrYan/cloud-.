@@ -20,6 +20,8 @@ import com.inspur.emmcloud.bean.AppConfig;
 import com.inspur.emmcloud.bean.Language;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.config.MyAppConfig;
+import com.inspur.emmcloud.service.BackgroundService;
+import com.inspur.emmcloud.service.CoreService;
 import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.util.AppConfigCacheUtils;
 import com.inspur.emmcloud.util.DataCleanManager;
@@ -42,7 +44,7 @@ public class SettingActivity extends BaseActivity {
     private Handler handler;
     private LoadingDialog loadingDlg;
     private SwitchView webAutoRotateSwitch;
-
+    private SwitchView backgroundRunSwitch;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
@@ -53,11 +55,20 @@ public class SettingActivity extends BaseActivity {
         handMessage();
     }
 
-    private void initView() {
+    private void initView(){
         loadingDlg = new LoadingDialog(this);
-        webAutoRotateSwitch = (SwitchView) findViewById(R.id.web_auto_rotate_switch);
+        webAutoRotateSwitch = (SwitchView)findViewById(R.id.web_auto_rotate_switch);
         setWebAutoRotateState();
         webAutoRotateSwitch.setOnStateChangedListener(onStateChangedListener);
+        backgroundRunSwitch = (SwitchView)findViewById(R.id.background_run_switch);
+        boolean isAppSetRunBackground = PreferencesUtils.getBoolean(getApplicationContext(),Constant.PREF_APP_RUN_BACKGROUND,false);
+        backgroundRunSwitch.setOpened(isAppSetRunBackground);
+        backgroundRunSwitch.setOnStateChangedListener(onStateChangedListener);
+    }
+
+    private void setWebAutoRotateState(){
+        boolean isWebAutoRotate = Boolean.parseBoolean(AppConfigCacheUtils.getAppConfigValue(this,Constant.CONCIG_WEB_AUTO_ROTATE,"false"));
+        webAutoRotateSwitch.setOpened(isWebAutoRotate);
     }
 
     /**
@@ -84,25 +95,46 @@ public class SettingActivity extends BaseActivity {
         }
     }
 
-    private void setWebAutoRotateState() {
-        boolean isWebAutoRotate = Boolean.parseBoolean(AppConfigCacheUtils.getAppConfigValue(this, Constant.CONCIG_WEB_AUTO_ROTATE, "false"));
-        webAutoRotateSwitch.setOpened(isWebAutoRotate);
-    }
-
     private SwitchView.OnStateChangedListener onStateChangedListener = new SwitchView.OnStateChangedListener() {
 
         @Override
         public void toggleToOn(View view) {
             // TODO Auto-generated method stub
-            saveWebAutoRotateConfig(true);
+            if (view.getId() != R.id.background_run_switch){
+                saveWebAutoRotateConfig(true);
+            }else {
+                setAppRunBackground(true);
+            }
+
         }
 
         @Override
         public void toggleToOff(View view) {
             // TODO Auto-generated method stub
-            saveWebAutoRotateConfig(false);
+            if (view.getId() != R.id.background_run_switch){
+                saveWebAutoRotateConfig(false);
+            }else {
+                setAppRunBackground(false);
+            }
+
         }
     };
+
+    /**
+     * 设置app是否运行在后台
+     * @param isAppSetRunBackground
+     */
+    private void setAppRunBackground(boolean isAppSetRunBackground){
+        PreferencesUtils.putBoolean(getApplicationContext(),Constant.PREF_APP_RUN_BACKGROUND,isAppSetRunBackground);
+        backgroundRunSwitch.setOpened(isAppSetRunBackground);
+        Intent intent = new Intent();
+        intent.setClass(SettingActivity.this, BackgroundService.class);
+        if (isAppSetRunBackground){
+            startService(intent);
+        }else {
+            stopService(intent);
+        }
+    }
 
     private void handMessage() {
         // TODO Auto-generated method stub
@@ -164,6 +196,7 @@ public class SettingActivity extends BaseActivity {
                 // TODO Auto-generated method stub
                 if (which == -1) {
                     ((MyApplication) getApplication()).signout();
+                    stopAppService();
                 }
             }
         };
@@ -172,6 +205,14 @@ public class SettingActivity extends BaseActivity {
                 getString(R.string.if_confirm_signout),
                 getString(R.string.ok), getString(R.string.cancel),
                 dialogClickListener, true);
+    }
+
+    /**
+     * 关闭服务
+     */
+    private void stopAppService(){
+        stopService(new Intent(getApplicationContext(),CoreService.class));
+        stopService(new Intent(getApplicationContext(),BackgroundService.class));
     }
 
 
@@ -301,13 +342,13 @@ public class SettingActivity extends BaseActivity {
     }
 
 
-    private void saveWebAutoRotateConfig(boolean isWebAutoRotate) {
-        if (NetUtils.isNetworkConnected(this)) {
+    private void saveWebAutoRotateConfig(boolean isWebAutoRotate){
+        if (NetUtils.isNetworkConnected(this)){
             loadingDlg.show();
             AppAPIService apiService = new AppAPIService(this);
             apiService.setAPIInterface(new WebService());
             apiService.saveWebAutoRotateConfig(isWebAutoRotate);
-        } else {
+        }else {
             setWebAutoRotateState();
         }
     }
@@ -315,21 +356,21 @@ public class SettingActivity extends BaseActivity {
     private class WebService extends APIInterfaceInstance {
         @Override
         public void returnSaveWebAutoRotateConfigSuccess(boolean isWebAutoRotate) {
-            if (loadingDlg != null && loadingDlg.isShowing()) {
+            if (loadingDlg != null && loadingDlg.isShowing()){
                 loadingDlg.dismiss();
             }
-            AppConfig appConfig = new AppConfig(Constant.CONCIG_WEB_AUTO_ROTATE, isWebAutoRotate + "");
-            AppConfigCacheUtils.saveAppConfig(SettingActivity.this, appConfig);
+            AppConfig appConfig = new AppConfig(Constant.CONCIG_WEB_AUTO_ROTATE,isWebAutoRotate+"");
+            AppConfigCacheUtils.saveAppConfig(SettingActivity.this,appConfig);
             setWebAutoRotateState();
         }
 
         @Override
         public void returnSaveWebAutoRotateConfigFail(String error, int errorCode) {
-            if (loadingDlg != null && loadingDlg.isShowing()) {
+            if (loadingDlg != null && loadingDlg.isShowing()){
                 loadingDlg.dismiss();
             }
             setWebAutoRotateState();
-            WebServiceMiddleUtils.hand(SettingActivity.this, error, errorCode);
+            WebServiceMiddleUtils.hand(SettingActivity.this,error,errorCode);
         }
     }
 
