@@ -95,7 +95,7 @@
     <string name="notice">通知</string>
     <string name="close">關閉</string>
     <string name="commoly_use_app">常用</string>
-    <string name="app_init">正在初始化...</string>
+    <string name="app_init">正在初始化</string>
     <string name="news_content_cant_empty">內容不能為空</string>
     <string name="help">幫助</string>
 
@@ -361,7 +361,7 @@
     <string name="follow_system">跟隨系統</string>
     <string name="more_message">消息通知</string>
     <string name="more_allApps">所有應用</string>
-    <string name="more_help">意見回饋</string>
+    <string name="more_feedback">意見回饋</string>
     <string name="more_pushlist_text">推送列表</string>
     <string name="more_invitefriend_text">邀請好友使用Cloud</string>
     <string name="account_security_head">帳號與安全</string>

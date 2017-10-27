@@ -47,10 +47,10 @@ import com.inspur.emmcloud.util.FileUtils;
 import com.inspur.emmcloud.util.ImageDisplayUtils;
 import com.inspur.emmcloud.util.JSONUtils;
 import com.inspur.emmcloud.util.LogUtils;
+import com.inspur.emmcloud.util.MessionTagColorUtils;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.SendFileUtils;
 import com.inspur.emmcloud.util.StringUtils;
-import com.inspur.emmcloud.util.TagColorUtils;
 import com.inspur.emmcloud.util.TimeUtils;
 import com.inspur.emmcloud.util.ToastUtils;
 import com.inspur.emmcloud.util.UriUtils;
@@ -62,6 +62,7 @@ import com.inspur.emmcloud.widget.SegmentControl;
 import com.inspur.emmcloud.widget.SegmentControl.OnSegmentControlClickListener;
 import com.inspur.emmcloud.widget.dialogs.EasyDialog;
 
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -84,9 +85,7 @@ public class MessionDetailActivity extends BaseActivity {
 	private int segmentIndex = 1;
 	private TextView messionEndTime;
 	private TextView messionStatus;
-//	private ImageView typeImg;// 一个默认的类别图片
 	private TextView memberText;
-	private ImageDisplayUtils imageDisplayUtils;
 	private List<SearchModel> selectMemList = new ArrayList<SearchModel>();
 	private List<SearchModel> addMemList = new ArrayList<SearchModel>();
 	private List<SearchModel> deleteMemList = new ArrayList<SearchModel>();
@@ -130,7 +129,6 @@ public class MessionDetailActivity extends BaseActivity {
 		handleTags();
 		handleManager();
 		handleDeadline();
-		imageDisplayUtils = new ImageDisplayUtils(R.drawable.icon_default_photo);
 	}
 
 	/**
@@ -196,7 +194,7 @@ public class MessionDetailActivity extends BaseActivity {
 			}
 			for (int i = 0; i < tagSize; i++) {
 				tagImgs[i].setVisibility(View.VISIBLE);
-				TagColorUtils.setTagColorImg(tagImgs[i], tagList.get(i)
+				MessionTagColorUtils.setTagColorImg(tagImgs[i], tagList.get(i)
 						.getColor());
 			}
 		}
@@ -212,7 +210,7 @@ public class MessionDetailActivity extends BaseActivity {
 //			}
 //			for (int i = 0; i < tagSize; i++) {
 //				tagImgs[i].setVisibility(View.VISIBLE);
-//				TagColorUtils.setTagColorImg(tagImgs[i], tagList.get(i)
+//				MessionTagColorUtils.setTagColorImg(tagImgs[i], tagList.get(i)
 //						.getColor());
 //			}
 //		}
@@ -531,7 +529,7 @@ public class MessionDetailActivity extends BaseActivity {
 		}
 		for (int i = 0; i < tagNumber; i++) {
 			tagImgs[i].setVisibility(View.VISIBLE);
-			TagColorUtils.setTagColorImg(tagImgs[i], addTags.get(i).getColor());
+			MessionTagColorUtils.setTagColorImg(tagImgs[i], addTags.get(i).getColor());
 		}
 		tagList.clear();
 		tagList.addAll(addTags);
@@ -601,8 +599,8 @@ public class MessionDetailActivity extends BaseActivity {
 				displayAttachments(position, holder.attachmentImg);
 				holder.textView.setText(attachments.get(position).getName());
 			} else if (position == attachments.size()) {
-				imageDisplayUtils.displayImage(holder.attachmentImg, "drawable://"
-						+ R.drawable.icon_member_add);
+				ImageDisplayUtils.getInstance().displayImage(holder.attachmentImg, "drawable://"
+						+ R.drawable.icon_member_add,R.drawable.icon_default_photo);
 				holder.textView.setText(getString(R.string.add));
 			}
 			return convertView;
@@ -642,7 +640,7 @@ public class MessionDetailActivity extends BaseActivity {
 		} else {
 			displayImg = displayImg + R.drawable.icon_file_unknown;
 		}
-		imageDisplayUtils.displayImage(attachmentImg, displayImg);
+		ImageDisplayUtils.getInstance().displayImage(attachmentImg, displayImg,R.drawable.icon_default_photo);
 	}
 
 	private static class Holder {
@@ -916,6 +914,7 @@ public class MessionDetailActivity extends BaseActivity {
 			attachments = taskResult.getAttachments();
 			task.setAttachments(attachments);
 			initAttachments();
+			EventBus.getDefault().post(task);
 			ToastUtils.show(MessionDetailActivity.this,
 					getString(R.string.mession_upload_attachment_success));
 		}

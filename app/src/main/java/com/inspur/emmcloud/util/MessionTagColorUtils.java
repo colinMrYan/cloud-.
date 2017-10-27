@@ -4,7 +4,7 @@ import android.widget.ImageView;
 
 import com.inspur.emmcloud.R;
 
-public class TagColorUtils {
+public class MessionTagColorUtils {
 	public static void setTagColorImg(ImageView imageView,String color){
 		if (color.equals("ORANGE")) {
 			imageView.setImageResource(R.drawable.icon_mession_orange);

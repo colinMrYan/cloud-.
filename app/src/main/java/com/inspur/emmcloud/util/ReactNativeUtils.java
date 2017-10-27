@@ -29,7 +29,7 @@ public class ReactNativeUtils {
 
     public void init(){
         reactNativeCurrentPath = MyAppConfig.getReactAppFilePath(context, uid, "discover");
-        if (!ReactNativeFlow.checkBundleFileIsExist(reactNativeCurrentPath + "/index.android.bundle")) {
+        if (!FileUtils.isFileExist(reactNativeCurrentPath + "/index.android.bundle")) {
             ReactNativeFlow.initReactNative(context, uid);
         } else {
             new ClientIDUtils(context, new CommonCallBack() {
@@ -69,7 +69,7 @@ public class ReactNativeUtils {
             //拷贝temp下的current到app内部current目录下
             File file = new File(reactNatviveTempPath);
             if (file.exists()) {
-                ReactNativeFlow.moveFolder(reactNatviveTempPath, reactNativeCurrentPath);
+                FileUtils.copyFolder(reactNatviveTempPath, reactNativeCurrentPath);
                 LogUtils.YfcDebug("回滚时temp：" + reactNatviveTempPath);
                 LogUtils.YfcDebug("回滚时current：" + reactNativeCurrentPath);
                 FileUtils.deleteFile(reactNatviveTempPath);

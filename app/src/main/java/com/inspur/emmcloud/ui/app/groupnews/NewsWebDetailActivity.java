@@ -22,13 +22,10 @@ import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.inspur.emmcloud.BaseActivity;
-import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
@@ -58,51 +55,24 @@ import com.inspur.imp.plugin.PluginMgr;
 
 import org.greenrobot.eventbus.EventBus;
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 
 public class NewsWebDetailActivity extends BaseActivity {
 
-    private ProgressWebView webView;
     private static final int SHARE_SEARCH_RUEST_CODE = 1;
     private static final String darkMode = "#dark_120";
     private static final String lightMode = "#light_120";
+    private ProgressWebView webView;
     private String url;
-    private String poster;
-    private String title;
-    private String digest;
     private LoadingDialog loadingDlg;
     private Dialog dialog;
     private int textSize;
-    private RelativeLayout relativeLayout;
-    private WebSettings webSettings;
-    private LinearLayout dialogLayout;
-    private LinearLayout dayOrNightLayout;
-    private Button shareBtn;
-    private Button instructionsBtn;
-    private TextView readModeText;
-    private TextView dayOrNightModeText;
-    private ImageView sunImg, moonImg;
-    private Button normalBtn, middleBtn, bigBtn, biggestBtn;
-    private TextView fontTxt;
-    private View dayOrNightLine;
-    private View fontLine;
-    private int darkModeBtnColor;
-    private int lightModeBtnColor;
-    private int lightModeFontColor;
-    private int blackFontColor;
-    private int whiteFontColor;
-    private TextView headText;
-    private View appReadModeLine;
-    private String pagerTitle = "";
-    private SwitchView nightModeSwitchBtn;
-    private GradientDrawable lightChooseFontBtnBackgroundDrawable;
-    private String newsId = "";
+    private Button smallerBtn, normalBtn, largerBtn, largestBtn;
     private String instruction = "";
-    private String approvedDate = "";
-    private boolean editorCommentCreated = false;
     private String originalEditorComment = "";
+    private GroupNews groupNews;
+    Dialog intrcutionDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,21 +82,12 @@ public class NewsWebDetailActivity extends BaseActivity {
         initViews();
     }
 
-
     /**
      * 初始化Views
      */
     private void initViews() {
-        lightChooseFontBtnBackgroundDrawable = new GradientDrawable();
-        lightChooseFontBtnBackgroundDrawable.setCornerRadius(DensityUtil.dip2px(NewsWebDetailActivity.this, 5));
-        lightChooseFontBtnBackgroundDrawable.setColor(lightModeBtnColor);
         loadingDlg = new LoadingDialog(NewsWebDetailActivity.this);
-        relativeLayout = (RelativeLayout) findViewById(R.id.header_layout);
-        headText = (TextView) findViewById(R.id.header_text);
-        if (StringUtils.isBlank(title)) {
-            title = getString(R.string.group_news_detail);
-        }
-        headText.setText(pagerTitle);
+        ((TextView) findViewById(R.id.header_text)).setText(getString(R.string.group_news));
         initWebView();
     }
 
@@ -134,48 +95,31 @@ public class NewsWebDetailActivity extends BaseActivity {
      * 初始化WebView，设置WebView属性
      */
     private void initWebView() {
-        webView = (ProgressWebView) findViewById(R.id.news_webdetail_webview);
         String model = PreferencesByUserAndTanentUtils.getString(NewsWebDetailActivity.this, "app_news_webview_model", "");
+        webView = (ProgressWebView) findViewById(R.id.news_webdetail_webview);
         webView.setBackgroundColor(ContextCompat.getColor(NewsWebDetailActivity.this, (model.equals(darkMode)) ? R.color.app_news_night_color : R.color.white));
+        //没有确定这里的影响，暂时不去掉
         webView.setLayerType(WebView.LAYER_TYPE_SOFTWARE, null);
         webView.clearCache(true);
-        initWebViewTextSize();
         initWebViewSettings();
-        initWebViewModel();
+        setWebViewModel(StringUtils.isBlank(model) ? lightMode : model);
         webView.setDownloadListener(new FileDownloadListener());
     }
 
     private class FileDownloadListener implements DownloadListener {
-
         @Override
         public void onDownloadStart(String url, String userAgent, String contentDisposition, final String mimetype, long contentLength) {
-            if (NetUtils.isNetworkConnected(NewsWebDetailActivity.this)){
+            if (NetUtils.isNetworkConnected(NewsWebDetailActivity.this)) {
                 JSONObject object = new JSONObject();
                 try {
-                    object.put("url",url);
-                }catch (Exception e){
+                    object.put("url", url);
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
-                PluginMgr.init(NewsWebDetailActivity.this,null);
-                PluginMgr.execute("FileTransferService","download",object.toString());
+                PluginMgr.init(NewsWebDetailActivity.this, null);
+                PluginMgr.execute("FileTransferService", "download", object.toString());
                 PluginMgr.onDestroy();
             }
-
-        }
-    }
-
-
-
-
-    /**
-     * 初始化是否夜间日间模式
-     */
-    private void initWebViewModel() {
-        String model = PreferencesByUserAndTanentUtils.getString(NewsWebDetailActivity.this, "app_news_webview_model", "");
-        if (StringUtils.isBlank(model)) {
-            changeWebViewModel(lightMode);
-        } else {
-            changeWebViewModel(model);
         }
     }
 
@@ -183,7 +127,7 @@ public class NewsWebDetailActivity extends BaseActivity {
      * 初始化WebView的Settings
      */
     private void initWebViewSettings() {
-        webSettings = webView.getSettings();
+        WebSettings webSettings = webView.getSettings();
         // 设置WebView属性，能够执行Javascript脚本
         webSettings.setJavaScriptEnabled(true);
         // 设置可以访问文件
@@ -196,6 +140,8 @@ public class NewsWebDetailActivity extends BaseActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             webSettings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
         }
+        //初始化WebView字体的大小
+        textSize = PreferencesByUserAndTanentUtils.getInt(NewsWebDetailActivity.this, "app_news_text_size", MyAppWebConfig.NORMAL);
         webSettings.setTextZoom(textSize);
         // 加载需要显示的网页
         if (!url.startsWith("http")) {
@@ -203,79 +149,33 @@ public class NewsWebDetailActivity extends BaseActivity {
         }
         webView.loadUrl(url);
         // 设置Web视图
-        webView.setWebViewClient(new webViewClient());
-    }
-
-    /**
-     * 初始化WebView的字体大小
-     */
-    private void initWebViewTextSize() {
-        textSize = PreferencesByUserAndTanentUtils.getInt(NewsWebDetailActivity.this, "app_news_text_size", MyAppWebConfig.NORMAL);
-        switch (textSize) {
-            case MyAppWebConfig.SMALLESET:
-                textSize = MyAppWebConfig.SMALLESET;
-                break;
-            case MyAppWebConfig.SMALLER:
-                textSize = MyAppWebConfig.SMALLER;
-                break;
-            case MyAppWebConfig.NORMAL:
-                textSize = MyAppWebConfig.NORMAL;
-                break;
-            case MyAppWebConfig.LARGER:
-                textSize = MyAppWebConfig.LARGER;
-                break;
-            case MyAppWebConfig.LARGEST:
-                textSize = MyAppWebConfig.LARGEST;
-                break;
-            default:
-                textSize = MyAppWebConfig.NORMAL;
-                break;
-        }
+        webView.setWebViewClient(new GroupNewsWebViewClient());
     }
 
     /**
      * 初始化数据
      */
     private void initData() {
-        //夜间模式黑底
-        darkModeBtnColor = ContextCompat.getColor(NewsWebDetailActivity.this, R.color.app_dialog_night_background_btn);
-        lightModeBtnColor = ContextCompat.getColor(NewsWebDetailActivity.this, R.color.app_dialog_day_background_btn);
-        lightModeFontColor = ContextCompat.getColor(NewsWebDetailActivity.this, R.color.app_dialog_day_font_color);
-        blackFontColor = ContextCompat.getColor(NewsWebDetailActivity.this, R.color.black);
-        whiteFontColor = ContextCompat.getColor(NewsWebDetailActivity.this, R.color.white);
-        Intent intent = getIntent();
-        GroupNews groupNews = (GroupNews) intent.getSerializableExtra("groupNews");
+        groupNews = (GroupNews) getIntent().getSerializableExtra("groupNews");
         if (groupNews != null) {
             String postTime = groupNews.getCreationDate();
-            if (!StringUtils.isBlank(groupNews.getUrl())) {
-                url = groupNews.getUrl();
-            } else {
-                url = TimeUtils.getNewsTimePathIn(postTime)
-                        + groupNews.getResource();
-            }
-            poster = groupNews.getPoster();
-            title = groupNews.getTitle();
-            digest = groupNews.getDigest();
-            pagerTitle = getString(R.string.group_news);
-            newsId = groupNews.getId();
-            approvedDate = groupNews.getApprovedDate();
-            editorCommentCreated = groupNews.isEditorCommentCreated();
+            url = StringUtils.isBlank(groupNews.getUrl()) ? (TimeUtils.getNewsTimePathIn(postTime)
+                    + groupNews.getResource()) : groupNews.getUrl();
             originalEditorComment = groupNews.getOriginalEditorComment();
         } else {
             url = getIntent().getDataString();
         }
-
     }
 
     /**
-     * 打开Dialog
+     * 打开字体设置，夜间模式设置Dialog
      */
     private void showDialog() {
         View view = getLayoutInflater().inflate(R.layout.app_news_choose_dialog, null);
         dialog = new Dialog(this, R.style.transparentFrameWindowStyle);
         dialog.setContentView(view, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT));
-        initDialogViews(view);
+        initDialogViews();
         Window window = dialog.getWindow();
         // 设置显示动画
         window.setWindowAnimations(R.style.main_menu_animstyle);
@@ -288,96 +188,41 @@ public class NewsWebDetailActivity extends BaseActivity {
         // 设置Dialog的透明度
         wl.dimAmount = 0.31f;
         dialog.getWindow().setAttributes(wl);
+        // 控制透明度相关
         dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
         // 设置显示位置
         dialog.onWindowAttributesChanged(wl);
         // 设置点击外围解散
         dialog.setCanceledOnTouchOutside(true);
-        initDialogFontSize();
+        setFontSizeBtn();
         String model = PreferencesByUserAndTanentUtils.getString(NewsWebDetailActivity.this, "app_news_webview_model", "");
-        if (model.equals(darkMode)) {
-            changeDialogModelToNight();
-        } else {
-            changeDialogModelToDay();
-        }
+        setDialogModel(model);
         dialog.show();
     }
 
     /**
-     * Dialog字体按钮控制
+     * 初始化字体大小设置，夜间模式设置Dialog的Views和监听
      */
-    private void initDialogFontSize() {
-        String model = PreferencesByUserAndTanentUtils.getString(NewsWebDetailActivity.this, "app_news_webview_model", "");
-        switch (textSize) {
-            case MyAppWebConfig.SMALLESET:
-                chooseNormalFont(model);
-                break;
-            case MyAppWebConfig.SMALLER:
-                chooseNormalFont(model);
-                break;
-            case MyAppWebConfig.NORMAL:
-                chooseMiddleFont(model);
-                break;
-            case MyAppWebConfig.LARGER:
-                chooseBigFont(model);
-                break;
-            case MyAppWebConfig.LARGEST:
-                chooseBiggestFont(model);
-                break;
-            default:
-                chooseNormalFont(model);
-                break;
+    private void initDialogViews() {
+        if (!groupNews.isHasExtraPermission()) {
+            dialog.findViewById(R.id.app_news_instructions_btn).setVisibility(View.GONE);
+            (dialog.findViewById(R.id.app_news_share_btn)).setPadding(getIconLeftSize(), 0, 0, 0);
         }
-    }
-
-
-    /**
-     * 初始化Dialog的Views
-     *
-     * @param view
-     */
-    private void initDialogViews(View view) {
-        dialogLayout = (LinearLayout) view.findViewById(R.id.app_news_dialog);
-        dayOrNightLayout = (LinearLayout) view.findViewById(R.id.app_news_mode_layout);
-        shareBtn = (Button) view.findViewById(R.id.app_news_share_btn);
-        instructionsBtn = (Button) view.findViewById(R.id.app_news_instructions_btn);
-        if (!((GroupNews) getIntent().getSerializableExtra("groupNews")).isHasExtraPermission()) {
-            instructionsBtn.setVisibility(View.GONE);
-            shareBtn.setPadding(getIconLeftSize(), 0, 0, 0);
-        }
-        shareBtn.setText(getString(R.string.news_share_text));
-        dayOrNightModeText = (TextView) view.findViewById(R.id.app_news_mode_night_text);
-        dayOrNightModeText.setText(getString(R.string.news_read_mode));
-        sunImg = (ImageView) view.findViewById(R.id.app_news_mode_sun_img);
-        moonImg = (ImageView) view.findViewById(R.id.app_news_mode_moon_img);
-        appReadModeLine = view.findViewById(R.id.app_news_read_mode_line);
-        readModeText = (TextView) view.findViewById(R.id.app_news_read_mode_text);
-        normalBtn = (Button) view.findViewById(R.id.app_news_font_normal_btn);
-        normalBtn.setText(getString(R.string.news_font_smaller));
-        middleBtn = (Button) view.findViewById(R.id.app_news_font_middle_btn);
-        middleBtn.setText(getString(R.string.news_font_normal));
-        bigBtn = (Button) view.findViewById(R.id.app_news_font_big_btn);
-        bigBtn.setText(getString(R.string.news_font_big_text));
-        biggestBtn = (Button) view.findViewById(R.id.app_news_font_biggest_btn);
-        biggestBtn.setText(getString(R.string.news_font_biggest_text));
-        dayOrNightLine = view.findViewById(R.id.app_news_mode_line);
-        fontLine = view.findViewById(R.id.app_news_font_line);
-        fontTxt = (TextView) view.findViewById(R.id.app_news_font_text);
-        nightModeSwitchBtn = (SwitchView) view.findViewById(R.id.app_news_mode_switch);
+        smallerBtn = (Button) dialog.findViewById(R.id.app_news_font_normal_btn);
+        normalBtn = (Button) dialog.findViewById(R.id.app_news_font_middle_btn);
+        largerBtn = (Button) dialog.findViewById(R.id.app_news_font_big_btn);
+        largestBtn = (Button) dialog.findViewById(R.id.app_news_font_biggest_btn);
+        String model = PreferencesByUserAndTanentUtils.getString(NewsWebDetailActivity.this, "app_news_webview_model", lightMode);
+        final SwitchView nightModeSwitchBtn = (SwitchView) dialog.findViewById(R.id.app_news_mode_switch);
         nightModeSwitchBtn.setPaintColorOn(0x7E000000);
         nightModeSwitchBtn.setPaintCircleBtnColor(0x1A666666);
-        String model = PreferencesByUserAndTanentUtils.getString(NewsWebDetailActivity.this, "app_news_webview_model", lightMode);
-        if (model.equals(darkMode)) {
-            nightModeSwitchBtn.setOpened(true);
-        } else {
-            nightModeSwitchBtn.setOpened(false);
-        }
+        nightModeSwitchBtn.setOpened(model.endsWith(darkMode) ? true : false);
         nightModeSwitchBtn.setOnStateChangedListener(new SwitchView.OnStateChangedListener() {
             @Override
             public void toggleToOn(View view) {
                 PreferencesByUserAndTanentUtils.putString(NewsWebDetailActivity.this, "app_news_webview_model", darkMode);
-                changeDialogModelToNight();
-                changeWebViewModel(darkMode);
+                setDialogModel(darkMode);
+                setWebViewModel(darkMode);
                 nightModeSwitchBtn.toggleSwitch(true);
                 reRender();
             }
@@ -385,12 +230,58 @@ public class NewsWebDetailActivity extends BaseActivity {
             @Override
             public void toggleToOff(View view) {
                 PreferencesByUserAndTanentUtils.putString(NewsWebDetailActivity.this, "app_news_webview_model", lightMode);
-                changeDialogModelToDay();
-                changeWebViewModel(lightMode);
+                setDialogModel(lightMode);
+                setWebViewModel(lightMode);
                 nightModeSwitchBtn.toggleSwitch(false);
                 reRender();
             }
         });
+    }
+
+    /**
+     * 设置Dialog的夜间，日间模式
+     *
+     * @param model
+     */
+    private void setDialogModel(String model) {
+        GradientDrawable drawable = new GradientDrawable();
+        drawable.setCornerRadius(DensityUtil.dip2px(NewsWebDetailActivity.this, 5));
+        drawable.setColor(model.equals(darkMode) ? ContextCompat.getColor(NewsWebDetailActivity.this, R.color.app_dialog_night_background_layout)
+                : ContextCompat.getColor(NewsWebDetailActivity.this, R.color.app_dialog_day_background_layout));
+        (dialog.findViewById(R.id.app_news_dialog)).setBackground(drawable);
+        GradientDrawable drawableBtn = new GradientDrawable();
+        drawableBtn.setCornerRadius(DensityUtil.dip2px(NewsWebDetailActivity.this, 5));
+        drawableBtn.setColor(model.equals(darkMode) ? ContextCompat.getColor(NewsWebDetailActivity.this, R.color.app_dialog_night_background_btn) : ContextCompat.getColor(NewsWebDetailActivity.this, R.color.app_dialog_day_background_btn));
+        (dialog.findViewById(R.id.app_news_mode_layout)).setBackground(drawableBtn);
+        setDayBtn(model.equals(darkMode) ? 1 : 2);
+        Button shareBtn = (Button) (dialog.findViewById(R.id.app_news_share_btn));
+        shareBtn.setBackground(drawableBtn);
+        shareBtn.setTextColor(model.equals(darkMode) ? ContextCompat.getColor(NewsWebDetailActivity.this, R.color.white)
+                : ContextCompat.getColor(NewsWebDetailActivity.this, R.color.black));
+        Button instructionsBtn = (Button) dialog.findViewById(R.id.app_news_instructions_btn);
+        instructionsBtn.setBackground(drawableBtn);
+        instructionsBtn.setTextColor(model.equals(darkMode) ? ContextCompat.getColor(NewsWebDetailActivity.this, R.color.white)
+                : ContextCompat.getColor(NewsWebDetailActivity.this, R.color.black));
+        dialog.findViewById(R.id.app_news_read_mode_line).setBackgroundColor(model.equals(darkMode) ? ContextCompat.getColor(NewsWebDetailActivity.this, R.color.app_dialog_night_background_btn)
+                : ContextCompat.getColor(NewsWebDetailActivity.this, R.color.app_dialog_day_read_line_color));
+        ((TextView) dialog.findViewById(R.id.app_news_read_mode_text)).setTextColor(model.equals(darkMode) ? ContextCompat.getColor(NewsWebDetailActivity.this, R.color.app_dialog_night_font_size_color)
+                : ContextCompat.getColor(NewsWebDetailActivity.this, R.color.app_dialog_night_font_size_color));
+        TextView dayOrNightModeText = (TextView) dialog.findViewById(R.id.app_news_mode_night_text);
+        dayOrNightModeText.setText(model.equals(darkMode) ? getString(R.string.news_night_mode_text) : getString(R.string.news_day_mode_text));
+        dayOrNightModeText.setTextColor(model.equals(darkMode) ? ContextCompat.getColor(NewsWebDetailActivity.this, R.color.white) : ContextCompat.getColor(NewsWebDetailActivity.this, R.color.black));
+        ((ImageView) dialog.findViewById(R.id.app_news_mode_sun_img)).setImageResource(model.equals(darkMode) ? R.drawable.app_news_mode_day_light : R.drawable.app_news_mode_day_dark);
+        ((ImageView) dialog.findViewById(R.id.app_news_mode_moon_img)).setImageResource(model.equals(darkMode) ? R.drawable.app_news_mode_light : R.drawable.app_news_mode_dark);
+        smallerBtn.setBackground(drawableBtn);
+        normalBtn.setBackground(drawableBtn);
+        largerBtn.setBackground(drawableBtn);
+        largestBtn.setBackground(drawableBtn);
+        setFontSizeBtn();
+        dialog.findViewById(R.id.app_news_mode_line).setBackgroundColor(model.equals(darkMode) ? ContextCompat.getColor(NewsWebDetailActivity.this, R.color.app_dialog_night_line_color)
+                : ContextCompat.getColor(NewsWebDetailActivity.this, R.color.app_dialog_day_line_color));
+        dialog.findViewById(R.id.app_news_font_line).setBackgroundColor(model.equals(darkMode) ? ContextCompat.getColor(NewsWebDetailActivity.this, R.color.app_dialog_night_line_color)
+                : ContextCompat.getColor(NewsWebDetailActivity.this, R.color.app_dialog_day_line_color));
+        ((TextView) dialog.findViewById(R.id.app_news_font_text)).setTextColor(model.equals(darkMode) ? ContextCompat.getColor(NewsWebDetailActivity.this, R.color.app_dialog_night_font_size_color)
+                : ContextCompat.getColor(NewsWebDetailActivity.this, R.color.app_dialog_night_font_size_color));
     }
 
     /**
@@ -407,16 +298,16 @@ public class NewsWebDetailActivity extends BaseActivity {
     }
 
     /**
-     * 改变WebView字体大小
+     * 改变WebView字体大小，设置dialog上四种字体的UI
      *
-     * @param settings
      * @param textZoom
      */
-    private void changeNewsFontSize(WebSettings settings, int textZoom) {
-        settings.setTextZoom(textZoom);
+    private void setNewsFontSize(int textZoom) {
+        webView.getSettings().setTextZoom(textZoom);
         PreferencesByUserAndTanentUtils.putInt(NewsWebDetailActivity.this, "app_news_text_size", textZoom);
         textSize = textZoom;
         reRender();
+        setFontSizeBtn();
     }
 
     /**
@@ -427,17 +318,14 @@ public class NewsWebDetailActivity extends BaseActivity {
         String model = PreferencesByUserAndTanentUtils.getString(NewsWebDetailActivity.this, "app_news_webview_model", "");
         GradientDrawable drawable = new GradientDrawable();
         drawable.setCornerRadius(DensityUtil.dip2px(NewsWebDetailActivity.this, 5));
-
-        if (model.equals(darkMode)) {
-            drawable.setColor(darkModeBtnColor);
-        } else {
-            drawable.setColor(lightModeBtnColor);
+        drawable.setColor(model.endsWith(darkMode) ? ContextCompat.getColor(NewsWebDetailActivity.this, R.color.app_dialog_night_background_btn)
+                : ContextCompat.getColor(NewsWebDetailActivity.this, R.color.app_dialog_day_background_btn));
+        if (groupNews.isHasExtraPermission()) {
+            dialog.findViewById(R.id.app_news_instructions_btn).setBackground(drawable);
         }
-        shareBtn.setBackground(drawable);
-        instructionsBtn.setBackground(drawable);
-        dayOrNightLayout.setBackground(drawable);
+        (dialog.findViewById(R.id.app_news_share_btn)).setBackground(drawable);
+        (dialog.findViewById(R.id.app_news_mode_layout)).setBackground(drawable);
     }
-
 
     @Override
     protected void onResume() {
@@ -451,7 +339,6 @@ public class NewsWebDetailActivity extends BaseActivity {
     }
 
     public void onClick(View v) {
-        String model = PreferencesByUserAndTanentUtils.getString(NewsWebDetailActivity.this, "app_news_webview_model", "");
         switch (v.getId()) {
             case R.id.back_layout:
                 finish();
@@ -460,53 +347,47 @@ public class NewsWebDetailActivity extends BaseActivity {
                 showDialog();
                 break;
             case R.id.app_news_mode_day_btn:
-                changeWebViewModel(lightMode);
-                changeDialogModelToDay();
+                setWebViewModel(lightMode);
+                setDialogModel(lightMode);
                 break;
             case R.id.app_news_mode_night_btn:
-                changeWebViewModel(darkMode);
-                changeDialogModelToNight();
+                setWebViewModel(darkMode);
+                setDialogModel(darkMode);
                 break;
             case R.id.app_news_share_btn:
                 shareNewsToFrinds();
-//                showHasInstruceionDialog();
                 break;
             case R.id.app_news_instructions_btn:
                 //批示逻辑
                 dialog.dismiss();
-                if (!StringUtils.isBlank(approvedDate)) {
-                    String content = ((GroupNews) getIntent().getSerializableExtra("groupNews")).getEditorComment();
+                if (!StringUtils.isBlank(groupNews.getApprovedDate())) {
+                    String content = groupNews.getEditorComment();
                     if (!StringUtils.isBlank(content)) {
                         instruction = content;
                     }
                     showHasInstruceionDialog();
-                } else if (editorCommentCreated == true) {
-                    instruction = originalEditorComment;
+                } else if (groupNews.isEditorCommentCreated() == true) {
+                    instruction = groupNews.getOriginalEditorComment();
                     showHasInstruceionDialog();
                 } else {
                     showInstruceionDialog();
                 }
                 break;
             case R.id.app_news_font_normal_btn:
-                changeNewsFontSize(webSettings, MyAppWebConfig.SMALLER);
-                chooseNormalFont(model);
+                setNewsFontSize(MyAppWebConfig.SMALLER);
                 break;
             case R.id.app_news_font_middle_btn:
-                changeNewsFontSize(webSettings, MyAppWebConfig.NORMAL);
-                chooseMiddleFont(model);
+                setNewsFontSize(MyAppWebConfig.NORMAL);
                 break;
             case R.id.app_news_font_big_btn:
-                changeNewsFontSize(webSettings, MyAppWebConfig.LARGER);
-                chooseBigFont(model);
+                setNewsFontSize(MyAppWebConfig.LARGER);
                 break;
             case R.id.app_news_font_biggest_btn:
-                changeNewsFontSize(webSettings, MyAppWebConfig.LARGEST);
-                chooseBiggestFont(model);
+                setNewsFontSize(MyAppWebConfig.LARGEST);
                 break;
             default:
                 break;
         }
-
     }
 
     /**
@@ -533,7 +414,6 @@ public class NewsWebDetailActivity extends BaseActivity {
                 hasIntrcutionDialog.dismiss();
             }
         });
-
         WindowManager.LayoutParams wl = window.getAttributes();
         wl.dimAmount = 0.31f;
         wl.width = WindowManager.LayoutParams.MATCH_PARENT;   //设置宽度充满屏幕
@@ -555,12 +435,11 @@ public class NewsWebDetailActivity extends BaseActivity {
         return instruction;
     }
 
-
     /**
-     * 展示审批
+     * 展示批示
      */
     private void showInstruceionDialog() {
-        final Dialog intrcutionDialog = new Dialog(NewsWebDetailActivity.this,
+        intrcutionDialog = new Dialog(NewsWebDetailActivity.this,
                 R.style.transparentFrameWindowStyleForIntrcution);
         Window window = intrcutionDialog.getWindow();
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE | WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
@@ -576,24 +455,21 @@ public class NewsWebDetailActivity extends BaseActivity {
             }
         });
         final EditText editText = (EditText) view.findViewById(R.id.news_instrcution_text);
-        Button okBtn = (Button) view.findViewById(R.id.ok_btn);
-        okBtn.setOnClickListener(new View.OnClickListener() {
+        editText.setFocusable(true);
+        editText.setFocusableInTouchMode(true);
+        editText.requestFocus();
+        (view.findViewById(R.id.ok_btn)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String instructions = editText.getText().toString();
-                if (!StringUtils.isBlank(instructions)) {
-                    originalEditorComment = instructions;
-                    sendInstructions(instructions);
-                    intrcutionDialog.dismiss();
-                } else {
+                originalEditorComment = editText.getText().toString();
+                if (StringUtils.isBlank(originalEditorComment)) {
                     ToastUtils.show(NewsWebDetailActivity.this, getString(R.string.news_content_cant_empty));
+                    return;
                 }
+                sendInstructions();
             }
         });
-
-
         WindowManager.LayoutParams wl = window.getAttributes();
-//        wl.alpha = 0.31f;
         wl.dimAmount = 0.31f;
         wl.width = WindowManager.LayoutParams.MATCH_PARENT;   //设置宽度充满屏幕
         wl.height = WindowManager.LayoutParams.WRAP_CONTENT;
@@ -605,20 +481,15 @@ public class NewsWebDetailActivity extends BaseActivity {
 
     /**
      * 发布批示
-     *
-     * @param instruction
      */
-    private void sendInstructions(String instruction) {
-        ChatAPIService apiService = new ChatAPIService(NewsWebDetailActivity.this);
-        apiService.setAPIInterface(new WebService());
-        if (NetUtils.isNetworkConnected(NewsWebDetailActivity.this)) {
-            if (!loadingDlg.isShowing()) {
-                loadingDlg.show();
-            }
-            apiService.sendNewsInstruction(newsId, instruction);
+    private void sendInstructions() {
+        if (NetUtils.isNetworkConnected(getApplicationContext())) {
+            loadingDlg.show();
+            ChatAPIService apiService = new ChatAPIService(NewsWebDetailActivity.this);
+            apiService.setAPIInterface(new WebService());
+            apiService.sendNewsInstruction(groupNews.getId(), originalEditorComment);
         }
     }
-
 
     /**
      * 打开软键盘
@@ -636,180 +507,54 @@ public class NewsWebDetailActivity extends BaseActivity {
         });
     }
 
-
-    /**
-     * 选择正常字体
-     */
-    private void chooseNormalFont(String model) {
-        if (model.equals(darkMode)) {
-            middleBtn.setTextColor(whiteFontColor);
-            bigBtn.setTextColor(whiteFontColor);
-            biggestBtn.setTextColor(whiteFontColor);
-            normalBtn.setTextColor(ContextCompat.getColor(NewsWebDetailActivity.this, R.color.app_dialog_night_font_size_color));
-        } else {
-            middleBtn.setTextColor(blackFontColor);
-            bigBtn.setTextColor(blackFontColor);
-            biggestBtn.setTextColor(blackFontColor);
-            normalBtn.setTextColor(lightModeFontColor);
-        }
-
-    }
-
-    /**
-     * 选择中字体
-     */
-    private void chooseMiddleFont(String model) {
-        if (model.equals(darkMode)) {
-            normalBtn.setTextColor(whiteFontColor);
-            bigBtn.setTextColor(whiteFontColor);
-            biggestBtn.setTextColor(whiteFontColor);
-            middleBtn.setTextColor(ContextCompat.getColor(NewsWebDetailActivity.this, R.color.app_dialog_night_font_size_color));
-        } else {
-            normalBtn.setTextColor(blackFontColor);
-            bigBtn.setTextColor(blackFontColor);
-            biggestBtn.setTextColor(blackFontColor);
-            middleBtn.setTextColor(lightModeFontColor);
-        }
-    }
-
-    /**
-     * 选择大字体
-     */
-    private void chooseBigFont(String model) {
-        if (model.equals(darkMode)) {
-            normalBtn.setTextColor(whiteFontColor);
-            middleBtn.setTextColor(whiteFontColor);
-            biggestBtn.setTextColor(whiteFontColor);
-            bigBtn.setTextColor(ContextCompat.getColor(NewsWebDetailActivity.this, R.color.app_dialog_night_font_size_color));
-        } else {
-            normalBtn.setTextColor(blackFontColor);
-            middleBtn.setTextColor(blackFontColor);
-            biggestBtn.setTextColor(blackFontColor);
-            bigBtn.setTextColor(lightModeFontColor);
-        }
-
-    }
-
-    /**
-     * 选择超大字体
-     */
-    private void chooseBiggestFont(String model) {
-        if (model.equals(darkMode)) {
-            normalBtn.setTextColor(whiteFontColor);
-            middleBtn.setTextColor(whiteFontColor);
-            bigBtn.setTextColor(whiteFontColor);
-            biggestBtn.setTextColor(ContextCompat.getColor(NewsWebDetailActivity.this, R.color.app_dialog_night_font_size_color));
-        } else {
-            normalBtn.setTextColor(blackFontColor);
-            middleBtn.setTextColor(blackFontColor);
-            bigBtn.setTextColor(blackFontColor);
-            biggestBtn.setTextColor(lightModeFontColor);
-        }
-
-    }
-
     /**
      * 修改WebView的模式
      *
      * @param model
      */
-    private void changeWebViewModel(String model) {
-        if (model.equals(darkMode)) {
-            StateBarColor.changeStateBarColor(NewsWebDetailActivity.this, R.color.app_news_night_color);
-            relativeLayout.setBackgroundColor(ContextCompat.getColor(NewsWebDetailActivity.this, R.color.app_news_night_color));
-            webView.loadUrl(url + model);
-        } else {
-            StateBarColor.changeStateBarColor(NewsWebDetailActivity.this, R.color.header_bg);
-            relativeLayout.setBackgroundColor(ContextCompat.getColor(NewsWebDetailActivity.this, R.color.header_bg));
-            webView.loadUrl(url + model);
-        }
+    private void setWebViewModel(String model) {
+        StateBarColor.changeStateBarColor(NewsWebDetailActivity.this, model.equals(darkMode) ? R.color.app_news_night_color : R.color.header_bg);
+        (findViewById(R.id.header_layout)).setBackgroundColor(model.equals(darkMode) ? ContextCompat.getColor(NewsWebDetailActivity.this, R.color.app_news_night_color)
+                : ContextCompat.getColor(NewsWebDetailActivity.this, R.color.header_bg));
+        webView.loadUrl(url + model);
         PreferencesByUserAndTanentUtils.putString(NewsWebDetailActivity.this, "app_news_webview_model", model);
-    }
-
-    /**
-     * 修改Dilaog的夜间模式
-     */
-    private void changeDialogModelToNight() {
-        GradientDrawable drawable = new GradientDrawable();
-        drawable.setCornerRadius(DensityUtil.dip2px(NewsWebDetailActivity.this, 5));
-        drawable.setColor(ContextCompat.getColor(NewsWebDetailActivity.this, R.color.app_dialog_night_background_layout));
-        dialogLayout.setBackground(drawable);
-        GradientDrawable drawableBtn = new GradientDrawable();
-        drawableBtn.setCornerRadius(DensityUtil.dip2px(NewsWebDetailActivity.this, 5));
-        drawableBtn.setColor(ContextCompat.getColor(NewsWebDetailActivity.this, R.color.app_dialog_night_background_btn));
-        dayOrNightLayout.setBackground(drawableBtn);
-        setDayBtn(1);
-        changeFontSizeBtn();
-        shareBtn.setBackground(drawableBtn);
-        shareBtn.setTextColor(ContextCompat.getColor(NewsWebDetailActivity.this, R.color.white));
-        instructionsBtn.setBackground(drawableBtn);
-        instructionsBtn.setTextColor(ContextCompat.getColor(NewsWebDetailActivity.this, R.color.white));
-        appReadModeLine.setBackgroundColor(ContextCompat.getColor(NewsWebDetailActivity.this, R.color.app_dialog_night_background_btn));
-        readModeText.setTextColor(ContextCompat.getColor(NewsWebDetailActivity.this, R.color.app_dialog_night_font_size_color));
-        dayOrNightModeText.setText(getString(R.string.news_night_mode_text));
-        dayOrNightModeText.setTextColor(ContextCompat.getColor(NewsWebDetailActivity.this, R.color.white));
-        sunImg.setImageResource(R.drawable.app_news_mode_day_light);
-        moonImg.setImageResource(R.drawable.app_news_mode_light);
-        normalBtn.setBackground(drawableBtn);
-        middleBtn.setBackground(drawableBtn);
-        bigBtn.setBackground(drawableBtn);
-        biggestBtn.setBackground(drawableBtn);
-        initDialogFontSize();
-        dayOrNightLine.setBackgroundColor(ContextCompat.getColor(NewsWebDetailActivity.this, R.color.app_dialog_night_line_color));
-        fontLine.setBackgroundColor(ContextCompat.getColor(NewsWebDetailActivity.this, R.color.app_dialog_night_line_color));
-        fontTxt.setTextColor(ContextCompat.getColor(NewsWebDetailActivity.this, R.color.app_dialog_night_font_size_color));
-    }
-
-    /**
-     * 修改Dialog的日间模式
-     */
-    private void changeDialogModelToDay() {
-        GradientDrawable drawableDay = new GradientDrawable();
-        drawableDay.setCornerRadius(DensityUtil.dip2px(NewsWebDetailActivity.this, 5));
-        drawableDay.setColor(ContextCompat.getColor(NewsWebDetailActivity.this, R.color.app_dialog_day_background_layout));
-        dialogLayout.setBackground(drawableDay);
-        GradientDrawable drawableDayBtn = new GradientDrawable();
-        drawableDayBtn.setCornerRadius(DensityUtil.dip2px(NewsWebDetailActivity.this, 5));
-        drawableDayBtn.setColor(lightModeBtnColor);
-        dayOrNightLayout.setBackground(drawableDayBtn);
-        setDayBtn(2);
-        changeFontSizeBtn();
-        shareBtn.setBackground(drawableDayBtn);
-        shareBtn.setTextColor(ContextCompat.getColor(NewsWebDetailActivity.this, R.color.black));
-        instructionsBtn.setBackground(drawableDayBtn);
-        instructionsBtn.setTextColor(ContextCompat.getColor(NewsWebDetailActivity.this, R.color.black));
-        appReadModeLine.setBackgroundColor(ContextCompat.getColor(NewsWebDetailActivity.this, R.color.app_dialog_day_read_line_color));
-        readModeText.setTextColor(ContextCompat.getColor(NewsWebDetailActivity.this, R.color.app_dialog_night_font_size_color));
-        dayOrNightModeText.setText(getString(R.string.news_day_mode_text));
-        dayOrNightModeText.setTextColor(ContextCompat.getColor(NewsWebDetailActivity.this, R.color.black));
-        sunImg.setImageResource(R.drawable.app_news_mode_day_dark);
-        moonImg.setImageResource(R.drawable.app_news_mode_dark);
-        normalBtn.setBackground(drawableDayBtn);
-        middleBtn.setBackground(drawableDayBtn);
-        bigBtn.setBackground(drawableDayBtn);
-        biggestBtn.setBackground(drawableDayBtn);
-        dayOrNightLine.setBackgroundColor(ContextCompat.getColor(NewsWebDetailActivity.this, R.color.app_dialog_day_line_color));
-        fontLine.setBackgroundColor(ContextCompat.getColor(NewsWebDetailActivity.this, R.color.app_dialog_day_line_color));
-        fontTxt.setTextColor(ContextCompat.getColor(NewsWebDetailActivity.this, R.color.app_dialog_night_font_size_color));
     }
 
     /**
      * 当改变日夜间模式的时候字体按钮对应改变
      */
-    private void changeFontSizeBtn() {
+    private void setFontSizeBtn() {
         String model = PreferencesByUserAndTanentUtils.getString(NewsWebDetailActivity.this, "app_news_webview_model", "");
+        int lightModeFontColor = ContextCompat.getColor(NewsWebDetailActivity.this, R.color.app_dialog_day_font_color);
+        int darkModeFontColor = ContextCompat.getColor(NewsWebDetailActivity.this, R.color.app_dialog_night_font_size_color);
+        int blackFontColor = ContextCompat.getColor(NewsWebDetailActivity.this, R.color.black);
+        int whiteFontColor = ContextCompat.getColor(NewsWebDetailActivity.this, R.color.white);
         switch (textSize) {
             case MyAppWebConfig.SMALLER:
-                chooseNormalFont(model);
+                normalBtn.setTextColor(model.equals(darkMode) ? whiteFontColor : blackFontColor);
+                largerBtn.setTextColor(model.equals(darkMode) ? whiteFontColor : blackFontColor);
+                largestBtn.setTextColor(model.equals(darkMode) ? whiteFontColor : blackFontColor);
+                smallerBtn.setTextColor(model.equals(darkMode) ? darkModeFontColor : lightModeFontColor);
                 break;
             case MyAppWebConfig.NORMAL:
-                chooseMiddleFont(model);
+                smallerBtn.setTextColor(model.equals(darkMode) ? whiteFontColor : blackFontColor);
+                largerBtn.setTextColor(model.equals(darkMode) ? whiteFontColor : blackFontColor);
+                largestBtn.setTextColor(model.equals(darkMode) ? whiteFontColor : blackFontColor);
+                normalBtn.setTextColor(model.equals(darkMode) ? darkModeFontColor : lightModeFontColor);
                 break;
             case MyAppWebConfig.LARGER:
-                chooseBigFont(model);
+                smallerBtn.setTextColor(model.equals(darkMode) ? whiteFontColor : blackFontColor);
+                normalBtn.setTextColor(model.equals(darkMode) ? whiteFontColor : blackFontColor);
+                largestBtn.setTextColor(model.equals(darkMode) ? whiteFontColor : blackFontColor);
+                largerBtn.setTextColor(model.equals(darkMode) ? darkModeFontColor : lightModeFontColor);
                 break;
             case MyAppWebConfig.LARGEST:
-                chooseBiggestFont(model);
+                smallerBtn.setTextColor(model.equals(darkMode) ? whiteFontColor : blackFontColor);
+                normalBtn.setTextColor(model.equals(darkMode) ? whiteFontColor : blackFontColor);
+                largerBtn.setTextColor(model.equals(darkMode) ? whiteFontColor : blackFontColor);
+                largestBtn.setTextColor(model.equals(darkMode) ? darkModeFontColor : lightModeFontColor);
+                break;
+            default:
                 break;
         }
     }
@@ -820,23 +565,13 @@ public class NewsWebDetailActivity extends BaseActivity {
      * @param dayOrNight
      */
     public void setDayBtn(int dayOrNight) {
-        Drawable shareIcon = null, instructionIcon = null;
         Resources res = getResources();
-        if (dayOrNight == 1) {
-            instructionIcon = res.getDrawable(R.drawable.icon_news_instruction_wihte);
-        } else {
-            instructionIcon = res.getDrawable(R.drawable.icon_news_instructions);
-        }
-
-        if (dayOrNight == 1) {
-            shareIcon = res.getDrawable(R.drawable.app_news_share_night);
-        } else {
-            shareIcon = res.getDrawable(R.drawable.app_news_share_day);
-        }
+        Drawable instructionIcon = (dayOrNight == 1) ? res.getDrawable(R.drawable.icon_news_instruction_wihte) : res.getDrawable(R.drawable.icon_news_instructions);
+        Drawable shareIcon = (dayOrNight == 1) ? res.getDrawable(R.drawable.app_news_share_night) : res.getDrawable(R.drawable.app_news_share_day);
         instructionIcon.setBounds(0, 0, instructionIcon.getMinimumWidth(), instructionIcon.getMinimumHeight());
         shareIcon.setBounds(0, 0, shareIcon.getMinimumWidth(), shareIcon.getMinimumHeight());
-        shareBtn.setCompoundDrawables(shareIcon, null, null, null);
-        instructionsBtn.setCompoundDrawables(instructionIcon, null, null, null);
+        ((Button) dialog.findViewById(R.id.app_news_share_btn)).setCompoundDrawables(shareIcon, null, null, null);
+        ((Button) dialog.findViewById(R.id.app_news_instructions_btn)).setCompoundDrawables(instructionIcon, null, null, null);
     }
 
     /**
@@ -856,7 +591,6 @@ public class NewsWebDetailActivity extends BaseActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        // TODO Auto-generated method stub
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == SHARE_SEARCH_RUEST_CODE && resultCode == RESULT_OK
                 && NetUtils.isNetworkConnected(getApplicationContext())) {
@@ -870,7 +604,6 @@ public class NewsWebDetailActivity extends BaseActivity {
                         String uid = peopleObj.getString("pid");
                         createDirectChannel(uid);
                     }
-
                 }
 
                 if (jsonObject.has("channelGroup")) {
@@ -879,16 +612,13 @@ public class NewsWebDetailActivity extends BaseActivity {
                     if (channelGroupArray.length() > 0) {
                         JSONObject cidObj = channelGroupArray.getJSONObject(0);
                         String cid = cidObj.getString("cid");
-                        shareNewsLink(cid);
+                        sendMsg(cid);
                     }
                 }
-
-            } catch (JSONException e) {
-                // TODO Auto-generated catch block
+            } catch (Exception e) {
                 e.printStackTrace();
                 showShareFailToast();
             }
-
         }
     }
 
@@ -898,61 +628,52 @@ public class NewsWebDetailActivity extends BaseActivity {
      * @param uid
      */
     private void createDirectChannel(String uid) {
-        // TODO Auto-generated method stub
         new ChatCreateUtils().createDirectChannel(NewsWebDetailActivity.this, uid,
                 new OnCreateDirectChannelListener() {
-
                     @Override
                     public void createDirectChannelSuccess(GetCreateSingleChannelResult getCreateSingleChannelResult) {
-                        // TODO Auto-generated method stub
-                        shareNewsLink(getCreateSingleChannelResult.getCid());
-
+                        sendMsg(getCreateSingleChannelResult.getCid());
                     }
 
                     @Override
                     public void createDirectChannelFail() {
-                        // TODO Auto-generated method stub
                         showShareFailToast();
                     }
                 });
     }
 
     /**
-     * 分享新闻
-     *
-     * @param cid
-     */
-    private void shareNewsLink(String cid) {
-        JSONObject jsonObject = new JSONObject();
-        try {
-            jsonObject.put("url", url);
-            jsonObject.put("poster", poster);
-            jsonObject.put("digest", digest);
-            jsonObject.put("title", title);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        sendMsg(cid, jsonObject.toString(), System.currentTimeMillis() + "");
-    }
-
-    /**
      * 发送新闻分享
      *
      * @param cid
-     * @param jsonNews
-     * @param time
      */
-    private void sendMsg(String cid, String jsonNews, String time) {
-        ChatAPIService apiService = new ChatAPIService(
-                NewsWebDetailActivity.this);
-        apiService.setAPIInterface(new WebService());
-        apiService.sendMsg(cid, jsonNews, "res_link", time);
+    private void sendMsg(String cid) {
+        if (NetUtils.isNetworkConnected(getApplicationContext())) {
+            ChatAPIService apiService = new ChatAPIService(
+                    NewsWebDetailActivity.this);
+            apiService.setAPIInterface(new WebService());
+            JSONObject jsonObject = new JSONObject();
+            String title = "";
+            if (StringUtils.isBlank(title)) {
+                title = getString(R.string.group_news_detail);
+            }
+            try {
+                jsonObject.put("url", url);
+                jsonObject.put("poster", groupNews.getPoster());
+                jsonObject.put("digest", groupNews.getDigest());
+                jsonObject.put("title", title);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            apiService.sendMsg(cid, jsonObject.toString(), "res_link", System.currentTimeMillis() + "");
+        }
+
     }
 
     /**
      * 自定义WebViewClient在应用中打开页面
      */
-    private class webViewClient extends WebViewClient {
+    private class GroupNewsWebViewClient extends WebViewClient {
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
             view.loadUrl(url);
             return true;
@@ -967,58 +688,12 @@ public class NewsWebDetailActivity extends BaseActivity {
                 getString(R.string.news_share_fail), Toast.LENGTH_SHORT).show();
     }
 
-    class WebService extends APIInterfaceInstance {
-
-        @Override
-        public void returnSendMsgSuccess(GetSendMsgResult getSendMsgResult,
-                                         String fakeMessageId) {
-            // TODO Auto-generated method stub
-            if (loadingDlg != null && loadingDlg.isShowing()) {
-                loadingDlg.dismiss();
-            }
-            Toast.makeText(NewsWebDetailActivity.this,
-                    getString(R.string.news_share_success), Toast.LENGTH_SHORT)
-                    .show();
-        }
-
-        @Override
-        public void returnSendMsgFail(String error, String fakeMessageId, int errorCode) {
-            // TODO Auto-generated method stub
-            if (loadingDlg != null && loadingDlg.isShowing()) {
-                loadingDlg.dismiss();
-            }
-            showShareFailToast();
-        }
-
-        @Override
-        public void returnNewsInstructionSuccess(GetNewsInstructionResult getNewsInstructionResult) {
-            if (loadingDlg != null && loadingDlg.isShowing()) {
-                loadingDlg.dismiss();
-            }
-            editorCommentCreated = true;
-            sendInstructionEvent();
-            Toast.makeText(NewsWebDetailActivity.this,
-                    getString(R.string.news_instructions_success_text), Toast.LENGTH_SHORT)
-                    .show();
-        }
-
-        @Override
-        public void returnNewsInstructionFail(String error, int errorCode) {
-            if (loadingDlg != null && loadingDlg.isShowing()) {
-                loadingDlg.dismiss();
-            }
-            editorCommentCreated = false;
-            originalEditorComment = "";
-            WebServiceMiddleUtils.hand(NewsWebDetailActivity.this, error, errorCode);
-        }
-    }
-
     /**
      * 发送批示成功事件
      */
     private void sendInstructionEvent() {
         NewsIntrcutionUpdateEvent groupEvent = new NewsIntrcutionUpdateEvent();
-        groupEvent.setId(newsId);
+        groupEvent.setId(groupNews.getId());
         groupEvent.setEditorCommentCreated(true);
         groupEvent.setOriginalEditorComment(originalEditorComment);
         EventBus.getDefault().post(groupEvent);
@@ -1031,10 +706,8 @@ public class NewsWebDetailActivity extends BaseActivity {
         }
     }
 
-
     @Override
     protected void onDestroy() {
-        // TODO Auto-generated method stub
         super.onDestroy();
         if (webView != null) {
             webView.removeAllViews();
@@ -1049,4 +722,47 @@ public class NewsWebDetailActivity extends BaseActivity {
         super.finish();
     }
 
+    class WebService extends APIInterfaceInstance {
+        @Override
+        public void returnSendMsgSuccess(GetSendMsgResult getSendMsgResult,
+                                         String fakeMessageId) {
+            if (loadingDlg != null && loadingDlg.isShowing()) {
+                loadingDlg.dismiss();
+            }
+            Toast.makeText(NewsWebDetailActivity.this,
+                    getString(R.string.news_share_success), Toast.LENGTH_SHORT)
+                    .show();
+        }
+
+        @Override
+        public void returnSendMsgFail(String error, String fakeMessageId, int errorCode) {
+            if (loadingDlg != null && loadingDlg.isShowing()) {
+                loadingDlg.dismiss();
+            }
+            showShareFailToast();
+        }
+
+        @Override
+        public void returnNewsInstructionSuccess(GetNewsInstructionResult getNewsInstructionResult) {
+            if (loadingDlg != null && loadingDlg.isShowing()) {
+                loadingDlg.dismiss();
+            }
+            intrcutionDialog.dismiss();
+            groupNews.setEditorCommentCreated(true);
+            sendInstructionEvent();
+            Toast.makeText(NewsWebDetailActivity.this,
+                    getString(R.string.news_instructions_success_text), Toast.LENGTH_SHORT)
+                    .show();
+        }
+
+        @Override
+        public void returnNewsInstructionFail(String error, int errorCode) {
+            if (loadingDlg != null && loadingDlg.isShowing()) {
+                loadingDlg.dismiss();
+            }
+            groupNews.setEditorCommentCreated(false);
+            originalEditorComment = "";
+            WebServiceMiddleUtils.hand(NewsWebDetailActivity.this, error, errorCode);
+        }
+    }
 }

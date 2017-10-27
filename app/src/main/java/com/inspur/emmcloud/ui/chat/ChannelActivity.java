@@ -54,11 +54,9 @@ import com.inspur.emmcloud.util.AppUtils;
 import com.inspur.emmcloud.util.ChannelCacheUtils;
 import com.inspur.emmcloud.util.ConbineMsg;
 import com.inspur.emmcloud.util.DirectChannelUtils;
-import com.inspur.emmcloud.util.HandleMsgTextUtils;
 import com.inspur.emmcloud.util.ImageDisplayUtils;
 import com.inspur.emmcloud.util.IntentUtils;
 import com.inspur.emmcloud.util.JSONUtils;
-import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.MsgCacheUtil;
 import com.inspur.emmcloud.util.MsgReadIDCacheUtils;
 import com.inspur.emmcloud.util.MsgRecourceUploadUtils;
@@ -68,7 +66,6 @@ import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.RobotCacheUtils;
 import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.TimeUtils;
-import com.inspur.emmcloud.util.URLMatcher;
 import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.ECMChatInputMenu;
@@ -119,7 +116,7 @@ public class ChannelActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_channel);
-        init();
+        initData();
         registeRefreshNameReceiver();
         recordUserClickChannel();
     }
@@ -130,26 +127,12 @@ public class ChannelActivity extends BaseActivity {
         // TODO Auto-generated method stub
         super.onNewIntent(intent);
         setIntent(intent);
-        init();
+        initData();
         //当从群成员选择进入沟通频道的时候执行这里的记录
         recordUserClickChannel();
     }
 
-    /**
-     * 记录用户点击的频道，修改不是云+客服的时候才记录频道点击事件170629
-     */
-    private void recordUserClickChannel() {
-        String from = "";
-        if (getIntent().hasExtra("from")) {
-            from = getIntent().getStringExtra("from");
-            if (!from.equals("customer")) {
-                PVCollectModel pvCollectModel = new PVCollectModel("channel", "communicate");
-                PVCollectModelCacheUtils.saveCollectModel(ChannelActivity.this, pvCollectModel);
-            }
-        }
-    }
-
-    private void init() {
+    private void initData() {
         loadingDlg = new LoadingDialog(this);
         apiService = new ChatAPIService(ChannelActivity.this);
         apiService.setAPIInterface(new WebService());
@@ -170,7 +153,7 @@ public class ChannelActivity extends BaseActivity {
     private void initViews() {
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh_layout);
         swipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.header_bg), getResources().getColor(R.color.header_bg));
-        handleChatInputMenu();
+        initChatInputMenu();
         setChannelTitle();
         initMsgListView();
         handMessage();
@@ -198,7 +181,7 @@ public class ChannelActivity extends BaseActivity {
     /**
      * 处理chatInputMenu是否显示，以及显示几个Menu上的item
      */
-    private void handleChatInputMenu() {
+    private void initChatInputMenu() {
         chatInputMenu = (ECMChatInputMenu) findViewById(R.id.chat_input_menu);
         if (channel.getType().equals("GROUP")) {
             chatInputMenu.setIsChannelGroup(true, cid);
@@ -224,31 +207,18 @@ public class ChannelActivity extends BaseActivity {
             }
 
             @Override
-            public void onSendMsg(String content, List<String> mentionsUidList,
-                                  List<String> mentionsUserNameList) {
+            public void onSendMsg(String content, List<String> mentionsUidList, List<String> urlList) {
                 // TODO Auto-generated method stub
-                sendTextMessage(content, mentionsUidList, mentionsUserNameList);
+                sendTextMessage(content, mentionsUidList, urlList);
             }
         });
         if ((channel != null) && channel.getInputs().equals("0")) {
             chatInputMenu.setVisibility(View.GONE);
         } else {
-            chatInputMenu.updateMenuGrid(handleShowItems());
+            chatInputMenu.updateMenuGrid(channel.getInputs());
         }
     }
 
-
-    /**
-     * 计算inputs的二进制
-     */
-    private String handleShowItems() {
-        String result = "-1";
-        String inputs = channel.getInputs();
-        if (!StringUtils.isBlank(inputs)) {
-            result = Integer.toBinaryString(Integer.parseInt(inputs));
-        }
-        return result;
-    }
 
     /**
      * 注册更改频道名称广播
@@ -284,7 +254,7 @@ public class ChannelActivity extends BaseActivity {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                if (msgList.size()>0 && MsgCacheUtil.isDataInLocal(ChannelActivity.this, cid, msgList
+                if (msgList.size() > 0 && MsgCacheUtil.isDataInLocal(ChannelActivity.this, cid, msgList
                         .get(0).getMid(), 15)) {
                     List<Msg> historyMsgList = MsgCacheUtil.getHistoryMsgList(
                             ChannelActivity.this, cid, msgList.get(0).getMid(),
@@ -293,8 +263,7 @@ public class ChannelActivity extends BaseActivity {
                     swipeRefreshLayout.setRefreshing(false);
                     adapter.notifyDataSetChanged();
                     msgListView.setSelection(historyMsgList.size() - 1);
-                    //ListViewUtils.setSelection(msgListView, historyMsgList.size() - 1);
-                } else{
+                } else {
                     getNewsMsg();
                 }
             }
@@ -305,14 +274,14 @@ public class ChannelActivity extends BaseActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
-                Bundle bundle = new Bundle();
                 Msg msg = msgList.get(position);
-                String msgType = msg.getType();
-                String mid = "";
                 //当消息处于发送中状态时无法点击
                 if (msg.getSendStatus() != 1) {
                     return;
                 }
+                String msgType = msg.getType();
+                String mid = "";
+                Bundle bundle = new Bundle();
                 if (msgType.equals("res_file")) {
                     mid = msg.getMid();
                     bundle.putString("mid", mid);
@@ -324,8 +293,6 @@ public class ChannelActivity extends BaseActivity {
                     mid = msg.getCommentMid();
                     bundle.putString("mid", mid);
                     bundle.putString("cid", msg.getCid());
-                    LogUtils.jasonDebug("orimid0="+msg.getMid());
-                    LogUtils.jasonDebug("mid0="+mid);
                     IntentUtils.startActivity(ChannelActivity.this,
                             ChannelMsgDetailActivity.class, bundle);
                 } else if (msgType.equals("res_link")) {
@@ -370,7 +337,6 @@ public class ChannelActivity extends BaseActivity {
         msgListView.postDelayed(new Runnable() {
             @Override
             public void run() {
-                // Select the last row so it will scroll into view...
                 msgListView.setSelection(adapter.getCount() - 1);
             }
         }, 30);
@@ -415,7 +381,11 @@ public class ChannelActivity extends BaseActivity {
                 addLocalMessage(localMsg);
             } else if (requestCode == MENTIONS_RESULT) {
                 // @返回
-                chatInputMenu.setMentionData(data);
+                String result = data.getStringExtra("searchResult");
+                String uid = JSONUtils.getString(result, "uid", null);
+                String name = JSONUtils.getString(result, "name", null);
+                boolean isInputKeyWord = data.getBooleanExtra("isInputKeyWord", false);
+                chatInputMenu.addMentions(uid, name, isInputKeyWord);
             }
         } else {
             // 图库选择图片返回
@@ -482,19 +452,6 @@ public class ChannelActivity extends BaseActivity {
     }
 
     /**
-     * 发送消息
-     *
-     * @param content
-     * @param type
-     * @param fakeMessageId
-     */
-    protected void sendMsg(String content, String type, String fakeMessageId) {
-        if (NetUtils.isNetworkConnected(getApplicationContext())) {
-            apiService.sendMsg(cid, content, type, fakeMessageId);
-        }
-    }
-
-    /**
      * 当推送消息是自己的消息时修改消息id
      *
      * @param fakeMessageId
@@ -535,21 +492,6 @@ public class ChannelActivity extends BaseActivity {
 
     }
 
-    /**
-     * 设置消息发送失败
-     *
-     * @param fakeMessageId
-     */
-    private void setMsgSendFail(String fakeMessageId) {
-        Msg fakeMsg = new Msg();
-        fakeMsg.setMid(fakeMessageId);
-        int fakeMsgIndex = msgList.indexOf(fakeMsg);
-        if (fakeMsgIndex != -1) {
-            msgList.get(fakeMsgIndex).setSendStatus(2);
-            adapter.notifyDataSetChanged();
-        }
-
-    }
 
     /**
      * 控件点击事件
@@ -605,17 +547,12 @@ public class ChannelActivity extends BaseActivity {
     /**
      * 点击发送按钮后发送消息的逻辑
      */
-    private void sendTextMessage(String content, List<String> mentionsUidList,
-                                 List<String> mentionsUserNameList) {
-
-        ArrayList<String> urlList = URLMatcher.getUrls(content);
+    private void sendTextMessage(String content, List<String> mentionsUidList, List<String> urlList) {
         JSONObject richTextObj = new JSONObject();
-        String source = HandleMsgTextUtils.handleMentionAndURL(chatInputMenu.getEdit(), content,
-                mentionsUserNameList, mentionsUidList);
         JSONArray mentionArray = JSONUtils.toJSONArray(mentionsUidList);
         JSONArray urlArray = JSONUtils.toJSONArray(urlList);
         try {
-            richTextObj.put("source", source);
+            richTextObj.put("source", content);
             richTextObj.put("mentions", mentionArray);
             richTextObj.put("urls", urlArray);
             richTextObj.put("tmpId", AppUtils.getMyUUID(ChannelActivity.this));
@@ -816,7 +753,9 @@ public class ChannelActivity extends BaseActivity {
             // TODO Auto-generated method stub
             TextView senderNameText = (TextView) convertView
                     .findViewById(R.id.sender_name_text);
-            if (channel.getType().equals("GROUP") && !isMyMsg(msg)) {
+            boolean isMyMsg = msg.getUid().equals(
+                    ((MyApplication) getApplicationContext()).getUid());
+            if (channel.getType().equals("GROUP") && !isMyMsg) {
                 senderNameText.setVisibility(View.VISIBLE);
                 senderNameText.setText(msg.getTitle());
             } else {
@@ -845,8 +784,8 @@ public class ChannelActivity extends BaseActivity {
                             .getRobotById(ChannelActivity.this, msg.getUid())
                             .getAvatar());
                 }
-                new ImageDisplayUtils(R.drawable.icon_person_default).displayImage(senderPhotoImg,
-                        iconUrl);
+                ImageDisplayUtils.getInstance().displayImage(senderPhotoImg,
+                        iconUrl, R.drawable.icon_person_default);
                 senderPhotoImg.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -863,6 +802,16 @@ public class ChannelActivity extends BaseActivity {
                         }
                     }
                 });
+                senderPhotoImg.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+                        if (channel.getType().equals("GROUP")) {
+                            chatInputMenu.addMentions(msg.getUid(), msg.getTitle(), false);
+                        }
+                        return true;
+                    }
+                });
+
             }
         }
 
@@ -883,17 +832,6 @@ public class ChannelActivity extends BaseActivity {
     };
 
     /**
-     * 判断是否自己的消息
-     *
-     * @param msg
-     * @return
-     */
-    private boolean isMyMsg(Msg msg) {
-        String uid = ((MyApplication) getApplication()).getUid();
-        return msg.getUid().equals(uid);
-    }
-
-    /**
      * 通知message页将本频道消息置为已读
      */
     private void setChannelMsgRead() {
@@ -908,6 +846,18 @@ public class ChannelActivity extends BaseActivity {
         }
     }
 
+
+    /**
+     * 记录用户点击的频道，修改不是云+客服的时候才记录频道点击事件170629
+     */
+    private void recordUserClickChannel() {
+        String from = getIntent().getExtras().getString("from","");
+        if (!from.equals("customer")) {
+            PVCollectModel pvCollectModel = new PVCollectModel("channel", "communicate");
+            PVCollectModelCacheUtils.saveCollectModel(ChannelActivity.this, pvCollectModel);
+        }
+    }
+
     @Override
     public void onBackPressed() {
         // TODO Auto-generated method stub
@@ -918,17 +868,33 @@ public class ChannelActivity extends BaseActivity {
 
     @Override
     protected void onDestroy() {
+        super.onDestroy();
         if (handler != null) {
             handler = null;
         }
         if (msgResvier != null) {
             unregisterReceiver(msgResvier);
+            msgResvier = null;
         }
         if (refreshNameReceiver != null) {
             unregisterReceiver(refreshNameReceiver);
+            refreshNameReceiver = null;
         }
-        super.onDestroy();
     }
+
+    /**
+     * 发送消息
+     *
+     * @param content
+     * @param type
+     * @param fakeMessageId
+     */
+    protected void sendMsg(String content, String type, String fakeMessageId) {
+        if (NetUtils.isNetworkConnected(getApplicationContext())) {
+            apiService.sendMsg(cid, content, type, fakeMessageId);
+        }
+    }
+
 
 
     /**
@@ -936,7 +902,7 @@ public class ChannelActivity extends BaseActivity {
      */
     private void getNewsMsg() {
         if (NetUtils.isNetworkConnected(ChannelActivity.this)) {
-            String newMsgMid = msgList.size()>0?msgList.get(0).getMid():"";
+            String newMsgMid = msgList.size() > 0 ? msgList.get(0).getMid() : "";
             apiService.getNewMsgs(cid, newMsgMid, 15);
         } else {
             swipeRefreshLayout.setRefreshing(false);
@@ -981,8 +947,16 @@ public class ChannelActivity extends BaseActivity {
 
         @Override
         public void returnSendMsgFail(String error, String fakeMessageId, int errorCode) {
+            //消息发送失败处理
+            Msg fakeMsg = new Msg();
+            fakeMsg.setMid(fakeMessageId);
+            int fakeMsgIndex = msgList.indexOf(fakeMsg);
+            if (fakeMsgIndex != -1) {
+                msgList.get(fakeMsgIndex).setSendStatus(2);
+                adapter.notifyDataSetChanged();
+            }
             WebServiceMiddleUtils.hand(ChannelActivity.this, error, errorCode);
-            setMsgSendFail(fakeMessageId);
+
         }
 
         @Override

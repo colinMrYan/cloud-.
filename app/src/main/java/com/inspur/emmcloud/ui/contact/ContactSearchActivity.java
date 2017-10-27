@@ -137,7 +137,7 @@ public class ContactSearchActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
-        StateBarColor.changeStateBarColor(this,R.color.contact_header_bg);
+        StateBarColor.changeStateBarColor(this, R.color.contact_header_bg);
         setContentView(R.layout.activity_contact_search);
         rootContact = ContactCacheUtils
                 .getRootContact(ContactSearchActivity.this);
@@ -1319,7 +1319,7 @@ public class ContactSearchActivity extends BaseActivity {
                     UriUtils.tanent + searchModel.getId() + "_100.png1");
             if (file.exists()) {
                 icon = "file://" + file.getAbsolutePath();
-                new ImageDisplayUtils().displayImageNoCache(photoImg, icon, defaultIcon);
+                ImageDisplayUtils.getInstance().displayImageNoCache(photoImg, icon, defaultIcon);
                 return;
             }
         } else if (type.equals("STRUCT")) {
@@ -1331,8 +1331,8 @@ public class ContactSearchActivity extends BaseActivity {
             }
 
         }
-        new ImageDisplayUtils(defaultIcon).displayImage(
-                photoImg, icon);
+        ImageDisplayUtils.getInstance().displayImage(
+                photoImg, icon, defaultIcon);
 
 
     }

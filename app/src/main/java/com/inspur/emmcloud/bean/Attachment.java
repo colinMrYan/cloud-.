@@ -1,10 +1,20 @@
 package com.inspur.emmcloud.bean;
 
-import java.io.Serializable;
-
-import org.json.JSONException;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.Serializable;
+
+//数据
+//[
+//		{
+//		"id": "ATM:ac99b3e1faed458fabad28d46a563d71",
+//		"name": "magazine-unlock-04-2.3.773-_f54546e2fd724d73b51bd846e80198fd.jpg",
+//		"uri": "NVRJ8ZKWNPI.jpg",
+//		"category": "IMAGE",
+//		"type": "JPEG"
+//		}
+//		]
 public class Attachment implements Serializable{
 
 	private String id = "";
@@ -15,7 +25,9 @@ public class Attachment implements Serializable{
 	
 	public Attachment(String response){
 		try {
-			JSONObject jsonObject = new JSONObject(response);
+			JSONArray jsonArray = new JSONArray(response);
+//			JSONObject jsonObject = new JSONObject(response);
+			JSONObject jsonObject = (JSONObject) jsonArray.get(0);
 				if(jsonObject.has("id")){
 					this.id = jsonObject.getString("id");
 				}
@@ -31,7 +43,7 @@ public class Attachment implements Serializable{
 				if(jsonObject.has("type")){
 					this.type = jsonObject.getString("type");
 				}
-		} catch (JSONException e1) {
+		} catch (Exception e1) {
 			e1.printStackTrace();
 		}
 		

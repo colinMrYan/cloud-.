@@ -27,68 +27,60 @@ import java.util.List;
 public class NewsListAdapter extends BaseAdapter {
 
     private Context context;
-
     private List<GroupNews> groupNewsList;
-    private ImageDisplayUtils imageDisplayUtils;
 
     public NewsListAdapter(Context context, List<GroupNews> groupNewsList) {
-        // TODO Auto-generated constructor stub
         this.context = context;
         this.groupNewsList = groupNewsList;
-        imageDisplayUtils = new ImageDisplayUtils(R.drawable.ic_app_news_default_icon);
     }
 
     @Override
     public int getCount() {
-        // TODO Auto-generated method stub
         return groupNewsList.size();
     }
 
     @Override
     public Object getItem(int position) {
-        // TODO Auto-generated method stub
         return groupNewsList.get(position);
     }
 
     @Override
     public long getItemId(int position) {
-        // TODO Auto-generated method stub
         return position;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        // TODO Auto-generated method stub
-
         LayoutInflater inflater = LayoutInflater.from(context);
         NewsHolder holder = new NewsHolder();
         if (convertView == null) {
-
             convertView = inflater.inflate(R.layout.news_fragment_listitem, null);
             holder.imageView = (ImageView) convertView.findViewById(R.id.news_leftImg_img);
             holder.title = (TextView) convertView.findViewById(R.id.news_middleUp_text);
             holder.content = (TextView) convertView.findViewById(R.id.news_middleDown_text);
-            holder.textposer = (TextView) convertView.findViewById(R.id.news_middlemid_text);
-
+            holder.textPoser = (TextView) convertView.findViewById(R.id.news_middlemid_text);
             convertView.setTag(holder);
         } else {
             holder = (NewsHolder) convertView.getTag();
         }
         String uri = handlePoster(position);
-        imageDisplayUtils.displayImage(holder.imageView, uri);
-        if (groupNewsList.get(position).isImportant()) {
-            holder.title.setTextColor(Color.RED);
-            holder.title.setText(groupNewsList.get(position).getTitle());
-        } else {
-            holder.title.setTextColor(0xff203b4f);
-            holder.title.setText(groupNewsList.get(position).getTitle());
-        }
-
+        ImageDisplayUtils.getInstance().displayImage(holder.imageView, uri, R.drawable.ic_app_news_default_icon);
+        holder.title.setTextColor(groupNewsList.get(position).isImportant()? Color.RED:0xff203b4f);
+        holder.title.setText(groupNewsList.get(position).getTitle());
         holder.content.setText(groupNewsList.get(position).getSummary());
         String postTime = groupNewsList.get(position).getCreationDate();
         postTime = TimeUtils.Calendar2TimeString(TimeUtils.timeLong2Calendar(Long.parseLong(postTime)), TimeUtils.getFormat(context, TimeUtils.FORMAT_DEFAULT_DATE));
-        holder.textposer.setText(groupNewsList.get(position).getAuthor() + "  " + postTime);
+        holder.textPoser.setText(groupNewsList.get(position).getAuthor() + "  " + postTime);
         return convertView;
+    }
+
+    /**
+     * 刷新新闻列表
+     * @param groupNewsList
+     */
+    public void reFreshNewsList(List<GroupNews> groupNewsList){
+        this.groupNewsList = groupNewsList;
+        notifyDataSetChanged();
     }
 
     /**
@@ -108,7 +100,6 @@ public class NewsListAdapter extends BaseAdapter {
         ImageView imageView;
         TextView title;
         TextView content;
-        TextView textposer;
+        TextView textPoser;
     }
-
 }

@@ -1,6 +1,7 @@
 package com.inspur.emmcloud.api;
 
 
+import com.inspur.emmcloud.bean.App;
 import com.inspur.emmcloud.bean.AppRedirectResult;
 import com.inspur.emmcloud.bean.Attachment;
 import com.inspur.emmcloud.bean.ChannelGroup;
@@ -407,13 +408,13 @@ public class APIInterfaceInstance implements APIInterface {
 
     @Override
     public void returnGroupNewsDetailSuccess(
-            GetGroupNewsDetailResult getGroupNewsDetailResult) {
+            GetGroupNewsDetailResult getGroupNewsDetailResult,int page) {
         // TODO Auto-generated method stub
 
     }
 
     @Override
-    public void returnGroupNewsDetailFail(String error, int errorCode) {
+    public void returnGroupNewsDetailFail(String error, int errorCode,int page) {
         // TODO Auto-generated method stub
 
     }
@@ -1419,6 +1420,16 @@ public class APIInterfaceInstance implements APIInterface {
 
     @Override
     public void returnDeviceLogListFail(String error, int errorCode) {
+
+    }
+
+    @Override
+    public void returnAppInfoSuccess(App app) {
+
+    }
+
+    @Override
+    public void returnAppInfoFail(String error, int errorCode) {
 
     }
 

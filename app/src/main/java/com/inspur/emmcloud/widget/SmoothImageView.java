@@ -67,7 +67,8 @@ public class SmoothImageView extends ImageView {
         mOriginalHeight = height;
         mOriginalLocationX = locationX;
         mOriginalLocationY = locationY;
-        mOriginalLocationY = mOriginalLocationY - getStatusBarHeight(getContext());
+        //当不注释此句时位置信息不准确
+       // mOriginalLocationY = mOriginalLocationY - getStatusBarHeight(getContext());
     }
 
     public static int getStatusBarHeight(Context context) {

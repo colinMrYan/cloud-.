@@ -739,7 +739,7 @@ public class APIUri {
     }
 
     public static String getAppConfigUrl() {
-        return URL_BASE_APP_CONFIG + "/array?key=WebAutoRotate&key=CommonFunctions&key=PosReportTimeInterval";
+        return URL_BASE_APP_CONFIG + "/array?key=WebAutoRotate&key=CommonFunctions&key=IsShowFeedback&key=IsShowCustomerService&key=PosReportTimeInterval";
     }
 
     /**

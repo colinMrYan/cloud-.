@@ -3,12 +3,10 @@ package com.inspur.emmcloud.ui.mine.myinfo;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Message;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
@@ -23,7 +21,6 @@ import com.inspur.emmcloud.bean.GetUploadMyHeadResult;
 import com.inspur.emmcloud.bean.UserProfileInfoBean;
 import com.inspur.emmcloud.ui.login.ModifyUserPsdActivity;
 import com.inspur.emmcloud.ui.login.ModifyUserPwdBySMSActivity;
-import com.inspur.emmcloud.ui.mine.MoreFragment;
 import com.inspur.emmcloud.ui.mine.setting.SwitchEnterpriseActivity;
 import com.inspur.emmcloud.util.ContactCacheUtils;
 import com.inspur.emmcloud.util.ImageDisplayUtils;
@@ -32,6 +29,7 @@ import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.StringUtils;
+import com.inspur.emmcloud.util.ToastUtils;
 import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
@@ -47,7 +45,6 @@ import java.util.List;
 public class MyInfoActivity extends BaseActivity {
 
     private static final int REQUEST_CODE_SELECT_IMG = 1;
-    private static final int UPDATE_MY_HEAD = 3;
     private static final int USER_INFO_CHANGE = 10;
 
     private ImageView userHeadImg;
@@ -56,8 +53,8 @@ public class MyInfoActivity extends BaseActivity {
     private LoadingDialog loadingDlg;
     private RelativeLayout resetLayout;
     private String photoLocalPath;
-    private ImageDisplayUtils imageDisplayUtils;
     private GetMyInfoResult getMyInfoResult;
+    private boolean isUpdateUserPhoto = false; //标记是否更改了头像
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,12 +71,9 @@ public class MyInfoActivity extends BaseActivity {
     private void initView() {
         // TODO Auto-generated method stub
         loadingDlg = new LoadingDialog(MyInfoActivity.this);
-        String myInfo = PreferencesUtils.getString(this, "myInfo", "");
-        getMyInfoResult = new GetMyInfoResult(myInfo);
         userHeadImg = (ImageView) findViewById(R.id.myinfo_userheadimg_img);
         userMailText = (TextView) findViewById(R.id.myinfo_usermail_text);
         resetLayout = (RelativeLayout) findViewById(R.id.myinfo_reset_layout);
-        imageDisplayUtils = new ImageDisplayUtils(R.drawable.icon_photo_default);
         apiService = new MineAPIService(MyInfoActivity.this);
         apiService.setAPIInterface(new WebService());
     }
@@ -88,18 +82,20 @@ public class MyInfoActivity extends BaseActivity {
      * 显示个人信息数据
      **/
     private void showMyInfo() {
-        if (getMyInfoResult != null) {
-            String photoUri = UriUtils
-                    .getChannelImgUri(MyInfoActivity.this, getMyInfoResult.getID());
-            imageDisplayUtils.displayImage(userHeadImg, photoUri);
-            String userName = getMyInfoResult.getName();
-            ((TextView) findViewById(R.id.myinfo_username_text)).setText(userName.equals("null") ? getString(R.string.not_set) : userName);
-            String mail = getMyInfoResult.getMail();
-            userMailText.setText(mail.equals("null") ? getString(R.string.not_set) : mail);
-            String phoneNumber = getMyInfoResult.getPhoneNumber();
-            ((TextView) findViewById(R.id.myinfo_userphone_text)).setText(phoneNumber.equals("null") ? getString(R.string.not_set) : phoneNumber);
-            ((TextView) findViewById(R.id.myinfo_usercompanytext_text)).setText(((MyApplication) getApplicationContext()).getCurrentEnterprise().getName());
+        if (getMyInfoResult == null) {
+            String myInfo = PreferencesUtils.getString(this, "myInfo", "");
+            getMyInfoResult = new GetMyInfoResult(myInfo);
         }
+        String photoUri = UriUtils
+                .getChannelImgUri(MyInfoActivity.this, getMyInfoResult.getID());
+        ImageDisplayUtils.getInstance().displayImage(userHeadImg, photoUri, R.drawable.icon_photo_default);
+        String userName = getMyInfoResult.getName();
+        ((TextView) findViewById(R.id.myinfo_username_text)).setText(userName.equals("null") ? getString(R.string.not_set) : userName);
+        String mail = getMyInfoResult.getMail();
+        userMailText.setText(mail.equals("null") ? getString(R.string.not_set) : mail);
+        String phoneNumber = getMyInfoResult.getPhoneNumber();
+        ((TextView) findViewById(R.id.myinfo_userphone_text)).setText(phoneNumber.equals("null") ? getString(R.string.not_set) : phoneNumber);
+        ((TextView) findViewById(R.id.myinfo_usercompanytext_text)).setText(((MyApplication) getApplicationContext()).getCurrentEnterprise().getName());
 
     }
 
@@ -122,13 +118,12 @@ public class MyInfoActivity extends BaseActivity {
                     startActivityForResult(intent, REQUEST_CODE_SELECT_IMG);
 
                 } else {
-                    Toast.makeText(MyInfoActivity.this,
-                            getString(R.string.user_no_storage),
-                            Toast.LENGTH_SHORT).show();
+                    ToastUtils.show(MyInfoActivity.this,
+                            getString(R.string.user_no_storage));
                 }
                 break;
             case R.id.back_layout:
-                finish();
+                finishActivity();
                 break;
             case R.id.myinfo_modifypsd_layout:
                 IntentUtils.startActivity(MyInfoActivity.this,
@@ -164,13 +159,26 @@ public class MyInfoActivity extends BaseActivity {
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finishActivity();
+    }
+
+    private void finishActivity() {
+        if (isUpdateUserPhoto) {
+            setResult(RESULT_OK);
+        }
+        finish();
+    }
+
 
     /**
      * 初始化图片选择控件
      */
     private void initImagePicker() {
         ImagePicker imagePicker = ImagePicker.getInstance();
-        imagePicker.setImageLoader(new ImageDisplayUtils()); // 设置图片加载器
+        imagePicker.setImageLoader(ImageDisplayUtils.getInstance()); // 设置图片加载器
         imagePicker.setShowCamera(true); // 显示拍照按钮
         imagePicker.setCrop(true); // 允许裁剪（单选才有效）
         imagePicker.setSaveRectangle(true); // 是否按矩形区域保存
@@ -293,15 +301,8 @@ public class MyInfoActivity extends BaseActivity {
             // TODO Auto-generated method stub
             dimissDlg();
             saveUpdateHeadTime();
-            /**
-             * 向更多页面发送消息修改头像
-             */
-            String userHeadImgUrl = getUploadMyHeadResult.getUrl();
-            imageDisplayUtils.displayImage(userHeadImg, photoLocalPath);
-            Message msg = new Message();
-            msg.what = UPDATE_MY_HEAD;
-            msg.obj = userHeadImgUrl;
-            MoreFragment.handler.sendMessage(msg);
+            isUpdateUserPhoto = true;
+            ImageDisplayUtils.getInstance().displayImage(userHeadImg, photoLocalPath);
             // 通知消息页面重新创建群组头像
             Intent intent = new Intent("message_notify");
             intent.putExtra("command", "creat_group_icon");

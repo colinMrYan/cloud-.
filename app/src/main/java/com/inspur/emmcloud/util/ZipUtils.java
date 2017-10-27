@@ -1,6 +1,8 @@
 package com.inspur.emmcloud.util;
 
 
+import android.content.Context;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -17,8 +19,9 @@ import java.util.Enumeration;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
+import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
-  
+
 /**
  * Java utils 实现的Zip工具
  *
@@ -26,7 +29,7 @@ import java.util.zip.ZipOutputStream;
  */
 public class ZipUtils {
     private static final int BUFF_SIZE = 1024 * 1024; // 1M Byte
-  
+
     /**
      * 批量压缩文件（夹）
      *
@@ -42,7 +45,7 @@ public class ZipUtils {
         }
         zipout.close();
     }
-  
+
     /**
      * 批量压缩文件（夹）
      *
@@ -61,7 +64,7 @@ public class ZipUtils {
         zipout.setComment(comment);
         zipout.close();
     }
-  
+
     /**
      * 解压缩一个文件
      *
@@ -98,7 +101,7 @@ public class ZipUtils {
             out.close();
         }
     }
-  
+
     /**
      * 解压文件名包含传入文字的文件
      *
@@ -109,14 +112,14 @@ public class ZipUtils {
      * @throws IOException IO错误时抛出
      */
     public static ArrayList<File> upZipSelectedFile(File zipFile, String folderPath,
-            String nameContains) throws ZipException, IOException {
+                                                    String nameContains) throws ZipException, IOException {
         ArrayList<File> fileList = new ArrayList<File>();
-  
+
         File desDir = new File(folderPath);
         if (!desDir.exists()) {
             desDir.mkdir();
         }
-  
+
         ZipFile zf = new ZipFile(zipFile);
         for (Enumeration<?> entries = zf.entries(); entries.hasMoreElements();) {
             ZipEntry entry = ((ZipEntry)entries.nextElement());
@@ -147,7 +150,7 @@ public class ZipUtils {
         }
         return fileList;
     }
-  
+
     /**
      * 获得压缩文件内文件列表
      *
@@ -165,7 +168,7 @@ public class ZipUtils {
         }
         return entryNames;
     }
-  
+
     /**
      * 获得压缩文件内压缩文件对象以取得其属性
      *
@@ -178,9 +181,9 @@ public class ZipUtils {
             IOException {
         ZipFile zf = new ZipFile(zipFile);
         return zf.entries();
-  
+
     }
-  
+
     /**
      * 取得压缩文件对象的注释
      *
@@ -191,7 +194,7 @@ public class ZipUtils {
     public static String getEntryComment(ZipEntry entry) throws UnsupportedEncodingException {
         return new String(entry.getComment().getBytes("GB2312"), "8859_1");
     }
-  
+
     /**
      * 取得压缩文件对象的名称
      *
@@ -202,7 +205,7 @@ public class ZipUtils {
     public static String getEntryName(ZipEntry entry) throws UnsupportedEncodingException {
         return new String(entry.getName().getBytes("GB2312"), "8859_1");
     }
-  
+
     /**
      * 压缩文件
      *
@@ -351,6 +354,64 @@ public class ZipUtils {
             ret = new File(ret, absFileName);
         }
         return ret;
+    }
+
+    /**
+     * 解压assets的zip压缩文件到指定目录
+     *
+     * @throws IOException
+     */
+    public static boolean unZip(Context context, String assetName,
+                                String outputDirectory, boolean isReWrite)  {
+        boolean unZipFlag = false;
+        try{
+            //创建解压目标目录
+            File file = new File(outputDirectory);
+            //如果目标目录不存在，则创建
+            if (!file.exists()) {
+                file.mkdirs();
+            }
+            //打开压缩文件
+            InputStream inputStream = context.getAssets().open(assetName);
+            ZipInputStream zipInputStream = new ZipInputStream(inputStream);
+            //读取一个进入点
+            ZipEntry zipEntry = zipInputStream.getNextEntry();
+            //使用1Mbuffer
+            byte[] buffer = new byte[1024 * 1024];
+            //解压时字节计数
+            int count = 0;
+            //如果进入点为空说明已经遍历完所有压缩包中文件和目录
+            while (zipEntry != null) {
+                //如果是一个目录
+                if (zipEntry.isDirectory()) {
+                    file = new File(outputDirectory + File.separator + zipEntry.getName());
+                    //文件需要覆盖或者是文件不存在
+                    if (isReWrite || !file.exists()) {
+                        file.mkdir();
+                    }
+                } else {
+                    //如果是文件
+                    file = new File(outputDirectory + File.separator
+                            + zipEntry.getName());
+                    //文件需要覆盖或者文件不存在，则解压文件
+                    if (isReWrite || !file.exists()) {
+                        file.createNewFile();
+                        FileOutputStream fileOutputStream = new FileOutputStream(file);
+                        while ((count = zipInputStream.read(buffer)) > 0) {
+                            fileOutputStream.write(buffer, 0, count);
+                        }
+                        fileOutputStream.close();
+                    }
+                }
+                //定位到下一个文件入口
+                zipEntry = zipInputStream.getNextEntry();
+            }
+            zipInputStream.close();
+            unZipFlag = true;
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return unZipFlag;
     }
 
 }

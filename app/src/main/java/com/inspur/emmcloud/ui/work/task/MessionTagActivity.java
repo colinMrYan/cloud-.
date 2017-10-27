@@ -26,7 +26,7 @@ import com.inspur.emmcloud.bean.TagColorBean;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.StringUtils;
-import com.inspur.emmcloud.util.TagColorUtils;
+import com.inspur.emmcloud.util.MessionTagColorUtils;
 import com.inspur.emmcloud.util.ToastUtils;
 import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
@@ -278,7 +278,7 @@ public class MessionTagActivity extends BaseActivity {
 			ImageView imageView = (ImageView) convertView
 					.findViewById(R.id.mession_tagcolor_img);
 			String tagColor = tagColorBeans.get(position).getColor();
-			TagColorUtils.setTagColorImg(imageView, tagColor);
+			MessionTagColorUtils.setTagColorImg(imageView, tagColor);
 			// handleColorImg(imageView,position);
 			ImageView selectImg = (ImageView) convertView
 					.findViewById(R.id.mession_ring_img);

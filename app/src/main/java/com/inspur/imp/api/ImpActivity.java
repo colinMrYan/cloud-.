@@ -22,6 +22,7 @@ import android.webkit.WebSettings;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.MyApplication;
@@ -58,7 +59,7 @@ public class ImpActivity extends ImpBaseActivity {
     private Button normalBtn, middleBtn, bigBtn, biggestBtn;
     private String appId = "";
     private FrameLayout frameLayout;
-    private LinearLayout loadingLayout;
+    private RelativeLayout loadingLayout;
     private TextView loadingText;
     private String helpUrl = "";
 
@@ -68,7 +69,7 @@ public class ImpActivity extends ImpBaseActivity {
         super.onCreate(savedInstanceState);
         boolean isWebAutoRotate = Boolean.parseBoolean(AppConfigCacheUtils.getAppConfigValue(this, Constant.CONCIG_WEB_AUTO_ROTATE, "false"));
         //设置是否开启webview自动旋转
-        setRequestedOrientation(isWebAutoRotate ? ActivityInfo.SCREEN_ORIENTATION_SENSOR : ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        setRequestedOrientation(isWebAutoRotate ? ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED : ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(Res.getLayoutID("activity_imp"));
         getWindow().setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
@@ -80,7 +81,7 @@ public class ImpActivity extends ImpBaseActivity {
      * 初始化Views
      */
     private void initViews() {
-        loadingLayout = (LinearLayout) findViewById(Res.getWidgetID("loading_layout"));
+        loadingLayout = (RelativeLayout) findViewById(Res.getWidgetID("loading_layout"));
         loadingText = (TextView) findViewById(Res.getWidgetID("loading_text"));
         frameLayout = (FrameLayout) findViewById(Res.getWidgetID("videoContainer"));
         loadFailLayout = (LinearLayout) findViewById(Res.getWidgetID("load_error_layout"));
@@ -114,13 +115,13 @@ public class ImpActivity extends ImpBaseActivity {
             }
         });
         webView.loadUrl(url, webViewHeaders);
-        setWebViewFontZoom();
+        setWebViewFunctionVisiable();
     }
 
     /**
-     * 设置Webview字体缩放是否显示
+     * 设置Webview自定义功能是否显示
      */
-    private void setWebViewFontZoom() {
+    private void setWebViewFunctionVisiable() {
         if (getIntent().hasExtra("is_zoomable")) {
             int isZoomable = getIntent().getIntExtra("is_zoomable", 0);
             if (isZoomable == 1 || !StringUtils.isBlank(helpUrl)) {
@@ -223,16 +224,16 @@ public class ImpActivity extends ImpBaseActivity {
                 showChangeFontSizeDialog();
                 break;
             case R.id.app_imp_crm_font_normal_btn:
-                changeNewsFontSize(MyAppWebConfig.NORMAL);
+                setNewsFontSize(MyAppWebConfig.NORMAL);
                 break;
             case R.id.app_imp_crm_font_middle_btn:
-                changeNewsFontSize(MyAppWebConfig.CRM_BIG);
+                setNewsFontSize(MyAppWebConfig.CRM_BIG);
                 break;
             case R.id.app_imp_crm_font_big_btn:
-                changeNewsFontSize(MyAppWebConfig.CRM_BIGGER);
+                setNewsFontSize(MyAppWebConfig.CRM_BIGGER);
                 break;
             case R.id.app_imp_crm_font_biggest_btn:
-                changeNewsFontSize(MyAppWebConfig.CRM_BIGGEST);
+                setNewsFontSize(MyAppWebConfig.CRM_BIGGEST);
                 break;
             case R.id.back_layout:
                 goBack();
@@ -241,8 +242,10 @@ public class ImpActivity extends ImpBaseActivity {
                 finishActivity();
                 break;
             case R.id.refresh_text:
-                loadFailLayout.setVisibility(View.GONE);
+                showLoadingDlg(getString(Res.getStringID("@string/loading_text")));
                 webView.reload();
+                webView.setVisibility(View.INVISIBLE);
+                loadFailLayout.setVisibility(View.GONE);
                 break;
             default:
                 break;
@@ -280,7 +283,7 @@ public class ImpActivity extends ImpBaseActivity {
         // 设置点击外围解散
         dialog.setCanceledOnTouchOutside(true);
         if (getIntent().hasExtra("is_zoomable") && (getIntent().getIntExtra("is_zoomable", 0) == 1)) {
-            initWebViewTextSize(0);
+            setWebViewButtonTextColor(0);
         }
         dialog.show();
     }
@@ -296,6 +299,7 @@ public class ImpActivity extends ImpBaseActivity {
                 Intent intent = new Intent();
                 intent.setClass(ImpActivity.this, ImpActivity.class);
                 intent.putExtra("uri", helpUrl);
+                intent.putExtra("appName","");
                 startActivity(intent);
                 dialog.dismiss();
             }
@@ -309,6 +313,8 @@ public class ImpActivity extends ImpBaseActivity {
      */
     private void initFontSizeDialogViews(View view) {
         if (getIntent().hasExtra("is_zoomable") && (getIntent().getIntExtra("is_zoomable", 0) == 1)) {
+            view.findViewById(R.id.app_imp_crm_font_text).setVisibility(View.VISIBLE);
+            view.findViewById(R.id.app_imp_crm_font_layout).setVisibility(View.VISIBLE);
             normalBtn = (Button) view.findViewById(R.id.app_imp_crm_font_normal_btn);
             normalBtn.setText(getString(R.string.news_font_normal));
             middleBtn = (Button) view.findViewById(R.id.app_imp_crm_font_middle_btn);
@@ -317,29 +323,27 @@ public class ImpActivity extends ImpBaseActivity {
             bigBtn.setText(getString(R.string.news_font_big_text));
             biggestBtn = (Button) view.findViewById(R.id.app_imp_crm_font_biggest_btn);
             biggestBtn.setText(getString(R.string.news_font_biggest_text));
-        } else {
-            view.findViewById(R.id.app_imp_crm_font_text).setVisibility(View.GONE);
-            view.findViewById(R.id.app_imp_crm_font_layout).setVisibility(View.GONE);
         }
 
     }
+
 
     /**
      * 改变WebView字体大小
      *
      * @param textZoom
      */
-    private void changeNewsFontSize(int textZoom) {
+    private void setNewsFontSize(int textZoom) {
         WebSettings webSettings = webView.getSettings();
         PreferencesByUsersUtils.putInt(ImpActivity.this, "app_crm_font_size_" + appId, textZoom);
         webSettings.setTextZoom(textZoom);
-        initWebViewTextSize(textZoom);
+        setWebViewButtonTextColor(textZoom);
     }
 
     /**
      * 初始化WebView的字体大小
      */
-    private void initWebViewTextSize(int textZoom) {
+    private void setWebViewButtonTextColor(int textZoom) {
         int textSize = PreferencesByUsersUtils.getInt(ImpActivity.this, "app_crm_font_size_" + appId, MyAppWebConfig.NORMAL);
         if (textZoom != 0) {
             textSize = textZoom;
@@ -347,10 +351,9 @@ public class ImpActivity extends ImpBaseActivity {
         int lightModeFontColor = ContextCompat.getColor(ImpActivity.this, R.color.app_dialog_day_font_color);
         int blackFontColor = ContextCompat.getColor(ImpActivity.this, R.color.black);
         normalBtn.setTextColor((textSize == MyAppWebConfig.NORMAL) ? lightModeFontColor : blackFontColor);
-        bigBtn.setTextColor((textSize == MyAppWebConfig.CRM_BIG) ? lightModeFontColor : blackFontColor);
-        biggestBtn.setTextColor((textSize == MyAppWebConfig.CRM_BIGGER) ? lightModeFontColor : blackFontColor);
-        normalBtn.setTextColor((textSize == MyAppWebConfig.CRM_BIGGEST) ? lightModeFontColor : blackFontColor);
-
+        middleBtn.setTextColor((textSize == MyAppWebConfig.CRM_BIG) ? lightModeFontColor : blackFontColor);
+        bigBtn.setTextColor((textSize == MyAppWebConfig.CRM_BIGGER) ? lightModeFontColor : blackFontColor);
+        biggestBtn.setTextColor((textSize == MyAppWebConfig.CRM_BIGGEST) ? lightModeFontColor : blackFontColor);
     }
 
     @Override

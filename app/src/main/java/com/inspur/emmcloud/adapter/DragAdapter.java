@@ -38,16 +38,14 @@ public class DragAdapter extends BaseAdapter {
     private int groupPosition = -1;
     private NotifyCommonlyUseListener commonlyUseListener;
     private boolean canEdit = false;//表示排序和删除两个状态
-    private ImageDisplayUtils imageDisplayUtils;//由于Adapter里需要多次调用getView方法，所以创建一个全局ImageDisplayUtils不要每次调用都创建造成内存泄漏
     private LoadingDialog loadingDialog;
     private int deletePosition = -1;
-    private Map<String,AppBadgeBean> appBadgeBeanMap;
+    private Map<String, AppBadgeBean> appBadgeBeanMap;
 
-    public DragAdapter(Context context, List<App> appList, int position, Map<String,AppBadgeBean> appBadgeBeanMap) {
+    public DragAdapter(Context context, List<App> appList, int position, Map<String, AppBadgeBean> appBadgeBeanMap) {
         this.context = context;
         this.appList = appList;
         this.groupPosition = position;
-        imageDisplayUtils = new ImageDisplayUtils(R.drawable.icon_empty_icon);
         loadingDialog = new LoadingDialog(context);
         this.appBadgeBeanMap = appBadgeBeanMap;
     }
@@ -78,31 +76,33 @@ public class DragAdapter extends BaseAdapter {
         //应用图标
         ImageViewRound appIconImg = (ImageViewRound) convertView
                 .findViewById(R.id.icon_image);
-        setAppIconImg(app,appIconImg);
+        setAppIconImg(app, appIconImg);
         //应用名称
         TextView appNameText = (TextView) convertView.findViewById(R.id.name_text);
         appNameText.setText(app.getAppName());
         //未处理消息条数
         TextView unhandledBadges = (TextView) convertView.findViewById(R.id.unhandled_badges_text);
-        setUnHandledBadgesDisplay(app,unhandledBadges);
+        setUnHandledBadgesDisplay(app, unhandledBadges);
         //删除图标显示和监听事件处理
-        handleAppDeleteImg(app,position,convertView);
+        handleAppDeleteImg(app, position, convertView);
         return convertView;
     }
 
     /**
      * 处理应用图标显示
+     *
      * @param app
      * @param appIconImg
      */
     private void setAppIconImg(App app, ImageViewRound appIconImg) {
         appIconImg.setType(ImageViewRound.TYPE_ROUND);
         appIconImg.setRoundRadius(DensityUtil.dip2px(context, 10));
-        imageDisplayUtils.displayImage(appIconImg, app.getAppIcon());
+        ImageDisplayUtils.getInstance().displayImage(appIconImg, app.getAppIcon(), R.drawable.ic_app_default);
     }
 
     /**
      * 处理删除按钮显示和事件监听
+     *
      * @param app
      * @param position
      * @param convertView
@@ -129,6 +129,7 @@ public class DragAdapter extends BaseAdapter {
 
     /**
      * 处理未处理消息个数的显示
+     *
      * @param app
      * @param unhandledBadges
      */
@@ -141,7 +142,7 @@ public class DragAdapter extends BaseAdapter {
                     .setBackgroundColor(0xFFFF0033)
                     .setStrokeColor(0xFFFF0033).build();
             unhandledBadges.setBackground(gradientDrawable);
-            unhandledBadges.setText(appBadgeBean.getBadgeNum() > 99 ? "99+":(appBadgeBean.getBadgeNum() + ""));
+            unhandledBadges.setText(appBadgeBean.getBadgeNum() > 99 ? "99+" : (appBadgeBean.getBadgeNum() + ""));
         }
     }
 
@@ -161,6 +162,7 @@ public class DragAdapter extends BaseAdapter {
 
     /**
      * 卸载应用
+     *
      * @param packageName
      */
     private void uninstallNativeApp(String packageName) {

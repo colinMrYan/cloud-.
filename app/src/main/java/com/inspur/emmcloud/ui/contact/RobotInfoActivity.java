@@ -32,7 +32,6 @@ public class RobotInfoActivity extends BaseActivity implements OnStateChangedLis
 	private LoadingDialog loadingDialog;
 	private CircleImageView robotHeadImg;
 	private TextView robotNameText,functionIntroductionText,supportText;
-	private ImageDisplayUtils imageDisplayUtils;
 	private SwitchView setTopSwitch;
 	private String cid;
 	@Override
@@ -49,7 +48,6 @@ public class RobotInfoActivity extends BaseActivity implements OnStateChangedLis
 	private void initViews() {
 		apiService = new ContactAPIService(RobotInfoActivity.this);
 		apiService.setAPIInterface(new WebService());
-		imageDisplayUtils = new ImageDisplayUtils(R.drawable.icon_inspur_robot_notice);
 		loadingDialog = new LoadingDialog(RobotInfoActivity.this);
 		robotHeadImg = (CircleImageView) findViewById(R.id.photo_img);
 		robotNameText = (TextView) findViewById(R.id.name_text);
@@ -99,7 +97,7 @@ public class RobotInfoActivity extends BaseActivity implements OnStateChangedLis
 	 * 展示机器人信息
 	 */
 	private void showRobotInfo(Robot robotInfo) {
-		imageDisplayUtils.displayImage(robotHeadImg, UriUtils.getRobotIconUri(robotInfo.getAvatar()));
+		ImageDisplayUtils.getInstance().displayImage(robotHeadImg, UriUtils.getRobotIconUri(robotInfo.getAvatar()),R.drawable.icon_inspur_robot_notice);
 		robotNameText.setText(robotInfo.getName());
 		functionIntroductionText.setText(robotInfo.getTitle());
 		supportText.setText(robotInfo.getSupport());

@@ -31,8 +31,6 @@ import org.xutils.x;
 import java.util.List;
 
 
-
-
 /**
  * Created by Sym on 2015/12/24.
  */
@@ -68,16 +66,15 @@ public class GestureLoginActivity extends BaseActivity {
         updateStatus(Status.DEFAULT);
         if (getIntent().hasExtra("gesture_code_change")) {
             String command = getIntent().getStringExtra("gesture_code_change");
-            if(command.equals("login")){
+            if (command.equals("login")) {
                 isLogin = true;
             }
         }
         String userHeadImgUri = UriUtils
-                .getChannelImgUri(GestureLoginActivity.this,((MyApplication)getApplication()).getUid());
+                .getChannelImgUri(GestureLoginActivity.this, ((MyApplication) getApplication()).getUid());
         CircleImageView circleImageView = (CircleImageView) findViewById(R.id.gesture_login_user_head_img);
-        new ImageDisplayUtils(
-                R.drawable.icon_person_default).displayImage(circleImageView,
-                userHeadImgUri);
+        ImageDisplayUtils.getInstance().displayImage(circleImageView,
+                userHeadImgUri, R.drawable.icon_person_default);
         //由于机型，系统等问题，目前不开启指纹识别功能
 //        initFingerPrint();
     }
@@ -87,11 +84,11 @@ public class GestureLoginActivity extends BaseActivity {
      */
     private void initFingerPrint() {
         FingerprintIdentify cloudFingerprintIdentify = new FingerprintIdentify(this);
-        if(!isFingerPrintAvaiable(cloudFingerprintIdentify)){
+        if (!isFingerPrintAvaiable(cloudFingerprintIdentify)) {
             LogUtils.YfcDebug("设备指纹不可用");
             return;
         }
-        if(!PreferencesByUserAndTanentUtils.getBoolean(GestureLoginActivity.this,SafeCenterActivity.FINGER_PRINT_STATE,false)){
+        if (!PreferencesByUserAndTanentUtils.getBoolean(GestureLoginActivity.this, SafeCenterActivity.FINGER_PRINT_STATE, false)) {
             LogUtils.YfcDebug("用户没有开启指纹解锁");
             return;
         }
@@ -107,10 +104,10 @@ public class GestureLoginActivity extends BaseActivity {
             @Override
             public void onNotMatch(int availableTimes) {
                 // 指纹不匹配，并返回可用剩余次数并自动继续验证
-                LogUtils.YfcDebug("指纹识别剩余次数："+availableTimes);
-                ToastUtils.show(GestureLoginActivity.this,"指纹认证失败，您还可以尝试"+availableTimes+"次");
-                if(availableTimes == 0){
-                    ToastUtils.show(GestureLoginActivity.this,"您的识别次数用尽，请尝试手势解锁，或者一段时间后重试");
+                LogUtils.YfcDebug("指纹识别剩余次数：" + availableTimes);
+                ToastUtils.show(GestureLoginActivity.this, "指纹认证失败，您还可以尝试" + availableTimes + "次");
+                if (availableTimes == 0) {
+                    ToastUtils.show(GestureLoginActivity.this, "您的识别次数用尽，请尝试手势解锁，或者一段时间后重试");
                 }
             }
 
@@ -118,7 +115,7 @@ public class GestureLoginActivity extends BaseActivity {
             public void onFailed(boolean isDeviceLocked) {
                 // 错误次数达到上限或者API报错停止了验证，自动结束指纹识别
                 // isDeviceLocked 表示指纹硬件是否被暂时锁定
-                LogUtils.YfcDebug("isDeviceLocked:"+isDeviceLocked);
+                LogUtils.YfcDebug("isDeviceLocked:" + isDeviceLocked);
             }
 
             @Override
@@ -132,6 +129,7 @@ public class GestureLoginActivity extends BaseActivity {
 
     /**
      * 判断指纹是否可用
+     *
      * @param cloudFingerprintIdentify
      * @return
      */
@@ -143,6 +141,7 @@ public class GestureLoginActivity extends BaseActivity {
 
     /**
      * 判断是否设置了指纹
+     *
      * @param cloudFingerprintIdentify
      * @return
      */
@@ -152,6 +151,7 @@ public class GestureLoginActivity extends BaseActivity {
 
     /**
      * 硬件是否可用
+     *
      * @return
      */
     private boolean getIsHardwareEnable(FingerprintIdentify cloudFingerprintIdentify) {
@@ -159,6 +159,9 @@ public class GestureLoginActivity extends BaseActivity {
     }
 
 
+//    /**
+//     * 判断指纹识别成功，识别成功后关闭锁屏Activity
+//     */
 //    @Subscribe(threadMode = ThreadMode.MAIN)
 //    public void onFingerPrintSuccess(String fingerPrintSuccess){
 //        if(fingerPrintSuccess.equals("success")){
@@ -186,7 +189,7 @@ public class GestureLoginActivity extends BaseActivity {
                         } else if (command.equals("login")) {
                             isLogin = true;
                             finish();
-                        } else if(command.equals("close")){
+                        } else if (command.equals("close")) {
                             clearGestureInfo();
                             finish();
                         }
@@ -213,16 +216,16 @@ public class GestureLoginActivity extends BaseActivity {
                 lockPatternView.setPattern(LockPatternView.DisplayMode.DEFAULT);
                 break;
             case ERROR:
-                gestureMessage.setText(getString(R.string.gesture_code_error)+" "+
-                        (GESTURE_CODE_TIMES-errorTime)+" "+getString(R.string.gesture_code_time));
+                gestureMessage.setText(getString(R.string.gesture_code_error) + " " +
+                        (GESTURE_CODE_TIMES - errorTime) + " " + getString(R.string.gesture_code_time));
                 findViewById(R.id.gesture_code_tips).setVisibility(View.VISIBLE);
                 Animation shake = AnimationUtils.loadAnimation(this, R.anim.left_right_shake);
                 gestureMessage.startAnimation(shake);
                 lockPatternView.setPattern(LockPatternView.DisplayMode.ERROR);
                 lockPatternView.postClearPatternRunnable(DELAYTIME);
-                if((GESTURE_CODE_TIMES - errorTime)==0){
+                if ((GESTURE_CODE_TIMES - errorTime) == 0) {
                     clearGestureInfo();
-                    ((MyApplication)getApplication()).signout();
+                    ((MyApplication) getApplication()).signout();
                 }
                 break;
             case CORRECT:
@@ -237,10 +240,10 @@ public class GestureLoginActivity extends BaseActivity {
      */
     @Event(R.id.forget_gesture_btn)
     private void forgetGesturePasswrod(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.forget_gesture_btn:
                 clearGestureInfo();
-                ((MyApplication)getApplication()).signout();
+                ((MyApplication) getApplication()).signout();
                 break;
             default:
                 break;
@@ -252,8 +255,8 @@ public class GestureLoginActivity extends BaseActivity {
      * 清理手势信息
      */
     private void clearGestureInfo() {
-        CreateGestureActivity.putGestureCodeByUser(GestureLoginActivity.this,"");
-        CreateGestureActivity.putGestureCodeIsOpenByUser(GestureLoginActivity.this,false);
+        CreateGestureActivity.putGestureCodeByUser(GestureLoginActivity.this, "");
+        CreateGestureActivity.putGestureCodeIsOpenByUser(GestureLoginActivity.this, false);
     }
 
     private enum Status {
@@ -268,15 +271,16 @@ public class GestureLoginActivity extends BaseActivity {
             this.strId = strId;
             this.colorId = colorId;
         }
+
         private int strId;
         private int colorId;
     }
 
     @Override
     public void onBackPressed() {
-        if(isLogin){
-            ((MyApplication)getApplication()).exit();
-        }else {
+        if (isLogin) {
+            ((MyApplication) getApplication()).exit();
+        } else {
             finish();
         }
     }

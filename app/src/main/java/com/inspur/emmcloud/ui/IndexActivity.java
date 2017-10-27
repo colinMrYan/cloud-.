@@ -245,8 +245,8 @@ public class IndexActivity extends BaseFragmentActivity implements
                     apiService.setAPIInterface(new WebService());
                     String uid = ((MyApplication) getApplication()).getUid();
                     String version = PreferencesByUserAndTanentUtils.getString(IndexActivity.this, "app_tabbar_version", "");
-                    String clientid = PreferencesUtils.getString(IndexActivity.this, UriUtils.tanent + uid + "react_native_clientid", "");
-                    apiService.getAppNewTabs(version, clientid);
+                    String clientId = PreferencesUtils.getString(IndexActivity.this, UriUtils.tanent + uid + "react_native_clientid", "");
+                    apiService.getAppNewTabs(version, clientId);
 
                 }
             }
@@ -374,14 +374,6 @@ public class IndexActivity extends BaseFragmentActivity implements
         handleAppTabs();
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void updateTabBarLanguage(Language language) {
-        if (language != null) {
-            handleAppTabs();
-        }
-    }
-
-
     /**
      * 处理tab数组
      *
@@ -432,7 +424,7 @@ public class IndexActivity extends BaseFragmentActivity implements
                 }
             }
         }
-        if (mainTabs == null) {
+        if (mainTabs == null){
             mainTabs = addDefaultTabs();
         }
         displayMainTabs(mainTabs);
@@ -463,8 +455,7 @@ public class IndexActivity extends BaseFragmentActivity implements
                 tabText.setText(getString(mainTab.getResName()));
             }
             if (!StringUtils.isBlank(mainTab.getConfigureIcon())) {
-                ImageDisplayUtils imageDisplayUtils = new ImageDisplayUtils(R.drawable.icon_empty_icon);
-                imageDisplayUtils.displayImage(tabImg, mainTab.getConfigureIcon());
+                ImageDisplayUtils.getInstance().displayImage(tabImg, mainTab.getConfigureIcon(), R.drawable.ic_app_default);
             } else {
                 tabImg.setImageResource(mainTab.getResIcon());
             }
@@ -734,7 +725,6 @@ public class IndexActivity extends BaseFragmentActivity implements
         if (newMessageTipsLayout != null) {
             newMessageTipsLayout = null;
         }
-        EventBus.getDefault().unregister(this);
     }
 
     class ContactSaveTask extends AsyncTask<GetAllContactResult, Void, Void> {
