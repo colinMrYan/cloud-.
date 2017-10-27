@@ -33,7 +33,6 @@ import com.inspur.emmcloud.bean.GetAllContactResult;
 import com.inspur.emmcloud.bean.GetAllRobotsResult;
 import com.inspur.emmcloud.bean.GetAppTabAutoResult;
 import com.inspur.emmcloud.bean.GetSearchChannelGroupResult;
-import com.inspur.emmcloud.bean.Language;
 import com.inspur.emmcloud.bean.PVCollectModel;
 import com.inspur.emmcloud.callback.CommonCallBack;
 import com.inspur.emmcloud.config.Constant;
@@ -76,8 +75,6 @@ import com.inspur.emmcloud.widget.WeakThread;
 import com.inspur.emmcloud.widget.tipsview.TipsView;
 
 import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -121,7 +118,7 @@ public class IndexActivity extends BaseFragmentActivity implements
     /**
      * 初始化app的运行环境
      */
-    private void initAppEnvironment(){
+    private void initAppEnvironment() {
         ((MyApplication) getApplicationContext()).setIndexActvityRunning(true);
         ((MyApplication) getApplicationContext()).closeAllDb();
         DbCacheUtils.initDb(getApplicationContext());
@@ -155,7 +152,6 @@ public class IndexActivity extends BaseFragmentActivity implements
         new SplashPageUtils(IndexActivity.this).update();//更新闪屏页面
         new ReactNativeUtils(IndexActivity.this).init(); //更新react
         new AppConfigUtils(IndexActivity.this).getAppConfig(); //获取整个应用的配置信息
-        EventBus.getDefault().register(this);
     }
 
     /**
@@ -164,8 +160,8 @@ public class IndexActivity extends BaseFragmentActivity implements
     private void startService() {
         startUploadPVCollectService();
         startCoreService();
-        boolean isAppSetRunBackground = PreferencesUtils.getBoolean(getApplicationContext(),Constant.PREF_APP_RUN_BACKGROUND,false);
-        if (isAppSetRunBackground){
+        boolean isAppSetRunBackground = PreferencesUtils.getBoolean(getApplicationContext(), Constant.PREF_APP_RUN_BACKGROUND, false);
+        if (isAppSetRunBackground) {
             startBackgroudService();
         }
         startLocationService();
@@ -196,7 +192,7 @@ public class IndexActivity extends BaseFragmentActivity implements
     /**
      * 打开后台保活服务
      */
-    private void startBackgroudService(){
+    private void startBackgroudService() {
         Intent intent = new Intent();
         intent.setClass(this, BackgroundService.class);
         startService(intent);
@@ -205,7 +201,7 @@ public class IndexActivity extends BaseFragmentActivity implements
     /**
      * 打开位置收集服务
      */
-    private void startLocationService(){
+    private void startLocationService() {
         Intent intent = new Intent();
         intent.setClass(this, LocationService.class);
         startService(intent);
@@ -424,7 +420,7 @@ public class IndexActivity extends BaseFragmentActivity implements
                 }
             }
         }
-        if (mainTabs == null){
+        if (mainTabs == null) {
             mainTabs = addDefaultTabs();
         }
         displayMainTabs(mainTabs);
