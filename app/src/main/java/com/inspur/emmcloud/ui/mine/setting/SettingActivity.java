@@ -7,7 +7,6 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -45,6 +44,7 @@ public class SettingActivity extends BaseActivity {
     private LoadingDialog loadingDlg;
     private SwitchView webAutoRotateSwitch;
     private SwitchView backgroundRunSwitch;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
@@ -55,19 +55,19 @@ public class SettingActivity extends BaseActivity {
         handMessage();
     }
 
-    private void initView(){
+    private void initView() {
         loadingDlg = new LoadingDialog(this);
-        webAutoRotateSwitch = (SwitchView)findViewById(R.id.web_auto_rotate_switch);
+        webAutoRotateSwitch = (SwitchView) findViewById(R.id.web_auto_rotate_switch);
         setWebAutoRotateState();
         webAutoRotateSwitch.setOnStateChangedListener(onStateChangedListener);
-        backgroundRunSwitch = (SwitchView)findViewById(R.id.background_run_switch);
-        boolean isAppSetRunBackground = PreferencesUtils.getBoolean(getApplicationContext(),Constant.PREF_APP_RUN_BACKGROUND,false);
+        backgroundRunSwitch = (SwitchView) findViewById(R.id.background_run_switch);
+        boolean isAppSetRunBackground = PreferencesUtils.getBoolean(getApplicationContext(), Constant.PREF_APP_RUN_BACKGROUND, false);
         backgroundRunSwitch.setOpened(isAppSetRunBackground);
         backgroundRunSwitch.setOnStateChangedListener(onStateChangedListener);
     }
 
-    private void setWebAutoRotateState(){
-        boolean isWebAutoRotate = Boolean.parseBoolean(AppConfigCacheUtils.getAppConfigValue(this,Constant.CONCIG_WEB_AUTO_ROTATE,"false"));
+    private void setWebAutoRotateState() {
+        boolean isWebAutoRotate = Boolean.parseBoolean(AppConfigCacheUtils.getAppConfigValue(this, Constant.CONCIG_WEB_AUTO_ROTATE, "false"));
         webAutoRotateSwitch.setOpened(isWebAutoRotate);
     }
 
@@ -100,9 +100,9 @@ public class SettingActivity extends BaseActivity {
         @Override
         public void toggleToOn(View view) {
             // TODO Auto-generated method stub
-            if (view.getId() != R.id.background_run_switch){
+            if (view.getId() != R.id.background_run_switch) {
                 saveWebAutoRotateConfig(true);
-            }else {
+            } else {
                 setAppRunBackground(true);
             }
 
@@ -111,9 +111,9 @@ public class SettingActivity extends BaseActivity {
         @Override
         public void toggleToOff(View view) {
             // TODO Auto-generated method stub
-            if (view.getId() != R.id.background_run_switch){
+            if (view.getId() != R.id.background_run_switch) {
                 saveWebAutoRotateConfig(false);
-            }else {
+            } else {
                 setAppRunBackground(false);
             }
 
@@ -122,16 +122,17 @@ public class SettingActivity extends BaseActivity {
 
     /**
      * 设置app是否运行在后台
+     *
      * @param isAppSetRunBackground
      */
-    private void setAppRunBackground(boolean isAppSetRunBackground){
-        PreferencesUtils.putBoolean(getApplicationContext(),Constant.PREF_APP_RUN_BACKGROUND,isAppSetRunBackground);
+    private void setAppRunBackground(boolean isAppSetRunBackground) {
+        PreferencesUtils.putBoolean(getApplicationContext(), Constant.PREF_APP_RUN_BACKGROUND, isAppSetRunBackground);
         backgroundRunSwitch.setOpened(isAppSetRunBackground);
         Intent intent = new Intent();
         intent.setClass(SettingActivity.this, BackgroundService.class);
-        if (isAppSetRunBackground){
+        if (isAppSetRunBackground) {
             startService(intent);
-        }else {
+        } else {
             stopService(intent);
         }
     }
@@ -211,9 +212,9 @@ public class SettingActivity extends BaseActivity {
     /**
      * 关闭服务
      */
-    private void stopAppService(){
-        stopService(new Intent(getApplicationContext(),CoreService.class));
-        stopService(new Intent(getApplicationContext(),BackgroundService.class));
+    private void stopAppService() {
+        stopService(new Intent(getApplicationContext(), CoreService.class));
+        stopService(new Intent(getApplicationContext(), BackgroundService.class));
     }
 
 
