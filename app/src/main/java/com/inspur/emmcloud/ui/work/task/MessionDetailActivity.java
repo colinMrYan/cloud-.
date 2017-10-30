@@ -6,9 +6,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
-import android.os.Message;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -98,10 +95,8 @@ public class MessionDetailActivity extends BaseActivity {
 
 	private List<Attachment> attachments = new ArrayList<Attachment>();
 	private ImageView[] tagImgs = new ImageView[3];
-	private Handler handler;
 	private AttachmentGridAdapter attachmentAdapter;
 
-	private int attachDeletePosition = -1;
 	private boolean isRefreshList = false;// 判断页面数据是否修改让taskList能够刷新
 	private boolean isCanModify = true;// 已关注的任务不能进行修改
 
@@ -118,7 +113,6 @@ public class MessionDetailActivity extends BaseActivity {
 	private void initViews() {
 		apiService = new WorkAPIService(MessionDetailActivity.this);
 		apiService.setAPIInterface(new WebService());
-		handleMessage();
 		initTask();
 		initUI();
 		getTasks();
@@ -151,13 +145,9 @@ public class MessionDetailActivity extends BaseActivity {
 	 */
 	private void handleDeadline() {
 		dueDate = task.getDueDate();
-		if (dueDate != null) {
-			messionEndTime.setText(dueDate.get(Calendar.YEAR) + "-"
+		messionEndTime.setText(dueDate == null?"":dueDate.get(Calendar.YEAR) + "-"
 					+ (dueDate.get(Calendar.MONTH) + 1) + "-"
 					+ dueDate.get(Calendar.DAY_OF_MONTH));
-		} else {
-			messionEndTime.setText("");
-		}
 	}
 
 	/**
@@ -185,34 +175,13 @@ public class MessionDetailActivity extends BaseActivity {
 	private void handleTags() {
 		tagList = task.getTags();
 		if(tagList.size()>0){
-			int tagSize = 0;
-			if (tagList.size() > 3) {
-				tagSize = 3;
-			} else {
-				tagSize = tagList.size();
-			}
+			int tagSize = tagList.size()>3?3:tagList.size();
 			for (int i = 0; i < tagSize; i++) {
 				tagImgs[i].setVisibility(View.VISIBLE);
 				MessionTagColorUtils.setTagColorImg(tagImgs[i], tagList.get(i)
 						.getColor());
 			}
 		}
-		
-//		if (tagList == null || tagList.size() == 0) {
-////			typeImg.setVisibility(View.GONE);
-//		} else {
-//			int tagSize = 0;
-//			if (tagList.size() > 3) {
-//				tagSize = 3;
-//			} else {
-//				tagSize = tagList.size();
-//			}
-//			for (int i = 0; i < tagSize; i++) {
-//				tagImgs[i].setVisibility(View.VISIBLE);
-//				MessionTagColorUtils.setTagColorImg(tagImgs[i], tagList.get(i)
-//						.getColor());
-//			}
-//		}
 	}
 
 	/**
@@ -240,20 +209,6 @@ public class MessionDetailActivity extends BaseActivity {
 		}
 	}
 
-	/**
-	 * 处理添加附件后返回的消息
-	 */
-	private void handleMessage() {
-		handler = new Handler() {
-			@Override
-			public void handleMessage(Message msg) {
-				super.handleMessage(msg);
-				JSONObject jsonAttachment = organizeAttachment(msg);
-				addAttachMents(jsonAttachment);
-			}
-		};
-	}
-
 
 	/**
 	 * 组织附件数据
@@ -261,13 +216,13 @@ public class MessionDetailActivity extends BaseActivity {
 	 * @param msg
 	 * @return
 	 */
-	protected JSONObject organizeAttachment(Message msg) {
+	protected JSONObject organizeAttachment(String msg) {
 		// 返回的数据格式
 		// {"key":"CI9IPKWGIXJ.jpg","name":"IMG_20160510_095849.jpg","size":1444440,"type":"Photos"}
 		JSONObject jsonAttachment = new JSONObject();
 		String type = "", extName = "",category = "",name = "",key = "";
-		name = JSONUtils.getString((String)msg.obj, "name", "");
-		key = JSONUtils.getString((String)msg.obj, "key", "");
+		name = JSONUtils.getString(msg, "name", "");
+		key = JSONUtils.getString(msg, "key", "");
 		extName = FileUtils.getExtensionName(name);
 		type = extName;
 		if (type.equals("jpg") || "png".equals(type)) {
@@ -368,7 +323,7 @@ public class MessionDetailActivity extends BaseActivity {
 						downLoadFile(view, position);
 					}
 				} else{
-					if(attachments.size()==0 ||((attachments.size() >0 )&&(position == attachments.size()))){
+					if((position == attachments.size())){
 						ToastUtils.show(MessionDetailActivity.this,
 								getString(R.string.mession_upload_attachment));
 					}
@@ -386,7 +341,6 @@ public class MessionDetailActivity extends BaseActivity {
 									int which) {
 								if (which == -1) {
 									deleteAttachments(position);
-									attachDeletePosition = position;
 								} else {
 									dialog.dismiss();
 								}
@@ -493,7 +447,6 @@ public class MessionDetailActivity extends BaseActivity {
 			public void onClick(DialogInterface dialog, int which) {
 				if (which == -1) {
 					changeMessionOwner(managerID,managerName);
-
 				} else {
 					dialog.dismiss();
 				}
@@ -512,17 +465,12 @@ public class MessionDetailActivity extends BaseActivity {
 	 * @param data
 	 */
 	private void handleMessionTags(Intent data) {
-		if (data == null) {
-			return;
-		}
 		ArrayList<TaskColorTag> addTags = (ArrayList<TaskColorTag>) data
 				.getSerializableExtra("tag");
-		int tagNumber = 0;
-		if (addTags.size() > 3) {
-			tagNumber = 3;
-		} else {
-			tagNumber = addTags.size();
+		if(addTags == null || addTags.size() == 0){
+			return;
 		}
+		int tagNumber = addTags.size()>3?3:addTags.size();
 		for (int i = 0; i < 3; i++) {
 			tagImgs[i].setVisibility(View.GONE);
 		}
@@ -599,7 +547,7 @@ public class MessionDetailActivity extends BaseActivity {
 				holder.textView.setText(attachments.get(position).getName());
 			} else if (position == attachments.size()) {
 				ImageDisplayUtils.getInstance().displayImage(holder.attachmentImg, "drawable://"
-						+ R.drawable.icon_member_add,R.drawable.icon_default_photo);
+						+ R.drawable.icon_member_add,R.drawable.icon_member_add);
 				holder.textView.setText(getString(R.string.add));
 			}
 			return convertView;
@@ -615,7 +563,7 @@ public class MessionDetailActivity extends BaseActivity {
 	private void deleteAttachments(int position) {
 		loadingDlg.show();
 		apiService.deleteAttachments(task.getId(), attachments.get(position)
-				.getId());
+				.getId(),position);
 	}
 
 	/**
@@ -651,12 +599,11 @@ public class MessionDetailActivity extends BaseActivity {
 	 * 展示邀请的同伴
 	 */
 	private void displayInviteMates() {
-		String memebers = "";
+		String members = "";
 		for (int i = 0; i < selectMemList.size(); i++) {
-			memebers = memebers + selectMemList.get(i).getName() + " ";
+			members = members + selectMemList.get(i).getName() + " ";
 		}
-		memberText.setText("");
-		memberText.setText(memebers);
+		memberText.setText(members);
 	}
 
 	public void onClick(View v) {
@@ -730,7 +677,6 @@ public class MessionDetailActivity extends BaseActivity {
 				task.setDueDate(TimeUtils.localCalendar2UTCCalendar(dueDate));
 			}
 			String taskJson = JSON.toJSONString(task);
-			Log.d("jason", "taskJson=" + taskJson);
 			updateTask(taskJson);
 		}
 	}
@@ -748,7 +694,6 @@ public class MessionDetailActivity extends BaseActivity {
 			intent.putExtra("tag", (ArrayList<TaskColorTag>) task.getTags());
 			startActivityForResult(intent, TAG_TYPE);
 		}
-
 	}
 
 	/**
@@ -776,12 +721,7 @@ public class MessionDetailActivity extends BaseActivity {
 	 */
 	private void handleDeadlineTimeDialog() {
 		if (isCanModify) {
-			Calendar cal;
-			if (dueDate != null) {
-				cal = dueDate;
-			} else {
-				cal = Calendar.getInstance();
-			}
+			Calendar cal = dueDate == null?Calendar.getInstance():dueDate;
 			Locale locale = getResources().getConfiguration().locale;
 			Locale.setDefault(locale);
 			MyDatePickerDialog dialog = new MyDatePickerDialog(
@@ -890,10 +830,8 @@ public class MessionDetailActivity extends BaseActivity {
 				loadingDlg.dismiss();
 			}
 			isRefreshList = true;
-			Message msg = new Message();
-			msg.what = 5;
-			msg.obj = getFileUploadResult.getFileMsgBody();
-			handler.sendMessage(msg);
+			JSONObject jsonAttachment = organizeAttachment(getFileUploadResult.getFileMsgBody());
+			addAttachMents(jsonAttachment);
 		}
 
 		@Override
@@ -1000,19 +938,19 @@ public class MessionDetailActivity extends BaseActivity {
 		}
 
 		@Override
-		public void returnDelAttachmentSuccess() {
-			super.returnDelAttachmentSuccess();
+		public void returnDelAttachmentSuccess(int position) {
+			super.returnDelAttachmentSuccess(position);
 			isRefreshList = true;
 			if (loadingDlg != null && loadingDlg.isShowing()) {
 				loadingDlg.dismiss();
 			}
-			attachments.remove(attachDeletePosition);
+			attachments.remove(position);
 			task.setAttachments(attachments);
 			attachmentAdapter.notifyDataSetChanged();
 		}
 
 		@Override
-		public void returnDelAttachmentFail(String error,int errorCode) {
+		public void returnDelAttachmentFail(String error,int errorCode,int position) {
 			if (loadingDlg != null && loadingDlg.isShowing()) {
 				loadingDlg.dismiss();
 			}
@@ -1096,7 +1034,6 @@ public class MessionDetailActivity extends BaseActivity {
 			}
 
 			APIDownloadCallBack progressCallback = new APIDownloadCallBack(MessionDetailActivity.this,downlaodSource){
-
 				@Override
 				public void callbackStart() {
 					if ((fileProgressbar.getTag() != null)

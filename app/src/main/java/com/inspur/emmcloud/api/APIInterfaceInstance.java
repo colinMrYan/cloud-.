@@ -1012,13 +1012,13 @@ public class APIInterfaceInstance implements APIInterface {
     }
 
     @Override
-    public void returnDelAttachmentSuccess() {
+    public void returnDelAttachmentSuccess(int position) {
         // TODO Auto-generated method stub
 
     }
 
     @Override
-    public void returnDelAttachmentFail(String error, int errorCode) {
+    public void returnDelAttachmentFail(String error, int errorCode,int position) {
         // TODO Auto-generated method stub
 
     }

@@ -37,7 +37,6 @@ public class MessionFinishListActivity extends BaseActivity implements
 
 	private static final int OPEN_DETAIL = 0;
 	private static final int CAN_NOT_CHANGE = 2;
-	private PullableListView messionListView;
 	private MessionListAdapter adapter;
 	private WorkAPIService apiService;
 	private LoadingDialog loadingDialog;
@@ -60,7 +59,6 @@ public class MessionFinishListActivity extends BaseActivity implements
 	 */
 	private void initViews() {
 		taskList = new ArrayList<TaskResult>();
-		adapter = new MessionListAdapter();
 		pullToRefreshLayout = (PullToRefreshLayout) findViewById(R.id.refresh_view);
 		pullToRefreshLayout
 				.setOnRefreshListener(MessionFinishListActivity.this);
@@ -68,13 +66,15 @@ public class MessionFinishListActivity extends BaseActivity implements
 		apiService = new WorkAPIService(MessionFinishListActivity.this);
 		apiService.setAPIInterface(new WebService());
 		getAllTasks();
-		messionListView = (PullableListView) findViewById(R.id.mession_list);
+		PullableListView messionListView = (PullableListView) findViewById(R.id.mession_list);
 		messionListView
 				.setOnItemLongClickListener(new MessionLongClickListener());
 		messionListView.setDividerHeight(0);
 		messionListView.setVerticalScrollBarEnabled(false);
 		messionListView.setCanPullUp(true);
 		messionListView.setOnItemClickListener(new OnMessionClickListener());
+		adapter = new MessionListAdapter();
+		messionListView.setAdapter(adapter);
 	}
 
 	/**
@@ -220,8 +220,6 @@ public class MessionFinishListActivity extends BaseActivity implements
 			} else {
 				taskList = getTaskListResult.getTaskList();
 			}
-			adapter = new MessionListAdapter();
-			messionListView.setAdapter(adapter);
 			adapter.notifyDataSetChanged();
 		}
 
@@ -230,6 +228,7 @@ public class MessionFinishListActivity extends BaseActivity implements
 			if (loadingDialog.isShowing()) {
 				loadingDialog.dismiss();
 			}
+			pullToRefreshLayout.refreshFinish(PullToRefreshLayout.FAIL);
 			WebServiceMiddleUtils.hand(MessionFinishListActivity.this, error,errorCode);
 		}
 

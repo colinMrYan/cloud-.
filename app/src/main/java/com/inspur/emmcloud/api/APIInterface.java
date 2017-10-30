@@ -396,9 +396,9 @@ public interface APIInterface {
 
     void returnDelMembersFail(String error, int errorCode);
 
-    void returnDelAttachmentSuccess();
+    void returnDelAttachmentSuccess(int position);
 
-    void returnDelAttachmentFail(String error, int errorCode);
+    void returnDelAttachmentFail(String error, int errorCode,int position);
 
     void returnChangeMessionOwnerSuccess(String managerName);
 

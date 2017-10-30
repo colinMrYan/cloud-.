@@ -1852,7 +1852,7 @@ public class WorkAPIService {
      * @param id
      * @param attachments
      */
-    public void deleteAttachments(final String id, final String attachments) {
+    public void deleteAttachments(final String id, final String attachments, final int position) {
         final String completeUrl = UriUtils.addAttachments(id);
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
@@ -1873,7 +1873,7 @@ public class WorkAPIService {
                     @Override
                     public void reExecute() {
                         // TODO Auto-generated method stub
-                        addAttachments(id, attachments);
+                        deleteAttachments(id,attachments,position);
                     }
 
                     @Override
@@ -1886,13 +1886,13 @@ public class WorkAPIService {
             @Override
             public void callbackSuccess(String arg0) {
                 // TODO Auto-generated method stub
-                apiInterface.returnDelAttachmentSuccess();
+                apiInterface.returnDelAttachmentSuccess(position);
             }
 
             @Override
             public void callbackFail(String error, int responseCode) {
                 // TODO Auto-generated method stub
-                apiInterface.returnDelAttachmentFail(error, responseCode);
+                apiInterface.returnDelAttachmentFail(error, responseCode,position);
             }
         });
     }
