@@ -254,6 +254,7 @@ public class MessionDetailActivity extends BaseActivity {
 		};
 	}
 
+
 	/**
 	 * 组织附件数据
 	 * 
