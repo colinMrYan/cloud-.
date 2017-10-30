@@ -336,9 +336,9 @@ public interface APIInterface {
 
     void returnInviteMateForTaskFail(String error, int errorCode);
 
-    void returnUpdateTaskSuccess();
+    void returnUpdateTaskSuccess(int position);
 
-    void returnUpdateTaskFail(String error, int errorCode);
+    void returnUpdateTaskFail(String error, int errorCode,int position);
 
     void returnCalEventsSuccess(GetCalendarEventsResult getCalendarEventsResult, boolean isRefresh);
 

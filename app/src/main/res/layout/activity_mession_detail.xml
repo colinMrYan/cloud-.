@@ -521,8 +521,7 @@
     <RelativeLayout
         android:id="@+id/mession_file_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:minHeight="123dp"
+        android:layout_height="123dp"
         android:layout_below="@id/mession_link_layout"
         android:background="@drawable/text_layout_selector" >
 

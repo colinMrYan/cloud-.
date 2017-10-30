@@ -44,7 +44,7 @@ public class MessionFinishListActivity extends BaseActivity implements
 	private PullToRefreshLayout pullToRefreshLayout;
 	private int page = 0;
 	private boolean isPullup = false;
-	private int deletePosition = -1;
+//	private int deletePosition = -1;
 	
 
 	@Override
@@ -111,11 +111,7 @@ public class MessionFinishListActivity extends BaseActivity implements
 	class MessionListAdapter extends BaseAdapter {
 		@Override
 		public int getCount() {
-			if (taskList != null && taskList.size() > 0) {
-				return taskList.size();
-			} else {
-				return 0;
-			}
+			return (taskList != null && taskList.size() > 0)?taskList.size():0;
 		}
 
 		@Override
@@ -139,16 +135,9 @@ public class MessionFinishListActivity extends BaseActivity implements
 						.findViewById(R.id.mession_color),
 						taskList.get(position).getTags().get(0).getColor());
 			}
-			if (taskList.get(position).getPriority() == 1) {
-				// ((ImageView) convertView
-				// .findViewById(R.id.mession_state_img))
-				// .setVisibility(View.VISIBLE);
-			} else if (taskList.get(position).getPriority() == 2) {
-				((ImageView) convertView.findViewById(R.id.mession_state_img))
+			if (taskList.get(position).getPriority() == 2) {
+				(convertView.findViewById(R.id.mession_state_img))
 						.setVisibility(View.VISIBLE);
-				// ((ImageView) convertView
-				// .findViewById(R.id.mession_state_img2))
-				// .setVisibility(View.VISIBLE);
 			}
 			return convertView;
 		}
@@ -166,8 +155,8 @@ public class MessionFinishListActivity extends BaseActivity implements
 					} else {
 						TaskResult taskResult = taskList.get(position);
 						taskResult.setState("ACTIVED");
-						deletePosition = position;
-						updateTask(taskResult);
+//						deletePosition = position;
+						updateTask(taskResult,position);
 					}
 				}
 
@@ -187,10 +176,10 @@ public class MessionFinishListActivity extends BaseActivity implements
 	 * 
 	 * @param taskResult
 	 */
-	protected void updateTask(TaskResult taskResult) {
+	protected void updateTask(TaskResult taskResult,int position) {
 		if (NetUtils.isNetworkConnected(MessionFinishListActivity.this)) {
 			loadingDialog.show();
-			apiService.updateTask(JSON.toJSONString(taskResult));
+			apiService.updateTask(JSON.toJSONString(taskResult),position);
 		}
 	}
 
@@ -233,19 +222,20 @@ public class MessionFinishListActivity extends BaseActivity implements
 		}
 
 		@Override
-		public void returnUpdateTaskSuccess() {
+		public void returnUpdateTaskSuccess(int position) {
 			if (loadingDialog != null && loadingDialog.isShowing()) {
 				loadingDialog.dismiss();
 			}
-			if (deletePosition != -1) {
-				taskList.remove(deletePosition);
-				adapter.notifyDataSetChanged();
-			}
-
+//			if (deletePosition != -1) {
+//				taskList.remove(deletePosition);
+//				adapter.notifyDataSetChanged();
+//			}
+			taskList.remove(position);
+			adapter.notifyDataSetChanged();
 		}
 
 		@Override
-		public void returnUpdateTaskFail(String error,int errorCode) {
+		public void returnUpdateTaskFail(String error,int errorCode,int position) {
 			if (loadingDialog != null && loadingDialog.isShowing()) {
 				loadingDialog.dismiss();
 			}

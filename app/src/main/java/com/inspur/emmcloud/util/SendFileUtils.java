@@ -1,7 +1,5 @@
 package com.inspur.emmcloud.util;
 
-import java.io.File;
-
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -11,6 +9,8 @@ import android.text.TextUtils;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.widget.LoadingDialog;
+
+import java.io.File;
 
 public class SendFileUtils {
 
@@ -34,8 +34,6 @@ public class SendFileUtils {
 			filePath = GetPathFromUri4kitkat.getRealPathFromURI(context, uri);
 		}
 		File tempFile = new File(filePath);
-		String fileMsgName = "";
-		fileMsgName = tempFile.getName();
 		if (TextUtils.isEmpty(FileUtils.getSuffix(tempFile))) {
 			ToastUtils.show(context, context.getString(R.string.not_support_upload));
 			return;

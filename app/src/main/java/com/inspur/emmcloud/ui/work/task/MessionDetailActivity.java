@@ -33,7 +33,7 @@ import com.inspur.emmcloud.bean.GetFileUploadResult;
 import com.inspur.emmcloud.bean.GetTaskListResult;
 import com.inspur.emmcloud.bean.SearchModel;
 import com.inspur.emmcloud.bean.TaskColorTag;
-import com.inspur.emmcloud.bean.TaskList;
+import com.inspur.emmcloud.bean.TaskSubject;
 import com.inspur.emmcloud.bean.TaskResult;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
@@ -113,32 +113,35 @@ public class MessionDetailActivity extends BaseActivity {
 	private void initViews() {
 		apiService = new WorkAPIService(MessionDetailActivity.this);
 		apiService.setAPIInterface(new WebService());
-		initTask();
+//		initTask();
+		task = (TaskResult) getIntent().getExtras().getSerializable("task");
+		attachments = task.getAttachments();
 		initUI();
 		getTasks();
 		EditTextUtils.setText(messionNameEdit, task.getTitle());
 		handleState();
-		setSegmentControlIndex();
+//		setSegmentControlIndex();
+		segmentIndex = (2 - task.getPriority());
+		segmentControl.setCurrentIndex(segmentIndex);
 		handleTags();
 		handleManager();
 		handleDeadline();
 	}
 
-	/**
-	 * 设置segment的Index
-	 */
-	private void setSegmentControlIndex() {
-		segmentIndex = (2 - task.getPriority());
-		segmentControl.setCurrentIndex(segmentIndex);
-	}
+//	/**
+//	 * 设置segment的Index
+//	 */
+//	private void setSegmentControlIndex() {
+//
+//	}
 
-	/**
-	 * 初始化部分task数据
-	 */
-	private void initTask() {
-		task = (TaskResult) getIntent().getExtras().getSerializable("task");
-		attachments = task.getAttachments();
-	}
+//	/**
+//	 * 初始化部分task数据
+//	 */
+//	private void initTask() {
+//		task = (TaskResult) getIntent().getExtras().getSerializable("task");
+//		attachments = task.getAttachments();
+//	}
 
 	/**
 	 * 处理截止时间
@@ -201,11 +204,11 @@ public class MessionDetailActivity extends BaseActivity {
 	 * 获取任务
 	 */
 	private void getTasks() {
-		TaskList taskList = task.getSubject();
+		TaskSubject taskSubject = task.getSubject();
 		if (NetUtils.isNetworkConnected(MessionDetailActivity.this)
-				&& taskList != null) {
+				&& taskSubject != null) {
 			loadingDlg.show();
-			apiService.getTask(taskList.getId());
+			apiService.getTask(taskSubject.getId());
 		}
 	}
 
@@ -750,7 +753,7 @@ public class MessionDetailActivity extends BaseActivity {
 	private void updateTask(String task) {
 		if (NetUtils.isNetworkConnected(MessionDetailActivity.this)) {
 			loadingDlg.show();
-			apiService.updateTask(task);
+			apiService.updateTask(task,-1);
 		}
 	}
 
@@ -790,7 +793,7 @@ public class MessionDetailActivity extends BaseActivity {
 				loadingDlg.dismiss();
 			}
 			isRefreshList = true;
-			task.setSubject(new TaskList(subject));
+			task.setSubject(new TaskSubject(subject));
 			displayInviteMates();
 		}
 
@@ -803,7 +806,7 @@ public class MessionDetailActivity extends BaseActivity {
 		}
 
 		@Override
-		public void returnUpdateTaskSuccess() {
+		public void returnUpdateTaskSuccess(int defaultValue) {
 			if (loadingDlg != null && loadingDlg.isShowing()) {
 				loadingDlg.dismiss();
 			}
@@ -816,7 +819,7 @@ public class MessionDetailActivity extends BaseActivity {
 		}
 
 		@Override
-		public void returnUpdateTaskFail(String error,int errorCode) {
+		public void returnUpdateTaskFail(String error,int errorCode,int defaultValue) {
 			if (loadingDlg != null && loadingDlg.isShowing()) {
 				loadingDlg.dismiss();
 			}

@@ -1,15 +1,12 @@
 package com.inspur.emmcloud.bean;
 
-import java.io.Serializable;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import com.inspur.emmcloud.util.LogUtils;
-
 import android.text.TextUtils;
 
-public class TaskList implements Serializable{
+import org.json.JSONObject;
+
+import java.io.Serializable;
+
+public class TaskSubject implements Serializable{
 
 	private String creationDate ;
 	private String lastUpdate ;
@@ -18,10 +15,10 @@ public class TaskList implements Serializable{
 	private String title;
 	private String owner;
 	private String master;
-	public TaskList(){
+	public TaskSubject(){
 		
 	}
-	public TaskList(String response){
+	public TaskSubject(String response){
 		JSONObject jsonObject = null;
 		try {
 			if(!TextUtils.isEmpty(response)&&!response.equals("null")){

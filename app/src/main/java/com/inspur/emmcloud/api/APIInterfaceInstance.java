@@ -828,13 +828,13 @@ public class APIInterfaceInstance implements APIInterface {
     }
 
     @Override
-    public void returnUpdateTaskSuccess() {
+    public void returnUpdateTaskSuccess(int position) {
         // TODO Auto-generated method stub
 
     }
 
     @Override
-    public void returnUpdateTaskFail(String error, int errorCode) {
+    public void returnUpdateTaskFail(String error, int errorCode,int position) {
         // TODO Auto-generated method stub
 
     }

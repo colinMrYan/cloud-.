@@ -1378,7 +1378,7 @@ public class WorkAPIService {
      *
      * @param taskJson
      */
-    public void updateTask(final String taskJson) {
+    public void updateTask(final String taskJson, final int position) {
         final String completeUrl = UriUtils.createTask();
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
@@ -1393,7 +1393,7 @@ public class WorkAPIService {
 
                     @Override
                     public void reExecute() {
-                        updateTask(taskJson);
+                        updateTask(taskJson,position);
                     }
 
                     @Override
@@ -1406,13 +1406,13 @@ public class WorkAPIService {
             @Override
             public void callbackSuccess(String arg0) {
                 // TODO Auto-generated method stub
-                apiInterface.returnUpdateTaskSuccess();
+                apiInterface.returnUpdateTaskSuccess(position);
             }
 
             @Override
             public void callbackFail(String error, int responseCode) {
                 // TODO Auto-generated method stub
-                apiInterface.returnUpdateTaskFail(error, responseCode);
+                apiInterface.returnUpdateTaskFail(error, responseCode,position);
             }
         });
     }
