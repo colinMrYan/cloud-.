@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -21,6 +22,7 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -69,9 +71,6 @@ import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.CircleImageView;
 import com.inspur.emmcloud.widget.WeakThread;
-import com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout;
-import com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout.OnRefreshListener;
-import com.inspur.emmcloud.widget.pullableview.PullableListView;
 import com.inspur.imp.plugin.barcode.scan.CaptureActivity;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
 
@@ -100,7 +99,7 @@ import static android.app.Activity.RESULT_OK;
  *
  * @author Jason Chen; create at 2016年8月23日 下午2:59:39
  */
-public class MessageFragment extends Fragment implements OnRefreshListener {
+public class MessageFragment extends Fragment{
 
     private static final int RECEIVE_MSG = 1;
     private static final int CREAT_CHANNEL_GROUP = 1;
@@ -108,11 +107,10 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
     private static final int SORT_CHANNEL_COMPLETE = 3;
     private static final int SCAN_LOGIN_QRCODE_RESULT = 5;
     private View rootView;
-    private LayoutInflater inflater;
-    private PullableListView msgListView;
-    private PullToRefreshLayout pullToRefreshLayout;
+    private ListView msgListView;
+    private SwipeRefreshLayout swipeRefreshLayout;
     private ChatAPIService apiService;
-    private List<Channel> displayChannelList = new ArrayList<Channel>();
+    private List<Channel> displayChannelList = new ArrayList<>();
     private Adapter adapter;
     private MsgReceiver msgReceiver;
     private Handler handler;
@@ -153,15 +151,8 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
     }
 
     @Override
-    public void onResume() {
-        // TODO Auto-generated method stub
-        super.onResume();
-    }
-
-    @Override
     public void onPause() {
         super.onPause();
-        pullToRefreshLayout.refreshFinish(PullToRefreshLayout.FAIL);
         if (popupWindow != null && popupWindow.isShowing()) {
             popupWindow.dismiss();
         }
@@ -173,7 +164,7 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
         super.onCreate(savedInstanceState);
         initView();
         registerMessageFragmentReceiver();
-        getChannelContent();
+        getChannelList();
         sortChannelList();// 对Channel 进行排序
         showMessageButtons();
         EventBus.getDefault().register(this);
@@ -226,9 +217,7 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
         handMessage();
         apiService = new ChatAPIService(getActivity());
         apiService.setAPIInterface(new WebService());
-        inflater = (LayoutInflater) getActivity().getSystemService(
-                getActivity().LAYOUT_INFLATER_SERVICE);
-        rootView = inflater.inflate(R.layout.fragment_message, null);
+        rootView = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_message, null);
         (rootView.findViewById(R.id.more_function_list_img))
                 .setOnClickListener(onViewClickListener);
         (rootView.findViewById(R.id.contact_img))
@@ -236,11 +225,30 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
         (rootView.findViewById(R.id.find_friends_btn))
                 .setOnClickListener(onViewClickListener);
         titleText = (TextView) rootView.findViewById(R.id.header_text);
-        pullToRefreshLayout = (PullToRefreshLayout) rootView
-                .findViewById(R.id.refresh_view);
-        pullToRefreshLayout.setOnRefreshListener(MessageFragment.this);
-        msgListView = (PullableListView) rootView.findViewById(R.id.msg_list);
-        msgListView = (PullableListView) rootView.findViewById(R.id.msg_list);
+        initPullRefreshLayout();
+        initListView();
+    }
+
+    /**
+     * 初始化PullRefreshLayout
+     */
+    private void initPullRefreshLayout(){
+        swipeRefreshLayout = (SwipeRefreshLayout) rootView
+                .findViewById(R.id.refresh_layout);
+        swipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.header_bg), getResources().getColor(R.color.header_bg));
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                getChannelList();
+            }
+        });
+    }
+
+    /**
+     * 初始化ListView
+     */
+    private void initListView(){
+        msgListView = (ListView) rootView.findViewById(R.id.msg_list);
         msgListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
@@ -414,16 +422,6 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
 
 
     /**
-     * 获取消息会话列表和最新消息
-     */
-    private void getChannelContent() {
-        // TODO Auto-generated method stub
-        if (NetUtils.isNetworkConnected(getActivity(), false)) {
-            apiService.getChannelList();
-        }
-    }
-
-    /**
      * 当没有网络的时候加载缓存中的数据
      */
     private List<Channel> getCacheData() {
@@ -581,7 +579,7 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
                         Channel receiveMsgChannel = ChannelCacheUtils.getChannel(
                                 getActivity(), receivedMsg.getCid());
                         if (receiveMsgChannel == null) {
-                            getChannelContent();
+                            getChannelList();
                         } else {
                             cacheReceiveMsg(receiveMsgChannel, receivedMsg);
                             //addChannelToList(receivedMsg, receiveMsgChannel);
@@ -933,7 +931,7 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
                 createGroupIcon(addchannelList);
             }
             getChannelInfoResult(allchannelList);
-            apiService.getNewMsgs();
+            getChannelMsg();
         }
 
         @Override
@@ -985,67 +983,7 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
         }
     }
 
-    class WebService extends APIInterfaceInstance {
 
-        @Override
-        public void returnChannelListSuccess(
-                GetChannelListResult getChannelListResult) {
-            // TODO Auto-generated method stub
-            if (getActivity() != null) {
-                cacheChannelTask = new CacheChannelTask();
-                cacheChannelTask.execute(getChannelListResult);
-
-            }
-
-        }
-
-        @Override
-        public void returnChannelListFail(String error, int errorCode) {
-            // TODO Auto-generated method stub
-            if (getActivity() != null) {
-                pullToRefreshLayout.refreshFinish(PullToRefreshLayout.FAIL);
-                WebServiceMiddleUtils.hand(getActivity(), error, errorCode);
-                sortChannelList();// 对Channel 进行排序
-            }
-
-        }
-
-        @Override
-        public void returnNewMsgsSuccess(final GetNewMsgsResult getNewMsgsResult) {
-            // TODO Auto-generated method stub
-            if (getActivity() != null) {
-                pullToRefreshLayout.refreshFinish(PullToRefreshLayout.SUCCEED);
-                cacheMsgAsyncTask = new CacheNewMsgTask();
-                cacheMsgAsyncTask.execute(getNewMsgsResult);
-
-            }
-
-        }
-
-        @Override
-        public void returnSearchChannelGroupSuccess(
-                GetSearchChannelGroupResult getSearchChannelGroupResult) {
-            saveChannelInfo(getSearchChannelGroupResult
-                    .getSearchChannelGroupList());
-        }
-
-        @Override
-        public void returnSearchChannelGroupFail(String error, int errorCode) {
-        }
-
-
-        @Override
-        public void returnNewMsgsFail(String error, int errorCode) {
-            // TODO Auto-generated method stub
-            if (getActivity() != null) {
-                pullToRefreshLayout.refreshFinish(PullToRefreshLayout.FAIL);
-                sortChannelList();// 对Channel 进行排序
-                WebServiceMiddleUtils.hand(getActivity(), error, errorCode);
-            }
-
-        }
-
-    }
 
     /**
      * 接受创建群组头像的icon
@@ -1062,7 +1000,7 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
                 isHaveCreatGroupIcon =false;
                 createGroupIcon(null);
             } else if (command.equals("refresh_session_list")) {
-                getChannelContent();
+                getChannelList();
             } else if (command.equals("sort_session_list")) {
                 sortChannelList();
             } else if (command.equals("sync_all_base_data_success")) {
@@ -1089,7 +1027,7 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
         } else if (socketStatus.equals(Socket.EVENT_CONNECT)) {
             //当断开以后连接成功(非第一次连接上)后重新拉取一遍消息
             if (!isFirstConnectWebsockt){
-                getChannelContent();
+                getChannelList();
             }
             isFirstConnectWebsockt = false;
             String appTabs = PreferencesByUserAndTanentUtils.getString(getActivity(), "app_tabbar_info_current", "");
@@ -1170,30 +1108,6 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
         }).start();
 
     }
-
-    /**
-     * 根据cid数组获取Channel信息
-     *
-     * @param channelList
-     */
-    public void getChannelInfoResult(List<Channel> channelList) {
-        if (NetUtils.isNetworkConnected(getActivity())) {
-            ArrayList<String> cidList = new ArrayList<>();
-            for (int i = 0; i < channelList.size(); i++) {
-                Channel channel = channelList.get(i);
-                if (channel.getType().equals("SERVICE")) {
-                    cidList.add(channelList.get(i).getCid());
-                }
-            }
-            if (cidList.size() > 0) {
-                String[] cidArray = cidList.toArray(new String[cidList.size()]);
-                apiService.getChannelGroupList(cidArray);
-            }
-
-        }
-
-    }
-
 
     private class SortComparator implements Comparator {
 
@@ -1297,7 +1211,7 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
                                 ChannelActivity.class, bundle);
                         ChannelGroupCacheUtils.saveChannelGroup(getActivity(),
                                 channelGroup);
-                        getChannelContent();
+                        getChannelList();
                     }
 
                     @Override
@@ -1308,19 +1222,110 @@ public class MessageFragment extends Fragment implements OnRefreshListener {
                 });
     }
 
-    @Override
-    public void onRefresh(PullToRefreshLayout pullToRefreshLayout) {
-        // TODO Auto-generated method stub
+
+    /**
+     * 获取消息会话列表
+     */
+    private void getChannelList() {
         if (NetUtils.isNetworkConnected(getActivity())) {
             apiService.getChannelList();
-        } else {
-            pullToRefreshLayout.refreshFinish(PullToRefreshLayout.FAIL);
+        }else {
+            swipeRefreshLayout.setRefreshing(false);
         }
     }
 
-    @Override
-    public void onLoadMore(PullToRefreshLayout pullToRefreshLayout) {
-        // TODO Auto-generated method stub
+    /**
+     * 获取频道消息
+     */
+    private void getChannelMsg(){
+        if (NetUtils.isNetworkConnected(getActivity(),false)) {
+            apiService.getNewMsgs();
+        }
+    }
+
+
+    /**
+     * 根据cid数组获取Channel信息
+     *
+     * @param channelList
+     */
+    public void getChannelInfoResult(List<Channel> channelList) {
+        if (NetUtils.isNetworkConnected(getActivity(),false)) {
+            ArrayList<String> cidList = new ArrayList<>();
+            for (int i = 0; i < channelList.size(); i++) {
+                Channel channel = channelList.get(i);
+                if (channel.getType().equals("SERVICE")) {
+                    cidList.add(channelList.get(i).getCid());
+                }
+            }
+            if (cidList.size() > 0) {
+                String[] cidArray = cidList.toArray(new String[cidList.size()]);
+                apiService.getChannelGroupList(cidArray);
+            }
+
+        }
+
+    }
+
+    class WebService extends APIInterfaceInstance {
+
+        @Override
+        public void returnChannelListSuccess(
+                GetChannelListResult getChannelListResult) {
+            // TODO Auto-generated method stub
+            if (getActivity() != null) {
+                cacheChannelTask = new CacheChannelTask();
+                cacheChannelTask.execute(getChannelListResult);
+
+            }
+
+        }
+
+        @Override
+        public void returnChannelListFail(String error, int errorCode) {
+            // TODO Auto-generated method stub
+            if (getActivity() != null) {
+                swipeRefreshLayout.setRefreshing(false);
+                WebServiceMiddleUtils.hand(getActivity(), error, errorCode);
+                sortChannelList();// 对Channel 进行排序
+            }
+
+        }
+
+        @Override
+        public void returnNewMsgsSuccess(final GetNewMsgsResult getNewMsgsResult) {
+            // TODO Auto-generated method stub
+            if (getActivity() != null) {
+                swipeRefreshLayout.setRefreshing(false);
+                cacheMsgAsyncTask = new CacheNewMsgTask();
+                cacheMsgAsyncTask.execute(getNewMsgsResult);
+
+            }
+
+        }
+
+        @Override
+        public void returnSearchChannelGroupSuccess(
+                GetSearchChannelGroupResult getSearchChannelGroupResult) {
+            saveChannelInfo(getSearchChannelGroupResult
+                    .getSearchChannelGroupList());
+        }
+
+        @Override
+        public void returnSearchChannelGroupFail(String error, int errorCode) {
+        }
+
+
+        @Override
+        public void returnNewMsgsFail(String error, int errorCode) {
+            // TODO Auto-generated method stub
+            if (getActivity() != null) {
+                swipeRefreshLayout.setRefreshing(false);
+                sortChannelList();// 对Channel 进行排序
+                WebServiceMiddleUtils.hand(getActivity(), error, errorCode);
+            }
+
+        }
 
     }
 
