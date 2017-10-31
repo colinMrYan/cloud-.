@@ -336,9 +336,9 @@ public interface APIInterface {
 
     void returnInviteMateForTaskFail(String error, int errorCode);
 
-    void returnUpdateTaskSuccess();
+    void returnUpdateTaskSuccess(int position);
 
-    void returnUpdateTaskFail(String error, int errorCode);
+    void returnUpdateTaskFail(String error, int errorCode,int position);
 
     void returnCalEventsSuccess(GetCalendarEventsResult getCalendarEventsResult, boolean isRefresh);
 
@@ -396,11 +396,11 @@ public interface APIInterface {
 
     void returnDelMembersFail(String error, int errorCode);
 
-    void returnDelAttachmentSuccess();
+    void returnDelAttachmentSuccess(int position);
 
-    void returnDelAttachmentFail(String error, int errorCode);
+    void returnDelAttachmentFail(String error, int errorCode,int position);
 
-    void returnChangeMessionOwnerSuccess();
+    void returnChangeMessionOwnerSuccess(String managerName);
 
     void returnChangeMessionOwnerFail(String error, int errorCode);
 
@@ -413,7 +413,7 @@ public interface APIInterface {
 
     void returnCardPackageListFail(String error, int errorCode);
 
-    void returnDeleteOfficeSuccess();
+    void returnDeleteOfficeSuccess(int position);
 
     void returnDeleteOfficeFail(String error, int errorCode);
 

@@ -2,11 +2,11 @@ package com.inspur.emmcloud.util;
 
 import android.content.Context;
 
-import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.AppAPIService;
 import com.inspur.emmcloud.bean.GetClientIdRsult;
 import com.inspur.emmcloud.callback.CommonCallBack;
+import com.inspur.emmcloud.config.Constant;
 
 /**
  * Created by chenmch on 2017/10/10.
@@ -45,17 +45,14 @@ public class ClientIDUtils {
      * @return
      */
     private boolean checkClientIdNotExit() {
-        String uid = ((MyApplication)context.getApplicationContext()).getUid();
-        String clientId = PreferencesUtils.getString(context, UriUtils.tanent + uid + "react_native_clientid", "");
+        String clientId = PreferencesByUserAndTanentUtils.getString(context, Constant.PREF_REACT_NATIVE_CLIENTID, "");
         return StringUtils.isBlank(clientId);
     }
 
     private class WebService extends APIInterfaceInstance{
         @Override
         public void returnGetClientIdResultSuccess(GetClientIdRsult getClientIdRsult) {
-            String uid = ((MyApplication)context.getApplicationContext()).getUid();
-            PreferencesUtils.putString(context, UriUtils.tanent + uid + "react_native_clientid", getClientIdRsult.getClientId());
-            LogUtils.jasonDebug("getClientIdRsult.getClientId()="+getClientIdRsult.getClientId());
+            PreferencesByUserAndTanentUtils.putString(context, Constant.PREF_REACT_NATIVE_CLIENTID, getClientIdRsult.getClientId());
             if (commonCallBack != null){
                 commonCallBack.execute();
             }

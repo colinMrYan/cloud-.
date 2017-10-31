@@ -8,6 +8,7 @@ import com.inspur.emmcloud.api.apiservice.AppAPIService;
 import com.inspur.emmcloud.bean.AndroidBundleBean;
 import com.inspur.emmcloud.bean.ReactNativeUpdateBean;
 import com.inspur.emmcloud.callback.CommonCallBack;
+import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.ui.find.FindFragment;
 import com.inspur.reactnative.ReactNativeFlow;
@@ -45,7 +46,7 @@ public class ReactNativeUtils {
      * 更新ReactNative
      */
     private void updateReactNative() {
-        String clientId = PreferencesUtils.getString(context, UriUtils.tanent + uid + "react_native_clientid", "");
+        String clientId = PreferencesByUserAndTanentUtils.getString(context, Constant.PREF_REACT_NATIVE_CLIENTID, "");
         StringBuilder describeVersionAndTime = FileUtils.readFile(reactNativeCurrentPath + "/bundle.json", "UTF-8");
         AndroidBundleBean androidBundleBean = new AndroidBundleBean(describeVersionAndTime.toString());
         if (NetUtils.isNetworkConnected(context, false)) {

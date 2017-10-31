@@ -17,4 +17,5 @@ public class Constant {
 
 
 
+    public static final String PREF_REACT_NATIVE_CLIENTID = "react_native_clientid";
 }

@@ -343,13 +343,16 @@ public class FileUtils {
         try {
             (new File(newPath)).mkdirs(); //如果文件夹不存在 则建立新文件夹
             File a = new File(oldPath);
-            String[] file = a.list();
+            String[] files = a.list();
             File temp = null;
-            for (int i = 0; i < file.length; i++) {
+            if(files == null){
+                return false;
+            }
+            for (int i = 0; i < files.length; i++) {
                 if (oldPath.endsWith(File.separator)) {
-                    temp = new File(oldPath + file[i]);
+                    temp = new File(oldPath + files[i]);
                 } else {
-                    temp = new File(oldPath + File.separator + file[i]);
+                    temp = new File(oldPath + File.separator + files[i]);
                 }
 
                 if (temp.isFile()) {
@@ -366,7 +369,7 @@ public class FileUtils {
                     input.close();
                 }
                 if (temp.isDirectory()) {//如果是子文件夹
-                    copyFolder(oldPath + "/" + file[i], newPath + "/" + file[i]);
+                    copyFolder(oldPath + "/" + files[i], newPath + "/" + files[i]);
                 }
             }
             copySuccess = true;
