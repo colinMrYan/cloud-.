@@ -459,7 +459,6 @@ public class MyCommonOfficeActivity extends BaseActivity implements
                         }
                     })
                     .show();
-            }
             return true;
         }
 

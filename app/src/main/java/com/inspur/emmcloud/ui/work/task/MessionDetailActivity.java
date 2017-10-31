@@ -32,8 +32,8 @@ import com.inspur.emmcloud.bean.GetFileUploadResult;
 import com.inspur.emmcloud.bean.GetTaskListResult;
 import com.inspur.emmcloud.bean.SearchModel;
 import com.inspur.emmcloud.bean.TaskColorTag;
-import com.inspur.emmcloud.bean.TaskSubject;
 import com.inspur.emmcloud.bean.TaskResult;
+import com.inspur.emmcloud.bean.TaskSubject;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.util.ContactCacheUtils;
@@ -306,68 +306,6 @@ public class MessionDetailActivity extends BaseActivity {
         initAttachments();
     }
 
-	/**
-	 * 附件展示，及监听逻辑设置
-	 */
-	public void initAttachments() {
-		GridView attachmentGridView = (GridView) findViewById(R.id.mession_file_grid);
-		attachmentAdapter = new AttachmentGridAdapter();
-		attachmentGridView.setAdapter(attachmentAdapter);
-		attachmentGridView.setOnItemClickListener(new OnItemClickListener() {
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view,
-					int position, long id) {
-				String ownerUid = task.getOwner();
-				String userID = ((MyApplication) getApplication()).getUid();
-				if (ownerUid.contains(userID)) {
-					if (position == attachments.size()) {
-						openFileSystem();
-					} else {
-						downLoadFile(view, position);
-					}
-				} else{
-					if((position == attachments.size())){
-						ToastUtils.show(MessionDetailActivity.this,
-								getString(R.string.mession_upload_attachment));
-					}
-				}
-			}
-		});
-		attachmentGridView
-				.setOnItemLongClickListener(new OnItemLongClickListener() {
-					@Override
-					public boolean onItemLongClick(AdapterView<?> parent,
-							View view, final int position, long id) {
-						DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
-							@Override
-							public void onClick(DialogInterface dialog,
-									int which) {
-								if (which == -1) {
-									deleteAttachments(position);
-								} else {
-									dialog.dismiss();
-								}
-							}
-						};
-						String ownerUid = task.getOwner();
-						String userID = ((MyApplication) getApplication()).getUid();
-						if (ownerUid.contains(userID)) {
-							if(position != attachments.size()){
-								EasyDialog.showDialog(MessionDetailActivity.this,
-										getString(R.string.prompt),
-										getString(R.string.mession_delete_atachment),
-										getString(R.string.ok),
-										getString(R.string.cancel), listener, true);
-							}
-						}else {
-							if(position != attachments.size()){
-								ToastUtils.show(MessionDetailActivity.this,
-									getString(R.string.mession_delete_attachment));
-							}
-						}
-						return true;
-					}
-				});
     /**
      * 附件展示，及监听逻辑设置
      */
@@ -434,7 +372,6 @@ public class MessionDetailActivity extends BaseActivity {
                     public void onClick(QMUIDialog dialog, int index) {
                         dialog.dismiss();
                         deleteAttachments(position);
-                        attachDeletePosition = position;
                     }
                 })
                 .show();
@@ -526,7 +463,7 @@ public class MessionDetailActivity extends BaseActivity {
                     @Override
                     public void onClick(QMUIDialog dialog, int index) {
                         dialog.dismiss();
-                        changeMessionOwner(managerID);
+                        changeMessionOwner(managerID,managerName);
                         managerText.setText(managerName);
                     }
                 })
