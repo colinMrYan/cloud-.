@@ -2,7 +2,6 @@ package com.inspur.emmcloud.ui.work.task;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
@@ -56,7 +55,8 @@ import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.MyDatePickerDialog;
 import com.inspur.emmcloud.widget.SegmentControl;
 import com.inspur.emmcloud.widget.SegmentControl.OnSegmentControlClickListener;
-import com.inspur.emmcloud.widget.dialogs.EasyDialog;
+import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
+import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
 
 import org.greenrobot.eventbus.EventBus;
 import org.json.JSONArray;
@@ -71,27 +71,27 @@ import java.util.Locale;
 
 public class MessionDetailActivity extends BaseActivity {
 
-	private static final int TAG_TYPE = 0;
-	private static final int MANAGER = 1;
-	private static final int MEMBER = 2;
-	private static final int LINK = 3;
-	private static final int UPLOAD_FILE = 4;
-	private EditText messionNameEdit;
-	private SegmentControl segmentControl;
-	private int segmentIndex = 1;
-	private TextView messionEndTime;
-	private TextView messionStatus;
-	private TextView memberText;
-	private List<SearchModel> selectMemList = new ArrayList<SearchModel>();
-	private List<SearchModel> addMemList = new ArrayList<SearchModel>();
-	private List<SearchModel> deleteMemList = new ArrayList<SearchModel>();
-	private List<SearchModel> oldMemList = new ArrayList<SearchModel>();
-	private TextView managerText;
-	private TaskResult task;
-	private List<TaskColorTag> tagList;
-	private Calendar dueDate;
-	private WorkAPIService apiService;
-	private LoadingDialog loadingDlg;
+    private static final int TAG_TYPE = 0;
+    private static final int MANAGER = 1;
+    private static final int MEMBER = 2;
+    private static final int LINK = 3;
+    private static final int UPLOAD_FILE = 4;
+    private EditText messionNameEdit;
+    private SegmentControl segmentControl;
+    private int segmentIndex = 1;
+    private TextView messionEndTime;
+    private TextView messionStatus;
+    private TextView memberText;
+    private List<SearchModel> selectMemList = new ArrayList<SearchModel>();
+    private List<SearchModel> addMemList = new ArrayList<SearchModel>();
+    private List<SearchModel> deleteMemList = new ArrayList<SearchModel>();
+    private List<SearchModel> oldMemList = new ArrayList<SearchModel>();
+    private TextView managerText;
+    private TaskResult task;
+    private List<TaskColorTag> tagList;
+    private Calendar dueDate;
+    private WorkAPIService apiService;
+    private LoadingDialog loadingDlg;
 
 	private List<Attachment> attachments = new ArrayList<Attachment>();
 	private ImageView[] tagImgs = new ImageView[3];
@@ -100,12 +100,12 @@ public class MessionDetailActivity extends BaseActivity {
 	private boolean isRefreshList = false;// 判断页面数据是否修改让taskList能够刷新
 	private boolean isCanModify = true;// 已关注的任务不能进行修改
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_mession_detail);
-		initViews();
-	}
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_mession_detail);
+        initViews();
+    }
 
 	/**
 	 * 初始化
@@ -153,24 +153,24 @@ public class MessionDetailActivity extends BaseActivity {
 					+ dueDate.get(Calendar.DAY_OF_MONTH));
 	}
 
-	/**
-	 * 处理负责人显示
-	 */
-	private void handleManager() {
-		String ownerUid = task.getOwner();
-		String ownerName = ContactCacheUtils.getUserName(
-				getApplicationContext(), ownerUid);
-		String masterId = task.getMaster();
-		String masterName = ContactCacheUtils.getUserName(
-				getApplicationContext(), masterId);
-		if (!StringUtils.isEmpty(masterId) && !masterId.contains("null")) {
-			managerText.setText(masterName);
-		} else if (!StringUtils.isEmpty(ownerUid)) {
-			managerText.setText(ownerName);
-		} else {
-			managerText.setText(getString(R.string.mession_no_person_charge));
-		}
-	}
+    /**
+     * 处理负责人显示
+     */
+    private void handleManager() {
+        String ownerUid = task.getOwner();
+        String ownerName = ContactCacheUtils.getUserName(
+                getApplicationContext(), ownerUid);
+        String masterId = task.getMaster();
+        String masterName = ContactCacheUtils.getUserName(
+                getApplicationContext(), masterId);
+        if (!StringUtils.isEmpty(masterId) && !masterId.contains("null")) {
+            managerText.setText(masterName);
+        } else if (!StringUtils.isEmpty(ownerUid)) {
+            managerText.setText(ownerName);
+        } else {
+            managerText.setText(getString(R.string.mession_no_person_charge));
+        }
+    }
 
 	/**
 	 * 处理tags的显示
@@ -187,18 +187,18 @@ public class MessionDetailActivity extends BaseActivity {
 		}
 	}
 
-	/**
-	 * 把状态转化为容易理解的文字
-	 */
-	private void handleState() {
-		String taskState = task.getState();
-		if (taskState.contains("ACTIVED") || taskState.contains("PENDING")) {
-			messionStatus.setText(getString(R.string.mession_detial_doing));
-		} else if (taskState.contains("REMOVED")
-				|| taskState.contains("SUSPENDED")) {
-			messionStatus.setText(getString(R.string.mession_detial_finish));
-		}
-	}
+    /**
+     * 把状态转化为容易理解的文字
+     */
+    private void handleState() {
+        String taskState = task.getState();
+        if (taskState.contains("ACTIVED") || taskState.contains("PENDING")) {
+            messionStatus.setText(getString(R.string.mession_detial_doing));
+        } else if (taskState.contains("REMOVED")
+                || taskState.contains("SUSPENDED")) {
+            messionStatus.setText(getString(R.string.mession_detial_finish));
+        }
+    }
 
 	/**
 	 * 获取任务
@@ -258,53 +258,53 @@ public class MessionDetailActivity extends BaseActivity {
 		return jsonAttachment;
 	}
 
-	/**
-	 * 添加附件
-	 */
-	protected void addAttachMents(JSONObject jsonAttachment) {
-		if (NetUtils.isNetworkConnected(MessionDetailActivity.this)) {
-			loadingDlg.show();
-			apiService.addAttachments(task.getId(), jsonAttachment.toString());
-		}
-	}
+    /**
+     * 添加附件
+     */
+    protected void addAttachMents(JSONObject jsonAttachment) {
+        if (NetUtils.isNetworkConnected(MessionDetailActivity.this)) {
+            loadingDlg.show();
+            apiService.addAttachments(task.getId(), jsonAttachment.toString());
+        }
+    }
 
-	/**
-	 * 初始化UI界面上的一些控件
-	 */
-	private void initUI() {
-		int tabIndex = -1;
-		messionNameEdit = (EditText) findViewById(R.id.mession_name_edit);
-		if (getIntent().hasExtra("tabIndex")) {
-			tabIndex = (Integer) getIntent().getExtras().getSerializable(
-					"tabIndex");
-		}
-		if (tabIndex == 2) {
-			isCanModify = false;
-			messionNameEdit.setFocusable(false);
-			messionNameEdit.setFocusableInTouchMode(false);
-		}
-		segmentControl = (SegmentControl) findViewById(R.id.segment_control);
+    /**
+     * 初始化UI界面上的一些控件
+     */
+    private void initUI() {
+        int tabIndex = -1;
+        messionNameEdit = (EditText) findViewById(R.id.mession_name_edit);
+        if (getIntent().hasExtra("tabIndex")) {
+            tabIndex = (Integer) getIntent().getExtras().getSerializable(
+                    "tabIndex");
+        }
+        if (tabIndex == 2) {
+            isCanModify = false;
+            messionNameEdit.setFocusable(false);
+            messionNameEdit.setFocusableInTouchMode(false);
+        }
+        segmentControl = (SegmentControl) findViewById(R.id.segment_control);
 //		typeImg = (ImageView) findViewById(R.id.mession_typecolor_img);
-		messionEndTime = (TextView) findViewById(R.id.mession_endtime_text);
-		messionStatus = (TextView) findViewById(R.id.mession_state_text);
-		tagImgs[0] = (ImageView) findViewById(R.id.mession_typecolor_img);
-		tagImgs[1] = (ImageView) findViewById(R.id.mession_typecolor_img2);
-		tagImgs[2] = (ImageView) findViewById(R.id.mession_typecolor_img3);
-		memberText = (TextView) findViewById(R.id.mession_allmembers_text);
-		managerText = (TextView) findViewById(R.id.mession_managerm_text);
-		if (!isCanModify) {
-			segmentControl.setIsEnable(false);
-		}
-		segmentControl
-				.setOnSegmentControlClickListener(new OnSegmentControlClickListener() {
-					@Override
-					public void onSegmentControlClick(int index) {
-						segmentIndex = index;
-					}
-				});
-		loadingDlg = new LoadingDialog(this);
-		initAttachments();
-	}
+        messionEndTime = (TextView) findViewById(R.id.mession_endtime_text);
+        messionStatus = (TextView) findViewById(R.id.mession_state_text);
+        tagImgs[0] = (ImageView) findViewById(R.id.mession_typecolor_img);
+        tagImgs[1] = (ImageView) findViewById(R.id.mession_typecolor_img2);
+        tagImgs[2] = (ImageView) findViewById(R.id.mession_typecolor_img3);
+        memberText = (TextView) findViewById(R.id.mession_allmembers_text);
+        managerText = (TextView) findViewById(R.id.mession_managerm_text);
+        if (!isCanModify) {
+            segmentControl.setIsEnable(false);
+        }
+        segmentControl
+                .setOnSegmentControlClickListener(new OnSegmentControlClickListener() {
+                    @Override
+                    public void onSegmentControlClick(int index) {
+                        segmentIndex = index;
+                    }
+                });
+        loadingDlg = new LoadingDialog(this);
+        initAttachments();
+    }
 
 	/**
 	 * 附件展示，及监听逻辑设置
@@ -368,19 +368,88 @@ public class MessionDetailActivity extends BaseActivity {
 						return true;
 					}
 				});
+    /**
+     * 附件展示，及监听逻辑设置
+     */
+    public void initAttachments() {
+        GridView attachmentGridView = (GridView) findViewById(R.id.mession_file_grid);
+        attachmentAdapter = new AttachmentGridAdapter();
+        attachmentGridView.setAdapter(attachmentAdapter);
+        attachmentGridView.setOnItemClickListener(new OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view,
+                                    int position, long id) {
+                String ownerUid = task.getOwner();
+                String userID = ((MyApplication) getApplication()).getUid();
+                if (ownerUid.contains(userID)) {
+                    if (position == attachments.size()) {
+                        openFileSystem();
+                    } else {
+                        downLoadFile(view, position);
+                    }
+                } else {
+                    if (attachments.size() == 0 || ((attachments.size() > 0) && (position == attachments.size()))) {
+                        ToastUtils.show(MessionDetailActivity.this,
+                                getString(R.string.mession_upload_attachment));
+                    }
+                }
+            }
+        });
+        attachmentGridView
+                .setOnItemLongClickListener(new OnItemLongClickListener() {
+                    @Override
+                    public boolean onItemLongClick(AdapterView<?> parent,
+                                                   View view, final int position, long id) {
+                        if (position != attachments.size()) {
+                            String ownerUid = task.getOwner();
+                            String uid = ((MyApplication) getApplication()).getUid();
+                            if (ownerUid.contains(uid)) {
+                                showDeleteAttachmentsPromptDlg(position);
+                            } else {
+                                ToastUtils.show(MessionDetailActivity.this,
+                                        R.string.mession_delete_attachment);
+                            }
+                        }
+                        return true;
+                    }
+                });
 
-	}
+    }
 
-	/**
-	 * 打开文件系统
-	 */
-	protected void openFileSystem() {
-		Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-		intent.setType("*/*");
-		intent.addCategory(Intent.CATEGORY_OPENABLE);
-		startActivityForResult(Intent.createChooser(intent,
-				getString(R.string.file_upload_tips)), UPLOAD_FILE);
-	}
+    /**
+     * 弹出删除附件提示框
+     * @param position
+     */
+    private void showDeleteAttachmentsPromptDlg(final int position){
+        new QMUIDialog.MessageDialogBuilder(MessionDetailActivity.this)
+                .setMessage(R.string.mession_delete_atachment)
+                .addAction(R.string.cancel, new QMUIDialogAction.ActionListener() {
+                    @Override
+                    public void onClick(QMUIDialog dialog, int index) {
+                        dialog.dismiss();
+                    }
+                })
+                .addAction(R.string.ok, new QMUIDialogAction.ActionListener() {
+                    @Override
+                    public void onClick(QMUIDialog dialog, int index) {
+                        dialog.dismiss();
+                        deleteAttachments(position);
+                        attachDeletePosition = position;
+                    }
+                })
+                .show();
+    }
+
+    /**
+     * 打开文件系统
+     */
+    protected void openFileSystem() {
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("*/*");
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        startActivityForResult(Intent.createChooser(intent,
+                getString(R.string.file_upload_tips)), UPLOAD_FILE);
+    }
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -410,57 +479,59 @@ public class MessionDetailActivity extends BaseActivity {
 		}
 	}
 
-	/**
-	 * 邀请的参与人员修改
-	 * 
-	 * @param data
-	 */
-	private void handleMemberChange(Intent data) {
-		if (data.getExtras().containsKey("selectMemList")) {
-			selectMemList = (List<SearchModel>) data.getExtras()
-					.getSerializable("selectMemList");
-			addMemList = (List<SearchModel>) data.getExtras().getSerializable(
-					"selectMemList");
-			deleteMemList.removeAll(addMemList);
-			addMemList.removeAll(oldMemList);
-			inviteMatesForTask();
-			deleteMemList = (List<SearchModel>) data.getExtras()
-					.getSerializable("selectMemList");
-			oldMemList = (List<SearchModel>) data.getExtras().getSerializable(
-					"selectMemList");
-		}
-	}
+    /**
+     * 邀请的参与人员修改
+     *
+     * @param data
+     */
+    private void handleMemberChange(Intent data) {
+        if (data.getExtras().containsKey("selectMemList")) {
+            selectMemList = (List<SearchModel>) data.getExtras()
+                    .getSerializable("selectMemList");
+            addMemList = (List<SearchModel>) data.getExtras().getSerializable(
+                    "selectMemList");
+            deleteMemList.removeAll(addMemList);
+            addMemList.removeAll(oldMemList);
+            inviteMatesForTask();
+            deleteMemList = (List<SearchModel>) data.getExtras()
+                    .getSerializable("selectMemList");
+            oldMemList = (List<SearchModel>) data.getExtras().getSerializable(
+                    "selectMemList");
+        }
+    }
 
-	/**
-	 * Manager变化时处理逻辑
-	 * 
-	 * @param data
-	 */
-	private void handleManagerChange(Intent data) {
-		List<SearchModel> managerList = (List<SearchModel>) data.getExtras()
-				.getSerializable("selectMemList");
-		if (managerList == null || managerList.size() == 0) {
-			return;
-		}
-		SearchModel searchModel = managerList.get(0);
-		final String managerName = searchModel.getName();
-		final String managerID = searchModel.getId();
-		DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				if (which == -1) {
-					changeMessionOwner(managerID,managerName);
-				} else {
-					dialog.dismiss();
-				}
-			}
-		};
-		EasyDialog.showDialog(MessionDetailActivity.this,
-				getString(R.string.prompt),
-				getString(R.string.mession_change_charge_person),
-				getString(R.string.ok), getString(R.string.cancel), listener,
-				true);
-	}
+    /**
+     * Manager变化时处理逻辑
+     *
+     * @param data
+     */
+    private void handleManagerChange(Intent data) {
+        List<SearchModel> managerList = (List<SearchModel>) data.getExtras()
+                .getSerializable("selectMemList");
+        if (managerList == null || managerList.size() == 0) {
+            return;
+        }
+        SearchModel searchModel = managerList.get(0);
+        final String managerName = searchModel.getName();
+        final String managerID = searchModel.getId();
+        new QMUIDialog.MessageDialogBuilder(MessionDetailActivity.this)
+                .setMessage(R.string.mession_change_charge_person)
+                .addAction(R.string.cancel, new QMUIDialogAction.ActionListener() {
+                    @Override
+                    public void onClick(QMUIDialog dialog, int index) {
+                        dialog.dismiss();
+                    }
+                })
+                .addAction(R.string.ok, new QMUIDialogAction.ActionListener() {
+                    @Override
+                    public void onClick(QMUIDialog dialog, int index) {
+                        dialog.dismiss();
+                        changeMessionOwner(managerID);
+                        managerText.setText(managerName);
+                    }
+                })
+                .show();
+    }
 
 	/**
 	 * tag变化的逻辑
@@ -498,34 +569,34 @@ public class MessionDetailActivity extends BaseActivity {
 		}
 	}
 
-	@Override
-	public void onBackPressed() {
-		super.onBackPressed();
-		if (isRefreshList) {
-			setResult(RESULT_OK);
-		}
-		finish();
-	}
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        if (isRefreshList) {
+            setResult(RESULT_OK);
+        }
+        finish();
+    }
 
-	/**
-	 * 附件
-	 */
-	class AttachmentGridAdapter extends BaseAdapter {
+    /**
+     * 附件
+     */
+    class AttachmentGridAdapter extends BaseAdapter {
 
-		@Override
-		public int getCount() {
-			return attachments.size() + 1;
-		}
+        @Override
+        public int getCount() {
+            return attachments.size() + 1;
+        }
 
-		@Override
-		public Object getItem(int position) {
-			return null;
-		}
+        @Override
+        public Object getItem(int position) {
+            return null;
+        }
 
-		@Override
-		public long getItemId(int position) {
-			return 0;
-		}
+        @Override
+        public long getItemId(int position) {
+            return 0;
+        }
 
 		@Override
 		public View getView(final int position, View convertView,
@@ -556,7 +627,7 @@ public class MessionDetailActivity extends BaseActivity {
 			return convertView;
 		}
 
-	}
+    }
 
 	/**
 	 * 删除附件
@@ -593,10 +664,10 @@ public class MessionDetailActivity extends BaseActivity {
 		ImageDisplayUtils.getInstance().displayImage(attachmentImg, displayImg,R.drawable.icon_file_unknown);
 	}
 
-	private static class Holder {
-		ImageView attachmentImg;
-		TextView textView;
-	}
+    private static class Holder {
+        ImageView attachmentImg;
+        TextView textView;
+    }
 
 	/**
 	 * 展示邀请的同伴
@@ -609,62 +680,62 @@ public class MessionDetailActivity extends BaseActivity {
 		memberText.setText(members);
 	}
 
-	public void onClick(View v) {
-		Intent intent = new Intent();
-		switch (v.getId()) {
-		case R.id.back_layout:
-			if (isRefreshList) {
-				setResult(RESULT_OK);
-			}
-			finish();
-			break;
-		case R.id.mession_type_layout:
-			addTags(intent);
-			break;
-		case R.id.mession_manager_layout:
-			String ownerUid = task.getOwner();
-			String myUid = ((MyApplication) getApplication()).getUid();
-			if (!ownerUid.contains(myUid)) {
-				Toast.makeText(MessionDetailActivity.this,
-						getString(R.string.mession_not_change_charge_person),
-						Toast.LENGTH_SHORT).show();
-				break;
-			}
-			changeMessionManager();
-			break;
-		case R.id.mession_members_layout:
-			inviteMembers();
-			break;
-		case R.id.mession_endtime_layout:
-			handleDeadlineTimeDialog();
-			break;
-		case R.id.mession_state_layout:
-			break;
-		case R.id.mession_link_layout:
-			break;
-		case R.id.save_btn:
-			saveTask();
-			break;
-		default:
-			break;
-		}
-	}
+    public void onClick(View v) {
+        Intent intent = new Intent();
+        switch (v.getId()) {
+            case R.id.back_layout:
+                if (isRefreshList) {
+                    setResult(RESULT_OK);
+                }
+                finish();
+                break;
+            case R.id.mession_type_layout:
+                addTags(intent);
+                break;
+            case R.id.mession_manager_layout:
+                String ownerUid = task.getOwner();
+                String myUid = ((MyApplication) getApplication()).getUid();
+                if (!ownerUid.contains(myUid)) {
+                    Toast.makeText(MessionDetailActivity.this,
+                            getString(R.string.mession_not_change_charge_person),
+                            Toast.LENGTH_SHORT).show();
+                    break;
+                }
+                changeMessionManager();
+                break;
+            case R.id.mession_members_layout:
+                inviteMembers();
+                break;
+            case R.id.mession_endtime_layout:
+                handleDeadlineTimeDialog();
+                break;
+            case R.id.mession_state_layout:
+                break;
+            case R.id.mession_link_layout:
+                break;
+            case R.id.save_btn:
+                saveTask();
+                break;
+            default:
+                break;
+        }
+    }
 
-	/**
-	 * 变更任务负责人
-	 */
-	private void changeMessionManager() {
-		if (isCanModify) {
-			Intent intent = new Intent();
-			intent.setClass(getApplicationContext(),
-					ContactSearchActivity.class);
-			intent.putExtra("select_content", 2);
-			intent.putExtra("isMulti_select", false);
-			intent.putExtra("title",
-					getString(R.string.mession_charge_person));
-			startActivityForResult(intent, MANAGER);
-		}
-	}
+    /**
+     * 变更任务负责人
+     */
+    private void changeMessionManager() {
+        if (isCanModify) {
+            Intent intent = new Intent();
+            intent.setClass(getApplicationContext(),
+                    ContactSearchActivity.class);
+            intent.putExtra("select_content", 2);
+            intent.putExtra("isMulti_select", false);
+            intent.putExtra("title",
+                    getString(R.string.mession_charge_person));
+            startActivityForResult(intent, MANAGER);
+        }
+    }
 
 	/**
 	 * 保存任务
@@ -699,25 +770,25 @@ public class MessionDetailActivity extends BaseActivity {
 		}
 	}
 
-	/**
-	 * 邀请任务参与成员
-	 */
-	private void inviteMembers() {
-		if (isCanModify) {
-			Intent intentMem = new Intent();
-			intentMem.putExtra("select_content", 2);
-			intentMem.putExtra("isMulti_select", true);
-			intentMem.putExtra("title",
-					getString(R.string.mession_invate_members));
-			if (selectMemList != null) {
-				intentMem.putExtra("hasSearchResult",
-						(Serializable) selectMemList);
-			}
-			intentMem.setClass(getApplicationContext(),
-					ContactSearchActivity.class);
-			startActivityForResult(intentMem, MEMBER);
-		}
-	}
+    /**
+     * 邀请任务参与成员
+     */
+    private void inviteMembers() {
+        if (isCanModify) {
+            Intent intentMem = new Intent();
+            intentMem.putExtra("select_content", 2);
+            intentMem.putExtra("isMulti_select", true);
+            intentMem.putExtra("title",
+                    getString(R.string.mession_invate_members));
+            if (selectMemList != null) {
+                intentMem.putExtra("hasSearchResult",
+                        (Serializable) selectMemList);
+            }
+            intentMem.setClass(getApplicationContext(),
+                    ContactSearchActivity.class);
+            startActivityForResult(intentMem, MEMBER);
+        }
+    }
 
 	/**
 	 * 处理截止时间Dialog
@@ -757,34 +828,34 @@ public class MessionDetailActivity extends BaseActivity {
 		}
 	}
 
-	/**
-	 * 邀请其他人协作，同时包含增减人员
-	 */
-	private void inviteMatesForTask() {
-		if (NetUtils.isNetworkConnected(getApplicationContext())) {
-			JSONArray addMembers = new JSONArray();
-			JSONArray delMembers = new JSONArray();
-			for (int i = 0; i < addMemList.size(); i++) {
-				addMembers.put(addMemList.get(i).getId());
-			}
-			for (int i = 0; i < deleteMemList.size(); i++) {
-				delMembers.put(deleteMemList.get(i).getId());
-			}
-			if (addMembers.length() > 0) {
-				if (!loadingDlg.isShowing()) {
-					loadingDlg.show();
-				}
-				apiService.inviteMateForTask(task.getId(), addMembers);
-			}
-			if (delMembers.length() > 0) {
-				if (!loadingDlg.isShowing()) {
-					loadingDlg.show();
-				}
-				apiService.deleteMateForTask(task.getId(), delMembers);
-			}
-		}
+    /**
+     * 邀请其他人协作，同时包含增减人员
+     */
+    private void inviteMatesForTask() {
+        if (NetUtils.isNetworkConnected(getApplicationContext())) {
+            JSONArray addMembers = new JSONArray();
+            JSONArray delMembers = new JSONArray();
+            for (int i = 0; i < addMemList.size(); i++) {
+                addMembers.put(addMemList.get(i).getId());
+            }
+            for (int i = 0; i < deleteMemList.size(); i++) {
+                delMembers.put(deleteMemList.get(i).getId());
+            }
+            if (addMembers.length() > 0) {
+                if (!loadingDlg.isShowing()) {
+                    loadingDlg.show();
+                }
+                apiService.inviteMateForTask(task.getId(), addMembers);
+            }
+            if (delMembers.length() > 0) {
+                if (!loadingDlg.isShowing()) {
+                    loadingDlg.show();
+                }
+                apiService.deleteMateForTask(task.getId(), delMembers);
+            }
+        }
 
-	}
+    }
 
 	private class WebService extends APIInterfaceInstance {
 		@Override
@@ -797,13 +868,13 @@ public class MessionDetailActivity extends BaseActivity {
 			displayInviteMates();
 		}
 
-		@Override
-		public void returnInviteMateForTaskFail(String error,int errorCode) {
-			if (loadingDlg != null && loadingDlg.isShowing()) {
-				loadingDlg.dismiss();
-			}
-			WebServiceMiddleUtils.hand(MessionDetailActivity.this, error,errorCode);
-		}
+        @Override
+        public void returnInviteMateForTaskFail(String error, int errorCode) {
+            if (loadingDlg != null && loadingDlg.isShowing()) {
+                loadingDlg.dismiss();
+            }
+            WebServiceMiddleUtils.hand(MessionDetailActivity.this, error, errorCode);
+        }
 
 		@Override
 		public void returnUpdateTaskSuccess(int defaultValue) {
@@ -837,108 +908,108 @@ public class MessionDetailActivity extends BaseActivity {
 			addAttachMents(jsonAttachment);
 		}
 
-		@Override
-		public void returnFileUpLoadFail(String error,int errorCode) {
-			if (loadingDlg != null && loadingDlg.isShowing()) {
-				loadingDlg.dismiss();
-			}
-			WebServiceMiddleUtils.hand(MessionDetailActivity.this, error,errorCode);
-		}
+        @Override
+        public void returnFileUpLoadFail(String error, int errorCode) {
+            if (loadingDlg != null && loadingDlg.isShowing()) {
+                loadingDlg.dismiss();
+            }
+            WebServiceMiddleUtils.hand(MessionDetailActivity.this, error, errorCode);
+        }
 
-		@Override
-		public void returnAttachmentSuccess(TaskResult taskResult) {
-			super.returnAttachmentSuccess(taskResult);
-			if (loadingDlg != null && loadingDlg.isShowing()) {
-				loadingDlg.dismiss();
-			}
-			attachments = taskResult.getAttachments();
-			task.setAttachments(attachments);
-			initAttachments();
-			EventBus.getDefault().post(task);
-			ToastUtils.show(MessionDetailActivity.this,
-					getString(R.string.mession_upload_attachment_success));
-		}
+        @Override
+        public void returnAttachmentSuccess(TaskResult taskResult) {
+            super.returnAttachmentSuccess(taskResult);
+            if (loadingDlg != null && loadingDlg.isShowing()) {
+                loadingDlg.dismiss();
+            }
+            attachments = taskResult.getAttachments();
+            task.setAttachments(attachments);
+            initAttachments();
+            EventBus.getDefault().post(task);
+            ToastUtils.show(MessionDetailActivity.this,
+                    getString(R.string.mession_upload_attachment_success));
+        }
 
-		@Override
-		public void returnAttachmentFail(String error,int errorCode) {
-			if (loadingDlg != null && loadingDlg.isShowing()) {
-				loadingDlg.dismiss();
-			}
-			WebServiceMiddleUtils.hand(MessionDetailActivity.this, error,errorCode);
-		}
+        @Override
+        public void returnAttachmentFail(String error, int errorCode) {
+            if (loadingDlg != null && loadingDlg.isShowing()) {
+                loadingDlg.dismiss();
+            }
+            WebServiceMiddleUtils.hand(MessionDetailActivity.this, error, errorCode);
+        }
 
-		@Override
-		public void returnAddAttachMentSuccess(Attachment attachment) {
-			super.returnAddAttachMentSuccess(attachment);
-			if (loadingDlg != null && loadingDlg.isShowing()) {
-				loadingDlg.dismiss();
-				apiService.getSigleTask(task.getId());
-			}
-			isRefreshList = true;
-		}
+        @Override
+        public void returnAddAttachMentSuccess(Attachment attachment) {
+            super.returnAddAttachMentSuccess(attachment);
+            if (loadingDlg != null && loadingDlg.isShowing()) {
+                loadingDlg.dismiss();
+                apiService.getSigleTask(task.getId());
+            }
+            isRefreshList = true;
+        }
 
-		@Override
-		public void returnAddAttachMentFail(String error,int errorCode) {
-			if (loadingDlg != null && loadingDlg.isShowing()) {
-				loadingDlg.dismiss();
-			}
-			WebServiceMiddleUtils.hand(MessionDetailActivity.this, error,errorCode);
-		}
+        @Override
+        public void returnAddAttachMentFail(String error, int errorCode) {
+            if (loadingDlg != null && loadingDlg.isShowing()) {
+                loadingDlg.dismiss();
+            }
+            WebServiceMiddleUtils.hand(MessionDetailActivity.this, error, errorCode);
+        }
 
-		@Override
-		public void returnGetTasksSuccess(GetTaskListResult getTaskListResult) {
-			super.returnGetTasksSuccess(getTaskListResult);
-			if (loadingDlg != null && loadingDlg.isShowing()) {
-				loadingDlg.dismiss();
-			}
-			ArrayList<String> memebersIds = new ArrayList<String>();
-			memebersIds = handleTaskSearhMembers(getTaskListResult);
-			String memebers = "";
-			int memimg = memebersIds.size();
-			if (memimg > 4) {
-				memimg = 4;
-			}
-			for (int i = 0; i < memimg; i++) {
-				// 去掉显示头像逻辑改为显示名字
-				// String inspurID = ContactCacheUtils.getUserInspurID(
-				// getApplicationContext(), memids.get(i));
-				//
-				// membersImg[i].setVisibility(View.VISIBLE);
-				// imageDisplayUtils.displayImage(membersImg[i],
-				// UriUtils.getChannelImgUri(inspurID));
-				memebers = memebers
-						+ ContactCacheUtils.getUserName(
-								getApplicationContext(), memebersIds.get(i))
-						+ " ";
-			}
-			memberText.setText(memebers);
-		}
+        @Override
+        public void returnGetTasksSuccess(GetTaskListResult getTaskListResult) {
+            super.returnGetTasksSuccess(getTaskListResult);
+            if (loadingDlg != null && loadingDlg.isShowing()) {
+                loadingDlg.dismiss();
+            }
+            ArrayList<String> memebersIds = new ArrayList<String>();
+            memebersIds = handleTaskSearhMembers(getTaskListResult);
+            String memebers = "";
+            int memimg = memebersIds.size();
+            if (memimg > 4) {
+                memimg = 4;
+            }
+            for (int i = 0; i < memimg; i++) {
+                // 去掉显示头像逻辑改为显示名字
+                // String inspurID = ContactCacheUtils.getUserInspurID(
+                // getApplicationContext(), memids.get(i));
+                //
+                // membersImg[i].setVisibility(View.VISIBLE);
+                // imageDisplayUtils.displayImage(membersImg[i],
+                // UriUtils.getChannelImgUri(inspurID));
+                memebers = memebers
+                        + ContactCacheUtils.getUserName(
+                        getApplicationContext(), memebersIds.get(i))
+                        + " ";
+            }
+            memberText.setText(memebers);
+        }
 
-		@Override
-		public void returnGetTasksFail(String error,int errorCode) {
-			if (loadingDlg != null && loadingDlg.isShowing()) {
-				loadingDlg.dismiss();
-			}
-			WebServiceMiddleUtils.hand(MessionDetailActivity.this, error,errorCode);
-		}
+        @Override
+        public void returnGetTasksFail(String error, int errorCode) {
+            if (loadingDlg != null && loadingDlg.isShowing()) {
+                loadingDlg.dismiss();
+            }
+            WebServiceMiddleUtils.hand(MessionDetailActivity.this, error, errorCode);
+        }
 
-		@Override
-		public void returnDelTaskMemSuccess() {
-			super.returnDelTaskMemSuccess();
-			isRefreshList = true;
-			if (loadingDlg != null && loadingDlg.isShowing()) {
-				loadingDlg.dismiss();
-			}
-			displayInviteMates();
-		}
+        @Override
+        public void returnDelTaskMemSuccess() {
+            super.returnDelTaskMemSuccess();
+            isRefreshList = true;
+            if (loadingDlg != null && loadingDlg.isShowing()) {
+                loadingDlg.dismiss();
+            }
+            displayInviteMates();
+        }
 
-		@Override
-		public void returnDelTaskMemFail(String error,int errorCode) {
-			if (loadingDlg != null && loadingDlg.isShowing()) {
-				loadingDlg.dismiss();
-			}
-			WebServiceMiddleUtils.hand(MessionDetailActivity.this, error,errorCode);
-		}
+        @Override
+        public void returnDelTaskMemFail(String error, int errorCode) {
+            if (loadingDlg != null && loadingDlg.isShowing()) {
+                loadingDlg.dismiss();
+            }
+            WebServiceMiddleUtils.hand(MessionDetailActivity.this, error, errorCode);
+        }
 
 		@Override
 		public void returnDelAttachmentSuccess(int position) {
@@ -977,64 +1048,64 @@ public class MessionDetailActivity extends BaseActivity {
 			finish();
 		}
 
-		@Override
-		public void returnChangeMessionOwnerFail(String error,int errorCode) {
-			// TODO Auto-generated method stub
-			if (loadingDlg != null && loadingDlg.isShowing()) {
-				loadingDlg.dismiss();
-			}
-			WebServiceMiddleUtils.hand(MessionDetailActivity.this, error,errorCode);
-		}
+        @Override
+        public void returnChangeMessionOwnerFail(String error, int errorCode) {
+            // TODO Auto-generated method stub
+            if (loadingDlg != null && loadingDlg.isShowing()) {
+                loadingDlg.dismiss();
+            }
+            WebServiceMiddleUtils.hand(MessionDetailActivity.this, error, errorCode);
+        }
 
-		@Override
-		public void returnChangeMessionTagSuccess() {
-			super.returnChangeMessionTagSuccess();
-			isRefreshList = true;
-			if (loadingDlg != null && loadingDlg.isShowing()) {
-				loadingDlg.dismiss();
-			}
-		}
+        @Override
+        public void returnChangeMessionTagSuccess() {
+            super.returnChangeMessionTagSuccess();
+            isRefreshList = true;
+            if (loadingDlg != null && loadingDlg.isShowing()) {
+                loadingDlg.dismiss();
+            }
+        }
 
-		@Override
-		public void returnChangeMessionTagFail(String error,int errorCode) {
-			if (loadingDlg != null && loadingDlg.isShowing()) {
-				loadingDlg.dismiss();
-			}
-			WebServiceMiddleUtils.hand(MessionDetailActivity.this, error,errorCode);
-		}
+        @Override
+        public void returnChangeMessionTagFail(String error, int errorCode) {
+            if (loadingDlg != null && loadingDlg.isShowing()) {
+                loadingDlg.dismiss();
+            }
+            WebServiceMiddleUtils.hand(MessionDetailActivity.this, error, errorCode);
+        }
 
-	}
+    }
 
-	/**
-	 * 下载文件
-	 * 
-	 * @param convertView
-	 * @param position
-	 */
-	private void downLoadFile(View convertView, int position) {
-		if (!(position < attachments.size())) {
-			return;
-		}
-		if (Environment.getExternalStorageState().equals(
-				Environment.MEDIA_MOUNTED)) {
-			File dir = new File(MyAppConfig.LOCAL_DOWNLOAD_PATH);
-			if (!dir.exists()) {
-				dir.mkdirs();
-			}
-			String fileName = attachments.get(position).getName();
-			final String fileUri = attachments.get(position).getUri();
-			final String target = MyAppConfig.LOCAL_DOWNLOAD_PATH
-					+ fileName;
-			final String downlaodSource = UriUtils.getPreviewUri(fileUri);
-			final HorizontalProgressBarWithNumber fileProgressbar = (HorizontalProgressBarWithNumber) convertView
-					.findViewById(R.id.filecard_progressbar);
-			fileProgressbar.setTag(target);
-			fileProgressbar.setVisibility(View.VISIBLE);
-			// 当文件正在下载中 点击不响应
-			if ((0 < fileProgressbar.getProgress())
-					&& (fileProgressbar.getProgress() < 100)) {
-				return;
-			}
+    /**
+     * 下载文件
+     *
+     * @param convertView
+     * @param position
+     */
+    private void downLoadFile(View convertView, int position) {
+        if (!(position < attachments.size())) {
+            return;
+        }
+        if (Environment.getExternalStorageState().equals(
+                Environment.MEDIA_MOUNTED)) {
+            File dir = new File(MyAppConfig.LOCAL_DOWNLOAD_PATH);
+            if (!dir.exists()) {
+                dir.mkdirs();
+            }
+            String fileName = attachments.get(position).getName();
+            final String fileUri = attachments.get(position).getUri();
+            final String target = MyAppConfig.LOCAL_DOWNLOAD_PATH
+                    + fileName;
+            final String downlaodSource = UriUtils.getPreviewUri(fileUri);
+            final HorizontalProgressBarWithNumber fileProgressbar = (HorizontalProgressBarWithNumber) convertView
+                    .findViewById(R.id.filecard_progressbar);
+            fileProgressbar.setTag(target);
+            fileProgressbar.setVisibility(View.VISIBLE);
+            // 当文件正在下载中 点击不响应
+            if ((0 < fileProgressbar.getProgress())
+                    && (fileProgressbar.getProgress() < 100)) {
+                return;
+            }
 
 			APIDownloadCallBack progressCallback = new APIDownloadCallBack(MessionDetailActivity.this,downlaodSource){
 				@Override
@@ -1047,89 +1118,90 @@ public class MessionDetailActivity extends BaseActivity {
 					}
 				}
 
-				@Override
-				public void callbackLoading(long total, long current,
-											boolean isUploading) {
-					if (total == 0) {
-						total = 1;
-					}
-					int progress = (int) ((current * 100) / total);
-					if (!(fileProgressbar.getVisibility() == View.VISIBLE)) {
-						fileProgressbar.setVisibility(View.VISIBLE);
-					}
-					fileProgressbar.setProgress(progress);
-					fileProgressbar.refreshDrawableState();
-				}
+                @Override
+                public void callbackLoading(long total, long current,
+                                            boolean isUploading) {
+                    if (total == 0) {
+                        total = 1;
+                    }
+                    int progress = (int) ((current * 100) / total);
+                    if (!(fileProgressbar.getVisibility() == View.VISIBLE)) {
+                        fileProgressbar.setVisibility(View.VISIBLE);
+                    }
+                    fileProgressbar.setProgress(progress);
+                    fileProgressbar.refreshDrawableState();
+                }
 
-				@Override
-				public void callbackSuccess(File file) {
-					fileProgressbar.setVisibility(View.GONE);
-					ToastUtils.show(MessionDetailActivity.this,
-							getString(R.string.download_success));
-				}
+                @Override
+                public void callbackSuccess(File file) {
+                    fileProgressbar.setVisibility(View.GONE);
+                    ToastUtils.show(MessionDetailActivity.this,
+                            getString(R.string.download_success));
+                }
 
-				@Override
-				public void callbackError(Throwable arg0, boolean arg1) {
-					fileProgressbar.setVisibility(View.GONE);
-					ToastUtils.show(MessionDetailActivity.this,
-							getString(R.string.download_fail));
-				}
+                @Override
+                public void callbackError(Throwable arg0, boolean arg1) {
+                    fileProgressbar.setVisibility(View.GONE);
+                    ToastUtils.show(MessionDetailActivity.this,
+                            getString(R.string.download_fail));
+                }
 
-				@Override
-				public void callbackCanceled(CancelledException e) {
+                @Override
+                public void callbackCanceled(CancelledException e) {
 
-				}
-			};
-			
-			if (FileUtils.isFileExist(fileUri)) {
-				fileProgressbar.setVisibility(View.INVISIBLE);
-				FileUtils.openFile(MessionDetailActivity.this, fileUri);
-			}else if (FileUtils.isFileExist(target)) {
-				fileProgressbar.setVisibility(View.INVISIBLE);
-				FileUtils.openFile(MessionDetailActivity.this, target);
-			}else {
-				new DownLoaderUtils().startDownLoad(downlaodSource, target,
-						progressCallback);
-			}
-			
-		} else {
-			ToastUtils.show(getApplicationContext(),
-					R.string.filetransfer_sd_not_exist);
-		}
+                }
+            };
 
-	}
+            if (FileUtils.isFileExist(fileUri)) {
+                fileProgressbar.setVisibility(View.INVISIBLE);
+                FileUtils.openFile(MessionDetailActivity.this, fileUri);
+            } else if (FileUtils.isFileExist(target)) {
+                fileProgressbar.setVisibility(View.INVISIBLE);
+                FileUtils.openFile(MessionDetailActivity.this, target);
+            } else {
+                new DownLoaderUtils().startDownLoad(downlaodSource, target,
+                        progressCallback);
+            }
 
-	/**
-	 * 筛选任务获取参与人员的list
-	 * @param getTaskListResult
-	 * @return
-	 */
-	public ArrayList<String> handleTaskSearhMembers(
-			GetTaskListResult getTaskListResult) {
-		ArrayList<String> membersIds = new ArrayList<String>();
-		for (int i = 0; i < getTaskListResult.getTaskList().size(); i++) {
-			if (getTaskListResult.getTaskList().get(i).getState()
-					.contains("ACTIVED")
-					|| getTaskListResult.getTaskList().get(i).getState()
-							.contains("REMOVED")) {
-				membersIds.add(getTaskListResult.getTaskList().get(i)
-						.getMaster());
-				if (!StringUtils.isBlank(getTaskListResult.getTaskList()
-						.get(i).getMaster())) {
-					SearchModel searchModel = new SearchModel(
-							ContactCacheUtils.getUserContact(
-									MessionDetailActivity.this,
-									getTaskListResult.getTaskList().get(i)
-											.getMaster()));
-					if (searchModel != null) {
-						selectMemList.add(searchModel);
-						deleteMemList.add(searchModel);
-						oldMemList.add(searchModel);
-					}
-				}
+        } else {
+            ToastUtils.show(getApplicationContext(),
+                    R.string.filetransfer_sd_not_exist);
+        }
 
-			}
-		}
-		return membersIds;
-	}
+    }
+
+    /**
+     * 筛选任务获取参与人员的list
+     *
+     * @param getTaskListResult
+     * @return
+     */
+    public ArrayList<String> handleTaskSearhMembers(
+            GetTaskListResult getTaskListResult) {
+        ArrayList<String> membersIds = new ArrayList<String>();
+        for (int i = 0; i < getTaskListResult.getTaskList().size(); i++) {
+            if (getTaskListResult.getTaskList().get(i).getState()
+                    .contains("ACTIVED")
+                    || getTaskListResult.getTaskList().get(i).getState()
+                    .contains("REMOVED")) {
+                membersIds.add(getTaskListResult.getTaskList().get(i)
+                        .getMaster());
+                if (!StringUtils.isBlank(getTaskListResult.getTaskList()
+                        .get(i).getMaster())) {
+                    SearchModel searchModel = new SearchModel(
+                            ContactCacheUtils.getUserContact(
+                                    MessionDetailActivity.this,
+                                    getTaskListResult.getTaskList().get(i)
+                                            .getMaster()));
+                    if (searchModel != null) {
+                        selectMemList.add(searchModel);
+                        deleteMemList.add(searchModel);
+                        oldMemList.add(searchModel);
+                    }
+                }
+
+            }
+        }
+        return membersIds;
+    }
 }

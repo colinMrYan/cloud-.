@@ -1,6 +1,5 @@
 package com.inspur.emmcloud.ui.work.task;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -20,20 +19,21 @@ import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.WorkAPIService;
 import com.inspur.emmcloud.bean.GetTaskListResult;
 import com.inspur.emmcloud.bean.TaskResult;
-import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.MessionTagColorUtils;
+import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
-import com.inspur.emmcloud.widget.dialogs.EasyDialog;
 import com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout;
 import com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout.OnRefreshListener;
 import com.inspur.emmcloud.widget.pullableview.PullableListView;
+import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
+import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 
 public class MessionFinishListActivity extends BaseActivity implements
-		OnRefreshListener {
+        OnRefreshListener {
 
 	private static final int OPEN_DETAIL = 0;
 	private static final int CAN_NOT_CHANGE = 2;
@@ -77,36 +77,36 @@ public class MessionFinishListActivity extends BaseActivity implements
 		messionListView.setAdapter(adapter);
 	}
 
-	/**
-	 * 获取所有任务
-	 */
-	private void getAllTasks() {
-		if (NetUtils.isNetworkConnected(MessionFinishListActivity.this)) {
-			loadingDialog.show();
-			apiService.getAllTasks(0, 12, "REMOVED");
-		}
-	}
+    /**
+     * 获取所有任务
+     */
+    private void getAllTasks() {
+        if (NetUtils.isNetworkConnected(MessionFinishListActivity.this)) {
+            loadingDialog.show();
+            apiService.getAllTasks(0, 12, "REMOVED");
+        }
+    }
 
-	public void onClick(View v) {
-		switch (v.getId()) {
-		case R.id.back_layout:
-			setResult(RESULT_OK);
-			finish();
-			break;
-		default:
-			break;
-		}
-	}
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.back_layout:
+                setResult(RESULT_OK);
+                finish();
+                break;
+            default:
+                break;
+        }
+    }
 
-	@Override
-	public void onBackPressed() {
-		Intent mIntent = new Intent("com.inspur.task");
-		mIntent.putExtra("refreshTask", "refreshTask");
-		// 发送广播
-		sendBroadcast(mIntent);
-		setResult(RESULT_OK);
-		finish();
-	}
+    @Override
+    public void onBackPressed() {
+        Intent mIntent = new Intent("com.inspur.task");
+        mIntent.putExtra("refreshTask", "refreshTask");
+        // 发送广播
+        sendBroadcast(mIntent);
+        setResult(RESULT_OK);
+        finish();
+    }
 
 	class MessionListAdapter extends BaseAdapter {
 		@Override
@@ -114,15 +114,15 @@ public class MessionFinishListActivity extends BaseActivity implements
 			return (taskList != null && taskList.size() > 0)?taskList.size():0;
 		}
 
-		@Override
-		public Object getItem(int position) {
-			return null;
-		}
+        @Override
+        public Object getItem(int position) {
+            return null;
+        }
 
-		@Override
-		public long getItemId(int position) {
-			return 0;
-		}
+        @Override
+        public long getItemId(int position) {
+            return 0;
+        }
 
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
@@ -142,7 +142,7 @@ public class MessionFinishListActivity extends BaseActivity implements
 			return convertView;
 		}
 
-	}
+    }
 
 	class MessionLongClickListener implements OnItemLongClickListener {
 		@Override
@@ -169,7 +169,7 @@ public class MessionFinishListActivity extends BaseActivity implements
 			return true;
 		}
 
-	}
+    }
 
 	/**
 	 * 更新任务状态
@@ -183,18 +183,18 @@ public class MessionFinishListActivity extends BaseActivity implements
 		}
 	}
 
-	class OnMessionClickListener implements OnItemClickListener {
-		@Override
-		public void onItemClick(AdapterView<?> parent, View view, int position,
-				long id) {
-			Intent intent = new Intent();
-			intent.putExtra("task", (Serializable) taskList.get(position));
-			intent.putExtra("tabIndex", CAN_NOT_CHANGE);
-			intent.setClass(MessionFinishListActivity.this,
-					MessionDetailActivity.class);
-			startActivityForResult(intent, OPEN_DETAIL);
-		}
-	}
+    class OnMessionClickListener implements OnItemClickListener {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position,
+                                long id) {
+            Intent intent = new Intent();
+            intent.putExtra("task", (Serializable) taskList.get(position));
+            intent.putExtra("tabIndex", CAN_NOT_CHANGE);
+            intent.setClass(MessionFinishListActivity.this,
+                    MessionDetailActivity.class);
+            startActivityForResult(intent, OPEN_DETAIL);
+        }
+    }
 
 	class WebService extends APIInterfaceInstance {
 		@Override
@@ -242,25 +242,25 @@ public class MessionFinishListActivity extends BaseActivity implements
 			WebServiceMiddleUtils.hand(MessionFinishListActivity.this, error,errorCode);
 		}
 
-	}
+    }
 
-	@Override
-	public void onRefresh(PullToRefreshLayout pullToRefreshLayout) {
-		if (NetUtils.isNetworkConnected(MessionFinishListActivity.this)) {
-			apiService.getAllTasks(0, 12, "REMOVED");
-			page = 0;
-		} else {
-			pullToRefreshLayout.refreshFinish(PullToRefreshLayout.FAIL);
-		}
-		isPullup = false;
-	}
+    @Override
+    public void onRefresh(PullToRefreshLayout pullToRefreshLayout) {
+        if (NetUtils.isNetworkConnected(MessionFinishListActivity.this)) {
+            apiService.getAllTasks(0, 12, "REMOVED");
+            page = 0;
+        } else {
+            pullToRefreshLayout.refreshFinish(PullToRefreshLayout.FAIL);
+        }
+        isPullup = false;
+    }
 
-	@Override
-	public void onLoadMore(PullToRefreshLayout pullToRefreshLayout) {
-		if (NetUtils.isNetworkConnected(MessionFinishListActivity.this)) {
-			page = page + 1;
-			apiService.getAllTasks(page, 12, "REMOVED");
-			isPullup = true;
-		}
-	}
+    @Override
+    public void onLoadMore(PullToRefreshLayout pullToRefreshLayout) {
+        if (NetUtils.isNetworkConnected(MessionFinishListActivity.this)) {
+            page = page + 1;
+            apiService.getAllTasks(page, 12, "REMOVED");
+            isPullup = true;
+        }
+    }
 }

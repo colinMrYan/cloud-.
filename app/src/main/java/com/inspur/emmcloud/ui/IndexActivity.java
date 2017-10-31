@@ -37,7 +37,9 @@ import com.inspur.emmcloud.bean.PVCollectModel;
 import com.inspur.emmcloud.callback.CommonCallBack;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.interf.OnTabReselectListener;
+import com.inspur.emmcloud.service.BackgroundService;
 import com.inspur.emmcloud.service.CoreService;
+import com.inspur.emmcloud.service.LocationService;
 import com.inspur.emmcloud.service.PVCollectService;
 import com.inspur.emmcloud.ui.app.MyAppFragment;
 import com.inspur.emmcloud.ui.chat.MessageFragment;
@@ -105,40 +107,77 @@ public class IndexActivity extends BaseFragmentActivity implements
         super.onCreate(savedInstanceState);
         StateBarColor.changeStateBarColor(this);
         setContentView(R.layout.activity_index);
+        initAppEnvironment();
+        initView();
+        getData();
+        startService();
+
+    }
+
+    /**
+     * 初始化app的运行环境
+     */
+    private void initAppEnvironment() {
         ((MyApplication) getApplicationContext()).setIndexActvityRunning(true);
         ((MyApplication) getApplicationContext()).closeAllDb();
         DbCacheUtils.initDb(getApplicationContext());
         ((MyApplication) getApplicationContext()).closeWebSocket();
         ((MyApplication) getApplicationContext()).clearUserPhotoMap();
         ((MyApplication) getApplicationContext()).startPush();
-        init();
+    }
+
+    private void initView() {
+        appApiService = new AppAPIService(IndexActivity.this);
+        appApiService.setAPIInterface(new WebService());
+        loadingDlg = new LoadingDialog(IndexActivity.this, getString(R.string.app_init));
+        handMessage();
+        initTabView();
+        setPreloadWebApp();
     }
 
     /**
      * 初始化
      */
-    private void init() {
-        appApiService = new AppAPIService(IndexActivity.this);
-        appApiService.setAPIInterface(new WebService());
-        loadingDlg = new LoadingDialog(IndexActivity.this, getString(R.string.app_init));
-        handMessage();
-        getIsHasCacheContact();
+    private void getData() {
+        String contactLastUpdateTime = ContactCacheUtils
+                .getLastUpdateTime(IndexActivity.this);
+        isHasCacheContact = !StringUtils.isBlank(contactLastUpdateTime);
         if (!isHasCacheContact) {
             loadingDlg.show();
         }
-        getAllContact();
-        getAllRobots();
-        initTabView();
-
-        /**从服务端获取显示tab**/
-        getAppTabs();
+        getContactInfo();
+        getAllRobotInfo();
+        getAppTabInfo();  //从服务端获取显示tab
         new SplashPageUtils(IndexActivity.this).update();//更新闪屏页面
-        new ReactNativeUtils(IndexActivity.this).init(); //初始化和更新react
-        new AppConfigUtils(IndexActivity.this).getAppConfig();
+        new ReactNativeUtils(IndexActivity.this).init(); //更新react
+        new AppConfigUtils(IndexActivity.this).getAppConfig(); //获取整个应用的配置信息
+    }
+
+    /**
+     * 启动服务
+     */
+    private void startService() {
         startUploadPVCollectService();
         startCoreService();
-        setPreloadWebApp();
+        boolean isAppSetRunBackground = PreferencesUtils.getBoolean(getApplicationContext(), Constant.PREF_APP_RUN_BACKGROUND, false);
+        if (isAppSetRunBackground) {
+            startBackgroudService();
+        }
+        startLocationService();
     }
+
+    /***
+     * 打开app应用行为分析上传的Service;
+     */
+    private void startUploadPVCollectService() {
+        // TODO Auto-generated method stub
+        if (!AppUtils.isServiceWork(getApplicationContext(), "com.inspur.emmcloud.service.CollectService")) {
+            Intent intent = new Intent();
+            intent.setClass(this, PVCollectService.class);
+            startService(intent);
+        }
+    }
+
 
     /**
      * 打开保活服务
@@ -148,6 +187,25 @@ public class IndexActivity extends BaseFragmentActivity implements
         intent.setClass(this, CoreService.class);
         startService(intent);
     }
+
+    /**
+     * 打开后台保活服务
+     */
+    private void startBackgroudService() {
+        Intent intent = new Intent();
+        intent.setClass(this, BackgroundService.class);
+        startService(intent);
+    }
+
+    /**
+     * 打开位置收集服务
+     */
+    private void startLocationService() {
+        Intent intent = new Intent();
+        intent.setClass(this, LocationService.class);
+        startService(intent);
+    }
+
 
     /**
      * 为了使打开报销web应用更快，进行预加载
@@ -170,22 +228,10 @@ public class IndexActivity extends BaseFragmentActivity implements
     }
 
 
-    /***
-     * 打开app应用行为分析上传的Service;
-     */
-    private void startUploadPVCollectService() {
-        // TODO Auto-generated method stub
-        if (!AppUtils.isServiceWork(getApplicationContext(), "com.inspur.emmcloud.service.CollectService")) {
-            Intent intent = new Intent();
-            intent.setClass(this, PVCollectService.class);
-            startService(intent);
-        }
-    }
-
     /**
      * 获取应用显示tab
      */
-    private void getAppTabs() {
+    private void getAppTabInfo() {
         new ClientIDUtils(IndexActivity.this, new CommonCallBack() {
             @Override
             public void execute() {
@@ -206,7 +252,7 @@ public class IndexActivity extends BaseFragmentActivity implements
     /**
      * 获取所有的Robot
      */
-    private void getAllRobots() {
+    private void getAllRobotInfo() {
         ContactAPIService apiService = new ContactAPIService(IndexActivity.this);
         apiService.setAPIInterface(new WebService());
         if (NetUtils.isNetworkConnected(getApplicationContext(), false)) {
@@ -256,17 +302,6 @@ public class IndexActivity extends BaseFragmentActivity implements
     }
 
     /**
-     * 判断通讯录是否已经缓存过
-     */
-    private void getIsHasCacheContact() {
-        // TODO Auto-generated method stub
-        String contactLastUpdateTime = ContactCacheUtils
-                .getLastUpdateTime(IndexActivity.this);
-        isHasCacheContact = StringUtils.isBlank(contactLastUpdateTime) ? false
-                : true;
-    }
-
-    /**
      * 获取所有的群组信息
      */
     private void getAllChannelGroup() {
@@ -284,7 +319,7 @@ public class IndexActivity extends BaseFragmentActivity implements
     /**
      * 获取通讯录信息
      */
-    private void getAllContact() {
+    private void getContactInfo() {
         // TODO Auto-generated method stub
         ContactAPIService apiService = new ContactAPIService(IndexActivity.this);
         apiService.setAPIInterface(new WebService());

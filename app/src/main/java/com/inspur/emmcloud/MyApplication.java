@@ -123,23 +123,24 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
     }
 
 
-/**************************************登出逻辑相关********************************************************/
+    /**************************************登出逻辑相关********************************************************/
     //登出逻辑
     public void signout() {
         // TODO Auto-generated method stub
-        if (((MyApplication) getApplicationContext()).getWebSocketPush() != null) {
-            ((MyApplication) getApplicationContext()).getWebSocketPush()
+        if (getWebSocketPush() != null) {
+            getWebSocketPush()
                     .webSocketSignout();
         }
         //清除日历提醒极光推送本地通知
         CalEventNotificationUtils.cancelAllCalEventNotification(this);
-        ((MyApplication) getApplicationContext()).stopPush();
-        ((MyApplication) getApplicationContext()).clearNotification();
-        ((MyApplication) getApplicationContext()).removeAllCookie();
-        ((MyApplication) getApplicationContext()).clearUserPhotoMap();
+        stopPush();
+        clearNotification();
+        removeAllCookie();
+        removeAllSessionCookie();
+        clearUserPhotoMap();
         PreferencesUtils.putString(this, "tokenType", "");
         PreferencesUtils.putString(this, "accessToken", "");
-        ((MyApplication) getApplicationContext()).setAccessToken("");
+        setAccessToken("");
         Intent intent = new Intent();
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -284,11 +285,11 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
      */
     public void setIsActive(boolean isActive) {
         this.isActive = isActive;
-        if(webSocketPush != null){
-            if(isActive){
+        if (webSocketPush != null) {
+            if (isActive) {
                 webSocketPush.sendActivedMsg();
 
-            }else{
+            } else {
                 webSocketPush.sendFrozenMsg();
             }
         }
@@ -367,7 +368,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
     /**
      * 关闭websocket推送
      */
-    public void closeWebSocket(){
+    public void closeWebSocket() {
         if (webSocketPush != null) {
             webSocketPush.webSocketSignout();
         }
@@ -652,7 +653,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         activityList.add(activity);
     }
 
-    public void removeActivity(Activity activity){
+    public void removeActivity(Activity activity) {
         activityList.remove(activity);
     }
 
@@ -708,13 +709,13 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
 
     /**
      * ReactNative相关代码
+     *
      * @return
      */
     @Override
     public ReactNativeHost getReactNativeHost() {
         return mReactNativeHost;
     }
-
 
 
 }

@@ -40,13 +40,15 @@
             android:textColor="@color/header_text"
             android:textSize="@dimen/header_textsize" />
     </RelativeLayout>
-
-
+<RelativeLayout
+    android:layout_below="@id/header_layout"
+    android:background="@color/content_bg"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
     <RelativeLayout
         android:id="@+id/safe_center_gesture_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/header_layout"
         android:layout_marginTop="10dp"
         android:onClick="onClick"
         android:background="@color/white"
@@ -154,6 +156,9 @@
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp" />
     </RelativeLayout>
+
+</RelativeLayout>
+
 
 
 </RelativeLayout>

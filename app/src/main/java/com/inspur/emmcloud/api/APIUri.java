@@ -739,7 +739,7 @@ public class APIUri {
     }
 
     public static String getAppConfigUrl() {
-        return URL_BASE_APP_CONFIG + "/array?key=WebAutoRotate&key=CommonFunctions&key=IsShowFeedback&key=IsShowCustomerService";
+        return URL_BASE_APP_CONFIG + "/array?key=WebAutoRotate&key=CommonFunctions&key=IsShowFeedback&key=IsShowCustomerService&key=PosReportTimeInterval";
     }
 
     /**
@@ -751,8 +751,21 @@ public class APIUri {
         return URL_BASE_APP_V3 + "api/app/badge";
     }
 
+    /**
+     * 存储app配置url
+     * @param key
+     * @return
+     */
     public static String saveAppConfigUrl(String key) {
         return URL_BASE_APP_CONFIG + "/" + key;
+    }
+
+    /**
+     * 获取上传位置信息url
+     * @return
+     */
+    public static String getUploadPositionUrl() {
+        return URL_BASE_APP_V3 + "api/app/position/upload";
     }
 
 }

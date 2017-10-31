@@ -542,4 +542,5 @@ public interface APIInterface {
     void returnGetAppBadgeResultSuccess(GetAppBadgeResult getAppBadgeResult);
     void returnGetAppBadgeResultFail(String error,int errorCode);
 
+    void returnUploadPositionSuccess();
 }

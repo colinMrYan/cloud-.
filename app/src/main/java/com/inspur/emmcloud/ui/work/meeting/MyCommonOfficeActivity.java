@@ -1,6 +1,5 @@
 package com.inspur.emmcloud.ui.work.meeting;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -29,12 +28,13 @@ import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
-import com.inspur.emmcloud.widget.dialogs.EasyDialog;
 import com.inspur.emmcloud.widget.dragsortlistview.DragSortController;
 import com.inspur.emmcloud.widget.dragsortlistview.DragSortListView;
 import com.inspur.emmcloud.widget.dragsortlistview.DragSortListView.DropListener;
 import com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout;
 import com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout.OnRefreshListener;
+import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
+import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -442,21 +442,23 @@ public class MyCommonOfficeActivity extends BaseActivity implements
         @Override
         public boolean onItemLongClick(AdapterView<?> parent, View view,
                                        final int position, long id) {
-            DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    if (which == -1) {
-                        deleteOffice(position);
-                    }
-                    dialog.dismiss();
-                }
-            };
-            if (!isOrdering) {
-                EasyDialog.showDialog(MyCommonOfficeActivity.this,
-                        getString(R.string.prompt),
-                        getString(R.string.office_delete_position),
-                        getString(R.string.ok), getString(R.string.cancel),
-                        listener, true);
+            new QMUIDialog.MessageDialogBuilder(MyCommonOfficeActivity.this)
+                    .setMessage(R.string.office_delete_position)
+                    .addAction(R.string.cancel, new QMUIDialogAction.ActionListener() {
+                        @Override
+                        public void onClick(QMUIDialog dialog, int index) {
+                            dialog.dismiss();
+                        }
+                    })
+                    .addAction(R.string.ok, new QMUIDialogAction.ActionListener() {
+                        @Override
+                        public void onClick(QMUIDialog dialog, int index) {
+                            dialog.dismiss();
+                            deleteOffice(position);
+                            myCommonOfficeAdapter.notifyDataSetChanged();
+                        }
+                    })
+                    .show();
             }
             return true;
         }

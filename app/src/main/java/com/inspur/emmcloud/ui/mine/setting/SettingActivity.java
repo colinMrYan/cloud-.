@@ -7,7 +7,6 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -20,6 +19,8 @@ import com.inspur.emmcloud.bean.AppConfig;
 import com.inspur.emmcloud.bean.Language;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.config.MyAppConfig;
+import com.inspur.emmcloud.service.BackgroundService;
+import com.inspur.emmcloud.service.CoreService;
 import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.util.AppConfigCacheUtils;
 import com.inspur.emmcloud.util.DataCleanManager;
@@ -33,8 +34,8 @@ import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.SwitchView;
-import com.inspur.emmcloud.widget.dialogs.EasyDialog;
-import com.inspur.emmcloud.widget.dialogs.MyDialog;
+import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
+import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
 
 public class SettingActivity extends BaseActivity {
 
@@ -42,6 +43,7 @@ public class SettingActivity extends BaseActivity {
     private Handler handler;
     private LoadingDialog loadingDlg;
     private SwitchView webAutoRotateSwitch;
+    private SwitchView backgroundRunSwitch;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +60,15 @@ public class SettingActivity extends BaseActivity {
         webAutoRotateSwitch = (SwitchView) findViewById(R.id.web_auto_rotate_switch);
         setWebAutoRotateState();
         webAutoRotateSwitch.setOnStateChangedListener(onStateChangedListener);
+        backgroundRunSwitch = (SwitchView) findViewById(R.id.background_run_switch);
+        boolean isAppSetRunBackground = PreferencesUtils.getBoolean(getApplicationContext(), Constant.PREF_APP_RUN_BACKGROUND, false);
+        backgroundRunSwitch.setOpened(isAppSetRunBackground);
+        backgroundRunSwitch.setOnStateChangedListener(onStateChangedListener);
+    }
+
+    private void setWebAutoRotateState() {
+        boolean isWebAutoRotate = Boolean.parseBoolean(AppConfigCacheUtils.getAppConfigValue(this, Constant.CONCIG_WEB_AUTO_ROTATE, "false"));
+        webAutoRotateSwitch.setOpened(isWebAutoRotate);
     }
 
     /**
@@ -84,25 +95,47 @@ public class SettingActivity extends BaseActivity {
         }
     }
 
-    private void setWebAutoRotateState() {
-        boolean isWebAutoRotate = Boolean.parseBoolean(AppConfigCacheUtils.getAppConfigValue(this, Constant.CONCIG_WEB_AUTO_ROTATE, "false"));
-        webAutoRotateSwitch.setOpened(isWebAutoRotate);
-    }
-
     private SwitchView.OnStateChangedListener onStateChangedListener = new SwitchView.OnStateChangedListener() {
 
         @Override
         public void toggleToOn(View view) {
             // TODO Auto-generated method stub
-            saveWebAutoRotateConfig(true);
+            if (view.getId() != R.id.background_run_switch) {
+                saveWebAutoRotateConfig(true);
+            } else {
+                setAppRunBackground(true);
+            }
+
         }
 
         @Override
         public void toggleToOff(View view) {
             // TODO Auto-generated method stub
-            saveWebAutoRotateConfig(false);
+            if (view.getId() != R.id.background_run_switch) {
+                saveWebAutoRotateConfig(false);
+            } else {
+                setAppRunBackground(false);
+            }
+
         }
     };
+
+    /**
+     * 设置app是否运行在后台
+     *
+     * @param isAppSetRunBackground
+     */
+    private void setAppRunBackground(boolean isAppSetRunBackground) {
+        PreferencesUtils.putBoolean(getApplicationContext(), Constant.PREF_APP_RUN_BACKGROUND, isAppSetRunBackground);
+        backgroundRunSwitch.setOpened(isAppSetRunBackground);
+        Intent intent = new Intent();
+        intent.setClass(SettingActivity.this, BackgroundService.class);
+        if (isAppSetRunBackground) {
+            startService(intent);
+        } else {
+            stopService(intent);
+        }
+    }
 
     private void handMessage() {
         // TODO Auto-generated method stub
@@ -157,21 +190,31 @@ public class SettingActivity extends BaseActivity {
      * 弹出注销提示框
      */
     private void showSignoutDlg() {
-        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+        new QMUIDialog.MessageDialogBuilder(SettingActivity.this)
+                .setMessage(R.string.if_confirm_signout)
+                .addAction(R.string.cancel, new QMUIDialogAction.ActionListener() {
+                    @Override
+                    public void onClick(QMUIDialog dialog, int index) {
+                        dialog.dismiss();
+                    }
+                })
+                .addAction(R.string.ok, new QMUIDialogAction.ActionListener() {
+                    @Override
+                    public void onClick(QMUIDialog dialog, int index) {
+                        dialog.dismiss();
+                        ((MyApplication) getApplication()).signout();
+                        stopAppService();
+                    }
+                })
+                .show();
+    }
 
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                // TODO Auto-generated method stub
-                if (which == -1) {
-                    ((MyApplication) getApplication()).signout();
-                }
-            }
-        };
-        EasyDialog.showDialog(SettingActivity.this,
-                getString(R.string.prompt),
-                getString(R.string.if_confirm_signout),
-                getString(R.string.ok), getString(R.string.cancel),
-                dialogClickListener, true);
+    /**
+     * 关闭服务
+     */
+    private void stopAppService() {
+        stopService(new Intent(getApplicationContext(), CoreService.class));
+        stopService(new Intent(getApplicationContext(), BackgroundService.class));
     }
 
 
@@ -180,75 +223,34 @@ public class SettingActivity extends BaseActivity {
      */
     private void showClearCacheDlg() {
         // TODO Auto-generated method stub
-        float radio = 0.850f;
-        final MyDialog clearCacheDlg = new MyDialog(SettingActivity.this,
-                R.layout.dialog_four_item, R.style.userhead_dialog_bg, radio);
-        TextView clearImgAndFileText = (TextView) clearCacheDlg
-                .findViewById(R.id.text1);
-        clearImgAndFileText
-                .setText(getString(R.string.settings_clean_imgae_attachment));
-        TextView clearWebCacheText = (TextView) clearCacheDlg
-                .findViewById(R.id.text2);
-        clearWebCacheText.setText(getString(R.string.settings_clean_web));
-        TextView clearAllCacheText = (TextView) clearCacheDlg
-                .findViewById(R.id.text3);
-        clearAllCacheText.setText(getString(R.string.settings_clean_all));
-        TextView cancelText = (TextView) clearCacheDlg.findViewById(R.id.text4);
-        cancelText.setText(getString(R.string.button_cancel));
-        clearImgAndFileText.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                // TODO Auto-generated method stub
-                new Thread(new Runnable() {
-
+        final String[] items = new String[]{getString(R.string.settings_clean_imgae_attachment), getString(R.string.settings_clean_web), getString(R.string.settings_clean_all)};
+        new QMUIDialog.MenuDialogBuilder(SettingActivity.this)
+                .addItems(items, new DialogInterface.OnClickListener() {
                     @Override
-                    public void run() {
-                        // TODO Auto-generated method stub
-                        String msgCachePath = Environment
-                                .getExternalStorageDirectory()
-                                + "/IMP-Cloud/download/";
-                        String imgCachePath = MyAppConfig.LOCAL_CACHE_PATH;
-                        DataCleanManager.cleanApplicationData(
-                                SettingActivity.this, msgCachePath,
-                                imgCachePath);
-                        ImageDisplayUtils.getInstance().clearAllCache();
-                        handler.sendEmptyMessage(DATA_CLEAR_SUCCESS);
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        switch (which) {
+                            case 0:
+                                DataCleanManager.cleanApplicationData(
+                                        SettingActivity.this, MyAppConfig.LOCAL_DOWNLOAD_PATH,
+                                        MyAppConfig.LOCAL_CACHE_PATH);
+                                ImageDisplayUtils.getInstance().clearAllCache();
+                                handler.sendEmptyMessage(DATA_CLEAR_SUCCESS);
+                                break;
+                            case 1:
+                                DataCleanManager.cleanWebViewCache(SettingActivity.this);
+                                ToastUtils.show(getApplicationContext(),
+                                        R.string.data_clear_success);
+                                break;
+                            case 2:
+                                showClearCacheWarningDlg();
+                                break;
+                            default:
+                                break;
+                        }
                     }
-                }).start();
-                clearCacheDlg.dismiss();
-            }
-        });
-        clearWebCacheText.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                // TODO Auto-generated method stub
-                clearCacheDlg.dismiss();
-                DataCleanManager.cleanWebViewCache(SettingActivity.this);
-                ToastUtils.show(getApplicationContext(),
-                        R.string.data_clear_success);
-            }
-        });
-        clearAllCacheText.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                // TODO Auto-generated method stub
-                clearCacheDlg.dismiss();
-                showClearCacheWarningDlg();
-            }
-
-        });
-        cancelText.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                // TODO Auto-generated method stub
-                clearCacheDlg.dismiss();
-            }
-        });
-        clearCacheDlg.show();
+                })
+                .show();
     }
 
     /**
@@ -256,39 +258,41 @@ public class SettingActivity extends BaseActivity {
      */
     private void showClearCacheWarningDlg() {
         // TODO Auto-generated method stub
-        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
-
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                // TODO Auto-generated method stub
-                if (which == -1) {
-                    DataCleanManager.cleanWebViewCache(SettingActivity.this);
-                    ((MyApplication) getApplicationContext()).deleteAllDb();
-                    String msgCachePath = Environment
-                            .getExternalStorageDirectory()
-                            + "/IMP-Cloud/download/";
-                    String imgCachePath = MyAppConfig.LOCAL_CACHE_PATH;
-                    DataCleanManager.cleanApplicationData(SettingActivity.this,
-                            msgCachePath, imgCachePath);
-                    ImageDisplayUtils.getInstance().clearAllCache();
-                    MyAppCacheUtils.clearMyAppList(SettingActivity.this);
-                    //清除全部缓存时是否需要清除掉小程序，如果需要，解开下面一行的注释
+        new QMUIDialog.MessageDialogBuilder(SettingActivity.this)
+                .setMessage(getString(R.string.my_setting_tips_quit))
+                .addAction(getString(R.string.cancel), new QMUIDialogAction.ActionListener() {
+                    @Override
+                    public void onClick(QMUIDialog dialog, int index) {
+                        dialog.dismiss();
+                    }
+                })
+                .addAction(getString(R.string.ok), new QMUIDialogAction.ActionListener() {
+                    @Override
+                    public void onClick(QMUIDialog dialog, int index) {
+                        dialog.dismiss();
+                        DataCleanManager.cleanWebViewCache(SettingActivity.this);
+                        ((MyApplication) getApplicationContext()).deleteAllDb();
+                        String msgCachePath = Environment
+                                .getExternalStorageDirectory()
+                                + "/IMP-Cloud/download/";
+                        String imgCachePath = MyAppConfig.LOCAL_CACHE_PATH;
+                        DataCleanManager.cleanApplicationData(SettingActivity.this,
+                                msgCachePath, imgCachePath);
+                        ImageDisplayUtils.getInstance().clearAllCache();
+                        MyAppCacheUtils.clearMyAppList(SettingActivity.this);
+                        //清除全部缓存时是否需要清除掉小程序，如果需要，解开下面一行的注释
 //					ReactNativeFlow.deleteReactNativeInstallDir(MyAppConfig.getReactInstallPath(SettingActivity.this,userId));
-                    ToastUtils.show(getApplicationContext(),
-                            R.string.data_clear_success);
-                    //((MyApplication) getApplicationContext()).exit();
-                    Intent intentLog = new Intent(SettingActivity.this,
-                            IndexActivity.class);
-                    intentLog.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
-                            | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    startActivity(intentLog);
-                }
-            }
-        };
-        EasyDialog.showDialog(SettingActivity.this, getString(R.string.prompt),
-                getString(R.string.my_setting_tips_quit),
-                getString(R.string.ok), getString(R.string.cancel),
-                dialogClickListener, true);
+                        ToastUtils.show(getApplicationContext(),
+                                R.string.data_clear_success);
+                        //((MyApplication) getApplicationContext()).exit();
+                        Intent intentLog = new Intent(SettingActivity.this,
+                                IndexActivity.class);
+                        intentLog.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+                                | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intentLog);
+                    }
+                })
+                .show();
     }
 
     @Override

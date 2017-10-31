@@ -6,19 +6,13 @@
 
 
     -->
-    <style name="AppBaseTheme" parent="android:Theme.Light">
-        <!--
-            Theme customizations available in newer API levels can go in
-            res/values-vXX/styles.xml, while customizations related to
-            backward-compatibility can go here.
-
-
-        -->
-    </style>
 
     <!-- Application theme. -->
-    <style name="AppTheme" parent="AppBaseTheme">
-        <!-- All customizations that are NOT specific to a particular API-level can go here. -->
+    <style name="AppTheme" parent="QMUI.Compat.NoActionBar">
+        <item name="qmui_dialog_content_message_text_size">17sp</item>
+        <item name="qmui_dialog_action_button_text_size">15sp</item>
+        <item name="qmui_dialog_content_list_item_text_size">16sp</item>
+        <item name="qmui_config_color_gray_4">#333333</item>
     </style>
 
 

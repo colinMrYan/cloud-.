@@ -18,6 +18,7 @@ package com.inspur.emmcloud.widget;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Paint;
@@ -105,6 +106,7 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
 	private int tabTextSize = 36;
 //	private int tabTextColor = 0xFF666666;
 	private int tabTextColor = 0xFF4a8299;
+	private ColorStateList tabTextColorStateList; //tab选中时字体颜色变化
 	private Typeface tabTypeface = null;
 //	private int tabTypefaceStyle = Typeface.BOLD;
 
@@ -314,7 +316,7 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
 
 		//为避免发版错误注释掉的date：20170224   name：yufuchang
 //		tab.setTextColor(getResources().getColorStateList(
-//				R.drawable.selector_viewpager_tab_text));
+//				R.drawable.news_viewpager_tab_text_color));
 
 
 //		tab.setTextSize(18);
@@ -359,7 +361,12 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
 				RadioButton tab = (RadioButton) v;
 				tab.setGravity(Gravity.CENTER);
 				tab.setTextSize(TypedValue.COMPLEX_UNIT_DIP, tabTextSize);
-//				tab.setTextColor(0xFF4a8299);
+				if (tabTextColorStateList != null){
+					tab.setTextColor(tabTextColorStateList);
+				}else {
+					tab.setTextColor(tabTextColor);
+				}
+
 //				tab.setTypeface(tabTypeface, tabTypefaceStyle);
 				// tab.setTextColor(tabTextColor);
 				// setAllCaps() is only available from API 14, so the upper case
@@ -603,6 +610,11 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
 
 	public void setTextColorResource(int resId) {
 		this.tabTextColor = getResources().getColor(resId);
+		updateTabStyles();
+	}
+
+	public void setTextColorStateList(int resId){
+		this.tabTextColorStateList = getResources().getColorStateList(resId);
 		updateTabStyles();
 	}
 
