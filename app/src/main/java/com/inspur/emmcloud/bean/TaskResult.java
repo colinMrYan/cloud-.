@@ -27,9 +27,9 @@ public class TaskResult implements Serializable {
     private List<TaskColorTag> tags = new ArrayList<TaskColorTag>();
     private List<Attachment> attachments = new ArrayList<Attachment>();
     //private String attachments ="";
-    private TaskList list;
+    private TaskSubject taskSubject;
     private String subjectstr = "";
-    private TaskList subject;
+    private TaskSubject subject;
 
     public TaskResult() {
     }
@@ -99,7 +99,7 @@ public class TaskResult implements Serializable {
             if (jsonObject.has("list")) {
                 String listStr = jsonObject.getString("list");
                 if (listStr != null && !listStr.equals("null")) {
-                    this.list = new TaskList(jsonObject.getString("list"));
+                    this.taskSubject = new TaskSubject(jsonObject.getString("list"));
                 }
 
             }
@@ -114,7 +114,7 @@ public class TaskResult implements Serializable {
             if (jsonObject.has("subject")) {
                 String subjectStr = jsonObject.getString("subject");
                 if (subjectStr != null && !subjectStr.equals("null")) {
-                    this.subject = new TaskList(jsonObject.getString("subject"));
+                    this.subject = new TaskSubject(jsonObject.getString("subject"));
                 }
 
             }
@@ -187,7 +187,7 @@ public class TaskResult implements Serializable {
             if (jsonObject.has("list")) {
                 String listStr = jsonObject.getString("list");
                 if (listStr != null && !listStr.equals("null")) {
-                    this.list = new TaskList(jsonObject.getString("list"));
+                    this.taskSubject = new TaskSubject(jsonObject.getString("list"));
                 }
 
             }
@@ -202,7 +202,7 @@ public class TaskResult implements Serializable {
             if (jsonObject.has("subject")) {
                 String subjectStr = jsonObject.getString("subject");
                 if (subjectStr != null && !subjectStr.equals("null")) {
-                    this.subject = new TaskList(jsonObject.getString("subject"));
+                    this.subject = new TaskSubject(jsonObject.getString("subject"));
                 }
 
             }
@@ -314,12 +314,12 @@ public class TaskResult implements Serializable {
 
 
     //
-    public TaskList getList() {
-        return list;
+    public TaskSubject getList() {
+        return taskSubject;
     }
 
-    public void setList(TaskList list) {
-        this.list = list;
+    public void setList(TaskSubject list) {
+        this.taskSubject = list;
     }
 
 //	public String getSubject() {
@@ -332,11 +332,11 @@ public class TaskResult implements Serializable {
 //	}
 
     //	@JSONField(serialize=false)
-    public TaskList getSubject() {
+    public TaskSubject getSubject() {
         return subject;
     }
 
-    public void setSubject(TaskList taskList) {
+    public void setSubject(TaskSubject taskList) {
         this.subject = taskList;
     }
 

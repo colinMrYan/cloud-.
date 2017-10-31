@@ -11,7 +11,6 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
@@ -52,15 +51,13 @@ public class MyCommonOfficeActivity extends BaseActivity implements
     private LoadingDialog loadingDialog;
     private WorkAPIService apiService;
     private List<Office> commonOfficeList = new ArrayList<Office>();
-    private List<Office> origonCommonOfficeList = new ArrayList<Office>();
+    private List<Office> originCommonOfficeList = new ArrayList<Office>();
     private MyCommonOfficeAdapter myCommonOfficeAdapter;
     private boolean isOrdering = false;
-    private int deletePositon = -1;
     private List<String> selectOfficeIdList = new ArrayList<String>();
     private String userId = "";
     private boolean isOfficeChange = false;
     private DragSortListView dragSortListView;
-    private DragSortController dragSortController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,7 +75,7 @@ public class MyCommonOfficeActivity extends BaseActivity implements
         apiService.setAPIInterface(new WebService());
         loadingDialog = new LoadingDialog(MyCommonOfficeActivity.this);
         dragSortListView = (DragSortListView) findViewById(R.id.meeting_my_common_office_listview);
-        dragSortController = buildController(dragSortListView);
+        DragSortController dragSortController = buildController(dragSortListView);
         dragSortListView.setFloatViewManager(dragSortController);
         dragSortListView.setOnTouchListener(dragSortController);
         dragSortListView.setDragEnabled(true);
@@ -181,11 +178,9 @@ public class MyCommonOfficeActivity extends BaseActivity implements
      */
     private void releaseOrder() {
         isOfficeChange = true;
-        ((LinearLayout) findViewById(R.id.meeting_common_office_create_layout))
-                .setVisibility(View.VISIBLE);
-        ((LinearLayout) findViewById(R.id.meeting_common_office_confirm_layout))
-                .setVisibility(View.GONE);
-        origonCommonOfficeList = commonOfficeList;
+        ( findViewById(R.id.meeting_common_office_create_layout)).setVisibility(View.VISIBLE);
+        (findViewById(R.id.meeting_common_office_confirm_layout)).setVisibility(View.GONE);
+        originCommonOfficeList = commonOfficeList;
         saveAllOfficeIds(false);
         isOrdering = false;
         myCommonOfficeAdapter.notifyDataSetChanged();
@@ -195,10 +190,8 @@ public class MyCommonOfficeActivity extends BaseActivity implements
      * 打开排序
      */
     private void handleOrder() {
-        ((LinearLayout) findViewById(R.id.meeting_common_office_create_layout))
-                .setVisibility(View.GONE);
-        ((LinearLayout) findViewById(R.id.meeting_common_office_confirm_layout))
-                .setVisibility(View.VISIBLE);
+        (findViewById(R.id.meeting_common_office_create_layout)).setVisibility(View.GONE);
+        (findViewById(R.id.meeting_common_office_confirm_layout)).setVisibility(View.VISIBLE);
         isOrdering = true;
         if (myCommonOfficeAdapter != null) {
             myCommonOfficeAdapter.notifyDataSetChanged();
@@ -215,8 +208,8 @@ public class MyCommonOfficeActivity extends BaseActivity implements
         List<String> allCommonOfficeIdList = new ArrayList<String>();
         List<String> allCommonBuildingIdList = new ArrayList<String>();
         List<String> newSelectOfficeList = new ArrayList<String>();
-        for (int i = 0; i < origonCommonOfficeList.size(); i++) {
-            Office office = origonCommonOfficeList.get(i);
+        for (int i = 0; i < originCommonOfficeList.size(); i++) {
+            Office office = originCommonOfficeList.get(i);
             if (selectOfficeIdList.contains(office.getOfficeId())) {
                 newSelectOfficeList.add(office.getOfficeId());
             }
@@ -316,7 +309,6 @@ public class MyCommonOfficeActivity extends BaseActivity implements
             setOfficeList(getOfficeResult.getOfficeList());
             myCommonOfficeAdapter = new MyCommonOfficeAdapter();
             dragSortListView.setAdapter(myCommonOfficeAdapter);
-
             myCommonOfficeAdapter.notifyDataSetChanged();
         }
 
@@ -329,15 +321,12 @@ public class MyCommonOfficeActivity extends BaseActivity implements
         }
 
         @Override
-        public void returnDeleteOfficeSuccess() {
-            super.returnDeleteOfficeSuccess();
+        public void returnDeleteOfficeSuccess(int position) {
+            super.returnDeleteOfficeSuccess(position);
             if (loadingDialog != null && loadingDialog.isShowing()) {
                 loadingDialog.dismiss();
             }
-            if (deletePositon != -1) {
-                origonCommonOfficeList.remove(deletePositon);
-            }
-
+            originCommonOfficeList.remove(position);
             saveAllOfficeIds(false);
             isOfficeChange = true;
             myCommonOfficeAdapter.notifyDataSetChanged();
@@ -371,7 +360,7 @@ public class MyCommonOfficeActivity extends BaseActivity implements
                         + "allCommonOfficeIds");
         LogUtils.debug("jason", "localOfficeIds=" + localOfficeIds);
         if (StringUtils.isBlank(localOfficeIds)) {
-            origonCommonOfficeList = officeListNet;
+            originCommonOfficeList = officeListNet;
         } else {
             List<String> allOfficeIdList = (List) JSON.parseArray(
                     localOfficeIds, String.class);
@@ -389,9 +378,9 @@ public class MyCommonOfficeActivity extends BaseActivity implements
                 }
             }
             allOfficeList.addAll(allOfficeList.size(), officeListNet);
-            origonCommonOfficeList = allOfficeList;
+            originCommonOfficeList = allOfficeList;
         }
-        commonOfficeList = origonCommonOfficeList;
+        commonOfficeList = originCommonOfficeList;
         saveAllOfficeIds(true);
     }
 
@@ -405,8 +394,8 @@ public class MyCommonOfficeActivity extends BaseActivity implements
         if (!selectOfficeIdList.contains(officeId)) {
             selectOfficeIdList.add(officeId);
             List<String> newSelectOfficeIdList = new ArrayList<String>();
-            for (int i = 0; i < origonCommonOfficeList.size(); i++) {
-                String id = origonCommonOfficeList.get(i).getOfficeId();
+            for (int i = 0; i < originCommonOfficeList.size(); i++) {
+                String id = originCommonOfficeList.get(i).getOfficeId();
                 if (selectOfficeIdList.contains(id)) {
                     newSelectOfficeIdList.add(id);
                 }
@@ -470,7 +459,6 @@ public class MyCommonOfficeActivity extends BaseActivity implements
                         }
                     })
                     .show();
-
             return true;
         }
 
@@ -480,11 +468,10 @@ public class MyCommonOfficeActivity extends BaseActivity implements
          * @param position
          */
         protected void deleteOffice(int position) {
-            deletePositon = position;
             if (NetUtils.isNetworkConnected(MyCommonOfficeActivity.this)) {
                 loadingDialog.show();
-                apiService.deleteOffice(origonCommonOfficeList.get(position)
-                        .getOfficeId());
+                apiService.deleteOffice(originCommonOfficeList.get(position)
+                        .getOfficeId(),position);
             }
         }
 

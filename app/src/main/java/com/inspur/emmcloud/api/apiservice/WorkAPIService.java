@@ -835,11 +835,10 @@ public class WorkAPIService {
      *
      * @param buildingId
      */
-    public void deleteOffice(final String buildingId) {
-        final String completeUrl = UriUtils.addOffice();
+    public void deleteOffice(final String buildingId, final int position) {
+        final String completeUrl = UriUtils.addOffice()+"?id="+buildingId;
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
-        params.addParameter("id", buildingId);
         x.http().request(HttpMethod.DELETE, params, new APICallback(context, completeUrl) {
 
             @Override
@@ -849,7 +848,7 @@ public class WorkAPIService {
 
                     @Override
                     public void reExecute() {
-                        deleteOffice(buildingId);
+                        deleteOffice(buildingId,position);
                     }
 
                     @Override
@@ -862,7 +861,7 @@ public class WorkAPIService {
             @Override
             public void callbackSuccess(String arg0) {
                 // TODO Auto-generated method stub
-                apiInterface.returnDeleteOfficeSuccess();
+                apiInterface.returnDeleteOfficeSuccess(position);
             }
 
             @Override
@@ -1379,7 +1378,7 @@ public class WorkAPIService {
      *
      * @param taskJson
      */
-    public void updateTask(final String taskJson) {
+    public void updateTask(final String taskJson, final int position) {
         final String completeUrl = UriUtils.createTask();
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
@@ -1394,7 +1393,7 @@ public class WorkAPIService {
 
                     @Override
                     public void reExecute() {
-                        updateTask(taskJson);
+                        updateTask(taskJson,position);
                     }
 
                     @Override
@@ -1407,13 +1406,13 @@ public class WorkAPIService {
             @Override
             public void callbackSuccess(String arg0) {
                 // TODO Auto-generated method stub
-                apiInterface.returnUpdateTaskSuccess();
+                apiInterface.returnUpdateTaskSuccess(position);
             }
 
             @Override
             public void callbackFail(String error, int responseCode) {
                 // TODO Auto-generated method stub
-                apiInterface.returnUpdateTaskFail(error, responseCode);
+                apiInterface.returnUpdateTaskFail(error, responseCode,position);
             }
         });
     }
@@ -1706,7 +1705,7 @@ public class WorkAPIService {
      * @param id
      * @param newOwner
      */
-    public void changeMessionOwner(final String id, final String newOwner) {
+    public void changeMessionOwner(final String id, final String newOwner, final String managerName) {
 
         final String completeUrl = UriUtils.changeMessionOwner() + id
                 + "?";
@@ -1722,7 +1721,7 @@ public class WorkAPIService {
 
                     @Override
                     public void reExecute() {
-                        changeMessionOwner(id, newOwner);
+                        changeMessionOwner(id, newOwner,managerName);
                     }
 
                     @Override
@@ -1735,7 +1734,7 @@ public class WorkAPIService {
             @Override
             public void callbackSuccess(String arg0) {
                 // TODO Auto-generated method stub
-                apiInterface.returnChangeMessionOwnerSuccess();
+                apiInterface.returnChangeMessionOwnerSuccess(managerName);
             }
 
             @Override
@@ -1853,7 +1852,7 @@ public class WorkAPIService {
      * @param id
      * @param attachments
      */
-    public void deleteAttachments(final String id, final String attachments) {
+    public void deleteAttachments(final String id, final String attachments, final int position) {
         final String completeUrl = UriUtils.addAttachments(id);
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
@@ -1874,7 +1873,7 @@ public class WorkAPIService {
                     @Override
                     public void reExecute() {
                         // TODO Auto-generated method stub
-                        addAttachments(id, attachments);
+                        deleteAttachments(id,attachments,position);
                     }
 
                     @Override
@@ -1887,13 +1886,13 @@ public class WorkAPIService {
             @Override
             public void callbackSuccess(String arg0) {
                 // TODO Auto-generated method stub
-                apiInterface.returnDelAttachmentSuccess();
+                apiInterface.returnDelAttachmentSuccess(position);
             }
 
             @Override
             public void callbackFail(String error, int responseCode) {
                 // TODO Auto-generated method stub
-                apiInterface.returnDelAttachmentFail(error, responseCode);
+                apiInterface.returnDelAttachmentFail(error, responseCode,position);
             }
         });
     }

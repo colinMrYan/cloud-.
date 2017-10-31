@@ -14,7 +14,4 @@ public class GetFileUploadResult {
 	public String getFileMsgBody() {
 		return response;
 	}
-	
-	
-	
 }
