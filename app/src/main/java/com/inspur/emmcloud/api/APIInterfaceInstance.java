@@ -1102,7 +1102,7 @@ public class APIInterfaceInstance implements APIInterface {
      */
     @Override
     public void returnMeetingsSuccess(GetMeetingsResult getMeetingsResult,
-                                      boolean isLoadMore) {
+                                      int page) {
         // TODO Auto-generated method stub
 
     }

@@ -498,9 +498,6 @@
             android:name=".ui.work.calendar.CalFilterActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.work.meeting.LocationActivity"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".ui.work.meeting.BuildingActivity"
             android:screenOrientation="portrait" />
         <activity

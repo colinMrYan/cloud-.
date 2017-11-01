@@ -35,6 +35,7 @@ import com.inspur.emmcloud.util.ToastUtils;
 import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
+import com.inspur.emmcloud.widget.dialogs.MyQMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
 
@@ -435,7 +436,7 @@ public class MeetingsRoomDetailActivity extends BaseActivity {
      */
     private void showDeleteMeetingDlg(final MeetingSchedule meetingSchedule) {
         // TODO Auto-generated method stub
-        new QMUIDialog.MessageDialogBuilder(MeetingsRoomDetailActivity.this)
+        new MyQMUIDialog.MessageDialogBuilder(MeetingsRoomDetailActivity.this)
                 .setMessage(R.string.meeting_list_cirform)
                 .addAction(R.string.cancel, new QMUIDialogAction.ActionListener() {
                     @Override

@@ -3,6 +3,7 @@ package com.inspur.emmcloud.ui.work.task;
 import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -35,9 +37,7 @@ import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.SegmentControl;
-import com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout;
-import com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout.OnRefreshListener;
-import com.inspur.emmcloud.widget.pullableview.PullableListView;
+import com.inspur.emmcloud.widget.dialogs.MyQMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
 
@@ -48,21 +48,20 @@ import java.util.List;
 /**
  * 任务列表页
  */
-public class MessionListActivity extends BaseActivity implements
-		OnRefreshListener {
+public class MessionListActivity extends BaseActivity{
 
 	private static final int MY_MINE = 0;
 	private static final int MY_INVOLVED = 1;
 	private static final int MY_FOCUSED = 2;
 	private static final int MESSION_SET = 5;
-	private PullableListView messionListView;
+	private ListView messionListView;
 	private EditText messionAddEdit;
 	private MessionListAdapter adapter;
 	private WorkAPIService apiService;
 	private LoadingDialog loadingDialog;
 	private ArrayList<TaskResult> taskList = new ArrayList<TaskResult>();
 	private int nowIndex = 0;
-	private PullToRefreshLayout pullToRefreshLayout;
+	private SwipeRefreshLayout swipeRefreshLayout;
 	private RelativeLayout addLayout;
 	private String orderBy = "PRIORITY";
 	private String orderType = "ASC";
@@ -77,7 +76,7 @@ public class MessionListActivity extends BaseActivity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_mession_list);
-		initViews();
+		initView();
 		// registerTaskReceiver();
 	}
 
@@ -117,16 +116,15 @@ public class MessionListActivity extends BaseActivity implements
 	/**
 	 * 初始化views
 	 */
-	private void initViews() {
+	private void initView() {
 		apiService = new WorkAPIService(MessionListActivity.this);
 		apiService.setAPIInterface(new WebService());
 		getOrder();
 		adapter = new MessionListAdapter();
+		initPullRefreshLayout();
 		noSearchResultLayout = (LinearLayout) findViewById(R.id.nosearch_result_layout);
-		pullToRefreshLayout = (PullToRefreshLayout) findViewById(R.id.refresh_view);
 		noResultText = (TextView) findViewById(R.id.mession_no_result_text);
 		final RelativeLayout addLayout = (RelativeLayout) findViewById(R.id.mession_add_layout);
-		pullToRefreshLayout.setOnRefreshListener(MessionListActivity.this);
 		loadingDialog = new LoadingDialog(MessionListActivity.this);
 		segmentControl = (SegmentControl) findViewById(R.id.segment_control);
 		segmentControl
@@ -163,11 +161,35 @@ public class MessionListActivity extends BaseActivity implements
 			getMineMessions(true);
 		}
 		messionAddEdit = (EditText) findViewById(R.id.mession_add_text);
-		messionListView = (PullableListView) findViewById(R.id.mession_list);
+		messionListView = (ListView) findViewById(R.id.mession_list);
 		messionListView
 				.setOnItemLongClickListener(new MessionLongClickListener());
 		messionListView.setOnItemClickListener(new OnMessionClickListener());
 	}
+
+	/**
+	 * 初始化PullRefreshLayout
+	 */
+	private void initPullRefreshLayout(){
+		swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh_layout);
+		swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+			@Override
+			public void onRefresh() {
+				if (NetUtils.isNetworkConnected(MessionListActivity.this)) {
+					if (nowIndex == MY_MINE) {
+						getMineMessions(false);
+					} else if (nowIndex == MY_INVOLVED) {
+						getInvolvedMessions(false);
+					} else if (nowIndex == MY_FOCUSED) {
+						getFocusedMessions(false);
+					}
+				} else {
+					swipeRefreshLayout.setRefreshing(false);
+				}
+			}
+		});
+	}
+
 
 	/**
 	 * 获取关注的任务
@@ -213,7 +235,6 @@ public class MessionListActivity extends BaseActivity implements
 			nowIndex = segmentControl.getCurrentIndex();
 			if (requestCode == MESSION_SET) {
 				noSearchResultLayout.setVisibility(View.GONE);
-				pullToRefreshLayout.setVisibility(View.VISIBLE);
 			}
 			getOrder();
 			refreshMessionList();
@@ -278,7 +299,6 @@ public class MessionListActivity extends BaseActivity implements
 			PreferencesUtils.putString(MessionListActivity.this,
 					UriUtils.tanent + userId + "chooseTags", "");
 			noSearchResultLayout.setVisibility(View.GONE);
-			pullToRefreshLayout.setVisibility(View.VISIBLE);
 			refreshMessionList();
 			break;
 		default:
@@ -373,7 +393,7 @@ public class MessionListActivity extends BaseActivity implements
 		public boolean onItemLongClick(AdapterView<?> parent, View view,
 				final int position, long id) {
 			if (nowIndex == 0 || nowIndex == 1) {
-                new QMUIDialog.MessageDialogBuilder(MessionListActivity.this)
+                new MyQMUIDialog.MessageDialogBuilder(MessionListActivity.this)
                         .setMessage(R.string.mession_set_finish)
                         .addAction(getString(R.string.cancel), new QMUIDialogAction.ActionListener() {
                             @Override
@@ -432,7 +452,6 @@ public class MessionListActivity extends BaseActivity implements
 				loadingDialog.dismiss();
 			}
 			noResultText.setVisibility(View.GONE);
-			pullToRefreshLayout.setVisibility(View.VISIBLE);
 			TaskResult taskResult = new TaskResult();
 			taskResult.setTitle(messionAddEdit.getText().toString());
 			taskResult.setId(getTaskAddResult.getId());
@@ -459,7 +478,7 @@ public class MessionListActivity extends BaseActivity implements
 			if (loadingDialog.isShowing()) {
 				loadingDialog.dismiss();
 			}
-			pullToRefreshLayout.refreshFinish(PullToRefreshLayout.SUCCEED);
+			swipeRefreshLayout.setRefreshing(false);
 			String userId = ((MyApplication) getApplicationContext()).getUid();
 			String chooseTags = PreferencesUtils.getString(
 					MessionListActivity.this, UriUtils.tanent + userId
@@ -513,22 +532,6 @@ public class MessionListActivity extends BaseActivity implements
 
 	}
 
-	@Override
-	public void onRefresh(PullToRefreshLayout pullToRefreshLayout) {
-		if (NetUtils.isNetworkConnected(MessionListActivity.this)) {
-			if (nowIndex == MY_MINE) {
-				getMineMessions(false);
-			} else if (nowIndex == MY_INVOLVED) {
-				getInvolvedMessions(false);
-			} else if (nowIndex == MY_FOCUSED) {
-				getFocusedMessions(false);
-			}
-		} else {
-			pullToRefreshLayout.refreshFinish(PullToRefreshLayout.FAIL);
-		}
-
-	}
-
 	/**
 	 * 处理
 	 * 
@@ -538,7 +541,7 @@ public class MessionListActivity extends BaseActivity implements
 		if (taskList.size() == 0 && chooseTags.size() == 0) {
 			noResultText.setVisibility(View.VISIBLE);
 		} else {
-			pullToRefreshLayout.setVisibility(View.VISIBLE);
+			swipeRefreshLayout.setRefreshing(false);
 			noResultText.setVisibility(View.GONE);
 		}
 	}
@@ -555,7 +558,7 @@ public class MessionListActivity extends BaseActivity implements
 		// String[] tags = chooseTags.split(":");
 		if (chooseTagList.size() == 0) {
 			noSearchResultLayout.setVisibility(View.GONE);
-			pullToRefreshLayout.setVisibility(View.VISIBLE);
+			swipeRefreshLayout.setRefreshing(false);
 			taskList = getTaskListResult.getTaskList();
 		} else {
 			taskList = new ArrayList<TaskResult>();
@@ -579,13 +582,10 @@ public class MessionListActivity extends BaseActivity implements
 				noSearchResultLayout.setVisibility(View.VISIBLE);
 			} else {
 				noSearchResultLayout.setVisibility(View.GONE);
-				pullToRefreshLayout.setVisibility(View.VISIBLE);
 			}
 		}
 		return taskList;
 	}
 
-	@Override
-	public void onLoadMore(PullToRefreshLayout pullToRefreshLayout) {
-	}
+
 }

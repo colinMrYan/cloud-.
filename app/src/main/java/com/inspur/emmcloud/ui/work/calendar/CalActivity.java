@@ -201,7 +201,7 @@ public class CalActivity extends BaseActivity implements OnRefreshListener {
 		case R.id.back_layout:
 			finish();
 			break;
-		case R.id.mession_calset_detail:
+		case R.id.cal_config_img:
 			intent.putExtra("calendarList", (Serializable) calendarList);
 			intent.setClass(CalActivity.this, CalFilterActivity.class);
 			startActivityForResult(intent, FILTER_CAL_EVENT);

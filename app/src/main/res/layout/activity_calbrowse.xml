@@ -41,7 +41,6 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_toRightOf="@id/back_layout"
-            android:text="2016"
             android:textColor="@color/header_text"
             android:textSize="@dimen/header_textsize" />
 

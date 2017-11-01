@@ -151,13 +151,37 @@ public class ChannelActivity extends BaseActivity {
      * 初始化Views
      */
     private void initViews() {
-        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh_layout);
-        swipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.header_bg), getResources().getColor(R.color.header_bg));
+        initPullRefreshLayout();
         initChatInputMenu();
         setChannelTitle();
         initMsgListView();
         handMessage();
         registeMsgReceiver();
+    }
+
+    /**
+     * 初始化下拉刷新UI
+     */
+    private void initPullRefreshLayout(){
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh_layout);
+        swipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.header_bg), getResources().getColor(R.color.header_bg));
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                if (msgList.size() > 0 && MsgCacheUtil.isDataInLocal(ChannelActivity.this, cid, msgList
+                        .get(0).getMid(), 15)) {
+                    List<Msg> historyMsgList = MsgCacheUtil.getHistoryMsgList(
+                            ChannelActivity.this, cid, msgList.get(0).getMid(),
+                            15);
+                    msgList.addAll(0, historyMsgList);
+                    swipeRefreshLayout.setRefreshing(false);
+                    adapter.notifyDataSetChanged();
+                    msgListView.setSelection(historyMsgList.size() - 1);
+                } else {
+                    getNewsMsg();
+                }
+            }
+        });
     }
 
     /**
@@ -251,23 +275,6 @@ public class ChannelActivity extends BaseActivity {
                 msgListView.setSelection(adapter.getCount() - 1);
             }
         }, 30);
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                if (msgList.size() > 0 && MsgCacheUtil.isDataInLocal(ChannelActivity.this, cid, msgList
-                        .get(0).getMid(), 15)) {
-                    List<Msg> historyMsgList = MsgCacheUtil.getHistoryMsgList(
-                            ChannelActivity.this, cid, msgList.get(0).getMid(),
-                            15);
-                    msgList.addAll(0, historyMsgList);
-                    swipeRefreshLayout.setRefreshing(false);
-                    adapter.notifyDataSetChanged();
-                    msgListView.setSelection(historyMsgList.size() - 1);
-                } else {
-                    getNewsMsg();
-                }
-            }
-        });
         msgListView.smoothScrollToPosition(adapter.getCount());
         // 设置点击每个Item时跳转到详情
         msgListView.setOnItemClickListener(new OnItemClickListener() {

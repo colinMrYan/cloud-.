@@ -202,7 +202,7 @@ public interface APIInterface {
 
     void returnMeetingsFail(String error, int errorCode);
 
-    void returnMeetingsSuccess(GetMeetingsResult getMeetingsResult, boolean isLoadMore);
+    void returnMeetingsSuccess(GetMeetingsResult getMeetingsResult, int page);
 
     void returnMeetingRoomsSuccess(GetMeetingRoomsResult getMeetingRoomsResult);
 

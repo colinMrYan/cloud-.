@@ -7,6 +7,7 @@ import android.graphics.PixelFormat;
 import android.graphics.Rect;
 import android.os.Handler;
 import android.os.Vibrator;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.MotionEvent;
@@ -15,9 +16,6 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
-
-import com.inspur.emmcloud.util.LogUtils;
-import com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout;
 
 /**
  * 可以拖动的GridView
@@ -122,7 +120,7 @@ public class DragGridView extends GridView {
 	 * 设置是否可以编辑
 	 */
 	private boolean canEdit = false;
-	private PullToRefreshLayout pullToRefreshLayout;
+	private SwipeRefreshLayout swipeRefreshLayout;
 	
 	/**
 	 * 编辑的组编号
@@ -154,8 +152,8 @@ public class DragGridView extends GridView {
 
 		@Override
 		public void run() {
-			if(pullToRefreshLayout != null){
-				pullToRefreshLayout.setCanTouch(false);
+			if(swipeRefreshLayout != null){
+				swipeRefreshLayout.setEnabled(false);
 			}
 			requestDisallowInterceptTouchEvent(true);
 			isDrag = true; // 设置可以拖拽
@@ -186,8 +184,8 @@ public class DragGridView extends GridView {
 	}
 
 	
-	public void setPullToRefreshLayout(PullToRefreshLayout PullToRefreshLayout) {
-		this.pullToRefreshLayout = PullToRefreshLayout;
+	public void setPullRefreshLayout(SwipeRefreshLayout  swipeRefreshLayout) {
+		this.swipeRefreshLayout = swipeRefreshLayout;
 	}
 	
 
@@ -283,8 +281,9 @@ public class DragGridView extends GridView {
 		case MotionEvent.ACTION_UP:
 			mHandler.removeCallbacks(mLongClickRunnable);
 			mHandler.removeCallbacks(mScrollRunnable);
-			if(pullToRefreshLayout != null){
-				pullToRefreshLayout.setCanTouch(true);
+			if(swipeRefreshLayout != null){
+				swipeRefreshLayout.setEnabled(true);
+
 			}
 			
 			requestDisallowInterceptTouchEvent(false);
@@ -294,8 +293,8 @@ public class DragGridView extends GridView {
 		case MotionEvent.ACTION_CANCEL:
 			mHandler.removeCallbacks(mLongClickRunnable);
 			mHandler.removeCallbacks(mScrollRunnable);
-			if(pullToRefreshLayout != null){
-				pullToRefreshLayout.setCanTouch(true);
+			if(swipeRefreshLayout != null){
+				swipeRefreshLayout.setEnabled(true);
 			}
 			requestDisallowInterceptTouchEvent(false);
 			onStopDrag();
@@ -342,16 +341,16 @@ public class DragGridView extends GridView {
 				onDragItem(moveX, moveY);
 				break;
 			case MotionEvent.ACTION_CANCEL:
-				if(pullToRefreshLayout != null){
-					pullToRefreshLayout.setCanTouch(true);
+				if(swipeRefreshLayout != null){
+					swipeRefreshLayout.setEnabled(true);
 				}
 				requestDisallowInterceptTouchEvent(false);
 				onStopDrag();
 				isDrag = false;
 				break;
 			case MotionEvent.ACTION_UP:
-				if(pullToRefreshLayout != null){
-					pullToRefreshLayout.setCanTouch(true);
+				if(swipeRefreshLayout != null){
+					swipeRefreshLayout.setEnabled(true);
 				}
 				requestDisallowInterceptTouchEvent(false);
 				onStopDrag();

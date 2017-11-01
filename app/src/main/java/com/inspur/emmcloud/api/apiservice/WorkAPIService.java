@@ -250,7 +250,7 @@ public class WorkAPIService {
             public void callbackSuccess(String arg0) {
                 // TODO Auto-generated method stub
                 apiInterface.returnMeetingsSuccess(
-                        new GetMeetingsResult(arg0), isLoadMore);
+                        new GetMeetingsResult(arg0), page);
             }
 
             @Override

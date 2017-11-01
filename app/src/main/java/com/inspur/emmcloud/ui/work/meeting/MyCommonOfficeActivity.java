@@ -28,6 +28,7 @@ import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
+import com.inspur.emmcloud.widget.dialogs.MyQMUIDialog;
 import com.inspur.emmcloud.widget.dragsortlistview.DragSortController;
 import com.inspur.emmcloud.widget.dragsortlistview.DragSortListView;
 import com.inspur.emmcloud.widget.dragsortlistview.DragSortListView.DropListener;
@@ -442,7 +443,7 @@ public class MyCommonOfficeActivity extends BaseActivity implements
         @Override
         public boolean onItemLongClick(AdapterView<?> parent, View view,
                                        final int position, long id) {
-            new QMUIDialog.MessageDialogBuilder(MyCommonOfficeActivity.this)
+            new MyQMUIDialog.MessageDialogBuilder(MyCommonOfficeActivity.this)
                     .setMessage(R.string.office_delete_position)
                     .addAction(R.string.cancel, new QMUIDialogAction.ActionListener() {
                         @Override

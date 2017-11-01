@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,9 +35,7 @@ import com.inspur.emmcloud.util.ToastUtils;
 import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
-import com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout;
-import com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout.OnRefreshListener;
-import com.inspur.emmcloud.widget.pullableview.PullableExpandableListView;
+import com.inspur.emmcloud.widget.dialogs.MyQMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
 
@@ -55,7 +54,7 @@ import java.util.Map;
  * @author 包含预定过的所有会议
  */
 public class MeetingListActivity extends BaseActivity implements
-        OnRefreshListener {
+        SwipeRefreshLayout.OnRefreshListener {
     private static final int WEEK_SUNDAY = 1;
     private static final int WEEK_MONDAY = 2;
     private static final int WEEK_TUESDAY = 3;
@@ -63,11 +62,11 @@ public class MeetingListActivity extends BaseActivity implements
     private static final int WEEK_THURSDAY = 5;
     private static final int WEEK_FRIDAY = 6;
     private static final int WEEK_SATURDAY = 7;
-    private PullableExpandableListView expandListView;
+    private ExpandableListView expandListView;
     private MyAdapter adapter;
     private LoadingDialog loadingDlg;
     private WorkAPIService apiService;
-    private PullToRefreshLayout pullToRefreshLayout;
+    private SwipeRefreshLayout swipeRefreshLayout;
     private LinearLayout relNullLayout;
     private int groupIdCancel, childIdCancel;
     private Map<String, List<Meeting>> meetingMap = new HashMap<String, List<Meeting>>();
@@ -91,6 +90,8 @@ public class MeetingListActivity extends BaseActivity implements
         if (NetUtils.isNetworkConnected(MeetingListActivity.this)) {
             loadingDlg.show(isShowDlg);
             apiService.getMeetings(7);
+        }else {
+            swipeRefreshLayout.setRefreshing(false);
         }
     }
 
@@ -121,15 +122,14 @@ public class MeetingListActivity extends BaseActivity implements
         apiService.setAPIInterface(new WebService());
 
         loadingDlg = new LoadingDialog(MeetingListActivity.this);
-        pullToRefreshLayout = (PullToRefreshLayout) findViewById(R.id.meeting_expandlistview_layout);
-        pullToRefreshLayout.setOnRefreshListener(MeetingListActivity.this);
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh_layout);
+        swipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.header_bg), getResources().getColor(R.color.header_bg));
+        swipeRefreshLayout.setOnRefreshListener(MeetingListActivity.this);
         relNullLayout = (LinearLayout) findViewById(R.id.meeting_list_out_layout);
-        expandListView = (PullableExpandableListView) findViewById(R.id.meeting_expandablelistview);
+        expandListView = (ExpandableListView) findViewById(R.id.expandable_list);
         expandListView.setGroupIndicator(null);
         expandListView.setVerticalScrollBarEnabled(false);
         expandListView.setHeaderDividersEnabled(false);
-        expandListView.setCanpullup(false);
-        expandListView.setCanpulldown(true);
         expandListView.setOnChildClickListener(new MeetingListListener());
     }
 
@@ -166,7 +166,7 @@ public class MeetingListActivity extends BaseActivity implements
                                 return true;
                             }
                         }
-                        new QMUIDialog.MessageDialogBuilder(MeetingListActivity.this)
+                        new MyQMUIDialog.MessageDialogBuilder(MeetingListActivity.this)
                                 .setMessage(R.string.meeting_list_cirform)
                                 .addAction(R.string.cancel, new QMUIDialogAction.ActionListener() {
                                     @Override
@@ -301,7 +301,7 @@ public class MeetingListActivity extends BaseActivity implements
         @Override
         public View getGroupView(final int groupPosition, boolean isExpanded,
                                  View convertView, ViewGroup parent) {
-            PullableExpandableListView expandableListView = (PullableExpandableListView) parent;
+            ExpandableListView expandableListView = (ExpandableListView) parent;
             expandableListView.expandGroup(groupPosition);
             ViewHolder holder;
             if (convertView == null) {
@@ -402,15 +402,11 @@ public class MeetingListActivity extends BaseActivity implements
         meetingMap = GroupUtils.group(getMeetingsResult.getMeetingsList(),
                 new MeetingGroup());
         if (meetingMap != null && meetingMap.size() > 0) {
-            meetingGroupList = new ArrayList<String>(meetingMap.keySet());
-            Collections.sort(meetingGroupList, new SortClass());
-        }
-        if (meetingMap == null || meetingMap.size() == 0) {
-            relNullLayout.setVisibility(View.VISIBLE);
-            pullToRefreshLayout.setVisibility(View.GONE);
-        } else {
             relNullLayout.setVisibility(View.GONE);
-            pullToRefreshLayout.setVisibility(View.VISIBLE);
+            meetingGroupList = new ArrayList<>(meetingMap.keySet());
+            Collections.sort(meetingGroupList, new SortClass());
+        }else {
+            relNullLayout.setVisibility(View.VISIBLE);
         }
     }
 
@@ -509,19 +505,10 @@ public class MeetingListActivity extends BaseActivity implements
     }
 
     @Override
-    public void onRefresh(PullToRefreshLayout pullToRefreshLayout) {
-        if (NetUtils.isNetworkConnected(MeetingListActivity.this)) {
+    public void onRefresh() {
             getMeetings(false);
-        } else {
-            if (pullToRefreshLayout != null) {
-                pullToRefreshLayout.refreshFinish(PullToRefreshLayout.FAIL);
-            }
-        }
     }
 
-    @Override
-    public void onLoadMore(PullToRefreshLayout pullToRefreshLayout) {
-    }
 
     class WebService extends APIInterfaceInstance {
         @Override
@@ -531,7 +518,7 @@ public class MeetingListActivity extends BaseActivity implements
             }
             initData(getMeetingsResult);
             adapter = new MyAdapter();
-            pullToRefreshLayout.refreshFinish(PullToRefreshLayout.SUCCEED);
+            swipeRefreshLayout.setRefreshing(false);
             expandListView.setAdapter(adapter);
         }
 
@@ -540,7 +527,7 @@ public class MeetingListActivity extends BaseActivity implements
             if (loadingDlg != null && loadingDlg.isShowing()) {
                 loadingDlg.dismiss();
             }
-            pullToRefreshLayout.refreshFinish(PullToRefreshLayout.FAIL);
+            swipeRefreshLayout.setRefreshing(false);
             WebServiceMiddleUtils.hand(MeetingListActivity.this, error, errorCode);
         }
 
@@ -557,7 +544,6 @@ public class MeetingListActivity extends BaseActivity implements
                 meetingGroupList.remove(groupIdCancel);
             }
             if (meetingGroupList.size() == 0) {
-                pullToRefreshLayout.setVisibility(View.GONE);
                 relNullLayout.setVisibility(View.VISIBLE);
             }
             adapter.notifyDataSetChanged();

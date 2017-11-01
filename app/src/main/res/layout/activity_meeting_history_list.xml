@@ -83,26 +83,25 @@
                 android:textSize="14sp" />
         </RelativeLayout>
 
-        <com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout
-            android:id="@+id/meeting_history_expandlistview_Layout"
+        <com.inspur.emmcloud.widget.MySwipeRefreshLayout
+            android:id="@+id/refresh_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@id/search_layout" >
+            android:layout_below="@id/search_layout">
 
-            <include layout="@layout/pull_refresh_head" />
 
-            <com.inspur.emmcloud.widget.pullableview.PullableExpandableListView
-                android:id="@+id/meeting_history_expandablelistview"
+            <ExpandableListView
+                android:id="@+id/expandable_list"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:divider="@null"
                 android:dividerHeight="0dp"
                 android:listSelector="#00000000" />
 
-            <include layout="@layout/pull_load_more" />
-        </com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout>
-        
-                <RelativeLayout
+        </com.inspur.emmcloud.widget.MySwipeRefreshLayout>
+
+
+        <RelativeLayout
             android:id="@+id/meeting_history_null_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

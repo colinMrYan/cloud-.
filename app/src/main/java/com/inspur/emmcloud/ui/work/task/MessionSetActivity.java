@@ -257,34 +257,6 @@ public class MessionSetActivity extends BaseActivity {
 		}
 	}
 
-	// /**
-	// * 组装数据
-	// */
-	// private void setUpData() {
-	// String messionTags = PreferencesUtils.getString(
-	// MessionSetActivity.this, "messiontags");
-	// LogUtils.debug("yfcLog", "取到的数据：" + messionTags);
-	// if (!StringUtils.isEmpty(messionTags)) {
-	// allTags.clear();
-	// try {
-	// JSONArray jsonArray = new JSONArray(messionTags);
-	// for (int i = 0; i < jsonArray.length(); i++) {
-	// JSONObject jsonObject;
-	// jsonObject = jsonArray.getJSONObject(i);
-	// Tag tag = new Tag();
-	// tag.setId(i);
-	// tag.setChecked(true);
-	// tag.setTagId(jsonObject.getString("id"));
-	// tag.setTitle(jsonObject.getString("title"));
-	// allTags.add(tag);
-	// }
-	// } catch (JSONException e) {
-	// e.printStackTrace();
-	// }
-	// }
-	//
-	// }
-
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.back_layout:
