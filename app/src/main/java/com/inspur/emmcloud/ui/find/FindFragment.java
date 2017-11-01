@@ -13,17 +13,21 @@ import com.facebook.react.ReactRootView;
 import com.facebook.react.common.LifecycleState;
 import com.facebook.react.modules.core.DefaultHardwareBackBtnHandler;
 import com.facebook.react.shell.MainReactPackage;
+import com.horcrux.svg.SvgPackage;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.bean.Enterprise;
 import com.inspur.emmcloud.bean.GetMyInfoResult;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.util.AppUtils;
 import com.inspur.emmcloud.util.FileUtils;
+import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.ZipUtils;
 import com.inspur.reactnative.AuthorizationManagerPackage;
 import com.inspur.reactnative.ReactNativeInitInfoUtils;
+import com.oblador.vectoricons.VectorIconsPackage;
 import com.reactnativecomponent.swiperefreshlayout.RCTSwipeRefreshLayoutPackage;
+import com.reactnativenavigation.bridge.NavigationReactPackage;
 
 
 /**
@@ -73,10 +77,13 @@ public class FindFragment extends Fragment implements DefaultHardwareBackBtnHand
                 .addPackage(new RCTSwipeRefreshLayoutPackage())
                 .addPackage(new AuthorizationManagerPackage())
                 .addPackage(new PickerViewPackage())
+                .addPackage(new SvgPackage())
+                .addPackage(new NavigationReactPackage())
+                .addPackage(new VectorIconsPackage())
                 .setUseDeveloperSupport(BuildConfig.DEBUG)
                 .setInitialLifecycleState(LifecycleState.RESUMED)
                 .build();
-        mReactRootView.startReactApplication(mReactInstanceManager, "discover", createInitBundle());
+        mReactRootView.startReactApplication(mReactInstanceManager, "Discovery", createInitBundle());
         if (needToRefresh) {
             mReactRootView.invalidate();
         }
@@ -88,8 +95,10 @@ public class FindFragment extends Fragment implements DefaultHardwareBackBtnHand
         userId = ((MyApplication) getActivity().getApplication()).getUid();
 //        reactCurrentFilePath = MyAppConfig.getReactCurrentFilePath(getActivity(), userId);
         reactCurrentFilePath = MyAppConfig.getReactAppFilePath(getActivity(),userId,"discover");
+        LogUtils.YfcDebug("发现存储路径："+reactCurrentFilePath);
+        LogUtils.YfcDebug("是否有发现的bundle："+FileUtils.isFileExist(reactCurrentFilePath + "/index.android.bundle"));
         if (!FileUtils.isFileExist(reactCurrentFilePath + "/index.android.bundle")) {
-            ZipUtils.unZip(getActivity(), "bundle-v0.1.0.android.zip", reactCurrentFilePath, true);
+            ZipUtils.unZip(getActivity(), "bundle-inspur_esg-10000-v2.0.0-beta1.android.zip", reactCurrentFilePath, true);
         }
     }
 

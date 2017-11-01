@@ -11,6 +11,7 @@ import com.facebook.react.ReactRootView;
 import com.facebook.react.common.LifecycleState;
 import com.facebook.react.modules.core.DefaultHardwareBackBtnHandler;
 import com.facebook.react.shell.MainReactPackage;
+import com.horcrux.svg.SvgPackage;
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
@@ -44,7 +45,9 @@ import com.inspur.emmcloud.widget.dialogs.ECMCustomIOSDialog;
 import com.inspur.reactnative.AuthorizationManagerPackage;
 import com.inspur.reactnative.ReactNativeFlow;
 import com.inspur.reactnative.ReactNativeInitInfoUtils;
+import com.oblador.vectoricons.VectorIconsPackage;
 import com.reactnativecomponent.swiperefreshlayout.RCTSwipeRefreshLayoutPackage;
+import com.reactnativenavigation.bridge.NavigationReactPackage;
 
 import java.io.File;
 
@@ -198,6 +201,9 @@ public class ReactNativeAppActivity extends BaseActivity implements DefaultHardw
                 .addPackage(new RCTSwipeRefreshLayoutPackage())
                 .addPackage(new PickerViewPackage())
                 .addPackage(new AuthorizationManagerPackage())
+                .addPackage(new SvgPackage())
+                .addPackage(new VectorIconsPackage())
+                .addPackage(new NavigationReactPackage())
                 .setJSMainModuleName("index.android")
                 .setJSBundleFile(reactAppFilePath + "/index.android.bundle")
                 .setUseDeveloperSupport(BuildConfig.DEBUG)

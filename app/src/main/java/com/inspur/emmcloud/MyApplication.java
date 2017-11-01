@@ -21,6 +21,7 @@ import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
+import com.horcrux.svg.SvgPackage;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.bean.Enterprise;
 import com.inspur.emmcloud.bean.GetMyInfoResult;
@@ -50,6 +51,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.nostra13.universalimageloader.utils.L;
+import com.oblador.vectoricons.VectorIconsPackage;
 
 import org.xutils.http.RequestParams;
 import org.xutils.x;
@@ -702,7 +704,9 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
             return Arrays.<ReactPackage>asList(
                     new MainReactPackage(),
                     new AuthorizationManagerPackage(),
-                    new PickerViewPackage()
+                    new PickerViewPackage(),
+                    new SvgPackage(),
+                    new VectorIconsPackage()
             );
         }
     };

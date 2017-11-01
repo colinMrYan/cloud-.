@@ -8,12 +8,15 @@
     "bundle-android": "react-native bundle --platform android --dev false --entry-file index.android.js --bundle-output app/src/main/assets/index.android.bundle --assets-dest app/src/main/res/"
   },
   "dependencies": {
-    "react": "~15.4.0",
-    "react-native": "0.41.2",
-    "react-native-picker": "^4.0.18",
-    "react-native-smart-pull-to-refresh-listview": "^1.6.9",
-    "react-redux": "^5.0.2",
-    "redux": "^3.6.0"
+    "prop-types": "^15.6.0",
+    "react": "16.0.0-alpha.6",
+    "react-native": "0.43.4",
+    "react-native-navigation": "^1.1.255",
+    "react-native-picker": "^4.2.0",
+    "react-native-smart-pull-to-refresh-listview": "^1.6.10",
+    "react-native-snap-carousel": "^3.3.4",
+    "react-native-svg": "^4.5.0",
+    "react-native-vector-icons": "^4.4.2"
   },
   "devDependencies": {
     "babel-jest": "18.0.0",
