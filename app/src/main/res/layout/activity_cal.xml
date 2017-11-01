@@ -78,7 +78,7 @@
                 android:scaleType="fitXY"
                 android:adjustViewBounds="true"
                 android:onClick="onClick"
-                android:src="@drawable/btn_channel_info" />
+                android:src="@drawable/ic_config" />
         </LinearLayout>
     </RelativeLayout>
 
