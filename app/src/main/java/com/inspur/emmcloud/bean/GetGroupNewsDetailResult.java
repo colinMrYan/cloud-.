@@ -2,8 +2,6 @@ package com.inspur.emmcloud.bean;
 
 import android.text.TextUtils;
 
-import com.inspur.emmcloud.util.LogUtils;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -12,26 +10,21 @@ import java.util.List;
 
 public class GetGroupNewsDetailResult {
 
-	private static final String TAG = "GetNewsTitleResult";
-//	private String author="";
-//	private String category="";
-//	private String digest="";
-//	private String needpush="";
-//	private String nid="";
-//	private String posttime="";
-//	private String publisher="";
-//	private String title="";
-//	private String url="";
 
-	private JSONArray jsonArray;
-	private List<GroupNews> groupNewsList;
+	private List<GroupNews> groupNewsList = new ArrayList<>();
 
 	public GetGroupNewsDetailResult(String response) {
 		try {
 			JSONObject jsonObject = new JSONObject(response);
-//			jsonArray = new JSONArray(response);
 			if(jsonObject.has("content")){
-				jsonArray = jsonObject.getJSONArray("content");
+				JSONArray jsonArray = jsonObject.getJSONArray("content");
+				for (int i = 0; i < jsonArray.length(); i++) {
+					jsonObject = jsonArray.getJSONObject(i);
+					if(!TextUtils.isEmpty(jsonObject.toString())){
+						groupNewsList.add(new GroupNews(jsonObject));
+					}
+
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -39,22 +32,6 @@ public class GetGroupNewsDetailResult {
 	}
 
 	public List<GroupNews> getGroupNews() {
-		groupNewsList = new ArrayList<GroupNews>();
-		JSONObject jsonObject;
-		try {
-
-			for (int i = 0; i < jsonArray.length(); i++) {
-				jsonObject = new JSONObject();
-				jsonObject = jsonArray.getJSONObject(i);
-				if(!TextUtils.isEmpty(jsonObject.toString())){
-					groupNewsList.add(new GroupNews(jsonObject));
-				}
-				
-			}
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		return groupNewsList;
 	}
 }

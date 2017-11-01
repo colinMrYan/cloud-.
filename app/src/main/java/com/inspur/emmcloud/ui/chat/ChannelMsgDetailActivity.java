@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.SpannableString;
 import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
@@ -50,9 +51,6 @@ import com.inspur.emmcloud.widget.CircleImageView;
 import com.inspur.emmcloud.widget.ECMChatInputMenu;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.ScrollViewWithListView;
-import com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout;
-import com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout.OnRefreshListener;
-import com.inspur.emmcloud.widget.pullableview.PullableScrollView;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -69,7 +67,7 @@ import static com.inspur.emmcloud.util.UriUtils.getChannelImgUri;
  * @author Administrator
  */
 public class ChannelMsgDetailActivity extends BaseActivity implements
-        OnRefreshListener {
+        SwipeRefreshLayout.OnRefreshListener {
 
     private static final int RESULT_MENTIONS = 5;
     private ScrollViewWithListView commentListView;
@@ -78,8 +76,8 @@ public class ChannelMsgDetailActivity extends BaseActivity implements
     private List<Comment> commentList;
     private BaseAdapter commentAdapter;
     private LoadingDialog loadingDialog;
-    private PullableScrollView commentScrollView;
-    private PullToRefreshLayout pullToRefreshLayout;
+    private ScrollView commentScrollView;
+    private SwipeRefreshLayout swipeRefreshLayout;
     private CircleImageView senderHeadImg;
     private TextView msgSendTimeText;
     private TextView senderNameText;
@@ -101,13 +99,13 @@ public class ChannelMsgDetailActivity extends BaseActivity implements
      * 初始化Views
      */
     private void initView() {
-        pullToRefreshLayout = (PullToRefreshLayout) findViewById(R.id.refresh_view);
-        pullToRefreshLayout.setOnRefreshListener(this);
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh_layout);
+        swipeRefreshLayout.setOnRefreshListener(this);
         loadingDialog = new LoadingDialog(this);
         apiService = new ChatAPIService(this);
         apiService.setAPIInterface(new WebService());
         commentList = new ArrayList<Comment>();
-        commentScrollView = (PullableScrollView) findViewById(R.id.xscrollview);
+        commentScrollView = (ScrollView) findViewById(R.id.scrollview);
         inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
         View msgDetailLayout = inflater.inflate(R.layout.msg_parent_detail,
                 null);
@@ -140,10 +138,10 @@ public class ChannelMsgDetailActivity extends BaseActivity implements
             @Override
             public void onSetContentViewHeight(boolean isLock) {
                 // TODO Auto-generated method stub
-                final LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) pullToRefreshLayout
+                final LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) swipeRefreshLayout
                         .getLayoutParams();
                 if (isLock) {
-                    params.height = pullToRefreshLayout.getHeight();
+                    params.height = swipeRefreshLayout.getHeight();
                     params.weight = 0.0F;
                 } else {
                     new Handler().post(new Runnable() {
@@ -168,13 +166,8 @@ public class ChannelMsgDetailActivity extends BaseActivity implements
      * 初始化数据源
      */
     private void initData() {
-        String mid = "";
-        if (getIntent().hasExtra("msg")) {
-            msg = (Msg) getIntent().getExtras().getSerializable("msg");
-        } else if (getIntent().hasExtra("mid")) {
-            mid = getIntent().getExtras().getString("mid");
-            msg = MsgCacheUtil.getCacheMsg(getApplicationContext(), mid);
-        }
+        String mid = getIntent().getStringExtra("mid");
+        msg = MsgCacheUtil.getCacheMsg(getApplicationContext(), mid);
         if (msg != null) {
             handMsgData();
         } else {
@@ -361,8 +354,9 @@ public class ChannelMsgDetailActivity extends BaseActivity implements
             if (commentAdapter == null) {
                 commentAdapter = new CommentAdapter();
                 commentListView.setAdapter(commentAdapter);
+            } else {
+                commentAdapter.notifyDataSetChanged();
             }
-            commentAdapter.notifyDataSetChanged();
             // 滚动到页面最后
             commentScrollView.post(new Runnable() {
                 public void run() {
@@ -481,16 +475,8 @@ public class ChannelMsgDetailActivity extends BaseActivity implements
     }
 
     @Override
-    public void onRefresh(PullToRefreshLayout pullToRefreshLayout) {
-        if (NetUtils.isNetworkConnected(ChannelMsgDetailActivity.this)) {
-            getComment();
-        } else {
-            pullToRefreshLayout.refreshFinish(PullToRefreshLayout.FAIL);
-        }
-    }
-
-    @Override
-    public void onLoadMore(PullToRefreshLayout pullToRefreshLayout) {
+    public void onRefresh() {
+        getComment();
     }
 
 
@@ -526,6 +512,8 @@ public class ChannelMsgDetailActivity extends BaseActivity implements
     private void getComment() {
         if (NetUtils.isNetworkConnected(ChannelMsgDetailActivity.this)) {
             apiService.getComment(msg.getMid());
+        } else{
+            swipeRefreshLayout.setRefreshing(false);
         }
     }
 
@@ -552,7 +540,7 @@ public class ChannelMsgDetailActivity extends BaseActivity implements
         @Override
         public void returnMsgCommentSuccess(
                 GetMsgCommentResult getMsgCommentResult, String mid) {
-            pullToRefreshLayout.refreshFinish(PullToRefreshLayout.SUCCEED);
+            swipeRefreshLayout.setRefreshing(false);
             commentList = getMsgCommentResult.getCommentList();
             if (commentList != null && commentList.size() > 0) {
                 commentAdapter = new CommentAdapter();
@@ -563,7 +551,7 @@ public class ChannelMsgDetailActivity extends BaseActivity implements
 
         @Override
         public void returnMsgCommentFail(String error, int errorCode) {
-            pullToRefreshLayout.refreshFinish(PullToRefreshLayout.FAIL);
+            swipeRefreshLayout.setRefreshing(false);
             WebServiceMiddleUtils.hand(ChannelMsgDetailActivity.this, error, errorCode);
         }
 

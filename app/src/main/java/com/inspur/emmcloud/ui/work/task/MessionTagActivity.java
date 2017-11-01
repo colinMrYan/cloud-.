@@ -30,6 +30,7 @@ import com.inspur.emmcloud.util.ToastUtils;
 import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
+import com.inspur.emmcloud.widget.dialogs.MyQMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
 
@@ -74,7 +75,7 @@ public class MessionTagActivity extends BaseActivity {
             deleteLayout.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    new QMUIDialog.MessageDialogBuilder(MessionTagActivity.this)
+                    new MyQMUIDialog.MessageDialogBuilder(MessionTagActivity.this)
                             .setMessage(R.string.mession_delete_tag)
                             .addAction(R.string.cancel, new QMUIDialogAction.ActionListener() {
                                 @Override

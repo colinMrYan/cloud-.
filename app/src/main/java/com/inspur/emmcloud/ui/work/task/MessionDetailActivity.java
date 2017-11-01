@@ -55,6 +55,7 @@ import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.MyDatePickerDialog;
 import com.inspur.emmcloud.widget.SegmentControl;
 import com.inspur.emmcloud.widget.SegmentControl.OnSegmentControlClickListener;
+import com.inspur.emmcloud.widget.dialogs.MyQMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
 
@@ -359,7 +360,7 @@ public class MessionDetailActivity extends BaseActivity {
      * @param position
      */
     private void showDeleteAttachmentsPromptDlg(final int position){
-        new QMUIDialog.MessageDialogBuilder(MessionDetailActivity.this)
+        new MyQMUIDialog.MessageDialogBuilder(MessionDetailActivity.this)
                 .setMessage(R.string.mession_delete_atachment)
                 .addAction(R.string.cancel, new QMUIDialogAction.ActionListener() {
                     @Override
@@ -451,7 +452,7 @@ public class MessionDetailActivity extends BaseActivity {
         SearchModel searchModel = managerList.get(0);
         final String managerName = searchModel.getName();
         final String managerID = searchModel.getId();
-        new QMUIDialog.MessageDialogBuilder(MessionDetailActivity.this)
+        new MyQMUIDialog.MessageDialogBuilder(MessionDetailActivity.this)
                 .setMessage(R.string.mession_change_charge_person)
                 .addAction(R.string.cancel, new QMUIDialogAction.ActionListener() {
                     @Override

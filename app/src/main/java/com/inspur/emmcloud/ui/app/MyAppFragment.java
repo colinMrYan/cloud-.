@@ -56,6 +56,7 @@ import com.inspur.emmcloud.util.ShortCutUtils;
 import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
+import com.inspur.emmcloud.widget.MySwipeRefreshLayout;
 import com.inspur.emmcloud.widget.SwitchView;
 import com.inspur.emmcloud.widget.SwitchView.OnStateChangedListener;
 import com.inspur.emmcloud.widget.draggrid.DragGridView;
@@ -85,7 +86,7 @@ public class MyAppFragment extends Fragment {
     private ImageView editBtn;
     private Button editBtnFinish;
     private MyAppAPIService apiService;
-    private SwipeRefreshLayout swipeRefreshLayout;
+    private MySwipeRefreshLayout swipeRefreshLayout;
     private BroadcastReceiver mBroadcastReceiver;
     private PopupWindow popupWindow;
     private boolean isNeedCommonlyUseApp = false;
@@ -191,7 +192,7 @@ public class MyAppFragment extends Fragment {
      * 初始化PullRefreshLayout
      */
     private void initPullRefreshLayout(){
-        swipeRefreshLayout = (SwipeRefreshLayout) rootView
+        swipeRefreshLayout = (MySwipeRefreshLayout) rootView
                 .findViewById(R.id.refresh_layout);
         swipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.header_bg), getResources().getColor(R.color.header_bg));
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {

@@ -18,6 +18,7 @@ import com.inspur.emmcloud.bean.Enterprise;
 import com.inspur.emmcloud.bean.GetMyInfoResult;
 import com.inspur.emmcloud.util.PreferencesByUsersUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
+import com.inspur.emmcloud.widget.dialogs.MyQMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
 
@@ -68,7 +69,7 @@ public class SwitchEnterpriseActivity extends BaseActivity {
      * @param enterprise
      */
     private void showSwitchPromptDlg(final Enterprise enterprise) {
-        new QMUIDialog.MessageDialogBuilder(SwitchEnterpriseActivity.this)
+        new MyQMUIDialog.MessageDialogBuilder(SwitchEnterpriseActivity.this)
                 .setMessage(getString(R.string.sure_switch_to, enterprise.getName()))
                 .addAction(R.string.cancel, new QMUIDialogAction.ActionListener() {
                     @Override

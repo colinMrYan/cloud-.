@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ListView;
 
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.NewsListAdapter;
@@ -18,12 +19,9 @@ import com.inspur.emmcloud.bean.GetGroupNewsDetailResult;
 import com.inspur.emmcloud.bean.GroupNews;
 import com.inspur.emmcloud.bean.NewsIntrcutionUpdateEvent;
 import com.inspur.emmcloud.util.NetUtils;
-import com.inspur.emmcloud.util.ToastUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
-import com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout;
-import com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout.OnRefreshListener;
-import com.inspur.emmcloud.widget.pullableview.PullableListView;
+import com.inspur.emmcloud.widget.MySwipeRefreshLayout;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -38,13 +36,12 @@ import java.util.List;
  * @author sunqx
  */
 @SuppressLint("ValidFragment")
-public class GroupNewsCardFragment extends Fragment implements
-        OnRefreshListener {
+public class GroupNewsCardFragment extends Fragment implements MySwipeRefreshLayout.OnRefreshListener, MySwipeRefreshLayout.OnLoadListener {
     private static final String ARG_POSITION = "position";
     private View rootView;
     private LoadingDialog loadingDlg;
-    private PullableListView newsListView;
-    private PullToRefreshLayout pullToRefreshLayout;
+    private ListView newsListView;
+    private MySwipeRefreshLayout swipeRefreshLayout;
     private int page = 0;
     private List<GroupNews> groupnNewsList = new ArrayList<GroupNews>();
     private String pagerTitle = "";
@@ -69,14 +66,14 @@ public class GroupNewsCardFragment extends Fragment implements
                 getActivity().LAYOUT_INFLATER_SERVICE);
         rootView = inflater.inflate(R.layout.fragment_news, null);
         loadingDlg = new LoadingDialog(getActivity());
-        pullToRefreshLayout = (PullToRefreshLayout) rootView
-                .findViewById(R.id.refresh_view);
-        pullToRefreshLayout.setOnRefreshListener(this);
-        newsListView = (PullableListView) rootView.findViewById(R.id.news_listView);
+        swipeRefreshLayout = (MySwipeRefreshLayout) rootView
+                .findViewById(R.id.refresh_layout);
+        swipeRefreshLayout.setOnRefreshListener(this);
+        swipeRefreshLayout.setOnLoadListener(this);
+        newsListView = (ListView) rootView.findViewById(R.id.news_listView);
         newsListView.setVerticalScrollBarEnabled(false);
-        newsListView.setCanPullUp(true);
         newsListView.setOnItemClickListener(new ListItemOnClickListener());
-        newsAdapter = new NewsListAdapter(getActivity(),groupnNewsList);
+        newsAdapter = new NewsListAdapter(getActivity(), groupnNewsList);
         newsListView.setAdapter(newsAdapter);
         getGroupNewsList(getArguments().getString("catagoryid"), 0, true);
         EventBus.getDefault().register(this);
@@ -112,21 +109,6 @@ public class GroupNewsCardFragment extends Fragment implements
         }
     }
 
-    /**
-     * 获取每个标题下的新闻列表
-     */
-    private void getGroupNewsList(String catagoryid, int page, boolean needShowDialog) {
-        if (NetUtils.isNetworkConnected(getActivity())) {
-            loadingDlg.show(needShowDialog);
-            MyAppAPIService apiService = new MyAppAPIService(getActivity());
-            apiService.setAPIInterface(new WebService());
-            apiService.getGroupNewsDetail(catagoryid, page);
-        } else {
-            if (pullToRefreshLayout != null) {
-                pullToRefreshLayout.refreshFinish(PullToRefreshLayout.FAIL);
-            }
-        }
-    }
 
     class ListItemOnClickListener implements OnItemClickListener {
         @Override
@@ -139,14 +121,24 @@ public class GroupNewsCardFragment extends Fragment implements
         }
     }
 
-    @Override
-    public void onRefresh(PullToRefreshLayout pullToRefreshLayout) {
-        getGroupNewsList(getArguments().getString("catagoryid"), 0, false);
-    }
-
-    @Override
-    public void onLoadMore(PullToRefreshLayout pullToRefreshLayout) {
-        getGroupNewsList(getArguments().getString("catagoryid"), page + 1, false);
+    /**
+     * 处理新闻列表，记录当前刷新成功的页编号，设置显示位置
+     *
+     * @param getGroupNewsDetailResult
+     */
+    private void handleNewsList(GetGroupNewsDetailResult getGroupNewsDetailResult) {
+        //如果page是0即下拉刷新时，需要清空新闻列表
+        if (page == 0) {
+            groupnNewsList.clear();
+        }
+        List<GroupNews> newgroupNewsList = getGroupNewsDetailResult.getGroupNews();
+        //返回结果少于20时，说明服务端暂时没有更新数据，则禁止上拉加载，并提示，减少向服务端发送无效请求
+        swipeRefreshLayout.setCanLoadMore(newgroupNewsList.size() == 20);
+        //添加新数据，如果page是0则重新添加，不是0则在末尾继续添加
+        groupnNewsList.addAll(newgroupNewsList);
+        //刷新数据
+        newsAdapter.reFreshNewsList(groupnNewsList);
+        swipeRefreshLayout.setLoading(false);
     }
 
     @Override
@@ -155,30 +147,29 @@ public class GroupNewsCardFragment extends Fragment implements
         EventBus.getDefault().unregister(this);
     }
 
+
     /**
-     * 处理新闻列表，记录当前刷新成功的页编号，设置显示位置
-     * @param getGroupNewsDetailResult
+     * 获取每个标题下的新闻列表
      */
-    private void handleNewsList(GetGroupNewsDetailResult getGroupNewsDetailResult) {
-        //如果page是0即下拉刷新时，需要清空新闻列表
-        if (page == 0) {
-            groupnNewsList.clear();
+    private void getGroupNewsList(String catagoryId, int page, boolean needShowDialog) {
+        if (NetUtils.isNetworkConnected(getActivity())) {
+            loadingDlg.show(needShowDialog);
+            MyAppAPIService apiService = new MyAppAPIService(getActivity());
+            apiService.setAPIInterface(new WebService());
+            apiService.getGroupNewsDetail(catagoryId, page);
+        } else {
+            swipeRefreshLayout.setLoading(false);
         }
-        List<GroupNews> groupNewsList = getGroupNewsDetailResult.getGroupNews();
-        //添加新数据，如果page是0则重新添加，不是0则在末尾继续添加
-        groupnNewsList.addAll(groupNewsList);
-        //刷新数据
-        newsAdapter.reFreshNewsList(groupnNewsList);
-        //设置显示位置
-        if (groupnNewsList.size() > 20) {
-            newsListView.setSelection(groupnNewsList.size() - (groupNewsList.size() + 4));
-        }
-        //返回结果少于20时，说明服务端暂时没有更新数据，则禁止上拉加载，并提示，减少向服务端发送无效请求
-        if (groupNewsList.size() == 0) {
-            page = page - 1;
-            ToastUtils.show(getActivity(),getString(R.string.no_more_data));
-        }
-        pullToRefreshLayout.refreshFinish(PullToRefreshLayout.SUCCEED);
+    }
+
+    @Override
+    public void onRefresh() {
+        getGroupNewsList(getArguments().getString("catagoryid"), 0, false);
+    }
+
+    @Override
+    public void onLoadMore() {
+        getGroupNewsList(getArguments().getString("catagoryid"), page + 1, false);
     }
 
     class WebService extends APIInterfaceInstance {
@@ -201,7 +192,7 @@ public class GroupNewsCardFragment extends Fragment implements
             }
             //记录刷新页数，刷新失败保持已经刷新出来的页编号，下拉刷新则把页面编号设为0
             GroupNewsCardFragment.this.page = (page > 0) ? (page - 1) : page;
-            pullToRefreshLayout.refreshFinish(PullToRefreshLayout.FAIL);
+            swipeRefreshLayout.setLoading(false);
             WebServiceMiddleUtils.hand(getActivity(), error, errorCode);
         }
     }

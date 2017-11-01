@@ -145,23 +145,17 @@
                         android:background="#dadadd" />
                 </LinearLayout>
 
-                <com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout
-                    android:id="@+id/refresh_view"
+                <com.inspur.emmcloud.widget.MySwipeRefreshLayout
+                    android:id="@+id/refresh_layout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" >
-
-                    <include layout="@layout/pull_refresh_head" />
-                    <!-- 支持所有实现Pullable接口的View -->
-
-                    <com.inspur.emmcloud.widget.pullableview.PullableListView
+                    <ListView
                         android:id="@+id/search_list"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:divider="@null"
                         />
-
-                    <include layout="@layout/pull_load_more" />
-                </com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout>
+                </com.inspur.emmcloud.widget.MySwipeRefreshLayout>
             </RelativeLayout>
         </LinearLayout>
     </RelativeLayout>

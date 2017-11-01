@@ -25,6 +25,7 @@ import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
+import com.inspur.emmcloud.widget.dialogs.MyQMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
 
@@ -135,7 +136,7 @@ public class LanguageChangeActivity extends BaseActivity {
     private void showChangeLanguageDlg(final int position) {
         // TODO Auto-generated method stub
 
-        new QMUIDialog.MessageDialogBuilder(LanguageChangeActivity.this)
+        new MyQMUIDialog.MessageDialogBuilder(LanguageChangeActivity.this)
                 .setMessage(getString(R.string.confirm_modify_language))
                 .addAction(R.string.cancel, new QMUIDialogAction.ActionListener() {
                     @Override
