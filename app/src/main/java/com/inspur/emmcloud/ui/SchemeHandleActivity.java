@@ -21,6 +21,7 @@ import com.inspur.emmcloud.ui.find.trip.TripInfoActivity;
 import com.inspur.emmcloud.ui.login.LoginActivity;
 import com.inspur.emmcloud.util.IntentUtils;
 import com.inspur.emmcloud.util.LogUtils;
+import com.inspur.emmcloud.util.ToastUtils;
 import com.inspur.imp.api.ImpActivity;
 
 /**
@@ -40,6 +41,10 @@ public class SchemeHandleActivity extends Activity {
                     Uri uri = getIntent().getData();
                     String scheme = uri.getScheme();
                     String host = uri.getHost();
+                    if(uri == null || scheme == null || host == null){
+                        ToastUtils.show(SchemeHandleActivity.this,"页面跳转配置错误");
+                        return;
+                    }
                     Bundle bundle = new Bundle();
                     switch (scheme) {
                         case "ecc-contact":

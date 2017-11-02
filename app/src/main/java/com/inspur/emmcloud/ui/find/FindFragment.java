@@ -20,7 +20,6 @@ import com.inspur.emmcloud.bean.GetMyInfoResult;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.util.AppUtils;
 import com.inspur.emmcloud.util.FileUtils;
-import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.ZipUtils;
 import com.inspur.reactnative.AuthorizationManagerPackage;
@@ -95,10 +94,8 @@ public class FindFragment extends Fragment implements DefaultHardwareBackBtnHand
         userId = ((MyApplication) getActivity().getApplication()).getUid();
 //        reactCurrentFilePath = MyAppConfig.getReactCurrentFilePath(getActivity(), userId);
         reactCurrentFilePath = MyAppConfig.getReactAppFilePath(getActivity(),userId,"discover");
-        LogUtils.YfcDebug("发现存储路径："+reactCurrentFilePath);
-        LogUtils.YfcDebug("是否有发现的bundle："+FileUtils.isFileExist(reactCurrentFilePath + "/index.android.bundle"));
         if (!FileUtils.isFileExist(reactCurrentFilePath + "/index.android.bundle")) {
-            ZipUtils.unZip(getActivity(), "bundle-inspur_esg-10000-v2.0.0-beta1.android.zip", reactCurrentFilePath, true);
+            ZipUtils.unZip(getActivity(), "bundle-inspur_esg-10000-v2.0.0-alpha3.android.zip", reactCurrentFilePath, true);
         }
     }
 
