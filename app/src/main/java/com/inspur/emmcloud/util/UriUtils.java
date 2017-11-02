@@ -7,88 +7,89 @@ import android.os.Bundle;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.api.APICallback;
 import com.inspur.emmcloud.bean.App;
 import com.inspur.emmcloud.bean.Contact;
 import com.inspur.emmcloud.bean.PVCollectModel;
-import com.inspur.emmcloud.callback.OauthCallBack;
 import com.inspur.emmcloud.ui.app.ReactNativeAppActivity;
 import com.inspur.emmcloud.ui.app.groupnews.GroupNewsActivity;
-import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.imp.api.ImpActivity;
-
-import org.xutils.http.RequestParams;
-import org.xutils.x;
 
 
 public class UriUtils {
-    // public static String res;
     public static String tanent;
 
-    public static void openApp(Activity activity, App app) {
+    public static void openApp(final Activity activity,final App app) {
         String uri = app.getUri();
         int appType = app.getAppType();
-        Intent intent = new Intent();
         switch (appType) {
             case 0:
             case 1:
                 if (uri.equals("emm://news")) {
-                    intent.setClass(activity, GroupNewsActivity.class);
-                    activity.startActivity(intent);
+                    IntentUtils.startActivity(activity, GroupNewsActivity.class);
                 } else {
                     ToastUtils.show(activity,
-                            activity.getString(R.string.not_support_app_type));
+                            R.string.not_support_app_type);
                 }
 
                 break;
             case 2:
-                new AppCenterNativeAppUtils().InstallOrOpen(activity,app);
+                new AppCenterNativeAppUtils().InstallOrOpen(activity, app);
                 break;
             case 3:
             case 4:
-                if (uri.startsWith("https://emm.inspur.com:443/ssohandler/gs/") || uri.startsWith("https://emm.inspur.com/ssohandler/gs/")) {
-                    uri = uri.replace("/gs/","/gs_uri/");
-                    if (NetUtils.isNetworkConnected(activity)){
-                        LoadingDialog loadingDialog = new LoadingDialog(activity);
-                        loadingDialog.show();
-                        getGSWebReallyUrl(activity,uri,app,loadingDialog);
+                if (!uri.startsWith("https://emm.inspur.com:443/ssohandler/gs/") && !uri.startsWith("https://emm.inspur.com/ssohandler/gs/")) {
+                    openWebApp(activity, uri, app);
+                } else {
+                    uri = uri.replace("/gs/", "/gs_uri/");
+                    if (NetUtils.isNetworkConnected(activity)) {
+                        new WebAppUtils(activity, new WebAppUtils.OnGetWebAppRealUrlListener() {
+                            @Override
+                            public void getWebAppRealUrlSuccess(String webAppUrl) {
+                                openWebApp(activity, webAppUrl, app);
+                            }
+
+                            @Override
+                            public void getWebAppRealUrlFail() {
+                                ToastUtils.show(activity, R.string.react_native_app_open_failed);
+                            }
+                        }).getWebAppRealUrl(uri);
                     }
-                }else {
-                    openWebApp(activity,uri,app);
 
                 }
                 break;
             case 5:
-//                Intent intentRN = new Intent();
-                intent.setClass(activity, ReactNativeAppActivity.class);
-                intent.putExtra("ecc-app-react-native",uri);
-                activity.startActivity(intent);
+                Bundle bundle = new Bundle();
+                bundle.putString("ecc-app-react-native", uri);
+                IntentUtils.startActivity(activity, ReactNativeAppActivity.class, bundle);
                 break;
 
             default:
                 ToastUtils.show(activity,
-                        activity.getString(R.string.not_support_app_type));
+                        R.string.not_support_app_type);
                 break;
         }
-        saveAPPPVCollect(activity,app);
+        saveAPPPVCollect(activity, app);
     }
 
     /**
-     * pv收集,新闻应用目前为强识别
+     * 应用pv收集
+     * @param activity
      * @param app
      */
-    private static void saveAPPPVCollect(Activity activity,App app) {
-        //web应用PV收集
-        if(app != null && app.getAppID().equals("inspur_news_esg")){
-            PVCollectModel pvCollectModel = new PVCollectModel("news","application");
-            PVCollectModelCacheUtils.saveCollectModel(activity,pvCollectModel);
-        }else{
-            PVCollectModel collectModel = new PVCollectModel(app.getAppID(), "application");
-            PVCollectModelCacheUtils.saveCollectModel(activity, collectModel);
-        }
+    private static void saveAPPPVCollect(Activity activity, App app) {
+        String appID = (app.getAppID().equals("inspur_news_esg"))?"news":app.getAppID();  //新闻应用跟普通应用区分开
+        PVCollectModel pvCollectModel = new PVCollectModel(appID, "application");
+        PVCollectModelCacheUtils.saveCollectModel(activity, pvCollectModel);
     }
 
-    public  static  void  openWebApp(Activity activity,String uri,App app){
+    /**
+     * 打开web应用
+     *
+     * @param activity
+     * @param uri
+     * @param app
+     */
+    public static void openWebApp(Activity activity, String uri, App app) {
         Intent intent = new Intent();
         intent.setClass(activity, ImpActivity.class);
         intent.putExtra("uri", uri);
@@ -96,55 +97,11 @@ public class UriUtils {
             intent.putExtra("appName", app.getAppName());
         }
         intent.putExtra("is_zoomable", app.getIsZoomable());
-        intent.putExtra("help_url",app.getHelpUrl());
-        intent.putExtra("appId",app.getAppID());
+        intent.putExtra("help_url", app.getHelpUrl());
+        intent.putExtra("appId", app.getAppID());
         activity.startActivity(intent);
     }
 
-    /**
-     * 获取web页面真实url地址
-     * @param activity
-     * @param url
-     * @param app
-     * @param loadingDialog
-     */
-    private static void getGSWebReallyUrl(final Activity activity, final String url, final App app, final LoadingDialog loadingDialog) {
-        RequestParams params = ((MyApplication) activity.getApplicationContext()).getHttpRequestParams(url);
-        x.http().get(params, new APICallback(activity,url) {
-            @Override
-            public void callbackSuccess(String arg0) {
-                if (loadingDialog != null && loadingDialog.isShowing()){
-                    loadingDialog.dismiss();
-                }
-                String reallyUrl = JSONUtils.getString(arg0,"uri","");
-                openWebApp(activity,reallyUrl,app);
-            }
-
-            @Override
-            public void callbackFail(String error, int responseCode) {
-                if (loadingDialog != null && loadingDialog.isShowing()){
-                    loadingDialog.dismiss();
-                }
-                ToastUtils.show(activity, R.string.react_native_app_open_failed);
-            }
-
-            @Override
-            public void callbackTokenExpire() {
-                new OauthUtils(new OauthCallBack() {
-                    @Override
-                    public void reExecute() {
-                        getGSWebReallyUrl(activity, url, app, loadingDialog);
-                    }
-
-                    @Override
-                    public void executeFailCallback() {
-                        callbackFail("", -1);
-                    }
-                },activity).refreshToken(url);
-            }
-        });
-
-    }
 
     /**
      * 打开url
@@ -166,6 +123,7 @@ public class UriUtils {
         bundle.putString("appName", header);
         IntentUtils.startActivity(context, ImpActivity.class, bundle);
     }
+
 
     /**
      * 获取带语言的cookie
@@ -228,23 +186,23 @@ public class UriUtils {
     /**
      * 频道页面头像显示图片
      **/
-    public static String getChannelImgUri(Context context,String inspurID) {
+    public static String getChannelImgUri(Context context, String inspurID) {
         String headImgUrl = null;
         if (StringUtils.isBlank(inspurID) || inspurID.equals("null"))
             return null;
-        headImgUrl = ((MyApplication)context.getApplicationContext()).getUserPhotoUrl(inspurID);
-        if (headImgUrl == null && !((MyApplication)context.getApplicationContext()).isKeysContainUid(inspurID)){
-            Contact contact = ContactCacheUtils.getUserContact(context,inspurID);
-            if(contact != null){
+        headImgUrl = ((MyApplication) context.getApplicationContext()).getUserPhotoUrl(inspurID);
+        if (headImgUrl == null && !((MyApplication) context.getApplicationContext()).isKeysContainUid(inspurID)) {
+            Contact contact = ContactCacheUtils.getUserContact(context, inspurID);
+            if (contact != null) {
                 headImgUrl = "https://emm.inspur.com/img/userhead/" + inspurID;
                 String lastUpdateTime = contact.getLastUpdateTime();
-                if(!StringUtils.isBlank(lastUpdateTime)&&(!lastUpdateTime.equals("null"))){
-                    headImgUrl = headImgUrl + "?"+lastUpdateTime;
+                if (!StringUtils.isBlank(lastUpdateTime) && (!lastUpdateTime.equals("null"))) {
+                    headImgUrl = headImgUrl + "?" + lastUpdateTime;
                 }
-                ((MyApplication)context.getApplicationContext()).setUsesrPhotoUrl(inspurID,headImgUrl);
-            }else if(((MyApplication)context.getApplicationContext())
-                    .getIsContactReady()){
-                ((MyApplication)context.getApplicationContext()).setUsesrPhotoUrl(inspurID,null);
+                ((MyApplication) context.getApplicationContext()).setUsesrPhotoUrl(inspurID, headImgUrl);
+            } else if (((MyApplication) context.getApplicationContext())
+                    .getIsContactReady()) {
+                ((MyApplication) context.getApplicationContext()).setUsesrPhotoUrl(inspurID, null);
             }
         }
         return headImgUrl;

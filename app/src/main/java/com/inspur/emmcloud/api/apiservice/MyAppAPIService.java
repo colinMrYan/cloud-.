@@ -24,6 +24,7 @@ import com.inspur.emmcloud.bean.GetMyAppResult;
 import com.inspur.emmcloud.bean.GetNewsTitleResult;
 import com.inspur.emmcloud.bean.GetRemoveAppResult;
 import com.inspur.emmcloud.bean.GetSearchAppResult;
+import com.inspur.emmcloud.bean.GetWebAppRealUrlResult;
 import com.inspur.emmcloud.callback.OauthCallBack;
 import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.OauthUtils;
@@ -39,6 +40,7 @@ import org.xutils.x;
 public class MyAppAPIService {
     private Context context;
     private APIInterface apiInterface;
+
 
     public MyAppAPIService(Context context) {
         this.context = context;
@@ -63,7 +65,7 @@ public class MyAppAPIService {
                 .getHttpRequestParams(completeUrl);
         params.addParameter("pageNumber", pageNumber + "");
 
-        x.http().post(params, new APICallback(context,completeUrl) {
+        x.http().post(params, new APICallback(context, completeUrl) {
 
             @Override
             public void callbackSuccess(String arg0) {
@@ -84,11 +86,11 @@ public class MyAppAPIService {
             public void callbackFail(String error, int responseCode) {
                 // TODO Auto-generated method stub
                 if (type == TYPE_NORMAL) {
-                    apiInterface.returnAllAppsFail(error,responseCode);
+                    apiInterface.returnAllAppsFail(error, responseCode);
                 } else if (type == TYPE_REFRESH) {
-                    apiInterface.returnAllAppsFreshFail(error,responseCode);
+                    apiInterface.returnAllAppsFreshFail(error, responseCode);
                 } else {
-                    apiInterface.returnAllAppsMoreFail(error,responseCode);
+                    apiInterface.returnAllAppsMoreFail(error, responseCode);
                 }
             }
 
@@ -121,7 +123,7 @@ public class MyAppAPIService {
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
         params.addParameter("appID", appID);
-        x.http().post(params, new APICallback(context,completeUrl) {
+        x.http().post(params, new APICallback(context, completeUrl) {
             @Override
             public void callbackTokenExpire() {
                 new OauthUtils(new OauthCallBack() {
@@ -145,7 +147,7 @@ public class MyAppAPIService {
 
             @Override
             public void callbackFail(String error, int responseCode) {
-                apiInterface.returnAddAppFail(error,responseCode);
+                apiInterface.returnAddAppFail(error, responseCode);
             }
         });
 
@@ -161,7 +163,7 @@ public class MyAppAPIService {
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
         params.addParameter("appID", appID);
-        x.http().post(params, new APICallback(context,completeUrl) {
+        x.http().post(params, new APICallback(context, completeUrl) {
             @Override
             public void callbackTokenExpire() {
                 new OauthUtils(new OauthCallBack() {
@@ -185,7 +187,7 @@ public class MyAppAPIService {
 
             @Override
             public void callbackFail(String error, int responseCode) {
-                apiInterface.returnRemoveAppFail(error,responseCode);
+                apiInterface.returnRemoveAppFail(error, responseCode);
             }
         });
     }
@@ -199,7 +201,7 @@ public class MyAppAPIService {
         final String completeUrl = APIUri.getMyApp();
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
-        x.http().post(params, new APICallback(context,completeUrl) {
+        x.http().post(params, new APICallback(context, completeUrl) {
             @Override
             public void callbackTokenExpire() {
                 new OauthUtils(new OauthCallBack() {
@@ -222,7 +224,7 @@ public class MyAppAPIService {
 
             @Override
             public void callbackFail(String error, int responseCode) {
-                apiInterface.returnMyAppFail(error,responseCode);
+                apiInterface.returnMyAppFail(error, responseCode);
             }
         });
 
@@ -230,7 +232,6 @@ public class MyAppAPIService {
 
     /**
      * 应用搜索
-     *
      */
     public void searchApp(final String keyword) {
         final String completeUrl = APIUri.getAllApps();
@@ -238,7 +239,7 @@ public class MyAppAPIService {
                 .getHttpRequestParams(completeUrl);
         params.addParameter("keyword", keyword);
         params.addParameter("clientType", 0);
-        x.http().post(params, new APICallback(context,completeUrl) {
+        x.http().post(params, new APICallback(context, completeUrl) {
             @Override
             public void callbackTokenExpire() {
                 new OauthUtils(new OauthCallBack() {
@@ -256,13 +257,13 @@ public class MyAppAPIService {
 
             @Override
             public void callbackSuccess(String arg0) {
-                    apiInterface.returnSearchAppSuccess(new GetSearchAppResult(
-                            arg0));
+                apiInterface.returnSearchAppSuccess(new GetSearchAppResult(
+                        arg0));
             }
 
             @Override
             public void callbackFail(String error, int responseCode) {
-                    apiInterface.returnSearchAppFail(error,responseCode);
+                apiInterface.returnSearchAppFail(error, responseCode);
             }
         });
 
@@ -278,7 +279,7 @@ public class MyAppAPIService {
         final String completeUrl = UriUtils.getHttpApiUri("api/v0/content/news/section");
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
-        x.http().get(params, new APICallback(context,completeUrl) {
+        x.http().get(params, new APICallback(context, completeUrl) {
 
             @Override
             public void callbackTokenExpire() {
@@ -308,8 +309,8 @@ public class MyAppAPIService {
             @Override
             public void callbackFail(String error, int responseCode) {
                 // TODO Auto-generated method stub
-                LogUtils.YfcDebug("错误代码："+responseCode);
-                apiInterface.returnGroupNewsTitleFail(error,responseCode);
+                LogUtils.YfcDebug("错误代码：" + responseCode);
+                apiInterface.returnGroupNewsTitleFail(error, responseCode);
             }
         });
     }
@@ -323,11 +324,11 @@ public class MyAppAPIService {
      */
     public void getGroupNewsDetail(final String ncid, final int page) {
 
-        final String completeUrl = UriUtils.getHttpApiUri("/api/v0/content/news/section/"+ncid+"/post?page="+page+"&limit=20");
+        final String completeUrl = UriUtils.getHttpApiUri("/api/v0/content/news/section/" + ncid + "/post?page=" + page + "&limit=20");
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
 
-        x.http().get(params, new APICallback(context,completeUrl) {
+        x.http().get(params, new APICallback(context, completeUrl) {
 
             @Override
             public void callbackTokenExpire() {
@@ -351,13 +352,13 @@ public class MyAppAPIService {
                 // TODO Auto-generated method stub
                 apiInterface
                         .returnGroupNewsDetailSuccess(new GetGroupNewsDetailResult(
-                                arg0),page);
+                                arg0), page);
             }
 
             @Override
             public void callbackFail(String error, int responseCode) {
                 // TODO Auto-generated method stub
-                apiInterface.returnGroupNewsDetailFail(error,responseCode,page);
+                apiInterface.returnGroupNewsDetailFail(error, responseCode, page);
             }
         });
 
@@ -370,7 +371,7 @@ public class MyAppAPIService {
         final String completeUrl = APIUri.getUserApps();
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
-        x.http().post(params, new APICallback(context,completeUrl) {
+        x.http().post(params, new APICallback(context, completeUrl) {
 
             @Override
             public void callbackTokenExpire() {
@@ -397,7 +398,7 @@ public class MyAppAPIService {
 
             @Override
             public void callbackFail(String error, int responseCode) {
-                apiInterface.returnUserAppsFail(error,responseCode);
+                apiInterface.returnUserAppsFail(error, responseCode);
             }
         });
     }
@@ -405,14 +406,13 @@ public class MyAppAPIService {
 
     /**
      * 获取所有应用
-     *
      */
     public void getNewAllApps() {
         final String completeUrl = APIUri.getNewAllApps();
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
 
-        x.http().post(params, new APICallback(context,completeUrl) {
+        x.http().post(params, new APICallback(context, completeUrl) {
 
             @Override
             public void callbackSuccess(String arg0) {
@@ -423,7 +423,7 @@ public class MyAppAPIService {
             @Override
             public void callbackFail(String error, int responseCode) {
                 // TODO Auto-generated method stub
-                apiInterface.returnAllAppsFail(error,responseCode);
+                apiInterface.returnAllAppsFail(error, responseCode);
             }
 
             @Override
@@ -447,12 +447,13 @@ public class MyAppAPIService {
 
     /**
      * 应用身份认证
+     *
      * @param urlParams
      */
     public void getAuthCode(final String urlParams) {
         final String completeUrl = APIUri.getAppAuthCodeUri() + "?" + urlParams;
         RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(completeUrl);
-        x.http().get(params, new APICallback(context,completeUrl) {
+        x.http().get(params, new APICallback(context, completeUrl) {
             @Override
             public void callbackSuccess(String arg0) {
                 apiInterface.returnGetAppAuthCodeResultSuccess(new AppRedirectResult(arg0));
@@ -460,7 +461,7 @@ public class MyAppAPIService {
 
             @Override
             public void callbackFail(String error, int responseCode) {
-                apiInterface.returnGetAppAuthCodeResultFail(error,responseCode);
+                apiInterface.returnGetAppAuthCodeResultFail(error, responseCode);
             }
 
             @Override
@@ -482,12 +483,13 @@ public class MyAppAPIService {
 
     /**
      * 根据应用id获取应用的详细信息
+     *
      * @param appId
      */
-    public void getAppInfo(final String appId){
-        final String completeUrl = APIUri.getAppInfo() +"?appID="+appId;
-        RequestParams params = ((MyApplication)context.getApplicationContext()).getHttpRequestParams(completeUrl);
-        x.http().get(params, new APICallback(context,completeUrl) {
+    public void getAppInfo(final String appId) {
+        final String completeUrl = APIUri.getAppInfo() + "?appID=" + appId;
+        RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(completeUrl);
+        x.http().get(params, new APICallback(context, completeUrl) {
             @Override
             public void callbackSuccess(String arg0) {
                 apiInterface.returnAppInfoSuccess(new App(arg0));
@@ -495,7 +497,7 @@ public class MyAppAPIService {
 
             @Override
             public void callbackFail(String error, int responseCode) {
-                apiInterface.returnAppInfoFail(error,responseCode);
+                apiInterface.returnAppInfoFail(error, responseCode);
             }
 
             @Override
@@ -518,10 +520,10 @@ public class MyAppAPIService {
     /**
      * 获取所有app的未处理消息
      */
-    public void getAppBadgeNum(){
+    public void getAppBadgeNum() {
         final String completeUrl = APIUri.getAppBadgeNumUrl();
         RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(completeUrl);
-        x.http().get(params, new APICallback(context,completeUrl) {
+        x.http().get(params, new APICallback(context, completeUrl) {
             @Override
             public void callbackSuccess(String arg0) {
                 apiInterface.returnGetAppBadgeResultSuccess(new GetAppBadgeResult(arg0));
@@ -529,7 +531,7 @@ public class MyAppAPIService {
 
             @Override
             public void callbackFail(String error, int responseCode) {
-                apiInterface.returnGetAppBadgeResultFail(error,responseCode);
+                apiInterface.returnGetAppBadgeResultFail(error, responseCode);
             }
 
             @Override
@@ -544,39 +546,45 @@ public class MyAppAPIService {
                     public void executeFailCallback() {
                         callbackFail("", -1);
                     }
-                },context).refreshToken(completeUrl);
+                }, context).refreshToken(completeUrl);
             }
         });
     }
 
     /**
      * 获取真实的url地址
+     *
      * @param url
      */
-    public void getReallyUrl(final String url){
-//        RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
-//        x.http().get(params, new Callback.CommonCallback<String>() {
-//            @Override
-//            public void onSuccess(String s) {
-//                String reallyUrl = JSONUtils.getString(s,"uri","");
-//                openWebApp(activity,reallyUrl,app);
-//            }
-//
-//            @Override
-//            public void onError(Throwable throwable, boolean b) {
-//                ToastUtils.show(activity, R.string.react_native_app_open_failed);
-//            }
-//
-//            @Override
-//            public void onCancelled(CancelledException e) {
-//
-//            }
-//
-//            @Override
-//            public void onFinished() {
-//                loadingDialog.dismiss();
-//            }
-//        });
+    public void getWebAppRealUrl(final String url) {
+        RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
+        x.http().get(params, new APICallback(context, url) {
+            @Override
+            public void callbackSuccess(String arg0) {
+                apiInterface.returnWebAppRealUrlSuccess(new GetWebAppRealUrlResult(arg0));
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                apiInterface.returnWebAppRealUrlFail();
+            }
+
+            @Override
+            public void callbackTokenExpire() {
+                new OauthUtils(new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        getWebAppRealUrl(url);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                }, context).refreshToken(url);
+
+            }
+        });
     }
 
 }
