@@ -9,6 +9,7 @@ import android.os.Handler;
 import android.support.annotation.Nullable;
 
 import com.inspur.emmcloud.MyApplication;
+import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.ui.app.ReactNativeAppActivity;
 import com.inspur.emmcloud.ui.app.groupnews.GroupNewsActivity;
 import com.inspur.emmcloud.ui.chat.ChannelActivity;
@@ -20,7 +21,10 @@ import com.inspur.emmcloud.ui.find.KnowledgeActivity;
 import com.inspur.emmcloud.ui.find.trip.TripInfoActivity;
 import com.inspur.emmcloud.ui.login.LoginActivity;
 import com.inspur.emmcloud.util.IntentUtils;
-import com.inspur.emmcloud.util.LogUtils;
+import com.inspur.emmcloud.util.NetUtils;
+import com.inspur.emmcloud.util.StateBarColor;
+import com.inspur.emmcloud.util.ToastUtils;
+import com.inspur.emmcloud.util.WebAppUtils;
 import com.inspur.imp.api.ImpActivity;
 
 /**
@@ -31,7 +35,9 @@ public class SchemeHandleActivity extends Activity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if(((MyApplication)getApplicationContext()).isHaveLogin()){
+        StateBarColor.changeStateBarColor(this);
+        //  this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);//设置全屏
+        if (((MyApplication) getApplicationContext()).isHaveLogin()) {
             openIndexActivity(this);
             //此处加延时操作，为了让打开通知时IndexActivity走onCreate()方法
             new Handler().postDelayed(new Runnable() {
@@ -44,47 +50,73 @@ public class SchemeHandleActivity extends Activity {
                     switch (scheme) {
                         case "ecc-contact":
                         case "ecm-contact":
-                            bundle.putString("uid",host);
-                            if(host.startsWith("BOT")){
-                                IntentUtils.startActivity(SchemeHandleActivity.this, RobotInfoActivity.class,bundle);
-                            }else{
-                                IntentUtils.startActivity(SchemeHandleActivity.this, UserInfoActivity.class,bundle);
+                            bundle.putString("uid", host);
+                            if (host.startsWith("BOT")) {
+                                IntentUtils.startActivity(SchemeHandleActivity.this, RobotInfoActivity.class, bundle, true);
+                            } else {
+                                IntentUtils.startActivity(SchemeHandleActivity.this, UserInfoActivity.class, bundle, true);
                             }
                             break;
                         case "ecc-component":
-                            openComponentScheme(uri,host);
+                            openComponentScheme(uri, host);
                             break;
                         case "ecc-app-react-native":
-                            IntentUtils.startActivity(SchemeHandleActivity.this,ReactNativeAppActivity.class);
+                            IntentUtils.startActivity(SchemeHandleActivity.this, ReactNativeAppActivity.class, true);
                             break;
 
                         case "gs-msg":
-                            String url = "https://emm.inspur.com/ssohandler/gs_msg/" + host;
-                            String openMode = uri.getQueryParameter("openMode");
-                            boolean isUriHasTitle = (openMode != null && openMode.equals("1"));
-                            bundle.putString("uri", url);
-                            if (isUriHasTitle) {
-                                bundle.putString("appName", "");
+                            if (!NetUtils.isNetworkConnected(SchemeHandleActivity.this)) {
+                                finish();
+                                break;
                             }
-                            IntentUtils.startActivity(SchemeHandleActivity.this,ImpActivity.class,bundle);
+                            String openMode = uri.getQueryParameter("openMode");
+                            openWebApp(host, openMode);
                             break;
                         case "ecc-channel":
                             bundle.putString("cid", host);
-                            bundle.putBoolean("get_new_msg",true);
+                            bundle.putBoolean("get_new_msg", true);
                             IntentUtils.startActivity(SchemeHandleActivity.this,
-                                    ChannelActivity.class, bundle);
+                                    ChannelActivity.class, bundle, true);
                             break;
 
                         default:
                             break;
                     }
                 }
-            },1);
+            }, 1);
 
-        }else {
-           IntentUtils.startActivity(this, LoginActivity.class);
+        } else {
+            IntentUtils.startActivity(this, LoginActivity.class, true);
         }
-        finish();
+
+    }
+
+    /**
+     * 打开web应用
+     *
+     * @param host
+     * @param openMode
+     */
+    private void openWebApp(String host, final String openMode) {
+        String url = "https://emm.inspur.com/api/v1/gs_sso/msg_uri?id=" + host;
+        new WebAppUtils(SchemeHandleActivity.this, new WebAppUtils.OnGetWebAppRealUrlListener() {
+            @Override
+            public void getWebAppRealUrlSuccess(String webAppUrl) {
+                boolean isUriHasTitle = (openMode != null && openMode.equals("1"));
+                Bundle bundle = new Bundle();
+                bundle.putString("uri", webAppUrl);
+                if (isUriHasTitle) {
+                    bundle.putString("appName", "");
+                }
+                IntentUtils.startActivity(SchemeHandleActivity.this, ImpActivity.class, bundle, true);
+            }
+
+            @Override
+            public void getWebAppRealUrlFail() {
+                ToastUtils.show(SchemeHandleActivity.this, R.string.react_native_app_open_failed);
+                finish();
+            }
+        }).getWebAppRealUrl(url);
     }
 
     /**
@@ -95,40 +127,39 @@ public class SchemeHandleActivity extends Activity {
     private void openIndexActivity(Context context) {
         Intent indexIntent = new Intent(context, IndexActivity.class);
         if (!((MyApplication) context.getApplicationContext()).isIndexActivityRunning()) {
-            LogUtils.jasonDebug("start----index----");
             context.startActivity(indexIntent);
         } else if (!((MyApplication) context.getApplicationContext()).getIsActive()) {
-            LogUtils.jasonDebug("start----index2222222----");
             indexIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
                     | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
             context.startActivity(indexIntent);
         }
     }
 
-    private void openComponentScheme(Uri uri,String host){
+    private void openComponentScheme(Uri uri, String host) {
         Bundle bundle = new Bundle();
         switch (host) {
             case "stastistics":
-                IntentUtils.startActivity(this, AnalysisActivity.class,bundle);
+                IntentUtils.startActivity(this, AnalysisActivity.class, bundle, true);
                 break;
             case "trips":
                 String path = uri.getPath();
                 String tripId = path.split("/")[1];
-                bundle.putString("tripId",tripId);
-                IntentUtils.startActivity(this,TripInfoActivity.class,bundle);
+                bundle.putString("tripId", tripId);
+                IntentUtils.startActivity(this, TripInfoActivity.class, bundle, true);
                 break;
             case "news.ecc":
-                IntentUtils.startActivity(this,GroupNewsActivity.class);
+                IntentUtils.startActivity(this, GroupNewsActivity.class, true);
                 break;
 
             case "document":
-                IntentUtils.startActivity(this,DocumentActivity.class);
+                IntentUtils.startActivity(this, DocumentActivity.class, true);
                 break;
 
             case "knowledge":
-                IntentUtils.startActivity(this,KnowledgeActivity.class);
+                IntentUtils.startActivity(this, KnowledgeActivity.class, true);
                 break;
             default:
+                finish();
                 break;
         }
     }

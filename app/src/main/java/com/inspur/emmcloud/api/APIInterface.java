@@ -69,6 +69,7 @@ import com.inspur.emmcloud.bean.GetUpdatePwdBySMSCodeBean;
 import com.inspur.emmcloud.bean.GetUpgradeResult;
 import com.inspur.emmcloud.bean.GetUploadMyHeadResult;
 import com.inspur.emmcloud.bean.GetUserHeadUploadResult;
+import com.inspur.emmcloud.bean.GetWebAppRealUrlResult;
 import com.inspur.emmcloud.bean.GetWebSocketUrlResult;
 import com.inspur.emmcloud.bean.LoginDesktopCloudPlusBean;
 import com.inspur.emmcloud.bean.ReactNativeDownloadUrlBean;
@@ -543,4 +544,8 @@ public interface APIInterface {
     void returnGetAppBadgeResultFail(String error,int errorCode);
 
     void returnUploadPositionSuccess();
+
+    void returnWebAppRealUrlSuccess(GetWebAppRealUrlResult getWebAppRealUrlResult);
+    void returnWebAppRealUrlFail();
+
 }

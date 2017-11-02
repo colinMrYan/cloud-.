@@ -183,7 +183,7 @@
             android:name=".ui.SchemeHandleActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            android:theme="@style/SplashTheme">
+            android:theme="@android:style/Theme.Translucent.NoTitleBar">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
