@@ -23,7 +23,7 @@ public class WebAppUtils {
     }
 
     public void getWebAppRealUrl(String url) {
-        if (NetUtils.isNetworkConnected(context,false)) {
+        if (NetUtils.isNetworkConnected(context, false)) {
             loadingDlg.show();
             MyAppAPIService apiService = new MyAppAPIService(context);
             apiService.setAPIInterface(new WebService());

@@ -36,7 +36,7 @@ public class SchemeHandleActivity extends Activity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         StateBarColor.changeStateBarColor(this);
-      //  this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);//设置全屏
+        //  this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);//设置全屏
         if (((MyApplication) getApplicationContext()).isHaveLogin()) {
             openIndexActivity(this);
             //此处加延时操作，为了让打开通知时IndexActivity走onCreate()方法
@@ -70,7 +70,7 @@ public class SchemeHandleActivity extends Activity {
                                 break;
                             }
                             String openMode = uri.getQueryParameter("openMode");
-                            openWebApp(host,openMode);
+                            openWebApp(host, openMode);
                             break;
                         case "ecc-channel":
                             bundle.putString("cid", host);
@@ -93,10 +93,11 @@ public class SchemeHandleActivity extends Activity {
 
     /**
      * 打开web应用
+     *
      * @param host
      * @param openMode
      */
-    private void openWebApp(String host,final String openMode){
+    private void openWebApp(String host, final String openMode) {
         String url = "https://emm.inspur.com/api/v1/gs_sso/msg_uri?id=" + host;
         new WebAppUtils(SchemeHandleActivity.this, new WebAppUtils.OnGetWebAppRealUrlListener() {
             @Override
