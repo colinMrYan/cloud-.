@@ -20,6 +20,7 @@ import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.WorkAPIService;
 import com.inspur.emmcloud.bean.GetIsAdmin;
 import com.inspur.emmcloud.bean.SearchModel;
+import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.util.ImageDisplayUtils;
@@ -500,7 +501,7 @@ public class MeetingBookingActivity extends BaseActivity {
      * 发送广播
      */
     public void setBroadCast() {
-        Intent mIntent = new Intent("com.inspur.meeting");
+        Intent mIntent = new Intent(Constant.ACTION_MEETING);
         mIntent.putExtra("refreshMeeting", "refreshMeeting");
         // 发送广播
         sendBroadcast(mIntent);

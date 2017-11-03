@@ -46,9 +46,9 @@ public class DisplayResImageMsg {
 
         }
         DisplayImageOptions options = new DisplayImageOptions.Builder()
-                .showImageForEmptyUri(R.drawable.icon_photo_default)
-                .showImageOnFail(R.drawable.icon_photo_default)
-                .showImageOnLoading(R.drawable.icon_photo_default)
+                .showImageForEmptyUri(R.drawable.default_image)
+                .showImageOnFail(R.drawable.default_image)
+                .showImageOnLoading(R.drawable.default_image)
                 // 设置图片的解码类型
                 .bitmapConfig(Bitmap.Config.RGB_565).cacheInMemory(true)
                 .cacheOnDisk(true).build();

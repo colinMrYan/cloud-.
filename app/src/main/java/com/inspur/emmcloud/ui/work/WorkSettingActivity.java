@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.WorkSetting;
+import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.WorkSettingCacheUtils;
 import com.inspur.emmcloud.widget.SwitchView;
@@ -37,7 +38,7 @@ public class WorkSettingActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_work_setting);
-        boolean isShowDate = PreferencesByUserAndTanentUtils.getBoolean(getApplicationContext(), "work_open_info", true);
+        boolean isShowDate = PreferencesByUserAndTanentUtils.getBoolean(getApplicationContext(), Constant.PREF_WORK_INFO_BAR_OPEN, true);
         SwitchView switchView = (SwitchView) findViewById(R.id.date_open_switch);
         switchView.setOpened(isShowDate);
         switchView.setOnStateChangedListener(new StateChangedListener(null));
@@ -132,7 +133,7 @@ public class WorkSettingActivity extends BaseActivity {
             // TODO Auto-generated method stub
             isChangeSetting = true;
             if (workSetting == null) {
-                PreferencesByUserAndTanentUtils.putBoolean(getApplicationContext(), "work_open_info", true);
+                PreferencesByUserAndTanentUtils.putBoolean(getApplicationContext(), Constant.PREF_WORK_INFO_BAR_OPEN, true);
             } else{
                 workSetting.setOpen(true);
                 WorkSettingCacheUtils.saveWorkSetting(getApplicationContext(),workSetting);
@@ -145,7 +146,7 @@ public class WorkSettingActivity extends BaseActivity {
             // TODO Auto-generated method stub
             isChangeSetting = true;
             if (workSetting == null) {
-                PreferencesByUserAndTanentUtils.putBoolean(getApplicationContext(), "work_open_info", false);
+                PreferencesByUserAndTanentUtils.putBoolean(getApplicationContext(), Constant.PREF_WORK_INFO_BAR_OPEN, false);
             } else{
                 workSetting.setOpen(false);
                 WorkSettingCacheUtils.saveWorkSetting(getApplicationContext(),workSetting);

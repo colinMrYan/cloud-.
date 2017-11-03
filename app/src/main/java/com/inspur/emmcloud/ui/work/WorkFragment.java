@@ -32,6 +32,7 @@ import com.inspur.emmcloud.bean.MyCalendar;
 import com.inspur.emmcloud.bean.PVCollectModel;
 import com.inspur.emmcloud.bean.TaskResult;
 import com.inspur.emmcloud.bean.WorkSetting;
+import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.ui.work.calendar.CalActivity;
 import com.inspur.emmcloud.ui.work.calendar.CalEventAddActivity;
 import com.inspur.emmcloud.ui.work.meeting.MeetingBookingActivity;
@@ -39,12 +40,14 @@ import com.inspur.emmcloud.ui.work.meeting.MeetingDetailActivity;
 import com.inspur.emmcloud.ui.work.meeting.MeetingListActivity;
 import com.inspur.emmcloud.ui.work.task.MessionDetailActivity;
 import com.inspur.emmcloud.ui.work.task.MessionListActivity;
+import com.inspur.emmcloud.util.AppConfigCacheUtils;
 import com.inspur.emmcloud.util.CalEventNotificationUtils;
 import com.inspur.emmcloud.util.CalendarUtil;
 import com.inspur.emmcloud.util.DbCacheUtils;
 import com.inspur.emmcloud.util.DensityUtil;
 import com.inspur.emmcloud.util.FestivalCacheUtils;
 import com.inspur.emmcloud.util.IntentUtils;
+import com.inspur.emmcloud.util.JSONUtils;
 import com.inspur.emmcloud.util.MyCalendarCacheUtils;
 import com.inspur.emmcloud.util.MyCalendarOperationCacheUtils;
 import com.inspur.emmcloud.util.NetUtils;
@@ -61,6 +64,8 @@ import com.inspur.emmcloud.widget.ScrollViewWithListView;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -94,6 +99,7 @@ public class WorkFragment extends Fragment {
     private List<String> calendarIdList = new ArrayList<>();
     private ChildAdapter calendarChildAdapter, meetingChildAdapter, taskChildAdapter;
     private List<WorkSetting> workSettingList = new ArrayList<>();
+    private boolean isWorkPortletConfigUploadSuccess = true;  //flag:判断是否上传配置信息成功
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -114,11 +120,21 @@ public class WorkFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         rootView = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_work, null);
-        getWorkSettingData();
+        apiService = new WorkAPIService(getActivity());
+        apiService.setAPIInterface(new WebService());
+        initWorkSettingData();
         initViews();
         getWorkData();
         registerWorkNotifyReceiver();
         EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (!isWorkPortletConfigUploadSuccess){
+            uploadWorkPortletConfig();
+        }
     }
 
     /**
@@ -126,20 +142,44 @@ public class WorkFragment extends Fragment {
      */
     private void refreshWorkLayout() {
         setHeadLayout();
-        getWorkSettingData();
+        initWorkSettingData();
         adapter.notifyDataSetChanged();
         getWorkData();
     }
 
-    private void getWorkSettingData() {
+    /***
+     * 初始化工作页面ui配置
+     */
+    private void initWorkSettingData() {
+        isWorkPortletConfigUploadSuccess = PreferencesUtils.getBoolean(getActivity(),Constant.PREF_WORK_PORTLET_CONFIG_UPLOAD,true);
+        String WorkPortletConfigJson = AppConfigCacheUtils.getAppConfigValue(getActivity(),"WorkPortlet",null);
         List<WorkSetting> allWorkSettingList = WorkSettingCacheUtils.getAllWorkSettingList(getActivity());
-        if (allWorkSettingList.size() == 0) {
-            workSettingList.add(new WorkSetting(TYPE_MEETING, getString(R.string.meeting), true, 0));
-            workSettingList.add(new WorkSetting(TYPE_CALENDAR, getString(R.string.work_calendar_text), true, 1));
-            workSettingList.add(new WorkSetting(TYPE_TASK, getString(R.string.work_task_text), true, 2));
-            WorkSettingCacheUtils.saveWorkSettingList(getActivity(), workSettingList);
-        } else {
-            workSettingList = WorkSettingCacheUtils.getOpenWorkSettingList(getActivity());
+        if (allWorkSettingList.size() == 0) { //本地没有缓存
+            if (WorkPortletConfigJson == null || WorkPortletConfigJson.equals("null")) {   //服务端没有配置
+                workSettingList.add(new WorkSetting(TYPE_MEETING, getString(R.string.meeting), true, 0));
+                workSettingList.add(new WorkSetting(TYPE_CALENDAR, getString(R.string.work_calendar_text), true, 1));
+                workSettingList.add(new WorkSetting(TYPE_TASK, getString(R.string.work_task_text), true, 2));
+                WorkSettingCacheUtils.saveWorkSettingList(getActivity(), workSettingList);
+            } else {  //服务端有配置
+                JSONArray array = JSONUtils.getJSONArray(WorkPortletConfigJson, new JSONArray());
+                for (int i = 0; i < array.length(); i++) {
+                    JSONObject object = JSONUtils.getJSONObject(array, i, new JSONObject());
+                    String id = JSONUtils.getString(object, "id", "");
+                    boolean isOpen = JSONUtils.getBoolean(object, "isOpen", true);
+                    if (i==0){
+                        PreferencesByUserAndTanentUtils.putBoolean(getContext(), Constant.PREF_WORK_INFO_BAR_OPEN, isOpen);
+                    }else {
+                        workSettingList.add(new WorkSetting(id, "", isOpen, i-1));
+                    }
+
+                }
+                WorkSettingCacheUtils.saveWorkSettingList(getActivity(), workSettingList);
+            }
+        }
+        workSettingList = WorkSettingCacheUtils.getOpenWorkSettingList(getActivity());
+        //当服务端还没有保存过配置信息时需要上传
+        if (WorkPortletConfigJson == null || WorkPortletConfigJson.equals("null")){
+            uploadWorkPortletConfig();
         }
     }
 
@@ -151,8 +191,6 @@ public class WorkFragment extends Fragment {
         initPullRefreshLayout();
         listView = (ListView) rootView
                 .findViewById(R.id.list);
-        apiService = new WorkAPIService(getActivity());
-        apiService.setAPIInterface(new WebService());
         adapter = new Adapter();
         listView.setAdapter(adapter);
         (rootView.findViewById(R.id.work_config_img)).setOnClickListener(new View.OnClickListener() {
@@ -172,7 +210,7 @@ public class WorkFragment extends Fragment {
     }
 
     private void setHeadLayout() {
-        boolean isShowDate = PreferencesByUserAndTanentUtils.getBoolean(getActivity(), "work_open_info", true);
+        boolean isShowDate = PreferencesByUserAndTanentUtils.getBoolean(getActivity(), Constant.PREF_WORK_INFO_BAR_OPEN, true);
         (rootView.findViewById(R.id.work_header_layout)).setVisibility(isShowDate ? View.GONE : View.VISIBLE);
         (rootView.findViewById(R.id.calendar_layout)).setVisibility(isShowDate ? View.VISIBLE : View.GONE);
     }
@@ -231,9 +269,9 @@ public class WorkFragment extends Fragment {
             }
         };
         IntentFilter myIntentFilter = new IntentFilter();
-        myIntentFilter.addAction("com.inspur.meeting");
-        myIntentFilter.addAction("com.inspur.task");
-        myIntentFilter.addAction("com.inspur.calendar");
+        myIntentFilter.addAction(Constant.ACTION_MEETING);
+        myIntentFilter.addAction(Constant.ACTION_CALENDAR);
+        myIntentFilter.addAction(Constant.ACTION_TASK);
         getActivity().registerReceiver(meetingAndTaskReceiver, myIntentFilter);
     }
 
@@ -551,43 +589,11 @@ public class WorkFragment extends Fragment {
         if (resultCode == getActivity().RESULT_OK) {
             if (requestCode == WORK_SETTING) {
                 refreshWorkLayout();
+                uploadWorkPortletConfig();
             }
         }
     }
 
-
-    /**
-     * 获取日历中Event
-     */
-    private void getMyCalendar() {
-        if (NetUtils.isNetworkConnected(getActivity()) && isContainWork(TYPE_CALENDAR)) {
-            apiService.getMyCalendar(0, 30);
-        }
-    }
-
-
-    /**
-     * 获取任务
-     */
-    private void getTasks() {
-        if (NetUtils.isNetworkConnected(getActivity()) && isContainWork(TYPE_TASK)) {
-            String orderBy = PreferencesUtils.getString(getActivity(),
-                    "order_by", "PRIORITY");
-            String orderType = PreferencesUtils.getString(getActivity(),
-                    "order_type", "DESC");
-            apiService.getRecentTasks(orderBy, orderType);
-        }
-    }
-
-
-    /**
-     * 获取会议
-     */
-    private void getMeetings() {
-        if (NetUtils.isNetworkConnected(getActivity()) && isContainWork(TYPE_MEETING)) {
-            apiService.getMeetings(7);
-        }
-    }
 
     /**
      * 获取三条Event
@@ -637,6 +643,103 @@ public class WorkFragment extends Fragment {
 
     }
 
+    /**
+     * 获取工作页面ui配置
+     * @return
+     */
+    private String getWorkPortletConfigJson(){
+        List<WorkSetting> allWorkSettingList = WorkSettingCacheUtils.getAllWorkSettingList(getActivity());
+        JSONArray array = new JSONArray();
+        try {
+            JSONObject infoBarObj = new JSONObject();
+            boolean isInfoBarOpen = PreferencesByUserAndTanentUtils.getBoolean(getActivity(), Constant.PREF_WORK_INFO_BAR_OPEN, true);
+            infoBarObj.put("id","infoBar");
+            infoBarObj.put("isOpen",isInfoBarOpen);
+            array.put(infoBarObj);
+            for (int i=0;i<allWorkSettingList.size();i++){
+                WorkSetting workSetting = allWorkSettingList.get(i);
+                JSONObject obj = new JSONObject();
+                obj.put("id",workSetting.getId());
+                obj.put("isOpen",workSetting.isOpen());
+                array.put(obj);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+       return array.toString();
+    }
+
+
+    /**
+     * 记录用户点击
+     *
+     * @param functionId
+     */
+    private void recordUserClickWorkFunction(String functionId) {
+        PVCollectModel pvCollectModel = new PVCollectModel(functionId, "work");
+        PVCollectModelCacheUtils.saveCollectModel(getActivity(), pvCollectModel);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (calEventReceiver != null) {
+            getActivity().unregisterReceiver(calEventReceiver);
+            calEventReceiver = null;
+        }
+        if (meetingAndTaskReceiver != null) {
+            getActivity().unregisterReceiver(meetingAndTaskReceiver);
+            meetingAndTaskReceiver = null;
+        }
+        EventBus.getDefault().unregister(this);
+        PreferencesUtils.putBoolean(getActivity(),Constant.PREF_WORK_PORTLET_CONFIG_UPLOAD,isWorkPortletConfigUploadSuccess);
+    }
+
+
+    /**
+     * 获取日历中Event
+     */
+    private void getMyCalendar() {
+        if (NetUtils.isNetworkConnected(getActivity()) && isContainWork(TYPE_CALENDAR)) {
+            apiService.getMyCalendar(0, 30);
+        }
+    }
+
+
+    /**
+     * 获取任务
+     */
+    private void getTasks() {
+        if (NetUtils.isNetworkConnected(getActivity()) && isContainWork(TYPE_TASK)) {
+            String orderBy = PreferencesUtils.getString(getActivity(),
+                    "order_by", "PRIORITY");
+            String orderType = PreferencesUtils.getString(getActivity(),
+                    "order_type", "DESC");
+            apiService.getRecentTasks(orderBy, orderType);
+        }
+    }
+
+
+    /**
+     * 获取会议
+     */
+    private void getMeetings() {
+        if (NetUtils.isNetworkConnected(getActivity()) && isContainWork(TYPE_MEETING)) {
+            apiService.getMeetings(7);
+        }
+    }
+
+    /**
+     * 上传工作页面配置信息
+     */
+    private void uploadWorkPortletConfig() {
+        if (NetUtils.isNetworkConnected(getActivity(), false)) {
+            isWorkPortletConfigUploadSuccess = true;
+            apiService.saveWorkPortletConfig(getWorkPortletConfigJson());
+        }else {
+            isWorkPortletConfigUploadSuccess = false;
+        }
+    }
 
     class WebService extends APIInterfaceInstance {
         @Override
@@ -711,31 +814,18 @@ public class WorkFragment extends Fragment {
             WebServiceMiddleUtils.hand(getActivity(), error, errorCode);
         }
 
-    }
 
-
-    /**
-     * 记录用户点击
-     *
-     * @param functionId
-     */
-    private void recordUserClickWorkFunction(String functionId) {
-        PVCollectModel pvCollectModel = new PVCollectModel(functionId, "work");
-        PVCollectModelCacheUtils.saveCollectModel(getActivity(), pvCollectModel);
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        if (calEventReceiver != null) {
-            getActivity().unregisterReceiver(calEventReceiver);
-            calEventReceiver = null;
+        @Override
+        public void returnSaveConfigSuccess() {
+           isWorkPortletConfigUploadSuccess = true;
         }
-        if (meetingAndTaskReceiver != null) {
-            getActivity().unregisterReceiver(meetingAndTaskReceiver);
-            meetingAndTaskReceiver = null;
+
+        @Override
+        public void returnSaveConfigFail() {
+            isWorkPortletConfigUploadSuccess = false;
         }
-        EventBus.getDefault().unregister(this);
     }
+
+
 
 }

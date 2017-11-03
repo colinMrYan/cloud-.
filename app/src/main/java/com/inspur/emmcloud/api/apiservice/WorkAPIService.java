@@ -11,6 +11,7 @@ import android.content.Context;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.api.APICallback;
 import com.inspur.emmcloud.api.APIInterface;
+import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.bean.Attachment;
 import com.inspur.emmcloud.bean.ChannelGroup;
 import com.inspur.emmcloud.bean.GetCalendarEventsResult;
@@ -2251,4 +2252,40 @@ public class WorkAPIService {
 
     }
 
+    /**
+     * 上传工作页面布局配置信息
+     * @param configJSon
+     */
+    public void saveWorkPortletConfig(final String configJSon){
+        final String url = APIUri.saveAppConfigUrl("WorkPortlet");
+        RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
+        params.setBodyContent(configJSon);
+        x.http().post(params, new APICallback(context, url) {
+            @Override
+            public void callbackSuccess(String arg0) {
+                apiInterface.returnSaveConfigSuccess();
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                apiInterface.returnSaveConfigFail();
+            }
+
+            @Override
+            public void callbackTokenExpire() {
+                new OauthUtils(new OauthCallBack() {
+
+                    @Override
+                    public void reExecute() {
+                        saveWorkPortletConfig(configJSon);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                }, context).refreshToken(url);
+            }
+        });
+    }
 }

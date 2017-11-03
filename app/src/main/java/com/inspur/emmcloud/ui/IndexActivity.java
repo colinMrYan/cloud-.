@@ -140,6 +140,12 @@ public class IndexActivity extends BaseFragmentActivity implements
      * 初始化
      */
     private void getData() {
+        new AppConfigUtils(IndexActivity.this, new CommonCallBack() {
+            @Override
+            public void execute() {
+                startLocationService();
+            }
+        }).getAppConfig(); //获取整个应用的配置信息,获取完成后启动位置服务
         String contactLastUpdateTime = ContactCacheUtils
                 .getLastUpdateTime(IndexActivity.this);
         isHasCacheContact = !StringUtils.isBlank(contactLastUpdateTime);
@@ -151,7 +157,6 @@ public class IndexActivity extends BaseFragmentActivity implements
         getAppTabInfo();  //从服务端获取显示tab
         new SplashPageUtils(IndexActivity.this).update();//更新闪屏页面
         new ReactNativeUtils(IndexActivity.this).init(); //更新react
-        new AppConfigUtils(IndexActivity.this).getAppConfig(); //获取整个应用的配置信息
     }
 
     /**
@@ -206,7 +211,6 @@ public class IndexActivity extends BaseFragmentActivity implements
         intent.setClass(this, LocationService.class);
         startService(intent);
     }
-
 
     /**
      * 为了使打开报销web应用更快，进行预加载

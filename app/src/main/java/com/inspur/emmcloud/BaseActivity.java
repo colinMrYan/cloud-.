@@ -13,7 +13,7 @@ public class BaseActivity extends Activity {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
         String className = this.getClass().getCanonicalName();
-        if (!className.endsWith("CaptureActivity") &&!className.equals("MyCameraActivity") && !className.endsWith("LoginActivity") ){
+        if (!className.endsWith("CaptureActivity") &&!className.endsWith("MyCameraActivity") && !className.endsWith("LoginActivity") ){
             StateBarColor.changeStateBarColor(this);
         }
     }

@@ -548,4 +548,7 @@ public interface APIInterface {
     void returnWebAppRealUrlSuccess(GetWebAppRealUrlResult getWebAppRealUrlResult);
     void returnWebAppRealUrlFail();
 
+    void returnSaveConfigSuccess();
+    void returnSaveConfigFail();
+
 }

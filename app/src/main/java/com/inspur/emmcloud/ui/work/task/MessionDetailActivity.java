@@ -34,6 +34,7 @@ import com.inspur.emmcloud.bean.SearchModel;
 import com.inspur.emmcloud.bean.TaskColorTag;
 import com.inspur.emmcloud.bean.TaskResult;
 import com.inspur.emmcloud.bean.TaskSubject;
+import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.util.ContactCacheUtils;
@@ -819,7 +820,7 @@ public class MessionDetailActivity extends BaseActivity {
 			if (loadingDlg != null && loadingDlg.isShowing()) {
 				loadingDlg.dismiss();
 			}
-			Intent mIntent = new Intent("com.inspur.task");
+			Intent mIntent = new Intent(Constant.ACTION_TASK);
 			mIntent.putExtra("refreshTask", "refreshTask");
 			sendBroadcast(mIntent);
 			ToastUtils.show(getApplicationContext(),

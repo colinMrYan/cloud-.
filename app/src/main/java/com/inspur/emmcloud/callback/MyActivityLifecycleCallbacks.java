@@ -9,6 +9,7 @@ import android.os.Bundle;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.api.apiservice.AppAPIService;
 import com.inspur.emmcloud.service.PVCollectService;
+import com.inspur.emmcloud.service.SyncCommonAppService;
 import com.inspur.emmcloud.ui.mine.setting.CreateGestureActivity;
 import com.inspur.emmcloud.ui.mine.setting.GestureLoginActivity;
 import com.inspur.emmcloud.util.AppUtils;
@@ -54,7 +55,8 @@ public class MyActivityLifecycleCallbacks implements Application.ActivityLifecyc
                 .isIndexActivityRunning() && !AppUtils.isAppOnForeground(activity.getApplicationContext())) {
             // app 进入后台
             ((MyApplication) activity.getApplicationContext()).setIsActive(false);
-            startUploadPVCollectService(activity);
+            startUploadPVCollectService(activity.getApplicationContext());
+            startSyncCommonAppService(activity.getApplicationContext());
         }
     }
 
@@ -119,6 +121,19 @@ public class MyActivityLifecycleCallbacks implements Application.ActivityLifecyc
         if (!AppUtils.isServiceWork(context, "com.inspur.emmcloud.service.CollectService") && (!DbCacheUtils.isDbNull())) {
             Intent intent = new Intent();
             intent.setClass(context, PVCollectService.class);
+            context.startService(intent);
+        }
+    }
+
+
+    /***
+     * 打开同步常用应用Service;
+     */
+    private void startSyncCommonAppService(Context context) {
+        // TODO Auto-generated method stub
+        if (!AppUtils.isServiceWork(context, "com.inspur.emmcloud.service.SyncCommonAppService") && (!DbCacheUtils.isDbNull())) {
+            Intent intent = new Intent();
+            intent.setClass(context, SyncCommonAppService.class);
             context.startService(intent);
         }
     }

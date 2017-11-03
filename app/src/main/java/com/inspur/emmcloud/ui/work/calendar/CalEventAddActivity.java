@@ -15,13 +15,13 @@ import android.widget.TimePicker;
 
 import com.alibaba.fastjson.JSON;
 import com.inspur.emmcloud.BaseActivity;
-import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.WorkAPIService;
 import com.inspur.emmcloud.bean.CalendarEvent;
 import com.inspur.emmcloud.bean.GetIDResult;
 import com.inspur.emmcloud.bean.MyCalendar;
+import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.util.CalendarColorUtils;
 import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.NetUtils;
@@ -489,7 +489,7 @@ public class CalEventAddActivity extends BaseActivity {
 	 * @param isAdd
 	 */
 	public void sendBoradcastReceiver() {
-		Intent mIntent = new Intent("com.inspur.calendar");
+		Intent mIntent = new Intent(Constant.ACTION_CALENDAR);
 		mIntent.putExtra("refreshCalendar","");
 		// 发送广播
 		sendBroadcast(mIntent);
