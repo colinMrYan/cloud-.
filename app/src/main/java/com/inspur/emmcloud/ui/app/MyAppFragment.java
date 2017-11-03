@@ -181,7 +181,6 @@ public class MyAppFragment extends Fragment {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                isNeedRefreshApp = true;
                 getMyApp();
                 getAppBadgeNum();
             }
@@ -580,12 +579,6 @@ public class MyAppFragment extends Fragment {
             }
         }
         appGroupItemList.set(to, temp);
-    }
-
-    @Override
-    public void onRefresh(PullToRefreshLayout pullToRefreshLayout) {
-        getMyApp();
-        getAppBadgeNum();
     }
 
     /**

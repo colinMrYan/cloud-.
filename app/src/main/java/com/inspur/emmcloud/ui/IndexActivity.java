@@ -45,7 +45,6 @@ import com.inspur.emmcloud.ui.app.MyAppFragment;
 import com.inspur.emmcloud.ui.chat.MessageFragment;
 import com.inspur.emmcloud.ui.find.FindFragment;
 import com.inspur.emmcloud.ui.mine.MoreFragment;
-import com.inspur.emmcloud.ui.mine.setting.LanguageChangeActivity;
 import com.inspur.emmcloud.ui.notsupport.NotSupportFragment;
 import com.inspur.emmcloud.ui.work.MainTabBean;
 import com.inspur.emmcloud.ui.work.WorkFragment;
@@ -85,7 +84,7 @@ import java.util.List;
  * @author Administrator
  */
 public class IndexActivity extends BaseFragmentActivity implements
-        OnTabChangeListener, OnTouchListener, MyAppFragment.AppLanguageState {
+        OnTabChangeListener, OnTouchListener {
     private static final int SYNC_ALL_BASE_DATA_SUCCESS = 0;
     private static final int RELOAD_WEB = 3;
     private long lastBackTime;
@@ -697,16 +696,6 @@ public class IndexActivity extends BaseFragmentActivity implements
         return getFragmentManager().findFragmentByTag(
                 mTabHost.getCurrentTabTag());
     }
-
-    //修改语言时状态接口
-    @Override
-    public boolean getAppLanguageState() {
-        if (getIntent().hasExtra(LanguageChangeActivity.LANGUAGE_CHANGE)) {
-            return getIntent().getBooleanExtra(LanguageChangeActivity.LANGUAGE_CHANGE, false);
-        }
-        return false;
-    }
-
 
     @Override
     protected void onDestroy() {
