@@ -46,6 +46,10 @@ public class SchemeHandleActivity extends Activity {
                     Uri uri = getIntent().getData();
                     String scheme = uri.getScheme();
                     String host = uri.getHost();
+                    if(uri == null || scheme == null || host == null){
+                        finish();
+                        return;
+                    }
                     Bundle bundle = new Bundle();
                     switch (scheme) {
                         case "ecc-contact":

@@ -97,7 +97,7 @@ public class RobotInfoActivity extends BaseActivity implements OnStateChangedLis
 	 * 展示机器人信息
 	 */
 	private void showRobotInfo(Robot robotInfo) {
-		ImageDisplayUtils.getInstance().displayImage(robotHeadImg, UriUtils.getRobotIconUri(robotInfo.getAvatar()),R.drawable.icon_inspur_robot_notice);
+		ImageDisplayUtils.getInstance().displayImage(robotHeadImg, UriUtils.getRobotIconUri(robotInfo.getAvatar()),R.drawable.icon_person_default);
 		robotNameText.setText(robotInfo.getName());
 		functionIntroductionText.setText(robotInfo.getTitle());
 		supportText.setText(robotInfo.getSupport());

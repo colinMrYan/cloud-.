@@ -4,6 +4,7 @@ apply plugin: 'com.android.application'
 import com.android.build.OutputFile
 
 apply from: "../node_modules/react-native/react.gradle"
+apply from: "../node_modules/react-native-vector-icons/fonts.gradle"
 
 /**
  * Set this to true to create two separate APKs instead of one:
@@ -143,6 +144,9 @@ dependencies {
     // React Naive Components
     compile project(':react-native-smart-swipe-refresh-layout')
     compile project(':react-native-picker')
+    compile project(':react-native-svg')
+    compile project(':react-native-vector-icons')
+    compile project(':react-native-navigation')
     testCompile 'junit:junit:4.12'
     androidTestCompile('com.android.support.test:runner:0.5') {
         exclude module: 'support-annotations'

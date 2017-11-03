@@ -91,10 +91,9 @@ public class MyAppFragment extends Fragment {
     private PopupWindow popupWindow;
     private boolean isNeedCommonlyUseApp = false;
     private List<String> shortCutAppList = new ArrayList<>();
-    private boolean isNeedRefreshApp = false;//下拉刷新和从应用中心添加应用 删除应用时刷新标志
-    private boolean isHasCacheNotRefresh = false;
     private MyAppSaveTask myAppSaveTask;
     private Map<String,AppBadgeBean> appBadgeBeanMap = new HashMap<>();
+    private boolean isOnCreate = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -121,31 +120,14 @@ public class MyAppFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        //每次createView如果有上一次存下来的缓存数据则刷新并修改缓存状态
-        if (isHasCacheNotRefresh) {
-            refreshAppListView();
-            isHasCacheNotRefresh = false;
-        }
         //隔五分钟刷一次badge
         long badgeUpdateTime = PreferencesByUserAndTanentUtils.getLong(getActivity(),
                 Constant.PREF_APP_BADGE_UPDATE_TIME,0L);
         long badgeUpdateTimeBetween = System.currentTimeMillis() - badgeUpdateTime;
-        if(badgeUpdateTimeBetween>=GET_BADGE_DELAY){
+        if(!isOnCreate && badgeUpdateTimeBetween>=GET_BADGE_DELAY){
             getAppBadgeNum();
         }
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        isNeedRefreshApp = ((AppLanguageState) context).getAppLanguageState();
-    }
-
-    /**
-     * 修改语言时的接口
-     */
-    public interface AppLanguageState {
-         boolean getAppLanguageState();
+        isOnCreate = false;
     }
 
     /**
@@ -183,6 +165,7 @@ public class MyAppFragment extends Fragment {
         getMyApp();
         setTabTitle();
         getAppBadgeNum();
+        isOnCreate = true;
 //        shortCutAppList.add("mobile_checkin_hcm");
 //        shortCutAppList.add("inspur_news_esg");//目前，除在此处添加id还需要为每个需要生成快捷方式的应用配置图标
     }
@@ -198,7 +181,6 @@ public class MyAppFragment extends Fragment {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                isNeedRefreshApp = true;
                 getMyApp();
                 getAppBadgeNum();
             }
@@ -213,7 +195,6 @@ public class MyAppFragment extends Fragment {
         List<AppGroupBean> appGroupList = MyAppCacheUtils.getMyAppList(getContext());
         if(appListAdapter != null){
             appListAdapter.setAppAdapterList(appGroupList);
-            appListAdapter.notifyDataSetChanged();
         }else{
             appListAdapter = new AppListAdapter(appGroupList);
             appListView.setAdapter(appListAdapter);
@@ -251,7 +232,6 @@ public class MyAppFragment extends Fragment {
             public void onReceive(Context context, Intent intent) {
                 String action = intent.getAction();
                 if (action.equals(ACTION_NAME)) {
-                    isNeedRefreshApp = true;
                     getMyApp();
                     (rootView.findViewById(R.id.app_edit_finish)).setVisibility(View.GONE);
                     editBtn.setVisibility(View.VISIBLE);
@@ -434,6 +414,7 @@ public class MyAppFragment extends Fragment {
          */
         public void setAppAdapterList(List<AppGroupBean> list) {
             appAdapterList = list;
+            notifyDataSetChanged();
         }
 
         /**
@@ -501,7 +482,6 @@ public class MyAppFragment extends Fragment {
         if(appCommonlyUseList.size() == 1){
             AppCommonlyUse appCommonlyUse = appCommonlyUseList.get(0);
             clickCount = appCommonlyUse.getClickCount();
-
         }
         return (appCommonlyUseList.size()>1 || clickCount > 1);
     }
@@ -577,7 +557,6 @@ public class MyAppFragment extends Fragment {
             }
         }
         appListAdapter.setAppAdapterList(appAdapterList);
-        appListAdapter.notifyDataSetChanged();
     }
 
     /**
@@ -979,8 +958,6 @@ public class MyAppFragment extends Fragment {
         @Override
         protected List<AppGroupBean> doInBackground(GetAppGroupResult... params) {
             try {
-                String appCache = MyAppCacheUtils.getMyAppListJson(getActivity());
-                isNeedRefreshApp = (StringUtils.isBlank(appCache) || isNeedRefreshApp);
                 List<AppGroupBean> appGroupList = handleAppList((params[0])
                         .getAppGroupBeanList());
                 MyAppCacheUtils.saveMyAppList(getActivity(), appGroupList);
@@ -995,14 +972,7 @@ public class MyAppFragment extends Fragment {
         @Override
         protected void onPostExecute(List<AppGroupBean> appGroupList) {
             super.onPostExecute(appGroupList);
-            isHasCacheNotRefresh = true;
-            //当第一次安装，第一次打开时，没有缓存的时候需要刷新appAdapter，其余时候只存（并且存储一个是否有网络数据的标志）不刷
-            if (isNeedRefreshApp) {
-                isNeedRefreshApp = false;
-                isHasCacheNotRefresh = false;
-                appListAdapter.setAppAdapterList(appGroupList);
-                appListAdapter.notifyDataSetChanged();
-            }
+            appListAdapter.setAppAdapterList(appGroupList);
             swipeRefreshLayout.setRefreshing(false);
         }
     }

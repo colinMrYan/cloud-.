@@ -13,6 +13,7 @@ import com.facebook.react.ReactRootView;
 import com.facebook.react.common.LifecycleState;
 import com.facebook.react.modules.core.DefaultHardwareBackBtnHandler;
 import com.facebook.react.shell.MainReactPackage;
+import com.horcrux.svg.SvgPackage;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.bean.Enterprise;
 import com.inspur.emmcloud.bean.GetMyInfoResult;
@@ -23,7 +24,9 @@ import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.ZipUtils;
 import com.inspur.reactnative.AuthorizationManagerPackage;
 import com.inspur.reactnative.ReactNativeInitInfoUtils;
+import com.oblador.vectoricons.VectorIconsPackage;
 import com.reactnativecomponent.swiperefreshlayout.RCTSwipeRefreshLayoutPackage;
+import com.reactnativenavigation.bridge.NavigationReactPackage;
 
 
 /**
@@ -73,6 +76,9 @@ public class FindFragment extends Fragment implements DefaultHardwareBackBtnHand
                 .addPackage(new RCTSwipeRefreshLayoutPackage())
                 .addPackage(new AuthorizationManagerPackage())
                 .addPackage(new PickerViewPackage())
+                .addPackage(new SvgPackage())
+                .addPackage(new NavigationReactPackage())
+                .addPackage(new VectorIconsPackage())
                 .setUseDeveloperSupport(BuildConfig.DEBUG)
                 .setInitialLifecycleState(LifecycleState.RESUMED)
                 .build();
