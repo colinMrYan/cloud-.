@@ -140,7 +140,8 @@
         <activity
             android:name=".ui.login.LoginActivity"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen"></activity>
         <activity
             android:name=".ui.login.ScanQrCodeLoginActivity"
             android:screenOrientation="portrait" />
@@ -183,7 +184,7 @@
             android:name=".ui.SchemeHandleActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            android:theme="@style/SplashTheme">
+            android:theme="@android:style/Theme.Translucent.NoTitleBar">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -498,9 +499,6 @@
             android:name=".ui.work.calendar.CalFilterActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.work.meeting.LocationActivity"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".ui.work.meeting.BuildingActivity"
             android:screenOrientation="portrait" />
         <activity
@@ -535,6 +533,8 @@
         <service android:name=".service.CoreService"></service>
         <service android:name=".service.CoreInnerService"></service>
         <service android:name=".service.AppExceptionService"></service>
+        <service android:name=".service.SyncCommonAppService"></service>
+
         <!--AliveJobService需要BIND_JOB_SERVICE权限-->
         <service android:name=".service.BackgroundService"></service>
 
@@ -582,23 +582,28 @@
         <activity
             android:name="com.inspur.imp.plugin.camera.imagepicker.ui.ImageGridActivity"
             android:configChanges="orientation|screenSize"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"></activity>
         <activity
             android:name="com.inspur.imp.plugin.camera.imagepicker.ui.ImagePreviewActivity"
             android:configChanges="orientation|screenSize"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"></activity>
         <activity
             android:name="com.inspur.imp.plugin.camera.imagepicker.ui.ImageCropActivity"
             android:configChanges="orientation|screenSize"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"></activity>
         <activity
             android:name="com.inspur.imp.plugin.camera.imagepicker.ui.ImagePreviewDelActivity"
             android:configChanges="orientation|screenSize"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"></activity>
         <activity
             android:name="com.inspur.imp.plugin.camera.editimage.EditImageActivity"
             android:configChanges="orientation|screenSize"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"></activity>
         <!-- ImagePicker -->
 
 
@@ -620,9 +625,12 @@
             android:screenOrientation="portrait"
             android:stateNotNeeded="true"
             android:supportsRtl="true"
-            android:theme="@style/SplashTheme"></activity>
+            android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen"></activity>
 
-        <activity android:name="com.inspur.imp.plugin.file.FileBrowerAppActivity"></activity>
+        <activity android:name="com.inspur.imp.plugin.file.FileBrowerAppActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+
+            ></activity>
 
         <activity
             android:name="com.inspur.imp.plugin.filetransfer.TextFileShowActivity"

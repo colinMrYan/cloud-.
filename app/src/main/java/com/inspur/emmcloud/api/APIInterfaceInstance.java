@@ -11,8 +11,8 @@ import com.inspur.emmcloud.bean.GetAdressUsersResult;
 import com.inspur.emmcloud.bean.GetAllAppResult;
 import com.inspur.emmcloud.bean.GetAllContactResult;
 import com.inspur.emmcloud.bean.GetAllRobotsResult;
-import com.inspur.emmcloud.bean.GetAppConfigResult;
 import com.inspur.emmcloud.bean.GetAppBadgeResult;
+import com.inspur.emmcloud.bean.GetAppConfigResult;
 import com.inspur.emmcloud.bean.GetAppGroupResult;
 import com.inspur.emmcloud.bean.GetAppTabAutoResult;
 import com.inspur.emmcloud.bean.GetAppTabsResult;
@@ -69,6 +69,7 @@ import com.inspur.emmcloud.bean.GetUpdatePwdBySMSCodeBean;
 import com.inspur.emmcloud.bean.GetUpgradeResult;
 import com.inspur.emmcloud.bean.GetUploadMyHeadResult;
 import com.inspur.emmcloud.bean.GetUserHeadUploadResult;
+import com.inspur.emmcloud.bean.GetWebAppRealUrlResult;
 import com.inspur.emmcloud.bean.GetWebSocketUrlResult;
 import com.inspur.emmcloud.bean.LoginDesktopCloudPlusBean;
 import com.inspur.emmcloud.bean.ReactNativeDownloadUrlBean;
@@ -1102,7 +1103,7 @@ public class APIInterfaceInstance implements APIInterface {
      */
     @Override
     public void returnMeetingsSuccess(GetMeetingsResult getMeetingsResult,
-                                      boolean isLoadMore) {
+                                      int page) {
         // TODO Auto-generated method stub
 
     }
@@ -1465,6 +1466,26 @@ public class APIInterfaceInstance implements APIInterface {
 
     @Override
     public void returnUploadPositionSuccess() {
+
+    }
+
+    @Override
+    public void returnWebAppRealUrlSuccess(GetWebAppRealUrlResult getWebAppRealUrlResult) {
+
+    }
+
+    @Override
+    public void returnWebAppRealUrlFail() {
+
+    }
+
+    @Override
+    public void returnSaveConfigSuccess() {
+
+    }
+
+    @Override
+    public void returnSaveConfigFail() {
 
     }
 }

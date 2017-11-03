@@ -4,6 +4,7 @@
     android:layout_height="wrap_content"
     android:background="@color/white"
     android:orientation="horizontal"
+    android:paddingRight="16dp"
     android:paddingLeft="16dp" >
 
     <com.inspur.emmcloud.widget.CircleImageView
@@ -32,7 +33,6 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_marginLeft="12dp"
-                android:paddingRight="16dp"
                 android:textColor="@color/text_grey"
                 android:textSize="15sp" />
 

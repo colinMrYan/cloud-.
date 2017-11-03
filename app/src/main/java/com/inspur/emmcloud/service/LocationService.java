@@ -51,7 +51,7 @@ public class LocationService extends Service implements AMapLocationListener {
 				@Override
 				public void run() {
 					// TODO Auto-generated method stub
-					if (NetUtils.isNetworkConnected(getApplicationContext())){
+					if (NetUtils.isNetworkConnected(getApplicationContext(),false)){
 						if (mlocationClient == null){
 							initLocation();
 						}
@@ -133,7 +133,7 @@ public class LocationService extends Service implements AMapLocationListener {
      * @param locationObjJson
      */
 	private void uploadPosition(String locationObjJson){
-        if (NetUtils.isNetworkConnected(this)){
+        if (NetUtils.isNetworkConnected(this,false)){
             if (apiService == null){
                 apiService = new AppAPIService(getApplicationContext());
                 apiService.setAPIInterface(new WebService());

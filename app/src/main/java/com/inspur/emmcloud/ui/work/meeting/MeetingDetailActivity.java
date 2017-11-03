@@ -31,6 +31,7 @@ import com.inspur.emmcloud.bean.Contact;
 import com.inspur.emmcloud.bean.Meeting;
 import com.inspur.emmcloud.bean.Room;
 import com.inspur.emmcloud.bean.SearchModel;
+import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.ui.chat.MembersActivity;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.util.ContactCacheUtils;
@@ -669,7 +670,7 @@ public class MeetingDetailActivity extends BaseActivity {
      * 发送广播
      */
     private void sendBroadCast() {
-        Intent mIntent = new Intent("com.inspur.meeting");
+        Intent mIntent = new Intent(Constant.ACTION_MEETING);
         mIntent.putExtra("refreshMeeting", "refreshMeeting");
         sendBroadcast(mIntent);
     }

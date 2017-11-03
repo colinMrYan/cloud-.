@@ -34,6 +34,7 @@ import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.SwitchView;
+import com.inspur.emmcloud.widget.dialogs.MyQMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
 
@@ -190,7 +191,7 @@ public class SettingActivity extends BaseActivity {
      * 弹出注销提示框
      */
     private void showSignoutDlg() {
-        new QMUIDialog.MessageDialogBuilder(SettingActivity.this)
+        new MyQMUIDialog.MessageDialogBuilder(SettingActivity.this)
                 .setMessage(R.string.if_confirm_signout)
                 .addAction(R.string.cancel, new QMUIDialogAction.ActionListener() {
                     @Override
@@ -258,7 +259,7 @@ public class SettingActivity extends BaseActivity {
      */
     private void showClearCacheWarningDlg() {
         // TODO Auto-generated method stub
-        new QMUIDialog.MessageDialogBuilder(SettingActivity.this)
+        new MyQMUIDialog.MessageDialogBuilder(SettingActivity.this)
                 .setMessage(getString(R.string.my_setting_tips_quit))
                 .addAction(getString(R.string.cancel), new QMUIDialogAction.ActionListener() {
                     @Override

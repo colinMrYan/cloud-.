@@ -20,6 +20,7 @@ import com.inspur.emmcloud.bean.CalEventGroup;
 import com.inspur.emmcloud.bean.CalendarEvent;
 import com.inspur.emmcloud.bean.GetCalendarEventsResult;
 import com.inspur.emmcloud.bean.MyCalendar;
+import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.util.CalEventNotificationUtils;
 import com.inspur.emmcloud.util.CalendarColorUtils;
 import com.inspur.emmcloud.util.LogUtils;
@@ -201,7 +202,7 @@ public class CalActivity extends BaseActivity implements OnRefreshListener {
 		case R.id.back_layout:
 			finish();
 			break;
-		case R.id.mession_calset_detail:
+		case R.id.cal_config_img:
 			intent.putExtra("calendarList", (Serializable) calendarList);
 			intent.setClass(CalActivity.this, CalFilterActivity.class);
 			startActivityForResult(intent, FILTER_CAL_EVENT);
@@ -456,7 +457,7 @@ public class CalActivity extends BaseActivity implements OnRefreshListener {
 	 * 发送CalEvent变化通知
 	 */
 	public void sendBoradcastReceiver() {
-			Intent mIntent = new Intent("com.inspur.calendar");
+			Intent mIntent = new Intent(Constant.ACTION_CALENDAR);
 			mIntent.putExtra("refreshCalendar", "");
 			// 发送广播
 			sendBroadcast(mIntent);

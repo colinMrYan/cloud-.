@@ -45,25 +45,22 @@
     </RelativeLayout>
 
 
-    <com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout
-        android:id="@+id/refresh_view"
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/refresh_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/header_layout"
         android:background="@color/content_bg">
 
-        <include layout="@layout/pull_refresh_head" />
-        <!-- 支持所有实现Pullable接口的View -->
 
-        <com.inspur.emmcloud.widget.pullableview.PullableListView
+        <ListView
             android:id="@+id/msg_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:divider="@null"
             android:dividerHeight="0dp" />
 
-        <include layout="@layout/pull_load_more" />
-    </com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout>
+    </android.support.v4.widget.SwipeRefreshLayout>
 
     <LinearLayout
         android:id="@+id/no_chat_layout"

@@ -6,12 +6,6 @@
     android:background="@drawable/text_layout_selector"
     tools:context=".MainActivity" >
 
-    <View
-        android:id="@+id/work_bottom_line"
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:background="#33000000" />
-
     <ImageView
         android:id="@+id/mession_color"
         android:layout_width="4dp"

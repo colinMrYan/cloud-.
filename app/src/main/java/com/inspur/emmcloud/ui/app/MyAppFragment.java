@@ -10,6 +10,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,6 +26,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
@@ -54,13 +56,11 @@ import com.inspur.emmcloud.util.ShortCutUtils;
 import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
+import com.inspur.emmcloud.widget.MySwipeRefreshLayout;
 import com.inspur.emmcloud.widget.SwitchView;
 import com.inspur.emmcloud.widget.SwitchView.OnStateChangedListener;
 import com.inspur.emmcloud.widget.draggrid.DragGridView;
 import com.inspur.emmcloud.widget.draggrid.DragGridView.OnChanageListener;
-import com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout;
-import com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout.OnRefreshListener;
-import com.inspur.emmcloud.widget.pullableview.PullableListView;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -76,18 +76,17 @@ import static com.inspur.emmcloud.util.AppCacheUtils.getCommonlyUseAppList;
  * classes : com.inspur.emmcloud.ui.app.MyAppFragment Create at 2016年12月13日
  * 上午11:10:20
  */
-public class MyAppFragment extends Fragment implements OnRefreshListener {
+public class MyAppFragment extends Fragment {
 
     private static final String ACTION_NAME = "add_app";
-    private static final long GET_BADGE_DELAY = 5 * 60 * 60;
+    private static final long GET_BADGE_DELAY = 18000;
     private View rootView;
-    private LayoutInflater inflater;
-    private PullableListView appListView;
+    private ListView appListView;
     private AppListAdapter appListAdapter;
     private ImageView editBtn;
     private Button editBtnFinish;
     private MyAppAPIService apiService;
-    private PullToRefreshLayout pullToRefreshLayout;
+    private MySwipeRefreshLayout swipeRefreshLayout;
     private BroadcastReceiver mBroadcastReceiver;
     private PopupWindow popupWindow;
     private boolean isNeedCommonlyUseApp = false;
@@ -99,9 +98,7 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        inflater = (LayoutInflater) getActivity().getSystemService(
-                getActivity().LAYOUT_INFLATER_SERVICE);
-        rootView = inflater.inflate(R.layout.fragment_app, null);
+        rootView = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_app, null);
         initViews();
         registerReceiver();
     }
@@ -125,7 +122,7 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
         super.onResume();
         //隔五分钟刷一次badge
         long badgeUpdateTime = PreferencesByUserAndTanentUtils.getLong(getActivity(),
-                Constant.PREF_APP_BADGE_UPDATE_TIME,0l);
+                Constant.PREF_APP_BADGE_UPDATE_TIME,0L);
         long badgeUpdateTimeBetween = System.currentTimeMillis() - badgeUpdateTime;
         if(!isOnCreate && badgeUpdateTimeBetween>=GET_BADGE_DELAY){
             getAppBadgeNum();
@@ -139,12 +136,9 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
     private void initViews() {
         apiService = new MyAppAPIService(getActivity());
         apiService.setAPIInterface(new WebService());
-        pullToRefreshLayout = (PullToRefreshLayout) rootView
-                .findViewById(R.id.refresh_view);
-        pullToRefreshLayout.setOnRefreshListener(this);
-        appListView = (PullableListView) rootView
+        initPullRefreshLayout();
+        appListView = (ListView) rootView
                 .findViewById(R.id.my_app_list);
-        appListView.setCanPullDown(true);
         refreshAppListView();
         editBtn = (ImageView) rootView.findViewById(R.id.app_edit_btn);
         editBtn.setOnClickListener(new OnClickListener() {
@@ -176,6 +170,25 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
 //        shortCutAppList.add("inspur_news_esg");//目前，除在此处添加id还需要为每个需要生成快捷方式的应用配置图标
     }
 
+
+    /**
+     * 初始化PullRefreshLayout
+     */
+    private void initPullRefreshLayout(){
+        swipeRefreshLayout = (MySwipeRefreshLayout) rootView
+                .findViewById(R.id.refresh_layout);
+        swipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.header_bg), getResources().getColor(R.color.header_bg));
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                isNeedRefreshApp = true;
+                getMyApp();
+                getAppBadgeNum();
+            }
+        });
+    }
+
+
     /**
      * 初始化AppListView，加载缓存数据
      */
@@ -204,10 +217,10 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
      * 获取我的apps
      */
     private void getMyApp() {
-        if (NetUtils.isNetworkConnected(getActivity())) {
+        if (NetUtils.isNetworkConnected(getActivity(),false)) {
             apiService.getUserApps();
         } else {
-            pullToRefreshLayout.refreshFinish(PullToRefreshLayout.FAIL);
+            swipeRefreshLayout.setRefreshing(false);
         }
     }
 
@@ -272,7 +285,7 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
         @Override
         public View getView(final int listPosition, View convertView,
                             ViewGroup parent) {
-            convertView = inflater.inflate(R.layout.app_drag_item, null);
+            convertView = LayoutInflater.from(getActivity()).inflate(R.layout.app_drag_item, null);
             ((TextView) convertView.findViewById(R.id.app_title_text))
                     .setText(appAdapterList.get(listPosition).getCategoryName());
             DragGridView dragGridView = (DragGridView) convertView
@@ -283,7 +296,7 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
                     getActivity(), appGroupItemList, listPosition,appBadgeBeanMap);
             dragGridView.setCanScroll(false);
             dragGridView.setPosition(listPosition);
-            dragGridView.setPullToRefreshLayout(pullToRefreshLayout);
+            dragGridView.setPullRefreshLayout(swipeRefreshLayout);
             dragGridViewAdapter.setGroupPosition(listPosition);
             dragGridView.setOnChangeListener(new OnChanageListener() {
                 @Override
@@ -585,14 +598,9 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
     }
 
     @Override
-    public void onLoadMore(PullToRefreshLayout pullToRefreshLayout) {
-    }
-
-    @Override
     public void onPause() {
         super.onPause();
         //为解决切换tab卡死的bug
-        pullToRefreshLayout.refreshFinish(PullToRefreshLayout.FAIL);
         if (popupWindow != null && popupWindow.isShowing()) {
             popupWindow.dismiss();
         }
@@ -972,7 +980,7 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
         protected void onPostExecute(List<AppGroupBean> appGroupList) {
             super.onPostExecute(appGroupList);
             appListAdapter.setAppAdapterList(appGroupList);
-            pullToRefreshLayout.refreshFinish(PullToRefreshLayout.SUCCEED);
+            swipeRefreshLayout.setRefreshing(false);
         }
     }
 
@@ -988,13 +996,13 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
 
         @Override
         public void returnUserAppsFail(String error, int errorCode) {
-            pullToRefreshLayout.refreshFinish(PullToRefreshLayout.FAIL);
+            swipeRefreshLayout.setRefreshing(false);
             WebServiceMiddleUtils.hand(getActivity(), error, errorCode);
         }
 
         @Override
         public void returnGetAppBadgeResultSuccess(GetAppBadgeResult getAppBadgeResult) {
-            pullToRefreshLayout.refreshFinish(PullToRefreshLayout.SUCCEED);
+            swipeRefreshLayout.setRefreshing(false);
             appBadgeBeanMap = getAppBadgeResult.getAppBadgeBeanMap();
             appListAdapter.notifyDataSetChanged();
             PreferencesByUserAndTanentUtils.putLong(getActivity(), Constant.PREF_APP_BADGE_UPDATE_TIME,System.currentTimeMillis());
@@ -1002,7 +1010,7 @@ public class MyAppFragment extends Fragment implements OnRefreshListener {
 
         @Override
         public void returnGetAppBadgeResultFail(String error, int errorCode) {
-            pullToRefreshLayout.refreshFinish(PullToRefreshLayout.FAIL);
+            swipeRefreshLayout.setRefreshing(false);
 //            WebServiceMiddleUtils.hand(getActivity(), error, errorCode);
             PreferencesByUserAndTanentUtils.putLong(getActivity(), Constant.PREF_APP_BADGE_UPDATE_TIME,0l);
         }

@@ -54,7 +54,7 @@ public class NewsListAdapter extends BaseAdapter {
         LayoutInflater inflater = LayoutInflater.from(context);
         NewsHolder holder = new NewsHolder();
         if (convertView == null) {
-            convertView = inflater.inflate(R.layout.news_fragment_listitem, null);
+            convertView = inflater.inflate(R.layout.news_item_view, null);
             holder.imageView = (ImageView) convertView.findViewById(R.id.news_leftImg_img);
             holder.title = (TextView) convertView.findViewById(R.id.news_middleUp_text);
             holder.content = (TextView) convertView.findViewById(R.id.news_middleDown_text);

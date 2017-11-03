@@ -25,6 +25,7 @@ import com.inspur.emmcloud.util.ToastUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.ScrollViewWithListView;
+import com.inspur.emmcloud.widget.dialogs.MyQMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
 
@@ -88,7 +89,7 @@ public class DeviceInfoActivity extends BaseActivity {
      */
     private void showUnbindDevicePromptDlg() {
         String warningText = bindingDevice.getDeviceId().equals(AppUtils.getMyUUID(getApplicationContext())) ? getString(R.string.device_current_unbind_warning) : getString(R.string.device_other_unbind_warning, bindingDevice.getDeviceModel());
-        new QMUIDialog.MessageDialogBuilder(DeviceInfoActivity.this)
+        new MyQMUIDialog.MessageDialogBuilder(DeviceInfoActivity.this)
                 .setMessage(warningText)
                 .addAction(R.string.cancel, new QMUIDialogAction.ActionListener() {
                     @Override

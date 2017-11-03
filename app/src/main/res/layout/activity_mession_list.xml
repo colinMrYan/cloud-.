@@ -45,14 +45,19 @@
 
         <ImageView
             android:id="@+id/mession_settiing_img"
-            android:layout_width="52dp"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
+            android:adjustViewBounds="true"
+            android:clickable="true"
             android:onClick="onClick"
+            android:paddingBottom="13dp"
             android:paddingLeft="12dp"
             android:paddingRight="15dp"
-            android:src="@drawable/icon_mession_set" />
+            android:paddingTop="13dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_config" />
     </RelativeLayout>
 
     <com.inspur.emmcloud.widget.SegmentControl
@@ -79,24 +84,20 @@
         android:layout_marginTop="8dp"
         android:layout_weight="1" >
 
-        <com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout
-            android:id="@+id/refresh_view"
+        <com.inspur.emmcloud.widget.MySwipeRefreshLayout
+            android:id="@+id/refresh_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent" >
-
-            <include layout="@layout/pull_refresh_head" />
-            <!-- 支持所有实现Pullable接口的View -->
-
-            <com.inspur.emmcloud.widget.pullableview.PullableListView
+            <ListView
                 android:id="@+id/mession_list"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:divider="@null"
+                android:dividerHeight="0.5dp"
+                android:divider="@color/color_list_divider"
                 android:fastScrollEnabled="true"
                 android:transcriptMode="normal" />
 
-            <include layout="@layout/pull_load_more" />
-        </com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout>
+        </com.inspur.emmcloud.widget.MySwipeRefreshLayout>
 
 
         <TextView

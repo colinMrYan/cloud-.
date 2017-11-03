@@ -1,13 +1,15 @@
 package com.inspur.emmcloud.util;
 
 import android.content.Context;
-import android.content.Intent;
 
+import com.alibaba.fastjson.JSON;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.AppAPIService;
+import com.inspur.emmcloud.bean.AppCommonlyUse;
 import com.inspur.emmcloud.bean.AppConfig;
 import com.inspur.emmcloud.bean.GetAppConfigResult;
-import com.inspur.emmcloud.service.LocationService;
+import com.inspur.emmcloud.callback.CommonCallBack;
+import com.inspur.emmcloud.config.Constant;
 
 import java.util.List;
 
@@ -17,8 +19,10 @@ import java.util.List;
 
 public class AppConfigUtils {
     private Context context;
-    public AppConfigUtils(Context context){
+    private CommonCallBack callBack;
+    public AppConfigUtils(Context context, CommonCallBack callBack){
         this.context = context;
+        this.callBack = callBack;
     }
 
     public void getAppConfig(){
@@ -30,21 +34,28 @@ public class AppConfigUtils {
     }
 
     /**
-     * 打开位置收集服务
+     * 当获取到服务端常用应用后，查看本地是否有常用应用记录，如果没有的话把数据存到本地
      */
-    private void startLocationService(){
-        Intent intent = new Intent();
-        intent.setClass(context, LocationService.class);
-        context.startService(intent);
+    private void syncCommonAppToLocalDb(){
+        String commonAppListJson = AppConfigCacheUtils.getAppConfigValue(context, Constant.CONCIG_COMMON_FUNCTIONS,"null");
+        if (!commonAppListJson.equals("null")){
+            List<AppCommonlyUse> commonAppList = AppCacheUtils.getCommonlyUseAppList(context);
+            if (commonAppList.size() == 0){
+                commonAppList = JSON.parseArray(commonAppListJson,AppCommonlyUse.class);
+                AppCacheUtils.saveAppCommonlyUseList(context,commonAppList);
+            }
+        }
     }
-
 
     private class WebService extends APIInterfaceInstance{
         @Override
         public void returnAppConfigSuccess(GetAppConfigResult getAppConfigResult) {
             List<AppConfig> appConfigList = getAppConfigResult.getAppConfigList();
             AppConfigCacheUtils.clearAndSaveAppConfigList(context,appConfigList);
-            startLocationService();
+            if (callBack != null){
+                callBack.execute();
+            }
+            syncCommonAppToLocalDb();
         }
 
         @Override

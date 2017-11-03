@@ -3,15 +3,15 @@
     android:id="@+id/main_layout"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-     android:orientation="vertical"
     android:background="@color/white"
-    android:fitsSystemWindows="true" >
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
 
     <RelativeLayout
         android:id="@+id/header_layout"
         android:layout_width="match_parent"
         android:layout_height="@dimen/header_height"
-        android:background="@color/header_bg" >
+        android:background="@color/header_bg">
 
         <RelativeLayout
             android:id="@+id/back_layout"
@@ -21,7 +21,7 @@
             android:clickable="true"
             android:onClick="onClick"
             android:paddingLeft="12dp"
-            android:paddingRight="12dp" >
+            android:paddingRight="12dp">
 
             <ImageView
                 android:id="@+id/back_btn"
@@ -44,18 +44,17 @@
             android:textColor="@color/header_text"
             android:textSize="@dimen/header_textsize" />
     </RelativeLayout>
-     <com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout
-        android:id="@+id/refresh_view"
+
+    <com.inspur.emmcloud.widget.MySwipeRefreshLayout
+        android:id="@+id/refresh_layout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:background="@color/comment_background_color" >
+        android:background="@color/comment_background_color">
 
-        <include layout="@layout/pull_refresh_head" />
-        <!-- 支持所有实现Pullable接口的View -->
 
-        <com.inspur.emmcloud.widget.pullableview.PullableScrollView
-            android:id="@+id/xscrollview"
+        <ScrollView
+            android:id="@+id/scrollview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
@@ -69,14 +68,11 @@
             android:stretchMode="columnWidth"
             android:verticalSpacing="3dp" />
 
-        <include layout="@layout/pull_load_more" />
-    </com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout>
+    </com.inspur.emmcloud.widget.MySwipeRefreshLayout>
 
     <com.inspur.emmcloud.widget.ECMChatInputMenu
         android:id="@+id/chat_input_menu"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        >
-    </com.inspur.emmcloud.widget.ECMChatInputMenu>
+        android:layout_height="wrap_content"></com.inspur.emmcloud.widget.ECMChatInputMenu>
 
 </LinearLayout>

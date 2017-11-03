@@ -62,7 +62,7 @@
                 android:src="@drawable/icon_cal_cal" />
 
             <ImageView
-                android:id="@+id/mession_calset_detail"
+                android:id="@+id/cal_config_img"
                 android:layout_width="22dp"
                 android:layout_height="22dp"
                 android:layout_alignParentRight="true"

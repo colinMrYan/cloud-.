@@ -8,7 +8,6 @@ import android.os.Message;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
-import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
@@ -73,7 +72,6 @@ public class ImageGridActivity extends ImageBaseActivity implements
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		requestWindowFeature(Window.FEATURE_NO_TITLE);//
 		setContentView(R.layout.activity_image_grid);
 		// hideBars();
 		imagePicker = ImagePicker.getInstance();
