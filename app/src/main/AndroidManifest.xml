@@ -140,8 +140,7 @@
         <activity
             android:name=".ui.login.LoginActivity"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen"></activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".ui.login.ScanQrCodeLoginActivity"
             android:screenOrientation="portrait" />
