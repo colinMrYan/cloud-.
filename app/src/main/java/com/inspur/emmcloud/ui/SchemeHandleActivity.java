@@ -21,8 +21,6 @@ import com.inspur.emmcloud.ui.find.KnowledgeActivity;
 import com.inspur.emmcloud.ui.find.trip.TripInfoActivity;
 import com.inspur.emmcloud.ui.login.LoginActivity;
 import com.inspur.emmcloud.util.IntentUtils;
-import com.inspur.emmcloud.util.LogUtils;
-import com.inspur.emmcloud.util.ToastUtils;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.StateBarColor;
 import com.inspur.emmcloud.util.ToastUtils;
@@ -49,7 +47,7 @@ public class SchemeHandleActivity extends Activity {
                     String scheme = uri.getScheme();
                     String host = uri.getHost();
                     if(uri == null || scheme == null || host == null){
-                        ToastUtils.show(SchemeHandleActivity.this,"页面跳转配置错误");
+                        finish();
                         return;
                     }
                     Bundle bundle = new Bundle();
