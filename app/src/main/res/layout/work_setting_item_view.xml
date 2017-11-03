@@ -5,11 +5,6 @@
     android:background="@color/white"
     android:paddingLeft="14dp">
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.6dp"
-        android:background="@color/content_bg"></View>
-
     <TextView
         android:id="@+id/text"
         android:layout_width="match_parent"
@@ -44,7 +39,11 @@
         android:paddingRight="17dp"
         android:paddingTop="5dp"
         android:src="@drawable/icon_my_common_office_order_handle" />
-
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_below="@id/text"
+        android:background="@color/color_list_divider"></View>
 </RelativeLayout>
 
 

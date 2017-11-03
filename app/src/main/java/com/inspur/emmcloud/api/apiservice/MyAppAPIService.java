@@ -587,4 +587,41 @@ public class MyAppAPIService {
         });
     }
 
+    /**
+     * 向服务端同步常用应用数据
+     * @param commonAppListJson
+     */
+    public void syncCommonApp(final String commonAppListJson){
+        final String url = APIUri.saveAppConfigUrl("CommonFunctions");
+        RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
+        params.setBodyContent(commonAppListJson);
+        x.http().post(params, new APICallback(context, url) {
+            @Override
+            public void callbackSuccess(String arg0) {
+                apiInterface.returnSaveConfigSuccess();
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                apiInterface.returnSaveConfigFail();
+            }
+
+            @Override
+            public void callbackTokenExpire() {
+                new OauthUtils(new OauthCallBack() {
+
+                    @Override
+                    public void reExecute() {
+                        syncCommonApp(commonAppListJson);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                }, context).refreshToken(url);
+            }
+        });
+    }
+
 }

@@ -28,6 +28,7 @@ import com.inspur.emmcloud.bean.GetTaskAddResult;
 import com.inspur.emmcloud.bean.GetTaskListResult;
 import com.inspur.emmcloud.bean.TaskColorTag;
 import com.inspur.emmcloud.bean.TaskResult;
+import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.util.MessionTagColorUtils;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
@@ -98,7 +99,7 @@ public class MessionListActivity extends BaseActivity{
 	// }
 	// };
 	// IntentFilter myIntentFilter = new IntentFilter();
-	// myIntentFilter.addAction("com.inspur.task");
+	// myIntentFilter.addAction(ACTION_TASK);
 	// // 注册广播
 	// MessionListActivity.this.registerReceiver(taskEventReceiver,
 	// myIntentFilter);
@@ -321,7 +322,7 @@ public class MessionListActivity extends BaseActivity{
 	@Override
 	public void onBackPressed() {
 		if (isNeedRefresh) {
-			Intent mIntent = new Intent("com.inspur.task");
+			Intent mIntent = new Intent(Constant.ACTION_TASK);
 			mIntent.putExtra("refreshTask", "refreshTask");
 			sendBroadcast(mIntent);
 			setResult(RESULT_OK);

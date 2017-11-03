@@ -10,11 +10,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.BaseActivity;
-import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.WorkAPIService;
 import com.inspur.emmcloud.bean.MyCalendar;
+import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.util.CalendarColorUtils;
 import com.inspur.emmcloud.util.MyCalendarOperationCacheUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
@@ -178,7 +178,7 @@ public class CalFilterActivity extends BaseActivity {
 	 * 发送Calendar变化通知
 	 */
 	public void sendBoradcastReceiver() {
-		Intent mIntent = new Intent("com.inspur.calendar");
+		Intent mIntent = new Intent(Constant.ACTION_CALENDAR);
 		mIntent.putExtra("refreshCalendar", "");
 		sendBroadcast(mIntent);
 	}

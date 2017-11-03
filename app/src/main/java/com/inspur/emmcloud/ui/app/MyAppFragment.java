@@ -128,7 +128,7 @@ public class MyAppFragment extends Fragment {
         }
         //隔五分钟刷一次badge
         long badgeUpdateTime = PreferencesByUserAndTanentUtils.getLong(getActivity(),
-                Constant.PREF_APP_BADGE_UPDATE_TIME,0l);
+                Constant.PREF_APP_BADGE_UPDATE_TIME,0L);
         long badgeUpdateTimeBetween = System.currentTimeMillis() - badgeUpdateTime;
         if(badgeUpdateTimeBetween>=GET_BADGE_DELAY){
             getAppBadgeNum();
@@ -145,7 +145,7 @@ public class MyAppFragment extends Fragment {
      * 修改语言时的接口
      */
     public interface AppLanguageState {
-        public boolean getAppLanguageState();
+         boolean getAppLanguageState();
     }
 
     /**

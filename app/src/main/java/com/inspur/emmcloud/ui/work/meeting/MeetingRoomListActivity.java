@@ -38,6 +38,7 @@ import com.inspur.emmcloud.bean.GetMeetingRoomsResult;
 import com.inspur.emmcloud.bean.GetOfficeResult;
 import com.inspur.emmcloud.bean.MeetingArea;
 import com.inspur.emmcloud.bean.MeetingRoom;
+import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
@@ -121,7 +122,7 @@ public class MeetingRoomListActivity extends BaseActivity implements
 			}
 		};
 		IntentFilter myIntentFilter = new IntentFilter();
-		myIntentFilter.addAction("com.inspur.meeting");
+		myIntentFilter.addAction(Constant.ACTION_MEETING);
 		registerReceiver(meetingReceiver, myIntentFilter);
 	}
 

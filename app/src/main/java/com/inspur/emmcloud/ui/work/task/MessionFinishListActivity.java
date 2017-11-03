@@ -20,6 +20,7 @@ import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.WorkAPIService;
 import com.inspur.emmcloud.bean.GetTaskListResult;
 import com.inspur.emmcloud.bean.TaskResult;
+import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.util.MessionTagColorUtils;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
@@ -100,7 +101,7 @@ public class MessionFinishListActivity extends BaseActivity implements
 
     @Override
     public void onBackPressed() {
-        Intent mIntent = new Intent("com.inspur.task");
+        Intent mIntent = new Intent(Constant.ACTION_TASK);
         mIntent.putExtra("refreshTask", "refreshTask");
         // 发送广播
         sendBroadcast(mIntent);

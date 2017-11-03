@@ -25,6 +25,7 @@ import com.inspur.emmcloud.api.apiservice.WorkAPIService;
 import com.inspur.emmcloud.bean.GetMeetingsResult;
 import com.inspur.emmcloud.bean.Meeting;
 import com.inspur.emmcloud.bean.Room;
+import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.util.GroupUtils;
 import com.inspur.emmcloud.util.GroupUtils.GroupBy;
 import com.inspur.emmcloud.util.IntentUtils;
@@ -110,7 +111,7 @@ public class MeetingListActivity extends BaseActivity implements
             }
         };
         IntentFilter myIntentFilter = new IntentFilter();
-        myIntentFilter.addAction("com.inspur.meeting");
+        myIntentFilter.addAction(Constant.ACTION_MEETING);
         registerReceiver(meetingReceiver, myIntentFilter);
     }
 
@@ -239,7 +240,7 @@ public class MeetingListActivity extends BaseActivity implements
      * 发送广播
      */
     private void sendBroadCast() {
-        Intent mIntent = new Intent("com.inspur.meeting");
+        Intent mIntent = new Intent(Constant.ACTION_MEETING);
         mIntent.putExtra("refreshMeeting", "refreshMeeting");
         sendBroadcast(mIntent);
     }

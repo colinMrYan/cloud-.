@@ -1478,4 +1478,14 @@ public class APIInterfaceInstance implements APIInterface {
     public void returnWebAppRealUrlFail() {
 
     }
+
+    @Override
+    public void returnSaveConfigSuccess() {
+
+    }
+
+    @Override
+    public void returnSaveConfigFail() {
+
+    }
 }

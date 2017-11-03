@@ -1,12 +1,12 @@
 package com.inspur.emmcloud.util;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.content.Context;
 
 import com.inspur.emmcloud.bean.AppCommonlyUse;
 import com.inspur.emmcloud.bean.AppOrder;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * classes : com.inspur.emmcloud.util.AppCacheUtils Create at 2016年12月17日
@@ -108,5 +108,5 @@ public class AppCacheUtils {
 		}
 		return commonlyUseAppList;
 	}
-	
+
 }
