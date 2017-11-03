@@ -36,7 +36,7 @@ public class ReactNativeUtils {
             new ClientIDUtils(context, new CommonCallBack() {
                 @Override
                 public void execute() {
-//                    updateReactNative();
+                    updateReactNative();
                 }
             }).getClientID();
         }
