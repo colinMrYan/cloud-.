@@ -13,7 +13,7 @@ public class BaseActivity extends Activity {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
         String className = this.getClass().getCanonicalName();
-        if (!className.equals("com.inspur.imp.plugin.barcode.scan.CaptureActivity") &&!className.equals("com.inspur.imp.plugin.camera.mycamera.MyCameraActivity") ){
+        if (!className.endsWith("CaptureActivity") &&!className.equals("MyCameraActivity") && !className.endsWith("LoginActivity") ){
             StateBarColor.changeStateBarColor(this);
         }
     }
