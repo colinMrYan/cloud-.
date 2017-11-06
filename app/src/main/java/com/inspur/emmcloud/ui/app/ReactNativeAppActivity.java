@@ -32,7 +32,6 @@ import com.inspur.emmcloud.util.AppExceptionCacheUtils;
 import com.inspur.emmcloud.util.AppUtils;
 import com.inspur.emmcloud.util.ClientIDUtils;
 import com.inspur.emmcloud.util.FileUtils;
-import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
@@ -67,7 +66,7 @@ public class ReactNativeAppActivity extends BaseActivity implements DefaultHardw
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        StateBarColor.changeStateBarColor(this, R.color.white);
+        StateBarColor.changeStateBarColor(this, R.color.react_native_statebar_color);
         init();
         checkSource();
         initReactNativeApp();
@@ -304,7 +303,6 @@ public class ReactNativeAppActivity extends BaseActivity implements DefaultHardw
                 @Override
                 public void execute() {
                     String clientId = PreferencesByUserAndTanentUtils.getString(ReactNativeAppActivity.this, Constant.PREF_REACT_NATIVE_CLIENTID, "");
-                    LogUtils.YfcDebug("获取下载地址时的clientId："+clientId);
                     StringBuilder describeVersionAndTime = ReactNativeFlow.getBundleDotJsonFromFile(reactAppFilePath);
                     AndroidBundleBean androidBundleBean = new AndroidBundleBean(describeVersionAndTime.toString());
                     reactNativeAPIService.getDownLoadUrl(ReactNativeAppActivity.this, reactNativeInstallUriBean.getInstallUri(), clientId, androidBundleBean.getVersion());
@@ -424,6 +422,7 @@ public class ReactNativeAppActivity extends BaseActivity implements DefaultHardw
             }
             WebServiceMiddleUtils.hand(ReactNativeAppActivity.this,
                     error, errorCode);
+            finish();
         }
 
         @Override
@@ -442,6 +441,7 @@ public class ReactNativeAppActivity extends BaseActivity implements DefaultHardw
             }
             WebServiceMiddleUtils.hand(ReactNativeAppActivity.this,
                     error, errorCode);
+            finish();
         }
 
     }
