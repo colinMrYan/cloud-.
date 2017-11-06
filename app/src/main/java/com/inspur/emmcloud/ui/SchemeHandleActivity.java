@@ -65,7 +65,8 @@ public class SchemeHandleActivity extends Activity {
                             openComponentScheme(uri, host);
                             break;
                         case "ecc-app-react-native":
-                            IntentUtils.startActivity(SchemeHandleActivity.this, ReactNativeAppActivity.class, true);
+                            bundle.putString(scheme,uri.toString());
+                            IntentUtils.startActivity(SchemeHandleActivity.this, ReactNativeAppActivity.class,bundle, true);
                             break;
 
                         case "gs-msg":
