@@ -10,6 +10,7 @@ import android.content.IntentFilter;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -49,17 +50,13 @@ import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.MyDatePickerDialog;
-import com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout;
-import com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout.OnRefreshListener;
-import com.inspur.emmcloud.widget.pullableview.PullableExpandableListView;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
-public class MeetingRoomListActivity extends BaseActivity implements
-		OnRefreshListener {
+public class MeetingRoomListActivity extends BaseActivity implements SwipeRefreshLayout.OnRefreshListener{
 
 	private static final int CHANGE_LOCATION = 0;
 	private static final int CHECK_MEETING_ROOM_DETAIL = 1;
@@ -68,11 +65,11 @@ public class MeetingRoomListActivity extends BaseActivity implements
 	private static final int MEETING_ROOM_BEGIN_TIME = 4;
 	private static final int MEETING_ROOM_END_TIME = 5;
 	private static final int CREATE_COMMON_OFFICE = 6;
-	private PullableExpandableListView expandListView;
+	private ExpandableListView expandListView;
 	private MyAdapter adapter;
 	private LoadingDialog loadingDlg;
 	private WorkAPIService apiService;
-	private PullToRefreshLayout pullToRefreshLayout;
+	private SwipeRefreshLayout swipeRefreshLayout;
 	private RelativeLayout headLayout;
 	private ArrayList<MeetingArea> meetingAreas = new ArrayList<MeetingArea>();
 	private TextView beginDateText, beginTimeText, endDateText, endTimeText;
@@ -239,17 +236,15 @@ public class MeetingRoomListActivity extends BaseActivity implements
 		apiService.setAPIInterface(new WebService());
 		adapter = new MyAdapter(MeetingRoomListActivity.this);
 		loadingDlg = new LoadingDialog(MeetingRoomListActivity.this);
-		pullToRefreshLayout = (PullToRefreshLayout) findViewById(R.id.meeting_room_list_expand_layout);
-		pullToRefreshLayout.setOnRefreshListener(MeetingRoomListActivity.this);
+		swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh_layout);
+		swipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.header_bg), getResources().getColor(R.color.header_bg));
+		swipeRefreshLayout.setOnRefreshListener(MeetingRoomListActivity.this);
 		headLayout = (RelativeLayout) findViewById(R.id.header_layout);
-		expandListView = (PullableExpandableListView) findViewById(R.id.meeting_room_list_expandableListview);
 		filteImg = (ImageView) findViewById(R.id.filte_img);
-
+		expandListView = (ExpandableListView) findViewById(R.id.expandable_list);
 		expandListView.setGroupIndicator(null);
 		expandListView.setVerticalScrollBarEnabled(false);
 		expandListView.setHeaderDividersEnabled(false);
-		expandListView.setCanpulldown(true);
-		expandListView.setCanpullup(false);
 		expandListView.setOnChildClickListener(new RoomChildClickListener());
 	}
 
@@ -510,7 +505,7 @@ public class MeetingRoomListActivity extends BaseActivity implements
 	 */
 	public class MyAdapter extends BaseExpandableListAdapter {
 		private Context context;
-		PullableExpandableListView expandableListView;
+		ExpandableListView expandableListView;
 
 		public MyAdapter(Context context, List<String> group,
 				List<List<String>> child) {
@@ -564,7 +559,7 @@ public class MeetingRoomListActivity extends BaseActivity implements
 		@Override
 		public View getGroupView(final int groupPosition, boolean isExpanded,
 				View convertView, ViewGroup parent) {
-			expandableListView = (PullableExpandableListView) parent;
+			expandableListView = (ExpandableListView) parent;
 			expandableListView.expandGroup(groupPosition);
 			ViewHolder holder;
 			if (convertView == null) {
@@ -607,7 +602,7 @@ public class MeetingRoomListActivity extends BaseActivity implements
 				holder.nowState = (ImageView) convertView
 						.findViewById(R.id.meeting_room_list_now_state_img);
 				holder.relLayout = (RelativeLayout) convertView
-						.findViewById(R.id.meeting_room_list_expand_layout);
+						.findViewById(R.id.refresh_layout);
 				holder.equipsImg[0] = (ImageView) convertView
 						.findViewById(R.id.meeting_room_list_equipment_img);
 				holder.equipsImg[1] = (ImageView) convertView
@@ -696,13 +691,18 @@ public class MeetingRoomListActivity extends BaseActivity implements
 	}
 
 	@Override
-	public void onRefresh(PullToRefreshLayout pullToRefreshLayout) {
-		if (isAfterFilte) {
-			getFilteMeetingRooms(beginCalendar.getTimeInMillis(),
-					endCalendar.getTimeInMillis(), true, false);
-		} else {
-			getCommonOfficeSpace(false);
-		}
+	public void onRefresh() {
+        if (NetUtils.isNetworkConnected(MeetingRoomListActivity.this)){
+            if (isAfterFilte) {
+                getFilteMeetingRooms(beginCalendar.getTimeInMillis(),
+                        endCalendar.getTimeInMillis(), true, false);
+            } else {
+                getCommonOfficeSpace(false);
+            }
+        }else {
+            swipeRefreshLayout.setRefreshing(false);
+        }
+
 
 	}
 
@@ -803,13 +803,6 @@ public class MeetingRoomListActivity extends BaseActivity implements
 		}
 	}
 
-	@Override
-	public void onLoadMore(PullToRefreshLayout pullToRefreshLayout) {
-		if (NetUtils.isNetworkConnected(MeetingRoomListActivity.this)) {
-			apiService.getMeetingRooms();
-		}
-	}
-
 	class RoomChildClickListener implements OnChildClickListener {
 		@Override
 		public boolean onChildClick(ExpandableListView parent, View v,
@@ -840,15 +833,6 @@ public class MeetingRoomListActivity extends BaseActivity implements
 
 	}
 
-	/**
-	 * 获取我的常用办公地点
-	 */
-	protected void getMyCommonOfficeSapce() {
-		if (NetUtils.isNetworkConnected(MeetingRoomListActivity.this)) {
-			loadingDlg.show();
-			apiService.getOffice();
-		}
-	}
 
 	/**
 	 * 获取常用办公地点
@@ -938,7 +922,7 @@ public class MeetingRoomListActivity extends BaseActivity implements
 			if (loadingDlg.isShowing()) {
 				loadingDlg.dismiss();
 			}
-			pullToRefreshLayout.refreshFinish(PullToRefreshLayout.FAIL);
+			swipeRefreshLayout.setRefreshing(false);
 			WebServiceMiddleUtils.hand(MeetingRoomListActivity.this, error,errorCode);
 		}
 
@@ -949,7 +933,7 @@ public class MeetingRoomListActivity extends BaseActivity implements
 				loadingDlg.dismiss();
 			}
 
-			pullToRefreshLayout.refreshFinish(PullToRefreshLayout.SUCCEED);
+            swipeRefreshLayout.setRefreshing(false);
 			if (getMeetingRoomsResult.getMeetingAreas().size() > 0) {
 				meetingAreas = getMeetingRoomsResult.getMeetingAreas();
 				LogUtils.debug("yfcLog", "meetingAreas 中room大小:"+meetingAreas.get(0).getMeetingRooms().size());
@@ -977,7 +961,7 @@ public class MeetingRoomListActivity extends BaseActivity implements
 			if (loadingDlg.isShowing()) {
 				loadingDlg.dismiss();
 			}
-			pullToRefreshLayout.refreshFinish(PullToRefreshLayout.FAIL);
+            swipeRefreshLayout.setRefreshing(false);
 			WebServiceMiddleUtils.hand(MeetingRoomListActivity.this, error,errorCode);
 		}
 

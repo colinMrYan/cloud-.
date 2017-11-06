@@ -293,7 +293,7 @@ public class UpgradeUtils extends APIInterfaceInstance {
         // 判断SD卡是否存在，并且是否具有读写权限
         if (Environment.getExternalStorageState().equals(
                 Environment.MEDIA_MOUNTED)) {
-            RequestParams params = new RequestParams("http://www.fdklfkdlkfs.com");
+            RequestParams params = new RequestParams(upgradeUrl);
             params.setSaveFilePath(DOWNLOAD_PATH + "update.apk");
             cancelable = x.http().get(params,
                     new Callback.ProgressCallback<File>() {
