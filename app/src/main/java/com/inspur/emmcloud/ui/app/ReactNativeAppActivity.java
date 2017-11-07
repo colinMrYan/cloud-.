@@ -107,14 +107,26 @@ public class ReactNativeAppActivity extends BaseActivity implements DefaultHardw
     private void checkSource() {
         //从网页，消息，快捷方式等唤起应用时从这里获取协议和应用编号
         reactNativeAppScheme = getIntent().getDataString();
-        if (reactNativeAppScheme == null && getIntent().hasExtra("ecc-app-react-native")) {
+        if (StringUtils.isBlank(reactNativeAppScheme)) {
             //从其他Activity启动时从这启动
-            String procotolsExtras = getIntent().getStringExtra("ecc-app-react-native");
-            reactNativeAppScheme = procotolsExtras.contains("?")?procotolsExtras.split("[?]")[0]:procotolsExtras;
-            rnAppParams = procotolsExtras.contains("?")?procotolsExtras.split("[?]")[1]:"";
-        } else {
-            finish();
+            if(getIntent().hasExtra("ecc-app-react-native")){
+                String procotolsExtras = getIntent().getStringExtra("ecc-app-react-native");
+                initSchemeAndParams(procotolsExtras);
+            }else{
+                finish();
+            }
+        }else {
+            initSchemeAndParams(reactNativeAppScheme);
         }
+    }
+
+    /**
+     *
+     * @param procotolsExtras
+     */
+    private void initSchemeAndParams(String procotolsExtras) {
+        reactNativeAppScheme = procotolsExtras.contains("?")?procotolsExtras.split("[?]")[0]:procotolsExtras;
+        rnAppParams = procotolsExtras.contains("?")?procotolsExtras.split("[?]")[1]:"";
     }
 
     @Override
