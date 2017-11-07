@@ -32,7 +32,6 @@ import com.inspur.emmcloud.util.AppExceptionCacheUtils;
 import com.inspur.emmcloud.util.AppUtils;
 import com.inspur.emmcloud.util.ClientIDUtils;
 import com.inspur.emmcloud.util.FileUtils;
-import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
@@ -45,6 +44,7 @@ import com.inspur.emmcloud.widget.dialogs.ECMCustomIOSDialog;
 import com.inspur.reactnative.AuthorizationManagerPackage;
 import com.inspur.reactnative.ReactNativeFlow;
 import com.inspur.reactnative.ReactNativeInitInfoUtils;
+import com.inspur.reactnative.ReactNativeWritableNativeMap;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.reactnativecomponent.swiperefreshlayout.RCTSwipeRefreshLayoutPackage;
 import com.reactnativenavigation.bridge.NavigationReactPackage;
@@ -62,12 +62,13 @@ public class ReactNativeAppActivity extends BaseActivity implements DefaultHardw
     private String reactAppFilePath;
     private ECMCustomIOSDialog loadingDialog;
     private String appModule;
+    private String rnAppParams = "";
 //    private String installUri = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        StateBarColor.changeStateBarColor(this, R.color.white);
+        StateBarColor.changeStateBarColor(this, R.color.react_native_statebar_color);
         init();
         checkSource();
         initReactNativeApp();
@@ -106,12 +107,26 @@ public class ReactNativeAppActivity extends BaseActivity implements DefaultHardw
     private void checkSource() {
         //从网页，消息，快捷方式等唤起应用时从这里获取协议和应用编号
         reactNativeAppScheme = getIntent().getDataString();
-        if (reactNativeAppScheme == null && getIntent().hasExtra("ecc-app-react-native")) {
+        if (StringUtils.isBlank(reactNativeAppScheme)) {
             //从其他Activity启动时从这启动
-            reactNativeAppScheme = getIntent().getStringExtra("ecc-app-react-native");
-        } else {
-            finish();
+            if(getIntent().hasExtra("ecc-app-react-native")){
+                String procotolsExtras = getIntent().getStringExtra("ecc-app-react-native");
+                initSchemeAndParams(procotolsExtras);
+            }else{
+                finish();
+            }
+        }else {
+            initSchemeAndParams(reactNativeAppScheme);
         }
+    }
+
+    /**
+     *
+     * @param procotolsExtras
+     */
+    private void initSchemeAndParams(String procotolsExtras) {
+        reactNativeAppScheme = procotolsExtras.contains("?")?procotolsExtras.split("[?]")[0]:procotolsExtras;
+        rnAppParams = procotolsExtras.contains("?")?procotolsExtras.split("[?]")[1]:"";
     }
 
     @Override
@@ -246,11 +261,24 @@ public class ReactNativeAppActivity extends BaseActivity implements DefaultHardw
         bundle.putString("locale", ReactNativeInitInfoUtils.getLocalLanguage(ReactNativeAppActivity.this));
         bundle.putString("reactNativeVersion", ReactNativeInitInfoUtils.getReactNativeVersion(reactAppFilePath));
         bundle.putSerializable("userProfile", getMyInfoResult.getUserProfile2ReactNativeWritableNativeMap());
-        bundle.putString("accessToken", ReactNativeInitInfoUtils.getAppToken(ReactNativeAppActivity.this));
+        bundle.putString("accessToken", ((MyApplication)getApplicationContext()).getToken());
         bundle.putString("pushId", ReactNativeInitInfoUtils.getPushId(ReactNativeAppActivity.this));
-        bundle.putString("pushType", ReactNativeInitInfoUtils.getPushType());
-        bundle.putSerializable("currentEnterprise", ReactNativeInitInfoUtils.getCurrentEnterprise(ReactNativeAppActivity.this).enterPrise2ReactNativeWritableNativeMap());
+        bundle.putString("pushType", ReactNativeInitInfoUtils.getPushType(ReactNativeAppActivity.this));
+        bundle.putSerializable("currentEnterprise", ((MyApplication) getApplicationContext()).getCurrentEnterprise().enterPrise2ReactNativeWritableNativeMap());
         bundle.putString("appVersion", AppUtils.getVersion(ReactNativeAppActivity.this));
+
+        /**
+         * 增加RN路径上的约定参数
+         */
+        if(!StringUtils.isBlank(rnAppParams)){
+            String[] rnParams = rnAppParams.split("&");
+            ReactNativeWritableNativeMap map = new ReactNativeWritableNativeMap();
+            for(int i = 0; i < rnParams.length; i++){
+                String[] signleArgs = rnParams[i].split("=");
+                map.putString(signleArgs[0],signleArgs[1]);
+            }
+            bundle.putSerializable("params",map);
+        }
         return bundle;
     }
 
@@ -304,7 +332,6 @@ public class ReactNativeAppActivity extends BaseActivity implements DefaultHardw
                 @Override
                 public void execute() {
                     String clientId = PreferencesByUserAndTanentUtils.getString(ReactNativeAppActivity.this, Constant.PREF_REACT_NATIVE_CLIENTID, "");
-                    LogUtils.YfcDebug("获取下载地址时的clientId："+clientId);
                     StringBuilder describeVersionAndTime = ReactNativeFlow.getBundleDotJsonFromFile(reactAppFilePath);
                     AndroidBundleBean androidBundleBean = new AndroidBundleBean(describeVersionAndTime.toString());
                     reactNativeAPIService.getDownLoadUrl(ReactNativeAppActivity.this, reactNativeInstallUriBean.getInstallUri(), clientId, androidBundleBean.getVersion());
@@ -424,6 +451,7 @@ public class ReactNativeAppActivity extends BaseActivity implements DefaultHardw
             }
             WebServiceMiddleUtils.hand(ReactNativeAppActivity.this,
                     error, errorCode);
+            finish();
         }
 
         @Override
@@ -442,6 +470,7 @@ public class ReactNativeAppActivity extends BaseActivity implements DefaultHardw
             }
             WebServiceMiddleUtils.hand(ReactNativeAppActivity.this,
                     error, errorCode);
+            finish();
         }
 
     }

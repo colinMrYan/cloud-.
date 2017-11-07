@@ -2,9 +2,7 @@ package com.inspur.reactnative;
 
 import android.content.Context;
 
-import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.bean.AndroidBundleBean;
-import com.inspur.emmcloud.bean.Enterprise;
 import com.inspur.emmcloud.bean.Language;
 import com.inspur.emmcloud.util.AppUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
@@ -65,53 +63,31 @@ public class ReactNativeInitInfoUtils {
     }
 
     /**
-     * 获取apptoken
-     * @param context
-     * @return
-     */
-    public static String getAppToken(Context context){
-        return ((MyApplication)context.getApplicationContext()).getToken();
-    }
-
-    /**
-     * 获取当前企业
-     * @param context
-     * @return
-     */
-    public static Enterprise getCurrentEnterprise(Context context){
-        return  ((MyApplication)context.getApplicationContext()).getCurrentEnterprise();
-    }
-
-    /**
      * 获取pushid
      * @param context
      * @return
      */
     public static String getPushId(Context context){
-        String pushid = "";
-        if(AppUtils.getIsHuaWei()){
-            //需要对华为单独推送的时候解开这里
-            String hwtoken = PreferencesUtils.getString(context,"huawei_push_token","");
-            if(!StringUtils.isBlank(hwtoken)){
-                pushid = hwtoken + "@push.huawei.com";
-            }
-        }else{
-            pushid = PreferencesUtils.getString(context, "JpushRegId", "");
-        }
-        return pushid;
+        String hwToken = PreferencesUtils.getString(context,"huawei_push_token","");
+        return AppUtils.getIsHuaWei()?(StringUtils.isBlank(hwToken)?PreferencesUtils.getString(context, "JpushRegId", "")
+                :(hwToken + "@push.huawei.com")):PreferencesUtils.getString(context, "JpushRegId", "");
     }
 
     /**
      * 获取推送类型
      * @return
      */
-    public static String getPushType(){
-        String pushType = "";
-        if(AppUtils.getIsHuaWei()){
-            pushType = "huawei";
-        }else {
-            pushType = "jiguang";
-        }
-        return pushType;
+    public static String getPushType(Context context){
+        return (AppUtils.getIsHuaWei() && canConnectHuawei(context))?"huawei":"jiguang";
+    }
+
+    /**
+     * 判断是否可以连接华为推了送
+     *
+     * @return
+     */
+    private static boolean canConnectHuawei(Context context) {
+        String pushFlag = PreferencesUtils.getString(context, "pushFlag", "");
+        return (StringUtils.isBlank(pushFlag) || pushFlag.equals("huawei"));
     }
 }
