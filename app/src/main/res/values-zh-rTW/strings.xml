@@ -11,7 +11,7 @@
     <string name="retry">重試</string>
     <string name="software_service_term">服務協定</string>
     <string name="update_fail">更新失敗</string>
-    <string name="downloading_package">下載中，請稍後....</string>
+    <string name="downloading_package">下載中，請稍候....</string>
     <string name="service_term">服務協定</string>
     <string name="prompt">提示</string>
     <string name="nothing">無 </string>
@@ -425,7 +425,7 @@
     <string name="switch_enterprise">切換企業</string>
     <string name="current_enterprise">當前企業</string>
     <string name="web_app_auto_rotate">Web應用支持旋轉</string>
-
+    <string name="run_background">後臺運行</string>
 
 
 

@@ -11,7 +11,7 @@
     <string name="retry">重试</string>
     <string name="software_service_term">服务协议</string>
     <string name="update_fail">更新失败</string>
-    <string name="downloading_package">下载中，请稍后....</string>
+    <string name="downloading_package">下载中，请稍候....</string>
     <string name="service_term">服务协议</string>
     <string name="prompt">提示</string>
     <string name="nothing">无 </string>
@@ -427,8 +427,7 @@
     <string name="switch_enterprise">切换企业</string>
     <string name="current_enterprise">当前企业</string>
     <string name="web_app_auto_rotate">Web应用支持旋转</string>
-
-
+    <string name="run_background">后台运行</string>
 
     <!-- 修改密码部分 -->
     <string name="modify_input_user_new_password">请输入新密码</string>

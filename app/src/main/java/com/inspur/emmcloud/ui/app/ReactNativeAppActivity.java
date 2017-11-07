@@ -32,7 +32,6 @@ import com.inspur.emmcloud.util.AppExceptionCacheUtils;
 import com.inspur.emmcloud.util.AppUtils;
 import com.inspur.emmcloud.util.ClientIDUtils;
 import com.inspur.emmcloud.util.FileUtils;
-import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
@@ -110,7 +109,6 @@ public class ReactNativeAppActivity extends BaseActivity implements DefaultHardw
         reactNativeAppScheme = getIntent().getDataString();
         if (reactNativeAppScheme == null && getIntent().hasExtra("ecc-app-react-native")) {
             //从其他Activity启动时从这启动
-//            reactNativeAppScheme = getIntent().getStringExtra("ecc-app-react-native");
             String procotolsExtras = getIntent().getStringExtra("ecc-app-react-native");
             reactNativeAppScheme = procotolsExtras.contains("?")?procotolsExtras.split("[?]")[0]:procotolsExtras;
             rnAppParams = procotolsExtras.contains("?")?procotolsExtras.split("[?]")[1]:"";
