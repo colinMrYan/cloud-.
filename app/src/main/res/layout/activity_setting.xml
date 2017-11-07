@@ -234,7 +234,7 @@
                 android:layout_marginLeft="12dp"
                 android:paddingBottom="10dp"
                 android:paddingTop="10dp"
-                android:text="后台运行"
+                android:text="@string/run_background"
                 android:textSize="@dimen/content_normal_textsize" />
 
             <com.inspur.emmcloud.widget.SwitchView

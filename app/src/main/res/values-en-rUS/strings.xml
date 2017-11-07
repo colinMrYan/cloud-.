@@ -11,7 +11,7 @@
     <string name="retry">Retry</string>
     <string name="software_service_term">Services Agreemen</string>
     <string name="update_fail">Update failed</string>
-    <string name="downloading_package">In the download, please later...</string>
+    <string name="downloading_package">Please wait a minute while downloading</string>
     <string name="service_term">Services Agreement</string>
     <string name="prompt">Info</string>
     <string name="nothing">Nothing </string>
@@ -424,7 +424,7 @@
     <string name="switch_enterprise">Switch</string>
     <string name="current_enterprise">Current enterprise</string>
     <string name="web_app_auto_rotate">Web App support rotation</string>
-
+    <string name="run_background">Background running</string>
 
     <!-- 修改密码部分 -->
     <string name="modify_input_user_new_password">Enter a new password</string>
