@@ -2,9 +2,7 @@ package com.inspur.reactnative;
 
 import android.content.Context;
 
-import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.bean.AndroidBundleBean;
-import com.inspur.emmcloud.bean.Enterprise;
 import com.inspur.emmcloud.bean.Language;
 import com.inspur.emmcloud.util.AppUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
@@ -62,24 +60,6 @@ public class ReactNativeInitInfoUtils {
         StringBuilder describeVersionAndTime = ReactNativeFlow.getBundleDotJsonFromFile(reactAppFilePath);
         AndroidBundleBean androidBundleBean = new AndroidBundleBean(describeVersionAndTime.toString());
         return androidBundleBean.getVersion();
-    }
-
-    /**
-     * 获取apptoken
-     * @param context
-     * @return
-     */
-    public static String getAppToken(Context context){
-        return ((MyApplication)context.getApplicationContext()).getToken();
-    }
-
-    /**
-     * 获取当前企业
-     * @param context
-     * @return
-     */
-    public static Enterprise getCurrentEnterprise(Context context){
-        return  ((MyApplication)context.getApplicationContext()).getCurrentEnterprise();
     }
 
     /**

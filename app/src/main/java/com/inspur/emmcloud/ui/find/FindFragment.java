@@ -126,7 +126,7 @@ public class FindFragment extends Fragment implements DefaultHardwareBackBtnHand
         bundle.putString("locale",ReactNativeInitInfoUtils.getLocalLanguage(getActivity()));
         bundle.putString("reactNativeVersion",ReactNativeInitInfoUtils.getReactNativeVersion(reactCurrentFilePath));
         bundle.putSerializable("userProfile",getMyInfoResult.getUserProfile2ReactNativeWritableNativeMap());
-        bundle.putString("accessToken",ReactNativeInitInfoUtils.getAppToken(getActivity()));
+        bundle.putString("accessToken",((MyApplication)getActivity().getApplicationContext()).getToken());
         bundle.putString("pushId",ReactNativeInitInfoUtils.getPushId(getActivity()));
         bundle.putString("pushType",ReactNativeInitInfoUtils.getPushType(getActivity()));
         bundle.putSerializable("currentEnterprise", ((MyApplication)getActivity().getApplicationContext()).getCurrentEnterprise().enterPrise2ReactNativeWritableNativeMap());
