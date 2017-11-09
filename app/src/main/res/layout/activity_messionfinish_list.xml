@@ -86,7 +86,6 @@
             android:id="@+id/mession_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:fastScrollEnabled="true"
             android:transcriptMode="normal"
             android:divider="@null" />
 
