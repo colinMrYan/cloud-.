@@ -120,6 +120,9 @@ public class MyAppFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        if(!isOnCreate){
+            getMyApp();
+        }
         //隔五分钟刷一次badge
         long badgeUpdateTime = PreferencesByUserAndTanentUtils.getLong(getActivity(),
                 Constant.PREF_APP_BADGE_UPDATE_TIME,0L);
