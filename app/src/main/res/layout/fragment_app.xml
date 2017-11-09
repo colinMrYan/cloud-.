@@ -118,5 +118,24 @@
             android:numColumns="4"
             android:scrollbars="none" />
     </com.inspur.emmcloud.widget.MySwipeRefreshLayout>
+    <RelativeLayout
+        android:id="@+id/my_app_recommend_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="15dp"
+        android:layout_marginBottom="20dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true">
+        <Button
+            android:id="@+id/my_app_first_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="点击按钮1"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/my_app_first_button"
+            android:text="点击按钮2"/>
+    </RelativeLayout>
 
 </RelativeLayout>
