@@ -45,10 +45,4 @@
         android:paddingRight="10dp"
         android:textColor="#FF666666"
         android:textSize="14sp" />
-<View
-        android:id="@+id/cal_bottom_line"
-        android:layout_width="match_parent"
-        android:layout_alignParentBottom="true"
-        android:layout_height="0.6dp"
-        android:background="#33000000" />
 </RelativeLayout>
