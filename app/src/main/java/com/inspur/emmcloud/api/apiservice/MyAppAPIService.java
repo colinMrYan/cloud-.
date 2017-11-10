@@ -21,12 +21,12 @@ import com.inspur.emmcloud.bean.GetAppBadgeResult;
 import com.inspur.emmcloud.bean.GetAppGroupResult;
 import com.inspur.emmcloud.bean.GetGroupNewsDetailResult;
 import com.inspur.emmcloud.bean.GetMyAppResult;
+import com.inspur.emmcloud.bean.GetMyAppWidgetResult;
 import com.inspur.emmcloud.bean.GetNewsTitleResult;
 import com.inspur.emmcloud.bean.GetRemoveAppResult;
 import com.inspur.emmcloud.bean.GetSearchAppResult;
 import com.inspur.emmcloud.bean.GetWebAppRealUrlResult;
 import com.inspur.emmcloud.callback.OauthCallBack;
-import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.OauthUtils;
 import com.inspur.emmcloud.util.UriUtils;
 
@@ -309,7 +309,7 @@ public class MyAppAPIService {
             @Override
             public void callbackFail(String error, int responseCode) {
                 // TODO Auto-generated method stub
-                LogUtils.YfcDebug("错误代码：" + responseCode);
+
                 apiInterface.returnGroupNewsTitleFail(error, responseCode);
             }
         });
@@ -620,6 +620,45 @@ public class MyAppAPIService {
                         callbackFail("", -1);
                     }
                 }, context).refreshToken(url);
+            }
+        });
+    }
+
+    /**
+     * 获取推荐应用小部件
+     */
+    public void getMyAppWidgets() {
+        final String completeUrl = APIUri.getMyAppWidgetsUrl();
+        RequestParams params = ((MyApplication) context.getApplicationContext())
+                .getHttpRequestParams(completeUrl);
+        x.http().post(params, new APICallback(context, completeUrl) {
+
+            @Override
+            public void callbackTokenExpire() {
+                // TODO Auto-generated method stub
+                new OauthUtils(new OauthCallBack() {
+
+                    @Override
+                    public void reExecute() {
+                        // TODO Auto-generated method stub
+                        getMyAppWidgets();
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                }, context).refreshToken(completeUrl);
+            }
+
+            @Override
+            public void callbackSuccess(String arg0) {
+                apiInterface.returnMyAppWidgetsSuccess(new GetMyAppWidgetResult(arg0));
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                apiInterface.returnMyAppWidgetsFail(error, responseCode);
             }
         });
     }
