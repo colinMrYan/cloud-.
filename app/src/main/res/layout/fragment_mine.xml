@@ -41,7 +41,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"
-                android:background="#dadadd" />
+                android:background="@color/color_list_divider" />
 
             <com.inspur.emmcloud.widget.CircleImageView
                 android:id="@+id/more_head_img"
@@ -94,12 +94,12 @@
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
             android:layout_marginBottom="10dp"
-            android:background="#dadadd" />
+            android:background="@color/color_list_divider" />
 
         <View
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
-            android:background="#dadadd" />
+            android:background="@color/color_list_divider" />
 
         <RelativeLayout
             android:id="@+id/more_set_layout"
@@ -142,7 +142,7 @@
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
             android:layout_marginBottom="10dp"
-            android:background="#dadadd" />
+            android:background="@color/color_list_divider" />
 
 
         <RelativeLayout
@@ -156,7 +156,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"
-                android:background="#dadadd" />
+                android:background="@color/color_list_divider" />
 
             <ImageView
                 android:id="@+id/more_feedback_img"
@@ -191,7 +191,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"
                 android:layout_below="@id/more_feedback_img"
-                android:background="#dadadd" />
+                android:background="@color/color_list_divider" />
 
         </RelativeLayout>
 
@@ -208,7 +208,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"
-                android:background="#dadadd" />
+                android:background="@color/color_list_divider" />
 
             <ImageView
                 android:id="@+id/customer_img"
@@ -243,7 +243,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"
                 android:layout_below="@id/customer_img"
-                android:background="#dadadd" />
+                android:background="@color/color_list_divider" />
         </RelativeLayout>
 
         <View
@@ -297,7 +297,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
-            android:background="#dadadd" />
+            android:background="@color/color_list_divider" />
 
 
         <RelativeLayout
@@ -341,7 +341,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
-            android:background="#dadadd" />
+            android:background="@color/color_list_divider" />
 
     </LinearLayout>
 

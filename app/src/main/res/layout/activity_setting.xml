@@ -53,7 +53,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
-            android:background="#dadadd" />
+            android:background="@color/color_list_divider" />
 
         <RelativeLayout
             android:id="@+id/setting_gesture_layout"
@@ -87,13 +87,13 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
-            android:background="#dadadd" />
+            android:background="@color/color_list_divider" />
 
         <View
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
             android:layout_marginTop="10dp"
-            android:background="#dadadd" />
+            android:background="@color/color_list_divider" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -155,7 +155,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"
-                android:background="#dadadd" />
+                android:background="@color/color_list_divider" />
 
             <RelativeLayout
                 android:id="@+id/clear_cache_layout"
@@ -192,7 +192,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
-            android:background="#dadadd" />
+            android:background="@color/color_list_divider" />
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -220,7 +220,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
-            android:background="#dadadd" />
+            android:background="@color/color_list_divider" />
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -250,7 +250,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
-            android:background="#dadadd" />
+            android:background="@color/color_list_divider" />
 
         <RelativeLayout
             android:id="@+id/signout_layout"
@@ -265,7 +265,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"
-                android:background="#dadadd" />
+                android:background="@color/color_list_divider" />
 
             <TextView
                 android:id="@+id/signout_text"
@@ -285,7 +285,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
-            android:background="#dadadd" />
+            android:background="@color/color_list_divider" />
     </LinearLayout>
 
 </RelativeLayout>
