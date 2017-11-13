@@ -9,6 +9,7 @@ import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -32,9 +33,7 @@ import com.inspur.emmcloud.util.TimeUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.CircleTextImageView;
 import com.inspur.emmcloud.widget.LoadingDialog;
-import com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout;
-import com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout.OnRefreshListener;
-import com.inspur.emmcloud.widget.pullableview.PullableExpandableListView;
+import com.inspur.emmcloud.widget.MySwipeRefreshLayout;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
 
 import java.io.Serializable;
@@ -43,20 +42,20 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 
-public class CalActivity extends BaseActivity implements OnRefreshListener {
+public class CalActivity extends BaseActivity implements MySwipeRefreshLayout.OnRefreshListener, MySwipeRefreshLayout.OnLoadListener{
 
 	protected static final int UPDATE_CAL_EVENT = 1;
 	private static final int FILTER_CAL_EVENT = 2;
 	private static final int ADD_CAL_EVENT = 3;
-	private PullableExpandableListView calExpandableListView;
+	private ExpandableListView expandableListView;
 
 	private LoadingDialog loadingDlg;
 	private WorkAPIService apiService;
-	private List<MyCalendar> calendarList = new ArrayList<MyCalendar>();
-	private List<CalendarEvent> allCalEventList = new ArrayList<CalendarEvent>();
+	private List<MyCalendar> calendarList = new ArrayList<>();
+	private List<CalendarEvent> allCalEventList = new ArrayList<>();
 	private String calEventDisplayType;
-	private List<CalEventGroup> calEventGroupList = new ArrayList<CalEventGroup>();
-	private PullToRefreshLayout pullToRefreshLayout;
+	private List<CalEventGroup> calEventGroupList = new ArrayList<>();
+	private MySwipeRefreshLayout swipeRefreshLayout;
 	private CalendarEvent deleteCalEvent;
 	private int page = 0;
 	private List<String> calendarIdList = new ArrayList<String>();
@@ -69,14 +68,13 @@ public class CalActivity extends BaseActivity implements OnRefreshListener {
 		loadingDlg = new LoadingDialog(this);
 		apiService = new WorkAPIService(this);
 		apiService.setAPIInterface(new WebServcie());
-		pullToRefreshLayout = (PullToRefreshLayout) findViewById(R.id.refresh_view);
-		pullToRefreshLayout.setOnRefreshListener(this);
-		calExpandableListView = (PullableExpandableListView) findViewById(R.id.expandableListView);
-		calExpandableListView.setGroupIndicator(null);
-		calExpandableListView.setVerticalScrollBarEnabled(false);
-		calExpandableListView.setHeaderDividersEnabled(false);
-		calExpandableListView.setCanpullup(false);
-		calExpandableListView.setCanpulldown(true);
+        swipeRefreshLayout = (MySwipeRefreshLayout) findViewById(R.id.refresh_layout);
+        swipeRefreshLayout.setOnRefreshListener(this);
+        swipeRefreshLayout.setOnLoadListener(this);
+		expandableListView = (ExpandableListView) findViewById(R.id.expandable_list);
+		expandableListView.setGroupIndicator(null);
+		expandableListView.setVerticalScrollBarEnabled(false);
+		expandableListView.setHeaderDividersEnabled(false);
 		getCalendarEvent(true);
 
 	}
@@ -91,29 +89,28 @@ public class CalActivity extends BaseActivity implements OnRefreshListener {
 			calendarList = MyCalendarCacheUtils
 					.getAllMyCalendarList(CalActivity.this);
 			if (calendarList.size() > 0) {
-				if (isShowDlg) {
-					loadingDlg.show();
-				}
+
+					loadingDlg.show(isShowDlg);
+
 				for (int i = 0; i < calendarList.size(); i++) {
 					calendarIdList.add(calendarList.get(i).getId());
 				}
 				getCalEvents(true);
 			} else {
 				if (!isShowDlg) {
-					pullToRefreshLayout
-							.refreshFinish(PullToRefreshLayout.SUCCEED);
+                    swipeRefreshLayout.setLoading(false);
 				}
 				initDisplayData();
 			}
 		} else if (!isShowDlg) {
-			pullToRefreshLayout.refreshFinish(PullToRefreshLayout.FAIL);
+            swipeRefreshLayout.setLoading(false);
 		}
 
 	}
 
 	/**
 	 * 获取所有日历的所有event
-	 * 
+	 *
 	 * @param isRefresh
 	 */
 	private void getCalEvents(boolean isRefresh) {
@@ -131,8 +128,7 @@ public class CalActivity extends BaseActivity implements OnRefreshListener {
 			apiService.getAllCalEvents(calendarIdList, afterCalendar,
 					beforeCalendar, 15, page, isRefresh);
 		} else {
-			pullToRefreshLayout.refreshFinish(PullToRefreshLayout.FAIL);
-			pullToRefreshLayout.loadmoreFinish(PullToRefreshLayout.FAIL);
+            swipeRefreshLayout.setLoading(false);
 		}
 	}
 
@@ -193,7 +189,7 @@ public class CalActivity extends BaseActivity implements OnRefreshListener {
 				Collections.sort(calEventList, new CalendarEvent());
 			}
 		}
-		calExpandableListView.setAdapter(new CalAdapter());
+		expandableListView.setAdapter(new CalAdapter());
 	}
 
 	public void onClick(View v) {
@@ -219,7 +215,7 @@ public class CalActivity extends BaseActivity implements OnRefreshListener {
 
 	/**
 	 * 弹出频道操作选择框
-	 * 
+	 *
 	 * @param calEvent
 	 */
 	private void showOperationDlg(final CalendarEvent calEvent) {
@@ -241,7 +237,7 @@ public class CalActivity extends BaseActivity implements OnRefreshListener {
 
 	/**
 	 * 删除事件
-	 * 
+	 *
 	 * @param calEvent
 	 */
 	private void deleteCalEvent(CalendarEvent calEvent) {
@@ -308,7 +304,7 @@ public class CalActivity extends BaseActivity implements OnRefreshListener {
 		@Override
 		public View getGroupView(final int groupPosition, boolean isExpanded,
 				View convertView, ViewGroup parent) {
-			PullableExpandableListView expandableListView = (PullableExpandableListView) parent;
+			ExpandableListView expandableListView = (ExpandableListView) parent;
 			expandableListView.expandGroup(groupPosition);
 			ViewHolder holder;
 			if (convertView == null) {
@@ -472,11 +468,7 @@ public class CalActivity extends BaseActivity implements OnRefreshListener {
 			// TODO Auto-generated method stub
 			List<CalendarEvent> resultCalEventList = getCalendarEventsResult
 					.getCalEventList();
-			if (resultCalEventList.size() == 15) {
-				calExpandableListView.setCanpullup(true);
-			} else {
-				calExpandableListView.setCanpullup(false);
-			}
+            swipeRefreshLayout.setCanLoadMore(resultCalEventList.size() == 15);
 			if (isRefresh) {
 				allCalEventList = resultCalEventList;
 			} else {
@@ -487,8 +479,7 @@ public class CalActivity extends BaseActivity implements OnRefreshListener {
 			if (loadingDlg != null && loadingDlg.isShowing()) {
 				loadingDlg.dismiss();
 			}
-			pullToRefreshLayout.refreshFinish(PullToRefreshLayout.SUCCEED);
-			pullToRefreshLayout.loadmoreFinish(PullToRefreshLayout.SUCCEED);
+            swipeRefreshLayout.setLoading(false);
 		}
 
 		@Override
@@ -498,8 +489,7 @@ public class CalActivity extends BaseActivity implements OnRefreshListener {
 				loadingDlg.dismiss();
 			}
 			WebServiceMiddleUtils.hand(CalActivity.this, error,errorCode);
-			pullToRefreshLayout.refreshFinish(PullToRefreshLayout.FAIL);
-			pullToRefreshLayout.loadmoreFinish(PullToRefreshLayout.FAIL);
+            swipeRefreshLayout.setLoading(false);
 		}
 
 		@Override
@@ -531,19 +521,19 @@ public class CalActivity extends BaseActivity implements OnRefreshListener {
 	}
 
 	@Override
-	public void onRefresh(PullToRefreshLayout pullToRefreshLayout) {
+	public void onRefresh() {
 		// TODO Auto-generated method stub
 		getCalendarEvent(false);
 	}
 
 	@Override
-	public void onLoadMore(PullToRefreshLayout pullToRefreshLayout) {
+	public void onLoadMore() {
 		// TODO Auto-generated method stub
 		if (calendarIdList != null && calendarIdList.size() > 0) {
 			page = page + 1;
 			getCalEvents(false);
 		} else {
-			pullToRefreshLayout.loadmoreFinish(PullToRefreshLayout.SUCCEED);
+            swipeRefreshLayout.setLoading(false);
 		}
 	}
 }

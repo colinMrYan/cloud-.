@@ -11,6 +11,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
@@ -25,16 +26,14 @@ import com.inspur.emmcloud.util.MessionTagColorUtils;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
+import com.inspur.emmcloud.widget.MySwipeRefreshLayout;
 import com.inspur.emmcloud.widget.dialogs.EasyDialog;
-import com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout;
-import com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout.OnRefreshListener;
-import com.inspur.emmcloud.widget.pullableview.PullableListView;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 
 public class MessionFinishListActivity extends BaseActivity implements
-        OnRefreshListener {
+		MySwipeRefreshLayout.OnRefreshListener, MySwipeRefreshLayout.OnLoadListener {
 
 	private static final int OPEN_DETAIL = 0;
 	private static final int CAN_NOT_CHANGE = 2;
@@ -42,11 +41,10 @@ public class MessionFinishListActivity extends BaseActivity implements
 	private WorkAPIService apiService;
 	private LoadingDialog loadingDialog;
 	private ArrayList<TaskResult> taskList;
-	private PullToRefreshLayout pullToRefreshLayout;
+	private MySwipeRefreshLayout swipeRefreshLayout;
 	private int page = 0;
 	private boolean isPullup = false;
-//	private int deletePosition = -1;
-	
+
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -59,20 +57,18 @@ public class MessionFinishListActivity extends BaseActivity implements
 	 * 初始化
 	 */
 	private void initViews() {
-		taskList = new ArrayList<TaskResult>();
-		pullToRefreshLayout = (PullToRefreshLayout) findViewById(R.id.refresh_view);
-		pullToRefreshLayout
+		taskList = new ArrayList<>();
+		swipeRefreshLayout = (MySwipeRefreshLayout) findViewById(R.id.refresh_layout);
+		swipeRefreshLayout
 				.setOnRefreshListener(MessionFinishListActivity.this);
 		loadingDialog = new LoadingDialog(MessionFinishListActivity.this);
 		apiService = new WorkAPIService(MessionFinishListActivity.this);
 		apiService.setAPIInterface(new WebService());
 		getAllTasks();
-		PullableListView messionListView = (PullableListView) findViewById(R.id.mession_list);
+		ListView messionListView = (ListView) findViewById(R.id.mession_list);
 		messionListView
 				.setOnItemLongClickListener(new MessionLongClickListener());
-		messionListView.setDividerHeight(0);
 		messionListView.setVerticalScrollBarEnabled(false);
-		messionListView.setCanPullUp(true);
 		messionListView.setOnItemClickListener(new OnMessionClickListener());
 		adapter = new MessionListAdapter();
 		messionListView.setAdapter(adapter);
@@ -204,7 +200,7 @@ public class MessionFinishListActivity extends BaseActivity implements
 			if (loadingDialog.isShowing()) {
 				loadingDialog.dismiss();
 			}
-			pullToRefreshLayout.refreshFinish(PullToRefreshLayout.SUCCEED);
+			swipeRefreshLayout.setLoading(false);
 			if (isPullup) {
 				taskList.addAll(getTaskListResult.getTaskList());
 			} else {
@@ -218,7 +214,7 @@ public class MessionFinishListActivity extends BaseActivity implements
 			if (loadingDialog.isShowing()) {
 				loadingDialog.dismiss();
 			}
-			pullToRefreshLayout.refreshFinish(PullToRefreshLayout.FAIL);
+			swipeRefreshLayout.setLoading(false);
 			WebServiceMiddleUtils.hand(MessionFinishListActivity.this, error,errorCode);
 		}
 
@@ -227,10 +223,6 @@ public class MessionFinishListActivity extends BaseActivity implements
 			if (loadingDialog != null && loadingDialog.isShowing()) {
 				loadingDialog.dismiss();
 			}
-//			if (deletePosition != -1) {
-//				taskList.remove(deletePosition);
-//				adapter.notifyDataSetChanged();
-//			}
 			taskList.remove(position);
 			adapter.notifyDataSetChanged();
 		}
@@ -246,22 +238,24 @@ public class MessionFinishListActivity extends BaseActivity implements
     }
 
     @Override
-    public void onRefresh(PullToRefreshLayout pullToRefreshLayout) {
+    public void onRefresh() {
         if (NetUtils.isNetworkConnected(MessionFinishListActivity.this)) {
             apiService.getAllTasks(0, 12, "REMOVED");
             page = 0;
         } else {
-            pullToRefreshLayout.refreshFinish(PullToRefreshLayout.FAIL);
+            swipeRefreshLayout.setLoading(false);
         }
         isPullup = false;
     }
 
     @Override
-    public void onLoadMore(PullToRefreshLayout pullToRefreshLayout) {
+    public void onLoadMore() {
         if (NetUtils.isNetworkConnected(MessionFinishListActivity.this)) {
             page = page + 1;
             apiService.getAllTasks(page, 12, "REMOVED");
             isPullup = true;
-        }
+        }else {
+			swipeRefreshLayout.setLoading(false);
+		}
     }
 }
