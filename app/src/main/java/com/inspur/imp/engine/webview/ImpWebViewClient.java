@@ -16,6 +16,7 @@ import android.widget.LinearLayout;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
 import com.inspur.emmcloud.bean.AppRedirectResult;
+import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.imp.api.ImpActivity;
@@ -94,6 +95,7 @@ public class ImpWebViewClient extends WebViewClient {
 	 */
 	@Override
 	public void onPageStarted(WebView view, String url, Bitmap favicon) {
+		LogUtils.YfcDebug("onPageStarted:"+url);
 		super.onPageStarted(view, url, favicon);
 		urlparam = url;
 		myWebView = (ImpWebView) view;
@@ -107,6 +109,7 @@ public class ImpWebViewClient extends WebViewClient {
 	 */
 	@Override
 	public void onPageFinished(WebView view, String url) {
+		LogUtils.YfcDebug("onPageFinished:"+url);
 		if (runnable != null){
 			mHandler.removeCallbacks(runnable);
 			runnable = null;
@@ -138,6 +141,7 @@ public class ImpWebViewClient extends WebViewClient {
 	@Override
 	public void onReceivedError(WebView view, int errorCode,
 								String description, String failingUrl) {
+		LogUtils.YfcDebug("onReceivedError"+description);
 		if (runnable != null){
 			mHandler.removeCallbacks(runnable);
 			runnable = null;
@@ -163,6 +167,7 @@ public class ImpWebViewClient extends WebViewClient {
 	@SuppressWarnings("deprecation")
 	@Override
 	public boolean shouldOverrideUrlLoading(WebView view, String url) {
+		LogUtils.YfcDebug("shouldOverrideUrlLoading："+url);
 		if (runnable != null){
 			mHandler.removeCallbacks(runnable);
 			runnable = null;

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF" >
+    <com.inspur.emmcloud.widget.CircleImageView
+        android:id="@+id/my_app_recommend_widget_img"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_toRightOf="@id/my_app_first_img"
+        android:layout_centerVertical="true"
+        android:layout_marginBottom="8dp"
+        android:layout_marginRight="12dp"
+        android:layout_marginTop="11dp"
+        android:src="@drawable/icon_default"
+        />
+</RelativeLayout>

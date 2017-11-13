@@ -11,6 +11,8 @@ import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,6 +35,7 @@ import android.widget.TextView;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.DragAdapter;
+import com.inspur.emmcloud.adapter.RecommendAppAdapter;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
 import com.inspur.emmcloud.bean.App;
@@ -44,6 +47,7 @@ import com.inspur.emmcloud.bean.GetAppBadgeResult;
 import com.inspur.emmcloud.bean.GetAppGroupResult;
 import com.inspur.emmcloud.bean.PVCollectModel;
 import com.inspur.emmcloud.config.Constant;
+import com.inspur.emmcloud.interf.OnRecommendAppItemClickListener;
 import com.inspur.emmcloud.util.AppCacheUtils;
 import com.inspur.emmcloud.util.AppTitleUtils;
 import com.inspur.emmcloud.util.IntentUtils;
@@ -168,9 +172,24 @@ public class MyAppFragment extends Fragment {
         getMyApp();
         setTabTitle();
         getAppBadgeNum();
+        initRecommendView();
         isOnCreate = true;
 //        shortCutAppList.add("mobile_checkin_hcm");
 //        shortCutAppList.add("inspur_news_esg");//目前，除在此处添加id还需要为每个需要生成快捷方式的应用配置图标
+    }
+
+    private void initRecommendView() {
+        RecyclerView recommendWidgetView = (RecyclerView) rootView.findViewById(R.id.my_app_recommend_recyclerview);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        recommendWidgetView.setLayoutManager(layoutManager);
+        RecommendAppAdapter recommendAppAdapter = new RecommendAppAdapter();
+        recommendWidgetView.setAdapter(recommendAppAdapter);
+        recommendAppAdapter.setOnRecommendAppItemClickListener(new OnRecommendAppItemClickListener() {
+            @Override
+            public void onRecommendAppItemClick(View view, int position) {
+
+            }
+        });
     }
 
 
