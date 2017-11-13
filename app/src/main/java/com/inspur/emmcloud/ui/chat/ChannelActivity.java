@@ -11,27 +11,17 @@ import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.view.LayoutInflater;
+import android.support.v7.widget.LinearLayoutManager;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
-import android.view.ViewGroup;
-import android.view.animation.AnimationUtils;
-import android.view.animation.LinearInterpolator;
-import android.view.animation.RotateAnimation;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.adapter.ChannelMsgAdapter;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.bean.Channel;
@@ -54,7 +44,6 @@ import com.inspur.emmcloud.util.AppUtils;
 import com.inspur.emmcloud.util.ChannelCacheUtils;
 import com.inspur.emmcloud.util.ConbineMsg;
 import com.inspur.emmcloud.util.DirectChannelUtils;
-import com.inspur.emmcloud.util.ImageDisplayUtils;
 import com.inspur.emmcloud.util.IntentUtils;
 import com.inspur.emmcloud.util.JSONUtils;
 import com.inspur.emmcloud.util.MsgCacheUtil;
@@ -63,15 +52,12 @@ import com.inspur.emmcloud.util.MsgRecourceUploadUtils;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
-import com.inspur.emmcloud.util.RobotCacheUtils;
 import com.inspur.emmcloud.util.StringUtils;
-import com.inspur.emmcloud.util.TimeUtils;
-import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.ECMChatInputMenu;
 import com.inspur.emmcloud.widget.ECMChatInputMenu.ChatInputMenuListener;
 import com.inspur.emmcloud.widget.LoadingDialog;
-import com.inspur.emmcloud.widget.SizeChangeListView;
+import com.inspur.emmcloud.widget.RecycleViewForSizeChange;
 import com.inspur.imp.plugin.camera.editimage.EditImageActivity;
 import com.inspur.imp.plugin.camera.imagepicker.ImagePicker;
 import com.inspur.imp.plugin.camera.imagepicker.bean.ImageItem;
@@ -99,8 +85,9 @@ public class ChannelActivity extends BaseActivity {
     private static final int CAMERA_RESULT = 3;
     private static final int MENTIONS_RESULT = 5;
     private static final int CHOOSE_FILE = 4;
-    private SizeChangeListView msgListView;
+    private RecycleViewForSizeChange msgListView;
     private List<Msg> msgList;
+    private ChannelMsgAdapter adapter;
     private Handler handler;
     private MsgReceiver msgResvier;
     private ChatAPIService apiService;
@@ -116,7 +103,7 @@ public class ChannelActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_channel);
-        initData();
+        init();
         registeRefreshNameReceiver();
         recordUserClickChannel();
     }
@@ -127,12 +114,12 @@ public class ChannelActivity extends BaseActivity {
         // TODO Auto-generated method stub
         super.onNewIntent(intent);
         setIntent(intent);
-        initData();
+        init();
         //当从群成员选择进入沟通频道的时候执行这里的记录
         recordUserClickChannel();
     }
 
-    private void initData() {
+    private void init() {
         loadingDlg = new LoadingDialog(this);
         apiService = new ChatAPIService(ChannelActivity.this);
         apiService.setAPIInterface(new WebService());
@@ -162,7 +149,7 @@ public class ChannelActivity extends BaseActivity {
     /**
      * 初始化下拉刷新UI
      */
-    private void initPullRefreshLayout(){
+    private void initPullRefreshLayout() {
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh_layout);
         swipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.header_bg), getResources().getColor(R.color.header_bg));
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -175,8 +162,9 @@ public class ChannelActivity extends BaseActivity {
                             15);
                     msgList.addAll(0, historyMsgList);
                     swipeRefreshLayout.setRefreshing(false);
-                    adapter.notifyDataSetChanged();
-                    msgListView.setSelection(historyMsgList.size() - 1);
+                    adapter.setMsgList(msgList);
+                    adapter.notifyItemRangeInserted(0,historyMsgList.size());
+                    msgListView.MoveToPosition(historyMsgList.size()-1);
                 } else {
                     getNewsMsg();
                 }
@@ -264,23 +252,14 @@ public class ChannelActivity extends BaseActivity {
      * 初始化消息列表UI
      */
     private void initMsgListView() {
-        msgListView = (SizeChangeListView) findViewById(R.id.msg_list);
+        msgListView = (RecycleViewForSizeChange) findViewById(R.id.msg_list);
+        msgListView.setLayoutManager(new LinearLayoutManager(this));
         msgList = MsgCacheUtil.getHistoryMsgList(getApplicationContext(),
                 cid, "", 15);
-        msgListView.setAdapter(adapter);
-        msgListView.postDelayed(new Runnable() {
+        adapter = new ChannelMsgAdapter(ChannelActivity.this,apiService,channel.getType(),chatInputMenu);
+        adapter.setItemClickListener(new ChannelMsgAdapter.MyItemClickListener() {
             @Override
-            public void run() {
-                // Select the last row so it will scroll into view...
-                msgListView.setSelection(adapter.getCount() - 1);
-            }
-        }, 30);
-        msgListView.smoothScrollToPosition(adapter.getCount());
-        // 设置点击每个Item时跳转到详情
-        msgListView.setOnItemClickListener(new OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view,
-                                    int position, long id) {
+            public void onItemClick(View view,int position) {
                 Msg msg = msgList.get(position);
                 //当消息处于发送中状态时无法点击
                 if (msg.getSendStatus() != 1) {
@@ -317,9 +296,11 @@ public class ChannelActivity extends BaseActivity {
                     IntentUtils.startActivity(ChannelActivity.this,
                             NewsWebDetailActivity.class, bundle);
                 }
-
             }
         });
+        adapter.setMsgList(msgList);
+        msgListView.setAdapter(adapter);
+        msgListView.MoveToPosition(msgList.size() - 1);
         /**
          * 当触摸消息list时把输入法和添加选项layout隐藏
          */
@@ -336,18 +317,8 @@ public class ChannelActivity extends BaseActivity {
 
     }
 
-    /**
-     * 设置ListView的刷新和滚动到最下方
-     */
-    private void setListViewNotifyAndScrollEnd() {
-        adapter.notifyDataSetChanged();
-        msgListView.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                msgListView.setSelection(adapter.getCount() - 1);
-            }
-        }, 30);
-    }
+
+
 
 
     /**
@@ -444,7 +415,7 @@ public class ChannelActivity extends BaseActivity {
                                     pushMsg.getCid(), pushMsg.getMid());
                             if (!msgList.contains(pushMsg) && !pushMsg.getTmpId().equals(AppUtils.getMyUUID(getApplicationContext()))) {
                                 msgList.add(pushMsg);
-                                setListViewNotifyAndScrollEnd();
+                                msgListView.MoveToPosition(msgList.size() - 1);
                             }
                         }
                         break;
@@ -470,30 +441,22 @@ public class ChannelActivity extends BaseActivity {
         }
         Msg fakeMsg = new Msg();
         fakeMsg.setMid(fakeMessageId);
-        // 如果list中已经有了这个真实的消息，就要去掉假消息，防止重复
-        if (msgList.contains(realMsg)) {
-            msgList.remove(fakeMsg);
-            adapter.notifyDataSetChanged();
-        } else { // 如果list中没有这真是的消息，就要替换成真实消息
-            int fakeMsgIndex = msgList.indexOf(fakeMsg);
-            if (fakeMsgIndex != -1) {
-                msgList.remove(fakeMsgIndex);
-                msgList.add(fakeMsgIndex, realMsg);
-                /**第一个可见的位置**/
-                int firstVisiblePosition = msgListView.getFirstVisiblePosition();
-                /**最后一个可见的位置**/
-                int lastVisiblePosition = msgListView.getLastVisiblePosition();
-                if (fakeMsgIndex >= firstVisiblePosition && fakeMsgIndex <= lastVisiblePosition) {
-                    View childAt = msgListView.getChildAt(fakeMsgIndex
-                            - firstVisiblePosition);
-                    if (childAt != null) {
-                        adapter.getView(fakeMsgIndex, childAt, msgListView);
-                    }
-                }
+        int fakeMsgIndex = msgList.indexOf(fakeMsg);
+        boolean isContainRealMsg = msgList.contains(realMsg);
+        if (fakeMsgIndex != -1) {
+            msgList.remove(fakeMsgIndex);
+            if (isContainRealMsg) {
+                adapter.setMsgList(msgList);
+                adapter.notifyItemRemoved(fakeMsgIndex);
             } else {
-                msgList.add(realMsg);
-                adapter.notifyDataSetChanged();
+                msgList.add(fakeMsgIndex, realMsg);
+                adapter.setMsgList(msgList);
+                adapter.notifyItemChanged(fakeMsgIndex);
             }
+        } else if (!isContainRealMsg) {
+            msgList.add(realMsg);
+            adapter.setMsgList(msgList);
+            adapter.notifyItemInserted(msgList.size() - 1);
         }
 
 
@@ -584,259 +547,13 @@ public class ChannelActivity extends BaseActivity {
             //本地添加的消息设置为正在发送状态
             msg.setSendStatus(0);
             msgList.add(msg);
-            setListViewNotifyAndScrollEnd();
+            adapter.setMsgList(msgList);
+            adapter.notifyItemInserted(msgList.size() - 1);
+            msgListView.MoveToPosition(msgList.size() - 1);
         }
     }
 
-    /**
-     * 显示adapter
-     */
-    private BaseAdapter adapter = new BaseAdapter() {
 
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            final Msg msg = msgList.get(position);
-            String type = msg.getType();
-            LayoutInflater vi = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
-            if (convertView == null) {
-                convertView = vi.inflate(R.layout.chat_msg_card_parent_view, null);
-            }
-            RelativeLayout cardLayout = (RelativeLayout) convertView
-                    .findViewById(R.id.card_layout);
-            cardLayout.removeAllViewsInLayout();
-            cardLayout.removeAllViews();
-            showCommonView(convertView, position, cardLayout);
-            View childView = null;
-            if (type.equals("txt_comment") || type.equals("comment")) {
-                (convertView.findViewById(R.id.card_cover_view)).setVisibility(View.GONE);
-                childView = vi.inflate(
-                        R.layout.chat_msg_card_child_text_comment_view, null);
-                DisplayTxtCommentMsg.displayCommentMsg(ChannelActivity.this,
-                        childView, msg, apiService);
-            } else if (type.equals("res_image") || type.equals("image")) {
-                childView = vi.inflate(
-                        R.layout.chat_msg_card_child_res_img_view, null);
-                DisplayResImageMsg.displayResImgMsg(ChannelActivity.this,
-                        childView, msg);
-            } else if (type.equals("res_link")) {
-                TextView newsCommentText = (TextView) convertView
-                        .findViewById(R.id.news_comment_text);
-                // newsCommentText.setVisibility(View.VISIBLE);
-                newsCommentText.setOnClickListener(new OnClickListener() {
-
-                    @Override
-                    public void onClick(View v) {
-                        // TODO Auto-generated method stub
-                        Bundle bundle = new Bundle();
-                        bundle.putString("mid", msg.getMid());
-                        bundle.putString("cid", msg.getCid());
-                        IntentUtils.startActivity(ChannelActivity.this,
-                                ChannelMsgDetailActivity.class, bundle);
-                    }
-                });
-                childView = vi.inflate(
-                        R.layout.chat_msg_card_child_res_link_view, null);
-                DisplayResLinkMsg.displayResLinkMsg(ChannelActivity.this,
-                        childView, msg);
-            } else if (type.equals("res_file")) {
-                childView = vi.inflate(
-                        R.layout.chat_msg_card_child_res_file_view, null);
-                DisplayResFileMsg.displayResFileMsg(ChannelActivity.this,
-                        childView, msg);
-            } else if (type.equals("txt_rich")) {
-                (convertView.findViewById(R.id.card_cover_view)).setVisibility(View.GONE);
-                childView = vi.inflate(
-                        R.layout.chat_msg_card_child_text_rich_view, null);
-                DisplayTxtRichMsg.displayRichTextMsg(ChannelActivity.this,
-                        childView, msg);
-            } else {
-                childView = vi.inflate(
-                        R.layout.chat_msg_card_child_res_unknown_view, null);
-                DisplayResUnknownMsg.displayResUnknownMsg(ChannelActivity.this,
-                        childView, msg);
-            }
-            cardLayout.addView(childView);
-            return convertView;
-        }
-
-        /**
-         * 显示公共的View
-         * @param convertView
-         * @param position
-         * @param cardLayout
-         */
-        private void showCommonView(View convertView, int position,
-                                    RelativeLayout cardLayout) {
-            final Msg msg = msgList.get(position);
-            showUserName(convertView, msg);
-            showMsgSendTime(convertView, msg, position);
-            showUserPhoto(convertView, msg);
-            showRefreshingImg(convertView, msg);
-            showCardLayout(convertView, cardLayout, msg);
-        }
-
-        /**
-         * 显示正在发送的标志
-         * @param convertView
-         * @param msg
-         */
-        private void showRefreshingImg(View convertView, Msg msg) {
-            ImageView refreshingImg = (ImageView) convertView.findViewById(R.id.refreshing_img);
-            if (msg.getSendStatus() == 0) {
-                RotateAnimation refreshingAnimation = (RotateAnimation) AnimationUtils.loadAnimation(
-                        getApplicationContext(), R.anim.pull_rotating);
-                // 添加匀速转动动画
-                LinearInterpolator lir = new LinearInterpolator();
-                refreshingAnimation.setInterpolator(lir);
-                refreshingImg.setVisibility(View.VISIBLE);
-                refreshingImg.startAnimation(refreshingAnimation);
-            } else if (msg.getSendStatus() == 2) {
-                refreshingImg.clearAnimation();
-                refreshingImg.setVisibility(View.VISIBLE);
-                refreshingImg.setImageResource(R.drawable.ic_chat_msg_send_fail);
-            } else {
-                refreshingImg.clearAnimation();
-                refreshingImg.setVisibility(View.GONE);
-            }
-
-        }
-
-        /**
-         * 显示卡片的内容
-         * @param convertView
-         * @param cardLayout
-         * @param msg
-         */
-        private void showCardLayout(View convertView,
-                                    RelativeLayout cardLayout, Msg msg) {
-            // TODO Auto-generated method stub
-            boolean isMyMsg = msg.getUid().equals(
-                    ((MyApplication) getApplicationContext()).getUid());
-            (convertView.findViewById(R.id.card_cover_view)).setVisibility(View.VISIBLE);
-            ((View) convertView.findViewById(R.id.card_cover_view)).setBackgroundResource(isMyMsg ? R.drawable.ic_chat_msg_img_cover_arrow_right : R.drawable.ic_chat_msg_img_cover_arrow_left);
-            LayoutParams params = (LayoutParams) cardLayout.getLayoutParams();
-            params.removeRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-            params.removeRule(RelativeLayout.ALIGN_LEFT);
-            params.addRule(isMyMsg ? RelativeLayout.ALIGN_PARENT_RIGHT : RelativeLayout.ALIGN_LEFT);
-            cardLayout.setLayoutParams(params);
-        }
-
-
-        /**
-         * 展示消息发送时间
-         *
-         * @param convertView
-         * @param msg
-         * @param position
-         */
-        private void showMsgSendTime(View convertView, Msg msg, int position) {
-            // TODO Auto-generated method stub
-            TextView sendTimeText = (TextView) convertView
-                    .findViewById(R.id.send_time_text);
-            long msgTimeLong = TimeUtils.UTCString2Long(msg.getTime());
-            long lastMsgTimelong = 0;
-            if (position != 0) {
-                lastMsgTimelong = TimeUtils.UTCString2Long(msgList.get(
-                        position - 1).getTime());
-            }
-            long duration = msgTimeLong - lastMsgTimelong;
-            if (duration >= 180000) {
-                sendTimeText.setVisibility(View.VISIBLE);
-                String msgSendTime = TimeUtils.getChannelMsgDisplayTime(
-                        getApplicationContext(), msg.getTime());
-                sendTimeText.setText(msgSendTime);
-            } else {
-                sendTimeText.setVisibility(View.GONE);
-            }
-        }
-
-        /**
-         * 展示用户名称
-         *
-         * @param convertView
-         * @param msg
-         */
-        private void showUserName(View convertView, Msg msg) {
-            // TODO Auto-generated method stub
-            TextView senderNameText = (TextView) convertView
-                    .findViewById(R.id.sender_name_text);
-            boolean isMyMsg = msg.getUid().equals(
-                    ((MyApplication) getApplicationContext()).getUid());
-            if (channel.getType().equals("GROUP") && !isMyMsg) {
-                senderNameText.setVisibility(View.VISIBLE);
-                senderNameText.setText(msg.getTitle());
-            } else {
-                senderNameText.setVisibility(View.GONE);
-            }
-        }
-
-        /**
-         * 展示用户头像
-         *
-         * @param convertView
-         * @param msg
-         */
-        private void showUserPhoto(View convertView, final Msg msg) {
-            // TODO Auto-generated method stub
-            ImageView senderPhotoImg = (ImageView) convertView
-                    .findViewById(R.id.sender_photo_img);
-            if (msg.getUid().equals(
-                    ((MyApplication) getApplicationContext()).getUid())) {
-                senderPhotoImg.setVisibility(View.INVISIBLE);
-            } else {
-                senderPhotoImg.setVisibility(View.VISIBLE);
-                String iconUrl = UriUtils.getChannelImgUri(ChannelActivity.this, msg.getUid());
-                if (msg.getUid().startsWith("BOT") || channel.getType().equals("SERVICE")) {
-                    iconUrl = UriUtils.getRobotIconUri(RobotCacheUtils
-                            .getRobotById(ChannelActivity.this, msg.getUid())
-                            .getAvatar());
-                }
-                ImageDisplayUtils.getInstance().displayImage(senderPhotoImg,
-                        iconUrl, R.drawable.icon_person_default);
-                senderPhotoImg.setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Bundle bundle = new Bundle();
-                        String uid = msg.getUid();
-                        bundle.putString("uid", uid);
-                        if (uid.startsWith("BOT") || channel.getType().endsWith("SERVICE")) {
-                            bundle.putString("type", channel.getType());
-                            IntentUtils.startActivity(ChannelActivity.this,
-                                    RobotInfoActivity.class, bundle);
-                        } else {
-                            IntentUtils.startActivity(ChannelActivity.this,
-                                    UserInfoActivity.class, bundle);
-                        }
-                    }
-                });
-                senderPhotoImg.setOnLongClickListener(new View.OnLongClickListener() {
-                    @Override
-                    public boolean onLongClick(View v) {
-                        if (channel.getType().equals("GROUP")) {
-                            chatInputMenu.addMentions(msg.getUid(), msg.getTitle(), false);
-                        }
-                        return true;
-                    }
-                });
-
-            }
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return 0;
-        }
-
-        @Override
-        public Object getItem(int position) {
-            return null;
-        }
-
-        @Override
-        public int getCount() {
-            return msgList.size();
-        }
-    };
 
     /**
      * 通知message页将本频道消息置为已读
@@ -853,12 +570,11 @@ public class ChannelActivity extends BaseActivity {
         }
     }
 
-
     /**
      * 记录用户点击的频道，修改不是云+客服的时候才记录频道点击事件170629
      */
     private void recordUserClickChannel() {
-        String from = getIntent().getExtras().getString("from","");
+        String from = getIntent().getExtras().getString("from", "");
         if (!from.equals("customer")) {
             PVCollectModel pvCollectModel = new PVCollectModel("channel", "communicate");
             PVCollectModelCacheUtils.saveCollectModel(ChannelActivity.this, pvCollectModel);
@@ -901,7 +617,6 @@ public class ChannelActivity extends BaseActivity {
             apiService.sendMsg(cid, content, type, fakeMessageId);
         }
     }
-
 
 
     /**
@@ -960,6 +675,7 @@ public class ChannelActivity extends BaseActivity {
             int fakeMsgIndex = msgList.indexOf(fakeMsg);
             if (fakeMsgIndex != -1) {
                 msgList.get(fakeMsgIndex).setSendStatus(2);
+                adapter.setMsgList(msgList);
                 adapter.notifyDataSetChanged();
             }
             WebServiceMiddleUtils.hand(ChannelActivity.this, error, errorCode);
@@ -1006,10 +722,9 @@ public class ChannelActivity extends BaseActivity {
                         msgList.get(0).getMid());
                 if (historyMsgList != null && historyMsgList.size() > 1) {
                     msgList.addAll(0, historyMsgList);
-                    adapter.notifyDataSetChanged();
-                    msgListView.setSelection(historyMsgList.size() - 1);
-//                    ListViewUtils.setSelection(msgListView,
-//                            historyMsgList.size()-1 );
+                    adapter.setMsgList(msgList);
+                    adapter.notifyItemRangeInserted(0,historyMsgList.size());
+                    msgListView.MoveToPosition(historyMsgList.size()-1);
                 }
             }
 
@@ -1017,10 +732,10 @@ public class ChannelActivity extends BaseActivity {
 
         @Override
         public void returnNewMsgsFail(String error, int errorCode) {
+            if (loadingDlg != null && loadingDlg.isShowing()) {
+                loadingDlg.dismiss();
+            }
             if (swipeRefreshLayout == null) {
-                if (loadingDlg != null && loadingDlg.isShowing()) {
-                    loadingDlg.dismiss();
-                }
                 initViews();
             } else {
                 WebServiceMiddleUtils.hand(ChannelActivity.this, error, errorCode);
@@ -1032,6 +747,7 @@ public class ChannelActivity extends BaseActivity {
             Msg msg = getMsgResult.getMsg();
             if (msg != null && ChannelActivity.this != null) {
                 MsgCacheUtil.saveMsg(ChannelActivity.this, msg);
+                adapter.setMsgList(msgList);
                 adapter.notifyDataSetChanged();
             }
         }
