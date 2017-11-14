@@ -124,33 +124,25 @@
         android:layout_height="wrap_content"
         android:layout_marginRight="15dp"
         android:layout_marginBottom="20dp"
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp"
+        android:background="@drawable/shape_recommend_widget_layout"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true">
-        <com.inspur.emmcloud.widget.CircleImageView
-            android:id="@+id/my_app_first_img"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_centerVertical="true"
-            android:layout_marginBottom="8dp"
-            android:layout_marginRight="12dp"
-            android:layout_marginTop="11dp"
-            android:src="@drawable/icon_default"
-            />
-        <com.inspur.emmcloud.widget.CircleImageView
-            android:id="@+id/my_app_second_img"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_toRightOf="@id/my_app_first_img"
-            android:layout_centerVertical="true"
-            android:layout_marginBottom="8dp"
-            android:layout_marginRight="12dp"
-            android:layout_marginTop="11dp"
-            android:src="@drawable/icon_default"
-            />
         <android.support.v7.widget.RecyclerView
             android:id="@+id/my_app_recommend_recyclerview"
             android:layout_width="wrap_content"
-            android:layout_height="48dp"/>
+            android:layout_height="48dp"
+            />
+        <ImageView
+            android:id="@+id/my_app_recommend_widget_img"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_toRightOf="@id/my_app_recommend_recyclerview"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="14dp"
+            android:layout_marginLeft="10dp"
+            android:src="@drawable/ic_recommend_close"/>
     </RelativeLayout>
 
 </RelativeLayout>

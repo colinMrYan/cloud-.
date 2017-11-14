@@ -30,6 +30,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.MyApplication;
@@ -50,7 +51,9 @@ import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.interf.OnRecommendAppItemClickListener;
 import com.inspur.emmcloud.util.AppCacheUtils;
 import com.inspur.emmcloud.util.AppTitleUtils;
+import com.inspur.emmcloud.util.DensityUtil;
 import com.inspur.emmcloud.util.IntentUtils;
+import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.MyAppCacheUtils;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.PVCollectModelCacheUtils;
@@ -60,6 +63,7 @@ import com.inspur.emmcloud.util.ShortCutUtils;
 import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
+import com.inspur.emmcloud.widget.ECMSpaceItemDecoration;
 import com.inspur.emmcloud.widget.MySwipeRefreshLayout;
 import com.inspur.emmcloud.widget.SwitchView;
 import com.inspur.emmcloud.widget.SwitchView.OnStateChangedListener;
@@ -121,6 +125,8 @@ public class MyAppFragment extends Fragment {
         return rootView;
     }
 
+
+
     @Override
     public void onResume() {
         super.onResume();
@@ -181,15 +187,25 @@ public class MyAppFragment extends Fragment {
     private void initRecommendView() {
         RecyclerView recommendWidgetView = (RecyclerView) rootView.findViewById(R.id.my_app_recommend_recyclerview);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         recommendWidgetView.setLayoutManager(layoutManager);
-        RecommendAppAdapter recommendAppAdapter = new RecommendAppAdapter();
+        recommendWidgetView.addItemDecoration(new ECMSpaceItemDecoration(DensityUtil.dip2px(getActivity(), 4)));
+        RecommendAppAdapter recommendAppAdapter = new RecommendAppAdapter(getActivity(),new ArrayList<App>());
         recommendWidgetView.setAdapter(recommendAppAdapter);
         recommendAppAdapter.setOnRecommendAppItemClickListener(new OnRecommendAppItemClickListener() {
             @Override
             public void onRecommendAppItemClick(View view, int position) {
-
+                LogUtils.YfcDebug("获取到点击事件："+position);
             }
         });
+        final RelativeLayout relativeLayout = (RelativeLayout) rootView.findViewById(R.id.my_app_recommend_layout);
+        rootView.findViewById(R.id.my_app_recommend_widget_img).setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                relativeLayout.setVisibility(View.GONE);
+            }
+        });
+
     }
 
 
