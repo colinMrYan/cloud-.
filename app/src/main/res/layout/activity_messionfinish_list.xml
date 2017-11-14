@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:segmentcontrol="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/main_layout"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical"
@@ -42,81 +40,22 @@
             android:text="@string/mession_finish_history"
             android:textColor="@color/header_text"
             android:textSize="@dimen/header_textsize" />
-        <!-- 
-        <ImageView 
-            android:id="@+id/mession_settiing_img"
-            android:layout_width="33dp"
-            android:layout_height="33dp"
-            android:onClick="onClick"
-            android:layout_centerVertical="true"
-            android:src="@drawable/icon_mession_set"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="10dp"/>
-             -->
     </RelativeLayout>
-<!-- 
-    <com.inspur.emmcloud.widget.SegmentControl
-        android:id="@+id/segment_control"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/header_layout"
-        android:layout_centerInParent="true"
-        android:layout_marginTop="10dp"
-        android:layout_gravity="center_horizontal"
-        android:textSize="17sp"
-        segmentcontrol:cornerRadius="5dip"
-        segmentcontrol:direction="horizon"
-        segmentcontrol:horizonGap="8dip"
-        segmentcontrol:selectedBackgroundColors="#FF0F7BCA"
-        segmentcontrol:selectedIndex="0"
-        segmentcontrol:verticalGap="8dip" />
- -->
-    <com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout
-        android:id="@+id/refresh_view"
+    <com.inspur.emmcloud.widget.MySwipeRefreshLayout
+        android:id="@+id/refresh_layout"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_height="match_parent"
         android:layout_marginTop="10dp"
         android:layout_below="@id/segment_control" >
 
-        <include layout="@layout/pull_refresh_head" />
-        <!-- 支持所有实现Pullable接口的View -->
 
-        <com.inspur.emmcloud.widget.pullableview.PullableListView
+        <ListView
             android:id="@+id/mession_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:transcriptMode="normal"
-            android:divider="@null" />
+            android:dividerHeight="0.5dp"
+            android:divider="@color/color_list_divider" />
 
-        <include layout="@layout/pull_load_more" />
-    </com.inspur.emmcloud.widget.pullableview.PullToRefreshLayout>
-<!-- 
-    <RelativeLayout 
-        android:id="@+id/mession_add_layout"
-        android:layout_height="45dp"
-        android:layout_width="match_parent"
-        android:layout_alignParentBottom="true"
-        android:clickable="false"
-        android:background="@drawable/text_layout_selector">
-        <EditText
-            android:id="@+id/mession_add_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@null"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="30dp"
-            android:layout_centerVertical="true"
-            android:textSize="@dimen/content_title_textsize"/>
-        <ImageView 
-            android:id="@+id/mession_add_img"
-            android:layout_width="28dp"
-            android:layout_height="28dp"
-            android:layout_centerVertical="true"
-            android:layout_alignParentRight="true"
-            android:onClick="onClick"
-            android:layout_marginRight="10dp"
-            android:src="@drawable/icon_mession_add_task"/>
-    </RelativeLayout>
-     -->
+    </com.inspur.emmcloud.widget.MySwipeRefreshLayout>
 </LinearLayout>

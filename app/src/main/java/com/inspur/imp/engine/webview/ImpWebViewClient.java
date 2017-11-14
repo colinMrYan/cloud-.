@@ -9,7 +9,6 @@ import android.os.Message;
 import android.view.View;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
-import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.LinearLayout;
@@ -17,13 +16,13 @@ import android.widget.LinearLayout;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
 import com.inspur.emmcloud.bean.AppRedirectResult;
-import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.imp.api.ImpActivity;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Map;
 
 
 /**
@@ -96,7 +95,6 @@ public class ImpWebViewClient extends WebViewClient {
 	 */
 	@Override
 	public void onPageStarted(WebView view, String url, Bitmap favicon) {
-		LogUtils.YfcDebug("onPageStarted:"+url);
 		super.onPageStarted(view, url, favicon);
 		urlparam = url;
 		myWebView = (ImpWebView) view;
@@ -110,7 +108,6 @@ public class ImpWebViewClient extends WebViewClient {
 	 */
 	@Override
 	public void onPageFinished(WebView view, String url) {
-		LogUtils.YfcDebug("onPageFinished:"+url);
 		if (runnable != null){
 			mHandler.removeCallbacks(runnable);
 			runnable = null;
@@ -142,7 +139,6 @@ public class ImpWebViewClient extends WebViewClient {
 	@Override
 	public void onReceivedError(WebView view, int errorCode,
 								String description, String failingUrl) {
-		LogUtils.YfcDebug("onReceivedError"+description);
 		if (runnable != null){
 			mHandler.removeCallbacks(runnable);
 			runnable = null;
@@ -168,7 +164,6 @@ public class ImpWebViewClient extends WebViewClient {
 	@SuppressWarnings("deprecation")
 	@Override
 	public boolean shouldOverrideUrlLoading(WebView view, String url) {
-		LogUtils.YfcDebug("shouldOverrideUrlLoading："+url);
 		if (runnable != null){
 			mHandler.removeCallbacks(runnable);
 			runnable = null;
@@ -182,13 +177,16 @@ public class ImpWebViewClient extends WebViewClient {
 			((Activity)myWebView.getContext()).startActivityForResult(intent,ImpActivity.DO_NOTHING_RESULTCODE);
 			return true;
 		}
+		view.loadUrl(url, getWebViewHeaders());
 		return super.shouldOverrideUrlLoading(view, url);
-
 	}
 
-	@Override
-	public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
-		return super.shouldOverrideUrlLoading(view, request);
+	/**
+	 * 获取Header
+	 * @return
+	 */
+	private Map<String,String> getWebViewHeaders(){
+		return ((ImpActivity)myWebView.getContext()).getWebViewHeaders();
 	}
 
 	/**
@@ -221,7 +219,7 @@ public class ImpWebViewClient extends WebViewClient {
 		@Override
 		public void returnGetAppAuthCodeResultSuccess(AppRedirectResult appRedirectResult) {
 			if (NetUtils.isNetworkConnected(webView.getContext())) {
-				webView.loadUrl(appRedirectResult.getRedirect_uri());
+				webView.loadUrl(appRedirectResult.getRedirect_uri(), getWebViewHeaders());
 			}
 			super.returnGetAppAuthCodeResultSuccess(appRedirectResult);
 		}
