@@ -9,6 +9,7 @@ import android.os.Message;
 import android.view.View;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.LinearLayout;
@@ -183,6 +184,11 @@ public class ImpWebViewClient extends WebViewClient {
 		}
 		return super.shouldOverrideUrlLoading(view, url);
 
+	}
+
+	@Override
+	public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+		return super.shouldOverrideUrlLoading(view, request);
 	}
 
 	/**

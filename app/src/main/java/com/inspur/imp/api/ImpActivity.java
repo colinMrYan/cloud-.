@@ -118,6 +118,9 @@ public class ImpActivity extends ImpBaseActivity {
         setWebViewFunctionVisiable();
     }
 
+    public Map<String, String> getWebViewHeaders(){
+        return webViewHeaders;
+    }
     /**
      * 设置Webview自定义功能是否显示
      */

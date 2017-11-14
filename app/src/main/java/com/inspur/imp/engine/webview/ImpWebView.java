@@ -122,6 +122,17 @@ public class ImpWebView extends WebView {
 		this.addJavascriptInterface(new GetTitle(), "getTitle");
 		initPlugin();
 		setDownloadListener(new MyWebViewDownLoadListener());
+		setWebViewDebug();
+	}
+
+	/**
+	 * 开启WebViewdebug模式代码
+	 */
+	private void setWebViewDebug(){
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+			LogUtils.YfcDebug("开启WebView  debug模式");
+			setWebContentsDebuggingEnabled(true);
+		}
 	}
 
 	private class MyWebViewDownLoadListener implements DownloadListener {
