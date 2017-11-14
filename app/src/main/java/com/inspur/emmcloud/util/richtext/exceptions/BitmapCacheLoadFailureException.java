@@ -15,7 +15,7 @@ public class BitmapCacheLoadFailureException extends Exception {
     public BitmapCacheLoadFailureException(Throwable cause) {
         super(MESSAGE, cause);
     }
-//
+
 //    @TargetApi(Build.VERSION_CODES.N)
 //    public BitmapCacheLoadFailureException(Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
 //        super(MESSAGE, cause, enableSuppression, writableStackTrace);

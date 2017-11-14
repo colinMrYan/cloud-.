@@ -171,45 +171,50 @@ public class Channel implements Serializable {
             Msg msg = newMsgList.get(newMsgList.size() - 1);
             String title = msg.getTitle();
             String uid = ((MyApplication) context.getApplicationContext()).getUid();
+            String msgType = msg.getType();
             if (type.equals("DIRECT") || ((!type.equals("DIRECT")) && uid.equals(msg.getUid()))) {
                 title = "";
             } else {
                 title = title + "：";
             }
-            if (msg.getType().equals("text")) {
-                newMsgContent = title + msg.getBody();
-            } else if (msg.getType().equals("image")
-                    || msg.getType().equals("res_image")) {
-                newMsgContent = title + context.getString(R.string.send_a_picture);
-            } else if (msg.getType().equals("txt_comment")
-                    || msg.getType().equals("comment")) {
-                newMsgContent = title + context.getString(R.string.send_a_comment);
-            } else if (msg.getType().equals("file")
-                    || msg.getType().equals("res_file")) {
-                newMsgContent = title + context.getString(R.string.send_a_file);
-            } else if (msg.getType().equals("news")) {
-                newMsgContent = msg.getNTitle();
-            } else if (msg.getType().equals("res_link")) {
-                newMsgContent = title + context.getString(R.string.share_a_link);
-            } else if (msg.getType().equals("act_meeting")) {
-                newMsgContent = title + context.getString(R.string.send_a_meeting_invitation);
-            } else if (msg.getType().equals("txt_rich")) {
-                String msgBody = msg.getBody();
-                String source = JSONUtils.getString(msgBody, "source", "");
-                newMsgContent = source;
-                if (!StringUtils.isBlank(source)) {
-                    newMsgContent = MarkDown.fromMarkdown(source);
-                }
-                if (type.equals("GROUP")) {
-                    newMsgContent = title + newMsgContent;
-                }
-            } else if (msg.getType().equals("act_meeting_cancel")) {
-                newMsgContent = title + context.getString(R.string.cancel_a_meeting);
-            } else if (msg.getType().equals("act_meeting_approve")) {
-                newMsgContent = title + context.getString(R.string.send_a_meeting_request);
-            } else {
-                newMsgContent = title + context
-                        .getString(R.string.send_a_message_of_unknown_type);
+
+            switch (msgType) {
+                case "text":
+                    newMsgContent = title + msg.getBody();
+                    break;
+                case "image":
+                case "res_image":
+                    newMsgContent = title + context.getString(R.string.send_a_picture);
+                    break;
+                case "txt_comment":
+                case "comment":
+                    newMsgContent = title + context.getString(R.string.send_a_comment);
+                    break;
+                case "file":
+                case "res_file":
+                    newMsgContent = title + context.getString(R.string.send_a_file);
+                    break;
+                case "news":
+                    newMsgContent = msg.getNTitle();
+                    break;
+                case "res_link":
+                    newMsgContent = title + context.getString(R.string.share_a_link);
+                    break;
+                case "txt_rich":
+                    String msgBody = msg.getBody();
+                    String source = JSONUtils.getString(msgBody, "source", "");
+                    newMsgContent = source;
+                    if (!StringUtils.isBlank(source)) {
+                        newMsgContent = MarkDown.fromMarkdown(source);
+                    }
+                    if (type.equals("GROUP")) {
+                        newMsgContent = title + newMsgContent;
+                    }
+                    break;
+                default:
+                    newMsgContent = title + context
+                            .getString(R.string.send_a_message_of_unknown_type);
+                    break;
             }
         } else {
             if (type.equals("SERVICE")) {

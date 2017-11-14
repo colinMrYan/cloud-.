@@ -11,7 +11,6 @@ import com.zzhoujay.markdown.parser.QueueConsumer;
 import com.zzhoujay.markdown.parser.StyleBuilder;
 import com.zzhoujay.markdown.parser.Tag;
 import com.zzhoujay.markdown.parser.TagHandler;
-import com.zzhoujay.markdown.parser.TagHandlerImpl;
 import com.zzhoujay.markdown.style.ScaleHeightSpan;
 
 import java.io.BufferedReader;
