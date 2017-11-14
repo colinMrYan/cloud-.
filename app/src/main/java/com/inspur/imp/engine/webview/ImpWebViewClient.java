@@ -16,12 +16,14 @@ import android.widget.LinearLayout;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
 import com.inspur.emmcloud.bean.AppRedirectResult;
+import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.imp.api.ImpActivity;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Map;
 
 
 /**
@@ -163,6 +165,7 @@ public class ImpWebViewClient extends WebViewClient {
 	@SuppressWarnings("deprecation")
 	@Override
 	public boolean shouldOverrideUrlLoading(WebView view, String url) {
+		LogUtils.YfcDebug("shouldOverrideUrlLoading------------"+ getWebViewHeaders().toString());
 		if (runnable != null){
 			mHandler.removeCallbacks(runnable);
 			runnable = null;
@@ -176,8 +179,16 @@ public class ImpWebViewClient extends WebViewClient {
 			((Activity)myWebView.getContext()).startActivityForResult(intent,ImpActivity.DO_NOTHING_RESULTCODE);
 			return true;
 		}
+		view.loadUrl(url, getWebViewHeaders());
 		return super.shouldOverrideUrlLoading(view, url);
+	}
 
+	/**
+	 * 获取Header
+	 * @return
+	 */
+	private Map<String,String> getWebViewHeaders(){
+		return ((ImpActivity)myWebView.getContext()).getWebViewHeaders();
 	}
 
 	/**
@@ -210,7 +221,7 @@ public class ImpWebViewClient extends WebViewClient {
 		@Override
 		public void returnGetAppAuthCodeResultSuccess(AppRedirectResult appRedirectResult) {
 			if (NetUtils.isNetworkConnected(webView.getContext())) {
-				webView.loadUrl(appRedirectResult.getRedirect_uri());
+				webView.loadUrl(appRedirectResult.getRedirect_uri(), getWebViewHeaders());
 			}
 			super.returnGetAppAuthCodeResultSuccess(appRedirectResult);
 		}

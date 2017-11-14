@@ -119,6 +119,14 @@ public class ImpActivity extends ImpBaseActivity {
     }
 
     /**
+     * 在WebClient获取header
+     * @return
+     */
+    public Map<String,String> getWebViewHeaders(){
+        return webViewHeaders;
+    }
+
+    /**
      * 设置Webview自定义功能是否显示
      */
     private void setWebViewFunctionVisiable() {
