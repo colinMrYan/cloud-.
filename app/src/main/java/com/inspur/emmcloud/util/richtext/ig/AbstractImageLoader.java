@@ -15,6 +15,8 @@ import com.inspur.emmcloud.util.richtext.callback.ImageLoadNotify;
 import com.inspur.emmcloud.util.richtext.drawable.DrawableWrapper;
 import com.inspur.emmcloud.util.richtext.exceptions.ImageDecodeException;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.ref.WeakReference;
 
 /**
@@ -204,7 +206,10 @@ abstract class AbstractImageLoader<T> implements ImageLoader {
     @Override
     public void recycle() {
         if (imageWrapperWeakReference != null) {
-            imageWrapperWeakReference.get().recycle();
+            ImageWrapper imageWrapper = imageWrapperWeakReference.get();
+            if (imageWrapper != null) {
+                imageWrapper.recycle();
+            }
         }
     }
 
@@ -213,6 +218,14 @@ abstract class AbstractImageLoader<T> implements ImageLoader {
                 inWidth / (float) outWidth));
         int lesserOrEqualSampleSize = Math.max(1, Integer.highestOneBit(maxIntegerFactor));
         return lesserOrEqualSampleSize << (lesserOrEqualSampleSize < maxIntegerFactor ? 1 : 0);
+    }
+
+    InputStream openAssetFile(String name) throws IOException {
+        TextView textView = textViewWeakReference.get();
+        if (textView != null) {
+            return textView.getContext().getAssets().open(name);
+        }
+        return null;
     }
 
     private boolean activityIsAlive() {

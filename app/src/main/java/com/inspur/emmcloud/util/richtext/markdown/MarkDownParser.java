@@ -11,7 +11,6 @@ import com.zzhoujay.markdown.parser.QueueConsumer;
 import com.zzhoujay.markdown.parser.StyleBuilder;
 import com.zzhoujay.markdown.parser.Tag;
 import com.zzhoujay.markdown.parser.TagHandler;
-import com.zzhoujay.markdown.parser.TagHandlerImpl;
 import com.zzhoujay.markdown.style.ScaleHeightSpan;
 
 import java.io.BufferedReader;
@@ -94,15 +93,15 @@ class MarkDownParser {
         if (queue.empty()) {
             return null;
         }
-        boolean notBlock;// 当前Line不是CodeBlock
+        //boolean notBlock;// 当前Line不是CodeBlock
         do {
-
-            notBlock = queue.prevLine() != null && (queue.prevLine().getType() == Line.LINE_TYPE_OL || queue.prevLine().getType() == Line.LINE_TYPE_UL)
-                    && (tagHandler.find(Tag.UL, queue.currLine()) || tagHandler.find(Tag.OL, queue.currLine()));
-            // 处理CodeBlock
-            if (!notBlock && (tagHandler.codeBlock1(queue.currLine()) || tagHandler.codeBlock2(queue.currLine()))) {
-                continue;
-            }
+                //jason修改处
+//            notBlock = queue.prevLine() != null && (queue.prevLine().getType() == Line.LINE_TYPE_OL || queue.prevLine().getType() == Line.LINE_TYPE_UL)
+//                    && (tagHandler.find(Tag.UL, queue.currLine()) || tagHandler.find(Tag.OL, queue.currLine()));
+//            // 处理CodeBlock
+//            if (!notBlock && (tagHandler.codeBlock1(queue.currLine()) || tagHandler.codeBlock2(queue.currLine()))) {
+//                continue;
+//            }
             // 合并未换行的Line，并处理一些和Quota嵌套相关的问题
             boolean isNewLine = tagHandler.find(Tag.NEW_LINE, queue.currLine()) || tagHandler.find(Tag.GAP, queue.currLine()) || tagHandler.find(Tag.H, queue.currLine());
             if (isNewLine) {
@@ -111,9 +110,9 @@ class MarkDownParser {
                 removeNextBlankLine(queue);
             } else {
                 while (queue.nextLine() != null && !removeNextBlankLine(queue)) {
-                    if (tagHandler.find(Tag.CODE_BLOCK_1, queue.nextLine()) || tagHandler.find(Tag.CODE_BLOCK_2, queue.nextLine()) ||
-                            tagHandler.find(Tag.GAP, queue.nextLine()) || tagHandler.find(Tag.UL, queue.nextLine()) ||
-                            tagHandler.find(Tag.OL, queue.nextLine()) || tagHandler.find(Tag.H, queue.nextLine())) {
+                    //jason修改处
+                    if ( tagHandler.find(Tag.GAP, queue.nextLine()) || tagHandler.find(Tag.UL, queue.nextLine()) ||
+                                    tagHandler.find(Tag.OL, queue.nextLine()) || tagHandler.find(Tag.H, queue.nextLine())) {
                         break;
                     }
                     if (handleQuotaRelevant(queue, false)) break;
@@ -158,7 +157,8 @@ class MarkDownParser {
             if (tagHandler.find(Tag.UL, source) || tagHandler.find(Tag.OL, source) || tagHandler.find(Tag.H, source)) {
                 return true;
             } else {
-                queue.currLine().setSource(queue.currLine().getSource() + ' ' + source);
+                //jason修改 解决聊天消息中换行不管用的问题
+                queue.currLine().setSource(queue.currLine().getSource() + '\n' + source);
                 queue.removeNextLine();
             }
         }
