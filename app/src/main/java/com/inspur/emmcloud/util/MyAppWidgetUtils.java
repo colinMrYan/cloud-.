@@ -7,6 +7,7 @@ import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
 import com.inspur.emmcloud.bean.GetMyAppWidgetResult;
 import com.inspur.emmcloud.bean.RecommendAppWidgetBean;
+import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.widget.LoadingDialog;
 
 import java.util.ArrayList;
@@ -66,6 +67,25 @@ public class MyAppWidgetUtils {
     }
 
     /**
+     * 保存不要显示的日期时间
+     * @param context
+     * @param notShowDate
+     */
+    public static void saveNotShowDate(Context context,long notShowDate){
+        PreferencesByUserAndTanentUtils.putLong(context, Constant.PREF_HAS_MY_APP_RECOMMEND,notShowDate);
+    }
+
+    /**
+     * 判断是否显示推荐应用小部件
+     * @param context
+     * @return
+     */
+    public static boolean isShowMyAppRecommendWidget(Context context){
+        long notShowTime = PreferencesByUserAndTanentUtils.getLong(context,Constant.PREF_HAS_MY_APP_RECOMMEND,0);
+        return System.currentTimeMillis()>notShowTime;
+    }
+
+    /**
      * 获取需要显示的appId列表
      * @param recommendAppWidgetBeanList
      * @return
@@ -85,7 +105,7 @@ public class MyAppWidgetUtils {
      * 获取当前小时数
      * @return
      */
-    public static int getNowHour(){
+    private static int getNowHour(){
         return Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
     }
 
