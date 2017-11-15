@@ -52,4 +52,20 @@ public class GetMyAppWidgetResult {
     public void setResponse(String response) {
         this.response = response;
     }
+
+    public long getExpiredDate() {
+        return expiredDate;
+    }
+
+    public void setExpiredDate(long expiredDate) {
+        this.expiredDate = expiredDate;
+    }
+
+    public List<RecommendAppWidgetBean> getRecommendAppWidgetBeanList() {
+        return recommendAppWidgetBeanList;
+    }
+
+    public void setRecommendAppWidgetBeanList(List<RecommendAppWidgetBean> recommendAppWidgetBeanList) {
+        this.recommendAppWidgetBeanList = recommendAppWidgetBeanList;
+    }
 }

@@ -80,20 +80,21 @@ public class MyAppWidgetUtils {
      * @param context
      * @return
      */
-    public static boolean isShowMyAppRecommendWidget(Context context){
+    public static boolean isNeedShowMyAppRecommendWidgets(Context context){
         long notShowTime = PreferencesByUserAndTanentUtils.getLong(context,Constant.PREF_HAS_MY_APP_RECOMMEND,0);
         return System.currentTimeMillis()>notShowTime;
     }
 
     /**
      * 获取需要显示的appId列表
-     * @param recommendAppWidgetBeanList
      * @return
      */
-    public static List<String> getShouldShowAppList(List<RecommendAppWidgetBean> recommendAppWidgetBeanList){
+    public static List<String> getShouldShowAppList(Context context){
+        GetMyAppWidgetResult getMyAppWidgetResult = new GetMyAppWidgetResult(PreferencesByUserAndTanentUtils.getString(context,Constant.PREF_MY_APP_RECOMMEND_DATA,""));
+        List<RecommendAppWidgetBean> recommendAppWidgetBeanList = getMyAppWidgetResult.getRecommendAppWidgetBeanList();
         List<String> appIdList = new ArrayList<>();
         for(int i = 0; i < recommendAppWidgetBeanList.size(); i++){
-            if(Integer.parseInt(recommendAppWidgetBeanList.get(i).getPeriod()) == getNowHour()){
+            if(Integer.parseInt(recommendAppWidgetBeanList.get(i).getPeriod()) == (getNowHour()+1)){
                 appIdList.addAll(recommendAppWidgetBeanList.get(i).getAppIdList());
                 break;
             }
@@ -124,7 +125,7 @@ public class MyAppWidgetUtils {
             if(loadingDlg.isShowing()){
                 loadingDlg.dismiss();
             }
-            PreferencesByUserAndTanentUtils.putString(context,getMyAppWidgetResult.getResponse(),"");
+            PreferencesByUserAndTanentUtils.putString(context,Constant.PREF_MY_APP_RECOMMEND_DATA,getMyAppWidgetResult.getResponse());
         }
 
         @Override

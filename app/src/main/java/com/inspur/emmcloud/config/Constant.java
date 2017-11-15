@@ -20,6 +20,7 @@ public class Constant {
     public static final String PREF_WORK_INFO_BAR_OPEN = "work_open_info";
     public static final String PREF_WORK_PORTLET_CONFIG_UPLOAD = "is_work_portlet_config_upload";
     public static final String PREF_HAS_MY_APP_RECOMMEND = "has_my_app_recommend";
+    public static final String PREF_MY_APP_RECOMMEND_DATA = "my_app_recommend_data";
 
     public static final String ACTION_MEETING = "com.inspur.meeting";
     public static final String ACTION_TASK = "com.inspur.task";

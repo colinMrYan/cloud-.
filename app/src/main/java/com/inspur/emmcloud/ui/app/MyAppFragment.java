@@ -30,7 +30,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.MyApplication;
@@ -55,12 +54,14 @@ import com.inspur.emmcloud.util.DensityUtil;
 import com.inspur.emmcloud.util.IntentUtils;
 import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.MyAppCacheUtils;
+import com.inspur.emmcloud.util.MyAppWidgetUtils;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.ShortCutUtils;
 import com.inspur.emmcloud.util.StringUtils;
+import com.inspur.emmcloud.util.TimeUtils;
 import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.ECMSpaceItemDecoration;
@@ -102,6 +103,8 @@ public class MyAppFragment extends Fragment {
     private MyAppSaveTask myAppSaveTask;
     private Map<String,AppBadgeBean> appBadgeBeanMap = new HashMap<>();
     private boolean isOnCreate = false;
+    private RecyclerView recommendWidgetView = null;
+    private RecommendAppAdapter recommendAppAdapter = null;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -141,6 +144,7 @@ public class MyAppFragment extends Fragment {
             getAppBadgeNum();
         }
         isOnCreate = false;
+        reFreshRecommendAppWidgetView();
     }
 
     /**
@@ -178,34 +182,71 @@ public class MyAppFragment extends Fragment {
         getMyApp();
         setTabTitle();
         getAppBadgeNum();
-        initRecommendView();
         isOnCreate = true;
 //        shortCutAppList.add("mobile_checkin_hcm");
 //        shortCutAppList.add("inspur_news_esg");//目前，除在此处添加id还需要为每个需要生成快捷方式的应用配置图标
     }
 
-    private void initRecommendView() {
-        RecyclerView recommendWidgetView = (RecyclerView) rootView.findViewById(R.id.my_app_recommend_recyclerview);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
-        layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        recommendWidgetView.setLayoutManager(layoutManager);
-        recommendWidgetView.addItemDecoration(new ECMSpaceItemDecoration(DensityUtil.dip2px(getActivity(), 4)));
-        RecommendAppAdapter recommendAppAdapter = new RecommendAppAdapter(getActivity(),new ArrayList<App>());
-        recommendWidgetView.setAdapter(recommendAppAdapter);
-        recommendAppAdapter.setOnRecommendAppItemClickListener(new OnRecommendAppItemClickListener() {
-            @Override
-            public void onRecommendAppItemClick(View view, int position) {
-                LogUtils.YfcDebug("获取到点击事件："+position);
+    /**
+     * 刷新推荐应用小部件
+     */
+    private void reFreshRecommendAppWidgetView() {
+        if(MyAppWidgetUtils.isNeedShowMyAppRecommendWidgets(getActivity())){
+            if(recommendWidgetView == null){
+                LogUtils.YfcDebug("创建推荐应用");
+                recommendWidgetView = (RecyclerView) rootView.findViewById(R.id.my_app_recommend_recyclerview);
+                (rootView.findViewById(R.id.my_app_recommend_layout)).setVisibility(View.VISIBLE);
+                LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+                layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+                recommendWidgetView.setLayoutManager(layoutManager);
+                recommendWidgetView.addItemDecoration(new ECMSpaceItemDecoration(DensityUtil.dip2px(getActivity(), 4)));
+                recommendAppAdapter = new RecommendAppAdapter(getActivity(),new ArrayList<App>());
+                recommendWidgetView.setAdapter(recommendAppAdapter);
+                recommendAppAdapter.setOnRecommendAppItemClickListener(new OnRecommendAppItemClickListener() {
+                    @Override
+                    public void onRecommendAppItemClick(App app) {
+                        LogUtils.YfcDebug("接收到点击事件"+(app == null));
+                        if(!StringUtils.isBlank(app.getAppID())){
+                            UriUtils.openApp(getActivity(),app);
+                        }
+                    }
+                });
+                rootView.findViewById(R.id.my_app_recommend_widget_img).setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        (rootView.findViewById(R.id.my_app_recommend_layout)).setVisibility(View.GONE);
+                        MyAppWidgetUtils.saveNotShowDate(getActivity(), TimeUtils.getEndTime());
+                    }
+                });
+            }else{
+                LogUtils.YfcDebug("刷新推荐应用");
+                if(recommendAppAdapter != null){
+                    refreshRecommendAppWidgets();
+                }
             }
-        });
-        final RelativeLayout relativeLayout = (RelativeLayout) rootView.findViewById(R.id.my_app_recommend_layout);
-        rootView.findViewById(R.id.my_app_recommend_widget_img).setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                relativeLayout.setVisibility(View.GONE);
-            }
-        });
+        }
+    }
 
+    /**
+     * 获取本时间段内应该显示的推荐
+     * @return
+     */
+    private void refreshRecommendAppWidgets() {
+        List<String> appIdList = MyAppWidgetUtils.getShouldShowAppList(getActivity());
+        List<App> recommendAppWidgetList = new ArrayList<>();
+        List<AppGroupBean> appGroupBeanList = appListAdapter.getAppAdapterList();
+        App app = new App();
+        for(int i = 0; i < appIdList.size(); i++ ){
+            app.setAppID(appIdList.get(i));
+            for(int j = 0; j < appGroupBeanList.size(); j++){
+                int index = appGroupBeanList.get(j).getAppItemList().indexOf(app);
+                if(index != -1){
+                    recommendAppWidgetList.add(appGroupBeanList.get(j).getAppItemList().get(j));
+                    break;
+                }
+            }
+        }
+        recommendAppAdapter.setAndReFreshRecommendList(recommendAppWidgetList);
     }
 
 

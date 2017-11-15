@@ -43,7 +43,8 @@ public class RecommendAppAdapter extends RecyclerView.Adapter<RecommendAppAdapte
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    onRecommendAppItemClickListener.onRecommendAppItemClick(holder.recommendAppImg,position);
+                    App app = new App();
+                    onRecommendAppItemClickListener.onRecommendAppItemClick(app);
                 }
             });
         }
@@ -73,7 +74,7 @@ public class RecommendAppAdapter extends RecyclerView.Adapter<RecommendAppAdapte
      * 更新数据并刷新
      * @param recommendList
      */
-    public void setRecommendList(List<App> recommendList){
+    public void setAndReFreshRecommendList(List<App> recommendList){
         this.recommendList = recommendList;
         notifyDataSetChanged();
     }
