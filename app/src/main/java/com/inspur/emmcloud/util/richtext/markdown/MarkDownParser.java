@@ -95,7 +95,7 @@ class MarkDownParser {
         }
         boolean notBlock;// 当前Line不是CodeBlock
         do {
-
+                //jason修改处
             notBlock = queue.prevLine() != null && (queue.prevLine().getType() == Line.LINE_TYPE_OL || queue.prevLine().getType() == Line.LINE_TYPE_UL)
                     && (tagHandler.find(Tag.UL, queue.currLine()) || tagHandler.find(Tag.OL, queue.currLine()));
             // 处理CodeBlock
@@ -110,9 +110,9 @@ class MarkDownParser {
                 removeNextBlankLine(queue);
             } else {
                 while (queue.nextLine() != null && !removeNextBlankLine(queue)) {
-                    if (tagHandler.find(Tag.CODE_BLOCK_1, queue.nextLine()) || tagHandler.find(Tag.CODE_BLOCK_2, queue.nextLine()) ||
-                            tagHandler.find(Tag.GAP, queue.nextLine()) || tagHandler.find(Tag.UL, queue.nextLine()) ||
-                            tagHandler.find(Tag.OL, queue.nextLine()) || tagHandler.find(Tag.H, queue.nextLine())) {
+                    //jason修改处
+                    if ( tagHandler.find(Tag.GAP, queue.nextLine()) || tagHandler.find(Tag.UL, queue.nextLine()) ||
+                                    tagHandler.find(Tag.OL, queue.nextLine()) || tagHandler.find(Tag.H, queue.nextLine())) {
                         break;
                     }
                     if (handleQuotaRelevant(queue, false)) break;
@@ -157,7 +157,8 @@ class MarkDownParser {
             if (tagHandler.find(Tag.UL, source) || tagHandler.find(Tag.OL, source) || tagHandler.find(Tag.H, source)) {
                 return true;
             } else {
-                queue.currLine().setSource(queue.currLine().getSource() + ' ' + source);
+                //jason修改 解决聊天消息中换行不管用的问题
+                queue.currLine().setSource(queue.currLine().getSource() + '\n' + source);
                 queue.removeNextLine();
             }
         }

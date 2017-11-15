@@ -253,7 +253,6 @@ public class ChannelActivity extends BaseActivity {
      */
     private void initMsgListView() {
         msgListView = (RecycleViewForSizeChange) findViewById(R.id.msg_list);
-        msgListView.setLayoutManager(new LinearLayoutManager(this));
         msgList = MsgCacheUtil.getHistoryMsgList(getApplicationContext(),
                 cid, "", 15);
         adapter = new ChannelMsgAdapter(ChannelActivity.this,apiService,channel.getType(),chatInputMenu);
@@ -299,8 +298,11 @@ public class ChannelActivity extends BaseActivity {
             }
         });
         adapter.setMsgList(msgList);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        //设置listview自动滚动到最下方
+        linearLayoutManager.setStackFromEnd(true);
+        msgListView.setLayoutManager(linearLayoutManager);
         msgListView.setAdapter(adapter);
-        msgListView.MoveToPosition(msgList.size() - 1);
         /**
          * 当触摸消息list时把输入法和添加选项layout隐藏
          */
@@ -415,6 +417,8 @@ public class ChannelActivity extends BaseActivity {
                                     pushMsg.getCid(), pushMsg.getMid());
                             if (!msgList.contains(pushMsg) && !pushMsg.getTmpId().equals(AppUtils.getMyUUID(getApplicationContext()))) {
                                 msgList.add(pushMsg);
+                                adapter.setMsgList(msgList);
+                                adapter.notifyItemInserted(msgList.size()-1);
                                 msgListView.MoveToPosition(msgList.size() - 1);
                             }
                         }

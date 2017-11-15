@@ -143,12 +143,17 @@ public class RichText implements ImageGetterWrapper, ImageLoadNotify {
     void generateAndSet() {
         final TextView textView = textViewSoftReference.get();
         if (textView != null) {
-            textView.post(new Runnable() {
-                @Override
-                public void run() {
-                    asyncGenerate(textView);
-                }
-            });
+            if (!TextUtils.isEmpty(config.source) && config.source.length()<400){
+                textView.setText(generateRichText());
+            }else {
+                textView.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        asyncGenerate(textView);
+                    }
+                });
+            }
+
         }
     }
 

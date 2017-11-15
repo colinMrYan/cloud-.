@@ -72,56 +72,11 @@ public class ChannelMsgAdapter extends RecyclerView.Adapter<ChannelMsgAdapter.Vi
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         final Msg msg = msgList.get(position);
-        String type = msg.getType();
-        showCommonView(holder, position, msg);
-        View childView = null;
-        LayoutInflater vi = (LayoutInflater) context.getSystemService(LAYOUT_INFLATER_SERVICE);
-        if (type.equals("txt_comment") || type.equals("comment")) {
-            holder.cardCoverView.setVisibility(View.GONE);
-            childView = vi.inflate(
-                    R.layout.chat_msg_card_child_text_comment_view, null);
-            DisplayTxtCommentMsg.displayCommentMsg(context,
-                    childView, msg, apiService);
-        } else if (type.equals("res_image") || type.equals("image")) {
-            childView = vi.inflate(
-                    R.layout.chat_msg_card_child_res_img_view, null);
-            DisplayResImageMsg.displayResImgMsg(context,
-                    childView, msg);
-        } else if (type.equals("res_link")) {
-            holder.newsCommentText.setOnClickListener(new View.OnClickListener() {
-
-                @Override
-                public void onClick(View v) {
-                    // TODO Auto-generated method stub
-                    Bundle bundle = new Bundle();
-                    bundle.putString("mid", msg.getMid());
-                    bundle.putString("cid", msg.getCid());
-                    IntentUtils.startActivity(context,
-                            ChannelMsgDetailActivity.class, bundle);
-                }
-            });
-            childView = vi.inflate(
-                    R.layout.chat_msg_card_child_res_link_view, null);
-            DisplayResLinkMsg.displayResLinkMsg(context,
-                    childView, msg);
-        } else if (type.equals("res_file")) {
-            childView = vi.inflate(
-                    R.layout.chat_msg_card_child_res_file_view, null);
-            DisplayResFileMsg.displayResFileMsg(context,
-                    childView, msg);
-        } else if (type.equals("txt_rich")) {
-            holder.cardCoverView.setVisibility(View.GONE);
-            childView = vi.inflate(
-                    R.layout.chat_msg_card_child_text_rich_view, null);
-            DisplayTxtRichMsg.displayRichTextMsg(context,
-                    childView, msg);
-        } else {
-            childView = vi.inflate(
-                    R.layout.chat_msg_card_child_res_unknown_view, null);
-            DisplayResUnknownMsg.displayResUnknownMsg(context,
-                    childView, msg);
-        }
-        holder.cardLayout.addView(childView);
+        showCardLayout(holder, msg);
+        showUserName(holder, msg);
+        showMsgSendTime(holder, msg, position);
+        showUserPhoto(holder, msg);
+        showRefreshingImg(holder, msg);
     }
 
     /**
@@ -184,22 +139,6 @@ public class ChannelMsgAdapter extends RecyclerView.Adapter<ChannelMsgAdapter.Vi
 
 
     /**
-     * 显示公共的View
-     *
-     * @param holder
-     * @param position
-     * @param msg
-     */
-    private void showCommonView(ViewHolder holder, int position, Msg msg
-    ) {
-        showUserName(holder, msg);
-        showMsgSendTime(holder, msg, position);
-        showUserPhoto(holder, msg);
-        showRefreshingImg(holder, msg);
-        showCardLayout(holder, msg);
-    }
-
-    /**
      * 显示正在发送的标志
      *
      * @param holder
@@ -232,13 +171,62 @@ public class ChannelMsgAdapter extends RecyclerView.Adapter<ChannelMsgAdapter.Vi
      * @param holder
      * @param msg
      */
-    private void showCardLayout(ViewHolder holder, Msg msg) {
+    private void showCardLayout(ViewHolder holder, final Msg msg) {
         // TODO Auto-generated method stub
         holder.cardLayout.removeAllViewsInLayout();
         holder.cardLayout.removeAllViews();
         boolean isMyMsg = msg.getUid().equals(
                 ((MyApplication) context.getApplicationContext()).getUid());
         holder.cardCoverView.setVisibility(View.VISIBLE);
+        View childView = null;
+        LayoutInflater vi = (LayoutInflater) context.getSystemService(LAYOUT_INFLATER_SERVICE);
+        String type = msg.getType();
+        if (type.equals("txt_comment") || type.equals("comment")) {
+            holder.cardCoverView.setVisibility(View.GONE);
+            childView = vi.inflate(
+                    R.layout.chat_msg_card_child_text_comment_view, null);
+            DisplayTxtCommentMsg.displayCommentMsg(context,
+                    childView, msg, apiService);
+        } else if (type.equals("res_image") || type.equals("image")) {
+            childView = vi.inflate(
+                    R.layout.chat_msg_card_child_res_img_view, null);
+            DisplayResImageMsg.displayResImgMsg(context,
+                    childView, msg);
+        } else if (type.equals("res_link")) {
+            holder.newsCommentText.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+                    // TODO Auto-generated method stub
+                    Bundle bundle = new Bundle();
+                    bundle.putString("mid", msg.getMid());
+                    bundle.putString("cid", msg.getCid());
+                    IntentUtils.startActivity(context,
+                            ChannelMsgDetailActivity.class, bundle);
+                }
+            });
+            childView = vi.inflate(
+                    R.layout.chat_msg_card_child_res_link_view, null);
+            DisplayResLinkMsg.displayResLinkMsg(context,
+                    childView, msg);
+        } else if (type.equals("res_file")) {
+            childView = vi.inflate(
+                    R.layout.chat_msg_card_child_res_file_view, null);
+            DisplayResFileMsg.displayResFileMsg(context,
+                    childView, msg);
+        } else if (type.equals("txt_rich")) {
+            holder.cardCoverView.setVisibility(View.GONE);
+            childView = vi.inflate(
+                    R.layout.chat_msg_card_child_text_rich_view, null);
+            DisplayTxtRichMsg.displayRichTextMsg(context,
+                    childView, msg);
+        } else {
+            childView = vi.inflate(
+                    R.layout.chat_msg_card_child_res_unknown_view, null);
+            DisplayResUnknownMsg.displayResUnknownMsg(context,
+                    childView, msg);
+        }
+        holder.cardLayout.addView(childView);
         holder.cardCoverView.setBackgroundResource(isMyMsg ? R.drawable.ic_chat_msg_img_cover_arrow_right : R.drawable.ic_chat_msg_img_cover_arrow_left);
         RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) holder.cardLayout.getLayoutParams();
         //此处实际执行params.removeRule();
@@ -306,11 +294,13 @@ public class ChannelMsgAdapter extends RecyclerView.Adapter<ChannelMsgAdapter.Vi
             holder.senderPhotoImg.setVisibility(View.INVISIBLE);
         } else {
             holder.senderPhotoImg.setVisibility(View.VISIBLE);
-            String iconUrl = UriUtils.getChannelImgUri(context, msg.getUid());
+            String iconUrl ="";
             if (msg.getUid().startsWith("BOT") || channelType.equals("SERVICE")) {
                 iconUrl = UriUtils.getRobotIconUri(RobotCacheUtils
                         .getRobotById(context, msg.getUid())
                         .getAvatar());
+            }else {
+                iconUrl = UriUtils.getChannelImgUri(context, msg.getUid());
             }
             ImageDisplayUtils.getInstance().displayImage(holder.senderPhotoImg,
                     iconUrl, R.drawable.icon_person_default);

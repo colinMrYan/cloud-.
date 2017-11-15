@@ -567,31 +567,31 @@ public class TagHandlerImpl implements TagHandler {
 
     @Override
     public boolean code(Line line) {
-        line = line.get();
-        SpannableStringBuilder builder = (SpannableStringBuilder) line.getStyle();
-        Matcher matcher = obtain(Tag.CODE, builder);
-        if (matcher.find()) {
-            String content = matcher.group(3);
-            builder.delete(matcher.start(1), matcher.end(1));
-            builder.insert(matcher.start(1), styleBuilder.code(content));
-            code(line);
-            return true;
-        }
+//        line = line.get();
+//        SpannableStringBuilder builder = (SpannableStringBuilder) line.getStyle();
+//        Matcher matcher = obtain(Tag.CODE, builder);
+//        if (matcher.find()) {
+//            String content = matcher.group(3);
+//            builder.delete(matcher.start(1), matcher.end(1));
+//            builder.insert(matcher.start(1), styleBuilder.code(content));
+//            code(line);
+//            return true;
+//        }
         return false;
     }
 
     @Override
     public boolean email(Line line) {
-        line = line.get();
-        SpannableStringBuilder builder = (SpannableStringBuilder) line.getStyle();
-        Matcher matcher = obtain(Tag.EMAIL, builder);
-        if (matcher.find()) {
-            SpannableStringBuilder sb = (SpannableStringBuilder) builder.subSequence(matcher.start(2), matcher.end(2));
-            builder.delete(matcher.start(1), matcher.end(1));
-            builder.insert(matcher.start(1), styleBuilder.email(sb));
-            email(line);
-            return true;
-        }
+//        line = line.get();
+//        SpannableStringBuilder builder = (SpannableStringBuilder) line.getStyle();
+//        Matcher matcher = obtain(Tag.EMAIL, builder);
+//        if (matcher.find()) {
+//            SpannableStringBuilder sb = (SpannableStringBuilder) builder.subSequence(matcher.start(2), matcher.end(2));
+//            builder.delete(matcher.start(1), matcher.end(1));
+//            builder.insert(matcher.start(1), styleBuilder.email(sb));
+//            email(line);
+//            return true;
+//        }
         return false;
     }
 
@@ -617,16 +617,16 @@ public class TagHandlerImpl implements TagHandler {
 
     @Override
     public boolean autoLink(Line line) {
-        line = line.get();
-        SpannableStringBuilder builder = (SpannableStringBuilder) line.getStyle();
-        Matcher matcher = obtain(Tag.AUTO_LINK, builder);
+//        line = line.get();
+//        SpannableStringBuilder builder = (SpannableStringBuilder) line.getStyle();
+//        Matcher matcher = obtain(Tag.AUTO_LINK, builder);
         boolean m = false;
-        while (matcher.find()) {
-            String content = matcher.group();
-            builder.delete(matcher.start(), matcher.end());
-            builder.insert(matcher.start(), styleBuilder.link(content, content, ""));
-            m = true;
-        }
+//        while (matcher.find()) {
+//            String content = matcher.group();
+//            builder.delete(matcher.start(), matcher.end());
+//            builder.insert(matcher.start(), styleBuilder.link(content, content, ""));
+//            m = true;
+//        }
         return m;
     }
 
@@ -681,145 +681,152 @@ public class TagHandlerImpl implements TagHandler {
         return false;
     }
 
+    //jason修改处
     @Override
     public boolean image(Line line) {
-        line = line.get();
-        SpannableStringBuilder builder = (SpannableStringBuilder) line.getStyle();
-        Matcher matcher = obtain(Tag.IMAGE, builder);
-        if (matcher.find()) {
-            String title = matcher.group(2);
-            String link = matcher.group(3);
-            String hint = matcher.group(6);
-            builder.delete(matcher.start(1), matcher.end(1));
-            builder.insert(matcher.start(1), styleBuilder.image(title, link, hint));
-            image(line);
-            return true;
-        }
+//        line = line.get();
+//        SpannableStringBuilder builder = (SpannableStringBuilder) line.getStyle();
+//        Matcher matcher = obtain(Tag.IMAGE, builder);
+//        if (matcher.find()) {
+//            String title = matcher.group(2);
+//            String link = matcher.group(3);
+//            String hint = matcher.group(6);
+//            builder.delete(matcher.start(1), matcher.end(1));
+//            builder.insert(matcher.start(1), styleBuilder.image(title, link, hint));
+//            image(line);
+//            return true;
+//        }
         return false;
     }
 
+    //jason修改处
     @Override
     public boolean image2(Line line) {
-        line = line.get();
-        SpannableStringBuilder builder = (SpannableStringBuilder) line.getStyle();
-        Matcher matcher = obtain(Tag.IMAGE2, builder);
-        if (matcher.find()) {
-            String title = matcher.group(2);
-            String id = matcher.group(3);
-            Pair<String, String> image = idImageUrl.get(id);
-            if (image != null) {
-                builder.delete(matcher.start(1), matcher.end(1));
-                builder.insert(matcher.start(1), styleBuilder.image(title, image.first, image.second));
-            } else {
-                return false;
-            }
-            image2(line);
-            return true;
-        }
+//        line = line.get();
+//        SpannableStringBuilder builder = (SpannableStringBuilder) line.getStyle();
+//        Matcher matcher = obtain(Tag.IMAGE2, builder);
+//        if (matcher.find()) {
+//            String title = matcher.group(2);
+//            String id = matcher.group(3);
+//            Pair<String, String> image = idImageUrl.get(id);
+//            if (image != null) {
+//                builder.delete(matcher.start(1), matcher.end(1));
+//                builder.insert(matcher.start(1), styleBuilder.image(title, image.first, image.second));
+//            } else {
+//                return false;
+//            }
+//            image2(line);
+//            return true;
+//        }
         return false;
     }
 
+    //jason修改处
     @Override
     public boolean imageId(String line) {
-        Matcher matcher = obtain(Tag.IMAGE_ID, line);
-        if (matcher.find()) {
-            String id = matcher.group(1);
-            String link = matcher.group(2);
-            String hint = matcher.group(5);
-            idImageUrl.put(id, new Pair<>(link, hint));
-            return true;
-        }
+//        Matcher matcher = obtain(Tag.IMAGE_ID, line);
+//        if (matcher.find()) {
+//            String id = matcher.group(1);
+//            String link = matcher.group(2);
+//            String hint = matcher.group(5);
+//            idImageUrl.put(id, new Pair<>(link, hint));
+//            return true;
+//        }
         return false;
     }
 
+    //jason修改处
     @Override
     public boolean codeBlock1(Line line) {
-        Matcher matcher = obtain(Tag.CODE_BLOCK_1, line.getSource());
-        if (matcher.find()) {
-            String content = matcher.group(2);
-            LineQueue queue = queueProvider.getQueue();
-            Line next = queue.nextLine();
-            StringBuilder sb = new StringBuilder(content);
-            StringBuilder bsb = new StringBuilder();
-
-            while (next != null) {
-                CharSequence r = get(Tag.CODE_BLOCK_1, next, 2);
-                if (r == null) {
-                    if (find(Tag.BLANK, next)) {
-                        bsb.append(' ').append('\n');
-                    } else {
-                        break;
-                    }
-                } else {
-                    if (bsb.length() != 0) {
-                        sb.append(bsb).append(r);
-                        bsb.delete(0, sb.length());
-                    } else {
-                        sb.append('\n').append(r);
-                    }
-                }
-                queue.removeNextLine();
-                next = queue.nextLine();
-            }
-
-
-            line.setType(Line.LINE_TYPE_CODE_BLOCK_1);
-            line.setStyle(styleBuilder.codeBlock(sb.toString()));
-            return true;
-        }
+//        Matcher matcher = obtain(Tag.CODE_BLOCK_1, line.getSource());
+//        if (matcher.find()) {
+//            String content = matcher.group(2);
+//            LineQueue queue = queueProvider.getQueue();
+//            Line next = queue.nextLine();
+//            StringBuilder sb = new StringBuilder(content);
+//            StringBuilder bsb = new StringBuilder();
+//
+//            while (next != null) {
+//                CharSequence r = get(Tag.CODE_BLOCK_1, next, 2);
+//                if (r == null) {
+//                    if (find(Tag.BLANK, next)) {
+//                        bsb.append(' ').append('\n');
+//                    } else {
+//                        break;
+//                    }
+//                } else {
+//                    if (bsb.length() != 0) {
+//                        sb.append(bsb).append(r);
+//                        bsb.delete(0, sb.length());
+//                    } else {
+//                        sb.append('\n').append(r);
+//                    }
+//                }
+//                queue.removeNextLine();
+//                next = queue.nextLine();
+//            }
+//
+//
+//            line.setType(Line.LINE_TYPE_CODE_BLOCK_1);
+//            line.setStyle(styleBuilder.codeBlock(sb.toString()));
+//            return true;
+//        }
         return false;
     }
 
 
+    //jason修改处
     @Override
     public boolean codeBlock2(Line line) {
-        if (find(Tag.CODE_BLOCK_2, line)) {
-            LineQueue queue = queueProvider.getQueue();
-            LineQueue nextQueue = queue.copy();
-            boolean find = false;
-            while (nextQueue.nextLine() != null) {
-                if (find(Tag.CODE_BLOCK_2, nextQueue.nextLine())) {
-                    nextQueue.next();
-                    removePrevBlankLine(nextQueue);
-                    removeNextBlankLine(queue);
-                    find = true;
-                    break;
-                }
-                nextQueue.next();
-            }
-            if (find) {
-                StringBuilder sb = new StringBuilder();
-                queue.next();
-                queue.removePrevLine();
-                while (queue.currLine() != nextQueue.currLine()) {
-                    sb.append(queue.currLine().getSource()).append('\n');
-                    queue.next();
-                    queue.removePrevLine();
-                }
-                removeNextBlankLine(nextQueue);
-                nextQueue.currLine().setType(Line.LINE_TYPE_CODE_BLOCK_2);
-                nextQueue.currLine().setStyle(styleBuilder.codeBlock(sb.toString()));
-                return true;
-            } else {
-                return false;
-            }
-        }
+//        if (find(Tag.CODE_BLOCK_2, line)) {
+//            LineQueue queue = queueProvider.getQueue();
+//            LineQueue nextQueue = queue.copy();
+//            boolean find = false;
+//            while (nextQueue.nextLine() != null) {
+//                if (find(Tag.CODE_BLOCK_2, nextQueue.nextLine())) {
+//                    nextQueue.next();
+//                    removePrevBlankLine(nextQueue);
+//                    removeNextBlankLine(queue);
+//                    find = true;
+//                    break;
+//                }
+//                nextQueue.next();
+//            }
+//            if (find) {
+//                StringBuilder sb = new StringBuilder();
+//                queue.next();
+//                queue.removePrevLine();
+//                while (queue.currLine() != nextQueue.currLine()) {
+//                    sb.append(queue.currLine().getSource()).append('\n');
+//                    queue.next();
+//                    queue.removePrevLine();
+//                }
+//                removeNextBlankLine(nextQueue);
+//                nextQueue.currLine().setType(Line.LINE_TYPE_CODE_BLOCK_2);
+//                nextQueue.currLine().setStyle(styleBuilder.codeBlock(sb.toString()));
+//                return true;
+//            } else {
+//                return false;
+//            }
+//        }
         return false;
     }
 
+    //jason修改处
     @Override
     public boolean inline(Line line) {
-        boolean flag = code(line);
-        flag = email(line) || flag;
-        flag = image(line) || flag;
-        flag = image2(line) || flag;
-        flag = link(line) || flag;
-        flag = link2(line) || flag;
+        //jason  修改 去除一些标签的过滤
+        boolean flag = false;
+//        flag = email(line) || flag;
+//        flag = image(line) || flag;
+//        flag = image2(line) || flag;
+        flag = link(line) || flag;;
+//        flag = link2(line) || flag;
         flag = autoLink(line) || flag;
         flag = emItalic(line) || flag;
         flag = em(line) || flag;
         flag = italic(line) || flag;
-        flag = delete(line) || flag;
+//        boolean flag = link(line) || delete(line)  || em(line) ||italic(line);
         return flag;
     }
 
@@ -873,9 +880,6 @@ public class TagHandlerImpl implements TagHandler {
 
     private Matcher obtain(int tag, CharSequence src) {
         Matcher m = patterns.get(tag, null).matcher(src);
-//        if (m != null) {
-//            m.reset(src);
-//        }
         return m;
     }
 
