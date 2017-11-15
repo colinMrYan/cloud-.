@@ -1227,7 +1227,7 @@ public class MessageFragment extends Fragment{
      * 获取消息会话列表
      */
     private void getChannelList() {
-        if (NetUtils.isNetworkConnected(getActivity())) {
+        if (NetUtils.isNetworkConnected(getActivity(),false)) {
             apiService.getChannelList();
         }else {
             swipeRefreshLayout.setRefreshing(false);

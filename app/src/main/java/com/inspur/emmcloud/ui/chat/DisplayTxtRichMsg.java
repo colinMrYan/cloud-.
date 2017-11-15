@@ -86,7 +86,7 @@ public class DisplayTxtRichMsg {
                         }
                     })
                     .noImage(true)
-                    .singleLoad(true)
+                    .singleLoad(false)
                     .cache(CacheType.ALL)
                     .into(richText);
         } else {

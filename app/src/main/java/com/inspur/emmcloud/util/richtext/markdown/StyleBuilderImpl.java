@@ -14,6 +14,7 @@ import android.text.style.QuoteSpan;
 import android.text.style.StrikethroughSpan;
 import android.widget.TextView;
 
+import com.inspur.emmcloud.util.LogUtils;
 import com.zzhoujay.markdown.parser.StyleBuilder;
 import com.zzhoujay.markdown.style.CodeSpan;
 import com.zzhoujay.markdown.style.EmailSpan;
@@ -259,6 +260,10 @@ public class StyleBuilderImpl implements StyleBuilder {
     private int getTextViewRealWidth() {
         TextView textView = textViewWeakReference.get();
         if (textView != null) {
+            LogUtils.jasonDebug("textView.getWidth()="+textView.getWidth());
+            LogUtils.jasonDebug("textView.getPaddingRight()="+textView.getPaddingRight());
+            LogUtils.jasonDebug("textView.getPaddingLeft()="+textView.getPaddingLeft());
+
             return textView.getWidth() - textView.getPaddingRight() - textView.getPaddingLeft();
         }
         return 0;
@@ -268,6 +273,7 @@ public class StyleBuilderImpl implements StyleBuilder {
     public SpannableStringBuilder gap() {
         SpannableStringBuilder builder = new SpannableStringBuilder(" ");
         Drawable underLine = new ColorDrawable(h_under_line_color);
+        LogUtils.jasonDebug("getTextViewRealWidth()="+getTextViewRealWidth());
         UnderLineSpan underLineSpan = new UnderLineSpan(underLine, getTextViewRealWidth(), 10);
         builder.setSpan(underLineSpan, 0, builder.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         return builder;

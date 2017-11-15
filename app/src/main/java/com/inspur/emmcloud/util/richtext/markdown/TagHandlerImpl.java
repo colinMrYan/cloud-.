@@ -822,10 +822,11 @@ public class TagHandlerImpl implements TagHandler {
 //        flag = image2(line) || flag;
         flag = link(line) || flag;;
 //        flag = link2(line) || flag;
-        flag = autoLink(line) || flag;
+//        flag = autoLink(line) || flag;
         flag = emItalic(line) || flag;
         flag = em(line) || flag;
         flag = italic(line) || flag;
+//        flag = delete(line) || flag;
 //        boolean flag = link(line) || delete(line)  || em(line) ||italic(line);
         return flag;
     }

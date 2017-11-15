@@ -145,8 +145,8 @@ public class ChannelMsgAdapter extends RecyclerView.Adapter<ChannelMsgAdapter.Vi
      * @param msg
      */
     private void showRefreshingImg(ViewHolder holder, Msg msg) {
-
         if (msg.getSendStatus() == 0) {
+            holder.refreshingImg.setImageResource(R.drawable.pull_loading);
             RotateAnimation refreshingAnimation = (RotateAnimation) AnimationUtils.loadAnimation(
                     context, R.anim.pull_rotating);
             // 添加匀速转动动画

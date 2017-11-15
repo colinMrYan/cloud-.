@@ -93,15 +93,15 @@ class MarkDownParser {
         if (queue.empty()) {
             return null;
         }
-        boolean notBlock;// 当前Line不是CodeBlock
+        //boolean notBlock;// 当前Line不是CodeBlock
         do {
                 //jason修改处
-            notBlock = queue.prevLine() != null && (queue.prevLine().getType() == Line.LINE_TYPE_OL || queue.prevLine().getType() == Line.LINE_TYPE_UL)
-                    && (tagHandler.find(Tag.UL, queue.currLine()) || tagHandler.find(Tag.OL, queue.currLine()));
-            // 处理CodeBlock
-            if (!notBlock && (tagHandler.codeBlock1(queue.currLine()) || tagHandler.codeBlock2(queue.currLine()))) {
-                continue;
-            }
+//            notBlock = queue.prevLine() != null && (queue.prevLine().getType() == Line.LINE_TYPE_OL || queue.prevLine().getType() == Line.LINE_TYPE_UL)
+//                    && (tagHandler.find(Tag.UL, queue.currLine()) || tagHandler.find(Tag.OL, queue.currLine()));
+//            // 处理CodeBlock
+//            if (!notBlock && (tagHandler.codeBlock1(queue.currLine()) || tagHandler.codeBlock2(queue.currLine()))) {
+//                continue;
+//            }
             // 合并未换行的Line，并处理一些和Quota嵌套相关的问题
             boolean isNewLine = tagHandler.find(Tag.NEW_LINE, queue.currLine()) || tagHandler.find(Tag.GAP, queue.currLine()) || tagHandler.find(Tag.H, queue.currLine());
             if (isNewLine) {
