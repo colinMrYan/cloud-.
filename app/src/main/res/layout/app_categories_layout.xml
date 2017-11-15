@@ -15,7 +15,8 @@
         android:layout_height="match_parent"
         android:scrollbars="none"
         android:overScrollMode="never"
-        android:divider="@null"
+        android:dividerHeight="0px"
+        android:divider="#00000000"
          />
     </android.support.v4.widget.SwipeRefreshLayout>
 <!--android:dividerHeight="10dp"-->

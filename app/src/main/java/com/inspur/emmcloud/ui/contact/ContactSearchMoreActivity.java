@@ -48,7 +48,6 @@ import com.inspur.emmcloud.util.ToastUtils;
 import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.emmcloud.widget.CircleImageView;
 import com.inspur.emmcloud.widget.FlowLayout;
-import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.MaxHightScrollView;
 import com.inspur.emmcloud.widget.MySwipeRefreshLayout;
 
@@ -83,7 +82,6 @@ public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRe
     private Adapter adapter;
     private RecyclerView groupTitleListView;
     private GroupTitleAdapter groupTitleAdapter;
-    private LoadingDialog loadingDlg;
     private Handler handler;
 
     @Override
@@ -99,7 +97,6 @@ public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRe
 
     private void initView() {
         // TODO Auto-generated method stub
-        loadingDlg = new LoadingDialog(getApplicationContext());
         flowLayout = (FlowLayout) findViewById(R.id.flowlayout);
         myTextWatcher = new MyTextWatcher();
         flowAddEdit();

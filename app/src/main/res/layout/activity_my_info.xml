@@ -10,7 +10,6 @@
         android:id="@+id/header_layout"
         android:layout_width="match_parent"
         android:layout_height="@dimen/header_height"
-        android:layout_marginBottom="10dp"
         android:background="@color/header_bg" >
 
         <RelativeLayout
@@ -66,6 +65,7 @@
         android:layout_height="fill_parent"
         android:layout_below="@id/header_layout"
         android:background="@color/content_bg"
+        android:paddingTop="10dp"
         android:orientation="vertical" >
 
         <!-- android:visibility="gone" -->
@@ -80,7 +80,7 @@
             <View
                 android:layout_width="fill_parent"
                 android:layout_height="0.5dp"
-                android:background="@color/grey_line_color" />
+                android:background="@color/color_list_divider" />
 
             <RelativeLayout
                 android:id="@+id/myinfo_userhead_layout"
@@ -115,13 +115,6 @@
                         android:layout_marginBottom="5dp"
                         android:layout_marginRight="5dp"
                         android:layout_marginTop="5dp" />
-                    <!--
-                    <ImageView
-                        android:id="@+id/myinfo_userheadarrow_img"
-                        android:layout_width="15dp"
-                        android:layout_height="15dp"
-                        android:src="@drawable/icon_arrow_right" />
-                    -->
                 </LinearLayout>
             </RelativeLayout>
 
@@ -129,7 +122,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="0.5dp"
                 android:layout_marginLeft="10dp"
-                android:background="@color/grey_line_color" />
+                android:background="@color/color_list_divider" />
 
             <RelativeLayout
                 android:id="@+id/myinfo_username_layout"
@@ -178,7 +171,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="0.5dp"
                 android:layout_marginLeft="10dp"
-                android:background="@color/grey_line_color" />
+                android:background="@color/color_list_divider" />
 
             <RelativeLayout
                 android:id="@+id/myinfo_userdepart_layout"
@@ -228,7 +221,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="0.5dp"
                 android:layout_marginLeft="10dp"
-                android:background="@color/grey_line_color"
+                android:background="@color/color_list_divider"
                 android:visibility="gone" />
 
             <RelativeLayout
@@ -278,7 +271,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="0.5dp"
                 android:layout_marginLeft="10dp"
-                android:background="@color/grey_line_color" />
+                android:background="@color/color_list_divider" />
 
             <RelativeLayout
                 android:id="@+id/myinfo_userphone_layout"
@@ -326,7 +319,7 @@
             <View
                 android:layout_width="fill_parent"
                 android:layout_height="0.5dp"
-                android:background="@color/grey_line_color" />
+                android:background="@color/color_list_divider" />
         </LinearLayout>
 
         <LinearLayout
@@ -341,7 +334,7 @@
             <View
                 android:layout_width="fill_parent"
                 android:layout_height="0.5dp"
-                android:background="@color/grey_line_color" />
+                android:background="@color/color_list_divider" />
 
             <RelativeLayout
                 android:id="@+id/myinfo_usersex_layout"
@@ -391,7 +384,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="0.5dp"
                 android:layout_marginLeft="10dp"
-                android:background="@color/grey_line_color" />
+                android:background="@color/color_list_divider" />
 
             <RelativeLayout
                 android:id="@+id/myinfo_usercode_layout"
@@ -440,7 +433,7 @@
             android:layout_width="fill_parent"
             android:layout_height="0.5dp"
             android:layout_marginTop="10dp"
-            android:background="@color/grey_line_color" />
+            android:background="@color/color_list_divider" />
 
         <RelativeLayout
             android:id="@+id/myinfo_usercompany_layout"
@@ -494,7 +487,7 @@
                 android:layout_below="@id/myinfo_usercompony_text"
                 android:layout_width="fill_parent"
                 android:layout_height="0.5dp"
-                android:background="@color/grey_line_color" />
+                android:background="@color/color_list_divider" />
         </RelativeLayout>
 
 
@@ -510,7 +503,7 @@
                 android:id="@+id/myinfo_modifypsd_top_line"
                 android:layout_width="fill_parent"
                 android:layout_height="0.5dp"
-                android:background="@color/grey_line_color" />
+                android:background="@color/color_list_divider" />
 
 
             <TextView
@@ -539,7 +532,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="0.5dp"
                 android:layout_below="@id/myinfo_modifypsd_text"
-                android:background="@color/grey_line_color" />
+                android:background="@color/color_list_divider" />
         </RelativeLayout>
 
 
@@ -557,7 +550,7 @@
                 android:id="@+id/myinfo_reset_top_line"
                 android:layout_width="fill_parent"
                 android:layout_height="0.5dp"
-                android:background="@color/grey_line_color" />
+                android:background="@color/color_list_divider" />
             <TextView
                 android:id="@+id/myinfo_reset_text"
                 android:layout_below="@id/myinfo_reset_top_line"
@@ -583,7 +576,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="0.5dp"
                 android:layout_below="@id/myinfo_reset_text"
-                android:background="@color/grey_line_color" />
+                android:background="@color/color_list_divider" />
         </RelativeLayout>
 
 

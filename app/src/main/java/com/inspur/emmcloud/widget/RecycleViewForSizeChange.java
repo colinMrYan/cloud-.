@@ -25,7 +25,12 @@ public class RecycleViewForSizeChange extends RecyclerView {
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
-        MoveToPosition(getAdapter().getItemCount()-1);
+        this.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                MoveToPosition(getAdapter().getItemCount()-1);
+            }
+        },50);
     }
 
     public void MoveToPosition(int position) {

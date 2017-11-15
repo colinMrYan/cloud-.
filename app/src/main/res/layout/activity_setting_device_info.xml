@@ -112,7 +112,7 @@
                 <View
                     android:layout_width="fill_parent"
                     android:layout_height="0.5dp"
-                    android:background="#c8c7cc" />
+                    android:background="@color/color_list_divider" />
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -167,7 +167,7 @@
                 android:layout_height="wrap_content"
                 android:background="@color/white"
                 android:listSelector="@color/transparent"
-                android:divider="#c8c7cc"
+                android:divider="@color/color_list_divider"
                 android:dividerHeight="0.5dp"
                 android:paddingLeft="20dp"></com.inspur.emmcloud.widget.ScrollViewWithListView>
 

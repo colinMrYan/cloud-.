@@ -80,7 +80,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
-            android:background="#dadadd" />
+            android:background="@color/color_list_divider" />
 
         <RelativeLayout
             android:id="@+id/newfun_layout"
@@ -114,7 +114,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
-            android:background="#dadadd" />
+            android:background="@color/color_list_divider" />
 
         <RelativeLayout
             android:id="@+id/protocol_layout"
@@ -148,7 +148,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
-            android:background="#dadadd" />
+            android:background="@color/color_list_divider" />
 
         <RelativeLayout
             android:id="@+id/check_update_layout"
@@ -181,7 +181,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
-            android:background="#dadadd" />
+            android:background="@color/color_list_divider" />
 
         <RelativeLayout
             android:id="@+id/invite_friends_layout"
@@ -213,7 +213,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
-            android:background="#dadadd" />
+            android:background="@color/color_list_divider" />
     </LinearLayout>
 </RelativeLayout>
 

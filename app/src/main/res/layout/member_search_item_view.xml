@@ -66,10 +66,10 @@
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="0.5dp"
+            android:layout_height="0.6dp"
             android:layout_alignParentBottom="true"
             android:layout_marginLeft="60dp"
-            android:background="#dadadd" />
+            android:background="@color/color_list_divider" />
     </RelativeLayout>
 
 </LinearLayout>
