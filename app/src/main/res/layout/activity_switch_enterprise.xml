@@ -50,7 +50,7 @@
         <ListView
             android:id="@+id/device_list"
             android:dividerHeight="0.5dp"
-            android:divider="@color/content_border"
+            android:divider="@color/color_list_divider"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"></ListView>
     </RelativeLayout>

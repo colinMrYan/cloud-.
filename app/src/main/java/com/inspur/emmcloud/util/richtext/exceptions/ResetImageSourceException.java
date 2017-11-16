@@ -19,8 +19,8 @@ public class ResetImageSourceException extends RuntimeException {
         super(MESSAGE, cause);
     }
 
-//    @TargetApi(Build.VERSION_CODES.N)
-//    public ResetImageSourceException(Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-//        super(MESSAGE, cause, enableSuppression, writableStackTrace);
-//    }
+    @TargetApi(Build.VERSION_CODES.N)
+    public ResetImageSourceException(Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+        super(MESSAGE, cause, enableSuppression, writableStackTrace);
+    }
 }

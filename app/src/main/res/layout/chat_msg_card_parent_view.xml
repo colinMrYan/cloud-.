@@ -89,7 +89,6 @@
                     android:layout_marginRight="8dp"
                     android:scaleType="fitXY"
                     android:visibility="gone"
-                    android:background="@drawable/pull_loading"
                     />
                 <View
                     android:id="@+id/card_cover_view"

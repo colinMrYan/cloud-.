@@ -2,13 +2,13 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true" >
+    android:fitsSystemWindows="true">
 
     <RelativeLayout
         android:id="@+id/header_layout"
         android:layout_width="match_parent"
         android:layout_height="@dimen/header_height"
-        android:background="#EFEFF4" >
+        android:background="#EFEFF4">
 
         <RelativeLayout
             android:id="@+id/back_layout"
@@ -18,7 +18,7 @@
             android:onClick="onClick"
             android:paddingLeft="12dp"
             android:paddingRight="12dp"
-            android:visibility="gone" >
+            android:visibility="gone">
 
             <ImageView
                 android:id="@+id/back_btn"
@@ -75,13 +75,13 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/header_layout"
-        android:background="@color/content_bg" >
+        android:background="@color/content_bg">
 
         <View
             android:id="@+id/view0"
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
-            android:background="#dadadd" />
+            android:background="@color/color_list_divider" />
 
         <com.inspur.emmcloud.widget.MaxHightScrollView
             android:id="@+id/search_edit_layout"
@@ -90,11 +90,11 @@
             android:layout_below="@id/view0"
             android:background="@color/white"
             android:paddingLeft="12dp"
-            android:paddingRight="8dp" >
+            android:paddingRight="8dp">
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" >
+                android:layout_height="wrap_content">
 
                 <com.inspur.emmcloud.widget.FlowLayout
                     android:id="@+id/flowlayout"
@@ -109,74 +109,69 @@
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
             android:layout_below="@id/search_edit_layout"
-            android:background="#dadadd" />
+            android:background="@color/color_list_divider" />
 
         <RelativeLayout
             android:id="@+id/origin_all_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@id/view1"
-            android:background="@color/white" >
+            android:background="@color/white">
 
             <LinearLayout
                 android:id="@+id/open_group_layout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
-                android:visibility="gone" >
+                android:visibility="gone">
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="0.5dp"
-                    android:background="#dadadd" />
 
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="39dp"
-                    android:background="#efeff4" >
+                    android:background="#efeff4">
 
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/open_title_list"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent" >
-                    </android.support.v7.widget.RecyclerView>
+                        android:layout_height="match_parent"></android.support.v7.widget.RecyclerView>
                 </RelativeLayout>
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="0.5dp"
-                    android:background="#dadadd" />
+                    android:background="@color/color_list_divider" />
 
                 <ListView
                     android:id="@+id/open_first_group_list"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1.0"
-                    android:divider="@null" >
-                </ListView>
+                    android:dividerHeight="0dp"
+                    android:divider="#00000000"></ListView>
             </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/origin_layout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical" >
+                android:orientation="vertical">
 
                 <LinearLayout
                     android:id="@+id/orgin_first_group_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical" >
+                    android:orientation="vertical">
 
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="0.5dp"
-                        android:background="#dadadd" />
+                        android:background="@color/color_list_divider" />
 
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="39dp"
-                        android:background="#efeff4" >
+                        android:background="#efeff4">
 
                         <TextView
                             android:id="@+id/title_all_text"
@@ -193,51 +188,53 @@
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="0.5dp"
-                        android:background="#dadadd" />
+                        android:background="@color/color_list_divider" />
 
                     <RelativeLayout
                         android:id="@+id/struct_layout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@color/white"
-                        android:onClick="onClick" >
+                        android:onClick="onClick">
 
-                            <com.inspur.emmcloud.widget.CircleImageView
-                                android:id="@+id/struct_img"
-                                android:layout_width="40dp"
-                                android:layout_height="40dp"
-                                android:layout_centerVertical="true"
-                                android:layout_marginBottom="5dp"
-                                android:layout_marginLeft="10dp"
-                                android:layout_marginRight="10dp"
-                                android:layout_marginTop="5dp"
-                                android:src="@drawable/icon_company" />
+                        <com.inspur.emmcloud.widget.CircleImageView
+                            android:id="@+id/struct_img"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_centerVertical="true"
+                            android:layout_marginBottom="5dp"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:layout_marginTop="5dp"
+                            android:src="@drawable/icon_company" />
 
-                            <TextView
-                                android:id="@+id/text_title"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_centerVertical="true"
-                                android:layout_toRightOf="@id/struct_img"
-                                android:paddingBottom="14dp"
-                                android:paddingTop="14dp"
-                                android:text="@string/origanization_struct"
-                                android:textColor="#030303"
-                                android:textSize="@dimen/content_title_textsize" />
-
-                        
-                    </RelativeLayout>
-						<View
+                        <TextView
+                            android:id="@+id/text_title"
                             android:layout_width="match_parent"
-                            android:layout_height="0.5dp"
-                            android:layout_marginLeft="60dp"
-                            android:background="#dadadd" />
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_toRightOf="@id/struct_img"
+                            android:paddingBottom="14dp"
+                            android:paddingTop="14dp"
+                            android:text="@string/origanization_struct"
+                            android:textColor="#030303"
+                            android:textSize="@dimen/content_title_textsize" />
+
+
+                    </RelativeLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="0.5dp"
+                        android:layout_marginLeft="60dp"
+                        android:background="@color/color_list_divider" />
+
                     <RelativeLayout
                         android:id="@+id/channel_group_layout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@color/white"
-                        android:onClick="onClick" >
+                        android:onClick="onClick">
 
                         <com.inspur.emmcloud.widget.CircleImageView
                             android:id="@+id/channel_group_img"
@@ -268,12 +265,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1.0"
-                    android:orientation="vertical" >
+                    android:orientation="vertical">
 
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="0.5dp"
-                        android:background="#dadadd" />
+                        android:background="@color/color_list_divider" />
 
                     <TextView
                         android:id="@+id/second_title_text"
@@ -288,15 +285,15 @@
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="0.5dp"
-                        android:background="#dadadd" />
+                        android:background="@color/color_list_divider" />
 
                     <ListView
                         android:id="@+id/second_group_list"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_weight="1.0"
-                        android:divider="@null" >
-                    </ListView>
+                        android:dividerHeight="0dp"
+                        android:divider="#00000000"></ListView>
                 </LinearLayout>
             </LinearLayout>
         </RelativeLayout>
@@ -308,34 +305,30 @@
             android:layout_below="@id/view1"
             android:background="#f4f4f4"
             android:scrollbars="none"
-            android:visibility="gone" >
+            android:visibility="gone">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical" >
+                android:orientation="vertical">
+
                 <LinearLayout
                     android:id="@+id/pop_third_group_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical" >
+                    android:orientation="vertical">
 
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="0.5dp"
-                        android:background="#dadadd" />
 
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="39dp"
-                        android:background="#efeff4" >
+                        android:background="#efeff4">
 
                         <android.support.v7.widget.RecyclerView
                             android:id="@+id/pop_third_title_list"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:layout_toLeftOf="@+id/pop_third_group_more_text" >
-                        </android.support.v7.widget.RecyclerView>
+                            android:layout_toLeftOf="@+id/pop_third_group_more_text"></android.support.v7.widget.RecyclerView>
 
                         <TextView
                             android:id="@+id/pop_third_group_more_text"
@@ -356,16 +349,16 @@
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="0.5dp"
-                        android:background="#dadadd" />
+                        android:background="@color/color_list_divider" />
 
                     <RelativeLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" >
+                        android:layout_height="wrap_content">
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:orientation="vertical" >
+                            android:orientation="vertical">
 
                             <TextView
                                 android:layout_width="match_parent"
@@ -380,15 +373,15 @@
                             <View
                                 android:layout_width="match_parent"
                                 android:layout_height="0.5dp"
-                                android:background="#dadadd" />
+                                android:background="@color/color_list_divider" />
                         </LinearLayout>
 
                         <ListView
                             android:id="@+id/pop_third_group_list"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:divider="@null" >
-                        </ListView>
+                            android:dividerHeight="0dp"
+                            android:divider="#00000000"></ListView>
                     </RelativeLayout>
                 </LinearLayout>
 
@@ -396,24 +389,23 @@
                     android:id="@+id/pop_second_group_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical" >
+                    android:orientation="vertical">
 
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="0.5dp"
-                        android:background="#dadadd" />
+                        android:background="@color/color_list_divider" />
 
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="39dp"
-                        android:background="#efeff4" >
+                        android:background="#efeff4">
 
                         <android.support.v7.widget.RecyclerView
                             android:id="@+id/pop_second_title_list"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:layout_toLeftOf="@+id/pop_second_group_more_text" >
-                        </android.support.v7.widget.RecyclerView>
+                            android:layout_toLeftOf="@+id/pop_second_group_more_text"></android.support.v7.widget.RecyclerView>
 
                         <TextView
                             android:id="@+id/pop_second_group_more_text"
@@ -434,16 +426,16 @@
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="0.5dp"
-                        android:background="#dadadd" />
+                        android:background="@color/color_list_divider" />
 
                     <RelativeLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" >
+                        android:layout_height="wrap_content">
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:orientation="vertical" >
+                            android:orientation="vertical">
 
                             <TextView
                                 android:layout_width="match_parent"
@@ -458,15 +450,15 @@
                             <View
                                 android:layout_width="match_parent"
                                 android:layout_height="0.5dp"
-                                android:background="#dadadd" />
+                                android:background="@color/color_list_divider" />
                         </LinearLayout>
 
                         <ListView
                             android:id="@+id/pop_second_group_list"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:divider="@null" >
-                        </ListView>
+                            android:dividerHeight="0dp"
+                            android:divider="#00000000"></ListView>
                     </RelativeLayout>
                 </LinearLayout>
             </LinearLayout>
