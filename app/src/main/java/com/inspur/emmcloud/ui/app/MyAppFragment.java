@@ -203,7 +203,7 @@ public class MyAppFragment extends Fragment {
                 layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
                 recommendWidgetView.setLayoutManager(layoutManager);
                 recommendWidgetView.addItemDecoration(new ECMSpaceItemDecoration(DensityUtil.dip2px(getActivity(), 4)));
-                recommendAppAdapter = new RecommendAppAdapter(getActivity(),new ArrayList<App>());
+                recommendAppAdapter = new RecommendAppAdapter(getActivity());
                 recommendWidgetView.setAdapter(recommendAppAdapter);
                 recommendAppAdapter.setOnRecommendAppItemClickListener(new OnRecommendAppItemClickListener() {
                     @Override
@@ -221,6 +221,17 @@ public class MyAppFragment extends Fragment {
                         MyAppWidgetUtils.saveNotShowDate(getActivity(), TimeUtils.getEndTime());
                     }
                 });
+                refreshRecommendAppWidgets();
+                //高斯模糊测试方案1
+//                (rootView.findViewById(R.id.my_app_recommend_layout)).getViewTreeObserver()
+//                        .addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+//                            @Override
+//                            public boolean onPreDraw() {
+//                                BlurBitmapUtil.blur(rootView, (rootView.findViewById(R.id.my_app_recommend_layout)), 4, 8);
+//                                return true;
+//                            }
+//                        });
+                //高斯模糊测试方案2
 //                BlurKit.getInstance().blur(rootView.findViewById(R.id.my_app_recommend_layout), 5);
             }else{
                 LogUtils.YfcDebug("刷新推荐应用");
@@ -250,7 +261,13 @@ public class MyAppFragment extends Fragment {
                 }
             }
         }
-        recommendAppAdapter.setAndReFreshRecommendList(recommendAppWidgetList);
+        recommendAppWidgetList.add(new App());
+        recommendAppWidgetList.add(new App());
+        if(recommendAppWidgetList.size() > 0){
+            recommendAppAdapter.setAndReFreshRecommendList(recommendAppWidgetList);
+        } else{
+            rootView.findViewById(R.id.my_app_recommend_layout).setVisibility(View.GONE);
+        }
     }
 
 

@@ -12,6 +12,7 @@ import com.inspur.emmcloud.bean.App;
 import com.inspur.emmcloud.interf.OnRecommendAppItemClickListener;
 import com.inspur.emmcloud.util.ImageDisplayUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -22,11 +23,10 @@ import java.util.List;
 public class RecommendAppAdapter extends RecyclerView.Adapter<RecommendAppAdapter.RecommendAppAdapterHolder>{
     private OnRecommendAppItemClickListener onRecommendAppItemClickListener;
     private LayoutInflater inflater;
-    private List<App> recommendList;
+    private List<App> recommendList = new ArrayList<>();
     private Context context;
-    public RecommendAppAdapter(Context context, List<App> recommendList){
+    public RecommendAppAdapter(Context context){
         inflater = LayoutInflater.from(context);
-        this.recommendList = recommendList;
         this.context = context;
     }
     @Override
@@ -39,14 +39,13 @@ public class RecommendAppAdapter extends RecyclerView.Adapter<RecommendAppAdapte
 
     @Override
     public void onBindViewHolder(final RecommendAppAdapter.RecommendAppAdapterHolder holder, final int position) {
-        ImageDisplayUtils.getInstance().displayImage(holder.recommendAppImg,"",R.drawable.ic_app_default);
+        ImageDisplayUtils.getInstance().displayImage(holder.recommendAppImg,recommendList.get(position).getAppIcon(),R.drawable.ic_app_default);
 //        BlurKit.getInstance().blur(holder.recommendAppImg, 5);
         if(onRecommendAppItemClickListener != null){
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    App app = new App();
-                    onRecommendAppItemClickListener.onRecommendAppItemClick(app);
+                    onRecommendAppItemClickListener.onRecommendAppItemClick(recommendList.get(position));
                 }
             });
         }
@@ -54,7 +53,7 @@ public class RecommendAppAdapter extends RecyclerView.Adapter<RecommendAppAdapte
 
     @Override
     public int getItemCount() {
-        return 2;
+        return recommendList.size();
     }
 
     public class RecommendAppAdapterHolder extends RecyclerView.ViewHolder {
