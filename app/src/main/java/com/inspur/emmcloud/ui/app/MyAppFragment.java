@@ -125,6 +125,7 @@ public class MyAppFragment extends Fragment {
         if (parent != null) {
             parent.removeView(rootView);
         }
+        LogUtils.YfcDebug("获取时间Api测试："+TimeUtils.getFormatYearMonthDay());
         return rootView;
     }
 
@@ -144,7 +145,7 @@ public class MyAppFragment extends Fragment {
             getAppBadgeNum();
         }
         isOnCreate = false;
-        reFreshRecommendAppWidgetView();
+        refreshRecommendAppWidgetView();
     }
 
     /**
@@ -190,8 +191,8 @@ public class MyAppFragment extends Fragment {
     /**
      * 刷新推荐应用小部件
      */
-    private void reFreshRecommendAppWidgetView() {
-        if(MyAppWidgetUtils.isNeedShowMyAppRecommendWidgets(getActivity())){
+    private void refreshRecommendAppWidgetView() {
+        if(MyAppWidgetUtils.isNeedShowMyAppRecommendWidgets(getActivity()) && (MyAppWidgetUtils.getShouldShowAppList(getActivity()).size() > 0)){
             if(recommendWidgetView == null){
                 LogUtils.YfcDebug("创建推荐应用");
                 recommendWidgetView = (RecyclerView) rootView.findViewById(R.id.my_app_recommend_recyclerview);
@@ -218,6 +219,7 @@ public class MyAppFragment extends Fragment {
                         MyAppWidgetUtils.saveNotShowDate(getActivity(), TimeUtils.getEndTime());
                     }
                 });
+//                BlurKit.getInstance().blur(rootView.findViewById(R.id.my_app_recommend_layout), 5);
             }else{
                 LogUtils.YfcDebug("刷新推荐应用");
                 if(recommendAppAdapter != null){

@@ -48,14 +48,14 @@ public class MyAppWidgetUtils {
     private MyAppWidgetUtils(Activity activity,boolean needDialog){
         this.context = activity;
         loadingDlg = new LoadingDialog(context);
-        getMyAppWidgetsFromNet(needDialog);
+//        getMyAppWidgetsFromNet(needDialog);
     }
 
     /**
      * 获取我的应用推荐小部件
      * @param needDialog
      */
-    private void getMyAppWidgetsFromNet(boolean needDialog){
+    public void getMyAppWidgetsFromNet(boolean needDialog){
         if(NetUtils.isNetworkConnected(context)){
             if(needDialog){
                 loadingDlg.show();
@@ -83,6 +83,24 @@ public class MyAppWidgetUtils {
     public static boolean isNeedShowMyAppRecommendWidgets(Context context){
         long notShowTime = PreferencesByUserAndTanentUtils.getLong(context,Constant.PREF_HAS_MY_APP_RECOMMEND,0);
         return System.currentTimeMillis()>notShowTime;
+    }
+
+    /**
+     * 保存更新的日期
+     * @param context
+     */
+    public static void saveUpdateMyAppWidgetsDate(Context context){
+        PreferencesByUserAndTanentUtils.putString(context,Constant.PREF_MY_APP_RECOMMEND_CACHE_DATE,TimeUtils.getFormatYearMonthDay());
+    }
+
+    /**
+     * 检查是否需要发起更新请求
+     * @param context
+     * @return
+     */
+    public static boolean checkNeedUpdateMyAppWidget(Context context){
+        return Integer.parseInt(TimeUtils.getFormatYearMonthDay()) >
+                Integer.parseInt(PreferencesByUserAndTanentUtils.getString(context,Constant.PREF_MY_APP_RECOMMEND_CACHE_DATE,"0"));
     }
 
     /**
@@ -126,6 +144,7 @@ public class MyAppWidgetUtils {
                 loadingDlg.dismiss();
             }
             PreferencesByUserAndTanentUtils.putString(context,Constant.PREF_MY_APP_RECOMMEND_DATA,getMyAppWidgetResult.getResponse());
+            PreferencesByUserAndTanentUtils.putString(context,Constant.PREF_MY_APP_RECOMMEND_CACHE_DATE,TimeUtils.getFormatYearMonthDay());
         }
 
         @Override

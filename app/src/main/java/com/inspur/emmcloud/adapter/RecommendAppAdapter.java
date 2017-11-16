@@ -14,6 +14,7 @@ import com.inspur.emmcloud.util.ImageDisplayUtils;
 
 import java.util.List;
 
+
 /**
  * Created by yufuchang on 2017/11/13.
  */
@@ -39,6 +40,7 @@ public class RecommendAppAdapter extends RecyclerView.Adapter<RecommendAppAdapte
     @Override
     public void onBindViewHolder(final RecommendAppAdapter.RecommendAppAdapterHolder holder, final int position) {
         ImageDisplayUtils.getInstance().displayImage(holder.recommendAppImg,"",R.drawable.ic_app_default);
+//        BlurKit.getInstance().blur(holder.recommendAppImg, 5);
         if(onRecommendAppItemClickListener != null){
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
