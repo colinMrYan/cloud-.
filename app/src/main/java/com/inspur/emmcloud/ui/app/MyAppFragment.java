@@ -192,7 +192,9 @@ public class MyAppFragment extends Fragment {
      * 刷新推荐应用小部件
      */
     private void refreshRecommendAppWidgetView() {
-        if(MyAppWidgetUtils.isNeedShowMyAppRecommendWidgets(getActivity()) && (MyAppWidgetUtils.getShouldShowAppList(getActivity()).size() > 0)){
+        //接口真正有数据时打开
+//        && (MyAppWidgetUtils.getShouldShowAppList(getActivity()).size() > 0)
+        if(MyAppWidgetUtils.isNeedShowMyAppRecommendWidgets(getActivity()) ){
             if(recommendWidgetView == null){
                 LogUtils.YfcDebug("创建推荐应用");
                 recommendWidgetView = (RecyclerView) rootView.findViewById(R.id.my_app_recommend_recyclerview);
