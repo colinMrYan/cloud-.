@@ -5,6 +5,7 @@ import com.inspur.emmcloud.util.JSONUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -18,8 +19,8 @@ public class RecommendAppWidgetBean {
      * appIdList : ["app11","app51"]
      */
 
-    private String period;
-    private List<String> appIdList;
+    private String period = "";
+    private List<String> appIdList = new ArrayList<>();
 
     public RecommendAppWidgetBean(JSONObject response) {
         try {

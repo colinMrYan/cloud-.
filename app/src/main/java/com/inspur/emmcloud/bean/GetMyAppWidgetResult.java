@@ -2,6 +2,7 @@ package com.inspur.emmcloud.bean;
 
 import com.inspur.emmcloud.util.JSONUtils;
 import com.inspur.emmcloud.util.LogUtils;
+import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.TimeUtils;
 
 import org.json.JSONArray;
@@ -42,7 +43,8 @@ public class GetMyAppWidgetResult {
     private long getExpiredDate(String expiredDate) {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
                 "yyyy/MM/dd HH:mm:ss");
-        return TimeUtils.timeString2Calendar(expiredDate, simpleDateFormat).getTimeInMillis();
+        long expireDate = StringUtils.isBlank(expiredDate)? 0 : TimeUtils.timeString2Calendar(expiredDate, simpleDateFormat).getTimeInMillis();
+        return expireDate;
     }
 
     public String getResponse() {

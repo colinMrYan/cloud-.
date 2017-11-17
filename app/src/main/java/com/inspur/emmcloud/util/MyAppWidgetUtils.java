@@ -10,6 +10,8 @@ import com.inspur.emmcloud.bean.RecommendAppWidgetBean;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.widget.LoadingDialog;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -26,14 +28,13 @@ public class MyAppWidgetUtils {
     /**
      * 我的应用推荐应用小部件单例模式
      * @param activity
-     * @param needDialog
      * @return
      */
-    public  static MyAppWidgetUtils getInstance(Activity activity,boolean needDialog){
+    public  static MyAppWidgetUtils getInstance(Activity activity){
         if(myAppWidgetUtils == null){
             synchronized (MyAppWidgetUtils.class){
                 if(myAppWidgetUtils == null){
-                    myAppWidgetUtils = new MyAppWidgetUtils(activity,needDialog);
+                    myAppWidgetUtils = new MyAppWidgetUtils(activity);
                 }
             }
         }
@@ -43,9 +44,8 @@ public class MyAppWidgetUtils {
     /**
      * 需要展示Dialog的
      * @param activity
-     * @param needDialog
      */
-    private MyAppWidgetUtils(Activity activity,boolean needDialog){
+    private MyAppWidgetUtils(Activity activity){
         this.context = activity;
         loadingDlg = new LoadingDialog(context);
 //        getMyAppWidgetsFromNet(needDialog);
@@ -85,13 +85,13 @@ public class MyAppWidgetUtils {
         return System.currentTimeMillis()>notShowTime;
     }
 
-    /**
-     * 保存更新的日期
-     * @param context
-     */
-    public static void saveUpdateMyAppWidgetsDate(Context context){
-        PreferencesByUserAndTanentUtils.putString(context,Constant.PREF_MY_APP_RECOMMEND_CACHE_DATE,TimeUtils.getFormatYearMonthDay());
-    }
+//    /**
+//     * 保存更新的日期
+//     * @param context
+//     */
+//    public static void saveUpdateMyAppWidgetsDate(Context context){
+//        PreferencesByUserAndTanentUtils.putString(context,Constant.PREF_MY_APP_RECOMMEND_CACHE_DATE,TimeUtils.getFormatYearMonthDay());
+//    }
 
     /**
      * 检查是否需要发起更新请求
@@ -99,7 +99,8 @@ public class MyAppWidgetUtils {
      * @return
      */
     public static boolean checkNeedUpdateMyAppWidget(Context context){
-        return Integer.parseInt(TimeUtils.getFormatYearMonthDay()) >
+        return StringUtils.isBlank(PreferencesByUserAndTanentUtils.getString(context,Constant.PREF_MY_APP_RECOMMEND_DATA,""))? true
+                : Integer.parseInt(TimeUtils.getFormatYearMonthDay()) >
                 Integer.parseInt(PreferencesByUserAndTanentUtils.getString(context,Constant.PREF_MY_APP_RECOMMEND_CACHE_DATE,"0"));
     }
 
@@ -143,6 +144,7 @@ public class MyAppWidgetUtils {
             if(loadingDlg.isShowing()){
                 loadingDlg.dismiss();
             }
+            EventBus.getDefault().post(getMyAppWidgetResult);
             PreferencesByUserAndTanentUtils.putString(context,Constant.PREF_MY_APP_RECOMMEND_DATA,getMyAppWidgetResult.getResponse());
             PreferencesByUserAndTanentUtils.putString(context,Constant.PREF_MY_APP_RECOMMEND_CACHE_DATE,TimeUtils.getFormatYearMonthDay());
         }

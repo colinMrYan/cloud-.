@@ -45,6 +45,7 @@ import com.inspur.emmcloud.bean.AppGroupBean;
 import com.inspur.emmcloud.bean.AppOrder;
 import com.inspur.emmcloud.bean.GetAppBadgeResult;
 import com.inspur.emmcloud.bean.GetAppGroupResult;
+import com.inspur.emmcloud.bean.GetMyAppWidgetResult;
 import com.inspur.emmcloud.bean.PVCollectModel;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.interf.OnRecommendAppItemClickListener;
@@ -70,6 +71,10 @@ import com.inspur.emmcloud.widget.SwitchView;
 import com.inspur.emmcloud.widget.SwitchView.OnStateChangedListener;
 import com.inspur.emmcloud.widget.draggrid.DragGridView;
 import com.inspur.emmcloud.widget.draggrid.DragGridView.OnChanageListener;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -112,6 +117,7 @@ public class MyAppFragment extends Fragment {
         rootView = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_app, null);
         initViews();
         registerReceiver();
+        EventBus.getDefault().register(this);
     }
 
     @Override
@@ -125,10 +131,32 @@ public class MyAppFragment extends Fragment {
         if (parent != null) {
             parent.removeView(rootView);
         }
-        LogUtils.YfcDebug("获取时间Api测试："+TimeUtils.getFormatYearMonthDay());
+        getMyAppRecommendWidgetsUpdate();
         return rootView;
     }
 
+    /**
+     * 更推荐应用小部件信息
+     * 从MyAppWidgetUtils发送通知而来
+     *
+     * @param getMyAppWidgetResult
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void updateMyAppWidegts(GetMyAppWidgetResult getMyAppWidgetResult) {
+        refreshRecommendAppWidgets();
+    }
+
+    /**
+     * 检查获取我的应用推荐应用小部件更新
+     * 过期则更新不过期不更新
+     */
+    private void getMyAppRecommendWidgetsUpdate() {
+        GetMyAppWidgetResult getMyAppWidgetResult = new GetMyAppWidgetResult(PreferencesByUserAndTanentUtils
+                .getString(getActivity(),Constant.PREF_MY_APP_RECOMMEND_DATA,""));
+        if(!MyAppWidgetUtils.isEffective(getMyAppWidgetResult.getExpiredDate())){
+            MyAppWidgetUtils.getInstance(getActivity()).getMyAppWidgetsFromNet(false);
+        }
+    }
 
 
     @Override
@@ -190,6 +218,7 @@ public class MyAppFragment extends Fragment {
 
     /**
      * 刷新推荐应用小部件
+     * 每个小时都有可能有变化
      */
     private void refreshRecommendAppWidgetView() {
         //接口真正有数据时打开
@@ -711,6 +740,7 @@ public class MyAppFragment extends Fragment {
             myAppSaveTask.cancel(true);
             myAppSaveTask = null;
         }
+        EventBus.getDefault().unregister(this);
     }
 
     /**
