@@ -773,7 +773,7 @@ public class APIUri {
      * @return
      */
     public static String getMyAppWidgetsUrl(){
-        return "";
+        return URL_BASE_APP_V3+"api/app/recommend/apps";
     }
 
 }

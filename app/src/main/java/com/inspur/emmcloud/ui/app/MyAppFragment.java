@@ -285,13 +285,11 @@ public class MyAppFragment extends Fragment {
             for(int j = 0; j < appGroupBeanList.size(); j++){
                 int index = appGroupBeanList.get(j).getAppItemList().indexOf(app);
                 if(index != -1){
-                    recommendAppWidgetList.add(appGroupBeanList.get(j).getAppItemList().get(j));
+                    recommendAppWidgetList.add(appGroupBeanList.get(j).getAppItemList().get(index));
                     break;
                 }
             }
         }
-        recommendAppWidgetList.add(new App());
-        recommendAppWidgetList.add(new App());
         if(recommendAppWidgetList.size() > 0){
             recommendAppAdapter.setAndReFreshRecommendList(recommendAppWidgetList);
         } else{

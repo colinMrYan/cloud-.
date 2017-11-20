@@ -11,6 +11,7 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.App;
 import com.inspur.emmcloud.interf.OnRecommendAppItemClickListener;
 import com.inspur.emmcloud.util.ImageDisplayUtils;
+import com.inspur.emmcloud.util.LogUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,6 +46,7 @@ public class RecommendAppAdapter extends RecyclerView.Adapter<RecommendAppAdapte
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    LogUtils.YfcDebug("appId:"+recommendList.get(position).getAppName()+":"+recommendList.get(position).getAppID());
                     onRecommendAppItemClickListener.onRecommendAppItemClick(recommendList.get(position));
                 }
             });

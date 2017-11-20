@@ -631,7 +631,7 @@ public class MyAppAPIService {
         final String completeUrl = APIUri.getMyAppWidgetsUrl();
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
-        x.http().post(params, new APICallback(context, completeUrl) {
+        x.http().get(params, new APICallback(context, completeUrl) {
 
             @Override
             public void callbackTokenExpire() {

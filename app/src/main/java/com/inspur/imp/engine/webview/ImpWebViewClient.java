@@ -22,6 +22,7 @@ import com.inspur.imp.api.ImpActivity;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.Map;
 
 
@@ -186,7 +187,7 @@ public class ImpWebViewClient extends WebViewClient {
 	 * @return
 	 */
 	private Map<String,String> getWebViewHeaders(){
-		return ((ImpActivity)myWebView.getContext()).getWebViewHeaders();
+		return myWebView == null ? new HashMap<String,String>() : ((ImpActivity)myWebView.getContext()).getWebViewHeaders();
 	}
 
 	/**

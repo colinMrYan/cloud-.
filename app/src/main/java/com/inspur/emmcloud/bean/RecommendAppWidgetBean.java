@@ -24,8 +24,8 @@ public class RecommendAppWidgetBean {
 
     public RecommendAppWidgetBean(JSONObject response) {
         try {
-            period = JSONUtils.getString(response, "Period", "");
-            JSONArray jsonArray = JSONUtils.getJSONArray(response, "AppIds", new JSONArray());
+            period = JSONUtils.getString(response, "period", "");
+            JSONArray jsonArray = JSONUtils.getJSONArray(response, "appIds", new JSONArray());
             for (int i = 0; i < jsonArray.length(); i++) {
                 appIdList.add(jsonArray.getString(i));
             }

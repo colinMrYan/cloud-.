@@ -23,9 +23,9 @@ public class GetMyAppWidgetResult {
     public GetMyAppWidgetResult(String response) {
         try {
             this.response = response;
-            expiredDate = getExpiredDate(JSONUtils.getString(response, "ExpiredDate", ""));
-            LogUtils.YfcDebug("转换时间戳：" + expiredDate);
-            JSONArray jsonArray = JSONUtils.getJSONArray(response, "Recommends", new JSONArray());
+//            expiredDate = getExpiredDate(JSONUtils.getString(response, "expiredDate", ""));
+//            LogUtils.YfcDebug("转换时间戳：" + expiredDate);
+            JSONArray jsonArray = JSONUtils.getJSONArray(response, "recommends", new JSONArray());
             for (int i = 0; i < jsonArray.length(); i++) {
                 recommendAppWidgetBeanList.add(new RecommendAppWidgetBean(jsonArray.getJSONObject(i)));
             }
@@ -43,7 +43,7 @@ public class GetMyAppWidgetResult {
     private long getExpiredDate(String expiredDate) {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
                 "yyyy/MM/dd HH:mm:ss");
-        long expireDate = StringUtils.isBlank(expiredDate)? 0 : TimeUtils.timeString2Calendar(expiredDate, simpleDateFormat).getTimeInMillis();
+        long expireDate = StringUtils.isBlank(expiredDate)? 0 : TimeUtils.UTCString2Long(expiredDate);
         return expireDate;
     }
 
