@@ -51,19 +51,19 @@ public class WebSocketPush {
 	 */
 	public void start() {
 		// TODO Auto-generated method stub
-		String pushid = getPushIdByChangeShang();
-		if(((MyApplication)context.getApplicationContext()).isHaveLogin() && !StringUtils.isBlank(pushid)){
+		String pushId = getPushIdByChangeShang();
+		if(((MyApplication)context.getApplicationContext()).isHaveLogin() && !StringUtils.isBlank(pushId)){
 			String url = "https://ecm.inspur.com/";
 			String enterpriseCode = ((MyApplication)context.getApplicationContext()).getCurrentEnterprise().getCode();
 			String path = "/"+enterpriseCode+"/socket/handshake";
-			WebSocketConnect(url, path,pushid);
+			WebSocketConnect(url, path,pushId);
 		}else {
 			sendWebSocketStatusBroadcaset(Socket.EVENT_DISCONNECT);
 		}
 	}
 
 
-	public void WebSocketConnect(String url, String path,String pushid) {
+	public void WebSocketConnect(String url, String path,String pushId) {
 			if (!isSocketConnect() && !isWebsocketConnnecting){
 				isWebsocketConnnecting = true;
 				sendWebSocketStatusBroadcaset("socket_connecting");
@@ -83,7 +83,7 @@ public class WebSocketPush {
 				Map<String, String> query = new HashMap<String, String>();
 				query.put("device.id", uuid);
 				query.put("device.name", name);
-				query.put("device.push", pushid);
+				query.put("device.push", pushId);
 				// opts.transports = new String[] { Polling.NAME };
 				opts.path = path;
 				LogUtils.debug(TAG, "query.toString()=" + ParseQS.encode(query));
@@ -133,21 +133,21 @@ public class WebSocketPush {
 	}
 
 	/**
-	 * 通过厂商确定pushid
+	 * 通过厂商确定pushId
 	 * @return
      */
 	private String getPushIdByChangeShang() {
-		String pushid = "";
+		String pushId = "";
 		if(AppUtils.getIsHuaWei()&&canConnectHuawei()){
 			//需要对华为单独推送的时候解开这里
 			String hwtoken = PreferencesUtils.getString(context,"huawei_push_token","");
 			if(!StringUtils.isBlank(hwtoken)){
-				pushid = hwtoken + "@push.huawei.com";
+				pushId = hwtoken + "@push.huawei.com";
 			}
 		}else{
-			pushid = PreferencesUtils.getString(context, "JpushRegId", "");
+			pushId = PreferencesUtils.getString(context, "JpushRegId", "");
 		}
-		return pushid;
+		return pushId;
 	}
 
 	/**

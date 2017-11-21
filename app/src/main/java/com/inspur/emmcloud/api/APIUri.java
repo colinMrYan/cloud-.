@@ -768,4 +768,12 @@ public class APIUri {
         return URL_BASE_APP_V3 + "api/app/position/upload";
     }
 
+    /**
+     * 获取我的应用小部件的url
+     * @return
+     */
+    public static String getMyAppWidgetsUrl(){
+        return URL_BASE_APP_V3+"api/app/recommend/apps";
+    }
+
 }

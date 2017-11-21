@@ -913,4 +913,24 @@ public class JSONUtils {
         }
         return defaultValue;
     };
+
+    /**
+     *
+     * @param array
+     * @param index
+     * @param defaultValue
+     * @return
+     */
+    public static String getString(JSONArray array,int index,String defaultValue){
+        if (array == null || array.length() == 0 || index<0 || array.length()<index+1) {
+            return defaultValue;
+        }
+        try {
+            String obj = array.getString(index);
+            return  obj;
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return defaultValue;
+    }
 }

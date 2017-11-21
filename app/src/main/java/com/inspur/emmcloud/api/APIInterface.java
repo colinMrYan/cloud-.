@@ -46,6 +46,7 @@ import com.inspur.emmcloud.bean.GetMsgCommentCountResult;
 import com.inspur.emmcloud.bean.GetMsgCommentResult;
 import com.inspur.emmcloud.bean.GetMsgResult;
 import com.inspur.emmcloud.bean.GetMyAppResult;
+import com.inspur.emmcloud.bean.GetRecommendAppWidgetListResult;
 import com.inspur.emmcloud.bean.GetMyCalendarResult;
 import com.inspur.emmcloud.bean.GetMyInfoResult;
 import com.inspur.emmcloud.bean.GetNewMsgsResult;
@@ -550,5 +551,8 @@ public interface APIInterface {
 
     void returnSaveConfigSuccess();
     void returnSaveConfigFail();
+
+    void returnRecommendAppWidgetListSuccess(GetRecommendAppWidgetListResult getRecommendAppWidgetListResult);
+    void returnRecommendAppWidgetListFail(String error, int errorCode);
 
 }
