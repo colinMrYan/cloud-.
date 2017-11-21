@@ -53,7 +53,6 @@ import com.inspur.emmcloud.util.AppCacheUtils;
 import com.inspur.emmcloud.util.AppTitleUtils;
 import com.inspur.emmcloud.util.DensityUtil;
 import com.inspur.emmcloud.util.IntentUtils;
-import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.MyAppCacheUtils;
 import com.inspur.emmcloud.util.MyAppWidgetUtils;
 import com.inspur.emmcloud.util.NetUtils;
@@ -65,6 +64,7 @@ import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.TimeUtils;
 import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
+import com.inspur.emmcloud.widget.ECMRecyclerViewLinearLayoutManager;
 import com.inspur.emmcloud.widget.ECMSpaceItemDecoration;
 import com.inspur.emmcloud.widget.MySwipeRefreshLayout;
 import com.inspur.emmcloud.widget.SwitchView;
@@ -212,6 +212,8 @@ public class MyAppFragment extends Fragment {
         setTabTitle();
         getAppBadgeNum();
         isOnCreate = true;
+        //当Fragment创建时重置时间
+        PreferencesByUserAndTanentUtils.putInt(getActivity(),Constant.PREF_MY_APP_RECOMMEND_LASTUPDATE_HOUR,0);
 //        shortCutAppList.add("mobile_checkin_hcm");
 //        shortCutAppList.add("inspur_news_esg");//目前，除在此处添加id还需要为每个需要生成快捷方式的应用配置图标
     }
@@ -222,14 +224,13 @@ public class MyAppFragment extends Fragment {
      */
     private void refreshRecommendAppWidgetView() {
         //接口真正有数据时打开
-//        && (MyAppWidgetUtils.getShouldShowAppList(getActivity()).size() > 0)
-        if(MyAppWidgetUtils.isNeedShowMyAppRecommendWidgets(getActivity()) ){
+        if(MyAppWidgetUtils.isNeedShowMyAppRecommendWidgets(getActivity()) && (MyAppWidgetUtils.getShouldShowAppList(getActivity()).size() > 0)){
             if(recommendWidgetView == null){
-                LogUtils.YfcDebug("创建推荐应用");
                 recommendWidgetView = (RecyclerView) rootView.findViewById(R.id.my_app_recommend_recyclerview);
                 (rootView.findViewById(R.id.my_app_recommend_layout)).setVisibility(View.VISIBLE);
-                LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+                ECMRecyclerViewLinearLayoutManager layoutManager = new ECMRecyclerViewLinearLayoutManager(getActivity());
                 layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+                layoutManager.setCanScrollHorizontally(false);
                 recommendWidgetView.setLayoutManager(layoutManager);
                 recommendWidgetView.addItemDecoration(new ECMSpaceItemDecoration(DensityUtil.dip2px(getActivity(), 4)));
                 recommendAppAdapter = new RecommendAppAdapter(getActivity());
@@ -237,10 +238,7 @@ public class MyAppFragment extends Fragment {
                 recommendAppAdapter.setOnRecommendAppItemClickListener(new OnRecommendAppItemClickListener() {
                     @Override
                     public void onRecommendAppItemClick(App app) {
-                        LogUtils.YfcDebug("接收到点击事件"+(app == null));
-                        if(!StringUtils.isBlank(app.getAppID())){
-                            UriUtils.openApp(getActivity(),app);
-                        }
+                        UriUtils.openApp(getActivity(),app);
                     }
                 });
                 rootView.findViewById(R.id.my_app_recommend_widget_img).setOnClickListener(new OnClickListener() {
@@ -251,19 +249,7 @@ public class MyAppFragment extends Fragment {
                     }
                 });
                 refreshRecommendAppWidgets();
-                //高斯模糊测试方案1
-//                (rootView.findViewById(R.id.my_app_recommend_layout)).getViewTreeObserver()
-//                        .addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
-//                            @Override
-//                            public boolean onPreDraw() {
-//                                BlurBitmapUtil.blur(rootView, (rootView.findViewById(R.id.my_app_recommend_layout)), 4, 8);
-//                                return true;
-//                            }
-//                        });
-                //高斯模糊测试方案2
-//                BlurKit.getInstance().blur(rootView.findViewById(R.id.my_app_recommend_layout), 5);
             }else{
-                LogUtils.YfcDebug("刷新推荐应用");
                 if(recommendAppAdapter != null){
                     refreshRecommendAppWidgets();
                 }
@@ -290,10 +276,12 @@ public class MyAppFragment extends Fragment {
                 }
             }
         }
-        if(recommendAppWidgetList.size() > 0){
+        rootView.findViewById(R.id.my_app_recommend_layout).setVisibility(((recommendAppWidgetList.size())>0
+                && MyAppWidgetUtils.isNeedShowMyAppRecommendWidgets(getActivity()))?View.VISIBLE:View.GONE);
+        boolean isNeedRefresh = PreferencesByUserAndTanentUtils.getInt(getActivity(),Constant.PREF_MY_APP_RECOMMEND_LASTUPDATE_HOUR,0) < MyAppWidgetUtils.getNowHour();
+        if(recommendAppAdapter != null && recommendAppWidgetList.size() > 0 && isNeedRefresh){
             recommendAppAdapter.setAndReFreshRecommendList(recommendAppWidgetList);
-        } else{
-            rootView.findViewById(R.id.my_app_recommend_layout).setVisibility(View.GONE);
+            PreferencesByUserAndTanentUtils.putInt(getActivity(),Constant.PREF_MY_APP_RECOMMEND_LASTUPDATE_HOUR,MyAppWidgetUtils.getNowHour());
         }
     }
 
@@ -1102,6 +1090,9 @@ public class MyAppFragment extends Fragment {
             super.onPostExecute(appGroupList);
             appListAdapter.setAppAdapterList(appGroupList);
             swipeRefreshLayout.setRefreshing(false);
+            if(MyAppWidgetUtils.isNeedShowMyAppRecommendWidgets(getActivity())){
+                refreshRecommendAppWidgets();
+            }
         }
     }
 

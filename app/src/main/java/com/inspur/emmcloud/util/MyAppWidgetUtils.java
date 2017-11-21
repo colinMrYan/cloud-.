@@ -48,7 +48,6 @@ public class MyAppWidgetUtils {
     private MyAppWidgetUtils(Activity activity){
         this.context = activity;
         loadingDlg = new LoadingDialog(context);
-//        getMyAppWidgetsFromNet(needDialog);
     }
 
     /**
@@ -85,14 +84,6 @@ public class MyAppWidgetUtils {
         return System.currentTimeMillis()>notShowTime;
     }
 
-//    /**
-//     * 保存更新的日期
-//     * @param context
-//     */
-//    public static void saveUpdateMyAppWidgetsDate(Context context){
-//        PreferencesByUserAndTanentUtils.putString(context,Constant.PREF_MY_APP_RECOMMEND_CACHE_DATE,TimeUtils.getFormatYearMonthDay());
-//    }
-
     /**
      * 检查是否需要发起更新请求
      * @param context
@@ -112,10 +103,12 @@ public class MyAppWidgetUtils {
         GetMyAppWidgetResult getMyAppWidgetResult = new GetMyAppWidgetResult(PreferencesByUserAndTanentUtils.getString(context,Constant.PREF_MY_APP_RECOMMEND_DATA,""));
         List<RecommendAppWidgetBean> recommendAppWidgetBeanList = getMyAppWidgetResult.getRecommendAppWidgetBeanList();
         List<String> appIdList = new ArrayList<>();
-        for(int i = 0; i < recommendAppWidgetBeanList.size(); i++){
-            if(Integer.parseInt(recommendAppWidgetBeanList.get(i).getPeriod()) == (getNowHour()+1)){
-                appIdList.addAll(recommendAppWidgetBeanList.get(i).getAppIdList());
-                break;
+        if(getMyAppWidgetResult.getExpiredDate()>TimeUtils.getEndTime()){
+            for(int i = 0; i < recommendAppWidgetBeanList.size(); i++){
+                if(Integer.parseInt(recommendAppWidgetBeanList.get(i).getPeriod()) == (getNowHour()+1)){
+                    appIdList.addAll(recommendAppWidgetBeanList.get(i).getAppIdList());
+                    break;
+                }
             }
         }
         return appIdList;
@@ -125,7 +118,7 @@ public class MyAppWidgetUtils {
      * 获取当前小时数
      * @return
      */
-    private static int getNowHour(){
+    public static int getNowHour(){
         return Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
     }
 

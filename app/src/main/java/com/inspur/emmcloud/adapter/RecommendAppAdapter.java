@@ -41,12 +41,10 @@ public class RecommendAppAdapter extends RecyclerView.Adapter<RecommendAppAdapte
     @Override
     public void onBindViewHolder(final RecommendAppAdapter.RecommendAppAdapterHolder holder, final int position) {
         ImageDisplayUtils.getInstance().displayImage(holder.recommendAppImg,recommendList.get(position).getAppIcon(),R.drawable.ic_app_default);
-//        BlurKit.getInstance().blur(holder.recommendAppImg, 5);
         if(onRecommendAppItemClickListener != null){
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    LogUtils.YfcDebug("appId:"+recommendList.get(position).getAppName()+":"+recommendList.get(position).getAppID());
                     onRecommendAppItemClickListener.onRecommendAppItemClick(recommendList.get(position));
                 }
             });

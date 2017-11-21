@@ -164,9 +164,8 @@ public class IndexActivity extends BaseFragmentActivity implements
      * 获取我的应用推荐小部件数据
      */
     private void getMyAppRecommendWidgets() {
-        MyAppWidgetUtils myAppWidgetUtils = MyAppWidgetUtils.getInstance(IndexActivity.this);
         if(MyAppWidgetUtils.checkNeedUpdateMyAppWidget(IndexActivity.this)){
-            myAppWidgetUtils.getMyAppWidgetsFromNet(false);
+            MyAppWidgetUtils.getInstance(IndexActivity.this).getMyAppWidgetsFromNet(false);
         }
     }
 

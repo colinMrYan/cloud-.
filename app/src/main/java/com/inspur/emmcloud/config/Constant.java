@@ -22,10 +22,9 @@ public class Constant {
     public static final String PREF_HAS_MY_APP_RECOMMEND = "has_my_app_recommend";
     public static final String PREF_MY_APP_RECOMMEND_DATA = "my_app_recommend_data";
     public static final String PREF_MY_APP_RECOMMEND_CACHE_DATE = "my_app_recommend_cache_date";
+    public static final String PREF_MY_APP_RECOMMEND_LASTUPDATE_HOUR = "my_app_recommend_lastupdate_hour";
 
     public static final String ACTION_MEETING = "com.inspur.meeting";
     public static final String ACTION_TASK = "com.inspur.task";
     public static final String ACTION_CALENDAR = "com.inspur.calendar";
-
-
 }

@@ -52,7 +52,6 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.nostra13.universalimageloader.utils.L;
 import com.oblador.vectoricons.VectorIconsPackage;
-import com.wonderkiln.blurkit.BlurKit;
 
 import org.xutils.http.RequestParams;
 import org.xutils.x;
@@ -108,7 +107,6 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         initImageLoader();
         initTanent();
         RichText.initCacheDir(new File(LOCAL_CACHE_MARKDOWN_PATH));
-        BlurKit.init(this);
         userPhotoUrlMap = new LinkedHashMap<String, String>() {
             @Override
             protected boolean removeEldestEntry(Entry<String, String> eldest) {

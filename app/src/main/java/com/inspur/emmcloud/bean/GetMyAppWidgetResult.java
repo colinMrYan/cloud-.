@@ -1,7 +1,6 @@
 package com.inspur.emmcloud.bean;
 
 import com.inspur.emmcloud.util.JSONUtils;
-import com.inspur.emmcloud.util.LogUtils;
 
 import org.json.JSONArray;
 
@@ -21,7 +20,6 @@ public class GetMyAppWidgetResult {
         try {
             this.response = response;
             expiredDate = JSONUtils.getLong(response,"expiredDate",0);
-            LogUtils.YfcDebug("转换时间戳：" + expiredDate);
             JSONArray jsonArray = JSONUtils.getJSONArray(response, "recommends", new JSONArray());
             for (int i = 0; i < jsonArray.length(); i++) {
                 recommendAppWidgetBeanList.add(new RecommendAppWidgetBean(jsonArray.getJSONObject(i)));
