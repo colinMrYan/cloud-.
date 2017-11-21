@@ -2,12 +2,9 @@ package com.inspur.emmcloud.bean;
 
 import com.inspur.emmcloud.util.JSONUtils;
 import com.inspur.emmcloud.util.LogUtils;
-import com.inspur.emmcloud.util.StringUtils;
-import com.inspur.emmcloud.util.TimeUtils;
 
 import org.json.JSONArray;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,8 +20,8 @@ public class GetMyAppWidgetResult {
     public GetMyAppWidgetResult(String response) {
         try {
             this.response = response;
-//            expiredDate = getExpiredDate(JSONUtils.getString(response, "expiredDate", ""));
-//            LogUtils.YfcDebug("转换时间戳：" + expiredDate);
+            expiredDate = JSONUtils.getLong(response,"expiredDate",0);
+            LogUtils.YfcDebug("转换时间戳：" + expiredDate);
             JSONArray jsonArray = JSONUtils.getJSONArray(response, "recommends", new JSONArray());
             for (int i = 0; i < jsonArray.length(); i++) {
                 recommendAppWidgetBeanList.add(new RecommendAppWidgetBean(jsonArray.getJSONObject(i)));
@@ -34,18 +31,6 @@ public class GetMyAppWidgetResult {
         }
     }
 
-    /**
-     * 把失效时间转换为时间戳
-     *
-     * @param expiredDate
-     * @return
-     */
-    private long getExpiredDate(String expiredDate) {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
-                "yyyy/MM/dd HH:mm:ss");
-        long expireDate = StringUtils.isBlank(expiredDate)? 0 : TimeUtils.UTCString2Long(expiredDate);
-        return expireDate;
-    }
 
     public String getResponse() {
         return response;
