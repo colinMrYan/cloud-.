@@ -1,55 +1,52 @@
 package com.inspur.imp.plugin.barcode.scan;
 
+import android.Manifest;
 import android.content.Intent;
-import android.content.res.AssetFileDescriptor;
-import android.graphics.Bitmap;
-import android.media.AudioManager;
-import android.media.MediaPlayer;
-import android.media.MediaPlayer.OnCompletionListener;
+import android.content.pm.PackageManager;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Vibrator;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.view.SurfaceHolder;
-import android.view.SurfaceHolder.Callback;
 import android.view.SurfaceView;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Button;
-import android.widget.TextView;
+import android.view.animation.Animation;
+import android.view.animation.LinearInterpolator;
+import android.view.animation.ScaleAnimation;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
-import com.google.zxing.BarcodeFormat;
 import com.google.zxing.Result;
-import com.inspur.emmcloud.util.StateBarColor;
+import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.imp.api.ImpBaseActivity;
 import com.inspur.imp.api.Res;
-import com.inspur.imp.plugin.barcode.camera.CameraManager;
-import com.inspur.imp.plugin.barcode.decoding.CaptureActivityHandler;
+import com.inspur.imp.plugin.barcode.CameraManager;
+import com.inspur.imp.plugin.barcode.CaptureActivityHandler;
 import com.inspur.imp.plugin.barcode.decoding.InactivityTimer;
-import com.inspur.imp.plugin.barcode.view.ViewfinderView;
 
 import java.io.IOException;
-import java.util.Vector;
+import java.util.concurrent.atomic.AtomicInteger;
 
 
-public class CaptureActivity extends ImpBaseActivity implements Callback {
 
-	private CaptureActivityHandler handler;
-	private ViewfinderView viewfinderView;
-	private boolean hasSurface;
-	private Vector<BarcodeFormat> decodeFormats;
-	private String characterSet;
+public class CaptureActivity extends ImpBaseActivity  {
+
 	private InactivityTimer inactivityTimer;
-	private MediaPlayer mediaPlayer;
-	private boolean playBeep;
-	private static final float BEEP_VOLUME = 0.10f;
-	private boolean vibrate;
-	private SurfaceView surfaceView;
-	private Button btn_torch;
-	private boolean isTorchOn = false;
-	private TextView lampText;
-
+	private CaptureActivityHandler handler;//扫描处理
+	private RelativeLayout mContainer = null;//整体根布局
+	private RelativeLayout mCropLayout = null;//扫描框根布局
+	private int mCropWidth = 0;//扫描边界的宽度
+	private int mCropHeight = 0;//扫描边界的高度
+	private boolean hasSurface;//是否有预览
+	private boolean vibrate = true;//扫描成功后是否震动
+	private boolean mFlashing = true;//闪光灯开启状态
+	private LinearLayout mLlScanHelp;//生成二维码 & 条形码 布局
+	private ImageView mIvLight;//闪光灯 按钮
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -57,64 +54,46 @@ public class CaptureActivity extends ImpBaseActivity implements Callback {
 		super.onCreate(savedInstanceState);
 		setContentView(Res.getLayoutID("plugin_barcode_capture"));
 		this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);//设置全屏
-		CameraManager.init(this);
-		btn_torch = (Button)findViewById(Res.getWidgetID("btn_torch"));
-		viewfinderView = (ViewfinderView) findViewById(Res.getWidgetID("viewfinder_view"));
-		surfaceView = (SurfaceView) findViewById(Res.getWidgetID("preview_view"));
-		lampText = (TextView) findViewById(Res.getWidgetID("lamp_text"));
+		initView();//界面控件初始化
+		initScanerAnimation();//扫描动画初始化
+		CameraManager.init(CaptureActivity.this);//初始化 CameraManager
 		hasSurface = false;
 		inactivityTimer = new InactivityTimer(this);
-		(findViewById(Res.getWidgetID("close_camera_btn"))).setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				finish();
-			}
-		});
-		btn_torch.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				if (isTorchOn) {
-					isTorchOn = false;
-					lampText.setText(Res.getStringID("turn_on_light"));
-					btn_torch.setBackgroundResource(Res.getDrawableID("imp_lamp_off"));
-					CameraManager.get().setTorch(false);
-				} else {
-					isTorchOn = true;
-					lampText.setText(Res.getStringID("turn_off_light"));
-					btn_torch.setBackgroundResource(Res.getDrawableID("imp_lamp_on"));
-					CameraManager.get().setTorch(true);
-				}
-			}
-		});
+		
 	}
-
+	@SuppressWarnings("deprecation")
 	@Override
 	protected void onResume() {
 		super.onResume();
+		SurfaceView surfaceView = (SurfaceView) findViewById(R.id.capture_preview);
 		SurfaceHolder surfaceHolder = surfaceView.getHolder();
 		if (hasSurface) {
-			initCamera(surfaceHolder);
+			initCamera(surfaceHolder);//Camera初始化
 		} else {
-			surfaceHolder.addCallback(this);
+			surfaceHolder.addCallback(new SurfaceHolder.Callback() {
+				@Override
+				public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+
+				}
+
+				@Override
+				public void surfaceCreated(SurfaceHolder holder) {
+					if (!hasSurface) {
+						hasSurface = true;
+						initCamera(holder);
+					}
+				}
+
+				@Override
+				public void surfaceDestroyed(SurfaceHolder holder) {
+					hasSurface = false;
+
+				}
+			});
 			surfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
 		}
-		decodeFormats = null;
-		characterSet = null;
-
-		playBeep = true;
-		AudioManager audioService = (AudioManager) getSystemService(AUDIO_SERVICE);
-		if (audioService.getRingerMode() != AudioManager.RINGER_MODE_NORMAL) {
-			playBeep = false;
-		}
-		initBeepSound();
-		vibrate = true;
 	}
 
-	
 	@Override
 	protected void onPause() {
 		super.onPause();
@@ -131,123 +110,153 @@ public class CaptureActivity extends ImpBaseActivity implements Callback {
 		super.onDestroy();
 	}
 
-	public void handDecodeResult(String result){
+	private void initView() {
+		mIvLight = (ImageView) findViewById(R.id.top_mask);
+		mContainer = (RelativeLayout) findViewById(R.id.capture_containter);
+		mCropLayout = (RelativeLayout) findViewById(R.id.capture_crop_layout);
+		mLlScanHelp = (LinearLayout) findViewById(R.id.ll_scan_help);
+		//请求Camera权限 与 文件读写 权限
+		if (ContextCompat.checkSelfPermission(CaptureActivity.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED &&
+				ContextCompat.checkSelfPermission(CaptureActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+			ActivityCompat.requestPermissions(CaptureActivity.this, new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+		}
+	}
+
+
+	private void initScanerAnimation() {
+		ImageView mQrLineView = (ImageView) findViewById(R.id.capture_scan_line);
+		ScaleAnimation animation = new ScaleAnimation(1.0f, 1.0f, 0.0f, 1.0f);
+		animation.setRepeatCount(-1);
+		animation.setRepeatMode(Animation.RESTART);
+		animation.setInterpolator(new LinearInterpolator());
+		animation.setDuration(1200);
+		mQrLineView.startAnimation(animation);
+	}
+
+	public int getCropWidth() {
+		return mCropWidth;
+	}
+
+	public void setCropWidth(int cropWidth) {
+		mCropWidth = cropWidth;
+		CameraManager.FRAME_WIDTH = mCropWidth;
+
+	}
+
+	public int getCropHeight() {
+		return mCropHeight;
+	}
+
+	public void setCropHeight(int cropHeight) {
+		this.mCropHeight = cropHeight;
+		CameraManager.FRAME_HEIGHT = mCropHeight;
+	}
+
+	public void btn(View view) {
+		int viewId = view.getId();
+		if (viewId == R.id.top_mask) {
+			light();
+		} else if (viewId == R.id.top_back) {
+			finish();
+		}
+	}
+
+	private void light() {
+		if (mFlashing) {
+			mFlashing = false;
+			// 开闪光灯
+			CameraManager.get().openLight();
+		} else {
+			mFlashing = true;
+			// 关闪光灯
+			CameraManager.get().offLight();
+		}
+
+	}
+
+	private void initCamera(SurfaceHolder surfaceHolder) {
+		try {
+			CameraManager.get().openDriver(surfaceHolder);
+			Point point = CameraManager.get().getCameraResolution();
+			AtomicInteger width = new AtomicInteger(point.y);
+			AtomicInteger height = new AtomicInteger(point.x);
+			int cropWidth = mCropLayout.getWidth() * width.get() / mContainer.getWidth();
+			int cropHeight = mCropLayout.getHeight() * height.get() / mContainer.getHeight();
+			setCropWidth(cropWidth);
+			setCropHeight(cropHeight);
+		} catch (IOException | RuntimeException ioe) {
+			return;
+		}
+		if (handler == null) {
+			handler = new CaptureActivityHandler(CaptureActivity.this);
+		}
+	}
+	//========================================打开本地图片识别二维码 end=================================
+
+	//--------------------------------------打开本地图片识别二维码 start---------------------------------
+//	@Override
+//	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//		super.onActivityResult(requestCode, resultCode, data);
+//		if (resultCode == Activity.RESULT_OK) {
+//			ContentResolver resolver = getContentResolver();
+//			// 照片的原始资源地址
+//			Uri originalUri = data.getData();
+//			try {
+//				// 使用ContentProvider通过URI获取原始图片
+//				Bitmap photo = MediaStore.Images.Media.getBitmap(resolver, originalUri);
+//
+//				// 开始对图像资源解码
+//				Result rawResult = RxQrBarTool.decodeFromPhoto(photo);
+//				if (rawResult != null) {
+//					if (mScanerListener == null) {
+//						initDialogResult(rawResult);
+//					} else {
+//						mScanerListener.onSuccess("From to Picture", rawResult);
+//					}
+//				} else {
+//					if (mScanerListener == null) {
+//						RxToast.error("图片识别失败.");
+//					} else {
+//						mScanerListener.onFail("From to Picture", "图片识别失败");
+//					}
+//				}
+//			} catch (IOException e) {
+//				e.printStackTrace();
+//			}
+//		}
+//	}
+	//==============================================================================================解析结果 及 后续处理 end
+
+	public void handleDecode(Result result) {
+		inactivityTimer.onActivity();
+		String content = result.getText();
 		boolean isFromWeb = true;
 		if (getIntent().hasExtra("from")) {
 			isFromWeb = false;
 		}
 		if (!isFromWeb) {
 			Intent intent = new Intent();
-			if (result == null || "".equals(result)) {
-				result = getString(Res.getStringID("can_not_recognize"));
+			if (content == null || "".equals(content)) {
+				content = getString(Res.getStringID("can_not_recognize"));
 				intent.putExtra("isDecodeSuccess", false);
 			}else {
 				intent.putExtra("isDecodeSuccess", true);
 			}
-			 intent.putExtra("msg", result);
-			 setResult(RESULT_OK, intent);
+			intent.putExtra("msg", content);
+			setResult(RESULT_OK, intent);
 		}else {
 			String functName = BarCodeService.functName;
 			if(BarCodeService.barcodeService != null){
-				BarCodeService.barcodeService.jsCallback(functName, result.toString());
+				BarCodeService.barcodeService.jsCallback(functName, content.toString());
 			}
 		}
 		finish();
-	}
-	
-	private void initCamera(SurfaceHolder surfaceHolder) {
-		try {
-			CameraManager.get().openDriver(surfaceHolder);
-		} catch (IOException ioe) {
-			return;
-		} catch (RuntimeException e) {
-			return;
-		}
-		if (handler == null) {
-			handler = new CaptureActivityHandler(this, decodeFormats,
-					characterSet);
-		}
-	}
-
-	public void surfaceChanged(SurfaceHolder holder, int format, int width,
-			int height) {
-
-	}
-
-	public void surfaceCreated(SurfaceHolder holder) {
-		if (!hasSurface) {
-			hasSurface = true;
-			initCamera(holder);
-		}
-
-	}
-
-	public void surfaceDestroyed(SurfaceHolder holder) {
-		hasSurface = false;
-
-	}
-
-	public ViewfinderView getViewfinderView() {
-		return viewfinderView;
 	}
 
 	public Handler getHandler() {
 		return handler;
 	}
 
-	public void drawViewfinder() {
-		viewfinderView.drawViewfinder();
 
-	}
-
-	public void handleDecode(Result obj, Bitmap barcode) {
-		inactivityTimer.onActivity();
-	}
-	
-
-	private void initBeepSound() {
-		if (playBeep && mediaPlayer == null) {
-			// The volume on STREAM_SYSTEM is not adjustable, and users found it
-			// too loud,
-			// so we now play on the music stream.
-			setVolumeControlStream(AudioManager.STREAM_MUSIC);
-			mediaPlayer = new MediaPlayer();
-			mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-			mediaPlayer.setOnCompletionListener(beepListener);
-
-			AssetFileDescriptor file = getResources().openRawResourceFd(
-					Res.getRawID("plugin_barcode_beep"));
-			try {
-				mediaPlayer.setDataSource(file.getFileDescriptor(),
-						file.getStartOffset(), file.getLength());
-				file.close();
-				mediaPlayer.setVolume(BEEP_VOLUME, BEEP_VOLUME);
-				mediaPlayer.prepare();
-			} catch (IOException e) {
-				mediaPlayer = null;
-			}
-		}
-	}
-
-	private static final long VIBRATE_DURATION = 200L;
-
-	private void playBeepSoundAndVibrate() {
-		if (playBeep && mediaPlayer != null) {
-			mediaPlayer.start();
-		}
-		if (vibrate) {
-			Vibrator vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
-			vibrator.vibrate(VIBRATE_DURATION);
-		}
-	}
-
-	/**
-	 * When the beep has finished playing, rewind to queue up another one.
-	 */
-	private final OnCompletionListener beepListener = new OnCompletionListener() {
-		public void onCompletion(MediaPlayer mediaPlayer) {
-			mediaPlayer.seekTo(0);
-		}
-	};
 
 }
