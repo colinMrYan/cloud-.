@@ -32,7 +32,6 @@ import java.io.IOException;
 import java.util.concurrent.atomic.AtomicInteger;
 
 
-
 public class CaptureActivity extends ImpBaseActivity  {
 
 	private InactivityTimer inactivityTimer;
@@ -115,7 +114,7 @@ public class CaptureActivity extends ImpBaseActivity  {
 		mCropLayout = (RelativeLayout) findViewById(R.id.capture_crop_layout);
 		mLlScanHelp = (LinearLayout) findViewById(R.id.ll_scan_help);
 		//请求Camera权限 与 文件读写 权限
-		if (ContextCompat.checkSelfPermission(CaptureActivity.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED &&
+		if (ContextCompat.checkSelfPermission(CaptureActivity.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED ||
 				ContextCompat.checkSelfPermission(CaptureActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
 			ActivityCompat.requestPermissions(CaptureActivity.this, new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
 		}
@@ -246,7 +245,7 @@ public class CaptureActivity extends ImpBaseActivity  {
 		}else {
 			String functName = BarCodeService.functName;
 			if(BarCodeService.barcodeService != null){
-				BarCodeService.barcodeService.jsCallback(functName, content.toString());
+				BarCodeService.barcodeService.jsCallback(functName, content);
 			}
 		}
 		finish();
