@@ -22,7 +22,6 @@ import android.widget.RelativeLayout;
 
 import com.google.zxing.Result;
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.imp.api.ImpBaseActivity;
 import com.inspur.imp.api.Res;
 import com.inspur.imp.plugin.barcode.CameraManager;
