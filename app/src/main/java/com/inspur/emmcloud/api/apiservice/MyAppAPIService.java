@@ -25,6 +25,9 @@ import com.inspur.emmcloud.bean.GetNewsTitleResult;
 import com.inspur.emmcloud.bean.GetRemoveAppResult;
 import com.inspur.emmcloud.bean.GetSearchAppResult;
 import com.inspur.emmcloud.bean.GetWebAppRealUrlResult;
+import com.inspur.emmcloud.bean.Volume.GetVolumeFileListResult;
+import com.inspur.emmcloud.bean.Volume.GetVolumeFileUploadSTSTokenResult;
+import com.inspur.emmcloud.bean.Volume.GetVolumeListResult;
 import com.inspur.emmcloud.callback.OauthCallBack;
 import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.OauthUtils;
@@ -624,4 +627,116 @@ public class MyAppAPIService {
         });
     }
 
+
+    /**
+     * 获取云盘列表
+     */
+    public void getVolumeList(){
+        final String url = APIUri.getVolumeListUrl();
+        RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
+        x.http().get(params, new APICallback(context, url) {
+            @Override
+            public void callbackSuccess(String arg0) {
+                apiInterface.returnVolumeListSuccess(new GetVolumeListResult(arg0));
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                apiInterface.returnVolumeListFail(error,responseCode);
+            }
+
+            @Override
+            public void callbackTokenExpire() {
+                new OauthUtils(new OauthCallBack() {
+
+                    @Override
+                    public void reExecute() {
+                        getVolumeList();
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                }, context).refreshToken(url);
+            }
+        });
+    }
+
+    /**
+     * 获取云盘文件列表
+     * @param volumeId
+     * @param subPath
+     */
+    public void getVolumeFileList(final String volumeId,final String subPath){
+        final String url = APIUri.getVolumeFileListUrl(volumeId,subPath);
+        RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
+        x.http().get(params, new APICallback(context, url) {
+            @Override
+            public void callbackSuccess(String arg0) {
+                apiInterface.returnVolumeFileListSuccess(new GetVolumeFileListResult(arg0));
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                apiInterface.returnVolumeFileListFail(error,responseCode);
+            }
+
+            @Override
+            public void callbackTokenExpire() {
+                new OauthUtils(new OauthCallBack() {
+
+                    @Override
+                    public void reExecute() {
+                        getVolumeFileList(volumeId,subPath);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                }, context).refreshToken(url);
+            }
+        });
+    }
+
+    /**
+     * 获取阿里云上传STS Token
+     * @param volumeId
+     * @param fileName
+     * @param volumeFilePath
+     */
+    public void getVolumeFileUploadSTSToken(final String volumeId,final String fileName,final String volumeFilePath){
+        final String url = APIUri.getVolumeFileUploadSTSTokenUrl(volumeId);
+        RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
+        params.addParameter("name",fileName);
+        params.addParameter("path",volumeFilePath);
+        x.http().post(params, new APICallback(context, url) {
+            @Override
+            public void callbackSuccess(String arg0) {
+                apiInterface.returnVolumeFileUploadSTSTokenSuccess(new GetVolumeFileUploadSTSTokenResult(arg0));
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                apiInterface.returnVolumeFileUploadSTSTokenFail(error,responseCode);
+            }
+
+            @Override
+            public void callbackTokenExpire() {
+                new OauthUtils(new OauthCallBack() {
+
+                    @Override
+                    public void reExecute() {
+                        getVolumeFileUploadSTSToken(volumeId,fileName,volumeFilePath);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                }, context).refreshToken(url);
+            }
+        });
+    }
 }

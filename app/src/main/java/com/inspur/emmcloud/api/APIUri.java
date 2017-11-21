@@ -17,6 +17,7 @@ public class APIUri {
     private static final String URL_BASE_SMS_LOGIN = "https://id.inspur.com/api/v1/passcode?phone=";
     private static final String URL_BASE_APP_CONFIG = "https://emm.inspur.com/v3.0/api/app/config";
     private static final String URL_BASE_APP_V3 = "https://emm.inspur.com/v3.0/";
+    private static final String URL_BASE_VOLUME = "https://emm.inspur.com/suhe/cloud-drive/api/v1";
 
     /**
      * 获取到租户级的URL
@@ -768,4 +769,30 @@ public class APIUri {
         return URL_BASE_APP_V3 + "api/app/position/upload";
     }
 
+    /**
+     * 获取云盘列表
+     * @return
+     */
+    public static String getVolumeListUrl(){
+        return URL_BASE_VOLUME+"/volume";
+    }
+
+    /**
+     * 获取云盘文件列表
+     * @param volumeId
+     * @param subPath
+     * @return
+     */
+    public static String getVolumeFileListUrl(String volumeId,String subPath){
+        return  URL_BASE_VOLUME+"/volume/"+volumeId+"/"+subPath;
+    }
+
+    /**
+     * 获取云盘上传STS token
+     * @param volumeId
+     * @return
+     */
+    public static String getVolumeFileUploadSTSTokenUrl(String volumeId){
+        return URL_BASE_VOLUME+"/volume/"+volumeId+"/file/request";
+    }
 }

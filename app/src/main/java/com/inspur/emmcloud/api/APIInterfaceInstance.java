@@ -80,6 +80,9 @@ import com.inspur.emmcloud.bean.SplashPageBean;
 import com.inspur.emmcloud.bean.TaskResult;
 import com.inspur.emmcloud.bean.Trip;
 import com.inspur.emmcloud.bean.UserProfileInfoBean;
+import com.inspur.emmcloud.bean.Volume.GetVolumeFileListResult;
+import com.inspur.emmcloud.bean.Volume.GetVolumeFileUploadSTSTokenResult;
+import com.inspur.emmcloud.bean.Volume.GetVolumeListResult;
 
 public class APIInterfaceInstance implements APIInterface {
     @Override
@@ -409,13 +412,13 @@ public class APIInterfaceInstance implements APIInterface {
 
     @Override
     public void returnGroupNewsDetailSuccess(
-            GetGroupNewsDetailResult getGroupNewsDetailResult,int page) {
+            GetGroupNewsDetailResult getGroupNewsDetailResult, int page) {
         // TODO Auto-generated method stub
 
     }
 
     @Override
-    public void returnGroupNewsDetailFail(String error, int errorCode,int page) {
+    public void returnGroupNewsDetailFail(String error, int errorCode, int page) {
         // TODO Auto-generated method stub
 
     }
@@ -835,7 +838,7 @@ public class APIInterfaceInstance implements APIInterface {
     }
 
     @Override
-    public void returnUpdateTaskFail(String error, int errorCode,int position) {
+    public void returnUpdateTaskFail(String error, int errorCode, int position) {
         // TODO Auto-generated method stub
 
     }
@@ -1019,7 +1022,7 @@ public class APIInterfaceInstance implements APIInterface {
     }
 
     @Override
-    public void returnDelAttachmentFail(String error, int errorCode,int position) {
+    public void returnDelAttachmentFail(String error, int errorCode, int position) {
         // TODO Auto-generated method stub
 
     }
@@ -1446,46 +1449,61 @@ public class APIInterfaceInstance implements APIInterface {
 
     @Override
     public void returnSaveWebAutoRotateConfigSuccess(boolean isWebAutoRotate) {
-
     }
 
     @Override
     public void returnSaveWebAutoRotateConfigFail(String error, int errorCode) {
-
     }
 
     @Override
     public void returnGetAppBadgeResultSuccess(GetAppBadgeResult getAppBadgeResult) {
-
     }
 
     @Override
     public void returnGetAppBadgeResultFail(String error, int errorCode) {
-
     }
 
     @Override
     public void returnUploadPositionSuccess() {
-
     }
 
     @Override
     public void returnWebAppRealUrlSuccess(GetWebAppRealUrlResult getWebAppRealUrlResult) {
-
     }
 
     @Override
     public void returnWebAppRealUrlFail() {
-
     }
 
     @Override
     public void returnSaveConfigSuccess() {
-
     }
 
     @Override
     public void returnSaveConfigFail() {
+    }
 
+    @Override
+    public void returnVolumeListSuccess(GetVolumeListResult getVolumeListResult) {
+    }
+
+    @Override
+    public void returnVolumeListFail(String error, int errorCode) {
+    }
+
+    @Override
+    public void returnVolumeFileListSuccess(GetVolumeFileListResult getVolumeFileListResult) {
+    }
+
+    @Override
+    public void returnVolumeFileListFail(String error, int errorCode) {
+    }
+
+    @Override
+    public void returnVolumeFileUploadSTSTokenSuccess(GetVolumeFileUploadSTSTokenResult getVolumeFileUploadSTSTokenResult) {
+    }
+
+    @Override
+    public void returnVolumeFileUploadSTSTokenFail(String error, int errorCode) {
     }
 }

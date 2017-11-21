@@ -80,6 +80,9 @@ import com.inspur.emmcloud.bean.SplashPageBean;
 import com.inspur.emmcloud.bean.TaskResult;
 import com.inspur.emmcloud.bean.Trip;
 import com.inspur.emmcloud.bean.UserProfileInfoBean;
+import com.inspur.emmcloud.bean.Volume.GetVolumeFileListResult;
+import com.inspur.emmcloud.bean.Volume.GetVolumeFileUploadSTSTokenResult;
+import com.inspur.emmcloud.bean.Volume.GetVolumeListResult;
 
 
 public interface APIInterface {
@@ -550,5 +553,14 @@ public interface APIInterface {
 
     void returnSaveConfigSuccess();
     void returnSaveConfigFail();
+
+    void returnVolumeListSuccess(GetVolumeListResult getVolumeListResult);
+    void returnVolumeListFail(String error,int errorCode);
+
+    void returnVolumeFileListSuccess(GetVolumeFileListResult getVolumeFileListResult);
+    void returnVolumeFileListFail(String error,int errorCode);
+
+    void returnVolumeFileUploadSTSTokenSuccess(GetVolumeFileUploadSTSTokenResult getVolumeFileUploadSTSTokenResult);
+    void returnVolumeFileUploadSTSTokenFail(String error,int errorCode);
 
 }

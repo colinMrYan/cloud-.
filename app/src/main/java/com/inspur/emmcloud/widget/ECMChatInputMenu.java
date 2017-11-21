@@ -35,14 +35,12 @@ import com.inspur.emmcloud.adapter.MsgInputAddItemAdapter;
 import com.inspur.emmcloud.bean.InsertModel;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.ui.chat.MembersActivity;
+import com.inspur.emmcloud.util.AppUtils;
 import com.inspur.emmcloud.util.DensityUtil;
-import com.inspur.emmcloud.util.ImageDisplayUtils;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.ToastUtils;
-import com.inspur.imp.plugin.camera.imagepicker.ImagePicker;
-import com.inspur.imp.plugin.camera.imagepicker.ui.ImageGridActivity;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -310,13 +308,13 @@ public class ECMChatInputMenu extends LinearLayout {
                 int clickItem = imgList.get(position);
                 switch (clickItem) {
                     case R.drawable.ic_chat_input_add_gallery:
-                        openGallery();
+                        AppUtils.openGallery((Activity)context,5,GELLARY_RESULT);
                         break;
                     case R.drawable.ic_chat_input_add_camera:
                         openCamera();
                         break;
                     case R.drawable.ic_chat_input_add_file:
-                        openFileSystem();
+                       AppUtils.openFileSystem((Activity)context,CHOOSE_FILE);
                         break;
                     case R.drawable.ic_chat_input_add_mention:
                         openMention(false);
@@ -328,48 +326,6 @@ public class ECMChatInputMenu extends LinearLayout {
             }
         });
     }
-
-    /**
-     * 调用文件系统
-     */
-    protected void openFileSystem() {
-        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.setType("*/*");
-        intent.addCategory(Intent.CATEGORY_OPENABLE);
-        ((Activity) context).startActivityForResult(
-                Intent.createChooser(intent,
-                        context.getString(R.string.file_upload_tips)),
-                CHOOSE_FILE);
-    }
-
-    /**
-     * 调用图库
-     */
-    protected void openGallery() {
-        initImagePicker();
-        Intent intent = new Intent(context,
-                ImageGridActivity.class);
-        ((Activity) context).startActivityForResult(intent, GELLARY_RESULT);
-    }
-
-    /**
-     * 初始化图片选择控件
-     */
-    private void initImagePicker() {
-        ImagePicker imagePicker = ImagePicker.getInstance();
-        imagePicker.setImageLoader(ImageDisplayUtils.getInstance()); // 设置图片加载器
-        imagePicker.setShowCamera(false); // 显示拍照按钮
-        imagePicker.setCrop(false); // 允许裁剪（单选才有效）
-        imagePicker.setSelectLimit(5);
-//		imagePicker.setSaveRectangle(true); // 是否按矩形区域保存
-        imagePicker.setMultiMode(true);
-//		imagePicker.setStyle(CropImageView.Style.RECTANGLE); // 裁剪框的形状
-//		imagePicker.setFocusWidth(1000); // 裁剪框的宽度。单位像素（圆形自动取宽高最小值）
-//		imagePicker.setFocusHeight(1000); // 裁剪框的高度。单位像素（圆形自动取宽高最小值）
-//		imagePicker.setOutPutX(1000); // 保存文件的宽度。单位像素
-//		imagePicker.setOutPutY(1000); // 保存文件的高度。单位像素
-    }
-
 
     /**
      * 调用摄像头拍照

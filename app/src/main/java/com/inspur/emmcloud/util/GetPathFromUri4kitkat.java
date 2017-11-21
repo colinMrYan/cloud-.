@@ -12,6 +12,19 @@ import android.provider.MediaStore;
 
 public class GetPathFromUri4kitkat {
 
+	public static String getPathByUri(final Context context, final Uri uri){
+		boolean isAboveKitKat = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
+		String filePath = null;
+		if (isAboveKitKat) {
+			// 获取4.4及以上版本的文件路径
+			filePath = GetPathFromUri4kitkat.getPath(context, uri);
+		} else {
+			// 低版本兼容方法
+			filePath = GetPathFromUri4kitkat.getRealPathFromURI(context, uri);
+		}
+		return filePath;
+	}
+
 	/**
 	 * 专为Android4.4设计的从Uri获取文件绝对路径，以前的方法已不好使
 	 */
