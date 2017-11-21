@@ -21,7 +21,6 @@ import android.widget.TextView;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.Result;
-import com.inspur.emmcloud.util.StateBarColor;
 import com.inspur.imp.api.ImpBaseActivity;
 import com.inspur.imp.api.Res;
 import com.inspur.imp.plugin.barcode.camera.CameraManager;
@@ -149,7 +148,7 @@ public class CaptureActivity extends ImpBaseActivity implements Callback {
 		}else {
 			String functName = BarCodeService.functName;
 			if(BarCodeService.barcodeService != null){
-				BarCodeService.barcodeService.jsCallback(functName, result.toString());
+				BarCodeService.barcodeService.jsCallback(functName, result);
 			}
 		}
 		finish();
