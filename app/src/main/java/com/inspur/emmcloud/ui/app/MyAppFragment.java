@@ -35,7 +35,7 @@ import android.widget.TextView;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.DragAdapter;
-import com.inspur.emmcloud.adapter.RecommendAppAdapter;
+import com.inspur.emmcloud.adapter.RecommendAppWidgetListAdapter;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
 import com.inspur.emmcloud.bean.App;
@@ -45,10 +45,10 @@ import com.inspur.emmcloud.bean.AppGroupBean;
 import com.inspur.emmcloud.bean.AppOrder;
 import com.inspur.emmcloud.bean.GetAppBadgeResult;
 import com.inspur.emmcloud.bean.GetAppGroupResult;
-import com.inspur.emmcloud.bean.GetMyAppWidgetResult;
+import com.inspur.emmcloud.bean.GetRecommendAppWidgetListResult;
 import com.inspur.emmcloud.bean.PVCollectModel;
 import com.inspur.emmcloud.config.Constant;
-import com.inspur.emmcloud.interf.OnRecommendAppItemClickListener;
+import com.inspur.emmcloud.interf.OnRecommendAppWidgetItemClickListener;
 import com.inspur.emmcloud.util.AppCacheUtils;
 import com.inspur.emmcloud.util.AppTitleUtils;
 import com.inspur.emmcloud.util.DensityUtil;
@@ -108,8 +108,8 @@ public class MyAppFragment extends Fragment {
     private MyAppSaveTask myAppSaveTask;
     private Map<String,AppBadgeBean> appBadgeBeanMap = new HashMap<>();
     private boolean isOnCreate = false;
-    private RecyclerView recommendWidgetView = null;
-    private RecommendAppAdapter recommendAppAdapter = null;
+    private RecyclerView recommendAppWidgetListView = null;
+    private RecommendAppWidgetListAdapter recommendAppWidgetListAdapter = null;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -139,11 +139,11 @@ public class MyAppFragment extends Fragment {
      * 更推荐应用小部件信息
      * 从MyAppWidgetUtils发送通知而来
      *
-     * @param getMyAppWidgetResult
+     * @param getRecommendAppWidgetListResult
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void updateMyAppWidegts(GetMyAppWidgetResult getMyAppWidgetResult) {
-        refreshRecommendAppWidgets();
+    public void updateRecommendAppWidegtList(GetRecommendAppWidgetListResult getRecommendAppWidgetListResult) {
+        refreshRecommendAppWidgetList();
     }
 
     /**
@@ -151,10 +151,10 @@ public class MyAppFragment extends Fragment {
      * 过期则更新不过期不更新
      */
     private void getMyAppRecommendWidgetsUpdate() {
-        GetMyAppWidgetResult getMyAppWidgetResult = new GetMyAppWidgetResult(PreferencesByUserAndTanentUtils
+        GetRecommendAppWidgetListResult getRecommendAppWidgetListResult = new GetRecommendAppWidgetListResult(PreferencesByUserAndTanentUtils
                 .getString(getActivity(),Constant.PREF_MY_APP_RECOMMEND_DATA,""));
-        if(!MyAppWidgetUtils.isEffective(getMyAppWidgetResult.getExpiredDate())){
-            MyAppWidgetUtils.getInstance(getActivity()).getMyAppWidgetsFromNet(false);
+        if(!MyAppWidgetUtils.isEffective(getRecommendAppWidgetListResult.getExpiredDate())){
+            MyAppWidgetUtils.getInstance(getActivity().getApplicationContext()).getMyAppWidgetsFromNet();
         }
     }
 
@@ -225,33 +225,33 @@ public class MyAppFragment extends Fragment {
     private void refreshRecommendAppWidgetView() {
         //接口真正有数据时打开
         if(MyAppWidgetUtils.isNeedShowMyAppRecommendWidgets(getActivity()) && (MyAppWidgetUtils.getShouldShowAppList(getActivity()).size() > 0)){
-            if(recommendWidgetView == null){
-                recommendWidgetView = (RecyclerView) rootView.findViewById(R.id.my_app_recommend_recyclerview);
-                (rootView.findViewById(R.id.my_app_recommend_layout)).setVisibility(View.VISIBLE);
+            if(recommendAppWidgetListView == null){
+                recommendAppWidgetListView = (RecyclerView) rootView.findViewById(R.id.my_app_recommend_app_wiget_recyclerview);
+                (rootView.findViewById(R.id.my_app_recommend_app_widget_layout)).setVisibility(View.VISIBLE);
                 ECMRecyclerViewLinearLayoutManager layoutManager = new ECMRecyclerViewLinearLayoutManager(getActivity());
                 layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
                 layoutManager.setCanScrollHorizontally(false);
-                recommendWidgetView.setLayoutManager(layoutManager);
-                recommendWidgetView.addItemDecoration(new ECMSpaceItemDecoration(DensityUtil.dip2px(getActivity(), 4)));
-                recommendAppAdapter = new RecommendAppAdapter(getActivity());
-                recommendWidgetView.setAdapter(recommendAppAdapter);
-                recommendAppAdapter.setOnRecommendAppItemClickListener(new OnRecommendAppItemClickListener() {
+                recommendAppWidgetListView.setLayoutManager(layoutManager);
+                recommendAppWidgetListView.addItemDecoration(new ECMSpaceItemDecoration(DensityUtil.dip2px(getActivity(), 4)));
+                recommendAppWidgetListAdapter = new RecommendAppWidgetListAdapter(getActivity());
+                recommendAppWidgetListView.setAdapter(recommendAppWidgetListAdapter);
+                recommendAppWidgetListAdapter.setOnRecommendAppWidgetItemClickListener(new OnRecommendAppWidgetItemClickListener() {
                     @Override
-                    public void onRecommendAppItemClick(App app) {
+                    public void onRecommendAppWidgetItemClick(App app) {
                         UriUtils.openApp(getActivity(),app);
                     }
                 });
-                rootView.findViewById(R.id.my_app_recommend_widget_img).setOnClickListener(new OnClickListener() {
+                rootView.findViewById(R.id.my_app_recommend_app_widget_img).setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        (rootView.findViewById(R.id.my_app_recommend_layout)).setVisibility(View.GONE);
+                        (rootView.findViewById(R.id.my_app_recommend_app_widget_layout)).setVisibility(View.GONE);
                         MyAppWidgetUtils.saveNotShowDate(getActivity(), TimeUtils.getEndTime());
                     }
                 });
-                refreshRecommendAppWidgets();
+                refreshRecommendAppWidgetList();
             }else{
-                if(recommendAppAdapter != null){
-                    refreshRecommendAppWidgets();
+                if(recommendAppWidgetListAdapter != null){
+                    refreshRecommendAppWidgetList();
                 }
             }
         }
@@ -261,7 +261,7 @@ public class MyAppFragment extends Fragment {
      * 获取本时间段内应该显示的推荐
      * @return
      */
-    private void refreshRecommendAppWidgets() {
+    private void refreshRecommendAppWidgetList() {
         List<String> appIdList = MyAppWidgetUtils.getShouldShowAppList(getActivity());
         List<App> recommendAppWidgetList = new ArrayList<>();
         List<AppGroupBean> appGroupBeanList = appListAdapter.getAppAdapterList();
@@ -276,11 +276,11 @@ public class MyAppFragment extends Fragment {
                 }
             }
         }
-        rootView.findViewById(R.id.my_app_recommend_layout).setVisibility(((recommendAppWidgetList.size())>0
+        rootView.findViewById(R.id.my_app_recommend_app_widget_layout).setVisibility(((recommendAppWidgetList.size())>0
                 && MyAppWidgetUtils.isNeedShowMyAppRecommendWidgets(getActivity()))?View.VISIBLE:View.GONE);
         boolean isNeedRefresh = PreferencesByUserAndTanentUtils.getInt(getActivity(),Constant.PREF_MY_APP_RECOMMEND_LASTUPDATE_HOUR,0) < MyAppWidgetUtils.getNowHour();
-        if(recommendAppAdapter != null && recommendAppWidgetList.size() > 0 && isNeedRefresh){
-            recommendAppAdapter.setAndReFreshRecommendList(recommendAppWidgetList);
+        if(recommendAppWidgetListAdapter != null && recommendAppWidgetList.size() > 0 && isNeedRefresh){
+            recommendAppWidgetListAdapter.setAndReFreshRecommendList(recommendAppWidgetList);
             PreferencesByUserAndTanentUtils.putInt(getActivity(),Constant.PREF_MY_APP_RECOMMEND_LASTUPDATE_HOUR,MyAppWidgetUtils.getNowHour());
         }
     }
@@ -1091,7 +1091,7 @@ public class MyAppFragment extends Fragment {
             appListAdapter.setAppAdapterList(appGroupList);
             swipeRefreshLayout.setRefreshing(false);
             if(MyAppWidgetUtils.isNeedShowMyAppRecommendWidgets(getActivity())){
-                refreshRecommendAppWidgets();
+                refreshRecommendAppWidgetList();
             }
         }
     }

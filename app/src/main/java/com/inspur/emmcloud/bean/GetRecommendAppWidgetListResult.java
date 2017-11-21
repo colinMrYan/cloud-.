@@ -3,6 +3,7 @@ package com.inspur.emmcloud.bean;
 import com.inspur.emmcloud.util.JSONUtils;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,21 +12,17 @@ import java.util.List;
  * Created by yufuchang on 2017/11/10.
  */
 
-public class GetMyAppWidgetResult {
+public class GetRecommendAppWidgetListResult {
     private String response = "";
     private long expiredDate = 0L;
     private List<RecommendAppWidgetBean> recommendAppWidgetBeanList = new ArrayList<>();
 
-    public GetMyAppWidgetResult(String response) {
-        try {
-            this.response = response;
-            expiredDate = JSONUtils.getLong(response,"expiredDate",0);
-            JSONArray jsonArray = JSONUtils.getJSONArray(response, "recommends", new JSONArray());
-            for (int i = 0; i < jsonArray.length(); i++) {
-                recommendAppWidgetBeanList.add(new RecommendAppWidgetBean(jsonArray.getJSONObject(i)));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+    public GetRecommendAppWidgetListResult(String response) {
+        this.response = response;
+        expiredDate = JSONUtils.getLong(response, "expiredDate", 0);
+        JSONArray jsonArray = JSONUtils.getJSONArray(response, "recommends", new JSONArray());
+        for (int i = 0; i < jsonArray.length(); i++) {
+            recommendAppWidgetBeanList.add(new RecommendAppWidgetBean(JSONUtils.getJSONObject(jsonArray, i, new JSONObject())));
         }
     }
 

@@ -23,14 +23,10 @@ public class RecommendAppWidgetBean {
     private List<String> appIdList = new ArrayList<>();
 
     public RecommendAppWidgetBean(JSONObject response) {
-        try {
-            period = JSONUtils.getString(response, "period", "");
-            JSONArray jsonArray = JSONUtils.getJSONArray(response, "appIds", new JSONArray());
-            for (int i = 0; i < jsonArray.length(); i++) {
-                appIdList.add(jsonArray.getString(i));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+        period = JSONUtils.getString(response, "period", "");
+        JSONArray jsonArray = JSONUtils.getJSONArray(response, "appIds", new JSONArray());
+        for (int i = 0; i < jsonArray.length(); i++) {
+            appIdList.add(JSONUtils.getString(jsonArray, i, ""));
         }
     }
 
@@ -46,7 +42,7 @@ public class RecommendAppWidgetBean {
         return appIdList;
     }
 
-    public void setAppIdList(List<String> AppIds) {
-        this.appIdList = AppIds;
+    public void setAppIdList(List<String> appIdList) {
+        this.appIdList = appIdList;
     }
 }

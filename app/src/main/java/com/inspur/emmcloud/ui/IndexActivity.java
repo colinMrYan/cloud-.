@@ -165,7 +165,7 @@ public class IndexActivity extends BaseFragmentActivity implements
      */
     private void getMyAppRecommendWidgets() {
         if(MyAppWidgetUtils.checkNeedUpdateMyAppWidget(IndexActivity.this)){
-            MyAppWidgetUtils.getInstance(IndexActivity.this).getMyAppWidgetsFromNet(false);
+            MyAppWidgetUtils.getInstance(getApplicationContext()).getMyAppWidgetsFromNet();
         }
     }
 

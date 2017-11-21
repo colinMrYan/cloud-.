@@ -1,14 +1,12 @@
 package com.inspur.emmcloud.util;
 
-import android.app.Activity;
 import android.content.Context;
 
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
-import com.inspur.emmcloud.bean.GetMyAppWidgetResult;
+import com.inspur.emmcloud.bean.GetRecommendAppWidgetListResult;
 import com.inspur.emmcloud.bean.RecommendAppWidgetBean;
 import com.inspur.emmcloud.config.Constant;
-import com.inspur.emmcloud.widget.LoadingDialog;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -22,19 +20,18 @@ import java.util.List;
 
 public class MyAppWidgetUtils {
     private Context context;
-    private LoadingDialog loadingDlg;
     private static MyAppWidgetUtils myAppWidgetUtils;
 
     /**
      * 我的应用推荐应用小部件单例模式
-     * @param activity
+     * @param context
      * @return
      */
-    public  static MyAppWidgetUtils getInstance(Activity activity){
+    public  static MyAppWidgetUtils getInstance(Context context){
         if(myAppWidgetUtils == null){
             synchronized (MyAppWidgetUtils.class){
                 if(myAppWidgetUtils == null){
-                    myAppWidgetUtils = new MyAppWidgetUtils(activity);
+                    myAppWidgetUtils = new MyAppWidgetUtils(context);
                 }
             }
         }
@@ -43,25 +40,20 @@ public class MyAppWidgetUtils {
 
     /**
      * 需要展示Dialog的
-     * @param activity
+     * @param context
      */
-    private MyAppWidgetUtils(Activity activity){
-        this.context = activity;
-        loadingDlg = new LoadingDialog(context);
+    private MyAppWidgetUtils(Context context){
+        this.context = context;
     }
 
     /**
      * 获取我的应用推荐小部件
-     * @param needDialog
      */
-    public void getMyAppWidgetsFromNet(boolean needDialog){
-        if(NetUtils.isNetworkConnected(context)){
-            if(needDialog){
-                loadingDlg.show();
-            }
+    public void getMyAppWidgetsFromNet(){
+        if(NetUtils.isNetworkConnected(context,false)){
             MyAppAPIService appAPIService = new MyAppAPIService(context);
             appAPIService.setAPIInterface(new WebService());
-            appAPIService.getMyAppWidgets();
+            appAPIService.getRecommendAppWidgetList();
         }
     }
 
@@ -92,7 +84,7 @@ public class MyAppWidgetUtils {
     public static boolean checkNeedUpdateMyAppWidget(Context context){
         return StringUtils.isBlank(PreferencesByUserAndTanentUtils.getString(context,Constant.PREF_MY_APP_RECOMMEND_DATA,""))? true
                 : Integer.parseInt(TimeUtils.getFormatYearMonthDay()) >
-                Integer.parseInt(PreferencesByUserAndTanentUtils.getString(context,Constant.PREF_MY_APP_RECOMMEND_CACHE_DATE,"0"));
+                Integer.parseInt(PreferencesByUserAndTanentUtils.getString(context,Constant.PREF_MY_APP_RECOMMEND_DATE,"0"));
     }
 
     /**
@@ -100,10 +92,10 @@ public class MyAppWidgetUtils {
      * @return
      */
     public static List<String> getShouldShowAppList(Context context){
-        GetMyAppWidgetResult getMyAppWidgetResult = new GetMyAppWidgetResult(PreferencesByUserAndTanentUtils.getString(context,Constant.PREF_MY_APP_RECOMMEND_DATA,""));
-        List<RecommendAppWidgetBean> recommendAppWidgetBeanList = getMyAppWidgetResult.getRecommendAppWidgetBeanList();
+        GetRecommendAppWidgetListResult getRecommendAppWidgetListResult = new GetRecommendAppWidgetListResult(PreferencesByUserAndTanentUtils.getString(context,Constant.PREF_MY_APP_RECOMMEND_DATA,""));
+        List<RecommendAppWidgetBean> recommendAppWidgetBeanList = getRecommendAppWidgetListResult.getRecommendAppWidgetBeanList();
         List<String> appIdList = new ArrayList<>();
-        if(getMyAppWidgetResult.getExpiredDate()>TimeUtils.getEndTime()){
+        if(getRecommendAppWidgetListResult.getExpiredDate()>=System.currentTimeMillis()){
             for(int i = 0; i < recommendAppWidgetBeanList.size(); i++){
                 if(Integer.parseInt(recommendAppWidgetBeanList.get(i).getPeriod()) == (getNowHour()+1)){
                     appIdList.addAll(recommendAppWidgetBeanList.get(i).getAppIdList());
@@ -133,20 +125,15 @@ public class MyAppWidgetUtils {
 
     class WebService extends APIInterfaceInstance{
         @Override
-        public void returnMyAppWidgetsSuccess(GetMyAppWidgetResult getMyAppWidgetResult) {
-            if(loadingDlg.isShowing()){
-                loadingDlg.dismiss();
-            }
-            EventBus.getDefault().post(getMyAppWidgetResult);
-            PreferencesByUserAndTanentUtils.putString(context,Constant.PREF_MY_APP_RECOMMEND_DATA,getMyAppWidgetResult.getResponse());
-            PreferencesByUserAndTanentUtils.putString(context,Constant.PREF_MY_APP_RECOMMEND_CACHE_DATE,TimeUtils.getFormatYearMonthDay());
+        public void returnRecommendAppWidgetListSuccess(GetRecommendAppWidgetListResult getRecommendAppWidgetListResult) {
+            //发送到MyAPPFragment updateMyAppWidegts方法
+            EventBus.getDefault().post(getRecommendAppWidgetListResult);
+            PreferencesByUserAndTanentUtils.putString(context,Constant.PREF_MY_APP_RECOMMEND_DATA, getRecommendAppWidgetListResult.getResponse());
+            PreferencesByUserAndTanentUtils.putString(context,Constant.PREF_MY_APP_RECOMMEND_DATE,TimeUtils.getFormatYearMonthDay());
         }
 
         @Override
-        public void returnMyAppWidgetsFail(String error, int errorCode) {
-            if(loadingDlg.isShowing()){
-                loadingDlg.dismiss();
-            }
+        public void returnRecommendAppWidgetListFail(String error, int errorCode) {
         }
     }
 }

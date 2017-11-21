@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     >
     <com.inspur.emmcloud.widget.CircleImageView
-        android:id="@+id/my_app_recommend_widget_img"
+        android:id="@+id/my_app_recommend_app_widget_img"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_centerInParent="true"
