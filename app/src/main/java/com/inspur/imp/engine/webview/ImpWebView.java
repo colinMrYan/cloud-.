@@ -171,7 +171,6 @@ public class ImpWebView extends WebView {
 
 		@JavascriptInterface
 		public void onHashChangeEvent(){
-			LogUtils.YfcDebug("监听到hash改变");
 		}
 	}
 

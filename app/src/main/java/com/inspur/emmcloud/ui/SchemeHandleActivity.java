@@ -20,6 +20,7 @@ import com.inspur.emmcloud.ui.find.DocumentActivity;
 import com.inspur.emmcloud.ui.find.KnowledgeActivity;
 import com.inspur.emmcloud.ui.find.trip.TripInfoActivity;
 import com.inspur.emmcloud.ui.login.LoginActivity;
+import com.inspur.emmcloud.util.AppId2AppAndOpenAppUtils;
 import com.inspur.emmcloud.util.IntentUtils;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.StateBarColor;
@@ -83,8 +84,11 @@ public class SchemeHandleActivity extends Activity {
                             IntentUtils.startActivity(SchemeHandleActivity.this,
                                     ChannelActivity.class, bundle, true);
                             break;
-
+                        case "ecc-app":
+                            AppId2AppAndOpenAppUtils.getInstance(SchemeHandleActivity.this).getAppInfoById(uri);
+                            break;
                         default:
+                            finish();
                             break;
                     }
                 }
@@ -159,7 +163,6 @@ public class SchemeHandleActivity extends Activity {
             case "document":
                 IntentUtils.startActivity(this, DocumentActivity.class, true);
                 break;
-
             case "knowledge":
                 IntentUtils.startActivity(this, KnowledgeActivity.class, true);
                 break;
