@@ -48,7 +48,6 @@ import com.inspur.emmcloud.util.IntentUtils;
 import com.inspur.emmcloud.util.ListViewUtils;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
-import com.inspur.emmcloud.util.StateBarColor;
 import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.ToastUtils;
 import com.inspur.emmcloud.util.UriUtils;
@@ -137,7 +136,6 @@ public class ContactSearchActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
-        StateBarColor.changeStateBarColor(this, R.color.contact_header_bg);
         setContentView(R.layout.activity_contact_search);
         rootContact = ContactCacheUtils
                 .getRootContact(ContactSearchActivity.this);
@@ -398,7 +396,7 @@ public class ContactSearchActivity extends BaseActivity {
             searchEdit.setSingleLine(true);
             searchEdit.setHint(getString(R.string.seach_blank));
             searchEdit.setGravity(Gravity.CENTER_VERTICAL);
-            searchEdit.setTextSize(TypedValue.COMPLEX_UNIT_SP, 17);
+            searchEdit.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
             // searchEdit.setTextSize(getResources().getDimension(R.dimen.content_title_textsize));
             searchEdit.setBackgroundDrawable(null);
             searchEdit.addTextChangedListener(myTextWatcher);
@@ -597,7 +595,6 @@ public class ContactSearchActivity extends BaseActivity {
                 ContactSearchMoreActivity.class);
         switch (v.getId()) {
             case R.id.back_layout:
-            case R.id.cancel_text:
                 finish();
                 break;
             case R.id.ok_text:

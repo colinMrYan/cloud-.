@@ -42,7 +42,6 @@ import com.inspur.emmcloud.util.DensityUtil;
 import com.inspur.emmcloud.util.EditTextUtils;
 import com.inspur.emmcloud.util.ImageDisplayUtils;
 import com.inspur.emmcloud.util.InputMethodUtils;
-import com.inspur.emmcloud.util.StateBarColor;
 import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.ToastUtils;
 import com.inspur.emmcloud.util.UriUtils;
@@ -88,7 +87,6 @@ public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRe
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
-        StateBarColor.changeStateBarColor(this, R.color.contact_header_bg);
         setContentView(R.layout.activity_contact_search_more);
         handMessage();
         initView();
@@ -145,9 +143,9 @@ public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRe
             searchEdit.setPadding(0, 0, paddingRight, 0);
             searchEdit.setLayoutParams(params);
             searchEdit.setSingleLine(true);
-            searchEdit.setHint(getString(R.string.seach_blank));
+            searchEdit.setHint(getString(R.string.input_search_key));
             searchEdit.setGravity(Gravity.CENTER_VERTICAL);
-            searchEdit.setTextSize(TypedValue.COMPLEX_UNIT_SP, 17);
+            searchEdit.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
             // searchEdit.setTextSize(getResources().getDimension(R.dimen.content_title_textsize));
             searchEdit.setBackgroundDrawable(null);
             searchEdit.addTextChangedListener(myTextWatcher);
@@ -296,7 +294,7 @@ public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRe
 
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.cancel_text:
+            case R.id.back_layout:
                 finish();
                 break;
             case R.id.ok_text:
