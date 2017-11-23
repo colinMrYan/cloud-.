@@ -83,61 +83,52 @@ import com.inspur.emmcloud.bean.UserProfileInfoBean;
 import com.inspur.emmcloud.bean.Volume.GetVolumeFileListResult;
 import com.inspur.emmcloud.bean.Volume.GetVolumeFileUploadSTSTokenResult;
 import com.inspur.emmcloud.bean.Volume.GetVolumeListResult;
+import com.inspur.emmcloud.bean.Volume.VolumeFile;
 
 public class APIInterfaceInstance implements APIInterface {
     @Override
     public void returnDeviceCheckSuccess(GetDeviceCheckResult getDeviceCheckResult) {
-
     }
 
     @Override
     public void returnDeviceCheckFail(String error, int errorCode) {
-
     }
 
     @Override
     public void returnUnBindDeviceSuccess() {
-
     }
 
     @Override
     public void returnUnBindDeviceFail(String error, int errorCode) {
-
     }
 
     @Override
     public void returnBindingDeviceListSuccess(GetBindingDeviceResult getBindingDeviceResult) {
-
     }
 
     @Override
     public void returnBindingDeviceListFail(String error, int errorCode) {
-
     }
 
     @Override
     public void returnOauthSigninSuccess(GetLoginResult getLoginResult) {
         // TODO Auto-generated method stub
-
     }
 
     @Override
     public void returnOauthSigninFail(String error, int errorCode) {
         // TODO Auto-generated method stub
-
     }
 
 
     @Override
     public void returnAddAppSuccess(GetAddAppResult getAddAppResult) {
         // TODO Auto-generated method stub
-
     }
 
     @Override
     public void returnAddAppFail(String error, int errorCode) {
         // TODO Auto-generated method stub
-
     }
 
     @Override
@@ -149,53 +140,44 @@ public class APIInterfaceInstance implements APIInterface {
     @Override
     public void returnRemoveAppFail(String error, int errorCode) {
         // TODO Auto-generated method stub
-
     }
 
     @Override
     public void returnMyAppSuccess(GetMyAppResult getMyAppResult) {
         // TODO Auto-generated method stub
-
     }
 
     @Override
     public void returnMyAppFail(String error, int errorCode) {
         // TODO Auto-generated method stub
-
     }
 
     @Override
     public void returnSignoutSuccess(GetSignoutResult getSignoutResult) {
         // TODO Auto-generated method stub
-
     }
 
     @Override
     public void returnSignoutFail(String error, int errorCode) {
         // TODO Auto-generated method stub
-
     }
 
     @Override
     public void returnMsgCommentCountSuccess(GetMsgCommentCountResult getMsgCommentCountResult, String mid) {
-
     }
 
     @Override
     public void returnMsgCommentCountFail(String error, int errorCode) {
-
     }
 
     @Override
     public void returnUpgradeSuccess(GetUpgradeResult getUpgradeResult, boolean isManualCheck) {
         // TODO Auto-generated method stub
-
     }
 
     @Override
     public void returnUpgradeFail(String error, boolean isManualCheck, int errorCode) {
         // TODO Auto-generated method stub
-
     }
 
     @Override
@@ -1500,10 +1482,26 @@ public class APIInterfaceInstance implements APIInterface {
     }
 
     @Override
-    public void returnVolumeFileUploadSTSTokenSuccess(GetVolumeFileUploadSTSTokenResult getVolumeFileUploadSTSTokenResult) {
+    public void returnVolumeFileUploadSTSTokenSuccess(GetVolumeFileUploadSTSTokenResult getVolumeFileUploadSTSTokenResult, String filePath) {
     }
 
     @Override
-    public void returnVolumeFileUploadSTSTokenFail(String error, int errorCode) {
+    public void returnVolumeFileUploadSTSTokenFail(String error, int errorCode, String filePath) {
+    }
+
+    @Override
+    public void returnCreateForderSuccess(VolumeFile volumeFile) {
+    }
+
+    @Override
+    public void returnCreateForderFail(String error, int errorCode) {
+    }
+
+    @Override
+    public void returnDeleteFileSuccess(VolumeFile volumeFile) {
+    }
+
+    @Override
+    public void returnDeleteFileFail(String error, int errorCode) {
     }
 }

@@ -95,7 +95,6 @@
                     android:layout_height="wrap_content" />
                 <TextView
                     android:id="@+id/volume_capacity_text"
-                    android:text="678K / 2.0G"
                     android:textColor="#8f8e94"
                     android:textSize="15sp"
                     android:layout_alignParentRight="true"

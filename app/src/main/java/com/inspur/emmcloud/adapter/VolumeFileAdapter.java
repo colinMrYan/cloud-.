@@ -13,10 +13,12 @@ import com.inspur.emmcloud.bean.Volume.VolumeFile;
 import com.inspur.emmcloud.util.FileUtils;
 import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.TimeUtils;
+import com.inspur.emmcloud.util.VolumeFileIconUtils;
 
 import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 
@@ -35,6 +37,10 @@ public class VolumeFileAdapter extends RecyclerView.Adapter<VolumeFileAdapter.Vi
     public VolumeFileAdapter(Context context, List<VolumeFile> volumeFileList){
         this.context = context;
         this.volumeFileList = volumeFileList;
+    }
+
+    public void setVolumeFileList(List<VolumeFile> volumeFileList){
+        this.volumeFileList= volumeFileList;
     }
 
     public void setMultiselect(boolean isMultiselect ){
@@ -59,10 +65,12 @@ public class VolumeFileAdapter extends RecyclerView.Adapter<VolumeFileAdapter.Vi
     public void onBindViewHolder(ViewHolder holder, int position) {
         VolumeFile volumeFile = volumeFileList.get(position);
         holder.fileSelcetImg.setVisibility(isMultiselect?View.VISIBLE:View.GONE);
-        holder.fileTypeImg.setImageResource(R.drawable.ic_volume_file_typ_ppt);
+        int fileTypeImgResId = VolumeFileIconUtils.getIconResId(volumeFile);
+        holder.fileTypeImg.setImageResource(fileTypeImgResId);
         holder.fileNameText.setText(volumeFile.getName());
         holder.fileSizeText.setText(FileUtils.formatFileSize(volumeFile.getSize()));
-        String fileTime = TimeUtils.getTime(context,volumeFile.getCreationDate(),TimeUtils.FORMAT_YEAR_MONTH_DAY_HOUR_MINUTE);
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        String fileTime = TimeUtils.getTime(volumeFile.getCreationDate(),format);
         holder.fileTimeText.setText(fileTime);
     }
 

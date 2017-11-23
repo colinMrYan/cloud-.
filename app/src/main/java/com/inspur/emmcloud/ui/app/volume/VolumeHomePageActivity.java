@@ -17,11 +17,14 @@ import com.inspur.emmcloud.util.IntentUtils;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
+import com.inspur.imp.plugin.file.FileUtil;
 
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
 
 import java.util.List;
+
+import static com.inspur.emmcloud.R.id.volume_capacity_text;
 
 
 /**
@@ -31,7 +34,7 @@ import java.util.List;
 @ContentView(R.layout.activity_volume_homepage)
 public class VolumeHomePageActivity extends BaseActivity {
 
-    @ViewInject(R.id.volume_capacity_text)
+    @ViewInject(volume_capacity_text)
     private TextView volumeCapacityText;
 
     @ViewInject(R.id.volume_recent_use_list)
@@ -72,9 +75,12 @@ public class VolumeHomePageActivity extends BaseActivity {
             case R.id.option_img:
                 break;
             case R.id.my_file_layout:
-                bundle = new Bundle();
-                bundle.putSerializable("volume", myVolume);
-                IntentUtils.startActivity(VolumeHomePageActivity.this, VolumeMyFileActivity.class,bundle);
+                if (myVolume != null){
+                    bundle = new Bundle();
+                    bundle.putSerializable("volume", myVolume);
+                    bundle.putSerializable("title", "我的文件");
+                    IntentUtils.startActivity(VolumeHomePageActivity.this, VolumeMyFileActivity.class,bundle);
+                }
                 break;
             case R.id.share_volume_layout:
                 break;
@@ -102,6 +108,9 @@ public class VolumeHomePageActivity extends BaseActivity {
             }
             myVolume = getVolumeListResult.getMyVolume();
             shareVolumeList = getVolumeListResult.getShareVolumeList();
+            String volumeUsedSize = FileUtil.formetFileSize(myVolume.getUserdSize());
+            String volumeMaxSize = FileUtil.formetFileSize(myVolume.getMaxSize());
+            volumeCapacityText.setText(volumeUsedSize+" / "+volumeMaxSize);
         }
 
         @Override

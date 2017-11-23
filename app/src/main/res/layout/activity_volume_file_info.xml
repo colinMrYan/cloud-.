@@ -13,20 +13,6 @@
         android:layout_alignParentTop="true"
         android:background="@color/header_bg">
 
-        <TextView
-            android:id="@+id/rename_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:clickable="true"
-            android:onClick="onClick"
-            android:paddingLeft="20dp"
-            android:paddingRight="15dp"
-            android:text="重命名"
-            android:textColor="@color/white"
-            android:textSize="17sp" />
-
         <RelativeLayout
             android:id="@+id/back_layout"
             android:layout_width="wrap_content"

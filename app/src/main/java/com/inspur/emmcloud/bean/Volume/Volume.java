@@ -16,7 +16,7 @@ public class Volume implements Serializable {
     private String type;
     private String owner;
     private long maxSize;
-    private long userdSize;
+    private long usedSize;
 
     public Volume() {
     }
@@ -26,8 +26,8 @@ public class Volume implements Serializable {
         name = JSONUtils.getString(obj, "name", "");
         type = JSONUtils.getString(obj, "type", "");
         owner = JSONUtils.getString(obj, "owner", "");
-        maxSize = JSONUtils.getLong(obj, "maxSize", 1L);
-        userdSize = JSONUtils.getLong(obj, "userdSize", 1L);
+        maxSize = JSONUtils.getLong(obj, "maxSize", 0L);
+        usedSize = JSONUtils.getLong(obj, "usedSize", 0L);
     }
 
     public String getId() {
@@ -71,10 +71,10 @@ public class Volume implements Serializable {
     }
 
     public long getUserdSize() {
-        return userdSize;
+        return usedSize;
     }
 
     public void setUserdSize(long userdSize) {
-        this.userdSize = userdSize;
+        this.usedSize = userdSize;
     }
 }

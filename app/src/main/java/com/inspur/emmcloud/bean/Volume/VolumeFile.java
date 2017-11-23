@@ -21,6 +21,10 @@ public class VolumeFile {
 
     public VolumeFile(){}
 
+    public VolumeFile(String response){
+        this(JSONUtils.getJSONObject(response));
+    }
+
     public VolumeFile(JSONObject object){
         this.type = JSONUtils.getString(object,"type","");
         this.name = JSONUtils.getString(object,"name","");
@@ -103,5 +107,20 @@ public class VolumeFile {
 
     public void setSize(long size) {
         this.size = size;
+    }
+
+    public boolean equals(Object other) { // 重写equals方法，后面最好重写hashCode方法
+
+        if (this == other) // 先检查是否其自反性，后比较other是否为空。这样效率高
+            return true;
+        if (other == null)
+            return false;
+        if (!(other instanceof VolumeFile))
+            return false;
+
+        final VolumeFile otherVolumeFile = (VolumeFile) other;
+        if (getName().equals(otherVolumeFile.getName()) && getType().equals(otherVolumeFile.getType()))
+            return true;
+        return false;
     }
 }

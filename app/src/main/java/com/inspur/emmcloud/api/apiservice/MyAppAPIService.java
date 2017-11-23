@@ -28,11 +28,13 @@ import com.inspur.emmcloud.bean.GetWebAppRealUrlResult;
 import com.inspur.emmcloud.bean.Volume.GetVolumeFileListResult;
 import com.inspur.emmcloud.bean.Volume.GetVolumeFileUploadSTSTokenResult;
 import com.inspur.emmcloud.bean.Volume.GetVolumeListResult;
+import com.inspur.emmcloud.bean.Volume.VolumeFile;
 import com.inspur.emmcloud.callback.OauthCallBack;
 import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.OauthUtils;
 import com.inspur.emmcloud.util.UriUtils;
 
+import org.xutils.http.HttpMethod;
 import org.xutils.http.RequestParams;
 import org.xutils.x;
 
@@ -666,11 +668,12 @@ public class MyAppAPIService {
     /**
      * 获取云盘文件列表
      * @param volumeId
-     * @param subPath
+     * @param absolutePath
      */
-    public void getVolumeFileList(final String volumeId,final String subPath){
-        final String url = APIUri.getVolumeFileListUrl(volumeId,subPath);
+    public void getVolumeFileList(final String volumeId,final String absolutePath){
+        final String url = APIUri.getVolumeFileOperationUrl(volumeId);
         RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
+        params.addParameter("path",absolutePath);
         x.http().get(params, new APICallback(context, url) {
             @Override
             public void callbackSuccess(String arg0) {
@@ -688,7 +691,7 @@ public class MyAppAPIService {
 
                     @Override
                     public void reExecute() {
-                        getVolumeFileList(volumeId,subPath);
+                        getVolumeFileList(volumeId,absolutePath);
                     }
 
                     @Override
@@ -706,7 +709,7 @@ public class MyAppAPIService {
      * @param fileName
      * @param volumeFilePath
      */
-    public void getVolumeFileUploadSTSToken(final String volumeId,final String fileName,final String volumeFilePath){
+    public void getVolumeFileUploadSTSToken(final String volumeId,final String fileName,final String volumeFilePath,final String localFilePath){
         final String url = APIUri.getVolumeFileUploadSTSTokenUrl(volumeId);
         RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
         params.addParameter("name",fileName);
@@ -714,12 +717,12 @@ public class MyAppAPIService {
         x.http().post(params, new APICallback(context, url) {
             @Override
             public void callbackSuccess(String arg0) {
-                apiInterface.returnVolumeFileUploadSTSTokenSuccess(new GetVolumeFileUploadSTSTokenResult(arg0));
+                apiInterface.returnVolumeFileUploadSTSTokenSuccess(new GetVolumeFileUploadSTSTokenResult(arg0),localFilePath);
             }
 
             @Override
             public void callbackFail(String error, int responseCode) {
-                apiInterface.returnVolumeFileUploadSTSTokenFail(error,responseCode);
+                apiInterface.returnVolumeFileUploadSTSTokenFail(error,responseCode,localFilePath);
             }
 
             @Override
@@ -728,7 +731,7 @@ public class MyAppAPIService {
 
                     @Override
                     public void reExecute() {
-                        getVolumeFileUploadSTSToken(volumeId,fileName,volumeFilePath);
+                        getVolumeFileUploadSTSToken(volumeId,fileName,volumeFilePath,localFilePath);
                     }
 
                     @Override
@@ -736,6 +739,82 @@ public class MyAppAPIService {
                         callbackFail("", -1);
                     }
                 }, context).refreshToken(url);
+            }
+        });
+    }
+
+    /**
+     * 创建文件夹
+     * @param volumeId
+     * @param forderName
+     * @param absolutePath
+     */
+    public void createForder(final String volumeId,final String forderName,final String absolutePath){
+        final String url = APIUri.getCreateForderUrl(volumeId);
+        RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
+        params.addQueryStringParameter("path",absolutePath+forderName);
+        x.http().post(params, new APICallback(context, url) {
+            @Override
+            public void callbackSuccess(String arg0) {
+                apiInterface.returnCreateForderSuccess(new VolumeFile(arg0));
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                apiInterface.returnCreateForderFail(error,responseCode);
+            }
+
+            @Override
+            public void callbackTokenExpire() {
+                new OauthUtils(new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        createForder(volumeId,forderName,absolutePath);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                },context).refreshToken(url);
+            }
+        });
+    }
+
+    /**
+     * 删除文件
+     * @param volumeId
+     * @param fileName
+     * @param absolutePath
+     */
+    public void deleteFile(final String volumeId,final VolumeFile volumeFile,final String absolutePath){
+        final String url = APIUri.getVolumeFileOperationUrl(volumeId);
+        RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
+        params.addQueryStringParameter("path",absolutePath+volumeFile.getName());
+        x.http().request(HttpMethod.DELETE, params, new APICallback(context,url) {
+            @Override
+            public void callbackSuccess(String arg0) {
+                apiInterface.returnDeleteFileSuccess(volumeFile);
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                apiInterface.returnDeleteFileFail(error,responseCode);
+            }
+
+            @Override
+            public void callbackTokenExpire() {
+                new OauthUtils(new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        deleteFile(volumeId,volumeFile,absolutePath);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                },context).refreshToken(url);
             }
         });
     }

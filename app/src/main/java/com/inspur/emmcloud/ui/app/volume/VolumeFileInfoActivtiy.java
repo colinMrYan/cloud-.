@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIDownloadCallBack;
+import com.inspur.emmcloud.bean.Volume.VolumeFile;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.util.AppUtils;
 import com.inspur.emmcloud.util.DownLoaderUtils;
@@ -43,6 +44,7 @@ public class VolumeFileInfoActivtiy extends BaseActivity {
     private TextView progressText;
 
     private DownLoaderUtils downLoaderUtils;
+    private VolumeFile volumeFile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,8 +55,6 @@ public class VolumeFileInfoActivtiy extends BaseActivity {
         switch (v.getId()) {
             case R.id.back_layout:
                 finish();
-                break;
-            case R.id.rename_text:
                 break;
             case R.id.download_btn:
                 if (NetUtils.isNetworkConnected(getApplicationContext()) && AppUtils.isHasSDCard(getApplicationContext())){

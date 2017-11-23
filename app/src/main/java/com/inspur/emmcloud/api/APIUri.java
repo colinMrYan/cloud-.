@@ -17,7 +17,7 @@ public class APIUri {
     private static final String URL_BASE_SMS_LOGIN = "https://id.inspur.com/api/v1/passcode?phone=";
     private static final String URL_BASE_APP_CONFIG = "https://emm.inspur.com/v3.0/api/app/config";
     private static final String URL_BASE_APP_V3 = "https://emm.inspur.com/v3.0/";
-    private static final String URL_BASE_VOLUME = "https://emm.inspur.com/suhe/cloud-drive/api/v1";
+    private static final String URL_BASE_VOLUME = "https://yunjia.inspur.com/cloud-drive/api/v1/volume";
 
     /**
      * 获取到租户级的URL
@@ -769,12 +769,14 @@ public class APIUri {
         return URL_BASE_APP_V3 + "api/app/position/upload";
     }
 
+
+    /***************************************VOLUME云盘************************************************************/
     /**
      * 获取云盘列表
      * @return
      */
     public static String getVolumeListUrl(){
-        return URL_BASE_VOLUME+"/volume";
+        return URL_BASE_VOLUME;
     }
 
     /**
@@ -783,8 +785,8 @@ public class APIUri {
      * @param subPath
      * @return
      */
-    public static String getVolumeFileListUrl(String volumeId,String subPath){
-        return  URL_BASE_VOLUME+"/volume/"+volumeId+"/"+subPath;
+    public static String getVolumeFileOperationUrl(String volumeId){
+        return  URL_BASE_VOLUME+"/"+volumeId+"/file";
     }
 
     /**
@@ -793,6 +795,16 @@ public class APIUri {
      * @return
      */
     public static String getVolumeFileUploadSTSTokenUrl(String volumeId){
-        return URL_BASE_VOLUME+"/volume/"+volumeId+"/file/request";
+        return URL_BASE_VOLUME+"/"+volumeId+"/file/request";
     }
+
+    /**
+     * 获取云盘创建文件夹url
+     * @param volumeId
+     * @return
+     */
+    public static String getCreateForderUrl(String volumeId){
+        return URL_BASE_VOLUME+"/"+volumeId+"/directory";
+    }
+
 }

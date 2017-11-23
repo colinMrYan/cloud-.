@@ -44,7 +44,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_marginRight="30dp"
         android:layout_toLeftOf="@id/file_operation_drop_down_img"
         android:layout_toRightOf="@id/file_type_img">
 
