@@ -328,6 +328,11 @@ public class ContactCacheUtils {
 		return noInSql;
 	}
 
+	public static  List<Contact> getSearchContactByPhoneNum(Context context,
+															String searchText, int from,int limit){
+
+	}
+
 
 
 	/**
