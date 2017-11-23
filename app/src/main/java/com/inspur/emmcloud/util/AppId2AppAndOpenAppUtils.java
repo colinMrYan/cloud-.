@@ -18,18 +18,18 @@ import java.util.List;
  */
 
 public class AppId2AppAndOpenAppUtils {
-    private static AppId2AppAndOpenAppUtils appId2AppUtils = null;
+    private static AppId2AppAndOpenAppUtils appId2AppAndOpenAppUtils = null;
     private Activity activity;
     private String uri = "";
     public static AppId2AppAndOpenAppUtils getInstance(Activity activity){
-        if(appId2AppUtils == null){
+        if(appId2AppAndOpenAppUtils == null){
             synchronized (AppId2AppAndOpenAppUtils.class){
-                if(appId2AppUtils == null){
-                    appId2AppUtils = new AppId2AppAndOpenAppUtils(activity);
+                if(appId2AppAndOpenAppUtils == null){
+                    appId2AppAndOpenAppUtils = new AppId2AppAndOpenAppUtils(activity);
                 }
             }
         }
-        return appId2AppUtils;
+        return appId2AppAndOpenAppUtils;
     }
 
     private AppId2AppAndOpenAppUtils(Activity activity){
