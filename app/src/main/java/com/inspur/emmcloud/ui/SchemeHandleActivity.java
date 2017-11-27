@@ -85,7 +85,7 @@ public class SchemeHandleActivity extends Activity {
                                     ChannelActivity.class, bundle, true);
                             break;
                         case "ecc-app":
-                            AppId2AppAndOpenAppUtils appId2AppAndOpenAppUtils =  AppId2AppAndOpenAppUtils.getInstance(SchemeHandleActivity.this);
+                            AppId2AppAndOpenAppUtils appId2AppAndOpenAppUtils =  new AppId2AppAndOpenAppUtils(SchemeHandleActivity.this);
                             appId2AppAndOpenAppUtils.setOnFinishActivityListener(new AppId2AppAndOpenAppUtils.OnFinishActivityListener() {
                                 @Override
                                 public void onFinishActivity() {

@@ -8,29 +8,21 @@ import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
 import com.inspur.emmcloud.bean.App;
 import com.inspur.emmcloud.ui.find.ScanResultActivity;
+import com.inspur.emmcloud.widget.LoadingDialog;
 
 /**
  * Created by yufuchang on 2017/11/22.
  */
 
 public class AppId2AppAndOpenAppUtils {
-    private static AppId2AppAndOpenAppUtils appId2AppAndOpenAppUtils = null;
     private Activity activity;
     private String uri = "";
     private OnFinishActivityListener onFinishActivityListener;
-    public static AppId2AppAndOpenAppUtils getInstance(Activity activity){
-        if(appId2AppAndOpenAppUtils == null){
-            synchronized (AppId2AppAndOpenAppUtils.class){
-                if(appId2AppAndOpenAppUtils == null){
-                    appId2AppAndOpenAppUtils = new AppId2AppAndOpenAppUtils(activity);
-                }
-            }
-        }
-        return appId2AppAndOpenAppUtils;
-    }
+    private LoadingDialog loadingDialog;
 
-    private AppId2AppAndOpenAppUtils(Activity activity){
+    public AppId2AppAndOpenAppUtils(Activity activity){
         this.activity = activity;
+        loadingDialog = new LoadingDialog(activity);
     }
 
     /**
@@ -40,10 +32,20 @@ public class AppId2AppAndOpenAppUtils {
         String appId = uri.getHost();
         this.uri = (uri == null) ? "":uri.toString();
         if (NetUtils.isNetworkConnected(activity) && !StringUtils.isBlank(appId)) {
+            loadingDialog.show();
             MyAppAPIService apiService = new MyAppAPIService(activity);
             apiService.setAPIInterface(new WebService());
             apiService.getAppInfo(appId);
         }else{
+            finishActivty();
+        }
+    }
+
+    /**
+     * 结束Activity
+     */
+    private void finishActivty() {
+        if(onFinishActivityListener != null){
             onFinishActivityListener.onFinishActivity();
         }
     }
@@ -59,14 +61,16 @@ public class AppId2AppAndOpenAppUtils {
     class WebService extends APIInterfaceInstance{
         @Override
         public void returnAppInfoSuccess(App app) {
+            dismissLoadingDialog();
             handleAppAction(app);
-            onFinishActivityListener.onFinishActivity();
+            finishActivty();
         }
 
         @Override
         public void returnAppInfoFail(String error, int errorCode) {
+            dismissLoadingDialog();
             WebServiceMiddleUtils.hand(activity, error, errorCode);
-            onFinishActivityListener.onFinishActivity();
+            finishActivty();
         }
     }
 
@@ -99,6 +103,18 @@ public class AppId2AppAndOpenAppUtils {
         activity.startActivity(intent);
     }
 
+    /**
+     * 取消dialog
+     */
+    private void dismissLoadingDialog(){
+        if(loadingDialog.isShowing()){
+            loadingDialog.dismiss();
+        }
+    }
+
+    /**
+     * 结束Activity的接口
+     */
     public interface OnFinishActivityListener{
         void onFinishActivity();
     }
