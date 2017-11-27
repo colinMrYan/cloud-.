@@ -22,7 +22,6 @@ import com.inspur.emmcloud.ui.find.trip.TripInfoActivity;
 import com.inspur.emmcloud.ui.login.LoginActivity;
 import com.inspur.emmcloud.util.AppId2AppAndOpenAppUtils;
 import com.inspur.emmcloud.util.IntentUtils;
-import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.StateBarColor;
 import com.inspur.emmcloud.util.ToastUtils;
@@ -86,7 +85,14 @@ public class SchemeHandleActivity extends Activity {
                                     ChannelActivity.class, bundle, true);
                             break;
                         case "ecc-app":
-                            AppId2AppAndOpenAppUtils.getInstance(SchemeHandleActivity.this).getAppInfoById(uri);
+                            AppId2AppAndOpenAppUtils appId2AppAndOpenAppUtils =  AppId2AppAndOpenAppUtils.getInstance(SchemeHandleActivity.this);
+                            appId2AppAndOpenAppUtils.setOnFinishActivityListener(new AppId2AppAndOpenAppUtils.OnFinishActivityListener() {
+                                @Override
+                                public void onFinishActivity() {
+                                    finish();
+                                }
+                            });
+                            appId2AppAndOpenAppUtils.getAppInfoById(uri);
                             break;
                         default:
                             finish();

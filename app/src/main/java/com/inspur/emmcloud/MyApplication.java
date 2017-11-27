@@ -655,10 +655,6 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         activityList.add(activity);
     }
 
-    public List<Activity> getActivitieList(){
-        return activityList;
-    }
-
     public void removeActivity(Activity activity) {
         activityList.remove(activity);
     }
