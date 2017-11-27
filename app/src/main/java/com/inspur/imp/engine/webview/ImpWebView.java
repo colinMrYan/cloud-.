@@ -168,6 +168,10 @@ public class ImpWebView extends WebView {
 				handler.sendEmptyMessage(DIMISS_LOADING);
 			}
 		}
+
+		@JavascriptInterface
+		public void onHashChangeEvent(){
+		}
 	}
 
 	// 重置当前接口的webview

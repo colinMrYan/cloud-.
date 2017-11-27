@@ -653,15 +653,11 @@ public class NewsWebDetailActivity extends BaseActivity {
                     NewsWebDetailActivity.this);
             apiService.setAPIInterface(new WebService());
             JSONObject jsonObject = new JSONObject();
-            String title = "";
-            if (StringUtils.isBlank(title)) {
-                title = getString(R.string.group_news_detail);
-            }
             try {
                 jsonObject.put("url", url);
                 jsonObject.put("poster", groupNews.getPoster());
-                jsonObject.put("digest", groupNews.getDigest());
-                jsonObject.put("title", title);
+                jsonObject.put("digest", groupNews.getSummary());
+                jsonObject.put("title", groupNews.getTitle());
             } catch (Exception e) {
                 e.printStackTrace();
             }
