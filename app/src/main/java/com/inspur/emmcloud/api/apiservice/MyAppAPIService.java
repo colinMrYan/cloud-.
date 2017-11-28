@@ -25,7 +25,6 @@ import com.inspur.emmcloud.bean.GetNewsTitleResult;
 import com.inspur.emmcloud.bean.GetRemoveAppResult;
 import com.inspur.emmcloud.bean.GetSearchAppResult;
 import com.inspur.emmcloud.bean.GetWebAppRealUrlResult;
-import com.inspur.emmcloud.bean.Volume.GetVolumeFileDownloadUrlResult;
 import com.inspur.emmcloud.bean.Volume.GetVolumeFileListResult;
 import com.inspur.emmcloud.bean.Volume.GetVolumeFileUploadSTSTokenResult;
 import com.inspur.emmcloud.bean.Volume.GetVolumeListResult;
@@ -744,44 +743,44 @@ public class MyAppAPIService {
         });
     }
 
-    /**
-     * 获取云盘文件真实下载路径
-     * @param volumeId
-     * @param absolutePath
-     */
-    public void getVolumeFileDownloadUrl(final String volumeId,final String absolutePath){
-        final String url = APIUri.getVolumeFileUploadSTSTokenUrl(volumeId);
-        RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
-        params.addParameter("volumeId",volumeId);
-        params.addQueryStringParameter("path",absolutePath);
-        x.http().get(params, new APICallback(context, url) {
-            @Override
-            public void callbackSuccess(String arg0) {
-                apiInterface.returnVolumeFileDownloadUrlSuccess(new GetVolumeFileDownloadUrlResult(arg0));
-            }
-
-            @Override
-            public void callbackFail(String error, int responseCode) {
-                apiInterface.returnVolumeFileDownloadUrlFail(error,responseCode);
-            }
-
-            @Override
-            public void callbackTokenExpire() {
-                new OauthUtils(new OauthCallBack() {
-
-                    @Override
-                    public void reExecute() {
-                        getVolumeFileDownloadUrl(volumeId,absolutePath);
-                    }
-
-                    @Override
-                    public void executeFailCallback() {
-                        callbackFail("", -1);
-                    }
-                }, context).refreshToken(url);
-            }
-        });
-    }
+//    /**
+//     * 获取云盘文件真实下载路径
+//     * @param volumeId
+//     * @param absolutePath
+//     */
+//    public void getVolumeFileDownloadUrl(final String volumeId,final String absolutePath){
+//        final String url = APIUri.getVolumeFileUploadSTSTokenUrl(volumeId);
+//        RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
+//        params.addParameter("volumeId",volumeId);
+//        params.addQueryStringParameter("path",absolutePath);
+//        x.http().get(params, new APICallback(context, url) {
+//            @Override
+//            public void callbackSuccess(String arg0) {
+//                apiInterface.returnVolumeFileDownloadUrlSuccess(new GetVolumeFileDownloadUrlResult(arg0));
+//            }
+//
+//            @Override
+//            public void callbackFail(String error, int responseCode) {
+//                apiInterface.returnVolumeFileDownloadUrlFail(error,responseCode);
+//            }
+//
+//            @Override
+//            public void callbackTokenExpire() {
+//                new OauthUtils(new OauthCallBack() {
+//
+//                    @Override
+//                    public void reExecute() {
+//                        getVolumeFileDownloadUrl(volumeId,absolutePath);
+//                    }
+//
+//                    @Override
+//                    public void executeFailCallback() {
+//                        callbackFail("", -1);
+//                    }
+//                }, context).refreshToken(url);
+//            }
+//        });
+//    }
 
     /**
      * 创建文件夹
@@ -874,7 +873,7 @@ public class MyAppAPIService {
         x.http().request(HttpMethod.PUT, params, new APICallback(context,url) {
             @Override
             public void callbackSuccess(String arg0) {
-                apiInterface.returnVolumeFileRenameSuccess(volumeFile,new VolumeFile(arg0));
+                apiInterface.returnVolumeFileRenameSuccess(volumeFile,fileNewName);
             }
 
             @Override

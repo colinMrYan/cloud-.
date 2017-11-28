@@ -1515,7 +1515,7 @@ public class APIInterfaceInstance implements APIInterface {
     }
 
     @Override
-    public void returnVolumeFileRenameSuccess(VolumeFile oldVolumeFile, VolumeFile volumeFile) {
+    public void returnVolumeFileRenameSuccess(VolumeFile oldVolumeFile, String fileNewName) {
 
     }
 

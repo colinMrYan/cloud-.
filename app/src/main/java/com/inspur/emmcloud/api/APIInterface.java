@@ -574,6 +574,6 @@ public interface APIInterface {
     void returnVolumeFileDownloadUrlSuccess(GetVolumeFileDownloadUrlResult getVolumeFileDownloadUrlResult);
     void returnVolumeFileDownloadUrlFail(String error, int errorCode);
 
-    void returnVolumeFileRenameSuccess(VolumeFile oldVolumeFile,VolumeFile volumeFile);
+    void returnVolumeFileRenameSuccess(VolumeFile oldVolumeFile,String fileNewName);
     void returnVolumeFileRenameFail(String error,int errorCode);
 }

@@ -12,25 +12,22 @@ import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIDownloadCallBack;
-import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.APIUri;
-import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
-import com.inspur.emmcloud.bean.Volume.GetVolumeFileDownloadUrlResult;
 import com.inspur.emmcloud.bean.Volume.VolumeFile;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.util.AppUtils;
-import com.inspur.emmcloud.util.DownLoaderUtils;
 import com.inspur.emmcloud.util.FileUtils;
-import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.TimeUtils;
 import com.inspur.emmcloud.util.ToastUtils;
 import com.inspur.emmcloud.util.VolumeFileIconUtils;
-import com.inspur.emmcloud.util.WebServiceMiddleUtils;
 import com.inspur.imp.plugin.file.FileUtil;
 
 import org.xutils.common.Callback;
+import org.xutils.http.HttpMethod;
 import org.xutils.http.RequestParams;
+import org.xutils.http.app.RedirectHandler;
+import org.xutils.http.request.UriRequest;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
@@ -46,6 +43,7 @@ import java.text.SimpleDateFormat;
 @ContentView(R.layout.activity_volume_file_download)
 public class VolumeFileDownloadActivtiy extends BaseActivity {
 
+    private String fileSavePath = "";
     @ViewInject(R.id.download_status_layout)
     private LinearLayout downloadStatusLayout;
 
@@ -67,7 +65,7 @@ public class VolumeFileDownloadActivtiy extends BaseActivity {
     @ViewInject(R.id.file_time_text)
     private TextView fileTimeText;
 
-    private DownLoaderUtils downLoaderUtils;
+    private Callback.Cancelable cancelable;
     private VolumeFile volumeFile;
 
     @Override
@@ -78,7 +76,16 @@ public class VolumeFileDownloadActivtiy extends BaseActivity {
         fileTypeImg.setImageResource(VolumeFileIconUtils.getIconResId(volumeFile));
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         fileTimeText.setText(TimeUtils.getTime(volumeFile.getCreationDate(), format));
-        downloadBtn.setText("下载"+" ("+ FileUtils.formatFileSize(volumeFile.getSize())+")");
+        fileSavePath = MyAppConfig.LOCAL_DOWNLOAD_PATH + volumeFile.getName();
+        if (FileUtils.isFileExist(fileSavePath)) {
+            downloadBtn.setText(R.string.open);
+        } else {
+            downloadBtn.setText("下载" + " (" + FileUtils.formatFileSize(volumeFile.getSize()) + ")");
+            boolean isStartDownload = getIntent().getBooleanExtra("isStartDownload",false);
+            if (isStartDownload){
+                downloadFile();
+            }
+        }
     }
 
     public void onClick(View v) {
@@ -87,15 +94,16 @@ public class VolumeFileDownloadActivtiy extends BaseActivity {
                 finish();
                 break;
             case R.id.download_btn:
-                if (NetUtils.isNetworkConnected(getApplicationContext()) && AppUtils.isHasSDCard(getApplicationContext())) {
-                    downloadBtn.setVisibility(View.GONE);
-                    downloadStatusLayout.setVisibility(View.VISIBLE);
+                if (downloadBtn.getText().equals(getString(R.string.open))) {
+                    FileUtils.openFile(getApplicationContext(), fileSavePath);
+                } else {
                     downloadFile();
-                   // getVolumeFileDownloadUrl();
                 }
                 break;
             case R.id.file_download_close_img:
-                downLoaderUtils.pauseDownLoad();
+                if (cancelable != null) {
+                    cancelable.cancel();
+                }
                 downloadBtn.setVisibility(View.VISIBLE);
                 downloadStatusLayout.setVisibility(View.GONE);
                 break;
@@ -104,28 +112,19 @@ public class VolumeFileDownloadActivtiy extends BaseActivity {
         }
     }
 
-    /**
-     * 请求下载的token
-     */
-    private void getVolumeFileDownloadUrl(){
-        if (NetUtils.isNetworkConnected(getApplicationContext())){
-            String volumeId = getIntent().getStringExtra("volumeId");
-            String absolutePath = getIntent().getStringExtra("absolutePath");
-            MyAppAPIService apiService = new MyAppAPIService(VolumeFileDownloadActivtiy.this);
-            apiService.setAPIInterface(new WebService());
-            apiService.getVolumeFileDownloadUrl(volumeId,absolutePath);
-        }
-
-    }
 
     /**
      * 下载文件
      */
     private void downloadFile() {
-        String fileName = volumeFile.getName();
+        if (!NetUtils.isNetworkConnected(getApplicationContext()) || !AppUtils.isHasSDCard(getApplicationContext())) {
+            return;
+        }
+        downloadBtn.setVisibility(View.GONE);
+        downloadStatusLayout.setVisibility(View.VISIBLE);
         String volumeId = getIntent().getStringExtra("volumeId");
         String absolutePath = getIntent().getStringExtra("absolutePath");
-        String source =  APIUri.getVolumeFileUploadSTSTokenUrl(volumeId);
+        String source = APIUri.getVolumeFileUploadSTSTokenUrl(volumeId);
         APIDownloadCallBack callBack = new APIDownloadCallBack(getApplicationContext(), source) {
             @Override
             public void callbackStart() {
@@ -145,8 +144,12 @@ public class VolumeFileDownloadActivtiy extends BaseActivity {
 
             @Override
             public void callbackSuccess(File file) {
-                progressText.setText("");
                 ToastUtils.show(getApplicationContext(), R.string.download_success);
+                downloadStatusLayout.setVisibility(View.GONE);
+                progressBar.setProgress(0);
+                progressText.setText("");
+                downloadBtn.setVisibility(View.VISIBLE);
+                downloadBtn.setText(R.string.open);
             }
 
             @Override
@@ -167,25 +170,21 @@ public class VolumeFileDownloadActivtiy extends BaseActivity {
         };
 
         RequestParams params = ((MyApplication) getApplicationContext()).getHttpRequestParams(source);
-        params.addParameter("volumeId",volumeId);
-        params.addQueryStringParameter("path",absolutePath);
-        params.setAutoResume(true);// 断点下载
-        params.setSaveFilePath( MyAppConfig.LOCAL_DOWNLOAD_PATH+fileName);
-        params.setCancelFast(true);
-        Callback.Cancelable cancelable = x.http().get(params, callBack);
+        params.addParameter("volumeId", volumeId);
+        params.addQueryStringParameter("path", absolutePath);
+        params.setRedirectHandler(new RedirectHandler() {
+            @Override
+            public RequestParams getRedirectParams(UriRequest uriRequest) throws Throwable {
+                String locationUrl = uriRequest.getResponseHeader("Location");
+                RequestParams params = new RequestParams(locationUrl);
+                params.setAutoResume(true);// 断点下载
+                params.setSaveFilePath(fileSavePath);
+                params.setCancelFast(true);
+                params.setMethod(HttpMethod.GET);
+                return params;
+            }
+        });
+        cancelable = x.http().get(params, callBack);
     }
 
-    private class WebService extends APIInterfaceInstance{
-        @Override
-        public void returnVolumeFileDownloadUrlSuccess(GetVolumeFileDownloadUrlResult getVolumeFileDownloadUrlResult) {
-            super.returnVolumeFileDownloadUrlSuccess(getVolumeFileDownloadUrlResult);
-        }
-
-        @Override
-        public void returnVolumeFileDownloadUrlFail(String error, int errorCode) {
-            LogUtils.jasonDebug("error="+error);
-            LogUtils.jasonDebug("errorCode="+errorCode);
-            WebServiceMiddleUtils.hand(getApplicationContext(),error,errorCode);
-        }
-    }
 }

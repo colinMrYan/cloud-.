@@ -11,10 +11,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.TypedArray;
 import android.graphics.Rect;
-import android.net.Uri;
-import android.os.Environment;
 import android.os.Handler;
-import android.provider.MediaStore;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -40,9 +37,7 @@ import com.inspur.emmcloud.util.DensityUtil;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.StringUtils;
-import com.inspur.emmcloud.util.ToastUtils;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -311,7 +306,9 @@ public class ECMChatInputMenu extends LinearLayout {
                         AppUtils.openGallery((Activity)context,5,GELLARY_RESULT);
                         break;
                     case R.drawable.ic_chat_input_add_camera:
-                        openCamera();
+                        String fileName = new Date().getTime() + ".jpg";
+                        PreferencesUtils.putString(context, "capturekey", fileName);
+                        AppUtils.openCamera((Activity)context,fileName,CAMERA_RESULT);
                         break;
                     case R.drawable.ic_chat_input_add_file:
                        AppUtils.openFileSystem((Activity)context,CHOOSE_FILE);
@@ -325,31 +322,6 @@ public class ECMChatInputMenu extends LinearLayout {
 
             }
         });
-    }
-
-    /**
-     * 调用摄像头拍照
-     */
-    protected void openCamera() {
-        Intent intentFromCapture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        // 判断存储卡是否可以用，可用进行存储
-        if (Environment.getExternalStorageState().equals(
-                Environment.MEDIA_MOUNTED)) {
-            File appDir = new File(Environment.getExternalStorageDirectory(),
-                    "DCIM");
-            if (!appDir.exists()) {
-                appDir.mkdir();
-            }
-            // 指定文件名字
-            String fileName = new Date().getTime() + ".jpg";
-            intentFromCapture.putExtra(MediaStore.EXTRA_OUTPUT,
-                    Uri.fromFile(new File(appDir, fileName)));
-            PreferencesUtils.putString(context, "capturekey", fileName);
-            ((Activity) context).startActivityForResult(intentFromCapture,
-                    CAMERA_RESULT);
-        } else {
-            ToastUtils.show(context, R.string.filetransfer_sd_not_exist);
-        }
     }
 
     /**

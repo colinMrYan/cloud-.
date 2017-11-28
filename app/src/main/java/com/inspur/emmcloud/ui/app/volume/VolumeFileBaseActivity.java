@@ -147,9 +147,10 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
                                 break;
                             case 1:
                                 bundle = new Bundle();
-                                bundle.putSerializable("volumeId", volume.getId());
+                                bundle.putString("volumeId", volume.getId());
                                 bundle.putSerializable("volumeFile", volumeFile);
-                                bundle.putSerializable("absolutePath", absolutePath + volumeFile.getName());
+                                bundle.putString("absolutePath", absolutePath + volumeFile.getName());
+                                bundle.putBoolean("isStartDownload", true);
                                 IntentUtils.startActivity(VolumeFileBaseActivity.this, VolumeFileDownloadActivtiy.class, bundle);
                                 break;
                             case 2:
@@ -463,14 +464,16 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
         }
 
         @Override
-        public void returnVolumeFileRenameSuccess(VolumeFile oldVolumeFile,VolumeFile volumeFile) {
+        public void returnVolumeFileRenameSuccess(VolumeFile oldVolumeFile,String fileNewName) {
             if (loadingDlg != null && loadingDlg.isShowing()) {
                 loadingDlg.dismiss();
             }
+            if (fileRenameDlg != null && fileRenameDlg.isShowing()) {
+                fileRenameDlg.dismiss();
+            }
             int index = volumeFileList.indexOf(oldVolumeFile);
             if (index != -1){
-                volumeFileList.remove(index);
-                volumeFileList.add(index,volumeFile);
+                volumeFileList.get(index).setName(fileNewName);
                 adapter.notifyItemChanged(index);
             }
 
@@ -480,6 +483,9 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
         public void returnVolumeFileRenameFail(String error, int errorCode) {
             if (loadingDlg != null && loadingDlg.isShowing()) {
                 loadingDlg.dismiss();
+            }
+            if (fileRenameDlg != null && fileRenameDlg.isShowing()) {
+                fileRenameDlg.dismiss();
             }
             WebServiceMiddleUtils.hand(getApplicationContext(), error, errorCode);
         }

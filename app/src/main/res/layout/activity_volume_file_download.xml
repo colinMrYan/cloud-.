@@ -39,7 +39,7 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:text="文件详情"
+            android:text="文件下载"
             android:textColor="@color/header_text"
             android:textSize="@dimen/header_textsize" />
     </RelativeLayout>

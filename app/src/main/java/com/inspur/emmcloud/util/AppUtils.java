@@ -16,6 +16,7 @@ import android.graphics.Paint.FontMetrics;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
@@ -501,6 +502,32 @@ public class AppUtils {
         Intent intent = new Intent(activity,
                 ImageGridActivity.class);
         activity.startActivityForResult(intent, requestCode);
+    }
+
+    /**
+     * 调用系统相机
+     * @param activity
+     * @param fileName
+     * @param requestCode
+     */
+    public static void openCamera(Activity activity,String fileName,int requestCode){
+        // 判断存储卡是否可以用，可用进行存储
+        if (Environment.getExternalStorageState().equals(
+                Environment.MEDIA_MOUNTED)) {
+            Intent intentFromCapture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            File appDir = new File(Environment.getExternalStorageDirectory(),
+                    "DCIM");
+            if (!appDir.exists()) {
+                appDir.mkdir();
+            }
+            // 指定文件名字
+            intentFromCapture.putExtra(MediaStore.EXTRA_OUTPUT,
+                    Uri.fromFile(new File(appDir, fileName)));
+            activity.startActivityForResult(intentFromCapture,
+                    requestCode);
+        } else {
+            ToastUtils.show(activity, R.string.filetransfer_sd_not_exist);
+        }
     }
 
     /**

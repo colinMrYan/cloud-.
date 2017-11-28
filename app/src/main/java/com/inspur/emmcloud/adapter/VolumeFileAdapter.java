@@ -103,7 +103,6 @@ public class VolumeFileAdapter extends RecyclerView.Adapter<VolumeFileAdapter.Vi
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         final VolumeFile volumeFile = volumeFileList.get(position);
         boolean isStatusNomal = volumeFile.getStatus().equals("normal");
-        LogUtils.jasonDebug("volumeFile.getStatus()="+volumeFile.getStatus());
         holder.uploadProgressBar.setVisibility(isStatusNomal?View.GONE:View.VISIBLE);
         holder.uploadCancelText.setVisibility(isStatusNomal?View.GONE:View.VISIBLE);
         holder.fileInfoLayout.setVisibility(isStatusNomal ? View.VISIBLE : View.GONE);

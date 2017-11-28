@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,10 +35,13 @@ import com.inspur.emmcloud.util.ToastUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.util.oss.OssUploadManager;
 import com.inspur.emmcloud.widget.dialogs.ActionSheetDialog;
+import com.inspur.imp.plugin.camera.imagepicker.ImagePicker;
+import com.inspur.imp.plugin.camera.imagepicker.bean.ImageItem;
 
 import org.xutils.view.annotation.ViewInject;
 
 import java.io.File;
+import java.util.ArrayList;
 
 
 /**
@@ -45,6 +49,7 @@ import java.io.File;
  */
 
 public class VolumeFileActivity extends VolumeFileBaseActivity {
+    private static final int REQUEST_OPEN_CEMERA = 2;
     private static final int REQUEST_OPEN_GALLERY = 3;
     private static final int REQUEST_OPEN_FILE_BROWSER = 4;
 
@@ -55,6 +60,8 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
     protected RelativeLayout batchOprationHeaderLayout;
 
     private MyAppAPIService apiService;
+    private String cameraPicFileName;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,12 +70,12 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
         setListIemClick();
     }
 
-    private void setListIemClick(){
+    private void setListIemClick() {
         adapter.setItemClickListener(new VolumeFileAdapter.MyItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
                 VolumeFile volumeFile = volumeFileList.get(position);
-                if (volumeFile.getStatus().equals("normal")){
+                if (volumeFile.getStatus().equals("normal")) {
                     if (!adapter.getMultiselect()) {
                         Bundle bundle = new Bundle();
                         if (volumeFile.getType().equals("directory")) {
@@ -109,7 +116,6 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
         dataBlankLayout.setVisibility((volumeFileList.size() == 0) ? View.VISIBLE : View.GONE);
         operationLayout.setVisibility((volumeFileList.size() == 0) ? View.GONE : View.VISIBLE);
     }
-
 
 
     public void onClick(View v) {
@@ -174,6 +180,8 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
                     public void onClick(ActionSheetDialog dialog, View itemView, int position) {
                         switch (position) {
                             case 0:
+                                cameraPicFileName = System.currentTimeMillis() + ".jpg";
+                                AppUtils.openCamera(VolumeFileActivity.this, cameraPicFileName, REQUEST_OPEN_CEMERA);
                                 break;
                             case 1:
                                 AppUtils.openGallery(VolumeFileActivity.this, 1, REQUEST_OPEN_GALLERY);
@@ -272,17 +280,37 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
         if (resultCode == RESULT_OK) {
             if (requestCode == REQUEST_OPEN_FILE_BROWSER) {
                 Uri uri = data.getData();
-                LogUtils.jasonDebug("uri="+uri.toString());
+                LogUtils.jasonDebug("uri=" + uri.toString());
                 String filePath = GetPathFromUri4kitkat.getPathByUri(getApplicationContext(), uri);
-                File file = new File(filePath);
-                if (file.exists()){
-                    getVolumeFileUploadSTSToken(file);
-                }else {
-                    ToastUtils.show(getApplicationContext(),"选择的文件不存在！");
-                }
+                uploadFile(filePath);
+            } else if (requestCode == REQUEST_OPEN_CEMERA
+                    && NetUtils.isNetworkConnected(getApplicationContext())) {
+                String filePath = Environment.getExternalStorageDirectory() + "/DCIM/" + cameraPicFileName;
+                uploadFile(filePath);
+            }
+        } else if (resultCode == ImagePicker.RESULT_CODE_ITEMS) {  // 图库选择图片返回
+            if (data != null && requestCode == REQUEST_OPEN_GALLERY) {
+                ArrayList<ImageItem> imageItemList = (ArrayList<ImageItem>) data
+                        .getSerializableExtra(ImagePicker.EXTRA_RESULT_ITEMS);
+                String filePath = imageItemList.get(0).path;
+                uploadFile(filePath);
             }
         }
 
+    }
+
+    /**
+     * 上传文件
+     *
+     * @param filePath
+     */
+    private void uploadFile(String filePath) {
+        File file = new File(filePath);
+        if (file.exists()) {
+            getVolumeFileUploadSTSToken(file);
+        } else {
+            ToastUtils.show(getApplicationContext(), "选择的文件不存在！");
+        }
     }
 
     /**
@@ -310,13 +338,13 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
             File file = new File(filePath);
             VolumeFile volumeFile = new VolumeFile();
             volumeFile.setType("regular");
-            volumeFile.setId(time+"");
+            volumeFile.setId(time + "");
             volumeFile.setCreationDate(time);
             volumeFile.setName(file.getName());
             volumeFile.setStatus("downloading");
-            volumeFile.setFormat("."+FileUtils.getFileExtension(filePath));
-            OssUploadManager.getInstance().startUpload(getApplicationContext(),getVolumeFileUploadSTSTokenResult,null,volumeFile,filePath,volume.getId()+absolutePath);
-            volumeFileList.add(0,volumeFile);
+            volumeFile.setFormat("." + FileUtils.getFileExtension(filePath));
+            OssUploadManager.getInstance().startUpload(getApplicationContext(), getVolumeFileUploadSTSTokenResult, null, volumeFile, filePath, volume.getId() + absolutePath);
+            volumeFileList.add(0, volumeFile);
             initDataBlankLayoutStatus();
             adapter.setVolumeFileList(volumeFileList);
             adapter.notifyItemInserted(0);
