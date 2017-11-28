@@ -16,6 +16,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -249,7 +250,7 @@ public class ECMChatInputMenu extends LinearLayout {
     public void showAddItemLayout() {
         int softInputHeight = getSupportSoftInputHeight();
         if (softInputHeight == 0) {
-            softInputHeight = PreferencesUtils.getInt(context, "inputHight",
+            softInputHeight = PreferencesUtils.getInt(context, Constant.PREF_SOFT_INPUT_HEIGHT,
                     DensityUtil.dip2px(context, 274));
         }
         if (isSetWindowListener) {
@@ -282,16 +283,16 @@ public class ECMChatInputMenu extends LinearLayout {
         Rect r = new Rect();
         ((Activity) context).getWindow().getDecorView()
                 .getWindowVisibleDisplayFrame(r);
-        int screenHeight = ((Activity) context).getWindow().getDecorView()
-                .getRootView().getHeight();
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        ((Activity) context).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int screenHeight = displayMetrics.heightPixels;
         int softInputHeight = screenHeight - r.bottom;
-
         if (softInputHeight < 0) {
             Log.w("EmotionInputDetector",
                     "Warning: value of softInputHeight is below zero!");
         }
         if (softInputHeight > 0) {
-            PreferencesUtils.putInt(context, "inputHight", softInputHeight);
+            PreferencesUtils.putInt(context, Constant.PREF_SOFT_INPUT_HEIGHT, softInputHeight);
         }
         return softInputHeight;
     }

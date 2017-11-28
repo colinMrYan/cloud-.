@@ -299,8 +299,8 @@ public class ChannelActivity extends BaseActivity {
         });
         adapter.setMsgList(msgList);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-        //设置listview自动滚动到最下方
-        linearLayoutManager.setStackFromEnd(true);
+//        //设置listview自动滚动到最下方
+//        linearLayoutManager.setStackFromEnd(true);
         msgListView.setLayoutManager(linearLayoutManager);
         msgListView.setAdapter(adapter);
         /**
