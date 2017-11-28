@@ -80,6 +80,7 @@ import com.inspur.emmcloud.bean.SplashPageBean;
 import com.inspur.emmcloud.bean.TaskResult;
 import com.inspur.emmcloud.bean.Trip;
 import com.inspur.emmcloud.bean.UserProfileInfoBean;
+import com.inspur.emmcloud.bean.Volume.GetVolumeFileDownloadUrlResult;
 import com.inspur.emmcloud.bean.Volume.GetVolumeFileListResult;
 import com.inspur.emmcloud.bean.Volume.GetVolumeFileUploadSTSTokenResult;
 import com.inspur.emmcloud.bean.Volume.GetVolumeListResult;
@@ -1498,10 +1499,28 @@ public class APIInterfaceInstance implements APIInterface {
     }
 
     @Override
-    public void returnDeleteFileSuccess(VolumeFile volumeFile) {
+    public void returnVolumeFileDeleteSuccess(VolumeFile volumeFile) {
     }
 
     @Override
-    public void returnDeleteFileFail(String error, int errorCode) {
+    public void returnVolumeFileDeleteFail(String error, int errorCode) {
+    }
+
+    @Override
+    public void returnVolumeFileDownloadUrlSuccess(GetVolumeFileDownloadUrlResult getVolumeFileDownloadUrlResult) {
+    }
+
+    @Override
+    public void returnVolumeFileDownloadUrlFail(String error, int errorCode) {
+    }
+
+    @Override
+    public void returnVolumeFileRenameSuccess(VolumeFile oldVolumeFile, VolumeFile volumeFile) {
+
+    }
+
+    @Override
+    public void returnVolumeFileRenameFail(String error, int errorCode) {
+
     }
 }

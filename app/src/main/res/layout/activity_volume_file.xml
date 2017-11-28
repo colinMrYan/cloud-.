@@ -42,6 +42,7 @@
                 android:layout_height="match_parent"
                 android:ellipsize="end"
                 android:gravity="center"
+                android:maxLines="1"
                 android:paddingLeft="100dp"
                 android:paddingRight="100dp"
                 android:textColor="@color/header_text"
@@ -49,6 +50,7 @@
 
 
             <RelativeLayout
+                android:id="@+id/header_operation_layout"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_alignParentRight="true">
@@ -80,6 +82,22 @@
                     android:scaleType="fitXY"
                     android:src="@drawable/ic_volume_upload_file_white" />
             </RelativeLayout>
+
+            <TextView
+                android:id="@+id/location_select_cancel_text"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:clickable="true"
+                android:gravity="center"
+                android:onClick="onClick"
+                android:paddingLeft="12dp"
+                android:paddingRight="12dp"
+                android:text="@string/cancel"
+                android:textColor="#ffffff"
+                android:textSize="17sp"
+                android:visibility="gone" />
         </RelativeLayout>
 
         <RelativeLayout
@@ -133,128 +151,138 @@
         </RelativeLayout>
     </RelativeLayout>
 
-    <RelativeLayout
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_below="@id/header_layout"
-        android:background="@color/content_bg">
 
-        <android.support.v4.widget.SwipeRefreshLayout
-            android:id="@+id/refresh_layout"
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/refresh_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/bottom_layout"
+        android:layout_below="@id/header_layout"
+        android:background="@color/content_bg"
+        android:scrollbars="vertical">
+
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_above="@+id/batch_operation_bar_layout"
-            android:scrollbars="vertical">
+            android:layout_height="match_parent">
 
             <RelativeLayout
+                android:id="@+id/operation_layout"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="wrap_content"
+                android:background="#fafafa"
+                android:visibility="gone">
 
-                <RelativeLayout
-                    android:id="@+id/operation_layout"
-                    android:layout_width="match_parent"
+                <TextView
+                    android:id="@+id/operation_sort_text"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="#fafafa">
+                    android:drawableRight="@drawable/ic_volume_menu_drop_down"
+                    android:onClick="onClick"
+                    android:padding="12dp"
+                    android:text="时间排序"
+                    android:textColor="#666666"
+                    android:textSize="15sp" />
 
-                    <TextView
-                        android:id="@+id/operation_sort_text"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:drawableRight="@drawable/ic_volume_menu_drop_down"
-                        android:onClick="onClick"
-                        android:padding="12dp"
-                        android:text="时间排序"
-                        android:textColor="#666666"
-                        android:textSize="15sp" />
+                <TextView
+                    android:id="@+id/operation_multiselect_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:onClick="onClick"
+                    android:padding="12dp"
+                    android:text="多选"
+                    android:textColor="#666666"
+                    android:textSize="15sp" />
 
-                    <TextView
-                        android:id="@+id/operation_multiselect_text"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerHorizontal="true"
-                        android:onClick="onClick"
-                        android:padding="12dp"
-                        android:text="多选"
-                        android:textColor="#666666"
-                        android:textSize="15sp" />
+                <TextView
+                    android:id="@+id/operation_filter_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:onClick="onClick"
+                    android:padding="12dp"
+                    android:text="分类筛选"
+                    android:textColor="#666666"
+                    android:textSize="15sp" />
 
-                    <TextView
-                        android:id="@+id/operation_filter_text"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:onClick="onClick"
-                        android:padding="12dp"
-                        android:text="分类筛选"
-                        android:textColor="#666666"
-                        android:textSize="15sp" />
-
-                    <View
-                        android:id="@+id/line"
-                        android:layout_width="match_parent"
-                        android:layout_height="0.5dp"
-                        android:layout_below="@id/operation_sort_text"
-                        android:background="@color/color_list_divider" />
-                </RelativeLayout>
-
-
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/file_list"
+                <View
+                    android:id="@+id/line"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_below="@id/operation_layout"
-                    android:background="@color/white"
-                    android:divider="#00000000"
-                    android:dividerHeight="0dp" />
-
-                <LinearLayout
-                    android:id="@+id/data_blank_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@color/content_bg"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <ImageView
-                        android:layout_width="90dp"
-                        android:layout_height="70dp"
-                        android:scaleType="fitXY"
-                        android:src="@drawable/ic_volume_file_blak" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
-                        android:paddingBottom="50dp"
-                        android:text="暂无文件"
-                        android:textColor="#666666"
-                        android:textSize="14sp" />
-
-                    <com.qmuiteam.qmui.widget.roundwidget.QMUIRoundButton
-                        android:id="@+id/upload_btn"
-                        android:layout_width="130dp"
-                        android:layout_height="40dp"
-                        android:layout_marginBottom="150dp"
-                        android:gravity="center"
-                        android:onClick="onClick"
-                        android:padding="10dp"
-                        android:text="上传文件"
-                        android:textColor="#2586CD"
-                        app:qmui_borderColor="#2586CD"
-                        app:qmui_borderWidth="0.6dp"
-                        app:qmui_radius="4dp" />
-
-                </LinearLayout>
+                    android:layout_height="0.5dp"
+                    android:layout_below="@id/operation_sort_text"
+                    android:background="@color/color_list_divider" />
             </RelativeLayout>
 
-        </android.support.v4.widget.SwipeRefreshLayout>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/file_list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@id/operation_layout"
+                android:divider="#00000000"
+                android:dividerHeight="0dp" />
+
+            <LinearLayout
+                android:id="@+id/data_blank_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/content_bg"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="90dp"
+                    android:layout_height="70dp"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/ic_volume_file_blak" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:paddingBottom="50dp"
+                    android:text="暂无文件"
+                    android:textColor="#666666"
+                    android:textSize="14sp" />
+
+                <com.qmuiteam.qmui.widget.roundwidget.QMUIRoundButton
+                    android:id="@+id/refresh_btn"
+                    android:layout_width="100dp"
+                    android:layout_height="40dp"
+                    android:layout_marginBottom="150dp"
+                    android:gravity="center"
+                    android:onClick="onClick"
+                    android:padding="10dp"
+                    android:text="刷新"
+                    android:textColor="#2586CD"
+                    app:qmui_borderColor="#2586CD"
+                    app:qmui_borderWidth="0.6dp"
+                    app:qmui_radius="4dp" />
+
+            </LinearLayout>
+        </RelativeLayout>
+
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/bottom_layout"
+        android:background="#ffffff"
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
         <RelativeLayout
             android:id="@+id/batch_operation_bar_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
             android:visibility="gone">
+            <View
+                android:background="@color/color_list_divider"
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp">
+
+            </View>
 
             <TextView
                 android:id="@+id/batch_operation_delete_text"
@@ -303,6 +331,39 @@
 
 
         </RelativeLayout>
-    </RelativeLayout>
 
+        <RelativeLayout
+            android:id="@+id/location_select_bar_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone">
+            <View
+                android:background="@color/color_list_divider"
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp">
+
+            </View>
+
+            <TextView
+                android:id="@+id/location_select_new_forder_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="onClick"
+                android:padding="12dp"
+                android:text="新建文件夹"
+                android:textColor="#444444"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/location_select_to_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:onClick="onClick"
+                android:padding="12dp"
+                android:text="移动到此目录"
+                android:textColor="#444444"
+                android:textSize="15sp" />
+        </RelativeLayout>
+    </RelativeLayout>
 </RelativeLayout>

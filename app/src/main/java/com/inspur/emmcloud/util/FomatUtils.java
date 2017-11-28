@@ -10,4 +10,13 @@ public class FomatUtils {
 		Matcher m = p.matcher(phoneNum);
 		return m.matches();
 	}
+
+	/**
+	 * 验证文件名是否合法
+	 * @param fileName
+	 * @return
+	 */
+	public static boolean isValidFileName(String fileName){
+		return  !fileName.matches("[\\\\/:*?\"<>|]");
+	}
 }

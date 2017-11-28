@@ -6,19 +6,24 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.Volume.VolumeFile;
+import com.inspur.emmcloud.callback.ProgressCallback;
 import com.inspur.emmcloud.util.FileUtils;
 import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.TimeUtils;
 import com.inspur.emmcloud.util.VolumeFileIconUtils;
+import com.inspur.emmcloud.util.oss.OssUploadManager;
 
 import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -33,45 +38,114 @@ public class VolumeFileAdapter extends RecyclerView.Adapter<VolumeFileAdapter.Vi
     private MyItemClickListener mItemClickListener;
     private MyItemDropDownImgClickListener myItemDropDownImgClickListener;
     private boolean isMultiselect = false;
+    private List<VolumeFile> selectVolumeFileList = new ArrayList<>();
+    private SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+    private boolean isShowFileOperationDropDownImg = true;
 
-    public VolumeFileAdapter(Context context, List<VolumeFile> volumeFileList){
+    public VolumeFileAdapter(Context context, List<VolumeFile> volumeFileList) {
         this.context = context;
         this.volumeFileList = volumeFileList;
     }
 
-    public void setVolumeFileList(List<VolumeFile> volumeFileList){
-        this.volumeFileList= volumeFileList;
+    public void setVolumeFileList(List<VolumeFile> volumeFileList) {
+        this.volumeFileList = volumeFileList;
     }
 
-    public void setMultiselect(boolean isMultiselect ){
+    public void setShowFileOperationDropDownImg(boolean isShowFileOperationDropDownImg){
+        this.isShowFileOperationDropDownImg = isShowFileOperationDropDownImg;
+    }
+
+    public void setMultiselect(boolean isMultiselect) {
         this.isMultiselect = isMultiselect;
-        LogUtils.jasonDebug("isMultiselect="+isMultiselect);
+        if (!isMultiselect){
+            selectVolumeFileList.clear();
+        }
         notifyDataSetChanged();
     }
 
-    public boolean getMultiselect(){
-        return  isMultiselect;
+    public List<VolumeFile> getSelectVolumeFileList(){
+        return selectVolumeFileList;
     }
+
+    public boolean getMultiselect() {
+        return isMultiselect;
+    }
+
+    public void setVolumeFileSelect(int position) {
+        VolumeFile volumeFile = volumeFileList.get(position);
+        if (selectVolumeFileList.contains(volumeFile)) {
+            selectVolumeFileList.remove(volumeFile);
+        } else {
+            selectVolumeFileList.add(volumeFile);
+        }
+        notifyDataSetChanged();
+    }
+
+    public void replaceVolumeFile(VolumeFile oldVolumeFile, VolumeFile newVolumeFile){
+        int position = volumeFileList.indexOf(oldVolumeFile);
+        if (position != -1){
+            volumeFileList.remove(position);
+            volumeFileList.add(position,newVolumeFile);
+            notifyItemChanged(position);
+        }
+
+    }
+
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.app_volume_file_item_view, parent, false);
-        ViewHolder holder = new ViewHolder(view, mItemClickListener,myItemDropDownImgClickListener);
-        x.view().inject(holder,view);
+        ViewHolder holder = new ViewHolder(view, mItemClickListener, myItemDropDownImgClickListener);
         return holder;
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
-        VolumeFile volumeFile = volumeFileList.get(position);
-        holder.fileSelcetImg.setVisibility(isMultiselect?View.VISIBLE:View.GONE);
+    public void onBindViewHolder(final ViewHolder holder, final int position) {
+        final VolumeFile volumeFile = volumeFileList.get(position);
+        boolean isStatusNomal = volumeFile.getStatus().equals("normal");
+        LogUtils.jasonDebug("volumeFile.getStatus()="+volumeFile.getStatus());
+        holder.uploadProgressBar.setVisibility(isStatusNomal?View.GONE:View.VISIBLE);
+        holder.uploadCancelText.setVisibility(isStatusNomal?View.GONE:View.VISIBLE);
+        holder.fileInfoLayout.setVisibility(isStatusNomal ? View.VISIBLE : View.GONE);
+        holder.fileOperationDropDownImg.setVisibility((isStatusNomal && isShowFileOperationDropDownImg)? View.VISIBLE : View.GONE);
+        if (isMultiselect && isStatusNomal) {
+            holder.fileSelcetImg.setVisibility(View.VISIBLE);
+            holder.fileSelcetImg.setImageResource(selectVolumeFileList.contains(volumeFile) ? R.drawable.ic_volume_file_selct_yes : R.drawable.ic_volume_file_selct_no);
+        } else {
+            holder.fileSelcetImg.setVisibility(View.GONE);
+        }
         int fileTypeImgResId = VolumeFileIconUtils.getIconResId(volumeFile);
         holder.fileTypeImg.setImageResource(fileTypeImgResId);
         holder.fileNameText.setText(volumeFile.getName());
         holder.fileSizeText.setText(FileUtils.formatFileSize(volumeFile.getSize()));
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-        String fileTime = TimeUtils.getTime(volumeFile.getCreationDate(),format);
+        String fileTime = TimeUtils.getTime(volumeFile.getCreationDate(), format);
         holder.fileTimeText.setText(fileTime);
+        if (!isStatusNomal){
+            OssUploadManager.getInstance().setOssUploadProgressCallback(volumeFile, new ProgressCallback() {
+                @Override
+                public void onSuccess(VolumeFile newVolumeFile) {
+                    replaceVolumeFile(volumeFile,newVolumeFile);
+                }
+
+                @Override
+                public void onLoading(int progress) {
+                    holder.uploadProgressBar.setProgress(progress);
+                }
+
+                @Override
+                public void onFail() {
+                    holder.uploadCancelText.setText("上传失败");
+                }
+            });
+            holder.uploadCancelText.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    OssUploadManager.getInstance().removeOssService(volumeFile.getId());
+                    volumeFileList.remove(position);
+                    notifyItemRemoved(position);
+                }
+            });
+        }
     }
 
     @Override
@@ -98,31 +172,46 @@ public class VolumeFileAdapter extends RecyclerView.Adapter<VolumeFileAdapter.Vi
         @ViewInject(R.id.file_select_img)
         private ImageView fileSelcetImg;
 
-        public ViewHolder(View itemView,MyItemClickListener myItemClickListener,MyItemDropDownImgClickListener myItemDropDownImgClickListener) {
+        @ViewInject(R.id.upload_cancel_text)
+        private TextView uploadCancelText;
+
+        @ViewInject(R.id.upload_progress)
+        private ProgressBar uploadProgressBar;
+
+        @ViewInject(R.id.file_info_layout)
+        private RelativeLayout fileInfoLayout;
+
+        @ViewInject(R.id.file_operation_drop_down_img)
+        private ImageView fileOperationDropDownImg;
+
+        public ViewHolder(View itemView, MyItemClickListener myItemClickListener, MyItemDropDownImgClickListener myItemDropDownImgClickListener) {
             super(itemView);
+            x.view().inject(this, itemView);
             this.myItemClickListener = myItemClickListener;
             this.myItemDropDownImgClickListener = myItemDropDownImgClickListener;
             itemView.setOnClickListener(this);
-            (itemView.findViewById(R.id.file_operation_drop_down_img)).setOnClickListener(this);
+            fileOperationDropDownImg.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View v) {
-            if (v.getId() == R.id.file_operation_drop_down_img ){
-                if (myItemDropDownImgClickListener != null){
-                    myItemDropDownImgClickListener.onItemDropDownImgClick(v,getAdapterPosition());
+            if (v.getId() == R.id.file_operation_drop_down_img) {
+                if (myItemDropDownImgClickListener != null) {
+                    myItemDropDownImgClickListener.onItemDropDownImgClick(v, getAdapterPosition());
                 }
 
-            }else if (myItemClickListener != null) {
+            } else if (myItemClickListener != null) {
                 myItemClickListener.onItemClick(v, getAdapterPosition());
             }
         }
+
     }
 
     public void setItemClickListener(MyItemClickListener myItemClickListener) {
         this.mItemClickListener = myItemClickListener;
     }
-    public void setItemDropDownImgClickListener(MyItemDropDownImgClickListener myItemDropDownImgClickListener){
+
+    public void setItemDropDownImgClickListener(MyItemDropDownImgClickListener myItemDropDownImgClickListener) {
         this.myItemDropDownImgClickListener = myItemDropDownImgClickListener;
     }
 
@@ -133,7 +222,7 @@ public class VolumeFileAdapter extends RecyclerView.Adapter<VolumeFileAdapter.Vi
         void onItemClick(View view, int position);
     }
 
-    public interface  MyItemDropDownImgClickListener{
+    public interface MyItemDropDownImgClickListener {
         void onItemDropDownImgClick(View view, int position);
     }
 }

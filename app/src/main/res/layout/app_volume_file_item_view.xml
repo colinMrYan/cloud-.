@@ -13,38 +13,58 @@
         android:layout_marginLeft="12dp"
         android:layout_marginRight="8dp"
         android:scaleType="fitXY"
-        android:src="@drawable/ic_volume_file_selct_no"
-        />
+        android:src="@drawable/ic_volume_file_selct_no" />
 
     <ImageView
         android:id="@+id/file_type_img"
         android:layout_width="44dp"
         android:layout_height="44dp"
         android:layout_marginBottom="16dp"
-        android:layout_toRightOf="@id/file_select_img"
         android:layout_marginLeft="12dp"
         android:layout_marginRight="22dp"
         android:layout_marginTop="16dp"
+        android:layout_toRightOf="@id/file_select_img"
         android:scaleType="fitXY" />
-
-    <ImageView
-        android:id="@+id/file_operation_drop_down_img"
-        android:layout_width="50dp"
-        android:layout_height="76dp"
+    <RelativeLayout
+        android:id="@+id/right_layout"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:paddingBottom="20dp"
-        android:paddingLeft="13dp"
-        android:paddingRight="2dp"
-        android:paddingTop="20dp"
-        android:scaleType="fitXY"
-        android:src="@drawable/ic_volume_file_operation_drop_down" />
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/file_operation_drop_down_img"
+            android:layout_width="50dp"
+            android:layout_height="76dp"
+            android:visibility="gone"
+            android:layout_centerVertical="true"
+            android:paddingBottom="20dp"
+            android:paddingLeft="13dp"
+            android:paddingRight="2dp"
+            android:paddingTop="20dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_volume_file_operation_drop_down" />
+        <TextView
+            android:id="@+id/upload_cancel_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="15dp"
+            android:paddingBottom="15dp"
+            android:paddingRight="12dp"
+            android:paddingLeft="12dp"
+            android:layout_marginLeft="18dp"
+            android:text="取消上传"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textColor="#2586CD"
+            android:textSize="15sp" />
+    </RelativeLayout>
+
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_toLeftOf="@id/file_operation_drop_down_img"
+        android:layout_toLeftOf="@id/right_layout"
         android:layout_toRightOf="@id/file_type_img">
 
         <TextView
@@ -57,27 +77,42 @@
             android:textColor="#333333"
             android:textSize="17sp" />
 
-        <TextView
-            android:id="@+id/file_time_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <RelativeLayout
+            android:id="@+id/file_info_layout"
             android:layout_below="@id/file_name_text"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:textColor="#8f8e94"
-            android:textSize="15sp" />
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/file_time_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textColor="#8f8e94"
+                android:textSize="15sp" />
 
-        <TextView
-            android:id="@+id/file_size_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            <TextView
+                android:id="@+id/file_size_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="22dp"
+                android:layout_toRightOf="@id/file_time_text"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textColor="#8f8e94"
+                android:textSize="15sp" />
+        </RelativeLayout>
+
+        <ProgressBar
+            android:id="@+id/upload_progress"
+            style="?android:attr/progressBarStyleHorizontal"
             android:layout_below="@id/file_name_text"
-            android:layout_marginLeft="22dp"
-            android:layout_toRightOf="@id/file_time_text"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:textColor="#8f8e94"
-            android:textSize="15sp" />
+            android:progressDrawable="@drawable/bg_volume_file_download_progressbar"
+            android:max="100"
+            android:layout_marginTop="8dp"
+            android:layout_width="match_parent"
+            android:layout_height="4dp" />
     </RelativeLayout>
 
     <View

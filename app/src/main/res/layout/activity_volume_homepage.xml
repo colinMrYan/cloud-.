@@ -185,24 +185,6 @@
                 android:layout_height="wrap_content">
             </ListView>
         </LinearLayout>
-        <RelativeLayout
-            android:id="@+id/upload_file_layout"
-            android:layout_marginTop="35dp"
-            android:visibility="gone"
-            android:background="@android:color/white"
-            android:layout_width="match_parent"
-            android:layout_height="56dp">
-            <TextView
-                android:textSize="17sp"
-                android:text="上传文件"
-                android:gravity="center"
-                android:layout_centerInParent="true"
-                android:drawablePadding="12dp"
-                android:drawableLeft="@drawable/ic_volume_upload_file_blue"
-                android:textColor="#2586CD"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-        </RelativeLayout>
     </LinearLayout>
 
 </RelativeLayout>

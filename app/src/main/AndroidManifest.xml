@@ -537,11 +537,14 @@
 
         <!-- 云盘 -->
         <activity
-            android:name=".ui.app.volume.VolumeMyFileActivity"
+            android:name=".ui.app.volume.VolumeFileActivity"
             android:screenOrientation="portrait"></activity>
         <activity
-            android:name=".ui.app.volume.VolumeFileInfoActivtiy"
+            android:name=".ui.app.volume.VolumeFileDownloadActivtiy"
             android:launchMode="singleTask"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".ui.app.volume.VolumeFileLocationSelectActivity"
             android:screenOrientation="portrait"></activity>
 
 

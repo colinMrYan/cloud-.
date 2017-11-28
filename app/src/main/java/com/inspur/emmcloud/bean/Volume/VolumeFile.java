@@ -4,20 +4,24 @@ import com.inspur.emmcloud.util.JSONUtils;
 
 import org.json.JSONObject;
 
+import java.io.Serializable;
+
 /**
  * Created by chenmch on 2017/11/16.
  */
 
-public class VolumeFile {
-    private String type;
-    private String name;
-    private String resource;
-    private String parent;
-    private long creationDate;
-    private long lastUpdate;
-    private String privilege;
-    private String format;
-    private long size;
+public class VolumeFile implements Serializable{
+    private String id ="";
+    private String type ="";
+    private String name ="";
+    private String resource ="";
+    private String parent ="";
+    private long creationDate = 0L;
+    private long lastUpdate = 0L;
+    private String privilege ="";
+    private String format ="";
+    private long size = 0L;
+    private String status = "normal";  // "downloading","download_fail"
 
     public VolumeFile(){}
 
@@ -35,6 +39,7 @@ public class VolumeFile {
         this.privilege = JSONUtils.getString(object,"privilege","");
         this.format = JSONUtils.getString(object,"format","");
         this.size = JSONUtils.getLong(object,"size",0L);
+        this.id = JSONUtils.getString(object,"id","");
     }
 
     public String getType() {
@@ -109,6 +114,22 @@ public class VolumeFile {
         this.size = size;
     }
 
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
     public boolean equals(Object other) { // 重写equals方法，后面最好重写hashCode方法
 
         if (this == other) // 先检查是否其自反性，后比较other是否为空。这样效率高
@@ -119,7 +140,7 @@ public class VolumeFile {
             return false;
 
         final VolumeFile otherVolumeFile = (VolumeFile) other;
-        if (getName().equals(otherVolumeFile.getName()) && getType().equals(otherVolumeFile.getType()))
+        if (getId().equals(otherVolumeFile.getId()))
             return true;
         return false;
     }

@@ -25,6 +25,7 @@ import com.inspur.emmcloud.bean.GetNewsTitleResult;
 import com.inspur.emmcloud.bean.GetRemoveAppResult;
 import com.inspur.emmcloud.bean.GetSearchAppResult;
 import com.inspur.emmcloud.bean.GetWebAppRealUrlResult;
+import com.inspur.emmcloud.bean.Volume.GetVolumeFileDownloadUrlResult;
 import com.inspur.emmcloud.bean.Volume.GetVolumeFileListResult;
 import com.inspur.emmcloud.bean.Volume.GetVolumeFileUploadSTSTokenResult;
 import com.inspur.emmcloud.bean.Volume.GetVolumeListResult;
@@ -744,6 +745,45 @@ public class MyAppAPIService {
     }
 
     /**
+     * 获取云盘文件真实下载路径
+     * @param volumeId
+     * @param absolutePath
+     */
+    public void getVolumeFileDownloadUrl(final String volumeId,final String absolutePath){
+        final String url = APIUri.getVolumeFileUploadSTSTokenUrl(volumeId);
+        RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
+        params.addParameter("volumeId",volumeId);
+        params.addQueryStringParameter("path",absolutePath);
+        x.http().get(params, new APICallback(context, url) {
+            @Override
+            public void callbackSuccess(String arg0) {
+                apiInterface.returnVolumeFileDownloadUrlSuccess(new GetVolumeFileDownloadUrlResult(arg0));
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                apiInterface.returnVolumeFileDownloadUrlFail(error,responseCode);
+            }
+
+            @Override
+            public void callbackTokenExpire() {
+                new OauthUtils(new OauthCallBack() {
+
+                    @Override
+                    public void reExecute() {
+                        getVolumeFileDownloadUrl(volumeId,absolutePath);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                }, context).refreshToken(url);
+            }
+        });
+    }
+
+    /**
      * 创建文件夹
      * @param volumeId
      * @param forderName
@@ -787,19 +827,19 @@ public class MyAppAPIService {
      * @param fileName
      * @param absolutePath
      */
-    public void deleteFile(final String volumeId,final VolumeFile volumeFile,final String absolutePath){
+    public void volumeFileDelete(final String volumeId, final VolumeFile volumeFile, final String absolutePath){
         final String url = APIUri.getVolumeFileOperationUrl(volumeId);
         RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
         params.addQueryStringParameter("path",absolutePath+volumeFile.getName());
         x.http().request(HttpMethod.DELETE, params, new APICallback(context,url) {
             @Override
             public void callbackSuccess(String arg0) {
-                apiInterface.returnDeleteFileSuccess(volumeFile);
+                apiInterface.returnVolumeFileDeleteSuccess(volumeFile);
             }
 
             @Override
             public void callbackFail(String error, int responseCode) {
-                apiInterface.returnDeleteFileFail(error,responseCode);
+                apiInterface.returnVolumeFileDeleteFail(error,responseCode);
             }
 
             @Override
@@ -807,7 +847,47 @@ public class MyAppAPIService {
                 new OauthUtils(new OauthCallBack() {
                     @Override
                     public void reExecute() {
-                        deleteFile(volumeId,volumeFile,absolutePath);
+                        volumeFileDelete(volumeId,volumeFile,absolutePath);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                },context).refreshToken(url);
+            }
+        });
+    }
+
+    /**
+     * 文件重命名
+     * @param volumeId
+     * @param volumeFile
+     * @param absolutePath
+     */
+    public void volumeFileRename(final String volumeId,final VolumeFile volumeFile,final String absolutePath,final String fileNewName){
+        final String url = APIUri.getVolumeFileRenameUrl(volumeId);
+        RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
+        params.addQueryStringParameter("path",absolutePath+volumeFile.getName());
+        params.addQueryStringParameter("name",fileNewName);
+        LogUtils.jasonDebug("params="+params.getQueryStringParams().toString());
+        x.http().request(HttpMethod.PUT, params, new APICallback(context,url) {
+            @Override
+            public void callbackSuccess(String arg0) {
+                apiInterface.returnVolumeFileRenameSuccess(volumeFile,new VolumeFile(arg0));
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                apiInterface.returnVolumeFileRenameFail(error,responseCode);
+            }
+
+            @Override
+            public void callbackTokenExpire() {
+                new OauthUtils(new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        volumeFileRename(volumeId,volumeFile,absolutePath,fileNewName);
                     }
 
                     @Override

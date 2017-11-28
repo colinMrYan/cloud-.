@@ -79,14 +79,12 @@ public class VolumeHomePageActivity extends BaseActivity {
                     bundle = new Bundle();
                     bundle.putSerializable("volume", myVolume);
                     bundle.putSerializable("title", "我的文件");
-                    IntentUtils.startActivity(VolumeHomePageActivity.this, VolumeMyFileActivity.class,bundle);
+                    IntentUtils.startActivity(VolumeHomePageActivity.this, VolumeFileActivity.class,bundle);
                 }
                 break;
             case R.id.share_volume_layout:
                 break;
             case R.id.enterprise_file_layout:
-                break;
-            case R.id.upload_file_layout:
                 break;
             default:
                 break;

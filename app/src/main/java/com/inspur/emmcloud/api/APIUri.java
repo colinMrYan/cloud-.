@@ -807,4 +807,12 @@ public class APIUri {
         return URL_BASE_VOLUME+"/"+volumeId+"/directory";
     }
 
+    /**
+     * 获取文件重命名url
+     * @param volumeId
+     * @return
+     */
+    public static String getVolumeFileRenameUrl(String volumeId){
+        return  URL_BASE_VOLUME+"/"+volumeId+"/file/name";
+    }
 }
