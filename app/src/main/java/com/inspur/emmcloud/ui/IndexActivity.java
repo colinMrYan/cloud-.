@@ -3,6 +3,7 @@ package com.inspur.emmcloud.ui;
 import android.app.Fragment;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.drawable.GradientDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Message;
@@ -54,6 +55,7 @@ import com.inspur.emmcloud.util.ChannelGroupCacheUtils;
 import com.inspur.emmcloud.util.ClientIDUtils;
 import com.inspur.emmcloud.util.ContactCacheUtils;
 import com.inspur.emmcloud.util.DbCacheUtils;
+import com.inspur.emmcloud.util.DensityUtil;
 import com.inspur.emmcloud.util.ImageDisplayUtils;
 import com.inspur.emmcloud.util.MyAppWidgetUtils;
 import com.inspur.emmcloud.util.NetUtils;
@@ -68,6 +70,7 @@ import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.ToastUtils;
 import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
+import com.inspur.emmcloud.widget.GradientDrawableBuilder;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.MyFragmentTabHost;
 import com.inspur.emmcloud.widget.WeakHandler;
@@ -164,7 +167,7 @@ public class IndexActivity extends BaseFragmentActivity implements
      * 获取我的应用推荐小部件数据
      */
     private void getMyAppRecommendWidgets() {
-        if(MyAppWidgetUtils.checkNeedUpdateMyAppWidget(IndexActivity.this)){
+        if (MyAppWidgetUtils.checkNeedUpdateMyAppWidget(IndexActivity.this)) {
             MyAppWidgetUtils.getInstance(getApplicationContext()).getMyAppWidgetsFromNet();
         }
     }
@@ -380,7 +383,7 @@ public class IndexActivity extends BaseFragmentActivity implements
         tipsView = (TipsView) findViewById(R.id.tip);
         mTabHost = (MyFragmentTabHost) findViewById(android.R.id.tabhost);
         mTabHost.setup(this, getSupportFragmentManager(), R.id.realtabcontent);
-        findViewById(R.id.index_root_layout).setPadding(0,StateBarColor.getStateBarHeight(IndexActivity.this),0,0);
+        findViewById(R.id.index_root_layout).setPadding(0, StateBarColor.getStateBarHeight(IndexActivity.this), 0, 0);
         handleAppTabs();
     }
 
@@ -412,18 +415,22 @@ public class IndexActivity extends BaseFragmentActivity implements
                         case "work":
                             mainTabBean = new MainTabBean(i, R.string.work, R.drawable.selector_tab_work_btn,
                                     WorkFragment.class);
+                            mainTabBean.setCommpant(appTabList.get(i).getComponent());
                             break;
                         case "find":
                             mainTabBean = new MainTabBean(i, R.string.find, R.drawable.selector_tab_find_btn,
                                     FindFragment.class);
+                            mainTabBean.setCommpant(appTabList.get(i).getComponent());
                             break;
                         case "application":
                             mainTabBean = new MainTabBean(i, R.string.application, R.drawable.selector_tab_app_btn,
                                     MyAppFragment.class);
+                            mainTabBean.setCommpant(appTabList.get(i).getComponent());
                             break;
                         case "mine":
                             mainTabBean = new MainTabBean(i, R.string.mine, R.drawable.selector_tab_more_btn,
                                     MoreFragment.class);
+                            mainTabBean.setCommpant(appTabList.get(i).getComponent());
                             break;
                         default:
                             mainTabBean = new MainTabBean(i, R.string.unknown, R.drawable.selector_tab_unknown_btn,
@@ -456,8 +463,10 @@ public class IndexActivity extends BaseFragmentActivity implements
             ImageView tabImg = (ImageView) tabView.findViewById(R.id.imageview);
             TextView tabText = (TextView) tabView.findViewById(R.id.textview);
             if (mainTab.getCommpant().equals("communicate")) {
-
                 handleTipsView(tabView);
+            }
+            if (mainTab.getCommpant().equals("application")) {
+                handleAppTabItemBadge(tabView);
             }
             if (!StringUtils.isBlank(mainTab.getConfigureName())) {
                 tabText.setText(mainTab.getConfigureName());
@@ -496,6 +505,32 @@ public class IndexActivity extends BaseFragmentActivity implements
         } else {
             mTabHost.setCurrentTab(getTabIndex());
         }
+    }
+
+    /**
+     * 展示应用角标
+     *
+     * @param tabView
+     */
+    private void handleAppTabItemBadge(View tabView) {
+        TextView textView = (TextView) tabView.findViewById(R.id.index_unhandled_badges_text);
+        setUnHandledBadgesDisplay(textView);
+    }
+
+    /**
+     * 处理未处理消息个数的显示
+     *
+     * @param unhandledBadges
+     */
+    private void setUnHandledBadgesDisplay(TextView unhandledBadges) {
+        unhandledBadges.setVisibility(View.VISIBLE);
+        GradientDrawable gradientDrawable = new GradientDrawableBuilder()
+                .setCornerRadius(DensityUtil.dip2px(IndexActivity.this, 40))
+                .setBackgroundColor(0xFFFF0033)
+                .setStrokeColor(0xFFFF0033).build();
+        unhandledBadges.setBackground(gradientDrawable);
+//            unhandledBadges.setText(appBadgeBean.getBadgeNum() > 99 ? "99+" : (appBadgeBean.getBadgeNum() + ""));
+        unhandledBadges.setText("15");
     }
 
     /**
