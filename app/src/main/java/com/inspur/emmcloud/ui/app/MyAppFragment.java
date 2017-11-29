@@ -247,12 +247,8 @@ public class MyAppFragment extends Fragment {
                         MyAppWidgetUtils.saveNotShowDate(getActivity(), TimeUtils.getEndTime());
                     }
                 });
-                refreshRecommendAppWidgetList();
-            }else{
-                if(recommendAppWidgetListAdapter != null){
-                    refreshRecommendAppWidgetList();
-                }
             }
+            refreshRecommendAppWidgetList();
         }else{
             (rootView.findViewById(R.id.my_app_recommend_app_widget_layout)).setVisibility(View.GONE);
         }
@@ -277,7 +273,7 @@ public class MyAppFragment extends Fragment {
                 }
             }
         }
-        boolean isNeedRefresh = PreferencesByUserAndTanentUtils.getInt(getActivity(),Constant.PREF_MY_APP_RECOMMEND_LASTUPDATE_HOUR,0) < MyAppWidgetUtils.getNowHour();
+        boolean isNeedRefresh = PreferencesByUserAndTanentUtils.getInt(getActivity(),Constant.PREF_MY_APP_RECOMMEND_LASTUPDATE_HOUR,0) != MyAppWidgetUtils.getNowHour();
         if(recommendAppWidgetListAdapter != null && recommendAppWidgetList.size() > 0 && isNeedRefresh){
             recommendAppWidgetListAdapter.setAndReFreshRecommendList(recommendAppWidgetList);
             PreferencesByUserAndTanentUtils.putInt(getActivity(),Constant.PREF_MY_APP_RECOMMEND_LASTUPDATE_HOUR,MyAppWidgetUtils.getNowHour());
