@@ -143,7 +143,7 @@ public class MyAppFragment extends Fragment {
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void updateRecommendAppWidegtList(GetRecommendAppWidgetListResult getRecommendAppWidgetListResult) {
-        refreshRecommendAppWidgetList();
+        refreshRecommendAppWidgetView();
     }
 
     /**
@@ -223,7 +223,6 @@ public class MyAppFragment extends Fragment {
      * 每个小时都有可能有变化
      */
     private void refreshRecommendAppWidgetView() {
-        //接口真正有数据时打开
         if(MyAppWidgetUtils.isNeedShowMyAppRecommendWidgets(getActivity()) && (MyAppWidgetUtils.getShouldShowAppList(getActivity()).size() > 0)){
             if(recommendAppWidgetListView == null){
                 recommendAppWidgetListView = (RecyclerView) rootView.findViewById(R.id.my_app_recommend_app_wiget_recyclerview);
@@ -254,6 +253,8 @@ public class MyAppFragment extends Fragment {
                     refreshRecommendAppWidgetList();
                 }
             }
+        }else{
+            (rootView.findViewById(R.id.my_app_recommend_app_widget_layout)).setVisibility(View.GONE);
         }
     }
 
@@ -276,8 +277,6 @@ public class MyAppFragment extends Fragment {
                 }
             }
         }
-        rootView.findViewById(R.id.my_app_recommend_app_widget_layout).setVisibility(((recommendAppWidgetList.size())>0
-                && MyAppWidgetUtils.isNeedShowMyAppRecommendWidgets(getActivity()))?View.VISIBLE:View.GONE);
         boolean isNeedRefresh = PreferencesByUserAndTanentUtils.getInt(getActivity(),Constant.PREF_MY_APP_RECOMMEND_LASTUPDATE_HOUR,0) < MyAppWidgetUtils.getNowHour();
         if(recommendAppWidgetListAdapter != null && recommendAppWidgetList.size() > 0 && isNeedRefresh){
             recommendAppWidgetListAdapter.setAndReFreshRecommendList(recommendAppWidgetList);
@@ -1091,7 +1090,7 @@ public class MyAppFragment extends Fragment {
             appListAdapter.setAppAdapterList(appGroupList);
             swipeRefreshLayout.setRefreshing(false);
             if(MyAppWidgetUtils.isNeedShowMyAppRecommendWidgets(getActivity())){
-                refreshRecommendAppWidgetList();
+                refreshRecommendAppWidgetView();
             }
         }
     }
