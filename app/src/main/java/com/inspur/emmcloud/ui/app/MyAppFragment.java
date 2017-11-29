@@ -143,7 +143,7 @@ public class MyAppFragment extends Fragment {
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void updateRecommendAppWidegtList(GetRecommendAppWidgetListResult getRecommendAppWidgetListResult) {
-        refreshRecommendAppWidgetList();
+        refreshRecommendAppWidgetView();
     }
 
     /**
@@ -223,7 +223,6 @@ public class MyAppFragment extends Fragment {
      * 每个小时都有可能有变化
      */
     private void refreshRecommendAppWidgetView() {
-        //接口真正有数据时打开
         if(MyAppWidgetUtils.isNeedShowMyAppRecommendWidgets(getActivity()) && (MyAppWidgetUtils.getShouldShowAppList(getActivity()).size() > 0)){
             if(recommendAppWidgetListView == null){
                 recommendAppWidgetListView = (RecyclerView) rootView.findViewById(R.id.my_app_recommend_app_wiget_recyclerview);
@@ -1117,6 +1116,8 @@ public class MyAppFragment extends Fragment {
             swipeRefreshLayout.setRefreshing(false);
             appBadgeBeanMap = getAppBadgeResult.getAppBadgeBeanMap();
             appListAdapter.notifyDataSetChanged();
+            //把数据发送到Index 的updateBadge方法
+            EventBus.getDefault().post(getAppBadgeResult);
             PreferencesByUserAndTanentUtils.putLong(getActivity(), Constant.PREF_APP_BADGE_UPDATE_TIME,System.currentTimeMillis());
         }
 

@@ -27,11 +27,13 @@ import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.AppAPIService;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.api.apiservice.ContactAPIService;
+import com.inspur.emmcloud.bean.AppBadgeBean;
 import com.inspur.emmcloud.bean.AppTabAutoBean;
 import com.inspur.emmcloud.bean.ChannelGroup;
 import com.inspur.emmcloud.bean.Contact;
 import com.inspur.emmcloud.bean.GetAllContactResult;
 import com.inspur.emmcloud.bean.GetAllRobotsResult;
+import com.inspur.emmcloud.bean.GetAppBadgeResult;
 import com.inspur.emmcloud.bean.GetAppTabAutoResult;
 import com.inspur.emmcloud.bean.GetSearchChannelGroupResult;
 import com.inspur.emmcloud.bean.PVCollectModel;
@@ -78,9 +80,13 @@ import com.inspur.emmcloud.widget.WeakThread;
 import com.inspur.emmcloud.widget.tipsview.TipsView;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * 主页面
@@ -115,7 +121,7 @@ public class IndexActivity extends BaseFragmentActivity implements
         initView();
         getData();
         startService();
-
+        EventBus.getDefault().register(this);
     }
 
     /**
@@ -465,9 +471,6 @@ public class IndexActivity extends BaseFragmentActivity implements
             if (mainTab.getCommpant().equals("communicate")) {
                 handleTipsView(tabView);
             }
-            if (mainTab.getCommpant().equals("application")) {
-                handleAppTabItemBadge(tabView);
-            }
             if (!StringUtils.isBlank(mainTab.getConfigureName())) {
                 tabText.setText(mainTab.getConfigureName());
             } else {
@@ -508,21 +511,33 @@ public class IndexActivity extends BaseFragmentActivity implements
     }
 
     /**
-     * 展示应用角标
-     *
-     * @param tabView
+     * 更新底部tab数字，从MyAppFragment badge请求返回
+     * @param getAppBadgeResult
      */
-    private void handleAppTabItemBadge(View tabView) {
-        TextView textView = (TextView) tabView.findViewById(R.id.index_unhandled_badges_text);
-        setUnHandledBadgesDisplay(textView);
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void updateBadgeNumber(GetAppBadgeResult getAppBadgeResult) {
+        int badgeNumber = 0;
+        Map<String,AppBadgeBean> appBadgeBeanMap = getAppBadgeResult.getAppBadgeBeanMap();
+        Set<String> set = appBadgeBeanMap.keySet();
+        for (String appId:set) {
+            badgeNumber = badgeNumber + appBadgeBeanMap.get(appId).getBadgeNum();
+        }
+
+        for (int i = 0; i < mTabHost.getTabWidget().getChildCount(); i++) {
+            View tabview = mTabHost.getTabWidget().getChildAt(i);
+            if(((TextView)tabview.findViewById(R.id.textview)).getText().toString().contains(getString(R.string.application))){
+                setUnHandledBadgesDisplay(tabview,badgeNumber);
+            }
+        }
     }
 
     /**
      * 处理未处理消息个数的显示
      *
-     * @param unhandledBadges
+     * @param tabView
      */
-    private void setUnHandledBadgesDisplay(TextView unhandledBadges) {
+    private void setUnHandledBadgesDisplay(View tabView,int badgeNumber) {
+        TextView unhandledBadges = (TextView) tabView.findViewById(R.id.index_unhandled_badges_text);
         unhandledBadges.setVisibility(View.VISIBLE);
         GradientDrawable gradientDrawable = new GradientDrawableBuilder()
                 .setCornerRadius(DensityUtil.dip2px(IndexActivity.this, 40))
@@ -530,7 +545,7 @@ public class IndexActivity extends BaseFragmentActivity implements
                 .setStrokeColor(0xFFFF0033).build();
         unhandledBadges.setBackground(gradientDrawable);
 //            unhandledBadges.setText(appBadgeBean.getBadgeNum() > 99 ? "99+" : (appBadgeBean.getBadgeNum() + ""));
-        unhandledBadges.setText("15");
+        unhandledBadges.setText(""+badgeNumber);
     }
 
     /**
@@ -760,6 +775,7 @@ public class IndexActivity extends BaseFragmentActivity implements
         if (newMessageTipsLayout != null) {
             newMessageTipsLayout = null;
         }
+        EventBus.getDefault().unregister(this);
     }
 
     class ContactSaveTask extends AsyncTask<GetAllContactResult, Void, Void> {
