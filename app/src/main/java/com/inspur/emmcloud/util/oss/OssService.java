@@ -16,6 +16,7 @@ import com.inspur.emmcloud.bean.Volume.GetVolumeFileUploadSTSTokenResult;
 import com.inspur.emmcloud.bean.Volume.VolumeFile;
 import com.inspur.emmcloud.callback.ProgressCallback;
 import com.inspur.emmcloud.util.LogUtils;
+import com.inspur.emmcloud.util.VolumeFileUploadUtils;
 
 import java.io.File;
 import java.util.HashMap;
@@ -74,7 +75,7 @@ public class OssService {
                             String result = (String) msg.obj;
                             progressCallback.onSuccess(new VolumeFile(result));
                         }
-                        OssUploadManager.getInstance().removeOssService(volumeFileId);
+                        VolumeFileUploadUtils.getInstance().removeOssService(volumeFileId);
                         onDestory();
                         break;
                     case FAIL:

@@ -11,7 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
@@ -33,7 +32,7 @@ import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.ToastUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
-import com.inspur.emmcloud.util.oss.OssUploadManager;
+import com.inspur.emmcloud.util.VolumeFileUploadUtils;
 import com.inspur.emmcloud.widget.dialogs.ActionSheetDialog;
 import com.inspur.imp.plugin.camera.imagepicker.ImagePicker;
 import com.inspur.imp.plugin.camera.imagepicker.bean.ImageItem;
@@ -42,10 +41,13 @@ import org.xutils.view.annotation.ViewInject;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
+
+import static com.inspur.emmcloud.R.id.operation_layout;
 
 
 /**
- * 云盘-我的文件
+ * 云盘-文件列表展示
  */
 
 public class VolumeFileActivity extends VolumeFileBaseActivity {
@@ -53,14 +55,29 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
     private static final int REQUEST_OPEN_GALLERY = 3;
     private static final int REQUEST_OPEN_FILE_BROWSER = 4;
 
+    private static final String SORT_BY_NAME_UP = "sort_by_name_up";
+    private static final String SORT_BY_NAME_DOWN = "sort_by_name_down";
+    private static final String SORT_BY_TIME_UP = "sort_by_time_up";
+    private static final String SORT_BY_TIME_DOWN = "sort_by_time_down";
+
+    @ViewInject(R.id.operation_sort_text)
+    private TextView operationSortText;
+
     @ViewInject(R.id.batch_operation_bar_layout)
-    protected RelativeLayout batchOperationBarLayout;
+    private RelativeLayout batchOperationBarLayout;
 
     @ViewInject(R.id.batch_operation_header_layout)
-    protected RelativeLayout batchOprationHeaderLayout;
+    private RelativeLayout batchOprationHeaderLayout;
+
+    @ViewInject(R.id.batch_operation_header_text)
+    private TextView batchOprationHeaderText;
+
+    @ViewInject(operation_layout)
+    protected RelativeLayout operationLayout;
 
     private MyAppAPIService apiService;
     private String cameraPicFileName;
+    private String sortType = SORT_BY_NAME_UP;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,6 +108,7 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
                         }
                     } else {
                         adapter.setVolumeFileSelect(position);
+                        batchOprationHeaderText.setText("已选择("+adapter.getSelectVolumeFileList().size()+")");
                     }
                 }
 
@@ -141,19 +159,31 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
             case R.id.operation_filter_text:
                 showFileFilterPop(v);
                 break;
-            case R.id.sort_by_time_layout:
-                isSortByTime = true;
+            case R.id.sort_by_time_up_layout:
+                sortType = "sort_time_up";
                 sortOperationPop.dismiss();
                 break;
-            case R.id.sort_by_name_layout:
-                isSortByTime = false;
+            case R.id.sort_by_time_down_layout:
+                sortType = "sort_time_down";
+                sortOperationPop.dismiss();
+                break;
+            case R.id.sort_by_name_up_layout:
+                sortType = "sort_name_up";
+                sortOperationPop.dismiss();
+                break;
+            case R.id.sort_by_name_down_layout:
+                sortType = "sort_name_down";
                 sortOperationPop.dismiss();
                 break;
             case R.id.batch_operation_delete_text:
                 break;
             case R.id.batch_operation_copy_text:
+                List<VolumeFile> copyVolumeFileList = adapter.getSelectVolumeFileList();
+                copyFile(copyVolumeFileList);
                 break;
             case R.id.batch_operation_move_text:
+                List<VolumeFile> moveVolumeFileList = adapter.getSelectVolumeFileList();
+                moveFile(moveVolumeFileList);
                 break;
             case R.id.batch_operation_cancel_text:
                 setMutiselect(false);
@@ -209,14 +239,14 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
         sortOperationPop = new PopupWindow(contentView,
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT, true);
-        sortByTimeText = (TextView) contentView.findViewById(R.id.sort_by_time_text);
-        sortByNameText = (TextView) contentView.findViewById(R.id.sort_by_name_text);
-        sortByTimeSelectImg = (ImageView) contentView.findViewById(R.id.sort_by_time_select_img);
-        sortByNameSelectImg = (ImageView) contentView.findViewById(R.id.sort_by_name_select_img);
-        sortByTimeText.setTextColor(Color.parseColor(isSortByTime ? "#2586CD" : "#666666"));
-        sortByNameText.setTextColor(Color.parseColor(isSortByTime ? "#666666" : "#2586CD"));
-        sortByTimeSelectImg.setVisibility(isSortByTime ? View.VISIBLE : View.INVISIBLE);
-        sortByNameSelectImg.setVisibility(isSortByTime ? View.INVISIBLE : View.VISIBLE);
+        ((TextView) contentView.findViewById(R.id.sort_by_time_up_text)).setTextColor(Color.parseColor(sortType.equals(SORT_BY_TIME_UP) ? "#2586CD" : "#666666"));
+        ((TextView) contentView.findViewById(R.id.sort_by_time_down_text)).setTextColor(Color.parseColor(sortType.equals(SORT_BY_TIME_DOWN) ? "#2586CD" : "#666666"));
+        ((TextView) contentView.findViewById(R.id.sort_by_name_up_text)).setTextColor(Color.parseColor(sortType.equals(SORT_BY_NAME_UP) ? "#2586CD" : "#666666"));
+        ((TextView) contentView.findViewById(R.id.sort_by_name_down_text)).setTextColor(Color.parseColor(sortType.equals(SORT_BY_NAME_DOWN) ? "#2586CD" : "#666666"));
+        (contentView.findViewById(R.id.sort_by_time_up_select_img)).setVisibility(sortType.equals(SORT_BY_TIME_UP)? View.VISIBLE : View.INVISIBLE);
+        (contentView.findViewById(R.id.sort_by_time_down_select_img)).setVisibility(sortType.equals(SORT_BY_TIME_DOWN)? View.VISIBLE : View.INVISIBLE);
+        (contentView.findViewById(R.id.sort_by_name_up_select_img)).setVisibility(sortType.equals(SORT_BY_NAME_UP)? View.VISIBLE : View.INVISIBLE);
+        (contentView.findViewById(R.id.sort_by_name_down_select_img)).setVisibility(sortType.equals(SORT_BY_NAME_DOWN)? View.VISIBLE : View.INVISIBLE);
         sortOperationPop.setTouchable(true);
         sortOperationPop.setBackgroundDrawable(ContextCompat.getDrawable(
                 getApplicationContext(), R.drawable.pop_window_view_tran));
@@ -228,13 +258,35 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
         sortOperationPop.setOnDismissListener(new PopupWindow.OnDismissListener() {
             @Override
             public void onDismiss() {
-                operationSortText.setText(isSortByTime ? "时间排序" : "名称排序");
-                Drawable drawable1 = ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_volume_menu_drop_down);
-                drawable1.setBounds(0, 0, DensityUtil.dip2px(getApplicationContext(), 14), DensityUtil.dip2px(getApplicationContext(), 14));
-                operationSortText.setCompoundDrawables(null, null, drawable1, null);
+                setOperationSort();
             }
         });
 
+    }
+
+    /**
+     * 设置排序显示
+     */
+    private void setOperationSort(){
+        Drawable drawable1 = ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_volume_menu_drop_down);
+        drawable1.setBounds(0, 0, DensityUtil.dip2px(getApplicationContext(), 14), DensityUtil.dip2px(getApplicationContext(), 14));
+        operationSortText.setCompoundDrawables(null, null, drawable1, null);
+        String sortTypeShowTxt;
+        switch (sortType){
+            case SORT_BY_NAME_DOWN:
+                sortTypeShowTxt = "名称降序";
+                break;
+            case SORT_BY_TIME_UP:
+                sortTypeShowTxt = "时间升序";
+                break;
+            case SORT_BY_TIME_DOWN:
+                sortTypeShowTxt = "时间降序";
+                break;
+            default:
+                sortTypeShowTxt = "名称升序";
+                break;
+        }
+        operationSortText.setText(sortTypeShowTxt);
     }
 
     /**
@@ -278,12 +330,12 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
-            if (requestCode == REQUEST_OPEN_FILE_BROWSER) {
+            if (requestCode == REQUEST_OPEN_FILE_BROWSER) {  //文件浏览器选择文件返回
                 Uri uri = data.getData();
                 LogUtils.jasonDebug("uri=" + uri.toString());
                 String filePath = GetPathFromUri4kitkat.getPathByUri(getApplicationContext(), uri);
                 uploadFile(filePath);
-            } else if (requestCode == REQUEST_OPEN_CEMERA
+            } else if (requestCode == REQUEST_OPEN_CEMERA //拍照返回
                     && NetUtils.isNetworkConnected(getApplicationContext())) {
                 String filePath = Environment.getExternalStorageDirectory() + "/DCIM/" + cameraPicFileName;
                 uploadFile(filePath);
@@ -343,7 +395,7 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
             volumeFile.setName(file.getName());
             volumeFile.setStatus("downloading");
             volumeFile.setFormat("." + FileUtils.getFileExtension(filePath));
-            OssUploadManager.getInstance().startUpload(getApplicationContext(), getVolumeFileUploadSTSTokenResult, null, volumeFile, filePath, volume.getId() + absolutePath);
+            VolumeFileUploadUtils.getInstance().startUpload(getApplicationContext(), getVolumeFileUploadSTSTokenResult, null, volumeFile, filePath, volume.getId() + absolutePath);
             volumeFileList.add(0, volumeFile);
             initDataBlankLayoutStatus();
             adapter.setVolumeFileList(volumeFileList);

@@ -91,6 +91,9 @@ public class VolumeHomePageActivity extends BaseActivity {
         }
     }
 
+    /**
+     * 获取云盘列表
+     */
     private void getVolumeList() {
         if (NetUtils.isNetworkConnected(getApplicationContext())) {
             loadingDlg.show();
@@ -104,11 +107,14 @@ public class VolumeHomePageActivity extends BaseActivity {
             if (loadingDlg != null && loadingDlg.isShowing()) {
                 loadingDlg.dismiss();
             }
-            myVolume = getVolumeListResult.getMyVolume();
+
             shareVolumeList = getVolumeListResult.getShareVolumeList();
-            String volumeUsedSize = FileUtil.formetFileSize(myVolume.getUserdSize());
-            String volumeMaxSize = FileUtil.formetFileSize(myVolume.getMaxSize());
-            volumeCapacityText.setText(volumeUsedSize+" / "+volumeMaxSize);
+            myVolume = getVolumeListResult.getMyVolume();
+            if (myVolume != null){
+                String volumeUsedSize = FileUtil.formetFileSize(myVolume.getUserdSize());
+                String volumeMaxSize = FileUtil.formetFileSize(myVolume.getMaxSize());
+                volumeCapacityText.setText(volumeUsedSize+" / "+volumeMaxSize);
+            }
         }
 
         @Override

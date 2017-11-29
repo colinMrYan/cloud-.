@@ -10,7 +10,7 @@ import android.widget.TextView;
 import com.inspur.emmcloud.R;
 
 /**
- * Created by chenmch on 2017/11/15.
+ * 最近使用云盘列表adapter
  */
 
 public class VolumeRecentUseAdapter extends BaseAdapter {

@@ -1,4 +1,4 @@
-package com.inspur.emmcloud.util.oss;
+package com.inspur.emmcloud.util;
 
 import android.content.Context;
 import android.os.Handler;
@@ -10,23 +10,26 @@ import com.alibaba.sdk.android.oss.common.auth.OSSCredentialProvider;
 import com.inspur.emmcloud.bean.Volume.GetVolumeFileUploadSTSTokenResult;
 import com.inspur.emmcloud.bean.Volume.VolumeFile;
 import com.inspur.emmcloud.callback.ProgressCallback;
+import com.inspur.emmcloud.util.oss.OssService;
+import com.inspur.emmcloud.util.oss.OssUploadInfo;
+import com.inspur.emmcloud.util.oss.STSGetter;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by chenmch on 2017/11/24.
+ * 云盘文件上传管理类
  */
 
-public class OssUploadManager {
-    private static  OssUploadManager instance;
+public class VolumeFileUploadUtils {
+    private static VolumeFileUploadUtils instance;
     private List<OssUploadInfo> ossUploadInfoList = new ArrayList<>();
 
-    public static  OssUploadManager getInstance(){
+    public static VolumeFileUploadUtils getInstance(){
         if (instance == null){
-            synchronized (OssUploadManager.class){
+            synchronized (VolumeFileUploadUtils.class){
                 if (instance == null){
-                    instance = new OssUploadManager();
+                    instance = new VolumeFileUploadUtils();
                 }
             }
         }

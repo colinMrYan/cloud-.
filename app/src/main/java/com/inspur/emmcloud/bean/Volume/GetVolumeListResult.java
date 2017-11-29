@@ -15,14 +15,16 @@ import java.util.List;
 public class GetVolumeListResult {
     private List<Volume> shareVolumeList = new ArrayList<>();
     private Volume myVolume;
-    public GetVolumeListResult(String response){
-        JSONArray array = JSONUtils.getJSONArray(response,new JSONArray());
-        for (int i=0;i<array.length();i++){
-            JSONObject object = JSONUtils.getJSONObject(array,i,new JSONObject());
+
+    public GetVolumeListResult(String response) {
+        JSONArray array = JSONUtils.getJSONArray(response, new JSONArray());
+        for (int i = 0; i < array.length(); i++) {
+            JSONObject object = JSONUtils.getJSONObject(array, i, new JSONObject());
             Volume volume = new Volume(object);
-            if (volume.getType().equals("pubic")){
+            String type = volume.getType();
+            if (type.equals("pubic")) {
                 shareVolumeList.add(volume);
-            }else {
+            } else if (type.equals("private")) {
                 myVolume = volume;
             }
         }

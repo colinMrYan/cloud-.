@@ -14,10 +14,9 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.Volume.VolumeFile;
 import com.inspur.emmcloud.callback.ProgressCallback;
 import com.inspur.emmcloud.util.FileUtils;
-import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.TimeUtils;
 import com.inspur.emmcloud.util.VolumeFileIconUtils;
-import com.inspur.emmcloud.util.oss.OssUploadManager;
+import com.inspur.emmcloud.util.VolumeFileUploadUtils;
 
 import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
@@ -46,7 +45,6 @@ public class VolumeFileAdapter extends RecyclerView.Adapter<VolumeFileAdapter.Vi
         this.context = context;
         this.volumeFileList = volumeFileList;
     }
-
     public void setVolumeFileList(List<VolumeFile> volumeFileList) {
         this.volumeFileList = volumeFileList;
     }
@@ -120,7 +118,7 @@ public class VolumeFileAdapter extends RecyclerView.Adapter<VolumeFileAdapter.Vi
         String fileTime = TimeUtils.getTime(volumeFile.getCreationDate(), format);
         holder.fileTimeText.setText(fileTime);
         if (!isStatusNomal){
-            OssUploadManager.getInstance().setOssUploadProgressCallback(volumeFile, new ProgressCallback() {
+            VolumeFileUploadUtils.getInstance().setOssUploadProgressCallback(volumeFile, new ProgressCallback() {
                 @Override
                 public void onSuccess(VolumeFile newVolumeFile) {
                     replaceVolumeFile(volumeFile,newVolumeFile);
@@ -139,7 +137,7 @@ public class VolumeFileAdapter extends RecyclerView.Adapter<VolumeFileAdapter.Vi
             holder.uploadCancelText.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    OssUploadManager.getInstance().removeOssService(volumeFile.getId());
+                    VolumeFileUploadUtils.getInstance().removeOssService(volumeFile.getId());
                     volumeFileList.remove(position);
                     notifyItemRemoved(position);
                 }
