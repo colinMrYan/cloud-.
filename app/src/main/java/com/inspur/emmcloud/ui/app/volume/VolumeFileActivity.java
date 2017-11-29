@@ -77,7 +77,7 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
 
     private MyAppAPIService apiService;
     private String cameraPicFileName;
-    private String sortType = SORT_BY_NAME_UP;
+    private String sortType = "sort_by_name_up";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -160,19 +160,19 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
                 showFileFilterPop(v);
                 break;
             case R.id.sort_by_time_up_layout:
-                sortType = "sort_time_up";
+                sortType = SORT_BY_TIME_UP;
                 sortOperationPop.dismiss();
                 break;
             case R.id.sort_by_time_down_layout:
-                sortType = "sort_time_down";
+                sortType = SORT_BY_TIME_DOWN;
                 sortOperationPop.dismiss();
                 break;
             case R.id.sort_by_name_up_layout:
-                sortType = "sort_name_up";
+                sortType = SORT_BY_NAME_UP;
                 sortOperationPop.dismiss();
                 break;
             case R.id.sort_by_name_down_layout:
-                sortType = "sort_name_down";
+                sortType = SORT_BY_NAME_DOWN;
                 sortOperationPop.dismiss();
                 break;
             case R.id.batch_operation_delete_text:
