@@ -265,7 +265,7 @@ public class MeetingListActivity extends BaseActivity implements
 
         @Override
         public int getChildrenCount(int groupPosition) {
-            if (meetingMap.get(meetingGroupList.get(groupPosition)) != null) {
+            if (meetingMap != null && meetingMap.get(meetingGroupList.get(groupPosition)) != null) {
                 return meetingMap.get(meetingGroupList.get(groupPosition))
                         .size();
             } else {
@@ -319,19 +319,21 @@ public class MeetingListActivity extends BaseActivity implements
             } else {
                 holder = (ViewHolder) convertView.getTag();
             }
-            String from = meetingMap.get(meetingGroupList.get(groupPosition))
-                    .get(0).getFrom();
-            String week = getWeekDay(from);
-            Calendar calendar = TimeUtils.timeString2Calendar(from);
-            String date = TimeUtils.calendar2FormatString(
-                    MeetingListActivity.this, calendar,
-                    TimeUtils.FORMAT_YEAR_MONTH_DAY);
-            holder.dateText.setText(date);
-            holder.weekText.setText(week);
-            if (TimeUtils.isCalendarToday(TimeUtils.timeString2Calendar(from))) {
-                holder.todayText.setText("(" + getString(R.string.today) + ")");
-            } else {
-                holder.todayText.setText("");
+            if(meetingMap != null) {
+                String from = meetingMap.get(meetingGroupList.get(groupPosition))
+                        .get(0).getFrom();
+                String week = getWeekDay(from);
+                Calendar calendar = TimeUtils.timeString2Calendar(from);
+                String date = TimeUtils.calendar2FormatString(
+                        MeetingListActivity.this, calendar,
+                        TimeUtils.FORMAT_YEAR_MONTH_DAY);
+                holder.dateText.setText(date);
+                holder.weekText.setText(week);
+                if (TimeUtils.isCalendarToday(TimeUtils.timeString2Calendar(from))) {
+                    holder.todayText.setText("(" + getString(R.string.today) + ")");
+                } else {
+                    holder.todayText.setText("");
+                }
             }
             return convertView;
         }
