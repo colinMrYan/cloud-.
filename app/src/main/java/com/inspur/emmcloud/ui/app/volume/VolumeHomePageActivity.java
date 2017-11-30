@@ -111,8 +111,8 @@ public class VolumeHomePageActivity extends BaseActivity {
             shareVolumeList = getVolumeListResult.getShareVolumeList();
             myVolume = getVolumeListResult.getMyVolume();
             if (myVolume != null){
-                String volumeUsedSize = FileUtil.formetFileSize(myVolume.getUserdSize());
-                String volumeMaxSize = FileUtil.formetFileSize(myVolume.getMaxSize());
+                String volumeUsedSize = FileUtil.formetFileSizeMinM(myVolume.getUserdSize());
+                String volumeMaxSize = FileUtil.formetFileSizeMinM(myVolume.getMaxSize());
                 volumeCapacityText.setText(volumeUsedSize+" / "+volumeMaxSize);
             }
         }
