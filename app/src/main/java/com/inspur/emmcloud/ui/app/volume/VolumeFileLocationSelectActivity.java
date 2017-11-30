@@ -179,6 +179,13 @@ public class VolumeFileLocationSelectActivity extends VolumeFileBaseActivity {
             if (loadingDlg != null && loadingDlg.isShowing()) {
                 loadingDlg.dismiss();
             }
+            //将移动的位置传递回去，以便于当前页面刷新数据
+            Intent intent = new  Intent();
+            intent.putExtra("path",absolutePath);
+            intent.putExtra("command","refresh");
+            intent.setAction("broadcast_volume");
+            //发送无序广播
+            sendBroadcast(intent);
             setResult(RESULT_OK);
             finish();
         }

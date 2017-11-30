@@ -95,7 +95,7 @@ public class VolumeFileDownloadActivtiy extends BaseActivity {
                 break;
             case R.id.download_btn:
                 if (downloadBtn.getText().equals(getString(R.string.open))) {
-                    FileUtils.openFile(getApplicationContext(), fileSavePath);
+                    FileUtils.openFile(getApplicationContext(), fileSavePath,volumeFile.getFormat());
                 } else {
                     downloadFile();
                 }

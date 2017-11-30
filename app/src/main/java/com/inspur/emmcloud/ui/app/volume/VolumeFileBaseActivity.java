@@ -387,7 +387,6 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
         }
     }
 
-
     /**
      * 创建文件夹
      *

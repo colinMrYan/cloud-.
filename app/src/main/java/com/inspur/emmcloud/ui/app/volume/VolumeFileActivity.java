@@ -1,6 +1,9 @@
 package com.inspur.emmcloud.ui.app.volume;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -31,8 +34,8 @@ import com.inspur.emmcloud.util.IntentUtils;
 import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.ToastUtils;
-import com.inspur.emmcloud.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.util.VolumeFileUploadUtils;
+import com.inspur.emmcloud.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.dialogs.ActionSheetDialog;
 import com.inspur.imp.plugin.camera.imagepicker.ImagePicker;
 import com.inspur.imp.plugin.camera.imagepicker.bean.ImageItem;
@@ -77,6 +80,7 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
     private MyAppAPIService apiService;
     private String cameraPicFileName;
     private List<VolumeFile> moveVolumeFileList = new ArrayList<>();
+    private BroadcastReceiver broadcastReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,6 +88,7 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
         apiService = new MyAppAPIService(this);
         apiService.setAPIInterface(new WebService());
         setListIemClick();
+        registerReceiver();
     }
 
     private void setListIemClick() {
@@ -107,7 +112,7 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
                         }
                     } else {
                         adapter.setVolumeFileSelect(position);
-                        batchOprationHeaderText.setText("已选择("+adapter.getSelectVolumeFileList().size()+")");
+                        batchOprationHeaderText.setText("已选择(" + adapter.getSelectVolumeFileList().size() + ")");
                     }
                 }
 
@@ -124,6 +129,23 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
 
             }
         });
+    }
+
+    private void registerReceiver() {
+        broadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                String path = intent.getStringExtra("path");
+                if (path != null && path.equals(absolutePath)) {
+                    String command = intent.getStringExtra("command");
+                    if (command != null && command.equals("refresh")){
+                        getVolumeFileList(true);
+                    }
+                }
+            }
+        };
+        IntentFilter intentFilter = new IntentFilter("broadcast_volume");
+        registerReceiver(broadcastReceiver, intentFilter);
     }
 
     /**
@@ -243,10 +265,10 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
         ((TextView) contentView.findViewById(R.id.sort_by_time_down_text)).setTextColor(Color.parseColor(sortType.equals(SORT_BY_TIME_DOWN) ? "#2586CD" : "#666666"));
         ((TextView) contentView.findViewById(R.id.sort_by_name_up_text)).setTextColor(Color.parseColor(sortType.equals(SORT_BY_NAME_UP) ? "#2586CD" : "#666666"));
         ((TextView) contentView.findViewById(R.id.sort_by_name_down_text)).setTextColor(Color.parseColor(sortType.equals(SORT_BY_NAME_DOWN) ? "#2586CD" : "#666666"));
-        (contentView.findViewById(R.id.sort_by_time_up_select_img)).setVisibility(sortType.equals(SORT_BY_TIME_UP)? View.VISIBLE : View.INVISIBLE);
-        (contentView.findViewById(R.id.sort_by_time_down_select_img)).setVisibility(sortType.equals(SORT_BY_TIME_DOWN)? View.VISIBLE : View.INVISIBLE);
-        (contentView.findViewById(R.id.sort_by_name_up_select_img)).setVisibility(sortType.equals(SORT_BY_NAME_UP)? View.VISIBLE : View.INVISIBLE);
-        (contentView.findViewById(R.id.sort_by_name_down_select_img)).setVisibility(sortType.equals(SORT_BY_NAME_DOWN)? View.VISIBLE : View.INVISIBLE);
+        (contentView.findViewById(R.id.sort_by_time_up_select_img)).setVisibility(sortType.equals(SORT_BY_TIME_UP) ? View.VISIBLE : View.INVISIBLE);
+        (contentView.findViewById(R.id.sort_by_time_down_select_img)).setVisibility(sortType.equals(SORT_BY_TIME_DOWN) ? View.VISIBLE : View.INVISIBLE);
+        (contentView.findViewById(R.id.sort_by_name_up_select_img)).setVisibility(sortType.equals(SORT_BY_NAME_UP) ? View.VISIBLE : View.INVISIBLE);
+        (contentView.findViewById(R.id.sort_by_name_down_select_img)).setVisibility(sortType.equals(SORT_BY_NAME_DOWN) ? View.VISIBLE : View.INVISIBLE);
         sortOperationPop.setTouchable(true);
         sortOperationPop.setBackgroundDrawable(ContextCompat.getDrawable(
                 getApplicationContext(), R.drawable.pop_window_view_tran));
@@ -267,12 +289,12 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
     /**
      * 设置排序显示
      */
-    private void setOperationSort(){
+    private void setOperationSort() {
         Drawable drawable1 = ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_volume_menu_drop_down);
         drawable1.setBounds(0, 0, DensityUtil.dip2px(getApplicationContext(), 14), DensityUtil.dip2px(getApplicationContext(), 14));
         operationSortText.setCompoundDrawables(null, null, drawable1, null);
         String sortTypeShowTxt;
-        switch (sortType){
+        switch (sortType) {
             case SORT_BY_NAME_DOWN:
                 sortTypeShowTxt = "名称降序";
                 break;
@@ -320,7 +342,7 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
      * @param title
      */
     protected void showFileOperationDlg(final VolumeFile volumeFile) {
-        if (volumeFile.getType().equals("directory")){
+        if (volumeFile.getType().equals("directory")) {
             new ActionSheetDialog.ActionListSheetBuilder(VolumeFileActivity.this)
                     .setTitle(volumeFile.getName())
                     .addItem("删除")
@@ -355,7 +377,7 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
                     })
                     .build()
                     .show();
-        }else {
+        } else {
             new ActionSheetDialog.ActionListSheetBuilder(VolumeFileActivity.this)
                     .setTitle(volumeFile.getName())
                     .addItem("删除")
@@ -419,10 +441,10 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
         adapter.setMultiselect(isMutiselect);
     }
 
-    private void setselectAll(boolean isSelectAll){
-        getBatchOprationSelectAllText.setText(isSelectAll?"全不选":"全选");
+    private void setselectAll(boolean isSelectAll) {
+        getBatchOprationSelectAllText.setText(isSelectAll ? "全不选" : "全选");
         adapter.setSelectAll(isSelectAll);
-        batchOprationHeaderText.setText("已选择("+adapter.getSelectVolumeFileList().size()+")");
+        batchOprationHeaderText.setText("已选择(" + adapter.getSelectVolumeFileList().size() + ")");
     }
 
 
@@ -439,7 +461,7 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
                     && NetUtils.isNetworkConnected(getApplicationContext())) {
                 String filePath = Environment.getExternalStorageDirectory() + "/DCIM/" + cameraPicFileName;
                 uploadFile(filePath);
-            }else if (requestCode == REQUEST_MOVE_FILE){  //移动文件
+            } else if (requestCode == REQUEST_MOVE_FILE) {  //移动文件
                 volumeFileList.removeAll(moveVolumeFileList);
                 adapter.notifyDataSetChanged();
             }
@@ -466,6 +488,16 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
         } else {
             ToastUtils.show(getApplicationContext(), "选择的文件不存在！");
         }
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        if (broadcastReceiver != null) {
+            this.unregisterReceiver(broadcastReceiver);
+            broadcastReceiver = null;
+        }
+        super.onDestroy();
     }
 
     /**

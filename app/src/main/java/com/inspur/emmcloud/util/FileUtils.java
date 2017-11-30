@@ -804,20 +804,25 @@ public class FileUtils {
      */
     public static void openFile(Context context, String path) {
         File file = new File(path);
-        Intent intent = new Intent("android.intent.action.VIEW");
-        try {
-            String mime = FileUtils.getMimeType(file);
-            if (StringUtils.isBlank(mime)) {
-                mime = "text/plain";
-            }
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.setDataAndType(Uri.fromFile(file), mime);
-            context.startActivity(intent);
-        } catch (Exception e) {
-            e.printStackTrace();
-            ToastUtils.show(context,
-                    context.getString(R.string.file_type_not_recognize));
+        String mime = FileUtils.getMimeType(file);
+        if (StringUtils.isBlank(mime)) {
+            mime = "text/plain";
         }
+        openFile(context,path,mime);
+    }
+
+    /**
+     * 打开文件
+     * @param context
+     * @param path
+     * @param mime
+     */
+    public static void openFile(Context context, String path,String mime){
+        File file = new File(path);
+        Intent intent = new Intent("android.intent.action.VIEW");
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.setDataAndType(Uri.fromFile(file), mime);
+        context.startActivity(intent);
     }
 
     /**
