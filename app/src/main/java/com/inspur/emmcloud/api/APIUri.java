@@ -815,4 +815,13 @@ public class APIUri {
     public static String getVolumeFileRenameUrl(String volumeId){
         return  URL_BASE_VOLUME+"/"+volumeId+"/file/name";
     }
+
+    /**
+     * 获取云盘文件移动url
+     * @param volumeId
+     * @return
+     */
+    public static String getMoveVolumeFileUrl(String volumeId){
+        return  URL_BASE_VOLUME+"/"+volumeId+"/file/path";
+    }
 }

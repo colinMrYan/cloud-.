@@ -1,6 +1,7 @@
 package com.inspur.emmcloud.ui.app.volume;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.RelativeLayout;
@@ -9,9 +10,12 @@ import android.widget.TextView;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.VolumeFileAdapter;
+import com.inspur.emmcloud.api.APIInterfaceInstance;
+import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
 import com.inspur.emmcloud.bean.Volume.VolumeFile;
-import com.inspur.emmcloud.util.IntentUtils;
 import com.inspur.emmcloud.util.NetUtils;
+import com.inspur.emmcloud.util.ToastUtils;
+import com.inspur.emmcloud.util.WebServiceMiddleUtils;
 
 import org.xutils.view.annotation.ViewInject;
 
@@ -38,19 +42,22 @@ public class VolumeFileLocationSelectActivity extends VolumeFileBaseActivity {
     private RelativeLayout locationSelectBarLayout;
 
     private boolean isFunctionCopy;//判断是复制还是移动功能
+    private MyAppAPIService apiService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //设置此界面只显示文件夹
         this.isShowDirectoryOnly = true;
-        isFunctionCopy = getIntent().getBooleanExtra("isFunctionCopy",true);
+        isFunctionCopy = getIntent().getBooleanExtra("isFunctionCopy", true);
         initViews();
 
     }
 
-    private void initViews(){
-        locationSelectToText.setText(isFunctionCopy?"复制到":"移动到当前目录");
+    private void initViews() {
+        apiService = new MyAppAPIService(this);
+        apiService.setAPIInterface(new WebService());
+        locationSelectToText.setText(isFunctionCopy ? "复制到" : "移动到当前目录");
         headerOperationLayout.setVisibility(View.GONE);
         locationSelectCancelText.setVisibility(View.VISIBLE);
         locationSelectBarLayout.setVisibility(View.VISIBLE);
@@ -58,13 +65,16 @@ public class VolumeFileLocationSelectActivity extends VolumeFileBaseActivity {
         adapter.setItemClickListener(new VolumeFileAdapter.MyItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
+                Intent intent = new Intent(getApplicationContext(), VolumeFileLocationSelectActivity.class);
                 VolumeFile volumeFile = volumeFileList.get(position);
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("volume", volume);
+                Bundle bundle = getIntent().getExtras();
                 bundle.putString("absolutePath", absolutePath + volumeFile.getName() + "/");
-                bundle.putString("title", volumeFile.getName());
-                bundle.putBoolean("isFunctionCopy",true);
-                IntentUtils.startActivity(VolumeFileLocationSelectActivity.this, VolumeFileLocationSelectActivity.class, bundle);
+                intent.putExtras(bundle);
+                if (!isFunctionCopy) {
+                    startActivityForResult(intent, REQUEST_MOVE_FILE);
+                } else {
+                    startActivity(intent);
+                }
 
             }
         });
@@ -96,10 +106,15 @@ public class VolumeFileLocationSelectActivity extends VolumeFileBaseActivity {
                 showCreateFolderDlg();
                 break;
             case R.id.location_select_to_text:
-                if (isFunctionCopy){
-                    copyFile();
-                }else {
-                    moveFile();
+                String operationFileAbsolutePath = getIntent().getStringExtra("fileAbsolutePath");
+                if (operationFileAbsolutePath.equals(absolutePath)) {
+                    ToastUtils.show(getApplicationContext(), "该文件已在当前文件夹");
+                    return;
+                }
+                if (isFunctionCopy) {
+                    copyFile(operationFileAbsolutePath);
+                } else {
+                    moveFile(operationFileAbsolutePath);
                 }
                 break;
 
@@ -111,12 +126,23 @@ public class VolumeFileLocationSelectActivity extends VolumeFileBaseActivity {
     /**
      * 关闭此Activity所有的instance
      */
-    private void closeAllThisActivityInstance(){
-        List<Activity> activityList = ((MyApplication)getApplicationContext()).getActivityList();
-        for (int i=0;i<activityList.size();i++){
+    private void closeAllThisActivityInstance() {
+        List<Activity> activityList = ((MyApplication) getApplicationContext()).getActivityList();
+        for (int i = 0; i < activityList.size(); i++) {
             Activity activity = activityList.get(i);
-            if (activity != null && activity instanceof  VolumeFileLocationSelectActivity){
+            if (activity != null && activity instanceof VolumeFileLocationSelectActivity) {
                 activity.finish();
+            }
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            if (requestCode == REQUEST_MOVE_FILE) {
+                setResult(RESULT_OK);
+                finish();
             }
         }
     }
@@ -124,18 +150,45 @@ public class VolumeFileLocationSelectActivity extends VolumeFileBaseActivity {
     /**
      * 复制文件
      */
-    private void copyFile(){
-        if (NetUtils.isNetworkConnected(getApplicationContext())){
+    private void copyFile(String operationFileAbsolutePath) {
+        if (NetUtils.isNetworkConnected(getApplicationContext())) {
 
         }
     }
 
     /**
      * 移动文件
+     *
+     * @param operationFileAbsolutePath
      */
-    private void moveFile(){
-        if (NetUtils.isNetworkConnected(getApplicationContext())){
+    private void moveFile(String operationFileAbsolutePath) {
+        if (NetUtils.isNetworkConnected(getApplicationContext())) {
+            loadingDlg.show();
+            String path = absolutePath;
+            if (absolutePath.length() > 1) {
+                path = absolutePath.substring(0, absolutePath.length() - 1);
+            }
+            List<VolumeFile> moveVolumeFileList = (List<VolumeFile>) getIntent().getSerializableExtra("volumeFileList");
+            apiService.moveVolumeFile(volume.getId(), operationFileAbsolutePath, moveVolumeFileList, path);
+        }
+    }
 
+    private class WebService extends APIInterfaceInstance {
+        @Override
+        public void returnMoveFileSuccess(List<VolumeFile> movedVolumeFileList) {
+            if (loadingDlg != null && loadingDlg.isShowing()) {
+                loadingDlg.dismiss();
+            }
+            setResult(RESULT_OK);
+            finish();
+        }
+
+        @Override
+        public void returnMoveFileFail(String error, int errorCode) {
+            if (loadingDlg != null && loadingDlg.isShowing()) {
+                loadingDlg.dismiss();
+            }
+            WebServiceMiddleUtils.hand(getApplicationContext(), error, errorCode);
         }
     }
 }

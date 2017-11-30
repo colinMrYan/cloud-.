@@ -55,11 +55,6 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
     private static final int REQUEST_OPEN_GALLERY = 3;
     private static final int REQUEST_OPEN_FILE_BROWSER = 4;
 
-    private static final String SORT_BY_NAME_UP = "sort_by_name_up";
-    private static final String SORT_BY_NAME_DOWN = "sort_by_name_down";
-    private static final String SORT_BY_TIME_UP = "sort_by_time_up";
-    private static final String SORT_BY_TIME_DOWN = "sort_by_time_down";
-
     @ViewInject(R.id.operation_sort_text)
     private TextView operationSortText;
 
@@ -72,12 +67,16 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
     @ViewInject(R.id.batch_operation_header_text)
     private TextView batchOprationHeaderText;
 
+    @ViewInject(R.id.batch_operation_select_all_text)
+    private TextView getBatchOprationSelectAllText;
+
     @ViewInject(operation_layout)
     protected RelativeLayout operationLayout;
 
+    private PopupWindow sortOperationPop;
     private MyAppAPIService apiService;
     private String cameraPicFileName;
-    private String sortType = "sort_by_name_up";
+    private List<VolumeFile> moveVolumeFileList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -154,7 +153,7 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
                 showSortOperationPop();
                 break;
             case R.id.operation_multiselect_text:
-                setMutiselect(!adapter.getMultiselect());
+                setMutiSelect(!adapter.getMultiselect());
                 break;
             case R.id.operation_filter_text:
                 showFileFilterPop(v);
@@ -179,17 +178,18 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
                 break;
             case R.id.batch_operation_copy_text:
                 List<VolumeFile> copyVolumeFileList = adapter.getSelectVolumeFileList();
-                copyFile(copyVolumeFileList);
+                GoCopyFile(copyVolumeFileList);
                 break;
             case R.id.batch_operation_move_text:
-                List<VolumeFile> moveVolumeFileList = adapter.getSelectVolumeFileList();
-                moveFile(moveVolumeFileList);
+                moveVolumeFileList = adapter.getSelectVolumeFileList();
+                GomoveFile(moveVolumeFileList);
                 break;
             case R.id.batch_operation_cancel_text:
-                setMutiselect(false);
+                setMutiSelect(false);
                 break;
             case R.id.batch_operation_select_all_text:
-
+                boolean isSelectAllStatus = getBatchOprationSelectAllText.getText().toString().equals("全选");
+                setselectAll(isSelectAllStatus);
                 break;
 
             default:
@@ -287,6 +287,7 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
                 break;
         }
         operationSortText.setText(sortTypeShowTxt);
+        sortVolumeFileList();
     }
 
     /**
@@ -314,15 +315,114 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
     }
 
     /**
+     * 弹出文件操作框
+     *
+     * @param title
+     */
+    protected void showFileOperationDlg(final VolumeFile volumeFile) {
+        if (volumeFile.getType().equals("directory")){
+            new ActionSheetDialog.ActionListSheetBuilder(VolumeFileActivity.this)
+                    .setTitle(volumeFile.getName())
+                    .addItem("删除")
+                    .addItem("重命名")
+                    .addItem("移动到")
+                    .addItem("复制")
+                    .setOnSheetItemClickListener(new ActionSheetDialog.ActionListSheetBuilder.OnSheetItemClickListener() {
+                        @Override
+                        public void onClick(ActionSheetDialog dialog, View itemView, int position) {
+                            switch (position) {
+                                case 0:
+                                    showFileDelWranibgDlg(volumeFile);
+                                    break;
+                                case 1:
+                                    showFileRenameDlg(volumeFile);
+                                    break;
+                                case 2:
+                                    moveVolumeFileList.clear();
+                                    moveVolumeFileList.add(volumeFile);
+                                    GomoveFile(moveVolumeFileList);
+                                    break;
+                                case 3:
+                                    List<VolumeFile> copyVolumeFileList = new ArrayList<VolumeFile>();
+                                    copyVolumeFileList.add(volumeFile);
+                                    GoCopyFile(copyVolumeFileList);
+                                    break;
+                                default:
+                                    break;
+                            }
+                            dialog.dismiss();
+                        }
+                    })
+                    .build()
+                    .show();
+        }else {
+            new ActionSheetDialog.ActionListSheetBuilder(VolumeFileActivity.this)
+                    .setTitle(volumeFile.getName())
+                    .addItem("删除")
+                    .addItem("下载")
+                    .addItem("重命名")
+                    .addItem("移动到")
+                    .addItem("复制")
+                    .addItem("分享")
+                    .setOnSheetItemClickListener(new ActionSheetDialog.ActionListSheetBuilder.OnSheetItemClickListener() {
+                        @Override
+                        public void onClick(ActionSheetDialog dialog, View itemView, int position) {
+                            Bundle bundle = null;
+                            switch (position) {
+                                case 0:
+                                    showFileDelWranibgDlg(volumeFile);
+                                    break;
+                                case 1:
+                                    bundle = new Bundle();
+                                    bundle.putString("volumeId", volume.getId());
+                                    bundle.putSerializable("volumeFile", volumeFile);
+                                    bundle.putString("absolutePath", absolutePath + volumeFile.getName());
+                                    bundle.putBoolean("isStartDownload", true);
+                                    IntentUtils.startActivity(VolumeFileActivity.this, VolumeFileDownloadActivtiy.class, bundle);
+                                    break;
+                                case 2:
+                                    showFileRenameDlg(volumeFile);
+                                    break;
+                                case 3:
+                                    moveVolumeFileList.clear();
+                                    moveVolumeFileList.add(volumeFile);
+                                    GomoveFile(moveVolumeFileList);
+                                    break;
+                                case 4:
+                                    List<VolumeFile> copyVolumeFileList = new ArrayList<VolumeFile>();
+                                    copyVolumeFileList.add(volumeFile);
+                                    GoCopyFile(copyVolumeFileList);
+                                    break;
+                                default:
+                                    break;
+                            }
+                            dialog.dismiss();
+                        }
+                    })
+                    .build()
+                    .show();
+        }
+
+    }
+
+    /**
      * 设置是否是多选状态
      *
      * @param isMutiselect
      */
-    private void setMutiselect(boolean isMutiselect) {
+    private void setMutiSelect(boolean isMutiselect) {
+        getBatchOprationSelectAllText.setText("全选");
+        batchOprationHeaderText.setText("已选择(0)");
         batchOperationBarLayout.setVisibility(isMutiselect ? View.VISIBLE : View.GONE);
         batchOprationHeaderLayout.setVisibility(isMutiselect ? View.VISIBLE : View.GONE);
         adapter.setShowFileOperationDropDownImg(!isMutiselect);
         adapter.setMultiselect(isMutiselect);
+    }
+
+    private void setselectAll(boolean isSelectAll){
+        getBatchOprationSelectAllText.setText(isSelectAll?"全不选":"全选");
+        adapter.setSelectAll(isSelectAll);
+        batchOprationHeaderText.setText("已选择("+adapter.getSelectVolumeFileList().size()+")");
     }
 
 
@@ -339,6 +439,9 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
                     && NetUtils.isNetworkConnected(getApplicationContext())) {
                 String filePath = Environment.getExternalStorageDirectory() + "/DCIM/" + cameraPicFileName;
                 uploadFile(filePath);
+            }else if (requestCode == REQUEST_MOVE_FILE){  //移动文件
+                volumeFileList.removeAll(moveVolumeFileList);
+                adapter.notifyDataSetChanged();
             }
         } else if (resultCode == ImagePicker.RESULT_CODE_ITEMS) {  // 图库选择图片返回
             if (data != null && requestCode == REQUEST_OPEN_GALLERY) {

@@ -38,6 +38,8 @@ import org.xutils.http.HttpMethod;
 import org.xutils.http.RequestParams;
 import org.xutils.x;
 
+import java.util.List;
+
 /**
  * com.inspur.emmcloud.api.apiservice.MyAppAPIService create at 2016年11月8日
  * 下午2:31:55
@@ -743,44 +745,44 @@ public class MyAppAPIService {
         });
     }
 
-//    /**
-//     * 获取云盘文件真实下载路径
-//     * @param volumeId
-//     * @param absolutePath
-//     */
-//    public void getVolumeFileDownloadUrl(final String volumeId,final String absolutePath){
-//        final String url = APIUri.getVolumeFileUploadSTSTokenUrl(volumeId);
-//        RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
-//        params.addParameter("volumeId",volumeId);
-//        params.addQueryStringParameter("path",absolutePath);
-//        x.http().get(params, new APICallback(context, url) {
-//            @Override
-//            public void callbackSuccess(String arg0) {
-//                apiInterface.returnVolumeFileDownloadUrlSuccess(new GetVolumeFileDownloadUrlResult(arg0));
-//            }
-//
-//            @Override
-//            public void callbackFail(String error, int responseCode) {
-//                apiInterface.returnVolumeFileDownloadUrlFail(error,responseCode);
-//            }
-//
-//            @Override
-//            public void callbackTokenExpire() {
-//                new OauthUtils(new OauthCallBack() {
-//
-//                    @Override
-//                    public void reExecute() {
-//                        getVolumeFileDownloadUrl(volumeId,absolutePath);
-//                    }
-//
-//                    @Override
-//                    public void executeFailCallback() {
-//                        callbackFail("", -1);
-//                    }
-//                }, context).refreshToken(url);
-//            }
-//        });
-//    }
+    /**
+     * 移动云盘文件
+     * @param volumeId
+     * @param absolutePath
+     */
+    public void moveVolumeFile(final String volumeId, final String absolutePath, final List<VolumeFile> moveVolumeFileList,final String toPath){
+        final String url = APIUri.getMoveVolumeFileUrl(volumeId);
+        RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
+        params.addQueryStringParameter("to",toPath);
+        params.addQueryStringParameter("from",absolutePath+moveVolumeFileList.get(0).getName());
+        x.http().request(HttpMethod.PUT,params, new APICallback(context, url) {
+            @Override
+            public void callbackSuccess(String arg0) {
+                apiInterface.returnMoveFileSuccess(moveVolumeFileList);
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                apiInterface.returnMoveFileFail(error,responseCode);
+            }
+
+            @Override
+            public void callbackTokenExpire() {
+                new OauthUtils(new OauthCallBack() {
+
+                    @Override
+                    public void reExecute() {
+                        moveVolumeFile(volumeId,absolutePath,moveVolumeFileList,toPath);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                }, context).refreshToken(url);
+            }
+        });
+    }
 
     /**
      * 创建文件夹

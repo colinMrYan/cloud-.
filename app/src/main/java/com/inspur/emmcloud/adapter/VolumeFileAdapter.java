@@ -45,23 +45,42 @@ public class VolumeFileAdapter extends RecyclerView.Adapter<VolumeFileAdapter.Vi
         this.context = context;
         this.volumeFileList = volumeFileList;
     }
+
     public void setVolumeFileList(List<VolumeFile> volumeFileList) {
         this.volumeFileList = volumeFileList;
     }
 
-    public void setShowFileOperationDropDownImg(boolean isShowFileOperationDropDownImg){
+    public void setShowFileOperationDropDownImg(boolean isShowFileOperationDropDownImg) {
         this.isShowFileOperationDropDownImg = isShowFileOperationDropDownImg;
     }
 
     public void setMultiselect(boolean isMultiselect) {
         this.isMultiselect = isMultiselect;
-        if (!isMultiselect){
+        if (!isMultiselect) {
             selectVolumeFileList.clear();
         }
         notifyDataSetChanged();
     }
 
-    public List<VolumeFile> getSelectVolumeFileList(){
+    /**
+     * 设置是否全选
+     * @param isSelectAll
+     */
+    public void setSelectAll(boolean isSelectAll) {
+        selectVolumeFileList.clear();
+        if (isSelectAll) {
+            for (int i = 0; i < volumeFileList.size(); i++) {
+                VolumeFile volumeFile = volumeFileList.get(i);
+                if (volumeFile.getStatus().equals("normal")) {
+                    selectVolumeFileList.add(volumeFile);
+                }
+            }
+
+        }
+        notifyDataSetChanged();
+    }
+
+    public List<VolumeFile> getSelectVolumeFileList() {
         return selectVolumeFileList;
     }
 
@@ -79,11 +98,11 @@ public class VolumeFileAdapter extends RecyclerView.Adapter<VolumeFileAdapter.Vi
         notifyDataSetChanged();
     }
 
-    public void replaceVolumeFile(VolumeFile oldVolumeFile, VolumeFile newVolumeFile){
+    public void replaceVolumeFile(VolumeFile oldVolumeFile, VolumeFile newVolumeFile) {
         int position = volumeFileList.indexOf(oldVolumeFile);
-        if (position != -1){
+        if (position != -1) {
             volumeFileList.remove(position);
-            volumeFileList.add(position,newVolumeFile);
+            volumeFileList.add(position, newVolumeFile);
             notifyItemChanged(position);
         }
 
@@ -101,10 +120,10 @@ public class VolumeFileAdapter extends RecyclerView.Adapter<VolumeFileAdapter.Vi
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         final VolumeFile volumeFile = volumeFileList.get(position);
         boolean isStatusNomal = volumeFile.getStatus().equals("normal");
-        holder.uploadProgressBar.setVisibility(isStatusNomal?View.GONE:View.VISIBLE);
-        holder.uploadCancelText.setVisibility(isStatusNomal?View.GONE:View.VISIBLE);
+        holder.uploadProgressBar.setVisibility(isStatusNomal ? View.GONE : View.VISIBLE);
+        holder.uploadCancelText.setVisibility(isStatusNomal ? View.GONE : View.VISIBLE);
         holder.fileInfoLayout.setVisibility(isStatusNomal ? View.VISIBLE : View.GONE);
-        holder.fileOperationDropDownImg.setVisibility((isStatusNomal && isShowFileOperationDropDownImg)? View.VISIBLE : View.GONE);
+        holder.fileOperationDropDownImg.setVisibility((isStatusNomal && isShowFileOperationDropDownImg) ? View.VISIBLE : View.GONE);
         if (isMultiselect && isStatusNomal) {
             holder.fileSelcetImg.setVisibility(View.VISIBLE);
             holder.fileSelcetImg.setImageResource(selectVolumeFileList.contains(volumeFile) ? R.drawable.ic_volume_file_selct_yes : R.drawable.ic_volume_file_selct_no);
@@ -117,11 +136,11 @@ public class VolumeFileAdapter extends RecyclerView.Adapter<VolumeFileAdapter.Vi
         holder.fileSizeText.setText(FileUtils.formatFileSize(volumeFile.getSize()));
         String fileTime = TimeUtils.getTime(volumeFile.getCreationDate(), format);
         holder.fileTimeText.setText(fileTime);
-        if (!isStatusNomal){
+        if (!isStatusNomal) {
             VolumeFileUploadUtils.getInstance().setOssUploadProgressCallback(volumeFile, new ProgressCallback() {
                 @Override
                 public void onSuccess(VolumeFile newVolumeFile) {
-                    replaceVolumeFile(volumeFile,newVolumeFile);
+                    replaceVolumeFile(volumeFile, newVolumeFile);
                 }
 
                 @Override

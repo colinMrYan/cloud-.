@@ -1,7 +1,6 @@
 package com.inspur.emmcloud.bean.Volume;
 
 import com.inspur.emmcloud.util.JSONUtils;
-import com.inspur.emmcloud.util.LogUtils;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -15,12 +14,19 @@ import java.util.List;
 
 public class GetVolumeFileListResult {
     private List<VolumeFile> volumeFileList = new ArrayList<>();
-    private List<VolumeFile> volumeFileDirectortList = new ArrayList<>();
+    private List<VolumeFile> volumeFileDirectoryList = new ArrayList<>();
+    private List<VolumeFile> volumeFileRegularList = new ArrayList<>();
     public GetVolumeFileListResult(String response){
         JSONArray array = JSONUtils.getJSONArray(response,new JSONArray());
         for (int i=0;i<array.length();i++){
             JSONObject object = JSONUtils.getJSONObject(array,i,new JSONObject());
-            volumeFileList.add(new VolumeFile(object));
+            VolumeFile volumeFile = new VolumeFile(object);
+            volumeFileList.add(volumeFile);
+            if (volumeFile.getType().equals("directory")){
+                volumeFileDirectoryList.add(volumeFile);
+            }else {
+                volumeFileRegularList.add(volumeFile);
+            }
         }
     }
 
@@ -32,16 +38,11 @@ public class GetVolumeFileListResult {
      * 获取目录中所有的文件夹
      * @return
      */
-    public List<VolumeFile> getVolumeFileDirectortList() {
-        LogUtils.jasonDebug("0000000000000000000000");
-        for (int i=0;i<volumeFileList.size();i++){
-            VolumeFile volumeFile = volumeFileList.get(i);
-            LogUtils.jasonDebug("volumeFile.getType()"+volumeFile.getType());
-            if (volumeFile.getType().equals("directory")){
-                volumeFileDirectortList.add(volumeFile);
+    public List<VolumeFile> getVolumeFileDirectoryList() {
+        return volumeFileDirectoryList;
+    }
 
-            }
-        }
-        return volumeFileDirectortList;
+    public List<VolumeFile> getVolumeFileRegularList() {
+        return volumeFileRegularList;
     }
 }

@@ -77,4 +77,19 @@ public class Volume implements Serializable {
     public void setUserdSize(long userdSize) {
         this.usedSize = userdSize;
     }
+
+    public boolean equals(Object other) { // 重写equals方法，后面最好重写hashCode方法
+
+        if (this == other) // 先检查是否其自反性，后比较other是否为空。这样效率高
+            return true;
+        if (other == null)
+            return false;
+        if (!(other instanceof Volume))
+            return false;
+
+        final Volume otherVolume = (Volume) other;
+        if (getId().equals(otherVolume.getId()))
+            return true;
+        return false;
+    }
 }

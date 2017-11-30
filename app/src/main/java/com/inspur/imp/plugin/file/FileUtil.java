@@ -10,7 +10,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.text.DecimalFormat;
+import java.text.NumberFormat;
 
 /**
  * 文件工具类
@@ -101,16 +101,17 @@ public class FileUtil {
      * @return
      */
     public static String formetFileSize(long fileSize) {
-        DecimalFormat df = new DecimalFormat("#.0");//保留1位小数
+        NumberFormat nf=NumberFormat.getInstance();
+        nf.setMaximumFractionDigits(1);
         String formatFileSize = "";
         if (fileSize < 1024) {
             formatFileSize = fileSize + " B";
         } else if (fileSize < 1024 * 1024) {
-            formatFileSize = df.format((double) fileSize / 1024) + " K";
+            formatFileSize = nf.format((double) fileSize / 1024) + " K";
         } else if (fileSize < 1024 * 1024 * 1024) {
-            formatFileSize = df.format((double) fileSize / 1024 / 1024) + " M";
+            formatFileSize = nf.format((double) fileSize / 1024 / 1024) + " M";
         } else {
-            formatFileSize = df.format((double) fileSize / 1024 / 1024 / 1024) + " G";
+            formatFileSize = nf.format((double) fileSize / 1024 / 1024 / 1024) + " G";
         }
         return formatFileSize;
     }
@@ -122,12 +123,13 @@ public class FileUtil {
      * @return
      */
     public static String formetFileSizeMinM(long fileSize) {
-        DecimalFormat df = new DecimalFormat("#.0");//保留1位小数
+        NumberFormat nf=NumberFormat.getInstance();
+        nf.setMaximumFractionDigits(1);
         String formatFileSize = "";
         if (fileSize < 1024 * 1024 * 1024) {
-            formatFileSize = df.format((float) fileSize / 1024 / 1024) + " M";
+            formatFileSize = nf.format((float) fileSize / 1024 / 1024) + " M";
         } else {
-            formatFileSize = df.format((double) fileSize / 1024 / 1024 / 1024) + " G";
+            formatFileSize = nf.format((double) fileSize / 1024 / 1024 / 1024) + " G";
         }
         return formatFileSize;
     }

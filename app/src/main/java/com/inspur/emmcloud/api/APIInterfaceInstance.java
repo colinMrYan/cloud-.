@@ -80,11 +80,12 @@ import com.inspur.emmcloud.bean.SplashPageBean;
 import com.inspur.emmcloud.bean.TaskResult;
 import com.inspur.emmcloud.bean.Trip;
 import com.inspur.emmcloud.bean.UserProfileInfoBean;
-import com.inspur.emmcloud.bean.Volume.GetVolumeFileDownloadUrlResult;
 import com.inspur.emmcloud.bean.Volume.GetVolumeFileListResult;
 import com.inspur.emmcloud.bean.Volume.GetVolumeFileUploadSTSTokenResult;
 import com.inspur.emmcloud.bean.Volume.GetVolumeListResult;
 import com.inspur.emmcloud.bean.Volume.VolumeFile;
+
+import java.util.List;
 
 public class APIInterfaceInstance implements APIInterface {
     @Override
@@ -1507,20 +1508,18 @@ public class APIInterfaceInstance implements APIInterface {
     }
 
     @Override
-    public void returnVolumeFileDownloadUrlSuccess(GetVolumeFileDownloadUrlResult getVolumeFileDownloadUrlResult) {
-    }
-
-    @Override
-    public void returnVolumeFileDownloadUrlFail(String error, int errorCode) {
-    }
-
-    @Override
     public void returnVolumeFileRenameSuccess(VolumeFile oldVolumeFile, String fileNewName) {
-
     }
 
     @Override
     public void returnVolumeFileRenameFail(String error, int errorCode) {
+    }
 
+    @Override
+    public void returnMoveFileSuccess(List<VolumeFile> movedVolumeFileList) {
+    }
+
+    @Override
+    public void returnMoveFileFail(String error, int errorCode) {
     }
 }
