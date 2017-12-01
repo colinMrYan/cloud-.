@@ -17,6 +17,7 @@ import com.inspur.emmcloud.bean.Volume.VolumeFile;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.util.AppUtils;
 import com.inspur.emmcloud.util.FileUtils;
+import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.TimeUtils;
 import com.inspur.emmcloud.util.ToastUtils;
@@ -176,6 +177,7 @@ public class VolumeFileDownloadActivtiy extends BaseActivity {
             @Override
             public RequestParams getRedirectParams(UriRequest uriRequest) throws Throwable {
                 String locationUrl = uriRequest.getResponseHeader("Location");
+                LogUtils.jasonDebug("locationUrl="+locationUrl);
                 RequestParams params = new RequestParams(locationUrl);
                 params.setAutoResume(true);// 断点下载
                 params.setSaveFilePath(fileSavePath);

@@ -74,6 +74,9 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
     @ViewInject(R.id.data_blank_layout)
     protected LinearLayout dataBlankLayout;
 
+    @ViewInject(R.id.no_file_text)
+    protected TextView noFileText;
+
     //是否只显示文件夹，如果想改变此设置项，需要重写此变量
     protected boolean isShowDirectoryOnly = false;
 

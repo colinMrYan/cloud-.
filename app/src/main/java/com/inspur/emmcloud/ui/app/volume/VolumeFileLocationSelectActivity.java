@@ -57,6 +57,7 @@ public class VolumeFileLocationSelectActivity extends VolumeFileBaseActivity {
     private void initViews() {
         apiService = new MyAppAPIService(this);
         apiService.setAPIInterface(new WebService());
+        noFileText.setText("暂无文件夹");
         locationSelectToText.setText(isFunctionCopy ? "复制到" : "移动到当前目录");
         headerOperationLayout.setVisibility(View.GONE);
         locationSelectCancelText.setVisibility(View.VISIBLE);
