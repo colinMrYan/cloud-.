@@ -1,5 +1,7 @@
 package com.inspur.emmcloud.config;
 
+import android.os.Environment;
+
 /**
  * Created by chenmch on 2017/10/12.
  */
@@ -10,6 +12,7 @@ public class Constant {
     public static final String CONCIG_POS_REPORT_TIME_INTERVAL_= "PosReportTimeInterval";
     public static final String CONCIG_SHOW_FEEDBACK = "IsShowFeedback";
     public static final String CONCIG_SHOW_CUSTOMER_SERVICE = "IsShowCustomerService";
+    public static final String CONCIG_CLOUD_PLUS_UUID_FILE = Environment.getExternalStorageDirectory()+"/gsp.uuid";
 
 
     public static final String PATTERN_URL = "(((https?)://[a-zA-Z0-9\\_\\-]+(\\.[a-zA-Z0-9\\_\\-]+)*(\\:\\d{2,4})?(/?[a-zA-Z0-9\\-\\_\\.\\?\\=\\&\\%\\#]+)*/?)" +
