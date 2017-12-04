@@ -28,7 +28,6 @@ import com.inspur.emmcloud.bean.Volume.GetVolumeFileUploadSTSTokenResult;
 import com.inspur.emmcloud.bean.Volume.VolumeFile;
 import com.inspur.emmcloud.util.AppUtils;
 import com.inspur.emmcloud.util.DensityUtil;
-import com.inspur.emmcloud.util.FileUtils;
 import com.inspur.emmcloud.util.GetPathFromUri4kitkat;
 import com.inspur.emmcloud.util.IntentUtils;
 import com.inspur.emmcloud.util.LogUtils;
@@ -523,12 +522,13 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
             volumeFile.setCreationDate(time);
             volumeFile.setName(file.getName());
             volumeFile.setStatus("downloading");
-            volumeFile.setFormat("." + FileUtils.getFileExtension(filePath));
+            volumeFile.setFormat("");
             VolumeFileUploadUtils.getInstance().startUpload(getApplicationContext(), getVolumeFileUploadSTSTokenResult, null, volumeFile, filePath, volume.getId() + absolutePath);
             volumeFileList.add(0, volumeFile);
             initDataBlankLayoutStatus();
             adapter.setVolumeFileList(volumeFileList);
             adapter.notifyItemInserted(0);
+            fileRecycleView.scrollToPosition(0);
         }
 
         @Override
