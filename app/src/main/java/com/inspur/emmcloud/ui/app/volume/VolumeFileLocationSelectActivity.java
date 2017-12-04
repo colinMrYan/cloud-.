@@ -48,7 +48,7 @@ public class VolumeFileLocationSelectActivity extends VolumeFileBaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //设置此界面只显示文件夹
-        this.isShowDirectoryOnly = true;
+        this.fileFilterType = VolumeFile.FILE_TYPE_DIRECTORY;
         isFunctionCopy = getIntent().getBooleanExtra("isFunctionCopy", true);
         initViews();
 
@@ -70,6 +70,7 @@ public class VolumeFileLocationSelectActivity extends VolumeFileBaseActivity {
                 VolumeFile volumeFile = volumeFileList.get(position);
                 Bundle bundle = getIntent().getExtras();
                 bundle.putString("absolutePath", absolutePath + volumeFile.getName() + "/");
+                bundle.putString("title",volumeFile.getName() );
                 intent.putExtras(bundle);
                 if (!isFunctionCopy) {
                     startActivityForResult(intent, REQUEST_MOVE_FILE);
@@ -78,14 +79,12 @@ public class VolumeFileLocationSelectActivity extends VolumeFileBaseActivity {
                 }
 
             }
-        });
-    }
 
-    /**
-     * 初始化无数据时显示的ui
-     */
-    protected void initDataBlankLayoutStatus() {
-        dataBlankLayout.setVisibility((volumeFileList.size() == 0) ? View.VISIBLE : View.GONE);
+            @Override
+            public void onItemLongClick(View view, int position) {
+
+            }
+        });
     }
 
     public void onClick(View v) {
@@ -185,7 +184,6 @@ public class VolumeFileLocationSelectActivity extends VolumeFileBaseActivity {
             intent.putExtra("path",absolutePath);
             intent.putExtra("command","refresh");
             intent.setAction("broadcast_volume");
-            //发送无序广播
             sendBroadcast(intent);
             setResult(RESULT_OK);
             finish();

@@ -11,6 +11,14 @@ import java.io.Serializable;
  */
 
 public class VolumeFile implements Serializable{
+    public static final String FILE_TYPE_REGULAR = "regular";
+    public static final String FILE_TYPE_DIRECTORY = "directory";
+
+    public static final String FILTER_TYPE_DOCUNMENT = "filter_docunment";
+    public static final String FILTER_TYPE_IMAGE = "filter_image";
+    public static final String FILTER_TYPE_AUDIO = "filter_application";
+    public static final String FILTER_TYPE_VIDEO = "filter_video";
+    public static final String FILTER_TYPE_OTHER = "filter_other";
     private String id ="";
     private String type ="";
     private String name ="";

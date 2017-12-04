@@ -169,7 +169,7 @@ public class VolumeFileAdapter extends RecyclerView.Adapter<VolumeFileAdapter.Vi
         return volumeFileList.size();
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener,View.OnLongClickListener {
         private MyItemClickListener myItemClickListener;
         private MyItemDropDownImgClickListener myItemDropDownImgClickListener;
 
@@ -206,6 +206,7 @@ public class VolumeFileAdapter extends RecyclerView.Adapter<VolumeFileAdapter.Vi
             this.myItemClickListener = myItemClickListener;
             this.myItemDropDownImgClickListener = myItemDropDownImgClickListener;
             itemView.setOnClickListener(this);
+            itemView.setOnLongClickListener(this);
             fileOperationDropDownImg.setOnClickListener(this);
         }
 
@@ -221,22 +222,27 @@ public class VolumeFileAdapter extends RecyclerView.Adapter<VolumeFileAdapter.Vi
             }
         }
 
+        @Override
+        public boolean onLongClick(View v) {
+            myItemClickListener.onItemLongClick(v, getAdapterPosition());
+            return false;
+        }
     }
 
     public void setItemClickListener(MyItemClickListener myItemClickListener) {
         this.mItemClickListener = myItemClickListener;
     }
 
+
     public void setItemDropDownImgClickListener(MyItemDropDownImgClickListener myItemDropDownImgClickListener) {
         this.myItemDropDownImgClickListener = myItemDropDownImgClickListener;
     }
 
-    /**
-     * 创建一个回调接口
-     */
     public interface MyItemClickListener {
         void onItemClick(View view, int position);
+        void onItemLongClick(View view, int position);
     }
+
 
     public interface MyItemDropDownImgClickListener {
         void onItemDropDownImgClick(View view, int position);

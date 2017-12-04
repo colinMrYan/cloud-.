@@ -43,8 +43,12 @@ import com.inspur.imp.plugin.camera.imagepicker.bean.ImageItem;
 import org.xutils.view.annotation.ViewInject;
 
 import java.io.File;
+import java.text.Collator;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 
 import static com.inspur.emmcloud.R.id.operation_layout;
 
@@ -57,6 +61,7 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
     private static final int REQUEST_OPEN_CEMERA = 2;
     private static final int REQUEST_OPEN_GALLERY = 3;
     private static final int REQUEST_OPEN_FILE_BROWSER = 4;
+    private static final int REQUEST_SHOW_FILE_FILTER = 5;
 
     @ViewInject(R.id.operation_sort_text)
     private TextView operationSortText;
@@ -79,12 +84,12 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
     private PopupWindow sortOperationPop;
     private MyAppAPIService apiService;
     private String cameraPicFileName;
-    private List<VolumeFile> moveVolumeFileList = new ArrayList<>();
     private BroadcastReceiver broadcastReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.isShowFileUploading = true;
         apiService = new MyAppAPIService(this);
         apiService.setAPIInterface(new WebService());
         setListIemClick();
@@ -99,16 +104,13 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
                 if (volumeFile.getStatus().equals("normal")) {
                     if (!adapter.getMultiselect()) {
                         Bundle bundle = new Bundle();
-                        if (volumeFile.getType().equals("directory")) {
+                        if (volumeFile.getType().equals(VolumeFile.FILE_TYPE_DIRECTORY)) {
                             bundle.putSerializable("volume", volume);
                             bundle.putSerializable("absolutePath", absolutePath + volumeFile.getName() + "/");
                             bundle.putSerializable("title", volumeFile.getName());
                             IntentUtils.startActivity(VolumeFileActivity.this, VolumeFileActivity.class, bundle);
                         } else {
-                            bundle.putSerializable("volumeId", volume.getId());
-                            bundle.putSerializable("volumeFile", volumeFile);
-                            bundle.putSerializable("absolutePath", absolutePath + volumeFile.getName());
-                            IntentUtils.startActivity(VolumeFileActivity.this, VolumeFileDownloadActivtiy.class, bundle);
+                            downloadOrOpenVolumeFile(volumeFile);
                         }
                     } else {
                         adapter.setVolumeFileSelect(position);
@@ -116,6 +118,13 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
                     }
                 }
 
+            }
+
+            @Override
+            public void onItemLongClick(View view, int position) {
+                if (!adapter.getMultiselect()) {
+                    showFileOperationDlg(volumeFileList.get(position));
+                }
             }
         });
         adapter.setItemDropDownImgClickListener(new VolumeFileAdapter.MyItemDropDownImgClickListener() {
@@ -138,7 +147,7 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
                 String path = intent.getStringExtra("path");
                 if (path != null && path.equals(absolutePath)) {
                     String command = intent.getStringExtra("command");
-                    if (command != null && command.equals("refresh")){
+                    if (command != null && command.equals("refresh")) {
                         getVolumeFileList(true);
                     }
                 }
@@ -152,7 +161,7 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
      * 初始化无数据时显示的ui
      */
     protected void initDataBlankLayoutStatus() {
-        dataBlankLayout.setVisibility((volumeFileList.size() == 0) ? View.VISIBLE : View.GONE);
+        super.initDataBlankLayoutStatus();
         operationLayout.setVisibility((volumeFileList.size() == 0) ? View.GONE : View.VISIBLE);
     }
 
@@ -203,8 +212,7 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
                 GoCopyFile(copyVolumeFileList);
                 break;
             case R.id.batch_operation_move_text:
-                moveVolumeFileList = adapter.getSelectVolumeFileList();
-                GomoveFile(moveVolumeFileList);
+                GomoveFile(adapter.getSelectVolumeFileList());
                 break;
             case R.id.batch_operation_cancel_text:
                 setMutiSelect(false);
@@ -310,6 +318,74 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
         }
         operationSortText.setText(sortTypeShowTxt);
         sortVolumeFileList();
+        adapter.setVolumeFileList(volumeFileList);
+        adapter.notifyDataSetChanged();
+    }
+
+
+    /**
+     * 文件排序
+     */
+    protected void sortVolumeFileList() {
+        List<VolumeFile> VolumeFileUploadingList = new ArrayList<>();
+        List<VolumeFile> VolumeFileNormalList = new ArrayList<>();
+        for (int i = 0; i < volumeFileList.size(); i++) {
+            VolumeFile volumeFile = volumeFileList.get(i);
+            if (!volumeFile.getStatus().equals("normal")) {
+                VolumeFileUploadingList.add(volumeFile);
+            } else {
+                VolumeFileNormalList.add(volumeFile);
+            }
+        }
+
+        Collections.sort(VolumeFileNormalList, new FileSortComparable());
+        volumeFileList.clear();
+        volumeFileList.addAll(VolumeFileUploadingList);
+        volumeFileList.addAll(VolumeFileNormalList);
+    }
+
+    private class FileSortComparable implements Comparator {
+        @Override
+        public int compare(Object o1, Object o2) {
+            VolumeFile volumeFileA = (VolumeFile) o1;
+            VolumeFile volumeFileB = (VolumeFile) o2;
+            int sortResult = 0;
+            if (volumeFileA.getType().equals(VolumeFile.FILE_TYPE_DIRECTORY) && volumeFileB.getType().equals(VolumeFile.FILE_TYPE_REGULAR)) {
+                sortResult = -1;
+            } else if (volumeFileB.getType().equals(VolumeFile.FILE_TYPE_DIRECTORY) && volumeFileA.getType().equals(VolumeFile.FILE_TYPE_REGULAR)) {
+                sortResult = 1;
+            } else {
+                switch (sortType) {
+                    case SORT_BY_NAME_UP:
+                        sortResult = Collator.getInstance(Locale.CHINA).compare(volumeFileA.getName(), volumeFileB.getName());
+                        break;
+                    case SORT_BY_NAME_DOWN:
+                        sortResult = 0 - Collator.getInstance(Locale.CHINA).compare(volumeFileA.getName(), volumeFileB.getName());
+                        break;
+                    case SORT_BY_TIME_DOWN:
+                        if (volumeFileA.getCreationDate() == volumeFileB.getCreationDate()) {
+                            sortResult = 0;
+                        } else if (volumeFileA.getCreationDate() < volumeFileB.getCreationDate()) {
+                            sortResult = 1;
+                        } else {
+                            sortResult = -1;
+                        }
+                        break;
+                    case SORT_BY_TIME_UP:
+                        if (volumeFileA.getCreationDate() == volumeFileB.getCreationDate()) {
+                            sortResult = 0;
+                        } else if (volumeFileA.getCreationDate() < volumeFileB.getCreationDate()) {
+                            sortResult = -1;
+                        } else {
+                            sortResult = 1;
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
+            return sortResult;
+        }
     }
 
     /**
@@ -326,6 +402,15 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
         fileFilterGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String[] fileFilterTypes = {VolumeFile.FILTER_TYPE_DOCUNMENT, VolumeFile.FILTER_TYPE_IMAGE, VolumeFile.FILTER_TYPE_AUDIO, VolumeFile.FILTER_TYPE_VIDEO, VolumeFile.FILTER_TYPE_OTHER};
+                Intent intent = new Intent(VolumeFileActivity.this, VolumeFileFilterActvity.class);
+                Bundle bundle = getIntent().getExtras();
+                bundle.putString("title", "分类");
+                bundle.putString("fileFilterType", fileFilterTypes[position]);
+                bundle.putString("absolutePath",absolutePath);
+                intent.putExtras(bundle);
+                LogUtils.jasonDebug("bundle="+bundle.toString());
+                startActivityForResult(intent, REQUEST_SHOW_FILE_FILTER);
                 fileFilterPop.dismiss();
             }
         });
@@ -336,96 +421,6 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
         fileFilterPop.showAsDropDown(v);
     }
 
-    /**
-     * 弹出文件操作框
-     *
-     * @param title
-     */
-    protected void showFileOperationDlg(final VolumeFile volumeFile) {
-        if (volumeFile.getType().equals("directory")) {
-            new ActionSheetDialog.ActionListSheetBuilder(VolumeFileActivity.this)
-                    .setTitle(volumeFile.getName())
-                    .addItem("删除")
-                    .addItem("重命名")
-                    .addItem("移动到")
-                    .addItem("复制")
-                    .setOnSheetItemClickListener(new ActionSheetDialog.ActionListSheetBuilder.OnSheetItemClickListener() {
-                        @Override
-                        public void onClick(ActionSheetDialog dialog, View itemView, int position) {
-                            switch (position) {
-                                case 0:
-                                    showFileDelWranibgDlg(volumeFile);
-                                    break;
-                                case 1:
-                                    showFileRenameDlg(volumeFile);
-                                    break;
-                                case 2:
-                                    moveVolumeFileList.clear();
-                                    moveVolumeFileList.add(volumeFile);
-                                    GomoveFile(moveVolumeFileList);
-                                    break;
-                                case 3:
-                                    List<VolumeFile> copyVolumeFileList = new ArrayList<VolumeFile>();
-                                    copyVolumeFileList.add(volumeFile);
-                                    GoCopyFile(copyVolumeFileList);
-                                    break;
-                                default:
-                                    break;
-                            }
-                            dialog.dismiss();
-                        }
-                    })
-                    .build()
-                    .show();
-        } else {
-            new ActionSheetDialog.ActionListSheetBuilder(VolumeFileActivity.this)
-                    .setTitle(volumeFile.getName())
-                    .addItem("删除")
-                    .addItem("下载")
-                    .addItem("重命名")
-                    .addItem("移动到")
-                    .addItem("复制")
-                    .addItem("分享")
-                    .setOnSheetItemClickListener(new ActionSheetDialog.ActionListSheetBuilder.OnSheetItemClickListener() {
-                        @Override
-                        public void onClick(ActionSheetDialog dialog, View itemView, int position) {
-                            Bundle bundle = null;
-                            switch (position) {
-                                case 0:
-                                    showFileDelWranibgDlg(volumeFile);
-                                    break;
-                                case 1:
-                                    bundle = new Bundle();
-                                    bundle.putString("volumeId", volume.getId());
-                                    bundle.putSerializable("volumeFile", volumeFile);
-                                    bundle.putString("absolutePath", absolutePath + volumeFile.getName());
-                                    bundle.putBoolean("isStartDownload", true);
-                                    IntentUtils.startActivity(VolumeFileActivity.this, VolumeFileDownloadActivtiy.class, bundle);
-                                    break;
-                                case 2:
-                                    showFileRenameDlg(volumeFile);
-                                    break;
-                                case 3:
-                                    moveVolumeFileList.clear();
-                                    moveVolumeFileList.add(volumeFile);
-                                    GomoveFile(moveVolumeFileList);
-                                    break;
-                                case 4:
-                                    List<VolumeFile> copyVolumeFileList = new ArrayList<VolumeFile>();
-                                    copyVolumeFileList.add(volumeFile);
-                                    GoCopyFile(copyVolumeFileList);
-                                    break;
-                                default:
-                                    break;
-                            }
-                            dialog.dismiss();
-                        }
-                    })
-                    .build()
-                    .show();
-        }
-
-    }
 
     /**
      * 设置是否是多选状态
@@ -461,9 +456,8 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
                     && NetUtils.isNetworkConnected(getApplicationContext())) {
                 String filePath = Environment.getExternalStorageDirectory() + "/DCIM/" + cameraPicFileName;
                 uploadFile(filePath);
-            } else if (requestCode == REQUEST_MOVE_FILE) {  //移动文件
-                volumeFileList.removeAll(moveVolumeFileList);
-                adapter.notifyDataSetChanged();
+            } else if (requestCode == REQUEST_SHOW_FILE_FILTER) {  //移动文件
+                getVolumeFileList(false);
             }
         } else if (resultCode == ImagePicker.RESULT_CODE_ITEMS) {  // 图库选择图片返回
             if (data != null && requestCode == REQUEST_OPEN_GALLERY) {
@@ -524,7 +518,7 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
             long time = System.currentTimeMillis();
             File file = new File(filePath);
             VolumeFile volumeFile = new VolumeFile();
-            volumeFile.setType("regular");
+            volumeFile.setType(VolumeFile.FILE_TYPE_REGULAR);
             volumeFile.setId(time + "");
             volumeFile.setCreationDate(time);
             volumeFile.setName(file.getName());

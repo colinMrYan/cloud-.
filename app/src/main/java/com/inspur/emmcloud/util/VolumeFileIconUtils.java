@@ -10,7 +10,7 @@ import com.inspur.emmcloud.bean.Volume.VolumeFile;
 public class VolumeFileIconUtils {
     public static int getIconResId(VolumeFile volumeFile) {
         int resId = -1;
-        if (volumeFile.getType().equals("directory")) {
+        if (volumeFile.getType().equals(VolumeFile.FILE_TYPE_DIRECTORY)) {
             resId = R.drawable.ic_volume_file_typ_forder;
         } else {
             String format = volumeFile.getFormat();

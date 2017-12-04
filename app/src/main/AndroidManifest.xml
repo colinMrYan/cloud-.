@@ -546,6 +546,9 @@
         <activity
             android:name=".ui.app.volume.VolumeFileLocationSelectActivity"
             android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".ui.app.volume.VolumeFileFilterActvity"
+            android:screenOrientation="portrait"></activity>
 
 
         <!-- service -->
