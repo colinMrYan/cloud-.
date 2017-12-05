@@ -17,6 +17,7 @@ import com.inspur.emmcloud.ui.work.calendar.CalEventAddActivity;
 import com.inspur.emmcloud.util.JSONUtils;
 import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
+import com.inspur.emmcloud.util.ECMShortcutBadgeNumberManagerUtils;
 import com.inspur.emmcloud.util.StringUtils;
 
 import org.json.JSONException;
@@ -36,6 +37,7 @@ public class JpushReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
+
         Bundle bundle = intent.getExtras();
         LogUtils.debug(TAG, "[MyReceiver] onReceive - " + intent.getAction()
                 + ", extras: " + printBundle(bundle));
@@ -87,6 +89,7 @@ public class JpushReceiver extends BroadcastReceiver {
         } else {
             LogUtils.debug(TAG, "[MyReceiver] Unhandled intent - " + intent.getAction());
         }
+        ECMShortcutBadgeNumberManagerUtils.setDesktopBadgeNumber(context,166);
     }
 
     /**

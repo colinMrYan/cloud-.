@@ -115,7 +115,7 @@ public class IndexActivity extends BaseFragmentActivity implements
         getData();
         startService();
 
-        ShortcutBadger.applyCount(this, 66);
+        ShortcutBadger.applyCount(this, 888);
 
     }
 
