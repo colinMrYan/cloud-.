@@ -79,6 +79,8 @@ import org.greenrobot.eventbus.EventBus;
 import java.util.ArrayList;
 import java.util.List;
 
+import me.leolin.shortcutbadger.ShortcutBadger;
+
 /**
  * 主页面
  *
@@ -112,6 +114,8 @@ public class IndexActivity extends BaseFragmentActivity implements
         initView();
         getData();
         startService();
+
+        ShortcutBadger.applyCount(this, 66);
 
     }
 
