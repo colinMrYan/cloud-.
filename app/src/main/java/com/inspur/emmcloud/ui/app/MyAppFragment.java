@@ -151,9 +151,7 @@ public class MyAppFragment extends Fragment {
      * 过期则更新不过期不更新
      */
     private void getMyAppRecommendWidgetsUpdate() {
-        GetRecommendAppWidgetListResult getRecommendAppWidgetListResult = new GetRecommendAppWidgetListResult(PreferencesByUserAndTanentUtils
-                .getString(getActivity(),Constant.PREF_MY_APP_RECOMMEND_DATA,""));
-        if(!MyAppWidgetUtils.isEffective(getRecommendAppWidgetListResult.getExpiredDate())){
+        if(!MyAppWidgetUtils.isEffective(PreferencesByUserAndTanentUtils.getLong(getContext(),Constant.PREF_MY_APP_RECOMMEND_EXPIREDDATE,0L))){
             MyAppWidgetUtils.getInstance(getActivity().getApplicationContext()).getMyAppWidgetsFromNet();
         }
     }
@@ -223,7 +221,12 @@ public class MyAppFragment extends Fragment {
      * 每个小时都有可能有变化
      */
     private void refreshRecommendAppWidgetView() {
-        if(MyAppWidgetUtils.isNeedShowMyAppRecommendWidgets(getActivity()) && (MyAppWidgetUtils.getShouldShowAppList(getActivity()).size() > 0)){
+        boolean isRefreshTime = PreferencesByUserAndTanentUtils.getInt(getActivity(),Constant.PREF_MY_APP_RECOMMEND_LASTUPDATE_HOUR,0) != MyAppWidgetUtils.getNowHour();
+        if(!(MyAppWidgetUtils.isNeedShowMyAppRecommendWidgets(getActivity()) && isRefreshTime)){
+            return;
+        }
+        List<App> appList = MyAppWidgetUtils.getShouldShowAppList(getActivity(),appListAdapter.getAppAdapterList());
+        if(appList.size() > 0){
             if(recommendAppWidgetListView == null){
                 recommendAppWidgetListView = (RecyclerView) rootView.findViewById(R.id.my_app_recommend_app_wiget_recyclerview);
                 (rootView.findViewById(R.id.my_app_recommend_app_widget_layout)).setVisibility(View.VISIBLE);
@@ -248,35 +251,9 @@ public class MyAppFragment extends Fragment {
                     }
                 });
             }
-            refreshRecommendAppWidgetList();
+            recommendAppWidgetListAdapter.setAndReFreshRecommendList(appList);
         }else{
             (rootView.findViewById(R.id.my_app_recommend_app_widget_layout)).setVisibility(View.GONE);
-        }
-    }
-
-    /**
-     * 获取本时间段内应该显示的推荐
-     * @return
-     */
-    private void refreshRecommendAppWidgetList() {
-        List<String> appIdList = MyAppWidgetUtils.getShouldShowAppList(getActivity());
-        List<App> recommendAppWidgetList = new ArrayList<>();
-        List<AppGroupBean> appGroupBeanList = appListAdapter.getAppAdapterList();
-        App app = new App();
-        for(int i = 0; i < appIdList.size(); i++ ){
-            app.setAppID(appIdList.get(i));
-            for(int j = 0; j < appGroupBeanList.size(); j++){
-                int index = appGroupBeanList.get(j).getAppItemList().indexOf(app);
-                if(index != -1){
-                    recommendAppWidgetList.add(appGroupBeanList.get(j).getAppItemList().get(index));
-                    break;
-                }
-            }
-        }
-        boolean isNeedRefresh = PreferencesByUserAndTanentUtils.getInt(getActivity(),Constant.PREF_MY_APP_RECOMMEND_LASTUPDATE_HOUR,0) != MyAppWidgetUtils.getNowHour();
-        if(recommendAppWidgetListAdapter != null && recommendAppWidgetList.size() > 0 && isNeedRefresh){
-            recommendAppWidgetListAdapter.setAndReFreshRecommendList(recommendAppWidgetList);
-            PreferencesByUserAndTanentUtils.putInt(getActivity(),Constant.PREF_MY_APP_RECOMMEND_LASTUPDATE_HOUR,MyAppWidgetUtils.getNowHour());
         }
     }
 
@@ -1085,9 +1062,7 @@ public class MyAppFragment extends Fragment {
             super.onPostExecute(appGroupList);
             appListAdapter.setAppAdapterList(appGroupList);
             swipeRefreshLayout.setRefreshing(false);
-            if(MyAppWidgetUtils.isNeedShowMyAppRecommendWidgets(getActivity())){
-                refreshRecommendAppWidgetView();
-            }
+            refreshRecommendAppWidgetView();
         }
     }
 

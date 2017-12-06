@@ -25,6 +25,7 @@ public class Constant {
     public static final String PREF_HAS_MY_APP_RECOMMEND = "has_my_app_recommend";
     public static final String PREF_MY_APP_RECOMMEND_DATA = "my_app_recommend_data";
     public static final String PREF_MY_APP_RECOMMEND_DATE = "my_app_recommend_date";
+    public static final String PREF_MY_APP_RECOMMEND_EXPIREDDATE = "my_app_recommend_expired_date";
     public static final String PREF_MY_APP_RECOMMEND_LASTUPDATE_HOUR = "my_app_recommend_lastupdate_hour";
     public static final String PREF_SOFT_INPUT_HEIGHT = "soft_input_height";
 

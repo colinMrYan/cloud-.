@@ -4,6 +4,8 @@ import android.content.Context;
 
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
+import com.inspur.emmcloud.bean.App;
+import com.inspur.emmcloud.bean.AppGroupBean;
 import com.inspur.emmcloud.bean.GetRecommendAppWidgetListResult;
 import com.inspur.emmcloud.bean.RecommendAppWidgetBean;
 import com.inspur.emmcloud.config.Constant;
@@ -91,7 +93,7 @@ public class MyAppWidgetUtils {
      * 获取需要显示的appId列表
      * @return
      */
-    public static List<String> getShouldShowAppList(Context context){
+    public static List<App> getShouldShowAppList(Context context, List<AppGroupBean> appGroupBeanList){
         GetRecommendAppWidgetListResult getRecommendAppWidgetListResult = new GetRecommendAppWidgetListResult(PreferencesByUserAndTanentUtils.getString(context,Constant.PREF_MY_APP_RECOMMEND_DATA,""));
         List<RecommendAppWidgetBean> recommendAppWidgetBeanList = getRecommendAppWidgetListResult.getRecommendAppWidgetBeanList();
         List<String> appIdList = new ArrayList<>();
@@ -103,7 +105,19 @@ public class MyAppWidgetUtils {
                 }
             }
         }
-        return appIdList;
+        List<App> recommendAppWidgetList = new ArrayList<>();
+        App app = new App();
+        for(int i = 0; i < appIdList.size(); i++ ){
+            app.setAppID(appIdList.get(i));
+            for(int j = 0; j < appGroupBeanList.size(); j++){
+                int index = appGroupBeanList.get(j).getAppItemList().indexOf(app);
+                if(index != -1){
+                    recommendAppWidgetList.add(appGroupBeanList.get(j).getAppItemList().get(index));
+                    break;
+                }
+            }
+        }
+        return recommendAppWidgetList;
     }
 
     /**
@@ -130,6 +144,7 @@ public class MyAppWidgetUtils {
             EventBus.getDefault().post(getRecommendAppWidgetListResult);
             PreferencesByUserAndTanentUtils.putString(context,Constant.PREF_MY_APP_RECOMMEND_DATA, getRecommendAppWidgetListResult.getResponse());
             PreferencesByUserAndTanentUtils.putString(context,Constant.PREF_MY_APP_RECOMMEND_DATE,TimeUtils.getFormatYearMonthDay());
+            PreferencesByUserAndTanentUtils.putLong(context,Constant.PREF_MY_APP_RECOMMEND_EXPIREDDATE,getRecommendAppWidgetListResult.getExpiredDate());
         }
 
         @Override
