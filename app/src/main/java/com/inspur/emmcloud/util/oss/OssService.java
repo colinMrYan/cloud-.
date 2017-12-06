@@ -73,12 +73,6 @@ public class OssService implements VolumeFileUploadService {
         return progress;
     }
 
-    public void callUpload() {
-        if (task != null) {
-            task.cancel();
-        }
-    }
-
     private void handMessage()
 
     {
