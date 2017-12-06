@@ -69,7 +69,7 @@ public class WorkAPIService {
      * @param day
      */
     public void getMeetings(final int day) {
-        final String completeUrl = UriUtils.getMeetings() + "?day=" + day;
+        final String completeUrl = APIUri.getMeetingsUrl() + "?day=" + day;
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
         x.http().get(params, new APICallback(context, completeUrl) {
@@ -111,7 +111,7 @@ public class WorkAPIService {
      * 获取会议室
      */
     public void getMeetingRooms() {
-        final String completeUrl = UriUtils.getMeetingRooms();
+        final String completeUrl = APIUri.getMeetingRoomsUrl();
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
         x.http().get(params, new APICallback(context, completeUrl) {
@@ -159,7 +159,7 @@ public class WorkAPIService {
      */
     public void getFiltMeetingRooms(final long start, final long end,
                                     final List<String> commonOfficeIdList, final boolean isFilte) {
-        String baseUrl = UriUtils.getMeetingRooms() + "?";
+        String baseUrl = APIUri.getMeetingRoomsUrl() + "?";
         if (isFilte) {
             baseUrl = baseUrl + "start=" + start + "&end=" + end;
         } else {
@@ -221,7 +221,7 @@ public class WorkAPIService {
     public void getHistoryMeetingList(final String keyword, final int page,
                                       final int limit, final boolean isLoadMore) {
         String uid = PreferencesUtils.getString(context, "userID");
-        final String completeUrl = UriUtils.meetingRootUrl()
+        final String completeUrl = APIUri.getMeetingRootUrl()
                 + "/room/booking/history?uid=" + uid
                 + "&page=" + page + "&limit=" + limit + "&keyword=" + keyword;
         RequestParams params = ((MyApplication) context.getApplicationContext())
@@ -269,7 +269,7 @@ public class WorkAPIService {
      */
     public void getIsAdmin(final String cid) {
 
-        final String completeUrl = UriUtils.getIsAdmin() + "?cid=" + cid;
+        final String completeUrl = APIUri.getMeetingIsAdminUrl() + "?cid=" + cid;
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
         x.http().get(params, new APICallback(context, completeUrl) {
@@ -329,7 +329,7 @@ public class WorkAPIService {
                               final String organizer, final String[] cids,
                               final List<SearchModel> pids, final String attendant,
                               final String id) {
-        final String completeUrl = UriUtils.getBookingRoom();
+        final String completeUrl = APIUri.getBookingRoomUrl();
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
         try {
@@ -427,7 +427,7 @@ public class WorkAPIService {
                                final long from, final long to, final String organizer,
                                final String[] cids, final List<SearchModel> pids,
                                final String attendant) {
-        final String completeUrl = UriUtils.getBookingRoom();
+        final String completeUrl = APIUri.getBookingRoomUrl();
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
         try {
@@ -561,7 +561,7 @@ public class WorkAPIService {
      * @param bid
      */
     public void getRoomMeetingList(final String bid) {
-        final String completeUrl = UriUtils.getRoomMeetingList();
+        final String completeUrl = APIUri.getRoomMeetingListUrl();
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
         params.addParameter("bid", bid);
@@ -653,7 +653,7 @@ public class WorkAPIService {
      * 获取园区
      */
     public void getLoction() {
-        final String completeUrl = UriUtils.getLoction();
+        final String completeUrl = APIUri.getLoctionUrl();
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
         x.http().get(params, new APICallback(context, completeUrl) {
@@ -695,7 +695,7 @@ public class WorkAPIService {
      * 获取常用办公地点
      */
     public void getOffice() {
-        final String completeUrl = UriUtils.getOffice();
+        final String completeUrl = APIUri.getOfficeUrl();
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
         x.http().get(params, new APICallback(context, completeUrl) {
@@ -739,7 +739,7 @@ public class WorkAPIService {
      * @param buildingId
      */
     public void creatOffice(final String name, final String buildingId) {
-        final String completeUrl = UriUtils.addOffice();
+        final String completeUrl = APIUri.addOfficeUrl();
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
         JSONObject jsonBuild = new JSONObject();
@@ -795,7 +795,7 @@ public class WorkAPIService {
      */
     public void deleteMeeting(final String rid) {
         final String completeUrl;
-        completeUrl = UriUtils.deleteMeeting() + "?rid=" + rid;
+        completeUrl = APIUri.getDeleteMeetingUrl() + "?rid=" + rid;
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
         x.http().request(HttpMethod.DELETE, params, new APICallback(context, completeUrl) {
@@ -837,7 +837,7 @@ public class WorkAPIService {
      * @param buildingId
      */
     public void deleteOffice(final String buildingId, final int position) {
-        final String completeUrl = UriUtils.addOffice()+"?id="+buildingId;
+        final String completeUrl = APIUri.addOfficeUrl()+"?id="+buildingId;
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
         x.http().request(HttpMethod.DELETE, params, new APICallback(context, completeUrl) {
@@ -874,108 +874,6 @@ public class WorkAPIService {
 
     }
 
-    /**
-     * 根据常用办公地点和天数获取会议室列表
-     *
-     * @param oidList
-     * @param day
-     */
-    public void getOfficeMeetingRooms(final List<String> oidList,
-                                      final String day) {
-        String url = UriUtils.getMeetingRooms();
-        url = url + "?day=" + 3;
-        for (int i = 0; i < oidList.size(); i++) {
-            url = url + "&oids=" + oidList.get(i);
-        }
-        final String completeUrl = url;
-        RequestParams params = ((MyApplication) context.getApplicationContext())
-                .getHttpRequestParams(completeUrl);
-        x.http().get(params, new APICallback(context, completeUrl) {
-
-            @Override
-            public void callbackTokenExpire() {
-                // TODO Auto-generated method stub
-                new OauthUtils(new OauthCallBack() {
-
-                    @Override
-                    public void reExecute() {
-                        getOfficeMeetingRooms(oidList, day);
-                    }
-
-                    @Override
-                    public void executeFailCallback() {
-                        callbackFail("", -1);
-                    }
-                }, context).refreshToken(completeUrl);
-            }
-
-            @Override
-            public void callbackSuccess(String arg0) {
-                // TODO Auto-generated method stub
-                apiInterface
-                        .returnMeetingRoomsSuccess(new GetMeetingRoomsResult(
-                                arg0));
-            }
-
-            @Override
-            public void callbackFail(String error, int responseCode) {
-                // TODO Auto-generated method stub
-                apiInterface.returnMeetingRoomsFail(error, responseCode);
-            }
-        });
-    }
-
-    /**
-     * 根据会议室起止时间过滤会议室
-     *
-     * @param oids
-     * @param start
-     * @param end
-     */
-    public void getAvailableRooms(final String[] oids, final String start,
-                                  final String end) {
-        String url = UriUtils.getAvailable();
-        url = url + "?start=" + start + "&end=" + end;
-        for (int i = 0; i < oids.length; i++) {
-            url = url + "&oids=" + oids[i];
-        }
-        final String completeUrl = url;
-        RequestParams params = ((MyApplication) context.getApplicationContext())
-                .getHttpRequestParams(completeUrl);
-        x.http().get(params, new APICallback(context, completeUrl) {
-
-            @Override
-            public void callbackTokenExpire() {
-                // TODO Auto-generated method stub
-                new OauthUtils(new OauthCallBack() {
-
-                    @Override
-                    public void reExecute() {
-                        getAvailableRooms(oids, start, end);
-                    }
-
-                    @Override
-                    public void executeFailCallback() {
-                        callbackFail("", -1);
-                    }
-                }, context).refreshToken(completeUrl);
-            }
-
-            @Override
-            public void callbackSuccess(String arg0) {
-                // TODO Auto-generated method stub
-                apiInterface
-                        .returnMeetingRoomsSuccess(new GetMeetingRoomsResult(
-                                arg0));
-            }
-
-            @Override
-            public void callbackFail(String error, int responseCode) {
-                // TODO Auto-generated method stub
-                apiInterface.returnMeetingRoomsFail(error, responseCode);
-            }
-        });
-    }
 
     /****************************************************** 待办任务部分 **************************************************************/
 
@@ -986,7 +884,7 @@ public class WorkAPIService {
      * @param orderType
      */
     public void getRecentTasks(final String orderBy, final String orderType) {
-        final String completeUrl = UriUtils.getToDoRecent();
+        final String completeUrl = APIUri.getToDoRecentUrl();
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
         params.addParameter("order_by", orderBy);
@@ -1033,7 +931,7 @@ public class WorkAPIService {
      * @param id
      */
     public void getTask(final String id) {
-        final String completeUrl = UriUtils.getTasks(id);
+        final String completeUrl = APIUri.getTasksList(id);
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
         x.http().get(params, new APICallback(context, completeUrl) {
@@ -1078,7 +976,7 @@ public class WorkAPIService {
      * @param state
      */
     public void getAllTasks(final int page, final int limit, final String state) {
-        final String completeUrl = UriUtils.createTask();
+        final String completeUrl = APIUri.getCreateTaskUrl();
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
         params.addHeader("Accept", "application/json");
@@ -1123,7 +1021,7 @@ public class WorkAPIService {
      * 获取我参与的任务
      */
     public void getInvolvedTasks(final String orderBy, final String orderType) {
-        final String completeUrl = UriUtils.getInvolved();
+        final String completeUrl = APIUri.getInvolvedTasksUrl();
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
         params.addParameter("order_by", orderBy);
@@ -1166,7 +1064,7 @@ public class WorkAPIService {
      *
      */
     public void getFocusedTasks(final String orderBy, final String orderType) {
-        final String completeUrl = UriUtils.getFocused();
+        final String completeUrl = APIUri.getFocusedTasksUrl();
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
         params.addParameter("order_by", orderBy);
@@ -1209,7 +1107,7 @@ public class WorkAPIService {
      * 创建任务
      */
     public void createTasks(final String mession) {
-        final String completeUrl = UriUtils.createTask();
+        final String completeUrl = APIUri.getCreateTaskUrl();
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
         params.addParameter("title", mession);
@@ -1254,7 +1152,7 @@ public class WorkAPIService {
      * @param id
      */
     public void deleteTasks(final String id) {
-        final String completeUrl = UriUtils.createTask() + "/" + id;
+        final String completeUrl = APIUri.getCreateTaskUrl() + "/" + id;
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
         x.http().request(HttpMethod.DELETE, params, new APICallback(context, completeUrl) {
@@ -1294,7 +1192,7 @@ public class WorkAPIService {
      * 获取今天的任务
      */
     public void getTodayTasks() {
-        final String completeUrl = UriUtils.getTodayTask();
+        final String completeUrl = APIUri.getTodayTaskUrl();
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
         x.http().get(params, new APICallback(context, completeUrl) {
@@ -1338,7 +1236,7 @@ public class WorkAPIService {
      * @param id
      */
     public void getSigleTask(final String id) {
-        final String completeUrl = UriUtils.createTask() + "/" + id;
+        final String completeUrl = APIUri.getCreateTaskUrl() + "/" + id;
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
         x.http().get(params, new APICallback(context, completeUrl) {
@@ -1380,7 +1278,7 @@ public class WorkAPIService {
      * @param taskJson
      */
     public void updateTask(final String taskJson, final int position) {
-        final String completeUrl = UriUtils.createTask();
+        final String completeUrl = APIUri.getCreateTaskUrl();
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
         params.setBodyContent(taskJson);
@@ -1425,7 +1323,7 @@ public class WorkAPIService {
      * @param uidArray
      */
     public void inviteMateForTask(final String taskId, final JSONArray uidArray) {
-        final String completeUrl = UriUtils.createTask() + "/" + taskId
+        final String completeUrl = APIUri.getCreateTaskUrl() + "/" + taskId
                 + "/mates";
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
@@ -1472,7 +1370,7 @@ public class WorkAPIService {
      * @param uidArray
      */
     public void deleteMateForTask(final String taskId, final JSONArray uidArray) {
-        final String completeUrl = UriUtils.createTask() + "/" + taskId
+        final String completeUrl = APIUri.getCreateTaskUrl() + "/" + taskId
                 + "/mates";
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
@@ -1515,7 +1413,7 @@ public class WorkAPIService {
      * 获取所有标签
      */
     public void getTags() {
-        final String completeUrl = UriUtils.getTag();
+        final String completeUrl = APIUri.getTagUrl();
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
         params.addHeader("Accept", "application/json");
@@ -1563,7 +1461,7 @@ public class WorkAPIService {
      */
     public void changeTag(final String id, final String title,
                           final String color, final String owner) {
-        final String completeUrl = UriUtils.getTag();
+        final String completeUrl = APIUri.getTagUrl();
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("id", id);
@@ -1617,7 +1515,7 @@ public class WorkAPIService {
      * @param id
      */
     public void deleteTag(final String id) {
-        final String completeUrl = UriUtils.getTag() + "/" + id;
+        final String completeUrl = APIUri.getTagUrl() + "/" + id;
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
 
@@ -1662,7 +1560,7 @@ public class WorkAPIService {
      * @param color
      */
     public void createTag(final String title, final String color) {
-        final String completeUrl = UriUtils.getTag();
+        final String completeUrl = APIUri.getTagUrl();
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
         params.addParameter("title", title);
@@ -1708,7 +1606,7 @@ public class WorkAPIService {
      */
     public void changeMessionOwner(final String id, final String newOwner, final String managerName) {
 
-        final String completeUrl = UriUtils.changeMessionOwner() + id
+        final String completeUrl = APIUri.getChangeMessionOwnerUrl() + id
                 + "?";
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
@@ -1747,51 +1645,6 @@ public class WorkAPIService {
 
     }
 
-    /**
-     *  修改标签
-     *
-     * @param id
-     * @param tags
-     */
-    public void changeMessionTag(final String id, final String tags) {
-        final String completeUrl = UriUtils.changeMessionTag(id);
-        RequestParams params = ((MyApplication) context.getApplicationContext())
-                .getHttpRequestParams(completeUrl);
-        params.setBodyContent(tags);
-        params.setAsJsonContent(true);
-        x.http().post(params, new APICallback(context, completeUrl) {
-
-            @Override
-            public void callbackTokenExpire() {
-                // TODO Auto-generated method stub
-                new OauthUtils(new OauthCallBack() {
-
-                    @Override
-                    public void reExecute() {
-                        changeMessionTag(id, tags);
-                    }
-
-                    @Override
-                    public void executeFailCallback() {
-                        callbackFail("", -1);
-                    }
-                }, context).refreshToken(completeUrl);
-            }
-
-            @Override
-            public void callbackSuccess(String arg0) {
-                // TODO Auto-generated method stub
-                apiInterface.returnChangeMessionTagSuccess();
-            }
-
-            @Override
-            public void callbackFail(String error, int responseCode) {
-                // TODO Auto-generated method stub
-                apiInterface.returnChangeMessionTagFail(error, responseCode);
-            }
-        });
-
-    }
 
     /**
      * 创建附件
@@ -1800,7 +1653,7 @@ public class WorkAPIService {
      * @param attachments
      */
     public void addAttachments(final String id, final String attachments) {
-        final String completeUrl = UriUtils.addAttachments(id);
+        final String completeUrl = APIUri.getAddAttachmentsUrl(id);
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
         try {
@@ -1854,7 +1707,7 @@ public class WorkAPIService {
      * @param attachments
      */
     public void deleteAttachments(final String id, final String attachments, final int position) {
-        final String completeUrl = UriUtils.addAttachments(id);
+        final String completeUrl = APIUri.getAddAttachmentsUrl(id);
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
         try {
@@ -1908,7 +1761,7 @@ public class WorkAPIService {
      * @param limit
      */
     public void getMyCalendar(final int page, final int limit) {
-        final String completeUrl = UriUtils.getCalendarUri() + "/calendar";
+        final String completeUrl = APIUri.getCalendarUrl() + "/calendar";
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
         params.addParameter("page", page);
@@ -1956,7 +1809,7 @@ public class WorkAPIService {
      * @param id
      */
     public void delelteCalendarById(final String id) {
-        final String completeUrl = UriUtils.getCalendarUri() + "/calendar/"
+        final String completeUrl = APIUri.getCalendarUrl() + "/calendar/"
                 + id;
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
@@ -2000,7 +1853,7 @@ public class WorkAPIService {
      * @param calendarJson
      */
     public void updateCalendar(final String calendarJson) {
-        final String completeUrl = UriUtils.getCalendarUri() + "/calendar";
+        final String completeUrl = APIUri.getCalendarUrl() + "/calendar";
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
         params.setAsJsonContent(true);
@@ -2047,7 +1900,7 @@ public class WorkAPIService {
      */
     public void addCalEvent(final String calendarId, final String eventJson) {
 
-        final String completeUrl = UriUtils.getCalendarUri() + "/calendar/"
+        final String completeUrl = APIUri.getCalendarUrl() + "/calendar/"
                 + calendarId + "/event";
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
@@ -2095,7 +1948,7 @@ public class WorkAPIService {
      */
     public void updateCalEvent(final String calEventJson) {
 
-        final String completeUrl = UriUtils.getCalendarUri()
+        final String completeUrl = APIUri.getCalendarUrl()
                 + "/calendar/event";
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
@@ -2150,7 +2003,7 @@ public class WorkAPIService {
     public void getAllCalEvents(final List<String> calendarIdList,
                                 final Calendar afterCalendar, final Calendar beforCalendar,
                                 final int limit, final int page, final boolean isRefresh) {
-        String url = UriUtils.getCalendarUri() + "/calendar/events?";
+        String url = APIUri.getCalendarUrl() + "/calendar/events?";
         final String completeUrl = url;
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
@@ -2214,7 +2067,7 @@ public class WorkAPIService {
      * @param calEventId
      */
     public void deleteCalEvent(final String calEventId) {
-        final String completeUrl = UriUtils.getCalendarUri()
+        final String completeUrl = APIUri.getCalendarUrl()
                 + "/calendar/event/" + calEventId;
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);

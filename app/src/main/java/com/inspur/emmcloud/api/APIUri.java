@@ -43,7 +43,7 @@ public class APIUri {
      * @param cid
      * @return
      */
-    public static String addGroupMembers(String cid) {
+    public static String getAddGroupMembersUrl(String cid) {
         return getEcmTanentUrl() + "/channel/group/" + cid + "/users?";
     }
 
@@ -52,7 +52,7 @@ public class APIUri {
      *
      * @return
      */
-    public static String getNointerRuption() {
+    public static String getNointerRuptionUrl() {
         return getEcmTanentUrl() + "/session/dnd";
     }
 
@@ -77,7 +77,7 @@ public class APIUri {
     /**
      * 修改密码
      **/
-    public static String getChangePsd() {
+    public static String getChangePsdUrl() {
         return "https://id.inspur.com/console/api/v1/account/password";
     }
 
@@ -99,7 +99,7 @@ public class APIUri {
      *
      * @return
      */
-    public static String getGroupNewsArticle() {
+    public static String getGroupNewsArticleUrl() {
         return "/" + tanent + "/res" + "/article" + "/";
     }
 
@@ -122,7 +122,7 @@ public class APIUri {
      *
      * @return
      */
-    public static String getMeetings() {
+    public static String getMeetingsUrl() {
         return getMeetingBaseUrl() + "room/bookings";
     }
 
@@ -153,7 +153,7 @@ public class APIUri {
      *
      * @return
      */
-    public static String getMeetingRooms() {
+    public static String getMeetingRoomsUrl() {
         return getMeetingBaseUrl() + "room";
     }
 
@@ -171,7 +171,7 @@ public class APIUri {
      *
      * @return
      */
-    public static String deleteMeeting() {
+    public static String getDeleteMeetingUrl() {
         return getMeetingBaseUrl() + "room/booking/cancel";
     }
 
@@ -180,25 +180,17 @@ public class APIUri {
      *
      * @return
      */
-    public static String getBookingRoom() {
+    public static String getBookingRoomUrl() {
         return getMeetingBaseUrl() + "booking";
     }
 
-    /**
-     * 会议状态返回接口
-     *
-     * @return
-     */
-    public static String getMeetingReply() {
-        return getMeetingBaseUrl() + "booking/receipt/state";
-    }
 
     /**
      * 获取某一个会议室的会议预定情况
      *
      * @return
      */
-    public static String getRoomMeetingList() {
+    public static String getRoomMeetingListUrl() {
         return getMeetingBaseUrl() + "booking/room";
     }
 
@@ -207,7 +199,7 @@ public class APIUri {
      *
      * @return
      */
-    public static String getOffice() {
+    public static String getOfficeUrl() {
         return getMeetingBaseUrl() + "location/office";
     }
 
@@ -216,7 +208,7 @@ public class APIUri {
      *
      * @return
      */
-    public static String addOffice() {
+    public static String addOfficeUrl() {
         return getMeetingBaseUrl() + "location/office";
     }
 
@@ -234,34 +226,17 @@ public class APIUri {
      *
      * @return
      */
-    public static String getIsAdmin() {
+    public static String getMeetingIsAdminUrl() {
         return getMeetingBaseUrl() + "is_admin";
     }
 
-    /**
-     * 获取园区
-     *
-     * @return
-     */
-    public static String getBuilding() {
-        return getMeetingBaseUrl() + "building";
-    }
-
-    /**
-     * 获取楼层
-     *
-     * @return
-     */
-    public static String getFloor() {
-        return getMeetingBaseUrl() + "floor";
-    }
 
     /**
      * 获取园区
      *
      * @return
      */
-    public static String getLoction() {
+    public static String getLoctionUrl() {
         return getMeetingBaseUrl() + "location";
     }
 
@@ -271,7 +246,7 @@ public class APIUri {
      *
      * @return
      */
-    public static String getCalendarUri() {
+    public static String getCalendarUrl() {
         return getEcmTanentUrl() + "/api/v0";
     }
 
@@ -291,7 +266,7 @@ public class APIUri {
      * @param cid
      * @return
      */
-    public static String addAttachments(String cid) {
+    public static String getAddAttachmentsUrl(String cid) {
         return getToDoBaseUrl() + cid + "/attachments";
     }
 
@@ -300,7 +275,7 @@ public class APIUri {
      *
      * @return
      */
-    public static String getToDoRecent() {
+    public static String getToDoRecentUrl() {
         return getToDoBaseUrl() + "recent";
     }
 
@@ -309,7 +284,7 @@ public class APIUri {
      *
      * @return
      */
-    public static String getInvolved() {
+    public static String getInvolvedTasksUrl() {
         return getToDoBaseUrl() + "involved";
     }
 
@@ -318,7 +293,7 @@ public class APIUri {
      *
      * @return
      */
-    public static String getFocused() {
+    public static String getFocusedTasksUrl() {
         return getToDoBaseUrl() + "focused";
     }
 
@@ -327,7 +302,7 @@ public class APIUri {
      *
      * @return
      */
-    public static String createTask() {
+    public static String getCreateTaskUrl() {
         return getEcmTanentUrl() + "/api/v0/todo";
     }
 
@@ -336,7 +311,7 @@ public class APIUri {
      *
      * @return
      */
-    public static String getTodayTask() {
+    public static String getTodayTaskUrl() {
         return getToDoBaseUrl() + "today";
     }
 
@@ -354,7 +329,7 @@ public class APIUri {
      *
      * @return
      */
-    public static String getTag() {
+    public static String getTagUrl() {
         return getToDoBaseUrl() + "tag";
     }
 
@@ -364,7 +339,7 @@ public class APIUri {
      * @param id
      * @return
      */
-    public static String getTasks(String id) {
+    public static String getTasksList(String id) {
         return getToDoBaseUrl() + "list/" + id + "/tasks";
     }
 
@@ -373,7 +348,7 @@ public class APIUri {
      *
      * @return
      */
-    public static String changeMessionOwner() {
+    public static String getChangeMessionOwnerUrl() {
         return getToDoBaseUrl();
     }
 
@@ -383,7 +358,7 @@ public class APIUri {
      * @param id
      * @return
      */
-    public static String changeMessionTag(String id) {
+    public static String getChangeMessionTagUrl(String id) {
         return getToDoBaseUrl() + id + "/tags";
     }
 
@@ -393,7 +368,7 @@ public class APIUri {
      *
      * @return
      */
-    public static String getTripArriveCity() {
+    public static String getTripArriveCityUrl() {
         return getEcmTanentUrl() + "/trip/simple/city";
     }
 
@@ -402,7 +377,7 @@ public class APIUri {
      *
      * @return
      */
-    public static String knowledgeTips() {
+    public static String getKnowledgeTipsUrl() {
         return getEcmTanentUrl() + "/tips";
     }
 
@@ -412,7 +387,7 @@ public class APIUri {
      * @param uri
      * @return
      */
-    public static String getHttpApiUri(String uri) {
+    public static String getHttpApiUrl(String uri) {
         return getEcmTanentUrl() + "/" + uri;
     }
 

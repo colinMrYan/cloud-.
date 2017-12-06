@@ -21,7 +21,6 @@ import com.inspur.emmcloud.bean.GetChannelInfoResult;
 import com.inspur.emmcloud.bean.GetChannelListResult;
 import com.inspur.emmcloud.bean.GetCreateSingleChannelResult;
 import com.inspur.emmcloud.bean.GetFileUploadResult;
-import com.inspur.emmcloud.bean.GetMeetingReplyResult;
 import com.inspur.emmcloud.bean.GetMsgCommentCountResult;
 import com.inspur.emmcloud.bean.GetMsgCommentResult;
 import com.inspur.emmcloud.bean.GetMsgResult;
@@ -66,7 +65,7 @@ public class ChatAPIService {
 	 * 获取会话列表
 	 */
 	public void getChannelList() {
-		final String completeUrl = UriUtils.getHttpApiUri("channel/session");
+		final String completeUrl = APIUri.getHttpApiUrl("channel/session");
 		RequestParams params = ((MyApplication) context.getApplicationContext())
 				.getHttpRequestParams(completeUrl);
 		x.http().get(params, new APICallback(context, completeUrl) {
@@ -111,7 +110,7 @@ public class ChatAPIService {
 	 * @param count
 	 */
 	public void getNewMsgs(final String cid, final String msgId, final int count) {
-		final String completeUrl = UriUtils.getHttpApiUri("session/message");
+		final String completeUrl = APIUri.getHttpApiUrl("session/message");
 		RequestParams params = ((MyApplication) context.getApplicationContext())
 				.getHttpRequestParams(completeUrl);
 		params.addParameter("limit", count);
@@ -170,7 +169,7 @@ public class ChatAPIService {
 	 */
 	public void getComment(final String mid) {
 
-		final String completeUrl = UriUtils.getHttpApiUri("message/" + mid
+		final String completeUrl = APIUri.getHttpApiUrl("message/" + mid
 				+ "/comment");
 		RequestParams params = ((MyApplication) context.getApplicationContext())
 				.getHttpRequestParams(completeUrl);
@@ -214,7 +213,7 @@ public class ChatAPIService {
 	 * @param cid
 	 */
 	public void getChannelInfo(final String cid) {
-		final String completeUrl = UriUtils.getHttpApiUri("channel/" + cid);
+		final String completeUrl = APIUri.getHttpApiUrl("channel/" + cid);
 		RequestParams params = ((MyApplication) context.getApplicationContext())
 				.getHttpRequestParams(completeUrl);
 		x.http().get(params, new APICallback(context, completeUrl) {
@@ -276,7 +275,7 @@ public class ChatAPIService {
 	 */
 	public void sendMsg(final String channelId, final String msgContent,
 						final String type, final String mid, final String fakeMessageId) {
-		final String completeUrl = UriUtils.getHttpApiUri("message");
+		final String completeUrl = APIUri.getHttpApiUrl("message");
 		RequestParams params = ((MyApplication) context.getApplicationContext())
 				.getHttpRequestParams(completeUrl);
 		try {
@@ -345,7 +344,7 @@ public class ChatAPIService {
 	 * @param mid
 	 */
 	public void getMsg(final String mid) {
-		final String completeUrl = UriUtils.getHttpApiUri("message/" + mid);
+		final String completeUrl = APIUri.getHttpApiUrl("message/" + mid);
 		RequestParams params = ((MyApplication) context.getApplicationContext())
 				.getHttpRequestParams(completeUrl);
 		x.http().get(params, new APICallback(context, completeUrl) {
@@ -456,8 +455,8 @@ public class ChatAPIService {
 	 */
 	public void getAllGroupChannelList() {
 
-		final String completeUrl = UriUtils
-				.getHttpApiUri("channel/group?limit=-1");
+		final String completeUrl = APIUri
+				.getHttpApiUrl("channel/group?limit=-1");
 		RequestParams params = ((MyApplication) context.getApplicationContext())
 				.getHttpRequestParams(completeUrl);
 		x.http().get(params, new APICallback(context, completeUrl) {
@@ -501,7 +500,7 @@ public class ChatAPIService {
 	 * @param cidArray
 	 */
 	public void getChannelGroupList(final String[] cidArray) {
-		final String completeUrl = UriUtils.getHttpApiUri("channel?")
+		final String completeUrl = APIUri.getHttpApiUrl("channel?")
 				+ "limit=1000";
 		RequestParams params = ((MyApplication) context.getApplicationContext())
 				.getHttpRequestParams(completeUrl);
@@ -556,7 +555,7 @@ public class ChatAPIService {
 	 * @param uid
 	 */
 	public void createDirectChannel(final String uid) {
-		final String completeUrl = UriUtils.getHttpApiUri("channel");
+		final String completeUrl = APIUri.getHttpApiUrl("channel");
 		RequestParams params = ((MyApplication) context.getApplicationContext())
 				.getHttpRequestParams(completeUrl);
 		params.addParameter("mate", uid);
@@ -605,7 +604,7 @@ public class ChatAPIService {
 	 * @param name
 	 */
 	public void updateChannelGroupName(final String cid, final String name) {
-		final String completeUrl = UriUtils.getHttpApiUri("channel?cid=") + cid;
+		final String completeUrl = APIUri.getHttpApiUrl("channel?cid=") + cid;
 		RequestParams params = ((MyApplication) context.getApplicationContext())
 				.getHttpRequestParams(completeUrl);
 		try {
@@ -659,7 +658,7 @@ public class ChatAPIService {
 	 * @param cid
 	 */
 	public void addGroupMembers(final ArrayList<String> uids, final String cid) {
-		String url = UriUtils.addGroupMembers(cid);
+		String url = APIUri.getAddGroupMembersUrl(cid);
 		for (int i = 0; i < uids.size(); i++) {
 			url = url + "uids=" + uids.get(i) + "&";
 		}
@@ -712,7 +711,7 @@ public class ChatAPIService {
 	 */
 	public void deleteGroupMembers(final ArrayList<String> uids,
 								   final String cid) {
-		String url = UriUtils.addGroupMembers(cid);
+		String url = APIUri.getAddGroupMembersUrl(cid);
 		for (int i = 0; i < uids.size(); i++) {
 			url = url + "uids=" + uids.get(i) + "&";
 		}
@@ -764,7 +763,7 @@ public class ChatAPIService {
 	 */
 	public void updateDnd(final String cid, final Boolean nointerruption) {
 
-		final String completeUrl = UriUtils.getNointerruption() + "?cid=" + cid
+		final String completeUrl = APIUri.getNointerRuptionUrl() + "?cid=" + cid
 				+ "&dnd=" + nointerruption;
 		RequestParams params = ((MyApplication) context.getApplicationContext())
 				.getHttpRequestParams(completeUrl);
@@ -804,65 +803,13 @@ public class ChatAPIService {
 	}
 
 	/**
-	 * 会议邀请卡片的应答
-	 *
-	 * @param rid
-	 * @param mpid
-	 * @param state
-	 */
-	public void sendMeetingReply(final String rid, final String mpid,
-								 final String state) {
-		final String completeUrl = UriUtils.getMeetingReply() + "?";
-		RequestParams params = ((MyApplication) context.getApplicationContext())
-				.getHttpRequestParams(completeUrl);
-		params.addQueryStringParameter("rid", rid);
-		params.addQueryStringParameter("mpid", mpid);
-		params.addQueryStringParameter("state", state);
-		x.http().request(HttpMethod.PUT, params, new APICallback(context, completeUrl) {
-
-			@Override
-			public void callbackTokenExpire() {
-				// TODO Auto-generated method stub
-				new OauthUtils(new OauthCallBack() {
-
-					@Override
-					public void reExecute() {
-						sendMeetingReply(rid, mpid, state);
-					}
-
-					@Override
-					public void executeFailCallback() {
-						callbackFail("",-1);
-					}
-
-				}, context).refreshToken(completeUrl);
-			}
-
-			@Override
-			public void callbackSuccess(String arg0) {
-				// TODO Auto-generated method stub
-				apiInterface
-						.returnGetMeetingReplySuccess(new GetMeetingReplyResult(
-								arg0));
-			}
-
-			@Override
-			public void callbackFail(String error, int responseCode) {
-				// TODO Auto-generated method stub
-				apiInterface.returnGetMeetingReplyFail(error, responseCode);
-			}
-		});
-
-	}
-
-	/**
 	 * 创建群组
 	 *
 	 * @param name
 	 * @param members
 	 */
 	public void createGroupChannel(final String name, final JSONArray members) {
-		final String completeUrl = UriUtils.getHttpApiUri("channel");
+		final String completeUrl = APIUri.getHttpApiUrl("channel");
 		RequestParams params = ((MyApplication) context.getApplicationContext())
 				.getHttpRequestParams(completeUrl);
 		try {
@@ -913,7 +860,7 @@ public class ChatAPIService {
 	}
 
 	public void getMsgCommentCount(final String mid) {
-		final String completeUrl = UriUtils.getHttpApiUri("message/" + mid
+		final String completeUrl = APIUri.getHttpApiUrl("message/" + mid
 				+ "/comment/count");
 		RequestParams params = ((MyApplication) context.getApplicationContext())
 				.getHttpRequestParams(completeUrl);

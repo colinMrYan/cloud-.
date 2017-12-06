@@ -12,8 +12,7 @@ import android.content.Context;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.api.APICallback;
 import com.inspur.emmcloud.api.APIInterface;
-import com.inspur.emmcloud.bean.GetFindMixSearchResult;
-import com.inspur.emmcloud.bean.GetFindSearchResult;
+import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.bean.GetKnowledgeInfo;
 import com.inspur.emmcloud.bean.GetTripArriveCity;
 import com.inspur.emmcloud.bean.Trip;
@@ -266,7 +265,7 @@ public class FindAPIService {
 	 */
 	public void getArriveCity(final String station) {
 		final String completeUrl;
-		completeUrl = UriUtils.getTripArriveCity() + "?";
+		completeUrl = APIUri.getTripArriveCityUrl() + "?";
 		RequestParams params = ((MyApplication)context.getApplicationContext()).getHttpRequestParams(completeUrl);
 		params.addParameter("station", station);
 		x.http().get(params, new APICallback(context,completeUrl) {
@@ -307,7 +306,7 @@ public class FindAPIService {
 	 * 获取知识信息
 	 */
 	public void getKnowledgeList() {
-		final String completeUrl = UriUtils.knowledgeTips();
+		final String completeUrl = APIUri.getKnowledgeTipsUrl();
 		RequestParams params = ((MyApplication)context.getApplicationContext()).getHttpRequestParams(completeUrl);
 		x.http().get(params, new APICallback(context,completeUrl) {
 			
@@ -340,100 +339,6 @@ public class FindAPIService {
 			public void callbackFail(String error, int responseCode) {
 				// TODO Auto-generated method stub
 				apiInterface.returnKnowledgeListFail(error,responseCode);
-			}
-		});
-	}
-	
-	
-	/**
-	 * 发现界面的搜索
-	 *
-	 * @param keyword
-	 * @param datatype
-	 * @param page
-	 */
-	public void findSearch(final String keyword, final String datatype,
-			final int page, final int num, final int start) {
-		String url = UriUtils.getFindSearch();
-		url = url  + "&fq=" + datatype
-				+ "&wt=json&indent=true&start=" + start + "&rows=" + num;
-		final String completeUrl = url;
-		RequestParams params = ((MyApplication)context.getApplicationContext()).getHttpRequestParams(completeUrl);
-		params.addParameter("q", keyword);
-		x.http().get(params, new APICallback(context,completeUrl) {
-			
-			@Override
-			public void callbackTokenExpire() {
-				// TODO Auto-generated method stub
-				new OauthUtils(new OauthCallBack() {
-
-					@Override
-					public void reExecute() {
-						findSearch(keyword, datatype, page, num, start);
-					}
-
-					@Override
-					public void executeFailCallback() {
-						callbackFail("", -1);
-					}
-				}, context).refreshToken(completeUrl);
-			}
-			
-			@Override
-			public void callbackSuccess(String arg0) {
-				// TODO Auto-generated method stub
-				apiInterface.returnFindSearchSuccess(new GetFindSearchResult(
-						arg0));
-			}
-			
-			@Override
-			public void callbackFail(String error, int responseCode) {
-				// TODO Auto-generated method stub
-				apiInterface.returnFindSearchFail(error,responseCode);
-			}
-		});
-	}
-
-	/**
-	 * 发现界面的搜索
-	 *
-	 * @param keyword
-	 * @param keyword
-	 */
-	public void findMixSearch(final String keyword) {
-		final String completeUrl = UriUtils.getFindMixSearch() + keyword;
-		RequestParams params = ((MyApplication)context.getApplicationContext()).getHttpRequestParams(completeUrl);
-		x.http().get(params, new APICallback(context,completeUrl) {
-			
-			@Override
-			public void callbackTokenExpire() {
-				// TODO Auto-generated method stub
-				new OauthUtils(new OauthCallBack() {
-
-					@Override
-					public void reExecute() {
-						findMixSearch(keyword);
-					}
-
-					@Override
-					public void executeFailCallback() {
-						callbackFail("", -1);
-					}
-				}, context).refreshToken(completeUrl);
-			}
-			
-			@Override
-			public void callbackSuccess(String arg0) {
-				// TODO Auto-generated method stub
-				apiInterface
-				.returnFindMixSearchSuccess(new GetFindMixSearchResult(
-						arg0));
-			}
-			
-			@Override
-			public void callbackFail(String error, int responseCode) {
-				// TODO Auto-generated method stub
-				apiInterface.returnFindMixSearchFail(error,responseCode);
 			}
 		});
 	}

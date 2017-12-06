@@ -13,6 +13,7 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APICallback;
 import com.inspur.emmcloud.api.APIInterface;
+import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.bean.GetBoolenResult;
 import com.inspur.emmcloud.bean.GetLoginResult;
 import com.inspur.emmcloud.bean.GetMyInfoResult;
@@ -22,7 +23,6 @@ import com.inspur.emmcloud.bean.GetUpdatePwdBySMSCodeBean;
 import com.inspur.emmcloud.callback.OauthCallBack;
 import com.inspur.emmcloud.util.OauthUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
-import com.inspur.emmcloud.util.UriUtils;
 
 import org.xutils.http.HttpMethod;
 import org.xutils.http.RequestParams;
@@ -277,7 +277,7 @@ public class LoginAPIService {
 //	 * 获取websocket的连接url
 //	 */
 //	public void getWebsocketUrl() {
-//		final String completeUrl = UriUtils.getHttpApiUri("settings/socket");
+//		final String completeUrl = UriUtils.getHttpApiUrl("settings/socket");
 //		RequestParams params = ((MyApplication) context.getApplicationContext())
 //				.getHttpRequestParams(completeUrl);
 //		x.http().get(params, new APICallback(context,completeUrl) {
@@ -392,14 +392,14 @@ public class LoginAPIService {
 	 * @param newpsd
 	 */
 	public void changePsd(final String oldpsd, final String newpsd) {
-		final String completeUrl  = UriUtils.getChangePsd();
+		final String completeUrl  = APIUri.getChangePsdUrl();
 //		if (PreferencesUtils.getBoolean(context, "hasPassword")
 //				&& !StringUtils.isEmpty(oldpsd)) {
-//			completeUrl = UriUtils.getChangePsd() + "?old="
+//			completeUrl = UriUtils.getChangePsdUrl() + "?old="
 //					+ StringUtils.utf8Encode(oldpsd, "UTF-8") + "&new="
 //					+ StringUtils.utf8Encode(newpsd, "UTF-8");
 //		} else {
-//			completeUrl = UriUtils.getChangePsd() + "?new="
+//			completeUrl = UriUtils.getChangePsdUrl() + "?new="
 //					+ StringUtils.utf8Encode(newpsd, "UTF-8");
 //		}
 		RequestParams params = ((MyApplication)context.getApplicationContext()).getHttpRequestParams(completeUrl);
@@ -448,7 +448,7 @@ public class LoginAPIService {
 	 * @param newPwd
 	 */
 	public void updatePwdBySMSCode(final String smsCode,final String newPwd){
-		final String completeUrl = UriUtils.getChangePsd();
+		final String completeUrl = APIUri.getChangePsdUrl();
 		RequestParams params = ((MyApplication)context.getApplicationContext()).getHttpRequestParams(completeUrl);
 		params.addQueryStringParameter("passcode", smsCode);
 		params.addQueryStringParameter("new", newPwd);
