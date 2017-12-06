@@ -17,6 +17,7 @@ public class APIUri {
     private static final String URL_BASE_SMS_LOGIN = "https://id.inspur.com/api/v1/passcode?phone=";
     private static final String URL_BASE_APP_CONFIG = "https://emm.inspur.com/v3.0/api/app/config";
     private static final String URL_BASE_APP_V3 = "https://emm.inspur.com/v3.0/";
+    private static final String URL_BASE_VOLUME = "https://yunjia.inspur.com/cloud-drive/api/v1/volume";
 
     /**
      * 获取到租户级的URL
@@ -768,6 +769,61 @@ public class APIUri {
         return URL_BASE_APP_V3 + "api/app/position/upload";
     }
 
+
+    /***************************************VOLUME云盘************************************************************/
+    /**
+     * 获取云盘列表
+     * @return
+     */
+    public static String getVolumeListUrl(){
+        return URL_BASE_VOLUME;
+    }
+
+    /**
+     * 获取云盘文件列表
+     * @param volumeId
+     * @param subPath
+     * @return
+     */
+    public static String getVolumeFileOperationUrl(String volumeId){
+        return  URL_BASE_VOLUME+"/"+volumeId+"/file";
+    }
+
+    /**
+     * 获取云盘上传STS token
+     * @param volumeId
+     * @return
+     */
+    public static String getVolumeFileUploadSTSTokenUrl(String volumeId){
+        return URL_BASE_VOLUME+"/"+volumeId+"/file/request";
+    }
+
+    /**
+     * 获取云盘创建文件夹url
+     * @param volumeId
+     * @return
+     */
+    public static String getCreateForderUrl(String volumeId){
+        return URL_BASE_VOLUME+"/"+volumeId+"/directory";
+    }
+
+    /**
+     * 获取文件重命名url
+     * @param volumeId
+     * @return
+     */
+    public static String getVolumeFileRenameUrl(String volumeId){
+        return  URL_BASE_VOLUME+"/"+volumeId+"/file/name";
+    }
+
+    /**
+     * 获取云盘文件移动url
+     * @param volumeId
+     * @return
+     */
+    public static String getMoveVolumeFileUrl(String volumeId){
+        return  URL_BASE_VOLUME+"/"+volumeId+"/file/path";
+    }
     /**
      * 获取我的应用小部件的url
      * @return

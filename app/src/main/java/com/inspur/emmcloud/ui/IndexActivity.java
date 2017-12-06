@@ -34,7 +34,7 @@ import com.inspur.emmcloud.bean.GetAllRobotsResult;
 import com.inspur.emmcloud.bean.GetAppTabAutoResult;
 import com.inspur.emmcloud.bean.GetSearchChannelGroupResult;
 import com.inspur.emmcloud.bean.PVCollectModel;
-import com.inspur.emmcloud.callback.CommonCallBack;
+import com.inspur.emmcloud.interf.CommonCallBack;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.interf.OnTabReselectListener;
 import com.inspur.emmcloud.service.BackgroundService;
