@@ -14,6 +14,7 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.Volume.VolumeFile;
 import com.inspur.emmcloud.interf.ProgressCallback;
 import com.inspur.emmcloud.util.FileUtils;
+import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.TimeUtils;
 import com.inspur.emmcloud.util.VolumeFileIconUtils;
 import com.inspur.emmcloud.util.VolumeFileUploadManagerUtils;
@@ -27,7 +28,7 @@ import java.util.List;
 
 
 /**
- * Created by chenmch on 2017/11/16.
+ * 云盘文件展示Adapter
  */
 
 public class VolumeFileAdapter extends RecyclerView.Adapter<VolumeFileAdapter.ViewHolder> {
@@ -52,6 +53,7 @@ public class VolumeFileAdapter extends RecyclerView.Adapter<VolumeFileAdapter.Vi
 
     /**
      * 设置是否显示右侧箭头
+     *
      * @param isShowFileOperationDropDownImg
      */
     public void setShowFileOperationDropDownImg(boolean isShowFileOperationDropDownImg) {
@@ -60,6 +62,7 @@ public class VolumeFileAdapter extends RecyclerView.Adapter<VolumeFileAdapter.Vi
 
     /**
      * 设置是否全选
+     *
      * @param isMultiselect
      */
     public void setMultiselect(boolean isMultiselect) {
@@ -72,6 +75,7 @@ public class VolumeFileAdapter extends RecyclerView.Adapter<VolumeFileAdapter.Vi
 
     /**
      * 选中所有的文件
+     *
      * @param isSelectAll
      */
     public void setSelectAll(boolean isSelectAll) {
@@ -90,6 +94,7 @@ public class VolumeFileAdapter extends RecyclerView.Adapter<VolumeFileAdapter.Vi
 
     /**
      * 获取被选中的文件列表
+     *
      * @return
      */
     public List<VolumeFile> getSelectVolumeFileList() {
@@ -97,7 +102,8 @@ public class VolumeFileAdapter extends RecyclerView.Adapter<VolumeFileAdapter.Vi
     }
 
     /**
-     * 判断是否处于多远状态
+     * 判断是否处于多选状态
+     *
      * @return
      */
     public boolean getMultiselect() {
@@ -106,6 +112,7 @@ public class VolumeFileAdapter extends RecyclerView.Adapter<VolumeFileAdapter.Vi
 
     /**
      * 设置此位置文件的选中状态
+     *
      * @param position
      */
     public void setVolumeFileSelect(int position) {
@@ -120,6 +127,7 @@ public class VolumeFileAdapter extends RecyclerView.Adapter<VolumeFileAdapter.Vi
 
     /**
      * 文件上传成功之后，服务端返回的VolumeFile数据替换用户显示的客户端构造的数据
+     *
      * @param mockVolumeFile
      * @param newVolumeFile
      */
@@ -164,11 +172,11 @@ public class VolumeFileAdapter extends RecyclerView.Adapter<VolumeFileAdapter.Vi
         holder.fileTimeText.setText(fileTime);
         if (!isStatusNomal) {
             boolean isStutasUploading = volumeFileStatus.equals(VolumeFile.STATUS_UPLOADIND);
-            holder.uploadOperationText.setText(isStutasUploading?"取消上传":"重新上传");
+            holder.uploadOperationText.setText(isStutasUploading ? "取消上传" : "重新上传");
             holder.uploadProgressBar.setProgress(0);
             holder.uploadProgressBar.setVisibility(View.GONE);
             holder.uploadStatusText.setVisibility(View.VISIBLE);
-            holder.uploadStatusText.setText(isStutasUploading?"等待上传":"上传失败");
+            holder.uploadStatusText.setText(isStutasUploading ? "等待上传" : "上传失败");
             VolumeFileUploadManagerUtils.getInstance().setOssUploadProgressCallback(volumeFile, new ProgressCallback() {
                 @Override
                 public void onSuccess(VolumeFile newVolumeFile) {
@@ -191,17 +199,18 @@ public class VolumeFileAdapter extends RecyclerView.Adapter<VolumeFileAdapter.Vi
             holder.uploadOperationText.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (volumeFile.getStatus().equals(VolumeFile.STATUS_UPLOADIND)){
+                    if (volumeFile.getStatus().equals(VolumeFile.STATUS_UPLOADIND)) {
                         //取消上传
                         VolumeFileUploadManagerUtils.getInstance().removeVolumeFileUploadService(volumeFile);
                         volumeFileList.remove(position);
                         notifyItemRemoved(position);
-                    }else {
-                        volumeFile.setStatus(VolumeFile.STATUS_UPLOADIND);
+                    } else if (NetUtils.isNetworkConnected(context)) {
                         //重新上传
+                        volumeFile.setStatus(VolumeFile.STATUS_UPLOADIND);
                         VolumeFileUploadManagerUtils.getInstance().reUploadFile(volumeFile);
                         notifyItemChanged(position);
                     }
+
 
                 }
             });
@@ -213,7 +222,7 @@ public class VolumeFileAdapter extends RecyclerView.Adapter<VolumeFileAdapter.Vi
         return volumeFileList.size();
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener,View.OnLongClickListener {
+    class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
         private MyItemClickListener myItemClickListener;
         private MyItemDropDownImgClickListener myItemDropDownImgClickListener;
 
@@ -290,6 +299,7 @@ public class VolumeFileAdapter extends RecyclerView.Adapter<VolumeFileAdapter.Vi
 
     public interface MyItemClickListener {
         void onItemClick(View view, int position);
+
         void onItemLongClick(View view, int position);
     }
 
