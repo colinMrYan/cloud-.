@@ -107,6 +107,7 @@ public class OssService implements VolumeFileUploadService {
 
     @Override
     public void uploadFile(String fileName, String localFile) {
+        handMessage();
         // 构造上传请求
         PutObjectRequest put = new PutObjectRequest(getVolumeFileUploadTokenResult.getBucket(), fileName, localFile);
 
