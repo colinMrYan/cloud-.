@@ -68,6 +68,9 @@ public class VolumeFileFilterActvity extends VolumeFileBaseActivity {
         finishActivity();
     }
 
+    /**
+     * 分类展示返回时,前一个页面进行数据刷新，以便于更新在此页面进行操作的数据
+     */
     private void finishActivity(){
         finish();
         setResult(RESULT_OK);
