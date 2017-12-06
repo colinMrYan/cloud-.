@@ -20,6 +20,7 @@ import android.text.TextUtils;
 import android.util.DisplayMetrics;
 
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.config.Constant;
 import com.inspur.imp.api.ImpActivity;
 
 import java.io.File;
@@ -160,7 +161,6 @@ public class AppUtils {
                 String currentVersionCode = getNormalVersionCode(currentArray[2]);
                 currentArray[2] = currentVersionCode;
             } catch (Exception e) {
-                LogUtils.YfcDebug("捕获版本异常：" + e.getMessage());
                 e.printStackTrace();
             }
             if (savedArray.length != 3) {
@@ -230,25 +230,44 @@ public class AppUtils {
      * @return
      */
     public static String getMyUUID(Context context) {
-        final TelephonyManager tm = (TelephonyManager) context
-                .getSystemService(Context.TELEPHONY_SERVICE);
-        String uuid = PreferencesUtils.getString(context, "device_uuid", "");
-        if (StringUtils.isBlank(uuid)) {
-            String tmDevice, tmSerial, androidId;
-            tmDevice = "" + tm.getDeviceId();
-            tmSerial = "" + tm.getSimSerialNumber();
-            androidId = ""
-                    + android.provider.Settings.Secure.getString(
-                    context.getContentResolver(),
-                    android.provider.Settings.Secure.ANDROID_ID);
-            UUID deviceUuid = new UUID(androidId.hashCode(),
-                    ((long) tmDevice.hashCode() << 32) | tmSerial.hashCode());
-            uuid = deviceUuid.toString();
-            PreferencesUtils.putString(context, "device_uuid", uuid);
-        }
-
+        String uuid = getUUID(context);
+        saveUUID(context, uuid);
         return uuid;
+    }
 
+
+    /**
+     * 获取UUID，类内部使用，不暴露给外部
+     * @param context
+     * @return
+     */
+    private static String getUUID(Context context) {
+        //先读SharePreference，如果SharePreference里有UUID则返回SharePreference里的UUID，并判断SD卡里是否存在UUID文件，没有则存一份
+        String uniqueId = PreferencesUtils.getString(context, "device_uuid", "");
+        if(!StringUtils.isBlank(uniqueId)){
+            return uniqueId;
+        }
+        //如果SharePreference里没有，则检查SD卡里有没有UUID文件，如果有则返回sd卡里的UUID，并向SharePreference里存一份
+        uniqueId = getUUIDFromSDCardFile(context);
+        if(!StringUtils.isBlank(uniqueId)){
+            return uniqueId;
+        }
+        //如果前两个都没有，则生成一个UUID，并存到SharePreference和SD卡文件里
+        if(StringUtils.isBlank(uniqueId)){
+            uniqueId = getDeviceUUID(context);
+        }
+        return uniqueId;
+    }
+
+    /**
+     * 存UUID
+     * @param context
+     */
+    private static void saveUUID(Context context,String uuid){
+        PreferencesUtils.putString(context,"device_uuid",uuid);
+        if(!FileUtils.isFolderExist(Constant.CONCIG_CLOUD_PLUS_UUID_FILE)){
+            saveDeviceUUID2SDCardFile(context, uuid);
+        }
     }
 
     /**
@@ -458,6 +477,64 @@ public class AppUtils {
             }
         }
         return false;
+    }
+
+
+    /**
+     * 获取SD卡文件里的UUID
+     * @param context
+     * @return
+     */
+    private static String getUUIDFromSDCardFile(Context context) {
+        if(!FileUtils.isFileExist(Constant.CONCIG_CLOUD_PLUS_UUID_FILE)){
+            return "";
+        }
+        try {
+            return EncryptUtils.decode(FileUtils.readFile(Constant.CONCIG_CLOUD_PLUS_UUID_FILE, "utf-8").toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
+
+    /**
+     * 获取设备UUID，动态获取
+     * 影响要素有设备序列号，sim卡串号，系统id
+     *
+     * @param context
+     * @return
+     */
+    private static String getDeviceUUID(Context context) {
+        final TelephonyManager tm = (TelephonyManager) context
+                .getSystemService(Context.TELEPHONY_SERVICE);
+        final String tmDevice, tmSerial, tmPhone, androidId;
+        tmDevice = "" + tm.getDeviceId();
+        tmSerial = "" + tm.getSimSerialNumber();
+        androidId = ""
+                + android.provider.Settings.Secure.getString(
+                context.getContentResolver(),
+                android.provider.Settings.Secure.ANDROID_ID);
+        UUID deviceUuid = new UUID(androidId.hashCode(),
+                ((long) tmDevice.hashCode() << 32) | tmSerial.hashCode());
+        String uniqueId = deviceUuid.toString();
+        return uniqueId;
+    }
+
+
+
+    /**
+     * 存储uuid到SD卡文件系统，不分租户用户
+     * @param context
+     * @param uuid
+     * @return
+     */
+    private static void saveDeviceUUID2SDCardFile(Context context,String uuid) {
+        try {
+            uuid = EncryptUtils.encode(uuid);
+            FileUtils.writeFile(Constant.CONCIG_CLOUD_PLUS_UUID_FILE, uuid);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }
