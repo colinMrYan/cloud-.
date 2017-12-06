@@ -126,7 +126,7 @@ public class VolumeFileAdapter extends RecyclerView.Adapter<VolumeFileAdapter.Vi
     }
 
     /**
-     * 文件上传成功之后，服务端返回的VolumeFile数据替换用户显示的客户端构造的数据
+     * 文件上传成功之后，服务端返回的VolumeFile数据替换用于显示的客户端构造的数据
      *
      * @param mockVolumeFile
      * @param newVolumeFile
