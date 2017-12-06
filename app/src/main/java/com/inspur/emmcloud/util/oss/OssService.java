@@ -22,7 +22,6 @@ import com.inspur.emmcloud.interf.VolumeFileUploadService;
 import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.VolumeFileUploadManagerUtils;
 
-import java.io.File;
 import java.util.HashMap;
 
 import static com.umeng.socialize.utils.DeviceConfig.context;
@@ -108,22 +107,6 @@ public class OssService implements VolumeFileUploadService {
 
     @Override
     public void uploadFile(String fileName, String localFile) {
-        //如果未设置isBeginUpload 暂时不开始
-        if (progressCallback == null) {
-            return;
-        }
-        if (fileName.equals("")) {
-            Log.w("AsyncPutImage", "ObjectNull");
-            return;
-        }
-        handMessage();
-        LogUtils.jasonDebug("localFile=" + localFile);
-        File file = new File(localFile);
-        if (!file.exists()) {
-            Log.w("AsyncPutImage", "FileNotExist");
-            Log.w("LocalFile", localFile);
-            return;
-        }
         // 构造上传请求
         PutObjectRequest put = new PutObjectRequest(getVolumeFileUploadTokenResult.getBucket(), fileName, localFile);
 
