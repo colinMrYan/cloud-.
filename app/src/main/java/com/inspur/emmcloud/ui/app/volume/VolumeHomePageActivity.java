@@ -1,6 +1,8 @@
 package com.inspur.emmcloud.ui.app.volume;
 
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -32,7 +34,7 @@ import static com.inspur.emmcloud.R.id.volume_capacity_text;
  */
 
 @ContentView(R.layout.activity_volume_homepage)
-public class VolumeHomePageActivity extends BaseActivity {
+public class VolumeHomePageActivity extends BaseActivity implements SwipeRefreshLayout.OnRefreshListener{
 
     @ViewInject(volume_capacity_text)
     private TextView volumeCapacityText;
@@ -42,6 +44,9 @@ public class VolumeHomePageActivity extends BaseActivity {
 
     @ViewInject(R.id.volume_recent_use_layout)
     private LinearLayout volumeRecentUseLayout;
+
+    @ViewInject(R.id.refresh_layout)
+    protected SwipeRefreshLayout swipeRefreshLayout;
 
     private VolumeRecentUseAdapter adapter;
     private MyAppAPIService apiService;
@@ -55,7 +60,7 @@ public class VolumeHomePageActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initView();
-        getVolumeList();
+        getVolumeList(true);
     }
 
     private void initView() {
@@ -64,6 +69,8 @@ public class VolumeHomePageActivity extends BaseActivity {
         apiService.setAPIInterface(new WebService());
         adapter = new VolumeRecentUseAdapter(this);
         volumeRecentUseListView.setAdapter(adapter);
+        swipeRefreshLayout.setColorSchemeColors(ContextCompat.getColor(getApplicationContext(), R.color.header_bg), ContextCompat.getColor(getApplicationContext(), R.color.header_bg));
+        swipeRefreshLayout.setOnRefreshListener(this);
     }
 
     public void onClick(View v) {
@@ -91,13 +98,20 @@ public class VolumeHomePageActivity extends BaseActivity {
         }
     }
 
+    @Override
+    public void onRefresh() {
+        getVolumeList(false);
+    }
+
     /**
      * 获取云盘列表
      */
-    private void getVolumeList() {
+    private void getVolumeList(boolean isShowDlg) {
         if (NetUtils.isNetworkConnected(getApplicationContext())) {
-            loadingDlg.show();
+            loadingDlg.show(isShowDlg);
             apiService.getVolumeList();
+        } else {
+            swipeRefreshLayout.setRefreshing(false);
         }
     }
 
@@ -107,7 +121,7 @@ public class VolumeHomePageActivity extends BaseActivity {
             if (loadingDlg != null && loadingDlg.isShowing()) {
                 loadingDlg.dismiss();
             }
-
+            swipeRefreshLayout.setRefreshing(false);
             shareVolumeList = getVolumeListResult.getShareVolumeList();
             myVolume = getVolumeListResult.getMyVolume();
             if (myVolume != null){
@@ -122,6 +136,7 @@ public class VolumeHomePageActivity extends BaseActivity {
             if (loadingDlg != null && loadingDlg.isShowing()) {
                 loadingDlg.dismiss();
             }
+            swipeRefreshLayout.setRefreshing(false);
             WebServiceMiddleUtils.hand(getApplicationContext(), error, errorCode);
         }
     }

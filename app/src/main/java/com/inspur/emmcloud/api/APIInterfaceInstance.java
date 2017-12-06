@@ -81,7 +81,7 @@ import com.inspur.emmcloud.bean.TaskResult;
 import com.inspur.emmcloud.bean.Trip;
 import com.inspur.emmcloud.bean.UserProfileInfoBean;
 import com.inspur.emmcloud.bean.Volume.GetVolumeFileListResult;
-import com.inspur.emmcloud.bean.Volume.GetVolumeFileUploadSTSTokenResult;
+import com.inspur.emmcloud.bean.Volume.GetVolumeFileUploadTokenResult;
 import com.inspur.emmcloud.bean.Volume.GetVolumeListResult;
 import com.inspur.emmcloud.bean.Volume.VolumeFile;
 
@@ -1484,11 +1484,11 @@ public class APIInterfaceInstance implements APIInterface {
     }
 
     @Override
-    public void returnVolumeFileUploadSTSTokenSuccess(GetVolumeFileUploadSTSTokenResult getVolumeFileUploadSTSTokenResult, String filePath) {
+    public void returnVolumeFileUploadTokenSuccess(GetVolumeFileUploadTokenResult getVolumeFileUploadTokenResult, String fileLocalPath,VolumeFile mockVolumeFile) {
     }
 
     @Override
-    public void returnVolumeFileUploadSTSTokenFail(String error, int errorCode, String filePath) {
+    public void returnVolumeFileUploadTokenFail(VolumeFile mockVolumeFile,String error, int errorCode, String filePath) {
     }
 
     @Override

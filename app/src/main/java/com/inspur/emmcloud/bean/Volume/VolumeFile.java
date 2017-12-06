@@ -19,6 +19,9 @@ public class VolumeFile implements Serializable{
     public static final String FILTER_TYPE_AUDIO = "filter_application";
     public static final String FILTER_TYPE_VIDEO = "filter_video";
     public static final String FILTER_TYPE_OTHER = "filter_other";
+    public static final String STATUS_NORMAL = "normal";
+    public static final String STATUS_UPLOADIND = "downloading";
+    public static final String STATUS_UPLOADIND_FAIL = "download_fail";
     private String id ="";
     private String type ="";
     private String name ="";
@@ -29,7 +32,8 @@ public class VolumeFile implements Serializable{
     private String privilege ="";
     private String format ="";
     private long size = 0L;
-    private String status = "normal";  // "downloading","download_fail"
+    private String volume = "";
+    private String status = STATUS_NORMAL;
 
     public VolumeFile(){}
 
@@ -48,6 +52,7 @@ public class VolumeFile implements Serializable{
         this.format = JSONUtils.getString(object,"format","");
         this.size = JSONUtils.getLong(object,"size",0L);
         this.id = JSONUtils.getString(object,"id","");
+        this.volume = JSONUtils.getString(object,"volume","");
     }
 
     public String getType() {
@@ -136,6 +141,14 @@ public class VolumeFile implements Serializable{
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getVolume() {
+        return volume;
+    }
+
+    public void setVolume(String volume) {
+        this.volume = volume;
     }
 
     public boolean equals(Object other) { // 重写equals方法，后面最好重写hashCode方法

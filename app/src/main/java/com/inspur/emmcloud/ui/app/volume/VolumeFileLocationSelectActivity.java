@@ -106,14 +106,23 @@ public class VolumeFileLocationSelectActivity extends VolumeFileBaseActivity {
                 showCreateFolderDlg();
                 break;
             case R.id.location_select_to_text:
-                String operationFileAbsolutePath = getIntent().getStringExtra("fileAbsolutePath");
+                String operationFileAbsolutePath = getIntent().getStringExtra("absolutePath");
                 if (operationFileAbsolutePath.equals(absolutePath)) {
                     ToastUtils.show(getApplicationContext(), "该文件已在当前文件夹");
                     return;
                 }
+
+                List<VolumeFile> operationFileList = (List<VolumeFile>) getIntent().getSerializableExtra("volumeFileList");
+                for (int i = 0;i<operationFileList.size();i++){
+                    String volumeFilePath = operationFileAbsolutePath+operationFileList.get(i);
+                    if (absolutePath.startsWith(volumeFilePath)){
+                        ToastUtils.show(getApplicationContext(), isFunctionCopy?"不能将文件复制到自身或其子目录下":"不能将文件移动到自身或其子目录下");
+                        return;
+                    }
+                }
                 if (isFunctionCopy) {
                     copyFile(operationFileAbsolutePath);
-                } else {
+                } else { //此处应考虑不能将文件移动到自身或其子目录下
                     moveFile(operationFileAbsolutePath);
                 }
                 break;

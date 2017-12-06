@@ -19,12 +19,10 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.VolumeFileAdapter;
 import com.inspur.emmcloud.adapter.VolumeFileFilterPopGridAdapter;
-import com.inspur.emmcloud.api.APIInterfaceInstance;
-import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
-import com.inspur.emmcloud.bean.Volume.GetVolumeFileUploadSTSTokenResult;
 import com.inspur.emmcloud.bean.Volume.VolumeFile;
 import com.inspur.emmcloud.util.AppUtils;
 import com.inspur.emmcloud.util.DensityUtil;
@@ -33,8 +31,7 @@ import com.inspur.emmcloud.util.IntentUtils;
 import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.ToastUtils;
-import com.inspur.emmcloud.util.VolumeFileUploadUtils;
-import com.inspur.emmcloud.util.WebServiceMiddleUtils;
+import com.inspur.emmcloud.util.VolumeFileUploadManagerUtils;
 import com.inspur.emmcloud.widget.dialogs.ActionSheetDialog;
 import com.inspur.imp.plugin.camera.imagepicker.ImagePicker;
 import com.inspur.imp.plugin.camera.imagepicker.bean.ImageItem;
@@ -81,7 +78,6 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
     protected RelativeLayout operationLayout;
 
     private PopupWindow sortOperationPop;
-    private MyAppAPIService apiService;
     private String cameraPicFileName;
     private BroadcastReceiver broadcastReceiver;
 
@@ -89,8 +85,6 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.isShowFileUploading = true;
-        apiService = new MyAppAPIService(this);
-        apiService.setAPIInterface(new WebService());
         setListIemClick();
         registerReceiver();
     }
@@ -448,7 +442,7 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
         if (resultCode == RESULT_OK) {
             if (requestCode == REQUEST_OPEN_FILE_BROWSER) {  //文件浏览器选择文件返回
                 Uri uri = data.getData();
-                LogUtils.jasonDebug("uri=" + uri.toString());
+                LogUtils.jasonDebug("uri="+uri.toString());
                 String filePath = GetPathFromUri4kitkat.getPathByUri(getApplicationContext(), uri);
                 uploadFile(filePath);
             } else if (requestCode == REQUEST_OPEN_CEMERA //拍照返回
@@ -475,12 +469,43 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
      * @param filePath
      */
     private void uploadFile(String filePath) {
-        File file = new File(filePath);
-        if (file.exists()) {
-            getVolumeFileUploadSTSToken(file);
-        } else {
+        if (filePath == null){
             ToastUtils.show(getApplicationContext(), "选择的文件不存在！");
+            return;
         }
+        File file = new File(filePath);
+        if (!file.exists()) {
+            ToastUtils.show(getApplicationContext(), "选择的文件不存在！");
+            return;
+
+        }
+        if (NetUtils.isNetworkConnected(MyApplication.getInstance())){
+            VolumeFile mockVolumeFile = getMockVolumeFileData(file);
+            VolumeFileUploadManagerUtils.getInstance().uploadFile(mockVolumeFile,filePath,absolutePath);
+            volumeFileList.add(0, mockVolumeFile);
+            initDataBlankLayoutStatus();
+            adapter.setVolumeFileList(volumeFileList);
+            adapter.notifyItemInserted(0);
+            fileRecycleView.scrollToPosition(0);
+        }
+    }
+
+    /**
+     * 生成一个用于上传展示的数据
+     * @param file
+     * @return
+     */
+    private VolumeFile getMockVolumeFileData(File file ){
+        long time = System.currentTimeMillis();
+        VolumeFile volumeFile = new VolumeFile();
+        volumeFile.setType(VolumeFile.FILE_TYPE_REGULAR);
+        volumeFile.setId(time + "");
+        volumeFile.setCreationDate(time);
+        volumeFile.setName(file.getName());
+        volumeFile.setStatus("downloading");
+        volumeFile.setVolume(volume.getId());
+        volumeFile.setFormat("");
+        return volumeFile;
     }
 
 
@@ -493,50 +518,5 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
         super.onDestroy();
     }
 
-    /**
-     * 获取云盘上传STS Token
-     *
-     * @param file
-     */
-    private void getVolumeFileUploadSTSToken(File file) {
-        if (NetUtils.isNetworkConnected(getApplicationContext())) {
-            loadingDlg.show();
-            String volumeFilePath = absolutePath + file.getName();
-            apiService.getVolumeFileUploadSTSToken(volume.getId(), file.getName(), volumeFilePath, file.getPath());
-        }
-    }
 
-
-    private class WebService extends APIInterfaceInstance {
-
-        @Override
-        public void returnVolumeFileUploadSTSTokenSuccess(GetVolumeFileUploadSTSTokenResult getVolumeFileUploadSTSTokenResult, String filePath) {
-            if (loadingDlg != null && loadingDlg.isShowing()) {
-                loadingDlg.dismiss();
-            }
-            long time = System.currentTimeMillis();
-            File file = new File(filePath);
-            VolumeFile volumeFile = new VolumeFile();
-            volumeFile.setType(VolumeFile.FILE_TYPE_REGULAR);
-            volumeFile.setId(time + "");
-            volumeFile.setCreationDate(time);
-            volumeFile.setName(file.getName());
-            volumeFile.setStatus("downloading");
-            volumeFile.setFormat("");
-            VolumeFileUploadUtils.getInstance().startUpload(getApplicationContext(), getVolumeFileUploadSTSTokenResult, null, volumeFile, filePath, volume.getId() + absolutePath);
-            volumeFileList.add(0, volumeFile);
-            initDataBlankLayoutStatus();
-            adapter.setVolumeFileList(volumeFileList);
-            adapter.notifyItemInserted(0);
-            fileRecycleView.scrollToPosition(0);
-        }
-
-        @Override
-        public void returnVolumeFileUploadSTSTokenFail(String error, int errorCode, String filePath) {
-            if (loadingDlg != null && loadingDlg.isShowing()) {
-                loadingDlg.dismiss();
-            }
-            WebServiceMiddleUtils.hand(getApplicationContext(), error, errorCode);
-        }
-    }
 }

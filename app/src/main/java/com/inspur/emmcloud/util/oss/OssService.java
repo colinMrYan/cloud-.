@@ -12,11 +12,12 @@ import com.alibaba.sdk.android.oss.callback.OSSProgressCallback;
 import com.alibaba.sdk.android.oss.internal.OSSAsyncTask;
 import com.alibaba.sdk.android.oss.model.PutObjectRequest;
 import com.alibaba.sdk.android.oss.model.PutObjectResult;
-import com.inspur.emmcloud.bean.Volume.GetVolumeFileUploadSTSTokenResult;
+import com.inspur.emmcloud.bean.Volume.GetVolumeFileUploadTokenResult;
 import com.inspur.emmcloud.bean.Volume.VolumeFile;
 import com.inspur.emmcloud.callback.ProgressCallback;
+import com.inspur.emmcloud.callback.VolumeFileUploadService;
 import com.inspur.emmcloud.util.LogUtils;
-import com.inspur.emmcloud.util.VolumeFileUploadUtils;
+import com.inspur.emmcloud.util.VolumeFileUploadManagerUtils;
 
 import java.io.File;
 import java.util.HashMap;
@@ -25,32 +26,29 @@ import java.util.HashMap;
  * Created by oss on 2015/12/7 0007.
  * 支持普通上传，普通下载和断点上传
  */
-public class OssService {
+public class OssService implements VolumeFileUploadService {
 
     private static final int SUCCESS = 0;
     private static final int PROGRESS = 1;
     private static final int FAIL = 2;
     private OSS oss;
-    private GetVolumeFileUploadSTSTokenResult getVolumeFileUploadSTSTokenResult;
+    private GetVolumeFileUploadTokenResult getVolumeFileUploadTokenResult;
     private OSSAsyncTask task;
     private int progress = 0;
     private ProgressCallback progressCallback;
-    private String volumeFileId = "";
+    private VolumeFile mockVolumeFile;
     private Handler handler;
 
 
-    public OssService(OSS oss, GetVolumeFileUploadSTSTokenResult getVolumeFileUploadSTSTokenResult, ProgressCallback progressCallback, String volumeFileId) {
+    public OssService(OSS oss, GetVolumeFileUploadTokenResult getVolumeFileUploadTokenResult, VolumeFile mockVolumeFile) {
         this.oss = oss;
-        this.getVolumeFileUploadSTSTokenResult = getVolumeFileUploadSTSTokenResult;
-        this.progressCallback = progressCallback;
-        this.volumeFileId = volumeFileId;
+        this.getVolumeFileUploadTokenResult = getVolumeFileUploadTokenResult;
+        this.mockVolumeFile = mockVolumeFile;
     }
 
+    @Override
     public void setProgressCallback(ProgressCallback progressCallback) {
         this.progressCallback = progressCallback;
-        if (progressCallback != null) {
-            progressCallback.onLoading(progress);
-        }
     }
 
     public int getProgress() {
@@ -75,12 +73,17 @@ public class OssService {
                             String result = (String) msg.obj;
                             progressCallback.onSuccess(new VolumeFile(result));
                         }
-                        VolumeFileUploadUtils.getInstance().removeOssService(volumeFileId);
-                        onDestory();
+                        VolumeFileUploadManagerUtils.getInstance().removeVolumeFileUploadService(mockVolumeFile);
                         break;
                     case FAIL:
                         if (progressCallback != null) {
                             progressCallback.onFail();
+                        }
+                        break;
+                    case PROGRESS:
+                        if (progressCallback != null) {
+                            int progress =(int) msg.obj;
+                            progressCallback.onLoading(progress);
                         }
                         break;
                     default:
@@ -90,17 +93,19 @@ public class OssService {
         };
     }
 
-    public void asyncPutImage(String object, String localFile) {
+
+    @Override
+    public void uploadFile(String fileName, String localFile) {
         //如果未设置isBeginUpload 暂时不开始
         if (progressCallback == null) {
             return;
         }
-        if (object.equals("")) {
+        if (fileName.equals("")) {
             Log.w("AsyncPutImage", "ObjectNull");
             return;
         }
         handMessage();
-        LogUtils.jasonDebug("localFile="+localFile);
+        LogUtils.jasonDebug("localFile=" + localFile);
         File file = new File(localFile);
         if (!file.exists()) {
             Log.w("AsyncPutImage", "FileNotExist");
@@ -108,7 +113,7 @@ public class OssService {
             return;
         }
         // 构造上传请求
-        PutObjectRequest put = new PutObjectRequest(getVolumeFileUploadSTSTokenResult.getBucket(), object, localFile);
+        PutObjectRequest put = new PutObjectRequest(getVolumeFileUploadTokenResult.getBucket(), fileName, localFile);
 
 
         /**
@@ -117,9 +122,9 @@ public class OssService {
         // 传入对应的上传回调参数，这里默认使用OSS提供的公共测试回调服务器地址
         put.setCallbackParam(new HashMap<String, String>() {
             {
-                put("callbackUrl", getVolumeFileUploadSTSTokenResult.getCallbackUrl());
+                put("callbackUrl", getVolumeFileUploadTokenResult.getCallbackUrl());
                 //callbackBody可以自定义传入的信息
-                put("callbackBody", getVolumeFileUploadSTSTokenResult.getCallbackBody());
+                put("callbackBody", getVolumeFileUploadTokenResult.getCallbackBody());
             }
         });
 
@@ -130,9 +135,12 @@ public class OssService {
             public void onProgress(PutObjectRequest request, long currentSize, long totalSize) {
                 //Log.d("PutObject", "currentSize: " + currentSize + " totalSize: " + totalSize);
                 progress = (int) (100 * currentSize / totalSize);
-                LogUtils.jasonDebug("progress="+progress);
-                if (progressCallback != null) {
-                    progressCallback.onLoading(progress);
+                LogUtils.jasonDebug("progress=" + progress);
+                Message msg = new Message();
+                msg.what = PROGRESS;
+                msg.obj = progress;
+                if (handler != null) {
+                    handler.sendMessage(msg);
                 }
             }
         });
@@ -148,7 +156,7 @@ public class OssService {
                 Message msg = new Message();
                 msg.what = SUCCESS;
                 msg.obj = result.getServerCallbackReturnBody();
-                if (handler != null){
+                if (handler != null) {
                     handler.sendMessage(msg);
                 }
 
@@ -157,6 +165,7 @@ public class OssService {
 
             @Override
             public void onFailure(PutObjectRequest request, ClientException clientExcepion, ServiceException serviceException) {
+
                 String info = "";
                 // 请求异常
                 if (clientExcepion != null) {
@@ -174,22 +183,21 @@ public class OssService {
                 }
                 Message msg = new Message();
                 msg.what = FAIL;
-                if (handler != null){
+                if (handler != null) {
                     handler.sendMessage(msg);
                 }
-//                UIDisplayer.uploadFail(info);
-//                UIDisplayer.displayInfo(info);
             }
         });
     }
-    public void onDestory(){
-        if (task != null){
+
+    @Override
+    public void onDestory() {
+        if (task != null) {
             task.cancel();
             task = null;
         }
-        if(handler != null){
+        if (handler != null) {
             handler = null;
         }
     }
-
 }

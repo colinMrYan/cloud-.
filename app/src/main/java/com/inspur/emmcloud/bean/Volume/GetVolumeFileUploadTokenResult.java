@@ -9,7 +9,7 @@ import org.json.JSONObject;
  * Created by chenmch on 2017/11/20.
  */
 
-public class GetVolumeFileUploadSTSTokenResult {
+public class GetVolumeFileUploadTokenResult {
     private String accessKeySecret;
     private String accessKeyId;
     private String expiration;
@@ -24,7 +24,7 @@ public class GetVolumeFileUploadSTSTokenResult {
     private String strategy;
     private String endpoint;
 
-    public GetVolumeFileUploadSTSTokenResult(String response) {
+    public GetVolumeFileUploadTokenResult(String response) {
         JSONObject obj = JSONUtils.getJSONObject(response);
         JSONObject credentialObj = JSONUtils.getJSONObject(obj, "credential", new JSONObject());
         accessKeySecret = JSONUtils.getString(credentialObj, "accessKeySecret", "");

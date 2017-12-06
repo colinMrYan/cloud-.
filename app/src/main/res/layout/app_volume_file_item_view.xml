@@ -25,36 +25,39 @@
         android:layout_marginTop="16dp"
         android:layout_toRightOf="@id/file_select_img"
         android:scaleType="fitXY" />
+
     <RelativeLayout
         android:id="@+id/right_layout"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true">
+
         <ImageView
             android:id="@+id/file_operation_drop_down_img"
             android:layout_width="50dp"
             android:layout_height="76dp"
-            android:visibility="gone"
             android:layout_centerVertical="true"
             android:paddingBottom="20dp"
             android:paddingLeft="13dp"
             android:paddingRight="2dp"
             android:paddingTop="20dp"
             android:scaleType="fitXY"
-            android:src="@drawable/ic_volume_file_operation_drop_down" />
+            android:src="@drawable/ic_volume_file_operation_drop_down"
+            android:visibility="gone" />
+
         <TextView
             android:id="@+id/upload_cancel_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingTop="15dp"
-            android:paddingBottom="15dp"
-            android:paddingRight="12dp"
-            android:paddingLeft="12dp"
             android:layout_marginLeft="18dp"
-            android:text="取消上传"
             android:ellipsize="end"
             android:maxLines="1"
+            android:paddingBottom="15dp"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:paddingTop="15dp"
+            android:text="取消上传"
             android:textColor="#2586CD"
             android:textSize="15sp" />
     </RelativeLayout>
@@ -79,10 +82,11 @@
 
         <RelativeLayout
             android:id="@+id/file_info_layout"
-            android:layout_below="@id/file_name_text"
-            android:visibility="gone"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_below="@id/file_name_text"
+            android:visibility="gone">
+
             <TextView
                 android:id="@+id/file_time_text"
                 android:layout_width="match_parent"
@@ -104,15 +108,33 @@
                 android:textSize="15sp" />
         </RelativeLayout>
 
-        <ProgressBar
-            android:id="@+id/upload_progress"
-            style="?android:attr/progressBarStyleHorizontal"
+        <RelativeLayout
+            android:id="@+id/file_upload_status_layout"
             android:layout_below="@id/file_name_text"
-            android:progressDrawable="@drawable/bg_volume_file_download_progressbar"
-            android:max="100"
-            android:layout_marginTop="8dp"
             android:layout_width="match_parent"
-            android:layout_height="4dp" />
+            android:layout_height="wrap_content">
+            <ProgressBar
+                android:id="@+id/upload_progress"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="4dp"
+                android:layout_marginTop="8dp"
+                android:max="100"
+                android:visibility="gone"
+                android:progressDrawable="@drawable/bg_volume_file_download_progressbar" />
+
+            <TextView
+                android:id="@+id/upload_status_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textColor="#8f8e94"
+                android:textSize="15sp"
+                 />
+        </RelativeLayout>
+
+
     </RelativeLayout>
 
     <View

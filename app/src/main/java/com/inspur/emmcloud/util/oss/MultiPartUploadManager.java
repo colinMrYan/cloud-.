@@ -8,7 +8,7 @@ import com.alibaba.sdk.android.oss.ServiceException;
 import com.alibaba.sdk.android.oss.callback.OSSCompletedCallback;
 import com.alibaba.sdk.android.oss.callback.OSSProgressCallback;
 import com.alibaba.sdk.android.oss.common.utils.BinaryUtil;
-import com.inspur.emmcloud.bean.Volume.GetVolumeFileUploadSTSTokenResult;
+import com.inspur.emmcloud.bean.Volume.GetVolumeFileUploadTokenResult;
 import com.inspur.emmcloud.util.LogUtils;
 
 import java.io.IOException;
@@ -36,9 +36,9 @@ public class MultiPartUploadManager {
         this.UIDisplayer = UIDisplayer;
     }
 
-    public PauseableUploadTask asyncUpload(final GetVolumeFileUploadSTSTokenResult getVolumeFileUploadSTSTokenResult, String localFileName) {
+    public PauseableUploadTask asyncUpload(final GetVolumeFileUploadTokenResult getVolumeFileUploadTokenResult, String localFileName) {
 
-        final String object = new String(getVolumeFileUploadSTSTokenResult.getFileName());
+        final String object = new String(getVolumeFileUploadTokenResult.getFileName());
         final String localFile = new String(localFileName);
 
         final PauseableUploadRequest request = new PauseableUploadRequest(bucket, object, localFile, partSize);
@@ -54,9 +54,9 @@ public class MultiPartUploadManager {
         });
         request.setCallbackParam(new HashMap<String, String>() {
             {
-                put("callbackUrl", getVolumeFileUploadSTSTokenResult.getCallbackUrl());
+                put("callbackUrl", getVolumeFileUploadTokenResult.getCallbackUrl());
                 //callbackBody可以自定义传入的信息
-                put("callbackBody", getVolumeFileUploadSTSTokenResult.getCallbackBody());
+                put("callbackBody", getVolumeFileUploadTokenResult.getCallbackBody());
             }
         });
 
@@ -97,7 +97,7 @@ public class MultiPartUploadManager {
         });
 
         Log.d("AsyncMultiPartUpload", "Begin");
-        Log.d("Object", getVolumeFileUploadSTSTokenResult.getFileName());
+        Log.d("Object", getVolumeFileUploadTokenResult.getFileName());
         Log.d("LocalFile", localFileName);
 
         //因为demo中只允许一个断点上传任务，因此简单使用新线程来完成任务，实际使用过程中如果需要减少资源消耗，可以使用线程池来代替

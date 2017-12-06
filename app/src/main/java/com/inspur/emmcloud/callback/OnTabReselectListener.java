@@ -1,4 +1,4 @@
-package com.inspur.emmcloud.interf;
+package com.inspur.emmcloud.callback;
 
 /** 
  * 当tabHost再次被点击时

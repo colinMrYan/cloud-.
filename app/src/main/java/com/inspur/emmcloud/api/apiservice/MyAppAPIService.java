@@ -26,7 +26,7 @@ import com.inspur.emmcloud.bean.GetRemoveAppResult;
 import com.inspur.emmcloud.bean.GetSearchAppResult;
 import com.inspur.emmcloud.bean.GetWebAppRealUrlResult;
 import com.inspur.emmcloud.bean.Volume.GetVolumeFileListResult;
-import com.inspur.emmcloud.bean.Volume.GetVolumeFileUploadSTSTokenResult;
+import com.inspur.emmcloud.bean.Volume.GetVolumeFileUploadTokenResult;
 import com.inspur.emmcloud.bean.Volume.GetVolumeListResult;
 import com.inspur.emmcloud.bean.Volume.VolumeFile;
 import com.inspur.emmcloud.callback.OauthCallBack;
@@ -711,20 +711,20 @@ public class MyAppAPIService {
      * @param fileName
      * @param volumeFilePath
      */
-    public void getVolumeFileUploadSTSToken(final String volumeId,final String fileName,final String volumeFilePath,final String localFilePath){
-        final String url = APIUri.getVolumeFileUploadSTSTokenUrl(volumeId);
+    public void getVolumeFileUploadToken(final String fileName, final String volumeFilePath, final String localFilePath,final VolumeFile mockVolumeFile){
+        final String url = APIUri.getVolumeFileUploadSTSTokenUrl(mockVolumeFile.getVolume());
         RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
         params.addParameter("name",fileName);
-        params.addParameter("path",volumeFilePath);
+        params.addParameter("path",volumeFilePath+fileName);
         x.http().post(params, new APICallback(context, url) {
             @Override
             public void callbackSuccess(String arg0) {
-                apiInterface.returnVolumeFileUploadSTSTokenSuccess(new GetVolumeFileUploadSTSTokenResult(arg0),localFilePath);
+                apiInterface.returnVolumeFileUploadTokenSuccess(new GetVolumeFileUploadTokenResult(arg0),localFilePath,mockVolumeFile);
             }
 
             @Override
             public void callbackFail(String error, int responseCode) {
-                apiInterface.returnVolumeFileUploadSTSTokenFail(error,responseCode,localFilePath);
+                apiInterface.returnVolumeFileUploadTokenFail(mockVolumeFile,error,responseCode,localFilePath);
             }
 
             @Override
@@ -733,7 +733,7 @@ public class MyAppAPIService {
 
                     @Override
                     public void reExecute() {
-                        getVolumeFileUploadSTSToken(volumeId,fileName,volumeFilePath,localFilePath);
+                        getVolumeFileUploadToken(fileName,volumeFilePath,localFilePath,mockVolumeFile);
                     }
 
                     @Override

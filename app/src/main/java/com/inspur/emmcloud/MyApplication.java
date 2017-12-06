@@ -86,6 +86,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
     private String accessToken;
     private Enterprise currentEnterprise;
     private Map<String, String> userPhotoUrlMap;
+    private static MyApplication instance;
 
     public void onCreate() {
         super.onCreate();
@@ -98,6 +99,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
 
     private void init() {
         // TODO Auto-generated method stub
+        instance = this;
         CrashHandler crashHandler = CrashHandler.getInstance();
         crashHandler.init(getApplicationContext());
         x.Ext.init(MyApplication.this);
@@ -124,9 +126,19 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
 
     }
 
+    /**
+     * 单例获取application实例
+     * @return MyApplication
+     */
+    public static MyApplication getInstance() {
+        return instance;
+    }
+
 
     /**************************************登出逻辑相关********************************************************/
-    //登出逻辑
+    /**
+     * 注销
+     */
     public void signout() {
         // TODO Auto-generated method stub
         if (getWebSocketPush() != null) {
@@ -659,7 +671,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         activityList.remove(activity);
     }
 
-    public List<Activity> getActivityList(){
+    public List<Activity> getActivityList() {
         return activityList;
     }
 

@@ -60,12 +60,15 @@
 
     </RelativeLayout>
 
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/refresh_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_below="@id/header_layout"
         android:background="@color/content_bg"
-        android:orientation="vertical" >
+        android:scrollbars="vertical">
         <LinearLayout
             android:orientation="vertical"
             android:background="@android:color/white"
@@ -160,10 +163,17 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
             </RelativeLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_marginLeft="12dp"
+                android:background="@color/color_list_divider">
+            </View>
         </LinearLayout>
         <LinearLayout
             android:id="@+id/volume_recent_use_layout"
             android:orientation="vertical"
+            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <TextView
@@ -185,6 +195,6 @@
                 android:layout_height="wrap_content">
             </ListView>
         </LinearLayout>
-    </LinearLayout>
+    </android.support.v4.widget.SwipeRefreshLayout>
 
 </RelativeLayout>

@@ -16,7 +16,7 @@ import com.inspur.emmcloud.callback.ProgressCallback;
 import com.inspur.emmcloud.util.FileUtils;
 import com.inspur.emmcloud.util.TimeUtils;
 import com.inspur.emmcloud.util.VolumeFileIconUtils;
-import com.inspur.emmcloud.util.VolumeFileUploadUtils;
+import com.inspur.emmcloud.util.VolumeFileUploadManagerUtils;
 
 import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
@@ -119,9 +119,10 @@ public class VolumeFileAdapter extends RecyclerView.Adapter<VolumeFileAdapter.Vi
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         final VolumeFile volumeFile = volumeFileList.get(position);
-        boolean isStatusNomal = volumeFile.getStatus().equals("normal");
-        holder.uploadProgressBar.setVisibility(isStatusNomal ? View.GONE : View.VISIBLE);
-        holder.uploadCancelText.setVisibility(isStatusNomal ? View.GONE : View.VISIBLE);
+        String volumeFileStatus = volumeFile.getStatus();
+        boolean isStatusNomal = volumeFileStatus.equals("normal");
+        holder.fileUploadStatusLayout.setVisibility(isStatusNomal ? View.GONE : View.VISIBLE);
+        holder.uploadOperationText.setVisibility(isStatusNomal ? View.GONE : View.VISIBLE);
         holder.fileInfoLayout.setVisibility(isStatusNomal ? View.VISIBLE : View.GONE);
         holder.fileOperationDropDownImg.setVisibility((isStatusNomal && isShowFileOperationDropDownImg) ? View.VISIBLE : View.GONE);
         if (isMultiselect && isStatusNomal) {
@@ -137,7 +138,13 @@ public class VolumeFileAdapter extends RecyclerView.Adapter<VolumeFileAdapter.Vi
         String fileTime = TimeUtils.getTime(volumeFile.getCreationDate(), format);
         holder.fileTimeText.setText(fileTime);
         if (!isStatusNomal) {
-            VolumeFileUploadUtils.getInstance().setOssUploadProgressCallback(volumeFile, new ProgressCallback() {
+            boolean isStutasUploading = volumeFileStatus.equals(VolumeFile.STATUS_UPLOADIND);
+            holder.uploadOperationText.setText(isStutasUploading?"取消上传":"重新上传");
+            holder.uploadProgressBar.setProgress(0);
+            holder.uploadProgressBar.setVisibility(View.GONE);
+            holder.uploadStatusText.setVisibility(View.VISIBLE);
+            holder.uploadStatusText.setText(isStutasUploading?"等待上传":"上传失败");
+            VolumeFileUploadManagerUtils.getInstance().setOssUploadProgressCallback(volumeFile, new ProgressCallback() {
                 @Override
                 public void onSuccess(VolumeFile newVolumeFile) {
                     replaceVolumeFile(volumeFile, newVolumeFile);
@@ -145,20 +152,32 @@ public class VolumeFileAdapter extends RecyclerView.Adapter<VolumeFileAdapter.Vi
 
                 @Override
                 public void onLoading(int progress) {
+                    holder.uploadProgressBar.setVisibility(View.VISIBLE);
+                    holder.uploadStatusText.setVisibility(View.GONE);
                     holder.uploadProgressBar.setProgress(progress);
                 }
 
                 @Override
                 public void onFail() {
-                    holder.uploadCancelText.setText("上传失败");
+                    volumeFile.setStatus(VolumeFile.STATUS_UPLOADIND_FAIL);
+                    notifyItemChanged(position);
                 }
             });
-            holder.uploadCancelText.setOnClickListener(new View.OnClickListener() {
+            holder.uploadOperationText.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    VolumeFileUploadUtils.getInstance().removeOssService(volumeFile.getId());
-                    volumeFileList.remove(position);
-                    notifyItemRemoved(position);
+                    if (volumeFile.getStatus().equals(VolumeFile.STATUS_UPLOADIND)){
+                        //取消上传
+                        VolumeFileUploadManagerUtils.getInstance().removeVolumeFileUploadService(volumeFile);
+                        volumeFileList.remove(position);
+                        notifyItemRemoved(position);
+                    }else {
+                        volumeFile.setStatus(VolumeFile.STATUS_UPLOADIND);
+                        //重新上传
+                        VolumeFileUploadManagerUtils.getInstance().reUploadFile(volumeFile);
+                        notifyItemChanged(position);
+                    }
+
                 }
             });
         }
@@ -189,13 +208,19 @@ public class VolumeFileAdapter extends RecyclerView.Adapter<VolumeFileAdapter.Vi
         private ImageView fileSelcetImg;
 
         @ViewInject(R.id.upload_cancel_text)
-        private TextView uploadCancelText;
+        private TextView uploadOperationText;
 
         @ViewInject(R.id.upload_progress)
         private ProgressBar uploadProgressBar;
 
+        @ViewInject(R.id.upload_status_text)
+        private TextView uploadStatusText;
+
         @ViewInject(R.id.file_info_layout)
         private RelativeLayout fileInfoLayout;
+
+        @ViewInject(R.id.file_upload_status_layout)
+        private RelativeLayout fileUploadStatusLayout;
 
         @ViewInject(R.id.file_operation_drop_down_img)
         private ImageView fileOperationDropDownImg;

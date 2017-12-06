@@ -2,23 +2,23 @@ package com.inspur.emmcloud.util.oss;
 
 import com.alibaba.sdk.android.oss.common.auth.OSSFederationCredentialProvider;
 import com.alibaba.sdk.android.oss.common.auth.OSSFederationToken;
-import com.inspur.emmcloud.bean.Volume.GetVolumeFileUploadSTSTokenResult;
+import com.inspur.emmcloud.bean.Volume.GetVolumeFileUploadTokenResult;
 
 /**
  * Created by Administrator on 2015/12/9 0009.
  * 重载OSSFederationCredentialProvider生成自己的获取STS的功能
  */
 public class STSGetter extends OSSFederationCredentialProvider {
-    private GetVolumeFileUploadSTSTokenResult getVolumeFileUploadSTSTokenResult;
+    private GetVolumeFileUploadTokenResult getVolumeFileUploadTokenResult;
 
-    public STSGetter(GetVolumeFileUploadSTSTokenResult getVolumeFileUploadSTSTokenResult) {
-        this.getVolumeFileUploadSTSTokenResult = getVolumeFileUploadSTSTokenResult;
+    public STSGetter(GetVolumeFileUploadTokenResult getVolumeFileUploadTokenResult) {
+        this.getVolumeFileUploadTokenResult = getVolumeFileUploadTokenResult;
     }
 
 
     public OSSFederationToken getFederationToken() {
-        return new OSSFederationToken(getVolumeFileUploadSTSTokenResult.getAccessKeyId(), getVolumeFileUploadSTSTokenResult.getAccessKeySecret(),
-                getVolumeFileUploadSTSTokenResult.getSecurityToken(), getVolumeFileUploadSTSTokenResult.getExpiration());
+        return new OSSFederationToken(getVolumeFileUploadTokenResult.getAccessKeyId(), getVolumeFileUploadTokenResult.getAccessKeySecret(),
+                getVolumeFileUploadTokenResult.getSecurityToken(), getVolumeFileUploadTokenResult.getExpiration());
     }
 
 }

@@ -30,6 +30,7 @@ import com.inspur.emmcloud.util.IntentUtils;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.ToastUtils;
+import com.inspur.emmcloud.util.VolumeFileUploadManagerUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.dialogs.ActionSheetDialog;
@@ -413,7 +414,7 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
             bundle.putSerializable("volume", volume);
             bundle.putSerializable("volumeFileList", (Serializable) moveVolumeFileList);
             bundle.putString("title", "选择目标文件夹");
-            bundle.putString("fileAbsolutePath", absolutePath);
+            bundle.putString("absolutePath", absolutePath);
             bundle.putBoolean("isFunctionCopy", false);
             intent.putExtras(bundle);
             startActivityForResult(intent, REQUEST_MOVE_FILE);
@@ -525,7 +526,7 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
             }
 
             if (isShowFileUploading) {
-                List<VolumeFile> volumeFileUploadingList = new ArrayList<>();
+                List<VolumeFile> volumeFileUploadingList = VolumeFileUploadManagerUtils.getInstance().getCurrentForderUploadingVolumeFile(volume.getId(),absolutePath);
                 volumeFileList.addAll(0, volumeFileUploadingList);
             }
             sortVolumeFileList();
