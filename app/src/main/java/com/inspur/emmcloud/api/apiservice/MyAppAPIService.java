@@ -670,12 +670,12 @@ public class MyAppAPIService {
     /**
      * 获取云盘文件列表
      * @param volumeId
-     * @param absolutePath
+     * @param currentDirAbsolutePath
      */
-    public void getVolumeFileList(final String volumeId,final String absolutePath){
+    public void getVolumeFileList(final String volumeId,final String currentDirAbsolutePath){
         final String url = APIUri.getVolumeFileOperationUrl(volumeId);
         RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
-        params.addParameter("path",absolutePath);
+        params.addParameter("path",currentDirAbsolutePath);
         x.http().get(params, new APICallback(context, url) {
             @Override
             public void callbackSuccess(String arg0) {
@@ -693,7 +693,7 @@ public class MyAppAPIService {
 
                     @Override
                     public void reExecute() {
-                        getVolumeFileList(volumeId,absolutePath);
+                        getVolumeFileList(volumeId,currentDirAbsolutePath);
                     }
 
                     @Override
@@ -748,13 +748,13 @@ public class MyAppAPIService {
     /**
      * 移动云盘文件
      * @param volumeId
-     * @param absolutePath
+     * @param currentDirAbsolutePath
      */
-    public void moveVolumeFile(final String volumeId, final String absolutePath, final List<VolumeFile> moveVolumeFileList,final String toPath){
+    public void moveVolumeFile(final String volumeId, final String currentDirAbsolutePath, final List<VolumeFile> moveVolumeFileList,final String toPath){
         final String url = APIUri.getMoveVolumeFileUrl(volumeId);
         RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
         params.addQueryStringParameter("to",toPath);
-        params.addQueryStringParameter("from",absolutePath+moveVolumeFileList.get(0).getName());
+        params.addQueryStringParameter("from",currentDirAbsolutePath+moveVolumeFileList.get(0).getName());
         x.http().request(HttpMethod.PUT,params, new APICallback(context, url) {
             @Override
             public void callbackSuccess(String arg0) {
@@ -772,7 +772,7 @@ public class MyAppAPIService {
 
                     @Override
                     public void reExecute() {
-                        moveVolumeFile(volumeId,absolutePath,moveVolumeFileList,toPath);
+                        moveVolumeFile(volumeId,currentDirAbsolutePath,moveVolumeFileList,toPath);
                     }
 
                     @Override
@@ -788,12 +788,12 @@ public class MyAppAPIService {
      * 创建文件夹
      * @param volumeId
      * @param forderName
-     * @param absolutePath
+     * @param currentDirAbsolutePath
      */
-    public void createForder(final String volumeId,final String forderName,final String absolutePath){
+    public void createForder(final String volumeId,final String forderName,final String currentDirAbsolutePath){
         final String url = APIUri.getCreateForderUrl(volumeId);
         RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
-        params.addQueryStringParameter("path",absolutePath+forderName);
+        params.addQueryStringParameter("path",currentDirAbsolutePath+forderName);
         x.http().post(params, new APICallback(context, url) {
             @Override
             public void callbackSuccess(String arg0) {
@@ -810,7 +810,7 @@ public class MyAppAPIService {
                 new OauthUtils(new OauthCallBack() {
                     @Override
                     public void reExecute() {
-                        createForder(volumeId,forderName,absolutePath);
+                        createForder(volumeId,forderName,currentDirAbsolutePath);
                     }
 
                     @Override
@@ -826,12 +826,12 @@ public class MyAppAPIService {
      * 删除文件
      * @param volumeId
      * @param fileName
-     * @param absolutePath
+     * @param currentDirAbsolutePath
      */
-    public void volumeFileDelete(final String volumeId, final VolumeFile volumeFile, final String absolutePath){
+    public void volumeFileDelete(final String volumeId, final VolumeFile volumeFile, final String currentDirAbsolutePath){
         final String url = APIUri.getVolumeFileOperationUrl(volumeId);
         RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
-        params.addQueryStringParameter("path",absolutePath+volumeFile.getName());
+        params.addQueryStringParameter("path",currentDirAbsolutePath+volumeFile.getName());
         x.http().request(HttpMethod.DELETE, params, new APICallback(context,url) {
             @Override
             public void callbackSuccess(String arg0) {
@@ -848,7 +848,7 @@ public class MyAppAPIService {
                 new OauthUtils(new OauthCallBack() {
                     @Override
                     public void reExecute() {
-                        volumeFileDelete(volumeId,volumeFile,absolutePath);
+                        volumeFileDelete(volumeId,volumeFile,currentDirAbsolutePath);
                     }
 
                     @Override
@@ -864,12 +864,12 @@ public class MyAppAPIService {
      * 文件重命名
      * @param volumeId
      * @param volumeFile
-     * @param absolutePath
+     * @param currentDirAbsolutePath
      */
-    public void volumeFileRename(final String volumeId,final VolumeFile volumeFile,final String absolutePath,final String fileNewName){
+    public void volumeFileRename(final String volumeId,final VolumeFile volumeFile,final String currentDirAbsolutePath,final String fileNewName){
         final String url = APIUri.getVolumeFileRenameUrl(volumeId);
         RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
-        params.addQueryStringParameter("path",absolutePath+volumeFile.getName());
+        params.addQueryStringParameter("path",currentDirAbsolutePath+volumeFile.getName());
         params.addQueryStringParameter("name",fileNewName);
         LogUtils.jasonDebug("params="+params.getQueryStringParams().toString());
         x.http().request(HttpMethod.PUT, params, new APICallback(context,url) {
@@ -888,7 +888,7 @@ public class MyAppAPIService {
                 new OauthUtils(new OauthCallBack() {
                     @Override
                     public void reExecute() {
-                        volumeFileRename(volumeId,volumeFile,absolutePath,fileNewName);
+                        volumeFileRename(volumeId,volumeFile,currentDirAbsolutePath,fileNewName);
                     }
 
                     @Override

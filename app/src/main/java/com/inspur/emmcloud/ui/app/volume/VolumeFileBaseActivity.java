@@ -81,7 +81,7 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
     private List<VolumeFile> moveVolumeFileList = new ArrayList<>();
     protected Volume volume;
     private MyAppAPIService apiServiceBase;
-    protected String absolutePath;
+    protected String currentDirAbsolutePath;
     private Dialog fileRenameDlg, createFolderDlg;
     protected String sortType = "sort_by_name_up";
     protected String fileFilterType = "";  //显示的文件类型
@@ -101,7 +101,7 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
         apiServiceBase = new MyAppAPIService(VolumeFileBaseActivity.this);
         apiServiceBase.setAPIInterface(new WebServiceBase());
         volume = (Volume) getIntent().getSerializableExtra("volume");
-        absolutePath = getIntent().getExtras().getString("absolutePath", "/");
+        currentDirAbsolutePath = getIntent().getExtras().getString("currentDirAbsolutePath", "/");
         fileFilterType = getIntent().getExtras().getString("fileFilterType","");
         String title = getIntent().getExtras().getString("title", "");
         headerText.setVisibility(View.VISIBLE);
@@ -183,7 +183,7 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
                                     bundle = new Bundle();
                                     bundle.putString("volumeId", volume.getId());
                                     bundle.putSerializable("volumeFile", volumeFile);
-                                    bundle.putString("absolutePath", absolutePath + volumeFile.getName());
+                                    bundle.putString("currentDirAbsolutePath", currentDirAbsolutePath + volumeFile.getName());
                                     bundle.putBoolean("isStartDownload", true);
                                     IntentUtils.startActivity(VolumeFileBaseActivity.this, VolumeFileDownloadActivtiy.class, bundle);
                                     break;
@@ -360,7 +360,7 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
             Bundle bundle = new Bundle();
             bundle.putSerializable("volumeId", volume.getId());
             bundle.putSerializable("volumeFile", volumeFile);
-            bundle.putSerializable("absolutePath", absolutePath + volumeFile.getName());
+            bundle.putSerializable("currentDirAbsolutePath", currentDirAbsolutePath + volumeFile.getName());
             IntentUtils.startActivity(VolumeFileBaseActivity.this, VolumeFileDownloadActivtiy.class, bundle);
         }
     }
@@ -414,7 +414,7 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
             bundle.putSerializable("volume", volume);
             bundle.putSerializable("volumeFileList", (Serializable) moveVolumeFileList);
             bundle.putString("title", "选择目标文件夹");
-            bundle.putString("absolutePath", absolutePath);
+            bundle.putString("operationFileDirAbsolutePath", currentDirAbsolutePath);
             bundle.putBoolean("isFunctionCopy", false);
             intent.putExtras(bundle);
             startActivityForResult(intent, REQUEST_MOVE_FILE);
@@ -434,6 +434,7 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
             bundle.putSerializable("volume", volume);
             bundle.putString("title", "选择复制位置");
             bundle.putBoolean("isFunctionCopy", true);
+            bundle.putString("operationFileDirAbsolutePath", currentDirAbsolutePath);
             IntentUtils.startActivity(VolumeFileBaseActivity.this, VolumeFileLocationSelectActivity.class, bundle);
         } else {
             ToastUtils.show(getApplicationContext(), "请选择文件");
@@ -464,14 +465,14 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
     private void createForder(String forderName) {
         if (NetUtils.isNetworkConnected(getApplicationContext())) {
             loadingDlg.show();
-            apiServiceBase.createForder(volume.getId(), forderName, absolutePath);
+            apiServiceBase.createForder(volume.getId(), forderName, currentDirAbsolutePath);
         }
     }
 
     private void deleteFileByName(VolumeFile volumeFile) {
         if (NetUtils.isNetworkConnected(getApplicationContext())) {
             loadingDlg.show();
-            apiServiceBase.volumeFileDelete(volume.getId(), volumeFile, absolutePath);
+            apiServiceBase.volumeFileDelete(volume.getId(), volumeFile, currentDirAbsolutePath);
         }
     }
 
@@ -484,7 +485,7 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
     private void renameFile(VolumeFile volumeFile, String fileNewName) {
         if (NetUtils.isNetworkConnected(getApplicationContext())) {
             loadingDlg.show();
-            apiServiceBase.volumeFileRename(volume.getId(), volumeFile, absolutePath, fileNewName);
+            apiServiceBase.volumeFileRename(volume.getId(), volumeFile, currentDirAbsolutePath, fileNewName);
         }
     }
 
@@ -500,9 +501,9 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
     protected void getVolumeFileList(boolean isShowDlg) {
         if (NetUtils.isNetworkConnected(getApplicationContext())) {
             loadingDlg.show(isShowDlg);
-            String path = absolutePath;
-            if (absolutePath.length() > 1) {
-                path = absolutePath.substring(0, absolutePath.length() - 1);
+            String path = currentDirAbsolutePath;
+            if (currentDirAbsolutePath.length() > 1) {
+                path = currentDirAbsolutePath.substring(0, currentDirAbsolutePath.length() - 1);
             }
             apiServiceBase.getVolumeFileList(volume.getId(), path);
         } else {
@@ -526,7 +527,7 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
             }
 
             if (isShowFileUploading) {
-                List<VolumeFile> volumeFileUploadingList = VolumeFileUploadManagerUtils.getInstance().getCurrentForderUploadingVolumeFile(volume.getId(),absolutePath);
+                List<VolumeFile> volumeFileUploadingList = VolumeFileUploadManagerUtils.getInstance().getCurrentForderUploadingVolumeFile(volume.getId(), currentDirAbsolutePath);
                 volumeFileList.addAll(0, volumeFileUploadingList);
             }
             sortVolumeFileList();

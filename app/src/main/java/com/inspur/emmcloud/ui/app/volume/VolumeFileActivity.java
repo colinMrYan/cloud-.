@@ -99,7 +99,7 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
                         Bundle bundle = new Bundle();
                         if (volumeFile.getType().equals(VolumeFile.FILE_TYPE_DIRECTORY)) {
                             bundle.putSerializable("volume", volume);
-                            bundle.putSerializable("absolutePath", absolutePath + volumeFile.getName() + "/");
+                            bundle.putSerializable("currentDirAbsolutePath", currentDirAbsolutePath + volumeFile.getName() + "/");
                             bundle.putSerializable("title", volumeFile.getName());
                             IntentUtils.startActivity(VolumeFileActivity.this, VolumeFileActivity.class, bundle);
                         } else {
@@ -138,7 +138,7 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
             @Override
             public void onReceive(Context context, Intent intent) {
                 String path = intent.getStringExtra("path");
-                if (path != null && path.equals(absolutePath)) {
+                if (path != null && path.equals(currentDirAbsolutePath)) {
                     String command = intent.getStringExtra("command");
                     if (command != null && command.equals("refresh")) {
                         getVolumeFileList(true);
@@ -400,7 +400,7 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
                 Bundle bundle = getIntent().getExtras();
                 bundle.putString("title", "分类");
                 bundle.putString("fileFilterType", fileFilterTypes[position]);
-                bundle.putString("absolutePath",absolutePath);
+                bundle.putString("currentDirAbsolutePath", currentDirAbsolutePath);
                 intent.putExtras(bundle);
                 LogUtils.jasonDebug("bundle="+bundle.toString());
                 startActivityForResult(intent, REQUEST_SHOW_FILE_FILTER);
@@ -481,7 +481,7 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
         }
         if (NetUtils.isNetworkConnected(MyApplication.getInstance())){
             VolumeFile mockVolumeFile = getMockVolumeFileData(file);
-            VolumeFileUploadManagerUtils.getInstance().uploadFile(mockVolumeFile,filePath,absolutePath);
+            VolumeFileUploadManagerUtils.getInstance().uploadFile(mockVolumeFile,filePath, currentDirAbsolutePath);
             volumeFileList.add(0, mockVolumeFile);
             initDataBlankLayoutStatus();
             adapter.setVolumeFileList(volumeFileList);

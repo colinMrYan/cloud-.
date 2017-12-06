@@ -69,7 +69,7 @@ public class VolumeFileLocationSelectActivity extends VolumeFileBaseActivity {
                 Intent intent = new Intent(getApplicationContext(), VolumeFileLocationSelectActivity.class);
                 VolumeFile volumeFile = volumeFileList.get(position);
                 Bundle bundle = getIntent().getExtras();
-                bundle.putString("absolutePath", absolutePath + volumeFile.getName() + "/");
+                bundle.putString("currentDirAbsolutePath", currentDirAbsolutePath + volumeFile.getName() + "/");
                 bundle.putString("title",volumeFile.getName() );
                 intent.putExtras(bundle);
                 if (!isFunctionCopy) {
@@ -106,23 +106,23 @@ public class VolumeFileLocationSelectActivity extends VolumeFileBaseActivity {
                 showCreateFolderDlg();
                 break;
             case R.id.location_select_to_text:
-                String operationFileAbsolutePath = getIntent().getStringExtra("absolutePath");
-                if (operationFileAbsolutePath.equals(absolutePath)) {
+                String operationFileAbsolutePath = getIntent().getStringExtra("operationFileDirAbsolutePath");
+                if (operationFileAbsolutePath.equals(currentDirAbsolutePath)) {
                     ToastUtils.show(getApplicationContext(), "该文件已在当前文件夹");
                     return;
                 }
 
                 List<VolumeFile> operationFileList = (List<VolumeFile>) getIntent().getSerializableExtra("volumeFileList");
                 for (int i = 0;i<operationFileList.size();i++){
-                    String volumeFilePath = operationFileAbsolutePath+operationFileList.get(i);
-                    if (absolutePath.startsWith(volumeFilePath)){
+                    String volumeFilePath = operationFileAbsolutePath+operationFileList.get(i).getName();
+                    if (currentDirAbsolutePath.startsWith(volumeFilePath)){
                         ToastUtils.show(getApplicationContext(), isFunctionCopy?"不能将文件复制到自身或其子目录下":"不能将文件移动到自身或其子目录下");
                         return;
                     }
                 }
                 if (isFunctionCopy) {
                     copyFile(operationFileAbsolutePath);
-                } else { //此处应考虑不能将文件移动到自身或其子目录下
+                } else {
                     moveFile(operationFileAbsolutePath);
                 }
                 break;
@@ -173,9 +173,9 @@ public class VolumeFileLocationSelectActivity extends VolumeFileBaseActivity {
     private void moveFile(String operationFileAbsolutePath) {
         if (NetUtils.isNetworkConnected(getApplicationContext())) {
             loadingDlg.show();
-            String path = absolutePath;
-            if (absolutePath.length() > 1) {
-                path = absolutePath.substring(0, absolutePath.length() - 1);
+            String path = currentDirAbsolutePath;
+            if (currentDirAbsolutePath.length() > 1) {
+                path = currentDirAbsolutePath.substring(0, currentDirAbsolutePath.length() - 1);
             }
             List<VolumeFile> moveVolumeFileList = (List<VolumeFile>) getIntent().getSerializableExtra("volumeFileList");
             apiService.moveVolumeFile(volume.getId(), operationFileAbsolutePath, moveVolumeFileList, path);
@@ -190,7 +190,7 @@ public class VolumeFileLocationSelectActivity extends VolumeFileBaseActivity {
             }
             //将移动的位置传递回去，以便于当前页面刷新数据
             Intent intent = new  Intent();
-            intent.putExtra("path",absolutePath);
+            intent.putExtra("path", currentDirAbsolutePath);
             intent.putExtra("command","refresh");
             intent.setAction("broadcast_volume");
             sendBroadcast(intent);

@@ -124,7 +124,7 @@ public class VolumeFileDownloadActivtiy extends BaseActivity {
         downloadBtn.setVisibility(View.GONE);
         downloadStatusLayout.setVisibility(View.VISIBLE);
         String volumeId = getIntent().getStringExtra("volumeId");
-        String absolutePath = getIntent().getStringExtra("absolutePath");
+        String currentDirAbsolutePath = getIntent().getStringExtra("currentDirAbsolutePath");
         String source = APIUri.getVolumeFileUploadSTSTokenUrl(volumeId);
         APIDownloadCallBack callBack = new APIDownloadCallBack(getApplicationContext(), source) {
             @Override
@@ -172,7 +172,7 @@ public class VolumeFileDownloadActivtiy extends BaseActivity {
 
         RequestParams params = ((MyApplication) getApplicationContext()).getHttpRequestParams(source);
         params.addParameter("volumeId", volumeId);
-        params.addQueryStringParameter("path", absolutePath);
+        params.addQueryStringParameter("path", currentDirAbsolutePath);
         params.setRedirectHandler(new RedirectHandler() {
             @Override
             public RequestParams getRedirectParams(UriRequest uriRequest) throws Throwable {
