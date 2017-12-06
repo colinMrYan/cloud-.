@@ -1,21 +1,14 @@
 package com.inspur.emmcloud.util;
 
-import android.content.Context;
-
-import com.alibaba.sdk.android.oss.ClientConfiguration;
-import com.alibaba.sdk.android.oss.OSS;
-import com.alibaba.sdk.android.oss.OSSClient;
-import com.alibaba.sdk.android.oss.common.auth.OSSCredentialProvider;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
 import com.inspur.emmcloud.bean.Volume.GetVolumeFileUploadTokenResult;
 import com.inspur.emmcloud.bean.Volume.VolumeFile;
 import com.inspur.emmcloud.bean.Volume.VolumeFileUploadInfo;
-import com.inspur.emmcloud.callback.ProgressCallback;
-import com.inspur.emmcloud.callback.VolumeFileUploadService;
+import com.inspur.emmcloud.interf.ProgressCallback;
+import com.inspur.emmcloud.interf.VolumeFileUploadService;
 import com.inspur.emmcloud.util.oss.OssService;
-import com.inspur.emmcloud.util.oss.STSGetter;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -70,13 +63,11 @@ public class VolumeFileUploadManagerUtils {
             VolumeFile volumeFile = volumeFileUploadInfo.getVolumeFile();
             if (volumeFile == mockVolumeFile){
                 targetVolumeFileUploadInfo =volumeFileUploadInfo ;
+                //上传文件
+                apiService.getVolumeFileUploadToken(mockVolumeFile.getName(),targetVolumeFileUploadInfo.getVolumeFileParentPath(),targetVolumeFileUploadInfo.getLocalFilePath(),mockVolumeFile);
                 break;
             }
         }
-        if (targetVolumeFileUploadInfo != null){
-            apiService.getVolumeFileUploadToken(mockVolumeFile.getName(),targetVolumeFileUploadInfo.getVolumeFileParentPath(),targetVolumeFileUploadInfo.getLocalFilePath(),mockVolumeFile);
-        }
-
     }
 
     /**
@@ -135,44 +126,50 @@ public class VolumeFileUploadManagerUtils {
         }
     }
 
-
     /**
-     * 初始化一个OssService用来上传下载
-     * @param context
+     * 根据不同的storage选择不同的存储服务
      * @param getVolumeFileUploadTokenResult
      * @param mockVolumeFile
      * @return
      */
-    public OssService initOSS(Context context, GetVolumeFileUploadTokenResult getVolumeFileUploadTokenResult, VolumeFile mockVolumeFile) {
-        OSSCredentialProvider credentialProvider = new STSGetter(getVolumeFileUploadTokenResult);
-        ClientConfiguration conf = new ClientConfiguration();
-        conf.setConnectionTimeout(15 * 1000); // 连接超时，默认15秒
-        conf.setSocketTimeout(15 * 1000); // socket超时，默认15秒
-        conf.setMaxConcurrentRequest(5); // 最大并发请求书，默认5个
-        conf.setMaxErrorRetry(2); // 失败后最大重试次数，默认2次
-        OSS oss = new OSSClient(context, getVolumeFileUploadTokenResult.getEndpoint(), credentialProvider, conf);
-        return new OssService(oss, getVolumeFileUploadTokenResult,mockVolumeFile);
-
+    private VolumeFileUploadService getVolumeFileUploadService(GetVolumeFileUploadTokenResult getVolumeFileUploadTokenResult,VolumeFile mockVolumeFile){
+        VolumeFileUploadService volumeFileUploadService = null;
+        switch (getVolumeFileUploadTokenResult.getStorage()){
+            case "aliyun":
+                volumeFileUploadService = new OssService(getVolumeFileUploadTokenResult,mockVolumeFile);
+                break;
+            default:
+                break;
+        }
+        return  volumeFileUploadService;
     }
 
     private class WebService extends APIInterfaceInstance {
 
         @Override
         public void returnVolumeFileUploadTokenSuccess(GetVolumeFileUploadTokenResult getVolumeFileUploadTokenResult, String fileLocalPath,VolumeFile mockVolumeFile) {
-            VolumeFileUploadService volumeFileUploadService = initOSS(MyApplication.getInstance(), getVolumeFileUploadTokenResult,mockVolumeFile);
-            for (int i = 0; i< volumeFileUploadInfoList.size(); i++){
-                VolumeFileUploadInfo volumeFileUploadInfo = volumeFileUploadInfoList.get(i);
-                if (volumeFileUploadInfo.getVolumeFile() == mockVolumeFile){
-                    //如果ProgressCallback已经从ui传递进来，则给volumeFileUploadService设置ProgressCallback
-                    ProgressCallback progressCallback = volumeFileUploadInfo.getProgressCallback();
-                    if (progressCallback != null){
-                        volumeFileUploadService.setProgressCallback(progressCallback);
+            VolumeFileUploadService volumeFileUploadService = getVolumeFileUploadService(getVolumeFileUploadTokenResult,mockVolumeFile);
+                for (int i = 0; i< volumeFileUploadInfoList.size(); i++){
+                    VolumeFileUploadInfo volumeFileUploadInfo = volumeFileUploadInfoList.get(i);
+                    if (volumeFileUploadInfo.getVolumeFile() == mockVolumeFile){
+                        ProgressCallback progressCallback = volumeFileUploadInfo.getProgressCallback();
+                        if(volumeFileUploadService != null){
+                            if (progressCallback != null){
+                                volumeFileUploadService.setProgressCallback(progressCallback);   //如果ProgressCallback已经从ui传递进来，则给volumeFileUploadService设置ProgressCallback
+                            }
+                            volumeFileUploadInfo.setVolumeFileUploadService(volumeFileUploadService);
+                            volumeFileUploadService.uploadFile(getVolumeFileUploadTokenResult.getFileName(),fileLocalPath);
+                        }else {  //如果没有获取相应的上传服务 返回上传失败
+                            volumeFileUploadInfo.getVolumeFile().setStatus(VolumeFile.STATUS_UPLOADIND_FAIL);
+                            if (progressCallback != null){
+                                progressCallback.onFail();
+                            }
+                        }
+                        break;
                     }
-                    volumeFileUploadInfo.setVolumeFileUploadService(volumeFileUploadService);
-                    volumeFileUploadService.uploadFile(getVolumeFileUploadTokenResult.getFileName(),fileLocalPath);
-                    break;
                 }
-            }
+
+
         }
 
         @Override

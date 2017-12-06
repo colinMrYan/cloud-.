@@ -30,7 +30,7 @@ import com.inspur.emmcloud.bean.Volume.GetVolumeFileListResult;
 import com.inspur.emmcloud.bean.Volume.GetVolumeFileUploadTokenResult;
 import com.inspur.emmcloud.bean.Volume.GetVolumeListResult;
 import com.inspur.emmcloud.bean.Volume.VolumeFile;
-import com.inspur.emmcloud.callback.OauthCallBack;
+import com.inspur.emmcloud.interf.OauthCallBack;
 import com.inspur.emmcloud.util.OauthUtils;
 import com.inspur.emmcloud.util.UriUtils;
 
@@ -910,7 +910,6 @@ public class MyAppAPIService {
         RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
         params.addQueryStringParameter("path",currentDirAbsolutePath+volumeFile.getName());
         params.addQueryStringParameter("name",fileNewName);
-        LogUtils.jasonDebug("params="+params.getQueryStringParams().toString());
         x.http().request(HttpMethod.PUT, params, new APICallback(context,url) {
             @Override
             public void callbackSuccess(String arg0) {

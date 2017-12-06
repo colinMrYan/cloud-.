@@ -4,23 +4,28 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
+import com.alibaba.sdk.android.oss.ClientConfiguration;
 import com.alibaba.sdk.android.oss.ClientException;
 import com.alibaba.sdk.android.oss.OSS;
+import com.alibaba.sdk.android.oss.OSSClient;
 import com.alibaba.sdk.android.oss.ServiceException;
 import com.alibaba.sdk.android.oss.callback.OSSCompletedCallback;
 import com.alibaba.sdk.android.oss.callback.OSSProgressCallback;
+import com.alibaba.sdk.android.oss.common.auth.OSSCredentialProvider;
 import com.alibaba.sdk.android.oss.internal.OSSAsyncTask;
 import com.alibaba.sdk.android.oss.model.PutObjectRequest;
 import com.alibaba.sdk.android.oss.model.PutObjectResult;
 import com.inspur.emmcloud.bean.Volume.GetVolumeFileUploadTokenResult;
 import com.inspur.emmcloud.bean.Volume.VolumeFile;
-import com.inspur.emmcloud.callback.ProgressCallback;
-import com.inspur.emmcloud.callback.VolumeFileUploadService;
+import com.inspur.emmcloud.interf.ProgressCallback;
+import com.inspur.emmcloud.interf.VolumeFileUploadService;
 import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.VolumeFileUploadManagerUtils;
 
 import java.io.File;
 import java.util.HashMap;
+
+import static com.umeng.socialize.utils.DeviceConfig.context;
 
 /**
  * Created by oss on 2015/12/7 0007.
@@ -40,10 +45,23 @@ public class OssService implements VolumeFileUploadService {
     private Handler handler;
 
 
-    public OssService(OSS oss, GetVolumeFileUploadTokenResult getVolumeFileUploadTokenResult, VolumeFile mockVolumeFile) {
-        this.oss = oss;
+    public OssService(GetVolumeFileUploadTokenResult getVolumeFileUploadTokenResult, VolumeFile mockVolumeFile) {
         this.getVolumeFileUploadTokenResult = getVolumeFileUploadTokenResult;
         this.mockVolumeFile = mockVolumeFile;
+        initOss();
+    }
+
+    /**
+     * 初始化osss
+     */
+    private void initOss(){
+        OSSCredentialProvider credentialProvider = new STSGetter(getVolumeFileUploadTokenResult);
+        ClientConfiguration conf = new ClientConfiguration();
+        conf.setConnectionTimeout(15 * 1000); // 连接超时，默认15秒
+        conf.setSocketTimeout(15 * 1000); // socket超时，默认15秒
+        //conf.setMaxConcurrentRequest(5); // 最大并发请求书，默认5个
+        conf.setMaxErrorRetry(2); // 失败后最大重试次数，默认2次
+        oss = new OSSClient(context, getVolumeFileUploadTokenResult.getEndpoint(), credentialProvider, conf);
     }
 
     @Override

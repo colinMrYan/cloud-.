@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.Volume.VolumeFile;
-import com.inspur.emmcloud.callback.ProgressCallback;
+import com.inspur.emmcloud.interf.ProgressCallback;
 import com.inspur.emmcloud.util.FileUtils;
 import com.inspur.emmcloud.util.TimeUtils;
 import com.inspur.emmcloud.util.VolumeFileIconUtils;
@@ -50,10 +50,18 @@ public class VolumeFileAdapter extends RecyclerView.Adapter<VolumeFileAdapter.Vi
         this.volumeFileList = volumeFileList;
     }
 
+    /**
+     * 设置是否显示右侧箭头
+     * @param isShowFileOperationDropDownImg
+     */
     public void setShowFileOperationDropDownImg(boolean isShowFileOperationDropDownImg) {
         this.isShowFileOperationDropDownImg = isShowFileOperationDropDownImg;
     }
 
+    /**
+     * 设置是否全选
+     * @param isMultiselect
+     */
     public void setMultiselect(boolean isMultiselect) {
         this.isMultiselect = isMultiselect;
         if (!isMultiselect) {
@@ -63,7 +71,7 @@ public class VolumeFileAdapter extends RecyclerView.Adapter<VolumeFileAdapter.Vi
     }
 
     /**
-     * 设置是否全选
+     * 选中所有的文件
      * @param isSelectAll
      */
     public void setSelectAll(boolean isSelectAll) {
@@ -80,14 +88,26 @@ public class VolumeFileAdapter extends RecyclerView.Adapter<VolumeFileAdapter.Vi
         notifyDataSetChanged();
     }
 
+    /**
+     * 获取被选中的文件列表
+     * @return
+     */
     public List<VolumeFile> getSelectVolumeFileList() {
         return selectVolumeFileList;
     }
 
+    /**
+     * 判断是否处于多远状态
+     * @return
+     */
     public boolean getMultiselect() {
         return isMultiselect;
     }
 
+    /**
+     * 设置此位置文件的选中状态
+     * @param position
+     */
     public void setVolumeFileSelect(int position) {
         VolumeFile volumeFile = volumeFileList.get(position);
         if (selectVolumeFileList.contains(volumeFile)) {
@@ -98,8 +118,13 @@ public class VolumeFileAdapter extends RecyclerView.Adapter<VolumeFileAdapter.Vi
         notifyDataSetChanged();
     }
 
-    public void replaceVolumeFile(VolumeFile oldVolumeFile, VolumeFile newVolumeFile) {
-        int position = volumeFileList.indexOf(oldVolumeFile);
+    /**
+     * 文件上传成功之后，服务端返回的VolumeFile数据替换用户显示的客户端构造的数据
+     * @param mockVolumeFile
+     * @param newVolumeFile
+     */
+    public void replaceVolumeFileData(VolumeFile mockVolumeFile, VolumeFile newVolumeFile) {
+        int position = volumeFileList.indexOf(mockVolumeFile);
         if (position != -1) {
             volumeFileList.remove(position);
             volumeFileList.add(position, newVolumeFile);
@@ -147,7 +172,7 @@ public class VolumeFileAdapter extends RecyclerView.Adapter<VolumeFileAdapter.Vi
             VolumeFileUploadManagerUtils.getInstance().setOssUploadProgressCallback(volumeFile, new ProgressCallback() {
                 @Override
                 public void onSuccess(VolumeFile newVolumeFile) {
-                    replaceVolumeFile(volumeFile, newVolumeFile);
+                    replaceVolumeFileData(volumeFile, newVolumeFile);
                 }
 
                 @Override

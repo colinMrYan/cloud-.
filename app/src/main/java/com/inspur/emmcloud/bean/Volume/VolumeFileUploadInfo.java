@@ -1,7 +1,7 @@
 package com.inspur.emmcloud.bean.Volume;
 
-import com.inspur.emmcloud.callback.ProgressCallback;
-import com.inspur.emmcloud.callback.VolumeFileUploadService;
+import com.inspur.emmcloud.interf.ProgressCallback;
+import com.inspur.emmcloud.interf.VolumeFileUploadService;
 
 /**
  * Created by chenmch on 2017/11/24.

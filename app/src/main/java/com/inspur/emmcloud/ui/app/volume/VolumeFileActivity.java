@@ -402,7 +402,7 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
                 bundle.putString("fileFilterType", fileFilterTypes[position]);
                 bundle.putString("currentDirAbsolutePath", currentDirAbsolutePath);
                 intent.putExtras(bundle);
-                LogUtils.jasonDebug("bundle="+bundle.toString());
+                LogUtils.jasonDebug("bundle=" + bundle.toString());
                 startActivityForResult(intent, REQUEST_SHOW_FILE_FILTER);
                 fileFilterPop.dismiss();
             }
@@ -442,7 +442,7 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
         if (resultCode == RESULT_OK) {
             if (requestCode == REQUEST_OPEN_FILE_BROWSER) {  //文件浏览器选择文件返回
                 Uri uri = data.getData();
-                LogUtils.jasonDebug("uri="+uri.toString());
+                LogUtils.jasonDebug("uri=" + uri.toString());
                 String filePath = GetPathFromUri4kitkat.getPathByUri(getApplicationContext(), uri);
                 uploadFile(filePath);
             } else if (requestCode == REQUEST_OPEN_CEMERA //拍照返回
@@ -469,7 +469,7 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
      * @param filePath
      */
     private void uploadFile(String filePath) {
-        if (filePath == null){
+        if (filePath == null) {
             ToastUtils.show(getApplicationContext(), "选择的文件不存在！");
             return;
         }
@@ -479,23 +479,25 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
             return;
 
         }
-        if (NetUtils.isNetworkConnected(MyApplication.getInstance())){
+        if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
             VolumeFile mockVolumeFile = getMockVolumeFileData(file);
-            VolumeFileUploadManagerUtils.getInstance().uploadFile(mockVolumeFile,filePath, currentDirAbsolutePath);
+            VolumeFileUploadManagerUtils.getInstance().uploadFile(mockVolumeFile, filePath, currentDirAbsolutePath);
             volumeFileList.add(0, mockVolumeFile);
             initDataBlankLayoutStatus();
             adapter.setVolumeFileList(volumeFileList);
             adapter.notifyItemInserted(0);
+            //解决RecyclerView当数据添加到第一位置，显示位置不正确的系统bug
             fileRecycleView.scrollToPosition(0);
         }
     }
 
     /**
      * 生成一个用于上传展示的数据
+     *
      * @param file
      * @return
      */
-    private VolumeFile getMockVolumeFileData(File file ){
+    private VolumeFile getMockVolumeFileData(File file) {
         long time = System.currentTimeMillis();
         VolumeFile volumeFile = new VolumeFile();
         volumeFile.setType(VolumeFile.FILE_TYPE_REGULAR);

@@ -1,7 +1,6 @@
 package com.inspur.emmcloud.bean.Volume;
 
 import com.inspur.emmcloud.util.JSONUtils;
-import com.inspur.emmcloud.util.LogUtils;
 
 import org.json.JSONObject;
 
@@ -41,8 +40,6 @@ public class GetVolumeFileUploadTokenResult {
         region = JSONUtils.getString(obj, "region", "");
         strategy = JSONUtils.getString(obj, "strategy", "");
         endpoint = url.replace(bucket + ".", "");
-        LogUtils.jasonDebug("endpoint="+endpoint);
-        LogUtils.jasonDebug("callbackUrl="+callbackUrl);
     }
 
     public String getAccessKeySecret() {

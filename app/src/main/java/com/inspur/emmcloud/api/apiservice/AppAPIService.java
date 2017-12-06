@@ -21,7 +21,7 @@ import com.inspur.emmcloud.bean.GetUpgradeResult;
 import com.inspur.emmcloud.bean.LoginDesktopCloudPlusBean;
 import com.inspur.emmcloud.bean.ReactNativeUpdateBean;
 import com.inspur.emmcloud.bean.SplashPageBean;
-import com.inspur.emmcloud.callback.OauthCallBack;
+import com.inspur.emmcloud.interf.OauthCallBack;
 import com.inspur.emmcloud.util.AppUtils;
 import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.OauthUtils;

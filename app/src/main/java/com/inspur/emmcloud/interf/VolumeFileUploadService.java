@@ -1,4 +1,4 @@
-package com.inspur.emmcloud.callback;
+package com.inspur.emmcloud.interf;
 
 /**
  * Created by chenmch on 2017/12/5.
