@@ -4,7 +4,7 @@ import com.inspur.emmcloud.interf.ProgressCallback;
 import com.inspur.emmcloud.interf.VolumeFileUploadService;
 
 /**
- * Created by chenmch on 2017/11/24.
+ * 云盘文件上传信息类
  */
 
 public class VolumeFileUploadInfo {
