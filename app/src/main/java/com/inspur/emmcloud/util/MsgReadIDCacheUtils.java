@@ -20,8 +20,7 @@ public class MsgReadIDCacheUtils {
 	 */
 	public static void saveReadedMsg(Context context, String cid, String msgID) {
 		try {
-			
-			DbCacheUtils.getDb(context).saveOrUpdate(new MsgReadId(cid, msgID));
+            DbCacheUtils.getDb(context).saveOrUpdate(new MsgReadId(cid, msgID));
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();

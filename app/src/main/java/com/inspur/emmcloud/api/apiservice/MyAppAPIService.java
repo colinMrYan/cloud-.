@@ -21,6 +21,7 @@ import com.inspur.emmcloud.bean.GetAppBadgeResult;
 import com.inspur.emmcloud.bean.GetAppGroupResult;
 import com.inspur.emmcloud.bean.GetGroupNewsDetailResult;
 import com.inspur.emmcloud.bean.GetMyAppResult;
+import com.inspur.emmcloud.bean.GetRecommendAppWidgetListResult;
 import com.inspur.emmcloud.bean.GetNewsTitleResult;
 import com.inspur.emmcloud.bean.GetRemoveAppResult;
 import com.inspur.emmcloud.bean.GetSearchAppResult;
@@ -30,7 +31,6 @@ import com.inspur.emmcloud.bean.Volume.GetVolumeFileUploadTokenResult;
 import com.inspur.emmcloud.bean.Volume.GetVolumeListResult;
 import com.inspur.emmcloud.bean.Volume.VolumeFile;
 import com.inspur.emmcloud.callback.OauthCallBack;
-import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.OauthUtils;
 import com.inspur.emmcloud.util.UriUtils;
 
@@ -316,7 +316,7 @@ public class MyAppAPIService {
             @Override
             public void callbackFail(String error, int responseCode) {
                 // TODO Auto-generated method stub
-                LogUtils.YfcDebug("错误代码：" + responseCode);
+
                 apiInterface.returnGroupNewsTitleFail(error, responseCode);
             }
         });
@@ -627,6 +627,45 @@ public class MyAppAPIService {
                         callbackFail("", -1);
                     }
                 }, context).refreshToken(url);
+            }
+        });
+    }
+
+    /**
+     * 获取推荐应用小部件
+     */
+    public void getRecommendAppWidgetList() {
+        final String completeUrl = APIUri.getMyAppWidgetsUrl();
+        RequestParams params = ((MyApplication) context.getApplicationContext())
+                .getHttpRequestParams(completeUrl);
+        x.http().get(params, new APICallback(context, completeUrl) {
+
+            @Override
+            public void callbackTokenExpire() {
+                // TODO Auto-generated method stub
+                new OauthUtils(new OauthCallBack() {
+
+                    @Override
+                    public void reExecute() {
+                        // TODO Auto-generated method stub
+                        getRecommendAppWidgetList();
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                }, context).refreshToken(completeUrl);
+            }
+
+            @Override
+            public void callbackSuccess(String arg0) {
+                apiInterface.returnRecommendAppWidgetListSuccess(new GetRecommendAppWidgetListResult(arg0));
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                apiInterface.returnRecommendAppWidgetListFail(error, responseCode);
             }
         });
     }

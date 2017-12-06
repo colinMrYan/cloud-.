@@ -76,7 +76,7 @@ public class ScanQrCodeUtils {
     private boolean isMatchCloudPlusProtrol(String msg) {
         if (msg.startsWith("ecm-contact") || msg.startsWith("ecc-component") ||
                 msg.startsWith("ecc-app-react-native") || msg.startsWith("gs-msg")
-                || msg.startsWith("ecc-channel")) {
+                || msg.startsWith("ecc-channel") || msg.startsWith("ecc-app")) {
             return true;
         }
         return false;

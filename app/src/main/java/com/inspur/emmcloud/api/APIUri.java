@@ -824,4 +824,12 @@ public class APIUri {
     public static String getMoveVolumeFileUrl(String volumeId){
         return  URL_BASE_VOLUME+"/"+volumeId+"/file/path";
     }
+    /**
+     * 获取我的应用小部件的url
+     * @return
+     */
+    public static String getMyAppWidgetsUrl(){
+        return URL_BASE_APP_V3+"api/app/recommend/apps";
+    }
+
 }

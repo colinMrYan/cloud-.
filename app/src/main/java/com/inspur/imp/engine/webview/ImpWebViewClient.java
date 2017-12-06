@@ -16,13 +16,13 @@ import android.widget.LinearLayout;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
 import com.inspur.emmcloud.bean.AppRedirectResult;
-import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.imp.api.ImpActivity;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.Map;
 
 
@@ -126,6 +126,7 @@ public class ImpWebViewClient extends WebViewClient {
 		//为了获取网页的html内容
 		view.loadUrl("javascript:window.getTitle.onGetHtmlContent("
 				+ "document.getElementsByTagName('html')[0].innerHTML" + ");");
+		view.loadUrl("javascript:window.onhashchange = function() { getTitle.onHashChangeEvent(); };");
 		webview.loadUrl(F_UEX_SCRIPT_SELF_FINISH);
 		String c = CookieManager.getInstance().getCookie(url);
 		PreferencesUtils.putString(view.getContext(), "web_cookie", c);
@@ -165,7 +166,6 @@ public class ImpWebViewClient extends WebViewClient {
 	@SuppressWarnings("deprecation")
 	@Override
 	public boolean shouldOverrideUrlLoading(WebView view, String url) {
-		LogUtils.YfcDebug("shouldOverrideUrlLoading------------"+ getWebViewHeaders().toString());
 		if (runnable != null){
 			mHandler.removeCallbacks(runnable);
 			runnable = null;
@@ -188,7 +188,7 @@ public class ImpWebViewClient extends WebViewClient {
 	 * @return
 	 */
 	private Map<String,String> getWebViewHeaders(){
-		return ((ImpActivity)myWebView.getContext()).getWebViewHeaders();
+		return myWebView == null ? new HashMap<String,String>() : ((ImpActivity)myWebView.getContext()).getWebViewHeaders();
 	}
 
 	/**

@@ -452,7 +452,18 @@ public class TimeUtils {
     }
 
     /**
-     * long time to string, format is {@link #DEFAULT_DATE_FORMAT}
+     * 获取系统时间今天年月日，形式如20171116，八位
+     * @return
+     */
+    public static String getFormatYearMonthDay(){
+        Calendar today = Calendar.getInstance();
+        String month = (today.get(Calendar.MONTH) < 10)?("0"+(today.get(Calendar.MONTH)+1)):(""+(today.get(Calendar.MONTH)+1));
+        String day = (today.get(Calendar.DAY_OF_MONTH) < 10)?("0"+today.get(Calendar.DAY_OF_MONTH)):(""+today.get(Calendar.DAY_OF_MONTH));
+        return today.get(Calendar.YEAR)+month+day;
+    }
+
+    /**
+     * long time to string, format is {@link #FORMAT_DEFAULT_DATE}
      *
      * @param timeInMillis
      * @return

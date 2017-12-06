@@ -55,6 +55,7 @@ import com.inspur.emmcloud.util.ClientIDUtils;
 import com.inspur.emmcloud.util.ContactCacheUtils;
 import com.inspur.emmcloud.util.DbCacheUtils;
 import com.inspur.emmcloud.util.ImageDisplayUtils;
+import com.inspur.emmcloud.util.MyAppWidgetUtils;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.util.PreferencesByUserAndTanentUtils;
@@ -156,6 +157,16 @@ public class IndexActivity extends BaseFragmentActivity implements
         getAppTabInfo();  //从服务端获取显示tab
         new SplashPageUtils(IndexActivity.this).update();//更新闪屏页面
         new ReactNativeUtils(IndexActivity.this).init(); //更新react
+        getMyAppRecommendWidgets();
+    }
+
+    /**
+     * 获取我的应用推荐小部件数据
+     */
+    private void getMyAppRecommendWidgets() {
+        if(MyAppWidgetUtils.checkNeedUpdateMyAppWidget(IndexActivity.this)){
+            MyAppWidgetUtils.getInstance(getApplicationContext()).getMyAppWidgetsFromNet();
+        }
     }
 
     /**

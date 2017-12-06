@@ -11,6 +11,8 @@ import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,6 +35,7 @@ import android.widget.TextView;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.DragAdapter;
+import com.inspur.emmcloud.adapter.RecommendAppWidgetListAdapter;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
 import com.inspur.emmcloud.bean.App;
@@ -42,25 +45,36 @@ import com.inspur.emmcloud.bean.AppGroupBean;
 import com.inspur.emmcloud.bean.AppOrder;
 import com.inspur.emmcloud.bean.GetAppBadgeResult;
 import com.inspur.emmcloud.bean.GetAppGroupResult;
+import com.inspur.emmcloud.bean.GetRecommendAppWidgetListResult;
 import com.inspur.emmcloud.bean.PVCollectModel;
 import com.inspur.emmcloud.config.Constant;
+import com.inspur.emmcloud.interf.OnRecommendAppWidgetItemClickListener;
 import com.inspur.emmcloud.util.AppCacheUtils;
 import com.inspur.emmcloud.util.AppTitleUtils;
+import com.inspur.emmcloud.util.DensityUtil;
 import com.inspur.emmcloud.util.IntentUtils;
 import com.inspur.emmcloud.util.MyAppCacheUtils;
+import com.inspur.emmcloud.util.MyAppWidgetUtils;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.ShortCutUtils;
 import com.inspur.emmcloud.util.StringUtils;
+import com.inspur.emmcloud.util.TimeUtils;
 import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
+import com.inspur.emmcloud.widget.ECMRecyclerViewLinearLayoutManager;
+import com.inspur.emmcloud.widget.ECMSpaceItemDecoration;
 import com.inspur.emmcloud.widget.MySwipeRefreshLayout;
 import com.inspur.emmcloud.widget.SwitchView;
 import com.inspur.emmcloud.widget.SwitchView.OnStateChangedListener;
 import com.inspur.emmcloud.widget.draggrid.DragGridView;
 import com.inspur.emmcloud.widget.draggrid.DragGridView.OnChanageListener;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -94,6 +108,8 @@ public class MyAppFragment extends Fragment {
     private MyAppSaveTask myAppSaveTask;
     private Map<String,AppBadgeBean> appBadgeBeanMap = new HashMap<>();
     private boolean isOnCreate = false;
+    private RecyclerView recommendAppWidgetListView = null;
+    private RecommendAppWidgetListAdapter recommendAppWidgetListAdapter = null;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -101,6 +117,7 @@ public class MyAppFragment extends Fragment {
         rootView = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_app, null);
         initViews();
         registerReceiver();
+        EventBus.getDefault().register(this);
     }
 
     @Override
@@ -114,8 +131,33 @@ public class MyAppFragment extends Fragment {
         if (parent != null) {
             parent.removeView(rootView);
         }
+        getMyAppRecommendWidgetsUpdate();
         return rootView;
     }
+
+    /**
+     * 更推荐应用小部件信息
+     * 从MyAppWidgetUtils发送通知而来
+     *
+     * @param getRecommendAppWidgetListResult
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void updateRecommendAppWidegtList(GetRecommendAppWidgetListResult getRecommendAppWidgetListResult) {
+        refreshRecommendAppWidgetView();
+    }
+
+    /**
+     * 检查获取我的应用推荐应用小部件更新
+     * 过期则更新不过期不更新
+     */
+    private void getMyAppRecommendWidgetsUpdate() {
+        GetRecommendAppWidgetListResult getRecommendAppWidgetListResult = new GetRecommendAppWidgetListResult(PreferencesByUserAndTanentUtils
+                .getString(getActivity(),Constant.PREF_MY_APP_RECOMMEND_DATA,""));
+        if(!MyAppWidgetUtils.isEffective(getRecommendAppWidgetListResult.getExpiredDate())){
+            MyAppWidgetUtils.getInstance(getActivity().getApplicationContext()).getMyAppWidgetsFromNet();
+        }
+    }
+
 
     @Override
     public void onResume() {
@@ -131,6 +173,7 @@ public class MyAppFragment extends Fragment {
             getAppBadgeNum();
         }
         isOnCreate = false;
+        refreshRecommendAppWidgetView();
     }
 
     /**
@@ -169,8 +212,72 @@ public class MyAppFragment extends Fragment {
         setTabTitle();
         getAppBadgeNum();
         isOnCreate = true;
+        //当Fragment创建时重置时间
+        PreferencesByUserAndTanentUtils.putInt(getActivity(),Constant.PREF_MY_APP_RECOMMEND_LASTUPDATE_HOUR,0);
 //        shortCutAppList.add("mobile_checkin_hcm");
 //        shortCutAppList.add("inspur_news_esg");//目前，除在此处添加id还需要为每个需要生成快捷方式的应用配置图标
+    }
+
+    /**
+     * 刷新推荐应用小部件
+     * 每个小时都有可能有变化
+     */
+    private void refreshRecommendAppWidgetView() {
+        if(MyAppWidgetUtils.isNeedShowMyAppRecommendWidgets(getActivity()) && (MyAppWidgetUtils.getShouldShowAppList(getActivity()).size() > 0)){
+            if(recommendAppWidgetListView == null){
+                recommendAppWidgetListView = (RecyclerView) rootView.findViewById(R.id.my_app_recommend_app_wiget_recyclerview);
+                (rootView.findViewById(R.id.my_app_recommend_app_widget_layout)).setVisibility(View.VISIBLE);
+                ECMRecyclerViewLinearLayoutManager layoutManager = new ECMRecyclerViewLinearLayoutManager(getActivity());
+                layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+                layoutManager.setCanScrollHorizontally(false);
+                recommendAppWidgetListView.setLayoutManager(layoutManager);
+                recommendAppWidgetListView.addItemDecoration(new ECMSpaceItemDecoration(DensityUtil.dip2px(getActivity(), 4)));
+                recommendAppWidgetListAdapter = new RecommendAppWidgetListAdapter(getActivity());
+                recommendAppWidgetListView.setAdapter(recommendAppWidgetListAdapter);
+                recommendAppWidgetListAdapter.setOnRecommendAppWidgetItemClickListener(new OnRecommendAppWidgetItemClickListener() {
+                    @Override
+                    public void onRecommendAppWidgetItemClick(App app) {
+                        UriUtils.openApp(getActivity(),app);
+                    }
+                });
+                rootView.findViewById(R.id.my_app_recommend_app_widget_img).setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        (rootView.findViewById(R.id.my_app_recommend_app_widget_layout)).setVisibility(View.GONE);
+                        MyAppWidgetUtils.saveNotShowDate(getActivity(), TimeUtils.getEndTime());
+                    }
+                });
+            }
+            refreshRecommendAppWidgetList();
+        }else{
+            (rootView.findViewById(R.id.my_app_recommend_app_widget_layout)).setVisibility(View.GONE);
+        }
+    }
+
+    /**
+     * 获取本时间段内应该显示的推荐
+     * @return
+     */
+    private void refreshRecommendAppWidgetList() {
+        List<String> appIdList = MyAppWidgetUtils.getShouldShowAppList(getActivity());
+        List<App> recommendAppWidgetList = new ArrayList<>();
+        List<AppGroupBean> appGroupBeanList = appListAdapter.getAppAdapterList();
+        App app = new App();
+        for(int i = 0; i < appIdList.size(); i++ ){
+            app.setAppID(appIdList.get(i));
+            for(int j = 0; j < appGroupBeanList.size(); j++){
+                int index = appGroupBeanList.get(j).getAppItemList().indexOf(app);
+                if(index != -1){
+                    recommendAppWidgetList.add(appGroupBeanList.get(j).getAppItemList().get(index));
+                    break;
+                }
+            }
+        }
+        boolean isNeedRefresh = PreferencesByUserAndTanentUtils.getInt(getActivity(),Constant.PREF_MY_APP_RECOMMEND_LASTUPDATE_HOUR,0) != MyAppWidgetUtils.getNowHour();
+        if(recommendAppWidgetListAdapter != null && recommendAppWidgetList.size() > 0 && isNeedRefresh){
+            recommendAppWidgetListAdapter.setAndReFreshRecommendList(recommendAppWidgetList);
+            PreferencesByUserAndTanentUtils.putInt(getActivity(),Constant.PREF_MY_APP_RECOMMEND_LASTUPDATE_HOUR,MyAppWidgetUtils.getNowHour());
+        }
     }
 
 
@@ -614,6 +721,7 @@ public class MyAppFragment extends Fragment {
             myAppSaveTask.cancel(true);
             myAppSaveTask = null;
         }
+        EventBus.getDefault().unregister(this);
     }
 
     /**
@@ -977,6 +1085,9 @@ public class MyAppFragment extends Fragment {
             super.onPostExecute(appGroupList);
             appListAdapter.setAppAdapterList(appGroupList);
             swipeRefreshLayout.setRefreshing(false);
+            if(MyAppWidgetUtils.isNeedShowMyAppRecommendWidgets(getActivity())){
+                refreshRecommendAppWidgetView();
+            }
         }
     }
 
