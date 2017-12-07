@@ -164,7 +164,7 @@ public class IndexActivity extends BaseFragmentActivity implements
      * 获取我的应用推荐小部件数据
      */
     private void getMyAppRecommendWidgets() {
-        if(MyAppWidgetUtils.checkNeedUpdateMyAppWidget(IndexActivity.this)){
+        if (MyAppWidgetUtils.checkNeedUpdateMyAppWidget(IndexActivity.this)) {
             MyAppWidgetUtils.getInstance(getApplicationContext()).getMyAppWidgetsFromNet();
         }
     }
@@ -199,20 +199,20 @@ public class IndexActivity extends BaseFragmentActivity implements
      * 打开保活服务
      */
     private void startCoreService() {
-        Intent intent = new Intent();
-        intent.setClass(this, CoreService.class);
-        startService(intent);
+        if (AppUtils.getSDKVersionNumber() < 26) {
+            Intent intent = new Intent();
+            intent.setClass(this, CoreService.class);
+            startService(intent);
+        }
     }
 
     /**
      * 打开后台保活服务
      */
     private void startBackgroudService() {
-        if(AppUtils.getSDKVersionNumber() < 26){
-            Intent intent = new Intent();
-            intent.setClass(this, BackgroundService.class);
-            startService(intent);
-        }
+        Intent intent = new Intent();
+        intent.setClass(this, BackgroundService.class);
+        startService(intent);
     }
 
     /**
@@ -382,7 +382,7 @@ public class IndexActivity extends BaseFragmentActivity implements
         tipsView = (TipsView) findViewById(R.id.tip);
         mTabHost = (MyFragmentTabHost) findViewById(android.R.id.tabhost);
         mTabHost.setup(this, getSupportFragmentManager(), R.id.realtabcontent);
-        findViewById(R.id.index_root_layout).setPadding(0,StateBarColor.getStateBarHeight(IndexActivity.this),0,0);
+        findViewById(R.id.index_root_layout).setPadding(0, StateBarColor.getStateBarHeight(IndexActivity.this), 0, 0);
         handleAppTabs();
     }
 
