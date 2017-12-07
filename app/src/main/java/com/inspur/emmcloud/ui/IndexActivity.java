@@ -199,9 +199,11 @@ public class IndexActivity extends BaseFragmentActivity implements
      * 打开保活服务
      */
     private void startCoreService() {
-        Intent intent = new Intent();
-        intent.setClass(this, CoreService.class);
-        startService(intent);
+        if (AppUtils.getSDKVersionNumber() < 26) {
+            Intent intent = new Intent();
+            intent.setClass(this, CoreService.class);
+            startService(intent);
+        }
     }
 
     /**
