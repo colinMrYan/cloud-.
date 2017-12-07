@@ -208,9 +208,11 @@ public class IndexActivity extends BaseFragmentActivity implements
      * 打开后台保活服务
      */
     private void startBackgroudService() {
-        Intent intent = new Intent();
-        intent.setClass(this, BackgroundService.class);
-        startService(intent);
+        if(AppUtils.getSDKVersionNumber() < 26){
+            Intent intent = new Intent();
+            intent.setClass(this, BackgroundService.class);
+            startService(intent);
+        }
     }
 
     /**
