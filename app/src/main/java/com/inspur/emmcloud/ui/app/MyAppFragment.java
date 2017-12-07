@@ -94,7 +94,6 @@ import static com.inspur.emmcloud.util.AppCacheUtils.getCommonlyUseAppList;
 public class MyAppFragment extends Fragment {
 
     private static final String ACTION_NAME = "add_app";
-    private static final long GET_BADGE_DELAY = 18000;
     private View rootView;
     private ListView appListView;
     private AppListAdapter appListAdapter;
@@ -108,7 +107,6 @@ public class MyAppFragment extends Fragment {
     private List<String> shortCutAppList = new ArrayList<>();
     private MyAppSaveTask myAppSaveTask;
     private Map<String,AppBadgeBean> appBadgeBeanMap = new HashMap<>();
-    private boolean isOnCreate = false;
     private RecyclerView recommendAppWidgetListView = null;
     private RecommendAppWidgetListAdapter recommendAppWidgetListAdapter = null;
 
@@ -161,17 +159,8 @@ public class MyAppFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        if(!isOnCreate){
-            getMyApp();
-        }
-        //隔五分钟刷一次badge
-        long badgeUpdateTime = PreferencesByUserAndTanentUtils.getLong(getActivity(),
-                Constant.PREF_APP_BADGE_UPDATE_TIME,0L);
-        long badgeUpdateTimeBetween = System.currentTimeMillis() - badgeUpdateTime;
-        if(!isOnCreate && badgeUpdateTimeBetween>=GET_BADGE_DELAY){
-            getAppBadgeNum();
-        }
-        isOnCreate = false;
+        getMyApp();
+        getAppBadgeNum();
         refreshRecommendAppWidgetView();
     }
 
@@ -207,10 +196,7 @@ public class MyAppFragment extends Fragment {
         });
         OnAppCenterClickListener listener = new OnAppCenterClickListener();
         (rootView.findViewById(R.id.appcenter_layout)).setOnClickListener(listener);
-        getMyApp();
         setTabTitle();
-        getAppBadgeNum();
-        isOnCreate = true;
         //当Fragment创建时重置时间
         PreferencesByUserAndTanentUtils.putInt(getActivity(),Constant.PREF_MY_APP_RECOMMEND_LASTUPDATE_HOUR,0);
 //        shortCutAppList.add("mobile_checkin_hcm");
@@ -1101,14 +1087,12 @@ public class MyAppFragment extends Fragment {
             swipeRefreshLayout.setRefreshing(false);
             appBadgeBeanMap = getAppBadgeResult.getAppBadgeBeanMap();
             appListAdapter.notifyDataSetChanged();
-            PreferencesByUserAndTanentUtils.putLong(getActivity(), Constant.PREF_APP_BADGE_UPDATE_TIME,System.currentTimeMillis());
         }
 
         @Override
         public void returnGetAppBadgeResultFail(String error, int errorCode) {
             swipeRefreshLayout.setRefreshing(false);
 //            WebServiceMiddleUtils.hand(getActivity(), error, errorCode);
-            PreferencesByUserAndTanentUtils.putLong(getActivity(), Constant.PREF_APP_BADGE_UPDATE_TIME,0l);
         }
     }
 }
