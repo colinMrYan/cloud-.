@@ -34,7 +34,6 @@ import com.inspur.emmcloud.util.AppUtils;
 import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.OauthUtils;
 import com.inspur.emmcloud.util.StringUtils;
-import com.inspur.emmcloud.util.UriUtils;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -390,7 +389,7 @@ public class ChatAPIService {
 	 */
 	public void uploadMsgResource(final String filePath,
 								  final String fakeMessageId, final boolean isImg) {
-		final String completeUrl = UriUtils.getResUri("upload");
+		final String completeUrl = APIUri.getResUrl("upload");
 		RequestParams params = ((MyApplication) context.getApplicationContext())
 				.getHttpRequestParams(completeUrl);
 		File file = new File(filePath);

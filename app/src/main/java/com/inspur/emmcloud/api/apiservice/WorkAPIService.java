@@ -32,7 +32,6 @@ import com.inspur.emmcloud.bean.TaskResult;
 import com.inspur.emmcloud.callback.OauthCallBack;
 import com.inspur.emmcloud.util.OauthUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
-import com.inspur.emmcloud.util.UriUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -507,7 +506,7 @@ public class WorkAPIService {
      * @param members
      */
     public void creatGroupChannel(final String name, final JSONArray members) {
-        final String completeUrl = UriUtils.getHttpApiUri("channel");
+        final String completeUrl = APIUri.getHttpApiUrl("channel");
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
         try {

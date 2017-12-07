@@ -13,6 +13,7 @@ import android.util.TypedValue;
 
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
+import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.bean.Channel;
 import com.inspur.emmcloud.bean.ChannelGroup;
@@ -136,7 +137,7 @@ public class ChannelGroupIconUtils {
                         String pid = memberUidList.get(j);
                         Bitmap bitmap = null;
                         if (!StringUtils.isBlank(pid) && !pid.equals("null")) {
-                            bitmap = ImageLoader.getInstance().loadImageSync(UriUtils.getChannelImgUri(context, pid), options);
+                            bitmap = ImageLoader.getInstance().loadImageSync(APIUri.getChannelImgUrl(context, pid), options);
                         }
                         if (bitmap == null) {
                             bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.icon_person_default);

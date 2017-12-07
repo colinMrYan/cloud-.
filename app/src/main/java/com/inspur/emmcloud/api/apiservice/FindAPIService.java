@@ -18,7 +18,6 @@ import com.inspur.emmcloud.bean.GetTripArriveCity;
 import com.inspur.emmcloud.bean.Trip;
 import com.inspur.emmcloud.callback.OauthCallBack;
 import com.inspur.emmcloud.util.OauthUtils;
-import com.inspur.emmcloud.util.UriUtils;
 
 import org.json.JSONArray;
 import org.xutils.http.HttpMethod;
@@ -44,7 +43,7 @@ public class FindAPIService {
 	 * 获取行程信息
 	 */
 	public void getTripInfo(final String  tripId) {
-		final String completeUrl = UriUtils.getHttpApiUri("trip/simple/detail?trip_ticket=")+tripId;
+		final String completeUrl = APIUri.getHttpApiUrl("trip/simple/detail?trip_ticket=")+tripId;
 		RequestParams params = ((MyApplication)context.getApplicationContext()).getHttpRequestParams(completeUrl);
 		x.http().get(params, new APICallback(context,completeUrl) {
 			
@@ -85,8 +84,8 @@ public class FindAPIService {
 	 * @param tripId
 	 */
 	public void deleteTripByIds(final String tripId) {
-		final String completeUrl = UriUtils
-				.getHttpApiUri("trip/simple/states?state=DELETED");
+		final String completeUrl = APIUri
+				.getHttpApiUrl("trip/simple/states?state=DELETED");
 		RequestParams params = ((MyApplication)context.getApplicationContext()).getHttpRequestParams(completeUrl);
 		JSONArray array = new JSONArray();
 		array.put(tripId);
@@ -133,8 +132,8 @@ public class FindAPIService {
 	 * @param ticketInfos
 	 */
 	public void uploadTrainTicket(final String ticketInfos) {
-		final String completeUrl = UriUtils
-				.getHttpApiUri("trip/simple/upload");
+		final String completeUrl = APIUri
+				.getHttpApiUrl("trip/simple/upload");
 		RequestParams params = ((MyApplication)context.getApplicationContext()).getHttpRequestParams(completeUrl);
 		params.setBodyContent(ticketInfos);
 		params.setAsJsonContent(true);
@@ -177,8 +176,8 @@ public class FindAPIService {
 	 * @param ticketInfos
 	 */
 	public void updateTrainTicket(final String ticketInfos) {
-		final String completeUrl = UriUtils
-				.getHttpApiUri("trip/simple/upload");
+		final String completeUrl = APIUri
+				.getHttpApiUrl("trip/simple/upload");
 		RequestParams params = ((MyApplication)context.getApplicationContext()).getHttpRequestParams(completeUrl);
 		params.setBodyContent(ticketInfos);
 		params.setAsJsonContent(true);
@@ -219,8 +218,8 @@ public class FindAPIService {
 	 * 获取上次用户扫描的最近的行程信息：返回单个行程
 	 */
 	public void getLastUploadTrip() {
-		final String completeUrl = UriUtils
-				.getHttpApiUri("trip/simple/latest");
+		final String completeUrl = APIUri
+				.getHttpApiUrl("trip/simple/latest");
 		RequestParams params = ((MyApplication)context.getApplicationContext()).getHttpRequestParams(completeUrl);
 		params.addParameter("way", "TRAIN");
 		params.addParameter("source", "SMS");

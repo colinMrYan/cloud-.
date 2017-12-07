@@ -24,7 +24,6 @@ import com.inspur.emmcloud.callback.OauthCallBack;
 import com.inspur.emmcloud.util.AppUtils;
 import com.inspur.emmcloud.util.OauthUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
-import com.inspur.emmcloud.util.UriUtils;
 
 import org.xutils.http.RequestParams;
 import org.xutils.x;
@@ -209,7 +208,7 @@ public class MineAPIService {
 	 */
 	public void getCardPackageList() {
 
-		final String completeUrl = UriUtils.getHttpApiUri("wallet");
+		final String completeUrl = APIUri.getHttpApiUrl("wallet");
 		RequestParams params = ((MyApplication) context.getApplicationContext())
 				.getHttpRequestParams(completeUrl);
 		x.http().get(params, new APICallback(context, completeUrl) {
@@ -253,7 +252,7 @@ public class MineAPIService {
 	 */
 	public void getLanguage() {
 
-		final String completeUrl = UriUtils.getHttpApiUri("settings/lang");
+		final String completeUrl = APIUri.getHttpApiUrl("settings/lang");
 		RequestParams params = ((MyApplication) context.getApplicationContext())
 				.getHttpRequestParams(completeUrl);
 		x.http().get(params, new APICallback(context, completeUrl) {

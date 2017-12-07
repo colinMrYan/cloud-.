@@ -10,13 +10,13 @@ import android.widget.TextView;
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.util.ImageDisplayUtils;
 import com.inspur.emmcloud.util.IntentUtils;
 import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.StateBarColor;
 import com.inspur.emmcloud.util.ToastUtils;
-import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.emmcloud.util.ninelock.LockPatternUtil;
 import com.inspur.emmcloud.util.ninelock.LockPatternView;
 import com.inspur.emmcloud.widget.CircleImageView;
@@ -70,8 +70,8 @@ public class GestureLoginActivity extends BaseActivity {
                 isLogin = true;
             }
         }
-        String userHeadImgUri = UriUtils
-                .getChannelImgUri(GestureLoginActivity.this, ((MyApplication) getApplication()).getUid());
+        String userHeadImgUri = APIUri
+                .getChannelImgUrl(GestureLoginActivity.this, ((MyApplication) getApplication()).getUid());
         CircleImageView circleImageView = (CircleImageView) findViewById(R.id.gesture_login_user_head_img);
         ImageDisplayUtils.getInstance().displayImage(circleImageView,
                 userHeadImgUri, R.drawable.icon_person_default);

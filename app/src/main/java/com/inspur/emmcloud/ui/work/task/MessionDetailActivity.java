@@ -25,6 +25,7 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIDownloadCallBack;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
+import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.api.apiservice.WorkAPIService;
 import com.inspur.emmcloud.bean.Attachment;
@@ -49,7 +50,6 @@ import com.inspur.emmcloud.util.SendFileUtils;
 import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.TimeUtils;
 import com.inspur.emmcloud.util.ToastUtils;
-import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.HorizontalProgressBarWithNumber;
 import com.inspur.emmcloud.widget.LoadingDialog;
@@ -915,7 +915,7 @@ public class MessionDetailActivity extends BaseActivity {
                 //
                 // membersImg[i].setVisibility(View.VISIBLE);
                 // imageDisplayUtils.displayImage(membersImg[i],
-                // UriUtils.getChannelImgUri(inspurID));
+                // APIUri.getChannelImgUrl(inspurID));
                 memebers = memebers
                         + ContactCacheUtils.getUserName(
                         getApplicationContext(), memebersIds.get(i))
@@ -1035,7 +1035,7 @@ public class MessionDetailActivity extends BaseActivity {
             final String fileUri = attachments.get(position).getUri();
             final String target = MyAppConfig.LOCAL_DOWNLOAD_PATH
                     + fileName;
-            final String downlaodSource = UriUtils.getPreviewUri(fileUri);
+            final String downlaodSource = APIUri.getPreviewUrl(fileUri);
             final HorizontalProgressBarWithNumber fileProgressbar = (HorizontalProgressBarWithNumber) convertView
                     .findViewById(R.id.filecard_progressbar);
             fileProgressbar.setTag(target);

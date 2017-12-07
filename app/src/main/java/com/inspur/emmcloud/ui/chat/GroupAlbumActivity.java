@@ -13,10 +13,10 @@ import android.widget.ImageView;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.bean.Msg;
 import com.inspur.emmcloud.util.ImageDisplayUtils;
 import com.inspur.emmcloud.util.MsgCacheUtil;
-import com.inspur.emmcloud.util.UriUtils;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -72,7 +72,7 @@ public class GroupAlbumActivity extends BaseActivity {
         // TODO Auto-generated method stub
         imgTypeMsgList = MsgCacheUtil.getImgTypeMsgList(GroupAlbumActivity.this, cid);
         for (int i = 0; i < imgTypeMsgList.size(); i++) {
-            String url = UriUtils.getPreviewUri(imgTypeMsgList.get(i).getImgTypeMsgImg());
+            String url = APIUri.getPreviewUrl(imgTypeMsgList.get(i).getImgTypeMsgImg());
             imgUrlList.add(url);
         }
 

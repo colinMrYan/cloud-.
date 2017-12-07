@@ -26,6 +26,7 @@ import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
+import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.api.apiservice.WorkAPIService;
 import com.inspur.emmcloud.bean.Contact;
 import com.inspur.emmcloud.bean.Meeting;
@@ -104,7 +105,7 @@ public class MeetingDetailActivity extends BaseActivity {
     // if (!StringUtils.isEmpty(attendant)) {
     // conferenceImg.setVisibility(View.VISIBLE);
     // imageDisplayUtils.displayImage(conferenceImg,
-    // UriUtils.getChannelImgUri(attendant));
+    // APIUri.getChannelImgUri(attendant));
     // }
     // }
 
@@ -120,7 +121,7 @@ public class MeetingDetailActivity extends BaseActivity {
                     - 1);
             if (!StringUtils.isBlank(memberId)) {
                 ImageDisplayUtils.getInstance().displayImage(circleImg[i],
-                        UriUtils.getChannelImgUri(MeetingDetailActivity.this, memberId), R.drawable.icon_person_default);
+                        APIUri.getChannelImgUrl(MeetingDetailActivity.this, memberId), R.drawable.icon_person_default);
             }
         }
     }

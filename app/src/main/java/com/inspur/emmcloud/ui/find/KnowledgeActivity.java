@@ -13,11 +13,11 @@ import android.widget.TextView;
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
+import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.api.apiservice.FindAPIService;
 import com.inspur.emmcloud.bean.GetKnowledgeInfo;
 import com.inspur.emmcloud.bean.KnowledgeInfo;
 import com.inspur.emmcloud.util.ImageDisplayUtils;
-import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
 
 import java.util.ArrayList;
@@ -80,7 +80,7 @@ public class KnowledgeActivity extends BaseActivity {
                     .findViewById(R.id.name_text);
             ImageView knowledgeImageView = (ImageView) convertView.findViewById(R.id.knowledge_img);
             nameText.setText(knowledgeList.get(position).getName());
-            ImageDisplayUtils.getInstance().displayImage(knowledgeImageView, UriUtils.getPreviewUri(knowledgeList.get(position).getIcon()), R.drawable.icon_photo_default);
+            ImageDisplayUtils.getInstance().displayImage(knowledgeImageView, APIUri.getPreviewUrl(knowledgeList.get(position).getIcon()), R.drawable.icon_photo_default);
             return convertView;
         }
 

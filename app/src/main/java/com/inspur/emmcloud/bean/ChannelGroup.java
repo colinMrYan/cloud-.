@@ -1,7 +1,7 @@
 package com.inspur.emmcloud.bean;
 
 import com.alibaba.fastjson.JSON;
-import com.inspur.emmcloud.util.UriUtils;
+import com.inspur.emmcloud.api.APIUri;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -149,9 +149,9 @@ public class ChannelGroup {
     public String getIcon() {
         if (!icon.startsWith("http")) {
             if (type.equals("DIRECT")) {
-                return UriUtils.getUserInfoPhotoUri(icon);
+                return APIUri.getUserInfoPhotoUrl(icon);
             } else {
-                return UriUtils.getPreviewUri(icon);
+                return APIUri.getPreviewUrl(icon);
             }
 
         }

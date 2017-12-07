@@ -3,9 +3,9 @@ package com.inspur.emmcloud.bean;
 import android.content.Context;
 
 import com.facebook.react.bridge.ReadableMap;
+import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.util.ContactCacheUtils;
 import com.inspur.emmcloud.util.StringUtils;
-import com.inspur.emmcloud.util.UriUtils;
 
 import org.xutils.db.annotation.Column;
 import org.xutils.db.annotation.Table;
@@ -127,11 +127,11 @@ public class SearchModel implements Serializable {
 	public String getIcon(Context context) {
 		if (!icon.startsWith("http")) {
 			if (type.equals("GROUP")) {
-				return UriUtils.getPreviewUri(icon);
+				return APIUri.getPreviewUrl(icon);
 			} else if (type.equals("DIRECT")) {
-				return UriUtils.getUserInfoPhotoUri(icon);
+				return APIUri.getUserInfoPhotoUrl(icon);
 			} else if (type.equals("USER")) {
-				return UriUtils.getChannelImgUri(context,id);
+				return APIUri.getChannelImgUrl(context,id);
 			} else {
 				return null;
 			}

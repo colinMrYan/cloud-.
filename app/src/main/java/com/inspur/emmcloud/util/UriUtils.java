@@ -8,7 +8,6 @@ import android.os.Bundle;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.App;
-import com.inspur.emmcloud.bean.Contact;
 import com.inspur.emmcloud.bean.PVCollectModel;
 import com.inspur.emmcloud.ui.app.ReactNativeAppActivity;
 import com.inspur.emmcloud.ui.app.groupnews.GroupNewsActivity;
@@ -139,70 +138,6 @@ public class UriUtils {
             cookie = languageJson;
         }
         return cookie;
-    }
-
-    /**
-     * 预览图片或视频
-     **/
-    public static String getPreviewUri(String fileName) {
-        return getResUri("stream/" + fileName);
-    }
-
-
-    public static String getResUri(String url) {
-        return "https://ecm.inspur.com/" + tanent + "/res/" + url;
-    }
-
-    /**
-     * 获取推送新闻
-     **/
-    public static String getGroupNewsUrl(String url) {
-        return "https://ecm.inspur.com/" + url;
-    }
-
-    ;
-
-    /**
-     * 个人信息头像显示图片
-     **/
-    public static String getUserInfoPhotoUri(String url) {
-        return "https://emm.inspur.com" + url;
-    }
-
-    /**
-     * 获取机器人头像路径
-     *
-     * @return
-     */
-    public static String getRobotIconUri(String iconUrl) {
-        return "https://ecm.inspur.com/" + UriUtils.tanent + "/avatar/stream/"
-                + iconUrl;
-    }
-
-
-    /**
-     * 频道页面头像显示图片
-     **/
-    public static String getChannelImgUri(Context context, String inspurID) {
-        String headImgUrl = null;
-        if (StringUtils.isBlank(inspurID) || inspurID.equals("null"))
-            return null;
-        headImgUrl = ((MyApplication) context.getApplicationContext()).getUserPhotoUrl(inspurID);
-        if (headImgUrl == null && !((MyApplication) context.getApplicationContext()).isKeysContainUid(inspurID)) {
-            Contact contact = ContactCacheUtils.getUserContact(context, inspurID);
-            if (contact != null) {
-                headImgUrl = "https://emm.inspur.com/img/userhead/" + inspurID;
-                String lastUpdateTime = contact.getLastUpdateTime();
-                if (!StringUtils.isBlank(lastUpdateTime) && (!lastUpdateTime.equals("null"))) {
-                    headImgUrl = headImgUrl + "?" + lastUpdateTime;
-                }
-                ((MyApplication) context.getApplicationContext()).setUsesrPhotoUrl(inspurID, headImgUrl);
-            } else if (((MyApplication) context.getApplicationContext())
-                    .getIsContactReady()) {
-                ((MyApplication) context.getApplicationContext()).setUsesrPhotoUrl(inspurID, null);
-            }
-        }
-        return headImgUrl;
     }
 
 

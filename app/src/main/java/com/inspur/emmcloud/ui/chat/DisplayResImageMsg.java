@@ -9,11 +9,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.bean.Msg;
 import com.inspur.emmcloud.util.DensityUtil;
 import com.inspur.emmcloud.util.JSONUtils;
 import com.inspur.emmcloud.util.MsgCacheUtil;
-import com.inspur.emmcloud.util.UriUtils;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
@@ -42,7 +42,7 @@ public class DisplayResImageMsg {
         final TextView longImgText = (TextView) convertView.findViewById(R.id.long_img_text);
         String imageUri = JSONUtils.getString(msg.getBody(), "key", "");
         if (!imageUri.startsWith("content:") && !imageUri.startsWith("file:")) {
-            imageUri = UriUtils.getPreviewUri(imageUri);
+            imageUri = APIUri.getPreviewUrl(imageUri);
 
         }
         DisplayImageOptions options = new DisplayImageOptions.Builder()

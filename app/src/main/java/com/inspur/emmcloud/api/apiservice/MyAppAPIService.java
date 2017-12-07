@@ -21,14 +21,13 @@ import com.inspur.emmcloud.bean.GetAppBadgeResult;
 import com.inspur.emmcloud.bean.GetAppGroupResult;
 import com.inspur.emmcloud.bean.GetGroupNewsDetailResult;
 import com.inspur.emmcloud.bean.GetMyAppResult;
-import com.inspur.emmcloud.bean.GetRecommendAppWidgetListResult;
 import com.inspur.emmcloud.bean.GetNewsTitleResult;
+import com.inspur.emmcloud.bean.GetRecommendAppWidgetListResult;
 import com.inspur.emmcloud.bean.GetRemoveAppResult;
 import com.inspur.emmcloud.bean.GetSearchAppResult;
 import com.inspur.emmcloud.bean.GetWebAppRealUrlResult;
 import com.inspur.emmcloud.callback.OauthCallBack;
 import com.inspur.emmcloud.util.OauthUtils;
-import com.inspur.emmcloud.util.UriUtils;
 
 import org.xutils.http.RequestParams;
 import org.xutils.x;
@@ -276,7 +275,7 @@ public class MyAppAPIService {
      */
     public void getNewsTitles() {
 
-        final String completeUrl = UriUtils.getHttpApiUri("api/v0/content/news/section");
+        final String completeUrl = APIUri.getHttpApiUrl("api/v0/content/news/section");
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
         x.http().get(params, new APICallback(context, completeUrl) {
@@ -324,7 +323,7 @@ public class MyAppAPIService {
      */
     public void getGroupNewsDetail(final String ncid, final int page) {
 
-        final String completeUrl = UriUtils.getHttpApiUri("/api/v0/content/news/section/" + ncid + "/post?page=" + page + "&limit=20");
+        final String completeUrl = APIUri.getHttpApiUrl("/api/v0/content/news/section/" + ncid + "/post?page=" + page + "&limit=20");
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
 

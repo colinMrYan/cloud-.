@@ -3,7 +3,7 @@ package com.inspur.emmcloud.bean;
 import android.content.Context;
 
 import com.facebook.react.bridge.WritableNativeMap;
-import com.inspur.emmcloud.util.UriUtils;
+import com.inspur.emmcloud.api.APIUri;
 
 import org.json.JSONObject;
 import org.xutils.db.annotation.Column;
@@ -245,7 +245,7 @@ public class Contact implements Serializable {
             obj.put("email", email);
             obj.put("org_name", orgName);
             obj.put("type", type);
-            obj.put("head", UriUtils.getChannelImgUri(context, inspurID));
+            obj.put("head", APIUri.getChannelImgUrl(context, inspurID));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -266,7 +266,7 @@ public class Contact implements Serializable {
             map.putString("email", email);
             map.putString("org_name", orgName);
             map.putString("type", type);
-            map.putString("head", UriUtils.getChannelImgUri(context, inspurID));
+            map.putString("head", APIUri.getChannelImgUrl(context, inspurID));
         } catch (Exception e) {
             e.printStackTrace();
         }
