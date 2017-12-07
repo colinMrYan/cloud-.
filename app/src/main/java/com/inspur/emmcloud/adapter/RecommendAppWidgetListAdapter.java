@@ -9,11 +9,8 @@ import android.widget.ImageView;
 
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.App;
-import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.interf.OnRecommendAppWidgetItemClickListener;
 import com.inspur.emmcloud.util.ImageDisplayUtils;
-import com.inspur.emmcloud.util.MyAppWidgetUtils;
-import com.inspur.emmcloud.util.PreferencesByUserAndTanentUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -80,6 +77,5 @@ public class RecommendAppWidgetListAdapter extends RecyclerView.Adapter<Recommen
     public void setAndReFreshRecommendList(List<App> recommendList){
         this.recommendList = recommendList;
         notifyDataSetChanged();
-        PreferencesByUserAndTanentUtils.putInt(context, Constant.PREF_MY_APP_RECOMMEND_LASTUPDATE_HOUR, MyAppWidgetUtils.getNowHour());
     }
 }

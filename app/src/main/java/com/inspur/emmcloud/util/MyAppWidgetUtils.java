@@ -26,13 +26,14 @@ public class MyAppWidgetUtils {
 
     /**
      * 我的应用推荐应用小部件单例模式
+     *
      * @param context
      * @return
      */
-    public  static MyAppWidgetUtils getInstance(Context context){
-        if(myAppWidgetUtils == null){
-            synchronized (MyAppWidgetUtils.class){
-                if(myAppWidgetUtils == null){
+    public static MyAppWidgetUtils getInstance(Context context) {
+        if (myAppWidgetUtils == null) {
+            synchronized (MyAppWidgetUtils.class) {
+                if (myAppWidgetUtils == null) {
                     myAppWidgetUtils = new MyAppWidgetUtils(context);
                 }
             }
@@ -42,17 +43,18 @@ public class MyAppWidgetUtils {
 
     /**
      * 需要展示Dialog的
+     *
      * @param context
      */
-    private MyAppWidgetUtils(Context context){
+    private MyAppWidgetUtils(Context context) {
         this.context = context;
     }
 
     /**
      * 获取我的应用推荐小部件
      */
-    public void getMyAppWidgetsFromNet(){
-        if(NetUtils.isNetworkConnected(context,false)){
+    public void getMyAppWidgetsFromNet() {
+        if (NetUtils.isNetworkConnected(context, false)) {
             MyAppAPIService appAPIService = new MyAppAPIService(context);
             appAPIService.setAPIInterface(new WebService());
             appAPIService.getRecommendAppWidgetList();
@@ -61,57 +63,58 @@ public class MyAppWidgetUtils {
 
     /**
      * 保存不要显示的日期时间
+     *
      * @param context
      * @param notShowDate
      */
-    public static void saveNotShowDate(Context context,long notShowDate){
-        PreferencesByUserAndTanentUtils.putLong(context, Constant.PREF_HAS_MY_APP_RECOMMEND,notShowDate);
+    public static void saveNotShowDate(Context context, long notShowDate) {
+        PreferencesByUserAndTanentUtils.putLong(context, Constant.PREF_HAS_MY_APP_RECOMMEND, notShowDate);
     }
 
     /**
      * 判断是否显示推荐应用小部件
+     *
      * @param context
      * @return
      */
-    public static boolean isNeedShowMyAppRecommendWidgets(Context context){
-        long notShowTime = PreferencesByUserAndTanentUtils.getLong(context,Constant.PREF_HAS_MY_APP_RECOMMEND,0);
-        return System.currentTimeMillis()>notShowTime;
+    public static boolean isNeedShowMyAppRecommendWidgets(Context context) {
+        long notShowTime = PreferencesByUserAndTanentUtils.getLong(context, Constant.PREF_HAS_MY_APP_RECOMMEND, 0);
+        return System.currentTimeMillis() > notShowTime;
     }
 
     /**
      * 检查是否需要发起更新请求
+     *
      * @param context
      * @return
      */
-    public static boolean checkNeedUpdateMyAppWidget(Context context){
-        return StringUtils.isBlank(PreferencesByUserAndTanentUtils.getString(context,Constant.PREF_MY_APP_RECOMMEND_DATA,""))? true
+    public static boolean checkNeedUpdateMyAppWidget(Context context) {
+        return StringUtils.isBlank(PreferencesByUserAndTanentUtils.getString(context, Constant.PREF_MY_APP_RECOMMEND_DATA, "")) ? true
                 : Integer.parseInt(TimeUtils.getFormatYearMonthDay()) >
-                Integer.parseInt(PreferencesByUserAndTanentUtils.getString(context,Constant.PREF_MY_APP_RECOMMEND_DATE,"0"));
+                Integer.parseInt(PreferencesByUserAndTanentUtils.getString(context, Constant.PREF_MY_APP_RECOMMEND_DATE, "0"));
     }
 
     /**
      * 获取需要显示的appId列表
+     *
      * @return
      */
-    public static List<App> getShouldShowAppList(Context context, List<AppGroupBean> appGroupBeanList){
-        GetRecommendAppWidgetListResult getRecommendAppWidgetListResult = new GetRecommendAppWidgetListResult(PreferencesByUserAndTanentUtils.getString(context,Constant.PREF_MY_APP_RECOMMEND_DATA,""));
-        List<RecommendAppWidgetBean> recommendAppWidgetBeanList = getRecommendAppWidgetListResult.getRecommendAppWidgetBeanList();
+    public static List<App> getShouldShowAppList(List<RecommendAppWidgetBean> recommendAppWidgetBeanList, List<AppGroupBean> appGroupBeanList) {
         List<String> appIdList = new ArrayList<>();
-        if(getRecommendAppWidgetListResult.getExpiredDate()>=System.currentTimeMillis()){
-            for(int i = 0; i < recommendAppWidgetBeanList.size(); i++){
-                if(Integer.parseInt(recommendAppWidgetBeanList.get(i).getPeriod()) == (getNowHour()+1)){
-                    appIdList.addAll(recommendAppWidgetBeanList.get(i).getAppIdList());
-                    break;
-                }
+        for (int i = 0; i < recommendAppWidgetBeanList.size(); i++) {
+            if (Integer.parseInt(recommendAppWidgetBeanList.get(i).getPeriod()) == (getNowHour() + 1)) {
+                appIdList.addAll(recommendAppWidgetBeanList.get(i).getAppIdList());
+                break;
             }
         }
+
         List<App> recommendAppWidgetList = new ArrayList<>();
         App app = new App();
-        for(int i = 0; i < appIdList.size(); i++ ){
+        for (int i = 0; i < appIdList.size(); i++) {
             app.setAppID(appIdList.get(i));
-            for(int j = 0; j < appGroupBeanList.size(); j++){
+            for (int j = 0; j < appGroupBeanList.size(); j++) {
                 int index = appGroupBeanList.get(j).getAppItemList().indexOf(app);
-                if(index != -1){
+                if (index != -1) {
                     recommendAppWidgetList.add(appGroupBeanList.get(j).getAppItemList().get(index));
                     break;
                 }
@@ -122,29 +125,31 @@ public class MyAppWidgetUtils {
 
     /**
      * 获取当前小时数
+     *
      * @return
      */
-    public static int getNowHour(){
+    public static int getNowHour() {
         return Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
     }
 
     /**
      * 判断推荐应用小部件是否在有效期内
+     *
      * @param expiredDate
      * @return
      */
-    public static boolean isEffective(long expiredDate){
+    public static boolean isEffective(long expiredDate) {
         return expiredDate > System.currentTimeMillis();
     }
 
-    class WebService extends APIInterfaceInstance{
+    class WebService extends APIInterfaceInstance {
         @Override
         public void returnRecommendAppWidgetListSuccess(GetRecommendAppWidgetListResult getRecommendAppWidgetListResult) {
             //发送到MyAPPFragment updateMyAppWidegts方法
             EventBus.getDefault().post(getRecommendAppWidgetListResult);
-            PreferencesByUserAndTanentUtils.putString(context,Constant.PREF_MY_APP_RECOMMEND_DATA, getRecommendAppWidgetListResult.getResponse());
-            PreferencesByUserAndTanentUtils.putString(context,Constant.PREF_MY_APP_RECOMMEND_DATE,TimeUtils.getFormatYearMonthDay());
-            PreferencesByUserAndTanentUtils.putLong(context,Constant.PREF_MY_APP_RECOMMEND_EXPIREDDATE,getRecommendAppWidgetListResult.getExpiredDate());
+            PreferencesByUserAndTanentUtils.putString(context, Constant.PREF_MY_APP_RECOMMEND_DATA, getRecommendAppWidgetListResult.getResponse());
+            PreferencesByUserAndTanentUtils.putString(context, Constant.PREF_MY_APP_RECOMMEND_DATE, TimeUtils.getFormatYearMonthDay());
+            PreferencesByUserAndTanentUtils.putLong(context, Constant.PREF_MY_APP_RECOMMEND_EXPIREDDATE, getRecommendAppWidgetListResult.getExpiredDate());
         }
 
         @Override

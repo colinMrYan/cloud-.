@@ -47,6 +47,7 @@ import com.inspur.emmcloud.bean.GetAppBadgeResult;
 import com.inspur.emmcloud.bean.GetAppGroupResult;
 import com.inspur.emmcloud.bean.GetRecommendAppWidgetListResult;
 import com.inspur.emmcloud.bean.PVCollectModel;
+import com.inspur.emmcloud.bean.RecommendAppWidgetBean;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.interf.OnRecommendAppWidgetItemClickListener;
 import com.inspur.emmcloud.util.AppCacheUtils;
@@ -221,11 +222,22 @@ public class MyAppFragment extends Fragment {
      * 每个小时都有可能有变化
      */
     private void refreshRecommendAppWidgetView() {
-        boolean isRefreshTime = PreferencesByUserAndTanentUtils.getInt(getActivity(),Constant.PREF_MY_APP_RECOMMEND_LASTUPDATE_HOUR,0) != MyAppWidgetUtils.getNowHour();
-        if(!(MyAppWidgetUtils.isNeedShowMyAppRecommendWidgets(getActivity()) && isRefreshTime)){
+        //判断时间是否点击了叉号，不在显示时间内，或者推荐应用已经过了有效期
+        if(!(MyAppWidgetUtils.isNeedShowMyAppRecommendWidgets(getActivity())) ||
+                !MyAppWidgetUtils.isEffective(PreferencesByUserAndTanentUtils.getLong(getContext()
+                        ,Constant.PREF_MY_APP_RECOMMEND_EXPIREDDATE,0L))){
+            (rootView.findViewById(R.id.my_app_recommend_app_widget_layout)).setVisibility(View.GONE);
             return;
         }
-        List<App> appList = MyAppWidgetUtils.getShouldShowAppList(getActivity(),appListAdapter.getAppAdapterList());
+        //是否是需要刷新的时间，即过了当前小时内appId的显示时间，这是只控制刷新，不控制显示隐藏，MyAPPFragment Destroy时会重置这个时间，使下次进入时不会影响刷新UI
+        boolean isRefreshTime = PreferencesByUserAndTanentUtils.getInt(getActivity(),Constant.PREF_MY_APP_RECOMMEND_LASTUPDATE_HOUR,0) != MyAppWidgetUtils.getNowHour();
+        if(!isRefreshTime){
+            return;
+        }
+        GetRecommendAppWidgetListResult getRecommendAppWidgetListResult = new GetRecommendAppWidgetListResult(PreferencesByUserAndTanentUtils.
+                getString(getActivity(),Constant.PREF_MY_APP_RECOMMEND_DATA,""));
+        List<RecommendAppWidgetBean> recommendAppWidgetBeanList = getRecommendAppWidgetListResult.getRecommendAppWidgetBeanList();
+        List<App> appList = MyAppWidgetUtils.getShouldShowAppList(recommendAppWidgetBeanList,appListAdapter.getAppAdapterList());
         if(appList.size() > 0){
             if(recommendAppWidgetListView == null){
                 recommendAppWidgetListView = (RecyclerView) rootView.findViewById(R.id.my_app_recommend_app_wiget_recyclerview);
@@ -252,7 +264,9 @@ public class MyAppFragment extends Fragment {
                 });
             }
             recommendAppWidgetListAdapter.setAndReFreshRecommendList(appList);
+            PreferencesByUserAndTanentUtils.putInt(getActivity(), Constant.PREF_MY_APP_RECOMMEND_LASTUPDATE_HOUR, MyAppWidgetUtils.getNowHour());
         }else{
+            //当前小时没有需要显示的appId或者列表中没有当前小时内的应用
             (rootView.findViewById(R.id.my_app_recommend_app_widget_layout)).setVisibility(View.GONE);
         }
     }
