@@ -255,6 +255,15 @@
                 <data android:scheme="ecc-app" />
             </intent-filter>
 
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data
+                    android:host="com.huawei.pushtest"
+                    android:scheme="customscheme" />
+            </intent-filter>
         </activity>
 
 

@@ -216,7 +216,7 @@ public class MyAppFragment extends Fragment {
             return;
         }
         //是否是需要刷新的时间，即过了当前小时内appId的显示时间，这是只控制刷新，不控制显示隐藏，MyAPPFragment Destroy时会重置这个时间，使下次进入时不会影响刷新UI
-        boolean isRefreshTime = PreferencesByUserAndTanentUtils.getInt(getActivity(),Constant.PREF_MY_APP_RECOMMEND_LASTUPDATE_HOUR,0) != MyAppWidgetUtils.getNowHour();
+        boolean isRefreshTime = PreferencesByUserAndTanentUtils.getInt(getActivity(),Constant.PREF_MY_APP_RECOMMEND_LASTUPDATE_HOUR,-1) != MyAppWidgetUtils.getNowHour();
         if(!isRefreshTime){
             return;
         }
