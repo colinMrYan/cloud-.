@@ -5,15 +5,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 
 import com.inspur.emmcloud.MyApplication;
-import com.inspur.emmcloud.bean.CalendarEvent;
-import com.inspur.emmcloud.ui.IndexActivity;
-import com.inspur.emmcloud.ui.chat.ChannelActivity;
 import com.inspur.emmcloud.ui.login.LoginActivity;
-import com.inspur.emmcloud.ui.work.calendar.CalEventAddActivity;
 import com.inspur.emmcloud.util.JSONUtils;
 import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
@@ -116,63 +111,33 @@ public class JpushReceiver extends BroadcastReceiver {
                 final JSONObject extraObj = new JSONObject(extra);
                 //日历提醒的通知
                 if (extraObj.has("calEvent")) {
-                    openIndexActivity(context);
-                    openCalEvent(context, extraObj);
+                    String json = extraObj.getString("calEvent");
+                    JSONObject actionObj = new JSONObject();
+                    actionObj.put("url","ecc-calendar-jpush://");
+                    actionObj.put("type","open-url");
+                    actionObj.put("content",json);
+                    JSONObject obj = new JSONObject();
+                    obj.put("action",actionObj);
+                    openScheme(context, obj);
+
                 } else if (extraObj.has("action")) {//用scheme打开相应的页面
                     openScheme(context, extraObj);
                 } else if (extraObj.has("channel")) {
-                    openIndexActivity(context);
-                    openChannel(context, extraObj);
+                    String cid = JSONUtils.getString(extraObj, "channel", "");
+                    if (!StringUtils.isBlank(cid)){
+                        JSONObject actionObj = new JSONObject();
+                        actionObj.put("url","ecc-channel://"+cid);
+                        actionObj.put("type","open-url");
+                        JSONObject obj = new JSONObject();
+                        obj.put("action",actionObj);
+                        openScheme(context, obj);
+                    }
                 }
             } catch (Exception e) {
                 e.printStackTrace();
             }
 
         }
-    }
-
-    /**
-     * 打开主tab页
-     *
-     * @param context
-     */
-    private void openIndexActivity(Context context) {
-        Intent indexIntent = new Intent(context, IndexActivity.class);
-        if (!((MyApplication) context.getApplicationContext()).isIndexActivityRunning()) {
-            indexIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            context.startActivity(indexIntent);
-        } else if (!((MyApplication) context.getApplicationContext()).getIsActive()) {
-            indexIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
-                    | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
-            context.startActivity(indexIntent);
-        }
-    }
-
-    /**
-     * 打开日历详情
-     *
-     * @param context
-     * @param extraObj
-     */
-    private void openCalEvent(final Context context, final JSONObject extraObj) {
-        //此处加延时操作，为了让打开通知时IndexActivity走onCreate()方法
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    String json = extraObj.getString("calEvent");
-                    JSONObject calEventObj = new JSONObject(json);
-                    CalendarEvent calendarEvent = new CalendarEvent(calEventObj);
-                    Intent intent = new Intent(context, CalEventAddActivity.class);
-                    intent.putExtra("calEvent", calendarEvent);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    context.startActivity(intent);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }, 1);
-
     }
 
     /**
@@ -190,35 +155,15 @@ public class JpushReceiver extends BroadcastReceiver {
                 Intent intent = new Intent(Intent.ACTION_VIEW);
                 intent.setData(Uri.parse(scheme));
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                if (extraObj.has("content")){
+                    String content = extraObj.getString("content");
+                    intent.putExtra("content",content);
+                }
                 context.startActivity(intent);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    /**
-     * 打开频道聊天页面
-     *
-     * @param context
-     * @param extraObj
-     */
-    private void openChannel(final Context context, final JSONObject extraObj) {
-        //此处加延时操作，为了让打开通知时IndexActivity走onCreate()方法
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                String cid = JSONUtils.getString(extraObj, "channel", "");
-                if (!StringUtils.isBlank(cid)) {
-                    Intent intent = new Intent(context, ChannelActivity.class);
-                    intent.putExtra("get_new_msg", true);
-                    intent.putExtra("cid", cid);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    context.startActivity(intent);
-                }
-            }
-        },1);
-
     }
 
     /**

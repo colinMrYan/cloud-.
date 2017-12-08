@@ -10,6 +10,7 @@ import android.support.annotation.Nullable;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.bean.CalendarEvent;
 import com.inspur.emmcloud.ui.app.ReactNativeAppActivity;
 import com.inspur.emmcloud.ui.app.groupnews.GroupNewsActivity;
 import com.inspur.emmcloud.ui.chat.ChannelActivity;
@@ -20,24 +21,45 @@ import com.inspur.emmcloud.ui.find.DocumentActivity;
 import com.inspur.emmcloud.ui.find.KnowledgeActivity;
 import com.inspur.emmcloud.ui.find.trip.TripInfoActivity;
 import com.inspur.emmcloud.ui.login.LoginActivity;
+import com.inspur.emmcloud.ui.mine.setting.CreateGestureActivity;
+import com.inspur.emmcloud.ui.mine.setting.GestureLoginActivity;
+import com.inspur.emmcloud.ui.work.calendar.CalEventAddActivity;
 import com.inspur.emmcloud.util.AppId2AppAndOpenAppUtils;
 import com.inspur.emmcloud.util.IntentUtils;
+import com.inspur.emmcloud.util.JSONUtils;
+import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.StateBarColor;
 import com.inspur.emmcloud.util.ToastUtils;
 import com.inspur.emmcloud.util.WebAppUtils;
 import com.inspur.imp.api.ImpActivity;
 
+import org.json.JSONObject;
+
 /**
- * Created by chenmch on 2017/7/10.
+ * scheme统一处理类
  */
 
 public class SchemeHandleActivity extends Activity {
+    private static final int REQUEST_GESTURE_LOGIN = 2;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         StateBarColor.changeStateBarColor(this);
-        //  this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);//设置全屏
+        LogUtils.jasonDebug("SchemeHandleActivity-----");
+        LogUtils.jasonDebug("MyApplication.getInstance().getActivityLifecycleCallbacksCount()="+MyApplication.getInstance().getActivityLifecycleCallbacksCount());
+        if ((MyApplication.getInstance().getActivityLifecycleCallbacksCount() == 0) && getIsNeedGestureCode()) {
+            showGestureVerification();
+        } else {
+            openScheme();
+        }
+    }
+
+    /**
+     * 打开具体的要么
+     */
+    private void openScheme() {
         if (((MyApplication) getApplicationContext()).isHaveLogin()) {
             openIndexActivity(this);
             //此处加延时操作，为了让打开通知时IndexActivity走onCreate()方法
@@ -47,7 +69,7 @@ public class SchemeHandleActivity extends Activity {
                     Uri uri = getIntent().getData();
                     String scheme = uri.getScheme();
                     String host = uri.getHost();
-                    if(uri == null || scheme == null || host == null){
+                    if (uri == null || scheme == null || host == null) {
                         finish();
                         return;
                     }
@@ -66,8 +88,8 @@ public class SchemeHandleActivity extends Activity {
                             openComponentScheme(uri, host);
                             break;
                         case "ecc-app-react-native":
-                            bundle.putString(scheme,uri.toString());
-                            IntentUtils.startActivity(SchemeHandleActivity.this, ReactNativeAppActivity.class,bundle, true);
+                            bundle.putString(scheme, uri.toString());
+                            IntentUtils.startActivity(SchemeHandleActivity.this, ReactNativeAppActivity.class, bundle, true);
                             break;
 
                         case "gs-msg":
@@ -85,7 +107,7 @@ public class SchemeHandleActivity extends Activity {
                                     ChannelActivity.class, bundle, true);
                             break;
                         case "ecc-app":
-                            AppId2AppAndOpenAppUtils appId2AppAndOpenAppUtils =  new AppId2AppAndOpenAppUtils(SchemeHandleActivity.this);
+                            AppId2AppAndOpenAppUtils appId2AppAndOpenAppUtils = new AppId2AppAndOpenAppUtils(SchemeHandleActivity.this);
                             appId2AppAndOpenAppUtils.setOnFinishActivityListener(new AppId2AppAndOpenAppUtils.OnFinishActivityListener() {
                                 @Override
                                 public void onFinishActivity() {
@@ -93,6 +115,19 @@ public class SchemeHandleActivity extends Activity {
                                 }
                             });
                             appId2AppAndOpenAppUtils.getAppInfoById(uri);
+                            break;
+
+                        case "ecc-calendar-jpush":
+                            String content = getIntent().getStringExtra("content");
+                            if (content != null) {
+                                JSONObject calEventObj = JSONUtils.getJSONObject(content);
+                                CalendarEvent calendarEvent = new CalendarEvent(calEventObj);
+                                Intent intent = new Intent(SchemeHandleActivity.this, CalEventAddActivity.class);
+                                intent.putExtra("calEvent", calendarEvent);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                startActivity(intent);
+                            }
+                            finish();
                             break;
                         default:
                             finish();
@@ -104,7 +139,25 @@ public class SchemeHandleActivity extends Activity {
         } else {
             IntentUtils.startActivity(this, LoginActivity.class, true);
         }
+    }
 
+    /**
+     * 是否应该显示显示手势解锁
+     * @return
+     */
+    private boolean getIsNeedGestureCode() {
+        return CreateGestureActivity.getGestureCodeIsOpenByUser(this);
+    }
+
+    /**
+     * 弹出手势验证码
+     *
+     * @param context
+     */
+    private void showGestureVerification() {
+            Intent intent = new Intent(this, GestureLoginActivity.class);
+            intent.putExtra("gesture_code_change", "login");
+            startActivityForResult(intent,REQUEST_GESTURE_LOGIN);
     }
 
     /**
@@ -178,4 +231,13 @@ public class SchemeHandleActivity extends Activity {
                 break;
         }
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK && requestCode == REQUEST_GESTURE_LOGIN) {
+            openScheme();
+        }
+    }
+
 }

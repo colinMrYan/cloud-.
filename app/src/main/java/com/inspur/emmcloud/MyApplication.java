@@ -87,15 +87,16 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
     private Enterprise currentEnterprise;
     private Map<String, String> userPhotoUrlMap;
     private static MyApplication instance;
+    private MyActivityLifecycleCallbacks myActivityLifecycleCallbacks;
 
     public void onCreate() {
         super.onCreate();
         init();
         setAppLanguageAndFontScale();
         removeAllSessionCookie();
-        registerActivityLifecycleCallbacks(new MyActivityLifecycleCallbacks());
+        myActivityLifecycleCallbacks = new MyActivityLifecycleCallbacks();
+        registerActivityLifecycleCallbacks(myActivityLifecycleCallbacks);
     }
-
 
     private void init() {
         // TODO Auto-generated method stub
@@ -673,6 +674,10 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
 
     public List<Activity> getActivityList() {
         return activityList;
+    }
+
+    public int getActivityLifecycleCallbacksCount(){
+        return myActivityLifecycleCallbacks.getCount();
     }
 
     /**
