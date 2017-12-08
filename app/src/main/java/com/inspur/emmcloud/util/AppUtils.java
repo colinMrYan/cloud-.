@@ -15,12 +15,17 @@ import android.graphics.Paint;
 import android.graphics.Paint.FontMetrics;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.config.Constant;
 import com.inspur.imp.api.ImpActivity;
+import com.inspur.imp.plugin.camera.imagepicker.ImagePicker;
+import com.inspur.imp.plugin.camera.imagepicker.ui.ImageGridActivity;
 
 import java.io.File;
 import java.util.List;
@@ -160,7 +165,6 @@ public class AppUtils {
                 String currentVersionCode = getNormalVersionCode(currentArray[2]);
                 currentArray[2] = currentVersionCode;
             } catch (Exception e) {
-                LogUtils.YfcDebug("捕获版本异常：" + e.getMessage());
                 e.printStackTrace();
             }
             if (savedArray.length != 3) {
@@ -230,25 +234,44 @@ public class AppUtils {
      * @return
      */
     public static String getMyUUID(Context context) {
-        final TelephonyManager tm = (TelephonyManager) context
-                .getSystemService(Context.TELEPHONY_SERVICE);
-        String uuid = PreferencesUtils.getString(context, "device_uuid", "");
-        if (StringUtils.isBlank(uuid)) {
-            String tmDevice, tmSerial, androidId;
-            tmDevice = "" + tm.getDeviceId();
-            tmSerial = "" + tm.getSimSerialNumber();
-            androidId = ""
-                    + android.provider.Settings.Secure.getString(
-                    context.getContentResolver(),
-                    android.provider.Settings.Secure.ANDROID_ID);
-            UUID deviceUuid = new UUID(androidId.hashCode(),
-                    ((long) tmDevice.hashCode() << 32) | tmSerial.hashCode());
-            uuid = deviceUuid.toString();
-            PreferencesUtils.putString(context, "device_uuid", uuid);
-        }
-
+        String uuid = getUUID(context);
+        saveUUID(context, uuid);
         return uuid;
+    }
 
+
+    /**
+     * 获取UUID，类内部使用，不暴露给外部
+     * @param context
+     * @return
+     */
+    private static String getUUID(Context context) {
+        //先读SharePreference，如果SharePreference里有UUID则返回SharePreference里的UUID，并判断SD卡里是否存在UUID文件，没有则存一份
+        String uniqueId = PreferencesUtils.getString(context, "device_uuid", "");
+        if(!StringUtils.isBlank(uniqueId)){
+            return uniqueId;
+        }
+        //如果SharePreference里没有，则检查SD卡里有没有UUID文件，如果有则返回sd卡里的UUID，并向SharePreference里存一份
+        uniqueId = getUUIDFromSDCardFile(context);
+        if(!StringUtils.isBlank(uniqueId)){
+            return uniqueId;
+        }
+        //如果前两个都没有，则生成一个UUID，并存到SharePreference和SD卡文件里
+        if(StringUtils.isBlank(uniqueId)){
+            uniqueId = getDeviceUUID(context);
+        }
+        return uniqueId;
+    }
+
+    /**
+     * 存UUID
+     * @param context
+     */
+    private static void saveUUID(Context context,String uuid){
+        PreferencesUtils.putString(context,"device_uuid",uuid);
+        if(!FileUtils.isFolderExist(Constant.CONCIG_CLOUD_PLUS_UUID_FILE)){
+            saveDeviceUUID2SDCardFile(context, uuid);
+        }
     }
 
     /**
@@ -458,6 +481,150 @@ public class AppUtils {
             }
         }
         return false;
+    }
+
+    /**
+     * 判断是否有SD卡
+     * @param context
+     * @return
+     */
+    public static boolean isHasSDCard(Context context){
+        if ( Environment.getExternalStorageState().equals(
+                Environment.MEDIA_MOUNTED)){
+            return true;
+        }
+        ToastUtils.show(context,
+                R.string.filetransfer_sd_not_exist);
+        return false;
+
+    }
+
+
+    /**
+     * 调用文件系统
+     */
+    public static void openFileSystem(Activity activity,int requestCode) {
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("*/*");
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        activity.startActivityForResult(
+                Intent.createChooser(intent,
+                        activity.getString(R.string.file_upload_tips)),
+                requestCode);
+    }
+
+    /**
+     * 调用图库
+     */
+    public static void openGallery(Activity activity,int limit,int requestCode) {
+        initImagePicker(limit);
+        Intent intent = new Intent(activity,
+                ImageGridActivity.class);
+        activity.startActivityForResult(intent, requestCode);
+    }
+
+    /**
+     * 调用系统相机
+     * @param activity
+     * @param fileName
+     * @param requestCode
+     */
+    public static void openCamera(Activity activity,String fileName,int requestCode){
+        // 判断存储卡是否可以用，可用进行存储
+        if (Environment.getExternalStorageState().equals(
+                Environment.MEDIA_MOUNTED)) {
+            Intent intentFromCapture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            File appDir = new File(Environment.getExternalStorageDirectory(),
+                    "DCIM");
+            if (!appDir.exists()) {
+                appDir.mkdir();
+            }
+            // 指定文件名字
+            intentFromCapture.putExtra(MediaStore.EXTRA_OUTPUT,
+                    Uri.fromFile(new File(appDir, fileName)));
+            activity.startActivityForResult(intentFromCapture,
+                    requestCode);
+        } else {
+            ToastUtils.show(activity, R.string.filetransfer_sd_not_exist);
+        }
+    }
+
+    /**
+     * 初始化图片选择控件
+     */
+    private static void initImagePicker(int limit) {
+        ImagePicker imagePicker = ImagePicker.getInstance();
+        imagePicker.setImageLoader(ImageDisplayUtils.getInstance()); // 设置图片加载器
+        imagePicker.setShowCamera(false); // 显示拍照按钮
+        imagePicker.setCrop(false); // 允许裁剪（单选才有效）
+        imagePicker.setSelectLimit(limit);
+//		imagePicker.setSaveRectangle(true); // 是否按矩形区域保存
+        imagePicker.setMultiMode(true);
+//		imagePicker.setStyle(CropImageView.Style.RECTANGLE); // 裁剪框的形状
+//		imagePicker.setFocusWidth(1000); // 裁剪框的宽度。单位像素（圆形自动取宽高最小值）
+//		imagePicker.setFocusHeight(1000); // 裁剪框的高度。单位像素（圆形自动取宽高最小值）
+//		imagePicker.setOutPutX(1000); // 保存文件的宽度。单位像素
+//		imagePicker.setOutPutY(1000); // 保存文件的高度。单位像素
+    }
+
+
+
+
+    /**
+     * 获取SD卡文件里的UUID
+     * @param context
+     * @return
+     */
+    private static String getUUIDFromSDCardFile(Context context) {
+        if(!FileUtils.isFileExist(Constant.CONCIG_CLOUD_PLUS_UUID_FILE)){
+            return "";
+        }
+        try {
+            return EncryptUtils.decode(FileUtils.readFile(Constant.CONCIG_CLOUD_PLUS_UUID_FILE, "utf-8").toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
+
+    /**
+     * 获取设备UUID，动态获取
+     * 影响要素有设备序列号，sim卡串号，系统id
+     *
+     * @param context
+     * @return
+     */
+    private static String getDeviceUUID(Context context) {
+        final TelephonyManager tm = (TelephonyManager) context
+                .getSystemService(Context.TELEPHONY_SERVICE);
+        final String tmDevice, tmSerial, tmPhone, androidId;
+        tmDevice = "" + tm.getDeviceId();
+        tmSerial = "" + tm.getSimSerialNumber();
+        androidId = ""
+                + android.provider.Settings.Secure.getString(
+                context.getContentResolver(),
+                android.provider.Settings.Secure.ANDROID_ID);
+        UUID deviceUuid = new UUID(androidId.hashCode(),
+                ((long) tmDevice.hashCode() << 32) | tmSerial.hashCode());
+        String uniqueId = deviceUuid.toString();
+        return uniqueId;
+    }
+
+
+
+    /**
+     * 存储uuid到SD卡文件系统，不分租户用户
+     * @param context
+     * @param uuid
+     * @return
+     */
+    private static void saveDeviceUUID2SDCardFile(Context context,String uuid) {
+        try {
+            uuid = EncryptUtils.encode(uuid);
+            FileUtils.writeFile(Constant.CONCIG_CLOUD_PLUS_UUID_FILE, uuid);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }

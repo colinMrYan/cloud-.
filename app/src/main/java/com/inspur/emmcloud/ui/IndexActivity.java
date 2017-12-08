@@ -37,7 +37,7 @@ import com.inspur.emmcloud.bean.GetAppBadgeResult;
 import com.inspur.emmcloud.bean.GetAppTabAutoResult;
 import com.inspur.emmcloud.bean.GetSearchChannelGroupResult;
 import com.inspur.emmcloud.bean.PVCollectModel;
-import com.inspur.emmcloud.callback.CommonCallBack;
+import com.inspur.emmcloud.interf.CommonCallBack;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.interf.OnTabReselectListener;
 import com.inspur.emmcloud.service.BackgroundService;
@@ -208,9 +208,11 @@ public class IndexActivity extends BaseFragmentActivity implements
      * 打开保活服务
      */
     private void startCoreService() {
-        Intent intent = new Intent();
-        intent.setClass(this, CoreService.class);
-        startService(intent);
+        if (AppUtils.getSDKVersionNumber() < 26) {
+            Intent intent = new Intent();
+            intent.setClass(this, CoreService.class);
+            startService(intent);
+        }
     }
 
     /**

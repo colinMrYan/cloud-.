@@ -1,7 +1,6 @@
 package com.inspur.emmcloud.util;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -43,7 +42,7 @@ public class JSONUtils {
 
         try {
             return jsonObject.getLong(key);
-        } catch (JSONException e) {
+        } catch (Exception e) {
             if (isPrintException) {
                 e.printStackTrace();
             }
@@ -71,7 +70,7 @@ public class JSONUtils {
         try {
             JSONObject jsonObject = new JSONObject(jsonData);
             return getLong(jsonObject, key, defaultValue);
-        } catch (JSONException e) {
+        } catch (Exception e) {
             if (isPrintException) {
                 e.printStackTrace();
             }
@@ -121,7 +120,7 @@ public class JSONUtils {
 
         try {
             return jsonObject.getInt(key);
-        } catch (JSONException e) {
+        } catch (Exception e) {
             if (isPrintException) {
                 e.printStackTrace();
             }
@@ -149,7 +148,7 @@ public class JSONUtils {
         try {
             JSONObject jsonObject = new JSONObject(jsonData);
             return getInt(jsonObject, key, defaultValue);
-        } catch (JSONException e) {
+        } catch (Exception e) {
             if (isPrintException) {
                 e.printStackTrace();
             }
@@ -199,7 +198,7 @@ public class JSONUtils {
 
         try {
             return jsonObject.getDouble(key);
-        } catch (JSONException e) {
+        } catch (Exception e) {
             if (isPrintException) {
                 e.printStackTrace();
             }
@@ -227,7 +226,7 @@ public class JSONUtils {
         try {
             JSONObject jsonObject = new JSONObject(jsonData);
             return getDouble(jsonObject, key, defaultValue);
-        } catch (JSONException e) {
+        } catch (Exception e) {
             if (isPrintException) {
                 e.printStackTrace();
             }
@@ -279,7 +278,7 @@ public class JSONUtils {
         	if(jsonObject.has(key)){
         		return jsonObject.getString(key);
             }
-        } catch (JSONException e) {
+        } catch (Exception e) {
             if (isPrintException) {
                 e.printStackTrace();
             }
@@ -307,7 +306,7 @@ public class JSONUtils {
         try {
             JSONObject jsonObject = new JSONObject(jsonData);
             return getString(jsonObject, key, defaultValue);
-        } catch (JSONException e) {
+        } catch (Exception e) {
             if (isPrintException) {
                 e.printStackTrace();
             }
@@ -399,7 +398,7 @@ public class JSONUtils {
                 }
                 return value;
             }
-        } catch (JSONException e) {
+        } catch (Exception e) {
             if (isPrintException) {
                 e.printStackTrace();
             }
@@ -428,7 +427,7 @@ public class JSONUtils {
         try {
             JSONObject jsonObject = new JSONObject(jsonData);
             return getStringArray(jsonObject, key, defaultValue);
-        } catch (JSONException e) {
+        } catch (Exception e) {
             if (isPrintException) {
                 e.printStackTrace();
             }
@@ -464,7 +463,7 @@ public class JSONUtils {
                 }
                 return list;
             }
-        } catch (JSONException e) {
+        } catch (Exception e) {
             if (isPrintException) {
                 e.printStackTrace();
             }
@@ -493,7 +492,7 @@ public class JSONUtils {
         try {
             JSONObject jsonObject = new JSONObject(jsonData);
             return getStringList(jsonObject, key, defaultValue);
-        } catch (JSONException e) {
+        } catch (Exception e) {
             if (isPrintException) {
                 e.printStackTrace();
             }
@@ -521,7 +520,7 @@ public class JSONUtils {
 
         try {
             return jsonObject.getJSONObject(key);
-        } catch (JSONException e) {
+        } catch (Exception e) {
             if (isPrintException) {
                 e.printStackTrace();
             }
@@ -549,7 +548,7 @@ public class JSONUtils {
         try {
             JSONObject jsonObject = new JSONObject(jsonData);
             return getJSONObject(jsonObject, key, defaultValue);
-        } catch (JSONException e) {
+        } catch (Exception e) {
             if (isPrintException) {
                 e.printStackTrace();
             }
@@ -566,7 +565,7 @@ public class JSONUtils {
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject = new JSONObject(jsonData);
-        } catch (JSONException e) {
+        } catch (Exception e) {
             if (isPrintException) {
                 e.printStackTrace();
             }
@@ -623,7 +622,7 @@ public class JSONUtils {
         try {
             JSONObject jsonObject = new JSONObject(jsonData);
             return getJSONObjectCascade(jsonObject, defaultValue, keyArray);
-        } catch (JSONException e) {
+        } catch (Exception e) {
             if (isPrintException) {
                 e.printStackTrace();
             }
@@ -651,7 +650,7 @@ public class JSONUtils {
 
         try {
             return jsonObject.getJSONArray(key);
-        } catch (JSONException e) {
+        } catch (Exception e) {
             if (isPrintException) {
                 e.printStackTrace();
             }
@@ -679,7 +678,7 @@ public class JSONUtils {
         try {
             JSONObject jsonObject = new JSONObject(jsonData);
             return getJSONArray(jsonObject, key, defaultValue);
-        } catch (JSONException e) {
+        } catch (Exception e) {
             if (isPrintException) {
                 e.printStackTrace();
             }
@@ -700,7 +699,7 @@ public class JSONUtils {
         try {
             JSONArray jsonArray = new JSONArray(jsonArrayData);
             return jsonArray;
-        } catch (JSONException e) {
+        } catch (Exception e) {
             if (isPrintException) {
                 e.printStackTrace();
             }
@@ -727,7 +726,7 @@ public class JSONUtils {
 
         try {
             return jsonObject.getBoolean(key);
-        } catch (JSONException e) {
+        } catch (Exception e) {
             if (isPrintException) {
                 e.printStackTrace();
             }
@@ -755,7 +754,7 @@ public class JSONUtils {
         try {
             JSONObject jsonObject = new JSONObject(jsonData);
             return getBoolean(jsonObject, key, defaultValue);
-        } catch (JSONException e) {
+        } catch (Exception e) {
             if (isPrintException) {
                 e.printStackTrace();
             }
@@ -804,7 +803,7 @@ public class JSONUtils {
 				return getMap(jsonObject, key);
 			}
 			return null;
-        } catch (JSONException e) {
+        } catch (Exception e) {
             if (isPrintException) {
                 e.printStackTrace();
             }
@@ -854,7 +853,7 @@ public class JSONUtils {
         try {
             JSONObject jsonObject = new JSONObject(source);
             return parseKeyAndValueToMap(jsonObject);
-        } catch (JSONException e) {
+        } catch (Exception e) {
             if (isPrintException) {
                 e.printStackTrace();
             }

@@ -13,10 +13,8 @@ import android.view.View;
 import android.view.View.OnTouchListener;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.RelativeLayout;
 
 import com.inspur.emmcloud.BaseActivity;
-import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.LoginAPIService;
@@ -63,8 +61,8 @@ public class CaptchasLoginActivity extends BaseActivity {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_captchas_login);
-        InputMethodUtils.display(CaptchasLoginActivity.this, phoneNumEdit);
         phoneNumEdit = (EditText) findViewById(R.id.phone_num_edit);
+        InputMethodUtils.display(CaptchasLoginActivity.this, phoneNumEdit);
         captchasEdit = (EditText) findViewById(R.id.captchas_edit);
         captchasEdit.addTextChangedListener(new EditWatcher());
         phoneNumEdit.addTextChangedListener(new EditWatcher());
@@ -76,7 +74,7 @@ public class CaptchasLoginActivity extends BaseActivity {
         phoneNumEdit.setText(phoneNum);
 
         handMessage();
-        ((RelativeLayout) findViewById(R.id.main_layout))
+        (findViewById(R.id.main_layout))
                 .setOnTouchListener(new OnTouchListener() {
 
                     @Override

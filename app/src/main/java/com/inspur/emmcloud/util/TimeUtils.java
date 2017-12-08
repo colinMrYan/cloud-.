@@ -345,6 +345,11 @@ public class TimeUtils {
         return dateFormat.format(new Date(timeInMillis));
     }
 
+    public static String getTime(Context context,long timeInMillis, int type){
+        SimpleDateFormat format = getFormat(context,type);
+        return  getTime(timeInMillis,format);
+    }
+
     public static String getTime(String timeInMills) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("MM.dd");
         return dateFormat.format(new Date(Long.parseLong(timeInMills)));
