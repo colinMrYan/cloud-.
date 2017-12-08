@@ -1087,6 +1087,8 @@ public class MyAppFragment extends Fragment {
             swipeRefreshLayout.setRefreshing(false);
             appBadgeBeanMap = getAppBadgeResult.getAppBadgeBeanMap();
             appListAdapter.notifyDataSetChanged();
+            //发送到IndexActivity
+            EventBus.getDefault().post(getAppBadgeResult);
         }
 
         @Override
