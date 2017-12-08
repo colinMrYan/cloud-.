@@ -159,6 +159,7 @@ public class JpushReceiver extends BroadcastReceiver {
                     String content = extraObj.getString("content");
                     intent.putExtra("content",content);
                 }
+                MyApplication.getInstance().setOpenNotification(true);
                 context.startActivity(intent);
             }
         } catch (Exception e) {

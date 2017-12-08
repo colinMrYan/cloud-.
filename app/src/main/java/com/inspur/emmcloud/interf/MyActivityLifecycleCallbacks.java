@@ -38,7 +38,7 @@ public class MyActivityLifecycleCallbacks implements Application.ActivityLifecyc
         //此处不能用（count == 0）判断，由于Activity跳转生命周期因素导致，已登录账号进入应用不会打开手势解锁
         if (!MyApplication.getInstance().getIsActive() && MyApplication.getInstance()
                 .isIndexActivityRunning()) {
-            if (!(activity instanceof SchemeHandleActivity)) {
+            if (!MyApplication.getInstance().getOPenNotification() && !(activity instanceof SchemeHandleActivity)) {
                 showGestureVerification(activity);
             }
             MyApplication.getInstance().setIsActive(true);

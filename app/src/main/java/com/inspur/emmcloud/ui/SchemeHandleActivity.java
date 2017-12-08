@@ -27,7 +27,6 @@ import com.inspur.emmcloud.ui.work.calendar.CalEventAddActivity;
 import com.inspur.emmcloud.util.AppId2AppAndOpenAppUtils;
 import com.inspur.emmcloud.util.IntentUtils;
 import com.inspur.emmcloud.util.JSONUtils;
-import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.StateBarColor;
 import com.inspur.emmcloud.util.ToastUtils;
@@ -47,13 +46,14 @@ public class SchemeHandleActivity extends Activity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         StateBarColor.changeStateBarColor(this);
-        LogUtils.jasonDebug("SchemeHandleActivity-----");
-        LogUtils.jasonDebug("MyApplication.getInstance().getActivityLifecycleCallbacksCount()="+MyApplication.getInstance().getActivityLifecycleCallbacksCount());
-        if ((MyApplication.getInstance().getActivityLifecycleCallbacksCount() == 0) && getIsNeedGestureCode()) {
-            showGestureVerification();
-        } else {
-            openScheme();
+        if (MyApplication.getInstance().getOPenNotification()){
+            MyApplication.getInstance().setOpenNotification(false);
+            if (getIsNeedGestureCode()){
+                showGestureVerification();
+                return;
+            }
         }
+        openScheme();
     }
 
     /**

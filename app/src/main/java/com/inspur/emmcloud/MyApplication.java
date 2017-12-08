@@ -88,6 +88,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
     private Map<String, String> userPhotoUrlMap;
     private static MyApplication instance;
     private MyActivityLifecycleCallbacks myActivityLifecycleCallbacks;
+    private boolean isOpenNotification = false;
 
     public void onCreate() {
         super.onCreate();
@@ -678,6 +679,22 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
 
     public int getActivityLifecycleCallbacksCount(){
         return myActivityLifecycleCallbacks.getCount();
+    }
+
+    /**
+     * 获取是否正在打开通知
+     * @return
+     */
+    public boolean getOPenNotification(){
+        return isOpenNotification;
+    }
+
+    /**
+     * 设置是否正在打开通知
+     * @param isOpenNotification
+     */
+    public  void setOpenNotification(boolean isOpenNotification){
+        this.isOpenNotification = isOpenNotification;
     }
 
     /**
