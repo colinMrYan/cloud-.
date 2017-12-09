@@ -101,7 +101,7 @@
             android:name=".MainActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/SplashTheme">
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -191,6 +191,14 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data android:scheme="ecc-contact" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="ecc-calendar-jpush" />
             </intent-filter>
 
             <intent-filter>
@@ -542,6 +550,27 @@
                 <data android:scheme="http12233444"></data>
             </intent-filter>
         </activity>
+
+
+        <!-- 云盘 -->
+        <activity
+            android:name=".ui.app.volume.VolumeHomePageActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".ui.app.volume.VolumeFileActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".ui.app.volume.VolumeFileDownloadActivtiy"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".ui.app.volume.VolumeFileLocationSelectActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".ui.app.volume.VolumeFileFilterActvity"
+            android:screenOrientation="portrait"></activity>
+
+
         <!-- service -->
         <service android:name=".service.LocationService"></service>
         <service android:name=".service.PVCollectService"></service>

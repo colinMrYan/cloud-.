@@ -34,7 +34,7 @@ import com.inspur.emmcloud.bean.GetAllRobotsResult;
 import com.inspur.emmcloud.bean.GetAppTabAutoResult;
 import com.inspur.emmcloud.bean.GetSearchChannelGroupResult;
 import com.inspur.emmcloud.bean.PVCollectModel;
-import com.inspur.emmcloud.callback.CommonCallBack;
+import com.inspur.emmcloud.interf.CommonCallBack;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.interf.OnTabReselectListener;
 import com.inspur.emmcloud.service.BackgroundService;
@@ -164,7 +164,7 @@ public class IndexActivity extends BaseFragmentActivity implements
      * 获取我的应用推荐小部件数据
      */
     private void getMyAppRecommendWidgets() {
-        if(MyAppWidgetUtils.checkNeedUpdateMyAppWidget(IndexActivity.this)){
+        if (MyAppWidgetUtils.checkNeedUpdateMyAppWidget(IndexActivity.this)) {
             MyAppWidgetUtils.getInstance(getApplicationContext()).getMyAppWidgetsFromNet();
         }
     }
@@ -199,9 +199,11 @@ public class IndexActivity extends BaseFragmentActivity implements
      * 打开保活服务
      */
     private void startCoreService() {
-        Intent intent = new Intent();
-        intent.setClass(this, CoreService.class);
-        startService(intent);
+        if (AppUtils.getSDKVersionNumber() < 26) {
+            Intent intent = new Intent();
+            intent.setClass(this, CoreService.class);
+            startService(intent);
+        }
     }
 
     /**
@@ -380,7 +382,7 @@ public class IndexActivity extends BaseFragmentActivity implements
         tipsView = (TipsView) findViewById(R.id.tip);
         mTabHost = (MyFragmentTabHost) findViewById(android.R.id.tabhost);
         mTabHost.setup(this, getSupportFragmentManager(), R.id.realtabcontent);
-        findViewById(R.id.index_root_layout).setPadding(0,StateBarColor.getStateBarHeight(IndexActivity.this),0,0);
+        findViewById(R.id.index_root_layout).setPadding(0, StateBarColor.getStateBarHeight(IndexActivity.this), 0, 0);
         handleAppTabs();
     }
 

@@ -16,7 +16,7 @@ import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.bean.GetKnowledgeInfo;
 import com.inspur.emmcloud.bean.GetTripArriveCity;
 import com.inspur.emmcloud.bean.Trip;
-import com.inspur.emmcloud.callback.OauthCallBack;
+import com.inspur.emmcloud.interf.OauthCallBack;
 import com.inspur.emmcloud.util.OauthUtils;
 
 import org.json.JSONArray;

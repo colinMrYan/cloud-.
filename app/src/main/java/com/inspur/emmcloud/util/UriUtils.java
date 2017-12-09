@@ -11,6 +11,7 @@ import com.inspur.emmcloud.bean.App;
 import com.inspur.emmcloud.bean.PVCollectModel;
 import com.inspur.emmcloud.ui.app.ReactNativeAppActivity;
 import com.inspur.emmcloud.ui.app.groupnews.GroupNewsActivity;
+import com.inspur.emmcloud.ui.app.volume.VolumeHomePageActivity;
 import com.inspur.imp.api.ImpActivity;
 
 
@@ -23,13 +24,18 @@ public class UriUtils {
         switch (appType) {
             case 0:
             case 1:
-                if (uri.equals("emm://news")) {
-                    IntentUtils.startActivity(activity, GroupNewsActivity.class);
-                } else {
-                    ToastUtils.show(activity,
-                            R.string.not_support_app_type);
+                switch (uri){
+                    case "emm://news":
+                        IntentUtils.startActivity(activity, GroupNewsActivity.class);
+                        break;
+                    case "emm://volume":
+                        IntentUtils.startActivity(activity, VolumeHomePageActivity.class);
+                        break;
+                    default:
+                        ToastUtils.show(activity,
+                                R.string.not_support_app_type);
+                        break;
                 }
-
                 break;
             case 2:
                 new AppCenterNativeAppUtils().InstallOrOpen(activity, app);
