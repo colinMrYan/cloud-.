@@ -10,53 +10,57 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.api.apiservice.AppAPIService;
 import com.inspur.emmcloud.service.PVCollectService;
 import com.inspur.emmcloud.service.SyncCommonAppService;
+import com.inspur.emmcloud.ui.SchemeHandleActivity;
 import com.inspur.emmcloud.ui.mine.setting.CreateGestureActivity;
 import com.inspur.emmcloud.ui.mine.setting.GestureLoginActivity;
 import com.inspur.emmcloud.util.AppUtils;
 import com.inspur.emmcloud.util.DbCacheUtils;
 import com.inspur.emmcloud.util.NetUtils;
-import com.inspur.emmcloud.util.StringUtils;
 
 /**
  * Created by chenmch on 2017/9/13.
  */
 
 public class MyActivityLifecycleCallbacks implements Application.ActivityLifecycleCallbacks {
+
+    private int count = 0;
+
     @Override
     public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
-        ((MyApplication)activity.getApplicationContext()).addActivity(activity);
+        MyApplication.getInstance().addActivity(activity);
     }
 
     @Override
     public void onActivityStarted(Activity activity) {
-        if (!((MyApplication) activity.getApplicationContext()).getIsActive()) {
-            if (((MyApplication) activity.getApplicationContext())
-                    .isIndexActivityRunning()) {
-                ((MyApplication) activity.getApplicationContext()).setIsActive(true);
-                uploadMDMInfo(activity);
+        //此处不能用（count == 0）判断，由于Activity跳转生命周期因素导致，已登录账号进入应用不会打开手势解锁
+        if (!MyApplication.getInstance().getIsActive() && MyApplication.getInstance()
+                .isIndexActivityRunning()) {
+            //当用通知打开特定Activity或者第一个打开的是SchemeActivity时，此处不作处理，交由SchemeActivity处理
+            if (!MyApplication.getInstance().getOPenNotification() && !(activity instanceof SchemeHandleActivity)) {
                 showGestureVerification(activity);
             }
+            MyApplication.getInstance().setIsActive(true);
+            uploadMDMInfo(activity);
         }
+        count++;
+
     }
 
     @Override
     public void onActivityResumed(Activity activity) {
-
     }
 
     @Override
     public void onActivityPaused(Activity activity) {
-
     }
 
     @Override
     public void onActivityStopped(Activity activity) {
-        if (((MyApplication) activity.getApplicationContext())
-                .isIndexActivityRunning() && !AppUtils.isAppOnForeground(activity.getApplicationContext())) {
-            // app 进入后台
-            ((MyApplication) activity.getApplicationContext()).setIsActive(false);
-            startUploadPVCollectService(activity.getApplicationContext());
-            startSyncCommonAppService(activity.getApplicationContext());
+        count--;
+        if (count == 0) { // app 进入后台
+            MyApplication.getInstance().setIsActive(false);
+            startUploadPVCollectService(MyApplication.getInstance());
+            startSyncCommonAppService(MyApplication.getInstance());
         }
     }
 
@@ -67,40 +71,33 @@ public class MyActivityLifecycleCallbacks implements Application.ActivityLifecyc
 
     @Override
     public void onActivityDestroyed(Activity activity) {
-        ((MyApplication)activity.getApplicationContext()).removeActivity(activity);
+        MyApplication.getInstance().removeActivity(activity);
+    }
+
+    public int getCount() {
+        return count;
     }
 
     /**
      * 弹出手势验证码
+     *
      * @param context
      */
     private void showGestureVerification(final Context context) {
-        if (getIsNeedGestureCode(context)){
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        Thread.sleep(10);
-                        Intent intent = new Intent(context,GestureLoginActivity.class);
-                        intent.putExtra("gesture_code_change","login");
-                        context.startActivity(intent);
-                    }catch (Exception e){
-                        e.printStackTrace();
-                    }
-
-                }
-            }).start();
+        if (getIsNeedGestureCode(context)) {
+            Intent intent = new Intent(context, GestureLoginActivity.class);
+            intent.putExtra("gesture_code_change", "login");
+            context.startActivity(intent);
         }
     }
 
     /**
      * 判断收需要打开手势解锁
+     *
      * @return
      */
     private boolean getIsNeedGestureCode(Context context) {
-        String gestureCode = CreateGestureActivity.getGestureCodeByUser(context);
-        boolean gestureCodeOpen = CreateGestureActivity.getGestureCodeIsOpenByUser(context);
-        return !StringUtils.isBlank(gestureCode) && gestureCodeOpen;
+        return CreateGestureActivity.getGestureCodeIsOpenByUser(context);
     }
 
     /**

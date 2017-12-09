@@ -188,6 +188,7 @@ public class GestureLoginActivity extends BaseActivity {
                             finish();
                         } else if (command.equals("login")) {
                             isLogin = true;
+                            setResult(RESULT_OK);
                             finish();
                         } else if (command.equals("close")) {
                             clearGestureInfo();

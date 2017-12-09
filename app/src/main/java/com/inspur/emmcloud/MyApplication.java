@@ -87,15 +87,17 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
     private Enterprise currentEnterprise;
     private Map<String, String> userPhotoUrlMap;
     private static MyApplication instance;
+    private MyActivityLifecycleCallbacks myActivityLifecycleCallbacks;
+    private boolean isOpenNotification = false;
 
     public void onCreate() {
         super.onCreate();
         init();
         setAppLanguageAndFontScale();
         removeAllSessionCookie();
-        registerActivityLifecycleCallbacks(new MyActivityLifecycleCallbacks());
+        myActivityLifecycleCallbacks = new MyActivityLifecycleCallbacks();
+        registerActivityLifecycleCallbacks(myActivityLifecycleCallbacks);
     }
-
 
     private void init() {
         // TODO Auto-generated method stub
@@ -673,6 +675,22 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
 
     public List<Activity> getActivityList() {
         return activityList;
+    }
+
+    /**
+     * 获取是否正在打开通知
+     * @return
+     */
+    public boolean getOPenNotification(){
+        return isOpenNotification;
+    }
+
+    /**
+     * 设置是否正在打开通知
+     * @param isOpenNotification
+     */
+    public  void setOpenNotification(boolean isOpenNotification){
+        this.isOpenNotification = isOpenNotification;
     }
 
     /**

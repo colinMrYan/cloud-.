@@ -303,6 +303,7 @@ public class ChannelActivity extends BaseActivity {
 //        linearLayoutManager.setStackFromEnd(true);
         msgListView.setLayoutManager(linearLayoutManager);
         msgListView.setAdapter(adapter);
+         msgListView.MoveToPosition(msgList.size()-1);
         /**
          * 当触摸消息list时把输入法和添加选项layout隐藏
          */
