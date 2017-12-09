@@ -677,10 +677,6 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         return activityList;
     }
 
-    public int getActivityLifecycleCallbacksCount(){
-        return myActivityLifecycleCallbacks.getCount();
-    }
-
     /**
      * 获取是否正在打开通知
      * @return

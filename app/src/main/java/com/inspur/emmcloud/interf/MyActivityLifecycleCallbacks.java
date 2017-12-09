@@ -15,7 +15,6 @@ import com.inspur.emmcloud.ui.mine.setting.CreateGestureActivity;
 import com.inspur.emmcloud.ui.mine.setting.GestureLoginActivity;
 import com.inspur.emmcloud.util.AppUtils;
 import com.inspur.emmcloud.util.DbCacheUtils;
-import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.NetUtils;
 
 /**
@@ -28,16 +27,15 @@ public class MyActivityLifecycleCallbacks implements Application.ActivityLifecyc
 
     @Override
     public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
-        LogUtils.jasonDebug("onActivityCreated---------------");
         MyApplication.getInstance().addActivity(activity);
     }
 
     @Override
     public void onActivityStarted(Activity activity) {
-        LogUtils.jasonDebug("onActivityStarted---------------"+activity.getClass().getCanonicalName());
         //此处不能用（count == 0）判断，由于Activity跳转生命周期因素导致，已登录账号进入应用不会打开手势解锁
         if (!MyApplication.getInstance().getIsActive() && MyApplication.getInstance()
                 .isIndexActivityRunning()) {
+            //当用通知打开特定Activity或者第一个打开的是SchemeActivity时，此处不作处理，交由SchemeActivity处理
             if (!MyApplication.getInstance().getOPenNotification() && !(activity instanceof SchemeHandleActivity)) {
                 showGestureVerification(activity);
             }
@@ -50,17 +48,14 @@ public class MyActivityLifecycleCallbacks implements Application.ActivityLifecyc
 
     @Override
     public void onActivityResumed(Activity activity) {
-        LogUtils.jasonDebug("onActivityResumed---------------");
     }
 
     @Override
     public void onActivityPaused(Activity activity) {
-        LogUtils.jasonDebug("onActivityPaused---------------");
     }
 
     @Override
     public void onActivityStopped(Activity activity) {
-        LogUtils.jasonDebug("onActivityStopped---------------");
         count--;
         if (count == 0) { // app 进入后台
             MyApplication.getInstance().setIsActive(false);
