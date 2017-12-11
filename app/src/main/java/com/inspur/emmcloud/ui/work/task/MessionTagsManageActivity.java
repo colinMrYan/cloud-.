@@ -204,7 +204,7 @@ public class MessionTagsManageActivity extends BaseActivity {
 
 			String userId = ((MyApplication) getApplicationContext()).getUid();
 			PreferencesUtils.putString(MessionTagsManageActivity.this,
-					UriUtils.tanent + userId + "messionTags",
+					MyApplication.getInstance().getTanent() + userId + "messionTags",
 					JSON.toJSONString(allTags));
 		}
 

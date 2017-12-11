@@ -228,7 +228,7 @@ public class IndexActivity extends BaseFragmentActivity implements
      * 为了使打开报销web应用更快，进行预加载
      */
     private void setPreloadWebApp() {
-        if (UriUtils.tanent.equals("inspur_esg")) {
+        if (MyApplication.getInstance().getTanent().equals("inspur_esg")) {
             webView = (WebView) findViewById(R.id.preload_webview);
             webView.getSettings().setJavaScriptEnabled(true);
             webView.setWebViewClient(new WebViewClient() {

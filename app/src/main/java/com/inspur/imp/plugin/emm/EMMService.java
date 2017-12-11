@@ -2,6 +2,7 @@ package com.inspur.imp.plugin.emm;
 
 import android.os.Build;
 
+import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.bean.GetDeviceCheckResult;
 import com.inspur.emmcloud.util.AppUtils;
 import com.inspur.emmcloud.util.LogUtils;
@@ -9,7 +10,6 @@ import com.inspur.emmcloud.util.MDM.MDM;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.ResolutionUtils;
 import com.inspur.emmcloud.util.ToastUtils;
-import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.imp.plugin.ImpPlugin;
 
 import org.json.JSONObject;
@@ -86,7 +86,7 @@ public class EMMService extends ImpPlugin {
 				GetDeviceCheckResult getDeviceCheckResult = new GetDeviceCheckResult(state);
 				String userName = PreferencesUtils.getString(getActivity(), "userRealName", "");
 				String userCode = PreferencesUtils.getString(getActivity(), "userID", "");
-				MDM mdm = new MDM(getActivity(), UriUtils.tanent, userCode,
+				MDM mdm = new MDM(getActivity(), MyApplication.getInstance().getTanent(), userCode,
 						userName, getDeviceCheckResult);
 				mdm.handCheckResult(getDeviceCheckResult.getState());
 			}

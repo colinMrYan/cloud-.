@@ -1,12 +1,11 @@
 package com.inspur.emmcloud.util;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.bean.App;
 import com.inspur.emmcloud.bean.PVCollectModel;
 import com.inspur.emmcloud.ui.app.ReactNativeAppActivity;
@@ -16,7 +15,6 @@ import com.inspur.imp.api.ImpActivity;
 
 
 public class UriUtils {
-    public static String tanent;
 
     public static void openApp(final Activity activity,final App app) {
         String uri = app.getUri();
@@ -42,7 +40,7 @@ public class UriUtils {
                 break;
             case 3:
             case 4:
-                if (!uri.startsWith("https://emm.inspur.com:443/ssohandler/gs/") && !uri.startsWith("https://emm.inspur.com/ssohandler/gs/")) {
+                if (!uri.startsWith(APIUri.getECMBaseUrl()+"ssohandler/gs/")) {
                     openWebApp(activity, uri, app);
                 } else {
                     uri = uri.replace("/gs/", "/gs_uri/");
@@ -115,38 +113,10 @@ public class UriUtils {
      * @param uri
      * @param header
      */
-    public static void openUrl(Activity context, String uri, String header) {
+    public static void openUrl(Activity context, String uri) {
         Bundle bundle = new Bundle();
         bundle.putString("uri", uri);
-        String token = ((MyApplication) context.getApplicationContext())
-                .getToken();
-        bundle.putString("Authorization", token);
-        bundle.putString("userAgentExtra",
-                "/emmcloud/" + AppUtils.getVersion(context));
-        String webLanguageCookie = getLanguageCookie(context);
-        bundle.putString("cookie", webLanguageCookie);
-        bundle.putString("appName", header);
         IntentUtils.startActivity(context, ImpActivity.class, bundle);
     }
-
-
-    /**
-     * 获取带语言的cookie
-     *
-     * @return
-     */
-    public static String getLanguageCookie(Context context) {
-        // TODO Auto-generated method stub
-        String languageJson = PreferencesUtils.getString(context, tanent
-                + "appLanguageObj");
-        String cookie = "";
-        if (languageJson != null) {
-            cookie = languageJson;
-        }
-        return cookie;
-    }
-
-
-
 
 }

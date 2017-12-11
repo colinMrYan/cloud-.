@@ -10,6 +10,7 @@ import android.support.annotation.Nullable;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.bean.CalendarEvent;
 import com.inspur.emmcloud.ui.app.ReactNativeAppActivity;
 import com.inspur.emmcloud.ui.app.groupnews.GroupNewsActivity;
@@ -167,7 +168,7 @@ public class SchemeHandleActivity extends Activity {
      * @param openMode
      */
     private void openWebApp(String host, final String openMode) {
-        String url = "https://emm.inspur.com/api/v1/gs_sso/msg_uri?id=" + host;
+        String url = APIUri.getGSMsgSchemeUrl(host);
         new WebAppUtils(SchemeHandleActivity.this, new WebAppUtils.OnGetWebAppRealUrlListener() {
             @Override
             public void getWebAppRealUrlSuccess(String webAppUrl) {

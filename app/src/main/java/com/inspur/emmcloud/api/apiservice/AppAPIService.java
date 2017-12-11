@@ -355,7 +355,7 @@ public class AppAPIService {
      * @param password
      */
     public void veriryApprovalPassword(String userName, final String password) {
-        String completeUrl = "https://emm.inspur.com/proxy/shenpi/langchao.ecgap.inportal/login/CheckLoginDB.aspx?";
+        String completeUrl = APIUri.getVeriryApprovalPasswordUrl();
         RequestParams params = new RequestParams(completeUrl);
         params.addQueryStringParameter("userName", userName);
         params.addQueryStringParameter("userPass", password);
@@ -505,10 +505,7 @@ public class AppAPIService {
      */
     public void deviceCheck(String tenantId, String userCode) {
         // TODO Auto-generated method stub
-        String baseUrl = "https://emm.inspur.com/api?";
-        String module = "mdm";
-        String method = "check_state";
-        String completeUrl = baseUrl + "module=" + module + "&method=" + method;
+        String completeUrl =APIUri.getDeviceCheckUrl();
         String uuid = AppUtils.getMyUUID(context);
         RequestParams params = new RequestParams(completeUrl);
         params.addBodyParameter("udid", uuid);

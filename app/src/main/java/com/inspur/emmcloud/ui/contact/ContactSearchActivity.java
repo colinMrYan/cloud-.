@@ -1313,7 +1313,7 @@ public class ContactSearchActivity extends BaseActivity {
         if (type.equals("GROUP")) {
             defaultIcon = R.drawable.icon_channel_group_default;
             File file = new File(MyAppConfig.LOCAL_CACHE_PHOTO_PATH,
-                    UriUtils.tanent + searchModel.getId() + "_100.png1");
+                    MyApplication.getInstance().getTanent() + searchModel.getId() + "_100.png1");
             if (file.exists()) {
                 icon = "file://" + file.getAbsolutePath();
                 ImageDisplayUtils.getInstance().displayImageNoCache(photoImg, icon, defaultIcon);

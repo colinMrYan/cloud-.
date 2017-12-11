@@ -791,7 +791,7 @@ public class MyAppFragment extends Fragment {
      */
     private void saveNeedCommonlyUseApp(boolean isNeedCommonlyUseApp) {
         String userId = ((MyApplication) getActivity().getApplication()).getUid();
-        PreferencesUtils.putBoolean(getActivity(), UriUtils.tanent
+        PreferencesUtils.putBoolean(getActivity(), MyApplication.getInstance().getTanent()
                         + userId + "needCommonlyUseApp",
                 isNeedCommonlyUseApp);
     }
@@ -803,7 +803,7 @@ public class MyAppFragment extends Fragment {
      */
     private boolean getNeedCommonlyUseApp() {
         String userId = ((MyApplication) getActivity().getApplication()).getUid();
-        isNeedCommonlyUseApp = PreferencesUtils.getBoolean(getActivity(), UriUtils.tanent
+        isNeedCommonlyUseApp = PreferencesUtils.getBoolean(getActivity(), MyApplication.getInstance().getTanent()
                 + userId + "needCommonlyUseApp", true);
         return isNeedCommonlyUseApp;
     }

@@ -179,7 +179,7 @@ public class MeetingDetailActivity extends BaseActivity {
             meetingChangeImg.setVisibility(View.GONE);
         }
         isAdmin = PreferencesUtils.getBoolean(getApplicationContext(),
-                UriUtils.tanent + userId + "isAdmin", false);
+                MyApplication.getInstance().getTanent() + userId + "isAdmin", false);
 
     }
 

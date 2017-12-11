@@ -79,9 +79,9 @@ public class SettingActivity extends BaseActivity {
         // TODO Auto-generated method stub
         TextView languageText = (TextView) findViewById(R.id.msg_languagechg_result_text);
         String languageName = PreferencesUtils.getString(
-                getApplicationContext(), UriUtils.tanent + "language", "");
+                getApplicationContext(), MyApplication.getInstance().getTanent() + "language", "");
         String languageJson = PreferencesUtils
-                .getString(this, UriUtils.tanent + "appLanguageObj");
+                .getString(this, MyApplication.getInstance().getTanent() + "appLanguageObj");
         if (languageJson != null && !languageName.equals("followSys")) {
             Language language = new Language(languageJson);
             languageText.setText(new Language(languageJson).getLabel());

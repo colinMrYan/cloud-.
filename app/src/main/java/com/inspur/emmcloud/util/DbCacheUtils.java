@@ -30,7 +30,7 @@ public class DbCacheUtils {
 
     public static void initDb(Context context) {
         String userID = ((MyApplication) context.getApplicationContext()).getUid();
-        String tanentID = UriUtils.tanent;
+        String tanentID = MyApplication.getInstance().getTanent();
         String dbCachePath = "/data/data/" + context.getPackageName()
                 + "/databases/" + userID + "/" + tanentID + "/" + "db/";
 

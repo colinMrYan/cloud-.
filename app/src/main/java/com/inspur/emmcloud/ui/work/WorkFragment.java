@@ -17,6 +17,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.WorkAPIService;
@@ -55,7 +56,6 @@ import com.inspur.emmcloud.util.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.TimeUtils;
-import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.util.WorkColorUtils;
 import com.inspur.emmcloud.util.WorkSettingCacheUtils;
@@ -537,7 +537,7 @@ public class WorkFragment extends Fragment {
         ((TextView) (rootView.findViewById(R.id.work_date_text)))
                 .setText(date);
         String appLanguageObj = PreferencesUtils.getString(
-                getActivity(), UriUtils.tanent + "appLanguageObj", "");
+                getActivity(), MyApplication.getInstance().getTanent() + "appLanguageObj", "");
         Language language = new Language(appLanguageObj);
         if (language.getIso().equals("zh-CN")
                 || language.equals("zh-TW")

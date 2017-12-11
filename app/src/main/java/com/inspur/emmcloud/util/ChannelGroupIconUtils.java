@@ -11,6 +11,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.TypedValue;
 
+import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.APIUri;
@@ -354,7 +355,7 @@ public class ChannelGroupIconUtils {
         if (!dir.exists()) {
             dir.mkdirs();
         }
-        File file = new File(MyAppConfig.LOCAL_CACHE_PHOTO_PATH, UriUtils.tanent + cid + "_100.png1");
+        File file = new File(MyAppConfig.LOCAL_CACHE_PHOTO_PATH, MyApplication.getInstance().getTanent() + cid + "_100.png1");
         if (file.exists()) {
             file.delete();
         }

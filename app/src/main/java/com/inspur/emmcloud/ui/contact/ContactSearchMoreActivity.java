@@ -26,6 +26,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.BaseActivity;
+import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.Channel;
 import com.inspur.emmcloud.bean.ChannelGroup;
@@ -44,7 +45,6 @@ import com.inspur.emmcloud.util.ImageDisplayUtils;
 import com.inspur.emmcloud.util.InputMethodUtils;
 import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.ToastUtils;
-import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.emmcloud.widget.CircleImageView;
 import com.inspur.emmcloud.widget.FlowLayout;
 import com.inspur.emmcloud.widget.MaxHightScrollView;
@@ -476,7 +476,7 @@ public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRe
         if (type.equals("GROUP")) {
             defaultIcon = R.drawable.icon_channel_group_default;
             File file = new File(MyAppConfig.LOCAL_CACHE_PHOTO_PATH,
-                    UriUtils.tanent + searchModel.getId() + "_100.png1");
+                    MyApplication.getInstance().getTanent() + searchModel.getId() + "_100.png1");
             if (file.exists()) {
                 icon = "file://" + file.getAbsolutePath();
                 ImageDisplayUtils.getInstance().displayImageNoCache(photoImg, icon, defaultIcon);

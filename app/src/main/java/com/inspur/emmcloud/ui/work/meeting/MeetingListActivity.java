@@ -157,7 +157,7 @@ public class MeetingListActivity extends BaseActivity implements
                                 .get(meetingGroupList.get(groupId))
                                 .get(childId).getOrganizer();
                         boolean isAdmin = PreferencesUtils.getBoolean(
-                                MeetingListActivity.this, UriUtils.tanent
+                                MeetingListActivity.this, MyApplication.getInstance().getTanent()
                                         + userId + "isAdmin");
                         if (!isAdmin) {
                             if (!userId.equals(organizer)) {
