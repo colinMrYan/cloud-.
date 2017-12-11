@@ -17,6 +17,7 @@ import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
+import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.bean.Channel;
 import com.inspur.emmcloud.bean.ChannelGroup;
@@ -37,7 +38,6 @@ import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.PinyinUtils;
 import com.inspur.emmcloud.util.RobotCacheUtils;
 import com.inspur.emmcloud.util.StringUtils;
-import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.CircleImageView;
 import com.inspur.emmcloud.widget.LoadingDialog;
@@ -382,11 +382,11 @@ public class ChannelInfoActivity extends BaseActivity {
                 viewHolder.nameText.setText(ContactCacheUtils.getUserName(
                         ChannelInfoActivity.this, uid));
                 if (uid.startsWith("BOT")) {
-                    userPhotoUrl = UriUtils.getRobotIconUri(RobotCacheUtils
+                    userPhotoUrl = APIUri.getRobotIconUrl(RobotCacheUtils
                             .getRobotById(ChannelInfoActivity.this, uid)
                             .getAvatar());
                 } else {
-                    userPhotoUrl = UriUtils.getChannelImgUri(ChannelInfoActivity.this, uid);
+                    userPhotoUrl = APIUri.getChannelImgUrl(ChannelInfoActivity.this, uid);
                 }
                 if (uid.startsWith("BOT")) {
                     userName = RobotCacheUtils
@@ -397,7 +397,7 @@ public class ChannelInfoActivity extends BaseActivity {
                             ChannelInfoActivity.this, uid);
                 }
                 ImageDisplayUtils.getInstance().displayImage(viewHolder.memberHeadImg,
-                        UriUtils.getChannelImgUri(ChannelInfoActivity.this, uid), R.drawable.icon_photo_default);
+                        APIUri.getChannelImgUrl(ChannelInfoActivity.this, uid), R.drawable.icon_photo_default);
             }
             viewHolder.nameText.setText(userName);
             ImageDisplayUtils.getInstance().displayImage(viewHolder.memberHeadImg, userPhotoUrl, R.drawable.icon_photo_default);

@@ -3,6 +3,7 @@ package com.inspur.emmcloud.util;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.inspur.emmcloud.MyApplication;
 
 
 /**
@@ -39,7 +40,7 @@ public class PreferencesByUserAndTanentUtils {
 
     private static String getPreferenceName(Context context) {
         String userID = PreferencesUtils.getString(context, "userID", "");
-        String tanent = UriUtils.tanent;
+        String tanent = MyApplication.getInstance().getTanent();
         return userID + tanent;
     }
 

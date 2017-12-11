@@ -346,7 +346,7 @@ public class MeetingsRoomDetailActivity extends BaseActivity {
                                         .getUid();
                                 boolean isAdmin = PreferencesUtils.getBoolean(
                                         getApplicationContext(),
-                                        UriUtils.tanent + uid + "isAdmin",
+                                        MyApplication.getInstance().getTanent() + uid + "isAdmin",
                                         false);
                                 if (isAdmin
                                         || meetingSchedule.getMeeting()

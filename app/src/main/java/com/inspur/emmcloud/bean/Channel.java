@@ -4,12 +4,12 @@ import android.content.Context;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.util.DirectChannelUtils;
 import com.inspur.emmcloud.util.JSONUtils;
 import com.inspur.emmcloud.util.PinyinUtils;
 import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.TimeUtils;
-import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.emmcloud.util.richtext.markdown.MarkDown;
 
 import org.json.JSONObject;
@@ -266,9 +266,9 @@ public class Channel implements Serializable {
     public String getIcon() {
         if (!icon.startsWith("http")) {
             if (type.equals("DIRECT")) {
-                return UriUtils.getUserInfoPhotoUri(icon);
+                return APIUri.getUserInfoPhotoUrl(icon);
             } else {
-                return UriUtils.getPreviewUri(icon);
+                return APIUri.getPreviewUrl(icon);
             }
 
         }

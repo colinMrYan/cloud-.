@@ -3,11 +3,10 @@ package com.inspur.emmcloud.ui.mine.setting;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Toast;
 
 import com.inspur.emmcloud.BaseActivity;
-import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.ToastUtils;
 import com.inspur.emmcloud.widget.ProgressWebView;
@@ -21,7 +20,6 @@ import com.umeng.socialize.common.QueuedWork;
 import com.umeng.socialize.media.UMImage;
 import com.umeng.socialize.media.UMWeb;
 import com.umeng.socialize.shareboard.SnsPlatform;
-import com.umeng.socialize.utils.Log;
 import com.umeng.socialize.utils.ShareBoardlistener;
 
 import org.xutils.view.annotation.ContentView;
@@ -36,7 +34,7 @@ import java.lang.ref.WeakReference;
 
 @ContentView(R.layout.activity_recommend_app)
 public class RecommendAppActivity extends BaseActivity {
-    private final String RECOMMAND_APP_URL = "https://emm.inspur.com/admin/share_qr";
+    private final String RECOMMAND_APP_URL = APIUri.getRecommandAppUrl();
     @ViewInject(R.id.webview)
     ProgressWebView webView;
     private CustomShareListener mShareListener;
@@ -85,13 +83,13 @@ public class RecommendAppActivity extends BaseActivity {
                     @Override
                     public void onclick(SnsPlatform snsPlatform, SHARE_MEDIA share_media) {
                         if(share_media == SHARE_MEDIA.SMS) {
-                            new ShareAction(RecommendAppActivity.this).withText("欢迎使用【云+】  https://ecm.inspur.com/")
+                            new ShareAction(RecommendAppActivity.this).withText("欢迎使用【云+】  "+APIUri.getECMBaseUrl())
                                     .setPlatform(share_media)
                                     .setCallback(mShareListener)
                                     .share();
                         }else {
                             UMImage thumb = new UMImage(RecommendAppActivity.this, R.drawable.ic_launcher_share);
-                            UMWeb web = new UMWeb("https://ecm.inspur.com/");
+                            UMWeb web = new UMWeb(APIUri.getECMBaseUrl());
                             web.setThumb(thumb);
                             web.setDescription("云+ -智能化的企业协同平台");
                             web.setTitle("欢迎使用【云+】");

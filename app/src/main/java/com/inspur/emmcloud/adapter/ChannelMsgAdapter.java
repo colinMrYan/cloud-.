@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.bean.Msg;
 import com.inspur.emmcloud.ui.chat.ChannelMsgDetailActivity;
@@ -30,7 +31,6 @@ import com.inspur.emmcloud.util.ImageDisplayUtils;
 import com.inspur.emmcloud.util.IntentUtils;
 import com.inspur.emmcloud.util.RobotCacheUtils;
 import com.inspur.emmcloud.util.TimeUtils;
-import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.emmcloud.widget.ECMChatInputMenu;
 
 import java.util.ArrayList;
@@ -296,11 +296,11 @@ public class ChannelMsgAdapter extends RecyclerView.Adapter<ChannelMsgAdapter.Vi
             holder.senderPhotoImg.setVisibility(View.VISIBLE);
             String iconUrl ="";
             if (msg.getUid().startsWith("BOT") || channelType.equals("SERVICE")) {
-                iconUrl = UriUtils.getRobotIconUri(RobotCacheUtils
+                iconUrl = APIUri.getRobotIconUrl(RobotCacheUtils
                         .getRobotById(context, msg.getUid())
                         .getAvatar());
             }else {
-                iconUrl = UriUtils.getChannelImgUri(context, msg.getUid());
+                iconUrl = APIUri.getChannelImgUrl(context, msg.getUid());
             }
             ImageDisplayUtils.getInstance().displayImage(holder.senderPhotoImg,
                     iconUrl, R.drawable.icon_person_default);

@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.bean.Channel;
 import com.inspur.emmcloud.bean.PVCollectModel;
 import com.inspur.emmcloud.config.Constant;
@@ -30,7 +31,6 @@ import com.inspur.emmcloud.util.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.StringUtils;
-import com.inspur.emmcloud.util.UriUtils;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -110,7 +110,7 @@ public class MoreFragment extends Fragment {
     private void setMyInfo() {
         // TODO Auto-generated method stub
         String uid = ((MyApplication)getActivity().getApplicationContext()).getUid();
-        String photoUri = UriUtils.getChannelImgUri(getActivity(), uid);
+        String photoUri = APIUri.getChannelImgUrl(getActivity(), uid);
         ImageDisplayUtils.getInstance().displayImage(moreHeadImg, photoUri, R.drawable.icon_photo_default);
         String userName = PreferencesUtils.getString(getActivity(), "userRealName", getString(R.string.not_set));
         ((TextView) rootView.findViewById(R.id.more_head_name_text)).setText(userName);
@@ -123,7 +123,7 @@ public class MoreFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && requestCode == REQUEST_CODE_UPDATE_USER_PHOTO) {
             String uid = ((MyApplication)getActivity().getApplicationContext()).getUid();
-            String photoUri = UriUtils.getChannelImgUri(getActivity(),uid);
+            String photoUri = APIUri.getChannelImgUrl(getActivity(),uid);
             ImageDisplayUtils.getInstance().displayImage(moreHeadImg, photoUri, R.drawable.icon_photo_default);
         }
     }

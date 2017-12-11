@@ -72,7 +72,7 @@ public class DisplayTxtRichMsg {
                         @Override
                         public boolean urlClicked(String url) {
                             if (url.startsWith("http")) {
-                                UriUtils.openUrl((Activity) context, url, "");
+                                UriUtils.openUrl((Activity) context, url);
                                 return true;
                             }
                             return false;

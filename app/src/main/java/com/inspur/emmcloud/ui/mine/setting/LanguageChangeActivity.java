@@ -111,7 +111,7 @@ public class LanguageChangeActivity extends BaseActivity {
             public void onItemClick(AdapterView<?> parent, View view,
                                     final int position, long id) {
                 String currentLanguageName = PreferencesUtils.getString(
-                        getApplicationContext(), UriUtils.tanent + "language",
+                        getApplicationContext(), MyApplication.getInstance().getTanent() + "language",
                         "");
                 Language language = commonLanguageList.get(position);
                 String languageName = "";
@@ -156,9 +156,9 @@ public class LanguageChangeActivity extends BaseActivity {
                             languageName = language.getIso();
                         }
                         PreferencesUtils.putString(getApplicationContext(),
-                                UriUtils.tanent + "language", languageName);
+                                MyApplication.getInstance().getTanent() + "language", languageName);
                         PreferencesUtils.putString(getApplicationContext(),
-                                UriUtils.tanent + "appLanguageObj",
+                                MyApplication.getInstance().getTanent() + "appLanguageObj",
                                 language.toString());
 
                         ((MyApplication) getApplicationContext())
@@ -234,7 +234,7 @@ public class LanguageChangeActivity extends BaseActivity {
             }
 
             String languageName = PreferencesUtils.getString(
-                    getApplicationContext(), UriUtils.tanent + "language", "");
+                    getApplicationContext(), MyApplication.getInstance().getTanent() + "language", "");
             if (position == 0) {
                 holder.flagImg.setVisibility(View.INVISIBLE);
                 holder.tvName.setText(getString(R.string.follow_system));

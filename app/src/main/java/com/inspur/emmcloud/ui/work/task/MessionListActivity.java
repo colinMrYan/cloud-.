@@ -298,7 +298,7 @@ public class MessionListActivity extends BaseActivity{
 		case R.id.cancel_btn:
 			String userId = ((MyApplication) getApplicationContext()).getUid();
 			PreferencesUtils.putString(MessionListActivity.this,
-					UriUtils.tanent + userId + "chooseTags", "");
+					MyApplication.getInstance().getTanent() + userId + "chooseTags", "");
 			noSearchResultLayout.setVisibility(View.GONE);
 			refreshMessionList();
 			break;
@@ -482,7 +482,7 @@ public class MessionListActivity extends BaseActivity{
 			swipeRefreshLayout.setRefreshing(false);
 			String userId = ((MyApplication) getApplicationContext()).getUid();
 			String chooseTags = PreferencesUtils.getString(
-					MessionListActivity.this, UriUtils.tanent + userId
+					MessionListActivity.this, MyApplication.getInstance().getTanent() + userId
 							+ "chooseTags", "");
 			ArrayList<String> chooseTagList;
 			if (!StringUtils.isBlank(chooseTags)) {
