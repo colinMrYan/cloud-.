@@ -42,9 +42,10 @@
             android:textSize="@dimen/header_textsize"/>
     </RelativeLayout>
 
-    <RelativeLayout
+    <LinearLayout
         android:background="@color/content_bg"
         android:layout_below="@id/header_layout"
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <ListView
@@ -53,7 +54,38 @@
             android:divider="@color/color_list_divider"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"></ListView>
-    </RelativeLayout>
+        <RelativeLayout
+            android:id="@+id/clear_auto_select_enterprise_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:onClick="onClick"
+            android:paddingLeft="10dp"
+            android:background="@color/white">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="42dp"
+                android:layout_toLeftOf="@+id/current_enterprise_text"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="@string/close_auto_select_enterprise"
+                android:gravity="center_vertical"
+                android:textColor="#333333"
+                android:textSize="17sp" />
+
+
+            <ImageView
+                android:id="@+id/img"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:src="@drawable/icon_arrow_right" />
+        </RelativeLayout>
+    </LinearLayout>
 
 
 </RelativeLayout>

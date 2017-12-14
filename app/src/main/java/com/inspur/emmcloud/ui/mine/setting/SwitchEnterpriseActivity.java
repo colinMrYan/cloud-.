@@ -16,8 +16,11 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.Enterprise;
 import com.inspur.emmcloud.bean.GetMyInfoResult;
+import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.util.PreferencesByUsersUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
+import com.inspur.emmcloud.util.StringUtils;
+import com.inspur.emmcloud.util.ToastUtils;
 import com.inspur.emmcloud.widget.dialogs.MyQMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
@@ -48,6 +51,10 @@ public class SwitchEnterpriseActivity extends BaseActivity {
     }
 
     private void initView() {
+        String selectLoginEnterpriseId= PreferencesByUsersUtils.getString(this, Constant.PREF_SELECT_LOGIN_ENTERPRISE_ID,"");
+        if(!StringUtils.isBlank(selectLoginEnterpriseId)){
+            findViewById(R.id.clear_auto_select_enterprise_text).setVisibility(View.VISIBLE);
+        }
         ((TextView) findViewById(R.id.header_text)).setText(R.string.select_enterprise);
         enterpriseListView = (ListView) findViewById(R.id.device_list);
         enterpriseListView.setAdapter(adapter);
@@ -116,6 +123,10 @@ public class SwitchEnterpriseActivity extends BaseActivity {
             case R.id.back_layout:
                 finish();
                 break;
+            case R.id.clear_auto_select_enterprise_text:
+                PreferencesByUsersUtils.putString(this, Constant.PREF_SELECT_LOGIN_ENTERPRISE_ID,"");
+                ToastUtils.show(MyApplication.getInstance(),R.string.turn_off_success);
+                break;
             default:
                 break;
         }
@@ -144,6 +155,7 @@ public class SwitchEnterpriseActivity extends BaseActivity {
             ((TextView) convertView.findViewById(R.id.enterprise_text)).setText(enterprise.getName());
             if (enterprise.getId().equals(((MyApplication) getApplicationContext()).getCurrentEnterprise().getId())) {
                 (convertView.findViewById(R.id.current_enterprise_text)).setVisibility(View.VISIBLE);
+                (convertView.findViewById(R.id.img)).setVisibility(View.INVISIBLE);
             }
             return convertView;
         }

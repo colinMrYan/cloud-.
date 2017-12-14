@@ -27,6 +27,8 @@ public class Constant {
     public static final String PREF_MY_APP_RECOMMEND_EXPIREDDATE = "my_app_recommend_expired_date";
     public static final String PREF_MY_APP_RECOMMEND_LASTUPDATE_HOUR = "my_app_recommend_lastupdate_hour";
     public static final String PREF_SOFT_INPUT_HEIGHT = "soft_input_height";
+    public static final String PREF_SELECT_LOGIN_ENTERPRISE_ID = "select_login_tenent_id";
+    public static final String PREF_CURRENT_ENTERPRISE_ID="current_enterprise_id";
 
     public static final String ACTION_MEETING = "com.inspur.meeting";
     public static final String ACTION_TASK = "com.inspur.task";
