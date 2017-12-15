@@ -1,11 +1,11 @@
 package com.inspur.imp.plugin.camera.mycamera;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.Matrix;
 import android.hardware.Camera;
 import android.net.Uri;
@@ -15,26 +15,31 @@ import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.TypedValue;
 import android.view.OrientationEventListener;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.config.MyAppConfig;
+import com.inspur.emmcloud.util.DensityUtil;
 import com.inspur.emmcloud.util.JSONUtils;
-import com.inspur.emmcloud.util.StateBarColor;
-import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.ToastUtils;
 import com.inspur.imp.api.ImpBaseActivity;
 import com.inspur.imp.plugin.camera.editimage.EditImageActivity;
 import com.inspur.imp.plugin.camera.editimage.utils.BitmapUtils;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.File;
@@ -63,7 +68,9 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
     private String photoSaveDirectoryPath;
     private String photoName;
     private String extraParam;
-    private Integer ratioX,ratioY;
+    private String defaultRectScale;
+    private RecyclerView setRadioRecycleView;
+    private List<RectScale> rectScaleList;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -77,7 +84,6 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);//设置全屏
         this.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);//拍照过程屏幕一直处于高亮
         setContentView(R.layout.activity_mycamera);
-
         initData();
     }
 
@@ -97,17 +103,31 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
         photoName = getIntent().getStringExtra(PHOTO_NAME);
         extraParam = getIntent().getStringExtra(PHOTO_PARAM);
         JSONObject optionsObj = JSONUtils.getJSONObject(extraParam,"options",new JSONObject());
-        String rectScale = JSONUtils.getString(optionsObj,"rectScale",null);
-        if (!StringUtils.isBlank(rectScale) && !rectScale.equals("null")){
-            String[] ratios = rectScale.split(":");
-            if (ratios.length == 2){
-                int ratio0 = Integer.parseInt(ratios[0]);
-                int ratio1 = Integer.parseInt(ratios[1]);
-                ratioX = ratio0<=ratio1?ratio0:ratio1;
-                ratioY = ratio0>ratio1?ratio0:ratio1;
-            }
+        try {
+            JSONObject object1 = new JSONObject();
+            object1.put("name","A4纸");
+            object1.put("rectScale","16:9");
 
+            JSONObject object2 = new JSONObject();
+            object2.put("name","身份证2");
+            object2.put("rectScale","2:5");
+
+            JSONObject object3 = new JSONObject();
+            object3.put("name","自定义");
+            object3.put("rectScale","custom");
+            JSONArray array = new JSONArray();
+            array.put(object1);
+            array.put(object2);
+            array.put(object3);
+            optionsObj.put("rectScaleList",array);
+        }catch (Exception e){
+            e.printStackTrace();
         }
+
+        defaultRectScale = JSONUtils.getString(optionsObj,"rectScale",null);
+        String rectScaleListJson = JSONUtils.getString(optionsObj,"rectScaleList","");
+        rectScaleList = new GetReatScaleResult(rectScaleListJson).getRectScaleList();
+
     }
 
     private void initView() {
@@ -126,6 +146,15 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
         if (Camera.getNumberOfCameras() < 2) {
             switchCameraBtn.setVisibility(View.GONE);
         }
+        setRadioRecycleView = (RecyclerView) findViewById(R.id.set_radio_list);
+        if (rectScaleList.size() > 0){
+            setRadioRecycleView.setVisibility(View.VISIBLE);
+            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+            linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+            setRadioRecycleView.setLayoutManager(linearLayoutManager);
+            setRadioRecycleView.setAdapter(new Adapter());
+
+        }
     }
 
 
@@ -139,9 +168,12 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
 
     @Override
     public void surfaceCreated(SurfaceHolder surfaceHolder) {
-        if (ratioX != null){
-            previewSFV.setCustomRatio(ratioX,ratioY);
+        if (rectScaleList.size()>0){
+            previewSFV.setCustomRectScale(rectScaleList.get(0).getRectScale());
+        }else {
+            previewSFV.setCustomRectScale(defaultRectScale);
         }
+
         currentCameraFacing = hasBackFacingCamera() ? Camera.CameraInfo.CAMERA_FACING_BACK : Camera.CameraInfo.CAMERA_FACING_FRONT;
         initCamera();
         setCameraParams();
@@ -293,7 +325,7 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
                 previewSFV.setCropMode(FocusSurfaceView.CropMode.RATIO_9_16);
                 break;
             case R.id.sixteen_nine_bt:
-                previewSFV.setCropMode(FocusSurfaceView.CropMode.RATIO_9_16);
+                previewSFV.setCropMode(FocusSurfaceView.CropMode.FREE);
                 break;
             case R.id.switch_camera_btn:
                 currentCameraFacing = 1 - currentCameraFacing;
@@ -400,7 +432,6 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
     public Bitmap rotaingImageView(int angle, Bitmap bitmap) {
         // 旋转图片 动作
         Matrix matrix = new Matrix();
-        ;
         matrix.postRotate(angle);
         // 创建新的图片
         Bitmap resizedBitmap = Bitmap.createBitmap(bitmap, 0, 0,
@@ -477,4 +508,63 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
         super.onDestroy();
         releaseCamera();
     }
+
+
+    public class Adapter extends
+            RecyclerView.Adapter<Adapter.ViewHolder>
+    {
+
+
+        public class ViewHolder extends RecyclerView.ViewHolder
+        {
+            public ViewHolder(View arg0)
+            {
+                super(arg0);
+            }
+
+            TextView textView;
+        }
+
+        @Override
+        public int getItemCount()
+        {
+            return rectScaleList.size();
+        }
+
+        /**
+         * 创建ViewHolder
+         */
+        @Override
+        public ViewHolder onCreateViewHolder(ViewGroup viewGroup, final int i)
+        {
+            TextView textView = new TextView(MyCameraActivity.this);
+            textView.setTextSize(TypedValue.COMPLEX_UNIT_SP,16);
+            textView.setPadding(DensityUtil.dip2px(MyCameraActivity.this,10),DensityUtil.dip2px(MyCameraActivity.this,10),DensityUtil.dip2px(MyCameraActivity.this,10),DensityUtil.dip2px(MyCameraActivity.this,10));
+            textView.setTextColor(Color.parseColor("#FFFFFB"));
+            textView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT));
+            ViewHolder viewHolder = new ViewHolder(textView);
+            viewHolder.textView = textView;
+            return viewHolder;
+        }
+
+        /**
+         * 设置值
+         */
+        @Override
+        public void onBindViewHolder(final ViewHolder viewHolder, final int i)
+        {
+            viewHolder.textView.setText(rectScaleList.get(i).getName());
+            viewHolder.textView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    RectScale rectScale = rectScaleList.get(i);
+                    previewSFV.setCustomRectScale(rectScale.getRectScale());
+                }
+            });
+
+        }
+
+    }
+
+
 }
