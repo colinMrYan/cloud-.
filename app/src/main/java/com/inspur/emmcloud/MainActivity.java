@@ -201,6 +201,7 @@ public class MainActivity extends Activity{ // 此处不能继承BaseActivity �
 		} else if (!StringUtils.isBlank(accessToken) && !StringUtils.isBlank(myInfo) && StringUtils.isBlank(languageJson)) {
 			new LoginUtils(MainActivity.this, handler).getServerSupportLanguage();
 		} else if(!StringUtils.isBlank(accessToken) && !StringUtils.isBlank(myInfo) && !StringUtils.isBlank(languageJson)&&!isMDMStatusPass){
+            MyApplication.getInstance().setAppLanguageAndFontScale();
 			new LoginUtils(MainActivity.this, handler).startMDM();
 		} else {
 			setSplashShow();
