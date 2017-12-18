@@ -71,6 +71,7 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
     private String defaultRectScale;
     private RecyclerView setRadioRecycleView;
     private List<RectScale> rectScaleList;
+    private int radioSelectPosition = 0;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -540,7 +541,6 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
             TextView textView = new TextView(MyCameraActivity.this);
             textView.setTextSize(TypedValue.COMPLEX_UNIT_SP,16);
             textView.setPadding(DensityUtil.dip2px(MyCameraActivity.this,10),DensityUtil.dip2px(MyCameraActivity.this,10),DensityUtil.dip2px(MyCameraActivity.this,10),DensityUtil.dip2px(MyCameraActivity.this,10));
-            textView.setTextColor(Color.parseColor("#FFFFFB"));
             textView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT));
             ViewHolder viewHolder = new ViewHolder(textView);
             viewHolder.textView = textView;
@@ -554,9 +554,12 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
         public void onBindViewHolder(final ViewHolder viewHolder, final int i)
         {
             viewHolder.textView.setText(rectScaleList.get(i).getName());
+            viewHolder.textView.setTextColor((radioSelectPosition == i)? Color.parseColor("#CB602D"):Color.parseColor("#FFFFFB"));
             viewHolder.textView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    radioSelectPosition = i;
+                    Adapter.this.notifyDataSetChanged();
                     RectScale rectScale = rectScaleList.get(i);
                     previewSFV.setCustomRectScale(rectScale.getRectScale());
                 }
