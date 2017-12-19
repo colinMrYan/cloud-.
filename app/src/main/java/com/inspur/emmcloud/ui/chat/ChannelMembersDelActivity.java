@@ -14,11 +14,11 @@ import android.widget.TextView;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.bean.Contact;
 import com.inspur.emmcloud.util.ChannelGroupCacheUtils;
 import com.inspur.emmcloud.util.ImageDisplayUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
-import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.emmcloud.widget.CircleImageView;
 
 import java.util.ArrayList;
@@ -87,8 +87,8 @@ public class ChannelMembersDelActivity extends BaseActivity {
 			convertView = vi.inflate(R.layout.channel_member_list_item, null);
 			CircleImageView circleImageView = (CircleImageView) convertView
 					.findViewById(R.id.head);
-			ImageDisplayUtils.getInstance().displayImage(circleImageView, UriUtils
-					.getChannelImgUri(ChannelMembersDelActivity.this, memberList.get(position).getInspurID()),R.drawable.icon_person_default);
+			ImageDisplayUtils.getInstance().displayImage(circleImageView, APIUri
+					.getChannelImgUrl(ChannelMembersDelActivity.this, memberList.get(position).getInspurID()),R.drawable.icon_person_default);
 			((TextView) convertView.findViewById(R.id.title))
 					.setText(memberList.get(position).getName());
 			((CheckBox) convertView.findViewById(R.id.choose_check))

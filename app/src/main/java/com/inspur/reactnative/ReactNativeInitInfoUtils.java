@@ -2,12 +2,12 @@ package com.inspur.reactnative;
 
 import android.content.Context;
 
+import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.bean.AndroidBundleBean;
 import com.inspur.emmcloud.bean.Language;
 import com.inspur.emmcloud.util.AppUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.StringUtils;
-import com.inspur.emmcloud.util.UriUtils;
 
 /**
  * Created by yufuchang on 2017/7/11.
@@ -43,7 +43,7 @@ public class ReactNativeInitInfoUtils {
      */
     public static String getLocalLanguage(Context context){
         String languageJson = PreferencesUtils.getString(
-                context, UriUtils.tanent + "appLanguageObj");
+                context, MyApplication.getInstance().getTanent() + "appLanguageObj");
         if (!StringUtils.isBlank(languageJson)) {
             Language language = new Language(languageJson);
             return language.getIana();

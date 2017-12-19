@@ -12,6 +12,7 @@ import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
+import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.bean.Contact;
 import com.inspur.emmcloud.bean.GetChannelInfoResult;
@@ -28,7 +29,6 @@ import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.ToastUtils;
-import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 
@@ -131,7 +131,7 @@ public class UserInfoActivity extends BaseActivity {
         String mail = contact.getEmail();
         String phoneNum = contact.getMobile();
         String name = contact.getName();
-        String headUrl = UriUtils.getChannelImgUri(UserInfoActivity.this, contact.getInspurID());
+        String headUrl = APIUri.getChannelImgUrl(UserInfoActivity.this, contact.getInspurID());
         if (StringUtils.isEmpty(organize)) {
             (findViewById(R.id.department_layout))
                     .setVisibility(View.GONE);
@@ -211,7 +211,7 @@ public class UserInfoActivity extends BaseActivity {
                 Intent intent = new Intent(UserInfoActivity.this,
                         ImagePagerActivity.class);
                 ArrayList<String> urls = new ArrayList<String>();
-                urls.add(UriUtils.getChannelImgUri(UserInfoActivity.this, contact.getInspurID()));
+                urls.add(APIUri.getChannelImgUrl(UserInfoActivity.this, contact.getInspurID()));
                 intent.putExtra("image_index", 0);
                 intent.putStringArrayListExtra("image_urls", urls);
                 startActivity(intent);

@@ -10,11 +10,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.bean.GroupNews;
 import com.inspur.emmcloud.util.ImageDisplayUtils;
 import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.TimeUtils;
-import com.inspur.emmcloud.util.UriUtils;
 
 import java.util.List;
 
@@ -91,7 +91,7 @@ public class NewsListAdapter extends BaseAdapter {
      */
     private String handlePoster(int position) {
         if (!StringUtils.isBlank(groupNewsList.get(position).getPoster())) {
-            return UriUtils.getPreviewUri(groupNewsList.get(position).getPoster());
+            return APIUri.getPreviewUrl(groupNewsList.get(position).getPoster());
         }
         return null;
     }

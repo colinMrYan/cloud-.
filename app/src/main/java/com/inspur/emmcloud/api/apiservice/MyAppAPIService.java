@@ -8,7 +8,6 @@ package com.inspur.emmcloud.api.apiservice;
 
 import android.content.Context;
 
-import com.google.gson.JsonArray;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.api.APICallback;
 import com.inspur.emmcloud.api.APIInterface;
@@ -20,9 +19,8 @@ import com.inspur.emmcloud.bean.GetAllAppResult;
 import com.inspur.emmcloud.bean.GetAppBadgeResult;
 import com.inspur.emmcloud.bean.GetAppGroupResult;
 import com.inspur.emmcloud.bean.GetGroupNewsDetailResult;
-import com.inspur.emmcloud.bean.GetMyAppResult;
-import com.inspur.emmcloud.bean.GetRecommendAppWidgetListResult;
 import com.inspur.emmcloud.bean.GetNewsTitleResult;
+import com.inspur.emmcloud.bean.GetRecommendAppWidgetListResult;
 import com.inspur.emmcloud.bean.GetRemoveAppResult;
 import com.inspur.emmcloud.bean.GetSearchAppResult;
 import com.inspur.emmcloud.bean.GetWebAppRealUrlResult;
@@ -32,7 +30,6 @@ import com.inspur.emmcloud.bean.Volume.GetVolumeListResult;
 import com.inspur.emmcloud.bean.Volume.VolumeFile;
 import com.inspur.emmcloud.interf.OauthCallBack;
 import com.inspur.emmcloud.util.OauthUtils;
-import com.inspur.emmcloud.util.UriUtils;
 
 import org.xutils.http.HttpMethod;
 import org.xutils.http.RequestParams;
@@ -55,69 +52,6 @@ public class MyAppAPIService {
 
     public void setAPIInterface(APIInterface apiInterface) {
         this.apiInterface = apiInterface;
-    }
-
-    /**
-     * 获取所有应用
-     *
-     * @param type
-     * @param pageNumber
-     */
-    public void getAllApps(final int type, final int pageNumber) {
-        final int TYPE_NORMAL = 3;
-        final int TYPE_REFRESH = 4;
-        final int TYPE_MORE = 5;
-        final String completeUrl = APIUri.getAllApps();
-        RequestParams params = ((MyApplication) context.getApplicationContext())
-                .getHttpRequestParams(completeUrl);
-        params.addParameter("pageNumber", pageNumber + "");
-
-        x.http().post(params, new APICallback(context, completeUrl) {
-
-            @Override
-            public void callbackSuccess(String arg0) {
-                // TODO Auto-generated method stub
-                if (type == TYPE_NORMAL) {
-                    apiInterface
-                            .returnAllAppsSuccess(new GetAllAppResult(arg0));
-                } else if (type == TYPE_REFRESH) {
-                    apiInterface.returnAllAppsFreshSuccess(new GetAllAppResult(
-                            arg0));
-                } else {
-                    apiInterface.returnAllAppsMoreSuccess(new GetAllAppResult(
-                            arg0));
-                }
-            }
-
-            @Override
-            public void callbackFail(String error, int responseCode) {
-                // TODO Auto-generated method stub
-                if (type == TYPE_NORMAL) {
-                    apiInterface.returnAllAppsFail(error, responseCode);
-                } else if (type == TYPE_REFRESH) {
-                    apiInterface.returnAllAppsFreshFail(error, responseCode);
-                } else {
-                    apiInterface.returnAllAppsMoreFail(error, responseCode);
-                }
-            }
-
-            @Override
-            public void callbackTokenExpire() {
-                new OauthUtils(new OauthCallBack() {
-                    @Override
-                    public void reExecute() {
-                        getAllApps(type, pageNumber);
-                    }
-
-                    @Override
-                    public void executeFailCallback() {
-                        callbackFail("", -1);
-                    }
-                }, context).refreshToken(completeUrl);
-            }
-
-        });
-
     }
 
     /**
@@ -199,43 +133,6 @@ public class MyAppAPIService {
         });
     }
 
-    /**
-     * 获取我的应用
-     *
-     * @param jsonArray
-     */
-    public void getMyApp(final JsonArray jsonArray) {
-        final String completeUrl = APIUri.getMyApp();
-        RequestParams params = ((MyApplication) context.getApplicationContext())
-                .getHttpRequestParams(completeUrl);
-        x.http().post(params, new APICallback(context, completeUrl) {
-            @Override
-            public void callbackTokenExpire() {
-                new OauthUtils(new OauthCallBack() {
-                    @Override
-                    public void reExecute() {
-                        getMyApp(jsonArray);
-                    }
-
-                    @Override
-                    public void executeFailCallback() {
-                        callbackFail("", -1);
-                    }
-                }, context).refreshToken(completeUrl);
-            }
-
-            @Override
-            public void callbackSuccess(String arg0) {
-                apiInterface.returnMyAppSuccess(new GetMyAppResult(arg0));
-            }
-
-            @Override
-            public void callbackFail(String error, int responseCode) {
-                apiInterface.returnMyAppFail(error, responseCode);
-            }
-        });
-
-    }
 
     /**
      * 应用搜索
@@ -283,7 +180,7 @@ public class MyAppAPIService {
      */
     public void getNewsTitles() {
 
-        final String completeUrl = UriUtils.getHttpApiUri("api/v0/content/news/section");
+        final String completeUrl = APIUri.getHttpApiUrl("api/v0/content/news/section");
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
         x.http().get(params, new APICallback(context, completeUrl) {
@@ -331,7 +228,7 @@ public class MyAppAPIService {
      */
     public void getGroupNewsDetail(final String ncid, final int page) {
 
-        final String completeUrl = UriUtils.getHttpApiUri("/api/v0/content/news/section/" + ncid + "/post?page=" + page + "&limit=20");
+        final String completeUrl = APIUri.getHttpApiUrl("/api/v0/content/news/section/" + ncid + "/post?page=" + page + "&limit=20");
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
 

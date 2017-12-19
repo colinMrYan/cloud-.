@@ -13,9 +13,9 @@ import android.widget.TextView;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
 import com.inspur.emmcloud.util.ImageDisplayUtils;
-import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.emmcloud.widget.CircleImageView;
 
 public class ChannelMemActivity extends BaseActivity {
@@ -94,7 +94,7 @@ public class ChannelMemActivity extends BaseActivity {
 
             String uid = memberArray[position];
             ImageDisplayUtils.getInstance().displayImage(viewHolder.memberHeadImg,
-                    UriUtils.getChannelImgUri(ChannelMemActivity.this, uid), R.drawable.icon_photo_default);
+                    APIUri.getChannelImgUrl(ChannelMemActivity.this, uid), R.drawable.icon_photo_default);
             viewHolder.nameText.setText("");
             return convertView;
         }

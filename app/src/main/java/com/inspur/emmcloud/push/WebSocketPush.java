@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.util.Log;
 
 import com.inspur.emmcloud.MyApplication;
+import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.util.AppUtils;
 import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
@@ -53,7 +54,7 @@ public class WebSocketPush {
 		// TODO Auto-generated method stub
 		String pushId = getPushIdByChangeShang();
 		if(((MyApplication)context.getApplicationContext()).isHaveLogin() && !StringUtils.isBlank(pushId)){
-			String url = "https://ecm.inspur.com/";
+			String url = APIUri.getWebsocketConnectUrl();
 			String enterpriseCode = ((MyApplication)context.getApplicationContext()).getCurrentEnterprise().getCode();
 			String path = "/"+enterpriseCode+"/socket/handshake";
 			WebSocketConnect(url, path,pushId);

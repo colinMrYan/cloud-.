@@ -25,7 +25,6 @@ import com.inspur.emmcloud.util.SplashPageUtils;
 import com.inspur.emmcloud.util.StateBarColor;
 import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.UpgradeUtils;
-import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.emmcloud.widget.dialogs.EasyDialog;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -195,13 +194,14 @@ public class MainActivity extends Activity{ // 此处不能继承BaseActivity �
 		String myInfo = PreferencesUtils.getString(getApplicationContext(),
 				"myInfo", "");
 		String languageJson = PreferencesUtils.getString(getApplicationContext(),
-				UriUtils.tanent + "appLanguageObj");
+				MyApplication.getInstance().getTanent() + "appLanguageObj");
 		boolean isMDMStatusPass = PreferencesUtils.getBoolean(getApplicationContext(), "isMDMStatusPass", true);
 		if (!StringUtils.isBlank(accessToken) && (StringUtils.isBlank(myInfo))) {
 			new LoginUtils(MainActivity.this, handler).getMyInfo();
 		} else if (!StringUtils.isBlank(accessToken) && !StringUtils.isBlank(myInfo) && StringUtils.isBlank(languageJson)) {
 			new LoginUtils(MainActivity.this, handler).getServerSupportLanguage();
 		} else if(!StringUtils.isBlank(accessToken) && !StringUtils.isBlank(myInfo) && !StringUtils.isBlank(languageJson)&&!isMDMStatusPass){
+            MyApplication.getInstance().setAppLanguageAndFontScale();
 			new LoginUtils(MainActivity.this, handler).startMDM();
 		} else {
 			setSplashShow();

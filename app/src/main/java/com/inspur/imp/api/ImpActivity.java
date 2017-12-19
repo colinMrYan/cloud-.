@@ -36,7 +36,6 @@ import com.inspur.emmcloud.util.MDM.MDM;
 import com.inspur.emmcloud.util.PreferencesByUsersUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.StringUtils;
-import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.imp.engine.webview.ImpWebView;
 import com.inspur.imp.plugin.PluginMgr;
 import com.inspur.imp.plugin.camera.PublicWay;
@@ -218,7 +217,7 @@ public class ImpActivity extends ImpBaseActivity {
         }
         webViewHeaders.put("X-ECC-Current-Enterprise", ((MyApplication) getApplicationContext()).getCurrentEnterprise().getId());
         String languageJson = PreferencesUtils.getString(
-                getApplicationContext(), UriUtils.tanent + "appLanguageObj");
+                getApplicationContext(), MyApplication.getInstance().getTanent() + "appLanguageObj");
         if (languageJson != null) {
             Language language = new Language(languageJson);
             webViewHeaders.put("Accept-Language", language.getIana());

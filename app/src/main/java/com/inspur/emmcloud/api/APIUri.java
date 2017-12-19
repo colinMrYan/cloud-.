@@ -1,7 +1,15 @@
 package com.inspur.emmcloud.api;
 
 
-import com.inspur.emmcloud.util.UriUtils;
+import android.content.Context;
+
+import com.inspur.emmcloud.MyApplication;
+import com.inspur.emmcloud.bean.Contact;
+import com.inspur.emmcloud.util.AppUtils;
+import com.inspur.emmcloud.util.ContactCacheUtils;
+import com.inspur.emmcloud.util.StringUtils;
+
+
 
 /**
  * 本类中包含4个常量，分别是
@@ -10,14 +18,11 @@ import com.inspur.emmcloud.util.UriUtils;
  * 整体有一个getEcmTanent的方法，获取到tanent这一级
  */
 public class APIUri {
-    public static String tanent;
     private static final String URL_BASE_ECM = "https://ecm.inspur.com/";
-    private static final String URL_BASE_EMM = "https://emm.inspur.com/api/";
-    private static final String URL_BASE_OAUTH = "https://id.inspur.com/oauth2.0/token";
-    private static final String URL_BASE_SMS_LOGIN = "https://id.inspur.com/api/v1/passcode?phone=";
-    private static final String URL_BASE_APP_CONFIG = "https://emm.inspur.com/v3.0/api/app/config";
-    private static final String URL_BASE_APP_V3 = "https://emm.inspur.com/v3.0/";
+    private static final String URL_BASE_EMM = "https://emm.inspur.com/";
+    private static final String URL_BASE_ID = "https://id.inspur.com/";
     private static final String URL_BASE_VOLUME = "https://yunjia.inspur.com/cloud-drive/api/v1/volume";
+
 
     /**
      * 获取到租户级的URL
@@ -25,10 +30,17 @@ public class APIUri {
      * @return
      */
     private static String getEcmTanentUrl() {
-        return URL_BASE_ECM + tanent;
+        return URL_BASE_ECM + MyApplication.getInstance().getTanent();
     }
 
-    /*****************************************聊天，异常，语言，修改密码接口*********************************************/
+    public static String getECMBaseUrl(){
+        return URL_BASE_ECM;
+    }
+
+    public static String getEMMBaseUrl(){
+        return URL_BASE_EMM;
+    }
+    /***************************************************************系统*******************************************************************/
     /**
      * 异常上传接口
      *
@@ -39,12 +51,215 @@ public class APIUri {
     }
 
     /**
+     * 获取appTab的顺序和可显示性
+     *
+     * @return
+     */
+    public static String getAppTabs() {
+        return getEcmTanentUrl() + "/settings/client/mobile/main/tabs";
+    }
+
+    /**
+     * 新版底部Tabbar接口
+     *
+     * @return
+     */
+    public static String getAppNewTabs() {
+        return getEcmTanentUrl() + "/api/v0/preference/main-tab/latest";
+    }
+
+
+    public static String getAppConfigUrl() {
+        return URL_BASE_EMM + "v3.0/api/app/config/array?key=WebAutoRotate&key=CommonFunctions&key=IsShowFeedback&key=IsShowCustomerService&key=PosReportTimeInterval&key=WorkPortlet";
+    }
+
+
+    /**
+     * app闪屏页面
+     *
+     * @return
+     */
+    public static String getSplashPageUrl() {
+        return getEcmTanentUrl() + "/api/v0/preference/launch-screen/latest";
+    }
+
+    /**
+     * @return
+     */
+    public static String getUploadSplashPageWriteBackLogUrl() {
+        return getEcmTanentUrl() + "/api/v0/preference/launch-screen/update";
+    }
+
+    /**
+     * 存储app配置url
+     *
+     * @param key
+     * @return
+     */
+    public static String saveAppConfigUrl(String key) {
+        return URL_BASE_EMM + "v3.0/api/app/config/" + key;
+    }
+
+    /**
+     * 获取上传位置信息url
+     *
+     * @return
+     */
+    public static String getUploadPositionUrl() {
+        return URL_BASE_EMM + "v3.0/api/app/position/upload";
+    }
+
+    /************************************************************************登录*****************************************************************/
+
+    /**
+     * 请求短信验证码
+     * @param mobile
+     * @return
+     */
+    public static String getReqLoginSMSUrl(String mobile) {
+        return URL_BASE_ID + "api/v1/passcode?phone=" + mobile;
+    }
+
+    /**
+     * 验证短信验证码
+     * @return
+     */
+    public static String  getSMSRegisterCheckUrl(){
+        return  URL_BASE_EMM+"/api?module=register&method=verify_smscode";
+    }
+
+    /**
+     * 获取用户信息
+     * @return
+     */
+    public static String getMyInfoUrl(){
+        return URL_BASE_ID+"oauth2.0/profile";
+    }
+
+    /**
+     * 修改密码
+     **/
+    public static String getChangePsdUrl() {
+        return URL_BASE_ID+"console/api/v1/account/password";
+    }
+
+
+    /**
+     * 获取oauth认证的基础
+     *
+     * @return
+     */
+    public static String getOauthSigninUrl() {
+        return URL_BASE_ID + "oauth2.0/token";
+    }
+
+    /**
+     * 返回我的信息
+     *
+     * @return
+     */
+    public static String getOauthMyInfoUrl() {
+        return URL_BASE_ID + "oauth2.0/token/profile";
+    }
+
+    /**
+     * 刷新token
+     *
+     * @return
+     */
+    public static String getRefreshToken() {
+        return URL_BASE_ID + "oauth2.0/token";
+    }
+
+    /**
+     * 扫码登录url
+     *
+     * @return
+     */
+    public static String getLoginDesktopCloudPlusUrl() {
+        return "";
+    }
+
+    /**
+     * 网页登录
+     * @return
+     */
+    public static String getWebLoginUrl(){
+        return  URL_BASE_ID+"oauth2.0/authorize";
+    }
+
+
+    /**************************************************************沟通***************************************************************/
+
+    /**
+     * 频道页面头像显示图片
+     **/
+    public static String getChannelImgUrl(Context context, String inspurID) {
+        if (StringUtils.isBlank(inspurID) || inspurID.equals("null"))
+            return null;
+        String headImgUrl = ((MyApplication) context.getApplicationContext()).getUserPhotoUrl(inspurID);
+        if (headImgUrl == null && !((MyApplication) context.getApplicationContext()).isKeysContainUid(inspurID)) {
+            Contact contact = ContactCacheUtils.getUserContact(context, inspurID);
+            if (contact != null) {
+                headImgUrl = URL_BASE_EMM + "img/userhead/" + inspurID;
+                String lastUpdateTime = contact.getLastUpdateTime();
+                if (!StringUtils.isBlank(lastUpdateTime) && (!lastUpdateTime.equals("null"))) {
+                    headImgUrl = headImgUrl + "?" + lastUpdateTime;
+                }
+                ((MyApplication) context.getApplicationContext()).setUsesrPhotoUrl(inspurID, headImgUrl);
+            } else if (((MyApplication) context.getApplicationContext())
+                    .getIsContactReady()) {
+                ((MyApplication) context.getApplicationContext()).setUsesrPhotoUrl(inspurID, null);
+            }
+        }
+        return headImgUrl;
+    }
+
+
+    /**
+     * 个人信息头像显示图片
+     *
+     * @param url
+     * @return
+     */
+    public static String getUserInfoPhotoUrl(String url) {
+        return URL_BASE_EMM + url;
+    }
+
+    /**
+     * 获取机器人头像路径
+     *
+     * @return
+     */
+    public static String getRobotIconUrl(String iconUrl) {
+        return getEcmTanentUrl() + "/avatar/stream/"
+                + iconUrl;
+    }
+
+    /**
+     * 预览图片或视频
+     **/
+    public static String getPreviewUrl(String fileName) {
+        return getResUrl("stream/" + fileName);
+    }
+
+    /**
+     * 获取资源
+     *
+     * @param url
+     * @return
+     */
+    public static String getResUrl(String url) {
+        return URL_BASE_ECM + MyApplication.getInstance().getTanent() + "/res/" + url;
+    }
+
+    /**
      * 添加群组成员
      *
      * @param cid
      * @return
      */
-    public static String addGroupMembers(String cid) {
+    public static String getAddGroupMembersUrl(String cid) {
         return getEcmTanentUrl() + "/channel/group/" + cid + "/users?";
     }
 
@@ -53,7 +268,7 @@ public class APIUri {
      *
      * @return
      */
-    public static String getNointerRuption() {
+    public static String getNointerRuptionUrl() {
         return getEcmTanentUrl() + "/session/dnd";
     }
 
@@ -76,413 +291,15 @@ public class APIUri {
     }
 
     /**
-     * 修改密码
-     **/
-    public static String getChangePsd() {
-        return "https://id.inspur.com/console/api/v1/account/password";
-    }
-
-    /*****************************************新闻接口*********************************************/
-    /**
-     * 获取新闻
-     *
-     * @param url
+     * 获取websocket链接url
      * @return
      */
-    public static String getGroupNewsUrl(String url) {
-        return URL_BASE_ECM + url;
+    public static String getWebsocketConnectUrl(){
+        return URL_BASE_ECM;
     }
 
-    ;
+    /**************************************************应用和应用中心********************************************************************/
 
-    /**
-     * 得到集团新闻的Path
-     *
-     * @return
-     */
-    public static String getGroupNewsArticle() {
-        return "/" + tanent + "/res" + "/article" + "/";
-    }
-
-    public static String getNewsInstruction(String newsId) {
-        return getEcmTanentUrl() + "/api/v0/content/news/" + newsId + "/editor-comment";
-    }
-
-    /*************************************************会议接口*******************************************/
-    /**
-     * 工作页面会议
-     *
-     * @return
-     */
-    private static String getMeetingBaseUrl() {
-        return URL_BASE_ECM + tanent + "/meeting/";
-    }
-
-    /**
-     * 会议预定
-     *
-     * @return
-     */
-    public static String getMeetings() {
-        return getMeetingBaseUrl() + "room/bookings";
-    }
-
-    /**
-     * 会议详情
-     *
-     * @param meetingId
-     * @return
-     */
-    public static String getMeetingDetails(String meetingId) {
-        return getMeetingBaseUrl() + "room/bookings/:"
-                + meetingId;
-    }
-
-    /**
-     * 会议室空闲时段接口
-     *
-     * @param param
-     * @return
-     */
-    public static String getAvailableTime(String param) {
-        return getMeetingBaseUrl() + "room/idle"
-                + param;
-    }
-
-    /**
-     * 会议室列表
-     *
-     * @return
-     */
-    public static String getMeetingRooms() {
-        return getMeetingBaseUrl() + "room";
-    }
-
-    /**
-     * 获取时间过滤的rooms
-     *
-     * @return
-     */
-    public static String getAvailable() {
-        return getMeetingBaseUrl() + "room/available";
-    }
-
-    /**
-     * 删除会议
-     *
-     * @return
-     */
-    public static String deleteMeeting() {
-        return getMeetingBaseUrl() + "room/booking/cancel";
-    }
-
-    /**
-     * 会议室接口
-     *
-     * @return
-     */
-    public static String getBookingRoom() {
-        return getMeetingBaseUrl() + "booking";
-    }
-
-    /**
-     * 会议状态返回接口
-     *
-     * @return
-     */
-    public static String getMeetingReply() {
-        return getMeetingBaseUrl() + "booking/receipt/state";
-    }
-
-    /**
-     * 获取某一个会议室的会议预定情况
-     *
-     * @return
-     */
-    public static String getRoomMeetingList() {
-        return getMeetingBaseUrl() + "booking/room";
-    }
-
-    /**
-     * 获取办公地点
-     *
-     * @return
-     */
-    public static String getOffice() {
-        return getMeetingBaseUrl() + "location/office";
-    }
-
-    /**
-     * 增加办公地点
-     *
-     * @return
-     */
-    public static String addOffice() {
-        return getMeetingBaseUrl() + "location/office";
-    }
-
-    /**
-     * 会议的root路径
-     *
-     * @return
-     */
-    public static String getMeetingRootUrl() {
-        return getEcmTanentUrl() + "/meeting";
-    }
-
-    /**
-     * 获取是否管理员接口
-     *
-     * @return
-     */
-    public static String getIsAdmin() {
-        return getMeetingBaseUrl() + "is_admin";
-    }
-
-    /**
-     * 获取园区
-     *
-     * @return
-     */
-    public static String getBuilding() {
-        return getMeetingBaseUrl() + "building";
-    }
-
-    /**
-     * 获取楼层
-     *
-     * @return
-     */
-    public static String getFloor() {
-        return getMeetingBaseUrl() + "floor";
-    }
-
-    /**
-     * 获取园区
-     *
-     * @return
-     */
-    public static String getLoction() {
-        return getMeetingBaseUrl() + "location";
-    }
-
-    /**********************************************日历接口*******************************************/
-    /**
-     * 日历相关Uri
-     *
-     * @return
-     */
-    public static String getCalendarUri() {
-        return getEcmTanentUrl() + "/api/v0";
-    }
-
-    /**********************************************任务接口*******************************************/
-    /**
-     * 任务基础URL
-     *
-     * @return
-     */
-    private static String getToDoBaseUrl() {
-        return URL_BASE_ECM + tanent + "/api/v0/todo/";
-    }
-
-    /**
-     * 添加附件
-     *
-     * @param cid
-     * @return
-     */
-    public static String addAttachments(String cid) {
-        return getToDoBaseUrl() + cid + "/attachments";
-    }
-
-    /**
-     * 获取我的任务
-     *
-     * @return
-     */
-    public static String getToDoRecent() {
-        return getToDoBaseUrl() + "recent";
-    }
-
-    /**
-     * 获取我参与的任务
-     *
-     * @return
-     */
-    public static String getInvolved() {
-        return getToDoBaseUrl() + "involved";
-    }
-
-    /**
-     * 获取我参与的任务
-     *
-     * @return
-     */
-    public static String getFocused() {
-        return getToDoBaseUrl() + "focused";
-    }
-
-    /**
-     * 创建任务
-     *
-     * @return
-     */
-    public static String createTask() {
-        return getEcmTanentUrl() + "/api/v0/todo";
-    }
-
-    /**
-     * 获取今天的任务
-     *
-     * @return
-     */
-    public static String getTodayTask() {
-        return getToDoBaseUrl() + "today";
-    }
-
-    /**
-     * 查询所有待办任务
-     *
-     * @return
-     */
-    public static String getAllListTasks() {
-        return getToDoBaseUrl() + "list";
-    }
-
-    /**
-     * 获取所有Tag
-     *
-     * @return
-     */
-    public static String getTag() {
-        return getToDoBaseUrl() + "tag";
-    }
-
-    /**
-     * 获取所有task
-     *
-     * @param id
-     * @return
-     */
-    public static String getTasks(String id) {
-        return getToDoBaseUrl() + "list/" + id + "/tasks";
-    }
-
-    /**
-     * 变更任务所有人
-     *
-     * @return
-     */
-    public static String changeMessionOwner() {
-        return getToDoBaseUrl();
-    }
-
-    /**
-     * 变更任务标签
-     *
-     * @param id
-     * @return
-     */
-    public static String changeMessionTag(String id) {
-        return getToDoBaseUrl() + id + "/tags";
-    }
-
-    /*************************************************发现接口***********************************/
-    /**
-     * 通过车站名获取到达城市
-     *
-     * @return
-     */
-    public static String getTripArriveCity() {
-        return getEcmTanentUrl() + "/trip/simple/city";
-    }
-
-    /**
-     * 知识
-     *
-     * @return
-     */
-    public static String knowledgeTips() {
-        return getEcmTanentUrl() + "/tips";
-    }
-
-    /**
-     * 卡包
-     *
-     * @param uri
-     * @return
-     */
-    public static String getHttpApiUri(String uri) {
-        return getEcmTanentUrl() + "/" + uri;
-    }
-
-    /**
-     * 获取发现搜索接口
-     *
-     * @return
-     */
-    public static String getFindSearch() {
-        return "http://10.24.11.232:8080/solr/collection1/select?";
-    }
-
-    /**
-     * 获取发现混合搜索接口
-     *
-     * @return
-     */
-    public static String getFindMixSearch() {
-        return "http://10.24.11.232:8080/solr-web/mix/collection1/";
-    }
-
-    /***************************************Oauth相关接口**************************************/
-
-    /**
-     * 获取oauth认证的基础
-     *
-     * @return
-     */
-    public static String getUrlBaseOauth() {
-        return URL_BASE_OAUTH;
-    }
-
-    /**
-     * 返回我的信息
-     *
-     * @return
-     */
-    public static String getOauthMyInfoUrl() {
-        return URL_BASE_OAUTH + "/profile";
-    }
-
-    /**
-     * 刷新token
-     *
-     * @return
-     */
-    public static String getRefreshToken() {
-        return URL_BASE_OAUTH + "/token";
-    }
-
-
-    /******************************************底座应用接口*********************************/
-    /**
-     * 获取appTab的顺序和可显示性
-     *
-     * @return
-     */
-    public static String getAppTabs() {
-        return getEcmTanentUrl() + "/settings/client/mobile/main/tabs";
-    }
-
-    /**
-     * 新版底部Tabbar接口
-     *
-     * @return
-     */
-    public static String getAppNewTabs() {
-        return getEcmTanentUrl() + "/api/v0/preference/main-tab/latest";
-    }
 
     /**
      * 获取所有App以及查询app
@@ -490,7 +307,7 @@ public class APIUri {
      * @return
      */
     public static String getAllApps() {
-        return URL_BASE_EMM + "imp_app/getAllApps";
+        return URL_BASE_EMM + "api/imp_app/getAllApps";
     }
 
     /**
@@ -499,7 +316,7 @@ public class APIUri {
      * @return
      */
     public static String getNewAllApps() {
-        return URL_BASE_EMM + "v1/imp_app/appCenterList";
+        return URL_BASE_EMM + "api/v1/imp_app/appCenterList";
     }
 
     /**
@@ -508,9 +325,17 @@ public class APIUri {
      * @return
      */
     public static String getAppAuthCodeUri() {
-        return "https://id.inspur.com/oauth2.0/quick_authz_code";
+        return URL_BASE_ID+"oauth2.0/quick_authz_code";
     }
 
+    /**
+     * 获取我的应用小部件的url
+     *
+     * @return
+     */
+    public static String getMyAppWidgetsUrl() {
+        return URL_BASE_EMM + "v3.0/api/app/recommend/apps";
+    }
 
     /**
      * 获取用户apps
@@ -518,7 +343,7 @@ public class APIUri {
      * @return
      */
     public static String getUserApps() {
-        return URL_BASE_EMM + "imp_app/userApps";
+        return URL_BASE_EMM + "api/imp_app/userApps";
     }
 
     /**
@@ -527,7 +352,7 @@ public class APIUri {
      * @return
      */
     public static String getMyApp() {
-        return URL_BASE_EMM + "imp_app/getUserApps";
+        return URL_BASE_EMM + "api/imp_app/getUserApps";
     }
 
     /**
@@ -536,7 +361,7 @@ public class APIUri {
      * @return
      */
     public static String getAppInfo() {
-        return URL_BASE_EMM + "imp_app/getAppInfo";
+        return URL_BASE_EMM + "api/imp_app/getAppInfo";
     }
 
     /**
@@ -545,7 +370,7 @@ public class APIUri {
      * @returnsunqx
      */
     public static String addApp() {
-        return URL_BASE_EMM + "imp_app/installApp";
+        return URL_BASE_EMM + "api/imp_app/installApp";
     }
 
     /**
@@ -554,7 +379,7 @@ public class APIUri {
      * @return
      */
     public static String removeApp() {
-        return URL_BASE_EMM + "imp_app/uninstallApp";
+        return URL_BASE_EMM + "api/imp_app/uninstallApp";
     }
 
     /**
@@ -563,7 +388,7 @@ public class APIUri {
      * @return
      */
     public static String checkUpgrade() {
-        return URL_BASE_EMM + "v1/upgrade/checkVersion";
+        return URL_BASE_EMM + "api/v1/upgrade/checkVersion";
     }
 
     /**
@@ -572,26 +397,25 @@ public class APIUri {
      * @return
      */
     public static String getAllContact() {
-        return URL_BASE_EMM + "contacts/get_all";
+        return URL_BASE_EMM + "api/contacts/get_all";
     }
 
 
     /**
-     * 通过短信验证码重置密码
+     * 行政审批验证密码
      */
-    public static String getUpdatePwdBySMSCode() {
-        return URL_BASE_ECM + "";
+    public static String getVeriryApprovalPasswordUrl() {
+        return URL_BASE_EMM + "proxy/shenpi/langchao.ecgap.inportal/login/CheckLoginDB.aspx?";
     }
 
-    /******************************************短信调用接口**************************************/
 
     /**
-     * 短信登录
-     *
+     * 获取gs-msg  scheme url
+     * @param host
      * @return
      */
-    public static String getSMSLogin() {
-        return URL_BASE_SMS_LOGIN;
+    public static String getGSMsgSchemeUrl(String host){
+        return "https://emm.inspur.com/api/v1/gs_sso/msg_uri?id=" + host;
     }
 
     /*****************************************ReactNative**************************************/
@@ -610,8 +434,7 @@ public class APIUri {
      * @return
      */
     public static String getClientId() {
-//		return getEcmTanentUrl()+"/api/v0/view/client";
-        return "https://ecm.inspur.com/" + UriUtils.tanent + "/api/v0/client/registry";
+        return URL_BASE_ECM + MyApplication.getInstance().getTanent() + "/api/v0/client/registry";
     }
 
     /**
@@ -638,7 +461,7 @@ public class APIUri {
      * @return
      */
     public static String getReactNativeInstallUrl() {
-        return "https://emm.inspur.com/api/imp_app/queryByUri";
+        return URL_BASE_EMM+"api/imp_app/queryByUri";
     }
 
     /**
@@ -650,85 +473,356 @@ public class APIUri {
         return getEcmTanentUrl() + "/api/v0/app/" + appModule + "/update";
     }
 
+    /******************新闻接口**************************/
     /**
-     * 获取我的信息
+     * 获取新闻
+     *
+     * @param url
+     * @return
+     */
+    public static String getGroupNewsUrl(String url) {
+        return URL_BASE_ECM + url;
+    }
+
+    /**
+     * 得到集团新闻的Path
      *
      * @return
      */
-    public static String getUserProfileUrl() {
-        return URL_BASE_EMM + "userprofile/displayconfig";
+    public static String getGroupNewsArticleUrl() {
+        return "/" + MyApplication.getInstance().getTanent() + "/res" + "/article" + "/";
     }
 
+    public static String getNewsInstruction(String newsId) {
+        return getEcmTanentUrl() + "/api/v0/content/news/" + newsId + "/editor-comment";
+    }
+
+
+
+    /***********************VOLUME云盘****************/
     /**
-     * app闪屏页面
+     * 获取云盘列表
      *
      * @return
      */
-    public static String getSplashPageUrl() {
-        return getEcmTanentUrl() + "/api/v0/preference/launch-screen/latest";
+    public static String getVolumeListUrl() {
+        return URL_BASE_VOLUME;
     }
 
     /**
+     * 获取云盘文件列表
+     *
+     * @param volumeId
+     * @param subPath
      * @return
      */
-    public static String getUploadSplashPageWriteBackLogUrl() {
-        return getEcmTanentUrl() + "/api/v0/preference/launch-screen/update";
+    public static String getVolumeFileOperationUrl(String volumeId) {
+        return URL_BASE_VOLUME + "/" + volumeId + "/file";
     }
 
+    /**
+     * 获取云盘上传STS token
+     *
+     * @param volumeId
+     * @return
+     */
+    public static String getVolumeFileUploadSTSTokenUrl(String volumeId) {
+        return URL_BASE_VOLUME + "/" + volumeId + "/file/request";
+    }
 
     /**
-     * 获取解绑设备url
+     * 获取云盘创建文件夹url
+     *
+     * @param volumeId
+     * @return
+     */
+    public static String getCreateForderUrl(String volumeId) {
+        return URL_BASE_VOLUME + "/" + volumeId + "/directory";
+    }
+
+    /**
+     * 获取文件重命名url
+     *
+     * @param volumeId
+     * @return
+     */
+    public static String getVolumeFileRenameUrl(String volumeId) {
+        return URL_BASE_VOLUME + "/" + volumeId + "/file/name";
+    }
+
+    /**
+     * 获取云盘文件移动url
+     *
+     * @param volumeId
+     * @return
+     */
+    public static String getMoveVolumeFileUrl(String volumeId) {
+        return URL_BASE_VOLUME + "/" + volumeId + "/file/path";
+    }
+/************************************************************************工作****************************************************************************/
+    /***************会议接口*****************************/
+    /**
+     * 工作页面会议
      *
      * @return
      */
-    public static String getUnBindDeviceUrl() {
-        return URL_BASE_EMM + "device/unbind";
+    private static String getMeetingBaseUrl() {
+        return URL_BASE_ECM + MyApplication.getInstance().getTanent() + "/meeting/";
     }
 
     /**
-     * 获取绑定设备
+     * 会议预定
      *
      * @return
      */
-    public static String getBindingDevicesUrl() {
-        return URL_BASE_EMM + "v1/device/getUserDevices";
+    public static String getMeetingsUrl() {
+        return getMeetingBaseUrl() + "room/bookings";
     }
 
     /**
-     * 获取绑定设备
+     * 会议室列表
      *
      * @return
      */
-    public static String getDeviceLogUrl() {
-        return URL_BASE_EMM + "v1/device/getDeviceLogs";
+    public static String getMeetingRoomsUrl() {
+        return getMeetingBaseUrl() + "room";
     }
 
     /**
-     * 获取MDM启用状态
+     * 获取时间过滤的rooms
      *
      * @return
      */
-    public static String getMDMStateUrl() {
-        return URL_BASE_EMM + "userprofile/mdm_state";
+    public static String getAvailable() {
+        return getMeetingBaseUrl() + "room/available";
     }
 
     /**
-     * 上传设备管理所需token和设备ID
+     * 删除会议
      *
      * @return
      */
-    public static String getUploadMDMInfoUrl() {
-        return URL_BASE_EMM + "mdm/mdm_check";
+    public static String getDeleteMeetingUrl() {
+        return getMeetingBaseUrl() + "room/booking/cancel";
     }
 
     /**
-     * 扫码登录url
+     * 会议室接口
      *
      * @return
      */
-    public static String getLoginDesktopCloudPlusUrl() {
-        return "";
+    public static String getBookingRoomUrl() {
+        return getMeetingBaseUrl() + "booking";
     }
+
+
+    /**
+     * 获取某一个会议室的会议预定情况
+     *
+     * @return
+     */
+    public static String getRoomMeetingListUrl() {
+        return getMeetingBaseUrl() + "booking/room";
+    }
+
+    /**
+     * 获取办公地点
+     *
+     * @return
+     */
+    public static String getOfficeUrl() {
+        return getMeetingBaseUrl() + "location/office";
+    }
+
+    /**
+     * 增加办公地点
+     *
+     * @return
+     */
+    public static String addOfficeUrl() {
+        return getMeetingBaseUrl() + "location/office";
+    }
+
+    /**
+     * 会议的root路径
+     *
+     * @return
+     */
+    public static String getMeetingRootUrl() {
+        return getEcmTanentUrl() + "/meeting";
+    }
+
+    /**
+     * 获取是否管理员接口
+     *
+     * @return
+     */
+    public static String getMeetingIsAdminUrl() {
+        return getMeetingBaseUrl() + "is_admin";
+    }
+
+    /**
+     * 获取园区
+     *
+     * @return
+     */
+    public static String getLoctionUrl() {
+        return getMeetingBaseUrl() + "location";
+    }
+
+    /**********************日历接口**********************/
+    /**
+     * 日历相关Uri
+     *
+     * @return
+     */
+    public static String getCalendarUrl() {
+        return getEcmTanentUrl() + "/api/v0";
+    }
+
+    /*******************任务*****************************/
+    /**
+     * 任务基础URL
+     *
+     * @return
+     */
+    private static String getToDoBaseUrl() {
+        return URL_BASE_ECM + MyApplication.getInstance().getTanent() + "/api/v0/todo/";
+    }
+
+    /**
+     * 添加附件
+     *
+     * @param cid
+     * @return
+     */
+    public static String getAddAttachmentsUrl(String cid) {
+        return getToDoBaseUrl() + cid + "/attachments";
+    }
+
+    /**
+     * 获取我的任务
+     *
+     * @return
+     */
+    public static String getToDoRecentUrl() {
+        return getToDoBaseUrl() + "recent";
+    }
+
+    /**
+     * 获取我参与的任务
+     *
+     * @return
+     */
+    public static String getInvolvedTasksUrl() {
+        return getToDoBaseUrl() + "involved";
+    }
+
+    /**
+     * 获取我参与的任务
+     *
+     * @return
+     */
+    public static String getFocusedTasksUrl() {
+        return getToDoBaseUrl() + "focused";
+    }
+
+    /**
+     * 创建任务
+     *
+     * @return
+     */
+    public static String getCreateTaskUrl() {
+        return getEcmTanentUrl() + "/api/v0/todo";
+    }
+
+    /**
+     * 获取今天的任务
+     *
+     * @return
+     */
+    public static String getTodayTaskUrl() {
+        return getToDoBaseUrl() + "today";
+    }
+
+    /**
+     * 查询所有待办任务
+     *
+     * @return
+     */
+    public static String getAllListTasks() {
+        return getToDoBaseUrl() + "list";
+    }
+
+    /**
+     * 获取所有Tag
+     *
+     * @return
+     */
+    public static String getTagUrl() {
+        return getToDoBaseUrl() + "tag";
+    }
+
+    /**
+     * 获取所有task
+     *
+     * @param id
+     * @return
+     */
+    public static String getTasksList(String id) {
+        return getToDoBaseUrl() + "list/" + id + "/tasks";
+    }
+
+    /**
+     * 变更任务所有人
+     *
+     * @return
+     */
+    public static String getChangeMessionOwnerUrl() {
+        return getToDoBaseUrl();
+    }
+
+    /**
+     * 变更任务标签
+     *
+     * @param id
+     * @return
+     */
+    public static String getChangeMessionTagUrl(String id) {
+        return getToDoBaseUrl() + id + "/tags";
+    }
+
+    /*************************************************发现*********************************************************/
+    /**
+     * 通过车站名获取到达城市
+     *
+     * @return
+     */
+    public static String getTripArriveCityUrl() {
+        return getEcmTanentUrl() + "/trip/simple/city";
+    }
+
+    /**
+     * 知识
+     *
+     * @return
+     */
+    public static String getKnowledgeTipsUrl() {
+        return getEcmTanentUrl() + "/tips";
+    }
+
+    /**
+     * 卡包
+     *
+     * @param uri
+     * @return
+     */
+    public static String getHttpApiUrl(String uri) {
+        return getEcmTanentUrl() + "/" + uri;
+    }
+
+
+
 
     /**
      * 获取分享二维码的url
@@ -739,9 +833,6 @@ public class APIUri {
         return "";
     }
 
-    public static String getAppConfigUrl() {
-        return URL_BASE_APP_CONFIG + "/array?key=WebAutoRotate&key=CommonFunctions&key=IsShowFeedback&key=IsShowCustomerService&key=PosReportTimeInterval&key=WorkPortlet";
-    }
 
     /**
      * 获取应用未处理消息条数的URL
@@ -749,87 +840,106 @@ public class APIUri {
      * @return
      */
     public static String getAppBadgeNumUrl() {
-        return URL_BASE_APP_V3 + "api/app/badge";
+        return URL_BASE_EMM + "v3.0/api/app/badge";
+    }
+
+
+    /***************************************设置*********************************************************************/
+
+    /**
+     * 获得推荐云+页面url
+     * @return
+     */
+    public static String getRecommandAppUrl() {
+        return URL_BASE_EMM +"admin/share_qr";
     }
 
     /**
-     * 存储app配置url
-     * @param key
+     * 获取我的信息展示配置
+     *
      * @return
      */
-    public static String saveAppConfigUrl(String key) {
-        return URL_BASE_APP_CONFIG + "/" + key;
+    public static String getUserProfileUrl() {
+        return URL_BASE_EMM + "api/userprofile/displayconfig";
     }
 
     /**
-     * 获取上传位置信息url
-     * @return
+     * 修改用户头像
+     *
+     * @param
      */
-    public static String getUploadPositionUrl() {
-        return URL_BASE_APP_V3 + "api/app/position/upload";
-    }
-
-
-    /***************************************VOLUME云盘************************************************************/
-    /**
-     * 获取云盘列表
-     * @return
-     */
-    public static String getVolumeListUrl(){
-        return URL_BASE_VOLUME;
+    public static String getUpdateUserHeadUrl() {
+        return  URL_BASE_EMM+"api?module=user&method=update_head";
     }
 
     /**
-     * 获取云盘文件列表
-     * @param volumeId
-     * @param subPath
+     * 修改用户信息
      * @return
      */
-    public static String getVolumeFileOperationUrl(String volumeId){
-        return  URL_BASE_VOLUME+"/"+volumeId+"/file";
+    public static String getModifyUserInfoUrl(){
+        return  URL_BASE_EMM+"api?module=user&method=update_baseinfo";
+    }
+
+    /***********设备管理******************
+    /**
+     * 获取解绑设备url
+     *
+     * @return
+     */
+    public static String getUnBindDeviceUrl() {
+        return URL_BASE_EMM + "api/device/unbind";
     }
 
     /**
-     * 获取云盘上传STS token
-     * @param volumeId
+     * 获取绑定设备
+     *
      * @return
      */
-    public static String getVolumeFileUploadSTSTokenUrl(String volumeId){
-        return URL_BASE_VOLUME+"/"+volumeId+"/file/request";
+    public static String getBindingDevicesUrl() {
+        return URL_BASE_EMM + "api/v1/device/getUserDevices";
     }
 
     /**
-     * 获取云盘创建文件夹url
-     * @param volumeId
+     * 获取设备注册URl
+     * @param context
      * @return
      */
-    public static String getCreateForderUrl(String volumeId){
-        return URL_BASE_VOLUME+"/"+volumeId+"/directory";
+    public static String getDeviceRegisterUrl(Context context){
+        return "https://emm.inspur.com/mdm/loadForRegister?udid="+ AppUtils.getMyUUID(context);
     }
 
     /**
-     * 获取文件重命名url
-     * @param volumeId
+     * 获取绑定设备
+     *
      * @return
      */
-    public static String getVolumeFileRenameUrl(String volumeId){
-        return  URL_BASE_VOLUME+"/"+volumeId+"/file/name";
+    public static String getDeviceLogUrl() {
+        return URL_BASE_EMM + "api/v1/device/getDeviceLogs";
     }
 
     /**
-     * 获取云盘文件移动url
-     * @param volumeId
+     * 获取MDM启用状态
+     *
      * @return
      */
-    public static String getMoveVolumeFileUrl(String volumeId){
-        return  URL_BASE_VOLUME+"/"+volumeId+"/file/path";
-    }
-    /**
-     * 获取我的应用小部件的url
-     * @return
-     */
-    public static String getMyAppWidgetsUrl(){
-        return URL_BASE_APP_V3+"api/app/recommend/apps";
+    public static String getMDMStateUrl() {
+        return URL_BASE_EMM + "api/userprofile/mdm_state";
     }
 
+    /**
+     * 上传设备管理所需token和设备ID
+     *
+     * @return
+     */
+    public static String getUploadMDMInfoUrl() {
+        return URL_BASE_EMM + "api/mdm/mdm_check";
+    }
+
+    /**
+     * 设备检查
+     * @return
+     */
+    public static String getDeviceCheckUrl(){
+       return  URL_BASE_EMM+"api?module=mdm&method=check_state";
+    }
 }

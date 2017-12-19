@@ -467,7 +467,7 @@ public class MeetingRoomListActivity extends BaseActivity implements SwipeRefres
 			case CHANGE_LOCATION:
 				String uid = ((MyApplication) getApplicationContext()).getUid();
 				String selectCommonOfficeIds = PreferencesUtils.getString(
-						getApplicationContext(), UriUtils.tanent + uid
+						getApplicationContext(), MyApplication.getInstance().getTanent() + uid
 								+ "selectCommonOfficeIds");
 				if (selectCommonOfficeIds != null) {
 					selectCommonOfficeIdList = (List) JSON.parseArray(
@@ -840,7 +840,7 @@ public class MeetingRoomListActivity extends BaseActivity implements SwipeRefres
 	private void getCommonOfficeSpace(boolean isShowDlg) {
 		String uid = ((MyApplication) getApplicationContext()).getUid();
 		String selectCommonOfficeIds = PreferencesUtils.getString(
-				getApplicationContext(), UriUtils.tanent + uid
+				getApplicationContext(), MyApplication.getInstance().getTanent() + uid
 						+ "selectCommonOfficeIds");
 		if (!StringUtils.isBlank(selectCommonOfficeIds)) {
 			selectCommonOfficeIdList = (List) JSON.parseArray(
@@ -902,7 +902,7 @@ public class MeetingRoomListActivity extends BaseActivity implements SwipeRefres
 			loadingDlg.show(isShowDlg);
 			String uid = ((MyApplication) getApplicationContext()).getUid();
 			String selectCommonOfficeIds = PreferencesUtils.getString(
-					getApplicationContext(), UriUtils.tanent + uid
+					getApplicationContext(), MyApplication.getInstance().getTanent() + uid
 							+ "selectCommonOfficeIds");
 			List<String> selectCommonOfficeIdList = new ArrayList<String>();
 			if (!StringUtils.isBlank(selectCommonOfficeIds)) {

@@ -188,10 +188,10 @@ public class MessionSetActivity extends BaseActivity {
 	protected void saveChoosedTagList(ArrayList<String> tagList) {
 		String userId = ((MyApplication) getApplicationContext()).getUid();
 		if (tagList.size() > 0) {
-			PreferencesUtils.putString(MessionSetActivity.this, UriUtils.tanent
+			PreferencesUtils.putString(MessionSetActivity.this, MyApplication.getInstance().getTanent()
 					+ userId + "chooseTags", JSON.toJSONString(tagList));
 		} else {
-			PreferencesUtils.putString(MessionSetActivity.this, UriUtils.tanent
+			PreferencesUtils.putString(MessionSetActivity.this, MyApplication.getInstance().getTanent()
 					+ userId + "chooseTags", "");
 		}
 	}
@@ -225,7 +225,7 @@ public class MessionSetActivity extends BaseActivity {
 		tagListView.setTags(allTags);
 		String userId = ((MyApplication) getApplicationContext()).getUid();
 		String choosenTags = PreferencesUtils.getString(
-				MessionSetActivity.this, UriUtils.tanent + userId
+				MessionSetActivity.this, MyApplication.getInstance().getTanent() + userId
 						+ "chooseTags", "");
 		ArrayList<String> chooseTagList;
 		if (!StringUtils.isBlank(choosenTags)) {
@@ -248,7 +248,7 @@ public class MessionSetActivity extends BaseActivity {
 							e.printStackTrace();
 							PreferencesUtils
 									.putString(MessionSetActivity.this,
-											UriUtils.tanent + userId
+											MyApplication.getInstance().getTanent() + userId
 													+ "chooseTags", "");
 						}
 					}

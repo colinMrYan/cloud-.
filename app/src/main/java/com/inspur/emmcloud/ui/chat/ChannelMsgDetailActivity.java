@@ -23,6 +23,7 @@ import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
+import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.bean.Comment;
 import com.inspur.emmcloud.bean.CommentBodyBean;
@@ -45,7 +46,6 @@ import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.RobotCacheUtils;
 import com.inspur.emmcloud.util.TimeUtils;
 import com.inspur.emmcloud.util.TransHtmlToTextUtils;
-import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.CircleImageView;
 import com.inspur.emmcloud.widget.ECMChatInputMenu;
@@ -59,7 +59,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.inspur.emmcloud.util.UriUtils.getChannelImgUri;
+import static com.inspur.emmcloud.api.APIUri.getChannelImgUrl;
+
 
 /**
  * 消息详情页面
@@ -237,7 +238,7 @@ public class ChannelMsgDetailActivity extends BaseActivity implements
     private void displayImage(String fileName) {
         if (msg.getType().equals("res_image")) {
             ImageDisplayUtils.getInstance().displayImage(msgContentImg,
-                    UriUtils.getPreviewUri(fileName), R.drawable.icon_photo_default);
+                    APIUri.getPreviewUrl(fileName), R.drawable.icon_photo_default);
         } else {
             ImageDisplayUtils.getInstance().displayImage(msgContentImg, "drawable://" + FileUtils.getIconResId(fileName));
         }
@@ -258,7 +259,7 @@ public class ChannelMsgDetailActivity extends BaseActivity implements
         String url = path;
         if (!path.startsWith("file:") && !path.startsWith("content:")
                 && !path.startsWith("drawable")) {
-            url = UriUtils.getPreviewUri(path);
+            url = APIUri.getPreviewUrl(path);
         }
         ArrayList<String> urlList = new ArrayList<String>();
         urlList.add(url);
@@ -279,11 +280,11 @@ public class ChannelMsgDetailActivity extends BaseActivity implements
         //机器人进群修改处
         String iconUrl = "";
         if (msg.getUid().startsWith("BOT")) {
-            iconUrl = UriUtils.getRobotIconUri(RobotCacheUtils
+            iconUrl = APIUri.getRobotIconUrl(RobotCacheUtils
                     .getRobotById(ChannelMsgDetailActivity.this, msg.getUid())
                     .getAvatar());
         } else {
-            iconUrl = UriUtils.getChannelImgUri(ChannelMsgDetailActivity.this, msg.getUid());
+            iconUrl = getChannelImgUrl(ChannelMsgDetailActivity.this, msg.getUid());
         }
         ImageDisplayUtils.getInstance().displayImage(senderHeadImg, iconUrl, R.drawable.icon_photo_default);
         senderHeadImg.setOnClickListener(new OnClickListener() {
@@ -438,12 +439,12 @@ public class ChannelMsgDetailActivity extends BaseActivity implements
             //机器人进群修改处
             String iconUrl = "";
             if (comment.getUid().startsWith("BOT")) {
-                iconUrl = UriUtils.getRobotIconUri(RobotCacheUtils
+                iconUrl = APIUri.getRobotIconUrl(RobotCacheUtils
                         .getRobotById(ChannelMsgDetailActivity.this, comment.getUid())
                         .getAvatar());
             } else {
                 iconUrl =
-                        getChannelImgUri(ChannelMsgDetailActivity.this, comment.getUid());
+                        getChannelImgUrl(ChannelMsgDetailActivity.this, comment.getUid());
             }
             ImageDisplayUtils.getInstance().displayImage(photoImg, iconUrl, R.drawable.icon_person_default);
             photoImg.setOnClickListener(new OnClickListener() {

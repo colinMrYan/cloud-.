@@ -40,7 +40,7 @@ public class LanguageUtils {
 
 	public void getServerSupportLanguage() {
 		String languageResult = PreferencesUtils.getString(context,
-				UriUtils.tanent + "languageResult");
+				MyApplication.getInstance().getTanent() + "languageResult");
 		if (NetUtils.isNetworkConnected(context,false)) {
 			MineAPIService apiService = new MineAPIService(context);
 			apiService.setAPIInterface(new WebService());
@@ -100,7 +100,7 @@ public class LanguageUtils {
 			commonLanguageList.add(MyAppConfig.getDefaultLanguage);
 		}
 		String languageJson = PreferencesUtils.getString(context,
-				UriUtils.tanent + "appLanguageObj");
+				MyApplication.getInstance().getTanent() + "appLanguageObj");
 		String languageName= "";
 		String savelanguageName = ""; //Preference中保存的语言名字
 		// 当本地已经没有存储了languageObj信息时候
@@ -110,7 +110,7 @@ public class LanguageUtils {
 		} else {
 			languageName = new Language(languageJson).getIso();
 			savelanguageName = PreferencesUtils.getString(
-					context, UriUtils.tanent+"language", "");
+					context, MyApplication.getInstance().getTanent()+"language", "");
 		}   
 		Language language = getContainedLanguage(commonLanguageList,
 				languageName);
@@ -119,12 +119,12 @@ public class LanguageUtils {
 			savelanguageName = language.getIso();
 		}
 		
-		PreferencesUtils.putString(context, UriUtils.tanent
+		PreferencesUtils.putString(context, MyApplication.getInstance().getTanent()
 				+ "appLanguageObj", language.toString());
-		PreferencesUtils.putString(context, UriUtils.tanent
+		PreferencesUtils.putString(context, MyApplication.getInstance().getTanent()
 				+ "language", savelanguageName);
 		String commonLanguageListJson = JSON.toJSONString(commonLanguageList);
-		PreferencesUtils.putString(context, UriUtils.tanent+"commonLanguageList", commonLanguageListJson);
+		PreferencesUtils.putString(context, MyApplication.getInstance().getTanent()+"commonLanguageList", commonLanguageListJson);
 		((MyApplication) context.getApplicationContext())
 				.setAppLanguageAndFontScale();
 		handler.sendEmptyMessage(GET_LANGUAGE_SUCCESS);
@@ -149,7 +149,7 @@ public class LanguageUtils {
 		@Override
 		public void returnLanguageSuccess(GetLanguageResult getLanguageResult) {
 			// TODO Auto-generated method stub
-			PreferencesUtils.putString(context, UriUtils.tanent
+			PreferencesUtils.putString(context, MyApplication.getInstance().getTanent()
 					+ "languageResult", getLanguageResult.getLanguageResult());
 			handData(getLanguageResult);
 		}
@@ -158,7 +158,7 @@ public class LanguageUtils {
 		public void returnLanguageFail(String error,int errorCode) {
 			// TODO Auto-generated method stub
 			String languageResult = PreferencesUtils.getString(context,
-					UriUtils.tanent + "languageResult");
+					MyApplication.getInstance().getTanent() + "languageResult");
 			if (languageResult != null) {
 				handData(new GetLanguageResult(languageResult));
 			}else {

@@ -29,7 +29,7 @@ public class URLClickableSpan extends ClickableSpan {
 //        intent.setClass(context, AppWebOpenActivity.class);
 //        intent.putExtra("url",openUri);
 //        context.startActivity(intent);
-        UriUtils.openUrl((Activity) context,openUri,"");
+        UriUtils.openUrl((Activity) context,openUri);
     }
 
     @Override

@@ -9,10 +9,10 @@ import android.os.Bundle;
 import android.widget.Toast;
 
 import com.inspur.emmcloud.api.APIInterfaceInstance;
+import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.api.apiservice.AppAPIService;
 import com.inspur.emmcloud.bean.GetDeviceCheckResult;
 import com.inspur.emmcloud.ui.mdm.DeviceRegisterFailDetailActivity;
-import com.inspur.emmcloud.util.AppUtils;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
 import com.inspur.imp.api.ImpActivity;
@@ -112,7 +112,7 @@ public class MDM extends APIInterfaceInstance {
 		Bundle bundle = new Bundle();
 		bundle.putString("appName", context.getString(Res.getStringID("device_registe")));
 		bundle.putString("function","mdm");
-		bundle.putString("uri", "https://emm.inspur.com/mdm/loadForRegister?udid="+ AppUtils.getMyUUID(context));
+		bundle.putString("uri", APIUri.getDeviceRegisterUrl(context));
 		intent.putExtras(bundle);
 		context.startActivity(intent);
 	}

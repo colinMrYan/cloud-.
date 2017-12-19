@@ -11,8 +11,8 @@ package com.inspur.emmcloud.config;
 import android.content.Context;
 import android.os.Environment;
 
+import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.bean.Language;
-import com.inspur.emmcloud.util.UriUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -55,7 +55,7 @@ public class MyAppConfig {
      * @return
      */
 	public static String getReactCurrentFilePath(Context context,String userId){
-		return context.getDir("ReactResource",MODE_PRIVATE).getPath()+"/"+ UriUtils.tanent+"/"+userId;
+		return context.getDir("ReactResource",MODE_PRIVATE).getPath()+"/"+ MyApplication.getInstance().getTanent()+"/"+userId;
 	}
 
 	/**
@@ -65,7 +65,7 @@ public class MyAppConfig {
 	 * @return
 	 */
 	public static String getReactAppFilePath(Context context,String userId,String module){
-		return context.getDir("ReactResource",MODE_PRIVATE).getPath()+"/"+ UriUtils.tanent+"/"+userId+"/"+module;
+		return context.getDir("ReactResource",MODE_PRIVATE).getPath()+"/"+ MyApplication.getInstance().getTanent()+"/"+userId+"/"+module;
 	}
 
 	/**
@@ -75,7 +75,7 @@ public class MyAppConfig {
      * @return
      */
 	public static String getReactTempFilePath(Context context,String userId){
-		return context.getDir("ReactResource",MODE_PRIVATE).getPath()+"/"+ UriUtils.tanent+"/"+userId+"/Pre";
+		return context.getDir("ReactResource",MODE_PRIVATE).getPath()+"/"+ MyApplication.getInstance().getTanent()+"/"+userId+"/Pre";
 	}
 
 	/**
@@ -85,7 +85,7 @@ public class MyAppConfig {
      * @return
      */
 	public static String getSplashPageImageShowPath(Context context,String userId,String module){
-		return context.getDir("SplashPage", MODE_PRIVATE).getPath()+"/"+UriUtils.tanent+"/"+userId+"/"+module;
+		return context.getDir("SplashPage", MODE_PRIVATE).getPath()+"/"+MyApplication.getInstance().getTanent()+"/"+userId+"/"+module;
 	}
 
 	/**
@@ -95,7 +95,7 @@ public class MyAppConfig {
      * @return
      */
 	public static String getSplashPageImageLastVersionPath(Context context,String userId){
-		return context.getDir("SplashPage",MODE_PRIVATE).getPath()+"/"+UriUtils.tanent+"/"+userId+"/Pre";
+		return context.getDir("SplashPage",MODE_PRIVATE).getPath()+"/"+MyApplication.getInstance().getTanent()+"/"+userId+"/Pre";
 	}
 
 	/**
@@ -105,7 +105,7 @@ public class MyAppConfig {
      * @return
      */
 	public static String getReactInstallPath(Context context,String userId){
-		return  context.getDir("ReactResource",MODE_PRIVATE).getPath()+"/"+ UriUtils.tanent+"/"+userId;
+		return  context.getDir("ReactResource",MODE_PRIVATE).getPath()+"/"+ MyApplication.getInstance().getTanent()+"/"+userId;
 	}
 	
 	public static Language getDefaultLanguage = new Language("中文简体","zh-CN","zh-Hans","zh-CN","zh-CN","zh-Hans");

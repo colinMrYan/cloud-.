@@ -1,12 +1,12 @@
 package com.inspur.emmcloud.bean;
 
-import org.json.JSONObject;
-
 import android.content.Context;
 
+import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.util.FileUtils;
 import com.inspur.emmcloud.util.TimeUtils;
-import com.inspur.emmcloud.util.UriUtils;
+
+import org.json.JSONObject;
 
 public class GroupFileInfo {
 	private String url = "";
@@ -27,7 +27,7 @@ public class GroupFileInfo {
 			}
 			if (jsonObject.has("key")) {
 				url = jsonObject.getString("key");
-				url = UriUtils.getPreviewUri(url);
+				url = APIUri.getPreviewUrl(url);
 			}
 
 		} catch (Exception e) {

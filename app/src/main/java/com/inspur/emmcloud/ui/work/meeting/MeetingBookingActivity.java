@@ -388,7 +388,7 @@ public class MeetingBookingActivity extends BaseActivity {
             String icon = searchModel.getIcon(MeetingBookingActivity.this);
             int defaultIcon = -1;
             if (searchModel.getType().equals("GROUP")) {
-                File file = new File(MyAppConfig.LOCAL_CACHE_PATH, UriUtils.tanent
+                File file = new File(MyAppConfig.LOCAL_CACHE_PATH, MyApplication.getInstance().getTanent()
                         + searchModel.getId() + "_100.png1");
                 if (file.exists()) {
                     icon = "file://" + file.getAbsolutePath();
@@ -482,7 +482,7 @@ public class MeetingBookingActivity extends BaseActivity {
                 loadingDlg.dismiss();
             }
             PreferencesUtils.putBoolean(MeetingBookingActivity.this,
-                    UriUtils.tanent + userId + "isAdmin", getIsAdmin.isAdmin());
+                    MyApplication.getInstance().getTanent() + userId + "isAdmin", getIsAdmin.isAdmin());
         }
 
         @Override
@@ -491,7 +491,7 @@ public class MeetingBookingActivity extends BaseActivity {
                 loadingDlg.dismiss();
             }
             PreferencesUtils.putBoolean(MeetingBookingActivity.this,
-                    UriUtils.tanent + userId + "isAdmin", false);
+                    MyApplication.getInstance().getTanent() + userId + "isAdmin", false);
             WebServiceMiddleUtils.hand(MeetingBookingActivity.this, error, errorCode);
         }
 

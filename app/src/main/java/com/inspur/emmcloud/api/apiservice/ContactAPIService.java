@@ -30,7 +30,6 @@ import org.xutils.x;
 public class ContactAPIService {
 	private Context context;
 	private APIInterface apiInterface;
-	private String baseUrl = "https://emm.inspur.com/api?";
 	public ContactAPIService(Context context) {
 		this.context = context;
 	}

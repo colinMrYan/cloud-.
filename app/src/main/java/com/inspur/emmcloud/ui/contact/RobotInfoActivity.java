@@ -1,4 +1,4 @@
-package com.inspur.emmcloud.ui.contact; 
+package com.inspur.emmcloud.ui.contact;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,13 +8,13 @@ import android.widget.TextView;
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
+import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.api.apiservice.ContactAPIService;
 import com.inspur.emmcloud.bean.Robot;
 import com.inspur.emmcloud.util.ChannelOperationCacheUtils;
 import com.inspur.emmcloud.util.ImageDisplayUtils;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.RobotCacheUtils;
-import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.CircleImageView;
 import com.inspur.emmcloud.widget.LoadingDialog;
@@ -97,7 +97,7 @@ public class RobotInfoActivity extends BaseActivity implements OnStateChangedLis
 	 * 展示机器人信息
 	 */
 	private void showRobotInfo(Robot robotInfo) {
-		ImageDisplayUtils.getInstance().displayImage(robotHeadImg, UriUtils.getRobotIconUri(robotInfo.getAvatar()),R.drawable.icon_person_default);
+		ImageDisplayUtils.getInstance().displayImage(robotHeadImg, APIUri.getRobotIconUrl(robotInfo.getAvatar()),R.drawable.icon_person_default);
 		robotNameText.setText(robotInfo.getName());
 		functionIntroductionText.setText(robotInfo.getTitle());
 		supportText.setText(robotInfo.getSupport());

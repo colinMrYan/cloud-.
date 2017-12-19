@@ -94,7 +94,7 @@ public class GetAdressUsersResult implements Serializable{
 //		public String getHead(){
 //			return head;
 //		}
-//		public String getOffice(){
+//		public String getOfficeUrl(){
 //			return office;
 //		}
 		public String getInspurId(){

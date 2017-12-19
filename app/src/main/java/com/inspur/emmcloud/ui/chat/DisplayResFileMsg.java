@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIDownloadCallBack;
+import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.bean.Msg;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.util.DownLoaderUtils;
@@ -15,7 +16,6 @@ import com.inspur.emmcloud.util.FileUtils;
 import com.inspur.emmcloud.util.ImageDisplayUtils;
 import com.inspur.emmcloud.util.JSONUtils;
 import com.inspur.emmcloud.util.ToastUtils;
-import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.emmcloud.widget.HorizontalProgressBarWithNumber;
 import com.inspur.emmcloud.widget.RoundAngleImageView;
 
@@ -148,7 +148,7 @@ public class DisplayResFileMsg {
             fileDownLoadImg.setVisibility(View.GONE);
             FileUtils.openFile(context, downloadUri);
         } else {
-            String completeDownloadUrl = UriUtils.getPreviewUri(downloadUri);
+            String completeDownloadUrl = APIUri.getPreviewUrl(downloadUri);
             downLoaderUtils.startDownLoad(completeDownloadUrl, target,
                     fileProgressBar);
         }
