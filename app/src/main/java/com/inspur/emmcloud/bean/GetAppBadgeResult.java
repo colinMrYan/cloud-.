@@ -12,6 +12,7 @@ import java.util.Map;
 
 public class GetAppBadgeResult {
     private Map<String,AppBadgeBean> appBadgeBeanMap = new HashMap<>();
+    private int tabBadgeNumber = 0;
     public GetAppBadgeResult(String response){
         try {
             JSONArray jsonArray = new JSONArray(response);
@@ -30,5 +31,13 @@ public class GetAppBadgeResult {
 
     public void setAppBadgeBeanMap(Map<String, AppBadgeBean> appBadgeBeanMap) {
         this.appBadgeBeanMap = appBadgeBeanMap;
+    }
+
+    public int getTabBadgeNumber() {
+        return tabBadgeNumber;
+    }
+
+    public void setTabBadgeNumber(int tabBadgeNumber) {
+        this.tabBadgeNumber = tabBadgeNumber;
     }
 }
