@@ -39,7 +39,6 @@ import com.inspur.imp.api.ImpBaseActivity;
 import com.inspur.imp.plugin.camera.editimage.EditImageActivity;
 import com.inspur.imp.plugin.camera.editimage.utils.BitmapUtils;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.File;
@@ -104,27 +103,6 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
         photoName = getIntent().getStringExtra(PHOTO_NAME);
         extraParam = getIntent().getStringExtra(PHOTO_PARAM);
         JSONObject optionsObj = JSONUtils.getJSONObject(extraParam,"options",new JSONObject());
-        try {
-            JSONObject object1 = new JSONObject();
-            object1.put("name","A4纸");
-            object1.put("rectScale","16:9");
-
-            JSONObject object2 = new JSONObject();
-            object2.put("name","身份证2");
-            object2.put("rectScale","2:5");
-
-            JSONObject object3 = new JSONObject();
-            object3.put("name","自定义");
-            object3.put("rectScale","custom");
-            JSONArray array = new JSONArray();
-            array.put(object1);
-            array.put(object2);
-            array.put(object3);
-            optionsObj.put("rectScaleList",array);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-
         defaultRectScale = JSONUtils.getString(optionsObj,"rectScale",null);
         String rectScaleListJson = JSONUtils.getString(optionsObj,"rectScaleList","");
         rectScaleList = new GetReatScaleResult(rectScaleListJson).getRectScaleList();
@@ -540,7 +518,7 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
         {
             TextView textView = new TextView(MyCameraActivity.this);
             textView.setTextSize(TypedValue.COMPLEX_UNIT_SP,16);
-            textView.setPadding(DensityUtil.dip2px(MyCameraActivity.this,10),DensityUtil.dip2px(MyCameraActivity.this,10),DensityUtil.dip2px(MyCameraActivity.this,10),DensityUtil.dip2px(MyCameraActivity.this,10));
+            textView.setPadding(DensityUtil.dip2px(MyCameraActivity.this,20),DensityUtil.dip2px(MyCameraActivity.this,8),DensityUtil.dip2px(MyCameraActivity.this,20),DensityUtil.dip2px(MyCameraActivity.this,8));
             textView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT));
             ViewHolder viewHolder = new ViewHolder(textView);
             viewHolder.textView = textView;
@@ -555,6 +533,7 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
         {
             viewHolder.textView.setText(rectScaleList.get(i).getName());
             viewHolder.textView.setTextColor((radioSelectPosition == i)? Color.parseColor("#CB602D"):Color.parseColor("#FFFFFB"));
+            viewHolder.textView.setBackgroundColor((radioSelectPosition == i)?Color.parseColor("#323232"):Color.parseColor("#00000000"));
             viewHolder.textView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

@@ -53,7 +53,7 @@ public class SwitchEnterpriseActivity extends BaseActivity {
     private void initView() {
         String selectLoginEnterpriseId= PreferencesByUsersUtils.getString(this, Constant.PREF_SELECT_LOGIN_ENTERPRISE_ID,"");
         if(!StringUtils.isBlank(selectLoginEnterpriseId)){
-            findViewById(R.id.clear_auto_select_enterprise_text).setVisibility(View.VISIBLE);
+            findViewById(R.id.clear_auto_select_enterprise_layout).setVisibility(View.VISIBLE);
         }
         ((TextView) findViewById(R.id.header_text)).setText(R.string.select_enterprise);
         enterpriseListView = (ListView) findViewById(R.id.device_list);
@@ -123,7 +123,8 @@ public class SwitchEnterpriseActivity extends BaseActivity {
             case R.id.back_layout:
                 finish();
                 break;
-            case R.id.clear_auto_select_enterprise_text:
+            case R.id.clear_auto_select_enterprise_layout:
+                v.setVisibility(View.GONE);
                 PreferencesByUsersUtils.putString(this, Constant.PREF_SELECT_LOGIN_ENTERPRISE_ID,"");
                 ToastUtils.show(MyApplication.getInstance(),R.string.turn_off_success);
                 break;

@@ -55,10 +55,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"></ListView>
         <RelativeLayout
-            android:id="@+id/clear_auto_select_enterprise_text"
+            android:id="@+id/clear_auto_select_enterprise_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
+            android:visibility="gone"
             android:onClick="onClick"
             android:paddingLeft="10dp"
             android:background="@color/white">

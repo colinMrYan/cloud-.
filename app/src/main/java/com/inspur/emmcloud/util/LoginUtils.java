@@ -15,7 +15,6 @@ import com.inspur.emmcloud.bean.Enterprise;
 import com.inspur.emmcloud.bean.GetLoginResult;
 import com.inspur.emmcloud.bean.GetMyInfoResult;
 import com.inspur.emmcloud.config.Constant;
-import com.inspur.emmcloud.ui.login.LoginActivity;
 import com.inspur.emmcloud.util.MDM.MDM;
 import com.inspur.emmcloud.util.MDM.MDMListener;
 import com.inspur.emmcloud.widget.LoadingDialog;
@@ -111,6 +110,8 @@ public class LoginUtils extends APIInterfaceInstance {
             public void MDMStatusNoPass() {
                 // TODO Auto-generated method stub
                 clearLoginInfo();
+                //当设备因为设备管理无法进入时，把记住选择企业选项情况，让用户重新选择企业进入
+                PreferencesByUsersUtils.putString(activity, Constant.PREF_SELECT_LOGIN_ENTERPRISE_ID,"");
                 loginUtilsHandler.sendEmptyMessage(LOGIN_FAIL);
             }
 
@@ -282,8 +283,6 @@ public class LoginUtils extends APIInterfaceInstance {
                 .setUid(getMyInfoResult.getID());
         List<Enterprise> enterpriseList = getMyInfoResult.getEnterpriseList();
         Enterprise defaultEnterprise = getMyInfoResult.getDefaultEnterprise();
-        LogUtils.jasonDebug("activity instanceof LoginActivity="+(activity instanceof LoginActivity));
-        LogUtils.jasonDebug("enterpriseList.size()"+(enterpriseList.size()));
         if (isLogin && enterpriseList.size() > 1) {
             String selectLoginEnterpriseId = PreferencesByUsersUtils.getString(activity, Constant.PREF_SELECT_LOGIN_ENTERPRISE_ID, "");
             //当用户没有指定登录的企业时或已指定登录企业但是此企业不存在时则弹出选择登录企业的页面
@@ -297,8 +296,6 @@ public class LoginUtils extends APIInterfaceInstance {
         }
         ((MyApplication) activity.getApplicationContext()).initTanent();
         getServerSupportLanguage();
-
-
     }
 
 
