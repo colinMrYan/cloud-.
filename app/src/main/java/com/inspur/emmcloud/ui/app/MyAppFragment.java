@@ -84,6 +84,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import static com.inspur.emmcloud.util.AppCacheUtils.getCommonlyUseAppList;
 
@@ -1066,6 +1067,31 @@ public class MyAppFragment extends Fragment {
         }
     }
 
+
+    /**
+     * 获取需要显示的appId列表
+     *
+     * @return
+     */
+    public  void calculateBadgeNumberAndSendToIndex(GetAppBadgeResult getAppBadgeResult) {
+        int badageNum = 0;
+        Set<String> appBadgeSet = appBadgeBeanMap.keySet();
+        for (String appId:appBadgeSet) {
+            App app = new App();
+            app.setAppID(appId);
+            for (int i = 0; i < appListAdapter.getAppAdapterList().size(); i++){
+                int index = appListAdapter.getAppAdapterList().get(i).getAppItemList().indexOf(app);
+                if(index != -1){
+                    badageNum = badageNum + appBadgeBeanMap.get(appId).getBadgeNum();
+                    break;
+                }
+            }
+        }
+        getAppBadgeResult.setTabBadgeNumber(badageNum);
+        //发送到IndexActivity updateBadgeNumber
+        EventBus.getDefault().post(getAppBadgeResult);
+    }
+
     /**
      * 网络请求处理类，一般放最后
      */
@@ -1087,6 +1113,7 @@ public class MyAppFragment extends Fragment {
             swipeRefreshLayout.setRefreshing(false);
             appBadgeBeanMap = getAppBadgeResult.getAppBadgeBeanMap();
             appListAdapter.notifyDataSetChanged();
+            calculateBadgeNumberAndSendToIndex(getAppBadgeResult);
         }
 
         @Override
