@@ -27,7 +27,6 @@ import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.AppAPIService;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.api.apiservice.ContactAPIService;
-import com.inspur.emmcloud.bean.AppBadgeBean;
 import com.inspur.emmcloud.bean.AppTabAutoBean;
 import com.inspur.emmcloud.bean.ChannelGroup;
 import com.inspur.emmcloud.bean.Contact;
@@ -37,8 +36,8 @@ import com.inspur.emmcloud.bean.GetAppBadgeResult;
 import com.inspur.emmcloud.bean.GetAppTabAutoResult;
 import com.inspur.emmcloud.bean.GetSearchChannelGroupResult;
 import com.inspur.emmcloud.bean.PVCollectModel;
-import com.inspur.emmcloud.interf.CommonCallBack;
 import com.inspur.emmcloud.config.Constant;
+import com.inspur.emmcloud.interf.CommonCallBack;
 import com.inspur.emmcloud.interf.OnTabReselectListener;
 import com.inspur.emmcloud.service.BackgroundService;
 import com.inspur.emmcloud.service.CoreService;
@@ -70,7 +69,6 @@ import com.inspur.emmcloud.util.SplashPageUtils;
 import com.inspur.emmcloud.util.StateBarColor;
 import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.ToastUtils;
-import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.GradientDrawableBuilder;
 import com.inspur.emmcloud.widget.LoadingDialog;
@@ -85,8 +83,6 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * 主页面
@@ -518,20 +514,17 @@ public class IndexActivity extends BaseFragmentActivity implements
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void updateBadgeNumber(GetAppBadgeResult getAppBadgeResult) {
-        int badgeNumber = 0;
-        Map<String,AppBadgeBean> appBadgeBeanMap = getAppBadgeResult.getAppBadgeBeanMap();
-        Set<String> set = appBadgeBeanMap.keySet();
-        for (String appId:set) {
-            badgeNumber = badgeNumber + appBadgeBeanMap.get(appId).getBadgeNum();
-        }
-
-        for (int i = 0; i < mTabHost.getTabWidget().getChildCount(); i++) {
-            View tabview = mTabHost.getTabWidget().getChildAt(i);
-            if(((TextView)tabview.findViewById(R.id.textview)).getText().toString().contains(getString(R.string.application))){
-                setUnHandledBadgesDisplay(tabview,badgeNumber);
+        int badgeNumber = getAppBadgeResult.getTabBadgeNumber();
+        if(badgeNumber > 0){
+            for (int i = 0; i < mTabHost.getTabWidget().getChildCount(); i++) {
+                View tabView = mTabHost.getTabWidget().getChildAt(i);
+                if(((TextView)tabView.findViewById(R.id.textview)).getText().toString().contains(getString(R.string.application))){
+                    setUnHandledBadgesDisplay(tabView,badgeNumber);
+                }
             }
         }
     }
+
 
     /**
      * 处理未处理消息个数的显示
@@ -543,11 +536,10 @@ public class IndexActivity extends BaseFragmentActivity implements
         unhandledBadges.setVisibility(View.VISIBLE);
         GradientDrawable gradientDrawable = new GradientDrawableBuilder()
                 .setCornerRadius(DensityUtil.dip2px(IndexActivity.this, 40))
-                .setBackgroundColor(0xFFFF0033)
-                .setStrokeColor(0xFFFF0033).build();
+                .setBackgroundColor(0xFFF74C31)
+                .setStrokeColor(0xFFF74C31).build();
         unhandledBadges.setBackground(gradientDrawable);
-//            unhandledBadges.setText(appBadgeBean.getBadgeNum() > 99 ? "99+" : (appBadgeBean.getBadgeNum() + ""));
-        unhandledBadges.setText(""+badgeNumber);
+        unhandledBadges.setText(""+(badgeNumber > 99 ? "99+":badgeNumber));
     }
 
     /**
