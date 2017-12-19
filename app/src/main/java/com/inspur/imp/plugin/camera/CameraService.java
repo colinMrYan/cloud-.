@@ -92,6 +92,7 @@ public class CameraService extends ImpPlugin {
 
     @Override
     public void execute(String action, JSONObject paramsObject) {
+        LogUtils.jasonDebug("paramsObject="+paramsObject);
         if ("open".equals(action)) {
             open(paramsObject);
         }

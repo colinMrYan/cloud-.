@@ -421,6 +421,9 @@
     <string name="sure_switch_to">Make sure to switch to %1$s</string>
     <string name="fail_to_switch_enterprise">Failed to switch enterprise!</string>
     <string name="select_enterprise">Select enterprise</string>
+    <string name="auto_select_enterprise">Automatically choose</string>
+    <string name="close_select_enterprise">Turn off auto selection enterprise</string>
+    <string name="turn_off_success">Turn off success</string>
     <string name="switch_enterprise">Switch</string>
     <string name="current_enterprise">Current enterprise</string>
     <string name="web_app_auto_rotate">Web App support rotation</string>
