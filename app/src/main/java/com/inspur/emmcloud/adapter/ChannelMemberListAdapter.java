@@ -13,9 +13,9 @@ import android.widget.TextView;
 
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
-import com.inspur.emmcloud.bean.PersonDto;
-import com.inspur.emmcloud.util.ImageDisplayUtils;
-import com.inspur.emmcloud.util.RobotCacheUtils;
+import com.inspur.emmcloud.bean.chat.PersonDto;
+import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
+import com.inspur.emmcloud.util.privates.db.RobotCacheUtils;
 
 import java.util.List;
 

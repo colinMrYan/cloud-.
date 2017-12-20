@@ -1,7 +1,6 @@
 package com.inspur.emmcloud.widget;
 
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.util.LogUtils;
 
 import android.content.Context;
 import android.content.res.TypedArray;

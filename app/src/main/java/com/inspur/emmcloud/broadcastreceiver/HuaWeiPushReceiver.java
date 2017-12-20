@@ -6,8 +6,8 @@ import android.os.Bundle;
 
 import com.huawei.hms.support.api.push.PushReceiver;
 import com.inspur.emmcloud.push.WebSocketPush;
-import com.inspur.emmcloud.util.LogUtils;
-import com.inspur.emmcloud.util.PreferencesUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
+import com.inspur.emmcloud.util.common.PreferencesUtils;
 
 /**
  * Created by yufuchang on 2017/6/20.

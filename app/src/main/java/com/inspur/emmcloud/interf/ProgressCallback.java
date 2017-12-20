@@ -1,6 +1,6 @@
 package com.inspur.emmcloud.interf;
 
-import com.inspur.emmcloud.bean.Volume.VolumeFile;
+import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
 
 /**
  * Created by chenmch on 2017/11/24.

@@ -13,7 +13,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.util.DisplayMetrics;
@@ -25,8 +24,8 @@ import android.widget.ViewFlipper;
 
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.config.MyAppConfig;
-import com.inspur.emmcloud.util.LogUtils;
-import com.inspur.emmcloud.util.ToastUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
+import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.imp.plugin.camera.editimage.fragment.CropFragment;
 import com.inspur.imp.plugin.camera.editimage.fragment.MainMenuFragment;

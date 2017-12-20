@@ -11,9 +11,9 @@ import android.support.annotation.Nullable;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
-import com.inspur.emmcloud.bean.CalendarEvent;
-import com.inspur.emmcloud.ui.app.ReactNativeAppActivity;
-import com.inspur.emmcloud.ui.app.groupnews.GroupNewsActivity;
+import com.inspur.emmcloud.bean.work.CalendarEvent;
+import com.inspur.emmcloud.ui.appcenter.ReactNativeAppActivity;
+import com.inspur.emmcloud.ui.appcenter.groupnews.GroupNewsActivity;
 import com.inspur.emmcloud.ui.chat.ChannelActivity;
 import com.inspur.emmcloud.ui.contact.RobotInfoActivity;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
@@ -25,13 +25,13 @@ import com.inspur.emmcloud.ui.login.LoginActivity;
 import com.inspur.emmcloud.ui.mine.setting.CreateGestureActivity;
 import com.inspur.emmcloud.ui.mine.setting.GestureLoginActivity;
 import com.inspur.emmcloud.ui.work.calendar.CalEventAddActivity;
-import com.inspur.emmcloud.util.AppId2AppAndOpenAppUtils;
-import com.inspur.emmcloud.util.IntentUtils;
-import com.inspur.emmcloud.util.JSONUtils;
-import com.inspur.emmcloud.util.NetUtils;
-import com.inspur.emmcloud.util.StateBarColor;
-import com.inspur.emmcloud.util.ToastUtils;
-import com.inspur.emmcloud.util.WebAppUtils;
+import com.inspur.emmcloud.util.privates.AppId2AppAndOpenAppUtils;
+import com.inspur.emmcloud.util.common.IntentUtils;
+import com.inspur.emmcloud.util.common.JSONUtils;
+import com.inspur.emmcloud.util.common.NetUtils;
+import com.inspur.emmcloud.util.common.StateBarUtils;
+import com.inspur.emmcloud.util.common.ToastUtils;
+import com.inspur.emmcloud.util.privates.WebAppUtils;
 import com.inspur.imp.api.ImpActivity;
 
 import org.json.JSONObject;
@@ -46,7 +46,7 @@ public class SchemeHandleActivity extends Activity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        StateBarColor.changeStateBarColor(this);
+        StateBarUtils.changeStateBarColor(this);
         if (MyApplication.getInstance().getOPenNotification()){
             MyApplication.getInstance().setOpenNotification(false);
             if (getIsNeedGestureCode()){

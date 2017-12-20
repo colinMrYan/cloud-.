@@ -8,11 +8,11 @@ import android.support.annotation.Nullable;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.AppAPIService;
-import com.inspur.emmcloud.bean.AppException;
-import com.inspur.emmcloud.util.AppExceptionCacheUtils;
-import com.inspur.emmcloud.util.AppUtils;
-import com.inspur.emmcloud.util.NetUtils;
-import com.inspur.emmcloud.util.PreferencesUtils;
+import com.inspur.emmcloud.bean.system.AppException;
+import com.inspur.emmcloud.util.privates.db.AppExceptionCacheUtils;
+import com.inspur.emmcloud.util.privates.AppUtils;
+import com.inspur.emmcloud.util.common.NetUtils;
+import com.inspur.emmcloud.util.common.PreferencesUtils;
 
 import org.json.JSONArray;
 import org.json.JSONObject;

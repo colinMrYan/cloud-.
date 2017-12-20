@@ -5,17 +5,17 @@ import android.content.Intent;
 
 import com.inspur.emmcloud.api.APIDownloadCallBack;
 import com.inspur.emmcloud.api.APIUri;
-import com.inspur.emmcloud.bean.AppException;
-import com.inspur.emmcloud.bean.ReactNativeUpdateBean;
+import com.inspur.emmcloud.bean.system.AppException;
+import com.inspur.emmcloud.bean.appcenter.ReactNativeUpdateBean;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.ui.find.FindFragment;
-import com.inspur.emmcloud.util.AppExceptionCacheUtils;
-import com.inspur.emmcloud.util.AppUtils;
-import com.inspur.emmcloud.util.DownLoaderUtils;
-import com.inspur.emmcloud.util.FileSafeCode;
-import com.inspur.emmcloud.util.FileUtils;
-import com.inspur.emmcloud.util.StringUtils;
-import com.inspur.emmcloud.util.ZipUtils;
+import com.inspur.emmcloud.util.privates.db.AppExceptionCacheUtils;
+import com.inspur.emmcloud.util.privates.AppUtils;
+import com.inspur.emmcloud.util.privates.DownLoaderUtils;
+import com.inspur.emmcloud.util.privates.FileSafeCode;
+import com.inspur.emmcloud.util.common.FileUtils;
+import com.inspur.emmcloud.util.common.StringUtils;
+import com.inspur.emmcloud.util.common.ZipUtils;
 
 import java.io.File;
 

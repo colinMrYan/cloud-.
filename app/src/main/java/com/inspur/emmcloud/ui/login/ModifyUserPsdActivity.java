@@ -10,11 +10,10 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.inspur.emmcloud.BaseActivity;
-import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.LoginAPIService;
-import com.inspur.emmcloud.util.NetUtils;
+import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.widget.ClearEditText;
 import com.inspur.emmcloud.widget.LoadingDialog;
 

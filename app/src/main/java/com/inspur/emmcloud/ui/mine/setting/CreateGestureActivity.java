@@ -9,12 +9,12 @@ import android.widget.Toast;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.util.IntentUtils;
-import com.inspur.emmcloud.util.PreferencesByUsersUtils;
-import com.inspur.emmcloud.util.StateBarColor;
-import com.inspur.emmcloud.util.ninelock.LockPatternIndicator;
-import com.inspur.emmcloud.util.ninelock.LockPatternUtil;
-import com.inspur.emmcloud.util.ninelock.LockPatternView;
+import com.inspur.emmcloud.util.common.IntentUtils;
+import com.inspur.emmcloud.util.privates.PreferencesByUsersUtils;
+import com.inspur.emmcloud.util.common.StateBarUtils;
+import com.inspur.emmcloud.util.privates.ninelock.LockPatternIndicator;
+import com.inspur.emmcloud.util.privates.ninelock.LockPatternUtil;
+import com.inspur.emmcloud.util.privates.ninelock.LockPatternView;
 
 import org.greenrobot.eventbus.EventBus;
 import org.xutils.view.annotation.ContentView;
@@ -50,7 +50,7 @@ public class CreateGestureActivity extends BaseActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		StateBarColor.changeStateBarColor(this, R.color.grey_f6f6f6);
+		StateBarUtils.changeStateBarColor(this, R.color.grey_f6f6f6);
 		x.view().inject(this);
 		init();
 	}

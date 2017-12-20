@@ -16,7 +16,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.util.LogUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
   
 /** 
  * draggable可拖动的列表,并且支持行删除功能 

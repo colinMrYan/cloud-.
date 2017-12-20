@@ -22,8 +22,8 @@ import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Interpolator;
 
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.util.LogUtils;
-import com.inspur.emmcloud.util.StringUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
+import com.inspur.emmcloud.util.common.StringUtils;
 
 /**
  * Created by moubiao on 2016/11/2.

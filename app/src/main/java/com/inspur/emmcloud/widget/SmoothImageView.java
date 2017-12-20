@@ -16,8 +16,6 @@ import android.util.Log;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.ImageView;
 
-import com.inspur.emmcloud.util.LogUtils;
-
 /**
  * Author: liuk
  * Created at: 15/12/15

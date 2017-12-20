@@ -15,10 +15,10 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.api.apiservice.FindAPIService;
-import com.inspur.emmcloud.bean.GetKnowledgeInfo;
-import com.inspur.emmcloud.bean.KnowledgeInfo;
-import com.inspur.emmcloud.util.ImageDisplayUtils;
-import com.inspur.emmcloud.util.WebServiceMiddleUtils;
+import com.inspur.emmcloud.bean.find.GetKnowledgeInfo;
+import com.inspur.emmcloud.bean.find.KnowledgeInfo;
+import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
+import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 
 import java.util.ArrayList;
 import java.util.List;

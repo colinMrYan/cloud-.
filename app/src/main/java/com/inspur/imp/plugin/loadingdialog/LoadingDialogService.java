@@ -1,6 +1,6 @@
 package com.inspur.imp.plugin.loadingdialog;
 
-import com.inspur.emmcloud.util.JSONUtils;
+import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.imp.api.ImpActivity;
 import com.inspur.imp.plugin.ImpPlugin;
 

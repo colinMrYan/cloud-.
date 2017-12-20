@@ -12,12 +12,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.inspur.emmcloud.BaseActivity;
-import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.apiservice.MineAPIService;
-import com.inspur.emmcloud.util.NetUtils;
-import com.inspur.emmcloud.util.PreferencesUtils;
-import com.inspur.emmcloud.util.ToastUtils;
+import com.inspur.emmcloud.util.common.NetUtils;
+import com.inspur.emmcloud.util.common.PreferencesUtils;
+import com.inspur.emmcloud.util.common.ToastUtils;
 
 public class FeedBackActivity extends BaseActivity {
 

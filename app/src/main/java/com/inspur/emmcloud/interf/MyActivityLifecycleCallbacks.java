@@ -13,9 +13,9 @@ import com.inspur.emmcloud.service.SyncCommonAppService;
 import com.inspur.emmcloud.ui.SchemeHandleActivity;
 import com.inspur.emmcloud.ui.mine.setting.CreateGestureActivity;
 import com.inspur.emmcloud.ui.mine.setting.GestureLoginActivity;
-import com.inspur.emmcloud.util.AppUtils;
-import com.inspur.emmcloud.util.DbCacheUtils;
-import com.inspur.emmcloud.util.NetUtils;
+import com.inspur.emmcloud.util.privates.AppUtils;
+import com.inspur.emmcloud.util.privates.db.DbCacheUtils;
+import com.inspur.emmcloud.util.common.NetUtils;
 
 /**
  * Created by chenmch on 2017/9/13.

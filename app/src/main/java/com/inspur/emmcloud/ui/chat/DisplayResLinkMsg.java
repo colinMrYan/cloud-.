@@ -8,11 +8,11 @@ import android.widget.TextView;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
-import com.inspur.emmcloud.bean.Msg;
-import com.inspur.emmcloud.util.DensityUtil;
-import com.inspur.emmcloud.util.ImageDisplayUtils;
-import com.inspur.emmcloud.util.JSONUtils;
-import com.inspur.emmcloud.util.StringUtils;
+import com.inspur.emmcloud.bean.chat.Msg;
+import com.inspur.emmcloud.util.common.DensityUtil;
+import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
+import com.inspur.emmcloud.util.common.JSONUtils;
+import com.inspur.emmcloud.util.common.StringUtils;
 
 /**
  * DisplayResLinkMsg

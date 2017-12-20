@@ -11,14 +11,14 @@ import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
-import com.inspur.emmcloud.util.ImageDisplayUtils;
-import com.inspur.emmcloud.util.IntentUtils;
-import com.inspur.emmcloud.util.LogUtils;
-import com.inspur.emmcloud.util.PreferencesByUserAndTanentUtils;
-import com.inspur.emmcloud.util.StateBarColor;
-import com.inspur.emmcloud.util.ToastUtils;
-import com.inspur.emmcloud.util.ninelock.LockPatternUtil;
-import com.inspur.emmcloud.util.ninelock.LockPatternView;
+import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
+import com.inspur.emmcloud.util.common.IntentUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
+import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
+import com.inspur.emmcloud.util.common.StateBarUtils;
+import com.inspur.emmcloud.util.common.ToastUtils;
+import com.inspur.emmcloud.util.privates.ninelock.LockPatternUtil;
+import com.inspur.emmcloud.util.privates.ninelock.LockPatternView;
 import com.inspur.emmcloud.widget.CircleImageView;
 import com.wei.android.lib.fingerprintidentify.FingerprintIdentify;
 import com.wei.android.lib.fingerprintidentify.base.BaseFingerprint;
@@ -53,7 +53,7 @@ public class GestureLoginActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        StateBarColor.changeStateBarColor(this, R.color.grey_f6f6f6);
+        StateBarUtils.changeStateBarColor(this, R.color.grey_f6f6f6);
         x.view().inject(this);
         init();
 //        EventBus.getDefault().register(this);

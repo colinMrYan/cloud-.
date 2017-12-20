@@ -3,7 +3,7 @@ package com.inspur.emmcloud.widget.slidebar;
 
 import java.util.Comparator;
 
-import com.inspur.emmcloud.bean.PersonDto;
+import com.inspur.emmcloud.bean.chat.PersonDto;
 
 
 public class PinyinComparator implements Comparator<PersonDto> {

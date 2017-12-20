@@ -9,10 +9,10 @@ import android.util.Log;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.ui.login.LoginActivity;
-import com.inspur.emmcloud.util.JSONUtils;
-import com.inspur.emmcloud.util.LogUtils;
-import com.inspur.emmcloud.util.PreferencesUtils;
-import com.inspur.emmcloud.util.StringUtils;
+import com.inspur.emmcloud.util.common.JSONUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
+import com.inspur.emmcloud.util.common.PreferencesUtils;
+import com.inspur.emmcloud.util.common.StringUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;

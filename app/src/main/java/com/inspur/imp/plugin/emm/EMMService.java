@@ -3,13 +3,13 @@ package com.inspur.imp.plugin.emm;
 import android.os.Build;
 
 import com.inspur.emmcloud.MyApplication;
-import com.inspur.emmcloud.bean.GetDeviceCheckResult;
-import com.inspur.emmcloud.util.AppUtils;
-import com.inspur.emmcloud.util.LogUtils;
-import com.inspur.emmcloud.util.MDM.MDM;
-import com.inspur.emmcloud.util.PreferencesUtils;
-import com.inspur.emmcloud.util.ResolutionUtils;
-import com.inspur.emmcloud.util.ToastUtils;
+import com.inspur.emmcloud.bean.login.GetDeviceCheckResult;
+import com.inspur.emmcloud.util.privates.AppUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
+import com.inspur.emmcloud.util.privates.MDM.MDM;
+import com.inspur.emmcloud.util.common.PreferencesUtils;
+import com.inspur.emmcloud.util.common.ResolutionUtils;
+import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.imp.plugin.ImpPlugin;
 
 import org.json.JSONObject;

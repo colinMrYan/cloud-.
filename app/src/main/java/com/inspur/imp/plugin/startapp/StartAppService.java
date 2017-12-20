@@ -15,7 +15,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.inspur.emmcloud.util.LogUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.imp.plugin.ImpPlugin;
 import com.inspur.imp.util.StrUtil;
 

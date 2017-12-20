@@ -9,22 +9,22 @@ import android.os.Message;
 import android.text.TextUtils;
 import android.view.View;
 
-import com.inspur.emmcloud.bean.SplashPageBean;
+import com.inspur.emmcloud.bean.system.SplashPageBean;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.service.AppExceptionService;
 import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.ui.login.LoginActivity;
 import com.inspur.emmcloud.ui.mine.setting.GuideActivity;
-import com.inspur.emmcloud.util.AppUtils;
-import com.inspur.emmcloud.util.IntentUtils;
-import com.inspur.emmcloud.util.LoginUtils;
-import com.inspur.emmcloud.util.PreferencesByUserAndTanentUtils;
-import com.inspur.emmcloud.util.PreferencesUtils;
-import com.inspur.emmcloud.util.ResolutionUtils;
-import com.inspur.emmcloud.util.SplashPageUtils;
-import com.inspur.emmcloud.util.StateBarColor;
-import com.inspur.emmcloud.util.StringUtils;
-import com.inspur.emmcloud.util.UpgradeUtils;
+import com.inspur.emmcloud.util.privates.AppUtils;
+import com.inspur.emmcloud.util.common.IntentUtils;
+import com.inspur.emmcloud.util.privates.LoginUtils;
+import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
+import com.inspur.emmcloud.util.common.PreferencesUtils;
+import com.inspur.emmcloud.util.common.ResolutionUtils;
+import com.inspur.emmcloud.util.privates.SplashPageUtils;
+import com.inspur.emmcloud.util.common.StateBarUtils;
+import com.inspur.emmcloud.util.common.StringUtils;
+import com.inspur.emmcloud.util.privates.UpgradeUtils;
 import com.inspur.emmcloud.widget.dialogs.EasyDialog;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -56,7 +56,7 @@ public class MainActivity extends Activity{ // 此处不能继承BaseActivity �
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		StateBarColor.showOrHideStatusBar(this,false);
+		StateBarUtils.showOrHideStatusBar(this,false);
 		setContentView(R.layout.activity_main);
 		init();
 	}

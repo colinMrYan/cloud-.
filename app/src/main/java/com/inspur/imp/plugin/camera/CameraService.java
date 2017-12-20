@@ -15,8 +15,8 @@ import android.provider.MediaStore;
 import android.util.Base64;
 import android.widget.Toast;
 
-import com.inspur.emmcloud.util.ImageDisplayUtils;
-import com.inspur.emmcloud.util.LogUtils;
+import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.imp.api.Res;
 import com.inspur.imp.api.iLog;
 import com.inspur.imp.plugin.ImpPlugin;

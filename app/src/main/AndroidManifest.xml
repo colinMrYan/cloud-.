@@ -165,17 +165,17 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait"></activity>
         <activity
-            android:name=".ui.app.AppCenterActivity"
+            android:name=".ui.appcenter.AppCenterActivity"
             android:screenOrientation="portrait"></activity>
         <activity
-            android:name=".ui.app.AppCenterMoreActivity"
+            android:name=".ui.appcenter.AppCenterMoreActivity"
             android:screenOrientation="portrait"></activity>
         <activity
-            android:name=".ui.app.AppSearchActivity"
+            android:name=".ui.appcenter.AppSearchActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"></activity>
         <activity
-            android:name=".ui.app.AppDetailActivity"
+            android:name=".ui.appcenter.AppDetailActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"></activity>
 
@@ -359,7 +359,7 @@
             android:screenOrientation="portrait" />
 
         <activity
-            android:name=".ui.app.groupnews.NewsWebDetailActivity"
+            android:name=".ui.appcenter.groupnews.NewsWebDetailActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Holo.Light.NoActionBar"
@@ -430,7 +430,7 @@
             android:name=".ui.find.trip.TripInfoActivity"
             android:screenOrientation="portrait"></activity>
         <activity
-            android:name=".ui.app.ReactNativeAppActivity"
+            android:name=".ui.appcenter.ReactNativeAppActivity"
             android:screenOrientation="portrait"></activity>
         <activity
             android:name=".ui.chat.ModifyChannelGroupNameActivity"
@@ -451,7 +451,7 @@
 
         </activity>
         <activity
-            android:name=".ui.app.groupnews.GroupNewsActivity"
+            android:name=".ui.appcenter.groupnews.GroupNewsActivity"
             android:screenOrientation="portrait"></activity>
         <activity
             android:name=".ui.work.task.MessionListActivity"
@@ -538,7 +538,7 @@
             android:configChanges="locale|layoutDirection"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.app.ShortCutFunctionActivity"
+            android:name=".ui.appcenter.ShortCutFunctionActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar">
             <intent-filter>
@@ -554,20 +554,20 @@
 
         <!-- 云盘 -->
         <activity
-            android:name=".ui.app.volume.VolumeHomePageActivity"
+            android:name=".ui.appcenter.volume.VolumeHomePageActivity"
             android:screenOrientation="portrait"></activity>
         <activity
-            android:name=".ui.app.volume.VolumeFileActivity"
+            android:name=".ui.appcenter.volume.VolumeFileActivity"
             android:screenOrientation="portrait"></activity>
         <activity
-            android:name=".ui.app.volume.VolumeFileDownloadActivtiy"
+            android:name=".ui.appcenter.volume.VolumeFileDownloadActivtiy"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"></activity>
         <activity
-            android:name=".ui.app.volume.VolumeFileLocationSelectActivity"
+            android:name=".ui.appcenter.volume.VolumeFileLocationSelectActivity"
             android:screenOrientation="portrait"></activity>
         <activity
-            android:name=".ui.app.volume.VolumeFileFilterActvity"
+            android:name=".ui.appcenter.volume.VolumeFileFilterActvity"
             android:screenOrientation="portrait"></activity>
 
 

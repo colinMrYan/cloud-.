@@ -15,7 +15,7 @@ import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
-import com.inspur.emmcloud.util.ImageDisplayUtils;
+import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.widget.CircleImageView;
 
 public class ChannelMemActivity extends BaseActivity {

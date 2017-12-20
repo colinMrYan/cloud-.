@@ -32,9 +32,9 @@ import android.widget.Toast;
 
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.config.MyAppConfig;
-import com.inspur.emmcloud.util.DensityUtil;
-import com.inspur.emmcloud.util.JSONUtils;
-import com.inspur.emmcloud.util.ToastUtils;
+import com.inspur.emmcloud.util.common.DensityUtil;
+import com.inspur.emmcloud.util.common.JSONUtils;
+import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.imp.api.ImpBaseActivity;
 import com.inspur.imp.plugin.camera.editimage.EditImageActivity;
 import com.inspur.imp.plugin.camera.editimage.utils.BitmapUtils;

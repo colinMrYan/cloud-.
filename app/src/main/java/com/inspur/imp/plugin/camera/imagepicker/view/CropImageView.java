@@ -25,7 +25,7 @@ import android.view.MotionEvent;
 import android.widget.ImageView;
 
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.util.LogUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 
 import java.io.File;
 import java.io.IOException;

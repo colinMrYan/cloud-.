@@ -13,9 +13,9 @@ import com.amap.api.location.AMapLocationListener;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.AppAPIService;
 import com.inspur.emmcloud.config.Constant;
-import com.inspur.emmcloud.util.AppConfigCacheUtils;
-import com.inspur.emmcloud.util.LogUtils;
-import com.inspur.emmcloud.util.NetUtils;
+import com.inspur.emmcloud.util.privates.db.AppConfigCacheUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
+import com.inspur.emmcloud.util.common.NetUtils;
 
 import org.json.JSONObject;
 

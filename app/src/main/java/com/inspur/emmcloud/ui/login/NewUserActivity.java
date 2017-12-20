@@ -1,31 +1,6 @@
 package com.inspur.emmcloud.ui.login;
 
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.View.OnTouchListener;
-import android.widget.Button;
-import android.widget.RelativeLayout;
-
 import com.inspur.emmcloud.BaseActivity;
-import com.inspur.emmcloud.MyApplication;
-import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.api.APIInterfaceInstance;
-import com.inspur.emmcloud.bean.GetRegisterResult;
-import com.inspur.emmcloud.ui.mine.setting.ServiceTermActivity;
-import com.inspur.emmcloud.util.InputMethodUtils;
-import com.inspur.emmcloud.util.LogUtils;
-import com.inspur.emmcloud.util.ToastUtils;
-import com.inspur.emmcloud.util.WebServiceMiddleUtils;
-import com.inspur.emmcloud.widget.ClearEditText;
-import com.inspur.emmcloud.widget.LoadingDialog;
-import com.inspur.emmcloud.widget.dialogs.EasyDialog;
 
 /**
  * 新用户注册页面
