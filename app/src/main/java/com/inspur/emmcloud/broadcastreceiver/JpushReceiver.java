@@ -84,7 +84,7 @@ public class JpushReceiver extends BroadcastReceiver {
         } else {
             LogUtils.debug(TAG, "[MyReceiver] Unhandled intent - " + intent.getAction());
         }
-        ECMShortcutBadgeNumberManagerUtils.setDesktopBadgeNumber(context,166);
+        ECMShortcutBadgeNumberManagerUtils.setDesktopBadgeNumber(context,16,intent);
     }
 
     /**

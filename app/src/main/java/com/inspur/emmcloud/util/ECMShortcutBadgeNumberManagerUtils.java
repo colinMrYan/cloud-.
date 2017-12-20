@@ -15,6 +15,7 @@ import java.io.InputStreamReader;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
+import cn.jpush.android.api.JPushInterface;
 import me.leolin.shortcutbadger.ShortcutBadger;
 
 /**
@@ -27,13 +28,31 @@ public class ECMShortcutBadgeNumberManagerUtils {
      * @param context
      */
     public static void setDesktopBadgeNumber(Context context,int count) {
+//        LogUtils.YfcDebug("厂商："+AppUtils.GetChangShang().toLowerCase());
+//        if(AppUtils.GetChangShang().toLowerCase().startsWith("xiaomi")){
+//            String miuiVersionString = getSystemProperty("ro.miui.ui.version.name");
+//            int miuiVersionNum = (StringUtils.isBlank(miuiVersionString))? -1 : Integer.parseInt(miuiVersionString.substring(1));
+//            LogUtils.YfcDebug("MIUIVersion："+miuiVersionNum);
+//            if(count >= 6){
+//                setMIUIV6PlusBadge(context,count);
+//                return;
+//            }
+//        }
+        ShortcutBadger.applyCount(context,count);
+    }
+
+    /**
+     * 设置桌面角标
+     * @param context
+     */
+    public static void setDesktopBadgeNumber(Context context,int count,Intent intent) {
         LogUtils.YfcDebug("厂商："+AppUtils.GetChangShang().toLowerCase());
         if(AppUtils.GetChangShang().toLowerCase().startsWith("xiaomi")){
             String miuiVersionString = getSystemProperty("ro.miui.ui.version.name");
             int miuiVersionNum = (StringUtils.isBlank(miuiVersionString))? -1 : Integer.parseInt(miuiVersionString.substring(1));
             LogUtils.YfcDebug("MIUIVersion："+miuiVersionNum);
             if(count >= 6){
-                setMIUIV6PlusBadge(context,count);
+                setMIUIV6PlusBadge(context,count,intent);
                 return;
             }
         }
@@ -72,13 +91,23 @@ public class ECMShortcutBadgeNumberManagerUtils {
      * @param context
      * @param mCount
      */
-    private static void setMIUIV6PlusBadge(Context context, int mCount){
+    private static void setMIUIV6PlusBadge(Context context, int mCount,Intent intent){
         NotificationManager notificationManager = (NotificationManager) context
                 .getSystemService(Context.NOTIFICATION_SERVICE);
         Notification.Builder builder = new Notification.Builder(context)
                 .setContentTitle("通知").setContentText("您有一条新的消息")
                 .setAutoCancel(true).setPriority(Notification.PRIORITY_DEFAULT)
                 .setDefaults(Notification.DEFAULT_VIBRATE).setSmallIcon(R.drawable.ic_launcher);
+        Intent clickIntent = new Intent("com.inspur.emmcloud.openjpush");
+//        clickIntent.putExtra("key","value");
+//        intent.setAction("com.inspur.emmcloud.openjpush");
+        LogUtils.YfcDebug("广播里的字符串："+intent.getExtras().getString(JPushInterface.EXTRA_EXTRA));
+        clickIntent.putExtras(intent.getExtras());
+//        clickIntent.putExtra("jpushMessage",intent.getExtras().getString(JPushInterface.EXTRA_EXTRA));
+//        clickIntent.putExtra("jpushMessage","你好");
+        PendingIntent clickPendingIntent = PendingIntent.getBroadcast(context, 0, clickIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT);
+        builder.setContentIntent(clickPendingIntent);
         Notification notification = builder.build();
         notificationManager.cancelAll();
         try {
@@ -89,7 +118,7 @@ public class ECMShortcutBadgeNumberManagerUtils {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        notificationManager.notify(0,notification);
+        notificationManager.notify(mCount,notification);
     }
 
     /**
