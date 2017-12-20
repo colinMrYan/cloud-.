@@ -424,6 +424,9 @@
     <string name="select_enterprise">選擇企業</string>
     <string name="switch_enterprise">切換企業</string>
     <string name="current_enterprise">當前企業</string>
+    <string name="auto_select_enterprise">下次自動幫我選擇</string>
+    <string name="close_auto_select_enterprise">關閉自動選擇登入企業</string>
+    <string name="turn_off_success">關閉成功</string>
     <string name="web_app_auto_rotate">Web應用支持旋轉</string>
     <string name="run_background">後臺運行</string>
 
