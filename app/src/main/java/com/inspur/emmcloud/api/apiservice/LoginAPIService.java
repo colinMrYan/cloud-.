@@ -13,16 +13,15 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APICallback;
 import com.inspur.emmcloud.api.APIInterface;
+import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.bean.GetBoolenResult;
 import com.inspur.emmcloud.bean.GetLoginResult;
 import com.inspur.emmcloud.bean.GetMyInfoResult;
 import com.inspur.emmcloud.bean.GetRegisterCheckResult;
-import com.inspur.emmcloud.bean.GetSignoutResult;
 import com.inspur.emmcloud.bean.GetUpdatePwdBySMSCodeBean;
-import com.inspur.emmcloud.callback.OauthCallBack;
+import com.inspur.emmcloud.interf.OauthCallBack;
 import com.inspur.emmcloud.util.OauthUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
-import com.inspur.emmcloud.util.UriUtils;
 
 import org.xutils.http.HttpMethod;
 import org.xutils.http.RequestParams;
@@ -35,7 +34,6 @@ import org.xutils.x;
 public class LoginAPIService {
 	private Context context;
 	private APIInterface apiInterface;
-	private String baseUrl = "https://emm.inspur.com/api?";
 
 	public LoginAPIService(Context context) {
 		this.context = context;
@@ -52,7 +50,7 @@ public class LoginAPIService {
 	 * @param password
 	 */
 	public void OauthSignin(String userName, String password) {
-		String completeUrl = "https://id.inspur.com/oauth2.0/token";
+		String completeUrl = APIUri.getOauthSigninUrl();
 		RequestParams params = new RequestParams(completeUrl);
 		params.addParameter("grant_type", "password");
 		params.addParameter("username", userName);
@@ -87,7 +85,7 @@ public class LoginAPIService {
 	 * 刷新token
 	 */
 	public void refreshToken() {
-		String completeUrl = "https://id.inspur.com/oauth2.0/token";
+		String completeUrl = APIUri.getOauthSigninUrl();
 		String refreshToken = PreferencesUtils.getString(context,
 				"refreshToken", "");
 		RequestParams params = new RequestParams(completeUrl);
@@ -121,47 +119,12 @@ public class LoginAPIService {
 	}
 
 	/**
-	 * 注销登录
-	 */
-	public void signout() {
-		String module = "sign";
-		String method = "signout";
-		String completeUrl = "https://emm.inspur.com/api?module=" + module
-				+ "&method=" + method;
-		RequestParams params = ((MyApplication) context.getApplicationContext())
-				.getHttpRequestParams(completeUrl);
-		x.http().post(params, new APICallback(context,completeUrl) {
-
-			@Override
-			public void callbackSuccess(String arg0) {
-				// TODO Auto-generated method stub
-				apiInterface.returnSignoutSuccess(new GetSignoutResult(arg0));
-
-			}
-
-			@Override
-			public void callbackFail(String error, int responseCode) {
-				// TODO Auto-generated method stub
-				apiInterface.returnSignoutFail(error,responseCode);
-			}
-
-			@Override
-			public void callbackTokenExpire() {
-				// TODO Auto-generated method stub
-				apiInterface.returnSignoutFail(new String(""),-1);
-			}
-
-		});
-	}
-
-	/**
 	 * 短信登录-发送短信
 	 *
 	 * @param mobile
 	 */
 	public void reqLoginSMS(String mobile) {
-		String completeUrl = "https://id.inspur.com/api/v1/passcode?phone="
-				+ mobile;
+		String completeUrl = APIUri.getReqLoginSMSUrl(mobile);
 		RequestParams params = ((MyApplication) context.getApplicationContext())
 				.getHttpRequestParams(completeUrl);
 		x.http().get(params, new APICallback(context,completeUrl) {
@@ -198,9 +161,7 @@ public class LoginAPIService {
 	 * @param sms
 	 */
 	public void SMSRegisterCheck(String mobile, String sms) {
-		String module = "register";
-		String method = "verify_smscode";
-		String completeUrl = baseUrl + "module=" + module + "&method=" + method;
+		String completeUrl =APIUri.getSMSRegisterCheckUrl();
 		RequestParams params = ((MyApplication) context.getApplicationContext())
 				.getHttpRequestParams(completeUrl);
 		params.addParameter("mobile", mobile);
@@ -235,7 +196,7 @@ public class LoginAPIService {
 	 * 获取个人信息 得到当前用户的登录信息
 	 */
 	public void getMyInfo() {
-		final String completeUrl = "https://id.inspur.com/oauth2.0/profile";
+		final String completeUrl = APIUri.getMyInfoUrl();
 		RequestParams params = ((MyApplication) context.getApplicationContext())
 				.getHttpRequestParams(completeUrl);
 		x.http().get(params, new APICallback(context,completeUrl) {
@@ -273,118 +234,6 @@ public class LoginAPIService {
 		});
 	}
 
-//	/**
-//	 * 获取websocket的连接url
-//	 */
-//	public void getWebsocketUrl() {
-//		final String completeUrl = UriUtils.getHttpApiUri("settings/socket");
-//		RequestParams params = ((MyApplication) context.getApplicationContext())
-//				.getHttpRequestParams(completeUrl);
-//		x.http().get(params, new APICallback(context,completeUrl) {
-//
-//			@Override
-//			public void callbackTokenExpire() {
-//				// TODO Auto-generated method stub
-//				new OauthUtils(new OauthCallBack() {
-//
-//					@Override
-//					public void reExecute() {
-//						getWebsocketUrl();
-//					}
-//
-//					@Override
-//					public void executeFailCallback() {
-//						callbackFail("", -1);
-//					}
-//				}, context).refreshToken(completeUrl);
-//			}
-//
-//			@Override
-//			public void callbackSuccess(String arg0) {
-//				// TODO Auto-generated method stub
-//				apiInterface
-//				.returnWebSocketUrlSuccess(new GetWebSocketUrlResult(
-//						arg0));
-//			}
-//
-//			@Override
-//			public void callbackFail(String error, int responseCode) {
-//				// TODO Auto-generated method stub
-//				apiInterface.returnWebSocketUrlFail(error,responseCode);
-//			}
-//		});
-//	}
-
-
-//	/**
-//	 * 上传认证token信息
-//	 *
-//	 * @param info
-//	 */
-//	public void uploadAuthorizationInfo(int type, String requestUrl,
-//			String oldToken) {
-//		String enterpriseCode = UriUtils.tanent;
-//		String account = PreferencesUtils.getString(context, "userName", "");
-//		final String completeUrl = "https://ecm.inspur.com/" + enterpriseCode
-//				+ "/tlog";
-//		String accessToken = PreferencesUtils.getString(context, "accessToken",
-//				"");
-//		String refreshToken = PreferencesUtils.getString(context,
-//				"refreshToken", "");
-//		String logInfo = "";
-//		switch (type) {
-//		case 0: // login
-//			logInfo = "Android client signed-in as account: " + account
-//					+ ". Got access token: " + accessToken
-//					+ ", refresh token: " + refreshToken;
-//			break;
-//		case 1:// api return 401
-//			logInfo = "Android client got code 401 when requesting "
-//					+ requestUrl + ". Current account: " + account
-//					+ ". Got access token: " + accessToken
-//					+ ", refresh token: " + refreshToken;
-//			break;
-//		case 2:// token refresh success
-//			logInfo = "Android client refreshed success whith token:"
-//					+ oldToken + ". Current account: " + account
-//					+ ". New access token: " + accessToken
-//					+ ", refresh token: " + refreshToken;
-//			break;
-//		case 3:// token refresh fail
-//			logInfo = "Android client refreshed failed whith token: "
-//					+ refreshToken + ". Current account: " + account;
-//
-//			break;
-//		default:
-//			break;
-//		}
-//		RequestParams params = ((MyApplication)context.getApplicationContext()).getHttpRequestParams(completeUrl);
-//		params.setBodyContent(logInfo);
-//		params.setAsJsonContent(true);
-//		x.http().post(params, new APICallback(context,completeUrl) {
-//
-//			@Override
-//			public void callbackSuccess(String arg0) {
-//				// TODO Auto-generated method stub
-//
-//			}
-//
-//			@Override
-//			public void callbackFail(String error, int responseCode) {
-//				// TODO Auto-generated method stub
-//
-//			}
-//
-//			@Override
-//			public void callbackTokenExpire() {
-//				// TODO Auto-generated method stub
-//
-//			}
-//
-//		});
-//	}
-
-
 	/**
 	 * 修改密码
 	 *
@@ -392,16 +241,7 @@ public class LoginAPIService {
 	 * @param newpsd
 	 */
 	public void changePsd(final String oldpsd, final String newpsd) {
-		final String completeUrl  = UriUtils.getChangePsd();
-//		if (PreferencesUtils.getBoolean(context, "hasPassword")
-//				&& !StringUtils.isEmpty(oldpsd)) {
-//			completeUrl = UriUtils.getChangePsd() + "?old="
-//					+ StringUtils.utf8Encode(oldpsd, "UTF-8") + "&new="
-//					+ StringUtils.utf8Encode(newpsd, "UTF-8");
-//		} else {
-//			completeUrl = UriUtils.getChangePsd() + "?new="
-//					+ StringUtils.utf8Encode(newpsd, "UTF-8");
-//		}
+		final String completeUrl  = APIUri.getChangePsdUrl();
 		RequestParams params = ((MyApplication)context.getApplicationContext()).getHttpRequestParams(completeUrl);
 		params.addQueryStringParameter("old", oldpsd);
 		params.addQueryStringParameter("new", newpsd);
@@ -448,7 +288,7 @@ public class LoginAPIService {
 	 * @param newPwd
 	 */
 	public void updatePwdBySMSCode(final String smsCode,final String newPwd){
-		final String completeUrl = UriUtils.getChangePsd();
+		final String completeUrl = APIUri.getChangePsdUrl();
 		RequestParams params = ((MyApplication)context.getApplicationContext()).getHttpRequestParams(completeUrl);
 		params.addQueryStringParameter("passcode", smsCode);
 		params.addQueryStringParameter("new", newPwd);

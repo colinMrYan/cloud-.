@@ -3,6 +3,7 @@ package com.inspur.emmcloud.util;
 import android.content.Context;
 
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.bean.CalendarEvent;
 
 import java.text.ParseException;
@@ -343,6 +344,11 @@ public class TimeUtils {
      */
     public static String getTime(long timeInMillis, SimpleDateFormat dateFormat) {
         return dateFormat.format(new Date(timeInMillis));
+    }
+
+    public static String getTime(Context context,long timeInMillis, int type){
+        SimpleDateFormat format = getFormat(context,type);
+        return  getTime(timeInMillis,format);
     }
 
     public static String getTime(String timeInMills) {
@@ -998,7 +1004,7 @@ public class TimeUtils {
         int year = Integer.parseInt(timeYear);
         int mon = Integer.parseInt(timeMon);
         int day = Integer.parseInt(timeDay);
-        String timepath = UriUtils.getGroupNewsArticle() + year + "/" + mon
+        String timepath = APIUri.getGroupNewsArticleUrl() + year + "/" + mon
                 + "/" + day + "/";
         return timepath;
     }
@@ -1020,7 +1026,7 @@ public class TimeUtils {
         int year = Integer.parseInt(timeYear);
         int mon = Integer.parseInt(timeMon);
         int day = Integer.parseInt(timeDay);
-        String timePath = UriUtils.getGroupNewsArticle() + year + "/" + mon
+        String timePath = APIUri.getGroupNewsArticleUrl() + year + "/" + mon
                 + "/" + day + "/";
         return timePath;
     }

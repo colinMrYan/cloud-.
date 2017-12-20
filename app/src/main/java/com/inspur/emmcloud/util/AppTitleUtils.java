@@ -23,7 +23,7 @@ public class AppTitleUtils {
         }
 //        String environmentLanguage = "";
 //        String languageJson = PreferencesUtils.getString(
-//                context, UriUtils.tanent + "appLanguageObj");
+//                context, MyApplication.getInstance().getTanent() + "appLanguageObj");
 //        if (languageJson != null) {
 //            Language language = new Language(languageJson);
 //            environmentLanguage = language.getIana();

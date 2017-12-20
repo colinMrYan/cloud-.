@@ -7,12 +7,12 @@ import android.widget.TextView;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.bean.Msg;
 import com.inspur.emmcloud.util.DensityUtil;
 import com.inspur.emmcloud.util.ImageDisplayUtils;
 import com.inspur.emmcloud.util.JSONUtils;
 import com.inspur.emmcloud.util.StringUtils;
-import com.inspur.emmcloud.util.UriUtils;
 
 /**
  * DisplayResLinkMsg
@@ -47,7 +47,7 @@ public class DisplayResLinkMsg {
         ImageView linkImageview = (ImageView) convertView
                 .findViewById(R.id.news_card_content_img);
         if (!StringUtils.isBlank(linkPoster)) {
-            ImageDisplayUtils.getInstance().displayImage(linkImageview, UriUtils.getPreviewUri(linkPoster), R.drawable.icon_photo_default);
+            ImageDisplayUtils.getInstance().displayImage(linkImageview, APIUri.getPreviewUrl(linkPoster), R.drawable.icon_photo_default);
         } else {
             linkImageview.setVisibility(View.GONE);
         }

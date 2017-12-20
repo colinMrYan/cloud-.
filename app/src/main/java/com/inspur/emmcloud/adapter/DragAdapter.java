@@ -139,8 +139,8 @@ public class DragAdapter extends BaseAdapter {
             unhandledBadges.setVisibility(View.VISIBLE);
             GradientDrawable gradientDrawable = new GradientDrawableBuilder()
                     .setCornerRadius(DensityUtil.dip2px(context, 40))
-                    .setBackgroundColor(0xFFFF0033)
-                    .setStrokeColor(0xFFFF0033).build();
+                    .setBackgroundColor(0xFFF74C31)
+                    .setStrokeColor(0xFFF74C31).build();
             unhandledBadges.setBackground(gradientDrawable);
             unhandledBadges.setText(appBadgeBean.getBadgeNum() > 99 ? "99+" : (appBadgeBean.getBadgeNum() + ""));
         }

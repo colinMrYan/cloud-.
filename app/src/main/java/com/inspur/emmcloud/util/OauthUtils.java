@@ -9,7 +9,7 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.LoginAPIService;
 import com.inspur.emmcloud.bean.GetLoginResult;
-import com.inspur.emmcloud.callback.OauthCallBack;
+import com.inspur.emmcloud.interf.OauthCallBack;
 import com.inspur.emmcloud.ui.login.LoginActivity;
 
 import java.util.List;

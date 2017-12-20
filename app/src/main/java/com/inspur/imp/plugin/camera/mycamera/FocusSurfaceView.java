@@ -22,6 +22,8 @@ import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Interpolator;
 
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.util.LogUtils;
+import com.inspur.emmcloud.util.StringUtils;
 
 /**
  * Created by moubiao on 2016/11/2.
@@ -33,7 +35,7 @@ public class FocusSurfaceView extends SurfaceView {
     private static final int MIN_FRAME_SIZE_IN_DP = 50;
     private static final int FRAME_STROKE_WEIGHT_IN_DP = 1;
     private static final int GUIDE_STROKE_WEIGHT_IN_DP = 1;
-    private static final float DEFAULT_INITIAL_FRAME_SCALE = 0.85f;
+    private static final float DEFAULT_INITIAL_FRAME_SCALE = 0.55f;
     private static final int DEFAULT_ANIMATION_DURATION_MILLIS = 10;
 
     private static final int TRANSPARENT = 0x00000000;
@@ -361,6 +363,7 @@ public class FocusSurfaceView extends SurfaceView {
                 onDown(event);
                 return true;
             case MotionEvent.ACTION_MOVE:
+                //取消边框拖动
                 onMove(event);
                 if (mTouchArea != TouchArea.OUT_OF_BOUNDS) {
                     getParent().requestDisallowInterceptTouchEvent(true);
@@ -963,6 +966,26 @@ public class FocusSurfaceView extends SurfaceView {
         mCustomRatio.set(ratioX, ratioY);
         recalculateFrameRect(durationMillis);
     }
+
+    public void setCustomRectScale(String rectScale){
+        LogUtils.jasonDebug("rectScale="+rectScale);
+        if (!StringUtils.isBlank(rectScale) && !rectScale.equals("null")){
+            if (rectScale.equals("custom")){
+                setCropMode(CropMode.FREE);
+            }else {
+                String[] ratios = rectScale.split(":");
+                if (ratios.length == 2){
+                    int ratio0 = Integer.parseInt(ratios[0]);
+                    int ratio1 = Integer.parseInt(ratios[1]);
+                    int ratioX = ratio0<=ratio1?ratio0:ratio1;
+                    int ratioY = ratio0>ratio1?ratio0:ratio1;
+                    setCustomRatio(ratioX,ratioY);
+                }
+            }
+
+        }
+    }
+
 
     /**
      * 设置裁剪框的长宽比

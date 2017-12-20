@@ -6,7 +6,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.BaseActivity;
-import com.inspur.emmcloud.util.AppUtils;
+import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.util.MDM.MDM;
 import com.inspur.imp.api.ImpActivity;
 import com.inspur.imp.api.Res;
@@ -35,7 +35,7 @@ public class DeviceRegisterFailDetailActivity extends BaseActivity {
 			Bundle bundle = new Bundle();
 			bundle.putString("appName", getString(Res.getStringID("device_registe")));
 			bundle.putString("function","mdm");
-			bundle.putString("uri", "https://emm.inspur.com/mdm/loadForRegister?udid="+ AppUtils.getMyUUID(this));
+			bundle.putString("uri", APIUri.getDeviceRegisterUrl(this));
 			intent.putExtras(bundle);
 			startActivity(intent);
 			finish();

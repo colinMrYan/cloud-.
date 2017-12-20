@@ -870,7 +870,7 @@ public class MessageFragment extends Fragment{
             String iconUrl = channel.getIcon();// Channel头像的uri
             if (channel.getType().equals("GROUP")) {
                 File file = new File(MyAppConfig.LOCAL_CACHE_PHOTO_PATH,
-                        UriUtils.tanent + channel.getCid() + "_100.png1");
+                        MyApplication.getInstance().getTanent() + channel.getCid() + "_100.png1");
                 if (file.exists()) {
                     iconUrl = "file://" + file.getAbsolutePath();
                     ImageDisplayUtils.getInstance().displayImageNoCache(channelPhotoImg, iconUrl, defaultIcon);

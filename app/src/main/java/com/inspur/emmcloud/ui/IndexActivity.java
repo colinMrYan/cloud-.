@@ -3,6 +3,7 @@ package com.inspur.emmcloud.ui;
 import android.app.Fragment;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.drawable.GradientDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Message;
@@ -31,11 +32,12 @@ import com.inspur.emmcloud.bean.ChannelGroup;
 import com.inspur.emmcloud.bean.Contact;
 import com.inspur.emmcloud.bean.GetAllContactResult;
 import com.inspur.emmcloud.bean.GetAllRobotsResult;
+import com.inspur.emmcloud.bean.GetAppBadgeResult;
 import com.inspur.emmcloud.bean.GetAppTabAutoResult;
 import com.inspur.emmcloud.bean.GetSearchChannelGroupResult;
 import com.inspur.emmcloud.bean.PVCollectModel;
-import com.inspur.emmcloud.callback.CommonCallBack;
 import com.inspur.emmcloud.config.Constant;
+import com.inspur.emmcloud.interf.CommonCallBack;
 import com.inspur.emmcloud.interf.OnTabReselectListener;
 import com.inspur.emmcloud.service.BackgroundService;
 import com.inspur.emmcloud.service.CoreService;
@@ -54,6 +56,7 @@ import com.inspur.emmcloud.util.ChannelGroupCacheUtils;
 import com.inspur.emmcloud.util.ClientIDUtils;
 import com.inspur.emmcloud.util.ContactCacheUtils;
 import com.inspur.emmcloud.util.DbCacheUtils;
+import com.inspur.emmcloud.util.DensityUtil;
 import com.inspur.emmcloud.util.ImageDisplayUtils;
 import com.inspur.emmcloud.util.MyAppWidgetUtils;
 import com.inspur.emmcloud.util.NetUtils;
@@ -66,8 +69,8 @@ import com.inspur.emmcloud.util.SplashPageUtils;
 import com.inspur.emmcloud.util.StateBarColor;
 import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.ToastUtils;
-import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
+import com.inspur.emmcloud.widget.GradientDrawableBuilder;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.MyFragmentTabHost;
 import com.inspur.emmcloud.widget.WeakHandler;
@@ -75,6 +78,8 @@ import com.inspur.emmcloud.widget.WeakThread;
 import com.inspur.emmcloud.widget.tipsview.TipsView;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -112,7 +117,7 @@ public class IndexActivity extends BaseFragmentActivity implements
         initView();
         getData();
         startService();
-
+        EventBus.getDefault().register(this);
     }
 
     /**
@@ -164,7 +169,7 @@ public class IndexActivity extends BaseFragmentActivity implements
      * 获取我的应用推荐小部件数据
      */
     private void getMyAppRecommendWidgets() {
-        if(MyAppWidgetUtils.checkNeedUpdateMyAppWidget(IndexActivity.this)){
+        if (MyAppWidgetUtils.checkNeedUpdateMyAppWidget(IndexActivity.this)) {
             MyAppWidgetUtils.getInstance(getApplicationContext()).getMyAppWidgetsFromNet();
         }
     }
@@ -199,7 +204,7 @@ public class IndexActivity extends BaseFragmentActivity implements
      * 打开保活服务
      */
     private void startCoreService() {
-        if(AppUtils.getSDKVersionNumber() < 26){
+        if (AppUtils.getSDKVersionNumber() < 26) {
             Intent intent = new Intent();
             intent.setClass(this, CoreService.class);
             startService(intent);
@@ -228,7 +233,7 @@ public class IndexActivity extends BaseFragmentActivity implements
      * 为了使打开报销web应用更快，进行预加载
      */
     private void setPreloadWebApp() {
-        if (UriUtils.tanent.equals("inspur_esg")) {
+        if (MyApplication.getInstance().getTanent().equals("inspur_esg")) {
             webView = (WebView) findViewById(R.id.preload_webview);
             webView.getSettings().setJavaScriptEnabled(true);
             webView.setWebViewClient(new WebViewClient() {
@@ -382,7 +387,7 @@ public class IndexActivity extends BaseFragmentActivity implements
         tipsView = (TipsView) findViewById(R.id.tip);
         mTabHost = (MyFragmentTabHost) findViewById(android.R.id.tabhost);
         mTabHost.setup(this, getSupportFragmentManager(), R.id.realtabcontent);
-        findViewById(R.id.index_root_layout).setPadding(0,StateBarColor.getStateBarHeight(IndexActivity.this),0,0);
+        findViewById(R.id.index_root_layout).setPadding(0, StateBarColor.getStateBarHeight(IndexActivity.this), 0, 0);
         handleAppTabs();
     }
 
@@ -414,18 +419,22 @@ public class IndexActivity extends BaseFragmentActivity implements
                         case "work":
                             mainTabBean = new MainTabBean(i, R.string.work, R.drawable.selector_tab_work_btn,
                                     WorkFragment.class);
+                            mainTabBean.setCommpant(appTabList.get(i).getComponent());
                             break;
                         case "find":
                             mainTabBean = new MainTabBean(i, R.string.find, R.drawable.selector_tab_find_btn,
                                     FindFragment.class);
+                            mainTabBean.setCommpant(appTabList.get(i).getComponent());
                             break;
                         case "application":
                             mainTabBean = new MainTabBean(i, R.string.application, R.drawable.selector_tab_app_btn,
                                     MyAppFragment.class);
+                            mainTabBean.setCommpant(appTabList.get(i).getComponent());
                             break;
                         case "mine":
                             mainTabBean = new MainTabBean(i, R.string.mine, R.drawable.selector_tab_more_btn,
                                     MoreFragment.class);
+                            mainTabBean.setCommpant(appTabList.get(i).getComponent());
                             break;
                         default:
                             mainTabBean = new MainTabBean(i, R.string.unknown, R.drawable.selector_tab_unknown_btn,
@@ -458,7 +467,6 @@ public class IndexActivity extends BaseFragmentActivity implements
             ImageView tabImg = (ImageView) tabView.findViewById(R.id.imageview);
             TextView tabText = (TextView) tabView.findViewById(R.id.textview);
             if (mainTab.getCommpant().equals("communicate")) {
-
                 handleTipsView(tabView);
             }
             if (!StringUtils.isBlank(mainTab.getConfigureName())) {
@@ -498,6 +506,40 @@ public class IndexActivity extends BaseFragmentActivity implements
         } else {
             mTabHost.setCurrentTab(getTabIndex());
         }
+    }
+
+    /**
+     * 更新底部tab数字，从MyAppFragment badge请求返回
+     * @param getAppBadgeResult
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void updateBadgeNumber(GetAppBadgeResult getAppBadgeResult) {
+        int badgeNumber = getAppBadgeResult.getTabBadgeNumber();
+        if(badgeNumber > 0){
+            for (int i = 0; i < mTabHost.getTabWidget().getChildCount(); i++) {
+                View tabView = mTabHost.getTabWidget().getChildAt(i);
+                if(((TextView)tabView.findViewById(R.id.textview)).getText().toString().contains(getString(R.string.application))){
+                    setUnHandledBadgesDisplay(tabView,badgeNumber);
+                }
+            }
+        }
+    }
+
+
+    /**
+     * 处理未处理消息个数的显示
+     *
+     * @param tabView
+     */
+    private void setUnHandledBadgesDisplay(View tabView,int badgeNumber) {
+        TextView unhandledBadges = (TextView) tabView.findViewById(R.id.index_unhandled_badges_text);
+        unhandledBadges.setVisibility(View.VISIBLE);
+        GradientDrawable gradientDrawable = new GradientDrawableBuilder()
+                .setCornerRadius(DensityUtil.dip2px(IndexActivity.this, 40))
+                .setBackgroundColor(0xFFF74C31)
+                .setStrokeColor(0xFFF74C31).build();
+        unhandledBadges.setBackground(gradientDrawable);
+        unhandledBadges.setText(""+(badgeNumber > 99 ? "99+":badgeNumber));
     }
 
     /**
@@ -727,6 +769,7 @@ public class IndexActivity extends BaseFragmentActivity implements
         if (newMessageTipsLayout != null) {
             newMessageTipsLayout = null;
         }
+        EventBus.getDefault().unregister(this);
     }
 
     class ContactSaveTask extends AsyncTask<GetAllContactResult, Void, Void> {

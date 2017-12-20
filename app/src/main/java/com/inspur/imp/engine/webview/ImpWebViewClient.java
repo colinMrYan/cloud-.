@@ -14,6 +14,7 @@ import android.webkit.WebViewClient;
 import android.widget.LinearLayout;
 
 import com.inspur.emmcloud.api.APIInterfaceInstance;
+import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
 import com.inspur.emmcloud.bean.AppRedirectResult;
 import com.inspur.emmcloud.util.NetUtils;
@@ -170,7 +171,7 @@ public class ImpWebViewClient extends WebViewClient {
 			mHandler.removeCallbacks(runnable);
 			runnable = null;
 		}
-		if (url.contains("https://id.inspur.com/oauth2.0/authorize")) {
+		if (url.contains(APIUri.getWebLoginUrl())) {
 			handleReDirectURL(url, view);
 			return true;
 		}

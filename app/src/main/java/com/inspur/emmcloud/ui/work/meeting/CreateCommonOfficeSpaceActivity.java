@@ -63,7 +63,7 @@ public class CreateCommonOfficeSpaceActivity extends BaseActivity {
 	private void getAllCommonOfficeIdList() {
 		String uid = ((MyApplication) getApplicationContext()).getUid();
 		String allCommonBuildingIds = PreferencesUtils.getString(
-				getApplicationContext(), UriUtils.tanent + uid
+				getApplicationContext(), MyApplication.getInstance().getTanent() + uid
 						+ "allCommonBuildingIds");
 		if (allCommonBuildingIds != null) {
 			allCommonBuildingIdList = (List) JSON.parseArray(allCommonBuildingIds,

@@ -123,7 +123,7 @@ public class MessionTagActivity extends BaseActivity {
     private void initData() {
         deleteTagName = getIntent().getStringExtra("title");
         String userId = ((MyApplication) getApplicationContext()).getUid();
-        messionTagList = (ArrayList<String>) JSON.parseArray(PreferencesUtils.getString(MessionTagActivity.this, UriUtils.tanent + userId + "messionTags", ""), String.class);
+        messionTagList = (ArrayList<String>) JSON.parseArray(PreferencesUtils.getString(MessionTagActivity.this, MyApplication.getInstance().getTanent() + userId + "messionTags", ""), String.class);
         if (messionTagList == null) {
             messionTagList = new ArrayList<String>();
         }
@@ -355,7 +355,7 @@ public class MessionTagActivity extends BaseActivity {
     public void saveTagsAfterDelete() {
         String userId = ((MyApplication) getApplicationContext()).getUid();
         String choosenTags = PreferencesUtils.getString(MessionTagActivity.this,
-                UriUtils.tanent + userId + "chooseTags", "");
+                MyApplication.getInstance().getTanent() + userId + "chooseTags", "");
         ArrayList<String> afterDeleteList;
         if (!StringUtils.isBlank(choosenTags)) {
             afterDeleteList = (ArrayList<String>) JSON
@@ -372,12 +372,12 @@ public class MessionTagActivity extends BaseActivity {
                 }
             }
             PreferencesUtils
-                    .putString(MessionTagActivity.this, UriUtils.tanent
+                    .putString(MessionTagActivity.this, MyApplication.getInstance().getTanent()
                                     + userId + "chooseTags",
                             JSON.toJSONString(afterDeleteList));
         } else {
             PreferencesUtils
-                    .putString(MessionTagActivity.this, UriUtils.tanent
+                    .putString(MessionTagActivity.this, MyApplication.getInstance().getTanent()
                                     + userId + "chooseTags",
                             "");
         }

@@ -2,25 +2,19 @@ package com.inspur.emmcloud.widget;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.View;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 
 /**
- * Created by Administrator on 2017/3/6.
+ * 可以设置最大高度的listview
  */
 
 public class MaxHightListView extends ListView {
 	/**
-	 * listview高度
+	 * listview最大高度
 	 */
-	private int listViewHeight;
-
-	public int getListViewHeight() {
-		return listViewHeight;
-	}
-
-	public void setListViewHeight(int listViewHeight) {
-		this.listViewHeight = listViewHeight;
-	}
+	private int maxHeight;
 
 	public MaxHightListView(Context context) {
 		super(context);
@@ -38,12 +32,51 @@ public class MaxHightListView extends ListView {
 	}
 
 	@Override
-	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-		// TODO Auto-generated method stub
-		if (listViewHeight > -1) {
-			heightMeasureSpec = MeasureSpec.makeMeasureSpec(listViewHeight,
-					MeasureSpec.AT_MOST);
-		}
-		super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+	protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
+		super.onLayout(changed, left, top, right, bottom);
+		setViewHeightBasedOnChildren();
 	}
+
+
+	public void setViewHeightBasedOnChildren() {
+		ListAdapter listAdapter = this.getAdapter();
+		if (listAdapter == null) {
+			return;
+		}
+		// int h = 10;
+		// int itemHeight = BdUtilHelper.getDimens(getContext(), R.dimen.ds30);
+		int sumHeight = 0;
+		int size = listAdapter.getCount();
+
+
+		for (int i = 0; i < size; i++) {
+			View v = listAdapter.getView(i, null, this);
+			v.measure(0, 0);
+			sumHeight += v.getMeasuredHeight();
+
+
+		}
+
+
+		if (sumHeight > maxHeight) {
+			sumHeight = maxHeight;
+		}
+		android.view.ViewGroup.LayoutParams params = this.getLayoutParams();
+		// this.getLayoutParams();
+		params.height = sumHeight;
+
+
+		this.setLayoutParams(params);
+	}
+
+
+	public int getMaxHeight() {
+		return maxHeight;
+	}
+
+
+	public void setMaxHeight(int maxHeight) {
+		this.maxHeight = maxHeight;
+	}
+
 }

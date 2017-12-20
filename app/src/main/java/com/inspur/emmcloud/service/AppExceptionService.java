@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 
+import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.AppAPIService;
 import com.inspur.emmcloud.bean.AppException;
@@ -12,7 +13,6 @@ import com.inspur.emmcloud.util.AppExceptionCacheUtils;
 import com.inspur.emmcloud.util.AppUtils;
 import com.inspur.emmcloud.util.NetUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
-import com.inspur.emmcloud.util.UriUtils;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -68,8 +68,8 @@ public class AppExceptionService extends Service {
 		try {
 			contentObj.put("AppID", 1);
 			contentObj.put("UserCode", PreferencesUtils.getString(AppExceptionService.this, "userID", ""));
-			if (UriUtils.tanent != null) {
-				contentObj.put("EnterpriseCode", UriUtils.tanent);
+			if (MyApplication.getInstance().getTanent() != null) {
+				contentObj.put("EnterpriseCode", MyApplication.getInstance().getTanent());
 			} else {
 				contentObj.put("EnterpriseCode", "");
 			}

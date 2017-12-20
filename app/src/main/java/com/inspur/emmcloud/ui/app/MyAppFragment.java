@@ -47,6 +47,7 @@ import com.inspur.emmcloud.bean.GetAppBadgeResult;
 import com.inspur.emmcloud.bean.GetAppGroupResult;
 import com.inspur.emmcloud.bean.GetRecommendAppWidgetListResult;
 import com.inspur.emmcloud.bean.PVCollectModel;
+import com.inspur.emmcloud.bean.RecommendAppWidgetBean;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.interf.OnRecommendAppWidgetItemClickListener;
 import com.inspur.emmcloud.util.AppCacheUtils;
@@ -83,6 +84,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import static com.inspur.emmcloud.util.AppCacheUtils.getCommonlyUseAppList;
 
@@ -93,7 +95,6 @@ import static com.inspur.emmcloud.util.AppCacheUtils.getCommonlyUseAppList;
 public class MyAppFragment extends Fragment {
 
     private static final String ACTION_NAME = "add_app";
-    private static final long GET_BADGE_DELAY = 18000;
     private View rootView;
     private ListView appListView;
     private AppListAdapter appListAdapter;
@@ -107,7 +108,6 @@ public class MyAppFragment extends Fragment {
     private List<String> shortCutAppList = new ArrayList<>();
     private MyAppSaveTask myAppSaveTask;
     private Map<String,AppBadgeBean> appBadgeBeanMap = new HashMap<>();
-    private boolean isOnCreate = false;
     private RecyclerView recommendAppWidgetListView = null;
     private RecommendAppWidgetListAdapter recommendAppWidgetListAdapter = null;
 
@@ -151,9 +151,7 @@ public class MyAppFragment extends Fragment {
      * 过期则更新不过期不更新
      */
     private void getMyAppRecommendWidgetsUpdate() {
-        GetRecommendAppWidgetListResult getRecommendAppWidgetListResult = new GetRecommendAppWidgetListResult(PreferencesByUserAndTanentUtils
-                .getString(getActivity(),Constant.PREF_MY_APP_RECOMMEND_DATA,""));
-        if(!MyAppWidgetUtils.isEffective(getRecommendAppWidgetListResult.getExpiredDate())){
+        if(!MyAppWidgetUtils.isEffective(PreferencesByUserAndTanentUtils.getLong(getContext(),Constant.PREF_MY_APP_RECOMMEND_EXPIREDDATE,0L))){
             MyAppWidgetUtils.getInstance(getActivity().getApplicationContext()).getMyAppWidgetsFromNet();
         }
     }
@@ -162,17 +160,8 @@ public class MyAppFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        if(!isOnCreate){
-            getMyApp();
-        }
-        //隔五分钟刷一次badge
-        long badgeUpdateTime = PreferencesByUserAndTanentUtils.getLong(getActivity(),
-                Constant.PREF_APP_BADGE_UPDATE_TIME,0L);
-        long badgeUpdateTimeBetween = System.currentTimeMillis() - badgeUpdateTime;
-        if(!isOnCreate && badgeUpdateTimeBetween>=GET_BADGE_DELAY){
-            getAppBadgeNum();
-        }
-        isOnCreate = false;
+        getMyApp();
+        getAppBadgeNum();
         refreshRecommendAppWidgetView();
     }
 
@@ -208,10 +197,7 @@ public class MyAppFragment extends Fragment {
         });
         OnAppCenterClickListener listener = new OnAppCenterClickListener();
         (rootView.findViewById(R.id.appcenter_layout)).setOnClickListener(listener);
-        getMyApp();
         setTabTitle();
-        getAppBadgeNum();
-        isOnCreate = true;
         //当Fragment创建时重置时间
         PreferencesByUserAndTanentUtils.putInt(getActivity(),Constant.PREF_MY_APP_RECOMMEND_LASTUPDATE_HOUR,0);
 //        shortCutAppList.add("mobile_checkin_hcm");
@@ -223,7 +209,23 @@ public class MyAppFragment extends Fragment {
      * 每个小时都有可能有变化
      */
     private void refreshRecommendAppWidgetView() {
-        if(MyAppWidgetUtils.isNeedShowMyAppRecommendWidgets(getActivity()) && (MyAppWidgetUtils.getShouldShowAppList(getActivity()).size() > 0)){
+        //判断时间是否点击了叉号，不在显示时间内，或者推荐应用已经过了有效期
+        if(!(MyAppWidgetUtils.isNeedShowMyAppRecommendWidgets(getActivity())) ||
+                !MyAppWidgetUtils.isEffective(PreferencesByUserAndTanentUtils.getLong(getContext()
+                        ,Constant.PREF_MY_APP_RECOMMEND_EXPIREDDATE,0L))){
+            (rootView.findViewById(R.id.my_app_recommend_app_widget_layout)).setVisibility(View.GONE);
+            return;
+        }
+        //是否是需要刷新的时间，即过了当前小时内appId的显示时间，这是只控制刷新，不控制显示隐藏，MyAPPFragment Destroy时会重置这个时间，使下次进入时不会影响刷新UI
+        boolean isRefreshTime = PreferencesByUserAndTanentUtils.getInt(getActivity(),Constant.PREF_MY_APP_RECOMMEND_LASTUPDATE_HOUR,-1) != MyAppWidgetUtils.getNowHour();
+        if(!isRefreshTime){
+            return;
+        }
+        GetRecommendAppWidgetListResult getRecommendAppWidgetListResult = new GetRecommendAppWidgetListResult(PreferencesByUserAndTanentUtils.
+                getString(getActivity(),Constant.PREF_MY_APP_RECOMMEND_DATA,""));
+        List<RecommendAppWidgetBean> recommendAppWidgetBeanList = getRecommendAppWidgetListResult.getRecommendAppWidgetBeanList();
+        List<App> appList = MyAppWidgetUtils.getShouldShowAppList(recommendAppWidgetBeanList,appListAdapter.getAppAdapterList());
+        if(appList.size() > 0){
             if(recommendAppWidgetListView == null){
                 recommendAppWidgetListView = (RecyclerView) rootView.findViewById(R.id.my_app_recommend_app_wiget_recyclerview);
                 (rootView.findViewById(R.id.my_app_recommend_app_widget_layout)).setVisibility(View.VISIBLE);
@@ -248,35 +250,11 @@ public class MyAppFragment extends Fragment {
                     }
                 });
             }
-            refreshRecommendAppWidgetList();
+            recommendAppWidgetListAdapter.setAndReFreshRecommendList(appList);
+            PreferencesByUserAndTanentUtils.putInt(getActivity(), Constant.PREF_MY_APP_RECOMMEND_LASTUPDATE_HOUR, MyAppWidgetUtils.getNowHour());
         }else{
+            //当前小时没有需要显示的appId或者列表中没有当前小时内的应用
             (rootView.findViewById(R.id.my_app_recommend_app_widget_layout)).setVisibility(View.GONE);
-        }
-    }
-
-    /**
-     * 获取本时间段内应该显示的推荐
-     * @return
-     */
-    private void refreshRecommendAppWidgetList() {
-        List<String> appIdList = MyAppWidgetUtils.getShouldShowAppList(getActivity());
-        List<App> recommendAppWidgetList = new ArrayList<>();
-        List<AppGroupBean> appGroupBeanList = appListAdapter.getAppAdapterList();
-        App app = new App();
-        for(int i = 0; i < appIdList.size(); i++ ){
-            app.setAppID(appIdList.get(i));
-            for(int j = 0; j < appGroupBeanList.size(); j++){
-                int index = appGroupBeanList.get(j).getAppItemList().indexOf(app);
-                if(index != -1){
-                    recommendAppWidgetList.add(appGroupBeanList.get(j).getAppItemList().get(index));
-                    break;
-                }
-            }
-        }
-        boolean isNeedRefresh = PreferencesByUserAndTanentUtils.getInt(getActivity(),Constant.PREF_MY_APP_RECOMMEND_LASTUPDATE_HOUR,0) != MyAppWidgetUtils.getNowHour();
-        if(recommendAppWidgetListAdapter != null && recommendAppWidgetList.size() > 0 && isNeedRefresh){
-            recommendAppWidgetListAdapter.setAndReFreshRecommendList(recommendAppWidgetList);
-            PreferencesByUserAndTanentUtils.putInt(getActivity(),Constant.PREF_MY_APP_RECOMMEND_LASTUPDATE_HOUR,MyAppWidgetUtils.getNowHour());
         }
     }
 
@@ -814,7 +792,7 @@ public class MyAppFragment extends Fragment {
      */
     private void saveNeedCommonlyUseApp(boolean isNeedCommonlyUseApp) {
         String userId = ((MyApplication) getActivity().getApplication()).getUid();
-        PreferencesUtils.putBoolean(getActivity(), UriUtils.tanent
+        PreferencesUtils.putBoolean(getActivity(), MyApplication.getInstance().getTanent()
                         + userId + "needCommonlyUseApp",
                 isNeedCommonlyUseApp);
     }
@@ -826,7 +804,7 @@ public class MyAppFragment extends Fragment {
      */
     private boolean getNeedCommonlyUseApp() {
         String userId = ((MyApplication) getActivity().getApplication()).getUid();
-        isNeedCommonlyUseApp = PreferencesUtils.getBoolean(getActivity(), UriUtils.tanent
+        isNeedCommonlyUseApp = PreferencesUtils.getBoolean(getActivity(), MyApplication.getInstance().getTanent()
                 + userId + "needCommonlyUseApp", true);
         return isNeedCommonlyUseApp;
     }
@@ -1085,10 +1063,33 @@ public class MyAppFragment extends Fragment {
             super.onPostExecute(appGroupList);
             appListAdapter.setAppAdapterList(appGroupList);
             swipeRefreshLayout.setRefreshing(false);
-            if(MyAppWidgetUtils.isNeedShowMyAppRecommendWidgets(getActivity())){
-                refreshRecommendAppWidgetView();
+            refreshRecommendAppWidgetView();
+        }
+    }
+
+
+    /**
+     * 获取需要显示的appId列表
+     *
+     * @return
+     */
+    public  void calculateBadgeNumberAndSendToIndex(GetAppBadgeResult getAppBadgeResult) {
+        int badageNum = 0;
+        Set<String> appBadgeSet = appBadgeBeanMap.keySet();
+        for (String appId:appBadgeSet) {
+            App app = new App();
+            app.setAppID(appId);
+            for (int i = 0; i < appListAdapter.getAppAdapterList().size(); i++){
+                int index = appListAdapter.getAppAdapterList().get(i).getAppItemList().indexOf(app);
+                if(index != -1){
+                    badageNum = badageNum + appBadgeBeanMap.get(appId).getBadgeNum();
+                    break;
+                }
             }
         }
+        getAppBadgeResult.setTabBadgeNumber(badageNum);
+        //发送到IndexActivity updateBadgeNumber
+        EventBus.getDefault().post(getAppBadgeResult);
     }
 
     /**
@@ -1112,14 +1113,13 @@ public class MyAppFragment extends Fragment {
             swipeRefreshLayout.setRefreshing(false);
             appBadgeBeanMap = getAppBadgeResult.getAppBadgeBeanMap();
             appListAdapter.notifyDataSetChanged();
-            PreferencesByUserAndTanentUtils.putLong(getActivity(), Constant.PREF_APP_BADGE_UPDATE_TIME,System.currentTimeMillis());
+            calculateBadgeNumberAndSendToIndex(getAppBadgeResult);
         }
 
         @Override
         public void returnGetAppBadgeResultFail(String error, int errorCode) {
             swipeRefreshLayout.setRefreshing(false);
 //            WebServiceMiddleUtils.hand(getActivity(), error, errorCode);
-            PreferencesByUserAndTanentUtils.putLong(getActivity(), Constant.PREF_APP_BADGE_UPDATE_TIME,0l);
         }
     }
 }

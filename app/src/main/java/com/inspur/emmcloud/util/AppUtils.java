@@ -15,6 +15,8 @@ import android.graphics.Paint;
 import android.graphics.Paint.FontMetrics;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
@@ -22,6 +24,8 @@ import android.util.DisplayMetrics;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.imp.api.ImpActivity;
+import com.inspur.imp.plugin.camera.imagepicker.ImagePicker;
+import com.inspur.imp.plugin.camera.imagepicker.ui.ImageGridActivity;
 
 import java.io.File;
 import java.util.List;
@@ -478,6 +482,92 @@ public class AppUtils {
         }
         return false;
     }
+
+    /**
+     * 判断是否有SD卡
+     * @param context
+     * @return
+     */
+    public static boolean isHasSDCard(Context context){
+        if ( Environment.getExternalStorageState().equals(
+                Environment.MEDIA_MOUNTED)){
+            return true;
+        }
+        ToastUtils.show(context,
+                R.string.filetransfer_sd_not_exist);
+        return false;
+
+    }
+
+
+    /**
+     * 调用文件系统
+     */
+    public static void openFileSystem(Activity activity,int requestCode) {
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("*/*");
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        activity.startActivityForResult(
+                Intent.createChooser(intent,
+                        activity.getString(R.string.file_upload_tips)),
+                requestCode);
+    }
+
+    /**
+     * 调用图库
+     */
+    public static void openGallery(Activity activity,int limit,int requestCode) {
+        initImagePicker(limit);
+        Intent intent = new Intent(activity,
+                ImageGridActivity.class);
+        activity.startActivityForResult(intent, requestCode);
+    }
+
+    /**
+     * 调用系统相机
+     * @param activity
+     * @param fileName
+     * @param requestCode
+     */
+    public static void openCamera(Activity activity,String fileName,int requestCode){
+        // 判断存储卡是否可以用，可用进行存储
+        if (Environment.getExternalStorageState().equals(
+                Environment.MEDIA_MOUNTED)) {
+            Intent intentFromCapture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            File appDir = new File(Environment.getExternalStorageDirectory(),
+                    "DCIM");
+            if (!appDir.exists()) {
+                appDir.mkdir();
+            }
+            // 指定文件名字
+            intentFromCapture.putExtra(MediaStore.EXTRA_OUTPUT,
+                    Uri.fromFile(new File(appDir, fileName)));
+            activity.startActivityForResult(intentFromCapture,
+                    requestCode);
+        } else {
+            ToastUtils.show(activity, R.string.filetransfer_sd_not_exist);
+        }
+    }
+
+    /**
+     * 初始化图片选择控件
+     */
+    private static void initImagePicker(int limit) {
+        ImagePicker imagePicker = ImagePicker.getInstance();
+        imagePicker.setImageLoader(ImageDisplayUtils.getInstance()); // 设置图片加载器
+        imagePicker.setShowCamera(false); // 显示拍照按钮
+        imagePicker.setCrop(false); // 允许裁剪（单选才有效）
+        imagePicker.setSelectLimit(limit);
+//		imagePicker.setSaveRectangle(true); // 是否按矩形区域保存
+        imagePicker.setMultiMode(true);
+//		imagePicker.setStyle(CropImageView.Style.RECTANGLE); // 裁剪框的形状
+//		imagePicker.setFocusWidth(1000); // 裁剪框的宽度。单位像素（圆形自动取宽高最小值）
+//		imagePicker.setFocusHeight(1000); // 裁剪框的高度。单位像素（圆形自动取宽高最小值）
+//		imagePicker.setOutPutX(1000); // 保存文件的宽度。单位像素
+//		imagePicker.setOutPutY(1000); // 保存文件的高度。单位像素
+    }
+
+
 
 
     /**

@@ -1,40 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/text_layout_selector"
-                android:paddingLeft="10dp">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingLeft="10dp"
+    android:background="@color/white">
 
     <RelativeLayout
-        android:layout_toLeftOf="@id/img"
-        android:layout_centerVertical="true"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@id/img">
+
         <TextView
             android:id="@+id/enterprise_text"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:maxLines="1"
-            android:ellipsize="end"
+            android:layout_height="42dp"
             android:layout_toLeftOf="@+id/current_enterprise_text"
-            android:paddingBottom="10dp"
-            android:paddingTop="10dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:gravity="center_vertical"
             android:textColor="#333333"
-            android:textSize="17sp"/>
+            android:textSize="17sp" />
+
         <TextView
             android:id="@+id/current_enterprise_text"
             android:layout_width="wrap_content"
-
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
+            android:layout_marginLeft="8dp"
             android:ellipsize="end"
-            android:visibility="invisible"
-            android:text="@string/current_enterprise"
-            android:layout_marginLeft="12dp"
             android:maxLines="1"
+            android:text="@string/current_enterprise"
             android:textColor="#0F7BCA"
-            android:textSize="14sp"/>
+            android:textSize="14sp"
+            android:visibility="gone" />
     </RelativeLayout>
 
 
@@ -46,6 +45,5 @@
         android:layout_centerVertical="true"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:src="@drawable/icon_arrow_right"
-        />
+        android:src="@drawable/icon_arrow_right" />
 </RelativeLayout>

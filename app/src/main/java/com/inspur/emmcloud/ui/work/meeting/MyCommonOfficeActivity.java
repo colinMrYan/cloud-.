@@ -97,7 +97,7 @@ public class MyCommonOfficeActivity extends BaseActivity implements
         });
         userId = ((MyApplication) getApplicationContext()).getUid();
         String selectCommonOfficeIds = PreferencesUtils.getString(
-                MyCommonOfficeActivity.this, UriUtils.tanent + userId
+                MyCommonOfficeActivity.this, MyApplication.getInstance().getTanent() + userId
                         + "selectCommonOfficeIds");
         if (!StringUtils.isBlank(selectCommonOfficeIds)) {
             selectOfficeIdList = JSON.parseArray(selectCommonOfficeIds,
@@ -223,13 +223,13 @@ public class MyCommonOfficeActivity extends BaseActivity implements
             selectOfficeIdList = allCommonOfficeIdList;
         }
         LogUtils.debug("jason", "selectOfficeIdList.size=" + selectOfficeIdList.size());
-        PreferencesUtils.putString(MyCommonOfficeActivity.this, UriUtils.tanent
+        PreferencesUtils.putString(MyCommonOfficeActivity.this, MyApplication.getInstance().getTanent()
                         + userId + "allCommonOfficeIds",
                 JSON.toJSONString(allCommonOfficeIdList));
-        PreferencesUtils.putString(MyCommonOfficeActivity.this, UriUtils.tanent
+        PreferencesUtils.putString(MyCommonOfficeActivity.this, MyApplication.getInstance().getTanent()
                         + userId + "allCommonBuildingIds",
                 JSON.toJSONString(allCommonBuildingIdList));
-        PreferencesUtils.putString(MyCommonOfficeActivity.this, UriUtils.tanent
+        PreferencesUtils.putString(MyCommonOfficeActivity.this, MyApplication.getInstance().getTanent()
                         + userId + "selectCommonOfficeIds",
                 JSON.toJSONString(selectOfficeIdList));
     }
@@ -357,7 +357,7 @@ public class MyCommonOfficeActivity extends BaseActivity implements
 
     public void setOfficeList(ArrayList<Office> officeListNet) {
         String localOfficeIds = PreferencesUtils.getString(
-                MyCommonOfficeActivity.this, UriUtils.tanent + userId
+                MyCommonOfficeActivity.this, MyApplication.getInstance().getTanent() + userId
                         + "allCommonOfficeIds");
         LogUtils.debug("jason", "localOfficeIds=" + localOfficeIds);
         if (StringUtils.isBlank(localOfficeIds)) {
@@ -407,7 +407,7 @@ public class MyCommonOfficeActivity extends BaseActivity implements
         }
         isOfficeChange = true;
         myCommonOfficeAdapter.notifyDataSetChanged();
-        PreferencesUtils.putString(MyCommonOfficeActivity.this, UriUtils.tanent
+        PreferencesUtils.putString(MyCommonOfficeActivity.this, MyApplication.getInstance().getTanent()
                         + userId + "selectCommonOfficeIds",
                 JSON.toJSONString(selectOfficeIdList));
     }

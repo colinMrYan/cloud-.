@@ -3,6 +3,7 @@ package com.inspur.emmcloud.util;
 import android.content.Context;
 
 import com.inspur.emmcloud.MyApplication;
+import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.bean.Contact;
 import com.inspur.emmcloud.bean.Robot;
 
@@ -33,7 +34,7 @@ public class DirectChannelUtils {
      */
     public static String getDirectChannelIcon(Context context, String msgTitle) {
         String otherUid = getDirctChannelOtherUid(context, msgTitle);
-        return UriUtils.getChannelImgUri(context, otherUid);
+        return APIUri.getChannelImgUrl(context, otherUid);
     }
 
     /**
@@ -48,7 +49,7 @@ public class DirectChannelUtils {
         if (robotIcon == null) {
             Robot robot = getRobotInfo(context, title);
             if (robot != null) {
-                robotIcon = UriUtils.getRobotIconUri(robot.getAvatar());
+                robotIcon = APIUri.getRobotIconUrl(robot.getAvatar());
                 ((MyApplication) context.getApplicationContext()).setUsesrPhotoUrl(title, robotIcon);
             }
         }

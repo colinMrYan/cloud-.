@@ -12,6 +12,7 @@ import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
+import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.api.apiservice.LoginAPIService;
 import com.inspur.emmcloud.api.apiservice.MineAPIService;
 import com.inspur.emmcloud.bean.Contact;
@@ -30,7 +31,6 @@ import com.inspur.emmcloud.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.ToastUtils;
-import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.imp.plugin.camera.imagepicker.ImagePicker;
@@ -86,8 +86,8 @@ public class MyInfoActivity extends BaseActivity {
             String myInfo = PreferencesUtils.getString(this, "myInfo", "");
             getMyInfoResult = new GetMyInfoResult(myInfo);
         }
-        String photoUri = UriUtils
-                .getChannelImgUri(MyInfoActivity.this, getMyInfoResult.getID());
+        String photoUri = APIUri
+                .getChannelImgUrl(MyInfoActivity.this, getMyInfoResult.getID());
         ImageDisplayUtils.getInstance().displayImage(userHeadImg, photoUri, R.drawable.icon_photo_default);
         String userName = getMyInfoResult.getName();
         ((TextView) findViewById(R.id.myinfo_username_text)).setText(userName.equals("null") ? getString(R.string.not_set) : userName);

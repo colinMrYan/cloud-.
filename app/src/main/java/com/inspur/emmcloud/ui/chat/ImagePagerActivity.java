@@ -18,6 +18,7 @@ import android.widget.TextView;
 import com.inspur.emmcloud.BaseFragmentActivity;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
+import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.bean.GetMsgCommentCountResult;
 import com.inspur.emmcloud.bean.Msg;
@@ -25,7 +26,6 @@ import com.inspur.emmcloud.util.ChannelCacheUtils;
 import com.inspur.emmcloud.util.IntentUtils;
 import com.inspur.emmcloud.util.JSONUtils;
 import com.inspur.emmcloud.util.NetUtils;
-import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.emmcloud.widget.ECMChatInputMenu;
 import com.inspur.emmcloud.widget.HackyViewPager;
 import com.inspur.emmcloud.widget.ImageDetailFragment;
@@ -287,7 +287,7 @@ public class ImagePagerActivity extends BaseFragmentActivity {
 			imgTypeMsgList = (List<Msg>) getIntent().getSerializableExtra(EXTRA_IMAGE_MSG_LIST);
 			for (int i = 0; i < imgTypeMsgList.size(); i++) {
 				Msg msg = imgTypeMsgList.get(i);
-				String url = UriUtils.getPreviewUri(msg.getImgTypeMsgImg());
+				String url = APIUri.getPreviewUrl(msg.getImgTypeMsgImg());
 				urlList.add(url);
 			}
 			pageStartPosition = imgTypeMsgList.indexOf(currentMsg);

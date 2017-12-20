@@ -81,6 +81,12 @@ import com.inspur.emmcloud.bean.SplashPageBean;
 import com.inspur.emmcloud.bean.TaskResult;
 import com.inspur.emmcloud.bean.Trip;
 import com.inspur.emmcloud.bean.UserProfileInfoBean;
+import com.inspur.emmcloud.bean.Volume.GetVolumeFileListResult;
+import com.inspur.emmcloud.bean.Volume.GetVolumeFileUploadTokenResult;
+import com.inspur.emmcloud.bean.Volume.GetVolumeListResult;
+import com.inspur.emmcloud.bean.Volume.VolumeFile;
+
+import java.util.List;
 
 
 public interface APIInterface {
@@ -552,6 +558,27 @@ public interface APIInterface {
     void returnSaveConfigSuccess();
     void returnSaveConfigFail();
 
+    void returnVolumeListSuccess(GetVolumeListResult getVolumeListResult);
+    void returnVolumeListFail(String error,int errorCode);
+
+    void returnVolumeFileListSuccess(GetVolumeFileListResult getVolumeFileListResult);
+    void returnVolumeFileListFail(String error,int errorCode);
+
+    void returnVolumeFileUploadTokenSuccess(GetVolumeFileUploadTokenResult getVolumeFileUploadTokenResult, String fileLocalPath,VolumeFile mockVolumeFile);
+    void returnVolumeFileUploadTokenFail(VolumeFile mockVolumeFile,String error,int errorCode,String filePath);
+
+    void returnCreateForderSuccess(VolumeFile volumeFile);
+    void returnCreateForderFail(String error,int errorCode);
+
+    void returnVolumeFileDeleteSuccess(VolumeFile volumeFile);
+    void returnVolumeFileDeleteFail(String error, int errorCode);
+
+
+    void returnVolumeFileRenameSuccess(VolumeFile oldVolumeFile,String fileNewName);
+    void returnVolumeFileRenameFail(String error,int errorCode);
+
+    void returnMoveFileSuccess(List<VolumeFile> movedVolumeFileList);
+    void returnMoveFileFail(String error,int errorCode);
     void returnRecommendAppWidgetListSuccess(GetRecommendAppWidgetListResult getRecommendAppWidgetListResult);
     void returnRecommendAppWidgetListFail(String error, int errorCode);
 

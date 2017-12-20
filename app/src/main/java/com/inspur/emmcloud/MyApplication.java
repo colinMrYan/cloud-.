@@ -22,13 +22,12 @@ import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
 import com.horcrux.svg.SvgPackage;
-import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.bean.Enterprise;
 import com.inspur.emmcloud.bean.GetMyInfoResult;
 import com.inspur.emmcloud.bean.Language;
-import com.inspur.emmcloud.callback.MyActivityLifecycleCallbacks;
-import com.inspur.emmcloud.callback.OauthCallBack;
 import com.inspur.emmcloud.config.MyAppConfig;
+import com.inspur.emmcloud.interf.MyActivityLifecycleCallbacks;
+import com.inspur.emmcloud.interf.OauthCallBack;
 import com.inspur.emmcloud.push.WebSocketPush;
 import com.inspur.emmcloud.ui.login.LoginActivity;
 import com.inspur.emmcloud.util.AppUtils;
@@ -40,7 +39,6 @@ import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.PreferencesByUsersUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.StringUtils;
-import com.inspur.emmcloud.util.UriUtils;
 import com.inspur.emmcloud.util.richtext.RichText;
 import com.inspur.imp.api.Res;
 import com.inspur.reactnative.AuthorizationManagerPackage;
@@ -86,18 +84,23 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
     private String accessToken;
     private Enterprise currentEnterprise;
     private Map<String, String> userPhotoUrlMap;
+    private static MyApplication instance;
+    private MyActivityLifecycleCallbacks myActivityLifecycleCallbacks;
+    private boolean isOpenNotification = false;
+    private String tanent;
 
     public void onCreate() {
         super.onCreate();
         init();
         setAppLanguageAndFontScale();
         removeAllSessionCookie();
-        registerActivityLifecycleCallbacks(new MyActivityLifecycleCallbacks());
+        myActivityLifecycleCallbacks = new MyActivityLifecycleCallbacks();
+        registerActivityLifecycleCallbacks(myActivityLifecycleCallbacks);
     }
-
 
     private void init() {
         // TODO Auto-generated method stub
+        instance = this;
         CrashHandler crashHandler = CrashHandler.getInstance();
         crashHandler.init(getApplicationContext());
         x.Ext.init(MyApplication.this);
@@ -124,9 +127,19 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
 
     }
 
+    /**
+     * 单例获取application实例
+     * @return MyApplication
+     */
+    public static MyApplication getInstance() {
+        return instance;
+    }
+
 
     /**************************************登出逻辑相关********************************************************/
-    //登出逻辑
+    /**
+     * 注销
+     */
     public void signout() {
         // TODO Auto-generated method stub
         if (getWebSocketPush() != null) {
@@ -260,7 +273,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
             params.addHeader("X-ECC-Current-Enterprise", currentEnterprise.getId());
         }
         String languageJson = PreferencesUtils.getString(
-                getApplicationContext(), UriUtils.tanent + "appLanguageObj");
+                getApplicationContext(), MyApplication.getInstance().getTanent() + "appLanguageObj");
         if (languageJson != null) {
             Language language = new Language(languageJson);
             params.addHeader("Accept-Language", language.getIana());
@@ -406,9 +419,12 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
                 currentEnterprise = getMyInfoResult.getDefaultEnterprise();
             }
             String enterpriseCode = currentEnterprise.getCode();
-            UriUtils.tanent = enterpriseCode;
-            APIUri.tanent = enterpriseCode;
+            tanent = enterpriseCode;
         }
+    }
+
+    public String getTanent(){
+        return tanent;
     }
 
     public Enterprise getCurrentEnterprise() {
@@ -501,16 +517,16 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
     public void setAppLanguageAndFontScale() {
 
         String languageJson = PreferencesUtils
-                .getString(getApplicationContext(), UriUtils.tanent
+                .getString(getApplicationContext(), MyApplication.getInstance().getTanent()
                         + "appLanguageObj");
         Configuration config = getResources().getConfiguration();
         if (languageJson != null) {
             String language = PreferencesUtils.getString(
-                    getApplicationContext(), UriUtils.tanent + "language");
+                    getApplicationContext(), MyApplication.getInstance().getTanent() + "language");
             // 当系统语言选择为跟随系统的时候，要检查当前系统的语言是不是在commonList中，重新赋值
             if (language.equals("followSys")) {
                 String commonLanguageListJson = PreferencesUtils.getString(
-                        getApplicationContext(), UriUtils.tanent
+                        getApplicationContext(), MyApplication.getInstance().getTanent()
                                 + "commonLanguageList");
                 if (commonLanguageListJson != null) {
                     List<Language> commonLanguageList = (List) JSON
@@ -523,7 +539,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
                                 Resources.getSystem().getConfiguration().locale.getCountry())) {
                             PreferencesUtils.putString(
                                     getApplicationContext(),
-                                    UriUtils.tanent + "appLanguageObj",
+                                    MyApplication.getInstance().getTanent() + "appLanguageObj",
                                     commonLanguage.toString());
                             languageJson = commonLanguage.toString();
                             isContainDefault = true;
@@ -532,7 +548,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
                     }
                     if (!isContainDefault) {
                         PreferencesUtils.putString(getApplicationContext(),
-                                UriUtils.tanent + "appLanguageObj",
+                                MyApplication.getInstance().getTanent() + "appLanguageObj",
                                 commonLanguageList.get(0).toString());
                         languageJson = commonLanguageList.get(0).toString();
                     }
@@ -657,6 +673,26 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
 
     public void removeActivity(Activity activity) {
         activityList.remove(activity);
+    }
+
+    public List<Activity> getActivityList() {
+        return activityList;
+    }
+
+    /**
+     * 获取是否正在打开通知
+     * @return
+     */
+    public boolean getOPenNotification(){
+        return isOpenNotification;
+    }
+
+    /**
+     * 设置是否正在打开通知
+     * @param isOpenNotification
+     */
+    public  void setOpenNotification(boolean isOpenNotification){
+        this.isOpenNotification = isOpenNotification;
     }
 
     /**

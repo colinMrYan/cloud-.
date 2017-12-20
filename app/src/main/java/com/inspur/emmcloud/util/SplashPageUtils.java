@@ -6,11 +6,12 @@ import android.content.Context;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.api.APIDownloadCallBack;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
+import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.api.apiservice.AppAPIService;
 import com.inspur.emmcloud.api.apiservice.ReactNativeAPIService;
 import com.inspur.emmcloud.bean.AppException;
 import com.inspur.emmcloud.bean.SplashPageBean;
-import com.inspur.emmcloud.callback.CommonCallBack;
+import com.inspur.emmcloud.interf.CommonCallBack;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.config.MyAppConfig;
 
@@ -60,13 +61,13 @@ public class SplashPageUtils {
             SplashPageBean.PayloadBean.ResourceBean.DefaultBean defaultBean = splashPageBean.getPayload()
                     .getResource().getDefaultX();
             if (screenType.equals("2k")) {
-                downloadSplashPage(UriUtils.getPreviewUri(defaultBean.getXxxhdpi()), defaultBean.getXxxhdpi(), splashPageBean);
+                downloadSplashPage(APIUri.getPreviewUrl(defaultBean.getXxxhdpi()), defaultBean.getXxxhdpi(), splashPageBean);
             } else if (screenType.equals("xxhdpi")) {
-                downloadSplashPage(UriUtils.getPreviewUri(defaultBean.getXxhdpi()), defaultBean.getXxhdpi(), splashPageBean);
+                downloadSplashPage(APIUri.getPreviewUrl(defaultBean.getXxhdpi()), defaultBean.getXxhdpi(), splashPageBean);
             } else if (screenType.equals("xhdpi")) {
-                downloadSplashPage(UriUtils.getPreviewUri(defaultBean.getXhdpi()), defaultBean.getXhdpi(), splashPageBean);
+                downloadSplashPage(APIUri.getPreviewUrl(defaultBean.getXhdpi()), defaultBean.getXhdpi(), splashPageBean);
             } else {
-                downloadSplashPage(UriUtils.getPreviewUri(defaultBean.getHdpi()), defaultBean.getHdpi(), splashPageBean);
+                downloadSplashPage(APIUri.getPreviewUrl(defaultBean.getHdpi()), defaultBean.getHdpi(), splashPageBean);
             }
         }
     }

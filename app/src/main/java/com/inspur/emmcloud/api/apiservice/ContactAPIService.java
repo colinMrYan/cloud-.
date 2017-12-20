@@ -16,7 +16,7 @@ import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.bean.GetAllContactResult;
 import com.inspur.emmcloud.bean.GetAllRobotsResult;
 import com.inspur.emmcloud.bean.Robot;
-import com.inspur.emmcloud.callback.OauthCallBack;
+import com.inspur.emmcloud.interf.OauthCallBack;
 import com.inspur.emmcloud.util.OauthUtils;
 import com.inspur.emmcloud.util.StringUtils;
 
@@ -30,7 +30,6 @@ import org.xutils.x;
 public class ContactAPIService {
 	private Context context;
 	private APIInterface apiInterface;
-	private String baseUrl = "https://emm.inspur.com/api?";
 	public ContactAPIService(Context context) {
 		this.context = context;
 	}

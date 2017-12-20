@@ -7,7 +7,7 @@ import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.AppAPIService;
 import com.inspur.emmcloud.bean.AndroidBundleBean;
 import com.inspur.emmcloud.bean.ReactNativeUpdateBean;
-import com.inspur.emmcloud.callback.CommonCallBack;
+import com.inspur.emmcloud.interf.CommonCallBack;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.ui.find.FindFragment;
