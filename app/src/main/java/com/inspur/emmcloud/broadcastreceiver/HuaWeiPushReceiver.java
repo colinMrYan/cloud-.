@@ -6,8 +6,12 @@ import android.os.Bundle;
 
 import com.huawei.hms.support.api.push.PushReceiver;
 import com.inspur.emmcloud.push.WebSocketPush;
+import com.inspur.emmcloud.util.ECMShortcutBadgeNumberManagerUtils;
+import com.inspur.emmcloud.util.JSONUtils;
 import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
+
+import java.io.UnsupportedEncodingException;
 
 /**
  * Created by yufuchang on 2017/6/20.
@@ -36,12 +40,29 @@ public class HuaWeiPushReceiver extends PushReceiver {
      */
     @Override
     public boolean onPushMsg(Context context, byte[] msg, Bundle bundle) {
+        ECMShortcutBadgeNumberManagerUtils.setDesktopBadgeNumber(context,getDesktopBadgeNumber(msg));
         try {
             LogUtils.YfcDebug("接收到华为透传消息： " + new String(msg, "UTF-8"));
         } catch (Exception e) {
             e.printStackTrace();
         }
         return false;
+    }
+
+    /**
+     * 获取桌面badge的数字
+     * @param msg
+     * @return
+     */
+    private int getDesktopBadgeNumber(byte[] msg) {
+        int badageNumber = 0;
+        try {
+            String message = new String(msg,"UTF-8");
+            badageNumber = JSONUtils.getInt(message,"",0);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        return badageNumber;
     }
 
     /**
