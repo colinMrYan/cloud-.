@@ -3,7 +3,6 @@ package com.inspur.emmcloud.ui;
 import android.app.Fragment;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.graphics.drawable.GradientDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Message;
@@ -56,7 +55,6 @@ import com.inspur.emmcloud.util.ChannelGroupCacheUtils;
 import com.inspur.emmcloud.util.ClientIDUtils;
 import com.inspur.emmcloud.util.ContactCacheUtils;
 import com.inspur.emmcloud.util.DbCacheUtils;
-import com.inspur.emmcloud.util.DensityUtil;
 import com.inspur.emmcloud.util.ImageDisplayUtils;
 import com.inspur.emmcloud.util.MyAppWidgetUtils;
 import com.inspur.emmcloud.util.NetUtils;
@@ -70,7 +68,6 @@ import com.inspur.emmcloud.util.StateBarColor;
 import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.ToastUtils;
 import com.inspur.emmcloud.util.WebServiceMiddleUtils;
-import com.inspur.emmcloud.widget.GradientDrawableBuilder;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.MyFragmentTabHost;
 import com.inspur.emmcloud.widget.WeakHandler;
@@ -525,20 +522,15 @@ public class IndexActivity extends BaseFragmentActivity implements
         }
     }
 
-
     /**
      * 处理未处理消息个数的显示
      *
      * @param tabView
      */
     private void setUnHandledBadgesDisplay(View tabView,int badgeNumber) {
-        TextView unhandledBadges = (TextView) tabView.findViewById(R.id.index_unhandled_badges_text);
-        unhandledBadges.setVisibility(View.VISIBLE);
-        GradientDrawable gradientDrawable = new GradientDrawableBuilder()
-                .setCornerRadius(DensityUtil.dip2px(IndexActivity.this, 40))
-                .setBackgroundColor(0xFFF74C31)
-                .setStrokeColor(0xFFF74C31).build();
-        unhandledBadges.setBackground(gradientDrawable);
+        RelativeLayout unhandledBadgesLayout = (RelativeLayout) tabView.findViewById(R.id.new_message_tips_layout);
+        unhandledBadgesLayout.setVisibility(View.VISIBLE);
+        TextView unhandledBadges = (TextView) tabView.findViewById(R.id.new_message_tips_text);
         unhandledBadges.setText(""+(badgeNumber > 99 ? "99+":badgeNumber));
     }
 
