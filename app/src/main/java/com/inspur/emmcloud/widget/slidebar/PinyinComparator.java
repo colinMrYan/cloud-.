@@ -1,9 +1,11 @@
 package com.inspur.emmcloud.widget.slidebar;
 
 
-import java.util.Comparator;
-
 import com.inspur.emmcloud.bean.PersonDto;
+
+import java.text.Collator;
+import java.util.Comparator;
+import java.util.Locale;
 
 
 public class PinyinComparator implements Comparator<PersonDto> {
@@ -19,7 +21,7 @@ public class PinyinComparator implements Comparator<PersonDto> {
 		} else if (o2.getSortLetters().equals("#")) {
 			return 1;
 		} else {
-			return o1.getSortLetters().compareTo(o2.getSortLetters());
+			return Collator.getInstance(Locale.CHINA).compare(o1.getName(), o2.getName());
 		}
 	}
 
