@@ -14,7 +14,7 @@ import com.inspur.emmcloud.ui.SchemeHandleActivity;
 import com.inspur.emmcloud.ui.mine.setting.CreateGestureActivity;
 import com.inspur.emmcloud.ui.mine.setting.GestureLoginActivity;
 import com.inspur.emmcloud.util.privates.AppUtils;
-import com.inspur.emmcloud.util.privates.db.DbCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.DbCacheUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 
 /**

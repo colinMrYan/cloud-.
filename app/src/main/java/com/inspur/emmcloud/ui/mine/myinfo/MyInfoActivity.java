@@ -23,7 +23,7 @@ import com.inspur.emmcloud.bean.mine.UserProfileInfoBean;
 import com.inspur.emmcloud.ui.login.ModifyUserPsdActivity;
 import com.inspur.emmcloud.ui.login.ModifyUserPwdBySMSActivity;
 import com.inspur.emmcloud.ui.mine.setting.SwitchEnterpriseActivity;
-import com.inspur.emmcloud.util.privates.db.ContactCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.ContactCacheUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.NetUtils;

@@ -12,7 +12,7 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.work.WorkSetting;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
-import com.inspur.emmcloud.util.privates.db.WorkSettingCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.WorkSettingCacheUtils;
 import com.inspur.emmcloud.widget.SwitchView;
 import com.inspur.emmcloud.widget.dragsortlistview.DragSortController;
 import com.inspur.emmcloud.widget.dragsortlistview.DragSortListView;

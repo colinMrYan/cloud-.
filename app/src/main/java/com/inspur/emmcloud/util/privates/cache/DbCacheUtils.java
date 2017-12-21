@@ -4,7 +4,7 @@
  * V 1.0.0
  * Create at 2016年10月25日 上午10:02:19
  */
-package com.inspur.emmcloud.util.privates.db;
+package com.inspur.emmcloud.util.privates.cache;
 
 import android.content.Context;
 import android.database.Cursor;

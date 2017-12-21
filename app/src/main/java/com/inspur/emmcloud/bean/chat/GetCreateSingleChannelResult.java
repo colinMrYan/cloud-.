@@ -4,7 +4,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.inspur.emmcloud.util.privates.db.ContactCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.ContactCacheUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 
 import android.content.Context;

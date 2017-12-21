@@ -9,7 +9,7 @@ import com.inspur.emmcloud.bean.system.AppException;
 import com.inspur.emmcloud.bean.appcenter.ReactNativeUpdateBean;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.ui.find.FindFragment;
-import com.inspur.emmcloud.util.privates.db.AppExceptionCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.AppExceptionCacheUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.DownLoaderUtils;
 import com.inspur.emmcloud.util.privates.FileSafeCode;

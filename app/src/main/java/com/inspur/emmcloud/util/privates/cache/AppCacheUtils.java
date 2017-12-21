@@ -1,15 +1,15 @@
-package com.inspur.emmcloud.util;
+package com.inspur.emmcloud.util.privates.cache;
 
 import android.content.Context;
 
-import com.inspur.emmcloud.bean.AppCommonlyUse;
-import com.inspur.emmcloud.bean.AppOrder;
+import com.inspur.emmcloud.bean.appcenter.AppCommonlyUse;
+import com.inspur.emmcloud.bean.appcenter.AppOrder;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * classes : com.inspur.emmcloud.util.AppCacheUtils Create at 2016年12月17日
+ * classes : com.inspur.emmcloud.util.privates.db.AppCacheUtils Create at 2016年12月17日
  * 下午2:59:11
  */
 public class AppCacheUtils {

@@ -1,4 +1,4 @@
-package com.inspur.emmcloud.util.privates.db;
+package com.inspur.emmcloud.util.privates.cache;
 
 import android.content.Context;
 

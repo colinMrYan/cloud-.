@@ -50,14 +50,14 @@ import com.inspur.emmcloud.bean.system.PVCollectModel;
 import com.inspur.emmcloud.bean.appcenter.RecommendAppWidgetBean;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.interf.OnRecommendAppWidgetItemClickListener;
-import com.inspur.emmcloud.util.privates.db.AppCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.AppCacheUtils;
 import com.inspur.emmcloud.util.privates.AppTitleUtils;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.IntentUtils;
-import com.inspur.emmcloud.util.privates.db.MyAppCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.MyAppCacheUtils;
 import com.inspur.emmcloud.util.privates.MyAppWidgetUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
-import com.inspur.emmcloud.util.privates.db.PVCollectModelCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.ShortCutUtils;
@@ -86,7 +86,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static com.inspur.emmcloud.util.privates.db.AppCacheUtils.getCommonlyUseAppList;
+import static com.inspur.emmcloud.util.privates.cache.AppCacheUtils.getCommonlyUseAppList;
 
 /**
  * classes : com.inspur.emmcloud.ui.app.MyAppFragment Create at 2016年12月13日

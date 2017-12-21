@@ -16,7 +16,7 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.bean.chat.Msg;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
-import com.inspur.emmcloud.util.privates.db.MsgCacheUtil;
+import com.inspur.emmcloud.util.privates.cache.MsgCacheUtil;
 
 import java.io.Serializable;
 import java.util.ArrayList;

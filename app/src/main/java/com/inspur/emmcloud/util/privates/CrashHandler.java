@@ -5,7 +5,7 @@ import android.os.Environment;
 
 import com.inspur.emmcloud.bean.system.AppException;
 import com.inspur.emmcloud.util.common.LogUtils;
-import com.inspur.emmcloud.util.privates.db.AppExceptionCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.AppExceptionCacheUtils;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;

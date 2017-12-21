@@ -7,8 +7,8 @@ import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.bean.contact.Contact;
 import com.inspur.emmcloud.bean.chat.Robot;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
-import com.inspur.emmcloud.util.privates.db.ContactCacheUtils;
-import com.inspur.emmcloud.util.privates.db.RobotCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.ContactCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.RobotCacheUtils;
 
 public class DirectChannelUtils {
 

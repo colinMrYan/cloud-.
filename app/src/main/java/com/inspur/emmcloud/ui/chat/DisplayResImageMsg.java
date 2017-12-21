@@ -13,7 +13,7 @@ import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.bean.chat.Msg;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.JSONUtils;
-import com.inspur.emmcloud.util.privates.db.MsgCacheUtil;
+import com.inspur.emmcloud.util.privates.cache.MsgCacheUtil;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;

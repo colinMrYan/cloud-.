@@ -33,7 +33,7 @@ import com.inspur.emmcloud.ui.login.LoginActivity;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.CalEventNotificationUtils;
 import com.inspur.emmcloud.util.privates.CrashHandler;
-import com.inspur.emmcloud.util.privates.db.DbCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.DbCacheUtils;
 import com.inspur.emmcloud.util.privates.HuaWeiPushMangerUtils;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUsersUtils;

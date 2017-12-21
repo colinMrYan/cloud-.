@@ -19,7 +19,7 @@ import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
 import com.inspur.emmcloud.bean.appcenter.App;
 import com.inspur.emmcloud.bean.appcenter.AppBadgeBean;
 import com.inspur.emmcloud.bean.appcenter.GetRemoveAppResult;
-import com.inspur.emmcloud.util.privates.db.AppCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.AppCacheUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
