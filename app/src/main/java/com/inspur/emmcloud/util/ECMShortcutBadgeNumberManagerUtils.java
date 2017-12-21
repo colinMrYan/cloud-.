@@ -24,7 +24,7 @@ import me.leolin.shortcutbadger.ShortcutBadger;
 
 public class ECMShortcutBadgeNumberManagerUtils {
     /**
-     * 设置桌面角标
+     * 设置桌面角标，只面向华为推送
      * @param context
      */
     public static void setDesktopBadgeNumber(Context context,int count) {
@@ -42,7 +42,7 @@ public class ECMShortcutBadgeNumberManagerUtils {
     }
 
     /**
-     * 设置桌面角标
+     * 设置桌面角标，面向华为小米推送
      * @param context
      */
     public static void setDesktopBadgeNumber(Context context,int count,Intent intent) {
@@ -51,7 +51,7 @@ public class ECMShortcutBadgeNumberManagerUtils {
             String miuiVersionString = getSystemProperty("ro.miui.ui.version.name");
             int miuiVersionNum = (StringUtils.isBlank(miuiVersionString))? -1 : Integer.parseInt(miuiVersionString.substring(1));
             LogUtils.YfcDebug("MIUIVersion："+miuiVersionNum);
-            if(count >= 6){
+            if(miuiVersionNum >= 6){
                 setMIUIV6PlusBadge(context,count,intent);
                 return;
             }
@@ -95,16 +95,12 @@ public class ECMShortcutBadgeNumberManagerUtils {
         NotificationManager notificationManager = (NotificationManager) context
                 .getSystemService(Context.NOTIFICATION_SERVICE);
         Notification.Builder builder = new Notification.Builder(context)
-                .setContentTitle("通知").setContentText("您有一条新的消息")
+                .setContentTitle(intent.getExtras().getString(JPushInterface.EXTRA_NOTIFICATION_TITLE))
+                .setContentText(intent.getExtras().getString(JPushInterface.EXTRA_ALERT))
                 .setAutoCancel(true).setPriority(Notification.PRIORITY_DEFAULT)
                 .setDefaults(Notification.DEFAULT_VIBRATE).setSmallIcon(R.drawable.ic_launcher);
         Intent clickIntent = new Intent("com.inspur.emmcloud.openjpush");
-//        clickIntent.putExtra("key","value");
-//        intent.setAction("com.inspur.emmcloud.openjpush");
-        LogUtils.YfcDebug("广播里的字符串："+intent.getExtras().getString(JPushInterface.EXTRA_EXTRA));
         clickIntent.putExtras(intent.getExtras());
-//        clickIntent.putExtra("jpushMessage",intent.getExtras().getString(JPushInterface.EXTRA_EXTRA));
-//        clickIntent.putExtra("jpushMessage","你好");
         PendingIntent clickPendingIntent = PendingIntent.getBroadcast(context, 0, clickIntent,
                 PendingIntent.FLAG_UPDATE_CURRENT);
         builder.setContentIntent(clickPendingIntent);
