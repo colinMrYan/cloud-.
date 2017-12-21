@@ -40,7 +40,7 @@ public class HuaWeiPushReceiver extends PushReceiver {
      */
     @Override
     public boolean onPushMsg(Context context, byte[] msg, Bundle bundle) {
-        ECMShortcutBadgeNumberManagerUtils.setDesktopBadgeNumber(context,getDesktopBadgeNumber(msg));
+        ECMShortcutBadgeNumberManagerUtils.setDesktopBadgeNumber(context,getDesktopBadgeNumber(msg),null);
         try {
             LogUtils.YfcDebug("接收到华为透传消息： " + new String(msg, "UTF-8"));
         } catch (Exception e) {
@@ -58,7 +58,7 @@ public class HuaWeiPushReceiver extends PushReceiver {
         int badageNumber = 0;
         try {
             String message = new String(msg,"UTF-8");
-            badageNumber = JSONUtils.getInt(message,"",0);
+            badageNumber = JSONUtils.getInt(message,"badgeNumber",0);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }

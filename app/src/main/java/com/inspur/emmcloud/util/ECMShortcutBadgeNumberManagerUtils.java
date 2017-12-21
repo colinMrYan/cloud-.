@@ -10,7 +10,6 @@ import android.support.v4.app.NotificationCompat;
 import com.inspur.emmcloud.R;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -23,34 +22,15 @@ import me.leolin.shortcutbadger.ShortcutBadger;
  */
 
 public class ECMShortcutBadgeNumberManagerUtils {
-    /**
-     * 设置桌面角标，只面向华为推送
-     * @param context
-     */
-    public static void setDesktopBadgeNumber(Context context,int count) {
-//        LogUtils.YfcDebug("厂商："+AppUtils.GetChangShang().toLowerCase());
-//        if(AppUtils.GetChangShang().toLowerCase().startsWith("xiaomi")){
-//            String miuiVersionString = getSystemProperty("ro.miui.ui.version.name");
-//            int miuiVersionNum = (StringUtils.isBlank(miuiVersionString))? -1 : Integer.parseInt(miuiVersionString.substring(1));
-//            LogUtils.YfcDebug("MIUIVersion："+miuiVersionNum);
-//            if(count >= 6){
-//                setMIUIV6PlusBadge(context,count);
-//                return;
-//            }
-//        }
-        ShortcutBadger.applyCount(context,count);
-    }
 
     /**
-     * 设置桌面角标，面向华为小米推送
+     * 设置桌面角标
      * @param context
      */
     public static void setDesktopBadgeNumber(Context context,int count,Intent intent) {
-        LogUtils.YfcDebug("厂商："+AppUtils.GetChangShang().toLowerCase());
-        if(AppUtils.GetChangShang().toLowerCase().startsWith("xiaomi")){
+        if(AppUtils.GetChangShang().toLowerCase().startsWith("xiaomi") && intent != null){
             String miuiVersionString = getSystemProperty("ro.miui.ui.version.name");
             int miuiVersionNum = (StringUtils.isBlank(miuiVersionString))? -1 : Integer.parseInt(miuiVersionString.substring(1));
-            LogUtils.YfcDebug("MIUIVersion："+miuiVersionNum);
             if(miuiVersionNum >= 6){
                 setMIUIV6PlusBadge(context,count,intent);
                 return;
@@ -78,7 +58,7 @@ public class ECMShortcutBadgeNumberManagerUtils {
             if (input != null) {
                 try {
                     input.close();
-                } catch (IOException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }

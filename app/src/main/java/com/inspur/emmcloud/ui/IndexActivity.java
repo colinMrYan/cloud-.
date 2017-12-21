@@ -55,6 +55,7 @@ import com.inspur.emmcloud.util.ChannelGroupCacheUtils;
 import com.inspur.emmcloud.util.ClientIDUtils;
 import com.inspur.emmcloud.util.ContactCacheUtils;
 import com.inspur.emmcloud.util.DbCacheUtils;
+import com.inspur.emmcloud.util.ECMShortcutBadgeNumberManagerUtils;
 import com.inspur.emmcloud.util.ImageDisplayUtils;
 import com.inspur.emmcloud.util.MyAppWidgetUtils;
 import com.inspur.emmcloud.util.NetUtils;
@@ -80,6 +81,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
+
 
 /**
  * 主页面
@@ -532,6 +534,8 @@ public class IndexActivity extends BaseFragmentActivity implements
         unhandledBadgesLayout.setVisibility(View.VISIBLE);
         TextView unhandledBadges = (TextView) tabView.findViewById(R.id.new_message_tips_text);
         unhandledBadges.setText(""+(badgeNumber > 99 ? "99+":badgeNumber));
+        //更新桌面角标数字
+        ECMShortcutBadgeNumberManagerUtils.setDesktopBadgeNumber(IndexActivity.this,badgeNumber,null);
     }
 
     /**
