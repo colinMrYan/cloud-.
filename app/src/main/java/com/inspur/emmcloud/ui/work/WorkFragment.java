@@ -572,7 +572,7 @@ public class WorkFragment extends Fragment {
     private FestivalDate initFestivalDate() {
         FestivalDate festivalDate = null;
         try {
-            if (!DbCacheUtils.tableIsExist("com_inspur_emmcloud_bean_FestivalDate")) {
+            if (!DbCacheUtils.tableIsExist("com_inspur_emmcloud_bean_FestivalDate") || FestivalCacheUtils.isNeedUpdateFestivalTable(getActivity())) {
                 FestivalCacheUtils.saveFestivalList(getActivity());
             }
             festivalDate = FestivalCacheUtils.getFestival(getActivity());
