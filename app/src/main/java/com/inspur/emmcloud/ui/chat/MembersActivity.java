@@ -23,6 +23,7 @@ import com.inspur.emmcloud.ui.contact.RobotInfoActivity;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
 import com.inspur.emmcloud.util.ChannelGroupCacheUtils;
 import com.inspur.emmcloud.util.ContactCacheUtils;
+import com.inspur.emmcloud.util.PinyinUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.ToastUtils;
@@ -326,8 +327,10 @@ public class MembersActivity extends BaseActivity implements
             } else if (o2.getSortLetters().equals("#")) {
                 return 1;
             } else {
-                return Collator.getInstance(Locale.CHINA).compare(o1.getName(), o2.getName());
+                return Collator.getInstance(Locale.CHINA).compare(PinyinUtils.getPingYin(o1.getName()), PinyinUtils.getPingYin(o2.getName()));
             }
         }
     }
+
+
 }
