@@ -16,9 +16,6 @@ import org.xutils.view.annotation.ViewInject;
 
 public class VolumeFileFilterActvity extends VolumeFileBaseActivity {
 
-    @ViewInject(R.id.header_operation_layout)
-    private RelativeLayout headerOperationLayout;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

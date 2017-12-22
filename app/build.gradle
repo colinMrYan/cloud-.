@@ -24,7 +24,7 @@ def enableProguardInReleaseBuilds = false
 
 android {
     compileSdkVersion 24
-    buildToolsVersion "25.0.0"
+    buildToolsVersion "26.0.2"
     aaptOptions.cruncherEnabled = false
     aaptOptions.useNewCruncher = false
 
@@ -64,20 +64,20 @@ android {
     }
 
     //指定打包后应用名称
-        applicationVariants.all {variant ->
-        variant.outputs.each {output ->
-            def outputFile = output.outputFile
-            def fileName
-            if (outputFile != null && outputFile.name.endsWith('.apk')) {
-                if (variant.buildType.name.equals('release')) {
-                    fileName = "inspur_cloud_mobileclient_${defaultConfig.versionName}.apk"
-                } else if (variant.buildType.name.equals('debug')) {
-                    fileName = "inspur_cloud_mobileclient_debug_1.0.0.apk"
-                }
-                output.outputFile = new File(outputFile.parent, fileName)
-            }
-        }
-    }
+//        applicationVariants.all {variant ->
+//        variant.outputs.each {output ->
+//            def outputFile = output.outputFile
+//            def fileName
+//            if (outputFile != null && outputFile.name.endsWith('.apk')) {
+//                if (variant.buildType.name.equals('release')) {
+//                    fileName = "inspur_cloud_mobileclient_${defaultConfig.versionName}.apk"
+//                } else if (variant.buildType.name.equals('debug')) {
+//                    fileName = "inspur_cloud_mobileclient_debug_1.0.0.apk"
+//                }
+//                output.outputFile = new File(outputFile.parent, fileName)
+//            }
+//        }
+ //   }
 
 
     splits {
@@ -138,7 +138,7 @@ dependencies {
     compile 'org.jsoup:jsoup:1.9.2'
     compile 'com.zzhoujay.markdown:markdown:1.0.5'
     compile 'com.jakewharton:disklrucache:2.0.2' //Markdown引入 缓存
-    compile 'com.android.support:multidex:1.0.1'
+    compile 'com.android.support:multidex:1.0.2'
     compile 'com.wei.android.lib:fingerprintidentify:1.2.1'//指纹识别库暂未启用
 
     // React Naive Components

@@ -559,6 +559,15 @@ public class APIUri {
     public static String getMoveVolumeFileUrl(String volumeId) {
         return URL_BASE_VOLUME + "/" + volumeId + "/file/path";
     }
+
+    /**
+     * 获取复制文件的url
+     * @param volumeId
+     * @return
+     */
+    public static String getCopyVolumeFileUrl(String volumeId){
+        return URL_BASE_VOLUME + "/" + volumeId +"/file/duplication";
+    }
 /************************************************************************工作****************************************************************************/
     /***************会议接口*****************************/
     /**

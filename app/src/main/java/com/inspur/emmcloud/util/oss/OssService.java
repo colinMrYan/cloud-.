@@ -107,6 +107,7 @@ public class OssService implements VolumeFileUploadService {
 
     @Override
     public void uploadFile(String fileName, String localFile) {
+        LogUtils.jasonDebug("00000000000000");
         handMessage();
         // 构造上传请求
         PutObjectRequest put = new PutObjectRequest(getVolumeFileUploadTokenResult.getBucket(), fileName, localFile);
@@ -144,6 +145,7 @@ public class OssService implements VolumeFileUploadService {
         task = oss.asyncPutObject(put, new OSSCompletedCallback<PutObjectRequest, PutObjectResult>() {
             @Override
             public void onSuccess(PutObjectRequest request, PutObjectResult result) {
+                LogUtils.jasonDebug("onSuccess");
                 Log.d("PutObject", "UploadSuccess");
 
                 Log.d("ETag", result.getETag());
@@ -161,7 +163,7 @@ public class OssService implements VolumeFileUploadService {
 
             @Override
             public void onFailure(PutObjectRequest request, ClientException clientExcepion, ServiceException serviceException) {
-
+                LogUtils.jasonDebug("onFailure");
                 String info = "";
                 // 请求异常
                 if (clientExcepion != null) {

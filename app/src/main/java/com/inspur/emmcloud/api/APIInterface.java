@@ -579,6 +579,10 @@ public interface APIInterface {
 
     void returnMoveFileSuccess(List<VolumeFile> movedVolumeFileList);
     void returnMoveFileFail(String error,int errorCode);
+
+    void returnCopyFileSuccess();
+    void returnCopyFileFail(String error,int errorCode);
+
     void returnRecommendAppWidgetListSuccess(GetRecommendAppWidgetListResult getRecommendAppWidgetListResult);
     void returnRecommendAppWidgetListFail(String error, int errorCode);
 

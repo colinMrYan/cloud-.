@@ -726,6 +726,46 @@ public class MyAppAPIService {
     }
 
     /**
+     * 复制云盘文件
+     *
+     * @param volumeId
+     * @param currentDirAbsolutePath
+     */
+    public void copyVolumeFile(final String volumeId, final String currentDirAbsolutePath, final List<VolumeFile> moveVolumeFileList, final String toPath) {
+        final String url = APIUri.getCopyVolumeFileUrl(volumeId);
+        RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
+        params.addQueryStringParameter("to", toPath);
+        params.addQueryStringParameter("from", currentDirAbsolutePath + moveVolumeFileList.get(0).getName());
+        x.http().post(params, new APICallback(context, url) {
+            @Override
+            public void callbackSuccess(String arg0) {
+                apiInterface.returnCopyFileSuccess();
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                apiInterface.returnCopyFileFail(error, responseCode);
+            }
+
+            @Override
+            public void callbackTokenExpire() {
+                new OauthUtils(new OauthCallBack() {
+
+                    @Override
+                    public void reExecute() {
+                        copyVolumeFile(volumeId, currentDirAbsolutePath, moveVolumeFileList, toPath);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                }, context).refreshToken(url);
+            }
+        });
+    }
+
+    /**
      * 创建文件夹
      *
      * @param volumeId

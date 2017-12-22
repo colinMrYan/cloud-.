@@ -1533,4 +1533,14 @@ public class APIInterfaceInstance implements APIInterface {
     public void returnRecommendAppWidgetListFail(String error, int errorCode) {
 
     }
+
+    @Override
+    public void returnCopyFileSuccess() {
+
+    }
+
+    @Override
+    public void returnCopyFileFail(String error, int errorCode) {
+
+    }
 }

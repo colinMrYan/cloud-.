@@ -24,6 +24,7 @@ import com.inspur.imp.plugin.file.FileUtil;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
 
+import java.io.Serializable;
 import java.util.List;
 
 import static com.inspur.emmcloud.R.id.volume_capacity_text;
@@ -90,6 +91,9 @@ public class VolumeHomePageActivity extends BaseActivity implements SwipeRefresh
                 }
                 break;
             case R.id.share_volume_layout:
+                bundle = new Bundle();
+                bundle.putSerializable("shareVolumeList", (Serializable) shareVolumeList);
+                IntentUtils.startActivity(VolumeHomePageActivity.this, ShareVolumeActivity.class,bundle);
                 break;
             case R.id.enterprise_file_layout:
                 break;

@@ -1,5 +1,6 @@
 package com.inspur.emmcloud.bean.Volume;
 
+import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.util.JSONUtils;
 
 import org.json.JSONArray;
@@ -13,11 +14,21 @@ import java.util.List;
  */
 
 public class GetVolumeFileListResult {
+    private String name = "";
+    private String owner = "";
+    private String id = "";
+    private int ownerPrivilege = 0;
+    private int othersPrivilege = 0;
     private List<VolumeFile> volumeFileList = new ArrayList<>();
     private List<VolumeFile> volumeFileDirectoryList = new ArrayList<>();
     private List<VolumeFile> volumeFileRegularList = new ArrayList<>();
     public GetVolumeFileListResult(String response){
-        JSONArray array = JSONUtils.getJSONArray(response,new JSONArray());
+        this.name = JSONUtils.getString(response,"name","");
+        this.owner = JSONUtils.getString(response,"owner","");
+        this.id = JSONUtils.getString(response,"id","");
+        this.ownerPrivilege = JSONUtils.getInt(response,"ownerPrivilege",0);
+        this.othersPrivilege = JSONUtils.getInt(response,"othersPrivilege",0);
+        JSONArray array = JSONUtils.getJSONArray(response,"children",new JSONArray());
         for (int i=0;i<array.length();i++){
             JSONObject object = JSONUtils.getJSONObject(array,i,new JSONObject());
             VolumeFile volumeFile = new VolumeFile(object);
@@ -89,5 +100,47 @@ public class GetVolumeFileListResult {
         return volumeFileFilterList;
     }
 
+    public String getName() {
+        return name;
+    }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getOwner() {
+        return owner;
+    }
+
+    public void setOwner(String owner) {
+        this.owner = owner;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public int getOwnerPrivilege() {
+        return ownerPrivilege;
+    }
+
+    public void setOwnerPrivilege(int ownerPrivilege) {
+        this.ownerPrivilege = ownerPrivilege;
+    }
+
+    public int getOthersPrivilege() {
+        return othersPrivilege;
+    }
+
+    public void setOthersPrivilege(int othersPrivilege) {
+        this.othersPrivilege = othersPrivilege;
+    }
+
+    public boolean getHaveModifyPrivilege(){
+        return owner.equals(MyApplication.getInstance().getUid()) || (othersPrivilege > 5);
+    }
 }
