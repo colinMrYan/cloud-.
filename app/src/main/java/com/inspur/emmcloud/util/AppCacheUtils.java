@@ -131,8 +131,8 @@ public class AppCacheUtils {
 		for(int i = 0; i < appCommonlyUseList.size(); i++){
 			App app = new App();
 			app.setAppID(appCommonlyUseList.get(i).getAppID());
-			List<App> appItemList = appGroupBeanList.get(i).getAppItemList();
 			for(int j = 0; j < appGroupBeanList.size(); j++){
+				List<App> appItemList = appGroupBeanList.get(j).getAppItemList();
 				int index = appItemList.indexOf(app);
 				int allreadHas = appList.indexOf(app);
 				if(index != -1 && allreadHas == -1){
