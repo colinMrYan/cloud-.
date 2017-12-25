@@ -101,12 +101,13 @@ public class FestivalCacheUtils {
 		FestivalDate festivalDate = null;
 		try {
 			festivalDate = DbCacheUtils.getDb(context).selector(FestivalDate.class).where("festivalKey", "=", "work_spring_festival").findFirst();
-            if(festivalDate.getFestivalTime() < 1485619200000l){
-                return true;
-            }
+			if(festivalDate != null && festivalDate.getFestivalTime() < 1485619200000l){
+				return true;
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+
 		return false;
 	}
 	  
