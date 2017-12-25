@@ -35,7 +35,7 @@ public class SyncCommonAppService extends Service {
             stopSelf();
         }
 
-        List<AppCommonlyUse> commonAppList = AppCacheUtils.getCommonlyUseAppList(getApplicationContext());
+        List<AppCommonlyUse> commonAppList = AppCacheUtils.getCommonlyUseList(getApplicationContext());
         if (commonAppList.size()>0){
             String commonAppListJson = JSON.toJSONString(commonAppList);
             MyAppAPIService apiService = new MyAppAPIService(getApplicationContext());
