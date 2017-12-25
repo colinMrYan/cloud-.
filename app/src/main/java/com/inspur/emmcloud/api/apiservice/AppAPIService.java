@@ -14,7 +14,6 @@ import com.inspur.emmcloud.api.APIInterface;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.bean.GetAppConfigResult;
 import com.inspur.emmcloud.bean.GetAppTabAutoResult;
-import com.inspur.emmcloud.bean.GetAppTabsResult;
 import com.inspur.emmcloud.bean.GetClientIdRsult;
 import com.inspur.emmcloud.bean.GetDeviceCheckResult;
 import com.inspur.emmcloud.bean.GetUpgradeResult;
@@ -245,41 +244,6 @@ public class AppAPIService {
         });
     }
 
-    /**
-     * 获取显示tab页的接口
-     */
-    public void getAppTabs() {
-        final String completeUrl = APIUri.getAppTabs();
-        RequestParams params = ((MyApplication) context.getApplicationContext())
-                .getHttpRequestParams(completeUrl);
-        x.http().request(HttpMethod.GET, params, new APICallback(context, completeUrl) {
-            @Override
-            public void callbackTokenExpire() {
-                new OauthUtils(new OauthCallBack() {
-
-                    @Override
-                    public void reExecute() {
-                        getAppTabs();
-                    }
-
-                    @Override
-                    public void executeFailCallback() {
-                        callbackFail("", -1);
-                    }
-                }, context).refreshToken(completeUrl);
-            }
-
-            @Override
-            public void callbackSuccess(String arg0) {
-                apiInterface.returnGetAppTabsSuccess(new GetAppTabsResult(arg0));
-            }
-
-            @Override
-            public void callbackFail(String error, int responseCode) {
-                apiInterface.returnAddAppFail(error, responseCode);
-            }
-        });
-    }
 
 
     /**
