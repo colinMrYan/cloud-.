@@ -50,6 +50,7 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:clickable="true"
+            android:onClick="onClick"
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
             android:scaleType="centerInside"
