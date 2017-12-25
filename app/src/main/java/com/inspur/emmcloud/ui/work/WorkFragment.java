@@ -187,6 +187,7 @@ public class WorkFragment extends Fragment {
      * 初始化views
      */
     private void initViews() {
+        handHeaderDate();
         setHeadLayout();
         initPullRefreshLayout();
         listView = (ListView) rootView
@@ -235,7 +236,6 @@ public class WorkFragment extends Fragment {
             getMeetings();
             getMyCalendar();
             getTasks();
-            handHeaderDate();
         } else {
             swipeRefreshLayout.setRefreshing(false);
         }
