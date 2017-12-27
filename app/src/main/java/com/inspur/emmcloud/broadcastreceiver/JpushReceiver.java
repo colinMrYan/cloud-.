@@ -9,10 +9,11 @@ import android.util.Log;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.ui.login.LoginActivity;
+import com.inspur.emmcloud.util.AppUtils;
+import com.inspur.emmcloud.util.ECMShortcutBadgeNumberManagerUtils;
 import com.inspur.emmcloud.util.JSONUtils;
 import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
-import com.inspur.emmcloud.util.ECMShortcutBadgeNumberManagerUtils;
 import com.inspur.emmcloud.util.StringUtils;
 
 import org.json.JSONException;
@@ -44,16 +45,22 @@ public class JpushReceiver extends BroadcastReceiver {
             ((MyApplication) context.getApplicationContext()).startWebSocket();
         } else if (JPushInterface.ACTION_MESSAGE_RECEIVED.equals(intent
                 .getAction())) {
+            if(!AppUtils.GetChangShang().toLowerCase().startsWith("xiaomi")){
+                ECMShortcutBadgeNumberManagerUtils.setDesktopBadgeNumber(context,JSONUtils.getInt(bundle.getString(JPushInterface.EXTRA_MESSAGE),"badge",0),intent);
+            }
             LogUtils.debug(TAG,
                     "[MyReceiver] 接收到推送下来的自定义消息: "
                             + bundle.getString(JPushInterface.EXTRA_MESSAGE));
-
+            return;
         } else if (JPushInterface.ACTION_NOTIFICATION_RECEIVED.equals(intent
                 .getAction())) {
             int notifactionId = bundle
                     .getInt(JPushInterface.EXTRA_NOTIFICATION_ID);
             LogUtils.debug(TAG, "[MyReceiver] 接收到推送下来的通知的ID: " + notifactionId);
-
+//            if(AppUtils.GetChangShang().toLowerCase().startsWith("xiaomi")){
+//                ECMShortcutBadgeNumberManagerUtils.setDesktopBadgeNumber(context,JSONUtils.getInt(bundle.getString(JPushInterface.EXTRA_MESSAGE),"badge",0),intent);
+//                return;
+//            }
         } else if (JPushInterface.ACTION_NOTIFICATION_OPENED.equals(intent
                 .getAction())) {
             LogUtils.debug(TAG, "[MyReceiver] 用户点击打开了通知");
