@@ -2,6 +2,7 @@ package com.inspur.emmcloud.util;
 
 import android.content.Context;
 import android.os.Environment;
+import android.util.Log;
 
 import com.inspur.emmcloud.bean.AppException;
 
@@ -41,6 +42,7 @@ public class CrashHandler implements UncaughtExceptionHandler {
 		// 把错误的堆栈信息 获取出来
 		String errorInfo = getErrorInfo(throwable);
 		LogUtils.jasonDebug("errorInfo="+errorInfo);
+		Log.e("AndroidRuntime", errorInfo);
 		if (!AppUtils.isApkDebugable(mContext)) {
 			AppException appException = new AppException(System.currentTimeMillis(),AppUtils.getVersion(mContext),1,"",errorInfo,-1);
 			AppExceptionCacheUtils.saveAppException(mContext,appException);

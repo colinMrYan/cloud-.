@@ -747,7 +747,9 @@ public class WorkFragment extends Fragment {
             swipeRefreshLayout.setRefreshing(false);
             WorkFragment.this.meetingList = getMeetingsResult.getMeetingsList();
             Collections.sort(WorkFragment.this.meetingList, new Meeting());
-            meetingChildAdapter.notifyDataSetChanged();
+            if (meetingChildAdapter != null){
+                meetingChildAdapter.notifyDataSetChanged();
+            }
         }
 
         @Override
@@ -760,7 +762,9 @@ public class WorkFragment extends Fragment {
         public void returnRecentTasksSuccess(GetTaskListResult getTaskListResult) {
             swipeRefreshLayout.setRefreshing(false);
             taskList = getTaskListResult.getTaskList();
-            taskChildAdapter.notifyDataSetChanged();
+            if (taskChildAdapter != null){
+                taskChildAdapter.notifyDataSetChanged();
+            }
         }
 
         @Override
@@ -803,7 +807,7 @@ public class WorkFragment extends Fragment {
             CalEventNotificationUtils.setCalEventNotification(getActivity().getApplicationContext(), calEventList);
             if (isRefresh && (calEventList.size() < 3)) { // 获取今明两天的日历不足3条
                 getCalEventsFor3();
-            } else {
+            } else if(calendarChildAdapter != null){
                 calendarChildAdapter.notifyDataSetChanged();
             }
 

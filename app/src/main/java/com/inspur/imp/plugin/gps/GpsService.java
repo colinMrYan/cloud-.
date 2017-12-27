@@ -121,8 +121,10 @@ public class GpsService extends ImpPlugin implements
 
     @Override
     public void onDestroy() {
-        mlocationClient.stopLocation();
-        mlocationClient.onDestroy();
+        if (mlocationClient  != null){
+            mlocationClient.stopLocation();
+            mlocationClient.onDestroy();
+        }
     }
 
 
