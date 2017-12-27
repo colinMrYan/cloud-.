@@ -83,7 +83,7 @@ public class HuaWeiPushMangerUtils implements ConnectionCallbacks, OnConnectionF
      */
     private void startJpush() {
         if (client != null) {
-            delToken();
+            stopPush();
             client.disconnect();
         }
         PreferencesUtils.putString(contextLocal, "pushFlag", "Jpush");
@@ -153,7 +153,7 @@ public class HuaWeiPushMangerUtils implements ConnectionCallbacks, OnConnectionF
     /**
      * 注销token
      */
-    public void delToken() {
+    public void stopPush() {
         new Thread() {
             @Override
             public void run() {
@@ -161,6 +161,7 @@ public class HuaWeiPushMangerUtils implements ConnectionCallbacks, OnConnectionF
                     String deltoken = PreferencesUtils.getString(contextLocal, "huawei_push_token", "");
                     if (!StringUtils.isEmpty(deltoken) && null != client) {
                         HuaweiPush.HuaweiPushApi.deleteToken(client, deltoken);
+                        client.disconnect();
                     }
                 } catch (Exception e) {
                     e.printStackTrace();

@@ -202,7 +202,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
      */
     public void stopPush() {
         if (AppUtils.getIsHuaWei() && canConnectHuawei()) {
-            HuaWeiPushMangerUtils.getInstance(this).delToken();
+            HuaWeiPushMangerUtils.getInstance(this).stopPush();
         } else {
             JPushInterface.stopPush(this);
         }
