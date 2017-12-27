@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Bundle;
 
 import com.inspur.emmcloud.MyApplication;
+import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.ui.login.LoginActivity;
 import com.inspur.emmcloud.util.JSONUtils;
 import com.inspur.emmcloud.util.StringUtils;
@@ -90,7 +91,20 @@ public class OpenJpushReceiver extends BroadcastReceiver{
                 e.printStackTrace();
             }
 
+        }else{
+            openIndex(context);
         }
+    }
+
+    /**
+     * 唤起Index
+     * @param context
+     */
+    private void openIndex(Context context) {
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setClass(context, IndexActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent);
     }
 
     /**

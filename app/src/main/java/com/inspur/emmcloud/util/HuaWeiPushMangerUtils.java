@@ -53,7 +53,6 @@ public class HuaWeiPushMangerUtils implements ConnectionCallbacks, OnConnectionF
 
     @Override
     public void onConnected() {
-        LogUtils.YfcDebug("华为连接成功");
         PreferencesUtils.putString(contextLocal, "pushFlag", "huawei");
         getToken();
         setPassByMsg(true);
@@ -66,7 +65,6 @@ public class HuaWeiPushMangerUtils implements ConnectionCallbacks, OnConnectionF
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-        LogUtils.YfcDebug("华为连接失败"+connectionResult.getErrorCode());
         startJpushInMainThread();
 //        保留下来做参照的代码，这里如果华为没有连上，华为SDK有一个处理，这里改为自己处理
 //        if (mResolvingError) {

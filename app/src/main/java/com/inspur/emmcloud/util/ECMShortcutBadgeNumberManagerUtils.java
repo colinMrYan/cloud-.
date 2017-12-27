@@ -28,7 +28,7 @@ public class ECMShortcutBadgeNumberManagerUtils {
      * @param context
      */
     public static void setDesktopBadgeNumber(Context context,int count,Intent intent) {
-        if(AppUtils.GetChangShang().toLowerCase().startsWith("xiaomi") && intent != null){
+        if(intent != null){
             String miuiVersionString = getSystemProperty("ro.miui.ui.version.name");
             int miuiVersionNum = (StringUtils.isBlank(miuiVersionString))? -1 : Integer.parseInt(miuiVersionString.substring(1));
             if(miuiVersionNum >= 6){

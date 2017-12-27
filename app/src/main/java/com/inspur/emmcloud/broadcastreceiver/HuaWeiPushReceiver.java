@@ -8,7 +8,6 @@ import com.huawei.hms.support.api.push.PushReceiver;
 import com.inspur.emmcloud.push.WebSocketPush;
 import com.inspur.emmcloud.util.ECMShortcutBadgeNumberManagerUtils;
 import com.inspur.emmcloud.util.JSONUtils;
-import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 
 import java.io.UnsupportedEncodingException;
@@ -26,7 +25,6 @@ public class HuaWeiPushReceiver extends PushReceiver {
      */
     @Override
     public void onToken(Context context, String token, Bundle extras) {
-        LogUtils.YfcDebug("华为token："+token);
         PreferencesUtils.putString(context, "huawei_push_token", token);
         WebSocketPush.getInstance(context).start();
     }
@@ -42,11 +40,6 @@ public class HuaWeiPushReceiver extends PushReceiver {
     @Override
     public boolean onPushMsg(Context context, byte[] msg, Bundle bundle) {
         ECMShortcutBadgeNumberManagerUtils.setDesktopBadgeNumber(context,getDesktopBadgeNumber(msg),null);
-        try {
-            LogUtils.YfcDebug("接收到华为透传消息： " + new String(msg, "UTF-8"));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
         return false;
     }
 
@@ -59,7 +52,7 @@ public class HuaWeiPushReceiver extends PushReceiver {
         int badageNumber = 0;
         try {
             String message = new String(msg,"UTF-8");
-            badageNumber = JSONUtils.getInt(message,"badgeNumber",0);
+            badageNumber = JSONUtils.getInt(message,"badge",0);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
