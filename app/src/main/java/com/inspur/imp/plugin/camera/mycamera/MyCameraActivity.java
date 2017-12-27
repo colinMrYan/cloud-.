@@ -34,6 +34,8 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.util.DensityUtil;
 import com.inspur.emmcloud.util.JSONUtils;
+import com.inspur.emmcloud.util.LogUtils;
+import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.ToastUtils;
 import com.inspur.imp.api.ImpBaseActivity;
 import com.inspur.imp.plugin.camera.editimage.EditImageActivity;
@@ -106,11 +108,37 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
         defaultRectScale = JSONUtils.getString(optionsObj,"rectScale",null);
         String rectScaleListJson = JSONUtils.getString(optionsObj,"rectScaleList","");
         rectScaleList = new GetReatScaleResult(rectScaleListJson).getRectScaleList();
+        if (!StringUtils.isBlank(defaultRectScale) && rectScaleList.size()>0){
+            boolean isSelectionRadio = false;
+            for (int i=0;i<rectScaleList.size();i++){
+                String rectScale = rectScaleList.get(i).getRectScale();
+                if (rectScale.equals(defaultRectScale)){
+                    radioSelectPosition = i;
+                    isSelectionRadio = true;
+                         break;
+                }
+            }
+            if (!isSelectionRadio){
+                for (int i=0;i<rectScaleList.size();i++){
+                    String rectScale = rectScaleList.get(i).getRectScale();
+                    if (rectScale.equals("custom")){
+                        radioSelectPosition = i;
+                        break;
+                    }
+                }
+            }
+        }
 
     }
 
     private void initView() {
         previewSFV = (FocusSurfaceView) findViewById(R.id.preview_sv);
+        //为了使取景框居中（下部的内容较多），上调取景框
+        if (rectScaleList.size()>0){
+            previewSFV.setTopMove(DensityUtil.dip2px(getApplicationContext(),29));
+        }else {
+            previewSFV.setTopMove(DensityUtil.dip2px(getApplicationContext(),12));
+        }
         mHolder = previewSFV.getHolder();
         mHolder.addCallback(MyCameraActivity.this);
         mHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
@@ -148,7 +176,7 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
     @Override
     public void surfaceCreated(SurfaceHolder surfaceHolder) {
         if (rectScaleList.size()>0){
-            previewSFV.setCustomRectScale(rectScaleList.get(0).getRectScale());
+            previewSFV.setCustomRectScale(rectScaleList.get(radioSelectPosition).getRectScale());
         }else {
             previewSFV.setCustomRectScale(defaultRectScale);
         }
@@ -224,10 +252,14 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
 
             List<Camera.Size> PictureSizeList = parameters.getSupportedPictureSizes();
             Camera.Size pictureSize = CameraUtils.getInstance(this).getPictureSize(PictureSizeList, 1000);
+            LogUtils.jasonDebug("pictureSize.width="+pictureSize.width);
+            LogUtils.jasonDebug("pictureSize.height="+pictureSize.height);
             parameters.setPictureSize(pictureSize.width, pictureSize.height);
             List<Camera.Size> previewSizeList = parameters.getSupportedPreviewSizes();
             Camera.Size previewSize = CameraUtils.getInstance(this).getPreviewSize(previewSizeList, 1300);
             parameters.setPreviewSize(previewSize.width, previewSize.height);
+            LogUtils.jasonDebug("previewSize.width="+previewSize.width);
+            LogUtils.jasonDebug("previewSize.height="+previewSize.height);
             List<String> modelList = parameters.getSupportedFlashModes();
             if (modelList != null && modelList.contains(cameraFlashModel)){
                 parameters.setFlashMode(cameraFlashModel);
@@ -517,8 +549,8 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
         public ViewHolder onCreateViewHolder(ViewGroup viewGroup, final int i)
         {
             TextView textView = new TextView(MyCameraActivity.this);
-            textView.setTextSize(TypedValue.COMPLEX_UNIT_SP,16);
-            textView.setPadding(DensityUtil.dip2px(MyCameraActivity.this,20),DensityUtil.dip2px(MyCameraActivity.this,8),DensityUtil.dip2px(MyCameraActivity.this,20),DensityUtil.dip2px(MyCameraActivity.this,8));
+            textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP,17);
+            textView.setPadding(DensityUtil.dip2px(MyCameraActivity.this,20),DensityUtil.dip2px(MyCameraActivity.this,4),DensityUtil.dip2px(MyCameraActivity.this,20),DensityUtil.dip2px(MyCameraActivity.this,4));
             textView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT));
             ViewHolder viewHolder = new ViewHolder(textView);
             viewHolder.textView = textView;
