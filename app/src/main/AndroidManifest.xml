@@ -693,6 +693,12 @@
         <activity
             android:name="cn.jpush.android.ui.PopWinActivity"
             android:exported="false"></activity>
+        <!-- since 3.0.9 Required SDK 核心功能-->
+        <provider
+            android:authorities="com.inspur.emmcloud.DataProvider"
+            android:name="cn.jpush.android.service.DataProvider"
+            android:exported="false"
+            />
 
         <!-- Required SDK核心功能-->
         <activity

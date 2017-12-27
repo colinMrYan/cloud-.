@@ -22,6 +22,7 @@ public class HuaWeiPushReceiver extends PushReceiver {
      */
     @Override
     public void onToken(Context context, String token, Bundle extras) {
+        LogUtils.YfcDebug("华为token："+token);
         PreferencesUtils.putString(context, "huawei_push_token", token);
         WebSocketPush.getInstance(context).start();
     }
