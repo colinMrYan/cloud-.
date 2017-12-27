@@ -9,6 +9,8 @@ import android.support.v4.app.NotificationCompat;
 
 import com.inspur.emmcloud.R;
 
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.lang.reflect.Field;
@@ -23,20 +25,67 @@ import me.leolin.shortcutbadger.ShortcutBadger;
 
 public class ECMShortcutBadgeNumberManagerUtils {
 
+//    /**
+//     * 设置桌面角标
+//     * @param context
+//     */
+//    public static void setDesktopBadgeNumber(Context context,int count,Intent intent) {
+//        if(intent != null){
+//            String miuiVersionString = getSystemProperty("ro.miui.ui.version.name");
+//            int miuiVersionNum = (StringUtils.isBlank(miuiVersionString))? -1 : Integer.parseInt(miuiVersionString.substring(1));
+//            if(miuiVersionNum >= 6){
+//                setMIUIV6PlusBadge(context,count,intent);
+//                return;
+//            }
+//        }
+//        ShortcutBadger.applyCount(context,count);
+//    }
+
+    /**
+     * 判断byte里是否含有badge
+     * @param msg
+     * @return
+     */
+    public static boolean isHasBadge(byte[] msg){
+        if(msg == null){
+            return false;
+        }
+        try {
+            String message = new String(msg,"UTF-8");
+            JSONObject jsonObject = new JSONObject(message);
+            return jsonObject.has("badge");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    /**
+     * 判断字符串是否含有badge
+     * @param msg
+     * @return
+     */
+    public static boolean isHasBadge(String msg){
+        if(StringUtils.isBlank(msg)){
+            return false;
+        }
+        try {
+            JSONObject jsonObject = new JSONObject(msg);
+            return jsonObject.has("badge");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
     /**
      * 设置桌面角标
      * @param context
      */
-    public static void setDesktopBadgeNumber(Context context,int count,Intent intent) {
-        if(intent != null){
-            String miuiVersionString = getSystemProperty("ro.miui.ui.version.name");
-            int miuiVersionNum = (StringUtils.isBlank(miuiVersionString))? -1 : Integer.parseInt(miuiVersionString.substring(1));
-            if(miuiVersionNum >= 6){
-                setMIUIV6PlusBadge(context,count,intent);
-                return;
-            }
+    public static void setDesktopBadgeNumber(Context context,int count) {
+        if(!AppUtils.GetChangShang().toLowerCase().startsWith("xiaomi")){
+            ShortcutBadger.applyCount(context,count);
         }
-        ShortcutBadger.applyCount(context,count);
     }
 
     /**

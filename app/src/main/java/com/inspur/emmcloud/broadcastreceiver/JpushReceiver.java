@@ -9,7 +9,6 @@ import android.util.Log;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.ui.login.LoginActivity;
-import com.inspur.emmcloud.util.AppUtils;
 import com.inspur.emmcloud.util.ECMShortcutBadgeNumberManagerUtils;
 import com.inspur.emmcloud.util.JSONUtils;
 import com.inspur.emmcloud.util.LogUtils;
@@ -45,8 +44,8 @@ public class JpushReceiver extends BroadcastReceiver {
             ((MyApplication) context.getApplicationContext()).startWebSocket();
         } else if (JPushInterface.ACTION_MESSAGE_RECEIVED.equals(intent
                 .getAction())) {
-            if(!AppUtils.GetChangShang().toLowerCase().startsWith("xiaomi")){
-                ECMShortcutBadgeNumberManagerUtils.setDesktopBadgeNumber(context,JSONUtils.getInt(bundle.getString(JPushInterface.EXTRA_MESSAGE),"badge",0),intent);
+            if(ECMShortcutBadgeNumberManagerUtils.isHasBadge(bundle.getString(JPushInterface.EXTRA_MESSAGE))){
+                ECMShortcutBadgeNumberManagerUtils.setDesktopBadgeNumber(context,JSONUtils.getInt(bundle.getString(JPushInterface.EXTRA_MESSAGE),"badge",0));
             }
             LogUtils.debug(TAG,
                     "[MyReceiver] 接收到推送下来的自定义消息: "

@@ -622,13 +622,14 @@
             </intent-filter>
         </receiver>
 
-        <receiver
-            android:name=".broadcastreceiver.OpenJpushReceiver"
-            android:label="OpenJpushMessage">
-            <intent-filter>
-                <action android:name="com.inspur.emmcloud.openjpush" />
-            </intent-filter>
-        </receiver>
+        <!--处理小米推送广播的Recevier-->
+        <!--<receiver-->
+            <!--android:name=".broadcastreceiver.OpenJpushReceiver"-->
+            <!--android:label="OpenJpushMessage">-->
+            <!--<intent-filter>-->
+                <!--<action android:name="com.inspur.emmcloud.openjpush" />-->
+            <!--</intent-filter>-->
+        <!--</receiver>-->
         <!-- ImagePicker -->
 
         <activity

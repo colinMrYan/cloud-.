@@ -486,9 +486,9 @@ public class IndexActivity extends BaseFragmentActivity implements
                     return new View(IndexActivity.this);
                 }
             });
-
             mTabHost.addTab(tab, mainTab.getClz(), null);
             mTabHost.getTabWidget().getChildAt(i).setOnTouchListener(this);
+            mTabHost.getTabWidget().getChildAt(i).setTag(mainTab.getCommpant());
             mTabHost.getTabWidget().setDividerDrawable(android.R.color.transparent);
             mTabHost.setOnTabChangedListener(this);
         }
@@ -514,12 +514,11 @@ public class IndexActivity extends BaseFragmentActivity implements
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void updateBadgeNumber(GetAppBadgeResult getAppBadgeResult) {
         int badgeNumber = getAppBadgeResult.getTabBadgeNumber();
-        if(badgeNumber > 0){
-            for (int i = 0; i < mTabHost.getTabWidget().getChildCount(); i++) {
-                View tabView = mTabHost.getTabWidget().getChildAt(i);
-                if(((TextView)tabView.findViewById(R.id.textview)).getText().toString().contains(getString(R.string.application))){
-                    setUnHandledBadgesDisplay(tabView,badgeNumber);
-                }
+        for (int i = 0; i < mTabHost.getTabWidget().getChildCount(); i++) {
+            View tabView = mTabHost.getTabWidget().getChildAt(i);
+            if(mTabHost.getTabWidget().getChildAt(i).getTag().toString().contains("application")){
+                setUnHandledBadgesDisplay(tabView,badgeNumber);
+                break;
             }
         }
     }
@@ -531,11 +530,11 @@ public class IndexActivity extends BaseFragmentActivity implements
      */
     private void setUnHandledBadgesDisplay(View tabView,int badgeNumber) {
         RelativeLayout unhandledBadgesLayout = (RelativeLayout) tabView.findViewById(R.id.new_message_tips_layout);
-        unhandledBadgesLayout.setVisibility(View.VISIBLE);
+        unhandledBadgesLayout.setVisibility((badgeNumber == 0)?View.GONE:View.VISIBLE);
         TextView unhandledBadges = (TextView) tabView.findViewById(R.id.new_message_tips_text);
         unhandledBadges.setText(""+(badgeNumber > 99 ? "99+":badgeNumber));
         //更新桌面角标数字
-        ECMShortcutBadgeNumberManagerUtils.setDesktopBadgeNumber(IndexActivity.this,badgeNumber,null);
+        ECMShortcutBadgeNumberManagerUtils.setDesktopBadgeNumber(IndexActivity.this,badgeNumber);
     }
 
     /**
@@ -670,7 +669,6 @@ public class IndexActivity extends BaseFragmentActivity implements
      */
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             if ((System.currentTimeMillis() - lastBackTime) > 2000) {
                 ToastUtils.show(IndexActivity.this,

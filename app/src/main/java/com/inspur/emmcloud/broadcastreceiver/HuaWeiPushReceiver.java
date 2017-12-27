@@ -10,8 +10,6 @@ import com.inspur.emmcloud.util.ECMShortcutBadgeNumberManagerUtils;
 import com.inspur.emmcloud.util.JSONUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 
-import java.io.UnsupportedEncodingException;
-
 /**
  * Created by yufuchang on 2017/6/20.
  */
@@ -39,7 +37,9 @@ public class HuaWeiPushReceiver extends PushReceiver {
      */
     @Override
     public boolean onPushMsg(Context context, byte[] msg, Bundle bundle) {
-        ECMShortcutBadgeNumberManagerUtils.setDesktopBadgeNumber(context,getDesktopBadgeNumber(msg),null);
+        if(ECMShortcutBadgeNumberManagerUtils.isHasBadge(msg)){
+            ECMShortcutBadgeNumberManagerUtils.setDesktopBadgeNumber(context,getDesktopBadgeNumber(msg));
+        }
         return false;
     }
 
@@ -53,7 +53,7 @@ public class HuaWeiPushReceiver extends PushReceiver {
         try {
             String message = new String(msg,"UTF-8");
             badageNumber = JSONUtils.getInt(message,"badge",0);
-        } catch (UnsupportedEncodingException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return badageNumber;
