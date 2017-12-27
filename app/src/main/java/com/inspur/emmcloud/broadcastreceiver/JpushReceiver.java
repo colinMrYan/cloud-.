@@ -51,6 +51,7 @@ public class JpushReceiver extends BroadcastReceiver {
             LogUtils.debug(TAG,
                     "[MyReceiver] 接收到推送下来的自定义消息: "
                             + bundle.getString(JPushInterface.EXTRA_MESSAGE));
+
             return;
         } else if (JPushInterface.ACTION_NOTIFICATION_RECEIVED.equals(intent
                 .getAction())) {
