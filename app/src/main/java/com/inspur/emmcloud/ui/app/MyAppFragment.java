@@ -54,6 +54,7 @@ import com.inspur.emmcloud.util.AppCacheUtils;
 import com.inspur.emmcloud.util.AppTitleUtils;
 import com.inspur.emmcloud.util.DensityUtil;
 import com.inspur.emmcloud.util.IntentUtils;
+import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.MyAppCacheUtils;
 import com.inspur.emmcloud.util.MyAppWidgetUtils;
 import com.inspur.emmcloud.util.NetUtils;
@@ -85,8 +86,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import static com.inspur.emmcloud.util.AppCacheUtils.getCommonlyUseAppList;
 
 /**
  * classes : com.inspur.emmcloud.ui.app.MyAppFragment Create at 2016年12月13日
@@ -471,7 +470,7 @@ public class MyAppFragment extends Fragment {
                         }
                     });
             if (canEdit) {
-                if (getNeedCommonlyUseApp() && AppCacheUtils.getCommonlyUseAppList(getActivity()).size() > 0 && (listPosition == 0)) {
+                if (getNeedCommonlyUseApp() && AppCacheUtils.getCommonlyUseNeedShowList(getActivity()).size() > 0 && (listPosition == 0)) {
                     //如果应用列表可以编辑，并且有常用应用分组，则把常用应用的可编辑属性设置false（也就是第0行设为false）
                     dragGridViewAdapter.setCanEdit(false);
                 } else {
@@ -543,7 +542,7 @@ public class MyAppFragment extends Fragment {
      */
     private void showCommonlyUseApps(App app,
                                      List<AppGroupBean> appAdapterList) {
-        if (getNeedRemoveFirstGroup()) {
+        if (AppCacheUtils.getCommonlyUseNeedShowList(getActivity()).size() > 0) {
             //如果已经有了常用app则需要先移除掉第一组
             appAdapterList.remove(0);
             handCommonlyUseAppData(appAdapterList, true);
@@ -560,19 +559,6 @@ public class MyAppFragment extends Fragment {
 
     }
 
-    /**
-     * 判断是否需要移除第一组
-     * @return
-     */
-    private boolean getNeedRemoveFirstGroup() {
-        int clickCount = 0;
-        List<AppCommonlyUse> appCommonlyUseList = AppCacheUtils.getCommonlyUseAppList(getActivity());
-        if(appCommonlyUseList.size() == 1){
-            AppCommonlyUse appCommonlyUse = appCommonlyUseList.get(0);
-            clickCount = appCommonlyUse.getClickCount();
-        }
-        return (appCommonlyUseList.size()>1 || clickCount > 1);
-    }
 
     /**
      * 根据前面计算出的点击次数和当前位置计算权重
@@ -606,7 +592,7 @@ public class MyAppFragment extends Fragment {
      * @return
      */
     private List<AppCommonlyUse> addClickCount(App app) {
-        List<AppCommonlyUse> appCommonlyUseList = AppCacheUtils.getCommonlyUseAppList(getActivity());
+        List<AppCommonlyUse> appCommonlyUseList = AppCacheUtils.getCommonlyUseList(getActivity());
         AppCommonlyUse appCommonlyUse = new AppCommonlyUse();
         appCommonlyUse.setAppID(app.getAppID());
         int index = appCommonlyUseList.indexOf(appCommonlyUse);
@@ -744,7 +730,7 @@ public class MyAppFragment extends Fragment {
                     return;
                 }
                 switchView.toggleSwitch(false);
-                if (getNeedCommonlyUseApp() && AppCacheUtils.getCommonlyUseAppList(getActivity()).size() > 0) {
+                if (getNeedCommonlyUseApp() && AppCacheUtils.getCommonlyUseNeedShowList(getActivity()).size() > 0) {
                     appListAdapter.getAppAdapterList().remove(0);
                     appListAdapter.notifyDataSetChanged();
                 }
@@ -866,7 +852,7 @@ public class MyAppFragment extends Fragment {
      */
     private void handCommonlyUseAppData(List<AppGroupBean> appGroupList, boolean isNeedRefresh) {
         List<AppCommonlyUse> appCommonlyUseList =
-                getCommonlyUseAppList(getActivity());//这里换成获取所有
+                AppCacheUtils.getCommonlyUseList(getActivity());//这里换成获取所有
         if (appCommonlyUseList.size() > 0 && getNeedCommonlyUseApp()) {
             AppGroupBean appGroupBean = new AppGroupBean();
             appGroupBean.setCategoryID("commonly");
@@ -881,10 +867,8 @@ public class MyAppFragment extends Fragment {
                     appCommonlyUse.setAppID(app.getAppID());
                     int index = appCommonlyUseList.indexOf(appCommonlyUse);
                     int allreadHas = myCommonlyUseAppList.indexOf(app);
-//                    int appCommonlyUseListSize = appCommonlyUseList.size();
                     if (index != -1 && allreadHas == -1) {
                         AppCommonlyUse appCommonlyUseTemp = appCommonlyUseList.get(index);
-//						double weight = 0.6*appCommonlyUseTemp.getClickCount()+(0.4*20*(1-((double)index)/(double)appCommonlyUseListSize));
                         app.setWeight(appCommonlyUseTemp.getWeight());
                         myCommonlyUseAppList.add(app);
                     }

@@ -23,21 +23,24 @@ import com.inspur.emmcloud.ui.contact.RobotInfoActivity;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
 import com.inspur.emmcloud.util.ChannelGroupCacheUtils;
 import com.inspur.emmcloud.util.ContactCacheUtils;
+import com.inspur.emmcloud.util.PinyinUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.ToastUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.slidebar.CharacterParser;
-import com.inspur.emmcloud.widget.slidebar.PinyinComparator;
 import com.inspur.emmcloud.widget.slidebar.SideBar;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 
 public class MembersActivity extends BaseActivity implements
         SideBar.OnTouchingLetterChangedListener, TextWatcher {
@@ -292,7 +295,6 @@ public class MembersActivity extends BaseActivity implements
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.back_layout:
-                // setResult(RESULT_OK);
                 finish();
                 break;
 
@@ -301,20 +303,34 @@ public class MembersActivity extends BaseActivity implements
         }
     }
 
-    public void testAddManager(List<PersonDto> channelDataList) {
-        PersonDto user = new PersonDto();
-        user.setName("Manager");
-        user.setUtype("1");
-        user.setSortLetters("☆");
-        channelDataList.add(0, user);
-    }
-
     @Override
     public void onBackPressed() {
         // TODO Auto-generated method stub
         super.onBackPressed();
-        // setResult(RESULT_OK);
         finish();
     }
+
+
+    /**
+     * 按照姓氏排序比较器，改为按照汉字比较，原比较方式会将统一姓氏分开
+     */
+    public class PinyinComparator implements Comparator<PersonDto> {
+
+        @Override
+        public int compare(PersonDto o1, PersonDto o2) {
+            if (o1.getSortLetters().equals("☆")) {
+                return -1;
+            } else if (o2.getSortLetters().equals("☆")) {
+                return 1;
+            } else if (o1.getSortLetters().equals("#")) {
+                return -1;
+            } else if (o2.getSortLetters().equals("#")) {
+                return 1;
+            } else {
+                return Collator.getInstance(Locale.CHINA).compare(PinyinUtils.getPingYin(o1.getName()), PinyinUtils.getPingYin(o2.getName()));
+            }
+        }
+    }
+
 
 }

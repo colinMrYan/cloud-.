@@ -94,6 +94,7 @@
                 android:layout_alignBaseline="@id/work_chinesedate_text"
                 android:layout_alignParentRight="true"
                 android:paddingRight="17dp"
+                android:visibility="invisible"
                 android:textColor="@color/white"
                 android:textSize="14sp" />
 

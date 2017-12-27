@@ -187,6 +187,7 @@ public class WorkFragment extends Fragment {
      * 初始化views
      */
     private void initViews() {
+        handHeaderDate();
         setHeadLayout();
         initPullRefreshLayout();
         listView = (ListView) rootView
@@ -235,7 +236,6 @@ public class WorkFragment extends Fragment {
             getMeetings();
             getMyCalendar();
             getTasks();
-            handHeaderDate();
         } else {
             swipeRefreshLayout.setRefreshing(false);
         }
@@ -572,7 +572,7 @@ public class WorkFragment extends Fragment {
     private FestivalDate initFestivalDate() {
         FestivalDate festivalDate = null;
         try {
-            if (!DbCacheUtils.tableIsExist("com_inspur_emmcloud_bean_FestivalDate")) {
+            if (!DbCacheUtils.tableIsExist("com_inspur_emmcloud_bean_FestivalDate") || FestivalCacheUtils.isNeedUpdateFestivalTable(getActivity())) {
                 FestivalCacheUtils.saveFestivalList(getActivity());
             }
             festivalDate = FestivalCacheUtils.getFestival(getActivity());

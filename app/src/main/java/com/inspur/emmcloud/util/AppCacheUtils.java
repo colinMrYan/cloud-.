@@ -2,7 +2,9 @@ package com.inspur.emmcloud.util;
 
 import android.content.Context;
 
+import com.inspur.emmcloud.bean.App;
 import com.inspur.emmcloud.bean.AppCommonlyUse;
+import com.inspur.emmcloud.bean.AppGroupBean;
 import com.inspur.emmcloud.bean.AppOrder;
 
 import java.util.ArrayList;
@@ -77,7 +79,7 @@ public class AppCacheUtils {
 	 * @param commonlyUseAppNum
 	 * @return
 	 */
-	public static List<AppCommonlyUse> getCommonlyUseAppList(Context context,int commonlyUseAppNum){
+	public static List<AppCommonlyUse> getCommonlyUseList(Context context, int commonlyUseAppNum){
 		List<AppCommonlyUse> commonlyUseAppList = null;
 		try {
 			commonlyUseAppList = DbCacheUtils.getDb(context).selector(AppCommonlyUse.class)
@@ -96,7 +98,7 @@ public class AppCacheUtils {
 	 * @param context
 	 * @return
 	 */
-	public static List<AppCommonlyUse> getCommonlyUseAppList(Context context){
+	public static List<AppCommonlyUse> getCommonlyUseList(Context context){
 		List<AppCommonlyUse> commonlyUseAppList = null;
 		try {
 			commonlyUseAppList = DbCacheUtils.getDb(context).findAll(AppCommonlyUse.class);
@@ -107,6 +109,40 @@ public class AppCacheUtils {
 			commonlyUseAppList = new ArrayList<AppCommonlyUse>();
 		}
 		return commonlyUseAppList;
+	}
+
+	/**
+	 * 获取遍历缓存列表后的AppCommonLyUse
+	 * @param context
+	 * @return
+	 */
+	public static List<App> getCommonlyUseNeedShowList(Context context){
+		List<AppGroupBean> appGroupBeanList = MyAppCacheUtils.getMyAppList(context);
+		List<AppCommonlyUse> appCommonlyUseList = null;
+		List<App> appList = new ArrayList<>();
+		try {
+			appCommonlyUseList = DbCacheUtils.getDb(context).findAll(AppCommonlyUse.class);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		if(appCommonlyUseList == null){
+			appCommonlyUseList = new ArrayList<AppCommonlyUse>();
+		}
+		for(int i = 0; i < appCommonlyUseList.size(); i++){
+			App app = new App();
+			app.setAppID(appCommonlyUseList.get(i).getAppID());
+			for(int j = 0; j < appGroupBeanList.size(); j++){
+				List<App> appItemList = appGroupBeanList.get(j).getAppItemList();
+				int index = appItemList.indexOf(app);
+				int allreadHas = appList.indexOf(app);
+				if(index != -1 && allreadHas == -1){
+					App appAdd = appItemList.get(index);
+					appAdd.setWeight(appCommonlyUseList.get(i).getWeight());
+					appList.add(appAdd);
+				}
+			}
+		}
+		return appList;
 	}
 
 }
