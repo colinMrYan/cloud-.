@@ -8,13 +8,11 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.inspur.emmcloud.R;
 import com.inspur.imp.plugin.camera.imagepicker.ImagePicker;
 import com.inspur.imp.plugin.camera.imagepicker.bean.ImageItem;
 import com.inspur.imp.plugin.camera.imagepicker.util.Utils;
-import com.inspur.imp.plugin.camera.imagepicker.view.SuperCheckBox;
 
 import java.util.ArrayList;
 
@@ -49,11 +47,11 @@ public class ImageGridAdapter extends BaseAdapter {
         else this.images = images;
         notifyDataSetChanged();
     }
-    
-    public void replaceData(int position,ImageItem imageItem){
-    	this.images.remove(position);
-    	this.images.add(position, imageItem);
-    	 notifyDataSetChanged();
+
+    public void replaceData(int position, ImageItem imageItem) {
+        this.images.remove(position);
+        this.images.add(position, imageItem);
+        notifyDataSetChanged();
     }
 
     @Override
@@ -100,8 +98,8 @@ public class ImageGridAdapter extends BaseAdapter {
 //                    if (!((ImageBaseActivity) mActivity).checkPermission(Manifest.permission.CAMERA)) {
 //                        ActivityCompat.requestPermissions(mActivity, new String[]{Manifest.permission.CAMERA}, ImageGridActivity.REQUEST_PERMISSION_CAMERA);
 //                    } else {
-                        imagePicker.takePicture(mActivity, ImagePicker.REQUEST_CODE_TAKE);
- //                   }
+                    imagePicker.takePicture(mActivity, ImagePicker.REQUEST_CODE_TAKE);
+                    //                   }
                 }
             });
         } else {
@@ -119,38 +117,18 @@ public class ImageGridAdapter extends BaseAdapter {
             holder.ivThumb.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (listener != null) listener.onImageItemClick(holder.rootView, imageItem, position);
-                }
-            });
-            holder.cbCheck.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int selectLimit = imagePicker.getSelectLimit();
-                    if (holder.cbCheck.isChecked() && mSelectedImages.size() >= selectLimit) {
-                        Toast.makeText(mActivity.getApplicationContext(), mActivity.getString(R.string.select_limit, selectLimit+""), Toast.LENGTH_SHORT).show();
-                        holder.cbCheck.setChecked(false);
-                       // holder.mask.setVisibility(View.GONE);
-                        holder.mask.setBackgroundColor(Color.parseColor("#11000000"));
-                    } else {
-                        imagePicker.addSelectedImageItem(position, imageItem, holder.cbCheck.isChecked());
-                       // holder.mask.setVisibility(View.VISIBLE);
-                        holder.mask.setBackgroundColor(Color.parseColor("#88000000"));
-                    }
+                    if (listener != null)
+                        listener.onImageItemClick(holder.rootView, imageItem, position);
                 }
             });
             //根据是否多选，显示或隐藏checkbox
             if (imagePicker.isMultiMode()) {
-                holder.cbCheck.setVisibility(View.VISIBLE);
+                holder.checkImg.setVisibility(View.VISIBLE);
                 boolean checked = mSelectedImages.contains(imageItem);
-                if (checked) {
-                	 holder.mask.setBackgroundColor(Color.parseColor("#88000000"));
-                    holder.cbCheck.setChecked(true);
-                } else {
-                	 holder.mask.setBackgroundColor(Color.parseColor("#11000000"));
-                    holder.cbCheck.setChecked(false);
-                }
+                holder.mask.setBackgroundColor(checked ? Color.parseColor("#88000000") : Color.parseColor("#11000000"));
+                holder.checkImg.setImageResource(checked ?R.drawable.plugin_camera_gellery_img_checked : R.drawable.plugin_camera_gellery_img_normal);
             } else {
-                holder.cbCheck.setVisibility(View.GONE);
+                holder.checkImg.setVisibility(View.GONE);
             }
             ImageView ivThumb = (ImageView) convertView.findViewById(R.id.iv_thumb);
             imagePicker.getImageLoader().displayImage(mActivity, imageItem.path, ivThumb, mImageSize, mImageSize); //显示图片
@@ -162,13 +140,13 @@ public class ImageGridAdapter extends BaseAdapter {
         public View rootView;
         public ImageView ivThumb;
         public View mask;
-        public SuperCheckBox cbCheck;
+        public ImageView checkImg;
 
         public ViewHolder(View view) {
             rootView = view;
             ivThumb = (ImageView) view.findViewById(R.id.iv_thumb);
             mask = view.findViewById(R.id.mask);
-            cbCheck = (SuperCheckBox) view.findViewById(R.id.cb_check);
+            checkImg = (ImageView) view.findViewById(R.id.check_img);
         }
     }
 

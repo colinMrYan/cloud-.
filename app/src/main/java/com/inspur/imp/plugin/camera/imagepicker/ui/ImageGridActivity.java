@@ -351,18 +351,15 @@ public class ImageGridActivity extends ImageBaseActivity implements
 	public void onImageItemClick(View view, ImageItem imageItem, int position) {
 		// 根据是否有相机按钮确定位置
 		position = imagePicker.isShowCamera() ? position - 1 : position;
-		// imagePicker.setMultiMode(false);
-		// imagePicker.setStyle(CropImageView.Style.CIRCLE);
 		if (imagePicker.isMultiMode()) {
-			// Intent intent = new Intent(ImageGridActivity.this,
-			// ImagePreviewActivity.class);
-			// intent.putExtra(ImagePicker.EXTRA_SELECTED_IMAGE_POSITION,
-			// position);
-			// intent.putExtra(ImagePicker.EXTRA_IMAGE_ITEMS,
-			// imagePicker.getCurrentImageFolderItems());
-			// intent.putExtra(ImagePreviewActivity.ISORIGIN, isOrigin);
-			// startActivityForResult(intent, ImagePicker.REQUEST_CODE_PREVIEW);
-			// // 如果是多选，点击图片进入预览界面
+			int selectLimit = imagePicker.getSelectLimit();
+			boolean isCheck = imagePicker.getSelectedImages().contains(imageItem);
+			if (!isCheck && imagePicker.getSelectedImages().size()>= selectLimit){
+				Toast.makeText(getApplicationContext(), getString(R.string.select_limit, selectLimit+""), Toast.LENGTH_SHORT).show();
+			}else {
+				imagePicker.addSelectedImageItem(position, imageItem, !isCheck);
+			}
+			mImageGridAdapter.notifyDataSetChanged();
 		} else {
 			imagePicker.clearSelectedImages();
 			imagePicker.addSelectedImageItem(position, imagePicker
