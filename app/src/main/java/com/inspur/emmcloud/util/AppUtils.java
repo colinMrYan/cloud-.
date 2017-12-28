@@ -355,7 +355,7 @@ public class AppUtils {
                 .getSystemService(Context.ACTIVITY_SERVICE);
         List<RunningServiceInfo> myList = myAM
                 .getRunningServices(Integer.MAX_VALUE);
-        if (myList.size() <= 0) {
+        if (myList == null || myList.size() <= 0) {
             return false;
         }
         for (int i = 0; i < myList.size(); i++) {

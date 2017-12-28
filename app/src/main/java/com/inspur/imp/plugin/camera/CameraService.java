@@ -15,7 +15,9 @@ import android.provider.MediaStore;
 import android.util.Base64;
 import android.widget.Toast;
 
+import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.util.ImageDisplayUtils;
+import com.inspur.emmcloud.util.ImageUtils;
 import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.imp.api.Res;
 import com.inspur.imp.api.iLog;
@@ -24,6 +26,7 @@ import com.inspur.imp.plugin.camera.imagepicker.ImagePicker;
 import com.inspur.imp.plugin.camera.imagepicker.bean.ImageItem;
 import com.inspur.imp.plugin.camera.imagepicker.ui.ImageGridActivity;
 import com.inspur.imp.plugin.camera.imagepicker.view.CropImageView;
+import com.inspur.imp.plugin.photo.PhotoNameUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -39,11 +42,12 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Date;
 
+import id.zelory.compressor.Compressor;
+
 /**
  * 进入相册选择图片进行上传
  *
  * @author 浪潮移动应用平台(IMP)产品组
- *
  */
 public class CameraService extends ImpPlugin {
     private Bitmap photo;
@@ -69,13 +73,13 @@ public class CameraService extends ImpPlugin {
     public static final int REQUEST_GELLEY_IMG_SELECT = 100;
 
     private static int destType;
-    private static int mQuality; // Compression quality hint (0-100: 0=low
+    private static int mQuality = 100; // Compression quality hint (0-100: 0=low
     // quality &
     // high compression, 100=compress of max quality)
     private static int targetWidth; // desired width of the image
     private static int targetHeight; // desired height of the image
     private static Uri imageUri; // Uri of captured image
-    private static int encodingType; // Type of encoding to use
+    private static int encodingType = 0; // Type of encoding to use
     private static boolean saveToPhotoAlbum = false; // Should the picture be
     // saved to the
     // device's photo album
@@ -87,12 +91,15 @@ public class CameraService extends ImpPlugin {
     private ArrayList<String> dataList = new ArrayList<String>();
 
     private String successCb, failCb;
+    private static final int maxResolution = 1400;
 
     public static int num = 8;// 可以选择的图片数目
+    private int uploadOriginMaxSize = MyAppConfig.UPLOAD_ORIGIN_IMG_MAX_SIZE;
+    private int uploadThumbnailMaxSize = MyAppConfig.UPLOAD_THUMBNAIL_IMG_MAX_SIZE;
 
     @Override
     public void execute(String action, JSONObject paramsObject) {
-        LogUtils.jasonDebug("paramsObject="+paramsObject);
+        LogUtils.jasonDebug("paramsObject=" + paramsObject);
         if ("open".equals(action)) {
             open(paramsObject);
         }
@@ -103,7 +110,6 @@ public class CameraService extends ImpPlugin {
 
     /**
      * 选择相机拍照进行上传
-     *
      */
     private void open(JSONObject jsonObject) {
         try {
@@ -127,10 +133,10 @@ public class CameraService extends ImpPlugin {
             e.printStackTrace();
         }
         if (this.targetWidth < 1) {
-            this.targetWidth = -1;
+            this.targetWidth = MyAppConfig.UPLOAD_ORIGIN_IMG_MAX_SIZE;
         }
         if (this.targetHeight < 1) {
-            this.targetHeight = -1;
+            this.targetHeight = MyAppConfig.UPLOAD_ORIGIN_IMG_MAX_SIZE;
         }
         destoryImage();
         String state = Environment.getExternalStorageState();
@@ -141,7 +147,7 @@ public class CameraService extends ImpPlugin {
             this.imageUri = Uri.fromFile(PublicWay.file);
             intent.putExtra(MediaStore.EXTRA_OUTPUT,
                     Uri.fromFile(PublicWay.file));
-            ((Activity)context).startActivityForResult(intent, CAMERA);
+            ((Activity) context).startActivityForResult(intent, CAMERA);
 
         } else {
             Toast.makeText(this.context, Res.getString("invalidSD"),
@@ -152,9 +158,9 @@ public class CameraService extends ImpPlugin {
             savePath.mkdirs();
         }
     }
+
     /**
      * 进入相册文件夹
-     *
      */
     private void getPicture(JSONObject jsonObject) {
         try {
@@ -185,22 +191,16 @@ public class CameraService extends ImpPlugin {
             e.printStackTrace();
         }
         if (this.targetWidth < 1) {
-            this.targetWidth = -1;
+            this.targetWidth = MyAppConfig.UPLOAD_ORIGIN_IMG_MAX_SIZE;
         }
         if (this.targetHeight < 1) {
-            this.targetHeight = -1;
+            this.targetHeight = MyAppConfig.UPLOAD_ORIGIN_IMG_MAX_SIZE;
         }
-//		Intent intent = new Intent();
-//		Bundle bundle = new Bundle();
         PublicWay.photoService = this;
-//		bundle.putStringArrayList("dataList", dataList);
-//		intent.putExtras(bundle);
-//		intent.setClass(this.context, AlbumActivity.class);
-//		this.context.startActivity(intent);
         initImagePicker();
         Intent intent = new Intent(this.context,
                 ImageGridActivity.class);
-        ((Activity)this.context).startActivityForResult(intent, REQUEST_GELLEY_IMG_SELECT);
+        ((Activity) this.context).startActivityForResult(intent, REQUEST_GELLEY_IMG_SELECT);
     }
 
     /**
@@ -245,12 +245,10 @@ public class CameraService extends ImpPlugin {
     /**
      * 根据相应的encodingType创建相应的格式文件
      *
-     * @param encodingType
-     *            图片格式
+     * @param encodingType 图片格式
      * @return 返回对应的图片
      */
     private File createCaptureFile(int encodingType) {
-        LogUtils.jasonDebug("createCaptureFile----------------------------");
         File photo = null;
         if (encodingType == JPEG) {
             photo = new File(getTempDirectoryPath(), System.currentTimeMillis()
@@ -274,6 +272,29 @@ public class CameraService extends ImpPlugin {
         if (requestCode == CAMERA) {
             if (resultCode == -2) {
                 if (PublicWay.file != null && PublicWay.file.exists()) {
+                    int mOriginHeightSize = targetHeight < uploadOriginMaxSize ? targetHeight : uploadOriginMaxSize;
+                    int mOriginWidthtSize = targetWidth < uploadOriginMaxSize ? targetWidth : uploadOriginMaxSize;
+                    try {
+                        String originImgFileName = PhotoNameUtils.getFileName(context, encodingType);
+                        String thumbnailImgFileName = PhotoNameUtils.getThumbnailFileName(context, 0, encodingType);
+                        File originImgFile = new Compressor(this.context).setMaxHeight(mOriginHeightSize).setMaxWidth(mOriginWidthtSize).setQuality(mQuality).setDestinationDirectoryPath(MyAppConfig.LOCAL_IMG_CREATE_PATH)
+                                .compressToFile(PublicWay.file, originImgFileName);
+                        File thumbnailImgFile = new Compressor(this.context).setMaxHeight(mOriginHeightSize).setMaxWidth(mOriginWidthtSize).setQuality(mQuality).setDestinationDirectoryPath(MyAppConfig.LOCAL_IMG_CREATE_PATH)
+                                .compressToFile(PublicWay.file, thumbnailImgFileName);
+                        String originImgPath = originImgFile.getAbsolutePath();
+                        String thumbnailImgPath = thumbnailImgFile.getAbsolutePath();
+                        rotateImg(originImgPath);
+                        rotateImg(thumbnailImgPath);
+                        Bitmap originBitmap = ImageUtils.getBitmapByFile(originImgFile);
+                        Bitmap thumbnailBitmap = ImageUtils.getBitmapByFile(thumbnailImgFile);
+                        callbackData(originBitmap, thumbnailBitmap, originImgPath,
+                                thumbnailImgPath);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        this.failPicture(Res.getString("capture_error"));
+                    }
+
+
                     try {
                         // Create an ExifHelper to save the exif data that is
                         // lost during compression
@@ -308,7 +329,7 @@ public class CameraService extends ImpPlugin {
                             this.failPicture(Res.getString("no_storage"));
                         }
 
-                        rotateImg();
+                        rotateImg(this.imageUri.getPath());
 
                         // If all this is true we shouldn't compress the
                         // image.
@@ -340,20 +361,20 @@ public class CameraService extends ImpPlugin {
                                 exif.writeExifData();
                             }
                         }
-                        Bitmap overviewBitmap =  Bimp.revitionImageSize(uri.getPath()
+                        Bitmap overviewBitmap = Bimp.revitionImageSize(uri.getPath()
                                 .toString());
                         Bitmap originalBitmap;
                         if (this.targetHeight == -1 && this.targetWidth == -1
-                                && this.mQuality == 100){
+                                && this.mQuality == 100) {
                             originalBitmap = overviewBitmap;
-                        }else {
+                        } else {
                             originalBitmap = Bimp.revitionImageSize(saveUri
                                     .getPath());
                         }
                         // Send Uri back to JavaScript for viewing image
                         // 将高清图片地址和小图地址传回前端
-                        callbackData(originalBitmap, overviewBitmap, saveUri,
-                                uri);
+                        callbackData(originalBitmap, overviewBitmap, saveUri.getPath(),
+                                uri.getPath());
 
                         this.cleanup(FILE_URI, this.imageUri, uri, bitmap);
 
@@ -375,13 +396,13 @@ public class CameraService extends ImpPlugin {
             }
         }
         // 从相册取图片
-        else if (requestCode  ==REQUEST_GELLEY_IMG_SELECT ) {
+        else if (requestCode == REQUEST_GELLEY_IMG_SELECT) {
             if (resultCode == -2) {
                 if (intent == null) {
                     //解决HCM放弃选择图片时弹出error的问题
 //					LogUtils.jasonDebug("00000000");
 //					this.failPicture(Res.getString("cancel_select"));
-                }else {
+                } else {
                     ArrayList<ImageItem> selectedList = (ArrayList<ImageItem>) intent
                             .getSerializableExtra(ImagePicker.EXTRA_RESULT_ITEMS);
                     String uris[] = new String[selectedList.size()];
@@ -463,7 +484,7 @@ public class CameraService extends ImpPlugin {
                             for (int i = 0; i < filePaths.length; i++) {
                                 originalBitmaps[i] = Bimp.revitionImageSize(selectedList
                                         .get(i).path);
-                                bitmaps[i] =  Bimp.revitionImageSize(filePaths[i].split("file://")[1]);
+                                bitmaps[i] = Bimp.revitionImageSize(filePaths[i].split("file://")[1]);
                             }
                             callbackDatas(originalBitmaps, bitmaps,
                                     selectedList, filePaths);
@@ -502,7 +523,6 @@ public class CameraService extends ImpPlugin {
                 }
 
 
-
             } else if (resultCode == Activity.RESULT_CANCELED) {
                 this.failPicture(Res.getString("cancel_select"));
             } else {
@@ -515,20 +535,20 @@ public class CameraService extends ImpPlugin {
     /**
      * 旋转图片，解决三星手机拍照图片被旋转的问题
      */
-    private void rotateImg() {
+    private void rotateImg(String imgPath) {
         // TODO Auto-generated method stub
-        int degree = readPictureDegree(this.imageUri.getPath());
-        if(degree == 0){
+        int degree = readPictureDegree(imgPath);
+        if (degree == 0) {
             return;
         }
         FileInputStream inputStream = null;
         try {
 
-            Bitmap bitmap = Bimp.revitionImageSize(this.imageUri.getPath());
-            Bitmap destBitmap = rotaingImageView(degree,bitmap);
+            Bitmap bitmap = Bimp.revitionImageSize(imgPath);
+            Bitmap destBitmap = rotaingImageView(degree, bitmap);
             bitmap.recycle();
             //save to file
-            saveBitmapToSDCard(destBitmap, this.imageUri.getPath());
+            saveBitmapToSDCard(destBitmap, imgPath);
             destBitmap.recycle();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -551,9 +571,9 @@ public class CameraService extends ImpPlugin {
      *
      * @param bitmap
      */
-    public void saveBitmapToSDCard(Bitmap bitmap,String path) {
+    public void saveBitmapToSDCard(Bitmap bitmap, String path) {
         File orignFile = new File(path);
-        File file = new File(path+"---");
+        File file = new File(path + "---");
         try {
             FileOutputStream out = new FileOutputStream(file);
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
@@ -573,7 +593,6 @@ public class CameraService extends ImpPlugin {
 
 
     }
-
 
 
     /**
@@ -653,12 +672,10 @@ public class CameraService extends ImpPlugin {
     }
 
 
-
     /**
      * IMP代码修改处
      *
-     * @param pathString
-     *            图片本地路径
+     * @param pathString 图片本地路径
      * @return bitmap对象
      */
     private Bitmap getDiskBitmap(String pathString) {
@@ -678,6 +695,7 @@ public class CameraService extends ImpPlugin {
 
     /**
      * Return a scaled bitmap based on the target width and height
+     *
      * @param imageUrl
      * @return
      * @throws IOException
@@ -812,17 +830,13 @@ public class CameraService extends ImpPlugin {
     /**
      * IMP代码修改处
      *
-     * @param originalBitmap
-     *            原图Bitmap
-     * @param overviewBitmap
-     *            缩略图Bitmap
-     * @param saveUri
-     *            原图URI
-     * @param uri
-     *            缩略图URI
+     * @param originalBitmap 原图Bitmap
+     * @param overviewBitmap 缩略图Bitmap
+     * @param saveUri        原图URI
+     * @param uri            缩略图URI
      */
     private void callbackData(Bitmap originalBitmap, Bitmap overviewBitmap,
-                              Uri saveUri, Uri uri) {
+                              String originImgPath, String thumbnailImgPath) {
         // TODO Auto-generated method stub
         ByteArrayOutputStream jpeg_data = new ByteArrayOutputStream();
         ByteArrayOutputStream originalJpeg_data = new ByteArrayOutputStream();
@@ -833,7 +847,7 @@ public class CameraService extends ImpPlugin {
                 byte[] code = jpeg_data.toByteArray();
                 byte[] output = Base64.encode(code, Base64.NO_WRAP);
                 String js_out = new String(output);
-                jsonObject.put("thumbnailUrl", uri.getPath().toString());
+                jsonObject.put("thumbnailUrl", originImgPath);
                 jsonObject.put("thumbnailData", js_out.toString());
                 js_out = null;
                 output = null;
@@ -844,7 +858,7 @@ public class CameraService extends ImpPlugin {
                 byte[] code = originalJpeg_data.toByteArray();
                 byte[] output = Base64.encode(code, Base64.NO_WRAP);
                 String js_out = new String(output);
-                jsonObject.put("originalUrl", saveUri.getPath().toString());
+                jsonObject.put("originalUrl", thumbnailImgPath);
                 jsonObject.put("originalData", js_out.toString());
                 js_out = null;
                 output = null;
@@ -862,14 +876,10 @@ public class CameraService extends ImpPlugin {
     /**
      * IMP代码修改处
      *
-     * @param originalBitmaps
-     *            原图Bitmap数组
-     * @param bitmaps
-     *            缩略图Bitmap数组
-     * @param selectedDataList
-     *            原图路径List
-     * @param filePaths
-     *            缩略图路径List
+     * @param originalBitmaps  原图Bitmap数组
+     * @param bitmaps          缩略图Bitmap数组
+     * @param selectedDataList 原图路径List
+     * @param filePaths        缩略图路径List
      */
     private void callbackDatas(Bitmap[] originalBitmaps, Bitmap[] bitmaps,
                                ArrayList<ImageItem> selectedDataList, String[] filePaths) {
@@ -1033,8 +1043,7 @@ public class CameraService extends ImpPlugin {
      * images in the DB increases by 2 we have a duplicate, when using a
      * DATA_URL the number is 1.
      *
-     * @param type
-     *            FILE_URI or DATA_URL
+     * @param type FILE_URI or DATA_URL
      */
     private void checkForDuplicateImage(int type) {
         int diff = 1;
@@ -1068,14 +1077,13 @@ public class CameraService extends ImpPlugin {
      */
     private Cursor queryImgDB(Uri contentStore) {
         return this.context.getContentResolver().query(contentStore,
-                new String[] { MediaStore.Images.Media._ID }, null, null, null);
+                new String[]{MediaStore.Images.Media._ID}, null, null, null);
     }
 
     /**
      * 读取图片属性：旋转的角度
      *
-     * @param path
-     *            图片绝对路径
+     * @param path 图片绝对路径
      * @return degree旋转的角度
      */
     public static int readPictureDegree(String path) {

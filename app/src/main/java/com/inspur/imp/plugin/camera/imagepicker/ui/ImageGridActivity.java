@@ -28,13 +28,14 @@ import com.inspur.imp.plugin.camera.imagepicker.view.FolderPopUpWindow;
 import com.inspur.imp.plugin.photo.PhotoNameUtils;
 import com.inspur.imp.plugin.photo.UploadPhoto;
 import com.inspur.imp.plugin.photo.UploadPhoto.OnUploadPhotoListener;
-import com.inspur.imp.util.imgcompress.Compressor;
 
 import org.json.JSONObject;
 
 import java.io.File;
 import java.text.DecimalFormat;
 import java.util.List;
+
+import id.zelory.compressor.Compressor;
 
 
 public class ImageGridActivity extends ImageBaseActivity implements
@@ -284,17 +285,18 @@ public class ImageGridActivity extends ImageBaseActivity implements
 				// TODO Auto-generated method stub
 				long time = System.currentTimeMillis();
 				for (int i = 0; i < imagePicker.getSelectedImages().size(); i++) {
-					String fileName = PhotoNameUtils.getListFileName(getApplicationContext(),time,i,parm_encodingType);
-					ImageItem imageItem = imagePicker.getSelectedImages().get(i);
-					String path = imageItem.path;
-//					Bitmap bitmap = BitmapUtils.getImageCompress(path, parm_resolution, parm_qualtity);
-//					BitmapUtils.saveBitmap(bitmap, newPath);
-					Bitmap.CompressFormat format = (parm_encodingType == 0)? Bitmap.CompressFormat.JPEG:Bitmap.CompressFormat.PNG;
-					new Compressor.Builder(ImageGridActivity.this).setMaxHeight(parm_resolution).setMaxWidth(parm_resolution).setQuality(parm_qualtity).setCompressFormat(format).setDestinationDirectoryPath(MyAppConfig.LOCAL_IMG_CREATE_PATH)
-							.setFileName(fileName).build().compressToFile(new File(path));
-					String newPath = MyAppConfig.LOCAL_IMG_CREATE_PATH+fileName;
-					imageItem.path = newPath;
-
+				    try {
+                        String fileName = PhotoNameUtils.getListFileName(getApplicationContext(),time,i,parm_encodingType);
+                        ImageItem imageItem = imagePicker.getSelectedImages().get(i);
+                        String path = imageItem.path;
+                        Bitmap.CompressFormat format = (parm_encodingType == 0)? Bitmap.CompressFormat.JPEG:Bitmap.CompressFormat.PNG;
+                        new Compressor(ImageGridActivity.this).setMaxHeight(parm_resolution).setMaxWidth(parm_resolution).setQuality(parm_qualtity).setCompressFormat(format).setDestinationDirectoryPath(MyAppConfig.LOCAL_IMG_CREATE_PATH)
+                                .compressToFile(new File(path),fileName);
+                        String newPath = MyAppConfig.LOCAL_IMG_CREATE_PATH+fileName;
+                        imageItem.path = newPath;
+                    }catch (Exception e){
+				        e.printStackTrace();
+                    }
 				}
 				handler.sendEmptyMessage(CUT_IMG_SUCCESS);
 			}
