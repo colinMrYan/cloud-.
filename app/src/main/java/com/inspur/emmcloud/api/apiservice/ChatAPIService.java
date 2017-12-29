@@ -954,7 +954,6 @@ public class ChatAPIService {
 		x.http().post(params, new APICallback(context,url) {
             @Override
             public void callbackSuccess(String arg0) {
-                LogUtils.jasonDebug("arg0="+arg0);
             }
 
             @Override

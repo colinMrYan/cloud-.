@@ -2,7 +2,6 @@ package com.inspur.emmcloud.util;
 
 import android.content.Context;
 
-import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 
 /**
@@ -19,16 +18,11 @@ public class PushInfoUtils {
         String pushTracer = AppUtils.getPushId(context);
         if (NetUtils.isNetworkConnected(context,false) && !StringUtils.isBlank(pushTracer)){
             ChatAPIService apiService = new ChatAPIService(context);
-            apiService.setAPIInterface(new WebService());
             String deviceId = AppUtils.getMyUUID(context);
             String deviceName = AppUtils.getDeviceName(context);
             String pushProvider = getPushProvider(context);
             apiService.uploadPushInfo(deviceId,deviceName,pushProvider,pushTracer);
         }
-
-    }
-
-    private class WebService extends APIInterfaceInstance{
 
     }
 
