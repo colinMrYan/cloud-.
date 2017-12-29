@@ -936,4 +936,46 @@ public class ChatAPIService {
 		});
 	}
 
+
+    /**
+     * 上传推送相关信息
+     * @param deviceId
+     * @param deviceName
+     * @param pushProvider
+     * @param pushTracer
+     */
+	public void uploadPushInfo(final String deviceId,final String deviceName,final String pushProvider,final String pushTracer){
+		final String url = APIUri.getUploadPushInfoUrl();
+		RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
+		params.addParameter("deviceId",deviceId);
+		params.addParameter("deviceName",deviceName);
+		params.addParameter("pushProvider",pushProvider);
+		params.addParameter("pushTracer",pushTracer);
+		x.http().post(params, new APICallback(context,url) {
+            @Override
+            public void callbackSuccess(String arg0) {
+                LogUtils.jasonDebug("arg0="+arg0);
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+
+            }
+
+            @Override
+            public void callbackTokenExpire() {
+                new OauthUtils(new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        uploadPushInfo(deviceId,deviceName,pushProvider,pushTracer);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("",-1);
+                    }
+                },context).refreshToken(url);
+            }
+        });
+	}
 }

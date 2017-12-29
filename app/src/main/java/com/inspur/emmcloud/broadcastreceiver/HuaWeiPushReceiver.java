@@ -5,10 +5,11 @@ import android.content.Context;
 import android.os.Bundle;
 
 import com.huawei.hms.support.api.push.PushReceiver;
-import com.inspur.emmcloud.push.WebSocketPush;
+import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.util.ECMShortcutBadgeNumberManagerUtils;
 import com.inspur.emmcloud.util.JSONUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
+import com.inspur.emmcloud.util.PushInfoUtils;
 
 /**
  * Created by yufuchang on 2017/6/20.
@@ -24,7 +25,8 @@ public class HuaWeiPushReceiver extends PushReceiver {
     @Override
     public void onToken(Context context, String token, Bundle extras) {
         PreferencesUtils.putString(context, "huawei_push_token", token);
-        WebSocketPush.getInstance(context).start();
+        ((MyApplication) context.getApplicationContext()).startWebSocket();
+        new PushInfoUtils(context).upload();
     }
 
     /**

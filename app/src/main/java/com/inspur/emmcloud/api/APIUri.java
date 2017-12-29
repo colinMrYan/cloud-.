@@ -21,7 +21,8 @@ public class APIUri {
     private static final String URL_BASE_ECM = "https://ecm.inspur.com/";
     private static final String URL_BASE_EMM = "https://emm.inspur.com/";
     private static final String URL_BASE_ID = "https://id.inspur.com/";
-    private static final String URL_BASE_VOLUME = "https://yunjia.inspur.com/cloud-drive/api/v1/volume";
+    private static final String URL_BASE_YUNJIA = "https://yunjia.inspur.com/";
+    private static final String URL_BASE_VOLUME = URL_BASE_YUNJIA+"cloud-drive/api/v1/volume";
 
 
     /**
@@ -107,6 +108,14 @@ public class APIUri {
      */
     public static String getUploadPositionUrl() {
         return URL_BASE_EMM + "v3.0/api/app/position/upload";
+    }
+
+    /**
+     * 获取上传推送信息的url
+     * @return
+     */
+    public static String getUploadPushInfoUrl(){
+        return  URL_BASE_YUNJIA+"message/api/v1/client";
     }
 
     /************************************************************************登录*****************************************************************/
