@@ -16,6 +16,7 @@ import android.util.Base64;
 import android.widget.Toast;
 
 import com.inspur.emmcloud.config.MyAppConfig;
+import com.inspur.emmcloud.util.DataCleanManager;
 import com.inspur.emmcloud.util.ImageDisplayUtils;
 import com.inspur.emmcloud.util.ImageUtils;
 import com.inspur.emmcloud.util.LogUtils;
@@ -267,137 +268,99 @@ public class CameraService extends ImpPlugin {
      * IMP代码修改处
      */
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        //每次使用之前先将原来的生成的图片清除掉
+        DataCleanManager.cleanCustomCache(MyAppConfig.LOCAL_IMG_CREATE_PATH);
         PublicWay.photoService = null;
+        int mOriginHeightSize = targetHeight < uploadOriginMaxSize ? targetHeight : uploadOriginMaxSize;
+        int mOriginWidthtSize = targetWidth < uploadOriginMaxSize ? targetWidth : uploadOriginMaxSize;
         // 照相取得图片
         if (requestCode == CAMERA) {
             if (resultCode == -2) {
                 if (PublicWay.file != null && PublicWay.file.exists()) {
-                    int mOriginHeightSize = targetHeight < uploadOriginMaxSize ? targetHeight : uploadOriginMaxSize;
-                    int mOriginWidthtSize = targetWidth < uploadOriginMaxSize ? targetWidth : uploadOriginMaxSize;
+                    Bitmap originBitmap = null;
+                    Bitmap thumbnailBitmap = null;
                     try {
                         String originImgFileName = PhotoNameUtils.getFileName(context, encodingType);
                         String thumbnailImgFileName = PhotoNameUtils.getThumbnailFileName(context, 0, encodingType);
                         File originImgFile = new Compressor(this.context).setMaxHeight(mOriginHeightSize).setMaxWidth(mOriginWidthtSize).setQuality(mQuality).setDestinationDirectoryPath(MyAppConfig.LOCAL_IMG_CREATE_PATH)
                                 .compressToFile(PublicWay.file, originImgFileName);
-                        File thumbnailImgFile = new Compressor(this.context).setMaxHeight(mOriginHeightSize).setMaxWidth(mOriginWidthtSize).setQuality(mQuality).setDestinationDirectoryPath(MyAppConfig.LOCAL_IMG_CREATE_PATH)
+                        File thumbnailImgFile = new Compressor(this.context).setMaxHeight(uploadThumbnailMaxSize).setMaxWidth(mOriginWidthtSize).setQuality(mQuality).setDestinationDirectoryPath(MyAppConfig.LOCAL_IMG_CREATE_PATH)
                                 .compressToFile(PublicWay.file, thumbnailImgFileName);
                         String originImgPath = originImgFile.getAbsolutePath();
                         String thumbnailImgPath = thumbnailImgFile.getAbsolutePath();
                         rotateImg(originImgPath);
                         rotateImg(thumbnailImgPath);
-                        Bitmap originBitmap = ImageUtils.getBitmapByFile(originImgFile);
-                        Bitmap thumbnailBitmap = ImageUtils.getBitmapByFile(thumbnailImgFile);
+                        originBitmap = ImageUtils.getBitmapByFile(originImgFile);
+                        thumbnailBitmap = ImageUtils.getBitmapByFile(thumbnailImgFile);
                         callbackData(originBitmap, thumbnailBitmap, originImgPath,
                                 thumbnailImgPath);
                     } catch (Exception e) {
                         e.printStackTrace();
                         this.failPicture(Res.getString("capture_error"));
+                    } finally {
+                        recycleBitmap(originBitmap);
+                        recycleBitmap(thumbnailBitmap);
+                        System.gc();
+                    }
+                }
+            } else if (resultCode == Activity.RESULT_CANCELED) {
+                this.failPicture(Res.getString("cancel_camera"));
+            } else {
+                this.failPicture(Res.getString("camera_error"));
+            }
+        } else if (requestCode == REQUEST_GELLEY_IMG_SELECT) {  // 从相册取图片
+            if (resultCode == -2) {
+                if (intent == null) {
+                    //解决HCM放弃选择图片时弹出error的问题
+//					LogUtils.jasonDebug("00000000");
+//					this.failPicture(Res.getString("cancel_select"));
+                } else {
+                    ArrayList<ImageItem> selectedList = (ArrayList<ImageItem>) intent
+                            .getSerializableExtra(ImagePicker.EXTRA_RESULT_ITEMS);
+                    String uris[] = new String[selectedList.size()];
+                    for (int i = 0; i < selectedList.size(); i++) {
+                        uris[i] = selectedList.get(i).path;
                     }
 
+                    Bitmap originalBitmaps[] = new Bitmap[uris.length;
+                    Bitmap thumbnailBitmaps[] = new Bitmap[uris.length];
+                    String[] originImgPaths = new String[uris.length];
+                    String[] thumbnailImgPaths = new String[uris.length];
 
                     try {
-                        // Create an ExifHelper to save the exif data that is
-                        // lost during compression
-                        ExifHelper exif = new ExifHelper();
-                        try {
-                            if (this.encodingType == JPEG) {
-                                exif.createInFile(getTempDirectoryPath()
-                                        + "/.Pic.jpg");
-                                exif.readExifData();
-                            }
-                        } catch (IOException e) {
-                            e.printStackTrace();
+                        for (int i=0;i<selectedList.size();i++){
+                            String imgFilePath = uris[i];
+                            String originImgFileName = PhotoNameUtils.getFileName(context,i,encodingType);
+                            String thumbnailImgFileName = PhotoNameUtils.getThumbnailFileName(context, i, encodingType);
+                            File originImgFile = new Compressor(this.context).setMaxHeight(mOriginHeightSize).setMaxWidth(mOriginWidthtSize).setQuality(mQuality).setDestinationDirectoryPath(MyAppConfig.LOCAL_IMG_CREATE_PATH)
+                                    .compressToFile(new File(imgFilePath), originImgFileName);
+                            File thumbnailImgFile = new Compressor(this.context).setMaxHeight(uploadThumbnailMaxSize).setMaxWidth(mOriginWidthtSize).setQuality(mQuality).setDestinationDirectoryPath(MyAppConfig.LOCAL_IMG_CREATE_PATH)
+                                    .compressToFile(new File(imgFilePath), thumbnailImgFileName);
+                            String originImgPath = originImgFile.getAbsolutePath();
+                            String thumbnailImgPath = thumbnailImgFile.getAbsolutePath();
+                            Bitmap originBitmap = ImageUtils.getBitmapByFile(originImgFile);
+                            Bitmap thumbnailBitmap = ImageUtils.getBitmapByFile(thumbnailImgFile);
+                            originalBitmaps[i] = originBitmap;
+                            thumbnailBitmaps[i] = thumbnailBitmap;
+                            originImgPaths[i] = originImgPath;
+                            thumbnailImgPaths[i] = thumbnailImgPath;
+                            callbackDatas(originalBitmaps,thumbnailBitmaps,originImgPaths,thumbnailImgPaths);
                         }
-
-                        Bitmap bitmap = null;
-                        Uri uri = null;
-                        // If sending filename back
-                        if (this.saveToPhotoAlbum) {
-                            Uri inputUri = getUriFromMediaStore();
-                            // Just because we have a media URI doesn't mean
-                            // we have a real file, we need to make it
-                            uri = Uri.fromFile(new File(FileHelper.getRealPath(
-                                    inputUri, this)));
-
-                        } else {
-                            uri = Uri.fromFile(new File(getTempDirectoryPath(),
-                                    System.currentTimeMillis() + ".jpg"));
-                        }
-                        Uri saveUri = Uri.fromFile(new File(FileHelper
-                                .getRealPath(getUriFromMediaStore(), this)));
-                        if (uri == null) {
-                            this.failPicture(Res.getString("no_storage"));
-                        }
-
-                        rotateImg(this.imageUri.getPath());
-
-                        // If all this is true we shouldn't compress the
-                        // image.
-                        if (this.targetHeight == -1 && this.targetWidth == -1
-                                && this.mQuality == 100) {
-                            writeUncompressedImage(uri);
-                        } else {
-                            bitmap = getScaledBitmap(FileHelper
-                                    .stripFileProtocol(this.imageUri.toString()));
-
-                            // Add compressed version of captured image to
-                            // returned media store Uri
-                            OutputStream os = this.context.getContentResolver()
-                                    .openOutputStream(uri);
-                            bitmap.compress(Bitmap.CompressFormat.JPEG,
-                                    this.mQuality, os);
-                            os.close();
-                            writeUncompressedImage(saveUri);
-                            // Restore exif data to file
-                            if (this.encodingType == JPEG) {
-                                String exifPath;
-                                if (this.saveToPhotoAlbum) {
-                                    exifPath = FileHelper.getRealPath(saveUri,
-                                            this);
-                                } else {
-                                    exifPath = saveUri.getPath();
-                                }
-                                exif.createOutFile(exifPath);
-                                exif.writeExifData();
-                            }
-                        }
-                        Bitmap overviewBitmap = Bimp.revitionImageSize(uri.getPath()
-                                .toString());
-                        Bitmap originalBitmap;
-                        if (this.targetHeight == -1 && this.targetWidth == -1
-                                && this.mQuality == 100) {
-                            originalBitmap = overviewBitmap;
-                        } else {
-                            originalBitmap = Bimp.revitionImageSize(saveUri
-                                    .getPath());
-                        }
-                        // Send Uri back to JavaScript for viewing image
-                        // 将高清图片地址和小图地址传回前端
-                        callbackData(originalBitmap, overviewBitmap, saveUri.getPath(),
-                                uri.getPath());
-
-                        this.cleanup(FILE_URI, this.imageUri, uri, bitmap);
-
-                        bitmap = null;
 
                     } catch (Exception e) {
                         e.printStackTrace();
                         this.failPicture(Res.getString("capture_error"));
+                    } finally {
+                        recycleBitmap(originBitmap);
+                        recycleBitmap(thumbnailBitmap);
+                        System.gc();
                     }
-                }
-            }// If cancelled
-            else if (resultCode == Activity.RESULT_CANCELED) {
-                this.failPicture(Res.getString("cancel_camera"));
-            }
 
-            // If something else
-            else {
-                this.failPicture(Res.getString("camera_error"));
-            }
-        }
-        // 从相册取图片
-        else if (requestCode == REQUEST_GELLEY_IMG_SELECT) {
-            if (resultCode == -2) {
+
+
+                }
+
+
                 if (intent == null) {
                     //解决HCM放弃选择图片时弹出error的问题
 //					LogUtils.jasonDebug("00000000");
@@ -518,8 +481,6 @@ public class CameraService extends ImpPlugin {
                         }
                     }
                     System.gc();
-
-
                 }
 
 
@@ -564,6 +525,17 @@ public class CameraService extends ImpPlugin {
             }
         }
 
+    }
+
+    /**
+     * 回收bitmap
+     * @param bitmap
+     */
+    private void recycleBitmap(Bitmap bitmap){
+        if(bitmap != null && !bitmap.isRecycled()){
+            bitmap.recycle();
+            bitmap = null;
+        }
     }
 
     /**
