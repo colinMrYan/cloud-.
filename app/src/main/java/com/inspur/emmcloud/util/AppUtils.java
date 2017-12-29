@@ -627,4 +627,44 @@ public class AppUtils {
         }
     }
 
+    /**
+     * 获取设备名称
+     * @param context
+     * @return
+     */
+    public static String getDeviceName(Context context){
+        boolean isTelbet = AppUtils.isTablet(context);
+        String username = PreferencesUtils.getString(context, "userRealName");
+        return username + (isTelbet?"的平板电脑":"的手机");
+    }
+
+    /**
+     * 通过厂商确定pushId
+     * @return
+     */
+    public static String getPushId(Context context) {
+        String pushId = "";
+        if(AppUtils.getIsHuaWei()&&canConnectHuawei(context)){
+            //需要对华为单独推送的时候解开这里
+            String hwtoken = PreferencesUtils.getString(context,"huawei_push_token","");
+            if(!StringUtils.isBlank(hwtoken)){
+                pushId = hwtoken + "@push.huawei.com";
+            }
+        }else{
+            pushId = PreferencesUtils.getString(context, "JpushRegId", "");
+        }
+        return pushId;
+    }
+
+    /**
+     * 判断是否可以连接华为推了送
+     * @return
+     */
+    private static boolean canConnectHuawei(Context context) {
+        String pushFlag = PreferencesUtils.getString(context,"pushFlag","");
+        if(StringUtils.isBlank(pushFlag) || pushFlag.equals("huawei")){
+            return true;
+        }
+        return false;
+    }
 }
