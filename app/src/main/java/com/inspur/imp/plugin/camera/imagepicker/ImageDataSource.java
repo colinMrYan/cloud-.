@@ -10,7 +10,6 @@ import android.support.v4.content.Loader;
 
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.util.FileUtils;
-import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.imp.plugin.camera.imagepicker.bean.ImageFolder;
 import com.inspur.imp.plugin.camera.imagepicker.bean.ImageItem;
 
@@ -76,20 +75,16 @@ public class ImageDataSource implements LoaderManager.LoaderCallbacks<Cursor> {
 		imageFolders.clear();
 		if (data != null) {
 			ArrayList<ImageItem> allImages = new ArrayList<ImageItem>();   //所有图片的集合,不分文件夹
-            LogUtils.jasonDebug("data.length()="+data.getCount());
 			while (data.moveToNext()) {
 				//查询数据
 				String imageName = data.getString(data.getColumnIndexOrThrow(IMAGE_PROJECTION[0]));
 				String imagePath = data.getString(data.getColumnIndexOrThrow(IMAGE_PROJECTION[1]));
-				LogUtils.jasonDebug("imagePath="+imagePath);
 				File file = new File(imagePath);
 				if (!file.exists()){
-				    LogUtils.jasonDebug("文件不存在");
 					continue;
 				}
 				long imageSize = FileUtils.getFileSize(imagePath);
 				if (imageSize == 0){
-                    LogUtils.jasonDebug("文件size=0");
 					continue;
 				}
 				int imageWidth = data.getInt(data.getColumnIndexOrThrow(IMAGE_PROJECTION[3]));

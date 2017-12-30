@@ -11,13 +11,13 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.bean.Msg;
 import com.inspur.emmcloud.config.MyAppConfig;
+import com.inspur.imp.util.compressor.Compressor;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
 
-import id.zelory.compressor.Compressor;
 
 public class MsgRecourceUploadUtils {
 	
