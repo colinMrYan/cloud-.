@@ -16,7 +16,9 @@ import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.bean.PersonDto;
 import com.inspur.emmcloud.util.ImageDisplayUtils;
 import com.inspur.emmcloud.util.RobotCacheUtils;
+import com.inspur.emmcloud.util.StringUtils;
 
+import java.util.HashMap;
 import java.util.List;
 
 
@@ -26,10 +28,9 @@ import java.util.List;
 public class ChannelMemberListAdapter extends BaseAdapter implements SectionIndexer {
 
     private LayoutInflater inflater;
-
     private Activity mActivity;
-
     private List<PersonDto> list;
+    private HashMap<String,String> indexMap = new HashMap<>();
 
 
     public ChannelMemberListAdapter(Activity mActivity, List<PersonDto> sortDataList) {
@@ -86,6 +87,7 @@ public class ChannelMemberListAdapter extends BaseAdapter implements SectionInde
             int section = getSectionForPosition(position);
             // 如果当前位置等于该分类首字母的Char的位置 ，则认为是第一次出现
             if (position == getPositionForSection(section)) {
+//            if(isNeedIndex(dto.getSortLetters())){
                 holder.slidebarleter.setVisibility(View.VISIBLE);
                 holder.slidebarleter.setText("☆".equals(dto.getSortLetters()) ? dto.getSortLetters()
                         + mActivity.getString(R.string.administrators_of_channel) : dto.getSortLetters());
@@ -137,6 +139,15 @@ public class ChannelMemberListAdapter extends BaseAdapter implements SectionInde
             }
         }
         return -1;
+    }
+
+    public boolean isNeedIndex(String sortLetters){
+        String sortLetter = sortLetters.toLowerCase();
+        if(StringUtils.isBlank(indexMap.get(sortLetter))){
+            indexMap.put(sortLetter,sortLetter);
+            return true;
+        }
+        return false;
     }
 
     @Override
