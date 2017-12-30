@@ -13,6 +13,7 @@ import com.inspur.emmcloud.util.ECMShortcutBadgeNumberManagerUtils;
 import com.inspur.emmcloud.util.JSONUtils;
 import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
+import com.inspur.emmcloud.util.PushInfoUtils;
 import com.inspur.emmcloud.util.StringUtils;
 
 import org.json.JSONException;
@@ -42,6 +43,7 @@ public class JpushReceiver extends BroadcastReceiver {
             LogUtils.debug(TAG, "[MyReceiver] 接收Registration Id : " + regId);
             PreferencesUtils.putString(context, "JpushRegId", regId);
             ((MyApplication) context.getApplicationContext()).startWebSocket();
+            new PushInfoUtils(context).upload();
         } else if (JPushInterface.ACTION_MESSAGE_RECEIVED.equals(intent
                 .getAction())) {
             if(ECMShortcutBadgeNumberManagerUtils.isHasBadge(bundle.getString(JPushInterface.EXTRA_MESSAGE))){

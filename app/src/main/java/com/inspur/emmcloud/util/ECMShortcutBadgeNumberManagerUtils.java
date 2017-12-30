@@ -84,7 +84,11 @@ public class ECMShortcutBadgeNumberManagerUtils {
      */
     public static void setDesktopBadgeNumber(Context context,int count) {
         if(!AppUtils.GetChangShang().toLowerCase().startsWith("xiaomi")){
-            ShortcutBadger.applyCount(context,count);
+            try {
+                ShortcutBadger.applyCount(context,count);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
         }
     }
 
