@@ -11,12 +11,13 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.bean.Msg;
 import com.inspur.emmcloud.config.MyAppConfig;
-import com.inspur.imp.util.imgcompress.Compressor;
+import com.inspur.imp.util.compressor.Compressor;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+
 
 public class MsgRecourceUploadUtils {
 	
@@ -31,17 +32,21 @@ public class MsgRecourceUploadUtils {
 	 */
 	public static Msg uploadMsgImg(Context context,String filePath,
 			ChatAPIService apiService){
-		final  int maxSize = 1200;
+		LogUtils.jasonDebug("filePath="+filePath);
 		int imgHeight = 0;
 		int imgWidth= 0;
 		Bitmap bitmapImg = BitmapFactory.decodeFile(filePath);
 		imgHeight = bitmapImg.getHeight();
 		imgWidth = bitmapImg.getWidth();
 		bitmapImg.recycle();
-		if (imgHeight>maxSize || imgWidth>maxSize){
+		if (imgHeight>MyAppConfig.UPLOAD_ORIGIN_IMG_MAX_SIZE || imgWidth>MyAppConfig.UPLOAD_ORIGIN_IMG_MAX_SIZE ){
 			String fileName = System.currentTimeMillis() + ".jpg";
-			new Compressor.Builder(context).setMaxWidth(maxSize).setMaxHeight(maxSize).setQuality(90).setDestinationDirectoryPath(MyAppConfig.LOCAL_CACHE_PATH).setFileName(fileName).build().compressToFile(new File(filePath));
-			filePath = MyAppConfig.LOCAL_CACHE_PATH+fileName;
+			try {
+				new Compressor(context).setMaxWidth(MyAppConfig.UPLOAD_ORIGIN_IMG_MAX_SIZE).setMaxHeight(MyAppConfig.UPLOAD_ORIGIN_IMG_MAX_SIZE).setQuality(90).setDestinationDirectoryPath(MyAppConfig.LOCAL_CACHE_PATH).compressToFile(new File(filePath),fileName);
+                filePath = MyAppConfig.LOCAL_CACHE_PATH+fileName;
+			}catch (Exception e){
+				e.printStackTrace();
+			}
 		}
 		JSONObject jsonObject = new JSONObject();
 		//暂时为要显示的消息设定一个假的id

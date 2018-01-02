@@ -5,9 +5,11 @@ import android.content.Context;
 import android.os.Bundle;
 
 import com.huawei.hms.support.api.push.PushReceiver;
-import com.inspur.emmcloud.push.WebSocketPush;
-import com.inspur.emmcloud.util.LogUtils;
+import com.inspur.emmcloud.MyApplication;
+import com.inspur.emmcloud.util.ECMShortcutBadgeNumberManagerUtils;
+import com.inspur.emmcloud.util.JSONUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
+import com.inspur.emmcloud.util.PushInfoUtils;
 
 /**
  * Created by yufuchang on 2017/6/20.
@@ -23,7 +25,8 @@ public class HuaWeiPushReceiver extends PushReceiver {
     @Override
     public void onToken(Context context, String token, Bundle extras) {
         PreferencesUtils.putString(context, "huawei_push_token", token);
-        WebSocketPush.getInstance(context).start();
+        ((MyApplication) context.getApplicationContext()).startWebSocket();
+        new PushInfoUtils(context).upload();
     }
 
     /**
@@ -36,12 +39,26 @@ public class HuaWeiPushReceiver extends PushReceiver {
      */
     @Override
     public boolean onPushMsg(Context context, byte[] msg, Bundle bundle) {
+        if(ECMShortcutBadgeNumberManagerUtils.isHasBadge(msg)){
+            ECMShortcutBadgeNumberManagerUtils.setDesktopBadgeNumber(context,getDesktopBadgeNumber(msg));
+        }
+        return false;
+    }
+
+    /**
+     * 获取桌面badge的数字
+     * @param msg
+     * @return
+     */
+    private int getDesktopBadgeNumber(byte[] msg) {
+        int badageNumber = 0;
         try {
-            LogUtils.YfcDebug("接收到华为透传消息： " + new String(msg, "UTF-8"));
+            String message = new String(msg,"UTF-8");
+            badageNumber = JSONUtils.getInt(message,"badge",0);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return false;
+        return badageNumber;
     }
 
     /**

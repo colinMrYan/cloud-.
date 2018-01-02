@@ -9,9 +9,11 @@ import android.util.Log;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.ui.login.LoginActivity;
+import com.inspur.emmcloud.util.ECMShortcutBadgeNumberManagerUtils;
 import com.inspur.emmcloud.util.JSONUtils;
 import com.inspur.emmcloud.util.LogUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
+import com.inspur.emmcloud.util.PushInfoUtils;
 import com.inspur.emmcloud.util.StringUtils;
 
 import org.json.JSONException;
@@ -31,6 +33,7 @@ public class JpushReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
+
         Bundle bundle = intent.getExtras();
         LogUtils.debug(TAG, "[MyReceiver] onReceive - " + intent.getAction()
                 + ", extras: " + printBundle(bundle));
@@ -40,18 +43,26 @@ public class JpushReceiver extends BroadcastReceiver {
             LogUtils.debug(TAG, "[MyReceiver] 接收Registration Id : " + regId);
             PreferencesUtils.putString(context, "JpushRegId", regId);
             ((MyApplication) context.getApplicationContext()).startWebSocket();
+            new PushInfoUtils(context).upload();
         } else if (JPushInterface.ACTION_MESSAGE_RECEIVED.equals(intent
                 .getAction())) {
+            if(ECMShortcutBadgeNumberManagerUtils.isHasBadge(bundle.getString(JPushInterface.EXTRA_MESSAGE))){
+                ECMShortcutBadgeNumberManagerUtils.setDesktopBadgeNumber(context,JSONUtils.getInt(bundle.getString(JPushInterface.EXTRA_MESSAGE),"badge",0));
+            }
             LogUtils.debug(TAG,
                     "[MyReceiver] 接收到推送下来的自定义消息: "
                             + bundle.getString(JPushInterface.EXTRA_MESSAGE));
 
+            return;
         } else if (JPushInterface.ACTION_NOTIFICATION_RECEIVED.equals(intent
                 .getAction())) {
             int notifactionId = bundle
                     .getInt(JPushInterface.EXTRA_NOTIFICATION_ID);
             LogUtils.debug(TAG, "[MyReceiver] 接收到推送下来的通知的ID: " + notifactionId);
-
+//            if(AppUtils.GetChangShang().toLowerCase().startsWith("xiaomi")){
+//                ECMShortcutBadgeNumberManagerUtils.setDesktopBadgeNumber(context,JSONUtils.getInt(bundle.getString(JPushInterface.EXTRA_MESSAGE),"badge",0),intent);
+//                return;
+//            }
         } else if (JPushInterface.ACTION_NOTIFICATION_OPENED.equals(intent
                 .getAction())) {
             LogUtils.debug(TAG, "[MyReceiver] 用户点击打开了通知");

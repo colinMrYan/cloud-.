@@ -136,6 +136,7 @@ public class NewsWebDetailActivity extends BaseActivity {
         webSettings.setBuiltInZoomControls(false);
         // 设置字体大小
         webSettings.setSupportZoom(false);
+        webSettings.setSavePassword(false);
         //解决在安卓5.0以上跨域链接无法访问的问题
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             webSettings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);

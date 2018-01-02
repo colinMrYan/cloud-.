@@ -28,13 +28,14 @@ import com.inspur.imp.plugin.camera.imagepicker.view.FolderPopUpWindow;
 import com.inspur.imp.plugin.photo.PhotoNameUtils;
 import com.inspur.imp.plugin.photo.UploadPhoto;
 import com.inspur.imp.plugin.photo.UploadPhoto.OnUploadPhotoListener;
-import com.inspur.imp.util.imgcompress.Compressor;
+import com.inspur.imp.util.compressor.Compressor;
 
 import org.json.JSONObject;
 
 import java.io.File;
 import java.text.DecimalFormat;
 import java.util.List;
+
 
 
 public class ImageGridActivity extends ImageBaseActivity implements
@@ -284,17 +285,18 @@ public class ImageGridActivity extends ImageBaseActivity implements
 				// TODO Auto-generated method stub
 				long time = System.currentTimeMillis();
 				for (int i = 0; i < imagePicker.getSelectedImages().size(); i++) {
-					String fileName = PhotoNameUtils.getListFileName(getApplicationContext(),time,i,parm_encodingType);
-					ImageItem imageItem = imagePicker.getSelectedImages().get(i);
-					String path = imageItem.path;
-//					Bitmap bitmap = BitmapUtils.getImageCompress(path, parm_resolution, parm_qualtity);
-//					BitmapUtils.saveBitmap(bitmap, newPath);
-					Bitmap.CompressFormat format = (parm_encodingType == 0)? Bitmap.CompressFormat.JPEG:Bitmap.CompressFormat.PNG;
-					new Compressor.Builder(ImageGridActivity.this).setMaxHeight(parm_resolution).setMaxWidth(parm_resolution).setQuality(parm_qualtity).setCompressFormat(format).setDestinationDirectoryPath(MyAppConfig.LOCAL_IMG_CREATE_PATH)
-							.setFileName(fileName).build().compressToFile(new File(path));
-					String newPath = MyAppConfig.LOCAL_IMG_CREATE_PATH+fileName;
-					imageItem.path = newPath;
-
+				    try {
+                        String fileName = PhotoNameUtils.getListFileName(getApplicationContext(),time,i,parm_encodingType);
+                        ImageItem imageItem = imagePicker.getSelectedImages().get(i);
+                        String path = imageItem.path;
+                        Bitmap.CompressFormat format = (parm_encodingType == 0)? Bitmap.CompressFormat.JPEG:Bitmap.CompressFormat.PNG;
+                        new Compressor(ImageGridActivity.this).setMaxHeight(parm_resolution).setMaxWidth(parm_resolution).setQuality(parm_qualtity).setCompressFormat(format).setDestinationDirectoryPath(MyAppConfig.LOCAL_IMG_CREATE_PATH)
+                                .compressToFile(new File(path),fileName);
+                        String newPath = MyAppConfig.LOCAL_IMG_CREATE_PATH+fileName;
+                        imageItem.path = newPath;
+                    }catch (Exception e){
+				        e.printStackTrace();
+                    }
 				}
 				handler.sendEmptyMessage(CUT_IMG_SUCCESS);
 			}
@@ -351,18 +353,15 @@ public class ImageGridActivity extends ImageBaseActivity implements
 	public void onImageItemClick(View view, ImageItem imageItem, int position) {
 		// 根据是否有相机按钮确定位置
 		position = imagePicker.isShowCamera() ? position - 1 : position;
-		// imagePicker.setMultiMode(false);
-		// imagePicker.setStyle(CropImageView.Style.CIRCLE);
 		if (imagePicker.isMultiMode()) {
-			// Intent intent = new Intent(ImageGridActivity.this,
-			// ImagePreviewActivity.class);
-			// intent.putExtra(ImagePicker.EXTRA_SELECTED_IMAGE_POSITION,
-			// position);
-			// intent.putExtra(ImagePicker.EXTRA_IMAGE_ITEMS,
-			// imagePicker.getCurrentImageFolderItems());
-			// intent.putExtra(ImagePreviewActivity.ISORIGIN, isOrigin);
-			// startActivityForResult(intent, ImagePicker.REQUEST_CODE_PREVIEW);
-			// // 如果是多选，点击图片进入预览界面
+			int selectLimit = imagePicker.getSelectLimit();
+			boolean isCheck = imagePicker.getSelectedImages().contains(imageItem);
+			if (!isCheck && imagePicker.getSelectedImages().size()>= selectLimit){
+				Toast.makeText(getApplicationContext(), getString(R.string.select_limit, selectLimit+""), Toast.LENGTH_SHORT).show();
+			}else {
+				imagePicker.addSelectedImageItem(position, imageItem, !isCheck);
+			}
+			mImageGridAdapter.notifyDataSetChanged();
 		} else {
 			imagePicker.clearSelectedImages();
 			imagePicker.addSelectedImageItem(position, imagePicker
