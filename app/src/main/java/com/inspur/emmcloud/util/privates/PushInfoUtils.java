@@ -1,8 +1,11 @@
-package com.inspur.emmcloud.util;
+package com.inspur.emmcloud.util.privates;
 
 import android.content.Context;
 
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
+import com.inspur.emmcloud.util.common.NetUtils;
+import com.inspur.emmcloud.util.common.PreferencesUtils;
+import com.inspur.emmcloud.util.common.StringUtils;
 
 /**
  * 推送信息

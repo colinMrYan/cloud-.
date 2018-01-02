@@ -7,9 +7,9 @@ import android.os.Bundle;
 import com.huawei.hms.support.api.push.PushReceiver;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
-import com.inspur.emmcloud.util.PushInfoUtils;
+import com.inspur.emmcloud.util.privates.PushInfoUtils;
 import com.inspur.emmcloud.MyApplication;
-import com.inspur.emmcloud.util.ECMShortcutBadgeNumberManagerUtils;
+import com.inspur.emmcloud.util.privates.ECMShortcutBadgeNumberManagerUtils;
 
 /**
  * Created by yufuchang on 2017/6/20.

@@ -1,4 +1,4 @@
-package com.inspur.emmcloud.util;
+package com.inspur.emmcloud.util.privates;
 
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
 
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.util.common.StringUtils;
 
 import org.json.JSONObject;
 

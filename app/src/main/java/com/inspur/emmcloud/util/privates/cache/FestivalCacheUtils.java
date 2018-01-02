@@ -5,15 +5,9 @@ import android.content.Context;
 import com.inspur.emmcloud.bean.work.FestivalDate;
 import com.inspur.emmcloud.util.common.StringUtils;
 
-import android.content.Context;
-
-import com.inspur.emmcloud.bean.FestivalDate;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-
-import android.content.Context;
 
 
 

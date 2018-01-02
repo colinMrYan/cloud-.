@@ -86,7 +86,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static com.inspur.emmcloud.util.privates.cache.AppCacheUtils.getCommonlyUseAppList;
 
 /**
  * classes : com.inspur.emmcloud.ui.app.MyAppFragment Create at 2016年12月13日

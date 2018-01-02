@@ -9,11 +9,11 @@ import android.util.Log;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.ui.login.LoginActivity;
-import com.inspur.emmcloud.util.ECMShortcutBadgeNumberManagerUtils;
+import com.inspur.emmcloud.util.privates.ECMShortcutBadgeNumberManagerUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
-import com.inspur.emmcloud.util.PushInfoUtils;
+import com.inspur.emmcloud.util.privates.PushInfoUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 
 import org.json.JSONException;
