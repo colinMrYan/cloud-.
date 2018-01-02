@@ -290,8 +290,6 @@ public class CameraService extends ImpPlugin {
                                 .setCompressFormat(format) .compressToFile(PublicWay.file, thumbnailImgFileName);
                         String originImgPath = originImgFile.getAbsolutePath();
                         String thumbnailImgPath = thumbnailImgFile.getAbsolutePath();
-                        rotateImg(originImgPath);
-                        rotateImg(thumbnailImgPath);
                         originBitmap = ImageUtils.getBitmapByFile(originImgFile);
                         thumbnailBitmap = ImageUtils.getBitmapByFile(thumbnailImgFile);
                         callbackData(originBitmap, thumbnailBitmap, originImgPath,
