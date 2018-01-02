@@ -949,12 +949,11 @@ public class ChatAPIService {
 		RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
 		params.addParameter("deviceId",deviceId);
 		params.addParameter("deviceName",deviceName);
-		params.addParameter("pushProvider",pushProvider);
-		params.addParameter("pushTracer",pushTracer);
+		params.addParameter("notificationProvider",pushProvider);
+		params.addParameter("notificationTracer",pushTracer);
 		x.http().post(params, new APICallback(context,url) {
             @Override
             public void callbackSuccess(String arg0) {
-                LogUtils.jasonDebug("arg0="+arg0);
             }
 
             @Override

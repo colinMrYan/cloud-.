@@ -8,6 +8,8 @@ import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 
 import com.inspur.emmcloud.bean.SplashPageBean;
 import com.inspur.emmcloud.config.MyAppConfig;
@@ -22,7 +24,6 @@ import com.inspur.emmcloud.util.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.PreferencesUtils;
 import com.inspur.emmcloud.util.ResolutionUtils;
 import com.inspur.emmcloud.util.SplashPageUtils;
-import com.inspur.emmcloud.util.StateBarColor;
 import com.inspur.emmcloud.util.StringUtils;
 import com.inspur.emmcloud.util.UpgradeUtils;
 import com.inspur.emmcloud.widget.dialogs.EasyDialog;
@@ -55,8 +56,9 @@ public class MainActivity extends Activity{ // 此处不能继承BaseActivity �
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		requestWindowFeature(Window.FEATURE_NO_TITLE);//没有标题
 		super.onCreate(savedInstanceState);
-		StateBarColor.showOrHideStatusBar(this,false);
+		this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);//设置全屏
 		setContentView(R.layout.activity_main);
 		init();
 	}
