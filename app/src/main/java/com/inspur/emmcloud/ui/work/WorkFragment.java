@@ -187,6 +187,7 @@ public class WorkFragment extends Fragment {
      * 初始化views
      */
     private void initViews() {
+        handHeaderDate();
         setHeadLayout();
         initPullRefreshLayout();
         listView = (ListView) rootView
@@ -235,7 +236,6 @@ public class WorkFragment extends Fragment {
             getMeetings();
             getMyCalendar();
             getTasks();
-            handHeaderDate();
         } else {
             swipeRefreshLayout.setRefreshing(false);
         }
@@ -572,7 +572,7 @@ public class WorkFragment extends Fragment {
     private FestivalDate initFestivalDate() {
         FestivalDate festivalDate = null;
         try {
-            if (!DbCacheUtils.tableIsExist("com_inspur_emmcloud_bean_FestivalDate")) {
+            if (!DbCacheUtils.tableIsExist("com_inspur_emmcloud_bean_FestivalDate") || FestivalCacheUtils.isNeedUpdateFestivalTable(getActivity())) {
                 FestivalCacheUtils.saveFestivalList(getActivity());
             }
             festivalDate = FestivalCacheUtils.getFestival(getActivity());
@@ -747,7 +747,9 @@ public class WorkFragment extends Fragment {
             swipeRefreshLayout.setRefreshing(false);
             WorkFragment.this.meetingList = getMeetingsResult.getMeetingsList();
             Collections.sort(WorkFragment.this.meetingList, new Meeting());
-            meetingChildAdapter.notifyDataSetChanged();
+            if (meetingChildAdapter != null){
+                meetingChildAdapter.notifyDataSetChanged();
+            }
         }
 
         @Override
@@ -760,7 +762,9 @@ public class WorkFragment extends Fragment {
         public void returnRecentTasksSuccess(GetTaskListResult getTaskListResult) {
             swipeRefreshLayout.setRefreshing(false);
             taskList = getTaskListResult.getTaskList();
-            taskChildAdapter.notifyDataSetChanged();
+            if (taskChildAdapter != null){
+                taskChildAdapter.notifyDataSetChanged();
+            }
         }
 
         @Override
@@ -803,7 +807,7 @@ public class WorkFragment extends Fragment {
             CalEventNotificationUtils.setCalEventNotification(getActivity().getApplicationContext(), calEventList);
             if (isRefresh && (calEventList.size() < 3)) { // 获取今明两天的日历不足3条
                 getCalEventsFor3();
-            } else {
+            } else if(calendarChildAdapter != null){
                 calendarChildAdapter.notifyDataSetChanged();
             }
 

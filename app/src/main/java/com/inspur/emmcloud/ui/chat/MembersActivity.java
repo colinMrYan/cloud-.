@@ -28,16 +28,18 @@ import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.slidebar.CharacterParser;
-import com.inspur.emmcloud.widget.slidebar.PinyinComparator;
 import com.inspur.emmcloud.widget.slidebar.SideBar;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 
 public class MembersActivity extends BaseActivity implements
         SideBar.OnTouchingLetterChangedListener, TextWatcher {
@@ -94,7 +96,6 @@ public class MembersActivity extends BaseActivity implements
                         personDtoIterator.remove();
                     }
                 }
-
                 handler.sendMessage(handler.obtainMessage(0));
             }
         };
@@ -261,6 +262,7 @@ public class MembersActivity extends BaseActivity implements
         // 根据a-z进行排序
         Collections.sort(filterDateList, pinyinComparator);
         mAdapter.updateListView(filterDateList);
+        mListView.setSelection(0);
     }
 
     /**
@@ -292,7 +294,6 @@ public class MembersActivity extends BaseActivity implements
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.back_layout:
-                // setResult(RESULT_OK);
                 finish();
                 break;
 
@@ -301,20 +302,43 @@ public class MembersActivity extends BaseActivity implements
         }
     }
 
-    public void testAddManager(List<PersonDto> channelDataList) {
-        PersonDto user = new PersonDto();
-        user.setName("Manager");
-        user.setUtype("1");
-        user.setSortLetters("☆");
-        channelDataList.add(0, user);
-    }
-
     @Override
     public void onBackPressed() {
         // TODO Auto-generated method stub
         super.onBackPressed();
-        // setResult(RESULT_OK);
         finish();
     }
+
+
+    public class PinyinComparator implements Comparator<PersonDto> {
+
+        @Override
+        public int compare(PersonDto o1, PersonDto o2) {
+            if (o1.getSortLetters().equals("☆")) {
+                return -1;
+            } else if (o2.getSortLetters().equals("☆")) {
+                return 1;
+            } else if (o1.getSortLetters().equals("#")) {
+                return -1;
+            } else if (o2.getSortLetters().equals("#")) {
+                return 1;
+            } else {
+                String o1Name = o1.getName();
+                String o2Name = o2.getName();
+                String o1First = o1.getPinyinFull().subSequence(0, 1).toString();
+                String o2First = o2.getPinyinFull().subSequence(0, 1).toString();
+                if (!o1First.equals(o2First)) {
+                    return Collator.getInstance().compare(o1First, o2First);
+                } else if (StringUtils.isFirstCharEnglish(o1Name) && StringUtils.isFirstCharEnglish(o2Name) || !StringUtils.isFirstCharEnglish(o1Name) && !StringUtils.isFirstCharEnglish(o2Name)) {
+                    return Collator.getInstance(Locale.CHINA).compare(o1Name, o2Name);
+                } else if (StringUtils.isFirstCharEnglish(o1Name)) {
+                    return 1;
+                } else {
+                    return -1;
+                }
+            }
+        }
+    }
+
 
 }

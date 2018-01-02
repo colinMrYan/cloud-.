@@ -52,7 +52,7 @@ public class WebSocketPush {
 	 */
 	public void start() {
 		// TODO Auto-generated method stub
-		String pushId = getPushIdByChangeShang();
+		String pushId = AppUtils.getPushId(context);
 		if(((MyApplication)context.getApplicationContext()).isHaveLogin() && !StringUtils.isBlank(pushId)){
 			String url = APIUri.getWebsocketConnectUrl();
 			String enterpriseCode = ((MyApplication)context.getApplicationContext()).getCurrentEnterprise().getCode();
@@ -68,22 +68,14 @@ public class WebSocketPush {
 			if (!isSocketConnect() && !isWebsocketConnnecting){
 				isWebsocketConnnecting = true;
 				sendWebSocketStatusBroadcaset("socket_connecting");
-				String username = PreferencesUtils.getString(context, "userRealName");
 				String uuid = AppUtils.getMyUUID(context);
-				boolean isTelbet = AppUtils.isTablet(context);
-				String name;
-				if (isTelbet) {
-					name = username + "的平板电脑";
-				} else {
-					name = username + "的手机";
-				}
-//		final BlockingQueue<Object> values = new LinkedBlockingQueue<Object>();
+				String deviceName = AppUtils.getDeviceName(context);
 				IO.Options opts = new IO.Options();
 				opts.reconnectionAttempts = 4; // 设置websocket重连次数
 				opts.forceNew = true;
 				Map<String, String> query = new HashMap<String, String>();
 				query.put("device.id", uuid);
-				query.put("device.name", name);
+				query.put("device.name", deviceName);
 				query.put("device.push", pushId);
 				// opts.transports = new String[] { Polling.NAME };
 				opts.path = path;
@@ -133,35 +125,6 @@ public class WebSocketPush {
 
 	}
 
-	/**
-	 * 通过厂商确定pushId
-	 * @return
-     */
-	private String getPushIdByChangeShang() {
-		String pushId = "";
-		if(AppUtils.getIsHuaWei()&&canConnectHuawei()){
-			//需要对华为单独推送的时候解开这里
-			String hwtoken = PreferencesUtils.getString(context,"huawei_push_token","");
-			if(!StringUtils.isBlank(hwtoken)){
-				pushId = hwtoken + "@push.huawei.com";
-			}
-		}else{
-			pushId = PreferencesUtils.getString(context, "JpushRegId", "");
-		}
-		return pushId;
-	}
-
-	/**
-	 * 判断是否可以连接华为推了送
-	 * @return
-	 */
-	private boolean canConnectHuawei() {
-		String pushFlag = PreferencesUtils.getString(context,"pushFlag","");
-		if(StringUtils.isBlank(pushFlag) || pushFlag.equals("huawei")){
-			return true;
-		}
-		return false;
-	}
 
 	/**
 	 * 判断websocket是否已连接

@@ -573,7 +573,7 @@ public class MessageFragment extends Fragment{
                 // TODO Auto-generated method stub
                 switch (msg.what) {
                     case RECEIVE_MSG:
-                        /** 接收到新的消息 **/
+                        // 接收到新的消息
                         Msg receivedMsg = (Msg) msg.obj;
                         Channel receiveMsgChannel = ChannelCacheUtils.getChannel(
                                 getActivity(), receivedMsg.getCid());
@@ -637,37 +637,6 @@ public class MessageFragment extends Fragment{
         }
 
     }
-
-//    /**
-//     * 将推送消息所属的channel添加到channelList
-//     *
-//     * @param receivedMsg
-//     * @param receiveMsgChannel
-//     */
-//    private void addChannelToList(Msg receivedMsg, Channel receiveMsgChannel) {
-//        // TODO Auto-generated method stub
-//        boolean isInChannelList = false;
-//        for (int i = 0; i < displayChannelList.size(); i++) {
-//            Channel channel = displayChannelList.get(i);
-//            if (receivedMsg.getCid().equals(channel.getCid())) {
-//                isInChannelList = true;
-//                receiveMsgChannel = channel;
-//                break;
-//            }
-//        }
-//        if (!isInChannelList) {// channel没在当前channelList中
-//            receiveMsgChannel = ChannelCacheUtils.getChannel(getActivity(),
-//                    receivedMsg.getCid());
-//            List<Msg> newMsgList = MsgCacheUtil.getHistoryMsgList(
-//                    getActivity(), receivedMsg.getCid(), "", 15);
-//            receiveMsgChannel.setNewMsgList(newMsgList);
-//            ChannelOperationCacheUtils.setChannelHide(getActivity(),
-//                    receivedMsg.getCid(), false);
-//            displayChannelList.add(receiveMsgChannel);
-//        } else {
-//            receiveMsgChannel.addReceivedNewMsg(receivedMsg);
-//        }
-//    }
 
     /**
      * 注册接收消息的广播

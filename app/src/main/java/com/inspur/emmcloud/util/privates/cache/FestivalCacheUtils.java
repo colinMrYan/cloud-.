@@ -5,9 +5,17 @@ import android.content.Context;
 import com.inspur.emmcloud.bean.work.FestivalDate;
 import com.inspur.emmcloud.util.common.StringUtils;
 
+import android.content.Context;
+
+import com.inspur.emmcloud.bean.FestivalDate;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+
+import android.content.Context;
+
+
 
 /**
  * classes : com.inspur.emmcloud.util.FestivalUtils
@@ -48,22 +56,22 @@ public class FestivalCacheUtils {
 		cal.set(2018, 0, 1,0,0,0);
 		FestivalDate newYearDay = new FestivalDate("work_new_year_day", cal.getTimeInMillis());
 		festivalDateList.add(newYearDay);
-		cal.set(2017, 0, 28,0,0,0);
+		cal.set(2018, 1, 15,0,0,0);
 		FestivalDate springFestival = new FestivalDate("work_spring_festival", cal.getTimeInMillis());
 		festivalDateList.add(springFestival);
-		cal.set(2017, 3, 4, 0, 0, 0);
+		cal.set(2018, 3, 5, 0, 0, 0);
 		FestivalDate qingMingFestival = new FestivalDate("work_qingming_festival", cal.getTimeInMillis());
 		festivalDateList.add(qingMingFestival);
-		cal.set(2017, 4, 1, 0, 0, 0);
+		cal.set(2018, 3, 29, 0, 0, 0);
 		FestivalDate labourFestival = new FestivalDate("work_international_labour_day", cal.getTimeInMillis());
 		festivalDateList.add(labourFestival);
-		cal.set(2017, 4, 30, 0, 0, 0);
+		cal.set(2018, 5, 16, 0, 0, 0);
 		FestivalDate dragonBoatFestival = new FestivalDate("work_dragon_boat_festival", cal.getTimeInMillis());
 		festivalDateList.add(dragonBoatFestival);
-		cal.set(2017, 9, 1, 0, 0, 0);
+		cal.set(2018, 9, 1, 0, 0, 0);
 		FestivalDate nationalFestival = new FestivalDate("work_national_day", cal.getTimeInMillis());
 		festivalDateList.add(nationalFestival);
-		cal.set(2017, 9, 4, 0, 0, 0);
+		cal.set(2018, 8, 22, 0, 0, 0);
 		FestivalDate moonFestival = new FestivalDate("work_moon_festival", cal.getTimeInMillis());
 		festivalDateList.add(moonFestival);
 		try {
@@ -77,7 +85,6 @@ public class FestivalCacheUtils {
 	/**
 	 * 通过时间获取节日
 	 * @param context
-	 * @param nowTime
 	 * @return
 	 */
 	public static FestivalDate getFestival(Context context){
@@ -93,6 +100,25 @@ public class FestivalCacheUtils {
 		}
 		return festivalDate;
 	}
-	  
+
+	/**
+	 * 判断节日表时间是否需要更新
+	 * @param context
+	 * @return
+	 */
+	public static boolean isNeedUpdateFestivalTable(Context context){
+		FestivalDate festivalDate = null;
+		try {
+			festivalDate = DbCacheUtils.getDb(context).selector(FestivalDate.class).where("festivalKey", "=", "work_spring_festival").findFirst();
+			if(festivalDate != null && festivalDate.getFestivalTime() < 1485619200000l){
+				return true;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return false;
+	}
+
 }
  

@@ -42,7 +42,7 @@ public class AppConfigUtils {
     private void syncCommonAppToLocalDb(){
         String commonAppListJson = AppConfigCacheUtils.getAppConfigValue(context, Constant.CONCIG_COMMON_FUNCTIONS,"null");
         if (!commonAppListJson.equals("null")){
-            List<AppCommonlyUse> commonAppList = AppCacheUtils.getCommonlyUseAppList(context);
+            List<AppCommonlyUse> commonAppList = AppCacheUtils.getCommonlyUseList(context);
             if (commonAppList.size() == 0){
                 commonAppList = JSON.parseArray(commonAppListJson,AppCommonlyUse.class);
                 AppCacheUtils.saveAppCommonlyUseList(context,commonAppList);

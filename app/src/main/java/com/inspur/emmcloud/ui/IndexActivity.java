@@ -115,6 +115,7 @@ public class IndexActivity extends BaseFragmentActivity implements
         getData();
         startService();
         EventBus.getDefault().register(this);
+        new PushInfoUtils(this).upload();//上传推送信息
     }
 
     /**
@@ -233,6 +234,7 @@ public class IndexActivity extends BaseFragmentActivity implements
         if (MyApplication.getInstance().getTanent().equals("inspur_esg")) {
             webView = (WebView) findViewById(R.id.preload_webview);
             webView.getSettings().setJavaScriptEnabled(true);
+            webView.getSettings().setSavePassword(false);
             webView.setWebViewClient(new WebViewClient() {
                 @Override
                 public boolean shouldOverrideUrlLoading(WebView view, String url) {
@@ -487,6 +489,7 @@ public class IndexActivity extends BaseFragmentActivity implements
 
             mTabHost.addTab(tab, mainTab.getClz(), null);
             mTabHost.getTabWidget().getChildAt(i).setOnTouchListener(this);
+            mTabHost.getTabWidget().getChildAt(i).setTag(mainTab.getCommpant());
             mTabHost.getTabWidget().setDividerDrawable(android.R.color.transparent);
             mTabHost.setOnTabChangedListener(this);
         }
@@ -512,12 +515,11 @@ public class IndexActivity extends BaseFragmentActivity implements
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void updateBadgeNumber(GetAppBadgeResult getAppBadgeResult) {
         int badgeNumber = getAppBadgeResult.getTabBadgeNumber();
-        if(badgeNumber > 0){
-            for (int i = 0; i < mTabHost.getTabWidget().getChildCount(); i++) {
-                View tabView = mTabHost.getTabWidget().getChildAt(i);
-                if(((TextView)tabView.findViewById(R.id.textview)).getText().toString().contains(getString(R.string.application))){
-                    setUnHandledBadgesDisplay(tabView,badgeNumber);
-                }
+        for (int i = 0; i < mTabHost.getTabWidget().getChildCount(); i++) {
+            View tabView = mTabHost.getTabWidget().getChildAt(i);
+            if(mTabHost.getTabWidget().getChildAt(i).getTag().toString().contains("application")){
+                setUnHandledBadgesDisplay(tabView,badgeNumber);
+                break;
             }
         }
     }
@@ -529,9 +531,11 @@ public class IndexActivity extends BaseFragmentActivity implements
      */
     private void setUnHandledBadgesDisplay(View tabView,int badgeNumber) {
         RelativeLayout unhandledBadgesLayout = (RelativeLayout) tabView.findViewById(R.id.new_message_tips_layout);
-        unhandledBadgesLayout.setVisibility(View.VISIBLE);
+        unhandledBadgesLayout.setVisibility((badgeNumber == 0)?View.GONE:View.VISIBLE);
         TextView unhandledBadges = (TextView) tabView.findViewById(R.id.new_message_tips_text);
         unhandledBadges.setText(""+(badgeNumber > 99 ? "99+":badgeNumber));
+        //更新桌面角标数字
+        ECMShortcutBadgeNumberManagerUtils.setDesktopBadgeNumber(IndexActivity.this,badgeNumber);
     }
 
     /**

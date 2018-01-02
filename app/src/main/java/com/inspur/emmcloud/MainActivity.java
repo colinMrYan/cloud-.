@@ -8,6 +8,8 @@ import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 
 import com.inspur.emmcloud.bean.system.SplashPageBean;
 import com.inspur.emmcloud.config.MyAppConfig;
@@ -57,6 +59,7 @@ public class MainActivity extends Activity{ // 此处不能继承BaseActivity �
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		StateBarUtils.showOrHideStatusBar(this,false);
+		this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);//设置全屏
 		setContentView(R.layout.activity_main);
 		init();
 	}

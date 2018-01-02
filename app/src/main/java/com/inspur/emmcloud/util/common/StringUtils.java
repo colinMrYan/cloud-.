@@ -305,4 +305,19 @@ public class StringUtils {
         }
         return true;
     }
+
+    /**
+     * 判断字符串首个字母是否为英文
+     * @param s
+     * @return
+     */
+    public static boolean isFirstCharEnglish(String s) {
+        char c = s.charAt(0);
+        int i = (int) c;
+        if ((i >= 65 && i <= 90) || (i >= 97 && i <= 122)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

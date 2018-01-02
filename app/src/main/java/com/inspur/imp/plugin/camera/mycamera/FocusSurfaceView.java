@@ -24,6 +24,7 @@ import android.view.animation.Interpolator;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
+import com.inspur.emmcloud.util.common.DensityUtil;
 
 /**
  * Created by moubiao on 2016/11/2.
@@ -35,7 +36,7 @@ public class FocusSurfaceView extends SurfaceView {
     private static final int MIN_FRAME_SIZE_IN_DP = 50;
     private static final int FRAME_STROKE_WEIGHT_IN_DP = 1;
     private static final int GUIDE_STROKE_WEIGHT_IN_DP = 1;
-    private static final float DEFAULT_INITIAL_FRAME_SCALE = 0.55f;
+    private static final float DEFAULT_INITIAL_FRAME_SCALE = 0.75f;
     private static final int DEFAULT_ANIMATION_DURATION_MILLIS = 10;
 
     private static final int TRANSPARENT = 0x00000000;
@@ -85,6 +86,7 @@ public class FocusSurfaceView extends SurfaceView {
     private boolean mIsAnimationEnabled = true;
     private int mAnimationDurationMillis = DEFAULT_ANIMATION_DURATION_MILLIS;
     private boolean mIsHandleShadowEnabled = true;
+    private int topMove = 0;
 
     public FocusSurfaceView(Context context) {
         this(context, null);
@@ -345,9 +347,16 @@ public class FocusSurfaceView extends SurfaceView {
         float h = b - t;
         float cx = l + w / 2;
         float cy = t + h / 2;
-        float sw = w * mInitialFrameScale;
-        float sh = h * mInitialFrameScale;
-        return new RectF(cx - sw / 2, cy - sh / 2, cx + sw / 2, cy + sh / 2);
+        float maxInitialFrameWidth = imageRect.width()- DensityUtil.dip2px(getContext(),30);
+        float maxInitialFrameHeight = imageRect.height()-2*topMove-2* DensityUtil.dip2px(getContext(),50)-DensityUtil.dip2px(getContext(),30);
+        float maxInitialFrameWidthScale = maxInitialFrameWidth/w;
+        float maxInitialFrameHeightScale = maxInitialFrameHeight/h;
+        mInitialFrameScale = (maxInitialFrameWidthScale < maxInitialFrameHeightScale)?maxInitialFrameWidthScale:maxInitialFrameHeightScale;
+        float scale = (mCropMode == CropMode.FIT_IMAGE)?1:mInitialFrameScale;
+        float sw = w * scale;
+        float sh = h * scale;
+        int reallyTopMove = (mCropMode == CropMode.FIT_IMAGE)?0:topMove;
+        return new RectF(cx - sw / 2, cy - sh / 2-reallyTopMove, cx + sw / 2, cy + sh / 2-reallyTopMove);
     }
 
     @Override
@@ -807,7 +816,7 @@ public class FocusSurfaceView extends SurfaceView {
             case FIT_IMAGE:
                 return mBoundaryRect.width();
             case FREE:
-                return w;
+                return 1;
             case RATIO_4_3:
                 return 4;
             case RATIO_3_4:
@@ -832,7 +841,7 @@ public class FocusSurfaceView extends SurfaceView {
             case FIT_IMAGE:
                 return mBoundaryRect.height();
             case FREE:
-                return h;
+                return 1;
             case RATIO_4_3:
                 return 3;
             case RATIO_3_4:
@@ -983,6 +992,9 @@ public class FocusSurfaceView extends SurfaceView {
                 }
             }
 
+        }else {
+            setCropMode(CropMode.FIT_IMAGE);
+            setCropEnabled(false);
         }
     }
 
@@ -1158,6 +1170,14 @@ public class FocusSurfaceView extends SurfaceView {
      */
     public void setHandleShadowEnabled(boolean handleShadowEnabled) {
         mIsHandleShadowEnabled = handleShadowEnabled;
+    }
+
+    /**
+     * 设置取景框上移，保证取景框在中央
+     * @param topMove
+     */
+    public void setTopMove(int topMove){
+        this.topMove = topMove;
     }
 
     /**

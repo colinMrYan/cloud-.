@@ -40,6 +40,7 @@ import com.inspur.emmcloud.util.privates.PreferencesByUsersUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.richtext.RichText;
+import com.inspur.emmcloud.util.ECMShortcutBadgeNumberManagerUtils;
 import com.inspur.imp.api.Res;
 import com.inspur.reactnative.AuthorizationManagerPackage;
 import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiskCache;
@@ -161,6 +162,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.setClass(this, LoginActivity.class);
         startActivity(intent);
+        ECMShortcutBadgeNumberManagerUtils.setDesktopBadgeNumber(getApplicationContext(),0);
     }
 /****************************通知相关（极光和华为推送）******************************************/
     /**
@@ -202,7 +204,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
      */
     public void stopPush() {
         if (AppUtils.getIsHuaWei() && canConnectHuawei()) {
-            HuaWeiPushMangerUtils.getInstance(this).delToken();
+            HuaWeiPushMangerUtils.getInstance(this).stopPush();
         } else {
             JPushInterface.stopPush(this);
         }
