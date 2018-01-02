@@ -237,6 +237,7 @@ public class IndexActivity extends BaseFragmentActivity implements
         if (MyApplication.getInstance().getTanent().equals("inspur_esg")) {
             webView = (WebView) findViewById(R.id.preload_webview);
             webView.getSettings().setJavaScriptEnabled(true);
+            webView.getSettings().setSavePassword(false);
             webView.setWebViewClient(new WebViewClient() {
                 @Override
                 public boolean shouldOverrideUrlLoading(WebView view, String url) {
