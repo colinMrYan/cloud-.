@@ -161,7 +161,6 @@ public class ShareVolumeActivity extends BaseActivity implements SwipeRefreshLay
     private void createShareVolume(String shareVolumeName){
         if (NetUtils.isNetworkConnected(getApplicationContext())){
             loadingDialog.show();
-            apiService.createForder();
         }
     }
 
@@ -170,14 +169,12 @@ public class ShareVolumeActivity extends BaseActivity implements SwipeRefreshLay
      */
     private void getVolumeList() {
         if (NetUtils.isNetworkConnected(getApplicationContext())) {
-
             apiService.getVolumeList();
         } else {
             swipeRefreshLayout.setRefreshing(false);
         }
     }
 
-    private
 
 
     private class WebService extends APIInterfaceInstance {
