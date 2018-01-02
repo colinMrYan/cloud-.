@@ -39,6 +39,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 
 public class MembersActivity extends BaseActivity implements
         SideBar.OnTouchingLetterChangedListener, TextWatcher {
@@ -95,7 +96,6 @@ public class MembersActivity extends BaseActivity implements
                         personDtoIterator.remove();
                     }
                 }
-
                 handler.sendMessage(handler.obtainMessage(0));
             }
         };
@@ -262,6 +262,7 @@ public class MembersActivity extends BaseActivity implements
         // 根据a-z进行排序
         Collections.sort(filterDateList, pinyinComparator);
         mAdapter.updateListView(filterDateList);
+        mListView.setSelection(0);
     }
 
     /**
@@ -309,9 +310,6 @@ public class MembersActivity extends BaseActivity implements
     }
 
 
-    /**
-     * 按照姓氏排序比较器，改为按照汉字比较，原比较方式会将统一姓氏分开
-     */
     public class PinyinComparator implements Comparator<PersonDto> {
 
         @Override
@@ -325,7 +323,19 @@ public class MembersActivity extends BaseActivity implements
             } else if (o2.getSortLetters().equals("#")) {
                 return 1;
             } else {
-                return Collator.getInstance().compare(o1.getName(), o2.getName());
+                String o1Name = o1.getName();
+                String o2Name = o2.getName();
+                String o1First = o1.getPinyinFull().subSequence(0, 1).toString();
+                String o2First = o2.getPinyinFull().subSequence(0, 1).toString();
+                if (!o1First.equals(o2First)) {
+                    return Collator.getInstance().compare(o1First, o2First);
+                } else if (StringUtils.isFirstCharEnglish(o1Name) && StringUtils.isFirstCharEnglish(o2Name) || !StringUtils.isFirstCharEnglish(o1Name) && !StringUtils.isFirstCharEnglish(o2Name)) {
+                    return Collator.getInstance(Locale.CHINA).compare(o1Name, o2Name);
+                } else if (StringUtils.isFirstCharEnglish(o1Name)) {
+                    return 1;
+                } else {
+                    return -1;
+                }
             }
         }
     }
