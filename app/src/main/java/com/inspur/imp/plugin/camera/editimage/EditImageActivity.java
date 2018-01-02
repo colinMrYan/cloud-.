@@ -13,7 +13,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.util.DisplayMetrics;
@@ -42,11 +41,12 @@ import com.inspur.imp.plugin.camera.imagepicker.ui.ImageBaseActivity;
 import com.inspur.imp.plugin.photo.PhotoNameUtils;
 import com.inspur.imp.plugin.photo.UploadPhoto;
 import com.inspur.imp.plugin.photo.UploadPhoto.OnUploadPhotoListener;
-import com.inspur.imp.util.imgcompress.Compressor;
+import com.inspur.imp.util.compressor.Compressor;
 
 import org.json.JSONObject;
 
 import java.io.File;
+
 
 
 /**
@@ -71,7 +71,7 @@ public class EditImageActivity extends ImageBaseActivity {
 	public static final int MODE_TEXT = 5;// 文字模式
 	protected static final int CUT_IMG_SUCCESS = 7;
 
-	private int parm_resolution = 1280;
+	private int parm_resolution = MyAppConfig.UPLOAD_ORIGIN_IMG_MAX_SIZE;
 	private int parm_qualtity = 90;
 	private int parm_encodingType = 0;
 	private String parm_context;
@@ -288,8 +288,8 @@ public class EditImageActivity extends ImageBaseActivity {
 		protected Bitmap doInBackground(String... params) {
 			Bitmap bitmap = null;
 			try {
-				bitmap = new Compressor.Builder(EditImageActivity.this).setMaxHeight(parm_resolution).setMaxWidth(parm_resolution).setQuality(parm_qualtity).setDestinationDirectoryPath(MyAppConfig.LOCAL_IMG_CREATE_PATH)
-						.build().compressToBitmap(new File(params[0]));
+				bitmap = new Compressor(EditImageActivity.this).setMaxHeight(parm_resolution).setMaxWidth(parm_resolution).setQuality(parm_qualtity).setDestinationDirectoryPath(MyAppConfig.LOCAL_IMG_CREATE_PATH)
+						.compressToBitmap(new File(params[0]));
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
