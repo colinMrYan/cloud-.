@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.inspur.emmcloud"
     android:configChanges="locale|layoutDirection">
 
@@ -90,9 +91,11 @@
         android:smallScreens="true"
         android:xlargeScreens="true" />
 
+    <!--allowBackup = false 防止对应用程序数据进行备份和还原 -->
     <application
+        tools:replace="android:allowBackup"
+        android:allowBackup="false"
         android:name=".MyApplication"
-        android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:largeHeap="true"
