@@ -32,11 +32,10 @@ import android.widget.Toast;
 
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.config.MyAppConfig;
-import com.inspur.emmcloud.util.DensityUtil;
-import com.inspur.emmcloud.util.JSONUtils;
-import com.inspur.emmcloud.util.LogUtils;
-import com.inspur.emmcloud.util.StringUtils;
-import com.inspur.emmcloud.util.ToastUtils;
+import com.inspur.emmcloud.util.common.DensityUtil;
+import com.inspur.emmcloud.util.common.JSONUtils;
+import com.inspur.emmcloud.util.common.ToastUtils;
+import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.imp.api.ImpBaseActivity;
 import com.inspur.imp.plugin.camera.editimage.EditImageActivity;
 import com.inspur.imp.plugin.camera.editimage.utils.BitmapUtils;
@@ -252,14 +251,10 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
 
             List<Camera.Size> PictureSizeList = parameters.getSupportedPictureSizes();
             Camera.Size pictureSize = CameraUtils.getInstance(this).getPictureSize(PictureSizeList, 1000);
-            LogUtils.jasonDebug("pictureSize.width="+pictureSize.width);
-            LogUtils.jasonDebug("pictureSize.height="+pictureSize.height);
             parameters.setPictureSize(pictureSize.width, pictureSize.height);
             List<Camera.Size> previewSizeList = parameters.getSupportedPreviewSizes();
             Camera.Size previewSize = CameraUtils.getInstance(this).getPreviewSize(previewSizeList, 1300);
             parameters.setPreviewSize(previewSize.width, previewSize.height);
-            LogUtils.jasonDebug("previewSize.width="+previewSize.width);
-            LogUtils.jasonDebug("previewSize.height="+previewSize.height);
             List<String> modelList = parameters.getSupportedFlashModes();
             if (modelList != null && modelList.contains(cameraFlashModel)){
                 parameters.setFlashMode(cameraFlashModel);

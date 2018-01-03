@@ -1,7 +1,7 @@
 package com.inspur.emmcloud.ui;
 
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.ui.app.MyAppFragment;
+import com.inspur.emmcloud.ui.appcenter.MyAppFragment;
 import com.inspur.emmcloud.ui.chat.MessageFragment;
 import com.inspur.emmcloud.ui.find.FindFragment;
 import com.inspur.emmcloud.ui.mine.MoreFragment;

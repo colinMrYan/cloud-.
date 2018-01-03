@@ -4,14 +4,12 @@ import java.util.Calendar;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.BaseActivity;
-import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.util.IntentUtils;
+import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.widget.calendarlistview.DatePickerController;
 import com.inspur.emmcloud.widget.calendarlistview.DayPickerView;
 import com.inspur.emmcloud.widget.calendarlistview.SimpleMonthAdapter.CalendarDay;

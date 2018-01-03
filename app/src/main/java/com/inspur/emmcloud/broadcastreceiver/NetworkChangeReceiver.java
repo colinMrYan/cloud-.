@@ -8,8 +8,8 @@ import android.net.NetworkInfo.State;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.util.LogUtils;
-import com.inspur.emmcloud.util.ToastUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
+import com.inspur.emmcloud.util.common.ToastUtils;
 
 /**
  * 

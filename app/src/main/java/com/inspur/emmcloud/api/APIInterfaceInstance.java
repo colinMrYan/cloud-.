@@ -1,90 +1,85 @@
 package com.inspur.emmcloud.api;
 
 
-import com.inspur.emmcloud.bean.App;
-import com.inspur.emmcloud.bean.AppRedirectResult;
-import com.inspur.emmcloud.bean.Attachment;
-import com.inspur.emmcloud.bean.ChannelGroup;
-import com.inspur.emmcloud.bean.GetAddAppResult;
-import com.inspur.emmcloud.bean.GetAddMembersSuccessResult;
-import com.inspur.emmcloud.bean.GetAdressUsersResult;
-import com.inspur.emmcloud.bean.GetAllAppResult;
-import com.inspur.emmcloud.bean.GetAllContactResult;
-import com.inspur.emmcloud.bean.GetAllRobotsResult;
-import com.inspur.emmcloud.bean.GetAppBadgeResult;
-import com.inspur.emmcloud.bean.GetAppConfigResult;
-import com.inspur.emmcloud.bean.GetAppGroupResult;
-import com.inspur.emmcloud.bean.GetAppTabAutoResult;
-import com.inspur.emmcloud.bean.GetAppTabsResult;
-import com.inspur.emmcloud.bean.GetBindingDeviceResult;
-import com.inspur.emmcloud.bean.GetBoolenResult;
-import com.inspur.emmcloud.bean.GetCalendarEventsResult;
-import com.inspur.emmcloud.bean.GetCardPackageListResult;
-import com.inspur.emmcloud.bean.GetChannelInfoResult;
-import com.inspur.emmcloud.bean.GetChannelListResult;
-import com.inspur.emmcloud.bean.GetClientIdRsult;
-import com.inspur.emmcloud.bean.GetCreateOfficeResult;
-import com.inspur.emmcloud.bean.GetCreateSingleChannelResult;
-import com.inspur.emmcloud.bean.GetDeviceCheckResult;
-import com.inspur.emmcloud.bean.GetDeviceLogResult;
-import com.inspur.emmcloud.bean.GetFileUploadResult;
-import com.inspur.emmcloud.bean.GetFindMixSearchResult;
-import com.inspur.emmcloud.bean.GetFindSearchResult;
-import com.inspur.emmcloud.bean.GetGroupNewsDetailResult;
-import com.inspur.emmcloud.bean.GetIDResult;
-import com.inspur.emmcloud.bean.GetIsAdmin;
-import com.inspur.emmcloud.bean.GetKnowledgeInfo;
-import com.inspur.emmcloud.bean.GetLanguageResult;
-import com.inspur.emmcloud.bean.GetLoctionResult;
-import com.inspur.emmcloud.bean.GetLoginResult;
-import com.inspur.emmcloud.bean.GetMDMStateResult;
-import com.inspur.emmcloud.bean.GetMeetingListResult;
-import com.inspur.emmcloud.bean.GetMeetingReplyResult;
-import com.inspur.emmcloud.bean.GetMeetingRoomsResult;
-import com.inspur.emmcloud.bean.GetMeetingsResult;
-import com.inspur.emmcloud.bean.GetMsgCommentCountResult;
-import com.inspur.emmcloud.bean.GetMsgCommentResult;
-import com.inspur.emmcloud.bean.GetMsgResult;
-import com.inspur.emmcloud.bean.GetMyAppResult;
-import com.inspur.emmcloud.bean.GetRecommendAppWidgetListResult;
-import com.inspur.emmcloud.bean.GetMyCalendarResult;
-import com.inspur.emmcloud.bean.GetMyInfoResult;
-import com.inspur.emmcloud.bean.GetNewMsgsResult;
-import com.inspur.emmcloud.bean.GetNewsImgResult;
-import com.inspur.emmcloud.bean.GetNewsInstructionResult;
-import com.inspur.emmcloud.bean.GetNewsResult;
-import com.inspur.emmcloud.bean.GetNewsTitleResult;
-import com.inspur.emmcloud.bean.GetOfficeResult;
-import com.inspur.emmcloud.bean.GetRegisterCheckResult;
-import com.inspur.emmcloud.bean.GetRegisterResult;
-import com.inspur.emmcloud.bean.GetRemoveAppResult;
-import com.inspur.emmcloud.bean.GetSearchAppResult;
-import com.inspur.emmcloud.bean.GetSearchChannelGroupResult;
-import com.inspur.emmcloud.bean.GetSendMsgResult;
-import com.inspur.emmcloud.bean.GetSignoutResult;
-import com.inspur.emmcloud.bean.GetTagResult;
-import com.inspur.emmcloud.bean.GetTaskAddResult;
-import com.inspur.emmcloud.bean.GetTaskListResult;
-import com.inspur.emmcloud.bean.GetTripArriveCity;
-import com.inspur.emmcloud.bean.GetUpdatePwdBySMSCodeBean;
-import com.inspur.emmcloud.bean.GetUpgradeResult;
-import com.inspur.emmcloud.bean.GetUploadMyHeadResult;
-import com.inspur.emmcloud.bean.GetUserHeadUploadResult;
-import com.inspur.emmcloud.bean.GetWebAppRealUrlResult;
-import com.inspur.emmcloud.bean.GetWebSocketUrlResult;
-import com.inspur.emmcloud.bean.LoginDesktopCloudPlusBean;
-import com.inspur.emmcloud.bean.ReactNativeDownloadUrlBean;
-import com.inspur.emmcloud.bean.ReactNativeInstallUriBean;
-import com.inspur.emmcloud.bean.ReactNativeUpdateBean;
-import com.inspur.emmcloud.bean.Robot;
-import com.inspur.emmcloud.bean.SplashPageBean;
-import com.inspur.emmcloud.bean.TaskResult;
-import com.inspur.emmcloud.bean.Trip;
-import com.inspur.emmcloud.bean.UserProfileInfoBean;
-import com.inspur.emmcloud.bean.Volume.GetVolumeFileListResult;
-import com.inspur.emmcloud.bean.Volume.GetVolumeFileUploadTokenResult;
-import com.inspur.emmcloud.bean.Volume.GetVolumeListResult;
-import com.inspur.emmcloud.bean.Volume.VolumeFile;
+import com.inspur.emmcloud.bean.appcenter.App;
+import com.inspur.emmcloud.bean.appcenter.AppRedirectResult;
+import com.inspur.emmcloud.bean.work.Attachment;
+import com.inspur.emmcloud.bean.chat.ChannelGroup;
+import com.inspur.emmcloud.bean.appcenter.GetAddAppResult;
+import com.inspur.emmcloud.bean.chat.GetAddMembersSuccessResult;
+import com.inspur.emmcloud.bean.appcenter.GetAllAppResult;
+import com.inspur.emmcloud.bean.contact.GetAllContactResult;
+import com.inspur.emmcloud.bean.chat.GetAllRobotsResult;
+import com.inspur.emmcloud.bean.appcenter.GetAppBadgeResult;
+import com.inspur.emmcloud.bean.system.GetAppConfigResult;
+import com.inspur.emmcloud.bean.appcenter.GetAppGroupResult;
+import com.inspur.emmcloud.bean.system.GetAppTabAutoResult;
+import com.inspur.emmcloud.bean.system.GetAppTabsResult;
+import com.inspur.emmcloud.bean.mine.GetBindingDeviceResult;
+import com.inspur.emmcloud.bean.system.GetBoolenResult;
+import com.inspur.emmcloud.bean.work.GetCalendarEventsResult;
+import com.inspur.emmcloud.bean.chat.GetChannelInfoResult;
+import com.inspur.emmcloud.bean.chat.GetChannelListResult;
+import com.inspur.emmcloud.bean.appcenter.GetClientIdRsult;
+import com.inspur.emmcloud.bean.work.GetCreateOfficeResult;
+import com.inspur.emmcloud.bean.chat.GetCreateSingleChannelResult;
+import com.inspur.emmcloud.bean.login.GetDeviceCheckResult;
+import com.inspur.emmcloud.bean.mine.GetDeviceLogResult;
+import com.inspur.emmcloud.bean.chat.GetFileUploadResult;
+import com.inspur.emmcloud.bean.appcenter.news.GetGroupNewsDetailResult;
+import com.inspur.emmcloud.bean.appcenter.GetIDResult;
+import com.inspur.emmcloud.bean.work.GetIsAdmin;
+import com.inspur.emmcloud.bean.find.GetKnowledgeInfo;
+import com.inspur.emmcloud.bean.mine.GetLanguageResult;
+import com.inspur.emmcloud.bean.work.GetLoctionResult;
+import com.inspur.emmcloud.bean.login.GetLoginResult;
+import com.inspur.emmcloud.bean.login.GetMDMStateResult;
+import com.inspur.emmcloud.bean.work.GetMeetingListResult;
+import com.inspur.emmcloud.bean.work.GetMeetingReplyResult;
+import com.inspur.emmcloud.bean.work.GetMeetingRoomsResult;
+import com.inspur.emmcloud.bean.work.GetMeetingsResult;
+import com.inspur.emmcloud.bean.chat.GetMsgCommentCountResult;
+import com.inspur.emmcloud.bean.chat.GetMsgCommentResult;
+import com.inspur.emmcloud.bean.chat.GetMsgResult;
+import com.inspur.emmcloud.bean.appcenter.GetMyAppResult;
+import com.inspur.emmcloud.bean.appcenter.GetRecommendAppWidgetListResult;
+import com.inspur.emmcloud.bean.work.GetMyCalendarResult;
+import com.inspur.emmcloud.bean.mine.GetMyInfoResult;
+import com.inspur.emmcloud.bean.chat.GetNewMsgsResult;
+import com.inspur.emmcloud.bean.chat.GetNewsImgResult;
+import com.inspur.emmcloud.bean.chat.GetNewsInstructionResult;
+import com.inspur.emmcloud.bean.appcenter.news.GetNewsTitleResult;
+import com.inspur.emmcloud.bean.work.GetOfficeResult;
+import com.inspur.emmcloud.bean.appcenter.GetRegisterCheckResult;
+import com.inspur.emmcloud.bean.appcenter.GetRegisterResult;
+import com.inspur.emmcloud.bean.appcenter.GetRemoveAppResult;
+import com.inspur.emmcloud.bean.appcenter.GetSearchAppResult;
+import com.inspur.emmcloud.bean.contact.GetSearchChannelGroupResult;
+import com.inspur.emmcloud.bean.chat.GetSendMsgResult;
+import com.inspur.emmcloud.bean.login.GetSignoutResult;
+import com.inspur.emmcloud.bean.work.GetTagResult;
+import com.inspur.emmcloud.bean.work.GetTaskAddResult;
+import com.inspur.emmcloud.bean.work.GetTaskListResult;
+import com.inspur.emmcloud.bean.find.GetTripArriveCity;
+import com.inspur.emmcloud.bean.login.GetUpdatePwdBySMSCodeBean;
+import com.inspur.emmcloud.bean.system.GetUpgradeResult;
+import com.inspur.emmcloud.bean.mine.GetUploadMyHeadResult;
+import com.inspur.emmcloud.bean.mine.GetUserHeadUploadResult;
+import com.inspur.emmcloud.bean.appcenter.GetWebAppRealUrlResult;
+import com.inspur.emmcloud.bean.chat.GetWebSocketUrlResult;
+import com.inspur.emmcloud.bean.login.LoginDesktopCloudPlusBean;
+import com.inspur.emmcloud.bean.appcenter.ReactNativeDownloadUrlBean;
+import com.inspur.emmcloud.bean.appcenter.ReactNativeInstallUriBean;
+import com.inspur.emmcloud.bean.appcenter.ReactNativeUpdateBean;
+import com.inspur.emmcloud.bean.chat.Robot;
+import com.inspur.emmcloud.bean.system.SplashPageBean;
+import com.inspur.emmcloud.bean.work.TaskResult;
+import com.inspur.emmcloud.bean.find.Trip;
+import com.inspur.emmcloud.bean.mine.UserProfileInfoBean;
+import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeFileListResult;
+import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeFileUploadTokenResult;
+import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeListResult;
+import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
 
 import java.util.List;
 
@@ -256,20 +251,6 @@ public class APIInterfaceInstance implements APIInterface {
 
     }
 
-
-    @Override
-    public void returnUsersInOrgSuccess(
-            GetAdressUsersResult getAdressUsersResult) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void returnUsersInOrgFail(String error, int errorCode) {
-        // TODO Auto-generated method stub
-
-    }
-
     @Override
     public void returnUploadMyHeadSuccess(
             GetUploadMyHeadResult getUploadMyInfoResult) {
@@ -321,17 +302,6 @@ public class APIInterfaceInstance implements APIInterface {
 
     }
 
-    @Override
-    public void returnNewsSuccess(GetNewsResult getNewsResult) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void returnNewsFail(String error, int errorCode) {
-        // TODO Auto-generated method stub
-
-    }
 
     @Override
     public void returnModifyUserInfoSucces(GetBoolenResult getBoolenResult) {
@@ -1038,19 +1008,6 @@ public class APIInterfaceInstance implements APIInterface {
 
 
     @Override
-    public void returnCardPackageListSuccess(
-            GetCardPackageListResult getCardPackageListResult) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void returnCardPackageListFail(String error, int errorCode) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
     public void returnDeleteOfficeSuccess(int position) {
         // TODO Auto-generated method stub
 
@@ -1087,7 +1044,7 @@ public class APIInterfaceInstance implements APIInterface {
     }
 
     /* (non-Javadoc)
-     * @see com.inspur.emmcloud.api.APIInterface#returnMeettingsSuccess(com.inspur.emmcloud.bean.GetMeetingsResult, boolean)
+     * @see com.inspur.emmcloud.api.APIInterface#returnMeettingsSuccess(com.inspur.emmcloud.bean.work.GetMeetingsResult, boolean)
      */
     @Override
     public void returnMeetingsSuccess(GetMeetingsResult getMeetingsResult,
@@ -1097,7 +1054,7 @@ public class APIInterfaceInstance implements APIInterface {
     }
 
     /* (non-Javadoc)
-     * @see com.inspur.emmcloud.api.APIInterface#returnLanguageSuccess(com.inspur.emmcloud.bean.GetLanguageResult)
+     * @see com.inspur.emmcloud.api.APIInterface#returnLanguageSuccess(com.inspur.emmcloud.bean.mine.GetLanguageResult)
      */
     @Override
     public void returnLanguageSuccess(GetLanguageResult getLanguageResult) {
@@ -1115,7 +1072,7 @@ public class APIInterfaceInstance implements APIInterface {
     }
 
     /* (non-Javadoc)
-     * @see com.inspur.emmcloud.api.APIInterface#returnMeettingRoomsSuccess(com.inspur.emmcloud.bean.GetMeetingRoomsResult, boolean)
+     * @see com.inspur.emmcloud.api.APIInterface#returnMeettingRoomsSuccess(com.inspur.emmcloud.bean.work.GetMeetingRoomsResult, boolean)
      */
     @Override
     public void returnMeetingRoomsSuccess(
@@ -1124,30 +1081,12 @@ public class APIInterfaceInstance implements APIInterface {
 
     }
 
-    /* (non-Javadoc)
-     * @see com.inspur.emmcloud.api.APIInterface#returnFindSearchSuccess(com.inspur.emmcloud.bean.GetFindSearchResult)
-     */
-    @Override
-    public void returnFindSearchSuccess(GetFindSearchResult getFindSearchResult) {
-        // TODO Auto-generated method stub
-
-    }
 
     /* (non-Javadoc)
      * @see com.inspur.emmcloud.api.APIInterface#returnFindSearchFail(java.lang.String)
      */
     @Override
     public void returnFindSearchFail(String error, int errorCode) {
-        // TODO Auto-generated method stub
-
-    }
-
-    /* (non-Javadoc)
-     * @see com.inspur.emmcloud.api.APIInterface#returnFindMixSearchSuccess(com.inspur.emmcloud.bean.GetFindMixSearchResult)
-     */
-    @Override
-    public void returnFindMixSearchSuccess(
-            GetFindMixSearchResult getFindMixSearchResult) {
         // TODO Auto-generated method stub
 
     }
@@ -1163,7 +1102,7 @@ public class APIInterfaceInstance implements APIInterface {
 
 
     /* (non-Javadoc)
-     * @see com.inspur.emmcloud.api.APIInterface#returnMeettingListSuccess(com.inspur.emmcloud.bean.GetMeetingListResult, int)
+     * @see com.inspur.emmcloud.api.APIInterface#returnMeettingListSuccess(com.inspur.emmcloud.bean.work.GetMeetingListResult, int)
      */
     @Override
     public void returnMeetingListSuccess(

@@ -7,13 +7,11 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.BaseActivity;
-import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.util.AppUtils;
-import com.inspur.emmcloud.util.IntentUtils;
-import com.inspur.emmcloud.util.ToastUtils;
-import com.inspur.emmcloud.util.UpgradeUtils;
-import com.inspur.imp.api.ImpActivity;
+import com.inspur.emmcloud.util.privates.AppUtils;
+import com.inspur.emmcloud.util.common.IntentUtils;
+import com.inspur.emmcloud.util.common.ToastUtils;
+import com.inspur.emmcloud.util.privates.UpgradeUtils;
 
 /**
  * 关于页面 com.inspur.emmcloud.ui.AboutActivity

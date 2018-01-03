@@ -4,10 +4,10 @@ package com.inspur.emmcloud.api;
 import android.content.Context;
 
 import com.inspur.emmcloud.MyApplication;
-import com.inspur.emmcloud.bean.Contact;
-import com.inspur.emmcloud.util.AppUtils;
-import com.inspur.emmcloud.util.ContactCacheUtils;
-import com.inspur.emmcloud.util.StringUtils;
+import com.inspur.emmcloud.bean.contact.Contact;
+import com.inspur.emmcloud.util.privates.AppUtils;
+import com.inspur.emmcloud.util.privates.cache.ContactCacheUtils;
+import com.inspur.emmcloud.util.common.StringUtils;
 
 
 

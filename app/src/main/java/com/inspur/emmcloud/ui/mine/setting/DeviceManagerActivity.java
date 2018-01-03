@@ -14,12 +14,12 @@ import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.MineAPIService;
-import com.inspur.emmcloud.bean.BindingDevice;
-import com.inspur.emmcloud.bean.GetBindingDeviceResult;
-import com.inspur.emmcloud.util.AppUtils;
-import com.inspur.emmcloud.util.NetUtils;
-import com.inspur.emmcloud.util.TimeUtils;
-import com.inspur.emmcloud.util.WebServiceMiddleUtils;
+import com.inspur.emmcloud.bean.mine.BindingDevice;
+import com.inspur.emmcloud.bean.mine.GetBindingDeviceResult;
+import com.inspur.emmcloud.util.privates.AppUtils;
+import com.inspur.emmcloud.util.common.NetUtils;
+import com.inspur.emmcloud.util.privates.TimeUtils;
+import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 
 import java.util.ArrayList;

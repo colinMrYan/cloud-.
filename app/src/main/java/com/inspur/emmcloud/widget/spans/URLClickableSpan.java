@@ -6,7 +6,7 @@ import android.text.TextPaint;
 import android.text.style.ClickableSpan;
 import android.view.View;
 
-import com.inspur.emmcloud.util.UriUtils;
+import com.inspur.emmcloud.util.privates.UriUtils;
 
 /**
  * Created by yufuchang on 2017/3/21.

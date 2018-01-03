@@ -11,8 +11,8 @@ import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationClientOption.AMapLocationMode;
 import com.amap.api.location.AMapLocationListener;
-import com.inspur.emmcloud.util.LogUtils;
-import com.inspur.emmcloud.util.StringUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
+import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.imp.plugin.ImpPlugin;
 import com.inspur.imp.plugin.amaplocation.ECMLoactionTransformUtils;
 

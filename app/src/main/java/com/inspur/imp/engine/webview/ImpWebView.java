@@ -23,9 +23,9 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.inspur.emmcloud.util.LogUtils;
-import com.inspur.emmcloud.util.ParseHtmlUtils;
-import com.inspur.emmcloud.util.StringUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
+import com.inspur.emmcloud.util.common.ParseHtmlUtils;
+import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.imp.api.ImpActivity;
 import com.inspur.imp.api.JsInterface;
 import com.inspur.imp.api.iLog;

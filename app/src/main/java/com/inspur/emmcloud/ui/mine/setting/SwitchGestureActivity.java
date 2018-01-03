@@ -5,10 +5,9 @@ import android.support.annotation.Nullable;
 import android.view.View;
 
 import com.inspur.emmcloud.BaseActivity;
-import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.util.IntentUtils;
-import com.inspur.emmcloud.util.StringUtils;
+import com.inspur.emmcloud.util.common.IntentUtils;
+import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.widget.SwitchView;
 
 /**

@@ -22,9 +22,9 @@ import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Interpolator;
 
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.util.DensityUtil;
-import com.inspur.emmcloud.util.LogUtils;
-import com.inspur.emmcloud.util.StringUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
+import com.inspur.emmcloud.util.common.StringUtils;
+import com.inspur.emmcloud.util.common.DensityUtil;
 
 /**
  * Created by moubiao on 2016/11/2.
@@ -98,6 +98,7 @@ public class FocusSurfaceView extends SurfaceView {
 
     public FocusSurfaceView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
+
         float density = getDensity();
         mHandleSize = (int) (density * HANDLE_SIZE_IN_DP);
         mMinFrameSize = density * MIN_FRAME_SIZE_IN_DP;

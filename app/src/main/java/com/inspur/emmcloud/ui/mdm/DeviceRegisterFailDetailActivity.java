@@ -7,7 +7,7 @@ import android.widget.TextView;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.api.APIUri;
-import com.inspur.emmcloud.util.MDM.MDM;
+import com.inspur.emmcloud.util.privates.MDM.MDM;
 import com.inspur.imp.api.ImpActivity;
 import com.inspur.imp.api.Res;
 
