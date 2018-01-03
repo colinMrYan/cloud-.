@@ -18,12 +18,12 @@ import com.inspur.emmcloud.bean.appcenter.GetAddAppResult;
 import com.inspur.emmcloud.bean.appcenter.GetAllAppResult;
 import com.inspur.emmcloud.bean.appcenter.GetAppBadgeResult;
 import com.inspur.emmcloud.bean.appcenter.GetAppGroupResult;
-import com.inspur.emmcloud.bean.appcenter.news.GetGroupNewsDetailResult;
-import com.inspur.emmcloud.bean.appcenter.news.GetNewsTitleResult;
 import com.inspur.emmcloud.bean.appcenter.GetRecommendAppWidgetListResult;
 import com.inspur.emmcloud.bean.appcenter.GetRemoveAppResult;
 import com.inspur.emmcloud.bean.appcenter.GetSearchAppResult;
 import com.inspur.emmcloud.bean.appcenter.GetWebAppRealUrlResult;
+import com.inspur.emmcloud.bean.appcenter.news.GetGroupNewsDetailResult;
+import com.inspur.emmcloud.bean.appcenter.news.GetNewsTitleResult;
 import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeFileListResult;
 import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeFileUploadTokenResult;
 import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeListResult;
@@ -31,6 +31,7 @@ import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
 import com.inspur.emmcloud.interf.OauthCallBack;
 import com.inspur.emmcloud.util.privates.OauthUtils;
 
+import org.json.JSONArray;
 import org.xutils.http.HttpMethod;
 import org.xutils.http.RequestParams;
 import org.xutils.x;
@@ -883,5 +884,16 @@ public class MyAppAPIService {
                 }, context).refreshToken(url);
             }
         });
+    }
+
+    /**
+     * 创建共享网盘
+     * @param memberArray
+     * @param volumeName
+     */
+    public void createShareVolume(final JSONArray memberArray, final String volumeName){
+        final String url = APIUri.getVolumeListUrl();
+
+
     }
 }

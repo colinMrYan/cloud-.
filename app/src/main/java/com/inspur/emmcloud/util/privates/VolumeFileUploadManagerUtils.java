@@ -136,7 +136,6 @@ public class VolumeFileUploadManagerUtils {
         VolumeFileUploadService volumeFileUploadService = null;
         switch (getVolumeFileUploadTokenResult.getStorage()){
             case "ali_oss":  //阿里云
-                LogUtils.jasonDebug("ali_oss------");
                 volumeFileUploadService = new OssService(getVolumeFileUploadTokenResult,mockVolumeFile);
                 break;
             default:

@@ -1,4 +1,4 @@
-package com.inspur.emmcloud.ui.app.volume;
+package com.inspur.emmcloud.ui.appcenter.volume;
 
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
@@ -18,13 +18,13 @@ import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
-import com.inspur.emmcloud.bean.Volume.GetVolumeListResult;
-import com.inspur.emmcloud.bean.Volume.Volume;
-import com.inspur.emmcloud.util.InputMethodUtils;
-import com.inspur.emmcloud.util.NetUtils;
-import com.inspur.emmcloud.util.StringUtils;
-import com.inspur.emmcloud.util.ToastUtils;
-import com.inspur.emmcloud.util.WebServiceMiddleUtils;
+import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeListResult;
+import com.inspur.emmcloud.bean.appcenter.volume.Volume;
+import com.inspur.emmcloud.util.common.InputMethodUtils;
+import com.inspur.emmcloud.util.common.NetUtils;
+import com.inspur.emmcloud.util.common.StringUtils;
+import com.inspur.emmcloud.util.common.ToastUtils;
+import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.dialogs.MyDialog;
 
