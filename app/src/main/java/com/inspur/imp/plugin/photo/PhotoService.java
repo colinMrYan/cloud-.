@@ -7,9 +7,9 @@ import android.os.Environment;
 import android.widget.Toast;
 
 import com.inspur.emmcloud.config.MyAppConfig;
-import com.inspur.emmcloud.util.DataCleanManager;
-import com.inspur.emmcloud.util.ImageDisplayUtils;
-import com.inspur.emmcloud.util.LogUtils;
+import com.inspur.emmcloud.util.privates.DataCleanManager;
+import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.imp.api.Res;
 import com.inspur.imp.plugin.ImpPlugin;
 import com.inspur.imp.plugin.camera.Bimp;
@@ -19,6 +19,7 @@ import com.inspur.imp.plugin.camera.imagepicker.ImagePicker;
 import com.inspur.imp.plugin.camera.imagepicker.bean.ImageItem;
 import com.inspur.imp.plugin.camera.imagepicker.ui.ImageGridActivity;
 import com.inspur.imp.plugin.camera.mycamera.MyCameraActivity;
+import com.inspur.imp.util.compressor.Compressor;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -142,69 +143,52 @@ public class PhotoService extends ImpPlugin {
         PublicWay.uploadPhotoService = null;
         LogUtils.jasonDebug("requestCode=" + requestCode);
         LogUtils.jasonDebug("resultCode=" + resultCode);
-        if (requestCode == RESULT_CAMERA) {
+        if (requestCode == RESULT_CAMERA || requestCode == EditImageActivity.ACTION_REQUEST_EDITIMAGE) {
             if (resultCode == getActivity().RESULT_OK) {
-                try {
-                    JSONObject jsonObject = new JSONObject();
-                    String uploadResult = intent.getStringExtra("uploadResult");
-                    String imagePath = intent.getStringExtra("save_file_path");
-                    File file = new File(imagePath);
-                    JSONObject contextObj = new JSONObject(uploadResult);
-                    jsonObject.put("context", contextObj);
-
-                    Bitmap bitmap = Bimp.revitionImageSize(imagePath);
-                    String bitmapBase64 = Bimp.bitmapToBase64(bitmap);
-                    jsonObject.put("thumbnailData", bitmapBase64);
-                    String returnData = jsonObject.toString();
-                    // LogUtils.jasonDebug("returnData="+returnData);
-                    this.jsCallback(successCb, returnData);
-                } catch (Exception e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
-            } else {
-                this.failPicture(Res.getString("cancel_camera"));
-            }
-            clearImgCache();
-        } else if (requestCode == EditImageActivity.ACTION_REQUEST_EDITIMAGE) {
-            if (resultCode == getActivity().RESULT_OK) {
+                Bitmap bitmap = null;
                 try {
                     JSONObject jsonObject = new JSONObject();
                     String uploadResult = intent.getStringExtra("uploadResult");
                     String imagePath = intent.getStringExtra("save_file_path");
                     JSONObject contextObj = new JSONObject(uploadResult);
                     jsonObject.put("context", contextObj);
-
-                    Bitmap bitmap = Bimp.revitionImageSize(imagePath);
+                    bitmap = new Compressor(context).setMaxHeight(MyAppConfig.UPLOAD_THUMBNAIL_IMG_MAX_SIZE).setMaxWidth(MyAppConfig.UPLOAD_THUMBNAIL_IMG_MAX_SIZE).setQuality(90).setDestinationDirectoryPath(MyAppConfig.LOCAL_IMG_CREATE_PATH)
+                            .compressToBitmap(new File(imagePath));
                     String bitmapBase64 = Bimp.bitmapToBase64(bitmap);
                     jsonObject.put("thumbnailData", bitmapBase64);
                     String returnData = jsonObject.toString();
-                    // LogUtils.jasonDebug("returnData="+returnData);
                     this.jsCallback(successCb, returnData);
                 } catch (Exception e) {
                     // TODO Auto-generated catch block
+                    this.failPicture(Res.getString("camera_error"));
                     e.printStackTrace();
+                } finally {
+                    recycleBitmap(bitmap);
+                    System.gc();
                 }
             } else {
                 this.failPicture(Res.getString("cancel_camera"));
             }
             clearImgCache();
         } else if (requestCode == RESULT_GELLERY) {
+            LogUtils.jasonDebug("RESULT_GELLERY-===================");
             if (resultCode == ImagePicker.RESULT_CODE_ITEMS) {
+                ArrayList<ImageItem> selectedList = (ArrayList<ImageItem>) intent
+                        .getSerializableExtra(ImagePicker.EXTRA_RESULT_ITEMS);
+                Bitmap thumbnailBitmaps[] = new Bitmap[selectedList.size()];
                 try {
                     JSONObject jsonObject = new JSONObject();
                     String uploadResult = intent.getStringExtra("uploadResult");
-                    LogUtils.jasonDebug("uploadResult=======" + uploadResult);
                     JSONObject contextObj = new JSONObject(uploadResult);
                     jsonObject.put("context", contextObj);
                     JSONArray dataArray = new JSONArray();
-                    ArrayList<ImageItem> selectedList = (ArrayList<ImageItem>) intent
-                            .getSerializableExtra(ImagePicker.EXTRA_RESULT_ITEMS);
                     for (int i = 0; i < selectedList.size(); i++) {
                         String imagePath = selectedList.get(i).path;
                         File file = new File(imagePath);
                         JSONObject obj = new JSONObject();
-                        Bitmap bitmap = Bimp.revitionImageSize(imagePath);
+                        Bitmap bitmap = new Compressor(context).setMaxHeight(MyAppConfig.UPLOAD_THUMBNAIL_IMG_MAX_SIZE).setMaxWidth(MyAppConfig.UPLOAD_THUMBNAIL_IMG_MAX_SIZE).setQuality(90).setDestinationDirectoryPath(MyAppConfig.LOCAL_IMG_CREATE_PATH)
+                                .compressToBitmap(new File(imagePath));
+                        thumbnailBitmaps[i] = bitmap;
                         String bitmapBase64 = Bimp.bitmapToBase64(bitmap);
                         obj.put("data", bitmapBase64);
                         obj.put("name", file.getName());
@@ -217,6 +201,12 @@ public class PhotoService extends ImpPlugin {
                 } catch (Exception e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
+                    this.failPicture(Res.getString("select_error"));
+                }finally {
+                    for (int i = 0; i < thumbnailBitmaps.length; i++) {
+                        recycleBitmap(thumbnailBitmaps[i]);
+                    }
+                    System.gc();
                 }
             } else {
                 this.failPicture(Res.getString("cancel_select"));
@@ -230,6 +220,18 @@ public class PhotoService extends ImpPlugin {
      */
     private void clearImgCache() {
         DataCleanManager.cleanCustomCache(MyAppConfig.LOCAL_IMG_CREATE_PATH);
+    }
+
+    /**
+     * 回收bitmap
+     *
+     * @param bitmap
+     */
+    private void recycleBitmap(Bitmap bitmap) {
+        if (bitmap != null && !bitmap.isRecycled()) {
+            bitmap.recycle();
+            bitmap = null;
+        }
     }
 
     /**

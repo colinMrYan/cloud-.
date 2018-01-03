@@ -13,12 +13,12 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.api.APICallback;
 import com.inspur.emmcloud.api.APIInterface;
 import com.inspur.emmcloud.api.APIUri;
-import com.inspur.emmcloud.bean.GetAllContactResult;
-import com.inspur.emmcloud.bean.GetAllRobotsResult;
-import com.inspur.emmcloud.bean.Robot;
+import com.inspur.emmcloud.bean.contact.GetAllContactResult;
+import com.inspur.emmcloud.bean.chat.GetAllRobotsResult;
+import com.inspur.emmcloud.bean.chat.Robot;
 import com.inspur.emmcloud.interf.OauthCallBack;
-import com.inspur.emmcloud.util.OauthUtils;
-import com.inspur.emmcloud.util.StringUtils;
+import com.inspur.emmcloud.util.privates.OauthUtils;
+import com.inspur.emmcloud.util.common.StringUtils;
 
 import org.xutils.http.RequestParams;
 import org.xutils.x;

@@ -2,8 +2,8 @@ package com.inspur.imp.plugin.photo;
 
 import android.content.Context;
 
-import com.inspur.emmcloud.util.LogUtils;
-import com.inspur.emmcloud.util.PreferencesUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
+import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.imp.plugin.camera.imagepicker.bean.ImageItem;
 
 import org.xutils.common.Callback.CommonCallback;

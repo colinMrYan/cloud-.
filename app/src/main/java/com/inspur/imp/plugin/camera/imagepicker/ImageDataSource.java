@@ -9,6 +9,7 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.imp.plugin.camera.imagepicker.bean.ImageFolder;
 import com.inspur.imp.plugin.camera.imagepicker.bean.ImageItem;
 
@@ -82,7 +83,7 @@ public class ImageDataSource implements LoaderManager.LoaderCallbacks<Cursor> {
 				if (!file.exists()){
 					continue;
 				}
-				long imageSize = data.getLong(data.getColumnIndexOrThrow(IMAGE_PROJECTION[2]));
+				long imageSize = FileUtils.getFileSize(imagePath);
 				if (imageSize == 0){
 					continue;
 				}
@@ -120,7 +121,7 @@ public class ImageDataSource implements LoaderManager.LoaderCallbacks<Cursor> {
 				}
 			}
 			//防止没有图片报异常
-			if (data.getCount() > 0) {
+			if (data.getCount() > 0 && allImages.size()>0) {
 				//构造所有图片的集合
 				ImageFolder allImagesFolder = new ImageFolder();
 				allImagesFolder.name = activity.getResources().getString(R.string.all_images);

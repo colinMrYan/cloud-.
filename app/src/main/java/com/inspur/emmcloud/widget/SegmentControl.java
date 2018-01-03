@@ -14,7 +14,6 @@ import android.view.View;
 import android.view.ViewConfiguration;
 
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.util.LogUtils;
 
 /**
  * Created by .

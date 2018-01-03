@@ -7,9 +7,9 @@ import android.os.IBinder;
 import com.alibaba.fastjson.JSON;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
-import com.inspur.emmcloud.bean.AppCommonlyUse;
-import com.inspur.emmcloud.util.AppCacheUtils;
-import com.inspur.emmcloud.util.NetUtils;
+import com.inspur.emmcloud.bean.appcenter.AppCommonlyUse;
+import com.inspur.emmcloud.util.privates.cache.AppCacheUtils;
+import com.inspur.emmcloud.util.common.NetUtils;
 
 import java.util.List;
 

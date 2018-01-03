@@ -3,11 +3,11 @@ package com.inspur.reactnative;
 import android.content.Context;
 
 import com.inspur.emmcloud.MyApplication;
-import com.inspur.emmcloud.bean.AndroidBundleBean;
-import com.inspur.emmcloud.bean.Language;
-import com.inspur.emmcloud.util.AppUtils;
-import com.inspur.emmcloud.util.PreferencesUtils;
-import com.inspur.emmcloud.util.StringUtils;
+import com.inspur.emmcloud.bean.appcenter.AndroidBundleBean;
+import com.inspur.emmcloud.bean.mine.Language;
+import com.inspur.emmcloud.util.privates.AppUtils;
+import com.inspur.emmcloud.util.common.PreferencesUtils;
+import com.inspur.emmcloud.util.common.StringUtils;
 
 /**
  * Created by yufuchang on 2017/7/11.

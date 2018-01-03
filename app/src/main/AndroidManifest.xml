@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.inspur.emmcloud"
     android:configChanges="locale|layoutDirection">
 
@@ -90,9 +91,11 @@
         android:smallScreens="true"
         android:xlargeScreens="true" />
 
+    <!--allowBackup = false 防止对应用程序数据进行备份和还原 -->
     <application
+        tools:replace="android:allowBackup"
+        android:allowBackup="false"
         android:name=".MyApplication"
-        android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:largeHeap="true"
@@ -166,17 +169,17 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait"></activity>
         <activity
-            android:name=".ui.app.AppCenterActivity"
+            android:name=".ui.appcenter.AppCenterActivity"
             android:screenOrientation="portrait"></activity>
         <activity
-            android:name=".ui.app.AppCenterMoreActivity"
+            android:name=".ui.appcenter.AppCenterMoreActivity"
             android:screenOrientation="portrait"></activity>
         <activity
-            android:name=".ui.app.AppSearchActivity"
+            android:name=".ui.appcenter.AppSearchActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"></activity>
         <activity
-            android:name=".ui.app.AppDetailActivity"
+            android:name=".ui.appcenter.AppDetailActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"></activity>
 
@@ -360,7 +363,7 @@
             android:screenOrientation="portrait" />
 
         <activity
-            android:name=".ui.app.groupnews.NewsWebDetailActivity"
+            android:name=".ui.appcenter.groupnews.NewsWebDetailActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Holo.Light.NoActionBar"
@@ -431,7 +434,7 @@
             android:name=".ui.find.trip.TripInfoActivity"
             android:screenOrientation="portrait"></activity>
         <activity
-            android:name=".ui.app.ReactNativeAppActivity"
+            android:name=".ui.appcenter.ReactNativeAppActivity"
             android:screenOrientation="portrait"></activity>
         <activity
             android:name=".ui.chat.ModifyChannelGroupNameActivity"
@@ -452,7 +455,7 @@
 
         </activity>
         <activity
-            android:name=".ui.app.groupnews.GroupNewsActivity"
+            android:name=".ui.appcenter.groupnews.GroupNewsActivity"
             android:screenOrientation="portrait"></activity>
         <activity
             android:name=".ui.work.task.MessionListActivity"
@@ -539,7 +542,7 @@
             android:configChanges="locale|layoutDirection"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.app.ShortCutFunctionActivity"
+            android:name=".ui.appcenter.ShortCutFunctionActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar">
             <intent-filter>
@@ -555,20 +558,20 @@
 
         <!-- 云盘 -->
         <activity
-            android:name=".ui.app.volume.VolumeHomePageActivity"
+            android:name=".ui.appcenter.volume.VolumeHomePageActivity"
             android:screenOrientation="portrait"></activity>
         <activity
-            android:name=".ui.app.volume.VolumeFileActivity"
+            android:name=".ui.appcenter.volume.VolumeFileActivity"
             android:screenOrientation="portrait"></activity>
         <activity
-            android:name=".ui.app.volume.VolumeFileDownloadActivtiy"
+            android:name=".ui.appcenter.volume.VolumeFileDownloadActivtiy"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"></activity>
         <activity
-            android:name=".ui.app.volume.VolumeFileLocationSelectActivity"
+            android:name=".ui.appcenter.volume.VolumeFileLocationSelectActivity"
             android:screenOrientation="portrait"></activity>
         <activity
-            android:name=".ui.app.volume.VolumeFileFilterActvity"
+            android:name=".ui.appcenter.volume.VolumeFileFilterActvity"
             android:screenOrientation="portrait"></activity>
 
 

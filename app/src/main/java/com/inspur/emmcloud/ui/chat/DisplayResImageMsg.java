@@ -10,10 +10,10 @@ import android.widget.TextView;
 
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
-import com.inspur.emmcloud.bean.Msg;
-import com.inspur.emmcloud.util.DensityUtil;
-import com.inspur.emmcloud.util.JSONUtils;
-import com.inspur.emmcloud.util.MsgCacheUtil;
+import com.inspur.emmcloud.bean.chat.Msg;
+import com.inspur.emmcloud.util.common.DensityUtil;
+import com.inspur.emmcloud.util.common.JSONUtils;
+import com.inspur.emmcloud.util.privates.cache.MsgCacheUtil;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;

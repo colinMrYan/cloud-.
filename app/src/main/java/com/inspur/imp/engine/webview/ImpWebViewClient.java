@@ -16,9 +16,9 @@ import android.widget.LinearLayout;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
-import com.inspur.emmcloud.bean.AppRedirectResult;
-import com.inspur.emmcloud.util.NetUtils;
-import com.inspur.emmcloud.util.PreferencesUtils;
+import com.inspur.emmcloud.bean.appcenter.AppRedirectResult;
+import com.inspur.emmcloud.util.common.NetUtils;
+import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.imp.api.ImpActivity;
 
 import java.net.MalformedURLException;

@@ -13,7 +13,7 @@ import android.view.View;
 
 import com.inspur.imp.plugin.camera.editimage.utils.PaintUtil;
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.util.LogUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 
 /**
  * 剪切图片

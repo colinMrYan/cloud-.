@@ -2,7 +2,7 @@ package com.inspur.imp.plugin.photo;
 
 import android.content.Context;
 
-import com.inspur.emmcloud.util.PreferencesUtils;
+import com.inspur.emmcloud.util.common.PreferencesUtils;
 
 public class PhotoNameUtils {
 	public static String getFileName(Context context,int parm_encodingType) {
@@ -14,6 +14,14 @@ public class PhotoNameUtils {
 		String userName = PreferencesUtils.getString(context,
 				"userName", "");
 		String fileName = userName+"_"+System.currentTimeMillis()+ "_"+index+ (parm_encodingType == 0?".jpg":".png");
+		return fileName;
+	}
+
+	public static String getThumbnailFileName(Context context,int index,int parm_encodingType) {
+		index = index+1;
+		String userName = PreferencesUtils.getString(context,
+				"userName", "");
+		String fileName = userName+"_"+System.currentTimeMillis()+ "_"+"thumb_"+index+ (parm_encodingType == 0?".jpg":".png");
 		return fileName;
 	}
 	

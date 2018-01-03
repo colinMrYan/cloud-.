@@ -24,36 +24,36 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.ChannelMsgAdapter;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
-import com.inspur.emmcloud.bean.Channel;
-import com.inspur.emmcloud.bean.ChannelGroup;
-import com.inspur.emmcloud.bean.GetFileUploadResult;
-import com.inspur.emmcloud.bean.GetMsgResult;
-import com.inspur.emmcloud.bean.GetNewMsgsResult;
-import com.inspur.emmcloud.bean.GetNewsImgResult;
-import com.inspur.emmcloud.bean.GetSearchChannelGroupResult;
-import com.inspur.emmcloud.bean.GetSendMsgResult;
-import com.inspur.emmcloud.bean.GroupNews;
-import com.inspur.emmcloud.bean.Msg;
-import com.inspur.emmcloud.bean.PVCollectModel;
+import com.inspur.emmcloud.bean.chat.Channel;
+import com.inspur.emmcloud.bean.chat.ChannelGroup;
+import com.inspur.emmcloud.bean.chat.GetFileUploadResult;
+import com.inspur.emmcloud.bean.chat.GetMsgResult;
+import com.inspur.emmcloud.bean.chat.GetNewMsgsResult;
+import com.inspur.emmcloud.bean.chat.GetNewsImgResult;
+import com.inspur.emmcloud.bean.contact.GetSearchChannelGroupResult;
+import com.inspur.emmcloud.bean.chat.GetSendMsgResult;
+import com.inspur.emmcloud.bean.appcenter.news.GroupNews;
+import com.inspur.emmcloud.bean.chat.Msg;
+import com.inspur.emmcloud.bean.system.PVCollectModel;
 import com.inspur.emmcloud.broadcastreceiver.MsgReceiver;
 import com.inspur.emmcloud.config.MyAppConfig;
-import com.inspur.emmcloud.ui.app.groupnews.NewsWebDetailActivity;
+import com.inspur.emmcloud.ui.appcenter.groupnews.NewsWebDetailActivity;
 import com.inspur.emmcloud.ui.contact.RobotInfoActivity;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
-import com.inspur.emmcloud.util.AppUtils;
-import com.inspur.emmcloud.util.ChannelCacheUtils;
-import com.inspur.emmcloud.util.ConbineMsg;
-import com.inspur.emmcloud.util.DirectChannelUtils;
-import com.inspur.emmcloud.util.IntentUtils;
-import com.inspur.emmcloud.util.JSONUtils;
-import com.inspur.emmcloud.util.MsgCacheUtil;
-import com.inspur.emmcloud.util.MsgReadIDCacheUtils;
-import com.inspur.emmcloud.util.MsgRecourceUploadUtils;
-import com.inspur.emmcloud.util.NetUtils;
-import com.inspur.emmcloud.util.PVCollectModelCacheUtils;
-import com.inspur.emmcloud.util.PreferencesUtils;
-import com.inspur.emmcloud.util.StringUtils;
-import com.inspur.emmcloud.util.WebServiceMiddleUtils;
+import com.inspur.emmcloud.util.privates.AppUtils;
+import com.inspur.emmcloud.util.privates.cache.ChannelCacheUtils;
+import com.inspur.emmcloud.util.privates.ConbineMsg;
+import com.inspur.emmcloud.util.privates.DirectChannelUtils;
+import com.inspur.emmcloud.util.common.IntentUtils;
+import com.inspur.emmcloud.util.common.JSONUtils;
+import com.inspur.emmcloud.util.privates.cache.MsgCacheUtil;
+import com.inspur.emmcloud.util.privates.cache.MsgReadIDCacheUtils;
+import com.inspur.emmcloud.util.privates.MsgRecourceUploadUtils;
+import com.inspur.emmcloud.util.common.NetUtils;
+import com.inspur.emmcloud.util.privates.cache.PVCollectModelCacheUtils;
+import com.inspur.emmcloud.util.common.PreferencesUtils;
+import com.inspur.emmcloud.util.common.StringUtils;
+import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.ECMChatInputMenu;
 import com.inspur.emmcloud.widget.ECMChatInputMenu.ChatInputMenuListener;
 import com.inspur.emmcloud.widget.LoadingDialog;
@@ -67,7 +67,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -395,11 +394,11 @@ public class ChannelActivity extends BaseActivity {
         try {
             MediaStore.Images.Media.insertImage(context.getContentResolver(),
                     file.getAbsolutePath(), file.getName(), null);
-        } catch (FileNotFoundException e) {
+            // 最后通知图库更新
+            context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + path)));
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        // 最后通知图库更新
-        context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + path)));
     }
 
     /**

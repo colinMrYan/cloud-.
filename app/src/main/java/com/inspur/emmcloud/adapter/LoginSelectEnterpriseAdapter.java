@@ -8,7 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.bean.Enterprise;
+import com.inspur.emmcloud.bean.mine.Enterprise;
 
 import java.util.List;
 

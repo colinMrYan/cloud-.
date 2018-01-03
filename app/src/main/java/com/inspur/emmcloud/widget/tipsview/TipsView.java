@@ -20,7 +20,6 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.util.LogUtils;
 
 public class TipsView extends FrameLayout {
 

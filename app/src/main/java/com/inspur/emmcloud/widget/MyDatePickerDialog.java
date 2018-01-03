@@ -16,7 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.DatePicker;
 
-import com.inspur.emmcloud.util.TimeUtils;
+import com.inspur.emmcloud.util.privates.TimeUtils;
 
 /**
  * com.inspur.emmcloud.widget.MyDatePickerDialog

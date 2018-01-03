@@ -9,7 +9,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 
-import com.inspur.emmcloud.util.StringUtils;
+import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.imp.api.Res;
 
 import java.io.BufferedInputStream;

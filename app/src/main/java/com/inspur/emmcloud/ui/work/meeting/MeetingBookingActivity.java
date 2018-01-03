@@ -18,20 +18,18 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.WorkAPIService;
-import com.inspur.emmcloud.bean.GetIsAdmin;
-import com.inspur.emmcloud.bean.SearchModel;
+import com.inspur.emmcloud.bean.work.GetIsAdmin;
+import com.inspur.emmcloud.bean.contact.SearchModel;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
-import com.inspur.emmcloud.util.ImageDisplayUtils;
-import com.inspur.emmcloud.util.MathCaculateUtils;
-import com.inspur.emmcloud.util.NetUtils;
-import com.inspur.emmcloud.util.PreferencesUtils;
-import com.inspur.emmcloud.util.StringUtils;
-import com.inspur.emmcloud.util.TimeUtils;
-import com.inspur.emmcloud.util.ToastUtils;
-import com.inspur.emmcloud.util.UriUtils;
-import com.inspur.emmcloud.util.WebServiceMiddleUtils;
+import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
+import com.inspur.emmcloud.util.common.NetUtils;
+import com.inspur.emmcloud.util.common.PreferencesUtils;
+import com.inspur.emmcloud.util.common.StringUtils;
+import com.inspur.emmcloud.util.privates.TimeUtils;
+import com.inspur.emmcloud.util.common.ToastUtils;
+import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.CircleImageView;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.MyDatePickerDialog;
@@ -194,7 +192,7 @@ public class MeetingBookingActivity extends BaseActivity {
                     ToastUtils.show(MeetingBookingActivity.this, getString(R.string.more_than_max_day));
                     break;
                 }
-                int countHour = MathCaculateUtils.getCeil(meetingEndCalendar, meetingBeginCalendar);
+                int countHour = TimeUtils.getCeil(meetingEndCalendar, meetingBeginCalendar);
                 if (countHour > maxDuration) {
                     ToastUtils.show(MeetingBookingActivity.this, getString(R.string.more_than_max_time));
                     break;

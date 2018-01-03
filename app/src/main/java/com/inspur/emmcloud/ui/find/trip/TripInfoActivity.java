@@ -6,17 +6,16 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.BaseActivity;
-import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.FindAPIService;
-import com.inspur.emmcloud.bean.PVCollectModel;
-import com.inspur.emmcloud.bean.Trip;
-import com.inspur.emmcloud.util.NetUtils;
-import com.inspur.emmcloud.util.PVCollectModelCacheUtils;
-import com.inspur.emmcloud.util.StringUtils;
-import com.inspur.emmcloud.util.TimeUtils;
-import com.inspur.emmcloud.util.WebServiceMiddleUtils;
+import com.inspur.emmcloud.bean.system.PVCollectModel;
+import com.inspur.emmcloud.bean.find.Trip;
+import com.inspur.emmcloud.util.common.NetUtils;
+import com.inspur.emmcloud.util.privates.cache.PVCollectModelCacheUtils;
+import com.inspur.emmcloud.util.common.StringUtils;
+import com.inspur.emmcloud.util.privates.TimeUtils;
+import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 
 import java.io.Serializable;
