@@ -1,17 +1,13 @@
 package com.inspur.emmcloud.broadcastreceiver;
 
-import com.inspur.emmcloud.util.ToastUtils;
-
 import android.app.Activity;
 import android.content.ContentValues;
-import android.content.Context;
 import android.database.ContentObserver;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 
 /**
  * 监听短信数据库

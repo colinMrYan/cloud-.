@@ -15,17 +15,16 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.BaseActivity;
-import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.LoginAPIService;
-import com.inspur.emmcloud.bean.GetRegisterCheckResult;
+import com.inspur.emmcloud.bean.appcenter.GetRegisterCheckResult;
 import com.inspur.emmcloud.ui.IndexActivity;
-import com.inspur.emmcloud.util.InputMethodUtils;
-import com.inspur.emmcloud.util.LogUtils;
-import com.inspur.emmcloud.util.NetUtils;
-import com.inspur.emmcloud.util.StringUtils;
-import com.inspur.emmcloud.util.WebServiceMiddleUtils;
+import com.inspur.emmcloud.util.common.InputMethodUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
+import com.inspur.emmcloud.util.common.NetUtils;
+import com.inspur.emmcloud.util.common.StringUtils;
+import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.dialogs.EasyDialog;
 

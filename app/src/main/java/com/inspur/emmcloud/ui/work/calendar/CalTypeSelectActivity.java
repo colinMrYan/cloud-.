@@ -1,9 +1,5 @@
 package com.inspur.emmcloud.ui.work.calendar;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -17,11 +13,14 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.BaseActivity;
-import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.bean.MyCalendar;
-import com.inspur.emmcloud.util.CalendarColorUtils;
-import com.inspur.emmcloud.util.MyCalendarCacheUtils;
+import com.inspur.emmcloud.bean.work.MyCalendar;
+import com.inspur.emmcloud.util.privates.CalendarColorUtils;
+import com.inspur.emmcloud.util.privates.cache.MyCalendarCacheUtils;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CalTypeSelectActivity extends BaseActivity {
 	private ListView calendarListView;

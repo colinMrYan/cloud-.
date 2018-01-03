@@ -9,16 +9,15 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.BaseActivity;
-import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.AppAPIService;
-import com.inspur.emmcloud.bean.LoginDesktopCloudPlusBean;
-import com.inspur.emmcloud.util.LogUtils;
-import com.inspur.emmcloud.util.NetUtils;
-import com.inspur.emmcloud.util.StateBarColor;
-import com.inspur.emmcloud.util.ToastUtils;
-import com.inspur.emmcloud.util.WebServiceMiddleUtils;
+import com.inspur.emmcloud.bean.login.LoginDesktopCloudPlusBean;
+import com.inspur.emmcloud.util.common.LogUtils;
+import com.inspur.emmcloud.util.common.NetUtils;
+import com.inspur.emmcloud.util.common.StateBarUtils;
+import com.inspur.emmcloud.util.common.ToastUtils;
+import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.imp.plugin.barcode.scan.CaptureActivity;
 
@@ -39,7 +38,7 @@ public class ScanQrCodeLoginActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        StateBarColor.changeStateBarColor(this, R.color.scan_result_color);
+        StateBarUtils.changeStateBarColor(this, R.color.scan_result_color);
 //        setStatusBarIconDark(true);
         setMiuiStatusBarDarkMode(this,true);
         setContentView(R.layout.activity_scan_qrcode_login_result);

@@ -12,7 +12,7 @@ import android.content.Context;
 import android.os.Environment;
 
 import com.inspur.emmcloud.MyApplication;
-import com.inspur.emmcloud.bean.Language;
+import com.inspur.emmcloud.bean.mine.Language;
 
 import java.util.HashMap;
 import java.util.Map;

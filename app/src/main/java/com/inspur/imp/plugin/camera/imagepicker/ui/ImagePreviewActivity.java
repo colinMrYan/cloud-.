@@ -13,7 +13,7 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import com.inspur.imp.plugin.camera.editimage.EditImageActivity;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.config.MyAppConfig;
-import com.inspur.emmcloud.util.LogUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.imp.plugin.camera.imagepicker.ImagePicker;
 import com.inspur.imp.plugin.camera.imagepicker.bean.ImageItem;
 import com.inspur.imp.plugin.camera.imagepicker.view.SuperCheckBox;

@@ -18,10 +18,10 @@ import android.widget.TextView;
 
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.ui.IndexActivity;
-import com.inspur.emmcloud.util.LogUtils;
-import com.inspur.emmcloud.util.PreferencesByUserAndTanentUtils;
-import com.inspur.emmcloud.util.StringUtils;
-import com.inspur.emmcloud.util.UpgradeUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
+import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
+import com.inspur.emmcloud.util.common.StringUtils;
+import com.inspur.emmcloud.util.privates.UpgradeUtils;
 
 /**
  * 如果有不支持的功能时显示这个界面

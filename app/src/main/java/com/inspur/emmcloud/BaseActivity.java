@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.inspur.emmcloud.util.StateBarColor;
+import com.inspur.emmcloud.util.common.StateBarUtils;
 
 import org.xutils.x;
 
@@ -17,7 +17,7 @@ public class BaseActivity extends Activity {
         x.view().inject(this);
         String className = this.getClass().getCanonicalName();
         if (!className.endsWith(".CaptureActivity") &&!className.endsWith(".MyCameraActivity") && !className.endsWith(".LoginActivity") ){
-            StateBarColor.changeStateBarColor(this);
+            StateBarUtils.changeStateBarColor(this);
         }
     }
 

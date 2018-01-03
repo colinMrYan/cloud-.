@@ -38,7 +38,7 @@
         android:layout_marginTop="20dp"
         android:orientation="vertical">
 
-        <com.inspur.emmcloud.util.ninelock.LockPatternView
+        <com.inspur.emmcloud.util.privates.ninelock.LockPatternView
             android:id="@+id/lockPatternView"
             android:layout_width="@dimen/_270dp"
             android:layout_height="@dimen/_270dp"

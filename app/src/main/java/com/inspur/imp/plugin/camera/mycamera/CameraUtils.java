@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.hardware.Camera.Size;
 
-import com.inspur.emmcloud.util.ResolutionUtils;
+import com.inspur.emmcloud.util.common.ResolutionUtils;
 
 import java.util.Collections;
 import java.util.Comparator;

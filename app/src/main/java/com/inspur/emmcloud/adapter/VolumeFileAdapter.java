@@ -11,13 +11,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.bean.Volume.VolumeFile;
+import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
 import com.inspur.emmcloud.interf.ProgressCallback;
-import com.inspur.emmcloud.util.FileUtils;
-import com.inspur.emmcloud.util.NetUtils;
-import com.inspur.emmcloud.util.TimeUtils;
-import com.inspur.emmcloud.util.VolumeFileIconUtils;
-import com.inspur.emmcloud.util.VolumeFileUploadManagerUtils;
+import com.inspur.emmcloud.util.common.FileUtils;
+import com.inspur.emmcloud.util.common.NetUtils;
+import com.inspur.emmcloud.util.privates.TimeUtils;
+import com.inspur.emmcloud.util.privates.VolumeFileIconUtils;
+import com.inspur.emmcloud.util.privates.VolumeFileUploadManagerUtils;
 
 import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;

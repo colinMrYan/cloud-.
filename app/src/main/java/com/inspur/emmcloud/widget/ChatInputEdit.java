@@ -18,10 +18,10 @@ import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.View;
 
-import com.inspur.emmcloud.bean.InsertModel;
+import com.inspur.emmcloud.bean.chat.InsertModel;
 import com.inspur.emmcloud.config.Constant;
-import com.inspur.emmcloud.util.DensityUtil;
-import com.inspur.emmcloud.util.LogUtils;
+import com.inspur.emmcloud.util.common.DensityUtil;
+import com.inspur.emmcloud.util.common.LogUtils;
 
 import java.util.ArrayList;
 import java.util.List;

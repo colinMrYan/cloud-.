@@ -13,11 +13,11 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.api.APICallback;
 import com.inspur.emmcloud.api.APIInterface;
 import com.inspur.emmcloud.api.APIUri;
-import com.inspur.emmcloud.bean.GetKnowledgeInfo;
-import com.inspur.emmcloud.bean.GetTripArriveCity;
-import com.inspur.emmcloud.bean.Trip;
+import com.inspur.emmcloud.bean.find.GetKnowledgeInfo;
+import com.inspur.emmcloud.bean.find.GetTripArriveCity;
+import com.inspur.emmcloud.bean.find.Trip;
 import com.inspur.emmcloud.interf.OauthCallBack;
-import com.inspur.emmcloud.util.OauthUtils;
+import com.inspur.emmcloud.util.privates.OauthUtils;
 
 import org.json.JSONArray;
 import org.xutils.http.HttpMethod;

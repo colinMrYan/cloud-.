@@ -17,7 +17,7 @@ import android.view.animation.Interpolator;
 import android.view.animation.LinearInterpolator;
 
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.util.DensityUtil;
+import com.inspur.emmcloud.util.common.DensityUtil;
 
 public class CircularProgress extends View {
 

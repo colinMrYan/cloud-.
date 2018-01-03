@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
 
-import com.inspur.emmcloud.bean.Msg;
+import com.inspur.emmcloud.bean.chat.Msg;
 
 import org.json.JSONObject;
 

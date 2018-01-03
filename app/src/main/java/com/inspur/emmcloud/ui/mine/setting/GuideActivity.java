@@ -11,18 +11,17 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import com.inspur.emmcloud.BaseActivity;
-import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.MyViewPagerAdapter;
 import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.ui.login.LoginActivity;
-import com.inspur.emmcloud.util.AppUtils;
-import com.inspur.emmcloud.util.IntentUtils;
-import com.inspur.emmcloud.util.LoginUtils;
-import com.inspur.emmcloud.util.NetUtils;
-import com.inspur.emmcloud.util.PreferencesUtils;
-import com.inspur.emmcloud.util.StateBarColor;
-import com.inspur.emmcloud.util.StringUtils;
+import com.inspur.emmcloud.util.privates.AppUtils;
+import com.inspur.emmcloud.util.common.IntentUtils;
+import com.inspur.emmcloud.util.privates.LoginUtils;
+import com.inspur.emmcloud.util.common.NetUtils;
+import com.inspur.emmcloud.util.common.PreferencesUtils;
+import com.inspur.emmcloud.util.common.StateBarUtils;
+import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 
 import java.util.ArrayList;
@@ -45,7 +44,7 @@ public class GuideActivity extends BaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		StateBarColor.changeStateBarColor(this,R.color.white);
+		StateBarUtils.changeStateBarColor(this,R.color.white);
 		setContentView(R.layout.activity_guide);
 		// 存入当前版本号,方便判断新功能介绍显示的时机
 		String appVersion = AppUtils.getVersion(GuideActivity.this);

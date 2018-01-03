@@ -37,13 +37,12 @@ import android.graphics.Paint.Style;
 import android.graphics.Typeface;
 import android.text.format.DateUtils;
 import android.text.format.Time;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.util.DensityUtil;
+import com.inspur.emmcloud.util.common.DensityUtil;
 
 public class SimpleMonthView extends View {
 
