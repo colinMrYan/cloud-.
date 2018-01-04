@@ -27,16 +27,21 @@ import com.inspur.emmcloud.bean.appcenter.news.GetNewsTitleResult;
 import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeFileListResult;
 import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeFileUploadTokenResult;
 import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeListResult;
+import com.inspur.emmcloud.bean.appcenter.volume.Volume;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
 import com.inspur.emmcloud.interf.OauthCallBack;
 import com.inspur.emmcloud.util.privates.OauthUtils;
 
 import org.json.JSONArray;
+import org.xutils.common.util.KeyValue;
 import org.xutils.http.HttpMethod;
 import org.xutils.http.RequestParams;
+import org.xutils.http.body.UrlEncodedParamsBody;
 import org.xutils.x;
 
+import java.util.ArrayList;
 import java.util.List;
+
 
 /**
  * com.inspur.emmcloud.api.apiservice.MyAppAPIService create at 2016年11月8日
@@ -806,7 +811,6 @@ public class MyAppAPIService {
     }
 
 
-
     /**
      * 删除文件
      *
@@ -888,12 +892,47 @@ public class MyAppAPIService {
 
     /**
      * 创建共享网盘
+     *
      * @param memberArray
      * @param volumeName
      */
-    public void createShareVolume(final JSONArray memberArray, final String volumeName){
+    public void createShareVolume(final JSONArray memberUidArray, final String volumeName) {
         final String url = APIUri.getVolumeListUrl();
+        RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
+        List<KeyValue> keyValueList = new ArrayList<>();
+        keyValueList.add(new KeyValue("name",volumeName));
+        keyValueList.add(new KeyValue("members","66666"));
+        try {
+            params.setRequestBody(new UrlEncodedParamsBody(keyValueList,"utf-8"));
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        x.http().post(params, new APICallback(context, url) {
+            @Override
+            public void callbackSuccess(String arg0) {
+                apiInterface.returnCreateShareVolumeSuccess(new Volume(arg0));
+            }
 
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                apiInterface.returnCreateShareVolumeFail("", -1);
+            }
+
+            @Override
+            public void callbackTokenExpire() {
+                new OauthUtils(new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        createShareVolume(memberUidArray, volumeName);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                }, context).refreshToken(url);
+            }
+        });
 
     }
 }

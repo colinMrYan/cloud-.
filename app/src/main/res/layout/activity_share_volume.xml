@@ -3,6 +3,7 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:fitsSystemWindows="true">
+
     <RelativeLayout
         android:id="@+id/header_layout"
         android:layout_width="match_parent"
@@ -36,9 +37,9 @@
             android:ellipsize="end"
             android:gravity="center"
             android:maxLines="1"
-            android:text="共享网盘"
             android:paddingLeft="100dp"
             android:paddingRight="100dp"
+            android:text="共享网盘"
             android:textColor="@color/header_text"
             android:textSize="@dimen/header_textsize" />
 

@@ -3,6 +3,7 @@ package com.inspur.emmcloud.api;
 
 import com.inspur.emmcloud.bean.appcenter.App;
 import com.inspur.emmcloud.bean.appcenter.AppRedirectResult;
+import com.inspur.emmcloud.bean.appcenter.volume.Volume;
 import com.inspur.emmcloud.bean.work.Attachment;
 import com.inspur.emmcloud.bean.chat.ChannelGroup;
 import com.inspur.emmcloud.bean.appcenter.GetAddAppResult;
@@ -1465,21 +1466,25 @@ public class APIInterfaceInstance implements APIInterface {
 
     @Override
     public void returnRecommendAppWidgetListSuccess(GetRecommendAppWidgetListResult getRecommendAppWidgetListResult) {
-
     }
 
     @Override
     public void returnRecommendAppWidgetListFail(String error, int errorCode) {
-
     }
 
     @Override
     public void returnCopyFileSuccess() {
-
     }
 
     @Override
     public void returnCopyFileFail(String error, int errorCode) {
+    }
 
+    @Override
+    public void returnCreateShareVolumeSuccess(Volume volume) {
+    }
+
+    @Override
+    public void returnCreateShareVolumeFail(String error, int errorCode) {
     }
 }

@@ -15,6 +15,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.BaseActivity;
+import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
@@ -28,6 +29,7 @@ import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.dialogs.MyDialog;
 
+import org.json.JSONArray;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
 
@@ -50,19 +52,19 @@ public class ShareVolumeActivity extends BaseActivity implements SwipeRefreshLay
 
     private Adapter adapter;
     private MyAppAPIService apiService;
-    private LoadingDialog loadingDialog;
+    private LoadingDialog loadingDlg;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        apiService = new MyAppAPIService(this);
-        apiService.setAPIInterface(new WebService());
         shareVolumeList = (List<Volume>) getIntent().getExtras().getSerializable("shareVolumeList");
         initView();
     }
 
     private void initView(){
-        loadingDialog = new LoadingDialog(this);
+        loadingDlg = new LoadingDialog(this);
+        apiService = new MyAppAPIService(this);
+        apiService.setAPIInterface(new WebService());
         adapter = new Adapter();
         swipeRefreshLayout.setColorSchemeColors(ContextCompat.getColor(getApplicationContext(), R.color.header_bg), ContextCompat.getColor(getApplicationContext(), R.color.header_bg));
         swipeRefreshLayout.setOnRefreshListener(this);
@@ -160,7 +162,14 @@ public class ShareVolumeActivity extends BaseActivity implements SwipeRefreshLay
      */
     private void createShareVolume(String shareVolumeName){
         if (NetUtils.isNetworkConnected(getApplicationContext())){
-            loadingDialog.show();
+            loadingDlg.show();
+            JSONArray jsonArray = new JSONArray();
+            try{
+                jsonArray.put(0,MyApplication.getInstance().getUid());
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+            apiService.createShareVolume(jsonArray,shareVolumeName);
         }
     }
 
@@ -189,6 +198,20 @@ public class ShareVolumeActivity extends BaseActivity implements SwipeRefreshLay
         public void returnVolumeListFail(String error, int errorCode) {
             swipeRefreshLayout.setRefreshing(false);
             WebServiceMiddleUtils.hand(getApplicationContext(), error, errorCode);
+        }
+
+        @Override
+        public void returnCreateShareVolumeSuccess(Volume volume) {
+            shareVolumeList.add(volume);
+            adapter.notifyDataSetChanged();
+        }
+
+        @Override
+        public void returnCreateShareVolumeFail(String error, int errorCode) {
+            if (loadingDlg != null && loadingDlg.isShowing()){
+                loadingDlg.dismiss();
+            }
+            WebServiceMiddleUtils.hand(getApplicationContext(),error,errorCode);
         }
     }
 }

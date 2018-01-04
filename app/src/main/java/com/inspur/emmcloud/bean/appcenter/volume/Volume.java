@@ -17,10 +17,14 @@ public class Volume implements Serializable {
     private String owner;
     private long maxSize;
     private long usedSize;
+    private long lastUpdate;
 
     public Volume() {
     }
 
+    public Volume(String volumeJSon){
+        this(JSONUtils.getJSONObject(volumeJSon));
+    }
     public Volume(JSONObject obj) {
         id = JSONUtils.getString(obj, "id", "");
         name = JSONUtils.getString(obj, "name", "");
@@ -28,6 +32,7 @@ public class Volume implements Serializable {
         owner = JSONUtils.getString(obj, "owner", "");
         maxSize = JSONUtils.getLong(obj, "maxSize", 0L);
         usedSize = JSONUtils.getLong(obj, "usedSize", 0L);
+        lastUpdate = JSONUtils.getLong(obj,"lastUpdate",0L);
     }
 
     public String getId() {
