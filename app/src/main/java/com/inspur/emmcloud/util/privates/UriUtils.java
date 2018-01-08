@@ -11,9 +11,9 @@ import com.inspur.emmcloud.bean.system.PVCollectModel;
 import com.inspur.emmcloud.ui.appcenter.ReactNativeAppActivity;
 import com.inspur.emmcloud.ui.appcenter.groupnews.GroupNewsActivity;
 import com.inspur.emmcloud.ui.appcenter.volume.VolumeHomePageActivity;
+import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
-import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.privates.cache.PVCollectModelCacheUtils;
 import com.inspur.imp.api.ImpActivity;
 
@@ -44,10 +44,10 @@ public class UriUtils {
                 break;
             case 3:
             case 4:
-                if (!uri.startsWith(APIUri.getECMBaseUrl()+"ssohandler/gs/")) {
+                if (!uri.startsWith(APIUri.getEMMBaseUrl()+"ssohandler/gs/")) {
                     openWebApp(activity, uri, app);
                 } else {
-                    uri = uri.replace("/gs/", "/gs_uri/");
+                    uri = uri.replace("ssohandler/gs/", "api/v1/gs_sso/app_uri?id=");
                     if (NetUtils.isNetworkConnected(activity)) {
                         new WebAppUtils(activity, new WebAppUtils.OnGetWebAppRealUrlListener() {
                             @Override
