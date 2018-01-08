@@ -22,11 +22,13 @@ import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
 import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeListResult;
 import com.inspur.emmcloud.bean.appcenter.volume.Volume;
 import com.inspur.emmcloud.util.common.InputMethodUtils;
+import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
+import com.inspur.emmcloud.widget.dialogs.ActionSheetDialog;
 import com.inspur.emmcloud.widget.dialogs.MyDialog;
 
 import org.json.JSONArray;
@@ -61,7 +63,7 @@ public class ShareVolumeActivity extends BaseActivity implements SwipeRefreshLay
         initView();
     }
 
-    private void initView(){
+    private void initView() {
         loadingDlg = new LoadingDialog(this);
         apiService = new MyAppAPIService(this);
         apiService.setAPIInterface(new WebService());
@@ -73,6 +75,18 @@ public class ShareVolumeActivity extends BaseActivity implements SwipeRefreshLay
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Volume volume = shareVolumeList.get(position);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("volume", volume);
+                bundle.putSerializable("title", volume.getName());
+                IntentUtils.startActivity(ShareVolumeActivity.this, VolumeFileActivity.class, bundle);
+            }
+        });
+        shareVolumeListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                Volume volume = shareVolumeList.get(position);
+                showVolumeOperationDlg(volume);
+                return true;
             }
         });
     }
@@ -126,6 +140,76 @@ public class ShareVolumeActivity extends BaseActivity implements SwipeRefreshLay
         InputMethodUtils.display(ShareVolumeActivity.this, inputEdit);
     }
 
+    /**
+     * 弹出网盘操作框
+     *
+     * @param volume
+     */
+    private void showVolumeOperationDlg(final Volume volume) {
+        boolean isOwner = volume.isOwner();
+        new ActionSheetDialog.ActionListSheetBuilder(ShareVolumeActivity.this)
+                .setTitle(volume.getName())
+                .addItem("删除", isOwner)
+                .addItem("网盘详情")
+                .addItem("重命名", isOwner)
+                .setOnSheetItemClickListener(new ActionSheetDialog.ActionListSheetBuilder.OnSheetItemClickListener() {
+                    @Override
+                    public void onClick(ActionSheetDialog dialog, View itemView, int position) {
+                        switch (position) {
+                            case 0:
+                                removeShareVolume(volume);
+                                break;
+                            case 1:
+                                break;
+                            case 2:
+                                showUpdateVolumeShareNameDlg(volume);
+                                break;
+                            default:
+                                break;
+                        }
+                        dialog.dismiss();
+                    }
+                }).build()
+                .show();
+    }
+
+    /**
+     * 弹出更改共享网盘名称弹出框
+     * @param volume
+     */
+    private void showUpdateVolumeShareNameDlg(final Volume volume){
+        final MyDialog createShareVolumeDlg = new MyDialog(ShareVolumeActivity.this,
+                R.layout.dialog_my_app_approval_password_input, R.style.userhead_dialog_bg);
+        createShareVolumeDlg.setCancelable(false);
+        final EditText inputEdit = (EditText) createShareVolumeDlg.findViewById(R.id.edit);
+        inputEdit.setText(volume.getName());
+        inputEdit.setSelectAllOnFocus(true);
+        inputEdit.setInputType(InputType.TYPE_CLASS_TEXT);
+        ((TextView) createShareVolumeDlg.findViewById(R.id.app_update_title)).setText("新建网盘");
+        Button okBtn = (Button) createShareVolumeDlg.findViewById(R.id.ok_btn);
+        okBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String shareVolumeName = inputEdit.getText().toString();
+                if (StringUtils.isBlank(shareVolumeName)) {
+                    ToastUtils.show(getApplicationContext(), "请输入网盘名称");
+                } else if(!shareVolumeName.equals(volume.getName())){
+                    updateShareVolumeName(volume,shareVolumeName);
+                }else {
+                    createShareVolumeDlg.dismiss();
+                }
+            }
+        });
+
+        (createShareVolumeDlg.findViewById(R.id.cancel_btn)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                createShareVolumeDlg.dismiss();
+            }
+        });
+        createShareVolumeDlg.show();
+        InputMethodUtils.display(ShareVolumeActivity.this, inputEdit);
+    }
 
     private class Adapter extends BaseAdapter {
         @Override
@@ -144,9 +228,15 @@ public class ShareVolumeActivity extends BaseActivity implements SwipeRefreshLay
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+        public View getView(final int position, View convertView, ViewGroup parent) {
             convertView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.app_volume_share_item_view, null);
             ((TextView) convertView.findViewById(R.id.name_text)).setText(shareVolumeList.get(position).getName());
+            (convertView.findViewById(R.id.file_operation_drop_down_img)).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    showVolumeOperationDlg(shareVolumeList.get(position));
+                }
+            });
             return convertView;
         }
     }
@@ -157,23 +247,6 @@ public class ShareVolumeActivity extends BaseActivity implements SwipeRefreshLay
     }
 
     /**
-     * 创建共享网盘
-     * @param shareVolumeName
-     */
-    private void createShareVolume(String shareVolumeName){
-        if (NetUtils.isNetworkConnected(getApplicationContext())){
-            loadingDlg.show();
-            JSONArray jsonArray = new JSONArray();
-            try{
-                jsonArray.put(0,MyApplication.getInstance().getUid());
-            }catch (Exception e){
-                e.printStackTrace();
-            }
-            apiService.createShareVolume(jsonArray,shareVolumeName);
-        }
-    }
-
-    /**
      * 获取云盘列表
      */
     private void getVolumeList() {
@@ -181,6 +254,43 @@ public class ShareVolumeActivity extends BaseActivity implements SwipeRefreshLay
             apiService.getVolumeList();
         } else {
             swipeRefreshLayout.setRefreshing(false);
+        }
+    }
+
+
+    /**
+     * 创建共享网盘
+     *
+     * @param shareVolumeName
+     */
+    private void createShareVolume(String shareVolumeName) {
+        if (NetUtils.isNetworkConnected(getApplicationContext())) {
+            loadingDlg.show();
+            JSONArray jsonArray = new JSONArray();
+            try {
+                jsonArray.put(0, MyApplication.getInstance().getUid());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            apiService.createShareVolume(jsonArray, shareVolumeName);
+        }
+    }
+
+    /**
+     * 删除共享网盘
+     * @param volume
+     */
+    private void removeShareVolume(Volume volume){
+        if (NetUtils.isNetworkConnected(getApplicationContext())){
+            loadingDlg.show();
+            apiService.removeShareVolumeName(volume);
+        }
+    }
+
+    private void updateShareVolumeName(Volume volume,String name){
+        if (NetUtils.isNetworkConnected(getApplicationContext())){
+            loadingDlg.show();
+            apiService.updateShareVolumeName(volume,name);
         }
     }
 
@@ -202,16 +312,56 @@ public class ShareVolumeActivity extends BaseActivity implements SwipeRefreshLay
 
         @Override
         public void returnCreateShareVolumeSuccess(Volume volume) {
+            if (loadingDlg != null && loadingDlg.isShowing()) {
+                loadingDlg.dismiss();
+            }
             shareVolumeList.add(volume);
             adapter.notifyDataSetChanged();
         }
 
         @Override
         public void returnCreateShareVolumeFail(String error, int errorCode) {
-            if (loadingDlg != null && loadingDlg.isShowing()){
+            if (loadingDlg != null && loadingDlg.isShowing()) {
                 loadingDlg.dismiss();
             }
-            WebServiceMiddleUtils.hand(getApplicationContext(),error,errorCode);
+            WebServiceMiddleUtils.hand(getApplicationContext(), error, errorCode);
+        }
+
+        @Override
+        public void returnUpdateShareVolumeNameSuccess(Volume volume, String name) {
+            if (loadingDlg != null && loadingDlg.isShowing()) {
+                loadingDlg.dismiss();
+            }
+            int position = shareVolumeList.indexOf(volume);
+            if (position != -1){
+                shareVolumeList.get(position).setName(name);
+                adapter.notifyDataSetChanged();
+            }
+        }
+
+        @Override
+        public void returnUpdateShareVolumeNameFail(String error, int errorCode) {
+            if (loadingDlg != null && loadingDlg.isShowing()) {
+                loadingDlg.dismiss();
+            }
+            WebServiceMiddleUtils.hand(getApplicationContext(), error, errorCode);
+        }
+
+        @Override
+        public void retrunRemoveShareVolumeSuccess(Volume volume) {
+            if (loadingDlg != null && loadingDlg.isShowing()) {
+                loadingDlg.dismiss();
+            }
+            shareVolumeList.remove(volume);
+            adapter.notifyDataSetChanged();
+        }
+
+        @Override
+        public void returnRemoveShareVolumeFail(String error, int errorCode) {
+            if (loadingDlg != null && loadingDlg.isShowing()) {
+                loadingDlg.dismiss();
+            }
+            WebServiceMiddleUtils.hand(getApplicationContext(), error, errorCode);
         }
     }
 }

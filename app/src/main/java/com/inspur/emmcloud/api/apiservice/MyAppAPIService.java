@@ -935,4 +935,81 @@ public class MyAppAPIService {
         });
 
     }
+
+    /**
+     * 修改网盘名称
+     * @param volume
+     * @param name
+     */
+    public void updateShareVolumeName(final Volume volume,final String name){
+        final String url = APIUri.getUpdateVolumeInfoUrl(volume.getId());
+        RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
+        params.addParameter("name", name);
+        x.http().request(HttpMethod.PUT,params,new APICallback(context,url){
+            @Override
+            public void callbackSuccess(String arg0) {
+                apiInterface.returnUpdateShareVolumeNameSuccess(volume,name);
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                apiInterface.returnUpdateShareVolumeNameFail(error,responseCode);
+            }
+
+            @Override
+            public void callbackTokenExpire() {
+                new OauthUtils(new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        updateShareVolumeName(volume, name);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                }, context).refreshToken(url);
+            }
+        });
+
+    }
+
+
+    /**
+     * 修改网盘名称
+     * @param volume
+     * @param name
+     */
+    public void removeShareVolumeName(final Volume volume){
+        final String url = APIUri.getUpdateVolumeInfoUrl(volume.getId());
+        RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
+        params.addParameter("id", volume.getId());
+        x.http().request(HttpMethod.DELETE,params,new APICallback(context,url){
+            @Override
+            public void callbackSuccess(String arg0) {
+                apiInterface.retrunRemoveShareVolumeSuccess(volume);
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                apiInterface.returnRemoveShareVolumeFail(error,responseCode);
+            }
+
+            @Override
+            public void callbackTokenExpire() {
+                new OauthUtils(new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        removeShareVolumeName(volume);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                }, context).refreshToken(url);
+            }
+        });
+
+    }
 }

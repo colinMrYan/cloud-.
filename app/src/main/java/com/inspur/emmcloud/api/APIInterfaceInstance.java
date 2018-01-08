@@ -1487,4 +1487,21 @@ public class APIInterfaceInstance implements APIInterface {
     @Override
     public void returnCreateShareVolumeFail(String error, int errorCode) {
     }
+
+    @Override
+    public void returnUpdateShareVolumeNameSuccess(Volume volume, String name) {
+    }
+
+    @Override
+    public void returnUpdateShareVolumeNameFail(String error, int errorCode) {
+    }
+
+    @Override
+    public void retrunRemoveShareVolumeSuccess(Volume volume) {
+    }
+
+    @Override
+    public void returnRemoveShareVolumeFail(String error, int errorCode) {
+
+    }
 }

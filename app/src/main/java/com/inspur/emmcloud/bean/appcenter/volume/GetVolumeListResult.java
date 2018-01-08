@@ -1,7 +1,6 @@
 package com.inspur.emmcloud.bean.appcenter.volume;
 
 import com.inspur.emmcloud.util.common.JSONUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -32,7 +31,6 @@ public class GetVolumeListResult {
     }
 
     public List<Volume> getShareVolumeList() {
-        LogUtils.jasonDebug("shareVolumeList="+shareVolumeList);
         return shareVolumeList;
     }
 

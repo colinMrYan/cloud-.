@@ -9,10 +9,8 @@
         android:layout_width="34dp"
         android:layout_height="34dp"
         android:layout_centerVertical="true"
-        android:layout_marginBottom="16dp"
         android:layout_marginLeft="14dp"
-        android:layout_marginRight="22dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginRight="10dp"
         android:src="@drawable/ic_volume_share_volume"
         android:scaleType="fitXY" />
     <TextView
@@ -29,13 +27,13 @@
     <ImageView
         android:id="@+id/file_operation_drop_down_img"
         android:layout_width="50dp"
-        android:layout_height="76dp"
+        android:layout_height="56dp"
         android:layout_centerVertical="true"
         android:layout_alignParentRight="true"
-        android:paddingBottom="20dp"
-        android:paddingLeft="13dp"
+        android:paddingBottom="10dp"
+        android:paddingLeft="12dp"
         android:paddingRight="2dp"
-        android:paddingTop="20dp"
+        android:paddingTop="10dp"
         android:scaleType="fitXY"
         android:src="@drawable/ic_volume_file_operation_drop_down"
         />
@@ -43,7 +41,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="0.6dp"
-        android:layout_below="@id/icon_img"
+        android:layout_below="@id/file_operation_drop_down_img"
         android:layout_marginLeft="14dp"
         android:background="@color/color_list_divider" />
 </RelativeLayout>

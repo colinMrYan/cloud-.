@@ -80,6 +80,12 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
     @ViewInject(R.id.no_file_text)
     protected TextView noFileText;
 
+    @ViewInject(R.id.batch_operation_delete_text)
+    private TextView batchOperationDeleteText;
+
+    @ViewInject(R.id.batch_operation_move_text)
+    private TextView batchOperationMoveText;
+
     protected LoadingDialog loadingDlg;
     protected VolumeFileAdapter adapter;
     protected List<VolumeFile> volumeFileList = new ArrayList<>();
@@ -108,7 +114,7 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
         apiServiceBase.setAPIInterface(new WebServiceBase());
         volume = (Volume) getIntent().getSerializableExtra("volume");
         currentDirAbsolutePath = getIntent().getExtras().getString("currentDirAbsolutePath", "/");
-        fileFilterType = getIntent().getExtras().getString("fileFilterType","");
+        fileFilterType = getIntent().getExtras().getString("fileFilterType", "");
         String title = getIntent().getExtras().getString("title", "");
         headerText.setVisibility(View.VISIBLE);
         headerText.setText(title);
@@ -134,45 +140,45 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
      */
     protected void showFileOperationDlg(final VolumeFile volumeFile) {
         boolean isVolumeFileDirectory = volumeFile.getType().equals(VolumeFile.FILE_TYPE_DIRECTORY);
-            new ActionSheetDialog.ActionListSheetBuilder(VolumeFileBaseActivity.this)
-                    .setTitle(volumeFile.getName())
-                    .addItem("删除",getVolumeFileListResult.getHaveModifyPrivilege())
-                    .addItem("下载",!isVolumeFileDirectory)
-                    .addItem("重命名",getVolumeFileListResult.getHaveModifyPrivilege())
-                    .addItem("移动到",getVolumeFileListResult.getHaveModifyPrivilege())
-                    .addItem("复制")
-                    .addItem("分享",!isVolumeFileDirectory)
-                    .setOnSheetItemClickListener(new ActionSheetDialog.ActionListSheetBuilder.OnSheetItemClickListener() {
-                        @Override
-                        public void onClick(ActionSheetDialog dialog, View itemView, int position) {
-                            switch (position) {
-                                case 0:
-                                    showFileDelWranibgDlg(volumeFile);
-                                    break;
-                                case 1:
-                                    goDownloadFile(volumeFile);
-                                    break;
-                                case 2:
-                                    showFileRenameDlg(volumeFile);
-                                    break;
-                                case 3:
-                                    moveVolumeFileList.clear();
-                                    moveVolumeFileList.add(volumeFile);
-                                    GomoveFile(moveVolumeFileList);
-                                    break;
-                                case 4:
-                                    List<VolumeFile> copyVolumeFileList = new ArrayList<VolumeFile>();
-                                    copyVolumeFileList.add(volumeFile);
-                                    GoCopyFile(copyVolumeFileList);
-                                    break;
-                                default:
-                                    break;
-                            }
-                            dialog.dismiss();
+        new ActionSheetDialog.ActionListSheetBuilder(VolumeFileBaseActivity.this)
+                .setTitle(volumeFile.getName())
+                .addItem("删除", getVolumeFileListResult.getHaveModifyPrivilege())
+                .addItem("下载", !isVolumeFileDirectory)
+                .addItem("重命名", getVolumeFileListResult.getHaveModifyPrivilege())
+                .addItem("移动到", getVolumeFileListResult.getHaveModifyPrivilege())
+                .addItem("复制")
+                .addItem("分享", !isVolumeFileDirectory)
+                .setOnSheetItemClickListener(new ActionSheetDialog.ActionListSheetBuilder.OnSheetItemClickListener() {
+                    @Override
+                    public void onClick(ActionSheetDialog dialog, View itemView, int position) {
+                        switch (position) {
+                            case 0:
+                                showFileDelWranibgDlg(volumeFile);
+                                break;
+                            case 1:
+                                goDownloadFile(volumeFile);
+                                break;
+                            case 2:
+                                showFileRenameDlg(volumeFile);
+                                break;
+                            case 3:
+                                moveVolumeFileList.clear();
+                                moveVolumeFileList.add(volumeFile);
+                                GomoveFile(moveVolumeFileList);
+                                break;
+                            case 4:
+                                List<VolumeFile> copyVolumeFileList = new ArrayList<VolumeFile>();
+                                copyVolumeFileList.add(volumeFile);
+                                GoCopyFile(copyVolumeFileList);
+                                break;
+                            default:
+                                break;
                         }
-                    })
-                    .build()
-                    .show();
+                        dialog.dismiss();
+                    }
+                })
+                .build()
+                .show();
     }
 
 
@@ -256,10 +262,7 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
      */
     protected void showFileRenameDlg(final VolumeFile volumeFile) {
         String fileName = volumeFile.getName();
-        String fileNameNoEx = fileName;
-        if (volumeFile.getType().equals(VolumeFile.FILE_TYPE_REGULAR)) {
-            fileNameNoEx = FileUtils.getFileNameWithoutExtension(fileName);
-        }
+        final String fileNameNoEx = volumeFile.getType().equals(VolumeFile.FILE_TYPE_REGULAR) ? FileUtils.getFileNameWithoutExtension(fileName) : fileName;
         final String fileExtension = fileName.replace(fileNameNoEx, "");
         fileRenameDlg = new MyDialog(VolumeFileBaseActivity.this,
                 R.layout.dialog_my_app_approval_password_input, R.style.userhead_dialog_bg);
@@ -279,7 +282,7 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
                     ToastUtils.show(getApplicationContext(), "请输入文件/文件夹名称");
                 } else if (!FomatUtils.isValidFileName(newName)) {
                     ToastUtils.show(getApplicationContext(), "文件名中不能包含特殊字符 / \\ \" : | * ? < >");
-                } else {
+                } else if (!fileNameNoEx.equals(newName)) {
                     newName = newName + fileExtension;
                     boolean isNameDuplication = false;
                     for (int i = 0; i < volumeFileList.size(); i++) {
@@ -294,11 +297,9 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
                         ToastUtils.show(getApplicationContext(), "已存在同名文件/文件夹");
                         return;
                     }
-                    if (!newName.equals(volumeFile.getName())) {
-                        renameFile(volumeFile, newName);
-                    } else {
-                        fileRenameDlg.dismiss();
-                    }
+                    renameFile(volumeFile, newName);
+                } else {
+                    fileRenameDlg.dismiss();
                 }
             }
         });
@@ -313,15 +314,28 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
         InputMethodUtils.display(VolumeFileBaseActivity.this, inputEdit);
     }
 
+
+    /**
+     * 设置跟权限相关的layout
+     * @param haveModifyPrivilege
+     */
+    private void setLayoutByPrivilege(boolean haveModifyPrivilege){
+        //当自己没有写权限时禁止上传文件和新建文件夹
+        headerOperationLayout.setVisibility(haveModifyPrivilege ? View.VISIBLE : View.GONE);
+        batchOperationDeleteText.setVisibility(haveModifyPrivilege ? View.VISIBLE : View.GONE);
+        batchOperationMoveText.setVisibility(haveModifyPrivilege ? View.VISIBLE : View.GONE);
+
+    }
     /**
      * 下载或打开文件
+     *
      * @param volumeFile
      */
-    protected void downloadOrOpenVolumeFile(VolumeFile volumeFile){
+    protected void downloadOrOpenVolumeFile(VolumeFile volumeFile) {
         String fileSavePath = MyAppConfig.LOCAL_DOWNLOAD_PATH + volumeFile.getName();
         if (FileUtils.isFileExist(fileSavePath)) {
-            FileUtils.openFile(getApplicationContext(), fileSavePath,volumeFile.getFormat());
-        }else {
+            FileUtils.openFile(getApplicationContext(), fileSavePath, volumeFile.getFormat());
+        } else {
             Bundle bundle = new Bundle();
             bundle.putSerializable("volumeId", volume.getId());
             bundle.putSerializable("volumeFile", volumeFile);
@@ -356,9 +370,10 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
 
     /**
      * 文件下载
+     *
      * @param volumeFile
      */
-    private void goDownloadFile(VolumeFile volumeFile){
+    private void goDownloadFile(VolumeFile volumeFile) {
         Bundle bundle = null;
         bundle = new Bundle();
         bundle.putString("volumeId", volume.getId());
@@ -489,14 +504,13 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
                 loadingDlg.dismiss();
             }
             VolumeFileBaseActivity.this.getVolumeFileListResult = getVolumeFileListResult;
-            //当自己没有写权限时禁止上传文件和新建文件夹
-            headerOperationLayout.setVisibility(getVolumeFileListResult.getHaveModifyPrivilege()?View.VISIBLE:View.GONE);
+            setLayoutByPrivilege(getVolumeFileListResult.getHaveModifyPrivilege());
             swipeRefreshLayout.setRefreshing(false);
-            if (StringUtils.isBlank(fileFilterType)){
+            if (StringUtils.isBlank(fileFilterType)) {
                 volumeFileList = getVolumeFileListResult.getVolumeFileList();
-            }else if(fileFilterType.equals(VolumeFile.FILE_TYPE_DIRECTORY)){
+            } else if (fileFilterType.equals(VolumeFile.FILE_TYPE_DIRECTORY)) {
                 volumeFileList = getVolumeFileListResult.getVolumeFileDirectoryList();
-            }else {
+            } else {
                 volumeFileList = getVolumeFileListResult.getVolumeFileFilterList(fileFilterType);
             }
 

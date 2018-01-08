@@ -519,6 +519,15 @@ public class APIUri {
     }
 
     /**
+     * 更新网盘信息
+     * @param volumeId
+     * @return
+     */
+    public static String getUpdateVolumeInfoUrl(String volumeId){
+        return URL_BASE_VOLUME+"/"+volumeId;
+    }
+
+    /**
      * 获取云盘文件列表
      *
      * @param volumeId
