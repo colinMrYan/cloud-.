@@ -33,6 +33,7 @@ import com.inspur.emmcloud.interf.OauthCallBack;
 import com.inspur.emmcloud.util.privates.OauthUtils;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
 import org.xutils.common.util.KeyValue;
 import org.xutils.http.HttpMethod;
 import org.xutils.http.RequestParams;
@@ -700,8 +701,20 @@ public class MyAppAPIService {
     public void moveVolumeFile(final String volumeId, final String currentDirAbsolutePath, final List<VolumeFile> moveVolumeFileList, final String toPath) {
         final String url = APIUri.getMoveVolumeFileUrl(volumeId);
         RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
-        params.addQueryStringParameter("to", toPath);
-        params.addQueryStringParameter("from", currentDirAbsolutePath + moveVolumeFileList.get(0).getName());
+        JSONArray array = new JSONArray();
+        try {
+            for (int i =0;i<moveVolumeFileList.size();i++){
+                JSONObject object = new JSONObject();
+                object.put("from", currentDirAbsolutePath + moveVolumeFileList.get(i).getName());
+                object.put("to", toPath);
+                array.put(object);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        params.setBodyContent(array.toString());
+        params.setAsJsonContent(true);
+
         x.http().request(HttpMethod.PUT, params, new APICallback(context, url) {
             @Override
             public void callbackSuccess(String arg0) {
@@ -737,11 +750,22 @@ public class MyAppAPIService {
      * @param volumeId
      * @param currentDirAbsolutePath
      */
-    public void copyVolumeFile(final String volumeId, final String currentDirAbsolutePath, final List<VolumeFile> moveVolumeFileList, final String toPath) {
+    public void copyVolumeFile(final String volumeId, final String currentDirAbsolutePath, final List<VolumeFile> copyVolumeFileList, final String toPath) {
         final String url = APIUri.getCopyVolumeFileUrl(volumeId);
         RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
-        params.addQueryStringParameter("to", toPath);
-        params.addQueryStringParameter("from", currentDirAbsolutePath + moveVolumeFileList.get(0).getName());
+        JSONArray array = new JSONArray();
+        try {
+            for (int i =0;i<copyVolumeFileList.size();i++){
+                JSONObject object = new JSONObject();
+                object.put("from", currentDirAbsolutePath + copyVolumeFileList.get(i).getName());
+                object.put("to", toPath);
+                array.put(object);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        params.setBodyContent(array.toString());
+        params.setAsJsonContent(true);
         x.http().post(params, new APICallback(context, url) {
             @Override
             public void callbackSuccess(String arg0) {
@@ -759,7 +783,7 @@ public class MyAppAPIService {
 
                     @Override
                     public void reExecute() {
-                        copyVolumeFile(volumeId, currentDirAbsolutePath, moveVolumeFileList, toPath);
+                        copyVolumeFile(volumeId, currentDirAbsolutePath, copyVolumeFileList, toPath);
                     }
 
                     @Override
@@ -818,14 +842,25 @@ public class MyAppAPIService {
      * @param fileName
      * @param currentDirAbsolutePath
      */
-    public void volumeFileDelete(final String volumeId, final VolumeFile volumeFile, final String currentDirAbsolutePath) {
+    public void volumeFileDelete(final String volumeId, final List<VolumeFile> deleteVolumeFileList, final String currentDirAbsolutePath) {
         final String url = APIUri.getVolumeFileOperationUrl(volumeId);
         RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
-        params.addQueryStringParameter("path", currentDirAbsolutePath + volumeFile.getName());
+        JSONArray array = new JSONArray();
+        try {
+            for (int i =0;i<deleteVolumeFileList.size();i++){
+                JSONObject object = new JSONObject();
+                object.put("path", currentDirAbsolutePath + deleteVolumeFileList.get(i).getName());
+                array.put(object);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        params.setBodyContent(array.toString());
+        params.setAsJsonContent(true);
         x.http().request(HttpMethod.DELETE, params, new APICallback(context, url) {
             @Override
             public void callbackSuccess(String arg0) {
-                apiInterface.returnVolumeFileDeleteSuccess(volumeFile);
+                apiInterface.returnVolumeFileDeleteSuccess(deleteVolumeFileList);
             }
 
             @Override
@@ -838,7 +873,7 @@ public class MyAppAPIService {
                 new OauthUtils(new OauthCallBack() {
                     @Override
                     public void reExecute() {
-                        volumeFileDelete(volumeId, volumeFile, currentDirAbsolutePath);
+                        volumeFileDelete(volumeId, deleteVolumeFileList, currentDirAbsolutePath);
                     }
 
                     @Override

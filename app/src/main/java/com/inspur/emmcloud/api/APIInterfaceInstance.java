@@ -1441,7 +1441,7 @@ public class APIInterfaceInstance implements APIInterface {
     }
 
     @Override
-    public void returnVolumeFileDeleteSuccess(VolumeFile volumeFile) {
+    public void returnVolumeFileDeleteSuccess(List<VolumeFile> deleteVolumeFileList) {
     }
 
     @Override

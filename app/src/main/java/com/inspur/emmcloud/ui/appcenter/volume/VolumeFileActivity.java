@@ -153,6 +153,9 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
     protected void initDataBlankLayoutStatus() {
         super.initDataBlankLayoutStatus();
         operationLayout.setVisibility((volumeFileList.size() == 0) ? View.GONE : View.VISIBLE);
+        if (adapter.getMultiselect()){
+            setMutiSelect(false);
+        }
     }
 
 
@@ -196,13 +199,13 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
                 sortOperationPop.dismiss();
                 break;
             case R.id.batch_operation_delete_text:
+                deleteFile(adapter.getSelectVolumeFileList());
                 break;
             case R.id.batch_operation_copy_text:
-                List<VolumeFile> copyVolumeFileList = adapter.getSelectVolumeFileList();
-                GoCopyFile(copyVolumeFileList);
+                copyFile(adapter.getSelectVolumeFileList());
                 break;
             case R.id.batch_operation_move_text:
-                GomoveFile(adapter.getSelectVolumeFileList());
+                moveFile(adapter.getSelectVolumeFileList());
                 break;
             case R.id.batch_operation_cancel_text:
                 setMutiSelect(false);

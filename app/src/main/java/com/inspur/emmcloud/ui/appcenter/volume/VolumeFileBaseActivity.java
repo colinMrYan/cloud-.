@@ -156,7 +156,7 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
                                 showFileDelWranibgDlg(volumeFile);
                                 break;
                             case 1:
-                                goDownloadFile(volumeFile);
+                                downloadFile(volumeFile);
                                 break;
                             case 2:
                                 showFileRenameDlg(volumeFile);
@@ -164,12 +164,12 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
                             case 3:
                                 moveVolumeFileList.clear();
                                 moveVolumeFileList.add(volumeFile);
-                                GomoveFile(moveVolumeFileList);
+                                moveFile(moveVolumeFileList);
                                 break;
                             case 4:
                                 List<VolumeFile> copyVolumeFileList = new ArrayList<VolumeFile>();
                                 copyVolumeFileList.add(volumeFile);
-                                GoCopyFile(copyVolumeFileList);
+                                copyFile(copyVolumeFileList);
                                 break;
                             default:
                                 break;
@@ -199,7 +199,9 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
                 .addAction(R.string.ok, new QMUIDialogAction.ActionListener() {
                     @Override
                     public void onClick(QMUIDialog dialog, int index) {
-                        deleteFileByName(volumeFile);
+                        List<VolumeFile> deleteVolumeFileList = new ArrayList<>();
+                        deleteVolumeFileList.add(volumeFile);
+                        deleteFile(deleteVolumeFileList);
                         dialog.dismiss();
                     }
                 })
@@ -373,7 +375,7 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
      *
      * @param volumeFile
      */
-    private void goDownloadFile(VolumeFile volumeFile) {
+    private void downloadFile(VolumeFile volumeFile) {
         Bundle bundle = null;
         bundle = new Bundle();
         bundle.putString("volumeId", volume.getId());
@@ -389,7 +391,7 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
      *
      * @param volumeFileList
      */
-    protected void GomoveFile(List<VolumeFile> moveVolumeFileList) {
+    protected void moveFile(List<VolumeFile> moveVolumeFileList) {
         this.moveVolumeFileList = moveVolumeFileList;
         if (moveVolumeFileList.size() > 0) {
             Intent intent = new Intent(getApplicationContext(), VolumeFileLocationSelectActivity.class);
@@ -411,7 +413,7 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
      * 复制文件
      * @param volumeFileList
      */
-    protected void GoCopyFile(List<VolumeFile> volumeFileList) {
+    protected void copyFile(List<VolumeFile> volumeFileList) {
         if (volumeFileList.size() > 0) {
             Intent intent = new Intent(getApplicationContext(), VolumeFileLocationSelectActivity.class);
             Bundle bundle = new Bundle();
@@ -429,21 +431,6 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
 
 
     /**
-     * 删除本地列表的文件
-     *
-     * @param fileName
-     */
-    private void deleteFileInLocal(VolumeFile volumeFile) {
-        int deletePositon = volumeFileList.indexOf(volumeFile);
-        if (deletePositon != -1) {
-            volumeFileList.remove(deletePositon);
-            adapter.setVolumeFileList(volumeFileList);
-            adapter.notifyItemRemoved(deletePositon);
-            initDataBlankLayoutStatus();
-        }
-    }
-
-    /**
      * 创建文件夹
      *
      * @param forderName
@@ -455,10 +442,14 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
         }
     }
 
-    private void deleteFileByName(VolumeFile volumeFile) {
+    /**
+     * 删除文件
+     * @param deleteVolumeFile
+     */
+    protected void deleteFile(List<VolumeFile> deleteVolumeFile) {
         if (NetUtils.isNetworkConnected(getApplicationContext())) {
             loadingDlg.show();
-            apiServiceBase.volumeFileDelete(volume.getId(), volumeFile, currentDirAbsolutePath);
+            apiServiceBase.volumeFileDelete(volume.getId(), deleteVolumeFile, currentDirAbsolutePath);
         }
     }
 
@@ -557,11 +548,14 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
         }
 
         @Override
-        public void returnVolumeFileDeleteSuccess(VolumeFile volumeFile) {
+        public void returnVolumeFileDeleteSuccess(List<VolumeFile> deleteVolumeFileList) {
             if (loadingDlg != null && loadingDlg.isShowing()) {
                 loadingDlg.dismiss();
             }
-            deleteFileInLocal(volumeFile);
+            volumeFileList.removeAll(deleteVolumeFileList);
+            adapter.setVolumeFileList(volumeFileList);
+            adapter.notifyDataSetChanged();
+            initDataBlankLayoutStatus();
         }
 
         @Override

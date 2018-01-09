@@ -551,7 +551,7 @@ public interface APIInterface {
     void returnCreateForderSuccess(VolumeFile volumeFile);
     void returnCreateForderFail(String error,int errorCode);
 
-    void returnVolumeFileDeleteSuccess(VolumeFile volumeFile);
+    void returnVolumeFileDeleteSuccess(List<VolumeFile> deleteVolumeFileList);
     void returnVolumeFileDeleteFail(String error, int errorCode);
 
 
