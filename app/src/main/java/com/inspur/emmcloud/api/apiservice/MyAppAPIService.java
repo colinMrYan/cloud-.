@@ -34,13 +34,10 @@ import com.inspur.emmcloud.util.privates.OauthUtils;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.xutils.common.util.KeyValue;
 import org.xutils.http.HttpMethod;
 import org.xutils.http.RequestParams;
-import org.xutils.http.body.UrlEncodedParamsBody;
 import org.xutils.x;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -931,17 +928,20 @@ public class MyAppAPIService {
      * @param memberArray
      * @param volumeName
      */
-    public void createShareVolume(final JSONArray memberUidArray, final String volumeName) {
+    public void createShareVolume(final String myUid, final String volumeName) {
         final String url = APIUri.getVolumeListUrl();
         RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
-        List<KeyValue> keyValueList = new ArrayList<>();
-        keyValueList.add(new KeyValue("name",volumeName));
-        keyValueList.add(new KeyValue("members","66666"));
+        JSONObject object = new JSONObject();
         try {
-            params.setRequestBody(new UrlEncodedParamsBody(keyValueList,"utf-8"));
+            object.put("name",volumeName);
+            JSONArray array = new JSONArray();
+            array.put(myUid);
+            object.put("members",array);
         }catch (Exception e){
             e.printStackTrace();
         }
+        params.setBodyContent(object.toString());
+        params.setAsJsonContent(true);
         x.http().post(params, new APICallback(context, url) {
             @Override
             public void callbackSuccess(String arg0) {
@@ -958,7 +958,7 @@ public class MyAppAPIService {
                 new OauthUtils(new OauthCallBack() {
                     @Override
                     public void reExecute() {
-                        createShareVolume(memberUidArray, volumeName);
+                        createShareVolume(myUid, volumeName);
                     }
 
                     @Override

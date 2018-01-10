@@ -70,7 +70,7 @@
             android:id="@+id/share_volume_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:divider="@color/transparent"
+            android:divider="@null"
             android:dividerHeight="0dp"></ListView>
     </android.support.v4.widget.SwipeRefreshLayout>
 
