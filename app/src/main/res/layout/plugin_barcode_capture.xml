@@ -1,153 +1,77 @@
-<?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/capture_containter"
+<?xml version="1.0" encoding="UTF-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
 
-    <SurfaceView
-        android:id="@+id/capture_preview"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clipToPadding="true"
-        android:fitsSystemWindows="true"/>
+        android:layout_height="match_parent" >
 
-    <RelativeLayout
-        android:id="@+id/rl_title"
-        android:layout_width="match_parent"
-        android:layout_height="170dp"
-        android:layout_alignParentTop="true"
-        android:background="@drawable/plugin_scan_mask">
+        <SurfaceView
+            android:id="@+id/preview_view"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent" />
 
-        <ImageView
-            android:id="@+id/top_mask"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="40dp"
-            android:onClick="btn"
-            android:src="@drawable/plugin_btn_scan_light"/>
-
-        <ImageView
-            android:id="@+id/top_openpicture"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="40dp"
-            android:visibility="gone"
-            android:onClick="btn"
-            />
-
-        <ImageView
-            android:id="@+id/top_back"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="40dp"
-            android:onClick="btn"
-            android:src="@drawable/plugin_btn_scan_back"/>
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:id="@+id/capture_crop_layout"
-        android:layout_width="280dp"
-        android:layout_height="280dp"
-        android:layout_below="@id/rl_title"
-        android:layout_centerHorizontal="true"
-        android:background="@drawable/plugin_scan_capture"
-        >
-
-        <ImageView
-            android:id="@+id/capture_scan_line"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_alignParentTop="true"
-            android:layout_margin="5dp"
-            android:background="@drawable/plugin_scan_ray"
-            />
-    </RelativeLayout>
+            android:orientation="vertical" >
 
-    <ImageView
-        android:id="@+id/bottom_mask"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentBottom="true"
-        android:layout_below="@id/capture_crop_layout"
-        android:background="@drawable/plugin_scan_mask"
-        />
+            <com.inspur.imp.plugin.barcode.view.ViewfinderView
+                android:id="@+id/viewfinder_view"
+                android:layout_width="fill_parent"
+                android:layout_height="match_parent" />
+        </LinearLayout>
 
-    <ImageView
-        android:id="@+id/left_mask"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@id/bottom_mask"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@id/rl_title"
-        android:layout_toLeftOf="@id/capture_crop_layout"
-        android:background="@drawable/plugin_scan_mask"
-        />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#00000000" >
 
-    <ImageView
-        android:id="@+id/right_mask"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@id/bottom_mask"
-        android:layout_alignParentRight="true"
-        android:layout_below="@id/rl_title"
-        android:layout_toRightOf="@id/capture_crop_layout"
-        android:background="@drawable/plugin_scan_mask"
-        />
+            <RelativeLayout
+                android:layout_gravity="top"
+                android:padding="10dp"
+                android:background="#5e000000"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <ImageButton
+                    android:id="@+id/close_camera_btn"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:padding="5dp"
+                    android:scaleType="fitXY"
+                    android:background="@null"
+                    android:src="@drawable/plugin_cemera_btn_close_camera"/>
 
-    <TextView
-        android:layout_marginTop="20dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_below="@+id/ll_scan_help"
-        android:layout_centerHorizontal="true"
-        android:text="@string/capture_tip"
-        android:textColor="@android:color/white"
-        android:textSize="15sp"/>
+            </RelativeLayout>
 
-    <LinearLayout
-        android:id="@+id/ll_scan_help"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@id/capture_crop_layout"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="30dp"
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:background="#00000000"
+                android:paddingBottom="5dp"
+                android:paddingTop="5dp" >
 
-        android:onClick="btn"
-        android:weightSum="2">
+                <Button
+                    android:id="@+id/btn_torch"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:layout_centerHorizontal="true"
+                    android:background="@drawable/icon_lamp_off"
+                    android:textSize="18sp" />
 
-        <TextView
+                <TextView
+                    android:id="@+id/lamp_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/btn_torch"
+                    android:layout_centerHorizontal="true"
+                    android:text="@string/turn_on_light"
+                    android:textColor="@color/white" />
+            </RelativeLayout>
+        </RelativeLayout>
+    </FrameLayout>
 
-            android:id="@+id/imageView1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="30dp"
-            android:layout_weight="1"
-            android:drawableTop="@drawable/plugin_scan_code_icon"
-            android:gravity="center"
-            android:padding="10dp"
-            android:src="@drawable/plugin_scan_code_icon"
-            android:text="@string/qr_code"
-            android:textColor="#DBD5D5"/>
-
-        <TextView
-            android:id="@+id/imageView2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="30dp"
-            android:layout_weight="1"
-            android:drawableTop="@drawable/plugin_scan_linecode_icon"
-            android:gravity="center"
-            android:src="@drawable/plugin_scan_linecode_icon"
-            android:text="@string/bar_code"
-            android:textColor="#DBD5D5"/>
-    </LinearLayout>
-
-</RelativeLayout>
+</LinearLayout>
