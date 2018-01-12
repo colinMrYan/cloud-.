@@ -184,6 +184,7 @@
         <attr name="focus_guide_stroke_weight" format="dimension"/>
         <attr name="focus_crop_enabled" format="boolean"/>
         <attr name="focus_initial_frame_scale" format="float"/>
+        <attr name="focus_set_max_initial_frame_scale" format="boolean"/>
         <attr name="focus_animation_enabled" format="boolean"/>
         <attr name="focus_animation_duration" format="integer"/>
         <attr name="focus_handle_shadow_enabled" format="boolean"/>

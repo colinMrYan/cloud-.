@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.inspur.imp.plugin.camera.mycamera.FocusSurfaceView
+        android:id="@+id/preview_sv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/transparent"
+        android:visibility="visible"
+        app:focus_frame_can_change="true"
+        app:focus_frame_color="@android:color/transparent"
+        app:focus_frame_stroke_weight="0dp"
+        app:focus_guide_color="@android:color/holo_green_dark"
+        app:focus_guide_show_mode="not_show"
+        app:focus_guide_stroke_weight="1dp"
+        app:focus_handle_color="@android:color/white"
+        app:focus_handle_show_mode="show_always"
+        app:focus_handle_size="0dp"
+        app:focus_initial_frame_scale="0.65"
+        app:focus_min_frame_size="50dp"
+        app:focus_overlay_color="#ffffff"
+        app:focus_touch_padding="8dp" />
+    <RelativeLayout
+        android:layout_centerVertical="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:id="@+id/face_verification_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_horizontal"
+            android:weightSum="100">
+            <com.inspur.emmcloud.widget.SquareLayout
+                android:id="@+id/square_layout"
+                android:layout_width="0dp"
+                android:layout_weight="65"
+                android:background="@drawable/ic_setting_face_verification_bg"
+                android:layout_height="wrap_content">
+            </com.inspur.emmcloud.widget.SquareLayout>
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_below="@id/face_verification_layout"
+            android:orientation="vertical"
+            android:paddingTop="40dp"
+            android:gravity="center_horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="180dp">
+            <TextView
+                android:textSize="17sp"
+                android:textColor="#4cc7ff"
+                android:text="拿起手机，眨眨眼"
+                android:layout_below="@id/face_verification_layout"
+                android:gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <ImageView
+                android:src="@drawable/ic_setting_face_hint"
+                android:layout_marginTop="5dp"
+                android:scaleType="fitXY"
+                android:layout_width="110dp"
+                android:layout_height="110dp" />
+        </LinearLayout>
+    </RelativeLayout>
+
+
+
+
+    <ImageButton
+        android:id="@+id/close_camera_btn"
+        android:layout_width="66dp"
+        android:layout_height="66dp"
+        android:background="@null"
+        android:onClick="onClick"
+        android:padding="12dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/pup_close_before" />
+
+</RelativeLayout>

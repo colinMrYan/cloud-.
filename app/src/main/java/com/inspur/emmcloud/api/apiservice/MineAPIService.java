@@ -13,6 +13,7 @@ import com.inspur.emmcloud.api.APICallback;
 import com.inspur.emmcloud.api.APIInterface;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.bean.mine.GetBindingDeviceResult;
+import com.inspur.emmcloud.bean.mine.GetFaceSettingResult;
 import com.inspur.emmcloud.bean.system.GetBoolenResult;
 import com.inspur.emmcloud.bean.mine.GetDeviceLogResult;
 import com.inspur.emmcloud.bean.mine.GetLanguageResult;
@@ -420,6 +421,84 @@ public class MineAPIService {
                     @Override
                     public void reExecute() {
                         getMDMState();
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                }, context).refreshToken(completeUrl);
+            }
+        });
+    }
+
+    /**
+     * 设置脸部图像
+     * @param bitmapBase64
+     */
+    public void faceSetting(final String bitmapBase64){
+        final String completeUrl = APIUri.getFaceSettingUrl();
+        RequestParams params = ((MyApplication) context.getApplicationContext())
+                .getHttpRequestParams(completeUrl);
+        params.addParameter("face",bitmapBase64);
+        params.setAsJsonContent(true);
+        x.http().post(params, new APICallback(context,completeUrl) {
+            @Override
+            public void callbackSuccess(String arg0) {
+             apiInterface.returnFaceSettingSuccess(new GetFaceSettingResult(arg0));
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                apiInterface.returnFaceSettingFail(error, responseCode);
+            }
+
+            @Override
+            public void callbackTokenExpire() {
+                new OauthUtils(new OauthCallBack() {
+
+                    @Override
+                    public void reExecute() {
+                        faceSetting(bitmapBase64);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                }, context).refreshToken(completeUrl);
+            }
+        });
+    }
+
+    /**
+     * 刷脸比对图像
+     * @param bitmapBase64
+     */
+    public void faceVerify(final String bitmapBase64){
+        final String completeUrl = APIUri.getFaceVerifyUrl();
+        RequestParams params = ((MyApplication) context.getApplicationContext())
+                .getHttpRequestParams(completeUrl);
+        params.addParameter("face",bitmapBase64);
+        params.setAsJsonContent(true);
+        x.http().post(params, new APICallback(context,completeUrl) {
+            @Override
+            public void callbackSuccess(String arg0) {
+                apiInterface.returnFaceVerifySuccess(new GetFaceSettingResult(arg0));
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                apiInterface.returnFaceVerifyFail(error, responseCode);
+            }
+
+            @Override
+            public void callbackTokenExpire() {
+                new OauthUtils(new OauthCallBack() {
+
+                    @Override
+                    public void reExecute() {
+                        faceVerify(bitmapBase64);
                     }
 
                     @Override

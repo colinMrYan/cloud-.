@@ -380,14 +380,16 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
                 if (isSamSungType){
                     originBitmap = rotaingImageView(90, originBitmap);
                 }
-                //前置摄像头和后置摄像头拍照后图像角度旋转
-                Bitmap cropBitmap = previewSFV.getPicture(originBitmap);
                 if (currentCameraFacing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
                     orientation = (540 - orientation) % 360;
                 }
                 if (orientation != 0) {
-                    cropBitmap = rotaingImageView(orientation, cropBitmap);
+                    originBitmap = rotaingImageView(orientation, originBitmap);
                 }
+                String imgPaths = MyAppConfig.LOCAL_DOWNLOAD_PATH + System.currentTimeMillis() + ".png";
+                BitmapUtils.saveBitmap(originBitmap, imgPaths, 100, 0);
+                //前置摄像头和后置摄像头拍照后图像角度旋转
+                Bitmap cropBitmap = previewSFV.getPicture(originBitmap);
                 File photoDir = null;
                 if (photoSaveDirectoryPath != null) {
                     photoDir = new File(photoSaveDirectoryPath);

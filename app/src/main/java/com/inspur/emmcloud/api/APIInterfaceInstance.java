@@ -3,6 +3,7 @@ package com.inspur.emmcloud.api;
 
 import com.inspur.emmcloud.bean.appcenter.App;
 import com.inspur.emmcloud.bean.appcenter.AppRedirectResult;
+import com.inspur.emmcloud.bean.mine.GetFaceSettingResult;
 import com.inspur.emmcloud.bean.work.Attachment;
 import com.inspur.emmcloud.bean.chat.ChannelGroup;
 import com.inspur.emmcloud.bean.appcenter.GetAddAppResult;
@@ -1465,11 +1466,26 @@ public class APIInterfaceInstance implements APIInterface {
 
     @Override
     public void returnRecommendAppWidgetListSuccess(GetRecommendAppWidgetListResult getRecommendAppWidgetListResult) {
-
     }
 
     @Override
     public void returnRecommendAppWidgetListFail(String error, int errorCode) {
+    }
 
+
+    @Override
+    public void returnFaceSettingSuccess(GetFaceSettingResult getFaceSettingResult) {
+    }
+
+    @Override
+    public void returnFaceSettingFail(String error, int errorCode) {
+    }
+
+    @Override
+    public void returnFaceVerifySuccess(GetFaceSettingResult getFaceSettingResult) {
+    }
+
+    @Override
+    public void returnFaceVerifyFail(String error, int errorCode) {
     }
 }

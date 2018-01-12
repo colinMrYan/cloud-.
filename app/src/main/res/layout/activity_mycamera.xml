@@ -22,6 +22,7 @@
         app:focus_handle_size="5dp"
         app:focus_min_frame_size="50dp"
         app:focus_overlay_color="#86000000"
+        app:focus_set_max_initial_frame_scale="true"
         app:focus_touch_padding="8dp" />
 
     <RelativeLayout
