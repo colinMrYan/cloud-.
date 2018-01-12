@@ -276,9 +276,9 @@ public class AppUtils {
      */
     private static void saveUUID(Context context,String uuid){
         PreferencesUtils.putString(context,"device_uuid",uuid);
-//        if(!FileUtils.isFolderExist(Constant.CONCIG_CLOUD_PLUS_UUID_FILE)){
-//            saveDeviceUUID2SDCardFile(context, uuid);
-//        }
+        if(isHasSDCard(context) && !FileUtils.isFolderExist(Constant.CONCIG_CLOUD_PLUS_UUID_FILE)){
+            saveDeviceUUID2SDCardFile(context, uuid);
+        }
     }
 
     /**
@@ -583,7 +583,7 @@ public class AppUtils {
      * @return
      */
     private static String getUUIDFromSDCardFile(Context context) {
-        if(!FileUtils.isFileExist(Constant.CONCIG_CLOUD_PLUS_UUID_FILE)){
+        if(!isHasSDCard(context) || !FileUtils.isFileExist(Constant.CONCIG_CLOUD_PLUS_UUID_FILE)){
             return "";
         }
         try {
@@ -627,11 +627,8 @@ public class AppUtils {
      */
     private static void saveDeviceUUID2SDCardFile(Context context,String uuid) {
         try {
-            long time = System.currentTimeMillis();
-            LogUtils.jasonDebug("time0="+time);
             uuid = EncryptUtils.encode(uuid);
             FileUtils.writeFile(Constant.CONCIG_CLOUD_PLUS_UUID_FILE, uuid);
-            LogUtils.jasonDebug("time1="+time);
         } catch (Exception e) {
             e.printStackTrace();
         }
