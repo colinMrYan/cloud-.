@@ -583,7 +583,7 @@ public class AppUtils {
      * @return
      */
     private static String getUUIDFromSDCardFile(Context context) {
-        if(!isHasSDCard(context) && !FileUtils.isFileExist(Constant.CONCIG_CLOUD_PLUS_UUID_FILE)){
+        if(!isHasSDCard(context) || !FileUtils.isFileExist(Constant.CONCIG_CLOUD_PLUS_UUID_FILE)){
             return "";
         }
         try {
