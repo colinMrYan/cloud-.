@@ -1,14 +1,18 @@
 package com.inspur.imp.engine.webview;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.view.View;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
+import android.webkit.WebResourceError;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.LinearLayout;
@@ -142,6 +146,9 @@ public class ImpWebViewClient extends WebViewClient {
 	@Override
 	public void onReceivedError(WebView view, int errorCode,
 								String description, String failingUrl) {
+		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+			return;
+		}
 		if (runnable != null){
 			mHandler.removeCallbacks(runnable);
 			runnable = null;
@@ -150,7 +157,22 @@ public class ImpWebViewClient extends WebViewClient {
 		loadFailLayout.setVisibility(View.VISIBLE);
 	}
 
-//	@TargetApi(android.os.Build.VERSION_CODES.M)
+	@TargetApi(Build.VERSION_CODES.M)
+	@Override
+	public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
+		super.onReceivedError(view, request, error);
+		if(request.isForMainFrame()){// 在这里加上个判断
+			if (runnable != null){
+				mHandler.removeCallbacks(runnable);
+				runnable = null;
+			}
+			((ImpActivity)view.getContext()).dimissLoadingDlg();
+			loadFailLayout.setVisibility(View.VISIBLE);
+		}
+	}
+
+
+	//	@TargetApi(android.os.Build.VERSION_CODES.M)
 //	@Override
 //	public void onReceivedHttpError(WebView view, WebResourceRequest request, WebResourceResponse errorResponse) {
 //		onReceivedError(view,errorResponse.getStatusCode(), errorResponse.getReasonPhrase(), request.getUrl().toString());
