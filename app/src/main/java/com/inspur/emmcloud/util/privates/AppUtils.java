@@ -276,7 +276,7 @@ public class AppUtils {
      */
     private static void saveUUID(Context context,String uuid){
         PreferencesUtils.putString(context,"device_uuid",uuid);
-        if(!FileUtils.isFolderExist(Constant.CONCIG_CLOUD_PLUS_UUID_FILE)){
+        if(isHasSDCard(context) && !FileUtils.isFolderExist(Constant.CONCIG_CLOUD_PLUS_UUID_FILE)){
             saveDeviceUUID2SDCardFile(context, uuid);
         }
     }
@@ -583,7 +583,7 @@ public class AppUtils {
      * @return
      */
     private static String getUUIDFromSDCardFile(Context context) {
-        if(!FileUtils.isFileExist(Constant.CONCIG_CLOUD_PLUS_UUID_FILE)){
+        if(!isHasSDCard(context) && !FileUtils.isFileExist(Constant.CONCIG_CLOUD_PLUS_UUID_FILE)){
             return "";
         }
         try {

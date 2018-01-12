@@ -464,6 +464,7 @@ public class MyAppFragment extends Fragment {
                         @Override
                         public void onNotifyCommonlyUseApp(App app) {
                             handCommonlyUseAppChange(appAdapterList, app);
+                            getAppBadgeNum();
                             appListAdapter.notifyDataSetChanged();
                             dragGridViewAdapter.notifyDataSetChanged();
                             MyAppCacheUtils.saveMyAppList(getActivity(), appListAdapter.getAppAdapterList());
