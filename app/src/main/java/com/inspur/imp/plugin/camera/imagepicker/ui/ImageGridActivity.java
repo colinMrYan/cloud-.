@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.config.MyAppConfig;
+import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.imp.plugin.camera.editimage.EditImageActivity;
 import com.inspur.imp.plugin.camera.imagepicker.ImageDataSource;
@@ -69,6 +70,7 @@ public class ImageGridActivity extends ImageBaseActivity implements
 	private String paramObjJson;
 	private Handler handler;
 	private LoadingDialog loadingDlg;
+	private JSONObject watermarkObj;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -121,34 +123,13 @@ public class ImageGridActivity extends ImageBaseActivity implements
 		
 		if (getIntent().hasExtra("paramsObject")) {
 			paramObjJson = getIntent().getExtras().getString("paramsObject");
-			try {
-				JSONObject paramObj = new JSONObject(paramObjJson);
-				if (!paramObj.isNull("options")) {
-					JSONObject obj = paramObj.getJSONObject("options");
-					if (obj.has("resolution")) {
-						this.parm_resolution = obj.getInt(
-								"resolution");
-					}
-					if (obj.has("quality")) {
-						this.parm_qualtity = obj.getInt(
-								"quality");
-					}
-					if (obj.has("encodingType")) {
-						this.parm_encodingType = obj.getInt(
-								"encodingType");
-					}
-					if (obj.has("context")) {
-						this.parm_context = obj.getString(
-								"context");
-					}
-				}
-				if (!paramObj.isNull("uploadUrl")) {
-					this.parm_uploadUrl = paramObj.getString("uploadUrl");
-				}
-			} catch (Exception e) {
-				// TODO: handle exception
-				e.printStackTrace();
-			}
+			this.parm_uploadUrl = JSONUtils.getString(paramObjJson, "uploadUrl", null);
+			JSONObject optionsObj = JSONUtils.getJSONObject(paramObjJson, "options", new JSONObject());
+			this.parm_resolution = JSONUtils.getInt(optionsObj, "resolution", MyAppConfig.UPLOAD_ORIGIN_IMG_MAX_SIZE);
+			this.parm_qualtity = JSONUtils.getInt(optionsObj, "quality", 90);
+			this.parm_context = JSONUtils.getString(optionsObj, "context", "");
+			this.parm_encodingType = JSONUtils.getInt(optionsObj, "encodingType", 0);
+			this.watermarkObj = JSONUtils.getJSONObject(optionsObj, "watermark", null);
 		}
 	}
 
@@ -242,7 +223,7 @@ public class ImageGridActivity extends ImageBaseActivity implements
 				}
 				Toast.makeText(getApplicationContext(), "图片上传失败！", Toast.LENGTH_SHORT).show();
 			}
-		}).upload(parm_uploadUrl, imagePicker.getSelectedImages(), parm_encodingType, parm_context);
+		}).upload(parm_uploadUrl, imagePicker.getSelectedImages(), parm_encodingType, parm_context,watermarkObj);
 	}
 	
 	private void returnDataAndClose(String uploadResult){

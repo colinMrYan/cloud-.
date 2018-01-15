@@ -1,5 +1,6 @@
 package com.inspur.emmcloud.bean.appcenter.volume;
 
+import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.util.common.JSONUtils;
 
 import org.json.JSONObject;
@@ -17,10 +18,14 @@ public class Volume implements Serializable {
     private String owner;
     private long maxSize;
     private long usedSize;
+    private long lastUpdate;
 
     public Volume() {
     }
 
+    public Volume(String volumeJSon){
+        this(JSONUtils.getJSONObject(volumeJSon));
+    }
     public Volume(JSONObject obj) {
         id = JSONUtils.getString(obj, "id", "");
         name = JSONUtils.getString(obj, "name", "");
@@ -28,6 +33,7 @@ public class Volume implements Serializable {
         owner = JSONUtils.getString(obj, "owner", "");
         maxSize = JSONUtils.getLong(obj, "maxSize", 0L);
         usedSize = JSONUtils.getLong(obj, "usedSize", 0L);
+        lastUpdate = JSONUtils.getLong(obj,"lastUpdate",0L);
     }
 
     public String getId() {
@@ -76,6 +82,10 @@ public class Volume implements Serializable {
 
     public void setUserdSize(long userdSize) {
         this.usedSize = userdSize;
+    }
+
+    public boolean isOwner(){
+        return MyApplication.getInstance().getUid().equals(owner);
     }
 
     public boolean equals(Object other) { // 重写equals方法，后面最好重写hashCode方法

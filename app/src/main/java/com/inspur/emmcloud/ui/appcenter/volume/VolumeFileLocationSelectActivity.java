@@ -72,12 +72,7 @@ public class VolumeFileLocationSelectActivity extends VolumeFileBaseActivity {
                 bundle.putString("currentDirAbsolutePath", currentDirAbsolutePath + volumeFile.getName() + "/");
                 bundle.putString("title",volumeFile.getName() );
                 intent.putExtras(bundle);
-                if (!isFunctionCopy) {
-                    startActivityForResult(intent, REQUEST_MOVE_FILE);
-                } else {
-                    startActivity(intent);
-                }
-
+                startActivityForResult(intent, isFunctionCopy?REQUEST_COPY_FILE:REQUEST_MOVE_FILE);
             }
 
             @Override
@@ -149,7 +144,7 @@ public class VolumeFileLocationSelectActivity extends VolumeFileBaseActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
-            if (requestCode == REQUEST_MOVE_FILE) {
+            if (requestCode == REQUEST_MOVE_FILE || requestCode == REQUEST_COPY_FILE) {
                 setResult(RESULT_OK);
                 finish();
             }
@@ -161,7 +156,13 @@ public class VolumeFileLocationSelectActivity extends VolumeFileBaseActivity {
      */
     private void copyFile(String operationFileAbsolutePath) {
         if (NetUtils.isNetworkConnected(getApplicationContext())) {
-
+            loadingDlg.show();
+            String path = currentDirAbsolutePath;
+            if (currentDirAbsolutePath.length() > 1) {
+                path = currentDirAbsolutePath.substring(0, currentDirAbsolutePath.length() - 1);
+            }
+            List<VolumeFile> moveVolumeFileList = (List<VolumeFile>) getIntent().getSerializableExtra("volumeFileList");
+            apiService.copyVolumeFile(volume.getId(), operationFileAbsolutePath, moveVolumeFileList, path);
         }
     }
 
@@ -200,6 +201,29 @@ public class VolumeFileLocationSelectActivity extends VolumeFileBaseActivity {
 
         @Override
         public void returnMoveFileFail(String error, int errorCode) {
+            if (loadingDlg != null && loadingDlg.isShowing()) {
+                loadingDlg.dismiss();
+            }
+            WebServiceMiddleUtils.hand(getApplicationContext(), error, errorCode);
+        }
+
+        @Override
+        public void returnCopyFileSuccess() {
+            if (loadingDlg != null && loadingDlg.isShowing()) {
+                loadingDlg.dismiss();
+            }
+            //将移动的位置传递回去，以便于当前页面刷新数据
+            Intent intent = new  Intent();
+            intent.putExtra("path", currentDirAbsolutePath);
+            intent.putExtra("command","refresh");
+            intent.setAction("broadcast_volume");
+            sendBroadcast(intent);
+            setResult(RESULT_OK);
+            finish();
+        }
+
+        @Override
+        public void returnCopyFileFail(String error, int errorCode) {
             if (loadingDlg != null && loadingDlg.isShowing()) {
                 loadingDlg.dismiss();
             }

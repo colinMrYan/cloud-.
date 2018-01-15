@@ -18,24 +18,28 @@ import com.inspur.emmcloud.bean.appcenter.GetAddAppResult;
 import com.inspur.emmcloud.bean.appcenter.GetAllAppResult;
 import com.inspur.emmcloud.bean.appcenter.GetAppBadgeResult;
 import com.inspur.emmcloud.bean.appcenter.GetAppGroupResult;
-import com.inspur.emmcloud.bean.appcenter.news.GetGroupNewsDetailResult;
-import com.inspur.emmcloud.bean.appcenter.news.GetNewsTitleResult;
 import com.inspur.emmcloud.bean.appcenter.GetRecommendAppWidgetListResult;
 import com.inspur.emmcloud.bean.appcenter.GetRemoveAppResult;
 import com.inspur.emmcloud.bean.appcenter.GetSearchAppResult;
 import com.inspur.emmcloud.bean.appcenter.GetWebAppRealUrlResult;
+import com.inspur.emmcloud.bean.appcenter.news.GetGroupNewsDetailResult;
+import com.inspur.emmcloud.bean.appcenter.news.GetNewsTitleResult;
 import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeFileListResult;
 import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeFileUploadTokenResult;
 import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeListResult;
+import com.inspur.emmcloud.bean.appcenter.volume.Volume;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
 import com.inspur.emmcloud.interf.OauthCallBack;
 import com.inspur.emmcloud.util.privates.OauthUtils;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.xutils.http.HttpMethod;
 import org.xutils.http.RequestParams;
 import org.xutils.x;
 
 import java.util.List;
+
 
 /**
  * com.inspur.emmcloud.api.apiservice.MyAppAPIService create at 2016年11月8日
@@ -694,8 +698,20 @@ public class MyAppAPIService {
     public void moveVolumeFile(final String volumeId, final String currentDirAbsolutePath, final List<VolumeFile> moveVolumeFileList, final String toPath) {
         final String url = APIUri.getMoveVolumeFileUrl(volumeId);
         RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
-        params.addQueryStringParameter("to", toPath);
-        params.addQueryStringParameter("from", currentDirAbsolutePath + moveVolumeFileList.get(0).getName());
+        JSONArray array = new JSONArray();
+        try {
+            for (int i =0;i<moveVolumeFileList.size();i++){
+                JSONObject object = new JSONObject();
+                object.put("from", currentDirAbsolutePath + moveVolumeFileList.get(i).getName());
+                object.put("to", toPath);
+                array.put(object);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        params.setBodyContent(array.toString());
+        params.setAsJsonContent(true);
+
         x.http().request(HttpMethod.PUT, params, new APICallback(context, url) {
             @Override
             public void callbackSuccess(String arg0) {
@@ -714,6 +730,57 @@ public class MyAppAPIService {
                     @Override
                     public void reExecute() {
                         moveVolumeFile(volumeId, currentDirAbsolutePath, moveVolumeFileList, toPath);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                }, context).refreshToken(url);
+            }
+        });
+    }
+
+    /**
+     * 复制云盘文件
+     *
+     * @param volumeId
+     * @param currentDirAbsolutePath
+     */
+    public void copyVolumeFile(final String volumeId, final String currentDirAbsolutePath, final List<VolumeFile> copyVolumeFileList, final String toPath) {
+        final String url = APIUri.getCopyVolumeFileUrl(volumeId);
+        RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
+        JSONArray array = new JSONArray();
+        try {
+            for (int i =0;i<copyVolumeFileList.size();i++){
+                JSONObject object = new JSONObject();
+                object.put("from", currentDirAbsolutePath + copyVolumeFileList.get(i).getName());
+                object.put("to", toPath);
+                array.put(object);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        params.setBodyContent(array.toString());
+        params.setAsJsonContent(true);
+        x.http().post(params, new APICallback(context, url) {
+            @Override
+            public void callbackSuccess(String arg0) {
+                apiInterface.returnCopyFileSuccess();
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                apiInterface.returnCopyFileFail(error, responseCode);
+            }
+
+            @Override
+            public void callbackTokenExpire() {
+                new OauthUtils(new OauthCallBack() {
+
+                    @Override
+                    public void reExecute() {
+                        copyVolumeFile(volumeId, currentDirAbsolutePath, copyVolumeFileList, toPath);
                     }
 
                     @Override
@@ -764,6 +831,7 @@ public class MyAppAPIService {
         });
     }
 
+
     /**
      * 删除文件
      *
@@ -771,14 +839,25 @@ public class MyAppAPIService {
      * @param fileName
      * @param currentDirAbsolutePath
      */
-    public void volumeFileDelete(final String volumeId, final VolumeFile volumeFile, final String currentDirAbsolutePath) {
+    public void volumeFileDelete(final String volumeId, final List<VolumeFile> deleteVolumeFileList, final String currentDirAbsolutePath) {
         final String url = APIUri.getVolumeFileOperationUrl(volumeId);
         RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
-        params.addQueryStringParameter("path", currentDirAbsolutePath + volumeFile.getName());
+        JSONArray array = new JSONArray();
+        try {
+            for (int i =0;i<deleteVolumeFileList.size();i++){
+                JSONObject object = new JSONObject();
+                object.put("path", currentDirAbsolutePath + deleteVolumeFileList.get(i).getName());
+                array.put(object);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        params.setBodyContent(array.toString());
+        params.setAsJsonContent(true);
         x.http().request(HttpMethod.DELETE, params, new APICallback(context, url) {
             @Override
             public void callbackSuccess(String arg0) {
-                apiInterface.returnVolumeFileDeleteSuccess(volumeFile);
+                apiInterface.returnVolumeFileDeleteSuccess(deleteVolumeFileList);
             }
 
             @Override
@@ -791,7 +870,7 @@ public class MyAppAPIService {
                 new OauthUtils(new OauthCallBack() {
                     @Override
                     public void reExecute() {
-                        volumeFileDelete(volumeId, volumeFile, currentDirAbsolutePath);
+                        volumeFileDelete(volumeId, deleteVolumeFileList, currentDirAbsolutePath);
                     }
 
                     @Override
@@ -841,5 +920,131 @@ public class MyAppAPIService {
                 }, context).refreshToken(url);
             }
         });
+    }
+
+    /**
+     * 创建共享网盘
+     *
+     * @param memberArray
+     * @param volumeName
+     */
+    public void createShareVolume(final String myUid, final String volumeName) {
+        final String url = APIUri.getVolumeListUrl();
+        RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
+        JSONObject object = new JSONObject();
+        try {
+            object.put("name",volumeName);
+            JSONArray array = new JSONArray();
+            array.put(myUid);
+            object.put("members",array);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        params.setBodyContent(object.toString());
+        params.setAsJsonContent(true);
+        x.http().post(params, new APICallback(context, url) {
+            @Override
+            public void callbackSuccess(String arg0) {
+                apiInterface.returnCreateShareVolumeSuccess(new Volume(arg0));
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                apiInterface.returnCreateShareVolumeFail("", -1);
+            }
+
+            @Override
+            public void callbackTokenExpire() {
+                new OauthUtils(new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        createShareVolume(myUid, volumeName);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                }, context).refreshToken(url);
+            }
+        });
+
+    }
+
+    /**
+     * 修改网盘名称
+     * @param volume
+     * @param name
+     */
+    public void updateShareVolumeName(final Volume volume,final String name){
+        final String url = APIUri.getUpdateVolumeInfoUrl(volume.getId());
+        RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
+        params.addParameter("name", name);
+        x.http().request(HttpMethod.PUT,params,new APICallback(context,url){
+            @Override
+            public void callbackSuccess(String arg0) {
+                apiInterface.returnUpdateShareVolumeNameSuccess(volume,name);
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                apiInterface.returnUpdateShareVolumeNameFail(error,responseCode);
+            }
+
+            @Override
+            public void callbackTokenExpire() {
+                new OauthUtils(new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        updateShareVolumeName(volume, name);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                }, context).refreshToken(url);
+            }
+        });
+
+    }
+
+
+    /**
+     * 修改网盘名称
+     * @param volume
+     * @param name
+     */
+    public void removeShareVolumeName(final Volume volume){
+        final String url = APIUri.getUpdateVolumeInfoUrl(volume.getId());
+        RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
+        params.addParameter("id", volume.getId());
+        x.http().request(HttpMethod.DELETE,params,new APICallback(context,url){
+            @Override
+            public void callbackSuccess(String arg0) {
+                apiInterface.retrunRemoveShareVolumeSuccess(volume);
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                apiInterface.returnRemoveShareVolumeFail(error,responseCode);
+            }
+
+            @Override
+            public void callbackTokenExpire() {
+                new OauthUtils(new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        removeShareVolumeName(volume);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                }, context).refreshToken(url);
+            }
+        });
+
     }
 }
