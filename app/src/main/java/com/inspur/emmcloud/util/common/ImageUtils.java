@@ -729,12 +729,12 @@ public class ImageUtils {
     }
 
 
-    public static Bitmap createWaterMask(Context context, String imgFilePath, String content, String color, String background, String algin, String valign) {
+    public static Bitmap createWaterMask(Context context, String imgFilePath, String content, String color, String background, String algin, String valign,int fontSize) {
         Bitmap sourceBitmap = null;
         Bitmap waterMaskBitmap = null;
         try {
             sourceBitmap = getBitmapByPath(imgFilePath);
-            waterMaskBitmap = convertViewToBitmap(context, content, sourceBitmap.getWidth(),sourceBitmap.getHeight(),color, background);
+            waterMaskBitmap = convertViewToBitmap(context, content, sourceBitmap.getWidth(),sourceBitmap.getHeight(),color, background,fontSize);
             int paddingLeft = getWaterMaskPaddingLeft(valign,sourceBitmap,waterMaskBitmap);
             int paddingTop = getWaterMaskPaddingTop(valign,sourceBitmap,waterMaskBitmap);
             Bitmap newBitmap = createWaterMaskBitmap(sourceBitmap, waterMaskBitmap,paddingLeft,paddingTop);
@@ -755,13 +755,14 @@ public class ImageUtils {
         return null;
     }
 
-    private static Bitmap convertViewToBitmap(Context context, String content, int maxWidth,int maxHight,String color, String background) {
+    private static Bitmap convertViewToBitmap(Context context, String content, int maxWidth,int maxHight,String color, String background,int fontSize) {
         TextView textView = new TextView(context);
         textView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         textView.setMaxWidth(maxWidth);
         textView.setBackgroundColor(Color.parseColor(background));
-        textView.setTextSize(15);
+        textView.setTextSize(fontSize);
         textView.setTextColor(Color.parseColor(color));
+        textView.setPadding(DensityUtil.dip2px(context,6),DensityUtil.dip2px(context,3),DensityUtil.dip2px(context,6),DensityUtil.dip2px(context,3));
         textView.setText(content);
         textView.measure(View.MeasureSpec.makeMeasureSpec(maxWidth, View.MeasureSpec.AT_MOST),
                 View.MeasureSpec.makeMeasureSpec(maxHight, View.MeasureSpec.AT_MOST));

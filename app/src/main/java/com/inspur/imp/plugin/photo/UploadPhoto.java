@@ -43,16 +43,17 @@ public class UploadPhoto {
 	}
 
 	private void createWatermark(JSONObject watermarkObj,List<String> filePathList){
+		LogUtils.jasonDebug("watermarkObj="+watermarkObj);
 		if (watermarkObj != null) {
 			String watermarkContent = JSONUtils.getString(watermarkObj, "content", null);
-			String color = JSONUtils.getString(watermarkObj, "content", "#ffffff");
-			String fontSize = JSONUtils.getString(watermarkObj, "fontSize", "16");
+			String color = JSONUtils.getString(watermarkObj, "color", "#ffffff");
+			int fontSize = JSONUtils.getInt(watermarkObj, "fontSize", 14);
 			String background = JSONUtils.getString(watermarkObj, "background", "#00000000");
 			String algin = JSONUtils.getString(watermarkObj, "algin", "left");
 			String valign = JSONUtils.getString(watermarkObj, "valign", "top");
 			for (int i=0;i<filePathList.size();i++){
 				String filePath = filePathList.get(i);
-				ImageUtils.createWaterMask(mContext,filePath,watermarkContent,color,background,algin,valign);
+				ImageUtils.createWaterMask(mContext,filePath,watermarkContent,color,background,algin,valign,fontSize);
 			}
 		}
 	}

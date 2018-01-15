@@ -98,7 +98,8 @@ public class CameraService extends ImpPlugin {
     public static int num = 8;// 可以选择的图片数目
     private int uploadOriginMaxSize = MyAppConfig.UPLOAD_ORIGIN_IMG_MAX_SIZE;
     private int uploadThumbnailMaxSize = MyAppConfig.UPLOAD_THUMBNAIL_IMG_MAX_SIZE;
-    private String watermarkContent,fontSize,color,background,algin,valign;
+    private String watermarkContent,color,background,algin,valign;
+    private int fontSize;
 
     @Override
     public void execute(String action, JSONObject paramsObject) {
@@ -131,7 +132,7 @@ public class CameraService extends ImpPlugin {
                 if (!optionsObj.isNull("watermark")){
                     JSONObject watermarkObj = optionsObj.getJSONObject("watermark");
                     watermarkContent = JSONUtils.getString(watermarkObj,"content","");
-                    fontSize = JSONUtils.getString(watermarkObj,"fontSize","16");
+                    fontSize = JSONUtils.getInt(watermarkObj,"fontSize",14);
                     color = JSONUtils.getString(watermarkObj,"color","#ffffff");
                     background = JSONUtils.getString(watermarkObj,"background","#00000000");
                     algin = JSONUtils.getString(watermarkObj,"algin","left");
@@ -200,7 +201,7 @@ public class CameraService extends ImpPlugin {
                 if (!optionsObj.isNull("watermark")){
                     JSONObject watermarkObj = optionsObj.getJSONObject("watermark");
                     watermarkContent = JSONUtils.getString(watermarkObj,"content","");
-                    fontSize = JSONUtils.getString(watermarkObj,"fontSize","16");
+                    fontSize = JSONUtils.getInt(watermarkObj,"fontSize",14);
                     color = JSONUtils.getString(watermarkObj,"color","#ffffff");
                     background = JSONUtils.getString(watermarkObj,"background","#00000000");
                     algin = JSONUtils.getString(watermarkObj,"algin","left");
@@ -312,7 +313,7 @@ public class CameraService extends ImpPlugin {
                         if (StringUtils.isBlank(watermarkContent)){
                             originBitmap = ImageUtils.getBitmapByFile(originImgFile);
                         }else {
-                            originBitmap = ImageUtils.createWaterMask(context,originImgPath,watermarkContent,color,background,algin,valign);
+                            originBitmap = ImageUtils.createWaterMask(context,originImgPath,watermarkContent,color,background,algin,valign,fontSize);
                         }
                         File thumbnailImgFile = new Compressor(this.context).setMaxHeight(uploadThumbnailMaxSize).setMaxWidth(uploadThumbnailMaxSize).setQuality(mQuality).setDestinationDirectoryPath(MyAppConfig.LOCAL_IMG_CREATE_PATH)
                                 .setCompressFormat(format) .compressToFile(originImgFile, thumbnailImgFileName);
@@ -364,7 +365,7 @@ public class CameraService extends ImpPlugin {
                             if (StringUtils.isBlank(watermarkContent)){
                                 originBitmap = ImageUtils.getBitmapByFile(originImgFile);
                             }else {
-                                originBitmap = ImageUtils.createWaterMask(context,originImgPath,watermarkContent,color,background,algin,valign);
+                                originBitmap = ImageUtils.createWaterMask(context,originImgPath,watermarkContent,color,background,algin,valign,fontSize);
                             }
                             File thumbnailImgFile = new Compressor(this.context).setMaxHeight(uploadThumbnailMaxSize).setMaxWidth(mOriginWidthtSize).setQuality(mQuality).setDestinationDirectoryPath(MyAppConfig.LOCAL_IMG_CREATE_PATH)
                                     .setCompressFormat(format).compressToFile(originImgFile, thumbnailImgFileName);
