@@ -5,8 +5,10 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
+import android.graphics.Paint;
 import android.hardware.Camera;
 import android.net.Uri;
 import android.os.Bundle;
@@ -34,8 +36,8 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.JSONUtils;
-import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
+import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.imp.api.ImpBaseActivity;
 import com.inspur.imp.plugin.camera.editimage.EditImageActivity;
 import com.inspur.imp.plugin.camera.editimage.utils.BitmapUtils;
@@ -386,8 +388,21 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
                 if (orientation != 0) {
                     originBitmap = rotaingImageView(orientation, originBitmap);
                 }
-                String imgPaths = MyAppConfig.LOCAL_DOWNLOAD_PATH + System.currentTimeMillis() + ".png";
-                BitmapUtils.saveBitmap(originBitmap, imgPaths, 100, 0);
+                //前置摄像头拍摄的照片和预览界面成镜面效果，需要翻转。
+                if (currentCameraFacing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
+                    Bitmap mirrorOriginBitmap = Bitmap.createBitmap(originBitmap.getWidth(), originBitmap.getHeight(), originBitmap.getConfig());
+                    Canvas canvas = new Canvas(mirrorOriginBitmap);
+                    Paint paint = new Paint();
+                    paint.setColor(Color.BLACK);
+                    paint.setAntiAlias(true);
+                    Matrix matrix = new Matrix();
+                    //镜子效果
+                    matrix.setScale(-1, 1);
+                    matrix.postTranslate(originBitmap.getWidth(), 0);
+                    canvas.drawBitmap(originBitmap, matrix, paint);
+                    originBitmap = mirrorOriginBitmap;
+                }
+
                 //前置摄像头和后置摄像头拍照后图像角度旋转
                 Bitmap cropBitmap = previewSFV.getPicture(originBitmap);
                 File photoDir = null;

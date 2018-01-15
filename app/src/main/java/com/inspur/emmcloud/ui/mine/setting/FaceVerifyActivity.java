@@ -5,6 +5,10 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Matrix;
+import android.graphics.Paint;
 import android.hardware.Camera;
 import android.os.Bundle;
 import android.os.Environment;
@@ -18,6 +22,7 @@ import android.view.SurfaceHolder;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.inspur.emmcloud.R;
@@ -28,6 +33,7 @@ import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.ImageUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
+import com.inspur.emmcloud.util.privates.PreferencesByUsersUtils;
 import com.inspur.imp.plugin.camera.mycamera.CameraUtils;
 import com.inspur.imp.plugin.camera.mycamera.FocusSurfaceView;
 
@@ -41,8 +47,9 @@ import static android.Manifest.permission.CAMERA;
  */
 
 public class FaceVerifyActivity extends Activity implements SurfaceHolder.Callback {
-    private FocusSurfaceView previewSFV;
 
+    public static final String FACE_VERIFT_IS_OPEN = "face_verify_isopen";
+    private FocusSurfaceView previewSFV;
     private Camera mCamera;
     private SurfaceHolder mHolder;
     private int currentCameraFacing;
@@ -50,6 +57,8 @@ public class FaceVerifyActivity extends Activity implements SurfaceHolder.Callba
     private String cameraFlashModel = Camera.Parameters.FLASH_MODE_AUTO;
     private DetectScreenOrientation detectScreenOrientation;
     private MineAPIService apiService;
+    private boolean isFaceSetting = true;
+    private TextView tipText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +78,8 @@ public class FaceVerifyActivity extends Activity implements SurfaceHolder.Callba
         detectScreenOrientation.enable();
         apiService = new MineAPIService(this);
         apiService.setAPIInterface(new WebService());
+        tipText = (TextView)findViewById(R.id.tip_text);
+        isFaceSetting = getIntent().getBooleanExtra("isFaceSetting",true);
     }
 
 
@@ -89,7 +100,7 @@ public class FaceVerifyActivity extends Activity implements SurfaceHolder.Callba
         currentCameraFacing = Camera.CameraInfo.CAMERA_FACING_FRONT;
         initCamera();
         setCameraParams();
-       // takePicture(2000);
+        takePicture(1000);
     }
 
     private void initCamera() {
@@ -273,12 +284,28 @@ public class FaceVerifyActivity extends Activity implements SurfaceHolder.Callba
                         if (orientation != 0) {
                             originBitmap = ImageUtils.rotaingImageView(orientation, originBitmap);
                         }
-//                        String imgPath = MyAppConfig.LOCAL_DOWNLOAD_PATH + System.currentTimeMillis() + ".png";
-//                        BitmapUtils.saveBitmap(originBitmap, imgPath, 100, 0);
+                        //前置摄像头拍摄的照片和预览界面成镜面效果，需要翻转。
+                        if (currentCameraFacing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
+                            Bitmap mirrorOriginBitmap = Bitmap.createBitmap(originBitmap.getWidth(), originBitmap.getHeight(), originBitmap.getConfig());
+                            Canvas canvas = new Canvas(mirrorOriginBitmap);
+                            Paint paint = new Paint();
+                            paint.setColor(Color.BLACK);
+                            paint.setAntiAlias(true);
+                            Matrix matrix = new Matrix();
+                            //镜子效果
+                            matrix.setScale(-1, 1);
+                            matrix.postTranslate(originBitmap.getWidth(), 0);
+                            canvas.drawBitmap(originBitmap, matrix, paint);
+                            originBitmap = mirrorOriginBitmap;
+                        }
                         //前置摄像头和后置摄像头拍照后图像角度旋转
                         Bitmap cropBitmap = previewSFV.getPicture(originBitmap);
                         cropBitmap = ImageUtils.scaleBitmap(cropBitmap, 400);
-                        faceVerify(cropBitmap);
+                        if (isFaceSetting){
+                            faceSetting(cropBitmap);
+                        }else {
+                            faceVerify(cropBitmap);
+                        }
 
                     }
                 });
@@ -287,11 +314,20 @@ public class FaceVerifyActivity extends Activity implements SurfaceHolder.Callba
 
     }
 
+    /**
+     * 根据用户获取是否打开了gesturecode
+     * @param context
+     * @return
+     */
+    public static boolean getFaceVerifyIsOpenByUser(Context context){
+        return PreferencesByUsersUtils.getBoolean(context,FaceVerifyActivity.FACE_VERIFT_IS_OPEN,false);
+    }
+
 
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.close_camera_btn:
-                takePicture(0);
+                finish();
                 break;
         }
     }
@@ -309,26 +345,36 @@ public class FaceVerifyActivity extends Activity implements SurfaceHolder.Callba
     private void handResultCode(int code) {
         switch (code) {
             case 200:
-                ToastUtils.show(getApplicationContext(), "成功");
+                tipText.setVisibility(View.VISIBLE);
+                ToastUtils.show(getApplicationContext(), "刷脸成功");
+                if (!isFaceSetting){
+                    setResult(RESULT_OK);
+                }
+                finish();
                 break;
             case 201:
-                ToastUtils.show(getApplicationContext(), "没有检测到脸");
+                tipText.setVisibility(View.VISIBLE);
+                tipText.setText("没有检测到脸");
                 takePicture(1000);
                 break;
             case 202:
-                ToastUtils.show(getApplicationContext(), "请摆正姿势");
+                tipText.setVisibility(View.VISIBLE);
+                tipText.setText("请摆正姿势");
                 takePicture(1000);
                 break;
             case 203:
-                ToastUtils.show(getApplicationContext(), "请靠近一点");
+                tipText.setVisibility(View.VISIBLE);
+                tipText.setText("请靠近一点");
                 takePicture(1000);
                 break;
             case 204:
-                ToastUtils.show(getApplicationContext(), "请眨眨眼");
+                tipText.setVisibility(View.VISIBLE);
+                tipText.setText("请眨眨眼");
                 takePicture(1000);
                 break;
             case 400:
-                ToastUtils.show(getApplicationContext(), "失败");
+                tipText.setVisibility(View.VISIBLE);
+                tipText.setText("失败");
                 break;
             default:
                 takePicture(1000);

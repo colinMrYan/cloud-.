@@ -10,6 +10,7 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.MineAPIService;
 import com.inspur.emmcloud.bean.login.GetMDMStateResult;
+import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
@@ -23,6 +24,7 @@ import com.inspur.emmcloud.widget.LoadingDialog;
 public class SafeCenterActivity extends BaseActivity {
 
     public static final String FINGER_PRINT_STATE = "finger_print_state";
+    private static final int REQUEST_FACE_SETTING = 2;
 
     private LoadingDialog loadingDlg;
     @Override
@@ -53,24 +55,32 @@ public class SafeCenterActivity extends BaseActivity {
 
 
     public void onClick(View view) {
-        Intent intent = new Intent();
+        Intent intent = null;
         switch (view.getId()) {
             case R.id.back_layout:
                 finish();
                 break;
+            case R.id.safe_center_face_layout:
+                intent = new Intent();
+                intent.putExtra("isFaceSetting",true);
+                intent.setClass(this, FaceVerifyActivity.class);
+                startActivityForResult(intent,REQUEST_FACE_SETTING);
+                break;
+            case R.id.safe_center_experience_face_layout:
+                intent = new Intent();
+                intent.putExtra("isFaceSetting",true);
+                intent.setClass(this, FaceVerifyActivity.class);
+                startActivityForResult(intent,REQUEST_FACE_SETTING);
+                break;
             case R.id.safe_center_gesture_layout:
                 if(getHasGesturePassword()&&getGestureCodeIsOpen()){
-                    intent.setClass(this, SwitchGestureActivity.class);
-                    startActivity(intent);
+                    IntentUtils.startActivity(this, SwitchGestureActivity.class);
                 }else{
-                    intent.setClass(this, CreateGestureCodeGuidActivity.class);
-                    startActivity(intent);
+                    IntentUtils.startActivity(this, CreateGestureCodeGuidActivity.class);
                 }
                 break;
             case R.id.device_manager_layout:
-                intent.setClass(SafeCenterActivity.this,
-                        DeviceManagerActivity.class);
-                startActivity(intent);
+                IntentUtils.startActivity(this, DeviceManagerActivity.class);
                 break;
             default:
                 break;
@@ -92,6 +102,11 @@ public class SafeCenterActivity extends BaseActivity {
      */
     public boolean getGestureCodeIsOpen(){
         return CreateGestureActivity.getGestureCodeIsOpenByUser(SafeCenterActivity.this);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     /**
