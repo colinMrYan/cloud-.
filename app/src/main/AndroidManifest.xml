@@ -140,6 +140,11 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait"></activity>
         <activity
+            android:name=".ui.mine.setting.FaceVerifyManagerActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"></activity>
+
+        <activity
             android:name=".ui.mine.setting.FaceVerifyActivity"
             android:launchMode="singleTask"
             android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen"
@@ -314,7 +319,7 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.mine.setting.SwitchGestureActivity"
+            android:name=".ui.mine.setting.GestureManagerActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity

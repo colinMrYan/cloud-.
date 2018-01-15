@@ -1,6 +1,5 @@
 package com.inspur.emmcloud.ui.mine.setting;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
@@ -17,16 +16,20 @@ import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 
+import org.xutils.view.annotation.ContentView;
+
 /**
  * 账号、设备安全
  */
 
+@ContentView(R.layout.activity_safe_center)
 public class SafeCenterActivity extends BaseActivity {
 
     public static final String FINGER_PRINT_STATE = "finger_print_state";
     private static final int REQUEST_FACE_SETTING = 2;
 
     private LoadingDialog loadingDlg;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,41 +44,34 @@ public class SafeCenterActivity extends BaseActivity {
      * @param mdmState
      */
     private void setMDMLayoutState() {
-         int mdmState = PreferencesByUserAndTanentUtils.getInt(getApplicationContext(), "mdm_state", 1);
+        int mdmState = PreferencesByUserAndTanentUtils.getInt(getApplicationContext(), "mdm_state", 1);
         (findViewById(R.id.device_manager_layout)).setVisibility((mdmState == 1) ? View.VISIBLE : View.GONE);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        ((TextView)(findViewById(R.id.safe_center_gesture_open_text))).setText((getHasGesturePassword()&&getGestureCodeIsOpen())
-                ?getString(R.string.safe_center_enable)
-                :getString(R.string.safe_center_unenable));
+        ((TextView) (findViewById(R.id.safe_center_gesture_open_text))).setText((getHasGesturePassword() && getGestureCodeIsOpen())
+                ? getString(R.string.safe_center_enable)
+                : getString(R.string.safe_center_unenable));
+        ((TextView) (findViewById(R.id.safe_center_face_open_text))).setText(FaceVerifyActivity.getFaceVerifyIsOpenByUser(this)
+                ? getString(R.string.safe_center_enable)
+                : getString(R.string.safe_center_unenable));
     }
 
 
     public void onClick(View view) {
-        Intent intent = null;
         switch (view.getId()) {
             case R.id.back_layout:
                 finish();
                 break;
             case R.id.safe_center_face_layout:
-                intent = new Intent();
-                intent.putExtra("isFaceSetting",true);
-                intent.setClass(this, FaceVerifyActivity.class);
-                startActivityForResult(intent,REQUEST_FACE_SETTING);
-                break;
-            case R.id.safe_center_experience_face_layout:
-                intent = new Intent();
-                intent.putExtra("isFaceSetting",true);
-                intent.setClass(this, FaceVerifyActivity.class);
-                startActivityForResult(intent,REQUEST_FACE_SETTING);
+                IntentUtils.startActivity(this, FaceVerifyManagerActivity.class);
                 break;
             case R.id.safe_center_gesture_layout:
-                if(getHasGesturePassword()&&getGestureCodeIsOpen()){
-                    IntentUtils.startActivity(this, SwitchGestureActivity.class);
-                }else{
+                if (getHasGesturePassword() && getGestureCodeIsOpen()) {
+                    IntentUtils.startActivity(this, GestureManagerActivity.class);
+                } else {
                     IntentUtils.startActivity(this, CreateGestureCodeGuidActivity.class);
                 }
                 break;
@@ -89,6 +85,7 @@ public class SafeCenterActivity extends BaseActivity {
 
     /**
      * 获取是否有手势解锁码
+     *
      * @return
      */
     private boolean getHasGesturePassword() {
@@ -98,16 +95,13 @@ public class SafeCenterActivity extends BaseActivity {
 
     /**
      * 获取是否打开了重置手势密码
+     *
      * @return
      */
-    public boolean getGestureCodeIsOpen(){
+    public boolean getGestureCodeIsOpen() {
         return CreateGestureActivity.getGestureCodeIsOpenByUser(SafeCenterActivity.this);
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-    }
 
     /**
      * 获取设备管理状态

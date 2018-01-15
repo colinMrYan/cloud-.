@@ -25,17 +25,22 @@ import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.MineAPIService;
 import com.inspur.emmcloud.bean.mine.GetFaceSettingResult;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.ImageUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUsersUtils;
+import com.inspur.emmcloud.widget.dialogs.MyQMUIDialog;
 import com.inspur.imp.plugin.camera.mycamera.CameraUtils;
 import com.inspur.imp.plugin.camera.mycamera.FocusSurfaceView;
+import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
+import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
 
 import java.io.ByteArrayOutputStream;
 import java.util.List;
@@ -48,6 +53,7 @@ import static android.Manifest.permission.CAMERA;
 
 public class FaceVerifyActivity extends Activity implements SurfaceHolder.Callback {
 
+    private static final int TIMEOUT_TIME = 20000;
     public static final String FACE_VERIFT_IS_OPEN = "face_verify_isopen";
     private FocusSurfaceView previewSFV;
     private Camera mCamera;
@@ -58,7 +64,12 @@ public class FaceVerifyActivity extends Activity implements SurfaceHolder.Callba
     private DetectScreenOrientation detectScreenOrientation;
     private MineAPIService apiService;
     private boolean isFaceSetting = true;
+    private boolean isFaceSettingOpen = true;
+    private boolean isFaceVerityTest = false;
     private TextView tipText;
+    private Handler handler;
+    private Runnable takePhotoRunnable;
+    private long startTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,14 +83,30 @@ public class FaceVerifyActivity extends Activity implements SurfaceHolder.Callba
         setContentView(R.layout.activity_face_verification);
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);//设置全屏
         this.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);//拍照过程屏幕一直处于高亮
+        init();
+    }
+
+    private void init() {
         if (detectScreenOrientation == null) {
             detectScreenOrientation = new DetectScreenOrientation(this);
         }
         detectScreenOrientation.enable();
+        handler = new Handler();
         apiService = new MineAPIService(this);
         apiService.setAPIInterface(new WebService());
-        tipText = (TextView)findViewById(R.id.tip_text);
-        isFaceSetting = getIntent().getBooleanExtra("isFaceSetting",true);
+        tipText = (TextView) findViewById(R.id.tip_text);
+        isFaceVerityTest = getIntent().getExtras().getBoolean("isFaceVerifyExperience", false);
+        isFaceSetting = getIntent().hasExtra("isFaceSettingOpen");
+        if (isFaceSetting) {
+            isFaceSettingOpen = getIntent().getBooleanExtra("isFaceSettingOpen", true);
+        }
+        takePhotoRunnable = new Runnable() {
+            @Override
+            public void run() {
+                takePicture();
+            }
+        };
+        startTime = System.currentTimeMillis();
     }
 
 
@@ -100,7 +127,7 @@ public class FaceVerifyActivity extends Activity implements SurfaceHolder.Callba
         currentCameraFacing = Camera.CameraInfo.CAMERA_FACING_FRONT;
         initCamera();
         setCameraParams();
-        takePicture(1000);
+        delayTotakePicture(1500);
     }
 
     private void initCamera() {
@@ -260,82 +287,94 @@ public class FaceVerifyActivity extends Activity implements SurfaceHolder.Callba
         }
     }
 
+    private void delayTotakePicture(long time) {
+        handler.postDelayed(takePhotoRunnable, time);
+    }
+
     /**
      * 拍照
      */
-    private void takePicture(long time) {
-        new Handler().postDelayed(new Runnable() {
+    private void takePicture() {
+        mCamera.takePicture(null, null, null, new Camera.PictureCallback() {
+
             @Override
-            public void run() {
-                mCamera.takePicture(null, null, null, new Camera.PictureCallback() {
+            public void onPictureTaken(byte[] data, Camera camera) {
+                int orientation = currentOrientation;
+                Bitmap originBitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
+                boolean isSamSungType = originBitmap.getWidth() > originBitmap.getHeight();
+                if (isSamSungType) {
+                    originBitmap = ImageUtils.rotaingImageView(90, originBitmap);
+                }
 
-                    @Override
-                    public void onPictureTaken(byte[] data, Camera camera) {
-                        int orientation = currentOrientation;
-                        Bitmap originBitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
-                        boolean isSamSungType = originBitmap.getWidth() > originBitmap.getHeight();
-                        if (isSamSungType) {
-                            originBitmap = ImageUtils.rotaingImageView(90, originBitmap);
-                        }
+                if (currentCameraFacing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
+                    orientation = (540 - orientation) % 360;
+                }
+                if (orientation != 0) {
+                    originBitmap = ImageUtils.rotaingImageView(orientation, originBitmap);
+                }
+                //前置摄像头拍摄的照片和预览界面成镜面效果，需要翻转。
+                if (currentCameraFacing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
+                    Bitmap mirrorOriginBitmap = Bitmap.createBitmap(originBitmap.getWidth(), originBitmap.getHeight(), originBitmap.getConfig());
+                    Canvas canvas = new Canvas(mirrorOriginBitmap);
+                    Paint paint = new Paint();
+                    paint.setColor(Color.BLACK);
+                    paint.setAntiAlias(true);
+                    Matrix matrix = new Matrix();
+                    //镜子效果
+                    matrix.setScale(-1, 1);
+                    matrix.postTranslate(originBitmap.getWidth(), 0);
+                    canvas.drawBitmap(originBitmap, matrix, paint);
+                    originBitmap = mirrorOriginBitmap;
+                }
+                //前置摄像头和后置摄像头拍照后图像角度旋转
+                Bitmap cropBitmap = previewSFV.getPicture(originBitmap);
+                cropBitmap = ImageUtils.scaleBitmap(cropBitmap, 400);
+                if (isFaceSetting) {
+                    faceSetting(cropBitmap);
+                } else {
+                    faceVerify(cropBitmap);
+                }
 
-                        if (currentCameraFacing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
-                            orientation = (540 - orientation) % 360;
-                        }
-                        if (orientation != 0) {
-                            originBitmap = ImageUtils.rotaingImageView(orientation, originBitmap);
-                        }
-                        //前置摄像头拍摄的照片和预览界面成镜面效果，需要翻转。
-                        if (currentCameraFacing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
-                            Bitmap mirrorOriginBitmap = Bitmap.createBitmap(originBitmap.getWidth(), originBitmap.getHeight(), originBitmap.getConfig());
-                            Canvas canvas = new Canvas(mirrorOriginBitmap);
-                            Paint paint = new Paint();
-                            paint.setColor(Color.BLACK);
-                            paint.setAntiAlias(true);
-                            Matrix matrix = new Matrix();
-                            //镜子效果
-                            matrix.setScale(-1, 1);
-                            matrix.postTranslate(originBitmap.getWidth(), 0);
-                            canvas.drawBitmap(originBitmap, matrix, paint);
-                            originBitmap = mirrorOriginBitmap;
-                        }
-                        //前置摄像头和后置摄像头拍照后图像角度旋转
-                        Bitmap cropBitmap = previewSFV.getPicture(originBitmap);
-                        cropBitmap = ImageUtils.scaleBitmap(cropBitmap, 400);
-                        if (isFaceSetting){
-                            faceSetting(cropBitmap);
-                        }else {
-                            faceVerify(cropBitmap);
-                        }
-
-                    }
-                });
             }
-        }, time);
-
+        });
     }
 
     /**
      * 根据用户获取是否打开了gesturecode
+     *
      * @param context
      * @return
      */
-    public static boolean getFaceVerifyIsOpenByUser(Context context){
-        return PreferencesByUsersUtils.getBoolean(context,FaceVerifyActivity.FACE_VERIFT_IS_OPEN,false);
+    public static boolean getFaceVerifyIsOpenByUser(Context context) {
+        return PreferencesByUsersUtils.getBoolean(context, FaceVerifyActivity.FACE_VERIFT_IS_OPEN, false);
     }
-
 
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.close_camera_btn:
-                finish();
+                onBackPressed();
+                break;
+            default:
                 break;
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        if (isFaceSetting || isFaceVerityTest) {
+            finish();
+        } else {
+            MyApplication.getInstance().exit();
+        }
+    }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        if (handler != null) {
+            handler.removeCallbacks(takePhotoRunnable);
+            handler = null;
+        }
         releaseCamera();
     }
 
@@ -347,39 +386,100 @@ public class FaceVerifyActivity extends Activity implements SurfaceHolder.Callba
             case 200:
                 tipText.setVisibility(View.VISIBLE);
                 ToastUtils.show(getApplicationContext(), "刷脸成功");
-                if (!isFaceSetting){
-                    setResult(RESULT_OK);
+                if (isFaceSetting) {
+                    PreferencesByUsersUtils.putBoolean(FaceVerifyActivity.this, FaceVerifyActivity.FACE_VERIFT_IS_OPEN, isFaceSettingOpen);
                 }
                 finish();
                 break;
             case 201:
-                tipText.setVisibility(View.VISIBLE);
-                tipText.setText("没有检测到脸");
-                takePicture(1000);
+                if (!checkIsTimeout()) {
+                    tipText.setVisibility(View.VISIBLE);
+                    tipText.setText("没有检测到脸");
+                    delayTotakePicture(1000);
+                }
                 break;
             case 202:
-                tipText.setVisibility(View.VISIBLE);
-                tipText.setText("请摆正姿势");
-                takePicture(1000);
+                if (!checkIsTimeout()) {
+                    tipText.setVisibility(View.VISIBLE);
+                    tipText.setText("请摆正姿势");
+                    delayTotakePicture(1000);
+                }
                 break;
             case 203:
-                tipText.setVisibility(View.VISIBLE);
-                tipText.setText("请靠近一点");
-                takePicture(1000);
+                if (!checkIsTimeout()) {
+                    tipText.setVisibility(View.VISIBLE);
+                    tipText.setText("请靠近一点");
+                    delayTotakePicture(1000);
+                }
                 break;
             case 204:
-                tipText.setVisibility(View.VISIBLE);
-                tipText.setText("请眨眨眼");
-                takePicture(1000);
+                if (!checkIsTimeout()) {
+                    tipText.setVisibility(View.VISIBLE);
+                    tipText.setText("请眨眨眼");
+                    delayTotakePicture(1000);
+                }
                 break;
             case 400:
-                tipText.setVisibility(View.VISIBLE);
-                tipText.setText("失败");
+                tipText.setVisibility(View.GONE);
+                showFaceVerifyFailDlg();
                 break;
             default:
-                takePicture(1000);
+                if (!checkIsTimeout()) {
+                    delayTotakePicture(1000);
+                }
                 break;
         }
+    }
+
+    private boolean checkIsTimeout() {
+        long currentTime = System.currentTimeMillis();
+        LogUtils.jasonDebug("currentTime - startTime="+(currentTime - startTime));
+        if (currentTime - startTime >= TIMEOUT_TIME) {
+            showFaceVerifyTimeoutDlg();
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * 弹出人脸验证失败弹出框
+     */
+    private void showFaceVerifyFailDlg() {
+        new MyQMUIDialog.MessageDialogBuilder(FaceVerifyActivity.this)
+                .setMessage("抱歉，没有认出你来")
+                .addAction(getString(R.string.ok), new QMUIDialogAction.ActionListener() {
+                    @Override
+                    public void onClick(QMUIDialog dialog, int index) {
+                        dialog.dismiss();
+                        onBackPressed();
+                    }
+                })
+                .show();
+    }
+
+    /**
+     * 弹出验证超时提示框
+     */
+    private void showFaceVerifyTimeoutDlg() {
+        LogUtils.jasonDebug("showFaceVerifyTimeoutDlg------------------------");
+        new MyQMUIDialog.MessageDialogBuilder(FaceVerifyActivity.this)
+                .setMessage("操作超时,正对手机，更容易成功")
+                .addAction(getString(R.string.exit), new QMUIDialogAction.ActionListener() {
+                    @Override
+                    public void onClick(QMUIDialog dialog, int index) {
+                        dialog.dismiss();
+                        onBackPressed();
+                    }
+                })
+                .addAction(getString(R.string.retry), new QMUIDialogAction.ActionListener() {
+                    @Override
+                    public void onClick(QMUIDialog dialog, int index) {
+                        dialog.dismiss();
+                        startTime = System.currentTimeMillis();
+                        delayTotakePicture(1000);
+                    }
+                })
+                .show();
     }
 
     /**
@@ -429,7 +529,7 @@ public class FaceVerifyActivity extends Activity implements SurfaceHolder.Callba
 
         @Override
         public void returnFaceSettingFail(String error, int errorCode) {
-            takePicture(1000);
+            handResultCode(-1);
         }
 
         @Override
@@ -440,7 +540,7 @@ public class FaceVerifyActivity extends Activity implements SurfaceHolder.Callba
 
         @Override
         public void returnFaceVerifyFail(String error, int errorCode) {
-            takePicture(1000);
+            handResultCode(-1);
         }
     }
 }
