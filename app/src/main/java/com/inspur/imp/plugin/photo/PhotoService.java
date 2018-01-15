@@ -105,8 +105,12 @@ public class PhotoService extends ImpPlugin {
             if (!paramsObject.isNull("fail"))
                 failCb = paramsObject.getString("fail");
             int encodingType = 0;
-            if (!paramsObject.isNull("encodingType"))
-                encodingType = paramsObject.getInt("encodingType");
+            if (!paramsObject.isNull("options")){
+                JSONObject optionsObj = paramsObject.getJSONObject("options");
+                if (!optionsObj.isNull("encodingType")){
+                    encodingType = optionsObj.getInt("encodingType");
+                }
+            }
             openCamera(encodingType);
         } catch (Exception e) {
             // TODO: handle exception

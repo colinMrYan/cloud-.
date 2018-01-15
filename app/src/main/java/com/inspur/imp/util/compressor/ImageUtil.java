@@ -56,9 +56,13 @@ class ImageUtil {
         Bitmap scaledBitmap = BitmapFactory.decodeFile(imageFile.getAbsolutePath(), options);
 
         //check the rotation of the image and display it properly
-        ExifInterface exif;
-        exif = new ExifInterface(imageFile.getAbsolutePath());
-        int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, 0);
+        int orientation = 0;
+        try {
+            ExifInterface exif = new ExifInterface(imageFile.getAbsolutePath());
+            orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, 0);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
         Matrix matrix = new Matrix();
         if (orientation == 6) {
             matrix.postRotate(90);
