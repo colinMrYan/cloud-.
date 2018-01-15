@@ -6,6 +6,8 @@ import android.view.View;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
+import com.inspur.emmcloud.util.common.LogUtils;
+
 /**
  * 可以设置最大高度的listview
  */
@@ -34,6 +36,7 @@ public class MaxHightListView extends ListView {
 	@Override
 	protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
 		super.onLayout(changed, left, top, right, bottom);
+		LogUtils.jasonDebug("onLayout-=============================");
 		setViewHeightBasedOnChildren();
 	}
 
@@ -43,13 +46,12 @@ public class MaxHightListView extends ListView {
 		if (listAdapter == null) {
 			return;
 		}
-		// int h = 10;
-		// int itemHeight = BdUtilHelper.getDimens(getContext(), R.dimen.ds30);
 		int sumHeight = 0;
 		int size = listAdapter.getCount();
 
-
+		LogUtils.jasonDebug("size="+size);
 		for (int i = 0; i < size; i++) {
+		    //此处的View必须是Linearlayout。因为RelativeLayout的measure方法在Android4.4以下有bug
 			View v = listAdapter.getView(i, null, this);
 			v.measure(0, 0);
 			sumHeight += v.getMeasuredHeight();

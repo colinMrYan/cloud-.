@@ -83,6 +83,7 @@ public class FocusSurfaceView extends SurfaceView {
     private int mGuideColor;
     private Drawable mFrameBackground;
     private float mInitialFrameScale; // 0.01 ~ 1.0, 0.75 is default value
+    private boolean isSetMaxInitialFrameScale = false;//是否设置最大的初始框比例
     private boolean mIsAnimationEnabled = true;
     private int mAnimationDurationMillis = DEFAULT_ANIMATION_DURATION_MILLIS;
     private boolean mIsHandleShadowEnabled = true;
@@ -160,6 +161,7 @@ public class FocusSurfaceView extends SurfaceView {
             mIsCropEnabled = ta.getBoolean(R.styleable.FocusSurfaceView_focus_crop_enabled, false);
             mInitialFrameScale = constrain(ta.getFloat(R.styleable.FocusSurfaceView_focus_initial_frame_scale, DEFAULT_INITIAL_FRAME_SCALE),
                     0.01f, 1.0f, DEFAULT_INITIAL_FRAME_SCALE);
+            isSetMaxInitialFrameScale = ta.getBoolean(R.styleable.FocusSurfaceView_focus_set_max_initial_frame_scale,false);
             mIsAnimationEnabled = ta.getBoolean(R.styleable.FocusSurfaceView_focus_animation_enabled, true);
             mAnimationDurationMillis = ta.getInt(R.styleable.FocusSurfaceView_focus_animation_duration, DEFAULT_ANIMATION_DURATION_MILLIS);
             mIsHandleShadowEnabled = ta.getBoolean(R.styleable.FocusSurfaceView_focus_handle_shadow_enabled, true);
@@ -347,11 +349,13 @@ public class FocusSurfaceView extends SurfaceView {
         float h = b - t;
         float cx = l + w / 2;
         float cy = t + h / 2;
-        float maxInitialFrameWidth = imageRect.width()- DensityUtil.dip2px(getContext(),30);
-        float maxInitialFrameHeight = imageRect.height()-2*topMove-2* DensityUtil.dip2px(getContext(),50)-DensityUtil.dip2px(getContext(),30);
-        float maxInitialFrameWidthScale = maxInitialFrameWidth/w;
-        float maxInitialFrameHeightScale = maxInitialFrameHeight/h;
-        mInitialFrameScale = (maxInitialFrameWidthScale < maxInitialFrameHeightScale)?maxInitialFrameWidthScale:maxInitialFrameHeightScale;
+        if(isSetMaxInitialFrameScale){
+            float maxInitialFrameWidth = imageRect.width()- DensityUtil.dip2px(getContext(),30);
+            float maxInitialFrameHeight = imageRect.height()-2*topMove-2* DensityUtil.dip2px(getContext(),50)-DensityUtil.dip2px(getContext(),30);
+            float maxInitialFrameWidthScale = maxInitialFrameWidth/w;
+            float maxInitialFrameHeightScale = maxInitialFrameHeight/h;
+            mInitialFrameScale = (maxInitialFrameWidthScale < maxInitialFrameHeightScale)?maxInitialFrameWidthScale:maxInitialFrameHeightScale;
+        }
         float scale = (mCropMode == CropMode.FIT_IMAGE)?1:mInitialFrameScale;
         float sw = w * scale;
         float sh = h * scale;
