@@ -758,7 +758,7 @@ public class ImageUtils {
         try {
             sourceBitmap = getBitmapByPath(imgFilePath);
             waterMaskBitmap = convertViewToBitmap(context, content, sourceBitmap.getWidth(),sourceBitmap.getHeight(),color, background,fontSize);
-            int paddingLeft = getWaterMaskPaddingLeft(valign,sourceBitmap,waterMaskBitmap);
+            int paddingLeft = getWaterMaskPaddingLeft(algin,sourceBitmap,waterMaskBitmap);
             int paddingTop = getWaterMaskPaddingTop(valign,sourceBitmap,waterMaskBitmap);
             Bitmap newBitmap = createWaterMaskBitmap(sourceBitmap, waterMaskBitmap,paddingLeft,paddingTop);
             saveImageToSD(context, imgFilePath, newBitmap, 100);
