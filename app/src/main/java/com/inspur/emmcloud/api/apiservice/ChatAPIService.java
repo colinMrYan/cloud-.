@@ -237,7 +237,6 @@ public class ChatAPIService {
 			@Override
 			public void callbackSuccess(String arg0) {
 				// TODO Auto-generated method stub
-				LogUtils.debug("yfcLog", "返回数据：" + arg0);
 				apiInterface.returnChannelInfoSuccess(new GetChannelInfoResult(
 						arg0));
 			}

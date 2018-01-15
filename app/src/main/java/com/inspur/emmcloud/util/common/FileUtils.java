@@ -129,6 +129,7 @@ public class FileUtils {
             fileWriter.close();
             return true;
         } catch (IOException e) {
+            e.printStackTrace();
             throw new RuntimeException("IOException occurred. ", e);
         } finally {
             if (fileWriter != null) {

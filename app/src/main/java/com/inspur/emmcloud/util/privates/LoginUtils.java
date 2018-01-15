@@ -11,17 +11,18 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.LoginSelectEnterpriseAdapter;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.LoginAPIService;
-import com.inspur.emmcloud.bean.mine.Enterprise;
 import com.inspur.emmcloud.bean.login.GetLoginResult;
+import com.inspur.emmcloud.bean.mine.Enterprise;
 import com.inspur.emmcloud.bean.mine.GetMyInfoResult;
 import com.inspur.emmcloud.config.Constant;
+import com.inspur.emmcloud.util.common.DensityUtil;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.MDM.MDM;
 import com.inspur.emmcloud.util.privates.MDM.MDMListener;
-import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.MaxHightListView;
 import com.inspur.emmcloud.widget.SwitchView;
@@ -232,8 +233,12 @@ public class LoginUtils extends APIInterfaceInstance {
         final SwitchView switchView = (SwitchView) myDialog.findViewById(R.id.auto_select_switch);
         switchView.setOpened(true);
         MaxHightListView enterpriseListView = (MaxHightListView) myDialog.findViewById(R.id.enterprise_list);
+        LogUtils.jasonDebug("000000000000-=============================");
         enterpriseListView.setMaxHeight(DensityUtil.dip2px(activity, 180));
+        LogUtils.jasonDebug("1111111111-=============================");
+        LogUtils.jasonDebug("enterpriseList-============================="+enterpriseList.size());
         enterpriseListView.setAdapter(new LoginSelectEnterpriseAdapter(activity, enterpriseList, defaultEnterprise));
+        LogUtils.jasonDebug("2222222222222-=============================");
         enterpriseListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -249,6 +254,7 @@ public class LoginUtils extends APIInterfaceInstance {
         });
         myDialog.setCancelable(false);
         myDialog.show();
+        LogUtils.jasonDebug("3333333333=============================");
 
     }
 

@@ -907,6 +907,23 @@ public class APIUri {
         return  URL_BASE_EMM+"api?module=user&method=update_baseinfo";
     }
 
+
+    /**
+     * 设置人脸头像
+     * @return
+     */
+    public static String getFaceSettingUrl(){
+        return  URL_BASE_EMM+"v3.0/api/app/face/save";
+    }
+
+    /**
+     * 脸部图像验证
+     * @return
+     */
+    public static String getFaceVerifyUrl(){
+        return  URL_BASE_EMM+"v3.0/api/app/face/verify";
+    }
+
     /***********设备管理******************
     /**
      * 获取解绑设备url
