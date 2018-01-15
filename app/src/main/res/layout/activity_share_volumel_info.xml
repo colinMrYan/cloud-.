@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main_layout"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:fitsSystemWindows="true">
+
+    <RelativeLayout
+        android:id="@+id/header_layout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/header_height"
+        android:background="@color/header_bg">
+
+        <RelativeLayout
+            android:id="@+id/back_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:onClick="onClick"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp">
+
+            <ImageView
+                android:id="@+id/back_btn"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_centerVertical="true"
+                android:background="@null"
+                android:paddingRight="5dp"
+                android:scaleType="centerInside"
+                android:src="@drawable/selector_back_btn" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/header_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:text="网盘详情"
+            android:textColor="@color/header_text"
+            android:textSize="@dimen/header_textsize" />
+    </RelativeLayout>
+
+    <ScrollView
+        android:id="@+id/header_image_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/header_layout"
+        android:background="@color/content_bg"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:orientation="vertical">
+
+            <com.inspur.emmcloud.widget.NoScrollGridView
+                android:id="@+id/member_grid"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:horizontalSpacing="18dp"
+                android:listSelector="@android:color/transparent"
+                android:numColumns="5"
+                android:paddingBottom="10dp"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
+                android:paddingTop="19dp"
+                android:stretchMode="columnWidth"
+                android:verticalSpacing="10dp"></com.inspur.emmcloud.widget.NoScrollGridView>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@color/color_list_divider" />
+
+            <RelativeLayout
+                android:id="@+id/volume_member_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/text_layout_selector"
+                android:onClick="onClick"
+                android:paddingLeft="15dp"
+                android:paddingRight="16dp">
+
+                <TextView
+                    android:id="@+id/volume_member_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:paddingBottom="10dp"
+                    android:paddingTop="10dp"
+                    android:textColor="#FF333333"
+                    android:textSize="@dimen/content_title_textsize" />
+
+                <ImageView
+                    style="@style/arrow_right"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="10dp"
+                    android:src="@drawable/icon_arrow_right" />
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@color/color_list_divider" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_marginTop="10dp"
+                android:background="@color/color_list_divider" />
+
+            <RelativeLayout
+                android:id="@+id/volume_name_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/text_layout_selector"
+                android:onClick="onClick"
+                android:paddingLeft="15dp"
+                android:paddingRight="16dp">
+
+                <TextView
+                    android:id="@+id/volume_name_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:paddingBottom="10dp"
+                    android:paddingTop="10dp"
+                    android:text="网盘名称"
+                    android:textColor="#FF333333"
+                    android:textSize="@dimen/content_title_textsize" />
+
+                <TextView
+                    android:id="@+id/volume_name_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="20dp"
+                    android:layout_toLeftOf="@+id/volume_name_arrow"
+                    android:layout_toRightOf="@id/volume_name_title"
+                    android:ellipsize="end"
+                    android:gravity="right"
+                    android:paddingBottom="10dp"
+                    android:paddingTop="10dp"
+                    android:singleLine="true"
+                    android:textColor="#FF8F8E94"
+                    android:textSize="@dimen/content_title_textsize" />
+
+                <ImageView
+                    android:id="@+id/volume_name_arrow"
+                    style="@style/arrow_right"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="10dp"
+                    android:src="@drawable/icon_arrow_right" />
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@color/color_list_divider" />
+
+
+            <LinearLayout
+                android:id="@+id/privilege_setting_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#ffffff"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="12dp"
+                    android:paddingTop="15dp"
+                    android:paddingLeft="15dp"
+                    android:text="权限设置"
+                    android:textColor="#666666"
+                    android:textSize="13sp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:background="@color/color_list_divider" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/text_layout_selector"
+                    android:onClick="onClick"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="16dp">
+
+                    <TextView
+                        android:id="@+id/upload_privilege_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:paddingBottom="10dp"
+                        android:paddingTop="10dp"
+                        android:text="拥有上传/查看权限"
+                        android:textColor="#FF333333"
+                        android:textSize="@dimen/content_title_textsize" />
+
+                    <TextView
+                        android:id="@+id/upload_privilege_num_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_toLeftOf="@+id/upload_privilege_arrow_img"
+                        android:layout_toRightOf="@id/upload_privilege_text"
+                        android:gravity="right"
+                        android:textColor="#666666"
+                        android:textSize="17sp" />
+
+                    <ImageView
+                        android:id="@+id/upload_privilege_arrow_img"
+                        style="@style/arrow_right"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="10dp"
+                        android:src="@drawable/icon_arrow_right" />
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:layout_marginLeft="15dp"
+                    android:background="@color/color_list_divider" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/text_layout_selector"
+                    android:onClick="onClick"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="16dp">
+
+                    <TextView
+                        android:id="@+id/view_privilege_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:paddingBottom="10dp"
+                        android:paddingTop="10dp"
+                        android:text="拥有查看权限"
+                        android:textColor="#FF333333"
+                        android:textSize="@dimen/content_title_textsize" />
+
+                    <TextView
+                        android:id="@+id/view_privilege_num_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_toLeftOf="@+id/view_privilege_arrow_img"
+                        android:layout_toRightOf="@id/view_privilege_text"
+                        android:gravity="right"
+                        android:textColor="#666666"
+                        android:textSize="17sp" />
+
+                    <ImageView
+                        android:id="@+id/view_privilege_arrow_img"
+                        style="@style/arrow_right"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="10dp"
+                        android:src="@drawable/icon_arrow_right" />
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:background="@color/color_list_divider" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+
+</RelativeLayout>

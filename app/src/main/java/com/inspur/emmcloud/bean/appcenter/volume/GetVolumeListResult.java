@@ -22,7 +22,7 @@ public class GetVolumeListResult {
             JSONObject object = JSONUtils.getJSONObject(array, i, new JSONObject());
             Volume volume = new Volume(object);
             String type = volume.getType();
-            if (type.equals("pubic")) {
+            if (type.equals("public")) {
                 shareVolumeList.add(volume);
             } else if (type.equals("private")) {
                 myVolume = volume;

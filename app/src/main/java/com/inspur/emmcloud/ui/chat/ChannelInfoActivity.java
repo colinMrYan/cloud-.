@@ -263,7 +263,7 @@ public class ChannelInfoActivity extends BaseActivity {
                 intent.putExtra("name", name);
                 startActivityForResult(intent, MODIFY_NAME);
                 break;
-            case R.id.channel_member_layout:
+            case R.id.volume_member_layout:
                 bundle.putString("title", getString(R.string.group_member));
                 bundle.putString("search", "1");
                 IntentUtils.startActivity(ChannelInfoActivity.this,

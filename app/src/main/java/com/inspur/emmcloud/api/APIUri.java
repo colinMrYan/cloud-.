@@ -519,6 +519,15 @@ public class APIUri {
     }
 
     /**
+     * 更新网盘信息
+     * @param volumeId
+     * @return
+     */
+    public static String getUpdateVolumeInfoUrl(String volumeId){
+        return URL_BASE_VOLUME+"/"+volumeId;
+    }
+
+    /**
      * 获取云盘文件列表
      *
      * @param volumeId
@@ -567,6 +576,15 @@ public class APIUri {
      */
     public static String getMoveVolumeFileUrl(String volumeId) {
         return URL_BASE_VOLUME + "/" + volumeId + "/file/path";
+    }
+
+    /**
+     * 获取复制文件的url
+     * @param volumeId
+     * @return
+     */
+    public static String getCopyVolumeFileUrl(String volumeId){
+        return URL_BASE_VOLUME + "/" + volumeId +"/file/duplication";
     }
 /************************************************************************工作****************************************************************************/
     /***************会议接口*****************************/

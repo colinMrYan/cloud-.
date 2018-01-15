@@ -24,6 +24,7 @@ import com.inspur.emmcloud.bean.appcenter.news.GetNewsTitleResult;
 import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeFileListResult;
 import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeFileUploadTokenResult;
 import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeListResult;
+import com.inspur.emmcloud.bean.appcenter.volume.Volume;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
 import com.inspur.emmcloud.bean.chat.ChannelGroup;
 import com.inspur.emmcloud.bean.chat.GetAddMembersSuccessResult;
@@ -551,7 +552,7 @@ public interface APIInterface {
     void returnCreateForderSuccess(VolumeFile volumeFile);
     void returnCreateForderFail(String error,int errorCode);
 
-    void returnVolumeFileDeleteSuccess(VolumeFile volumeFile);
+    void returnVolumeFileDeleteSuccess(List<VolumeFile> deleteVolumeFileList);
     void returnVolumeFileDeleteFail(String error, int errorCode);
 
 
@@ -560,8 +561,22 @@ public interface APIInterface {
 
     void returnMoveFileSuccess(List<VolumeFile> movedVolumeFileList);
     void returnMoveFileFail(String error,int errorCode);
+
+    void returnCopyFileSuccess();
+    void returnCopyFileFail(String error,int errorCode);
+
     void returnRecommendAppWidgetListSuccess(GetRecommendAppWidgetListResult getRecommendAppWidgetListResult);
     void returnRecommendAppWidgetListFail(String error, int errorCode);
+
+    void returnCreateShareVolumeSuccess(Volume volume);
+    void returnCreateShareVolumeFail(String error, int errorCode);
+
+    void returnUpdateShareVolumeNameSuccess(Volume volume,String name);
+    void returnUpdateShareVolumeNameFail(String error, int errorCode);
+
+    void retrunRemoveShareVolumeSuccess(Volume volume);
+    void returnRemoveShareVolumeFail(String error, int errorCode);
+
 
     void returnFaceSettingSuccess( GetFaceSettingResult getFaceSettingResult);
     void returnFaceSettingFail(String error, int errorCode);
