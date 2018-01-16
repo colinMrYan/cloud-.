@@ -128,7 +128,7 @@ public class FaceVerifyActivity extends Activity implements SurfaceHolder.Callba
         currentCameraFacing = Camera.CameraInfo.CAMERA_FACING_FRONT;
         initCamera();
         setCameraParams();
-        delayTotakePicture(1500);
+        delayTotakePicture(1000);
     }
 
     private void initCamera() {
@@ -302,17 +302,6 @@ public class FaceVerifyActivity extends Activity implements SurfaceHolder.Callba
             public void onPictureTaken(byte[] data, Camera camera) {
                 int orientation = currentOrientation;
                 Bitmap originBitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
-                boolean isSamSungType = originBitmap.getWidth() > originBitmap.getHeight();
-                if (isSamSungType) {
-                    originBitmap = ImageUtils.rotaingImageView(90, originBitmap);
-                }
-
-                if (currentCameraFacing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
-                    orientation = (540 - orientation) % 360;
-                }
-                if (orientation != 0) {
-                    originBitmap = ImageUtils.rotaingImageView(orientation, originBitmap);
-                }
                 //前置摄像头拍摄的照片和预览界面成镜面效果，需要翻转。
                 if (currentCameraFacing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
                     Bitmap mirrorOriginBitmap = Bitmap.createBitmap(originBitmap.getWidth(), originBitmap.getHeight(), originBitmap.getConfig());
@@ -326,9 +315,20 @@ public class FaceVerifyActivity extends Activity implements SurfaceHolder.Callba
                     matrix.postTranslate(originBitmap.getWidth(), 0);
                     canvas.drawBitmap(originBitmap, matrix, paint);
                     originBitmap = mirrorOriginBitmap;
+                    //前置摄像头旋转180度才能显示preview显示的界面
+                    originBitmap = ImageUtils.rotaingImageView(180, originBitmap);
                 }
-                //前置摄像头和后置摄像头拍照后图像角度旋转
+                //如果是三星手机需要先旋转90度
+                boolean isSamSungType = originBitmap.getWidth()>originBitmap.getHeight();
+                if (isSamSungType){
+                    originBitmap = ImageUtils.rotaingImageView(90, originBitmap);
+                }
+                //通过各种旋转和镜面操作，使originBitmap显示出preview界面
                 Bitmap cropBitmap = previewSFV.getPicture(originBitmap);
+                //界面进行旋转
+                if (orientation != 0) {
+                    cropBitmap = ImageUtils.rotaingImageView(orientation, cropBitmap);
+                }
                 cropBitmap = ImageUtils.scaleBitmap(cropBitmap, 400);
                 if (isFaceSetting) {
                     faceSetting(cropBitmap);
@@ -490,7 +490,6 @@ public class FaceVerifyActivity extends Activity implements SurfaceHolder.Callba
                             dialog.dismiss();
                             startTime = System.currentTimeMillis();
                             delayTotakePicture(1000);
-                            finish();
                         }
                     })
                     .addAction("关闭刷脸，重新登录", new QMUIDialogAction.ActionListener() {
