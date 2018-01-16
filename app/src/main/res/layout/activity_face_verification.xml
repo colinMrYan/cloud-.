@@ -67,7 +67,7 @@
             <TextView
                 android:textSize="17sp"
                 android:textColor="#4cc7ff"
-                android:text="拿起手机，眨眨眼"
+                android:text="请把脸放入框内保持不动"
                 android:layout_below="@id/face_verification_layout"
                 android:gravity="center"
                 android:layout_width="wrap_content"

@@ -2,6 +2,7 @@ package com.inspur.emmcloud.ui.mine.setting;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -334,6 +335,7 @@ public class FaceVerifyActivity extends Activity implements SurfaceHolder.Callba
                 } else {
                     faceVerify(cropBitmap);
                 }
+                mCamera.startPreview();
 
             }
         });
@@ -346,6 +348,7 @@ public class FaceVerifyActivity extends Activity implements SurfaceHolder.Callba
      * @return
      */
     public static boolean getFaceVerifyIsOpenByUser(Context context) {
+        LogUtils.jasonDebug("flag=========================="+PreferencesByUsersUtils.getBoolean(context, FaceVerifyActivity.FACE_VERIFT_IS_OPEN, false));
         return PreferencesByUsersUtils.getBoolean(context, FaceVerifyActivity.FACE_VERIFT_IS_OPEN, false);
     }
 
@@ -384,7 +387,7 @@ public class FaceVerifyActivity extends Activity implements SurfaceHolder.Callba
     private void handResultCode(int code) {
         switch (code) {
             case 200:
-                tipText.setVisibility(View.VISIBLE);
+                tipText.setVisibility(View.GONE);
                 ToastUtils.show(getApplicationContext(), "刷脸成功");
                 if (isFaceSetting) {
                     PreferencesByUsersUtils.putBoolean(FaceVerifyActivity.this, FaceVerifyActivity.FACE_VERIFT_IS_OPEN, isFaceSettingOpen);
@@ -435,7 +438,7 @@ public class FaceVerifyActivity extends Activity implements SurfaceHolder.Callba
         long currentTime = System.currentTimeMillis();
         LogUtils.jasonDebug("currentTime - startTime="+(currentTime - startTime));
         if (currentTime - startTime >= TIMEOUT_TIME) {
-            showFaceVerifyTimeoutDlg();
+            showFaceVerifyFailDlg();
             return true;
         }
         return false;
@@ -445,41 +448,62 @@ public class FaceVerifyActivity extends Activity implements SurfaceHolder.Callba
      * 弹出人脸验证失败弹出框
      */
     private void showFaceVerifyFailDlg() {
-        new MyQMUIDialog.MessageDialogBuilder(FaceVerifyActivity.this)
-                .setMessage("抱歉，没有认出你来")
-                .addAction(getString(R.string.ok), new QMUIDialogAction.ActionListener() {
-                    @Override
-                    public void onClick(QMUIDialog dialog, int index) {
-                        dialog.dismiss();
-                        onBackPressed();
-                    }
-                })
-                .show();
-    }
+        if (isFaceSetting || isFaceVerityTest) {
+            new MyQMUIDialog.MessageDialogBuilder(FaceVerifyActivity.this)
+                    .setMessage("抱歉，没有认出你来")
+                    .addAction(getString(R.string.ok), new QMUIDialogAction.ActionListener() {
+                        @Override
+                        public void onClick(QMUIDialog dialog, int index) {
+                            dialog.dismiss();
+                                finish();
+                        }
+                    })
+                    .show();
+        }else if(CreateGestureActivity.getGestureCodeIsOpenByUser(FaceVerifyActivity.this)){
+            new MyQMUIDialog.MessageDialogBuilder(FaceVerifyActivity.this)
+                    .setMessage("抱歉，没有认出你来")
+                    .addAction(getString(R.string.retry), new QMUIDialogAction.ActionListener() {
+                        @Override
+                        public void onClick(QMUIDialog dialog, int index) {
+                            dialog.dismiss();
+                            startTime = System.currentTimeMillis();
+                            delayTotakePicture(1000);
+                        }
+                    })
+                    .addAction("手势解锁", new QMUIDialogAction.ActionListener() {
+                        @Override
+                        public void onClick(QMUIDialog dialog, int index) {
+                            dialog.dismiss();
+                            Intent intent = new Intent(FaceVerifyActivity.this, GestureLoginActivity.class);
+                            intent.putExtra("gesture_code_change", "login");
+                            startActivity(intent);
+                            finish();
+                        }
+                    })
+                    .show();
+        }else {
+            new MyQMUIDialog.MessageDialogBuilder(FaceVerifyActivity.this)
+                    .setMessage("抱歉，没有认出你来")
+                    .addAction(getString(R.string.retry), new QMUIDialogAction.ActionListener() {
+                        @Override
+                        public void onClick(QMUIDialog dialog, int index) {
+                            dialog.dismiss();
+                            startTime = System.currentTimeMillis();
+                            delayTotakePicture(1000);
+                            finish();
+                        }
+                    })
+                    .addAction("关闭刷脸，重新登录", new QMUIDialogAction.ActionListener() {
+                        @Override
+                        public void onClick(QMUIDialog dialog, int index) {
+                            dialog.dismiss();
+                            ((MyApplication) getApplication()).signout();
+                            PreferencesByUsersUtils.putBoolean(FaceVerifyActivity.this, FaceVerifyActivity.FACE_VERIFT_IS_OPEN, false);
+                        }
+                    })
+                    .show();
+        }
 
-    /**
-     * 弹出验证超时提示框
-     */
-    private void showFaceVerifyTimeoutDlg() {
-        LogUtils.jasonDebug("showFaceVerifyTimeoutDlg------------------------");
-        new MyQMUIDialog.MessageDialogBuilder(FaceVerifyActivity.this)
-                .setMessage("操作超时,正对手机，更容易成功")
-                .addAction(getString(R.string.exit), new QMUIDialogAction.ActionListener() {
-                    @Override
-                    public void onClick(QMUIDialog dialog, int index) {
-                        dialog.dismiss();
-                        onBackPressed();
-                    }
-                })
-                .addAction(getString(R.string.retry), new QMUIDialogAction.ActionListener() {
-                    @Override
-                    public void onClick(QMUIDialog dialog, int index) {
-                        dialog.dismiss();
-                        startTime = System.currentTimeMillis();
-                        delayTotakePicture(1000);
-                    }
-                })
-                .show();
     }
 
     /**

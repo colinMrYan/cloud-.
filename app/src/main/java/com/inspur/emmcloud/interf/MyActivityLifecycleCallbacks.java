@@ -12,7 +12,9 @@ import com.inspur.emmcloud.service.PVCollectService;
 import com.inspur.emmcloud.service.SyncCommonAppService;
 import com.inspur.emmcloud.ui.SchemeHandleActivity;
 import com.inspur.emmcloud.ui.mine.setting.CreateGestureActivity;
+import com.inspur.emmcloud.ui.mine.setting.FaceVerifyActivity;
 import com.inspur.emmcloud.ui.mine.setting.GestureLoginActivity;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.cache.DbCacheUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
@@ -35,9 +37,10 @@ public class MyActivityLifecycleCallbacks implements Application.ActivityLifecyc
         //此处不能用（count == 0）判断，由于Activity跳转生命周期因素导致，已登录账号进入应用不会打开手势解锁
         if (!MyApplication.getInstance().getIsActive() && MyApplication.getInstance()
                 .isIndexActivityRunning()) {
+            LogUtils.jasonDebug("app 进入前台---------------------------");
             //当用通知打开特定Activity或者第一个打开的是SchemeActivity时，此处不作处理，交由SchemeActivity处理
             if (!MyApplication.getInstance().getOPenNotification() && !(activity instanceof SchemeHandleActivity)) {
-                showGestureVerification(activity);
+                showSafeVerificationPage(activity);
             }
             MyApplication.getInstance().setIsActive(true);
             uploadMDMInfo(activity);
@@ -58,6 +61,7 @@ public class MyActivityLifecycleCallbacks implements Application.ActivityLifecyc
     public void onActivityStopped(Activity activity) {
         count--;
         if (count == 0) { // app 进入后台
+            LogUtils.jasonDebug("app 进入后台---------------------------");
             MyApplication.getInstance().setIsActive(false);
             startUploadPVCollectService(MyApplication.getInstance());
             startSyncCommonAppService(MyApplication.getInstance());
@@ -79,12 +83,17 @@ public class MyActivityLifecycleCallbacks implements Application.ActivityLifecyc
     }
 
     /**
-     * 弹出手势验证码
+     * 弹出进入app安全验证界面
      *
      * @param context
      */
-    private void showGestureVerification(final Context context) {
-        if (getIsNeedGestureCode(context)) {
+    private void showSafeVerificationPage(final Context context) {
+        if (FaceVerifyActivity.getFaceVerifyIsOpenByUser(context)) {
+            Intent intent = new Intent(context, FaceVerifyActivity.class);
+            LogUtils.jasonDebug("MyActivityLifecycleCallbacks------------------------");
+            intent.putExtra("isFaceVerifyExperience",false);
+            context.startActivity(intent);
+        } else if (getIsNeedGestureCode(context)) {
             Intent intent = new Intent(context, GestureLoginActivity.class);
             intent.putExtra("gesture_code_change", "login");
             context.startActivity(intent);

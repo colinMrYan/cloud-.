@@ -23,14 +23,16 @@ import com.inspur.emmcloud.ui.find.KnowledgeActivity;
 import com.inspur.emmcloud.ui.find.trip.TripInfoActivity;
 import com.inspur.emmcloud.ui.login.LoginActivity;
 import com.inspur.emmcloud.ui.mine.setting.CreateGestureActivity;
+import com.inspur.emmcloud.ui.mine.setting.FaceVerifyActivity;
 import com.inspur.emmcloud.ui.mine.setting.GestureLoginActivity;
 import com.inspur.emmcloud.ui.work.calendar.CalEventAddActivity;
-import com.inspur.emmcloud.util.privates.AppId2AppAndOpenAppUtils;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StateBarUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
+import com.inspur.emmcloud.util.privates.AppId2AppAndOpenAppUtils;
 import com.inspur.emmcloud.util.privates.WebAppUtils;
 import com.inspur.imp.api.ImpActivity;
 
@@ -47,10 +49,18 @@ public class SchemeHandleActivity extends Activity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         StateBarUtils.changeStateBarColor(this);
-        if (MyApplication.getInstance().getOPenNotification()){
+        if (MyApplication.getInstance().getOPenNotification()) {
             MyApplication.getInstance().setOpenNotification(false);
-            if (getIsNeedGestureCode()){
-                showGestureVerification();
+            if (FaceVerifyActivity.getFaceVerifyIsOpenByUser(SchemeHandleActivity.this)) {
+                Intent intent = new Intent(SchemeHandleActivity.this, FaceVerifyActivity.class);
+                LogUtils.jasonDebug("SchemeHandleActivity------------------------");
+                intent.putExtra("isFaceVerifyExperience",false);
+                startActivity(intent);
+                return;
+            } else if (getIsNeedGestureCode()) {
+                Intent intent = new Intent(SchemeHandleActivity.this, GestureLoginActivity.class);
+                intent.putExtra("gesture_code_change", "login");
+                startActivity(intent);
                 return;
             }
         }
@@ -144,22 +154,13 @@ public class SchemeHandleActivity extends Activity {
 
     /**
      * 是否应该显示显示手势解锁
+     *
      * @return
      */
     private boolean getIsNeedGestureCode() {
         return CreateGestureActivity.getGestureCodeIsOpenByUser(this);
     }
 
-    /**
-     * 弹出手势验证码
-     *
-     * @param context
-     */
-    private void showGestureVerification() {
-            Intent intent = new Intent(this, GestureLoginActivity.class);
-            intent.putExtra("gesture_code_change", "login");
-            startActivityForResult(intent,REQUEST_GESTURE_LOGIN);
-    }
 
     /**
      * 打开web应用
