@@ -23,26 +23,31 @@ import java.util.HashMap;
  */
 public class PluginMgr {
 
-	private static Context context;
+	private Context context;
 
-	private static ImpWebView webView;
+	private ImpWebView webView;
 
 	private static String TAG = "PLUGIN_MGR";
-	private static IPlugin plugin;
+	private  IPlugin plugin;
 
 	// 缓存功能类实例
-	private static final HashMap<String, IPlugin> entries = new HashMap<String, IPlugin>();
+	private  HashMap<String, IPlugin> entries = new HashMap<String, IPlugin>();
 
-	/**
-	 * 初始化PluginMgr，包括初始化PluginEntry和解析plugin.xml来获取service名称
-	 * 
-	 * @param ctx
-	 * @param
-	 */
-	public static void init(Context ctx, ImpWebView ImpWebView) {
+	public PluginMgr(Context ctx, ImpWebView ImpWebView){
 		context = ctx;
 		webView = ImpWebView;
 	}
+
+//	/**
+//	 * 初始化PluginMgr，包括初始化PluginEntry和解析plugin.xml来获取service名称
+//	 *
+//	 * @param ctx
+//	 * @param
+//	 */
+//	public static void init(Context ctx, ImpWebView ImpWebView) {
+//		context = ctx;
+//		webView = ImpWebView;
+//	}
 
 	/**
 	 * 执行对插件的操作，无返回值
@@ -54,7 +59,7 @@ public class PluginMgr {
 	 * @param params
 	 *            操作参数
 	 */
-	public static void execute(String serviceName, final String action,
+	public  void execute(String serviceName, final String action,
 			final String params) {
 		if (serviceName.endsWith("LoadingDialogService")){
 			serviceName = "com.inspur.imp.plugin.loadingdialog."+serviceName;
@@ -96,7 +101,7 @@ public class PluginMgr {
 	 * @param params
 	 *            操作参数
 	 */
-	public static String executeAndReturn(final String serviceName,
+	public  String executeAndReturn(final String serviceName,
 			final String action, final String params) {
 		IPlugin plugin = null;
 		String res = "";
@@ -136,7 +141,7 @@ public class PluginMgr {
 	 * @param service
 	 * @return IPlugin
 	 */
-	public static IPlugin getPlugin(String service) {
+	public  IPlugin getPlugin(String service) {
 		IPlugin plugin = entries.get(service);
 
 		// 页面切换时切换webView
@@ -156,7 +161,7 @@ public class PluginMgr {
 	 * 
 	 * @return The plugin object
 	 */
-	private static IPlugin createPlugin(String clssName) {
+	private IPlugin createPlugin(String clssName) {
 		try {
 			@SuppressWarnings("rawtypes")
 			Class c = getClassByName(clssName);
@@ -176,7 +181,7 @@ public class PluginMgr {
 	 * @throws ClassNotFoundException
 	 */
 	@SuppressWarnings("rawtypes")
-	private static Class getClassByName(final String clazz)
+	private  Class getClassByName( String clazz)
 			throws ClassNotFoundException {
 		Class c = null;
 		if (clazz != null) {
@@ -188,19 +193,20 @@ public class PluginMgr {
 	/**
 	 * activity关闭之前调用方法关闭相应的空间
 	 */
-	public static void onDestroy() {
+	public  void onDestroy() {
 		for (IPlugin plugin : entries.values()) {
 			if (plugin != null) {
 				plugin.onDestroy();
 			}
 		}
 		entries.clear();
+		entries = null;
 	}
 
 	/**
 	 * activity onResume事件
 	 */
-	public static  void onResume(){
+	public  void onResume(){
 		for (IPlugin plugin : entries.values()) {
 			if (plugin != null) {
 				plugin.onActivityResume();
@@ -211,7 +217,7 @@ public class PluginMgr {
 	/**
 	 * activity onPause事件
 	 */
-	public static  void onPause(){
+	public  void onPause(){
 		for (IPlugin plugin : entries.values()) {
 			if (plugin != null) {
 				plugin.onActivityPause();

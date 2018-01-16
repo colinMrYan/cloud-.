@@ -30,17 +30,17 @@ import com.inspur.emmcloud.interf.MyActivityLifecycleCallbacks;
 import com.inspur.emmcloud.interf.OauthCallBack;
 import com.inspur.emmcloud.push.WebSocketPush;
 import com.inspur.emmcloud.ui.login.LoginActivity;
-import com.inspur.emmcloud.util.privates.AppUtils;
-import com.inspur.emmcloud.util.privates.CalEventNotificationUtils;
-import com.inspur.emmcloud.util.privates.CrashHandler;
-import com.inspur.emmcloud.util.privates.cache.DbCacheUtils;
-import com.inspur.emmcloud.util.privates.HuaWeiPushMangerUtils;
 import com.inspur.emmcloud.util.common.LogUtils;
-import com.inspur.emmcloud.util.privates.PreferencesByUsersUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.richtext.RichText;
+import com.inspur.emmcloud.util.privates.AppUtils;
+import com.inspur.emmcloud.util.privates.CalEventNotificationUtils;
+import com.inspur.emmcloud.util.privates.CrashHandler;
 import com.inspur.emmcloud.util.privates.ECMShortcutBadgeNumberManagerUtils;
+import com.inspur.emmcloud.util.privates.HuaWeiPushMangerUtils;
+import com.inspur.emmcloud.util.privates.PreferencesByUsersUtils;
+import com.inspur.emmcloud.util.privates.cache.DbCacheUtils;
 import com.inspur.imp.api.Res;
 import com.inspur.reactnative.AuthorizationManagerPackage;
 import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiskCache;
@@ -51,6 +51,8 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.nostra13.universalimageloader.utils.L;
 import com.oblador.vectoricons.VectorIconsPackage;
+import com.squareup.leakcanary.LeakCanary;
+import com.squareup.leakcanary.RefWatcher;
 
 import org.xutils.http.RequestParams;
 import org.xutils.x;
@@ -90,6 +92,13 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
     private boolean isOpenNotification = false;
     private String tanent;
 
+    public static RefWatcher getRefWatcher(Context context) {
+        MyApplication application = (MyApplication) context.getApplicationContext();
+        return application.refWatcher;
+    }
+
+    private RefWatcher refWatcher;
+
     public void onCreate() {
         super.onCreate();
         init();
@@ -102,6 +111,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
     private void init() {
         // TODO Auto-generated method stub
         instance = this;
+        refWatcher = LeakCanary.install(this);
         CrashHandler crashHandler = CrashHandler.getInstance();
         crashHandler.init(getApplicationContext());
         x.Ext.init(MyApplication.this);

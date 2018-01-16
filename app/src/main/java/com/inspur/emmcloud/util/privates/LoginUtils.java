@@ -39,7 +39,7 @@ public class LoginUtils extends APIInterfaceInstance {
     private static final int LOGIN_SUCCESS = 0;
     private static final int LOGIN_FAIL = 1;
     private static final int GET_LANGUAGE_SUCCESS = 3;
-    private static LoginAPIService apiServices;
+    private  LoginAPIService apiServices;
     private Activity activity;
     private Handler handler;
     private boolean isSMSLogin = false;

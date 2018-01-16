@@ -75,6 +75,7 @@ public class ImpWebView extends WebView {
 	private LinearLayout loadFailLayout;
 	private Handler handler;
 	private FrameLayout frameLayout;
+	private PluginMgr pluginMgr;
 
 	public ImpWebView(Context context, AttributeSet attrs) {
 		super(context,attrs);
@@ -117,10 +118,10 @@ public class ImpWebView extends WebView {
 	}
 
 	public void init() {
-		this.addJavascriptInterface(new JsInterface(), method);
+		initPlugin();
+		this.addJavascriptInterface(new JsInterface(pluginMgr), method);
 		//显示webview网页标题
 		this.addJavascriptInterface(new GetTitle(), "getTitle");
-		initPlugin();
 		setDownloadListener(new MyWebViewDownLoadListener());
 	}
 
@@ -133,7 +134,7 @@ public class ImpWebView extends WebView {
 			try {
 				JSONObject object = new JSONObject();
 				object.put("url",url);
-				PluginMgr.execute("FileTransferService","download",object.toString());
+				pluginMgr.execute("FileTransferService","download",object.toString());
 			}catch (Exception e){
 				e.printStackTrace();
 			}
@@ -176,7 +177,8 @@ public class ImpWebView extends WebView {
 
 	// 重置当前接口的webview
 	public void initPlugin() {
-		PluginMgr.init(this.context, this);
+//		PluginMgr.init(this.context, this);
+		pluginMgr = new PluginMgr(context,this);
 	}
 	private int mLastMotionX;
 	private int mLastMotionY;
