@@ -1,9 +1,9 @@
 package com.inspur.emmcloud.util.privates;
 
 import android.content.Context;
-import android.os.Environment;
 import android.util.Log;
 
+import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.bean.system.AppException;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.privates.cache.AppExceptionCacheUtils;
@@ -24,8 +24,6 @@ public class CrashHandler implements UncaughtExceptionHandler {
 	private UncaughtExceptionHandler mDefaultHandler;
 	private static CrashHandler mInstance;
 	private Context mContext;
-	private String errorFilePath = Environment.getExternalStorageDirectory()
-			+ "/IMP-Cloud/";
 
 	private CrashHandler() {
 	}
@@ -49,9 +47,21 @@ public class CrashHandler implements UncaughtExceptionHandler {
 			AppException appException = new AppException(System.currentTimeMillis(),AppUtils.getVersion(mContext),1,"",errorInfo,-1);
 			AppExceptionCacheUtils.saveAppException(mContext,appException);
 		}
-		// 干掉当前的程序
-		android.os.Process.killProcess(android.os.Process.myPid());
-	}
+        //如果系统提供了默认的异常处理器，则交给系统去结束我们的程序，否则就由我们自己结束自己
+        if (mDefaultHandler != null) {
+            mDefaultHandler.uncaughtException(thread, throwable);
+        } else {
+            try {
+                Thread.sleep(2000);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+            MyApplication.getInstance().exit();
+            // 干掉当前的程序
+            android.os.Process.killProcess(android.os.Process.myPid());
+            System.exit(1);
+        }
+    }
 
 	private String getErrorInfo(Throwable arg1) {
 		Writer writer = new StringWriter();

@@ -796,8 +796,19 @@
     <string name="setting_safe_center">Account and device security</string>
     <string name="safe_center_gesture">Gesture password locking</string>
     <string name="safe_center_finger_print">Fingerprint</string>
-    <string name="switch_gesture_unlock">Gesture unlock</string>
+    <string name="switch_gesture_unlock">Pattern Unlock</string>
     <string name="switch_gesture_reset_unlock">Reset gesture unlock</string>
+    <string name="put_face_in_frame">Put your face into the frame</string>
+    <string name="experience_face_verify">Have a try</string>
+    <string name="no_face">No face</string>
+    <string name="put_body_right">Face no clear</string>
+    <string name="get_closer">Face no clear</string>
+    <string name="blink">Blink</string>
+    <string name="face_verify_success">Success</string>
+    <string name="face_verify_fail">Sorry,we couldn’t identify you</string>
+    <string name="face_enter">Face Enter</string>
+    <string name="off_face_verify_relogin">Turn Off it and relogin </string>
+
     <!--九宫格-->
     <!-- Gesture login activity -->
     <string name="gesture_forget_gesture">Forget gesture code</string>

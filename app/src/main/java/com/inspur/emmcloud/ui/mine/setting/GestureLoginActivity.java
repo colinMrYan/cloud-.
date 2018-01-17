@@ -1,5 +1,6 @@
 package com.inspur.emmcloud.ui.mine.setting;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.animation.Animation;
@@ -11,12 +12,13 @@ import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
-import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
+import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.LogUtils;
-import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.common.StateBarUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
+import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
+import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.privates.ninelock.LockPatternUtil;
 import com.inspur.emmcloud.util.privates.ninelock.LockPatternView;
 import com.inspur.emmcloud.widget.CircleImageView;
@@ -188,7 +190,10 @@ public class GestureLoginActivity extends BaseActivity {
                             finish();
                         } else if (command.equals("login")) {
                             isLogin = true;
-                            setResult(RESULT_OK);
+                            //发送解锁广播是，SchemeHandleActivity中接收处理
+                            Intent intent = new  Intent();
+                            intent.setAction(Constant.ACTION_SAFE_UNLOCK);
+                            sendBroadcast(intent);
                             finish();
                         } else if (command.equals("close")) {
                             clearGestureInfo();

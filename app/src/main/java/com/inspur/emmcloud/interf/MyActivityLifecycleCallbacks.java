@@ -12,10 +12,11 @@ import com.inspur.emmcloud.service.PVCollectService;
 import com.inspur.emmcloud.service.SyncCommonAppService;
 import com.inspur.emmcloud.ui.SchemeHandleActivity;
 import com.inspur.emmcloud.ui.mine.setting.CreateGestureActivity;
+import com.inspur.emmcloud.ui.mine.setting.FaceVerifyActivity;
 import com.inspur.emmcloud.ui.mine.setting.GestureLoginActivity;
+import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.cache.DbCacheUtils;
-import com.inspur.emmcloud.util.common.NetUtils;
 
 /**
  * Created by chenmch on 2017/9/13.
@@ -37,7 +38,7 @@ public class MyActivityLifecycleCallbacks implements Application.ActivityLifecyc
                 .isIndexActivityRunning()) {
             //当用通知打开特定Activity或者第一个打开的是SchemeActivity时，此处不作处理，交由SchemeActivity处理
             if (!MyApplication.getInstance().getOPenNotification() && !(activity instanceof SchemeHandleActivity)) {
-                showGestureVerification(activity);
+                showSafeVerificationPage(activity);
             }
             MyApplication.getInstance().setIsActive(true);
             uploadMDMInfo(activity);
@@ -79,12 +80,16 @@ public class MyActivityLifecycleCallbacks implements Application.ActivityLifecyc
     }
 
     /**
-     * 弹出手势验证码
+     * 弹出进入app安全验证界面
      *
      * @param context
      */
-    private void showGestureVerification(final Context context) {
-        if (getIsNeedGestureCode(context)) {
+    private void showSafeVerificationPage(final Context context) {
+        if (FaceVerifyActivity.getFaceVerifyIsOpenByUser(context)) {
+            Intent intent = new Intent(context, FaceVerifyActivity.class);
+            intent.putExtra("isFaceVerifyExperience",false);
+            context.startActivity(intent);
+        } else if (getIsNeedGestureCode(context)) {
             Intent intent = new Intent(context, GestureLoginActivity.class);
             intent.putExtra("gesture_code_change", "login");
             context.startActivity(intent);
