@@ -402,6 +402,9 @@ public class ImpWebView extends WebView {
 		if (handler != null){
 			handler = null;
 		}
+		if(pluginMgr != null){
+			pluginMgr = null;
+		}
 		super.destroy();
 	}
 

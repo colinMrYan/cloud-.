@@ -116,9 +116,6 @@ public class NewsWebDetailActivity extends BaseActivity {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-//                PluginMgr.init(NewsWebDetailActivity.this, null);
-//                PluginMgr.execute("FileTransferService", "download", object.toString());
-//                PluginMgr.onDestroy();
                 PluginMgr pluginMgr = new PluginMgr(NewsWebDetailActivity.this,null);
                 pluginMgr.execute("FileTransferService", "download", object.toString());
                 pluginMgr.onDestroy();

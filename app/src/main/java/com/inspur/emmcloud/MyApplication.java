@@ -51,8 +51,6 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.nostra13.universalimageloader.utils.L;
 import com.oblador.vectoricons.VectorIconsPackage;
-import com.squareup.leakcanary.LeakCanary;
-import com.squareup.leakcanary.RefWatcher;
 
 import org.xutils.http.RequestParams;
 import org.xutils.x;
@@ -92,13 +90,6 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
     private boolean isOpenNotification = false;
     private String tanent;
 
-    public static RefWatcher getRefWatcher(Context context) {
-        MyApplication application = (MyApplication) context.getApplicationContext();
-        return application.refWatcher;
-    }
-
-    private RefWatcher refWatcher;
-
     public void onCreate() {
         super.onCreate();
         init();
@@ -111,7 +102,6 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
     private void init() {
         // TODO Auto-generated method stub
         instance = this;
-        refWatcher = LeakCanary.install(this);
         CrashHandler crashHandler = CrashHandler.getInstance();
         crashHandler.init(getApplicationContext());
         x.Ext.init(MyApplication.this);

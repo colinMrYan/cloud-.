@@ -27,7 +27,7 @@ public class PluginMgr {
 
 	private ImpWebView webView;
 
-	private static String TAG = "PLUGIN_MGR";
+	private static final String TAG = "PLUGIN_MGR";
 	private  IPlugin plugin;
 
 	// 缓存功能类实例
