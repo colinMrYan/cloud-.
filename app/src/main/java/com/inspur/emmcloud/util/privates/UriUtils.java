@@ -44,7 +44,9 @@ public class UriUtils {
                 break;
             case 3:
             case 4:
-                if (!uri.startsWith(APIUri.getEMMBaseUrl()+"ssohandler/gs/")) {
+                if(app.getAppID().equals("456166a362436750d74bfeaef997693d")){
+                    new AppCenterApprovalUtils().openApprovalApp(activity,app);
+                }else if (!uri.startsWith(APIUri.getEMMBaseUrl()+"ssohandler/gs/")) {
                     openWebApp(activity, uri, app);
                 } else {
                     uri = uri.replace("ssohandler/gs/", "api/v1/gs_sso/app_uri?id=");
@@ -115,7 +117,6 @@ public class UriUtils {
      *
      * @param context
      * @param uri
-     * @param header
      */
     public static void openUrl(Activity context, String uri) {
         Bundle bundle = new Bundle();
