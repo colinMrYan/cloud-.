@@ -105,24 +105,24 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
         photoSaveDirectoryPath = getIntent().getStringExtra(PHOTO_DIRECTORY_PATH);
         photoName = getIntent().getStringExtra(PHOTO_NAME);
         extraParam = getIntent().getStringExtra(PHOTO_PARAM);
-        JSONObject optionsObj = JSONUtils.getJSONObject(extraParam,"options",new JSONObject());
-        defaultRectScale = JSONUtils.getString(optionsObj,"rectScale",null);
-        String rectScaleListJson = JSONUtils.getString(optionsObj,"rectScaleList","");
+        JSONObject optionsObj = JSONUtils.getJSONObject(extraParam, "options", new JSONObject());
+        defaultRectScale = JSONUtils.getString(optionsObj, "rectScale", null);
+        String rectScaleListJson = JSONUtils.getString(optionsObj, "rectScaleList", "");
         rectScaleList = new GetReatScaleResult(rectScaleListJson).getRectScaleList();
-        if (!StringUtils.isBlank(defaultRectScale) && rectScaleList.size()>0){
+        if (!StringUtils.isBlank(defaultRectScale) && rectScaleList.size() > 0) {
             boolean isSelectionRadio = false;
-            for (int i=0;i<rectScaleList.size();i++){
+            for (int i = 0; i < rectScaleList.size(); i++) {
                 String rectScale = rectScaleList.get(i).getRectScale();
-                if (rectScale.equals(defaultRectScale)){
+                if (rectScale.equals(defaultRectScale)) {
                     radioSelectPosition = i;
                     isSelectionRadio = true;
-                         break;
+                    break;
                 }
             }
-            if (!isSelectionRadio){
-                for (int i=0;i<rectScaleList.size();i++){
+            if (!isSelectionRadio) {
+                for (int i = 0; i < rectScaleList.size(); i++) {
                     String rectScale = rectScaleList.get(i).getRectScale();
-                    if (rectScale.equals("custom")){
+                    if (rectScale.equals("custom")) {
                         radioSelectPosition = i;
                         break;
                     }
@@ -135,10 +135,10 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
     private void initView() {
         previewSFV = (FocusSurfaceView) findViewById(R.id.preview_sv);
         //为了使取景框居中（下部的内容较多），上调取景框
-        if (rectScaleList.size()>0){
-            previewSFV.setTopMove(DensityUtil.dip2px(getApplicationContext(),29));
-        }else {
-            previewSFV.setTopMove(DensityUtil.dip2px(getApplicationContext(),12));
+        if (rectScaleList.size() > 0) {
+            previewSFV.setTopMove(DensityUtil.dip2px(getApplicationContext(), 29));
+        } else {
+            previewSFV.setTopMove(DensityUtil.dip2px(getApplicationContext(), 12));
         }
         mHolder = previewSFV.getHolder();
         mHolder.addCallback(MyCameraActivity.this);
@@ -155,7 +155,7 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
             switchCameraBtn.setVisibility(View.GONE);
         }
         setRadioRecycleView = (RecyclerView) findViewById(R.id.set_radio_list);
-        if (rectScaleList.size() > 0){
+        if (rectScaleList.size() > 0) {
             setRadioRecycleView.setVisibility(View.VISIBLE);
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
             linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
@@ -176,9 +176,9 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
 
     @Override
     public void surfaceCreated(SurfaceHolder surfaceHolder) {
-        if (rectScaleList.size()>0){
+        if (rectScaleList.size() > 0) {
             previewSFV.setCustomRectScale(rectScaleList.get(radioSelectPosition).getRectScale());
-        }else {
+        } else {
             previewSFV.setCustomRectScale(defaultRectScale);
         }
 
@@ -196,7 +196,7 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
                 mCamera.setParameters(mParameters);
                 mCamera.setPreviewDisplay(mHolder);
             } catch (Exception e) {
-                Toast.makeText(getApplicationContext(),R.string.open_camera_fail_by_perminssion,Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), R.string.open_camera_fail_by_perminssion, Toast.LENGTH_LONG).show();
                 finish();
                 e.printStackTrace();
             }
@@ -224,7 +224,7 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
                         break;
                     }
                 }
-                Toast.makeText(getApplicationContext(),R.string.open_camera_fail_by_perminssion,Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), R.string.open_camera_fail_by_perminssion, Toast.LENGTH_LONG).show();
                 finish();
                 break;
         }
@@ -258,7 +258,7 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
             Camera.Size previewSize = CameraUtils.getInstance(this).getPreviewSize(previewSizeList, 1300);
             parameters.setPreviewSize(previewSize.width, previewSize.height);
             List<String> modelList = parameters.getSupportedFlashModes();
-            if (modelList != null && modelList.contains(cameraFlashModel)){
+            if (modelList != null && modelList.contains(cameraFlashModel)) {
                 parameters.setFlashMode(cameraFlashModel);
             }
             List<String> focusModeList = parameters.getSupportedFocusModes();
@@ -311,7 +311,7 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
                 mCamera.release();
                 mCamera = null;
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -378,6 +378,11 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
             public void onPictureTaken(byte[] data, Camera camera) {
                 int orientation = currentOrientation;
                 Bitmap originBitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
+                //如果是三星手机需要先旋转90度
+                boolean isSamSungType = originBitmap.getWidth() > originBitmap.getHeight();
+                if (isSamSungType) {
+                    originBitmap = rotaingImageView(90, originBitmap);
+                }
                 //前置摄像头拍摄的照片和预览界面成镜面效果，需要翻转。
                 if (currentCameraFacing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
                     Bitmap mirrorOriginBitmap = Bitmap.createBitmap(originBitmap.getWidth(), originBitmap.getHeight(), originBitmap.getConfig());
@@ -393,11 +398,6 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
                     originBitmap = mirrorOriginBitmap;
                     //前置摄像头旋转180度才能显示preview显示的界面
                     originBitmap = rotaingImageView(180, originBitmap);
-                }
-                //如果是三星手机需要先旋转90度
-                boolean isSamSungType = originBitmap.getWidth()>originBitmap.getHeight();
-                if (isSamSungType){
-                    originBitmap = rotaingImageView(90, originBitmap);
                 }
                 //通过各种旋转和镜面操作，使originBitmap显示出preview界面
                 Bitmap cropBitmap = previewSFV.getPicture(originBitmap);
@@ -415,24 +415,25 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
                 if (!photoDir.exists()) {
                     photoDir.mkdir();
                 }
-               if (photoName == null){
-                   photoName = System.currentTimeMillis()+".jpg";
-               }
-                String imgPath = photoDir.getAbsolutePath()+"/"+photoName;
-                BitmapUtils.saveBitmap(cropBitmap, imgPath,100,0);
+                if (photoName == null) {
+                    photoName = System.currentTimeMillis() + ".jpg";
+                }
+                String imgPath = photoDir.getAbsolutePath() + "/" + photoName;
+                BitmapUtils.saveBitmap(cropBitmap, imgPath, 100, 0);
                 recycleBitmap(originBitmap);
                 recycleBitmap(cropBitmap);
-                EditImageActivity.start(MyCameraActivity.this, imgPath, MyAppConfig.LOCAL_IMG_CREATE_PATH,true,extraParam);
+                EditImageActivity.start(MyCameraActivity.this, imgPath, MyAppConfig.LOCAL_IMG_CREATE_PATH, true, extraParam);
             }
         });
     }
 
     /**
      * 回收Bitmap
+     *
      * @param bitmap
      */
-    public void recycleBitmap(Bitmap bitmap){
-        if(bitmap != null && !bitmap.isRecycled()){
+    public void recycleBitmap(Bitmap bitmap) {
+        if (bitmap != null && !bitmap.isRecycled()) {
             bitmap.recycle();
             bitmap = null;
         }
@@ -443,9 +444,9 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == ACTION_REQUEST_EDITIMAGE){
-            if (resultCode == RESULT_OK ){
-                setResult(RESULT_OK,data);
+        if (requestCode == ACTION_REQUEST_EDITIMAGE) {
+            if (resultCode == RESULT_OK) {
+                setResult(RESULT_OK, data);
             }
             finish();
         }
@@ -510,9 +511,10 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
 
     /**
      * 保存并显示把图片展示出来
+     *
      * @param cameraPath
      */
-    private  void refreshGallery( String cameraPath) {
+    private void refreshGallery(String cameraPath) {
         File file = new File(cameraPath);
         // 其次把文件插入到系统图库
         try {
@@ -522,7 +524,7 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
             e.printStackTrace();
         }
         // 最后通知图库更新
-       sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + path)));
+        sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + path)));
     }
 
 
@@ -534,14 +536,11 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
 
 
     public class Adapter extends
-            RecyclerView.Adapter<Adapter.ViewHolder>
-    {
+            RecyclerView.Adapter<Adapter.ViewHolder> {
 
 
-        public class ViewHolder extends RecyclerView.ViewHolder
-        {
-            public ViewHolder(View arg0)
-            {
+        public class ViewHolder extends RecyclerView.ViewHolder {
+            public ViewHolder(View arg0) {
                 super(arg0);
             }
 
@@ -549,8 +548,7 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
         }
 
         @Override
-        public int getItemCount()
-        {
+        public int getItemCount() {
             return rectScaleList.size();
         }
 
@@ -558,12 +556,11 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
          * 创建ViewHolder
          */
         @Override
-        public ViewHolder onCreateViewHolder(ViewGroup viewGroup, final int i)
-        {
+        public ViewHolder onCreateViewHolder(ViewGroup viewGroup, final int i) {
             TextView textView = new TextView(MyCameraActivity.this);
-            textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP,17);
-            textView.setPadding(DensityUtil.dip2px(MyCameraActivity.this,20),DensityUtil.dip2px(MyCameraActivity.this,4),DensityUtil.dip2px(MyCameraActivity.this,20),DensityUtil.dip2px(MyCameraActivity.this,4));
-            textView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT));
+            textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 17);
+            textView.setPadding(DensityUtil.dip2px(MyCameraActivity.this, 20), DensityUtil.dip2px(MyCameraActivity.this, 4), DensityUtil.dip2px(MyCameraActivity.this, 20), DensityUtil.dip2px(MyCameraActivity.this, 4));
+            textView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
             ViewHolder viewHolder = new ViewHolder(textView);
             viewHolder.textView = textView;
             return viewHolder;
@@ -573,11 +570,10 @@ public class MyCameraActivity extends ImpBaseActivity implements View.OnClickLis
          * 设置值
          */
         @Override
-        public void onBindViewHolder(final ViewHolder viewHolder, final int i)
-        {
+        public void onBindViewHolder(final ViewHolder viewHolder, final int i) {
             viewHolder.textView.setText(rectScaleList.get(i).getName());
-            viewHolder.textView.setTextColor((radioSelectPosition == i)? Color.parseColor("#CB602D"):Color.parseColor("#FFFFFB"));
-            viewHolder.textView.setBackgroundColor((radioSelectPosition == i)?Color.parseColor("#323232"):Color.parseColor("#00000000"));
+            viewHolder.textView.setTextColor((radioSelectPosition == i) ? Color.parseColor("#CB602D") : Color.parseColor("#FFFFFB"));
+            viewHolder.textView.setBackgroundColor((radioSelectPosition == i) ? Color.parseColor("#323232") : Color.parseColor("#00000000"));
             viewHolder.textView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
