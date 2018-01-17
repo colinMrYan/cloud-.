@@ -34,7 +34,7 @@ public class MDM extends APIInterfaceInstance {
 	private String userCode;
 	private String userName;
 	private ArrayList<String> requireFieldList;
-	private static MDMListener mdmListener;
+	private  MDMListener mdmListener;
 	public MDM() {
 
 	}
