@@ -31,6 +31,7 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.MineAPIService;
 import com.inspur.emmcloud.bean.mine.GetFaceSettingResult;
+import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.ImageUtils;
 import com.inspur.emmcloud.util.common.LogUtils;
@@ -64,7 +65,7 @@ public class FaceVerifyActivity extends Activity implements SurfaceHolder.Callba
     private String cameraFlashModel = Camera.Parameters.FLASH_MODE_AUTO;
     private DetectScreenOrientation detectScreenOrientation;
     private MineAPIService apiService;
-    private boolean isFaceSetting = true;
+    private boolean isFaceSetting = false;
     private boolean isFaceSettingOpen = true;
     private boolean isFaceVerityTest = false;
     private TextView tipText;
@@ -390,6 +391,11 @@ public class FaceVerifyActivity extends Activity implements SurfaceHolder.Callba
                 ToastUtils.show(getApplicationContext(), R.string.face_verify_success);
                 if (isFaceSetting) {
                     PreferencesByUsersUtils.putBoolean(FaceVerifyActivity.this, FaceVerifyActivity.FACE_VERIFT_IS_OPEN, isFaceSettingOpen);
+                }else if(!isFaceVerityTest){
+                    //发送解锁广播是，SchemeHandleActivity中接收处理
+                    Intent intent = new  Intent();
+                    intent.setAction(Constant.ACTION_SAFE_UNLOCK);
+                    sendBroadcast(intent);
                 }
                 finish();
                 break;

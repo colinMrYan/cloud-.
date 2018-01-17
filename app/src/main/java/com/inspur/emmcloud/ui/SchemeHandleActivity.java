@@ -1,8 +1,10 @@
 package com.inspur.emmcloud.ui;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -12,6 +14,7 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.bean.work.CalendarEvent;
+import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.ui.appcenter.ReactNativeAppActivity;
 import com.inspur.emmcloud.ui.appcenter.groupnews.GroupNewsActivity;
 import com.inspur.emmcloud.ui.chat.ChannelActivity;
@@ -28,7 +31,6 @@ import com.inspur.emmcloud.ui.mine.setting.GestureLoginActivity;
 import com.inspur.emmcloud.ui.work.calendar.CalEventAddActivity;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StateBarUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
@@ -43,7 +45,7 @@ import org.json.JSONObject;
  */
 
 public class SchemeHandleActivity extends Activity {
-    private static final int REQUEST_GESTURE_LOGIN = 2;
+    private BroadcastReceiver unlockReceiver;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -52,19 +54,36 @@ public class SchemeHandleActivity extends Activity {
         if (MyApplication.getInstance().getOPenNotification()) {
             MyApplication.getInstance().setOpenNotification(false);
             if (FaceVerifyActivity.getFaceVerifyIsOpenByUser(SchemeHandleActivity.this)) {
+                registerReiceiver();
                 Intent intent = new Intent(SchemeHandleActivity.this, FaceVerifyActivity.class);
-                LogUtils.jasonDebug("SchemeHandleActivity------------------------");
                 intent.putExtra("isFaceVerifyExperience",false);
                 startActivity(intent);
                 return;
             } else if (getIsNeedGestureCode()) {
-                Intent intent = new Intent(SchemeHandleActivity.this, GestureLoginActivity.class);
+                registerReiceiver();
+                Intent intent = new Intent(this, GestureLoginActivity.class);
                 intent.putExtra("gesture_code_change", "login");
                 startActivity(intent);
                 return;
             }
         }
         openScheme();
+    }
+
+    /**
+     * 注册安全解锁监听广播
+     */
+    private void registerReiceiver(){
+        unlockReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                openScheme();
+            }
+        };
+
+        IntentFilter myIntentFilter = new IntentFilter();
+        myIntentFilter.addAction(Constant.ACTION_SAFE_UNLOCK);
+        registerReceiver(unlockReceiver, myIntentFilter);
     }
 
     /**
@@ -235,11 +254,11 @@ public class SchemeHandleActivity extends Activity {
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK && requestCode == REQUEST_GESTURE_LOGIN) {
-            openScheme();
+    protected void onDestroy() {
+        if (unlockReceiver != null) {
+            unregisterReceiver(unlockReceiver);
+            unlockReceiver = null;
         }
+        super.onDestroy();
     }
-
 }
