@@ -24,6 +24,9 @@ public class FaceVerifyManagerActivity extends BaseActivity {
     @ViewInject(R.id.switch_gesture_switchview)
     private SwitchView switchView;
 
+    @ViewInject(R.id.header_text)
+    private TextView headerText;
+
     @ViewInject(R.id.title_text)
     private TextView switchText;
 
@@ -51,8 +54,9 @@ public class FaceVerifyManagerActivity extends BaseActivity {
 
 
     private void init() {
-        switchText.setText("刷脸解锁");
-        experienceText.setText("体验刷脸");
+        headerText.setText(R.string.face_enter);
+        switchText.setText(R.string.face_enter);
+        experienceText.setText(getString(R.string.experience_face_verify));
         switchView.setOnStateChangedListener(new SwitchView.OnStateChangedListener() {
             @Override
             public void toggleToOn(View view) {

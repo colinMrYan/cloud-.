@@ -108,7 +108,7 @@
             android:paddingBottom="10dp"
             android:paddingLeft="12dp"
             android:paddingTop="10dp"
-            android:text="刷脸解锁"
+            android:text="@string/face_enter"
             android:textSize="@dimen/content_normal_textsize" />
         <TextView
             android:id="@+id/safe_center_face_open_text"

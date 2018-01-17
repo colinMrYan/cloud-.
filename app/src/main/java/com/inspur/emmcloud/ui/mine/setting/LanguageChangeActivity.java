@@ -20,9 +20,9 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.mine.Language;
 import com.inspur.emmcloud.ui.IndexActivity;
-import com.inspur.emmcloud.util.privates.LanguageUtils;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
+import com.inspur.emmcloud.util.privates.LanguageUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.dialogs.MyQMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
@@ -121,7 +121,6 @@ public class LanguageChangeActivity extends BaseActivity {
                 }
                 if (!currentLanguageName.equals(languageName)) {
                     showChangeLanguageDlg(position);
-                    LogUtils.jasonDebug("1111111111");
                 }
             }
         });
@@ -159,7 +158,8 @@ public class LanguageChangeActivity extends BaseActivity {
                         PreferencesUtils.putString(getApplicationContext(),
                                 MyApplication.getInstance().getTanent() + "appLanguageObj",
                                 language.toString());
-
+                        LogUtils.jasonDebug("language="+languageName);
+                        LogUtils.jasonDebug("appLanguageObj="+language.toString());
                         ((MyApplication) getApplicationContext())
                                 .setAppLanguageAndFontScale();
                         Intent intentLog = new Intent(LanguageChangeActivity.this,

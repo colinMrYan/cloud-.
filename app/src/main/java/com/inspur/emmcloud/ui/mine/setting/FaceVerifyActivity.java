@@ -348,7 +348,6 @@ public class FaceVerifyActivity extends Activity implements SurfaceHolder.Callba
      * @return
      */
     public static boolean getFaceVerifyIsOpenByUser(Context context) {
-        LogUtils.jasonDebug("flag=========================="+PreferencesByUsersUtils.getBoolean(context, FaceVerifyActivity.FACE_VERIFT_IS_OPEN, false));
         return PreferencesByUsersUtils.getBoolean(context, FaceVerifyActivity.FACE_VERIFT_IS_OPEN, false);
     }
 
@@ -388,7 +387,7 @@ public class FaceVerifyActivity extends Activity implements SurfaceHolder.Callba
         switch (code) {
             case 200:
                 tipText.setVisibility(View.GONE);
-                ToastUtils.show(getApplicationContext(), "刷脸成功");
+                ToastUtils.show(getApplicationContext(), R.string.face_verify_success);
                 if (isFaceSetting) {
                     PreferencesByUsersUtils.putBoolean(FaceVerifyActivity.this, FaceVerifyActivity.FACE_VERIFT_IS_OPEN, isFaceSettingOpen);
                 }
@@ -397,28 +396,28 @@ public class FaceVerifyActivity extends Activity implements SurfaceHolder.Callba
             case 201:
                 if (!checkIsTimeout()) {
                     tipText.setVisibility(View.VISIBLE);
-                    tipText.setText("没有检测到脸");
+                    tipText.setText(getString(R.string.no_face));
                     delayTotakePicture(1000);
                 }
                 break;
             case 202:
                 if (!checkIsTimeout()) {
                     tipText.setVisibility(View.VISIBLE);
-                    tipText.setText("请摆正姿势");
+                    tipText.setText(getString(R.string.put_body_right));
                     delayTotakePicture(1000);
                 }
                 break;
             case 203:
                 if (!checkIsTimeout()) {
                     tipText.setVisibility(View.VISIBLE);
-                    tipText.setText("请靠近一点");
+                    tipText.setText(getString(R.string.get_closer));
                     delayTotakePicture(1000);
                 }
                 break;
             case 204:
                 if (!checkIsTimeout()) {
                     tipText.setVisibility(View.VISIBLE);
-                    tipText.setText("请眨眨眼");
+                    tipText.setText(getString(R.string.blink));
                     delayTotakePicture(1000);
                 }
                 break;
@@ -450,7 +449,7 @@ public class FaceVerifyActivity extends Activity implements SurfaceHolder.Callba
     private void showFaceVerifyFailDlg() {
         if (isFaceSetting || isFaceVerityTest) {
             new MyQMUIDialog.MessageDialogBuilder(FaceVerifyActivity.this)
-                    .setMessage("抱歉，没有认出你来")
+                    .setMessage(R.string.face_verify_fail)
                     .addAction(getString(R.string.ok), new QMUIDialogAction.ActionListener() {
                         @Override
                         public void onClick(QMUIDialog dialog, int index) {
@@ -461,7 +460,7 @@ public class FaceVerifyActivity extends Activity implements SurfaceHolder.Callba
                     .show();
         }else if(CreateGestureActivity.getGestureCodeIsOpenByUser(FaceVerifyActivity.this)){
             new MyQMUIDialog.MessageDialogBuilder(FaceVerifyActivity.this)
-                    .setMessage("抱歉，没有认出你来")
+                    .setMessage(R.string.face_verify_fail)
                     .addAction(getString(R.string.retry), new QMUIDialogAction.ActionListener() {
                         @Override
                         public void onClick(QMUIDialog dialog, int index) {
@@ -470,7 +469,7 @@ public class FaceVerifyActivity extends Activity implements SurfaceHolder.Callba
                             delayTotakePicture(1000);
                         }
                     })
-                    .addAction("手势解锁", new QMUIDialogAction.ActionListener() {
+                    .addAction(R.string.switch_gesture_unlock, new QMUIDialogAction.ActionListener() {
                         @Override
                         public void onClick(QMUIDialog dialog, int index) {
                             dialog.dismiss();
@@ -483,7 +482,7 @@ public class FaceVerifyActivity extends Activity implements SurfaceHolder.Callba
                     .show();
         }else {
             new MyQMUIDialog.MessageDialogBuilder(FaceVerifyActivity.this)
-                    .setMessage("抱歉，没有认出你来")
+                    .setMessage(R.string.face_verify_fail)
                     .addAction(getString(R.string.retry), new QMUIDialogAction.ActionListener() {
                         @Override
                         public void onClick(QMUIDialog dialog, int index) {
@@ -492,7 +491,7 @@ public class FaceVerifyActivity extends Activity implements SurfaceHolder.Callba
                             delayTotakePicture(1000);
                         }
                     })
-                    .addAction("关闭刷脸，重新登录", new QMUIDialogAction.ActionListener() {
+                    .addAction(R.string.off_face_verify_relogin, new QMUIDialogAction.ActionListener() {
                         @Override
                         public void onClick(QMUIDialog dialog, int index) {
                             dialog.dismiss();
