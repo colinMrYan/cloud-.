@@ -32,30 +32,31 @@
 
         <TextView
             android:id="@+id/header_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:text="网盘"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:maxLines="1"
+            android:paddingLeft="100dp"
+            android:paddingRight="100dp"
+            android:text="共享网盘"
             android:textColor="@color/header_text"
             android:textSize="@dimen/header_textsize" />
 
 
         <ImageView
-            android:id="@+id/option_img"
-            android:layout_width="48dp"
+            android:id="@+id/add_img"
+            android:layout_width="52dp"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:clickable="true"
             android:onClick="onClick"
-            android:paddingLeft="12dp"
-            android:paddingRight="15dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
             android:scaleType="centerInside"
-            android:src="@drawable/ic_header_option"
-            android:visibility="gone" />
+            android:src="@drawable/icon_add" />
     </RelativeLayout>
-
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/refresh_layout"
@@ -66,36 +67,12 @@
         android:scrollbars="vertical">
 
         <ListView
-            android:id="@+id/list"
+            android:id="@+id/share_volume_list"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:divider="@null"
             android:dividerHeight="0dp"></ListView>
-
-        <LinearLayout
-            android:id="@+id/volume_recent_use_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:visibility="gone">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingBottom="10dp"
-                android:paddingLeft="20dp"
-                android:paddingTop="14dp"
-                android:text="最近使用"
-                android:textColor="#666666"
-                android:textSize="15sp" />
-
-            <ListView
-                android:id="@+id/volume_recent_use_list"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:divider="@null"
-                android:dividerHeight="0dp"></ListView>
-        </LinearLayout>
     </android.support.v4.widget.SwipeRefreshLayout>
+
 
 </RelativeLayout>

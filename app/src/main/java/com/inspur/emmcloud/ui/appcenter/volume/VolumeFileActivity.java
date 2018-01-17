@@ -24,13 +24,13 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.VolumeFileAdapter;
 import com.inspur.emmcloud.adapter.VolumeFileFilterPopGridAdapter;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
-import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.common.DensityUtil;
-import com.inspur.emmcloud.util.privates.GetPathFromUri4kitkat;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
+import com.inspur.emmcloud.util.privates.AppUtils;
+import com.inspur.emmcloud.util.privates.GetPathFromUri4kitkat;
 import com.inspur.emmcloud.util.privates.VolumeFileUploadManagerUtils;
 import com.inspur.emmcloud.widget.dialogs.ActionSheetDialog;
 import com.inspur.imp.plugin.camera.imagepicker.ImagePicker;
@@ -45,8 +45,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
-
-import static com.inspur.emmcloud.R.id.operation_layout;
 
 
 /**
@@ -74,9 +72,8 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
     @ViewInject(R.id.batch_operation_select_all_text)
     private TextView getBatchOprationSelectAllText;
 
-    @ViewInject(operation_layout)
+    @ViewInject(R.id.operation_layout)
     protected RelativeLayout operationLayout;
-
     private PopupWindow sortOperationPop;
     private String cameraPicFileName;
     private BroadcastReceiver broadcastReceiver;
@@ -156,6 +153,9 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
     protected void initDataBlankLayoutStatus() {
         super.initDataBlankLayoutStatus();
         operationLayout.setVisibility((volumeFileList.size() == 0) ? View.GONE : View.VISIBLE);
+        if (adapter.getMultiselect()){
+            setMutiSelect(false);
+        }
     }
 
 
@@ -199,13 +199,13 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
                 sortOperationPop.dismiss();
                 break;
             case R.id.batch_operation_delete_text:
+                deleteFile(adapter.getSelectVolumeFileList());
                 break;
             case R.id.batch_operation_copy_text:
-                List<VolumeFile> copyVolumeFileList = adapter.getSelectVolumeFileList();
-                GoCopyFile(copyVolumeFileList);
+                copyFile(adapter.getSelectVolumeFileList());
                 break;
             case R.id.batch_operation_move_text:
-                GomoveFile(adapter.getSelectVolumeFileList());
+                moveFile(adapter.getSelectVolumeFileList());
                 break;
             case R.id.batch_operation_cancel_text:
                 setMutiSelect(false);

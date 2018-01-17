@@ -573,6 +573,12 @@
         <activity
             android:name=".ui.appcenter.volume.VolumeFileFilterActvity"
             android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".ui.appcenter.volume.ShareVolumeActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".ui.appcenter.volume.ShareVolumeInfoActivity"
+            android:screenOrientation="portrait"></activity>
 
 
         <!-- service -->

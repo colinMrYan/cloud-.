@@ -154,8 +154,8 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         removeAllCookie();
         removeAllSessionCookie();
         clearUserPhotoMap();
-        PreferencesUtils.putString(this, "tokenType", "");
         PreferencesUtils.putString(this, "accessToken", "");
+        PreferencesUtils.putString(this, "refreshToken","");
         setAccessToken("");
         Intent intent = new Intent();
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);

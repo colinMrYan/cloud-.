@@ -140,6 +140,10 @@ public class ActionSheetDialog extends Dialog {
             return this;
         }
 
+        public ActionListSheetBuilder addItem(String textAndTag,boolean isShow){
+                mItems.add(new ActionSheetListItemData(textAndTag, textAndTag,isShow));
+            return this;
+        }
 
         public ActionListSheetBuilder setOnSheetItemClickListener(OnSheetItemClickListener onSheetItemClickListener) {
             mOnSheetItemClickListener = onSheetItemClickListener;
@@ -222,10 +226,17 @@ public class ActionSheetDialog extends Dialog {
 
             String text;
             String tag = "";
+            boolean isShow = true;
 
             public ActionSheetListItemData(String text, String tag) {
                 this.text = text;
                 this.tag = tag;
+            }
+
+            public ActionSheetListItemData(String text, String tag,boolean isShow) {
+                this.text = text;
+                this.tag = tag;
+                this.isShow = isShow;
             }
         }
 
@@ -253,6 +264,7 @@ public class ActionSheetDialog extends Dialog {
                 convertView = LayoutInflater.from(mContext).inflate(R.layout.widget_actionsheet_item_view, parent, false);
                 TextView textView = (TextView) convertView.findViewById(R.id.content);
                 textView.setText(data.text);
+                convertView.findViewById(R.id.layout).setVisibility(data.isShow?View.VISIBLE:View.GONE);
                 convertView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
