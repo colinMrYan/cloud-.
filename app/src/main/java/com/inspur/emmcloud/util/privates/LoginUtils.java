@@ -101,7 +101,7 @@ public class LoginUtils extends APIInterfaceInstance {
         String tanentId = ((MyApplication) activity.getApplicationContext()).getCurrentEnterprise().getId();
         String userCode = ((MyApplication) activity.getApplicationContext())
                 .getUid();
-        MDM mdm = new MDM(activity, tanentId, userCode, userName);
+        final MDM mdm = new MDM(activity, tanentId, userCode, userName);
         mdm.addOnMDMListener(new MDMListener() {
 
             @Override
@@ -110,6 +110,7 @@ public class LoginUtils extends APIInterfaceInstance {
                 PreferencesUtils.putBoolean(activity, "isMDMStatusPass", true);
                 saveLoginInfo();
                 loginUtilsHandler.sendEmptyMessage(LOGIN_SUCCESS);
+                mdm.destroyOnMDMListener();
             }
 
             @Override
@@ -119,6 +120,7 @@ public class LoginUtils extends APIInterfaceInstance {
                 //当设备因为设备管理无法进入时，把记住选择企业选项情况，让用户重新选择企业进入
                 PreferencesByUsersUtils.putString(activity, Constant.PREF_SELECT_LOGIN_ENTERPRISE_ID,"");
                 loginUtilsHandler.sendEmptyMessage(LOGIN_FAIL);
+                mdm.destroyOnMDMListener();
             }
 
             @Override

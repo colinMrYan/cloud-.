@@ -301,8 +301,14 @@ public class FaceVerifyActivity extends Activity implements SurfaceHolder.Callba
 
             @Override
             public void onPictureTaken(byte[] data, Camera camera) {
+                mCamera.startPreview();
                 int orientation = currentOrientation;
                 Bitmap originBitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
+                //如果是三星手机需要先旋转90度
+                boolean isSamSungType = originBitmap.getWidth()>originBitmap.getHeight();
+                if (isSamSungType){
+                    originBitmap = ImageUtils.rotaingImageView(90, originBitmap);
+                }
                 //前置摄像头拍摄的照片和预览界面成镜面效果，需要翻转。
                 if (currentCameraFacing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
                     Bitmap mirrorOriginBitmap = Bitmap.createBitmap(originBitmap.getWidth(), originBitmap.getHeight(), originBitmap.getConfig());
@@ -319,11 +325,6 @@ public class FaceVerifyActivity extends Activity implements SurfaceHolder.Callba
                     //前置摄像头旋转180度才能显示preview显示的界面
                     originBitmap = ImageUtils.rotaingImageView(180, originBitmap);
                 }
-                //如果是三星手机需要先旋转90度
-                boolean isSamSungType = originBitmap.getWidth()>originBitmap.getHeight();
-                if (isSamSungType){
-                    originBitmap = ImageUtils.rotaingImageView(90, originBitmap);
-                }
                 //通过各种旋转和镜面操作，使originBitmap显示出preview界面
                 Bitmap cropBitmap = previewSFV.getPicture(originBitmap);
                 //界面进行旋转
@@ -336,8 +337,6 @@ public class FaceVerifyActivity extends Activity implements SurfaceHolder.Callba
                 } else {
                     faceVerify(cropBitmap);
                 }
-                mCamera.startPreview();
-
             }
         });
     }

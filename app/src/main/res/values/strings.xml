@@ -831,7 +831,7 @@
     <string name="put_face_in_frame">请把脸放入框内保持不动</string>
     <string name="experience_face_verify">体验刷脸</string>
     <string name="no_face">没有检测到脸</string>
-    <string name="put_body_right">请保证姿势</string>
+    <string name="put_body_right">请保持姿势</string>
     <string name="get_closer">请靠近一点</string>
     <string name="blink">请眨眨眼</string>
     <string name="face_verify_success">刷脸成功</string>

@@ -109,7 +109,6 @@ public class EditImageActivity extends ImageBaseActivity {
     // public TextFragment mTextFragment;// 文字Fragment
     private Handler handle;
     private JSONObject watermarkObj;
-    private String watermarkContent, fontSize, color, background, algin, valign;
 
     /**
      * @param srcPath    原图片路径
