@@ -32,6 +32,7 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.MsgInputAddItemAdapter;
 import com.inspur.emmcloud.bean.chat.InsertModel;
 import com.inspur.emmcloud.config.Constant;
+import com.inspur.emmcloud.interf.OnStartListeningListener;
 import com.inspur.emmcloud.ui.chat.MembersActivity;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.common.DensityUtil;
@@ -68,6 +69,7 @@ public class ECMChatInputMenu extends LinearLayout {
     private MsgInputAddItemAdapter msgInputAddItemAdapter;
     private List<Integer> imgList = new ArrayList<>();
     private boolean isSetWindowListener = true;//是否监听窗口变化自动跳转输入框ui
+    private OnStartListeningListener onStartListeningListener;
 
     // private View view ;
 
@@ -86,6 +88,10 @@ public class ECMChatInputMenu extends LinearLayout {
     public ECMChatInputMenu(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         init(context, attrs);
+    }
+
+    public void setOnStartListeningListener(OnStartListeningListener onStartListeningListener) {
+        this.onStartListeningListener = onStartListeningListener;
     }
 
     private void init(final Context context, AttributeSet attrs) {
@@ -317,6 +323,9 @@ public class ECMChatInputMenu extends LinearLayout {
                     case R.drawable.ic_chat_input_add_mention:
                         openMention(false);
                         break;
+                    case R.drawable.ic_chat_input_add_voice:
+                        onStartListeningListener.onStartListening();
+                        break;
                     default:
                         break;
                 }
@@ -387,15 +396,14 @@ public class ECMChatInputMenu extends LinearLayout {
     /**
      * 根据二进制字符串更新菜单视图
      *
-     * @param binaryString
      */
     public void updateMenuGrid(String inputs) {
         String binaryString  = "-1";
         if (!StringUtils.isBlank(inputs)) {
             binaryString = Integer.toBinaryString(Integer.parseInt(inputs));
         }
-        int[] imgArray = {R.drawable.ic_chat_input_add_gallery, R.drawable.ic_chat_input_add_camera, R.drawable.ic_chat_input_add_file, R.drawable.ic_chat_input_add_mention};
-        String[] functionNameArray = {context.getString(R.string.album), context.getString(R.string.take_photo), context.getString(R.string.file), "@"};
+        int[] imgArray = {R.drawable.ic_chat_input_add_gallery, R.drawable.ic_chat_input_add_camera, R.drawable.ic_chat_input_add_file,R.drawable.ic_chat_input_add_voice, R.drawable.ic_chat_input_add_mention};
+        String[] functionNameArray = {context.getString(R.string.album), context.getString(R.string.take_photo), context.getString(R.string.file),"语音", "@"};
         imgList.clear();
         List<String> textList = new ArrayList<>();
         int menuGridSize = binaryString.length() - 1;
@@ -404,7 +412,7 @@ public class ECMChatInputMenu extends LinearLayout {
         }
         if (binaryString.equals("-1")) {
             menuGridSize = imgArray.length - 2;
-            binaryString = "111";
+            binaryString = "1111";
         }
         for (int i = menuGridSize; i >= 0; i--) {
             if ((binaryString.charAt(i) + "").equals("1")) {
@@ -414,8 +422,8 @@ public class ECMChatInputMenu extends LinearLayout {
         }
         //如果是群组的话添加@功能
         if (isChannelGroup) {
-            imgList.add(imgArray[3]);
-            textList.add(functionNameArray[3]);
+            imgList.add(imgArray[4]);
+            textList.add(functionNameArray[4]);
         }
         msgInputAddItemAdapter.updateGridView(imgList, textList);
     }
