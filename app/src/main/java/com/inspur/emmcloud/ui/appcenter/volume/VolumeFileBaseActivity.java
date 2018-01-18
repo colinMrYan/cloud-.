@@ -323,7 +323,8 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
      */
     private void setLayoutByPrivilege(boolean haveModifyPrivilege){
         //当自己没有写权限时禁止上传文件和新建文件夹
-        headerOperationLayout.setVisibility(haveModifyPrivilege ? View.VISIBLE : View.GONE);
+        boolean isVolumeFileLocaitionSelectActivity = VolumeFileBaseActivity.this instanceof VolumeFileLocationSelectActivity;
+        headerOperationLayout.setVisibility(!haveModifyPrivilege || isVolumeFileLocaitionSelectActivity ? View.GONE : View.VISIBLE);
         batchOperationDeleteText.setVisibility(haveModifyPrivilege ? View.VISIBLE : View.GONE);
         batchOperationMoveText.setVisibility(haveModifyPrivilege ? View.VISIBLE : View.GONE);
 
