@@ -30,6 +30,7 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.mine.Language;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.config.MyAppWebConfig;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
@@ -117,6 +118,12 @@ public class ImpActivity extends ImpBaseActivity {
         setWebViewFunctionVisiable();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        LogUtils.jasonDebug("00000000000000000000");
+    }
+
     /**
      * 在WebClient获取header
      * @return
@@ -165,6 +172,12 @@ public class ImpActivity extends ImpBaseActivity {
     public void initWebViewGoBackOrClose() {
         if (headerText != null) {
             (findViewById(Res.getWidgetID("imp_close_btn"))).setVisibility(webView.canGoBack() ? View.VISIBLE : View.GONE);
+        }
+    }
+
+    public void setTitle(String title){
+        if (headerText != null && !StringUtils.isBlank(title)){
+            headerText.setText(title);
         }
     }
 

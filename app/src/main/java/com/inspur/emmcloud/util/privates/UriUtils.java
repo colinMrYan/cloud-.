@@ -12,6 +12,7 @@ import com.inspur.emmcloud.ui.appcenter.ReactNativeAppActivity;
 import com.inspur.emmcloud.ui.appcenter.groupnews.GroupNewsActivity;
 import com.inspur.emmcloud.ui.appcenter.volume.VolumeHomePageActivity;
 import com.inspur.emmcloud.util.common.IntentUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.cache.PVCollectModelCacheUtils;
@@ -99,6 +100,7 @@ public class UriUtils {
      * @param app
      */
     public static void openWebApp(Activity activity, String uri, App app) {
+        LogUtils.jasonDebug("00000000000000000000");
         Intent intent = new Intent();
         intent.setClass(activity, ImpActivity.class);
         intent.putExtra("uri", uri);

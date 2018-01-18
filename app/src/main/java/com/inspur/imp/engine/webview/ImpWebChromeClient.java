@@ -303,12 +303,18 @@ public class ImpWebChromeClient extends WebChromeClient {
 
 	@Override
 	public void onReceivedTitle(WebView view, String title) {
-		super.onReceivedTitle(view, title);
+		if(null != title && !getRemoveHttpUrl(title).equals(getRemoveHttpUrl(view.getUrl()))){
+			((ImpActivity)context).setTitle(title);
+		}
 	}
 
 	@Override
 	public void onRequestFocus(WebView view) {
 		super.onRequestFocus(view);
+	}
+
+	public String getRemoveHttpUrl(String url){
+		return url.replace("http://","").replace("https://","");
 	}
 	
 
