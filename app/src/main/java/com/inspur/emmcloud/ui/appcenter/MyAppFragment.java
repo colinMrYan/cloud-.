@@ -46,25 +46,25 @@ import com.inspur.emmcloud.bean.appcenter.AppOrder;
 import com.inspur.emmcloud.bean.appcenter.GetAppBadgeResult;
 import com.inspur.emmcloud.bean.appcenter.GetAppGroupResult;
 import com.inspur.emmcloud.bean.appcenter.GetRecommendAppWidgetListResult;
-import com.inspur.emmcloud.bean.system.PVCollectModel;
 import com.inspur.emmcloud.bean.appcenter.RecommendAppWidgetBean;
+import com.inspur.emmcloud.bean.system.PVCollectModel;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.interf.OnRecommendAppWidgetItemClickListener;
-import com.inspur.emmcloud.util.privates.cache.AppCacheUtils;
-import com.inspur.emmcloud.util.privates.AppTitleUtils;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.IntentUtils;
-import com.inspur.emmcloud.util.privates.cache.MyAppCacheUtils;
-import com.inspur.emmcloud.util.privates.MyAppWidgetUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
-import com.inspur.emmcloud.util.privates.cache.PVCollectModelCacheUtils;
-import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.ShortCutUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
+import com.inspur.emmcloud.util.privates.AppTitleUtils;
+import com.inspur.emmcloud.util.privates.MyAppWidgetUtils;
+import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.UriUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
+import com.inspur.emmcloud.util.privates.cache.AppCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.MyAppCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.widget.ECMRecyclerViewLinearLayoutManager;
 import com.inspur.emmcloud.widget.ECMSpaceItemDecoration;
 import com.inspur.emmcloud.widget.MySwipeRefreshLayout;
@@ -94,6 +94,7 @@ import java.util.Set;
 public class MyAppFragment extends Fragment {
 
     private static final String ACTION_NAME = "add_app";
+    private long lastOnItemClickTime = 0;//防止多次点击
     private View rootView;
     private ListView appListView;
     private AppListAdapter appListAdapter;
@@ -431,7 +432,9 @@ public class MyAppFragment extends Fragment {
 //                        }else{
 //                            UriUtils.openApp(getActivity(), app);
 //                        }
-                        if (NetUtils.isNetworkConnected(getActivity())) {
+
+
+                        if (NetUtils.isNetworkConnected(getActivity()) && !isFastDoubleClick()) {
                             UriUtils.openApp(getActivity(), app);
                         }
                         if (getNeedCommonlyUseApp()) {
@@ -959,6 +962,21 @@ public class MyAppFragment extends Fragment {
                 return -1;
             }
         }
+    }
+
+    /**
+     * 判断是否连点
+     * @return
+     */
+    private boolean isFastDoubleClick() {
+        long time = System.currentTimeMillis();
+        long timeD = time - lastOnItemClickTime;
+        if (0 < timeD && timeD < 800) {
+            return true;
+        }
+        lastOnItemClickTime = time;
+        return false;
+
     }
 
     /**
