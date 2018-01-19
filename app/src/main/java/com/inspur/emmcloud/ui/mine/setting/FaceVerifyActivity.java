@@ -1,6 +1,5 @@
 package com.inspur.emmcloud.ui.mine.setting;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -26,6 +25,7 @@ import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
@@ -53,7 +53,7 @@ import static android.Manifest.permission.CAMERA;
  * 面容解锁识别页面
  */
 
-public class FaceVerifyActivity extends Activity implements SurfaceHolder.Callback {
+public class FaceVerifyActivity extends BaseActivity implements SurfaceHolder.Callback {
 
     private static final int TIMEOUT_TIME = 20000;
     public static final String FACE_VERIFT_IS_OPEN = "face_verify_isopen";
