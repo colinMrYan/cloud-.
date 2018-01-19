@@ -297,6 +297,9 @@ public class FaceVerifyActivity extends Activity implements SurfaceHolder.Callba
      * 拍照
      */
     private void takePicture() {
+        if (mCamera == null){
+            return;
+        }
         mCamera.takePicture(null, null, null, new Camera.PictureCallback() {
 
             @Override
