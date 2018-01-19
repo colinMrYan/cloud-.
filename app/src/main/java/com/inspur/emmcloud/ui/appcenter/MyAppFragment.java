@@ -669,6 +669,10 @@ public class MyAppFragment extends Fragment {
         }
     }
 
+    /**
+     * 修改tab角标，来自ECMTransparentUtils
+     * @param transparentBean
+     */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void updateBadgeNumber(TransparentBean transparentBean){
         getAppBadgeNum();
