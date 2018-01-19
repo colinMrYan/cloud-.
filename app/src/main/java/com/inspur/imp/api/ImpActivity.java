@@ -30,7 +30,6 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.mine.Language;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.config.MyAppWebConfig;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
@@ -61,6 +60,7 @@ public class ImpActivity extends ImpBaseActivity {
     private RelativeLayout loadingLayout;
     private TextView loadingText;
     private String helpUrl = "";
+    private HashMap<String,String> urlTilteMap = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,12 +118,6 @@ public class ImpActivity extends ImpBaseActivity {
         setWebViewFunctionVisiable();
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        LogUtils.jasonDebug("00000000000000000000");
-    }
-
     /**
      * 在WebClient获取header
      * @return
@@ -177,7 +171,20 @@ public class ImpActivity extends ImpBaseActivity {
 
     public void setTitle(String title){
         if (headerText != null && !StringUtils.isBlank(title)){
+            urlTilteMap.put(webView.getUrl(),title);
             headerText.setText(title);
+        }
+    }
+
+    /**
+     * 解决有的机型Webview goback时候不会获取title的问题
+     */
+    private void setGoBackTitle(){
+        if (headerText != null){
+            String title = urlTilteMap.get(webView.getUrl());
+            if (!StringUtils.isBlank(title)){
+                headerText.setText(title);
+            }
         }
     }
 
@@ -187,6 +194,7 @@ public class ImpActivity extends ImpBaseActivity {
     private void goBack() {
         if (webView.canGoBack()) {
             webView.goBack();// 返回上一页面
+            setGoBackTitle();
         } else {
             finishActivity();
         }
