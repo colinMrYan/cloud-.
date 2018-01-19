@@ -7,9 +7,14 @@
  */
 package com.inspur.emmcloud.util.privates;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.Configuration;
+import android.content.res.Resources;
+import android.os.Build;
 import android.os.Handler;
+import android.os.LocaleList;
 
 import com.alibaba.fastjson.JSON;
 import com.inspur.emmcloud.MyApplication;
@@ -20,6 +25,7 @@ import com.inspur.emmcloud.bean.mine.Language;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
+import com.inspur.emmcloud.util.common.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -143,6 +149,48 @@ public class LanguageUtils {
 
 		}
 		return null;
+	}
+
+
+	private static Locale getLocaleByLanguage(Context context){
+		String languageJson = PreferencesUtils
+				.getString(context, MyApplication.getInstance().getTanent()
+						+ "appLanguageObj");
+		if (StringUtils.isBlank(languageJson)){
+			return Locale.getDefault();
+		}
+		String[] array = new Language(languageJson).getIso().split("-");
+		String country = "";
+		String variant = "";
+		try {
+			country = array[0];
+			variant = array[1];
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		return new Locale(country, variant);
+	}
+
+	public static Context attachBaseContext(Context context) {
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+			return updateResources(context);
+		} else {
+			return context;
+		}
+	}
+
+
+	@TargetApi(Build.VERSION_CODES.N)
+	private static Context updateResources(Context context) {
+		Resources resources = context.getResources();
+		Locale locale = getLocaleByLanguage(context);
+
+		Configuration configuration = resources.getConfiguration();
+		configuration.setLocale(locale);
+		configuration.setLocales(new LocaleList(locale));
+		configuration.fontScale = 1.0f;
+		return context.createConfigurationContext(configuration);
 	}
 
 

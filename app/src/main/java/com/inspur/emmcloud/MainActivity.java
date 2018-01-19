@@ -1,6 +1,5 @@
 package com.inspur.emmcloud;
 
-import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,14 +16,9 @@ import com.inspur.emmcloud.service.AppExceptionService;
 import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.ui.login.LoginActivity;
 import com.inspur.emmcloud.ui.mine.setting.GuideActivity;
-import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.common.IntentUtils;
-import com.inspur.emmcloud.util.privates.LoginUtils;
-import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.ResolutionUtils;
-import com.inspur.emmcloud.util.privates.SplashPageUtils;
-import com.inspur.emmcloud.util.common.StateBarUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.LoginUtils;
@@ -45,7 +39,7 @@ import pl.droidsonroids.gif.GifImageView;
  *
  * @author Administrator
  */
-public class MainActivity extends Activity{ // 此处不能继承BaseActivity 推送会有问题
+public class MainActivity extends BaseActivity{ // 此处不能继承BaseActivity 推送会有问题
 
 	private static final int LOGIN_SUCCESS = 0;
 	private static final int LOGIN_FAIL = 1;

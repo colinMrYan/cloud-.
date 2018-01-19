@@ -8,6 +8,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.os.Build;
 import android.os.Environment;
 import android.os.Parcelable;
 import android.support.multidex.MultiDexApplication;
@@ -573,7 +574,11 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
             LogUtils.jasonDebug("country="+country);
             LogUtils.jasonDebug("variant="+variant);
             Locale locale = new Locale(country, variant);
-            config.locale = locale;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                config.setLocale(locale);
+            } else {
+                config.locale = locale;
+            }
         }
         config.fontScale = 1.0f;
         getResources().updateConfiguration(config,
