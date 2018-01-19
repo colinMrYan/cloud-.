@@ -5,11 +5,10 @@ import android.content.Context;
 import android.os.Bundle;
 
 import com.huawei.hms.support.api.push.PushReceiver;
-import com.inspur.emmcloud.util.common.PreferencesUtils;
-import com.inspur.emmcloud.util.common.JSONUtils;
-import com.inspur.emmcloud.util.privates.PushInfoUtils;
 import com.inspur.emmcloud.MyApplication;
-import com.inspur.emmcloud.util.privates.ECMShortcutBadgeNumberManagerUtils;
+import com.inspur.emmcloud.util.common.PreferencesUtils;
+import com.inspur.emmcloud.util.privates.ECMTransparentUtils;
+import com.inspur.emmcloud.util.privates.PushInfoUtils;
 
 /**
  * Created by yufuchang on 2017/6/20.
@@ -39,27 +38,11 @@ public class HuaWeiPushReceiver extends PushReceiver {
      */
     @Override
     public boolean onPushMsg(Context context, byte[] msg, Bundle bundle) {
-        if(ECMShortcutBadgeNumberManagerUtils.isHasBadge(msg)){
-            ECMShortcutBadgeNumberManagerUtils.setDesktopBadgeNumber(context,getDesktopBadgeNumber(msg));
-        }
+        ECMTransparentUtils.handleTransparentMsg(context,msg);
         return false;
     }
 
-    /**
-     * 获取桌面badge的数字
-     * @param msg
-     * @return
-     */
-    private int getDesktopBadgeNumber(byte[] msg) {
-        int badageNumber = 0;
-        try {
-            String message = new String(msg,"UTF-8");
-            badageNumber = JSONUtils.getInt(message,"badge",0);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return badageNumber;
-    }
+
 
     /**
      * 自定义的消息的回调方法，自定义消息的字数应该是没有限制，目前测试到160字

@@ -29,6 +29,7 @@ import com.inspur.emmcloud.api.apiservice.ContactAPIService;
 import com.inspur.emmcloud.bean.appcenter.GetAppBadgeResult;
 import com.inspur.emmcloud.bean.chat.ChannelGroup;
 import com.inspur.emmcloud.bean.chat.GetAllRobotsResult;
+import com.inspur.emmcloud.bean.chat.TransparentBean;
 import com.inspur.emmcloud.bean.contact.Contact;
 import com.inspur.emmcloud.bean.contact.GetAllContactResult;
 import com.inspur.emmcloud.bean.contact.GetSearchChannelGroupResult;
@@ -49,6 +50,7 @@ import com.inspur.emmcloud.ui.mine.MoreFragment;
 import com.inspur.emmcloud.ui.notsupport.NotSupportFragment;
 import com.inspur.emmcloud.ui.work.MainTabBean;
 import com.inspur.emmcloud.ui.work.WorkFragment;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.privates.ECMShortcutBadgeNumberManagerUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
@@ -517,6 +519,14 @@ public class IndexActivity extends BaseFragmentActivity implements
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void updateBadgeNumber(GetAppBadgeResult getAppBadgeResult) {
         int badgeNumber = getAppBadgeResult.getTabBadgeNumber();
+        findAndSetUnhandleBadgesDisplay(badgeNumber);
+    }
+
+    /**
+     * 查找应用tab并改变tab上的角标
+     * @param badgeNumber
+     */
+    private void findAndSetUnhandleBadgesDisplay(int badgeNumber) {
         for (int i = 0; i < mTabHost.getTabWidget().getChildCount(); i++) {
             View tabView = mTabHost.getTabWidget().getChildAt(i);
             if(mTabHost.getTabWidget().getChildAt(i).getTag().toString().contains("application")){
@@ -524,6 +534,12 @@ public class IndexActivity extends BaseFragmentActivity implements
                 break;
             }
         }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void updpateBadgeNumber(TransparentBean transparentBean){
+        LogUtils.YfcDebug("接收到修改tab的Eventbus");
+        findAndSetUnhandleBadgesDisplay(transparentBean.getBadgeNumber());
     }
 
     /**
