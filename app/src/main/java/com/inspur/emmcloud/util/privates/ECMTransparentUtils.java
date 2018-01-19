@@ -21,7 +21,7 @@ public class ECMTransparentUtils {
     public static void handleTransparentMsg(Context context, String transparent){
         if(transparent != null && ECMShortcutBadgeNumberManagerUtils.isHasBadge(transparent)){
             TransparentBean transparentBean = new TransparentBean(transparent);
-            sendTabBadgeNumber(transparentBean);
+            EventBus.getDefault().post(transparentBean);
             ECMShortcutBadgeNumberManagerUtils.setDesktopBadgeNumber(context,transparentBean.getBadgeNumber());
         }
     }
@@ -35,21 +35,11 @@ public class ECMTransparentUtils {
         if(transparent != null && ECMShortcutBadgeNumberManagerUtils.isHasBadge(transparent)){
             try {
                 String transparentStr = new String(transparent,"UTF-8");
-                TransparentBean transparentBean = new TransparentBean(transparentStr);
-                sendTabBadgeNumber(transparentBean);
-                ECMShortcutBadgeNumberManagerUtils.setDesktopBadgeNumber(context,transparentBean.getBadgeNumber());
+                handleTransparentMsg(context,transparentStr);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-    }
-
-    /**
-     * 发送底部tab的数字
-     * @param transparentBean
-     */
-    private static void sendTabBadgeNumber(TransparentBean transparentBean) {
-        EventBus.getDefault().post(transparentBean);
     }
 
 }
