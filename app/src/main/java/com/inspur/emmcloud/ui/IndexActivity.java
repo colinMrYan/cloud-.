@@ -534,8 +534,8 @@ public class IndexActivity extends BaseFragmentActivity implements
     private void setUnHandledBadgesDisplay(View tabView,int badgeNumber) {
         RelativeLayout unhandledBadgesLayout = (RelativeLayout) tabView.findViewById(R.id.new_message_tips_layout);
         unhandledBadgesLayout.setVisibility((badgeNumber == 0)?View.GONE:View.VISIBLE);
-        TextView unhandledBadges = (TextView) tabView.findViewById(R.id.new_message_tips_text);
-        unhandledBadges.setText(""+(badgeNumber > 99 ? "99+":badgeNumber));
+        TextView unhandledBadgesText = (TextView) tabView.findViewById(R.id.new_message_tips_text);
+        unhandledBadgesText.setText(""+(badgeNumber > 99 ? "99+":badgeNumber));
         //更新桌面角标数字
         ECMShortcutBadgeNumberManagerUtils.setDesktopBadgeNumber(IndexActivity.this,badgeNumber);
     }
