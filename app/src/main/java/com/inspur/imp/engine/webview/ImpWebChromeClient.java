@@ -293,7 +293,6 @@ public class ImpWebChromeClient extends WebChromeClient {
 	@Override
 	public void onProgressChanged(WebView view, int newProgress) {
 		super.onProgressChanged(view, newProgress);
-
 	}
 
 	@Override
@@ -303,7 +302,7 @@ public class ImpWebChromeClient extends WebChromeClient {
 
 	@Override
 	public void onReceivedTitle(WebView view, String title) {
-		if(null != title && !getRemoveHttpUrl(title).equals(getRemoveHttpUrl(view.getUrl()))){
+		if(null != title && !getRemoveHttpUrl(title).equals(getRemoveHttpUrl(view.getUrl()))  && !getRemoveHttpUrl(title).equals(getRemoveHttpUrl(view.getOriginalUrl()))){
 			((ImpActivity)context).setTitle(title);
 		}
 	}
@@ -314,7 +313,7 @@ public class ImpWebChromeClient extends WebChromeClient {
 	}
 
 	public String getRemoveHttpUrl(String url){
-		return url.replace("http://","").replace("https://","");
+		return url.replace("http://","").replace("https://","").trim();
 	}
 	
 
