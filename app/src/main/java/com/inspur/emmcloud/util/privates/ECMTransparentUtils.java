@@ -3,7 +3,6 @@ package com.inspur.emmcloud.util.privates;
 import android.content.Context;
 
 import com.inspur.emmcloud.bean.chat.TransparentBean;
-import com.inspur.emmcloud.util.common.JSONUtils;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -20,9 +19,10 @@ public class ECMTransparentUtils {
      * @param transparent
      */
     public static void handleTransparentMsg(Context context, String transparent){
-        sendTabBadgeNumber(transparent);
-        if(ECMShortcutBadgeNumberManagerUtils.isHasBadge(transparent)){
-            ECMShortcutBadgeNumberManagerUtils.setDesktopBadgeNumber(context,JSONUtils.getInt(transparent,"badge",0));
+        if(transparent != null && ECMShortcutBadgeNumberManagerUtils.isHasBadge(transparent)){
+            TransparentBean transparentBean = new TransparentBean(transparent);
+            sendTabBadgeNumber(transparentBean);
+            ECMShortcutBadgeNumberManagerUtils.setDesktopBadgeNumber(context,transparentBean.getBadgeNumber());
         }
     }
 
@@ -32,40 +32,24 @@ public class ECMTransparentUtils {
      * @param transparent
      */
     public static void handleTransparentMsg(Context context, byte[] transparent){
-        if(transparent != null){
+        if(transparent != null && ECMShortcutBadgeNumberManagerUtils.isHasBadge(transparent)){
             try {
-                sendTabBadgeNumber(new String(transparent,"UTF-8"));
+                String transparentStr = new String(transparent,"UTF-8");
+                TransparentBean transparentBean = new TransparentBean(transparentStr);
+                sendTabBadgeNumber(transparentBean);
+                ECMShortcutBadgeNumberManagerUtils.setDesktopBadgeNumber(context,transparentBean.getBadgeNumber());
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }
-        if(ECMShortcutBadgeNumberManagerUtils.isHasBadge(transparent)){
-            ECMShortcutBadgeNumberManagerUtils.setDesktopBadgeNumber(context,getDesktopBadgeNumber(transparent));
         }
     }
 
     /**
      * 发送底部tab的数字
-     * @param transparent
+     * @param transparentBean
      */
-    private static void sendTabBadgeNumber(String transparent) {
-        TransparentBean transparentBean = new TransparentBean(transparent);
+    private static void sendTabBadgeNumber(TransparentBean transparentBean) {
         EventBus.getDefault().post(transparentBean);
     }
 
-    /**
-     * 获取桌面badge的数字
-     * @param msg
-     * @return
-     */
-    private static int getDesktopBadgeNumber(byte[] msg) {
-        int badageNumber = 0;
-        try {
-            String message = new String(msg,"UTF-8");
-            badageNumber = JSONUtils.getInt(message,"badge",0);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return badageNumber;
-    }
 }
