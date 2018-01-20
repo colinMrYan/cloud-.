@@ -159,6 +159,11 @@ public class ChannelActivity extends BaseActivity {
             public void onVoiceFinish() {
                 chatInputMenu.stopVoiceRecord();
             }
+
+            @Override
+            public void onVoiceLevelChange(int volume) {
+
+            }
         });
         chatInputMenu.setOnStartListeningListener(new OnStartListeningListener() {
             @Override

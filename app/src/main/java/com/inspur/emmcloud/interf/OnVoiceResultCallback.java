@@ -8,4 +8,5 @@ public interface OnVoiceResultCallback {
     void onVoiceStart();
     void onVoiceResult(String results, boolean isLast);
     void onVoiceFinish();
+    void onVoiceLevelChange(int volume);
 }

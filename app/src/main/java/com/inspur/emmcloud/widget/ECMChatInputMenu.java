@@ -33,15 +33,12 @@ import com.inspur.emmcloud.adapter.MsgInputAddItemAdapter;
 import com.inspur.emmcloud.bean.chat.InsertModel;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.interf.OnStartListeningListener;
-import com.inspur.emmcloud.interf.OnVoiceLevelCallBack;
 import com.inspur.emmcloud.ui.chat.MembersActivity;
 import com.inspur.emmcloud.util.common.DensityUtil;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
-import com.inspur.emmcloud.util.privates.MediaRecorderLevelUtils;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -73,7 +70,6 @@ public class ECMChatInputMenu extends LinearLayout {
     private List<Integer> imgList = new ArrayList<>();
     private boolean isSetWindowListener = true;//是否监听窗口变化自动跳转输入框ui
     private OnStartListeningListener onStartListeningListener;
-    private MediaRecorderLevelUtils mediaRecorderLevelUtils;
 
     // private View view ;
 
@@ -330,18 +326,6 @@ public class ECMChatInputMenu extends LinearLayout {
                         break;
                     case R.drawable.ic_chat_input_add_voice:
                         onStartListeningListener.onStartListening();
-                        mediaRecorderLevelUtils = MediaRecorderLevelUtils.getInstance();
-                        mediaRecorderLevelUtils.setOnVoiceLevelCallBack(new OnVoiceLevelCallBack() {
-                            @Override
-                            public void onVoiceLevelCallBack(double volume) {
-                                LogUtils.YfcDebug("接收到的分贝值："+volume);
-                            }
-                        });
-                        LogUtils.YfcDebug("监听到开始录音事件");
-                        mediaRecorderLevelUtils.getVoiceLevel();
-//                        MediaRecorderUtils mediaRecorderUtils = new MediaRecorderUtils();
-//                        mediaRecorderUtils.startMediaRecord();
-//                        mediaRecorderUtils.updateMicStatus();
                         break;
                     default:
                         break;

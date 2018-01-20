@@ -174,7 +174,8 @@ public class Voice2StringMessageUtils {
             @Override
             public void onVolumeChanged(int volume, byte[] data) {
 //                showTip("当前正在说话，音量大小：" + volume);
-                LogUtils.YfcDebug( "返回音频数据："+data.length);
+//                LogUtils.YfcDebug( "返回音频数据："+data.length);
+                LogUtils.YfcDebug("音量大小："+volume);
             }
 
             @Override
