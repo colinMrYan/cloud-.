@@ -12,6 +12,7 @@ import com.inspur.emmcloud.ui.appcenter.ReactNativeAppActivity;
 import com.inspur.emmcloud.ui.appcenter.groupnews.GroupNewsActivity;
 import com.inspur.emmcloud.ui.appcenter.volume.VolumeHomePageActivity;
 import com.inspur.emmcloud.util.common.IntentUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.cache.PVCollectModelCacheUtils;
@@ -44,7 +45,9 @@ public class UriUtils {
                 break;
             case 3:
             case 4:
-                if (!uri.startsWith(APIUri.getEMMBaseUrl()+"ssohandler/gs/")) {
+                if(app.getAppID().equals("456166a362436750d74bfeaef997693d")){
+                    new AppCenterApprovalUtils().openApprovalApp(activity,app);
+                }else if (!uri.startsWith(APIUri.getEMMBaseUrl()+"ssohandler/gs/")) {
                     openWebApp(activity, uri, app);
                 } else {
                     uri = uri.replace("ssohandler/gs/", "api/v1/gs_sso/app_uri?id=");
@@ -97,6 +100,7 @@ public class UriUtils {
      * @param app
      */
     public static void openWebApp(Activity activity, String uri, App app) {
+        LogUtils.jasonDebug("00000000000000000000");
         Intent intent = new Intent();
         intent.setClass(activity, ImpActivity.class);
         intent.putExtra("uri", uri);
@@ -115,7 +119,6 @@ public class UriUtils {
      *
      * @param context
      * @param uri
-     * @param header
      */
     public static void openUrl(Activity context, String uri) {
         Bundle bundle = new Bundle();

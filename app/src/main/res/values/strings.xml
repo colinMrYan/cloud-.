@@ -828,6 +828,17 @@
     <string name="safe_center_finger_print">指纹</string>
     <string name="switch_gesture_unlock">手势解锁</string>
     <string name="switch_gesture_reset_unlock">重置手势解锁</string>
+    <string name="put_face_in_frame">请把脸放入框内保持不动</string>
+    <string name="experience_face_verify">体验刷脸</string>
+    <string name="no_face">没有检测到脸</string>
+    <string name="put_body_right">请保持姿势</string>
+    <string name="get_closer">请靠近一点</string>
+    <string name="blink">请眨眨眼</string>
+    <string name="face_verify_success">刷脸成功</string>
+    <string name="face_verify_fail">抱歉，没有认出你来</string>
+    <string name="face_enter">刷脸解锁</string>
+    <string name="off_face_verify_relogin">关闭刷脸，重新登录</string>
+
     <!--九宫格-->
     <!-- Gesture login activity -->
     <string name="gesture_forget_gesture">忘记手势密码</string>

@@ -1,7 +1,10 @@
 package com.inspur.emmcloud;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.FragmentActivity;
+
+import com.inspur.emmcloud.util.privates.LanguageUtils;
 
 public class BaseFragmentActivity extends FragmentActivity {
 
@@ -10,6 +13,11 @@ public class BaseFragmentActivity extends FragmentActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         ((MyApplication) getApplicationContext()).setIsActive(true);
+    }
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LanguageUtils.attachBaseContext(newBase));
     }
 
 }

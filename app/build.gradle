@@ -32,8 +32,8 @@ android {
         applicationId "com.inspur.emmcloud"
         minSdkVersion 16
         targetSdkVersion 22
-        versionCode 47
-        versionName "1.8.0"
+        versionCode 48
+        versionName "1.9.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         ndk {
             abiFilters "armeabi-v7a", "x86"
@@ -141,6 +141,8 @@ dependencies {
     compile 'com.android.support:multidex:1.0.2'
     compile 'com.wei.android.lib:fingerprintidentify:1.2.1'//指纹识别库暂未启用
     compile 'me.leolin:ShortcutBadger:1.1.19@aar'
+    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5.4'
+    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.4'
 
     // React Naive Components
     compile project(':react-native-smart-swipe-refresh-layout')

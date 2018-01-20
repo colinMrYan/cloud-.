@@ -125,13 +125,10 @@ public class ImpWebViewClient extends WebViewClient {
 			return;
 		}
 		webview.setVisibility(View.VISIBLE);
-		//为了获取网页的title
-		view.loadUrl("javascript:window.getTitle.onGetTitle("
-				+ "document.getElementsByTagName('title')[0].innerHTML" + ");");
 		//为了获取网页的html内容
-		view.loadUrl("javascript:window.getTitle.onGetHtmlContent("
+		view.loadUrl("javascript:window.getContent.onGetHtmlContent("
 				+ "document.getElementsByTagName('html')[0].innerHTML" + ");");
-		view.loadUrl("javascript:window.onhashchange = function() { getTitle.onHashChangeEvent(); };");
+		//view.loadUrl("javascript:window.onhashchange = function() { getTitle.onHashChangeEvent(); };");
 		webview.loadUrl(F_UEX_SCRIPT_SELF_FINISH);
 		String c = CookieManager.getInstance().getCookie(url);
 		PreferencesUtils.putString(view.getContext(), "web_cookie", c);

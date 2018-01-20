@@ -30,23 +30,23 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
+import com.inspur.emmcloud.bean.appcenter.news.GroupNews;
+import com.inspur.emmcloud.bean.appcenter.news.NewsIntrcutionUpdateEvent;
 import com.inspur.emmcloud.bean.chat.GetCreateSingleChannelResult;
 import com.inspur.emmcloud.bean.chat.GetNewsInstructionResult;
 import com.inspur.emmcloud.bean.chat.GetSendMsgResult;
-import com.inspur.emmcloud.bean.appcenter.news.GroupNews;
-import com.inspur.emmcloud.bean.appcenter.news.NewsIntrcutionUpdateEvent;
 import com.inspur.emmcloud.config.MyAppWebConfig;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
-import com.inspur.emmcloud.util.privates.ChatCreateUtils;
-import com.inspur.emmcloud.util.privates.ChatCreateUtils.OnCreateDirectChannelListener;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.HtmlRegexpUtil;
 import com.inspur.emmcloud.util.common.NetUtils;
-import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.common.StateBarUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
-import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
+import com.inspur.emmcloud.util.privates.ChatCreateUtils;
+import com.inspur.emmcloud.util.privates.ChatCreateUtils.OnCreateDirectChannelListener;
+import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
+import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.ProgressWebView;
@@ -116,9 +116,9 @@ public class NewsWebDetailActivity extends BaseActivity {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                PluginMgr.init(NewsWebDetailActivity.this, null);
-                PluginMgr.execute("FileTransferService", "download", object.toString());
-                PluginMgr.onDestroy();
+                PluginMgr pluginMgr = new PluginMgr(NewsWebDetailActivity.this,null);
+                pluginMgr.execute("FileTransferService", "download", object.toString());
+                pluginMgr.onDestroy();
             }
         }
     }

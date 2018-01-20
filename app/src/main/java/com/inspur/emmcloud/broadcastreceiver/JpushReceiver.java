@@ -9,12 +9,12 @@ import android.util.Log;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.ui.login.LoginActivity;
-import com.inspur.emmcloud.util.privates.ECMShortcutBadgeNumberManagerUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
-import com.inspur.emmcloud.util.privates.PushInfoUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
+import com.inspur.emmcloud.util.privates.ECMTransparentUtils;
+import com.inspur.emmcloud.util.privates.PushInfoUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -45,9 +45,7 @@ public class JpushReceiver extends BroadcastReceiver {
             new PushInfoUtils(context).upload();
         } else if (JPushInterface.ACTION_MESSAGE_RECEIVED.equals(intent
                 .getAction())) {
-            if(ECMShortcutBadgeNumberManagerUtils.isHasBadge(bundle.getString(JPushInterface.EXTRA_MESSAGE))){
-                ECMShortcutBadgeNumberManagerUtils.setDesktopBadgeNumber(context,JSONUtils.getInt(bundle.getString(JPushInterface.EXTRA_MESSAGE),"badge",0));
-            }
+            ECMTransparentUtils.handleTransparentMsg(context,bundle.getString(JPushInterface.EXTRA_MESSAGE));
             LogUtils.debug(TAG,
                     "[MyReceiver] 接收到推送下来的自定义消息: "
                             + bundle.getString(JPushInterface.EXTRA_MESSAGE));

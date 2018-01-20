@@ -60,6 +60,10 @@ public class MDM extends APIInterfaceInstance {
 		this.mdmListener = mdmListener;
 	}
 
+	public void destroyOnMDMListener(){
+        mdmListener = null;
+    }
+
 	public MDMListener getMDMListener() {
 		return mdmListener;
 	}

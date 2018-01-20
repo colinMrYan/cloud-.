@@ -98,7 +98,7 @@ public class CameraService extends ImpPlugin {
     public static int num = 8;// 可以选择的图片数目
     private int uploadOriginMaxSize = MyAppConfig.UPLOAD_ORIGIN_IMG_MAX_SIZE;
     private int uploadThumbnailMaxSize = MyAppConfig.UPLOAD_THUMBNAIL_IMG_MAX_SIZE;
-    private String watermarkContent,color,background,algin,valign;
+    private String watermarkContent,color,background, align,valign;
     private int fontSize;
 
     @Override
@@ -110,6 +110,8 @@ public class CameraService extends ImpPlugin {
         if ("getPicture".equals(action)) {
             getPicture(paramsObject);
         }
+        //每次使用之前先将原来的生成的图片清除掉
+        DataCleanManager.cleanCustomCache(MyAppConfig.LOCAL_IMG_CREATE_PATH);
     }
 
     /**
@@ -135,7 +137,7 @@ public class CameraService extends ImpPlugin {
                     fontSize = JSONUtils.getInt(watermarkObj,"fontSize",14);
                     color = JSONUtils.getString(watermarkObj,"color","#ffffff");
                     background = JSONUtils.getString(watermarkObj,"background","#00000000");
-                    algin = JSONUtils.getString(watermarkObj,"algin","left");
+                    align = JSONUtils.getString(watermarkObj,"align","left");
                     valign = JSONUtils.getString(watermarkObj,"valign","top");
                 }
             }
@@ -204,7 +206,7 @@ public class CameraService extends ImpPlugin {
                     fontSize = JSONUtils.getInt(watermarkObj,"fontSize",14);
                     color = JSONUtils.getString(watermarkObj,"color","#ffffff");
                     background = JSONUtils.getString(watermarkObj,"background","#00000000");
-                    algin = JSONUtils.getString(watermarkObj,"algin","left");
+                    align = JSONUtils.getString(watermarkObj,"align","left");
                     valign = JSONUtils.getString(watermarkObj,"valign","top");
                 }
             }
@@ -292,8 +294,6 @@ public class CameraService extends ImpPlugin {
      * IMP代码修改处
      */
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
-        //每次使用之前先将原来的生成的图片清除掉
-        DataCleanManager.cleanCustomCache(MyAppConfig.LOCAL_IMG_CREATE_PATH);
         PublicWay.photoService = null;
         int mOriginHeightSize = targetHeight < uploadOriginMaxSize ? targetHeight : uploadOriginMaxSize;
         int mOriginWidthtSize = targetWidth < uploadOriginMaxSize ? targetWidth : uploadOriginMaxSize;
@@ -313,7 +313,7 @@ public class CameraService extends ImpPlugin {
                         if (StringUtils.isBlank(watermarkContent)){
                             originBitmap = ImageUtils.getBitmapByFile(originImgFile);
                         }else {
-                            originBitmap = ImageUtils.createWaterMask(context,originImgPath,watermarkContent,color,background,algin,valign,fontSize);
+                            originBitmap = ImageUtils.createWaterMask(context,originImgPath,watermarkContent,color,background, align,valign,fontSize);
                         }
                         File thumbnailImgFile = new Compressor(this.context).setMaxHeight(uploadThumbnailMaxSize).setMaxWidth(uploadThumbnailMaxSize).setQuality(mQuality).setDestinationDirectoryPath(MyAppConfig.LOCAL_IMG_CREATE_PATH)
                                 .setCompressFormat(format) .compressToFile(originImgFile, thumbnailImgFileName);
@@ -365,7 +365,7 @@ public class CameraService extends ImpPlugin {
                             if (StringUtils.isBlank(watermarkContent)){
                                 originBitmap = ImageUtils.getBitmapByFile(originImgFile);
                             }else {
-                                originBitmap = ImageUtils.createWaterMask(context,originImgPath,watermarkContent,color,background,algin,valign,fontSize);
+                                originBitmap = ImageUtils.createWaterMask(context,originImgPath,watermarkContent,color,background, align,valign,fontSize);
                             }
                             File thumbnailImgFile = new Compressor(this.context).setMaxHeight(uploadThumbnailMaxSize).setMaxWidth(mOriginWidthtSize).setQuality(mQuality).setDestinationDirectoryPath(MyAppConfig.LOCAL_IMG_CREATE_PATH)
                                     .setCompressFormat(format).compressToFile(originImgFile, thumbnailImgFileName);

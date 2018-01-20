@@ -33,5 +33,6 @@ public class Constant {
     public static final String ACTION_MEETING = "com.inspur.meeting";
     public static final String ACTION_TASK = "com.inspur.task";
     public static final String ACTION_CALENDAR = "com.inspur.calendar";
+    public static final String ACTION_SAFE_UNLOCK = "com.inspur.safe.unlock";
 
 }

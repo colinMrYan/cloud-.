@@ -8,6 +8,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.os.Build;
 import android.os.Environment;
 import android.os.Parcelable;
 import android.support.multidex.MultiDexApplication;
@@ -30,17 +31,17 @@ import com.inspur.emmcloud.interf.MyActivityLifecycleCallbacks;
 import com.inspur.emmcloud.interf.OauthCallBack;
 import com.inspur.emmcloud.push.WebSocketPush;
 import com.inspur.emmcloud.ui.login.LoginActivity;
-import com.inspur.emmcloud.util.privates.AppUtils;
-import com.inspur.emmcloud.util.privates.CalEventNotificationUtils;
-import com.inspur.emmcloud.util.privates.CrashHandler;
-import com.inspur.emmcloud.util.privates.cache.DbCacheUtils;
-import com.inspur.emmcloud.util.privates.HuaWeiPushMangerUtils;
 import com.inspur.emmcloud.util.common.LogUtils;
-import com.inspur.emmcloud.util.privates.PreferencesByUsersUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.richtext.RichText;
+import com.inspur.emmcloud.util.privates.AppUtils;
+import com.inspur.emmcloud.util.privates.CalEventNotificationUtils;
+import com.inspur.emmcloud.util.privates.CrashHandler;
 import com.inspur.emmcloud.util.privates.ECMShortcutBadgeNumberManagerUtils;
+import com.inspur.emmcloud.util.privates.HuaWeiPushMangerUtils;
+import com.inspur.emmcloud.util.privates.PreferencesByUsersUtils;
+import com.inspur.emmcloud.util.privates.cache.DbCacheUtils;
 import com.inspur.imp.api.Res;
 import com.inspur.reactnative.AuthorizationManagerPackage;
 import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiskCache;
@@ -525,6 +526,8 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         if (languageJson != null) {
             String language = PreferencesUtils.getString(
                     getApplicationContext(), MyApplication.getInstance().getTanent() + "language");
+            LogUtils.jasonDebug("language="+language);
+            LogUtils.jasonDebug("appLanguageObj="+languageJson);
             // 当系统语言选择为跟随系统的时候，要检查当前系统的语言是不是在commonList中，重新赋值
             if (language.equals("followSys")) {
                 String commonLanguageListJson = PreferencesUtils.getString(
@@ -568,8 +571,14 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
                 // TODO: handle exception
                 e.printStackTrace();
             }
+            LogUtils.jasonDebug("country="+country);
+            LogUtils.jasonDebug("variant="+variant);
             Locale locale = new Locale(country, variant);
-            config.locale = locale;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                config.setLocale(locale);
+            } else {
+                config.locale = locale;
+            }
         }
         config.fontScale = 1.0f;
         getResources().updateConfiguration(config,

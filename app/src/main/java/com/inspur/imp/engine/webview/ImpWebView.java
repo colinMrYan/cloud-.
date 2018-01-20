@@ -23,9 +23,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.ParseHtmlUtils;
-import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.imp.api.ImpActivity;
 import com.inspur.imp.api.JsInterface;
 import com.inspur.imp.api.iLog;
@@ -75,6 +73,7 @@ public class ImpWebView extends WebView {
 	private LinearLayout loadFailLayout;
 	private Handler handler;
 	private FrameLayout frameLayout;
+	private PluginMgr pluginMgr;
 
 	public ImpWebView(Context context, AttributeSet attrs) {
 		super(context,attrs);
@@ -117,10 +116,10 @@ public class ImpWebView extends WebView {
 	}
 
 	public void init() {
-		this.addJavascriptInterface(new JsInterface(), method);
-		//显示webview网页标题
-		this.addJavascriptInterface(new GetTitle(), "getTitle");
 		initPlugin();
+		this.addJavascriptInterface(new JsInterface(pluginMgr), method);
+		//显示webview网页标题
+		this.addJavascriptInterface(new GetContent(), "getContent");
 		setDownloadListener(new MyWebViewDownLoadListener());
 	}
 
@@ -129,11 +128,10 @@ public class ImpWebView extends WebView {
 		@Override
 		public void onDownloadStart(String url, String userAgent, String contentDisposition, String mimetype,
 									long contentLength) {
-			LogUtils.jasonDebug("url="+url);
 			try {
 				JSONObject object = new JSONObject();
 				object.put("url",url);
-				PluginMgr.execute("FileTransferService","download",object.toString());
+				pluginMgr.execute("FileTransferService","download",object.toString());
 			}catch (Exception e){
 				e.printStackTrace();
 			}
@@ -141,18 +139,7 @@ public class ImpWebView extends WebView {
 		}
 	}
 
-	public class GetTitle {
-		@JavascriptInterface
-		public void onGetTitle(final String title) {
-			// 参数title即为网页的标题，可在这里面进行相应的title的处理
-			if (titleText != null && !StringUtils.isBlank(title)){
-				Message msg = new Message();
-				msg.what = SET_TITLE;
-				msg.obj = title;
-				handler.sendMessage(msg);
-			}
-		}
-
+	public class GetContent {
 		@JavascriptInterface
 		public void onGetHtmlContent(String html){
 			Elements elements = ParseHtmlUtils.getDataFromHtml(html,"meta");
@@ -176,7 +163,7 @@ public class ImpWebView extends WebView {
 
 	// 重置当前接口的webview
 	public void initPlugin() {
-		PluginMgr.init(this.context, this);
+		pluginMgr = new PluginMgr(context,this);
 	}
 	private int mLastMotionX;
 	private int mLastMotionY;
@@ -399,6 +386,9 @@ public class ImpWebView extends WebView {
 		this.destroyed = true;
 		if (handler != null){
 			handler = null;
+		}
+		if(pluginMgr != null){
+			pluginMgr = null;
 		}
 		super.destroy();
 	}

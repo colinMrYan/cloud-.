@@ -37,7 +37,7 @@ public class ChatInputEdit extends AppCompatEditText {
     private int maxLength = 2000;
     private List<InsertModel> insertModelList = new ArrayList<>();
     private static final int BACKGROUND_COLOR = Color.parseColor("#FFDEAD"); // 默认,话题背景高亮颜色
-    private static Context mContext;
+    private  Context mContext;
     private InputWatcher inputWatcher;
 
     public ChatInputEdit(Context context) {
@@ -61,7 +61,7 @@ public class ChatInputEdit extends AppCompatEditText {
         this.inputWatcher = inputWatcher;
     }
 
-    public static int ParseIconResId(String name) {
+    public  int ParseIconResId(String name) {
         name = name.substring(1, name.length() - 1);
         int resId = mContext.getResources().getIdentifier(name, "drawable", mContext.getPackageName());
         return resId;

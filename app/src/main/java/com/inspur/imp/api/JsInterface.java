@@ -13,8 +13,13 @@ import com.inspur.imp.plugin.PluginMgr;
  * 
  */
 public class JsInterface {
+
 	private Handler handler = new Handler();
 
+	private PluginMgr pluginMgr;
+	public JsInterface(PluginMgr pluginMgr){
+		this.pluginMgr = pluginMgr;
+	}
 	/**
 	 * js调用invoke方法，有参数，无返回值
 	 * 
@@ -30,7 +35,7 @@ public class JsInterface {
 			final String params) {
 		handler.post(new Runnable() {
 			public void run() {
-				PluginMgr.execute(serviceName, action, params);
+				pluginMgr.execute(serviceName, action, params);
 			}
 		});
 	}
@@ -48,7 +53,7 @@ public class JsInterface {
 	public void invoke(final String serviceName, final String action) {
 		handler.post(new Runnable() {
 			public void run() {
-				PluginMgr.execute(serviceName, action, null);
+				pluginMgr.execute(serviceName, action, null);
 			}
 		});
 	}
@@ -73,7 +78,7 @@ public class JsInterface {
 			serviceName = "com.inspur.imp.plugin.filetransfer.FileTransferService";
 			action= "downloadFile";
 		}
-		return PluginMgr.executeAndReturn(serviceName, action, params);
+		return pluginMgr.executeAndReturn(serviceName, action, params);
 	}
 
 	/**
@@ -88,7 +93,7 @@ public class JsInterface {
 	 */
 	@JavascriptInterface
 	public String invokeAndReturn(final String serviceName, final String action) {
-		return PluginMgr.executeAndReturn(serviceName, action, null);
+		return pluginMgr.executeAndReturn(serviceName, action, null);
 	}
 	
 }
