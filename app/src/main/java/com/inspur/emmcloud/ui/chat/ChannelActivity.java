@@ -157,12 +157,12 @@ public class ChannelActivity extends BaseActivity {
 
             @Override
             public void onVoiceFinish() {
-                chatInputMenu.stopVoiceRecord();
+                chatInputMenu.changeUI2GridView();
             }
 
             @Override
             public void onVoiceLevelChange(int volume) {
-
+                chatInputMenu.setVoiceImageViewLevel(volume);
             }
         });
         chatInputMenu.setOnStartListeningListener(new OnStartListeningListener() {

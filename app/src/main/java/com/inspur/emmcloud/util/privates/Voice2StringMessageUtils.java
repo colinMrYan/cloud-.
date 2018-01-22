@@ -1,7 +1,6 @@
 package com.inspur.emmcloud.util.privates;
 
 import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
 import android.os.Environment;
 
@@ -17,11 +16,8 @@ import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
@@ -34,14 +30,14 @@ public class Voice2StringMessageUtils {
     // 语音听写对象
     private SpeechRecognizer speechRecognizer;
     // 用HashMap存储听写结果
-    private HashMap<String, String> mIatResults = new LinkedHashMap<String, String>();
+    private HashMap<String, String> iatResultMap = new LinkedHashMap<String, String>();
     // 引擎类型
-    private String mEngineType = SpeechConstant.TYPE_CLOUD;
+    private String engineType = SpeechConstant.TYPE_CLOUD;
+    //上下文
     private Activity activity;
-//    private boolean mTranslateEnable = false;
-    private RecognizerListener mRecognizerListener;
-
-
+    //结果监听
+    private RecognizerListener recognizerListener;
+    //结果回调
     private OnVoiceResultCallback onVoiceResultCallback;
 
     /**
@@ -61,31 +57,7 @@ public class Voice2StringMessageUtils {
         // 使用SpeechRecognizer对象，可根据回调消息自定义界面；
         speechRecognizer = SpeechRecognizer.createRecognizer(activity, mInitListener);
         setParam();
-        //注释掉的这几句是读取文件听写文字的
-//        speechRecognizer.setParameter(SpeechConstant.AUDIO_SOURCE, "-1");
-        speechRecognizer.startListening(mRecognizerListener);
-//        byte[] audioData = readAudioFile(activity, "iattest.wav");
-//        speechRecognizer.writeAudio(audioData, 0, audioData.length);
-//        speechRecognizer.stopListening();
-    }
-
-    /**
-     * 读取asset目录下音频文件。
-     *
-     * @return 二进制文件数据
-     */
-    public  byte[] readAudioFile(Context context, String filename) {
-        try {
-            InputStream ins = context.getAssets().open(filename);
-            byte[] data = new byte[ins.available()];
-            ins.read(data);
-            ins.close();
-            return data;
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        return null;
+        speechRecognizer.startListening(recognizerListener);
     }
 
     /**
@@ -97,7 +69,7 @@ public class Voice2StringMessageUtils {
         // 清空参数
         speechRecognizer.setParameter(SpeechConstant.PARAMS, null);
         // 设置听写引擎
-        speechRecognizer.setParameter(SpeechConstant.ENGINE_TYPE, mEngineType);
+        speechRecognizer.setParameter(SpeechConstant.ENGINE_TYPE, engineType);
         // 设置返回结果格式
         speechRecognizer.setParameter(SpeechConstant.RESULT_TYPE, "json");
         String lag = PreferencesUtils.getString(activity,"iat_language_preference",
@@ -114,7 +86,7 @@ public class Voice2StringMessageUtils {
         }
 
         // 设置语音前端点:静音超时时间，即用户多长时间不说话则当做超时处理
-        speechRecognizer.setParameter(SpeechConstant.VAD_BOS, PreferencesUtils.getString(activity,"iat_vadbos_preference", "10000"));
+        speechRecognizer.setParameter(SpeechConstant.VAD_BOS, PreferencesUtils.getString(activity,"iat_vadbos_preference", "3000"));
 
         // 设置语音后端点:后端点静音检测时间，即用户停止说话多长时间内即认为不再输入， 自动停止录音
         speechRecognizer.setParameter(SpeechConstant.VAD_EOS, PreferencesUtils.getString(activity,"iat_vadeos_preference", "3000"));
@@ -126,26 +98,27 @@ public class Voice2StringMessageUtils {
         // 注：AUDIO_FORMAT参数语记需要更新版本才能生效
         speechRecognizer.setParameter(SpeechConstant.AUDIO_FORMAT,"wav");
         speechRecognizer.setParameter(SpeechConstant.ASR_AUDIO_PATH, Environment.getExternalStorageDirectory()+"/msc/iat.wav");
-//        speechRecognizer.setParameter(SpeechConstant.ASR_AUDIO_PATH, MyAppConfig.LOCAL_CACHE_PATH + "voice/iat.wav");
     }
 
+    /**
+     * 初始化监听器
+     */
     private void initListeners() {
         mInitListener = new InitListener() {
             @Override
             public void onInit(int code) {
                 if (code != ErrorCode.SUCCESS) {
-                    showTip("初始化失败，错误码：" + code);
+                    LogUtils.YfcDebug("初始化失败："+code);
                 }else{
-                    showTip("初始化成功");
+                    LogUtils.YfcDebug("初始化成功");
                 }
             }
         };
 
-        mRecognizerListener = new RecognizerListener() {
+        recognizerListener = new RecognizerListener() {
             @Override
             public void onBeginOfSpeech() {
                 // 此回调表示：sdk内部录音机已经准备好了，用户可以开始语音输入
-                showTip("开始说话");
                 onVoiceResultCallback.onVoiceStart();
             }
 
@@ -157,33 +130,26 @@ public class Voice2StringMessageUtils {
             @Override
             public void onEndOfSpeech() {
                 // 此回调表示：检测到了语音的尾端点，已经进入识别过程，不再接受语音输入
-                showTip("结束说话");
                 onVoiceResultCallback.onVoiceFinish();
             }
 
             @Override
             public void onResult(RecognizerResult results, boolean isLast) {
-                LogUtils.YfcDebug("返回输入结果");
-                printAndReturnResult(results);
+                parseIatAndReturnStringResult(results);
                 if (isLast) {
-                    // TODO 最后的结果
+                    //最后的结果
+                    onVoiceResultCallback.onVoiceResult(parseIatAndReturnStringResult(results),isLast);
                 }
-                onVoiceResultCallback.onVoiceResult(printAndReturnResult(results),isLast);
             }
 
+            //音量值0~30
             @Override
             public void onVolumeChanged(int volume, byte[] data) {
-//                showTip("当前正在说话，音量大小：" + volume);
-//                LogUtils.YfcDebug( "返回音频数据："+data.length);
-                LogUtils.YfcDebug("音量大小："+volume);
+                onVoiceResultCallback.onVoiceLevelChange(volume);
             }
 
             @Override
             public void onEvent(int eventType, int arg1, int arg2, Bundle obj) {
-                LogUtils.YfcDebug("eventType:"+eventType);
-                LogUtils.YfcDebug("arg1:"+arg1);
-                LogUtils.YfcDebug("arg2:"+arg2);
-//                LogUtils.YfcDebug("obj:"+obj.toString());
                 // 以下代码用于获取与云端的会话id，当业务出错时将会话id提供给技术支持人员，可用于查询会话日志，定位出错原因
                 // 若使用本地能力，会话id为null
                 //	if (SpeechEvent.EVENT_SESSION_ID == eventType) {
@@ -198,29 +164,37 @@ public class Voice2StringMessageUtils {
      * 解析结果
      * @param results
      */
-    private String printAndReturnResult(RecognizerResult results) {
+    private String parseIatAndReturnStringResult(RecognizerResult results) {
         String text = XFJsonParser.parseIatResult(results.getResultString());
         String sn = null;
         // 读取json结果中的sn字段
         try {
             JSONObject resultJson = new JSONObject(results.getResultString());
             sn = resultJson.optString("sn");
-        } catch (JSONException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        mIatResults.put(sn, text);
+        iatResultMap.put(sn, text);
         StringBuffer resultBuffer = new StringBuffer();
-        for (String key : mIatResults.keySet()) {
-            resultBuffer.append(mIatResults.get(key));
+        for (String key : iatResultMap.keySet()) {
+            resultBuffer.append(iatResultMap.get(key));
         }
         ToastUtils.show(activity,text);
         return resultBuffer.toString();
     }
 
+    /**
+     * 在调用处回收资源的方法
+     * @return
+     */
     public SpeechRecognizer getSpeechRecognizer() {
         return speechRecognizer;
     }
 
+    /**
+     * 处理结果的回调接口，返回开始，结束，音量，解析文字四个结果
+     * @param onVoiceResultCallback
+     */
     public void setOnVoiceResultCallback(OnVoiceResultCallback onVoiceResultCallback) {
         this.onVoiceResultCallback = onVoiceResultCallback;
     }

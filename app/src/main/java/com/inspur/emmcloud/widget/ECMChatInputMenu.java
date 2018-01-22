@@ -70,6 +70,8 @@ public class ECMChatInputMenu extends LinearLayout {
     private List<Integer> imgList = new ArrayList<>();
     private boolean isSetWindowListener = true;//是否监听窗口变化自动跳转输入框ui
     private OnStartListeningListener onStartListeningListener;
+    private  ImageView voiceImageView;
+    private  GridView addItemGrid;
 
     // private View view ;
 
@@ -257,6 +259,9 @@ public class ECMChatInputMenu extends LinearLayout {
         }
         addMenuLayout.getLayoutParams().height = softInputHeight;
         addMenuLayout.setVisibility(View.VISIBLE);
+
+        addItemGrid.setVisibility(View.VISIBLE);
+        voiceImageView.setVisibility(View.GONE);
     }
 
     public void showSoftInput() {
@@ -300,8 +305,8 @@ public class ECMChatInputMenu extends LinearLayout {
      * 初始化消息发送的UI
      */
     private void initMenuGrid() {
-
-        GridView addItemGrid = (GridView) findViewById(R.id.add_menu_grid);
+        addItemGrid = (GridView) findViewById(R.id.add_menu_grid);
+        voiceImageView = (ImageView) findViewById(R.id.voice_volume_img);
         msgInputAddItemAdapter = new MsgInputAddItemAdapter(context);
         addItemGrid.setAdapter(msgInputAddItemAdapter);
         addItemGrid.setOnItemClickListener(new OnItemClickListener() {
@@ -325,7 +330,11 @@ public class ECMChatInputMenu extends LinearLayout {
                         openMention(false);
                         break;
                     case R.drawable.ic_chat_input_add_voice:
-                        onStartListeningListener.onStartListening();
+                        if(NetUtils.isNetworkConnected(context)){
+                            onStartListeningListener.onStartListening();
+                            addItemGrid.setVisibility(View.GONE);
+                            voiceImageView.setVisibility(View.VISIBLE);
+                        }
                         break;
                     default:
                         break;
@@ -335,9 +344,42 @@ public class ECMChatInputMenu extends LinearLayout {
         });
     }
 
-    public void stopVoiceRecord(){
-//        mediaRecorderLevelUtils.stopRecord();
+    /**
+     * 设置音量
+     * @param volume
+     */
+    public void setVoiceImageViewLevel(int volume){
+        if(volume <= 5){
+            voiceImageView.setImageLevel(0);
+        }else if(volume <= 8){
+            voiceImageView.setImageLevel(1);
+        }else if(volume <= 10){
+            voiceImageView.setImageLevel(2);
+        }else if(volume <= 13){
+            voiceImageView.setImageLevel(3);
+        }else if(volume <= 15){
+            voiceImageView.setImageLevel(4);
+        }else if(volume <= 18){
+            voiceImageView.setImageLevel(5);
+        }else if(volume <= 20){
+            voiceImageView.setImageLevel(6);
+        }else if(volume <= 23){
+            voiceImageView.setImageLevel(7);
+        }else if(volume <= 25){
+            voiceImageView.setImageLevel(8);
+        }else{
+            voiceImageView.setImageLevel(9);
+        }
     }
+
+    /**
+     * 恢复九宫格View
+     */
+    public void changeUI2GridView(){
+        addItemGrid.setVisibility(View.VISIBLE);
+        voiceImageView.setVisibility(View.GONE);
+    }
+
 
     /**
      * 是否是输入了关键字@字符打开mention页
@@ -408,7 +450,7 @@ public class ECMChatInputMenu extends LinearLayout {
             binaryString = Integer.toBinaryString(Integer.parseInt(inputs));
         }
         int[] imgArray = {R.drawable.ic_chat_input_add_gallery, R.drawable.ic_chat_input_add_camera, R.drawable.ic_chat_input_add_file,R.drawable.ic_chat_input_add_voice, R.drawable.ic_chat_input_add_mention};
-        String[] functionNameArray = {context.getString(R.string.album), context.getString(R.string.take_photo), context.getString(R.string.file),"语音", "@"};
+        String[] functionNameArray = {context.getString(R.string.album), context.getString(R.string.take_photo), context.getString(R.string.file),context.getString(R.string.voice_input), "@"};
         imgList.clear();
         List<String> textList = new ArrayList<>();
         int menuGridSize = binaryString.length() - 1;
