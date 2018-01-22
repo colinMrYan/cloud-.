@@ -27,24 +27,25 @@ import com.inspur.emmcloud.bean.contact.SearchModel;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.ui.contact.RobotInfoActivity;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
-import com.inspur.emmcloud.util.privates.cache.ChannelCacheUtils;
-import com.inspur.emmcloud.util.privates.cache.ChannelGroupCacheUtils;
-import com.inspur.emmcloud.util.privates.cache.ChannelOperationCacheUtils;
-import com.inspur.emmcloud.util.privates.cache.ContactCacheUtils;
-import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PinyinUtils;
-import com.inspur.emmcloud.util.privates.cache.RobotCacheUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
+import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
+import com.inspur.emmcloud.util.privates.cache.ChannelCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.ChannelGroupCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.ChannelOperationCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.ContactCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.RobotCacheUtils;
 import com.inspur.emmcloud.widget.CircleImageView;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.NoScrollGridView;
 import com.inspur.emmcloud.widget.SwitchView;
 import com.inspur.emmcloud.widget.SwitchView.OnStateChangedListener;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -61,7 +62,7 @@ public class ChannelInfoActivity extends BaseActivity {
     private static final int DEL_MEMBER = 3;
     private NoScrollGridView memberGrid;
     private LoadingDialog loadingDlg;
-    private List<String> memberList = new ArrayList<String>();
+    private List<String> memberList = new ArrayList<>();
     private String cid;
     private String name;
     private Handler handler;
@@ -183,7 +184,7 @@ public class ChannelInfoActivity extends BaseActivity {
             String myUid = ((MyApplication) getApplicationContext()).getUid();
             Intent intent = new Intent();
             if ((position == adapter.getCount() - 1) && owner.equals(myUid)) {
-                intent.putExtra("cid", cid);
+                intent.putExtra("memberUidList", (Serializable) memberList);
                 intent.setClass(getApplicationContext(),
                         ChannelMembersDelActivity.class);
                 startActivityForResult(intent, DEL_MEMBER);
@@ -263,7 +264,7 @@ public class ChannelInfoActivity extends BaseActivity {
                 intent.putExtra("name", name);
                 startActivityForResult(intent, MODIFY_NAME);
                 break;
-            case R.id.volume_member_layout:
+            case R.id.member_layout:
                 bundle.putString("title", getString(R.string.group_member));
                 bundle.putString("search", "1");
                 IntentUtils.startActivity(ChannelInfoActivity.this,

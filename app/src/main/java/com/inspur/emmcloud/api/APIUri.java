@@ -528,6 +528,15 @@ public class APIUri {
     }
 
     /**
+     * 获取云盘成员url
+     * @param volumeId
+     * @return
+     */
+    public static String getVolumeMemUrl(String volumeId){
+        return  URL_BASE_VOLUME+"/"+volumeId+"/member";
+    }
+
+    /**
      * 获取云盘文件列表
      *
      * @param volumeId

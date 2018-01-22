@@ -101,7 +101,7 @@
         android:largeHeap="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".MainActivity"
+            android:name=".ui.appcenter.volume.VolumeHomePageActivity"
             android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
@@ -567,7 +567,11 @@
 
         <!-- 云盘 -->
         <activity
-            android:name=".ui.appcenter.volume.VolumeHomePageActivity"
+            android:name=".ui.appcenter.volume.VolumeHomePageActivitys"
+            android:screenOrientation="portrait"></activity>
+
+        <activity
+            android:name=".ui.appcenter.volume.ShareVolumeNameModifyActivity"
             android:screenOrientation="portrait"></activity>
         <activity
             android:name=".ui.appcenter.volume.VolumeFileActivity"
