@@ -30,14 +30,15 @@ import android.widget.RelativeLayout;
 
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.MsgInputAddItemAdapter;
+import com.inspur.emmcloud.bean.chat.InputTypeBean;
 import com.inspur.emmcloud.bean.chat.InsertModel;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.ui.chat.MembersActivity;
-import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
+import com.inspur.emmcloud.util.privates.AppUtils;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -66,8 +67,8 @@ public class ECMChatInputMenu extends LinearLayout {
     private InputMethodManager mInputManager;
     private ChatInputMenuListener chatInputMenuListener;
     private MsgInputAddItemAdapter msgInputAddItemAdapter;
-    private List<Integer> imgList = new ArrayList<>();
     private boolean isSetWindowListener = true;//是否监听窗口变化自动跳转输入框ui
+    private List<InputTypeBean> inputTypeBeanList = new ArrayList<>();
 
     // private View view ;
 
@@ -301,7 +302,7 @@ public class ECMChatInputMenu extends LinearLayout {
             @Override
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
-                int clickItem = imgList.get(position);
+                int clickItem = inputTypeBeanList.get(position).getInputTypeIcon();
                 switch (clickItem) {
                     case R.drawable.ic_chat_input_add_gallery:
                         AppUtils.openGallery((Activity)context,5,GELLARY_RESULT);
@@ -356,7 +357,6 @@ public class ECMChatInputMenu extends LinearLayout {
 
     }
 
-
     /**
      * 添加mentions
      *
@@ -387,36 +387,48 @@ public class ECMChatInputMenu extends LinearLayout {
     /**
      * 根据二进制字符串更新菜单视图
      *
-     * @param binaryString
+     * @param inputs
      */
     public void updateMenuGrid(String inputs) {
-        String binaryString  = "-1";
-        if (!StringUtils.isBlank(inputs)) {
-            binaryString = Integer.toBinaryString(Integer.parseInt(inputs));
-        }
         int[] imgArray = {R.drawable.ic_chat_input_add_gallery, R.drawable.ic_chat_input_add_camera, R.drawable.ic_chat_input_add_file, R.drawable.ic_chat_input_add_mention};
         String[] functionNameArray = {context.getString(R.string.album), context.getString(R.string.take_photo), context.getString(R.string.file), "@"};
-        imgList.clear();
-        List<String> textList = new ArrayList<>();
-        int menuGridSize = binaryString.length() - 1;
-        if (binaryString.length() > imgArray.length) {
-            menuGridSize = imgArray.length - 2;
+        String binaryString  = "-1";
+        //如果第一位是且只能是1即 "1" 如果input是"2"则走下面逻辑
+        if(!StringUtils.isBlank(inputs)){
+            if(inputs.equals("1")){
+                addImg.setVisibility(View.GONE);
+                return;
+            }
+            binaryString = new StringBuffer(Integer.toBinaryString(Integer.parseInt(inputs))).reverse().toString();
+//            binaryString = Integer.toBinaryString(Integer.parseInt(inputs));
         }
+        //处理默认情况，也就是普通频道的情况
         if (binaryString.equals("-1")) {
-            menuGridSize = imgArray.length - 2;
             binaryString = "111";
         }
-        for (int i = menuGridSize; i >= 0; i--) {
-            if ((binaryString.charAt(i) + "").equals("1")) {
-                imgList.add(imgArray[menuGridSize - i]);
-                textList.add(functionNameArray[menuGridSize - i]);
+        for(int i=0; i < binaryString.length(); i++){
+            //第一位已经处理过了，这里不再处理
+            if(i == 0){
+                inputEdit.setEnabled((binaryString.charAt(0)+"").equals("1"));
+                continue;
+            }
+            if((binaryString.charAt(i)+"").equals("1")){
+                if(i == 1){
+                    InputTypeBean inputTypeBeanGallery = new InputTypeBean(imgArray[0],functionNameArray[0]);
+                    inputTypeBeanList.add(inputTypeBeanGallery);
+                    InputTypeBean inputTypeBeanCamera = new InputTypeBean(imgArray[1],functionNameArray[1]);
+                    inputTypeBeanList.add(inputTypeBeanCamera);
+                }else{
+                    InputTypeBean inputTypeBean = new InputTypeBean(imgArray[i],functionNameArray[i]);
+                    inputTypeBeanList.add(inputTypeBean);
+                }
             }
         }
         //如果是群组的话添加@功能
         if (isChannelGroup) {
-            imgList.add(imgArray[3]);
-            textList.add(functionNameArray[3]);
+            InputTypeBean inputTypeBean = new InputTypeBean(imgArray[3],functionNameArray[3]);
+            inputTypeBeanList.add(inputTypeBean);
         }
-        msgInputAddItemAdapter.updateGridView(imgList, textList);
+        msgInputAddItemAdapter.updateGridView(inputTypeBeanList);
     }
 }
