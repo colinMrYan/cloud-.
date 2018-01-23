@@ -375,9 +375,8 @@ public class CameraService extends ImpPlugin {
                             thumbnailBitmaps[i] = thumbnailBitmap;
                             originImgPaths[i] = originImgPath;
                             thumbnailImgPaths[i] = thumbnailImgPath;
-                            callbackDatas(originalBitmaps, thumbnailBitmaps, originImgPaths, thumbnailImgPaths);
                         }
-
+                        callbackDatas(originalBitmaps, thumbnailBitmaps, originImgPaths, thumbnailImgPaths);
                     } catch (Exception e) {
                         e.printStackTrace();
                         this.failPicture(Res.getString("capture_error"));
