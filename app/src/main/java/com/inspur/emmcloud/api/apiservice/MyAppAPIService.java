@@ -1163,4 +1163,118 @@ public class MyAppAPIService {
             }
         });
     }
+
+    /**
+     * 更改组名称
+     * @param groupId
+     * @param groupName
+     */
+    public void updateGroupName(final String groupId,final String groupName){
+        final String url = APIUri.getGroupBaseUrl(groupId);
+        RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
+        params.addQueryStringParameter("name ",groupName);
+        x.http().request(HttpMethod.PUT, params, new APICallback(context,url) {
+            @Override
+            public void callbackSuccess(String arg0) {
+                apiInterface.returnUpdateGroupNameSuccess(groupName);
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                apiInterface.returnUpdateGroupNameFail(error,responseCode);
+            }
+
+            @Override
+            public void callbackTokenExpire() {
+                new OauthUtils(new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        updateGroupName(groupId,groupName);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                }, context).refreshToken(url);
+            }
+        });
+    }
+
+
+    /**
+     * 增加组成员
+     * @param volumeId
+     * @param uidList
+     */
+    public void groupMemAdd(final String groupId,final List<String> uidList){
+        final String url = APIUri.getGroupMemBaseUrl(groupId);
+        RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
+        params.addParameter("members", uidList);
+        params.setAsJsonContent(true);
+        x.http().post(params, new APICallback(context, url) {
+            @Override
+            public void callbackSuccess(String arg0) {
+                apiInterface.returnGroupMemAddSuccess(uidList);
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                apiInterface.returnGroupMemAddFail(error, responseCode);
+            }
+
+            @Override
+            public void callbackTokenExpire() {
+                new OauthUtils(new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        groupMemAdd(groupId,uidList);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                }, context).refreshToken(url);
+            }
+        });
+    }
+
+    /**
+     * 删除组成员
+     * @param volumeId
+     * @param uidList
+     */
+    public void groupMemDel(final String groupId,final List<String> uidList){
+        final String url = APIUri.getGroupMemBaseUrl(groupId);
+        RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
+        params.addParameter("members",uidList);
+        params.setAsJsonContent(true);
+        x.http().request(HttpMethod.DELETE,params, new APICallback(context, url) {
+            @Override
+            public void callbackSuccess(String arg0) {
+                apiInterface.returnGroupMemDelSuccess(uidList);
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                apiInterface.returnGroupMemDelFail(error, responseCode);
+            }
+
+            @Override
+            public void callbackTokenExpire() {
+                new OauthUtils(new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        groupMemDel(groupId,uidList);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                }, context).refreshToken(url);
+            }
+        });
+    }
 }

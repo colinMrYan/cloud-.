@@ -23,6 +23,7 @@ public class APIUri {
     private static final String URL_BASE_ID = "https://id.inspur.com/";
     private static final String URL_BASE_YUNJIA = "https://yunjia.inspur.com/";
     private static final String URL_BASE_VOLUME = URL_BASE_YUNJIA+"cloud-drive/api/v1/volume";
+    private static final String URL_BASE_GROUP = URL_BASE_YUNJIA+"cloud-drive/api/v1/group";
 
 
     /**
@@ -534,6 +535,24 @@ public class APIUri {
      */
     public static String getVolumeMemUrl(String volumeId){
         return  URL_BASE_VOLUME+"/"+volumeId+"/member";
+    }
+
+    /**
+     * 获取组url
+     * @param groupId
+     * @return
+     */
+    public static String getGroupBaseUrl(String groupId){
+        return  URL_BASE_GROUP+"/"+groupId;
+    }
+
+    /**
+     * 获取组成员URL
+     * @param groupId
+     * @return
+     */
+    public static String getGroupMemBaseUrl(String groupId){
+        return  getGroupBaseUrl(groupId)+"/member";
     }
 
     /**

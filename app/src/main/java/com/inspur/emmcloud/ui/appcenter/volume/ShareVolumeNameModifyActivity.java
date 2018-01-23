@@ -9,6 +9,7 @@ import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
+import com.inspur.emmcloud.bean.appcenter.volume.Group;
 import com.inspur.emmcloud.bean.appcenter.volume.Volume;
 import com.inspur.emmcloud.util.common.EditTextUtils;
 import com.inspur.emmcloud.util.common.FomatUtils;
@@ -37,15 +38,21 @@ public class ShareVolumeNameModifyActivity extends BaseActivity {
 
 	private LoadingDialog loadingDlg;
 	private Volume volume;
+	private Group group;
+	private boolean isVolumeNameModify = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		headerText.setText("更改网盘名称");
-		editText = (ClearEditText)findViewById(R.id.edit);
-		volume = (Volume) getIntent().getSerializableExtra("volume");
-		EditTextUtils.setText(editText, volume.getName());
+		if (getIntent().hasExtra("volume")){
+            isVolumeNameModify = true;
+            volume = (Volume) getIntent().getSerializableExtra("volume");
+        }else {
+		    group = (Group)getIntent().getSerializableExtra("group");
+        }
+        headerText.setText(isVolumeNameModify?"更改网盘名称":"更改组名称");
+		EditTextUtils.setText(editText, isVolumeNameModify?volume.getName():group.getName());
 		loadingDlg= new LoadingDialog(ShareVolumeNameModifyActivity.this);
 	}
 	
@@ -55,14 +62,18 @@ public class ShareVolumeNameModifyActivity extends BaseActivity {
 			finish();
 			break;
 		case R.id.save_text:
-			String volumeName = editText.getText().toString();
-			if (StringUtils.isBlank(volumeName)) {
-				ToastUtils.show(getApplicationContext(), "请输入网盘名称");
-			} else if (!FomatUtils.isValidFileName(volumeName)) {
-				ToastUtils.show(getApplicationContext(), "网盘名中不能包含特殊字符 / \\ \" : | * ? < >");
-			} else {
-				updateShareVolumeName(volumeName);
-			}
+			String name = editText.getText().toString();
+			if (StringUtils.isBlank(name)) {
+				ToastUtils.show(getApplicationContext(), isVolumeNameModify?"请输入网盘名称":"请输入组名称");
+			}else if(isVolumeNameModify){
+                if (!FomatUtils.isValidFileName(name)) {
+                    ToastUtils.show(getApplicationContext(), "网盘名中不能包含特殊字符 / \\ \" : | * ? < >");
+                } else {
+                    updateShareVolumeName(name);
+                }
+            }else {
+			    updateGroupName(name);
+            }
 			break;
 
 		default:
@@ -83,12 +94,24 @@ public class ShareVolumeNameModifyActivity extends BaseActivity {
 		}
 	}
 
+    /**
+     * 修改组名称
+     * @param groupId
+     * @param groupName
+     */
+	private void updateGroupName(String groupName){
+        if (NetUtils.isNetworkConnected(getApplicationContext())) {
+            loadingDlg.show();
+            MyAppAPIService apiService = new MyAppAPIService(this);
+            apiService.setAPIInterface(new WebService());
+            apiService.updateGroupName(group.getId(),groupName);
+        }
+    }
+
 	private class WebService extends APIInterfaceInstance{
         @Override
         public void returnUpdateShareVolumeNameSuccess(Volume volume, String name) {
-            if (loadingDlg != null && loadingDlg.isShowing()) {
-                loadingDlg.dismiss();
-            }
+           LoadingDialog.dimissDlg(loadingDlg);
             Intent intent = new Intent();
             intent.putExtra("volumeName",name);
             setResult(RESULT_OK,intent);
@@ -97,11 +120,23 @@ public class ShareVolumeNameModifyActivity extends BaseActivity {
 
         @Override
         public void returnUpdateShareVolumeNameFail(String error, int errorCode) {
-            if (loadingDlg != null && loadingDlg.isShowing()) {
-                loadingDlg.dismiss();
-            }
+            LoadingDialog.dimissDlg(loadingDlg);
             WebServiceMiddleUtils.hand(getApplicationContext(), error, errorCode);
         }
 
-	}
+        @Override
+        public void returnUpdateGroupNameSuccess(String name) {
+            LoadingDialog.dimissDlg(loadingDlg);
+            Intent intent = new Intent();
+            intent.putExtra("groupName",name);
+            setResult(RESULT_OK,intent);
+            finish();
+        }
+
+        @Override
+        public void returnUpdateGroupNameFail(String error, int errorCode) {
+            LoadingDialog.dimissDlg(loadingDlg);
+            WebServiceMiddleUtils.hand(getApplicationContext(), error, errorCode);
+        }
+    }
 }

@@ -1546,4 +1546,28 @@ public class APIInterfaceInstance implements APIInterface {
     @Override
     public void returnVolumeMemDelFail(String error, int errorCode) {
     }
+
+    @Override
+    public void returnUpdateGroupNameSuccess(String name) {
+    }
+
+    @Override
+    public void returnUpdateGroupNameFail(String error, int errorCode) {
+    }
+
+    @Override
+    public void returnGroupMemAddSuccess(List<String> uidList) {
+    }
+
+    @Override
+    public void returnGroupMemAddFail(String error, int errorCode) {
+    }
+
+    @Override
+    public void returnGroupMemDelSuccess(List<String> uidList) {
+    }
+
+    @Override
+    public void returnGroupMemDelFail(String error, int errorCode) {
+    }
 }

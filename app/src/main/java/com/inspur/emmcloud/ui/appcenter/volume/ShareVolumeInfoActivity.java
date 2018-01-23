@@ -1,6 +1,9 @@
 package com.inspur.emmcloud.ui.appcenter.volume;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -15,9 +18,11 @@ import com.inspur.emmcloud.adapter.VolumeInfoGroupAdapter;
 import com.inspur.emmcloud.adapter.VolumeInfoMemberAdapter;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
+import com.inspur.emmcloud.bean.appcenter.volume.Group;
 import com.inspur.emmcloud.bean.appcenter.volume.Volume;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeDetail;
 import com.inspur.emmcloud.bean.contact.SearchModel;
+import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.ui.chat.ChannelMembersDelActivity;
 import com.inspur.emmcloud.ui.chat.MembersActivity;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
@@ -73,6 +78,7 @@ public class ShareVolumeInfoActivity extends BaseActivity {
     private VolumeInfoGroupAdapter groupAdapter;
     private boolean isOwner;
     private boolean isVolumeNameUpdate = false;
+    private BroadcastReceiver receiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,7 +89,24 @@ public class ShareVolumeInfoActivity extends BaseActivity {
         apiService.setAPIInterface(new WebService());
         isOwner = MyApplication.getInstance().getUid().equals(volume.getOwner());
         volumeNameArrowImg.setVisibility(isOwner ? View.VISIBLE : View.INVISIBLE);
+        registerReceiver();
         getVolumeInfo();
+    }
+
+    private void registerReceiver() {
+        receiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                getVolumeInfo();
+            }
+        };
+        IntentFilter intentFilter = new IntentFilter(Constant.ACTION_VOLUME_INFO_UPDATE);
+        registerReceiver(receiver, intentFilter);
+    }
+
+    public static void notifyVolumeInfoUpdate(Context context){
+        Intent intent = new Intent(Constant.ACTION_VOLUME_INFO_UPDATE);
+        context.sendBroadcast(intent);
     }
 
 
@@ -113,10 +136,20 @@ public class ShareVolumeInfoActivity extends BaseActivity {
     }
 
     private void showVolumeDetail() {
-        if (isOwner){
+        if (isOwner) {
             groupLayout.setVisibility(View.VISIBLE);
             groupAdapter = new VolumeInfoGroupAdapter(getApplicationContext(), volumeDetail.getGroupList());
             groupListView.setAdapter(groupAdapter);
+            groupListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    Group group = volumeDetail.getGroupList().get(position);
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("group",group);
+                    bundle.putSerializable("volumeMemList",volumeDetail.getMemberUidList());
+                    IntentUtils.startActivity(ShareVolumeInfoActivity.this,GroupInfoActivity.class,bundle);
+                }
+            });
         }
         memberAdapter = new VolumeInfoMemberAdapter(getApplicationContext(), volumeDetail.getMemberUidList(), isOwner);
         memberGrid.setAdapter(memberAdapter);
@@ -152,18 +185,27 @@ public class ShareVolumeInfoActivity extends BaseActivity {
 
     }
 
-    private void updateVolumeMemNum(){
+    private void updateVolumeMemNum() {
         volumeMemberText.setText("全部网盘成员(" + volumeDetail.getMemberUidList().size() + ")");
     }
 
     @Override
     public void onBackPressed() {
-        if (isVolumeNameUpdate){
+        if (isVolumeNameUpdate) {
             Intent intent = new Intent();
-            intent.putExtra("volume",volume);
-            setResult(RESULT_OK,intent);
+            intent.putExtra("volume", volume);
+            setResult(RESULT_OK, intent);
         }
         finish();
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (receiver != null){
+            unregisterReceiver(receiver);
+            receiver = null;
+        }
+        super.onDestroy();
     }
 
     @Override
@@ -203,7 +245,9 @@ public class ShareVolumeInfoActivity extends BaseActivity {
      */
     private void getVolumeInfo() {
         if (NetUtils.isNetworkConnected(getApplicationContext())) {
-            loadingDlg.show();
+            if (!loadingDlg.isShowing()) {
+                loadingDlg.show();
+            }
             apiService.getVolumeInfo(volume.getId());
         }
     }
@@ -253,10 +297,11 @@ public class ShareVolumeInfoActivity extends BaseActivity {
 
         @Override
         public void returnVolumeMemAddSuccess(List<String> uidList) {
-            LoadingDialog.dimissDlg(loadingDlg);
-            volumeDetail.getMemberUidList().addAll(uidList);
-            memberAdapter.notifyDataSetChanged();
-            updateVolumeMemNum();
+            getVolumeInfo();
+            //           LoadingDialog.dimissDlg(loadingDlg);
+//            volumeDetail.getMemberUidList().addAll(uidList);
+//            memberAdapter.notifyDataSetChanged();
+//            updateVolumeMemNum();
         }
 
         @Override
@@ -268,10 +313,11 @@ public class ShareVolumeInfoActivity extends BaseActivity {
 
         @Override
         public void returnVolumeMemDelSuccess(List<String> uidList) {
-            LoadingDialog.dimissDlg(loadingDlg);
-            volumeDetail.getMemberUidList().removeAll(uidList);
-            memberAdapter.notifyDataSetChanged();
-            updateVolumeMemNum();
+            getVolumeInfo();
+            //           LoadingDialog.dimissDlg(loadingDlg);
+//            volumeDetail.getMemberUidList().removeAll(uidList);
+//            memberAdapter.notifyDataSetChanged();
+//            updateVolumeMemNum();
         }
 
         @Override

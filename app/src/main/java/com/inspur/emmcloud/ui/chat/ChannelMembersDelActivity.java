@@ -34,6 +34,7 @@ public class ChannelMembersDelActivity extends BaseActivity {
 	private List<Contact> memberContactList;
 	private ChannelMemDelAdapter adapter;
 	private ArrayList<String> memberDelUidList = new ArrayList<>();
+	private boolean isRemoveMyself = true;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +45,10 @@ public class ChannelMembersDelActivity extends BaseActivity {
 		if (getIntent().hasExtra("title")){
 			((TextView)findViewById(R.id.header_text)).setText(getIntent().getStringExtra("title"));
 		}
-		delMyself();
+		isRemoveMyself = getIntent().getExtras().getBoolean("isRemoveMyself",true);
+		if (isRemoveMyself){
+			removeMyself();
+		}
         channelMemberListView = (ListView) findViewById(R.id.member_list);
         adapter = new ChannelMemDelAdapter();
         channelMemberListView.setAdapter(adapter);
@@ -67,12 +71,13 @@ public class ChannelMembersDelActivity extends BaseActivity {
 	/**
 	 * 从成员列表里去掉自己
 	 */
-	private void delMyself() {
+	private void removeMyself() {
 		Iterator<Contact> sListIterator = memberContactList.iterator();
 		while (sListIterator.hasNext()) {
 			Contact contact = sListIterator.next();
 			if (contact.getInspurID().equals(MyApplication.getInstance().getUid())) {
 				sListIterator.remove();
+				break;
 			}
 		}
 	}
@@ -111,15 +116,16 @@ public class ChannelMembersDelActivity extends BaseActivity {
 	}
 
 	public void onClick(View v) {
-		Intent intent = new Intent();
-		intent.putExtra("selectMemList", memberDelUidList);
 		switch (v.getId()) {
 		case R.id.back_layout:
-			setResult(RESULT_OK, intent);
 			finish();
 			break;
 		case R.id.header_del_text:
-			setResult(RESULT_OK, intent);
+			if (memberDelUidList.size()>0){
+				Intent intent = new Intent();
+				intent.putExtra("selectMemList", memberDelUidList);
+				setResult(RESULT_OK, intent);
+			}
 			finish();
 			break;
 		default:

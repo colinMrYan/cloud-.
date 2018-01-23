@@ -34,7 +34,7 @@ public class VolumeInfoMemberAdapter extends BaseAdapter {
         if (isOwner) {
             return memberList.size() > 9 ? 10 : memberList.size() + 2;
         } else {
-            return memberList.size() > 8 ? 10 : memberList.size() + 1;
+            return memberList.size() > 10 ? 10 : memberList.size();
         }
     }
 

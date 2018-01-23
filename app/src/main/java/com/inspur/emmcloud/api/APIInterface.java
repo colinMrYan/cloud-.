@@ -593,4 +593,13 @@ public interface APIInterface {
 
     void returnVolumeMemDelSuccess(List<String> uidList);
     void returnVolumeMemDelFail(String error, int errorCode);
+
+    void returnUpdateGroupNameSuccess(String name);
+    void returnUpdateGroupNameFail(String error, int errorCode);
+
+    void returnGroupMemAddSuccess(List<String> uidList);
+    void returnGroupMemAddFail(String error, int errorCode);
+
+    void returnGroupMemDelSuccess(List<String> uidList);
+    void returnGroupMemDelFail(String error, int errorCode);
 }

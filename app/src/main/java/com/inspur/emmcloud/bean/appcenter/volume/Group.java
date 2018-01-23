@@ -5,19 +5,21 @@ import com.inspur.emmcloud.util.common.JSONUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by chenmch on 2018/1/20.
  */
 
-public class Group {
+public class Group implements Serializable{
     private String id;
     private String name;
     private String owner;
     private int privilege;
-    private List<String>  memberUidList = new ArrayList<>();
+    private ArrayList<String>  memberUidList = new ArrayList<>();
+
+    public Group(){}
 
     public Group(JSONObject obj){
         id = JSONUtils.getString(obj,"id","");
@@ -63,11 +65,11 @@ public class Group {
         this.privilege = privilege;
     }
 
-    public List<String> getMemberUidList() {
+    public ArrayList<String> getMemberUidList() {
         return memberUidList;
     }
 
-    public void setMemberUidList(List<String> memberUidList) {
+    public void setMemberUidList(ArrayList<String> memberUidList) {
         this.memberUidList = memberUidList;
     }
 }
