@@ -8,6 +8,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.os.Build;
 import android.os.Environment;
 import android.os.Parcelable;
 import android.support.multidex.MultiDexApplication;
@@ -529,6 +530,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
             String language = PreferencesUtils.getString(
                     getApplicationContext(), MyApplication.getInstance().getTanent() + "language");
             LogUtils.jasonDebug("language="+language);
+            LogUtils.jasonDebug("appLanguageObj="+languageJson);
             // 当系统语言选择为跟随系统的时候，要检查当前系统的语言是不是在commonList中，重新赋值
             if (language.equals("followSys")) {
                 String commonLanguageListJson = PreferencesUtils.getString(
@@ -575,7 +577,11 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
             LogUtils.jasonDebug("country="+country);
             LogUtils.jasonDebug("variant="+variant);
             Locale locale = new Locale(country, variant);
-            config.locale = locale;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                config.setLocale(locale);
+            } else {
+                config.locale = locale;
+            }
         }
         config.fontScale = 1.0f;
         getResources().updateConfiguration(config,

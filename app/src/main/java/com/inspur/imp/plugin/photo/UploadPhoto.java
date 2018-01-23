@@ -49,11 +49,11 @@ public class UploadPhoto {
 			String color = JSONUtils.getString(watermarkObj, "color", "#ffffff");
 			int fontSize = JSONUtils.getInt(watermarkObj, "fontSize", 14);
 			String background = JSONUtils.getString(watermarkObj, "background", "#00000000");
-			String algin = JSONUtils.getString(watermarkObj, "algin", "left");
+			String align = JSONUtils.getString(watermarkObj, "align", "left");
 			String valign = JSONUtils.getString(watermarkObj, "valign", "top");
 			for (int i=0;i<filePathList.size();i++){
 				String filePath = filePathList.get(i);
-				ImageUtils.createWaterMask(mContext,filePath,watermarkContent,color,background,algin,valign,fontSize);
+				ImageUtils.createWaterMask(mContext,filePath,watermarkContent,color,background,align,valign,fontSize);
 			}
 		}
 	}

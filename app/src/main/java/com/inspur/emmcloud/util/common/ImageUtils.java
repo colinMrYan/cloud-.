@@ -752,13 +752,13 @@ public class ImageUtils {
 		return (b[0] == 0x42) && (b[1] == 0x4d);
 	}
 
-    public static Bitmap createWaterMask(Context context, String imgFilePath, String content, String color, String background, String algin, String valign,int fontSize) {
+    public static Bitmap createWaterMask(Context context, String imgFilePath, String content, String color, String background, String align, String valign,int fontSize) {
         Bitmap sourceBitmap = null;
         Bitmap waterMaskBitmap = null;
         try {
             sourceBitmap = getBitmapByPath(imgFilePath);
             waterMaskBitmap = convertViewToBitmap(context, content, sourceBitmap.getWidth(),sourceBitmap.getHeight(),color, background,fontSize);
-            int paddingLeft = getWaterMaskPaddingLeft(valign,sourceBitmap,waterMaskBitmap);
+            int paddingLeft = getWaterMaskPaddingLeft(align,sourceBitmap,waterMaskBitmap);
             int paddingTop = getWaterMaskPaddingTop(valign,sourceBitmap,waterMaskBitmap);
             Bitmap newBitmap = createWaterMaskBitmap(sourceBitmap, waterMaskBitmap,paddingLeft,paddingTop);
             saveImageToSD(context, imgFilePath, newBitmap, 100);

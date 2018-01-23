@@ -1,6 +1,5 @@
 package com.inspur.emmcloud.ui.mine.setting;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -26,6 +25,7 @@ import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
@@ -53,7 +53,7 @@ import static android.Manifest.permission.CAMERA;
  * 面容解锁识别页面
  */
 
-public class FaceVerifyActivity extends Activity implements SurfaceHolder.Callback {
+public class FaceVerifyActivity extends BaseActivity implements SurfaceHolder.Callback {
 
     private static final int TIMEOUT_TIME = 20000;
     public static final String FACE_VERIFT_IS_OPEN = "face_verify_isopen";
@@ -297,12 +297,21 @@ public class FaceVerifyActivity extends Activity implements SurfaceHolder.Callba
      * 拍照
      */
     private void takePicture() {
+        if (mCamera == null){
+            return;
+        }
         mCamera.takePicture(null, null, null, new Camera.PictureCallback() {
 
             @Override
             public void onPictureTaken(byte[] data, Camera camera) {
+                mCamera.startPreview();
                 int orientation = currentOrientation;
                 Bitmap originBitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
+                //如果是三星手机需要先旋转90度
+                boolean isSamSungType = originBitmap.getWidth()>originBitmap.getHeight();
+                if (isSamSungType){
+                    originBitmap = ImageUtils.rotaingImageView(90, originBitmap);
+                }
                 //前置摄像头拍摄的照片和预览界面成镜面效果，需要翻转。
                 if (currentCameraFacing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
                     Bitmap mirrorOriginBitmap = Bitmap.createBitmap(originBitmap.getWidth(), originBitmap.getHeight(), originBitmap.getConfig());
@@ -319,11 +328,6 @@ public class FaceVerifyActivity extends Activity implements SurfaceHolder.Callba
                     //前置摄像头旋转180度才能显示preview显示的界面
                     originBitmap = ImageUtils.rotaingImageView(180, originBitmap);
                 }
-                //如果是三星手机需要先旋转90度
-                boolean isSamSungType = originBitmap.getWidth()>originBitmap.getHeight();
-                if (isSamSungType){
-                    originBitmap = ImageUtils.rotaingImageView(90, originBitmap);
-                }
                 //通过各种旋转和镜面操作，使originBitmap显示出preview界面
                 Bitmap cropBitmap = previewSFV.getPicture(originBitmap);
                 //界面进行旋转
@@ -336,8 +340,6 @@ public class FaceVerifyActivity extends Activity implements SurfaceHolder.Callba
                 } else {
                     faceVerify(cropBitmap);
                 }
-                mCamera.startPreview();
-
             }
         });
     }

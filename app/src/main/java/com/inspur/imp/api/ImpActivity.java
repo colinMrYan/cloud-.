@@ -60,6 +60,7 @@ public class ImpActivity extends ImpBaseActivity {
     private RelativeLayout loadingLayout;
     private TextView loadingText;
     private String helpUrl = "";
+    private HashMap<String,String> urlTilteMap = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -168,12 +169,32 @@ public class ImpActivity extends ImpBaseActivity {
         }
     }
 
+    public void setTitle(String title){
+        if (headerText != null && !StringUtils.isBlank(title)){
+            urlTilteMap.put(webView.getUrl(),title);
+            headerText.setText(title);
+        }
+    }
+
+    /**
+     * 解决有的机型Webview goback时候不会获取title的问题
+     */
+    private void setGoBackTitle(){
+        if (headerText != null){
+            String title = urlTilteMap.get(webView.getUrl());
+            if (!StringUtils.isBlank(title)){
+                headerText.setText(title);
+            }
+        }
+    }
+
     /**
      * 返回
      */
     private void goBack() {
         if (webView.canGoBack()) {
             webView.goBack();// 返回上一页面
+            setGoBackTitle();
         } else {
             finishActivity();
         }

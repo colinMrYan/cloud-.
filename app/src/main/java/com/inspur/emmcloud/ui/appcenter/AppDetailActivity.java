@@ -19,10 +19,10 @@ import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
 import com.inspur.emmcloud.bean.appcenter.App;
 import com.inspur.emmcloud.bean.appcenter.GetAddAppResult;
 import com.inspur.emmcloud.ui.chat.ImagePagerActivity;
-import com.inspur.emmcloud.util.privates.AppCenterNativeAppUtils;
-import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
+import com.inspur.emmcloud.util.privates.AppCenterNativeAppUtils;
+import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.UriUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
@@ -43,6 +43,7 @@ public class AppDetailActivity extends BaseActivity {
     private LoadingDialog loadingDlg;
     private MyAppAPIService apiService;
     private App app;
+    private long lastOnItemClickTime = 0;//防止多次点击
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -164,15 +165,32 @@ public class AppDetailActivity extends BaseActivity {
     }
 
     public void onClick(View v) {
-        if (app.getUseStatus() == 0) {
-            addApp(statusBtn, app.getAppID());
-        } else if (app.getUseStatus() == 1) {
-            if (app.getAppType() == 2) {
-                new AppCenterNativeAppUtils().InstallOrOpen(AppDetailActivity.this, app);
-            } else {
-                UriUtils.openApp(AppDetailActivity.this, app);
+        if (!isFastDoubleClick()){
+            if (app.getUseStatus() == 0) {
+                addApp(statusBtn, app.getAppID());
+            } else if (app.getUseStatus() == 1) {
+                if (app.getAppType() == 2) {
+                    new AppCenterNativeAppUtils().InstallOrOpen(AppDetailActivity.this, app);
+                } else {
+                    UriUtils.openApp(AppDetailActivity.this, app);
+                }
             }
         }
+    }
+
+    /**
+     * 判断是否连点
+     * @return
+     */
+    private boolean isFastDoubleClick() {
+        long time = System.currentTimeMillis();
+        long timeD = time - lastOnItemClickTime;
+        if (0 < timeD && timeD < 800) {
+            return true;
+        }
+        lastOnItemClickTime = time;
+        return false;
+
     }
 
     /**

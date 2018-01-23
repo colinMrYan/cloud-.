@@ -29,6 +29,7 @@ import com.inspur.emmcloud.api.apiservice.ContactAPIService;
 import com.inspur.emmcloud.bean.appcenter.GetAppBadgeResult;
 import com.inspur.emmcloud.bean.chat.ChannelGroup;
 import com.inspur.emmcloud.bean.chat.GetAllRobotsResult;
+import com.inspur.emmcloud.bean.chat.TransparentBean;
 import com.inspur.emmcloud.bean.contact.Contact;
 import com.inspur.emmcloud.bean.contact.GetAllContactResult;
 import com.inspur.emmcloud.bean.contact.GetSearchChannelGroupResult;
@@ -49,7 +50,6 @@ import com.inspur.emmcloud.ui.mine.MoreFragment;
 import com.inspur.emmcloud.ui.notsupport.NotSupportFragment;
 import com.inspur.emmcloud.ui.work.MainTabBean;
 import com.inspur.emmcloud.ui.work.WorkFragment;
-import com.inspur.emmcloud.util.privates.ECMShortcutBadgeNumberManagerUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StateBarUtils;
@@ -58,6 +58,7 @@ import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.AppConfigUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.ClientIDUtils;
+import com.inspur.emmcloud.util.privates.ECMShortcutBadgeNumberManagerUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.MyAppWidgetUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
@@ -517,6 +518,14 @@ public class IndexActivity extends BaseFragmentActivity implements
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void updateBadgeNumber(GetAppBadgeResult getAppBadgeResult) {
         int badgeNumber = getAppBadgeResult.getTabBadgeNumber();
+        findAndSetUnhandleBadgesDisplay(badgeNumber);
+    }
+
+    /**
+     * 查找应用tab并改变tab上的角标
+     * @param badgeNumber
+     */
+    private void findAndSetUnhandleBadgesDisplay(int badgeNumber) {
         for (int i = 0; i < mTabHost.getTabWidget().getChildCount(); i++) {
             View tabView = mTabHost.getTabWidget().getChildAt(i);
             if(mTabHost.getTabWidget().getChildAt(i).getTag().toString().contains("application")){
@@ -527,6 +536,15 @@ public class IndexActivity extends BaseFragmentActivity implements
     }
 
     /**
+     * 修改tab角标，来自ECMTransparentUtils
+     * @param transparentBean
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void updateBadgeNumber(TransparentBean transparentBean){
+        findAndSetUnhandleBadgesDisplay(transparentBean.getBadgeNumber());
+    }
+
+    /**
      * 处理未处理消息个数的显示
      *
      * @param tabView
@@ -534,8 +552,8 @@ public class IndexActivity extends BaseFragmentActivity implements
     private void setUnHandledBadgesDisplay(View tabView,int badgeNumber) {
         RelativeLayout unhandledBadgesLayout = (RelativeLayout) tabView.findViewById(R.id.new_message_tips_layout);
         unhandledBadgesLayout.setVisibility((badgeNumber == 0)?View.GONE:View.VISIBLE);
-        TextView unhandledBadges = (TextView) tabView.findViewById(R.id.new_message_tips_text);
-        unhandledBadges.setText(""+(badgeNumber > 99 ? "99+":badgeNumber));
+        TextView unhandledBadgesText = (TextView) tabView.findViewById(R.id.new_message_tips_text);
+        unhandledBadgesText.setText(""+(badgeNumber > 99 ? "99+":badgeNumber));
         //更新桌面角标数字
         ECMShortcutBadgeNumberManagerUtils.setDesktopBadgeNumber(IndexActivity.this,badgeNumber);
     }

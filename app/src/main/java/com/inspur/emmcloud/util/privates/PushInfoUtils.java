@@ -2,6 +2,7 @@ package com.inspur.emmcloud.util.privates;
 
 import android.content.Context;
 
+import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
@@ -18,15 +19,16 @@ public class PushInfoUtils {
     }
 
     public void upload(){
-        String pushTracer = AppUtils.getPushId(context);
-        if (NetUtils.isNetworkConnected(context,false) && !StringUtils.isBlank(pushTracer)){
-            ChatAPIService apiService = new ChatAPIService(context);
-            String deviceId = AppUtils.getMyUUID(context);
-            String deviceName = AppUtils.getDeviceName(context);
-            String pushProvider = getPushProvider(context);
-            apiService.uploadPushInfo(deviceId,deviceName,pushProvider,pushTracer);
+        if (NetUtils.isNetworkConnected(context,false) && MyApplication.getInstance().isIndexActivityRunning()){
+            String pushTracer = AppUtils.getPushId(context);
+            if (!StringUtils.isBlank(pushTracer)){
+                ChatAPIService apiService = new ChatAPIService(context);
+                String deviceId = AppUtils.getMyUUID(context);
+                String deviceName = AppUtils.getDeviceName(context);
+                String pushProvider = getPushProvider(context);
+                apiService.uploadPushInfo(deviceId,deviceName,pushProvider,pushTracer);
+            }
         }
-
     }
 
     /**
