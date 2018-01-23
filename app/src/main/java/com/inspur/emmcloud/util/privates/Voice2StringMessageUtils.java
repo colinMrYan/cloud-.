@@ -1,6 +1,6 @@
 package com.inspur.emmcloud.util.privates;
 
-import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Environment;
 
@@ -34,19 +34,16 @@ public class Voice2StringMessageUtils {
     // 引擎类型
     private String engineType = SpeechConstant.TYPE_CLOUD;
     //上下文
-    private Activity activity;
+    private Context context;
     //结果监听
     private RecognizerListener recognizerListener;
     //结果回调
     private OnVoiceResultCallback onVoiceResultCallback;
+    //初始化监听器，监听是否初始化成功
+    private InitListener initListener;
 
-    /**
-     * 初始化监听器。
-     */
-    private InitListener mInitListener;
-
-    public Voice2StringMessageUtils(Activity activity){
-        this.activity = activity;
+    public Voice2StringMessageUtils(Context context){
+        this.context = context;
         initListeners();
     }
 
@@ -55,7 +52,7 @@ public class Voice2StringMessageUtils {
      */
     public void startVoiceListening(){
         // 使用SpeechRecognizer对象，可根据回调消息自定义界面；
-        speechRecognizer = SpeechRecognizer.createRecognizer(activity, mInitListener);
+        speechRecognizer = SpeechRecognizer.createRecognizer(context, initListener);
         setParam();
         speechRecognizer.startListening(recognizerListener);
     }
@@ -72,7 +69,7 @@ public class Voice2StringMessageUtils {
         speechRecognizer.setParameter(SpeechConstant.ENGINE_TYPE, engineType);
         // 设置返回结果格式
         speechRecognizer.setParameter(SpeechConstant.RESULT_TYPE, "json");
-        String lag = PreferencesUtils.getString(activity,"iat_language_preference",
+        String lag = PreferencesUtils.getString(context,"iat_language_preference",
                 "mandarin");
         if (lag.equals("en_us")) {
             // 设置语言
@@ -86,13 +83,13 @@ public class Voice2StringMessageUtils {
         }
 
         // 设置语音前端点:静音超时时间，即用户多长时间不说话则当做超时处理
-        speechRecognizer.setParameter(SpeechConstant.VAD_BOS, PreferencesUtils.getString(activity,"iat_vadbos_preference", "3000"));
+        speechRecognizer.setParameter(SpeechConstant.VAD_BOS, PreferencesUtils.getString(context,"iat_vadbos_preference", "3000"));
 
         // 设置语音后端点:后端点静音检测时间，即用户停止说话多长时间内即认为不再输入， 自动停止录音
-        speechRecognizer.setParameter(SpeechConstant.VAD_EOS, PreferencesUtils.getString(activity,"iat_vadeos_preference", "3000"));
+        speechRecognizer.setParameter(SpeechConstant.VAD_EOS, PreferencesUtils.getString(context,"iat_vadeos_preference", "3000"));
 
         // 设置标点符号,设置为"0"返回结果无标点,设置为"1"返回结果有标点
-        speechRecognizer.setParameter(SpeechConstant.ASR_PTT, PreferencesUtils.getString(activity,"iat_punc_preference", "1"));
+        speechRecognizer.setParameter(SpeechConstant.ASR_PTT, PreferencesUtils.getString(context,"iat_punc_preference", "1"));
 
         // 设置音频保存路径，保存音频格式支持pcm、wav，设置路径为sd卡请注意WRITE_EXTERNAL_STORAGE权限
         // 注：AUDIO_FORMAT参数语记需要更新版本才能生效
@@ -104,7 +101,7 @@ public class Voice2StringMessageUtils {
      * 初始化监听器
      */
     private void initListeners() {
-        mInitListener = new InitListener() {
+        initListener = new InitListener() {
             @Override
             public void onInit(int code) {
                 if (code != ErrorCode.SUCCESS) {
@@ -179,7 +176,6 @@ public class Voice2StringMessageUtils {
         for (String key : iatResultMap.keySet()) {
             resultBuffer.append(iatResultMap.get(key));
         }
-        ToastUtils.show(activity,text);
         return resultBuffer.toString();
     }
 
@@ -204,7 +200,7 @@ public class Voice2StringMessageUtils {
      * @param str
      */
     private void showTip(final String str) {
-        ToastUtils.show(activity,str);
+        ToastUtils.show(context,str);
     }
 
 }
