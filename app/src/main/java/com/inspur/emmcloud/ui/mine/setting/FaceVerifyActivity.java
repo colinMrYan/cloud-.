@@ -339,7 +339,7 @@ public class FaceVerifyActivity extends BaseActivity implements SurfaceHolder.Ca
                     YuvImage image = new YuvImage(data, ImageFormat.NV21, size.width, size.height, null);
                     if (image != null) {
                         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                        image.compressToJpeg(new Rect(0, 0, size.width, size.height), 80, stream);
+                        image.compressToJpeg(new Rect(0, 0, size.width, size.height), 100, stream);
 
                         Bitmap originBitmap = BitmapFactory.decodeByteArray(stream.toByteArray(), 0, stream.size());
                         stream.close();
