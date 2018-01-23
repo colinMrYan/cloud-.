@@ -871,4 +871,11 @@
     //tag标签
     <item name="tag_first" type="id"></item>
     <item name="tag_second" type="id"></item>
+
+    <string name="work_approval_text">我的审批</string>
+    <!--主页-->
+    <string name="app_home_page">首页</string>
+
+    <!--审批-->
+    <string name="work_approval_head_text">全部审批</string>
 </resources>
