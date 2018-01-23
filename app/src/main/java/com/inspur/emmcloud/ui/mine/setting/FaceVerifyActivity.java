@@ -7,8 +7,11 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.ImageFormat;
 import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.graphics.Rect;
+import android.graphics.YuvImage;
 import android.hardware.Camera;
 import android.os.Bundle;
 import android.os.Environment;
@@ -16,6 +19,7 @@ import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Base64;
+import android.util.Log;
 import android.view.OrientationEventListener;
 import android.view.Surface;
 import android.view.SurfaceHolder;
@@ -32,6 +36,7 @@ import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.MineAPIService;
 import com.inspur.emmcloud.bean.mine.GetFaceSettingResult;
 import com.inspur.emmcloud.config.Constant;
+import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.ImageUtils;
 import com.inspur.emmcloud.util.common.LogUtils;
@@ -198,7 +203,7 @@ public class FaceVerifyActivity extends BaseActivity implements SurfaceHolder.Ca
             Camera.Size pictureSize = CameraUtils.getInstance(this).getPictureSize(PictureSizeList, 1000);
             parameters.setPictureSize(pictureSize.width, pictureSize.height);
             List<Camera.Size> previewSizeList = parameters.getSupportedPreviewSizes();
-            Camera.Size previewSize = CameraUtils.getInstance(this).getPreviewSize(previewSizeList, 1300);
+            Camera.Size previewSize = CameraUtils.getInstance(this).getPreviewSize(previewSizeList, 1400);
             parameters.setPreviewSize(previewSize.width, previewSize.height);
             List<String> modelList = parameters.getSupportedFlashModes();
             if (modelList != null && modelList.contains(cameraFlashModel)) {
@@ -289,6 +294,31 @@ public class FaceVerifyActivity extends BaseActivity implements SurfaceHolder.Ca
         }
     }
 
+    private class PreViewCallback implements Camera.PreviewCallback {
+        @Override
+        public void onPreviewFrame(byte[] data, Camera camera) {
+            Camera.Size size = camera.getParameters().getPreviewSize();
+            try {
+                YuvImage image = new YuvImage(data, ImageFormat.NV21, size.width, size.height, null);
+                if (image != null) {
+                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                    image.compressToJpeg(new Rect(0, 0, size.width, size.height), 80, stream);
+
+                    Bitmap bmp = BitmapFactory.decodeByteArray(stream.toByteArray(), 0, stream.size());
+                    ImageUtils.saveImageToSD(getApplicationContext(), MyAppConfig.LOCAL_DOWNLOAD_PATH + System.currentTimeMillis() + ".jpg", bmp, 100);
+                    //**********************
+                    //因为图片会放生旋转，因此要对图片进行旋转到和手机在一个方向上
+                    // rotateMyBitmap(bmp);
+                    //**********************************
+
+                    stream.close();
+                }
+            } catch (Exception ex) {
+                Log.d("Sys", "Error:" + ex.getMessage());
+            }
+        }
+    }
+
     private void delayTotakePicture(long time) {
         handler.postDelayed(takePhotoRunnable, time);
     }
@@ -297,48 +327,47 @@ public class FaceVerifyActivity extends BaseActivity implements SurfaceHolder.Ca
      * 拍照
      */
     private void takePicture() {
-        if (mCamera == null){
+        if (mCamera == null) {
             return;
         }
-        mCamera.takePicture(null, null, null, new Camera.PictureCallback() {
-
+        mCamera.setPreviewCallback(new Camera.PreviewCallback() {
             @Override
-            public void onPictureTaken(byte[] data, Camera camera) {
-                mCamera.startPreview();
-                int orientation = currentOrientation;
-                Bitmap originBitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
-                //如果是三星手机需要先旋转90度
-                boolean isSamSungType = originBitmap.getWidth()>originBitmap.getHeight();
-                if (isSamSungType){
-                    originBitmap = ImageUtils.rotaingImageView(90, originBitmap);
-                }
-                //前置摄像头拍摄的照片和预览界面成镜面效果，需要翻转。
-                if (currentCameraFacing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
-                    Bitmap mirrorOriginBitmap = Bitmap.createBitmap(originBitmap.getWidth(), originBitmap.getHeight(), originBitmap.getConfig());
-                    Canvas canvas = new Canvas(mirrorOriginBitmap);
-                    Paint paint = new Paint();
-                    paint.setColor(Color.BLACK);
-                    paint.setAntiAlias(true);
-                    Matrix matrix = new Matrix();
-                    //镜子效果
-                    matrix.setScale(-1, 1);
-                    matrix.postTranslate(originBitmap.getWidth(), 0);
-                    canvas.drawBitmap(originBitmap, matrix, paint);
-                    originBitmap = mirrorOriginBitmap;
-                    //前置摄像头旋转180度才能显示preview显示的界面
-                    originBitmap = ImageUtils.rotaingImageView(180, originBitmap);
-                }
-                //通过各种旋转和镜面操作，使originBitmap显示出preview界面
-                Bitmap cropBitmap = previewSFV.getPicture(originBitmap);
-                //界面进行旋转
-                if (orientation != 0) {
-                    cropBitmap = ImageUtils.rotaingImageView(orientation, cropBitmap);
-                }
-                cropBitmap = ImageUtils.scaleBitmap(cropBitmap, 400);
-                if (isFaceSetting) {
-                    faceSetting(cropBitmap);
-                } else {
-                    faceVerify(cropBitmap);
+            public void onPreviewFrame(byte[] data, Camera camera) {
+                mCamera.setPreviewCallback(null);
+                Camera.Size size = camera.getParameters().getPreviewSize();
+                try {
+                    YuvImage image = new YuvImage(data, ImageFormat.NV21, size.width, size.height, null);
+                    if (image != null) {
+                        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                        image.compressToJpeg(new Rect(0, 0, size.width, size.height), 100, stream);
+
+                        Bitmap originBitmap = BitmapFactory.decodeByteArray(stream.toByteArray(), 0, stream.size());
+                        stream.close();
+                        //前置摄像头拍摄的照片和预览界面成镜面效果，需要翻转。
+                        Bitmap mirrorOriginBitmap = Bitmap.createBitmap(originBitmap.getWidth(), originBitmap.getHeight(), originBitmap.getConfig());
+                        Canvas canvas = new Canvas(mirrorOriginBitmap);
+                        Paint paint = new Paint();
+                        paint.setColor(Color.BLACK);
+                        paint.setAntiAlias(true);
+                        Matrix matrix = new Matrix();
+                        //镜子效果
+                        matrix.setScale(-1, 1);
+                        matrix.postTranslate(originBitmap.getWidth(), 0);
+                        canvas.drawBitmap(originBitmap, matrix, paint);
+                        originBitmap = mirrorOriginBitmap;
+                        originBitmap = ImageUtils.rotaingImageView(90, originBitmap);
+                        //通过各种旋转和镜面操作，使originBitmap显示出preview界面
+                        Bitmap cropBitmap = previewSFV.getPicture(originBitmap);
+                        cropBitmap = ImageUtils.scaleBitmap(cropBitmap, 400);
+                        if (isFaceSetting) {
+                            faceSetting(cropBitmap);
+                        } else {
+                            faceVerify(cropBitmap);
+                        }
+                    }
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                    delayTotakePicture(1000);
                 }
             }
         });
@@ -393,9 +422,9 @@ public class FaceVerifyActivity extends BaseActivity implements SurfaceHolder.Ca
                 ToastUtils.show(getApplicationContext(), R.string.face_verify_success);
                 if (isFaceSetting) {
                     PreferencesByUsersUtils.putBoolean(FaceVerifyActivity.this, FaceVerifyActivity.FACE_VERIFT_IS_OPEN, isFaceSettingOpen);
-                }else if(!isFaceVerityTest){
+                } else if (!isFaceVerityTest) {
                     //发送解锁广播是，SchemeHandleActivity中接收处理
-                    Intent intent = new  Intent();
+                    Intent intent = new Intent();
                     intent.setAction(Constant.ACTION_SAFE_UNLOCK);
                     sendBroadcast(intent);
                 }
@@ -443,7 +472,7 @@ public class FaceVerifyActivity extends BaseActivity implements SurfaceHolder.Ca
 
     private boolean checkIsTimeout() {
         long currentTime = System.currentTimeMillis();
-        LogUtils.jasonDebug("currentTime - startTime="+(currentTime - startTime));
+        LogUtils.jasonDebug("currentTime - startTime=" + (currentTime - startTime));
         if (currentTime - startTime >= TIMEOUT_TIME) {
             showFaceVerifyFailDlg();
             return true;
@@ -462,11 +491,11 @@ public class FaceVerifyActivity extends BaseActivity implements SurfaceHolder.Ca
                         @Override
                         public void onClick(QMUIDialog dialog, int index) {
                             dialog.dismiss();
-                                finish();
+                            finish();
                         }
                     })
                     .show();
-        }else if(CreateGestureActivity.getGestureCodeIsOpenByUser(FaceVerifyActivity.this)){
+        } else if (CreateGestureActivity.getGestureCodeIsOpenByUser(FaceVerifyActivity.this)) {
             new MyQMUIDialog.MessageDialogBuilder(FaceVerifyActivity.this)
                     .setMessage(R.string.face_verify_fail)
                     .addAction(getString(R.string.retry), new QMUIDialogAction.ActionListener() {
@@ -488,7 +517,7 @@ public class FaceVerifyActivity extends BaseActivity implements SurfaceHolder.Ca
                         }
                     })
                     .show();
-        }else {
+        } else {
             new MyQMUIDialog.MessageDialogBuilder(FaceVerifyActivity.this)
                     .setMessage(R.string.face_verify_fail)
                     .addAction(getString(R.string.retry), new QMUIDialogAction.ActionListener() {
