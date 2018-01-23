@@ -47,6 +47,7 @@ import com.inspur.emmcloud.bean.appcenter.GetAppBadgeResult;
 import com.inspur.emmcloud.bean.appcenter.GetAppGroupResult;
 import com.inspur.emmcloud.bean.appcenter.GetRecommendAppWidgetListResult;
 import com.inspur.emmcloud.bean.appcenter.RecommendAppWidgetBean;
+import com.inspur.emmcloud.bean.chat.TransparentBean;
 import com.inspur.emmcloud.bean.system.PVCollectModel;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.interf.OnRecommendAppWidgetItemClickListener;
@@ -666,6 +667,15 @@ public class MyAppFragment extends Fragment {
         if(NetUtils.isNetworkConnected(getActivity(),false)){
             apiService.getAppBadgeNum();
         }
+    }
+
+    /**
+     * 修改tab角标，来自ECMTransparentUtils
+     * @param transparentBean
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void updateBadgeNumber(TransparentBean transparentBean){
+        getAppBadgeNum();
     }
 
     @Override

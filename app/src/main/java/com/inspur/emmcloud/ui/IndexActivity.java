@@ -50,8 +50,6 @@ import com.inspur.emmcloud.ui.mine.MoreFragment;
 import com.inspur.emmcloud.ui.notsupport.NotSupportFragment;
 import com.inspur.emmcloud.ui.work.MainTabBean;
 import com.inspur.emmcloud.ui.work.WorkFragment;
-import com.inspur.emmcloud.util.common.LogUtils;
-import com.inspur.emmcloud.util.privates.ECMShortcutBadgeNumberManagerUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StateBarUtils;
@@ -60,6 +58,7 @@ import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.AppConfigUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.ClientIDUtils;
+import com.inspur.emmcloud.util.privates.ECMShortcutBadgeNumberManagerUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.MyAppWidgetUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
@@ -536,9 +535,12 @@ public class IndexActivity extends BaseFragmentActivity implements
         }
     }
 
+    /**
+     * 修改tab角标，来自ECMTransparentUtils
+     * @param transparentBean
+     */
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void updpateBadgeNumber(TransparentBean transparentBean){
-        LogUtils.YfcDebug("接收到修改tab的Eventbus");
+    public void updateBadgeNumber(TransparentBean transparentBean){
         findAndSetUnhandleBadgesDisplay(transparentBean.getBadgeNumber());
     }
 
