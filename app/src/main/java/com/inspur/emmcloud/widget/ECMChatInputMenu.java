@@ -36,7 +36,6 @@ import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.interf.OnStartListeningListener;
 import com.inspur.emmcloud.ui.chat.MembersActivity;
 import com.inspur.emmcloud.util.common.DensityUtil;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
@@ -459,7 +458,6 @@ public class ECMChatInputMenu extends LinearLayout {
      * @param inputs
      */
     public void updateMenuGrid(String inputs) {
-        LogUtils.YfcDebug("inputs:"+inputs);
         //功能组的图标，名称
         int[] functionIconArray = {R.drawable.ic_chat_input_add_gallery,
                 R.drawable.ic_chat_input_add_camera, R.drawable.ic_chat_input_add_file,
@@ -483,7 +481,6 @@ public class ECMChatInputMenu extends LinearLayout {
             //目前开放三位，有可能扩展
             binaryString = "1111";
         }
-        LogUtils.YfcDebug("binaryString:"+binaryString);
         //控制binaryString长度，防止穿的数字过大
         int binaryLength = binaryString.length() > 4 ? 4 : binaryString.length();
         for(int i=0; i < binaryLength; i++){
@@ -512,7 +509,6 @@ public class ECMChatInputMenu extends LinearLayout {
             InputTypeBean inputTypeBean = new InputTypeBean(R.drawable.ic_chat_input_add_mention,"@");
             inputTypeBeanList.add(inputTypeBean);
         }
-        LogUtils.YfcDebug("功能长度："+inputTypeBeanList.size());
         msgInputAddItemAdapter.updateGridView(inputTypeBeanList);
     }
 }
