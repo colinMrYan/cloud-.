@@ -450,8 +450,13 @@ public class ECMChatInputMenu extends LinearLayout {
      */
     public void updateMenuGrid(String inputs) {
         //功能组的图标，名称
-        int[] functionIconArray = {R.drawable.ic_chat_input_add_gallery, R.drawable.ic_chat_input_add_camera, R.drawable.ic_chat_input_add_file, R.drawable.ic_chat_input_add_mention};
-        String[] functionNameArray = {context.getString(R.string.album), context.getString(R.string.take_photo), context.getString(R.string.file), "@"};
+        int[] functionIconArray = {R.drawable.ic_chat_input_add_gallery,
+                R.drawable.ic_chat_input_add_camera, R.drawable.ic_chat_input_add_file,
+                R.drawable.ic_chat_input_add_voice};
+        String[] functionNameArray = {context.getString(R.string.album),
+                context.getString(R.string.take_photo),
+                context.getString(R.string.voice_input),
+                context.getString(R.string.file)};
         String binaryString  = "-1";
         //如果第一位是且只能是1即 "1" 如果inputs是其他，例如"2"则走下面逻辑
         //这种情况是只开放了输入文字的权限
@@ -465,10 +470,11 @@ public class ECMChatInputMenu extends LinearLayout {
         //处理默认情况，也就是普通频道的情况
         if (binaryString.equals("-1")) {
             //目前开放三位，有可能扩展
-            binaryString = "111";
+            binaryString = "1111";
         }
+
         //控制binaryString长度，防止穿的数字过大
-        int binaryLength = binaryString.length() > 3 ? 3 : binaryString.length();
+        int binaryLength = binaryString.length() > 4 ? 4 : binaryString.length();
         for(int i=0; i < binaryLength; i++){
             //第一位已经处理过了，这里不再处理
             //这里如果禁止输入文字时，inputEdit设置Enabled
@@ -492,7 +498,7 @@ public class ECMChatInputMenu extends LinearLayout {
         }
         //如果是群组的话添加@功能
         if (isChannelGroup) {
-            InputTypeBean inputTypeBean = new InputTypeBean(functionIconArray[3],functionNameArray[3]);
+            InputTypeBean inputTypeBean = new InputTypeBean(R.drawable.ic_chat_input_add_mention,"@");
             inputTypeBeanList.add(inputTypeBean);
         }
         msgInputAddItemAdapter.updateGridView(inputTypeBeanList);
