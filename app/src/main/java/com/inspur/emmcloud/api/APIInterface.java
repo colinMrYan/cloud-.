@@ -25,6 +25,7 @@ import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeFileListResult;
 import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeFileUploadTokenResult;
 import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeListResult;
 import com.inspur.emmcloud.bean.appcenter.volume.Volume;
+import com.inspur.emmcloud.bean.appcenter.volume.VolumeDetail;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
 import com.inspur.emmcloud.bean.chat.ChannelGroup;
 import com.inspur.emmcloud.bean.chat.GetAddMembersSuccessResult;
@@ -584,4 +585,21 @@ public interface APIInterface {
     void returnFaceVerifySuccess( GetFaceSettingResult getFaceSettingResult);
     void returnFaceVerifyFail(String error, int errorCode);
 
+    void returnVolumeDetailSuccess(VolumeDetail volumeDetail);
+    void returnVolumeDetailFail(String error, int errorCode);
+
+    void returnVolumeMemAddSuccess(List<String> uidList);
+    void returnVolumeMemAddFail(String error, int errorCode);
+
+    void returnVolumeMemDelSuccess(List<String> uidList);
+    void returnVolumeMemDelFail(String error, int errorCode);
+
+    void returnUpdateGroupNameSuccess(String name);
+    void returnUpdateGroupNameFail(String error, int errorCode);
+
+    void returnGroupMemAddSuccess(List<String> uidList);
+    void returnGroupMemAddFail(String error, int errorCode);
+
+    void returnGroupMemDelSuccess(List<String> uidList);
+    void returnGroupMemDelFail(String error, int errorCode);
 }

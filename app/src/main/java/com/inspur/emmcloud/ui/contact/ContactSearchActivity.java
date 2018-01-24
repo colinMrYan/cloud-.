@@ -130,6 +130,7 @@ public class ContactSearchActivity extends BaseActivity {
     private Runnable searchRunnbale;
     private String searchText;
     private long lastSearchTime = 0L;
+    private List<Contact> excludeContactList;//不显示某些数据
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -174,6 +175,13 @@ public class ContactSearchActivity extends BaseActivity {
             if (selectMemList == null) {
                 selectMemList = new ArrayList<SearchModel>();
             }
+        }
+
+        if (getIntent().hasExtra("excludeContactUidList")){
+            List<String> excludeContactUidList = (List<String>) getIntent().getExtras()
+                    .getSerializable("excludeContactUidList");
+            excludeContactList = ContactCacheUtils.getContactListById(getApplicationContext(),excludeContactUidList);
+
         }
     }
 
@@ -240,7 +248,7 @@ public class ContactSearchActivity extends BaseActivity {
         // TODO Auto-generated method stub
         secondTitleText.setText(getString(R.string.recently_used));
         commonContactList = CommonContactCacheUtils.getCommonContactList(
-                getApplicationContext(), 5, searchContent);
+                getApplicationContext(), 5, searchContent,excludeContactList);
         secondGroupListAdapter = new SecondGroupListAdapter();
         secondGroupListView.setAdapter(secondGroupListAdapter);
         secondGroupListView.setOnItemClickListener(new OnItemClickListener() {
@@ -522,7 +530,7 @@ public class ContactSearchActivity extends BaseActivity {
                                 .getSearchChannelGroupList(getApplicationContext(),
                                         searchText);
                         searchContactList = ContactCacheUtils.getSearchContact(
-                                getApplicationContext(), searchText, null,
+                                getApplicationContext(), searchText, excludeContactList,
                                 4);
                         break;
                     case SEARCH_CHANNELGROUP:
@@ -532,7 +540,7 @@ public class ContactSearchActivity extends BaseActivity {
                         break;
                     case SEARCH_CONTACT:
                         searchContactList = ContactCacheUtils.getSearchContact(
-                                getApplicationContext(), searchText, null,
+                                getApplicationContext(), searchText, excludeContactList,
                                 4);
                         break;
 
@@ -609,11 +617,16 @@ public class ContactSearchActivity extends BaseActivity {
             case R.id.pop_second_group_more_text:
                 intent.putExtra("groupTextList",
                         (Serializable) popSecondGroupTextList);
+                intent.putExtra("groupTextList",
+                        (Serializable) popSecondGroupTextList);
                 intent.putExtra("selectMemList", (Serializable) selectMemList);
                 intent.putExtra("groupPosition", 2);
                 intent.putExtra("searchText", searchEdit.getText().toString());
                 intent.putExtra("searchContent", searchContent);
                 intent.putExtra("isMultiSelect", isMultiSelect);
+                if (excludeContactList != null){
+                    intent.putExtra("excludeContactList", (Serializable)excludeContactList);
+                }
                 startActivityForResult(intent, SEARCH_MORE);
                 break;
             case R.id.pop_third_group_more_text:
@@ -627,6 +640,9 @@ public class ContactSearchActivity extends BaseActivity {
                 intent.putExtra("searchText", searchEdit.getText().toString());
                 intent.putExtra("searchContent", searchContent);
                 intent.putExtra("isMultiSelect", isMultiSelect);
+                if (excludeContactList != null){
+                    intent.putExtra("excludeContactList", (Serializable)excludeContactList);
+                }
                 startActivityForResult(intent, SEARCH_MORE);
                 break;
             default:

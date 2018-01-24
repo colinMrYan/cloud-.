@@ -37,7 +37,7 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:text="网盘详情"
+            android:text="网盘信息"
             android:textColor="@color/header_text"
             android:textSize="@dimen/header_textsize" />
     </RelativeLayout>
@@ -54,11 +54,11 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white"
             android:orientation="vertical">
 
             <com.inspur.emmcloud.widget.NoScrollGridView
                 android:id="@+id/member_grid"
+                android:background="@android:color/white"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:horizontalSpacing="18dp"
@@ -163,119 +163,32 @@
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"
                 android:background="@color/color_list_divider" />
-
-
             <LinearLayout
-                android:id="@+id/privilege_setting_layout"
+                android:id="@+id/group_layout"
+                android:orientation="vertical"
+                android:visibility="gone"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="#ffffff"
-                android:orientation="vertical">
-
+                android:layout_height="wrap_content">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingBottom="12dp"
+                    android:paddingBottom="10dp"
                     android:paddingTop="15dp"
                     android:paddingLeft="15dp"
-                    android:text="权限设置"
+                    android:text="组"
                     android:textColor="#666666"
-                    android:textSize="13sp" />
+                    android:textSize="15sp" />
 
-                <View
+                <com.inspur.emmcloud.widget.ScrollViewWithListView
+                    android:id="@+id/group_list"
+                    android:background="@android:color/white"
+                    android:dividerHeight="0dp"
+                    android:divider="@null"
                     android:layout_width="match_parent"
-                    android:layout_height="0.5dp"
-                    android:background="@color/color_list_divider" />
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/text_layout_selector"
-                    android:onClick="onClick"
-                    android:paddingLeft="15dp"
-                    android:paddingRight="16dp">
-
-                    <TextView
-                        android:id="@+id/upload_privilege_text"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:paddingBottom="10dp"
-                        android:paddingTop="10dp"
-                        android:text="拥有上传/查看权限"
-                        android:textColor="#FF333333"
-                        android:textSize="@dimen/content_title_textsize" />
-
-                    <TextView
-                        android:id="@+id/upload_privilege_num_text"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_toLeftOf="@+id/upload_privilege_arrow_img"
-                        android:layout_toRightOf="@id/upload_privilege_text"
-                        android:gravity="right"
-                        android:textColor="#666666"
-                        android:textSize="17sp" />
-
-                    <ImageView
-                        android:id="@+id/upload_privilege_arrow_img"
-                        style="@style/arrow_right"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="10dp"
-                        android:src="@drawable/icon_arrow_right" />
-                </RelativeLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="0.5dp"
-                    android:layout_marginLeft="15dp"
-                    android:background="@color/color_list_divider" />
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/text_layout_selector"
-                    android:onClick="onClick"
-                    android:paddingLeft="15dp"
-                    android:paddingRight="16dp">
-
-                    <TextView
-                        android:id="@+id/view_privilege_text"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:paddingBottom="10dp"
-                        android:paddingTop="10dp"
-                        android:text="拥有查看权限"
-                        android:textColor="#FF333333"
-                        android:textSize="@dimen/content_title_textsize" />
-
-                    <TextView
-                        android:id="@+id/view_privilege_num_text"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_toLeftOf="@+id/view_privilege_arrow_img"
-                        android:layout_toRightOf="@id/view_privilege_text"
-                        android:gravity="right"
-                        android:textColor="#666666"
-                        android:textSize="17sp" />
-
-                    <ImageView
-                        android:id="@+id/view_privilege_arrow_img"
-                        style="@style/arrow_right"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="10dp"
-                        android:src="@drawable/icon_arrow_right" />
-                </RelativeLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="0.5dp"
-                    android:background="@color/color_list_divider" />
+                    android:layout_height="wrap_content">
+                </com.inspur.emmcloud.widget.ScrollViewWithListView>
 
             </LinearLayout>
-
         </LinearLayout>
     </ScrollView>
 

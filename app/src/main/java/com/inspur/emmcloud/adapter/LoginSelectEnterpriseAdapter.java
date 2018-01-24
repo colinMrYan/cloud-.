@@ -9,7 +9,6 @@ import android.widget.TextView;
 
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.mine.Enterprise;
-import com.inspur.emmcloud.util.common.LogUtils;
 
 import java.util.List;
 
@@ -51,7 +50,6 @@ public class LoginSelectEnterpriseAdapter extends BaseAdapter {
         TextView enterpriseText = (TextView)convertView.findViewById(R.id.enterprise_text);
         enterpriseText.setText(enterprise.getName());
         convertView.findViewById(R.id.img).setVisibility(View.GONE);
-        LogUtils.jasonDebug("convertView=null========="+(convertView==null));
         return convertView;
     }
 }

@@ -176,8 +176,8 @@ public class VolumeHomePageActivity extends BaseActivity implements SwipeRefresh
             shareVolumeList = getVolumeListResult.getShareVolumeList();
             myVolume = getVolumeListResult.getMyVolume();
             if (myVolume != null) {
-                String volumeUsedSize = FileUtil.formetFileSizeMinM(myVolume.getUserdSize());
-                String volumeMaxSize = FileUtil.formetFileSizeMinM(myVolume.getMaxSize());
+                String volumeUsedSize = FileUtil.formetFileSizeMinM(myVolume.getQuotaUsed());
+                String volumeMaxSize = FileUtil.formetFileSizeMinM(myVolume.getQuotaTotal());
                 volumeHomePageDirectoryList.get(0).setText(volumeUsedSize + " / " + volumeMaxSize);
                 adapter.notifyDataSetChanged();
             }

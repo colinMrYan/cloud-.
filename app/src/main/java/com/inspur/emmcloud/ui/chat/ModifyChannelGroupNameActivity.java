@@ -9,6 +9,7 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.bean.system.GetBoolenResult;
+import com.inspur.emmcloud.util.common.EditTextUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
@@ -36,8 +37,7 @@ public class ModifyChannelGroupNameActivity extends BaseActivity {
 		editText = (ClearEditText)findViewById(R.id.edit);
 		String name = getIntent().getStringExtra("name");
 		cid = getIntent().getStringExtra("cid");
-//		EditTextUtils.setText(editText, name);
-		editText.setText(name);
+		EditTextUtils.setText(editText, name);
 		loadingDlg= new LoadingDialog(ModifyChannelGroupNameActivity.this);
 	}
 	
