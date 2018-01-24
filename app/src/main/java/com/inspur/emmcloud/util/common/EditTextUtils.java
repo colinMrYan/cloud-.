@@ -10,7 +10,6 @@ public class EditTextUtils {
 			edit.setText(content);
 			Editable editable = edit.getText();
 			int position = content.length();
-			LogUtils.jasonDebug("position="+position);
 			Selection.setSelection(editable, position);
 		}catch (Exception e){
 			e.printStackTrace();

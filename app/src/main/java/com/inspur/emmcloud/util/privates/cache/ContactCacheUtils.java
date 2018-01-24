@@ -105,6 +105,27 @@ public class ContactCacheUtils {
 
     }
 
+    /**
+     * 获取通讯录列表
+     * @param context
+     * @param uidList
+     * @return
+     */
+    public static List<Contact> getContactListById(final Context context,final List<String> uidList){
+        List<Contact> contactList = null;
+        try {
+            contactList = DbCacheUtils.getDb(context).selector(Contact.class).where("inspurID",
+                    "in", uidList).findAll();
+        } catch (Exception e) {
+            // TODO: handle exception
+            e.printStackTrace();
+
+        }
+        if (contactList == null) {
+            contactList = new ArrayList<Contact>();
+        }
+        return  contactList;
+    }
 
     /**
      * 保存此租户通讯录客户端最后的更新时间
@@ -217,13 +238,13 @@ public class ContactCacheUtils {
      */
     public static List<Contact> getSearchContact(Context context,
                                                  String searchText, List<Contact> haveSearchContactList, int limit) {
-        //数字大于4位搜索手机号
-        if (searchText.length() > 3 && StringUtils.isNumeric(searchText)) {
-            return getSearchContactByPhoneNum(context, searchText, haveSearchContactList, limit);
-        }
         String searchStr = searchText;
         String noInSql = "()";
         noInSql = getNoInSql(noInSql, haveSearchContactList);
+        //数字大于4位搜索手机号
+        if (searchText.length() > 3 && StringUtils.isNumeric(searchText)) {
+            return getSearchContactByPhoneNum(context, searchText, noInSql, limit);
+        }
         List<Contact> searchContactList = new ArrayList<>();
         try {
             List<Contact> searchContactList1 = DbCacheUtils.getDb(context).selector
@@ -346,10 +367,9 @@ public class ContactCacheUtils {
      * @return
      */
     public static List<Contact> getSearchContactByPhoneNum(Context context,
-                                                           String searchText, List<Contact> haveSearchContactList, int limit) {
+                                                           String searchText,  String noInSql, int limit) {
         List<Contact> searchContactList = null;
         searchText = "%" + searchText + "%";
-        int offset = haveSearchContactList == null ? 0 : haveSearchContactList.size();
         try {
             searchContactList = DbCacheUtils.getDb(context).selector
                     (Contact.class)
@@ -357,7 +377,7 @@ public class ContactCacheUtils {
                     .and(WhereBuilder.b("mobile", "like", searchText)
                             .or("realName", "like", searchText)
                     )
-                    .offset(offset)
+                    .and(WhereBuilder.b().expr("id not in" + noInSql))
                     .limit(limit).findAll();
         } catch (Exception e) {
             e.printStackTrace();

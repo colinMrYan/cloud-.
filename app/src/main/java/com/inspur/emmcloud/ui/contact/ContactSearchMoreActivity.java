@@ -82,6 +82,8 @@ public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRe
     private RecyclerView groupTitleListView;
     private GroupTitleAdapter groupTitleAdapter;
     private Handler handler;
+    private List<Contact> excludeContactList = new ArrayList<>();//不显示某些数据
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -185,6 +187,9 @@ public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRe
                 break;
         }
         notifyFlowLayoutDataChange(searchText);
+        if (getIntent().hasExtra("excludeContactList")){
+            excludeContactList = (List<Contact>) getIntent().getSerializableExtra("excludeContactList");
+        }
     }
 
     /**
@@ -355,7 +360,7 @@ public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRe
                             public void run() {
                                 searchContactList = ContactCacheUtils.getSearchContact(
                                         getApplicationContext(), searchText,
-                                        null, 25);
+                                        excludeContactList, 25);
                                 handler.sendEmptyMessage(REFRESH_CONTACT_DATA);
                             }
                         }).start();
@@ -579,9 +584,12 @@ public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRe
     @Override
     public void onLoadMore() {
         // TODO Auto-generated method stub
+        List<Contact> excludeSearchContactList = new ArrayList<>();
+        excludeSearchContactList.addAll(searchContactList);
+        excludeSearchContactList.addAll(excludeContactList);
         List<Contact> moreContactList = ContactCacheUtils.getSearchContact(
                 getApplicationContext(), searchText,
-                searchContactList, 25);
+                excludeSearchContactList, 25);
         swipeRefreshLayout.setLoading(false);
         swipeRefreshLayout.setCanLoadMore((moreContactList.size() == 25));
         if (moreContactList.size() != 0) {

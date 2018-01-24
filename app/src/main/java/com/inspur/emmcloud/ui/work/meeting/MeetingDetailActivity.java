@@ -381,7 +381,7 @@ public class MeetingDetailActivity extends BaseActivity {
             bundle.putString("cid", "");
             bundle.putString("title", getString(R.string.meeting_memebers));
             bundle.putString("search", "1");
-            bundle.putStringArrayList("uids", participantList);
+            bundle.putStringArrayList("uidList", participantList);
             IntentUtils.startActivity(MeetingDetailActivity.this,
                     MembersActivity.class, bundle);
         }
