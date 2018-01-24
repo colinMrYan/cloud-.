@@ -411,7 +411,9 @@ public class ECMChatInputMenu extends LinearLayout {
             //目前开放三位，有可能扩展
             binaryString = "111";
         }
-        for(int i=0; i < binaryString.length(); i++){
+        //控制binaryString长度，防止穿的数字过大
+        int binaryLength = binaryString.length() > 3 ? 3 : binaryString.length();
+        for(int i=0; i < binaryLength; i++){
             //第一位已经处理过了，这里不再处理
             //这里如果禁止输入文字时，inputEdit设置Enabled
             if(i == 0){
