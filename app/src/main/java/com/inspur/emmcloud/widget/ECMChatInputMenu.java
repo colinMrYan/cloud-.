@@ -36,6 +36,7 @@ import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.interf.OnStartListeningListener;
 import com.inspur.emmcloud.ui.chat.MembersActivity;
 import com.inspur.emmcloud.util.common.DensityUtil;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
@@ -334,6 +335,7 @@ public class ECMChatInputMenu extends LinearLayout {
                         if(NetUtils.isNetworkConnected(context)){
                             onStartListeningListener.onStartListening();
                             addItemGrid.setVisibility(View.GONE);
+                            voiceImageView.setImageLevel(0);
                             voiceImageView.setVisibility(View.VISIBLE);
                         }
                         break;
@@ -341,6 +343,13 @@ public class ECMChatInputMenu extends LinearLayout {
                         break;
                 }
 
+            }
+        });
+        voiceImageView.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                voiceImageView.setImageLevel(0);
+                onStartListeningListener.onStartListening();
             }
         });
     }
@@ -377,8 +386,9 @@ public class ECMChatInputMenu extends LinearLayout {
      * 恢复九宫格View
      */
     public void changeUI2GridView(){
-        addItemGrid.setVisibility(View.VISIBLE);
-        voiceImageView.setVisibility(View.GONE);
+//        addItemGrid.setVisibility(View.VISIBLE);
+//        voiceImageView.setVisibility(View.GONE);
+        voiceImageView.setImageLevel(10);
     }
 
 
@@ -449,14 +459,15 @@ public class ECMChatInputMenu extends LinearLayout {
      * @param inputs
      */
     public void updateMenuGrid(String inputs) {
+        LogUtils.YfcDebug("inputs:"+inputs);
         //功能组的图标，名称
         int[] functionIconArray = {R.drawable.ic_chat_input_add_gallery,
                 R.drawable.ic_chat_input_add_camera, R.drawable.ic_chat_input_add_file,
                 R.drawable.ic_chat_input_add_voice};
         String[] functionNameArray = {context.getString(R.string.album),
                 context.getString(R.string.take_photo),
-                context.getString(R.string.voice_input),
-                context.getString(R.string.file)};
+                context.getString(R.string.file),
+                context.getString(R.string.voice_input)};
         String binaryString  = "-1";
         //如果第一位是且只能是1即 "1" 如果inputs是其他，例如"2"则走下面逻辑
         //这种情况是只开放了输入文字的权限
@@ -472,7 +483,7 @@ public class ECMChatInputMenu extends LinearLayout {
             //目前开放三位，有可能扩展
             binaryString = "1111";
         }
-
+        LogUtils.YfcDebug("binaryString:"+binaryString);
         //控制binaryString长度，防止穿的数字过大
         int binaryLength = binaryString.length() > 4 ? 4 : binaryString.length();
         for(int i=0; i < binaryLength; i++){
@@ -501,6 +512,7 @@ public class ECMChatInputMenu extends LinearLayout {
             InputTypeBean inputTypeBean = new InputTypeBean(R.drawable.ic_chat_input_add_mention,"@");
             inputTypeBeanList.add(inputTypeBean);
         }
+        LogUtils.YfcDebug("功能长度："+inputTypeBeanList.size());
         msgInputAddItemAdapter.updateGridView(inputTypeBeanList);
     }
 }

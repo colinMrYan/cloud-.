@@ -12,6 +12,7 @@ import android.os.Message;
 import android.provider.MediaStore;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
+import android.text.Editable;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
@@ -150,8 +151,7 @@ public class ChannelActivity extends BaseActivity {
 
             @Override
             public void onVoiceResult(String results, boolean isLast) {
-                chatInputMenu.getEdit().setText(results);
-                chatInputMenu.getEdit().setSelection(chatInputMenu.getEdit().length());
+                inputVoiceStringResult(results);
             }
 
             @Override
@@ -172,6 +172,15 @@ public class ChannelActivity extends BaseActivity {
         });
     }
 
+    /**
+     * 在输入框里输入字符
+     * @param results
+     */
+    private void inputVoiceStringResult(String results) {
+        int index = chatInputMenu.getEdit().getSelectionStart();
+        Editable editable = chatInputMenu.getEdit().getText();
+        editable.insert(index, results);
+    }
 
     /**
      * 初始化Views
