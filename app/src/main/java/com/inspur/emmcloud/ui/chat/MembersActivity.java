@@ -85,8 +85,8 @@ public class MembersActivity extends BaseActivity implements
                 if (!StringUtils.isBlank(channelID)) {
                     List<String> uidList = ChannelGroupCacheUtils.getMemberUidList(MembersActivity.this, channelID, 0);
                     personDtoList = ContactCacheUtils.getShowMemberList(MembersActivity.this, uidList);
-                } else if (getIntent().getStringArrayListExtra("uids") != null) {
-                    personDtoList = ContactCacheUtils.getShowMemberList(MembersActivity.this, getIntent().getStringArrayListExtra("uids"));
+                } else if (getIntent().getStringArrayListExtra("uidList") != null) {
+                    personDtoList = ContactCacheUtils.getShowMemberList(MembersActivity.this, getIntent().getStringArrayListExtra("uidList"));
                 }
 
                 Iterator<PersonDto> personDtoIterator = personDtoList.iterator();

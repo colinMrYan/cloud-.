@@ -48,6 +48,16 @@ public class LoadingDialog extends Dialog {
 
 	}
 
+	/**
+	 * 关闭loadingDlg
+	 * @param loadingDialog
+	 */
+	public static void dimissDlg(LoadingDialog loadingDialog){
+		if (loadingDialog != null && loadingDialog.isShowing()){
+			loadingDialog.dismiss();
+		}
+	}
+
 	public void show(boolean isShow) {
 		if (isShow) {
 			show();

@@ -25,6 +25,7 @@ import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeFileListResult;
 import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeFileUploadTokenResult;
 import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeListResult;
 import com.inspur.emmcloud.bean.appcenter.volume.Volume;
+import com.inspur.emmcloud.bean.appcenter.volume.VolumeDetail;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
 import com.inspur.emmcloud.bean.chat.ChannelGroup;
 import com.inspur.emmcloud.bean.chat.GetAddMembersSuccessResult;
@@ -1426,11 +1427,11 @@ public class APIInterfaceInstance implements APIInterface {
     }
 
     @Override
-    public void returnVolumeFileUploadTokenSuccess(GetVolumeFileUploadTokenResult getVolumeFileUploadTokenResult, String fileLocalPath,VolumeFile mockVolumeFile) {
+    public void returnVolumeFileUploadTokenSuccess(GetVolumeFileUploadTokenResult getVolumeFileUploadTokenResult, String fileLocalPath, VolumeFile mockVolumeFile) {
     }
 
     @Override
-    public void returnVolumeFileUploadTokenFail(VolumeFile mockVolumeFile,String error, int errorCode, String filePath) {
+    public void returnVolumeFileUploadTokenFail(VolumeFile mockVolumeFile, String error, int errorCode, String filePath) {
     }
 
     @Override
@@ -1520,5 +1521,53 @@ public class APIInterfaceInstance implements APIInterface {
 
     @Override
     public void returnFaceVerifyFail(String error, int errorCode) {
+    }
+
+    @Override
+    public void returnVolumeDetailSuccess(VolumeDetail volumeDetail) {
+    }
+
+    @Override
+    public void returnVolumeDetailFail(String error, int errorCode) {
+    }
+
+    @Override
+    public void returnVolumeMemAddSuccess(List<String> uidList) {
+    }
+
+    @Override
+    public void returnVolumeMemAddFail(String error, int errorCode) {
+    }
+
+    @Override
+    public void returnVolumeMemDelSuccess(List<String> uidList) {
+    }
+
+    @Override
+    public void returnVolumeMemDelFail(String error, int errorCode) {
+    }
+
+    @Override
+    public void returnUpdateGroupNameSuccess(String name) {
+    }
+
+    @Override
+    public void returnUpdateGroupNameFail(String error, int errorCode) {
+    }
+
+    @Override
+    public void returnGroupMemAddSuccess(List<String> uidList) {
+    }
+
+    @Override
+    public void returnGroupMemAddFail(String error, int errorCode) {
+    }
+
+    @Override
+    public void returnGroupMemDelSuccess(List<String> uidList) {
+    }
+
+    @Override
+    public void returnGroupMemDelFail(String error, int errorCode) {
     }
 }

@@ -1,61 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/content"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
+    android:background="@color/white"
     android:gravity="center_vertical"
-    android:orientation="vertical" >
+    android:orientation="horizontal"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
+    >
 
-    
+    <ImageView
+        android:id="@+id/select_img"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginLeft="10dp"
+        android:scaleType="fitXY" />
 
-
-    <LinearLayout
-        android:id="@+id/content"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:orientation="horizontal"
-        android:paddingBottom="5dp"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:paddingTop="5dp" >
-<!-- 
-        <ImageView
-            android:id="@+id/head"
-            android:layout_width="42dp"
-            android:layout_height="42dp"
-            android:contentDescription="@null"
-            android:scaleType="fitXY"
-            android:src="@drawable/bg_head" />
- -->
- <CheckBox 
-     android:id="@+id/choose_check"
-     android:layout_width="wrap_content"
-     android:layout_height="wrap_content"
-     style="@style/CustomCheckboxTheme"
-     android:layout_gravity="center_vertical"
-     android:layout_marginLeft="10dp"/>
-     <com.inspur.emmcloud.widget.CircleImageView
+    <com.inspur.emmcloud.widget.CircleImageView
         android:id="@+id/head"
         android:layout_width="38dp"
         android:layout_height="38dp"
         android:layout_centerVertical="true"
-        android:layout_marginBottom="7dp"
-        android:layout_marginTop="6dp"
-        android:layout_marginLeft="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginTop="10dp"
         android:padding="0.5dp"
-        android:src="@drawable/icon_org_structure"
          />
-        <TextView
-            android:id="@+id/title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="5dp"
-            android:ellipsize="end"
-            android:gravity="center_vertical"
-            android:singleLine="true"
-            android:textColor="#323232"
-            android:textSize="16sp" />
-    </LinearLayout>
 
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="5dp"
+        android:ellipsize="end"
+        android:gravity="center_vertical"
+        android:singleLine="true"
+        android:textColor="#323232"
+        android:textSize="16sp" />
 </LinearLayout>
