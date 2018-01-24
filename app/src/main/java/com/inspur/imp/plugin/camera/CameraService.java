@@ -15,13 +15,16 @@ import android.provider.MediaStore;
 import android.util.Base64;
 import android.widget.Toast;
 
+import com.inspur.emmcloud.bean.system.AppException;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.util.common.ImageUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
+import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.DataCleanManager;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
+import com.inspur.emmcloud.util.privates.cache.AppExceptionCacheUtils;
 import com.inspur.imp.api.Res;
 import com.inspur.imp.api.iLog;
 import com.inspur.imp.plugin.ImpPlugin;
@@ -323,6 +326,7 @@ public class CameraService extends ImpPlugin {
                                 thumbnailImgPath);
                     } catch (Exception e) {
                         e.printStackTrace();
+                        saveNetException("CameraService.camera",e.toString());
                         this.failPicture(Res.getString("camera_error"));
                     } finally {
                         recycleBitmap(originBitmap);
@@ -333,6 +337,7 @@ public class CameraService extends ImpPlugin {
             } else if (resultCode == Activity.RESULT_CANCELED) {
                 this.failPicture(Res.getString("cancel_camera"));
             } else {
+                saveNetException("CameraService.camera","system_camera_error");
                 this.failPicture(Res.getString("camera_error"));
             }
         } else if (requestCode == REQUEST_GELLEY_IMG_SELECT) {  // 从相册取图片
@@ -379,6 +384,7 @@ public class CameraService extends ImpPlugin {
                         callbackDatas(originalBitmaps, thumbnailBitmaps, originImgPaths, thumbnailImgPaths);
                     } catch (Exception e) {
                         e.printStackTrace();
+                        saveNetException("CameraService.gallery",e.toString());
                         this.failPicture(Res.getString("capture_error"));
                     } finally {
                         for (int i = 0; i < originalBitmaps.length; i++) {
@@ -396,6 +402,7 @@ public class CameraService extends ImpPlugin {
                 this.failPicture(Res.getString("cancel_select"));
             } else {
                 this.failPicture(Res.getString("select_error"));
+                saveNetException("CameraService.gallery","system_gallry_error");
             }
         }
         PublicWay.activityList.clear();
@@ -1020,6 +1027,23 @@ public class CameraService extends ImpPlugin {
      */
     public void failPicture(String err) {
         this.jsCallback(failCb, err);
+    }
+
+    /**
+     * 处理异常网络请求
+     *
+     * @param error
+     * @param responseCode
+     */
+    private void saveNetException( String function,String error) {
+        try {
+            if (!AppUtils.isApkDebugable(context)) {
+                AppException appException = new AppException(System.currentTimeMillis(), AppUtils.getVersion(context), 4, function, error, 0);
+                AppExceptionCacheUtils.saveAppException(context, appException);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     @Override
