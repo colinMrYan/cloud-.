@@ -16,9 +16,8 @@ public class Volume implements Serializable {
     private String name;
     private String type;
     private String owner;
-    private long maxSize;
-    private long usedSize;
-    private long lastUpdate;
+    private long quotaTotal;
+    private long quotaUsed;
 
     public Volume() {
     }
@@ -31,9 +30,9 @@ public class Volume implements Serializable {
         name = JSONUtils.getString(obj, "name", "");
         type = JSONUtils.getString(obj, "type", "");
         owner = JSONUtils.getString(obj, "owner", "");
-        maxSize = JSONUtils.getLong(obj, "maxSize", 0L);
-        usedSize = JSONUtils.getLong(obj, "usedSize", 0L);
-        lastUpdate = JSONUtils.getLong(obj,"lastUpdate",0L);
+        JSONObject quotaObj = JSONUtils.getJSONObject(obj,"quota",new JSONObject());
+        quotaTotal = JSONUtils.getLong(quotaObj, "total", 0L);
+        quotaUsed = JSONUtils.getLong(quotaObj, "used", 0L);
     }
 
     public String getId() {
@@ -68,20 +67,20 @@ public class Volume implements Serializable {
         this.owner = owner;
     }
 
-    public long getMaxSize() {
-        return maxSize;
+    public long getQuotaTotal() {
+        return quotaTotal;
     }
 
-    public void setMaxSize(long maxSize) {
-        this.maxSize = maxSize;
+    public void setQuotaTotal(long quotaTotal) {
+        this.quotaTotal = quotaTotal;
     }
 
-    public long getUserdSize() {
-        return usedSize;
+    public long getQuotaUsed() {
+        return quotaUsed;
     }
 
-    public void setUserdSize(long userdSize) {
-        this.usedSize = userdSize;
+    public void setQuotaUsed(long quotaUsed) {
+        this.quotaUsed = quotaUsed;
     }
 
     public boolean isOwner(){
