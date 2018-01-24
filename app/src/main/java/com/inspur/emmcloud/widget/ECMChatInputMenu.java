@@ -386,47 +386,54 @@ public class ECMChatInputMenu extends LinearLayout {
 
     /**
      * 根据二进制字符串更新菜单视图
+     * 此处与IOS客户端略有不同，IOS客户端当inputs为"2"时则隐藏整个输入面板，没有任何输入入口
+     * 服务端允许输入类型1支持，0不支持
+     * 每一位bit代表的意义为（高位）video，voice，command，file，photo，text（地位）
      *
      * @param inputs
      */
     public void updateMenuGrid(String inputs) {
-        int[] imgArray = {R.drawable.ic_chat_input_add_gallery, R.drawable.ic_chat_input_add_camera, R.drawable.ic_chat_input_add_file, R.drawable.ic_chat_input_add_mention};
+        int[] functionImgArray = {R.drawable.ic_chat_input_add_gallery, R.drawable.ic_chat_input_add_camera, R.drawable.ic_chat_input_add_file, R.drawable.ic_chat_input_add_mention};
         String[] functionNameArray = {context.getString(R.string.album), context.getString(R.string.take_photo), context.getString(R.string.file), "@"};
         String binaryString  = "-1";
-        //如果第一位是且只能是1即 "1" 如果input是"2"则走下面逻辑
+        //如果第一位是且只能是1即 "1" 如果inputs是其他，例如"2"则走下面逻辑
+        //这种情况是只开放了输入文字的权限
         if(!StringUtils.isBlank(inputs)){
             if(inputs.equals("1")){
                 addImg.setVisibility(View.GONE);
                 return;
             }
             binaryString = new StringBuffer(Integer.toBinaryString(Integer.parseInt(inputs))).reverse().toString();
-//            binaryString = Integer.toBinaryString(Integer.parseInt(inputs));
         }
         //处理默认情况，也就是普通频道的情况
         if (binaryString.equals("-1")) {
+            //目前开放三位，有可能扩展
             binaryString = "111";
         }
         for(int i=0; i < binaryString.length(); i++){
             //第一位已经处理过了，这里不再处理
+            //这里如果禁止输入文字时，inputEdit设置Enabled
             if(i == 0){
                 inputEdit.setEnabled((binaryString.charAt(0)+"").equals("1"));
                 continue;
             }
             if((binaryString.charAt(i)+"").equals("1")){
+                //对于第二位特殊处理，如果第二位是"1"则添加相册，拍照两个功能，与服务端确认目前这样实现
+                //存在的疑问，如果仅显示相册或仅显示拍照应该如何处理？
                 if(i == 1){
-                    InputTypeBean inputTypeBeanGallery = new InputTypeBean(imgArray[0],functionNameArray[0]);
+                    InputTypeBean inputTypeBeanGallery = new InputTypeBean(functionImgArray[0],functionNameArray[0]);
                     inputTypeBeanList.add(inputTypeBeanGallery);
-                    InputTypeBean inputTypeBeanCamera = new InputTypeBean(imgArray[1],functionNameArray[1]);
+                    InputTypeBean inputTypeBeanCamera = new InputTypeBean(functionImgArray[1],functionNameArray[1]);
                     inputTypeBeanList.add(inputTypeBeanCamera);
                 }else{
-                    InputTypeBean inputTypeBean = new InputTypeBean(imgArray[i],functionNameArray[i]);
+                    InputTypeBean inputTypeBean = new InputTypeBean(functionImgArray[i],functionNameArray[i]);
                     inputTypeBeanList.add(inputTypeBean);
                 }
             }
         }
         //如果是群组的话添加@功能
         if (isChannelGroup) {
-            InputTypeBean inputTypeBean = new InputTypeBean(imgArray[3],functionNameArray[3]);
+            InputTypeBean inputTypeBean = new InputTypeBean(functionImgArray[3],functionNameArray[3]);
             inputTypeBeanList.add(inputTypeBean);
         }
         msgInputAddItemAdapter.updateGridView(inputTypeBeanList);
