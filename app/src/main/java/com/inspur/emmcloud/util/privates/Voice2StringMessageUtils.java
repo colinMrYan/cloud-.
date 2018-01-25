@@ -18,6 +18,8 @@ import com.inspur.emmcloud.util.common.ToastUtils;
 
 import org.json.JSONObject;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
@@ -55,6 +57,41 @@ public class Voice2StringMessageUtils {
         speechRecognizer = SpeechRecognizer.createRecognizer(context, initListener);
         setParam();
         speechRecognizer.startListening(recognizerListener);
+    }
+
+    /**
+     * 通过音频文件启动听写
+     * 以后需要发送语音时可以单独录制一段语音存到sd卡当做文件发送
+     */
+    public void startVoiceListeningByVoiceFile(String voiceFilePath){
+        // 使用SpeechRecognizer对象，可根据回调消息自定义界面；
+        speechRecognizer = SpeechRecognizer.createRecognizer(context, initListener);
+        setParam();
+        //注释掉的这几句是读取文件听写文字的
+        speechRecognizer.setParameter(SpeechConstant.AUDIO_SOURCE, "-1");
+        speechRecognizer.startListening(recognizerListener);
+        byte[] audioData = readAudioFile(context, "iattest.wav");
+        speechRecognizer.writeAudio(audioData, 0, audioData.length);
+        speechRecognizer.stopListening();
+    }
+
+    /**
+     * 读取指定目录下音频文件。
+     *
+     * @return 二进制文件数据
+     */
+    public  byte[] readAudioFile(Context context, String filename) {
+        try {
+            InputStream ins = context.getAssets().open(filename);
+            byte[] data = new byte[ins.available()];
+            ins.read(data);
+            ins.close();
+            return data;
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return null;
     }
 
     /**
@@ -156,6 +193,8 @@ public class Voice2StringMessageUtils {
             }
         };
     }
+
+
 
     /**
      * 解析结果

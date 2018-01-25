@@ -151,7 +151,7 @@ public class ChannelActivity extends BaseActivity {
 
             @Override
             public void onVoiceResult(String results, boolean isLast) {
-                inputVoiceStringResult(results);
+                inputVoiceStringResult((results.length() == 1 && StringUtils.isSymbol(results)) ? "":results);
             }
 
             @Override
