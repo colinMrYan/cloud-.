@@ -567,7 +567,7 @@
 
         <!-- 云盘 -->
         <activity
-            android:name=".ui.appcenter.volume.VolumeHomePageActivity"
+            android:name=".ui.appcenter.volume.VolumeHomePageActivitys"
             android:screenOrientation="portrait"></activity>
         <activity
             android:name=".ui.appcenter.volume.VolumeFileActivity"

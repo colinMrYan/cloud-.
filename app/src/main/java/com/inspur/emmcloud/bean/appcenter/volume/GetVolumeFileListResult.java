@@ -1,13 +1,17 @@
 package com.inspur.emmcloud.bean.appcenter.volume;
 
-import com.inspur.emmcloud.util.common.JSONUtils;
+import com.alibaba.fastjson.TypeReference;
 import com.inspur.emmcloud.MyApplication;
+import com.inspur.emmcloud.util.common.JSONUtils;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by chenmch on 2017/11/16.
@@ -22,23 +26,29 @@ public class GetVolumeFileListResult {
     private List<VolumeFile> volumeFileList = new ArrayList<>();
     private List<VolumeFile> volumeFileDirectoryList = new ArrayList<>();
     private List<VolumeFile> volumeFileRegularList = new ArrayList<>();
-    public GetVolumeFileListResult(String response){
-        this.name = JSONUtils.getString(response,"name","");
-        this.owner = JSONUtils.getString(response,"owner","");
-        this.id = JSONUtils.getString(response,"id","");
-        this.ownerPrivilege = JSONUtils.getInt(response,"ownerPrivilege",0);
-        this.othersPrivilege = JSONUtils.getInt(response,"othersPrivilege",0);
-        JSONArray array = JSONUtils.getJSONArray(response,"children",new JSONArray());
-        for (int i=0;i<array.length();i++){
-            JSONObject object = JSONUtils.getJSONObject(array,i,new JSONObject());
+    private Map<String, Integer> groupPrivilegeMap = new HashMap<>();
+
+    public GetVolumeFileListResult(String response) {
+        JSONObject obj = JSONUtils.getJSONObject(response);
+        this.name = JSONUtils.getString(obj, "name", "");
+        this.owner = JSONUtils.getString(obj, "owner", "");
+        this.id = JSONUtils.getString(obj, "id", "");
+        this.ownerPrivilege = JSONUtils.getInt(obj, "ownerPrivilege", 0);
+        this.othersPrivilege = JSONUtils.getInt(obj, "othersPrivilege", 0);
+        JSONArray array = JSONUtils.getJSONArray(obj, "children", new JSONArray());
+        for (int i = 0; i < array.length(); i++) {
+            JSONObject object = JSONUtils.getJSONObject(array, i, new JSONObject());
             VolumeFile volumeFile = new VolumeFile(object);
             volumeFileList.add(volumeFile);
-            if (volumeFile.getType().equals(VolumeFile.FILE_TYPE_DIRECTORY)){
+            if (volumeFile.getType().equals(VolumeFile.FILE_TYPE_DIRECTORY)) {
                 volumeFileDirectoryList.add(volumeFile);
-            }else {
+            } else {
                 volumeFileRegularList.add(volumeFile);
             }
         }
+        String groupPrivilegeJson = JSONUtils.getString(obj, "groups", "");
+        groupPrivilegeMap = com.alibaba.fastjson.JSONObject.parseObject(groupPrivilegeJson, new TypeReference<Map<String, Integer>>() {
+        });
     }
 
     public List<VolumeFile> getVolumeFileList() {
@@ -47,6 +57,7 @@ public class GetVolumeFileListResult {
 
     /**
      * 获取目录中所有的文件夹
+     *
      * @return
      */
     public List<VolumeFile> getVolumeFileDirectoryList() {
@@ -57,30 +68,30 @@ public class GetVolumeFileListResult {
         return volumeFileRegularList;
     }
 
-    public List<VolumeFile> getVolumeFileFilterList(String filterType){
+    public List<VolumeFile> getVolumeFileFilterList(String filterType) {
         List<VolumeFile> volumeFileFilterList;
         List<VolumeFile> volumeFileListFilterDocunemnt = new ArrayList<>();
         List<VolumeFile> volumeFileListFilterImage = new ArrayList<>();
         List<VolumeFile> volumeFileListFilterAudio = new ArrayList<>();
         List<VolumeFile> volumeFileListFilterVideo = new ArrayList<>();
         List<VolumeFile> volumeFileListFilterOther = new ArrayList<>();
-        for (int i=0;i<volumeFileRegularList.size();i++){
+        for (int i = 0; i < volumeFileRegularList.size(); i++) {
             VolumeFile volumeFile = volumeFileRegularList.get(i);
             String format = volumeFile.getFormat();
-            if (format.startsWith("application/vnd.openxmlformats-officedocument") || format.equals("text/plain") || format.equals("application/pdf")){
+            if (format.startsWith("application/vnd.openxmlformats-officedocument") || format.equals("text/plain") || format.equals("application/pdf")) {
                 volumeFileListFilterDocunemnt.add(volumeFile);
-            }else if(format.startsWith("image/")){
+            } else if (format.startsWith("image/")) {
                 volumeFileListFilterImage.add(volumeFile);
-            }else if(format.startsWith("audio/")){
+            } else if (format.startsWith("audio/")) {
                 volumeFileListFilterAudio.add(volumeFile);
-            }else if(format.startsWith("video/")){
+            } else if (format.startsWith("video/")) {
                 volumeFileListFilterVideo.add(volumeFile);
-            }else {
+            } else {
                 volumeFileListFilterOther.add(volumeFile);
             }
         }
 
-        switch (filterType){
+        switch (filterType) {
             case VolumeFile.FILTER_TYPE_DOCUNMENT:
                 volumeFileFilterList = volumeFileListFilterDocunemnt;
                 break;
@@ -140,7 +151,20 @@ public class GetVolumeFileListResult {
         this.othersPrivilege = othersPrivilege;
     }
 
-    public boolean getHaveModifyPrivilege(){
+    public boolean getHaveModifyPrivilege() {
         return owner.equals(MyApplication.getInstance().getUid()) || (othersPrivilege > 5);
+    }
+
+    public boolean isFileWriteable(List<String> groupIdList) {
+        List<Integer> privilegeList = new ArrayList<>();
+        for (int i = 0; i < groupIdList.size(); i++) {
+            String groupId = groupIdList.get(i);
+            Integer privilege = groupPrivilegeMap.get(groupId);
+            if (privilege != null) {
+                privilegeList.add(privilege);
+            }
+        }
+        int maxPrivilege = Collections.max(privilegeList);
+        return (maxPrivilege > 4);
     }
 }

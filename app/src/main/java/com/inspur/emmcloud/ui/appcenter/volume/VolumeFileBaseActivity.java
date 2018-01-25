@@ -23,6 +23,7 @@ import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
 import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeFileListResult;
 import com.inspur.emmcloud.bean.appcenter.volume.Volume;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
+import com.inspur.emmcloud.bean.appcenter.volume.VolumeGroupContainMe;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.FomatUtils;
@@ -33,6 +34,7 @@ import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.VolumeFileUploadManagerUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
+import com.inspur.emmcloud.util.privates.cache.VolumeGroupContainMeCacheUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.dialogs.ActionSheetDialog;
 import com.inspur.emmcloud.widget.dialogs.MyDialog;
@@ -98,6 +100,7 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
     protected String fileFilterType = "";  //显示的文件类型
     protected boolean isShowFileUploading = false;  //是否显示正在上传的文件
     protected GetVolumeFileListResult getVolumeFileListResult;
+    private boolean isFileWriteable = false;
 
 
     @Override
@@ -317,18 +320,34 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
     }
 
 
-    /**
-     * 设置跟权限相关的layout
-     * @param haveModifyPrivilege
-     */
-    private void setLayoutByPrivilege(boolean haveModifyPrivilege){
-        //当自己没有写权限时禁止上传文件和新建文件夹
-        boolean isVolumeFileLocaitionSelectActivity = VolumeFileBaseActivity.this instanceof VolumeFileLocationSelectActivity;
-        headerOperationLayout.setVisibility(!haveModifyPrivilege || isVolumeFileLocaitionSelectActivity ? View.GONE : View.VISIBLE);
-        batchOperationDeleteText.setVisibility(haveModifyPrivilege ? View.VISIBLE : View.GONE);
-        batchOperationMoveText.setVisibility(haveModifyPrivilege ? View.VISIBLE : View.GONE);
+    private void getFilePrivilege() {
+        VolumeGroupContainMe volumeGroupContainMe = VolumeGroupContainMeCacheUtils.getVolumeGroupContainMe(getApplicationContext(), volume.getId());
+        if (volumeGroupContainMe != null) {
+            List<String> groupIdList = volumeGroupContainMe.getGroupIdList();
+            isFileWriteable = getVolumeFileListResult.isFileWriteable(groupIdList);
+            setLayoutByPrivilege();
+        }else {
+
+        }
 
     }
+
+    /**
+     * 设置跟权限相关的layout
+     *
+     * @param haveModifyPrivilege
+     */
+    private void setLayoutByPrivilege() {
+        LoadingDialog.dimissDlg(loadingDlg);
+        //当自己没有写权限时禁止上传文件和新建文件夹
+        boolean isVolumeFileLocaitionSelectActivity = VolumeFileBaseActivity.this instanceof VolumeFileLocationSelectActivity;
+        headerOperationLayout.setVisibility(!isFileWriteable || isVolumeFileLocaitionSelectActivity ? View.GONE : View.VISIBLE);
+        batchOperationDeleteText.setVisibility(isFileWriteable ? View.VISIBLE : View.GONE);
+        batchOperationMoveText.setVisibility(isFileWriteable ? View.VISIBLE : View.GONE);
+
+    }
+
+
     /**
      * 下载或打开文件
      *
@@ -445,6 +464,7 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
 
     /**
      * 删除文件
+     *
      * @param deleteVolumeFile
      */
     protected void deleteFile(List<VolumeFile> deleteVolumeFile) {
@@ -492,11 +512,8 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
     private class WebServiceBase extends APIInterfaceInstance {
         @Override
         public void returnVolumeFileListSuccess(GetVolumeFileListResult getVolumeFileListResult) {
-            if (loadingDlg != null && loadingDlg.isShowing()) {
-                loadingDlg.dismiss();
-            }
             VolumeFileBaseActivity.this.getVolumeFileListResult = getVolumeFileListResult;
-            setLayoutByPrivilege(getVolumeFileListResult.getHaveModifyPrivilege());
+            getFilePrivilege();
             swipeRefreshLayout.setRefreshing(false);
             if (StringUtils.isBlank(fileFilterType)) {
                 volumeFileList = getVolumeFileListResult.getVolumeFileList();
@@ -527,9 +544,7 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
 
         @Override
         public void returnCreateForderSuccess(VolumeFile volumeFile) {
-            if (loadingDlg != null && loadingDlg.isShowing()) {
-                loadingDlg.dismiss();
-            }
+            LoadingDialog.dimissDlg(loadingDlg);
             if (createFolderDlg != null && createFolderDlg.isShowing()) {
                 createFolderDlg.dismiss();
             }
@@ -542,17 +557,13 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
 
         @Override
         public void returnCreateForderFail(String error, int errorCode) {
-            if (loadingDlg != null && loadingDlg.isShowing()) {
-                loadingDlg.dismiss();
-            }
+            LoadingDialog.dimissDlg(loadingDlg);
             WebServiceMiddleUtils.hand(getApplicationContext(), error, errorCode);
         }
 
         @Override
         public void returnVolumeFileDeleteSuccess(List<VolumeFile> deleteVolumeFileList) {
-            if (loadingDlg != null && loadingDlg.isShowing()) {
-                loadingDlg.dismiss();
-            }
+            LoadingDialog.dimissDlg(loadingDlg);
             volumeFileList.removeAll(deleteVolumeFileList);
             adapter.setVolumeFileList(volumeFileList);
             adapter.notifyDataSetChanged();
@@ -561,17 +572,13 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
 
         @Override
         public void returnVolumeFileDeleteFail(String error, int errorCode) {
-            if (loadingDlg != null && loadingDlg.isShowing()) {
-                loadingDlg.dismiss();
-            }
+            LoadingDialog.dimissDlg(loadingDlg);
             WebServiceMiddleUtils.hand(getApplicationContext(), error, errorCode);
         }
 
         @Override
         public void returnVolumeFileRenameSuccess(VolumeFile oldVolumeFile, String fileNewName) {
-            if (loadingDlg != null && loadingDlg.isShowing()) {
-                loadingDlg.dismiss();
-            }
+            LoadingDialog.dimissDlg(loadingDlg);
             if (fileRenameDlg != null && fileRenameDlg.isShowing()) {
                 fileRenameDlg.dismiss();
             }
@@ -588,9 +595,7 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
 
         @Override
         public void returnVolumeFileRenameFail(String error, int errorCode) {
-            if (loadingDlg != null && loadingDlg.isShowing()) {
-                loadingDlg.dismiss();
-            }
+            LoadingDialog.dimissDlg(loadingDlg);
             if (fileRenameDlg != null && fileRenameDlg.isShowing()) {
                 fileRenameDlg.dismiss();
             }
