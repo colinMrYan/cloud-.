@@ -33,7 +33,7 @@ import com.inspur.emmcloud.adapter.MsgInputAddItemAdapter;
 import com.inspur.emmcloud.bean.chat.InputTypeBean;
 import com.inspur.emmcloud.bean.chat.InsertModel;
 import com.inspur.emmcloud.config.Constant;
-import com.inspur.emmcloud.interf.OnStartListeningListener;
+import com.inspur.emmcloud.interf.OnListeningListener;
 import com.inspur.emmcloud.ui.chat.MembersActivity;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.MediaPlayerUtils;
@@ -70,8 +70,8 @@ public class ECMChatInputMenu extends LinearLayout {
     private ChatInputMenuListener chatInputMenuListener;
     private MsgInputAddItemAdapter msgInputAddItemAdapter;
     private boolean isSetWindowListener = true;//是否监听窗口变化自动跳转输入框ui
-    private OnStartListeningListener onStartListeningListener;
-    private  ImageView voiceImageView;
+    private OnListeningListener onListeningListener;
+    private  ImageView voiceImageView,voicePackUp;
     private  GridView addItemGrid;
     private List<InputTypeBean> inputTypeBeanList = new ArrayList<>();
     private MediaPlayerUtils mediaPlayerUtils;
@@ -96,8 +96,8 @@ public class ECMChatInputMenu extends LinearLayout {
         init(context, attrs);
     }
 
-    public void setOnStartListeningListener(OnStartListeningListener onStartListeningListener) {
-        this.onStartListeningListener = onStartListeningListener;
+    public void setOnListeningListener(OnListeningListener onListeningListener) {
+        this.onListeningListener = onListeningListener;
     }
 
     private void init(final Context context, AttributeSet attrs) {
@@ -266,9 +266,11 @@ public class ECMChatInputMenu extends LinearLayout {
 
         addItemGrid.setVisibility(View.VISIBLE);
         voiceImageView.setVisibility(View.GONE);
+        voicePackUp.setVisibility(View.GONE);
     }
 
     public void showSoftInput() {
+        onListeningListener.onStopListening();
         inputEdit.requestFocus();
         new Handler().post(new Runnable() {
             @Override
@@ -311,6 +313,7 @@ public class ECMChatInputMenu extends LinearLayout {
     private void initMenuGrid() {
         addItemGrid = (GridView) findViewById(R.id.add_menu_grid);
         voiceImageView = (ImageView) findViewById(R.id.voice_volume_img);
+        voicePackUp = (ImageView) findViewById(R.id.voice_back_img);
         msgInputAddItemAdapter = new MsgInputAddItemAdapter(context);
         addItemGrid.setAdapter(msgInputAddItemAdapter);
         addItemGrid.setOnItemClickListener(new OnItemClickListener() {
@@ -336,10 +339,11 @@ public class ECMChatInputMenu extends LinearLayout {
                     case R.drawable.ic_chat_input_add_voice:
                         if(NetUtils.isNetworkConnected(context)){
                             mediaPlayerUtils.playVoiceOn();
-                            onStartListeningListener.onStartListening();
+                            onListeningListener.onStartListening();
                             addItemGrid.setVisibility(View.GONE);
                             voiceImageView.setImageLevel(0);
                             voiceImageView.setVisibility(View.VISIBLE);
+                            voicePackUp.setVisibility(View.VISIBLE);
                         }
                         break;
                     default:
@@ -353,7 +357,16 @@ public class ECMChatInputMenu extends LinearLayout {
             public void onClick(View v) {
                 voiceImageView.setImageLevel(0);
                 mediaPlayerUtils.playVoiceOn();
-                onStartListeningListener.onStartListening();
+                onListeningListener.onStartListening();
+            }
+        });
+        voicePackUp.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addItemGrid.setVisibility(View.VISIBLE);
+                voiceImageView.setVisibility(View.GONE);
+                voicePackUp.setVisibility(View.GONE);
+                onListeningListener.onStopListening();
             }
         });
     }

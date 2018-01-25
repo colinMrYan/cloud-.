@@ -14,7 +14,6 @@ import com.iflytek.cloud.SpeechRecognizer;
 import com.inspur.emmcloud.interf.OnVoiceResultCallback;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
-import com.inspur.emmcloud.util.common.ToastUtils;
 
 import org.json.JSONObject;
 
@@ -148,9 +147,7 @@ public class Voice2StringMessageUtils {
             @Override
             public void onInit(int code) {
                 if (code != ErrorCode.SUCCESS) {
-                    LogUtils.YfcDebug("初始化失败："+code);
-                }else{
-                    LogUtils.YfcDebug("初始化成功");
+                    LogUtils.YfcDebug("科大讯飞初始化失败："+code);
                 }
             }
         };
@@ -164,7 +161,6 @@ public class Voice2StringMessageUtils {
 
             @Override
             public void onError(SpeechError error) {
-                showTip(error.getPlainDescription(true));
             }
 
             @Override
@@ -241,11 +237,12 @@ public class Voice2StringMessageUtils {
     }
 
     /**
-     * 提示信息
-     * @param str
+     * 停止监听
      */
-    private void showTip(final String str) {
-        ToastUtils.show(context,str);
+    public void stopListening(){
+        if(speechRecognizer != null && speechRecognizer.isListening()){
+            speechRecognizer.stopListening();
+        }
     }
 
 }

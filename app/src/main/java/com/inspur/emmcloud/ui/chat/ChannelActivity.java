@@ -38,7 +38,7 @@ import com.inspur.emmcloud.bean.contact.GetSearchChannelGroupResult;
 import com.inspur.emmcloud.bean.system.PVCollectModel;
 import com.inspur.emmcloud.broadcastreceiver.MsgReceiver;
 import com.inspur.emmcloud.config.MyAppConfig;
-import com.inspur.emmcloud.interf.OnStartListeningListener;
+import com.inspur.emmcloud.interf.OnListeningListener;
 import com.inspur.emmcloud.interf.OnVoiceResultCallback;
 import com.inspur.emmcloud.ui.appcenter.groupnews.NewsWebDetailActivity;
 import com.inspur.emmcloud.ui.contact.RobotInfoActivity;
@@ -164,12 +164,18 @@ public class ChannelActivity extends BaseActivity {
                 chatInputMenu.setVoiceImageViewLevel(volume);
             }
         });
-        chatInputMenu.setOnStartListeningListener(new OnStartListeningListener() {
+        chatInputMenu.setOnListeningListener(new OnListeningListener() {
             @Override
             public void onStartListening() {
                 voice2StringMessageUtils.startVoiceListening();
             }
+
+            @Override
+            public void onStopListening() {
+                voice2StringMessageUtils.stopListening();
+            }
         });
+
     }
 
     /**
