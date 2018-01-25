@@ -132,6 +132,7 @@ public class Voice2StringMessageUtils {
         speechRecognizer.setParameter(SpeechConstant.KEY_SPEECH_TIMEOUT,PreferencesUtils.getString(context,"iat_speech_timeout","-1"));
         speechRecognizer.setParameter(SpeechConstant.SAMPLE_RATE,PreferencesUtils.getString(context,"iat_sample_rate","16000"));
         speechRecognizer.setParameter(SpeechConstant.DOMAIN,PreferencesUtils.getString(context,"iat_domain","iat"));
+        speechRecognizer.setParameter(SpeechConstant.PARAMS,PreferencesUtils.getString(context,"iat_params","0"));
 
         // 设置音频保存路径，保存音频格式支持pcm、wav，设置路径为sd卡请注意WRITE_EXTERNAL_STORAGE权限
         // 注：AUDIO_FORMAT参数语记需要更新版本才能生效

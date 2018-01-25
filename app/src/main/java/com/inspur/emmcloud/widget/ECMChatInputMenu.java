@@ -36,6 +36,7 @@ import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.interf.OnStartListeningListener;
 import com.inspur.emmcloud.ui.chat.MembersActivity;
 import com.inspur.emmcloud.util.common.DensityUtil;
+import com.inspur.emmcloud.util.common.MediaPlayerUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
@@ -73,6 +74,8 @@ public class ECMChatInputMenu extends LinearLayout {
     private  ImageView voiceImageView;
     private  GridView addItemGrid;
     private List<InputTypeBean> inputTypeBeanList = new ArrayList<>();
+    private MediaPlayerUtils mediaPlayerUtils;
+
 
     // private View view ;
 
@@ -149,7 +152,7 @@ public class ECMChatInputMenu extends LinearLayout {
         });
         initInputEdit();
         initMenuGrid();
-
+        mediaPlayerUtils = new MediaPlayerUtils(context);
     }
 
     /**
@@ -332,6 +335,7 @@ public class ECMChatInputMenu extends LinearLayout {
                         break;
                     case R.drawable.ic_chat_input_add_voice:
                         if(NetUtils.isNetworkConnected(context)){
+                            mediaPlayerUtils.playVoiceOn();
                             onStartListeningListener.onStartListening();
                             addItemGrid.setVisibility(View.GONE);
                             voiceImageView.setImageLevel(0);
@@ -348,9 +352,17 @@ public class ECMChatInputMenu extends LinearLayout {
             @Override
             public void onClick(View v) {
                 voiceImageView.setImageLevel(0);
+                mediaPlayerUtils.playVoiceOn();
                 onStartListeningListener.onStartListening();
             }
         });
+    }
+
+    /**
+     * 释放MediaPlay资源
+     */
+    public void releaseMediaPlay(){
+        mediaPlayerUtils.release();
     }
 
     /**
@@ -382,12 +394,11 @@ public class ECMChatInputMenu extends LinearLayout {
     }
 
     /**
-     * 恢复九宫格View
+     * 停止识别，并播放停止提示音
      */
-    public void changeUI2GridView(){
-//        addItemGrid.setVisibility(View.VISIBLE);
-//        voiceImageView.setVisibility(View.GONE);
+    public void stopVoiceReleaseMediaPlay(){
         voiceImageView.setImageLevel(10);
+        mediaPlayerUtils.playVoiceOff();
     }
 
 

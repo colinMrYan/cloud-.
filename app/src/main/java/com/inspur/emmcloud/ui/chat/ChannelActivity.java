@@ -48,7 +48,6 @@ import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
-import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.ConbineMsg;
 import com.inspur.emmcloud.util.privates.DirectChannelUtils;
@@ -157,7 +156,7 @@ public class ChannelActivity extends BaseActivity {
 
             @Override
             public void onVoiceFinish() {
-                chatInputMenu.changeUI2GridView();
+                chatInputMenu.stopVoiceReleaseMediaPlay();
             }
 
             @Override
@@ -658,6 +657,7 @@ public class ChannelActivity extends BaseActivity {
             refreshNameReceiver = null;
         }
         if( null != voice2StringMessageUtils.getSpeechRecognizer() ){
+            chatInputMenu.releaseMediaPlay();
             // 退出时释放连接
             voice2StringMessageUtils.getSpeechRecognizer().cancel();
             voice2StringMessageUtils.getSpeechRecognizer().destroy();
