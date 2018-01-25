@@ -284,7 +284,6 @@ public class ECMChatInputMenu extends LinearLayout {
         mInputManager.hideSoftInputFromWindow(inputEdit.getWindowToken(), 0);
     }
 
-
     private boolean isSoftInputShown() {
         return getSupportSoftInputHeight() != 0;
     }
