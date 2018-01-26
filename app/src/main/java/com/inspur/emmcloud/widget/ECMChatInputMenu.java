@@ -71,7 +71,7 @@ public class ECMChatInputMenu extends LinearLayout {
     private MsgInputAddItemAdapter msgInputAddItemAdapter;
     private boolean isSetWindowListener = true;//是否监听窗口变化自动跳转输入框ui
     private OnListeningListener onListeningListener;
-    private  ImageView voiceImageView,voicePackUp;
+    private  ImageView voiceMicroPhoneImg, voicePackUpImg;
     private  GridView addItemGrid;
     private List<InputTypeBean> inputTypeBeanList = new ArrayList<>();
     private MediaPlayerUtils mediaPlayerUtils;
@@ -265,8 +265,8 @@ public class ECMChatInputMenu extends LinearLayout {
         addMenuLayout.setVisibility(View.VISIBLE);
 
         addItemGrid.setVisibility(View.VISIBLE);
-        voiceImageView.setVisibility(View.GONE);
-        voicePackUp.setVisibility(View.GONE);
+        voiceMicroPhoneImg.setVisibility(View.GONE);
+        voicePackUpImg.setVisibility(View.GONE);
     }
 
     public void showSoftInput() {
@@ -311,8 +311,8 @@ public class ECMChatInputMenu extends LinearLayout {
      */
     private void initMenuGrid() {
         addItemGrid = (GridView) findViewById(R.id.add_menu_grid);
-        voiceImageView = (ImageView) findViewById(R.id.voice_volume_img);
-        voicePackUp = (ImageView) findViewById(R.id.voice_back_img);
+        voiceMicroPhoneImg = (ImageView) findViewById(R.id.voice_volume_img);
+        voicePackUpImg = (ImageView) findViewById(R.id.voice_back_img);
         msgInputAddItemAdapter = new MsgInputAddItemAdapter(context);
         addItemGrid.setAdapter(msgInputAddItemAdapter);
         addItemGrid.setOnItemClickListener(new OnItemClickListener() {
@@ -340,9 +340,9 @@ public class ECMChatInputMenu extends LinearLayout {
                             mediaPlayerUtils.playVoiceOn();
                             onListeningListener.onStartListening();
                             addItemGrid.setVisibility(View.GONE);
-                            voiceImageView.setImageLevel(0);
-                            voiceImageView.setVisibility(View.VISIBLE);
-                            voicePackUp.setVisibility(View.VISIBLE);
+                            voiceMicroPhoneImg.setImageLevel(0);
+                            voiceMicroPhoneImg.setVisibility(View.VISIBLE);
+                            voicePackUpImg.setVisibility(View.VISIBLE);
                         }
                         break;
                     default:
@@ -351,20 +351,20 @@ public class ECMChatInputMenu extends LinearLayout {
 
             }
         });
-        voiceImageView.setOnClickListener(new OnClickListener() {
+        voiceMicroPhoneImg.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                voiceImageView.setImageLevel(0);
+                voiceMicroPhoneImg.setImageLevel(0);
                 mediaPlayerUtils.playVoiceOn();
                 onListeningListener.onStartListening();
             }
         });
-        voicePackUp.setOnClickListener(new OnClickListener() {
+        voicePackUpImg.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 addItemGrid.setVisibility(View.VISIBLE);
-                voiceImageView.setVisibility(View.GONE);
-                voicePackUp.setVisibility(View.GONE);
+                voiceMicroPhoneImg.setVisibility(View.GONE);
+                voicePackUpImg.setVisibility(View.GONE);
                 onListeningListener.onStopListening();
             }
         });
@@ -383,25 +383,25 @@ public class ECMChatInputMenu extends LinearLayout {
      */
     public void setVoiceImageViewLevel(int volume){
         if(volume <= 5){
-            voiceImageView.setImageLevel(0);
+            voiceMicroPhoneImg.setImageLevel(0);
         }else if(volume <= 8){
-            voiceImageView.setImageLevel(1);
+            voiceMicroPhoneImg.setImageLevel(1);
         }else if(volume <= 10){
-            voiceImageView.setImageLevel(2);
+            voiceMicroPhoneImg.setImageLevel(2);
         }else if(volume <= 13){
-            voiceImageView.setImageLevel(3);
+            voiceMicroPhoneImg.setImageLevel(3);
         }else if(volume <= 15){
-            voiceImageView.setImageLevel(4);
+            voiceMicroPhoneImg.setImageLevel(4);
         }else if(volume <= 18){
-            voiceImageView.setImageLevel(5);
+            voiceMicroPhoneImg.setImageLevel(5);
         }else if(volume <= 20){
-            voiceImageView.setImageLevel(6);
+            voiceMicroPhoneImg.setImageLevel(6);
         }else if(volume <= 23){
-            voiceImageView.setImageLevel(7);
+            voiceMicroPhoneImg.setImageLevel(7);
         }else if(volume <= 25){
-            voiceImageView.setImageLevel(8);
+            voiceMicroPhoneImg.setImageLevel(8);
         }else{
-            voiceImageView.setImageLevel(9);
+            voiceMicroPhoneImg.setImageLevel(9);
         }
     }
 
@@ -409,7 +409,7 @@ public class ECMChatInputMenu extends LinearLayout {
      * 停止识别，并播放停止提示音
      */
     public void stopVoiceReleaseMediaPlay(){
-        voiceImageView.setImageLevel(10);
+        voiceMicroPhoneImg.setImageLevel(10);
         mediaPlayerUtils.playVoiceOff();
     }
 

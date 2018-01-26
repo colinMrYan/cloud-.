@@ -12,15 +12,15 @@ import com.iflytek.cloud.SpeechConstant;
 import com.iflytek.cloud.SpeechError;
 import com.iflytek.cloud.SpeechRecognizer;
 import com.inspur.emmcloud.interf.OnVoiceResultCallback;
+import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
-
-import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.Set;
 
 
 /**
@@ -147,7 +147,8 @@ public class Voice2StringMessageUtils {
             @Override
             public void onInit(int code) {
                 if (code != ErrorCode.SUCCESS) {
-                    LogUtils.YfcDebug("科大讯飞初始化失败："+code);
+                    //初始化失败，停止录音
+                    stopListening();
                 }
             }
         };
@@ -161,6 +162,8 @@ public class Voice2StringMessageUtils {
 
             @Override
             public void onError(SpeechError error) {
+                //返回错误停止录音
+                stopListening();
             }
 
             @Override
@@ -171,10 +174,12 @@ public class Voice2StringMessageUtils {
 
             @Override
             public void onResult(RecognizerResult results, boolean isLast) {
-                parseIatAndReturnStringResult(results);
+                LogUtils.YfcDebug("解析结果："+results.getResultString());
+//                getLastListeningResult(results);
+                addListeningResult2Map(results);
                 if (isLast) {
                     //最后的结果
-                    onVoiceResultCallback.onVoiceResult(parseIatAndReturnStringResult(results),isLast);
+                    onVoiceResultCallback.onVoiceResult(getLastListeningResult(),isLast);
                 }
             }
 
@@ -196,26 +201,26 @@ public class Voice2StringMessageUtils {
         };
     }
 
-
-
     /**
-     * 解析结果
+     * 向map中加入一个解析结果
      * @param results
      */
-    private String parseIatAndReturnStringResult(RecognizerResult results) {
-        String text = XFJsonParser.parseIatResult(results.getResultString());
-        String sn = null;
-        // 读取json结果中的sn字段
-        try {
-            JSONObject resultJson = new JSONObject(results.getResultString());
-            sn = resultJson.optString("sn");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        iatResultMap.put(sn, text);
+    private void addListeningResult2Map(RecognizerResult results) {
+        String content = XFJsonParser.parseIatResult(results.getResultString());
+        String sn = JSONUtils.getString(results.getResultString(),"sn","");
+        iatResultMap.put(sn, content);
+    }
+
+    /**
+     * 获取最终解析结果
+     */
+    private String getLastListeningResult() {
         StringBuffer resultBuffer = new StringBuffer();
-        for (String key : iatResultMap.keySet()) {
-            resultBuffer.append(iatResultMap.get(key));
+        Set<String> iatResultSet = iatResultMap.keySet();
+        if(iatResultSet != null){
+            for (String key : iatResultMap.keySet()) {
+                resultBuffer.append(iatResultMap.get(key));
+            }
         }
         return resultBuffer.toString();
     }
