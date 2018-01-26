@@ -20,7 +20,7 @@ import com.inspur.emmcloud.util.common.StringUtils;
 public class APIUri {
     private static final String URL_BASE_ECM = "https://ecm.inspur.com/";
     private static final String URL_BASE_EMM = "https://emm.inspur.com/";
-    private static final String URL_BASE_ID = "https://id.inspur.com/";
+    private static final String URL_BASE_ID = "https://id.inspuronline.com/";
     private static final String URL_BASE_YUNJIA = "https://yunjia.inspur.com/";
     private static final String URL_BASE_VOLUME = URL_BASE_YUNJIA+"cloud-drive/api/v1/volume";
     private static final String URL_BASE_GROUP = URL_BASE_YUNJIA+"cloud-drive/api/v1/group";
@@ -99,7 +99,7 @@ public class APIUri {
      * @return
      */
     public static String saveAppConfigUrl(String key) {
-        return URL_BASE_EMM + "v3.0/api/app/config/" + key;
+        return URL_BASE_EMM + "api/sys/v6.0/config/" + key;
     }
 
     /**
@@ -108,7 +108,7 @@ public class APIUri {
      * @return
      */
     public static String getUploadPositionUrl() {
-        return URL_BASE_EMM + "v3.0/api/app/position/upload";
+        return URL_BASE_EMM + "api/mam/v6.0/app/pos";
     }
 
     /**
@@ -211,7 +211,7 @@ public class APIUri {
         if (headImgUrl == null && !((MyApplication) context.getApplicationContext()).isKeysContainUid(inspurID)) {
             Contact contact = ContactCacheUtils.getUserContact(context, inspurID);
             if (contact != null) {
-                headImgUrl = URL_BASE_EMM + "img/userhead/" + inspurID;
+                headImgUrl = URL_BASE_EMM + "api/sys/v3.0/img/userhead/" + inspurID;
                 String lastUpdateTime = contact.getLastUpdateTime();
                 if (!StringUtils.isBlank(lastUpdateTime) && (!lastUpdateTime.equals("null"))) {
                     headImgUrl = headImgUrl + "?" + lastUpdateTime;
@@ -317,7 +317,7 @@ public class APIUri {
      * @return
      */
     public static String getAllApps() {
-        return URL_BASE_EMM + "api/imp_app/getAllApps";
+        return URL_BASE_EMM + "api/mam/v3.0/imp_app/getAllApps";
     }
 
     /**
@@ -326,7 +326,7 @@ public class APIUri {
      * @return
      */
     public static String getNewAllApps() {
-        return URL_BASE_EMM + "api/v1/imp_app/appCenterList";
+        return URL_BASE_EMM + "api/mam/v3.0/imp_app/appCenterList";
     }
 
     /**
@@ -362,7 +362,7 @@ public class APIUri {
      * @return
      */
     public static String getMyApp() {
-        return URL_BASE_EMM + "api/imp_app/getUserApps";
+        return URL_BASE_EMM + "api/mam/v3.0/imp_app/userApps";
     }
 
     /**
@@ -371,7 +371,7 @@ public class APIUri {
      * @return
      */
     public static String getAppInfo() {
-        return URL_BASE_EMM + "api/imp_app/getAppInfo";
+        return URL_BASE_EMM + "api/mam/v3.0/imp_app/getAppInfo";
     }
 
     /**
@@ -380,7 +380,7 @@ public class APIUri {
      * @returnsunqx
      */
     public static String addApp() {
-        return URL_BASE_EMM + "api/imp_app/installApp";
+        return URL_BASE_EMM + "api/mam/v3.0/imp_app/installApp";
     }
 
     /**
@@ -389,7 +389,7 @@ public class APIUri {
      * @return
      */
     public static String removeApp() {
-        return URL_BASE_EMM + "api/imp_app/uninstallApp";
+        return URL_BASE_EMM + "api/mam/v3.0/imp_app/uninstallApp";
     }
 
     /**
@@ -398,7 +398,7 @@ public class APIUri {
      * @return
      */
     public static String checkUpgrade() {
-        return URL_BASE_EMM + "api/v1/upgrade/checkVersion";
+        return URL_BASE_EMM + "api/sys/v3.0/upgrade/checkVersion";
     }
 
     /**
@@ -407,7 +407,7 @@ public class APIUri {
      * @return
      */
     public static String getAllContact() {
-        return URL_BASE_EMM + "api/contacts/get_all";
+        return URL_BASE_EMM + "api/sys/v3.0/contacts/get_all";
     }
 
 
@@ -425,7 +425,7 @@ public class APIUri {
      * @return
      */
     public static String getGSMsgSchemeUrl(String host){
-        return "https://emm.inspur.com/api/v1/gs_sso/msg_uri?id=" + host;
+        return "https://emm.inspur.com/api/mam/v3.0/gs_sso/msg_uri?id=" + host;
     }
 
     /*****************************************ReactNative**************************************/
@@ -471,7 +471,7 @@ public class APIUri {
      * @return
      */
     public static String getReactNativeInstallUrl() {
-        return URL_BASE_EMM+"api/imp_app/queryByUri";
+        return URL_BASE_EMM+"api/mam/v3.0/imp_app/queryByUri";
     }
 
     /**
@@ -895,7 +895,7 @@ public class APIUri {
      * @return
      */
     public static String getAppBadgeNumUrl() {
-        return URL_BASE_EMM + "v3.0/api/app/badge";
+        return URL_BASE_EMM + "api/mam/v6.0/app/badge";
     }
 
 
@@ -915,7 +915,7 @@ public class APIUri {
      * @return
      */
     public static String getUserProfileUrl() {
-        return URL_BASE_EMM + "api/userprofile/displayconfig";
+        return URL_BASE_EMM + "api/sys/v3.0/userprofile/displayconfig";
     }
 
     /**
@@ -924,7 +924,7 @@ public class APIUri {
      * @param
      */
     public static String getUpdateUserHeadUrl() {
-        return  URL_BASE_EMM+"api?module=user&method=update_head";
+        return  URL_BASE_EMM+"api/sys/v3.0/user/update_head";
     }
 
     /**
@@ -941,7 +941,7 @@ public class APIUri {
      * @return
      */
     public static String getFaceSettingUrl(){
-        return  URL_BASE_EMM+"v3.0/api/app/face/save";
+        return  URL_BASE_EMM+"api/sys/v6.0/face/save";
     }
 
     /**
@@ -949,7 +949,7 @@ public class APIUri {
      * @return
      */
     public static String getFaceVerifyUrl(){
-        return  URL_BASE_EMM+"v3.0/api/app/face/verify";
+        return  URL_BASE_EMM+"api/sys/v6.0/face/verify";
     }
 
     /***********设备管理******************
@@ -959,7 +959,7 @@ public class APIUri {
      * @return
      */
     public static String getUnBindDeviceUrl() {
-        return URL_BASE_EMM + "api/device/unbind";
+        return URL_BASE_EMM + "mdm/v3.0/mdm/unbind";
     }
 
     /**
@@ -977,7 +977,7 @@ public class APIUri {
      * @return
      */
     public static String getDeviceRegisterUrl(Context context){
-        return "https://emm.inspur.com/mdm/loadForRegister?udid="+ AppUtils.getMyUUID(context);
+        return "https://emm.inspur.com/mdm/v3.0/loadForRegister?udid="+ AppUtils.getMyUUID(context);
     }
 
     /**
@@ -986,7 +986,7 @@ public class APIUri {
      * @return
      */
     public static String getDeviceLogUrl() {
-        return URL_BASE_EMM + "api/v1/device/getDeviceLogs";
+        return URL_BASE_EMM + "api/mdm/v3.0/device/getDeviceLogs";
     }
 
     /**
@@ -995,7 +995,7 @@ public class APIUri {
      * @return
      */
     public static String getMDMStateUrl() {
-        return URL_BASE_EMM + "api/userprofile/mdm_state";
+        return URL_BASE_EMM + "api/sys/v3.0/userprofile/mdm_state";
     }
 
     /**
@@ -1004,7 +1004,7 @@ public class APIUri {
      * @return
      */
     public static String getUploadMDMInfoUrl() {
-        return URL_BASE_EMM + "api/mdm/mdm_check";
+        return URL_BASE_EMM + "api/mdm/v3.0/device/getUserDevices";
     }
 
     /**
@@ -1012,6 +1012,6 @@ public class APIUri {
      * @return
      */
     public static String getDeviceCheckUrl(){
-       return  URL_BASE_EMM+"api?module=mdm&method=check_state";
+       return  URL_BASE_EMM+"api/mdm/v3.0/mdm/check_state";
     }
 }

@@ -50,7 +50,7 @@ public class UriUtils {
                 }else if (!uri.startsWith(APIUri.getEMMBaseUrl()+"ssohandler/gs/")) {
                     openWebApp(activity, uri, app);
                 } else {
-                    uri = uri.replace("ssohandler/gs/", "api/v1/gs_sso/app_uri?id=");
+                    uri = uri.replace("ssohandler/gs/", "api/mam/v3.0/gs_sso/app_uri?id=");
                     if (NetUtils.isNetworkConnected(activity)) {
                         new WebAppUtils(activity, new WebAppUtils.OnGetWebAppRealUrlListener() {
                             @Override
