@@ -58,8 +58,8 @@ public class SearchModel implements Serializable {
 
 	public SearchModel(ReadableMap nativeInfo){
 		try {
-			if(nativeInfo.hasKey("new_id")){
-				id = nativeInfo.getString("new_id");
+			if(nativeInfo.hasKey("inspur_id")){
+				id = nativeInfo.getString("inspur_id");
 			}
 			if(nativeInfo.hasKey("real_name")){
 				name = nativeInfo.getString("real_name");
