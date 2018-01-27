@@ -538,6 +538,16 @@ public class APIUri {
     }
 
     /**
+     * 获取云盘组url
+     * @param volumeId
+     * @return
+     */
+    public static String getVolumeGroupUrl(String volumeId){
+        return  URL_BASE_VOLUME+"/"+volumeId+"/group";
+    }
+
+
+    /**
      * 获取组url
      * @param groupId
      * @return

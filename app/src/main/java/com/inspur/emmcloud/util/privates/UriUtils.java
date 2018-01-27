@@ -100,7 +100,6 @@ public class UriUtils {
      * @param app
      */
     public static void openWebApp(Activity activity, String uri, App app) {
-        LogUtils.jasonDebug("00000000000000000000");
         Intent intent = new Intent();
         intent.setClass(activity, ImpActivity.class);
         intent.putExtra("uri", uri);

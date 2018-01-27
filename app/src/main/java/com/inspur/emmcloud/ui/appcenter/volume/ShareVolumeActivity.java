@@ -64,8 +64,8 @@ public class ShareVolumeActivity extends BaseActivity implements SwipeRefreshLay
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        shareVolumeList = (List<Volume>) getIntent().getExtras().getSerializable("shareVolumeList");
         initView();
+        getVolumeList(true);
     }
 
     private void initView() {
@@ -272,14 +272,15 @@ public class ShareVolumeActivity extends BaseActivity implements SwipeRefreshLay
 
     @Override
     public void onRefresh() {
-        getVolumeList();
+        getVolumeList(false);
     }
 
     /**
      * 获取云盘列表
      */
-    private void getVolumeList() {
+    private void getVolumeList(boolean isShowDlg) {
         if (NetUtils.isNetworkConnected(getApplicationContext())) {
+            loadingDlg.show(isShowDlg);
             apiService.getVolumeList();
         } else {
             swipeRefreshLayout.setRefreshing(false);
@@ -327,6 +328,7 @@ public class ShareVolumeActivity extends BaseActivity implements SwipeRefreshLay
     private class WebService extends APIInterfaceInstance {
         @Override
         public void returnVolumeListSuccess(GetVolumeListResult getVolumeListResult) {
+            LoadingDialog.dimissDlg(loadingDlg);
             swipeRefreshLayout.setRefreshing(false);
             shareVolumeList = getVolumeListResult.getShareVolumeList();
             adapter.notifyDataSetChanged();
@@ -334,6 +336,7 @@ public class ShareVolumeActivity extends BaseActivity implements SwipeRefreshLay
 
         @Override
         public void returnVolumeListFail(String error, int errorCode) {
+            LoadingDialog.dimissDlg(loadingDlg);
             swipeRefreshLayout.setRefreshing(false);
             WebServiceMiddleUtils.hand(getApplicationContext(), error, errorCode);
         }

@@ -15,7 +15,9 @@ import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
+import com.inspur.emmcloud.util.privates.VolumeFilePrivilegeUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
+import com.inspur.emmcloud.widget.LoadingDialog;
 
 import org.xutils.view.annotation.ViewInject;
 
@@ -40,6 +42,9 @@ public class VolumeFileLocationSelectActivity extends VolumeFileBaseActivity {
 
     @ViewInject(R.id.location_select_bar_layout)
     private RelativeLayout locationSelectBarLayout;
+
+    @ViewInject(R.id.path_text)
+    private TextView pathText;
 
     private boolean isFunctionCopy;//判断是复制还是移动功能
     private MyAppAPIService apiService;
@@ -80,6 +85,8 @@ public class VolumeFileLocationSelectActivity extends VolumeFileBaseActivity {
 
             }
         });
+        pathText.setVisibility(View.VISIBLE);
+        pathText.setText("当前目录："+currentDirAbsolutePath);
     }
 
     public void onClick(View v) {
@@ -125,6 +132,15 @@ public class VolumeFileLocationSelectActivity extends VolumeFileBaseActivity {
             default:
                 break;
         }
+    }
+
+    /**
+     * 设置当前目录权限有关的layout展示
+     */
+    @Override
+    protected void setCurrentDirectoryLayoutByPrivilege() {
+        boolean isCurrentDirectoryWriteable = VolumeFilePrivilegeUtils.getVolumeFileWriteable(getApplicationContext(),getVolumeFileListResult);
+        locationSelectBarLayout.setVisibility(isCurrentDirectoryWriteable ? View.VISIBLE : View.GONE);
     }
 
     /**
@@ -186,47 +202,32 @@ public class VolumeFileLocationSelectActivity extends VolumeFileBaseActivity {
     private class WebService extends APIInterfaceInstance {
         @Override
         public void returnMoveFileSuccess(List<VolumeFile> movedVolumeFileList) {
-            if (loadingDlg != null && loadingDlg.isShowing()) {
-                loadingDlg.dismiss();
-            }
+            LoadingDialog.dimissDlg(loadingDlg);
             //将移动的位置传递回去，以便于当前页面刷新数据
-            Intent intent = new  Intent();
-            intent.putExtra("path", currentDirAbsolutePath);
-            intent.putExtra("command","refresh");
-            intent.setAction("broadcast_volume");
-            sendBroadcast(intent);
+            sendVolumeFileRefreshBroadcast(getVolumeFileListResult.getId());
+            sendVolumeFileRefreshBroadcast(movedVolumeFileList.get(0).getParent());
             setResult(RESULT_OK);
             finish();
         }
 
         @Override
         public void returnMoveFileFail(String error, int errorCode) {
-            if (loadingDlg != null && loadingDlg.isShowing()) {
-                loadingDlg.dismiss();
-            }
+            LoadingDialog.dimissDlg(loadingDlg);
             WebServiceMiddleUtils.hand(getApplicationContext(), error, errorCode);
         }
 
         @Override
         public void returnCopyFileSuccess() {
-            if (loadingDlg != null && loadingDlg.isShowing()) {
-                loadingDlg.dismiss();
-            }
+            LoadingDialog.dimissDlg(loadingDlg);
             //将移动的位置传递回去，以便于当前页面刷新数据
-            Intent intent = new  Intent();
-            intent.putExtra("path", currentDirAbsolutePath);
-            intent.putExtra("command","refresh");
-            intent.setAction("broadcast_volume");
-            sendBroadcast(intent);
+            sendVolumeFileRefreshBroadcast(getVolumeFileListResult.getId());
             setResult(RESULT_OK);
             finish();
         }
 
         @Override
         public void returnCopyFileFail(String error, int errorCode) {
-            if (loadingDlg != null && loadingDlg.isShowing()) {
-                loadingDlg.dismiss();
-            }
+            LoadingDialog.dimissDlg(loadingDlg);
             WebServiceMiddleUtils.hand(getApplicationContext(), error, errorCode);
         }
     }

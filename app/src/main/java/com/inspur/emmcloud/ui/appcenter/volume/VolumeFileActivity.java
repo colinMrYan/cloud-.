@@ -31,6 +31,7 @@ import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.GetPathFromUri4kitkat;
+import com.inspur.emmcloud.util.privates.VolumeFilePrivilegeUtils;
 import com.inspur.emmcloud.util.privates.VolumeFileUploadManagerUtils;
 import com.inspur.emmcloud.widget.dialogs.ActionSheetDialog;
 import com.inspur.imp.plugin.camera.imagepicker.ImagePicker;
@@ -72,6 +73,12 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
     @ViewInject(R.id.batch_operation_select_all_text)
     private TextView getBatchOprationSelectAllText;
 
+    @ViewInject(R.id.batch_operation_delete_text)
+    private TextView batchOperationDeleteText;
+
+    @ViewInject(R.id.batch_operation_move_text)
+    private TextView batchOperationMoveText;
+
     @ViewInject(R.id.operation_layout)
     protected RelativeLayout operationLayout;
     private PopupWindow sortOperationPop;
@@ -105,6 +112,7 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
                     } else {
                         adapter.setVolumeFileSelect(position);
                         batchOprationHeaderText.setText("已选择(" + adapter.getSelectVolumeFileList().size() + ")");
+                        setBatchOprationLayoutByPrivilege();
                     }
                 }
 
@@ -112,7 +120,8 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
 
             @Override
             public void onItemLongClick(View view, int position) {
-                if (!adapter.getMultiselect()) {
+                VolumeFile volumeFile = volumeFileList.get(position);
+                if (volumeFile.getStatus().equals("normal") && !adapter.getMultiselect()) {
                     showFileOperationDlg(volumeFileList.get(position));
                 }
             }
@@ -134,8 +143,8 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
         broadcastReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                String path = intent.getStringExtra("path");
-                if (path != null && path.equals(currentDirAbsolutePath)) {
+                String directoryId = intent.getStringExtra("directoryId");
+                if (directoryId != null && directoryId.equals(getVolumeFileListResult.getId())) {
                     String command = intent.getStringExtra("command");
                     if (command != null && command.equals("refresh")) {
                         getVolumeFileList(true);
@@ -213,6 +222,7 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
             case R.id.batch_operation_select_all_text:
                 boolean isSelectAllStatus = getBatchOprationSelectAllText.getText().toString().equals("全选");
                 setselectAll(isSelectAllStatus);
+                setBatchOprationLayoutByPrivilege();
                 break;
 
             default:
@@ -416,6 +426,27 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
 
 
     /**
+     * 设置当前目录权限有关的layout展示
+     */
+    @Override
+    protected void setCurrentDirectoryLayoutByPrivilege() {
+        boolean isCurrentDirectoryWriteable = VolumeFilePrivilegeUtils.getVolumeFileWriteable(getApplicationContext(),getVolumeFileListResult);
+        headerOperationLayout.setVisibility(isCurrentDirectoryWriteable ? View.VISIBLE : View.GONE);
+    }
+
+    private void setBatchOprationLayoutByPrivilege(){
+        List<VolumeFile> selectVolumeFileList = adapter.getSelectVolumeFileList();
+        if (selectVolumeFileList.size()>0){
+            batchOperationBarLayout.setVisibility(View.VISIBLE);
+            boolean isFileListWriteable = VolumeFilePrivilegeUtils.getVolumeFileListWriteable(getApplicationContext(),selectVolumeFileList);
+            batchOperationDeleteText.setVisibility(isFileListWriteable?View.VISIBLE:View.GONE);
+            batchOperationMoveText.setVisibility(isFileListWriteable?View.VISIBLE:View.GONE);
+        }else {
+            batchOperationBarLayout.setVisibility(View.GONE);
+        }
+
+    };
+    /**
      * 设置是否是多选状态
      *
      * @param isMutiselect
@@ -423,7 +454,9 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
     private void setMutiSelect(boolean isMutiselect) {
         getBatchOprationSelectAllText.setText("全选");
         batchOprationHeaderText.setText("已选择(0)");
-        batchOperationBarLayout.setVisibility(isMutiselect ? View.VISIBLE : View.GONE);
+        if (!isMutiselect){
+            batchOperationBarLayout.setVisibility(View.GONE);
+        }
         batchOprationHeaderLayout.setVisibility(isMutiselect ? View.VISIBLE : View.GONE);
         adapter.setShowFileOperationDropDownImg(!isMutiselect);
         adapter.setMultiselect(isMutiselect);

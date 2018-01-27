@@ -53,6 +53,7 @@
                 android:id="@+id/header_operation_layout"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:visibility="gone"
                 android:layout_alignParentRight="true">
 
                 <ImageView
@@ -151,13 +152,30 @@
         </RelativeLayout>
     </RelativeLayout>
 
+    <TextView
+        android:id="@+id/path_text"
+        android:background="@android:color/white"
+        android:layout_below="@id/header_layout"
+        android:ellipsize="middle"
+        android:singleLine="true"
+        android:textColor="#333333"
+        android:paddingLeft="12dp"
+        android:paddingRight="10dp"
+        android:paddingTop="9dp"
+        android:paddingBottom="9dp"
+        android:visibility="gone"
+        android:textSize="16sp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/refresh_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/bottom_layout"
-        android:layout_below="@id/header_layout"
+        android:layout_below="@id/path_text"
         android:background="@color/content_bg"
         android:scrollbars="vertical">
 

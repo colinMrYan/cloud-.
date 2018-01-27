@@ -7,6 +7,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.InputFilter;
 import android.text.InputType;
 import android.view.View;
 import android.widget.Button;
@@ -21,6 +22,7 @@ import com.inspur.emmcloud.adapter.VolumeFileAdapter;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
 import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeFileListResult;
+import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeGroupResult;
 import com.inspur.emmcloud.bean.appcenter.volume.Volume;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeGroupContainMe;
@@ -32,6 +34,7 @@ import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
+import com.inspur.emmcloud.util.privates.VolumeFilePrivilegeUtils;
 import com.inspur.emmcloud.util.privates.VolumeFileUploadManagerUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.util.privates.cache.VolumeGroupContainMeCacheUtils;
@@ -82,12 +85,6 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
     @ViewInject(R.id.no_file_text)
     protected TextView noFileText;
 
-    @ViewInject(R.id.batch_operation_delete_text)
-    private TextView batchOperationDeleteText;
-
-    @ViewInject(R.id.batch_operation_move_text)
-    private TextView batchOperationMoveText;
-
     protected LoadingDialog loadingDlg;
     protected VolumeFileAdapter adapter;
     protected List<VolumeFile> volumeFileList = new ArrayList<>();
@@ -100,8 +97,6 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
     protected String fileFilterType = "";  //显示的文件类型
     protected boolean isShowFileUploading = false;  //是否显示正在上传的文件
     protected GetVolumeFileListResult getVolumeFileListResult;
-    private boolean isFileWriteable = false;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -142,13 +137,14 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
      * @param title
      */
     protected void showFileOperationDlg(final VolumeFile volumeFile) {
+        boolean isVolumeFileWriteable = VolumeFilePrivilegeUtils.getVolumeFileWriteable(getApplicationContext(),volumeFile);
         boolean isVolumeFileDirectory = volumeFile.getType().equals(VolumeFile.FILE_TYPE_DIRECTORY);
         new ActionSheetDialog.ActionListSheetBuilder(VolumeFileBaseActivity.this)
                 .setTitle(volumeFile.getName())
-                .addItem("删除", getVolumeFileListResult.getHaveModifyPrivilege())
+                .addItem("删除", isVolumeFileWriteable)
                 .addItem("下载", !isVolumeFileDirectory)
-                .addItem("重命名", getVolumeFileListResult.getHaveModifyPrivilege())
-                .addItem("移动到", getVolumeFileListResult.getHaveModifyPrivilege())
+                .addItem("重命名", isVolumeFileWriteable)
+                .addItem("移动到", isVolumeFileWriteable)
                 .addItem("复制")
                 .addItem("分享", !isVolumeFileDirectory)
                 .setOnSheetItemClickListener(new ActionSheetDialog.ActionListSheetBuilder.OnSheetItemClickListener() {
@@ -215,12 +211,12 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
      * 弹出新建文件夹提示框
      */
     protected void showCreateFolderDlg() {
-
         createFolderDlg = new MyDialog(VolumeFileBaseActivity.this,
                 R.layout.dialog_my_app_approval_password_input, R.style.userhead_dialog_bg);
         createFolderDlg.setCancelable(false);
         final EditText inputEdit = (EditText) createFolderDlg.findViewById(R.id.edit);
         inputEdit.setHint("请输入文件夹名称");
+        inputEdit.setFilters(new InputFilter[]{new InputFilter.LengthFilter(MyAppConfig.VOLUME_MAX_FILE_NAME_LENGTH)});
         inputEdit.setInputType(InputType.TYPE_CLASS_TEXT);
         ((TextView) createFolderDlg.findViewById(R.id.app_update_title)).setText("新建文件夹");
         Button okBtn = (Button) createFolderDlg.findViewById(R.id.ok_btn);
@@ -231,23 +227,26 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
                 String forderName = inputEdit.getText().toString();
                 if (StringUtils.isBlank(forderName)) {
                     ToastUtils.show(getApplicationContext(), "请输入文件夹名称");
-                } else if (!FomatUtils.isValidFileName(forderName)) {
-                    ToastUtils.show(getApplicationContext(), "文件名中不能包含特殊字符 / \\ \" : | * ? < >");
-                } else {
-                    boolean isNameDuplication = false;
-                    for (int i = 0; i < volumeFileList.size(); i++) {
-                        if (volumeFileList.get(i).getName().equals(forderName)) {
-                            isNameDuplication = true;
-                            break;
-                        }
-                    }
-
-                    if (isNameDuplication) {
-                        ToastUtils.show(getApplicationContext(), "已存在同名文件/文件夹");
-                        return;
-                    }
-                    createForder(forderName);
+                    return;
                 }
+                if (!FomatUtils.isValidFileName(forderName)) {
+                    ToastUtils.show(getApplicationContext(), "文件名中不能包含特殊字符 / \\ \" : | * ? < >");
+                    return;
+                }
+
+                boolean isNameDuplication = false;
+                for (int i = 0; i < volumeFileList.size(); i++) {
+                    if (volumeFileList.get(i).getName().equals(forderName)) {
+                        isNameDuplication = true;
+                        break;
+                    }
+                }
+
+                if (isNameDuplication) {
+                    ToastUtils.show(getApplicationContext(), "已存在同名文件/文件夹");
+                    return;
+                }
+                createForder(forderName);
             }
         });
 
@@ -273,6 +272,7 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
                 R.layout.dialog_my_app_approval_password_input, R.style.userhead_dialog_bg);
         fileRenameDlg.setCancelable(false);
         final EditText inputEdit = (EditText) fileRenameDlg.findViewById(R.id.edit);
+        inputEdit.setFilters(new InputFilter[]{new InputFilter.LengthFilter(MyAppConfig.VOLUME_MAX_FILE_NAME_LENGTH)});
         inputEdit.setText(fileNameNoEx);
         inputEdit.setSelectAllOnFocus(true);
         inputEdit.setInputType(InputType.TYPE_CLASS_TEXT);
@@ -285,9 +285,13 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
                 String newName = inputEdit.getText().toString();
                 if (StringUtils.isBlank(newName)) {
                     ToastUtils.show(getApplicationContext(), "请输入文件/文件夹名称");
-                } else if (!FomatUtils.isValidFileName(newName)) {
+                    return;
+                }
+                if (!FomatUtils.isValidFileName(newName)) {
                     ToastUtils.show(getApplicationContext(), "文件名中不能包含特殊字符 / \\ \" : | * ? < >");
-                } else if (!fileNameNoEx.equals(newName)) {
+                    return;
+                }
+                if (!fileNameNoEx.equals(newName)) {
                     newName = newName + fileExtension;
                     boolean isNameDuplication = false;
                     for (int i = 0; i < volumeFileList.size(); i++) {
@@ -320,30 +324,18 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
     }
 
 
-    private void getFilePrivilege() {
-        VolumeGroupContainMe volumeGroupContainMe = VolumeGroupContainMeCacheUtils.getVolumeGroupContainMe(getApplicationContext(), volume.getId());
-        if (volumeGroupContainMe != null) {
-            List<String> groupIdList = volumeGroupContainMe.getGroupIdList();
-            isFileWriteable = getVolumeFileListResult.isFileWriteable(groupIdList);
-            setLayoutByPrivilege();
-        }else {
-
-        }
-
-    }
-
     /**
      * 设置跟权限相关的layout
      *
      * @param haveModifyPrivilege
      */
-    private void setLayoutByPrivilege() {
-        LoadingDialog.dimissDlg(loadingDlg);
-        //当自己没有写权限时禁止上传文件和新建文件夹
-        boolean isVolumeFileLocaitionSelectActivity = VolumeFileBaseActivity.this instanceof VolumeFileLocationSelectActivity;
-        headerOperationLayout.setVisibility(!isFileWriteable || isVolumeFileLocaitionSelectActivity ? View.GONE : View.VISIBLE);
-        batchOperationDeleteText.setVisibility(isFileWriteable ? View.VISIBLE : View.GONE);
-        batchOperationMoveText.setVisibility(isFileWriteable ? View.VISIBLE : View.GONE);
+    protected void setCurrentDirectoryLayoutByPrivilege() {
+//        //当自己没有写权限时禁止上传文件和新建文件夹
+//        boolean isCurrentDirectoryWriteable = VolumeFilePrivilegeUtils.getVolumeFileWriteable(getApplicationContext(),getVolumeFileListResult);
+//        boolean isVolumeFileActivity = VolumeFileBaseActivity.this instanceof VolumeFileActivity;
+//        headerOperationLayout.setVisibility(isCurrentDirectoryWriteable && isVolumeFileActivity ? View.VISIBLE : View.GONE);
+//        batchOperationDeleteText.setVisibility(isCurrentDirectoryWriteable ? View.VISIBLE : View.GONE);
+//        batchOperationMoveText.setVisibility(isCurrentDirectoryWriteable ? View.VISIBLE : View.GONE);
 
     }
 
@@ -387,6 +379,19 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
             volumeFileList.removeAll(moveVolumeFileList);
             adapter.notifyDataSetChanged();
         }
+    }
+
+    /**
+     * 发送刷新目录广播
+     *
+     * @param directoryId
+     */
+    protected void sendVolumeFileRefreshBroadcast(String directoryId) {
+        Intent intent = new Intent();
+        intent.putExtra("directoryId", directoryId);
+        intent.putExtra("command", "refresh");
+        intent.setAction("broadcast_volume");
+        sendBroadcast(intent);
     }
 
 
@@ -451,6 +456,17 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
 
 
     /**
+     * 获取网盘下包含自己的组
+     */
+    private void getVolumeGroupContainMe() {
+        if (NetUtils.isNetworkConnected(getApplicationContext())) {
+            apiServiceBase.getVolumeGroupContainMe(volume.getId());
+        } else {
+            LoadingDialog.dimissDlg(loadingDlg);
+        }
+    }
+
+    /**
      * 创建文件夹
      *
      * @param forderName
@@ -513,7 +529,13 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
         @Override
         public void returnVolumeFileListSuccess(GetVolumeFileListResult getVolumeFileListResult) {
             VolumeFileBaseActivity.this.getVolumeFileListResult = getVolumeFileListResult;
-            getFilePrivilege();
+            //判断是否可以计算出当前目录的权限，如果不可以则获取网盘中我所属的群组信息
+            if (VolumeFilePrivilegeUtils.canGetVolumeFilePrivilege(getApplicationContext(),volume)){
+                LoadingDialog.dimissDlg(loadingDlg);
+                setCurrentDirectoryLayoutByPrivilege();
+            }else {
+                getVolumeGroupContainMe();
+            }
             swipeRefreshLayout.setRefreshing(false);
             if (StringUtils.isBlank(fileFilterType)) {
                 volumeFileList = getVolumeFileListResult.getVolumeFileList();
@@ -535,9 +557,7 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
 
         @Override
         public void returnVolumeFileListFail(String error, int errorCode) {
-            if (loadingDlg != null && loadingDlg.isShowing()) {
-                loadingDlg.dismiss();
-            }
+            LoadingDialog.dimissDlg(loadingDlg);
             swipeRefreshLayout.setRefreshing(false);
             WebServiceMiddleUtils.hand(getApplicationContext(), error, errorCode);
         }
@@ -599,6 +619,22 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
             if (fileRenameDlg != null && fileRenameDlg.isShowing()) {
                 fileRenameDlg.dismiss();
             }
+            WebServiceMiddleUtils.hand(getApplicationContext(), error, errorCode);
+        }
+
+        @Override
+        public void returnVolumeGroupContainMeSuccess(GetVolumeGroupResult getVolumeGroupResult) {
+            LoadingDialog.dimissDlg(loadingDlg);
+            List<String> groupIdList = getVolumeGroupResult.getGroupIdList();
+            VolumeGroupContainMe volumeGroupContainMe = new VolumeGroupContainMe(volume.getId(), groupIdList);
+            VolumeGroupContainMeCacheUtils.saveVolumeGroupContainMe(getApplicationContext(), volumeGroupContainMe);
+            setCurrentDirectoryLayoutByPrivilege();
+        }
+
+        @Override
+        public void returnVolumeGroupContainMeFail(String error, int errorCode) {
+            LoadingDialog.dimissDlg(loadingDlg);
+            setCurrentDirectoryLayoutByPrivilege();
             WebServiceMiddleUtils.hand(getApplicationContext(), error, errorCode);
         }
     }

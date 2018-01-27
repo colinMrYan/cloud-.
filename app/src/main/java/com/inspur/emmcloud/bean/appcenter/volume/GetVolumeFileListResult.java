@@ -1,14 +1,12 @@
 package com.inspur.emmcloud.bean.appcenter.volume;
 
 import com.alibaba.fastjson.TypeReference;
-import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.util.common.JSONUtils;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,6 +21,7 @@ public class GetVolumeFileListResult {
     private String id = "";
     private int ownerPrivilege = 0;
     private int othersPrivilege = 0;
+    private String volume= "";
     private List<VolumeFile> volumeFileList = new ArrayList<>();
     private List<VolumeFile> volumeFileDirectoryList = new ArrayList<>();
     private List<VolumeFile> volumeFileRegularList = new ArrayList<>();
@@ -35,6 +34,7 @@ public class GetVolumeFileListResult {
         this.id = JSONUtils.getString(obj, "id", "");
         this.ownerPrivilege = JSONUtils.getInt(obj, "ownerPrivilege", 0);
         this.othersPrivilege = JSONUtils.getInt(obj, "othersPrivilege", 0);
+        this.volume = JSONUtils.getString(obj,"volume","");
         JSONArray array = JSONUtils.getJSONArray(obj, "children", new JSONArray());
         for (int i = 0; i < array.length(); i++) {
             JSONObject object = JSONUtils.getJSONObject(array, i, new JSONObject());
@@ -151,20 +151,20 @@ public class GetVolumeFileListResult {
         this.othersPrivilege = othersPrivilege;
     }
 
-    public boolean getHaveModifyPrivilege() {
-        return owner.equals(MyApplication.getInstance().getUid()) || (othersPrivilege > 5);
+    public String getVolume() {
+        return volume;
     }
 
-    public boolean isFileWriteable(List<String> groupIdList) {
-        List<Integer> privilegeList = new ArrayList<>();
-        for (int i = 0; i < groupIdList.size(); i++) {
-            String groupId = groupIdList.get(i);
-            Integer privilege = groupPrivilegeMap.get(groupId);
-            if (privilege != null) {
-                privilegeList.add(privilege);
-            }
-        }
-        int maxPrivilege = Collections.max(privilegeList);
-        return (maxPrivilege > 4);
+    public void setVolume(String volume) {
+        this.volume = volume;
     }
+
+    public Map<String, Integer> getGroupPrivilegeMap() {
+        return groupPrivilegeMap;
+    }
+
+    public void setGroupPrivilegeMap(Map<String, Integer> groupPrivilegeMap) {
+        this.groupPrivilegeMap = groupPrivilegeMap;
+    }
+
 }
