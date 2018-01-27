@@ -6,10 +6,13 @@ import android.graphics.Bitmap;
 import android.os.Environment;
 import android.widget.Toast;
 
+import com.inspur.emmcloud.bean.system.AppException;
 import com.inspur.emmcloud.config.MyAppConfig;
+import com.inspur.emmcloud.util.common.LogUtils;
+import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.DataCleanManager;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
+import com.inspur.emmcloud.util.privates.cache.AppExceptionCacheUtils;
 import com.inspur.imp.api.Res;
 import com.inspur.imp.plugin.ImpPlugin;
 import com.inspur.imp.plugin.camera.Bimp;
@@ -165,6 +168,7 @@ public class PhotoService extends ImpPlugin {
                 } catch (Exception e) {
                     // TODO Auto-generated catch block
                     this.failPicture(Res.getString("camera_error"));
+                    saveNetException("PhotoService.camera",e.toString());
                     e.printStackTrace();
                 } finally {
                     recycleBitmap(bitmap);
@@ -172,6 +176,7 @@ public class PhotoService extends ImpPlugin {
                 }
             } else {
                 this.failPicture(Res.getString("cancel_camera"));
+                saveNetException("PhotoService.camera","system_camera_error");
             }
             clearImgCache();
         } else if (requestCode == RESULT_GELLERY) {
@@ -205,6 +210,7 @@ public class PhotoService extends ImpPlugin {
                 } catch (Exception e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
+                    saveNetException("PhotoService.gallery",e.toString());
                     this.failPicture(Res.getString("select_error"));
                 }finally {
                     for (int i = 0; i < thumbnailBitmaps.length; i++) {
@@ -246,7 +252,22 @@ public class PhotoService extends ImpPlugin {
     public void failPicture(String err) {
         this.jsCallback(failCb, err);
     }
-
+    /**
+     * 处理异常网络请求
+     *
+     * @param error
+     * @param responseCode
+     */
+    private void saveNetException( String function,String error) {
+        try {
+            if (!AppUtils.isApkDebugable(context)) {
+                AppException appException = new AppException(System.currentTimeMillis(), AppUtils.getVersion(context), 4, function, error, 0);
+                AppExceptionCacheUtils.saveAppException(context, appException);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
     @Override
     public void onDestroy() {
         // TODO Auto-generated method stub
