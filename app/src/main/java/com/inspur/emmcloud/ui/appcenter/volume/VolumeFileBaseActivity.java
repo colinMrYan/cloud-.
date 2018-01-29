@@ -141,12 +141,12 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
         boolean isVolumeFileDirectory = volumeFile.getType().equals(VolumeFile.FILE_TYPE_DIRECTORY);
         new ActionSheetDialog.ActionListSheetBuilder(VolumeFileBaseActivity.this)
                 .setTitle(volumeFile.getName())
-                .addItem("删除", isVolumeFileWriteable)
-                .addItem("下载", !isVolumeFileDirectory)
-                .addItem("重命名", isVolumeFileWriteable)
-                .addItem("移动到", isVolumeFileWriteable)
-                .addItem("复制")
-                .addItem("分享", !isVolumeFileDirectory)
+                .addItem(getString(R.string.delete), isVolumeFileWriteable)
+                .addItem(getString(R.string.download), !isVolumeFileDirectory)
+                .addItem(getString(R.string.rename), isVolumeFileWriteable)
+                .addItem(getString(R.string.move_to), isVolumeFileWriteable)
+                .addItem(getString(R.string.copy))
+               // .addItem("分享", !isVolumeFileDirectory)
                 .setOnSheetItemClickListener(new ActionSheetDialog.ActionListSheetBuilder.OnSheetItemClickListener() {
                     @Override
                     public void onClick(ActionSheetDialog dialog, View itemView, int position) {
@@ -188,7 +188,7 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
      */
     protected void showFileDelWranibgDlg(final VolumeFile volumeFile) {
         new MyQMUIDialog.MessageDialogBuilder(VolumeFileBaseActivity.this)
-                .setMessage("确定要删除所选文件吗？")
+                .setMessage(R.string.sure_delete_file)
                 .addAction(R.string.cancel, new QMUIDialogAction.ActionListener() {
                     @Override
                     public void onClick(QMUIDialog dialog, int index) {
@@ -215,22 +215,22 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
                 R.layout.dialog_my_app_approval_password_input, R.style.userhead_dialog_bg);
         createFolderDlg.setCancelable(false);
         final EditText inputEdit = (EditText) createFolderDlg.findViewById(R.id.edit);
-        inputEdit.setHint("请输入文件夹名称");
+        inputEdit.setHint(getString(R.string.input_directory_name));
         inputEdit.setFilters(new InputFilter[]{new InputFilter.LengthFilter(MyAppConfig.VOLUME_MAX_FILE_NAME_LENGTH)});
         inputEdit.setInputType(InputType.TYPE_CLASS_TEXT);
-        ((TextView) createFolderDlg.findViewById(R.id.app_update_title)).setText("新建文件夹");
+        ((TextView) createFolderDlg.findViewById(R.id.app_update_title)).setText(getString(R.string.create_forder));
         Button okBtn = (Button) createFolderDlg.findViewById(R.id.ok_btn);
-        okBtn.setText("新建");
+        okBtn.setText(R.string.create);
         okBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String forderName = inputEdit.getText().toString();
                 if (StringUtils.isBlank(forderName)) {
-                    ToastUtils.show(getApplicationContext(), "请输入文件夹名称");
+                    ToastUtils.show(getApplicationContext(), R.string.input_directory_name);
                     return;
                 }
                 if (!FomatUtils.isValidFileName(forderName)) {
-                    ToastUtils.show(getApplicationContext(), "文件名中不能包含特殊字符 / \\ \" : | * ? < >");
+                    ToastUtils.show(getApplicationContext(), R.string.directory_name_invaliad);
                     return;
                 }
 
@@ -243,7 +243,7 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
                 }
 
                 if (isNameDuplication) {
-                    ToastUtils.show(getApplicationContext(), "已存在同名文件/文件夹");
+                    ToastUtils.show(getApplicationContext(), R.string.exists_same_name);
                     return;
                 }
                 createForder(forderName);
@@ -276,19 +276,19 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
         inputEdit.setText(fileNameNoEx);
         inputEdit.setSelectAllOnFocus(true);
         inputEdit.setInputType(InputType.TYPE_CLASS_TEXT);
-        ((TextView) fileRenameDlg.findViewById(R.id.app_update_title)).setText("文件重命名");
+        ((TextView) fileRenameDlg.findViewById(R.id.app_update_title)).setText(R.string.file_rename);
         Button okBtn = (Button) fileRenameDlg.findViewById(R.id.ok_btn);
-        okBtn.setText("重命名");
+        okBtn.setText(R.string.rename);
         okBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String newName = inputEdit.getText().toString();
                 if (StringUtils.isBlank(newName)) {
-                    ToastUtils.show(getApplicationContext(), "请输入文件/文件夹名称");
+                    ToastUtils.show(getApplicationContext(), R.string.input_file_name);
                     return;
                 }
                 if (!FomatUtils.isValidFileName(newName)) {
-                    ToastUtils.show(getApplicationContext(), "文件名中不能包含特殊字符 / \\ \" : | * ? < >");
+                    ToastUtils.show(getApplicationContext(),  R.string.file_name_invaliad);
                     return;
                 }
                 if (!fileNameNoEx.equals(newName)) {
@@ -303,7 +303,7 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
                     }
 
                     if (isNameDuplication) {
-                        ToastUtils.show(getApplicationContext(), "已存在同名文件/文件夹");
+                        ToastUtils.show(getApplicationContext(), R.string.exists_same_name);
                         return;
                     }
                     renameFile(volumeFile, newName);
@@ -348,7 +348,7 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
     protected void downloadOrOpenVolumeFile(VolumeFile volumeFile) {
         String fileSavePath = MyAppConfig.LOCAL_DOWNLOAD_PATH + volumeFile.getName();
         if (FileUtils.isFileExist(fileSavePath)) {
-            FileUtils.openFile(getApplicationContext(), fileSavePath, volumeFile.getFormat());
+            FileUtils.openFile(getApplicationContext(), fileSavePath);
         } else {
             Bundle bundle = new Bundle();
             bundle.putSerializable("volumeId", volume.getId());
@@ -423,13 +423,11 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
             Bundle bundle = new Bundle();
             bundle.putSerializable("volume", volume);
             bundle.putSerializable("volumeFileList", (Serializable) moveVolumeFileList);
-            bundle.putString("title", "选择目标文件夹");
+            bundle.putString("title", getString(R.string.select_move_position));
             bundle.putString("operationFileDirAbsolutePath", currentDirAbsolutePath);
             bundle.putBoolean("isFunctionCopy", false);
             intent.putExtras(bundle);
             startActivityForResult(intent, REQUEST_MOVE_FILE);
-        } else {
-            ToastUtils.show(getApplicationContext(), "请选择文件");
         }
 
     }
@@ -444,13 +442,11 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
             Bundle bundle = new Bundle();
             bundle.putSerializable("volume", volume);
             bundle.putSerializable("volumeFileList", (Serializable) volumeFileList);
-            bundle.putString("title", "选择复制位置");
+            bundle.putString("title",getString(R.string.select_copy_position));
             bundle.putBoolean("isFunctionCopy", true);
             bundle.putString("operationFileDirAbsolutePath", currentDirAbsolutePath);
             intent.putExtras(bundle);
             startActivityForResult(intent, REQUEST_COPY_FILE);
-        } else {
-            ToastUtils.show(getApplicationContext(), "请选择文件");
         }
     }
 
@@ -573,6 +569,9 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
             adapter.setVolumeFileList(volumeFileList);
             adapter.notifyDataSetChanged();
             initDataBlankLayoutStatus();
+            if (VolumeFileBaseActivity.this instanceof VolumeFileLocationSelectActivity){
+                sendVolumeFileRefreshBroadcast(getVolumeFileListResult.getId());
+            }
         }
 
         @Override

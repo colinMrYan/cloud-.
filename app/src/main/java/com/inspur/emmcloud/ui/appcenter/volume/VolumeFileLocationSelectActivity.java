@@ -62,8 +62,8 @@ public class VolumeFileLocationSelectActivity extends VolumeFileBaseActivity {
     private void initViews() {
         apiService = new MyAppAPIService(this);
         apiService.setAPIInterface(new WebService());
-        noFileText.setText("暂无文件夹");
-        locationSelectToText.setText(isFunctionCopy ? "复制到" : "移动到当前目录");
+        noFileText.setText(R.string.no_directory);
+        locationSelectToText.setText(isFunctionCopy ? R.string.copy_to : R.string.copy_to_current_directory);
         headerOperationLayout.setVisibility(View.GONE);
         locationSelectCancelText.setVisibility(View.VISIBLE);
         locationSelectBarLayout.setVisibility(View.VISIBLE);
@@ -86,7 +86,7 @@ public class VolumeFileLocationSelectActivity extends VolumeFileBaseActivity {
             }
         });
         pathText.setVisibility(View.VISIBLE);
-        pathText.setText("当前目录："+currentDirAbsolutePath);
+        pathText.setText(getString(R.string.current_directory_hint,currentDirAbsolutePath));
     }
 
     public void onClick(View v) {
@@ -110,7 +110,7 @@ public class VolumeFileLocationSelectActivity extends VolumeFileBaseActivity {
             case R.id.location_select_to_text:
                 String operationFileAbsolutePath = getIntent().getStringExtra("operationFileDirAbsolutePath");
                 if (operationFileAbsolutePath.equals(currentDirAbsolutePath)) {
-                    ToastUtils.show(getApplicationContext(), "该文件已在当前文件夹");
+                    ToastUtils.show(getApplicationContext(), R.string.file_exist_current_directory);
                     return;
                 }
 
@@ -118,7 +118,7 @@ public class VolumeFileLocationSelectActivity extends VolumeFileBaseActivity {
                 for (int i = 0;i<operationFileList.size();i++){
                     String volumeFilePath = operationFileAbsolutePath+operationFileList.get(i).getName();
                     if (currentDirAbsolutePath.startsWith(volumeFilePath)){
-                        ToastUtils.show(getApplicationContext(), isFunctionCopy?"不能将文件复制到自身或其子目录下":"不能将文件移动到自身或其子目录下");
+                        ToastUtils.show(getApplicationContext(), isFunctionCopy?R.string.file_cannot_copy_here:R.string.file_cannot_move_here);
                         return;
                     }
                 }

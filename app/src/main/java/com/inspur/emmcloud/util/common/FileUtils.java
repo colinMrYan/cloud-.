@@ -773,6 +773,18 @@ public class FileUtils {
         }
     }
 
+    public static String  getSuffix(String  fileName){
+        if (fileName.equals("") || fileName.endsWith(".")) {
+            return "";
+        }
+        int index = fileName.lastIndexOf(".");
+        if (index != -1) {
+            return fileName.substring(index + 1).toLowerCase(Locale.US);
+        } else {
+            return "";
+        }
+    }
+
     /**
      * 获取文件打开的schema
      *
@@ -781,6 +793,24 @@ public class FileUtils {
      */
     public static String getMimeType(File file) {
         String suffix = getSuffix(file);
+        if (suffix == null) {
+            return "";
+        }
+        MimeTypeMap.getSingleton().getMimeTypeFromExtension(suffix);
+        String type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(
+                suffix);
+        if (TextUtils.isEmpty(type)) {
+            return "";
+        }
+        if (!StringUtils.isBlank(type)) {
+            return type;
+        } else {
+            return "";
+        }
+    }
+
+    public static String getMimeType(String fileName){
+        String suffix = getSuffix(fileName);
         if (suffix == null) {
             return "";
         }
@@ -819,11 +849,16 @@ public class FileUtils {
      * @param mime
      */
     public static void openFile(Context context, String path,String mime){
-        File file = new File(path);
-        Intent intent = new Intent("android.intent.action.VIEW");
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.setDataAndType(Uri.fromFile(file), mime);
-        context.startActivity(intent);
+        try {
+            File file = new File(path);
+            Intent intent = new Intent("android.intent.action.VIEW");
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.setDataAndType(Uri.fromFile(file), mime);
+            context.startActivity(intent);
+        }catch (Exception e){
+            e.printStackTrace();
+            ToastUtils.show(context,R.string.file_open_file);
+        }
     }
 
     /**

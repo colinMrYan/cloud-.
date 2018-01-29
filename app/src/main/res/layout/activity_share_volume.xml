@@ -39,7 +39,7 @@
             android:maxLines="1"
             android:paddingLeft="100dp"
             android:paddingRight="100dp"
-            android:text="共享网盘"
+            android:text="@string/share_volume"
             android:textColor="@color/header_text"
             android:textSize="@dimen/header_textsize" />
 

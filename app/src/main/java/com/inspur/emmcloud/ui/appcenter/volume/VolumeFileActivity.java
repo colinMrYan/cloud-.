@@ -111,7 +111,7 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
                         }
                     } else {
                         adapter.setVolumeFileSelect(position);
-                        batchOprationHeaderText.setText("已选择(" + adapter.getSelectVolumeFileList().size() + ")");
+                        batchOprationHeaderText.setText(getString(R.string.has_selected,adapter.getSelectVolumeFileList().size()));
                         setBatchOprationLayoutByPrivilege();
                     }
                 }
@@ -235,9 +235,9 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
      */
     private void showUploadFileDlg() {
         new ActionSheetDialog.ActionListSheetBuilder(VolumeFileActivity.this)
-                .addItem("拍照")
-                .addItem("选择照片")
-                .addItem("选择文件")
+                .addItem(getString(R.string.take_photo))
+                .addItem(getString(R.string.select_photo))
+                .addItem(getString(R.string.select_file))
                 .setOnSheetItemClickListener(new ActionSheetDialog.ActionListSheetBuilder.OnSheetItemClickListener() {
                     @Override
                     public void onClick(ActionSheetDialog dialog, View itemView, int position) {
@@ -307,16 +307,16 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
         String sortTypeShowTxt;
         switch (sortType) {
             case SORT_BY_NAME_DOWN:
-                sortTypeShowTxt = "名称降序";
+                sortTypeShowTxt = getString(R.string.sort_by_name_dasc);
                 break;
             case SORT_BY_TIME_UP:
-                sortTypeShowTxt = "时间升序";
+                sortTypeShowTxt = getString(R.string.sort_by_time_asc);;
                 break;
             case SORT_BY_TIME_DOWN:
-                sortTypeShowTxt = "时间降序";
+                sortTypeShowTxt = getString(R.string.sort_by_time_dasc);;
                 break;
             default:
-                sortTypeShowTxt = "名称升序";
+                sortTypeShowTxt = getString(R.string.sort_by_name_asc);;
                 break;
         }
         operationSortText.setText(sortTypeShowTxt);
@@ -408,11 +408,10 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
                 String[] fileFilterTypes = {VolumeFile.FILTER_TYPE_DOCUNMENT, VolumeFile.FILTER_TYPE_IMAGE, VolumeFile.FILTER_TYPE_AUDIO, VolumeFile.FILTER_TYPE_VIDEO, VolumeFile.FILTER_TYPE_OTHER};
                 Intent intent = new Intent(VolumeFileActivity.this, VolumeFileFilterActvity.class);
                 Bundle bundle = getIntent().getExtras();
-                bundle.putString("title", "分类");
+                bundle.putString("title", getString(R.string.app_classification));
                 bundle.putString("fileFilterType", fileFilterTypes[position]);
                 bundle.putString("currentDirAbsolutePath", currentDirAbsolutePath);
                 intent.putExtras(bundle);
-                LogUtils.jasonDebug("bundle=" + bundle.toString());
                 startActivityForResult(intent, REQUEST_SHOW_FILE_FILTER);
                 fileFilterPop.dismiss();
             }
@@ -452,8 +451,8 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
      * @param isMutiselect
      */
     private void setMutiSelect(boolean isMutiselect) {
-        getBatchOprationSelectAllText.setText("全选");
-        batchOprationHeaderText.setText("已选择(0)");
+        getBatchOprationSelectAllText.setText(R.string.select_all);
+        batchOprationHeaderText.setText(getString(R.string.has_selected,0));
         if (!isMutiselect){
             batchOperationBarLayout.setVisibility(View.GONE);
         }
@@ -463,9 +462,9 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
     }
 
     private void setselectAll(boolean isSelectAll) {
-        getBatchOprationSelectAllText.setText(isSelectAll ? "全不选" : "全选");
+        getBatchOprationSelectAllText.setText(isSelectAll ? R.string.select_nothing : R.string.select_all);
         adapter.setSelectAll(isSelectAll);
-        batchOprationHeaderText.setText("已选择(" + adapter.getSelectVolumeFileList().size() + ")");
+        batchOprationHeaderText.setText(getString(R.string.has_selected,adapter.getSelectVolumeFileList().size()));
     }
 
 
@@ -480,6 +479,7 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
                 uploadFile(filePath);
             } else if (requestCode == REQUEST_OPEN_CEMERA //拍照返回
                     && NetUtils.isNetworkConnected(getApplicationContext())) {
+                LogUtils.jasonDebug("cameraPicFileName="+cameraPicFileName);
                 String filePath = Environment.getExternalStorageDirectory() + "/DCIM/" + cameraPicFileName;
                 uploadFile(filePath);
             } else if (requestCode == REQUEST_SHOW_FILE_FILTER) {  //移动文件
@@ -503,12 +503,12 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
      */
     private void uploadFile(String filePath) {
         if (filePath == null) {
-            ToastUtils.show(getApplicationContext(), "选择的文件不存在！");
+            ToastUtils.show(getApplicationContext(), R.string.file_selected_no_exist);
             return;
         }
         File file = new File(filePath);
         if (!file.exists()) {
-            ToastUtils.show(getApplicationContext(), "选择的文件不存在！");
+            ToastUtils.show(getApplicationContext(), R.string.file_selected_no_exist);
             return;
 
         }
