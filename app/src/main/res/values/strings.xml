@@ -424,6 +424,8 @@
     <string name="file_cannot_move_here">不能将文件移动到自身或其子目录下</string>
     <string name="refresh">刷新</string>
     <string name="disk">网盘</string>
+    <string name="volume_file_filter">分类筛选</string>
+
 
     <!-- 我的页面部分 -->
     <string name="data_clear_success">清除成功</string>

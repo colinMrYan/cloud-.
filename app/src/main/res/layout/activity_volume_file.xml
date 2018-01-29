@@ -219,7 +219,7 @@
                     android:layout_alignParentRight="true"
                     android:onClick="onClick"
                     android:padding="12dp"
-                    android:text="分类筛选"
+                    android:text="@string/volume_file_filter"
                     android:textColor="#666666"
                     android:textSize="15sp" />
 
