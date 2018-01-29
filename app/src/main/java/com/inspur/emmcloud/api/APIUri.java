@@ -53,15 +53,6 @@ public class APIUri {
     }
 
     /**
-     * 获取appTab的顺序和可显示性
-     *
-     * @return
-     */
-    public static String getAppTabs() {
-        return getEcmTanentUrl() + "/settings/client/mobile/main/tabs";
-    }
-
-    /**
      * 新版底部Tabbar接口
      *
      * @return
@@ -181,14 +172,6 @@ public class APIUri {
         return URL_BASE_ID + "oauth2.0/token";
     }
 
-    /**
-     * 扫码登录url
-     *
-     * @return
-     */
-    public static String getLoginDesktopCloudPlusUrl() {
-        return "";
-    }
 
     /**
      * 网页登录
@@ -357,15 +340,6 @@ public class APIUri {
     }
 
     /**
-     * 获取我的app
-     *
-     * @return
-     */
-    public static String getMyApp() {
-        return URL_BASE_EMM + "api/mam/v3.0/imp_app/userApps";
-    }
-
-    /**
      * 获取引用详情
      *
      * @return
@@ -503,6 +477,11 @@ public class APIUri {
         return "/" + MyApplication.getInstance().getTanent() + "/res" + "/article" + "/";
     }
 
+    /**
+     * 获取新闻批示
+     * @param newsId
+     * @return
+     */
     public static String getNewsInstruction(String newsId) {
         return getEcmTanentUrl() + "/api/v0/content/news/" + newsId + "/editor-comment";
     }
@@ -559,7 +538,6 @@ public class APIUri {
      * 获取云盘文件列表
      *
      * @param volumeId
-     * @param subPath
      * @return
      */
     public static String getVolumeFileOperationUrl(String volumeId) {
@@ -801,15 +779,6 @@ public class APIUri {
     }
 
     /**
-     * 查询所有待办任务
-     *
-     * @return
-     */
-    public static String getAllListTasks() {
-        return getToDoBaseUrl() + "list";
-    }
-
-    /**
      * 获取所有Tag
      *
      * @return
@@ -837,15 +806,6 @@ public class APIUri {
         return getToDoBaseUrl();
     }
 
-    /**
-     * 变更任务标签
-     *
-     * @param id
-     * @return
-     */
-    public static String getChangeMessionTagUrl(String id) {
-        return getToDoBaseUrl() + id + "/tags";
-    }
 
     /*************************************************发现*********************************************************/
     /**
@@ -876,16 +836,12 @@ public class APIUri {
         return getEcmTanentUrl() + "/" + uri;
     }
 
-
-
-
     /**
-     * 获取分享二维码的url
-     *
+     * 获取语言的接口
      * @return
      */
-    public static String getShareCloudPlusUrl() {
-        return "";
+    public static String getLangUrl(){
+        return getEcmTanentUrl() + "/settings/lang";
     }
 
 
