@@ -29,7 +29,7 @@
                 android:layout_height="match_parent"
                 android:src="@drawable/ic_login_logo"
                 app:border_color="#d2e6f0"
-                app:border_width="0dp"></ImageView>
+                app:border_width="0dp"/>
         </com.inspur.emmcloud.widget.SquareLayout>
     </LinearLayout>
 
@@ -153,7 +153,7 @@
                 android:onClick="onClick"
                 android:text="@string/login"
                 android:textColor="#ffffff"
-                android:textSize="18sp"></Button>
+                android:textSize="18sp"/>
         </RelativeLayout>
     </LinearLayout>
 
@@ -213,4 +213,18 @@
                 android:textSize="@dimen/content_normal_textsize" />
         </RelativeLayout>
     </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:textSize="13sp"
+            android:paddingTop="20dp"
+            android:textColor="#6FBDE1"
+            android:layout_alignParentBottom="true"
+            android:text="@string/more"/>
+    </RelativeLayout>
 </LinearLayout>

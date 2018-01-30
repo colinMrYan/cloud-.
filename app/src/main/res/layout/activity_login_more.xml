@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main_layout"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#ecf1f4"
+    android:fitsSystemWindows="true" >
+
+    <RelativeLayout
+        android:id="@+id/header_layout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/header_height"
+        android:layout_alignParentTop="true"
+        android:background="@color/header_bg" >
+
+        <TextView
+            android:id="@+id/meetting_bookingcirform_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:clickable="true"
+            android:onClick="onClick"
+            android:paddingLeft="20dp"
+            android:text=""
+            android:textColor="@color/white"
+            android:textSize="@dimen/header_textsize" />
+
+        <RelativeLayout
+            android:id="@+id/back_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:onClick="onClick"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp" >
+
+            <ImageView
+                android:id="@+id/back_btn"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_centerVertical="true"
+                android:background="@null"
+                android:paddingRight="5dp"
+                android:scaleType="centerInside"
+                android:src="@drawable/selector_back_btn" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/header_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:text="S06"
+            android:textColor="@color/header_text"
+            android:textSize="@dimen/header_textsize" />
+    </RelativeLayout>
+
+
+    <ImageView
+        android:id="@+id/building_img"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/header_layout"
+        android:scaleType="fitXY"
+        android:src="@drawable/icon_map_building"/>
+
+
+
+
+</RelativeLayout>
