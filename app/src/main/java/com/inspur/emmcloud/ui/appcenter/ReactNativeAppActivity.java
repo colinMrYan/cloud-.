@@ -1,5 +1,6 @@
 package com.inspur.emmcloud.ui.appcenter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,7 +13,6 @@ import com.facebook.react.common.LifecycleState;
 import com.facebook.react.modules.core.DefaultHardwareBackBtnHandler;
 import com.facebook.react.shell.MainReactPackage;
 import com.horcrux.svg.SvgPackage;
-import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIDownloadCallBack;
@@ -20,26 +20,25 @@ import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.api.apiservice.ReactNativeAPIService;
 import com.inspur.emmcloud.bean.appcenter.AndroidBundleBean;
-import com.inspur.emmcloud.bean.system.AppException;
-import com.inspur.emmcloud.bean.mine.Enterprise;
-import com.inspur.emmcloud.bean.mine.GetMyInfoResult;
 import com.inspur.emmcloud.bean.appcenter.ReactNativeDownloadUrlBean;
 import com.inspur.emmcloud.bean.appcenter.ReactNativeInstallUriBean;
-import com.inspur.emmcloud.interf.CommonCallBack;
+import com.inspur.emmcloud.bean.mine.Enterprise;
+import com.inspur.emmcloud.bean.mine.GetMyInfoResult;
+import com.inspur.emmcloud.bean.system.AppException;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.config.MyAppConfig;
-import com.inspur.emmcloud.util.privates.cache.AppExceptionCacheUtils;
-import com.inspur.emmcloud.util.privates.AppUtils;
-import com.inspur.emmcloud.util.privates.ClientIDUtils;
+import com.inspur.emmcloud.interf.CommonCallBack;
 import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
-import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
-import com.inspur.emmcloud.util.common.StateBarUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
-import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.util.common.ZipUtils;
+import com.inspur.emmcloud.util.privates.AppUtils;
+import com.inspur.emmcloud.util.privates.ClientIDUtils;
+import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
+import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
+import com.inspur.emmcloud.util.privates.cache.AppExceptionCacheUtils;
 import com.inspur.emmcloud.widget.dialogs.ECMCustomIOSDialog;
 import com.inspur.reactnative.AuthorizationManagerPackage;
 import com.inspur.reactnative.ReactNativeFlow;
@@ -55,7 +54,7 @@ import java.io.File;
  * Created by yufuchang on 2017/3/15.
  */
 
-public class ReactNativeAppActivity extends BaseActivity implements DefaultHardwareBackBtnHandler {
+public class ReactNativeAppActivity extends Activity implements DefaultHardwareBackBtnHandler {
     private ReactInstanceManager mReactInstanceManager;
     private ReactNativeAPIService reactNativeAPIService;
     private String reactNativeAppScheme = "";
@@ -68,7 +67,7 @@ public class ReactNativeAppActivity extends BaseActivity implements DefaultHardw
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        StateBarUtils.changeStateBarColor(this, R.color.react_native_statebar_color);
+    //    StateBarUtils.changeStateBarColor(this, R.color.react_native_statebar_color);
         init();
         checkSource();
         initReactNativeApp();
