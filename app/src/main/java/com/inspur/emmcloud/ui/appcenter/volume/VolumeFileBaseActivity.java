@@ -224,7 +224,7 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
         okBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String forderName = inputEdit.getText().toString();
+                String forderName = inputEdit.getText().toString().trim();
                 if (StringUtils.isBlank(forderName)) {
                     ToastUtils.show(getApplicationContext(), R.string.input_directory_name);
                     return;
@@ -282,7 +282,7 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
         okBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String newName = inputEdit.getText().toString();
+                String newName = inputEdit.getText().toString().trim();
                 if (StringUtils.isBlank(newName)) {
                     ToastUtils.show(getApplicationContext(), R.string.input_file_name);
                     return;
