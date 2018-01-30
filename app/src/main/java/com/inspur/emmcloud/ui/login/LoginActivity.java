@@ -22,6 +22,7 @@ import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.util.common.EditTextUtils;
 import com.inspur.emmcloud.util.common.InputMethodUtils;
 import com.inspur.emmcloud.util.common.IntentUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.privates.LoginUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
@@ -134,6 +135,11 @@ public class LoginActivity extends BaseActivity {
             case R.id.captchas_login_text:
                 IntentUtils.startActivity(LoginActivity.this,
                         CaptchasLoginActivity.class);
+                break;
+            case R.id.login_more_btn:
+                LogUtils.YfcDebug("启动更多");
+                IntentUtils.startActivity(LoginActivity.this,
+                        LoginMoreActivity.class);
                 break;
             default:
                 break;
