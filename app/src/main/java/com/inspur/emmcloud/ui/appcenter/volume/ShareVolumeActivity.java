@@ -25,7 +25,6 @@ import com.inspur.emmcloud.bean.appcenter.volume.Volume;
 import com.inspur.emmcloud.util.common.FomatUtils;
 import com.inspur.emmcloud.util.common.InputMethodUtils;
 import com.inspur.emmcloud.util.common.IntentUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
@@ -33,6 +32,9 @@ import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.dialogs.ActionSheetDialog;
 import com.inspur.emmcloud.widget.dialogs.MyDialog;
+import com.inspur.emmcloud.widget.dialogs.MyQMUIDialog;
+import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
+import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
 
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
@@ -64,8 +66,8 @@ public class ShareVolumeActivity extends BaseActivity implements SwipeRefreshLay
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        shareVolumeList = (List<Volume>) getIntent().getExtras().getSerializable("shareVolumeList");
         initView();
+        getVolumeList(true);
     }
 
     private void initView() {
@@ -118,19 +120,19 @@ public class ShareVolumeActivity extends BaseActivity implements SwipeRefreshLay
                 R.layout.dialog_my_app_approval_password_input, R.style.userhead_dialog_bg);
         createShareVolumeDlg.setCancelable(false);
         final EditText inputEdit = (EditText) createShareVolumeDlg.findViewById(R.id.edit);
-        inputEdit.setHint("请输入网盘名称");
+        inputEdit.setHint(R.string.input_volume_name);
         inputEdit.setInputType(InputType.TYPE_CLASS_TEXT);
-        ((TextView) createShareVolumeDlg.findViewById(R.id.app_update_title)).setText("新建网盘");
+        ((TextView) createShareVolumeDlg.findViewById(R.id.app_update_title)).setText(R.string.create_volume);
         Button okBtn = (Button) createShareVolumeDlg.findViewById(R.id.ok_btn);
-        okBtn.setText("新建");
+        okBtn.setText(R.string.create);
         okBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String shareVolumeName = inputEdit.getText().toString();
                 if (StringUtils.isBlank(shareVolumeName)) {
-                    ToastUtils.show(getApplicationContext(), "请输入网盘名称");
+                    ToastUtils.show(getApplicationContext(), R.string.input_volume_name);
                 } else if (!FomatUtils.isValidFileName(shareVolumeName)) {
-                    ToastUtils.show(getApplicationContext(), "网盘名中不能包含特殊字符 / \\ \" : | * ? < >");
+                    ToastUtils.show(getApplicationContext(), R.string.volume_name_invaliad);
                 } else {
                     createShareVolume(shareVolumeName);
                 }
@@ -156,15 +158,15 @@ public class ShareVolumeActivity extends BaseActivity implements SwipeRefreshLay
         boolean isOwner = volume.isOwner();
         new ActionSheetDialog.ActionListSheetBuilder(ShareVolumeActivity.this)
                 .setTitle(volume.getName())
-                .addItem("删除", isOwner)
-                .addItem("网盘详情")
-                .addItem("重命名", isOwner)
+                .addItem(getString(R.string.delete), isOwner)
+                .addItem(getString(R.string.volume_info))
+                .addItem(getString(R.string.rename), isOwner)
                 .setOnSheetItemClickListener(new ActionSheetDialog.ActionListSheetBuilder.OnSheetItemClickListener() {
                     @Override
                     public void onClick(ActionSheetDialog dialog, View itemView, int position) {
                         switch (position) {
                             case 0:
-                                removeShareVolume(volume);
+                                showVolumeDelWranibgDlg(volume);
                                 break;
                             case 1:
                                 Intent intent = new Intent(ShareVolumeActivity.this, ShareVolumeInfoActivity.class);
@@ -184,6 +186,30 @@ public class ShareVolumeActivity extends BaseActivity implements SwipeRefreshLay
     }
 
     /**
+     * 弹出文件删除提示框
+     *
+     * @param volumeFile
+     */
+    protected void showVolumeDelWranibgDlg(final Volume volume) {
+        new MyQMUIDialog.MessageDialogBuilder(ShareVolumeActivity.this)
+                .setMessage(R.string.sure_delete_volume)
+                .addAction(R.string.cancel, new QMUIDialogAction.ActionListener() {
+                    @Override
+                    public void onClick(QMUIDialog dialog, int index) {
+                        dialog.dismiss();
+                    }
+                })
+                .addAction(R.string.ok, new QMUIDialogAction.ActionListener() {
+                    @Override
+                    public void onClick(QMUIDialog dialog, int index) {
+                        removeShareVolume(volume);
+                        dialog.dismiss();
+                    }
+                })
+                .show();
+    }
+
+    /**
      * 弹出更改共享网盘名称弹出框
      *
      * @param volume
@@ -196,16 +222,16 @@ public class ShareVolumeActivity extends BaseActivity implements SwipeRefreshLay
         inputEdit.setText(volume.getName());
         inputEdit.setSelectAllOnFocus(true);
         inputEdit.setInputType(InputType.TYPE_CLASS_TEXT);
-        ((TextView) updateShareVolumeNameDlg.findViewById(R.id.app_update_title)).setText("新建网盘");
+        ((TextView) updateShareVolumeNameDlg.findViewById(R.id.app_update_title)).setText(R.string.create_volume);
         Button okBtn = (Button) updateShareVolumeNameDlg.findViewById(R.id.ok_btn);
         okBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String shareVolumeName = inputEdit.getText().toString();
                 if (StringUtils.isBlank(shareVolumeName)) {
-                    ToastUtils.show(getApplicationContext(), "请输入网盘名称");
+                    ToastUtils.show(getApplicationContext(), R.string.input_volume_name);
                 } else if (!FomatUtils.isValidFileName(shareVolumeName)) {
-                    ToastUtils.show(getApplicationContext(), "网盘名中不能包含特殊字符 / \\ \" : | * ? < >");
+                    ToastUtils.show(getApplicationContext(), R.string.volume_name_invaliad);
                 } else if (!shareVolumeName.equals(volume.getName())) {
                     updateShareVolumeName(volume, shareVolumeName);
                 } else {
@@ -257,11 +283,8 @@ public class ShareVolumeActivity extends BaseActivity implements SwipeRefreshLay
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        LogUtils.jasonDebug("resultCode="+resultCode);
-        LogUtils.jasonDebug("requestCode="+requestCode);
         if (resultCode == RESULT_OK && requestCode == UPDATE_VOLUME_NAME){
             Volume volume = (Volume) data.getSerializableExtra("volume");
-            LogUtils.jasonDebug("volumeMafdfdf="+volume.getName());
             int index= shareVolumeList.indexOf(volume);
             if (index !=-1){
                 shareVolumeList.set(index,volume);
@@ -272,14 +295,15 @@ public class ShareVolumeActivity extends BaseActivity implements SwipeRefreshLay
 
     @Override
     public void onRefresh() {
-        getVolumeList();
+        getVolumeList(false);
     }
 
     /**
      * 获取云盘列表
      */
-    private void getVolumeList() {
+    private void getVolumeList(boolean isShowDlg) {
         if (NetUtils.isNetworkConnected(getApplicationContext())) {
+            loadingDlg.show(isShowDlg);
             apiService.getVolumeList();
         } else {
             swipeRefreshLayout.setRefreshing(false);
@@ -327,6 +351,7 @@ public class ShareVolumeActivity extends BaseActivity implements SwipeRefreshLay
     private class WebService extends APIInterfaceInstance {
         @Override
         public void returnVolumeListSuccess(GetVolumeListResult getVolumeListResult) {
+            LoadingDialog.dimissDlg(loadingDlg);
             swipeRefreshLayout.setRefreshing(false);
             shareVolumeList = getVolumeListResult.getShareVolumeList();
             adapter.notifyDataSetChanged();
@@ -334,6 +359,7 @@ public class ShareVolumeActivity extends BaseActivity implements SwipeRefreshLay
 
         @Override
         public void returnVolumeListFail(String error, int errorCode) {
+            LoadingDialog.dimissDlg(loadingDlg);
             swipeRefreshLayout.setRefreshing(false);
             WebServiceMiddleUtils.hand(getApplicationContext(), error, errorCode);
         }

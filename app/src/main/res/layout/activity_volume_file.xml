@@ -53,6 +53,7 @@
                 android:id="@+id/header_operation_layout"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:visibility="gone"
                 android:layout_alignParentRight="true">
 
                 <ImageView
@@ -145,11 +146,28 @@
                 android:onClick="onClick"
                 android:paddingLeft="12dp"
                 android:paddingRight="12dp"
-                android:text="全选"
+                android:text="@string/select_all"
                 android:textColor="#ffffff"
                 android:textSize="15sp" />
         </RelativeLayout>
     </RelativeLayout>
+
+    <TextView
+        android:id="@+id/path_text"
+        android:background="@android:color/white"
+        android:layout_below="@id/header_layout"
+        android:ellipsize="middle"
+        android:singleLine="true"
+        android:textColor="#333333"
+        android:paddingLeft="12dp"
+        android:paddingRight="10dp"
+        android:paddingTop="9dp"
+        android:paddingBottom="9dp"
+        android:visibility="gone"
+        android:textSize="16sp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
 
 
     <android.support.v4.widget.SwipeRefreshLayout
@@ -157,7 +175,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/bottom_layout"
-        android:layout_below="@id/header_layout"
+        android:layout_below="@id/path_text"
         android:background="@color/content_bg"
         android:scrollbars="vertical">
 
@@ -179,7 +197,7 @@
                     android:drawableRight="@drawable/ic_volume_menu_drop_down"
                     android:onClick="onClick"
                     android:padding="12dp"
-                    android:text="名称升序"
+                    android:text="@string/sort_by_name_asc"
                     android:textColor="#666666"
                     android:textSize="15sp" />
 
@@ -190,7 +208,7 @@
                     android:layout_centerHorizontal="true"
                     android:onClick="onClick"
                     android:padding="12dp"
-                    android:text="多选"
+                    android:text="@string/multi_select"
                     android:textColor="#666666"
                     android:textSize="15sp" />
 
@@ -201,7 +219,7 @@
                     android:layout_alignParentRight="true"
                     android:onClick="onClick"
                     android:padding="12dp"
-                    android:text="分类筛选"
+                    android:text="@string/volume_file_filter"
                     android:textColor="#666666"
                     android:textSize="15sp" />
 
@@ -242,7 +260,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:paddingBottom="50dp"
-                    android:text="暂无文件"
+                    android:text="@string/no_file"
                     android:textColor="#666666"
                     android:textSize="14sp" />
 
@@ -254,7 +272,7 @@
                     android:gravity="center"
                     android:onClick="onClick"
                     android:padding="10dp"
-                    android:text="刷新"
+                    android:text="@string/refresh"
                     android:textColor="#2586CD"
                     app:qmui_borderColor="#2586CD"
                     app:qmui_borderWidth="0.6dp"
@@ -312,7 +330,7 @@
                     android:paddingLeft="12dp"
                     android:paddingRight="10dp"
                     android:paddingTop="12dp"
-                    android:text="复制"
+                    android:text="@string/copy"
                     android:textColor="#444444"
                     android:textSize="15sp" />
 
@@ -325,7 +343,7 @@
                     android:paddingLeft="10dp"
                     android:paddingRight="12dp"
                     android:paddingTop="12dp"
-                    android:text="移动"
+                    android:text="@string/move"
                     android:textColor="#444444"
                     android:textSize="15sp" />
             </LinearLayout>
@@ -351,7 +369,7 @@
                 android:layout_height="wrap_content"
                 android:onClick="onClick"
                 android:padding="12dp"
-                android:text="新建文件夹"
+                android:text="@string/create_forder"
                 android:textColor="#444444"
                 android:textSize="15sp" />
 
@@ -362,7 +380,7 @@
                 android:layout_alignParentRight="true"
                 android:onClick="onClick"
                 android:padding="12dp"
-                android:text="移动到此目录"
+                android:text="@string/move_to_current_directory"
                 android:textColor="#444444"
                 android:textSize="15sp" />
         </RelativeLayout>

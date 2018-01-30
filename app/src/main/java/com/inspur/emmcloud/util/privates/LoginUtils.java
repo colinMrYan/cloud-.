@@ -235,12 +235,8 @@ public class LoginUtils extends APIInterfaceInstance {
         final SwitchView switchView = (SwitchView) myDialog.findViewById(R.id.auto_select_switch);
         switchView.setOpened(true);
         MaxHightListView enterpriseListView = (MaxHightListView) myDialog.findViewById(R.id.enterprise_list);
-        LogUtils.jasonDebug("000000000000-=============================");
         enterpriseListView.setMaxHeight(DensityUtil.dip2px(activity, 180));
-        LogUtils.jasonDebug("1111111111-=============================");
-        LogUtils.jasonDebug("enterpriseList-============================="+enterpriseList.size());
         enterpriseListView.setAdapter(new LoginSelectEnterpriseAdapter(activity, enterpriseList, defaultEnterprise));
-        LogUtils.jasonDebug("2222222222222-=============================");
         enterpriseListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -256,7 +252,6 @@ public class LoginUtils extends APIInterfaceInstance {
         });
         myDialog.setCancelable(false);
         myDialog.show();
-        LogUtils.jasonDebug("3333333333=============================");
 
     }
 

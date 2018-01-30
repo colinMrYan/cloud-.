@@ -41,7 +41,6 @@ public class VolumeRecentUseAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         convertView = LayoutInflater.from(context).inflate(R.layout.app_volume_recent_use_item_view,null);
         TextView textView = (TextView)convertView.findViewById(R.id.volume_name_text);
-        textView.setText("许阳、衣凡的网盘");
         (convertView.findViewById(R.id.volume_capacity_text)).setVisibility(View.GONE);
         return convertView;
     }

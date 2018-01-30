@@ -51,7 +51,7 @@ public class ShareVolumeNameModifyActivity extends BaseActivity {
         }else {
 		    group = (Group)getIntent().getSerializableExtra("group");
         }
-        headerText.setText(isVolumeNameModify?"更改网盘名称":"更改组名称");
+        headerText.setText(isVolumeNameModify?R.string.update_volume_name:R.string.update_group_name);
 		EditTextUtils.setText(editText, isVolumeNameModify?volume.getName():group.getName());
 		loadingDlg= new LoadingDialog(ShareVolumeNameModifyActivity.this);
 	}
@@ -64,10 +64,10 @@ public class ShareVolumeNameModifyActivity extends BaseActivity {
 		case R.id.save_text:
 			String name = editText.getText().toString();
 			if (StringUtils.isBlank(name)) {
-				ToastUtils.show(getApplicationContext(), isVolumeNameModify?"请输入网盘名称":"请输入组名称");
+				ToastUtils.show(getApplicationContext(), isVolumeNameModify?R.string.input_volume_name:R.string.input_volume_group_name);
 			}else if(isVolumeNameModify){
                 if (!FomatUtils.isValidFileName(name)) {
-                    ToastUtils.show(getApplicationContext(), "网盘名中不能包含特殊字符 / \\ \" : | * ? < >");
+                    ToastUtils.show(getApplicationContext(), R.string.input_volume_name);
                 } else {
                     updateShareVolumeName(name);
                 }

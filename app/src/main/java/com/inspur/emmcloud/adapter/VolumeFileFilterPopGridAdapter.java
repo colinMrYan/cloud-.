@@ -16,7 +16,7 @@ import com.inspur.emmcloud.R;
 
 public class VolumeFileFilterPopGridAdapter extends BaseAdapter{
     private Context context;
-    private String[] filterTypeNames = {"文档","图片","音频","视频","其他"};
+    private int[] filterTypeNameIds = {R.string.docunment,R.string.picture,R.string.audio,R.string.video,R.string.other};
     private int[] filterTypeIconIds = {R.drawable.ic_volume_file_typ_document,R.drawable.ic_volume_file_typ_img,R.drawable.ic_volume_file_typ_audio,R.drawable.ic_volume_file_typ_video,R.drawable.ic_volume_file_typ_other};
     public VolumeFileFilterPopGridAdapter(Context context){
         this.context = context;
@@ -41,7 +41,7 @@ public class VolumeFileFilterPopGridAdapter extends BaseAdapter{
     public View getView(int position, View convertView, ViewGroup parent) {
         convertView = LayoutInflater.from(context).inflate(R.layout.app_volume_file_filter_pop_grid_item_view,null);
         ((ImageView)convertView.findViewById(R.id.filter_type_img)).setImageResource(filterTypeIconIds[position]);
-        ((TextView)convertView.findViewById(R.id.filter_type_text)).setText(filterTypeNames[position]);
+        ((TextView)convertView.findViewById(R.id.filter_type_text)).setText(filterTypeNameIds[position]);
         return convertView;
     }
 }
