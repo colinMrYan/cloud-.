@@ -49,7 +49,7 @@ public class UriUtils {
                     new AppCenterApprovalUtils().openApprovalApp(activity,app);
                 }else if (!uri.startsWith(APIUri.getEMMBaseUrl()+"ssohandler/gs/")) {
                     openWebApp(activity, uri, app);
-                } else {
+                } else if(app.getIsSSO() == 1){
                     uri = uri.replace("ssohandler/gs/", "api/mam/v3.0/gs_sso/app_uri?id=");
                     if (NetUtils.isNetworkConnected(activity)) {
                         new WebAppUtils(activity, new WebAppUtils.OnGetWebAppRealUrlListener() {

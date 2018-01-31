@@ -12,20 +12,19 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.api.APICallback;
 import com.inspur.emmcloud.api.APIInterface;
 import com.inspur.emmcloud.api.APIUri;
+import com.inspur.emmcloud.bean.appcenter.GetClientIdRsult;
+import com.inspur.emmcloud.bean.appcenter.ReactNativeUpdateBean;
+import com.inspur.emmcloud.bean.login.GetDeviceCheckResult;
+import com.inspur.emmcloud.bean.login.LoginDesktopCloudPlusBean;
 import com.inspur.emmcloud.bean.system.GetAppConfigResult;
 import com.inspur.emmcloud.bean.system.GetAppTabAutoResult;
-import com.inspur.emmcloud.bean.system.GetAppTabsResult;
-import com.inspur.emmcloud.bean.appcenter.GetClientIdRsult;
-import com.inspur.emmcloud.bean.login.GetDeviceCheckResult;
 import com.inspur.emmcloud.bean.system.GetUpgradeResult;
-import com.inspur.emmcloud.bean.login.LoginDesktopCloudPlusBean;
-import com.inspur.emmcloud.bean.appcenter.ReactNativeUpdateBean;
 import com.inspur.emmcloud.bean.system.SplashPageBean;
 import com.inspur.emmcloud.interf.OauthCallBack;
-import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.common.LogUtils;
-import com.inspur.emmcloud.util.privates.OauthUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
+import com.inspur.emmcloud.util.privates.AppUtils;
+import com.inspur.emmcloud.util.privates.OauthUtils;
 
 import org.json.JSONObject;
 import org.xutils.http.HttpMethod;
@@ -472,12 +471,14 @@ public class AppAPIService {
         // TODO Auto-generated method stub
         String completeUrl =APIUri.getDeviceCheckUrl();
         String uuid = AppUtils.getMyUUID(context);
-        RequestParams params = new RequestParams(completeUrl);
+//        RequestParams params = new RequestParams(completeUrl);
+        // params.addBodyParameter("app_mdm_id", "imp"); // 和ios约定的appid
+        RequestParams params = ((MyApplication) context.getApplicationContext())
+                .getHttpRequestParams(completeUrl);
         params.addBodyParameter("udid", uuid);
         params.addBodyParameter("tenant_id", tenantId);
         params.addBodyParameter("mdm_user_auth_type", "IDMUser");
         params.addBodyParameter("user_code", userCode);
-        // params.addBodyParameter("app_mdm_id", "imp"); // 和ios约定的appid
         x.http().post(params, new APICallback(context, completeUrl) {
             @Override
             public void callbackSuccess(String arg0) {

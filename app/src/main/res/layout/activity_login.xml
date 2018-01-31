@@ -12,7 +12,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="36dp"
+        android:layout_marginBottom="16dp"
         android:layout_marginTop="65dp"
         android:gravity="center_horizontal"
         android:orientation="horizontal"
@@ -31,7 +31,19 @@
                 app:border_color="#d2e6f0"
                 app:border_width="0dp"/>
         </com.inspur.emmcloud.widget.SquareLayout>
+
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/login_current_enterprise"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="#6FBDE1"
+        android:textSize="13dp"
+        android:layout_below="@id/photo_img"
+        android:gravity="center_horizontal"
+        android:layout_marginBottom="10dp"
+        android:text="当前登录系统：中建电路桥"/>
 
     <View
         android:layout_width="fill_parent"

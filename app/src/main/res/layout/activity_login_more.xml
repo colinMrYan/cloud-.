@@ -66,6 +66,7 @@
         android:layout_marginTop="10dp"
         android:background="@color/white"
         android:layout_below="@id/header_layout"
+        android:onClick="onClick"
         android:text="@string/sweep"
         android:textColor="#0F7BCA"
         android:textSize="17sp" />

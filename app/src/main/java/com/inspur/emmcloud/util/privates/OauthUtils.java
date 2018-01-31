@@ -1,18 +1,13 @@
 package com.inspur.emmcloud.util.privates;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 
 import com.inspur.emmcloud.MyApplication;
-import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.LoginAPIService;
 import com.inspur.emmcloud.bean.login.GetLoginResult;
 import com.inspur.emmcloud.interf.OauthCallBack;
-import com.inspur.emmcloud.ui.login.LoginActivity;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
-import com.inspur.emmcloud.util.common.ToastUtils;
 
 import java.util.List;
 
@@ -64,27 +59,27 @@ public class OauthUtils {
 			// TODO Auto-generated method stub
 			((MyApplication)context.getApplicationContext()).setIsTokenRefreshing(false);
 			//当errorCode为400时代表refreshToken也失效，需要重新登录
-			if (errorCode == 400){
-				((MyApplication)context.getApplicationContext()).clearCallBackList();
-				if (((MyApplication)context.getApplicationContext()).getWebSocketPush() != null) {
-					((MyApplication)context.getApplicationContext()).getWebSocketPush().closeSocket();
-				}
-				ToastUtils.show(context, context.getString(R.string.authorization_expired));
-				Intent intent = new Intent();
-				intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-				intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-				intent.setClass(context, LoginActivity.class);
-				context.startActivity(intent);
-				if (context != null && context instanceof Activity) {
-					((Activity) context).finish();
-				}
-			}else{
+//			if (errorCode == 400){
+//				((MyApplication)context.getApplicationContext()).clearCallBackList();
+//				if (((MyApplication)context.getApplicationContext()).getWebSocketPush() != null) {
+//					((MyApplication)context.getApplicationContext()).getWebSocketPush().closeSocket();
+//				}
+//				ToastUtils.show(context, context.getString(R.string.authorization_expired));
+//				Intent intent = new Intent();
+//				intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//				intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//				intent.setClass(context, LoginActivity.class);
+//				context.startActivity(intent);
+//				if (context != null && context instanceof Activity) {
+//					((Activity) context).finish();
+//				}
+//			}else{
 				List<OauthCallBack> callBackList = ((MyApplication)context.getApplicationContext()).getCallBackList();
 				for (int i = 0; i < callBackList.size(); i++) {
 					callBackList.get(i).executeFailCallback();
 				}
 				((MyApplication)context.getApplicationContext()).clearCallBackList();
-			}
+//			}
 
 		}
 
