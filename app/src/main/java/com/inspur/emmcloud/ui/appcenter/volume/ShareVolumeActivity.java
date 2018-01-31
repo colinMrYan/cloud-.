@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.text.InputFilter;
 import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,6 +23,7 @@ import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
 import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeListResult;
 import com.inspur.emmcloud.bean.appcenter.volume.Volume;
+import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.util.common.FomatUtils;
 import com.inspur.emmcloud.util.common.InputMethodUtils;
 import com.inspur.emmcloud.util.common.IntentUtils;
@@ -121,6 +123,7 @@ public class ShareVolumeActivity extends BaseActivity implements SwipeRefreshLay
         createShareVolumeDlg.setCancelable(false);
         final EditText inputEdit = (EditText) createShareVolumeDlg.findViewById(R.id.edit);
         inputEdit.setHint(R.string.input_volume_name);
+        inputEdit.setFilters(new InputFilter[]{new InputFilter.LengthFilter(MyAppConfig.VOLUME_MAX_FILE_NAME_LENGTH)});
         inputEdit.setInputType(InputType.TYPE_CLASS_TEXT);
         ((TextView) createShareVolumeDlg.findViewById(R.id.app_update_title)).setText(R.string.create_volume);
         Button okBtn = (Button) createShareVolumeDlg.findViewById(R.id.ok_btn);
@@ -222,6 +225,7 @@ public class ShareVolumeActivity extends BaseActivity implements SwipeRefreshLay
         inputEdit.setText(volume.getName());
         inputEdit.setSelectAllOnFocus(true);
         inputEdit.setInputType(InputType.TYPE_CLASS_TEXT);
+        inputEdit.setFilters(new InputFilter[]{new InputFilter.LengthFilter(MyAppConfig.VOLUME_MAX_FILE_NAME_LENGTH)});
         ((TextView) updateShareVolumeNameDlg.findViewById(R.id.app_update_title)).setText(R.string.create_volume);
         Button okBtn = (Button) updateShareVolumeNameDlg.findViewById(R.id.ok_btn);
         okBtn.setOnClickListener(new View.OnClickListener() {

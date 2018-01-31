@@ -63,7 +63,7 @@ public class VolumeFileLocationSelectActivity extends VolumeFileBaseActivity {
         apiService = new MyAppAPIService(this);
         apiService.setAPIInterface(new WebService());
         noFileText.setText(R.string.no_directory);
-        locationSelectToText.setText(isFunctionCopy ? R.string.copy_to : R.string.copy_to_current_directory);
+        locationSelectToText.setText(isFunctionCopy ? R.string.copy_to_current_directory : R.string.move_to_current_directory);
         headerOperationLayout.setVisibility(View.GONE);
         locationSelectCancelText.setVisibility(View.VISIBLE);
         locationSelectBarLayout.setVisibility(View.VISIBLE);
