@@ -423,6 +423,7 @@
     <string name="refresh">Refresh</string>
     <string name="disk">Disk</string>
     <string name="volume_file_filter">Filter</string>
+    <string name="volume_group_name">Group Name</string>
 
 
     <!-- 我的页面部分 -->
