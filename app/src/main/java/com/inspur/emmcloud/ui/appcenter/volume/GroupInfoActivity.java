@@ -53,6 +53,9 @@ public class GroupInfoActivity extends BaseActivity {
     @ViewInject(R.id.volume_name_text)
     private TextView groupNameText;
 
+    @ViewInject(R.id.volume_name_title)
+    private TextView groupNameTitle;
+
     @ViewInject(R.id.header_text)
     private TextView headerText;
     private VolumeInfoMemberAdapter memberAdapter;
@@ -68,6 +71,7 @@ public class GroupInfoActivity extends BaseActivity {
         headerText.setText(R.string.volume_group_info);
         group = (Group) getIntent().getSerializableExtra("group");
         volumeMemList = getIntent().getStringArrayListExtra("volumeMemList");
+        groupNameTitle.setText(R.string.volume_group_name);
         showGroupDetail();
     }
 

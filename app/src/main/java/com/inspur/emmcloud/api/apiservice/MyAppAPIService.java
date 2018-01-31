@@ -1173,7 +1173,7 @@ public class MyAppAPIService {
     public void updateGroupName(final String groupId,final String groupName){
         final String url = APIUri.getGroupBaseUrl(groupId);
         RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
-        params.addQueryStringParameter("name ",groupName);
+        params.addQueryStringParameter("name",groupName);
         x.http().request(HttpMethod.PUT, params, new APICallback(context,url) {
             @Override
             public void callbackSuccess(String arg0) {
