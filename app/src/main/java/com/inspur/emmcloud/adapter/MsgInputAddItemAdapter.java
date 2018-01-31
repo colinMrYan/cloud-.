@@ -23,8 +23,12 @@ public class MsgInputAddItemAdapter extends BaseAdapter {
 		// TODO Auto-generated constructor stub
 		this.context = context;
 	}
-	
-	
+
+	public MsgInputAddItemAdapter(Context context,List<InputTypeBean> inputTypeBeanList) {
+		// TODO Auto-generated constructor stub
+		this.context = context;
+		this.inputTypeBeanList = inputTypeBeanList;
+	}
 	@Override
 	public int getCount() {
 		// TODO Auto-generated method stub

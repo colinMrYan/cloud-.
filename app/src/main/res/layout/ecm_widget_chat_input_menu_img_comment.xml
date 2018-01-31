@@ -70,14 +70,11 @@
         android:paddingTop="25dp"
         android:visibility="gone" >
 
-        <GridView
-            android:id="@+id/add_menu_grid"
+        <com.inspur.emmcloud.widget.ECMChatInputMenuViewpageLayout
+            android:id="@+id/viewpager_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:listSelector="@android:color/transparent"
-            android:numColumns="4"
-            android:paddingTop="8dp"
-            android:stretchMode="columnWidth" />
+            />
     </RelativeLayout>
 
 </LinearLayout>

@@ -19,17 +19,13 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.adapter.MsgInputAddItemAdapter;
 import com.inspur.emmcloud.bean.chat.InputTypeBean;
 import com.inspur.emmcloud.bean.chat.InsertModel;
 import com.inspur.emmcloud.config.Constant;
@@ -38,10 +34,8 @@ import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
-import com.inspur.emmcloud.util.privates.AppUtils;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -66,11 +60,9 @@ public class ECMChatInputMenu extends LinearLayout {
     private String cid = "";
     private InputMethodManager mInputManager;
     private ChatInputMenuListener chatInputMenuListener;
-    private MsgInputAddItemAdapter msgInputAddItemAdapter;
     private boolean isSetWindowListener = true;//是否监听窗口变化自动跳转输入框ui
     private List<InputTypeBean> inputTypeBeanList = new ArrayList<>();
-
-    // private View view ;
+    private ECMChatInputMenuViewpageLayout viewpagerLayout;
 
     public ECMChatInputMenu(Context context) {
         super(context);
@@ -140,7 +132,7 @@ public class ECMChatInputMenu extends LinearLayout {
             }
         });
         initInputEdit();
-        initMenuGrid();
+        viewpagerLayout = (ECMChatInputMenuViewpageLayout)findViewById(R.id.viewpager_layout);
 
     }
 
@@ -291,40 +283,40 @@ public class ECMChatInputMenu extends LinearLayout {
         return softInputHeight;
     }
 
-    /**
-     * 初始化消息发送的UI
-     */
-    private void initMenuGrid() {
-        GridView addItemGrid = (GridView) findViewById(R.id.add_menu_grid);
-        msgInputAddItemAdapter = new MsgInputAddItemAdapter(context);
-        addItemGrid.setAdapter(msgInputAddItemAdapter);
-        addItemGrid.setOnItemClickListener(new OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view,
-                                    int position, long id) {
-                int clickItem = inputTypeBeanList.get(position).getInputTypeIcon();
-                switch (clickItem) {
-                    case R.drawable.ic_chat_input_add_gallery:
-                        AppUtils.openGallery((Activity)context,5,GELLARY_RESULT);
-                        break;
-                    case R.drawable.ic_chat_input_add_camera:
-                        String fileName = new Date().getTime() + ".jpg";
-                        PreferencesUtils.putString(context, "capturekey", fileName);
-                        AppUtils.openCamera((Activity)context,fileName,CAMERA_RESULT);
-                        break;
-                    case R.drawable.ic_chat_input_add_file:
-                       AppUtils.openFileSystem((Activity)context,CHOOSE_FILE);
-                        break;
-                    case R.drawable.ic_chat_input_add_mention:
-                        openMention(false);
-                        break;
-                    default:
-                        break;
-                }
-
-            }
-        });
-    }
+//    /**
+//     * 初始化消息发送的UI
+//     */
+//    private void initMenuGrid() {
+//        GridView addItemGrid = (GridView) findViewById(R.id.add_menu_grid);
+//        msgInputAddItemAdapter = new MsgInputAddItemAdapter(context);
+//        addItemGrid.setAdapter(msgInputAddItemAdapter);
+//        addItemGrid.setOnItemClickListener(new OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view,
+//                                    int position, long id) {
+//                int clickItem = inputTypeBeanList.get(position).getInputTypeIcon();
+//                switch (clickItem) {
+//                    case R.drawable.ic_chat_input_add_gallery:
+//                        AppUtils.openGallery((Activity) context, 5, GELLARY_RESULT);
+//                        break;
+//                    case R.drawable.ic_chat_input_add_camera:
+//                        String fileName = new Date().getTime() + ".jpg";
+//                        PreferencesUtils.putString(context, "capturekey", fileName);
+//                        AppUtils.openCamera((Activity) context, fileName, CAMERA_RESULT);
+//                        break;
+//                    case R.drawable.ic_chat_input_add_file:
+//                        AppUtils.openFileSystem((Activity) context, CHOOSE_FILE);
+//                        break;
+//                    case R.drawable.ic_chat_input_add_mention:
+//                        openMention(false);
+//                        break;
+//                    default:
+//                        break;
+//                }
+//
+//            }
+//        });
+//    }
 
     /**
      * 是否是输入了关键字@字符打开mention页
@@ -396,11 +388,11 @@ public class ECMChatInputMenu extends LinearLayout {
         //功能组的图标，名称
         int[] functionIconArray = {R.drawable.ic_chat_input_add_gallery, R.drawable.ic_chat_input_add_camera, R.drawable.ic_chat_input_add_file, R.drawable.ic_chat_input_add_mention};
         String[] functionNameArray = {context.getString(R.string.album), context.getString(R.string.take_photo), context.getString(R.string.file), "@"};
-        String binaryString  = "-1";
+        String binaryString = "-1";
         //如果第一位是且只能是1即 "1" 如果inputs是其他，例如"2"则走下面逻辑
         //这种情况是只开放了输入文字的权限
-        if(!StringUtils.isBlank(inputs)){
-            if(inputs.equals("1")){
+        if (!StringUtils.isBlank(inputs)) {
+            if (inputs.equals("1")) {
                 addImg.setVisibility(View.GONE);
                 return;
             }
@@ -413,32 +405,32 @@ public class ECMChatInputMenu extends LinearLayout {
         }
         //控制binaryString长度，防止穿的数字过大
         int binaryLength = binaryString.length() > 3 ? 3 : binaryString.length();
-        for(int i=0; i < binaryLength; i++){
+        for (int i = 0; i < binaryLength; i++) {
             //第一位已经处理过了，这里不再处理
             //这里如果禁止输入文字时，inputEdit设置Enabled
-            if(i == 0){
-                inputEdit.setEnabled((binaryString.charAt(0)+"").equals("1"));
+            if (i == 0) {
+                inputEdit.setEnabled((binaryString.charAt(0) + "").equals("1"));
                 continue;
             }
-            if((binaryString.charAt(i)+"").equals("1")){
+            if ((binaryString.charAt(i) + "").equals("1")) {
                 //对于第二位特殊处理，如果第二位是"1"则添加相册，拍照两个功能，与服务端确认目前这样实现
                 //存在的疑问，如果仅显示相册或仅显示拍照应该如何处理？
-                if(i == 1){
-                    InputTypeBean inputTypeBeanGallery = new InputTypeBean(functionIconArray[0],functionNameArray[0]);
+                if (i == 1) {
+                    InputTypeBean inputTypeBeanGallery = new InputTypeBean(functionIconArray[0], functionNameArray[0]);
                     inputTypeBeanList.add(inputTypeBeanGallery);
-                    InputTypeBean inputTypeBeanCamera = new InputTypeBean(functionIconArray[1],functionNameArray[1]);
+                    InputTypeBean inputTypeBeanCamera = new InputTypeBean(functionIconArray[1], functionNameArray[1]);
                     inputTypeBeanList.add(inputTypeBeanCamera);
-                }else{
-                    InputTypeBean inputTypeBean = new InputTypeBean(functionIconArray[i],functionNameArray[i]);
+                } else {
+                    InputTypeBean inputTypeBean = new InputTypeBean(functionIconArray[i], functionNameArray[i]);
                     inputTypeBeanList.add(inputTypeBean);
                 }
             }
         }
         //如果是群组的话添加@功能
         if (isChannelGroup) {
-            InputTypeBean inputTypeBean = new InputTypeBean(functionIconArray[3],functionNameArray[3]);
+            InputTypeBean inputTypeBean = new InputTypeBean(functionIconArray[3], functionNameArray[3]);
             inputTypeBeanList.add(inputTypeBean);
         }
-        msgInputAddItemAdapter.updateGridView(inputTypeBeanList);
+        viewpagerLayout.setInputTypeBeanList(inputTypeBeanList);
     }
 }
