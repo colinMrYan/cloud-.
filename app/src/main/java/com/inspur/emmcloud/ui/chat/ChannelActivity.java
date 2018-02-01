@@ -226,7 +226,7 @@ public class ChannelActivity extends BaseActivity {
         if ((channel != null) && channel.getInputs().equals("0")) {
             chatInputMenu.setVisibility(View.GONE);
         } else {
-            chatInputMenu.updateMenuGrid(channel.getInputs());
+            chatInputMenu.updateCommonMenuLayout(channel.getInputs());
         }
     }
 
