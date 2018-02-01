@@ -18,7 +18,6 @@ import com.inspur.emmcloud.adapter.MyViewPagerAdapter;
 import com.inspur.emmcloud.bean.chat.InputTypeBean;
 import com.inspur.emmcloud.ui.chat.MembersActivity;
 import com.inspur.emmcloud.util.common.DensityUtil;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
 
@@ -80,24 +79,25 @@ public class ECMChatInputMenuViewpageLayout extends LinearLayout {
         int gridChildSize = (int) Math.ceil((double) inputTypeBeanList.size() / (double) 8);
         for (int i = 1; i <= gridChildSize; i++) {
             views.add(getGridChildView(i));
-
         }
-        LogUtils.jasonDebug("views=" + views.size());
         pageNumImgs = new ImageView[views.size()];
-        int pageNumSize = DensityUtil.dip2px(getContext(), 6);
-        int margin = DensityUtil.dip2px(getContext(), 6);
-        for (int i = 0; i < views.size(); i++) {
-            LayoutParams params = new LayoutParams(pageNumSize, pageNumSize);
-            params.setMargins(margin, 0, 0, 0);
-            ImageView pageNumImg = new ImageView(getContext());
-            pageNumImg.setLayoutParams(new ViewGroup.LayoutParams(pageNumSize, pageNumSize));
-            pageNumImgs[i] = pageNumImg;
-            if (i == 0) {
-                pageNumImgs[i].setBackgroundResource(R.drawable.icon_indicator_sel);
-            } else {
-                pageNumImgs[i].setBackgroundResource(R.drawable.icon_indicator_nor);
+        if (views.size()>1){
+            int pageNumSize = DensityUtil.dip2px(getContext(), 6);
+            int margin = DensityUtil.dip2px(getContext(), 6);
+            for (int i = 0; i < views.size(); i++) {
+                LayoutParams params = new LayoutParams(pageNumSize, pageNumSize);
+                params.setMargins(margin, 0, 0, 0);
+                ImageView pageNumImg = new ImageView(getContext());
+                pageNumImg.setLayoutParams(new ViewGroup.LayoutParams(pageNumSize, pageNumSize));
+                pageNumImgs[i] = pageNumImg;
+                if (i == 0) {
+                    pageNumImgs[i].setBackgroundResource(R.drawable.icon_indicator_sel);
+                } else {
+                    pageNumImgs[i].setBackgroundResource(R.drawable.icon_indicator_nor);
+                }
+                pageNumLayout.addView(pageNumImgs[i], params);
             }
-            pageNumLayout.addView(pageNumImgs[i], params);
+            viewPager.addOnPageChangeListener(new GuidePageChangeListener());
         }
         viewPager.setAdapter(new MyViewPagerAdapter(views, null));
     }
@@ -161,4 +161,28 @@ public class ECMChatInputMenuViewpageLayout extends LinearLayout {
 
     }
 
+
+    class GuidePageChangeListener implements ViewPager.OnPageChangeListener {
+
+        @Override
+        public void onPageScrollStateChanged(int arg0) {
+        }
+
+        @Override
+        public void onPageScrolled(int arg0, float arg1, int arg2) {
+
+        }
+
+        @Override
+        public void onPageSelected(int arg0) {
+
+            for (int i = 0; i < pageNumImgs.length; i++) {
+                pageNumImgs[arg0].setBackgroundResource(R.drawable.icon_indicator_sel);
+
+                if (arg0 != i) {
+                    pageNumImgs[i].setBackgroundResource(R.drawable.icon_indicator_nor);
+                }
+            }
+        }
+    }
 }
