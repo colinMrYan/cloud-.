@@ -1,7 +1,5 @@
 package com.inspur.emmcloud.ui.work.calendar;
 
-import java.util.Calendar;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -14,6 +12,8 @@ import com.inspur.emmcloud.widget.calendarlistview.DatePickerController;
 import com.inspur.emmcloud.widget.calendarlistview.DayPickerView;
 import com.inspur.emmcloud.widget.calendarlistview.SimpleMonthAdapter.CalendarDay;
 import com.inspur.emmcloud.widget.calendarlistview.SimpleMonthAdapter.SelectedDays;
+
+import java.util.Calendar;
 
 public class CalBrowseActivity extends BaseActivity implements
 		DatePickerController {
@@ -44,12 +44,12 @@ public class CalBrowseActivity extends BaseActivity implements
 			finish();
 			break;
 
-		case R.id.mession_cal_img:
-
-			intent.setClass(CalBrowseActivity.this,
-					CalSingleMonthActivity.class);
-			startActivity(intent);
-			break;
+//		case R.id.mession_cal_img:
+//
+//			intent.setClass(CalBrowseActivity.this,
+//					CalSingleMonthActivity.class);
+//			startActivity(intent);
+//			break;
 		case R.id.add_event_text:
 			intent.setClass(CalBrowseActivity.this, CalEventAddActivity.class);
 			startActivity(intent);
