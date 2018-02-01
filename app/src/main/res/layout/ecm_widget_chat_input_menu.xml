@@ -15,8 +15,6 @@
         android:background="#f7f7f7"
         android:paddingTop="5dp"
         android:paddingBottom="5dp" >
-
-
         <ImageView
             android:id="@+id/add_img"
             android:layout_width="41dp"
@@ -83,6 +81,25 @@
             android:id="@+id/viewpager_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            />
+        <ImageView
+            android:id="@+id/voice_volume_img"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_centerInParent="true"
+            android:visibility="gone"
+            android:src="@drawable/ic_chat_input_voice_level"
+            android:paddingTop="8dp"
+            />
+        <ImageView
+            android:id="@+id/voice_back_img"
+            android:layout_width="80dp"
+            android:layout_height="70dp"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="true"
+            android:visibility="gone"
+            android:src="@drawable/ic_arrow_down"
+            android:padding="25dp"
             />
     </RelativeLayout>
 

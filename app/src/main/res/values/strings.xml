@@ -947,4 +947,7 @@
     //tag标签
     <item name="tag_first" type="id"></item>
     <item name="tag_second" type="id"></item>
+
+    <!--科大讯飞语音-->
+    <string name="voice_input">语音输入</string>
 </resources>

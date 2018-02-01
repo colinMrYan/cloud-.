@@ -29,8 +29,10 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.chat.InputTypeBean;
 import com.inspur.emmcloud.bean.chat.InsertModel;
 import com.inspur.emmcloud.config.Constant;
+import com.inspur.emmcloud.interf.OnListeningListener;
 import com.inspur.emmcloud.ui.chat.MembersActivity;
 import com.inspur.emmcloud.util.common.DensityUtil;
+import com.inspur.emmcloud.util.common.MediaPlayerUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
@@ -57,8 +59,14 @@ public class ECMChatInputMenu extends LinearLayout {
     private InputMethodManager mInputManager;
     private ChatInputMenuListener chatInputMenuListener;
     private boolean isSetWindowListener = true;//是否监听窗口变化自动跳转输入框ui
+    private OnListeningListener onListeningListener;
+    private  ImageView voiceMicroPhoneImg, voicePackUpImg;
+    private  GridView addItemGrid;
     private List<InputTypeBean> inputTypeBeanList = new ArrayList<>();
+    private MediaPlayerUtils mediaPlayerUtils;
     private ECMChatInputMenuViewpageLayout viewpagerLayout;
+
+    // private View view ;
 
     public ECMChatInputMenu(Context context) {
         super(context);
@@ -75,6 +83,10 @@ public class ECMChatInputMenu extends LinearLayout {
     public ECMChatInputMenu(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         init(context, attrs);
+    }
+
+    public void setOnListeningListener(OnListeningListener onListeningListener) {
+        this.onListeningListener = onListeningListener;
     }
 
     private void init(final Context context, AttributeSet attrs) {
@@ -129,7 +141,24 @@ public class ECMChatInputMenu extends LinearLayout {
         });
         initInputEdit();
         viewpagerLayout = (ECMChatInputMenuViewpageLayout)findViewById(R.id.viewpager_layout);
-
+        voiceMicroPhoneImg.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                voiceMicroPhoneImg.setImageLevel(0);
+                mediaPlayerUtils.playVoiceOn();
+                onListeningListener.onStartListening();
+            }
+        });
+        voicePackUpImg.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addItemGrid.setVisibility(View.VISIBLE);
+                voiceMicroPhoneImg.setVisibility(View.GONE);
+                voicePackUpImg.setVisibility(View.GONE);
+                onListeningListener.onStopListening();
+            }
+        });
+        mediaPlayerUtils = new MediaPlayerUtils(context);
     }
 
     /**
@@ -259,9 +288,14 @@ public class ECMChatInputMenu extends LinearLayout {
         }
         addMenuLayout.getLayoutParams().height = softInputHeight;
         addMenuLayout.setVisibility(View.VISIBLE);
+
+        addItemGrid.setVisibility(View.VISIBLE);
+        voiceMicroPhoneImg.setVisibility(View.GONE);
+        voicePackUpImg.setVisibility(View.GONE);
     }
 
     public void showSoftInput() {
+        onListeningListener.onStopListening();
         inputEdit.requestFocus();
         new Handler().post(new Runnable() {
             @Override
@@ -310,6 +344,51 @@ public class ECMChatInputMenu extends LinearLayout {
 
     }
 
+
+    /**
+     * 释放MediaPlay资源
+     */
+    public void releaseMediaPlay(){
+        mediaPlayerUtils.release();
+    }
+
+    /**
+     * 设置音量
+     * @param volume
+     */
+    public void setVoiceImageViewLevel(int volume){
+        if(volume <= 5){
+            voiceMicroPhoneImg.setImageLevel(0);
+        }else if(volume <= 8){
+            voiceMicroPhoneImg.setImageLevel(1);
+        }else if(volume <= 10){
+            voiceMicroPhoneImg.setImageLevel(2);
+        }else if(volume <= 13){
+            voiceMicroPhoneImg.setImageLevel(3);
+        }else if(volume <= 15){
+            voiceMicroPhoneImg.setImageLevel(4);
+        }else if(volume <= 18){
+            voiceMicroPhoneImg.setImageLevel(5);
+        }else if(volume <= 20){
+            voiceMicroPhoneImg.setImageLevel(6);
+        }else if(volume <= 23){
+            voiceMicroPhoneImg.setImageLevel(7);
+        }else if(volume <= 25){
+            voiceMicroPhoneImg.setImageLevel(8);
+        }else{
+            voiceMicroPhoneImg.setImageLevel(9);
+        }
+    }
+
+    /**
+     * 停止识别，并播放停止提示音
+     */
+    public void stopVoiceReleaseMediaPlay(){
+        voiceMicroPhoneImg.setImageLevel(10);
+        mediaPlayerUtils.playVoiceOff();
+    }
+
+
     /**
      * 添加mentions
      *
@@ -347,14 +426,19 @@ public class ECMChatInputMenu extends LinearLayout {
      */
     public void updateCommonMenuLayout(String inputs) {
         //功能组的图标，名称
-        int[] functionIconArray = {R.drawable.ic_chat_input_add_gallery, R.drawable.ic_chat_input_add_camera, R.drawable.ic_chat_input_add_file, R.drawable.ic_chat_input_add_mention};
-        String[] functionNameArray = {context.getString(R.string.album), context.getString(R.string.take_photo), context.getString(R.string.file), "@"};
-        String[] actionArray={"gallery","camera","file","mention"};
-        String binaryString = "-1";
+        int[] functionIconArray = {R.drawable.ic_chat_input_add_gallery,
+                R.drawable.ic_chat_input_add_camera, R.drawable.ic_chat_input_add_file,
+                R.drawable.ic_chat_input_add_voice};
+        String[] functionNameArray = {context.getString(R.string.album),
+                context.getString(R.string.take_photo),
+                context.getString(R.string.file),
+                context.getString(R.string.voice_input)};
+        String[] actionArray={"gallery","camera","file","mention","voice2word"};
+        String binaryString  = "-1";
         //如果第一位是且只能是1即 "1" 如果inputs是其他，例如"2"则走下面逻辑
         //这种情况是只开放了输入文字的权限
-        if (!StringUtils.isBlank(inputs)) {
-            if (inputs.equals("1")) {
+        if(!StringUtils.isBlank(inputs)){
+            if(inputs.equals("1")){
                 addImg.setVisibility(View.GONE);
                 return;
             }
@@ -363,11 +447,11 @@ public class ECMChatInputMenu extends LinearLayout {
         //处理默认情况，也就是普通频道的情况
         if (binaryString.equals("-1")) {
             //目前开放三位，有可能扩展
-            binaryString = "111";
+            binaryString = "1111";
         }
         //控制binaryString长度，防止穿的数字过大
-        int binaryLength = binaryString.length() > 3 ? 3 : binaryString.length();
-        for (int i = 0; i < binaryLength; i++) {
+        int binaryLength = binaryString.length() > 4 ? 4 : binaryString.length();
+        for(int i=0; i < binaryLength; i++){
             //第一位已经处理过了，这里不再处理
             //这里如果禁止输入文字时，inputEdit设置Enabled
             if (i == 0) {

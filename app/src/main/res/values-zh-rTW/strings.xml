@@ -913,6 +913,7 @@
 
 
     <string name="qr_code_analysis_fail">二維碼解析失敗</string>
-
+    <!--科大讯飞语音-->
+    <string name="voice_input">語音輸入</string>
 
 </resources>

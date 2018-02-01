@@ -12,6 +12,7 @@ import android.os.Message;
 import android.provider.MediaStore;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
+import android.text.Editable;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
@@ -24,36 +25,39 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.ChannelMsgAdapter;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
+import com.inspur.emmcloud.bean.appcenter.news.GroupNews;
 import com.inspur.emmcloud.bean.chat.Channel;
 import com.inspur.emmcloud.bean.chat.ChannelGroup;
 import com.inspur.emmcloud.bean.chat.GetFileUploadResult;
 import com.inspur.emmcloud.bean.chat.GetMsgResult;
 import com.inspur.emmcloud.bean.chat.GetNewMsgsResult;
 import com.inspur.emmcloud.bean.chat.GetNewsImgResult;
-import com.inspur.emmcloud.bean.contact.GetSearchChannelGroupResult;
 import com.inspur.emmcloud.bean.chat.GetSendMsgResult;
-import com.inspur.emmcloud.bean.appcenter.news.GroupNews;
 import com.inspur.emmcloud.bean.chat.Msg;
+import com.inspur.emmcloud.bean.contact.GetSearchChannelGroupResult;
 import com.inspur.emmcloud.bean.system.PVCollectModel;
 import com.inspur.emmcloud.broadcastreceiver.MsgReceiver;
 import com.inspur.emmcloud.config.MyAppConfig;
+import com.inspur.emmcloud.interf.OnListeningListener;
+import com.inspur.emmcloud.interf.OnVoiceResultCallback;
 import com.inspur.emmcloud.ui.appcenter.groupnews.NewsWebDetailActivity;
 import com.inspur.emmcloud.ui.contact.RobotInfoActivity;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
-import com.inspur.emmcloud.util.privates.AppUtils;
-import com.inspur.emmcloud.util.privates.cache.ChannelCacheUtils;
-import com.inspur.emmcloud.util.privates.ConbineMsg;
-import com.inspur.emmcloud.util.privates.DirectChannelUtils;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
-import com.inspur.emmcloud.util.privates.cache.MsgCacheUtil;
-import com.inspur.emmcloud.util.privates.cache.MsgReadIDCacheUtils;
-import com.inspur.emmcloud.util.privates.MsgRecourceUploadUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
-import com.inspur.emmcloud.util.privates.cache.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
+import com.inspur.emmcloud.util.privates.AppUtils;
+import com.inspur.emmcloud.util.privates.ConbineMsg;
+import com.inspur.emmcloud.util.privates.DirectChannelUtils;
+import com.inspur.emmcloud.util.privates.MsgRecourceUploadUtils;
+import com.inspur.emmcloud.util.privates.Voice2StringMessageUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
+import com.inspur.emmcloud.util.privates.cache.ChannelCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.MsgCacheUtil;
+import com.inspur.emmcloud.util.privates.cache.MsgReadIDCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.widget.ECMChatInputMenu;
 import com.inspur.emmcloud.widget.ECMChatInputMenu.ChatInputMenuListener;
 import com.inspur.emmcloud.widget.LoadingDialog;
@@ -96,7 +100,7 @@ public class ChannelActivity extends BaseActivity {
     private String cid;
     private ECMChatInputMenu chatInputMenu;
     private LoadingDialog loadingDlg;
-
+    private Voice2StringMessageUtils voice2StringMessageUtils;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -131,6 +135,57 @@ public class ChannelActivity extends BaseActivity {
         } else {
             initViews();
         }
+        initVoiceInput();
+    }
+
+    /**
+     * 初始化语音输入
+     */
+    private void initVoiceInput() {
+        voice2StringMessageUtils = new Voice2StringMessageUtils(ChannelActivity.this);
+        voice2StringMessageUtils.setOnVoiceResultCallback(new OnVoiceResultCallback() {
+            @Override
+            public void onVoiceStart() {
+
+            }
+
+            @Override
+            public void onVoiceResult(String results, boolean isLast) {
+                inputVoiceStringResult((results.length() == 1 && StringUtils.isSymbol(results)) ? "":results);
+            }
+
+            @Override
+            public void onVoiceFinish() {
+                chatInputMenu.stopVoiceReleaseMediaPlay();
+            }
+
+            @Override
+            public void onVoiceLevelChange(int volume) {
+                chatInputMenu.setVoiceImageViewLevel(volume);
+            }
+        });
+        chatInputMenu.setOnListeningListener(new OnListeningListener() {
+            @Override
+            public void onStartListening() {
+                voice2StringMessageUtils.startVoiceListening();
+            }
+
+            @Override
+            public void onStopListening() {
+                voice2StringMessageUtils.stopListening();
+            }
+        });
+
+    }
+
+    /**
+     * 在输入框里输入字符
+     * @param results
+     */
+    private void inputVoiceStringResult(String results) {
+        int index = chatInputMenu.getEdit().getSelectionStart();
+        Editable editable = chatInputMenu.getEdit().getText();
+        editable.insert(index, results);
     }
 
     /**
@@ -606,6 +661,12 @@ public class ChannelActivity extends BaseActivity {
         if (refreshNameReceiver != null) {
             unregisterReceiver(refreshNameReceiver);
             refreshNameReceiver = null;
+        }
+        if( null != voice2StringMessageUtils.getSpeechRecognizer() ){
+            chatInputMenu.releaseMediaPlay();
+            // 退出时释放连接
+            voice2StringMessageUtils.getSpeechRecognizer().cancel();
+            voice2StringMessageUtils.getSpeechRecognizer().destroy();
         }
     }
 

@@ -23,6 +23,8 @@ import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
 import com.horcrux.svg.SvgPackage;
+import com.iflytek.cloud.SpeechConstant;
+import com.iflytek.cloud.SpeechUtility;
 import com.inspur.emmcloud.bean.mine.Enterprise;
 import com.inspur.emmcloud.bean.mine.GetMyInfoResult;
 import com.inspur.emmcloud.bean.mine.Language;
@@ -126,7 +128,8 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
                 "isContactReady", false);
         uid = PreferencesUtils.getString(getApplicationContext(), "userID");
         accessToken = PreferencesUtils.getString(getApplicationContext(), "accessToken", "");
-
+        //科大讯飞语音SDK初始化
+        SpeechUtility.createUtility(this, SpeechConstant.APPID +"=5a6001bf");
     }
 
     /**
