@@ -1,9 +1,5 @@
 package com.inspur.emmcloud.ui.work.calendar;
 
-import java.util.Calendar;
-import java.util.HashMap;
-
-import android.R.integer;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,13 +9,11 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.BaseActivity;
-import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.widget.calendarlistview.DatePickerController;
-import com.inspur.emmcloud.widget.calendarlistview.DayPickerView;
-import com.inspur.emmcloud.widget.calendarlistview.SimpleMonthView;
 import com.inspur.emmcloud.widget.calendarlistview.SimpleMonthAdapter.CalendarDay;
-import com.inspur.emmcloud.widget.calendarlistview.SimpleMonthAdapter.SelectedDays;
+import com.inspur.emmcloud.widget.calendarlistview.SimpleMonthView;
+
+import java.util.HashMap;
 
 public class CalSingleMonthActivity extends BaseActivity implements SimpleMonthView.OnDayClickListener{
 	private SimpleMonthView simpleMonthView;
@@ -78,12 +72,12 @@ public class CalSingleMonthActivity extends BaseActivity implements SimpleMonthV
 			finish();
 			break;
 
-		case R.id.mession_cal_img:
-
-			intent.setClass(CalSingleMonthActivity.this,
-					CalSingleMonthActivity.class);
-			startActivity(intent);
-			break;
+//		case R.id.mession_cal_img:
+//
+//			intent.setClass(CalSingleMonthActivity.this,
+//					CalSingleMonthActivity.class);
+//			startActivity(intent);
+//			break;
 		case R.id.add_event_text:
 			intent.setClass(CalSingleMonthActivity.this,
 					CalEventAddActivity.class);
