@@ -911,5 +911,7 @@
 
     <string name="qr_code_analysis_fail">Qr code parsing failed</string>
 
+    <!--科大讯飞语音-->
+    <string name="voice_input">Speech input</string>
 
 </resources>
