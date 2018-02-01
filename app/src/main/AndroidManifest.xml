@@ -448,6 +448,8 @@
             android:screenOrientation="portrait"></activity>
         <activity
             android:name=".ui.appcenter.ReactNativeAppActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
+            android:windowSoftInputMode="adjustResize"
             android:screenOrientation="portrait"></activity>
         <activity
             android:name=".ui.chat.ModifyChannelGroupNameActivity"
@@ -575,6 +577,7 @@
             android:screenOrientation="portrait"></activity>
         <activity
             android:name=".ui.appcenter.volume.VolumeFileActivity"
+            android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"></activity>
         <activity
             android:name=".ui.appcenter.volume.VolumeFileDownloadActivtiy"
@@ -594,6 +597,9 @@
             android:screenOrientation="portrait"></activity>
         <activity
             android:name=".ui.appcenter.volume.ShareVolumeInfoActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".ui.appcenter.volume.ShareVolumeNameModifyActivity"
             android:screenOrientation="portrait"></activity>
 
 
@@ -748,16 +754,12 @@
                 <category android:name="com.inspur.emmcloud" />
             </intent-filter>
         </activity>
-        <!-- Required  SDK核心功能-->
-        <service
-            android:name="cn.jpush.android.service.DownloadService"
-            android:enabled="true"
-            android:exported="false"></service>
 
         <!-- Required SDK 核心功能-->
         <!-- 可配置android:process参数将PushService放在其他进程中 -->
         <service
             android:name="cn.jpush.android.service.PushService"
+            android:exported="false"
             android:process=":mult">
             <intent-filter>
                 <action android:name="cn.jpush.android.intent.REGISTER" />

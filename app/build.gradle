@@ -32,8 +32,8 @@ android {
         applicationId "com.inspur.emmcloud"
         minSdkVersion 16
         targetSdkVersion 22
-        versionCode 49
-        versionName "1.9.1"
+        versionCode 50
+        versionName "1.9.2"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         ndk {
             abiFilters "armeabi-v7a", "x86"
@@ -160,8 +160,8 @@ dependencies {
     compile(name: 'xutils-3.5.0', ext: 'aar')
     compile(name: 'qmui-1.0.4', ext: 'aar')
     compile 'commons-codec:commons-codec:20041127.091804'
-    compile files('libs/jpush-android-3.1.0.jar')
-    compile files('libs/jcore-android-1.1.8.jar')
+    compile files('libs/jpush-android-3.1.1.jar')
+    compile files('libs/jcore-android-1.1.9.jar')
     compile files('libs/HMSSdkBase_2.5.3.302.jar')
     compile files('libs/HMSSdkPush_2.5.3.302.jar')
     compile files('libs/SocialSDK_QQ_Simplify.jar')

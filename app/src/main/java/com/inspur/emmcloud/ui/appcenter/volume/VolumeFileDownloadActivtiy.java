@@ -81,7 +81,7 @@ public class VolumeFileDownloadActivtiy extends BaseActivity {
         if (FileUtils.isFileExist(fileSavePath)) {
             downloadBtn.setText(R.string.open);
         } else {
-            downloadBtn.setText("下载" + " (" + FileUtils.formatFileSize(volumeFile.getSize()) + ")");
+            downloadBtn.setText(getString(R.string.download_size,FileUtils.formatFileSize(volumeFile.getSize())));
             boolean isStartDownload = getIntent().getBooleanExtra("isStartDownload",false);
             if (isStartDownload){
                 downloadFile();
@@ -96,7 +96,7 @@ public class VolumeFileDownloadActivtiy extends BaseActivity {
                 break;
             case R.id.download_btn:
                 if (downloadBtn.getText().equals(getString(R.string.open))) {
-                    FileUtils.openFile(getApplicationContext(), fileSavePath,volumeFile.getFormat());
+                    FileUtils.openFile(getApplicationContext(), fileSavePath);
                 } else {
                     downloadFile();
                 }
@@ -139,7 +139,7 @@ public class VolumeFileDownloadActivtiy extends BaseActivity {
                 progressBar.setProgress(progress);
                 String totleSize = FileUtil.formetFileSize(total);
                 String currentSize = FileUtil.formetFileSize(current);
-                progressText.setText("下载中（" + currentSize + "/" + totleSize + ")");
+                progressText.setText(getString(R.string.downloading_status,currentSize,totleSize));
 
             }
 

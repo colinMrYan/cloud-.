@@ -1,10 +1,13 @@
 package com.inspur.emmcloud.bean.appcenter.volume;
 
+import com.alibaba.fastjson.TypeReference;
 import com.inspur.emmcloud.util.common.JSONUtils;
 
 import org.json.JSONObject;
 
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by chenmch on 2017/11/16.
@@ -34,6 +37,10 @@ public class VolumeFile implements Serializable{
     private long size = 0L;
     private String volume = "";
     private String status = STATUS_NORMAL;
+    private Map<String, Integer> groupPrivilegeMap = new HashMap<>();
+    private int ownerPrivilege = 0;
+    private int othersPrivilege = 0;
+    private String owner="";
 
     public VolumeFile(){}
 
@@ -53,6 +60,11 @@ public class VolumeFile implements Serializable{
         this.size = JSONUtils.getLong(object,"size",0L);
         this.id = JSONUtils.getString(object,"id","");
         this.volume = JSONUtils.getString(object,"volume","");
+        this.ownerPrivilege = JSONUtils.getInt(object, "ownerPrivilege", 0);
+        this.othersPrivilege = JSONUtils.getInt(object,"othersPrivilege",0);
+        this.owner = JSONUtils.getString(object, "owner", "");
+        String groupPrivilegeJson = JSONUtils.getString(object, "groups", "");
+        groupPrivilegeMap = com.alibaba.fastjson.JSONObject.parseObject(groupPrivilegeJson, new TypeReference<Map<String, Integer>>() {});
     }
 
     public String getType() {
@@ -125,6 +137,38 @@ public class VolumeFile implements Serializable{
 
     public void setSize(long size) {
         this.size = size;
+    }
+
+    public Map<String, Integer> getGroupPrivilegeMap() {
+        return groupPrivilegeMap;
+    }
+
+    public void setGroupPrivilegeMap(Map<String, Integer> groupPrivilegeMap) {
+        this.groupPrivilegeMap = groupPrivilegeMap;
+    }
+
+    public int getOwnerPrivilege() {
+        return ownerPrivilege;
+    }
+
+    public void setOwnerPrivilege(int ownerPrivilege) {
+        this.ownerPrivilege = ownerPrivilege;
+    }
+
+    public int getOthersPrivilege() {
+        return othersPrivilege;
+    }
+
+    public void setOthersPrivilege(int othersPrivilege) {
+        this.othersPrivilege = othersPrivilege;
+    }
+
+    public String getOwner() {
+        return owner;
+    }
+
+    public void setOwner(String owner) {
+        this.owner = owner;
     }
 
     public String getStatus() {

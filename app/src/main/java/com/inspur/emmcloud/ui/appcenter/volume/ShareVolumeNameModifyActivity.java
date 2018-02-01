@@ -2,6 +2,7 @@ package com.inspur.emmcloud.ui.appcenter.volume;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputFilter;
 import android.view.View;
 import android.widget.TextView;
 
@@ -11,6 +12,7 @@ import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
 import com.inspur.emmcloud.bean.appcenter.volume.Group;
 import com.inspur.emmcloud.bean.appcenter.volume.Volume;
+import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.util.common.EditTextUtils;
 import com.inspur.emmcloud.util.common.FomatUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
@@ -51,8 +53,9 @@ public class ShareVolumeNameModifyActivity extends BaseActivity {
         }else {
 		    group = (Group)getIntent().getSerializableExtra("group");
         }
-        headerText.setText(isVolumeNameModify?"更改网盘名称":"更改组名称");
+        headerText.setText(isVolumeNameModify?R.string.update_volume_name:R.string.update_group_name);
 		EditTextUtils.setText(editText, isVolumeNameModify?volume.getName():group.getName());
+        editText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(MyAppConfig.VOLUME_MAX_FILE_NAME_LENGTH)});
 		loadingDlg= new LoadingDialog(ShareVolumeNameModifyActivity.this);
 	}
 	
@@ -64,10 +67,10 @@ public class ShareVolumeNameModifyActivity extends BaseActivity {
 		case R.id.save_text:
 			String name = editText.getText().toString();
 			if (StringUtils.isBlank(name)) {
-				ToastUtils.show(getApplicationContext(), isVolumeNameModify?"请输入网盘名称":"请输入组名称");
+				ToastUtils.show(getApplicationContext(), isVolumeNameModify?R.string.input_volume_name:R.string.input_volume_group_name);
 			}else if(isVolumeNameModify){
                 if (!FomatUtils.isValidFileName(name)) {
-                    ToastUtils.show(getApplicationContext(), "网盘名中不能包含特殊字符 / \\ \" : | * ? < >");
+                    ToastUtils.show(getApplicationContext(), R.string.volume_name_invaliad);
                 } else {
                     updateShareVolumeName(name);
                 }

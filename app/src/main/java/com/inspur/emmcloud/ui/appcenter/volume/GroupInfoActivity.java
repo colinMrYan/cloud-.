@@ -53,6 +53,9 @@ public class GroupInfoActivity extends BaseActivity {
     @ViewInject(R.id.volume_name_text)
     private TextView groupNameText;
 
+    @ViewInject(R.id.volume_name_title)
+    private TextView groupNameTitle;
+
     @ViewInject(R.id.header_text)
     private TextView headerText;
     private VolumeInfoMemberAdapter memberAdapter;
@@ -65,9 +68,10 @@ public class GroupInfoActivity extends BaseActivity {
         loadingDlg = new LoadingDialog(this);
         apiService = new MyAppAPIService(this);
         apiService.setAPIInterface(new WebService());
-        headerText.setText("组信息");
+        headerText.setText(R.string.volume_group_info);
         group = (Group) getIntent().getSerializableExtra("group");
         volumeMemList = getIntent().getStringArrayListExtra("volumeMemList");
+        groupNameTitle.setText(R.string.volume_group_name);
         showGroupDetail();
     }
 
@@ -80,7 +84,7 @@ public class GroupInfoActivity extends BaseActivity {
                 break;
             case R.id.volume_member_layout:
                 Bundle bundle = new Bundle();
-                bundle.putString("title", "组成员");
+                bundle.putString("title", getString(R.string.volume_group_member));
                 bundle.putString("search", "1");
                 bundle.putStringArrayList("uidList", group.getMemberUidList());
                 IntentUtils.startActivity(GroupInfoActivity.this,
@@ -113,13 +117,13 @@ public class GroupInfoActivity extends BaseActivity {
                     intent.putExtra("isRemoveMyself",false);
                     intent.setClass(getApplicationContext(),
                             ChannelMembersDelActivity.class);
-                    intent.putExtra("title", "添加组成员");
+                    intent.putExtra("title", getString(R.string.add_volume_group_member));
                     startActivityForResult(intent, ADD_MEMBER);
                 } else if (position == memberGrid.getCount() - 1) {
                     intent.putExtra("memberUidList", group.getMemberUidList());
                     intent.setClass(getApplicationContext(),
                             ChannelMembersDelActivity.class);
-                    intent.putExtra("title", "删除组成员");
+                    intent.putExtra("title", getString(R.string.del_volume_group_member));
                     startActivityForResult(intent, DEL_MEMBER);
 
                 } else {
@@ -134,7 +138,7 @@ public class GroupInfoActivity extends BaseActivity {
     }
 
     private void updateGroupMemNum() {
-        groupMemberText.setText("全部组成员(" + group.getMemberUidList().size() + ")");
+        groupMemberText.setText(getString(R.string.all_volume_group_member_size,group.getMemberUidList().size()));
     }
 
 
