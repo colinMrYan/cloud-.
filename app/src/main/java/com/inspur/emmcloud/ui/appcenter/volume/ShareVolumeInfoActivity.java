@@ -117,7 +117,7 @@ public class ShareVolumeInfoActivity extends BaseActivity {
                 break;
             case R.id.volume_member_layout:
                 Bundle bundle = new Bundle();
-                bundle.putString("title", "网盘成员");
+                bundle.putString("title", getString(R.string.volume_member));
                 bundle.putString("search", "1");
                 bundle.putStringArrayList("uidList", volumeDetail.getMemberUidList());
                 IntentUtils.startActivity(ShareVolumeInfoActivity.this,
@@ -162,7 +162,7 @@ public class ShareVolumeInfoActivity extends BaseActivity {
                 if ((position == memberGrid.getCount() - 2) && isOwner) {
                     intent.putExtra("select_content", 2);
                     intent.putExtra("isMulti_select", true);
-                    intent.putExtra("title", "添加网盘成员");
+                    intent.putExtra("title", getString(R.string.add_volume_member));
                     intent.putExtra("excludeContactUidList", volumeDetail.getMemberUidList());
                     intent.setClass(getApplicationContext(),
                             ContactSearchActivity.class);
@@ -171,7 +171,7 @@ public class ShareVolumeInfoActivity extends BaseActivity {
                     intent.putExtra("memberUidList", volumeDetail.getMemberUidList());
                     intent.setClass(getApplicationContext(),
                             ChannelMembersDelActivity.class);
-                    intent.putExtra("title", "删除云盘成员");
+                    intent.putExtra("title", getString(R.string.del_volume_member));
                     startActivityForResult(intent, DEL_MEMBER);
 
                 } else {
@@ -186,7 +186,7 @@ public class ShareVolumeInfoActivity extends BaseActivity {
     }
 
     private void updateVolumeMemNum() {
-        volumeMemberText.setText("全部网盘成员(" + volumeDetail.getMemberUidList().size() + ")");
+        volumeMemberText.setText(getString(R.string.all_volume_member_size,volumeDetail.getMemberUidList().size()));
     }
 
     @Override

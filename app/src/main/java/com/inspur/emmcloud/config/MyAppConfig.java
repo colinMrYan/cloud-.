@@ -39,6 +39,7 @@ public class MyAppConfig {
 	public static final boolean isUseMarkdown = true;
 	public static final int UPLOAD_ORIGIN_IMG_MAX_SIZE = 1400;
 	public static final int UPLOAD_THUMBNAIL_IMG_MAX_SIZE = 600;
+	public static final int VOLUME_MAX_FILE_NAME_LENGTH = 40;
 
 	public static Map<String, String> getLocalLanguageMap() {
 		Map<String, String> languageMap = new HashMap<String, String>();

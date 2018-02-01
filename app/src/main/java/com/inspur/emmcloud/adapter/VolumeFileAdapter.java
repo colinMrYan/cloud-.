@@ -172,11 +172,11 @@ public class VolumeFileAdapter extends RecyclerView.Adapter<VolumeFileAdapter.Vi
         holder.fileTimeText.setText(fileTime);
         if (!isStatusNomal) {
             boolean isStutasUploading = volumeFileStatus.equals(VolumeFile.STATUS_UPLOADIND);
-            holder.uploadOperationText.setText(isStutasUploading ? "取消上传" : "重新上传");
+            holder.uploadOperationText.setText(isStutasUploading ? R.string.upload_cancel : R.string.upload_again);
             holder.uploadProgressBar.setProgress(0);
             holder.uploadProgressBar.setVisibility(View.GONE);
             holder.uploadStatusText.setVisibility(View.VISIBLE);
-            holder.uploadStatusText.setText(isStutasUploading ? "等待上传" : "上传失败");
+            holder.uploadStatusText.setText(isStutasUploading ? R.string.upload_waiting : R.string.upload_fail);
             VolumeFileUploadManagerUtils.getInstance().setOssUploadProgressCallback(volumeFile, new ProgressCallback() {
                 @Override
                 public void onSuccess(VolumeFile newVolumeFile) {

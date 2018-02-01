@@ -57,7 +57,7 @@
             android:paddingLeft="12dp"
             android:paddingRight="12dp"
             android:paddingTop="15dp"
-            android:text="取消上传"
+            android:text="@string/upload_cancel"
             android:textColor="#2586CD"
             android:textSize="15sp" />
     </RelativeLayout>
