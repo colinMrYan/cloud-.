@@ -77,14 +77,11 @@
         android:paddingTop="25dp"
         android:visibility="gone" >
 
-        <GridView
-            android:id="@+id/add_menu_grid"
+        <com.inspur.emmcloud.widget.ECMChatInputMenuViewpageLayout
+            android:id="@+id/viewpager_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:listSelector="@android:color/transparent"
-            android:numColumns="4"
-            android:paddingTop="8dp"
-            android:stretchMode="columnWidth" />
+            />
         <ImageView
             android:id="@+id/voice_volume_img"
             android:layout_width="80dp"
@@ -93,7 +90,7 @@
             android:visibility="gone"
             android:src="@drawable/ic_chat_input_voice_level"
             android:paddingTop="8dp"
-             />
+            />
         <ImageView
             android:id="@+id/voice_back_img"
             android:layout_width="80dp"

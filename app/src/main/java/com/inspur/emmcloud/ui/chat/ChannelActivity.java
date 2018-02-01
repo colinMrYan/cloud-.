@@ -12,7 +12,6 @@ import android.os.Message;
 import android.provider.MediaStore;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
-import android.text.Editable;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
@@ -38,8 +37,6 @@ import com.inspur.emmcloud.bean.contact.GetSearchChannelGroupResult;
 import com.inspur.emmcloud.bean.system.PVCollectModel;
 import com.inspur.emmcloud.broadcastreceiver.MsgReceiver;
 import com.inspur.emmcloud.config.MyAppConfig;
-import com.inspur.emmcloud.interf.OnListeningListener;
-import com.inspur.emmcloud.interf.OnVoiceResultCallback;
 import com.inspur.emmcloud.ui.appcenter.groupnews.NewsWebDetailActivity;
 import com.inspur.emmcloud.ui.contact.RobotInfoActivity;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
@@ -52,7 +49,6 @@ import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.ConbineMsg;
 import com.inspur.emmcloud.util.privates.DirectChannelUtils;
 import com.inspur.emmcloud.util.privates.MsgRecourceUploadUtils;
-import com.inspur.emmcloud.util.privates.Voice2StringMessageUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.util.privates.cache.ChannelCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MsgCacheUtil;
@@ -100,7 +96,6 @@ public class ChannelActivity extends BaseActivity {
     private String cid;
     private ECMChatInputMenu chatInputMenu;
     private LoadingDialog loadingDlg;
-    private Voice2StringMessageUtils voice2StringMessageUtils;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -135,58 +130,8 @@ public class ChannelActivity extends BaseActivity {
         } else {
             initViews();
         }
-        initVoiceInput();
     }
 
-    /**
-     * 初始化语音输入
-     */
-    private void initVoiceInput() {
-        voice2StringMessageUtils = new Voice2StringMessageUtils(ChannelActivity.this);
-        voice2StringMessageUtils.setOnVoiceResultCallback(new OnVoiceResultCallback() {
-            @Override
-            public void onVoiceStart() {
-
-            }
-
-            @Override
-            public void onVoiceResult(String results, boolean isLast) {
-                inputVoiceStringResult((results.length() == 1 && StringUtils.isSymbol(results)) ? "":results);
-            }
-
-            @Override
-            public void onVoiceFinish() {
-                chatInputMenu.stopVoiceReleaseMediaPlay();
-            }
-
-            @Override
-            public void onVoiceLevelChange(int volume) {
-                chatInputMenu.setVoiceImageViewLevel(volume);
-            }
-        });
-        chatInputMenu.setOnListeningListener(new OnListeningListener() {
-            @Override
-            public void onStartListening() {
-                voice2StringMessageUtils.startVoiceListening();
-            }
-
-            @Override
-            public void onStopListening() {
-                voice2StringMessageUtils.stopListening();
-            }
-        });
-
-    }
-
-    /**
-     * 在输入框里输入字符
-     * @param results
-     */
-    private void inputVoiceStringResult(String results) {
-        int index = chatInputMenu.getEdit().getSelectionStart();
-        Editable editable = chatInputMenu.getEdit().getText();
-        editable.insert(index, results);
-    }
 
     /**
      * 初始化Views
@@ -281,7 +226,7 @@ public class ChannelActivity extends BaseActivity {
         if ((channel != null) && channel.getInputs().equals("0")) {
             chatInputMenu.setVisibility(View.GONE);
         } else {
-            chatInputMenu.updateMenuGrid(channel.getInputs());
+            chatInputMenu.updateCommonMenuLayout(channel.getInputs());
         }
     }
 
@@ -662,12 +607,7 @@ public class ChannelActivity extends BaseActivity {
             unregisterReceiver(refreshNameReceiver);
             refreshNameReceiver = null;
         }
-        if( null != voice2StringMessageUtils.getSpeechRecognizer() ){
-            chatInputMenu.releaseMediaPlay();
-            // 退出时释放连接
-            voice2StringMessageUtils.getSpeechRecognizer().cancel();
-            voice2StringMessageUtils.getSpeechRecognizer().destroy();
-        }
+        chatInputMenu.releaseVoliceInput();
     }
 
     /**

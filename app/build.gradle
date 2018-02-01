@@ -113,6 +113,8 @@ android {
                             'src/main/res/layouts/widgets',//dialog
                             'src/main/res/layouts/others/fragments',//fragments
                             'src/main/res/layouts/others',//fragments
+                            'src/main/res/layouts/umeng',//umeng
+                            'src/main/res/layouts/jpush',//jpush
                             'src/main/res/layout',//默认布局文件目录
                             'src/main/res'//根目录
 

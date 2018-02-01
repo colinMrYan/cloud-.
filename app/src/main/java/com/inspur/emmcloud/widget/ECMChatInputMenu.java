@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.content.res.TypedArray;
 import android.graphics.Rect;
 import android.os.Handler;
+import android.text.Editable;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -20,20 +21,17 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.adapter.MsgInputAddItemAdapter;
 import com.inspur.emmcloud.bean.chat.InputTypeBean;
 import com.inspur.emmcloud.bean.chat.InsertModel;
 import com.inspur.emmcloud.config.Constant;
-import com.inspur.emmcloud.interf.OnListeningListener;
+import com.inspur.emmcloud.interf.OnVoiceResultCallback;
 import com.inspur.emmcloud.ui.chat.MembersActivity;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.MediaPlayerUtils;
@@ -41,9 +39,9 @@ import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
+import com.inspur.emmcloud.util.privates.Voice2StringMessageUtils;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -58,7 +56,6 @@ public class ECMChatInputMenu extends LinearLayout {
     private static final int CAMERA_RESULT = 3;
     private static final int CHOOSE_FILE = 4;
     private static final int MENTIONS_RESULT = 5;
-    private Context context;
     private LayoutInflater layoutInflater;
     private ChatInputEdit inputEdit;
     private ImageView addImg;
@@ -68,16 +65,12 @@ public class ECMChatInputMenu extends LinearLayout {
     private String cid = "";
     private InputMethodManager mInputManager;
     private ChatInputMenuListener chatInputMenuListener;
-    private MsgInputAddItemAdapter msgInputAddItemAdapter;
     private boolean isSetWindowListener = true;//是否监听窗口变化自动跳转输入框ui
-    private OnListeningListener onListeningListener;
     private  ImageView voiceMicroPhoneImg, voicePackUpImg;
-    private  GridView addItemGrid;
     private List<InputTypeBean> inputTypeBeanList = new ArrayList<>();
     private MediaPlayerUtils mediaPlayerUtils;
-
-
-    // private View view ;
+    private ECMChatInputMenuViewpageLayout viewpagerLayout;
+    private Voice2StringMessageUtils voice2StringMessageUtils;
 
     public ECMChatInputMenu(Context context) {
         super(context);
@@ -96,13 +89,8 @@ public class ECMChatInputMenu extends LinearLayout {
         init(context, attrs);
     }
 
-    public void setOnListeningListener(OnListeningListener onListeningListener) {
-        this.onListeningListener = onListeningListener;
-    }
-
     private void init(final Context context, AttributeSet attrs) {
         // TODO Auto-generated method stub
-        this.context = context;
         layoutInflater = LayoutInflater.from(context);
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ECMChatInputMenu);
         String layoutType = a.getString(R.styleable.ECMChatInputMenu_layoutType);
@@ -151,8 +139,61 @@ public class ECMChatInputMenu extends LinearLayout {
             }
         });
         initInputEdit();
-        initMenuGrid();
-        mediaPlayerUtils = new MediaPlayerUtils(context);
+        initVoiceInput();
+    }
+
+    /**
+     * 初始化语言输入相关
+     */
+    private void initVoiceInput(){
+        voiceMicroPhoneImg = (ImageView) findViewById(R.id.voice_volume_img);
+        voicePackUpImg = (ImageView) findViewById(R.id.voice_back_img);
+        viewpagerLayout = (ECMChatInputMenuViewpageLayout)findViewById(R.id.viewpager_layout);
+        voiceMicroPhoneImg.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                voiceMicroPhoneImg.setImageLevel(0);
+                mediaPlayerUtils.playVoiceOn();
+                voice2StringMessageUtils.startVoiceListening();
+            }
+        });
+        voicePackUpImg.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                viewpagerLayout.setVisibility(View.VISIBLE);
+                voiceMicroPhoneImg.setVisibility(View.GONE);
+                voicePackUpImg.setVisibility(View.GONE);
+                voice2StringMessageUtils.stopListening();
+            }
+        });
+        mediaPlayerUtils = new MediaPlayerUtils(getContext());
+        voice2StringMessageUtils = new Voice2StringMessageUtils(getContext());
+        voice2StringMessageUtils.setOnVoiceResultCallback(new OnVoiceResultCallback() {
+            @Override
+            public void onVoiceStart() {
+
+            }
+
+            @Override
+            public void onVoiceResult(String results, boolean isLast) {
+                if (results.length() == 1 && StringUtils.isSymbol(results)){
+                    results = "";
+                }
+                int index = inputEdit.getSelectionStart();
+                Editable editable = inputEdit.getText();
+                editable.insert(index, results);
+            }
+
+            @Override
+            public void onVoiceFinish() {
+                stopVoiceReleaseMediaPlay();
+            }
+
+            @Override
+            public void onVoiceLevelChange(int volume) {
+                setVoiceImageViewLevel(volume);
+            }
+        });
     }
 
     /**
@@ -221,6 +262,25 @@ public class ECMChatInputMenu extends LinearLayout {
         });
     }
 
+    /**
+     * 是否是输入了关键字@字符打开mention页
+     *
+     * @param isInputKeyWord
+     */
+    private void openMention(boolean isInputKeyWord) {
+        Intent intent = new Intent();
+        intent.setClass(getContext(), MembersActivity.class);
+        intent.putExtra("title", getContext().getString(R.string.friend_list));
+        intent.putExtra("cid", cid);
+        intent.putExtra("isInputKeyWord", isInputKeyWord);
+        ((Activity) getContext()).overridePendingTransition(
+                R.anim.activity_open, 0);
+
+        ((Activity) getContext()).startActivityForResult(intent,
+                MENTIONS_RESULT);
+
+    }
+
     public void setWindowListener(boolean isSetWindowListener) {
         this.isSetWindowListener = isSetWindowListener;
     }
@@ -255,8 +315,8 @@ public class ECMChatInputMenu extends LinearLayout {
     public void showAddItemLayout() {
         int softInputHeight = getSupportSoftInputHeight();
         if (softInputHeight == 0) {
-            softInputHeight = PreferencesUtils.getInt(context, Constant.PREF_SOFT_INPUT_HEIGHT,
-                    DensityUtil.dip2px(context, 274));
+            softInputHeight = PreferencesUtils.getInt(getContext(), Constant.PREF_SOFT_INPUT_HEIGHT,
+                    DensityUtil.dip2px(getContext(), 274));
         }
         if (isSetWindowListener) {
             hideSoftInput();
@@ -264,13 +324,13 @@ public class ECMChatInputMenu extends LinearLayout {
         addMenuLayout.getLayoutParams().height = softInputHeight;
         addMenuLayout.setVisibility(View.VISIBLE);
 
-        addItemGrid.setVisibility(View.VISIBLE);
+        viewpagerLayout.setVisibility(View.VISIBLE);
         voiceMicroPhoneImg.setVisibility(View.GONE);
         voicePackUpImg.setVisibility(View.GONE);
     }
 
     public void showSoftInput() {
-        onListeningListener.onStopListening();
+        voice2StringMessageUtils.stopListening();
         inputEdit.requestFocus();
         new Handler().post(new Runnable() {
             @Override
@@ -284,16 +344,17 @@ public class ECMChatInputMenu extends LinearLayout {
         mInputManager.hideSoftInputFromWindow(inputEdit.getWindowToken(), 0);
     }
 
+
     private boolean isSoftInputShown() {
         return getSupportSoftInputHeight() != 0;
     }
 
     private int getSupportSoftInputHeight() {
         Rect r = new Rect();
-        ((Activity) context).getWindow().getDecorView()
+        ((Activity) getContext()).getWindow().getDecorView()
                 .getWindowVisibleDisplayFrame(r);
         DisplayMetrics displayMetrics = new DisplayMetrics();
-        ((Activity) context).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        ((Activity) getContext()).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         int screenHeight = displayMetrics.heightPixels;
         int softInputHeight = screenHeight - r.bottom;
         if (softInputHeight < 0) {
@@ -301,80 +362,33 @@ public class ECMChatInputMenu extends LinearLayout {
                     "Warning: value of softInputHeight is below zero!");
         }
         if (softInputHeight > 0) {
-            PreferencesUtils.putInt(context, Constant.PREF_SOFT_INPUT_HEIGHT, softInputHeight);
+            PreferencesUtils.putInt(getContext(), Constant.PREF_SOFT_INPUT_HEIGHT, softInputHeight);
         }
         return softInputHeight;
     }
 
-    /**
-     * 初始化消息发送的UI
-     */
-    private void initMenuGrid() {
-        addItemGrid = (GridView) findViewById(R.id.add_menu_grid);
-        voiceMicroPhoneImg = (ImageView) findViewById(R.id.voice_volume_img);
-        voicePackUpImg = (ImageView) findViewById(R.id.voice_back_img);
-        msgInputAddItemAdapter = new MsgInputAddItemAdapter(context);
-        addItemGrid.setAdapter(msgInputAddItemAdapter);
-        addItemGrid.setOnItemClickListener(new OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view,
-                                    int position, long id) {
-                int clickItem = inputTypeBeanList.get(position).getInputTypeIcon();
-                switch (clickItem) {
-                    case R.drawable.ic_chat_input_add_gallery:
-                        AppUtils.openGallery((Activity)context,5,GELLARY_RESULT);
-                        break;
-                    case R.drawable.ic_chat_input_add_camera:
-                        String fileName = new Date().getTime() + ".jpg";
-                        PreferencesUtils.putString(context, "capturekey", fileName);
-                        AppUtils.openCamera((Activity)context,fileName,CAMERA_RESULT);
-                        break;
-                    case R.drawable.ic_chat_input_add_file:
-                       AppUtils.openFileSystem((Activity)context,CHOOSE_FILE);
-                        break;
-                    case R.drawable.ic_chat_input_add_mention:
-                        openMention(false);
-                        break;
-                    case R.drawable.ic_chat_input_add_voice:
-                        if(NetUtils.isNetworkConnected(context)){
-                            mediaPlayerUtils.playVoiceOn();
-                            onListeningListener.onStartListening();
-                            addItemGrid.setVisibility(View.GONE);
-                            voiceMicroPhoneImg.setImageLevel(0);
-                            voiceMicroPhoneImg.setVisibility(View.VISIBLE);
-                            voicePackUpImg.setVisibility(View.VISIBLE);
-                        }
-                        break;
-                    default:
-                        break;
-                }
-
-            }
-        });
-        voiceMicroPhoneImg.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                voiceMicroPhoneImg.setImageLevel(0);
-                mediaPlayerUtils.playVoiceOn();
-                onListeningListener.onStartListening();
-            }
-        });
-        voicePackUpImg.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                addItemGrid.setVisibility(View.VISIBLE);
-                voiceMicroPhoneImg.setVisibility(View.GONE);
-                voicePackUpImg.setVisibility(View.GONE);
-                onListeningListener.onStopListening();
-            }
-        });
+    public void setChatInputMenuListener(
+            ChatInputMenuListener chatInputMenuListener) {
+        this.chatInputMenuListener = chatInputMenuListener;
     }
+
+    public interface ChatInputMenuListener {
+        void onSetContentViewHeight(boolean isLock);
+
+        void onSendMsg(String content, List<String> mentionsUidList, List<String> urlList);
+
+    }
+
 
     /**
      * 释放MediaPlay资源
      */
-    public void releaseMediaPlay(){
-        mediaPlayerUtils.release();
+    public void releaseVoliceInput(){
+        if (voice2StringMessageUtils.getSpeechRecognizer() != null){
+            mediaPlayerUtils.release();
+            voice2StringMessageUtils.getSpeechRecognizer().cancel();
+            voice2StringMessageUtils.getSpeechRecognizer().destroy();
+        }
     }
 
     /**
@@ -415,37 +429,6 @@ public class ECMChatInputMenu extends LinearLayout {
 
 
     /**
-     * 是否是输入了关键字@字符打开mention页
-     *
-     * @param isInputKeyWord
-     */
-    private void openMention(boolean isInputKeyWord) {
-        Intent intent = new Intent();
-        intent.setClass(context, MembersActivity.class);
-        intent.putExtra("title", context.getString(R.string.friend_list));
-        intent.putExtra("cid", cid);
-        intent.putExtra("isInputKeyWord", isInputKeyWord);
-        ((Activity) context).overridePendingTransition(
-                R.anim.activity_open, 0);
-
-        ((Activity) context).startActivityForResult(intent,
-                MENTIONS_RESULT);
-
-    }
-
-    public void setChatInputMenuListener(
-            ChatInputMenuListener chatInputMenuListener) {
-        this.chatInputMenuListener = chatInputMenuListener;
-    }
-
-    public interface ChatInputMenuListener {
-        void onSetContentViewHeight(boolean isLock);
-
-        void onSendMsg(String content, List<String> mentionsUidList, List<String> urlList);
-
-    }
-
-    /**
      * 添加mentions
      *
      * @param uid
@@ -480,15 +463,16 @@ public class ECMChatInputMenu extends LinearLayout {
      *
      * @param inputs
      */
-    public void updateMenuGrid(String inputs) {
+    public void updateCommonMenuLayout(String inputs) {
         //功能组的图标，名称
         int[] functionIconArray = {R.drawable.ic_chat_input_add_gallery,
                 R.drawable.ic_chat_input_add_camera, R.drawable.ic_chat_input_add_file,
-                R.drawable.ic_chat_input_add_voice};
-        String[] functionNameArray = {context.getString(R.string.album),
-                context.getString(R.string.take_photo),
-                context.getString(R.string.file),
-                context.getString(R.string.voice_input)};
+                R.drawable.ic_chat_input_add_voice,R.drawable.ic_chat_input_add_mention};
+        String[] functionNameArray = {getContext().getString(R.string.album),
+                getContext().getString(R.string.take_photo),
+                getContext().getString(R.string.file),
+                getContext().getString(R.string.voice_input),"@"};
+        String[] actionArray={"gallery","camera","file","voice2word","mention"};
         String binaryString  = "-1";
         //如果第一位是且只能是1即 "1" 如果inputs是其他，例如"2"则走下面逻辑
         //这种情况是只开放了输入文字的权限
@@ -509,29 +493,64 @@ public class ECMChatInputMenu extends LinearLayout {
         for(int i=0; i < binaryLength; i++){
             //第一位已经处理过了，这里不再处理
             //这里如果禁止输入文字时，inputEdit设置Enabled
-            if(i == 0){
-                inputEdit.setEnabled((binaryString.charAt(0)+"").equals("1"));
+            if (i == 0) {
+                inputEdit.setEnabled((binaryString.charAt(0) + "").equals("1"));
                 continue;
             }
-            if((binaryString.charAt(i)+"").equals("1")){
+            if ((binaryString.charAt(i) + "").equals("1")) {
                 //对于第二位特殊处理，如果第二位是"1"则添加相册，拍照两个功能，与服务端确认目前这样实现
                 //存在的疑问，如果仅显示相册或仅显示拍照应该如何处理？
-                if(i == 1){
-                    InputTypeBean inputTypeBeanGallery = new InputTypeBean(functionIconArray[0],functionNameArray[0]);
+                if (i == 1) {
+                    InputTypeBean inputTypeBeanGallery = new InputTypeBean(functionIconArray[0], functionNameArray[0],actionArray[0]);
                     inputTypeBeanList.add(inputTypeBeanGallery);
-                    InputTypeBean inputTypeBeanCamera = new InputTypeBean(functionIconArray[1],functionNameArray[1]);
+                    InputTypeBean inputTypeBeanCamera = new InputTypeBean(functionIconArray[1], functionNameArray[1],actionArray[1]);
                     inputTypeBeanList.add(inputTypeBeanCamera);
-                }else{
-                    InputTypeBean inputTypeBean = new InputTypeBean(functionIconArray[i],functionNameArray[i]);
+                } else {
+                    InputTypeBean inputTypeBean = new InputTypeBean(functionIconArray[i], functionNameArray[i],actionArray[i]);
                     inputTypeBeanList.add(inputTypeBean);
                 }
             }
         }
         //如果是群组的话添加@功能
         if (isChannelGroup) {
-            InputTypeBean inputTypeBean = new InputTypeBean(R.drawable.ic_chat_input_add_mention,"@");
+            InputTypeBean inputTypeBean = new InputTypeBean(functionIconArray[4], functionNameArray[4],actionArray[4]);
             inputTypeBeanList.add(inputTypeBean);
         }
-        msgInputAddItemAdapter.updateGridView(inputTypeBeanList);
+        viewpagerLayout.setOnGridItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                InputTypeBean inputTypeBean = inputTypeBeanList.get(position);
+                switch (inputTypeBean.getAction()) {
+                    case "gallery":
+                        AppUtils.openGallery((Activity) getContext(), 5, GELLARY_RESULT);
+                        break;
+                    case "camera":
+                        String fileName = System.currentTimeMillis() + ".jpg";
+                        PreferencesUtils.putString(getContext(), "capturekey", fileName);
+                        AppUtils.openCamera((Activity) getContext(), fileName, CAMERA_RESULT);
+                        break;
+                    case "file":
+                        AppUtils.openFileSystem((Activity) getContext(), CHOOSE_FILE);
+                        break;
+                    case "mention":
+                        openMention(false);
+                        break;
+                    case "voice2word":
+                        if(NetUtils.isNetworkConnected(getContext())){
+                            mediaPlayerUtils.playVoiceOn();
+                            voice2StringMessageUtils.startVoiceListening();
+                            viewpagerLayout.setVisibility(View.GONE);
+                            voiceMicroPhoneImg.setImageLevel(0);
+                            voiceMicroPhoneImg.setVisibility(View.VISIBLE);
+                            voicePackUpImg.setVisibility(View.VISIBLE);
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
+        });
+        viewpagerLayout.setInputTypeBeanList(inputTypeBeanList,cid);
     }
 }
