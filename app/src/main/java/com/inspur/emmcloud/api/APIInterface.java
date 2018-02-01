@@ -23,6 +23,7 @@ import com.inspur.emmcloud.bean.appcenter.news.GetGroupNewsDetailResult;
 import com.inspur.emmcloud.bean.appcenter.news.GetNewsTitleResult;
 import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeFileListResult;
 import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeFileUploadTokenResult;
+import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeGroupResult;
 import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeListResult;
 import com.inspur.emmcloud.bean.appcenter.volume.Volume;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeDetail;
@@ -602,4 +603,7 @@ public interface APIInterface {
 
     void returnGroupMemDelSuccess(List<String> uidList);
     void returnGroupMemDelFail(String error, int errorCode);
+
+    void returnVolumeGroupContainMeSuccess(GetVolumeGroupResult getVolumeGroupResult);
+    void returnVolumeGroupContainMeFail(String error, int errorCode);
 }

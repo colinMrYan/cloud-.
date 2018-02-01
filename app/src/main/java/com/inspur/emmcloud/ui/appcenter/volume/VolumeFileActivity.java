@@ -31,6 +31,7 @@ import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.GetPathFromUri4kitkat;
+import com.inspur.emmcloud.util.privates.VolumeFilePrivilegeUtils;
 import com.inspur.emmcloud.util.privates.VolumeFileUploadManagerUtils;
 import com.inspur.emmcloud.widget.dialogs.ActionSheetDialog;
 import com.inspur.imp.plugin.camera.imagepicker.ImagePicker;
@@ -72,6 +73,12 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
     @ViewInject(R.id.batch_operation_select_all_text)
     private TextView getBatchOprationSelectAllText;
 
+    @ViewInject(R.id.batch_operation_delete_text)
+    private TextView batchOperationDeleteText;
+
+    @ViewInject(R.id.batch_operation_move_text)
+    private TextView batchOperationMoveText;
+
     @ViewInject(R.id.operation_layout)
     protected RelativeLayout operationLayout;
     private PopupWindow sortOperationPop;
@@ -104,7 +111,8 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
                         }
                     } else {
                         adapter.setVolumeFileSelect(position);
-                        batchOprationHeaderText.setText("已选择(" + adapter.getSelectVolumeFileList().size() + ")");
+                        batchOprationHeaderText.setText(getString(R.string.has_selected,adapter.getSelectVolumeFileList().size()));
+                        setBatchOprationLayoutByPrivilege();
                     }
                 }
 
@@ -112,7 +120,8 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
 
             @Override
             public void onItemLongClick(View view, int position) {
-                if (!adapter.getMultiselect()) {
+                VolumeFile volumeFile = volumeFileList.get(position);
+                if (volumeFile.getStatus().equals("normal") && !adapter.getMultiselect()) {
                     showFileOperationDlg(volumeFileList.get(position));
                 }
             }
@@ -134,8 +143,8 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
         broadcastReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                String path = intent.getStringExtra("path");
-                if (path != null && path.equals(currentDirAbsolutePath)) {
+                String directoryId = intent.getStringExtra("directoryId");
+                if (directoryId != null && directoryId.equals(getVolumeFileListResult.getId())) {
                     String command = intent.getStringExtra("command");
                     if (command != null && command.equals("refresh")) {
                         getVolumeFileList(true);
@@ -213,6 +222,7 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
             case R.id.batch_operation_select_all_text:
                 boolean isSelectAllStatus = getBatchOprationSelectAllText.getText().toString().equals("全选");
                 setselectAll(isSelectAllStatus);
+                setBatchOprationLayoutByPrivilege();
                 break;
 
             default:
@@ -225,9 +235,9 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
      */
     private void showUploadFileDlg() {
         new ActionSheetDialog.ActionListSheetBuilder(VolumeFileActivity.this)
-                .addItem("拍照")
-                .addItem("选择照片")
-                .addItem("选择文件")
+                .addItem(getString(R.string.take_photo))
+                .addItem(getString(R.string.select_photo))
+                .addItem(getString(R.string.select_file))
                 .setOnSheetItemClickListener(new ActionSheetDialog.ActionListSheetBuilder.OnSheetItemClickListener() {
                     @Override
                     public void onClick(ActionSheetDialog dialog, View itemView, int position) {
@@ -297,16 +307,16 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
         String sortTypeShowTxt;
         switch (sortType) {
             case SORT_BY_NAME_DOWN:
-                sortTypeShowTxt = "名称降序";
+                sortTypeShowTxt = getString(R.string.sort_by_name_dasc);
                 break;
             case SORT_BY_TIME_UP:
-                sortTypeShowTxt = "时间升序";
+                sortTypeShowTxt = getString(R.string.sort_by_time_asc);;
                 break;
             case SORT_BY_TIME_DOWN:
-                sortTypeShowTxt = "时间降序";
+                sortTypeShowTxt = getString(R.string.sort_by_time_dasc);;
                 break;
             default:
-                sortTypeShowTxt = "名称升序";
+                sortTypeShowTxt = getString(R.string.sort_by_name_asc);;
                 break;
         }
         operationSortText.setText(sortTypeShowTxt);
@@ -398,11 +408,10 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
                 String[] fileFilterTypes = {VolumeFile.FILTER_TYPE_DOCUNMENT, VolumeFile.FILTER_TYPE_IMAGE, VolumeFile.FILTER_TYPE_AUDIO, VolumeFile.FILTER_TYPE_VIDEO, VolumeFile.FILTER_TYPE_OTHER};
                 Intent intent = new Intent(VolumeFileActivity.this, VolumeFileFilterActvity.class);
                 Bundle bundle = getIntent().getExtras();
-                bundle.putString("title", "分类");
+                bundle.putString("title", getString(R.string.app_classification));
                 bundle.putString("fileFilterType", fileFilterTypes[position]);
                 bundle.putString("currentDirAbsolutePath", currentDirAbsolutePath);
                 intent.putExtras(bundle);
-                LogUtils.jasonDebug("bundle=" + bundle.toString());
                 startActivityForResult(intent, REQUEST_SHOW_FILE_FILTER);
                 fileFilterPop.dismiss();
             }
@@ -416,23 +425,46 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
 
 
     /**
+     * 设置当前目录权限有关的layout展示
+     */
+    @Override
+    protected void setCurrentDirectoryLayoutByPrivilege() {
+        boolean isCurrentDirectoryWriteable = VolumeFilePrivilegeUtils.getVolumeFileWriteable(getApplicationContext(),getVolumeFileListResult);
+        headerOperationLayout.setVisibility(isCurrentDirectoryWriteable ? View.VISIBLE : View.GONE);
+    }
+
+    private void setBatchOprationLayoutByPrivilege(){
+        List<VolumeFile> selectVolumeFileList = adapter.getSelectVolumeFileList();
+        if (selectVolumeFileList.size()>0){
+            batchOperationBarLayout.setVisibility(View.VISIBLE);
+            boolean isFileListWriteable = VolumeFilePrivilegeUtils.getVolumeFileListWriteable(getApplicationContext(),selectVolumeFileList);
+            batchOperationDeleteText.setVisibility(isFileListWriteable?View.VISIBLE:View.GONE);
+            batchOperationMoveText.setVisibility(isFileListWriteable?View.VISIBLE:View.GONE);
+        }else {
+            batchOperationBarLayout.setVisibility(View.GONE);
+        }
+
+    };
+    /**
      * 设置是否是多选状态
      *
      * @param isMutiselect
      */
     private void setMutiSelect(boolean isMutiselect) {
-        getBatchOprationSelectAllText.setText("全选");
-        batchOprationHeaderText.setText("已选择(0)");
-        batchOperationBarLayout.setVisibility(isMutiselect ? View.VISIBLE : View.GONE);
+        getBatchOprationSelectAllText.setText(R.string.select_all);
+        batchOprationHeaderText.setText(getString(R.string.has_selected,0));
+        if (!isMutiselect){
+            batchOperationBarLayout.setVisibility(View.GONE);
+        }
         batchOprationHeaderLayout.setVisibility(isMutiselect ? View.VISIBLE : View.GONE);
         adapter.setShowFileOperationDropDownImg(!isMutiselect);
         adapter.setMultiselect(isMutiselect);
     }
 
     private void setselectAll(boolean isSelectAll) {
-        getBatchOprationSelectAllText.setText(isSelectAll ? "全不选" : "全选");
+        getBatchOprationSelectAllText.setText(isSelectAll ? R.string.select_nothing : R.string.select_all);
         adapter.setSelectAll(isSelectAll);
-        batchOprationHeaderText.setText("已选择(" + adapter.getSelectVolumeFileList().size() + ")");
+        batchOprationHeaderText.setText(getString(R.string.has_selected,adapter.getSelectVolumeFileList().size()));
     }
 
 
@@ -447,6 +479,7 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
                 uploadFile(filePath);
             } else if (requestCode == REQUEST_OPEN_CEMERA //拍照返回
                     && NetUtils.isNetworkConnected(getApplicationContext())) {
+                LogUtils.jasonDebug("cameraPicFileName="+cameraPicFileName);
                 String filePath = Environment.getExternalStorageDirectory() + "/DCIM/" + cameraPicFileName;
                 uploadFile(filePath);
             } else if (requestCode == REQUEST_SHOW_FILE_FILTER) {  //移动文件
@@ -470,12 +503,12 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
      */
     private void uploadFile(String filePath) {
         if (filePath == null) {
-            ToastUtils.show(getApplicationContext(), "选择的文件不存在！");
+            ToastUtils.show(getApplicationContext(), R.string.file_selected_no_exist);
             return;
         }
         File file = new File(filePath);
         if (!file.exists()) {
-            ToastUtils.show(getApplicationContext(), "选择的文件不存在！");
+            ToastUtils.show(getApplicationContext(), R.string.file_selected_no_exist);
             return;
 
         }

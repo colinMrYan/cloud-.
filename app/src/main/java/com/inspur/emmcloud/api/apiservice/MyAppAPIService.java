@@ -26,6 +26,7 @@ import com.inspur.emmcloud.bean.appcenter.news.GetGroupNewsDetailResult;
 import com.inspur.emmcloud.bean.appcenter.news.GetNewsTitleResult;
 import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeFileListResult;
 import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeFileUploadTokenResult;
+import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeGroupResult;
 import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeListResult;
 import com.inspur.emmcloud.bean.appcenter.volume.Volume;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeDetail;
@@ -1172,7 +1173,7 @@ public class MyAppAPIService {
     public void updateGroupName(final String groupId,final String groupName){
         final String url = APIUri.getGroupBaseUrl(groupId);
         RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
-        params.addQueryStringParameter("name ",groupName);
+        params.addQueryStringParameter("name",groupName);
         x.http().request(HttpMethod.PUT, params, new APICallback(context,url) {
             @Override
             public void callbackSuccess(String arg0) {
@@ -1276,5 +1277,42 @@ public class MyAppAPIService {
                 }, context).refreshToken(url);
             }
         });
+    }
+
+    /**
+     * 获取网盘下包含自己的组
+     * @param volumeId
+     */
+    public void getVolumeGroupContainMe(final String volumeId){
+        final String url = APIUri.getVolumeGroupUrl(volumeId);
+        RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
+        params.addParameter("isMember",true);
+        x.http().get(params, new APICallback(context, url) {
+            @Override
+            public void callbackSuccess(String arg0) {
+            apiInterface.returnVolumeGroupContainMeSuccess(new GetVolumeGroupResult(arg0));
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                apiInterface.returnVolumeGroupContainMeFail(error, responseCode);
+            }
+
+            @Override
+            public void callbackTokenExpire() {
+                new OauthUtils(new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        getVolumeGroupContainMe(volumeId);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                }, context).refreshToken(url);
+            }
+        });
+
     }
 }

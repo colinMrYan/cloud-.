@@ -79,9 +79,8 @@ public class VolumeHomePageActivity extends BaseActivity implements SwipeRefresh
         volumeRecentUseListView.setAdapter(volumeRecentUseAdapter);
         swipeRefreshLayout.setColorSchemeColors(ContextCompat.getColor(getApplicationContext(), R.color.header_bg), ContextCompat.getColor(getApplicationContext(), R.color.header_bg));
         swipeRefreshLayout.setOnRefreshListener(this);
-        volumeHomePageDirectoryList.add(new VolumeHomePageDirectory(R.drawable.ic_volume_my_file, "我的文件", ""));
-        volumeHomePageDirectoryList.add(new VolumeHomePageDirectory(R.drawable.ic_volume_share_volume, "共享网盘", ""));
-        volumeHomePageDirectoryList.add(new VolumeHomePageDirectory(R.drawable.ic_volume_enterprise_file, "企业文件", ""));
+        volumeHomePageDirectoryList.add(new VolumeHomePageDirectory(R.drawable.ic_volume_my_file, getString(R.string.volume_my_file), ""));
+        volumeHomePageDirectoryList.add(new VolumeHomePageDirectory(R.drawable.ic_volume_share_volume, getString(R.string.share_volume), ""));
         adapter = new Adapter();
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -93,7 +92,7 @@ public class VolumeHomePageActivity extends BaseActivity implements SwipeRefresh
                         if (myVolume != null) {
                             bundle = new Bundle();
                             bundle.putSerializable("volume", myVolume);
-                            bundle.putSerializable("title", "我的文件");
+                            bundle.putSerializable("title", getString(R.string.volume_my_file));
                             IntentUtils.startActivity(VolumeHomePageActivity.this, VolumeFileActivity.class, bundle);
                         }
                         break;

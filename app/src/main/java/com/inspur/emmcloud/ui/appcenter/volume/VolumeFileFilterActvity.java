@@ -1,14 +1,15 @@
 package com.inspur.emmcloud.ui.appcenter.volume;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.RelativeLayout;
 
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.VolumeFileAdapter;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
-
-import org.xutils.view.annotation.ViewInject;
 
 /**
  * 云盘文件分类展示
@@ -16,11 +17,13 @@ import org.xutils.view.annotation.ViewInject;
 
 public class VolumeFileFilterActvity extends VolumeFileBaseActivity {
 
+    private BroadcastReceiver broadcastReceiver;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         headerOperationLayout.setVisibility(View.INVISIBLE);
         setListIemClick();
+        registerReceiver();
     }
 
 
@@ -43,6 +46,23 @@ public class VolumeFileFilterActvity extends VolumeFileBaseActivity {
                 showFileOperationDlg(volumeFileList.get(position));
             }
         });
+    }
+
+    private void registerReceiver() {
+        broadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                String directoryId = intent.getStringExtra("directoryId");
+                if (directoryId != null && directoryId.equals(getVolumeFileListResult.getId())) {
+                    String command = intent.getStringExtra("command");
+                    if (command != null && command.equals("refresh")) {
+                        getVolumeFileList(true);
+                    }
+                }
+            }
+        };
+        IntentFilter intentFilter = new IntentFilter("broadcast_volume");
+        registerReceiver(broadcastReceiver, intentFilter);
     }
 
     public void onClick(View v) {
@@ -69,7 +89,16 @@ public class VolumeFileFilterActvity extends VolumeFileBaseActivity {
      * 分类展示返回时,前一个页面进行数据刷新，以便于更新在此页面进行操作的数据
      */
     private void finishActivity(){
-        finish();
         setResult(RESULT_OK);
+        finish();
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (broadcastReceiver != null) {
+            this.unregisterReceiver(broadcastReceiver);
+            broadcastReceiver = null;
+        }
+        super.onDestroy();
     }
 }
