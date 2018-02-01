@@ -1,8 +1,6 @@
 package com.inspur.emmcloud.widget;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -16,10 +14,8 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.MsgInputAddItemAdapter;
 import com.inspur.emmcloud.adapter.MyViewPagerAdapter;
 import com.inspur.emmcloud.bean.chat.InputTypeBean;
-import com.inspur.emmcloud.ui.chat.MembersActivity;
 import com.inspur.emmcloud.util.common.DensityUtil;
-import com.inspur.emmcloud.util.common.PreferencesUtils;
-import com.inspur.emmcloud.util.privates.AppUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 
 import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
@@ -33,10 +29,6 @@ import java.util.List;
 
 public class ECMChatInputMenuViewpageLayout extends LinearLayout {
 
-    private static final int GELLARY_RESULT = 2;
-    private static final int CAMERA_RESULT = 3;
-    private static final int CHOOSE_FILE = 4;
-    private static final int MENTIONS_RESULT = 5;
     @ViewInject(R.id.viewpager)
     private ViewPager viewPager;
 
@@ -46,7 +38,7 @@ public class ECMChatInputMenuViewpageLayout extends LinearLayout {
 
     private ImageView[] pageNumImgs;
     private List<InputTypeBean> inputTypeBeanList = new ArrayList<>();
-    private String cid;
+    private AdapterView.OnItemClickListener onItemClickListener;
 
     public ECMChatInputMenuViewpageLayout(Context context) {
         super(context);
@@ -70,8 +62,11 @@ public class ECMChatInputMenuViewpageLayout extends LinearLayout {
 
     public void setInputTypeBeanList(List<InputTypeBean> inputTypeBeanList,String cid) {
         this.inputTypeBeanList = inputTypeBeanList;
-        this.cid = cid;
         initViews();
+    }
+
+    public void setOnGridItemClickListener(AdapterView.OnItemClickListener onItemClickListener){
+        this.onItemClickListener = onItemClickListener;
     }
 
     private void initViews() {
@@ -103,6 +98,7 @@ public class ECMChatInputMenuViewpageLayout extends LinearLayout {
     }
 
     private View getGridChildView(int i) {
+        LogUtils.jasonDebug("000000000000000");
         View view = View.inflate(getContext(), R.layout.ecm_widget_chat_input_menu_grid, null);
         NoScrollGridView gridView = (NoScrollGridView) view.findViewById(R.id.grid);
         final List<InputTypeBean> pageInputTypeBeanList = new ArrayList<>();
@@ -114,53 +110,12 @@ public class ECMChatInputMenuViewpageLayout extends LinearLayout {
         }
         MsgInputAddItemAdapter adapter = new MsgInputAddItemAdapter(getContext(), pageInputTypeBeanList);
         gridView.setAdapter(adapter);
-        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                InputTypeBean inputTypeBean = pageInputTypeBeanList.get(position);
-                switch (inputTypeBean.getAction()) {
-                    case "gallery":
-                        AppUtils.openGallery((Activity) getContext(), 5, GELLARY_RESULT);
-                        break;
-                    case "camera":
-                        String fileName = System.currentTimeMillis() + ".jpg";
-                        PreferencesUtils.putString(getContext(), "capturekey", fileName);
-                        AppUtils.openCamera((Activity) getContext(), fileName, CAMERA_RESULT);
-                        break;
-                    case "file":
-                        AppUtils.openFileSystem((Activity) getContext(), CHOOSE_FILE);
-                        break;
-                    case "mention":
-                        openMention(false);
-                        break;
-                    default:
-                        break;
-                }
-            }
-        });
+        if (onItemClickListener != null){
+            LogUtils.jasonDebug("111111111111111111111");
+            gridView.setOnItemClickListener(onItemClickListener);
+        }
         return view;
     }
-
-    /**
-     * 是否是输入了关键字@字符打开mention页
-     *
-     * @param isInputKeyWord
-     */
-    private void openMention(boolean isInputKeyWord) {
-        Intent intent = new Intent();
-        intent.setClass(getContext(), MembersActivity.class);
-        intent.putExtra("title", getContext().getString(R.string.friend_list));
-        intent.putExtra("cid", cid);
-        intent.putExtra("isInputKeyWord", isInputKeyWord);
-        ((Activity) getContext()).overridePendingTransition(
-                R.anim.activity_open, 0);
-
-        ((Activity) getContext()).startActivityForResult(intent,
-                MENTIONS_RESULT);
-
-    }
-
 
     class GuidePageChangeListener implements ViewPager.OnPageChangeListener {
 
