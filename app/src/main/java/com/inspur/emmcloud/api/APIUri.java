@@ -915,7 +915,7 @@ public class APIUri {
      * @return
      */
     public static String getUnBindDeviceUrl() {
-        return URL_BASE_EMM + "mdm/v3.0/mdm/unbind";
+        return URL_BASE_EMM + "api/mdm/v3.0/device/unbind ";
     }
 
     /**
@@ -924,7 +924,7 @@ public class APIUri {
      * @return
      */
     public static String getBindingDevicesUrl() {
-        return URL_BASE_EMM + "api/v1/device/getUserDevices";
+        return URL_BASE_EMM + "api/mdm/v3.0/device/getUserDevices";
     }
 
     /**
@@ -933,7 +933,7 @@ public class APIUri {
      * @return
      */
     public static String getDeviceRegisterUrl(Context context){
-        return "https://emm.inspur.com/mdm/v3.0/loadForRegister?udid="+ AppUtils.getMyUUID(context);
+        return "https://emm.inspur.com/app/mdm/v3.0/loadForRegister?udid="+ AppUtils.getMyUUID(context);
     }
 
     /**
@@ -960,7 +960,7 @@ public class APIUri {
      * @return
      */
     public static String getUploadMDMInfoUrl() {
-        return URL_BASE_EMM + "api/mdm/v3.0/device/getUserDevices";
+        return URL_BASE_EMM + "api/mdm/v3.0/mdm/mdm_check";
     }
 
     /**
