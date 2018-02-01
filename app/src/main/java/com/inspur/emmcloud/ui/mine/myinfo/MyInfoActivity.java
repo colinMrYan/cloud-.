@@ -23,15 +23,15 @@ import com.inspur.emmcloud.bean.mine.UserProfileInfoBean;
 import com.inspur.emmcloud.ui.login.ModifyUserPsdActivity;
 import com.inspur.emmcloud.ui.login.ModifyUserPwdBySMSActivity;
 import com.inspur.emmcloud.ui.mine.setting.SwitchEnterpriseActivity;
-import com.inspur.emmcloud.util.privates.cache.ContactCacheUtils;
-import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
-import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
+import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
+import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
+import com.inspur.emmcloud.util.privates.cache.ContactCacheUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.imp.plugin.camera.imagepicker.ImagePicker;
 import com.inspur.imp.plugin.camera.imagepicker.bean.ImageItem;
@@ -184,10 +184,10 @@ public class MyInfoActivity extends BaseActivity {
         imagePicker.setSaveRectangle(true); // 是否按矩形区域保存
         imagePicker.setMultiMode(false);
         imagePicker.setStyle(CropImageView.Style.RECTANGLE); // 裁剪框的形状
-        imagePicker.setFocusWidth(1000); // 裁剪框的宽度。单位像素（圆形自动取宽高最小值）
-        imagePicker.setFocusHeight(1000); // 裁剪框的高度。单位像素（圆形自动取宽高最小值）
-        imagePicker.setOutPutX(1000); // 保存文件的宽度。单位像素
-        imagePicker.setOutPutY(1000); // 保存文件的高度。单位像素
+        imagePicker.setFocusWidth(800); // 裁剪框的宽度。单位像素（圆形自动取宽高最小值）
+        imagePicker.setFocusHeight(800); // 裁剪框的高度。单位像素（圆形自动取宽高最小值）
+        imagePicker.setOutPutX(450); // 保存文件的宽度。单位像素
+        imagePicker.setOutPutY(450); // 保存文件的高度。单位像素
     }
 
     /**
@@ -245,6 +245,10 @@ public class MyInfoActivity extends BaseActivity {
      * 设置多企业切换按钮的显示和隐藏
      */
     private void setSwitchEnterpriseState() {
+        if (getMyInfoResult == null) {
+            String myInfo = PreferencesUtils.getString(this, "myInfo", "");
+            getMyInfoResult = new GetMyInfoResult(myInfo);
+        }
         List<Enterprise> enterpriseList = getMyInfoResult.getEnterpriseList();
         if (enterpriseList.size() > 1) {
             (findViewById(R.id.switch_enterprese_text)).setVisibility(View.VISIBLE);
@@ -343,7 +347,6 @@ public class MyInfoActivity extends BaseActivity {
         public void returnMyInfoFail(String error, int errorCode) {
             // TODO Auto-generated method stub
             dimissDlg();
-            setSwitchEnterpriseState();
         }
     }
 
