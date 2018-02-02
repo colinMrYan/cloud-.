@@ -75,6 +75,9 @@ public class AmapLocateService extends ImpPlugin implements
         // 初始化定位参数
         mLocationOption = new AMapLocationClientOption();
         mLocationOption.setOnceLocation(true);
+        mLocationOption.setLocationPurpose(AMapLocationClientOption.AMapLocationPurpose.SignIn);
+        //关闭缓存机制
+        mLocationOption.setLocationCacheEnable(false);
         // 设置定位模式为低功耗定位
         mLocationOption.setLocationMode(AMapLocationMode.Hight_Accuracy);
         mLocationOption.setWifiScan(true);
@@ -87,8 +90,10 @@ public class AmapLocateService extends ImpPlugin implements
 
     @Override
     public void onDestroy() {
-        mlocationClient.stopLocation();
-        mlocationClient.onDestroy();
+        if (mlocationClient != null){
+            mlocationClient.stopLocation();
+            mlocationClient.onDestroy();
+        }
     }
 
 
