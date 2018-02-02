@@ -17,7 +17,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:padding="12dp"
-            android:text="名称升序"
+            android:text="@string/sort_by_name_asc"
             android:textColor="#666666"
             android:textSize="15sp" />
         <ImageView
@@ -47,7 +47,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:padding="12dp"
-            android:text="名称降序"
+            android:text="@string/sort_by_name_dasc"
             android:textColor="#666666"
             android:textSize="15sp" />
         <ImageView
@@ -77,7 +77,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:padding="12dp"
-            android:text="时间升序"
+            android:text="@string/sort_by_time_asc"
             android:textColor="#666666"
             android:textSize="15sp" />
         <ImageView
@@ -109,7 +109,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:padding="12dp"
-            android:text="时间降序"
+            android:text="@string/sort_by_time_dasc"
             android:textColor="#666666"
             android:textSize="15sp" />
         <ImageView
