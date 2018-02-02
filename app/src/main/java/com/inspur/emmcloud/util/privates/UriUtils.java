@@ -21,7 +21,7 @@ import com.inspur.imp.api.ImpActivity;
 
 public class UriUtils {
 
-    public static void openApp(final Activity activity,final App app) {
+    public static void openApp(final Activity activity, final App app, final String appCollectType) {
         String uri = app.getUri();
         int appType = app.getAppType();
         switch (appType) {
@@ -78,7 +78,7 @@ public class UriUtils {
                         R.string.not_support_app_type);
                 break;
         }
-        saveAPPPVCollect(activity, app);
+        saveAPPPVCollect(activity, app,appCollectType);
     }
 
     /**
@@ -86,9 +86,9 @@ public class UriUtils {
      * @param activity
      * @param app
      */
-    private static void saveAPPPVCollect(Activity activity, App app) {
+    private static void saveAPPPVCollect(Activity activity, App app,String appCollectType) {
         String appID = (app.getAppID().equals("inspur_news_esg"))?"news":app.getAppID();  //新闻应用跟普通应用区分开
-        PVCollectModel pvCollectModel = new PVCollectModel(appID, "application");
+        PVCollectModel pvCollectModel = new PVCollectModel(appID, appCollectType);
         PVCollectModelCacheUtils.saveCollectModel(activity, pvCollectModel);
     }
 

@@ -87,7 +87,7 @@ public class AppId2AppAndOpenAppUtils {
             if(app.getUri().startsWith(APIUri.getEMMBaseUrl()+"ssohandler/gs/")){
                 UriUtils.openWebApp(activity,app.getUri(),app);
             }else{
-                UriUtils.openApp(activity,app);
+                UriUtils.openApp(activity,app,"application");
             }
         } else{
             showUnKnownMsg(uri);
