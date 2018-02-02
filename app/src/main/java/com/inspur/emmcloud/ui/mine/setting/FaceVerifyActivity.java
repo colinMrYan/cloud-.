@@ -19,7 +19,6 @@ import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Base64;
-import android.util.Log;
 import android.view.OrientationEventListener;
 import android.view.Surface;
 import android.view.SurfaceHolder;
@@ -36,10 +35,8 @@ import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.MineAPIService;
 import com.inspur.emmcloud.bean.mine.GetFaceSettingResult;
 import com.inspur.emmcloud.config.Constant;
-import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.ImageUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUsersUtils;
@@ -294,31 +291,6 @@ public class FaceVerifyActivity extends BaseActivity implements SurfaceHolder.Ca
         }
     }
 
-    private class PreViewCallback implements Camera.PreviewCallback {
-        @Override
-        public void onPreviewFrame(byte[] data, Camera camera) {
-            Camera.Size size = camera.getParameters().getPreviewSize();
-            try {
-                YuvImage image = new YuvImage(data, ImageFormat.NV21, size.width, size.height, null);
-                if (image != null) {
-                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                    image.compressToJpeg(new Rect(0, 0, size.width, size.height), 80, stream);
-
-                    Bitmap bmp = BitmapFactory.decodeByteArray(stream.toByteArray(), 0, stream.size());
-                    ImageUtils.saveImageToSD(getApplicationContext(), MyAppConfig.LOCAL_DOWNLOAD_PATH + System.currentTimeMillis() + ".jpg", bmp, 100);
-                    //**********************
-                    //因为图片会放生旋转，因此要对图片进行旋转到和手机在一个方向上
-                    // rotateMyBitmap(bmp);
-                    //**********************************
-
-                    stream.close();
-                }
-            } catch (Exception ex) {
-                Log.d("Sys", "Error:" + ex.getMessage());
-            }
-        }
-    }
-
     private void delayTotakePicture(long time) {
         handler.postDelayed(takePhotoRunnable, time);
     }
@@ -419,7 +391,7 @@ public class FaceVerifyActivity extends BaseActivity implements SurfaceHolder.Ca
         switch (code) {
             case 200:
                 tipText.setVisibility(View.GONE);
-                ToastUtils.show(getApplicationContext(), R.string.face_verify_success);
+                ToastUtils.show(getApplicationContext(), getString(R.string.face_verify_success));
                 if (isFaceSetting) {
                     PreferencesByUsersUtils.putBoolean(FaceVerifyActivity.this, FaceVerifyActivity.FACE_VERIFT_IS_OPEN, isFaceSettingOpen);
                 } else if (!isFaceVerityTest) {
@@ -472,7 +444,6 @@ public class FaceVerifyActivity extends BaseActivity implements SurfaceHolder.Ca
 
     private boolean checkIsTimeout() {
         long currentTime = System.currentTimeMillis();
-        LogUtils.jasonDebug("currentTime - startTime=" + (currentTime - startTime));
         if (currentTime - startTime >= TIMEOUT_TIME) {
             showFaceVerifyFailDlg();
             return true;

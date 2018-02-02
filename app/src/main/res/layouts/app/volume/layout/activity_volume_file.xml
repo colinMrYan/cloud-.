@@ -48,13 +48,12 @@
                 android:textColor="@color/header_text"
                 android:textSize="@dimen/header_textsize" />
 
-
             <RelativeLayout
                 android:id="@+id/header_operation_layout"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:visibility="gone"
-                android:layout_alignParentRight="true">
+                android:layout_alignParentRight="true"
+                android:visibility="gone">
 
                 <ImageView
                     android:id="@+id/new_forder_img"
@@ -134,7 +133,6 @@
                 android:textColor="@color/header_text"
                 android:textSize="@dimen/header_textsize" />
 
-
             <TextView
                 android:id="@+id/batch_operation_select_all_text"
                 android:layout_width="wrap_content"
@@ -154,21 +152,19 @@
 
     <TextView
         android:id="@+id/path_text"
-        android:background="@android:color/white"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_below="@id/header_layout"
+        android:background="@android:color/white"
         android:ellipsize="middle"
-        android:singleLine="true"
-        android:textColor="#333333"
+        android:paddingBottom="9dp"
         android:paddingLeft="12dp"
         android:paddingRight="10dp"
         android:paddingTop="9dp"
-        android:paddingBottom="9dp"
-        android:visibility="gone"
+        android:singleLine="true"
+        android:textColor="#333333"
         android:textSize="16sp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-
+        android:visibility="gone" />
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/refresh_layout"
@@ -231,7 +227,6 @@
                     android:background="@color/color_list_divider" />
             </RelativeLayout>
 
-
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/file_list"
                 android:layout_width="match_parent"
@@ -277,31 +272,27 @@
                     app:qmui_borderColor="#2586CD"
                     app:qmui_borderWidth="0.6dp"
                     app:qmui_radius="4dp" />
-
             </LinearLayout>
         </RelativeLayout>
-
     </android.support.v4.widget.SwipeRefreshLayout>
-
 
     <RelativeLayout
         android:id="@+id/bottom_layout"
-        android:background="#ffffff"
-        android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="#ffffff">
 
         <RelativeLayout
             android:id="@+id/batch_operation_bar_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:visibility="gone">
-            <View
-                android:background="@color/color_list_divider"
-                android:layout_width="match_parent"
-                android:layout_height="0.5dp">
 
-            </View>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@color/color_list_divider"></View>
 
             <TextView
                 android:id="@+id/batch_operation_delete_text"
@@ -347,8 +338,6 @@
                     android:textColor="#444444"
                     android:textSize="15sp" />
             </LinearLayout>
-
-
         </RelativeLayout>
 
         <RelativeLayout
@@ -356,12 +345,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:visibility="gone">
-            <View
-                android:background="@color/color_list_divider"
-                android:layout_width="match_parent"
-                android:layout_height="0.5dp">
 
-            </View>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@color/color_list_divider"></View>
 
             <TextView
                 android:id="@+id/location_select_new_forder_text"

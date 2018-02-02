@@ -77,7 +77,7 @@
             android:layout_marginRight="30dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:text="未启用"/>
+            />
         <ImageView
             android:layout_width="15dp"
             android:layout_height="15dp"
@@ -94,7 +94,6 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:onClick="onClick"
-        android:visibility="gone"
         android:background="@color/white"
         android:orientation="vertical">
 
@@ -110,7 +109,7 @@
             android:paddingBottom="10dp"
             android:paddingLeft="12dp"
             android:paddingTop="10dp"
-            android:text="刷脸解锁"
+            android:text="@string/face_enter"
             android:textSize="@dimen/content_normal_textsize" />
         <TextView
             android:id="@+id/safe_center_face_open_text"
@@ -120,7 +119,7 @@
             android:layout_marginRight="30dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:text="未启用"/>
+            />
         <ImageView
             android:layout_width="15dp"
             android:layout_height="15dp"
