@@ -126,13 +126,13 @@ public class ECMChatInputMenu extends LinearLayout {
             public void onClick(View v) {
                 // TODO Auto-generated method stub
                 if (addMenuLayout.isShown()) {
-                    lockContentHeight();
+                    setContentHeightLock(true);
                     hideAddItemLayout(true);
-                    unlockContentHeight();
+                    setContentHeightLock(false);
                 } else if (isSoftInputShown()) {
-                    lockContentHeight();
+                    setContentHeightLock(true);
                     showAddItemLayout();
-                    unlockContentHeight();
+                    setContentHeightLock(false);
                 } else {
                     showAddItemLayout();
                 }
@@ -238,9 +238,9 @@ public class ECMChatInputMenu extends LinearLayout {
                 if (isSetWindowListener) {
                     if (event.getAction() == MotionEvent.ACTION_UP
                             && addMenuLayout.isShown()) {
-                        lockContentHeight();
+                        setContentHeightLock(true);
                         hideAddItemLayout(true);
-                        unlockContentHeight();
+                        setContentHeightLock(false);
                     }
                 }
                 return false;
@@ -290,12 +290,10 @@ public class ECMChatInputMenu extends LinearLayout {
     }
 
 
-    private void lockContentHeight() {
-        chatInputMenuListener.onSetContentViewHeight(true);
-    }
-
-    private void unlockContentHeight() {
-        chatInputMenuListener.onSetContentViewHeight(false);
+    private void setContentHeightLock(boolean isLock) {
+        if (chatInputMenuListener != null){
+            chatInputMenuListener.onSetContentViewHeight(isLock);
+        }
     }
 
     public void showAddBtn(boolean isShowHideBtn) {
