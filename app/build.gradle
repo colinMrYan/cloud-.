@@ -51,6 +51,7 @@ android {
         }
     }
 
+
     configurations.all {
         // React Native依赖的findbugs版本更高
         resolutionStrategy.force 'com.google.code.findbugs:jsr305:3.0.0',
@@ -78,6 +79,48 @@ android {
 //            }
 //        }
  //   }
+
+
+    //资源文件目录
+    sourceSets {
+        main {
+            res.srcDirs =
+                    [
+                            'src/main/res/layouts/app/groupnews',//新闻
+                            'src/main/res/layouts/app/volume',//网盘
+                            'src/main/res/layouts/app',//应用中心，应用详情，React应用等布局
+                            'src/main/res/layouts/chat',//沟通
+                            'src/main/res/layouts/chat/cards',//沟通卡片
+                            'src/main/res/layouts/contact',//通讯录
+                            'src/main/res/layouts/find/trip',//差旅
+                            'src/main/res/layouts/find',//发现里的其他内容
+                            'src/main/res/layouts/cards',//卡片
+                            'src/main/res/layouts/login',//登录
+                            'src/main/res/layouts/mdm',//mdm设备管理
+                            'src/main/res/layouts/mine/feedback',//用户反馈
+                            'src/main/res/layouts/mine/myinfo',//我的信息
+                            'src/main/res/layouts/mine/setting',//设置
+                            'src/main/res/layouts/mine',//其他设置内容
+                            'src/main/res/layouts/work/approval',//待办任务
+                            'src/main/res/layouts/work/calendar',//日历
+                            'src/main/res/layouts/work/meeting',//会议
+                            'src/main/res/layouts/work/task',//任务
+                            'src/main/res/layouts/work',//其他工作相关布局
+                            'src/main/res/layouts/notsupport',//不支持此功能页面
+                            'src/main/res/layouts/imp',//imp插件
+                            'src/main/res/layouts/widgets/popwindow',//popwindow
+                            'src/main/res/layouts/widgets/dialog',//dialog
+                            'src/main/res/layouts/widgets',//dialog
+                            'src/main/res/layouts/others/fragments',//fragments
+                            'src/main/res/layouts/others',//fragments
+                            'src/main/res/layouts/umeng',//umeng
+                            'src/main/res/layouts/jpush',//jpush
+                            'src/main/res/layout',//默认布局文件目录
+                            'src/main/res'//根目录
+
+                    ]
+        }
+    }
 
 
     splits {
@@ -115,7 +158,7 @@ dependencies {
     compile 'com.android.support:design:24.2.0'
     compile 'com.facebook.react:react-native:+'
     compile 'org.apache.commons:commons-lang3:3.5'
-    compile 'com.amap.api:location:3.4.1'
+    compile 'com.amap.api:location:3.8.0'
     compile 'com.baidu.mapapi:location:6.13'
     compile 'com.google.code.gson:gson:2.8.0'
     compile 'com.alibaba:fastjson:1.2.24'
@@ -174,6 +217,8 @@ dependencies {
     compile files('libs/umeng_social_tool.jar')
     compile files('libs/SocialSDK_sms.jar')
     compile files('libs/aliyun-oss-sdk-android-2.0.1.1.jar')
+    compile files('libs/Msc.jar')
+    compile files('libs/Sunflower.jar')
 
 }
 repositories { flatDir { dirs 'aars' } }

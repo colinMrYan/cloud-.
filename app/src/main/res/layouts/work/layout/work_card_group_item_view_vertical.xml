@@ -1,0 +1,111 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+    <View
+        android:id="@+id/top_blank_view"
+        android:layout_width="match_parent"
+        android:layout_height="10dp"></View>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_corner_fill_white_no_border"
+        android:orientation="vertical"
+        android:paddingBottom="18dp">
+
+        <RelativeLayout
+            android:id="@+id/group_header_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_corner_part_top"
+            android:paddingBottom="14dp"
+            android:paddingLeft="14dp"
+            android:paddingRight="5dp"
+            android:paddingTop="14dp">
+
+            <ImageView
+                android:id="@+id/group_icon_img"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="10dp"
+                android:scaleType="fitXY" />
+
+            <TextView
+                android:id="@+id/group_title_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@id/group_icon_img"
+                android:textColor="#3CBAFF"
+                android:textSize="14sp" />
+
+            <ImageView
+                android:id="@+id/work_right_img"
+                android:layout_width="wrap_content"
+                android:layout_height="16dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/right_arrow" />
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <RelativeLayout
+                android:id="@+id/work_add_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="17dp"
+                android:paddingRight="12dp"
+                >
+                <ImageView
+                    android:id="@+id/add_img"
+                    android:layout_width="26dp"
+                    android:layout_height="26dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginBottom="2dp"
+                    android:gravity="center"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/ic_work_add"
+                    android:layout_marginRight="12dp"
+                    android:layout_centerVertical="true"
+                    />
+                <TextView
+                    android:id="@+id/work_add_text"
+                    android:textColor="#333333"
+                    android:textSize="15sp"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:layout_centerVertical="true"
+                    android:layout_toRightOf="@id/add_img"
+                    android:paddingRight="20dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                <View
+                    android:layout_below="@id/add_img"
+                    android:layout_toRightOf="@id/add_img"
+                    android:layout_width="match_parent"
+                    android:background="#dddddd"
+                    android:layout_height="0.5dp"></View>
+            </RelativeLayout>
+            <com.inspur.emmcloud.widget.ScrollViewWithListView
+                android:id="@+id/list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:divider="#00000000"
+                android:dividerHeight="0dp"
+                android:listSelector="#00000000">
+
+            </com.inspur.emmcloud.widget.ScrollViewWithListView>
+        </RelativeLayout>
+
+
+    </LinearLayout>
+
+    <View
+        android:id="@+id/bottom_blank_view"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"></View>
+</LinearLayout>

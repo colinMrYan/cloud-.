@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/root_layout"
+    android:background="#FAFAFA"
+    android:orientation="vertical" >
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/grey_line_color" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#f7f7f7"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp" >
+        <ImageView
+            android:id="@+id/add_img"
+            android:layout_width="41dp"
+            android:layout_height="34dp"
+            android:paddingLeft="6dp"
+            android:paddingTop="1dp"
+            android:paddingBottom="1dp"
+            android:paddingRight="3dp"
+            android:layout_alignBottom="@+id/input_edit"
+            android:layout_centerVertical="true"
+            android:clickable="true"
+            android:onClick="onClick"
+            android:scaleType="fitXY"
+            android:src="@drawable/chat_btn_add_normal" />
+
+        <com.inspur.emmcloud.widget.ChatInputEdit
+            android:id="@+id/input_edit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@+id/send_msg_btn"
+            android:layout_toRightOf="@id/add_img"
+            android:layout_marginLeft="5dp"
+            android:layout_centerVertical="true"
+            android:background="@drawable/bg_corner_fill_white_no_border"
+            android:maxLines="5"
+            android:paddingBottom="8dp"
+            android:paddingLeft="7dp"
+            android:paddingRight="7dp"
+            android:paddingTop="8dp"
+            android:textSize="@dimen/content_normal_textsize" />
+
+        <Button
+            android:id="@+id/send_msg_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/input_edit"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/bg_chat_input_send_btn_disable"
+            android:gravity="center"
+            android:minHeight="0dp"
+            android:minWidth="0dp"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:text="@string/send"
+            android:textColor="#ffffff"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="9dp"
+            android:textSize="@dimen/content_title_textsize"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/add_menu_layout"
+        android:layout_width="match_parent"
+        android:layout_height="274dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:paddingTop="25dp"
+        android:visibility="gone" >
+
+        <com.inspur.emmcloud.widget.ECMChatInputMenuViewpageLayout
+            android:id="@+id/viewpager_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            />
+        <ImageView
+            android:id="@+id/voice_volume_img"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_centerInParent="true"
+            android:visibility="gone"
+            android:src="@drawable/ic_chat_input_voice_level"
+            android:paddingTop="8dp"
+            />
+        <ImageView
+            android:id="@+id/voice_back_img"
+            android:layout_width="80dp"
+            android:layout_height="70dp"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="true"
+            android:visibility="gone"
+            android:src="@drawable/ic_arrow_down"
+            android:padding="25dp"
+            />
+    </RelativeLayout>
+
+</LinearLayout>
