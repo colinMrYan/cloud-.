@@ -10,7 +10,9 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.LoginSelectEnterpriseAdapter;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
+import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.api.apiservice.LoginAPIService;
+import com.inspur.emmcloud.bean.login.ClusterBean;
 import com.inspur.emmcloud.bean.login.GetLoginResult;
 import com.inspur.emmcloud.bean.mine.Enterprise;
 import com.inspur.emmcloud.bean.mine.GetMyInfoResult;
@@ -291,6 +293,17 @@ public class LoginUtils extends APIInterfaceInstance {
                 .setUid(getMyInfoResult.getID());
         List<Enterprise> enterpriseList = getMyInfoResult.getEnterpriseList();
         Enterprise defaultEnterprise = getMyInfoResult.getDefaultEnterprise();
+        List<ClusterBean> clusterBeanList = defaultEnterprise.getClusterBeanList();
+        for(int i = 0; i < clusterBeanList.size(); i++){
+            switch (clusterBeanList.get(i).getServiceName()){
+                case "com.inspur.ecm":
+                    APIUri.URL_BASE_ECM = clusterBeanList.get(i).getBaseUrl()+"/";
+                    break;
+                case "com.inspur.emm":
+                    APIUri.URL_BASE_EMM = clusterBeanList.get(i).getBaseUrl()+"/";
+                    break;
+            }
+        }
         if (isLogin && enterpriseList.size() > 1) {
             String selectLoginEnterpriseId = PreferencesByUsersUtils.getString(activity, Constant.PREF_SELECT_LOGIN_ENTERPRISE_ID, "");
             //当用户没有指定登录的企业时或已指定登录企业但是此企业不存在时则弹出选择登录企业的页面
