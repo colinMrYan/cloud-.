@@ -15,6 +15,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
@@ -40,6 +41,7 @@ public class LoginActivity extends BaseActivity {
 
     private static final int LOGIN_SUCCESS = 0;
     private static final int LOGIN_FAIL = 1;
+    private static final int LOGIN_MORE = 2;
     private String userName;
     private String password;
 
@@ -106,6 +108,17 @@ public class LoginActivity extends BaseActivity {
         });
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode == RESULT_OK && requestCode == LOGIN_MORE){
+            if(data.hasExtra("loginEnterprise") && !StringUtils.isBlank(data.getStringExtra("loginEnterprise"))){
+                (findViewById(R.id.login_current_enterprise)).setVisibility(View.VISIBLE);
+                ((TextView)findViewById(R.id.login_current_enterprise)).setText(data.getStringExtra("loginEnterprise"));
+            }
+        }
+    }
+
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.login_btn:
@@ -136,8 +149,11 @@ public class LoginActivity extends BaseActivity {
                         CaptchasLoginActivity.class);
                 break;
             case R.id.login_more_btn:
-                IntentUtils.startActivity(LoginActivity.this,
-                        LoginMoreActivity.class);
+//                IntentUtils.startActivity(LoginActivity.this,
+//                        LoginMoreActivity.class);
+                Intent intent = new Intent();
+                intent.setClass(LoginActivity.this,LoginMoreActivity.class);
+                startActivityForResult(intent,LOGIN_MORE);
                 break;
             default:
                 break;

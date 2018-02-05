@@ -6,6 +6,7 @@ import android.view.View;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.imp.plugin.barcode.scan.CaptureActivity;
 
@@ -36,6 +37,10 @@ public class LoginMoreActivity extends BaseActivity{
                 intent.putExtra("from","loginMore");
                 startActivityForResult(intent, SCAN_LOGIN_ENTERPRISE_INFO);
                 break;
+            case R.id.login_more_reset_btn:
+                APIUri.URL_BASE_ID = "https://id.inspuronline.com/";
+                finish();
+                break;
         }
     }
 
@@ -47,8 +52,14 @@ public class LoginMoreActivity extends BaseActivity{
                 boolean isDecodeSuccess = data.getBooleanExtra("isDecodeSuccess", false);
                 if (isDecodeSuccess) {
                     String msg = data.getStringExtra("msg");
+                    Intent intent = new Intent();
+                    intent.putExtra("loginEnterprise",msg);
+                    setResult(RESULT_OK,intent);
+                    APIUri.URL_BASE_ID = "https://id.inspuronline.com/";
+                    finish();
                 } else {
                     ToastUtils.show(LoginMoreActivity.this, getString(R.string.qr_code_analysis_fail));
+                    finish();
                 }
             }
         }

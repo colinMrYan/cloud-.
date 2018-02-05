@@ -20,7 +20,7 @@ import com.inspur.emmcloud.util.common.StringUtils;
 public class APIUri {
     public static  String URL_BASE_ECM = "https://ecm.inspur.com/";
     public static  String URL_BASE_EMM = "https://emm.inspur.com/";
-    private static final String URL_BASE_ID = "https://id.inspuronline.com/";
+    public static String URL_BASE_ID = "https://id.inspuronline.com/";
     private static final String URL_BASE_YUNJIA = "https://yunjia.inspur.com/";
     private static final String URL_BASE_VOLUME = URL_BASE_YUNJIA+"cloud-drive/api/v1/volume";
     private static final String URL_BASE_GROUP = URL_BASE_YUNJIA+"cloud-drive/api/v1/group";
