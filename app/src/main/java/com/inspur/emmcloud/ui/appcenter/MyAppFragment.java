@@ -148,6 +148,16 @@ public class MyAppFragment extends Fragment {
     }
 
     /**
+     * 更新常用应用数据
+     * 来自AppDetailActivity打开应用
+     * @param app
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void updateCommonlyUseAppList(App app) {
+        saveOrChangeCommonlyUseAppList(app,appListAdapter.getAppAdapterList());
+    }
+
+    /**
      * 检查获取我的应用推荐应用小部件更新
      * 过期则更新不过期不更新
      */

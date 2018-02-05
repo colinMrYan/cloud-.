@@ -27,6 +27,8 @@ import com.inspur.emmcloud.util.privates.UriUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -174,6 +176,8 @@ public class AppDetailActivity extends BaseActivity {
                 } else {
                     UriUtils.openApp(AppDetailActivity.this, app);
                 }
+                //发送到MyAPPFragment.updateCommonlyUseAppList
+                EventBus.getDefault().post(app);
             }
         }
     }
