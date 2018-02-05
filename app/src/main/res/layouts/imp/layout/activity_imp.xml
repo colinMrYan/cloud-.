@@ -152,6 +152,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/header_layout"
+        android:clickable="true"
         android:background="#3e000000">
 
         <LinearLayout

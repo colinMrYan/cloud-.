@@ -174,7 +174,7 @@ public class AppDetailActivity extends BaseActivity {
                 if (app.getAppType() == 2) {
                     new AppCenterNativeAppUtils().InstallOrOpen(AppDetailActivity.this, app);
                 } else {
-                    UriUtils.openApp(AppDetailActivity.this, app);
+                    UriUtils.openApp(AppDetailActivity.this, app,"appcenter");
                 }
                 //发送到MyAPPFragment.updateCommonlyUseAppList
                 EventBus.getDefault().post(app);

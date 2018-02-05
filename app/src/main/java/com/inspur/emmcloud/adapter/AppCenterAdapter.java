@@ -120,7 +120,7 @@ public class AppCenterAdapter extends BaseAdapter {
                 if (app.getUseStatus() == 0) {
                     installApp(type, appID, (Button) v);
                 } else if (app.getUseStatus() == 1) {
-                    UriUtils.openApp(activity, app);
+                    UriUtils.openApp(activity, app,"appcenter");
                 } else {
                     // 更新
                 }

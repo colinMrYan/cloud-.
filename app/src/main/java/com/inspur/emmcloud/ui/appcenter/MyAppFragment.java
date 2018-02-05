@@ -250,7 +250,7 @@ public class MyAppFragment extends Fragment {
                 recommendAppWidgetListAdapter.setOnRecommendAppWidgetItemClickListener(new OnRecommendAppWidgetItemClickListener() {
                     @Override
                     public void onRecommendAppWidgetItemClick(App app) {
-                        UriUtils.openApp(getActivity(),app);
+                        UriUtils.openApp(getActivity(),app,"smartrecommend");
                     }
                 });
                 rootView.findViewById(R.id.my_app_recommend_app_widget_img).setOnClickListener(new OnClickListener() {
@@ -446,7 +446,11 @@ public class MyAppFragment extends Fragment {
 
 
                         if (NetUtils.isNetworkConnected(getActivity()) && !isFastDoubleClick()) {
-                            UriUtils.openApp(getActivity(), app);
+                            if((listPosition == 0) && getNeedCommonlyUseApp() && AppCacheUtils.getCommonlyUseNeedShowList(getActivity()).size() > 0){
+                                UriUtils.openApp(getActivity(), app,"commonapplications");
+                            }else{
+                                UriUtils.openApp(getActivity(), app,"application");
+                            }
                         }
                         if (getNeedCommonlyUseApp()) {
                             saveOrChangeCommonlyUseAppList(app, appAdapterList);
@@ -485,7 +489,7 @@ public class MyAppFragment extends Fragment {
                         }
                     });
             if (canEdit) {
-                if (getNeedCommonlyUseApp() && AppCacheUtils.getCommonlyUseNeedShowList(getActivity()).size() > 0 && (listPosition == 0)) {
+                if ((listPosition == 0) && getNeedCommonlyUseApp() && AppCacheUtils.getCommonlyUseNeedShowList(getActivity()).size() > 0) {
                     //如果应用列表可以编辑，并且有常用应用分组，则把常用应用的可编辑属性设置false（也就是第0行设为false）
                     dragGridViewAdapter.setCanEdit(false);
                 } else {
@@ -1041,7 +1045,7 @@ public class MyAppFragment extends Fragment {
                     ShortCutUtils.createShortCut(getActivity(), clz,
                             app.getAppName(), app.getUri(), appType, icon);
                 }
-                UriUtils.openApp(getActivity(), app);
+                UriUtils.openApp(getActivity(), app,"application");
                 hasIntrcutionDialog.dismiss();
             }
         });
@@ -1052,7 +1056,7 @@ public class MyAppFragment extends Fragment {
                 if (checkBox.isChecked()) {
                     PreferencesByUserAndTanentUtils.putBoolean(getActivity(), "need_create_shortcut" + app.getAppID(), false);
                 }
-                UriUtils.openApp(getActivity(), app);
+                UriUtils.openApp(getActivity(), app,"application");
                 hasIntrcutionDialog.dismiss();
             }
         });
