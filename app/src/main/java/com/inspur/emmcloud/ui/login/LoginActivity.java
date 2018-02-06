@@ -111,11 +111,15 @@ public class LoginActivity extends BaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        TextView enterpriseTextView = (TextView)findViewById(R.id.login_current_enterprise);
         if(resultCode == RESULT_OK && requestCode == LOGIN_MORE){
             if(data.hasExtra("loginEnterprise") && !StringUtils.isBlank(data.getStringExtra("loginEnterprise"))){
-                (findViewById(R.id.login_current_enterprise)).setVisibility(View.VISIBLE);
-                ((TextView)findViewById(R.id.login_current_enterprise)).setText(data.getStringExtra("loginEnterprise"));
+                enterpriseTextView.setVisibility(View.VISIBLE);
+                enterpriseTextView.setText(data.getStringExtra("loginEnterprise"));
             }
+        }else{
+            enterpriseTextView.setText("");
+            enterpriseTextView.setVisibility(View.VISIBLE);
         }
     }
 
@@ -149,8 +153,6 @@ public class LoginActivity extends BaseActivity {
                         CaptchasLoginActivity.class);
                 break;
             case R.id.login_more_btn:
-//                IntentUtils.startActivity(LoginActivity.this,
-//                        LoginMoreActivity.class);
                 Intent intent = new Intent();
                 intent.setClass(LoginActivity.this,LoginMoreActivity.class);
                 startActivityForResult(intent,LOGIN_MORE);
