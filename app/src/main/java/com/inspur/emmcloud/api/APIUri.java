@@ -336,7 +336,7 @@ public class APIUri {
      * @return
      */
     public static String getUserApps() {
-        return URL_BASE_EMM + "api/imp_app/userApps";
+        return URL_BASE_EMM + "api/mam/v3.0/imp_app/userApps";
     }
 
     /**

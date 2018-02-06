@@ -17,10 +17,11 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.mine.Enterprise;
 import com.inspur.emmcloud.bean.mine.GetMyInfoResult;
 import com.inspur.emmcloud.config.Constant;
-import com.inspur.emmcloud.util.privates.PreferencesByUsersUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
+import com.inspur.emmcloud.util.privates.MutilClusterUtils;
+import com.inspur.emmcloud.util.privates.PreferencesByUsersUtils;
 import com.inspur.emmcloud.widget.dialogs.MyQMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
@@ -104,6 +105,7 @@ public class SwitchEnterpriseActivity extends BaseActivity {
             ((MyApplication) getApplicationContext()).getWebSocketPush()
                     .webSocketSignout();
         }
+        MutilClusterUtils.changeClouldBaseUrl(enterprise);
         PreferencesByUsersUtils.putString(getApplicationContext(), "current_enterprise_id", enterprise.getId());
         ((MyApplication) getApplicationContext()).initTanent();
         ((MyApplication) getApplicationContext()).stopPush();

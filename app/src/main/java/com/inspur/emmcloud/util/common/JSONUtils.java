@@ -932,4 +932,21 @@ public class JSONUtils {
         }
         return defaultValue;
     }
+
+    /**
+     * 判断一个Json字符串是否含有某个key
+     * @param content
+     * @param key
+     * @return
+     */
+    public static boolean isJsonObjStringHasKey(String content,String key){
+        JSONObject jsonObject;
+        try {
+            jsonObject = new JSONObject(content);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+        return jsonObject.has(key);
+    }
 }

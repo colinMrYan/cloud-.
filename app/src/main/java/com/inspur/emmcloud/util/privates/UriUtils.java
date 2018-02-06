@@ -12,6 +12,7 @@ import com.inspur.emmcloud.ui.appcenter.ReactNativeAppActivity;
 import com.inspur.emmcloud.ui.appcenter.groupnews.GroupNewsActivity;
 import com.inspur.emmcloud.ui.appcenter.volume.VolumeHomePageActivity;
 import com.inspur.emmcloud.util.common.IntentUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.cache.PVCollectModelCacheUtils;
@@ -50,10 +51,12 @@ public class UriUtils {
                     openWebApp(activity, uri, app);
                 } else if(app.getIsSSO() == 1){
                     uri = uri.replace("ssohandler/gs/", "api/mam/v3.0/gs_sso/app_uri?id=");
+                    LogUtils.YfcDebug("uri"+uri);
                     if (NetUtils.isNetworkConnected(activity)) {
                         new WebAppUtils(activity, new WebAppUtils.OnGetWebAppRealUrlListener() {
                             @Override
                             public void getWebAppRealUrlSuccess(String webAppUrl) {
+                                LogUtils.YfcDebug("替换回来的Url："+webAppUrl);
                                 openWebApp(activity, webAppUrl, app);
                             }
 

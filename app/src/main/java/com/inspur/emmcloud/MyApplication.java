@@ -42,6 +42,7 @@ import com.inspur.emmcloud.util.privates.CalEventNotificationUtils;
 import com.inspur.emmcloud.util.privates.CrashHandler;
 import com.inspur.emmcloud.util.privates.ECMShortcutBadgeNumberManagerUtils;
 import com.inspur.emmcloud.util.privates.HuaWeiPushMangerUtils;
+import com.inspur.emmcloud.util.privates.MutilClusterUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUsersUtils;
 import com.inspur.emmcloud.util.privates.cache.DbCacheUtils;
 import com.inspur.imp.api.Res;
@@ -424,6 +425,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
             if (currentEnterprise == null) {
                 currentEnterprise = getMyInfoResult.getDefaultEnterprise();
             }
+            MutilClusterUtils.changeClouldBaseUrl(currentEnterprise);
             String enterpriseCode = currentEnterprise.getCode();
             tanent = enterpriseCode;
         }

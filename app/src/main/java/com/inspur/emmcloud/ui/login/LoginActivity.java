@@ -118,8 +118,8 @@ public class LoginActivity extends BaseActivity {
                 enterpriseTextView.setText(data.getStringExtra("loginEnterprise"));
             }
         }else{
-            enterpriseTextView.setText("");
             enterpriseTextView.setVisibility(View.VISIBLE);
+            enterpriseTextView.setText("");
         }
     }
 
