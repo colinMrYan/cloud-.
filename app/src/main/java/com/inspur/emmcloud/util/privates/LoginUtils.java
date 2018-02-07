@@ -290,7 +290,6 @@ public class LoginUtils extends APIInterfaceInstance {
                 .setUid(getMyInfoResult.getID());
         List<Enterprise> enterpriseList = getMyInfoResult.getEnterpriseList();
         Enterprise defaultEnterprise = getMyInfoResult.getDefaultEnterprise();
-        MutilClusterUtils.changeClouldBaseUrl(MyApplication.getInstance().getCurrentEnterprise());
         if (isLogin && enterpriseList.size() > 1) {
             String selectLoginEnterpriseId = PreferencesByUsersUtils.getString(activity, Constant.PREF_SELECT_LOGIN_ENTERPRISE_ID, "");
             //当用户没有指定登录的企业时或已指定登录企业但是此企业不存在时则弹出选择登录企业的页面

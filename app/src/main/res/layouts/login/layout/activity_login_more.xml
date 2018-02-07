@@ -78,8 +78,9 @@
         android:layout_marginTop="10dp"
         android:background="@color/white"
         android:visibility="gone"
+        android:onClick="onClick"
         android:layout_below="@id/login_more_scan_btn"
-        android:text="恢复默认"
+        android:text="@string/clear"
         android:textColor="#0F7BCA"
         android:textSize="17sp" />
 

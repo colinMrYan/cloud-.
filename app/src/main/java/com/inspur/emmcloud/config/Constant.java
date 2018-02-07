@@ -36,4 +36,8 @@ public class Constant {
     public static final String ACTION_SAFE_UNLOCK = "com.inspur.safe.unlock";
     public static final String ACTION_VOLUME_INFO_UPDATE = "com.inspur.volume.info.update";
 
+    public static final String DEFAULT_CLUSTER_EMM = "https://emm.inspur.com/";//EMM默认
+    public static final String DEFAULT_CLUSTER_ECM = "https://ecm.inspur.com/";//ECM默认
+    public static final String DEFAULT_CLUSTER_ID = "https://id.inspuronline.com/";//ID默认
+
 }

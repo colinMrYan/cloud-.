@@ -46,10 +46,10 @@ public class UriUtils {
             case 3:
             case 4:
                 if(app.getAppID().equals("456166a362436750d74bfeaef997693d")){
+                    LogUtils.YfcDebug("1111111111111");
                     new AppCenterApprovalUtils().openApprovalApp(activity,app);
-                }else if (!uri.startsWith(APIUri.getEMMBaseUrl()+"ssohandler/gs/")) {
-                    openWebApp(activity, uri, app);
                 } else if(app.getIsSSO() == 1){
+                    LogUtils.YfcDebug("33333333333333");
                     uri = uri.replace("ssohandler/gs/", "api/mam/v3.0/gs_sso/app_uri?id=");
                     LogUtils.YfcDebug("uri"+uri);
                     if (NetUtils.isNetworkConnected(activity)) {
@@ -67,6 +67,9 @@ public class UriUtils {
                         }).getWebAppRealUrl(uri);
                     }
 
+                }else {
+                    LogUtils.YfcDebug("2222222222222"+APIUri.getEMMBaseUrl()+"ssohandler/gs/");
+                    openWebApp(activity, uri, app);
                 }
                 break;
             case 5:

@@ -21,11 +21,11 @@ import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
 import com.inspur.emmcloud.bean.appcenter.AppRedirectResult;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.imp.api.ImpActivity;
 
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
@@ -186,11 +186,12 @@ public class ImpWebViewClient extends WebViewClient {
 	@SuppressWarnings("deprecation")
 	@Override
 	public boolean shouldOverrideUrlLoading(WebView view, String url) {
+		LogUtils.YfcDebug("shouldOverrideUrlLoading----------------------"+url);
 		if (runnable != null){
 			mHandler.removeCallbacks(runnable);
 			runnable = null;
 		}
-		if (url.contains(APIUri.getWebLoginUrl())) {
+		if (url.contains(APIUri.getWebLoginUrl()) || url.contains("https://id.inspur.com/")) {
 			handleReDirectURL(url, view);
 			return true;
 		}
@@ -220,13 +221,14 @@ public class ImpWebViewClient extends WebViewClient {
 		URL urlWithParams = null;
 		try {
 			urlWithParams = new URL(url);
-		} catch (MalformedURLException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		String requestUrl = urlWithParams.getProtocol() + "://"+ urlWithParams.getHost();
 		MyAppAPIService appAPIService = new MyAppAPIService(view.getContext());
 		appAPIService.setAPIInterface(new WebService(view));
 		if (NetUtils.isNetworkConnected(view.getContext())) {
-			appAPIService.getAuthCode(urlWithParams.getQuery());
+			appAPIService.getAuthCode(requestUrl,urlWithParams.getQuery());
 		}
 
 	}

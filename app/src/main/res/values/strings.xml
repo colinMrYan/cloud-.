@@ -957,4 +957,6 @@
 
     <!--科大讯飞语音-->
     <string name="voice_input">语音输入</string>
+
+    <string name="clear">清除</string>
 </resources>

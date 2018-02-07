@@ -51,6 +51,7 @@ public class LoginActivity extends BaseActivity {
     private EditText passwordEdit;
     private Button loginBtn;
     private ImageView seePWImg;
+    private TextView enterpriseTextView;
     private boolean canSee = false;
 
     @Override
@@ -106,19 +107,24 @@ public class LoginActivity extends BaseActivity {
                 canSee = !canSee;
             }
         });
+        String enterpriseName = PreferencesUtils
+                .getString(LoginActivity.this, "login_enterprise_name", "");
+        enterpriseTextView = (TextView)findViewById(R.id.login_current_enterprise);
+        enterpriseTextView.setVisibility(StringUtils.isBlank(enterpriseName)
+                ? View.INVISIBLE : View.VISIBLE);
+        enterpriseTextView.setText(enterpriseName);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        TextView enterpriseTextView = (TextView)findViewById(R.id.login_current_enterprise);
         if(resultCode == RESULT_OK && requestCode == LOGIN_MORE){
             if(data.hasExtra("loginEnterprise") && !StringUtils.isBlank(data.getStringExtra("loginEnterprise"))){
                 enterpriseTextView.setVisibility(View.VISIBLE);
                 enterpriseTextView.setText(data.getStringExtra("loginEnterprise"));
             }
         }else{
-            enterpriseTextView.setVisibility(View.VISIBLE);
+            enterpriseTextView.setVisibility(View.GONE);
             enterpriseTextView.setText("");
         }
     }

@@ -43,8 +43,8 @@
         android:layout_below="@id/photo_img"
         android:gravity="center_horizontal"
         android:layout_marginBottom="10dp"
-        android:visibility="gone"
-        android:text="当前登录系统：中建电路桥"/>
+        android:visibility="invisible"
+        />
 
     <View
         android:layout_width="fill_parent"

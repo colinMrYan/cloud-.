@@ -28,6 +28,7 @@ import com.iflytek.cloud.SpeechUtility;
 import com.inspur.emmcloud.bean.mine.Enterprise;
 import com.inspur.emmcloud.bean.mine.GetMyInfoResult;
 import com.inspur.emmcloud.bean.mine.Language;
+import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.interf.MyActivityLifecycleCallbacks;
 import com.inspur.emmcloud.interf.OauthCallBack;
@@ -93,6 +94,11 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
     private MyActivityLifecycleCallbacks myActivityLifecycleCallbacks;
     private boolean isOpenNotification = false;
     private String tanent;
+    private String clusterEcm = Constant.DEFAULT_CLUSTER_ECM;//多云ecm服务
+    private String clusterEmm = Constant.DEFAULT_CLUSTER_EMM;//多云emm服务
+    private String cloudId = Constant.DEFAULT_CLUSTER_ID;//多云认证
+
+
 
     public void onCreate() {
         super.onCreate();
@@ -101,6 +107,14 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         removeAllSessionCookie();
         myActivityLifecycleCallbacks = new MyActivityLifecycleCallbacks();
         registerActivityLifecycleCallbacks(myActivityLifecycleCallbacks);
+    }
+
+    public String getCloudId() {
+        return cloudId;
+    }
+
+    public void setCloudId(String cloudId) {
+        this.cloudId = cloudId;
     }
 
     private void init() {
@@ -419,16 +433,47 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
                         currentEnterprise = enterprise;
                         break;
                     }
-
                 }
             }
             if (currentEnterprise == null) {
                 currentEnterprise = getMyInfoResult.getDefaultEnterprise();
             }
-            MutilClusterUtils.changeClouldBaseUrl(currentEnterprise);
+            MutilClusterUtils.changeClusterBaseUrl(currentEnterprise);
             String enterpriseCode = currentEnterprise.getCode();
             tanent = enterpriseCode;
         }
+    }
+
+    /**
+     * 获取ecm云
+     * @return
+     */
+    public String getClusterEcm() {
+        return clusterEcm;
+    }
+
+    /**
+     * 设置ecm云
+     * @param clusterEcm
+     */
+    public void setClusterEcm(String clusterEcm) {
+        this.clusterEcm = clusterEcm;
+    }
+
+    /**
+     * 获取emm云
+     * @return
+     */
+    public String getClusterEmm() {
+        return clusterEmm;
+    }
+
+    /**
+     * 设置emm云
+     * @return
+     */
+    public void setClusterEmm(String clusterEmm) {
+        this.clusterEmm = clusterEmm;
     }
 
     public String getTanent(){

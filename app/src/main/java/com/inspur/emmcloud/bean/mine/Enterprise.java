@@ -6,7 +6,6 @@ import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.reactnative.ReactNativeWritableNativeMap;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.Serializable;
@@ -40,14 +39,9 @@ public class Enterprise implements Serializable {
         entLicenseSn = JSONUtils.getString(object, "ent_license_sn", "");
         lastUpdate = JSONUtils.getString(object, "last_update", "0");
         JSONArray jsonArray = JSONUtils.getJSONArray(object, "clusters", new JSONArray());
-        try {
-            for (int i = 0; i < jsonArray.length(); i++) {
-                clusterBeanList.add(new ClusterBean(jsonArray.getJSONObject(i)));
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
+        for (int i = 0; i < jsonArray.length(); i++) {
+            clusterBeanList.add(new ClusterBean(JSONUtils.getJSONObject(jsonArray, i, new JSONObject())));
         }
-
     }
 
     public String getCode() {
