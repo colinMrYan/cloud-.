@@ -52,11 +52,33 @@ public class LoginMoreActivity extends BaseActivity {
                 startActivityForResult(intent, SCAN_LOGIN_ENTERPRISE_INFO);
                 break;
             case R.id.login_more_reset_btn:
-                PreferencesUtils.putString(LoginMoreActivity.this, "login_enterprise_name", "");
-                MyApplication.getInstance().setCloudId(Constant.DEFAULT_CLUSTER_ID);
-                finish();
+                showConfirmClearDialog();
                 break;
         }
+    }
+
+    /**
+     * 确认清除
+     */
+    private void showConfirmClearDialog() {
+        new MyQMUIDialog.MessageDialogBuilder(LoginMoreActivity.this)
+                .setMessage("确认清除？")
+                .addAction(R.string.cancel, new QMUIDialogAction.ActionListener() {
+                    @Override
+                    public void onClick(QMUIDialog dialog, int index) {
+                        dialog.dismiss();
+                    }
+                })
+                .addAction(R.string.ok, new QMUIDialogAction.ActionListener() {
+                    @Override
+                    public void onClick(QMUIDialog dialog, int index) {
+                        dialog.dismiss();
+                        PreferencesUtils.putString(LoginMoreActivity.this, "login_enterprise_name", "");
+                        MyApplication.getInstance().setCloudId(Constant.DEFAULT_CLUSTER_ID);
+                        finish();
+                    }
+                })
+                .show();
     }
 
     @Override
@@ -102,7 +124,7 @@ public class LoginMoreActivity extends BaseActivity {
                         Intent intent = new Intent();
                         intent.putExtra("loginEnterprise", loginMoreBean.getName());
                         setResult(RESULT_OK, intent);
-                        MyApplication.getInstance().setCloudId(StringUtils.isBlank(loginMoreBean.getUrl()) ? Constant.DEFAULT_CLUSTER_ID : loginMoreBean.getUrl());
+                        MyApplication.getInstance().setCloudId(StringUtils.isBlank(loginMoreBean.getUrl()) ? Constant.DEFAULT_CLUSTER_ID : (loginMoreBean.getUrl()+"/"));
                         findViewById(R.id.login_more_reset_btn).setVisibility(View.VISIBLE);
                         PreferencesUtils.putString(LoginMoreActivity.this, "login_enterprise_name", loginMoreBean.getName());
                         finish();
