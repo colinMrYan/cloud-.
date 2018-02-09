@@ -959,4 +959,6 @@
     <string name="voice_input">语音输入</string>
 
     <string name="clear">清除</string>
+    <string name="confirm_clear">确认清除？</string>
+    <string name="login_more_current_enterprise">当前登录系统：</string>
 </resources>

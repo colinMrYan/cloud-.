@@ -25,7 +25,6 @@ public class MutilClusterUtils {
         clusterStringList.add("com.inspur.emm");
         List<ClusterBean> clusterBeanList = enterprise.getClusterBeanList();
         initClusterBaseUrl();
-        LogUtils.YfcDebug("clusterBeanList长度："+clusterBeanList.size());
         for (int i = 0; i < clusterBeanList.size(); i++) {
             switch (clusterBeanList.get(i).getServiceName()) {
                 case "com.inspur.ecm":

@@ -3,6 +3,7 @@ package com.inspur.emmcloud.ui.login;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.TextView;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
@@ -30,9 +31,18 @@ public class LoginMoreActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_more);
-        findViewById(R.id.login_more_reset_btn).setVisibility(StringUtils.isBlank(PreferencesUtils
-                .getString(LoginMoreActivity.this, "login_enterprise_name", ""))
+        initView();
+    }
+
+    /**
+     * 初始化
+     */
+    private void initView() {
+        String enterpriseName = PreferencesUtils
+                .getString(LoginMoreActivity.this, "login_enterprise_name", "");
+        findViewById(R.id.login_more_reset_layout).setVisibility(StringUtils.isBlank(enterpriseName)
                 ? View.GONE : View.VISIBLE);
+        ((TextView)findViewById(R.id.login_more_enterprise_text)).setText(getString(R.string.login_more_current_enterprise)+enterpriseName);
     }
 
     /**
@@ -45,13 +55,13 @@ public class LoginMoreActivity extends BaseActivity {
             case R.id.back_layout:
                 finish();
                 break;
-            case R.id.login_more_scan_btn:
+            case R.id.login_more_scan_layout:
                 Intent intent = new Intent();
                 intent.setClass(LoginMoreActivity.this, CaptureActivity.class);
                 intent.putExtra("from", "loginMore");
                 startActivityForResult(intent, SCAN_LOGIN_ENTERPRISE_INFO);
                 break;
-            case R.id.login_more_reset_btn:
+            case R.id.login_more_reset_layout:
                 showConfirmClearDialog();
                 break;
         }
@@ -62,7 +72,7 @@ public class LoginMoreActivity extends BaseActivity {
      */
     private void showConfirmClearDialog() {
         new MyQMUIDialog.MessageDialogBuilder(LoginMoreActivity.this)
-                .setMessage("确认清除？")
+                .setMessage(getString(R.string.confirm_clear))
                 .addAction(R.string.cancel, new QMUIDialogAction.ActionListener() {
                     @Override
                     public void onClick(QMUIDialog dialog, int index) {
@@ -110,7 +120,7 @@ public class LoginMoreActivity extends BaseActivity {
     private void showConfirmDialog(String msg) {
         final LoginMoreBean loginMoreBean = new LoginMoreBean(msg);
         new MyQMUIDialog.MessageDialogBuilder(LoginMoreActivity.this)
-                .setMessage("您将要登录的企业:"+loginMoreBean.getName())
+                .setMessage("扫描到["+loginMoreBean.getName()+"]确定添加吗？")
                 .addAction(R.string.cancel, new QMUIDialogAction.ActionListener() {
                     @Override
                     public void onClick(QMUIDialog dialog, int index) {

@@ -59,30 +59,71 @@
             android:textSize="@dimen/header_textsize" />
     </RelativeLayout>
 
-    <Button
-        android:id="@+id/login_more_scan_btn"
-        android:layout_width="match_parent"
-        android:layout_height="44dp"
-        android:layout_marginTop="10dp"
-        android:background="@color/white"
+    <LinearLayout
+        android:id="@+id/login_more_scan_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_below="@id/header_layout"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="70dp"
         android:onClick="onClick"
-        android:text="@string/sweep"
-        android:textColor="#0F7BCA"
-        android:textSize="17sp" />
+        android:orientation="vertical">
 
-    <Button
-        android:id="@+id/login_more_reset_btn"
-        android:layout_width="match_parent"
-        android:layout_height="44dp"
-        android:layout_marginTop="10dp"
-        android:background="@color/white"
-        android:visibility="gone"
+        <com.inspur.emmcloud.widget.CircleImageView
+            android:layout_width="84dp"
+            android:layout_height="84dp"
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/ic_login_more_scan" />
+
+        <Button
+            android:id="@+id/login_more_scan_btn"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:layout_below="@id/header_layout"
+            android:background="@color/transparent"
+            android:onClick="onClick"
+            android:text="@string/sweep"
+            android:textColor="@color/black"
+            android:textSize="17sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/login_more_reset_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/login_more_scan_layout"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="35dp"
         android:onClick="onClick"
-        android:layout_below="@id/login_more_scan_btn"
-        android:text="@string/clear"
-        android:textColor="#0F7BCA"
-        android:textSize="17sp" />
+        android:orientation="vertical"
+        android:visibility="visible">
+
+        <com.inspur.emmcloud.widget.CircleImageView
+            android:layout_width="84dp"
+            android:layout_height="84dp"
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/ic_login_more_clear" />
+
+        <Button
+            android:id="@+id/login_more_reset_btn"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:background="@color/transparent"
+            android:onClick="onClick"
+            android:text="@string/clear"
+            android:textColor="@color/black"
+            android:textSize="17sp" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/login_more_enterprise_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="15dp"
+        android:gravity="center_horizontal"
+        android:textColor="#999999"
+        android:textSize="13sp" />
 
 
 </RelativeLayout>

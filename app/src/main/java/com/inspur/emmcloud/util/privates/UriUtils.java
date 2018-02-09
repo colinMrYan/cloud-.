@@ -4,8 +4,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.bean.appcenter.App;
 import com.inspur.emmcloud.bean.system.PVCollectModel;
 import com.inspur.emmcloud.ui.appcenter.ReactNativeAppActivity;
@@ -46,17 +46,14 @@ public class UriUtils {
             case 3:
             case 4:
                 if(app.getAppID().equals("456166a362436750d74bfeaef997693d")){
-                    LogUtils.YfcDebug("1111111111111");
                     new AppCenterApprovalUtils().openApprovalApp(activity,app);
                 } else if(app.getIsSSO() == 1){
-                    LogUtils.YfcDebug("33333333333333");
-                    uri = uri.replace("ssohandler/gs/", "api/mam/v3.0/gs_sso/app_uri?id=");
-                    LogUtils.YfcDebug("uri"+uri);
+//                    uri = uri.replace("ssohandler/gs/", "api/mam/v3.0/gs_sso/app_uri?id=");
+                    uri = MyApplication.getInstance().getClusterEmm() + "api/mam/v3.0/gs_sso/app_uri?id="+app.getAppID();
                     if (NetUtils.isNetworkConnected(activity)) {
                         new WebAppUtils(activity, new WebAppUtils.OnGetWebAppRealUrlListener() {
                             @Override
                             public void getWebAppRealUrlSuccess(String webAppUrl) {
-                                LogUtils.YfcDebug("替换回来的Url："+webAppUrl);
                                 openWebApp(activity, webAppUrl, app);
                             }
 
@@ -68,7 +65,6 @@ public class UriUtils {
                     }
 
                 }else {
-                    LogUtils.YfcDebug("2222222222222"+APIUri.getEMMBaseUrl()+"ssohandler/gs/");
                     openWebApp(activity, uri, app);
                 }
                 break;

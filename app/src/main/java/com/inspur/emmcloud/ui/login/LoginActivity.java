@@ -118,11 +118,11 @@ public class LoginActivity extends BaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(resultCode == RESULT_OK && requestCode == LOGIN_MORE){
-            if(data.hasExtra("loginEnterprise") && !StringUtils.isBlank(data.getStringExtra("loginEnterprise"))){
-                enterpriseTextView.setVisibility(View.VISIBLE);
-                enterpriseTextView.setText(data.getStringExtra("loginEnterprise"));
-            }
+        String enterpriseName = PreferencesUtils
+                .getString(LoginActivity.this, "login_enterprise_name", "");
+        if(!StringUtils.isBlank(enterpriseName)){
+            enterpriseTextView.setVisibility(View.VISIBLE);
+            enterpriseTextView.setText(enterpriseName);
         }else{
             enterpriseTextView.setVisibility(View.GONE);
             enterpriseTextView.setText("");
