@@ -186,7 +186,6 @@ public class ImpWebViewClient extends WebViewClient {
 	@SuppressWarnings("deprecation")
 	@Override
 	public boolean shouldOverrideUrlLoading(WebView view, String url) {
-		LogUtils.YfcDebug("shouldOverrideUrlLoading----------------------"+url);
 		if (runnable != null){
 			mHandler.removeCallbacks(runnable);
 			runnable = null;
