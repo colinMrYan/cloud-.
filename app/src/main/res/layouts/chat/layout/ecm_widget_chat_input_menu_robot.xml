@@ -7,11 +7,16 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#015291"
+        android:background="#FAFAFA"
         android:orientation="vertical">
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/grey_line_color" />
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="#f7f7f7"
             android:paddingBottom="5dp"
             android:paddingTop="7dp">
 
@@ -33,7 +38,7 @@
                 android:layout_marginRight="5dp"
                 android:layout_toLeftOf="@+id/right_layout"
                 android:layout_toRightOf="@id/voice_input_btn"
-                android:background="@drawable/bg_corner_chat_input_robot"
+                android:background="@drawable/bg_corner_fill_white_no_border"
                 android:focusableInTouchMode="true"
                 android:gravity="center_vertical"
                 android:maxLines="5"
@@ -41,7 +46,6 @@
                 android:paddingLeft="7dp"
                 android:paddingRight="7dp"
                 android:paddingTop="9dp"
-                android:textColor="@color/white"
                 android:textSize="15sp"></com.inspur.emmcloud.widget.ChatInputEdit>
 
             <RelativeLayout

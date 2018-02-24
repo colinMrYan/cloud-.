@@ -549,6 +549,6 @@ public class ECMChatInputMenu extends LinearLayout {
                 }
             }
         });
-        viewpagerLayout.setInputTypeBeanList(inputTypeBeanList,cid);
+        viewpagerLayout.setInputTypeBeanList(inputTypeBeanList);
     }
 }

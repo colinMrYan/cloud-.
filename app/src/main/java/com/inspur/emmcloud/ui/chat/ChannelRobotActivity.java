@@ -1,25 +1,16 @@
 package com.inspur.emmcloud.ui.chat;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
-import android.provider.MediaStore;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnTouchListener;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.BaseActivity;
-import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.ChannelMsgAdapter;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
@@ -36,73 +27,62 @@ import com.inspur.emmcloud.bean.chat.Msg;
 import com.inspur.emmcloud.bean.contact.GetSearchChannelGroupResult;
 import com.inspur.emmcloud.bean.system.PVCollectModel;
 import com.inspur.emmcloud.broadcastreceiver.MsgReceiver;
-import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.ui.appcenter.groupnews.NewsWebDetailActivity;
 import com.inspur.emmcloud.ui.contact.RobotInfoActivity;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
-import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.ConbineMsg;
 import com.inspur.emmcloud.util.privates.DirectChannelUtils;
-import com.inspur.emmcloud.util.privates.MsgRecourceUploadUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.util.privates.cache.ChannelCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MsgCacheUtil;
 import com.inspur.emmcloud.util.privates.cache.MsgReadIDCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.PVCollectModelCacheUtils;
-import com.inspur.emmcloud.widget.ECMChatInputMenu;
-import com.inspur.emmcloud.widget.ECMChatInputMenu.ChatInputMenuListener;
+import com.inspur.emmcloud.widget.ECMChatInputMenuRobot;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.RecycleViewForSizeChange;
-import com.inspur.imp.plugin.camera.editimage.EditImageActivity;
-import com.inspur.imp.plugin.camera.imagepicker.ImagePicker;
-import com.inspur.imp.plugin.camera.imagepicker.bean.ImageItem;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.xutils.view.annotation.ContentView;
+import org.xutils.view.annotation.ViewInject;
 
-import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
-import static android.R.attr.path;
-
-/**
- * com.inspur.emmcloud.ui.ChannelActivity
- *
- * @author Fortune Yu; create at 2016年8月29日
- */
+@ContentView(R.layout.activity_channel_robot)
 public class ChannelRobotActivity extends BaseActivity {
 
     private static final int HAND_CALLBACK_MESSAGE = 1;
-    private static final int GELLARY_RESULT = 2;
-    private static final int CAMERA_RESULT = 3;
-    private static final int MENTIONS_RESULT = 5;
-    private static final int CHOOSE_FILE = 4;
+
+    @ViewInject(R.id.msg_list)
     private RecycleViewForSizeChange msgListView;
+
+    @ViewInject(R.id.refresh_layout)
+    private SwipeRefreshLayout swipeRefreshLayout;
+
+    @ViewInject(R.id.chat_input_menu)
+    private ECMChatInputMenuRobot chatInputMenu;
+    @ViewInject(R.id.header_text)
+    private TextView headerText;
+
+    private LoadingDialog loadingDlg;
+    private String cid;
+    private Channel channel;
     private List<Msg> msgList;
     private ChannelMsgAdapter adapter;
     private Handler handler;
     private MsgReceiver msgResvier;
     private ChatAPIService apiService;
-    private SwipeRefreshLayout swipeRefreshLayout;
-    private BroadcastReceiver refreshNameReceiver;
-    private Channel channel;
-    private String cid;
-    private ECMChatInputMenu chatInputMenu;
-    private LoadingDialog loadingDlg;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_channel);
         init();
-        registeRefreshNameReceiver();
         recordUserClickChannel();
     }
 
@@ -149,7 +129,6 @@ public class ChannelRobotActivity extends BaseActivity {
      * 初始化下拉刷新UI
      */
     private void initPullRefreshLayout() {
-        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh_layout);
         swipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.header_bg), getResources().getColor(R.color.header_bg));
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -162,8 +141,8 @@ public class ChannelRobotActivity extends BaseActivity {
                     msgList.addAll(0, historyMsgList);
                     swipeRefreshLayout.setRefreshing(false);
                     adapter.setMsgList(msgList);
-                    adapter.notifyItemRangeInserted(0,historyMsgList.size());
-                    msgListView.MoveToPosition(historyMsgList.size()-1);
+                    adapter.notifyItemRangeInserted(0, historyMsgList.size());
+                    msgListView.MoveToPosition(historyMsgList.size() - 1);
                 } else {
                     getNewsMsg();
                 }
@@ -176,46 +155,17 @@ public class ChannelRobotActivity extends BaseActivity {
      */
     private void setChannelTitle() {
         String title = channel.getTitle();
-        if (channel.getType().equals("DIRECT")) {
-            String myUid = ((MyApplication) getApplicationContext()).getUid();
-            if (title.contains(myUid) && title.contains("-")) {
-                title = DirectChannelUtils.getDirectChannelTitle(
-                        getApplicationContext(), title);
-            }
-        } else if (channel.getType().equals("SERVICE")) {
-            title = DirectChannelUtils.getRobotInfo(getApplicationContext(),
-                    title).getName();
-        }
-        ((TextView) findViewById(R.id.header_text)).setText(title);
+        title = DirectChannelUtils.getRobotInfo(getApplicationContext(),
+                title).getName();
+        headerText.setText(title);
     }
 
     /**
      * 处理chatInputMenu是否显示，以及显示几个Menu上的item
      */
     private void initChatInputMenu() {
-        chatInputMenu = (ECMChatInputMenu) findViewById(R.id.chat_input_menu);
-        if (channel.getType().equals("GROUP")) {
-            chatInputMenu.setIsChannelGroup(true, cid);
-        }
-        chatInputMenu.setChatInputMenuListener(new ChatInputMenuListener() {
-
-            @Override
-            public void onSetContentViewHeight(boolean isLock) {
-                // TODO Auto-generated method stub
-                final LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) swipeRefreshLayout
-                        .getLayoutParams();
-                if (isLock) {
-                    params.height = swipeRefreshLayout.getHeight();
-                    params.weight = 0.0F;
-                } else {
-                    new Handler().post(new Runnable() {
-                        @Override
-                        public void run() {
-                            params.weight = 1.0F;
-                        }
-                    });
-                }
-            }
+        chatInputMenu.setOtherLayoutView(swipeRefreshLayout);
+        chatInputMenu.setChatInputMenuListener(new ECMChatInputMenuRobot.ChatInputMenuListener() {
 
             @Override
             public void onSendMsg(String content, List<String> mentionsUidList, List<String> urlList) {
@@ -223,29 +173,8 @@ public class ChannelRobotActivity extends BaseActivity {
                 sendTextMessage(content, mentionsUidList, urlList);
             }
         });
-        if ((channel != null) && channel.getInputs().equals("0")) {
-            chatInputMenu.setVisibility(View.GONE);
-        } else {
-            chatInputMenu.updateCommonMenuLayout(channel.getInputs());
-        }
     }
 
-
-    /**
-     * 注册更改频道名称广播
-     */
-    private void registeRefreshNameReceiver() {
-        refreshNameReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                String name = intent.getExtras().getString("name");
-                ((TextView) findViewById(R.id.header_text)).setText(name);
-            }
-        };
-        IntentFilter filter = new IntentFilter();
-        filter.addAction("update_channel_name");
-        registerReceiver(refreshNameReceiver, filter);
-    }
 
     /**
      * 初始化消息列表UI
@@ -254,10 +183,10 @@ public class ChannelRobotActivity extends BaseActivity {
         msgListView = (RecycleViewForSizeChange) findViewById(R.id.msg_list);
         msgList = MsgCacheUtil.getHistoryMsgList(getApplicationContext(),
                 cid, "", 15);
-        adapter = new ChannelMsgAdapter(ChannelRobotActivity.this,apiService,channel.getType(),chatInputMenu);
+        adapter = new ChannelMsgAdapter(ChannelRobotActivity.this, apiService, channel.getType(), null);
         adapter.setItemClickListener(new ChannelMsgAdapter.MyItemClickListener() {
             @Override
-            public void onItemClick(View view,int position) {
+            public void onItemClick(View view, int position) {
                 Msg msg = msgList.get(position);
                 //当消息处于发送中状态时无法点击
                 if (msg.getSendStatus() != 1) {
@@ -302,25 +231,9 @@ public class ChannelRobotActivity extends BaseActivity {
 //        linearLayoutManager.setStackFromEnd(true);
         msgListView.setLayoutManager(linearLayoutManager);
         msgListView.setAdapter(adapter);
-         msgListView.MoveToPosition(msgList.size()-1);
-        /**
-         * 当触摸消息list时把输入法和添加选项layout隐藏
-         */
-        msgListView.setOnTouchListener(new OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                // TODO Auto-generated method stub
-                if (!chatInputMenu.hideAddMenuLayout()) {
-                    chatInputMenu.hideSoftInput();
-                }
-                return false;
-            }
-        });
+        msgListView.MoveToPosition(msgList.size() - 1);
 
     }
-
-
-
 
 
     /**
@@ -340,66 +253,48 @@ public class ChannelRobotActivity extends BaseActivity {
     protected void onActivityResult(int requestCode, int resultCode,
                                     final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK) {
-            // 文件管理器返回
-            if (requestCode == CHOOSE_FILE
-                    && NetUtils.isNetworkConnected(getApplicationContext())) {
-                Msg localMsg = MsgRecourceUploadUtils.uploadImgFile(
-                        ChannelRobotActivity.this, data, apiService);
-                addLocalMessage(localMsg);
-                //拍照返回
-            } else if (requestCode == CAMERA_RESULT
-                    && NetUtils.isNetworkConnected(getApplicationContext())) {
-                String cameraImgPath = Environment.getExternalStorageDirectory() + "/DCIM/" + PreferencesUtils.getString(ChannelRobotActivity.this, "capturekey");
-                refreshGallery(ChannelRobotActivity.this, cameraImgPath);
-                EditImageActivity.start(ChannelRobotActivity.this, cameraImgPath, MyAppConfig.LOCAL_IMG_CREATE_PATH);
-                //拍照后图片编辑返回
-            } else if (requestCode == EditImageActivity.ACTION_REQUEST_EDITIMAGE) {
-                String imgPath = data.getExtras().getString("save_file_path");
-                Msg localMsg = MsgRecourceUploadUtils.uploadMsgImg(
-                        ChannelRobotActivity.this, imgPath, apiService);
-                addLocalMessage(localMsg);
-            } else if (requestCode == MENTIONS_RESULT) {
-                // @返回
-                String result = data.getStringExtra("searchResult");
-                String uid = JSONUtils.getString(result, "uid", null);
-                String name = JSONUtils.getString(result, "name", null);
-                boolean isInputKeyWord = data.getBooleanExtra("isInputKeyWord", false);
-                chatInputMenu.addMentions(uid, name, isInputKeyWord);
-            }
-        } else {
-            // 图库选择图片返回
-            if (resultCode == ImagePicker.RESULT_CODE_ITEMS)
-                if (data != null && requestCode == GELLARY_RESULT) {
-                    ArrayList<ImageItem> imageItemList = (ArrayList<ImageItem>) data
-                            .getSerializableExtra(ImagePicker.EXTRA_RESULT_ITEMS);
-                    for (int i = 0; i < imageItemList.size(); i++) {
-                        Msg localMsg = MsgRecourceUploadUtils.uploadMsgImg(
-                                ChannelRobotActivity.this, imageItemList.get(i).path, apiService);
-                        addLocalMessage(localMsg);
-                    }
-                }
-        }
+//        if (resultCode == RESULT_OK) {
+//            // 文件管理器返回
+//            if (requestCode == CHOOSE_FILE
+//                    && NetUtils.isNetworkConnected(getApplicationContext())) {
+//                Msg localMsg = MsgRecourceUploadUtils.uploadImgFile(
+//                        ChannelRobotActivity.this, data, apiService);
+//                addLocalMessage(localMsg);
+//                //拍照返回
+//            } else if (requestCode == CAMERA_RESULT
+//                    && NetUtils.isNetworkConnected(getApplicationContext())) {
+//                String cameraImgPath = Environment.getExternalStorageDirectory() + "/DCIM/" + PreferencesUtils.getString(ChannelRobotActivity.this, "capturekey");
+//                refreshGallery(ChannelRobotActivity.this, cameraImgPath);
+//                EditImageActivity.start(ChannelRobotActivity.this, cameraImgPath, MyAppConfig.LOCAL_IMG_CREATE_PATH);
+//                //拍照后图片编辑返回
+//            } else if (requestCode == EditImageActivity.ACTION_REQUEST_EDITIMAGE) {
+//                String imgPath = data.getExtras().getString("save_file_path");
+//                Msg localMsg = MsgRecourceUploadUtils.uploadMsgImg(
+//                        ChannelRobotActivity.this, imgPath, apiService);
+//                addLocalMessage(localMsg);
+//            } else if (requestCode == MENTIONS_RESULT) {
+//                // @返回
+//                String result = data.getStringExtra("searchResult");
+//                String uid = JSONUtils.getString(result, "uid", null);
+//                String name = JSONUtils.getString(result, "name", null);
+//                boolean isInputKeyWord = data.getBooleanExtra("isInputKeyWord", false);
+//                chatInputMenu.addMentions(uid, name, isInputKeyWord);
+//            }
+//        } else {
+//            // 图库选择图片返回
+//            if (resultCode == ImagePicker.RESULT_CODE_ITEMS)
+//                if (data != null && requestCode == GELLARY_RESULT) {
+//                    ArrayList<ImageItem> imageItemList = (ArrayList<ImageItem>) data
+//                            .getSerializableExtra(ImagePicker.EXTRA_RESULT_ITEMS);
+//                    for (int i = 0; i < imageItemList.size(); i++) {
+//                        Msg localMsg = MsgRecourceUploadUtils.uploadMsgImg(
+//                                ChannelRobotActivity.this, imageItemList.get(i).path, apiService);
+//                        addLocalMessage(localMsg);
+//                    }
+//                }
+//        }
     }
 
-    /**
-     * 保存并显示把图片展示出来
-     *
-     * @param context
-     * @param cameraPath
-     */
-    private void refreshGallery(Context context, String cameraPath) {
-        File file = new File(cameraPath);
-        // 其次把文件插入到系统图库
-        try {
-            MediaStore.Images.Media.insertImage(context.getContentResolver(),
-                    file.getAbsolutePath(), file.getName(), null);
-            // 最后通知图库更新
-            context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + path)));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     /**
      * 处理子线程返回消息
@@ -418,7 +313,7 @@ public class ChannelRobotActivity extends BaseActivity {
                             if (!msgList.contains(pushMsg) && !pushMsg.getTmpId().equals(AppUtils.getMyUUID(getApplicationContext()))) {
                                 msgList.add(pushMsg);
                                 adapter.setMsgList(msgList);
-                                adapter.notifyItemInserted(msgList.size()-1);
+                                adapter.notifyItemInserted(msgList.size() - 1);
                                 msgListView.MoveToPosition(msgList.size() - 1);
                             }
                         }
@@ -558,7 +453,6 @@ public class ChannelRobotActivity extends BaseActivity {
     }
 
 
-
     /**
      * 通知message页将本频道消息置为已读
      */
@@ -588,9 +482,12 @@ public class ChannelRobotActivity extends BaseActivity {
     @Override
     public void onBackPressed() {
         // TODO Auto-generated method stub
-        if (!chatInputMenu.hideAddMenuLayout()) {
-            super.onBackPressed();
+        if (chatInputMenu.isAddMenuLayoutShow()){
+            chatInputMenu.hideAddMenuLayout();
+            return;
         }
+        super.onBackPressed();
+
     }
 
     @Override
@@ -602,10 +499,6 @@ public class ChannelRobotActivity extends BaseActivity {
         if (msgResvier != null) {
             unregisterReceiver(msgResvier);
             msgResvier = null;
-        }
-        if (refreshNameReceiver != null) {
-            unregisterReceiver(refreshNameReceiver);
-            refreshNameReceiver = null;
         }
         chatInputMenu.releaseVoliceInput();
     }
@@ -728,8 +621,8 @@ public class ChannelRobotActivity extends BaseActivity {
                 if (historyMsgList != null && historyMsgList.size() > 1) {
                     msgList.addAll(0, historyMsgList);
                     adapter.setMsgList(msgList);
-                    adapter.notifyItemRangeInserted(0,historyMsgList.size());
-                    msgListView.MoveToPosition(historyMsgList.size()-1);
+                    adapter.notifyItemRangeInserted(0, historyMsgList.size());
+                    msgListView.MoveToPosition(historyMsgList.size() - 1);
                 }
             }
 
