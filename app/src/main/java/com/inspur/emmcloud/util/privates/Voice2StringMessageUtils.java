@@ -125,7 +125,7 @@ public class Voice2StringMessageUtils {
         speechRecognizer.setParameter(SpeechConstant.VAD_EOS, PreferencesUtils.getString(context,"iat_vadeos_preference", "1800"));
 
         // 设置标点符号,设置为"0"返回结果无标点,设置为"1"返回结果有标点
-        speechRecognizer.setParameter(SpeechConstant.ASR_PTT, PreferencesUtils.getString(context,"iat_punc_preference", "1"));
+        speechRecognizer.setParameter(SpeechConstant.ASR_PTT, PreferencesUtils.getString(context,"iat_punc_preference", "0"));
 
         //根据IOS参数新加参数
         speechRecognizer.setParameter(SpeechConstant.KEY_SPEECH_TIMEOUT,PreferencesUtils.getString(context,"iat_speech_timeout","-1"));
