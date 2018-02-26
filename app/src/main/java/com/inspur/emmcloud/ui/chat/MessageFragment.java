@@ -860,7 +860,7 @@ public class MessageFragment extends Fragment{
                 defaultIcon = R.drawable.icon_person_default;
                 iconUrl = DirectChannelUtils.getRobotIcon(getActivity(), channel.getTitle());
             }
-            ImageDisplayUtils.getInstance().displayImage(
+            ImageDisplayUtils.getInstance().displayImageByTag(
                     channelPhotoImg, iconUrl, defaultIcon);
 
 

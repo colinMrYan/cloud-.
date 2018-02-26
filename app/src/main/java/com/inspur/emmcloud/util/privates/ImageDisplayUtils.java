@@ -61,7 +61,7 @@ public class ImageDisplayUtils implements ImagePickerLoader {
         }
         final String finalUri = uri;
         imageView.setTag(finalUri);
-        ImageLoader.getInstance().loadImage(uri, options, new ImageLoadingListener() {
+        ImageLoader.getInstance().loadImage(uri,options, new ImageLoadingListener() {
             @Override
             public void onLoadingStarted(String imageUri, View view) {
                 String tagUri = (String) imageView.getTag();
@@ -90,7 +90,7 @@ public class ImageDisplayUtils implements ImagePickerLoader {
             public void onLoadingCancelled(String imageUri, View view) {
                 String tagUri = (String) imageView.getTag();
                 if (tagUri != null && tagUri.equals(finalUri)) {
-                    imageView.setImageResource(defaultDrawableId);
+                    displayImageByTag(imageView,finalUri,defaultDrawableId);
                 }
             }
         });
