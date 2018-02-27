@@ -40,18 +40,6 @@ public class ScanQrCodeUtils {
      * @param msg
      */
     public void handleActionWithMsg(String msg) {
-        //暂时保留此处作为方案参考
-//        String urlHost = "";
-//        try {
-//            URL url = new URL(msg);
-//            urlHost = url.getHost();
-//            LogUtils.YfcDebug("url的host："+url.getHost());
-//            LogUtils.YfcDebug("url的protocol："+url.getProtocol());
-//        } catch (MalformedURLException e) {
-//            LogUtils.YfcDebug("解析出现异常："+e.getMessage());
-//            e.printStackTrace();
-//        }
-//        ToastUtils.show(context,msg);
         msg = msg.trim();
         if (isMatchCloudPlusProtrol(msg)) {
             Uri uri = Uri.parse(msg);
@@ -61,6 +49,7 @@ public class ScanQrCodeUtils {
             Intent intent = new Intent();
             intent.setClass(context, ImpActivity.class);
             intent.putExtra("uri", msg);
+            intent.putExtra("appName","");
             context.startActivity(intent);
         } else {
             showUnKnownMsg(msg);
@@ -82,7 +71,6 @@ public class ScanQrCodeUtils {
         return false;
     }
 
-
     /**
      * 展示扫描到的信息
      *
@@ -94,6 +82,4 @@ public class ScanQrCodeUtils {
         intent.setClass(context, ScanResultActivity.class);
         context.startActivity(intent);
     }
-
-
 }

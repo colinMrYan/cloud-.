@@ -14,7 +14,6 @@ import com.iflytek.cloud.SpeechRecognizer;
 import com.inspur.emmcloud.interf.OnVoiceResultCallback;
 import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.LogUtils;
-import com.inspur.emmcloud.util.common.PreferencesUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -43,7 +42,7 @@ public class Voice2StringMessageUtils {
     //初始化监听器，监听是否初始化成功
     private InitListener initListener;
 
-    public Voice2StringMessageUtils(Context context){
+    public Voice2StringMessageUtils(Context context) {
         this.context = context;
         initListeners();
     }
@@ -51,7 +50,7 @@ public class Voice2StringMessageUtils {
     /**
      * 启动听写
      */
-    public void startVoiceListening(){
+    public void startVoiceListening() {
         // 使用SpeechRecognizer对象，可根据回调消息自定义界面；
         speechRecognizer = SpeechRecognizer.createRecognizer(context, initListener);
         setParam();
@@ -62,7 +61,7 @@ public class Voice2StringMessageUtils {
      * 通过音频文件启动听写
      * 以后需要发送语音时可以单独录制一段语音存到sd卡当做文件发送
      */
-    public void startVoiceListeningByVoiceFile(String voiceFilePath){
+    public void startVoiceListeningByVoiceFile(String voiceFilePath) {
         // 使用SpeechRecognizer对象，可根据回调消息自定义界面；
         speechRecognizer = SpeechRecognizer.createRecognizer(context, initListener);
         setParam();
@@ -79,7 +78,7 @@ public class Voice2StringMessageUtils {
      *
      * @return 二进制文件数据
      */
-    public  byte[] readAudioFile(Context context, String filename) {
+    public byte[] readAudioFile(Context context, String filename) {
         try {
             InputStream ins = context.getAssets().open(filename);
             byte[] data = new byte[ins.available()];
@@ -105,38 +104,27 @@ public class Voice2StringMessageUtils {
         speechRecognizer.setParameter(SpeechConstant.ENGINE_TYPE, engineType);
         // 设置返回结果格式
         speechRecognizer.setParameter(SpeechConstant.RESULT_TYPE, "json");
-        String lag = PreferencesUtils.getString(context,"iat_language_preference",
-                "mandarin");
-        if (lag.equals("en_us")) {
-            // 设置语言
-            speechRecognizer.setParameter(SpeechConstant.LANGUAGE, "en_us");
-            speechRecognizer.setParameter(SpeechConstant.ACCENT, null);
-        } else {
-            // 设置语言
-            speechRecognizer.setParameter(SpeechConstant.LANGUAGE, "zh_cn");
-            // 设置语言区域
-            speechRecognizer.setParameter(SpeechConstant.ACCENT, lag);
-        }
-
+        // 设置语言
+        speechRecognizer.setParameter(SpeechConstant.LANGUAGE, "zh_cn");
+        // 设置语言区域
+        speechRecognizer.setParameter(SpeechConstant.ACCENT, "mandarin");
         // 设置语音前端点:静音超时时间，即用户多长时间不说话则当做超时处理
-        speechRecognizer.setParameter(SpeechConstant.VAD_BOS, PreferencesUtils.getString(context,"iat_vadbos_preference", "5000"));
-
+        speechRecognizer.setParameter(SpeechConstant.VAD_BOS, "5000");
         // 设置语音后端点:后端点静音检测时间，即用户停止说话多长时间内即认为不再输入， 自动停止录音
-        speechRecognizer.setParameter(SpeechConstant.VAD_EOS, PreferencesUtils.getString(context,"iat_vadeos_preference", "1800"));
-
+        speechRecognizer.setParameter(SpeechConstant.VAD_EOS, "1800");
         // 设置标点符号,设置为"0"返回结果无标点,设置为"1"返回结果有标点
-        speechRecognizer.setParameter(SpeechConstant.ASR_PTT, PreferencesUtils.getString(context,"iat_punc_preference", "1"));
+        speechRecognizer.setParameter(SpeechConstant.ASR_PTT, "0");
 
         //根据IOS参数新加参数
-        speechRecognizer.setParameter(SpeechConstant.KEY_SPEECH_TIMEOUT,PreferencesUtils.getString(context,"iat_speech_timeout","-1"));
-        speechRecognizer.setParameter(SpeechConstant.SAMPLE_RATE,PreferencesUtils.getString(context,"iat_sample_rate","16000"));
-        speechRecognizer.setParameter(SpeechConstant.DOMAIN,PreferencesUtils.getString(context,"iat_domain","iat"));
-        speechRecognizer.setParameter(SpeechConstant.PARAMS,PreferencesUtils.getString(context,"iat_params","0"));
+        speechRecognizer.setParameter(SpeechConstant.KEY_SPEECH_TIMEOUT, "-1");
+        speechRecognizer.setParameter(SpeechConstant.SAMPLE_RATE, "16000");
+        speechRecognizer.setParameter(SpeechConstant.DOMAIN, "iat");
+        speechRecognizer.setParameter(SpeechConstant.PARAMS, "0");
 
         // 设置音频保存路径，保存音频格式支持pcm、wav，设置路径为sd卡请注意WRITE_EXTERNAL_STORAGE权限
         // 注：AUDIO_FORMAT参数语记需要更新版本才能生效
-        speechRecognizer.setParameter(SpeechConstant.AUDIO_FORMAT,"wav");
-        speechRecognizer.setParameter(SpeechConstant.ASR_AUDIO_PATH, Environment.getExternalStorageDirectory()+"/msc/iat.wav");
+        speechRecognizer.setParameter(SpeechConstant.AUDIO_FORMAT, "wav");
+        speechRecognizer.setParameter(SpeechConstant.ASR_AUDIO_PATH, Environment.getExternalStorageDirectory() + "/msc/iat.wav");
     }
 
     /**
@@ -174,12 +162,12 @@ public class Voice2StringMessageUtils {
 
             @Override
             public void onResult(RecognizerResult results, boolean isLast) {
-                LogUtils.YfcDebug("解析结果："+results.getResultString());
+                LogUtils.YfcDebug("解析结果：" + results.getResultString());
 //                getLastListeningResult(results);
                 addListeningResult2Map(results);
                 if (isLast) {
                     //最后的结果
-                    onVoiceResultCallback.onVoiceResult(getLastListeningResult(),isLast);
+                    onVoiceResultCallback.onVoiceResult(getLastListeningResult(), isLast);
                 }
             }
 
@@ -203,11 +191,12 @@ public class Voice2StringMessageUtils {
 
     /**
      * 向map中加入一个解析结果
+     *
      * @param results
      */
     private void addListeningResult2Map(RecognizerResult results) {
         String content = XFJsonParser.parseIatResult(results.getResultString());
-        String sn = JSONUtils.getString(results.getResultString(),"sn","");
+        String sn = JSONUtils.getString(results.getResultString(), "sn", "");
         iatResultMap.put(sn, content);
     }
 
@@ -217,7 +206,7 @@ public class Voice2StringMessageUtils {
     private String getLastListeningResult() {
         StringBuffer resultBuffer = new StringBuffer();
         Set<String> iatResultSet = iatResultMap.keySet();
-        if(iatResultSet != null){
+        if (iatResultSet != null) {
             for (String key : iatResultMap.keySet()) {
                 resultBuffer.append(iatResultMap.get(key));
             }
@@ -227,6 +216,7 @@ public class Voice2StringMessageUtils {
 
     /**
      * 在调用处回收资源的方法
+     *
      * @return
      */
     public SpeechRecognizer getSpeechRecognizer() {
@@ -235,6 +225,7 @@ public class Voice2StringMessageUtils {
 
     /**
      * 处理结果的回调接口，返回开始，结束，音量，解析文字四个结果
+     *
      * @param onVoiceResultCallback
      */
     public void setOnVoiceResultCallback(OnVoiceResultCallback onVoiceResultCallback) {
@@ -244,8 +235,8 @@ public class Voice2StringMessageUtils {
     /**
      * 停止监听
      */
-    public void stopListening(){
-        if(speechRecognizer != null && speechRecognizer.isListening()){
+    public void stopListening() {
+        if (speechRecognizer != null && speechRecognizer.isListening()) {
             speechRecognizer.stopListening();
         }
     }
