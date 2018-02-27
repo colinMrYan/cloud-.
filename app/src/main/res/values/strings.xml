@@ -397,6 +397,8 @@
     <string name="volume_name">网盘名称</string>
     <string name="all_volume_member_size">全部网盘成员(%1$d)</string>
     <string name="group">组</string>
+    <string name="volume_has_upload_permission">拥有上传/查看权限</string>
+    <string name="volume_has_watch_permission">拥有查看权限</string>
     <string name="people_num">%1$d人</string>
     <string name="sure_delete_volume">确定要删除所选网盘吗？</string>
     <string name="del_volume_member">删除网盘成员</string>

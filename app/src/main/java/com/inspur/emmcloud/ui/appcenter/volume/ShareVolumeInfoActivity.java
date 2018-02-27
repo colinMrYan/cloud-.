@@ -68,17 +68,27 @@ public class ShareVolumeInfoActivity extends BaseActivity {
     @ViewInject(R.id.group_list)
     private ScrollViewWithListView groupListView;
 
+    @ViewInject(R.id.group_watch_list)
+    private ScrollViewWithListView groupWatchListView;
+
     @ViewInject(R.id.volume_name_arrow)
     private ImageView volumeNameArrowImg;
 
     @ViewInject(R.id.group_layout)
     private LinearLayout groupLayout;
 
+    @ViewInject(R.id.group_watch_layout)
+    private LinearLayout groupWatchLayout;
+
     private VolumeInfoMemberAdapter memberAdapter;
     private VolumeInfoGroupAdapter groupAdapter;
+    private VolumeInfoGroupAdapter groupWatchAdapter;
     private boolean isOwner;
     private boolean isVolumeNameUpdate = false;
     private BroadcastReceiver receiver;
+
+    private static final int VOLUME_HAS_UPLOAD_AND_WATCH_PERMISSION = 0;
+    private static final int VOLUME_HAS_WATCH_PERMISSION = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -137,19 +147,29 @@ public class ShareVolumeInfoActivity extends BaseActivity {
 
     private void showVolumeDetail() {
         if (isOwner) {
-            groupLayout.setVisibility(View.VISIBLE);
-            groupAdapter = new VolumeInfoGroupAdapter(getApplicationContext(), volumeDetail.getGroupList());
-            groupListView.setAdapter(groupAdapter);
-            groupListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    Group group = volumeDetail.getGroupList().get(position);
-                    Bundle bundle = new Bundle();
-                    bundle.putSerializable("group",group);
-                    bundle.putSerializable("volumeMemList",volumeDetail.getMemberUidList());
-                    IntentUtils.startActivity(ShareVolumeInfoActivity.this,GroupInfoActivity.class,bundle);
-                }
-            });
+            if(volumeDetail.getGroupList().size() > 0){
+                groupLayout.setVisibility(View.VISIBLE);
+                groupAdapter = new VolumeInfoGroupAdapter(getApplicationContext(), volumeDetail.getGroupList());
+                groupListView.setAdapter(groupAdapter);
+                groupListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        openMemberDetail(position,VOLUME_HAS_UPLOAD_AND_WATCH_PERMISSION);
+                    }
+                });
+            }
+
+            if(volumeDetail.getGroupWatchList().size() > 0){
+                groupWatchLayout.setVisibility(View.VISIBLE);
+                groupWatchAdapter = new VolumeInfoGroupAdapter(getApplicationContext(),volumeDetail.getGroupWatchList());
+                groupWatchListView.setAdapter(groupWatchAdapter);
+                groupWatchListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        openMemberDetail(position,VOLUME_HAS_WATCH_PERMISSION);
+                    }
+                });
+            }
         }
         memberAdapter = new VolumeInfoMemberAdapter(getApplicationContext(), volumeDetail.getMemberUidList(), isOwner);
         memberGrid.setAdapter(memberAdapter);
@@ -183,6 +203,22 @@ public class ShareVolumeInfoActivity extends BaseActivity {
             }
         });
 
+    }
+
+    /**
+     * 打开详细成员列表
+     */
+    private void openMemberDetail(int position,int type) {
+        Group group = null;
+        if(type == VOLUME_HAS_UPLOAD_AND_WATCH_PERMISSION){
+            group = volumeDetail.getGroupList().get(position);
+        }else{
+            group = volumeDetail.getGroupWatchList().get(position);
+        }
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("group",group);
+        bundle.putSerializable("volumeMemList",volumeDetail.getMemberUidList());
+        IntentUtils.startActivity(ShareVolumeInfoActivity.this,GroupInfoActivity.class,bundle);
     }
 
     private void updateVolumeMemNum() {

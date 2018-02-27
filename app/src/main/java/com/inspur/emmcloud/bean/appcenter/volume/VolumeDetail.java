@@ -20,6 +20,7 @@ public class VolumeDetail {
     private ArrayList<String> memberUidList = new ArrayList<>();
     private String owner;
     private List<Group> groupList = new ArrayList<>();
+    private List<Group> groupWatchList = new ArrayList<>();
 
 
     public VolumeDetail(String response) {
@@ -35,7 +36,12 @@ public class VolumeDetail {
         JSONArray groupArray = JSONUtils.getJSONArray(obj,"groups",new JSONArray());
         for (int i=0;i<groupArray.length();i++){
             JSONObject groupObj  = JSONUtils.getJSONObject(groupArray,i,new JSONObject());
-            groupList.add(new Group(groupObj));
+            Group group = new Group(groupObj);
+            if(group.getPrivilege() > 4){
+                groupList.add(group);
+            }else{
+                groupWatchList.add(group);
+            }
         }
     }
 
@@ -74,6 +80,14 @@ public class VolumeDetail {
 
     public List<Group> getGroupList() {
         return groupList;
+    }
+
+    public List<Group> getGroupWatchList() {
+        return groupWatchList;
+    }
+
+    public void setGroupWatchList(List<Group> groupWatchList) {
+        this.groupWatchList = groupWatchList;
     }
 
     public void setGroupList(List<Group> groupList) {

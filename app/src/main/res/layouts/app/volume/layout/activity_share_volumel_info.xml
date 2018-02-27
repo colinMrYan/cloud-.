@@ -175,13 +175,41 @@
                     android:paddingBottom="10dp"
                     android:paddingTop="15dp"
                     android:paddingLeft="15dp"
-                    android:text="@string/group"
+                    android:text="@string/volume_has_upload_permission"
                     android:textColor="#666666"
                     android:textSize="15sp" />
 
 
                 <com.inspur.emmcloud.widget.ScrollViewWithListView
                     android:id="@+id/group_list"
+                    android:background="@android:color/white"
+                    android:dividerHeight="0dp"
+                    android:divider="@null"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                </com.inspur.emmcloud.widget.ScrollViewWithListView>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/group_watch_layout"
+                android:orientation="vertical"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="10dp"
+                    android:paddingTop="15dp"
+                    android:paddingLeft="15dp"
+                    android:text="@string/volume_has_watch_permission"
+                    android:textColor="#666666"
+                    android:textSize="15sp" />
+
+
+                <com.inspur.emmcloud.widget.ScrollViewWithListView
+                    android:id="@+id/group_watch_list"
                     android:background="@android:color/white"
                     android:dividerHeight="0dp"
                     android:divider="@null"

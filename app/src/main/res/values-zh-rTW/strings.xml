@@ -397,6 +397,8 @@
     <string name="volume_name">網盤名稱</string>
     <string name="all_volume_member_size">全部網盤成員(%1$d)</string>
     <string name="group">組</string>
+    <string name="volume_has_upload_permission">擁有上傳/查看許可權</string>
+    <string name="volume_has_watch_permission">擁有查看許可權</string>
     <string name="people_num">%1$d人</string>
     <string name="sure_delete_volume">確定要刪除所選網盤嗎？</string>
     <string name="del_volume_member">刪除網盤成員</string>

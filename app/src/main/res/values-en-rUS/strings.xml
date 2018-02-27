@@ -395,6 +395,8 @@
     <string name="volume_name">Shared Disk Name</string>
     <string name="all_volume_member_size">All Members(%1$d)</string>
     <string name="group">Group</string>
+    <string name="volume_has_upload_permission">Have upload/view permissions</string>
+    <string name="volume_has_watch_permission">Have view permissions</string>
     <string name="people_num">%1$dpeople</string>
     <string name="sure_delete_volume">Sure to delete?</string>
     <string name="del_volume_member">Delete Member</string>
