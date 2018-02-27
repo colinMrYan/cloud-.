@@ -179,6 +179,7 @@
                     android:textColor="#666666"
                     android:textSize="15sp" />
 
+
                 <com.inspur.emmcloud.widget.ScrollViewWithListView
                     android:id="@+id/group_list"
                     android:background="@android:color/white"
