@@ -5,6 +5,7 @@ import android.os.Environment;
 import android.webkit.WebView;
 
 import com.inspur.emmcloud.config.MyAppConfig;
+import com.inspur.emmcloud.util.common.FileUtils;
 
 import java.io.File;
 import java.math.BigDecimal;
@@ -66,7 +67,7 @@ public class DataCleanManager {
 	public static void cleanApplicationData(Context context, String... filepath) {
 		cleanInternalCache(context);
 		cleanExternalCache(context);
-//		cleanWebViewCache(context);
+		cleanWebViewCache(context);
 		cleanFiles(context);
 		for (String filePath : filepath) {
 			DeleteFile(new File(filePath));
@@ -116,6 +117,15 @@ public class DataCleanManager {
 		WebView webView = new WebView(context);
 		webView.clearCache(true);
 		webView.clearHistory();
+		try {
+			context.deleteDatabase("webview.db");
+			context.deleteDatabase("webviewCache.db");
+			File webviewCacheFile = context.getDir("database", 0);
+			FileUtils.deleteFile(webviewCacheFile.getPath());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
 
 	}
 
