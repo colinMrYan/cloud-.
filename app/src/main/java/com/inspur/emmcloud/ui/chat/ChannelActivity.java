@@ -411,15 +411,17 @@ public class ChannelActivity extends BaseActivity {
             public void handleMessage(Message msg) {
                 switch (msg.what) {
                     case HAND_CALLBACK_MESSAGE: // 接收推送的消息·
-                        Msg pushMsg = (Msg) msg.obj;
-                        if (cid.equals(pushMsg.getCid())) {
-                            MsgReadIDCacheUtils.saveReadedMsg(ChannelActivity.this,
-                                    pushMsg.getCid(), pushMsg.getMid());
-                            if (!msgList.contains(pushMsg) && !pushMsg.getTmpId().equals(AppUtils.getMyUUID(getApplicationContext()))) {
-                                msgList.add(pushMsg);
-                                adapter.setMsgList(msgList);
-                                adapter.notifyItemInserted(msgList.size()-1);
-                                msgListView.MoveToPosition(msgList.size() - 1);
+                        if (msg.arg1 == 0){
+                            Msg pushMsg = (Msg) msg.obj;
+                            if (cid.equals(pushMsg.getCid())) {
+                                MsgReadIDCacheUtils.saveReadedMsg(ChannelActivity.this,
+                                        pushMsg.getCid(), pushMsg.getMid());
+                                if (!msgList.contains(pushMsg) && !pushMsg.getTmpId().equals(AppUtils.getMyUUID(getApplicationContext()))) {
+                                    msgList.add(pushMsg);
+                                    adapter.setMsgList(msgList);
+                                    adapter.notifyItemInserted(msgList.size()-1);
+                                    msgListView.MoveToPosition(msgList.size() - 1);
+                                }
                             }
                         }
                         break;

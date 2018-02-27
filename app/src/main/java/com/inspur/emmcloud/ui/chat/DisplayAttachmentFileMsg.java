@@ -1,0 +1,159 @@
+package com.inspur.emmcloud.ui.chat;
+
+import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.api.APIDownloadCallBack;
+import com.inspur.emmcloud.api.APIUri;
+import com.inspur.emmcloud.bean.chat.MsgContentAttachmentFile;
+import com.inspur.emmcloud.bean.chat.MsgRobot;
+import com.inspur.emmcloud.config.MyAppConfig;
+import com.inspur.emmcloud.util.common.FileUtils;
+import com.inspur.emmcloud.util.common.ToastUtils;
+import com.inspur.emmcloud.util.privates.DownLoaderUtils;
+import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
+import com.inspur.emmcloud.widget.HorizontalProgressBarWithNumber;
+import com.inspur.emmcloud.widget.RoundAngleImageView;
+
+import org.xutils.common.Callback.ProgressCallback;
+
+import java.io.File;
+
+/**
+ * DisplayAttachmentFileMsg
+ *
+ * @author Fortune Yu 展示文件卡片 2016-08-19
+ */
+public class DisplayAttachmentFileMsg {
+    /**
+     * 文件卡片
+     *
+     * @param context
+     * @param convertView
+     * @param msg
+     */
+    public static View getView(final Context context,
+                               final MsgRobot msg, boolean isComment) {
+        View convertView = LayoutInflater.from(context).inflate(
+                isComment? R.layout.child_msg_res_file_card_view: R.layout.chat_msg_card_child_res_file_view, null);
+        TextView fileTitleText = (TextView) convertView
+                .findViewById(R.id.file_name_text);
+        TextView fileSizeText = (TextView) convertView
+                .findViewById(R.id.file_size_text);
+        final ImageView fileDownLoadImg = (ImageView) convertView
+                .findViewById(R.id.filecard_download_img);
+        final MsgContentAttachmentFile msgContentFile = msg.getMsgContentAttachmentFile();
+        RoundAngleImageView roundAngleImageView = (RoundAngleImageView) convertView
+                .findViewById(R.id.file_type_img);
+        ImageDisplayUtils.getInstance().displayImage(roundAngleImageView, "drawable://" + FileUtils.getIconResId(msgContentFile.getCategory()));
+        fileTitleText.setText(msgContentFile.getName());
+        fileSizeText.setText(FileUtils.formatFileSize(msgContentFile.getSize()));
+        File dir = new File(MyAppConfig.LOCAL_DOWNLOAD_PATH);
+        if (!dir.exists()) {
+            dir.mkdir();
+        }
+        final String target = MyAppConfig.LOCAL_DOWNLOAD_PATH + msgContentFile.getName();
+
+        if (FileUtils.isFileExist(target) || FileUtils.isFileExist(msgContentFile.getMedia())) {
+            fileDownLoadImg.setVisibility(View.GONE);
+        } else {
+            fileDownLoadImg.setVisibility(View.VISIBLE);
+        }
+        final HorizontalProgressBarWithNumber fileProgressBar = (HorizontalProgressBarWithNumber) convertView
+                .findViewById(R.id.file_download_progressbar);
+        fileProgressBar.setTag(target);
+        fileProgressBar.setVisibility(View.VISIBLE);
+        convertView.findViewById(R.id.header_layout)
+                .setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if ((0 < fileProgressBar.getProgress())
+                                && (fileProgressBar.getProgress() < 100)) {
+                            return;
+                        }
+                        APIDownloadCallBack progressCallback = new APIDownloadCallBack(context, msgContentFile.getMedia()) {
+                            @Override
+                            public void callbackStart() {
+                                if ((fileProgressBar.getTag() != null)
+                                        && (fileProgressBar.getTag() == target)) {
+                                    fileProgressBar.setVisibility(View.VISIBLE);
+                                } else {
+                                    fileProgressBar
+                                            .setVisibility(View.INVISIBLE);
+                                }
+                            }
+
+                            @Override
+                            public void callbackLoading(long total, long current, boolean isUploading) {
+                                if (total == 0) {
+                                    total = 1;
+                                }
+                                int progress = (int) ((current * 100) / total);
+                                if (!(fileProgressBar.getVisibility() == View.INVISIBLE)) {
+                                    fileProgressBar.setVisibility(View.VISIBLE);
+                                }
+                                fileProgressBar.setProgress(progress);
+                                fileProgressBar.refreshDrawableState();
+                            }
+
+                            @Override
+                            public void callbackSuccess(File file) {
+                                fileProgressBar.setVisibility(View.INVISIBLE);
+                                fileDownLoadImg.setVisibility(View.GONE);
+                                ToastUtils.show(
+                                        context,
+                                        context.getString(R.string.chat_file_download_success));
+                            }
+
+                            @Override
+                            public void callbackError(Throwable arg0, boolean arg1) {
+                                fileProgressBar.setVisibility(View.GONE);
+                                ToastUtils.show(context, context
+                                        .getString(R.string.download_fail));
+                            }
+
+                            @Override
+                            public void callbackCanceled(CancelledException e) {
+
+                            }
+
+                        };
+                        showOrDownLoadFile(context, msgContentFile.getMedia(), target,
+                                fileDownLoadImg, progressCallback);
+                    }
+                });
+        return convertView;
+    }
+
+    /**
+     * 展示或下载文件
+     *
+     * @param context
+     * @param downloadUri
+     * @param target
+     * @param fileDownLoadImg
+     * @param fileProgressBar
+     */
+    protected static void showOrDownLoadFile(Context context,
+                                             String downloadUri, String target, ImageView fileDownLoadImg,
+                                             ProgressCallback<File> fileProgressBar) {
+        DownLoaderUtils downLoaderUtils = new DownLoaderUtils();
+        if (FileUtils.isFileExist(target)) {
+            FileUtils.openFile(context, target);
+        } else if (FileUtils.isFileExist(downloadUri)) {
+            fileDownLoadImg.setVisibility(View.GONE);
+            FileUtils.openFile(context, downloadUri);
+        } else {
+            String completeDownloadUrl = APIUri.getPreviewUrl(downloadUri);
+            downLoaderUtils.startDownLoad(completeDownloadUrl, target,
+                    fileProgressBar);
+        }
+
+    }
+
+}

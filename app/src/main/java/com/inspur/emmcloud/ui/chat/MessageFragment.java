@@ -582,15 +582,18 @@ public class MessageFragment extends Fragment{
                 switch (msg.what) {
                     case RECEIVE_MSG:
                         // 接收到新的消息
-                        Msg receivedMsg = (Msg) msg.obj;
-                        Channel receiveMsgChannel = ChannelCacheUtils.getChannel(
-                                getActivity(), receivedMsg.getCid());
-                        if (receiveMsgChannel == null) {
-                            getChannelList();
-                        } else {
-                            cacheReceiveMsg(receiveMsgChannel, receivedMsg);
-                            //addChannelToList(receivedMsg, receiveMsgChannel);
-                            sortChannelList();
+                        if (msg.arg1 == 0){
+                            Msg receivedMsg = (Msg) msg.obj;
+                            Channel receiveMsgChannel = ChannelCacheUtils.getChannel(
+                                    getActivity(), receivedMsg.getCid());
+                            if (receiveMsgChannel == null) {
+                                getChannelList();
+                            } else {
+                                cacheReceiveMsg(receiveMsgChannel, receivedMsg);
+                                sortChannelList();
+                            }
+                        }else {
+
                         }
                         break;
                     case RERESH_GROUP_ICON:

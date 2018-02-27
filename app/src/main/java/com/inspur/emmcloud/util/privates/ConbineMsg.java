@@ -4,7 +4,10 @@ import android.content.Context;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.bean.chat.Msg;
+import com.inspur.emmcloud.bean.chat.MsgRobot;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
+
+import org.json.JSONObject;
 
 public class ConbineMsg {
 
@@ -45,5 +48,31 @@ public class ConbineMsg {
 		}
 
 		return msgSend;
+	}
+
+	public static MsgRobot conbineTextPlainMsgRobot(String text,String cid,String fakeMessageId){
+		MsgRobot msgRobot = new MsgRobot();
+		msgRobot.setChannel(cid);
+		msgRobot.setMessage("1.0");
+		msgRobot.setId(fakeMessageId);
+		msgRobot.setType("text/plain");
+		JSONObject fromObj = new JSONObject();
+		try {
+			fromObj.put("user",MyApplication.getInstance().getUid());
+			fromObj.put("enterprise",MyApplication.getInstance().getTanent());
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+		msgRobot.setFrom(fromObj.toString());
+		msgRobot.setTo("");
+		msgRobot.setState("");
+		JSONObject contentObj = new JSONObject();
+		try {
+			contentObj.put("text",text);
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+		msgRobot.setContent(contentObj.toString());
+		return  msgRobot;
 	}
 }
