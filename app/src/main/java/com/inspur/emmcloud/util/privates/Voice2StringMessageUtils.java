@@ -119,19 +119,19 @@ public class Voice2StringMessageUtils {
         }
 
         // 设置语音前端点:静音超时时间，即用户多长时间不说话则当做超时处理
-        speechRecognizer.setParameter(SpeechConstant.VAD_BOS, PreferencesUtils.getString(context,"iat_vadbos_preference", "5000"));
+        speechRecognizer.setParameter(SpeechConstant.VAD_BOS, "5000");
 
         // 设置语音后端点:后端点静音检测时间，即用户停止说话多长时间内即认为不再输入， 自动停止录音
-        speechRecognizer.setParameter(SpeechConstant.VAD_EOS, PreferencesUtils.getString(context,"iat_vadeos_preference", "1800"));
+        speechRecognizer.setParameter(SpeechConstant.VAD_EOS, "1800");
 
         // 设置标点符号,设置为"0"返回结果无标点,设置为"1"返回结果有标点
-        speechRecognizer.setParameter(SpeechConstant.ASR_PTT, PreferencesUtils.getString(context,"iat_punc_preference", "0"));
+        speechRecognizer.setParameter(SpeechConstant.ASR_PTT,  "0");
 
         //根据IOS参数新加参数
-        speechRecognizer.setParameter(SpeechConstant.KEY_SPEECH_TIMEOUT,PreferencesUtils.getString(context,"iat_speech_timeout","-1"));
-        speechRecognizer.setParameter(SpeechConstant.SAMPLE_RATE,PreferencesUtils.getString(context,"iat_sample_rate","16000"));
-        speechRecognizer.setParameter(SpeechConstant.DOMAIN,PreferencesUtils.getString(context,"iat_domain","iat"));
-        speechRecognizer.setParameter(SpeechConstant.PARAMS,PreferencesUtils.getString(context,"iat_params","0"));
+        speechRecognizer.setParameter(SpeechConstant.KEY_SPEECH_TIMEOUT,"-1");
+        speechRecognizer.setParameter(SpeechConstant.SAMPLE_RATE,"16000");
+        speechRecognizer.setParameter(SpeechConstant.DOMAIN,"iat");
+        speechRecognizer.setParameter(SpeechConstant.PARAMS,"0");
 
         // 设置音频保存路径，保存音频格式支持pcm、wav，设置路径为sd卡请注意WRITE_EXTERNAL_STORAGE权限
         // 注：AUDIO_FORMAT参数语记需要更新版本才能生效
