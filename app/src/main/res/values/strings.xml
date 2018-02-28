@@ -428,6 +428,7 @@
     <string name="disk">网盘</string>
     <string name="volume_file_filter">分类筛选</string>
     <string name="volume_group_name">组名称</string>
+    <string name="volume_file_permission">权限管理</string>
 
 
     <!-- 我的页面部分 -->

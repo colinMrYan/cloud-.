@@ -1315,4 +1315,40 @@ public class MyAppAPIService {
         });
 
     }
+
+    /**
+     * 根据volumeId获取文件夹的权限组
+     * @param volumeId
+     */
+    public void getVolumeFileGroup(final String volumeId, final String path){
+        final String url = APIUri.getVolumeFileGroupUrl(volumeId)+"?"+path;
+        RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
+        x.http().get(params, new APICallback(context, url) {
+            @Override
+            public void callbackSuccess(String arg0) {
+
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+
+            }
+
+            @Override
+            public void callbackTokenExpire() {
+                new OauthUtils(new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        getVolumeFileGroup(volumeId,path);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                }, context).refreshToken(url);
+            }
+        });
+
+    }
 }

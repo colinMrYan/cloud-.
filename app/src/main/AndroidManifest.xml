@@ -608,6 +608,8 @@
         <activity
             android:name=".ui.appcenter.volume.ShareVolumeNameModifyActivity"
             android:screenOrientation="portrait"></activity>
+        <activity android:name=".ui.appcenter.volume.VolumeFilePermissionManagerActivity"
+            android:screenOrientation="portrait"/>
 
 
         <!-- service -->

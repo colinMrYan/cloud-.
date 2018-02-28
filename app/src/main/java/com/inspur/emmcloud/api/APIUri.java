@@ -624,6 +624,15 @@ public class APIUri {
     public static String getCopyVolumeFileUrl(String volumeId){
         return URL_BASE_VOLUME + "/" + volumeId +"/file/duplication";
     }
+
+    /**
+     * 根据volumeId
+     * @param volumeId
+     * @return
+     */
+    public static String getVolumeFileGroupUrl(String volumeId){
+        return URL_BASE_VOLUME + "/" + volumeId + "/file/group/privilege";
+    }
 /************************************************************************工作****************************************************************************/
     /***************会议接口*****************************/
     /**
