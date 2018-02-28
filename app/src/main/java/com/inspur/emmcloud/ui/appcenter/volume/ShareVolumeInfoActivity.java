@@ -158,7 +158,6 @@ public class ShareVolumeInfoActivity extends BaseActivity {
                     }
                 });
             }
-
             if(volumeDetail.getGroupWatchList().size() > 0){
                 groupWatchLayout.setVisibility(View.VISIBLE);
                 groupWatchAdapter = new VolumeInfoGroupAdapter(getApplicationContext(),volumeDetail.getGroupWatchList());
