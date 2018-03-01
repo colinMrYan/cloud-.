@@ -28,10 +28,12 @@ import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeFileListResult;
 import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeFileUploadTokenResult;
 import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeGroupResult;
 import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeListResult;
+import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeResultWithPermissionResult;
 import com.inspur.emmcloud.bean.appcenter.volume.Volume;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeDetail;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
 import com.inspur.emmcloud.interf.OauthCallBack;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.privates.OauthUtils;
 
 import org.json.JSONArray;
@@ -1321,17 +1323,17 @@ public class MyAppAPIService {
      * @param volumeId
      */
     public void getVolumeFileGroup(final String volumeId, final String path){
-        final String url = APIUri.getVolumeFileGroupUrl(volumeId)+"?"+path;
+        final String url = APIUri.getVolumeFileGroupUrl(volumeId)+"?path="+path;
         RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
         x.http().get(params, new APICallback(context, url) {
             @Override
             public void callbackSuccess(String arg0) {
-
+                apiInterface.returnVolumeGroupSuccess(new GetVolumeResultWithPermissionResult(arg0));
             }
 
             @Override
             public void callbackFail(String error, int responseCode) {
-
+                apiInterface.returnVolumeGroupFail(error,responseCode);
             }
 
             @Override

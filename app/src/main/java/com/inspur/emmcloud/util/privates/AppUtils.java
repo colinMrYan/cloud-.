@@ -500,8 +500,6 @@ public class AppUtils {
                 Environment.MEDIA_MOUNTED)){
             return true;
         }
-        ToastUtils.show(context,
-                R.string.filetransfer_sd_not_exist);
         return false;
 
     }
