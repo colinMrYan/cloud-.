@@ -324,7 +324,7 @@ public class APIUri {
      * @return
      */
     public static String getMyAppWidgetsUrl() {
-        return MyApplication.getInstance().getClusterEmm() + "v3.0/api/app/recommend/apps";
+        return MyApplication.getInstance().getClusterEmm() + "api/mam/v6.0/app/recommend/apps";
     }
 
     /**

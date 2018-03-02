@@ -84,6 +84,7 @@ public class LoginMoreActivity extends BaseActivity {
                     public void onClick(QMUIDialog dialog, int index) {
                         dialog.dismiss();
                         PreferencesUtils.putString(LoginMoreActivity.this, "login_enterprise_name", "");
+                        PreferencesUtils.putString(LoginMoreActivity.this,"cloud_idm",Constant.DEFAULT_CLUSTER_ID);
                         MyApplication.getInstance().setCloudId(Constant.DEFAULT_CLUSTER_ID);
                         finish();
                     }
@@ -135,6 +136,7 @@ public class LoginMoreActivity extends BaseActivity {
                         intent.putExtra("loginEnterprise", loginMoreBean.getName());
                         setResult(RESULT_OK, intent);
                         MyApplication.getInstance().setCloudId(StringUtils.isBlank(loginMoreBean.getUrl()) ? Constant.DEFAULT_CLUSTER_ID : (loginMoreBean.getUrl()+"/"));
+                        PreferencesUtils.putString(LoginMoreActivity.this,"cloud_idm",StringUtils.isBlank(loginMoreBean.getUrl()) ? Constant.DEFAULT_CLUSTER_ID : (loginMoreBean.getUrl()+"/"));
                         findViewById(R.id.login_more_reset_btn).setVisibility(View.VISIBLE);
                         PreferencesUtils.putString(LoginMoreActivity.this, "login_enterprise_name", loginMoreBean.getName());
                         finish();
