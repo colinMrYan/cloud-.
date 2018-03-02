@@ -55,7 +55,6 @@ import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StateBarUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
-import com.inspur.emmcloud.util.privates.AppConfigUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.ClientIDUtils;
 import com.inspur.emmcloud.util.privates.ECMShortcutBadgeNumberManagerUtils;
@@ -146,12 +145,12 @@ public class IndexActivity extends BaseFragmentActivity implements
      * 初始化
      */
     private void getData() {
-        new AppConfigUtils(IndexActivity.this, new CommonCallBack() {
-            @Override
-            public void execute() {
-                startLocationService();
-            }
-        }).getAppConfig(); //获取整个应用的配置信息,获取完成后启动位置服务
+//        new AppConfigUtils(IndexActivity.this, new CommonCallBack() {
+//            @Override
+//            public void execute() {
+//                startLocationService();
+//            }
+//        }).getAppConfig(); //获取整个应用的配置信息,获取完成后启动位置服务
         String contactLastUpdateTime = ContactCacheUtils
                 .getLastUpdateTime(IndexActivity.this);
         isHasCacheContact = !StringUtils.isBlank(contactLastUpdateTime);

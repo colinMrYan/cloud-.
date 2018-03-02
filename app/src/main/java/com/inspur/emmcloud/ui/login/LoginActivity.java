@@ -18,9 +18,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.BaseActivity;
-import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.util.common.EditTextUtils;
 import com.inspur.emmcloud.util.common.InputMethodUtils;
@@ -122,8 +120,6 @@ public class LoginActivity extends BaseActivity {
         enterpriseTextView.setVisibility(StringUtils.isBlank(enterpriseName)
                 ? View.INVISIBLE : View.VISIBLE);
         enterpriseTextView.setText(enterpriseName);
-        String clusterId = PreferencesUtils.getString(this,"cloud_idm", Constant.DEFAULT_CLUSTER_ID);
-        ((MyApplication)getApplicationContext()).setCloudId(StringUtils.isBlank(clusterId)? Constant.DEFAULT_CLUSTER_ID:clusterId);
     }
 
     @Override

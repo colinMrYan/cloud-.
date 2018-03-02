@@ -88,6 +88,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
     private List<OauthCallBack> callBackList = new ArrayList<OauthCallBack>();
     private String uid;
     private String accessToken;
+    private String refreshToken;
     private Enterprise currentEnterprise;
     private Map<String, String> userPhotoUrlMap;
     private static MyApplication instance;
@@ -96,9 +97,6 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
     private String tanent;
     private String clusterEcm = Constant.DEFAULT_CLUSTER_ECM;//多云ecm服务
     private String clusterEmm = Constant.DEFAULT_CLUSTER_EMM;//多云emm服务
-    private String cloudId = Constant.DEFAULT_CLUSTER_ID;//多云认证
-
-
 
     public void onCreate() {
         super.onCreate();
@@ -110,12 +108,10 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
     }
 
     public String getCloudId() {
-        return cloudId;
+        String clusterId = PreferencesUtils.getString(this,"cloud_idm", Constant.DEFAULT_CLUSTER_ID);
+        return StringUtils.isBlank(clusterId)? Constant.DEFAULT_CLUSTER_ID:clusterId;
     }
 
-    public void setCloudId(String cloudId) {
-        this.cloudId = cloudId;
-    }
 
     private void init() {
         // TODO Auto-generated method stub
@@ -143,6 +139,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
                 "isContactReady", false);
         uid = PreferencesUtils.getString(getApplicationContext(), "userID");
         accessToken = PreferencesUtils.getString(getApplicationContext(), "accessToken", "");
+        refreshToken = PreferencesUtils.getString(getApplicationContext(), "refreshToken", "");
         //科大讯飞语音SDK初始化
         SpeechUtility.createUtility(this, SpeechConstant.APPID +"=5a6001bf");
     }
@@ -367,6 +364,10 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
 
     public String getAccessToken() {
         return accessToken;
+    }
+
+    public String getRefreshToken() {
+        return refreshToken;
     }
 
     public void setAccessToken(String accessToken) {

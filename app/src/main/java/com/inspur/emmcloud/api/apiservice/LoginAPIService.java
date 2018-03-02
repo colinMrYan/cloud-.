@@ -85,7 +85,7 @@ public class LoginAPIService {
 	 */
 	public void refreshToken() {
 		String completeUrl = APIUri.getOauthSigninUrl();
-		String refreshToken = MyApplication.getInstance().getAccessToken();
+		String refreshToken = MyApplication.getInstance().getRefreshToken();
 		RequestParams params = new RequestParams(completeUrl);
 		params.addParameter("client_id", "com.inspur.ecm.client.android");
 		params.addParameter("client_secret",
