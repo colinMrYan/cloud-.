@@ -113,7 +113,6 @@ public class LoginMoreActivity extends BaseActivity {
 
     /**
      * 确认，取消dialog
-     *
      * @param msg
      */
     private void showConfirmDialog(String msg) {
