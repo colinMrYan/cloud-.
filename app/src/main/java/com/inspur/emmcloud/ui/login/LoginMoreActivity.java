@@ -118,7 +118,7 @@ public class LoginMoreActivity extends BaseActivity {
     private void showConfirmDialog(String msg) {
         final LoginMoreBean loginMoreBean = new LoginMoreBean(msg);
         new MyQMUIDialog.MessageDialogBuilder(LoginMoreActivity.this)
-                .setMessage("扫描到["+loginMoreBean.getName()+"]确定添加吗？")
+                .setMessage(getString(R.string.login_more_scan_find_left)+loginMoreBean.getName()+getString(R.string.login_more_scan_find_right))
                 .addAction(R.string.cancel, new QMUIDialogAction.ActionListener() {
                     @Override
                     public void onClick(QMUIDialog dialog, int index) {

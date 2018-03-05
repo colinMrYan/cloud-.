@@ -961,4 +961,7 @@
     <string name="clear">清除</string>
     <string name="confirm_clear">确认清除？</string>
     <string name="login_more_current_enterprise">当前登录系统：</string>
+
+    <string name="login_more_scan_find_left">扫描到[</string>
+    <string name="login_more_scan_find_right">]确定添加吗？</string>
 </resources>
