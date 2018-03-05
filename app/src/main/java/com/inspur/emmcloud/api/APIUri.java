@@ -396,7 +396,7 @@ public class APIUri {
      * @return
      */
     public static String getGSMsgSchemeUrl(String host){
-        return "https://emm.inspur.com/api/mam/v3.0/gs_sso/msg_uri?id=" + host;
+        return getEMMBaseUrl() + "api/mam/v3.0/gs_sso/msg_uri?id=" + host;
     }
 
     /*****************************************ReactNative**************************************/
@@ -940,7 +940,7 @@ public class APIUri {
      * @return
      */
     public static String getDeviceRegisterUrl(Context context){
-        return "https://emm.inspur.com/app/mdm/v3.0/loadForRegister?udid="+ AppUtils.getMyUUID(context);
+        return getEMMBaseUrl() + "app/mdm/v3.0/loadForRegister?udid="+ AppUtils.getMyUUID(context);
     }
 
     /**
