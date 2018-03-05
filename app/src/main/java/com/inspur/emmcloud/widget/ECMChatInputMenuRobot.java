@@ -150,15 +150,13 @@ public class ECMChatInputMenuRobot extends LinearLayout {
                     results = "";
                 }
                 if (!StringUtils.isBlank(results)){
-                    chatInputMenuListener.onSendMsg(results, new ArrayList<String>(), new ArrayList<String>());
+                    chatInputMenuListener.onSendMsg(results);
                 }
             }
 
             @Override
             public void onVoiceFinish() {
-                voiceInputLayout.setVisibility(View.GONE);
-                voice2StringMessageUtils.stopListening();
-                stopVoiceReleaseMediaPlay();
+                stopVoiceInput();
             }
 
             @Override
@@ -206,10 +204,8 @@ public class ECMChatInputMenuRobot extends LinearLayout {
                 break;
             case R.id.send_msg_btn:
                 if (NetUtils.isNetworkConnected(getContext())) {
-                    List<String> urlList = getContentUrlList(inputEdit.getText().toString());
                     String content = inputEdit.getRichContent();
-                    List<String> mentionsUidList = getContentMentionUidList();
-                    chatInputMenuListener.onSendMsg(content, mentionsUidList, urlList);
+                    chatInputMenuListener.onSendMsg(content);
                     inputEdit.setText("");
                 }
                 break;
@@ -234,6 +230,10 @@ public class ECMChatInputMenuRobot extends LinearLayout {
             default:
                 break;
         }
+    }
+
+    public boolean isVoiceInput(){
+        return voiceInputLayout.getVisibility() == View.VISIBLE;
     }
 
 
@@ -374,14 +374,16 @@ public class ECMChatInputMenuRobot extends LinearLayout {
     /**
      * 停止识别，并播放停止提示音
      */
-    public void stopVoiceReleaseMediaPlay() {
+    public void stopVoiceInput() {
+        voiceInputLayout.setVisibility(View.GONE);
+        voice2StringMessageUtils.stopListening();
         volumeLevelImg.setImageLevel(10);
         mediaPlayerUtils.playVoiceOff();
     }
 
 
     public interface ChatInputMenuListener {
-        void onSendMsg(String content, List<String> mentionsUidList, List<String> urlList);
+        void onSendMsg(String content);
     }
 
 

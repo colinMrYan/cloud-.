@@ -3,11 +3,20 @@ package com.inspur.emmcloud.util.privates;
 import android.content.Context;
 
 import com.inspur.emmcloud.MyApplication;
+import com.inspur.emmcloud.bean.chat.Email;
 import com.inspur.emmcloud.bean.chat.Msg;
+import com.inspur.emmcloud.bean.chat.MsgContentAttachmentCard;
+import com.inspur.emmcloud.bean.chat.MsgContentTextPlain;
 import com.inspur.emmcloud.bean.chat.MsgRobot;
+import com.inspur.emmcloud.bean.chat.Phone;
+import com.inspur.emmcloud.bean.contact.Contact;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 
 import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ConbineMsg {
 
@@ -66,13 +75,45 @@ public class ConbineMsg {
 		msgRobot.setFrom(fromObj.toString());
 		msgRobot.setTo("");
 		msgRobot.setState("");
-		JSONObject contentObj = new JSONObject();
+		MsgContentTextPlain msgContentTextPlain = new MsgContentTextPlain();
+		msgContentTextPlain.setText(text);
+		msgRobot.setContent(msgContentTextPlain.toString());
+		return  msgRobot;
+	}
+
+	public static  MsgRobot conbineReplyAttachmentCardMsg(Contact contact,String cid,String from,String fakeMessageId){
+		MsgRobot msgRobot = new MsgRobot();
+		msgRobot.setChannel(cid);
+		msgRobot.setMessage("1.0");
+		msgRobot.setId(fakeMessageId);
+		msgRobot.setType("attachment/card");
+		JSONObject fromObj = new JSONObject();
 		try {
-			contentObj.put("text",text);
+			fromObj.put("user",from);
+			fromObj.put("enterprise",MyApplication.getInstance().getTanent());
 		}catch (Exception e){
 			e.printStackTrace();
 		}
-		msgRobot.setContent(contentObj.toString());
-		return  msgRobot;
+		msgRobot.setFrom(fromObj.toString());
+		msgRobot.setTo("");
+		msgRobot.setState("");
+		MsgContentAttachmentCard msgContentAttachmentCard = new MsgContentAttachmentCard();
+		msgContentAttachmentCard.setAvatar(MyApplication.getInstance().getUserPhotoUrl(contact.getInspurID()));
+		msgContentAttachmentCard.setFirstName(contact.getRealName());
+		msgContentAttachmentCard.setLastName("");
+		msgContentAttachmentCard.setOrganization(contact.getOrgName());
+		msgContentAttachmentCard.setTitle("");
+		LogUtils.jasonDebug("contact.getInspurID()="+contact.getInspurID());
+		msgContentAttachmentCard.setUid(contact.getInspurID());
+		Email email = new Email("工作",contact.getEmail());
+		List<Email> emailList = new ArrayList<>();
+		emailList.add(email);
+		msgContentAttachmentCard.setEmailList(emailList);
+		Phone phone = new Phone("工作",contact.getMobile());
+		List<Phone> phoneList = new ArrayList<>();
+		phoneList.add(phone);
+		msgContentAttachmentCard.setPhoneList(phoneList);
+		msgRobot.setContent(msgContentAttachmentCard.toString());
+		return msgRobot;
 	}
 }

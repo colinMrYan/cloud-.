@@ -24,13 +24,15 @@ import com.inspur.emmcloud.bean.chat.GetNewsImgResult;
 import com.inspur.emmcloud.bean.chat.GetSendMsgResult;
 import com.inspur.emmcloud.bean.chat.Msg;
 import com.inspur.emmcloud.bean.chat.MsgRobot;
+import com.inspur.emmcloud.bean.chat.Robot;
+import com.inspur.emmcloud.bean.contact.Contact;
 import com.inspur.emmcloud.bean.contact.GetSearchChannelGroupResult;
 import com.inspur.emmcloud.bean.system.PVCollectModel;
 import com.inspur.emmcloud.broadcastreceiver.MsgReceiver;
 import com.inspur.emmcloud.ui.contact.RobotInfoActivity;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
 import com.inspur.emmcloud.util.common.IntentUtils;
-import com.inspur.emmcloud.util.common.JSONUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
@@ -38,6 +40,7 @@ import com.inspur.emmcloud.util.privates.ConbineMsg;
 import com.inspur.emmcloud.util.privates.DirectChannelUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.util.privates.cache.ChannelCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.ContactCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MsgCacheUtil;
 import com.inspur.emmcloud.util.privates.cache.MsgReadIDCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.PVCollectModelCacheUtils;
@@ -45,9 +48,6 @@ import com.inspur.emmcloud.widget.ECMChatInputMenuRobot;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.RecycleViewForSizeChange;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
 
@@ -77,6 +77,7 @@ public class ChannelRobotActivity extends BaseActivity {
     private Handler handler;
     private MsgReceiver msgResvier;
     private ChatAPIService apiService;
+    private String robotUid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -154,8 +155,10 @@ public class ChannelRobotActivity extends BaseActivity {
      */
     private void setChannelTitle() {
         String title = channel.getTitle();
-        title = DirectChannelUtils.getRobotInfo(getApplicationContext(),
-                title).getName();
+        Robot robot = DirectChannelUtils.getRobotInfo(getApplicationContext(),
+                title);
+        title = robot.getName();
+        robotUid = robot.getId();
         headerText.setText(title);
     }
 
@@ -167,9 +170,9 @@ public class ChannelRobotActivity extends BaseActivity {
         chatInputMenu.setChatInputMenuListener(new ECMChatInputMenuRobot.ChatInputMenuListener() {
 
             @Override
-            public void onSendMsg(String content, List<String> mentionsUidList, List<String> urlList) {
+            public void onSendMsg(String content) {
                 // TODO Auto-generated method stub
-                sendTextMessage(content, mentionsUidList, urlList);
+                sendTextMessage(content);
             }
         });
     }
@@ -188,6 +191,29 @@ public class ChannelRobotActivity extends BaseActivity {
         msgListView.setLayoutManager(linearLayoutManager);
         msgListView.setAdapter(adapter);
         msgListView.MoveToPosition(msgList.size() - 1);
+        adapter.setItemClickListener(new ChannelMsgAdapterRobot.MyItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                MsgRobot msg = msgList.get(position);
+                //当消息处于发送中状态时无法点击
+                if (msg.getSendStatus() != 1) {
+                    return;
+                }
+                String msgType = msg.getType();
+                switch (msgType) {
+                    case "attachment/card":
+                        Bundle bundle = new Bundle();
+                        String uid = msg.getMsgContentAttachmentCard().getUid();
+                        LogUtils.jasonDebug("uid="+uid);
+                        bundle.putString("uid", uid);
+                        IntentUtils.startActivity(ChannelRobotActivity.this,
+                                UserInfoActivity.class, bundle);
+                        break;
+                    default:
+                        break;
+                }
+            }
+        });
 
     }
 
@@ -216,7 +242,7 @@ public class ChannelRobotActivity extends BaseActivity {
             public void handleMessage(Message msg) {
                 switch (msg.what) {
                     case HAND_CALLBACK_MESSAGE: // 接收推送的消息·
-                        if (msg.arg1 == 1){
+                        if (msg.arg1 == 1) {
                             MsgRobot pushMsg = (MsgRobot) msg.obj;
                             if (cid.equals(pushMsg.getChannel())) {
                                 MsgReadIDCacheUtils.saveReadedMsg(ChannelRobotActivity.this,
@@ -328,23 +354,21 @@ public class ChannelRobotActivity extends BaseActivity {
     /**
      * 点击发送按钮后发送消息的逻辑
      */
-    private void sendTextMessage(String content, List<String> mentionsUidList, List<String> urlList) {
-        JSONObject richTextObj = new JSONObject();
-        JSONArray mentionArray = JSONUtils.toJSONArray(mentionsUidList);
-        JSONArray urlArray = JSONUtils.toJSONArray(urlList);
-        try {
-            richTextObj.put("source", content);
-            richTextObj.put("mentions", mentionArray);
-            richTextObj.put("urls", urlArray);
-            richTextObj.put("tmpId", AppUtils.getMyUUID(ChannelRobotActivity.this));
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+    private void sendTextMessage(String content) {
         String fakeMessageId = System.currentTimeMillis() + "";
         MsgRobot localMsg = ConbineMsg.conbineTextPlainMsgRobot(content,
                 cid, fakeMessageId);
-        addLocalMessage(localMsg);
-        sendMsg(richTextObj.toString(), "txt_rich", fakeMessageId);
+        if (content.length() < 4 && StringUtils.isChinese(content)) {
+            Contact contact = ContactCacheUtils.getContactByUserName(getApplicationContext(), content);
+            if (contact != null) {
+                addLocalMessage(localMsg, 1);
+                MsgRobot replContactCardMsg = ConbineMsg.conbineReplyAttachmentCardMsg(contact, cid, robotUid, fakeMessageId);
+                addLocalMessage(replContactCardMsg, 1);
+                return;
+            }
+        }
+        addLocalMessage(localMsg, 0);
+        //sendMsg(richTextObj.toString(), "txt_rich", fakeMessageId);
 
     }
 
@@ -353,10 +377,10 @@ public class ChannelRobotActivity extends BaseActivity {
      *
      * @param msg
      */
-    private void addLocalMessage(MsgRobot msg) {
+    private void addLocalMessage(MsgRobot msg, int status) {
         if (msg != null) {
             //本地添加的消息设置为正在发送状态
-            msg.setSendStatus(0);
+            msg.setSendStatus(status);
             msgList.add(msg);
             adapter.setMsgList(msgList);
             adapter.notifyItemInserted(msgList.size() - 1);
@@ -394,8 +418,12 @@ public class ChannelRobotActivity extends BaseActivity {
     @Override
     public void onBackPressed() {
         // TODO Auto-generated method stub
-        if (chatInputMenu.isAddMenuLayoutShow()){
+        if (chatInputMenu.isAddMenuLayoutShow()) {
             chatInputMenu.hideAddMenuLayout();
+            return;
+        }
+        if (chatInputMenu.isVoiceInput()) {
+            chatInputMenu.stopVoiceInput();
             return;
         }
         super.onBackPressed();
@@ -474,7 +502,7 @@ public class ChannelRobotActivity extends BaseActivity {
         @Override
         public void returnSendMsgSuccess(GetSendMsgResult getSendMsgResult,
                                          String fakeMessageId) {
-           // replaceWithRealMsg(fakeMessageId, getSendMsgResult.getMsg());
+            // replaceWithRealMsg(fakeMessageId, getSendMsgResult.getMsg());
         }
 
         @Override

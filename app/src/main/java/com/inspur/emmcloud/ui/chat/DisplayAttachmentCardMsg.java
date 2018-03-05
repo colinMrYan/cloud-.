@@ -7,6 +7,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.bean.chat.Email;
 import com.inspur.emmcloud.bean.chat.MsgContentAttachmentCard;
 import com.inspur.emmcloud.bean.chat.MsgRobot;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
@@ -37,7 +38,7 @@ public class DisplayAttachmentCardMsg {
         MsgContentAttachmentCard msgContentCard = msg.getMsgContentAttachmentCard();
         ImageDisplayUtils.getInstance().displayImage(cardPhotoImg,msgContentCard.getAvatar(), R.drawable.icon_person_default);
         cardNameText.setText(msgContentCard.getFirstName()+msgContentCard.getLastName());
-       List<MsgContentAttachmentCard.Email> emailList = msgContentCard.getEmailList();
+       List<Email> emailList = msgContentCard.getEmailList();
        if (emailList.size()>0){
            cardEmailText.setText(emailList.get(0).getAddress());
        }

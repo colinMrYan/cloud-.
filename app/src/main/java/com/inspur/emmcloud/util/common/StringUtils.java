@@ -373,4 +373,23 @@ public class StringUtils {
             return false;
         }
     }
+
+
+    /**
+     * 是否为纯汉字
+     * @param str
+     * @return
+     */
+    public static boolean isChinese(String str){
+        boolean isChinese = true;
+        for (char c : str.toCharArray()) {
+            if (c < 0x4E00 || c > 0x9FA5){
+                isChinese = false;
+                break;
+            }
+        }
+        return isChinese;
+    }
+
+
 }

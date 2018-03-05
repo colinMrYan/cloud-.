@@ -91,7 +91,7 @@ public class FindFragment extends Fragment implements DefaultHardwareBackBtnHand
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        userId = ((MyApplication) getActivity().getApplication()).getUid();
+        userId = ((MyApplication) getActivity().getApplicationContext()).getUid();
 //        reactCurrentFilePath = MyAppConfig.getReactCurrentFilePath(getActivity(), userId);
         reactCurrentFilePath = MyAppConfig.getReactAppFilePath(getActivity(),userId,"discover");
         if (!FileUtils.isFileExist(reactCurrentFilePath + "/index.android.bundle")) {

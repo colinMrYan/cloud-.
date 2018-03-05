@@ -17,7 +17,14 @@ public class MsgContentTextPlain {
     public MsgContentTextPlain(String Json){
         JSONObject object = JSONUtils.getJSONObject(Json);
         text = JSONUtils.getString(object,"text","");
-        mentionsMap = JSONUtils.parseKeyAndValueToMap(object);
+        JSONObject mentionObj = JSONUtils.getJSONObject(object,"metions",null);
+        if (mentionObj != null){
+            mentionsMap = JSONUtils.parseKeyAndValueToMap(object);
+        }
+    }
+
+    public MsgContentTextPlain(){
+
     }
 
     public String getText() {
@@ -34,5 +41,19 @@ public class MsgContentTextPlain {
 
     public void setMentionsMap(Map<String, String> mentionsMap) {
         this.mentionsMap = mentionsMap;
+    }
+
+    public String toString(){
+        JSONObject obj = new JSONObject();
+        try {
+            obj.put("text",text);
+            if (mentionsMap.size()>0){
+                JSONObject mentionObj = JSONUtils.map2Json(mentionsMap);
+                obj.put("metions",mentionObj);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return  obj.toString();
     }
 }

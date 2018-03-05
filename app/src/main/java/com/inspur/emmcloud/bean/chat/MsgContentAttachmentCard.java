@@ -18,22 +18,29 @@ public class MsgContentAttachmentCard {
     private String avatar;
     private String organization;
     private String title;
+    private String uid;
     private List<Email> emailList = new ArrayList<>();
     private List<Phone> phoneList = new ArrayList<>();
-    public MsgContentAttachmentCard(String content){
+
+    public MsgContentAttachmentCard() {
+
+    }
+
+    public MsgContentAttachmentCard(String content) {
         JSONObject object = JSONUtils.getJSONObject(content);
-        firstName = JSONUtils.getString(object,"firstName","");
-        lastName = JSONUtils.getString(object,"lastName","");
-        avatar = JSONUtils.getString(object,"avatar","");
-        organization = JSONUtils.getString(object,"organization","");
-        title = JSONUtils.getString(object,"title","");
-        JSONArray emailArray = JSONUtils.getJSONArray(object,"email",new JSONArray());
-        for (int i=0;i<emailArray.length();i++){
-            emailList.add(new Email(JSONUtils.getJSONObject(emailArray,i,new JSONObject())));
+        firstName = JSONUtils.getString(object, "firstName", "");
+        lastName = JSONUtils.getString(object, "lastName", "");
+        avatar = JSONUtils.getString(object, "avatar", "");
+        organization = JSONUtils.getString(object, "organization", "");
+        title = JSONUtils.getString(object, "title", "");
+        uid = JSONUtils.getString(object, "uid", "");
+        JSONArray emailArray = JSONUtils.getJSONArray(object, "email", new JSONArray());
+        for (int i = 0; i < emailArray.length(); i++) {
+            emailList.add(new Email(JSONUtils.getJSONObject(emailArray, i, new JSONObject())));
         }
-        JSONArray phoneArray = JSONUtils.getJSONArray(object,"phone",new JSONArray());
-        for (int i=0;i<phoneArray.length();i++){
-            phoneList.add(new Phone(JSONUtils.getJSONObject(phoneArray,i,new JSONObject())));
+        JSONArray phoneArray = JSONUtils.getJSONArray(object, "phone", new JSONArray());
+        for (int i = 0; i < phoneArray.length(); i++) {
+            phoneList.add(new Phone(JSONUtils.getJSONObject(phoneArray, i, new JSONObject())));
         }
 
     }
@@ -94,53 +101,41 @@ public class MsgContentAttachmentCard {
         this.phoneList = phoneList;
     }
 
-    public class Email{
-        private String category;
-        private String address;
-        public Email(JSONObject obj){
-            category = JSONUtils.getString(obj,"category","");
-            address = JSONUtils.getString(obj,"address","");
-        }
-
-        public String getCategory() {
-            return category;
-        }
-
-        public void setCategory(String category) {
-            this.category = category;
-        }
-
-        public String getAddress() {
-            return address;
-        }
-
-        public void setAddress(String address) {
-            this.address = address;
-        }
+    public String getUid() {
+        return uid;
     }
 
-    public class Phone{
-        private String category;
-        private String number;
-        public Phone(JSONObject obj){
-            category = JSONUtils.getString(obj,"category","");
-            number = JSONUtils.getString(obj,"number","");
-        }
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
 
-        public String getCategory() {
-            return category;
-        }
+    public String toString() {
+        JSONObject obj = new JSONObject();
+        try {
+            obj.put("firstName",firstName);
+            obj.put("lastName",lastName);
+            obj.put("avatar",avatar);
+            obj.put("organization",organization);
+            obj.put("title",title);
+            obj.put("uid",uid);
+            JSONArray emailArray = new JSONArray();
+            for(int i=0;i<emailList.size();i++){
+                emailArray.put(i,emailList.get(i).toJSONObject());
+            }
+            if (emailArray.length()>0){
+                obj.put("email",emailArray);
+            }
 
-        public void setCategory(String category) {
-            this.category = category;
+            JSONArray phoneArray = new JSONArray();
+            for(int i=0;i<phoneList.size();i++){
+                phoneArray.put(i,phoneList.get(i).toJSONObject());
+            }
+            if (phoneArray.length()>0){
+                obj.put("phone",phoneArray);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
         }
-
-        public String getNumber() {
-            return number;
-        }
-
-        public void setNumber(String number) {
-            this.number = number;
-        }
+        return  obj.toString();
     }
 }

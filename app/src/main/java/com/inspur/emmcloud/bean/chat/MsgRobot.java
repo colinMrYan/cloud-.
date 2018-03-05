@@ -27,6 +27,8 @@ public class MsgRobot implements Serializable {
     private String state;
     @Column(name = "content")
     private String content;
+    @Column(name="time")
+    private long time;
 
     private int sendStatus = 1;//0 发送中  1发送成功  2发送失败
     private String tmpId = "";
@@ -44,6 +46,7 @@ public class MsgRobot implements Serializable {
         channel = JSONUtils.getString(obj, "channel", "");
         state = JSONUtils.getString(obj, "state", "");
         content = JSONUtils.getString(obj, "content", "");
+        time = JSONUtils.getLong(obj,"time",0L);
     }
 
     public MsgContentExtendedActions getMsgContentExtendedActions() {
@@ -62,8 +65,8 @@ public class MsgRobot implements Serializable {
         return new MsgContentAttachmentFile(content);
     }
 
-    public String getTime(){
-        return  "";
+    public Long getTime(){
+        return  time;
     }
 
     public MsgContentMediaImage getMsgContentMediaImage() {

@@ -188,7 +188,7 @@ public class WebSocketPush {
 				} else {
 					sendFrozenMsg();
 				}
-
+				mSocket.emit("message","1111111");
 			}
 		});
 
@@ -233,6 +233,7 @@ public class WebSocketPush {
 				LogUtils.debug(TAG, "断开连接");
 			}
 		});
+
 	}
 
 	public void connectWebSocket() {
@@ -242,9 +243,8 @@ public class WebSocketPush {
 		// mSocket.connect();
 	}
 	
-	public void reConnectWebSocket() {
-		// mSocket.connect();
-		mSocket.connect();
+	public void sendChatMessage(String msgType,String content,String cid) {
+		mSocket.emit("message","1111111");
 	}
 
 	public void closeSocket() {

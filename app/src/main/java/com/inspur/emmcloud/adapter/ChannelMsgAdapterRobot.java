@@ -177,7 +177,7 @@ public class ChannelMsgAdapterRobot extends RecyclerView.Adapter<ChannelMsgAdapt
                 MyApplication.getInstance().getUid());
         holder.cardCoverView.setVisibility(View.VISIBLE);
         View cardContentView = null;
-        switch (msg.getType()){
+        switch (msg.getType()) {
             case "text/plain":
                 holder.cardCoverView.setVisibility(View.GONE);
                 cardContentView = DisplayTxtPlainMsg.getView(context,
@@ -190,7 +190,7 @@ public class ChannelMsgAdapterRobot extends RecyclerView.Adapter<ChannelMsgAdapt
                 break;
             case "attachment/file":
                 cardContentView = DisplayAttachmentFileMsg.getView(context,
-                        msg,false);
+                        msg, false);
                 break;
 //            case "comment/text-plain":
 //                holder.cardCoverView.setVisibility(View.GONE);
@@ -221,7 +221,7 @@ public class ChannelMsgAdapterRobot extends RecyclerView.Adapter<ChannelMsgAdapt
 //                        msg);
 //                break;
             case "extended/actions":
-                cardContentView = DisplayExtendedActionsMsg.getView(context,msg);
+                cardContentView = DisplayExtendedActionsMsg.getView(context, msg);
                 break;
             default:
                 cardContentView = DisplayResUnknownMsgRobot.getView(context,
@@ -248,11 +248,11 @@ public class ChannelMsgAdapterRobot extends RecyclerView.Adapter<ChannelMsgAdapt
      */
     private void showMsgSendTime(ViewHolder holder, MsgRobot msg, int position) {
         // TODO Auto-generated method stub
-        long msgTimeLong = TimeUtils.UTCString2Long(msg.getTime());
+        long msgTimeLong = msg.getTime();
         long lastMsgTimelong = 0;
         if (position != 0) {
-            lastMsgTimelong = TimeUtils.UTCString2Long(msgList.get(
-                    position - 1).getTime());
+            lastMsgTimelong = msgList.get(
+                    position - 1).getTime();
         }
         long duration = msgTimeLong - lastMsgTimelong;
         if (duration >= 180000) {
@@ -277,7 +277,7 @@ public class ChannelMsgAdapterRobot extends RecyclerView.Adapter<ChannelMsgAdapt
                 MyApplication.getInstance().getUid());
         if (channelType.equals("GROUP") && !isMyMsg) {
             holder.senderNameText.setVisibility(View.VISIBLE);
-            holder.senderNameText.setText(ContactCacheUtils.getUserName(MyApplication.getInstance(),msg.getFromUser()));
+            holder.senderNameText.setText(ContactCacheUtils.getUserName(MyApplication.getInstance(), msg.getFromUser()));
         } else {
             holder.senderNameText.setVisibility(View.GONE);
         }
@@ -296,12 +296,12 @@ public class ChannelMsgAdapterRobot extends RecyclerView.Adapter<ChannelMsgAdapt
             holder.senderPhotoImg.setVisibility(View.INVISIBLE);
         } else {
             holder.senderPhotoImg.setVisibility(View.VISIBLE);
-            String iconUrl ="";
+            String iconUrl = "";
             if (msg.getFromUser().startsWith("BOT") || channelType.equals("SERVICE")) {
                 iconUrl = APIUri.getRobotIconUrl(RobotCacheUtils
                         .getRobotById(context, msg.getFromUser())
                         .getAvatar());
-            }else {
+            } else {
                 iconUrl = APIUri.getChannelImgUrl(context, msg.getFromUser());
             }
             ImageDisplayUtils.getInstance().displayImage(holder.senderPhotoImg,

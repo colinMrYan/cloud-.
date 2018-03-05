@@ -858,6 +858,11 @@ public class TimeUtils {
      */
     public static String getChannelMsgDisplayTime(Context context, String UTCStringTime) {
         long timeLong = UTCString2Long(UTCStringTime);
+        return getChannelMsgDisplayTime(context,timeLong);
+
+    }
+
+    public static String getChannelMsgDisplayTime(Context context,long timeLong){
         Calendar displayCalendar = Calendar.getInstance();
         displayCalendar.setTimeInMillis(timeLong);
         String displayTime = "";
@@ -890,7 +895,6 @@ public class TimeUtils {
         }
 
         return displayTime;
-
     }
 
 
