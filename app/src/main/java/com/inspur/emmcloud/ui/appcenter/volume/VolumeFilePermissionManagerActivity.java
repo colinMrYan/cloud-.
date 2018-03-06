@@ -68,7 +68,7 @@ public class VolumeFilePermissionManagerActivity extends BaseActivity{
         public void returnVolumeGroupSuccess(GetVolumeResultWithPermissionResult getVolumeResultWithPermissionResult) {
             super.returnVolumeGroupSuccess(getVolumeResultWithPermissionResult);
             LogUtils.YfcDebug("组长度："+getVolumeResultWithPermissionResult.getVolumeGroupList().size());
-            groupRecyclerView.setAdapter(new VolumeGroupPermissionManagerAdapter());
+            groupRecyclerView.setAdapter(new VolumeGroupPermissionManagerAdapter(VolumeFilePermissionManagerActivity.this));
         }
 
         @Override
