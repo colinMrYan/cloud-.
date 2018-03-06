@@ -4,7 +4,6 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.bean.login.ClusterBean;
 import com.inspur.emmcloud.bean.mine.Enterprise;
 import com.inspur.emmcloud.config.Constant;
-import com.inspur.emmcloud.util.common.LogUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,8 +34,6 @@ public class MutilClusterUtils {
                     break;
             }
         }
-        LogUtils.YfcDebug("替换完成EMMURL："+MyApplication.getInstance().getClusterEmm());
-        LogUtils.YfcDebug("替换完成ECMURL："+MyApplication.getInstance().getClusterEcm());
     }
 
     /**
