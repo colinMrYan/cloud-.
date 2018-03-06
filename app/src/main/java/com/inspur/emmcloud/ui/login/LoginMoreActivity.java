@@ -14,6 +14,7 @@ import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
+import com.inspur.emmcloud.util.privates.PreferencesByUsersUtils;
 import com.inspur.emmcloud.widget.dialogs.MyQMUIDialog;
 import com.inspur.imp.plugin.barcode.scan.CaptureActivity;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
@@ -84,6 +85,7 @@ public class LoginMoreActivity extends BaseActivity {
                         dialog.dismiss();
                         PreferencesUtils.putString(LoginMoreActivity.this, "login_enterprise_name", "");
                         PreferencesUtils.putString(LoginMoreActivity.this,"cloud_idm",Constant.DEFAULT_CLUSTER_ID);
+                        PreferencesByUsersUtils.putString(getApplicationContext(), Constant.PREF_SELECT_LOGIN_ENTERPRISE_ID, "");
                         finish();
                     }
                 })
@@ -135,6 +137,7 @@ public class LoginMoreActivity extends BaseActivity {
                         PreferencesUtils.putString(LoginMoreActivity.this,"cloud_idm",StringUtils.isBlank(loginMoreBean.getUrl()) ? Constant.DEFAULT_CLUSTER_ID : (loginMoreBean.getUrl()+"/"));
                         findViewById(R.id.login_more_reset_btn).setVisibility(View.VISIBLE);
                         PreferencesUtils.putString(LoginMoreActivity.this, "login_enterprise_name", loginMoreBean.getName());
+                        PreferencesByUsersUtils.putString(getApplicationContext(), Constant.PREF_SELECT_LOGIN_ENTERPRISE_ID, "");
                         finish();
                     }
                 })
