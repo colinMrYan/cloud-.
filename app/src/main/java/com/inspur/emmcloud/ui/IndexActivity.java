@@ -33,6 +33,7 @@ import com.inspur.emmcloud.bean.chat.TransparentBean;
 import com.inspur.emmcloud.bean.contact.Contact;
 import com.inspur.emmcloud.bean.contact.GetAllContactResult;
 import com.inspur.emmcloud.bean.contact.GetSearchChannelGroupResult;
+import com.inspur.emmcloud.bean.system.AppException;
 import com.inspur.emmcloud.bean.system.AppTabAutoBean;
 import com.inspur.emmcloud.bean.system.GetAppTabAutoResult;
 import com.inspur.emmcloud.bean.system.PVCollectModel;
@@ -66,6 +67,7 @@ import com.inspur.emmcloud.util.privates.PushInfoUtils;
 import com.inspur.emmcloud.util.privates.ReactNativeUtils;
 import com.inspur.emmcloud.util.privates.SplashPageUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
+import com.inspur.emmcloud.util.privates.cache.AppExceptionCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ChannelGroupCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.DbCacheUtils;
@@ -300,6 +302,7 @@ public class IndexActivity extends BaseFragmentActivity implements
                         ((MyApplication) getApplicationContext())
                                 .setIsContactReady(true);
                         notifySyncAllBaseDataSuccess();
+                        deleteIllegalUser();
                         break;
                     case RELOAD_WEB:
                         if (webView != null) {
@@ -323,6 +326,24 @@ public class IndexActivity extends BaseFragmentActivity implements
         intent.putExtra("command", "sync_all_base_data_success");
         sendBroadcast(intent);
 
+    }
+
+    private void deleteIllegalUser(){
+        try {
+            boolean isHasDeletleIllegalUser = PreferencesByUserAndTanentUtils.getBoolean(getApplicationContext(),Constant.PREF_DELETE_ILLEGAL_USER,false);
+            if (!isHasDeletleIllegalUser){
+                int illegalUserCount =  ContactCacheUtils.deleteIllegalUser(getApplicationContext());
+                if (illegalUserCount != -1){
+                    PreferencesByUserAndTanentUtils.putBoolean(getApplicationContext(),Constant.PREF_DELETE_ILLEGAL_USER,true);
+                }
+                if (illegalUserCount != 0){
+                    AppException appException = new AppException(System.currentTimeMillis(), AppUtils.getVersion(getApplicationContext()), 5, "", "通讯录删除无效用户个数"+illegalUserCount, -1);
+                    AppExceptionCacheUtils.saveAppException(getApplicationContext(), appException);
+                }
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     /**
