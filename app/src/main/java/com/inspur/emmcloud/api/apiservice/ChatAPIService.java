@@ -261,6 +261,7 @@ public class ChatAPIService {
 		sendMsg(channelId, msgContent, type, "", fakeMessageId);
 	}
 
+
 	/**
 	 * 发送消息
 	 *
@@ -334,6 +335,8 @@ public class ChatAPIService {
 		});
 
 	}
+
+
 
 	/**
 	 * 获取消息

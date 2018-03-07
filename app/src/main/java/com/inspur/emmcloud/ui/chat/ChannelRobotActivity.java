@@ -17,10 +17,8 @@ import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.bean.chat.Channel;
 import com.inspur.emmcloud.bean.chat.ChannelGroup;
-import com.inspur.emmcloud.bean.chat.GetFileUploadResult;
 import com.inspur.emmcloud.bean.chat.GetMsgResult;
 import com.inspur.emmcloud.bean.chat.GetNewMsgsResult;
-import com.inspur.emmcloud.bean.chat.GetNewsImgResult;
 import com.inspur.emmcloud.bean.chat.GetSendMsgResult;
 import com.inspur.emmcloud.bean.chat.Msg;
 import com.inspur.emmcloud.bean.chat.MsgRobot;
@@ -390,15 +388,16 @@ public class ChannelRobotActivity extends BaseActivity {
 //        JSONArray urlArray = JSONUtils.toJSONArray(urlList);
 //        JSONObject sourceObj = new JSONObject();
 //        try{
-//            sourceObj.put("id","");
-//            sourceObj.put("message","1.0");
+//            sourceObj.put("id",fakeMessageId);
 //            sourceObj.put("message","1.0");
 //            sourceObj.put("type","text/plain");
-//            sourceObj .put("message","1.0");
 //            JSONObject fromObj = new JSONObject();
 //            fromObj.put("user", MyApplication.getInstance().getUid());
-//            fromObj.put("enterprise",MyApplication.getInstance().getCurrentEnterprise().getCode());
+//            fromObj.put("enterprise",MyApplication.getInstance().getCurrentEnterprise().getId());
 //            sourceObj.put("from",fromObj);
+//            JSONArray toArray = new JSONArray();
+//            toArray.put(robotUid);
+//            sourceObj.put("to",toArray);
 //            sourceObj.put("channel","ecc_financial");
 //            JSONObject contentObj = new JSONObject();
 //            contentObj.put("text",content);
@@ -416,7 +415,7 @@ public class ChannelRobotActivity extends BaseActivity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        sendMsg(richTextObj.toString(), "txt_rich", fakeMessageId);
+        sendMsg(richTextObj, "txt_rich", fakeMessageId);
 
     }
 
@@ -498,9 +497,9 @@ public class ChannelRobotActivity extends BaseActivity {
      * @param type
      * @param fakeMessageId
      */
-    protected void sendMsg(String content, String type, String fakeMessageId) {
+    protected void sendMsg(JSONObject contentObj, String type, String fakeMessageId) {
         if (NetUtils.isNetworkConnected(getApplicationContext())) {
-            apiService.sendMsg(cid, content, type, fakeMessageId);
+            apiService.sendMsg(cid, contentObj.toString(), type, fakeMessageId);
         }
     }
 
@@ -568,24 +567,6 @@ public class ChannelRobotActivity extends BaseActivity {
 
         }
 
-        @Override
-        public void returnUploadMsgImgSuccess(
-                GetNewsImgResult getNewsImgResult, String fakeMessageId) {
-            String newsImgBody = getNewsImgResult.getImgMsgBody();
-            sendMsg(newsImgBody, "res_image", fakeMessageId);
-        }
-
-        @Override
-        public void returnUploadMsgImgFail(String error, int errorCode) {
-            if (swipeRefreshLayout == null) {
-                if (loadingDlg != null && loadingDlg.isShowing()) {
-                    loadingDlg.dismiss();
-                }
-                initViews();
-            }
-
-            WebServiceMiddleUtils.hand(ChannelRobotActivity.this, error, errorCode);
-        }
 
         @Override
         public void returnNewMsgsSuccess(GetNewMsgsResult getNewMsgsResult) {
@@ -644,17 +625,17 @@ public class ChannelRobotActivity extends BaseActivity {
             WebServiceMiddleUtils.hand(ChannelRobotActivity.this, error, errorCode);
         }
 
-        @Override
-        public void returnFileUpLoadSuccess(
-                GetFileUploadResult getFileUploadResult, String fakeMessageId) {
-            String fileMsgBody = getFileUploadResult.getFileMsgBody();
-            sendMsg(fileMsgBody, "res_file", fakeMessageId);
-        }
-
-        @Override
-        public void returnFileUpLoadFail(String error, int errorCode) {
-            WebServiceMiddleUtils.hand(ChannelRobotActivity.this, error, errorCode);
-        }
+//        @Override
+//        public void returnFileUpLoadSuccess(
+//                GetFileUploadResult getFileUploadResult, String fakeMessageId) {
+//            String fileMsgBody = getFileUploadResult.getFileMsgBody();
+//            sendMsg(fileMsgBody, "res_file", fakeMessageId);
+//        }
+//
+//        @Override
+//        public void returnFileUpLoadFail(String error, int errorCode) {
+//            WebServiceMiddleUtils.hand(ChannelRobotActivity.this, error, errorCode);
+//        }
 
         @Override
         public void returnSearchChannelGroupSuccess(
