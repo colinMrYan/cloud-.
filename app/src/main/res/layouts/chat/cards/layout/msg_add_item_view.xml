@@ -6,6 +6,7 @@
     android:orientation="vertical">
 
     <com.inspur.emmcloud.widget.SquareLayout
+        android:padding="2dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <ImageView
@@ -22,7 +23,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="2dp"
         android:text="@string/album"
         android:textSize="12sp"></TextView>
 
