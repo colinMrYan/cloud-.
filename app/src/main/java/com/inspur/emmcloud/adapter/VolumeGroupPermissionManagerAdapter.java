@@ -6,7 +6,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.bean.appcenter.volume.Group;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by yufuchang on 2018/3/1.
@@ -15,32 +22,44 @@ import android.widget.TextView;
 public class VolumeGroupPermissionManagerAdapter extends RecyclerView.Adapter<VolumeGroupPermissionManagerAdapter.VolumeGroupPermissionManagerAdapterHolder>{
 
     private LayoutInflater inflater;
+    private List<Group> groupList = new ArrayList<>();
 
     public VolumeGroupPermissionManagerAdapter(Context context){
         inflater = LayoutInflater.from(context);
     }
+
     @Override
     public VolumeGroupPermissionManagerAdapter.VolumeGroupPermissionManagerAdapterHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return null;
+        View view = inflater.inflate(R.layout.app_volume_permission_manager_item,null);
+        VolumeGroupPermissionManagerAdapterHolder holder = new VolumeGroupPermissionManagerAdapterHolder(view);
+        holder.groupNameText = (TextView) view.findViewById(R.id.volume_group_name_tv);
+        holder.permissionText = (TextView) view.findViewById(R.id.volume_group_permission_tv);
+        holder.recommendAppImg = (ImageView) view.findViewById(R.id.volume_group_arrow_img);
+        holder.relativeLayout = (RelativeLayout) view.findViewById(R.id.volume_group_layout);
+        return holder;
     }
 
     @Override
     public void onBindViewHolder(VolumeGroupPermissionManagerAdapter.VolumeGroupPermissionManagerAdapterHolder holder, int position) {
-
     }
 
     @Override
     public int getItemCount() {
-        return 0;
+        return groupList.size();
     }
 
     public class VolumeGroupPermissionManagerAdapterHolder extends RecyclerView.ViewHolder {
+        RelativeLayout relativeLayout;
         ImageView recommendAppImg;
         TextView groupNameText;
         TextView permissionText;
-
         public VolumeGroupPermissionManagerAdapterHolder(View itemView) {
             super(itemView);
         }
+    }
+
+    public void setVolumeGroupPermissionList(List<Group> groupList){
+        this.groupList = groupList;
+        notifyDataSetChanged();
     }
 }

@@ -1,6 +1,7 @@
 package com.inspur.emmcloud.ui.appcenter.volume;
 
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
@@ -11,6 +12,7 @@ import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
 import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeResultWithPermissionResult;
 import com.inspur.emmcloud.util.common.LogUtils;
+import com.inspur.emmcloud.widget.ECMRecyclerViewLinearLayoutManager;
 
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
@@ -38,9 +40,17 @@ public class VolumeFilePermissionManagerActivity extends BaseActivity{
     @ViewInject(R.id.volume_file_permission_recyclerview)
     protected RecyclerView groupRecyclerView;
 
+    private VolumeGroupPermissionManagerAdapter volumeGroupPermissionManagerAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ECMRecyclerViewLinearLayoutManager layoutManager = new ECMRecyclerViewLinearLayoutManager(VolumeFilePermissionManagerActivity.this);
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        layoutManager.setCanScrollHorizontally(false);
+        groupRecyclerView.setLayoutManager(layoutManager);
+        volumeGroupPermissionManagerAdapter = new VolumeGroupPermissionManagerAdapter(VolumeFilePermissionManagerActivity.this);
+        groupRecyclerView.setAdapter(volumeGroupPermissionManagerAdapter);
         getVolumeFileGroup();
     }
 
@@ -67,8 +77,7 @@ public class VolumeFilePermissionManagerActivity extends BaseActivity{
         @Override
         public void returnVolumeGroupSuccess(GetVolumeResultWithPermissionResult getVolumeResultWithPermissionResult) {
             super.returnVolumeGroupSuccess(getVolumeResultWithPermissionResult);
-            LogUtils.YfcDebug("组长度："+getVolumeResultWithPermissionResult.getVolumeGroupList().size());
-            groupRecyclerView.setAdapter(new VolumeGroupPermissionManagerAdapter(VolumeFilePermissionManagerActivity.this));
+            volumeGroupPermissionManagerAdapter.setVolumeGroupPermissionList(getVolumeResultWithPermissionResult.getVolumeGroupList());
         }
 
         @Override

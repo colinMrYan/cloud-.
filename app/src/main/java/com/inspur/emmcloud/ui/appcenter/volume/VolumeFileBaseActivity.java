@@ -177,7 +177,6 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
                                 bundle.putString("volume",volumeFile.getVolume());
                                 bundle.putString("currentDirAbsolutePath",currentDirAbsolutePath+volumeFile.getName());
                                 IntentUtils.startActivity(VolumeFileBaseActivity.this,VolumeFilePermissionManagerActivity.class,bundle);
-                                LogUtils.YfcDebug("进权限管理页面"+currentDirAbsolutePath+volumeFile.getName()+volumeFile.getVolume());
                                 break;
                             default:
                                 break;
