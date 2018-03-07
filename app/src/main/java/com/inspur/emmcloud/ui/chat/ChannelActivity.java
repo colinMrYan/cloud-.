@@ -412,7 +412,7 @@ public class ChannelActivity extends BaseActivity {
                 switch (msg.what) {
                     case HAND_CALLBACK_MESSAGE: // 接收推送的消息·
                         if (msg.arg1 == 0){
-                            Msg pushMsg = (Msg) msg.obj;
+                            Msg pushMsg =new Msg((JSONObject) msg.obj);
                             if (cid.equals(pushMsg.getCid())) {
                                 MsgReadIDCacheUtils.saveReadedMsg(ChannelActivity.this,
                                         pushMsg.getCid(), pushMsg.getMid());

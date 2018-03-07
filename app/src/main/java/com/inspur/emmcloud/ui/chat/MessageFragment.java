@@ -264,7 +264,7 @@ public class MessageFragment extends Fragment{
                     IntentUtils.startActivity(getActivity(),
                             ChannelActivity.class, bundle);
                 } else if (channelType.equals("SERVICE")) {
-                    if (channel.getTitle().contains("BOT6004") ||channel.getTitle().contains("BOT6006")){
+                    if (channel.getTitle().contains("BOT6006")){
                         IntentUtils.startActivity(getActivity(),
                                 ChannelRobotActivity.class, bundle);
                     }else {
@@ -583,7 +583,7 @@ public class MessageFragment extends Fragment{
                     case RECEIVE_MSG:
                         // 接收到新的消息
                         if (msg.arg1 == 0){
-                            Msg receivedMsg = (Msg) msg.obj;
+                            Msg receivedMsg =new Msg((JSONObject) msg.obj);
                             Channel receiveMsgChannel = ChannelCacheUtils.getChannel(
                                     getActivity(), receivedMsg.getCid());
                             if (receiveMsgChannel == null) {

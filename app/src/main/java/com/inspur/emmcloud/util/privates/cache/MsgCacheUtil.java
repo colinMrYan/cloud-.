@@ -36,6 +36,21 @@ public class MsgCacheUtil {
 
     /**
      * @param context
+     * @param msg
+     */
+    public static void saveRobotMsg(final Context context, final MsgRobot msg) {
+        try {
+
+            DbCacheUtils.getDb(context).saveOrUpdate(msg); // 存储消息
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
+
+    /**
+     * @param context
      * @param msgList
      * @param targetMsgId
      */

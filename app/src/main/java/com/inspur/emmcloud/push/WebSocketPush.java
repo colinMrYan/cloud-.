@@ -188,7 +188,6 @@ public class WebSocketPush {
 				} else {
 					sendFrozenMsg();
 				}
-				mSocket.emit("message","1111111");
 			}
 		});
 

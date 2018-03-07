@@ -18,6 +18,7 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.bean.chat.MsgRobot;
+import com.inspur.emmcloud.bean.chat.Robot;
 import com.inspur.emmcloud.ui.chat.DisplayAttachmentCardMsg;
 import com.inspur.emmcloud.ui.chat.DisplayAttachmentFileMsg;
 import com.inspur.emmcloud.ui.chat.DisplayExtendedActionsMsg;
@@ -27,6 +28,7 @@ import com.inspur.emmcloud.ui.chat.DisplayTxtRichMsgRobot;
 import com.inspur.emmcloud.ui.contact.RobotInfoActivity;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
 import com.inspur.emmcloud.util.common.IntentUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactCacheUtils;
@@ -190,16 +192,8 @@ public class ChannelMsgAdapterRobot extends RecyclerView.Adapter<ChannelMsgAdapt
                 break;
             case "attachment/file":
                 cardContentView = DisplayAttachmentFileMsg.getView(context,
-                        msg, false);
+                        msg);
                 break;
-//            case "comment/text-plain":
-//                holder.cardCoverView.setVisibility(View.GONE);
-//                cardContentView = DisplayTxtCommentMsg.getView(context,msg, apiService);
-//                break;
-//            case "media/image":
-//                cardContentView = DisplayMediaImageMsg.getView(context,
-//                        msg);
-//                break;
             case "attachment/card":
                 cardContentView = DisplayAttachmentCardMsg.getView(context,
                         msg);
@@ -298,6 +292,10 @@ public class ChannelMsgAdapterRobot extends RecyclerView.Adapter<ChannelMsgAdapt
             holder.senderPhotoImg.setVisibility(View.VISIBLE);
             String iconUrl = "";
             if (msg.getFromUser().startsWith("BOT") || channelType.equals("SERVICE")) {
+                LogUtils.jasonDebug("msg.getFromUser()="+msg.getFromUser());
+                Robot robot =RobotCacheUtils
+                                .getRobotById(context, msg.getFromUser());
+                LogUtils.jasonDebug("robot==null==="+(robot == null));
                 iconUrl = APIUri.getRobotIconUrl(RobotCacheUtils
                         .getRobotById(context, msg.getFromUser())
                         .getAvatar());

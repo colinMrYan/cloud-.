@@ -48,6 +48,7 @@ import com.inspur.emmcloud.widget.ECMChatInputMenuRobot;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.RecycleViewForSizeChange;
 
+import org.json.JSONObject;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
 
@@ -242,11 +243,18 @@ public class ChannelRobotActivity extends BaseActivity {
             public void handleMessage(Message msg) {
                 switch (msg.what) {
                     case HAND_CALLBACK_MESSAGE: // 接收推送的消息·
-                        if (msg.arg1 == 1) {
-                            MsgRobot pushMsg = (MsgRobot) msg.obj;
+                        if (msg.what == 1) {
+                            JSONObject obj = (JSONObject) msg.obj;
+                            MsgRobot pushMsg;
+                            if (obj.has("message")){
+                                pushMsg= new MsgRobot(obj) ;
+                            }else {
+                                pushMsg= new MsgRobot(obj,true) ;
+                            }
                             if (cid.equals(pushMsg.getChannel())) {
                                 MsgReadIDCacheUtils.saveReadedMsg(ChannelRobotActivity.this,
                                         pushMsg.getChannel(), pushMsg.getId());
+                                MsgCacheUtil.saveRobotMsg(getApplicationContext(),pushMsg);
                                 if (!msgList.contains(pushMsg) && !pushMsg.getTmpId().equals(AppUtils.getMyUUID(getApplicationContext()))) {
                                     msgList.add(pushMsg);
                                     adapter.setMsgList(msgList);

@@ -1,6 +1,8 @@
 package com.inspur.emmcloud.bean.chat;
 
 import com.inspur.emmcloud.util.common.JSONUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
+import com.inspur.emmcloud.util.privates.TimeUtils;
 
 import org.json.JSONObject;
 import org.xutils.db.annotation.Column;
@@ -8,7 +10,7 @@ import org.xutils.db.annotation.Table;
 
 import java.io.Serializable;
 
-@Table(name = "MessageRobot", onCreated = "CREATE INDEX msgchannelindex ON MessageRobot(channel)")
+@Table(name = "MessageRobot", onCreated = "CREATE INDEX msgrobotchannelindex ON MessageRobot(channel)")
 public class MsgRobot implements Serializable {
     private static final String TAG = "Msg";
     @Column(name = "id", isId = true)
@@ -34,6 +36,25 @@ public class MsgRobot implements Serializable {
     private String tmpId = "";
 
     public MsgRobot() {
+
+    }
+
+    public MsgRobot(JSONObject obj,boolean isOldMsgType){
+        id = JSONUtils.getString(obj, "mid", "0");
+        JSONObject bodyObj = JSONUtils.getJSONObject(obj,"body",new JSONObject());
+        String source = JSONUtils.getString(bodyObj,"source","");
+        JSONObject sourceObj = JSONUtils.getJSONObject(source);
+        message = JSONUtils.getString(sourceObj, "message", "");
+        LogUtils.jasonDebug("sourceObj="+sourceObj.toString());
+        from = JSONUtils.getString(sourceObj, "from", "");
+        type = JSONUtils.getString(sourceObj, "type", "");
+        state = JSONUtils.getString(sourceObj, "state", "");
+        content = JSONUtils.getString(sourceObj, "content", "");
+
+        channel = JSONUtils.getString(obj, "to", "");
+
+        String oldMsgtime = JSONUtils.getString(obj,"timestamp","");
+        time = TimeUtils.UTCString2Long(oldMsgtime);
 
     }
 
