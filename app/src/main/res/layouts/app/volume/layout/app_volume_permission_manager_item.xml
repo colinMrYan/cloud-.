@@ -15,8 +15,9 @@
         android:id="@+id/volume_group_permission_tv"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:layout_toRightOf="@id/volume_group_name_tv"
+        android:layout_marginRight="40dp"
         android:text="上传/查看权限"/>
 
     <ImageView

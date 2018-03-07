@@ -23,6 +23,7 @@ public class VolumeGroupPermissionManagerAdapter extends RecyclerView.Adapter<Vo
 
     private LayoutInflater inflater;
     private List<Group> groupList = new ArrayList<>();
+    private VolumeGroupPermissionManagerInterface volumeGroupPermissionManagerInterface;
 
     public VolumeGroupPermissionManagerAdapter(Context context){
         inflater = LayoutInflater.from(context);
@@ -36,11 +37,20 @@ public class VolumeGroupPermissionManagerAdapter extends RecyclerView.Adapter<Vo
         holder.permissionText = (TextView) view.findViewById(R.id.volume_group_permission_tv);
         holder.recommendAppImg = (ImageView) view.findViewById(R.id.volume_group_arrow_img);
         holder.relativeLayout = (RelativeLayout) view.findViewById(R.id.volume_group_layout);
+
         return holder;
     }
 
     @Override
-    public void onBindViewHolder(VolumeGroupPermissionManagerAdapter.VolumeGroupPermissionManagerAdapterHolder holder, int position) {
+    public void onBindViewHolder(VolumeGroupPermissionManagerAdapter.VolumeGroupPermissionManagerAdapterHolder holder, final int position) {
+        holder.groupNameText.setText(groupList.get(position).getName());
+        holder.permissionText.setText(groupList.get(position).getPrivilege() > 4 ? "拥有读写权限":"拥有读权限");
+        holder.relativeLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                volumeGroupPermissionManagerInterface.onVolumeGroupClickListener(groupList.get(position));
+            }
+        });
     }
 
     @Override
@@ -58,8 +68,16 @@ public class VolumeGroupPermissionManagerAdapter extends RecyclerView.Adapter<Vo
         }
     }
 
+    public void setVolumeGroupPermissionManagerInterfaceListener(VolumeGroupPermissionManagerInterface l){
+        this.volumeGroupPermissionManagerInterface = l;
+    }
+
     public void setVolumeGroupPermissionList(List<Group> groupList){
         this.groupList = groupList;
         notifyDataSetChanged();
+    }
+
+    public interface VolumeGroupPermissionManagerInterface{
+        void onVolumeGroupClickListener(Group group);
     }
 }

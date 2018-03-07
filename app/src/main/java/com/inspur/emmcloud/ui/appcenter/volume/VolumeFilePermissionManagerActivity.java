@@ -11,6 +11,7 @@ import com.inspur.emmcloud.adapter.VolumeGroupPermissionManagerAdapter;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
 import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeResultWithPermissionResult;
+import com.inspur.emmcloud.bean.appcenter.volume.Group;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.widget.ECMRecyclerViewLinearLayoutManager;
 
@@ -50,6 +51,12 @@ public class VolumeFilePermissionManagerActivity extends BaseActivity{
         layoutManager.setCanScrollHorizontally(false);
         groupRecyclerView.setLayoutManager(layoutManager);
         volumeGroupPermissionManagerAdapter = new VolumeGroupPermissionManagerAdapter(VolumeFilePermissionManagerActivity.this);
+        volumeGroupPermissionManagerAdapter.setVolumeGroupPermissionManagerInterfaceListener(new VolumeGroupPermissionManagerAdapter.VolumeGroupPermissionManagerInterface() {
+            @Override
+            public void onVolumeGroupClickListener(Group group) {
+                LogUtils.YfcDebug("点击的组名："+group.getName());
+            }
+        });
         groupRecyclerView.setAdapter(volumeGroupPermissionManagerAdapter);
         getVolumeFileGroup();
     }
