@@ -5,7 +5,6 @@ import android.content.Context;
 import com.inspur.emmcloud.bean.chat.PersonDto;
 import com.inspur.emmcloud.bean.chat.Robot;
 import com.inspur.emmcloud.bean.contact.Contact;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.PinyinUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
@@ -49,11 +48,6 @@ public class ContactCacheUtils {
                     (Contact.class).where("type", "=", "user")
                     .and(WhereBuilder.b().expr("length(id)>25"))
                     .findAll();
-            for (int i=0;i<childUserList.size();i++){
-                LogUtils.jasonDebug(childUserList.get(i).getId());
-                LogUtils.jasonDebug(childUserList.get(i).getInspurID()
-                );
-            }
             illegalUserCount  = childUserList.size();
             if (illegalUserCount>0){
                 DbCacheUtils.getDb(context).delete(childUserList);
