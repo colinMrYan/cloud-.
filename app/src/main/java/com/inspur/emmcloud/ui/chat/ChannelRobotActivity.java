@@ -32,6 +32,7 @@ import com.inspur.emmcloud.broadcastreceiver.MsgReceiver;
 import com.inspur.emmcloud.ui.contact.RobotInfoActivity;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
 import com.inspur.emmcloud.util.common.IntentUtils;
+import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
@@ -48,6 +49,8 @@ import com.inspur.emmcloud.widget.ECMChatInputMenuRobot;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.RecycleViewForSizeChange;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
@@ -245,6 +248,10 @@ public class ChannelRobotActivity extends BaseActivity {
                     case HAND_CALLBACK_MESSAGE: // 接收推送的消息·
                         if (msg.what == 1) {
                             JSONObject obj = (JSONObject) msg.obj;
+                            String type = JSONUtils.getString(obj,"type","");
+                            if (obj.toString().contains(AppUtils.getMyUUID(ChannelRobotActivity.this))){
+                                return;
+                            }
                             MsgRobot pushMsg;
                             if (obj.has("message")){
                                 pushMsg= new MsgRobot(obj) ;
@@ -375,8 +382,41 @@ public class ChannelRobotActivity extends BaseActivity {
                 return;
             }
         }
-        addLocalMessage(localMsg, 0);
+        addLocalMessage(localMsg, 1);
         //sendMsg(richTextObj.toString(), "txt_rich", fakeMessageId);
+
+        JSONObject richTextObj = new JSONObject();
+//        JSONArray mentionArray = JSONUtils.toJSONArray(mentionsUidList);
+//        JSONArray urlArray = JSONUtils.toJSONArray(urlList);
+//        JSONObject sourceObj = new JSONObject();
+//        try{
+//            sourceObj.put("id","");
+//            sourceObj.put("message","1.0");
+//            sourceObj.put("message","1.0");
+//            sourceObj.put("type","text/plain");
+//            sourceObj .put("message","1.0");
+//            JSONObject fromObj = new JSONObject();
+//            fromObj.put("user", MyApplication.getInstance().getUid());
+//            fromObj.put("enterprise",MyApplication.getInstance().getCurrentEnterprise().getCode());
+//            sourceObj.put("from",fromObj);
+//            sourceObj.put("channel","ecc_financial");
+//            JSONObject contentObj = new JSONObject();
+//            contentObj.put("text",content);
+//            sourceObj.put("content",contentObj);
+//        }catch (Exception e){
+//            e.printStackTrace();
+//        }
+
+
+        try {
+            richTextObj.put("source", content);
+            richTextObj.put("mentions", new JSONArray());
+            richTextObj.put("urls", new JSONArray());
+            richTextObj.put("tmpId", AppUtils.getMyUUID(ChannelRobotActivity.this));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        sendMsg(richTextObj.toString(), "txt_rich", fakeMessageId);
 
     }
 
@@ -510,7 +550,7 @@ public class ChannelRobotActivity extends BaseActivity {
         @Override
         public void returnSendMsgSuccess(GetSendMsgResult getSendMsgResult,
                                          String fakeMessageId) {
-            // replaceWithRealMsg(fakeMessageId, getSendMsgResult.getMsg());
+//             replaceWithRealMsg(fakeMessageId, getSendMsgResult.getMsg());
         }
 
         @Override

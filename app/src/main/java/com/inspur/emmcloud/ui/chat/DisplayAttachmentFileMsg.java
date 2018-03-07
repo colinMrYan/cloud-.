@@ -3,6 +3,7 @@ package com.inspur.emmcloud.ui.chat;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.R;
@@ -10,7 +11,6 @@ import com.inspur.emmcloud.bean.chat.MsgContentAttachmentFile;
 import com.inspur.emmcloud.bean.chat.MsgRobot;
 import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
-import com.inspur.emmcloud.widget.RoundAngleImageView;
 
 /**
  * DisplayAttachmentFileMsg
@@ -33,10 +33,9 @@ public class DisplayAttachmentFileMsg {
                 .findViewById(R.id.file_name_text);
         TextView fileSizeText = (TextView) convertView
                 .findViewById(R.id.file_size_text);
+        ImageView img = (ImageView)convertView.findViewById(R.id.file_icon_img);
         final MsgContentAttachmentFile msgContentFile = msg.getMsgContentAttachmentFile();
-        RoundAngleImageView roundAngleImageView = (RoundAngleImageView) convertView
-                .findViewById(R.id.file_type_img);
-        ImageDisplayUtils.getInstance().displayImage(roundAngleImageView, "drawable://" + FileUtils.getIconResId(msgContentFile.getCategory()));
+        ImageDisplayUtils.getInstance().displayImage(img, "drawable://" + FileUtils.getIconResId(msgContentFile.getCategory()));
         fileNameText.setText(msgContentFile.getName());
         fileSizeText.setText(FileUtils.formatFileSize(msgContentFile.getSize()));
         return convertView;

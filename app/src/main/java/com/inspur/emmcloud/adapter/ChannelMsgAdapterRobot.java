@@ -72,11 +72,16 @@ public class ChannelMsgAdapterRobot extends RecyclerView.Adapter<ChannelMsgAdapt
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         final MsgRobot msg = msgList.get(position);
-        showCardLayout(holder, msg);
-        showUserName(holder, msg);
-        showMsgSendTime(holder, msg, position);
-        showUserPhoto(holder, msg);
-        showRefreshingImg(holder, msg);
+        try {
+            showCardLayout(holder, msg);
+            showUserName(holder, msg);
+            showMsgSendTime(holder, msg, position);
+            showUserPhoto(holder, msg);
+            showRefreshingImg(holder, msg);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
     }
 
     /**
