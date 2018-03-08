@@ -1,12 +1,13 @@
 package com.inspur.emmcloud.adapter;
 
 import android.content.Context;
-import android.graphics.Color;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.chat.MsgContentExtendedActions;
 
 import java.util.ArrayList;
@@ -43,8 +44,9 @@ public class MsgActionAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         TextView textView = new TextView(context);
         textView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-        textView.setBackgroundColor(Color.parseColor("#ffffff"));
-        textView.setTextSize(16);
+        textView.setBackgroundResource(R.drawable.bg_corner);
+        textView.setTextSize(15);
+        textView.setGravity(Gravity.CENTER);
         textView.setText(actionList.get(position).getTitle());
         return textView;
     }

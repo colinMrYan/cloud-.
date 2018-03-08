@@ -18,7 +18,6 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.bean.chat.MsgRobot;
-import com.inspur.emmcloud.bean.chat.Robot;
 import com.inspur.emmcloud.ui.chat.DisplayAttachmentCardMsg;
 import com.inspur.emmcloud.ui.chat.DisplayAttachmentFileMsg;
 import com.inspur.emmcloud.ui.chat.DisplayExtendedActionsMsg;
@@ -28,7 +27,6 @@ import com.inspur.emmcloud.ui.chat.DisplayTxtRichMsgRobot;
 import com.inspur.emmcloud.ui.contact.RobotInfoActivity;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
 import com.inspur.emmcloud.util.common.IntentUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactCacheUtils;
@@ -228,7 +226,7 @@ public class ChannelMsgAdapterRobot extends RecyclerView.Adapter<ChannelMsgAdapt
                 break;
         }
         holder.cardLayout.addView(cardContentView);
-        holder.cardCoverView.setBackgroundResource(isMyMsg ? R.drawable.ic_chat_msg_img_cover_arrow_right : R.drawable.ic_chat_msg_img_cover_arrow_left);
+        //holder.cardCoverView.setBackgroundResource(isMyMsg ? R.drawable.ic_chat_msg_img_cover_arrow_right : R.drawable.ic_chat_msg_img_cover_arrow_left);
         RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) holder.cardLayout.getLayoutParams();
         //此处实际执行params.removeRule();
         params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, 0);
@@ -297,10 +295,6 @@ public class ChannelMsgAdapterRobot extends RecyclerView.Adapter<ChannelMsgAdapt
             holder.senderPhotoImg.setVisibility(View.VISIBLE);
             String iconUrl = "";
             if (msg.getFromUser().startsWith("BOT") || channelType.equals("SERVICE")) {
-                LogUtils.jasonDebug("msg.getFromUser()="+msg.getFromUser());
-                Robot robot =RobotCacheUtils
-                                .getRobotById(context, msg.getFromUser());
-                LogUtils.jasonDebug("robot==null==="+(robot == null));
                 iconUrl = APIUri.getRobotIconUrl(RobotCacheUtils
                         .getRobotById(context, msg.getFromUser())
                         .getAvatar());
