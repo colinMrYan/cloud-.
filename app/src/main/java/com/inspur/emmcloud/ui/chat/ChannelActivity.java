@@ -112,7 +112,6 @@ public class ChannelActivity extends BaseActivity {
         // TODO Auto-generated method stub
         super.onNewIntent(intent);
         setIntent(intent);
-        setContentView(R.layout.activity_channel);
         init();
         //当从群成员选择进入沟通频道的时候执行这里的记录
         recordUserClickChannel();
@@ -197,6 +196,8 @@ public class ChannelActivity extends BaseActivity {
         chatInputMenu = (ECMChatInputMenu) findViewById(R.id.chat_input_menu);
         if (channel.getType().equals("GROUP")) {
             chatInputMenu.setIsChannelGroup(true, cid);
+        }else {
+            chatInputMenu.setIsChannelGroup(false);
         }
         chatInputMenu.setChatInputMenuListener(new ChatInputMenuListener() {
 
