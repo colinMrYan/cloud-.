@@ -18,9 +18,9 @@ import com.inspur.emmcloud.util.common.StringUtils;
  * 整体有一个getEcmTanent的方法，获取到tanent这一级
  */
 public class APIUri {
-    private static final String URL_BASE_YUNJIA = "https://yunjia.inspur.com/";
-    private static final String URL_BASE_VOLUME = URL_BASE_YUNJIA+"cloud-drive/api/v1/volume";
-    private static final String URL_BASE_GROUP = URL_BASE_YUNJIA+"cloud-drive/api/v1/group";
+//    private static final String URL_BASE_YUNJIA = "https://yunjia.inspur.com/";
+//    private static final String URL_BASE_VOLUME = URL_BASE_YUNJIA+"cloud-drive/api/v1/volume";
+//    private static final String URL_BASE_GROUP = URL_BASE_YUNJIA+"cloud-drive/api/v1/group";
 
 
     /**
@@ -38,6 +38,22 @@ public class APIUri {
 
     public static String getEMMBaseUrl(){
         return MyApplication.getInstance().getClusterEmm();
+    }
+
+    /**
+     * 云加网盘
+     * @return
+     */
+    public static String getUrlBaseYunjia(){
+        return MyApplication.getInstance().getClusterEcm();
+    }
+
+    public static String getUrlBaseVolume(){
+        return getUrlBaseYunjia() + "cloud-drive/api/v1/volume";
+    }
+
+    public static String getUrlBaseGroup(){
+        return getUrlBaseYunjia() + "cloud-drive/api/v1/group";
     }
     /***************************************************************系统*******************************************************************/
     /**
@@ -104,7 +120,7 @@ public class APIUri {
      * @return
      */
     public static String getUploadPushInfoUrl(){
-        return  URL_BASE_YUNJIA+"message/api/v1/client";
+        return  getUrlBaseYunjia() + "message/api/v1/client";
     }
 
     /************************************************************************登录*****************************************************************/
@@ -492,7 +508,7 @@ public class APIUri {
      * @return
      */
     public static String getVolumeListUrl() {
-        return URL_BASE_VOLUME;
+        return getUrlBaseVolume();
     }
 
     /**
@@ -501,7 +517,7 @@ public class APIUri {
      * @return
      */
     public static String getUpdateVolumeInfoUrl(String volumeId){
-        return URL_BASE_VOLUME+"/"+volumeId;
+        return getUrlBaseVolume()+"/"+volumeId;
     }
 
     /**
@@ -510,7 +526,7 @@ public class APIUri {
      * @return
      */
     public static String getVolumeMemUrl(String volumeId){
-        return  URL_BASE_VOLUME+"/"+volumeId+"/member";
+        return  getUrlBaseVolume()+"/"+volumeId+"/member";
     }
 
     /**
@@ -519,7 +535,7 @@ public class APIUri {
      * @return
      */
     public static String getVolumeGroupUrl(String volumeId){
-        return  URL_BASE_VOLUME+"/"+volumeId+"/group";
+        return  getUrlBaseVolume()+"/"+volumeId+"/group";
     }
 
 
@@ -529,7 +545,7 @@ public class APIUri {
      * @return
      */
     public static String getGroupBaseUrl(String groupId){
-        return  URL_BASE_GROUP+"/"+groupId;
+        return  getUrlBaseGroup()+"/"+groupId;
     }
 
     /**
@@ -548,7 +564,7 @@ public class APIUri {
      * @return
      */
     public static String getVolumeFileOperationUrl(String volumeId) {
-        return URL_BASE_VOLUME + "/" + volumeId + "/file";
+        return getUrlBaseVolume() + "/" + volumeId + "/file";
     }
 
     /**
@@ -558,7 +574,7 @@ public class APIUri {
      * @return
      */
     public static String getVolumeFileUploadSTSTokenUrl(String volumeId) {
-        return URL_BASE_VOLUME + "/" + volumeId + "/file/request";
+        return getUrlBaseVolume() + "/" + volumeId + "/file/request";
     }
 
     /**
@@ -568,7 +584,7 @@ public class APIUri {
      * @return
      */
     public static String getCreateForderUrl(String volumeId) {
-        return URL_BASE_VOLUME + "/" + volumeId + "/directory";
+        return getUrlBaseVolume() + "/" + volumeId + "/directory";
     }
 
     /**
@@ -578,7 +594,7 @@ public class APIUri {
      * @return
      */
     public static String getVolumeFileRenameUrl(String volumeId) {
-        return URL_BASE_VOLUME + "/" + volumeId + "/file/name";
+        return getUrlBaseVolume() + "/" + volumeId + "/file/name";
     }
 
     /**
@@ -588,7 +604,7 @@ public class APIUri {
      * @return
      */
     public static String getMoveVolumeFileUrl(String volumeId) {
-        return URL_BASE_VOLUME + "/" + volumeId + "/file/path";
+        return getUrlBaseVolume() + "/" + volumeId + "/file/path";
     }
 
     /**
@@ -597,7 +613,7 @@ public class APIUri {
      * @return
      */
     public static String getCopyVolumeFileUrl(String volumeId){
-        return URL_BASE_VOLUME + "/" + volumeId +"/file/duplication";
+        return getUrlBaseVolume() + "/" + volumeId +"/file/duplication";
     }
 /************************************************************************工作****************************************************************************/
     /***************会议接口*****************************/
