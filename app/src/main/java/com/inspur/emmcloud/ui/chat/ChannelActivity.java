@@ -112,6 +112,7 @@ public class ChannelActivity extends BaseActivity {
         // TODO Auto-generated method stub
         super.onNewIntent(intent);
         setIntent(intent);
+        setContentView(R.layout.activity_channel);
         init();
         //当从群成员选择进入沟通频道的时候执行这里的记录
         recordUserClickChannel();

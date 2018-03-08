@@ -462,6 +462,7 @@ public class ECMChatInputMenu extends LinearLayout {
      * @param inputs
      */
     public void updateCommonMenuLayout(String inputs) {
+        inputTypeBeanList.clear();
         //功能组的图标，名称
         int[] functionIconArray = {R.drawable.ic_chat_input_add_gallery,
                 R.drawable.ic_chat_input_add_camera, R.drawable.ic_chat_input_add_file,
