@@ -24,9 +24,11 @@ public class VolumeGroupPermissionManagerAdapter extends RecyclerView.Adapter<Vo
     private LayoutInflater inflater;
     private List<Group> groupList = new ArrayList<>();
     private VolumeGroupPermissionManagerInterface volumeGroupPermissionManagerInterface;
+    private Context context;
 
     public VolumeGroupPermissionManagerAdapter(Context context){
         inflater = LayoutInflater.from(context);
+        this.context = context;
     }
 
     @Override
@@ -44,7 +46,7 @@ public class VolumeGroupPermissionManagerAdapter extends RecyclerView.Adapter<Vo
     @Override
     public void onBindViewHolder(VolumeGroupPermissionManagerAdapter.VolumeGroupPermissionManagerAdapterHolder holder, final int position) {
         holder.groupNameText.setText(groupList.get(position).getName());
-        holder.permissionText.setText(groupList.get(position).getPrivilege() > 4 ? "拥有读写权限":"拥有读权限");
+        holder.permissionText.setText(groupList.get(position).getPrivilege() > 4 ? context.getString(R.string.volume_read_write_permission):context.getString(R.string.volume_read_permission));
         holder.relativeLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
