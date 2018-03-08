@@ -2,12 +2,12 @@ package com.inspur.emmcloud.util.privates.cache;
 
 import android.content.Context;
 
-import com.inspur.emmcloud.bean.contact.Contact;
 import com.inspur.emmcloud.bean.chat.PersonDto;
 import com.inspur.emmcloud.bean.chat.Robot;
+import com.inspur.emmcloud.bean.contact.Contact;
 import com.inspur.emmcloud.util.common.PinyinUtils;
-import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
+import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 
 import org.json.JSONArray;
 import org.xutils.db.sqlite.WhereBuilder;
@@ -38,6 +38,26 @@ public class ContactCacheUtils {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
+    }
+
+    public static int deleteIllegalUser(Context context){
+        int illegalUserCount = 0;
+        try {
+
+            List<Contact> childUserList = DbCacheUtils.getDb(context).selector
+                    (Contact.class).where("type", "=", "user")
+                    .and(WhereBuilder.b().expr("length(id)>25"))
+                    .findAll();
+            illegalUserCount  = childUserList.size();
+            if (illegalUserCount>0){
+                DbCacheUtils.getDb(context).delete(childUserList);
+            }
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            illegalUserCount = -1;
+        }
+        return illegalUserCount;
     }
 
     /**

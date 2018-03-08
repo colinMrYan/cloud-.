@@ -2,15 +2,18 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingTop="10dp"
+    android:paddingTop="8dp"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
     android:orientation="horizontal">
 
     <com.inspur.emmcloud.widget.NoScrollGridView
         android:id="@+id/grid"
         android:listSelector="@android:color/transparent"
         android:numColumns="4"
-        android:paddingTop="8dp"
-        android:verticalSpacing="25dp"
+        android:layout_gravity="center_vertical"
+        android:horizontalSpacing="30dp"
+        android:verticalSpacing="30dp"
         android:stretchMode="columnWidth"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
