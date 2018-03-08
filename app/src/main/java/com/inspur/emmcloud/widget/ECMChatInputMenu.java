@@ -444,6 +444,10 @@ public class ECMChatInputMenu extends LinearLayout {
         this.isChannelGroup = isChannelGroup;
     }
 
+    public void setIsChannelGroup(boolean isChannelGroup){
+        this.isChannelGroup = isChannelGroup;
+    }
+
     public boolean hideAddMenuLayout() {
         if (addMenuLayout.getVisibility() != View.GONE) {
             addMenuLayout.setVisibility(View.GONE);
