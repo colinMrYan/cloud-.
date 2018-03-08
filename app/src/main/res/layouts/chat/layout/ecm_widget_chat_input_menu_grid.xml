@@ -13,7 +13,7 @@
         android:numColumns="4"
         android:layout_gravity="center_vertical"
         android:horizontalSpacing="30dp"
-        android:verticalSpacing="30dp"
+        android:verticalSpacing="25dp"
         android:stretchMode="columnWidth"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
