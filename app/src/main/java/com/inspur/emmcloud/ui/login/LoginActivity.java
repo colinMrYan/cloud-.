@@ -15,6 +15,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
@@ -22,11 +23,11 @@ import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.util.common.EditTextUtils;
 import com.inspur.emmcloud.util.common.InputMethodUtils;
 import com.inspur.emmcloud.util.common.IntentUtils;
-import com.inspur.emmcloud.util.privates.LoginUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
+import com.inspur.emmcloud.util.privates.LoginUtils;
 import com.inspur.emmcloud.widget.ClearEditText;
 import com.inspur.emmcloud.widget.LoadingDialog;
 
@@ -40,6 +41,7 @@ public class LoginActivity extends BaseActivity {
 
     private static final int LOGIN_SUCCESS = 0;
     private static final int LOGIN_FAIL = 1;
+    private static final int LOGIN_MORE = 2;
     private String userName;
     private String password;
 
@@ -49,6 +51,7 @@ public class LoginActivity extends BaseActivity {
     private EditText passwordEdit;
     private Button loginBtn;
     private ImageView seePWImg;
+    private TextView enterpriseTextView;
     private boolean canSee = false;
 
     @Override
@@ -104,6 +107,33 @@ public class LoginActivity extends BaseActivity {
                 canSee = !canSee;
             }
         });
+        initCloudPlusCluster();
+    }
+
+    /**
+     * 初始化多云
+     */
+    private void initCloudPlusCluster() {
+        String enterpriseName = PreferencesUtils
+                .getString(LoginActivity.this, "login_enterprise_name", "");
+        enterpriseTextView = (TextView)findViewById(R.id.login_current_enterprise);
+        enterpriseTextView.setVisibility(StringUtils.isBlank(enterpriseName)
+                ? View.INVISIBLE : View.VISIBLE);
+        enterpriseTextView.setText(enterpriseName);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        String enterpriseName = PreferencesUtils
+                .getString(LoginActivity.this, "login_enterprise_name", "");
+        if(!StringUtils.isBlank(enterpriseName)){
+            enterpriseTextView.setVisibility(View.VISIBLE);
+            enterpriseTextView.setText(enterpriseName);
+        }else{
+            enterpriseTextView.setVisibility(View.GONE);
+            enterpriseTextView.setText("");
+        }
     }
 
     public void onClick(View v) {
@@ -134,6 +164,11 @@ public class LoginActivity extends BaseActivity {
             case R.id.captchas_login_text:
                 IntentUtils.startActivity(LoginActivity.this,
                         CaptchasLoginActivity.class);
+                break;
+            case R.id.login_more_btn:
+                Intent intent = new Intent();
+                intent.setClass(LoginActivity.this,LoginMoreActivity.class);
+                startActivityForResult(intent,LOGIN_MORE);
                 break;
             default:
                 break;

@@ -28,6 +28,7 @@ import com.iflytek.cloud.SpeechUtility;
 import com.inspur.emmcloud.bean.mine.Enterprise;
 import com.inspur.emmcloud.bean.mine.GetMyInfoResult;
 import com.inspur.emmcloud.bean.mine.Language;
+import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.interf.MyActivityLifecycleCallbacks;
 import com.inspur.emmcloud.interf.OauthCallBack;
@@ -42,6 +43,7 @@ import com.inspur.emmcloud.util.privates.CalEventNotificationUtils;
 import com.inspur.emmcloud.util.privates.CrashHandler;
 import com.inspur.emmcloud.util.privates.ECMShortcutBadgeNumberManagerUtils;
 import com.inspur.emmcloud.util.privates.HuaWeiPushMangerUtils;
+import com.inspur.emmcloud.util.privates.MutilClusterUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUsersUtils;
 import com.inspur.emmcloud.util.privates.cache.DbCacheUtils;
 import com.inspur.imp.api.Res;
@@ -86,12 +88,15 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
     private List<OauthCallBack> callBackList = new ArrayList<OauthCallBack>();
     private String uid;
     private String accessToken;
+    private String refreshToken;
     private Enterprise currentEnterprise;
     private Map<String, String> userPhotoUrlMap;
     private static MyApplication instance;
     private MyActivityLifecycleCallbacks myActivityLifecycleCallbacks;
     private boolean isOpenNotification = false;
     private String tanent;
+    private String clusterEcm = Constant.DEFAULT_CLUSTER_ECM;//多云ecm服务
+    private String clusterEmm = Constant.DEFAULT_CLUSTER_EMM;//多云emm服务
 
     public void onCreate() {
         super.onCreate();
@@ -101,6 +106,12 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         myActivityLifecycleCallbacks = new MyActivityLifecycleCallbacks();
         registerActivityLifecycleCallbacks(myActivityLifecycleCallbacks);
     }
+
+    public String getCloudId() {
+        String clusterId = PreferencesUtils.getString(this,"cloud_idm", Constant.DEFAULT_CLUSTER_ID);
+        return StringUtils.isBlank(clusterId)? Constant.DEFAULT_CLUSTER_ID:clusterId;
+    }
+
 
     private void init() {
         // TODO Auto-generated method stub
@@ -128,6 +139,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
                 "isContactReady", false);
         uid = PreferencesUtils.getString(getApplicationContext(), "userID");
         accessToken = PreferencesUtils.getString(getApplicationContext(), "accessToken", "");
+        refreshToken = PreferencesUtils.getString(getApplicationContext(), "refreshToken", "");
         //科大讯飞语音SDK初始化
         SpeechUtility.createUtility(this, SpeechConstant.APPID +"=5a6001bf");
     }
@@ -354,6 +366,10 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         return accessToken;
     }
 
+    public String getRefreshToken() {
+        return refreshToken;
+    }
+
     public void setAccessToken(String accessToken) {
         this.accessToken = accessToken;
     }
@@ -418,15 +434,47 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
                         currentEnterprise = enterprise;
                         break;
                     }
-
                 }
             }
             if (currentEnterprise == null) {
                 currentEnterprise = getMyInfoResult.getDefaultEnterprise();
             }
+            MutilClusterUtils.changeClusterBaseUrl(currentEnterprise);
             String enterpriseCode = currentEnterprise.getCode();
             tanent = enterpriseCode;
         }
+    }
+
+    /**
+     * 获取ecm云
+     * @return
+     */
+    public String getClusterEcm() {
+        return clusterEcm;
+    }
+
+    /**
+     * 设置ecm云
+     * @param clusterEcm
+     */
+    public void setClusterEcm(String clusterEcm) {
+        this.clusterEcm = clusterEcm;
+    }
+
+    /**
+     * 获取emm云
+     * @return
+     */
+    public String getClusterEmm() {
+        return clusterEmm;
+    }
+
+    /**
+     * 设置emm云
+     * @return
+     */
+    public void setClusterEmm(String clusterEmm) {
+        this.clusterEmm = clusterEmm;
     }
 
     public String getTanent(){

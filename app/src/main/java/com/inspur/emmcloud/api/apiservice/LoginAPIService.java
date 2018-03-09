@@ -14,14 +14,13 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APICallback;
 import com.inspur.emmcloud.api.APIInterface;
 import com.inspur.emmcloud.api.APIUri;
-import com.inspur.emmcloud.bean.system.GetBoolenResult;
-import com.inspur.emmcloud.bean.login.GetLoginResult;
-import com.inspur.emmcloud.bean.mine.GetMyInfoResult;
 import com.inspur.emmcloud.bean.appcenter.GetRegisterCheckResult;
+import com.inspur.emmcloud.bean.login.GetLoginResult;
 import com.inspur.emmcloud.bean.login.GetUpdatePwdBySMSCodeBean;
+import com.inspur.emmcloud.bean.mine.GetMyInfoResult;
+import com.inspur.emmcloud.bean.system.GetBoolenResult;
 import com.inspur.emmcloud.interf.OauthCallBack;
 import com.inspur.emmcloud.util.privates.OauthUtils;
-import com.inspur.emmcloud.util.common.PreferencesUtils;
 
 import org.xutils.http.HttpMethod;
 import org.xutils.http.RequestParams;
@@ -86,8 +85,7 @@ public class LoginAPIService {
 	 */
 	public void refreshToken() {
 		String completeUrl = APIUri.getOauthSigninUrl();
-		String refreshToken = PreferencesUtils.getString(context,
-				"refreshToken", "");
+		String refreshToken = MyApplication.getInstance().getRefreshToken();
 		RequestParams params = new RequestParams(completeUrl);
 		params.addParameter("client_id", "com.inspur.ecm.client.android");
 		params.addParameter("client_secret",

@@ -111,6 +111,7 @@ public class MyAppFragment extends Fragment {
     private Map<String,AppBadgeBean> appBadgeBeanMap = new HashMap<>();
     private RecyclerView recommendAppWidgetListView = null;
     private RecommendAppWidgetListAdapter recommendAppWidgetListAdapter = null;
+    private int appListSizeExceptCommonlyUse = 0;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -561,7 +562,7 @@ public class MyAppFragment extends Fragment {
      */
     private void showCommonlyUseApps(App app,
                                      List<AppGroupBean> appAdapterList) {
-        if (AppCacheUtils.getCommonlyUseNeedShowList(getActivity()).size() > 0) {
+        if (AppCacheUtils.getCommonlyUseNeedShowList(getActivity()).size() > 0 && appAdapterList.size() > appListSizeExceptCommonlyUse) {
             //如果已经有了常用app则需要先移除掉第一组
             appAdapterList.remove(0);
             handCommonlyUseAppData(appAdapterList, true);
@@ -1127,6 +1128,7 @@ public class MyAppFragment extends Fragment {
         public void returnUserAppsSuccess(final GetAppGroupResult getAppGroupResult) {
             myAppSaveTask = new MyAppSaveTask();
             myAppSaveTask.execute(getAppGroupResult);
+            appListSizeExceptCommonlyUse = getAppGroupResult.getAppGroupBeanList().size();
         }
 
         @Override
