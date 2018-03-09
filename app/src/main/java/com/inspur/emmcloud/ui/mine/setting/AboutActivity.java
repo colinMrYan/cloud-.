@@ -50,7 +50,7 @@ public class AboutActivity extends BaseActivity {
 				String enterpriseName = PreferencesUtils
 						.getString(AboutActivity.this, "login_enterprise_name", "");
 				new ActionSheetDialog.ActionListSheetBuilder(AboutActivity.this)
-						.setTitle("当前系统-->"+ (StringUtils.isBlank(enterpriseName)?"默认":enterpriseName))
+						.setTitle(getString(R.string.current_system)+"-->"+ (StringUtils.isBlank(enterpriseName)?getString(R.string.cluster_default):enterpriseName))
 						.addItem("idm-->"+ MyApplication.getInstance().getCloudId())
 						.addItem("ecm-->"+ MyApplication.getInstance().getClusterEcm())
 						.addItem("emm-->"+ MyApplication.getInstance().getClusterEmm())
