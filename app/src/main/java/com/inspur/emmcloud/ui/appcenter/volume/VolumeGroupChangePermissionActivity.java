@@ -7,6 +7,7 @@ import android.widget.TextView;
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.appcenter.volume.Group;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.widget.SwitchView;
 
 import org.xutils.view.annotation.ContentView;
@@ -55,7 +56,9 @@ public class VolumeGroupChangePermissionActivity extends BaseActivity {
         readAndWritePermissionSwitch.setOnStateChangedListener(new SwitchView.OnStateChangedListener() {
             @Override
             public void toggleToOn(View view) {
+                LogUtils.YfcDebug("-------------------------");
                 readAndWritePermissionSwitch.toggleSwitch(true);
+                readPermissionSwitch.setEnable(false);
                 readPermissionSwitch.setPaintColorOn(0x667fc5f6);
                 readPermissionSwitch.setPaintCircleBtnColor(0xbb7fc5f6);
             }

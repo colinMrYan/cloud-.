@@ -431,6 +431,7 @@ public class SwitchView extends View {
 
 	public void setPaintColorOn(int paintColorOn) {
 		this.paintColorOn = paintColorOn;
+		postInvalidate();
 	}
 
 	public int getPaintCircleBtnColor() {
@@ -439,6 +440,7 @@ public class SwitchView extends View {
 
 	public void setPaintCircleBtnColor(int paintCircleBtnColor) {
 		this.paintCircleBtnColor = paintCircleBtnColor;
+		postInvalidate();
 	}
 
 	public int getPaintColorOff() {
