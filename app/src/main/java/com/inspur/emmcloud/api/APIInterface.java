@@ -610,4 +610,5 @@ public interface APIInterface {
 
     void returnVolumeGroupSuccess(GetVolumeResultWithPermissionResult getVolumeResultWithPermissionResult);
     void returnVolumeGroupFail(String error,int errorCode);
+
 }
