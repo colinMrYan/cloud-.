@@ -44,7 +44,8 @@ public class MsgActionAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         TextView textView = new TextView(context);
         textView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-        textView.setBackgroundResource(R.drawable.bg_corner);
+       // textView.setBackgroundResource(R.drawable.bg_corner);
+        textView.setBackgroundResource(R.color.white);
         textView.setTextSize(15);
         textView.setGravity(Gravity.CENTER);
         textView.setText(actionList.get(position).getTitle());

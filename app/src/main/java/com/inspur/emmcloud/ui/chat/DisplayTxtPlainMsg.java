@@ -10,7 +10,6 @@ import android.widget.TextView;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.bean.chat.Msg;
 import com.inspur.emmcloud.bean.chat.MsgRobot;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.ChatMsgContentUtils;
@@ -39,11 +38,7 @@ public class DisplayTxtPlainMsg {
                 ((MyApplication) context.getApplicationContext()).getUid());
         final TextView richText = (TextView) convertView
                 .findViewById(R.id.content_text);
-        (convertView.findViewById(R.id.card_layout)).setBackgroundColor(context.getResources().getColor(
-                isMyMsg ? R.color.bg_my_card : R.color.white));
-        richText.setTextColor(context.getResources().getColor(
-                isMyMsg ? R.color.white : R.color.black));
-        richText.setBackgroundResource(isMyMsg ? R.drawable.ic_chat_msg_img_cover_arrow_right : R.drawable.ic_chat_msg_img_cover_arrow_left);
+        (convertView.findViewById(R.id.card_layout)).setBackgroundResource(isMyMsg ? R.drawable.ic_chat_msg_img_cover_arrow_right : R.drawable.ic_chat_msg_img_cover_arrow_left);
         String text = msg.getMsgContentTextPlain().getText();
         richText.setMovementMethod(LinkMovementClickMethod.getInstance());
         SpannableString spannableString = ChatMsgContentUtils.mentionsAndUrl2Span(context,text,msg.getMsgContentTextPlain().getMentionsMap());

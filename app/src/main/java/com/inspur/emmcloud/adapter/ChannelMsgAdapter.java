@@ -227,6 +227,8 @@ public class ChannelMsgAdapter extends RecyclerView.Adapter<ChannelMsgAdapter.Vi
                     childView, msg);
         }
         holder.cardLayout.addView(childView);
+        holder.cardLayout.setBackgroundColor(context.getResources().getColor(
+                isMyMsg ? R.color.bg_my_card : R.color.white));
         holder.cardCoverView.setBackgroundResource(isMyMsg ? R.drawable.ic_chat_msg_img_cover_arrow_right : R.drawable.ic_chat_msg_img_cover_arrow_left);
         RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) holder.cardLayout.getLayoutParams();
         //此处实际执行params.removeRule();

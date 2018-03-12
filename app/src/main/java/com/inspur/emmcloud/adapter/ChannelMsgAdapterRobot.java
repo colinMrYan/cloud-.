@@ -23,7 +23,7 @@ import com.inspur.emmcloud.ui.chat.DisplayAttachmentFileMsg;
 import com.inspur.emmcloud.ui.chat.DisplayExtendedActionsMsg;
 import com.inspur.emmcloud.ui.chat.DisplayResUnknownMsgRobot;
 import com.inspur.emmcloud.ui.chat.DisplayTxtPlainMsg;
-import com.inspur.emmcloud.ui.chat.DisplayTxtRichMsgRobot;
+import com.inspur.emmcloud.ui.chat.DisplayTxtMarkdownMsg;
 import com.inspur.emmcloud.ui.contact.RobotInfoActivity;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
 import com.inspur.emmcloud.util.common.IntentUtils;
@@ -190,7 +190,7 @@ public class ChannelMsgAdapterRobot extends RecyclerView.Adapter<ChannelMsgAdapt
                 break;
             case "text/markdown":
                 holder.cardCoverView.setVisibility(View.GONE);
-                cardContentView = DisplayTxtRichMsgRobot.getView(context,
+                cardContentView = DisplayTxtMarkdownMsg.getView(context,
                         msg);
                 break;
             case "attachment/file":
@@ -218,6 +218,7 @@ public class ChannelMsgAdapterRobot extends RecyclerView.Adapter<ChannelMsgAdapt
 //                        msg);
 //                break;
             case "extended/actions":
+                holder.cardCoverView.setVisibility(View.GONE);
                 cardContentView = DisplayExtendedActionsMsg.getView(context, msg);
                 break;
             default:
