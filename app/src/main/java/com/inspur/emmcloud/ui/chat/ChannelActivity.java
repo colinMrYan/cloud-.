@@ -196,6 +196,8 @@ public class ChannelActivity extends BaseActivity {
         chatInputMenu = (ECMChatInputMenu) findViewById(R.id.chat_input_menu);
         if (channel.getType().equals("GROUP")) {
             chatInputMenu.setIsChannelGroup(true, cid);
+        }else {
+            chatInputMenu.setIsChannelGroup(false);
         }
         chatInputMenu.setChatInputMenuListener(new ChatInputMenuListener() {
 

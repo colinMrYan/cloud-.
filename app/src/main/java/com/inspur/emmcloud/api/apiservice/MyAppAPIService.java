@@ -360,8 +360,9 @@ public class MyAppAPIService {
      *
      * @param urlParams
      */
-    public void getAuthCode(final String urlParams) {
-        final String completeUrl = APIUri.getAppAuthCodeUri() + "?" + urlParams;
+    public void getAuthCode(final String requestUrl, final String urlParams) {
+//        final String completeUrl = APIUri.getAppAuthCodeUri() + "?" + urlParams;
+        final String completeUrl = requestUrl + "/oauth2.0/quick_authz_code" + "?" + urlParams;
         RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(completeUrl);
         x.http().get(params, new APICallback(context, completeUrl) {
             @Override
@@ -379,7 +380,7 @@ public class MyAppAPIService {
                 new OauthUtils(new OauthCallBack() {
                     @Override
                     public void reExecute() {
-                        getAuthCode(urlParams);
+                        getAuthCode(requestUrl,urlParams);
                     }
 
                     @Override

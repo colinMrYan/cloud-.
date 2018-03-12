@@ -38,6 +38,7 @@ public class App implements Serializable {
 	private double weight = 0;
 	private String installUri = "";
 	private String helpUrl = "";
+	private int isSSO = -1;
 
 	//应用功能扩展字段
 	private int isZoomable = 0;
@@ -114,6 +115,7 @@ public class App implements Serializable {
 			categoryID = JSONUtils.getString(obj,"category_id","");
 			categoryName = JSONUtils.getString(obj,"category_name","");
 			helpUrl = JSONUtils.getString(obj,"help_url","");
+			isSSO = JSONUtils.getInt(obj,"is_sso",-1);
 			//对helpUrl特殊处理，因为服务端有时返回""，有时返回null返回null时fastJson会把此字段解析为字符串"null",需要特殊处理
 			if(helpUrl.equals("null")){
 				helpUrl = "";
@@ -205,6 +207,7 @@ public class App implements Serializable {
             categoryID = JSONUtils.getString(obj,"category_id","");
             categoryName = JSONUtils.getString(obj,"category_name","");
             helpUrl = JSONUtils.getString(obj,"help_url","");
+			isSSO = JSONUtils.getInt(obj,"is_sso",-1);
             //对helpUrl特殊处理，因为服务端有时返回""，有时返回null返回null时fastJson会把此字段解析为字符串"null",需要特殊处理
             if(helpUrl.equals("null")){
                 helpUrl = "";
@@ -405,6 +408,14 @@ public class App implements Serializable {
 		this.helpUrl = helpUrl;
 	}
 
+	public int getIsSSO() {
+		return isSSO;
+	}
+
+	public void setIsSSO(int isSSO) {
+		this.isSSO = isSSO;
+	}
+
 	@Override
 	public boolean equals(Object other) {
 		if(this == other){
@@ -450,6 +461,7 @@ public class App implements Serializable {
 				", weight=" + weight +
 				", installUri='" + installUri + '\'' +
 				", helpUrl='" + helpUrl + '\'' +
+				", isSSO=" + isSSO +
 				", isZoomable=" + isZoomable +
 				'}';
 	}
