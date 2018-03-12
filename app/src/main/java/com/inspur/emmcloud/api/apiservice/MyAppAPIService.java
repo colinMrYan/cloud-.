@@ -1353,4 +1353,44 @@ public class MyAppAPIService {
         });
 
     }
+
+    /**
+     * 修改文件夹组权限
+     * @param volumeId
+     * @param path
+     * @param group
+     * @param privilege
+     * @param recurse
+     */
+    public void updateVolumeFileGroupPermission(final String volumeId, final String path, final String group, final int privilege, final boolean recurse){
+        final String url = APIUri.getVolumeFileGroupUrl(volumeId)+"?path="+path+"&group="+group+"&privilege="+privilege+"&recurse="+recurse;
+        RequestParams params = ((MyApplication)context.getApplicationContext()).getHttpRequestParams(url);
+        x.http().request(HttpMethod.PUT, params, new APICallback(context,url) {
+            @Override
+            public void callbackSuccess(String arg0) {
+                LogUtils.YfcDebug("修改权限成功："+arg0);
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                LogUtils.YfcDebug("修改权限失败："+error);
+                LogUtils.YfcDebug("修改权限失败responseCode："+responseCode);
+            }
+
+            @Override
+            public void callbackTokenExpire() {
+                new OauthUtils(new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        updateVolumeFileGroupPermission(volumeId,path,group,privilege,recurse);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                },context).refreshToken(url);
+            }
+        });
+    }
 }

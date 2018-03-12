@@ -6,8 +6,8 @@ import android.widget.TextView;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
 import com.inspur.emmcloud.bean.appcenter.volume.Group;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.widget.SwitchView;
 
 import org.xutils.view.annotation.ContentView;
@@ -34,6 +34,8 @@ public class VolumeGroupChangePermissionActivity extends BaseActivity {
     @ViewInject(R.id.volume_read_permission_switch)
     protected SwitchView readPermissionSwitch;
 
+    private MyAppAPIService myAppAPIService;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,7 +46,8 @@ public class VolumeGroupChangePermissionActivity extends BaseActivity {
      * 初始化Views
      */
     private void initViews() {
-        Group group = (Group) getIntent().getSerializableExtra("volumeGroup");
+        myAppAPIService = new MyAppAPIService(VolumeGroupChangePermissionActivity.this);
+        final Group group = (Group) getIntent().getSerializableExtra("volumeGroup");
         headerText.setText(group.getName());
         readAndWritePermissionText.setText(getString(R.string.volume_read_write_permission));
         readPermissionText.setText(getString(R.string.volume_read_permission));
@@ -56,8 +59,10 @@ public class VolumeGroupChangePermissionActivity extends BaseActivity {
         readAndWritePermissionSwitch.setOnStateChangedListener(new SwitchView.OnStateChangedListener() {
             @Override
             public void toggleToOn(View view) {
-                LogUtils.YfcDebug("-------------------------");
+                myAppAPIService.updateVolumeFileGroupPermission(group.getVolume(),getIntent().getStringExtra("volumePath"),group.getId(),6,true);
                 readAndWritePermissionSwitch.toggleSwitch(true);
+                readPermissionSwitch.setIsCodeManual(true,true);
+                readPermissionSwitch.setOpened(true);
                 readPermissionSwitch.setEnable(false);
                 readPermissionSwitch.setPaintColorOn(0x667fc5f6);
                 readPermissionSwitch.setPaintCircleBtnColor(0xbb7fc5f6);

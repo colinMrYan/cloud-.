@@ -57,6 +57,7 @@ public class VolumeFilePermissionManagerActivity extends BaseActivity{
                 Intent intent = new Intent();
                 intent.setClass(VolumeFilePermissionManagerActivity.this,VolumeGroupChangePermissionActivity.class);
                 intent.putExtra("volumeGroup",group);
+                intent.putExtra("volumePath",getIntent().getStringExtra("currentDirAbsolutePath"));
                 startActivity(intent);
             }
         });
