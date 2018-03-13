@@ -120,7 +120,7 @@ public class APIUri {
      * @return
      */
     public static String getUploadPushInfoUrl(){
-        return  getUrlBaseYunjia() + "message/api/v1/client";
+        return  getUrlBaseYunjia() + "client-registry/api/v1/client";
     }
 
     /************************************************************************登录*****************************************************************/
@@ -301,7 +301,7 @@ public class APIUri {
      * @return
      */
     public static String getWebsocketConnectUrl(){
-        return MyApplication.getInstance().getClusterEcm();
+        return MyApplication.getInstance().getClusterEcm()+"api/v1";
     }
 
     /**************************************************应用和应用中心********************************************************************/

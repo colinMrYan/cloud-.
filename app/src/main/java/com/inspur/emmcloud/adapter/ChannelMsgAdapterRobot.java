@@ -218,8 +218,7 @@ public class ChannelMsgAdapterRobot extends RecyclerView.Adapter<ChannelMsgAdapt
 //                        msg);
 //                break;
             case "extended/actions":
-                holder.cardCoverView.setVisibility(View.GONE);
-                cardContentView = DisplayExtendedActionsMsg.getView(context, msg);
+                cardContentView = DisplayExtendedActionsMsg.getInstance(context).getView(msg);
                 break;
             default:
                 cardContentView = DisplayResUnknownMsgRobot.getView(context,

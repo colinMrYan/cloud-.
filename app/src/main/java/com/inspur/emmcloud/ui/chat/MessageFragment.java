@@ -162,9 +162,9 @@ public class MessageFragment extends Fragment{
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
         initView();
-        registerMessageFragmentReceiver();
         getChannelList();
         sortChannelList();// 对Channel 进行排序
+        registerMessageFragmentReceiver();
         showMessageButtons();
         EventBus.getDefault().register(this);
     }
@@ -608,7 +608,6 @@ public class MessageFragment extends Fragment{
                         displayChannelList.addAll(channelList);
                         displayData();// 展示数据
                         registerMsgReceiver();// 注册接收消息的广播
-                        ((MyApplication) getActivity().getApplicationContext()).startWebSocket();// 启动webSocket推送
                         break;
                     default:
                         break;

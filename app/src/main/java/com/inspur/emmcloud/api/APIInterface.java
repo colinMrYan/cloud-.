@@ -42,6 +42,7 @@ import com.inspur.emmcloud.bean.chat.GetNewMsgsResult;
 import com.inspur.emmcloud.bean.chat.GetNewsImgResult;
 import com.inspur.emmcloud.bean.chat.GetNewsInstructionResult;
 import com.inspur.emmcloud.bean.chat.GetSendMsgResult;
+import com.inspur.emmcloud.bean.chat.GetUploadPushInfoResult;
 import com.inspur.emmcloud.bean.chat.GetWebSocketUrlResult;
 import com.inspur.emmcloud.bean.chat.Robot;
 import com.inspur.emmcloud.bean.contact.GetAllContactResult;
@@ -604,6 +605,12 @@ public interface APIInterface {
     void returnGroupMemDelSuccess(List<String> uidList);
     void returnGroupMemDelFail(String error, int errorCode);
 
+    void returnUploadPushInfoResultSuccess(GetUploadPushInfoResult getUploadPushInfoResult);
+    void returnUploadPushInfoResultFail(String error, int errorCode);
+
     void returnVolumeGroupContainMeSuccess(GetVolumeGroupResult getVolumeGroupResult);
     void returnVolumeGroupContainMeFail(String error, int errorCode);
+
+    void returnOpenActionBackgroudUrlSuccess();
+    void returnOpenActionBackgroudUrlFail(String error, int errorCode);
 }

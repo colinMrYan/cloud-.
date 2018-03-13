@@ -298,10 +298,10 @@ public class IndexActivity extends BaseFragmentActivity implements
                         if (loadingDlg != null && loadingDlg.isShowing()) {
                             loadingDlg.dismiss();
                         }
-
                         ((MyApplication) getApplicationContext())
                                 .setIsContactReady(true);
                         notifySyncAllBaseDataSuccess();
+                        ((MyApplication) getApplicationContext()).startWebSocket();// 启动webSocket推送
                         deleteIllegalUser();
                         break;
                     case RELOAD_WEB:

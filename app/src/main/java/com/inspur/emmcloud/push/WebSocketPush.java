@@ -6,9 +6,14 @@ import android.util.Log;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.api.APIUri;
+import com.inspur.emmcloud.config.Constant;
+import com.inspur.emmcloud.interf.CommonCallBack;
 import com.inspur.emmcloud.util.common.LogUtils;
+import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
+import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
+import com.inspur.emmcloud.util.privates.PushInfoUtils;
 
 import java.net.URISyntaxException;
 import java.util.Arrays;
@@ -51,12 +56,23 @@ public class WebSocketPush {
 	 */
 	public void start() {
 		// TODO Auto-generated method stub
-		String pushId = AppUtils.getPushId(context);
+		final String pushId = AppUtils.getPushId(context);
 		if(((MyApplication)context.getApplicationContext()).isHaveLogin() && !StringUtils.isBlank(pushId)){
-			String url = APIUri.getWebsocketConnectUrl();
-			String enterpriseCode = ((MyApplication)context.getApplicationContext()).getCurrentEnterprise().getCode();
-			String path = "/"+enterpriseCode+"/socket/handshake";
-			WebSocketConnect(url, path,pushId);
+			new PushInfoUtils(context, new CommonCallBack() {
+				@Override
+				public void execute() {
+					if (NetUtils.isNetworkConnected(context, false)) {
+						String url = APIUri.getWebsocketConnectUrl();
+						LogUtils.jasonDebug("url="+url);
+						String path = "/chat/socket/handshake";
+						WebSocketConnect(url, path,pushId);
+					}
+				}
+			}).getChatClientId();
+
+
+
+
 		}else {
 			sendWebSocketStatusBroadcaset(Socket.EVENT_DISCONNECT);
 		}
@@ -72,10 +88,14 @@ public class WebSocketPush {
 				IO.Options opts = new IO.Options();
 				opts.reconnectionAttempts = 4; // 设置websocket重连次数
 				opts.forceNew = true;
+				String clientId = PreferencesByUserAndTanentUtils.getString(context, Constant.PREF_CHAT_CLIENTID, "");
 				Map<String, String> query = new HashMap<String, String>();
-				query.put("device.id", uuid);
-				query.put("device.name", deviceName);
-				query.put("device.push", pushId);
+				query.put("client", clientId);
+				query.put("deviceId", uuid);
+				query.put("deviceName", deviceName);
+				query.put("platform", "android");
+				query.put("notificationTracer", pushId);
+				query.put("notificationProvider", new PushInfoUtils(context).getPushProvider());
 				// opts.transports = new String[] { Polling.NAME };
 				opts.path = path;
 				LogUtils.debug(TAG, "query.toString()=" + ParseQS.encode(query));
@@ -171,6 +191,7 @@ public class WebSocketPush {
 			public void call(Object... arg0) {
 				// TODO Auto-generated method stub
 				LogUtils.debug(TAG, "连接失败");
+				LogUtils.debug(TAG,  arg0[0].toString());
 				sendWebSocketStatusBroadcaset(Socket.EVENT_CONNECT_ERROR);
 
 			}
@@ -230,6 +251,7 @@ public class WebSocketPush {
 				// TODO Auto-generated method stub
 				sendWebSocketStatusBroadcaset(Socket.EVENT_DISCONNECT);
 				LogUtils.debug(TAG, "断开连接");
+				LogUtils.debug(TAG,  arg0[0].toString());
 			}
 		});
 

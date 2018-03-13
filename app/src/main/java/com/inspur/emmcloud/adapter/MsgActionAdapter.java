@@ -1,14 +1,14 @@
 package com.inspur.emmcloud.adapter;
 
 import android.content.Context;
-import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.bean.chat.MsgContentExtendedActions;
+import com.inspur.emmcloud.bean.chat.Action;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,10 +19,13 @@ import java.util.List;
 
 public class MsgActionAdapter extends BaseAdapter {
     private Context context;
-    private List<MsgContentExtendedActions.Action> actionList = new ArrayList<>();
-    public MsgActionAdapter(Context context, List<MsgContentExtendedActions.Action> actionList) {
+    private List<Action> actionList = new ArrayList<>();
+    private String arrangement;
+
+    public MsgActionAdapter(Context context, List<Action> actionList, String arrangement) {
         this.context = context;
         this.actionList = actionList;
+        this.arrangement = arrangement;
     }
 
     @Override
@@ -42,13 +45,12 @@ public class MsgActionAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        TextView textView = new TextView(context);
-        textView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-       // textView.setBackgroundResource(R.drawable.bg_corner);
-        textView.setBackgroundResource(R.color.white);
-        textView.setTextSize(15);
-        textView.setGravity(Gravity.CENTER);
-        textView.setText(actionList.get(position).getTitle());
-        return textView;
+        convertView = LayoutInflater.from(context).inflate((arrangement.equals("horizontal") ?
+                R.layout.chat_msg_card_action_horizontal_item_view : R.layout.chat_msg_card_action_vertical_item_view), null);
+        TextView actionText = (TextView) convertView.findViewById(R.id.action_text);
+        View dividerView = convertView.findViewById(R.id.divider_view);
+        actionText.setText(actionList.get(position).getTitle());
+        dividerView.setVisibility((position == getCount() - 1) ? View.GONE : View.VISIBLE);
+        return convertView;
     }
 }
