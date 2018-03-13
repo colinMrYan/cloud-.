@@ -23,6 +23,7 @@ import com.inspur.emmcloud.bean.appcenter.news.GetGroupNewsDetailResult;
 import com.inspur.emmcloud.bean.appcenter.news.GetNewsTitleResult;
 import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeFileListResult;
 import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeFileUploadTokenResult;
+import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeGroupPermissionResult;
 import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeGroupResult;
 import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeListResult;
 import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeResultWithPermissionResult;
@@ -1588,6 +1589,16 @@ public class APIInterfaceInstance implements APIInterface {
 
     @Override
     public void returnVolumeGroupFail(String error, int errorCode) {
+
+    }
+
+    @Override
+    public void returnUpdateVolumeGroupPermissionSuccess(GetVolumeGroupPermissionResult getVolumeGroupPermissionResult) {
+
+    }
+
+    @Override
+    public void returnUpdateVolumeGroupPermissionFail(String error, int errorCode) {
 
     }
 }

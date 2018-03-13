@@ -26,6 +26,7 @@ import com.inspur.emmcloud.bean.appcenter.news.GetGroupNewsDetailResult;
 import com.inspur.emmcloud.bean.appcenter.news.GetNewsTitleResult;
 import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeFileListResult;
 import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeFileUploadTokenResult;
+import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeGroupPermissionResult;
 import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeGroupResult;
 import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeListResult;
 import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeResultWithPermissionResult;
@@ -1368,13 +1369,14 @@ public class MyAppAPIService {
         x.http().request(HttpMethod.PUT, params, new APICallback(context,url) {
             @Override
             public void callbackSuccess(String arg0) {
-                LogUtils.YfcDebug("修改权限成功："+arg0);
+                GetVolumeGroupPermissionResult getVolumeGroupPermissionResult = new GetVolumeGroupPermissionResult("");
+                getVolumeGroupPermissionResult.setPrivilege(privilege);
+                apiInterface.returnUpdateVolumeGroupPermissionSuccess(getVolumeGroupPermissionResult);
             }
 
             @Override
             public void callbackFail(String error, int responseCode) {
-                LogUtils.YfcDebug("修改权限失败："+error);
-                LogUtils.YfcDebug("修改权限失败responseCode："+responseCode);
+                apiInterface.returnUpdateVolumeGroupPermissionFail(error,responseCode);
             }
 
             @Override
