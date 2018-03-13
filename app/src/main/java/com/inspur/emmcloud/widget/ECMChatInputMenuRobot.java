@@ -8,11 +8,13 @@ package com.inspur.emmcloud.widget;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Handler;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -24,12 +26,14 @@ import com.inspur.emmcloud.bean.chat.InputTypeBean;
 import com.inspur.emmcloud.bean.chat.InsertModel;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.interf.OnVoiceResultCallback;
+import com.inspur.emmcloud.ui.chat.MembersActivity;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.InputMethodUtils;
 import com.inspur.emmcloud.util.common.MediaPlayerUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
+import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.Voice2StringMessageUtils;
 
 import org.xutils.view.annotation.Event;
@@ -38,8 +42,6 @@ import org.xutils.x;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 
 /**
@@ -73,13 +75,15 @@ public class ECMChatInputMenuRobot extends LinearLayout {
     @ViewInject(R.id.voice_input_layout)
     private LinearLayout voiceInputLayout;
 
-    private boolean isChannelGroup = false;
+    private boolean canMentions = false;
     private ChatInputMenuListener chatInputMenuListener;
     private List<InputTypeBean> inputTypeBeanList = new ArrayList<>();
     private View otherLayoutView;
     private Voice2StringMessageUtils voice2StringMessageUtils;
     private MediaPlayerUtils mediaPlayerUtils;
     private String botUid = "";
+    private String cid = "";
+    private String inputs;
 
     public ECMChatInputMenuRobot(Context context) {
         this(context, null);
@@ -127,11 +131,152 @@ public class ECMChatInputMenuRobot extends LinearLayout {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 boolean isContentBlank = (s.length() == 0);
                 sendMsgBtn.setVisibility(isContentBlank ? View.GONE : VISIBLE);
-                addBtn.setVisibility(isContentBlank ? VISIBLE : GONE);
+                if (StringUtils.isBlank(inputs) || (!StringUtils.isBlank(inputs) && !inputs.equals("1"))) {
+                    addBtn.setVisibility(isContentBlank ? VISIBLE : GONE);
+                }
+                if (canMentions && count == 1) {
+                    String inputWord = s.toString().substring(start, start + count);
+                    if (inputWord.equals("@")) {
+                        openMentionPage(true);
+                    }
+                }
             }
         });
     }
 
+    /**
+     * 设置是否可以@
+     *
+     * @param canMentions
+     * @param cid
+     */
+    public void setCanMentions(boolean canMentions, String cid) {
+        this.canMentions = canMentions;
+        this.cid = cid;
+    }
+
+    /**
+     * 添加mentions
+     *
+     * @param uid
+     * @param name
+     * @param isInputKeyWord
+     */
+    public void addMentions(String uid, String name, boolean isInputKeyWord) {
+        if (uid != null && name != null) {
+            inputEdit.insertSpecialStr(isInputKeyWord, new InsertModel("@", uid, name, "#99CCFF"));
+        }
+    }
+
+    /**
+     * 根据二进制字符串更新菜单视图
+     * 此处与IOS客户端略有不同，IOS客户端当inputs为"2"时则隐藏整个输入面板，没有任何输入入口
+     * 服务端允许输入类型1支持，0不支持
+     * 每一位bit代表的意义为（高位）video，voice，command，file，photo，text（低位）
+     *
+     * @param inputs
+     */
+    public void updateCommonMenuLayout(String inputs) {
+        inputTypeBeanList.clear();
+        this.inputs = inputs;
+        //功能组的图标，名称
+        int[] functionIconArray = {R.drawable.ic_chat_input_add_gallery,
+                R.drawable.ic_chat_input_add_camera, R.drawable.ic_chat_input_add_file,
+                R.drawable.ic_chat_input_add_mention};
+        String[] functionNameArray = {getContext().getString(R.string.album),
+                getContext().getString(R.string.take_photo),
+                getContext().getString(R.string.file),
+                "@"};
+        String[] actionArray = {"gallery", "camera", "file", "mention"};
+        String binaryString = "-1";
+        //如果第一位是且只能是1即 "1" 如果inputs是其他，例如"2"则走下面逻辑
+        //这种情况是只开放了输入文字的权限
+        if (!StringUtils.isBlank(inputs)) {
+            if (inputs.equals("1")) {
+                addBtn.setVisibility(View.GONE);
+                return;
+            }
+            binaryString = new StringBuffer(Integer.toBinaryString(Integer.parseInt(inputs))).reverse().toString();
+        }
+        //处理默认情况，也就是普通频道的情况
+        if (binaryString.equals("-1")) {
+            //目前开放三位，有可能扩展
+            binaryString = "1111";
+        }
+        //控制binaryString长度，防止穿的数字过大
+        int binaryLength = binaryString.length() > 4 ? 4 : binaryString.length();
+        for (int i = 0; i < binaryLength; i++) {
+            //第一位已经处理过了，这里不再处理
+            //这里如果禁止输入文字时，inputEdit设置Enabled
+            if (i == 0) {
+                inputEdit.setEnabled((binaryString.charAt(0) + "").equals("1"));
+                continue;
+            }
+            if ((binaryString.charAt(i) + "").equals("1")) {
+                //对于第二位特殊处理，如果第二位是"1"则添加相册，拍照两个功能，与服务端确认目前这样实现
+                //存在的疑问，如果仅显示相册或仅显示拍照应该如何处理？
+                if (i == 1) {
+                    InputTypeBean inputTypeBeanGallery = new InputTypeBean(functionIconArray[0], functionNameArray[0], actionArray[0]);
+                    inputTypeBeanList.add(inputTypeBeanGallery);
+                    InputTypeBean inputTypeBeanCamera = new InputTypeBean(functionIconArray[1], functionNameArray[1], actionArray[1]);
+                    inputTypeBeanList.add(inputTypeBeanCamera);
+                } else {
+                    InputTypeBean inputTypeBean = new InputTypeBean(functionIconArray[i], functionNameArray[i], actionArray[i]);
+                    inputTypeBeanList.add(inputTypeBean);
+                }
+            }
+        }
+        //如果是群组的话添加@功能
+        if (canMentions) {
+            InputTypeBean inputTypeBean = new InputTypeBean(functionIconArray[4], functionNameArray[4], actionArray[4]);
+            inputTypeBeanList.add(inputTypeBean);
+        }
+        viewpagerLayout.setOnGridItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                InputTypeBean inputTypeBean = inputTypeBeanList.get(position);
+                switch (inputTypeBean.getAction()) {
+                    case "gallery":
+                        AppUtils.openGallery((Activity) getContext(), 5, GELLARY_RESULT);
+                        break;
+                    case "camera":
+                        String fileName = System.currentTimeMillis() + ".jpg";
+                        PreferencesUtils.putString(getContext(), "capturekey", fileName);
+                        AppUtils.openCamera((Activity) getContext(), fileName, CAMERA_RESULT);
+                        break;
+                    case "file":
+                        AppUtils.openFileSystem((Activity) getContext(), CHOOSE_FILE);
+                        break;
+                    case "mention":
+                        openMentionPage(false);
+                        break;
+                    default:
+                        break;
+                }
+            }
+        });
+        viewpagerLayout.setInputTypeBeanList(inputTypeBeanList);
+    }
+
+    /**
+     * 是否是输入了关键字@字符打开mention页
+     *
+     * @param isInputKeyWord
+     */
+    private void openMentionPage(boolean isInputKeyWord) {
+        Intent intent = new Intent();
+        intent.setClass(getContext(), MembersActivity.class);
+        intent.putExtra("title", getContext().getString(R.string.friend_list));
+        intent.putExtra("cid", cid);
+        intent.putExtra("isInputKeyWord", isInputKeyWord);
+        ((Activity) getContext()).overridePendingTransition(
+                R.anim.activity_open, 0);
+
+        ((Activity) getContext()).startActivityForResult(intent,
+                MENTIONS_RESULT);
+
+    }
 
     /**
      * 初始化语言输入相关
@@ -149,8 +294,8 @@ public class ECMChatInputMenuRobot extends LinearLayout {
                 if (results.length() == 1 && StringUtils.isSymbol(results)) {
                     results = "";
                 }
-                if (!StringUtils.isBlank(results)){
-                    chatInputMenuListener.onSendMsg(results);
+                if (!StringUtils.isBlank(results)) {
+                    chatInputMenuListener.onSendMsg(results, getContentMentionUidList());
                 }
             }
 
@@ -205,22 +350,22 @@ public class ECMChatInputMenuRobot extends LinearLayout {
             case R.id.send_msg_btn:
                 if (NetUtils.isNetworkConnected(getContext())) {
                     String content = inputEdit.getRichContent();
-                    chatInputMenuListener.onSendMsg(content);
+                    chatInputMenuListener.onSendMsg(content, getContentMentionUidList());
                     inputEdit.setText("");
                 }
                 break;
             case R.id.add_btn:
-                    if (addMenuLayout.isShown()) {
-                        setOtherLayoutHeightLock(true);
-                        setAddMenuLayoutShow(false);
-                        setOtherLayoutHeightLock(false);
-                    } else if (InputMethodUtils.isSoftInputShow((Activity) getContext())) {
-                        setOtherLayoutHeightLock(true);
-                        setAddMenuLayoutShow(true);
-                        setOtherLayoutHeightLock(false);
-                    } else {
-                        setAddMenuLayoutShow(true);
-                    }
+                if (addMenuLayout.isShown()) {
+                    setOtherLayoutHeightLock(true);
+                    setAddMenuLayoutShow(false);
+                    setOtherLayoutHeightLock(false);
+                } else if (InputMethodUtils.isSoftInputShow((Activity) getContext())) {
+                    setOtherLayoutHeightLock(true);
+                    setAddMenuLayoutShow(true);
+                    setOtherLayoutHeightLock(false);
+                } else {
+                    setAddMenuLayoutShow(true);
+                }
 
                 break;
             case R.id.voice_input_close_img:
@@ -232,7 +377,7 @@ public class ECMChatInputMenuRobot extends LinearLayout {
         }
     }
 
-    public boolean isVoiceInput(){
+    public boolean isVoiceInput() {
         return voiceInputLayout.getVisibility() == View.VISIBLE;
     }
 
@@ -250,22 +395,6 @@ public class ECMChatInputMenuRobot extends LinearLayout {
             mentionsUidList.add(insertModel.getInsertId());
         }
         return mentionsUidList;
-    }
-
-    /**
-     * 获取content中urlList
-     *
-     * @param content
-     * @return
-     */
-    private List<String> getContentUrlList(String content) {
-        Pattern pattern = Pattern.compile(Constant.PATTERN_URL);
-        ArrayList<String> urlList = new ArrayList<>();
-        Matcher matcher = pattern.matcher(content);
-        while (matcher.find()) {
-            urlList.add(matcher.group(0));
-        }
-        return urlList;
     }
 
 
@@ -322,12 +451,12 @@ public class ECMChatInputMenuRobot extends LinearLayout {
 
     }
 
-    public boolean isAddMenuLayoutShow(){
+    public boolean isAddMenuLayoutShow() {
         return addMenuLayout.isShown();
     }
 
 
-    public void hideAddMenuLayout(){
+    public void hideAddMenuLayout() {
         addMenuLayout.setVisibility(View.GONE);
     }
 
@@ -383,7 +512,7 @@ public class ECMChatInputMenuRobot extends LinearLayout {
 
 
     public interface ChatInputMenuListener {
-        void onSendMsg(String content);
+        void onSendMsg(String content, List<String> mentionsUidList);
     }
 
 

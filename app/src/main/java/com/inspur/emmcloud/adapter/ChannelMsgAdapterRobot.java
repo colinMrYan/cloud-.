@@ -22,13 +22,12 @@ import com.inspur.emmcloud.ui.chat.DisplayAttachmentCardMsg;
 import com.inspur.emmcloud.ui.chat.DisplayAttachmentFileMsg;
 import com.inspur.emmcloud.ui.chat.DisplayExtendedActionsMsg;
 import com.inspur.emmcloud.ui.chat.DisplayResUnknownMsgRobot;
-import com.inspur.emmcloud.ui.chat.DisplayTxtPlainMsg;
 import com.inspur.emmcloud.ui.chat.DisplayTxtMarkdownMsg;
+import com.inspur.emmcloud.ui.chat.DisplayTxtPlainMsg;
 import com.inspur.emmcloud.ui.contact.RobotInfoActivity;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
-import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.RobotCacheUtils;
 import com.inspur.emmcloud.widget.ECMChatInputMenuRobot;
@@ -245,21 +244,21 @@ public class ChannelMsgAdapterRobot extends RecyclerView.Adapter<ChannelMsgAdapt
      */
     private void showMsgSendTime(ViewHolder holder, MsgRobot msg, int position) {
         // TODO Auto-generated method stub
-        long msgTimeLong = msg.getTime();
-        long lastMsgTimelong = 0;
-        if (position != 0) {
-            lastMsgTimelong = msgList.get(
-                    position - 1).getTime();
-        }
-        long duration = msgTimeLong - lastMsgTimelong;
-        if (duration >= 180000) {
-            holder.sendTimeText.setVisibility(View.VISIBLE);
-            String msgSendTime = TimeUtils.getChannelMsgDisplayTime(
-                    context, msg.getTime());
-            holder.sendTimeText.setText(msgSendTime);
-        } else {
-            holder.sendTimeText.setVisibility(View.GONE);
-        }
+//        long msgTimeLong = msg.getTime();
+//        long lastMsgTimelong = 0;
+//        if (position != 0) {
+//            lastMsgTimelong = msgList.get(
+//                    position - 1).getTime();
+//        }
+//        long duration = msgTimeLong - lastMsgTimelong;
+//        if (duration >= 180000) {
+//            holder.sendTimeText.setVisibility(View.VISIBLE);
+//            String msgSendTime = TimeUtils.getChannelMsgDisplayTime(
+//                    context, msg.getTime());
+//            holder.sendTimeText.setText(msgSendTime);
+//        } else {
+//            holder.sendTimeText.setVisibility(View.GONE);
+//        }
     }
 
     /**

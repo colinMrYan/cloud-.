@@ -301,7 +301,7 @@ public class APIUri {
      * @return
      */
     public static String getWebsocketConnectUrl(){
-        return MyApplication.getInstance().getClusterEcm()+"api/v1";
+        return MyApplication.getInstance().getClusterEcm();
     }
 
     /**************************************************应用和应用中心********************************************************************/

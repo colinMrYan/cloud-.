@@ -8,17 +8,17 @@ import android.os.Message;
 
 import org.json.JSONObject;
 
-public class MsgReceiver extends BroadcastReceiver{
+public class MsgReceiverRobot extends BroadcastReceiver{
 
-	private static final String ACTION_NAME = "com.inspur.msg";
+	private static final String ACTION_NAME = "com.inspur.msg_1.0";
 	private Handler handler;
-	public static MsgReceiver instance;
+	public static MsgReceiverRobot instance;
 
-	public MsgReceiver(){
+	public MsgReceiverRobot(){
 
 	}
 
-	public MsgReceiver(Context context,Handler handler) {
+	public MsgReceiverRobot(Context context, Handler handler) {
 		this.handler = handler;
 	}
 

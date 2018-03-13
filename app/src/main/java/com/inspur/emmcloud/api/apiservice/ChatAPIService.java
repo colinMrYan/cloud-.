@@ -762,10 +762,10 @@ public class ChatAPIService {
 	 * @param nointerruption
 	 *            是否免打扰
 	 */
-	public void updateDnd(final String cid, final Boolean nointerruption) {
+	public void updateDnd(final String cid, final Boolean noInterruption) {
 
 		final String completeUrl = APIUri.getNointerRuptionUrl() + "?cid=" + cid
-				+ "&dnd=" + nointerruption;
+				+ "&dnd=" + noInterruption;
 		RequestParams params = ((MyApplication) context.getApplicationContext())
 				.getHttpRequestParams(completeUrl);
 		x.http().request(HttpMethod.PUT, params, new APICallback(context, completeUrl) {
@@ -778,7 +778,7 @@ public class ChatAPIService {
 					@Override
 					public void reExecute() {
 						// TODO Auto-generated method stub
-						updateDnd(cid, nointerruption);
+						updateDnd(cid, noInterruption);
 					}
 
 					@Override

@@ -2,7 +2,6 @@ package com.inspur.emmcloud.bean.chat;
 
 import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.LogUtils;
-import com.inspur.emmcloud.util.privates.TimeUtils;
 
 import org.json.JSONObject;
 import org.xutils.db.annotation.Column;
@@ -29,8 +28,10 @@ public class MsgRobot implements Serializable {
     private String state;
     @Column(name = "content")
     private String content;
-    @Column(name="time")
-    private long time;
+    @Column(name="creationDate")
+    private String creationDate;
+    @Column(name="tracer")
+    private String tracer;
 
     private int sendStatus = 1;//0 发送中  1发送成功  2发送失败
     private String tmpId = "";
@@ -53,8 +54,7 @@ public class MsgRobot implements Serializable {
 
         channel = JSONUtils.getString(obj, "to", "");
 
-        String oldMsgtime = JSONUtils.getString(obj,"timestamp","");
-        time = TimeUtils.UTCString2Long(oldMsgtime);
+       creationDate = JSONUtils.getString(obj,"timestamp","");
 
     }
 
@@ -67,7 +67,8 @@ public class MsgRobot implements Serializable {
         channel = JSONUtils.getString(obj, "channel", "");
         state = JSONUtils.getString(obj, "state", "");
         content = JSONUtils.getString(obj, "content", "");
-        time = JSONUtils.getLong(obj,"time",0L);
+        creationDate = JSONUtils.getString(obj,"creationDate","");
+        tracer = JSONUtils.getString(obj,"tracer","");
     }
 
     public MsgContentExtendedActions getMsgContentExtendedActions() {
@@ -86,9 +87,6 @@ public class MsgRobot implements Serializable {
         return new MsgContentAttachmentFile(content);
     }
 
-    public Long getTime(){
-        return  time;
-    }
 
     public MsgContentMediaImage getMsgContentMediaImage() {
         return new MsgContentMediaImage(content);
@@ -182,14 +180,25 @@ public class MsgRobot implements Serializable {
         return JSONUtils.getString(from,"user","");
     }
 
-    public void setTmpId(String tmpId) {
-        this.tmpId = tmpId;
+    public String getTracer() {
+        return tracer;
     }
 
+    public void setTracer(String tracer) {
+        this.tracer = tracer;
+    }
+
+    public String getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(String creationDate) {
+        this.creationDate = creationDate;
+    }
 
     /*
-         * 重写equals方法修饰符必须是public,因为是重写的Object的方法. 2.参数类型必须是Object.
-         */
+             * 重写equals方法修饰符必须是public,因为是重写的Object的方法. 2.参数类型必须是Object.
+             */
     public boolean equals(Object other) { // 重写equals方法，后面最好重写hashCode方法
 
         if (this == other) // 先检查是否其自反性，后比较other是否为空。这样效率高

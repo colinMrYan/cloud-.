@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.BaseActivity;
+import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.ChannelMsgAdapterRobot;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
@@ -46,19 +47,25 @@ import com.inspur.emmcloud.util.privates.cache.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.widget.ECMChatInputMenuRobot;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.RecycleViewForSizeChange;
+import com.inspur.imp.plugin.camera.editimage.EditImageActivity;
+import com.inspur.imp.plugin.camera.imagepicker.ImagePicker;
+import com.inspur.imp.plugin.camera.imagepicker.bean.ImageItem;
 
-import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @ContentView(R.layout.activity_channel_robot)
 public class ChannelRobotActivity extends BaseActivity {
 
     private static final int HAND_CALLBACK_MESSAGE = 1;
+    private static final int GELLARY_RESULT = 2;
+    private static final int CAMERA_RESULT = 3;
+    private static final int MENTIONS_RESULT = 5;
+    private static final int CHOOSE_FILE = 4;
 
     @ViewInject(R.id.msg_list)
     private RecycleViewForSizeChange msgListView;
@@ -169,14 +176,24 @@ public class ChannelRobotActivity extends BaseActivity {
      */
     private void initChatInputMenu() {
         chatInputMenu.setOtherLayoutView(swipeRefreshLayout);
+        if (channel.getType().equals("GROUP")){
+            chatInputMenu.setCanMentions(true,cid);
+        }else {
+            chatInputMenu.setCanMentions(false,cid);
+        }
         chatInputMenu.setChatInputMenuListener(new ECMChatInputMenuRobot.ChatInputMenuListener() {
 
             @Override
-            public void onSendMsg(String content) {
+            public void onSendMsg(String content,List<String> mentionsUidList) {
                 // TODO Auto-generated method stub
-                sendTextMessage(content);
+                sendTextMessage(content,mentionsUidList);
             }
         });
+        if ((channel != null) && channel.getInputs().equals("0")) {
+            chatInputMenu.setVisibility(View.GONE);
+        }else {
+            chatInputMenu.updateCommonMenuLayout(channel.getInputs());
+        }
     }
 
 
@@ -220,6 +237,39 @@ public class ChannelRobotActivity extends BaseActivity {
     }
 
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode,
+                                    final Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            // 文件管理器返回
+            if (requestCode == CHOOSE_FILE
+                    && NetUtils.isNetworkConnected(getApplicationContext())) {
+                //拍照返回
+            } else if (requestCode == CAMERA_RESULT
+                    && NetUtils.isNetworkConnected(getApplicationContext())) {
+                //拍照后图片编辑返回
+            } else if (requestCode == EditImageActivity.ACTION_REQUEST_EDITIMAGE) {
+                String imgPath = data.getExtras().getString("save_file_path");
+            } else if (requestCode == MENTIONS_RESULT) {
+                // @返回
+                String result = data.getStringExtra("searchResult");
+                String uid = JSONUtils.getString(result, "uid", null);
+                String name = JSONUtils.getString(result, "name", null);
+                boolean isInputKeyWord = data.getBooleanExtra("isInputKeyWord", false);
+                chatInputMenu.addMentions(uid, name, isInputKeyWord);
+            }
+        } else {
+            // 图库选择图片返回
+            if (resultCode == ImagePicker.RESULT_CODE_ITEMS)
+                if (data != null && requestCode == GELLARY_RESULT) {
+                    ArrayList<ImageItem> imageItemList = (ArrayList<ImageItem>) data
+                            .getSerializableExtra(ImagePicker.EXTRA_RESULT_ITEMS);
+                }
+        }
+    }
+
+
     /**
      * 注册消息接收广播,传入一个Handler用于接收到消息后把消息发回到主线程
      */
@@ -228,7 +278,7 @@ public class ChannelRobotActivity extends BaseActivity {
         if (msgResvier == null) {
             msgResvier = new MsgReceiver(ChannelRobotActivity.this, handler);
             IntentFilter filter = new IntentFilter();
-            filter.addAction("com.inspur.msg");
+            filter.addAction("com.inspur.msg_1.0");
             registerReceiver(msgResvier, filter);
         }
     }
@@ -246,16 +296,17 @@ public class ChannelRobotActivity extends BaseActivity {
                     case HAND_CALLBACK_MESSAGE: // 接收推送的消息·
                         if (msg.what == 1) {
                             JSONObject obj = (JSONObject) msg.obj;
-                            String type = JSONUtils.getString(obj,"type","");
-                            if (obj.toString().contains(AppUtils.getMyUUID(ChannelRobotActivity.this))){
-                                return;
-                            }
-                            MsgRobot pushMsg;
-                            if (obj.has("message")){
-                                pushMsg= new MsgRobot(obj) ;
-                            }else {
-                                pushMsg= new MsgRobot(obj,true) ;
-                            }
+//                            String type = JSONUtils.getString(obj,"type","");
+//                            if (obj.toString().contains(AppUtils.getMyUUID(ChannelRobotActivity.this))){
+//                                return;
+//                            }
+//                            MsgRobot pushMsg;
+//                            if (obj.has("message")){
+//                                pushMsg= new MsgRobot(obj) ;
+//                            }else {
+//                                pushMsg= new MsgRobot(obj,true) ;
+//                            }
+                            MsgRobot pushMsg = new MsgRobot(obj);
                             if (cid.equals(pushMsg.getChannel())) {
                                 MsgReadIDCacheUtils.saveReadedMsg(ChannelRobotActivity.this,
                                         pushMsg.getChannel(), pushMsg.getId());
@@ -367,7 +418,7 @@ public class ChannelRobotActivity extends BaseActivity {
     /**
      * 点击发送按钮后发送消息的逻辑
      */
-    private void sendTextMessage(String content) {
+    private void sendTextMessage(String content,List<String> mentionsUidList) {
         String fakeMessageId = System.currentTimeMillis() + "";
         MsgRobot localMsg = ConbineMsg.conbineTextPlainMsgRobot(content,
                 cid, fakeMessageId);
@@ -381,41 +432,20 @@ public class ChannelRobotActivity extends BaseActivity {
             }
         }
         addLocalMessage(localMsg, 1);
-        //sendMsg(richTextObj.toString(), "txt_rich", fakeMessageId);
-
-        JSONObject richTextObj = new JSONObject();
-//        JSONArray mentionArray = JSONUtils.toJSONArray(mentionsUidList);
-//        JSONArray urlArray = JSONUtils.toJSONArray(urlList);
-//        JSONObject sourceObj = new JSONObject();
-//        try{
-//            sourceObj.put("id",fakeMessageId);
-//            sourceObj.put("message","1.0");
-//            sourceObj.put("type","text/plain");
-//            JSONObject fromObj = new JSONObject();
-//            fromObj.put("user", MyApplication.getInstance().getUid());
-//            fromObj.put("enterprise",MyApplication.getInstance().getCurrentEnterprise().getId());
-//            sourceObj.put("from",fromObj);
-//            JSONArray toArray = new JSONArray();
-//            toArray.put(robotUid);
-//            sourceObj.put("to",toArray);
-//            sourceObj.put("channel","ecc_financial");
-//            JSONObject contentObj = new JSONObject();
-//            contentObj.put("text",content);
-//            sourceObj.put("content",contentObj);
-//        }catch (Exception e){
+//
+//        JSONObject richTextObj = new JSONObject();
+//
+//
+//        try {
+//            richTextObj.put("source", content);
+//            richTextObj.put("mentions", new JSONArray());
+//            richTextObj.put("urls", new JSONArray());
+//            richTextObj.put("tmpId", AppUtils.getMyUUID(ChannelRobotActivity.this));
+//        } catch (JSONException e) {
 //            e.printStackTrace();
 //        }
-
-
-        try {
-            richTextObj.put("source", content);
-            richTextObj.put("mentions", new JSONArray());
-            richTextObj.put("urls", new JSONArray());
-            richTextObj.put("tmpId", AppUtils.getMyUUID(ChannelRobotActivity.this));
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        sendMsg(richTextObj, "txt_rich", fakeMessageId);
+//        sendMsg(richTextObj, "txt_rich", fakeMessageId);
+        MyApplication.getInstance().getWebSocketPush().setChatTextPlainMsg(content,cid,mentionsUidList);
 
     }
 

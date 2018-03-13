@@ -15,7 +15,9 @@ import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.privates.PushInfoUtils;
 
-import java.net.URISyntaxException;
+import org.json.JSONObject;
+
+import java.net.URI;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -83,26 +85,20 @@ public class WebSocketPush {
 			if (!isSocketConnect() && !isWebsocketConnnecting){
 				isWebsocketConnnecting = true;
 				sendWebSocketStatusBroadcaset("socket_connecting");
-				String uuid = AppUtils.getMyUUID(context);
-				String deviceName = AppUtils.getDeviceName(context);
 				IO.Options opts = new IO.Options();
 				opts.reconnectionAttempts = 4; // 设置websocket重连次数
 				opts.forceNew = true;
 				String clientId = PreferencesByUserAndTanentUtils.getString(context, Constant.PREF_CHAT_CLIENTID, "");
 				Map<String, String> query = new HashMap<String, String>();
 				query.put("client", clientId);
-				query.put("deviceId", uuid);
-				query.put("deviceName", deviceName);
-				query.put("platform", "android");
-				query.put("notificationTracer", pushId);
-				query.put("notificationProvider", new PushInfoUtils(context).getPushProvider());
 				// opts.transports = new String[] { Polling.NAME };
 				opts.path = path;
 				LogUtils.debug(TAG, "query.toString()=" + ParseQS.encode(query));
 				opts.query = ParseQS.encode(query);
 				try {
 					closeSocket();
-					mSocket = IO.socket(url, opts);
+					Manager manager = new Manager(new URI(url),opts);
+					mSocket = manager.socket("/api/v1");
 					mSocket.io().on(Manager.EVENT_TRANSPORT, new Emitter.Listener() {
 						@Override
 						public void call(Object... args) {
@@ -126,7 +122,7 @@ public class WebSocketPush {
 					});
 
 					connectWebSocket();
-				} catch (URISyntaxException e) {
+				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 					sendWebSocketStatusBroadcaset(Socket.EVENT_CONNECT_ERROR);
@@ -221,8 +217,8 @@ public class WebSocketPush {
 				LogUtils.debug(TAG, "message:" + arg0[0].toString());
 
 				String content = arg0[0].toString();
-				Intent intent = new Intent("com.inspur.msg");
-				intent.putExtra("push", content);
+				Intent intent = new Intent("com.inspur.msg_1.0");
+				intent.putExtra("content", content);
 				context.sendBroadcast(intent);
 			}
 		});
@@ -244,6 +240,18 @@ public class WebSocketPush {
 			}
 		});
 
+		mSocket.on("com.inspur.ecm.chat", new Emitter.Listener() {
+
+			@Override
+			public void call(Object... arg0) {
+				// TODO Auto-generated method stub
+				String content = arg0[0].toString();
+				Intent intent = new Intent("com.inspur.msg");
+				intent.putExtra("content", content);
+				context.sendBroadcast(intent);
+			}
+		});
+
 		mSocket.on(Socket.EVENT_DISCONNECT, new Emitter.Listener() {
 
 			@Override
@@ -261,11 +269,31 @@ public class WebSocketPush {
 		addListeners();
 		mSocket.open();
 		LogUtils.debug(TAG, "mSocket.open");
-		// mSocket.connect();
 	}
-	
-	public void sendChatMessage(String msgType,String content,String cid) {
-		mSocket.emit("message","1111111");
+
+	public void setChatTextPlainMsg(String content,String cid,List<String> mentionsUidList){
+		try {
+			JSONObject object = new JSONObject();
+			JSONObject actionObj = new JSONObject();
+			actionObj.put("method","post");
+			actionObj.put("path","/channel/"+cid+"/message");
+			object.put("action",actionObj);
+			JSONObject headerObj = new JSONObject();
+			headerObj.put("enterprise",MyApplication.getInstance().getCurrentEnterprise().getId());
+			headerObj.put("tracer","a"+MyApplication.getInstance().getUid()+System.currentTimeMillis());
+			object.put("headers",headerObj);
+			JSONObject bodyObj = new JSONObject();
+			bodyObj.put("type","text/plain");
+			bodyObj.put("text",content);
+			//bodyObj.put("mentions", JSONUtils.toJSONArray(mentionsUidList));
+			object.put("body",bodyObj);
+			LogUtils.jasonDebug("object="+object.toString());
+			mSocket.emit("com.inspur.ecm.chat",object);
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+
+
 	}
 
 	public void closeSocket() {
