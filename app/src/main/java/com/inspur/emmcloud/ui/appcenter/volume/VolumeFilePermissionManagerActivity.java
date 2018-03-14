@@ -11,10 +11,16 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.VolumeGroupPermissionManagerAdapter;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
+import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeGroupPermissionResult;
 import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeResultWithPermissionResult;
 import com.inspur.emmcloud.bean.appcenter.volume.Group;
+import com.inspur.emmcloud.util.common.LogUtils;
+import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.widget.ECMRecyclerViewLinearLayoutManager;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
 
@@ -46,6 +52,14 @@ public class VolumeFilePermissionManagerActivity extends BaseActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        initViews();
+        getVolumeFileGroup();
+    }
+
+    /**
+     * 初始化Views
+     */
+    private void initViews() {
         ECMRecyclerViewLinearLayoutManager layoutManager = new ECMRecyclerViewLinearLayoutManager(VolumeFilePermissionManagerActivity.this);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         layoutManager.setCanScrollHorizontally(false);
@@ -62,7 +76,7 @@ public class VolumeFilePermissionManagerActivity extends BaseActivity{
             }
         });
         groupRecyclerView.setAdapter(volumeGroupPermissionManagerAdapter);
-        getVolumeFileGroup();
+        EventBus.getDefault().register(this);
     }
 
     public void onClick(View view){
@@ -73,15 +87,28 @@ public class VolumeFilePermissionManagerActivity extends BaseActivity{
         }
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void updateVolumeGroupPermission(GetVolumeGroupPermissionResult getVolumeGroupPermissionResult) {
+        getVolumeFileGroup();
+    }
+
     /**
      * 获取文件夹对应的群组及权限
      */
     private void getVolumeFileGroup(){
-        String volumeId = getIntent().getStringExtra("volume");
-        String volumePath = getIntent().getStringExtra("currentDirAbsolutePath");
-        MyAppAPIService myAppAPIService = new MyAppAPIService(VolumeFilePermissionManagerActivity.this);
-        myAppAPIService.setAPIInterface(new WebService());
-        myAppAPIService.getVolumeFileGroup(volumeId,volumePath);
+        if(NetUtils.isNetworkConnected(VolumeFilePermissionManagerActivity.this)){
+            String volumeId = getIntent().getStringExtra("volume");
+            String volumePath = getIntent().getStringExtra("currentDirAbsolutePath");
+            MyAppAPIService myAppAPIService = new MyAppAPIService(VolumeFilePermissionManagerActivity.this);
+            myAppAPIService.setAPIInterface(new WebService());
+            myAppAPIService.getVolumeFileGroup(volumeId,volumePath);
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 
     class WebService extends APIInterfaceInstance{

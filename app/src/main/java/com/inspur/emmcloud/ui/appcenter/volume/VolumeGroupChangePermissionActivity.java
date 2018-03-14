@@ -14,6 +14,7 @@ import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.SwitchView;
 
+import org.greenrobot.eventbus.EventBus;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
 
@@ -139,6 +140,7 @@ public class VolumeGroupChangePermissionActivity extends BaseActivity {
                 readPermissionSwitch.setPaintColorOn(0xff7fc5f6);
                 readPermissionSwitch.setPaintCircleBtnColor(0xff008cee);
             }
+            EventBus.getDefault().post(getVolumeGroupPermissionResult);
         }
 
         @Override
