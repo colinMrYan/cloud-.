@@ -13,7 +13,6 @@ import com.iflytek.cloud.SpeechError;
 import com.iflytek.cloud.SpeechRecognizer;
 import com.inspur.emmcloud.interf.OnVoiceResultCallback;
 import com.inspur.emmcloud.util.common.JSONUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -124,7 +123,7 @@ public class Voice2StringMessageUtils {
         // 设置音频保存路径，保存音频格式支持pcm、wav，设置路径为sd卡请注意WRITE_EXTERNAL_STORAGE权限
         // 注：AUDIO_FORMAT参数语记需要更新版本才能生效
         speechRecognizer.setParameter(SpeechConstant.AUDIO_FORMAT, "wav");
-        speechRecognizer.setParameter(SpeechConstant.ASR_AUDIO_PATH, Environment.getExternalStorageDirectory() + "/msc/iat.wav");
+        speechRecognizer.setParameter(SpeechConstant.ASR_AUDIO_PATH, Environment.getExternalStorageDirectory() + "");
     }
 
     /**
@@ -162,8 +161,6 @@ public class Voice2StringMessageUtils {
 
             @Override
             public void onResult(RecognizerResult results, boolean isLast) {
-                LogUtils.YfcDebug("解析结果：" + results.getResultString());
-//                getLastListeningResult(results);
                 addListeningResult2Map(results);
                 if (isLast) {
                     //最后的结果
@@ -211,6 +208,7 @@ public class Voice2StringMessageUtils {
                 resultBuffer.append(iatResultMap.get(key));
             }
         }
+        iatResultMap.clear();
         return resultBuffer.toString();
     }
 
@@ -242,3 +240,4 @@ public class Voice2StringMessageUtils {
     }
 
 }
+
