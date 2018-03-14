@@ -75,6 +75,7 @@ public class ConbineMsg {
 		msgRobot.setFrom(fromObj.toString());
 		msgRobot.setTo("");
 		msgRobot.setState("");
+		msgRobot.setCreationDate(TimeUtils.getCurrentUTCTimeString());
 		MsgContentTextPlain msgContentTextPlain = new MsgContentTextPlain();
 		msgContentTextPlain.setText(text);
 		msgRobot.setContent(msgContentTextPlain.toString());
@@ -86,7 +87,9 @@ public class ConbineMsg {
 		msgRobot.setChannel(cid);
 		msgRobot.setMessage("1.0");
 		msgRobot.setId(fakeMessageId);
+		msgRobot.setCreationDate(TimeUtils.getCurrentUTCTimeString());
 		msgRobot.setType("attachment/card");
+		msgRobot.setCreationDate(TimeUtils.getCurrentUTCTimeString());
 		JSONObject fromObj = new JSONObject();
 		try {
 			fromObj.put("user",from);

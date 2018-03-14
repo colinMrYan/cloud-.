@@ -167,6 +167,11 @@ public class Channel implements Serializable {
 
 
     public void setNewMsgContent(Context context) {
+        if (type.equals("SERVICE") && getTitle().contains("BOT6006")){
+            newMsgContent = context
+                    .getString(R.string.welcome_to_attention) + " " + DirectChannelUtils.getRobotInfo(context, title).getName();
+            return;
+        }
         if (newMsgList.size() > 0) {
             Msg msg = newMsgList.get(newMsgList.size() - 1);
             String title = msg.getTitle();

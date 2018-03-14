@@ -1,5 +1,7 @@
 package com.inspur.emmcloud.ui.chat;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
@@ -86,6 +88,7 @@ public class ChannelRobotActivity extends BaseActivity {
     private MsgReceiver msgResvier;
     private ChatAPIService apiService;
     private String robotUid;
+    private BroadcastReceiver sendActionMsgReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -131,6 +134,7 @@ public class ChannelRobotActivity extends BaseActivity {
         initMsgListView();
         handMessage();
         registeMsgReceiver();
+        registeSendActionMsgReceiver();
     }
 
     /**
@@ -277,11 +281,27 @@ public class ChannelRobotActivity extends BaseActivity {
         if (msgResvier == null) {
             msgResvier = new MsgReceiver(ChannelRobotActivity.this, handler);
             IntentFilter filter = new IntentFilter();
-            filter.addAction("com.inspur.msg_1.0");
+            filter.addAction("com.inspur.msg");
             registerReceiver(msgResvier, filter);
         }
     }
 
+    private void registeSendActionMsgReceiver(){
+        if (sendActionMsgReceiver == null) {
+            sendActionMsgReceiver = new BroadcastReceiver() {
+                @Override
+                public void onReceive(Context context, Intent intent) {
+                    String content = intent.getStringExtra("content");
+                    if (!StringUtils.isBlank(content)){
+                        sendTextMessage(content,new ArrayList<String>());
+                    }
+                }
+            };
+            IntentFilter filter = new IntentFilter();
+            filter.addAction("com.inspur.msg.send");
+            registerReceiver(sendActionMsgReceiver, filter);
+        }
+    }
 
     /**
      * 处理子线程返回消息
@@ -295,7 +315,8 @@ public class ChannelRobotActivity extends BaseActivity {
                     case HAND_CALLBACK_MESSAGE: // 接收推送的消息·
                         if (msg.what == 1) {
                             JSONObject obj = (JSONObject) msg.obj;
-                            if (obj.toString().contains(AppUtils.getMyUUID(ChannelRobotActivity.this))){
+                            if (!obj.toString().contains("message") || !obj.toString().contains("1.0")){
+                                LogUtils.jasonDebug("被放弃不处理："+obj.toString());
                                 return;
                             }
                             MsgRobot pushMsg;
@@ -333,30 +354,33 @@ public class ChannelRobotActivity extends BaseActivity {
      * @param fakeMessageId
      * @param realMsg
      */
-    private void replaceWithRealMsg(String fakeMessageId, MsgRobot realMsg) {
+    private void replaceWithRealMsg(String fakeMessageId, String realMessageId) {
         if (StringUtils.isBlank(fakeMessageId)) {
             return;
         }
-        Msg fakeMsg = new Msg();
-        fakeMsg.setMid(fakeMessageId);
+        LogUtils.jasonDebug("msgListSize="+msgList.size());
+        MsgRobot fakeMsg = new MsgRobot();
+        fakeMsg.setId(fakeMessageId);
+        MsgRobot realMsg = new MsgRobot();
+        realMsg.setId(realMessageId);
         int fakeMsgIndex = msgList.indexOf(fakeMsg);
         boolean isContainRealMsg = msgList.contains(realMsg);
+        LogUtils.jasonDebug("fakeMsgIndex="+fakeMsgIndex);
+        LogUtils.jasonDebug("isContainRealMsg="+isContainRealMsg);
         if (fakeMsgIndex != -1) {
-            msgList.remove(fakeMsgIndex);
             if (isContainRealMsg) {
+                msgList.remove(fakeMsgIndex);
                 adapter.setMsgList(msgList);
                 adapter.notifyItemRemoved(fakeMsgIndex);
             } else {
-                msgList.add(fakeMsgIndex, realMsg);
+                LogUtils.jasonDebug("msgListSize="+msgList.size());
+                msgList.get(fakeMsgIndex).setId(realMessageId);
+                msgList.get(fakeMsgIndex).setSendStatus(1);
                 adapter.setMsgList(msgList);
                 adapter.notifyItemChanged(fakeMsgIndex);
+                MsgCacheUtil.saveRobotMsg(getApplicationContext(),msgList.get(fakeMsgIndex));
             }
-        } else if (!isContainRealMsg) {
-            msgList.add(realMsg);
-            adapter.setMsgList(msgList);
-            adapter.notifyItemInserted(msgList.size() - 1);
         }
-
 
     }
 
@@ -415,7 +439,7 @@ public class ChannelRobotActivity extends BaseActivity {
     /**
      * 点击发送按钮后发送消息的逻辑
      */
-    private void sendTextMessage(String content,List<String> mentionsUidList) {
+    public void sendTextMessage(String content,List<String> mentionsUidList) {
         String fakeMessageId = System.currentTimeMillis() + "";
         MsgRobot localMsg = ConbineMsg.conbineTextPlainMsgRobot(content,
                 cid, fakeMessageId);
@@ -428,8 +452,7 @@ public class ChannelRobotActivity extends BaseActivity {
                 return;
             }
         }
-        addLocalMessage(localMsg, 1);
-
+        addLocalMessage(localMsg, 0);
         JSONObject richTextObj = new JSONObject();
         try {
             richTextObj.put("source", content);
@@ -510,6 +533,11 @@ public class ChannelRobotActivity extends BaseActivity {
             unregisterReceiver(msgResvier);
             msgResvier = null;
         }
+        if (sendActionMsgReceiver != null) {
+            unregisterReceiver(sendActionMsgReceiver);
+            sendActionMsgReceiver = null;
+        }
+
         chatInputMenu.releaseVoliceInput();
     }
 
@@ -572,15 +600,16 @@ public class ChannelRobotActivity extends BaseActivity {
         @Override
         public void returnSendMsgSuccess(GetSendMsgResult getSendMsgResult,
                                          String fakeMessageId) {
-//             replaceWithRealMsg(fakeMessageId, getSendMsgResult.getMsg());
+             replaceWithRealMsg(fakeMessageId, getSendMsgResult.getMsg().getMid());
         }
 
         @Override
         public void returnSendMsgFail(String error, String fakeMessageId, int errorCode) {
             //消息发送失败处理
-            Msg fakeMsg = new Msg();
-            fakeMsg.setMid(fakeMessageId);
+            MsgRobot fakeMsg = new MsgRobot();
+            fakeMsg.setId(fakeMessageId);
             int fakeMsgIndex = msgList.indexOf(fakeMsg);
+            LogUtils.jasonDebug("fakeMsgIndex=============="+fakeMsgIndex);
             if (fakeMsgIndex != -1) {
                 msgList.get(fakeMsgIndex).setSendStatus(2);
                 adapter.setMsgList(msgList);

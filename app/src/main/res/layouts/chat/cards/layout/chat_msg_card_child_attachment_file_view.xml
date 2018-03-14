@@ -17,7 +17,7 @@
         android:scaleType="fitXY" />
 
     <RelativeLayout
-        android:layout_width="match_parent"
+        android:layout_width="180dp"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_marginLeft="9dp"

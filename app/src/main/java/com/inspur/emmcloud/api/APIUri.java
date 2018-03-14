@@ -120,7 +120,7 @@ public class APIUri {
      * @return
      */
     public static String getUploadPushInfoUrl(){
-        return  getUrlBaseYunjia() + "client-registry/api/v1/client";
+        return  getUrlBaseYunjia() + "message/api/v1/client";
     }
 
     /************************************************************************登录*****************************************************************/

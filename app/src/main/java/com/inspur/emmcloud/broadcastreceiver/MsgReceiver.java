@@ -26,7 +26,7 @@ public class MsgReceiver extends BroadcastReceiver{
 	public void onReceive(Context context, Intent intent) {
 		JSONObject jsonObject;
 		try {
-			jsonObject = new JSONObject(intent.getStringExtra("content"));
+			jsonObject = new JSONObject(intent.getStringExtra("push"));
 			Message msg = new Message();
 			msg.what = 1;
 			msg.obj = jsonObject;

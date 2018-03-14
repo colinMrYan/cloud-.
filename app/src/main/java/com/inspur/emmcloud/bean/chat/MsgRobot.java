@@ -1,7 +1,6 @@
 package com.inspur.emmcloud.bean.chat;
 
 import com.inspur.emmcloud.util.common.JSONUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
 
 import org.json.JSONObject;
 import org.xutils.db.annotation.Column;
@@ -46,7 +45,6 @@ public class MsgRobot implements Serializable {
         String source = JSONUtils.getString(bodyObj,"source","");
         JSONObject sourceObj = JSONUtils.getJSONObject(source);
         message = JSONUtils.getString(sourceObj, "message", "");
-        LogUtils.jasonDebug("sourceObj="+sourceObj.toString());
         from = JSONUtils.getString(sourceObj, "from", "");
         type = JSONUtils.getString(sourceObj, "type", "");
         state = JSONUtils.getString(sourceObj, "state", "");

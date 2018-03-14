@@ -1,6 +1,7 @@
 package com.inspur.emmcloud.ui.chat;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
@@ -13,10 +14,10 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.MsgActionAdapter;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
-import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.bean.chat.Action;
 import com.inspur.emmcloud.bean.chat.MsgContentExtendedActions;
 import com.inspur.emmcloud.bean.chat.MsgRobot;
+import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
@@ -123,17 +124,25 @@ public class DisplayExtendedActionsMsg extends APIInterfaceInstance {
 
 
     private void openAction(Context context, Action action) {
-        String type = action.getType();
-        String url = action.getUrl();
-        if (StringUtils.isBlank(url)) {
-            return;
+//        String type = action.getType();
+//        String url = action.getUrl();
+//        if (StringUtils.isBlank(url)) {
+//            return;
+//        }
+//        if (type.equals("open-url-background")) {
+//            loadingDlg.show();
+//            ChatAPIService apiService = new ChatAPIService(context);
+//            apiService.setAPIInterface(mInstance);
+//            apiService.openActionBackgroudUrl(url);
+//        }
+        String actionTitle = action.getTitle();
+        if (!StringUtils.isBlank(actionTitle) && NetUtils.isNetworkConnected(context)){
+            //((ChannelRobotActivity)context).sendTextMessage(actionTitle,new ArrayList<String>());
+            Intent intent = new Intent("com.inspur.msg.send");
+            intent.putExtra("content",actionTitle);
+            context.sendBroadcast(intent);
         }
-        if (type.equals("open-url-background")) {
-            loadingDlg.show();
-            ChatAPIService apiService = new ChatAPIService(context);
-            apiService.setAPIInterface(mInstance);
-            apiService.openActionBackgroudUrl(url);
-        }
+
     }
 
     @Override

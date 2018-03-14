@@ -7,10 +7,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.api.APIDownloadCallBack;
 import com.inspur.emmcloud.bean.chat.MsgContentAttachmentFile;
 import com.inspur.emmcloud.bean.chat.MsgRobot;
+import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.util.common.FileUtils;
+import com.inspur.emmcloud.util.common.ToastUtils;
+import com.inspur.emmcloud.util.privates.DownLoaderUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
+
+import java.io.File;
 
 /**
  * DisplayAttachmentFileMsg
@@ -38,6 +44,49 @@ public class DisplayAttachmentFileMsg {
         ImageDisplayUtils.getInstance().displayImage(img, "drawable://" + FileUtils.getIconResId(msgContentFile.getCategory()));
         fileNameText.setText(msgContentFile.getName());
         fileSizeText.setText(FileUtils.formatFileSize(msgContentFile.getSize()));
+        final String downloadUri = "https://emm.inspur.com/api/bot/v6.0/getfile/"+msgContentFile.getMedia();
+        final String fileDownloadPath = MyAppConfig.LOCAL_DOWNLOAD_PATH + msgContentFile.getName();
+        convertView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                APIDownloadCallBack progressCallback = new APIDownloadCallBack(context, downloadUri) {
+                    @Override
+                    public void callbackStart() {
+                    }
+
+                    @Override
+                    public void callbackLoading(long total, long current, boolean isUploading) {
+                    }
+
+                    @Override
+                    public void callbackSuccess(File file) {
+                        ToastUtils.show(
+                                context,
+                                context.getString(R.string.chat_file_download_success));
+                        FileUtils.openFile(context, fileDownloadPath);
+                    }
+
+                    @Override
+                    public void callbackError(Throwable arg0, boolean arg1) {
+                        ToastUtils.show(context, context
+                                .getString(R.string.download_fail));
+                    }
+
+                    @Override
+                    public void callbackCanceled(CancelledException e) {
+
+                    }
+
+                };
+                DownLoaderUtils downLoaderUtils = new DownLoaderUtils();
+                if (FileUtils.isFileExist(fileDownloadPath)) {
+                    FileUtils.openFile(context, fileDownloadPath);
+                } else {
+                    downLoaderUtils.startDownLoad(downloadUri, fileDownloadPath,
+                            progressCallback);
+                }
+            }
+        });
         return convertView;
     }
 

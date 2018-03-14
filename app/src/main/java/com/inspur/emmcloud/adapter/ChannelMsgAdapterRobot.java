@@ -28,6 +28,7 @@ import com.inspur.emmcloud.ui.contact.RobotInfoActivity;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
+import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.RobotCacheUtils;
 import com.inspur.emmcloud.widget.ECMChatInputMenuRobot;
@@ -244,21 +245,21 @@ public class ChannelMsgAdapterRobot extends RecyclerView.Adapter<ChannelMsgAdapt
      */
     private void showMsgSendTime(ViewHolder holder, MsgRobot msg, int position) {
         // TODO Auto-generated method stub
-//        long msgTimeLong = msg.getTime();
-//        long lastMsgTimelong = 0;
-//        if (position != 0) {
-//            lastMsgTimelong = msgList.get(
-//                    position - 1).getTime();
-//        }
-//        long duration = msgTimeLong - lastMsgTimelong;
-//        if (duration >= 180000) {
-//            holder.sendTimeText.setVisibility(View.VISIBLE);
-//            String msgSendTime = TimeUtils.getChannelMsgDisplayTime(
-//                    context, msg.getTime());
-//            holder.sendTimeText.setText(msgSendTime);
-//        } else {
-//            holder.sendTimeText.setVisibility(View.GONE);
-//        }
+        long msgTimeLong = TimeUtils.UTCString2Long(msg.getCreationDate());
+        long lastMsgTimelong = 0;
+        if (position != 0) {
+            lastMsgTimelong = TimeUtils.UTCString2Long(msgList.get(
+                    position - 1).getCreationDate());
+        }
+        long duration = msgTimeLong - lastMsgTimelong;
+        if (duration >= 180000) {
+            holder.sendTimeText.setVisibility(View.VISIBLE);
+            String msgSendTime = TimeUtils.getChannelMsgDisplayTime(
+                    context, msg.getCreationDate());
+            holder.sendTimeText.setText(msgSendTime);
+        } else {
+            holder.sendTimeText.setVisibility(View.GONE);
+        }
     }
 
     /**
@@ -300,7 +301,7 @@ public class ChannelMsgAdapterRobot extends RecyclerView.Adapter<ChannelMsgAdapt
             } else {
                 iconUrl = APIUri.getChannelImgUrl(context, msg.getFromUser());
             }
-            ImageDisplayUtils.getInstance().displayImage(holder.senderPhotoImg,
+            ImageDisplayUtils.getInstance().displayImageByTag(holder.senderPhotoImg,
                     iconUrl, R.drawable.icon_person_default);
             holder.senderPhotoImg.setOnClickListener(new View.OnClickListener() {
                 @Override

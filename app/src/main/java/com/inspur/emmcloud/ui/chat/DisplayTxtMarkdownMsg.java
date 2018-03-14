@@ -9,6 +9,7 @@ import android.widget.TextView;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.chat.MsgRobot;
+import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.richtext.CacheType;
 import com.inspur.emmcloud.util.common.richtext.LinkHolder;
 import com.inspur.emmcloud.util.common.richtext.RichText;
@@ -53,6 +54,7 @@ public class DisplayTxtMarkdownMsg {
 
         String text = msg.getMsgContentTextMarkdown().getText();
         String title = msg.getMsgContentTextMarkdown().getTitle();
+        richTitleText.setVisibility(StringUtils.isBlank(title)?View.GONE:View.VISIBLE);
         RichText.from(title)
                 .type(RichType.MARKDOWN)
                 .linkFix(new LinkFixCallback() {

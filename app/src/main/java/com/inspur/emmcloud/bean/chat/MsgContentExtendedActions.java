@@ -30,7 +30,7 @@ public class MsgContentExtendedActions {
         if (obj.has("singleAction")){
             singleAction = new Action(JSONUtils.getJSONObject(obj,"singleAction",new JSONObject()));
         }else {
-            arrangement = JSONUtils.getString(obj,"arrangement","horizontal");
+            arrangement = "vertical";
             JSONArray array = JSONUtils.getJSONArray(obj,"actions",new JSONArray());
             for (int i = 0;i<array.length();i++){
                 Action action = new Action(JSONUtils.getJSONObject(array,i,new JSONObject()));
