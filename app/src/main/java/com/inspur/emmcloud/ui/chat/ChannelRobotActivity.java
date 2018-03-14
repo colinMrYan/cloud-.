@@ -11,7 +11,6 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.BaseActivity;
-import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.ChannelMsgAdapterRobot;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
@@ -296,17 +295,15 @@ public class ChannelRobotActivity extends BaseActivity {
                     case HAND_CALLBACK_MESSAGE: // 接收推送的消息·
                         if (msg.what == 1) {
                             JSONObject obj = (JSONObject) msg.obj;
-//                            String type = JSONUtils.getString(obj,"type","");
-//                            if (obj.toString().contains(AppUtils.getMyUUID(ChannelRobotActivity.this))){
-//                                return;
-//                            }
-//                            MsgRobot pushMsg;
-//                            if (obj.has("message")){
-//                                pushMsg= new MsgRobot(obj) ;
-//                            }else {
-//                                pushMsg= new MsgRobot(obj,true) ;
-//                            }
-                            MsgRobot pushMsg = new MsgRobot(obj);
+                            if (obj.toString().contains(AppUtils.getMyUUID(ChannelRobotActivity.this))){
+                                return;
+                            }
+                            MsgRobot pushMsg;
+                            if (obj.has("message")){
+                                pushMsg= new MsgRobot(obj) ;
+                            }else {
+                                pushMsg= new MsgRobot(obj,true) ;
+                            }
                             if (cid.equals(pushMsg.getChannel())) {
                                 MsgReadIDCacheUtils.saveReadedMsg(ChannelRobotActivity.this,
                                         pushMsg.getChannel(), pushMsg.getId());
@@ -432,20 +429,16 @@ public class ChannelRobotActivity extends BaseActivity {
             }
         }
         addLocalMessage(localMsg, 1);
-//
-//        JSONObject richTextObj = new JSONObject();
-//
-//
-//        try {
-//            richTextObj.put("source", content);
-//            richTextObj.put("mentions", new JSONArray());
-//            richTextObj.put("urls", new JSONArray());
-//            richTextObj.put("tmpId", AppUtils.getMyUUID(ChannelRobotActivity.this));
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//        }
-//        sendMsg(richTextObj, "txt_rich", fakeMessageId);
-        MyApplication.getInstance().getWebSocketPush().setChatTextPlainMsg(content,cid,mentionsUidList);
+
+        JSONObject richTextObj = new JSONObject();
+        try {
+            richTextObj.put("source", content);
+            richTextObj.put("tmpId", AppUtils.getMyUUID(ChannelRobotActivity.this));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        sendMsg(richTextObj, "txt_rich", fakeMessageId);
+      //  MyApplication.getInstance().getWebSocketPush().setChatTextPlainMsg(content,cid,mentionsUidList);
 
     }
 
