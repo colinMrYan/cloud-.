@@ -72,6 +72,7 @@ public class VolumeFilePermissionManagerActivity extends BaseActivity{
                 intent.putExtra("volumeGroup",group);
                 intent.putExtra("volumePath",getIntent().getStringExtra("currentDirAbsolutePath"));
                 startActivity(intent);
+
             }
         });
         groupRecyclerView.setAdapter(volumeGroupPermissionManagerAdapter);
@@ -90,6 +91,7 @@ public class VolumeFilePermissionManagerActivity extends BaseActivity{
     public void updateVolumeGroupPermission(GetVolumeGroupPermissionResult getVolumeGroupPermissionResult) {
         getVolumeFileGroup();
     }
+
 
     /**
      * 获取文件夹对应的群组及权限

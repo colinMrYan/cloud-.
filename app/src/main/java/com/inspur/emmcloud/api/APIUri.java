@@ -622,7 +622,7 @@ public class APIUri {
      * @return
      */
     public static String getVolumeFileGroupUrl(String volumeId){
-        return URL_BASE_VOLUME + "/" + volumeId + "/file/group/privilege";
+        return getUrlBaseVolume() + "/" + volumeId + "/file/group/privilege";
     }
 /************************************************************************工作****************************************************************************/
     /***************会议接口*****************************/
