@@ -25,6 +25,7 @@ import android.view.SurfaceHolder;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,9 +36,10 @@ import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.MineAPIService;
 import com.inspur.emmcloud.bean.mine.GetFaceSettingResult;
 import com.inspur.emmcloud.config.Constant;
-import com.inspur.emmcloud.util.common.DensityUtil;
+import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.util.common.ImageUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
+import com.inspur.emmcloud.util.common.ResolutionUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUsersUtils;
 import com.inspur.emmcloud.widget.dialogs.MyQMUIDialog;
@@ -73,6 +75,7 @@ public class FaceVerifyActivity extends BaseActivity implements SurfaceHolder.Ca
     private TextView tipText;
     private Handler handler;
     private Runnable takePhotoRunnable;
+    private Runnable keepBodyRunnable;
     private long startTime;
 
     @Override
@@ -91,6 +94,13 @@ public class FaceVerifyActivity extends BaseActivity implements SurfaceHolder.Ca
     }
 
     private void init() {
+        previewSFV = (FocusSurfaceView) findViewById(R.id.preview_sv);
+        int previewSFVWidth = (int)(ResolutionUtils.getWidth(FaceVerifyActivity.this)*0.65);
+        int previewSFVHeight = (int)(ResolutionUtils.getHeight(FaceVerifyActivity.this)*0.65);
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(previewSFVWidth,previewSFVHeight);
+        params.addRule(RelativeLayout.CENTER_HORIZONTAL);
+        previewSFV.setLayoutParams(params);
+        previewSFV.setEnabled(false);
         if (detectScreenOrientation == null) {
             detectScreenOrientation = new DetectScreenOrientation(this);
         }
@@ -110,6 +120,13 @@ public class FaceVerifyActivity extends BaseActivity implements SurfaceHolder.Ca
                 takePicture();
             }
         };
+        keepBodyRunnable = new Runnable() {
+            @Override
+            public void run() {
+                tipText.setVisibility(View.VISIBLE);
+                tipText.setText(getString(R.string.put_body_right));
+            }
+        };
         startTime = System.currentTimeMillis();
     }
 
@@ -117,9 +134,6 @@ public class FaceVerifyActivity extends BaseActivity implements SurfaceHolder.Ca
     @Override
     protected void onResume() {
         super.onResume();
-        previewSFV = (FocusSurfaceView) findViewById(R.id.preview_sv);
-        previewSFV.setEnabled(false);
-        previewSFV.setTopMove(DensityUtil.dip2px(getApplicationContext(), 90));
         mHolder = previewSFV.getHolder();
         mHolder.addCallback(FaceVerifyActivity.this);
         mHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
@@ -131,7 +145,8 @@ public class FaceVerifyActivity extends BaseActivity implements SurfaceHolder.Ca
         currentCameraFacing = Camera.CameraInfo.CAMERA_FACING_FRONT;
         initCamera();
         setCameraParams();
-        delayTotakePicture(1000);
+        delayToNotifyKeepBody();
+        delayTotakePicture(2000);
     }
 
     private void initCamera() {
@@ -291,6 +306,10 @@ public class FaceVerifyActivity extends BaseActivity implements SurfaceHolder.Ca
         }
     }
 
+    private void delayToNotifyKeepBody(){
+        handler.postDelayed(keepBodyRunnable,1500);
+    }
+
     private void delayTotakePicture(long time) {
         handler.postDelayed(takePhotoRunnable, time);
     }
@@ -330,7 +349,8 @@ public class FaceVerifyActivity extends BaseActivity implements SurfaceHolder.Ca
                         originBitmap = ImageUtils.rotaingImageView(90, originBitmap);
                         //通过各种旋转和镜面操作，使originBitmap显示出preview界面
                         Bitmap cropBitmap = previewSFV.getPicture(originBitmap);
-                        cropBitmap = ImageUtils.scaleBitmap(cropBitmap, 400);
+                        cropBitmap = ImageUtils.scaleBitmap(cropBitmap, 350);
+                        ImageUtils.saveImageToSD(getApplicationContext(), MyAppConfig.LOCAL_DOWNLOAD_PATH+System.currentTimeMillis()+".png",cropBitmap,100);
                         if (isFaceSetting) {
                             faceSetting(cropBitmap);
                         } else {
@@ -379,6 +399,7 @@ public class FaceVerifyActivity extends BaseActivity implements SurfaceHolder.Ca
         super.onDestroy();
         if (handler != null) {
             handler.removeCallbacks(takePhotoRunnable);
+            handler.removeCallbacks(keepBodyRunnable);
             handler = null;
         }
         releaseCamera();

@@ -7,7 +7,7 @@ android:layout_height="wrap_content"
 android:background="@color/white">
 
 <RelativeLayout
-	android:layout_width="match_parent"
+	android:layout_width="248dp"
 	android:layout_height="wrap_content"
 	android:paddingTop="12dp"
 	android:paddingLeft="18dp"
@@ -51,11 +51,11 @@ android:background="@color/white">
 </RelativeLayout>
 
 <View
-	android:layout_width="match_parent"
+	android:layout_width="248dp"
 	android:layout_height="0.5dp"
 	android:background="@color/color_list_divider"></View>
 <TextView
-	android:layout_width="match_parent"
+	android:layout_width="248dp"
 	android:layout_height="wrap_content"
 	android:paddingLeft="17dp"
 	android:paddingTop="2dp"

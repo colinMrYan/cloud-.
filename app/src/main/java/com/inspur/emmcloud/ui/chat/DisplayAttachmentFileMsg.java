@@ -41,7 +41,7 @@ public class DisplayAttachmentFileMsg {
                 .findViewById(R.id.file_size_text);
         ImageView img = (ImageView)convertView.findViewById(R.id.file_icon_img);
         final MsgContentAttachmentFile msgContentFile = msg.getMsgContentAttachmentFile();
-        ImageDisplayUtils.getInstance().displayImage(img, "drawable://" + FileUtils.getIconResId(msgContentFile.getCategory()));
+        ImageDisplayUtils.getInstance().displayImage(img, "drawable://" + FileUtils.getIconResIdRobot(msgContentFile.getCategory()));
         fileNameText.setText(msgContentFile.getName());
         fileSizeText.setText(FileUtils.formatFileSize(msgContentFile.getSize()));
         final String downloadUri = "https://emm.inspur.com/api/bot/v6.0/getfile/"+msgContentFile.getMedia();
@@ -62,7 +62,7 @@ public class DisplayAttachmentFileMsg {
                     public void callbackSuccess(File file) {
                         ToastUtils.show(
                                 context,
-                                context.getString(R.string.chat_file_download_success));
+                                context.getString(R.string.download_success));
                         FileUtils.openFile(context, fileDownloadPath);
                     }
 

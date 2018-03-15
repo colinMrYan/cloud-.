@@ -898,6 +898,31 @@ public class FileUtils {
         }
         return imageIconId;
     }
+        /**
+         * 获取文件标识图片
+         * @param fileName
+         */
+    public static int getIconResIdRobot(String fileName) {
+        int imageIconId = R.drawable.ic_volume_file_typ_unknown;
+        if (fileName.endsWith("doc") || fileName.endsWith("docx")) {
+            imageIconId = R.drawable.ic_volume_file_typ_word;
+        } else if (fileName.endsWith("xls") || fileName.endsWith("xlsx")) {
+            imageIconId = R.drawable.ic_volume_file_typ_excel;
+        } else if (fileName.endsWith("ppt") || fileName.endsWith("pptx")) {
+            imageIconId = R.drawable.ic_volume_file_typ_ppt;
+        } else if (fileName.endsWith("pdf")) {
+            imageIconId = R.drawable.ic_volume_file_typ_pdf;
+        } else if (fileName.endsWith("txt")) {
+            imageIconId = R.drawable.ic_volume_file_typ_txt;
+        } else if (fileName.endsWith("zip")) {
+            imageIconId = R.drawable.ic_volume_file_typ_zip;
+        } else if (fileName.endsWith("rar")) {
+            imageIconId = R.drawable.ic_volume_file_typ_zip;
+        } else if (fileName.contains("jpg") || fileName.contains("png")) {
+            imageIconId = R.drawable.ic_volume_file_typ_img;
+        }
+        return imageIconId;
+    }
     /**
      * 传入目录名称，忽略删除的文件名
      * 返回成功删除的文件名列表
