@@ -161,6 +161,10 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait"></activity>
         <activity
+            android:name=".ui.login.LoginMoreActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"></activity>
+        <activity
             android:name=".ui.login.ScanQrCodeLoginActivity"
             android:screenOrientation="portrait" />
         <activity

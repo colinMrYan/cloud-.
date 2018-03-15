@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main_layout"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#ecf1f4"
+    android:fitsSystemWindows="true">
+
+    <RelativeLayout
+        android:id="@+id/header_layout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/header_height"
+        android:layout_alignParentTop="true"
+        android:background="@color/header_bg">
+
+        <TextView
+            android:id="@+id/meetting_bookingcirform_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:clickable="true"
+            android:onClick="onClick"
+            android:paddingLeft="20dp"
+            android:text=""
+            android:textColor="@color/white"
+            android:textSize="@dimen/header_textsize" />
+
+        <RelativeLayout
+            android:id="@+id/back_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:onClick="onClick"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp">
+
+            <ImageView
+                android:id="@+id/back_btn"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_centerVertical="true"
+                android:background="@null"
+                android:paddingRight="5dp"
+                android:scaleType="centerInside"
+                android:src="@drawable/selector_back_btn" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/header_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:text="@string/more"
+            android:textColor="@color/header_text"
+            android:textSize="@dimen/header_textsize" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/login_more_scan_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/header_layout"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="70dp"
+        android:onClick="onClick"
+        android:orientation="vertical">
+
+        <com.inspur.emmcloud.widget.CircleImageView
+            android:layout_width="84dp"
+            android:layout_height="84dp"
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/ic_login_more_scan" />
+
+        <Button
+            android:id="@+id/login_more_scan_btn"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:layout_below="@id/header_layout"
+            android:background="@color/transparent"
+            android:onClick="onClick"
+            android:text="@string/sweep"
+            android:textColor="@color/black"
+            android:textSize="17sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/login_more_reset_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/login_more_scan_layout"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="35dp"
+        android:onClick="onClick"
+        android:orientation="vertical"
+        android:visibility="visible">
+
+        <com.inspur.emmcloud.widget.CircleImageView
+            android:layout_width="84dp"
+            android:layout_height="84dp"
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/ic_login_more_clear" />
+
+        <Button
+            android:id="@+id/login_more_reset_btn"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:background="@color/transparent"
+            android:onClick="onClick"
+            android:text="@string/clear"
+            android:textColor="@color/black"
+            android:textSize="17sp" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/login_more_enterprise_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="15dp"
+        android:gravity="center_horizontal"
+        android:textColor="#999999"
+        android:textSize="13sp" />
+
+
+</RelativeLayout>

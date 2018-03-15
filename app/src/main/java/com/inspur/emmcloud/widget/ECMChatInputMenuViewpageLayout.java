@@ -15,7 +15,6 @@ import com.inspur.emmcloud.adapter.MsgInputAddItemAdapter;
 import com.inspur.emmcloud.adapter.MyViewPagerAdapter;
 import com.inspur.emmcloud.bean.chat.InputTypeBean;
 import com.inspur.emmcloud.util.common.DensityUtil;
-import com.inspur.emmcloud.util.common.LogUtils;
 
 import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
@@ -98,7 +97,6 @@ public class ECMChatInputMenuViewpageLayout extends LinearLayout {
     }
 
     private View getGridChildView(int i) {
-        LogUtils.jasonDebug("000000000000000");
         View view = View.inflate(getContext(), R.layout.ecm_widget_chat_input_menu_grid, null);
         NoScrollGridView gridView = (NoScrollGridView) view.findViewById(R.id.grid);
         final List<InputTypeBean> pageInputTypeBeanList = new ArrayList<>();
@@ -111,7 +109,6 @@ public class ECMChatInputMenuViewpageLayout extends LinearLayout {
         MsgInputAddItemAdapter adapter = new MsgInputAddItemAdapter(getContext(), pageInputTypeBeanList);
         gridView.setAdapter(adapter);
         if (onItemClickListener != null){
-            LogUtils.jasonDebug("111111111111111111111");
             gridView.setOnItemClickListener(onItemClickListener);
         }
         return view;

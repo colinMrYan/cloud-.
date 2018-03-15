@@ -198,7 +198,7 @@ public class MineAPIService {
      */
     public void getLanguage() {
 
-        final String completeUrl = APIUri.getHttpApiUrl("settings/lang");
+        final String completeUrl = APIUri.getLangUrl();
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
         x.http().get(params, new APICallback(context, completeUrl) {

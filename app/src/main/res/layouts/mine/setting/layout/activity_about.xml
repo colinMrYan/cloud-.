@@ -56,7 +56,7 @@
         android:orientation="vertical">
 
         <com.inspur.emmcloud.widget.CircleImageView
-            android:id="@+id/myinfo_userheadimg_img"
+            android:id="@+id/about_app_icon_img"
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:layout_marginBottom="10dp"

@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.net.Uri;
 
 import com.inspur.emmcloud.api.APIInterfaceInstance;
-import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
 import com.inspur.emmcloud.bean.appcenter.App;
 import com.inspur.emmcloud.ui.find.ScanResultActivity;
@@ -84,7 +83,7 @@ public class AppId2AppAndOpenAppUtils {
     private void handleAppAction(App app) {
         if(!StringUtils.isBlank(app.getAppID())){
             //特殊处理，不走UriUtils.openApp的逻辑，直接打开appUri，appUri是最终打开地址。
-            if(app.getUri().startsWith(APIUri.getEMMBaseUrl()+"ssohandler/gs/")){
+            if(app.getIsSSO() == 1){
                 UriUtils.openWebApp(activity,app.getUri(),app);
             }else{
                 UriUtils.openApp(activity,app,"application");

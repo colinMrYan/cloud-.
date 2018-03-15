@@ -413,7 +413,8 @@ public class UpgradeUtils extends APIInterfaceInstance {
             loadingDlg.dismiss();
         }
         upgradeHandler.sendEmptyMessage(UPGRADE_FAIL);
-        WebServiceMiddleUtils.hand(context, error, errorCode);
+        //在未登陆之前，为防止还不知道升级服务所在的地址导致检测升级失败，不再弹出提示
+//        WebServiceMiddleUtils.hand(context, error, errorCode);
 //		WebServiceMiddleUtils.hand(context, error, upgradeHandler,
 //				UPGRADE_FAIL);
     }

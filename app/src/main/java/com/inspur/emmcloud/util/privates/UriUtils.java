@@ -4,14 +4,15 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.bean.appcenter.App;
 import com.inspur.emmcloud.bean.system.PVCollectModel;
 import com.inspur.emmcloud.ui.appcenter.ReactNativeAppActivity;
 import com.inspur.emmcloud.ui.appcenter.groupnews.GroupNewsActivity;
 import com.inspur.emmcloud.ui.appcenter.volume.VolumeHomePageActivity;
 import com.inspur.emmcloud.util.common.IntentUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.cache.PVCollectModelCacheUtils;
@@ -46,10 +47,9 @@ public class UriUtils {
             case 4:
                 if(app.getAppID().equals("456166a362436750d74bfeaef997693d")){
                     new AppCenterApprovalUtils().openApprovalApp(activity,app);
-                }else if (!uri.startsWith(APIUri.getEMMBaseUrl()+"ssohandler/gs/")) {
-                    openWebApp(activity, uri, app);
-                } else {
-                    uri = uri.replace("ssohandler/gs/", "api/v1/gs_sso/app_uri?id=");
+                } else if(app.getIsSSO() == 1){
+//                    uri = uri.replace("ssohandler/gs/", "api/mam/v3.0/gs_sso/app_uri?id=");
+                    uri = MyApplication.getInstance().getClusterEmm() + "api/mam/v3.0/gs_sso/app_uri?id="+app.getAppID();
                     if (NetUtils.isNetworkConnected(activity)) {
                         new WebAppUtils(activity, new WebAppUtils.OnGetWebAppRealUrlListener() {
                             @Override
@@ -64,6 +64,8 @@ public class UriUtils {
                         }).getWebAppRealUrl(uri);
                     }
 
+                }else {
+                    openWebApp(activity, uri, app);
                 }
                 break;
             case 5:

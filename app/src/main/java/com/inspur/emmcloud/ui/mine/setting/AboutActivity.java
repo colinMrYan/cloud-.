@@ -7,11 +7,15 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.BaseActivity;
+import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.common.IntentUtils;
+import com.inspur.emmcloud.util.common.PreferencesUtils;
+import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
+import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.UpgradeUtils;
+import com.inspur.emmcloud.widget.dialogs.ActionSheetDialog;
 
 /**
  * 关于页面 com.inspur.emmcloud.ui.AboutActivity
@@ -32,7 +36,29 @@ public class AboutActivity extends BaseActivity {
 		((TextView) findViewById(R.id.app_version_text))
 				.setText(getString(R.string.app_name)+"  "
 						+ AppUtils.getVersion(this));
+		showSysInfo();
 		handMessage();
+	}
+
+	/**
+	 * 显示系统信息
+	 */
+	private void showSysInfo() {
+		findViewById(R.id.about_app_icon_img).setOnLongClickListener(new View.OnLongClickListener() {
+			@Override
+			public boolean onLongClick(View v) {
+				String enterpriseName = PreferencesUtils
+						.getString(AboutActivity.this, "login_enterprise_name", "");
+				new ActionSheetDialog.ActionListSheetBuilder(AboutActivity.this)
+						.setTitle(getString(R.string.current_system)+"-->"+ (StringUtils.isBlank(enterpriseName)?getString(R.string.cluster_default):enterpriseName))
+						.addItem("idm-->"+ MyApplication.getInstance().getCloudId())
+						.addItem("ecm-->"+ MyApplication.getInstance().getClusterEcm())
+						.addItem("emm-->"+ MyApplication.getInstance().getClusterEmm())
+						.build()
+						.show();
+				return false;
+			}
+		});
 	}
 
 	public void onClick(View v) {

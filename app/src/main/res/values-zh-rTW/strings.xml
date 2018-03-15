@@ -917,5 +917,13 @@
     <string name="qr_code_analysis_fail">二維碼解析失敗</string>
     <!--科大讯飞语音-->
     <string name="voice_input">語音輸入</string>
+    <string name="clear">清除</string>
+    <string name="confirm_clear">確認清除？</string>
+    <string name="login_more_current_enterprise">當前登錄系統：</string>
+
+    <string name="login_more_scan_find_left">掃描到[</string>
+    <string name="login_more_scan_find_right">]確定添加嗎？</string>
+    <string name="cluster_default">默認</string>
+    <string name="current_system">當前系統</string>
 
 </resources>

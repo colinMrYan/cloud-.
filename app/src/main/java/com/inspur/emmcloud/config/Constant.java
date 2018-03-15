@@ -29,11 +29,16 @@ public class Constant {
     public static final String PREF_SOFT_INPUT_HEIGHT = "soft_input_height";
     public static final String PREF_SELECT_LOGIN_ENTERPRISE_ID = "select_login_tenent_id";
     public static final String PREF_CURRENT_ENTERPRISE_ID="current_enterprise_id";
+    public static final String PREF_DELETE_ILLEGAL_USER="has_delete_illegal_user";
 
     public static final String ACTION_MEETING = "com.inspur.meeting";
     public static final String ACTION_TASK = "com.inspur.task";
     public static final String ACTION_CALENDAR = "com.inspur.calendar";
     public static final String ACTION_SAFE_UNLOCK = "com.inspur.safe.unlock";
     public static final String ACTION_VOLUME_INFO_UPDATE = "com.inspur.volume.info.update";
+
+    public static final String DEFAULT_CLUSTER_EMM = "https://emm.inspur.com/";//EMM默认
+    public static final String DEFAULT_CLUSTER_ECM = "https://ecm.inspur.com/";//ECM默认
+    public static final String DEFAULT_CLUSTER_ID = "https://id.inspuronline.com/";//ID默认
 
 }
