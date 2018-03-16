@@ -327,12 +327,12 @@ public class ChannelRobotActivity extends BaseActivity {
                                 pushMsg= new MsgRobot(obj,true) ;
                             }
                             if (cid.equals(pushMsg.getChannel())) {
+                                MsgReadIDCacheUtils.saveReadedMsg(ChannelRobotActivity.this,
+                                        pushMsg.getChannel(), pushMsg.getId());
                                 if (pushMsg.getType().equals("command/faceLogin")){
                                     intentFaceLogin(pushMsg.getContent());
                                     return;
                                 }
-                                MsgReadIDCacheUtils.saveReadedMsg(ChannelRobotActivity.this,
-                                        pushMsg.getChannel(), pushMsg.getId());
                                 MsgCacheUtil.saveRobotMsg(getApplicationContext(),pushMsg);
                                 if (!msgList.contains(pushMsg) && !pushMsg.getTmpId().equals(AppUtils.getMyUUID(getApplicationContext()))) {
                                     msgList.add(pushMsg);
