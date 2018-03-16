@@ -888,6 +888,7 @@
     <string name="face_verify_fail">抱歉，沒有認出你來</string>
     <string name="face_enter">刷脸解鎖</string>
     <string name="off_face_verify_relogin">關閉刷臉，重新登錄</string>
+    <string name="face_verifying">驗證中</string>
 
     <!--九宮格-->
     <!-- Gesture login activity -->

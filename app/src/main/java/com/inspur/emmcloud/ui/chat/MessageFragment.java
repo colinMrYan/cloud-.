@@ -584,6 +584,9 @@ public class MessageFragment extends Fragment{
                         // 接收到新的消息
                         if (msg.arg1 == 0){
                             Msg receivedMsg =new Msg((JSONObject) msg.obj);
+                            if (receivedMsg.getType().equals("command/faceLogin")){
+                                return;
+                            }
                             Channel receiveMsgChannel = ChannelCacheUtils.getChannel(
                                     getActivity(), receivedMsg.getCid());
                             if (receiveMsgChannel == null) {

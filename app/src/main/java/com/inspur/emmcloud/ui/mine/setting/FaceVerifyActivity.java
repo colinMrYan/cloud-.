@@ -13,6 +13,7 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.YuvImage;
 import android.hardware.Camera;
+import android.media.FaceDetector;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -36,8 +37,10 @@ import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.MineAPIService;
 import com.inspur.emmcloud.bean.mine.GetFaceSettingResult;
 import com.inspur.emmcloud.config.Constant;
-import com.inspur.emmcloud.config.MyAppConfig;
+import com.inspur.emmcloud.ui.login.ScanQrCodeLoginGSActivity;
 import com.inspur.emmcloud.util.common.ImageUtils;
+import com.inspur.emmcloud.util.common.IntentUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.ResolutionUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
@@ -77,6 +80,8 @@ public class FaceVerifyActivity extends BaseActivity implements SurfaceHolder.Ca
     private Runnable takePhotoRunnable;
     private Runnable keepBodyRunnable;
     private long startTime;
+    private boolean isFaceLogin = false;
+    private String token="";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,9 +100,9 @@ public class FaceVerifyActivity extends BaseActivity implements SurfaceHolder.Ca
 
     private void init() {
         previewSFV = (FocusSurfaceView) findViewById(R.id.preview_sv);
-        int previewSFVWidth = (int)(ResolutionUtils.getWidth(FaceVerifyActivity.this)*0.65);
-        int previewSFVHeight = (int)(ResolutionUtils.getHeight(FaceVerifyActivity.this)*0.65);
-        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(previewSFVWidth,previewSFVHeight);
+        int previewSFVWidth = (int) (ResolutionUtils.getWidth(FaceVerifyActivity.this) * 0.7);
+        int previewSFVHeight = (int) (ResolutionUtils.getHeight(FaceVerifyActivity.this) * 0.7);
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(previewSFVWidth, previewSFVHeight);
         params.addRule(RelativeLayout.CENTER_HORIZONTAL);
         previewSFV.setLayoutParams(params);
         previewSFV.setEnabled(false);
@@ -113,6 +118,10 @@ public class FaceVerifyActivity extends BaseActivity implements SurfaceHolder.Ca
         isFaceSetting = getIntent().hasExtra("isFaceSettingOpen");
         if (isFaceSetting) {
             isFaceSettingOpen = getIntent().getBooleanExtra("isFaceSettingOpen", true);
+        }
+        isFaceLogin = getIntent().getBooleanExtra("isFaceLogin", false);
+        if (isFaceLogin){
+            token = getIntent().getStringExtra("token");
         }
         takePhotoRunnable = new Runnable() {
             @Override
@@ -141,6 +150,7 @@ public class FaceVerifyActivity extends BaseActivity implements SurfaceHolder.Ca
 
     @Override
     public void surfaceCreated(SurfaceHolder surfaceHolder) {
+        LogUtils.jasonDebug("surfaceCreated-------------");
         previewSFV.setCustomRatio(1, 1);
         currentCameraFacing = Camera.CameraInfo.CAMERA_FACING_FRONT;
         initCamera();
@@ -306,8 +316,8 @@ public class FaceVerifyActivity extends BaseActivity implements SurfaceHolder.Ca
         }
     }
 
-    private void delayToNotifyKeepBody(){
-        handler.postDelayed(keepBodyRunnable,1500);
+    private void delayToNotifyKeepBody() {
+        handler.postDelayed(keepBodyRunnable, 1500);
     }
 
     private void delayTotakePicture(long time) {
@@ -330,12 +340,12 @@ public class FaceVerifyActivity extends BaseActivity implements SurfaceHolder.Ca
                     YuvImage image = new YuvImage(data, ImageFormat.NV21, size.width, size.height, null);
                     if (image != null) {
                         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                        image.compressToJpeg(new Rect(0, 0, size.width, size.height), 100, stream);
+                        image.compressToJpeg(new Rect(0, 0, size.width, size.height), 90, stream);
 
                         Bitmap originBitmap = BitmapFactory.decodeByteArray(stream.toByteArray(), 0, stream.size());
                         stream.close();
                         //前置摄像头拍摄的照片和预览界面成镜面效果，需要翻转。
-                        Bitmap mirrorOriginBitmap = Bitmap.createBitmap(originBitmap.getWidth(), originBitmap.getHeight(), originBitmap.getConfig());
+                        Bitmap mirrorOriginBitmap = Bitmap.createBitmap(originBitmap.getWidth(), originBitmap.getHeight(), Bitmap.Config.RGB_565);
                         Canvas canvas = new Canvas(mirrorOriginBitmap);
                         Paint paint = new Paint();
                         paint.setColor(Color.BLACK);
@@ -349,12 +359,27 @@ public class FaceVerifyActivity extends BaseActivity implements SurfaceHolder.Ca
                         originBitmap = ImageUtils.rotaingImageView(90, originBitmap);
                         //通过各种旋转和镜面操作，使originBitmap显示出preview界面
                         Bitmap cropBitmap = previewSFV.getPicture(originBitmap);
-                        cropBitmap = ImageUtils.scaleBitmap(cropBitmap, 350);
-                        ImageUtils.saveImageToSD(getApplicationContext(), MyAppConfig.LOCAL_DOWNLOAD_PATH+System.currentTimeMillis()+".png",cropBitmap,100);
-                        if (isFaceSetting) {
-                            faceSetting(cropBitmap);
+                       // String filePath = MyAppConfig.LOCAL_DOWNLOAD_PATH + System.currentTimeMillis() + ".png";
+                      //  ImageUtils.saveImageToSD(getApplicationContext(),filePath, cropBitmap, 100);
+                        cropBitmap = ImageUtils.scaleBitmap(cropBitmap, 250);
+                        //ImageUtils.saveImageToSD(getApplicationContext(), MyAppConfig.LOCAL_DOWNLOAD_PATH + System.currentTimeMillis() + ".png", cropBitmap, 100);
+                        FaceDetector faceDetector = new FaceDetector(cropBitmap.getWidth(), cropBitmap.getHeight(), 1);
+                        FaceDetector.Face[] faces = new FaceDetector.Face[1];
+                        int faceNum = faceDetector.findFaces(cropBitmap, faces);
+                        //当检测不到脸部时重新拍照
+                        if (faceNum < 1) {
+                            handResultCode(201);
                         } else {
-                            faceVerify(cropBitmap);
+                            if (isFaceLogin){
+                                ImageUtils.saveImage(getApplicationContext(),"face_unlock.png",cropBitmap);
+                            }
+                            tipText.setVisibility(View.VISIBLE);
+                            tipText.setText(R.string.face_verifying);
+                            if (isFaceSetting) {
+                                faceSetting(cropBitmap);
+                            } else {
+                                faceVerify(cropBitmap);
+                            }
                         }
                     }
                 } catch (Exception ex) {
@@ -409,11 +434,16 @@ public class FaceVerifyActivity extends BaseActivity implements SurfaceHolder.Ca
      * @param code
      */
     private void handResultCode(int code) {
+        LogUtils.jasonDebug("code="+code);
         switch (code) {
             case 200:
                 tipText.setVisibility(View.GONE);
                 ToastUtils.show(getApplicationContext(), getString(R.string.face_verify_success));
-                if (isFaceSetting) {
+                if (isFaceLogin) {
+                    Bundle bundle = new Bundle();
+                    bundle.putString("token",token);
+                    IntentUtils.startActivity(FaceVerifyActivity.this, ScanQrCodeLoginGSActivity.class,bundle);
+                } else if (isFaceSetting) {
                     PreferencesByUsersUtils.putBoolean(FaceVerifyActivity.this, FaceVerifyActivity.FACE_VERIFT_IS_OPEN, isFaceSettingOpen);
                 } else if (!isFaceVerityTest) {
                     //发送解锁广播是，SchemeHandleActivity中接收处理
@@ -457,6 +487,7 @@ public class FaceVerifyActivity extends BaseActivity implements SurfaceHolder.Ca
                 break;
             default:
                 if (!checkIsTimeout()) {
+                    tipText.setVisibility(View.GONE);
                     delayTotakePicture(1000);
                 }
                 break;
@@ -486,7 +517,7 @@ public class FaceVerifyActivity extends BaseActivity implements SurfaceHolder.Ca
                             finish();
                         }
                     })
-                    .show();
+                    .show(false);
         } else if (CreateGestureActivity.getGestureCodeIsOpenByUser(FaceVerifyActivity.this)) {
             new MyQMUIDialog.MessageDialogBuilder(FaceVerifyActivity.this)
                     .setMessage(R.string.face_verify_fail)
@@ -495,7 +526,6 @@ public class FaceVerifyActivity extends BaseActivity implements SurfaceHolder.Ca
                         public void onClick(QMUIDialog dialog, int index) {
                             dialog.dismiss();
                             startTime = System.currentTimeMillis();
-                            delayTotakePicture(1000);
                         }
                     })
                     .addAction(R.string.switch_gesture_unlock, new QMUIDialogAction.ActionListener() {
@@ -508,7 +538,7 @@ public class FaceVerifyActivity extends BaseActivity implements SurfaceHolder.Ca
                             finish();
                         }
                     })
-                    .show();
+                    .show(false);
         } else {
             new MyQMUIDialog.MessageDialogBuilder(FaceVerifyActivity.this)
                     .setMessage(R.string.face_verify_fail)
@@ -528,10 +558,11 @@ public class FaceVerifyActivity extends BaseActivity implements SurfaceHolder.Ca
                             PreferencesByUsersUtils.putBoolean(FaceVerifyActivity.this, FaceVerifyActivity.FACE_VERIFT_IS_OPEN, false);
                         }
                     })
-                    .show();
+                    .show(false);
         }
 
     }
+
 
     /**
      * 设置脸部图像
@@ -546,6 +577,9 @@ public class FaceVerifyActivity extends BaseActivity implements SurfaceHolder.Ca
             byte[] output = Base64.encode(code, Base64.NO_WRAP);
             String js_out = new String(output);
             apiService.faceSetting(js_out);
+        } else {
+            delayTotakePicture(1500);
+            tipText.setVisibility(View.GONE);
 
         }
 
@@ -564,7 +598,9 @@ public class FaceVerifyActivity extends BaseActivity implements SurfaceHolder.Ca
             byte[] output = Base64.encode(code, Base64.NO_WRAP);
             String js_out = new String(output);
             apiService.faceVerify(js_out);
-
+        } else {
+            delayTotakePicture(1500);
+            tipText.setVisibility(View.GONE);
         }
 
     }

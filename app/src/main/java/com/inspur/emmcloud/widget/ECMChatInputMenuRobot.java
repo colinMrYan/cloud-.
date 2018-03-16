@@ -349,7 +349,7 @@ public class ECMChatInputMenuRobot extends LinearLayout {
                 break;
             case R.id.send_msg_btn:
                 if (NetUtils.isNetworkConnected(getContext())) {
-                    String content = inputEdit.getRichContent();
+                    String content = inputEdit.getRichContent(false);
                     chatInputMenuListener.onSendMsg(content, getContentMentionUidList());
                     inputEdit.setText("");
                 }

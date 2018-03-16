@@ -41,13 +41,11 @@ public class DisplayTxtPlainMsg {
         (convertView.findViewById(R.id.card_layout)).setBackgroundResource(isMyMsg ? R.drawable.ic_chat_msg_img_cover_arrow_right : R.drawable.ic_chat_msg_img_cover_arrow_left);
         String text = msg.getMsgContentTextPlain().getText();
         richText.setMovementMethod(LinkMovementClickMethod.getInstance());
-        SpannableString spannableString = ChatMsgContentUtils.mentionsAndUrl2Span(context,text,msg.getMsgContentTextPlain().getMentionsMap());
+        SpannableString spannableString = ChatMsgContentUtils.mentionsAndUrl2Span(context, text, msg.getMsgContentTextPlain().getMentionsMap());
         richText.setText(spannableString);
         TransHtmlToTextUtils.stripUnderlines(
                 richText,
-                context.getResources().getColor(
-                        isMyMsg ? R.color.hightlight_in_blue_bg
-                                : R.color.header_bg));
+                context.getResources().getColor(R.color.header_bg));
 
         richText.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
@@ -56,7 +54,7 @@ public class DisplayTxtPlainMsg {
                 return true;
             }
         });
-        return  convertView;
+        return convertView;
     }
 
     public static void copyContentToPasteBoard(Context context, TextView textView) {

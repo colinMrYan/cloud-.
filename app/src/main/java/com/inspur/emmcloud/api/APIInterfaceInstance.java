@@ -1596,4 +1596,12 @@ public class APIInterfaceInstance implements APIInterface {
     @Override
     public void returnUploadPushInfoResultFail(String error, int errorCode) {
     }
+
+    @Override
+    public void returnFaceLoginGSSuccess() {
+    }
+
+    @Override
+    public void returnFaceLoginGSFail(String error, int errorCode) {
+    }
 }

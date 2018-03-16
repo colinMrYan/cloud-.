@@ -261,10 +261,7 @@ public class ChatInputEdit extends AppCompatEditText {
         setSelection(index + insertContent.length() + 1);
     }
 
-    /**
-     * 获取富文文本内容
-     */
-    public String getRichContent() {
+    public String getRichContent(boolean isConvertUrl){
         SpannableStringBuilder spannableStringBuilder = (SpannableStringBuilder) getText();
         BackgroundColorSpan[] mSpans = getText().getSpans(0, spannableStringBuilder.length(), BackgroundColorSpan.class);
         for (int i = 0; i < mSpans.length; i++) {
@@ -281,24 +278,32 @@ public class ChatInputEdit extends AppCompatEditText {
             }
         }
         String content = spannableStringBuilder.toString();
-        Pattern pattern = Pattern.compile(Constant.PATTERN_URL);
-        Matcher matcher = pattern.matcher(content);
-        int offset = 0;
-        while (matcher.find()) {
-            String replaceUrl = matcher.group(0);
-            StringBuilder sb = new StringBuilder(content);
-            int replaceUrlBeginLocation = sb.indexOf(replaceUrl, offset);
-            String matchedUrl = matcher.group(0);
-            if (matchedUrl.startsWith("http://") || matchedUrl.startsWith("https://")) {
-                content = sb.replace(replaceUrlBeginLocation, replaceUrlBeginLocation + replaceUrl.length(), "[" + matcher.group(0) + "]" + "(" + matcher.group(0) + ")").toString();
-                offset = replaceUrlBeginLocation + replaceUrl.length() * 2 + 4;//4代表两个中小括号
-            } else {
-                content = sb.replace(replaceUrlBeginLocation, replaceUrlBeginLocation + replaceUrl.length(), "[" + matcher.group(0) + "]" + "(http://" + matcher.group(0) + ")").toString();
-                offset = replaceUrlBeginLocation + replaceUrl.length() * 2 + 4 + 7;//4代表两个中小括号,7代表http://
+        if (isConvertUrl){
+            Pattern pattern = Pattern.compile(Constant.PATTERN_URL);
+            Matcher matcher = pattern.matcher(content);
+            int offset = 0;
+            while (matcher.find()) {
+                String replaceUrl = matcher.group(0);
+                StringBuilder sb = new StringBuilder(content);
+                int replaceUrlBeginLocation = sb.indexOf(replaceUrl, offset);
+                String matchedUrl = matcher.group(0);
+                if (matchedUrl.startsWith("http://") || matchedUrl.startsWith("https://")) {
+                    content = sb.replace(replaceUrlBeginLocation, replaceUrlBeginLocation + replaceUrl.length(), "[" + matcher.group(0) + "]" + "(" + matcher.group(0) + ")").toString();
+                    offset = replaceUrlBeginLocation + replaceUrl.length() * 2 + 4;//4代表两个中小括号
+                } else {
+                    content = sb.replace(replaceUrlBeginLocation, replaceUrlBeginLocation + replaceUrl.length(), "[" + matcher.group(0) + "]" + "(http://" + matcher.group(0) + ")").toString();
+                    offset = replaceUrlBeginLocation + replaceUrl.length() * 2 + 4 + 7;//4代表两个中小括号,7代表http://
+                }
             }
         }
         return content;
+    }
 
+    /**
+     * 获取富文文本内容
+     */
+    public String getRichContent() {
+        return getRichContent(true);
     }
 
     /**

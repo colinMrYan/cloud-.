@@ -613,4 +613,7 @@ public interface APIInterface {
 
     void returnOpenActionBackgroudUrlSuccess();
     void returnOpenActionBackgroudUrlFail(String error, int errorCode);
+
+    void returnFaceLoginGSSuccess();
+    void returnFaceLoginGSFail(String error,int errorCode);
 }

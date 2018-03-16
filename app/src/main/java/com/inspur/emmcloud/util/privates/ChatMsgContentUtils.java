@@ -3,12 +3,12 @@ package com.inspur.emmcloud.util.privates;
 import android.content.Context;
 import android.text.SpannableString;
 import android.text.Spanned;
-import android.text.style.URLSpan;
 
 import com.inspur.emmcloud.bean.work.MentionsAndUrl;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactCacheUtils;
+import com.inspur.emmcloud.widget.spans.URLClickableSpan;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -55,9 +55,14 @@ public class ChatMsgContentUtils {
         SpannableString spannableString = new SpannableString(content);
         for (int i=0;i<MentionProtocolList.size();i++){
             MentionsAndUrl mentionsAndUrl = MentionProtocolList.get(i);
-            URLSpan urlSpan = new URLSpan(mentionsAndUrl.getProtocol());
-            spannableString.setSpan(urlSpan, mentionsAndUrl.getStart(), mentionsAndUrl.getEnd(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+            String url = mentionsAndUrl.getProtocol();
+            if(!url.startsWith("http")){
+                url = "http://"+url;
+            }
+            URLClickableSpan urlClickableSpan = new URLClickableSpan(url);
+            spannableString.setSpan(urlClickableSpan, mentionsAndUrl.getStart(), mentionsAndUrl.getEnd(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
         }
         return  spannableString;
     }
+
 }

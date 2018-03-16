@@ -31,6 +31,7 @@ import com.inspur.emmcloud.bean.system.PVCollectModel;
 import com.inspur.emmcloud.broadcastreceiver.MsgReceiver;
 import com.inspur.emmcloud.ui.contact.RobotInfoActivity;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
+import com.inspur.emmcloud.ui.mine.setting.FaceVerifyActivity;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.LogUtils;
@@ -326,6 +327,10 @@ public class ChannelRobotActivity extends BaseActivity {
                                 pushMsg= new MsgRobot(obj,true) ;
                             }
                             if (cid.equals(pushMsg.getChannel())) {
+                                if (pushMsg.getType().equals("command/faceLogin")){
+                                    intentFaceLogin(pushMsg.getContent());
+                                    return;
+                                }
                                 MsgReadIDCacheUtils.saveReadedMsg(ChannelRobotActivity.this,
                                         pushMsg.getChannel(), pushMsg.getId());
                                 MsgCacheUtil.saveRobotMsg(getApplicationContext(),pushMsg);
@@ -346,6 +351,14 @@ public class ChannelRobotActivity extends BaseActivity {
             }
 
         };
+    }
+
+    private void intentFaceLogin(String token){
+        Bundle bundle = new Bundle();
+        bundle.putBoolean("isFaceVerifyExperience",false);
+        bundle.putBoolean("isFaceLogin",true);
+        bundle.putString("token",token);
+        IntentUtils.startActivity(ChannelRobotActivity.this, FaceVerifyActivity.class,bundle);
     }
 
     /**
