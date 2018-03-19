@@ -643,6 +643,10 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
 
     }
 
+    public MyActivityLifecycleCallbacks getActivityLifecycleCallbacks(){
+        return myActivityLifecycleCallbacks;
+    }
+
 
     /**
      * init ImageLoader
