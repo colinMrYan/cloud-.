@@ -25,6 +25,7 @@ import com.inspur.emmcloud.util.privates.cache.DbCacheUtils;
 public class MyActivityLifecycleCallbacks implements Application.ActivityLifecycleCallbacks {
 
     private int count = 0;
+    private Activity currentActivity;
 
     @Override
     public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
@@ -33,6 +34,7 @@ public class MyActivityLifecycleCallbacks implements Application.ActivityLifecyc
 
     @Override
     public void onActivityStarted(Activity activity) {
+        currentActivity = activity;
         //此处不能用（count == 0）判断，由于Activity跳转生命周期因素导致，已登录账号进入应用不会打开手势解锁
         if (!MyApplication.getInstance().getIsActive() && MyApplication.getInstance()
                 .isIndexActivityRunning()) {
@@ -77,6 +79,10 @@ public class MyActivityLifecycleCallbacks implements Application.ActivityLifecyc
 
     public int getCount() {
         return count;
+    }
+
+    public Activity getCurrentActivity(){
+        return currentActivity;
     }
 
     /**

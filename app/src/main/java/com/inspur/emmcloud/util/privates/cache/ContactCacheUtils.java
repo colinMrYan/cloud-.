@@ -40,7 +40,7 @@ public class ContactCacheUtils {
         }
     }
 
-    public static int deleteIllegalUser(Context context){
+    public static int deleteIllegalUser(Context context) {
         int illegalUserCount = 0;
         try {
 
@@ -48,8 +48,8 @@ public class ContactCacheUtils {
                     (Contact.class).where("type", "=", "user")
                     .and(WhereBuilder.b().expr("length(id)>25"))
                     .findAll();
-            illegalUserCount  = childUserList.size();
-            if (illegalUserCount>0){
+            illegalUserCount = childUserList.size();
+            if (illegalUserCount > 0) {
                 DbCacheUtils.getDb(context).delete(childUserList);
             }
         } catch (Exception e) {
@@ -127,11 +127,12 @@ public class ContactCacheUtils {
 
     /**
      * 获取通讯录列表
+     *
      * @param context
      * @param uidList
      * @return
      */
-    public static List<Contact> getContactListById(final Context context,final List<String> uidList){
+    public static List<Contact> getContactListById(final Context context, final List<String> uidList) {
         List<Contact> contactList = null;
         try {
             contactList = DbCacheUtils.getDb(context).selector(Contact.class).where("inspurID",
@@ -144,7 +145,7 @@ public class ContactCacheUtils {
         if (contactList == null) {
             contactList = new ArrayList<Contact>();
         }
-        return  contactList;
+        return contactList;
     }
 
     /**
@@ -258,6 +259,11 @@ public class ContactCacheUtils {
      */
     public static List<Contact> getSearchContact(Context context,
                                                  String searchText, List<Contact> haveSearchContactList, int limit) {
+        searchText = searchText.trim();
+        //解决ios通讯录复制后手机号带特殊字符的问题
+        String iosSpecialString1 = (char) (8236) + "";
+        String iosSpecialString2 = (char) (8237) + "";
+        searchText = searchText.replaceAll(iosSpecialString1, "").replaceAll(iosSpecialString2, "");
         String searchStr = searchText;
         String noInSql = "()";
         noInSql = getNoInSql(noInSql, haveSearchContactList);
@@ -387,7 +393,7 @@ public class ContactCacheUtils {
      * @return
      */
     public static List<Contact> getSearchContactByPhoneNum(Context context,
-                                                           String searchText,  String noInSql, int limit) {
+                                                           String searchText, String noInSql, int limit) {
         List<Contact> searchContactList = null;
         searchText = "%" + searchText + "%";
         try {
