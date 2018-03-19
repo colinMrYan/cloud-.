@@ -198,6 +198,8 @@ public class LoginUtils extends APIInterfaceInstance {
             int expiresIn = getLoginResult.getExpiresIn();
             ((MyApplication) activity.getApplicationContext())
                     .setAccessToken(accessToken);
+            ((MyApplication) activity.getApplicationContext())
+                    .setRefreshToken(refreshToken);
             PreferencesUtils.putString(activity, "accessToken", accessToken);
             PreferencesUtils.putString(activity, "refreshToken", refreshToken);
             PreferencesUtils.putInt(activity, "keepAlive", keepAlive);
@@ -259,8 +261,11 @@ public class LoginUtils extends APIInterfaceInstance {
         // TODO Auto-generated method stub
         this.getLoginResult = getLoginResult;
         String accessToken = getLoginResult.getAccessToken();
+        String refreshToken = getLoginResult.getRefreshToken();
         ((MyApplication) activity.getApplicationContext())
                 .setAccessToken(accessToken);
+        ((MyApplication) activity.getApplicationContext())
+                .setRefreshToken(refreshToken);
         getMyInfo();
     }
 

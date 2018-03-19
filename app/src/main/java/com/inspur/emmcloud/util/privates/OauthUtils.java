@@ -52,6 +52,7 @@ public class OauthUtils {
 			((MyApplication)context.getApplicationContext()).setIsTokenRefreshing(false);
 			((MyApplication)context.getApplicationContext()).startWebSocket();
 			((MyApplication)context.getApplicationContext()).setAccessToken(accessToken);
+			((MyApplication)context.getApplicationContext()).setRefreshToken(refreshToken);
 			List<OauthCallBack> callBackList = ((MyApplication)context.getApplicationContext()).getCallBackList();
 			for (int i = 0; i < callBackList.size(); i++) {
 				callBackList.get(i).reExecute();

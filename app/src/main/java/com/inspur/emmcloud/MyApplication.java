@@ -173,6 +173,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         PreferencesUtils.putString(this, "accessToken", "");
         PreferencesUtils.putString(this, "refreshToken","");
         setAccessToken("");
+        setRefreshToken("");
         Intent intent = new Intent();
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -369,6 +370,11 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
     public String getRefreshToken() {
         return refreshToken;
     }
+
+    public void setRefreshToken(String refreshToken){
+        this.refreshToken = refreshToken;
+    }
+
 
     public void setAccessToken(String accessToken) {
         this.accessToken = accessToken;

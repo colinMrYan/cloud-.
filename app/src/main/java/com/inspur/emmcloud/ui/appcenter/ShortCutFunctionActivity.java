@@ -128,6 +128,7 @@ public class ShortCutFunctionActivity extends BaseActivity{
         PreferencesUtils.putInt(context, "expiresIn", expiresIn);
         ((MyApplication)context.getApplicationContext()).setIsTokenRefreshing(false);
         ((MyApplication)context.getApplicationContext()).setAccessToken(accessToken);
+        ((MyApplication)context.getApplicationContext()).setRefreshToken(refreshToken);
     }
 
     /**
