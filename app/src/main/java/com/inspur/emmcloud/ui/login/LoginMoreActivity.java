@@ -42,7 +42,7 @@ public class LoginMoreActivity extends BaseActivity {
                 .getString(LoginMoreActivity.this, "login_enterprise_name", "");
         findViewById(R.id.login_more_reset_layout).setVisibility(StringUtils.isBlank(enterpriseName)
                 ? View.GONE : View.VISIBLE);
-        ((TextView)findViewById(R.id.login_more_enterprise_text)).setText(getString(R.string.login_more_current_enterprise)+enterpriseName);
+        ((TextView)findViewById(R.id.login_more_enterprise_text)).setText(StringUtils.isBlank(enterpriseName)?"":getString(R.string.login_more_current_enterprise)+enterpriseName);
     }
 
     /**
