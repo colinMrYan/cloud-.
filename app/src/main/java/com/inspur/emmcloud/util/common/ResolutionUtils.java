@@ -25,6 +25,13 @@ public class ResolutionUtils {
 		return height + "*" + width;
 	}
 
+	public static int getWidth(Activity context){
+		DisplayMetrics displayMetrics = new DisplayMetrics();
+		context.getWindowManager().getDefaultDisplay()
+				.getMetrics(displayMetrics);
+		return displayMetrics.widthPixels;
+	}
+
 	/**
 	 * 检查设备分辨率是否符合条件
 	 * 
@@ -84,7 +91,7 @@ public class ResolutionUtils {
 	 * @param context
 	 * @return
 	 */
-	private static int getHeight(Activity context)
+	public static int getHeight(Activity context)
     {   int dpi = 0;
             Display display = context.getWindowManager().getDefaultDisplay();
         DisplayMetrics dm = new DisplayMetrics(); 
