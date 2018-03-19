@@ -446,6 +446,7 @@ public class FaceVerifyActivity extends BaseActivity implements SurfaceHolder.Ca
                 } else if (!isFaceVerityTest) {
                     //发送解锁广播是，SchemeHandleActivity中接收处理
                     Intent intent = new Intent();
+                    MyApplication.getInstance().setIsActive(true);
                     intent.setAction(Constant.ACTION_SAFE_UNLOCK);
                     sendBroadcast(intent);
                 }
