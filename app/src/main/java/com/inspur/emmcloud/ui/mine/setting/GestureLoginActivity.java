@@ -193,6 +193,7 @@ public class GestureLoginActivity extends BaseActivity {
                             //发送解锁广播是，SchemeHandleActivity中接收处理
                             Intent intent = new  Intent();
                             intent.setAction(Constant.ACTION_SAFE_UNLOCK);
+                            MyApplication.getInstance().setIsActive(true);
                             sendBroadcast(intent);
                             finish();
                         } else if (command.equals("close")) {
