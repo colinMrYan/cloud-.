@@ -2,6 +2,7 @@ package com.inspur.emmcloud.ui;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -31,6 +32,7 @@ import com.inspur.emmcloud.ui.mine.setting.GestureLoginActivity;
 import com.inspur.emmcloud.ui.work.calendar.CalEventAddActivity;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StateBarUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
@@ -39,6 +41,8 @@ import com.inspur.emmcloud.util.privates.WebAppUtils;
 import com.inspur.imp.api.ImpActivity;
 
 import org.json.JSONObject;
+
+import java.io.InputStream;
 
 /**
  * scheme统一处理类
@@ -56,7 +60,7 @@ public class SchemeHandleActivity extends Activity {
             if (FaceVerifyActivity.getFaceVerifyIsOpenByUser(SchemeHandleActivity.this)) {
                 registerReiceiver();
                 Intent intent = new Intent(SchemeHandleActivity.this, FaceVerifyActivity.class);
-                intent.putExtra("isFaceVerifyExperience",false);
+                intent.putExtra("isFaceVerifyExperience", false);
                 startActivity(intent);
                 return;
             } else if (getIsNeedGestureCode()) {
@@ -67,13 +71,14 @@ public class SchemeHandleActivity extends Activity {
                 return;
             }
         }
+
         openScheme();
     }
 
     /**
      * 注册安全解锁监听广播
      */
-    private void registerReiceiver(){
+    private void registerReiceiver() {
         unlockReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -251,6 +256,37 @@ public class SchemeHandleActivity extends Activity {
                 finish();
                 break;
         }
+    }
+
+    /**
+     * 获取分享文件的Uri
+     * @return
+     */
+    public Uri getShareFileUri() {
+        Intent intent = getIntent();
+        Bundle extras = intent.getExtras();
+        String action = intent.getAction();
+        // 判断Intent是否是“分享”功能(Share Via)
+        if (Intent.ACTION_SEND.equals(action)) {
+            if (extras.containsKey(Intent.EXTRA_STREAM)) {
+                try {
+                    // 获取资源路径Uri
+                    Uri uri = (Uri) extras.getParcelable(Intent.EXTRA_STREAM);
+                    LogUtils.YfcDebug("uri路径：" + uri.toString());
+                    //解析Uri资源
+                    ContentResolver cr = getContentResolver();
+                    InputStream is = cr.openInputStream(uri);
+                    // Get binary bytes for encode
+//                    byte[] data = getBytesFromFile(is);
+                    return uri;
+                } catch (Exception e) {
+//                    Log.e(this.getClass().getName(), e.toString());
+                }
+            } else if (extras.containsKey(Intent.EXTRA_TEXT)) {
+                return null;
+            }
+        }
+        return null;
     }
 
     @Override
