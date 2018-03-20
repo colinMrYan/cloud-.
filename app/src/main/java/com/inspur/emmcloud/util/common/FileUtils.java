@@ -1,15 +1,21 @@
 package com.inspur.emmcloud.util.common;
 
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.AssetManager;
+import android.database.Cursor;
 import android.net.Uri;
+import android.os.Bundle;
+import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.webkit.MimeTypeMap;
 
 import com.inspur.emmcloud.R;
 
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -154,7 +160,7 @@ public class FileUtils {
      */
     public static boolean writeFile(String filePath, List<String> contentList,
                                     boolean append) {
-        if (contentList ==null || contentList.size() == 0) {
+        if (contentList == null || contentList.size() == 0) {
             return false;
         }
 
@@ -346,7 +352,7 @@ public class FileUtils {
             File a = new File(oldPath);
             String[] files = a.list();
             File temp = null;
-            if(files == null){
+            if (files == null) {
                 return false;
             }
             for (int i = 0; i < files.length; i++) {
@@ -689,6 +695,7 @@ public class FileUtils {
 
     /**
      * 获取文件大小
+     *
      * @param fileSize
      * @return
      */
@@ -773,7 +780,7 @@ public class FileUtils {
         }
     }
 
-    public static String  getSuffix(String  fileName){
+    public static String getSuffix(String fileName) {
         if (fileName.equals("") || fileName.endsWith(".")) {
             return "";
         }
@@ -809,7 +816,7 @@ public class FileUtils {
         }
     }
 
-    public static String getMimeType(String fileName){
+    public static String getMimeType(String fileName) {
         String suffix = getSuffix(fileName);
         if (suffix == null) {
             return "";
@@ -839,30 +846,32 @@ public class FileUtils {
         if (StringUtils.isBlank(mime)) {
             mime = "text/plain";
         }
-        openFile(context,path,mime);
+        openFile(context, path, mime);
     }
 
     /**
      * 打开文件
+     *
      * @param context
      * @param path
      * @param mime
      */
-    public static void openFile(Context context, String path,String mime){
+    public static void openFile(Context context, String path, String mime) {
         try {
             File file = new File(path);
             Intent intent = new Intent("android.intent.action.VIEW");
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.setDataAndType(Uri.fromFile(file), mime);
             context.startActivity(intent);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
-            ToastUtils.show(context,R.string.file_open_file);
+            ToastUtils.show(context, R.string.file_open_file);
         }
     }
 
     /**
      * 文件夹改名
+     *
      * @param src
      * @param dest
      * @return
@@ -875,6 +884,7 @@ public class FileUtils {
 
     /**
      * 获取文件标识图片
+     *
      * @param fileName
      */
     public static int getIconResId(String fileName) {
@@ -898,44 +908,48 @@ public class FileUtils {
         }
         return imageIconId;
     }
+
     /**
      * 传入目录名称，忽略删除的文件名
      * 返回成功删除的文件名列表
      * 只处理文件夹下没有目录的情况
+     *
      * @param src
      * @param protectedFileNameList
      * @return
      */
-    public static List<String> delFilesExceptNameList(String src, List<String> protectedFileNameList){
+    public static List<String> delFilesExceptNameList(String src, List<String> protectedFileNameList) {
         List<String> delSuccessFileNameList = new ArrayList<>();
-        try{
+        try {
             File[] files = new File(src).listFiles();
-            if(files != null && files.length > 0){
-                for(int i = 0; i < files.length; i++){
+            if (files != null && files.length > 0) {
+                for (int i = 0; i < files.length; i++) {
                     String fileName = files[i].getName();
-                    if(protectedFileNameList.indexOf(fileName) == -1){
+                    if (protectedFileNameList.indexOf(fileName) == -1) {
                         files[i].delete();
                         delSuccessFileNameList.add(fileName);
                     }
                 }
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return delSuccessFileNameList;
     }
 
-    /** 
-      * 判断assets文件夹下的文件是否存在 
-      * 
-      * @return false 不存在    true 存在 
-      */
-    public static boolean isAssetsFileExist(Context context,String fileName){
+    /**
+     *  
+     *  * 判断assets文件夹下的文件是否存在 
+     *  * 
+     *  * @return false 不存在    true 存在 
+     *  
+     */
+    public static boolean isAssetsFileExist(Context context, String fileName) {
         AssetManager assetManager = context.getAssets();
         try {
             String[] fileNames = assetManager.list("");
-            for(int i = 0; i < fileNames.length; i++){
-                if(fileNames[i].equals(fileName.trim())){
+            for (int i = 0; i < fileNames.length; i++) {
+                if (fileNames[i].equals(fileName.trim())) {
                     return true;
                 }
             }
@@ -945,6 +959,90 @@ public class FileUtils {
         return false;
     }
 
+    /**
+     * 把InputStream转化为ByteArray
+     *
+     * @param input
+     * @return
+     */
+    public static byte[] inputStream2ByteArray(InputStream input) {
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        try {
+            byte[] buffer = new byte[4096];
+            int n = 0;
+            while (-1 != (n = input.read(buffer))) {
+                output.write(buffer, 0, n);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+        return output.toByteArray();
+    }
 
+    public static File byteArray2File(byte[] byt) {
+        File file = new File("");
+        OutputStream output = null;
+        try {
+            output = new FileOutputStream(file);
+            BufferedOutputStream bufferedOutput = new BufferedOutputStream(output);
+            bufferedOutput.write(byt);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return file;
+    }
 
+    /**
+     * 获取分享文件的Uri
+     *
+     * @return
+     */
+    public static Uri getShareFileUri(Intent intent) {
+        Bundle extras = intent.getExtras();
+        // 判断Intent是否是“分享”功能(Share Via)
+        if (extras.containsKey(Intent.EXTRA_STREAM)) {
+            Uri uri = (Uri) extras.getParcelable(Intent.EXTRA_STREAM);
+            return uri;
+        }
+        return null;
+    }
+
+    /**
+     * 获取分享多个文件的Uri列表
+     *
+     * @return
+     */
+    public static List<Uri> getShareFileUriList(Intent intent) {
+        Bundle extras = intent.getExtras();
+        // 判断Intent是否是“分享多个”功能(Share Via)
+        if (extras.containsKey(Intent.EXTRA_STREAM)) {
+            ArrayList<Uri> fileUriList = intent.getParcelableArrayListExtra(Intent.EXTRA_STREAM);
+            return fileUriList;
+        }
+        return new ArrayList<Uri>();
+    }
+
+    /**
+     * uri转file
+     *
+     * @param context
+     * @param uri
+     * @return
+     */
+    public static File uri2File(Context context, Uri uri) {
+        String filePath;
+        String[] proj = {MediaStore.Images.Media.DATA};
+        Cursor cursor = context.getContentResolver().query(uri, proj, null,
+                null, null);
+        if (cursor == null) {
+            filePath = uri.getPath();
+        } else {
+            int actualColumnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+            cursor.moveToFirst();
+            filePath = cursor.getString(actualColumnIndex);
+        }
+        File file = new File(filePath);
+        return file;
+    }
 }
