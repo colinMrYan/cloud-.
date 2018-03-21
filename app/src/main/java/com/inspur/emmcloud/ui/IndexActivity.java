@@ -1,8 +1,10 @@
 package com.inspur.emmcloud.ui;
 
 import android.app.Fragment;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Message;
@@ -45,12 +47,15 @@ import com.inspur.emmcloud.service.CoreService;
 import com.inspur.emmcloud.service.LocationService;
 import com.inspur.emmcloud.service.PVCollectService;
 import com.inspur.emmcloud.ui.appcenter.MyAppFragment;
+import com.inspur.emmcloud.ui.appcenter.volume.VolumeHomePageActivity;
 import com.inspur.emmcloud.ui.chat.MessageFragment;
 import com.inspur.emmcloud.ui.find.FindFragment;
 import com.inspur.emmcloud.ui.mine.MoreFragment;
 import com.inspur.emmcloud.ui.notsupport.NotSupportFragment;
 import com.inspur.emmcloud.ui.work.MainTabBean;
 import com.inspur.emmcloud.ui.work.WorkFragment;
+import com.inspur.emmcloud.util.common.FileUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StateBarUtils;
@@ -78,11 +83,13 @@ import com.inspur.emmcloud.widget.MyFragmentTabHost;
 import com.inspur.emmcloud.widget.WeakHandler;
 import com.inspur.emmcloud.widget.WeakThread;
 import com.inspur.emmcloud.widget.tipsview.TipsView;
+import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -303,6 +310,7 @@ public class IndexActivity extends BaseFragmentActivity implements
                                 .setIsContactReady(true);
                         notifySyncAllBaseDataSuccess();
                         deleteIllegalUser();
+                        handleShareIntent();
                         break;
                     case RELOAD_WEB:
                         if (webView != null) {
@@ -317,6 +325,69 @@ public class IndexActivity extends BaseFragmentActivity implements
     }
 
     /**
+     * 处理带分享功能的Action
+     */
+    private void handleShareIntent() {
+        if (getIntent() != null) {
+            String action = getIntent().getAction();
+            List<Uri> uriList = new ArrayList<>();
+            if (Intent.ACTION_SEND.equals(action)) {
+                Uri uri = FileUtils.getShareFileUri(getIntent());
+                if (uri != null) {
+                    uriList.add(uri);
+                    LogUtils.YfcDebug("文件名称：" + FileUtils.uri2File(IndexActivity.this, uri).getName());
+                }
+            } else if (Intent.ACTION_SEND_MULTIPLE.equals(action)) {
+                List<Uri> fileUriList = FileUtils.getShareFileUriList(getIntent());
+                uriList.addAll(fileUriList);
+                for (int i = 0; i < fileUriList.size(); i++) {
+                    LogUtils.YfcDebug("文件名称：" + FileUtils.uri2File(IndexActivity.this, fileUriList.get(i)).getName());
+                }
+            }
+            if (uriList.size() > 0) {
+                showShareFileDlg(uriList);
+            }
+        }
+    }
+
+    /**
+     * 弹出上传文件到网盘的dialog
+     */
+    private void showShareFileDlg(final List<Uri> uriList) {
+        // TODO Auto-generated method stub
+        final String[] items = new String[]{"上传到网盘"};
+        new QMUIDialog.MenuDialogBuilder(this)
+                .addItems(items, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        LogUtils.YfcDebug("which:" + which);
+                        switch (which) {
+                            case 0:
+                                startVolumeShareActivity(uriList);
+                                break;
+                            case 1:
+
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                })
+                .show();
+    }
+
+    /**
+     * @param uriList
+     */
+    private void startVolumeShareActivity(List<Uri> uriList) {
+        Intent intent = new Intent();
+        intent.setClass(IndexActivity.this, VolumeHomePageActivity.class);
+        intent.putExtra("fileShareList", (Serializable) uriList);
+        startActivity(intent);
+    }
+
+    /**
      * 通讯录完成时发送广播
      */
     private void notifySyncAllBaseDataSuccess() {
@@ -325,23 +396,22 @@ public class IndexActivity extends BaseFragmentActivity implements
         Intent intent = new Intent("message_notify");
         intent.putExtra("command", "sync_all_base_data_success");
         sendBroadcast(intent);
-
     }
 
-    private void deleteIllegalUser(){
+    private void deleteIllegalUser() {
         try {
-            boolean isHasDeletleIllegalUser = PreferencesByUserAndTanentUtils.getBoolean(getApplicationContext(),Constant.PREF_DELETE_ILLEGAL_USER,false);
-            if (!isHasDeletleIllegalUser){
-                int illegalUserCount =  ContactCacheUtils.deleteIllegalUser(getApplicationContext());
-                if (illegalUserCount != -1){
-                    PreferencesByUserAndTanentUtils.putBoolean(getApplicationContext(),Constant.PREF_DELETE_ILLEGAL_USER,true);
+            boolean isHasDeletleIllegalUser = PreferencesByUserAndTanentUtils.getBoolean(getApplicationContext(), Constant.PREF_DELETE_ILLEGAL_USER, false);
+            if (!isHasDeletleIllegalUser) {
+                int illegalUserCount = ContactCacheUtils.deleteIllegalUser(getApplicationContext());
+                if (illegalUserCount != -1) {
+                    PreferencesByUserAndTanentUtils.putBoolean(getApplicationContext(), Constant.PREF_DELETE_ILLEGAL_USER, true);
                 }
-                if (illegalUserCount != 0){
-                    AppException appException = new AppException(System.currentTimeMillis(), AppUtils.getVersion(getApplicationContext()), 5, "", "通讯录删除无效用户个数"+illegalUserCount, -1);
+                if (illegalUserCount != 0) {
+                    AppException appException = new AppException(System.currentTimeMillis(), AppUtils.getVersion(getApplicationContext()), 5, "", "通讯录删除无效用户个数" + illegalUserCount, -1);
                     AppExceptionCacheUtils.saveAppException(getApplicationContext(), appException);
                 }
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -534,6 +604,7 @@ public class IndexActivity extends BaseFragmentActivity implements
 
     /**
      * 更新底部tab数字，从MyAppFragment badge请求返回
+     *
      * @param getAppBadgeResult
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -544,13 +615,14 @@ public class IndexActivity extends BaseFragmentActivity implements
 
     /**
      * 查找应用tab并改变tab上的角标
+     *
      * @param badgeNumber
      */
     private void findAndSetUnhandleBadgesDisplay(int badgeNumber) {
         for (int i = 0; i < mTabHost.getTabWidget().getChildCount(); i++) {
             View tabView = mTabHost.getTabWidget().getChildAt(i);
-            if(mTabHost.getTabWidget().getChildAt(i).getTag().toString().contains("application")){
-                setUnHandledBadgesDisplay(tabView,badgeNumber);
+            if (mTabHost.getTabWidget().getChildAt(i).getTag().toString().contains("application")) {
+                setUnHandledBadgesDisplay(tabView, badgeNumber);
                 break;
             }
         }
@@ -558,10 +630,11 @@ public class IndexActivity extends BaseFragmentActivity implements
 
     /**
      * 修改tab角标，来自ECMTransparentUtils
+     *
      * @param transparentBean
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void updateBadgeNumber(TransparentBean transparentBean){
+    public void updateBadgeNumber(TransparentBean transparentBean) {
         findAndSetUnhandleBadgesDisplay(transparentBean.getBadgeNumber());
     }
 
@@ -570,13 +643,13 @@ public class IndexActivity extends BaseFragmentActivity implements
      *
      * @param tabView
      */
-    private void setUnHandledBadgesDisplay(View tabView,int badgeNumber) {
+    private void setUnHandledBadgesDisplay(View tabView, int badgeNumber) {
         RelativeLayout unhandledBadgesLayout = (RelativeLayout) tabView.findViewById(R.id.new_message_tips_layout);
-        unhandledBadgesLayout.setVisibility((badgeNumber == 0)?View.GONE:View.VISIBLE);
+        unhandledBadgesLayout.setVisibility((badgeNumber == 0) ? View.GONE : View.VISIBLE);
         TextView unhandledBadgesText = (TextView) tabView.findViewById(R.id.new_message_tips_text);
-        unhandledBadgesText.setText(""+(badgeNumber > 99 ? "99+":badgeNumber));
+        unhandledBadgesText.setText("" + (badgeNumber > 99 ? "99+" : badgeNumber));
         //更新桌面角标数字
-        ECMShortcutBadgeNumberManagerUtils.setDesktopBadgeNumber(IndexActivity.this,badgeNumber);
+        ECMShortcutBadgeNumberManagerUtils.setDesktopBadgeNumber(IndexActivity.this, badgeNumber);
     }
 
     /**

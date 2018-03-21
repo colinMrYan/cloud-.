@@ -1,7 +1,5 @@
 package com.inspur.emmcloud.ui.appcenter.volume;
 
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -23,9 +21,7 @@ import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
 import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeListResult;
 import com.inspur.emmcloud.bean.appcenter.volume.Volume;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeHomePageDirectory;
-import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.IntentUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
@@ -170,25 +166,7 @@ public class VolumeHomePageActivity extends BaseActivity implements SwipeRefresh
     }
 
 
-    /**
-     * 处理带分享功能的Action
-     */
-    private void handleShareIntent() {
-        if(getIntent() != null){
-            String action = getIntent().getAction();
-            if(Intent.ACTION_SEND.equals(action)){
-                Uri uri = FileUtils.getShareFileUri(getIntent());
-                if(uri != null){
-                    LogUtils.YfcDebug("文件名称："+FileUtils.uri2File(VolumeHomePageActivity.this,uri).getName());
-                }
-            }else if(Intent.ACTION_SEND_MULTIPLE.equals(action)){
-                List<Uri> fileUriList = FileUtils.getShareFileUriList(getIntent());
-                for(int i = 0; i < fileUriList.size(); i++){
-                    LogUtils.YfcDebug("文件名称："+FileUtils.uri2File(VolumeHomePageActivity.this,fileUriList.get(i)).getName());
-                }
-            }
-        }
-    }
+
 
     private class WebService extends APIInterfaceInstance {
         @Override
@@ -204,7 +182,6 @@ public class VolumeHomePageActivity extends BaseActivity implements SwipeRefresh
                 String volumeMaxSize = FileUtil.formetFileSizeMinM(myVolume.getQuotaTotal());
                 volumeHomePageDirectoryList.get(0).setText(volumeUsedSize + " / " + volumeMaxSize);
                 adapter.notifyDataSetChanged();
-                handleShareIntent();
             }
         }
 
