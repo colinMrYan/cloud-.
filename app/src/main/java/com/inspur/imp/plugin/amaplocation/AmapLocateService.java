@@ -114,7 +114,7 @@ public class AmapLocateService extends ImpPlugin implements
         if (amapLocation != null && (amapLocation.getErrorCode() == 0)) {
             aMapLocationList.add(amapLocation);
         }
-        if (locationCount > 2 || (amapLocation != null && (amapLocation.getErrorCode() == 0) && amapLocation.getAccuracy()<80)) {
+        if (locationCount > 2 || (amapLocation != null && (amapLocation.getErrorCode() == 0) && amapLocation.getAccuracy()<60)) {
             mlocationClient.stopLocation();
             String latitude = "0.0", longtitude = "0.0";
             if (aMapLocationList.size() > 0) {
