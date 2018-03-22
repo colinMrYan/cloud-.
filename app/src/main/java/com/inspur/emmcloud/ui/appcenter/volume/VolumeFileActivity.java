@@ -25,6 +25,7 @@ import com.inspur.emmcloud.adapter.VolumeFileAdapter;
 import com.inspur.emmcloud.adapter.VolumeFileFilterPopGridAdapter;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
 import com.inspur.emmcloud.util.common.DensityUtil;
+import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
@@ -81,6 +82,7 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
 
     @ViewInject(R.id.operation_layout)
     protected RelativeLayout operationLayout;
+
     private PopupWindow sortOperationPop;
     private String cameraPicFileName;
     private BroadcastReceiver broadcastReceiver;
@@ -91,6 +93,21 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
         this.isShowFileUploading = true;
         setListIemClick();
         registerReceiver();
+        handleFileShareToVolume();
+    }
+
+    /**
+     *  处理文件分享
+     */
+    private void handleFileShareToVolume() {
+        List<Uri> uriList = new ArrayList<>();
+        List<Uri> fileShareList = (List<Uri>)getIntent().getSerializableExtra("fileShareList");
+        if(fileShareList != null){
+            uriList.addAll(fileShareList);
+        }
+        for(int i = 0; i < uriList.size(); i++){
+            uploadFile(FileUtils.uri2File(VolumeFileActivity.this,uriList.get(i)).getAbsolutePath());
+        }
     }
 
     private void setListIemClick() {
@@ -137,6 +154,7 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
 
             }
         });
+        adapter.getItemCount();
     }
 
     private void registerReceiver() {
@@ -514,6 +532,7 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
         }
         if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
             VolumeFile mockVolumeFile = getMockVolumeFileData(file);
+            LogUtils.YfcDebug("只差网络上传-----------------");
             VolumeFileUploadManagerUtils.getInstance().uploadFile(mockVolumeFile, filePath, currentDirAbsolutePath);
             volumeFileList.add(0, mockVolumeFile);
             initDataBlankLayoutStatus();

@@ -371,6 +371,18 @@
                 android:text="@string/move_to_current_directory"
                 android:textColor="#444444"
                 android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/location_select_upload_to_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:layout_alignParentRight="true"
+                android:onClick="onClick"
+                android:padding="12dp"
+                android:text="上传文件"
+                android:textColor="#444444"
+                android:textSize="15sp" />
         </RelativeLayout>
     </RelativeLayout>
 </RelativeLayout>

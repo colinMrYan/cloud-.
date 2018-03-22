@@ -669,11 +669,13 @@ public class MyAppAPIService {
         x.http().post(params, new APICallback(context, url) {
             @Override
             public void callbackSuccess(String arg0) {
+                LogUtils.YfcDebug("文件上传成功："+arg0);
                 apiInterface.returnVolumeFileUploadTokenSuccess(new GetVolumeFileUploadTokenResult(arg0), localFilePath, mockVolumeFile);
             }
 
             @Override
             public void callbackFail(String error, int responseCode) {
+                LogUtils.YfcDebug("文件上传失败："+error+responseCode+localFilePath);
                 apiInterface.returnVolumeFileUploadTokenFail(mockVolumeFile, error, responseCode, localFilePath);
             }
 

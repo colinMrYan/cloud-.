@@ -361,14 +361,13 @@ public class IndexActivity extends BaseFragmentActivity implements
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
-                        LogUtils.YfcDebug("which:" + which);
                         switch (which) {
                             case 0:
                                 startVolumeShareActivity(uriList);
+                                finish();
                                 break;
-                            case 1:
-
-                                break;
+//                            case 1:
+//                                break;
                             default:
                                 break;
                         }

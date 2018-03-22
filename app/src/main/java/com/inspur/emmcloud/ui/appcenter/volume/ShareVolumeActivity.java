@@ -1,6 +1,7 @@
 package com.inspur.emmcloud.ui.appcenter.volume;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -41,6 +42,7 @@ import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -83,10 +85,14 @@ public class ShareVolumeActivity extends BaseActivity implements SwipeRefreshLay
         shareVolumeListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                List<Uri> uriList = (List<Uri>) getIntent().getSerializableExtra("fileShareList");
                 Volume volume = shareVolumeList.get(position);
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("volume", volume);
                 bundle.putSerializable("title", volume.getName());
+                if(uriList != null && uriList.size() > 0){
+                    bundle.putSerializable("fileShareList", (Serializable) uriList);
+                }
                 IntentUtils.startActivity(ShareVolumeActivity.this, VolumeFileActivity.class, bundle);
             }
         });

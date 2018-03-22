@@ -2,6 +2,7 @@ package com.inspur.emmcloud.ui.appcenter.volume;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.RelativeLayout;
@@ -13,6 +14,8 @@ import com.inspur.emmcloud.adapter.VolumeFileAdapter;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
+import com.inspur.emmcloud.util.common.IntentUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.VolumeFilePrivilegeUtils;
@@ -21,6 +24,8 @@ import com.inspur.emmcloud.widget.LoadingDialog;
 
 import org.xutils.view.annotation.ViewInject;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -37,17 +42,22 @@ public class VolumeFileLocationSelectActivity extends VolumeFileBaseActivity {
     @ViewInject(R.id.location_select_cancel_text)
     private TextView locationSelectCancelText;
 
-    @ViewInject(R.id.location_select_to_text)
-    private TextView locationSelectToText;
-
     @ViewInject(R.id.location_select_bar_layout)
-    private RelativeLayout locationSelectBarLayout;
+    protected RelativeLayout locationSelectBarLayout;
+
+    @ViewInject(R.id.location_select_to_text)
+    protected TextView locationSelectToText;
+
+    @ViewInject(R.id.location_select_upload_to_text)
+    protected TextView locationSelectUploadToText;
 
     @ViewInject(R.id.path_text)
     private TextView pathText;
 
     private boolean isFunctionCopy;//判断是复制还是移动功能
     private MyAppAPIService apiService;
+
+    private List<Uri> uriList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,6 +97,9 @@ public class VolumeFileLocationSelectActivity extends VolumeFileBaseActivity {
         });
         pathText.setVisibility(View.VISIBLE);
         pathText.setText(getString(R.string.current_directory_hint,currentDirAbsolutePath));
+        uriList.addAll((List<Uri>)getIntent().getSerializableExtra("fileShareList"));
+        locationSelectUploadToText.setVisibility(uriList.size()>0?View.VISIBLE:View.GONE);
+        locationSelectToText.setVisibility(uriList.size()>0?View.GONE:View.VISIBLE);
     }
 
     public void onClick(View v) {
@@ -127,6 +140,15 @@ public class VolumeFileLocationSelectActivity extends VolumeFileBaseActivity {
                 } else {
                     moveFile(operationFileAbsolutePath);
                 }
+                break;
+            case R.id.location_select_upload_to_text:
+                LogUtils.YfcDebug("上传文件的长度："+uriList.size());
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("volume", volume);
+                bundle.putSerializable("currentDirAbsolutePath", currentDirAbsolutePath);
+                bundle.putSerializable("title", "上传文件");
+                bundle.putSerializable("fileShareList", (Serializable) uriList);
+                IntentUtils.startActivity(VolumeFileLocationSelectActivity.this, VolumeFileActivity.class, bundle,true);
                 break;
 
             default:
