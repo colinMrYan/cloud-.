@@ -218,6 +218,16 @@ public class ContactSearchActivity extends BaseActivity {
             okText.setVisibility(View.GONE);
         }
         flowAddEdit();
+        flowLayout.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (searchEdit != null) {
+                    searchEdit.setFocusable(true);
+                    searchEdit.setFocusableInTouchMode(true);
+                    searchEdit.requestFocus();
+                }
+            }
+        });
         searchEditLayout = (MaxHightScrollView) findViewById(R.id.search_edit_layout);
         initSecondGroup();
         initPopView();
