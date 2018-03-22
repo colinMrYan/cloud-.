@@ -30,19 +30,13 @@ import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.chat.ChannelGroup;
+import com.inspur.emmcloud.bean.chat.GetCreateSingleChannelResult;
 import com.inspur.emmcloud.bean.contact.Contact;
 import com.inspur.emmcloud.bean.contact.FirstGroupTextModel;
-import com.inspur.emmcloud.bean.chat.GetCreateSingleChannelResult;
 import com.inspur.emmcloud.bean.contact.SearchModel;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.ui.chat.ChannelActivity;
-import com.inspur.emmcloud.util.privates.cache.ChannelGroupCacheUtils;
-import com.inspur.emmcloud.util.privates.ChatCreateUtils;
-import com.inspur.emmcloud.util.privates.ChatCreateUtils.OnCreateDirectChannelListener;
-import com.inspur.emmcloud.util.privates.cache.CommonContactCacheUtils;
-import com.inspur.emmcloud.util.privates.cache.ContactCacheUtils;
 import com.inspur.emmcloud.util.common.DensityUtil;
-import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.common.InputMethodUtils;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.ListViewUtils;
@@ -50,6 +44,12 @@ import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
+import com.inspur.emmcloud.util.privates.ChatCreateUtils;
+import com.inspur.emmcloud.util.privates.ChatCreateUtils.OnCreateDirectChannelListener;
+import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
+import com.inspur.emmcloud.util.privates.cache.ChannelGroupCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.CommonContactCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.ContactCacheUtils;
 import com.inspur.emmcloud.widget.CircleImageView;
 import com.inspur.emmcloud.widget.FlowLayout;
 import com.inspur.emmcloud.widget.MaxHightScrollView;
@@ -219,6 +219,14 @@ public class ContactSearchActivity extends BaseActivity {
         }
         flowAddEdit();
         searchEditLayout = (MaxHightScrollView) findViewById(R.id.search_edit_layout);
+//        searchEditLayout.setOnClickListener(new OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (searchEdit != null){
+//                    InputMethodUtils.display(ContactSearchActivity.this,searchEdit);
+//                }
+//            }
+//        });
         initSecondGroup();
         initPopView();
         if (selectMemList.size() > 0) {
@@ -396,16 +404,17 @@ public class ContactSearchActivity extends BaseActivity {
             searchEdit = new EditText(this);
             FlowLayout.LayoutParams params = new FlowLayout.LayoutParams(
                     LayoutParams.WRAP_CONTENT, DensityUtil.dip2px(
-                    getApplicationContext(), 45));
-            int paddingRight = DensityUtil.dip2px(getApplicationContext(), 80);
-            searchEdit.setPadding(0, 0, paddingRight, 0);
+                    getApplicationContext(), LayoutParams.WRAP_CONTENT));
+            params.topMargin = DensityUtil.dip2px(getApplicationContext(), 3);
+            params.bottomMargin =  params.topMargin;
+            int piddingTop = DensityUtil.dip2px(getApplicationContext(), 1);
+            int piddingLeft = DensityUtil.dip2px(getApplicationContext(), 5);
+            searchEdit.setPadding(piddingLeft, piddingTop, piddingLeft, piddingTop);
             searchEdit.setLayoutParams(params);
             searchEdit.setSingleLine(true);
-            searchEdit.setHint(getString(R.string.seach_blank));
-            searchEdit.setGravity(Gravity.CENTER_VERTICAL);
+            searchEdit.setHint(getString(R.string.search));
             searchEdit.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
-            // searchEdit.setTextSize(getResources().getDimension(R.dimen.content_title_textsize));
-            searchEdit.setBackgroundDrawable(null);
+            searchEdit.setBackground(null);
             searchEdit.addTextChangedListener(myTextWatcher);
         }
         flowLayout.addView(searchEdit);
@@ -485,14 +494,15 @@ public class ContactSearchActivity extends BaseActivity {
             FlowLayout.LayoutParams params = new FlowLayout.LayoutParams(
                     LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
             params.rightMargin = DensityUtil.dip2px(getApplicationContext(), 5);
-            params.topMargin = DensityUtil.dip2px(getApplicationContext(), 11);
+            params.topMargin = DensityUtil.dip2px(getApplicationContext(), 3);
+            params.bottomMargin =  params.topMargin;
             searchResultText.setLayoutParams(params);
-            int piddingTop = DensityUtil.dip2px(getApplicationContext(), 2);
-            searchResultText.setPadding(0, piddingTop, 0, piddingTop);
-            searchResultText.setGravity(Gravity.CENTER_VERTICAL);
-            searchResultText.setBackgroundDrawable(getResources().getDrawable(
-                    R.drawable.bg_select_mem));
-            searchResultText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
+            int piddingTop = DensityUtil.dip2px(getApplicationContext(), 1);
+            int piddingLeft = DensityUtil.dip2px(getApplicationContext(), 5);
+            searchResultText.setPadding(piddingLeft, piddingTop, piddingLeft, piddingTop);
+            searchResultText.setGravity(Gravity.CENTER);
+            searchResultText.setBackgroundResource(R.drawable.bg_corner_search_member);
+            searchResultText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
             searchResultText.setTextColor(getResources()
                     .getColor(R.color.white));
             searchResultText.setText(selectMemList.get(i).getName());
@@ -504,10 +514,6 @@ public class ContactSearchActivity extends BaseActivity {
                     changeMembers(searchModel);
                 }
             });
-            int paddingLeft = DensityUtil.dip2px(getApplicationContext(), 5);
-            int paddingTop = DensityUtil.dip2px(getApplicationContext(), 1);
-            searchResultText.setPadding(paddingLeft, paddingTop, paddingLeft,
-                    paddingTop);
             flowLayout.addView(searchResultText);
         }
         flowAddEdit();
@@ -602,9 +608,11 @@ public class ContactSearchActivity extends BaseActivity {
                 ContactSearchMoreActivity.class);
         switch (v.getId()) {
             case R.id.back_layout:
+                InputMethodUtils.hide(ContactSearchActivity.this);
                 finish();
                 break;
             case R.id.ok_text:
+                InputMethodUtils.hide(ContactSearchActivity.this);
                 returnSearchResultData();
                 break;
             case R.id.struct_layout:
@@ -612,6 +620,11 @@ public class ContactSearchActivity extends BaseActivity {
                 break;
             case R.id.channel_group_layout:
                 showAllChannelGroup();
+                break;
+            case R.id.layout:
+                if (searchEdit != null){
+                    InputMethodUtils.display(ContactSearchActivity.this,searchEdit);
+                }
                 break;
 
             case R.id.pop_second_group_more_text:
@@ -1454,5 +1467,4 @@ public class ContactSearchActivity extends BaseActivity {
         adpter.notifyDataSetChanged();
         ListViewUtils.setListViewHeightBasedOnChildren(listView);
     }
-
 }

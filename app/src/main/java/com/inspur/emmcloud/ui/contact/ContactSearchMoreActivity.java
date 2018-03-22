@@ -140,16 +140,17 @@ public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRe
             searchEdit = new EditText(this);
             FlowLayout.LayoutParams params = new FlowLayout.LayoutParams(
                     LayoutParams.WRAP_CONTENT, DensityUtil.dip2px(
-                    getApplicationContext(), 45));
-            int paddingRight = DensityUtil.dip2px(getApplicationContext(), 80);
-            searchEdit.setPadding(0, 0, paddingRight, 0);
+                    getApplicationContext(), LayoutParams.WRAP_CONTENT));
+            params.topMargin = DensityUtil.dip2px(getApplicationContext(), 3);
+            params.bottomMargin =  params.topMargin;
+            int piddingTop = DensityUtil.dip2px(getApplicationContext(), 1);
+            int piddingLeft = DensityUtil.dip2px(getApplicationContext(), 5);
+            searchEdit.setPadding(piddingLeft, piddingTop, piddingLeft, piddingTop);
             searchEdit.setLayoutParams(params);
             searchEdit.setSingleLine(true);
-            searchEdit.setHint(getString(R.string.input_search_key));
-            searchEdit.setGravity(Gravity.CENTER_VERTICAL);
+            searchEdit.setHint(getString(R.string.search));
             searchEdit.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
-            // searchEdit.setTextSize(getResources().getDimension(R.dimen.content_title_textsize));
-            searchEdit.setBackgroundDrawable(null);
+            searchEdit.setBackground(null);
             searchEdit.addTextChangedListener(myTextWatcher);
         }
         flowLayout.addView(searchEdit);
@@ -198,8 +199,6 @@ public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRe
     private void notifyFlowLayoutDataChange(String content) {
         // searchEdit.removeTextChangedListener(myTextWatcher);
         EditTextUtils.setText(searchEdit, content);
-
-        // searchEdit.addTextChangedListener(myTextWatcher);
         flowLayout.removeAllViews();
         for (int i = 0; i < selectMemList.size(); i++) {
             final SearchModel searchModel = selectMemList.get(i);
@@ -207,14 +206,15 @@ public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRe
             FlowLayout.LayoutParams params = new FlowLayout.LayoutParams(
                     LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
             params.rightMargin = DensityUtil.dip2px(getApplicationContext(), 5);
-            params.topMargin = DensityUtil.dip2px(getApplicationContext(), 11);
+            params.topMargin = DensityUtil.dip2px(getApplicationContext(), 3);
+            params.bottomMargin =  params.topMargin;
             searchResultText.setLayoutParams(params);
-            int piddingTop = DensityUtil.dip2px(getApplicationContext(), 2);
-            searchResultText.setPadding(0, piddingTop, 0, piddingTop);
-            searchResultText.setGravity(Gravity.CENTER_VERTICAL);
-            searchResultText.setBackgroundDrawable(getResources().getDrawable(
-                    R.drawable.bg_select_mem));
-            searchResultText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
+            int piddingTop = DensityUtil.dip2px(getApplicationContext(), 1);
+            int piddingLeft = DensityUtil.dip2px(getApplicationContext(), 5);
+            searchResultText.setPadding(piddingLeft, piddingTop, piddingLeft, piddingTop);
+            searchResultText.setGravity(Gravity.CENTER);
+            searchResultText.setBackgroundResource(R.drawable.bg_corner_search_member);
+            searchResultText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
             searchResultText.setTextColor(getResources()
                     .getColor(R.color.white));
             searchResultText.setText(selectMemList.get(i).getName());
@@ -304,6 +304,11 @@ public class ContactSearchMoreActivity extends BaseActivity implements MySwipeRe
                 break;
             case R.id.ok_text:
                 returnSelectData();
+                break;
+            case R.id.layout:
+                if (searchEdit != null){
+                    InputMethodUtils.display(ContactSearchMoreActivity.this,searchEdit);
+                }
                 break;
             default:
                 break;

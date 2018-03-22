@@ -74,10 +74,15 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/view0"
             android:background="@color/white"
-            android:paddingLeft="12dp"
-            android:paddingRight="8dp">
+           >
 
             <RelativeLayout
+                android:id="@+id/layout"
+                android:onClick="onClick"
+                android:paddingLeft="10dp"
+                android:paddingTop="7dp"
+                android:paddingBottom="7dp"
+                android:paddingRight="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
