@@ -10,12 +10,14 @@ import android.os.Message;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.ChannelMsgAdapterRobot;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
+import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.bean.chat.Channel;
 import com.inspur.emmcloud.bean.chat.ChannelGroup;
@@ -40,12 +42,14 @@ import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.ConbineMsg;
 import com.inspur.emmcloud.util.privates.DirectChannelUtils;
+import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.util.privates.cache.ChannelCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MsgCacheUtil;
 import com.inspur.emmcloud.util.privates.cache.MsgReadIDCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.PVCollectModelCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.RobotCacheUtils;
 import com.inspur.emmcloud.widget.ECMChatInputMenuRobot;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.RecycleViewForSizeChange;
@@ -79,6 +83,9 @@ public class ChannelRobotActivity extends BaseActivity {
     private ECMChatInputMenuRobot chatInputMenu;
     @ViewInject(R.id.header_text)
     private TextView headerText;
+
+    @ViewInject(R.id.robot_photo_img)
+    private ImageView robotPhotoImg;
 
     private LoadingDialog loadingDlg;
     private String cid;
@@ -173,6 +180,10 @@ public class ChannelRobotActivity extends BaseActivity {
         title = robot.getName();
         robotUid = robot.getId();
         headerText.setText(title);
+        String robotPhotoUrl = APIUri.getRobotIconUrl(RobotCacheUtils
+                .getRobotById(getApplicationContext(), robotUid)
+                .getAvatar());
+        ImageDisplayUtils.getInstance().displayImage(robotPhotoImg,robotPhotoUrl,R.drawable.ic_robot_new);
     }
 
     /**
