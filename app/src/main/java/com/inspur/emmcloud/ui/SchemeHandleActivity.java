@@ -59,20 +59,51 @@ public class SchemeHandleActivity extends Activity {
             MyApplication.getInstance().setOpenNotification(false);
             if (FaceVerifyActivity.getFaceVerifyIsOpenByUser(SchemeHandleActivity.this)) {
                 registerReiceiver();
-                Intent intent = new Intent(SchemeHandleActivity.this, FaceVerifyActivity.class);
-                intent.putExtra("isFaceVerifyExperience",false);
-                startActivity(intent);
+                MyApplication.getInstance().setIsActive(true);
+                faceVerify();
                 return;
             } else if (getIsNeedGestureCode()) {
                 registerReiceiver();
-                Intent intent = new Intent(this, GestureLoginActivity.class);
-                intent.putExtra("gesture_code_change", "login");
-                startActivity(intent);
+                MyApplication.getInstance().setIsActive(true);
+                gestureVerify();
                 return;
             }
         }
         openScheme();
     }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        // TODO Auto-generated method stub
+        super.onNewIntent(intent);
+        setIntent(intent);
+        if (MyApplication.getInstance().getOPenNotification()) {
+            MyApplication.getInstance().setOpenNotification(false);
+            if (FaceVerifyActivity.getFaceVerifyIsOpenByUser(SchemeHandleActivity.this)) {
+                MyApplication.getInstance().setIsActive(true);
+                faceVerify();
+                return;
+            } else if (getIsNeedGestureCode()) {
+                MyApplication.getInstance().setIsActive(true);
+                gestureVerify();
+                return;
+            }
+        }
+        openScheme();
+    }
+
+    private void faceVerify(){
+        Intent intent = new Intent(SchemeHandleActivity.this, FaceVerifyActivity.class);
+        intent.putExtra("isFaceVerifyExperience",false);
+        startActivity(intent);
+    }
+
+    private void gestureVerify(){
+        Intent intent = new Intent(this, GestureLoginActivity.class);
+        intent.putExtra("gesture_code_change", "login");
+        startActivity(intent);
+    }
+
 
     /**
      * 注册安全解锁监听广播

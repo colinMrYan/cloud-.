@@ -3,7 +3,6 @@ package com.inspur.imp.plugin.amaplocation;
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
-import com.amap.api.location.AMapLocationClientOption.AMapLocationMode;
 import com.amap.api.location.AMapLocationListener;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
@@ -11,6 +10,11 @@ import com.inspur.imp.plugin.ImpPlugin;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 
 /**
@@ -30,12 +34,13 @@ public class AmapLocateService extends ImpPlugin implements
     // 设置回调函数
     private String functName;
     private AMapLocationClient mlocationClient;
-    private AMapLocationClientOption mLocationOption;
     private String coordinateType = "";
+    private List<AMapLocation> aMapLocationList = new ArrayList<>();
+    private int locationCount = 0;
 
     @Override
     public void execute(String action, JSONObject paramsObject) {
-        LogUtils.YfcDebug("paramsObject:"+paramsObject.toString());
+        LogUtils.YfcDebug("paramsObject:" + paramsObject.toString());
         LogUtils.debug("jason", "action=" + action);
         // 获取经纬度地址
         if ("getInfo".equals(action)) {
@@ -51,8 +56,6 @@ public class AmapLocateService extends ImpPlugin implements
     private void getInfo(JSONObject paramsObject) {
         // 解析json串获取到传递过来的参数和回调函数
         try {
-//            paramsObject.put("coordinateType","WGS84");
-            LogUtils.YfcDebug("参数信息："+paramsObject.toString());
             if (!paramsObject.isNull("callback"))
                 functName = paramsObject.getString("callback");
             if (!paramsObject.isNull("coordinateType")) {
@@ -61,83 +64,122 @@ public class AmapLocateService extends ImpPlugin implements
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        initLocation();
-        mlocationClient.startLocation();
+        startLocation();
+
 
     }
 
     /**
      * 初始化定位
      */
-    private void initLocation() {
-        // 初始化定位，
-        mlocationClient = new AMapLocationClient(getActivity());
-        // 初始化定位参数
-        mLocationOption = new AMapLocationClientOption();
-        mLocationOption.setOnceLocation(true);
-        mLocationOption.setLocationPurpose(AMapLocationClientOption.AMapLocationPurpose.SignIn);
-        //关闭缓存机制
-        mLocationOption.setLocationCacheEnable(false);
-        // 设置定位模式为低功耗定位
-        mLocationOption.setLocationMode(AMapLocationMode.Hight_Accuracy);
-        mLocationOption.setWifiScan(true);
-        mLocationOption.setOnceLocationLatest(true);
-        // 设置定位回调监听
-        mlocationClient.setLocationListener(this);
+    private void startLocation() {
+        if (aMapLocationList == null) {
+            aMapLocationList = new ArrayList<>();
+        }
+        aMapLocationList.clear();
+        locationCount = 0;
+        if (mlocationClient == null) {
+            // 初始化定位，
+            mlocationClient = new AMapLocationClient(getActivity().getApplicationContext());
+        }
+        // 初始化定位参数 默认连续定位
+        AMapLocationClientOption mLocationOption = new AMapLocationClientOption();
+        mLocationOption.setInterval(1000);
         // 设置定位参数
         mlocationClient.setLocationOption(mLocationOption);
+        mLocationOption.setWifiScan(true);
+        // 设置定位回调监听
+        mlocationClient.setLocationListener(this);
+        mlocationClient.startLocation();
+
     }
 
     @Override
     public void onDestroy() {
-        if (mlocationClient != null){
+        if (mlocationClient != null) {
             mlocationClient.stopLocation();
             mlocationClient.onDestroy();
+            mlocationClient = null;
         }
+        if (aMapLocationList != null) {
+            aMapLocationList = null;
+        }
+        locationCount = 0;
     }
 
 
     @Override
     public void onLocationChanged(AMapLocation amapLocation) {
-        String latitude = "", longtitude = "";
-        double[] location = {0,0};
-        if (!StringUtils.isBlank(coordinateType)) {
-            location = coordinateTrans(amapLocation);
-            longtitude = String.valueOf(location[0]);
-            latitude = String.valueOf(location[1]);
-        } else {
-            longtitude = String.valueOf(amapLocation.getLongitude());
-            latitude = String.valueOf(amapLocation.getLatitude());
+        locationCount++;
+        if (amapLocation != null && (amapLocation.getErrorCode() == 0)) {
+            aMapLocationList.add(amapLocation);
         }
-        // 绑定监听状态
-        JSONObject jsonObject = new JSONObject();
-        try {
-            jsonObject.put("longitude", longtitude);
-            jsonObject.put("latitude", latitude);
-        } catch (JSONException e) {
-            e.printStackTrace();
+        if (locationCount > 2 || (amapLocation != null && (amapLocation.getErrorCode() == 0) && amapLocation.getAccuracy()<60)) {
+            mlocationClient.stopLocation();
+            String latitude = "0.0", longtitude = "0.0";
+            if (aMapLocationList.size() > 0) {
+                amapLocation = Collections.min(aMapLocationList, new ComparatorValues());
+                double[] location = {0, 0};
+                if (!StringUtils.isBlank(coordinateType)) {
+                    location = coordinateTrans(amapLocation);
+                    longtitude = String.valueOf(location[0]);
+                    latitude = String.valueOf(location[1]);
+                } else {
+                    longtitude = String.valueOf(amapLocation.getLongitude());
+                    latitude = String.valueOf(amapLocation.getLatitude());
+                }
+
+            }
+            aMapLocationList = null;
+            locationCount = 0;
+            // 绑定监听状态
+            JSONObject jsonObject = new JSONObject();
+            try {
+                jsonObject.put("longitude", longtitude);
+                jsonObject.put("latitude", latitude);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            jsCallback(functName, jsonObject.toString());
+            // 设置回调js页面函数
+            LogUtils.debug("yfcLog", "amapLocation:" + jsonObject.toString());
+            // 设置回调js页面函数
+            AmapLocateService.this.onDestroy();
         }
-        // 设置回调js页面函数
-        LogUtils.debug("yfcLog", "amapLocation:" + jsonObject.toString());
-        jsCallback(functName, jsonObject.toString());
-        AmapLocateService.this.onDestroy();
+    }
+
+
+    private class ComparatorValues implements Comparator<AMapLocation> {
+        @Override
+        public int compare(AMapLocation o1, AMapLocation o2) {
+            float locationAccuracy1 = o1.getAccuracy();
+            float locationAccuracy2 = o2.getAccuracy();
+            int result = 0;
+            if (locationAccuracy1 > locationAccuracy2) {
+                result = 1;
+            } else if (locationAccuracy1 < locationAccuracy2) {
+                result = -1;
+            }
+            return result;
+        }
     }
 
     /**
      * 坐标类型转化
+     *
      * @param amapLocation
      * @return
      */
     private double[] coordinateTrans(AMapLocation amapLocation) {
-        double[] location = {0,0};
+        double[] location = {0, 0};
         double longitudeD = amapLocation.getLongitude();
         double latitudeD = amapLocation.getLatitude();
         coordinateType = coordinateType.toUpperCase();
-        if(coordinateType.equals("WGS84")){
+        if (coordinateType.equals("WGS84")) {
             location = ECMLoactionTransformUtils.gcj02towgs84(longitudeD, latitudeD);
-        }else if(coordinateType.equals("BD09")){
+        } else if (coordinateType.equals("BD09")) {
             location = ECMLoactionTransformUtils.gcj02tobd09(longitudeD, latitudeD);
-        }else{
+        } else {
             location[0] = amapLocation.getLongitude();
             location[1] = amapLocation.getLatitude();
         }

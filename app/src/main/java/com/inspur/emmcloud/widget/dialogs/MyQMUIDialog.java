@@ -31,6 +31,7 @@ import android.widget.TextView;
 import com.qmuiteam.qmui.util.QMUIDisplayHelper;
 import com.qmuiteam.qmui.util.QMUIResHelper;
 import com.qmuiteam.qmui.util.QMUIViewHelper;
+import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialogBuilder;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialogMenuItemView;
 
@@ -56,8 +57,8 @@ public class MyQMUIDialog extends Dialog {
     }
 
     private void init() {
-        setCancelable(true);
-        setCanceledOnTouchOutside(true);
+        setCancelable(false);
+        setCanceledOnTouchOutside(false);
     }
 
     @Override
@@ -123,6 +124,12 @@ public class MyQMUIDialog extends Dialog {
             }
         }
 
+        public QMUIDialog show(boolean canCancel){
+            QMUIDialog dialog = this.create();
+            dialog.setCancelable(canCancel);
+            dialog.show();
+            return dialog;
+        }
         public TextView getTextView() {
             return mTextView;
         }

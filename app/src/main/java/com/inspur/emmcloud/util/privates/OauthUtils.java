@@ -1,8 +1,6 @@
 package com.inspur.emmcloud.util.privates;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
@@ -52,6 +50,7 @@ public class OauthUtils {
 			((MyApplication)context.getApplicationContext()).setIsTokenRefreshing(false);
 			((MyApplication)context.getApplicationContext()).startWebSocket();
 			((MyApplication)context.getApplicationContext()).setAccessToken(accessToken);
+			((MyApplication)context.getApplicationContext()).setRefreshToken(refreshToken);
 			List<OauthCallBack> callBackList = ((MyApplication)context.getApplicationContext()).getCallBackList();
 			for (int i = 0; i < callBackList.size(); i++) {
 				callBackList.get(i).reExecute();
@@ -65,18 +64,11 @@ public class OauthUtils {
 			((MyApplication)context.getApplicationContext()).setIsTokenRefreshing(false);
 			//当errorCode为400时代表refreshToken也失效，需要重新登录
 			if (errorCode == 400){
+				//防止多次跳转到登录页面
 				((MyApplication)context.getApplicationContext()).clearCallBackList();
-				if (((MyApplication)context.getApplicationContext()).getWebSocketPush() != null) {
-					((MyApplication)context.getApplicationContext()).getWebSocketPush().closeSocket();
-				}
-				ToastUtils.show(context, context.getString(R.string.authorization_expired));
-				Intent intent = new Intent();
-				intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-				intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-				intent.setClass(context, LoginActivity.class);
-				context.startActivity(intent);
-				if (context != null && context instanceof Activity) {
-					((Activity) context).finish();
+				if (!(MyApplication.getInstance().getActivityLifecycleCallbacks().getCurrentActivity() instanceof LoginActivity)){
+					ToastUtils.show(context, context.getString(R.string.authorization_expired));
+					((MyApplication)context.getApplicationContext()).signout();
 				}
 			}else{
 				List<OauthCallBack> callBackList = ((MyApplication)context.getApplicationContext()).getCallBackList();
