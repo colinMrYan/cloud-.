@@ -429,6 +429,8 @@
     <string name="volume_file_filter">分类筛选</string>
     <string name="volume_group_name">组名称</string>
     <string name="volume_file_permission">权限管理</string>
+    <string name="volume_upload_file">上传文件</string>
+    <string name="volume_upload_file_to_volume">上传到网盘</string>
 
 
     <!-- 我的页面部分 -->

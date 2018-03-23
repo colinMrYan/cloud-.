@@ -532,7 +532,6 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
         }
         if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
             VolumeFile mockVolumeFile = getMockVolumeFileData(file);
-            LogUtils.YfcDebug("只差网络上传-----------------");
             VolumeFileUploadManagerUtils.getInstance().uploadFile(mockVolumeFile, filePath, currentDirAbsolutePath);
             volumeFileList.add(0, mockVolumeFile);
             initDataBlankLayoutStatus();

@@ -55,7 +55,6 @@ import com.inspur.emmcloud.ui.notsupport.NotSupportFragment;
 import com.inspur.emmcloud.ui.work.MainTabBean;
 import com.inspur.emmcloud.ui.work.WorkFragment;
 import com.inspur.emmcloud.util.common.FileUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StateBarUtils;
@@ -335,14 +334,10 @@ public class IndexActivity extends BaseFragmentActivity implements
                 Uri uri = FileUtils.getShareFileUri(getIntent());
                 if (uri != null) {
                     uriList.add(uri);
-                    LogUtils.YfcDebug("文件名称：" + FileUtils.uri2File(IndexActivity.this, uri).getName());
                 }
             } else if (Intent.ACTION_SEND_MULTIPLE.equals(action)) {
                 List<Uri> fileUriList = FileUtils.getShareFileUriList(getIntent());
                 uriList.addAll(fileUriList);
-                for (int i = 0; i < fileUriList.size(); i++) {
-                    LogUtils.YfcDebug("文件名称：" + FileUtils.uri2File(IndexActivity.this, fileUriList.get(i)).getName());
-                }
             }
             if (uriList.size() > 0) {
                 showShareFileDlg(uriList);
@@ -355,7 +350,7 @@ public class IndexActivity extends BaseFragmentActivity implements
      */
     private void showShareFileDlg(final List<Uri> uriList) {
         // TODO Auto-generated method stub
-        final String[] items = new String[]{"上传到网盘"};
+        final String[] items = new String[]{getString(R.string.volume_upload_file_to_volume)};
         new QMUIDialog.MenuDialogBuilder(this)
                 .addItems(items, new DialogInterface.OnClickListener() {
                     @Override

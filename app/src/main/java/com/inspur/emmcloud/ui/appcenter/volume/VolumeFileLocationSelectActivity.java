@@ -15,7 +15,6 @@ import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
 import com.inspur.emmcloud.util.common.IntentUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.VolumeFilePrivilegeUtils;
@@ -142,15 +141,13 @@ public class VolumeFileLocationSelectActivity extends VolumeFileBaseActivity {
                 }
                 break;
             case R.id.location_select_upload_to_text:
-                LogUtils.YfcDebug("上传文件的长度："+uriList.size());
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("volume", volume);
                 bundle.putSerializable("currentDirAbsolutePath", currentDirAbsolutePath);
-                bundle.putSerializable("title", "上传文件");
+                bundle.putSerializable("title", getString(R.string.volume_upload_file));
                 bundle.putSerializable("fileShareList", (Serializable) uriList);
-                IntentUtils.startActivity(VolumeFileLocationSelectActivity.this, VolumeFileActivity.class, bundle,true);
+                IntentUtils.startActivity(VolumeFileLocationSelectActivity.this, VolumeFileActivity.class, bundle);
                 break;
-
             default:
                 break;
         }

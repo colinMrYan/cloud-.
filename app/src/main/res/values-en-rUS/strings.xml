@@ -426,6 +426,8 @@
     <string name="disk">Disk</string>
     <string name="volume_file_filter">Filter</string>
     <string name="volume_group_name">Group Name</string>
+    <string name="volume_upload_file">Upload File</string>
+    <string name="volume_upload_file_to_volume">Upload file to volume</string>
 
 
     <!-- 我的页面部分 -->

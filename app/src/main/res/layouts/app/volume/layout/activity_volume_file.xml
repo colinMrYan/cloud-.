@@ -380,7 +380,7 @@
                 android:layout_alignParentRight="true"
                 android:onClick="onClick"
                 android:padding="12dp"
-                android:text="上传文件"
+                android:text="@string/volume_upload_file"
                 android:textColor="#444444"
                 android:textSize="15sp" />
         </RelativeLayout>

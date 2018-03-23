@@ -1018,7 +1018,7 @@ public class FileUtils {
         // 判断Intent是否是“分享多个”功能(Share Via)
         if (extras.containsKey(Intent.EXTRA_STREAM)) {
             ArrayList<Uri> fileUriList = intent.getParcelableArrayListExtra(Intent.EXTRA_STREAM);
-            return fileUriList;
+            return (fileUriList == null)?new ArrayList<Uri>():fileUriList;
         }
         return new ArrayList<Uri>();
     }
