@@ -87,13 +87,19 @@ public class ShareVolumeActivity extends BaseActivity implements SwipeRefreshLay
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 List<Uri> uriList = (List<Uri>) getIntent().getSerializableExtra("fileShareList");
                 Volume volume = shareVolumeList.get(position);
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("volume", volume);
-                bundle.putSerializable("title", volume.getName());
                 if(uriList != null && uriList.size() > 0){
+                    Bundle bundle = new Bundle();
                     bundle.putSerializable("fileShareList", (Serializable) uriList);
+                    bundle.putString("operationFileDirAbsolutePath", "/");
+                    bundle.putSerializable("volume", volume);
+                    bundle.putString("title",volume.getName() );
+                    IntentUtils.startActivity(ShareVolumeActivity.this, VolumeFileLocationSelectActivity.class, bundle,true);
+                }else{
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("volume", volume);
+                    bundle.putSerializable("title", volume.getName());
+                    IntentUtils.startActivity(ShareVolumeActivity.this, VolumeFileActivity.class, bundle);
                 }
-                IntentUtils.startActivity(ShareVolumeActivity.this, VolumeFileActivity.class, bundle);
             }
         });
         shareVolumeListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
@@ -197,7 +203,7 @@ public class ShareVolumeActivity extends BaseActivity implements SwipeRefreshLay
     /**
      * 弹出文件删除提示框
      *
-     * @param volumeFile
+     * @param volume
      */
     protected void showVolumeDelWranibgDlg(final Volume volume) {
         new MyQMUIDialog.MessageDialogBuilder(ShareVolumeActivity.this)
