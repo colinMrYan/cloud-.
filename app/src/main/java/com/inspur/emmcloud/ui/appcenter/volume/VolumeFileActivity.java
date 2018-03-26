@@ -25,7 +25,6 @@ import com.inspur.emmcloud.adapter.VolumeFileAdapter;
 import com.inspur.emmcloud.adapter.VolumeFileFilterPopGridAdapter;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
 import com.inspur.emmcloud.util.common.DensityUtil;
-import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
@@ -106,7 +105,7 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
             uriList.addAll(fileShareList);
         }
         for(int i = 0; i < uriList.size(); i++){
-            uploadFile(FileUtils.uri2File(VolumeFileActivity.this,uriList.get(i)).getAbsolutePath());
+            uploadFile(GetPathFromUri4kitkat.getPathByUri(getApplicationContext(), uriList.get(i)));
         }
     }
 

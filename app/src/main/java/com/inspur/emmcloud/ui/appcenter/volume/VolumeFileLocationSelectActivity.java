@@ -147,6 +147,7 @@ public class VolumeFileLocationSelectActivity extends VolumeFileBaseActivity {
                 bundle.putSerializable("title", getString(R.string.volume_upload_file));
                 bundle.putSerializable("fileShareList", (Serializable) uriList);
                 IntentUtils.startActivity(VolumeFileLocationSelectActivity.this, VolumeFileActivity.class, bundle);
+                closeAllThisActivityInstance();
                 break;
             default:
                 break;

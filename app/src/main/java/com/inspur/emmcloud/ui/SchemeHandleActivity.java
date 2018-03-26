@@ -17,6 +17,7 @@ import com.inspur.emmcloud.bean.work.CalendarEvent;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.ui.appcenter.ReactNativeAppActivity;
 import com.inspur.emmcloud.ui.appcenter.groupnews.GroupNewsActivity;
+import com.inspur.emmcloud.ui.appcenter.volume.VolumeHomePageActivity;
 import com.inspur.emmcloud.ui.chat.ChannelActivity;
 import com.inspur.emmcloud.ui.contact.RobotInfoActivity;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
@@ -32,7 +33,6 @@ import com.inspur.emmcloud.ui.work.calendar.CalEventAddActivity;
 import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StateBarUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
@@ -42,6 +42,8 @@ import com.inspur.imp.api.ImpActivity;
 
 import org.json.JSONObject;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -50,6 +52,7 @@ import java.util.List;
 
 public class SchemeHandleActivity extends Activity {
     private BroadcastReceiver unlockReceiver;
+    private static final String FILE_SHARE_FLAG = "FILE_SHARE_FLAG";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -127,18 +130,22 @@ public class SchemeHandleActivity extends Activity {
     private void openScheme() {
         if (((MyApplication) getApplicationContext()).isHaveLogin()) {
             openIndexActivity(this);
-
-            handleShareIntent();
-
-
+            String action = getIntent().getAction();
+            if(action != null && (Intent.ACTION_SEND.equals(action) || Intent.ACTION_SEND_MULTIPLE.equals(action))){
+                handleShareIntent();
+            }
             //此处加延时操作，为了让打开通知时IndexActivity走onCreate()方法
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     Uri uri = getIntent().getData();
+                    if(uri == null){
+                        finish();
+                        return;
+                    }
                     String scheme = uri.getScheme();
                     String host = uri.getHost();
-                    if (uri == null || scheme == null || host == null) {
+                    if (scheme == null || host == null) {
                         finish();
                         return;
                     }
@@ -214,18 +221,33 @@ public class SchemeHandleActivity extends Activity {
      * 处理带分享功能的Action
      */
     private void handleShareIntent() {
-        String action = getIntent().getAction();
-        if(Intent.ACTION_SEND.equals(action)){
-            Uri uri = FileUtils.getShareFileUri(getIntent());
-            if(uri != null){
-                LogUtils.YfcDebug("文件名称："+FileUtils.uri2File(SchemeHandleActivity.this,uri).getName());
+        if (getIntent() != null) {
+            String action = getIntent().getAction();
+            List<Uri> uriList = new ArrayList<>();
+            if (Intent.ACTION_SEND.equals(action)) {
+                Uri uri = FileUtils.getShareFileUri(getIntent());
+                if (uri != null) {
+                    uriList.add(uri);
+                }
+            } else if (Intent.ACTION_SEND_MULTIPLE.equals(action)) {
+                List<Uri> fileUriList = FileUtils.getShareFileUriList(getIntent());
+                uriList.addAll(fileUriList);
             }
-        }else if(Intent.ACTION_SEND_MULTIPLE.equals(action)){
-            List<Uri> fileUriList = FileUtils.getShareFileUriList(getIntent());
-            for(int i = 0; i < fileUriList.size(); i++){
-                LogUtils.YfcDebug("文件名称："+FileUtils.uri2File(SchemeHandleActivity.this,fileUriList.get(i)).getName());
+            if (uriList.size() > 0) {
+                startVolumeShareActivity(uriList);
             }
         }
+    }
+
+    /**
+     * @param uriList
+     */
+    private void startVolumeShareActivity(List<Uri> uriList) {
+        Intent intent = new Intent();
+        intent.setClass(SchemeHandleActivity.this, VolumeHomePageActivity.class);
+        intent.putExtra("fileShareList", (Serializable) uriList);
+        startActivity(intent);
+        finish();
     }
 
     /**
