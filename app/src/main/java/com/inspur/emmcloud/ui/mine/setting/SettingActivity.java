@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -148,7 +149,7 @@ public class SettingActivity extends BaseActivity {
                 // 通知消息页面重新创建群组头像
                 Intent intent = new Intent("message_notify");
                 intent.putExtra("command", "creat_group_icon");
-                sendBroadcast(intent);
+                LocalBroadcastManager.getInstance(SettingActivity.this).sendBroadcast(intent);
 
             }
 

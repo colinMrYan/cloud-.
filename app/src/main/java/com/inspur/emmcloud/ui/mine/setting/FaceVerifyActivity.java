@@ -19,6 +19,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Base64;
 import android.view.OrientationEventListener;
 import android.view.Surface;
@@ -448,7 +449,7 @@ public class FaceVerifyActivity extends BaseActivity implements SurfaceHolder.Ca
                     Intent intent = new Intent();
                     MyApplication.getInstance().setIsActive(true);
                     intent.setAction(Constant.ACTION_SAFE_UNLOCK);
-                    sendBroadcast(intent);
+                    LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
                 }
                 finish();
                 break;

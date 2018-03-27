@@ -3,6 +3,7 @@ package com.inspur.emmcloud.ui.work.calendar;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -22,9 +23,9 @@ import com.inspur.emmcloud.bean.work.CalendarEvent;
 import com.inspur.emmcloud.bean.work.GetCalendarEventsResult;
 import com.inspur.emmcloud.bean.work.MyCalendar;
 import com.inspur.emmcloud.config.Constant;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.privates.CalEventNotificationUtils;
 import com.inspur.emmcloud.util.privates.CalendarColorUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
@@ -456,7 +457,7 @@ public class CalActivity extends BaseActivity implements MySwipeRefreshLayout.On
 			Intent mIntent = new Intent(Constant.ACTION_CALENDAR);
 			mIntent.putExtra("refreshCalendar", "");
 			// 发送广播
-			sendBroadcast(mIntent);
+		LocalBroadcastManager.getInstance(this).sendBroadcast(mIntent);
 	}
 
 	public class WebServcie extends APIInterfaceInstance {

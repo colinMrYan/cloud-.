@@ -2,6 +2,7 @@ package com.inspur.emmcloud.adapter;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -16,8 +17,8 @@ import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
 import com.inspur.emmcloud.bean.appcenter.App;
 import com.inspur.emmcloud.bean.appcenter.GetAddAppResult;
-import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
+import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.UriUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
@@ -171,7 +172,7 @@ public class AppCenterAdapter extends BaseAdapter {
             Intent mIntent = new Intent(ACTION_NAME);
             mIntent.putExtra("app", appList.get(addPosition));
             // 发送广播
-            activity.sendBroadcast(mIntent);
+            LocalBroadcastManager.getInstance(activity).sendBroadcast(mIntent);
         }
 
         @Override

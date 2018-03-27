@@ -10,6 +10,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.MotionEvent;
@@ -572,7 +573,7 @@ public class ChannelActivity extends BaseActivity {
             intent.putExtra("command", "set_channel_message_read");
             intent.putExtra("cid", cid);
             intent.putExtra("mid", msgList.get(msgList.size() - 1).getMid());
-            sendBroadcast(intent);
+            LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
         }
     }
 

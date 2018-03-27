@@ -12,6 +12,7 @@ import android.content.pm.ResolveInfo;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 
 import com.inspur.emmcloud.R;
@@ -63,7 +64,7 @@ public class ShortCutUtils {
         //设置图标
         installer.putExtra("android.intent.extra.shortcut.ICON_RESOURCE", Intent.ShortcutIconResource.fromContext(contxt, icon));
         installer.setAction("com.android.launcher.action.INSTALL_SHORTCUT");
-        contxt.sendBroadcast(installer);//发送安装桌面图标的通知
+        LocalBroadcastManager.getInstance(contxt).sendBroadcast(installer);//发送安装桌面图标的通知
     }
 
 
@@ -105,7 +106,7 @@ public class ShortCutUtils {
         installer.putExtra(Intent.EXTRA_SHORTCUT_ICON, iconBitmap);
 //        installer.putExtra("android.intent.extra.shortcut.ICON_RESOURCE", Intent.ShortcutIconResource.fromContext(contxt, icon));
         installer.setAction("com.android.launcher.action.INSTALL_SHORTCUT");
-        contxt.sendBroadcast(installer);//发送安装桌面图标的通知
+        LocalBroadcastManager.getInstance(contxt).sendBroadcast(installer);//发送安装桌面图标的通知
     }
 
     private static String AUTHORITY = null;
@@ -238,6 +239,6 @@ public class ShortCutUtils {
         String appClass = activity.getPackageName() + "." + activity.getLocalClassName();
         ComponentName comp = new ComponentName(activity.getPackageName(), appClass);
         shortcut.putExtra(Intent.EXTRA_SHORTCUT_INTENT, new Intent(Intent.ACTION_MAIN).setComponent(comp));
-        activity.sendBroadcast(shortcut);
+        LocalBroadcastManager.getInstance(activity).sendBroadcast(shortcut);
     }
 }

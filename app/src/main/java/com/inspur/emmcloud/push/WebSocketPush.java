@@ -2,6 +2,7 @@ package com.inspur.emmcloud.push;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.inspur.emmcloud.MyApplication;
@@ -203,7 +204,7 @@ public class WebSocketPush {
 				String content = arg0[0].toString();
 				Intent intent = new Intent("com.inspur.msg");
 				intent.putExtra("push", content);
-				context.sendBroadcast(intent);
+				LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
 			}
 		});
 
@@ -263,7 +264,7 @@ public class WebSocketPush {
 			Intent intent = new Intent("message_notify");
 			intent.putExtra("status",event);
 			intent.putExtra("command","websocket_status");
-			context.sendBroadcast(intent);
+			LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
 		}
 	}
 

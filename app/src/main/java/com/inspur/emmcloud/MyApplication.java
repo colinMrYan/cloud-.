@@ -12,6 +12,7 @@ import android.os.Build;
 import android.os.Environment;
 import android.os.Parcelable;
 import android.support.multidex.MultiDexApplication;
+import android.support.v4.content.LocalBroadcastManager;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 
@@ -725,7 +726,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         intent.addCategory("android.intent.category.LAUNCHER");
         // 绑定事件
         shortcutIntent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, intent);
-        context.sendBroadcast(shortcutIntent);
+        LocalBroadcastManager.getInstance(context).sendBroadcast(shortcutIntent);
     }
 
 

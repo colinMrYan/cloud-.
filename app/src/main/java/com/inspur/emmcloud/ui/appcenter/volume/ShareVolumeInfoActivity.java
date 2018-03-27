@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
@@ -106,7 +107,7 @@ public class ShareVolumeInfoActivity extends BaseActivity {
 
     public static void notifyVolumeInfoUpdate(Context context){
         Intent intent = new Intent(Constant.ACTION_VOLUME_INFO_UPDATE);
-        context.sendBroadcast(intent);
+        LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
     }
 
 
