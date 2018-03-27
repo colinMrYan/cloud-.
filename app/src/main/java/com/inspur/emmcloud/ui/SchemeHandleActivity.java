@@ -52,7 +52,6 @@ import java.util.List;
 
 public class SchemeHandleActivity extends Activity {
     private BroadcastReceiver unlockReceiver;
-    private static final String FILE_SHARE_FLAG = "FILE_SHARE_FLAG";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -61,12 +60,12 @@ public class SchemeHandleActivity extends Activity {
         if (MyApplication.getInstance().getOPenNotification()) {
             MyApplication.getInstance().setOpenNotification(false);
             if (FaceVerifyActivity.getFaceVerifyIsOpenByUser(SchemeHandleActivity.this)) {
-                registerReiceiver();
+                registerReceiver();
                 MyApplication.getInstance().setIsActive(true);
                 faceVerify();
                 return;
             } else if (getIsNeedGestureCode()) {
-                registerReiceiver();
+                registerReceiver();
                 MyApplication.getInstance().setIsActive(true);
                 gestureVerify();
                 return;
@@ -111,7 +110,7 @@ public class SchemeHandleActivity extends Activity {
     /**
      * 注册安全解锁监听广播
      */
-    private void registerReiceiver(){
+    private void registerReceiver(){
         unlockReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -132,6 +131,7 @@ public class SchemeHandleActivity extends Activity {
             openIndexActivity(this);
             String action = getIntent().getAction();
             if(action != null && (Intent.ACTION_SEND.equals(action) || Intent.ACTION_SEND_MULTIPLE.equals(action))){
+
                 handleShareIntent();
             }
             //此处加延时操作，为了让打开通知时IndexActivity走onCreate()方法

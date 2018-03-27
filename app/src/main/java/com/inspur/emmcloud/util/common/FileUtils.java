@@ -1042,6 +1042,7 @@ public class FileUtils {
             cursor.moveToFirst();
             filePath = cursor.getString(actualColumnIndex);
         }
+        cursor.close();
         File file = new File(filePath);
         return file;
     }
