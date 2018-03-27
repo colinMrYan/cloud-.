@@ -3,7 +3,6 @@ package com.inspur.emmcloud.ui.mine.setting;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.view.View;
@@ -15,22 +14,22 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.AppAPIService;
-import com.inspur.emmcloud.bean.system.AppConfig;
 import com.inspur.emmcloud.bean.mine.Language;
+import com.inspur.emmcloud.bean.system.AppConfig;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.service.BackgroundService;
 import com.inspur.emmcloud.service.CoreService;
 import com.inspur.emmcloud.ui.IndexActivity;
-import com.inspur.emmcloud.util.privates.cache.AppConfigCacheUtils;
-import com.inspur.emmcloud.util.privates.DataCleanManager;
-import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.common.IntentUtils;
-import com.inspur.emmcloud.util.privates.cache.MyAppCacheUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
+import com.inspur.emmcloud.util.privates.DataCleanManager;
+import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
+import com.inspur.emmcloud.util.privates.cache.AppConfigCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.MyAppCacheUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.SwitchView;
 import com.inspur.emmcloud.widget.dialogs.MyQMUIDialog;
@@ -202,8 +201,10 @@ public class SettingActivity extends BaseActivity {
                     @Override
                     public void onClick(QMUIDialog dialog, int index) {
                         dialog.dismiss();
-                        ((MyApplication) getApplication()).signout();
-                        stopAppService();
+                        if (NetUtils.isNetworkConnected(getApplicationContext())){
+                            ((MyApplication) getApplication()).signout();
+                            stopAppService();
+                        }
                     }
                 })
                 .show();
@@ -272,9 +273,7 @@ public class SettingActivity extends BaseActivity {
                         dialog.dismiss();
                         DataCleanManager.cleanWebViewCache(SettingActivity.this);
                         ((MyApplication) getApplicationContext()).deleteAllDb();
-                        String msgCachePath = Environment
-                                .getExternalStorageDirectory()
-                                + "/IMP-Cloud/download/";
+                        String msgCachePath = MyAppConfig.LOCAL_DOWNLOAD_PATH;
                         String imgCachePath = MyAppConfig.LOCAL_CACHE_PATH;
                         DataCleanManager.cleanApplicationData(SettingActivity.this,
                                 msgCachePath, imgCachePath);

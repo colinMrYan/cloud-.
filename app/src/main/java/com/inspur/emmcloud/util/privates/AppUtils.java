@@ -406,7 +406,9 @@ public class AppUtils {
         intent.setAction(android.content.Intent.ACTION_VIEW);
         intent.setDataAndType(Uri.fromFile(file),
                 "application/vnd.android.package-archive");
-        context.startActivityForResult(intent, ImpActivity.DO_NOTHING_RESULTCODE);
+        if (context.getPackageManager().resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY) != null) {
+            context.startActivityForResult(intent, ImpActivity.DO_NOTHING_RESULTCODE);
+        }
     }
 
     /**

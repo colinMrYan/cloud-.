@@ -7,6 +7,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 
 import com.inspur.emmcloud.util.common.StringUtils;
@@ -401,12 +402,15 @@ public class FileOpen {
         } else {
             Intent intent = new Intent();
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            // 设置intent的Action属性
             intent.setAction(Intent.ACTION_VIEW);
-            // 设置intent的data和Type属性。
-            intent.setDataAndType(/* uri */Uri.fromFile(file), mimeType);
-            // 跳转
-            context.startActivity(intent);
+            intent.setDataAndType(Uri.fromFile(file), mimeType);
+            if (context.getPackageManager().resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY) != null) {
+                try {
+                    context.startActivity(intent);
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
         }
 
     }
