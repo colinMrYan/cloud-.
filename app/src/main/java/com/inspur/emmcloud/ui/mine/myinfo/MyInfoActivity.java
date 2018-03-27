@@ -161,7 +161,6 @@ public class MyInfoActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
         finishActivity();
     }
 
