@@ -177,7 +177,6 @@ public class VolumeFileDownloadActivtiy extends BaseActivity {
             @Override
             public RequestParams getRedirectParams(UriRequest uriRequest) throws Throwable {
                 String locationUrl = uriRequest.getResponseHeader("Location");
-                LogUtils.jasonDebug("locationUrl="+locationUrl);
                 RequestParams params = new RequestParams(locationUrl);
                 params.setAutoResume(true);// 断点下载
                 params.setSaveFilePath(fileSavePath);
