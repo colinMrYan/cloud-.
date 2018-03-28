@@ -131,7 +131,6 @@ public class SchemeHandleActivity extends Activity {
             openIndexActivity(this);
             String action = getIntent().getAction();
             if(action != null && (Intent.ACTION_SEND.equals(action) || Intent.ACTION_SEND_MULTIPLE.equals(action))){
-
                 handleShareIntent();
             }
             //此处加延时操作，为了让打开通知时IndexActivity走onCreate()方法
