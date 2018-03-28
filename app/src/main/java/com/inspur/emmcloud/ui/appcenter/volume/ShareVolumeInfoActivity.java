@@ -102,7 +102,7 @@ public class ShareVolumeInfoActivity extends BaseActivity {
             }
         };
         IntentFilter intentFilter = new IntentFilter(Constant.ACTION_VOLUME_INFO_UPDATE);
-        registerReceiver(receiver, intentFilter);
+        LocalBroadcastManager.getInstance(this).registerReceiver(receiver, intentFilter);
     }
 
     public static void notifyVolumeInfoUpdate(Context context){
@@ -203,7 +203,7 @@ public class ShareVolumeInfoActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         if (receiver != null){
-            unregisterReceiver(receiver);
+            LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
             receiver = null;
         }
         super.onDestroy();

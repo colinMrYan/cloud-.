@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.support.v4.content.LocalBroadcastManager;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
@@ -114,7 +115,7 @@ public class SchemeHandleActivity extends Activity {
 
         IntentFilter myIntentFilter = new IntentFilter();
         myIntentFilter.addAction(Constant.ACTION_SAFE_UNLOCK);
-        registerReceiver(unlockReceiver, myIntentFilter);
+        LocalBroadcastManager.getInstance(this).registerReceiver(unlockReceiver, myIntentFilter);
     }
 
     /**
@@ -287,7 +288,7 @@ public class SchemeHandleActivity extends Activity {
     @Override
     protected void onDestroy() {
         if (unlockReceiver != null) {
-            unregisterReceiver(unlockReceiver);
+            LocalBroadcastManager.getInstance(this).unregisterReceiver(unlockReceiver);
             unlockReceiver = null;
         }
         super.onDestroy();

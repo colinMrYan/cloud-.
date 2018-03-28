@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.Uri;
+import android.support.v4.content.LocalBroadcastManager;
 import android.telephony.SmsManager;
 import android.widget.Toast;
 
@@ -204,7 +205,7 @@ public class SmsService extends ImpPlugin {
 				}
 			}
 		};
-		context.registerReceiver(sendmessage, new IntentFilter(SENT_SMS_ACTION));
+		LocalBroadcastManager.getInstance(context).registerReceiver(sendmessage, new IntentFilter(SENT_SMS_ACTION));
 		
 		
 		// 发送状态确认

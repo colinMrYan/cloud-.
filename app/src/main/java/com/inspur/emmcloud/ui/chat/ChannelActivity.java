@@ -247,7 +247,7 @@ public class ChannelActivity extends BaseActivity {
         };
         IntentFilter filter = new IntentFilter();
         filter.addAction("update_channel_name");
-        registerReceiver(refreshNameReceiver, filter);
+        LocalBroadcastManager.getInstance(this).registerReceiver(refreshNameReceiver, filter);
     }
 
     /**
@@ -335,7 +335,7 @@ public class ChannelActivity extends BaseActivity {
             msgResvier = new MsgReceiver(ChannelActivity.this, handler);
             IntentFilter filter = new IntentFilter();
             filter.addAction("com.inspur.msg");
-            registerReceiver(msgResvier, filter);
+            LocalBroadcastManager.getInstance(this).registerReceiver(msgResvier, filter);
         }
     }
 
@@ -603,11 +603,11 @@ public class ChannelActivity extends BaseActivity {
             handler = null;
         }
         if (msgResvier != null) {
-            unregisterReceiver(msgResvier);
+            LocalBroadcastManager.getInstance(this).unregisterReceiver(msgResvier);
             msgResvier = null;
         }
         if (refreshNameReceiver != null) {
-            unregisterReceiver(refreshNameReceiver);
+            LocalBroadcastManager.getInstance(this).unregisterReceiver(refreshNameReceiver);
             refreshNameReceiver = null;
         }
         chatInputMenu.releaseVoliceInput();

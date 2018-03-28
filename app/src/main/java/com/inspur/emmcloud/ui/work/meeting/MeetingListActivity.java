@@ -112,7 +112,7 @@ public class MeetingListActivity extends BaseActivity implements
         };
         IntentFilter myIntentFilter = new IntentFilter();
         myIntentFilter.addAction(Constant.ACTION_MEETING);
-        registerReceiver(meetingReceiver, myIntentFilter);
+        LocalBroadcastManager.getInstance(this).registerReceiver(meetingReceiver, myIntentFilter);
     }
 
     /**
@@ -465,7 +465,7 @@ public class MeetingListActivity extends BaseActivity implements
      */
     private void unregisterReceiver() {
         if (meetingReceiver != null) {
-            unregisterReceiver(meetingReceiver);
+            LocalBroadcastManager.getInstance(this).unregisterReceiver(meetingReceiver);
             meetingReceiver = null;
         }
     }

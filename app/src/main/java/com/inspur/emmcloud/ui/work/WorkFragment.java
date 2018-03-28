@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,16 +22,16 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.WorkAPIService;
+import com.inspur.emmcloud.bean.mine.Language;
+import com.inspur.emmcloud.bean.system.PVCollectModel;
 import com.inspur.emmcloud.bean.work.CalendarEvent;
 import com.inspur.emmcloud.bean.work.FestivalDate;
 import com.inspur.emmcloud.bean.work.GetCalendarEventsResult;
 import com.inspur.emmcloud.bean.work.GetMeetingsResult;
 import com.inspur.emmcloud.bean.work.GetMyCalendarResult;
 import com.inspur.emmcloud.bean.work.GetTaskListResult;
-import com.inspur.emmcloud.bean.mine.Language;
 import com.inspur.emmcloud.bean.work.Meeting;
 import com.inspur.emmcloud.bean.work.MyCalendar;
-import com.inspur.emmcloud.bean.system.PVCollectModel;
 import com.inspur.emmcloud.bean.work.TaskResult;
 import com.inspur.emmcloud.bean.work.WorkSetting;
 import com.inspur.emmcloud.config.Constant;
@@ -41,23 +42,23 @@ import com.inspur.emmcloud.ui.work.meeting.MeetingDetailActivity;
 import com.inspur.emmcloud.ui.work.meeting.MeetingListActivity;
 import com.inspur.emmcloud.ui.work.task.MessionDetailActivity;
 import com.inspur.emmcloud.ui.work.task.MessionListActivity;
-import com.inspur.emmcloud.util.privates.cache.AppConfigCacheUtils;
-import com.inspur.emmcloud.util.privates.CalEventNotificationUtils;
-import com.inspur.emmcloud.util.privates.CalendarUtil;
-import com.inspur.emmcloud.util.privates.cache.DbCacheUtils;
 import com.inspur.emmcloud.util.common.DensityUtil;
-import com.inspur.emmcloud.util.privates.cache.FestivalCacheUtils;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
-import com.inspur.emmcloud.util.privates.cache.MyCalendarCacheUtils;
-import com.inspur.emmcloud.util.privates.cache.MyCalendarOperationCacheUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
-import com.inspur.emmcloud.util.privates.cache.PVCollectModelCacheUtils;
-import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
+import com.inspur.emmcloud.util.privates.CalEventNotificationUtils;
+import com.inspur.emmcloud.util.privates.CalendarUtil;
+import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.util.privates.WorkColorUtils;
+import com.inspur.emmcloud.util.privates.cache.AppConfigCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.DbCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.FestivalCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.MyCalendarCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.MyCalendarOperationCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.PVCollectModelCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.WorkSettingCacheUtils;
 import com.inspur.emmcloud.widget.ScrollViewWithListView;
 
@@ -272,7 +273,7 @@ public class WorkFragment extends Fragment {
         myIntentFilter.addAction(Constant.ACTION_MEETING);
         myIntentFilter.addAction(Constant.ACTION_CALENDAR);
         myIntentFilter.addAction(Constant.ACTION_TASK);
-        getActivity().registerReceiver(meetingAndTaskReceiver, myIntentFilter);
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(meetingAndTaskReceiver, myIntentFilter);
     }
 
     static class ViewHolder {
@@ -684,11 +685,11 @@ public class WorkFragment extends Fragment {
     public void onDestroy() {
         super.onDestroy();
         if (calEventReceiver != null) {
-            getActivity().unregisterReceiver(calEventReceiver);
+            LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(calEventReceiver);
             calEventReceiver = null;
         }
         if (meetingAndTaskReceiver != null) {
-            getActivity().unregisterReceiver(meetingAndTaskReceiver);
+            LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(meetingAndTaskReceiver);
             meetingAndTaskReceiver = null;
         }
         EventBus.getDefault().unregister(this);
