@@ -57,8 +57,8 @@ public class ReactNativeAPIService {
             }
 
             @Override
-            public void callbackTokenExpire() {
-                new OauthUtils(new OauthCallBack() {
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
                         getClientId(deviceId,deviceName);
@@ -68,8 +68,11 @@ public class ReactNativeAPIService {
                     public void executeFailCallback() {
                         callbackFail("", -1);
                     }
-                },context).refreshToken(completeUrl);
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
             }
+
         });
     }
 
@@ -94,9 +97,8 @@ public class ReactNativeAPIService {
             }
 
             @Override
-            public void callbackTokenExpire() {
-
-                new OauthUtils(new OauthCallBack() {
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
                         getReactNativeInstallUrl(uri);
@@ -106,8 +108,11 @@ public class ReactNativeAPIService {
                     public void executeFailCallback() {
                         callbackFail("", -1);
                     }
-                },context).refreshToken(completeUrl);
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
             }
+
         });
     }
 
@@ -136,8 +141,8 @@ public class ReactNativeAPIService {
             }
 
             @Override
-            public void callbackTokenExpire() {
-                new OauthUtils(new OauthCallBack() {
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
                         writeBackVersionChange(preVersion,currentVersion,clientId, command,appId);
@@ -147,8 +152,11 @@ public class ReactNativeAPIService {
                     public void executeFailCallback() {
                         callbackFail("", -1);
                     }
-                },context).refreshToken(completeUrl);
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
             }
+
         });
     }
 
@@ -177,9 +185,8 @@ public class ReactNativeAPIService {
             }
 
             @Override
-            public void callbackTokenExpire() {
-
-                new OauthUtils(new OauthCallBack() {
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
                         getDownLoadUrl(context,findDownloadUrl,clientId,currentVersion);
@@ -189,8 +196,11 @@ public class ReactNativeAPIService {
                     public void executeFailCallback() {
                         callbackFail("", -1);
                     }
-                },context).refreshToken(completeUrl);
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
             }
+
         });
     }
 
@@ -229,8 +239,8 @@ public class ReactNativeAPIService {
             }
 
             @Override
-            public void callbackTokenExpire() {
-                new OauthUtils(new OauthCallBack() {
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
                         writeBackSplashPageVersionChange(preVersion,currentVersion,clientId, command);
@@ -240,8 +250,11 @@ public class ReactNativeAPIService {
                     public void executeFailCallback() {
                         callbackFail("", -1);
                     }
-                },context).refreshToken(completeUrl);
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
             }
+
         });
     }
 

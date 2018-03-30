@@ -16,7 +16,6 @@ import com.inspur.emmcloud.api.APIInterface;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.bean.chat.ChannelGroup;
 import com.inspur.emmcloud.bean.chat.GetAddMembersSuccessResult;
-import com.inspur.emmcloud.bean.system.GetBoolenResult;
 import com.inspur.emmcloud.bean.chat.GetChannelInfoResult;
 import com.inspur.emmcloud.bean.chat.GetChannelListResult;
 import com.inspur.emmcloud.bean.chat.GetCreateSingleChannelResult;
@@ -27,13 +26,13 @@ import com.inspur.emmcloud.bean.chat.GetMsgResult;
 import com.inspur.emmcloud.bean.chat.GetNewMsgsResult;
 import com.inspur.emmcloud.bean.chat.GetNewsImgResult;
 import com.inspur.emmcloud.bean.chat.GetNewsInstructionResult;
-import com.inspur.emmcloud.bean.contact.GetSearchChannelGroupResult;
 import com.inspur.emmcloud.bean.chat.GetSendMsgResult;
+import com.inspur.emmcloud.bean.contact.GetSearchChannelGroupResult;
+import com.inspur.emmcloud.bean.system.GetBoolenResult;
 import com.inspur.emmcloud.interf.OauthCallBack;
-import com.inspur.emmcloud.util.privates.AppUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
-import com.inspur.emmcloud.util.privates.OauthUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
+import com.inspur.emmcloud.util.privates.AppUtils;
+import com.inspur.emmcloud.util.privates.OauthUtils;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -70,10 +69,8 @@ public class ChatAPIService {
 		x.http().get(params, new APICallback(context, completeUrl) {
 
 			@Override
-			public void callbackTokenExpire() {
-				// TODO Auto-generated method stub
-				new OauthUtils(new OauthCallBack() {
-
+			public void callbackTokenExpire(long requestTime) {
+				OauthCallBack oauthCallBack = new OauthCallBack() {
 					@Override
 					public void reExecute() {
 						getChannelList();
@@ -83,8 +80,11 @@ public class ChatAPIService {
 					public void executeFailCallback() {
 						callbackFail("", -1);
 					}
-				}, context).refreshToken(completeUrl);
+				};
+				OauthUtils.getInstance().refreshToken(
+						oauthCallBack, requestTime);
 			}
+
 
 			@Override
 			public void callbackSuccess(String arg0) {
@@ -123,10 +123,8 @@ public class ChatAPIService {
 		x.http().get(params, new APICallback(context, completeUrl) {
 
 			@Override
-			public void callbackTokenExpire() {
-				// TODO Auto-generated method stub
-				new OauthUtils(new OauthCallBack() {
-
+			public void callbackTokenExpire(long requestTime) {
+				OauthCallBack oauthCallBack = new OauthCallBack() {
 					@Override
 					public void reExecute() {
 						getNewMsgs(cid, msgId, count);
@@ -136,8 +134,11 @@ public class ChatAPIService {
 					public void executeFailCallback() {
 						callbackFail("", -1);
 					}
-				}, context).refreshToken(completeUrl);
+				};
+				OauthUtils.getInstance().refreshToken(
+						oauthCallBack, requestTime);
 			}
+
 
 			@Override
 			public void callbackSuccess(String arg0) {
@@ -175,10 +176,8 @@ public class ChatAPIService {
 		x.http().get(params, new APICallback(context, completeUrl) {
 
 			@Override
-			public void callbackTokenExpire() {
-				// TODO Auto-generated method stub
-				new OauthUtils(new OauthCallBack() {
-
+			public void callbackTokenExpire(long requestTime) {
+				OauthCallBack oauthCallBack = new OauthCallBack() {
 					@Override
 					public void reExecute() {
 						getComment(mid);
@@ -188,8 +187,11 @@ public class ChatAPIService {
 					public void executeFailCallback() {
 						callbackFail("", -1);
 					}
-				}, context).refreshToken(completeUrl);
+				};
+				OauthUtils.getInstance().refreshToken(
+						oauthCallBack, requestTime);
 			}
+
 
 			@Override
 			public void callbackSuccess(String arg0) {
@@ -218,10 +220,8 @@ public class ChatAPIService {
 		x.http().get(params, new APICallback(context, completeUrl) {
 
 			@Override
-			public void callbackTokenExpire() {
-				// TODO Auto-generated method stub
-				new OauthUtils(new OauthCallBack() {
-
+			public void callbackTokenExpire(long requestTime) {
+				OauthCallBack oauthCallBack = new OauthCallBack() {
 					@Override
 					public void reExecute() {
 						getChannelInfo(cid);
@@ -231,8 +231,11 @@ public class ChatAPIService {
 					public void executeFailCallback() {
 						callbackFail("", -1);
 					}
-				}, context).refreshToken(completeUrl);
+				};
+				OauthUtils.getInstance().refreshToken(
+						oauthCallBack, requestTime);
 			}
+
 
 			@Override
 			public void callbackSuccess(String arg0) {
@@ -303,10 +306,8 @@ public class ChatAPIService {
 		x.http().post(params, new APICallback(context, completeUrl) {
 
 			@Override
-			public void callbackTokenExpire() {
-				// TODO Auto-generated method stub
-				new OauthUtils(new OauthCallBack() {
-
+			public void callbackTokenExpire(long requestTime) {
+				OauthCallBack oauthCallBack = new OauthCallBack() {
 					@Override
 					public void reExecute() {
 						sendMsg(channelId, msgContent, type, mid, fakeMessageId);
@@ -316,9 +317,11 @@ public class ChatAPIService {
 					public void executeFailCallback() {
 						callbackFail("", -1);
 					}
-				}, context).refreshToken(completeUrl);
-
+				};
+				OauthUtils.getInstance().refreshToken(
+						oauthCallBack, requestTime);
 			}
+
 
 			@Override
 			public void callbackSuccess(String arg0) {
@@ -348,10 +351,8 @@ public class ChatAPIService {
 		x.http().get(params, new APICallback(context, completeUrl) {
 
 			@Override
-			public void callbackTokenExpire() {
-				// TODO Auto-generated method stub
-				new OauthUtils(new OauthCallBack() {
-
+			public void callbackTokenExpire(long requestTime) {
+				OauthCallBack oauthCallBack = new OauthCallBack() {
 					@Override
 					public void reExecute() {
 						getMsg(mid);
@@ -361,8 +362,11 @@ public class ChatAPIService {
 					public void executeFailCallback() {
 						callbackFail("", -1);
 					}
-				}, context).refreshToken(completeUrl);
+				};
+				OauthUtils.getInstance().refreshToken(
+						oauthCallBack, requestTime);
 			}
+
 
 			@Override
 			public void callbackSuccess(String arg0) {
@@ -398,10 +402,8 @@ public class ChatAPIService {
 		x.http().post(params, new APICallback(context, completeUrl) {
 
 			@Override
-			public void callbackTokenExpire() {
-				// TODO Auto-generated method stub
-				new OauthUtils(new OauthCallBack() {
-
+			public void callbackTokenExpire(long requestTime) {
+				OauthCallBack oauthCallBack = new OauthCallBack() {
 					@Override
 					public void reExecute() {
 						uploadMsgResource(filePath, fakeMessageId, isImg);
@@ -411,8 +413,11 @@ public class ChatAPIService {
 					public void executeFailCallback() {
 						callbackFail("", -1);
 					}
-				}, context).refreshToken(completeUrl);
+				};
+				OauthUtils.getInstance().refreshToken(
+						oauthCallBack, requestTime);
 			}
+
 
 			@Override
 			public void callbackSuccess(String arg0) {
@@ -460,10 +465,8 @@ public class ChatAPIService {
 		x.http().get(params, new APICallback(context, completeUrl) {
 
 			@Override
-			public void callbackTokenExpire() {
-				// TODO Auto-generated method stub
-				new OauthUtils(new OauthCallBack() {
-
+			public void callbackTokenExpire(long requestTime) {
+				OauthCallBack oauthCallBack = new OauthCallBack() {
 					@Override
 					public void reExecute() {
 						getAllGroupChannelList();
@@ -473,8 +476,11 @@ public class ChatAPIService {
 					public void executeFailCallback() {
 						callbackFail("", -1);
 					}
-				}, context).refreshToken(completeUrl);
+				};
+				OauthUtils.getInstance().refreshToken(
+						oauthCallBack, requestTime);
 			}
+
 
 			@Override
 			public void callbackSuccess(String arg0) {
@@ -513,10 +519,8 @@ public class ChatAPIService {
 		x.http().get(params, new APICallback(context, completeUrl) {
 
 			@Override
-			public void callbackTokenExpire() {
-				// TODO Auto-generated method stub
-				new OauthUtils(new OauthCallBack() {
-
+			public void callbackTokenExpire(long requestTime) {
+				OauthCallBack oauthCallBack = new OauthCallBack() {
 					@Override
 					public void reExecute() {
 						getChannelGroupList(cidArray);
@@ -526,9 +530,11 @@ public class ChatAPIService {
 					public void executeFailCallback() {
 						callbackFail("", -1);
 					}
-				}, context).refreshToken(completeUrl);
-
+				};
+				OauthUtils.getInstance().refreshToken(
+						oauthCallBack, requestTime);
 			}
+
 
 			@Override
 			public void callbackSuccess(String arg0) {
@@ -561,10 +567,8 @@ public class ChatAPIService {
 		x.http().post(params, new APICallback(context, completeUrl) {
 
 			@Override
-			public void callbackTokenExpire() {
-				// TODO Auto-generated method stub
-				new OauthUtils(new OauthCallBack() {
-
+			public void callbackTokenExpire(long requestTime) {
+				OauthCallBack oauthCallBack = new OauthCallBack() {
 					@Override
 					public void reExecute() {
 						createDirectChannel(uid);
@@ -574,8 +578,9 @@ public class ChatAPIService {
 					public void executeFailCallback() {
 						callbackFail("", -1);
 					}
-
-				}, context).refreshToken(completeUrl);
+				};
+				OauthUtils.getInstance().refreshToken(
+						oauthCallBack, requestTime);
 			}
 
 			@Override
@@ -616,10 +621,8 @@ public class ChatAPIService {
 		x.http().request(HttpMethod.PUT, params, new APICallback(context, completeUrl) {
 
 			@Override
-			public void callbackTokenExpire() {
-				// TODO Auto-generated method stub
-				new OauthUtils(new OauthCallBack() {
-
+			public void callbackTokenExpire(long requestTime) {
+				OauthCallBack oauthCallBack = new OauthCallBack() {
 					@Override
 					public void reExecute() {
 						updateChannelGroupName(cid, name);
@@ -627,11 +630,13 @@ public class ChatAPIService {
 
 					@Override
 					public void executeFailCallback() {
-						callbackFail("",-1);
+						callbackFail("", -1);
 					}
-
-				}, context).refreshToken(completeUrl);
+				};
+				OauthUtils.getInstance().refreshToken(
+						oauthCallBack, requestTime);
 			}
+
 
 			@Override
 			public void callbackSuccess(String arg0) {
@@ -668,10 +673,8 @@ public class ChatAPIService {
 		x.http().request(HttpMethod.PUT, params, new APICallback(context, completeUrl) {
 
 			@Override
-			public void callbackTokenExpire() {
-				// TODO Auto-generated method stub
-				new OauthUtils(new OauthCallBack() {
-
+			public void callbackTokenExpire(long requestTime) {
+				OauthCallBack oauthCallBack = new OauthCallBack() {
 					@Override
 					public void reExecute() {
 						addGroupMembers(uids, cid);
@@ -679,11 +682,13 @@ public class ChatAPIService {
 
 					@Override
 					public void executeFailCallback() {
-						callbackFail("",-1);
+						callbackFail("", -1);
 					}
-
-				}, context).refreshToken(completeUrl);
+				};
+				OauthUtils.getInstance().refreshToken(
+						oauthCallBack, requestTime);
 			}
+
 
 			@Override
 			public void callbackSuccess(String arg0) {
@@ -720,10 +725,8 @@ public class ChatAPIService {
 		x.http().request(HttpMethod.DELETE, params, new APICallback(context, completeUrl) {
 
 			@Override
-			public void callbackTokenExpire() {
-				// TODO Auto-generated method stub
-				new OauthUtils(new OauthCallBack() {
-
+			public void callbackTokenExpire(long requestTime) {
+				OauthCallBack oauthCallBack = new OauthCallBack() {
 					@Override
 					public void reExecute() {
 						deleteGroupMembers(uids, cid);
@@ -731,10 +734,11 @@ public class ChatAPIService {
 
 					@Override
 					public void executeFailCallback() {
-						callbackFail("",-1);
+						callbackFail("", -1);
 					}
-
-				}, context).refreshToken(completeUrl);
+				};
+				OauthUtils.getInstance().refreshToken(
+						oauthCallBack, requestTime);
 			}
 
 			@Override
@@ -768,23 +772,22 @@ public class ChatAPIService {
 		x.http().request(HttpMethod.PUT, params, new APICallback(context, completeUrl) {
 
 			@Override
-			public void callbackTokenExpire() {
-				// TODO Auto-generated method stub
-				new OauthUtils(new OauthCallBack() {
-
+			public void callbackTokenExpire(long requestTime) {
+				OauthCallBack oauthCallBack = new OauthCallBack() {
 					@Override
 					public void reExecute() {
-						// TODO Auto-generated method stub
 						updateDnd(cid, nointerruption);
 					}
 
 					@Override
 					public void executeFailCallback() {
-						callbackFail("",-1);
+						callbackFail("", -1);
 					}
-
-				}, context).refreshToken(completeUrl);
+				};
+				OauthUtils.getInstance().refreshToken(
+						oauthCallBack, requestTime);
 			}
+
 
 			@Override
 			public void callbackSuccess(String arg0) {
@@ -824,10 +827,8 @@ public class ChatAPIService {
 		x.http().post(params, new APICallback(context, completeUrl) {
 
 			@Override
-			public void callbackTokenExpire() {
-				// TODO Auto-generated method stub
-				new OauthUtils(new OauthCallBack() {
-
+			public void callbackTokenExpire(long requestTime) {
+				OauthCallBack oauthCallBack = new OauthCallBack() {
 					@Override
 					public void reExecute() {
 						createGroupChannel(name, members);
@@ -835,10 +836,11 @@ public class ChatAPIService {
 
 					@Override
 					public void executeFailCallback() {
-						callbackFail("",-1);
+						callbackFail("", -1);
 					}
-
-				}, context).refreshToken(completeUrl);
+				};
+				OauthUtils.getInstance().refreshToken(
+						oauthCallBack, requestTime);
 			}
 
 			@Override
@@ -865,10 +867,8 @@ public class ChatAPIService {
 		x.http().get(params, new APICallback(context, completeUrl) {
 
 			@Override
-			public void callbackTokenExpire() {
-				// TODO Auto-generated method stub
-				new OauthUtils(new OauthCallBack() {
-
+			public void callbackTokenExpire(long requestTime) {
+				OauthCallBack oauthCallBack = new OauthCallBack() {
 					@Override
 					public void reExecute() {
 						getMsgCommentCount(mid);
@@ -876,11 +876,13 @@ public class ChatAPIService {
 
 					@Override
 					public void executeFailCallback() {
-						callbackFail("",-1);
+						callbackFail("", -1);
 					}
-
-				}, context).refreshToken(completeUrl);
+				};
+				OauthUtils.getInstance().refreshToken(
+						oauthCallBack, requestTime);
 			}
+
 
 			@Override
 			public void callbackSuccess(String arg0) {
@@ -918,8 +920,8 @@ public class ChatAPIService {
 			}
 
 			@Override
-			public void callbackTokenExpire() {
-				new OauthUtils(new OauthCallBack() {
+			public void callbackTokenExpire(long requestTime) {
+				OauthCallBack oauthCallBack = new OauthCallBack() {
 					@Override
 					public void reExecute() {
 						sendNewsInstruction(newsId, instruction);
@@ -927,11 +929,13 @@ public class ChatAPIService {
 
 					@Override
 					public void executeFailCallback() {
-						callbackFail("",-1);
+						callbackFail("", -1);
 					}
-
-				}, context).refreshToken(completeUrl);
+				};
+				OauthUtils.getInstance().refreshToken(
+						oauthCallBack, requestTime);
 			}
+
 		});
 	}
 
@@ -960,20 +964,23 @@ public class ChatAPIService {
 
             }
 
-            @Override
-            public void callbackTokenExpire() {
-                new OauthUtils(new OauthCallBack() {
-                    @Override
-                    public void reExecute() {
-                        uploadPushInfo(deviceId,deviceName,pushProvider,pushTracer);
-                    }
+			@Override
+			public void callbackTokenExpire(long requestTime) {
+				OauthCallBack oauthCallBack = new OauthCallBack() {
+					@Override
+					public void reExecute() {
+						uploadPushInfo(deviceId,deviceName,pushProvider,pushTracer);
+					}
 
-                    @Override
-                    public void executeFailCallback() {
-                        callbackFail("",-1);
-                    }
-                },context).refreshToken(url);
-            }
-        });
+					@Override
+					public void executeFailCallback() {
+						callbackFail("", -1);
+					}
+				};
+				OauthUtils.getInstance().refreshToken(
+						oauthCallBack, requestTime);
+			}
+
+		});
 	}
 }

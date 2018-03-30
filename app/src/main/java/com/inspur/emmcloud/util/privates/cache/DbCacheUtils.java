@@ -29,11 +29,10 @@ public class DbCacheUtils {
     private static DbManager db;
 
     public static void initDb(Context context) {
-        String userID = ((MyApplication) context.getApplicationContext()).getUid();
+        String userID = MyApplication.getInstance().getUid();
         String tanentID = MyApplication.getInstance().getTanent();
         String dbCachePath = "/data/data/" + context.getPackageName()
                 + "/databases/" + userID + "/" + tanentID + "/" + "db/";
-
         DbManager.DaoConfig daoConfig = new DbManager.DaoConfig()
                 .setDbName("emm.db")
                 // 不设置dbDir时, 默认存储在app的私有目录.
