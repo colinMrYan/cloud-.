@@ -196,7 +196,7 @@ public class IndexActivity extends BaseFragmentActivity implements
      */
     private void startUploadPVCollectService() {
         // TODO Auto-generated method stub
-        if (!AppUtils.isServiceWork(getApplicationContext(), "com.inspur.emmcloud.service.CollectService")) {
+        if (!AppUtils.isServiceWork(getApplicationContext(), PVCollectService.class.getName())) {
             Intent intent = new Intent();
             intent.setClass(this, PVCollectService.class);
             startService(intent);
@@ -329,6 +329,9 @@ public class IndexActivity extends BaseFragmentActivity implements
 
     }
 
+    /**
+     * 清除数据库中非法用户
+     */
     private void deleteIllegalUser(){
         try {
             boolean isHasDeletleIllegalUser = PreferencesByUserAndTanentUtils.getBoolean(getApplicationContext(),Constant.PREF_DELETE_ILLEGAL_USER,false);
