@@ -161,9 +161,11 @@ public class AppUtils {
      * @param currentVersion
      * @return
      */
-    public static boolean isAppHasUpgraded(String savedVersion,
-                                           String currentVersion) {
-        if (savedVersion != null || currentVersion != null) {
+    public static boolean isAppHasUpgraded(Context context) {
+        String savedVersion = PreferencesUtils.getString(context,
+                "previousVersion", "");
+        String currentVersion = getVersion(context);
+        if (!StringUtils.isBlank(savedVersion)) {
             String[] savedArray = savedVersion.split("\\.");
             String[] currentArray = currentVersion.split("\\.");
             try {
@@ -174,24 +176,13 @@ public class AppUtils {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            if (savedArray.length != 3) {
-                return false;
-            } else if (currentArray.length != 3) {
-                return false;
-            } else if (Integer.parseInt(savedArray[0]) != Integer
-                    .parseInt(currentArray[0])
-                    || Integer.parseInt(savedArray[1]) != Integer
-                    .parseInt(currentArray[1])) {
-                return false;
-            } else if (Integer.parseInt(savedArray[2]) < Integer
-                    .parseInt(currentArray[2])) {
-                return true;
-            } else {
-                return false;
+            if (savedArray.length == 3 && currentArray.length == 3) {
+                int savedVersionNum = Integer.parseInt(savedArray[0])*1000000+Integer.parseInt(savedArray[1])*1000+Integer.parseInt(savedArray[2]);
+                int currentVersionNum = Integer.parseInt(savedArray[0])*1000000+Integer.parseInt(savedArray[1])*1000+Integer.parseInt(savedArray[2]);
+                return currentVersionNum>savedVersionNum;
             }
-        } else {
-            return false;
         }
+        return false;
     }
 
     /**
