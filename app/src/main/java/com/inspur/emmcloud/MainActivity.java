@@ -245,13 +245,8 @@ public class MainActivity extends BaseActivity{ // 此处不能继承BaseActivit
 		} else {
 			String accessToken = PreferencesUtils.getString(MainActivity.this,
 					"accessToken", "");
-			if (!StringUtils.isBlank(accessToken)) {
-				IntentUtils.startActivity(MainActivity.this, IndexActivity.class,
-						true);
-			}else {
-				IntentUtils.startActivity(MainActivity.this, LoginActivity.class,
-						true);
-			}
+			IntentUtils.startActivity(MainActivity.this, (!StringUtils.isBlank(accessToken)) ?
+					IndexActivity.class : LoginActivity.class, true);
 		}
 	}
 
@@ -291,7 +286,7 @@ public class MainActivity extends BaseActivity{ // 此处不能继承BaseActivit
 			if (shouldShow && !StringUtils.isBlank(splashPagePath)) {
 				ImageLoader.getInstance().displayImage("file://" + splashPagePath, (GifImageView) findViewById(R.id.splash_img_top));
 			} else {
-				((GifImageView) findViewById(R.id.splash_img_top)).setVisibility(View.GONE);
+				findViewById(R.id.splash_img_top).setVisibility(View.GONE);
 			}
 		}
 	}
