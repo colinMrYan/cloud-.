@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
@@ -106,7 +107,7 @@ public class AppSearchActivity extends BaseActivity {
         IntentFilter myIntentFilter = new IntentFilter();
         myIntentFilter.addAction(ACTION_NAME);
         // 注册广播
-        registerReceiver(mBroadcastReceiver, myIntentFilter);
+        LocalBroadcastManager.getInstance(this).registerReceiver(mBroadcastReceiver, myIntentFilter);
     }
 
     public void onBack(View v) {
@@ -143,7 +144,7 @@ public class AppSearchActivity extends BaseActivity {
         // TODO Auto-generated method stub
         super.onDestroy();
         if (mBroadcastReceiver != null) {
-            unregisterReceiver(mBroadcastReceiver);
+            LocalBroadcastManager.getInstance(this).unregisterReceiver(mBroadcastReceiver);
             mBroadcastReceiver = null;
         }
     }

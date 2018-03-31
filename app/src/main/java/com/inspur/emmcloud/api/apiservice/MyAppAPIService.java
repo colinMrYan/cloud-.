@@ -71,9 +71,10 @@ public class MyAppAPIService {
                 .getHttpRequestParams(completeUrl);
         params.addParameter("appID", appID);
         x.http().post(params, new APICallback(context, completeUrl) {
+
             @Override
-            public void callbackTokenExpire() {
-                new OauthUtils(new OauthCallBack() {
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
                         addApp(appID);
@@ -83,8 +84,11 @@ public class MyAppAPIService {
                     public void executeFailCallback() {
                         callbackFail("", -1);
                     }
-                }, context).refreshToken(completeUrl);
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
             }
+
 
             @Override
             public void callbackSuccess(String arg0) {
@@ -112,8 +116,8 @@ public class MyAppAPIService {
         params.addParameter("appID", appID);
         x.http().post(params, new APICallback(context, completeUrl) {
             @Override
-            public void callbackTokenExpire() {
-                new OauthUtils(new OauthCallBack() {
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
                         removeApp(appID);
@@ -123,7 +127,9 @@ public class MyAppAPIService {
                     public void executeFailCallback() {
                         callbackFail("", -1);
                     }
-                }, context).refreshToken(completeUrl);
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
             }
 
             @Override
@@ -150,9 +156,10 @@ public class MyAppAPIService {
         params.addParameter("keyword", keyword);
         params.addParameter("clientType", 0);
         x.http().post(params, new APICallback(context, completeUrl) {
+
             @Override
-            public void callbackTokenExpire() {
-                new OauthUtils(new OauthCallBack() {
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
                         searchApp(keyword);
@@ -162,7 +169,9 @@ public class MyAppAPIService {
                     public void executeFailCallback() {
                         callbackFail("", -1);
                     }
-                }, context).refreshToken(completeUrl);
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
             }
 
             @Override
@@ -192,10 +201,8 @@ public class MyAppAPIService {
         x.http().get(params, new APICallback(context, completeUrl) {
 
             @Override
-            public void callbackTokenExpire() {
-                // TODO Auto-generated method stub
-                new OauthUtils(new OauthCallBack() {
-
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
                         getNewsTitles();
@@ -205,7 +212,9 @@ public class MyAppAPIService {
                     public void executeFailCallback() {
                         callbackFail("", -1);
                     }
-                }, context).refreshToken(completeUrl);
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
             }
 
             @Override
@@ -241,10 +250,8 @@ public class MyAppAPIService {
         x.http().get(params, new APICallback(context, completeUrl) {
 
             @Override
-            public void callbackTokenExpire() {
-                // TODO Auto-generated method stub
-                new OauthUtils(new OauthCallBack() {
-
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
                         getGroupNewsDetail(ncid, page);
@@ -254,7 +261,9 @@ public class MyAppAPIService {
                     public void executeFailCallback() {
                         callbackFail("", -1);
                     }
-                }, context).refreshToken(completeUrl);
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
             }
 
             @Override
@@ -284,13 +293,10 @@ public class MyAppAPIService {
         x.http().post(params, new APICallback(context, completeUrl) {
 
             @Override
-            public void callbackTokenExpire() {
-                // TODO Auto-generated method stub
-                new OauthUtils(new OauthCallBack() {
-
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
-                        // TODO Auto-generated method stub
                         getUserApps();
                     }
 
@@ -298,7 +304,9 @@ public class MyAppAPIService {
                     public void executeFailCallback() {
                         callbackFail("", -1);
                     }
-                }, context).refreshToken(completeUrl);
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
             }
 
             @Override
@@ -337,8 +345,8 @@ public class MyAppAPIService {
             }
 
             @Override
-            public void callbackTokenExpire() {
-                new OauthUtils(new OauthCallBack() {
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
                         getNewAllApps();
@@ -348,7 +356,9 @@ public class MyAppAPIService {
                     public void executeFailCallback() {
                         callbackFail("", -1);
                     }
-                }, context).refreshToken(completeUrl);
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
             }
 
         });
@@ -376,8 +386,8 @@ public class MyAppAPIService {
             }
 
             @Override
-            public void callbackTokenExpire() {
-                new OauthUtils(new OauthCallBack() {
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
                         getAuthCode(requestUrl,urlParams);
@@ -387,8 +397,11 @@ public class MyAppAPIService {
                     public void executeFailCallback() {
                         callbackFail("", -1);
                     }
-                }, context).refreshToken(completeUrl);
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
             }
+
         });
     }
 
@@ -412,8 +425,8 @@ public class MyAppAPIService {
             }
 
             @Override
-            public void callbackTokenExpire() {
-                new OauthUtils(new OauthCallBack() {
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
                         getAppInfo(appId);
@@ -423,8 +436,11 @@ public class MyAppAPIService {
                     public void executeFailCallback() {
                         callbackFail("", -1);
                     }
-                }, context).refreshToken(completeUrl);
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
             }
+
         });
     }
 
@@ -446,8 +462,8 @@ public class MyAppAPIService {
             }
 
             @Override
-            public void callbackTokenExpire() {
-                new OauthUtils(new OauthCallBack() {
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
                         getAppBadgeNum();
@@ -457,8 +473,11 @@ public class MyAppAPIService {
                     public void executeFailCallback() {
                         callbackFail("", -1);
                     }
-                }, context).refreshToken(completeUrl);
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
             }
+
         });
     }
 
@@ -481,8 +500,8 @@ public class MyAppAPIService {
             }
 
             @Override
-            public void callbackTokenExpire() {
-                new OauthUtils(new OauthCallBack() {
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
                         getWebAppRealUrl(url);
@@ -492,9 +511,11 @@ public class MyAppAPIService {
                     public void executeFailCallback() {
                         callbackFail("", -1);
                     }
-                }, context).refreshToken(url);
-
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
             }
+
         });
     }
 
@@ -519,9 +540,8 @@ public class MyAppAPIService {
             }
 
             @Override
-            public void callbackTokenExpire() {
-                new OauthUtils(new OauthCallBack() {
-
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
                         syncCommonApp(commonAppListJson);
@@ -531,8 +551,11 @@ public class MyAppAPIService {
                     public void executeFailCallback() {
                         callbackFail("", -1);
                     }
-                }, context).refreshToken(url);
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
             }
+
         });
     }
 
@@ -546,13 +569,10 @@ public class MyAppAPIService {
         x.http().get(params, new APICallback(context, completeUrl) {
 
             @Override
-            public void callbackTokenExpire() {
-                // TODO Auto-generated method stub
-                new OauthUtils(new OauthCallBack() {
-
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
-                        // TODO Auto-generated method stub
                         getRecommendAppWidgetList();
                     }
 
@@ -560,7 +580,9 @@ public class MyAppAPIService {
                     public void executeFailCallback() {
                         callbackFail("", -1);
                     }
-                }, context).refreshToken(completeUrl);
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
             }
 
             @Override
@@ -595,9 +617,8 @@ public class MyAppAPIService {
             }
 
             @Override
-            public void callbackTokenExpire() {
-                new OauthUtils(new OauthCallBack() {
-
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
                         getVolumeList();
@@ -607,8 +628,11 @@ public class MyAppAPIService {
                     public void executeFailCallback() {
                         callbackFail("", -1);
                     }
-                }, context).refreshToken(url);
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
             }
+
         });
     }
 
@@ -634,9 +658,8 @@ public class MyAppAPIService {
             }
 
             @Override
-            public void callbackTokenExpire() {
-                new OauthUtils(new OauthCallBack() {
-
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
                         getVolumeFileList(volumeId, currentDirAbsolutePath);
@@ -646,8 +669,11 @@ public class MyAppAPIService {
                     public void executeFailCallback() {
                         callbackFail("", -1);
                     }
-                }, context).refreshToken(url);
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
             }
+
         });
     }
 
@@ -675,9 +701,8 @@ public class MyAppAPIService {
             }
 
             @Override
-            public void callbackTokenExpire() {
-                new OauthUtils(new OauthCallBack() {
-
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
                         getVolumeFileUploadToken(fileName, volumeFilePath, localFilePath, mockVolumeFile);
@@ -687,8 +712,11 @@ public class MyAppAPIService {
                     public void executeFailCallback() {
                         callbackFail("", -1);
                     }
-                }, context).refreshToken(url);
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
             }
+
         });
     }
 
@@ -727,9 +755,8 @@ public class MyAppAPIService {
             }
 
             @Override
-            public void callbackTokenExpire() {
-                new OauthUtils(new OauthCallBack() {
-
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
                         moveVolumeFile(volumeId, currentDirAbsolutePath, moveVolumeFileList, toPath);
@@ -739,8 +766,11 @@ public class MyAppAPIService {
                     public void executeFailCallback() {
                         callbackFail("", -1);
                     }
-                }, context).refreshToken(url);
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
             }
+
         });
     }
 
@@ -778,9 +808,8 @@ public class MyAppAPIService {
             }
 
             @Override
-            public void callbackTokenExpire() {
-                new OauthUtils(new OauthCallBack() {
-
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
                         copyVolumeFile(volumeId, currentDirAbsolutePath, copyVolumeFileList, toPath);
@@ -790,8 +819,11 @@ public class MyAppAPIService {
                     public void executeFailCallback() {
                         callbackFail("", -1);
                     }
-                }, context).refreshToken(url);
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
             }
+
         });
     }
 
@@ -818,8 +850,8 @@ public class MyAppAPIService {
             }
 
             @Override
-            public void callbackTokenExpire() {
-                new OauthUtils(new OauthCallBack() {
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
                         createForder(volumeId, forderName, currentDirAbsolutePath);
@@ -829,8 +861,11 @@ public class MyAppAPIService {
                     public void executeFailCallback() {
                         callbackFail("", -1);
                     }
-                }, context).refreshToken(url);
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
             }
+
         });
     }
 
@@ -869,8 +904,8 @@ public class MyAppAPIService {
             }
 
             @Override
-            public void callbackTokenExpire() {
-                new OauthUtils(new OauthCallBack() {
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
                         volumeFileDelete(volumeId, deleteVolumeFileList, currentDirAbsolutePath);
@@ -880,8 +915,11 @@ public class MyAppAPIService {
                     public void executeFailCallback() {
                         callbackFail("", -1);
                     }
-                }, context).refreshToken(url);
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
             }
+
         });
     }
 
@@ -909,8 +947,8 @@ public class MyAppAPIService {
             }
 
             @Override
-            public void callbackTokenExpire() {
-                new OauthUtils(new OauthCallBack() {
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
                         volumeFileRename(volumeId, volumeFile, currentDirAbsolutePath, fileNewName);
@@ -920,8 +958,11 @@ public class MyAppAPIService {
                     public void executeFailCallback() {
                         callbackFail("", -1);
                     }
-                }, context).refreshToken(url);
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
             }
+
         });
     }
 
@@ -957,8 +998,8 @@ public class MyAppAPIService {
             }
 
             @Override
-            public void callbackTokenExpire() {
-                new OauthUtils(new OauthCallBack() {
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
                         createShareVolume(myUid, volumeName);
@@ -968,8 +1009,11 @@ public class MyAppAPIService {
                     public void executeFailCallback() {
                         callbackFail("", -1);
                     }
-                }, context).refreshToken(url);
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
             }
+
         });
 
     }
@@ -996,8 +1040,8 @@ public class MyAppAPIService {
             }
 
             @Override
-            public void callbackTokenExpire() {
-                new OauthUtils(new OauthCallBack() {
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
                         updateShareVolumeName(volume, name);
@@ -1007,8 +1051,11 @@ public class MyAppAPIService {
                     public void executeFailCallback() {
                         callbackFail("", -1);
                     }
-                }, context).refreshToken(url);
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
             }
+
         });
 
     }
@@ -1036,8 +1083,8 @@ public class MyAppAPIService {
             }
 
             @Override
-            public void callbackTokenExpire() {
-                new OauthUtils(new OauthCallBack() {
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
                         removeShareVolumeName(volume);
@@ -1047,8 +1094,11 @@ public class MyAppAPIService {
                     public void executeFailCallback() {
                         callbackFail("", -1);
                     }
-                }, context).refreshToken(url);
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
             }
+
         });
 
     }
@@ -1074,8 +1124,8 @@ public class MyAppAPIService {
             }
 
             @Override
-            public void callbackTokenExpire() {
-                new OauthUtils(new OauthCallBack() {
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
                         getVolumeInfo(volumeId);
@@ -1085,8 +1135,11 @@ public class MyAppAPIService {
                     public void executeFailCallback() {
                         callbackFail("", -1);
                     }
-                }, context).refreshToken(url);
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
             }
+
         });
     }
 
@@ -1111,9 +1164,10 @@ public class MyAppAPIService {
                 apiInterface.returnVolumeMemAddFail(error, responseCode);
             }
 
+
             @Override
-            public void callbackTokenExpire() {
-                new OauthUtils(new OauthCallBack() {
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
                         volumeMemAdd(volumeId,uidList);
@@ -1123,8 +1177,11 @@ public class MyAppAPIService {
                     public void executeFailCallback() {
                         callbackFail("", -1);
                     }
-                }, context).refreshToken(url);
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
             }
+
         });
     }
 
@@ -1150,8 +1207,8 @@ public class MyAppAPIService {
             }
 
             @Override
-            public void callbackTokenExpire() {
-                new OauthUtils(new OauthCallBack() {
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
                         volumeMemDel(volumeId,uidList);
@@ -1161,8 +1218,11 @@ public class MyAppAPIService {
                     public void executeFailCallback() {
                         callbackFail("", -1);
                     }
-                }, context).refreshToken(url);
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
             }
+
         });
     }
 
@@ -1187,8 +1247,8 @@ public class MyAppAPIService {
             }
 
             @Override
-            public void callbackTokenExpire() {
-                new OauthUtils(new OauthCallBack() {
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
                         updateGroupName(groupId,groupName);
@@ -1198,8 +1258,11 @@ public class MyAppAPIService {
                     public void executeFailCallback() {
                         callbackFail("", -1);
                     }
-                }, context).refreshToken(url);
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
             }
+
         });
     }
 
@@ -1226,8 +1289,8 @@ public class MyAppAPIService {
             }
 
             @Override
-            public void callbackTokenExpire() {
-                new OauthUtils(new OauthCallBack() {
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
                         groupMemAdd(groupId,uidList);
@@ -1237,8 +1300,11 @@ public class MyAppAPIService {
                     public void executeFailCallback() {
                         callbackFail("", -1);
                     }
-                }, context).refreshToken(url);
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
             }
+
         });
     }
 
@@ -1264,8 +1330,8 @@ public class MyAppAPIService {
             }
 
             @Override
-            public void callbackTokenExpire() {
-                new OauthUtils(new OauthCallBack() {
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
                         groupMemDel(groupId,uidList);
@@ -1275,8 +1341,11 @@ public class MyAppAPIService {
                     public void executeFailCallback() {
                         callbackFail("", -1);
                     }
-                }, context).refreshToken(url);
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
             }
+
         });
     }
 
@@ -1300,8 +1369,8 @@ public class MyAppAPIService {
             }
 
             @Override
-            public void callbackTokenExpire() {
-                new OauthUtils(new OauthCallBack() {
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
                         getVolumeGroupContainMe(volumeId);
@@ -1311,8 +1380,11 @@ public class MyAppAPIService {
                     public void executeFailCallback() {
                         callbackFail("", -1);
                     }
-                }, context).refreshToken(url);
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
             }
+
         });
 
     }

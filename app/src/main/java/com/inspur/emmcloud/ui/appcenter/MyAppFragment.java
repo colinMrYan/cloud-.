@@ -10,6 +10,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -343,7 +344,7 @@ public class MyAppFragment extends Fragment {
         IntentFilter myIntentFilter = new IntentFilter();
         myIntentFilter.addAction(ACTION_NAME);
         // 注册广播
-        getActivity().registerReceiver(mBroadcastReceiver, myIntentFilter);
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mBroadcastReceiver, myIntentFilter);
     }
 
     /**
@@ -706,7 +707,7 @@ public class MyAppFragment extends Fragment {
     public void onDestroy() {
         super.onDestroy();
         if (mBroadcastReceiver != null) {
-            getActivity().unregisterReceiver(mBroadcastReceiver);
+            LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mBroadcastReceiver);
             mBroadcastReceiver = null;
         }
         if (myAppSaveTask != null && !myAppSaveTask.isCancelled()

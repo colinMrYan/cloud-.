@@ -6,6 +6,7 @@ import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Message;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -324,7 +325,7 @@ public class IndexActivity extends BaseFragmentActivity implements
         //当通讯录完成时需要刷新头像
         Intent intent = new Intent("message_notify");
         intent.putExtra("command", "sync_all_base_data_success");
-        sendBroadcast(intent);
+        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
 
     }
 
@@ -668,7 +669,7 @@ public class IndexActivity extends BaseFragmentActivity implements
                 // TODO Auto-generated method stub
                 Intent intent = new Intent("message_notify");
                 intent.putExtra("command", "set_all_message_read");
-                sendBroadcast(intent);
+                LocalBroadcastManager.getInstance(IndexActivity.this).sendBroadcast(intent);
                 showNotifyIcon(0);
             }
 

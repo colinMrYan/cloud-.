@@ -12,6 +12,7 @@ import android.os.Build;
 import android.os.Environment;
 import android.os.Parcelable;
 import android.support.multidex.MultiDexApplication;
+import android.support.v4.content.LocalBroadcastManager;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 
@@ -31,7 +32,6 @@ import com.inspur.emmcloud.bean.mine.Language;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.interf.MyActivityLifecycleCallbacks;
-import com.inspur.emmcloud.interf.OauthCallBack;
 import com.inspur.emmcloud.push.WebSocketPush;
 import com.inspur.emmcloud.ui.login.LoginActivity;
 import com.inspur.emmcloud.util.common.LogUtils;
@@ -61,7 +61,6 @@ import org.xutils.http.RequestParams;
 import org.xutils.x;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -84,8 +83,6 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
     private boolean isActive = false;
     private WebSocketPush webSocketPush;
     private static boolean isContactReady = false;
-    private boolean isTokenRefreshing = false;
-    private List<OauthCallBack> callBackList = new ArrayList<OauthCallBack>();
     private String uid;
     private String accessToken;
     private String refreshToken;
@@ -343,25 +340,6 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         return "Bearer" + " " + accessToken;
     }
 
-    public void setIsTokenRefreshing(boolean isTokenRefreshing) {
-        this.isTokenRefreshing = isTokenRefreshing;
-    }
-
-    public boolean getIsTokenRefreshing() {
-        return isTokenRefreshing;
-    }
-
-    public void addCallBack(OauthCallBack oauthCallBack) {
-        callBackList.add(oauthCallBack);
-    }
-
-    public List<OauthCallBack> getCallBackList() {
-        return callBackList;
-    }
-
-    public void clearCallBackList() {
-        callBackList = new ArrayList<OauthCallBack>();
-    }
 
     public String getAccessToken() {
         return accessToken;
@@ -725,7 +703,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         intent.addCategory("android.intent.category.LAUNCHER");
         // 绑定事件
         shortcutIntent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, intent);
-        context.sendBroadcast(shortcutIntent);
+        LocalBroadcastManager.getInstance(context).sendBroadcast(shortcutIntent);
     }
 
 

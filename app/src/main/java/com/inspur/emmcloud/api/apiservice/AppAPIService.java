@@ -69,7 +69,7 @@ public class AppAPIService {
         x.http().post(params, new APICallback(context, completeUrl) {
 
             @Override
-            public void callbackTokenExpire() {
+            public void callbackTokenExpire(long requestTime) {
                 // TODO Auto-generated method stub
                 apiInterface.returnUpgradeFail(new String(""), isManualCheck, -1);
             }
@@ -113,18 +113,19 @@ public class AppAPIService {
             }
 
             @Override
-            public void callbackTokenExpire() {
-                new OauthUtils(new OauthCallBack() {
-                    @Override
-                    public void reExecute() {
-                        getClientId(deviceId, deviceName);
-                    }
+            public void callbackTokenExpire(long requestTime) {
+                OauthUtils.getInstance().refreshToken(
+                        new OauthCallBack() {
+                            @Override
+                            public void reExecute() {
+                                getClientId(deviceId, deviceName);
+                            }
 
-                    @Override
-                    public void executeFailCallback() {
-                        callbackFail("", -1);
-                    }
-                }, context).refreshToken(completeUrl);
+                            @Override
+                            public void executeFailCallback() {
+                                callbackFail("", -1);
+                            }
+                        }, requestTime);
             }
         });
     }
@@ -152,19 +153,21 @@ public class AppAPIService {
                 apiInterface.returnReactNativeUpdateFail(error, responseCode);
             }
 
-            @Override
-            public void callbackTokenExpire() {
-                new OauthUtils(new OauthCallBack() {
-                    @Override
-                    public void reExecute() {
-                        getReactNativeUpdate(version, lastCreationDate, clientId);
-                    }
 
-                    @Override
-                    public void executeFailCallback() {
-                        callbackFail("", -1);
-                    }
-                }, context).refreshToken(completeUrl);
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthUtils.getInstance().refreshToken(
+                        new OauthCallBack() {
+                            @Override
+                            public void reExecute() {
+                                getReactNativeUpdate(version, lastCreationDate, clientId);
+                            }
+
+                            @Override
+                            public void executeFailCallback() {
+                                callbackFail("", -1);
+                            }
+                        }, requestTime);
             }
         });
     }
@@ -193,8 +196,8 @@ public class AppAPIService {
             }
 
             @Override
-            public void callbackTokenExpire() {
-                new OauthUtils(new OauthCallBack() {
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
                         sendBackReactNativeUpdateLog(command, version, clientId);
@@ -204,7 +207,9 @@ public class AppAPIService {
                     public void executeFailCallback() {
                         callbackFail("", -1);
                     }
-                }, context).refreshToken(completeUrl);
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
             }
         });
     }
@@ -224,7 +229,7 @@ public class AppAPIService {
         x.http().post(params, new APICallback(context, completeUrl) {
 
             @Override
-            public void callbackTokenExpire() {
+            public void callbackTokenExpire(long requestTime) {
                 // TODO Auto-generated method stub
                 apiInterface.returnUploadExceptionFail(new String(""), -1);
             }
@@ -245,7 +250,6 @@ public class AppAPIService {
     }
 
 
-
     /**
      * 获取显示tab页的接口
      */
@@ -255,9 +259,8 @@ public class AppAPIService {
                 .getHttpRequestParams(completeUrl);
         x.http().request(HttpMethod.GET, params, new APICallback(context, completeUrl) {
             @Override
-            public void callbackTokenExpire() {
-                new OauthUtils(new OauthCallBack() {
-
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
                         getAppNewTabs(version, clientId);
@@ -267,7 +270,9 @@ public class AppAPIService {
                     public void executeFailCallback() {
                         callbackFail("", -1);
                     }
-                }, context).refreshToken(completeUrl);
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
             }
 
             @Override
@@ -289,7 +294,6 @@ public class AppAPIService {
      * @param collectInfo
      */
     public void uploadPVCollect(String collectInfo) {
-//		String  completeUrl = "http://u.inspur.com/analytics/api/ECMPV/Post";
         String completeUrl = "http://u.inspur.com/analytics/api/v1.0/ECMClientPV/Post";
         RequestParams params = new RequestParams(completeUrl);
         params.setBodyContent(collectInfo);
@@ -306,8 +310,8 @@ public class AppAPIService {
             }
 
             @Override
-            public void callbackTokenExpire() {
-
+            public void callbackTokenExpire(long requestTime) {
+                callbackFail("", -1);
             }
         });
 
@@ -340,7 +344,7 @@ public class AppAPIService {
             }
 
             @Override
-            public void callbackTokenExpire() {
+            public void callbackTokenExpire(long requestTime) {
                 apiInterface.returnVeriryApprovalPasswordFail("", -1);
             }
         });
@@ -367,9 +371,8 @@ public class AppAPIService {
             }
 
             @Override
-            public void callbackTokenExpire() {
-
-                new OauthUtils(new OauthCallBack() {
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
                         uploadMDMInfo();
@@ -379,7 +382,9 @@ public class AppAPIService {
                     public void executeFailCallback() {
                         callbackFail("", -1);
                     }
-                }, context).refreshToken(completeUrl);
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
             }
         });
     }
@@ -407,8 +412,8 @@ public class AppAPIService {
             }
 
             @Override
-            public void callbackTokenExpire() {
-                new OauthUtils(new OauthCallBack() {
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
                         getSplashPageInfo(clientId, versionCode);
@@ -418,8 +423,11 @@ public class AppAPIService {
                     public void executeFailCallback() {
                         callbackFail("", -1);
                     }
-                }, context).refreshToken(completeUrl);
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
             }
+
         });
     }
 
@@ -445,8 +453,8 @@ public class AppAPIService {
             }
 
             @Override
-            public void callbackTokenExpire() {
-                new OauthUtils(new OauthCallBack() {
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
                         sendLoginDesktopCloudPlusInfo(url);
@@ -456,7 +464,9 @@ public class AppAPIService {
                     public void executeFailCallback() {
                         callbackFail("", -1);
                     }
-                }, context).refreshToken(completeUrl);
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
             }
         });
     }
@@ -469,7 +479,7 @@ public class AppAPIService {
      */
     public void deviceCheck(String tenantId, String userCode) {
         // TODO Auto-generated method stub
-        String completeUrl =APIUri.getDeviceCheckUrl();
+        String completeUrl = APIUri.getDeviceCheckUrl();
         String uuid = AppUtils.getMyUUID(context);
 //        RequestParams params = new RequestParams(completeUrl);
         // params.addBodyParameter("app_mdm_id", "imp"); // 和ios约定的appid
@@ -492,7 +502,7 @@ public class AppAPIService {
             }
 
             @Override
-            public void callbackTokenExpire() {
+            public void callbackTokenExpire(long requestTime) {
                 apiInterface.returnDeviceCheckFail("", -1);
             }
         });
@@ -518,9 +528,8 @@ public class AppAPIService {
             }
 
             @Override
-            public void callbackTokenExpire() {
-                new OauthUtils(new OauthCallBack() {
-
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
                         getAppConfig();
@@ -530,7 +539,9 @@ public class AppAPIService {
                     public void executeFailCallback() {
                         callbackFail("", -1);
                     }
-                }, context).refreshToken(url);
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
             }
         });
     }
@@ -556,9 +567,8 @@ public class AppAPIService {
             }
 
             @Override
-            public void callbackTokenExpire() {
-                new OauthUtils(new OauthCallBack() {
-
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
                         saveWebAutoRotateConfig(isWebAutoRotate);
@@ -568,7 +578,9 @@ public class AppAPIService {
                     public void executeFailCallback() {
                         callbackFail("", -1);
                     }
-                }, context).refreshToken(url);
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
             }
         });
     }
@@ -595,8 +607,8 @@ public class AppAPIService {
             }
 
             @Override
-            public void callbackTokenExpire() {
-                new OauthUtils(new OauthCallBack() {
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
                         uploadPosition(positionJson);
@@ -606,7 +618,9 @@ public class AppAPIService {
                     public void executeFailCallback() {
                         callbackFail("", -1);
                     }
-                },context).refreshToken(url);
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
             }
         });
     }

@@ -2,6 +2,7 @@ package com.inspur.emmcloud.ui.contact;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.View;
 import android.widget.TextView;
 
@@ -11,11 +12,11 @@ import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.api.apiservice.ContactAPIService;
 import com.inspur.emmcloud.bean.chat.Robot;
-import com.inspur.emmcloud.util.privates.cache.ChannelOperationCacheUtils;
-import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
-import com.inspur.emmcloud.util.privates.cache.RobotCacheUtils;
+import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
+import com.inspur.emmcloud.util.privates.cache.ChannelOperationCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.RobotCacheUtils;
 import com.inspur.emmcloud.widget.CircleImageView;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.SwitchView;
@@ -115,7 +116,7 @@ public class RobotInfoActivity extends BaseActivity implements OnStateChangedLis
 		// 通知消息页面重新创建群组头像
 		Intent intent = new Intent("message_notify");
 		intent.putExtra("command", "sort_session_list");
-		sendBroadcast(intent);
+		LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
 	}
 	
 	@Override

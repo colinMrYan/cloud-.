@@ -2,6 +2,7 @@ package com.inspur.emmcloud.ui.chat;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.View;
 
 import com.inspur.emmcloud.BaseActivity;
@@ -81,11 +82,11 @@ public class ModifyChannelGroupNameActivity extends BaseActivity {
 			
 			Intent intent = new Intent("message_notify");
 			intent.putExtra("command", "refresh_session_list");
-			sendBroadcast(intent);
-			
+			LocalBroadcastManager.getInstance(ModifyChannelGroupNameActivity.this).sendBroadcast(intent);
+
 			Intent intentChannel = new Intent("update_channel_name");
 			intentChannel.putExtra("name", name);
-			sendBroadcast(intentChannel);
+			LocalBroadcastManager.getInstance(ModifyChannelGroupNameActivity.this).sendBroadcast(intentChannel);
 			
 			Intent intentChannelInfo = new Intent();
 			intentChannelInfo.putExtra("name", name);

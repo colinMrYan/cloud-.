@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
+import android.os.AsyncTask;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
@@ -74,9 +75,7 @@ public class ChannelGroupIconUtils {
             channelTypeGroupList = ChannelCacheUtils.getChannelList(context, "GROUP");
         } else {
             channelTypeGroupList.clear();
-            for (int i = 0; i < channelList.size(); i++) {
-                channelTypeGroupList.add(channelList.get(i));
-            }
+            channelTypeGroupList.addAll(channelList);
         }
         if (channelTypeGroupList.size() == 0) {
             return;
@@ -95,7 +94,7 @@ public class ChannelGroupIconUtils {
         if (currentChannelGroupList.size() > 0) {
             getChannelGroups(currentChannelGroupList);
         } else {
-            creatIcon();
+            new ChannelGroupIconCreateTask().execute();
         }
 
     }
@@ -111,11 +110,56 @@ public class ChannelGroupIconUtils {
         apiService.getChannelGroupList(cidArray);
     }
 
-    private void creatIcon() {
-        if (netThread == null) {
-            netThread = new NetThread();
+    class ChannelGroupIconCreateTask extends AsyncTask<Void,Integer,Boolean>{
+        @Override
+        protected Boolean doInBackground(Void... voids) {
+            boolean isCreateNewGroupIcon = false;
+            synchronized (this) {
+                File dir = new File(MyAppConfig.LOCAL_CACHE_PHOTO_PATH);
+                if (!dir.exists()) {
+                    dir.mkdirs();
+                }
+                DisplayImageOptions options = new DisplayImageOptions.Builder()
+                        // 设置图片的解码类型
+                        .bitmapConfig(Bitmap.Config.RGB_565)
+                        .cacheInMemory(true)
+                        .cacheOnDisk(true)
+                        .build();
+                for (int i = 0; i < channelTypeGroupList.size(); i++) {
+                    Channel channel = channelTypeGroupList.get(i);
+                    isCreateNewGroupIcon = true;
+                    List<String> memberUidList = ChannelGroupCacheUtils.getMemberUidList(context, channel.getCid(), 4);
+                    List<Bitmap> bitmapList = new ArrayList<Bitmap>();
+                    for (int j = 0; j < memberUidList.size(); j++) {
+                        String pid = memberUidList.get(j);
+                        Bitmap bitmap = null;
+                        if (!StringUtils.isBlank(pid) && !pid.equals("null")) {
+                            bitmap = ImageLoader.getInstance().loadImageSync(APIUri.getChannelImgUrl(context, pid), options);
+                        }
+                        if (bitmap == null) {
+                            bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.icon_person_default);
+                        }
+                        bitmapList.add(bitmap);
+                    }
+                    Bitmap combineBitmap = createGroupFace(context, bitmapList);
+
+                    if (combineBitmap != null) {
+                        saveBitmap(channel.getCid(), combineBitmap);
+                    }
+                }
+
+            }
+            return isCreateNewGroupIcon;
         }
-        new Thread(netThread).start();
+        @Override
+        protected void onPostExecute(Boolean isCreateNewGroupIcon) {
+            if (handler != null) {
+                Message msg = new Message();
+                msg.what = RERESH_GROUP_ICON;
+                msg.obj = isCreateNewGroupIcon;
+                handler.sendMessage(msg);
+            }
+        }
     }
 
     class NetThread implements Runnable {
@@ -400,13 +444,13 @@ public class ChannelGroupIconUtils {
             // TODO Auto-generated method stub
             List<ChannelGroup> channelGroupList = getSearchChannelGroupResult.getSearchChannelGroupList();
             ChannelGroupCacheUtils.saveChannelGroupList(context, channelGroupList);
-            creatIcon();
+            new ChannelGroupIconCreateTask().execute();
         }
 
         @Override
         public void returnSearchChannelGroupFail(String error, int errCode) {
             // TODO Auto-generated method stub
-            creatIcon();
+            new ChannelGroupIconCreateTask().execute();
         }
 
     }

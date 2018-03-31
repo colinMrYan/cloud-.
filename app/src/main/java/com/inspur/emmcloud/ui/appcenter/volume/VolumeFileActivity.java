@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
@@ -153,7 +154,7 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
             }
         };
         IntentFilter intentFilter = new IntentFilter("broadcast_volume");
-        registerReceiver(broadcastReceiver, intentFilter);
+        LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver, intentFilter);
     }
 
     /**
@@ -547,7 +548,7 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
     @Override
     protected void onDestroy() {
         if (broadcastReceiver != null) {
-            this.unregisterReceiver(broadcastReceiver);
+            LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver);
             broadcastReceiver = null;
         }
         super.onDestroy();

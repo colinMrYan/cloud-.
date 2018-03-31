@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.v4.content.LocalBroadcastManager;
 
 import com.inspur.imp.plugin.camera.imagepicker.bean.ImageFolder;
 import com.inspur.imp.plugin.camera.imagepicker.bean.ImageItem;
@@ -273,7 +274,7 @@ public class ImagePicker {
         Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
         Uri contentUri = Uri.fromFile(file);
         mediaScanIntent.setData(contentUri);
-        context.sendBroadcast(mediaScanIntent);
+        LocalBroadcastManager.getInstance(context).sendBroadcast(mediaScanIntent);
     }
 
     /** 图片选中的监听 */

@@ -3,6 +3,7 @@ package com.inspur.emmcloud.ui.appcenter;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -231,7 +232,7 @@ public class AppDetailActivity extends BaseActivity {
             Intent mIntent = new Intent(ACTION_NAME);
             mIntent.putExtra("app", app);
             // 发送广播
-            sendBroadcast(mIntent);
+            LocalBroadcastManager.getInstance(AppDetailActivity.this).sendBroadcast(mIntent);
         }
 
         @Override

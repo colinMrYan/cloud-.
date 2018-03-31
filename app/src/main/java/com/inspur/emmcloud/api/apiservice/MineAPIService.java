@@ -63,9 +63,8 @@ public class MineAPIService {
         x.http().post(params, new APICallback(context, completeUrl) {
 
             @Override
-            public void callbackTokenExpire() {
-                // TODO Auto-generated method stub
-                new OauthUtils(new OauthCallBack() {
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
                         updateUserHead(filePath);
@@ -75,7 +74,9 @@ public class MineAPIService {
                     public void executeFailCallback() {
                         callbackFail("", -1);
                     }
-                }, context).refreshToken(completeUrl);
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
             }
 
             @Override
@@ -110,10 +111,8 @@ public class MineAPIService {
         x.http().post(params, new APICallback(context, completeUrl) {
 
             @Override
-            public void callbackTokenExpire() {
-                // TODO Auto-generated method stub
-                new OauthUtils(new OauthCallBack() {
-
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
                         modifyUserInfo(key, value);
@@ -123,7 +122,9 @@ public class MineAPIService {
                     public void executeFailCallback() {
                         callbackFail("", -1);
                     }
-                }, context).refreshToken(completeUrl);
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
             }
 
             @Override
@@ -174,7 +175,7 @@ public class MineAPIService {
         x.http().post(params, new APICallback(context, completeUrl) {
 
             @Override
-            public void callbackTokenExpire() {
+            public void callbackTokenExpire(long requestTime) {
                 // TODO Auto-generated method stub
 
             }
@@ -204,10 +205,8 @@ public class MineAPIService {
         x.http().get(params, new APICallback(context, completeUrl) {
 
             @Override
-            public void callbackTokenExpire() {
-                // TODO Auto-generated method stub
-                new OauthUtils(new OauthCallBack() {
-
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
                         getLanguage();
@@ -217,7 +216,9 @@ public class MineAPIService {
                     public void executeFailCallback() {
                         callbackFail("", -1);
                     }
-                }, context).refreshToken(completeUrl);
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
             }
 
             @Override
@@ -253,9 +254,8 @@ public class MineAPIService {
             }
 
             @Override
-            public void callbackTokenExpire() {
-                new OauthUtils(new OauthCallBack() {
-
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
                         getUserProfileInfo();
@@ -265,8 +265,11 @@ public class MineAPIService {
                     public void executeFailCallback() {
                         callbackFail("", -1);
                     }
-                }, context).refreshToken(completeUrl);
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
             }
+
         });
     }
 
@@ -281,10 +284,8 @@ public class MineAPIService {
         x.http().get(params, new APICallback(context, completeUrl) {
 
             @Override
-            public void callbackTokenExpire() {
-                // TODO Auto-generated method stub
-                new OauthUtils(new OauthCallBack() {
-
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
                         getBindingDeviceList();
@@ -294,7 +295,9 @@ public class MineAPIService {
                     public void executeFailCallback() {
                         callbackFail("", -1);
                     }
-                }, context).refreshToken(completeUrl);
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
             }
 
             @Override
@@ -325,10 +328,8 @@ public class MineAPIService {
         x.http().post(params, new APICallback(context, completeUrl) {
 
             @Override
-            public void callbackTokenExpire() {
-                // TODO Auto-generated method stub
-                new OauthUtils(new OauthCallBack() {
-
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
                         getDeviceLogList(udid);
@@ -338,7 +339,9 @@ public class MineAPIService {
                     public void executeFailCallback() {
                         callbackFail("", -1);
                     }
-                }, context).refreshToken(completeUrl);
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
             }
 
             @Override
@@ -379,9 +382,8 @@ public class MineAPIService {
             }
 
             @Override
-            public void callbackTokenExpire() {
-                new OauthUtils(new OauthCallBack() {
-
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
                         unBindDevice(udid);
@@ -391,8 +393,11 @@ public class MineAPIService {
                     public void executeFailCallback() {
                         callbackFail("", -1);
                     }
-                }, context).refreshToken(completeUrl);
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
             }
+
         });
     }
 
@@ -415,9 +420,8 @@ public class MineAPIService {
             }
 
             @Override
-            public void callbackTokenExpire() {
-                new OauthUtils(new OauthCallBack() {
-
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
                         getMDMState();
@@ -427,8 +431,11 @@ public class MineAPIService {
                     public void executeFailCallback() {
                         callbackFail("", -1);
                     }
-                }, context).refreshToken(completeUrl);
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
             }
+
         });
     }
 
@@ -454,9 +461,8 @@ public class MineAPIService {
             }
 
             @Override
-            public void callbackTokenExpire() {
-                new OauthUtils(new OauthCallBack() {
-
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
                         faceSetting(bitmapBase64);
@@ -466,7 +472,9 @@ public class MineAPIService {
                     public void executeFailCallback() {
                         callbackFail("", -1);
                     }
-                }, context).refreshToken(completeUrl);
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
             }
         });
     }
@@ -493,9 +501,8 @@ public class MineAPIService {
             }
 
             @Override
-            public void callbackTokenExpire() {
-                new OauthUtils(new OauthCallBack() {
-
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
                         faceVerify(bitmapBase64);
@@ -505,8 +512,11 @@ public class MineAPIService {
                     public void executeFailCallback() {
                         callbackFail("", -1);
                     }
-                }, context).refreshToken(completeUrl);
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
             }
+
         });
     }
 
