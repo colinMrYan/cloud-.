@@ -20,15 +20,16 @@ def enableSeparateBuildPerCPUArchitecture = false
  * Run Proguard to shrink the Java bytecode in release builds.
  */
 def enableProguardInReleaseBuilds = false
-
+Properties properties = new Properties()
+properties.load(new FileInputStream("sign.properties"))
 
 android {
     signingConfigs {
         config {
-            keyAlias 'sign'
-            keyPassword 'inspurimp'
-            storeFile file('E:/cloud+/2017021602/client-android/apk.keystore')
-            storePassword 'inspurimp'
+            keyAlias properties.getProperty("KEY_ALIAS")
+            keyPassword properties.getProperty("KEY_PASSWORD")
+            storeFile file(properties.getProperty("KEY_STORE_FILE_PATH"))
+            storePassword properties.getProperty("KEY_PASSWORD")
         }
     }
     compileSdkVersion 24
@@ -68,21 +69,8 @@ android {
         checkReleaseBuilds false
         disable 'MissingTranslation', 'ExtraTranslation'
     }
-    //指定打包后应用名称
-//        applicationVariants.all {variant ->
-//        variant.outputs.each {output ->
-//            def outputFile = output.outputFile
-//            def fileName
-//            if (outputFile != null && outputFile.name.endsWith('.apk')) {
-//                if (variant.buildType.name.equals('release')) {
-//                    fileName = "inspur_cloud_mobileclient_${defaultConfig.versionName}.apk"
-//                } else if (variant.buildType.name.equals('debug')) {
-//                    fileName = "inspur_cloud_mobileclient_debug_1.0.0.apk"
-//                }
-//                output.outputFile = new File(outputFile.parent, fileName)
-//            }
-//        }
-    //   }
+
+
     //资源文件目录
     sourceSets {
         main {
