@@ -41,6 +41,9 @@ import com.inspur.emmcloud.bean.chat.MatheSet;
 import com.inspur.emmcloud.bean.chat.Msg;
 import com.inspur.emmcloud.bean.contact.GetSearchChannelGroupResult;
 import com.inspur.emmcloud.bean.system.AppTabAutoBean;
+import com.inspur.emmcloud.bean.system.AppTabDataBean;
+import com.inspur.emmcloud.bean.system.AppTabPayloadBean;
+import com.inspur.emmcloud.bean.system.AppTabProperty;
 import com.inspur.emmcloud.bean.system.PVCollectModel;
 import com.inspur.emmcloud.broadcastreceiver.MsgReceiver;
 import com.inspur.emmcloud.config.MyAppConfig;
@@ -181,7 +184,7 @@ public class MessageFragment extends Fragment{
         }
         AppTabAutoBean appTabAutoBean = new AppTabAutoBean(tabBarInfo);
         if (appTabAutoBean != null) {
-            AppTabAutoBean.PayloadBean payloadBean = appTabAutoBean.getPayload();
+            AppTabPayloadBean payloadBean = appTabAutoBean.getPayload();
             if (payloadBean != null) {
                 showCreateGroupOrFindContact(payloadBean);
             }
@@ -193,12 +196,12 @@ public class MessageFragment extends Fragment{
      *
      * @param payloadBean
      */
-    private void showCreateGroupOrFindContact(AppTabAutoBean.PayloadBean payloadBean) {
-        ArrayList<AppTabAutoBean.PayloadBean.TabsBean> appTabList =
-                (ArrayList<AppTabAutoBean.PayloadBean.TabsBean>) payloadBean.getTabs();
+    private void showCreateGroupOrFindContact(AppTabPayloadBean payloadBean) {
+        ArrayList<AppTabDataBean> appTabList =
+                (ArrayList<AppTabDataBean>) payloadBean.getTabs();
         for (int i = 0; i < appTabList.size(); i++) {
             if (appTabList.get(i).getComponent().equals("communicate")) {
-                AppTabAutoBean.PayloadBean.TabsBean.Property property = appTabList.get(i).getProperty();
+                AppTabProperty property = appTabList.get(i).getProperty();
                 if (property != null) {
                     if (!property.isCanCreate()) {
                         rootView.findViewById(R.id.more_function_list_img).setVisibility(View.GONE);
@@ -295,7 +298,7 @@ public class MessageFragment extends Fragment{
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void updateMessageUI(AppTabAutoBean appTabAutoBean) {
         if (appTabAutoBean != null) {
-            AppTabAutoBean.PayloadBean payloadBean = appTabAutoBean.getPayload();
+            AppTabPayloadBean payloadBean = appTabAutoBean.getPayload();
             if (payloadBean != null) {
                 showCreateGroupOrFindContact(payloadBean);
             }
