@@ -2,6 +2,7 @@ package com.inspur.emmcloud.ui.work.calendar;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -180,7 +181,7 @@ public class CalFilterActivity extends BaseActivity {
 	public void sendBoradcastReceiver() {
 		Intent mIntent = new Intent(Constant.ACTION_CALENDAR);
 		mIntent.putExtra("refreshCalendar", "");
-		sendBroadcast(mIntent);
+		LocalBroadcastManager.getInstance(this).sendBroadcast(mIntent);
 	}
 
 	public class WebServcie extends APIInterfaceInstance {

@@ -53,21 +53,20 @@ public class ContactAPIService {
 		x.http().post(params, new APICallback(context,completeUrl) {
 			
 			@Override
-			public void callbackTokenExpire() {
-				// TODO Auto-generated method stub
-				new OauthUtils(new OauthCallBack() {
-
+			public void callbackTokenExpire(long requestTime) {
+				OauthCallBack oauthCallBack = new OauthCallBack() {
 					@Override
 					public void reExecute() {
-						// TODO Auto-generated method stub
 						getAllContact(lastQueryTime);
 					}
 
 					@Override
 					public void executeFailCallback() {
-						callbackFail("",-1);
+						callbackFail("", -1);
 					}
-				}, context).refreshToken(completeUrl);
+				};
+				OauthUtils.getInstance().refreshToken(
+						oauthCallBack, requestTime);
 			}
 			
 			@Override
@@ -93,11 +92,10 @@ public class ContactAPIService {
 		final String completeUrl = APIUri.getAllBotInfo();
 		RequestParams params = ((MyApplication)context.getApplicationContext()).getHttpRequestParams(completeUrl);
 		x.http().get(params, new APICallback(context,completeUrl) {
-			
+
 			@Override
-			public void callbackTokenExpire() {
-				new OauthUtils(new OauthCallBack() {
-					
+			public void callbackTokenExpire(long requestTime) {
+				OauthCallBack oauthCallBack = new OauthCallBack() {
 					@Override
 					public void reExecute() {
 						getAllRobotInfo();
@@ -107,7 +105,9 @@ public class ContactAPIService {
 					public void executeFailCallback() {
 						callbackFail("", -1);
 					}
-				}, context).refreshToken(completeUrl);
+				};
+				OauthUtils.getInstance().refreshToken(
+						oauthCallBack, requestTime);
 			}
 			
 			@Override
@@ -130,11 +130,10 @@ public class ContactAPIService {
 		final String completeUrl = APIUri.getBotInfoById()+"/"+id;
 		RequestParams params = ((MyApplication)context.getApplicationContext()).getHttpRequestParams(completeUrl);
 		x.http().get(params, new APICallback(context,completeUrl) {
-			
+
 			@Override
-			public void callbackTokenExpire() {
-				new OauthUtils(new OauthCallBack() {
-					
+			public void callbackTokenExpire(long requestTime) {
+				OauthCallBack oauthCallBack = new OauthCallBack() {
 					@Override
 					public void reExecute() {
 						getRobotInfoById(id);
@@ -144,9 +143,11 @@ public class ContactAPIService {
 					public void executeFailCallback() {
 						callbackFail("", -1);
 					}
-				}, context).refreshToken(completeUrl);
+				};
+				OauthUtils.getInstance().refreshToken(
+						oauthCallBack, requestTime);
 			}
-			
+
 			@Override
 			public void callbackSuccess(String arg0) {
 				apiInterface.returnRobotByIdSuccess(new Robot(arg0));

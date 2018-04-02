@@ -3,6 +3,7 @@ package com.inspur.emmcloud.util.privates;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Environment;
 import android.os.Handler;
@@ -366,12 +367,14 @@ public class UpgradeUtils extends APIInterfaceInstance {
             return;
         }
         // 通过Intent安装APK文件
-        Intent i = new Intent(Intent.ACTION_VIEW);
+        Intent intent = new Intent(Intent.ACTION_VIEW);
         // 更新后启动
-        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        i.setDataAndType(Uri.parse("file://" + apkfile.toString()),
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.setDataAndType(Uri.parse("file://" + apkfile.toString()),
                 "application/vnd.android.package-archive");
-        context.startActivity(i);
+        if (context.getPackageManager().resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY) != null) {
+            context.startActivity(intent);
+        }
     }
 
     /**

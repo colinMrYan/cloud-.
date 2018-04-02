@@ -2,6 +2,7 @@ package com.inspur.emmcloud.ui.mine.setting;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -194,7 +195,7 @@ public class GestureLoginActivity extends BaseActivity {
                             Intent intent = new  Intent();
                             intent.setAction(Constant.ACTION_SAFE_UNLOCK);
                             MyApplication.getInstance().setIsActive(true);
-                            sendBroadcast(intent);
+                            LocalBroadcastManager.getInstance(GestureLoginActivity.this).sendBroadcast(intent);
                             finish();
                         } else if (command.equals("close")) {
                             clearGestureInfo();

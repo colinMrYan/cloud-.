@@ -3,6 +3,7 @@ package com.inspur.emmcloud.util.common;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
 import android.database.Cursor;
 import android.net.Uri;
@@ -862,8 +863,10 @@ public class FileUtils {
             Intent intent = new Intent("android.intent.action.VIEW");
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.setDataAndType(Uri.fromFile(file), mime);
-            context.startActivity(intent);
-        } catch (Exception e) {
+            if (context.getPackageManager().resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY) != null) {
+                context.startActivity(intent);
+            }
+        }catch (Exception e){
             e.printStackTrace();
             ToastUtils.show(context, R.string.file_open_file);
         }

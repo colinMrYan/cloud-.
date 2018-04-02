@@ -5,6 +5,7 @@ import android.app.TimePickerDialog;
 import android.app.TimePickerDialog.OnTimeSetListener;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.DatePicker;
@@ -18,14 +19,14 @@ import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.WorkAPIService;
-import com.inspur.emmcloud.bean.work.CalendarEvent;
 import com.inspur.emmcloud.bean.appcenter.GetIDResult;
+import com.inspur.emmcloud.bean.work.CalendarEvent;
 import com.inspur.emmcloud.bean.work.MyCalendar;
 import com.inspur.emmcloud.config.Constant;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.privates.CalendarColorUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
@@ -492,7 +493,7 @@ public class CalEventAddActivity extends BaseActivity {
 		Intent mIntent = new Intent(Constant.ACTION_CALENDAR);
 		mIntent.putExtra("refreshCalendar","");
 		// 发送广播
-		sendBroadcast(mIntent);
+		LocalBroadcastManager.getInstance(this).sendBroadcast(mIntent);
 	}
 
 	@Override

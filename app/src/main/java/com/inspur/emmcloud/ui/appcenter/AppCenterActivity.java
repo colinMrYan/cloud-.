@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
@@ -38,10 +39,10 @@ import com.inspur.emmcloud.bean.appcenter.AppAdsBean;
 import com.inspur.emmcloud.bean.appcenter.AppGroupBean;
 import com.inspur.emmcloud.bean.appcenter.GetAllAppResult;
 import com.inspur.emmcloud.util.common.DensityUtil;
-import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
+import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.CircularProgress;
 import com.inspur.emmcloud.widget.ECMSpaceItemDecoration;
@@ -232,7 +233,7 @@ public class AppCenterActivity extends BaseActivity {
         };
         IntentFilter myIntentFilter = new IntentFilter();
         myIntentFilter.addAction(ACTION_NAME);
-        registerReceiver(addAppReceiver, myIntentFilter);
+        LocalBroadcastManager.getInstance(this).registerReceiver(addAppReceiver, myIntentFilter);
     }
 
     /**
@@ -548,7 +549,7 @@ public class AppCenterActivity extends BaseActivity {
     public void onDestroy() {
         super.onDestroy();
         if (addAppReceiver != null) {
-            unregisterReceiver(addAppReceiver);
+            LocalBroadcastManager.getInstance(this).unregisterReceiver(addAppReceiver);
             addAppReceiver = null;
         }
     }

@@ -30,10 +30,12 @@ public abstract class APICallback implements CommonCallback<String> {
 
     private Context context;
     private String url;
+    private long requestTime;
 
     public APICallback(Context context, String url) {
         this.context = context;
         this.url = url;
+        requestTime = System.currentTimeMillis();
     }
 
     /* (non-Javadoc)
@@ -77,7 +79,7 @@ public abstract class APICallback implements CommonCallback<String> {
             LogUtils.debug("HttpUtil", "result=" + error);
 
             if (responseCode == 401) {
-                callbackTokenExpire();
+                callbackTokenExpire(requestTime);
             } else {
                 callbackFail(error, responseCode);
                 saveNetException(error, responseCode, errorLevel);
@@ -131,6 +133,6 @@ public abstract class APICallback implements CommonCallback<String> {
 
     public abstract void callbackFail(String error, int responseCode);
 
-    public abstract void callbackTokenExpire();
+    public abstract void callbackTokenExpire(long requestTime);
 
 }

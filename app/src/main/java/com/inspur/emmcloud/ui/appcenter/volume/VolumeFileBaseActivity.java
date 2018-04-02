@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -379,7 +380,7 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
         intent.putExtra("directoryId", directoryId);
         intent.putExtra("command", "refresh");
         intent.setAction("broadcast_volume");
-        sendBroadcast(intent);
+        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
 
 

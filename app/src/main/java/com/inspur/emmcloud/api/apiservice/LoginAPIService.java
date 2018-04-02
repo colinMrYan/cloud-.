@@ -72,7 +72,7 @@ public class LoginAPIService {
 			}
 
 			@Override
-			public void callbackTokenExpire() {
+			public void callbackTokenExpire(long requestTime) {
 				// TODO Auto-generated method stub
 				apiInterface.returnOauthSigninFail(new String(""), 500);
 			}
@@ -107,7 +107,7 @@ public class LoginAPIService {
 			}
 
 			@Override
-			public void callbackTokenExpire() {
+			public void callbackTokenExpire(long requestTime) {
 				// TODO Auto-generated method stub
 				apiInterface.returnOauthSigninFail("",-1);
 			}
@@ -128,7 +128,7 @@ public class LoginAPIService {
 		x.http().get(params, new APICallback(context,completeUrl) {
 
 			@Override
-			public void callbackTokenExpire() {
+			public void callbackTokenExpire(long requestTime) {
 				// TODO Auto-generated method stub
 				apiInterface.returnReqLoginSMSFail(
 						context.getString(R.string.net_request_failed), 500);
@@ -167,7 +167,7 @@ public class LoginAPIService {
 		x.http().post(params, new APICallback(context,completeUrl) {
 
 			@Override
-			public void callbackTokenExpire() {
+			public void callbackTokenExpire(long requestTime) {
 				// TODO Auto-generated method stub
 				apiInterface.returnReisterSMSCheckFail("",-1);
 			}
@@ -200,13 +200,10 @@ public class LoginAPIService {
 		x.http().get(params, new APICallback(context,completeUrl) {
 
 			@Override
-			public void callbackTokenExpire() {
-				// TODO Auto-generated method stub
-				new OauthUtils(new OauthCallBack() {
-
+			public void callbackTokenExpire(long requestTime) {
+				OauthCallBack oauthCallBack = new OauthCallBack() {
 					@Override
 					public void reExecute() {
-						// TODO Auto-generated method stub
 						getMyInfo();
 					}
 
@@ -214,7 +211,9 @@ public class LoginAPIService {
 					public void executeFailCallback() {
 						callbackFail("", -1);
 					}
-				}, context).refreshToken(completeUrl);
+				};
+				OauthUtils.getInstance().refreshToken(
+						oauthCallBack, requestTime);
 			}
 
 			@Override
@@ -248,13 +247,10 @@ public class LoginAPIService {
 		x.http().request(HttpMethod.PUT, params, new APICallback(context,completeUrl) {
 
 			@Override
-			public void callbackTokenExpire() {
-				// TODO Auto-generated method stub
-				new OauthUtils(new OauthCallBack() {
-
+			public void callbackTokenExpire(long requestTime) {
+				OauthCallBack oauthCallBack = new OauthCallBack() {
 					@Override
 					public void reExecute() {
-						// TODO Auto-generated method stub
 						changePsd(oldpsd, newpsd);
 					}
 
@@ -262,7 +258,9 @@ public class LoginAPIService {
 					public void executeFailCallback() {
 						callbackFail("", -1);
 					}
-				}, context).refreshToken(completeUrl);
+				};
+				OauthUtils.getInstance().refreshToken(
+						oauthCallBack, requestTime);
 			}
 
 			@Override
@@ -293,9 +291,10 @@ public class LoginAPIService {
 		params.setAsJsonContent(true);
 		params.addHeader("Content-Type", "application/json");
 		x.http().request(HttpMethod.PUT, params, new APICallback(context,completeUrl) {
+
 			@Override
-			public void callbackTokenExpire() {
-				new OauthUtils(new OauthCallBack() {
+			public void callbackTokenExpire(long requestTime) {
+				OauthCallBack oauthCallBack = new OauthCallBack() {
 					@Override
 					public void reExecute() {
 						updatePwdBySMSCode( smsCode, newPwd);
@@ -305,7 +304,9 @@ public class LoginAPIService {
 					public void executeFailCallback() {
 						callbackFail("", -1);
 					}
-				}, context).refreshToken(completeUrl);
+				};
+				OauthUtils.getInstance().refreshToken(
+						oauthCallBack, requestTime);
 			}
 
 			@Override
@@ -320,83 +321,5 @@ public class LoginAPIService {
 		});
 	}
 
-
-//	/**
-//	 * 暂时没用上的接口
-//	 * 
-//	 * @param mobile
-//	 * @param username
-//	 * @param userpsd
-//	 * @param registerId
-//	 * @param xx
-//	 */
-//	public void uploadSMSRegInfo(String mobile, String username,
-//			String userpsd, String registerId, String xx) {
-//
-//		String module = "register";
-//		String method = "register";
-//		RequestParams params = new RequestParams();
-//		params.put("mobile", mobile);
-//		params.put("user_name", username);
-//		params.put("user_psd", userpsd);
-//		params.put("register_id", registerId);
-//		params.put("xx", xx);
-//		String completeUrl = baseUrl + "module=" + module + "&method=" + method;
-//		AsyncHttpResponseHandler asyncHttpResponseHandler = new AsyncHttpResponseHandler() {
-//
-//			@Override
-//			public void onSuccess(int arg0, Header[] arg1, byte[] arg2) {
-//
-//			}
-//
-//			@Override
-//			public void onFailure(int arg0, Header[] arg1, byte[] arg2,
-//					Throwable arg3) {
-//
-//			}
-//
-//			@Override
-//			public void onTokenExpire() {
-//
-//			}
-//		};
-//		asyncHttpResponseHandler.setIsDebug(LogUtils.isDebug);
-//		client.post(completeUrl, params, asyncHttpResponseHandler);
-//	}
-
-//	/**
-//	 * 手机短信注册，传入手机号码，验证是否已经注册，如果已经注册返回-1，未注册返回1
-//	 * 
-//	 * @param mobile
-//	 */
-//	public void SMSRegister(String mobile) {
-//		String module = "register";
-//		String method = "get_smscode";
-//		RequestParams params = new RequestParams();
-//		params.put("mobile", mobile);
-//		String completeUrl = baseUrl + "module=" + module + "&method=" + method;
-//		AsyncHttpResponseHandler asyncHttpResponseHandler = new AsyncHttpResponseHandler() {
-//
-//			@Override
-//			public void onSuccess(int arg0, Header[] arg1, byte[] arg2) {
-//				apiInterface.returnRegisterSMSSuccess(new GetRegisterResult(
-//						new String(arg2)));
-//			}
-//
-//			@Override
-//			public void onFailure(int arg0, Header[] arg1, byte[] arg2,
-//					Throwable arg3) {
-//				apiInterface.returnRegisterSMSFail(new String(arg2));
-//			}
-//
-//			@Override
-//			public void onTokenExpire() {
-//				apiInterface.returnRegisterSMSFail(context
-//						.getString(R.string.net_request_failed));
-//			}
-//		};
-//		asyncHttpResponseHandler.setIsDebug(LogUtils.isDebug);
-//		client.post(completeUrl, params, asyncHttpResponseHandler);
-//	}
 
 }

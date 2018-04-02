@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,8 +32,8 @@ import com.inspur.emmcloud.util.common.GroupUtils.GroupBy;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
-import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
+import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.dialogs.MyQMUIDialog;
@@ -111,7 +112,7 @@ public class MeetingListActivity extends BaseActivity implements
         };
         IntentFilter myIntentFilter = new IntentFilter();
         myIntentFilter.addAction(Constant.ACTION_MEETING);
-        registerReceiver(meetingReceiver, myIntentFilter);
+        LocalBroadcastManager.getInstance(this).registerReceiver(meetingReceiver, myIntentFilter);
     }
 
     /**
@@ -241,7 +242,7 @@ public class MeetingListActivity extends BaseActivity implements
     private void sendBroadCast() {
         Intent mIntent = new Intent(Constant.ACTION_MEETING);
         mIntent.putExtra("refreshMeeting", "refreshMeeting");
-        sendBroadcast(mIntent);
+        LocalBroadcastManager.getInstance(this).sendBroadcast(mIntent);
     }
 
     @Override
@@ -464,7 +465,7 @@ public class MeetingListActivity extends BaseActivity implements
      */
     private void unregisterReceiver() {
         if (meetingReceiver != null) {
-            unregisterReceiver(meetingReceiver);
+            LocalBroadcastManager.getInstance(this).unregisterReceiver(meetingReceiver);
             meetingReceiver = null;
         }
     }

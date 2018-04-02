@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
@@ -111,12 +112,12 @@ public class ShareVolumeInfoActivity extends BaseActivity {
             }
         };
         IntentFilter intentFilter = new IntentFilter(Constant.ACTION_VOLUME_INFO_UPDATE);
-        registerReceiver(receiver, intentFilter);
+        LocalBroadcastManager.getInstance(this).registerReceiver(receiver, intentFilter);
     }
 
     public static void notifyVolumeInfoUpdate(Context context){
         Intent intent = new Intent(Constant.ACTION_VOLUME_INFO_UPDATE);
-        context.sendBroadcast(intent);
+        LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
     }
 
 
@@ -237,7 +238,7 @@ public class ShareVolumeInfoActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         if (receiver != null){
-            unregisterReceiver(receiver);
+            LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
             receiver = null;
         }
         super.onDestroy();
