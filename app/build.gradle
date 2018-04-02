@@ -21,7 +21,7 @@ def enableSeparateBuildPerCPUArchitecture = false
  */
 def enableProguardInReleaseBuilds = false
 Properties properties = new Properties()
-properties.load(new FileInputStream("sign.properties"))
+properties.load(new FileInputStream(SIGN_PROPERTIES))
 
 android {
     signingConfigs {
