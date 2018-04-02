@@ -70,6 +70,22 @@ android {
         disable 'MissingTranslation', 'ExtraTranslation'
     }
 
+    applicationVariants.all { variant ->
+        if (variant.buildType.name == "release") {
+            variant.outputs.all { output ->
+                def outputFile = output.outputFile
+                def fileName
+                if (variant.buildType.name.equals('release')) {
+                    fileName = "inspur_cloud_mobileclient_${defaultConfig.versionName}.apk"
+                } else if (variant.buildType.name.equals('debug')) {
+                    fileName = "inspur_cloud_mobileclient_debug_1.0.0.apk"
+                }
+                if (outputFile != null && outputFile.name.endsWith('.apk')) {
+                    outputFileName = fileName
+                }
+            }
+        }
+    }
 
     //资源文件目录
     sourceSets {
