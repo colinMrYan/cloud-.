@@ -20,14 +20,22 @@ def enableSeparateBuildPerCPUArchitecture = false
  * Run Proguard to shrink the Java bytecode in release builds.
  */
 def enableProguardInReleaseBuilds = false
-
+Properties properties = new Properties()
+properties.load(new FileInputStream(SIGN_PROPERTIES))
 
 android {
+    signingConfigs {
+        config {
+            keyAlias properties.getProperty("KEY_ALIAS")
+            keyPassword properties.getProperty("KEY_PASSWORD")
+            storeFile file(properties.getProperty("KEY_STORE_FILE_PATH"))
+            storePassword properties.getProperty("KEY_PASSWORD")
+        }
+    }
     compileSdkVersion 24
     buildToolsVersion "26.0.2"
     aaptOptions.cruncherEnabled = false
     aaptOptions.useNewCruncher = false
-
     defaultConfig {
         applicationId "com.inspur.emmcloud"
         minSdkVersion 16
@@ -40,18 +48,16 @@ android {
         }
         multiDexEnabled true
     }
-
-    sourceSets.main{
-            jniLibs.srcDirs = ['libs']
+    sourceSets.main {
+        jniLibs.srcDirs = ['libs']
     }
     buildTypes {
         release {
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+            signingConfig signingConfigs.config
         }
     }
-
-
     configurations.all {
         // React Native依赖的findbugs版本更高
         resolutionStrategy.force 'com.google.code.findbugs:jsr305:3.0.0',
@@ -64,22 +70,22 @@ android {
         disable 'MissingTranslation', 'ExtraTranslation'
     }
 
-    //指定打包后应用名称
-//        applicationVariants.all {variant ->
-//        variant.outputs.each {output ->
-//            def outputFile = output.outputFile
-//            def fileName
-//            if (outputFile != null && outputFile.name.endsWith('.apk')) {
-//                if (variant.buildType.name.equals('release')) {
-//                    fileName = "inspur_cloud_mobileclient_${defaultConfig.versionName}.apk"
-//                } else if (variant.buildType.name.equals('debug')) {
-//                    fileName = "inspur_cloud_mobileclient_debug_1.0.0.apk"
-//                }
-//                output.outputFile = new File(outputFile.parent, fileName)
-//            }
-//        }
- //   }
-
+    applicationVariants.all { variant ->
+        if (variant.buildType.name == "release") {
+            variant.outputs.all { output ->
+                def outputFile = output.outputFile
+                def fileName
+                if (variant.buildType.name.equals('release')) {
+                    fileName = "inspur_cloud_mobileclient_${defaultConfig.versionName}.apk"
+                } else if (variant.buildType.name.equals('debug')) {
+                    fileName = "inspur_cloud_mobileclient_debug_1.0.0.apk"
+                }
+                if (outputFile != null && outputFile.name.endsWith('.apk')) {
+                    outputFileName = fileName
+                }
+            }
+        }
+    }
 
     //资源文件目录
     sourceSets {
@@ -121,8 +127,6 @@ android {
                     ]
         }
     }
-
-
     splits {
         abi {
             reset()
@@ -137,7 +141,7 @@ android {
         variant.outputs.each { output ->
             // For each separate APK per architecture, set a unique version code as described here:
             // http://tools.android.com/tech-docs/new-build-system/user-guide/apk-splits
-            def versionCodes = ["armeabi-v7a":1, "x86":2]
+            def versionCodes = ["armeabi-v7a": 1, "x86": 2]
             def abi = output.getFilter(OutputFile.ABI)
             if (abi != null) {  // null for the universal-debug, universal-release variants
                 output.versionCodeOverride =
@@ -180,13 +184,14 @@ dependencies {
     compile 'com.zhy:magic-viewpager:1.0.1'
     compile 'org.jsoup:jsoup:1.9.2'
     compile 'com.zzhoujay.markdown:markdown:1.0.5'
-    compile 'com.jakewharton:disklrucache:2.0.2' //Markdown引入 缓存
+    compile 'com.jakewharton:disklrucache:2.0.2'
+    //Markdown引入 缓存
     compile 'com.android.support:multidex:1.0.2'
-    compile 'com.wei.android.lib:fingerprintidentify:1.2.1'//指纹识别库暂未启用
+    compile 'com.wei.android.lib:fingerprintidentify:1.2.1'
+    //指纹识别库暂未启用
     compile 'me.leolin:ShortcutBadger:1.1.19@aar'
     debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5.4'
     releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.4'
-
     // React Naive Components
     compile project(':react-native-smart-swipe-refresh-layout')
     compile project(':react-native-picker')
@@ -219,6 +224,5 @@ dependencies {
     compile files('libs/aliyun-oss-sdk-android-2.0.1.1.jar')
     compile files('libs/Msc.jar')
     compile files('libs/Sunflower.jar')
-
 }
 repositories { flatDir { dirs 'aars' } }

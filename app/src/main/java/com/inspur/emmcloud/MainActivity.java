@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
+import com.inspur.emmcloud.bean.system.SplashDefaultBean;
 import com.inspur.emmcloud.bean.system.SplashPageBean;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.service.AppExceptionService;
@@ -16,6 +17,7 @@ import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.ui.login.LoginActivity;
 import com.inspur.emmcloud.ui.mine.setting.GuideActivity;
 import com.inspur.emmcloud.util.common.IntentUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.ResolutionUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
@@ -257,7 +259,7 @@ public class MainActivity extends BaseActivity { // 此处不能继承BaseActivi
         String splashInfo = PreferencesByUserAndTanentUtils.getString(MainActivity.this, "splash_page_info");
         if (!StringUtils.isBlank(splashInfo)) {
             SplashPageBean splashPageBeanLoacal = new SplashPageBean(splashInfo);
-            SplashPageBean.PayloadBean.ResourceBean.DefaultBean defaultBean = splashPageBeanLoacal.getPayload()
+            SplashDefaultBean defaultBean = splashPageBeanLoacal.getPayload()
                     .getResource().getDefaultX();
             String splashPagePath = getSplashPagePath(defaultBean);
             long nowTime = System.currentTimeMillis();
@@ -277,7 +279,7 @@ public class MainActivity extends BaseActivity { // 此处不能继承BaseActivi
      * @param defaultBean
      * @return
      */
-    private String getSplashPagePath(SplashPageBean.PayloadBean.ResourceBean.DefaultBean defaultBean) {
+    private String getSplashPagePath(SplashDefaultBean defaultBean) {
         String screenType = AppUtils.getScreenType(MainActivity.this);
         String fileName = "";
         switch (screenType) {
@@ -298,7 +300,6 @@ public class MainActivity extends BaseActivity { // 此处不能继承BaseActivi
                 MyApplication.getInstance().getUid(), "splash/" + fileName);
         return filePath;
     }
-
 
     @Override
     protected void onDestroy() {
