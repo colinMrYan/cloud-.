@@ -1410,9 +1410,10 @@ public class MyAppAPIService {
                 apiInterface.returnVolumeGroupFail(error,responseCode);
             }
 
+
             @Override
-            public void callbackTokenExpire() {
-                new OauthUtils(new OauthCallBack() {
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
                         getVolumeFileGroup(volumeId,path);
@@ -1422,7 +1423,9 @@ public class MyAppAPIService {
                     public void executeFailCallback() {
                         callbackFail("", -1);
                     }
-                }, context).refreshToken(url);
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
             }
         });
 
@@ -1453,8 +1456,8 @@ public class MyAppAPIService {
             }
 
             @Override
-            public void callbackTokenExpire() {
-                new OauthUtils(new OauthCallBack() {
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
                         updateVolumeFileGroupPermission(volumeId,path,group,privilege,recurse);
@@ -1464,7 +1467,9 @@ public class MyAppAPIService {
                     public void executeFailCallback() {
                         callbackFail("", -1);
                     }
-                },context).refreshToken(url);
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
             }
         });
     }
