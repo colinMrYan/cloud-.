@@ -16,12 +16,14 @@ import com.inspur.emmcloud.util.common.StringUtils;
 public class ReactNativeInitInfoUtils {
 
     public final static String SYSTEM = "Android";
+
     /**
      * 获取用户个人信息
+     *
      * @param context
      * @return
      */
-    public static String getMyProfile(Context context){
+    public static String getMyProfile(Context context) {
         String myInfo = PreferencesUtils.getString(context,
                 "myInfo", "");
         return myInfo;
@@ -29,19 +31,21 @@ public class ReactNativeInitInfoUtils {
 
     /**
      * 获取系统版本信息
+     *
      * @param context
      * @return
      */
-    public static String getSystemVersion(Context context){
+    public static String getSystemVersion(Context context) {
         return AppUtils.getSystemVersion();
     }
 
     /**
      * 获取当前应用语言
+     *
      * @param context
      * @return
      */
-    public static String getLocalLanguage(Context context){
+    public static String getLocalLanguage(Context context) {
         String languageJson = PreferencesUtils.getString(
                 context, MyApplication.getInstance().getTanent() + "appLanguageObj");
         if (!StringUtils.isBlank(languageJson)) {
@@ -53,10 +57,11 @@ public class ReactNativeInitInfoUtils {
 
     /**
      * 获取ReactNativeVersion
+     *
      * @param reactAppFilePath
      * @return
      */
-    public static String getReactNativeVersion(String reactAppFilePath){
+    public static String getReactNativeVersion(String reactAppFilePath) {
         StringBuilder describeVersionAndTime = ReactNativeFlow.getBundleDotJsonFromFile(reactAppFilePath);
         AndroidBundleBean androidBundleBean = new AndroidBundleBean(describeVersionAndTime.toString());
         return androidBundleBean.getVersion();
@@ -64,21 +69,23 @@ public class ReactNativeInitInfoUtils {
 
     /**
      * 获取pushid
+     *
      * @param context
      * @return
      */
-    public static String getPushId(Context context){
-        String hwToken = PreferencesUtils.getString(context,"huawei_push_token","");
-        return AppUtils.getIsHuaWei()?(StringUtils.isBlank(hwToken)?PreferencesUtils.getString(context, "JpushRegId", "")
-                :(hwToken + "@push.huawei.com")):PreferencesUtils.getString(context, "JpushRegId", "");
+    public static String getPushId(Context context) {
+        String hwToken = PreferencesUtils.getString(context, "huawei_push_token", "");
+        return AppUtils.getIsHuaWei() ? (StringUtils.isBlank(hwToken) ? PreferencesUtils.getString(context, "JpushRegId", "")
+                : (hwToken + "@push.huawei.com")) : PreferencesUtils.getString(context, "JpushRegId", "");
     }
 
     /**
      * 获取推送类型
+     *
      * @return
      */
-    public static String getPushType(Context context){
-        return (AppUtils.getIsHuaWei() && canConnectHuawei(context))?"huawei":"jiguang";
+    public static String getPushType(Context context) {
+        return (AppUtils.getIsHuaWei() && canConnectHuawei(context)) ? "huawei" : "jiguang";
     }
 
     /**

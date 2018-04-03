@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * Created by yufuchang on 2017/2/20.
  */
-public class AuthorizationManagerPackage  implements ReactPackage {
+public class AuthorizationManagerPackage implements ReactPackage {
     @Override
     public List<NativeModule> createNativeModules(ReactApplicationContext reactContext) {
         List<NativeModule> modules = new ArrayList<>();

@@ -15,13 +15,11 @@ import android.provider.MediaStore;
 import android.util.Base64;
 import android.widget.Toast;
 
-import com.inspur.emmcloud.bean.system.AppException;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.util.common.ImageUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
-import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.DataCleanManager;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.cache.AppExceptionCacheUtils;
@@ -1036,14 +1034,7 @@ public class CameraService extends ImpPlugin {
      * @param responseCode
      */
     private void saveNetException( String function,String error) {
-        try {
-            if (!AppUtils.isApkDebugable(context)) {
-                AppException appException = new AppException(System.currentTimeMillis(), AppUtils.getVersion(context), 4, function, error, 0);
-                AppExceptionCacheUtils.saveAppException(context, appException);
-            }
-        }catch (Exception e){
-            e.printStackTrace();
-        }
+        AppExceptionCacheUtils.saveAppException(context,4,function,error,0);
     }
 
     @Override
