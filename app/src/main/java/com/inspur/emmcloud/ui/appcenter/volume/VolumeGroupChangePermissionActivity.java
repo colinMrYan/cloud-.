@@ -135,6 +135,7 @@ public class VolumeGroupChangePermissionActivity extends BaseActivity {
                 if(getVolumeGroupPermissionResult.getPrivilege() == VOLUME_NO_PERMISSION){
                     readPermissionSwitch.toggleSwitch(false);
                 }else if(getVolumeGroupPermissionResult.getPrivilege() == VOLUME_READ_PERMISSION){
+                    readPermissionSwitch.toggleSwitch(true);
                     readPermissionSwitch.setIsCodeManual(true,true);
                 }
                 readPermissionSwitch.setPaintColorOn(0xff7fc5f6);
