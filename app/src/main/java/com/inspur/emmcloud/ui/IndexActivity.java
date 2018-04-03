@@ -37,6 +37,7 @@ import com.inspur.emmcloud.bean.contact.GetSearchChannelGroupResult;
 import com.inspur.emmcloud.bean.system.AppException;
 import com.inspur.emmcloud.bean.system.AppTabAutoBean;
 import com.inspur.emmcloud.bean.system.AppTabDataBean;
+import com.inspur.emmcloud.bean.system.ChangeTabBean;
 import com.inspur.emmcloud.bean.system.GetAppTabAutoResult;
 import com.inspur.emmcloud.bean.system.PVCollectModel;
 import com.inspur.emmcloud.config.Constant;
@@ -577,6 +578,21 @@ public class IndexActivity extends BaseFragmentActivity implements
         //更新桌面角标数字
         ECMShortcutBadgeNumberManagerUtils.setDesktopBadgeNumber(IndexActivity.this,badgeNumber);
     }
+
+    /**
+     * 改变tab的事件
+     * @param changeTabBean
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void updateCurrentTab(ChangeTabBean changeTabBean){
+        for (int i = 0; i < mTabHost.getTabWidget().getChildCount(); i++) {
+            if(mTabHost.getTabWidget().getChildAt(i).getTag().toString().contains(changeTabBean.getTabId())){
+                mTabHost.setCurrentTab(i);
+                break;
+            }
+        }
+    }
+
 
     /**
      * IndexActiveX首先打开MessageFragment,然后打开其他tab
