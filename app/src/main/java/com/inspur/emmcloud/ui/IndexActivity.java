@@ -602,13 +602,12 @@ public class IndexActivity extends BaseFragmentActivity implements
     private MainTabBean[] addDefaultTabs() {
         //无数据改为显示两个tab，数组变为2
         MainTabBean[] mainTabs = new MainTabBean[2];
-        MainTabBean mainTabBeanCommunicate = new MainTabBean(0, R.string.communicate, R.drawable.selector_tab_message_btn,
-                MessageFragment.class);
-        mainTabBeanCommunicate.setCommpant("communicate");
-        MainTabBean mainTabBeanApp = new MainTabBean(3, R.string.application, R.drawable.selector_tab_app_btn,
+        MainTabBean mainTabBeanApp = new MainTabBean(0, R.string.application, R.drawable.selector_tab_app_btn,
                 MyAppFragment.class);
-        MainTabBean mainTabBeanMine = new MainTabBean(4, R.string.mine, R.drawable.selector_tab_more_btn,
+        mainTabBeanApp.setCommpant("application");
+        MainTabBean mainTabBeanMine = new MainTabBean(1, R.string.mine, R.drawable.selector_tab_more_btn,
                 MoreFragment.class);
+        mainTabBeanMine.setCommpant("mine");
         //无数据改为显示两个tab
         mainTabs[0] = mainTabBeanApp;
         mainTabs[1] = mainTabBeanMine;
