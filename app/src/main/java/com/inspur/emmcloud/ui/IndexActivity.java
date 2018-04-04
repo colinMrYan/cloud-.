@@ -624,8 +624,6 @@ public class IndexActivity extends BaseFragmentActivity implements
             case "en-us":
                 tabBean.setTabName(tabsBean.getTitle().getEnUS());
                 break;
-            case "zh":
-            case "zh-hans":
             default:
                 tabBean.setTabName(tabsBean.getTitle().getZhHans());
                 break;
