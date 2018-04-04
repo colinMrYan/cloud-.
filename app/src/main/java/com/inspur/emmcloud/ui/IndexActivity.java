@@ -424,40 +424,36 @@ public class IndexActivity extends BaseFragmentActivity implements
             //发送到MessageFragment
             EventBus.getDefault().post(appTabAutoBean);
             ArrayList<AppTabDataBean> appTabList = (ArrayList<AppTabDataBean>) appTabAutoBean.getPayload().getTabs();
-            if (appTabList != null && appTabList.size() > 0) {
+            if (appTabList.size() > 0) {
                 mainTabs = new TabBean[appTabList.size()];
                 for (int i = 0; i < appTabList.size(); i++) {
                     TabBean mainTabBean = null;
-                    switch (appTabList.get(i).getComponent()) {
+                    switch (appTabList.get(i).getTabId()) {
                         case "communicate":
                             mainTabBean = new TabBean(getString(R.string.communicate), R.drawable.selector_tab_message_btn+"", MessageFragment.class);
-                            mainTabBean.setTabId(appTabList.get(i).getComponent());
                             break;
                         case "work":
                             mainTabBean = new TabBean(getString(R.string.work), R.drawable.selector_tab_work_btn+"",
                                     WorkFragment.class);
-                            mainTabBean.setTabId(appTabList.get(i).getComponent());
                             break;
                         case "find":
                             mainTabBean = new TabBean(getString(R.string.find), R.drawable.selector_tab_find_btn+"",
                                     FindFragment.class);
-                            mainTabBean.setTabId(appTabList.get(i).getComponent());
                             break;
                         case "application":
                             mainTabBean = new TabBean(getString(R.string.application), R.drawable.selector_tab_app_btn + "",
                                     MyAppFragment.class);
-                            mainTabBean.setTabId(appTabList.get(i).getComponent());
                             break;
                         case "mine":
                             mainTabBean = new TabBean(getString(R.string.mine), R.drawable.selector_tab_more_btn + "",
                                     MoreFragment.class);
-                            mainTabBean.setTabId(appTabList.get(i).getComponent());
                             break;
                         default:
                             mainTabBean = new TabBean(getString(R.string.unknown), R.drawable.selector_tab_unknown_btn + "",
                                     NotSupportFragment.class);
                             break;
                     }
+                    mainTabBean.setTabId(appTabList.get(i).getTabId());
                     mainTabs[i] = internationalMainLanguage(appTabList.get(i), environmentLanguage, mainTabBean);
                 }
             }
