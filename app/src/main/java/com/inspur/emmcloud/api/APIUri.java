@@ -10,7 +10,6 @@ import com.inspur.emmcloud.util.privates.cache.ContactCacheUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 
 
-
 /**
  * 本类中包含4个常量，分别是
  * 域名的Url：URL_BASE_ECM
@@ -32,27 +31,28 @@ public class APIUri {
         return MyApplication.getInstance().getClusterEcm() + MyApplication.getInstance().getTanent();
     }
 
-    public static String getECMBaseUrl(){
+    public static String getECMBaseUrl() {
         return MyApplication.getInstance().getClusterEcm();
     }
 
-    public static String getEMMBaseUrl(){
+    public static String getEMMBaseUrl() {
         return MyApplication.getInstance().getClusterEmm();
     }
 
     /**
      * 云加网盘
+     *
      * @return
      */
-    public static String getUrlBaseYunjia(){
+    public static String getUrlBaseYunjia() {
         return MyApplication.getInstance().getClusterEcm();
     }
 
-    public static String getUrlBaseVolume(){
+    public static String getUrlBaseVolume() {
         return getUrlBaseYunjia() + "cloud-drive/api/v1/volume";
     }
 
-    public static String getUrlBaseGroup(){
+    public static String getUrlBaseGroup() {
         return getUrlBaseYunjia() + "cloud-drive/api/v1/group";
     }
     /***************************************************************系统*******************************************************************/
@@ -117,16 +117,18 @@ public class APIUri {
 
     /**
      * 获取上传推送信息的url
+     *
      * @return
      */
-    public static String getUploadPushInfoUrl(){
-        return  getUrlBaseYunjia() + "message/api/v1/client";
+    public static String getUploadPushInfoUrl() {
+        return getUrlBaseYunjia() + "message/api/v1/client";
     }
 
     /************************************************************************登录*****************************************************************/
 
     /**
      * 请求短信验证码
+     *
      * @param mobile
      * @return
      */
@@ -136,25 +138,27 @@ public class APIUri {
 
     /**
      * 验证短信验证码
+     *
      * @return
      */
-    public static String  getSMSRegisterCheckUrl(){
-        return  MyApplication.getInstance().getClusterEmm()+"/api?module=register&method=verify_smscode";
+    public static String getSMSRegisterCheckUrl() {
+        return MyApplication.getInstance().getClusterEmm() + "/api?module=register&method=verify_smscode";
     }
 
     /**
      * 获取用户信息
+     *
      * @return
      */
-    public static String getMyInfoUrl(){
-        return MyApplication.getInstance().getCloudId()+"oauth2.0/profile";
+    public static String getMyInfoUrl() {
+        return MyApplication.getInstance().getCloudId() + "oauth2.0/profile";
     }
 
     /**
      * 修改密码
      **/
     public static String getChangePsdUrl() {
-        return MyApplication.getInstance().getCloudId()+"console/api/v1/account/password";
+        return MyApplication.getInstance().getCloudId() + "console/api/v1/account/password";
     }
 
 
@@ -188,10 +192,11 @@ public class APIUri {
 
     /**
      * 网页登录
+     *
      * @return
      */
-    public static String getWebLoginUrl(){
-        return  MyApplication.getInstance().getCloudId()+"oauth2.0/authorize";
+    public static String getWebLoginUrl() {
+        return MyApplication.getInstance().getCloudId() + "oauth2.0/authorize";
     }
 
 
@@ -298,9 +303,10 @@ public class APIUri {
 
     /**
      * 获取websocket链接url
+     *
      * @return
      */
-    public static String getWebsocketConnectUrl(){
+    public static String getWebsocketConnectUrl() {
         return MyApplication.getInstance().getClusterEcm();
     }
 
@@ -331,7 +337,7 @@ public class APIUri {
      * @return
      */
     public static String getAppAuthCodeUri() {
-        return MyApplication.getInstance().getCloudId()+"oauth2.0/quick_authz_code";
+        return MyApplication.getInstance().getCloudId() + "oauth2.0/quick_authz_code";
     }
 
     /**
@@ -408,10 +414,11 @@ public class APIUri {
 
     /**
      * 获取gs-msg  scheme url
+     *
      * @param host
      * @return
      */
-    public static String getGSMsgSchemeUrl(String host){
+    public static String getGSMsgSchemeUrl(String host) {
         return getEMMBaseUrl() + "api/mam/v3.0/gs_sso/msg_uri?id=" + host;
     }
 
@@ -458,7 +465,7 @@ public class APIUri {
      * @return
      */
     public static String getReactNativeInstallUrl() {
-        return MyApplication.getInstance().getClusterEmm()+"api/mam/v3.0/imp_app/queryByUri";
+        return MyApplication.getInstance().getClusterEmm() + "api/mam/v3.0/imp_app/queryByUri";
     }
 
     /**
@@ -492,13 +499,13 @@ public class APIUri {
 
     /**
      * 获取新闻批示
+     *
      * @param newsId
      * @return
      */
     public static String getNewsInstruction(String newsId) {
         return getEcmTanentUrl() + "/api/v0/content/news/" + newsId + "/editor-comment";
     }
-
 
 
     /***********************VOLUME云盘****************/
@@ -513,48 +520,53 @@ public class APIUri {
 
     /**
      * 更新网盘信息
+     *
      * @param volumeId
      * @return
      */
-    public static String getUpdateVolumeInfoUrl(String volumeId){
-        return getUrlBaseVolume()+"/"+volumeId;
+    public static String getUpdateVolumeInfoUrl(String volumeId) {
+        return getUrlBaseVolume() + "/" + volumeId;
     }
 
     /**
      * 获取云盘成员url
+     *
      * @param volumeId
      * @return
      */
-    public static String getVolumeMemUrl(String volumeId){
-        return  getUrlBaseVolume()+"/"+volumeId+"/member";
+    public static String getVolumeMemUrl(String volumeId) {
+        return getUrlBaseVolume() + "/" + volumeId + "/member";
     }
 
     /**
      * 获取云盘组url
+     *
      * @param volumeId
      * @return
      */
-    public static String getVolumeGroupUrl(String volumeId){
-        return  getUrlBaseVolume()+"/"+volumeId+"/group";
+    public static String getVolumeGroupUrl(String volumeId) {
+        return getUrlBaseVolume() + "/" + volumeId + "/group";
     }
 
 
     /**
      * 获取组url
+     *
      * @param groupId
      * @return
      */
-    public static String getGroupBaseUrl(String groupId){
-        return  getUrlBaseGroup()+"/"+groupId;
+    public static String getGroupBaseUrl(String groupId) {
+        return getUrlBaseGroup() + "/" + groupId;
     }
 
     /**
      * 获取组成员URL
+     *
      * @param groupId
      * @return
      */
-    public static String getGroupMemBaseUrl(String groupId){
-        return  getGroupBaseUrl(groupId)+"/member";
+    public static String getGroupMemBaseUrl(String groupId) {
+        return getGroupBaseUrl(groupId) + "/member";
     }
 
     /**
@@ -609,11 +621,12 @@ public class APIUri {
 
     /**
      * 获取复制文件的url
+     *
      * @param volumeId
      * @return
      */
-    public static String getCopyVolumeFileUrl(String volumeId){
-        return getUrlBaseVolume() + "/" + volumeId +"/file/duplication";
+    public static String getCopyVolumeFileUrl(String volumeId) {
+        return getUrlBaseVolume() + "/" + volumeId + "/file/duplication";
     }
 
     /**
@@ -870,9 +883,10 @@ public class APIUri {
 
     /**
      * 获取语言的接口
+     *
      * @return
      */
-    public static String getLangUrl(){
+    public static String getLangUrl() {
         return getEcmTanentUrl() + "/settings/lang";
     }
 
@@ -891,10 +905,11 @@ public class APIUri {
 
     /**
      * 获得推荐云+页面url
+     *
      * @return
      */
     public static String getRecommandAppUrl() {
-        return MyApplication.getInstance().getClusterEmm() +"admin/share_qr";
+        return MyApplication.getInstance().getClusterEmm() + "admin/share_qr";
     }
 
     /**
@@ -912,36 +927,39 @@ public class APIUri {
      * @param
      */
     public static String getUpdateUserHeadUrl() {
-        return  MyApplication.getInstance().getClusterEmm()+"api/sys/v3.0/user/update_head";
+        return MyApplication.getInstance().getClusterEmm() + "api/sys/v3.0/user/update_head";
     }
 
     /**
      * 修改用户信息
+     *
      * @return
      */
-    public static String getModifyUserInfoUrl(){
-        return  MyApplication.getInstance().getClusterEmm()+"api?module=user&method=update_baseinfo";
+    public static String getModifyUserInfoUrl() {
+        return MyApplication.getInstance().getClusterEmm() + "api?module=user&method=update_baseinfo";
     }
 
 
     /**
      * 设置人脸头像
+     *
      * @return
      */
-    public static String getFaceSettingUrl(){
-        return  MyApplication.getInstance().getClusterEmm()+"api/sys/v6.0/face/save";
+    public static String getFaceSettingUrl() {
+        return MyApplication.getInstance().getClusterEmm() + "api/sys/v6.0/face/save";
     }
 
     /**
      * 脸部图像验证
+     *
      * @return
      */
-    public static String getFaceVerifyUrl(){
-        return  MyApplication.getInstance().getClusterEmm()+"api/sys/v6.0/face/verify";
+    public static String getFaceVerifyUrl() {
+        return MyApplication.getInstance().getClusterEmm() + "api/sys/v6.0/face/verify";
     }
 
     /***********设备管理******************
-    /**
+     /**
      * 获取解绑设备url
      *
      * @return
@@ -961,11 +979,12 @@ public class APIUri {
 
     /**
      * 获取设备注册URl
+     *
      * @param context
      * @return
      */
-    public static String getDeviceRegisterUrl(Context context){
-        return getEMMBaseUrl() + "app/mdm/v3.0/loadForRegister?udid="+ AppUtils.getMyUUID(context);
+    public static String getDeviceRegisterUrl(Context context) {
+        return getEMMBaseUrl() + "app/mdm/v3.0/loadForRegister?udid=" + AppUtils.getMyUUID(context);
     }
 
     /**
@@ -997,9 +1016,10 @@ public class APIUri {
 
     /**
      * 设备检查
+     *
      * @return
      */
-    public static String getDeviceCheckUrl(){
-       return  MyApplication.getInstance().getClusterEmm()+"api/mdm/v3.0/mdm/check_state";
+    public static String getDeviceCheckUrl() {
+        return MyApplication.getInstance().getClusterEmm() + "api/mdm/v3.0/mdm/check_state";
     }
 }

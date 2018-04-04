@@ -194,9 +194,9 @@ public interface APIInterface {
 
     void returnGroupNewsTitleFail(String error, int errorCode);
 
-    void returnGroupNewsDetailSuccess(GetGroupNewsDetailResult getGroupNewsDetailResult,int page);
+    void returnGroupNewsDetailSuccess(GetGroupNewsDetailResult getGroupNewsDetailResult, int page);
 
-    void returnGroupNewsDetailFail(String error, int errorCode,int page);
+    void returnGroupNewsDetailFail(String error, int errorCode, int page);
 
     void returnMeetingsSuccess(GetMeetingsResult getMeetingsResult);
 
@@ -338,7 +338,7 @@ public interface APIInterface {
 
     void returnUpdateTaskSuccess(int position);
 
-    void returnUpdateTaskFail(String error, int errorCode,int position);
+    void returnUpdateTaskFail(String error, int errorCode, int position);
 
     void returnCalEventsSuccess(GetCalendarEventsResult getCalendarEventsResult, boolean isRefresh);
 
@@ -398,7 +398,7 @@ public interface APIInterface {
 
     void returnDelAttachmentSuccess(int position);
 
-    void returnDelAttachmentFail(String error, int errorCode,int position);
+    void returnDelAttachmentFail(String error, int errorCode, int position);
 
     void returnChangeMessionOwnerSuccess(String managerName);
 
@@ -523,7 +523,8 @@ public interface APIInterface {
     void returnDeviceLogListFail(String error, int errorCode);
 
     void returnAppInfoSuccess(App app);
-    void returnAppInfoFail(String error,int errorCode);
+
+    void returnAppInfoFail(String error, int errorCode);
 
     void returnAppConfigSuccess(GetAppConfigResult getAppConfigResult);
 
@@ -534,79 +535,103 @@ public interface APIInterface {
     void returnSaveWebAutoRotateConfigFail(String error, int errorCode);
 
     void returnGetAppBadgeResultSuccess(GetAppBadgeResult getAppBadgeResult);
-    void returnGetAppBadgeResultFail(String error,int errorCode);
+
+    void returnGetAppBadgeResultFail(String error, int errorCode);
 
     void returnUploadPositionSuccess();
 
     void returnWebAppRealUrlSuccess(GetWebAppRealUrlResult getWebAppRealUrlResult);
+
     void returnWebAppRealUrlFail();
 
     void returnSaveConfigSuccess();
+
     void returnSaveConfigFail();
 
     void returnVolumeListSuccess(GetVolumeListResult getVolumeListResult);
-    void returnVolumeListFail(String error,int errorCode);
+
+    void returnVolumeListFail(String error, int errorCode);
 
     void returnVolumeFileListSuccess(GetVolumeFileListResult getVolumeFileListResult);
-    void returnVolumeFileListFail(String error,int errorCode);
 
-    void returnVolumeFileUploadTokenSuccess(GetVolumeFileUploadTokenResult getVolumeFileUploadTokenResult, String fileLocalPath,VolumeFile mockVolumeFile);
-    void returnVolumeFileUploadTokenFail(VolumeFile mockVolumeFile,String error,int errorCode,String filePath);
+    void returnVolumeFileListFail(String error, int errorCode);
+
+    void returnVolumeFileUploadTokenSuccess(GetVolumeFileUploadTokenResult getVolumeFileUploadTokenResult, String fileLocalPath, VolumeFile mockVolumeFile);
+
+    void returnVolumeFileUploadTokenFail(VolumeFile mockVolumeFile, String error, int errorCode, String filePath);
 
     void returnCreateForderSuccess(VolumeFile volumeFile);
-    void returnCreateForderFail(String error,int errorCode);
+
+    void returnCreateForderFail(String error, int errorCode);
 
     void returnVolumeFileDeleteSuccess(List<VolumeFile> deleteVolumeFileList);
+
     void returnVolumeFileDeleteFail(String error, int errorCode);
 
 
-    void returnVolumeFileRenameSuccess(VolumeFile oldVolumeFile,String fileNewName);
-    void returnVolumeFileRenameFail(String error,int errorCode);
+    void returnVolumeFileRenameSuccess(VolumeFile oldVolumeFile, String fileNewName);
+
+    void returnVolumeFileRenameFail(String error, int errorCode);
 
     void returnMoveFileSuccess(List<VolumeFile> movedVolumeFileList);
-    void returnMoveFileFail(String error,int errorCode);
+
+    void returnMoveFileFail(String error, int errorCode);
 
     void returnCopyFileSuccess();
-    void returnCopyFileFail(String error,int errorCode);
+
+    void returnCopyFileFail(String error, int errorCode);
 
     void returnRecommendAppWidgetListSuccess(GetRecommendAppWidgetListResult getRecommendAppWidgetListResult);
+
     void returnRecommendAppWidgetListFail(String error, int errorCode);
 
     void returnCreateShareVolumeSuccess(Volume volume);
+
     void returnCreateShareVolumeFail(String error, int errorCode);
 
-    void returnUpdateShareVolumeNameSuccess(Volume volume,String name);
+    void returnUpdateShareVolumeNameSuccess(Volume volume, String name);
+
     void returnUpdateShareVolumeNameFail(String error, int errorCode);
 
     void retrunRemoveShareVolumeSuccess(Volume volume);
+
     void returnRemoveShareVolumeFail(String error, int errorCode);
 
 
-    void returnFaceSettingSuccess( GetFaceSettingResult getFaceSettingResult);
+    void returnFaceSettingSuccess(GetFaceSettingResult getFaceSettingResult);
+
     void returnFaceSettingFail(String error, int errorCode);
 
-    void returnFaceVerifySuccess( GetFaceSettingResult getFaceSettingResult);
+    void returnFaceVerifySuccess(GetFaceSettingResult getFaceSettingResult);
+
     void returnFaceVerifyFail(String error, int errorCode);
 
     void returnVolumeDetailSuccess(VolumeDetail volumeDetail);
+
     void returnVolumeDetailFail(String error, int errorCode);
 
     void returnVolumeMemAddSuccess(List<String> uidList);
+
     void returnVolumeMemAddFail(String error, int errorCode);
 
     void returnVolumeMemDelSuccess(List<String> uidList);
+
     void returnVolumeMemDelFail(String error, int errorCode);
 
     void returnUpdateGroupNameSuccess(String name);
+
     void returnUpdateGroupNameFail(String error, int errorCode);
 
     void returnGroupMemAddSuccess(List<String> uidList);
+
     void returnGroupMemAddFail(String error, int errorCode);
 
     void returnGroupMemDelSuccess(List<String> uidList);
+
     void returnGroupMemDelFail(String error, int errorCode);
 
     void returnVolumeGroupContainMeSuccess(GetVolumeGroupResult getVolumeGroupResult);
+
     void returnVolumeGroupContainMeFail(String error, int errorCode);
 
     void returnVolumeGroupSuccess(GetVolumeResultWithPermissionResult getVolumeResultWithPermissionResult);

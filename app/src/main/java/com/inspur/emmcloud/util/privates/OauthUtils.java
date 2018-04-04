@@ -9,6 +9,9 @@ import com.inspur.emmcloud.interf.OauthCallBack;
 import com.inspur.emmcloud.ui.login.LoginActivity;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
+import com.inspur.emmcloud.util.privates.cache.AppExceptionCacheUtils;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -73,9 +76,27 @@ public class OauthUtils {
             callBackList.clear();
         }
 
+        /**
+         * 将刷新token失败的异常进行记录
+         * @param error
+         * @param errorCode
+         */
+        private void saveRefreshTokenException(String error, int errorCode){
+            JSONObject object = new JSONObject();
+            try {
+                object.put("error",error);
+                object.put("AT",MyApplication.getInstance().getAccessToken());
+                object.put("RT",MyApplication.getInstance().getRefreshToken());
+                AppExceptionCacheUtils.saveAppException(MyApplication.getInstance(),6,"刷新token失败",object.toString(),errorCode);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+
         @Override
         public void returnOauthSigninFail(String error, int errorCode) {
             // TODO Auto-generated method stub
+            saveRefreshTokenException(error,errorCode);
             //当errorCode为400时代表refreshToken也失效，需要重新登录
             if (errorCode != 400){
                 for (OauthCallBack oauthCallBack : callBackList){

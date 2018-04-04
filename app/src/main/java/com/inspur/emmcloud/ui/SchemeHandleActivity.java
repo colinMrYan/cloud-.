@@ -95,13 +95,13 @@ public class SchemeHandleActivity extends Activity {
         openScheme();
     }
 
-    private void faceVerify(){
+    private void faceVerify() {
         Intent intent = new Intent(SchemeHandleActivity.this, FaceVerifyActivity.class);
-        intent.putExtra("isFaceVerifyExperience",false);
+        intent.putExtra("isFaceVerifyExperience", false);
         startActivity(intent);
     }
 
-    private void gestureVerify(){
+    private void gestureVerify() {
         Intent intent = new Intent(this, GestureLoginActivity.class);
         intent.putExtra("gesture_code_change", "login");
         startActivity(intent);
@@ -111,7 +111,7 @@ public class SchemeHandleActivity extends Activity {
     /**
      * 注册安全解锁监听广播
      */
-    private void registerReceiver(){
+    private void registerReiceiver() {
         unlockReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {

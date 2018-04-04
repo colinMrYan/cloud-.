@@ -90,7 +90,7 @@ public class AppTabDataBean {
         this.key = key;
     }
 
-    public String getComponent() {
+    public String getTabId() {
         return component;
     }
 

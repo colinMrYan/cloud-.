@@ -8,5 +8,5 @@ import java.io.Serializable;
  * Created by yufuchang on 2017/7/13.
  */
 
-public class ReactNativeWritableArray extends WritableNativeArray implements Serializable{
+public class ReactNativeWritableArray extends WritableNativeArray implements Serializable {
 }
