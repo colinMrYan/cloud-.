@@ -51,7 +51,7 @@ import com.inspur.emmcloud.ui.chat.MessageFragment;
 import com.inspur.emmcloud.ui.find.FindFragment;
 import com.inspur.emmcloud.ui.mine.MoreFragment;
 import com.inspur.emmcloud.ui.notsupport.NotSupportFragment;
-import com.inspur.emmcloud.ui.work.MainTabBean;
+import com.inspur.emmcloud.ui.work.TabBean;
 import com.inspur.emmcloud.ui.work.WorkFragment;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
@@ -171,7 +171,7 @@ public class IndexActivity extends BaseFragmentActivity implements
     }
 
     /**
-     * 获取我的应用推荐小部件数据
+     * 获取我的应用推荐小部件数据,如果到了更新时间才请求
      */
     private void getMyAppRecommendWidgets() {
         if (MyAppWidgetUtils.checkNeedUpdateMyAppWidget(IndexActivity.this)) {
@@ -369,11 +369,9 @@ public class IndexActivity extends BaseFragmentActivity implements
         apiService.setAPIInterface(new WebService());
         if (NetUtils.isNetworkConnected(getApplicationContext(), false)) {
             ((MyApplication) getApplicationContext()).setIsContactReady(false);
-
             String contackLastUpdateTime = ContactCacheUtils
                     .getLastUpdateTime(IndexActivity.this);
             apiService.getAllContact(contackLastUpdateTime);
-
         } else if (isHasCacheContact) {
             handler.sendEmptyMessage(SYNC_ALL_BASE_DATA_SUCCESS);
         }
@@ -418,48 +416,47 @@ public class IndexActivity extends BaseFragmentActivity implements
      *
      * @return
      */
-    private MainTabBean[] handleAppTabs() {
-        MainTabBean[] mainTabs = null;
+    private TabBean[] handleAppTabs() {
+        TabBean[] mainTabs = null;
         String appTabs = PreferencesByUserAndTanentUtils.getString(IndexActivity.this, "app_tabbar_info_current", "");
         if (!StringUtils.isBlank(appTabs)) {
             Configuration config = getResources().getConfiguration();
             String environmentLanguage = config.locale.getLanguage();
             AppTabAutoBean appTabAutoBean = new AppTabAutoBean(appTabs);
-            if (appTabAutoBean != null) {
-                EventBus.getDefault().post(appTabAutoBean);
-            }
+            //发送到MessageFragment
+            EventBus.getDefault().post(appTabAutoBean);
             ArrayList<AppTabDataBean> appTabList = (ArrayList<AppTabDataBean>) appTabAutoBean.getPayload().getTabs();
             if (appTabList != null && appTabList.size() > 0) {
-                mainTabs = new MainTabBean[appTabList.size()];
+                mainTabs = new TabBean[appTabList.size()];
                 for (int i = 0; i < appTabList.size(); i++) {
-                    MainTabBean mainTabBean = null;
+                    TabBean mainTabBean = null;
                     switch (appTabList.get(i).getComponent()) {
                         case "communicate":
-                            mainTabBean = new MainTabBean(i, R.string.communicate, R.drawable.selector_tab_message_btn, MessageFragment.class);
-                            mainTabBean.setCommpant(appTabList.get(i).getComponent());
+                            mainTabBean = new TabBean(getString(R.string.communicate), R.drawable.selector_tab_message_btn+"", MessageFragment.class);
+                            mainTabBean.setTabId(appTabList.get(i).getComponent());
                             break;
                         case "work":
-                            mainTabBean = new MainTabBean(i, R.string.work, R.drawable.selector_tab_work_btn,
+                            mainTabBean = new TabBean(getString(R.string.work), R.drawable.selector_tab_work_btn+"",
                                     WorkFragment.class);
-                            mainTabBean.setCommpant(appTabList.get(i).getComponent());
+                            mainTabBean.setTabId(appTabList.get(i).getComponent());
                             break;
                         case "find":
-                            mainTabBean = new MainTabBean(i, R.string.find, R.drawable.selector_tab_find_btn,
+                            mainTabBean = new TabBean(getString(R.string.find), R.drawable.selector_tab_find_btn+"",
                                     FindFragment.class);
-                            mainTabBean.setCommpant(appTabList.get(i).getComponent());
+                            mainTabBean.setTabId(appTabList.get(i).getComponent());
                             break;
                         case "application":
-                            mainTabBean = new MainTabBean(i, R.string.application, R.drawable.selector_tab_app_btn,
+                            mainTabBean = new TabBean(getString(R.string.application), R.drawable.selector_tab_app_btn + "",
                                     MyAppFragment.class);
-                            mainTabBean.setCommpant(appTabList.get(i).getComponent());
+                            mainTabBean.setTabId(appTabList.get(i).getComponent());
                             break;
                         case "mine":
-                            mainTabBean = new MainTabBean(i, R.string.mine, R.drawable.selector_tab_more_btn,
+                            mainTabBean = new TabBean(getString(R.string.mine), R.drawable.selector_tab_more_btn + "",
                                     MoreFragment.class);
-                            mainTabBean.setCommpant(appTabList.get(i).getComponent());
+                            mainTabBean.setTabId(appTabList.get(i).getComponent());
                             break;
                         default:
-                            mainTabBean = new MainTabBean(i, R.string.unknown, R.drawable.selector_tab_unknown_btn,
+                            mainTabBean = new TabBean(getString(R.string.unknown), R.drawable.selector_tab_unknown_btn + "",
                                     NotSupportFragment.class);
                             break;
                     }
@@ -479,56 +476,46 @@ public class IndexActivity extends BaseFragmentActivity implements
      *
      * @param tabs
      */
-    private void displayMainTabs(MainTabBean[] tabs) {
+    private void displayMainTabs(TabBean[] tabs) {
         final int size = tabs.length;
         for (int i = 0; i < size; i++) {
-            MainTabBean mainTab = tabs[i];
-            TabHost.TabSpec tab = mTabHost.newTabSpec(getString(mainTab.getResName()));
+            TabBean mainTab = tabs[i];
+            TabHost.TabSpec tab = mTabHost.newTabSpec(mainTab.getTabName());
             View tabView = LayoutInflater.from(getApplicationContext())
                     .inflate(R.layout.tab_item_view, null);
             ImageView tabImg = (ImageView) tabView.findViewById(R.id.imageview);
             TextView tabText = (TextView) tabView.findViewById(R.id.textview);
-            if (mainTab.getCommpant().equals("communicate")) {
+            if (mainTab.getTabId().equals("communicate")) {
                 handleTipsView(tabView);
             }
-            if (!StringUtils.isBlank(mainTab.getConfigureName())) {
-                tabText.setText(mainTab.getConfigureName());
+            tabText.setText(mainTab.getTabName());
+            if (mainTab.getTabIcon().startsWith("http")) {
+                ImageDisplayUtils.getInstance().displayImage(tabImg, mainTab.getTabIcon(), R.drawable.ic_app_default);
             } else {
-                tabText.setText(getString(mainTab.getResName()));
-            }
-            if (!StringUtils.isBlank(mainTab.getConfigureIcon())) {
-                ImageDisplayUtils.getInstance().displayImage(tabImg, mainTab.getConfigureIcon(), R.drawable.ic_app_default);
-            } else {
-                tabImg.setImageResource(mainTab.getResIcon());
+                tabImg.setImageResource(Integer.parseInt(mainTab.getTabIcon()));
             }
             tab.setIndicator(tabView);
             tab.setContent(new TabHost.TabContentFactory() {
-
                 @Override
                 public View createTabContent(String tag) {
                     return new View(IndexActivity.this);
                 }
             });
-
             mTabHost.addTab(tab, mainTab.getClz(), null);
             mTabHost.getTabWidget().getChildAt(i).setOnTouchListener(this);
-            mTabHost.getTabWidget().getChildAt(i).setTag(mainTab.getCommpant());
+            mTabHost.getTabWidget().getChildAt(i).setTag(mainTab.getTabId());
             mTabHost.getTabWidget().setDividerDrawable(android.R.color.transparent);
             mTabHost.setOnTabChangedListener(this);
         }
         int tabSize = tabs.length;
-        int communicateLocation = -1;
+        int communicateIndex = -1;
         for (int i = 0; i < tabSize; i++) {
-            if (tabs[i].getCommpant().equals("communicate")) {
-                communicateLocation = tabs[i].getIdx();
+            if (tabs[i].getTabId().equals("communicate")) {
+                communicateIndex = i;
                 break;
             }
         }
-        if (communicateLocation != -1 && isCommunicationRunning == false) {
-            mTabHost.setCurrentTab(communicateLocation);
-        } else {
-            mTabHost.setCurrentTab(getTabIndex());
-        }
+        mTabHost.setCurrentTab((communicateIndex != -1 && isCommunicationRunning == false)?communicateIndex:getTabIndex());
     }
 
     /**
@@ -599,15 +586,15 @@ public class IndexActivity extends BaseFragmentActivity implements
      *
      * @return
      */
-    private MainTabBean[] addDefaultTabs() {
+    private TabBean[] addDefaultTabs() {
         //无数据改为显示两个tab，数组变为2
-        MainTabBean[] mainTabs = new MainTabBean[2];
-        MainTabBean mainTabBeanApp = new MainTabBean(0, R.string.application, R.drawable.selector_tab_app_btn,
+        TabBean[] mainTabs = new TabBean[2];
+        TabBean mainTabBeanApp = new TabBean(getString(R.string.application), R.drawable.selector_tab_app_btn + "",
                 MyAppFragment.class);
-        mainTabBeanApp.setCommpant("application");
-        MainTabBean mainTabBeanMine = new MainTabBean(1, R.string.mine, R.drawable.selector_tab_more_btn,
+        mainTabBeanApp.setTabId("application");
+        TabBean mainTabBeanMine = new TabBean(getString(R.string.mine), R.drawable.selector_tab_more_btn + "",
                 MoreFragment.class);
-        mainTabBeanMine.setCommpant("mine");
+        mainTabBeanMine.setTabId("mine");
         //无数据改为显示两个tab
         mainTabs[0] = mainTabBeanApp;
         mainTabs[1] = mainTabBeanMine;
@@ -631,16 +618,22 @@ public class IndexActivity extends BaseFragmentActivity implements
      * @param environmentLanguage
      * @return
      */
-    private MainTabBean internationalMainLanguage(AppTabDataBean tabsBean, String environmentLanguage, MainTabBean mainTab) {
-        if (environmentLanguage.toLowerCase().equals("zh") || environmentLanguage.toLowerCase().equals("zh-Hans".toLowerCase())) {
-            mainTab.setConfigureName(tabsBean.getTitle().getZhHans());
-        } else if (environmentLanguage.toLowerCase().equals("zh-Hant".toLowerCase())) {
-            mainTab.setConfigureName(tabsBean.getTitle().getZhHant());
-        } else if (environmentLanguage.toLowerCase().equals("en-US".toLowerCase()) ||
-                environmentLanguage.toLowerCase().equals("en".toLowerCase())) {
-            mainTab.setConfigureName(tabsBean.getTitle().getEnUS());
-        } else {
-            mainTab.setConfigureName(tabsBean.getTitle().getZhHans());
+    private TabBean internationalMainLanguage(AppTabDataBean tabsBean, String environmentLanguage, TabBean mainTab) {
+        switch (environmentLanguage.toLowerCase()){
+            case "zh":
+            case "zh-hans":
+                mainTab.setTabName(tabsBean.getTitle().getZhHans());
+                break;
+            case "zh-hant":
+                mainTab.setTabName(tabsBean.getTitle().getZhHant());
+                break;
+            case "en":
+            case "en-us":
+                mainTab.setTabName(tabsBean.getTitle().getEnUS());
+                break;
+            default:
+                mainTab.setTabName(tabsBean.getTitle().getZhHans());
+                break;
         }
         return mainTab;
     }
@@ -709,7 +702,6 @@ public class IndexActivity extends BaseFragmentActivity implements
      */
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             if ((System.currentTimeMillis() - lastBackTime) > 2000) {
                 ToastUtils.show(IndexActivity.this,
@@ -731,7 +723,6 @@ public class IndexActivity extends BaseFragmentActivity implements
         if (event.getAction() == MotionEvent.ACTION_DOWN
                 && v.equals(mTabHost.getCurrentTabView())) {
             Fragment currentFragment = getCurrentFragment();
-//            addFragment(currentFragment);
             if (currentFragment != null
                     && currentFragment instanceof OnTabReselectListener) {
                 OnTabReselectListener listener = (OnTabReselectListener) currentFragment;
