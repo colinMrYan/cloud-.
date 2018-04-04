@@ -109,7 +109,7 @@ public class NativeBridge extends ReactContextBaseJavaModule implements Activity
      */
     @ReactMethod
     public void getCurrentEnterprise(Promise promise) {
-        Enterprise enterprise = ((MyApplication)getReactApplicationContext().getApplicationContext()).getCurrentEnterprise();
+        Enterprise enterprise = ((MyApplication) getReactApplicationContext().getApplicationContext()).getCurrentEnterprise();
         try {
             promise.resolve(enterprise.enterPrise2WritableNativeMap());
         } catch (Exception e) {
@@ -209,7 +209,7 @@ public class NativeBridge extends ReactContextBaseJavaModule implements Activity
      */
     @ReactMethod
     public void findContactByMail(String email, Promise promise) {
-        if(StringUtils.isBlank(email) || email.equals("null")){
+        if (StringUtils.isBlank(email) || email.equals("null")) {
             promise.resolve(null);
             return;
         }

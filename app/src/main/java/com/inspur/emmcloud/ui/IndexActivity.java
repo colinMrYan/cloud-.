@@ -34,7 +34,6 @@ import com.inspur.emmcloud.bean.chat.TransparentBean;
 import com.inspur.emmcloud.bean.contact.Contact;
 import com.inspur.emmcloud.bean.contact.GetAllContactResult;
 import com.inspur.emmcloud.bean.contact.GetSearchChannelGroupResult;
-import com.inspur.emmcloud.bean.system.AppException;
 import com.inspur.emmcloud.bean.system.AppTabAutoBean;
 import com.inspur.emmcloud.bean.system.AppTabDataBean;
 import com.inspur.emmcloud.bean.system.GetAppTabAutoResult;
@@ -327,20 +326,19 @@ public class IndexActivity extends BaseFragmentActivity implements
 
     }
 
-    private void deleteIllegalUser(){
+    private void deleteIllegalUser() {
         try {
-            boolean isHasDeletleIllegalUser = PreferencesByUserAndTanentUtils.getBoolean(getApplicationContext(),Constant.PREF_DELETE_ILLEGAL_USER,false);
-            if (!isHasDeletleIllegalUser){
-                int illegalUserCount =  ContactCacheUtils.deleteIllegalUser(getApplicationContext());
-                if (illegalUserCount != -1){
-                    PreferencesByUserAndTanentUtils.putBoolean(getApplicationContext(),Constant.PREF_DELETE_ILLEGAL_USER,true);
+            boolean isHasDeletleIllegalUser = PreferencesByUserAndTanentUtils.getBoolean(getApplicationContext(), Constant.PREF_DELETE_ILLEGAL_USER, false);
+            if (!isHasDeletleIllegalUser) {
+                int illegalUserCount = ContactCacheUtils.deleteIllegalUser(getApplicationContext());
+                if (illegalUserCount != -1) {
+                    PreferencesByUserAndTanentUtils.putBoolean(getApplicationContext(), Constant.PREF_DELETE_ILLEGAL_USER, true);
                 }
-                if (illegalUserCount != 0){
-                    AppException appException = new AppException(System.currentTimeMillis(), AppUtils.getVersion(getApplicationContext()), 5, "", "通讯录删除无效用户个数"+illegalUserCount, -1);
-                    AppExceptionCacheUtils.saveAppException(getApplicationContext(), appException);
+                if (illegalUserCount != 0) {
+                    AppExceptionCacheUtils.saveAppException(getApplicationContext(), 5,"","通讯录删除无效用户个数" + illegalUserCount,0);
                 }
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -520,6 +518,7 @@ public class IndexActivity extends BaseFragmentActivity implements
 
     /**
      * 更新底部tab数字，从MyAppFragment badge请求返回
+     *
      * @param getAppBadgeResult
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -530,13 +529,14 @@ public class IndexActivity extends BaseFragmentActivity implements
 
     /**
      * 查找应用tab并改变tab上的角标
+     *
      * @param badgeNumber
      */
     private void findAndSetUnhandleBadgesDisplay(int badgeNumber) {
         for (int i = 0; i < mTabHost.getTabWidget().getChildCount(); i++) {
             View tabView = mTabHost.getTabWidget().getChildAt(i);
-            if(mTabHost.getTabWidget().getChildAt(i).getTag().toString().contains("application")){
-                setUnHandledBadgesDisplay(tabView,badgeNumber);
+            if (mTabHost.getTabWidget().getChildAt(i).getTag().toString().contains("application")) {
+                setUnHandledBadgesDisplay(tabView, badgeNumber);
                 break;
             }
         }
@@ -544,10 +544,11 @@ public class IndexActivity extends BaseFragmentActivity implements
 
     /**
      * 修改tab角标，来自ECMTransparentUtils
+     *
      * @param transparentBean
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void updateBadgeNumber(TransparentBean transparentBean){
+    public void updateBadgeNumber(TransparentBean transparentBean) {
         findAndSetUnhandleBadgesDisplay(transparentBean.getBadgeNumber());
     }
 
@@ -556,13 +557,13 @@ public class IndexActivity extends BaseFragmentActivity implements
      *
      * @param tabView
      */
-    private void setUnHandledBadgesDisplay(View tabView,int badgeNumber) {
+    private void setUnHandledBadgesDisplay(View tabView, int badgeNumber) {
         RelativeLayout unhandledBadgesLayout = (RelativeLayout) tabView.findViewById(R.id.new_message_tips_layout);
-        unhandledBadgesLayout.setVisibility((badgeNumber == 0)?View.GONE:View.VISIBLE);
+        unhandledBadgesLayout.setVisibility((badgeNumber == 0) ? View.GONE : View.VISIBLE);
         TextView unhandledBadgesText = (TextView) tabView.findViewById(R.id.new_message_tips_text);
-        unhandledBadgesText.setText(""+(badgeNumber > 99 ? "99+":badgeNumber));
+        unhandledBadgesText.setText("" + (badgeNumber > 99 ? "99+" : badgeNumber));
         //更新桌面角标数字
-        ECMShortcutBadgeNumberManagerUtils.setDesktopBadgeNumber(IndexActivity.this,badgeNumber);
+        ECMShortcutBadgeNumberManagerUtils.setDesktopBadgeNumber(IndexActivity.this, badgeNumber);
     }
 
     /**
