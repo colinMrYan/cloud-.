@@ -61,12 +61,12 @@ public class SchemeHandleActivity extends Activity {
         if (MyApplication.getInstance().getOPenNotification()) {
             MyApplication.getInstance().setOpenNotification(false);
             if (FaceVerifyActivity.getFaceVerifyIsOpenByUser(SchemeHandleActivity.this)) {
-                registerReceiver();
+                registerReiceiver();
                 MyApplication.getInstance().setIsActive(true);
                 faceVerify();
                 return;
             } else if (getIsNeedGestureCode()) {
-                registerReceiver();
+                registerReiceiver();
                 MyApplication.getInstance().setIsActive(true);
                 gestureVerify();
                 return;
