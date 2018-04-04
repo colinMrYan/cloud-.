@@ -415,7 +415,7 @@ public class IndexActivity extends BaseFragmentActivity implements
      * @return
      */
     private TabBean[] handleAppTabs() {
-        TabBean[] mainTabs = null;
+        TabBean[] tabBeans = null;
         String appTabs = PreferencesByUserAndTanentUtils.getString(IndexActivity.this, "app_tabbar_info_current", "");
         if (!StringUtils.isBlank(appTabs)) {
             Configuration config = getResources().getConfiguration();
@@ -425,44 +425,44 @@ public class IndexActivity extends BaseFragmentActivity implements
             EventBus.getDefault().post(appTabAutoBean);
             ArrayList<AppTabDataBean> appTabList = (ArrayList<AppTabDataBean>) appTabAutoBean.getPayload().getTabs();
             if (appTabList.size() > 0) {
-                mainTabs = new TabBean[appTabList.size()];
+                tabBeans = new TabBean[appTabList.size()];
                 for (int i = 0; i < appTabList.size(); i++) {
-                    TabBean mainTabBean = null;
+                    TabBean tabBean = null;
                     switch (appTabList.get(i).getTabId()) {
                         case "communicate":
-                            mainTabBean = new TabBean(getString(R.string.communicate), R.drawable.selector_tab_message_btn+"", MessageFragment.class);
+                            tabBean = new TabBean(getString(R.string.communicate), R.drawable.selector_tab_message_btn+"", MessageFragment.class);
                             break;
                         case "work":
-                            mainTabBean = new TabBean(getString(R.string.work), R.drawable.selector_tab_work_btn+"",
+                            tabBean = new TabBean(getString(R.string.work), R.drawable.selector_tab_work_btn+"",
                                     WorkFragment.class);
                             break;
                         case "find":
-                            mainTabBean = new TabBean(getString(R.string.find), R.drawable.selector_tab_find_btn+"",
+                            tabBean = new TabBean(getString(R.string.find), R.drawable.selector_tab_find_btn+"",
                                     FindFragment.class);
                             break;
                         case "application":
-                            mainTabBean = new TabBean(getString(R.string.application), R.drawable.selector_tab_app_btn + "",
+                            tabBean = new TabBean(getString(R.string.application), R.drawable.selector_tab_app_btn + "",
                                     MyAppFragment.class);
                             break;
                         case "mine":
-                            mainTabBean = new TabBean(getString(R.string.mine), R.drawable.selector_tab_more_btn + "",
+                            tabBean = new TabBean(getString(R.string.mine), R.drawable.selector_tab_more_btn + "",
                                     MoreFragment.class);
                             break;
                         default:
-                            mainTabBean = new TabBean(getString(R.string.unknown), R.drawable.selector_tab_unknown_btn + "",
+                            tabBean = new TabBean(getString(R.string.unknown), R.drawable.selector_tab_unknown_btn + "",
                                     NotSupportFragment.class);
                             break;
                     }
-                    mainTabBean.setTabId(appTabList.get(i).getTabId());
-                    mainTabs[i] = internationalMainLanguage(appTabList.get(i), environmentLanguage, mainTabBean);
+                    tabBean.setTabId(appTabList.get(i).getTabId());
+                    tabBeans[i] = internationalMainLanguage(appTabList.get(i), environmentLanguage, tabBean);
                 }
             }
         }
-        if (mainTabs == null) {
-            mainTabs = addDefaultTabs();
+        if (tabBeans == null) {
+            tabBeans = addDefaultTabs();
         }
-        displayMainTabs(mainTabs);
-        return mainTabs;
+        displayTabs(tabBeans);
+        return tabBeans;
     }
 
     /**
@@ -470,23 +470,23 @@ public class IndexActivity extends BaseFragmentActivity implements
      *
      * @param tabs
      */
-    private void displayMainTabs(TabBean[] tabs) {
+    private void displayTabs(TabBean[] tabs) {
         final int size = tabs.length;
         for (int i = 0; i < size; i++) {
-            TabBean mainTab = tabs[i];
-            TabHost.TabSpec tab = mTabHost.newTabSpec(mainTab.getTabName());
+            TabBean tabBean = tabs[i];
+            TabHost.TabSpec tab = mTabHost.newTabSpec(tabBean.getTabName());
             View tabView = LayoutInflater.from(getApplicationContext())
                     .inflate(R.layout.tab_item_view, null);
             ImageView tabImg = (ImageView) tabView.findViewById(R.id.imageview);
             TextView tabText = (TextView) tabView.findViewById(R.id.textview);
-            if (mainTab.getTabId().equals("communicate")) {
+            if (tabBean.getTabId().equals("communicate")) {
                 handleTipsView(tabView);
             }
-            tabText.setText(mainTab.getTabName());
-            if (mainTab.getTabIcon().startsWith("http")) {
-                ImageDisplayUtils.getInstance().displayImage(tabImg, mainTab.getTabIcon(), R.drawable.ic_app_default);
+            tabText.setText(tabBean.getTabName());
+            if (tabBean.getTabIcon().startsWith("http")) {
+                ImageDisplayUtils.getInstance().displayImage(tabImg, tabBean.getTabIcon(), R.drawable.ic_app_default);
             } else {
-                tabImg.setImageResource(Integer.parseInt(mainTab.getTabIcon()));
+                tabImg.setImageResource(Integer.parseInt(tabBean.getTabIcon()));
             }
             tab.setIndicator(tabView);
             tab.setContent(new TabHost.TabContentFactory() {
@@ -495,9 +495,9 @@ public class IndexActivity extends BaseFragmentActivity implements
                     return new View(IndexActivity.this);
                 }
             });
-            mTabHost.addTab(tab, mainTab.getClz(), null);
+            mTabHost.addTab(tab, tabBean.getClz(), null);
             mTabHost.getTabWidget().getChildAt(i).setOnTouchListener(this);
-            mTabHost.getTabWidget().getChildAt(i).setTag(mainTab.getTabId());
+            mTabHost.getTabWidget().getChildAt(i).setTag(tabBean.getTabId());
             mTabHost.getTabWidget().setDividerDrawable(android.R.color.transparent);
             mTabHost.setOnTabChangedListener(this);
         }
@@ -585,17 +585,17 @@ public class IndexActivity extends BaseFragmentActivity implements
      */
     private TabBean[] addDefaultTabs() {
         //无数据改为显示两个tab，数组变为2
-        TabBean[] mainTabs = new TabBean[2];
-        TabBean mainTabBeanApp = new TabBean(getString(R.string.application), R.drawable.selector_tab_app_btn + "",
+        TabBean[] tabBeans = new TabBean[2];
+        TabBean tabBeanApp = new TabBean(getString(R.string.application), R.drawable.selector_tab_app_btn + "",
                 MyAppFragment.class);
-        mainTabBeanApp.setTabId("application");
-        TabBean mainTabBeanMine = new TabBean(getString(R.string.mine), R.drawable.selector_tab_more_btn + "",
+        tabBeanApp.setTabId("application");
+        TabBean tabBeanMine = new TabBean(getString(R.string.mine), R.drawable.selector_tab_more_btn + "",
                 MoreFragment.class);
-        mainTabBeanMine.setTabId("mine");
+        tabBeanMine.setTabId("mine");
         //无数据改为显示两个tab
-        mainTabs[0] = mainTabBeanApp;
-        mainTabs[1] = mainTabBeanMine;
-        return mainTabs;
+        tabBeans[0] = tabBeanApp;
+        tabBeans[1] = tabBeanMine;
+        return tabBeans;
     }
 
     /**
@@ -615,24 +615,22 @@ public class IndexActivity extends BaseFragmentActivity implements
      * @param environmentLanguage
      * @return
      */
-    private TabBean internationalMainLanguage(AppTabDataBean tabsBean, String environmentLanguage, TabBean mainTab) {
+    private TabBean internationalMainLanguage(AppTabDataBean tabsBean, String environmentLanguage, TabBean tabBean) {
         switch (environmentLanguage.toLowerCase()){
-            case "zh":
-            case "zh-hans":
-                mainTab.setTabName(tabsBean.getTitle().getZhHans());
-                break;
             case "zh-hant":
-                mainTab.setTabName(tabsBean.getTitle().getZhHant());
+                tabBean.setTabName(tabsBean.getTitle().getZhHant());
                 break;
             case "en":
             case "en-us":
-                mainTab.setTabName(tabsBean.getTitle().getEnUS());
+                tabBean.setTabName(tabsBean.getTitle().getEnUS());
                 break;
+            case "zh":
+            case "zh-hans":
             default:
-                mainTab.setTabName(tabsBean.getTitle().getZhHans());
+                tabBean.setTabName(tabsBean.getTitle().getZhHans());
                 break;
         }
-        return mainTab;
+        return tabBean;
     }
 
     /**
