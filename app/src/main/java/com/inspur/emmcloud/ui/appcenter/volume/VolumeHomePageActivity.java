@@ -93,7 +93,7 @@ public class VolumeHomePageActivity extends BaseActivity implements SwipeRefresh
                             if(uriList!=null && uriList.size() > 0){
                                 bundle.putSerializable("fileShareUriList", (Serializable) uriList);
                                 bundle.putString("operationFileDirAbsolutePath", "/");
-                                IntentUtils.startActivity(VolumeHomePageActivity.this,VolumeFileLocationSelectActivity.class,bundle,true);
+                                IntentUtils.startActivity(VolumeHomePageActivity.this,VolumeFileLocationSelectActivity.class,bundle);
                             } else  {
                                 IntentUtils.startActivity(VolumeHomePageActivity.this, VolumeFileActivity.class,
                                         bundle);
@@ -106,7 +106,7 @@ public class VolumeHomePageActivity extends BaseActivity implements SwipeRefresh
                             bundle.putSerializable("fileShareUriList", (Serializable) uriList);
                         }
                         IntentUtils.startActivity(VolumeHomePageActivity.this, ShareVolumeActivity.class,
-                                bundle,(uriList == null || uriList.size() == 0)?false:true);
+                                bundle);
                         break;
                     default:
                         break;
