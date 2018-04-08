@@ -57,7 +57,7 @@ public class VolumeGroupPermissionManagerAdapter extends RecyclerView.Adapter<Vo
 
     @Override
     public int getItemCount() {
-        return groupList.size();
+        return groupList == null? 0:groupList.size();
     }
 
     public class VolumeGroupPermissionManagerAdapterHolder extends RecyclerView.ViewHolder {

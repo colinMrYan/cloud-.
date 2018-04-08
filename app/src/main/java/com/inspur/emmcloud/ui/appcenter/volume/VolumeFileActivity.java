@@ -154,7 +154,6 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
 
             }
         });
-        adapter.getItemCount();
     }
 
     private void registerReceiver() {
