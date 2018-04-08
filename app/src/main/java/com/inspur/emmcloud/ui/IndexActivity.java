@@ -434,14 +434,14 @@ public class IndexActivity extends BaseFragmentActivity implements
                     TabBean tabBean = null;
                     switch (appTabList.get(i).getTabId()) {
                         case "communicate":
-                            tabBean = new TabBean(getString(R.string.communicate), R.drawable.selector_tab_message_btn+"", MessageFragment.class);
+                            tabBean = new TabBean(getString(R.string.communicate), R.drawable.selector_tab_message_btn + "", MessageFragment.class);
                             break;
                         case "work":
-                            tabBean = new TabBean(getString(R.string.work), R.drawable.selector_tab_work_btn+"",
+                            tabBean = new TabBean(getString(R.string.work), R.drawable.selector_tab_work_btn + "",
                                     WorkFragment.class);
                             break;
                         case "find":
-                            tabBean = new TabBean(getString(R.string.find), R.drawable.selector_tab_find_btn+"",
+                            tabBean = new TabBean(getString(R.string.find), R.drawable.selector_tab_find_btn + "",
                                     FindFragment.class);
                             break;
                         case "application":
@@ -513,7 +513,7 @@ public class IndexActivity extends BaseFragmentActivity implements
                 break;
             }
         }
-        mTabHost.setCurrentTab((communicateIndex != -1 && isCommunicationRunning == false)?communicateIndex:getTabIndex());
+        mTabHost.setCurrentTab((communicateIndex != -1 && isCommunicationRunning == false) ? communicateIndex : getTabIndex());
     }
 
     /**
@@ -620,7 +620,7 @@ public class IndexActivity extends BaseFragmentActivity implements
      * @return
      */
     private TabBean internationalMainLanguage(AppTabDataBean tabsBean, String environmentLanguage, TabBean tabBean) {
-        switch (environmentLanguage.toLowerCase()){
+        switch (environmentLanguage.toLowerCase()) {
             case "zh-hant":
                 tabBean.setTabName(tabsBean.getTitle().getZhHant());
                 break;
