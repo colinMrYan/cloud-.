@@ -72,7 +72,7 @@ public class AppTitleUtils {
      */
     private static AppTabDataBean getTabByTabKey(ArrayList<AppTabDataBean> tabList, String tabKey) {
         for(int i = 0; i < tabList.size(); i++){
-            if(tabList.get(i).getComponent().equals(tabKey)){
+            if(tabList.get(i).getTabId().equals(tabKey)){
                 return tabList.get(i);
             }
         }

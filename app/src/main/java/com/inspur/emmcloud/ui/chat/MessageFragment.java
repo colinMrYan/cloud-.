@@ -197,7 +197,7 @@ public class MessageFragment extends Fragment {
         ArrayList<AppTabDataBean> appTabList =
                 (ArrayList<AppTabDataBean>) payloadBean.getTabs();
         for (int i = 0; i < appTabList.size(); i++) {
-            if (appTabList.get(i).getComponent().equals("communicate")) {
+            if (appTabList.get(i).getTabId().equals("communicate")) {
                 AppTabProperty property = appTabList.get(i).getProperty();
                 if (property != null) {
                     if (!property.isCanCreate()) {
