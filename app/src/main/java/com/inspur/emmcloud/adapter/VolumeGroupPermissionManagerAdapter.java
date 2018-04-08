@@ -38,7 +38,7 @@ public class VolumeGroupPermissionManagerAdapter extends RecyclerView.Adapter<Vo
         holder.groupNameText = (TextView) view.findViewById(R.id.volume_group_name_tv);
         holder.permissionText = (TextView) view.findViewById(R.id.volume_group_permission_tv);
         holder.recommendAppImg = (ImageView) view.findViewById(R.id.volume_group_arrow_img);
-        holder.relativeLayout = (RelativeLayout) view.findViewById(R.id.volume_group_layout);
+        holder.relativeLayout = (RelativeLayout) view.findViewById(R.id.volume_group_rl);
 
         return holder;
     }

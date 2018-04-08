@@ -285,7 +285,6 @@ public class IndexActivity extends BaseFragmentActivity implements
         }
     }
 
-
     private void handMessage() {
         // TODO Auto-generated method stub
         handler = new WeakHandler(IndexActivity.this) {

@@ -43,7 +43,7 @@ import org.xutils.view.annotation.ViewInject;
 @ContentView(R.layout.activity_volume_permission)
 public class VolumeFilePermissionManagerActivity extends BaseActivity{
 
-    @ViewInject(R.id.volume_file_permission_recyclerview)
+    @ViewInject(R.id.volume_file_permission_rv)
     protected RecyclerView groupRecyclerView;
 
     private VolumeGroupPermissionManagerAdapter volumeGroupPermissionManagerAdapter;
@@ -72,7 +72,6 @@ public class VolumeFilePermissionManagerActivity extends BaseActivity{
                 intent.putExtra("volumeGroup",group);
                 intent.putExtra("volumePath",getIntent().getStringExtra("currentDirAbsolutePath"));
                 startActivity(intent);
-
             }
         });
         groupRecyclerView.setAdapter(volumeGroupPermissionManagerAdapter);
