@@ -181,7 +181,7 @@
 
 
                 <com.inspur.emmcloud.widget.ScrollViewWithListView
-                    android:id="@+id/group_list"
+                    android:id="@+id/slv_write_group_list"
                     android:background="@android:color/white"
                     android:dividerHeight="0dp"
                     android:divider="@null"
@@ -209,7 +209,7 @@
 
 
                 <com.inspur.emmcloud.widget.ScrollViewWithListView
-                    android:id="@+id/group_watch_list"
+                    android:id="@+id/slv_read_group_watch_list"
                     android:background="@android:color/white"
                     android:dividerHeight="0dp"
                     android:divider="@null"

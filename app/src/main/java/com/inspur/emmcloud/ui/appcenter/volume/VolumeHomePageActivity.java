@@ -83,30 +83,27 @@ public class VolumeHomePageActivity extends BaseActivity implements SwipeRefresh
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Bundle bundle;
-                List<Uri> uriList = (List<Uri>) getIntent().getSerializableExtra("fileShareList");
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("volume", myVolume);
+                bundle.putString("title",getString(R.string.volume_my_file) );
+                List<Uri> uriList = (List<Uri>) getIntent().getSerializableExtra("fileShareUriList");
                 switch (position) {
                     case 0:
-                        if(uriList!=null && uriList.size() > 0){
-                            bundle = new Bundle();
-                            bundle.putSerializable("fileShareList", (Serializable) uriList);
-                            bundle.putString("operationFileDirAbsolutePath", "/");
-                            bundle.putSerializable("volume", myVolume);
-                            bundle.putString("title",getString(R.string.volume_my_file) );
-                            IntentUtils.startActivity(VolumeHomePageActivity.this,VolumeFileLocationSelectActivity.class,bundle,true);
-                        } else if(myVolume != null) {
-                            bundle = new Bundle();
-                            bundle.putSerializable("volume", myVolume);
-                            bundle.putSerializable("title", getString(R.string.volume_my_file));
-                            IntentUtils.startActivity(VolumeHomePageActivity.this, VolumeFileActivity.class,
-                                    bundle);
+                        if(myVolume != null){
+                            if(uriList!=null && uriList.size() > 0){
+                                bundle.putSerializable("fileShareUriList", (Serializable) uriList);
+                                bundle.putString("operationFileDirAbsolutePath", "/");
+                                IntentUtils.startActivity(VolumeHomePageActivity.this,VolumeFileLocationSelectActivity.class,bundle,true);
+                            } else  {
+                                IntentUtils.startActivity(VolumeHomePageActivity.this, VolumeFileActivity.class,
+                                        bundle);
+                            }
                         }
                         break;
                     case 1:
-                        bundle = new Bundle();
                         bundle.putSerializable("shareVolumeList", (Serializable) shareVolumeList);
                         if (uriList != null && uriList.size() > 0) {
-                            bundle.putSerializable("fileShareList", (Serializable) uriList);
+                            bundle.putSerializable("fileShareUriList", (Serializable) uriList);
                         }
                         IntentUtils.startActivity(VolumeHomePageActivity.this, ShareVolumeActivity.class,
                                 bundle,(uriList == null || uriList.size() == 0)?false:true);

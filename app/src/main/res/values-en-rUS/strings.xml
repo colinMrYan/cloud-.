@@ -428,7 +428,7 @@
     <string name="volume_group_name">Group Name</string>
     <string name="volume_upload_file">Upload File</string>
     <string name="volume_upload_file_to_volume">Upload file to volume</string>
-    <string name="volume_file_permission">Permission manager</string>
+    <string name="volume_file_permission_manager">Permission manager</string>
 
 
     <!-- 我的页面部分 -->

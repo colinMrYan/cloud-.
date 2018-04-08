@@ -100,13 +100,13 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
      *  处理文件分享
      */
     private void handleFileShareToVolume() {
-        List<Uri> uriList = new ArrayList<>();
-        List<Uri> fileShareList = (List<Uri>)getIntent().getSerializableExtra("fileShareList");
-        if(fileShareList != null){
-            uriList.addAll(fileShareList);
+        List<Uri> shareUriList = new ArrayList<>();
+        List<Uri> fileShareUriList = (List<Uri>)getIntent().getSerializableExtra("fileShareUriList");
+        if(fileShareUriList != null){
+            shareUriList.addAll(fileShareUriList);
         }
-        for(int i = 0; i < uriList.size(); i++){
-            uploadFile(GetPathFromUri4kitkat.getPathByUri(getApplicationContext(), uriList.get(i)));
+        for(int i = 0; i < shareUriList.size(); i++){
+            uploadFile(GetPathFromUri4kitkat.getPathByUri(getApplicationContext(), shareUriList.get(i)));
         }
     }
 

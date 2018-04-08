@@ -66,10 +66,10 @@ public class ShareVolumeInfoActivity extends BaseActivity {
     @ViewInject(R.id.volume_name_text)
     private TextView volumeNameText;
 
-    @ViewInject(R.id.group_list)
-    private ScrollViewWithListView groupListView;
+    @ViewInject(R.id.slv_write_group_list)
+    private ScrollViewWithListView groupWriteListView;
 
-    @ViewInject(R.id.group_watch_list)
+    @ViewInject(R.id.slv_read_group_watch_list)
     private ScrollViewWithListView groupWatchListView;
 
     @ViewInject(R.id.volume_name_arrow)
@@ -148,20 +148,20 @@ public class ShareVolumeInfoActivity extends BaseActivity {
 
     private void showVolumeDetail() {
         if (isOwner) {
-            if(volumeDetail.getGroupList().size() > 0){
+            if(volumeDetail.getGroupWriteList().size() > 0){
                 groupLayout.setVisibility(View.VISIBLE);
-                groupAdapter = new VolumeInfoGroupAdapter(getApplicationContext(), volumeDetail.getGroupList());
-                groupListView.setAdapter(groupAdapter);
-                groupListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                groupAdapter = new VolumeInfoGroupAdapter(getApplicationContext(), volumeDetail.getGroupWriteList());
+                groupWriteListView.setAdapter(groupAdapter);
+                groupWriteListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         openMemberDetail(position,VOLUME_HAS_UPLOAD_AND_WATCH_PERMISSION);
                     }
                 });
             }
-            if(volumeDetail.getGroupWatchList().size() > 0){
+            if(volumeDetail.getGroupReadList().size() > 0){
                 groupWatchLayout.setVisibility(View.VISIBLE);
-                groupWatchAdapter = new VolumeInfoGroupAdapter(getApplicationContext(),volumeDetail.getGroupWatchList());
+                groupWatchAdapter = new VolumeInfoGroupAdapter(getApplicationContext(),volumeDetail.getGroupReadList());
                 groupWatchListView.setAdapter(groupWatchAdapter);
                 groupWatchListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
@@ -211,9 +211,9 @@ public class ShareVolumeInfoActivity extends BaseActivity {
     private void openMemberDetail(int position,int type) {
         Group group = null;
         if(type == VOLUME_HAS_UPLOAD_AND_WATCH_PERMISSION){
-            group = volumeDetail.getGroupList().get(position);
+            group = volumeDetail.getGroupWriteList().get(position);
         }else{
-            group = volumeDetail.getGroupWatchList().get(position);
+            group = volumeDetail.getGroupReadList().get(position);
         }
         Bundle bundle = new Bundle();
         bundle.putSerializable("group",group);

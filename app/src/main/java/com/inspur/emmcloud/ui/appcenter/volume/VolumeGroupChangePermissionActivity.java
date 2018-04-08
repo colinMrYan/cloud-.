@@ -141,6 +141,7 @@ public class VolumeGroupChangePermissionActivity extends BaseActivity {
                 readPermissionSwitch.setPaintColorOn(0xff7fc5f6);
                 readPermissionSwitch.setPaintCircleBtnColor(0xff008cee);
             }
+            //发送到VolumeFilePermissionManagerActivity
             EventBus.getDefault().post(getVolumeGroupPermissionResult);
         }
 

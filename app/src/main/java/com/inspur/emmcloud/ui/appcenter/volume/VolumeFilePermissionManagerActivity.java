@@ -86,6 +86,10 @@ public class VolumeFilePermissionManagerActivity extends BaseActivity{
         }
     }
 
+    /**
+     * 来自VolumeGroupChangePermissionActivity
+     * @param getVolumeGroupPermissionResult
+     */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void updateVolumeGroupPermission(GetVolumeGroupPermissionResult getVolumeGroupPermissionResult) {
         getVolumeFileGroup();

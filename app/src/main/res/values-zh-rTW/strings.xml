@@ -430,7 +430,7 @@
     <string name="volume_group_name">組名稱</string>
     <string name="volume_upload_file">上傳文件</string>
     <string name="volume_upload_file_to_volume">上傳到網盤</string>
-    <string name="volume_file_permission">許可權管理</string>
+    <string name="volume_file_permission_manager">許可權管理</string>
 
     <!-- 我的頁面部分 -->
     <string name="data_clear_success">清除成功</string>

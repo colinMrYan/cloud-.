@@ -64,7 +64,7 @@
             android:layout_height="wrap_content"
             android:paddingTop="5dp"
             android:paddingLeft="12dp"
-            android:text="@string/volume_file_permission"
+            android:text="@string/volume_file_permission_manager"
             android:textColor="#99999999"/>
 
         <LinearLayout

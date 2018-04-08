@@ -130,14 +130,14 @@ public class SchemeHandleActivity extends Activity {
     private void openScheme() {
         if (((MyApplication) getApplicationContext()).isHaveLogin()) {
             openIndexActivity(this);
-            String action = getIntent().getAction();
-            if(action != null && (Intent.ACTION_SEND.equals(action) || Intent.ACTION_SEND_MULTIPLE.equals(action))){
-                handleShareIntent();
-            }
             //此处加延时操作，为了让打开通知时IndexActivity走onCreate()方法
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
+                    String action = getIntent().getAction();
+                    if(action != null && (Intent.ACTION_SEND.equals(action) || Intent.ACTION_SEND_MULTIPLE.equals(action))){
+                        handleShareIntent();
+                    }
                     Uri uri = getIntent().getData();
                     if(uri == null){
                         finish();
@@ -245,7 +245,7 @@ public class SchemeHandleActivity extends Activity {
     private void startVolumeShareActivity(List<Uri> uriList) {
         Intent intent = new Intent();
         intent.setClass(SchemeHandleActivity.this, VolumeHomePageActivity.class);
-        intent.putExtra("fileShareList", (Serializable) uriList);
+        intent.putExtra("fileShareUriList", (Serializable) uriList);
         startActivity(intent);
         finish();
     }

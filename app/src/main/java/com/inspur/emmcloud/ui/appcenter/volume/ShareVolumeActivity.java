@@ -85,19 +85,16 @@ public class ShareVolumeActivity extends BaseActivity implements SwipeRefreshLay
         shareVolumeListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                List<Uri> uriList = (List<Uri>) getIntent().getSerializableExtra("fileShareList");
+                List<Uri> shareUriList = (List<Uri>) getIntent().getSerializableExtra("fileShareUriList");
                 Volume volume = shareVolumeList.get(position);
-                if(uriList != null && uriList.size() > 0){
-                    Bundle bundle = new Bundle();
-                    bundle.putSerializable("fileShareList", (Serializable) uriList);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("volume", volume);
+                bundle.putString("title",volume.getName() );
+                if(shareUriList != null && shareUriList.size() > 0){
+                    bundle.putSerializable("fileShareUriList", (Serializable) shareUriList);
                     bundle.putString("operationFileDirAbsolutePath", "/");
-                    bundle.putSerializable("volume", volume);
-                    bundle.putString("title",volume.getName() );
                     IntentUtils.startActivity(ShareVolumeActivity.this, VolumeFileLocationSelectActivity.class, bundle,true);
                 }else{
-                    Bundle bundle = new Bundle();
-                    bundle.putSerializable("volume", volume);
-                    bundle.putSerializable("title", volume.getName());
                     IntentUtils.startActivity(ShareVolumeActivity.this, VolumeFileActivity.class, bundle);
                 }
             }

@@ -96,7 +96,10 @@ public class VolumeFileLocationSelectActivity extends VolumeFileBaseActivity {
         });
         pathText.setVisibility(View.VISIBLE);
         pathText.setText(getString(R.string.current_directory_hint,currentDirAbsolutePath));
-        uriList.addAll((List<Uri>)getIntent().getSerializableExtra("fileShareList"));
+        List<Uri> fileShareUriList = (List<Uri>)getIntent().getSerializableExtra("fileShareUriList");
+        if(fileShareUriList != null){
+            uriList.addAll(fileShareUriList);
+        }
         locationSelectUploadToText.setVisibility(uriList.size()>0?View.VISIBLE:View.GONE);
         locationSelectToText.setVisibility(uriList.size()>0?View.GONE:View.VISIBLE);
     }
@@ -145,7 +148,7 @@ public class VolumeFileLocationSelectActivity extends VolumeFileBaseActivity {
                 bundle.putSerializable("volume", volume);
                 bundle.putSerializable("currentDirAbsolutePath", currentDirAbsolutePath);
                 bundle.putSerializable("title", getString(R.string.volume_upload_file));
-                bundle.putSerializable("fileShareList", (Serializable) uriList);
+                bundle.putSerializable("fileShareUriList", (Serializable) uriList);
                 IntentUtils.startActivity(VolumeFileLocationSelectActivity.this, VolumeFileActivity.class, bundle);
                 closeAllThisActivityInstance();
                 break;

@@ -32,7 +32,6 @@ import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.FomatUtils;
 import com.inspur.emmcloud.util.common.InputMethodUtils;
 import com.inspur.emmcloud.util.common.IntentUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
@@ -148,7 +147,7 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
                 .addItem(getString(R.string.rename), isVolumeFileWriteable)
                 .addItem(getString(R.string.move_to), isVolumeFileWriteable)
                 .addItem(getString(R.string.copy))
-                .addItem(getString(R.string.volume_file_permission),isVolumeFileWriteable)
+                .addItem(getString(R.string.volume_file_permission_manager),isVolumeFileWriteable)
                // .addItem("分享", !isVolumeFileDirectory)
                 .setOnSheetItemClickListener(new ActionSheetDialog.ActionListSheetBuilder.OnSheetItemClickListener() {
                     @Override
@@ -174,10 +173,7 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
                                 copyFile(copyVolumeFileList);
                                 break;
                             case 5:
-                                Bundle bundle = new Bundle();
-                                bundle.putString("volume",volumeFile.getVolume());
-                                bundle.putString("currentDirAbsolutePath",currentDirAbsolutePath+volumeFile.getName());
-                                IntentUtils.startActivity(VolumeFileBaseActivity.this,VolumeFilePermissionManagerActivity.class,bundle);
+                                startVolumeFilePermissionManager(volumeFile);
                                 break;
                             default:
                                 break;
@@ -187,6 +183,16 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
                 })
                 .build()
                 .show();
+    }
+
+    /**
+     * 打开权限管理
+     */
+    private void startVolumeFilePermissionManager(VolumeFile volumeFile) {
+        Bundle bundle = new Bundle();
+        bundle.putString("volume",volumeFile.getVolume());
+        bundle.putString("currentDirAbsolutePath",currentDirAbsolutePath+volumeFile.getName());
+        IntentUtils.startActivity(VolumeFileBaseActivity.this,VolumeFilePermissionManagerActivity.class,bundle);
     }
 
 

@@ -47,7 +47,7 @@
                 android:paddingRight="100dp"
                 android:textColor="@color/header_text"
                 android:textSize="@dimen/header_textsize"
-                android:text="@string/volume_file_permission"/>
+                android:text="@string/volume_file_permission_manager"/>
 
         </RelativeLayout>
 
