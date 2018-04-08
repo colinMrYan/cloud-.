@@ -34,8 +34,8 @@ import com.inspur.emmcloud.bean.chat.TransparentBean;
 import com.inspur.emmcloud.bean.contact.Contact;
 import com.inspur.emmcloud.bean.contact.GetAllContactResult;
 import com.inspur.emmcloud.bean.contact.GetSearchChannelGroupResult;
-import com.inspur.emmcloud.bean.system.AppException;
 import com.inspur.emmcloud.bean.system.AppTabAutoBean;
+import com.inspur.emmcloud.bean.system.AppTabDataBean;
 import com.inspur.emmcloud.bean.system.GetAppTabAutoResult;
 import com.inspur.emmcloud.bean.system.PVCollectModel;
 import com.inspur.emmcloud.config.Constant;
@@ -272,8 +272,6 @@ public class IndexActivity extends BaseFragmentActivity implements
                 }
             }
         }).getClientID();
-
-
     }
 
     /**
@@ -334,15 +332,14 @@ public class IndexActivity extends BaseFragmentActivity implements
      */
     private void deleteIllegalUser(){
         try {
-            boolean isHasDeletleIllegalUser = PreferencesByUserAndTanentUtils.getBoolean(getApplicationContext(),Constant.PREF_DELETE_ILLEGAL_USER,false);
-            if (!isHasDeletleIllegalUser){
-                int illegalUserCount =  ContactCacheUtils.deleteIllegalUser(getApplicationContext());
-                if (illegalUserCount != -1){
-                    PreferencesByUserAndTanentUtils.putBoolean(getApplicationContext(),Constant.PREF_DELETE_ILLEGAL_USER,true);
+            boolean isHasDeletleIllegalUser = PreferencesByUserAndTanentUtils.getBoolean(getApplicationContext(), Constant.PREF_DELETE_ILLEGAL_USER, false);
+            if (!isHasDeletleIllegalUser) {
+                int illegalUserCount = ContactCacheUtils.deleteIllegalUser(getApplicationContext());
+                if (illegalUserCount != -1) {
+                    PreferencesByUserAndTanentUtils.putBoolean(getApplicationContext(), Constant.PREF_DELETE_ILLEGAL_USER, true);
                 }
-                if (illegalUserCount != 0){
-                    AppException appException = new AppException(System.currentTimeMillis(), AppUtils.getVersion(getApplicationContext()), 5, "", "通讯录删除无效用户个数"+illegalUserCount, -1);
-                    AppExceptionCacheUtils.saveAppException(getApplicationContext(), appException);
+                if (illegalUserCount != 0) {
+                    AppExceptionCacheUtils.saveAppException(getApplicationContext(), 5,"","通讯录删除无效用户个数" + illegalUserCount,0);
                 }
             }
         }catch (Exception e){
@@ -433,7 +430,7 @@ public class IndexActivity extends BaseFragmentActivity implements
             if (appTabAutoBean != null) {
                 EventBus.getDefault().post(appTabAutoBean);
             }
-            ArrayList<AppTabAutoBean.PayloadBean.TabsBean> appTabList = (ArrayList<AppTabAutoBean.PayloadBean.TabsBean>) appTabAutoBean.getPayload().getTabs();
+            ArrayList<AppTabDataBean> appTabList = (ArrayList<AppTabDataBean>) appTabAutoBean.getPayload().getTabs();
             if (appTabList != null && appTabList.size() > 0) {
                 mainTabs = new MainTabBean[appTabList.size()];
                 for (int i = 0; i < appTabList.size(); i++) {
@@ -637,7 +634,7 @@ public class IndexActivity extends BaseFragmentActivity implements
      * @param environmentLanguage
      * @return
      */
-    private MainTabBean internationalMainLanguage(AppTabAutoBean.PayloadBean.TabsBean tabsBean, String environmentLanguage, MainTabBean mainTab) {
+    private MainTabBean internationalMainLanguage(AppTabDataBean tabsBean, String environmentLanguage, MainTabBean mainTab) {
         if (environmentLanguage.toLowerCase().equals("zh") || environmentLanguage.toLowerCase().equals("zh-Hans".toLowerCase())) {
             mainTab.setConfigureName(tabsBean.getTitle().getZhHans());
         } else if (environmentLanguage.toLowerCase().equals("zh-Hant".toLowerCase())) {
@@ -692,11 +689,11 @@ public class IndexActivity extends BaseFragmentActivity implements
     private int getTabIndex() {
         int tabIndex = 0;
         String appTabs = PreferencesByUserAndTanentUtils.getString(IndexActivity.this, "app_tabbar_info_current", "");
-        ArrayList<AppTabAutoBean.PayloadBean.TabsBean> appTabList;
+        ArrayList<AppTabDataBean> appTabList;
         if (!StringUtils.isBlank(appTabs)) {
-            appTabList = (ArrayList<AppTabAutoBean.PayloadBean.TabsBean>) new AppTabAutoBean(appTabs).getPayload().getTabs();
+            appTabList = (ArrayList<AppTabDataBean>) new AppTabAutoBean(appTabs).getPayload().getTabs();
         } else {
-            appTabList = new ArrayList<AppTabAutoBean.PayloadBean.TabsBean>();
+            appTabList = new ArrayList<AppTabDataBean>();
         }
 
         if (appTabList != null && appTabList.size() > 0) {

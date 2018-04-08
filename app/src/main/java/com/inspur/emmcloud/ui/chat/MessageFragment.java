@@ -41,6 +41,9 @@ import com.inspur.emmcloud.bean.chat.MatheSet;
 import com.inspur.emmcloud.bean.chat.Msg;
 import com.inspur.emmcloud.bean.contact.GetSearchChannelGroupResult;
 import com.inspur.emmcloud.bean.system.AppTabAutoBean;
+import com.inspur.emmcloud.bean.system.AppTabDataBean;
+import com.inspur.emmcloud.bean.system.AppTabPayloadBean;
+import com.inspur.emmcloud.bean.system.AppTabProperty;
 import com.inspur.emmcloud.bean.system.PVCollectModel;
 import com.inspur.emmcloud.broadcastreceiver.MsgReceiver;
 import com.inspur.emmcloud.config.MyAppConfig;
@@ -99,7 +102,7 @@ import static android.app.Activity.RESULT_OK;
  *
  * @author Jason Chen; create at 2016年8月23日 下午2:59:39
  */
-public class MessageFragment extends Fragment {
+public class MessageFragment extends Fragment{
 
     private static final int RECEIVE_MSG = 1;
     private static final int CREAT_CHANNEL_GROUP = 1;
@@ -147,7 +150,7 @@ public class MessageFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        ((IndexActivity) getActivity()).openTargetFragment();
+        ((IndexActivity)getActivity()).openTargetFragment();
     }
 
     @Override
@@ -175,14 +178,14 @@ public class MessageFragment extends Fragment {
      */
     private void showMessageButtons() {
         String tabBarInfo = PreferencesByUserAndTanentUtils.getString(getActivity(), "app_tabbar_info_current", "");
+        //第一次登录时有tabBarInfo会为“”，会导致JSON waring
         if (!StringUtils.isBlank(tabBarInfo)) {
             AppTabAutoBean appTabAutoBean = new AppTabAutoBean(tabBarInfo);
-            AppTabAutoBean.PayloadBean payloadBean = appTabAutoBean.getPayload();
-            if (payloadBean != null) {
-                showCreateGroupOrFindContact(payloadBean);
-            }
+                AppTabPayloadBean payloadBean = appTabAutoBean.getPayload();
+                if (payloadBean != null) {
+                    showCreateGroupOrFindContact(payloadBean);
+                }
         }
-
     }
 
     /**
@@ -190,12 +193,12 @@ public class MessageFragment extends Fragment {
      *
      * @param payloadBean
      */
-    private void showCreateGroupOrFindContact(AppTabAutoBean.PayloadBean payloadBean) {
-        ArrayList<AppTabAutoBean.PayloadBean.TabsBean> appTabList =
-                (ArrayList<AppTabAutoBean.PayloadBean.TabsBean>) payloadBean.getTabs();
+    private void showCreateGroupOrFindContact(AppTabPayloadBean payloadBean) {
+        ArrayList<AppTabDataBean> appTabList =
+                (ArrayList<AppTabDataBean>) payloadBean.getTabs();
         for (int i = 0; i < appTabList.size(); i++) {
             if (appTabList.get(i).getComponent().equals("communicate")) {
-                AppTabAutoBean.PayloadBean.TabsBean.Property property = appTabList.get(i).getProperty();
+                AppTabProperty property = appTabList.get(i).getProperty();
                 if (property != null) {
                     if (!property.isCanCreate()) {
                         rootView.findViewById(R.id.more_function_list_img).setVisibility(View.GONE);
@@ -229,7 +232,7 @@ public class MessageFragment extends Fragment {
     /**
      * 初始化PullRefreshLayout
      */
-    private void initPullRefreshLayout() {
+    private void initPullRefreshLayout(){
         swipeRefreshLayout = (SwipeRefreshLayout) rootView
                 .findViewById(R.id.refresh_layout);
         swipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.header_bg), getResources().getColor(R.color.header_bg));
@@ -244,7 +247,7 @@ public class MessageFragment extends Fragment {
     /**
      * 初始化ListView
      */
-    private void initListView() {
+    private void initListView(){
         msgListView = (ListView) rootView.findViewById(R.id.msg_list);
         msgListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
@@ -287,13 +290,12 @@ public class MessageFragment extends Fragment {
     /**
      * 根据tabbar信息更新加号UI，这里显示信息附在Tabbar信息里
      * 所以没有数据请求回来，MessageFragment不存在的情况
-     *
      * @param appTabAutoBean
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void updateMessageUI(AppTabAutoBean appTabAutoBean) {
         if (appTabAutoBean != null) {
-            AppTabAutoBean.PayloadBean payloadBean = appTabAutoBean.getPayload();
+            AppTabPayloadBean payloadBean = appTabAutoBean.getPayload();
             if (payloadBean != null) {
                 showCreateGroupOrFindContact(payloadBean);
             }
@@ -430,7 +432,7 @@ public class MessageFragment extends Fragment {
             String cid = channelList.get(i).getCid();
             List<Msg> newMsgList = MsgCacheUtil.getHistoryMsgList(getActivity(), cid, "",
                     15);
-            channelList.get(i).setNewMsgList(getActivity().getApplicationContext(), newMsgList);
+            channelList.get(i).setNewMsgList(getActivity().getApplicationContext(),newMsgList);
         }
         return channelList;
     }
@@ -440,7 +442,7 @@ public class MessageFragment extends Fragment {
      * 为单个群组创建头像
      */
     private void createGroupIcon(List<Channel> channelList) {
-        if (((MyApplication) getActivity().getApplicationContext()).getIsContactReady() && NetUtils.isNetworkConnected(getActivity(), false)) {
+        if (((MyApplication) getActivity().getApplicationContext()).getIsContactReady() && NetUtils.isNetworkConnected(getActivity(),false)) {
             isHaveCreatGroupIcon = true;
             ChannelGroupIconUtils.getInstance().create(getActivity(), channelList,
                     handler);
@@ -709,17 +711,17 @@ public class MessageFragment extends Fragment {
         final boolean isChannelSetTop = ChannelOperationCacheUtils
                 .isChannelSetTop(getActivity(), displayChannelList
                         .get(position).getCid());
-        final String[] items = new String[]{getString(isChannelSetTop ? R.string.chanel_cancel_top : R.string.channel_set_top), getString(R.string.channel_hide_chat)};
+        final String[] items = new String[]{getString(isChannelSetTop?R.string.chanel_cancel_top :R.string.channel_set_top), getString(R.string.channel_hide_chat)};
         new QMUIDialog.MenuDialogBuilder(getActivity())
                 .addItems(items, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
-                        if (which == 0) {
+                        if (which == 0){
                             ChannelOperationCacheUtils.setChannelTop(getActivity(),
                                     displayChannelList.get(position).getCid(), !isChannelSetTop);
                             sortChannelList();
-                        } else {
+                        }else {
                             ChannelOperationCacheUtils.setChannelHide(
                                     getActivity(), displayChannelList.get(position)
                                             .getCid(), true);
@@ -951,6 +953,7 @@ public class MessageFragment extends Fragment {
     }
 
 
+
     /**
      * 接受创建群组头像的icon
      *
@@ -963,7 +966,7 @@ public class MessageFragment extends Fragment {
             // TODO Auto-generated method stub
             String command = intent.getExtras().getString("command");
             if (command.equals("creat_group_icon")) {
-                isHaveCreatGroupIcon = false;
+                isHaveCreatGroupIcon =false;
                 createGroupIcon(null);
             } else if (command.equals("refresh_session_list")) {
                 getChannelList();
@@ -992,7 +995,7 @@ public class MessageFragment extends Fragment {
             titleText.setText(R.string.socket_connecting);
         } else if (socketStatus.equals(Socket.EVENT_CONNECT)) {
             //当断开以后连接成功(非第一次连接上)后重新拉取一遍消息
-            if (!isFirstConnectWebsockt) {
+            if (!isFirstConnectWebsockt){
                 getChannelList();
             }
             isFirstConnectWebsockt = false;
@@ -1193,9 +1196,9 @@ public class MessageFragment extends Fragment {
      * 获取消息会话列表
      */
     private void getChannelList() {
-        if (NetUtils.isNetworkConnected(getActivity(), false)) {
+        if (NetUtils.isNetworkConnected(getActivity(),false)) {
             apiService.getChannelList();
-        } else {
+        }else {
             swipeRefreshLayout.setRefreshing(false);
         }
     }
@@ -1203,8 +1206,8 @@ public class MessageFragment extends Fragment {
     /**
      * 获取频道消息
      */
-    private void getChannelMsg() {
-        if (NetUtils.isNetworkConnected(getActivity(), false)) {
+    private void getChannelMsg(){
+        if (NetUtils.isNetworkConnected(getActivity(),false)) {
             apiService.getNewMsgs();
         }
     }
@@ -1216,7 +1219,7 @@ public class MessageFragment extends Fragment {
      * @param channelList
      */
     public void getChannelInfoResult(List<Channel> channelList) {
-        if (NetUtils.isNetworkConnected(getActivity(), false)) {
+        if (NetUtils.isNetworkConnected(getActivity(),false)) {
             ArrayList<String> cidList = new ArrayList<>();
             for (int i = 0; i < channelList.size(); i++) {
                 Channel channel = channelList.get(i);

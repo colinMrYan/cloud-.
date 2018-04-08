@@ -4,9 +4,8 @@ import android.util.Log;
 
 /**
  * android端日志开关
- * 
+ *
  * @author 浪潮移动应用平台(IMP)产品组
- * 
  */
 public class iLog {
 
@@ -22,8 +21,7 @@ public class iLog {
     /**
      * 通过整数设置log类型
      *
-     * @param logLevel
-     * 			log级别
+     * @param logLevel log级别
      */
     public static void setLogLevel(int logLevel) {
         LOGLEVEL = logLevel;
@@ -32,8 +30,7 @@ public class iLog {
     /**
      * 通过字符串匹配设置log级别
      *
-     * @param logLevel
-     * 			级别字符串参数
+     * @param logLevel 级别字符串参数
      */
     public static void setLogLevel(String logLevel) {
         if ("VERBOSE".equals(logLevel)) LOGLEVEL = VERBOSE;
