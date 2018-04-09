@@ -137,77 +137,78 @@ public class SchemeHandleActivity extends Activity {
                     String action = getIntent().getAction();
                     if(action != null && (Intent.ACTION_SEND.equals(action) || Intent.ACTION_SEND_MULTIPLE.equals(action))){
                         handleShareIntent();
-                    }
-                    Uri uri = getIntent().getData();
-                    if(uri == null){
-                        finish();
-                        return;
-                    }
-                    String scheme = uri.getScheme();
-                    String host = uri.getHost();
-                    if (scheme == null || host == null) {
-                        finish();
-                        return;
-                    }
-                    Bundle bundle = new Bundle();
-                    switch (scheme) {
-                        case "ecc-contact":
-                        case "ecm-contact":
-                            bundle.putString("uid", host);
-                            if (host.startsWith("BOT")) {
-                                IntentUtils.startActivity(SchemeHandleActivity.this, RobotInfoActivity.class, bundle, true);
-                            } else {
-                                IntentUtils.startActivity(SchemeHandleActivity.this, UserInfoActivity.class, bundle, true);
-                            }
-                            break;
-                        case "ecc-component":
-                            openComponentScheme(uri, host);
-                            break;
-                        case "ecc-app-react-native":
-                            bundle.putString(scheme, uri.toString());
-                            IntentUtils.startActivity(SchemeHandleActivity.this, ReactNativeAppActivity.class, bundle, true);
-                            break;
+                    }else{
+                        Uri uri = getIntent().getData();
+                        if(uri == null){
+                            finish();
+                            return;
+                        }
+                        String scheme = uri.getScheme();
+                        String host = uri.getHost();
+                        if (scheme == null || host == null) {
+                            finish();
+                            return;
+                        }
+                        Bundle bundle = new Bundle();
+                        switch (scheme) {
+                            case "ecc-contact":
+                            case "ecm-contact":
+                                bundle.putString("uid", host);
+                                if (host.startsWith("BOT")) {
+                                    IntentUtils.startActivity(SchemeHandleActivity.this, RobotInfoActivity.class, bundle, true);
+                                } else {
+                                    IntentUtils.startActivity(SchemeHandleActivity.this, UserInfoActivity.class, bundle, true);
+                                }
+                                break;
+                            case "ecc-component":
+                                openComponentScheme(uri, host);
+                                break;
+                            case "ecc-app-react-native":
+                                bundle.putString(scheme, uri.toString());
+                                IntentUtils.startActivity(SchemeHandleActivity.this, ReactNativeAppActivity.class, bundle, true);
+                                break;
 
-                        case "gs-msg":
-                            if (!NetUtils.isNetworkConnected(SchemeHandleActivity.this)) {
+                            case "gs-msg":
+                                if (!NetUtils.isNetworkConnected(SchemeHandleActivity.this)) {
+                                    finish();
+                                    break;
+                                }
+                                String openMode = uri.getQueryParameter("openMode");
+                                openWebApp(host, openMode);
+                                break;
+                            case "ecc-channel":
+                                bundle.putString("cid", host);
+                                bundle.putBoolean("get_new_msg", true);
+                                IntentUtils.startActivity(SchemeHandleActivity.this,
+                                        ChannelActivity.class, bundle, true);
+                                break;
+                            case "ecc-app":
+                                AppId2AppAndOpenAppUtils appId2AppAndOpenAppUtils = new AppId2AppAndOpenAppUtils(SchemeHandleActivity.this);
+                                appId2AppAndOpenAppUtils.setOnFinishActivityListener(new AppId2AppAndOpenAppUtils.OnFinishActivityListener() {
+                                    @Override
+                                    public void onFinishActivity() {
+                                        finish();
+                                    }
+                                });
+                                appId2AppAndOpenAppUtils.getAppInfoById(uri);
+                                break;
+
+                            case "ecc-calendar-jpush":
+                                String content = getIntent().getStringExtra("content");
+                                if (content != null) {
+                                    JSONObject calEventObj = JSONUtils.getJSONObject(content);
+                                    CalendarEvent calendarEvent = new CalendarEvent(calEventObj);
+                                    Intent intent = new Intent(SchemeHandleActivity.this, CalEventAddActivity.class);
+                                    intent.putExtra("calEvent", calendarEvent);
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    startActivity(intent);
+                                }
                                 finish();
                                 break;
-                            }
-                            String openMode = uri.getQueryParameter("openMode");
-                            openWebApp(host, openMode);
-                            break;
-                        case "ecc-channel":
-                            bundle.putString("cid", host);
-                            bundle.putBoolean("get_new_msg", true);
-                            IntentUtils.startActivity(SchemeHandleActivity.this,
-                                    ChannelActivity.class, bundle, true);
-                            break;
-                        case "ecc-app":
-                            AppId2AppAndOpenAppUtils appId2AppAndOpenAppUtils = new AppId2AppAndOpenAppUtils(SchemeHandleActivity.this);
-                            appId2AppAndOpenAppUtils.setOnFinishActivityListener(new AppId2AppAndOpenAppUtils.OnFinishActivityListener() {
-                                @Override
-                                public void onFinishActivity() {
-                                    finish();
-                                }
-                            });
-                            appId2AppAndOpenAppUtils.getAppInfoById(uri);
-                            break;
-
-                        case "ecc-calendar-jpush":
-                            String content = getIntent().getStringExtra("content");
-                            if (content != null) {
-                                JSONObject calEventObj = JSONUtils.getJSONObject(content);
-                                CalendarEvent calendarEvent = new CalendarEvent(calEventObj);
-                                Intent intent = new Intent(SchemeHandleActivity.this, CalEventAddActivity.class);
-                                intent.putExtra("calEvent", calendarEvent);
-                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                startActivity(intent);
-                            }
-                            finish();
-                            break;
-                        default:
-                            finish();
-                            break;
+                            default:
+                                finish();
+                                break;
+                        }
                     }
                 }
             }, 1);
