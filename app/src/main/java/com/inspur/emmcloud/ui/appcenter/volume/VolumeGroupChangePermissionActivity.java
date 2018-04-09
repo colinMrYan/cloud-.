@@ -22,19 +22,19 @@ import org.xutils.view.annotation.ViewInject;
 /**
  * Created by yufuchang on 2018/3/8.
  */
-@ContentView(R.layout.activity_volume_change_permission)
+@ContentView(R.layout.activity_volume_group_change_permission)
 public class VolumeGroupChangePermissionActivity extends BaseActivity {
 
     @ViewInject(R.id.header_text)
     protected TextView headerText;
 
-    @ViewInject(R.id.tv_volume_read_write_permission)
-    protected TextView readAndWritePermissionText;
+    @ViewInject(R.id.tv_volume_write_permission)
+    protected TextView writePermissionText;
 
     @ViewInject(R.id.tv_volume_read_permission)
     protected TextView readPermissionText;
 
-    @ViewInject(R.id.swv_volume_read_write_permission)
+    @ViewInject(R.id.swv_volume_write_permission)
     protected SwitchView writePermissionSwitch;
 
     @ViewInject(R.id.swv_volume_read_permission)
@@ -44,7 +44,7 @@ public class VolumeGroupChangePermissionActivity extends BaseActivity {
 
     private LoadingDialog loadingDialog;
 
-    private static final int VOLUME_READ_WRITE_PERMISSION = 6;
+    private static final int VOLUME_WRITE_PERMISSION = 6;
     private static final int VOLUME_READ_PERMISSION = 4;
     private static final int VOLUME_NO_PERMISSION = 0;
 
@@ -63,7 +63,7 @@ public class VolumeGroupChangePermissionActivity extends BaseActivity {
         loadingDialog = new LoadingDialog(VolumeGroupChangePermissionActivity.this);
         final Group group = (Group) getIntent().getSerializableExtra("volumeGroup");
         headerText.setText(group.getName());
-        readAndWritePermissionText.setText(getString(R.string.volume_read_write_permission));
+        writePermissionText.setText(getString(R.string.volume_read_write_permission));
         readPermissionText.setText(getString(R.string.volume_read_permission));
         writePermissionSwitch.setOpened(group.getPrivilege() > VOLUME_READ_PERMISSION ? true : false);
         readPermissionSwitch.setOpened(true);
@@ -74,7 +74,7 @@ public class VolumeGroupChangePermissionActivity extends BaseActivity {
         writePermissionSwitch.setOnStateChangedListener(new SwitchView.OnStateChangedListener() {
             @Override
             public void toggleToOn(View view) {
-                updateVolumeGroupPermission(group,currentVolumePath,VOLUME_READ_WRITE_PERMISSION,true);
+                updateVolumeGroupPermission(group,currentVolumePath, VOLUME_WRITE_PERMISSION,true);
             }
 
             @Override
@@ -121,7 +121,7 @@ public class VolumeGroupChangePermissionActivity extends BaseActivity {
         @Override
         public void returnUpdateVolumeGroupPermissionSuccess(GetVolumeGroupPermissionResult getVolumeGroupPermissionResult) {
             LoadingDialog.dimissDlg(loadingDialog);
-            if(getVolumeGroupPermissionResult.getPrivilege() >= VOLUME_READ_WRITE_PERMISSION){
+            if(getVolumeGroupPermissionResult.getPrivilege() >= VOLUME_WRITE_PERMISSION){
                 writePermissionSwitch.toggleSwitch(true);
                 readPermissionSwitch.setIsCodeManual(true,true);
                 readPermissionSwitch.setOpened(true);

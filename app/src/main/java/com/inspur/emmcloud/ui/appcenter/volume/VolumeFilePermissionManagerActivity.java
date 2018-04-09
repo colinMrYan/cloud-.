@@ -17,6 +17,7 @@ import com.inspur.emmcloud.bean.appcenter.volume.Group;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.ECMRecyclerViewLinearLayoutManager;
+import com.inspur.emmcloud.widget.LoadingDialog;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -41,13 +42,15 @@ import org.xutils.view.annotation.ViewInject;
    }
  * Created by yufuchang on 2018/2/28.
  */
-@ContentView(R.layout.activity_volume_permission_manager)
+@ContentView(R.layout.activity_volume_file_permission_manager)
 public class VolumeFilePermissionManagerActivity extends BaseActivity{
 
     @ViewInject(R.id.rv_volume_file_permission)
     protected RecyclerView groupRecyclerView;
 
     private VolumeGroupPermissionManagerAdapter volumeGroupPermissionManagerAdapter;
+
+    private LoadingDialog loadingDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,6 +80,7 @@ public class VolumeFilePermissionManagerActivity extends BaseActivity{
         });
         groupRecyclerView.setAdapter(volumeGroupPermissionManagerAdapter);
         EventBus.getDefault().register(this);
+        loadingDialog = new LoadingDialog(this);
     }
 
     public void onClick(View view){
@@ -102,6 +106,7 @@ public class VolumeFilePermissionManagerActivity extends BaseActivity{
      */
     private void getVolumeFileGroup(){
         if(NetUtils.isNetworkConnected(VolumeFilePermissionManagerActivity.this)){
+            loadingDialog.show();
             String volumeId = getIntent().getStringExtra("volume");
             String volumeFilePath = getIntent().getStringExtra("currentDirAbsolutePath");
             MyAppAPIService myAppAPIService = new MyAppAPIService(VolumeFilePermissionManagerActivity.this);
@@ -120,12 +125,14 @@ public class VolumeFilePermissionManagerActivity extends BaseActivity{
         @Override
         public void returnVolumeGroupSuccess(GetVolumeResultWithPermissionResult getVolumeResultWithPermissionResult) {
             super.returnVolumeGroupSuccess(getVolumeResultWithPermissionResult);
+            LoadingDialog.dimissDlg(loadingDialog);
             volumeGroupPermissionManagerAdapter.setVolumeGroupPermissionList(getVolumeResultWithPermissionResult.getVolumeGroupList());
         }
 
         @Override
         public void returnVolumeGroupFail(String error, int errorCode) {
             super.returnVolumeGroupFail(error, errorCode);
+            LoadingDialog.dimissDlg(loadingDialog);
             WebServiceMiddleUtils.hand(getApplicationContext(), error, errorCode);
         }
     }
