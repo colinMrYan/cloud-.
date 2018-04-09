@@ -6,7 +6,7 @@
     android:layout_height="56dp"
     >
     <TextView
-        android:id="@+id/volume_group_name_tv"
+        android:id="@+id/tv_volume_group_name"
         android:layout_width="wrap_content"
         android:layout_height="44dp"
         android:paddingLeft="12dp"
@@ -16,7 +16,7 @@
         />
 
     <TextView
-        android:id="@+id/volume_group_permission_tv"
+        android:id="@+id/tv_volume_group_permission"
         android:layout_width="wrap_content"
         android:layout_height="44dp"
         android:layout_alignParentRight="true"
@@ -27,7 +27,7 @@
         />
 
     <ImageView
-        android:id="@+id/volume_group_arrow_img"
+        android:id="@+id/img_volume_group_arrow"
         style="@style/arrow_right"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"

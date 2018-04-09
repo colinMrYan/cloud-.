@@ -47,7 +47,7 @@ public class VolumeFileLocationSelectActivity extends VolumeFileBaseActivity {
     @ViewInject(R.id.location_select_to_text)
     protected TextView locationSelectToText;
 
-    @ViewInject(R.id.location_select_upload_to_text)
+    @ViewInject(R.id.tv_location_select_upload_to)
     protected TextView locationSelectUploadToText;
 
     @ViewInject(R.id.path_text)
@@ -143,7 +143,7 @@ public class VolumeFileLocationSelectActivity extends VolumeFileBaseActivity {
                     moveFile(operationFileAbsolutePath);
                 }
                 break;
-            case R.id.location_select_upload_to_text:
+            case R.id.tv_location_select_upload_to:
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("volume", volume);
                 bundle.putSerializable("currentDirAbsolutePath", currentDirAbsolutePath);

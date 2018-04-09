@@ -35,9 +35,9 @@ public class VolumeGroupPermissionManagerAdapter extends RecyclerView.Adapter<Vo
     public VolumeGroupPermissionManagerAdapter.VolumeGroupPermissionManagerAdapterHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = inflater.inflate(R.layout.app_volume_permission_manager_item,null);
         VolumeGroupPermissionManagerAdapterHolder holder = new VolumeGroupPermissionManagerAdapterHolder(view);
-        holder.groupNameText = (TextView) view.findViewById(R.id.volume_group_name_tv);
-        holder.permissionText = (TextView) view.findViewById(R.id.volume_group_permission_tv);
-        holder.recommendAppImg = (ImageView) view.findViewById(R.id.volume_group_arrow_img);
+        holder.groupNameText = (TextView) view.findViewById(R.id.tv_volume_group_name);
+        holder.permissionText = (TextView) view.findViewById(R.id.tv_volume_group_permission);
+        holder.recommendAppImg = (ImageView) view.findViewById(R.id.img_volume_group_arrow);
         holder.relativeLayout = (RelativeLayout) view.findViewById(R.id.volume_group_rl);
 
         return holder;

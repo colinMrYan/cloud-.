@@ -43,7 +43,7 @@ import org.xutils.view.annotation.ViewInject;
 @ContentView(R.layout.activity_volume_permission)
 public class VolumeFilePermissionManagerActivity extends BaseActivity{
 
-    @ViewInject(R.id.volume_file_permission_rv)
+    @ViewInject(R.id.rv_volume_file_permission)
     protected RecyclerView groupRecyclerView;
 
     private VolumeGroupPermissionManagerAdapter volumeGroupPermissionManagerAdapter;
