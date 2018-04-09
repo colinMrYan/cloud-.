@@ -2,20 +2,19 @@ package com.inspur.reactnative;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.content.LocalBroadcastManager;
 
 import com.inspur.emmcloud.api.APIDownloadCallBack;
 import com.inspur.emmcloud.api.APIUri;
-import com.inspur.emmcloud.bean.system.AppException;
 import com.inspur.emmcloud.bean.appcenter.ReactNativeUpdateBean;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.ui.find.FindFragment;
-import com.inspur.emmcloud.util.privates.cache.AppExceptionCacheUtils;
-import com.inspur.emmcloud.util.privates.AppUtils;
-import com.inspur.emmcloud.util.privates.DownLoaderUtils;
-import com.inspur.emmcloud.util.privates.FileSafeCode;
 import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ZipUtils;
+import com.inspur.emmcloud.util.privates.DownLoaderUtils;
+import com.inspur.emmcloud.util.privates.FileSafeCode;
+import com.inspur.emmcloud.util.privates.cache.AppExceptionCacheUtils;
 
 import java.io.File;
 
@@ -166,27 +165,11 @@ public class ReactNativeFlow {
 //            PreferencesUtils.putString(context, "react_native_lastupdatetime", "" + System.currentTimeMillis());//隔半小时检查更新逻辑相关
             FindFragment.hasUpdated = true;
             Intent intent = new Intent("com.inspur.react.success");
-            context.sendBroadcast(intent);
+            LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
         } else {
-            saveFileCheckException(context, reactZipFilePath, "discover download not compelete error", 3);
+            AppExceptionCacheUtils.saveAppException(context,3,reactZipFilePath,"discover download not compelete error",0);
         }
     }
-
-    /**
-     * 记录文件下载后验证异常
-     *
-     * @param context
-     * @param url
-     * @param error
-     * @param errorLevel
-     */
-    private static void saveFileCheckException(Context context, String url, String error, int errorLevel) {
-        if (!AppUtils.isApkDebugable(context)) {
-            AppException appException = new AppException(System.currentTimeMillis(), AppUtils.getVersion(context), errorLevel, url, error, 0);
-            AppExceptionCacheUtils.saveAppException(context, appException);
-        }
-    }
-
 
     /**
      * 判断react的状态，是更新，回退，重置还是保持

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.Configuration;
 
 import com.inspur.emmcloud.bean.system.AppTabAutoBean;
+import com.inspur.emmcloud.bean.system.AppTabDataBean;
 
 import java.util.ArrayList;
 
@@ -14,10 +15,10 @@ import java.util.ArrayList;
 public class AppTitleUtils {
     public static String getTabTitle(Context context,String tabkey){
         String appTabs = PreferencesByUserAndTanentUtils.getString(context,"app_tabbar_info_current","");
-        ArrayList<AppTabAutoBean.PayloadBean.TabsBean> tabList =
-                (ArrayList<AppTabAutoBean.PayloadBean.TabsBean>) new AppTabAutoBean(appTabs).getPayload().getTabs();
+        ArrayList<AppTabDataBean> tabList =
+                (ArrayList<AppTabDataBean>) new AppTabAutoBean(appTabs).getPayload().getTabs();
         String tabCompont = getCompont(tabkey);
-        AppTabAutoBean.PayloadBean.TabsBean tab = getTabByTabKey(tabList,tabCompont);
+        AppTabDataBean tab = getTabByTabKey(tabList,tabCompont);
         if(tab == null){
             return "";
         }
@@ -69,9 +70,9 @@ public class AppTitleUtils {
      * @param tabList
      * @return
      */
-    private static AppTabAutoBean.PayloadBean.TabsBean getTabByTabKey(ArrayList<AppTabAutoBean.PayloadBean.TabsBean> tabList,String tabKey) {
+    private static AppTabDataBean getTabByTabKey(ArrayList<AppTabDataBean> tabList, String tabKey) {
         for(int i = 0; i < tabList.size(); i++){
-            if(tabList.get(i).getComponent().equals(tabKey)){
+            if(tabList.get(i).getTabId().equals(tabKey)){
                 return tabList.get(i);
             }
         }

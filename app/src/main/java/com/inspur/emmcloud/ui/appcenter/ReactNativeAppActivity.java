@@ -1,6 +1,5 @@
 package com.inspur.emmcloud.ui.appcenter;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -24,7 +23,6 @@ import com.inspur.emmcloud.bean.appcenter.ReactNativeDownloadUrlBean;
 import com.inspur.emmcloud.bean.appcenter.ReactNativeInstallUriBean;
 import com.inspur.emmcloud.bean.mine.Enterprise;
 import com.inspur.emmcloud.bean.mine.GetMyInfoResult;
-import com.inspur.emmcloud.bean.system.AppException;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.interf.CommonCallBack;
@@ -374,7 +372,7 @@ public class ReactNativeAppActivity extends BaseActivity implements DefaultHardw
                     String currentVersion = getAppBundleBean().getVersion();
                     writeBackVersion(preVersion, currentVersion, "FORWARD");
                 }else {
-                    saveFileCheckException(ReactNativeAppActivity.this,reactZipDownloadFromUri,"react zip download error",3);
+                    AppExceptionCacheUtils.saveAppException(getApplicationContext(),3,reactZipDownloadFromUri,"react zip download error",0);
                 }
             }
 
@@ -394,21 +392,6 @@ public class ReactNativeAppActivity extends BaseActivity implements DefaultHardw
             }
         };
         reactNativeAPIService.downloadReactNativeModuleZipPackage(reactZipDownloadFromUri, reactZipFilePath, progressCallback);
-    }
-
-    /**
-     * 记录文件下载后验证异常
-     *
-     * @param context
-     * @param url
-     * @param error
-     * @param errorLevel
-     */
-    private void saveFileCheckException(Context context, String url, String error, int errorLevel) {
-        if (!AppUtils.isApkDebugable(context)) {
-            AppException appException = new AppException(System.currentTimeMillis(), AppUtils.getVersion(context), errorLevel, url, error, 0);
-            AppExceptionCacheUtils.saveAppException(context, appException);
-        }
     }
 
     /**

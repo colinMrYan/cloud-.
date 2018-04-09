@@ -31,43 +31,43 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
+import com.inspur.emmcloud.bean.system.AppTabAutoBean;
 import com.inspur.emmcloud.bean.chat.Channel;
 import com.inspur.emmcloud.bean.chat.ChannelGroup;
 import com.inspur.emmcloud.bean.chat.ChannelOperationInfo;
 import com.inspur.emmcloud.bean.chat.GetChannelListResult;
 import com.inspur.emmcloud.bean.chat.GetNewMsgsResult;
+import com.inspur.emmcloud.bean.contact.GetSearchChannelGroupResult;
 import com.inspur.emmcloud.bean.chat.MatheSet;
 import com.inspur.emmcloud.bean.chat.Msg;
-import com.inspur.emmcloud.bean.contact.GetSearchChannelGroupResult;
-import com.inspur.emmcloud.bean.system.AppTabAutoBean;
 import com.inspur.emmcloud.bean.system.PVCollectModel;
 import com.inspur.emmcloud.broadcastreceiver.MsgReceiver;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
-import com.inspur.emmcloud.util.common.IntentUtils;
-import com.inspur.emmcloud.util.common.NetUtils;
-import com.inspur.emmcloud.util.common.PreferencesUtils;
-import com.inspur.emmcloud.util.common.StringUtils;
-import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.AppTitleUtils;
+import com.inspur.emmcloud.util.privates.cache.ChannelCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.ChannelGroupCacheUtils;
 import com.inspur.emmcloud.util.privates.ChannelGroupIconUtils;
+import com.inspur.emmcloud.util.privates.cache.ChannelOperationCacheUtils;
 import com.inspur.emmcloud.util.privates.ChatCreateUtils;
 import com.inspur.emmcloud.util.privates.ChatCreateUtils.OnCreateGroupChannelListener;
 import com.inspur.emmcloud.util.privates.DirectChannelUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
-import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
-import com.inspur.emmcloud.util.privates.ScanQrCodeUtils;
-import com.inspur.emmcloud.util.privates.TimeUtils;
-import com.inspur.emmcloud.util.privates.TransHtmlToTextUtils;
-import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
-import com.inspur.emmcloud.util.privates.cache.ChannelCacheUtils;
-import com.inspur.emmcloud.util.privates.cache.ChannelGroupCacheUtils;
-import com.inspur.emmcloud.util.privates.cache.ChannelOperationCacheUtils;
+import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.privates.cache.MsgCacheUtil;
 import com.inspur.emmcloud.util.privates.cache.MsgMatheSetCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MsgReadIDCacheUtils;
+import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.privates.cache.PVCollectModelCacheUtils;
+import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
+import com.inspur.emmcloud.util.common.PreferencesUtils;
+import com.inspur.emmcloud.util.privates.ScanQrCodeUtils;
+import com.inspur.emmcloud.util.common.StringUtils;
+import com.inspur.emmcloud.util.privates.TimeUtils;
+import com.inspur.emmcloud.util.common.ToastUtils;
+import com.inspur.emmcloud.util.privates.TransHtmlToTextUtils;
+import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.CircleImageView;
 import com.inspur.emmcloud.widget.WeakThread;
 import com.inspur.imp.plugin.barcode.scan.CaptureActivity;
@@ -162,6 +162,7 @@ public class MessageFragment extends Fragment{
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
         initView();
+        registerMessageFragmentReceiver();
         getChannelList();
         sortChannelList();// 对Channel 进行排序
         registerMessageFragmentReceiver();
@@ -175,12 +176,9 @@ public class MessageFragment extends Fragment{
     private void showMessageButtons() {
         String tabBarInfo = PreferencesByUserAndTanentUtils.getString(getActivity(), "app_tabbar_info_current", "");
         //第一次登录时有tabBarInfo会为“”，会导致JSON waring
-        if (StringUtils.isBlank(tabBarInfo)) {
-            return;
-        }
-        AppTabAutoBean appTabAutoBean = new AppTabAutoBean(tabBarInfo);
-        if (appTabAutoBean != null) {
-            AppTabAutoBean.PayloadBean payloadBean = appTabAutoBean.getPayload();
+        if (!StringUtils.isBlank(tabBarInfo)) {
+            AppTabAutoBean appTabAutoBean = new AppTabAutoBean(tabBarInfo);
+            AppTabPayloadBean payloadBean = appTabAutoBean.getPayload();
             if (payloadBean != null) {
                 showCreateGroupOrFindContact(payloadBean);
             }
@@ -192,12 +190,12 @@ public class MessageFragment extends Fragment{
      *
      * @param payloadBean
      */
-    private void showCreateGroupOrFindContact(AppTabAutoBean.PayloadBean payloadBean) {
-        ArrayList<AppTabAutoBean.PayloadBean.TabsBean> appTabList =
-                (ArrayList<AppTabAutoBean.PayloadBean.TabsBean>) payloadBean.getTabs();
+    private void showCreateGroupOrFindContact(AppTabPayloadBean payloadBean) {
+        ArrayList<AppTabDataBean> appTabList =
+                (ArrayList<AppTabDataBean>) payloadBean.getTabs();
         for (int i = 0; i < appTabList.size(); i++) {
-            if (appTabList.get(i).getComponent().equals("communicate")) {
-                AppTabAutoBean.PayloadBean.TabsBean.Property property = appTabList.get(i).getProperty();
+            if (appTabList.get(i).getTabId().equals("communicate")) {
+                AppTabProperty property = appTabList.get(i).getProperty();
                 if (property != null) {
                     if (!property.isCanCreate()) {
                         rootView.findViewById(R.id.more_function_list_img).setVisibility(View.GONE);
@@ -297,12 +295,13 @@ public class MessageFragment extends Fragment{
     /**
      * 根据tabbar信息更新加号UI，这里显示信息附在Tabbar信息里
      * 所以没有数据请求回来，MessageFragment不存在的情况
+     *
      * @param appTabAutoBean
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void updateMessageUI(AppTabAutoBean appTabAutoBean) {
         if (appTabAutoBean != null) {
-            AppTabAutoBean.PayloadBean payloadBean = appTabAutoBean.getPayload();
+            AppTabPayloadBean payloadBean = appTabAutoBean.getPayload();
             if (payloadBean != null) {
                 showCreateGroupOrFindContact(payloadBean);
             }
@@ -660,7 +659,7 @@ public class MessageFragment extends Fragment{
             msgReceiver = new MsgReceiver(getActivity(), handler);
             IntentFilter filter = new IntentFilter();
             filter.addAction("com.inspur.msg");
-            getActivity().registerReceiver(msgReceiver, filter);
+            LocalBroadcastManager.getInstance(getActivity()).registerReceiver(msgReceiver, filter);
         }
     }
 
@@ -1121,11 +1120,11 @@ public class MessageFragment extends Fragment{
             cacheMsgAsyncTask = null;
         }
         if (msgReceiver != null) {
-            getActivity().unregisterReceiver(msgReceiver);
+            LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(msgReceiver);
             msgReceiver = null;
         }
         if (messageFragmentReceiver != null) {
-            getActivity().unregisterReceiver(messageFragmentReceiver);
+            LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(messageFragmentReceiver);
             messageFragmentReceiver = null;
         }
 

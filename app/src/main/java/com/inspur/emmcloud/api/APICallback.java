@@ -8,11 +8,9 @@ package com.inspur.emmcloud.api;
 
 import android.content.Context;
 
-import com.inspur.emmcloud.bean.system.AppException;
-import com.inspur.emmcloud.util.privates.cache.AppExceptionCacheUtils;
-import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
+import com.inspur.emmcloud.util.privates.cache.AppExceptionCacheUtils;
 
 import org.xutils.common.Callback.CommonCallback;
 import org.xutils.ex.HttpException;
@@ -30,10 +28,12 @@ public abstract class APICallback implements CommonCallback<String> {
 
     private Context context;
     private String url;
+    private long requestTime;
 
     public APICallback(Context context, String url) {
         this.context = context;
         this.url = url;
+        requestTime = System.currentTimeMillis();
     }
 
     /* (non-Javadoc)
@@ -77,29 +77,16 @@ public abstract class APICallback implements CommonCallback<String> {
             LogUtils.debug("HttpUtil", "result=" + error);
 
             if (responseCode == 401) {
-                callbackTokenExpire();
+                callbackTokenExpire(requestTime);
             } else {
                 callbackFail(error, responseCode);
-                saveNetException(error, responseCode, errorLevel);
+                AppExceptionCacheUtils.saveAppException(context,errorLevel,url,error,responseCode);
             }
         } catch (Exception e) {
             // TODO: handle exception
             e.printStackTrace();
         }
 
-    }
-
-    /**
-     * 处理异常网络请求
-     *
-     * @param error
-     * @param responseCode
-     */
-    private void saveNetException(String error, int responseCode, int errorLevel) {
-        if (!AppUtils.isApkDebugable(context)) {
-            AppException appException = new AppException(System.currentTimeMillis(), AppUtils.getVersion(context), errorLevel, url, error, responseCode);
-            AppExceptionCacheUtils.saveAppException(context, appException);
-        }
     }
 
     /* (non-Javadoc)
@@ -131,6 +118,6 @@ public abstract class APICallback implements CommonCallback<String> {
 
     public abstract void callbackFail(String error, int responseCode);
 
-    public abstract void callbackTokenExpire();
+    public abstract void callbackTokenExpire(long requestTime);
 
 }

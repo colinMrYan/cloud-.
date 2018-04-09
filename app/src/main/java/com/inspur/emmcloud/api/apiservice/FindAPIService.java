@@ -46,12 +46,9 @@ public class FindAPIService {
 		final String completeUrl = APIUri.getHttpApiUrl("trip/simple/detail?trip_ticket=")+tripId;
 		RequestParams params = ((MyApplication)context.getApplicationContext()).getHttpRequestParams(completeUrl);
 		x.http().get(params, new APICallback(context,completeUrl) {
-			
 			@Override
-			public void callbackTokenExpire() {
-				// TODO Auto-generated method stub
-				new OauthUtils(new OauthCallBack() {
-
+			public void callbackTokenExpire(long requestTime) {
+				OauthCallBack oauthCallBack = new OauthCallBack() {
 					@Override
 					public void reExecute() {
 						getTripInfo(tripId);
@@ -61,7 +58,9 @@ public class FindAPIService {
 					public void executeFailCallback() {
 						callbackFail("", -1);
 					}
-				}, context).refreshToken(completeUrl);
+				};
+				OauthUtils.getInstance().refreshToken(
+						oauthCallBack, requestTime);
 			}
 			
 			@Override
@@ -92,12 +91,9 @@ public class FindAPIService {
 		params.setBodyContent(array.toString());
 		params.setAsJsonContent(true);
 		x.http().request(HttpMethod.PUT, params, new APICallback(context,completeUrl) {
-			
 			@Override
-			public void callbackTokenExpire() {
-				// TODO Auto-generated method stub
-				new OauthUtils(new OauthCallBack() {
-
+			public void callbackTokenExpire(long requestTime) {
+				OauthCallBack oauthCallBack = new OauthCallBack() {
 					@Override
 					public void reExecute() {
 						deleteTripByIds(tripId);
@@ -107,7 +103,9 @@ public class FindAPIService {
 					public void executeFailCallback() {
 						callbackFail("", -1);
 					}
-				}, context).refreshToken(completeUrl);
+				};
+				OauthUtils.getInstance().refreshToken(
+						oauthCallBack, requestTime);
 			}
 			
 			@Override
@@ -125,10 +123,10 @@ public class FindAPIService {
 
 	}
 	
-	
+
 	/**
 	 * 上传最近一年的行程数据
-	 * 
+	 *
 	 * @param ticketInfos
 	 */
 	public void uploadTrainTicket(final String ticketInfos) {
@@ -138,12 +136,10 @@ public class FindAPIService {
 		params.setBodyContent(ticketInfos);
 		params.setAsJsonContent(true);
 		x.http().post(params, new APICallback(context,completeUrl) {
-			
-			@Override
-			public void callbackTokenExpire() {
-				// TODO Auto-generated method stub
-				new OauthUtils(new OauthCallBack() {
 
+			@Override
+			public void callbackTokenExpire(long requestTime) {
+				OauthCallBack oauthCallBack = new OauthCallBack() {
 					@Override
 					public void reExecute() {
 						uploadTrainTicket(ticketInfos);
@@ -153,15 +149,17 @@ public class FindAPIService {
 					public void executeFailCallback() {
 						callbackFail("", -1);
 					}
-				}, context).refreshToken(completeUrl);
+				};
+				OauthUtils.getInstance().refreshToken(
+						oauthCallBack, requestTime);
 			}
-			
+
 			@Override
 			public void callbackSuccess(String arg0) {
 				// TODO Auto-generated method stub
 				apiInterface.returnUploadTrainTicketSuccess();
 			}
-			
+
 			@Override
 			public void callbackFail(String error, int responseCode) {
 				// TODO Auto-generated method stub
@@ -182,12 +180,10 @@ public class FindAPIService {
 		params.setBodyContent(ticketInfos);
 		params.setAsJsonContent(true);
 		x.http().request(HttpMethod.PUT, params, new APICallback(context,completeUrl) {
-			
-			@Override
-			public void callbackTokenExpire() {
-				// TODO Auto-generated method stub
-				new OauthUtils(new OauthCallBack() {
 
+			@Override
+			public void callbackTokenExpire(long requestTime) {
+				OauthCallBack oauthCallBack = new OauthCallBack() {
 					@Override
 					public void reExecute() {
 						updateTrainTicket(ticketInfos);
@@ -197,7 +193,9 @@ public class FindAPIService {
 					public void executeFailCallback() {
 						callbackFail("", -1);
 					}
-				}, context).refreshToken(completeUrl);
+				};
+				OauthUtils.getInstance().refreshToken(
+						oauthCallBack, requestTime);
 			}
 			
 			@Override
@@ -215,49 +213,6 @@ public class FindAPIService {
 	}
 
 	/**
-	 * 获取上次用户扫描的最近的行程信息：返回单个行程
-	 */
-	public void getLastUploadTrip() {
-		final String completeUrl = APIUri
-				.getHttpApiUrl("trip/simple/latest");
-		RequestParams params = ((MyApplication)context.getApplicationContext()).getHttpRequestParams(completeUrl);
-		params.addParameter("way", "TRAIN");
-		params.addParameter("source", "SMS");
-		x.http().get(params, new APICallback(context,completeUrl) {
-			
-			@Override
-			public void callbackTokenExpire() {
-				// TODO Auto-generated method stub
-				new OauthUtils(new OauthCallBack() {
-
-					@Override
-					public void reExecute() {
-						getLastUploadTrip();
-					}
-
-					@Override
-					public void executeFailCallback() {
-						callbackFail("", -1);
-					}
-				}, context).refreshToken(completeUrl);
-			}
-			
-			@Override
-			public void callbackSuccess(String arg0) {
-				// TODO Auto-generated method stub
-				apiInterface.returnLastUploadTripSuccess(new Trip(arg0));
-			}
-			
-			@Override
-			public void callbackFail(String error, int responseCode) {
-				// TODO Auto-generated method stub
-				apiInterface.returnLastUploadTripFail(error,responseCode);
-			}
-		});
-		
-	}
-	
-	/**
 	 * 获取到达城市
 	 *
 	 * @param station
@@ -268,12 +223,10 @@ public class FindAPIService {
 		RequestParams params = ((MyApplication)context.getApplicationContext()).getHttpRequestParams(completeUrl);
 		params.addParameter("station", station);
 		x.http().get(params, new APICallback(context,completeUrl) {
-			
-			@Override
-			public void callbackTokenExpire() {
-				// TODO Auto-generated method stub
-				new OauthUtils(new OauthCallBack() {
 
+			@Override
+			public void callbackTokenExpire(long requestTime) {
+				OauthCallBack oauthCallBack = new OauthCallBack() {
 					@Override
 					public void reExecute() {
 						getArriveCity(station);
@@ -283,7 +236,9 @@ public class FindAPIService {
 					public void executeFailCallback() {
 						callbackFail("", -1);
 					}
-				}, context).refreshToken(completeUrl);
+				};
+				OauthUtils.getInstance().refreshToken(
+						oauthCallBack, requestTime);
 			}
 			
 			@Override
@@ -308,15 +263,12 @@ public class FindAPIService {
 		final String completeUrl = APIUri.getKnowledgeTipsUrl();
 		RequestParams params = ((MyApplication)context.getApplicationContext()).getHttpRequestParams(completeUrl);
 		x.http().get(params, new APICallback(context,completeUrl) {
-			
-			@Override
-			public void callbackTokenExpire() {
-				// TODO Auto-generated method stub
-				new OauthUtils(new OauthCallBack() {
 
+			@Override
+			public void callbackTokenExpire(long requestTime) {
+				OauthCallBack oauthCallBack = new OauthCallBack() {
 					@Override
 					public void reExecute() {
-						// TODO Auto-generated method stub
 						getKnowledgeList();
 					}
 
@@ -324,9 +276,11 @@ public class FindAPIService {
 					public void executeFailCallback() {
 						callbackFail("", -1);
 					}
-				}, context).refreshToken(completeUrl);
+				};
+				OauthUtils.getInstance().refreshToken(
+						oauthCallBack, requestTime);
 			}
-			
+
 			@Override
 			public void callbackSuccess(String arg0) {
 				// TODO Auto-generated method stub

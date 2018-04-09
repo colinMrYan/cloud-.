@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -562,7 +563,7 @@ public class ChannelInfoActivity extends BaseActivity {
     private void sendBroadCast() {
         Intent mIntent = new Intent("message_notify");
         mIntent.putExtra("command", "refresh_session_list");
-        sendBroadcast(mIntent);
+        LocalBroadcastManager.getInstance(this).sendBroadcast(mIntent);
     }
 
 }

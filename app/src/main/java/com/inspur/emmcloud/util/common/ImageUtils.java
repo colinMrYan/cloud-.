@@ -25,6 +25,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Base64;
 import android.util.DisplayMetrics;
 import android.view.View;
@@ -139,7 +140,7 @@ public class ImageUtils {
 		File file = new File(imgFileName);
 		Uri contentUri = Uri.fromFile(file);
 		mediaScanIntent.setData(contentUri);
-		ctx.sendBroadcast(mediaScanIntent);
+		LocalBroadcastManager.getInstance(ctx).sendBroadcast(mediaScanIntent);
 	}
 
 	/**

@@ -19,6 +19,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Base64;
 import android.view.OrientationEventListener;
 import android.view.Surface;
@@ -42,7 +43,6 @@ import com.inspur.emmcloud.util.common.ImageUtils;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
-import com.inspur.emmcloud.util.common.ResolutionUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUsersUtils;
 import com.inspur.emmcloud.widget.dialogs.MyQMUIDialog;
@@ -150,7 +150,6 @@ public class FaceVerifyActivity extends BaseActivity implements SurfaceHolder.Ca
 
     @Override
     public void surfaceCreated(SurfaceHolder surfaceHolder) {
-        LogUtils.jasonDebug("surfaceCreated-------------");
         previewSFV.setCustomRatio(1, 1);
         currentCameraFacing = Camera.CameraInfo.CAMERA_FACING_FRONT;
         initCamera();
@@ -434,7 +433,6 @@ public class FaceVerifyActivity extends BaseActivity implements SurfaceHolder.Ca
      * @param code
      */
     private void handResultCode(int code) {
-        LogUtils.jasonDebug("code="+code);
         switch (code) {
             case 200:
                 tipText.setVisibility(View.GONE);
@@ -448,8 +446,9 @@ public class FaceVerifyActivity extends BaseActivity implements SurfaceHolder.Ca
                 } else if (!isFaceVerityTest) {
                     //发送解锁广播是，SchemeHandleActivity中接收处理
                     Intent intent = new Intent();
+                    MyApplication.getInstance().setIsActive(true);
                     intent.setAction(Constant.ACTION_SAFE_UNLOCK);
-                    sendBroadcast(intent);
+                    LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
                 }
                 finish();
                 break;

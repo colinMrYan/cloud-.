@@ -12,6 +12,7 @@ import android.os.Build;
 import android.os.Environment;
 import android.os.Parcelable;
 import android.support.multidex.MultiDexApplication;
+import android.support.v4.content.LocalBroadcastManager;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 
@@ -31,7 +32,6 @@ import com.inspur.emmcloud.bean.mine.Language;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.interf.MyActivityLifecycleCallbacks;
-import com.inspur.emmcloud.interf.OauthCallBack;
 import com.inspur.emmcloud.push.WebSocketPush;
 import com.inspur.emmcloud.ui.login.LoginActivity;
 import com.inspur.emmcloud.util.common.LogUtils;
@@ -61,7 +61,6 @@ import org.xutils.http.RequestParams;
 import org.xutils.x;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -84,8 +83,6 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
     private boolean isActive = false;
     private WebSocketPush webSocketPush;
     private static boolean isContactReady = false;
-    private boolean isTokenRefreshing = false;
-    private List<OauthCallBack> callBackList = new ArrayList<OauthCallBack>();
     private String uid;
     private String accessToken;
     private String refreshToken;
@@ -108,8 +105,8 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
     }
 
     public String getCloudId() {
-        String clusterId = PreferencesUtils.getString(this,"cloud_idm", Constant.DEFAULT_CLUSTER_ID);
-        return StringUtils.isBlank(clusterId)? Constant.DEFAULT_CLUSTER_ID:clusterId;
+        String clusterId = PreferencesUtils.getString(this, "cloud_idm", Constant.DEFAULT_CLUSTER_ID);
+        return StringUtils.isBlank(clusterId) ? Constant.DEFAULT_CLUSTER_ID : clusterId;
     }
 
 
@@ -141,11 +138,12 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         accessToken = PreferencesUtils.getString(getApplicationContext(), "accessToken", "");
         refreshToken = PreferencesUtils.getString(getApplicationContext(), "refreshToken", "");
         //科大讯飞语音SDK初始化
-        SpeechUtility.createUtility(this, SpeechConstant.APPID +"=5a6001bf");
+        SpeechUtility.createUtility(this, SpeechConstant.APPID + "=5a6001bf");
     }
 
     /**
      * 单例获取application实例
+     *
      * @return MyApplication
      */
     public static MyApplication getInstance() {
@@ -171,14 +169,15 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         removeAllSessionCookie();
         clearUserPhotoMap();
         PreferencesUtils.putString(this, "accessToken", "");
-        PreferencesUtils.putString(this, "refreshToken","");
+        PreferencesUtils.putString(this, "refreshToken", "");
         setAccessToken("");
+        setRefreshToken("");
         Intent intent = new Intent();
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.setClass(this, LoginActivity.class);
         startActivity(intent);
-        ECMShortcutBadgeNumberManagerUtils.setDesktopBadgeNumber(getApplicationContext(),0);
+        ECMShortcutBadgeNumberManagerUtils.setDesktopBadgeNumber(getApplicationContext(), 0);
     }
 /****************************通知相关（极光和华为推送）******************************************/
     /**
@@ -342,25 +341,6 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         return "Bearer" + " " + accessToken;
     }
 
-    public void setIsTokenRefreshing(boolean isTokenRefreshing) {
-        this.isTokenRefreshing = isTokenRefreshing;
-    }
-
-    public boolean getIsTokenRefreshing() {
-        return isTokenRefreshing;
-    }
-
-    public void addCallBack(OauthCallBack oauthCallBack) {
-        callBackList.add(oauthCallBack);
-    }
-
-    public List<OauthCallBack> getCallBackList() {
-        return callBackList;
-    }
-
-    public void clearCallBackList() {
-        callBackList = new ArrayList<OauthCallBack>();
-    }
 
     public String getAccessToken() {
         return accessToken;
@@ -369,6 +349,11 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
     public String getRefreshToken() {
         return refreshToken;
     }
+
+    public void setRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
+    }
+
 
     public void setAccessToken(String accessToken) {
         this.accessToken = accessToken;
@@ -447,6 +432,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
 
     /**
      * 获取ecm云
+     *
      * @return
      */
     public String getClusterEcm() {
@@ -455,6 +441,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
 
     /**
      * 设置ecm云
+     *
      * @param clusterEcm
      */
     public void setClusterEcm(String clusterEcm) {
@@ -463,6 +450,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
 
     /**
      * 获取emm云
+     *
      * @return
      */
     public String getClusterEmm() {
@@ -471,13 +459,14 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
 
     /**
      * 设置emm云
+     *
      * @return
      */
     public void setClusterEmm(String clusterEmm) {
         this.clusterEmm = clusterEmm;
     }
 
-    public String getTanent(){
+    public String getTanent() {
         return tanent;
     }
 
@@ -577,8 +566,8 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         if (languageJson != null) {
             String language = PreferencesUtils.getString(
                     getApplicationContext(), MyApplication.getInstance().getTanent() + "language");
-            LogUtils.jasonDebug("language="+language);
-            LogUtils.jasonDebug("appLanguageObj="+languageJson);
+            LogUtils.jasonDebug("language=" + language);
+            LogUtils.jasonDebug("appLanguageObj=" + languageJson);
             // 当系统语言选择为跟随系统的时候，要检查当前系统的语言是不是在commonList中，重新赋值
             if (language.equals("followSys")) {
                 String commonLanguageListJson = PreferencesUtils.getString(
@@ -622,8 +611,8 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
                 // TODO: handle exception
                 e.printStackTrace();
             }
-            LogUtils.jasonDebug("country="+country);
-            LogUtils.jasonDebug("variant="+variant);
+            LogUtils.jasonDebug("country=" + country);
+            LogUtils.jasonDebug("variant=" + variant);
             Locale locale = new Locale(country, variant);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
                 config.setLocale(locale);
@@ -635,6 +624,10 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         getResources().updateConfiguration(config,
                 getResources().getDisplayMetrics());
 
+    }
+
+    public MyActivityLifecycleCallbacks getActivityLifecycleCallbacks() {
+        return myActivityLifecycleCallbacks;
     }
 
 
@@ -715,7 +708,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         intent.addCategory("android.intent.category.LAUNCHER");
         // 绑定事件
         shortcutIntent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, intent);
-        context.sendBroadcast(shortcutIntent);
+        LocalBroadcastManager.getInstance(context).sendBroadcast(shortcutIntent);
     }
 
 
@@ -743,17 +736,19 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
 
     /**
      * 获取是否正在打开通知
+     *
      * @return
      */
-    public boolean getOPenNotification(){
+    public boolean getOPenNotification() {
         return isOpenNotification;
     }
 
     /**
      * 设置是否正在打开通知
+     *
      * @param isOpenNotification
      */
-    public  void setOpenNotification(boolean isOpenNotification){
+    public void setOpenNotification(boolean isOpenNotification) {
         this.isOpenNotification = isOpenNotification;
     }
 

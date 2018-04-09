@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -47,9 +46,6 @@ public class VolumeHomePageActivity extends BaseActivity implements SwipeRefresh
 
     @ViewInject(R.id.volume_recent_use_list)
     private ListView volumeRecentUseListView;
-
-    @ViewInject(R.id.volume_recent_use_layout)
-    private LinearLayout volumeRecentUseLayout;
 
     @ViewInject(R.id.refresh_layout)
     protected SwipeRefreshLayout swipeRefreshLayout;
@@ -168,9 +164,7 @@ public class VolumeHomePageActivity extends BaseActivity implements SwipeRefresh
     private class WebService extends APIInterfaceInstance {
         @Override
         public void returnVolumeListSuccess(GetVolumeListResult getVolumeListResult) {
-            if (loadingDlg != null && loadingDlg.isShowing()) {
-                loadingDlg.dismiss();
-            }
+            LoadingDialog.dimissDlg(loadingDlg);
             swipeRefreshLayout.setRefreshing(false);
             shareVolumeList = getVolumeListResult.getShareVolumeList();
             myVolume = getVolumeListResult.getMyVolume();
@@ -184,9 +178,7 @@ public class VolumeHomePageActivity extends BaseActivity implements SwipeRefresh
 
         @Override
         public void returnVolumeListFail(String error, int errorCode) {
-            if (loadingDlg != null && loadingDlg.isShowing()) {
-                loadingDlg.dismiss();
-            }
+            LoadingDialog.dimissDlg(loadingDlg);
             swipeRefreshLayout.setRefreshing(false);
             WebServiceMiddleUtils.hand(getApplicationContext(), error, errorCode);
         }

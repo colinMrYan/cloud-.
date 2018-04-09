@@ -2,11 +2,9 @@ package com.inspur.emmcloud.api;
 
 import android.content.Context;
 
-import com.inspur.emmcloud.bean.system.AppException;
-import com.inspur.emmcloud.util.privates.cache.AppExceptionCacheUtils;
-import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
+import com.inspur.emmcloud.util.privates.cache.AppExceptionCacheUtils;
 
 import org.xutils.common.Callback;
 import org.xutils.ex.HttpException;
@@ -106,10 +104,7 @@ public abstract class APIDownloadCallBack implements Callback.ProgressCallback<F
      * @param responseCode
      */
     private void saveNetException(String error, int responseCode, int errorLevel) {
-        if (!AppUtils.isApkDebugable(context)) {
-            AppException appException = new AppException(System.currentTimeMillis(), AppUtils.getVersion(context), errorLevel, url, error, responseCode);
-            AppExceptionCacheUtils.saveAppException(context, appException);
-        }
+            AppExceptionCacheUtils.saveAppException(context,errorLevel,url,error,responseCode);
     }
 
 

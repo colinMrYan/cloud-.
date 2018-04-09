@@ -10,6 +10,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.MotionEvent;
@@ -246,7 +247,7 @@ public class ChannelActivity extends BaseActivity {
         };
         IntentFilter filter = new IntentFilter();
         filter.addAction("update_channel_name");
-        registerReceiver(refreshNameReceiver, filter);
+        LocalBroadcastManager.getInstance(this).registerReceiver(refreshNameReceiver, filter);
     }
 
     /**
@@ -334,7 +335,7 @@ public class ChannelActivity extends BaseActivity {
             msgResvier = new MsgReceiver(ChannelActivity.this, handler);
             IntentFilter filter = new IntentFilter();
             filter.addAction("com.inspur.msg");
-            registerReceiver(msgResvier, filter);
+            LocalBroadcastManager.getInstance(this).registerReceiver(msgResvier, filter);
         }
     }
 
@@ -574,7 +575,7 @@ public class ChannelActivity extends BaseActivity {
             intent.putExtra("command", "set_channel_message_read");
             intent.putExtra("cid", cid);
             intent.putExtra("mid", msgList.get(msgList.size() - 1).getMid());
-            sendBroadcast(intent);
+            LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
         }
     }
 
@@ -604,11 +605,11 @@ public class ChannelActivity extends BaseActivity {
             handler = null;
         }
         if (msgResvier != null) {
-            unregisterReceiver(msgResvier);
+            LocalBroadcastManager.getInstance(this).unregisterReceiver(msgResvier);
             msgResvier = null;
         }
         if (refreshNameReceiver != null) {
-            unregisterReceiver(refreshNameReceiver);
+            LocalBroadcastManager.getInstance(this).unregisterReceiver(refreshNameReceiver);
             refreshNameReceiver = null;
         }
         chatInputMenu.releaseVoliceInput();

@@ -2,6 +2,7 @@ package com.inspur.emmcloud.push;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.inspur.emmcloud.MyApplication;
@@ -26,7 +27,7 @@ import io.socket.parseqs.ParseQS;
 public class WebSocketPush {
 
 	private static final String TAG = "WebSocketPush";
-	private static WebSocketPush webSocketPush=null;
+	 private static WebSocketPush webSocketPush=null;
 	private  Socket mSocket = null;
 	private Context context;
 	private boolean isWebsocketConnnecting =false;
@@ -45,7 +46,7 @@ public class WebSocketPush {
 		}
 		return webSocketPush;
 	}
-
+	
 	/**
 	 * 开始WebSocket推送
 	 */
@@ -64,62 +65,62 @@ public class WebSocketPush {
 
 
 	public void WebSocketConnect(String url, String path,String pushId) {
-		if (!isSocketConnect() && !isWebsocketConnnecting){
-			isWebsocketConnnecting = true;
-			sendWebSocketStatusBroadcaset("socket_connecting");
-			String uuid = AppUtils.getMyUUID(context);
-			String deviceName = AppUtils.getDeviceName(context);
-			IO.Options opts = new IO.Options();
-			opts.reconnectionAttempts = 4; // 设置websocket重连次数
-			opts.forceNew = true;
-			Map<String, String> query = new HashMap<String, String>();
-			query.put("device.id", uuid);
-			query.put("device.name", deviceName);
-			query.put("device.push", pushId);
-			// opts.transports = new String[] { Polling.NAME };
-			opts.path = path;
-			LogUtils.debug(TAG, "query.toString()=" + ParseQS.encode(query));
-			opts.query = ParseQS.encode(query);
-			try {
-				closeSocket();
-				mSocket = IO.socket(url, opts);
-				mSocket.io().on(Manager.EVENT_TRANSPORT, new Emitter.Listener() {
-					@Override
-					public void call(Object... args) {
+			if (!isSocketConnect() && !isWebsocketConnnecting){
+				isWebsocketConnnecting = true;
+				sendWebSocketStatusBroadcaset("socket_connecting");
+				String uuid = AppUtils.getMyUUID(context);
+				String deviceName = AppUtils.getDeviceName(context);
+				IO.Options opts = new IO.Options();
+				opts.reconnectionAttempts = 4; // 设置websocket重连次数
+				opts.forceNew = true;
+				Map<String, String> query = new HashMap<String, String>();
+				query.put("device.id", uuid);
+				query.put("device.name", deviceName);
+				query.put("device.push", pushId);
+				// opts.transports = new String[] { Polling.NAME };
+				opts.path = path;
+				LogUtils.debug(TAG, "query.toString()=" + ParseQS.encode(query));
+				opts.query = ParseQS.encode(query);
+				try {
+					closeSocket();
+					mSocket = IO.socket(url, opts);
+					mSocket.io().on(Manager.EVENT_TRANSPORT, new Emitter.Listener() {
+						@Override
+						public void call(Object... args) {
 
-						Transport transport = (Transport) args[0];
-						transport.on(Transport.EVENT_REQUEST_HEADERS,
-								new Emitter.Listener() {
-									@Override
-									public void call(Object... args) {
-										@SuppressWarnings("unchecked")
-										Map<String, List<String>> headers = (Map<String, List<String>>) args[0];
-										headers.put("Authorization", Arrays.asList(((MyApplication)context.getApplicationContext()).getToken()));
-									}
-								}).on(Transport.EVENT_RESPONSE_HEADERS,
-								new Emitter.Listener() {
-									@Override
-									public void call(Object... args) {
-									}
-								});
+							Transport transport = (Transport) args[0];
+							transport.on(Transport.EVENT_REQUEST_HEADERS,
+									new Emitter.Listener() {
+										@Override
+										public void call(Object... args) {
+											@SuppressWarnings("unchecked")
+											Map<String, List<String>> headers = (Map<String, List<String>>) args[0];
+											headers.put("Authorization", Arrays.asList(((MyApplication)context.getApplicationContext()).getToken()));
+										}
+									}).on(Transport.EVENT_RESPONSE_HEADERS,
+									new Emitter.Listener() {
+										@Override
+										public void call(Object... args) {
+										}
+									});
+						}
+					});
+
+					connectWebSocket();
+				} catch (URISyntaxException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+					sendWebSocketStatusBroadcaset(Socket.EVENT_CONNECT_ERROR);
+					Log.d(TAG, "e=" + e.toString());
+					if (mSocket != null) {
+						mSocket.disconnect();
+						mSocket.off();
+						mSocket.close();
+						mSocket = null;
 					}
-				});
-
-				connectWebSocket();
-			} catch (URISyntaxException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-				sendWebSocketStatusBroadcaset(Socket.EVENT_CONNECT_ERROR);
-				Log.d(TAG, "e=" + e.toString());
-				if (mSocket != null) {
-					mSocket.disconnect();
-					mSocket.off();
-					mSocket.close();
-					mSocket = null;
 				}
+				isWebsocketConnnecting = false;
 			}
-			isWebsocketConnnecting = false;
-		}
 
 
 	}
@@ -127,7 +128,7 @@ public class WebSocketPush {
 
 	/**
 	 * 判断websocket是否已连接
-	 *
+	 * 
 	 * @return
 	 */
 	public boolean isSocketConnect() {
@@ -137,7 +138,7 @@ public class WebSocketPush {
 		return false;
 
 	}
-
+	
 
 	public void sendActivedMsg() {
 		if (mSocket != null && isSocketConnect()) {
@@ -152,9 +153,9 @@ public class WebSocketPush {
 		if (mSocket != null) {
 			LogUtils.debug(TAG,"sendFrozenMsg----");
 			mSocket.emit("state", "FROZEN");
-		}
 	}
-
+	}
+	
 	public void webSocketSignout(){
 		if (mSocket != null) {
 			LogUtils.debug(TAG,"webSocketSignout----");
@@ -163,48 +164,49 @@ public class WebSocketPush {
 		}
 	}
 
-	private void addListeners() {
+    private void addListeners() {
 
-		mSocket.on(Socket.EVENT_CONNECT_ERROR, new Emitter.Listener() {
+        mSocket.on(Socket.EVENT_CONNECT_ERROR, new Emitter.Listener() {
 
-			@Override
-			public void call(Object... arg0) {
-				// TODO Auto-generated method stub
-				LogUtils.debug(TAG, "连接失败");
-				sendWebSocketStatusBroadcaset(Socket.EVENT_CONNECT_ERROR);
+            @Override
+            public void call(Object... arg0) {
+                // TODO Auto-generated method stub
+                LogUtils.debug(TAG, "连接失败");
+                sendWebSocketStatusBroadcaset(Socket.EVENT_CONNECT_ERROR);
 
-			}
-		});
-		mSocket.on(Socket.EVENT_CONNECT, new Emitter.Listener() {
+            }
+        });
+        mSocket.on(Socket.EVENT_CONNECT, new Emitter.Listener() {
 
-			@Override
-			public void call(Object... arg0) {
-				// TODO Auto-generated method stub
-				LogUtils.debug(TAG, "连接成功");
-				sendWebSocketStatusBroadcaset(Socket.EVENT_CONNECT);
-				if (((MyApplication) context.getApplicationContext())
-						.getIsActive()) { // 当第一次连接成功后发送消息
-					sendActivedMsg();
-				} else {
-					sendFrozenMsg();
-				}
-			}
-		});
+            @Override
+            public void call(Object... arg0) {
+                // TODO Auto-generated method stub
+                LogUtils.debug(TAG, "连接成功");
+                sendWebSocketStatusBroadcaset(Socket.EVENT_CONNECT);
+                if (((MyApplication) context.getApplicationContext())
+                        .getIsActive()) { // 当第一次连接成功后发送消息
+                    sendActivedMsg();
+                } else {
+                    sendFrozenMsg();
+                }
+
+            }
+        });
 
 
-		mSocket.on("message", new Emitter.Listener() {
+        mSocket.on("message", new Emitter.Listener() {
 
-			@Override
-			public void call(Object... arg0) {
-				// TODO Auto-generated method stub
-				LogUtils.debug(TAG, "message:" + arg0[0].toString());
+            @Override
+            public void call(Object... arg0) {
+                // TODO Auto-generated method stub
+                LogUtils.debug(TAG, "message:" + arg0[0].toString());
 
-				String content = arg0[0].toString();
-				Intent intent = new Intent("com.inspur.msg");
-				intent.putExtra("push", content);
-				context.sendBroadcast(intent);
-			}
-		});
+                String content = arg0[0].toString();
+                Intent intent = new Intent("com.inspur.msg");
+                intent.putExtra("push", content);
+                LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+            }
+        });
 
 		mSocket.on("debug", new Emitter.Listener() {
 
@@ -232,7 +234,6 @@ public class WebSocketPush {
 				LogUtils.debug(TAG, "断开连接");
 			}
 		});
-
 	}
 
 	public void connectWebSocket() {
@@ -241,9 +242,10 @@ public class WebSocketPush {
 		LogUtils.debug(TAG, "mSocket.open");
 		// mSocket.connect();
 	}
-
-	public void sendChatMessage(String msgType,String content,String cid) {
-		mSocket.emit("message","1111111");
+	
+	public void reConnectWebSocket() {
+		// mSocket.connect();
+		mSocket.connect();
 	}
 
 	public void closeSocket() {
@@ -256,15 +258,15 @@ public class WebSocketPush {
 		}
 	}
 
-	private void sendWebSocketStatusBroadcaset(String event){
-		if (((MyApplication) context.getApplicationContext())
-				.isIndexActivityRunning()){
-			Intent intent = new Intent("message_notify");
-			intent.putExtra("status",event);
-			intent.putExtra("command","websocket_status");
-			context.sendBroadcast(intent);
-		}
-	}
+    private void sendWebSocketStatusBroadcaset(String event) {
+        if (((MyApplication) context.getApplicationContext())
+                .isIndexActivityRunning()) {
+            Intent intent = new Intent("message_notify");
+            intent.putExtra("status", event);
+            intent.putExtra("command", "websocket_status");
+            LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+        }
+    }
 
 
 }

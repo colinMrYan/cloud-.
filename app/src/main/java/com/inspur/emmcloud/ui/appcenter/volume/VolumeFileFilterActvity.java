@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.View;
 
 import com.inspur.emmcloud.R;
@@ -62,7 +63,7 @@ public class VolumeFileFilterActvity extends VolumeFileBaseActivity {
             }
         };
         IntentFilter intentFilter = new IntentFilter("broadcast_volume");
-        registerReceiver(broadcastReceiver, intentFilter);
+        LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver, intentFilter);
     }
 
     public void onClick(View v) {
@@ -96,7 +97,7 @@ public class VolumeFileFilterActvity extends VolumeFileBaseActivity {
     @Override
     protected void onDestroy() {
         if (broadcastReceiver != null) {
-            this.unregisterReceiver(broadcastReceiver);
+            LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver);
             broadcastReceiver = null;
         }
         super.onDestroy();

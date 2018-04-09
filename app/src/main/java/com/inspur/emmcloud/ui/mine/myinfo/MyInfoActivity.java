@@ -3,6 +3,7 @@ package com.inspur.emmcloud.ui.mine.myinfo;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -161,7 +162,6 @@ public class MyInfoActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
         finishActivity();
     }
 
@@ -310,7 +310,7 @@ public class MyInfoActivity extends BaseActivity {
             // 通知消息页面重新创建群组头像
             Intent intent = new Intent("message_notify");
             intent.putExtra("command", "creat_group_icon");
-            sendBroadcast(intent);
+            LocalBroadcastManager.getInstance(MyInfoActivity.this).sendBroadcast(intent);
         }
 
         @Override

@@ -74,10 +74,8 @@ public class WorkAPIService {
         x.http().get(params, new APICallback(context, completeUrl) {
 
             @Override
-            public void callbackTokenExpire() {
-                // TODO Auto-generated method stub
-                new OauthUtils(new OauthCallBack() {
-
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
                         getMeetings(day);
@@ -87,7 +85,9 @@ public class WorkAPIService {
                     public void executeFailCallback() {
                         callbackFail("", -1);
                     }
-                }, context).refreshToken(completeUrl);
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
             }
 
             @Override
@@ -116,10 +116,8 @@ public class WorkAPIService {
         x.http().get(params, new APICallback(context, completeUrl) {
 
             @Override
-            public void callbackTokenExpire() {
-                // TODO Auto-generated method stub
-                new OauthUtils(new OauthCallBack() {
-
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
                         getMeetingRooms();
@@ -129,7 +127,9 @@ public class WorkAPIService {
                     public void executeFailCallback() {
                         callbackFail("", -1);
                     }
-                }, context).refreshToken(completeUrl);
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
             }
 
             @Override
@@ -177,10 +177,8 @@ public class WorkAPIService {
         x.http().get(params, new APICallback(context, completeUrl) {
 
             @Override
-            public void callbackTokenExpire() {
-                // TODO Auto-generated method stub
-                new OauthUtils(new OauthCallBack() {
-
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
                         getFiltMeetingRooms(start, end, commonOfficeIdList,
@@ -191,7 +189,9 @@ public class WorkAPIService {
                     public void executeFailCallback() {
                         callbackFail("", -1);
                     }
-                }, context).refreshToken(completeUrl);
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
             }
 
             @Override
@@ -229,13 +229,10 @@ public class WorkAPIService {
         x.http().get(params, new APICallback(context, completeUrl) {
 
             @Override
-            public void callbackTokenExpire() {
-                // TODO Auto-generated method stub
-                new OauthUtils(new OauthCallBack() {
-
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
-                        // TODO Auto-generated method stub
                         getHistoryMeetingList(keyword, page, limit, isLoadMore);
                     }
 
@@ -243,7 +240,9 @@ public class WorkAPIService {
                     public void executeFailCallback() {
                         callbackFail("", -1);
                     }
-                }, context).refreshToken(completeUrl);
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
             }
 
             @Override
@@ -274,10 +273,8 @@ public class WorkAPIService {
         x.http().get(params, new APICallback(context, completeUrl) {
 
             @Override
-            public void callbackTokenExpire() {
-                // TODO Auto-generated method stub
-                new OauthUtils(new OauthCallBack() {
-
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
                         getIsAdmin(cid);
@@ -287,7 +284,9 @@ public class WorkAPIService {
                     public void executeFailCallback() {
                         callbackFail("", -1);
                     }
-                }, context).refreshToken(completeUrl);
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
             }
 
             @Override
@@ -371,10 +370,8 @@ public class WorkAPIService {
         x.http().request(HttpMethod.PUT, params, new APICallback(context, completeUrl) {
 
             @Override
-            public void callbackTokenExpire() {
-                // TODO Auto-generated method stub
-                new OauthUtils(new OauthCallBack() {
-
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
                         updateMeeting(topic, roomid, name, alert, notice,
@@ -386,7 +383,9 @@ public class WorkAPIService {
                     public void executeFailCallback() {
                         callbackFail("", -1);
                     }
-                }, context).refreshToken(completeUrl);
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
             }
 
             @Override
@@ -468,10 +467,8 @@ public class WorkAPIService {
         x.http().post(params, new APICallback(context, completeUrl) {
 
             @Override
-            public void callbackTokenExpire() {
-                // TODO Auto-generated method stub
-                new OauthUtils(new OauthCallBack() {
-
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
                         getBookingRoom(topic, roomid, name, alert, notice,
@@ -482,7 +479,9 @@ public class WorkAPIService {
                     public void executeFailCallback() {
                         callbackFail("", -1);
                     }
-                }, context).refreshToken(completeUrl);
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
             }
 
             @Override
@@ -522,10 +521,8 @@ public class WorkAPIService {
         x.http().post(params, new APICallback(context, completeUrl) {
 
             @Override
-            public void callbackTokenExpire() {
-                // TODO Auto-generated method stub
-                new OauthUtils(new OauthCallBack() {
-
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
                         creatGroupChannel(name, members);
@@ -535,7 +532,9 @@ public class WorkAPIService {
                     public void executeFailCallback() {
                         callbackFail("", -1);
                     }
-                }, context).refreshToken(completeUrl);
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
             }
 
             @Override
@@ -619,10 +618,8 @@ public class WorkAPIService {
         x.http().get(params, new APICallback(context, completeUrl) {
 
             @Override
-            public void callbackTokenExpire() {
-                // TODO Auto-generated method stub
-                new OauthUtils(new OauthCallBack() {
-
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
                         getRoomMeetingList(bid);
@@ -632,7 +629,9 @@ public class WorkAPIService {
                     public void executeFailCallback() {
                         callbackFail("", -1);
                     }
-                }, context).refreshToken(completeUrl);
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
             }
 
             @Override
@@ -658,10 +657,8 @@ public class WorkAPIService {
         x.http().get(params, new APICallback(context, completeUrl) {
 
             @Override
-            public void callbackTokenExpire() {
-                // TODO Auto-generated method stub
-                new OauthUtils(new OauthCallBack() {
-
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
                         getLoction();
@@ -671,7 +668,9 @@ public class WorkAPIService {
                     public void executeFailCallback() {
                         callbackFail("", -1);
                     }
-                }, context).refreshToken(completeUrl);
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
             }
 
             @Override
@@ -713,10 +712,8 @@ public class WorkAPIService {
             }
 
             @Override
-            public void callbackTokenExpire() {
-                // TODO Auto-generated method stub
-                new OauthUtils(new OauthCallBack() {
-
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
                         getOffice();
@@ -726,8 +723,11 @@ public class WorkAPIService {
                     public void executeFailCallback() {
                         callbackFail("", -1);
                     }
-                }, context).refreshToken(completeUrl);
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
             }
+
         });
     }
 
@@ -755,10 +755,8 @@ public class WorkAPIService {
         x.http().post(params, new APICallback(context, completeUrl) {
 
             @Override
-            public void callbackTokenExpire() {
-                // TODO Auto-generated method stub
-                new OauthUtils(new OauthCallBack() {
-
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
                         creatOffice(name, buildingId);
@@ -768,7 +766,9 @@ public class WorkAPIService {
                     public void executeFailCallback() {
                         callbackFail("", -1);
                     }
-                }, context).refreshToken(completeUrl);
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
             }
 
             @Override
@@ -800,10 +800,8 @@ public class WorkAPIService {
         x.http().request(HttpMethod.DELETE, params, new APICallback(context, completeUrl) {
 
             @Override
-            public void callbackTokenExpire() {
-                // TODO Auto-generated method stub
-                new OauthUtils(new OauthCallBack() {
-
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
                         deleteMeeting(rid);
@@ -813,7 +811,9 @@ public class WorkAPIService {
                     public void executeFailCallback() {
                         callbackFail("", -1);
                     }
-                }, context).refreshToken(completeUrl);
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
             }
 
             @Override
@@ -836,26 +836,26 @@ public class WorkAPIService {
      * @param buildingId
      */
     public void deleteOffice(final String buildingId, final int position) {
-        final String completeUrl = APIUri.addOfficeUrl()+"?id="+buildingId;
+        final String completeUrl = APIUri.addOfficeUrl() + "?id=" + buildingId;
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
         x.http().request(HttpMethod.DELETE, params, new APICallback(context, completeUrl) {
 
             @Override
-            public void callbackTokenExpire() {
-                // TODO Auto-generated method stub
-                new OauthUtils(new OauthCallBack() {
-
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
-                        deleteOffice(buildingId,position);
+                        deleteOffice(buildingId, position);
                     }
 
                     @Override
                     public void executeFailCallback() {
                         callbackFail("", -1);
                     }
-                }, context).refreshToken(completeUrl);
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
             }
 
             @Override
@@ -891,10 +891,8 @@ public class WorkAPIService {
         x.http().get(params, new APICallback(context, completeUrl) {
 
             @Override
-            public void callbackTokenExpire() {
-                // TODO Auto-generated method stub
-                new OauthUtils(new OauthCallBack() {
-
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
                         getRecentTasks(orderBy, orderType);
@@ -904,7 +902,9 @@ public class WorkAPIService {
                     public void executeFailCallback() {
                         callbackFail("", -1);
                     }
-                }, context).refreshToken(completeUrl);
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
             }
 
             @Override
@@ -936,10 +936,8 @@ public class WorkAPIService {
         x.http().get(params, new APICallback(context, completeUrl) {
 
             @Override
-            public void callbackTokenExpire() {
-                // TODO Auto-generated method stub
-                new OauthUtils(new OauthCallBack() {
-
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
                         getTask(id);
@@ -949,7 +947,9 @@ public class WorkAPIService {
                     public void executeFailCallback() {
                         callbackFail("", -1);
                     }
-                }, context).refreshToken(completeUrl);
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
             }
 
             @Override
@@ -985,10 +985,8 @@ public class WorkAPIService {
         x.http().get(params, new APICallback(context, completeUrl) {
 
             @Override
-            public void callbackTokenExpire() {
-                // TODO Auto-generated method stub
-                new OauthUtils(new OauthCallBack() {
-
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
                         getAllTasks(page, limit, state);
@@ -998,7 +996,9 @@ public class WorkAPIService {
                     public void executeFailCallback() {
                         callbackFail("", -1);
                     }
-                }, context).refreshToken(completeUrl);
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
             }
 
             @Override
@@ -1028,9 +1028,8 @@ public class WorkAPIService {
         x.http().get(params, new APICallback(context, completeUrl) {
 
             @Override
-            public void callbackTokenExpire() {
-                // TODO Auto-generated method stub
-                new OauthUtils(new OauthCallBack() {
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
                         getInvolvedTasks(orderBy, orderType);
@@ -1040,7 +1039,9 @@ public class WorkAPIService {
                     public void executeFailCallback() {
                         callbackFail("", -1);
                     }
-                }, context).refreshToken(completeUrl);
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
             }
 
             @Override
@@ -1060,7 +1061,6 @@ public class WorkAPIService {
 
     /**
      * 获取我关注的任务
-     *
      */
     public void getFocusedTasks(final String orderBy, final String orderType) {
         final String completeUrl = APIUri.getFocusedTasksUrl();
@@ -1071,10 +1071,8 @@ public class WorkAPIService {
         x.http().get(params, new APICallback(context, completeUrl) {
 
             @Override
-            public void callbackTokenExpire() {
-                // TODO Auto-generated method stub
-                new OauthUtils(new OauthCallBack() {
-
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
                         getFocusedTasks(orderBy, orderType);
@@ -1084,7 +1082,9 @@ public class WorkAPIService {
                     public void executeFailCallback() {
                         callbackFail("", -1);
                     }
-                }, context).refreshToken(completeUrl);
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
             }
 
             @Override
@@ -1113,10 +1113,8 @@ public class WorkAPIService {
         x.http().post(params, new APICallback(context, completeUrl) {
 
             @Override
-            public void callbackTokenExpire() {
-                // TODO Auto-generated method stub
-                new OauthUtils(new OauthCallBack() {
-
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
                         createTasks(mession);
@@ -1126,7 +1124,9 @@ public class WorkAPIService {
                     public void executeFailCallback() {
                         callbackFail("", -1);
                     }
-                }, context).refreshToken(completeUrl);
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
             }
 
             @Override
@@ -1157,10 +1157,8 @@ public class WorkAPIService {
         x.http().request(HttpMethod.DELETE, params, new APICallback(context, completeUrl) {
 
             @Override
-            public void callbackTokenExpire() {
-                // TODO Auto-generated method stub
-                new OauthUtils(new OauthCallBack() {
-
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
                         deleteTasks(id);
@@ -1170,7 +1168,9 @@ public class WorkAPIService {
                     public void executeFailCallback() {
                         callbackFail("", -1);
                     }
-                }, context).refreshToken(completeUrl);
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
             }
 
             @Override
@@ -1197,10 +1197,8 @@ public class WorkAPIService {
         x.http().get(params, new APICallback(context, completeUrl) {
 
             @Override
-            public void callbackTokenExpire() {
-                // TODO Auto-generated method stub
-                new OauthUtils(new OauthCallBack() {
-
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
                         getTodayTasks();
@@ -1210,7 +1208,9 @@ public class WorkAPIService {
                     public void executeFailCallback() {
                         callbackFail("", -1);
                     }
-                }, context).refreshToken(completeUrl);
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
             }
 
             @Override
@@ -1241,10 +1241,8 @@ public class WorkAPIService {
         x.http().get(params, new APICallback(context, completeUrl) {
 
             @Override
-            public void callbackTokenExpire() {
-                // TODO Auto-generated method stub
-                new OauthUtils(new OauthCallBack() {
-
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
                         getSigleTask(id);
@@ -1254,7 +1252,9 @@ public class WorkAPIService {
                     public void executeFailCallback() {
                         callbackFail("", -1);
                     }
-                }, context).refreshToken(completeUrl);
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
             }
 
             @Override
@@ -1285,20 +1285,20 @@ public class WorkAPIService {
         x.http().request(HttpMethod.PUT, params, new APICallback(context, completeUrl) {
 
             @Override
-            public void callbackTokenExpire() {
-                // TODO Auto-generated method stub
-                new OauthUtils(new OauthCallBack() {
-
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
-                        updateTask(taskJson,position);
+                        updateTask(taskJson, position);
                     }
 
                     @Override
                     public void executeFailCallback() {
                         callbackFail("", -1);
                     }
-                }, context).refreshToken(completeUrl);
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
             }
 
             @Override
@@ -1310,7 +1310,7 @@ public class WorkAPIService {
             @Override
             public void callbackFail(String error, int responseCode) {
                 // TODO Auto-generated method stub
-                apiInterface.returnUpdateTaskFail(error, responseCode,position);
+                apiInterface.returnUpdateTaskFail(error, responseCode, position);
             }
         });
     }
@@ -1331,10 +1331,8 @@ public class WorkAPIService {
         x.http().post(params, new APICallback(context, completeUrl) {
 
             @Override
-            public void callbackTokenExpire() {
-                // TODO Auto-generated method stub
-                new OauthUtils(new OauthCallBack() {
-
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
                         inviteMateForTask(taskId, uidArray);
@@ -1344,7 +1342,9 @@ public class WorkAPIService {
                     public void executeFailCallback() {
                         callbackFail("", -1);
                     }
-                }, context).refreshToken(completeUrl);
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
             }
 
             @Override
@@ -1378,10 +1378,8 @@ public class WorkAPIService {
         x.http().request(HttpMethod.DELETE, params, new APICallback(context, completeUrl) {
 
             @Override
-            public void callbackTokenExpire() {
-                // TODO Auto-generated method stub
-                new OauthUtils(new OauthCallBack() {
-
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
                         deleteMateForTask(taskId, uidArray);
@@ -1391,7 +1389,9 @@ public class WorkAPIService {
                     public void executeFailCallback() {
                         callbackFail("", -1);
                     }
-                }, context).refreshToken(completeUrl);
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
             }
 
             @Override
@@ -1419,10 +1419,8 @@ public class WorkAPIService {
         x.http().get(params, new APICallback(context, completeUrl) {
 
             @Override
-            public void callbackTokenExpire() {
-                // TODO Auto-generated method stub
-                new OauthUtils(new OauthCallBack() {
-
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
                         getTags();
@@ -1432,7 +1430,9 @@ public class WorkAPIService {
                     public void executeFailCallback() {
                         callbackFail("", -1);
                     }
-                }, context).refreshToken(completeUrl);
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
             }
 
             @Override
@@ -1477,10 +1477,8 @@ public class WorkAPIService {
         x.http().request(HttpMethod.PUT, params, new APICallback(context, completeUrl) {
 
             @Override
-            public void callbackTokenExpire() {
-                // TODO Auto-generated method stub
-                new OauthUtils(new OauthCallBack() {
-
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
                         changeTag(id, title, color, owner);
@@ -1490,7 +1488,9 @@ public class WorkAPIService {
                     public void executeFailCallback() {
                         callbackFail("", -1);
                     }
-                }, context).refreshToken(completeUrl);
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
             }
 
             @Override
@@ -1521,10 +1521,8 @@ public class WorkAPIService {
         x.http().request(HttpMethod.DELETE, params, new APICallback(context, completeUrl) {
 
             @Override
-            public void callbackTokenExpire() {
-                // TODO Auto-generated method stub
-                new OauthUtils(new OauthCallBack() {
-
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
                         deleteTag(id);
@@ -1534,7 +1532,9 @@ public class WorkAPIService {
                     public void executeFailCallback() {
                         callbackFail("", -1);
                     }
-                }, context).refreshToken(completeUrl);
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
             }
 
             @Override
@@ -1567,9 +1567,8 @@ public class WorkAPIService {
         x.http().post(params, new APICallback(context, completeUrl) {
 
             @Override
-            public void callbackTokenExpire() {
-                // TODO Auto-generated method stub
-                new OauthUtils(new OauthCallBack() {
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
                         createTag(title, color);
@@ -1579,7 +1578,9 @@ public class WorkAPIService {
                     public void executeFailCallback() {
                         callbackFail("", -1);
                     }
-                }, context).refreshToken(completeUrl);
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
             }
 
             @Override
@@ -1613,20 +1614,20 @@ public class WorkAPIService {
         x.http().request(HttpMethod.PUT, params, new APICallback(context, completeUrl) {
 
             @Override
-            public void callbackTokenExpire() {
-                // TODO Auto-generated method stub
-                new OauthUtils(new OauthCallBack() {
-
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
-                        changeMessionOwner(id, newOwner,managerName);
+                        changeMessionOwner(id, newOwner, managerName);
                     }
 
                     @Override
                     public void executeFailCallback() {
                         callbackFail("", -1);
                     }
-                }, context).refreshToken(completeUrl);
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
             }
 
             @Override
@@ -1668,13 +1669,10 @@ public class WorkAPIService {
         x.http().post(params, new APICallback(context, completeUrl) {
 
             @Override
-            public void callbackTokenExpire() {
-                // TODO Auto-generated method stub
-                new OauthUtils(new OauthCallBack() {
-
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
-                        // TODO Auto-generated method stub
                         addAttachments(id, attachments);
                     }
 
@@ -1682,7 +1680,9 @@ public class WorkAPIService {
                     public void executeFailCallback() {
                         callbackFail("", -1);
                     }
-                }, context).refreshToken(completeUrl);
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
             }
 
             @Override
@@ -1720,20 +1720,20 @@ public class WorkAPIService {
         x.http().request(HttpMethod.DELETE, params, new APICallback(context, completeUrl) {
 
             @Override
-            public void callbackTokenExpire() {
-                // TODO Auto-generated method stub
-                new OauthUtils(new OauthCallBack() {
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
-                        // TODO Auto-generated method stub
-                        deleteAttachments(id,attachments,position);
+                        deleteAttachments(id, attachments, position);
                     }
 
                     @Override
                     public void executeFailCallback() {
                         callbackFail("", -1);
                     }
-                }, context).refreshToken(completeUrl);
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
             }
 
             @Override
@@ -1745,7 +1745,7 @@ public class WorkAPIService {
             @Override
             public void callbackFail(String error, int responseCode) {
                 // TODO Auto-generated method stub
-                apiInterface.returnDelAttachmentFail(error, responseCode,position);
+                apiInterface.returnDelAttachmentFail(error, responseCode, position);
             }
         });
     }
@@ -1768,10 +1768,8 @@ public class WorkAPIService {
         x.http().get(params, new APICallback(context, completeUrl) {
 
             @Override
-            public void callbackTokenExpire() {
-                // TODO Auto-generated method stub
-                new OauthUtils(new OauthCallBack() {
-
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
                         getMyCalendar(page, limit);
@@ -1781,7 +1779,9 @@ public class WorkAPIService {
                     public void executeFailCallback() {
                         callbackFail("", -1);
                     }
-                }, context).refreshToken(completeUrl);
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
             }
 
             @Override
@@ -1815,10 +1815,8 @@ public class WorkAPIService {
         x.http().request(HttpMethod.DELETE, params, new APICallback(context, completeUrl) {
 
             @Override
-            public void callbackTokenExpire() {
-                // TODO Auto-generated method stub
-                new OauthUtils(new OauthCallBack() {
-
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
                         delelteCalendarById(id);
@@ -1828,7 +1826,9 @@ public class WorkAPIService {
                     public void executeFailCallback() {
                         callbackFail("", -1);
                     }
-                }, context).refreshToken(completeUrl);
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
             }
 
             @Override
@@ -1860,10 +1860,8 @@ public class WorkAPIService {
         x.http().request(HttpMethod.PUT, params, new APICallback(context, completeUrl) {
 
             @Override
-            public void callbackTokenExpire() {
-                // TODO Auto-generated method stub
-                new OauthUtils(new OauthCallBack() {
-
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
                         updateCalendar(calendarJson);
@@ -1873,7 +1871,9 @@ public class WorkAPIService {
                     public void executeFailCallback() {
                         callbackFail("", -1);
                     }
-                }, context).refreshToken(completeUrl);
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
             }
 
             @Override
@@ -1908,13 +1908,10 @@ public class WorkAPIService {
         x.http().post(params, new APICallback(context, completeUrl) {
 
             @Override
-            public void callbackTokenExpire() {
-                // TODO Auto-generated method stub
-                new OauthUtils(new OauthCallBack() {
-
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
-                        // TODO Auto-generated method stub
                         addCalEvent(calendarId, eventJson);
                     }
 
@@ -1922,7 +1919,9 @@ public class WorkAPIService {
                     public void executeFailCallback() {
                         callbackFail("", -1);
                     }
-                }, context).refreshToken(completeUrl);
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
             }
 
             @Override
@@ -1957,13 +1956,10 @@ public class WorkAPIService {
         x.http().request(HttpMethod.PUT, params, new APICallback(context, completeUrl) {
 
             @Override
-            public void callbackTokenExpire() {
-                // TODO Auto-generated method stub
-                new OauthUtils(new OauthCallBack() {
-
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
-                        // TODO Auto-generated method stub
                         updateCalEvent(calEventJson);
                     }
 
@@ -1971,7 +1967,9 @@ public class WorkAPIService {
                     public void executeFailCallback() {
                         callbackFail("", -1);
                     }
-                }, context).refreshToken(completeUrl);
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
             }
 
             @Override
@@ -2025,13 +2023,10 @@ public class WorkAPIService {
         x.http().get(params, new APICallback(context, completeUrl) {
 
             @Override
-            public void callbackTokenExpire() {
-                // TODO Auto-generated method stub
-                new OauthUtils(new OauthCallBack() {
-
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
-                        // TODO Auto-generated method stub
                         getAllCalEvents(calendarIdList, afterCalendar,
                                 beforCalendar, limit, page, isRefresh);
                     }
@@ -2040,7 +2035,9 @@ public class WorkAPIService {
                     public void executeFailCallback() {
                         callbackFail("", -1);
                     }
-                }, context).refreshToken(completeUrl);
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
             }
 
             @Override
@@ -2073,10 +2070,8 @@ public class WorkAPIService {
         x.http().request(HttpMethod.DELETE, params, new APICallback(context, completeUrl) {
 
             @Override
-            public void callbackTokenExpire() {
-                // TODO Auto-generated method stub
-                new OauthUtils(new OauthCallBack() {
-
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
                         deleteCalEvent(calEventId);
@@ -2086,7 +2081,9 @@ public class WorkAPIService {
                     public void executeFailCallback() {
                         callbackFail("", -1);
                     }
-                }, context).refreshToken(completeUrl);
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
             }
 
             @Override
@@ -2106,9 +2103,10 @@ public class WorkAPIService {
 
     /**
      * 上传工作页面布局配置信息
+     *
      * @param configJSon
      */
-    public void saveWorkPortletConfig(final String configJSon){
+    public void saveWorkPortletConfig(final String configJSon) {
         final String url = APIUri.saveAppConfigUrl("WorkPortlet");
         RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
         params.setBodyContent(configJSon);
@@ -2124,9 +2122,8 @@ public class WorkAPIService {
             }
 
             @Override
-            public void callbackTokenExpire() {
-                new OauthUtils(new OauthCallBack() {
-
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
                     @Override
                     public void reExecute() {
                         saveWorkPortletConfig(configJSon);
@@ -2136,8 +2133,11 @@ public class WorkAPIService {
                     public void executeFailCallback() {
                         callbackFail("", -1);
                     }
-                }, context).refreshToken(url);
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
             }
+
         });
     }
 }

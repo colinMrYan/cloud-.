@@ -3,6 +3,7 @@ package com.inspur.emmcloud.ui.work.task;
 import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,11 +30,11 @@ import com.inspur.emmcloud.bean.work.GetTaskListResult;
 import com.inspur.emmcloud.bean.work.TaskColorTag;
 import com.inspur.emmcloud.bean.work.TaskResult;
 import com.inspur.emmcloud.config.Constant;
-import com.inspur.emmcloud.util.privates.MessionTagColorUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
+import com.inspur.emmcloud.util.privates.MessionTagColorUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.SegmentControl;
@@ -323,7 +324,7 @@ public class MessionListActivity extends BaseActivity{
 		if (isNeedRefresh) {
 			Intent mIntent = new Intent(Constant.ACTION_TASK);
 			mIntent.putExtra("refreshTask", "refreshTask");
-			sendBroadcast(mIntent);
+			LocalBroadcastManager.getInstance(this).sendBroadcast(mIntent);
 			setResult(RESULT_OK);
 		}
 		finish();

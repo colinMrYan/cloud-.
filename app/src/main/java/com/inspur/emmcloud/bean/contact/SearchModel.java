@@ -6,6 +6,7 @@ import com.facebook.react.bridge.ReadableMap;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.bean.chat.Channel;
 import com.inspur.emmcloud.bean.chat.ChannelGroup;
+import com.inspur.emmcloud.bean.chat.InsertModel;
 import com.inspur.emmcloud.util.privates.cache.ContactCacheUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 
@@ -83,6 +84,14 @@ public class SearchModel implements Serializable {
 		icon = channel.getIcon();
 	}
 
+	public SearchModel(InsertModel insertModel){
+		id = insertModel.getInsertId();
+		name = insertModel.getInsertContent();
+		type = insertModel.getType();
+		icon = insertModel.getIcon();
+	}
+
+
 	public String getId() {
 		return id;
 	}
@@ -90,7 +99,27 @@ public class SearchModel implements Serializable {
 	public String getName() {
 		return name;
 	}
-	
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	public String getIcon() {
+		return icon;
+	}
+
+	public void setIcon(String icon) {
+		this.icon = icon;
+	}
+
 	/**
 	 * 中文名+英文名
 	 *

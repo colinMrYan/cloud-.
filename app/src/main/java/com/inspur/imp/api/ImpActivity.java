@@ -30,6 +30,7 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.mine.Language;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.config.MyAppWebConfig;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
@@ -60,7 +61,7 @@ public class ImpActivity extends ImpBaseActivity {
     private RelativeLayout loadingLayout;
     private TextView loadingText;
     private String helpUrl = "";
-    private HashMap<String,String> urlTilteMap = new HashMap<>();
+    private HashMap<String, String> urlTilteMap = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,14 +116,16 @@ public class ImpActivity extends ImpBaseActivity {
             }
         });
         webView.loadUrl(url, webViewHeaders);
+        LogUtils.jasonDebug("url="+url);
         setWebViewFunctionVisiable();
     }
 
     /**
      * 在WebClient获取header
+     *
      * @return
      */
-    public Map<String,String> getWebViewHeaders(){
+    public Map<String, String> getWebViewHeaders() {
         return webViewHeaders;
     }
 
@@ -169,9 +172,9 @@ public class ImpActivity extends ImpBaseActivity {
         }
     }
 
-    public void setTitle(String title){
-        if (headerText != null && !StringUtils.isBlank(title)){
-            urlTilteMap.put(webView.getUrl(),title);
+    public void setTitle(String title) {
+        if (headerText != null && !StringUtils.isBlank(title)) {
+            urlTilteMap.put(webView.getUrl(), title);
             headerText.setText(title);
         }
     }
@@ -179,10 +182,10 @@ public class ImpActivity extends ImpBaseActivity {
     /**
      * 解决有的机型Webview goback时候不会获取title的问题
      */
-    private void setGoBackTitle(){
-        if (headerText != null){
+    private void setGoBackTitle() {
+        if (headerText != null) {
             String title = urlTilteMap.get(webView.getUrl());
-            if (!StringUtils.isBlank(title)){
+            if (!StringUtils.isBlank(title)) {
                 headerText.setText(title);
             }
         }
@@ -327,7 +330,7 @@ public class ImpActivity extends ImpBaseActivity {
                 Intent intent = new Intent();
                 intent.setClass(ImpActivity.this, ImpActivity.class);
                 intent.putExtra("uri", helpUrl);
-                intent.putExtra("appName","");
+                intent.putExtra("appName", "");
                 startActivity(intent);
                 dialog.dismiss();
             }
