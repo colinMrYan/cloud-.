@@ -102,6 +102,7 @@
         android:xlargeScreens="true" />
 
     <!--allowBackup = false 防止对应用程序数据进行备份和还原 -->
+
     <application
         tools:replace="android:allowBackup"
         android:allowBackup="false"
@@ -126,7 +127,8 @@
         <activity
             android:name=".ui.IndexActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustNothing"></activity>
+            android:windowSoftInputMode="adjustNothing">
+        </activity>
         <activity
             android:name=".ui.mine.setting.GuideActivity"
             android:launchMode="singleTask"
@@ -211,6 +213,23 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar">
+
+            <intent-filter>
+                <action android:name="android.intent.action.SEND_MULTIPLE" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:mimeType="*/*" />
+            </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:mimeType="*/*" />
+            </intent-filter>
+
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -589,7 +608,8 @@
         <!-- 云盘 -->
         <activity
             android:name=".ui.appcenter.volume.VolumeHomePageActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait">
+        </activity>
         <activity
             android:name=".ui.appcenter.volume.VolumeFileActivity"
             android:configChanges="orientation|screenSize"
@@ -616,6 +636,10 @@
         <activity
             android:name=".ui.appcenter.volume.ShareVolumeNameModifyActivity"
             android:screenOrientation="portrait"></activity>
+        <activity android:name=".ui.appcenter.volume.VolumeFilePermissionManagerActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".ui.appcenter.volume.VolumeGroupChangePermissionActivity"
+            android:screenOrientation="portrait"/>
 
 
         <!-- service -->

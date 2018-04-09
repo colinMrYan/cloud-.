@@ -26,12 +26,15 @@ import com.inspur.emmcloud.bean.appcenter.news.GetGroupNewsDetailResult;
 import com.inspur.emmcloud.bean.appcenter.news.GetNewsTitleResult;
 import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeFileListResult;
 import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeFileUploadTokenResult;
+import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeGroupPermissionResult;
 import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeGroupResult;
 import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeListResult;
+import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeResultWithPermissionResult;
 import com.inspur.emmcloud.bean.appcenter.volume.Volume;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeDetail;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
 import com.inspur.emmcloud.interf.OauthCallBack;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.privates.OauthUtils;
 
 import org.json.JSONArray;
@@ -1387,5 +1390,87 @@ public class MyAppAPIService {
 
         });
 
+    }
+
+    /**
+     * 根据volumeId获取文件夹的权限组
+     * @param volumeId
+     */
+    public void getVolumeFileGroup(final String volumeId, final String path){
+        final String url = APIUri.getVolumeFileGroupUrl(volumeId)+"?path="+path;
+        RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
+        x.http().get(params, new APICallback(context, url) {
+            @Override
+            public void callbackSuccess(String arg0) {
+                apiInterface.returnVolumeGroupSuccess(new GetVolumeResultWithPermissionResult(arg0));
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                apiInterface.returnVolumeGroupFail(error,responseCode);
+            }
+
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        getVolumeFileGroup(volumeId,path);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
+            }
+        });
+
+    }
+
+    /**
+     * 修改文件夹组权限
+     * @param volumeId
+     * @param path
+     * @param group
+     * @param privilege
+     * @param recurse
+     */
+    public void updateVolumeFileGroupPermission(final String volumeId, final String path, final String group, final int privilege, final boolean recurse){
+        final String url = APIUri.getVolumeFileGroupUrl(volumeId)+"?path="+path+"&group="+group+"&privilege="+privilege+"&recurse="+recurse;
+        RequestParams params = ((MyApplication)context.getApplicationContext()).getHttpRequestParams(url);
+        x.http().request(HttpMethod.PUT, params, new APICallback(context,url) {
+            @Override
+            public void callbackSuccess(String arg0) {
+                GetVolumeGroupPermissionResult getVolumeGroupPermissionResult = new GetVolumeGroupPermissionResult("");
+                getVolumeGroupPermissionResult.setPrivilege(privilege);
+                apiInterface.returnUpdateVolumeGroupPermissionSuccess(getVolumeGroupPermissionResult);
+            }
+
+            @Override
+            public void callbackFail(String error, int responseCode) {
+                apiInterface.returnUpdateVolumeGroupPermissionFail(error,responseCode);
+            }
+
+            @Override
+            public void callbackTokenExpire(long requestTime) {
+                OauthCallBack oauthCallBack = new OauthCallBack() {
+                    @Override
+                    public void reExecute() {
+                        updateVolumeFileGroupPermission(volumeId,path,group,privilege,recurse);
+                    }
+
+                    @Override
+                    public void executeFailCallback() {
+                        callbackFail("", -1);
+                    }
+                };
+                OauthUtils.getInstance().refreshToken(
+                        oauthCallBack, requestTime);
+            }
+        });
     }
 }

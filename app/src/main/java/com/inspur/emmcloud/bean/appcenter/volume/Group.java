@@ -1,6 +1,7 @@
 package com.inspur.emmcloud.bean.appcenter.volume;
 
 import com.inspur.emmcloud.util.common.JSONUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -15,8 +16,13 @@ import java.util.ArrayList;
 public class Group implements Serializable{
     private String id;
     private String name;
+    private String enterprise;
+    private long creationDate;
+    private long lastUpdate;
+    private String volume;
     private String owner;
     private int privilege;
+    private String type;
     private ArrayList<String>  memberUidList = new ArrayList<>();
 
     public Group(){}
@@ -26,6 +32,11 @@ public class Group implements Serializable{
         name = JSONUtils.getString(obj,"name","");
         owner = JSONUtils.getString(obj,"owner","");
         privilege = JSONUtils.getInt(obj,"privilege",0);
+        type = JSONUtils.getString(obj,"type","");
+        enterprise = JSONUtils.getString(obj,"enterprise","");
+        creationDate = JSONUtils.getLong(obj,"creationDate",0);
+        lastUpdate = JSONUtils.getLong(obj,"lastUpdate",0);
+        volume = JSONUtils.getString(obj,"volume","");
         JSONArray array = JSONUtils.getJSONArray(obj,"members",new JSONArray());
         for (int i=0;i<array.length();i++){
             String uid = JSONUtils.getString(array,i,"");
@@ -59,6 +70,46 @@ public class Group implements Serializable{
 
     public int getPrivilege() {
         return privilege;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getEnterprise() {
+        return enterprise;
+    }
+
+    public void setEnterprise(String enterprise) {
+        this.enterprise = enterprise;
+    }
+
+    public long getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(long creationDate) {
+        this.creationDate = creationDate;
+    }
+
+    public long getLastUpdate() {
+        return lastUpdate;
+    }
+
+    public void setLastUpdate(long lastUpdate) {
+        this.lastUpdate = lastUpdate;
+    }
+
+    public String getVolume() {
+        return volume;
+    }
+
+    public void setVolume(String volume) {
+        this.volume = volume;
     }
 
     public void setPrivilege(int privilege) {

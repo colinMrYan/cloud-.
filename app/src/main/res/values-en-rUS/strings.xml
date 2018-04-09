@@ -395,6 +395,8 @@
     <string name="volume_name">Shared Disk Name</string>
     <string name="all_volume_member_size">All Members(%1$d)</string>
     <string name="group">Group</string>
+    <string name="volume_has_upload_permission">Have upload/view permissions</string>
+    <string name="volume_has_watch_permission">Have view permissions</string>
     <string name="people_num">%1$dpeople</string>
     <string name="sure_delete_volume">Sure to delete?</string>
     <string name="del_volume_member">Delete Member</string>
@@ -424,6 +426,9 @@
     <string name="disk">Disk</string>
     <string name="volume_file_filter">Filter</string>
     <string name="volume_group_name">Group Name</string>
+    <string name="volume_upload_file">Upload File</string>
+    <string name="volume_upload_file_to_volume">Upload file to volume</string>
+    <string name="volume_file_permission_manager">Permission manager</string>
 
 
     <!-- 我的页面部分 -->
@@ -922,5 +927,8 @@
     <string name="login_more_scan_find_right">]Do you decide to add？</string>
     <string name="cluster_default">default</string>
     <string name="current_system">Current Sys</string>
+
+    <string name="volume_read_write_permission">Have upload / view permissions</string>
+    <string name="volume_read_permission">Have view permissions</string>
 
 </resources>

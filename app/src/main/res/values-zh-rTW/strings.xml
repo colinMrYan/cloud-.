@@ -397,6 +397,8 @@
     <string name="volume_name">網盤名稱</string>
     <string name="all_volume_member_size">全部網盤成員(%1$d)</string>
     <string name="group">組</string>
+    <string name="volume_has_upload_permission">擁有上傳/查看許可權</string>
+    <string name="volume_has_watch_permission">擁有查看許可權</string>
     <string name="people_num">%1$d人</string>
     <string name="sure_delete_volume">確定要刪除所選網盤嗎？</string>
     <string name="del_volume_member">刪除網盤成員</string>
@@ -426,6 +428,9 @@
     <string name="disk">網盤</string>
     <string name="volume_file_filter">分類篩選</string>
     <string name="volume_group_name">組名稱</string>
+    <string name="volume_upload_file">上傳文件</string>
+    <string name="volume_upload_file_to_volume">上傳到網盤</string>
+    <string name="volume_file_permission_manager">許可權管理</string>
 
     <!-- 我的頁面部分 -->
     <string name="data_clear_success">清除成功</string>
@@ -924,5 +929,8 @@
     <string name="login_more_scan_find_right">]確定添加嗎？</string>
     <string name="cluster_default">默認</string>
     <string name="current_system">當前系統</string>
+
+    <string name="volume_read_write_permission">擁有上傳/查看許可權</string>
+    <string name="volume_read_permission">擁有查看許可權</string>
 
 </resources>

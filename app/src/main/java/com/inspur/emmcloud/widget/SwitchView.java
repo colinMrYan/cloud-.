@@ -72,8 +72,10 @@ public class SwitchView extends View {
 	private float bWidth;
 	private float bLeft, bTop, bRight, bBottom;
 	private float bOnLeftX, bOn2LeftX, bOff2LeftX, bOffLeftX;
-
 	private float shadowHeight;
+	//控制联动的标志true代表用代码改变状态
+	private boolean isCodeManual = false;
+	private boolean isCodeManualOpen = false;
 
 	public SwitchView(Context context) {
 		this(context, null);
@@ -142,6 +144,11 @@ public class SwitchView extends View {
 
 	public void setEnable(boolean isEnable){
 		this.isEnable = isEnable;
+	}
+
+	public void setIsCodeManual(boolean isCodeManual,boolean isCodeManualOpen){
+		this.isCodeManual = isCodeManual;
+		this.isCodeManualOpen = isCodeManualOpen;
 	}
 	private void calcBPath(float percent) {
 		bPath.reset();
@@ -285,6 +292,7 @@ public class SwitchView extends View {
 
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
+		isCodeManual = false;
 		if (isEnable &&(state == STATE_SWITCH_ON || state == STATE_SWITCH_OFF) && (sAnim * bAnim == 0)) {
 			switch (event.getAction()) {
 				case MotionEvent.ACTION_DOWN:
@@ -316,8 +324,21 @@ public class SwitchView extends View {
 		} else if (isOpened && newState == STATE_SWITCH_OFF) {
 			isOpened = false;
 		}
-		lastState = state;
-		state = newState;
+		//如果是由代码控制状态，自己来控制状切换
+		if(isCodeManual){
+			if(isCodeManualOpen){
+				isOpened = true;
+				lastState = STATE_SWITCH_OFF;
+				state = STATE_SWITCH_ON;
+			}else {
+				isOpened = false;
+				lastState = STATE_SWITCH_ON;
+				state =  STATE_SWITCH_OFF;
+			}
+		}else{
+			lastState = state;
+			state = newState;
+		}
 		postInvalidate();
 	}
 
@@ -431,6 +452,7 @@ public class SwitchView extends View {
 
 	public void setPaintColorOn(int paintColorOn) {
 		this.paintColorOn = paintColorOn;
+		postInvalidate();
 	}
 
 	public int getPaintCircleBtnColor() {
@@ -439,6 +461,7 @@ public class SwitchView extends View {
 
 	public void setPaintCircleBtnColor(int paintCircleBtnColor) {
 		this.paintCircleBtnColor = paintCircleBtnColor;
+		postInvalidate();
 	}
 
 	public int getPaintColorOff() {

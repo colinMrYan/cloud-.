@@ -1,6 +1,7 @@
 package com.inspur.emmcloud.ui.appcenter.volume;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -41,6 +42,7 @@ import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -83,11 +85,18 @@ public class ShareVolumeActivity extends BaseActivity implements SwipeRefreshLay
         shareVolumeListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                List<Uri> shareUriList = (List<Uri>) getIntent().getSerializableExtra("fileShareUriList");
                 Volume volume = shareVolumeList.get(position);
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("volume", volume);
-                bundle.putSerializable("title", volume.getName());
-                IntentUtils.startActivity(ShareVolumeActivity.this, VolumeFileActivity.class, bundle);
+                bundle.putString("title",volume.getName() );
+                if(shareUriList != null && shareUriList.size() > 0){
+                    bundle.putSerializable("fileShareUriList", (Serializable) shareUriList);
+                    bundle.putString("operationFileDirAbsolutePath", "/");
+                    IntentUtils.startActivity(ShareVolumeActivity.this, VolumeFileLocationSelectActivity.class, bundle);
+                }else{
+                    IntentUtils.startActivity(ShareVolumeActivity.this, VolumeFileActivity.class, bundle);
+                }
             }
         });
         shareVolumeListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
@@ -191,7 +200,7 @@ public class ShareVolumeActivity extends BaseActivity implements SwipeRefreshLay
     /**
      * 弹出文件删除提示框
      *
-     * @param volumeFile
+     * @param volume
      */
     protected void showVolumeDelWranibgDlg(final Volume volume) {
         new MyQMUIDialog.MessageDialogBuilder(ShareVolumeActivity.this)
