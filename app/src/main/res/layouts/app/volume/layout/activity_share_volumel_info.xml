@@ -43,7 +43,7 @@
     </RelativeLayout>
 
     <ScrollView
-        android:id="@+id/header_image_layout"
+        android:id="@+id/sl_header_image"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/header_layout"
@@ -140,7 +140,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="20dp"
-                    android:layout_toLeftOf="@+id/volume_name_arrow"
+                    android:layout_toLeftOf="@+id/img_volume_name_arrow"
                     android:layout_toRightOf="@id/volume_name_title"
                     android:ellipsize="end"
                     android:gravity="right"
@@ -151,7 +151,7 @@
                     android:textSize="@dimen/content_title_textsize" />
 
                 <ImageView
-                    android:id="@+id/volume_name_arrow"
+                    android:id="@+id/img_volume_name_arrow"
                     style="@style/arrow_right"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
@@ -164,7 +164,7 @@
                 android:layout_height="0.5dp"
                 android:background="@color/color_list_divider" />
             <LinearLayout
-                android:id="@+id/group_layout"
+                android:id="@+id/ll_write_group"
                 android:orientation="vertical"
                 android:visibility="gone"
                 android:layout_width="match_parent"
