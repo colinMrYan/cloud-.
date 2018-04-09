@@ -5,7 +5,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -37,9 +36,7 @@ public class VolumeGroupPermissionManagerAdapter extends RecyclerView.Adapter<Vo
         VolumeGroupPermissionManagerAdapterHolder holder = new VolumeGroupPermissionManagerAdapterHolder(view);
         holder.groupNameText = (TextView) view.findViewById(R.id.tv_volume_group_name);
         holder.permissionText = (TextView) view.findViewById(R.id.tv_volume_group_permission);
-        holder.recommendAppImg = (ImageView) view.findViewById(R.id.img_volume_group_arrow);
         holder.relativeLayout = (RelativeLayout) view.findViewById(R.id.volume_group_rl);
-
         return holder;
     }
 
@@ -62,7 +59,6 @@ public class VolumeGroupPermissionManagerAdapter extends RecyclerView.Adapter<Vo
 
     public class VolumeGroupPermissionManagerAdapterHolder extends RecyclerView.ViewHolder {
         RelativeLayout relativeLayout;
-        ImageView recommendAppImg;
         TextView groupNameText;
         TextView permissionText;
         public VolumeGroupPermissionManagerAdapterHolder(View itemView) {

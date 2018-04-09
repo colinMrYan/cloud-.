@@ -36,6 +36,7 @@ import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StateBarUtils;
+import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.AppId2AppAndOpenAppUtils;
 import com.inspur.emmcloud.util.privates.WebAppUtils;
@@ -134,8 +135,11 @@ public class SchemeHandleActivity extends Activity {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    String action = getIntent().getAction();
-                    if(action != null && (Intent.ACTION_SEND.equals(action) || Intent.ACTION_SEND_MULTIPLE.equals(action))){
+                    String action = "";
+                    if(getIntent() != null){
+                        action = getIntent().getAction();
+                    }
+                    if(!StringUtils.isBlank(action) && (Intent.ACTION_SEND.equals(action) || Intent.ACTION_SEND_MULTIPLE.equals(action))){
                         handleShareIntent();
                     }else{
                         Uri uri = getIntent().getData();
@@ -222,7 +226,6 @@ public class SchemeHandleActivity extends Activity {
      * 处理带分享功能的Action
      */
     private void handleShareIntent() {
-        if (getIntent() != null) {
             String action = getIntent().getAction();
             List<Uri> uriList = new ArrayList<>();
             if (Intent.ACTION_SEND.equals(action)) {
@@ -237,7 +240,6 @@ public class SchemeHandleActivity extends Activity {
             if (uriList.size() > 0) {
                 startVolumeShareActivity(uriList);
             }
-        }
     }
 
     /**

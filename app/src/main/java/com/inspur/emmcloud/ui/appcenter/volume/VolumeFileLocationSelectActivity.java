@@ -56,7 +56,7 @@ public class VolumeFileLocationSelectActivity extends VolumeFileBaseActivity {
     private boolean isFunctionCopy;//判断是复制还是移动功能
     private MyAppAPIService apiService;
 
-    private List<Uri> uriList = new ArrayList<>();
+    private List<Uri> shareUriList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,10 +98,10 @@ public class VolumeFileLocationSelectActivity extends VolumeFileBaseActivity {
         pathText.setText(getString(R.string.current_directory_hint,currentDirAbsolutePath));
         List<Uri> fileShareUriList = (List<Uri>)getIntent().getSerializableExtra("fileShareUriList");
         if(fileShareUriList != null){
-            uriList.addAll(fileShareUriList);
+            shareUriList.addAll(fileShareUriList);
         }
-        locationSelectUploadToText.setVisibility(uriList.size()>0?View.VISIBLE:View.GONE);
-        locationSelectToText.setVisibility(uriList.size()>0?View.GONE:View.VISIBLE);
+        locationSelectUploadToText.setVisibility(shareUriList.size()>0?View.VISIBLE:View.GONE);
+        locationSelectToText.setVisibility(shareUriList.size()>0?View.GONE:View.VISIBLE);
     }
 
     public void onClick(View v) {
@@ -144,16 +144,25 @@ public class VolumeFileLocationSelectActivity extends VolumeFileBaseActivity {
                 }
                 break;
             case R.id.tv_location_select_upload_to:
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("volume", volume);
-                bundle.putSerializable("currentDirAbsolutePath", currentDirAbsolutePath);
-                bundle.putSerializable("title", getString(R.string.volume_upload_file));
-                bundle.putSerializable("fileShareUriList", (Serializable) uriList);
-                IntentUtils.startActivity(VolumeFileLocationSelectActivity.this, VolumeFileActivity.class, bundle);
-                closeAllThisActivityInstance();
+                goUploadPage();
                 break;
             default:
                 break;
+        }
+    }
+
+    /**
+     * 返回上传页面
+     */
+    private void goUploadPage() {
+        if(NetUtils.isNetworkConnected(this)){
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("volume", volume);
+            bundle.putSerializable("currentDirAbsolutePath", currentDirAbsolutePath);
+            bundle.putSerializable("title", getString(R.string.volume_upload_file));
+            bundle.putSerializable("fileShareUriList", (Serializable) shareUriList);
+            IntentUtils.startActivity(VolumeFileLocationSelectActivity.this, VolumeFileActivity.class, bundle);
+            closeAllThisActivityInstance();
         }
     }
 

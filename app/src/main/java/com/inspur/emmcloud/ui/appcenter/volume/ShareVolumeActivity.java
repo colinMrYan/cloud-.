@@ -93,7 +93,7 @@ public class ShareVolumeActivity extends BaseActivity implements SwipeRefreshLay
                 if(shareUriList != null && shareUriList.size() > 0){
                     bundle.putSerializable("fileShareUriList", (Serializable) shareUriList);
                     bundle.putString("operationFileDirAbsolutePath", "/");
-                    IntentUtils.startActivity(ShareVolumeActivity.this, VolumeFileLocationSelectActivity.class, bundle,true);
+                    IntentUtils.startActivity(ShareVolumeActivity.this, VolumeFileLocationSelectActivity.class, bundle);
                 }else{
                     IntentUtils.startActivity(ShareVolumeActivity.this, VolumeFileActivity.class, bundle);
                 }

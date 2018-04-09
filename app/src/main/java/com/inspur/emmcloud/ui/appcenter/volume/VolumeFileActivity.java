@@ -105,8 +105,10 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
         if(fileShareUriList != null){
             shareUriList.addAll(fileShareUriList);
         }
-        for(int i = 0; i < shareUriList.size(); i++){
-            uploadFile(GetPathFromUri4kitkat.getPathByUri(getApplicationContext(), shareUriList.get(i)));
+        if(NetUtils.isNetworkConnected(this)){
+            for(int i = 0; i < shareUriList.size(); i++){
+                uploadFile(GetPathFromUri4kitkat.getPathByUri(getApplicationContext(), shareUriList.get(i)));
+            }
         }
     }
 
