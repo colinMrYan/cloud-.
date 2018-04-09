@@ -78,7 +78,7 @@ public class ShareVolumeInfoActivity extends BaseActivity {
     @ViewInject(R.id.ll_write_group)
     private LinearLayout groupWriteLayout;
 
-    @ViewInject(R.id.group_watch_layout)
+    @ViewInject(R.id.ll_group_watch)
     private LinearLayout groupReadLayout;
 
     private VolumeInfoMemberAdapter memberAdapter;

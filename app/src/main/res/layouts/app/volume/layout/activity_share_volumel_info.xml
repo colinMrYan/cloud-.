@@ -192,7 +192,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/group_watch_layout"
+                android:id="@+id/ll_group_watch"
                 android:orientation="vertical"
                 android:visibility="gone"
                 android:layout_width="match_parent"
