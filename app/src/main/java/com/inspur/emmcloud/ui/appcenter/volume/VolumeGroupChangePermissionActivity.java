@@ -11,6 +11,7 @@ import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
 import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeGroupPermissionResult;
 import com.inspur.emmcloud.bean.appcenter.volume.Group;
 import com.inspur.emmcloud.util.common.NetUtils;
+import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.SwitchView;
 
@@ -34,7 +35,7 @@ public class VolumeGroupChangePermissionActivity extends BaseActivity {
     protected TextView readPermissionText;
 
     @ViewInject(R.id.volume_read_write_permission_switch)
-    protected SwitchView readAndWritePermissionSwitch;
+    protected SwitchView writePermissionSwitch;
 
     @ViewInject(R.id.volume_read_permission_switch)
     protected SwitchView readPermissionSwitch;
@@ -64,13 +65,13 @@ public class VolumeGroupChangePermissionActivity extends BaseActivity {
         headerText.setText(group.getName());
         readAndWritePermissionText.setText(getString(R.string.volume_read_write_permission));
         readPermissionText.setText(getString(R.string.volume_read_permission));
-        readAndWritePermissionSwitch.setOpened(group.getPrivilege() > VOLUME_READ_PERMISSION ? true : false);
+        writePermissionSwitch.setOpened(group.getPrivilege() > VOLUME_READ_PERMISSION ? true : false);
         readPermissionSwitch.setOpened(true);
         readPermissionSwitch.setEnable(group.getPrivilege() > VOLUME_READ_PERMISSION ? false : true);
         readPermissionSwitch.setPaintColorOn(group.getPrivilege() > 4?0x667fc5f6:0xff7fc5f6);
         readPermissionSwitch.setPaintCircleBtnColor(group.getPrivilege() > 4?0xbb7fc5f6:0xff008cee);
         final String currentVolumePath = getIntent().getStringExtra("volumePath");
-        readAndWritePermissionSwitch.setOnStateChangedListener(new SwitchView.OnStateChangedListener() {
+        writePermissionSwitch.setOnStateChangedListener(new SwitchView.OnStateChangedListener() {
             @Override
             public void toggleToOn(View view) {
                 updateVolumeGroupPermission(group,currentVolumePath,VOLUME_READ_WRITE_PERMISSION,true);
@@ -123,14 +124,14 @@ public class VolumeGroupChangePermissionActivity extends BaseActivity {
                 loadingDialog.dismiss();
             }
             if(getVolumeGroupPermissionResult.getPrivilege() >= VOLUME_READ_WRITE_PERMISSION){
-                readAndWritePermissionSwitch.toggleSwitch(true);
+                writePermissionSwitch.toggleSwitch(true);
                 readPermissionSwitch.setIsCodeManual(true,true);
                 readPermissionSwitch.setOpened(true);
                 readPermissionSwitch.setEnable(false);
                 readPermissionSwitch.setPaintColorOn(0x667fc5f6);
                 readPermissionSwitch.setPaintCircleBtnColor(0xbb7fc5f6);
             }else {
-                readAndWritePermissionSwitch.toggleSwitch(false);
+                writePermissionSwitch.toggleSwitch(false);
                 readPermissionSwitch.setEnable(true);
                 if(getVolumeGroupPermissionResult.getPrivilege() == VOLUME_NO_PERMISSION){
                     readPermissionSwitch.toggleSwitch(false);
@@ -150,6 +151,7 @@ public class VolumeGroupChangePermissionActivity extends BaseActivity {
             if(loadingDialog != null){
                 loadingDialog.dismiss();
             }
+            WebServiceMiddleUtils.hand(getApplicationContext(), error, errorCode);
         }
     }
 }

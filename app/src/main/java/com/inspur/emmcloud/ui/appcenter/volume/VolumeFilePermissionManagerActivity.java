@@ -15,6 +15,7 @@ import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeGroupPermissionResult;
 import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeResultWithPermissionResult;
 import com.inspur.emmcloud.bean.appcenter.volume.Group;
 import com.inspur.emmcloud.util.common.NetUtils;
+import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.ECMRecyclerViewLinearLayoutManager;
 
 import org.greenrobot.eventbus.EventBus;
@@ -125,6 +126,7 @@ public class VolumeFilePermissionManagerActivity extends BaseActivity{
         @Override
         public void returnVolumeGroupFail(String error, int errorCode) {
             super.returnVolumeGroupFail(error, errorCode);
+            WebServiceMiddleUtils.hand(getApplicationContext(), error, errorCode);
         }
     }
 }
