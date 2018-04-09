@@ -41,7 +41,7 @@ import org.xutils.view.annotation.ViewInject;
    }
  * Created by yufuchang on 2018/2/28.
  */
-@ContentView(R.layout.activity_volume_permission)
+@ContentView(R.layout.activity_volume_permission_manager)
 public class VolumeFilePermissionManagerActivity extends BaseActivity{
 
     @ViewInject(R.id.rv_volume_file_permission)
@@ -71,7 +71,7 @@ public class VolumeFilePermissionManagerActivity extends BaseActivity{
                 Intent intent = new Intent();
                 intent.setClass(VolumeFilePermissionManagerActivity.this,VolumeGroupChangePermissionActivity.class);
                 intent.putExtra("volumeGroup",group);
-                intent.putExtra("volumePath",getIntent().getStringExtra("currentDirAbsolutePath"));
+                intent.putExtra("volumeFilePath",getIntent().getStringExtra("currentDirAbsolutePath"));
                 startActivity(intent);
             }
         });
@@ -103,10 +103,10 @@ public class VolumeFilePermissionManagerActivity extends BaseActivity{
     private void getVolumeFileGroup(){
         if(NetUtils.isNetworkConnected(VolumeFilePermissionManagerActivity.this)){
             String volumeId = getIntent().getStringExtra("volume");
-            String volumePath = getIntent().getStringExtra("currentDirAbsolutePath");
+            String volumeFilePath = getIntent().getStringExtra("currentDirAbsolutePath");
             MyAppAPIService myAppAPIService = new MyAppAPIService(VolumeFilePermissionManagerActivity.this);
             myAppAPIService.setAPIInterface(new WebService());
-            myAppAPIService.getVolumeFileGroup(volumeId,volumePath);
+            myAppAPIService.getVolumeFileGroup(volumeId,volumeFilePath);
         }
     }
 

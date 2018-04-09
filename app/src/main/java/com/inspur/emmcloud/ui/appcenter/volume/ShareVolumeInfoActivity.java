@@ -66,10 +66,10 @@ public class ShareVolumeInfoActivity extends BaseActivity {
     @ViewInject(R.id.volume_name_text)
     private TextView volumeNameText;
 
-    @ViewInject(R.id.slv_write_group_list)
+    @ViewInject(R.id.slv_write_group)
     private ScrollViewWithListView groupWriteListView;
 
-    @ViewInject(R.id.slv_read_group_watch_list)
+    @ViewInject(R.id.slv_read_group)
     private ScrollViewWithListView groupReadListView;
 
     @ViewInject(R.id.img_volume_name_arrow)

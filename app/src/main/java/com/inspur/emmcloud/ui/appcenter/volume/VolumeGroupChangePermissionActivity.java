@@ -28,16 +28,16 @@ public class VolumeGroupChangePermissionActivity extends BaseActivity {
     @ViewInject(R.id.header_text)
     protected TextView headerText;
 
-    @ViewInject(R.id.volume_read_write_permission_tv)
+    @ViewInject(R.id.tv_volume_read_write_permission)
     protected TextView readAndWritePermissionText;
 
-    @ViewInject(R.id.volume_read_permission_tv)
+    @ViewInject(R.id.tv_volume_read_permission)
     protected TextView readPermissionText;
 
-    @ViewInject(R.id.volume_read_write_permission_switch)
+    @ViewInject(R.id.swv_volume_read_write_permission)
     protected SwitchView writePermissionSwitch;
 
-    @ViewInject(R.id.volume_read_permission_switch)
+    @ViewInject(R.id.swv_volume_read_permission)
     protected SwitchView readPermissionSwitch;
 
     private MyAppAPIService myAppAPIService;
@@ -70,7 +70,7 @@ public class VolumeGroupChangePermissionActivity extends BaseActivity {
         readPermissionSwitch.setEnable(group.getPrivilege() > VOLUME_READ_PERMISSION ? false : true);
         readPermissionSwitch.setPaintColorOn(group.getPrivilege() > 4?0x667fc5f6:0xff7fc5f6);
         readPermissionSwitch.setPaintCircleBtnColor(group.getPrivilege() > 4?0xbb7fc5f6:0xff008cee);
-        final String currentVolumePath = getIntent().getStringExtra("volumePath");
+        final String currentVolumePath = getIntent().getStringExtra("volumeFilePath");
         writePermissionSwitch.setOnStateChangedListener(new SwitchView.OnStateChangedListener() {
             @Override
             public void toggleToOn(View view) {
@@ -120,9 +120,7 @@ public class VolumeGroupChangePermissionActivity extends BaseActivity {
     class WebService extends APIInterfaceInstance{
         @Override
         public void returnUpdateVolumeGroupPermissionSuccess(GetVolumeGroupPermissionResult getVolumeGroupPermissionResult) {
-            if(loadingDialog != null){
-                loadingDialog.dismiss();
-            }
+            LoadingDialog.dimissDlg(loadingDialog);
             if(getVolumeGroupPermissionResult.getPrivilege() >= VOLUME_READ_WRITE_PERMISSION){
                 writePermissionSwitch.toggleSwitch(true);
                 readPermissionSwitch.setIsCodeManual(true,true);
@@ -148,9 +146,7 @@ public class VolumeGroupChangePermissionActivity extends BaseActivity {
 
         @Override
         public void returnUpdateVolumeGroupPermissionFail(String error, int errorCode) {
-            if(loadingDialog != null){
-                loadingDialog.dismiss();
-            }
+            LoadingDialog.dimissDlg(loadingDialog);
             WebServiceMiddleUtils.hand(getApplicationContext(), error, errorCode);
         }
     }
