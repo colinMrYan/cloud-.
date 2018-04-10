@@ -185,9 +185,9 @@ public interface APIInterface {
 
     void returnSendMsgFail(String error, String fakeMessageId, int errorCode);
 
-    void returnUploadMsgImgSuccess(GetNewsImgResult getNewsImgResult, String fakeMessageId);
+    void returnUploadResImgSuccess(GetNewsImgResult getNewsImgResult, String fakeMessageId);
 
-    void returnUploadMsgImgFail(String error, int errorCode);
+    void returnUploadResImgFail(String error, int errorCode,String fakeMessageId);
 
     void returnGroupNewsTitleSuccess(GetNewsTitleResult getNewsTitleResult);
 
@@ -225,9 +225,9 @@ public interface APIInterface {
 
     void returnAllContactFail(String error, int errorCode);
 
-    void returnFileUpLoadSuccess(GetFileUploadResult getFileUploadResult, String fakeMessageId);
+    void returnUpLoadResFileSuccess(GetFileUploadResult getFileUploadResult, String fakeMessageId);
 
-    void returnFileUpLoadFail(String error, int errorCode);
+    void returnUpLoadResFileFail(String error, int errorCode, String fakeMessageId);
 
     void returnSearchChannelGroupSuccess(GetSearchChannelGroupResult getSearchChannelGroupResult);
 

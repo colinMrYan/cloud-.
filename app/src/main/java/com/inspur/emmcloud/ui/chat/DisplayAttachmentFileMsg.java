@@ -9,7 +9,7 @@ import android.widget.TextView;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIDownloadCallBack;
 import com.inspur.emmcloud.bean.chat.MsgContentAttachmentFile;
-import com.inspur.emmcloud.bean.chat.MsgRobot;
+import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
@@ -32,7 +32,7 @@ public class DisplayAttachmentFileMsg {
      * @param msg
      */
     public static View getView(final Context context,
-                               final MsgRobot msg) {
+                               final Message msg) {
         View convertView = LayoutInflater.from(context).inflate(
                 R.layout.chat_msg_card_child_attachment_file_view, null);
         TextView fileNameText = (TextView) convertView

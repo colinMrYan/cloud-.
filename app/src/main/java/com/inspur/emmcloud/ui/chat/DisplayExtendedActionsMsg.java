@@ -2,6 +2,7 @@ package com.inspur.emmcloud.ui.chat;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
@@ -16,7 +17,8 @@ import com.inspur.emmcloud.adapter.MsgActionAdapter;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.bean.chat.Action;
 import com.inspur.emmcloud.bean.chat.MsgContentExtendedActions;
-import com.inspur.emmcloud.bean.chat.MsgRobot;
+import com.inspur.emmcloud.bean.chat.Message;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
@@ -59,7 +61,7 @@ public class DisplayExtendedActionsMsg extends APIInterfaceInstance {
      * @param convertView
      * @param msg
      */
-    public View getView(MsgRobot msg) {
+    public View getView(Message msg) {
         View convertView = LayoutInflater.from(context).inflate(
                 R.layout.chat_msg_card_child_extended_actions_view, null);
         final boolean isMyMsg = msg.getFromUser().equals(
@@ -124,23 +126,12 @@ public class DisplayExtendedActionsMsg extends APIInterfaceInstance {
 
 
     private void openAction(Context context, Action action) {
-//        String type = action.getType();
-//        String url = action.getUrl();
-//        if (StringUtils.isBlank(url)) {
-//            return;
-//        }
-//        if (type.equals("open-url-background")) {
-//            loadingDlg.show();
-//            ChatAPIService apiService = new ChatAPIService(context);
-//            apiService.setAPIInterface(mInstance);
-//            apiService.openActionBackgroudUrl(url);
-//        }
         String actionTitle = action.getTitle();
         if (!StringUtils.isBlank(actionTitle) && NetUtils.isNetworkConnected(context)){
-            //((ChannelRobotActivity)context).sendTextMessage(actionTitle,new ArrayList<String>());
+            LogUtils.jasonDebug("actionTitle="+actionTitle);
             Intent intent = new Intent("com.inspur.msg.send");
             intent.putExtra("content",actionTitle);
-            context.sendBroadcast(intent);
+            LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
         }
 
     }

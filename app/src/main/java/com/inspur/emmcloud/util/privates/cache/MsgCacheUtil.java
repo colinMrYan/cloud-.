@@ -3,8 +3,8 @@ package com.inspur.emmcloud.util.privates.cache;
 import android.content.Context;
 
 import com.inspur.emmcloud.bean.chat.MatheSet;
+import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.Msg;
-import com.inspur.emmcloud.bean.chat.MsgRobot;
 import com.inspur.emmcloud.util.common.StringUtils;
 
 import org.xutils.db.sqlite.WhereBuilder;
@@ -38,7 +38,7 @@ public class MsgCacheUtil {
      * @param context
      * @param msg
      */
-    public static void saveRobotMsg(final Context context, final MsgRobot msg) {
+    public static void saveRobotMsg(final Context context, final Message msg) {
         try {
 
             DbCacheUtils.getDb(context).saveOrUpdate(msg); // 存储消息
@@ -85,7 +85,7 @@ public class MsgCacheUtil {
      * @param targetMsgId
      */
     public static void saveRobotMsgList(final Context context,
-                                   final List<MsgRobot> msgList, final String targetMsgId) {
+                                        final List<Message> msgList, final String targetMsgId) {
 
 
         // TODO Auto-generated method stub
@@ -150,17 +150,17 @@ public class MsgCacheUtil {
      * @param num       获取消息记录的条数
      * @return
      */
-    public static List<MsgRobot> getRobotHistoryMsgList(Context context,
-                                                        String channelID, String targetID, int num) {
-        List<MsgRobot> msgList = null;
+    public static List<Message> getRobotHistoryMsgList(Context context,
+                                                       String channelID, String targetID, int num) {
+        List<Message> msgList = null;
         try {
 
             if (StringUtils.isBlank(targetID)) {
-                msgList = DbCacheUtils.getDb(context).selector(MsgRobot.class)
+                msgList = DbCacheUtils.getDb(context).selector(Message.class)
                         .where("channel", "=", channelID).orderBy("id", true)
                         .limit(num).findAll();
             } else {
-                msgList = DbCacheUtils.getDb(context).selector(MsgRobot.class)
+                msgList = DbCacheUtils.getDb(context).selector(Message.class)
                         .where("id", "<", targetID).and("id", "=", channelID)
                         .orderBy("id", true).limit(num).findAll();
             }
@@ -173,7 +173,7 @@ public class MsgCacheUtil {
             e.printStackTrace();
         }
         if (msgList == null) {
-            msgList = new ArrayList<MsgRobot>();
+            msgList = new ArrayList<Message>();
         }
         return msgList;
     }

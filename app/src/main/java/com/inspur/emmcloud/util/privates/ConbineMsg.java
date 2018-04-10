@@ -4,10 +4,10 @@ import android.content.Context;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.bean.chat.Email;
+import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.Msg;
 import com.inspur.emmcloud.bean.chat.MsgContentAttachmentCard;
 import com.inspur.emmcloud.bean.chat.MsgContentTextPlain;
-import com.inspur.emmcloud.bean.chat.MsgRobot;
 import com.inspur.emmcloud.bean.chat.Phone;
 import com.inspur.emmcloud.bean.contact.Contact;
 import com.inspur.emmcloud.util.common.LogUtils;
@@ -59,8 +59,8 @@ public class ConbineMsg {
 		return msgSend;
 	}
 
-	public static MsgRobot conbineTextPlainMsgRobot(String text,String cid,String fakeMessageId){
-		MsgRobot msgRobot = new MsgRobot();
+	public static Message conbineTextPlainMsgRobot(String text, String cid, String fakeMessageId){
+		Message msgRobot = new Message();
 		msgRobot.setChannel(cid);
 		msgRobot.setMessage("1.0");
 		msgRobot.setId(fakeMessageId);
@@ -82,8 +82,8 @@ public class ConbineMsg {
 		return  msgRobot;
 	}
 
-	public static  MsgRobot conbineReplyAttachmentCardMsg(Contact contact,String cid,String from,String fakeMessageId){
-		MsgRobot msgRobot = new MsgRobot();
+	public static Message conbineReplyAttachmentCardMsg(Contact contact, String cid, String from, String fakeMessageId){
+		Message msgRobot = new Message();
 		msgRobot.setChannel(cid);
 		msgRobot.setMessage("1.0");
 		msgRobot.setId(fakeMessageId);

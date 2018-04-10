@@ -9,7 +9,7 @@ import android.widget.TextView;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.chat.Email;
 import com.inspur.emmcloud.bean.chat.MsgContentAttachmentCard;
-import com.inspur.emmcloud.bean.chat.MsgRobot;
+import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 
 import java.util.List;
@@ -29,7 +29,7 @@ public class DisplayAttachmentCardMsg {
      * @param msg
      */
     public static View getView(final Context context,
-                               MsgRobot msg) {
+                               Message msg) {
         View convertView = LayoutInflater.from(context).inflate(
                 R.layout.chat_msg_card_child_attachment_card_view, null);
         ImageView cardPhotoImg = (ImageView) convertView.findViewById(R.id.photo_img);

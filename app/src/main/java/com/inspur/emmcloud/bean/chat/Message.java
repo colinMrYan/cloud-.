@@ -3,60 +3,78 @@ package com.inspur.emmcloud.bean.chat;
 import com.inspur.emmcloud.util.common.JSONUtils;
 
 import org.json.JSONObject;
-import org.xutils.db.annotation.Column;
-import org.xutils.db.annotation.Table;
 
 import java.io.Serializable;
 
-@Table(name = "MessageRobot", onCreated = "CREATE INDEX msgrobotchannelindex ON MessageRobot(channel)")
-public class MsgRobot implements Serializable {
+public class Message implements Serializable {
     private static final String TAG = "Msg";
-    @Column(name = "id", isId = true)
+   // @Column(name = "id", isId = true)
     private String id;
-    @Column(name = "message")
+    //@Column(name = "message")
     private String message;
-    @Column(name = "type")
+   // @Column(name = "type")
     private String type;
-    @Column(name = "from")
+   // @Column(name = "from")
     private String from;
-    @Column(name = "to")
+   // @Column(name = "to")
     private String to;
-    @Column(name = "channel")
+   // @Column(name = "channel")
     private String channel;
-    @Column(name = "state")
+   // @Column(name = "state")
     private String state;
-    @Column(name = "content")
+   // @Column(name = "content")
     private String content;
-    @Column(name="creationDate")
+   // @Column(name="creationDate")
     private String creationDate;
-    @Column(name="tracer")
+    //@Column(name="tracer")
     private String tracer;
 
     private int sendStatus = 1;//0 发送中  1发送成功  2发送失败
     private String tmpId = "";
 
-    public MsgRobot() {
+    public Message() {
 
     }
 
-    public MsgRobot(JSONObject obj,boolean isOldMsgType){
-        id = JSONUtils.getString(obj, "mid", "0");
-        JSONObject bodyObj = JSONUtils.getJSONObject(obj,"body",new JSONObject());
-        String source = JSONUtils.getString(bodyObj,"source","");
-        JSONObject sourceObj = JSONUtils.getJSONObject(source);
-        message = JSONUtils.getString(sourceObj, "message", "");
-        from = JSONUtils.getString(sourceObj, "from", "");
-        type = JSONUtils.getString(sourceObj, "type", "");
-        state = JSONUtils.getString(sourceObj, "state", "");
-        content = JSONUtils.getString(sourceObj, "content", "");
+//    public Message(JSONObject obj, boolean isOldMsgType){
+//        id = JSONUtils.getString(obj, "mid", "0");
+//        JSONObject bodyObj = JSONUtils.getJSONObject(obj,"body",new JSONObject());
+//        String source = JSONUtils.getString(bodyObj,"source","");
+//        JSONObject sourceObj = JSONUtils.getJSONObject(source);
+//        message = JSONUtils.getString(sourceObj, "message", "");
+//        from = JSONUtils.getString(sourceObj, "from", "");
+//        type = JSONUtils.getString(sourceObj, "type", "");
+//        state = JSONUtils.getString(sourceObj, "state", "");
+//        content = JSONUtils.getString(sourceObj, "content", "");
+//
+//        channel = JSONUtils.getString(obj, "to", "");
+//
+//       creationDate = JSONUtils.getString(obj,"timestamp","");
+//
+//    }
 
-        channel = JSONUtils.getString(obj, "to", "");
+    public Message(Msg msg){
+        id = msg.getMid();
+        JSONObject extraObj = JSONUtils.getJSONObject(msg.getBody(),"extras",new JSONObject());
+        JSONObject propsObj = JSONUtils.getJSONObject(extraObj,"props",new JSONObject());
+        JSONObject dataObj = JSONUtils.getJSONObject(JSONUtils.getString(propsObj,"data",""));
+        message = JSONUtils.getString(dataObj, "message", "");
+        from = JSONUtils.getString(dataObj, "from", "");
+        type = JSONUtils.getString(dataObj, "type", "");
+        state = JSONUtils.getString(dataObj, "state", "");
+        content = JSONUtils.getString(dataObj, "content", "");
 
-       creationDate = JSONUtils.getString(obj,"timestamp","");
+        channel = msg.getCid();
+
+        creationDate = msg.getTime();
 
     }
 
-    public MsgRobot(JSONObject obj) {
+    public static boolean isMessage(Msg msg){
+        return msg.getBody().contains("\\\"message\\\":\\\"1.0\\\"");
+    }
+
+    public Message(JSONObject obj) {
         id = JSONUtils.getString(obj, "id", "0");
         message = JSONUtils.getString(obj, "message", "");
         from = JSONUtils.getString(obj, "from", "");
@@ -203,10 +221,10 @@ public class MsgRobot implements Serializable {
             return true;
         if (other == null)
             return false;
-        if (!(other instanceof MsgRobot))
+        if (!(other instanceof Message))
             return false;
 
-        final MsgRobot otherMsg = (MsgRobot) other;
+        final Message otherMsg = (Message) other;
         if (!getId().equals(otherMsg.getId()))
             return false;
         return true;

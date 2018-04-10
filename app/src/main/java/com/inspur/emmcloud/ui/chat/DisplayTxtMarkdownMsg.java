@@ -8,7 +8,7 @@ import android.widget.TextView;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.bean.chat.MsgRobot;
+import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.richtext.CacheType;
 import com.inspur.emmcloud.util.common.richtext.LinkHolder;
@@ -32,18 +32,18 @@ public class DisplayTxtMarkdownMsg {
      * @param convertView
      * @param msg
      */
-    public static View getView(final Context context, MsgRobot msg) {
-        View convertView = LayoutInflater.from(context).inflate(
+    public static View getView(final Context context, Message msg) {
+        View cardContentView = LayoutInflater.from(context).inflate(
                 R.layout.chat_msg_card_child_text_markdown_view, null);
         final boolean isMyMsg = msg.getFromUser().equals(
                 ((MyApplication) context.getApplicationContext()).getUid());
-        final TextView richTitleText = (TextView) convertView
+        final TextView richTitleText = (TextView) cardContentView
                 .findViewById(R.id.title_text);
-        final TextView richContentText = (TextView) convertView
+        final TextView richContentText = (TextView) cardContentView
                 .findViewById(R.id.content_text);
 
 
-        (convertView
+        (cardContentView
                 .findViewById(R.id.root_layout)).setBackgroundResource(isMyMsg?R.drawable.ic_chat_msg_img_cover_arrow_right:R.drawable.ic_chat_msg_img_cover_arrow_left);;
 
         richTitleText.setTextColor(context.getResources().getColor(
@@ -105,7 +105,7 @@ public class DisplayTxtMarkdownMsg {
                 .singleLoad(false)
                 .cache(CacheType.ALL)
                 .into(richContentText);
-        return convertView;
+        return cardContentView;
     }
 
 }

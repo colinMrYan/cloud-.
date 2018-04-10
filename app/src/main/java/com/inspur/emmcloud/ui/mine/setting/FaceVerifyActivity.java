@@ -41,8 +41,8 @@ import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.ui.login.ScanQrCodeLoginGSActivity;
 import com.inspur.emmcloud.util.common.ImageUtils;
 import com.inspur.emmcloud.util.common.IntentUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
+import com.inspur.emmcloud.util.common.ResolutionUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUsersUtils;
 import com.inspur.emmcloud.widget.dialogs.MyQMUIDialog;
@@ -525,6 +525,7 @@ public class FaceVerifyActivity extends BaseActivity implements SurfaceHolder.Ca
                         public void onClick(QMUIDialog dialog, int index) {
                             dialog.dismiss();
                             startTime = System.currentTimeMillis();
+                            delayTotakePicture(1000);
                         }
                     })
                     .addAction(R.string.switch_gesture_unlock, new QMUIDialogAction.ActionListener() {

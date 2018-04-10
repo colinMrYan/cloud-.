@@ -346,13 +346,13 @@ public class APIInterfaceInstance implements APIInterface {
     }
 
     @Override
-    public void returnUploadMsgImgSuccess(GetNewsImgResult getNewsImgResult, String fakeMessageId) {
+    public void returnUploadResImgSuccess(GetNewsImgResult getNewsImgResult, String fakeMessageId) {
         // TODO Auto-generated method stub
 
     }
 
     @Override
-    public void returnUploadMsgImgFail(String error, int errorCode) {
+    public void returnUploadResImgFail(String error, int errorCode,String fakeMessageId) {
         // TODO Auto-generated method stub
 
     }
@@ -460,13 +460,13 @@ public class APIInterfaceInstance implements APIInterface {
     }
 
     @Override
-    public void returnFileUpLoadSuccess(GetFileUploadResult getFileUploadResult, String fakeMessageId) {
+    public void returnUpLoadResFileSuccess(GetFileUploadResult getFileUploadResult, String fakeMessageId) {
         // TODO Auto-generated method stub
 
     }
 
     @Override
-    public void returnFileUpLoadFail(String error, int errorCode) {
+    public void returnUpLoadResFileFail(String error, int errorCode,String fakeMessageId) {
         // TODO Auto-generated method stub
 
     }

@@ -8,15 +8,12 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
-import android.os.Message;
 import android.provider.MediaStore;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnTouchListener;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.BaseActivity;
@@ -33,6 +30,7 @@ import com.inspur.emmcloud.bean.chat.GetMsgResult;
 import com.inspur.emmcloud.bean.chat.GetNewMsgsResult;
 import com.inspur.emmcloud.bean.chat.GetNewsImgResult;
 import com.inspur.emmcloud.bean.chat.GetSendMsgResult;
+import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.Msg;
 import com.inspur.emmcloud.bean.contact.GetSearchChannelGroupResult;
 import com.inspur.emmcloud.bean.system.PVCollectModel;
@@ -41,6 +39,7 @@ import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.ui.appcenter.groupnews.NewsWebDetailActivity;
 import com.inspur.emmcloud.ui.contact.RobotInfoActivity;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
+import com.inspur.emmcloud.util.common.InputMethodUtils;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
@@ -66,6 +65,8 @@ import com.inspur.imp.plugin.camera.imagepicker.bean.ImageItem;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.xutils.view.annotation.ContentView;
+import org.xutils.view.annotation.ViewInject;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -78,6 +79,7 @@ import static android.R.attr.path;
  *
  * @author Fortune Yu; create at 2016年8月29日
  */
+@ContentView(R.layout.activity_channel)
 public class ChannelActivity extends BaseActivity {
 
     private static final int HAND_CALLBACK_MESSAGE = 1;
@@ -85,25 +87,38 @@ public class ChannelActivity extends BaseActivity {
     private static final int CAMERA_RESULT = 3;
     private static final int MENTIONS_RESULT = 5;
     private static final int CHOOSE_FILE = 4;
+    @ViewInject(R.id.msg_list)
     private RecycleViewForSizeChange msgListView;
+
+    @ViewInject(R.id.refresh_layout)
+    private SwipeRefreshLayout swipeRefreshLayout;
+
+    @ViewInject(R.id.chat_input_menu)
+    private ECMChatInputMenu chatInputMenu;
+    @ViewInject(R.id.header_text)
+    private TextView headerText;
+
+//    @ViewInject(R.id.robot_photo_img)
+//    private ImageView robotPhotoImg;
+
+    private LoadingDialog loadingDlg;
+    private String cid;
+    private Channel channel;
     private List<Msg> msgList;
     private ChannelMsgAdapter adapter;
     private Handler handler;
     private MsgReceiver msgResvier;
     private ChatAPIService apiService;
-    private SwipeRefreshLayout swipeRefreshLayout;
+    private String robotUid;
+    private BroadcastReceiver sendActionMsgReceiver;
     private BroadcastReceiver refreshNameReceiver;
-    private Channel channel;
-    private String cid;
-    private ECMChatInputMenu chatInputMenu;
-    private LoadingDialog loadingDlg;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_channel);
         init();
         registeRefreshNameReceiver();
+        registeSendActionMsgReceiver();
         recordUserClickChannel();
     }
 
@@ -150,7 +165,6 @@ public class ChannelActivity extends BaseActivity {
      * 初始化下拉刷新UI
      */
     private void initPullRefreshLayout() {
-        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh_layout);
         swipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.header_bg), getResources().getColor(R.color.header_bg));
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -163,8 +177,8 @@ public class ChannelActivity extends BaseActivity {
                     msgList.addAll(0, historyMsgList);
                     swipeRefreshLayout.setRefreshing(false);
                     adapter.setMsgList(msgList);
-                    adapter.notifyItemRangeInserted(0,historyMsgList.size());
-                    msgListView.MoveToPosition(historyMsgList.size()-1);
+                    adapter.notifyItemRangeInserted(0, historyMsgList.size());
+                    msgListView.MoveToPosition(historyMsgList.size() - 1);
                 } else {
                     getNewsMsg();
                 }
@@ -187,38 +201,20 @@ public class ChannelActivity extends BaseActivity {
             title = DirectChannelUtils.getRobotInfo(getApplicationContext(),
                     title).getName();
         }
-        ((TextView) findViewById(R.id.header_text)).setText(title);
+        headerText.setText(title);
     }
 
     /**
      * 处理chatInputMenu是否显示，以及显示几个Menu上的item
      */
     private void initChatInputMenu() {
-        chatInputMenu = (ECMChatInputMenu) findViewById(R.id.chat_input_menu);
+        chatInputMenu.setOtherLayoutView(swipeRefreshLayout);
         if (channel.getType().equals("GROUP")) {
-            chatInputMenu.setIsChannelGroup(true, cid);
-        }else {
-            chatInputMenu.setIsChannelGroup(false);
+            chatInputMenu.setCanMentions(true, cid);
+        } else {
+            chatInputMenu.setCanMentions(false, "");
         }
         chatInputMenu.setChatInputMenuListener(new ChatInputMenuListener() {
-
-            @Override
-            public void onSetContentViewHeight(boolean isLock) {
-                // TODO Auto-generated method stub
-                final LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) swipeRefreshLayout
-                        .getLayoutParams();
-                if (isLock) {
-                    params.height = swipeRefreshLayout.getHeight();
-                    params.weight = 0.0F;
-                } else {
-                    new Handler().post(new Runnable() {
-                        @Override
-                        public void run() {
-                            params.weight = 1.0F;
-                        }
-                    });
-                }
-            }
 
             @Override
             public void onSendMsg(String content, List<String> mentionsUidList, List<String> urlList) {
@@ -226,11 +222,7 @@ public class ChannelActivity extends BaseActivity {
                 sendTextMessage(content, mentionsUidList, urlList);
             }
         });
-        if ((channel != null) && channel.getInputs().equals("0")) {
-            chatInputMenu.setVisibility(View.GONE);
-        } else {
-            chatInputMenu.updateCommonMenuLayout(channel.getInputs());
-        }
+        chatInputMenu.setInputLayout(channel.getInputs());
     }
 
 
@@ -242,7 +234,7 @@ public class ChannelActivity extends BaseActivity {
             @Override
             public void onReceive(Context context, Intent intent) {
                 String name = intent.getExtras().getString("name");
-                ((TextView) findViewById(R.id.header_text)).setText(name);
+                headerText.setText(name);
             }
         };
         IntentFilter filter = new IntentFilter();
@@ -250,80 +242,104 @@ public class ChannelActivity extends BaseActivity {
         LocalBroadcastManager.getInstance(this).registerReceiver(refreshNameReceiver, filter);
     }
 
+    private void registeSendActionMsgReceiver() {
+        if (sendActionMsgReceiver == null) {
+            sendActionMsgReceiver = new BroadcastReceiver() {
+                @Override
+                public void onReceive(Context context, Intent intent) {
+                    String content = intent.getStringExtra("content");
+                    if (!StringUtils.isBlank(content)) {
+                        sendTextMessage(content, null, null);
+                    }
+                }
+            };
+            IntentFilter filter = new IntentFilter();
+            filter.addAction("com.inspur.msg.send");
+            LocalBroadcastManager.getInstance(this).registerReceiver(sendActionMsgReceiver, filter);
+        }
+    }
+
+
     /**
      * 初始化消息列表UI
      */
     private void initMsgListView() {
-        msgListView = (RecycleViewForSizeChange) findViewById(R.id.msg_list);
         msgList = MsgCacheUtil.getHistoryMsgList(getApplicationContext(),
                 cid, "", 15);
-        adapter = new ChannelMsgAdapter(ChannelActivity.this,apiService,channel.getType(),chatInputMenu);
+        adapter = new ChannelMsgAdapter(ChannelActivity.this, apiService, channel.getType(), chatInputMenu);
         adapter.setItemClickListener(new ChannelMsgAdapter.MyItemClickListener() {
             @Override
-            public void onItemClick(View view,int position) {
+            public void onItemClick(View view, int position) {
                 Msg msg = msgList.get(position);
                 //当消息处于发送中状态时无法点击
                 if (msg.getSendStatus() != 1) {
                     return;
                 }
                 String msgType = msg.getType();
+                Message message = null;
+                if (Message.isMessage(msg)) {
+                    message = new Message(msg);
+                    msgType = message.getType();
+                }
+
                 String mid = "";
                 Bundle bundle = new Bundle();
-                if (msgType.equals("res_file")) {
-                    mid = msg.getMid();
-                    bundle.putString("mid", mid);
-                    bundle.putString("cid", msg.getCid());
-                    IntentUtils.startActivity(ChannelActivity.this,
-                            ChannelMsgDetailActivity.class, bundle);
-                } else if (msgType.equals("comment")
-                        || msgType.equals("txt_comment")) {
-                    mid = msg.getCommentMid();
-                    bundle.putString("mid", mid);
-                    bundle.putString("cid", msg.getCid());
-                    IntentUtils.startActivity(ChannelActivity.this,
-                            ChannelMsgDetailActivity.class, bundle);
-                } else if (msgType.equals("res_link")) {
-                    String msgBody = msg.getBody();
-                    String linkTitle = JSONUtils.getString(msgBody, "title", "");
-                    String linkDigest = JSONUtils.getString(msgBody, "digest", "");
-                    String linkUrl = JSONUtils.getString(msgBody, "url", "");
-                    String linkPoster = JSONUtils.getString(msgBody, "poster", "");
-                    GroupNews groupNews = new GroupNews();
-                    groupNews.setTitle(linkTitle);
-                    groupNews.setDigest(linkDigest);
-                    groupNews.setUrl(linkUrl);
-                    groupNews.setPoster(linkPoster);
-                    bundle.putSerializable("groupNews", groupNews);
-                    IntentUtils.startActivity(ChannelActivity.this,
-                            NewsWebDetailActivity.class, bundle);
+                switch (msgType) {
+                    case "attachment/card":
+                        String uid = message.getMsgContentAttachmentCard().getUid();
+                        bundle.putString("uid", uid);
+                        IntentUtils.startActivity(ChannelActivity.this,
+                                UserInfoActivity.class, bundle);
+                        break;
+                    case "res_file":
+                        mid = msg.getMid();
+                        bundle.putString("mid", mid);
+                        bundle.putString("cid", msg.getCid());
+                        IntentUtils.startActivity(ChannelActivity.this,
+                                ChannelMsgDetailActivity.class, bundle);
+                        break;
+                    case "comment":
+                    case "txt_comment":
+                        mid = msg.getCommentMid();
+                        bundle.putString("mid", mid);
+                        bundle.putString("cid", msg.getCid());
+                        IntentUtils.startActivity(ChannelActivity.this,
+                                ChannelMsgDetailActivity.class, bundle);
+                        break;
+                    case "res_link":
+                        String msgBody = msg.getBody();
+                        String linkTitle = JSONUtils.getString(msgBody, "title", "");
+                        String linkDigest = JSONUtils.getString(msgBody, "digest", "");
+                        String linkUrl = JSONUtils.getString(msgBody, "url", "");
+                        String linkPoster = JSONUtils.getString(msgBody, "poster", "");
+                        GroupNews groupNews = new GroupNews();
+                        groupNews.setTitle(linkTitle);
+                        groupNews.setDigest(linkDigest);
+                        groupNews.setUrl(linkUrl);
+                        groupNews.setPoster(linkPoster);
+                        bundle.putSerializable("groupNews", groupNews);
+                        IntentUtils.startActivity(ChannelActivity.this,
+                                NewsWebDetailActivity.class, bundle);
+                        break;
+                    default:
+                        break;
                 }
             }
         });
         adapter.setMsgList(msgList);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-//        //设置listview自动滚动到最下方
-//        linearLayoutManager.setStackFromEnd(true);
         msgListView.setLayoutManager(linearLayoutManager);
         msgListView.setAdapter(adapter);
-         msgListView.MoveToPosition(msgList.size()-1);
-        /**
-         * 当触摸消息list时把输入法和添加选项layout隐藏
-         */
-        msgListView.setOnTouchListener(new OnTouchListener() {
+        msgListView.MoveToPosition(msgList.size() - 1);
+        msgListView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                // TODO Auto-generated method stub
-                if (!chatInputMenu.hideAddMenuLayout()) {
-                    chatInputMenu.hideSoftInput();
-                }
+                chatInputMenu.hideAddMenuLayout();
+                InputMethodUtils.hide(ChannelActivity.this);
                 return false;
             }
         });
-
     }
-
-
-
 
 
     /**
@@ -347,7 +363,7 @@ public class ChannelActivity extends BaseActivity {
             // 文件管理器返回
             if (requestCode == CHOOSE_FILE
                     && NetUtils.isNetworkConnected(getApplicationContext())) {
-                Msg localMsg = MsgRecourceUploadUtils.uploadImgFile(
+                Msg localMsg = MsgRecourceUploadUtils.uploadResFile(
                         ChannelActivity.this, data, apiService);
                 addLocalMessage(localMsg);
                 //拍照返回
@@ -359,7 +375,7 @@ public class ChannelActivity extends BaseActivity {
                 //拍照后图片编辑返回
             } else if (requestCode == EditImageActivity.ACTION_REQUEST_EDITIMAGE) {
                 String imgPath = data.getExtras().getString("save_file_path");
-                Msg localMsg = MsgRecourceUploadUtils.uploadMsgImg(
+                Msg localMsg = MsgRecourceUploadUtils.uploadResImg(
                         ChannelActivity.this, imgPath, apiService);
                 addLocalMessage(localMsg);
             } else if (requestCode == MENTIONS_RESULT) {
@@ -377,7 +393,7 @@ public class ChannelActivity extends BaseActivity {
                     ArrayList<ImageItem> imageItemList = (ArrayList<ImageItem>) data
                             .getSerializableExtra(ImagePicker.EXTRA_RESULT_ITEMS);
                     for (int i = 0; i < imageItemList.size(); i++) {
-                        Msg localMsg = MsgRecourceUploadUtils.uploadMsgImg(
+                        Msg localMsg = MsgRecourceUploadUtils.uploadResImg(
                                 ChannelActivity.this, imageItemList.get(i).path, apiService);
                         addLocalMessage(localMsg);
                     }
@@ -411,18 +427,18 @@ public class ChannelActivity extends BaseActivity {
         // TODO Auto-generated method stub
         handler = new Handler() {
             @Override
-            public void handleMessage(Message msg) {
+            public void handleMessage(android.os.Message msg) {
                 switch (msg.what) {
                     case HAND_CALLBACK_MESSAGE: // 接收推送的消息·
-                        if (msg.arg1 == 0){
-                            Msg pushMsg =new Msg((JSONObject) msg.obj);
+                        if (msg.arg1 == 0) {
+                            Msg pushMsg = new Msg((JSONObject) msg.obj);
                             if (cid.equals(pushMsg.getCid())) {
                                 MsgReadIDCacheUtils.saveReadedMsg(ChannelActivity.this,
                                         pushMsg.getCid(), pushMsg.getMid());
                                 if (!msgList.contains(pushMsg) && !pushMsg.getTmpId().equals(AppUtils.getMyUUID(getApplicationContext()))) {
                                     msgList.add(pushMsg);
                                     adapter.setMsgList(msgList);
-                                    adapter.notifyItemInserted(msgList.size()-1);
+                                    adapter.notifyItemInserted(msgList.size() - 1);
                                     msgListView.MoveToPosition(msgList.size() - 1);
                                 }
                             }
@@ -439,12 +455,12 @@ public class ChannelActivity extends BaseActivity {
     }
 
     /**
-     * 当推送消息是自己的消息时修改消息id
+     * 消息发送成功处理：当推送消息是自己的消息时修改消息id
      *
      * @param fakeMessageId
      * @param realMsg
      */
-    private void replaceWithRealMsg(String fakeMessageId, Msg realMsg) {
+    private void setMsgSendSuccess(String fakeMessageId, Msg realMsg) {
         if (StringUtils.isBlank(fakeMessageId)) {
             return;
         }
@@ -469,6 +485,22 @@ public class ChannelActivity extends BaseActivity {
         }
 
 
+    }
+
+    /**
+     * 消息发送失败处理
+     * @param fakeMessageId
+     */
+    private void setMsgSendFail(String fakeMessageId){
+        //消息发送失败处理
+        Msg fakeMsg = new Msg();
+        fakeMsg.setMid(fakeMessageId);
+        int fakeMsgIndex = msgList.indexOf(fakeMsg);
+        if (fakeMsgIndex != -1) {
+            msgList.get(fakeMsgIndex).setSendStatus(2);
+            adapter.setMsgList(msgList);
+            adapter.notifyDataSetChanged();
+        }
     }
 
 
@@ -563,7 +595,6 @@ public class ChannelActivity extends BaseActivity {
     }
 
 
-
     /**
      * 通知message页将本频道消息置为已读
      */
@@ -593,9 +624,16 @@ public class ChannelActivity extends BaseActivity {
     @Override
     public void onBackPressed() {
         // TODO Auto-generated method stub
-        if (!chatInputMenu.hideAddMenuLayout()) {
-            super.onBackPressed();
+        if (chatInputMenu.isAddMenuLayoutShow()) {
+            chatInputMenu.hideAddMenuLayout();
+            return;
         }
+        if (chatInputMenu.isVoiceInput()) {
+            chatInputMenu.stopVoiceInput();
+            return;
+        }
+        super.onBackPressed();
+
     }
 
     @Override
@@ -607,6 +645,10 @@ public class ChannelActivity extends BaseActivity {
         if (msgResvier != null) {
             LocalBroadcastManager.getInstance(this).unregisterReceiver(msgResvier);
             msgResvier = null;
+        }
+        if (sendActionMsgReceiver != null) {
+            LocalBroadcastManager.getInstance(this).unregisterReceiver(sendActionMsgReceiver);
+            sendActionMsgReceiver = null;
         }
         if (refreshNameReceiver != null) {
             LocalBroadcastManager.getInstance(this).unregisterReceiver(refreshNameReceiver);
@@ -674,47 +716,55 @@ public class ChannelActivity extends BaseActivity {
         @Override
         public void returnSendMsgSuccess(GetSendMsgResult getSendMsgResult,
                                          String fakeMessageId) {
-            replaceWithRealMsg(fakeMessageId, getSendMsgResult.getMsg());
+            setMsgSendSuccess(fakeMessageId, getSendMsgResult.getMsg());
         }
 
         @Override
         public void returnSendMsgFail(String error, String fakeMessageId, int errorCode) {
-            //消息发送失败处理
-            Msg fakeMsg = new Msg();
-            fakeMsg.setMid(fakeMessageId);
-            int fakeMsgIndex = msgList.indexOf(fakeMsg);
-            if (fakeMsgIndex != -1) {
-                msgList.get(fakeMsgIndex).setSendStatus(2);
-                adapter.setMsgList(msgList);
-                adapter.notifyDataSetChanged();
-            }
-            WebServiceMiddleUtils.hand(ChannelActivity.this, error, errorCode);
-
+            setMsgSendFail(fakeMessageId);
         }
 
         @Override
-        public void returnUploadMsgImgSuccess(
+        public void returnUploadResImgSuccess(
                 GetNewsImgResult getNewsImgResult, String fakeMessageId) {
             String newsImgBody = getNewsImgResult.getImgMsgBody();
             sendMsg(newsImgBody, "res_image", fakeMessageId);
         }
 
         @Override
-        public void returnUploadMsgImgFail(String error, int errorCode) {
-            if (swipeRefreshLayout == null) {
-                if (loadingDlg != null && loadingDlg.isShowing()) {
-                    loadingDlg.dismiss();
-                }
-                initViews();
-            }
+        public void returnUploadResImgFail(String error, int errorCode,String fakeMessageId) {
+            setMsgSendFail(fakeMessageId);
+        }
 
-            WebServiceMiddleUtils.hand(ChannelActivity.this, error, errorCode);
+
+        @Override
+        public void returnUpLoadResFileSuccess(
+                GetFileUploadResult getFileUploadResult, String fakeMessageId) {
+            String fileMsgBody = getFileUploadResult.getFileMsgBody();
+            sendMsg(fileMsgBody, "res_file", fakeMessageId);
+        }
+
+        @Override
+        public void returnUpLoadResFileFail(String error, int errorCode,String fakeMessageId) {
+            setMsgSendFail(fakeMessageId);
         }
 
         @Override
         public void returnNewMsgsSuccess(GetNewMsgsResult getNewMsgsResult) {
-            if (loadingDlg != null && loadingDlg.isShowing()) {
-                loadingDlg.dismiss();
+            if (swipeRefreshLayout.isRefreshing()) {
+                swipeRefreshLayout.setRefreshing(false);
+                final List<Msg> historyMsgList = getNewMsgsResult
+                        .getNewMsgList(cid);
+                if (historyMsgList.size() > 1) {
+                    MsgCacheUtil.saveMsgList(ChannelActivity.this, historyMsgList,
+                            msgList.get(0).getMid());
+                    msgList.addAll(0, historyMsgList);
+                    adapter.setMsgList(msgList);
+                    adapter.notifyItemRangeInserted(0, historyMsgList.size());
+                    msgListView.MoveToPosition(historyMsgList.size() - 1);
+                }
+            } else {
+                LoadingDialog.dimissDlg(loadingDlg);
                 List<Msg> msgList = getNewMsgsResult.getNewMsgList(cid);
                 if (msgList.size() > 0) {
                     MsgCacheUtil.saveMsgList(ChannelActivity.this, msgList, "");
@@ -724,31 +774,18 @@ public class ChannelActivity extends BaseActivity {
                 }
                 initViews();
                 setChannelMsgRead();
-            } else {
-                swipeRefreshLayout.setRefreshing(false);
-                final List<Msg> historyMsgList = getNewMsgsResult
-                        .getNewMsgList(cid);
-                MsgCacheUtil.saveMsgList(ChannelActivity.this, historyMsgList,
-                        msgList.get(0).getMid());
-                if (historyMsgList != null && historyMsgList.size() > 1) {
-                    msgList.addAll(0, historyMsgList);
-                    adapter.setMsgList(msgList);
-                    adapter.notifyItemRangeInserted(0,historyMsgList.size());
-                    msgListView.MoveToPosition(historyMsgList.size()-1);
-                }
             }
 
         }
 
         @Override
         public void returnNewMsgsFail(String error, int errorCode) {
-            if (loadingDlg != null && loadingDlg.isShowing()) {
-                loadingDlg.dismiss();
-            }
-            if (swipeRefreshLayout == null) {
-                initViews();
-            } else {
+            LoadingDialog.dimissDlg(loadingDlg);
+            if (swipeRefreshLayout.isRefreshing()) {
+                swipeRefreshLayout.setRefreshing(false);
                 WebServiceMiddleUtils.hand(ChannelActivity.this, error, errorCode);
+            } else {
+                initViews();
             }
         }
 
@@ -767,17 +804,6 @@ public class ChannelActivity extends BaseActivity {
             WebServiceMiddleUtils.hand(ChannelActivity.this, error, errorCode);
         }
 
-        @Override
-        public void returnFileUpLoadSuccess(
-                GetFileUploadResult getFileUploadResult, String fakeMessageId) {
-            String fileMsgBody = getFileUploadResult.getFileMsgBody();
-            sendMsg(fileMsgBody, "res_file", fakeMessageId);
-        }
-
-        @Override
-        public void returnFileUpLoadFail(String error, int errorCode) {
-            WebServiceMiddleUtils.hand(ChannelActivity.this, error, errorCode);
-        }
 
         @Override
         public void returnSearchChannelGroupSuccess(

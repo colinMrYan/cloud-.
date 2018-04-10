@@ -173,7 +173,6 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         setAccessToken("");
         setRefreshToken("");
         Intent intent = new Intent();
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.setClass(this, LoginActivity.class);
         startActivity(intent);
@@ -766,6 +765,22 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
             LogUtils.exceptionDebug(TAG, e.toString());
         }
         setIsActive(false);
+    }
+
+    /**
+     * 清除目标之外的Activity
+     * @param targetActivity
+     */
+    public void closeOtherActivity(Activity targetActivity){
+        try {
+            for (Activity activity : activityList) {
+                if (activity != targetActivity){
+                    activity.finish();
+                }
+            }
+        } catch (Exception e) {
+            LogUtils.exceptionDebug(TAG, e.toString());
+        }
     }
 
     @Override

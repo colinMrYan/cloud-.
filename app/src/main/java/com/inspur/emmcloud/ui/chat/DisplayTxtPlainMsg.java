@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.bean.chat.MsgRobot;
+import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.ChatMsgContentUtils;
 import com.inspur.emmcloud.util.privates.TransHtmlToTextUtils;
@@ -31,14 +31,14 @@ public class DisplayTxtPlainMsg {
      * @param msg
      */
     public static View getView(final Context context,
-                               MsgRobot msg) {
-        View convertView = LayoutInflater.from(context).inflate(
+                               Message msg) {
+        View cardContentView = LayoutInflater.from(context).inflate(
                 R.layout.chat_msg_card_child_text_rich_view, null);
         final boolean isMyMsg = msg.getFromUser().equals(
                 ((MyApplication) context.getApplicationContext()).getUid());
-        final TextView richText = (TextView) convertView
+        final TextView richText = (TextView) cardContentView
                 .findViewById(R.id.content_text);
-        (convertView.findViewById(R.id.card_layout)).setBackgroundResource(isMyMsg ? R.drawable.ic_chat_msg_img_cover_arrow_right : R.drawable.ic_chat_msg_img_cover_arrow_left);
+        (cardContentView.findViewById(R.id.card_layout)).setBackgroundResource(isMyMsg ? R.drawable.ic_chat_msg_img_cover_arrow_right : R.drawable.ic_chat_msg_img_cover_arrow_left);
         String text = msg.getMsgContentTextPlain().getText();
         richText.setMovementMethod(LinkMovementClickMethod.getInstance());
         SpannableString spannableString = ChatMsgContentUtils.mentionsAndUrl2Span(context, text, msg.getMsgContentTextPlain().getMentionsMap());
@@ -54,7 +54,7 @@ public class DisplayTxtPlainMsg {
                 return true;
             }
         });
-        return convertView;
+        return cardContentView;
     }
 
     public static void copyContentToPasteBoard(Context context, TextView textView) {
