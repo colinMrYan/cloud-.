@@ -1,6 +1,7 @@
 package com.inspur.emmcloud.bean.chat;
 
 import com.inspur.emmcloud.util.common.JSONUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 
 import org.json.JSONObject;
 
@@ -8,23 +9,23 @@ import java.io.Serializable;
 
 public class Message implements Serializable {
     private static final String TAG = "Msg";
-   // @Column(name = "id", isId = true)
+    // @Column(name = "id", isId = true)
     private String id;
     //@Column(name = "message")
     private String message;
-   // @Column(name = "type")
+    // @Column(name = "type")
     private String type;
-   // @Column(name = "from")
+    // @Column(name = "from")
     private String from;
-   // @Column(name = "to")
+    // @Column(name = "to")
     private String to;
-   // @Column(name = "channel")
+    // @Column(name = "channel")
     private String channel;
-   // @Column(name = "state")
+    // @Column(name = "state")
     private String state;
-   // @Column(name = "content")
+    // @Column(name = "content")
     private String content;
-   // @Column(name="creationDate")
+    // @Column(name="creationDate")
     private String creationDate;
     //@Column(name="tracer")
     private String tracer;
@@ -53,11 +54,11 @@ public class Message implements Serializable {
 //
 //    }
 
-    public Message(Msg msg){
+    public Message(Msg msg) {
         id = msg.getMid();
-        JSONObject extraObj = JSONUtils.getJSONObject(msg.getBody(),"extras",new JSONObject());
-        JSONObject propsObj = JSONUtils.getJSONObject(extraObj,"props",new JSONObject());
-        JSONObject dataObj = JSONUtils.getJSONObject(JSONUtils.getString(propsObj,"data",""));
+        JSONObject extraObj = JSONUtils.getJSONObject(msg.getBody(), "extras", new JSONObject());
+        JSONObject propsObj = JSONUtils.getJSONObject(extraObj, "props", new JSONObject());
+        JSONObject dataObj = JSONUtils.getJSONObject(JSONUtils.getString(propsObj, "data", ""));
         message = JSONUtils.getString(dataObj, "message", "");
         from = JSONUtils.getString(dataObj, "from", "");
         type = JSONUtils.getString(dataObj, "type", "");
@@ -67,10 +68,12 @@ public class Message implements Serializable {
         channel = msg.getCid();
 
         creationDate = msg.getTime();
+        LogUtils.jasonDebug("type="+type);
+        LogUtils.jasonDebug("content="+content);
 
     }
 
-    public static boolean isMessage(Msg msg){
+    public static boolean isMessage(Msg msg) {
         return msg.getBody().contains("\\\"message\\\":\\\"1.0\\\"");
     }
 
@@ -83,8 +86,8 @@ public class Message implements Serializable {
         channel = JSONUtils.getString(obj, "channel", "");
         state = JSONUtils.getString(obj, "state", "");
         content = JSONUtils.getString(obj, "content", "");
-        creationDate = JSONUtils.getString(obj,"creationDate","");
-        tracer = JSONUtils.getString(obj,"tracer","");
+        creationDate = JSONUtils.getString(obj, "creationDate", "");
+        tracer = JSONUtils.getString(obj, "tracer", "");
     }
 
     public MsgContentExtendedActions getMsgContentExtendedActions() {
@@ -192,8 +195,8 @@ public class Message implements Serializable {
         return tmpId;
     }
 
-    public String getFromUser(){
-        return JSONUtils.getString(from,"user","");
+    public String getFromUser() {
+        return JSONUtils.getString(from, "user", "");
     }
 
     public String getTracer() {
@@ -228,6 +231,27 @@ public class Message implements Serializable {
         if (!getId().equals(otherMsg.getId()))
             return false;
         return true;
+    }
+
+    public String Message2MsgBody() {
+        JSONObject bodyObj = new JSONObject();
+        try {
+            JSONObject propsObj = new JSONObject();
+            JSONObject extrasObj = new JSONObject();
+            JSONObject MessageObj = new JSONObject();
+            MessageObj.put("id", id);
+            MessageObj.put("message", "1.0");
+            MessageObj.put("type", type);
+            MessageObj.put("from", from);
+            MessageObj.put("content", content);
+            propsObj.put("data", MessageObj.toString());
+            extrasObj.put("props", propsObj);
+            bodyObj.put("extras", extrasObj);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return bodyObj.toString();
     }
 }
 

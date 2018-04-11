@@ -14,17 +14,17 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.BaseActivity;
-import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.ChannelMsgAdapter;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
+import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.bean.appcenter.news.GroupNews;
 import com.inspur.emmcloud.bean.chat.Channel;
-import com.inspur.emmcloud.bean.chat.ChannelGroup;
 import com.inspur.emmcloud.bean.chat.GetFileUploadResult;
 import com.inspur.emmcloud.bean.chat.GetMsgResult;
 import com.inspur.emmcloud.bean.chat.GetNewMsgsResult;
@@ -32,7 +32,8 @@ import com.inspur.emmcloud.bean.chat.GetNewsImgResult;
 import com.inspur.emmcloud.bean.chat.GetSendMsgResult;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.Msg;
-import com.inspur.emmcloud.bean.contact.GetSearchChannelGroupResult;
+import com.inspur.emmcloud.bean.chat.Robot;
+import com.inspur.emmcloud.bean.contact.Contact;
 import com.inspur.emmcloud.bean.system.PVCollectModel;
 import com.inspur.emmcloud.broadcastreceiver.MsgReceiver;
 import com.inspur.emmcloud.config.MyAppConfig;
@@ -42,18 +43,22 @@ import com.inspur.emmcloud.ui.contact.UserInfoActivity;
 import com.inspur.emmcloud.util.common.InputMethodUtils;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
+import com.inspur.emmcloud.util.privates.ChannelInfoUtils;
 import com.inspur.emmcloud.util.privates.ConbineMsg;
 import com.inspur.emmcloud.util.privates.DirectChannelUtils;
+import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.MsgRecourceUploadUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
-import com.inspur.emmcloud.util.privates.cache.ChannelCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.ContactCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MsgCacheUtil;
 import com.inspur.emmcloud.util.privates.cache.MsgReadIDCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.PVCollectModelCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.RobotCacheUtils;
 import com.inspur.emmcloud.widget.ECMChatInputMenu;
 import com.inspur.emmcloud.widget.ECMChatInputMenu.ChatInputMenuListener;
 import com.inspur.emmcloud.widget.LoadingDialog;
@@ -98,10 +103,11 @@ public class ChannelActivity extends BaseActivity {
     @ViewInject(R.id.header_text)
     private TextView headerText;
 
-//    @ViewInject(R.id.robot_photo_img)
-//    private ImageView robotPhotoImg;
+    @ViewInject(R.id.robot_photo_img)
+    private ImageView robotPhotoImg;
 
     private LoadingDialog loadingDlg;
+    private String robotUid ="BOT6006";
     private String cid;
     private Channel channel;
     private List<Msg> msgList;
@@ -109,7 +115,7 @@ public class ChannelActivity extends BaseActivity {
     private Handler handler;
     private MsgReceiver msgResvier;
     private ChatAPIService apiService;
-    private String robotUid;
+    private boolean isSpecialUser = false; //小智机器人进行特殊处理
     private BroadcastReceiver sendActionMsgReceiver;
     private BroadcastReceiver refreshNameReceiver;
 
@@ -138,14 +144,25 @@ public class ChannelActivity extends BaseActivity {
         apiService = new ChatAPIService(ChannelActivity.this);
         apiService.setAPIInterface(new WebService());
         cid = getIntent().getExtras().getString("cid");
-        channel = ChannelCacheUtils.getChannel(this, cid);
-        if (channel == null) {
-            getChannelInfo();
-        } else if (getIntent().hasExtra("get_new_msg")) {//通过scheme打开的频道
-            getNewMsgOfChannel(true);
-        } else {
-            initViews();
-        }
+        new ChannelInfoUtils().getChannelInfo(this, cid, loadingDlg, new ChannelInfoUtils.GetChannelInfoCallBack() {
+            @Override
+            public void getChannelInfoSuccess(Channel channel) {
+                ChannelActivity.this.channel = channel;
+                isSpecialUser = channel.getType().equals("SERVICE") && channel.getTitle().contains(robotUid);
+                if (getIntent().hasExtra("get_new_msg") && NetUtils.isNetworkConnected(getApplicationContext(), false)) {//通过scheme打开的频道
+                    getNewMsgOfChannel();
+                } else {
+                    initViews();
+                }
+            }
+
+            @Override
+            public void getChannelInfoFail(String error, int errorCode) {
+                finishActivity();
+            }
+        });
+
+
     }
 
 
@@ -190,18 +207,36 @@ public class ChannelActivity extends BaseActivity {
      * 显示聊天频道的title
      */
     private void setChannelTitle() {
-        String title = channel.getTitle();
-        if (channel.getType().equals("DIRECT")) {
-            String myUid = ((MyApplication) getApplicationContext()).getUid();
-            if (title.contains(myUid) && title.contains("-")) {
-                title = DirectChannelUtils.getDirectChannelTitle(
-                        getApplicationContext(), title);
+
+        if (isSpecialUser) {
+            robotPhotoImg.setVisibility(View.VISIBLE);
+            headerText.setVisibility(View.GONE);
+            Robot robot = DirectChannelUtils.getRobotInfo(getApplicationContext(),
+                    channel.getTitle());
+            String robotPhotoUrl = APIUri.getRobotIconUrl(RobotCacheUtils
+                    .getRobotById(getApplicationContext(), robot.getId())
+                    .getAvatar());
+
+            ImageDisplayUtils.getInstance().displayImage(robotPhotoImg, robotPhotoUrl, R.drawable.ic_robot_new);
+        } else {
+            robotPhotoImg.setVisibility(View.GONE);
+            headerText.setVisibility(View.VISIBLE);
+            String title;
+            switch (channel.getType()) {
+                case "DIRECT":
+                    title = DirectChannelUtils.getDirectChannelTitle(
+                            getApplicationContext(), channel.getTitle());
+                    break;
+                case "SERVICE":
+                    title = DirectChannelUtils.getRobotInfo(getApplicationContext(),
+                            channel.getTitle()).getName();
+                    break;
+                default:
+                    title = channel.getTitle();
+                    break;
             }
-        } else if (channel.getType().equals("SERVICE")) {
-            title = DirectChannelUtils.getRobotInfo(getApplicationContext(),
-                    title).getName();
+            headerText.setText(title);
         }
-        headerText.setText(title);
     }
 
     /**
@@ -219,10 +254,11 @@ public class ChannelActivity extends BaseActivity {
             @Override
             public void onSendMsg(String content, List<String> mentionsUidList, List<String> urlList) {
                 // TODO Auto-generated method stub
-                sendTextMessage(content, mentionsUidList, urlList);
+                sendTextMessage(content, mentionsUidList, urlList,false);
             }
         });
-        chatInputMenu.setInputLayout(channel.getInputs());
+        LogUtils.jasonDebug("channel.getInputs()=" + channel.getInputs());
+        chatInputMenu.setInputLayout(isSpecialUser ? "1" : channel.getInputs());
     }
 
 
@@ -249,7 +285,7 @@ public class ChannelActivity extends BaseActivity {
                 public void onReceive(Context context, Intent intent) {
                     String content = intent.getStringExtra("content");
                     if (!StringUtils.isBlank(content)) {
-                        sendTextMessage(content, null, null);
+                        sendTextMessage(content, null, null,true);
                     }
                 }
             };
@@ -489,9 +525,10 @@ public class ChannelActivity extends BaseActivity {
 
     /**
      * 消息发送失败处理
+     *
      * @param fakeMessageId
      */
-    private void setMsgSendFail(String fakeMessageId){
+    private void setMsgSendFail(String fakeMessageId) {
         //消息发送失败处理
         Msg fakeMsg = new Msg();
         fakeMsg.setMid(fakeMessageId);
@@ -558,7 +595,33 @@ public class ChannelActivity extends BaseActivity {
     /**
      * 点击发送按钮后发送消息的逻辑
      */
-    private void sendTextMessage(String content, List<String> mentionsUidList, List<String> urlList) {
+    private void sendTextMessage(String content, List<String> mentionsUidList, List<String> urlList,boolean isActionMsg) {
+        String fakeMessageId = System.currentTimeMillis() + "";
+        if (isSpecialUser && !isActionMsg && content.length() < 4 && StringUtils.isChinese(content)) {
+            Contact contact = ContactCacheUtils.getContactByUserName(getApplicationContext(), content);
+            if (contact != null) {
+                Message conbineMessage = ConbineMsg.conbineTextPlainMsgRobot(content,
+                cid, fakeMessageId);
+                JSONObject sourceObj = new JSONObject();
+                try {
+                    sourceObj.put("source", content);
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+
+                Msg localMsg = ConbineMsg.conbineMsg(ChannelActivity.this,
+                        sourceObj.toString(), "", "txt_rich", fakeMessageId);
+                addLocalMessage(localMsg, 1);
+                Message conbineReplyMessage = ConbineMsg.conbineReplyAttachmentCardMsg(contact, cid, robotUid, fakeMessageId);
+                LogUtils.jasonDebug("conbineMessage.toString()="+conbineReplyMessage.Message2MsgBody());
+                Msg replyLocalMsg = ConbineMsg.conbineRobotMsg(ChannelActivity.this,
+                        conbineReplyMessage.Message2MsgBody(),robotUid, "txt_rich", fakeMessageId);
+                addLocalMessage(replyLocalMsg, 1);
+                return;
+            }
+        }
+
+
         JSONObject richTextObj = new JSONObject();
         JSONArray mentionArray = JSONUtils.toJSONArray(mentionsUidList);
         JSONArray urlArray = JSONUtils.toJSONArray(urlList);
@@ -570,7 +633,6 @@ public class ChannelActivity extends BaseActivity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        String fakeMessageId = System.currentTimeMillis() + "";
         Msg localMsg = ConbineMsg.conbineMsg(ChannelActivity.this,
                 richTextObj.toString(), "", "txt_rich", fakeMessageId);
         addLocalMessage(localMsg);
@@ -584,9 +646,19 @@ public class ChannelActivity extends BaseActivity {
      * @param msg
      */
     private void addLocalMessage(Msg msg) {
+        addLocalMessage(msg, 0);
+    }
+
+    /**
+     * 消息发送完成后在本地添加一条消息
+     *
+     * @param msg
+     * @param status
+     */
+    private void addLocalMessage(Msg msg, int status) {
         if (msg != null) {
             //本地添加的消息设置为正在发送状态
-            msg.setSendStatus(0);
+            msg.setSendStatus(status);
             msgList.add(msg);
             adapter.setMsgList(msgList);
             adapter.notifyItemInserted(msgList.size() - 1);
@@ -686,28 +758,12 @@ public class ChannelActivity extends BaseActivity {
 
 
     /**
-     * 获取频道信息
-     */
-    private void getChannelInfo() {
-        if (NetUtils.isNetworkConnected(this)) {
-            loadingDlg.show();
-            String[] cidArray = {cid};
-            apiService.getChannelGroupList(cidArray);
-        } else {
-            finishActivity();
-        }
-
-    }
-
-    /**
      * 获取此频道的最新消息
      */
-    private void getNewMsgOfChannel(boolean isShowDlg) {
+    private void getNewMsgOfChannel() {
         if (NetUtils.isNetworkConnected(this, false)) {
-            loadingDlg.show(isShowDlg);
+            loadingDlg.show();
             apiService.getNewMsgs(cid, "", 15);
-        } else {
-            initViews();
         }
     }
 
@@ -732,7 +788,7 @@ public class ChannelActivity extends BaseActivity {
         }
 
         @Override
-        public void returnUploadResImgFail(String error, int errorCode,String fakeMessageId) {
+        public void returnUploadResImgFail(String error, int errorCode, String fakeMessageId) {
             setMsgSendFail(fakeMessageId);
         }
 
@@ -745,7 +801,7 @@ public class ChannelActivity extends BaseActivity {
         }
 
         @Override
-        public void returnUpLoadResFileFail(String error, int errorCode,String fakeMessageId) {
+        public void returnUpLoadResFileFail(String error, int errorCode, String fakeMessageId) {
             setMsgSendFail(fakeMessageId);
         }
 
@@ -804,29 +860,6 @@ public class ChannelActivity extends BaseActivity {
             WebServiceMiddleUtils.hand(ChannelActivity.this, error, errorCode);
         }
 
-
-        @Override
-        public void returnSearchChannelGroupSuccess(
-                GetSearchChannelGroupResult getSearchChannelGroupResult) {
-            List<ChannelGroup> channelGroupList = getSearchChannelGroupResult.getSearchChannelGroupList();
-            if (channelGroupList.size() != 0) {
-                channel = new Channel(channelGroupList.get(0));
-                getNewMsgOfChannel(false);
-            } else {
-                finishActivity();
-            }
-
-        }
-
-        @Override
-        public void returnSearchChannelGroupFail(String error, int errorCode) {
-            channel = ChannelCacheUtils.getChannel(getApplicationContext(), cid);
-            if (channel == null) {
-                finishActivity();
-            } else {
-                getNewMsgOfChannel(false);
-            }
-        }
     }
 
 }

@@ -3,6 +3,7 @@ package com.inspur.emmcloud.util.privates;
 import android.content.Context;
 
 import com.inspur.emmcloud.MyApplication;
+import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.bean.chat.Email;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.Msg;
@@ -12,6 +13,7 @@ import com.inspur.emmcloud.bean.chat.Phone;
 import com.inspur.emmcloud.bean.contact.Contact;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
+import com.inspur.emmcloud.util.privates.cache.RobotCacheUtils;
 
 import org.json.JSONObject;
 
@@ -33,31 +35,30 @@ public class ConbineMsg {
 					"userRealName");
 		msgSend.setMid(fakeMessageId);
 		msgSend.setTitle(title);
-		if (type.equals("text")) {
-			msgSend.setType("text");
-		} else if (type.equals("image")) {
-			msgSend.setType("image");
-		}else if (type.equals("res_image")) {
-			msgSend.setType("res_image");
-		}else if(type.equals("res_file")){
-			msgSend.setType("res_file");
-		}else if(type.equals("txt_rich")){
-			msgSend.setType("txt_rich");
-		}
-
+		msgSend.setType(type);
 		msgSend.setUid(userID);
 		msgSend.setAvatar("");
-		// msgSend.setOrder(0);
 		String UTCNow = TimeUtils.getCurrentUTCTimeString();
 		msgSend.setTime(UTCNow);
-		if(type.equals("txt_rich")){
-			msgSend.setBody(body);
-		}else {
-			msgSend.setBody(body);
-		}
-
+		msgSend.setBody(body);
 		return msgSend;
 	}
+
+
+	public static Msg conbineRobotMsg(Context context,String body, String robotUid, String type,String fakeMessageId) {
+		Msg msgSend = new Msg();
+		String title = RobotCacheUtils.getRobotById(context, robotUid).getName();
+		msgSend.setMid(fakeMessageId);
+		msgSend.setTitle(title);
+		msgSend.setType(type);
+		msgSend.setUid(robotUid);
+		msgSend.setAvatar("");
+		String UTCNow = TimeUtils.getCurrentUTCTimeString();
+		msgSend.setTime(UTCNow);
+		msgSend.setBody(body);
+		return msgSend;
+	}
+
 
 	public static Message conbineTextPlainMsgRobot(String text, String cid, String fakeMessageId){
 		Message msgRobot = new Message();
@@ -101,7 +102,7 @@ public class ConbineMsg {
 		msgRobot.setTo("");
 		msgRobot.setState("");
 		MsgContentAttachmentCard msgContentAttachmentCard = new MsgContentAttachmentCard();
-		msgContentAttachmentCard.setAvatar(MyApplication.getInstance().getUserPhotoUrl(contact.getInspurID()));
+		msgContentAttachmentCard.setAvatar(APIUri.getChannelImgUrl(MyApplication.getInstance(), contact.getInspurID()));
 		msgContentAttachmentCard.setFirstName(contact.getRealName());
 		msgContentAttachmentCard.setLastName("");
 		msgContentAttachmentCard.setOrganization(contact.getOrgName());

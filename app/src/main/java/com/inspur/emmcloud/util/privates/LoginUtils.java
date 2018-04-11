@@ -187,6 +187,8 @@ public class LoginUtils extends APIInterfaceInstance {
         PreferencesUtils.putInt(activity, "keepAlive", 0);
         PreferencesUtils.putString(activity, "tokenType", "");
         PreferencesUtils.putInt(activity, "expiresIn", 0);
+        MyApplication.getInstance().setAccessToken("");
+        MyApplication.getInstance().setRefreshToken("");
     }
 
     private void saveLoginInfo() {

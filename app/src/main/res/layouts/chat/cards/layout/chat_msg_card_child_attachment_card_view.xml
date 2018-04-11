@@ -7,7 +7,7 @@ android:layout_height="wrap_content"
 android:background="@color/white">
 
 <RelativeLayout
-	android:layout_width="248dp"
+	android:layout_width="match_parent"
 	android:layout_height="wrap_content"
 	android:paddingTop="12dp"
 	android:paddingLeft="18dp"
@@ -16,17 +16,17 @@ android:background="@color/white">
 
 	<ImageView
 		android:id="@+id/photo_img"
-		android:layout_width="40dp"
-		android:layout_height="40dp"
+		android:layout_width="45dp"
+		android:layout_height="45dp"
 		android:layout_marginRight="10dp"
 		android:scaleType="fitXY" />
 
-	<LinearLayout
+	<RelativeLayout
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:layout_centerVertical="true"
 		android:layout_toRightOf="@id/photo_img"
-		android:orientation="vertical">
+		>
 
 		<TextView
 			android:id="@+id/name_text"
@@ -35,32 +35,33 @@ android:background="@color/white">
 			android:textColor="#333333"
 			android:maxLines="1"
 			android:ellipsize="end"
-			android:textSize="15sp"
+			android:textSize="16sp"
 			android:textStyle="bold" />
 
 		<TextView
 			android:id="@+id/mail_text"
+			android:layout_below="@id/name_text"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:layout_marginTop="2dp"
 			android:maxLines="1"
 			android:ellipsize="end"
 			android:textColor="#999999"
-			android:textSize="13sp" />
-	</LinearLayout>
+			android:textSize="15sp" />
+	</RelativeLayout>
 </RelativeLayout>
 
 <View
-	android:layout_width="248dp"
+	android:layout_width="match_parent"
 	android:layout_height="0.5dp"
 	android:background="@color/color_list_divider"></View>
 <TextView
-	android:layout_width="248dp"
+	android:layout_width="match_parent"
 	android:layout_height="wrap_content"
 	android:paddingLeft="17dp"
 	android:paddingTop="2dp"
 	android:paddingBottom="2dp"
 	android:text="个人名片"
 	android:textColor="#999999"
-	android:textSize="15sp" />
+	android:textSize="16sp" />
 </LinearLayout>
