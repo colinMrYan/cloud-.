@@ -249,7 +249,6 @@ public class WebSocketPush {
 	}
 
 	public void closeSocket() {
-		Log.d(TAG, "closeSocket------00");
 		if (mSocket != null) {
 			Log.d(TAG, "closeSocket------");
 			mSocket.disconnect();
@@ -261,7 +260,6 @@ public class WebSocketPush {
     private void sendWebSocketStatusBroadcaset(String event) {
         if (((MyApplication) context.getApplicationContext())
                 .isIndexActivityRunning()) {
-        	LogUtils.jasonDebug("发-----------------");
             Intent intent = new Intent("message_notify");
             intent.putExtra("status", event);
             intent.putExtra("command", "websocket_status");
