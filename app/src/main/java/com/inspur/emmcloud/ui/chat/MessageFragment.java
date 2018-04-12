@@ -50,6 +50,7 @@ import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.util.common.IntentUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
@@ -165,8 +166,8 @@ public class MessageFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
+        LogUtils.jasonDebug("onCreate-----11111111111111--------------");
         initView();
-        registerMessageFragmentReceiver();
         getChannelList();
         sortChannelList();// 对Channel 进行排序
         registerMessageFragmentReceiver();
@@ -419,6 +420,7 @@ public class MessageFragment extends Fragment {
         messageFragmentReceiver = new MessageFragmentReceiver();
         IntentFilter intentFilter = new IntentFilter("message_notify");
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(messageFragmentReceiver, intentFilter);
+        LogUtils.jasonDebug("注册-----11111111111111--------------");
 
     }
 
@@ -985,6 +987,7 @@ public class MessageFragment extends Fragment {
                     setAllChannelMsgRead();
                     break;
                 case "websocket_status":
+                    LogUtils.jasonDebug("收到广播--------------");
                     String socketStatus = intent.getExtras().getString("status");
                     showSocketStatusInTitle(socketStatus);
                     break;
@@ -1011,6 +1014,7 @@ public class MessageFragment extends Fragment {
             isFirstConnectWebsockt = false;
             String appTabs = PreferencesByUserAndTanentUtils.getString(getActivity(), "app_tabbar_info_current", "");
             if (!StringUtils.isBlank(appTabs)) {
+                LogUtils.jasonDebug("收到广播-执行-------------");
                 titleText.setText(AppTitleUtils.getTabTitle(getActivity(), getClass().getSimpleName()));
             } else {
                 titleText.setText(R.string.communicate);
@@ -1110,6 +1114,7 @@ public class MessageFragment extends Fragment {
     public void onDestroy() {
         // TODO Auto-generated method stub
         super.onDestroy();
+        LogUtils.jasonDebug("onDestroy-------------");
         if (cacheChannelTask != null && !cacheChannelTask.isCancelled() && cacheChannelTask.getStatus() == AsyncTask.Status.RUNNING) {
             cacheChannelTask.cancel(true);
             cacheChannelTask = null;
@@ -1126,7 +1131,7 @@ public class MessageFragment extends Fragment {
             LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(messageFragmentReceiver);
             messageFragmentReceiver = null;
         }
-
+        LogUtils.jasonDebug("解除-------------");
         if (handler != null) {
             handler = null;
         }

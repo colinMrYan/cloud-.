@@ -3,6 +3,7 @@ package com.inspur.emmcloud.util.privates;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 
 
@@ -39,7 +40,7 @@ public class PreferencesByUsersUtils {
     }
 
     private static String getPreferenceName(Context context) {
-        String userID = PreferencesUtils.getString(context, "userID", "unkown_user");
+        String userID = PreferencesUtils.getString(MyApplication.getInstance(), "userID", "unkown_user");
         return userID ;
     }
 
@@ -55,7 +56,7 @@ public class PreferencesByUsersUtils {
      */
     public static boolean putString(Context context, String key, String value) {
         SharedPreferences
-                settings = context.getSharedPreferences(getPreferenceName(context), Context.MODE_PRIVATE);
+                settings = MyApplication.getInstance().getSharedPreferences(getPreferenceName(context), Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = settings.edit();
         editor.putString(key, value);
         return editor.commit();
@@ -84,7 +85,7 @@ public class PreferencesByUsersUtils {
      * this name that is not a string
      */
     public static String getString(Context context, String key, String defaultValue) {
-        SharedPreferences settings = context.getSharedPreferences(getPreferenceName(context), Context.MODE_PRIVATE);
+        SharedPreferences settings = MyApplication.getInstance().getSharedPreferences(getPreferenceName(context), Context.MODE_PRIVATE);
         return settings.getString(key, defaultValue);
     }
 
@@ -97,7 +98,7 @@ public class PreferencesByUsersUtils {
      * @return True if the new values were successfully written to persistent storage.
      */
     public static boolean putInt(Context context, String key, int value) {
-        SharedPreferences settings = context.getSharedPreferences(getPreferenceName(context), Context.MODE_PRIVATE);
+        SharedPreferences settings = MyApplication.getInstance().getSharedPreferences(getPreferenceName(context), Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = settings.edit();
         editor.putInt(key, value);
         return editor.commit();
@@ -126,7 +127,7 @@ public class PreferencesByUsersUtils {
      * this name that is not a int
      */
     public static int getInt(Context context, String key, int defaultValue) {
-        SharedPreferences settings = context.getSharedPreferences(getPreferenceName(context), Context.MODE_PRIVATE);
+        SharedPreferences settings = MyApplication.getInstance().getSharedPreferences(getPreferenceName(context), Context.MODE_PRIVATE);
         return settings.getInt(key, defaultValue);
     }
 
@@ -139,7 +140,7 @@ public class PreferencesByUsersUtils {
      * @return True if the new values were successfully written to persistent storage.
      */
     public static boolean putLong(Context context, String key, long value) {
-        SharedPreferences settings = context.getSharedPreferences(getPreferenceName(context), Context.MODE_PRIVATE);
+        SharedPreferences settings = MyApplication.getInstance().getSharedPreferences(getPreferenceName(context), Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = settings.edit();
         editor.putLong(key, value);
         return editor.commit();
@@ -168,7 +169,7 @@ public class PreferencesByUsersUtils {
      * this name that is not a long
      */
     public static long getLong(Context context, String key, long defaultValue) {
-        SharedPreferences settings = context.getSharedPreferences(getPreferenceName(context), Context.MODE_PRIVATE);
+        SharedPreferences settings = MyApplication.getInstance().getSharedPreferences(getPreferenceName(context), Context.MODE_PRIVATE);
         return settings.getLong(key, defaultValue);
     }
 
@@ -181,7 +182,7 @@ public class PreferencesByUsersUtils {
      * @return True if the new values were successfully written to persistent storage.
      */
     public static boolean putFloat(Context context, String key, float value) {
-        SharedPreferences settings = context.getSharedPreferences(getPreferenceName(context), Context.MODE_PRIVATE);
+        SharedPreferences settings = MyApplication.getInstance().getSharedPreferences(getPreferenceName(context), Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = settings.edit();
         editor.putFloat(key, value);
         return editor.commit();
@@ -210,7 +211,7 @@ public class PreferencesByUsersUtils {
      * this name that is not a float
      */
     public static float getFloat(Context context, String key, float defaultValue) {
-        SharedPreferences settings = context.getSharedPreferences(getPreferenceName(context), Context.MODE_PRIVATE);
+        SharedPreferences settings = MyApplication.getInstance().getSharedPreferences(getPreferenceName(context), Context.MODE_PRIVATE);
         return settings.getFloat(key, defaultValue);
     }
 
@@ -223,7 +224,7 @@ public class PreferencesByUsersUtils {
      * @return True if the new values were successfully written to persistent storage.
      */
     public static boolean putBoolean(Context context, String key, boolean value) {
-        SharedPreferences settings = context.getSharedPreferences(getPreferenceName(context), Context.MODE_PRIVATE);
+        SharedPreferences settings = MyApplication.getInstance().getSharedPreferences(getPreferenceName(context), Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = settings.edit();
         editor.putBoolean(key, value);
         return editor.commit();
@@ -252,7 +253,7 @@ public class PreferencesByUsersUtils {
      * this name that is not a boolean
      */
     public static boolean getBoolean(Context context, String key, boolean defaultValue) {
-        SharedPreferences settings = context.getSharedPreferences(getPreferenceName(context), Context.MODE_PRIVATE);
+        SharedPreferences settings = MyApplication.getInstance().getSharedPreferences(getPreferenceName(context), Context.MODE_PRIVATE);
         return settings.getBoolean(key, defaultValue);
     }
 }

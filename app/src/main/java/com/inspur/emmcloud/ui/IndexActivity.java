@@ -52,6 +52,7 @@ import com.inspur.emmcloud.ui.mine.MoreFragment;
 import com.inspur.emmcloud.ui.notsupport.NotSupportFragment;
 import com.inspur.emmcloud.ui.work.TabBean;
 import com.inspur.emmcloud.ui.work.WorkFragment;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StateBarUtils;
@@ -725,7 +726,9 @@ public class IndexActivity extends BaseFragmentActivity implements
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        LogUtils.jasonDebug("setIndexActvityRunning---------before");
         MyApplication.getInstance().setIndexActvityRunning(false);
+        LogUtils.jasonDebug("setIndexActvityRunning---------after");
         if (contactSaveTask != null && !contactSaveTask.isCancelled() && contactSaveTask.getStatus() == AsyncTask.Status.RUNNING) {
             contactSaveTask.cancel(true);
             contactSaveTask = null;
