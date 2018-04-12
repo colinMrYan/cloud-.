@@ -443,7 +443,7 @@ public class MessageFragment extends Fragment {
      * 为单个群组创建头像
      */
     private void createGroupIcon(List<Channel> channelList) {
-        if (((MyApplication) getActivity().getApplicationContext()).getIsContactReady() && NetUtils.isNetworkConnected(getActivity(), false)) {
+        if (((MyApplication) getActivity().getApplicationContext()).getIsContactReady() && NetUtils.isNetworkConnected(MyApplication.getInstance(), false)) {
             isHaveCreatGroupIcon = true;
             ChannelGroupIconUtils.getInstance().create(getActivity(), channelList,
                     handler);
@@ -1146,7 +1146,7 @@ public class MessageFragment extends Fragment {
                 JSONArray peopleArray = searchResultObj.getJSONArray("people");
 
                 if (peopleArray.length() > 0
-                        && NetUtils.isNetworkConnected(getActivity())) {
+                        && NetUtils.isNetworkConnected(MyApplication.getInstance())) {
                     creatGroupChannel(peopleArray);
                 }
             } catch (JSONException e) {
@@ -1206,7 +1206,7 @@ public class MessageFragment extends Fragment {
      * 获取消息会话列表
      */
     private void getChannelList() {
-        if (NetUtils.isNetworkConnected(getActivity(), false)) {
+        if (NetUtils.isNetworkConnected(MyApplication.getInstance(), true)) {
             apiService.getChannelList();
         } else {
             swipeRefreshLayout.setRefreshing(false);
@@ -1217,7 +1217,7 @@ public class MessageFragment extends Fragment {
      * 获取频道消息
      */
     private void getChannelMsg() {
-        if (NetUtils.isNetworkConnected(getActivity(), false)) {
+        if (NetUtils.isNetworkConnected(MyApplication.getInstance(), false)) {
             apiService.getNewMsgs();
         }
     }
@@ -1229,7 +1229,7 @@ public class MessageFragment extends Fragment {
      * @param channelList
      */
     public void getChannelInfoResult(List<Channel> channelList) {
-        if (NetUtils.isNetworkConnected(getActivity(), false)) {
+        if (NetUtils.isNetworkConnected(MyApplication.getInstance(), false)) {
             ArrayList<String> cidList = new ArrayList<>();
             for (int i = 0; i < channelList.size(); i++) {
                 Channel channel = channelList.get(i);

@@ -128,12 +128,12 @@ public class IndexActivity extends BaseFragmentActivity implements
      * 初始化app的运行环境
      */
     private void initAppEnvironment() {
-        ((MyApplication) getApplicationContext()).setIndexActvityRunning(true);
-        ((MyApplication) getApplicationContext()).closeAllDb();
-        DbCacheUtils.initDb(getApplicationContext());
-        ((MyApplication) getApplicationContext()).closeWebSocket();
-        ((MyApplication) getApplicationContext()).clearUserPhotoMap();
-        ((MyApplication) getApplicationContext()).startPush();
+        MyApplication.getInstance().setIndexActvityRunning(true);
+        MyApplication.getInstance().closeAllDb();
+        DbCacheUtils.initDb(MyApplication.getInstance());
+        MyApplication.getInstance().closeWebSocket();
+        MyApplication.getInstance().clearUserPhotoMap();
+        MyApplication.getInstance().startPush();
     }
 
     private void initView() {
@@ -274,18 +274,6 @@ public class IndexActivity extends BaseFragmentActivity implements
         }).getClientID();
     }
 
-    /**
-     * 获取所有的Robot
-     */
-    private void getAllRobotInfo() {
-        ContactAPIService apiService = new ContactAPIService(IndexActivity.this);
-        apiService.setAPIInterface(new WebService());
-        if (NetUtils.isNetworkConnected(getApplicationContext(), false)) {
-            apiService.getAllRobotInfo();
-        }
-    }
-
-
     private void handMessage() {
         // TODO Auto-generated method stub
         handler = new WeakHandler(IndexActivity.this) {
@@ -294,13 +282,11 @@ public class IndexActivity extends BaseFragmentActivity implements
             protected void handleMessage(Object o, Message msg) {
                 switch (msg.what) {
                     case SYNC_ALL_BASE_DATA_SUCCESS:
-                        if (loadingDlg != null && loadingDlg.isShowing()) {
-                            loadingDlg.dismiss();
-                        }
-                        ((MyApplication) getApplicationContext())
+                        LoadingDialog.dimissDlg(loadingDlg);
+                        MyApplication.getInstance()
                                 .setIsContactReady(true);
                         notifySyncAllBaseDataSuccess();
-                        ((MyApplication) getApplicationContext()).startWebSocket();// 启动webSocket推送
+                        MyApplication.getInstance().startWebSocket();// 启动webSocket推送
                         deleteIllegalUser();
                         break;
                     case RELOAD_WEB:
@@ -353,7 +339,7 @@ public class IndexActivity extends BaseFragmentActivity implements
     private void getAllChannelGroup() {
         // TODO Auto-generated method stub
         if (NetUtils.isNetworkConnected(getApplicationContext(), false)) {
-            ((MyApplication) getApplicationContext()).setIsContactReady(false);
+            MyApplication.getInstance().setIsContactReady(false);
             ChatAPIService apiService = new ChatAPIService(IndexActivity.this);
             apiService.setAPIInterface(new WebService());
             apiService.getAllGroupChannelList();
@@ -370,7 +356,7 @@ public class IndexActivity extends BaseFragmentActivity implements
         ContactAPIService apiService = new ContactAPIService(IndexActivity.this);
         apiService.setAPIInterface(new WebService());
         if (NetUtils.isNetworkConnected(getApplicationContext(), false)) {
-            ((MyApplication) getApplicationContext()).setIsContactReady(false);
+            MyApplication.getInstance().setIsContactReady(false);
             String contackLastUpdateTime = ContactCacheUtils
                     .getLastUpdateTime(IndexActivity.this);
             apiService.getAllContact(contackLastUpdateTime);
@@ -391,12 +377,7 @@ public class IndexActivity extends BaseFragmentActivity implements
         if (num == 0) {
             newMessageTipsLayout.setVisibility(View.GONE);
         } else {
-            String shoWNum = "";
-            if (num > 99) {
-                shoWNum = "99+";
-            } else {
-                shoWNum = num + "";
-            }
+            String shoWNum = (num > 99)?"99+":num + "";
             newMessageTipsLayout.setVisibility(View.VISIBLE);
             newMessageTipsText.setText(shoWNum);
         }
@@ -410,7 +391,7 @@ public class IndexActivity extends BaseFragmentActivity implements
         mTabHost = (MyFragmentTabHost) findViewById(android.R.id.tabhost);
         mTabHost.setup(this, getSupportFragmentManager(), R.id.realtabcontent);
         findViewById(R.id.index_root_layout).setPadding(0, StateBarUtils.getStateBarHeight(IndexActivity.this), 0, 0);
-        handleAppTabs();
+        setAndShowAppTabs();
     }
 
     /**
@@ -418,7 +399,7 @@ public class IndexActivity extends BaseFragmentActivity implements
      *
      * @return
      */
-    private TabBean[] handleAppTabs() {
+    private void setAndShowAppTabs() {
         TabBean[] tabBeans = null;
         String appTabs = PreferencesByUserAndTanentUtils.getString(IndexActivity.this, "app_tabbar_info_current", "");
         if (!StringUtils.isBlank(appTabs)) {
@@ -465,8 +446,7 @@ public class IndexActivity extends BaseFragmentActivity implements
         if (tabBeans == null) {
             tabBeans = addDefaultTabs();
         }
-        displayTabs(tabBeans);
-        return tabBeans;
+        showTabs(tabBeans);
     }
 
     /**
@@ -474,17 +454,20 @@ public class IndexActivity extends BaseFragmentActivity implements
      *
      * @param tabs
      */
-    private void displayTabs(TabBean[] tabs) {
+    private void showTabs(TabBean[] tabs) {
         final int size = tabs.length;
+        int communicateIndex = -1;
         for (int i = 0; i < size; i++) {
             TabBean tabBean = tabs[i];
-            TabHost.TabSpec tab = mTabHost.newTabSpec(tabBean.getTabName());
+            String tabId = tabBean.getTabId();
+            TabHost.TabSpec tab = mTabHost.newTabSpec(tabId);
             View tabView = LayoutInflater.from(getApplicationContext())
                     .inflate(R.layout.tab_item_view, null);
             ImageView tabImg = (ImageView) tabView.findViewById(R.id.imageview);
             TextView tabText = (TextView) tabView.findViewById(R.id.textview);
-            if (tabBean.getTabId().equals("communicate")) {
+            if (tabId.equals("communicate")) {
                 handleTipsView(tabView);
+                communicateIndex = i;
             }
             tabText.setText(tabBean.getTabName());
             if (tabBean.getTabIcon().startsWith("http")) {
@@ -502,17 +485,9 @@ public class IndexActivity extends BaseFragmentActivity implements
             mTabHost.addTab(tab, tabBean.getClz(), null);
             mTabHost.getTabWidget().getChildAt(i).setOnTouchListener(this);
             mTabHost.getTabWidget().getChildAt(i).setTag(tabBean.getTabId());
-            mTabHost.getTabWidget().setDividerDrawable(android.R.color.transparent);
-            mTabHost.setOnTabChangedListener(this);
         }
-        int tabSize = tabs.length;
-        int communicateIndex = -1;
-        for (int i = 0; i < tabSize; i++) {
-            if (tabs[i].getTabId().equals("communicate")) {
-                communicateIndex = i;
-                break;
-            }
-        }
+        mTabHost.getTabWidget().setDividerDrawable(android.R.color.transparent);
+        mTabHost.setOnTabChangedListener(this);
         mTabHost.setCurrentTab((communicateIndex != -1 && isCommunicationRunning == false) ? communicateIndex : getTabIndex());
     }
 
@@ -676,17 +651,14 @@ public class IndexActivity extends BaseFragmentActivity implements
     private int getTabIndex() {
         int tabIndex = 0;
         String appTabs = PreferencesByUserAndTanentUtils.getString(IndexActivity.this, "app_tabbar_info_current", "");
-        ArrayList<AppTabDataBean> appTabList;
         if (!StringUtils.isBlank(appTabs)) {
-            appTabList = (ArrayList<AppTabDataBean>) new AppTabAutoBean(appTabs).getPayload().getTabs();
-        } else {
-            appTabList = new ArrayList<AppTabDataBean>();
-        }
-
-        if (appTabList != null && appTabList.size() > 0) {
-            for (int i = 0; i < appTabList.size(); i++) {
-                if (appTabList.get(i).isSelected()) {
-                    tabIndex = i;
+            ArrayList<AppTabDataBean> appTabList = (ArrayList<AppTabDataBean>) new AppTabAutoBean(appTabs).getPayload().getTabs();
+            if (appTabList.size() > 0) {
+                for (int i = 0; i < appTabList.size(); i++) {
+                    if (appTabList.get(i).isSelected()) {
+                        tabIndex = i;
+                        break;
+                    }
                 }
             }
         }
@@ -705,7 +677,7 @@ public class IndexActivity extends BaseFragmentActivity implements
                         getString(R.string.reclick_to_desktop));
                 lastBackTime = System.currentTimeMillis();
             } else {
-                ((MyApplication) getApplicationContext()).exit();
+                MyApplication.getInstance().exit();
             }
             return true;
         }
@@ -736,38 +708,13 @@ public class IndexActivity extends BaseFragmentActivity implements
     @Override
     public void onTabChanged(String tabId) {
         notSupportTitle = tabId;
-        if (tabId.equals(getString(R.string.communicate))) {
-            tipsView.setCanTouch(true);
-        } else {
-            tipsView.setCanTouch(false);
-        }
+        tipsView.setCanTouch(tabId.equals("communicate"));
         if (!isSystemChangeTag) {
-            recordOpenTab(tabId);
+            //记录打开的tab页
+            PVCollectModel pvCollectModel = new PVCollectModel(tabId, tabId);
+            PVCollectModelCacheUtils.saveCollectModel(IndexActivity.this, pvCollectModel);
             isSystemChangeTag = true;
         }
-    }
-
-    /**
-     * 记录打开的tab页
-     *
-     * @param tabId
-     */
-    private void recordOpenTab(String tabId) {
-        if (tabId.equals(getString(R.string.communicate))) {
-            tabId = "communicate";
-        } else if (tabId.equals(getString(R.string.work))) {
-            tabId = "work";
-        } else if (tabId.equals(getString(R.string.find))) {
-            tabId = "find";
-        } else if (tabId.equals(getString(R.string.application))) {
-            tabId = "application";
-        } else if (tabId.equals(getString(R.string.mine))) {
-            tabId = "mine";
-        } else {
-            tabId = "";
-        }
-        PVCollectModel pvCollectModel = new PVCollectModel(tabId, tabId);
-        PVCollectModelCacheUtils.saveCollectModel(IndexActivity.this, pvCollectModel);
     }
 
     private Fragment getCurrentFragment() {
@@ -778,7 +725,7 @@ public class IndexActivity extends BaseFragmentActivity implements
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        ((MyApplication) getApplicationContext()).setIndexActvityRunning(false);
+        MyApplication.getInstance().setIndexActvityRunning(false);
         if (contactSaveTask != null && !contactSaveTask.isCancelled() && contactSaveTask.getStatus() == AsyncTask.Status.RUNNING) {
             contactSaveTask.cancel(true);
             contactSaveTask = null;
@@ -818,6 +765,17 @@ public class IndexActivity extends BaseFragmentActivity implements
                     getAllContactResult.getLastUpdateTime());
             ContactCacheUtils.saveLastUpdateunitID(IndexActivity.this, getAllContactResult.getUnitID());
             return null;
+        }
+    }
+
+    /**
+     * 获取所有的Robot
+     */
+    private void getAllRobotInfo() {
+        if (NetUtils.isNetworkConnected(getApplicationContext(), false)) {
+            ContactAPIService apiService = new ContactAPIService(IndexActivity.this);
+            apiService.setAPIInterface(new WebService());
+            apiService.getAllRobotInfo();
         }
     }
 
@@ -912,7 +870,7 @@ public class IndexActivity extends BaseFragmentActivity implements
             PreferencesByUserAndTanentUtils.putString(IndexActivity.this, "app_tabbar_version", getAppTabAutoResult.getVersion());
             PreferencesByUserAndTanentUtils.putString(IndexActivity.this, "app_tabbar_info_current", getAppTabAutoResult.getAppTabInfo());
             mTabHost.clearAllTabs(); //更新tabbar
-            handleAppTabs();
+            setAndShowAppTabs();
         }
     }
 
