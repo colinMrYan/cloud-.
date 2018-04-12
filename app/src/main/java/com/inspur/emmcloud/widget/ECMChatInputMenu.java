@@ -11,6 +11,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.TypedArray;
 import android.os.Handler;
+import android.text.Editable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -86,6 +87,7 @@ public class ECMChatInputMenu extends LinearLayout {
     private MediaPlayerUtils mediaPlayerUtils;
     private String cid = "";
     private String inputs;
+    private boolean isSpecialUser = false; //小智机器人进行特殊处理
 
     public ECMChatInputMenu(Context context) {
         this(context, null);
@@ -156,6 +158,14 @@ public class ECMChatInputMenu extends LinearLayout {
     public void setCanMentions(boolean canMentions, String cid) {
         this.canMentions = canMentions;
         this.cid = cid;
+    }
+
+    /**
+     * 设置是否区分对待
+     * @param isSpecialUser
+     */
+    public void setSpecialUser(boolean isSpecialUser){
+        this.isSpecialUser = isSpecialUser;
     }
 
     /**
@@ -304,7 +314,14 @@ public class ECMChatInputMenu extends LinearLayout {
                     results = "";
                 }
                 if (!StringUtils.isBlank(results)) {
-                    chatInputMenuListener.onSendMsg(results, null, null);
+                    if (isSpecialUser){
+                        chatInputMenuListener.onSendMsg(results, null, null);
+                    }else {
+                        int index = inputEdit.getSelectionStart();
+                        Editable editable = inputEdit.getText();
+                        editable.insert(index, results);
+                    }
+
                 }
             }
 

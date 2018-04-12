@@ -1,7 +1,6 @@
 package com.inspur.emmcloud.bean.chat;
 
 import com.inspur.emmcloud.util.common.JSONUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
 
 import org.json.JSONObject;
 
@@ -68,8 +67,6 @@ public class Message implements Serializable {
         channel = msg.getCid();
 
         creationDate = msg.getTime();
-        LogUtils.jasonDebug("type="+type);
-        LogUtils.jasonDebug("content="+content);
 
     }
 
