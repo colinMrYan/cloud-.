@@ -597,11 +597,10 @@ public class ChannelActivity extends BaseActivity {
      */
     private void sendTextMessage(String content, List<String> mentionsUidList, List<String> urlList,boolean isActionMsg) {
         String fakeMessageId = System.currentTimeMillis() + "";
+        //当在机器人频道时输入小于4个汉字时先进行通讯录查找，查找到返回通讯路卡片
         if (isSpecialUser && !isActionMsg && content.length() < 4 && StringUtils.isChinese(content)) {
             Contact contact = ContactCacheUtils.getContactByUserName(getApplicationContext(), content);
             if (contact != null) {
-                Message conbineMessage = ConbineMsg.conbineTextPlainMsgRobot(content,
-                cid, fakeMessageId);
                 JSONObject sourceObj = new JSONObject();
                 try {
                     sourceObj.put("source", content);
@@ -613,7 +612,6 @@ public class ChannelActivity extends BaseActivity {
                         sourceObj.toString(), "", "txt_rich", fakeMessageId);
                 addLocalMessage(localMsg, 1);
                 Message conbineReplyMessage = ConbineMsg.conbineReplyAttachmentCardMsg(contact, cid, robotUid, fakeMessageId);
-                LogUtils.jasonDebug("conbineMessage.toString()="+conbineReplyMessage.Message2MsgBody());
                 Msg replyLocalMsg = ConbineMsg.conbineRobotMsg(ChannelActivity.this,
                         conbineReplyMessage.Message2MsgBody(),robotUid, "txt_rich", fakeMessageId);
                 addLocalMessage(replyLocalMsg, 1);

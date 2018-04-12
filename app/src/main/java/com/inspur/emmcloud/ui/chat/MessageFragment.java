@@ -418,7 +418,7 @@ public class MessageFragment extends Fragment {
         // TODO Auto-generated method stub
         messageFragmentReceiver = new MessageFragmentReceiver();
         IntentFilter intentFilter = new IntentFilter("message_notify");
-        getActivity().registerReceiver(messageFragmentReceiver, intentFilter);
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(messageFragmentReceiver, intentFilter);
 
     }
 
@@ -430,11 +430,10 @@ public class MessageFragment extends Fragment {
         // TODO Auto-generated method stub
         List<Channel> channelList = ChannelCacheUtils
                 .getCacheChannelList(getActivity());
-        for (int i = 0; i < channelList.size(); i++) {
-            String cid = channelList.get(i).getCid();
-            List<Msg> newMsgList = MsgCacheUtil.getHistoryMsgList(getActivity(), cid, "",
+        for (Channel channel:channelList){
+            List<Msg> newMsgList = MsgCacheUtil.getHistoryMsgList(getActivity(), channel.getCid(), "",
                     15);
-            channelList.get(i).setNewMsgList(getActivity().getApplicationContext(), newMsgList);
+            channel.setNewMsgList(getActivity().getApplicationContext(), newMsgList);
         }
         return channelList;
     }
@@ -478,7 +477,7 @@ public class MessageFragment extends Fragment {
                                     it.remove();
                                 } else if (channel.getType().equals("GROUP")) {
                                     ChannelGroup channelGroup = ChannelGroupCacheUtils.getChannelGroupById(getActivity(), channel.getCid());
-                                    String myUid = ((MyApplication) getActivity().getApplicationContext()).getUid();
+                                    String myUid = MyApplication.getInstance().getUid();
                                     if (channelGroup != null && !channelGroup.getOwner().equals(myUid)) {
                                         it.remove();
                                     }
@@ -553,7 +552,7 @@ public class MessageFragment extends Fragment {
      */
     private void setChannelDisplayTitle(Channel channel) {
 
-        String title = "";
+        String title;
         if (channel.getType().equals("DIRECT")) {
             title = DirectChannelUtils.getDirectChannelTitle(getActivity(),
                     channel.getTitle());

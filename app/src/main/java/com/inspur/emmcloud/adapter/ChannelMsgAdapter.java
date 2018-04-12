@@ -194,7 +194,6 @@ public class ChannelMsgAdapter extends RecyclerView.Adapter<ChannelMsgAdapter.Vi
             message = new Message(msg);
             type = message.getType();
         }
-        LogUtils.jasonDebug("type="+type);
         switch (type) {
             case "txt_comment":
             case "comment":
