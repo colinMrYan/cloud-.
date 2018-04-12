@@ -17,10 +17,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.ui.IndexActivity;
-import com.inspur.emmcloud.util.common.LogUtils;
-import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
-import com.inspur.emmcloud.util.common.StringUtils;
+import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.UpgradeUtils;
 
 /**
@@ -29,11 +26,12 @@ import com.inspur.emmcloud.util.privates.UpgradeUtils;
 public class NotSupportFragment extends Fragment {
 
 
-
+    private static final int NO_NEED_UPGRADE = 10;
+    private static final int UPGRADE_FAIL = 11;
+    private static final int DONOT_UPGRADE = 12;
     private View rootView;
     private LayoutInflater inflater;
     private TextView unknownFuctionText;
-    private TextView titleText;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -44,30 +42,28 @@ public class NotSupportFragment extends Fragment {
 
         rootView = inflater.inflate(R.layout.fragment_unknown, null);
         unknownFuctionText = (TextView) rootView.findViewById(R.id.app_unknow_text);
-        titleText = (TextView) rootView.findViewById(R.id.header_text);
         unknownFuctionText.setText(getClickableSpan());
         unknownFuctionText.setMovementMethod(LinkMovementMethod.getInstance());//必须设置否则无效
 
 
     }
 
-    /**
-     * 设置标题
-     */
-    private void setTabTitle(){
-        LogUtils.YfcDebug("不支持页面获取到的标题："+((IndexActivity)getActivity()).getNotSupportString());
-        String appTabs = PreferencesByUserAndTanentUtils.getString(getActivity(),"app_tabbar_info_current","");
-        if(!StringUtils.isBlank(appTabs)){
-            String title = ((IndexActivity)getActivity()).getNotSupportString();
-            titleText.setText(title);
-        }
-    }
-
 
     private Handler handler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
-            super.handleMessage(msg);
+            switch (msg.what) {
+                case NO_NEED_UPGRADE:
+                    ToastUtils.show(getActivity(), R.string.app_is_lastest_version);
+                    break;
+                case UPGRADE_FAIL:
+                    ToastUtils.show(getActivity(), R.string.check_update_fail);
+                    break;
+                case DONOT_UPGRADE:
+                    break;
+                default:
+                    break;
+            }
         }
     };
 
@@ -82,7 +78,6 @@ public class NotSupportFragment extends Fragment {
         if (parent != null) {
             parent.removeView(rootView);
         }
-        setTabTitle();
         return rootView;
     }
 

@@ -105,7 +105,6 @@ public class IndexActivity extends BaseFragmentActivity implements
     private TipsView tipsView;
     private LoadingDialog loadingDlg;
     private AppAPIService appApiService;
-    private String notSupportTitle = "";
     private WebView webView;
     private boolean isCommunicationRunning = false;
     private boolean isSystemChangeTag = true;//控制如果是系统切换的tab则不计入用户行为
@@ -434,7 +433,7 @@ public class IndexActivity extends BaseFragmentActivity implements
                                     MoreFragment.class);
                             break;
                         default:
-                            tabBean = new TabBean(getString(R.string.unknown), R.drawable.selector_tab_unknown_btn + "",
+                            tabBean = new TabBean(getString(R.string.new_function), R.drawable.selector_tab_unknown_btn + "",
                                     NotSupportFragment.class);
                             break;
                     }
@@ -578,16 +577,6 @@ public class IndexActivity extends BaseFragmentActivity implements
     }
 
     /**
-     * 暴露当前页面标题接口
-     *
-     * @return
-     */
-    public String getNotSupportString() {
-        return notSupportTitle;
-    }
-
-
-    /**
      * 根据语言设置tab，扩展语言从这里扩展
      *
      * @param tabsBean
@@ -707,7 +696,6 @@ public class IndexActivity extends BaseFragmentActivity implements
 
     @Override
     public void onTabChanged(String tabId) {
-        notSupportTitle = tabId;
         tipsView.setCanTouch(tabId.equals("communicate"));
         if (!isSystemChangeTag) {
             //记录打开的tab页
