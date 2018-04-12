@@ -189,7 +189,7 @@ public interface APIInterface {
 
     void returnUploadResImgSuccess(GetNewsImgResult getNewsImgResult, String fakeMessageId);
 
-    void returnUploadResImgFail(String error, int errorCode,String fakeMessageId);
+    void returnUploadResImgFail(String error, int errorCode, String fakeMessageId);
 
     void returnGroupNewsTitleSuccess(GetNewsTitleResult getNewsTitleResult);
 
@@ -632,6 +632,7 @@ public interface APIInterface {
     void returnGroupMemDelFail(String error, int errorCode);
 
     void returnUploadPushInfoResultSuccess(GetUploadPushInfoResult getUploadPushInfoResult);
+
     void returnUploadPushInfoResultFail(String error, int errorCode);
 
     void returnVolumeGroupContainMeSuccess(GetVolumeGroupResult getVolumeGroupResult);
@@ -639,14 +640,18 @@ public interface APIInterface {
     void returnVolumeGroupContainMeFail(String error, int errorCode);
 
     void returnVolumeGroupSuccess(GetVolumeResultWithPermissionResult getVolumeResultWithPermissionResult);
-    void returnVolumeGroupFail(String error,int errorCode);
+
+    void returnVolumeGroupFail(String error, int errorCode);
 
     void returnUpdateVolumeGroupPermissionSuccess(GetVolumeGroupPermissionResult getVolumeGroupPermissionResult);
-    void returnUpdateVolumeGroupPermissionFail(String error,int errorCode);
+
+    void returnUpdateVolumeGroupPermissionFail(String error, int errorCode);
 
     void returnOpenActionBackgroudUrlSuccess();
+
     void returnOpenActionBackgroudUrlFail(String error, int errorCode);
 
     void returnFaceLoginGSSuccess();
-    void returnFaceLoginGSFail(String error,int errorCode);
+
+    void returnFaceLoginGSFail(String error, int errorCode);
 }

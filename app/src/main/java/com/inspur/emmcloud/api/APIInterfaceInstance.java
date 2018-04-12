@@ -354,7 +354,7 @@ public class APIInterfaceInstance implements APIInterface {
     }
 
     @Override
-    public void returnUploadResImgFail(String error, int errorCode,String fakeMessageId) {
+    public void returnUploadResImgFail(String error, int errorCode, String fakeMessageId) {
         // TODO Auto-generated method stub
 
     }
@@ -468,7 +468,7 @@ public class APIInterfaceInstance implements APIInterface {
     }
 
     @Override
-    public void returnUpLoadResFileFail(String error, int errorCode,String fakeMessageId) {
+    public void returnUpLoadResFileFail(String error, int errorCode, String fakeMessageId) {
         // TODO Auto-generated method stub
 
     }
