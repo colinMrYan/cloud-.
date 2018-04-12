@@ -5,7 +5,6 @@ import android.content.res.Configuration;
 
 import com.inspur.emmcloud.bean.system.AppTabAutoBean;
 import com.inspur.emmcloud.bean.system.AppTabDataBean;
-import com.inspur.emmcloud.util.common.LogUtils;
 
 import java.util.ArrayList;
 
@@ -30,7 +29,6 @@ public class AppTitleUtils {
 //            Language language = new Language(languageJson);
 //            environmentLanguage = language.getIana();
 //        }
-        LogUtils.jasonDebug("===========-------------");
         Configuration config = context.getResources().getConfiguration();
         String environmentLanguage = config.locale.getLanguage();
         if(environmentLanguage.toLowerCase().equals("zh")||environmentLanguage.toLowerCase().equals("zh-Hans".toLowerCase())){
