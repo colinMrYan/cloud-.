@@ -18,6 +18,7 @@ import com.inspur.emmcloud.bean.work.CalendarEvent;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.ui.appcenter.ReactNativeAppActivity;
 import com.inspur.emmcloud.ui.appcenter.groupnews.GroupNewsActivity;
+import com.inspur.emmcloud.ui.appcenter.volume.VolumeHomePageActivity;
 import com.inspur.emmcloud.ui.chat.ChannelActivity;
 import com.inspur.emmcloud.ui.contact.RobotInfoActivity;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
@@ -30,16 +31,22 @@ import com.inspur.emmcloud.ui.mine.setting.CreateGestureActivity;
 import com.inspur.emmcloud.ui.mine.setting.FaceVerifyActivity;
 import com.inspur.emmcloud.ui.mine.setting.GestureLoginActivity;
 import com.inspur.emmcloud.ui.work.calendar.CalEventAddActivity;
+import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StateBarUtils;
+import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.AppId2AppAndOpenAppUtils;
 import com.inspur.emmcloud.util.privates.WebAppUtils;
 import com.inspur.imp.api.ImpActivity;
 
 import org.json.JSONObject;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * scheme统一处理类
@@ -128,72 +135,84 @@ public class SchemeHandleActivity extends Activity {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    Uri uri = getIntent().getData();
-                    String scheme = uri.getScheme();
-                    String host = uri.getHost();
-                    if (uri == null || scheme == null || host == null) {
-                        finish();
-                        return;
+                    String action = "";
+                    if(getIntent() != null){
+                        action = getIntent().getAction();
                     }
-                    Bundle bundle = new Bundle();
-                    switch (scheme) {
-                        case "ecc-contact":
-                        case "ecm-contact":
-                            bundle.putString("uid", host);
-                            if (host.startsWith("BOT")) {
-                                IntentUtils.startActivity(SchemeHandleActivity.this, RobotInfoActivity.class, bundle, true);
-                            } else {
-                                IntentUtils.startActivity(SchemeHandleActivity.this, UserInfoActivity.class, bundle, true);
-                            }
-                            break;
-                        case "ecc-component":
-                            openComponentScheme(uri, host);
-                            break;
-                        case "ecc-app-react-native":
-                            bundle.putString(scheme, uri.toString());
-                            IntentUtils.startActivity(SchemeHandleActivity.this, ReactNativeAppActivity.class, bundle, true);
-                            break;
+                    if(!StringUtils.isBlank(action) && (Intent.ACTION_SEND.equals(action) || Intent.ACTION_SEND_MULTIPLE.equals(action))){
+                        handleShareIntent();
+                    }else{
+                        Uri uri = getIntent().getData();
+                        if(uri == null){
+                            finish();
+                            return;
+                        }
+                        String scheme = uri.getScheme();
+                        String host = uri.getHost();
+                        if (scheme == null || host == null) {
+                            finish();
+                            return;
+                        }
+                        Bundle bundle = new Bundle();
+                        switch (scheme) {
+                            case "ecc-contact":
+                            case "ecm-contact":
+                                bundle.putString("uid", host);
+                                if (host.startsWith("BOT")) {
+                                    IntentUtils.startActivity(SchemeHandleActivity.this, RobotInfoActivity.class, bundle, true);
+                                } else {
+                                    IntentUtils.startActivity(SchemeHandleActivity.this, UserInfoActivity.class, bundle, true);
+                                }
+                                break;
+                            case "ecc-component":
+                                openComponentScheme(uri, host);
+                                break;
+                            case "ecc-app-react-native":
+                                bundle.putString(scheme, uri.toString());
+                                IntentUtils.startActivity(SchemeHandleActivity.this, ReactNativeAppActivity.class, bundle, true);
+                                break;
 
-                        case "gs-msg":
-                            if (!NetUtils.isNetworkConnected(SchemeHandleActivity.this)) {
+                            case "gs-msg":
+                                if (!NetUtils.isNetworkConnected(SchemeHandleActivity.this)) {
+                                    finish();
+                                    break;
+                                }
+                                String openMode = uri.getQueryParameter("openMode");
+                                openWebApp(host, openMode);
+                                break;
+                            case "ecc-channel":
+                                bundle.putString("cid", host);
+                                bundle.putBoolean("get_new_msg", true);
+                                IntentUtils.startActivity(SchemeHandleActivity.this,
+                                        ChannelActivity.class, bundle, true);
+                                break;
+                            case "ecc-app":
+                                AppId2AppAndOpenAppUtils appId2AppAndOpenAppUtils = new AppId2AppAndOpenAppUtils(SchemeHandleActivity.this);
+                                appId2AppAndOpenAppUtils.setOnFinishActivityListener(new AppId2AppAndOpenAppUtils.OnFinishActivityListener() {
+                                    @Override
+                                    public void onFinishActivity() {
+                                        finish();
+                                    }
+                                });
+                                appId2AppAndOpenAppUtils.getAppInfoById(uri);
+                                break;
+
+                            case "ecc-calendar-jpush":
+                                String content = getIntent().getStringExtra("content");
+                                if (content != null) {
+                                    JSONObject calEventObj = JSONUtils.getJSONObject(content);
+                                    CalendarEvent calendarEvent = new CalendarEvent(calEventObj);
+                                    Intent intent = new Intent(SchemeHandleActivity.this, CalEventAddActivity.class);
+                                    intent.putExtra("calEvent", calendarEvent);
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    startActivity(intent);
+                                }
                                 finish();
                                 break;
-                            }
-                            String openMode = uri.getQueryParameter("openMode");
-                            openWebApp(host, openMode);
-                            break;
-                        case "ecc-channel":
-                            bundle.putString("cid", host);
-                            bundle.putBoolean("get_new_msg", true);
-                            IntentUtils.startActivity(SchemeHandleActivity.this,
-                                    ChannelActivity.class, bundle, true);
-                            break;
-                        case "ecc-app":
-                            AppId2AppAndOpenAppUtils appId2AppAndOpenAppUtils = new AppId2AppAndOpenAppUtils(SchemeHandleActivity.this);
-                            appId2AppAndOpenAppUtils.setOnFinishActivityListener(new AppId2AppAndOpenAppUtils.OnFinishActivityListener() {
-                                @Override
-                                public void onFinishActivity() {
-                                    finish();
-                                }
-                            });
-                            appId2AppAndOpenAppUtils.getAppInfoById(uri);
-                            break;
-
-                        case "ecc-calendar-jpush":
-                            String content = getIntent().getStringExtra("content");
-                            if (content != null) {
-                                JSONObject calEventObj = JSONUtils.getJSONObject(content);
-                                CalendarEvent calendarEvent = new CalendarEvent(calEventObj);
-                                Intent intent = new Intent(SchemeHandleActivity.this, CalEventAddActivity.class);
-                                intent.putExtra("calEvent", calendarEvent);
-                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                startActivity(intent);
-                            }
-                            finish();
-                            break;
-                        default:
-                            finish();
-                            break;
+                            default:
+                                finish();
+                                break;
+                        }
                     }
                 }
             }, 1);
@@ -201,6 +220,37 @@ public class SchemeHandleActivity extends Activity {
         } else {
             IntentUtils.startActivity(this, LoginActivity.class, true);
         }
+    }
+
+    /**
+     * 处理带分享功能的Action
+     */
+    private void handleShareIntent() {
+            String action = getIntent().getAction();
+            List<Uri> uriList = new ArrayList<>();
+            if (Intent.ACTION_SEND.equals(action)) {
+                Uri uri = FileUtils.getShareFileUri(getIntent());
+                if (uri != null) {
+                    uriList.add(uri);
+                }
+            } else if (Intent.ACTION_SEND_MULTIPLE.equals(action)) {
+                List<Uri> fileUriList = FileUtils.getShareFileUriList(getIntent());
+                uriList.addAll(fileUriList);
+            }
+            if (uriList.size() > 0) {
+                startVolumeShareActivity(uriList);
+            }
+    }
+
+    /**
+     * @param uriList
+     */
+    private void startVolumeShareActivity(List<Uri> uriList) {
+        Intent intent = new Intent();
+        intent.setClass(SchemeHandleActivity.this, VolumeHomePageActivity.class);
+        intent.putExtra("fileShareUriList", (Serializable) uriList);
+        startActivity(intent);
+        finish();
     }
 
     /**

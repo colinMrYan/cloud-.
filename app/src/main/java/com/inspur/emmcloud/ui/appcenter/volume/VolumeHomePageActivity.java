@@ -1,5 +1,6 @@
 package com.inspur.emmcloud.ui.appcenter.volume;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -82,20 +83,30 @@ public class VolumeHomePageActivity extends BaseActivity implements SwipeRefresh
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Bundle bundle;
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("volume", myVolume);
+                bundle.putString("title",getString(R.string.volume_my_file) );
+                List<Uri> uriList = (List<Uri>) getIntent().getSerializableExtra("fileShareUriList");
                 switch (position) {
                     case 0:
-                        if (myVolume != null) {
-                            bundle = new Bundle();
-                            bundle.putSerializable("volume", myVolume);
-                            bundle.putSerializable("title", getString(R.string.volume_my_file));
-                            IntentUtils.startActivity(VolumeHomePageActivity.this, VolumeFileActivity.class, bundle);
+                        if(myVolume != null){
+                            if(uriList!=null && uriList.size() > 0){
+                                bundle.putSerializable("fileShareUriList", (Serializable) uriList);
+                                bundle.putString("operationFileDirAbsolutePath", "/");
+                                IntentUtils.startActivity(VolumeHomePageActivity.this,VolumeFileLocationSelectActivity.class,bundle);
+                            } else  {
+                                IntentUtils.startActivity(VolumeHomePageActivity.this, VolumeFileActivity.class,
+                                        bundle);
+                            }
                         }
                         break;
                     case 1:
-                        bundle = new Bundle();
                         bundle.putSerializable("shareVolumeList", (Serializable) shareVolumeList);
-                        IntentUtils.startActivity(VolumeHomePageActivity.this, ShareVolumeActivity.class, bundle);
+                        if (uriList != null && uriList.size() > 0) {
+                            bundle.putSerializable("fileShareUriList", (Serializable) uriList);
+                        }
+                        IntentUtils.startActivity(VolumeHomePageActivity.this, ShareVolumeActivity.class,
+                                bundle);
                         break;
                     default:
                         break;
@@ -160,6 +171,7 @@ public class VolumeHomePageActivity extends BaseActivity implements SwipeRefresh
             swipeRefreshLayout.setRefreshing(false);
         }
     }
+
 
     private class WebService extends APIInterfaceInstance {
         @Override
