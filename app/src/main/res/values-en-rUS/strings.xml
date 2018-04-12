@@ -168,6 +168,7 @@
     <string name="comment">Comment</string>
     <string name="find_your_friends">Find your friends</string>
     <string name="not_support_upload">Does not support file upload without suffix </string>
+    <string name="new_function">New</string>
     <string name="app_update_function">This feature is not supported by the current version, please upgrade to the latest version</string>
     <!-- 新添加部分 -->
 
