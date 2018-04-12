@@ -696,7 +696,6 @@ public class FileUtils {
 
     /**
      * 获取文件大小
-     *
      * @param fileSize
      * @return
      */
@@ -911,7 +910,31 @@ public class FileUtils {
         }
         return imageIconId;
     }
-
+        /**
+         * 获取文件标识图片
+         * @param fileName
+         */
+    public static int getIconResIdRobot(String fileName) {
+        int imageIconId = R.drawable.ic_volume_file_typ_unknown;
+        if (fileName.endsWith("doc") || fileName.endsWith("docx")) {
+            imageIconId = R.drawable.ic_volume_file_typ_word;
+        } else if (fileName.endsWith("xls") || fileName.endsWith("xlsx")) {
+            imageIconId = R.drawable.ic_volume_file_typ_excel;
+        } else if (fileName.endsWith("ppt") || fileName.endsWith("pptx")) {
+            imageIconId = R.drawable.ic_volume_file_typ_ppt;
+        } else if (fileName.endsWith("pdf")) {
+            imageIconId = R.drawable.ic_volume_file_typ_pdf;
+        } else if (fileName.endsWith("txt")) {
+            imageIconId = R.drawable.ic_volume_file_typ_txt;
+        } else if (fileName.endsWith("zip")) {
+            imageIconId = R.drawable.ic_volume_file_typ_zip;
+        } else if (fileName.endsWith("rar")) {
+            imageIconId = R.drawable.ic_volume_file_typ_zip;
+        } else if (fileName.contains("jpg") || fileName.contains("png")) {
+            imageIconId = R.drawable.ic_volume_file_typ_img;
+        }
+        return imageIconId;
+    }
     /**
      * 传入目录名称，忽略删除的文件名
      * 返回成功删除的文件名列表
@@ -921,38 +944,36 @@ public class FileUtils {
      * @param protectedFileNameList
      * @return
      */
-    public static List<String> delFilesExceptNameList(String src, List<String> protectedFileNameList) {
+    public static List<String> delFilesExceptNameList(String src, List<String> protectedFileNameList){
         List<String> delSuccessFileNameList = new ArrayList<>();
-        try {
+        try{
             File[] files = new File(src).listFiles();
-            if (files != null && files.length > 0) {
-                for (int i = 0; i < files.length; i++) {
+            if(files != null && files.length > 0){
+                for(int i = 0; i < files.length; i++){
                     String fileName = files[i].getName();
-                    if (protectedFileNameList.indexOf(fileName) == -1) {
+                    if(protectedFileNameList.indexOf(fileName) == -1){
                         files[i].delete();
                         delSuccessFileNameList.add(fileName);
                     }
                 }
             }
-        } catch (Exception e) {
+        }catch (Exception e){
             e.printStackTrace();
         }
         return delSuccessFileNameList;
     }
 
-    /**
-     *  
-     *  * 判断assets文件夹下的文件是否存在 
-     *  * 
-     *  * @return false 不存在    true 存在 
-     *  
-     */
-    public static boolean isAssetsFileExist(Context context, String fileName) {
+    /** 
+      * 判断assets文件夹下的文件是否存在 
+      * 
+      * @return false 不存在    true 存在 
+      */
+    public static boolean isAssetsFileExist(Context context,String fileName){
         AssetManager assetManager = context.getAssets();
         try {
             String[] fileNames = assetManager.list("");
-            for (int i = 0; i < fileNames.length; i++) {
-                if (fileNames[i].equals(fileName.trim())) {
+            for(int i = 0; i < fileNames.length; i++){
+                if(fileNames[i].equals(fileName.trim())){
                     return true;
                 }
             }

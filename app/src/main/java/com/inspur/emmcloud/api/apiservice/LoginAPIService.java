@@ -22,6 +22,7 @@ import com.inspur.emmcloud.bean.system.GetBoolenResult;
 import com.inspur.emmcloud.interf.OauthCallBack;
 import com.inspur.emmcloud.util.privates.OauthUtils;
 
+import org.json.JSONObject;
 import org.xutils.http.HttpMethod;
 import org.xutils.http.RequestParams;
 import org.xutils.x;
@@ -321,5 +322,47 @@ public class LoginAPIService {
 		});
 	}
 
+	public void faceLoginGS(final String bitmapBase64,final String token ){
+		final String completeUrl = "https://emm.inspur.com/app/imp/v6.0/Connect/FaceLogin";
+		RequestParams params = ((MyApplication)context.getApplicationContext()).getHttpRequestParams(completeUrl);
+		JSONObject object = new JSONObject();
+		try {
+			object.put("token",token);
+			object.put("face",bitmapBase64);
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+		params.setBodyContent(object.toString());
+		params.setAsJsonContent(true);
+		x.http().post(params, new APICallback(context,completeUrl) {
+			@Override
+			public void callbackSuccess(String arg0) {
+				apiInterface.returnFaceLoginGSSuccess();
+			}
 
+			@Override
+			public void callbackFail(String error, int responseCode) {
+				apiInterface.returnFaceLoginGSFail(error, responseCode);
+			}
+
+			@Override
+			public void callbackTokenExpire(long requestTime) {
+				OauthCallBack oauthCallBack = new OauthCallBack() {
+					@Override
+					public void reExecute() {
+						faceLoginGS(bitmapBase64, token);
+					}
+
+					@Override
+					public void executeFailCallback() {
+						callbackFail("", -1);
+					}
+				};
+				OauthUtils.getInstance().refreshToken(
+						oauthCallBack, requestTime);
+			}
+
+		});
+
+	}
 }

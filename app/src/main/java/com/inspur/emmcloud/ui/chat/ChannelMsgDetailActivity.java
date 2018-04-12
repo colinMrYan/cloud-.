@@ -3,7 +3,6 @@ package com.inspur.emmcloud.ui.chat;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.SpannableString;
 import android.text.method.LinkMovementMethod;
@@ -14,7 +13,6 @@ import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -33,20 +31,20 @@ import com.inspur.emmcloud.bean.chat.GetSendMsgResult;
 import com.inspur.emmcloud.bean.chat.Msg;
 import com.inspur.emmcloud.ui.contact.RobotInfoActivity;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
-import com.inspur.emmcloud.util.privates.cache.ChannelCacheUtils;
 import com.inspur.emmcloud.util.common.FileUtils;
-import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.common.InputMethodUtils;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
-import com.inspur.emmcloud.util.privates.MentionsAndUrlShowUtils;
-import com.inspur.emmcloud.util.privates.cache.MsgCacheUtil;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
-import com.inspur.emmcloud.util.privates.cache.RobotCacheUtils;
+import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
+import com.inspur.emmcloud.util.privates.MentionsAndUrlShowUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.TransHtmlToTextUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
+import com.inspur.emmcloud.util.privates.cache.ChannelCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.MsgCacheUtil;
+import com.inspur.emmcloud.util.privates.cache.RobotCacheUtils;
 import com.inspur.emmcloud.widget.CircleImageView;
 import com.inspur.emmcloud.widget.ECMChatInputMenu;
 import com.inspur.emmcloud.widget.LoadingDialog;
@@ -130,36 +128,17 @@ public class ChannelMsgDetailActivity extends BaseActivity implements
         String channelType = ChannelCacheUtils.getChannelType(getApplicationContext(),
                 cid);
         if (channelType.equals("GROUP")) {
-            chatInputMenu.setIsChannelGroup(true, cid);
+            chatInputMenu.setCanMentions(true, cid);
         }
         chatInputMenu.hideAddMenuLayout();
-        chatInputMenu.showAddBtn(false);
         chatInputMenu.setChatInputMenuListener(new ECMChatInputMenu.ChatInputMenuListener() {
-
-            @Override
-            public void onSetContentViewHeight(boolean isLock) {
-                // TODO Auto-generated method stub
-                final LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) swipeRefreshLayout
-                        .getLayoutParams();
-                if (isLock) {
-                    params.height = swipeRefreshLayout.getHeight();
-                    params.weight = 0.0F;
-                } else {
-                    new Handler().post(new Runnable() {
-                        @Override
-                        public void run() {
-                            params.weight = 1.0F;
-                        }
-                    });
-                }
-            }
-
             @Override
             public void onSendMsg(String content, List<String> mentionsUidList, List<String> urlList) {
                 // TODO Auto-generated method stub
                 sendComment(content, mentionsUidList, urlList);
             }
         });
+        chatInputMenu.setInputLayout("1");
     }
 
 
@@ -191,16 +170,8 @@ public class ChannelMsgDetailActivity extends BaseActivity implements
     private void displayMsgDetail() {
         disPlayCommonInfo();
         View msgDisplayView = null;
-        // 新闻链接类型消息体的展示单独使用一个layout
-        if (msg.getType().equals("res_link")) {
-            msgDisplayView = inflater.inflate(R.layout.msg_news_detail, null);
-            DisplayResLinkMsg.displayResLinkMsg(
-                    ChannelMsgDetailActivity.this, msgDisplayView, msg, false);
-        } else if (msg.getType().equals("res_file")) {
-            msgDisplayView = inflater.inflate(
-                    R.layout.child_msg_res_file_card_view, null);
-            DisplayResFileMsg.displayResFileMsg(
-                    ChannelMsgDetailActivity.this, msgDisplayView, msg);
+        if (msg.getType().equals("res_file")) {
+            msgDisplayView = DisplayResFileMsg.displayResFileMsg(ChannelMsgDetailActivity.this, msg);
         } else {
             msgDisplayView = inflater.inflate(R.layout.msg_common_detail, null);
             msgContentImg = (ImageView) msgDisplayView
@@ -513,7 +484,7 @@ public class ChannelMsgDetailActivity extends BaseActivity implements
     private void getComment() {
         if (NetUtils.isNetworkConnected(ChannelMsgDetailActivity.this)) {
             apiService.getComment(msg.getMid());
-        } else{
+        } else {
             swipeRefreshLayout.setRefreshing(false);
         }
     }

@@ -3,6 +3,7 @@ package com.inspur.emmcloud.ui.chat;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.ImageView;
@@ -35,11 +36,13 @@ public class DisplayResImageMsg {
      * @param convertView
      * @param msg
      */
-    public static void displayResImgMsg(final Activity context,
-                                        View convertView, final Msg msg) {
-        final ImageView imageView = (ImageView) convertView
+    public static View displayResImgMsg(final Activity context,
+                                        final Msg msg) {
+        View cardContentView = LayoutInflater.from(context).inflate(
+                R.layout.chat_msg_card_child_res_img_view, null);
+        final ImageView imageView = (ImageView) cardContentView
                 .findViewById(R.id.content_img);
-        final TextView longImgText = (TextView) convertView.findViewById(R.id.long_img_text);
+        final TextView longImgText = (TextView) cardContentView.findViewById(R.id.long_img_text);
         String imageUri = JSONUtils.getString(msg.getBody(), "key", "");
         if (!imageUri.startsWith("content:") && !imageUri.startsWith("file:")) {
             imageUri = APIUri.getPreviewUrl(imageUri);
@@ -95,6 +98,7 @@ public class DisplayResImageMsg {
                 context.startActivity(intent);
             }
         });
+        return cardContentView;
 
     }
 

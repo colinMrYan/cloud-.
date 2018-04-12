@@ -59,7 +59,7 @@ public class ECMChatInputMenuViewpageLayout extends LinearLayout {
         x.view().inject(view);
     }
 
-    public void setInputTypeBeanList(List<InputTypeBean> inputTypeBeanList,String cid) {
+    public void setInputTypeBeanList(List<InputTypeBean> inputTypeBeanList) {
         this.inputTypeBeanList = inputTypeBeanList;
         initViews();
     }

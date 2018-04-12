@@ -44,6 +44,7 @@ import com.inspur.emmcloud.bean.chat.GetNewMsgsResult;
 import com.inspur.emmcloud.bean.chat.GetNewsImgResult;
 import com.inspur.emmcloud.bean.chat.GetNewsInstructionResult;
 import com.inspur.emmcloud.bean.chat.GetSendMsgResult;
+import com.inspur.emmcloud.bean.chat.GetUploadPushInfoResult;
 import com.inspur.emmcloud.bean.chat.GetWebSocketUrlResult;
 import com.inspur.emmcloud.bean.chat.Robot;
 import com.inspur.emmcloud.bean.contact.GetAllContactResult;
@@ -186,9 +187,9 @@ public interface APIInterface {
 
     void returnSendMsgFail(String error, String fakeMessageId, int errorCode);
 
-    void returnUploadMsgImgSuccess(GetNewsImgResult getNewsImgResult, String fakeMessageId);
+    void returnUploadResImgSuccess(GetNewsImgResult getNewsImgResult, String fakeMessageId);
 
-    void returnUploadMsgImgFail(String error, int errorCode);
+    void returnUploadResImgFail(String error, int errorCode, String fakeMessageId);
 
     void returnGroupNewsTitleSuccess(GetNewsTitleResult getNewsTitleResult);
 
@@ -226,9 +227,9 @@ public interface APIInterface {
 
     void returnAllContactFail(String error, int errorCode);
 
-    void returnFileUpLoadSuccess(GetFileUploadResult getFileUploadResult, String fakeMessageId);
+    void returnUpLoadResFileSuccess(GetFileUploadResult getFileUploadResult, String fakeMessageId);
 
-    void returnFileUpLoadFail(String error, int errorCode);
+    void returnUpLoadResFileFail(String error, int errorCode, String fakeMessageId);
 
     void returnSearchChannelGroupSuccess(GetSearchChannelGroupResult getSearchChannelGroupResult);
 
@@ -630,13 +631,27 @@ public interface APIInterface {
 
     void returnGroupMemDelFail(String error, int errorCode);
 
+    void returnUploadPushInfoResultSuccess(GetUploadPushInfoResult getUploadPushInfoResult);
+
+    void returnUploadPushInfoResultFail(String error, int errorCode);
+
     void returnVolumeGroupContainMeSuccess(GetVolumeGroupResult getVolumeGroupResult);
 
     void returnVolumeGroupContainMeFail(String error, int errorCode);
 
     void returnVolumeGroupSuccess(GetVolumeResultWithPermissionResult getVolumeResultWithPermissionResult);
-    void returnVolumeGroupFail(String error,int errorCode);
+
+    void returnVolumeGroupFail(String error, int errorCode);
 
     void returnUpdateVolumeGroupPermissionSuccess(GetVolumeGroupPermissionResult getVolumeGroupPermissionResult);
-    void returnUpdateVolumeGroupPermissionFail(String error,int errorCode);
+
+    void returnUpdateVolumeGroupPermissionFail(String error, int errorCode);
+
+    void returnOpenActionBackgroudUrlSuccess();
+
+    void returnOpenActionBackgroudUrlFail(String error, int errorCode);
+
+    void returnFaceLoginGSSuccess();
+
+    void returnFaceLoginGSFail(String error, int errorCode);
 }

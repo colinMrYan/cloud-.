@@ -18,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.BaseActivity;
+import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.util.common.EditTextUtils;
@@ -60,6 +61,7 @@ public class LoginActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);//设置全屏
+        MyApplication.getInstance().closeOtherActivity(LoginActivity.this);
         initView();
         handMessage();
     }

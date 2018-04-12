@@ -6,6 +6,7 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
@@ -14,12 +15,12 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.bean.chat.Msg;
 import com.inspur.emmcloud.util.common.JSONUtils;
-import com.inspur.emmcloud.util.privates.MentionsAndUrlShowUtils;
-import com.inspur.emmcloud.util.privates.cache.MsgCacheUtil;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
+import com.inspur.emmcloud.util.privates.MentionsAndUrlShowUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.TransHtmlToTextUtils;
+import com.inspur.emmcloud.util.privates.cache.MsgCacheUtil;
 import com.inspur.emmcloud.widget.TextViewWithSpan;
 
 import java.util.Arrays;
@@ -35,18 +36,20 @@ public class DisplayTxtCommentMsg {
     /**
      * 评论卡片
      * @param context
-     * @param convertView
+     * @param childView
      * @param msg
      * @param apiService
      */
-    public static void displayCommentMsg(final Activity context,
-                                         View convertView, final Msg msg, ChatAPIService apiService) {
+    public static View displayCommentMsg(final Activity context,
+                                          final Msg msg, ChatAPIService apiService) {
+        View cardContentView = LayoutInflater.from(context).inflate(
+                R.layout.chat_msg_card_child_text_comment_view, null);
         String msgBody = msg.getBody();
         boolean isMyMsg = msg.getUid().equals(
                 ((MyApplication) context.getApplicationContext()).getUid());
-        final TextViewWithSpan commentContentText = (TextViewWithSpan) convertView
+        final TextViewWithSpan commentContentText = (TextViewWithSpan) cardContentView
                 .findViewById(R.id.comment_text);
-        TextView commentTitleText = (TextView) convertView
+        TextView commentTitleText = (TextView) cardContentView
                 .findViewById(R.id.comment_title_text);
 
         String commentContent = JSONUtils.getString(msgBody, "source", "");
@@ -83,37 +86,14 @@ public class DisplayTxtCommentMsg {
             apiService.getMsg(msg.getCommentMid());
         }
 
-        (convertView
-                .findViewById(R.id.root_layout)).setBackgroundColor(context.getResources().getColor(
-                isMyMsg ? R.color.bg_my_card : R.color.white));
-
-        (convertView
-                .findViewById(R.id.card_layout)).setBackgroundResource(isMyMsg?R.drawable.ic_chat_msg_img_cover_arrow_right:R.drawable.ic_chat_msg_img_cover_arrow_left);;
+        (cardContentView
+                .findViewById(R.id.root_layout)).setBackgroundResource(isMyMsg ? R.drawable.ic_chat_msg_img_cover_arrow_right : R.drawable.ic_chat_msg_img_cover_arrow_left);
 
         commentContentText.setTextColor(context.getResources().getColor(
                 isMyMsg ? R.color.white : R.color.black));
         commentTitleText.setTextColor(context.getResources().getColor(
                 isMyMsg ? R.color.white : R.color.black));
-//        commentContentText.setOnLongClickListener(new View.OnLongClickListener() {
-//            @Override
-//            public boolean onLongClick(View v) {
-//                ClipboardManager cmb = (ClipboardManager)context.getSystemService(Context.CLIPBOARD_SERVICE);
-//                cmb.setPrimaryClip(ClipData.newPlainText(null, commentContentText.getText()));
-//                ToastUtils.show(context,R.string.copyed_to_paste_board);
-//                return true;
-//            }
-//        });
-//        commentContentText.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Bundle bundle = new Bundle();
-//                bundle.putString("cid", msg.getCid());
-//                bundle.putString("mid", msg.getCommentMid());
-//                IntentUtils.startActivity(context,
-//                        ChannelMsgDetailActivity.class, bundle);
-//            }
-//        });
-
+        return cardContentView;
     }
 
     /**

@@ -3,6 +3,7 @@ package com.inspur.emmcloud.util.privates.cache;
 import android.content.Context;
 
 import com.inspur.emmcloud.bean.chat.MatheSet;
+import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.Msg;
 import com.inspur.emmcloud.util.common.StringUtils;
 
@@ -35,6 +36,21 @@ public class MsgCacheUtil {
 
     /**
      * @param context
+     * @param msg
+     */
+    public static void saveRobotMsg(final Context context, final Message msg) {
+        try {
+
+            DbCacheUtils.getDb(context).saveOrUpdate(msg); // 存储消息
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
+
+    /**
+     * @param context
      * @param msgList
      * @param targetMsgId
      */
@@ -55,6 +71,36 @@ public class MsgCacheUtil {
                     .getMid():targetMsgId);
             MsgMatheSetCacheUtils.add(context, msgList.get(0).getCid(),
                     matheSet);
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+    }
+
+
+    /**
+     * @param context
+     * @param msgList
+     * @param targetMsgId
+     */
+    public static void saveRobotMsgList(final Context context,
+                                        final List<Message> msgList, final String targetMsgId) {
+
+
+        // TODO Auto-generated method stub
+        try {
+            if (msgList == null || msgList.size() == 0) {
+                return;
+            }
+
+            DbCacheUtils.getDb(context).saveOrUpdate(msgList);
+//            MatheSet matheSet = new MatheSet();
+//            matheSet.setStart(msgList.get(0).getMid());
+//            matheSet.setEnd(StringUtils.isBlank(targetMsgId)?msgList.get(msgList.size() - 1)
+//                    .getMid():targetMsgId);
+//            MsgMatheSetCacheUtils.add(context, msgList.get(0).getCid(),
+//                    matheSet);
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -93,6 +139,41 @@ public class MsgCacheUtil {
         }
         if (msgList == null) {
             msgList = new ArrayList<Msg>();
+        }
+        return msgList;
+    }
+
+    /**
+     * @param context
+     * @param channelID 所属的频道
+     * @param targetID  目表消息的id
+     * @param num       获取消息记录的条数
+     * @return
+     */
+    public static List<Message> getRobotHistoryMsgList(Context context,
+                                                       String channelID, String targetID, int num) {
+        List<Message> msgList = null;
+        try {
+
+            if (StringUtils.isBlank(targetID)) {
+                msgList = DbCacheUtils.getDb(context).selector(Message.class)
+                        .where("channel", "=", channelID).orderBy("id", true)
+                        .limit(num).findAll();
+            } else {
+                msgList = DbCacheUtils.getDb(context).selector(Message.class)
+                        .where("id", "<", targetID).and("id", "=", channelID)
+                        .orderBy("id", true).limit(num).findAll();
+            }
+            if (msgList != null && msgList.size() > 1) {
+                Collections.reverse(msgList);
+            }
+
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        if (msgList == null) {
+            msgList = new ArrayList<Message>();
         }
         return msgList;
     }

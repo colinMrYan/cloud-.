@@ -1,6 +1,7 @@
 package com.inspur.emmcloud.ui.chat;
 
 import android.content.Context;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
@@ -33,22 +34,24 @@ public class DisplayResFileMsg {
      * 文件卡片
      *
      * @param context
-     * @param convertView
+     * @param childView
      * @param msg
      */
-    public static void displayResFileMsg(final Context context,
-                                         View convertView, final Msg msg) {
-        TextView fileTitleText = (TextView) convertView
+    public static View displayResFileMsg(final Context context,
+                                          final Msg msg) {
+        View cardContentView = LayoutInflater.from(context).inflate(
+                R.layout.chat_msg_card_child_res_file_view, null);
+        TextView fileTitleText = (TextView) cardContentView
                 .findViewById(R.id.file_name_text);
-        TextView fileSizeText = (TextView) convertView
+        TextView fileSizeText = (TextView) cardContentView
                 .findViewById(R.id.file_size_text);
-        final ImageView fileDownLoadImg = (ImageView) convertView
+        final ImageView fileDownLoadImg = (ImageView) cardContentView
                 .findViewById(R.id.filecard_download_img);
         String msgBody = msg.getBody();
         String fileSize = JSONUtils.getString(msgBody, "size", "");
         String fileName = JSONUtils.getString(msgBody, "name", "");
         final String downloadUri = JSONUtils.getString(msgBody, "key", "");
-        RoundAngleImageView roundAngleImageView = (RoundAngleImageView) convertView
+        RoundAngleImageView roundAngleImageView = (RoundAngleImageView) cardContentView
                 .findViewById(R.id.file_type_img);
         ImageDisplayUtils.getInstance().displayImage(roundAngleImageView, "drawable://" + FileUtils.getIconResId(downloadUri));
         fileTitleText.setText(fileName);
@@ -64,11 +67,11 @@ public class DisplayResFileMsg {
         } else {
             fileDownLoadImg.setVisibility(View.VISIBLE);
         }
-        final HorizontalProgressBarWithNumber fileProgressBar = (HorizontalProgressBarWithNumber) convertView
+        final HorizontalProgressBarWithNumber fileProgressBar = (HorizontalProgressBarWithNumber) cardContentView
                 .findViewById(R.id.file_download_progressbar);
         fileProgressBar.setTag(target);
         fileProgressBar.setVisibility(View.VISIBLE);
-        convertView.findViewById(R.id.header_layout)
+        cardContentView.findViewById(R.id.header_layout)
                 .setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -127,6 +130,7 @@ public class DisplayResFileMsg {
                                 fileDownLoadImg, progressCallback);
                     }
                 });
+        return cardContentView;
     }
 
     /**

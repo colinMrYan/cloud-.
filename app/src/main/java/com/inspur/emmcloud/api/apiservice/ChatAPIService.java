@@ -428,14 +428,14 @@ public class ChatAPIService {
 						jsonObject.put("height", bitmap.getHeight());
 						jsonObject.put("width", bitmap.getWidth());
 						jsonObject.put("tmpId", AppUtils.getMyUUID(context));
-						apiInterface.returnUploadMsgImgSuccess(
+						apiInterface.returnUploadResImgSuccess(
 								new GetNewsImgResult(jsonObject.toString()), fakeMessageId);
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
 					bitmap.recycle();
 				} else {
-					apiInterface.returnFileUpLoadSuccess(
+					apiInterface.returnUpLoadResFileSuccess(
 							new GetFileUploadResult(arg0), fakeMessageId);
 				}
 
@@ -445,9 +445,9 @@ public class ChatAPIService {
 			public void callbackFail(String error, int responseCode) {
 				// TODO Auto-generated method stub
 				if (isImg) {
-					apiInterface.returnUploadMsgImgFail(error, responseCode);
+					apiInterface.returnUploadResImgFail(error, responseCode, fakeMessageId);
 				} else {
-					apiInterface.returnFileUpLoadFail(error, responseCode);
+					apiInterface.returnUpLoadResFileFail(error, responseCode, fakeMessageId);
 				}
 			}
 		});
@@ -983,4 +983,41 @@ public class ChatAPIService {
 
 		});
 	}
+
+	/**
+	 * 活动卡片点击按钮
+	 * @param url
+	 */
+	public void openActionBackgroudUrl(final String url){
+		RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
+		x.http().get(params, new APICallback(context,url) {
+			@Override
+			public void callbackSuccess(String arg0) {
+				apiInterface.returnOpenActionBackgroudUrlSuccess();
+			}
+
+			@Override
+			public void callbackFail(String error, int responseCode) {
+				apiInterface.returnOpenActionBackgroudUrlFail(error,responseCode);
+			}
+
+			@Override
+			public void callbackTokenExpire(long requestTime) {
+				OauthCallBack oauthCallBack = new OauthCallBack() {
+					@Override
+					public void reExecute() {
+						openActionBackgroudUrl(url);
+					}
+
+					@Override
+					public void executeFailCallback() {
+						callbackFail("", -1);
+					}
+				};
+				OauthUtils.getInstance().refreshToken(
+						oauthCallBack, requestTime);
+			}
+		});
+	}
+
 }

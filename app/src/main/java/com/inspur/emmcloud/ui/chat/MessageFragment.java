@@ -169,6 +169,7 @@ public class MessageFragment extends Fragment {
         registerMessageFragmentReceiver();
         getChannelList();
         sortChannelList();// 对Channel 进行排序
+        registerMessageFragmentReceiver();
         showMessageButtons();
         EventBus.getDefault().register(this);
     }
@@ -429,11 +430,10 @@ public class MessageFragment extends Fragment {
         // TODO Auto-generated method stub
         List<Channel> channelList = ChannelCacheUtils
                 .getCacheChannelList(getActivity());
-        for (int i = 0; i < channelList.size(); i++) {
-            String cid = channelList.get(i).getCid();
-            List<Msg> newMsgList = MsgCacheUtil.getHistoryMsgList(getActivity(), cid, "",
+        for (Channel channel:channelList){
+            List<Msg> newMsgList = MsgCacheUtil.getHistoryMsgList(getActivity(), channel.getCid(), "",
                     15);
-            channelList.get(i).setNewMsgList(getActivity().getApplicationContext(), newMsgList);
+            channel.setNewMsgList(getActivity().getApplicationContext(), newMsgList);
         }
         return channelList;
     }
@@ -443,7 +443,7 @@ public class MessageFragment extends Fragment {
      * 为单个群组创建头像
      */
     private void createGroupIcon(List<Channel> channelList) {
-        if (((MyApplication) getActivity().getApplicationContext()).getIsContactReady() && NetUtils.isNetworkConnected(getActivity(), false)) {
+        if (((MyApplication) getActivity().getApplicationContext()).getIsContactReady() && NetUtils.isNetworkConnected(MyApplication.getInstance(), false)) {
             isHaveCreatGroupIcon = true;
             ChannelGroupIconUtils.getInstance().create(getActivity(), channelList,
                     handler);
@@ -477,7 +477,7 @@ public class MessageFragment extends Fragment {
                                     it.remove();
                                 } else if (channel.getType().equals("GROUP")) {
                                     ChannelGroup channelGroup = ChannelGroupCacheUtils.getChannelGroupById(getActivity(), channel.getCid());
-                                    String myUid = ((MyApplication) getActivity().getApplicationContext()).getUid();
+                                    String myUid = MyApplication.getInstance().getUid();
                                     if (channelGroup != null && !channelGroup.getOwner().equals(myUid)) {
                                         it.remove();
                                     }
@@ -552,7 +552,7 @@ public class MessageFragment extends Fragment {
      */
     private void setChannelDisplayTitle(Channel channel) {
 
-        String title = "";
+        String title;
         if (channel.getType().equals("DIRECT")) {
             title = DirectChannelUtils.getDirectChannelTitle(getActivity(),
                     channel.getTitle());
@@ -576,14 +576,16 @@ public class MessageFragment extends Fragment {
                 switch (msg.what) {
                     case RECEIVE_MSG:
                         // 接收到新的消息
-                        Msg receivedMsg = (Msg) msg.obj;
+                        Msg receivedMsg = new Msg((JSONObject) msg.obj);
+                        if (receivedMsg.getType().equals("command/faceLogin")) {
+                            return;
+                        }
                         Channel receiveMsgChannel = ChannelCacheUtils.getChannel(
                                 getActivity(), receivedMsg.getCid());
                         if (receiveMsgChannel == null) {
                             getChannelList();
                         } else {
                             cacheReceiveMsg(receiveMsgChannel, receivedMsg);
-                            //addChannelToList(receivedMsg, receiveMsgChannel);
                             sortChannelList();
                         }
                         break;
@@ -599,7 +601,6 @@ public class MessageFragment extends Fragment {
                         displayChannelList.addAll(channelList);
                         displayData();// 展示数据
                         registerMsgReceiver();// 注册接收消息的广播
-                        ((MyApplication) getActivity().getApplication()).startWebSocket();// 启动webSocket推送
                         break;
                     default:
                         break;
@@ -965,27 +966,36 @@ public class MessageFragment extends Fragment {
         public void onReceive(Context context, Intent intent) {
             // TODO Auto-generated method stub
             String command = intent.getExtras().getString("command");
-            if (command.equals("creat_group_icon")) {
-                isHaveCreatGroupIcon = false;
-                createGroupIcon(null);
-            } else if (command.equals("refresh_session_list")) {
-                getChannelList();
-            } else if (command.equals("sort_session_list")) {
-                sortChannelList();
-            } else if (command.equals("sync_all_base_data_success")) {
-                sortChannelList();
-                createGroupIcon(null);
-            } else if (command.equals("set_all_message_read")) {
-                setAllChannelMsgRead();
-            } else if (command.equals("websocket_status")) {
-                String socketStatus = intent.getExtras().getString("status");
-                showSocketStatusInTitle(socketStatus);
-            } else if (command.equals("set_channel_message_read")) {
-                String cid = intent.getExtras().getString("cid");
-                String mid = intent.getExtras().getString("mid");
-                setChannelMsgRead(cid, mid);
+            switch (command){
+                case "creat_group_icon":
+                    isHaveCreatGroupIcon = false;
+                    createGroupIcon(null);
+                    break;
+                case "refresh_session_list":
+                    getChannelList();
+                    break;
+                case "sort_session_list":
+                    sortChannelList();
+                    break;
+                case "sync_all_base_data_success":
+                    sortChannelList();
+                    createGroupIcon(null);
+                    break;
+                case "set_all_message_read":
+                    setAllChannelMsgRead();
+                    break;
+                case "websocket_status":
+                    String socketStatus = intent.getExtras().getString("status");
+                    showSocketStatusInTitle(socketStatus);
+                    break;
+                case "set_channel_message_read":
+                    String cid = intent.getExtras().getString("cid");
+                    String mid = intent.getExtras().getString("mid");
+                    setChannelMsgRead(cid, mid);
+                    break;
+                   default:
+                       break;
             }
-
         }
 
     }
@@ -1136,7 +1146,7 @@ public class MessageFragment extends Fragment {
                 JSONArray peopleArray = searchResultObj.getJSONArray("people");
 
                 if (peopleArray.length() > 0
-                        && NetUtils.isNetworkConnected(getActivity())) {
+                        && NetUtils.isNetworkConnected(MyApplication.getInstance())) {
                     creatGroupChannel(peopleArray);
                 }
             } catch (JSONException e) {
@@ -1196,7 +1206,7 @@ public class MessageFragment extends Fragment {
      * 获取消息会话列表
      */
     private void getChannelList() {
-        if (NetUtils.isNetworkConnected(getActivity(), false)) {
+        if (NetUtils.isNetworkConnected(MyApplication.getInstance(), true)) {
             apiService.getChannelList();
         } else {
             swipeRefreshLayout.setRefreshing(false);
@@ -1207,7 +1217,7 @@ public class MessageFragment extends Fragment {
      * 获取频道消息
      */
     private void getChannelMsg() {
-        if (NetUtils.isNetworkConnected(getActivity(), false)) {
+        if (NetUtils.isNetworkConnected(MyApplication.getInstance(), false)) {
             apiService.getNewMsgs();
         }
     }
@@ -1219,7 +1229,7 @@ public class MessageFragment extends Fragment {
      * @param channelList
      */
     public void getChannelInfoResult(List<Channel> channelList) {
-        if (NetUtils.isNetworkConnected(getActivity(), false)) {
+        if (NetUtils.isNetworkConnected(MyApplication.getInstance(), false)) {
             ArrayList<String> cidList = new ArrayList<>();
             for (int i = 0; i < channelList.size(); i++) {
                 Channel channel = channelList.get(i);

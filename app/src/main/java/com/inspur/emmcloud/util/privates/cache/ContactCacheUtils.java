@@ -148,6 +148,7 @@ public class ContactCacheUtils {
         return contactList;
     }
 
+
     /**
      * 保存此租户通讯录客户端最后的更新时间
      *
@@ -439,6 +440,22 @@ public class ContactCacheUtils {
         return name;
     }
 
+    /**
+     * 通过用户名获取Contact
+     * @param context
+     * @param userName
+     * @return
+     */
+    public static Contact getContactByUserName(Context context,String userName){
+        Contact contact = null;
+        try {
+            contact = DbCacheUtils.getDb(context).selector(Contact.class).where(
+                    "realName", "=", userName).and("type", "=", "user").findFirst();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return contact;
+    }
 
     /**
      * 通过id List获取PersonDto对象的List

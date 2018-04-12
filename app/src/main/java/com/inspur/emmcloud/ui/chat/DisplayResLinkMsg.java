@@ -1,6 +1,7 @@
 package com.inspur.emmcloud.ui.chat;
 
 import android.app.Activity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -25,26 +26,28 @@ public class DisplayResLinkMsg {
      * 展示链接类卡片，如新闻
      *
      * @param context
-     * @param convertView
+     * @param childView
      * @param msg
      * @param isShowCommentBtn
      */
-    public static void displayResLinkMsg(final Activity context,
-                                         View convertView, final Msg msg, boolean isShowCommentBtn) {
+    public static View displayResLinkMsg(final Activity context,
+                                          final Msg msg, boolean isShowCommentBtn) {
+        View cardContentView = LayoutInflater.from(context).inflate(
+                R.layout.chat_msg_card_child_res_link_view, null);
         boolean isMyMsg = msg.getUid().equals(
                 ((MyApplication) context.getApplicationContext()).getUid());
         String msgBody = msg.getBody();
         String linkTitle = JSONUtils.getString(msgBody, "title", "");
         String linkDigest = JSONUtils.getString(msgBody, "digest", "");
         String linkPoster = JSONUtils.getString(msgBody, "poster", "");
-        TextView linkTitleText = (TextView) convertView
+        TextView linkTitleText = (TextView) cardContentView
                 .findViewById(R.id.news_card_title_text);
-        TextView linkDigestText = (TextView) convertView
+        TextView linkDigestText = (TextView) cardContentView
                 .findViewById(R.id.news_card_digest_text);
         linkTitleText.setText(linkTitle);
         linkDigestText.setText(linkDigest);
 
-        ImageView linkImageview = (ImageView) convertView
+        ImageView linkImageview = (ImageView) cardContentView
                 .findViewById(R.id.news_card_content_img);
         if (!StringUtils.isBlank(linkPoster)) {
             ImageDisplayUtils.getInstance().displayImage(linkImageview, APIUri.getPreviewUrl(linkPoster), R.drawable.icon_photo_default);
@@ -55,13 +58,14 @@ public class DisplayResLinkMsg {
             int normalPadding = DensityUtil.dip2px(context, 10);
             int arrowPadding = DensityUtil.dip2px(context, 8);
             if (isMyMsg) {
-                (convertView.findViewById(R.id.text_layout)).setPadding(normalPadding, normalPadding, normalPadding
+                (cardContentView.findViewById(R.id.text_layout)).setPadding(normalPadding, normalPadding, normalPadding
                         + arrowPadding, normalPadding);
             } else {
-                (convertView.findViewById(R.id.text_layout)).setPadding(normalPadding + arrowPadding, normalPadding,
+                (cardContentView.findViewById(R.id.text_layout)).setPadding(normalPadding + arrowPadding, normalPadding,
                         normalPadding, normalPadding);
             }
         }
+        return cardContentView;
 
     }
 
@@ -72,9 +76,9 @@ public class DisplayResLinkMsg {
      * @param convertView
      * @param msg
      */
-    public static void displayResLinkMsg(Activity context, View convertView,
+    public static View displayResLinkMsg(Activity context,
                                          Msg msg) {
-        displayResLinkMsg(context, convertView, msg, true);
+       return displayResLinkMsg(context, msg, true);
     }
 
 }

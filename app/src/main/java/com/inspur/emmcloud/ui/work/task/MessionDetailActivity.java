@@ -870,7 +870,7 @@ public class MessionDetailActivity extends BaseActivity {
         }
 
         @Override
-        public void returnFileUpLoadSuccess(
+        public void returnUpLoadResFileSuccess(
                 GetFileUploadResult getFileUploadResult, String fakeMessageId) {
             if (loadingDlg != null && loadingDlg.isShowing()) {
                 loadingDlg.dismiss();
@@ -881,7 +881,7 @@ public class MessionDetailActivity extends BaseActivity {
         }
 
         @Override
-        public void returnFileUpLoadFail(String error, int errorCode) {
+        public void returnUpLoadResFileFail(String error,int errorCode, String temp) {
             if (loadingDlg != null && loadingDlg.isShowing()) {
                 loadingDlg.dismiss();
             }

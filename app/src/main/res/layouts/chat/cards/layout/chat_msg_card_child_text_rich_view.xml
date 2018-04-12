@@ -3,16 +3,15 @@
     android:id="@+id/card_layout"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="@color/header_bg"
      >
 
     <TextView
         android:id="@+id/content_text"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:maxWidth="280dp"
+        android:layout_height="match_parent"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
         android:minWidth="40dp"
-        android:background="@drawable/ic_chat_msg_img_cover_arrow_right"
         android:textColor="@color/black"
         android:textIsSelectable="false"
         android:textSize="@dimen/content_title_textsize" />
