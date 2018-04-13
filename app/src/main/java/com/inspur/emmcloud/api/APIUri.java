@@ -5,9 +5,10 @@ import android.content.Context;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.bean.contact.Contact;
+import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactCacheUtils;
-import com.inspur.emmcloud.util.common.StringUtils;
+import com.inspur.emmcloud.util.privates.cache.RobotCacheUtils;
 
 
 /**
@@ -245,6 +246,24 @@ public class APIUri {
     public static String getRobotIconUrl(String iconUrl) {
         return getEcmTanentUrl() + "/avatar/stream/"
                 + iconUrl;
+    }
+
+    /**
+     * 获取普通人和机器人人头像url
+     * @param context
+     * @param uid
+     * @return
+     */
+    public static String getUserIconUrl(Context context, String uid){
+        String iconUrl;
+        if (uid.startsWith("BOT")) {
+            iconUrl = APIUri.getRobotIconUrl(RobotCacheUtils
+                    .getRobotById(context, uid)
+                    .getAvatar());
+        } else {
+            iconUrl = APIUri.getChannelImgUrl(context, uid);
+        }
+        return  iconUrl;
     }
 
     /**
