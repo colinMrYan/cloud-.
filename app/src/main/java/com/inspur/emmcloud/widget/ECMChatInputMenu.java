@@ -31,6 +31,7 @@ import com.inspur.emmcloud.interf.OnVoiceResultCallback;
 import com.inspur.emmcloud.ui.chat.MembersActivity;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.InputMethodUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.MediaPlayerUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
@@ -190,6 +191,7 @@ public class ECMChatInputMenu extends LinearLayout {
      * @param inputs
      */
     public void setInputLayout(String inputs) {
+        LogUtils.jasonDebug("inputs="+inputs);
         inputTypeBeanList.clear();
         inputEdit.clearInsertModelList();
         this.inputs = inputs;
@@ -220,10 +222,11 @@ public class ECMChatInputMenu extends LinearLayout {
             //处理默认情况，也就是普通频道的情况
             if (binaryString.equals("-1")) {
                 //目前开放三位，有可能扩展
-                binaryString = "1111";
+                binaryString = "111";
             }
+            LogUtils.jasonDebug("binaryString="+binaryString);
             //控制binaryString长度，防止穿的数字过大
-            int binaryLength = binaryString.length() > 4 ? 4 : binaryString.length();
+            int binaryLength = binaryString.length() > 3 ? 3 : binaryString.length();
             for (int i = 0; i < binaryLength; i++) {
                 //第一位已经处理过了，这里不再处理
                 //这里如果禁止输入文字时，inputEdit设置Enabled
