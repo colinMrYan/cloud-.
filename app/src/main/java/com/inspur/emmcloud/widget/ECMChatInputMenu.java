@@ -162,9 +162,10 @@ public class ECMChatInputMenu extends LinearLayout {
 
     /**
      * 设置是否区分对待
+     *
      * @param isSpecialUser
      */
-    public void setSpecialUser(boolean isSpecialUser){
+    public void setSpecialUser(boolean isSpecialUser) {
         this.isSpecialUser = isSpecialUser;
     }
 
@@ -191,6 +192,7 @@ public class ECMChatInputMenu extends LinearLayout {
      */
     public void setInputLayout(String inputs) {
         inputTypeBeanList.clear();
+        inputEdit.clearInsertModelList();
         this.inputs = inputs;
         if (inputs.equals("0")) {
             this.setVisibility(View.GONE);
@@ -219,10 +221,10 @@ public class ECMChatInputMenu extends LinearLayout {
             //处理默认情况，也就是普通频道的情况
             if (binaryString.equals("-1")) {
                 //目前开放三位，有可能扩展
-                binaryString = "1111";
+                binaryString = "111";
             }
             //控制binaryString长度，防止穿的数字过大
-            int binaryLength = binaryString.length() > 4 ? 4 : binaryString.length();
+            int binaryLength = binaryString.length() > 3 ? 3 : binaryString.length();
             for (int i = 0; i < binaryLength; i++) {
                 //第一位已经处理过了，这里不再处理
                 //这里如果禁止输入文字时，inputEdit设置Enabled
@@ -314,9 +316,10 @@ public class ECMChatInputMenu extends LinearLayout {
                     results = "";
                 }
                 if (!StringUtils.isBlank(results)) {
-                    if (isSpecialUser){
+                    if (isSpecialUser) {
+                        inputEdit.clearInsertModelList();
                         chatInputMenuListener.onSendMsg(results, null, null);
-                    }else {
+                    } else {
                         int index = inputEdit.getSelectionStart();
                         Editable editable = inputEdit.getText();
                         editable.insert(index, results);
@@ -368,6 +371,7 @@ public class ECMChatInputMenu extends LinearLayout {
                 if (NetUtils.isNetworkConnected(getContext())) {
                     List<String> urlList = getContentUrlList(inputEdit.getText().toString());
                     String content = inputEdit.getRichContent(true);
+                    inputEdit.clearInsertModelList();
                     chatInputMenuListener.onSendMsg(content, getContentMentionUidList(), urlList);
                     inputEdit.setText("");
                 }
