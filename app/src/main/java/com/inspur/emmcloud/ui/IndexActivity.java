@@ -390,7 +390,6 @@ public class IndexActivity extends BaseFragmentActivity implements
         tipsView = (TipsView) findViewById(R.id.tip);
         mTabHost = (MyFragmentTabHost) findViewById(android.R.id.tabhost);
         mTabHost.setup(this, getSupportFragmentManager(), R.id.realtabcontent);
-        findViewById(R.id.index_root_layout).setPadding(0, StateBarUtils.getStateBarHeight(IndexActivity.this), 0, 0);
         setAndShowAppTabs();
     }
 
