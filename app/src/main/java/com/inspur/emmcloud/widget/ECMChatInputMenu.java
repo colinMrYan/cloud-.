@@ -31,7 +31,6 @@ import com.inspur.emmcloud.interf.OnVoiceResultCallback;
 import com.inspur.emmcloud.ui.chat.MembersActivity;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.InputMethodUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.MediaPlayerUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
@@ -163,9 +162,10 @@ public class ECMChatInputMenu extends LinearLayout {
 
     /**
      * 设置是否区分对待
+     *
      * @param isSpecialUser
      */
-    public void setSpecialUser(boolean isSpecialUser){
+    public void setSpecialUser(boolean isSpecialUser) {
         this.isSpecialUser = isSpecialUser;
     }
 
@@ -316,10 +316,10 @@ public class ECMChatInputMenu extends LinearLayout {
                     results = "";
                 }
                 if (!StringUtils.isBlank(results)) {
-                    if (isSpecialUser){
+                    if (isSpecialUser) {
                         inputEdit.clearInsertModelList();
                         chatInputMenuListener.onSendMsg(results, null, null);
-                    }else {
+                    } else {
                         int index = inputEdit.getSelectionStart();
                         Editable editable = inputEdit.getText();
                         editable.insert(index, results);
