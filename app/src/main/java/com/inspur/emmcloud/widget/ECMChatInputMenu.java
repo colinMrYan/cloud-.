@@ -191,7 +191,6 @@ public class ECMChatInputMenu extends LinearLayout {
      * @param inputs
      */
     public void setInputLayout(String inputs) {
-        LogUtils.jasonDebug("inputs="+inputs);
         inputTypeBeanList.clear();
         inputEdit.clearInsertModelList();
         this.inputs = inputs;
@@ -224,7 +223,6 @@ public class ECMChatInputMenu extends LinearLayout {
                 //目前开放三位，有可能扩展
                 binaryString = "111";
             }
-            LogUtils.jasonDebug("binaryString="+binaryString);
             //控制binaryString长度，防止穿的数字过大
             int binaryLength = binaryString.length() > 3 ? 3 : binaryString.length();
             for (int i = 0; i < binaryLength; i++) {

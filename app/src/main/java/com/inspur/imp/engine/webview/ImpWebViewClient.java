@@ -1,10 +1,8 @@
 package com.inspur.imp.engine.webview;
 
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
@@ -120,7 +118,7 @@ public class ImpWebViewClient extends WebViewClient {
 
 		((ImpActivity)(view.getContext())).initWebViewGoBackOrClose();
 		ImpWebView webview = (ImpWebView) view;
-		if (webview.destroyed || url.contains("error")) {
+		if (webview.destroyed) {
 			return;
 		}
 		webview.setVisibility(View.VISIBLE);
@@ -167,20 +165,11 @@ public class ImpWebViewClient extends WebViewClient {
 		}
 	}
 
-
-	//	@TargetApi(android.os.Build.VERSION_CODES.M)
-//	@Override
-//	public void onReceivedHttpError(WebView view, WebResourceRequest request, WebResourceResponse errorResponse) {
-//		onReceivedError(view,errorResponse.getStatusCode(), errorResponse.getReasonPhrase(), request.getUrl().toString());
-//
-//	}
-//
-//
-//	@TargetApi(android.os.Build.VERSION_CODES.LOLLIPOP)
-//	@Override
-//	public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
-//		return shouldOverrideUrlLoading(view, request.getUrl().toString());
-//	}
+	@TargetApi(android.os.Build.VERSION_CODES.LOLLIPOP)
+	@Override
+	public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+		return shouldOverrideUrlLoading(view, request.getUrl().toString());
+	}
 
 	@SuppressWarnings("deprecation")
 	@Override
@@ -193,9 +182,14 @@ public class ImpWebViewClient extends WebViewClient {
 			handleReDirectURL(url, view);
 			return true;
 		}
-		if (url.startsWith("mailto:") || url.startsWith("geo:") ||url.startsWith("tel:")) {
-			Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-			((Activity)myWebView.getContext()).startActivityForResult(intent,ImpActivity.DO_NOTHING_RESULTCODE);
+		if (!url.startsWith("http")){
+			try {
+				Intent  intent = Intent.parseUri(url, Intent.URI_INTENT_SCHEME);
+				intent.setComponent(null);
+				myWebView.getContext().startActivity(intent);
+			}catch (Exception e){
+				e.printStackTrace();
+			}
 			return true;
 		}
 		view.loadUrl(url, getWebViewHeaders());
