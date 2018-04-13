@@ -191,6 +191,7 @@ public class ECMChatInputMenu extends LinearLayout {
      */
     public void setInputLayout(String inputs) {
         inputTypeBeanList.clear();
+        inputEdit.clearInsertModelList();
         this.inputs = inputs;
         if (inputs.equals("0")) {
             this.setVisibility(View.GONE);
@@ -315,6 +316,7 @@ public class ECMChatInputMenu extends LinearLayout {
                 }
                 if (!StringUtils.isBlank(results)) {
                     if (isSpecialUser){
+                        inputEdit.clearInsertModelList();
                         chatInputMenuListener.onSendMsg(results, null, null);
                     }else {
                         int index = inputEdit.getSelectionStart();
@@ -368,6 +370,7 @@ public class ECMChatInputMenu extends LinearLayout {
                 if (NetUtils.isNetworkConnected(getContext())) {
                     List<String> urlList = getContentUrlList(inputEdit.getText().toString());
                     String content = inputEdit.getRichContent(true);
+                    inputEdit.clearInsertModelList();
                     chatInputMenuListener.onSendMsg(content, getContentMentionUidList(), urlList);
                     inputEdit.setText("");
                 }
