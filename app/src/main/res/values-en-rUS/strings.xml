@@ -266,6 +266,7 @@
     <string name="chat_file_download_success">File has been downloaded successfully, click again to open</string>
     <string name="group_name_longth_valid">Group name, word overrun (no more than 40 characters)</string>
     <string name="message_create_group">Group Chat</string>
+    <string name="business_card">Business Card</string>
 
 
     <!-- 会议卡片 -->
