@@ -2,7 +2,6 @@ package com.inspur.emmcloud.util.common;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.content.Context;
 import android.os.Build;
 import android.view.Window;
 import android.view.WindowManager;
@@ -18,31 +17,14 @@ public class StateBarUtils {
      * @param activity
      */
     public static void changeStateBarColor(Activity activity) {
-        activity.getWindow().addFlags(
-                WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         //系统版本小于19的不再处理
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            activity.getWindow().addFlags(
+                    WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             setTranslucentStatus(true, activity);
             SystemBarTintManager tintManager = new SystemBarTintManager(activity);
             tintManager.setStatusBarTintEnabled(true);
             tintManager.setStatusBarTintResource(R.color.header_bg);// 通知栏所需颜色
-        }
-    }
-
-    /**
-     * 控制状态栏显示隐藏
-     *
-     * @param activity
-     * @param showOrHide，true显示，false隐藏
-     */
-    public static void showOrHideStatusBar(Activity activity, boolean showOrHide) {
-        activity.getWindow().addFlags(
-                WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        //系统版本小于19的不再处理
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            setTranslucentStatus(true, activity);
-            SystemBarTintManager tintManager = new SystemBarTintManager(activity);
-            tintManager.setStatusBarTintEnabled(showOrHide);
         }
     }
 
@@ -53,10 +35,10 @@ public class StateBarUtils {
      * @param color
      */
     public static void changeStateBarColor(Activity activity, int color) {
-        activity.getWindow().addFlags(
-                WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         //系统版本小于19的不再处理
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            activity.getWindow().addFlags(
+                    WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             setTranslucentStatus(true, activity);
             SystemBarTintManager tintManager = new SystemBarTintManager(activity);
             tintManager.setStatusBarTintEnabled(true);
@@ -75,25 +57,5 @@ public class StateBarUtils {
             winParams.flags &= ~bits;
         }
         win.setAttributes(winParams);
-    }
-
-    /**
-     * 获取状态栏高度
-     *
-     * @param context
-     * @return
-     */
-    public static int getStateBarHeight(Context context) {
-        /**
-         * 获取状态栏高度——方法1
-         * */
-        int statusBarHeight = -1;
-        //获取status_bar_height资源的ID
-        int resourceId = context.getResources().getIdentifier("status_bar_height", "dimen", "android");
-        if (resourceId > 0) {
-            //根据资源ID获取响应的尺寸值
-            statusBarHeight = context.getResources().getDimensionPixelSize(resourceId);
-        }
-        return statusBarHeight;
     }
 }
