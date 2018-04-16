@@ -61,7 +61,7 @@ android:background="@color/white">
 	android:paddingLeft="17dp"
 	android:paddingTop="2dp"
 	android:paddingBottom="2dp"
-	android:text="个人名片"
+	android:text="@string/business_card"
 	android:textColor="#999999"
 	android:textSize="16sp" />
 </LinearLayout>

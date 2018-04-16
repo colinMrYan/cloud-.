@@ -167,7 +167,14 @@ public class ChannelMsgAdapter extends RecyclerView.Adapter<ChannelMsgAdapter.Vi
             holder.refreshingImg.setImageResource(R.drawable.ic_chat_msg_send_fail);
         } else {
             holder.refreshingImg.clearAnimation();
-            holder.refreshingImg.setVisibility(View.GONE);
+           boolean isMyMsg;
+            if (Message.isMessage(msg)){
+                Message message = new Message(msg);
+                isMyMsg = message.getFromUser().equals(MyApplication.getInstance().getUid());
+            }else {
+                isMyMsg =  msg.getUid().equals(MyApplication.getInstance().getUid());
+            }
+            holder.refreshingImg.setVisibility(isMyMsg?View.INVISIBLE:View.GONE);
         }
 
     }
