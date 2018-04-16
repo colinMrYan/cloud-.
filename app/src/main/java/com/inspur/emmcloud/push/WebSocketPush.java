@@ -249,7 +249,6 @@ public class WebSocketPush {
 	}
 
 	public void closeSocket() {
-		Log.d(TAG, "closeSocket------00");
 		if (mSocket != null) {
 			Log.d(TAG, "closeSocket------");
 			mSocket.disconnect();

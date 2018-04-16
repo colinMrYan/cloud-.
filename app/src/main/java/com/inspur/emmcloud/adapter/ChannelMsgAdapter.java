@@ -34,10 +34,8 @@ import com.inspur.emmcloud.ui.chat.DisplayTxtRichMsg;
 import com.inspur.emmcloud.ui.contact.RobotInfoActivity;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
 import com.inspur.emmcloud.util.common.IntentUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
-import com.inspur.emmcloud.util.privates.cache.RobotCacheUtils;
 import com.inspur.emmcloud.widget.ECMChatInputMenu;
 
 import java.util.ArrayList;
@@ -185,7 +183,7 @@ public class ChannelMsgAdapter extends RecyclerView.Adapter<ChannelMsgAdapter.Vi
         holder.cardLayout.removeAllViewsInLayout();
         holder.cardLayout.removeAllViews();
         boolean isMyMsg = msg.getUid().equals(
-                ((MyApplication) context.getApplicationContext()).getUid());
+                MyApplication.getInstance().getUid());
         holder.cardCoverView.setVisibility(View.VISIBLE);
         View cardContentView;
         Message message = null;
@@ -193,6 +191,8 @@ public class ChannelMsgAdapter extends RecyclerView.Adapter<ChannelMsgAdapter.Vi
         if (Message.isMessage(msg)) {
             message = new Message(msg);
             type = message.getType();
+            isMyMsg = message.getFromUser().equals(
+                    MyApplication.getInstance().getUid());
         }
         switch (type) {
             case "txt_comment":
@@ -304,8 +304,7 @@ public class ChannelMsgAdapter extends RecyclerView.Adapter<ChannelMsgAdapter.Vi
      */
     private void showUserName(ViewHolder holder, Msg msg) {
         // TODO Auto-generated method stub
-        boolean isMyMsg = msg.getUid().equals(
-                ((MyApplication) context.getApplicationContext()).getUid());
+        boolean isMyMsg = msg.getUid().equals(MyApplication.getInstance().getUid());
         if (channelType.equals("GROUP") && !isMyMsg) {
             holder.senderNameText.setVisibility(View.VISIBLE);
             holder.senderNameText.setText(msg.getTitle());
@@ -322,30 +321,28 @@ public class ChannelMsgAdapter extends RecyclerView.Adapter<ChannelMsgAdapter.Vi
      */
     private void showUserPhoto(ViewHolder holder, final Msg msg) {
         // TODO Auto-generated method stub
-        if (msg.getUid().equals(
-                ((MyApplication) context.getApplicationContext()).getUid())) {
+        final String fromUserUid;
+        if (Message.isMessage(msg)){
+            Message message = new Message(msg);
+            fromUserUid = message.getFromUser();
+        }else {
+            fromUserUid = msg.getUid();
+        }
+        if (MyApplication.getInstance().getUid().equals(fromUserUid)) {
             holder.senderPhotoImg.setVisibility(View.INVISIBLE);
             holder.senderPhotoRightView.setVisibility(View.GONE);
         } else {
             holder.senderPhotoImg.setVisibility(View.VISIBLE);
             holder.senderPhotoRightView.setVisibility(View.VISIBLE);
-            String iconUrl = "";
-            if (msg.getUid().startsWith("BOT") || channelType.equals("SERVICE")) {
-                iconUrl = APIUri.getRobotIconUrl(RobotCacheUtils
-                        .getRobotById(context, msg.getUid())
-                        .getAvatar());
-            } else {
-                iconUrl = APIUri.getChannelImgUrl(context, msg.getUid());
-            }
+            String iconUrl = APIUri.getUserIconUrl(context,fromUserUid);
             ImageDisplayUtils.getInstance().displayImage(holder.senderPhotoImg,
                     iconUrl, R.drawable.icon_person_default);
             holder.senderPhotoImg.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Bundle bundle = new Bundle();
-                    String uid = msg.getUid();
-                    bundle.putString("uid", uid);
-                    if (uid.startsWith("BOT") || channelType.endsWith("SERVICE")) {
+                    bundle.putString("uid", fromUserUid);
+                    if (fromUserUid.startsWith("BOT") || channelType.endsWith("SERVICE")) {
                         bundle.putString("type", channelType);
                         IntentUtils.startActivity(context,
                                 RobotInfoActivity.class, bundle);

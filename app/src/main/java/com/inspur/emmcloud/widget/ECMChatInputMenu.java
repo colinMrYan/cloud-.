@@ -11,6 +11,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.TypedArray;
 import android.os.Handler;
+import android.text.Editable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -86,6 +87,7 @@ public class ECMChatInputMenu extends LinearLayout {
     private MediaPlayerUtils mediaPlayerUtils;
     private String cid = "";
     private String inputs;
+    private boolean isSpecialUser = false; //小智机器人进行特殊处理
 
     public ECMChatInputMenu(Context context) {
         this(context, null);
@@ -159,6 +161,15 @@ public class ECMChatInputMenu extends LinearLayout {
     }
 
     /**
+     * 设置是否区分对待
+     *
+     * @param isSpecialUser
+     */
+    public void setSpecialUser(boolean isSpecialUser) {
+        this.isSpecialUser = isSpecialUser;
+    }
+
+    /**
      * 添加mentions
      *
      * @param uid
@@ -181,6 +192,7 @@ public class ECMChatInputMenu extends LinearLayout {
      */
     public void setInputLayout(String inputs) {
         inputTypeBeanList.clear();
+        inputEdit.clearInsertModelList();
         this.inputs = inputs;
         if (inputs.equals("0")) {
             this.setVisibility(View.GONE);
@@ -209,10 +221,10 @@ public class ECMChatInputMenu extends LinearLayout {
             //处理默认情况，也就是普通频道的情况
             if (binaryString.equals("-1")) {
                 //目前开放三位，有可能扩展
-                binaryString = "1111";
+                binaryString = "111";
             }
             //控制binaryString长度，防止穿的数字过大
-            int binaryLength = binaryString.length() > 4 ? 4 : binaryString.length();
+            int binaryLength = binaryString.length() > 3 ? 3 : binaryString.length();
             for (int i = 0; i < binaryLength; i++) {
                 //第一位已经处理过了，这里不再处理
                 //这里如果禁止输入文字时，inputEdit设置Enabled
@@ -304,7 +316,15 @@ public class ECMChatInputMenu extends LinearLayout {
                     results = "";
                 }
                 if (!StringUtils.isBlank(results)) {
-                    chatInputMenuListener.onSendMsg(results, null, null);
+                    if (isSpecialUser) {
+                        inputEdit.clearInsertModelList();
+                        chatInputMenuListener.onSendMsg(results, null, null);
+                    } else {
+                        int index = inputEdit.getSelectionStart();
+                        Editable editable = inputEdit.getText();
+                        editable.insert(index, results);
+                    }
+
                 }
             }
 
@@ -351,6 +371,7 @@ public class ECMChatInputMenu extends LinearLayout {
                 if (NetUtils.isNetworkConnected(getContext())) {
                     List<String> urlList = getContentUrlList(inputEdit.getText().toString());
                     String content = inputEdit.getRichContent(true);
+                    inputEdit.clearInsertModelList();
                     chatInputMenuListener.onSendMsg(content, getContentMentionUidList(), urlList);
                     inputEdit.setText("");
                 }
