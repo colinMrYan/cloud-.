@@ -56,6 +56,7 @@ public class MainActivity extends BaseActivity { // 此处不能继承BaseActivi
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         //解决了在sd卡中第一次安装应用，进入到主页并切换到后台再打开会重新启动应用的bug
         if ((getIntent().getFlags() & Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT) != 0) {
             finish();
@@ -66,7 +67,6 @@ public class MainActivity extends BaseActivity { // 此处不能继承BaseActivi
             requestWindowFeature(Window.FEATURE_NO_TITLE);//没有标题
             this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);//设置全屏
         }
-        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         init();
     }
