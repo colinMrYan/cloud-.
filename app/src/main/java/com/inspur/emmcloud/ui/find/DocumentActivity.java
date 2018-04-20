@@ -41,7 +41,7 @@ public class DocumentActivity extends BaseActivity {
 		((TextView) findViewById(R.id.header_text))
 				.setText(getString(R.string.docunment));
 		setDocumentList();
-		fileListView = (ListView) findViewById(R.id.file_list);
+		fileListView = (ListView) findViewById(R.id.lv_file);
 		fileListView.setAdapter(new Adapter());
 	}
 

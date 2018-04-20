@@ -42,7 +42,7 @@ public class KnowledgeActivity extends BaseActivity {
         apiService.setAPIInterface(new WebService());
         setKnowlegeList();
         adapter = new Adapter();
-        knowledgeListView = (ListView) findViewById(R.id.file_list);
+        knowledgeListView = (ListView) findViewById(R.id.lv_file);
         knowledgeListView.setAdapter(adapter);
     }
 
