@@ -46,7 +46,7 @@ import com.inspur.emmcloud.service.CoreService;
 import com.inspur.emmcloud.service.LocationService;
 import com.inspur.emmcloud.service.PVCollectService;
 import com.inspur.emmcloud.ui.appcenter.MyAppFragment;
-import com.inspur.emmcloud.ui.chat.MessageFragment;
+import com.inspur.emmcloud.ui.chat.CommunicationFragment;
 import com.inspur.emmcloud.ui.find.FindFragment;
 import com.inspur.emmcloud.ui.mine.MoreFragment;
 import com.inspur.emmcloud.ui.notsupport.NotSupportFragment;
@@ -64,7 +64,6 @@ import com.inspur.emmcloud.util.privates.ECMShortcutBadgeNumberManagerUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.MyAppWidgetUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
-import com.inspur.emmcloud.util.privates.PushInfoUtils;
 import com.inspur.emmcloud.util.privates.ReactNativeUtils;
 import com.inspur.emmcloud.util.privates.SplashPageUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
@@ -120,7 +119,6 @@ public class IndexActivity extends BaseFragmentActivity implements
         getData();
         startService();
         EventBus.getDefault().register(this);
-        new PushInfoUtils(this).upload();//上传推送信息
     }
 
     /**
@@ -130,7 +128,6 @@ public class IndexActivity extends BaseFragmentActivity implements
         MyApplication.getInstance().setIndexActvityRunning(true);
         MyApplication.getInstance().closeAllDb();
         DbCacheUtils.initDb(MyApplication.getInstance());
-        MyApplication.getInstance().closeWebSocket();
         MyApplication.getInstance().clearUserPhotoMap();
         MyApplication.getInstance().startPush();
     }
@@ -285,7 +282,7 @@ public class IndexActivity extends BaseFragmentActivity implements
                         MyApplication.getInstance()
                                 .setIsContactReady(true);
                         notifySyncAllBaseDataSuccess();
-                        MyApplication.getInstance().startWebSocket();// 启动webSocket推送
+                        MyApplication.getInstance().startWebSocket(true);// 启动webSocket推送
                         deleteIllegalUser();
                         break;
                     case RELOAD_WEB:
@@ -413,7 +410,7 @@ public class IndexActivity extends BaseFragmentActivity implements
                     TabBean tabBean = null;
                     switch (appTabList.get(i).getTabId()) {
                         case "communicate":
-                            tabBean = new TabBean(getString(R.string.communicate), R.drawable.selector_tab_message_btn + "", MessageFragment.class);
+                            tabBean = new TabBean(getString(R.string.communicate), R.drawable.selector_tab_message_btn + "", CommunicationFragment.class);
                             break;
                         case "work":
                             tabBean = new TabBean(getString(R.string.work), R.drawable.selector_tab_work_btn + "",

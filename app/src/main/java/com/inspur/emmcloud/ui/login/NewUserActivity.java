@@ -111,14 +111,14 @@ public class NewUserActivity extends BaseActivity {
 //	private class EditWatcher implements TextWatcher {
 //
 //		@Override
-//		public void beforeTextChanged(CharSequence s, int start, int count,
+//		public void beforeTextChanged(CharSequence s, int init, int count,
 //				int after) {
 //			// TODO Auto-generated method stub
 //
 //		}
 //
 //		@Override
-//		public void onTextChanged(CharSequence s, int start, int before,
+//		public void onTextChanged(CharSequence s, int init, int before,
 //				int count) {
 //			// TODO Auto-generated method stub
 //

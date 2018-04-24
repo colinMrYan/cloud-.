@@ -37,6 +37,7 @@ import com.inspur.emmcloud.bean.contact.Contact;
 import com.inspur.emmcloud.bean.system.PVCollectModel;
 import com.inspur.emmcloud.broadcastreceiver.MsgReceiver;
 import com.inspur.emmcloud.config.MyAppConfig;
+import com.inspur.emmcloud.push.WebSocketPush;
 import com.inspur.emmcloud.ui.appcenter.groupnews.NewsWebDetailActivity;
 import com.inspur.emmcloud.ui.contact.RobotInfoActivity;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
@@ -66,8 +67,6 @@ import com.inspur.imp.plugin.camera.editimage.EditImageActivity;
 import com.inspur.imp.plugin.camera.imagepicker.ImagePicker;
 import com.inspur.imp.plugin.camera.imagepicker.bean.ImageItem;
 
-import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
@@ -619,22 +618,22 @@ public class ChannelActivity extends BaseActivity {
         }
 
 
-        JSONObject richTextObj = new JSONObject();
-        JSONArray mentionArray = JSONUtils.toJSONArray(mentionsUidList);
-        JSONArray urlArray = JSONUtils.toJSONArray(urlList);
-        try {
-            richTextObj.put("source", content);
-            richTextObj.put("mentions", mentionArray);
-            richTextObj.put("urls", urlArray);
-            richTextObj.put("tmpId", AppUtils.getMyUUID(ChannelActivity.this));
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        Msg localMsg = ConbineMsg.conbineMsg(ChannelActivity.this,
-                richTextObj.toString(), "", "txt_rich", fakeMessageId);
-        addLocalMessage(localMsg);
-        sendMsg(richTextObj.toString(), "txt_rich", fakeMessageId);
-
+//        JSONObject richTextObj = new JSONObject();
+//        JSONArray mentionArray = JSONUtils.toJSONArray(mentionsUidList);
+//        JSONArray urlArray = JSONUtils.toJSONArray(urlList);
+//        try {
+//            richTextObj.put("source", content);
+//            richTextObj.put("mentions", mentionArray);
+//            richTextObj.put("urls", urlArray);
+//            richTextObj.put("tmpId", AppUtils.getMyUUID(ChannelActivity.this));
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
+//        Msg localMsg = ConbineMsg.conbineMsg(ChannelActivity.this,
+//                richTextObj.toString(), "", "txt_rich", fakeMessageId);
+//        addLocalMessage(localMsg);
+//        sendMsg(richTextObj.toString(), "txt_rich", fakeMessageId);
+       WebSocketPush.getInstance().sendChatTextPlainMsg(content,cid,new ArrayList<String>());
     }
 
     /**

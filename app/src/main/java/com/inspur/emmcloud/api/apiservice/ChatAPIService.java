@@ -27,6 +27,7 @@ import com.inspur.emmcloud.bean.chat.GetNewMsgsResult;
 import com.inspur.emmcloud.bean.chat.GetNewsImgResult;
 import com.inspur.emmcloud.bean.chat.GetNewsInstructionResult;
 import com.inspur.emmcloud.bean.chat.GetSendMsgResult;
+import com.inspur.emmcloud.bean.chat.GetUploadPushInfoResult;
 import com.inspur.emmcloud.bean.contact.GetSearchChannelGroupResult;
 import com.inspur.emmcloud.bean.system.GetBoolenResult;
 import com.inspur.emmcloud.interf.OauthCallBack;
@@ -957,11 +958,12 @@ public class ChatAPIService {
 		x.http().post(params, new APICallback(context,url) {
             @Override
             public void callbackSuccess(String arg0) {
+            	apiInterface.returnUploadPushInfoResultSuccess(new GetUploadPushInfoResult(arg0));
             }
 
             @Override
             public void callbackFail(String error, int responseCode) {
-
+				apiInterface.returnUploadPushInfoResultFail(error,responseCode);
             }
 
 			@Override

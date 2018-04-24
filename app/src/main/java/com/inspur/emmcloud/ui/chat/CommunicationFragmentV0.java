@@ -98,11 +98,11 @@ import io.socket.client.Socket;
 import static android.app.Activity.RESULT_OK;
 
 /**
- * 消息页面 com.inspur.emmcloud.ui.MessageFragment
+ * 消息页面 com.inspur.emmcloud.ui.CommunicationFragmentV0
  *
  * @author Jason Chen; create at 2016年8月23日 下午2:59:39
  */
-public class MessageFragment extends Fragment {
+public class CommunicationFragmentV0 extends Fragment {
 
     private static final int RECEIVE_MSG = 1;
     private static final int CREAT_CHANNEL_GROUP = 1;
@@ -383,7 +383,7 @@ public class MessageFragment extends Fragment {
             public void onClick(View v) {
                 Intent intent = new Intent();
                 intent.setClass(getActivity(), CaptureActivity.class);
-                intent.putExtra("from", "MessageFragment");
+                intent.putExtra("from", "CommunicationFragmentV0");
                 startActivityForResult(intent, SCAN_LOGIN_QRCODE_RESULT);
                 popupWindow.dismiss();
             }

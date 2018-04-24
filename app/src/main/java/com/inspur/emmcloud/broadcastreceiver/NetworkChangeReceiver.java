@@ -36,14 +36,12 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
 				if (isAppOnForeground) {
 					ToastUtils.show(context, R.string.Network_Mobile);
 				}
-				((MyApplication) context.getApplicationContext())
-						.startWebSocket();
+				MyApplication.getInstance().startWebSocket(false);
 			} else if (wifi == State.CONNECTED || wifi == State.CONNECTING) {
 				if (isAppOnForeground) {
 					ToastUtils.show(context, R.string.Network_WIFI);
 				}
-				((MyApplication) context.getApplicationContext())
-						.startWebSocket();
+				MyApplication.getInstance().startWebSocket(false);
 			} else if (isAppOnForeground) {
 				ToastUtils.show(context, R.string.network_exception);
 			}
