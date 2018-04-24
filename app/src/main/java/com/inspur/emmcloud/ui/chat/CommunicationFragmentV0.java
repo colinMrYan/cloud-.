@@ -256,7 +256,7 @@ public class CommunicationFragmentV0 extends BaseFragment {
                             R.string.not_support_open_channel);
                 }
                 setChannelAllMsgRead(channel);
-                refreshIndexNotify();
+                updateMessageUnReadCount();
             }
 
         });
@@ -653,7 +653,7 @@ public class CommunicationFragmentV0 extends BaseFragment {
             adapter.setDataList(displayChannelList);
             adapter.notifyDataSetChanged();
         }
-        refreshIndexNotify();
+        updateMessageUnReadCount();
 
     }
 
@@ -729,14 +729,14 @@ public class CommunicationFragmentV0 extends BaseFragment {
     /**
      * 设置消息tab页面的小红点（未读消息提醒）的显示
      */
-    private void refreshIndexNotify() {
+    private void updateMessageUnReadCount() {
         int unReadCount = 0;
         if (displayChannelList != null) {
             for (int i = 0; i < displayChannelList.size(); i++) {
                 unReadCount += displayChannelList.get(i).getUnReadCount();
             }
         }
-        IndexActivity.showNotifyIcon(unReadCount);
+        ((IndexActivity) getActivity()).updateMessageUnReadCount(unReadCount);
     }
 
     static class ViewHolder {
@@ -1035,7 +1035,7 @@ public class CommunicationFragmentV0 extends BaseFragment {
                 break;
             }
         }
-        refreshIndexNotify();
+        updateMessageUnReadCount();
         if (adapter != null) {
             adapter.notifyDataSetChanged();
         }

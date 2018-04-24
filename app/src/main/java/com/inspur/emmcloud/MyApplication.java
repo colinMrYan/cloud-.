@@ -349,11 +349,13 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
 
     /***************************** db相关 *******************************************/
     /**
-     * 关闭所有的数据库
+     * 重启所有的数据库
      */
-    public void closeAllDb() {
+    public void restartAllDb() {
         // TODO Auto-generated method stub
         DbCacheUtils.closeDb(getInstance());
+        DbCacheUtils.closeDb(getInstance());
+        DbCacheUtils.initDb(getInstance());
     }
 
     /**
