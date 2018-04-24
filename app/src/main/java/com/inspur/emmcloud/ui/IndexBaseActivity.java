@@ -76,27 +76,16 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
         super.onCreate(savedInstanceState);
         StateBarUtils.changeStateBarColor(this);
         x.view().inject(this);
-        initTabView();
-    }
-
-
-
-    /**
-     * 初始化底部的4个Tab
-     */
-    private void initTabView() {
         mTabHost.setup(this, getSupportFragmentManager(), R.id.realtabcontent);
-        findViewById(R.id.index_root_layout).setPadding(0, StateBarUtils.getStateBarHeight(IndexBaseActivity.this), 0, 0);
-        setAndShowAppTabs();
+        initTabs();
     }
-
 
     /**
      * 处理tab数组
      *
      * @return
      */
-    private void setAndShowAppTabs() {
+    private void initTabs() {
         TabBean[] tabBeans = null;
         String appTabs = PreferencesByUserAndTanentUtils.getString(IndexBaseActivity.this, "app_tabbar_info_current", "");
         if (!StringUtils.isBlank(appTabs)) {
@@ -131,7 +120,7 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
                                     MoreFragment.class);
                             break;
                         default:
-                            tabBean = new TabBean(getString(R.string.unknown), R.drawable.selector_tab_unknown_btn + "",
+                            tabBean = new TabBean(getString(R.string.new_function), R.drawable.selector_tab_unknown_btn + "",
                                     NotSupportFragment.class);
                             break;
                     }
@@ -449,7 +438,7 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
             PreferencesByUserAndTanentUtils.putString(IndexBaseActivity.this, "app_tabbar_version", getAppTabAutoResult.getVersion());
             PreferencesByUserAndTanentUtils.putString(IndexBaseActivity.this, "app_tabbar_info_current", getAppTabAutoResult.getAppTabInfo());
             mTabHost.clearAllTabs(); //更新tabbar
-            setAndShowAppTabs();
+            initTabs();
         }
     }
 }
