@@ -72,12 +72,17 @@ import java.util.List;
  */
 public class ContactSearchActivity extends BaseActivity {
     private static final int SEARCH_ALL = 0;
-    private static final int SEARCH_CONTACT = 2;
     private static final int SEARCH_CHANNELGROUP = 1;
-    private static final int SEARCH_RECENT = 3;
+    private static final int SEARCH_CONTACT = 2;
     private static final int SEARCH_NOTHIING = 4;
     private static final int SEARCH_MORE = 5;
     private static final int REFRESH_DATA = 6;
+    public static final String EXTRA_TITLE = "title";
+    public static final String EXTRA_MULTI_SELECT = "isMulti_select";
+    public static final String EXTRA_TYPE = "select_content";
+    public static final String EXTRA_CONTAIN_ME = "isContainMe";
+    public static final String EXTRA_HAS_SELECT = "hasSearchResult";
+    public static final String EXTRA_EXCLUDE_SELECT = "excludeContactUidList";
     private boolean isSearchSingle = false; // 判断是否搜索单一项
     private boolean isContainMe = false; // 搜索结果是否可以包含自己
     private boolean isMultiSelect = false;
@@ -150,12 +155,10 @@ public class ContactSearchActivity extends BaseActivity {
      */
     private void getIntentData() {
         // TODO Auto-generated method stub
-        title = getIntent().getExtras().getString("title");
-        isMultiSelect = getIntent().getExtras().getBoolean("isMulti_select");
-        searchContent = getIntent().getExtras().getInt("select_content");
-        if (getIntent().getExtras().containsKey("isContainMe")) {
-            isContainMe = true;
-        }
+        title = getIntent().getExtras().getString(EXTRA_TITLE);
+        isMultiSelect = getIntent().getExtras().getBoolean(EXTRA_MULTI_SELECT);
+        searchContent = getIntent().getExtras().getInt(EXTRA_TYPE);
+        isContainMe = getIntent().getExtras().containsKey(EXTRA_CONTAIN_ME) && getIntent().getBooleanExtra(EXTRA_CONTAIN_ME,false);
         initSearchArea();
         if (searchContent == SEARCH_CHANNELGROUP) {
             (findViewById(R.id.struct_layout))
@@ -169,17 +172,17 @@ public class ContactSearchActivity extends BaseActivity {
             orginCurrentArea = SEARCH_ALL;
         }
 
-        if (getIntent().hasExtra("hasSearchResult")) {
+        if (getIntent().hasExtra(EXTRA_HAS_SELECT)) {
             selectMemList = (List<SearchModel>) getIntent().getExtras()
-                    .getSerializable("hasSearchResult");
+                    .getSerializable(EXTRA_HAS_SELECT);
             if (selectMemList == null) {
-                selectMemList = new ArrayList<SearchModel>();
+                selectMemList = new ArrayList<>();
             }
         }
 
-        if (getIntent().hasExtra("excludeContactUidList")){
+        if (getIntent().hasExtra(EXTRA_EXCLUDE_SELECT)){
             List<String> excludeContactUidList = (List<String>) getIntent().getExtras()
-                    .getSerializable("excludeContactUidList");
+                    .getSerializable(EXTRA_EXCLUDE_SELECT);
             excludeContactList = ContactCacheUtils.getContactListById(getApplicationContext(),excludeContactUidList);
 
         }
@@ -219,14 +222,6 @@ public class ContactSearchActivity extends BaseActivity {
         }
         flowAddEdit();
         searchEditLayout = (MaxHightScrollView) findViewById(R.id.search_edit_layout);
-//        searchEditLayout.setOnClickListener(new OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if (searchEdit != null){
-//                    InputMethodUtils.display(ContactSearchActivity.this,searchEdit);
-//                }
-//            }
-//        });
         initSecondGroup();
         initPopView();
         if (selectMemList.size() > 0) {

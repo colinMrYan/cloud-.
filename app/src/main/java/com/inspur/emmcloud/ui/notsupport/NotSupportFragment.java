@@ -4,7 +4,6 @@ package com.inspur.emmcloud.ui.notsupport;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.app.Fragment;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextPaint;
@@ -13,9 +12,9 @@ import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.inspur.emmcloud.BaseFragment;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.UpgradeUtils;
@@ -23,7 +22,7 @@ import com.inspur.emmcloud.util.privates.UpgradeUtils;
 /**
  * 如果有不支持的功能时显示这个界面
  */
-public class NotSupportFragment extends Fragment {
+public class NotSupportFragment extends BaseFragment {
 
 
     private static final int NO_NEED_UPGRADE = 10;
@@ -66,20 +65,6 @@ public class NotSupportFragment extends Fragment {
             }
         }
     };
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        if (rootView == null) {
-            rootView = inflater.inflate(R.layout.fragment_unknown, container,
-                    false);
-        }
-        ViewGroup parent = (ViewGroup) rootView.getParent();
-        if (parent != null) {
-            parent.removeView(rootView);
-        }
-        return rootView;
-    }
 
     /**
      * 获取spanSgtring

@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
@@ -18,6 +17,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.inspur.emmcloud.BaseFragment;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
@@ -80,7 +80,7 @@ import static com.inspur.emmcloud.util.privates.TimeUtils.FORMAT_MONTH_DAY;
  *
  * @author Administrator
  */
-public class WorkFragment extends Fragment {
+public class WorkFragment extends BaseFragment {
 
     private static final String TYPE_CALENDAR = "calendar";
     private static final String TYPE_APPROVAL = "approval";
@@ -101,21 +101,6 @@ public class WorkFragment extends Fragment {
     private ChildAdapter calendarChildAdapter, meetingChildAdapter, taskChildAdapter;
     private List<WorkSetting> workSettingList = new ArrayList<>();
     private boolean isWorkPortletConfigUploadSuccess = true;  //flag:判断是否上传配置信息成功
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        if (rootView == null) {
-            rootView = inflater.inflate(R.layout.fragment_work, container,
-                    false);
-        }
-        ViewGroup parent = (ViewGroup) rootView.getParent();
-        if (parent != null) {
-            parent.removeView(rootView);
-        }
-        return rootView;
-    }
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

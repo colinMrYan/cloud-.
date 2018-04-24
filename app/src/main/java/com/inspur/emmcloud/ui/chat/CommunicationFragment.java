@@ -10,7 +10,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
@@ -18,7 +17,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
@@ -28,6 +26,7 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.inspur.emmcloud.BaseFragment;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
@@ -56,6 +55,7 @@ import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.AppTitleUtils;
+import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.ChannelGroupIconUtils;
 import com.inspur.emmcloud.util.privates.ChatCreateUtils;
 import com.inspur.emmcloud.util.privates.ChatCreateUtils.OnCreateGroupChannelListener;
@@ -101,7 +101,7 @@ import static android.app.Activity.RESULT_OK;
 /**
  * 沟通页面
  */
-public class CommunicationFragment extends Fragment {
+public class CommunicationFragment extends BaseFragment {
 
     private static final int RECEIVE_MSG = 1;
     private static final int CREAT_CHANNEL_GROUP = 1;
@@ -125,42 +125,6 @@ public class CommunicationFragment extends Fragment {
     private boolean isFirstConnectWebsockt = true;//判断是否第一次连上websockt
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        if (rootView == null) {
-            rootView = inflater.inflate(R.layout.fragment_message, container,
-                    false);
-        }
-        ViewGroup parent = (ViewGroup) rootView.getParent();
-        if (parent != null) {
-            parent.removeView(rootView);
-        }
-        return rootView;
-    }
-
-    /**
-     * 记录用户点击的频道
-     */
-    private void recordUserClickContact() {
-        PVCollectModel pvCollectModel = new PVCollectModel("contact", "communicate");
-        PVCollectModelCacheUtils.saveCollectModel(getActivity(), pvCollectModel);
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        ((IndexActivity) getActivity()).openTargetFragment();
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        if (popupWindow != null && popupWindow.isShowing()) {
-            popupWindow.dismiss();
-        }
-    }
-
-    @Override
     public void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
@@ -168,47 +132,8 @@ public class CommunicationFragment extends Fragment {
         registerMessageFragmentReceiver();
         getChannelList();
         sortChannelList();// 对Channel 进行排序
-        showMessageButtons();
+        updateHeaderFunctionBtn(null);
         EventBus.getDefault().register(this);
-    }
-
-    /**
-     * 展示创建
-     */
-    private void showMessageButtons() {
-        String tabBarInfo = PreferencesByUserAndTanentUtils.getString(getActivity(), "app_tabbar_info_current", "");
-        //第一次登录时有tabBarInfo会为“”，会导致JSON waring
-        if (!StringUtils.isBlank(tabBarInfo)) {
-            AppTabAutoBean appTabAutoBean = new AppTabAutoBean(tabBarInfo);
-            AppTabPayloadBean payloadBean = appTabAutoBean.getPayload();
-            if (payloadBean != null) {
-                showCreateGroupOrFindContact(payloadBean);
-            }
-        }
-    }
-
-    /**
-     * 如果数据没有问题则决定展示或者不展示加号，以及通讯录
-     *
-     * @param payloadBean
-     */
-    private void showCreateGroupOrFindContact(AppTabPayloadBean payloadBean) {
-        ArrayList<AppTabDataBean> appTabList =
-                (ArrayList<AppTabDataBean>) payloadBean.getTabs();
-        for (int i = 0; i < appTabList.size(); i++) {
-            if (appTabList.get(i).getTabId().equals("communicate")) {
-                AppTabProperty property = appTabList.get(i).getProperty();
-                if (property != null) {
-                    if (!property.isCanCreate()) {
-                        rootView.findViewById(R.id.more_function_list_img).setVisibility(View.GONE);
-                    }
-                    if (!property.isCanContact()) {
-                        rootView.findViewById(R.id.contact_img).setVisibility(View.GONE);
-                    }
-                }
-            }
-        }
-
     }
 
     private void initView() {
@@ -227,6 +152,17 @@ public class CommunicationFragment extends Fragment {
         initPullRefreshLayout();
         initListView();
     }
+
+    /**
+     * 注册接收消息的广播
+     */
+    private void registerMessageFragmentReceiver() {
+        // TODO Auto-generated method stub
+        messageFragmentReceiver = new MessageFragmentReceiver();
+        IntentFilter intentFilter = new IntentFilter("message_notify");
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(messageFragmentReceiver, intentFilter);
+    }
+
 
     /**
      * 初始化PullRefreshLayout
@@ -287,21 +223,64 @@ public class CommunicationFragment extends Fragment {
     }
 
     /**
-     * 根据tabbar信息更新加号UI，这里显示信息附在Tabbar信息里
-     * 所以没有数据请求回来，MessageFragment不存在的情况
+     * 根据服务端的配置信息显示和隐藏沟通header上的通讯录和“+”按钮
      *
-     * @param appTabAutoBean
+     * @param appTabAutoBeans
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void updateMessageUI(AppTabAutoBean appTabAutoBean) {
-        if (appTabAutoBean != null) {
-            AppTabPayloadBean payloadBean = appTabAutoBean.getPayload();
-            if (payloadBean != null) {
-                showCreateGroupOrFindContact(payloadBean);
+    public void updateHeaderFunctionBtn(AppTabAutoBean appTabAutoBeans) {
+        String tabBarInfo = PreferencesByUserAndTanentUtils.getString(getActivity(), "app_tabbar_info_current", "");
+        if (StringUtils.isBlank(tabBarInfo)) {
+            return;
+        }
+        AppTabAutoBean appTabAutoBean = new AppTabAutoBean(tabBarInfo);
+        if (appTabAutoBean == null) {
+            return;
+        }
+        AppTabPayloadBean payloadBean = appTabAutoBean.getPayload();
+        if (payloadBean == null) {
+            return;
+        }
+        ArrayList<AppTabDataBean> appTabList =
+                (ArrayList<AppTabDataBean>) payloadBean.getTabs();
+        for (AppTabDataBean appTabDataBean : appTabList) {
+            if (appTabDataBean.getTabId().equals("communicate")) {
+                AppTabProperty property = appTabDataBean.getProperty();
+                if (property != null) {
+                    if (!property.isCanCreate()) {
+                        rootView.findViewById(R.id.more_function_list_img).setVisibility(View.GONE);
+                    }
+                    if (!property.isCanContact()) {
+                        rootView.findViewById(R.id.contact_img).setVisibility(View.GONE);
+                    }
+                }
+                break;
             }
         }
-
     }
+
+    /**
+     * 记录用户点击的频道
+     */
+    private void recordUserClickContact() {
+        PVCollectModel pvCollectModel = new PVCollectModel("contact", "communicate");
+        PVCollectModelCacheUtils.saveCollectModel(getActivity(), pvCollectModel);
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        ((IndexActivity) getActivity()).openTargetFragment();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (popupWindow != null && popupWindow.isShowing()) {
+            popupWindow.dismiss();
+        }
+    }
+
 
     private OnClickListener onViewClickListener = new OnClickListener() {
 
@@ -322,6 +301,23 @@ public class CommunicationFragment extends Fragment {
                     IntentUtils.startActivity(getActivity(),
                             ContactSearchActivity.class, bundle);
                     recordUserClickContact();
+                    break;
+                case R.id.message_create_group_layout:
+                    Intent contactIntent = new Intent();
+                    contactIntent.putExtra(ContactSearchActivity.EXTRA_TYPE, 2);
+                    contactIntent.putExtra(ContactSearchActivity.EXTRA_MULTI_SELECT, true);
+                    contactIntent.putExtra(ContactSearchActivity.EXTRA_TITLE,
+                            getActivity().getString(R.string.creat_group));
+                    contactIntent.setClass(getActivity(), ContactSearchActivity.class);
+                    startActivityForResult(contactIntent, CREAT_CHANNEL_GROUP);
+                    popupWindow.dismiss();
+                    break;
+                case R.id.message_scan_layout:
+                    Intent scanIntent = new Intent();
+                    scanIntent.setClass(getActivity(), CaptureActivity.class);
+                    scanIntent.putExtra("from", "CommunicationFragment");
+                    startActivityForResult(scanIntent, SCAN_LOGIN_QRCODE_RESULT);
+                    popupWindow.dismiss();
                     break;
                 default:
                     break;
@@ -351,72 +347,19 @@ public class CommunicationFragment extends Fragment {
                 // 拦截后 PopupWindow的onTouchEvent不被调用，这样点击外部区域无法dismiss
             }
         });
-
         popupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
             @Override
             public void onDismiss() {
-                backgroundAlpha(1.0f);
+                AppUtils.setWindowBackgroundAlpha(getActivity(),1.0f);
             }
         });
-
-        RelativeLayout createGroupLayout = (RelativeLayout) contentView
-                .findViewById(R.id.message_create_group_layout);
-        createGroupLayout.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent();
-                intent.putExtra("select_content", 2);
-                intent.putExtra("isMulti_select", true);
-                intent.putExtra("title",
-                        getActivity().getString(R.string.creat_group));
-                intent.setClass(getActivity(), ContactSearchActivity.class);
-                startActivityForResult(intent, CREAT_CHANNEL_GROUP);
-                popupWindow.dismiss();
-            }
-        });
-
-
-        RelativeLayout scanLayout = (RelativeLayout) contentView.findViewById(R.id.message_scan_layout);
-        scanLayout.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent();
-                intent.setClass(getActivity(), CaptureActivity.class);
-                intent.putExtra("from", "CommunicationFragmentV0");
-                startActivityForResult(intent, SCAN_LOGIN_QRCODE_RESULT);
-                popupWindow.dismiss();
-            }
-        });
-
-        // 如果不设置PopupWindow的背景，无论是点击外部区域还是Back键都无法dismiss弹框
-        // 我觉得这里是API的一个bug
+        contentView.findViewById(R.id.message_create_group_layout).setOnClickListener(onViewClickListener);
+        contentView.findViewById(R.id.message_scan_layout).setOnClickListener(onViewClickListener);
         popupWindow.setBackgroundDrawable(getResources().getDrawable(
                 R.drawable.pop_window_view_tran));
-        backgroundAlpha(0.8f);
+        AppUtils.setWindowBackgroundAlpha(getActivity(),0.8f);
         // 设置好参数之后再show
         popupWindow.showAsDropDown(view);
-
-    }
-
-    /**
-     * 设置添加屏幕的背景透明度
-     *
-     * @param bgAlpha
-     */
-    public void backgroundAlpha(float bgAlpha) {
-        WindowManager.LayoutParams lp = getActivity().getWindow().getAttributes();
-        lp.alpha = bgAlpha; //0.0-1.0
-        getActivity().getWindow().setAttributes(lp);
-    }
-
-    /**
-     * 注册接收消息的广播
-     */
-    private void registerMessageFragmentReceiver() {
-        // TODO Auto-generated method stub
-        messageFragmentReceiver = new MessageFragmentReceiver();
-        IntentFilter intentFilter = new IntentFilter("message_notify");
-        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(messageFragmentReceiver, intentFilter);
     }
 
 
@@ -427,7 +370,7 @@ public class CommunicationFragment extends Fragment {
         // TODO Auto-generated method stub
         List<Channel> channelList = ChannelCacheUtils
                 .getCacheChannelList(getActivity());
-        for (Channel channel:channelList){
+        for (Channel channel : channelList) {
             List<Msg> newMsgList = MsgCacheUtil.getHistoryMsgList(getActivity(), channel.getCid(), "",
                     15);
             channel.setNewMsgList(getActivity().getApplicationContext(), newMsgList);
@@ -476,8 +419,8 @@ public class CommunicationFragment extends Fragment {
                                 } else if (channel.getType().equals("GROUP")) {
                                     ChannelGroup channelGroup = ChannelGroupCacheUtils.getChannelGroupById(getActivity(), channel.getCid());
                                     String myUid = MyApplication.getInstance().getUid();
-                                    LogUtils.jasonDebug("channelGroup != null===="+(channelGroup != null));
-                                    LogUtils.jasonDebug("!channelGroup.getOwner().equals(myUid)===="+(!channelGroup.getOwner().equals(myUid)));
+                                    LogUtils.jasonDebug("channelGroup != null====" + (channelGroup != null));
+                                    LogUtils.jasonDebug("!channelGroup.getOwner().equals(myUid)====" + (!channelGroup.getOwner().equals(myUid)));
                                     if (channelGroup != null && !channelGroup.getOwner().equals(myUid)) {
                                         it.remove();
                                     }
@@ -966,7 +909,7 @@ public class CommunicationFragment extends Fragment {
         public void onReceive(Context context, Intent intent) {
             // TODO Auto-generated method stub
             String command = intent.getExtras().getString("command");
-            switch (command){
+            switch (command) {
                 case "creat_group_icon":
                     isHaveCreatGroupIcon = false;
                     createGroupIcon(null);
@@ -993,8 +936,8 @@ public class CommunicationFragment extends Fragment {
                     String mid = intent.getExtras().getString("mid");
                     setChannelMsgRead(cid, mid);
                     break;
-                   default:
-                       break;
+                default:
+                    break;
             }
         }
 
