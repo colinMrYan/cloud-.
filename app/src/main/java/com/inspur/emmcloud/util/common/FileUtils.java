@@ -1,6 +1,5 @@
 package com.inspur.emmcloud.util.common;
 
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -890,6 +889,7 @@ public class FileUtils {
      * @param fileName
      */
     public static int getIconResId(String fileName) {
+        fileName = fileName.toLowerCase();
         int imageIconId = R.drawable.icon_file_unknown;
         if (fileName.endsWith("doc") || fileName.endsWith("docx")) {
             imageIconId = R.drawable.icon_file_word;

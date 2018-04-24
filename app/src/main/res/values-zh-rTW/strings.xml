@@ -168,7 +168,7 @@
     <string name="no_this_knowledge">暫無這條知識</string>
     <string name="comment">評論</string>
     <string name="find_your_friends">尋找你的夥伴</string>
-    <string name="unknown">新功能</string>
+    <string name="new_function">新功能</string>
     <string name="app_update_function">当前版本不支持此功能请立即升级到最新版本</string>
 
     <!-- 新用戶註冊 -->
@@ -266,6 +266,7 @@
     <string name="chat_file_download_success">檔案已下載成功，再次點擊進行打開</string>
     <string name="group_name_longth_valid">群名稱字數超限（不超過40個字元）</string>
     <string name="message_create_group">發起群聊</string>
+    <string name="business_card">個人名片</string>
 
 
     <!-- 會議卡片 -->

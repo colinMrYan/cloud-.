@@ -169,7 +169,6 @@ public class MessageFragment extends Fragment {
         registerMessageFragmentReceiver();
         getChannelList();
         sortChannelList();// 对Channel 进行排序
-        registerMessageFragmentReceiver();
         showMessageButtons();
         EventBus.getDefault().register(this);
     }
@@ -419,7 +418,6 @@ public class MessageFragment extends Fragment {
         messageFragmentReceiver = new MessageFragmentReceiver();
         IntentFilter intentFilter = new IntentFilter("message_notify");
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(messageFragmentReceiver, intentFilter);
-
     }
 
 
@@ -1126,7 +1124,6 @@ public class MessageFragment extends Fragment {
             LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(messageFragmentReceiver);
             messageFragmentReceiver = null;
         }
-
         if (handler != null) {
             handler = null;
         }

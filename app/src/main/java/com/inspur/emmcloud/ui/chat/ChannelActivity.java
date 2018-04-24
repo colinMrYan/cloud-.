@@ -43,7 +43,6 @@ import com.inspur.emmcloud.ui.contact.UserInfoActivity;
 import com.inspur.emmcloud.util.common.InputMethodUtils;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
@@ -243,6 +242,7 @@ public class ChannelActivity extends BaseActivity {
      * 处理chatInputMenu是否显示，以及显示几个Menu上的item
      */
     private void initChatInputMenu() {
+        chatInputMenu.setSpecialUser(isSpecialUser);
         chatInputMenu.setOtherLayoutView(swipeRefreshLayout);
         if (channel.getType().equals("GROUP")) {
             chatInputMenu.setCanMentions(true, cid);
@@ -257,7 +257,6 @@ public class ChannelActivity extends BaseActivity {
                 sendTextMessage(content, mentionsUidList, urlList,false);
             }
         });
-        LogUtils.jasonDebug("channel.getInputs()=" + channel.getInputs());
         chatInputMenu.setInputLayout(isSpecialUser ? "1" : channel.getInputs());
     }
 

@@ -168,7 +168,7 @@
     <string name="comment">Comment</string>
     <string name="find_your_friends">Find your friends</string>
     <string name="not_support_upload">Does not support file upload without suffix </string>
-    <string name="unknown">New</string>
+    <string name="new_function">New</string>
     <string name="app_update_function">This feature is not supported by the current version, please upgrade to the latest version</string>
     <!-- 新添加部分 -->
 
@@ -266,6 +266,7 @@
     <string name="chat_file_download_success">File has been downloaded successfully, click again to open</string>
     <string name="group_name_longth_valid">Group name, word overrun (no more than 40 characters)</string>
     <string name="message_create_group">Group Chat</string>
+    <string name="business_card">Business Card</string>
 
 
     <!-- 会议卡片 -->
