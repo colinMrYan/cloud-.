@@ -35,6 +35,7 @@ import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.bean.chat.Channel;
 import com.inspur.emmcloud.bean.chat.ChannelGroup;
 import com.inspur.emmcloud.bean.chat.ChannelOperationInfo;
+import com.inspur.emmcloud.bean.chat.EventMessageUnReadCount;
 import com.inspur.emmcloud.bean.chat.GetChannelListResult;
 import com.inspur.emmcloud.bean.chat.GetNewMsgsResult;
 import com.inspur.emmcloud.bean.chat.MatheSet;
@@ -750,7 +751,7 @@ public class CommunicationFragmentV0 extends Fragment {
                 unReadCount += displayChannelList.get(i).getUnReadCount();
             }
         }
-        ((IndexActivity) getActivity()).updateMessageUnReadCount(unReadCount);
+        EventBus.getDefault().post(new EventMessageUnReadCount(unReadCount));
     }
 
     static class ViewHolder {
@@ -1109,6 +1110,9 @@ public class CommunicationFragmentV0 extends Fragment {
     public void onDestroy() {
         // TODO Auto-generated method stub
         super.onDestroy();
+        if (handler != null) {
+            handler = null;
+        }
         if (cacheChannelTask != null && !cacheChannelTask.isCancelled() && cacheChannelTask.getStatus() == AsyncTask.Status.RUNNING) {
             cacheChannelTask.cancel(true);
             cacheChannelTask = null;
@@ -1124,9 +1128,6 @@ public class CommunicationFragmentV0 extends Fragment {
         if (messageFragmentReceiver != null) {
             LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(messageFragmentReceiver);
             messageFragmentReceiver = null;
-        }
-        if (handler != null) {
-            handler = null;
         }
         EventBus.getDefault().unregister(this);
     }
