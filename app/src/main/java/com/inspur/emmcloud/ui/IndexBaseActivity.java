@@ -27,12 +27,13 @@ import com.inspur.emmcloud.bean.system.GetAppTabAutoResult;
 import com.inspur.emmcloud.bean.system.PVCollectModel;
 import com.inspur.emmcloud.interf.OnTabReselectListener;
 import com.inspur.emmcloud.ui.appcenter.MyAppFragment;
-import com.inspur.emmcloud.ui.chat.MessageFragment;
+import com.inspur.emmcloud.ui.chat.CommunicationFragment;
 import com.inspur.emmcloud.ui.find.FindFragment;
 import com.inspur.emmcloud.ui.mine.MoreFragment;
 import com.inspur.emmcloud.ui.notsupport.NotSupportFragment;
 import com.inspur.emmcloud.ui.work.TabBean;
 import com.inspur.emmcloud.ui.work.WorkFragment;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.StateBarUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
@@ -62,12 +63,10 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
 
     private  TextView newMessageTipsText;
 
-    @ViewInject(R.id.new_message_tips_layout)
     private  RelativeLayout newMessageTipsLayout;
 
     @ViewInject(R.id.tip)
     private TipsView tipsView;
-    private String notSupportTitle = "";
     private boolean isCommunicationRunning = false;
     private boolean isSystemChangeTag = true;//控制如果是系统切换的tab则不计入用户行为
 
@@ -101,27 +100,22 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
                     TabBean tabBean = null;
                     switch (appTabList.get(i).getTabId()) {
                         case "communicate":
-                            tabBean = new TabBean(getString(R.string.communicate), R.drawable.selector_tab_message_btn + "", MessageFragment.class);
+                            tabBean = new TabBean(getString(R.string.communicate), R.drawable.selector_tab_message_btn + "", CommunicationFragment.class);
                             break;
                         case "work":
-                            tabBean = new TabBean(getString(R.string.work), R.drawable.selector_tab_work_btn + "",
-                                    WorkFragment.class);
+                            tabBean = new TabBean(getString(R.string.work), R.drawable.selector_tab_work_btn + "", WorkFragment.class);
                             break;
                         case "find":
-                            tabBean = new TabBean(getString(R.string.find), R.drawable.selector_tab_find_btn + "",
-                                    FindFragment.class);
+                            tabBean = new TabBean(getString(R.string.find), R.drawable.selector_tab_find_btn + "", FindFragment.class);
                             break;
                         case "application":
-                            tabBean = new TabBean(getString(R.string.application), R.drawable.selector_tab_app_btn + "",
-                                    MyAppFragment.class);
+                            tabBean = new TabBean(getString(R.string.application), R.drawable.selector_tab_app_btn + "", MyAppFragment.class);
                             break;
                         case "mine":
-                            tabBean = new TabBean(getString(R.string.mine), R.drawable.selector_tab_more_btn + "",
-                                    MoreFragment.class);
+                            tabBean = new TabBean(getString(R.string.mine), R.drawable.selector_tab_more_btn + "", MoreFragment.class);
                             break;
                         default:
-                            tabBean = new TabBean(getString(R.string.new_function), R.drawable.selector_tab_unknown_btn + "",
-                                    NotSupportFragment.class);
+                            tabBean = new TabBean(getString(R.string.new_function), R.drawable.selector_tab_unknown_btn + "", NotSupportFragment.class);
                             break;
                     }
                     tabBean.setTabId(appTabList.get(i).getTabId());
@@ -282,15 +276,6 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
         return tabBeans;
     }
 
-    /**
-     * 暴露当前页面标题接口
-     *
-     * @return
-     */
-    public String getNotSupportString() {
-        return notSupportTitle;
-    }
-
 
     /**
      * 根据语言设置tab，扩展语言从这里扩展
@@ -412,7 +397,7 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
 
     @Override
     public void onTabChanged(String tabId) {
-        notSupportTitle = tabId;
+        LogUtils.jasonDebug("tabId="+tabId);
         tipsView.setCanTouch(tabId.equals("communicate"));
         if (!isSystemChangeTag) {
             //记录打开的tab页

@@ -34,7 +34,6 @@ import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.ClientIDUtils;
 import com.inspur.emmcloud.util.privates.MyAppWidgetUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
-import com.inspur.emmcloud.util.privates.PushInfoUtils;
 import com.inspur.emmcloud.util.privates.ReactNativeUtils;
 import com.inspur.emmcloud.util.privates.SplashPageUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
@@ -59,11 +58,11 @@ import java.util.List;
 public class IndexActivity extends IndexBaseActivity {
     private static final int SYNC_ALL_BASE_DATA_SUCCESS = 0;
     private static final int RELOAD_WEB = 3;
+    @ViewInject(R.id.preload_webview)
+    private WebView webView;
     private WeakHandler handler;
     private boolean isHasCacheContact = false;
     private LoadingDialog loadingDlg;
-    @ViewInject(R.id.preload_webview)
-    private WebView webView;
     private ContactCacheTask contactCacheTask;
 
     @Override
@@ -82,7 +81,6 @@ public class IndexActivity extends IndexBaseActivity {
     private void initAppEnvironment() {
         MyApplication.getInstance().setIndexActvityRunning(true);
         MyApplication.getInstance().restartAllDb();
-        MyApplication.getInstance().closeWebSocket();
         MyApplication.getInstance().clearUserPhotoMap();
         MyApplication.getInstance().startPush();
     }

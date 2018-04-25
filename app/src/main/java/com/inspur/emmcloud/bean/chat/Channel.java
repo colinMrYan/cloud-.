@@ -53,7 +53,8 @@ public class Channel implements Serializable {
     private boolean dnd = false;
     @Column(name = "inputs")
     private String inputs = "";
-    private List<Msg> newMsgList = new ArrayList<Msg>();
+    private List<Msg> newMsgList = new ArrayList<>();
+    private List<Message> MessageList = new ArrayList<>();
     private int unReadCount = 0;
     private String displayTitle = "";//session显示的名字
     private String newMsgContent = "";
@@ -84,9 +85,6 @@ public class Channel implements Serializable {
                 // 解决最新创建的会话无法显示在列表的最上端的问题
                 setMsgLastUpdate(TimeUtils.UTCString2Long(lastUpdate));
             }
-            // if (obj.has("weight")) {
-            // this.weight = obj.getInt("weight");
-            // }
             if (obj.has("type")) {
                 this.type = obj.getString("type");
             }

@@ -5,9 +5,11 @@ import com.inspur.emmcloud.util.privates.TimeUtils;
 
 import org.json.JSONObject;
 import org.xutils.db.annotation.Column;
+import org.xutils.db.annotation.Table;
 
 import java.io.Serializable;
 
+@Table(name = "Message",onCreated = "CREATE INDEX messageindex ON Message(channel)")
 public class Message implements Serializable {
     private static final String TAG = "Msg";
     @Column(name = "id", isId = true)

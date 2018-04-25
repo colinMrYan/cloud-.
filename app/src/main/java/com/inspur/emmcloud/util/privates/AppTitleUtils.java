@@ -49,7 +49,7 @@ public class AppTitleUtils {
      * @return
      */
     private static String getCompont(String tabkey) {
-        if(tabkey.equals("CommunicationFragmentV0")){
+        if(tabkey.startsWith("CommunicationFragment")){
             return "communicate";
         }else if(tabkey.equals("FindFragment")){
             return "find";

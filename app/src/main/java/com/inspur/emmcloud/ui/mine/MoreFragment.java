@@ -2,14 +2,15 @@ package com.inspur.emmcloud.ui.mine;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.inspur.emmcloud.BaseFragment;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
@@ -36,7 +37,7 @@ import static android.app.Activity.RESULT_OK;
 /**
  * 更多页面
  */
-public class MoreFragment extends BaseFragment {
+public class MoreFragment extends Fragment {
 
     private static final int REQUEST_CODE_UPDATE_USER_PHOTO = 3;
     private View rootView;
@@ -61,6 +62,20 @@ public class MoreFragment extends BaseFragment {
         if (customerChannel == null) {
             (rootView.findViewById(R.id.customer_layout)).setVisibility(View.GONE);
         }
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        if (rootView == null) {
+            rootView = inflater.inflate(R.layout.fragment_mine, container,
+                    false);
+        }
+        ViewGroup parent = (ViewGroup) rootView.getParent();
+        if (parent != null) {
+            parent.removeView(rootView);
+        }
+        return rootView;
     }
 
     /**

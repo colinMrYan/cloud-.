@@ -6,10 +6,12 @@ import android.util.Log;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.api.APIUri;
+import com.inspur.emmcloud.bean.chat.WSPushMessageContent;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.privates.PushInfoUtils;
 
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONObject;
 
 import java.net.URI;
@@ -217,11 +219,9 @@ public class WebSocketPush {
 			@Override
 			public void call(Object... arg0) {
 				// TODO Auto-generated method stub
-				String content = arg0[0].toString();
-				LogUtils.debug(TAG, "messageV1:" + arg0[0].toString());
-				Intent intent = new Intent("com.inspur.msg");
-				intent.putExtra("content", content);
-				LocalBroadcastManager.getInstance(MyApplication.getInstance()).sendBroadcast(intent);
+				WSPushMessageContent wsPushMessageContent = new WSPushMessageContent(arg0[0].toString());
+				//将websocket推送过来的内容通过EventBus发送
+				EventBus.getDefault().post(wsPushMessageContent);
 			}
 		});
 
