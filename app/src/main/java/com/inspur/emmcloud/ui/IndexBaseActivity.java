@@ -20,6 +20,7 @@ import com.inspur.emmcloud.BaseFragmentActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.appcenter.GetAppBadgeResult;
+import com.inspur.emmcloud.bean.chat.EventMessageUnReadCount;
 import com.inspur.emmcloud.bean.chat.TransparentBean;
 import com.inspur.emmcloud.bean.system.AppTabAutoBean;
 import com.inspur.emmcloud.bean.system.AppTabDataBean;
@@ -183,12 +184,13 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
      *
      * @param count
      */
-    public void updateMessageUnReadCount(int count) {
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void updateMessageUnReadCount(EventMessageUnReadCount eventMessageUnReadCount) {
         if (newMessageTipsText != null) {
-            if (count == 0) {
+            if (eventMessageUnReadCount.getMessageUnReadCount() == 0) {
                 newMessageTipsLayout.setVisibility(View.GONE);
             } else {
-                String shoWNum = (count > 99)?"99+":count + "";
+                String shoWNum = (eventMessageUnReadCount.getMessageUnReadCount() > 99)?"99+":eventMessageUnReadCount.getMessageUnReadCount() + "";
                 newMessageTipsLayout.setVisibility(View.VISIBLE);
                 newMessageTipsText.setText(shoWNum);
             }
@@ -337,7 +339,7 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
                 Intent intent = new Intent("message_notify");
                 intent.putExtra("command", "set_all_message_read");
                 LocalBroadcastManager.getInstance(IndexBaseActivity.this).sendBroadcast(intent);
-                updateMessageUnReadCount(0);
+                updateMessageUnReadCount(new EventMessageUnReadCount(0));
             }
 
             @Override
