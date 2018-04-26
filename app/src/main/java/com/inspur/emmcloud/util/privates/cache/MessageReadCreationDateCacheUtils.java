@@ -17,7 +17,7 @@ public class MessageReadCreationDateCacheUtils {
 	 * @param cid
 	 * @param msgID
 	 */
-	public static void saveMsgReadCreationDate(Context context, String cid, long messageCreationDate) {
+	public static void saveMessageReadCreationDate(Context context, String cid, long messageCreationDate) {
 		try {
             DbCacheUtils.getDb(context).saveOrUpdate(new MessageReadCreationDate(cid, messageCreationDate));
 		} catch (Exception e) {

@@ -11,6 +11,7 @@ import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.richtext.markdown.MarkDown;
 import com.inspur.emmcloud.util.privates.DirectChannelUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
+import com.inspur.emmcloud.util.privates.cache.ContactCacheUtils;
 
 import org.json.JSONObject;
 import org.xutils.db.annotation.Column;
@@ -54,7 +55,7 @@ public class Channel implements Serializable {
     @Column(name = "inputs")
     private String inputs = "";
     private List<Msg> newMsgList = new ArrayList<>();
-    private List<Message> MessageList = new ArrayList<>();
+    private List<Message> newMessageList = new ArrayList<>();
     private int unReadCount = 0;
     private String displayTitle = "";//session显示的名字
     private String newMsgContent = "";
@@ -123,6 +124,22 @@ public class Channel implements Serializable {
         }
         setMsgLastUpdate(TimeUtils.UTCString2Long(lastMsgTime));
         setNewMsgContent(context);
+    }
+
+    public void setNewMessageList(Context context, List<Message> messageList) {
+        newMessageList.clear();
+        if (messageList != null) {
+            newMessageList.addAll(messageList);
+        }
+        long lastMsgTime;
+        if (newMessageList.size() > 0) {
+            lastMsgTime = newMessageList.get(newMessageList.size() - 1).getCreationDate();
+        } else {
+            lastMsgTime = TimeUtils.UTCString2Long(lastUpdate);
+        }
+        setMsgLastUpdate(lastMsgTime);
+        setNewMessageContent(context);
+
     }
 
     public void setMsgLastUpdate(long time) {
@@ -196,7 +213,7 @@ public class Channel implements Serializable {
                     newMsgContent = msg.getNTitle();
                     break;
                 case "res_link":
-                    newMsgContent = title + context.getString(R.string.share_a_link);
+                    newMsgContent = title + context.getString(R.string.send_a_link);
                     break;
                 case "txt_rich":
                     String msgBody = msg.getBody();
@@ -208,7 +225,7 @@ public class Channel implements Serializable {
                     if (type.equals("GROUP")) {
                         newMsgContent = title + newMsgContent;
                     }
-                    if (StringUtils.isEmpty(newMsgContent) && type.equals("SERVICE")&& getTitle().contains("BOT6006")) {
+                    if (StringUtils.isEmpty(newMsgContent) && type.equals("SERVICE") && getTitle().contains("BOT6006")) {
                         newMsgContent = context.getString(R.string.welcome_to_attention) + " " + DirectChannelUtils.getRobotInfo(context, getTitle()).getName();
                     }
                     break;
@@ -231,6 +248,57 @@ public class Channel implements Serializable {
         }
 
     }
+
+    public void setNewMessageContent(Context context) {
+        if (newMessageList.size() > 0) {
+            Message message = newMessageList.get(newMessageList.size() - 1);
+            String fromUserName = "";
+            String messageType = message.getType();
+            if (!type.equals("DIRECT") && !message.getFromUser().equals(MyApplication.getInstance().getUid())) {
+                fromUserName = ContactCacheUtils.getUserName(MyApplication.getInstance(), message.getFromUser()) + "：";
+            }
+            switch (messageType) {
+                case "text/plain":
+                    newMsgContent = fromUserName + message.getMsgContentTextPlain().getText();
+                    break;
+                case "text/markdown":
+                    newMsgContent = fromUserName + message.getMsgContentTextMarkdown().getText();
+                    break;
+                case "comment/text-plai":
+                    newMsgContent = fromUserName + context.getString(R.string.send_a_comment);
+                    break;
+                case "file/regular-file":
+                    newMsgContent = fromUserName + context.getString(R.string.send_a_file);
+                    break;
+                case "media/image":
+                    newMsgContent = fromUserName + context.getString(R.string.send_a_picture);
+                    break;
+                case "extended/links":
+                    newMsgContent = fromUserName + context.getString(R.string.send_a_link);
+                    break;
+                case "extended/contact-card":
+                    newMsgContent = fromUserName + context.getString(R.string.send_a_link);
+                    break;
+                default:
+                    newMsgContent = fromUserName + context
+                            .getString(R.string.send_a_message_of_unknown_type);
+                    break;
+            }
+        } else {
+            if (type.equals("SERVICE")) {
+                newMsgContent = context
+                        .getString(R.string.welcome_to_attention) + " " + DirectChannelUtils.getRobotInfo(context, title).getName();
+            } else if (type.equals("GROUP")) {
+                newMsgContent = context.getString(
+                        R.string.group_no_message);
+            } else {
+                newMsgContent = context.getString(
+                        R.string.direct_no_message);
+            }
+        }
+
+    }
+
 
     public String getCid() {
         return cid;

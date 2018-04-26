@@ -233,7 +233,8 @@
     <string name="send_a_picture">[Image]</string>
     <string name="send_a_comment">[Comment]</string>
     <string name="send_a_file">[File]</string>
-    <string name="share_a_link">[News]</string>
+    <string name="send_a_link">[Link]</string>
+    <string name="send_a_contact_card">[Buisiness Card]</string>
     <string name="send_a_meeting_invitation">[Meeting Invitation]</string>
     <string name="cancel_a_meeting">[Meeting Cancellation]</string>
     <string name="send_a_meeting_request">[Meeting Approval]</string>

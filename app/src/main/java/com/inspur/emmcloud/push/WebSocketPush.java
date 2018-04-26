@@ -219,6 +219,7 @@ public class WebSocketPush {
 			@Override
 			public void call(Object... arg0) {
 				// TODO Auto-generated method stub
+				LogUtils.debug(TAG,"arg0[0].toString()="+arg0[0].toString());
 				WSPushMessageContent wsPushMessageContent = new WSPushMessageContent(arg0[0].toString());
 				//将websocket推送过来的内容通过EventBus发送
 				EventBus.getDefault().post(wsPushMessageContent);

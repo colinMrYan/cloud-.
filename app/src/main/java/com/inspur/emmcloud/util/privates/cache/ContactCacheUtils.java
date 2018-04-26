@@ -426,10 +426,18 @@ public class ContactCacheUtils {
     public static String getUserName(Context context, String uid) {
         String name = "";
         try {
-            Contact contact = DbCacheUtils.getDb(context).selector(Contact.class).where(
-                    "inspurID", "=", uid).findFirst();
-            if (contact != null) {
-                name = contact.getRealName();
+            if (uid.startsWith("BOT")){
+                Robot robot =  RobotCacheUtils
+                        .getRobotById(context, uid);
+                if (robot != null){
+                    name = robot.getName();
+                }
+            }else {
+                Contact contact = DbCacheUtils.getDb(context).selector(Contact.class).where(
+                        "inspurID", "=", uid).findFirst();
+                if (contact != null) {
+                    name = contact.getRealName();
+                }
             }
 
         } catch (Exception e) {

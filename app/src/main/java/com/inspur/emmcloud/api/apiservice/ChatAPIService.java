@@ -23,6 +23,7 @@ import com.inspur.emmcloud.bean.chat.GetFileUploadResult;
 import com.inspur.emmcloud.bean.chat.GetMsgCommentCountResult;
 import com.inspur.emmcloud.bean.chat.GetMsgCommentResult;
 import com.inspur.emmcloud.bean.chat.GetMsgResult;
+import com.inspur.emmcloud.bean.chat.GetNewMessagesResult;
 import com.inspur.emmcloud.bean.chat.GetNewMsgsResult;
 import com.inspur.emmcloud.bean.chat.GetNewsImgResult;
 import com.inspur.emmcloud.bean.chat.GetNewsInstructionResult;
@@ -164,12 +165,65 @@ public class ChatAPIService {
 	}
 
 	/**
+	 * 获取新消息
+	 *
+	 * @param cid
+	 * @param msgId
+	 * @param count
+	 */
+	public void getNewMessages(final String cid, final String msgId, final int count) {
+		final String completeUrl = APIUri.getHttpApiUrl("session/message");
+		RequestParams params = ((MyApplication) context.getApplicationContext())
+				.getHttpRequestParams(completeUrl);
+		params.addParameter("limit", count);
+		if (!StringUtils.isBlank(msgId)) {
+			params.addParameter("mid", msgId);
+		}
+		if (!StringUtils.isBlank(cid)) {
+			params.addParameter("cid", cid);
+		}
+
+		x.http().get(params, new APICallback(context, completeUrl) {
+
+			@Override
+			public void callbackTokenExpire(long requestTime) {
+				OauthCallBack oauthCallBack = new OauthCallBack() {
+					@Override
+					public void reExecute() {
+						getNewMsgs(cid, msgId, count);
+					}
+
+					@Override
+					public void executeFailCallback() {
+						callbackFail("", -1);
+					}
+				};
+				OauthUtils.getInstance().refreshToken(
+						oauthCallBack, requestTime);
+			}
+
+
+			@Override
+			public void callbackSuccess(String arg0) {
+				// TODO Auto-generated method stub
+				apiInterface.returnNewMessagesSuccess(new GetNewMessagesResult(arg0));
+			}
+
+			@Override
+			public void callbackFail(String error, int responseCode) {
+				// TODO Auto-generated method stub
+				apiInterface.returnNewMessagesFail(error, responseCode);
+			}
+		});
+
+	}
+
+	/**
 	 * 获取评论
 	 *
 	 * @param mid
 	 */
 	public void getComment(final String mid) {
-
 		final String completeUrl = APIUri.getHttpApiUrl("message/" + mid
 				+ "/comment");
 		RequestParams params = ((MyApplication) context.getApplicationContext())
