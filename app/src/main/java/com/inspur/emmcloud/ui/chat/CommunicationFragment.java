@@ -47,6 +47,7 @@ import com.inspur.emmcloud.bean.system.PVCollectModel;
 import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.util.common.IntentUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
@@ -625,6 +626,7 @@ public class CommunicationFragment extends Fragment {
                 channel.setIsSetTop(false);
                 int unReadCount = MessageReadCreationDateCacheUtils.getNotReadMessageCount(
                         MyApplication.getInstance(), channel.getCid());
+                LogUtils.jasonDebug("unReadCount="+unReadCount);
                 channel.setUnReadCount(unReadCount);
                 channel.setDisplayTitle(CommunicationUtils.getChannelDisplayTitle(channel));
             }

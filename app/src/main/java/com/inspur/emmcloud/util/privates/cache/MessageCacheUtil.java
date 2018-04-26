@@ -115,7 +115,7 @@ public class MessageCacheUtil {
         try {
 
             message = DbCacheUtils.getDb(context).selector(Message.class)
-                    .where("cid", "=", cid).orderBy("creationDate", true).findFirst();
+                    .where("channel", "=", cid).orderBy("creationDate", true).findFirst();
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -146,7 +146,7 @@ public class MessageCacheUtil {
                     (Message.class)
                     .where("creationDate", "between",
                             new String[]{mathSetStart + "", targetCreateDate + ""})
-                    .and("creationDate", "!=", targetCreateDate).and("cid", "=", cid).count();
+                    .and("creationDate", "!=", targetCreateDate).and("channel", "=", cid).count();
 
 
             if (continuousCount >= num) {
@@ -191,7 +191,7 @@ public class MessageCacheUtil {
         try {
 
             count = (int) DbCacheUtils.getDb(context).selector(Message.class)
-                    .where("creationDate", ">", targetMessageReadCreationDate).and("cid", "=", cid).count();
+                    .where("creationDate", ">", targetMessageReadCreationDate).and("channel", "=", cid).count();
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -226,7 +226,7 @@ public class MessageCacheUtil {
         try {
             imgTypeMessageList = DbCacheUtils.getDb(context).selector
                     (Message.class)
-                    .where("cid", "=", cid)
+                    .where("channel", "=", cid)
                     .and(WhereBuilder.b("type", "=", "image").or("type", "=", "res_image").or("type", "=", "media/image")).orderBy("creationDate", desc).findAll();
         } catch (Exception e) {
             // TODO Auto-generated catch block
@@ -250,7 +250,7 @@ public class MessageCacheUtil {
         try {
 
             fileTypeMessageList = DbCacheUtils.getDb(context).selector(Message.class)
-                    .where("cid", "=", cid).and(WhereBuilder.b("type", "=", "res_file").or("type", "=", "file/regular-file"))
+                    .where("channel", "=", cid).and(WhereBuilder.b("type", "=", "res_file").or("type", "=", "file/regular-file"))
                     .orderBy("creationDate", true).findAll();
         } catch (Exception e) {
             // TODO Auto-generated catch block
