@@ -189,7 +189,7 @@ public class MyAppFragment extends Fragment {
         dataSetObserver = new DataSetObserver() {
             @Override
             public void onChanged() {
-                updateAppListAdapterSizeChange();
+                updateAppListAdapterSize();
             }
         };
         initPullRefreshLayout();
@@ -315,7 +315,7 @@ public class MyAppFragment extends Fragment {
     /**
      *  当Adapter的大小发生改变时调用此方法
      */
-    private void updateAppListAdapterSizeChange() {
+    private void updateAppListAdapterSize() {
         if(appListAdapter != null){
             if(appListAdapter.getCount() == 0){
 
