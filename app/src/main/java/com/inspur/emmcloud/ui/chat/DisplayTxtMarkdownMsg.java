@@ -80,6 +80,9 @@ public class DisplayTxtMarkdownMsg {
                 .singleLoad(false)
                 .cache(CacheType.ALL)
                 .into(richTitleText);
+
+
+
         RichText.from(text)
                 .type(RichType.MARKDOWN)
                 .linkFix(new LinkFixCallback() {

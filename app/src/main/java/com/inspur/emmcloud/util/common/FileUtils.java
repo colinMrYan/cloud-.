@@ -915,6 +915,7 @@ public class FileUtils {
          * @param fileName
          */
     public static int getIconResIdRobot(String fileName) {
+        fileName = fileName.toLowerCase();
         int imageIconId = R.drawable.ic_volume_file_typ_unknown;
         if (fileName.endsWith("doc") || fileName.endsWith("docx")) {
             imageIconId = R.drawable.ic_volume_file_typ_word;

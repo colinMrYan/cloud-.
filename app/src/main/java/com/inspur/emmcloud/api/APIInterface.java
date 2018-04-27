@@ -561,6 +561,10 @@ public interface APIInterface {
     void returnVolumeFileUploadTokenSuccess(GetVolumeFileUploadTokenResult getVolumeFileUploadTokenResult, String fileLocalPath, VolumeFile mockVolumeFile);
 
     void returnVolumeFileUploadTokenFail(VolumeFile mockVolumeFile, String error, int errorCode, String filePath);
+    void returnChatFileUploadTokenSuccess(GetVolumeFileUploadTokenResult getVolumeFileUploadTokenResult);
+
+    void returnChatFileUploadTokenFail(String error, int errorCode);
+
 
     void returnCreateForderSuccess(VolumeFile volumeFile);
 

@@ -15,22 +15,15 @@ import android.widget.TextView;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.bean.chat.Message;
-import com.inspur.emmcloud.bean.chat.Msg;
-import com.inspur.emmcloud.ui.chat.ChannelMsgDetailActivity;
+import com.inspur.emmcloud.bean.chat.UIMessage;
 import com.inspur.emmcloud.ui.chat.DisplayAttachmentCardMsg;
 import com.inspur.emmcloud.ui.chat.DisplayRegularFileMsg;
 import com.inspur.emmcloud.ui.chat.DisplayExtendedActionsMsg;
-import com.inspur.emmcloud.ui.chat.DisplayResFileMsg;
-import com.inspur.emmcloud.ui.chat.DisplayResImageMsg;
-import com.inspur.emmcloud.ui.chat.DisplayResLinkMsg;
 import com.inspur.emmcloud.ui.chat.DisplayResUnknownMsg;
-import com.inspur.emmcloud.ui.chat.DisplayTxtCommentMsg;
 import com.inspur.emmcloud.ui.chat.DisplayTxtMarkdownMsg;
 import com.inspur.emmcloud.ui.chat.DisplayTxtPlainMsg;
-import com.inspur.emmcloud.ui.chat.DisplayTxtRichMsg;
 import com.inspur.emmcloud.ui.contact.RobotInfoActivity;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
 import com.inspur.emmcloud.util.common.IntentUtils;
@@ -45,24 +38,24 @@ import java.util.List;
  * Created by chenmch on 2017/11/10.
  */
 
-public class ChannelMsgAdapter extends RecyclerView.Adapter<ChannelMsgAdapter.ViewHolder> {
+public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAdapter.ViewHolder> {
     private Activity context;
-    private List<Msg> msgList = new ArrayList<>();
+    private List<UIMessage> UIMessageList = new ArrayList<>();
     private MyItemClickListener mItemClickListener;
-    private ChatAPIService apiService;
     private String channelType;
     private ECMChatInputMenu chatInputMenu;
+    private ChatAPIService apiService;
 
-    public ChannelMsgAdapter(Activity context, ChatAPIService apiService, String channelType, ECMChatInputMenu chatInputMenu) {
+    public ChannelMessageAdapter(Activity context, ChatAPIService apiService, String channelType, ECMChatInputMenu chatInputMenu) {
         this.context = context;
-        this.apiService = apiService;
         this.channelType = channelType;
         this.chatInputMenu = chatInputMenu;
+        this.apiService = apiService;
     }
 
-    public void setMsgList(List<Msg> msgList) {
-        this.msgList.clear();
-        this.msgList.addAll(msgList);
+    public void setMessageList(List<UIMessage> UImessageList) {
+        this.UIMessageList.clear();
+        this.UIMessageList.addAll(UImessageList);
     }
 
     @Override
@@ -74,12 +67,12 @@ public class ChannelMsgAdapter extends RecyclerView.Adapter<ChannelMsgAdapter.Vi
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        final Msg msg = msgList.get(position);
-        showCardLayout(holder, msg);
-        showUserName(holder, msg);
-        showMsgSendTime(holder, msg, position);
-        showUserPhoto(holder, msg);
-        showRefreshingImg(holder, msg);
+        final UIMessage UImessage = UIMessageList.get(position);
+        showCardLayout(holder, UImessage.getMessage());
+        showUserName(holder, UImessage);
+        showMsgSendTime(holder, UImessage, position);
+        showUserPhoto(holder, UImessage);
+        showRefreshingImg(holder, UImessage);
     }
 
     /**
@@ -93,7 +86,7 @@ public class ChannelMsgAdapter extends RecyclerView.Adapter<ChannelMsgAdapter.Vi
 
     @Override
     public int getItemCount() {
-        return msgList.size();
+        return UIMessageList.size();
     }
 
 
@@ -127,7 +120,7 @@ public class ChannelMsgAdapter extends RecyclerView.Adapter<ChannelMsgAdapter.Vi
             newsCommentText = (TextView) view
                     .findViewById(R.id.news_comment_text);
             senderPhotoRightView = view.findViewById(R.id.sender_photo_right_view);
-            cardParentLayout =(RelativeLayout)view.findViewById(R.id.card_parent_layout);
+            cardParentLayout = (RelativeLayout) view.findViewById(R.id.card_parent_layout);
         }
 
         /**
@@ -151,8 +144,8 @@ public class ChannelMsgAdapter extends RecyclerView.Adapter<ChannelMsgAdapter.Vi
      * @param holder
      * @param msg
      */
-    private void showRefreshingImg(ViewHolder holder, Msg msg) {
-        if (msg.getSendStatus() == 0) {
+    private void showRefreshingImg(ViewHolder holder, UIMessage UIMessage) {
+        if (UIMessage.getSendStatus() == 0) {
             holder.refreshingImg.setImageResource(R.drawable.pull_loading);
             RotateAnimation refreshingAnimation = (RotateAnimation) AnimationUtils.loadAnimation(
                     context, R.anim.pull_rotating);
@@ -161,20 +154,14 @@ public class ChannelMsgAdapter extends RecyclerView.Adapter<ChannelMsgAdapter.Vi
             refreshingAnimation.setInterpolator(lir);
             holder.refreshingImg.setVisibility(View.VISIBLE);
             holder.refreshingImg.startAnimation(refreshingAnimation);
-        } else if (msg.getSendStatus() == 2) {
+        } else if (UIMessage.getSendStatus() == 2) {
             holder.refreshingImg.clearAnimation();
             holder.refreshingImg.setVisibility(View.VISIBLE);
             holder.refreshingImg.setImageResource(R.drawable.ic_chat_msg_send_fail);
         } else {
             holder.refreshingImg.clearAnimation();
-           boolean isMyMsg;
-            if (Message.isMessage(msg)){
-                Message message = new Message(msg);
-                isMyMsg = message.getFromUser().equals(MyApplication.getInstance().getUid());
-            }else {
-                isMyMsg =  msg.getUid().equals(MyApplication.getInstance().getUid());
-            }
-            holder.refreshingImg.setVisibility(isMyMsg?View.INVISIBLE:View.GONE);
+            boolean isMyMsg = UIMessage.getMessage().getFromUser().equals(MyApplication.getInstance().getUid());
+            holder.refreshingImg.setVisibility(isMyMsg ? View.INVISIBLE : View.GONE);
         }
 
     }
@@ -185,57 +172,16 @@ public class ChannelMsgAdapter extends RecyclerView.Adapter<ChannelMsgAdapter.Vi
      * @param holder
      * @param msg
      */
-    private void showCardLayout(ViewHolder holder, final Msg msg) {
+    private void showCardLayout(ViewHolder holder, final Message message) {
         // TODO Auto-generated method stub
         holder.cardLayout.removeAllViewsInLayout();
         holder.cardLayout.removeAllViews();
-        boolean isMyMsg = msg.getUid().equals(
+        boolean isMyMsg = message.getFromUser().equals(
                 MyApplication.getInstance().getUid());
         holder.cardCoverView.setVisibility(View.VISIBLE);
         View cardContentView;
-        Message message = null;
-        String type = msg.getType();
-        if (Message.isMessage(msg)) {
-            message = new Message(msg);
-            type = message.getType();
-            isMyMsg = message.getFromUser().equals(
-                    MyApplication.getInstance().getUid());
-        }
+        String type = message.getType();
         switch (type) {
-            case "txt_comment":
-            case "comment":
-                holder.cardCoverView.setVisibility(View.GONE);
-                cardContentView = DisplayTxtCommentMsg.displayCommentMsg(context, msg, apiService);
-                break;
-            case "res_image":
-            case "image":
-                cardContentView = DisplayResImageMsg.displayResImgMsg(context,
-                        msg);
-                break;
-            case "res_link":
-                holder.newsCommentText.setOnClickListener(new View.OnClickListener() {
-
-                    @Override
-                    public void onClick(View v) {
-                        // TODO Auto-generated method stub
-                        Bundle bundle = new Bundle();
-                        bundle.putString("mid", msg.getMid());
-                        bundle.putString("cid", msg.getCid());
-                        IntentUtils.startActivity(context,
-                                ChannelMsgDetailActivity.class, bundle);
-                    }
-                });
-
-                cardContentView = DisplayResLinkMsg.displayResLinkMsg(context,msg);
-                break;
-            case "res_file":
-                cardContentView = DisplayResFileMsg.displayResFileMsg(context,msg);
-                break;
-            case "txt_rich":
-                holder.cardCoverView.setVisibility(View.GONE);
-                cardContentView = DisplayTxtRichMsg.displayRichTextMsg(context,msg);
-                break;
-
             case "text/plain":
                 holder.cardCoverView.setVisibility(View.GONE);
                 cardContentView = DisplayTxtPlainMsg.getView(context,
@@ -246,7 +192,7 @@ public class ChannelMsgAdapter extends RecyclerView.Adapter<ChannelMsgAdapter.Vi
                 cardContentView = DisplayTxtMarkdownMsg.getView(context,
                         message);
                 break;
-            case "attachment/file":
+            case "file/regular-file":
                 cardContentView = DisplayRegularFileMsg.getView(context,
                         message);
                 break;
@@ -258,8 +204,7 @@ public class ChannelMsgAdapter extends RecyclerView.Adapter<ChannelMsgAdapter.Vi
                 cardContentView = DisplayExtendedActionsMsg.getInstance(context).getView(message);
                 break;
             default:
-                cardContentView = DisplayResUnknownMsg.getView(context,
-                        isMyMsg);
+                cardContentView = DisplayResUnknownMsg.getView(context, isMyMsg);
                 break;
         }
 
@@ -284,20 +229,17 @@ public class ChannelMsgAdapter extends RecyclerView.Adapter<ChannelMsgAdapter.Vi
      * @param msg
      * @param position
      */
-    private void showMsgSendTime(ViewHolder holder, Msg msg, int position) {
+    private void showMsgSendTime(ViewHolder holder, UIMessage UIMessage, int position) {
         // TODO Auto-generated method stub
-        long msgTimeLong = TimeUtils.UTCString2Long(msg.getTime());
-        long lastMsgTimelong = 0;
+        long lastMessageCreationDate = 0;
         if (position != 0) {
-            lastMsgTimelong = TimeUtils.UTCString2Long(msgList.get(
-                    position - 1).getTime());
+            lastMessageCreationDate = UIMessageList.get(position - 1).getCreationDate();
         }
-        long duration = msgTimeLong - lastMsgTimelong;
+        long duration = UIMessage.getCreationDate() - lastMessageCreationDate;
         if (duration >= 180000) {
             holder.sendTimeText.setVisibility(View.VISIBLE);
-            String msgSendTime = TimeUtils.getChannelMsgDisplayTime(
-                    context, msg.getTime());
-            holder.sendTimeText.setText(msgSendTime);
+            String messageSendTime = TimeUtils.getChannelMsgDisplayTime(MyApplication.getInstance(),UIMessage.getCreationDate());
+            holder.sendTimeText.setText(messageSendTime);
         } else {
             holder.sendTimeText.setVisibility(View.GONE);
         }
@@ -309,12 +251,12 @@ public class ChannelMsgAdapter extends RecyclerView.Adapter<ChannelMsgAdapter.Vi
      * @param holder
      * @param msg
      */
-    private void showUserName(ViewHolder holder, Msg msg) {
+    private void showUserName(ViewHolder holder, UIMessage UIMessage) {
         // TODO Auto-generated method stub
-        boolean isMyMsg = msg.getUid().equals(MyApplication.getInstance().getUid());
+        boolean isMyMsg = UIMessage.getMessage().getFromUser().equals(MyApplication.getInstance().getUid());
         if (channelType.equals("GROUP") && !isMyMsg) {
             holder.senderNameText.setVisibility(View.VISIBLE);
-            holder.senderNameText.setText(msg.getTitle());
+            holder.senderNameText.setText(UIMessage.getSenderName());
         } else {
             holder.senderNameText.setVisibility(View.GONE);
         }
@@ -326,30 +268,23 @@ public class ChannelMsgAdapter extends RecyclerView.Adapter<ChannelMsgAdapter.Vi
      * @param holder
      * @param msg
      */
-    private void showUserPhoto(ViewHolder holder, final Msg msg) {
+    private void showUserPhoto(ViewHolder holder, final UIMessage UImessage) {
         // TODO Auto-generated method stub
-        final String fromUserUid;
-        if (Message.isMessage(msg)){
-            Message message = new Message(msg);
-            fromUserUid = message.getFromUser();
-        }else {
-            fromUserUid = msg.getUid();
-        }
-        if (MyApplication.getInstance().getUid().equals(fromUserUid)) {
+        final String fromUser = UImessage.getMessage().getFromUser();
+        if (MyApplication.getInstance().getUid().equals(fromUser)) {
             holder.senderPhotoImg.setVisibility(View.INVISIBLE);
             holder.senderPhotoRightView.setVisibility(View.GONE);
         } else {
             holder.senderPhotoImg.setVisibility(View.VISIBLE);
             holder.senderPhotoRightView.setVisibility(View.VISIBLE);
-            String iconUrl = APIUri.getUserIconUrl(context,fromUserUid);
             ImageDisplayUtils.getInstance().displayImage(holder.senderPhotoImg,
-                    iconUrl, R.drawable.icon_person_default);
+                    UImessage.getSenderPhotoUrl(), R.drawable.icon_person_default);
             holder.senderPhotoImg.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Bundle bundle = new Bundle();
-                    bundle.putString("uid", fromUserUid);
-                    if (fromUserUid.startsWith("BOT") || channelType.endsWith("SERVICE")) {
+                    bundle.putString("uid", fromUser);
+                    if (fromUser.startsWith("BOT") || channelType.endsWith("SERVICE")) {
                         bundle.putString("type", channelType);
                         IntentUtils.startActivity(context,
                                 RobotInfoActivity.class, bundle);
@@ -363,7 +298,7 @@ public class ChannelMsgAdapter extends RecyclerView.Adapter<ChannelMsgAdapter.Vi
                 @Override
                 public boolean onLongClick(View v) {
                     if (channelType.equals("GROUP")) {
-                        chatInputMenu.addMentions(msg.getUid(), msg.getTitle(), false);
+                        chatInputMenu.addMentions(fromUser, UImessage.getSenderName(), false);
                     }
                     return true;
                 }

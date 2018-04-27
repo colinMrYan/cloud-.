@@ -1,6 +1,7 @@
 package com.inspur.emmcloud.bean.chat;
 
 import com.inspur.emmcloud.util.common.JSONUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 
 import org.json.JSONObject;
 
@@ -10,9 +11,13 @@ import org.json.JSONObject;
 
 public class WSPushMessageContent {
     private Message message;
+    private String tracer;
     public WSPushMessageContent(String content){
         JSONObject messageObj = JSONUtils.getJSONObject(content,"body",new JSONObject());
         message = new Message(messageObj);
+        JSONObject headerObj = JSONUtils.getJSONObject(content,"header",new JSONObject());
+        LogUtils.jasonDebug("headerObj="+headerObj);
+        tracer = JSONUtils.getString(headerObj,"tracer","");
     }
 
     public Message getMessage() {
@@ -21,5 +26,13 @@ public class WSPushMessageContent {
 
     public void setMessage(Message message) {
         this.message = message;
+    }
+
+    public String getTracer() {
+        return tracer;
+    }
+
+    public void setTracer(String tracer) {
+        this.tracer = tracer;
     }
 }

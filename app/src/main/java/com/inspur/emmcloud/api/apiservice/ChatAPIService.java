@@ -14,6 +14,7 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.api.APICallback;
 import com.inspur.emmcloud.api.APIInterface;
 import com.inspur.emmcloud.api.APIUri;
+import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeFileUploadTokenResult;
 import com.inspur.emmcloud.bean.chat.ChannelGroup;
 import com.inspur.emmcloud.bean.chat.GetAddMembersSuccessResult;
 import com.inspur.emmcloud.bean.chat.GetChannelInfoResult;
@@ -1076,4 +1077,46 @@ public class ChatAPIService {
 		});
 	}
 
+
+	/**
+	 * 获取文件上传Token
+	 *
+	 * @param volumeId
+	 * @param fileName
+	 * @param volumeFilePath
+	 */
+	public void getFileUploadToken(final String fileName, final String cid) {
+		final String url = APIUri.getUploadFileTokenUrl(cid);
+		RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
+		params.addParameter("name", fileName);
+		x.http().post(params, new APICallback(context, url) {
+			@Override
+			public void callbackSuccess(String arg0) {
+				apiInterface.returnChatFileUploadTokenSuccess(new GetVolumeFileUploadTokenResult(arg0));
+			}
+
+			@Override
+			public void callbackFail(String error, int responseCode) {
+				apiInterface.returnChatFileUploadTokenFail(error, responseCode);
+			}
+
+			@Override
+			public void callbackTokenExpire(long requestTime) {
+				OauthCallBack oauthCallBack = new OauthCallBack() {
+					@Override
+					public void reExecute() {
+						getFileUploadToken(fileName, cid);
+					}
+
+					@Override
+					public void executeFailCallback() {
+						callbackFail("", -1);
+					}
+				};
+				OauthUtils.getInstance().refreshToken(
+						oauthCallBack, requestTime);
+			}
+
+		});
+	}
 }

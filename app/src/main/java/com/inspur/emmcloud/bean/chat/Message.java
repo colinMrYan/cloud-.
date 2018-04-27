@@ -30,11 +30,8 @@ public class Message implements Serializable {
     private String content;
     @Column(name = "creationDate")
     private Long creationDate;
-    @Column(name = "tracer")
-    private String tracer;
 
     private int sendStatus = 1;//0 发送中  1发送成功  2发送失败
-    private String tmpId = "";
 
     public Message() {
 
@@ -69,7 +66,6 @@ public class Message implements Serializable {
         content = JSONUtils.getString(obj, "content", "");
         String UTCTime = JSONUtils.getString(obj, "creationDate", "");
         creationDate = TimeUtils.UTCString2Long(UTCTime);
-        tracer = JSONUtils.getString(obj, "tracer", "");
     }
 
     public MsgContentExtendedActions getMsgContentExtendedActions() {
@@ -84,8 +80,8 @@ public class Message implements Serializable {
         return new MsgContentComment(content);
     }
 
-    public MsgContentAttachmentFile getMsgContentAttachmentFile() {
-        return new MsgContentAttachmentFile(content);
+    public MsgContentRegularFile getMsgContentAttachmentFile() {
+        return new MsgContentRegularFile(content);
     }
 
 
@@ -173,21 +169,10 @@ public class Message implements Serializable {
         this.sendStatus = sendStatus;
     }
 
-    public String getTmpId() {
-        return tmpId;
-    }
-
     public String getFromUser() {
         return JSONUtils.getString(from, "user", "");
     }
 
-    public String getTracer() {
-        return tracer;
-    }
-
-    public void setTracer(String tracer) {
-        this.tracer = tracer;
-    }
 
     public Long getCreationDate() {
         return creationDate;

@@ -11,7 +11,6 @@ import com.inspur.emmcloud.bean.chat.MsgContentAttachmentCard;
 import com.inspur.emmcloud.bean.chat.MsgContentTextPlain;
 import com.inspur.emmcloud.bean.chat.Phone;
 import com.inspur.emmcloud.bean.contact.Contact;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.privates.cache.RobotCacheUtils;
 
@@ -106,7 +105,6 @@ public class ConbineMsg {
 		msgContentAttachmentCard.setLastName("");
 		msgContentAttachmentCard.setOrganization(contact.getOrgName());
 		msgContentAttachmentCard.setTitle("");
-		LogUtils.jasonDebug("contact.getInspurID()="+contact.getInspurID());
 		msgContentAttachmentCard.setUid(contact.getInspurID());
 		Email email = new Email("工作",contact.getEmail());
 		List<Email> emailList = new ArrayList<>();

@@ -125,6 +125,8 @@ public class APIUri {
         return getUrlBaseYunjia() + "client-registry/api/v1/client";
     }
 
+
+
     /************************************************************************登录*****************************************************************/
 
     /**
@@ -291,6 +293,15 @@ public class APIUri {
      */
     public static String getAddGroupMembersUrl(String cid) {
         return getEcmTanentUrl() + "/channel/group/" + cid + "/users?";
+    }
+
+    /**
+     * 获取聊天上传文件token url
+     * @param cid
+     * @return
+     */
+    public static String getUploadFileTokenUrl(String cid){
+        return getECMBaseUrl() +"chat/api/v1/channel/"+cid+"/file/request";
     }
 
     /**

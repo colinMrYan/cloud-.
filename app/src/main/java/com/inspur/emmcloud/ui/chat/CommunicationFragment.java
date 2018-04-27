@@ -66,7 +66,6 @@ import com.inspur.emmcloud.util.privates.cache.ChannelOperationCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
 import com.inspur.emmcloud.util.privates.cache.MessageMatheSetCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MessageReadCreationDateCacheUtils;
-import com.inspur.emmcloud.util.privates.cache.MsgReadIDCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.PVCollectModelCacheUtils;
 import com.inspur.imp.plugin.barcode.scan.CaptureActivity;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
@@ -704,8 +703,8 @@ public class CommunicationFragment extends Fragment {
                     break;
                 case "set_channel_message_read":
                     String cid = intent.getExtras().getString("cid");
-                    String mid = intent.getExtras().getString("mid");
-                    setChannelMsgRead(cid, mid);
+                    long messageCreationDate = intent.getExtras().getLong("messageCreationDate");
+                    setChannelMsgRead(cid, messageCreationDate);
                     break;
                 default:
                     break;
@@ -752,9 +751,8 @@ public class CommunicationFragment extends Fragment {
      * @param cid
      * @param mid
      */
-    private void setChannelMsgRead(String cid, String mid) {
-        MsgReadIDCacheUtils.saveReadedMsg(getActivity(), cid,
-                mid);
+    private void setChannelMsgRead(String cid, long messageCreationDate) {
+        MessageReadCreationDateCacheUtils.saveMessageReadCreationDate(MyApplication.getInstance(),cid,messageCreationDate);
         for(Channel channel:displayChannelList){
             if (channel.getCid().equals(cid)) {
                 channel.setUnReadCount(0);

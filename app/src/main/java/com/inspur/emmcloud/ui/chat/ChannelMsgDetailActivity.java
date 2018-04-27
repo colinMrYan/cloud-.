@@ -56,6 +56,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import static com.inspur.emmcloud.api.APIUri.getChannelImgUrl;
 
@@ -133,7 +134,7 @@ public class ChannelMsgDetailActivity extends BaseActivity implements
         chatInputMenu.hideAddMenuLayout();
         chatInputMenu.setChatInputMenuListener(new ECMChatInputMenu.ChatInputMenuListener() {
             @Override
-            public void onSendMsg(String content, List<String> mentionsUidList, List<String> urlList) {
+            public void onSendMsg(String content, List<String> mentionsUidList, List<String> urlList, Map<String,String> mentionsMap) {
                 // TODO Auto-generated method stub
                 sendComment(content, mentionsUidList, urlList);
             }

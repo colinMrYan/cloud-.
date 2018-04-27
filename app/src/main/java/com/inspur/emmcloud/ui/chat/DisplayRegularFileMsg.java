@@ -8,7 +8,7 @@ import android.widget.TextView;
 
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIDownloadCallBack;
-import com.inspur.emmcloud.bean.chat.MsgContentAttachmentFile;
+import com.inspur.emmcloud.bean.chat.MsgContentRegularFile;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.util.common.FileUtils;
@@ -19,11 +19,11 @@ import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import java.io.File;
 
 /**
- * DisplayAttachmentFileMsg
+ * DisplayRegularFileMsg
  *
  * @author Fortune Yu 展示文件卡片 2016-08-19
  */
-public class DisplayAttachmentFileMsg {
+public class DisplayRegularFileMsg {
     /**
      * 文件卡片
      *
@@ -40,8 +40,8 @@ public class DisplayAttachmentFileMsg {
         TextView fileSizeText = (TextView) convertView
                 .findViewById(R.id.file_size_text);
         ImageView img = (ImageView)convertView.findViewById(R.id.file_icon_img);
-        final MsgContentAttachmentFile msgContentFile = msg.getMsgContentAttachmentFile();
-        ImageDisplayUtils.getInstance().displayImage(img, "drawable://" + FileUtils.getIconResIdRobot(msgContentFile.getCategory()));
+        final MsgContentRegularFile msgContentFile = msg.getMsgContentAttachmentFile();
+        ImageDisplayUtils.getInstance().displayImage(img, "drawable://" + FileUtils.getIconResIdRobot(msgContentFile.getName()));
         fileNameText.setText(msgContentFile.getName());
         fileSizeText.setText(FileUtils.formatFileSize(msgContentFile.getSize()));
         final String downloadUri = "https://emm.inspur.com/api/bot/v6.0/getfile/"+msgContentFile.getMedia();

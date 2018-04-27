@@ -6,9 +6,12 @@ import android.util.Log;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.api.APIUri;
+import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
 import com.inspur.emmcloud.bean.chat.WSPushMessageContent;
+import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
+import com.inspur.emmcloud.util.privates.CommunicationUtils;
 import com.inspur.emmcloud.util.privates.PushInfoUtils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -239,7 +242,7 @@ public class WebSocketPush {
 
 	}
 
-	public void sendChatTextPlainMsg(String content, String cid, List<String> mentionsUidList){
+	public void sendChatTextPlainMsg(String content, String cid, Map<String,String> mentionsMap,String tracer){
 		try {
 			if (isSocketConnect()){
 				JSONObject object = new JSONObject();
@@ -249,26 +252,49 @@ public class WebSocketPush {
 				object.put("action",actionObj);
 				JSONObject headerObj = new JSONObject();
 				headerObj.put("enterprise",MyApplication.getInstance().getCurrentEnterprise().getId());
-				headerObj.put("tracer","a"+MyApplication.getInstance().getUid()+System.currentTimeMillis());
+				headerObj.put("tracer",tracer);
 				object.put("headers",headerObj);
 				JSONObject bodyObj = new JSONObject();
 				bodyObj.put("type","text/plain");
 				bodyObj.put("text",content);
-				//bodyObj.put("mentions", JSONUtils.toJSONArray(mentionsUidList));
+				if (mentionsMap != null && mentionsMap.size()>0){
+					JSONObject mentionsObj = JSONUtils.map2Json(mentionsMap);
+					bodyObj.put("mentions", mentionsObj);
+				}
 				object.put("body",bodyObj);
 				LogUtils.jasonDebug("object="+object.toString());
-				mSocket.emit("com.inspur.ecm.chat",object, new Emitter.Listener() {
-					@Override
-					public void call(Object... args) {
-						LogUtils.jasonDebug("args==="+args[0]);
-					}
-				});
+				mSocket.emit("com.inspur.ecm.chat",object);
 			}
 		}catch (Exception e){
 			e.printStackTrace();
 		}
+	}
 
-
+	public void sendFileMsg(String cid, String tracer, VolumeFile volumeFile){
+		try {
+			if (isSocketConnect()){
+				JSONObject object = new JSONObject();
+				JSONObject actionObj = new JSONObject();
+				actionObj.put("method","post");
+				actionObj.put("path","/channel/"+cid+"/message");
+				object.put("action",actionObj);
+				JSONObject headerObj = new JSONObject();
+				headerObj.put("enterprise",MyApplication.getInstance().getCurrentEnterprise().getId());
+				headerObj.put("tracer",tracer);
+				object.put("headers",headerObj);
+				JSONObject bodyObj = new JSONObject();
+				bodyObj.put("type","file/regular-file");
+				bodyObj.put("category", CommunicationUtils.getChatFileCategory(volumeFile.getName()));
+				bodyObj.put("name",volumeFile.getName());
+				bodyObj.put("size",volumeFile.getSize());
+				bodyObj.put("media",volumeFile.getPath());
+				object.put("body",bodyObj);
+				LogUtils.jasonDebug("object="+object.toString());
+				mSocket.emit("com.inspur.ecm.chat",object);
+			}
+		}catch (Exception e){
+			e.printStackTrace();
+		}
 	}
 
 

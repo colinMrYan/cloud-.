@@ -168,7 +168,7 @@ public class ECMChatInputMenuImgComment extends LinearLayout {
      */
     public void addMentions(String uid, String name, boolean isInputKeyWord) {
         if (uid != null && name != null) {
-            inputEdit.insertSpecialStr(isInputKeyWord, new InsertModel("@", uid, name, "#99CCFF"));
+            inputEdit.insertSpecialStr(isInputKeyWord, new InsertModel("@", uid, name));
         }
     }
 

@@ -1638,4 +1638,14 @@ public class APIInterfaceInstance implements APIInterface {
     @Override
     public void returnFaceLoginGSFail(String error, int errorCode) {
     }
+
+    @Override
+    public void returnChatFileUploadTokenSuccess(GetVolumeFileUploadTokenResult getVolumeFileUploadTokenResult) {
+
+    }
+
+    @Override
+    public void returnChatFileUploadTokenFail(String error, int errorCode) {
+
+    }
 }

@@ -4,18 +4,13 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 
-import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.bean.chat.Msg;
 import com.inspur.emmcloud.util.common.DensityUtil;
 
 public class DisplayResUnknownMsg {
-	public static View getView(Context context,  Msg msg){
+	public static View getView(Context context,boolean isMyMsg){
 		View cardContentView = LayoutInflater.from(context).inflate(
 				R.layout.chat_msg_card_child_res_unknown_view, null);
-		boolean isMyMsg = msg.getUid().equals(
-				MyApplication.getInstance().getUid());
-		
 		int arrowPadding = DensityUtil.dip2px(context, 7);
 		if (isMyMsg) {
 			( cardContentView.findViewById(R.id.root_layout)).setPadding(0, 0, arrowPadding, 0);
