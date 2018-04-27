@@ -93,6 +93,12 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
     private boolean isOpenNotification = false;
     private String tanent;
     private String clusterEcm = Constant.DEFAULT_CLUSTER_ECM;//多云ecm服务
+    private String clusterChat = "";
+    private String clusterSchedule = "";
+    private String clusterDistribution = "";
+    private String clusterNews = "";
+    private String clusterCloudDrive = "";
+    private String clusterStorageLegacy = "";
     private String clusterEmm = Constant.DEFAULT_CLUSTER_EMM;//多云emm服务
 
     public void onCreate() {
@@ -464,6 +470,58 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
      */
     public void setClusterEmm(String clusterEmm) {
         this.clusterEmm = clusterEmm;
+    }
+
+    /**
+     * 沟通相关
+     * @return
+     */
+    public String getClusterChat() {
+        return clusterChat;
+    }
+
+    public void setClusterChat(String clusterChat) {
+        this.clusterChat = clusterChat;
+    }
+
+    public String getClusterSchedule() {
+        return clusterSchedule;
+    }
+
+    public void setClusterSchedule(String clusterSchedule) {
+        this.clusterSchedule = clusterSchedule;
+    }
+
+    public String getClusterDistribution() {
+        return clusterDistribution;
+    }
+
+    public void setClusterDistribution(String clusterDistribution) {
+        this.clusterDistribution = clusterDistribution;
+    }
+
+    public String getClusterNews() {
+        return clusterNews;
+    }
+
+    public void setClusterNews(String clusterNews) {
+        this.clusterNews = clusterNews;
+    }
+
+    public String getClusterCloudDrive() {
+        return clusterCloudDrive;
+    }
+
+    public void setClusterCloudDrive(String clusterCloudDrive) {
+        this.clusterCloudDrive = clusterCloudDrive;
+    }
+
+    public String getClusterStorageLegacy() {
+        return clusterStorageLegacy;
+    }
+
+    public void setClusterStorageLegacy(String clusterStorageLegacy) {
+        this.clusterStorageLegacy = clusterStorageLegacy;
     }
 
     public String getTanent() {

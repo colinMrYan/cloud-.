@@ -42,4 +42,5 @@ public class Constant {
     public static final String DEFAULT_CLUSTER_ECM = "https://ecm.inspur.com/";//ECM默认
     public static final String DEFAULT_CLUSTER_ID = "https://id.inspuronline.com/";//ID默认
 
+    public static final String MY_INFO_OLD = "my_info_old";
 }

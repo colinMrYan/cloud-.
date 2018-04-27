@@ -12,10 +12,12 @@ public class ClusterBean {
     private String clusterId = "";
     private String serviceName = "";
     private String baseUrl = "";
+    private String serviceVersion = "";
     public ClusterBean(JSONObject clusterObj){
         clusterId = JSONUtils.getString(clusterObj,"cluster_id","");
         serviceName = JSONUtils.getString(clusterObj,"service_name","");
         baseUrl = JSONUtils.getString(clusterObj,"base_url","");
+        serviceVersion = JSONUtils.getString(clusterObj,"service_version","");
     }
 
     public String getClusterId() {
@@ -40,5 +42,13 @@ public class ClusterBean {
 
     public void setBaseUrl(String baseUrl) {
         this.baseUrl = baseUrl;
+    }
+
+    public String getServiceVersion() {
+        return serviceVersion;
+    }
+
+    public void setServiceVersion(String serviceVersion) {
+        this.serviceVersion = serviceVersion;
     }
 }
