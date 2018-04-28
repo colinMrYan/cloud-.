@@ -18,10 +18,6 @@ import com.inspur.emmcloud.util.privates.cache.RobotCacheUtils;
  * 整体有一个getEcmTanent的方法，获取到tanent这一级
  */
 public class APIUri {
-//    private static final String URL_BASE_YUNJIA = "https://yunjia.inspur.com/";
-//    private static final String URL_BASE_VOLUME = URL_BASE_YUNJIA+"cloud-drive/api/v1/volume";
-//    private static final String URL_BASE_GROUP = URL_BASE_YUNJIA+"cloud-drive/api/v1/group";
-
 
     /**
      * 获取到租户级的URL
@@ -32,29 +28,68 @@ public class APIUri {
         return MyApplication.getInstance().getClusterEcm() + MyApplication.getInstance().getTanent();
     }
 
-    public static String getECMBaseUrl() {
-        return MyApplication.getInstance().getClusterEcm();
-    }
-
+    /**
+     * EMM服务
+     * @return
+     */
     public static String getEMMBaseUrl() {
         return MyApplication.getInstance().getClusterEmm();
     }
 
     /**
-     * 云加网盘
-     *
+     * EcmChat服务
      * @return
      */
-    public static String getUrlBaseYunjia() {
-        return MyApplication.getInstance().getClusterEcm();
+    public static String getECMChatUrl(){
+        return MyApplication.getInstance().getClusterChat();
+    }
+
+    /**
+     * EcmSchedule服务
+     * @return
+     */
+    public static String getECMScheduleUrl(){
+        return MyApplication.getInstance().getClusterSchedule();
+    }
+
+    /**
+     * ECMDistribution服务
+     * @return
+     */
+    public static String getECMDistribution(){
+        return MyApplication.getInstance().getClusterDistribution();
+    }
+
+    /**
+     * ECMNews服务
+     * @return
+     */
+    public static String getECMNews(){
+        return MyApplication.getInstance().getClusterNews();
+    }
+
+    /**
+     * ECMCloudDriver服务
+     * @return
+     */
+    public static String getCloudDriver(){
+        return MyApplication.getInstance().getClusterCloudDrive();
+    }
+
+    /**
+     * StorageLegacy服务
+     * @return
+     */
+    public static String getStorageLegacy(){
+        return MyApplication.getInstance().getClusterStorageLegacy();
     }
 
     public static String getUrlBaseVolume() {
-        return getUrlBaseYunjia() + "cloud-drive/api/v1/volume";
+        return getCloudDriver() + "cloud-drive/api/v1/volume";
     }
 
     public static String getUrlBaseGroup() {
-        return getUrlBaseYunjia() + "cloud-drive/api/v1/group";
+        return getCloudDriver() + "cloud-drive/api/v1/group";
     }
     /***************************************************************系统*******************************************************************/
     /**
@@ -72,7 +107,7 @@ public class APIUri {
      * @return
      */
     public static String getAppNewTabs() {
-        return getEcmTanentUrl() + "/api/v0/preference/main-tab/latest";
+        return getECMDistribution() + "/api/v0/preference/main-tab/latest";
     }
 
 
@@ -80,21 +115,20 @@ public class APIUri {
         return MyApplication.getInstance().getClusterEmm() + "v3.0/api/app/config/array?key=WebAutoRotate&key=CommonFunctions&key=IsShowFeedback&key=IsShowCustomerService&key=PosReportTimeInterval&key=WorkPortlet";
     }
 
-
     /**
      * app闪屏页面
      *
      * @return
      */
     public static String getSplashPageUrl() {
-        return getEcmTanentUrl() + "/api/v0/preference/launch-screen/latest";
+        return getECMDistribution() + "/api/v0/preference/launch-screen/latest";
     }
 
     /**
      * @return
      */
     public static String getUploadSplashPageWriteBackLogUrl() {
-        return getEcmTanentUrl() + "/api/v0/preference/launch-screen/update";
+        return getECMDistribution() + "/api/v0/preference/launch-screen/update";
     }
 
     /**
@@ -122,7 +156,7 @@ public class APIUri {
      * @return
      */
     public static String getUploadPushInfoUrl() {
-        return getUrlBaseYunjia() + "message/api/v1/client";
+        return getECMChatUrl() + "message/api/v1/client";
     }
 
     /************************************************************************登录*****************************************************************/
@@ -244,7 +278,7 @@ public class APIUri {
      * @return
      */
     public static String getRobotIconUrl(String iconUrl) {
-        return getEcmTanentUrl() + "/avatar/stream/"
+        return MyApplication.getInstance().getClusterStorageLegacy() + "/avatar/stream/"
                 + iconUrl;
     }
 
@@ -280,7 +314,7 @@ public class APIUri {
      * @return
      */
     public static String getResUrl(String url) {
-        return MyApplication.getInstance().getClusterEcm() + MyApplication.getInstance().getTanent() + "/res/" + url;
+        return MyApplication.getInstance().getClusterStorageLegacy() + MyApplication.getInstance().getTanent() + "/res/" + url;
     }
 
     /**
@@ -290,7 +324,7 @@ public class APIUri {
      * @return
      */
     public static String getAddGroupMembersUrl(String cid) {
-        return getEcmTanentUrl() + "/channel/group/" + cid + "/users?";
+        return getECMChatUrl() + "/channel/group/" + cid + "/users?";
     }
 
     /**
@@ -299,7 +333,7 @@ public class APIUri {
      * @return
      */
     public static String getNointerRuptionUrl() {
-        return getEcmTanentUrl() + "/session/dnd";
+        return getECMChatUrl() + "/session/dnd";
     }
 
     /**
@@ -308,7 +342,7 @@ public class APIUri {
      * @return
      */
     public static String getAllBotInfo() {
-        return getEcmTanentUrl() + "/api/v0/registry/bot";
+        return getECMChatUrl() + "/api/v0/registry/bot";
     }
 
     /**
@@ -317,7 +351,7 @@ public class APIUri {
      * @return
      */
     public static String getBotInfoById() {
-        return getEcmTanentUrl() + "/api/v0/registry/bot/";
+        return getECMChatUrl() + "/api/v0/registry/bot/";
     }
 
     /**
@@ -326,7 +360,7 @@ public class APIUri {
      * @return
      */
     public static String getWebsocketConnectUrl() {
-        return MyApplication.getInstance().getClusterEcm();
+        return getECMChatUrl();
     }
 
     /**************************************************应用和应用中心********************************************************************/
@@ -448,7 +482,7 @@ public class APIUri {
      * @return
      */
     public static String getReactNativeUpdate() {
-        return getEcmTanentUrl() + "/api/v0/view/DISCOVER/bundle/?";
+        return getECMDistribution() + "/api/v0/view/DISCOVER/bundle/?";
     }
 
     /**
@@ -457,7 +491,7 @@ public class APIUri {
      * @return
      */
     public static String getClientId() {
-        return MyApplication.getInstance().getClusterEcm() + MyApplication.getInstance().getTanent() + "/api/v0/client/registry";
+        return MyApplication.getInstance().getClusterDistribution() + MyApplication.getInstance().getTanent() + "/api/v0/client/registry";
     }
 
     /**
@@ -466,7 +500,7 @@ public class APIUri {
      * @return
      */
     public static String getClientLog() {
-        return getEcmTanentUrl() + "/api/v0/view/update/DISCOVER/?";
+        return getECMDistribution() + "/api/v0/view/update/DISCOVER/?";
     }
 
     /**
@@ -475,7 +509,7 @@ public class APIUri {
      * @return
      */
     public static String getZipUrl() {
-        return getEcmTanentUrl() + "/res/stream/";
+        return getStorageLegacy() + "/res/stream/";
     }
 
     /**
@@ -493,7 +527,7 @@ public class APIUri {
      * @return
      */
     public static String getReactNativeWriteBackUrl(String appModule) {
-        return getEcmTanentUrl() + "/api/v0/app/" + appModule + "/update";
+        return getECMDistribution() + "/api/v0/app/" + appModule + "/update";
     }
 
     /******************新闻接口**************************/
@@ -504,7 +538,7 @@ public class APIUri {
      * @return
      */
     public static String getGroupNewsUrl(String url) {
-        return MyApplication.getInstance().getClusterEcm() + url;
+        return MyApplication.getInstance().getClusterNews() + url;
     }
 
     /**
@@ -523,7 +557,7 @@ public class APIUri {
      * @return
      */
     public static String getNewsInstruction(String newsId) {
-        return getEcmTanentUrl() + "/api/v0/content/news/" + newsId + "/editor-comment";
+        return getECMNews() + "/api/v0/content/news/" + newsId + "/editor-comment";
     }
 
 
@@ -664,7 +698,7 @@ public class APIUri {
      * @return
      */
     private static String getMeetingBaseUrl() {
-        return MyApplication.getInstance().getClusterEcm() + MyApplication.getInstance().getTanent() + "/meeting/";
+        return MyApplication.getInstance().getClusterSchedule() + MyApplication.getInstance().getTanent() + "/meeting/";
     }
 
     /**
@@ -746,7 +780,7 @@ public class APIUri {
      * @return
      */
     public static String getMeetingRootUrl() {
-        return getEcmTanentUrl() + "/meeting";
+        return getECMScheduleUrl() + "/meeting";
     }
 
     /**
@@ -774,7 +808,7 @@ public class APIUri {
      * @return
      */
     public static String getCalendarUrl() {
-        return getEcmTanentUrl() + "/api/v0";
+        return getECMScheduleUrl() + "/api/v0";
     }
 
     /*******************任务*****************************/
@@ -784,7 +818,7 @@ public class APIUri {
      * @return
      */
     private static String getToDoBaseUrl() {
-        return MyApplication.getInstance().getClusterEcm() + MyApplication.getInstance().getTanent() + "/api/v0/todo/";
+        return MyApplication.getInstance().getClusterSchedule() + MyApplication.getInstance().getTanent() + "/api/v0/todo/";
     }
 
     /**
@@ -830,7 +864,7 @@ public class APIUri {
      * @return
      */
     public static String getCreateTaskUrl() {
-        return getEcmTanentUrl() + "/api/v0/todo";
+        return getECMScheduleUrl() + "/api/v0/todo";
     }
 
     /**
@@ -878,7 +912,7 @@ public class APIUri {
      * @return
      */
     public static String getTripArriveCityUrl() {
-        return getEcmTanentUrl() + "/trip/simple/city";
+        return getECMScheduleUrl() + "/trip/simple/city";
     }
 
     /**

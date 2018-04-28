@@ -83,13 +83,13 @@ public class RecommendAppActivity extends BaseActivity {
                     @Override
                     public void onclick(SnsPlatform snsPlatform, SHARE_MEDIA share_media) {
                         if(share_media == SHARE_MEDIA.SMS) {
-                            new ShareAction(RecommendAppActivity.this).withText("欢迎使用【云+】  "+APIUri.getECMBaseUrl())
+                            new ShareAction(RecommendAppActivity.this).withText("欢迎使用【云+】  "+APIUri.getECMChatUrl())
                                     .setPlatform(share_media)
                                     .setCallback(mShareListener)
                                     .share();
                         }else {
                             UMImage thumb = new UMImage(RecommendAppActivity.this, R.drawable.ic_launcher_share);
-                            UMWeb web = new UMWeb(APIUri.getECMBaseUrl());
+                            UMWeb web = new UMWeb(APIUri.getECMChatUrl());
                             web.setThumb(thumb);
                             web.setDescription("云+ -智能化的企业协同平台");
                             web.setTitle("欢迎使用【云+】");

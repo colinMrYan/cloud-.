@@ -150,6 +150,7 @@ public class GuideActivity extends BaseActivity {
      * @param response
      */
     private void saveNewProfileAndOldProfile(String response) {
+        //存储上一个版本，不再有本地默认版本
         PreferencesUtils.putString(GuideActivity.this, Constant.MY_INFO_OLD,PreferencesUtils.getString(GuideActivity.this,"",""));
         PreferencesUtils.putString(GuideActivity.this, "myInfo", response);
     }

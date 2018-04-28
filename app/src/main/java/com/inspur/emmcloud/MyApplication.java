@@ -99,6 +99,8 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
     private String clusterNews = "";
     private String clusterCloudDrive = "";
     private String clusterStorageLegacy = "";
+    private String socketPath = "";
+    private String clusterVersion = "";
     private String clusterEmm = Constant.DEFAULT_CLUSTER_EMM;//多云emm服务
 
     public void onCreate() {
@@ -525,11 +527,27 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
     }
 
     public String getTanent() {
-        return tanent;
+        return "";
     }
 
     public Enterprise getCurrentEnterprise() {
         return currentEnterprise;
+    }
+
+    public String getSocketPath() {
+        return socketPath;
+    }
+
+    public void setSocketPath(String socketPath) {
+        this.socketPath = socketPath;
+    }
+
+    public String getClusterVersion() {
+        return clusterVersion;
+    }
+
+    public void setClusterVersion(String clusterVersion) {
+        this.clusterVersion = clusterVersion;
     }
 
     /*****************************通讯录头像缓存********************************************/

@@ -10,7 +10,7 @@ import org.json.JSONObject;
 
 public class ClusterBean {
     private String clusterId = "";
-    private String serviceName = "";
+    private String serviceName = "";//作为ID使用，服务端不确定，客户端无法解析
     private String baseUrl = "";
     private String serviceVersion = "";
     public ClusterBean(JSONObject clusterObj){
@@ -50,5 +50,24 @@ public class ClusterBean {
 
     public void setServiceVersion(String serviceVersion) {
         this.serviceVersion = serviceVersion;
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if(this == other){
+            return true;
+        }
+        if(other == null){
+            return false;
+        }
+        if(!(other instanceof ClusterBean)){
+            return false;
+        }
+        ClusterBean clusterBean = (ClusterBean) other;
+        //此处从==判断是否相等  改为equals
+        if(!(getServiceName().equals(clusterBean.getServiceName()))){
+            return false;
+        }
+        return true;
     }
 }

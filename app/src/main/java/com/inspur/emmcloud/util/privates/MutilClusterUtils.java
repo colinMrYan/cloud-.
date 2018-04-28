@@ -1,10 +1,13 @@
 package com.inspur.emmcloud.util.privates;
 
+import android.net.Uri;
+
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.bean.login.ClusterBean;
 import com.inspur.emmcloud.bean.mine.Enterprise;
 import com.inspur.emmcloud.bean.mine.GetMyInfoResult;
 import com.inspur.emmcloud.config.Constant;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 
@@ -15,6 +18,13 @@ import java.util.List;
  */
 
 public class MutilClusterUtils {
+    private static final String ECM_CHAT = "com.inspur.ecm.chat";
+    private static final String ECM_SCHEDULE = "com.inspur.ecm.schedule";
+    private static final String ECM_DISTRIBUTION = "com.inspur.ecm.distribution";
+    private static final String ECM_NEWS = "com.inspur.ecm.news";
+    private static final String ECM_CLOUD_DRIVER = "com.inspur.ecm.cloud-drive";
+    private static final String ECM_STORAGE_LEGACY = "com.inspur.ecm.storage.legacy";
+
     /**
      * 修改多云基地址，如果没有基地址则取默认
      *
@@ -22,9 +32,10 @@ public class MutilClusterUtils {
      */
     public static void changeClusterBaseUrl(Enterprise enterprise) {
         List<ClusterBean> clusterBeanList = enterprise.getClusterBeanList();
-//        initClusterBaseUrl();
         for (int i = 0; i < clusterBeanList.size(); i++) {
-            switch (clusterBeanList.get(i).getServiceName()) {
+            String serviceName = clusterBeanList.get(i).getServiceName();
+            LogUtils.YfcDebug("ServiceName:"+serviceName);
+            switch (serviceName) {
                 case "com.inspur.ecm":
                     MyApplication.getInstance().setClusterEcm(clusterBeanList.get(i).getBaseUrl() + "/");
                     break;
@@ -32,33 +43,32 @@ public class MutilClusterUtils {
                     MyApplication.getInstance().setClusterEmm(clusterBeanList.get(i).getBaseUrl() + "/");
                     break;
                 //聊天相关
-                case "com.inspur.ecm.chat":
-                    MyApplication.getInstance().setClusterChat(getSuitableUrl(clusterBeanList.get(i).getBaseUrl(),"chat"));
+                case ECM_CHAT:
+                    MyApplication.getInstance().setClusterChat(getSuitableUrl(clusterBeanList.get(i).getBaseUrl(),enterprise,serviceName));
                     break;
                 //会议，日历，任务相关
-                case "com.inspur.ecm.schedule":
-                    MyApplication.getInstance().setClusterSchedule(getSuitableUrl(clusterBeanList.get(i).getBaseUrl(),"schedule"));
+                case ECM_SCHEDULE:
+                    MyApplication.getInstance().setClusterSchedule(getSuitableUrl(clusterBeanList.get(i).getBaseUrl(),enterprise,serviceName));
                     break;
                 //tab，RN，闪屏分发相关
-                case "com.inspur.ecm.distribution":
-                    MyApplication.getInstance().setClusterDistribution(getSuitableUrl(clusterBeanList.get(i).getBaseUrl(),"distribution"));
+                case ECM_DISTRIBUTION:
+                    MyApplication.getInstance().setClusterDistribution(getSuitableUrl(clusterBeanList.get(i).getBaseUrl(),enterprise,serviceName));
                     break;
                 //浪潮个性化相关
-                case "com.inspur.ecm.news":
-                    MyApplication.getInstance().setClusterNews(getSuitableUrl(clusterBeanList.get(i).getBaseUrl(),"news"));
+                case ECM_NEWS:
+                    MyApplication.getInstance().setClusterNews(getSuitableUrl(clusterBeanList.get(i).getBaseUrl(),enterprise,serviceName));
                     break;
                 //云盘
-                case "com.inspur.ecm.cloud-drive":
-                    MyApplication.getInstance().setClusterCloudDrive(getSuitableUrl(clusterBeanList.get(i).getBaseUrl(),"cloud_drive"));
+                case ECM_CLOUD_DRIVER:
+                    MyApplication.getInstance().setClusterCloudDrive(getSuitableUrl(clusterBeanList.get(i).getBaseUrl(),enterprise,serviceName));
                     break;
                 //文件服务相关
-                case "com.inspur.ecm.storage.legacy":
-                    MyApplication.getInstance().setClusterStorageLegacy(getSuitableUrl(clusterBeanList.get(i).getBaseUrl(),"storage_legacy"));
+                case ECM_STORAGE_LEGACY:
+                    MyApplication.getInstance().setClusterStorageLegacy(getSuitableUrl(clusterBeanList.get(i).getBaseUrl(),enterprise,serviceName));
                     break;
             }
         }
     }
-
 
     /**
      * 把baseurl初始化为默认值，防止切企业时ecm和emm有一个没有改变影响切完企业后的地址
@@ -88,39 +98,44 @@ public class MutilClusterUtils {
                 }
             }
         }
-        return null;
+        return new Enterprise();
     }
 
     /**
      * 返回合适的Url
      */
-    private static String getSuitableUrl(String url,String type){
+    private static String getSuitableUrl(String url,Enterprise enterpriseNew,String type){
         String suitableUrl = url;
-        if(StringUtils.isBlank(suitableUrl)){
-            Enterprise enterprise = getOldEnterprise();
-            List<ClusterBean> clusterBeanList = enterprise.getClusterBeanList();
-            switch (type){
-                case "chat":
-                    suitableUrl = clusterBeanList.get(1).getBaseUrl();
-                    break;
-                case "schedule":
-
-                    break;
-                case "distribution":
-
-                    break;
-                case "news":
-
-                    break;
-                case "cloud_drive":
-
-                    break;
-                case "storage_legacy":
-
-                    break;
-            }
+        if(!StringUtils.isBlank(suitableUrl)){
+            List<ClusterBean> clusterBeanListNew = enterpriseNew.getClusterBeanList();
+            int suitableUrlIndex = clusterBeanListNew.indexOf(type);
+            ClusterBean clusterBean = clusterBeanListNew.get(suitableUrlIndex);
+            getDivisionUrlByType(clusterBean,type);
+        }else{
+            Enterprise enterpriseOld = getOldEnterprise();
+            List<ClusterBean> clusterBeanListOld = enterpriseOld.getClusterBeanList();
+            int suitableUrlIndex = clusterBeanListOld.indexOf(type);
+            ClusterBean clusterBean = clusterBeanListOld.get(suitableUrlIndex);
+            getDivisionUrlByType(clusterBean,type);
         }
         return suitableUrl;
     }
 
+    /**
+     * 获取区分类型的url
+     * @param clusterBean
+     * @param type
+     */
+    private static String getDivisionUrlByType(ClusterBean clusterBean, String type) {
+        String suitableUrl = "";
+        if(type.equals(ECM_CHAT)){
+            Uri clusterBeanUri = Uri.parse(clusterBean.getBaseUrl());
+            suitableUrl = clusterBeanUri.getHost();
+            MyApplication.getInstance().setSocketPath(clusterBeanUri.getPath());
+        }else{
+            suitableUrl = clusterBean.getBaseUrl();
+        }
+        MyApplication.getInstance().setClusterVersion(clusterBean.getServiceVersion());
+        return suitableUrl;
+    }
 }
