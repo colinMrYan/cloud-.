@@ -19,8 +19,10 @@ import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.UIMessage;
 import com.inspur.emmcloud.ui.chat.DisplayAttachmentCardMsg;
-import com.inspur.emmcloud.ui.chat.DisplayRegularFileMsg;
+import com.inspur.emmcloud.ui.chat.DisplayCommentTextPlainMsg;
 import com.inspur.emmcloud.ui.chat.DisplayExtendedActionsMsg;
+import com.inspur.emmcloud.ui.chat.DisplayMediaImageMsg;
+import com.inspur.emmcloud.ui.chat.DisplayRegularFileMsg;
 import com.inspur.emmcloud.ui.chat.DisplayResUnknownMsg;
 import com.inspur.emmcloud.ui.chat.DisplayTxtMarkdownMsg;
 import com.inspur.emmcloud.ui.chat.DisplayTxtPlainMsg;
@@ -68,7 +70,7 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         final UIMessage UImessage = UIMessageList.get(position);
-        showCardLayout(holder, UImessage.getMessage());
+        showCardLayout(holder, UImessage);
         showUserName(holder, UImessage);
         showMsgSendTime(holder, UImessage, position);
         showUserPhoto(holder, UImessage);
@@ -172,8 +174,9 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
      * @param holder
      * @param msg
      */
-    private void showCardLayout(ViewHolder holder, final Message message) {
+    private void showCardLayout(ViewHolder holder, final UIMessage UIMessage) {
         // TODO Auto-generated method stub
+        Message message = UIMessage.getMessage();
         holder.cardLayout.removeAllViewsInLayout();
         holder.cardLayout.removeAllViews();
         boolean isMyMsg = message.getFromUser().equals(
@@ -202,6 +205,12 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
                 break;
             case "extended/actions":
                 cardContentView = DisplayExtendedActionsMsg.getInstance(context).getView(message);
+                break;
+            case "media/image":
+                cardContentView = DisplayMediaImageMsg.getView(context,UIMessage);
+                break;
+            case "comment/text-plai":
+                cardContentView = DisplayCommentTextPlainMsg.getView(context,message);
                 break;
             default:
                 cardContentView = DisplayResUnknownMsg.getView(context, isMyMsg);
@@ -238,7 +247,7 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
         long duration = UIMessage.getCreationDate() - lastMessageCreationDate;
         if (duration >= 180000) {
             holder.sendTimeText.setVisibility(View.VISIBLE);
-            String messageSendTime = TimeUtils.getChannelMsgDisplayTime(MyApplication.getInstance(),UIMessage.getCreationDate());
+            String messageSendTime = TimeUtils.getChannelMsgDisplayTime(MyApplication.getInstance(), UIMessage.getCreationDate());
             holder.sendTimeText.setText(messageSendTime);
         } else {
             holder.sendTimeText.setVisibility(View.GONE);

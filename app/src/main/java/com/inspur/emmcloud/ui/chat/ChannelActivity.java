@@ -24,32 +24,37 @@ import com.inspur.emmcloud.adapter.ChannelMessageAdapter;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
+import com.inspur.emmcloud.api.apiservice.WSAPIService;
+import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
 import com.inspur.emmcloud.bean.chat.Channel;
 import com.inspur.emmcloud.bean.chat.GetFileUploadResult;
 import com.inspur.emmcloud.bean.chat.GetNewMessagesResult;
 import com.inspur.emmcloud.bean.chat.GetNewsImgResult;
 import com.inspur.emmcloud.bean.chat.Message;
-import com.inspur.emmcloud.bean.chat.Msg;
 import com.inspur.emmcloud.bean.chat.UIMessage;
-import com.inspur.emmcloud.bean.chat.WSPushMessageContent;
 import com.inspur.emmcloud.bean.contact.Contact;
+import com.inspur.emmcloud.bean.system.EventMessage;
 import com.inspur.emmcloud.bean.system.PVCollectModel;
+import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.config.MyAppConfig;
-import com.inspur.emmcloud.push.WebSocketPush;
+import com.inspur.emmcloud.interf.ProgressCallback;
 import com.inspur.emmcloud.ui.contact.RobotInfoActivity;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
+import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.InputMethodUtils;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
+import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.ChannelInfoUtils;
 import com.inspur.emmcloud.util.privates.CommunicationUtils;
 import com.inspur.emmcloud.util.privates.DirectChannelUtils;
+import com.inspur.emmcloud.util.privates.GetPathFromUri4kitkat;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.MessageRecourceUploadUtils;
-import com.inspur.emmcloud.util.privates.MsgRecourceUploadUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
@@ -66,6 +71,7 @@ import com.inspur.imp.plugin.camera.imagepicker.bean.ImageItem;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.json.JSONObject;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
 
@@ -118,11 +124,13 @@ public class ChannelActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
         init();
         registeRefreshNameReceiver();
         registeSendActionMsgReceiver();
         recordUserClickChannel();
-        EventBus.getDefault().register(this);
+        WSAPIService.getInstance().getMessageById("a3ad6065-c1fe-4e1c-93c5-ee9579a4c820");
+
     }
 
     // Activity在SingleTask的启动模式下多次打开传递Intent无效，用此方法解决
@@ -278,7 +286,7 @@ public class ChannelActivity extends BaseActivity {
      * 初始化消息列表UI
      */
     private void initMsgListView() {
-        List<Message> cacheMessageList = MessageCacheUtil.getHistoryMessageList(MyApplication.getInstance(), cid, null, 15);
+        final List<Message> cacheMessageList = MessageCacheUtil.getHistoryMessageList(MyApplication.getInstance(), cid, null, 15);
         UIMessageList = UIMessage.MessageList2UIMessageList(cacheMessageList);
         adapter = new ChannelMessageAdapter(ChannelActivity.this, apiService, channel.getType(), chatInputMenu);
         adapter.setItemClickListener(new ChannelMessageAdapter.MyItemClickListener() {
@@ -291,12 +299,17 @@ public class ChannelActivity extends BaseActivity {
                 }
                 String msgType = message.getType();
                 Bundle bundle = new Bundle();
+                LogUtils.jasonDebug("msgType="+msgType);
                 switch (msgType) {
                     case "attachment/card":
                         String uid = message.getMsgContentAttachmentCard().getUid();
                         bundle.putString("uid", uid);
                         IntentUtils.startActivity(ChannelActivity.this,
                                 UserInfoActivity.class, bundle);
+                        break;
+                    case "file/regular-file":
+                        break;
+                    case "media/image":
                         break;
                     default:
                         break;
@@ -327,8 +340,14 @@ public class ChannelActivity extends BaseActivity {
             // 文件管理器返回
             if (requestCode == CHOOSE_FILE
                     && NetUtils.isNetworkConnected(MyApplication.getInstance())) {
-                Message localMessage = new MessageRecourceUploadUtils(MyApplication.getInstance(),cid).uploadResFile(data,apiService);
-                addLocalMessage(localMessage,0);
+                String filePath = GetPathFromUri4kitkat.getPath(MyApplication.getInstance(), data.getData());
+                File file = new File(filePath);
+                if (StringUtils.isBlank(FileUtils.getSuffix(file))) {
+                    ToastUtils.show(MyApplication.getInstance(),
+                            getString(R.string.not_support_upload));
+                } else {
+                    uploadResFileAndSendMessage(filePath, true);
+                }
                 //拍照返回
             } else if (requestCode == CAMERA_RESULT
                     && NetUtils.isNetworkConnected(getApplicationContext())) {
@@ -337,10 +356,8 @@ public class ChannelActivity extends BaseActivity {
                 EditImageActivity.start(ChannelActivity.this, cameraImgPath, MyAppConfig.LOCAL_IMG_CREATE_PATH);
                 //拍照后图片编辑返回
             } else if (requestCode == EditImageActivity.ACTION_REQUEST_EDITIMAGE) {
-                String imgPath = data.getExtras().getString("save_file_path");
-                Msg localMsg = MsgRecourceUploadUtils.uploadResImg(
-                        ChannelActivity.this, imgPath, apiService);
-                //    addLocalMessage(localMsg,0);
+                String filePath = data.getExtras().getString("save_file_path");
+                uploadResFileAndSendMessage(filePath, false);
             } else if (requestCode == MENTIONS_RESULT) {
                 // @返回
                 String result = data.getStringExtra("searchResult");
@@ -356,12 +373,45 @@ public class ChannelActivity extends BaseActivity {
                     ArrayList<ImageItem> imageItemList = (ArrayList<ImageItem>) data
                             .getSerializableExtra(ImagePicker.EXTRA_RESULT_ITEMS);
                     for (int i = 0; i < imageItemList.size(); i++) {
-                        Msg localMsg = MsgRecourceUploadUtils.uploadResImg(
-                                ChannelActivity.this, imageItemList.get(i).path, apiService);
-                        //              addLocalMessage(localMsg,0);
+                        String filePath = imageItemList.get(i).path;
+                        uploadResFileAndSendMessage(filePath, false);
                     }
                 }
         }
+    }
+
+    private void uploadResFileAndSendMessage(String filePath, boolean isRegularFile) {
+        File file = new File(filePath);
+        if (!file.exists()) {
+            ToastUtils.show(MyApplication.getInstance(), R.string.file_not_exist);
+            return;
+        }
+        Message localMessage = null;
+        if (isRegularFile) {
+            localMessage = CommunicationUtils.combinLocalRegularFileMessage(cid, filePath);
+        } else {
+            localMessage = CommunicationUtils.combinLocalMediaImageMessage(cid, filePath);
+        }
+        final String fakeMessageId = localMessage.getId();
+        MessageRecourceUploadUtils messageRecourceUploadUtils = new MessageRecourceUploadUtils(MyApplication.getInstance(), cid);
+        messageRecourceUploadUtils.setProgressCallback(new ProgressCallback() {
+            @Override
+            public void onSuccess(VolumeFile volumeFile) {
+
+            }
+
+            @Override
+            public void onLoading(int progress) {
+
+            }
+
+            @Override
+            public void onFail() {
+                setMessageSendFailStatus(fakeMessageId);
+            }
+        });
+        messageRecourceUploadUtils.uploadResFile(file, localMessage, isRegularFile);
+        addLocalMessage(localMessage, 0);
     }
 
     /**
@@ -385,34 +435,54 @@ public class ChannelActivity extends BaseActivity {
 
     //接收到websocket发过来的消息
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onReceiveWSMessage(WSPushMessageContent WSPushMessageContent) {
-        Message receivedWSMessage = WSPushMessageContent.getMessage();
-        if (cid.equals(receivedWSMessage.getChannel())) {
-            MessageReadCreationDateCacheUtils.saveMessageReadCreationDate(MyApplication.getInstance(), cid, receivedWSMessage.getCreationDate());
-            int size = UIMessageList.size();
-            int index = -1;
-            if (size > 0) {
-                for (int i = size - 1; i >= 0; i--) {
-                    UIMessage UIMessage = UIMessageList.get(i);
-                    if (UIMessage.getMessage().getId() .equals(WSPushMessageContent.getTracer())) {
-                        index = i;
-                        break;
+    public void onReceiveWSMessage(EventMessage eventMessage) {
+        if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE)){
+            String content = eventMessage.getContent();
+            JSONObject contentobj = JSONUtils.getJSONObject(content);
+            Message receivedWSMessage = new Message(contentobj);
+            if (cid.equals(receivedWSMessage.getChannel())) {
+                MessageReadCreationDateCacheUtils.saveMessageReadCreationDate(MyApplication.getInstance(), cid, receivedWSMessage.getCreationDate());
+                int size = UIMessageList.size();
+                int index = -1;
+                if (size > 0) {
+                    for (int i = size - 1; i >= 0; i--) {
+                        UIMessage UIMessage = UIMessageList.get(i);
+                        if (UIMessage.getMessage().getId().equals(eventMessage.getExtra())) {
+                            index = i;
+                            break;
+                        }
                     }
-                }
 
+                }
+                if (index == -1) {
+                    UIMessageList.add(new UIMessage(receivedWSMessage));
+                    adapter.setMessageList(UIMessageList);
+                    adapter.notifyItemInserted(UIMessageList.size() - 1);
+                } else {
+                    UIMessageList.remove(index);
+                    UIMessageList.add(index, new UIMessage(receivedWSMessage));
+                    adapter.setMessageList(UIMessageList);
+                    adapter.notifyItemChanged(index);
+                }
+                msgListView.MoveToPosition(UIMessageList.size() - 1);
             }
-            if (index == -1) {
-                UIMessageList.add(new UIMessage(receivedWSMessage));
-                adapter.setMessageList(UIMessageList);
-                adapter.notifyItemInserted(UIMessageList.size() - 1);
-            } else {
-                UIMessageList.remove(index);
-                UIMessageList.add(index, new UIMessage(receivedWSMessage));
-                adapter.setMessageList(UIMessageList);
-                adapter.notifyItemChanged(index);
-            }
-            msgListView.MoveToPosition(UIMessageList.size() - 1);
         }
+
+    }
+
+
+    //接收到websocket发过来的消息
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onGetMessageById(EventMessage eventMessage) {
+        if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_GET_MESSAGE_BY_ID)){
+            String content = eventMessage.getContent();
+            JSONObject contentobj = JSONUtils.getJSONObject(content);
+            Message message = new Message(contentobj);
+            MessageCacheUtil.saveMessage(MyApplication.getInstance(),message);
+            adapter.setMessageList(UIMessageList);
+            adapter.notifyDataSetChanged();
+        }
+
     }
 
     /**
@@ -482,7 +552,7 @@ public class ChannelActivity extends BaseActivity {
             }
         }
         addLocalMessage(localMessage, 0);
-        WebSocketPush.getInstance().sendChatTextPlainMsg(content, cid, mentionsMap, localMessage.getId());
+        WSAPIService.getInstance().sendChatTextPlainMsg(content, cid, mentionsMap, localMessage.getId());
     }
 
 
@@ -493,13 +563,15 @@ public class ChannelActivity extends BaseActivity {
      * @param status
      */
     private void addLocalMessage(Message message, int status) {
-        UIMessage UIMessage = new UIMessage(message);
-        //本地添加的消息设置为正在发送状态
-        UIMessage.setSendStatus(status);
-        UIMessageList.add(UIMessage);
-        adapter.setMessageList(UIMessageList);
-        adapter.notifyItemInserted(UIMessageList.size() - 1);
-        msgListView.MoveToPosition(UIMessageList.size() - 1);
+        if (message != null) {
+            UIMessage UIMessage = new UIMessage(message);
+            //本地添加的消息设置为正在发送状态
+            UIMessage.setSendStatus(status);
+            UIMessageList.add(UIMessage);
+            adapter.setMessageList(UIMessageList);
+            adapter.notifyItemInserted(UIMessageList.size() - 1);
+            msgListView.MoveToPosition(UIMessageList.size() - 1);
+        }
     }
 
     /**

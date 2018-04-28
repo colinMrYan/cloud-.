@@ -46,4 +46,19 @@ public class MsgContentComment {
     public void setMessage(String message) {
         this.message = message;
     }
+
+    public String toString() {
+        JSONObject obj = new JSONObject();
+        try {
+            obj.put("text", text);
+            obj.put("message", message);
+            if (mentionsMap.size() > 0) {
+                JSONObject mentionObj = JSONUtils.map2Json(mentionsMap);
+                obj.put("mentions", mentionObj);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return obj.toString();
+    }
 }

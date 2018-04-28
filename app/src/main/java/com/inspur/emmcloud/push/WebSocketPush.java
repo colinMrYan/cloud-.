@@ -6,16 +6,13 @@ import android.util.Log;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.api.APIUri;
-import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
-import com.inspur.emmcloud.bean.chat.WSPushMessageContent;
-import com.inspur.emmcloud.util.common.JSONUtils;
+import com.inspur.emmcloud.bean.chat.WSPushContent;
+import com.inspur.emmcloud.bean.system.EventMessage;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
-import com.inspur.emmcloud.util.privates.CommunicationUtils;
 import com.inspur.emmcloud.util.privates.PushInfoUtils;
 
 import org.greenrobot.eventbus.EventBus;
-import org.json.JSONObject;
 
 import java.net.URI;
 import java.util.Arrays;
@@ -34,7 +31,8 @@ public class WebSocketPush {
 
 	private static final String TAG = "WebSocketPush";
 	private static WebSocketPush webSocketPush=null;
-	private  Socket mSocket = null;
+	private Socket mSocket = null;
+	private Map<String,String> tracerMap = new HashMap<>();
 
 	public WebSocketPush() {}
 
@@ -223,9 +221,15 @@ public class WebSocketPush {
 			public void call(Object... arg0) {
 				// TODO Auto-generated method stub
 				LogUtils.debug(TAG,"arg0[0].toString()="+arg0[0].toString());
-				WSPushMessageContent wsPushMessageContent = new WSPushMessageContent(arg0[0].toString());
-				//将websocket推送过来的内容通过EventBus发送
-				EventBus.getDefault().post(wsPushMessageContent);
+				WSPushContent wsPushContent = new WSPushContent(arg0[0].toString());
+				String tracer = wsPushContent.getTracer();
+				String body = wsPushContent.getBody();
+				String tag = tracerMap.get(tracer);
+				if (tag != null){
+					LogUtils.jasonDebug("tag="+tag);
+					EventMessage eventMessag = new EventMessage(tag,body,tracer);
+					EventBus.getDefault().post(eventMessag);
+				}
 			}
 		});
 
@@ -242,63 +246,23 @@ public class WebSocketPush {
 
 	}
 
-	public void sendChatTextPlainMsg(String content, String cid, Map<String,String> mentionsMap,String tracer){
-		try {
-			if (isSocketConnect()){
-				JSONObject object = new JSONObject();
-				JSONObject actionObj = new JSONObject();
-				actionObj.put("method","post");
-				actionObj.put("path","/channel/"+cid+"/message");
-				object.put("action",actionObj);
-				JSONObject headerObj = new JSONObject();
-				headerObj.put("enterprise",MyApplication.getInstance().getCurrentEnterprise().getId());
-				headerObj.put("tracer",tracer);
-				object.put("headers",headerObj);
-				JSONObject bodyObj = new JSONObject();
-				bodyObj.put("type","text/plain");
-				bodyObj.put("text",content);
-				if (mentionsMap != null && mentionsMap.size()>0){
-					JSONObject mentionsObj = JSONUtils.map2Json(mentionsMap);
-					bodyObj.put("mentions", mentionsObj);
-				}
-				object.put("body",bodyObj);
-				LogUtils.jasonDebug("object="+object.toString());
-				mSocket.emit("com.inspur.ecm.chat",object);
-			}
-		}catch (Exception e){
-			e.printStackTrace();
+	public void sendWSMessage(String event,Object content,String tracer){
+		if (isSocketConnect()){
+			LogUtils.jasonDebug("tracer====="+tracer);
+			mSocket.emit(event,content);
+			tracerMap.put(tracer, tracer);
 		}
 	}
 
-	public void sendFileMsg(String cid, String tracer, VolumeFile volumeFile){
-		try {
-			if (isSocketConnect()){
-				JSONObject object = new JSONObject();
-				JSONObject actionObj = new JSONObject();
-				actionObj.put("method","post");
-				actionObj.put("path","/channel/"+cid+"/message");
-				object.put("action",actionObj);
-				JSONObject headerObj = new JSONObject();
-				headerObj.put("enterprise",MyApplication.getInstance().getCurrentEnterprise().getId());
-				headerObj.put("tracer",tracer);
-				object.put("headers",headerObj);
-				JSONObject bodyObj = new JSONObject();
-				bodyObj.put("type","file/regular-file");
-				bodyObj.put("category", CommunicationUtils.getChatFileCategory(volumeFile.getName()));
-				bodyObj.put("name",volumeFile.getName());
-				bodyObj.put("size",volumeFile.getSize());
-				bodyObj.put("media",volumeFile.getPath());
-				object.put("body",bodyObj);
-				LogUtils.jasonDebug("object="+object.toString());
-				mSocket.emit("com.inspur.ecm.chat",object);
-			}
-		}catch (Exception e){
-			e.printStackTrace();
-		}
-	}
+//	public Map<String, String> getTracerMap() {
+//		return tracerMap;
+//	}
+//
+//	public void setTracerMap(Map<String, String> tracerMap) {
+//		this.tracerMap = tracerMap;
+//	}
 
-
-    private void sendWebSocketStatusBroadcaset(String event) {
+	private void sendWebSocketStatusBroadcaset(String event) {
         if (MyApplication.getInstance().isIndexActivityRunning()) {
             Intent intent = new Intent("message_notify");
             intent.putExtra("status", event);

@@ -1,25 +1,17 @@
 package com.inspur.emmcloud.util.privates;
 
 import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
-import android.os.Build;
 
 import com.inspur.emmcloud.MyApplication;
-import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
+import com.inspur.emmcloud.api.apiservice.WSAPIService;
 import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeFileUploadTokenResult;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.interf.ProgressCallback;
 import com.inspur.emmcloud.interf.VolumeFileUploadService;
-import com.inspur.emmcloud.push.WebSocketPush;
-import com.inspur.emmcloud.util.common.FileUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
-import com.inspur.emmcloud.util.common.StringUtils;
-import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.oss.OssService;
 
 import java.io.File;
@@ -29,8 +21,10 @@ public class MessageRecourceUploadUtils {
 	private Context context;
 	private ChatAPIService apiService;
 	private String cid;
-	private String filePath;
-	private String tracer;
+	private ProgressCallback callback;
+	private Message message;
+	private File file;
+	private boolean isRegularFile = false;
 	public MessageRecourceUploadUtils(Context context,String cid){
 		this.context = context;
 		apiService = new ChatAPIService(context);
@@ -40,36 +34,25 @@ public class MessageRecourceUploadUtils {
 	}
 
 
-	public Message uploadResFile(Intent data,
-										ChatAPIService apiService) {
+	public void uploadResFile(File file,Message message,boolean isRegularFile) {
 		// TODO Auto-generated method stub
-		Uri uri = data.getData();
-		boolean isAboveKitKat = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
-		if (isAboveKitKat) {
-			// 获取4.4及以上版本的文件路径
-			filePath = GetPathFromUri4kitkat.getPath(context, uri);
-		} else {
-			// 低版本兼容方法
-			filePath = GetPathFromUri4kitkat.getRealPathFromURI(context, uri);
+		this.file = file;
+		this.message = message;
+		this.isRegularFile = isRegularFile;
+		if (NetUtils.isNetworkConnected(MyApplication.getInstance())){
+			apiService.getFileUploadToken(file.getName(),cid);
+		}else {
+			callbackFail();
 		}
-
-		File tempFile = new File(filePath);
-		if (StringUtils.isBlank(FileUtils.getSuffix(tempFile))) {
-			ToastUtils.show(context,
-					context.getString(R.string.not_support_upload));
-			return null;
-		}
-		String fileName = tempFile.getName();
-		Message message = CommunicationUtils.combinLocalRegularFileMessage(cid,filePath);
-		tracer= message.getId();
-		getFileUploadToken(fileName);
-		return message;
-
 	}
 
-	private void getFileUploadToken(String fileName){
-		if (NetUtils.isNetworkConnected(MyApplication.getInstance())){
-			apiService.getFileUploadToken(fileName,cid);
+	public void setProgressCallback(ProgressCallback callback){
+		this.callback = callback;
+	}
+
+	private void callbackFail(){
+		if (callback != null){
+			callback.onFail();
 		}
 	}
 
@@ -99,28 +82,32 @@ public class MessageRecourceUploadUtils {
 			volumeFileUploadService.setProgressCallback(new ProgressCallback() {
 				@Override
 				public void onSuccess(VolumeFile volumeFile) {
-					WebSocketPush.getInstance().sendFileMsg(cid,tracer,volumeFile);
+					if (isRegularFile){
+						WSAPIService.getInstance().sendChatRegularFileMsg(cid,message.getId(),volumeFile);
+					}else {
+						WSAPIService.getInstance().sendChatMediaImageMsg(cid,message.getId(),volumeFile,message);
+					}
+
 				}
 
 				@Override
 				public void onLoading(int progress) {
-					LogUtils.jasonDebug("progress----------------="+progress);
 				}
 
 				@Override
 				public void onFail() {
-					LogUtils.jasonDebug("onFail----------------");
+					callbackFail();
 
 				}
 			});
-			volumeFileUploadService.uploadFile(getVolumeFileUploadTokenResult.getFileName(),filePath);
+			volumeFileUploadService.uploadFile(getVolumeFileUploadTokenResult.getFileName(),file.getAbsolutePath());
 
 
 		}
 
 		@Override
 		public void returnChatFileUploadTokenFail(String error, int errorCode) {
-
+			callbackFail();
 		}
 	}
 }

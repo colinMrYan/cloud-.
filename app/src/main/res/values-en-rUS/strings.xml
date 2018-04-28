@@ -224,6 +224,7 @@
     <string name="comment_type">   \'s picture</string>
     <string name="comment_filetype">   \'s file</string>
     <string name="comment_news_type">   \'s link</string>
+    <string name="comment_other_type">   \'s message</string>
     <string name="published_in">Pushlished in</string>
     <string name="all_channel_mem">All Channel Members</string>
     <string name="message_text">Message：</string>

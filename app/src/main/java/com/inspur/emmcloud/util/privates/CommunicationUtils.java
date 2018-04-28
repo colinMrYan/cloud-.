@@ -1,5 +1,8 @@
 package com.inspur.emmcloud.util.privates;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
@@ -7,6 +10,7 @@ import com.inspur.emmcloud.bean.chat.Channel;
 import com.inspur.emmcloud.bean.chat.Email;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.MsgContentAttachmentCard;
+import com.inspur.emmcloud.bean.chat.MsgContentMediaImage;
 import com.inspur.emmcloud.bean.chat.MsgContentRegularFile;
 import com.inspur.emmcloud.bean.chat.MsgContentTextPlain;
 import com.inspur.emmcloud.bean.chat.Phone;
@@ -60,7 +64,7 @@ public class CommunicationUtils {
         return message;
     }
 
-    public static Message combinLocalRegularFileMessage(String cid,String localFilePath) {
+    public static Message combinLocalRegularFileMessage(String cid, String localFilePath) {
         Message message = combinLocalMessageCommon();
         message.setChannel(cid);
         message.setId(getTracer());
@@ -72,6 +76,35 @@ public class CommunicationUtils {
         msgContentRegularFile.setSize(FileUtils.getFileSize(localFilePath));
         msgContentRegularFile.setMedia("");
         message.setContent(msgContentRegularFile.toString());
+        return message;
+    }
+
+    public static Message combinLocalMediaImageMessage(String cid, String localFilePath) {
+        Message message = combinLocalMessageCommon();
+        message.setChannel(cid);
+        message.setId(getTracer());
+        message.setType("media/image");
+        File file = new File(localFilePath);
+        Bitmap bitmap = BitmapFactory.decodeFile(localFilePath);
+        int imgHeight = bitmap.getHeight();
+        int imgWidth = bitmap.getWidth();
+        long fileSize = FileUtils.getFileSize(localFilePath);
+        bitmap.recycle();
+        MsgContentMediaImage msgContentMediaImage = new MsgContentMediaImage();
+        msgContentMediaImage.setName(file.getName());
+        msgContentMediaImage.setPreviewHeight(imgHeight);
+        msgContentMediaImage.setPreviewWidth(imgWidth);
+        msgContentMediaImage.setPreviewSize(fileSize);
+        msgContentMediaImage.setPreviewMedia("file://"+localFilePath);
+        msgContentMediaImage.setThumbnailHeight(imgHeight);
+        msgContentMediaImage.setThumbnailWidth(imgWidth);
+        msgContentMediaImage.setThumbnailSize(fileSize);
+        msgContentMediaImage.setThumbnailMedia("file://"+localFilePath);
+        msgContentMediaImage.setRawHeight(imgHeight);
+        msgContentMediaImage.setRawWidth(imgWidth);
+        msgContentMediaImage.setRawSize(fileSize);
+        msgContentMediaImage.setRawMedia("file://"+localFilePath);
+        message.setContent(msgContentMediaImage.toString());
         return message;
     }
 

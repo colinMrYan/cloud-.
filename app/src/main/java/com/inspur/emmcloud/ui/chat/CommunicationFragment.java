@@ -29,6 +29,7 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.ChannelAdapter;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
+import com.inspur.emmcloud.api.apiservice.WSAPIService;
 import com.inspur.emmcloud.bean.chat.Channel;
 import com.inspur.emmcloud.bean.chat.ChannelGroup;
 import com.inspur.emmcloud.bean.chat.ChannelOperationInfo;
@@ -37,16 +38,18 @@ import com.inspur.emmcloud.bean.chat.GetChannelListResult;
 import com.inspur.emmcloud.bean.chat.GetNewMessagesResult;
 import com.inspur.emmcloud.bean.chat.MatheSet;
 import com.inspur.emmcloud.bean.chat.Message;
-import com.inspur.emmcloud.bean.chat.WSPushMessageContent;
 import com.inspur.emmcloud.bean.contact.GetSearchChannelGroupResult;
 import com.inspur.emmcloud.bean.system.AppTabAutoBean;
 import com.inspur.emmcloud.bean.system.AppTabDataBean;
 import com.inspur.emmcloud.bean.system.AppTabPayloadBean;
 import com.inspur.emmcloud.bean.system.AppTabProperty;
+import com.inspur.emmcloud.bean.system.EventMessage;
 import com.inspur.emmcloud.bean.system.PVCollectModel;
+import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.util.common.IntentUtils;
+import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
@@ -116,12 +119,12 @@ public class CommunicationFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
         initView();
         registerMessageFragmentReceiver();
         getChannelList();
         sortChannelList();// 对Channel 进行排序
         updateHeaderFunctionBtn(null);
-        EventBus.getDefault().register(this);
     }
 
     private void initView() {
@@ -246,15 +249,30 @@ public class CommunicationFragment extends Fragment {
 
     //接收到websocket发过来的消息
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onReceiveWSMessage(WSPushMessageContent WSPushMessageContent) {
-        Message receivedWSMessage = WSPushMessageContent.getMessage();
-        Channel receiveMessageChannel = ChannelCacheUtils.getChannel(
-                getActivity(), receivedWSMessage.getChannel());
-        if (receiveMessageChannel == null) {
-            getChannelList();
-        } else {
-            cacheReceiveMessage(receivedWSMessage);
-            sortChannelList();
+    public void onReceiveWSMessage(EventMessage eventMessage) {
+        if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE)){
+            String content = eventMessage.getContent();
+            JSONObject contentObj = JSONUtils.getJSONObject(content);
+            Message receivedWSMessage = new Message(contentObj);
+            Channel receiveMessageChannel = ChannelCacheUtils.getChannel(
+                    getActivity(), receivedWSMessage.getChannel());
+            if (receiveMessageChannel == null) {
+                getChannelList();
+            } else {
+                cacheReceiveMessage(receivedWSMessage);
+                sortChannelList();
+            }
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onReiceveWSOfflineMessage(EventMessage eventMessage){
+        if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE)){
+            String content = eventMessage.getContent();
+            GetNewMessagesResult getNewMessagesResult = new GetNewMessagesResult(content);
+            LogUtils.jasonDebug("content="+content);
+            cacheMsgAsyncTask = new CacheNewMsgTask();
+            cacheMsgAsyncTask.execute(getNewMessagesResult);
         }
     }
 
@@ -541,7 +559,7 @@ public class CommunicationFragment extends Fragment {
         protected void onPostExecute(List<Channel> addchannelList) {
             createGroupIcon(isHaveCreatGroupIcon?addchannelList:allchannelList);
             getChannelInfoResult(allchannelList);
-            getChannelMsg();
+            WSAPIService.getInstance().getOfflineMessage();
         }
 
         @Override
@@ -720,6 +738,8 @@ public class CommunicationFragment extends Fragment {
             //当断开以后连接成功(非第一次连接上)后重新拉取一遍消息
             if (!isFirstConnectWebsockt) {
                 getChannelList();
+            }else {
+                WSAPIService.getInstance().getOfflineMessage();
             }
             isFirstConnectWebsockt = false;
             String appTabs = PreferencesByUserAndTanentUtils.getString(getActivity(), "app_tabbar_info_current", "");
@@ -901,14 +921,6 @@ public class CommunicationFragment extends Fragment {
         }
     }
 
-    /**
-     * 获取频道消息
-     */
-    private void getChannelMsg() {
-        if (NetUtils.isNetworkConnected(MyApplication.getInstance(), false)) {
-            apiService.getNewMessages("", "", 15);
-        }
-    }
 
 
     /**
@@ -941,9 +953,9 @@ public class CommunicationFragment extends Fragment {
                 GetChannelListResult getChannelListResult) {
             // TODO Auto-generated method stub
             if (getActivity() != null) {
+                swipeRefreshLayout.setRefreshing(false);
                 cacheChannelTask = new CacheChannelTask();
                 cacheChannelTask.execute(getChannelListResult);
-
             }
 
         }
@@ -959,17 +971,16 @@ public class CommunicationFragment extends Fragment {
 
         }
 
-        @Override
-        public void returnNewMessagesSuccess(final GetNewMessagesResult getNewMsgsResult) {
-            // TODO Auto-generated method stub
-            if (getActivity() != null) {
-                swipeRefreshLayout.setRefreshing(false);
-                cacheMsgAsyncTask = new CacheNewMsgTask();
-                cacheMsgAsyncTask.execute(getNewMsgsResult);
-
-            }
-
-        }
+//        @Override
+//        public void returnNewMessagesSuccess(final GetNewMessagesResult getNewMsgsResult) {
+//            // TODO Auto-generated method stub
+//            if (getActivity() != null) {
+//                cacheMsgAsyncTask = new CacheNewMsgTask();
+//                cacheMsgAsyncTask.execute(getNewMsgsResult);
+//
+//            }
+//
+//        }
 
         @Override
         public void returnSearchChannelGroupSuccess(
@@ -983,16 +994,16 @@ public class CommunicationFragment extends Fragment {
         }
 
 
-        @Override
-        public void returnNewMessagesFail(String error, int errorCode) {
-            // TODO Auto-generated method stub
-            if (getActivity() != null) {
-                swipeRefreshLayout.setRefreshing(false);
-                sortChannelList();// 对Channel 进行排序
-                WebServiceMiddleUtils.hand(getActivity(), error, errorCode);
-            }
-
-        }
+//        @Override
+//        public void returnNewMessagesFail(String error, int errorCode) {
+//            // TODO Auto-generated method stub
+//            if (getActivity() != null) {
+//                swipeRefreshLayout.setRefreshing(false);
+//                sortChannelList();// 对Channel 进行排序
+//                WebServiceMiddleUtils.hand(getActivity(), error, errorCode);
+//            }
+//
+//        }
 
     }
 

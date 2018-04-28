@@ -226,6 +226,7 @@
     <string name="comment_type">   的图片</string>
     <string name="comment_filetype">   的文件</string>
     <string name="comment_news_type">   的新闻</string>
+    <string name="comment_other_type">   的消息</string>
     <string name="published_in">发于</string>
     <string name="all_channel_mem">全部频道成员</string>
     <string name="message_text">消息：</string>
