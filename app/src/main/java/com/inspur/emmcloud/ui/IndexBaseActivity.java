@@ -238,7 +238,6 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
 
     @Subscribe(threadMode =  ThreadMode.MAIN)
     public void updateTabIndex(ChangeTabBean changeTabBean){
-        LogUtils.YfcDebug("mainTab的id："+mTabHost.getCurrentTabTag());
         for (int i = 0; i < mTabHost.getTabWidget().getChildCount(); i++) {
             if (mTabHost.getTabWidget().getChildAt(i).getTag().toString().contains(changeTabBean.getTabId())) {
                 mTabHost.setCurrentTab(i);
