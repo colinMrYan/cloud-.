@@ -209,7 +209,7 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
             case "media/image":
                 cardContentView = DisplayMediaImageMsg.getView(context,UIMessage);
                 break;
-            case "comment/text-plai":
+            case "comment/text-plain":
                 cardContentView = DisplayCommentTextPlainMsg.getView(context,message);
                 break;
             default:

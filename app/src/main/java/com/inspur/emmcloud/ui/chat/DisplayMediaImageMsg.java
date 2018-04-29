@@ -15,13 +15,14 @@ import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.MsgContentMediaImage;
 import com.inspur.emmcloud.bean.chat.UIMessage;
 import com.inspur.emmcloud.util.common.DensityUtil;
-import com.inspur.emmcloud.util.common.LogUtils;
+import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 
-import java.util.ArrayList;
+import java.io.Serializable;
+import java.util.List;
 
 /**
  * DisplayResImageMsg
@@ -64,8 +65,6 @@ public class DisplayMediaImageMsg {
         int w = msgContentMediaImage.getRawWidth();
         int h = msgContentMediaImage.getRawHeight();
         final boolean isHasSetImageViewSize = setImgViewSize(context, imageView, longImgText, w,h);
-        final String finalimageUrl = imageUri;
-        LogUtils.jasonDebug("finalimageUrl="+finalimageUrl);
 		ImageLoader.getInstance().displayImage(imageUri, imageView, options, new SimpleImageLoadingListener(){
 			@Override
 			public void onLoadingComplete(String imageUri, View view,
@@ -90,26 +89,15 @@ public class DisplayMediaImageMsg {
                 view.invalidate();
                 int width = view.getWidth();
                 int height = view.getHeight();
-//                Intent intent = new Intent(context,
-//                        ImagePagerActivity.class);
-//                List<Msg> imgTypeMsgList = MsgCacheUtil.getImgTypeMsgList(context, message.getChannel(), false);
-//                intent.putExtra(ImagePagerActivity.EXTRA_IMAGE_MSG_LIST, (Serializable) imgTypeMsgList);
-//                intent.putExtra(ImagePagerActivity.EXTRA_CURRENT_IMAGE_MSG, msg);
-//                intent.putExtra(ImagePagerActivity.PHOTO_SELECT_X_TAG, location[0]);
-//                intent.putExtra(ImagePagerActivity.PHOTO_SELECT_Y_TAG, location[1]);
-//                intent.putExtra(ImagePagerActivity.PHOTO_SELECT_W_TAG, width);
-//                intent.putExtra(ImagePagerActivity.PHOTO_SELECT_H_TAG, height);
-//                context.startActivity(intent);
                 Intent intent = new Intent(context,
-                        ImagePagerActivity.class);
-                ArrayList<String> urls = new ArrayList<String>();
-                urls.add(finalimageUrl);
+                        ChatImagePagerActivity.class);
+                List<Message> imgTypeMsgList = MessageCacheUtil.getImgTypeMessageList(context, message.getChannel(), false);
+                intent.putExtra(ImagePagerActivity.EXTRA_IMAGE_MSG_LIST, (Serializable) imgTypeMsgList);
+                intent.putExtra(ImagePagerActivity.EXTRA_CURRENT_IMAGE_MSG, message);
                 intent.putExtra(ImagePagerActivity.PHOTO_SELECT_X_TAG, location[0]);
                 intent.putExtra(ImagePagerActivity.PHOTO_SELECT_Y_TAG, location[1]);
                 intent.putExtra(ImagePagerActivity.PHOTO_SELECT_W_TAG, width);
                 intent.putExtra(ImagePagerActivity.PHOTO_SELECT_H_TAG, height);
-                intent.putExtra("image_index", 0);
-                intent.putStringArrayListExtra("image_urls", urls);
                 context.startActivity(intent);
             }
         });

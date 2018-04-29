@@ -11,16 +11,21 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.BaseActivity;
+import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIDownloadCallBack;
 import com.inspur.emmcloud.bean.chat.GroupFileInfo;
+import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.Msg;
+import com.inspur.emmcloud.bean.chat.MsgContentRegularFile;
 import com.inspur.emmcloud.config.MyAppConfig;
-import com.inspur.emmcloud.util.privates.DownLoaderUtils;
 import com.inspur.emmcloud.util.common.FileUtils;
-import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
-import com.inspur.emmcloud.util.privates.cache.MsgCacheUtil;
 import com.inspur.emmcloud.util.common.ToastUtils;
+import com.inspur.emmcloud.util.privates.DownLoaderUtils;
+import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
+import com.inspur.emmcloud.util.privates.cache.ContactCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
+import com.inspur.emmcloud.util.privates.cache.MsgCacheUtil;
 import com.inspur.emmcloud.widget.HorizontalProgressBarWithNumber;
 
 import java.io.File;
@@ -32,6 +37,7 @@ public class GroupFileActivity extends BaseActivity {
     private ListView fileListView;
     private String cid;
     private List<GroupFileInfo> fileInfoList = new ArrayList<GroupFileInfo>();
+    private boolean isMessageV0 = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,12 +55,22 @@ public class GroupFileActivity extends BaseActivity {
      */
     private void getFileMsgList() {
         // TODO Auto-generated method stub
-        List<Msg> fileTypeMsgList = MsgCacheUtil.getFileTypeMsgList(
-                GroupFileActivity.this, cid);
-        for (int i = 0; i < fileTypeMsgList.size(); i++) {
-            GroupFileInfo groupFileInfo = new GroupFileInfo(
-                    fileTypeMsgList.get(i));
-            fileInfoList.add(groupFileInfo);
+        if (isMessageV0) {
+            List<Msg> fileTypeMsgList = MsgCacheUtil.getFileTypeMsgList(
+                    GroupFileActivity.this, cid);
+            for (Msg msg : fileTypeMsgList) {
+                GroupFileInfo groupFileInfo = new GroupFileInfo(
+                        msg);
+                fileInfoList.add(groupFileInfo);
+            }
+
+        } else {
+            List<Message> fileTypeMessageList = MessageCacheUtil.getFileTypeMsgList(MyApplication.getInstance(), cid);
+            for (Message message : fileTypeMessageList) {
+                MsgContentRegularFile msgContentRegularFile = message.getMsgContentAttachmentFile();
+                GroupFileInfo groupFileInfo = new GroupFileInfo(msgContentRegularFile.getMedia(), msgContentRegularFile.getName(), msgContentRegularFile.getSize() + "", message.getCreationDate(), ContactCacheUtils.getUserName(MyApplication.getInstance(), message.getFromUser()));
+                fileInfoList.add(groupFileInfo);
+            }
         }
 
     }

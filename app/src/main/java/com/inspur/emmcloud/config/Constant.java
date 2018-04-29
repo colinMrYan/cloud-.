@@ -45,5 +45,8 @@ public class Constant {
     public static final String EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE = "tag_reveive_single_ws_message";
     public static final String EVENTBUS_TAG_GET_OFFLINE_WS_MESSAGE = "tag_get_offline_ws_message";
     public static final String EVENTBUS_TAG_GET_MESSAGE_BY_ID = "tag_get_message_by_id";
+    public static final String EVENTBUS_TAG_GET_MESSAGE_COMMENT = "tag_get_message_comment";
+    public static final String EVENTBUS_TAG_GET_MESSAGE_COMMENT_COUNT = "tag_get_message_comment_count";
+    public static final String EVENTBUS_TAG_ON_PHOTO_TAB = "tag_on_photo_tab";
 
 }

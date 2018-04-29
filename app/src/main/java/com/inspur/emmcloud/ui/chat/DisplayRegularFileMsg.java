@@ -41,7 +41,7 @@ public class DisplayRegularFileMsg {
                 .findViewById(R.id.file_size_text);
         ImageView img = (ImageView)convertView.findViewById(R.id.file_icon_img);
         final MsgContentRegularFile msgContentFile = msg.getMsgContentAttachmentFile();
-        ImageDisplayUtils.getInstance().displayImage(img, "drawable://" + FileUtils.getIconResIdRobot(msgContentFile.getName()));
+        ImageDisplayUtils.getInstance().displayImage(img, "drawable://" + FileUtils.getRegularFileIconResId(msgContentFile.getName()));
         fileNameText.setText(msgContentFile.getName());
         fileSizeText.setText(FileUtils.formatFileSize(msgContentFile.getSize()));
         final String downloadUri = "https://emm.inspur.com/api/bot/v6.0/getfile/"+msgContentFile.getMedia();

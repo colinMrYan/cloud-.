@@ -1,6 +1,5 @@
 package com.inspur.emmcloud.ui.chat;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,10 +11,14 @@ import android.widget.GridView;
 import android.widget.ImageView;
 
 import com.inspur.emmcloud.BaseActivity;
+import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
+import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.Msg;
+import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
+import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
 import com.inspur.emmcloud.util.privates.cache.MsgCacheUtil;
 
 import java.io.Serializable;
@@ -28,6 +31,8 @@ public class GroupAlbumActivity extends BaseActivity {
     private String cid;
     private ArrayList<String> imgUrlList = new ArrayList<String>();
     private List<Msg> imgTypeMsgList;
+    private List<Message> imgTypeMessageList;
+    private boolean isMessageV0 = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,17 +54,23 @@ public class GroupAlbumActivity extends BaseActivity {
                 view.invalidate();
                 int width = view.getWidth();
                 int height = view.getHeight();
-                Intent intent = new Intent(GroupAlbumActivity.this,
-                        ImagePagerActivity.class);
-                intent.putExtra(ImagePagerActivity.EXTRA_IMAGE_MSG_LIST, (Serializable) imgTypeMsgList);
-                intent.putExtra(ImagePagerActivity.EXTRA_CURRENT_IMAGE_MSG, imgTypeMsgList.get(position));
-                intent.putExtra(ImagePagerActivity.PHOTO_SELECT_X_TAG, location[0]);
-                intent.putExtra(ImagePagerActivity.PHOTO_SELECT_Y_TAG, location[1]);
-                intent.putExtra(ImagePagerActivity.PHOTO_SELECT_W_TAG, width);
-                intent.putExtra(ImagePagerActivity.PHOTO_SELECT_H_TAG, height);
-                intent.putExtra("image_index", position);
-                intent.putStringArrayListExtra("image_urls", imgUrlList);
-                startActivity(intent);
+                Bundle bundle = new Bundle();
+                bundle.putInt(ImagePagerActivity.PHOTO_SELECT_X_TAG, location[0]);
+                bundle.putInt(ImagePagerActivity.PHOTO_SELECT_Y_TAG, location[1]);
+                bundle.putInt(ImagePagerActivity.PHOTO_SELECT_W_TAG, width);
+                bundle.putInt(ImagePagerActivity.PHOTO_SELECT_H_TAG, height);
+                bundle.putInt("image_index", position);
+                bundle.putStringArrayList("image_urls", imgUrlList);
+                if (isMessageV0){
+                    bundle.putSerializable(ImagePagerActivity.EXTRA_IMAGE_MSG_LIST, (Serializable) imgTypeMsgList);
+                    bundle.putSerializable(ImagePagerActivity.EXTRA_CURRENT_IMAGE_MSG, imgTypeMsgList.get(position));
+                    IntentUtils.startActivity(GroupAlbumActivity.this,ImagePagerActivity.class,bundle);
+                }else {
+                    bundle.putSerializable(ImagePagerActivity.EXTRA_IMAGE_MSG_LIST, (Serializable) imgTypeMessageList);
+                    bundle.putSerializable(ImagePagerActivity.EXTRA_CURRENT_IMAGE_MSG, imgTypeMessageList.get(position));
+                    IntentUtils.startActivity(GroupAlbumActivity.this,ChatImagePagerActivity.class,bundle);
+                }
+
             }
         });
 
@@ -70,12 +81,21 @@ public class GroupAlbumActivity extends BaseActivity {
      */
     private void getImgMsgList() {
         // TODO Auto-generated method stub
-        imgTypeMsgList = MsgCacheUtil.getImgTypeMsgList(GroupAlbumActivity.this, cid);
-        for (int i = 0; i < imgTypeMsgList.size(); i++) {
-            String url = APIUri.getPreviewUrl(imgTypeMsgList.get(i).getImgTypeMsgImg());
-            imgUrlList.add(url);
-        }
+        if (isMessageV0){
+            imgTypeMsgList = MsgCacheUtil.getImgTypeMsgList(MyApplication.getInstance(), cid);
+            for (Msg msg :imgTypeMsgList){
+                String url = APIUri.getPreviewUrl(msg.getImgTypeMsgImg());
+                imgUrlList.add(url);
+            }
 
+        }else {
+            imgTypeMessageList = MessageCacheUtil.getImgTypeMessageList(MyApplication.getInstance(), cid);
+            for (Message message:imgTypeMessageList) {
+                String url = APIUri.getPreviewUrl(message.getMsgContentMediaImage().getRawMedia());
+                imgUrlList.add(url);
+            }
+
+        }
     }
 
     public void onClick(View v) {

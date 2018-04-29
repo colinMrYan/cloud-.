@@ -264,7 +264,7 @@ public class Channel implements Serializable {
                 case "text/markdown":
                     newMsgContent = fromUserName + message.getMsgContentTextMarkdown().getText();
                     break;
-                case "comment/text-plai":
+                case "comment/text-plain":
                     newMsgContent = fromUserName + context.getString(R.string.send_a_comment);
                     break;
                 case "file/regular-file":

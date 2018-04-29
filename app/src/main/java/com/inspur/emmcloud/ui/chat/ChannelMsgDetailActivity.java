@@ -50,6 +50,7 @@ import com.inspur.emmcloud.widget.ECMChatInputMenu;
 import com.inspur.emmcloud.widget.LoadingDialog;
 import com.inspur.emmcloud.widget.ScrollViewWithListView;
 
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -92,6 +93,7 @@ public class ChannelMsgDetailActivity extends BaseActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_channel_msg_detail);
         initView();
+        EventBus.getDefault().register(this);
         initData();
     }
 
@@ -445,6 +447,12 @@ public class ChannelMsgDetailActivity extends BaseActivity implements
             IntentUtils.startActivity(ChannelMsgDetailActivity.this,
                     UserInfoActivity.class, bundle);
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 
     @Override

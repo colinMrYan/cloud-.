@@ -270,7 +270,6 @@ public class CommunicationFragment extends Fragment {
         if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE)){
             String content = eventMessage.getContent();
             GetNewMessagesResult getNewMessagesResult = new GetNewMessagesResult(content);
-            LogUtils.jasonDebug("content="+content);
             cacheMsgAsyncTask = new CacheNewMsgTask();
             cacheMsgAsyncTask.execute(getNewMessagesResult);
         }

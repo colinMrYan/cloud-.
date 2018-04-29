@@ -32,9 +32,11 @@ public class WebSocketPush {
 	private static final String TAG = "WebSocketPush";
 	private static WebSocketPush webSocketPush=null;
 	private Socket mSocket = null;
-	private Map<String,String> tracerMap = new HashMap<>();
+	private Map<String,EventMessage> tracerMap = new HashMap<>();
 
-	public WebSocketPush() {}
+	public WebSocketPush() {
+		tracerMap = new HashMap<>();
+	}
 
 	public static WebSocketPush getInstance(){
 		if (webSocketPush == null) {
@@ -224,11 +226,11 @@ public class WebSocketPush {
 				WSPushContent wsPushContent = new WSPushContent(arg0[0].toString());
 				String tracer = wsPushContent.getTracer();
 				String body = wsPushContent.getBody();
-				String tag = tracerMap.get(tracer);
-				if (tag != null){
-					LogUtils.jasonDebug("tag="+tag);
-					EventMessage eventMessag = new EventMessage(tag,body,tracer);
-					EventBus.getDefault().post(eventMessag);
+				EventMessage eventMessage = tracerMap.get(tracer);
+				if (eventMessage != null){
+					tracerMap.remove(tracer);
+					eventMessage.setContent(body);
+					EventBus.getDefault().post(eventMessage);
 				}
 			}
 		});
@@ -246,21 +248,13 @@ public class WebSocketPush {
 
 	}
 
-	public void sendWSMessage(String event,Object content,String tracer){
+	public void sendWSMessage(EventMessage eventMessage,Object content,String tracer){
 		if (isSocketConnect()){
-			LogUtils.jasonDebug("tracer====="+tracer);
-			mSocket.emit(event,content);
-			tracerMap.put(tracer, tracer);
+			LogUtils.debug(TAG,"eventMessage.getTag()="+eventMessage.getTag());
+			mSocket.emit("com.inspur.ecm.chat",content);
+			tracerMap.put(tracer, eventMessage);
 		}
 	}
-
-//	public Map<String, String> getTracerMap() {
-//		return tracerMap;
-//	}
-//
-//	public void setTracerMap(Map<String, String> tracerMap) {
-//		this.tracerMap = tracerMap;
-//	}
 
 	private void sendWebSocketStatusBroadcaset(String event) {
         if (MyApplication.getInstance().isIndexActivityRunning()) {

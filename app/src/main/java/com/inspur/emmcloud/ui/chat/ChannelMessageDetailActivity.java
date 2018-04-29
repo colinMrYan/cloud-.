@@ -5,7 +5,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.SpannableString;
-import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -20,15 +19,13 @@ import android.widget.TextView;
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.APIUri;
-import com.inspur.emmcloud.api.apiservice.ChatAPIService;
-import com.inspur.emmcloud.bean.chat.Comment;
-import com.inspur.emmcloud.bean.chat.CommentBodyBean;
-import com.inspur.emmcloud.bean.chat.GetMsgCommentResult;
-import com.inspur.emmcloud.bean.chat.GetMsgResult;
-import com.inspur.emmcloud.bean.chat.GetSendMsgResult;
-import com.inspur.emmcloud.bean.chat.Msg;
+import com.inspur.emmcloud.api.apiservice.WSAPIService;
+import com.inspur.emmcloud.bean.chat.GetMessageCommentResult;
+import com.inspur.emmcloud.bean.chat.Message;
+import com.inspur.emmcloud.bean.chat.MsgContentMediaImage;
+import com.inspur.emmcloud.bean.system.EventMessage;
+import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.ui.contact.RobotInfoActivity;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
 import com.inspur.emmcloud.util.common.FileUtils;
@@ -36,29 +33,26 @@ import com.inspur.emmcloud.util.common.InputMethodUtils;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
-import com.inspur.emmcloud.util.common.PreferencesUtils;
+import com.inspur.emmcloud.util.privates.ChatMsgContentUtils;
+import com.inspur.emmcloud.util.privates.CommunicationUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
-import com.inspur.emmcloud.util.privates.MentionsAndUrlShowUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.TransHtmlToTextUtils;
-import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.util.privates.cache.ChannelCacheUtils;
-import com.inspur.emmcloud.util.privates.cache.MsgCacheUtil;
-import com.inspur.emmcloud.util.privates.cache.RobotCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.ContactCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
 import com.inspur.emmcloud.widget.CircleImageView;
 import com.inspur.emmcloud.widget.ECMChatInputMenu;
-import com.inspur.emmcloud.widget.LoadingDialog;
+import com.inspur.emmcloud.widget.LinkMovementClickMethod;
 import com.inspur.emmcloud.widget.ScrollViewWithListView;
 
-import org.json.JSONArray;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-
-import static com.inspur.emmcloud.api.APIUri.getChannelImgUrl;
 
 
 /**
@@ -71,11 +65,9 @@ public class ChannelMessageDetailActivity extends BaseActivity implements
 
     private static final int RESULT_MENTIONS = 5;
     private ScrollViewWithListView commentListView;
-    private Msg msg;
-    private ChatAPIService apiService;
-    private List<Comment> commentList;
+    private Message message;
+    private List<Message> commentList;
     private BaseAdapter commentAdapter;
-    private LoadingDialog loadingDialog;
     private ScrollView commentScrollView;
     private SwipeRefreshLayout swipeRefreshLayout;
     private CircleImageView senderHeadImg;
@@ -86,6 +78,7 @@ public class ChannelMessageDetailActivity extends BaseActivity implements
     private RelativeLayout msgDisplayLayout;
     private LayoutInflater inflater;
     private ECMChatInputMenu chatInputMenu;
+    private String mid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,10 +94,7 @@ public class ChannelMessageDetailActivity extends BaseActivity implements
     private void initView() {
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh_layout);
         swipeRefreshLayout.setOnRefreshListener(this);
-        loadingDialog = new LoadingDialog(this);
-        apiService = new ChatAPIService(this);
-        apiService.setAPIInterface(new WebService());
-        commentList = new ArrayList<Comment>();
+        commentList = new ArrayList<>();
         commentScrollView = (ScrollView) findViewById(R.id.scrollview);
         inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
         View msgDetailLayout = inflater.inflate(R.layout.msg_parent_detail,
@@ -125,6 +115,7 @@ public class ChannelMessageDetailActivity extends BaseActivity implements
 
     private void initChatInputMenu() {
         chatInputMenu = (ECMChatInputMenu) findViewById(R.id.chat_input_menu);
+        chatInputMenu.setIsMessageV0(false);
         cid = getIntent().getExtras().getString("cid");
         String channelType = ChannelCacheUtils.getChannelType(getApplicationContext(),
                 cid);
@@ -134,9 +125,9 @@ public class ChannelMessageDetailActivity extends BaseActivity implements
         chatInputMenu.hideAddMenuLayout();
         chatInputMenu.setChatInputMenuListener(new ECMChatInputMenu.ChatInputMenuListener() {
             @Override
-            public void onSendMsg(String content, List<String> mentionsUidList, List<String> urlList, Map<String,String> mentionsMap) {
+            public void onSendMsg(String content, List<String> mentionsUidList, List<String> urlList, Map<String, String> mentionsMap) {
                 // TODO Auto-generated method stub
-                sendComment(content, mentionsUidList, urlList);
+                sendComment(content, mentionsMap);
             }
         });
         chatInputMenu.setInputLayout("1");
@@ -147,20 +138,34 @@ public class ChannelMessageDetailActivity extends BaseActivity implements
      * 初始化数据源
      */
     private void initData() {
-        String mid = getIntent().getStringExtra("mid");
-        msg = MsgCacheUtil.getCacheMsg(getApplicationContext(), mid);
-        if (msg != null) {
+        mid = getIntent().getStringExtra("mid");
+        message = MessageCacheUtil.getMessageByMid(MyApplication.getInstance(), mid);
+        if (message != null) {
             handMsgData();
         } else {
-            getMsgById(mid);
+            WSAPIService.getInstance().getMessageById(mid);
         }
+    }
+
+    //接收到websocket发过来的消息
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onGetMessageById(EventMessage eventMessage) {
+        if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_GET_MESSAGE_BY_ID)) {
+            String content = eventMessage.getContent();
+            JSONObject contentobj = JSONUtils.getJSONObject(content);
+            Message message = new Message(contentobj);
+            if (message.getId().equals(mid)) {
+                handMsgData();
+            }
+        }
+
     }
 
     /**
      * 处理数据
      */
     private void handMsgData() {
-        cid = msg.getCid();
+        cid = message.getChannel();
         getComment();
         displayMsgDetail();
     }
@@ -171,8 +176,8 @@ public class ChannelMessageDetailActivity extends BaseActivity implements
     private void displayMsgDetail() {
         disPlayCommonInfo();
         View msgDisplayView = null;
-        if (msg.getType().equals("res_file")) {
-            msgDisplayView = DisplayResFileMsg.displayResFileMsg(ChannelMessageDetailActivity.this, msg);
+        if (!message.getType().equals("media/image")) {
+            msgDisplayView = DisplayRegularFileMsg.getView(MyApplication.getInstance(), message);
         } else {
             msgDisplayView = inflater.inflate(R.layout.msg_common_detail, null);
             msgContentImg = (ImageView) msgDisplayView
@@ -181,39 +186,33 @@ public class ChannelMessageDetailActivity extends BaseActivity implements
                     .findViewById(R.id.comment_filename_text);
             TextView fileSizeText = (TextView) msgDisplayView
                     .findViewById(R.id.comment_filesize_text);
-            final CommentBodyBean commentBodyBean = new CommentBodyBean(
-                    msg.getBody());
-            displayImage(commentBodyBean.getKey());
-            fileNameText.setText(commentBodyBean.getName());
-            fileSizeText.setText(FileUtils.formatFileSize(commentBodyBean
-                    .getSize()));
+            String fileName;
+            String fileSize;
+            //if (message.getType().equals("media/image")){
+            MsgContentMediaImage msgContentMediaImage = message.getMsgContentMediaImage();
+            fileName = msgContentMediaImage.getName();
+            fileSize = FileUtils.formatFileSize(msgContentMediaImage.getRawSize());
+            final String imgPath = APIUri.getPreviewUrl(msgContentMediaImage.getRawMedia());
+            ImageDisplayUtils.getInstance().displayImage(msgContentImg,
+                    imgPath, R.drawable.icon_photo_default);
             msgContentImg.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (msg.getType().equals("image")
-                            || msg.getType().equals("res_image")) {
-                        displayZoomImage(v, commentBodyBean.getKey());
-                    }
+                    displayZoomImage(v, imgPath);
                 }
             });
+            fileNameText.setText(fileName);
+            fileSizeText.setText(fileSize);
+//            }else {
+//                MsgContentRegularFile msgContentRegularFile = message.getMsgContentAttachmentFile();
+//                fileName = msgContentRegularFile.getName();
+//                fileSize = FileUtils.formatFileSize(msgContentRegularFile.getSize());
+//                ImageDisplayUtils.getInstance().displayImage(msgContentImg, "drawable://" + FileUtils.getRegularFileIconResId(fileName));
+//            }
         }
         msgDisplayView.setLayoutParams(new LayoutParams(
                 LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
         msgDisplayLayout.addView(msgDisplayView);
-    }
-
-    /**
-     * 展示图片或者文件图标
-     *
-     * @param fileName
-     */
-    private void displayImage(String fileName) {
-        if (msg.getType().equals("res_image")) {
-            ImageDisplayUtils.getInstance().displayImage(msgContentImg,
-                    APIUri.getPreviewUrl(fileName), R.drawable.icon_photo_default);
-        } else {
-            ImageDisplayUtils.getInstance().displayImage(msgContentImg, "drawable://" + FileUtils.getIconResId(fileName));
-        }
     }
 
     /**
@@ -249,26 +248,18 @@ public class ChannelMessageDetailActivity extends BaseActivity implements
      * 展示通用的部分
      */
     private void disPlayCommonInfo() {
-        //机器人进群修改处
-        String iconUrl = "";
-        if (msg.getUid().startsWith("BOT")) {
-            iconUrl = APIUri.getRobotIconUrl(RobotCacheUtils
-                    .getRobotById(ChannelMessageDetailActivity.this, msg.getUid())
-                    .getAvatar());
-        } else {
-            iconUrl = getChannelImgUrl(ChannelMessageDetailActivity.this, msg.getUid());
-        }
-        ImageDisplayUtils.getInstance().displayImage(senderHeadImg, iconUrl, R.drawable.icon_photo_default);
+        String photoUrl = APIUri.getChannelImgUrl(MyApplication.getInstance(), message.getFromUser());
+        ImageDisplayUtils.getInstance().displayImage(senderHeadImg, photoUrl, R.drawable.icon_photo_default);
         senderHeadImg.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                openUserInfo(msg.getUid());
+                openUserInfo(message.getFromUser());
             }
         });
-        String msgSendTime = TimeUtils.getDisplayTime(getApplicationContext(),
-                msg.getTime());
+        String msgSendTime = TimeUtils.getDisplayTime(MyApplication.getInstance(),
+                message.getCreationDate());
         msgSendTimeText.setText(msgSendTime);
-        senderNameText.setText(msg.getTitle());
+        senderNameText.setText(ContactCacheUtils.getUserName(MyApplication.getInstance(), message.getFromUser()));
     }
 
     /**
@@ -305,7 +296,7 @@ public class ChannelMessageDetailActivity extends BaseActivity implements
         //将最新的评论数返回给ImagePagerActivity
         if (getIntent().hasExtra("from") && getIntent().getStringExtra("from").equals("imagePager")) {
             Intent intent = new Intent();
-            intent.putExtra("mid", msg.getMid());
+            intent.putExtra("mid", message.getId());
             intent.putExtra("commentCount", commentList.size());
             setResult(RESULT_OK, intent);
         }
@@ -316,14 +307,11 @@ public class ChannelMessageDetailActivity extends BaseActivity implements
     /**
      * 发出评论
      */
-    private void sendComment(String commentContent, List<String> mentionsUidList, List<String> urlList) {
+    private void sendComment(String text, Map<String, String> mentionsMap) {
 
-        if (NetUtils.isNetworkConnected(getApplicationContext())) {
-            String commentConbineResult = getConbineComment(commentContent, mentionsUidList, urlList);
-            apiService.sendMsg(cid, commentConbineResult, "txt_comment",
-                    msg.getMid(), "");
-            Comment newComment = combineComment(commentConbineResult);
-            commentList.add(newComment);
+        if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
+            Message message = CommunicationUtils.combinLocalCommentTextPlainMessage(cid, mid, text, mentionsMap);
+            commentList.add(message);
             if (commentAdapter == null) {
                 commentAdapter = new CommentAdapter();
                 commentListView.setAdapter(commentAdapter);
@@ -337,30 +325,10 @@ public class ChannelMessageDetailActivity extends BaseActivity implements
                 }
             });
             InputMethodUtils.hide(ChannelMessageDetailActivity.this);
+            WSAPIService.getInstance().sendChatCommentTextPlainMsg(message);
         }
     }
 
-    /**
-     * 拼装评论
-     */
-    private Comment combineComment(String content) {
-        String uid = ((MyApplication) getApplicationContext()).getUid();
-        String title = PreferencesUtils.getString(
-                ChannelMessageDetailActivity.this, "userRealName");
-        String timeStamp = TimeUtils.getCurrentUTCTimeString();
-        JSONObject jsonComment = new JSONObject();
-        JSONObject jsonFrom = new JSONObject();
-        try {
-            jsonFrom.put("title", title);
-            jsonFrom.put("uid", uid);
-            jsonComment.put("timestamp", timeStamp);
-            jsonComment.put("body", content);
-            jsonComment.put("from", jsonFrom);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return new Comment(jsonComment);
-    }
 
     class CommentAdapter extends BaseAdapter {
         @Override
@@ -390,40 +358,23 @@ public class ChannelMessageDetailActivity extends BaseActivity implements
                     .findViewById(R.id.comment_text);
             ImageView photoImg = (ImageView) convertView
                     .findViewById(R.id.msg_img);
-            final Comment comment = commentList.get(position);
-            userNameText.setText(comment.getTitle());
-            String source = comment.getSource();
-            contentText.setMovementMethod(LinkMovementMethod.getInstance());
-            String mentionsString = comment.getMentions();
-            String urlsString = comment.getUrls();
-            String[] mentions = mentionsString.replace("[", "").replace("]", "").split(",");
-            String[] urls = urlsString.replace("[", "").replace("]", "").split(",");
-            List<String> mentionList = Arrays.asList(mentions);
-            List<String> urlList = Arrays.asList(urls);
-            SpannableString spannableString = MentionsAndUrlShowUtils.handleMentioin(source, mentionList, urlList);
-            contentText.setText(spannableString);
+            final Message message = commentList.get(position);
+            userNameText.setText(ContactCacheUtils.getUserName(MyApplication.getInstance(), message.getFromUser()));
+            String content = message.getMsgContentComment().getText();
+            contentText.setMovementMethod(LinkMovementClickMethod.getInstance());
+            SpannableString spannableString = ChatMsgContentUtils.mentionsAndUrl2Span(MyApplication.getInstance(), content, message.getMsgContentTextPlain().getMentionsMap());
+            contentText.setText(spannableString.toString());
             TransHtmlToTextUtils.stripUnderlines(contentText,
                     Color.parseColor("#0f7bca"));
-            String time = TimeUtils.getDisplayTime(getApplicationContext(),
-                    comment.getTimestamp());
+            String time = TimeUtils.getDisplayTime(MyApplication.getInstance(),
+                    message.getCreationDate());
             sendTimeText.setText(time);
-
-            //机器人进群修改处
-            String iconUrl = "";
-            if (comment.getUid().startsWith("BOT")) {
-                iconUrl = APIUri.getRobotIconUrl(RobotCacheUtils
-                        .getRobotById(ChannelMessageDetailActivity.this, comment.getUid())
-                        .getAvatar());
-            } else {
-                iconUrl =
-                        getChannelImgUrl(ChannelMessageDetailActivity.this, comment.getUid());
-            }
-            ImageDisplayUtils.getInstance().displayImage(photoImg, iconUrl, R.drawable.icon_person_default);
+            String photoUrl = APIUri.getChannelImgUrl(MyApplication.getInstance(), message.getFromUser());
+            ImageDisplayUtils.getInstance().displayImage(photoImg, photoUrl, R.drawable.icon_person_default);
             photoImg.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    String uid = comment.getUid();
-                    openUserInfo(uid);
+                    openUserInfo(message.getFromUser());
                 }
             });
             return convertView;
@@ -453,89 +404,46 @@ public class ChannelMessageDetailActivity extends BaseActivity implements
     }
 
 
-    public String getConbineComment(String content, List<String> mentionsUidList, List<String> urlList) {
-        JSONObject richTextObj = new JSONObject();
-        JSONArray mentionArray = JSONUtils.toJSONArray(mentionsUidList);
-        JSONArray urlArray = JSONUtils.toJSONArray(urlList);
-        try {
-            richTextObj.put("source", content);
-            richTextObj.put("mentions", mentionArray);
-            richTextObj.put("urlList", urlArray);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return richTextObj.toString();
-    }
+//    //接收到websocket发过来的消息
+//    @Subscribe(threadMode = ThreadMode.MAIN)
+//    public void onReceiveWSMessage(EventMessage eventMessage) {
+//        if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE)){
+//            String content = eventMessage.getContent();
+//            JSONObject contentObj = JSONUtils.getJSONObject(content);
+//            Message receivedWSMessage = new Message(contentObj);
+//            if (receivedWSMessage.getType().equals("comment/text-plain")&& receivedWSMessage.getChannel().equals(message.getChannel())){
+//                MsgContentComment msgContentComment = message.getMsgContentComment();
+//                if (msgContentComment.getMessage().equals(mid)){
+//
+//                }
+//            }
+//        }
+//    }
 
-    /**
-     * 获取消息
-     *
-     * @param mid
-     */
-    private void getMsgById(String mid) {
-        if (NetUtils.isNetworkConnected(ChannelMessageDetailActivity.this)) {
-            loadingDialog.show();
-            apiService.getMsg(mid);
-        }
-    }
 
     /**
      * 获取消息的评论
      */
     private void getComment() {
-        if (NetUtils.isNetworkConnected(ChannelMessageDetailActivity.this)) {
-            apiService.getComment(msg.getMid());
+        if (NetUtils.isNetworkConnected(MyApplication.getInstance())) {
+            WSAPIService.getInstance().getMessageComment(mid);
         } else {
             swipeRefreshLayout.setRefreshing(false);
         }
     }
 
-    class WebService extends APIInterfaceInstance {
-        @Override
-        public void returnMsgSuccess(GetMsgResult getMsgResult) {
-            if (loadingDialog != null && loadingDialog.isShowing()) {
-                loadingDialog.dismiss();
-            }
-            msg = getMsgResult.getMsg();
-            if (msg != null) {
-                handMsgData();
-            }
-        }
-
-        @Override
-        public void returnMsgFail(String error, int errorCode) {
-            if (loadingDialog != null && loadingDialog.isShowing()) {
-                loadingDialog.dismiss();
-            }
-            WebServiceMiddleUtils.hand(ChannelMessageDetailActivity.this, error, errorCode);
-        }
-
-        @Override
-        public void returnMsgCommentSuccess(
-                GetMsgCommentResult getMsgCommentResult, String mid) {
-            swipeRefreshLayout.setRefreshing(false);
-            commentList = getMsgCommentResult.getCommentList();
+    //接收到websocket发过来的消息
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onReceiveWSMessageComment(EventMessage eventMessage) {
+        if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_GET_MESSAGE_COMMENT)) {
+            String content = eventMessage.getContent();
+            GetMessageCommentResult getMessageCommentResult = new GetMessageCommentResult(content);
+            commentList = getMessageCommentResult.getCommentList();
             if (commentList != null && commentList.size() > 0) {
                 commentAdapter = new CommentAdapter();
                 commentListView.setAdapter(commentAdapter);
                 commentAdapter.notifyDataSetChanged();
             }
-        }
-
-        @Override
-        public void returnMsgCommentFail(String error, int errorCode) {
-            swipeRefreshLayout.setRefreshing(false);
-            WebServiceMiddleUtils.hand(ChannelMessageDetailActivity.this, error, errorCode);
-        }
-
-        @Override
-        public void returnSendMsgSuccess(GetSendMsgResult getSendMsgResult,
-                                         String fakeMessageId) {
-        }
-
-        @Override
-        public void returnSendMsgFail(String error, String fakeMessageId, int errorCode) {
-            WebServiceMiddleUtils.hand(ChannelMessageDetailActivity.this, error, errorCode);
         }
     }
 

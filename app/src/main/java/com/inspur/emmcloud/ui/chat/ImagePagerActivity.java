@@ -23,6 +23,8 @@ import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.bean.chat.GetMsgCommentCountResult;
 import com.inspur.emmcloud.bean.chat.Msg;
+import com.inspur.emmcloud.bean.system.EventMessage;
+import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
@@ -32,6 +34,9 @@ import com.inspur.emmcloud.widget.HackyViewPager;
 import com.inspur.emmcloud.widget.ImageDetailFragment;
 import com.inspur.emmcloud.widget.SoftKeyboardStateHelper;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -77,6 +82,7 @@ public class ImagePagerActivity extends BaseFragmentActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_image_pager);
 		this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);//设置全屏
+		EventBus.getDefault().register(this);
 		init();
 	}
 
@@ -200,7 +206,7 @@ public class ImagePagerActivity extends BaseFragmentActivity {
 		ecmChatInputMenu.setChatInputMenuListener(new ECMChatInputMenuImgComment.ChatInputMenuListener() {
 
 			@Override
-			public void onSendMsg(String content, List<String> mentionsUidList,List<String> urlList) {
+			public void onSendMsg(String content, List<String> mentionsUidList,List<String> urlList,Map<String,String> map) {
 				sendComment(content, mentionsUidList,urlList);
 				if (commentInputDlg != null && commentInputDlg.isShowing()) {
 					commentInputDlg.dismiss();
@@ -320,7 +326,7 @@ public class ImagePagerActivity extends BaseFragmentActivity {
 
 
 
-	public void onPhotoTap() {
+	public void setPhotoTap() {
 		if (functionLayout.getVisibility() == View.VISIBLE) {
 			functionLayout.setVisibility(View.GONE);
 		} else {
@@ -381,6 +387,20 @@ public class ImagePagerActivity extends BaseFragmentActivity {
 
 		public ImageDetailFragment getCurrentFragment() {
 			return currentFragment;
+		}
+
+	}
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		EventBus.getDefault().unregister(this);
+	}
+
+	//当包含的fragment发来OnPhotoTap信号
+	@Subscribe(threadMode = ThreadMode.MAIN)
+	public void onPhotoTab(EventMessage eventMessage) {
+		if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_ON_PHOTO_TAB)){
+			setPhotoTap();
 		}
 
 	}

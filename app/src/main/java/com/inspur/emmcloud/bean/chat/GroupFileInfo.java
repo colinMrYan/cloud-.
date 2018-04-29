@@ -12,11 +12,11 @@ public class GroupFileInfo {
 	private String url = "";
 	private String name = "";
 	private String size = "";
-	private String time = "";
+	private long time =0L;
 	private String owner = "";
 	public GroupFileInfo(Msg msg){
 		owner = msg.getTitle();
-		time = msg.getTime();
+		time = TimeUtils.UTCString2Long(msg.getTime());
 		try {
 			JSONObject jsonObject = new JSONObject(msg.getBody());
 			if (jsonObject.has("size")) {
@@ -34,7 +34,15 @@ public class GroupFileInfo {
 			e.printStackTrace();
 		}
 	}
-	
+
+	public GroupFileInfo(String url, String name, String size, long time, String owner) {
+		this.url = url;
+		this.name = name;
+		this.size = size;
+		this.time = time;
+		this.owner = owner;
+	}
+
 	public String getUrl(){
 		return url;
 	}
@@ -47,7 +55,7 @@ public class GroupFileInfo {
 	}
 	
 	public String getTime(Context context){
-		return TimeUtils.UTCString2YMDString(context,time);
+		return TimeUtils.timeLong2YMDString(context,time);
 	}
 	
 	public String getOwner(){

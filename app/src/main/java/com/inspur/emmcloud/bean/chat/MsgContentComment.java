@@ -23,6 +23,10 @@ public class MsgContentComment {
         message= JSONUtils.getString(object,"message","");
     }
 
+    public MsgContentComment(){
+
+    }
+
     public String getText() {
         return text;
     }

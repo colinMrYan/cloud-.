@@ -7,7 +7,7 @@ package com.inspur.emmcloud.bean.system;
 public class EventMessage {
     private String tag="";
     private String content="";
-    private String extra="";
+    private Object extra="";
 
     public EventMessage(String tag, String content) {
         this.tag = tag;
@@ -18,6 +18,10 @@ public class EventMessage {
         this.tag = tag;
         this.content = content;
         this.extra = extra;
+    }
+
+    public EventMessage(String tag) {
+        this.tag = tag;
     }
 
     public String getTag() {
@@ -36,11 +40,11 @@ public class EventMessage {
         this.content = content;
     }
 
-    public String getExtra() {
+    public Object getExtra() {
         return extra;
     }
 
-    public void setExtra(String extra) {
+    public void setExtra(Object extra) {
         this.extra = extra;
     }
 }

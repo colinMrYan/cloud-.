@@ -10,6 +10,7 @@ import com.inspur.emmcloud.bean.chat.Channel;
 import com.inspur.emmcloud.bean.chat.Email;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.MsgContentAttachmentCard;
+import com.inspur.emmcloud.bean.chat.MsgContentComment;
 import com.inspur.emmcloud.bean.chat.MsgContentMediaImage;
 import com.inspur.emmcloud.bean.chat.MsgContentRegularFile;
 import com.inspur.emmcloud.bean.chat.MsgContentTextPlain;
@@ -76,6 +77,21 @@ public class CommunicationUtils {
         msgContentRegularFile.setSize(FileUtils.getFileSize(localFilePath));
         msgContentRegularFile.setMedia("");
         message.setContent(msgContentRegularFile.toString());
+        return message;
+    }
+
+    public static Message combinLocalCommentTextPlainMessage(String cid, String commentedMid,String text,Map<String, String> mentionsMap) {
+        Message message = combinLocalMessageCommon();
+        message.setChannel(cid);
+        message.setId(getTracer());
+        message.setType("comment/text-plain");
+        MsgContentComment msgContentComment = new MsgContentComment();
+        msgContentComment.setText(text);
+        msgContentComment.setMessage(commentedMid);
+        if (mentionsMap != null && mentionsMap.size() > 0) {
+            msgContentComment.setMentionsMap(mentionsMap);
+        }
+        message.setContent(msgContentComment.toString());
         return message;
     }
 

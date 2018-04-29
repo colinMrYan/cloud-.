@@ -308,8 +308,18 @@ public class ChannelActivity extends BaseActivity {
                                 UserInfoActivity.class, bundle);
                         break;
                     case "file/regular-file":
-                        break;
                     case "media/image":
+                        bundle.putString("mid", message.getId());
+                        bundle.putString("cid", message.getChannel());
+                        IntentUtils.startActivity(ChannelActivity.this,
+                                ChannelMessageDetailActivity.class, bundle);
+                        break;
+                    case "comment/text-plain":
+                        String mid = message.getMsgContentComment().getMessage();
+                        bundle.putString("mid", mid);
+                        bundle.putString("cid", message.getChannel());
+                        IntentUtils.startActivity(ChannelActivity.this,
+                                ChannelMessageDetailActivity.class, bundle);
                         break;
                     default:
                         break;
@@ -447,7 +457,7 @@ public class ChannelActivity extends BaseActivity {
                 if (size > 0) {
                     for (int i = size - 1; i >= 0; i--) {
                         UIMessage UIMessage = UIMessageList.get(i);
-                        if (UIMessage.getMessage().getId().equals(eventMessage.getExtra())) {
+                        if (UIMessage.getMessage().getId().equals(String.valueOf(eventMessage.getExtra()))) {
                             index = i;
                             break;
                         }
