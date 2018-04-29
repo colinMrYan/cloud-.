@@ -99,11 +99,11 @@ import io.socket.client.Socket;
 import static android.app.Activity.RESULT_OK;
 
 /**
- * 消息页面 com.inspur.emmcloud.ui.CommunicationFragmentV0
+ * 消息页面 com.inspur.emmcloud.ui.CommunicationV0Fragment
  *
  * @author Jason Chen; create at 2016年8月23日 下午2:59:39
  */
-public class CommunicationFragmentV0 extends Fragment {
+public class CommunicationV0Fragment extends Fragment {
 
     private static final int RECEIVE_MSG = 1;
     private static final int CREAT_CHANNEL_GROUP = 1;
@@ -265,7 +265,7 @@ public class CommunicationFragmentV0 extends Fragment {
                 bundle.putString("channelType", channelType);
                 if (channelType.equals("GROUP") || channelType.equals("DIRECT") || channelType.equals("SERVICE")) {
                     IntentUtils.startActivity(getActivity(),
-                            ChannelActivity.class, bundle);
+                            ChannelV0Activity.class, bundle);
                 } else {
                     ToastUtils.show(getActivity(),
                             R.string.not_support_open_channel);
@@ -385,7 +385,7 @@ public class CommunicationFragmentV0 extends Fragment {
             public void onClick(View v) {
                 Intent intent = new Intent();
                 intent.setClass(getActivity(), CaptureActivity.class);
-                intent.putExtra("from", "CommunicationFragmentV0");
+                intent.putExtra("from", "CommunicationFragment");
                 startActivityForResult(intent, SCAN_LOGIN_QRCODE_RESULT);
                 popupWindow.dismiss();
             }
@@ -1186,7 +1186,7 @@ public class CommunicationFragmentV0 extends Fragment {
                         bundle.putString("channelType", channelGroup.getType());
                         bundle.putString("title", channelGroup.getChannelName());
                         IntentUtils.startActivity(getActivity(),
-                                ChannelActivity.class, bundle);
+                                ChannelV0Activity.class, bundle);
                         ChannelGroupCacheUtils.saveChannelGroup(getActivity(),
                                 channelGroup);
                         getChannelList();

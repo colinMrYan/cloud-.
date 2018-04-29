@@ -39,6 +39,7 @@ public class GroupAlbumActivity extends BaseActivity {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group_album);
+        isMessageV0 = MyApplication.getInstance().isMessageV0();
         cid = getIntent().getExtras().getString("cid");
         getImgMsgList();
         albumGrid = (GridView) findViewById(R.id.album_grid);

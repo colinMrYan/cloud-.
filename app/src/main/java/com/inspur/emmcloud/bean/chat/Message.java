@@ -89,6 +89,10 @@ public class Message implements Serializable {
         return new MsgContentMediaImage(content);
     }
 
+    public MsgContentExtendedLinks getMsgContentExtendedLinks(){
+        return  new MsgContentExtendedLinks(content);
+    }
+
     public MsgContentTextMarkdown getMsgContentTextMarkdown() {
         return new MsgContentTextMarkdown(content);
     }

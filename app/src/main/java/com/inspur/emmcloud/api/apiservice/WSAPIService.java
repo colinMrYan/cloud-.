@@ -4,12 +4,15 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.MsgContentComment;
+import com.inspur.emmcloud.bean.chat.MsgContentExtendedLinks;
+import com.inspur.emmcloud.bean.chat.RelatedLink;
 import com.inspur.emmcloud.bean.system.EventMessage;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.push.WebSocketPush;
 import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.privates.CommunicationUtils;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.Map;
@@ -115,6 +118,38 @@ public class WSAPIService {
         }
     }
 
+    public void sendChatExtendedLinksMsg(String cid, Message message) {
+        try {
+            JSONObject object = new JSONObject();
+            JSONObject actionObj = new JSONObject();
+            actionObj.put("method", "post");
+            actionObj.put("path", "/channel/" + cid + "/message");
+            object.put("action", actionObj);
+            JSONObject headerObj = new JSONObject();
+            headerObj.put("enterprise", MyApplication.getInstance().getCurrentEnterprise().getId());
+            headerObj.put("tracer", message.getId());
+            object.put("headers", headerObj);
+            JSONObject bodyObj = new JSONObject();
+            bodyObj.put("type", "extended/links");
+            MsgContentExtendedLinks msgContentExtendedLinks = message.getMsgContentExtendedLinks();
+            bodyObj.put("poster",msgContentExtendedLinks.getPoster() );
+            bodyObj.put("title", msgContentExtendedLinks.getTitle());
+            bodyObj.put("subtitle", msgContentExtendedLinks.getSubtitle());
+            bodyObj.put("url", msgContentExtendedLinks.getUrl());
+            JSONArray array = new JSONArray();
+            for (RelatedLink relatedLink:msgContentExtendedLinks.getRelatedLinkList()){
+                array.put(relatedLink.toJSonObject());
+            }
+            bodyObj.put("relatedLinks", array);
+            object.put("body", bodyObj);
+            EventMessage eventMessage = new EventMessage(Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE,"",message.getId());
+            WebSocketPush.getInstance().sendWSMessage(eventMessage, object,message.getId());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
     public void sendChatMediaImageMsg(String cid, String tracer, VolumeFile volumeFile, Message fakeMessage) {
         try {
 
@@ -170,7 +205,7 @@ public class WSAPIService {
             headerObj.put("enterprise", MyApplication.getInstance().getCurrentEnterprise().getId());
             headerObj.put("tracer", tracer);
             object.put("headers", headerObj);
-            EventMessage eventMessage = new EventMessage(Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE);
+            EventMessage eventMessage = new EventMessage(Constant.EVENTBUS_TAG_GET_OFFLINE_WS_MESSAGE);
             WebSocketPush.getInstance().sendWSMessage(eventMessage, object,tracer);
         } catch (Exception e) {
             e.printStackTrace();
@@ -229,6 +264,28 @@ public class WSAPIService {
             headerObj.put("tracer", tracer);
             object.put("headers", headerObj);
             EventMessage eventMessage = new EventMessage(Constant.EVENTBUS_TAG_GET_MESSAGE_COMMENT_COUNT,"",mid);
+            WebSocketPush.getInstance().sendWSMessage(eventMessage, object,tracer);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void getHistoryMessage(String cid,String mid){
+        try {
+            String tracer = CommunicationUtils.getTracer();
+            JSONObject object = new JSONObject();
+            JSONObject actionObj = new JSONObject();
+            actionObj.put("method", "get");
+            actionObj.put("path", "/channel/" + cid+"/message");
+            JSONObject queryObj = new JSONObject();
+            queryObj.put("before",mid);
+            queryObj.put("limit",15);
+            object.put("action", actionObj);
+            JSONObject headerObj = new JSONObject();
+            headerObj.put("enterprise", MyApplication.getInstance().getCurrentEnterprise().getId());
+            headerObj.put("tracer", tracer);
+            object.put("headers", headerObj);
+            EventMessage eventMessage = new EventMessage(Constant.EVENTBUS_TAG_GET_HISTORY_MESSAGE,"","");
             WebSocketPush.getInstance().sendWSMessage(eventMessage, object,tracer);
         } catch (Exception e) {
             e.printStackTrace();

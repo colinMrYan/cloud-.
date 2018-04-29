@@ -11,6 +11,7 @@ import com.inspur.emmcloud.bean.chat.Email;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.MsgContentAttachmentCard;
 import com.inspur.emmcloud.bean.chat.MsgContentComment;
+import com.inspur.emmcloud.bean.chat.MsgContentExtendedLinks;
 import com.inspur.emmcloud.bean.chat.MsgContentMediaImage;
 import com.inspur.emmcloud.bean.chat.MsgContentRegularFile;
 import com.inspur.emmcloud.bean.chat.MsgContentTextPlain;
@@ -92,6 +93,20 @@ public class CommunicationUtils {
             msgContentComment.setMentionsMap(mentionsMap);
         }
         message.setContent(msgContentComment.toString());
+        return message;
+    }
+
+    public static Message combinLocalExtendedLinksMessage(String cid,String poster,String title,String subTitle,String url){
+        Message message = combinLocalMessageCommon();
+        message.setChannel(cid);
+        message.setId(getTracer());
+        message.setType("extended/links");
+        MsgContentExtendedLinks msgContentExtendedLinks = new MsgContentExtendedLinks();
+        msgContentExtendedLinks.setPoster(poster);
+        msgContentExtendedLinks.setTitle(title);
+        msgContentExtendedLinks.setSubtitle(subTitle);
+        msgContentExtendedLinks.setUrl(url);
+        message.setContent(msgContentExtendedLinks.toString());
         return message;
     }
 

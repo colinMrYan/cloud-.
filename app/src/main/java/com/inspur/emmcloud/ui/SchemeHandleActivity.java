@@ -20,6 +20,7 @@ import com.inspur.emmcloud.ui.appcenter.ReactNativeAppActivity;
 import com.inspur.emmcloud.ui.appcenter.groupnews.GroupNewsActivity;
 import com.inspur.emmcloud.ui.appcenter.volume.VolumeHomePageActivity;
 import com.inspur.emmcloud.ui.chat.ChannelActivity;
+import com.inspur.emmcloud.ui.chat.ChannelV0Activity;
 import com.inspur.emmcloud.ui.contact.RobotInfoActivity;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
 import com.inspur.emmcloud.ui.find.AnalysisActivity;
@@ -183,8 +184,14 @@ public class SchemeHandleActivity extends Activity {
                             case "ecc-channel":
                                 bundle.putString("cid", host);
                                 bundle.putBoolean("get_new_msg", true);
-                                IntentUtils.startActivity(SchemeHandleActivity.this,
-                                        ChannelActivity.class, bundle, true);
+                                if (MyApplication.getInstance().isMessageV0()){
+                                    IntentUtils.startActivity(SchemeHandleActivity.this,
+                                            ChannelV0Activity.class, bundle, true);
+                                }else {
+                                    IntentUtils.startActivity(SchemeHandleActivity.this,
+                                            ChannelActivity.class, bundle, true);
+                                }
+
                                 break;
                             case "ecc-app":
                                 AppId2AppAndOpenAppUtils appId2AppAndOpenAppUtils = new AppId2AppAndOpenAppUtils(SchemeHandleActivity.this);
