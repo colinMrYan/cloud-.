@@ -24,6 +24,7 @@ import com.inspur.emmcloud.bean.chat.EventMessageUnReadCount;
 import com.inspur.emmcloud.bean.chat.TransparentBean;
 import com.inspur.emmcloud.bean.system.AppTabAutoBean;
 import com.inspur.emmcloud.bean.system.AppTabDataBean;
+import com.inspur.emmcloud.bean.system.ChangeTabBean;
 import com.inspur.emmcloud.bean.system.GetAppTabAutoResult;
 import com.inspur.emmcloud.bean.system.PVCollectModel;
 import com.inspur.emmcloud.interf.OnTabReselectListener;
@@ -34,6 +35,7 @@ import com.inspur.emmcloud.ui.mine.MoreFragment;
 import com.inspur.emmcloud.ui.notsupport.NotSupportFragment;
 import com.inspur.emmcloud.ui.work.TabBean;
 import com.inspur.emmcloud.ui.work.WorkFragment;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.StateBarUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
@@ -182,7 +184,7 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
     /**
      * 显示消息tab上的小红点（未读消息提醒）
      *
-     * @param count
+     * @param eventMessageUnReadCount
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void updateMessageUnReadCount(EventMessageUnReadCount eventMessageUnReadCount) {
@@ -232,6 +234,17 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void updateBadgeNumber(TransparentBean transparentBean) {
         findAndSetUnhandleBadgesDisplay(transparentBean.getBadgeNumber());
+    }
+
+    @Subscribe(threadMode =  ThreadMode.MAIN)
+    public void updateTabIndex(ChangeTabBean changeTabBean){
+        LogUtils.YfcDebug("mainTab的id："+mTabHost.getCurrentTabTag());
+        for (int i = 0; i < mTabHost.getTabWidget().getChildCount(); i++) {
+            if (mTabHost.getTabWidget().getChildAt(i).getTag().toString().contains(changeTabBean.getTabId())) {
+                mTabHost.setCurrentTab(i);
+                break;
+            }
+        }
     }
 
     /**
