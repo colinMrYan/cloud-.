@@ -110,13 +110,14 @@ public class MutilClusterUtils {
             List<ClusterBean> clusterBeanListNew = enterpriseNew.getClusterBeanList();
             int suitableUrlIndex = clusterBeanListNew.indexOf(type);
             ClusterBean clusterBean = clusterBeanListNew.get(suitableUrlIndex);
-            getDivisionUrlByType(clusterBean,type);
+            suitableUrl = getDivisionUrlByType(clusterBean,type);
+            MyApplication.getInstance().setClusterVersion(clusterBean.getServiceVersion());
         }else{
             Enterprise enterpriseOld = getOldEnterprise();
             List<ClusterBean> clusterBeanListOld = enterpriseOld.getClusterBeanList();
             int suitableUrlIndex = clusterBeanListOld.indexOf(type);
             ClusterBean clusterBean = clusterBeanListOld.get(suitableUrlIndex);
-            getDivisionUrlByType(clusterBean,type);
+            suitableUrl = getDivisionUrlByType(clusterBean,type);
         }
         return suitableUrl;
     }
@@ -135,7 +136,6 @@ public class MutilClusterUtils {
         }else{
             suitableUrl = clusterBean.getBaseUrl();
         }
-        MyApplication.getInstance().setClusterVersion(clusterBean.getServiceVersion());
         return suitableUrl;
     }
 }
