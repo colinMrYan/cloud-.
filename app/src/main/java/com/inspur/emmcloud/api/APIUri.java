@@ -107,7 +107,7 @@ public class APIUri {
      * @return
      */
     public static String getAppNewTabs() {
-        return getECMDistribution() + "/api/v0/preference/main-tab/latest";
+        return getECMDistribution() + "/preference/main-tab/latest";
     }
 
 
@@ -121,14 +121,14 @@ public class APIUri {
      * @return
      */
     public static String getSplashPageUrl() {
-        return getECMDistribution() + "/api/v0/preference/launch-screen/latest";
+        return getECMDistribution() + "/preference/launch-screen/latest";
     }
 
     /**
      * @return
      */
     public static String getUploadSplashPageWriteBackLogUrl() {
-        return getECMDistribution() + "/api/v0/preference/launch-screen/update";
+        return getECMDistribution() + "/preference/launch-screen/update";
     }
 
     /**
@@ -342,7 +342,7 @@ public class APIUri {
      * @return
      */
     public static String getAllBotInfo() {
-        return getECMChatUrl() + "/api/v0/registry/bot";
+        return getECMChatUrl() + "/registry/bot";
     }
 
     /**
@@ -351,7 +351,7 @@ public class APIUri {
      * @return
      */
     public static String getBotInfoById() {
-        return getECMChatUrl() + "/api/v0/registry/bot/";
+        return getECMChatUrl() + "/registry/bot/";
     }
 
     /**
@@ -482,7 +482,7 @@ public class APIUri {
      * @return
      */
     public static String getReactNativeUpdate() {
-        return getECMDistribution() + "/api/v0/view/DISCOVER/bundle/?";
+        return getECMDistribution() + "/view/DISCOVER/bundle/?";
     }
 
     /**
@@ -491,7 +491,7 @@ public class APIUri {
      * @return
      */
     public static String getClientId() {
-        return MyApplication.getInstance().getClusterDistribution() + MyApplication.getInstance().getTanent() + "/api/v0/client/registry";
+        return MyApplication.getInstance().getClusterDistribution() + "/client/registry";
     }
 
     /**
@@ -500,7 +500,7 @@ public class APIUri {
      * @return
      */
     public static String getClientLog() {
-        return getECMDistribution() + "/api/v0/view/update/DISCOVER/?";
+        return getECMDistribution() + "/view/update/DISCOVER/?";
     }
 
     /**
@@ -527,7 +527,7 @@ public class APIUri {
      * @return
      */
     public static String getReactNativeWriteBackUrl(String appModule) {
-        return getECMDistribution() + "/api/v0/app/" + appModule + "/update";
+        return getECMDistribution() + "/app/" + appModule + "/update";
     }
 
     /******************新闻接口**************************/
@@ -557,7 +557,7 @@ public class APIUri {
      * @return
      */
     public static String getNewsInstruction(String newsId) {
-        return getECMNews() + "/api/v0/content/news/" + newsId + "/editor-comment";
+        return getECMNews() + "/content/news/" + newsId + "/editor-comment";
     }
 
 
@@ -698,7 +698,7 @@ public class APIUri {
      * @return
      */
     private static String getMeetingBaseUrl() {
-        return MyApplication.getInstance().getClusterSchedule() + MyApplication.getInstance().getTanent() + "/meeting/";
+        return MyApplication.getInstance().getClusterSchedule()  + "/meeting/";
     }
 
     /**
@@ -808,7 +808,7 @@ public class APIUri {
      * @return
      */
     public static String getCalendarUrl() {
-        return getECMScheduleUrl() + "/api/v0";
+        return getECMScheduleUrl() ;
     }
 
     /*******************任务*****************************/
@@ -818,7 +818,7 @@ public class APIUri {
      * @return
      */
     private static String getToDoBaseUrl() {
-        return MyApplication.getInstance().getClusterSchedule() + MyApplication.getInstance().getTanent() + "/api/v0/todo/";
+        return MyApplication.getInstance().getClusterSchedule() + MyApplication.getInstance().getTanent() + "/todo/";
     }
 
     /**
@@ -864,7 +864,7 @@ public class APIUri {
      * @return
      */
     public static String getCreateTaskUrl() {
-        return getECMScheduleUrl() + "/api/v0/todo";
+        return getECMScheduleUrl() + "/todo";
     }
 
     /**
@@ -931,7 +931,7 @@ public class APIUri {
      * @return
      */
     public static String getHttpApiUrl(String uri) {
-        return getEcmTanentUrl() + "/" + uri;
+        return getECMChatUrl() + "/" + uri;
     }
 
     /**

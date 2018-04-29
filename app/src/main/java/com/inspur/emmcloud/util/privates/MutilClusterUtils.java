@@ -108,16 +108,22 @@ public class MutilClusterUtils {
         String suitableUrl = url;
         if(!StringUtils.isBlank(suitableUrl)){
             List<ClusterBean> clusterBeanListNew = enterpriseNew.getClusterBeanList();
-            int suitableUrlIndex = clusterBeanListNew.indexOf(type);
-            ClusterBean clusterBean = clusterBeanListNew.get(suitableUrlIndex);
-            suitableUrl = getDivisionUrlByType(clusterBean,type);
-            MyApplication.getInstance().setClusterVersion(clusterBean.getServiceVersion());
+            ClusterBean clusterBeanWithType = new ClusterBean();
+            clusterBeanWithType.setServiceName(type);
+            int suitableUrlIndex = clusterBeanListNew.indexOf(clusterBeanWithType);
+            if(suitableUrlIndex != -1){
+                ClusterBean clusterBean = clusterBeanListNew.get(suitableUrlIndex);
+                suitableUrl = getDivisionUrlByType(clusterBean,type);
+                MyApplication.getInstance().setClusterVersion(clusterBean.getServiceVersion());
+            }
         }else{
             Enterprise enterpriseOld = getOldEnterprise();
             List<ClusterBean> clusterBeanListOld = enterpriseOld.getClusterBeanList();
             int suitableUrlIndex = clusterBeanListOld.indexOf(type);
-            ClusterBean clusterBean = clusterBeanListOld.get(suitableUrlIndex);
-            suitableUrl = getDivisionUrlByType(clusterBean,type);
+            if(suitableUrlIndex != -1){
+                ClusterBean clusterBean = clusterBeanListOld.get(suitableUrlIndex);
+                suitableUrl = getDivisionUrlByType(clusterBean,type);
+            }
         }
         return suitableUrl;
     }
@@ -131,7 +137,7 @@ public class MutilClusterUtils {
         String suitableUrl = "";
         if(type.equals(ECM_CHAT)){
             Uri clusterBeanUri = Uri.parse(clusterBean.getBaseUrl());
-            suitableUrl = clusterBeanUri.getHost();
+            suitableUrl = clusterBeanUri.getScheme() + "://" + clusterBeanUri.getHost();
             MyApplication.getInstance().setSocketPath(clusterBeanUri.getPath());
         }else{
             suitableUrl = clusterBean.getBaseUrl();

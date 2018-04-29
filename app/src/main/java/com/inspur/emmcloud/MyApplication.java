@@ -527,7 +527,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
     }
 
     public String getTanent() {
-        return "";
+        return tanent;
     }
 
     public Enterprise getCurrentEnterprise() {

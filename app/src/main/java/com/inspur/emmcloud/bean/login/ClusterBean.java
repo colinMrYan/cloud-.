@@ -13,6 +13,8 @@ public class ClusterBean {
     private String serviceName = "";//作为ID使用，服务端不确定，客户端无法解析
     private String baseUrl = "";
     private String serviceVersion = "";
+
+    public ClusterBean(){}
     public ClusterBean(JSONObject clusterObj){
         clusterId = JSONUtils.getString(clusterObj,"cluster_id","");
         serviceName = JSONUtils.getString(clusterObj,"service_name","");
