@@ -82,6 +82,7 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
 
     @ViewInject(R.id.operation_layout)
     protected RelativeLayout operationLayout;
+
     private PopupWindow sortOperationPop;
     private String cameraPicFileName;
     private BroadcastReceiver broadcastReceiver;
@@ -92,6 +93,23 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
         this.isShowFileUploading = true;
         setListIemClick();
         registerReceiver();
+        handleFileShareToVolume();
+    }
+
+    /**
+     *  处理文件分享
+     */
+    private void handleFileShareToVolume() {
+        List<Uri> shareUriList = new ArrayList<>();
+        List<Uri> fileShareUriList = (List<Uri>)getIntent().getSerializableExtra("fileShareUriList");
+        if(fileShareUriList != null){
+            shareUriList.addAll(fileShareUriList);
+        }
+        if(NetUtils.isNetworkConnected(this)){
+            for(int i = 0; i < shareUriList.size(); i++){
+                uploadFile(GetPathFromUri4kitkat.getPathByUri(getApplicationContext(), shareUriList.get(i)));
+            }
+        }
     }
 
     private void setListIemClick() {

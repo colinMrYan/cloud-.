@@ -40,8 +40,8 @@ android {
         applicationId "com.inspur.emmcloud"
         minSdkVersion 16
         targetSdkVersion 22
-        versionCode 52
-        versionName "1.9.10"
+        versionCode 54
+        versionName "1.9.12"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         ndk {
             abiFilters "armeabi-v7a", "x86"
@@ -78,7 +78,7 @@ android {
                 if (variant.buildType.name.equals('release')) {
                     fileName = "inspur_cloud_mobileclient_${defaultConfig.versionName}.apk"
                 } else if (variant.buildType.name.equals('debug')) {
-                    fileName = "inspur_cloud_mobileclient_debug_1.0.0.apk"
+                    fileName = "inspur_cloud_mobileclient_debug_${defaultConfig.versionName}.apk"
                 }
                 if (outputFile != null && outputFile.name.endsWith('.apk')) {
                     outputFileName = fileName

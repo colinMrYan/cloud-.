@@ -19,7 +19,8 @@ public class VolumeDetail {
     private String name;
     private ArrayList<String> memberUidList = new ArrayList<>();
     private String owner;
-    private List<Group> groupList = new ArrayList<>();
+    private List<Group> groupWriteList = new ArrayList<>();
+    private List<Group> groupReadList = new ArrayList<>();
 
 
     public VolumeDetail(String response) {
@@ -35,7 +36,12 @@ public class VolumeDetail {
         JSONArray groupArray = JSONUtils.getJSONArray(obj,"groups",new JSONArray());
         for (int i=0;i<groupArray.length();i++){
             JSONObject groupObj  = JSONUtils.getJSONObject(groupArray,i,new JSONObject());
-            groupList.add(new Group(groupObj));
+            Group group = new Group(groupObj);
+            if(group.getPrivilege() > 4){
+                groupWriteList.add(group);
+            }else{
+                groupReadList.add(group);
+            }
         }
     }
 
@@ -72,11 +78,19 @@ public class VolumeDetail {
         this.owner = owner;
     }
 
-    public List<Group> getGroupList() {
-        return groupList;
+    public List<Group> getGroupWriteList() {
+        return groupWriteList;
     }
 
-    public void setGroupList(List<Group> groupList) {
-        this.groupList = groupList;
+    public List<Group> getGroupReadList() {
+        return groupReadList;
+    }
+
+    public void setGroupReadList(List<Group> groupReadList) {
+        this.groupReadList = groupReadList;
+    }
+
+    public void setGroupWriteList(List<Group> groupWriteList) {
+        this.groupWriteList = groupWriteList;
     }
 }

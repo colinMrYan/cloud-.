@@ -17,26 +17,29 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
+import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.Msg;
 import com.inspur.emmcloud.ui.chat.ChannelMsgDetailActivity;
+import com.inspur.emmcloud.ui.chat.DisplayAttachmentCardMsg;
+import com.inspur.emmcloud.ui.chat.DisplayAttachmentFileMsg;
+import com.inspur.emmcloud.ui.chat.DisplayExtendedActionsMsg;
 import com.inspur.emmcloud.ui.chat.DisplayResFileMsg;
 import com.inspur.emmcloud.ui.chat.DisplayResImageMsg;
 import com.inspur.emmcloud.ui.chat.DisplayResLinkMsg;
 import com.inspur.emmcloud.ui.chat.DisplayResUnknownMsg;
 import com.inspur.emmcloud.ui.chat.DisplayTxtCommentMsg;
+import com.inspur.emmcloud.ui.chat.DisplayTxtMarkdownMsg;
+import com.inspur.emmcloud.ui.chat.DisplayTxtPlainMsg;
 import com.inspur.emmcloud.ui.chat.DisplayTxtRichMsg;
 import com.inspur.emmcloud.ui.contact.RobotInfoActivity;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
-import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.common.IntentUtils;
-import com.inspur.emmcloud.util.privates.cache.RobotCacheUtils;
+import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.widget.ECMChatInputMenu;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static android.content.Context.LAYOUT_INFLATER_SERVICE;
 
 /**
  * Created by chenmch on 2017/11/10.
@@ -103,6 +106,8 @@ public class ChannelMsgAdapter extends RecyclerView.Adapter<ChannelMsgAdapter.Vi
         public View cardCoverView;
         public TextView sendTimeText;
         public TextView newsCommentText;
+        public View senderPhotoRightView;
+        public RelativeLayout cardParentLayout;
 
         public ViewHolder(View view, MyItemClickListener myItemClickListener) {
             super(view);
@@ -121,6 +126,8 @@ public class ChannelMsgAdapter extends RecyclerView.Adapter<ChannelMsgAdapter.Vi
                     .findViewById(R.id.send_time_text);
             newsCommentText = (TextView) view
                     .findViewById(R.id.news_comment_text);
+            senderPhotoRightView = view.findViewById(R.id.sender_photo_right_view);
+            cardParentLayout =(RelativeLayout)view.findViewById(R.id.card_parent_layout);
         }
 
         /**
@@ -160,7 +167,14 @@ public class ChannelMsgAdapter extends RecyclerView.Adapter<ChannelMsgAdapter.Vi
             holder.refreshingImg.setImageResource(R.drawable.ic_chat_msg_send_fail);
         } else {
             holder.refreshingImg.clearAnimation();
-            holder.refreshingImg.setVisibility(View.GONE);
+           boolean isMyMsg;
+            if (Message.isMessage(msg)){
+                Message message = new Message(msg);
+                isMyMsg = message.getFromUser().equals(MyApplication.getInstance().getUid());
+            }else {
+                isMyMsg =  msg.getUid().equals(MyApplication.getInstance().getUid());
+            }
+            holder.refreshingImg.setVisibility(isMyMsg?View.INVISIBLE:View.GONE);
         }
 
     }
@@ -176,64 +190,90 @@ public class ChannelMsgAdapter extends RecyclerView.Adapter<ChannelMsgAdapter.Vi
         holder.cardLayout.removeAllViewsInLayout();
         holder.cardLayout.removeAllViews();
         boolean isMyMsg = msg.getUid().equals(
-                ((MyApplication) context.getApplicationContext()).getUid());
+                MyApplication.getInstance().getUid());
         holder.cardCoverView.setVisibility(View.VISIBLE);
-        View childView = null;
-        LayoutInflater vi = (LayoutInflater) context.getSystemService(LAYOUT_INFLATER_SERVICE);
+        View cardContentView;
+        Message message = null;
         String type = msg.getType();
-        if (type.equals("txt_comment") || type.equals("comment")) {
-            holder.cardCoverView.setVisibility(View.GONE);
-            childView = vi.inflate(
-                    R.layout.chat_msg_card_child_text_comment_view, null);
-            DisplayTxtCommentMsg.displayCommentMsg(context,
-                    childView, msg, apiService);
-        } else if (type.equals("res_image") || type.equals("image")) {
-            childView = vi.inflate(
-                    R.layout.chat_msg_card_child_res_img_view, null);
-            DisplayResImageMsg.displayResImgMsg(context,
-                    childView, msg);
-        } else if (type.equals("res_link")) {
-            holder.newsCommentText.setOnClickListener(new View.OnClickListener() {
-
-                @Override
-                public void onClick(View v) {
-                    // TODO Auto-generated method stub
-                    Bundle bundle = new Bundle();
-                    bundle.putString("mid", msg.getMid());
-                    bundle.putString("cid", msg.getCid());
-                    IntentUtils.startActivity(context,
-                            ChannelMsgDetailActivity.class, bundle);
-                }
-            });
-            childView = vi.inflate(
-                    R.layout.chat_msg_card_child_res_link_view, null);
-            DisplayResLinkMsg.displayResLinkMsg(context,
-                    childView, msg);
-        } else if (type.equals("res_file")) {
-            childView = vi.inflate(
-                    R.layout.chat_msg_card_child_res_file_view, null);
-            DisplayResFileMsg.displayResFileMsg(context,
-                    childView, msg);
-        } else if (type.equals("txt_rich")) {
-            holder.cardCoverView.setVisibility(View.GONE);
-            childView = vi.inflate(
-                    R.layout.chat_msg_card_child_text_rich_view, null);
-            DisplayTxtRichMsg.displayRichTextMsg(context,
-                    childView, msg);
-        } else {
-            childView = vi.inflate(
-                    R.layout.chat_msg_card_child_res_unknown_view, null);
-            DisplayResUnknownMsg.displayResUnknownMsg(context,
-                    childView, msg);
+        if (Message.isMessage(msg)) {
+            message = new Message(msg);
+            type = message.getType();
+            isMyMsg = message.getFromUser().equals(
+                    MyApplication.getInstance().getUid());
         }
-        holder.cardLayout.addView(childView);
+        switch (type) {
+            case "txt_comment":
+            case "comment":
+                holder.cardCoverView.setVisibility(View.GONE);
+                cardContentView = DisplayTxtCommentMsg.displayCommentMsg(context, msg, apiService);
+                break;
+            case "res_image":
+            case "image":
+                cardContentView = DisplayResImageMsg.displayResImgMsg(context,
+                        msg);
+                break;
+            case "res_link":
+                holder.newsCommentText.setOnClickListener(new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View v) {
+                        // TODO Auto-generated method stub
+                        Bundle bundle = new Bundle();
+                        bundle.putString("mid", msg.getMid());
+                        bundle.putString("cid", msg.getCid());
+                        IntentUtils.startActivity(context,
+                                ChannelMsgDetailActivity.class, bundle);
+                    }
+                });
+
+                cardContentView = DisplayResLinkMsg.displayResLinkMsg(context,msg);
+                break;
+            case "res_file":
+                cardContentView = DisplayResFileMsg.displayResFileMsg(context,msg);
+                break;
+            case "txt_rich":
+                holder.cardCoverView.setVisibility(View.GONE);
+                cardContentView = DisplayTxtRichMsg.displayRichTextMsg(context,msg);
+                break;
+
+            case "text/plain":
+                holder.cardCoverView.setVisibility(View.GONE);
+                cardContentView = DisplayTxtPlainMsg.getView(context,
+                        message);
+                break;
+            case "text/markdown":
+                holder.cardCoverView.setVisibility(View.GONE);
+                cardContentView = DisplayTxtMarkdownMsg.getView(context,
+                        message);
+                break;
+            case "attachment/file":
+                cardContentView = DisplayAttachmentFileMsg.getView(context,
+                        message);
+                break;
+            case "attachment/card":
+                cardContentView = DisplayAttachmentCardMsg.getView(context,
+                        message);
+                break;
+            case "extended/actions":
+                cardContentView = DisplayExtendedActionsMsg.getInstance(context).getView(message);
+                break;
+            default:
+                cardContentView = DisplayResUnknownMsg.getView(context,
+                        msg);
+                break;
+        }
+
+
+        holder.cardLayout.addView(cardContentView);
+        holder.cardLayout.setBackgroundColor(context.getResources().getColor(
+                isMyMsg ? R.color.bg_my_card : R.color.white));
         holder.cardCoverView.setBackgroundResource(isMyMsg ? R.drawable.ic_chat_msg_img_cover_arrow_right : R.drawable.ic_chat_msg_img_cover_arrow_left);
-        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) holder.cardLayout.getLayoutParams();
+        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) holder.cardParentLayout.getLayoutParams();
         //此处实际执行params.removeRule();
         params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, 0);
         params.addRule(RelativeLayout.ALIGN_LEFT, 0);
         params.addRule(isMyMsg ? RelativeLayout.ALIGN_PARENT_RIGHT : RelativeLayout.ALIGN_LEFT);
-        holder.cardLayout.setLayoutParams(params);
+        holder.cardParentLayout.setLayoutParams(params);
     }
 
 
@@ -271,8 +311,7 @@ public class ChannelMsgAdapter extends RecyclerView.Adapter<ChannelMsgAdapter.Vi
      */
     private void showUserName(ViewHolder holder, Msg msg) {
         // TODO Auto-generated method stub
-        boolean isMyMsg = msg.getUid().equals(
-                ((MyApplication) context.getApplicationContext()).getUid());
+        boolean isMyMsg = msg.getUid().equals(MyApplication.getInstance().getUid());
         if (channelType.equals("GROUP") && !isMyMsg) {
             holder.senderNameText.setVisibility(View.VISIBLE);
             holder.senderNameText.setText(msg.getTitle());
@@ -289,28 +328,28 @@ public class ChannelMsgAdapter extends RecyclerView.Adapter<ChannelMsgAdapter.Vi
      */
     private void showUserPhoto(ViewHolder holder, final Msg msg) {
         // TODO Auto-generated method stub
-        if (msg.getUid().equals(
-                ((MyApplication) context.getApplicationContext()).getUid())) {
+        final String fromUserUid;
+        if (Message.isMessage(msg)){
+            Message message = new Message(msg);
+            fromUserUid = message.getFromUser();
+        }else {
+            fromUserUid = msg.getUid();
+        }
+        if (MyApplication.getInstance().getUid().equals(fromUserUid)) {
             holder.senderPhotoImg.setVisibility(View.INVISIBLE);
+            holder.senderPhotoRightView.setVisibility(View.GONE);
         } else {
             holder.senderPhotoImg.setVisibility(View.VISIBLE);
-            String iconUrl ="";
-            if (msg.getUid().startsWith("BOT") || channelType.equals("SERVICE")) {
-                iconUrl = APIUri.getRobotIconUrl(RobotCacheUtils
-                        .getRobotById(context, msg.getUid())
-                        .getAvatar());
-            }else {
-                iconUrl = APIUri.getChannelImgUrl(context, msg.getUid());
-            }
+            holder.senderPhotoRightView.setVisibility(View.VISIBLE);
+            String iconUrl = APIUri.getUserIconUrl(context,fromUserUid);
             ImageDisplayUtils.getInstance().displayImage(holder.senderPhotoImg,
                     iconUrl, R.drawable.icon_person_default);
             holder.senderPhotoImg.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Bundle bundle = new Bundle();
-                    String uid = msg.getUid();
-                    bundle.putString("uid", uid);
-                    if (uid.startsWith("BOT") || channelType.endsWith("SERVICE")) {
+                    bundle.putString("uid", fromUserUid);
+                    if (fromUserUid.startsWith("BOT") || channelType.endsWith("SERVICE")) {
                         bundle.putString("type", channelType);
                         IntentUtils.startActivity(context,
                                 RobotInfoActivity.class, bundle);

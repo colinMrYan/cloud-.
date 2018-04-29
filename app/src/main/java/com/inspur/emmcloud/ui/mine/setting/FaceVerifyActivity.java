@@ -38,8 +38,9 @@ import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.MineAPIService;
 import com.inspur.emmcloud.bean.mine.GetFaceSettingResult;
 import com.inspur.emmcloud.config.Constant;
+import com.inspur.emmcloud.ui.login.ScanQrCodeLoginGSActivity;
 import com.inspur.emmcloud.util.common.ImageUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
+import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.ResolutionUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
@@ -149,7 +150,6 @@ public class FaceVerifyActivity extends BaseActivity implements SurfaceHolder.Ca
 
     @Override
     public void surfaceCreated(SurfaceHolder surfaceHolder) {
-        LogUtils.jasonDebug("surfaceCreated-------------");
         previewSFV.setCustomRatio(1, 1);
         currentCameraFacing = Camera.CameraInfo.CAMERA_FACING_FRONT;
         initCamera();
@@ -358,8 +358,8 @@ public class FaceVerifyActivity extends BaseActivity implements SurfaceHolder.Ca
                         originBitmap = ImageUtils.rotaingImageView(90, originBitmap);
                         //通过各种旋转和镜面操作，使originBitmap显示出preview界面
                         Bitmap cropBitmap = previewSFV.getPicture(originBitmap);
-                        // String filePath = MyAppConfig.LOCAL_DOWNLOAD_PATH + System.currentTimeMillis() + ".png";
-                        //  ImageUtils.saveImageToSD(getApplicationContext(),filePath, cropBitmap, 100);
+                       // String filePath = MyAppConfig.LOCAL_DOWNLOAD_PATH + System.currentTimeMillis() + ".png";
+                      //  ImageUtils.saveImageToSD(getApplicationContext(),filePath, cropBitmap, 100);
                         cropBitmap = ImageUtils.scaleBitmap(cropBitmap, 250);
                         //ImageUtils.saveImageToSD(getApplicationContext(), MyAppConfig.LOCAL_DOWNLOAD_PATH + System.currentTimeMillis() + ".png", cropBitmap, 100);
                         FaceDetector faceDetector = new FaceDetector(cropBitmap.getWidth(), cropBitmap.getHeight(), 1);
@@ -433,15 +433,14 @@ public class FaceVerifyActivity extends BaseActivity implements SurfaceHolder.Ca
      * @param code
      */
     private void handResultCode(int code) {
-        LogUtils.jasonDebug("code="+code);
         switch (code) {
             case 200:
                 tipText.setVisibility(View.GONE);
                 ToastUtils.show(getApplicationContext(), getString(R.string.face_verify_success));
                 if (isFaceLogin) {
-//                    Bundle bundle = new Bundle();
-//                    bundle.putString("token",token);
-//                    IntentUtils.startActivity(FaceVerifyActivity.this, ScanQrCodeLoginGSActivity.class,bundle);
+                    Bundle bundle = new Bundle();
+                    bundle.putString("token",token);
+                    IntentUtils.startActivity(FaceVerifyActivity.this, ScanQrCodeLoginGSActivity.class,bundle);
                 } else if (isFaceSetting) {
                     PreferencesByUsersUtils.putBoolean(FaceVerifyActivity.this, FaceVerifyActivity.FACE_VERIFT_IS_OPEN, isFaceSettingOpen);
                 } else if (!isFaceVerityTest) {
@@ -526,6 +525,7 @@ public class FaceVerifyActivity extends BaseActivity implements SurfaceHolder.Ca
                         public void onClick(QMUIDialog dialog, int index) {
                             dialog.dismiss();
                             startTime = System.currentTimeMillis();
+                            delayTotakePicture(1000);
                         }
                     })
                     .addAction(R.string.switch_gesture_unlock, new QMUIDialogAction.ActionListener() {

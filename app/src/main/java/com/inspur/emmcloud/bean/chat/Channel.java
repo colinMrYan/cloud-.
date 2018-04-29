@@ -5,12 +5,12 @@ import android.content.Context;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
-import com.inspur.emmcloud.util.privates.DirectChannelUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.PinyinUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
-import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.common.richtext.markdown.MarkDown;
+import com.inspur.emmcloud.util.privates.DirectChannelUtils;
+import com.inspur.emmcloud.util.privates.TimeUtils;
 
 import org.json.JSONObject;
 import org.xutils.db.annotation.Column;
@@ -209,6 +209,9 @@ public class Channel implements Serializable {
                     }
                     if (type.equals("GROUP")) {
                         newMsgContent = title + newMsgContent;
+                    }
+                    if (StringUtils.isEmpty(newMsgContent) && type.equals("SERVICE")&& getTitle().contains("BOT6006")) {
+                        newMsgContent = context.getString(R.string.welcome_to_attention) + " " + DirectChannelUtils.getRobotInfo(context, getTitle()).getName();
                     }
                     break;
                 default:

@@ -23,8 +23,10 @@ import com.inspur.emmcloud.bean.appcenter.news.GetGroupNewsDetailResult;
 import com.inspur.emmcloud.bean.appcenter.news.GetNewsTitleResult;
 import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeFileListResult;
 import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeFileUploadTokenResult;
+import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeGroupPermissionResult;
 import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeGroupResult;
 import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeListResult;
+import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeResultWithPermissionResult;
 import com.inspur.emmcloud.bean.appcenter.volume.Volume;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeDetail;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
@@ -42,6 +44,7 @@ import com.inspur.emmcloud.bean.chat.GetNewMsgsResult;
 import com.inspur.emmcloud.bean.chat.GetNewsImgResult;
 import com.inspur.emmcloud.bean.chat.GetNewsInstructionResult;
 import com.inspur.emmcloud.bean.chat.GetSendMsgResult;
+import com.inspur.emmcloud.bean.chat.GetUploadPushInfoResult;
 import com.inspur.emmcloud.bean.chat.GetWebSocketUrlResult;
 import com.inspur.emmcloud.bean.chat.Robot;
 import com.inspur.emmcloud.bean.contact.GetAllContactResult;
@@ -345,13 +348,13 @@ public class APIInterfaceInstance implements APIInterface {
     }
 
     @Override
-    public void returnUploadMsgImgSuccess(GetNewsImgResult getNewsImgResult, String fakeMessageId) {
+    public void returnUploadResImgSuccess(GetNewsImgResult getNewsImgResult, String fakeMessageId) {
         // TODO Auto-generated method stub
 
     }
 
     @Override
-    public void returnUploadMsgImgFail(String error, int errorCode) {
+    public void returnUploadResImgFail(String error, int errorCode, String fakeMessageId) {
         // TODO Auto-generated method stub
 
     }
@@ -459,13 +462,13 @@ public class APIInterfaceInstance implements APIInterface {
     }
 
     @Override
-    public void returnFileUpLoadSuccess(GetFileUploadResult getFileUploadResult, String fakeMessageId) {
+    public void returnUpLoadResFileSuccess(GetFileUploadResult getFileUploadResult, String fakeMessageId) {
         // TODO Auto-generated method stub
 
     }
 
     @Override
-    public void returnFileUpLoadFail(String error, int errorCode) {
+    public void returnUpLoadResFileFail(String error, int errorCode, String fakeMessageId) {
         // TODO Auto-generated method stub
 
     }
@@ -1578,5 +1581,50 @@ public class APIInterfaceInstance implements APIInterface {
 
     @Override
     public void returnVolumeGroupContainMeFail(String error, int errorCode) {
+    }
+
+
+    @Override
+    public void returnVolumeGroupSuccess(GetVolumeResultWithPermissionResult getVolumeResultWithPermissionResult) {
+
+    }
+
+    @Override
+    public void returnVolumeGroupFail(String error, int errorCode) {
+
+    }
+
+    @Override
+    public void returnUpdateVolumeGroupPermissionSuccess(GetVolumeGroupPermissionResult getVolumeGroupPermissionResult) {
+
+    }
+
+    @Override
+    public void returnUpdateVolumeGroupPermissionFail(String error, int errorCode) {
+
+    }
+
+    @Override
+    public void returnOpenActionBackgroudUrlSuccess() {
+    }
+
+    @Override
+    public void returnOpenActionBackgroudUrlFail(String error, int errorCode) {
+    }
+
+    @Override
+    public void returnUploadPushInfoResultSuccess(GetUploadPushInfoResult getUploadPushInfoResult) {
+    }
+
+    @Override
+    public void returnUploadPushInfoResultFail(String error, int errorCode) {
+    }
+
+    @Override
+    public void returnFaceLoginGSSuccess() {
+    }
+
+    @Override
+    public void returnFaceLoginGSFail(String error, int errorCode) {
     }
 }

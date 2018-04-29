@@ -5,6 +5,7 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.text.SpannableString;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
@@ -40,20 +41,20 @@ public class DisplayTxtRichMsg {
      * 富文本卡片
      *
      * @param context
-     * @param convertView
+     * @param childView
      * @param msg
      */
-    public static void displayRichTextMsg(final Context context, View convertView,
+    public static View displayRichTextMsg(final Context context,
                                           Msg msg) {
+        View cardContentView = LayoutInflater.from(context).inflate(
+                R.layout.chat_msg_card_child_text_rich_view, null);
         final boolean isMyMsg = msg.getUid().equals(
                 ((MyApplication) context.getApplicationContext()).getUid());
-        final TextView richText = (TextView) convertView
+        final TextView richText = (TextView) cardContentView
                 .findViewById(R.id.content_text);
-        (convertView.findViewById(R.id.card_layout)).setBackgroundColor(context.getResources().getColor(
-                isMyMsg ? R.color.bg_my_card : R.color.white));
         richText.setTextColor(context.getResources().getColor(
                 isMyMsg ? R.color.white : R.color.black));
-        richText.setBackgroundResource(isMyMsg ? R.drawable.ic_chat_msg_img_cover_arrow_right : R.drawable.ic_chat_msg_img_cover_arrow_left);
+        (cardContentView.findViewById(R.id.card_layout)).setBackgroundResource(isMyMsg ? R.drawable.ic_chat_msg_img_cover_arrow_right : R.drawable.ic_chat_msg_img_cover_arrow_left);
         String msgBody = msg.getBody();
         String source = JSONUtils.getString(msgBody, "source", "");
         if (MyAppConfig.isUseMarkdown) {
@@ -114,6 +115,7 @@ public class DisplayTxtRichMsg {
                 return true;
             }
         });
+        return cardContentView;
     }
 
     public static void copyContentToPasteBoard(Context context, TextView textView) {

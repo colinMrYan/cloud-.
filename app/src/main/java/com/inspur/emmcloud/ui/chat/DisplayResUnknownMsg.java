@@ -1,8 +1,8 @@
 package com.inspur.emmcloud.ui.chat;
 
 import android.content.Context;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.RelativeLayout;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
@@ -10,16 +10,19 @@ import com.inspur.emmcloud.bean.chat.Msg;
 import com.inspur.emmcloud.util.common.DensityUtil;
 
 public class DisplayResUnknownMsg {
-	public static void displayResUnknownMsg(Context context,View contentView,Msg msg){
+	public static View getView(Context context,  Msg msg){
+		View cardContentView = LayoutInflater.from(context).inflate(
+				R.layout.chat_msg_card_child_res_unknown_view, null);
 		boolean isMyMsg = msg.getUid().equals(
-				((MyApplication)context.getApplicationContext()).getUid());
+				MyApplication.getInstance().getUid());
 		
 		int arrowPadding = DensityUtil.dip2px(context, 7);
 		if (isMyMsg) {
-			((RelativeLayout) contentView.findViewById(R.id.root_layout)).setPadding(0, 0, arrowPadding, 0);
+			( cardContentView.findViewById(R.id.root_layout)).setPadding(0, 0, arrowPadding, 0);
 		} else {
-			((RelativeLayout) contentView.findViewById(R.id.root_layout)).setPadding(arrowPadding, 0,
+			(cardContentView.findViewById(R.id.root_layout)).setPadding(arrowPadding, 0,
 					0, 0);
 		}
+		return cardContentView;
 	}
 }

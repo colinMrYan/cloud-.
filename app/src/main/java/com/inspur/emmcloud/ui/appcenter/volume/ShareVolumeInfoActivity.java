@@ -66,20 +66,30 @@ public class ShareVolumeInfoActivity extends BaseActivity {
     @ViewInject(R.id.volume_name_text)
     private TextView volumeNameText;
 
-    @ViewInject(R.id.group_list)
-    private ScrollViewWithListView groupListView;
+    @ViewInject(R.id.slv_write_group)
+    private ScrollViewWithListView groupWriteListView;
 
-    @ViewInject(R.id.volume_name_arrow)
+    @ViewInject(R.id.slv_read_group)
+    private ScrollViewWithListView groupReadListView;
+
+    @ViewInject(R.id.img_volume_name_arrow)
     private ImageView volumeNameArrowImg;
 
-    @ViewInject(R.id.group_layout)
-    private LinearLayout groupLayout;
+    @ViewInject(R.id.ll_write_group)
+    private LinearLayout groupWriteLayout;
+
+    @ViewInject(R.id.ll_group_watch)
+    private LinearLayout groupReadLayout;
 
     private VolumeInfoMemberAdapter memberAdapter;
-    private VolumeInfoGroupAdapter groupAdapter;
+    private VolumeInfoGroupAdapter groupWriteAdapter;
+    private VolumeInfoGroupAdapter groupReadAdapter;
     private boolean isOwner;
     private boolean isVolumeNameUpdate = false;
     private BroadcastReceiver receiver;
+
+    private static final int VOLUME_HAS_UPLOAD_AND_WATCH_PERMISSION = 0;
+    private static final int VOLUME_HAS_WATCH_PERMISSION = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -138,19 +148,28 @@ public class ShareVolumeInfoActivity extends BaseActivity {
 
     private void showVolumeDetail() {
         if (isOwner) {
-            groupLayout.setVisibility(View.VISIBLE);
-            groupAdapter = new VolumeInfoGroupAdapter(getApplicationContext(), volumeDetail.getGroupList());
-            groupListView.setAdapter(groupAdapter);
-            groupListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    Group group = volumeDetail.getGroupList().get(position);
-                    Bundle bundle = new Bundle();
-                    bundle.putSerializable("group",group);
-                    bundle.putSerializable("volumeMemList",volumeDetail.getMemberUidList());
-                    IntentUtils.startActivity(ShareVolumeInfoActivity.this,GroupInfoActivity.class,bundle);
-                }
-            });
+            if(volumeDetail.getGroupWriteList().size() > 0){
+                groupWriteLayout.setVisibility(View.VISIBLE);
+                groupWriteAdapter = new VolumeInfoGroupAdapter(getApplicationContext(), volumeDetail.getGroupWriteList());
+                groupWriteListView.setAdapter(groupWriteAdapter);
+                groupWriteListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        openMemberDetail(position,VOLUME_HAS_UPLOAD_AND_WATCH_PERMISSION);
+                    }
+                });
+            }
+            if(volumeDetail.getGroupReadList().size() > 0){
+                groupReadLayout.setVisibility(View.VISIBLE);
+                groupReadAdapter = new VolumeInfoGroupAdapter(getApplicationContext(),volumeDetail.getGroupReadList());
+                groupReadListView.setAdapter(groupReadAdapter);
+                groupReadListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        openMemberDetail(position,VOLUME_HAS_WATCH_PERMISSION);
+                    }
+                });
+            }
         }
         memberAdapter = new VolumeInfoMemberAdapter(getApplicationContext(), volumeDetail.getMemberUidList(), isOwner);
         memberGrid.setAdapter(memberAdapter);
@@ -184,6 +203,22 @@ public class ShareVolumeInfoActivity extends BaseActivity {
             }
         });
 
+    }
+
+    /**
+     * 打开详细成员列表
+     */
+    private void openMemberDetail(int position,int type) {
+        Group group = null;
+        if(type == VOLUME_HAS_UPLOAD_AND_WATCH_PERMISSION){
+            group = volumeDetail.getGroupWriteList().get(position);
+        }else{
+            group = volumeDetail.getGroupReadList().get(position);
+        }
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("group",group);
+        bundle.putSerializable("volumeMemList",volumeDetail.getMemberUidList());
+        IntentUtils.startActivity(ShareVolumeInfoActivity.this,GroupInfoActivity.class,bundle);
     }
 
     private void updateVolumeMemNum() {

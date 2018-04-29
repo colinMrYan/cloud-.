@@ -84,15 +84,14 @@
     <!-- 插件：设备震动 -->
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.GET_TASKS" />
-    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <!--科大讯飞语音增加权限-->
     <!--获取手机录音机使用权限，听写、识别、语义理解需要用到此权限 -->
-    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <!--读取联系人权限，上传联系人需要用到此权限 -->
-    <uses-permission android:name="android.permission.READ_CONTACTS"/>
-
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
     <supports-screens
         android:anyDensity="true"
         android:largeScreens="true"
@@ -102,20 +101,21 @@
         android:xlargeScreens="true" />
 
     <!--allowBackup = false 防止对应用程序数据进行备份和还原 -->
+
     <application
-        tools:replace="android:allowBackup"
-        android:allowBackup="false"
         android:name=".MyApplication"
+        android:allowBackup="false"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:largeHeap="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        tools:replace="android:allowBackup">
         <activity
             android:name=".MainActivity"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"
             android:label="@string/app_name"
+            android:resizeableActivity="true"
             android:screenOrientation="portrait"
-            >
+            android:theme="@android:style/Theme.Translucent.NoTitleBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -125,92 +125,135 @@
         <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" />
         <activity
             android:name=".ui.IndexActivity"
+            android:resizeableActivity="true"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustNothing"></activity>
         <activity
             android:name=".ui.mine.setting.GuideActivity"
             android:launchMode="singleTask"
+            android:resizeableActivity="true"
             android:screenOrientation="portrait"></activity>
         <activity
             android:name=".ui.mine.setting.SwitchEnterpriseActivity"
             android:launchMode="singleTask"
+            android:resizeableActivity="true"
             android:screenOrientation="portrait"></activity>
 
         <activity
             android:name=".ui.mine.setting.CreateGestureActivity"
             android:launchMode="singleTask"
+            android:resizeableActivity="true"
             android:screenOrientation="portrait"></activity>
         <activity
             android:name=".ui.mine.setting.CreateGestureCodeGuidActivity"
             android:launchMode="singleTask"
+            android:resizeableActivity="true"
             android:screenOrientation="portrait"></activity>
 
         <activity
             android:name=".ui.mine.setting.GestureLoginActivity"
             android:launchMode="singleTask"
+            android:resizeableActivity="true"
             android:screenOrientation="portrait"></activity>
         <activity
             android:name=".ui.mine.setting.FaceVerifyManagerActivity"
             android:launchMode="singleTask"
-            android:theme="@style/QMUI.Compat.NoActionBar"
-            android:screenOrientation="portrait"></activity>
+            android:resizeableActivity="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/QMUI.Compat.NoActionBar"></activity>
 
         <activity
             android:name=".ui.mine.setting.FaceVerifyActivity"
             android:launchMode="singleTask"
+            android:resizeableActivity="true"
             android:screenOrientation="portrait"></activity>
 
         <activity
             android:name=".ui.login.LoginActivity"
             android:launchMode="singleTask"
+            android:resizeableActivity="true"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".ui.login.ScanQrCodeLoginGSActivity"
+            android:launchMode="singleTask"
+            android:resizeableActivity="true"
             android:screenOrientation="portrait"></activity>
         <activity
             android:name=".ui.login.LoginMoreActivity"
             android:launchMode="singleTask"
+            android:resizeableActivity="true"
             android:screenOrientation="portrait"></activity>
         <activity
             android:name=".ui.login.ScanQrCodeLoginActivity"
+            android:resizeableActivity="true"
             android:screenOrientation="portrait" />
         <activity
             android:name="ui.login.NewUserActivity"
             android:launchMode="singleTask"
+            android:resizeableActivity="true"
             android:screenOrientation="portrait"></activity>
         <activity
             android:name=".ui.login.FillCaptchasActivity"
             android:launchMode="singleTask"
+            android:resizeableActivity="true"
             android:screenOrientation="portrait"></activity>
         <activity
             android:name=".ui.login.PerfectInfoActivity"
             android:launchMode="singleTask"
+            android:resizeableActivity="true"
             android:screenOrientation="portrait"></activity>
         <activity
             android:name=".ui.mine.setting.ServiceTermActivity"
             android:launchMode="singleTask"
+            android:resizeableActivity="true"
             android:screenOrientation="portrait"></activity>
         <activity
             android:name=".ui.login.CaptchasLoginActivity"
             android:launchMode="singleTask"
+            android:resizeableActivity="true"
             android:screenOrientation="portrait"></activity>
         <activity
             android:name=".ui.appcenter.AppCenterActivity"
+            android:resizeableActivity="true"
             android:screenOrientation="portrait"></activity>
         <activity
             android:name=".ui.appcenter.AppCenterMoreActivity"
+            android:resizeableActivity="true"
             android:screenOrientation="portrait"></activity>
         <activity
             android:name=".ui.appcenter.AppSearchActivity"
             android:launchMode="singleTask"
+            android:resizeableActivity="true"
             android:screenOrientation="portrait"></activity>
         <activity
             android:name=".ui.appcenter.AppDetailActivity"
             android:launchMode="singleTask"
+            android:resizeableActivity="true"
             android:screenOrientation="portrait"></activity>
 
         <activity
             android:name=".ui.SchemeHandleActivity"
             android:launchMode="singleTask"
+            android:resizeableActivity="true"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar">
+
+            <intent-filter>
+                <action android:name="android.intent.action.SEND_MULTIPLE" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:mimeType="*/*" />
+            </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:mimeType="*/*" />
+            </intent-filter>
+
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -305,94 +348,116 @@
         <activity
             android:name=".ui.chat.ChannelActivity"
             android:launchMode="singleTask"
+            android:resizeableActivity="true"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|stateHidden"></activity>
         <activity
-            android:name=".ui.chat.RobotChannelActivitys"
+            android:name=".ui.chat.ChannelRobotActivity"
             android:launchMode="singleTask"
+            android:resizeableActivity="true"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|stateHidden"></activity>
         <activity
             android:name=".ui.chat.ChannelInfoActivity"
             android:configChanges="locale|layoutDirection"
+            android:resizeableActivity="true"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan|stateHidden"></activity>
         <activity
             android:name=".ui.chat.ChannelMemActivity"
+            android:resizeableActivity="true"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan|stateHidden"></activity>
         <activity
             android:name=".ui.chat.ChannelMsgDetailActivity"
             android:launchMode="singleTask"
+            android:resizeableActivity="true"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|stateHidden"></activity>
         <activity
             android:name=".ui.mine.myinfo.MyInfoActivity"
             android:launchMode="singleTask"
+            android:resizeableActivity="true"
             android:screenOrientation="portrait"></activity>
         <activity
             android:name=".ui.contact.ContactSearchActivity"
+            android:resizeableActivity="true"
             android:screenOrientation="portrait"></activity>
         <activity
             android:name=".ui.mine.setting.SettingActivity"
             android:launchMode="singleTask"
+            android:resizeableActivity="true"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.mine.setting.GestureManagerActivity"
             android:launchMode="singleTask"
+            android:resizeableActivity="true"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.mine.setting.SafeCenterActivity"
             android:launchMode="singleTask"
+            android:resizeableActivity="true"
             android:screenOrientation="portrait" />
 
         <activity
             android:name=".ui.mine.setting.DeviceManagerActivity"
             android:launchMode="singleTask"
+            android:resizeableActivity="true"
             android:screenOrientation="portrait"></activity>
         <activity
             android:name=".ui.mine.setting.DeviceInfoActivity"
             android:launchMode="singleTask"
+            android:resizeableActivity="true"
             android:screenOrientation="portrait"></activity>
 
         <activity
             android:name=".ui.contact.UserInfoActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:launchMode="singleTask"
+            android:resizeableActivity="true"
             android:screenOrientation="portrait"></activity>
         <activity
             android:name=".ui.contact.RobotInfoActivity"
             android:launchMode="singleTask"
+            android:resizeableActivity="true"
             android:screenOrientation="portrait"></activity>
         <activity
             android:name=".ui.mine.myinfo.ModifyUserInfoActivity"
+            android:resizeableActivity="true"
             android:screenOrientation="portrait"></activity>
         <activity
             android:name=".ui.login.ModifyUserPsdActivity"
             android:launchMode="singleTask"
+            android:resizeableActivity="true"
             android:screenOrientation="portrait"></activity>
         <activity
             android:name=".ui.login.ModifyUserPwdBySMSActivity"
             android:launchMode="singleTask"
+            android:resizeableActivity="true"
             android:screenOrientation="portrait"></activity>
         <activity
             android:name=".ui.login.FillNewPwdActivity"
             android:launchMode="singleTask"
+            android:resizeableActivity="true"
             android:screenOrientation="portrait"></activity>
         <activity
             android:name=".ui.mine.setting.LanguageChangeActivity"
+            android:resizeableActivity="true"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.mine.setting.AboutActivity"
             android:launchMode="singleTask"
+            android:resizeableActivity="true"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.mine.setting.RecommendAppActivity"
+            android:resizeableActivity="true"
             android:screenOrientation="portrait" />
 
         <activity
             android:name=".ui.appcenter.groupnews.NewsWebDetailActivity"
             android:launchMode="singleTask"
+            android:resizeableActivity="true"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Holo.Light.NoActionBar"
             android:windowSoftInputMode="adjustPan">
@@ -401,84 +466,105 @@
         <activity
             android:name=".ui.find.ScanResultActivity"
             android:launchMode="singleTask"
+            android:resizeableActivity="true"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.mine.feedback.FeedBackActivity"
             android:launchMode="singleTask"
+            android:resizeableActivity="true"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
 
         <activity
             android:name=".ui.work.WorkSettingActivity"
+            android:resizeableActivity="true"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.work.meeting.MeetingListActivity"
+            android:resizeableActivity="true"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.work.meeting.MeetingHistoryListActivity"
+            android:resizeableActivity="true"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.work.meeting.MeetingHistorySearchActivity"
+            android:resizeableActivity="true"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".ui.work.meeting.MeetingDetailActivity"
+            android:resizeableActivity="true"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Holo.Light.NoActionBar" />
         <activity
             android:name=".ui.work.meeting.MeetingRoomListActivity"
+            android:resizeableActivity="true"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Holo.Light.NoActionBar" />
         <activity
             android:name=".ui.work.meeting.MeetingBookingActivity"
+            android:resizeableActivity="true"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Holo.Light.NoActionBar" />
         <activity
             android:name=".ui.contact.ContactSearchMoreActivity"
             android:launchMode="singleTask"
+            android:resizeableActivity="true"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".ui.chat.ImagePagerActivity"
+            android:resizeableActivity="true"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen"
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".ui.chat.MembersActivity"
+            android:resizeableActivity="true"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.chat.GroupAlbumActivity"
             android:launchMode="singleTask"
+            android:resizeableActivity="true"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.chat.GroupFileActivity"
             android:launchMode="singleTask"
+            android:resizeableActivity="true"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.find.AnalysisActivity"
             android:launchMode="singleTask"
+            android:resizeableActivity="true"
             android:screenOrientation="portrait"></activity>
         <activity
             android:name=".ui.find.trip.TripInfoActivity"
+            android:resizeableActivity="true"
             android:screenOrientation="portrait"></activity>
         <activity
             android:name=".ui.appcenter.ReactNativeAppActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
-            android:windowSoftInputMode="adjustResize"
-            android:screenOrientation="portrait"></activity>
+            android:resizeableActivity="true"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize"></activity>
         <activity
             android:name=".ui.chat.ModifyChannelGroupNameActivity"
+            android:resizeableActivity="true"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.find.trip.TravelActivity"
             android:launchMode="singleTask"
+            android:resizeableActivity="true"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.find.trip.TravelStarsActivity"
             android:launchMode="singleTask"
+            android:resizeableActivity="true"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.find.trip.TripDetailActivity"
+            android:resizeableActivity="true"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Holo.Light.NoActionBar"
             android:windowSoftInputMode="adjustResize|stateHidden">
@@ -486,93 +572,118 @@
         </activity>
         <activity
             android:name=".ui.appcenter.groupnews.GroupNewsActivity"
+            android:resizeableActivity="true"
             android:screenOrientation="portrait"></activity>
         <activity
             android:name=".ui.work.task.MessionListActivity"
+            android:resizeableActivity="true"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" />
         <activity
             android:name=".ui.work.task.MessionSetActivity"
+            android:resizeableActivity="true"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.work.task.MessionTagsManageActivity"
+            android:resizeableActivity="true"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.work.task.MessionTagActivity"
+            android:resizeableActivity="true"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" />
         <activity
             android:name=".ui.work.task.MessionDetailActivity"
+            android:resizeableActivity="true"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" />
         <activity
             android:name=".ui.work.calendar.CalActivity"
             android:launchMode="singleTask"
+            android:resizeableActivity="true"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.work.meeting.MeetingsRoomDetailActivity"
+            android:resizeableActivity="true"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.work.calendar.CalDetailActivity"
             android:launchMode="singleTask"
+            android:resizeableActivity="true"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.work.calendar.CalBrowseActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:launchMode="singleTask"
+            android:resizeableActivity="true"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".ui.work.calendar.CalSingleMonthActivity"
+            android:resizeableActivity="true"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.find.DocumentActivity"
             android:launchMode="singleTask"
+            android:resizeableActivity="true"
             android:screenOrientation="portrait"></activity>
         <activity
             android:name=".ui.find.KnowledgeActivity"
             android:launchMode="singleTask"
+            android:resizeableActivity="true"
             android:screenOrientation="portrait"></activity>
         <activity
             android:name=".ui.work.meeting.MyCommonOfficeActivity"
+            android:resizeableActivity="true"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.work.meeting.CreateCommonOfficeSpaceActivity"
+            android:resizeableActivity="true"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.work.calendar.CalRepeatActivity"
+            android:resizeableActivity="true"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.work.calendar.CalTypeSelectActivity"
+            android:resizeableActivity="true"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
             android:name=".ui.work.calendar.CalEventAddActivity"
             android:configChanges="locale|layoutDirection"
+            android:resizeableActivity="true"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Holo.Light.NoActionBar"
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
             android:name=".ui.work.calendar.CalFilterActivity"
+            android:resizeableActivity="true"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.work.meeting.BuildingActivity"
+            android:resizeableActivity="true"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.work.calendar.AlertTimeActivity"
+            android:resizeableActivity="true"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.login.ModifyUserFirstPsdActivity"
+            android:resizeableActivity="true"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.chat.ChannelMembersDelActivity"
+            android:resizeableActivity="true"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.work.task.MessionFinishListActivity"
             android:configChanges="locale|layoutDirection"
+            android:resizeableActivity="true"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.appcenter.ShortCutFunctionActivity"
+            android:resizeableActivity="true"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar">
             <intent-filter>
@@ -589,33 +700,50 @@
         <!-- 云盘 -->
         <activity
             android:name=".ui.appcenter.volume.VolumeHomePageActivity"
+            android:resizeableActivity="true"
             android:screenOrientation="portrait"></activity>
         <activity
             android:name=".ui.appcenter.volume.VolumeFileActivity"
             android:configChanges="orientation|screenSize"
+            android:resizeableActivity="true"
             android:screenOrientation="portrait"></activity>
         <activity
             android:name=".ui.appcenter.volume.VolumeFileDownloadActivtiy"
             android:launchMode="singleTask"
+            android:resizeableActivity="true"
             android:screenOrientation="portrait"></activity>
         <activity
             android:name=".ui.appcenter.volume.VolumeFileLocationSelectActivity"
+            android:resizeableActivity="true"
             android:screenOrientation="portrait"></activity>
         <activity
             android:name=".ui.appcenter.volume.VolumeFileFilterActvity"
+            android:resizeableActivity="true"
             android:screenOrientation="portrait"></activity>
         <activity
             android:name=".ui.appcenter.volume.ShareVolumeActivity"
+            android:resizeableActivity="true"
             android:screenOrientation="portrait"></activity>
         <activity
             android:name=".ui.appcenter.volume.GroupInfoActivity"
+            android:resizeableActivity="true"
             android:screenOrientation="portrait"></activity>
         <activity
             android:name=".ui.appcenter.volume.ShareVolumeInfoActivity"
+            android:resizeableActivity="true"
             android:screenOrientation="portrait"></activity>
         <activity
             android:name=".ui.appcenter.volume.ShareVolumeNameModifyActivity"
+            android:resizeableActivity="true"
             android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".ui.appcenter.volume.VolumeFilePermissionManagerActivity"
+            android:resizeableActivity="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.appcenter.volume.VolumeGroupChangePermissionActivity"
+            android:resizeableActivity="true"
+            android:screenOrientation="portrait" />
 
 
         <!-- service -->
@@ -671,35 +799,40 @@
 
         <!--处理小米推送广播的Recevier-->
         <!--<receiver-->
-            <!--android:name=".broadcastreceiver.OpenJpushReceiver"-->
-            <!--android:label="OpenJpushMessage">-->
-            <!--<intent-filter>-->
-                <!--<action android:name="com.inspur.emmcloud.openjpush" />-->
-            <!--</intent-filter>-->
+        <!--android:name=".broadcastreceiver.OpenJpushReceiver"-->
+        <!--android:label="OpenJpushMessage">-->
+        <!--<intent-filter>-->
+        <!--<action android:name="com.inspur.emmcloud.openjpush" />-->
+        <!--</intent-filter>-->
         <!--</receiver>-->
         <!-- ImagePicker -->
 
         <activity
+            android:resizeableActivity="true"
             android:name="com.inspur.imp.plugin.camera.imagepicker.ui.ImageGridActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"></activity>
         <activity
+            android:resizeableActivity="true"
             android:name="com.inspur.imp.plugin.camera.imagepicker.ui.ImagePreviewActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"></activity>
         <activity
+            android:resizeableActivity="true"
             android:name="com.inspur.imp.plugin.camera.imagepicker.ui.ImageCropActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"></activity>
         <activity
+            android:resizeableActivity="true"
             android:name="com.inspur.imp.plugin.camera.imagepicker.ui.ImagePreviewDelActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"></activity>
         <activity
+            android:resizeableActivity="true"
             android:name="com.inspur.imp.plugin.camera.editimage.EditImageActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
@@ -709,10 +842,12 @@
 
         <!-- imp插件 -->
         <activity
+            android:resizeableActivity="true"
             android:name="com.inspur.imp.api.ImpActivity"
             android:configChanges="orientation|screenSize"
             android:theme="@android:style/Theme.Holo.Light.NoActionBar"></activity>
         <activity
+            android:resizeableActivity="true"
             android:name="com.inspur.imp.plugin.barcode.scan.CaptureActivity"
             android:screenOrientation="portrait"
             android:stateNotNeeded="true"
@@ -720,6 +855,7 @@
             android:theme="@style/SplashTheme"></activity>
 
         <activity
+            android:resizeableActivity="true"
             android:name="com.inspur.imp.plugin.camera.mycamera.MyCameraActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
@@ -727,17 +863,20 @@
             android:supportsRtl="true"
             android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen"></activity>
 
-        <activity android:name="com.inspur.imp.plugin.file.FileBrowerAppActivity"
+        <activity
+            android:name="com.inspur.imp.plugin.file.FileBrowerAppActivity"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
-
+            android:resizeableActivity="true"
             ></activity>
 
         <activity
+            android:resizeableActivity="true"
             android:name="com.inspur.imp.plugin.filetransfer.TextFileShowActivity"
             android:theme="@android:style/Theme.NoTitleBar"></activity>
 
         <!-- MDM设备管理 -->
         <activity
+            android:resizeableActivity="true"
             android:name="com.inspur.emmcloud.ui.mdm.DeviceRegisterFailDetailActivity"
             android:screenOrientation="portrait"></activity>
 
@@ -747,17 +886,18 @@
         <!-- 极光推送开始 -->
         <!-- Rich push 核心功能 since 2.0.6-->
         <activity
+            android:resizeableActivity="true"
             android:name="cn.jpush.android.ui.PopWinActivity"
             android:exported="false"></activity>
         <!-- since 3.0.9 Required SDK 核心功能-->
         <provider
-            android:authorities="com.inspur.emmcloud.DataProvider"
             android:name="cn.jpush.android.service.DataProvider"
-            android:exported="false"
-            />
+            android:authorities="com.inspur.emmcloud.DataProvider"
+            android:exported="false" />
 
         <!-- Required SDK核心功能-->
         <activity
+            android:resizeableActivity="true"
             android:name="cn.jpush.android.ui.PushActivity"
             android:configChanges="orientation|keyboardHidden"
             android:exported="false"
@@ -918,12 +1058,14 @@
 
         <activity
             android:name=".wxapi.WXEntryActivity"
+            android:resizeableActivity="true"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:exported="true"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <activity
             android:name="com.umeng.qq.tencent.AuthActivity"
+            android:resizeableActivity="true"
             android:launchMode="singleTask"
             android:noHistory="true">
             <intent-filter>
@@ -937,11 +1079,13 @@
         </activity>
         <activity
             android:name="com.umeng.qq.tencent.AssistActivity"
+            android:resizeableActivity="true"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <activity
             android:name="com.umeng.socialize.editorpage.ShareActivity"
+            android:resizeableActivity="true"
             android:excludeFromRecents="true"
             android:theme="@style/Theme.UMDefault" />
     </application>

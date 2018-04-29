@@ -19,11 +19,13 @@ public class DirectChannelUtils {
      * @param msgTitle
      * @return
      */
-    public static String getDirectChannelTitle(Context context, String msgTitle) {
+    public static String getDirectChannelTitle(Context context, String title) {
         String channelTitle = "";
-        Contact otherContact = getDirctChannelOtherContact(context, msgTitle);
-        if (otherContact != null) {
-            channelTitle = otherContact.getRealName();
+        if (title.contains("-") && title.contains(MyApplication.getInstance().getUid())){
+            Contact otherContact = getDirctChannelOtherContact(context, title);
+            if (otherContact != null) {
+                channelTitle = otherContact.getRealName();
+            }
         }
         return channelTitle;
     }

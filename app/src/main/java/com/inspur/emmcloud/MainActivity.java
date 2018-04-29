@@ -2,6 +2,7 @@ package com.inspur.emmcloud;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -17,7 +18,6 @@ import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.ui.login.LoginActivity;
 import com.inspur.emmcloud.ui.mine.setting.GuideActivity;
 import com.inspur.emmcloud.util.common.IntentUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.ResolutionUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
@@ -56,9 +56,17 @@ public class MainActivity extends BaseActivity { // 此处不能继承BaseActivi
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        requestWindowFeature(Window.FEATURE_NO_TITLE);//没有标题
         super.onCreate(savedInstanceState);
-        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);//设置全屏
+        //解决了在sd卡中第一次安装应用，进入到主页并切换到后台再打开会重新启动应用的bug
+        if ((getIntent().getFlags() & Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT) != 0) {
+            finish();
+            return;
+        }
+        //当Android版本在4.4以下时不全屏显示，否则在进入IndexActivity时状态栏过度不美观
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            requestWindowFeature(Window.FEATURE_NO_TITLE);//没有标题
+            this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);//设置全屏
+        }
         setContentView(R.layout.activity_main);
         init();
     }
@@ -69,11 +77,6 @@ public class MainActivity extends BaseActivity { // 此处不能继承BaseActivi
      * 初始化
      */
     private void init() {
-                /* 解决了在sd卡中第一次安装应用，进入到主页并切换到后台再打开会重新启动应用的bug */
-        if ((getIntent().getFlags() & Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT) != 0) {
-            finish();
-            return;
-        }
         activitySplashShowTime = System.currentTimeMillis();
         //进行app异常上传
         startUploadExceptionService();

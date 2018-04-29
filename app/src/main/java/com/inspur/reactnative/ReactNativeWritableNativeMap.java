@@ -8,6 +8,6 @@ import java.io.Serializable;
  * Created by yufuchang on 2017/7/13.
  */
 
-public class ReactNativeWritableNativeMap extends WritableNativeMap implements Serializable{
+public class ReactNativeWritableNativeMap extends WritableNativeMap implements Serializable {
 
 }

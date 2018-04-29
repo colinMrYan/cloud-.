@@ -15,13 +15,15 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.style.ImageSpan;
 import android.util.AttributeSet;
+import android.view.ActionMode;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 
 import com.inspur.emmcloud.bean.chat.InsertModel;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.util.common.DensityUtil;
-import com.inspur.emmcloud.util.common.LogUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -72,6 +74,9 @@ public class ChatInputEdit extends AppCompatEditText {
         return resId;
     }
 
+    public void clearInsertModelList() {
+        insertModelList.clear();
+    }
 
     /**
      * 插入图片
@@ -111,7 +116,7 @@ public class ChatInputEdit extends AppCompatEditText {
             setText(spannableStringBuilder);
             return true;
         } else if (id == android.R.id.cut) {
-            removeInsertModelByDeleteContent(getSelectionStart(),getSelectionEnd());
+            removeInsertModelByDeleteContent(getSelectionStart(), getSelectionEnd());
             super.onTextContextMenuItem(android.R.id.cut);
             return true;
         }
@@ -154,9 +159,30 @@ public class ChatInputEdit extends AppCompatEditText {
                 if (keyCode == KeyEvent.KEYCODE_DEL && event.getAction() == KeyEvent.ACTION_DOWN) {
                     int selectionStart = getSelectionStart();
                     int selectionEnd = getSelectionEnd();
-                    removeInsertModelByDeleteContent(selectionStart,selectionEnd);
+                    removeInsertModelByDeleteContent(selectionStart, selectionEnd);
                 }
                 return false;
+            }
+        });
+        this.setCustomSelectionActionModeCallback(new ActionMode.Callback() {
+            @Override
+            public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
+                return false;
+            }
+
+            @Override
+            public boolean onPrepareActionMode(ActionMode actionMode, Menu menu) {
+                return false;
+            }
+
+            @Override
+            public boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem) {
+                return false;
+            }
+
+            @Override
+            public void onDestroyActionMode(ActionMode actionMode) {
+
             }
         });
     }
@@ -184,10 +210,11 @@ public class ChatInputEdit extends AppCompatEditText {
 
     /**
      * 系统剪切和键盘删除后清除被删除的InserModel数据
+     *
      * @param selectionStart
      * @param selectionEnd
      */
-    private void removeInsertModelByDeleteContent(int selectionStart,int selectionEnd){
+    private void removeInsertModelByDeleteContent(int selectionStart, int selectionEnd) {
         boolean isInsertModelListChanged = false;
         SpannableStringBuilder spannableStringBuilder = (SpannableStringBuilder) getText();
         MyBackgroundColorSpan[] mSpans = getText().getSpans(0, spannableStringBuilder.length(), MyBackgroundColorSpan.class);
@@ -196,7 +223,7 @@ public class ChatInputEdit extends AppCompatEditText {
             int spanStartPos = spannableStringBuilder.getSpanStart(span);
             int spanEndPos = spannableStringBuilder.getSpanEnd(span);
             //光标起始和结束在同一位置
-            if (selectionStart == selectionEnd){
+            if (selectionStart == selectionEnd) {
                 if (selectionStart != 0 && selectionStart >= spanStartPos && selectionStart <= spanEndPos) {
                     // 选中话题
                     setSelection(spanStartPos, spanEndPos);
@@ -205,8 +232,8 @@ public class ChatInputEdit extends AppCompatEditText {
                     isInsertModelListChanged = true;
                     break;
                 }
-            }else {
-                if (selectionStart <= spanStartPos && selectionEnd >= spanEndPos){
+            } else {
+                if (selectionStart <= spanStartPos && selectionEnd >= spanEndPos) {
                     insertModelList.remove(new InsertModel(span.getId()));
                     isInsertModelListChanged = true;
                 }
@@ -267,10 +294,7 @@ public class ChatInputEdit extends AppCompatEditText {
         setSelection(index + insertContent.length() + 1);
     }
 
-    /**
-     * 获取富文文本内容
-     */
-    public String getRichContent() {
+    public String getRichContent(boolean isConvertUrl) {
         SpannableStringBuilder spannableStringBuilder = (SpannableStringBuilder) getText();
         MyBackgroundColorSpan[] mSpans = getText().getSpans(0, spannableStringBuilder.length(), MyBackgroundColorSpan.class);
         for (int i = 0; i < mSpans.length; i++) {
@@ -287,24 +311,32 @@ public class ChatInputEdit extends AppCompatEditText {
             }
         }
         String content = spannableStringBuilder.toString();
-        Pattern pattern = Pattern.compile(Constant.PATTERN_URL);
-        Matcher matcher = pattern.matcher(content);
-        int offset = 0;
-        while (matcher.find()) {
-            String replaceUrl = matcher.group(0);
-            StringBuilder sb = new StringBuilder(content);
-            int replaceUrlBeginLocation = sb.indexOf(replaceUrl, offset);
-            String matchedUrl = matcher.group(0);
-            if (matchedUrl.startsWith("http://") || matchedUrl.startsWith("https://")) {
-                content = sb.replace(replaceUrlBeginLocation, replaceUrlBeginLocation + replaceUrl.length(), "[" + matcher.group(0) + "]" + "(" + matcher.group(0) + ")").toString();
-                offset = replaceUrlBeginLocation + replaceUrl.length() * 2 + 4;//4代表两个中小括号
-            } else {
-                content = sb.replace(replaceUrlBeginLocation, replaceUrlBeginLocation + replaceUrl.length(), "[" + matcher.group(0) + "]" + "(http://" + matcher.group(0) + ")").toString();
-                offset = replaceUrlBeginLocation + replaceUrl.length() * 2 + 4 + 7;//4代表两个中小括号,7代表http://
+        if (isConvertUrl) {
+            Pattern pattern = Pattern.compile(Constant.PATTERN_URL);
+            Matcher matcher = pattern.matcher(content);
+            int offset = 0;
+            while (matcher.find()) {
+                String replaceUrl = matcher.group(0);
+                StringBuilder sb = new StringBuilder(content);
+                int replaceUrlBeginLocation = sb.indexOf(replaceUrl, offset);
+                String matchedUrl = matcher.group(0);
+                if (matchedUrl.startsWith("http://") || matchedUrl.startsWith("https://")) {
+                    content = sb.replace(replaceUrlBeginLocation, replaceUrlBeginLocation + replaceUrl.length(), "[" + matcher.group(0) + "]" + "(" + matcher.group(0) + ")").toString();
+                    offset = replaceUrlBeginLocation + replaceUrl.length() * 2 + 4;//4代表两个中小括号
+                } else {
+                    content = sb.replace(replaceUrlBeginLocation, replaceUrlBeginLocation + replaceUrl.length(), "[" + matcher.group(0) + "]" + "(http://" + matcher.group(0) + ")").toString();
+                    offset = replaceUrlBeginLocation + replaceUrl.length() * 2 + 4 + 7;//4代表两个中小括号,7代表http://
+                }
             }
         }
         return content;
+    }
 
+    /**
+     * 获取富文文本内容
+     */
+    public String getRichContent() {
+        return getRichContent(true);
     }
 
     /**
@@ -379,7 +411,6 @@ public class ChatInputEdit extends AppCompatEditText {
      */
     private void notifyInsertModelListDataChanged() {
         if (insertModelListWatcher != null) {
-            LogUtils.jasonDebug("insertModelList=" + insertModelList.size());
             insertModelListWatcher.onDataChanged(insertModelList);
         }
     }

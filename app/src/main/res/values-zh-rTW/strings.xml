@@ -168,7 +168,7 @@
     <string name="no_this_knowledge">暫無這條知識</string>
     <string name="comment">評論</string>
     <string name="find_your_friends">尋找你的夥伴</string>
-    <string name="unknown">新功能</string>
+    <string name="new_function">新功能</string>
     <string name="app_update_function">当前版本不支持此功能请立即升级到最新版本</string>
 
     <!-- 新用戶註冊 -->
@@ -266,6 +266,7 @@
     <string name="chat_file_download_success">檔案已下載成功，再次點擊進行打開</string>
     <string name="group_name_longth_valid">群名稱字數超限（不超過40個字元）</string>
     <string name="message_create_group">發起群聊</string>
+    <string name="business_card">個人名片</string>
 
 
     <!-- 會議卡片 -->
@@ -397,6 +398,8 @@
     <string name="volume_name">網盤名稱</string>
     <string name="all_volume_member_size">全部網盤成員(%1$d)</string>
     <string name="group">組</string>
+    <string name="volume_has_upload_permission">擁有上傳/查看許可權</string>
+    <string name="volume_has_watch_permission">擁有查看許可權</string>
     <string name="people_num">%1$d人</string>
     <string name="sure_delete_volume">確定要刪除所選網盤嗎？</string>
     <string name="del_volume_member">刪除網盤成員</string>
@@ -426,6 +429,9 @@
     <string name="disk">網盤</string>
     <string name="volume_file_filter">分類篩選</string>
     <string name="volume_group_name">組名稱</string>
+    <string name="volume_upload_file">上傳文件</string>
+    <string name="volume_upload_file_to_volume">上傳到網盤</string>
+    <string name="volume_file_permission_manager">許可權管理</string>
 
     <!-- 我的頁面部分 -->
     <string name="data_clear_success">清除成功</string>
@@ -924,5 +930,8 @@
     <string name="login_more_scan_find_right">]確定添加嗎？</string>
     <string name="cluster_default">默認</string>
     <string name="current_system">當前系統</string>
+
+    <string name="volume_read_write_permission">擁有上傳/查看許可權</string>
+    <string name="volume_read_permission">擁有查看許可權</string>
 
 </resources>

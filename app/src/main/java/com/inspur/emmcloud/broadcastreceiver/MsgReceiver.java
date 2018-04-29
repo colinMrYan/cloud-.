@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
 
-import com.inspur.emmcloud.bean.chat.Msg;
+import com.inspur.emmcloud.util.common.LogUtils;
 
 import org.json.JSONObject;
 
@@ -29,10 +29,12 @@ public class MsgReceiver extends BroadcastReceiver{
 		JSONObject jsonObject;
 		try {
 			jsonObject = new JSONObject(intent.getStringExtra("push"));
-			Msg pushMsg = new Msg(jsonObject);
 			Message msg = new Message();
+			if(jsonObject.toString().contains("\\\"message\\\":\\\"1.0\\\"")){
+				LogUtils.jasonDebug("000000000000000000000");
+			}
 			msg.what = 1;
-			msg.obj = pushMsg;
+			msg.obj = jsonObject;
 			handler.sendMessage(msg);
 		} catch (Exception e) {
 			e.printStackTrace();

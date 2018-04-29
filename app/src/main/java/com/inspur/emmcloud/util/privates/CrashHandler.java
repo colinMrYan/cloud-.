@@ -4,7 +4,6 @@ import android.content.Context;
 import android.util.Log;
 
 import com.inspur.emmcloud.MyApplication;
-import com.inspur.emmcloud.bean.system.AppException;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.privates.cache.AppExceptionCacheUtils;
 
@@ -43,10 +42,7 @@ public class CrashHandler implements UncaughtExceptionHandler {
 		String errorInfo = getErrorInfo(throwable);
 		LogUtils.jasonDebug("errorInfo="+errorInfo);
 		Log.e("AndroidRuntime", errorInfo);
-		if (!AppUtils.isApkDebugable(mContext)) {
-			AppException appException = new AppException(System.currentTimeMillis(),AppUtils.getVersion(mContext),1,"",errorInfo,-1);
-			AppExceptionCacheUtils.saveAppException(mContext,appException);
-		}
+		AppExceptionCacheUtils.saveAppException(mContext,1,"",errorInfo,0);
         //如果系统提供了默认的异常处理器，则交给系统去结束我们的程序，否则就由我们自己结束自己
         if (mDefaultHandler != null) {
             mDefaultHandler.uncaughtException(thread, throwable);

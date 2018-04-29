@@ -34,8 +34,8 @@ public class MsgRecourceUploadUtils {
 	 * @param apiService
 	 * @return
 	 */
-	public static Msg uploadMsgImg(Context context,String filePath,
-			ChatAPIService apiService){
+	public static Msg uploadResImg(Context context, String filePath,
+								   ChatAPIService apiService){
 		int imgHeight = 0;
 		int imgWidth= 0;
 		Bitmap bitmapImg = BitmapFactory.decodeFile(filePath);
@@ -80,8 +80,8 @@ public class MsgRecourceUploadUtils {
 	}
 
 
-	public static Msg uploadImgFile(Context context, Intent data,
-			ChatAPIService apiService) {
+	public static Msg uploadResFile(Context context, Intent data,
+									ChatAPIService apiService) {
 		// TODO Auto-generated method stub
 		Uri uri = data.getData();
 		boolean isAboveKitKat = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;

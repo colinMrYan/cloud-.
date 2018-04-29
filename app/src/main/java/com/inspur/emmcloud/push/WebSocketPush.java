@@ -164,49 +164,49 @@ public class WebSocketPush {
 		}
 	}
 
-	private void addListeners() {
+    private void addListeners() {
 
-		mSocket.on(Socket.EVENT_CONNECT_ERROR, new Emitter.Listener() {
+        mSocket.on(Socket.EVENT_CONNECT_ERROR, new Emitter.Listener() {
 
-			@Override
-			public void call(Object... arg0) {
-				// TODO Auto-generated method stub
-				LogUtils.debug(TAG, "连接失败");
-				sendWebSocketStatusBroadcaset(Socket.EVENT_CONNECT_ERROR);
+            @Override
+            public void call(Object... arg0) {
+                // TODO Auto-generated method stub
+                LogUtils.debug(TAG, "连接失败");
+                sendWebSocketStatusBroadcaset(Socket.EVENT_CONNECT_ERROR);
 
-			}
-		});
-		mSocket.on(Socket.EVENT_CONNECT, new Emitter.Listener() {
+            }
+        });
+        mSocket.on(Socket.EVENT_CONNECT, new Emitter.Listener() {
 
-			@Override
-			public void call(Object... arg0) {
-				// TODO Auto-generated method stub
-				LogUtils.debug(TAG, "连接成功");
-				sendWebSocketStatusBroadcaset(Socket.EVENT_CONNECT);
-				if (((MyApplication) context.getApplicationContext())
-						.getIsActive()) { // 当第一次连接成功后发送消息
-					sendActivedMsg();
-				} else {
-					sendFrozenMsg();
-				}
+            @Override
+            public void call(Object... arg0) {
+                // TODO Auto-generated method stub
+                LogUtils.debug(TAG, "连接成功");
+                sendWebSocketStatusBroadcaset(Socket.EVENT_CONNECT);
+                if (((MyApplication) context.getApplicationContext())
+                        .getIsActive()) { // 当第一次连接成功后发送消息
+                    sendActivedMsg();
+                } else {
+                    sendFrozenMsg();
+                }
 
-			}
-		});
+            }
+        });
 
 
-		mSocket.on("message", new Emitter.Listener() {
+        mSocket.on("message", new Emitter.Listener() {
 
-			@Override
-			public void call(Object... arg0) {
-				// TODO Auto-generated method stub
-				LogUtils.debug(TAG, "message:" + arg0[0].toString());
+            @Override
+            public void call(Object... arg0) {
+                // TODO Auto-generated method stub
+                LogUtils.debug(TAG, "message:" + arg0[0].toString());
 
-				String content = arg0[0].toString();
-				Intent intent = new Intent("com.inspur.msg");
-				intent.putExtra("push", content);
-				LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
-			}
-		});
+                String content = arg0[0].toString();
+                Intent intent = new Intent("com.inspur.msg");
+                intent.putExtra("push", content);
+                LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+            }
+        });
 
 		mSocket.on("debug", new Emitter.Listener() {
 
@@ -249,7 +249,6 @@ public class WebSocketPush {
 	}
 
 	public void closeSocket() {
-		Log.d(TAG, "closeSocket------00");
 		if (mSocket != null) {
 			Log.d(TAG, "closeSocket------");
 			mSocket.disconnect();
@@ -258,15 +257,15 @@ public class WebSocketPush {
 		}
 	}
 
-	private void sendWebSocketStatusBroadcaset(String event){
-		if (((MyApplication) context.getApplicationContext())
-				.isIndexActivityRunning()){
-			Intent intent = new Intent("message_notify");
-			intent.putExtra("status",event);
-			intent.putExtra("command","websocket_status");
-			LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
-		}
-	}
+    private void sendWebSocketStatusBroadcaset(String event) {
+        if (((MyApplication) context.getApplicationContext())
+                .isIndexActivityRunning()) {
+            Intent intent = new Intent("message_notify");
+            intent.putExtra("status", event);
+            intent.putExtra("command", "websocket_status");
+            LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+        }
+    }
 
 
 }

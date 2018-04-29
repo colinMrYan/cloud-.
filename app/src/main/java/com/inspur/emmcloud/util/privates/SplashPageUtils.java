@@ -1,7 +1,6 @@
 package com.inspur.emmcloud.util.privates;
 
 import android.app.Activity;
-import android.content.Context;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.api.APIDownloadCallBack;
@@ -9,7 +8,6 @@ import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.api.apiservice.AppAPIService;
 import com.inspur.emmcloud.api.apiservice.ReactNativeAPIService;
-import com.inspur.emmcloud.bean.system.AppException;
 import com.inspur.emmcloud.bean.system.SplashDefaultBean;
 import com.inspur.emmcloud.bean.system.SplashPageBean;
 import com.inspur.emmcloud.config.Constant;
@@ -133,7 +131,7 @@ public class SplashPageUtils {
                         FileUtils.delFilesExceptNameList(MyAppConfig.getSplashPageImageShowPath(context,
                                 ((MyApplication) context.getApplicationContext()).getUid(), "splash/"),protectedFileNameList);
                     } else {
-                        saveFileCheckException(context, url, "splash sha256 Error", 2);
+                        AppExceptionCacheUtils.saveAppException(context,2,url,"splash sha256 Error",0);
                     }
                 }
             }
@@ -238,21 +236,6 @@ public class SplashPageUtils {
         String filePath = MyAppConfig.getSplashPageImageShowPath(context,
                 MyApplication.getInstance().getUid(), "splash/" + fileName);
         return filePath;
-    }
-
-    /**
-     * 记录文件下载后验证异常
-     *
-     * @param context
-     * @param url
-     * @param error
-     * @param errorLevel
-     */
-    private void saveFileCheckException(Context context, String url, String error, int errorLevel) {
-        if (!AppUtils.isApkDebugable(context)) {
-            AppException appException = new AppException(System.currentTimeMillis(), AppUtils.getVersion(context), errorLevel, url, error, 0);
-            AppExceptionCacheUtils.saveAppException(context, appException);
-        }
     }
 
 

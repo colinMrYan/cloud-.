@@ -2,6 +2,7 @@ package com.inspur.emmcloud.ui.chat;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -22,11 +23,11 @@ import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.bean.chat.GetMsgCommentCountResult;
 import com.inspur.emmcloud.bean.chat.Msg;
-import com.inspur.emmcloud.util.privates.cache.ChannelCacheUtils;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
-import com.inspur.emmcloud.widget.ECMChatInputMenu;
+import com.inspur.emmcloud.util.privates.cache.ChannelCacheUtils;
+import com.inspur.emmcloud.widget.ECMChatInputMenuImgComment;
 import com.inspur.emmcloud.widget.HackyViewPager;
 import com.inspur.emmcloud.widget.ImageDetailFragment;
 import com.inspur.emmcloud.widget.SoftKeyboardStateHelper;
@@ -54,7 +55,7 @@ public class ImagePagerActivity extends BaseFragmentActivity {
 	public static final String PHOTO_SELECT_W_TAG = "PHOTO_SELECT_W_TAG";
 	public static final String PHOTO_SELECT_H_TAG = "PHOTO_SELECT_H_TAG";
 
-	private ECMChatInputMenu ecmChatInputMenu;
+	private ECMChatInputMenuImgComment ecmChatInputMenu;
 	private HackyViewPager mPager;
 	private int pagerPosition;
 	private int pageStartPosition = 0;
@@ -162,6 +163,8 @@ public class ImagePagerActivity extends BaseFragmentActivity {
 				ViewGroup.LayoutParams.WRAP_CONTENT));
 		initEcmChatInputMenu();
 		Window window = commentInputDlg.getWindow();
+		window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+		window.setBackgroundDrawable(new ColorDrawable(0));
 		// 设置显示动画
 		window.setWindowAnimations(R.style.main_menu_animstyle);
 		WindowManager.LayoutParams wl = window.getAttributes();
@@ -180,27 +183,21 @@ public class ImagePagerActivity extends BaseFragmentActivity {
 		// 设置点击外围解散
 		commentInputDlg.setCanceledOnTouchOutside(true);
 		commentInputDlg.show();
-		ecmChatInputMenu.showSoftInput();
 	}
 
 	/**
 	 * 初始化评论输入框
 	 */
 	private void initEcmChatInputMenu() {
-		ecmChatInputMenu = (ECMChatInputMenu) commentInputDlg.findViewById(R.id.chat_input_menu);
-		ecmChatInputMenu.setWindowListener(false);
+		ecmChatInputMenu = (ECMChatInputMenuImgComment) commentInputDlg.findViewById(R.id.chat_input_menu);
+		//ecmChatInputMenu.setWindowListener(false);
 		String channelType = ChannelCacheUtils.getChannelType(getApplicationContext(), cid);
 		if (channelType != null && channelType.equals("GROUP")) {
-			ecmChatInputMenu.setIsChannelGroup(true, cid);
+			ecmChatInputMenu.setCanMentions(true, cid);
 		}else {
-			ecmChatInputMenu.setIsChannelGroup(false, cid);
+			ecmChatInputMenu.setCanMentions(false, cid);
 		}
-		ecmChatInputMenu.setChatInputMenuListener(new ECMChatInputMenu.ChatInputMenuListener() {
-
-			@Override
-			public void onSetContentViewHeight(boolean isLock) {
-				// TODO Auto-generated method stub
-			}
+		ecmChatInputMenu.setChatInputMenuListener(new ECMChatInputMenuImgComment.ChatInputMenuListener() {
 
 			@Override
 			public void onSendMsg(String content, List<String> mentionsUidList,List<String> urlList) {
@@ -208,7 +205,7 @@ public class ImagePagerActivity extends BaseFragmentActivity {
 				if (commentInputDlg != null && commentInputDlg.isShowing()) {
 					commentInputDlg.dismiss();
 				}
-				ecmChatInputMenu.hideSoftInput();
+				ecmChatInputMenu.showSoftInput(false);
 				// TODO Auto-generated method stub
 			}
 		});
@@ -216,13 +213,12 @@ public class ImagePagerActivity extends BaseFragmentActivity {
 		softKeyboardStateHelper.addSoftKeyboardStateListener(new SoftKeyboardStateHelper.SoftKeyboardStateListener() {
 			@Override
 			public void onSoftKeyboardOpened(int keyboardHeightInPx) {
-				ecmChatInputMenu.showAddItemLayout();
+				ecmChatInputMenu.setAddMenuLayoutShow(true);
 			}
 
 			@Override
 			public void onSoftKeyboardClosed() {
-			//	commentInputDlg.dismiss();
-				ecmChatInputMenu.hideAddItemLayout(false);
+				ecmChatInputMenu.setAddMenuLayoutShow(false);;
 			}
 		});
 	}

@@ -35,6 +35,7 @@ import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.bean.chat.Channel;
 import com.inspur.emmcloud.bean.chat.ChannelGroup;
 import com.inspur.emmcloud.bean.chat.ChannelOperationInfo;
+import com.inspur.emmcloud.bean.chat.EventMessageUnReadCount;
 import com.inspur.emmcloud.bean.chat.GetChannelListResult;
 import com.inspur.emmcloud.bean.chat.GetNewMsgsResult;
 import com.inspur.emmcloud.bean.chat.MatheSet;
@@ -102,7 +103,7 @@ import static android.app.Activity.RESULT_OK;
  *
  * @author Jason Chen; create at 2016年8月23日 下午2:59:39
  */
-public class MessageFragment extends Fragment{
+public class MessageFragment extends Fragment {
 
     private static final int RECEIVE_MSG = 1;
     private static final int CREAT_CHANNEL_GROUP = 1;
@@ -150,7 +151,7 @@ public class MessageFragment extends Fragment{
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        ((IndexActivity)getActivity()).openTargetFragment();
+        ((IndexActivity) getActivity()).openTargetFragment();
     }
 
     @Override
@@ -179,11 +180,8 @@ public class MessageFragment extends Fragment{
     private void showMessageButtons() {
         String tabBarInfo = PreferencesByUserAndTanentUtils.getString(getActivity(), "app_tabbar_info_current", "");
         //第一次登录时有tabBarInfo会为“”，会导致JSON waring
-        if (StringUtils.isBlank(tabBarInfo)) {
-            return;
-        }
-        AppTabAutoBean appTabAutoBean = new AppTabAutoBean(tabBarInfo);
-        if (appTabAutoBean != null) {
+        if (!StringUtils.isBlank(tabBarInfo)) {
+            AppTabAutoBean appTabAutoBean = new AppTabAutoBean(tabBarInfo);
             AppTabPayloadBean payloadBean = appTabAutoBean.getPayload();
             if (payloadBean != null) {
                 showCreateGroupOrFindContact(payloadBean);
@@ -200,7 +198,7 @@ public class MessageFragment extends Fragment{
         ArrayList<AppTabDataBean> appTabList =
                 (ArrayList<AppTabDataBean>) payloadBean.getTabs();
         for (int i = 0; i < appTabList.size(); i++) {
-            if (appTabList.get(i).getComponent().equals("communicate")) {
+            if (appTabList.get(i).getTabId().equals("communicate")) {
                 AppTabProperty property = appTabList.get(i).getProperty();
                 if (property != null) {
                     if (!property.isCanCreate()) {
@@ -235,7 +233,7 @@ public class MessageFragment extends Fragment{
     /**
      * 初始化PullRefreshLayout
      */
-    private void initPullRefreshLayout(){
+    private void initPullRefreshLayout() {
         swipeRefreshLayout = (SwipeRefreshLayout) rootView
                 .findViewById(R.id.refresh_layout);
         swipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.header_bg), getResources().getColor(R.color.header_bg));
@@ -250,7 +248,7 @@ public class MessageFragment extends Fragment{
     /**
      * 初始化ListView
      */
-    private void initListView(){
+    private void initListView() {
         msgListView = (ListView) rootView.findViewById(R.id.msg_list);
         msgListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
@@ -272,7 +270,7 @@ public class MessageFragment extends Fragment{
                             R.string.not_support_open_channel);
                 }
                 setChannelAllMsgRead(channel);
-                refreshIndexNotify();
+                updateMessageUnReadCount();
             }
 
         });
@@ -293,6 +291,7 @@ public class MessageFragment extends Fragment{
     /**
      * 根据tabbar信息更新加号UI，这里显示信息附在Tabbar信息里
      * 所以没有数据请求回来，MessageFragment不存在的情况
+     *
      * @param appTabAutoBean
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -420,7 +419,6 @@ public class MessageFragment extends Fragment{
         messageFragmentReceiver = new MessageFragmentReceiver();
         IntentFilter intentFilter = new IntentFilter("message_notify");
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(messageFragmentReceiver, intentFilter);
-
     }
 
 
@@ -431,11 +429,10 @@ public class MessageFragment extends Fragment{
         // TODO Auto-generated method stub
         List<Channel> channelList = ChannelCacheUtils
                 .getCacheChannelList(getActivity());
-        for (int i = 0; i < channelList.size(); i++) {
-            String cid = channelList.get(i).getCid();
-            List<Msg> newMsgList = MsgCacheUtil.getHistoryMsgList(getActivity(), cid, "",
+        for (Channel channel:channelList){
+            List<Msg> newMsgList = MsgCacheUtil.getHistoryMsgList(getActivity(), channel.getCid(), "",
                     15);
-            channelList.get(i).setNewMsgList(getActivity().getApplicationContext(),newMsgList);
+            channel.setNewMsgList(getActivity().getApplicationContext(), newMsgList);
         }
         return channelList;
     }
@@ -445,7 +442,7 @@ public class MessageFragment extends Fragment{
      * 为单个群组创建头像
      */
     private void createGroupIcon(List<Channel> channelList) {
-        if (((MyApplication) getActivity().getApplicationContext()).getIsContactReady() && NetUtils.isNetworkConnected(getActivity(),false)) {
+        if (((MyApplication) getActivity().getApplicationContext()).getIsContactReady() && NetUtils.isNetworkConnected(MyApplication.getInstance(), false)) {
             isHaveCreatGroupIcon = true;
             ChannelGroupIconUtils.getInstance().create(getActivity(), channelList,
                     handler);
@@ -479,7 +476,7 @@ public class MessageFragment extends Fragment{
                                     it.remove();
                                 } else if (channel.getType().equals("GROUP")) {
                                     ChannelGroup channelGroup = ChannelGroupCacheUtils.getChannelGroupById(getActivity(), channel.getCid());
-                                    String myUid = ((MyApplication) getActivity().getApplicationContext()).getUid();
+                                    String myUid = MyApplication.getInstance().getUid();
                                     if (channelGroup != null && !channelGroup.getOwner().equals(myUid)) {
                                         it.remove();
                                     }
@@ -554,7 +551,7 @@ public class MessageFragment extends Fragment{
      */
     private void setChannelDisplayTitle(Channel channel) {
 
-        String title = "";
+        String title;
         if (channel.getType().equals("DIRECT")) {
             title = DirectChannelUtils.getDirectChannelTitle(getActivity(),
                     channel.getTitle());
@@ -578,14 +575,16 @@ public class MessageFragment extends Fragment{
                 switch (msg.what) {
                     case RECEIVE_MSG:
                         // 接收到新的消息
-                        Msg receivedMsg = (Msg) msg.obj;
+                        Msg receivedMsg = new Msg((JSONObject) msg.obj);
+                        if (receivedMsg.getType().equals("command/faceLogin")) {
+                            return;
+                        }
                         Channel receiveMsgChannel = ChannelCacheUtils.getChannel(
                                 getActivity(), receivedMsg.getCid());
                         if (receiveMsgChannel == null) {
                             getChannelList();
                         } else {
                             cacheReceiveMsg(receiveMsgChannel, receivedMsg);
-                            //addChannelToList(receivedMsg, receiveMsgChannel);
                             sortChannelList();
                         }
                         break;
@@ -601,7 +600,6 @@ public class MessageFragment extends Fragment{
                         displayChannelList.addAll(channelList);
                         displayData();// 展示数据
                         registerMsgReceiver();// 注册接收消息的广播
-                        ((MyApplication) getActivity().getApplication()).startWebSocket();// 启动webSocket推送
                         break;
                     default:
                         break;
@@ -669,7 +667,7 @@ public class MessageFragment extends Fragment{
             adapter.setDataList(displayChannelList);
             adapter.notifyDataSetChanged();
         }
-        refreshIndexNotify();
+        updateMessageUnReadCount();
 
     }
 
@@ -714,17 +712,17 @@ public class MessageFragment extends Fragment{
         final boolean isChannelSetTop = ChannelOperationCacheUtils
                 .isChannelSetTop(getActivity(), displayChannelList
                         .get(position).getCid());
-        final String[] items = new String[]{getString(isChannelSetTop?R.string.chanel_cancel_top :R.string.channel_set_top), getString(R.string.channel_hide_chat)};
+        final String[] items = new String[]{getString(isChannelSetTop ? R.string.chanel_cancel_top : R.string.channel_set_top), getString(R.string.channel_hide_chat)};
         new QMUIDialog.MenuDialogBuilder(getActivity())
                 .addItems(items, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
-                        if (which == 0){
+                        if (which == 0) {
                             ChannelOperationCacheUtils.setChannelTop(getActivity(),
                                     displayChannelList.get(position).getCid(), !isChannelSetTop);
                             sortChannelList();
-                        }else {
+                        } else {
                             ChannelOperationCacheUtils.setChannelHide(
                                     getActivity(), displayChannelList.get(position)
                                             .getCid(), true);
@@ -745,14 +743,14 @@ public class MessageFragment extends Fragment{
     /**
      * 设置消息tab页面的小红点（未读消息提醒）的显示
      */
-    private void refreshIndexNotify() {
+    private void updateMessageUnReadCount() {
         int unReadCount = 0;
         if (displayChannelList != null) {
             for (int i = 0; i < displayChannelList.size(); i++) {
                 unReadCount += displayChannelList.get(i).getUnReadCount();
             }
         }
-        IndexActivity.showNotifyIcon(unReadCount);
+        EventBus.getDefault().post(new EventMessageUnReadCount(unReadCount));
     }
 
     static class ViewHolder {
@@ -956,7 +954,6 @@ public class MessageFragment extends Fragment{
     }
 
 
-
     /**
      * 接受创建群组头像的icon
      *
@@ -968,27 +965,36 @@ public class MessageFragment extends Fragment{
         public void onReceive(Context context, Intent intent) {
             // TODO Auto-generated method stub
             String command = intent.getExtras().getString("command");
-            if (command.equals("creat_group_icon")) {
-                isHaveCreatGroupIcon =false;
-                createGroupIcon(null);
-            } else if (command.equals("refresh_session_list")) {
-                getChannelList();
-            } else if (command.equals("sort_session_list")) {
-                sortChannelList();
-            } else if (command.equals("sync_all_base_data_success")) {
-                sortChannelList();
-                createGroupIcon(null);
-            } else if (command.equals("set_all_message_read")) {
-                setAllChannelMsgRead();
-            } else if (command.equals("websocket_status")) {
-                String socketStatus = intent.getExtras().getString("status");
-                showSocketStatusInTitle(socketStatus);
-            } else if (command.equals("set_channel_message_read")) {
-                String cid = intent.getExtras().getString("cid");
-                String mid = intent.getExtras().getString("mid");
-                setChannelMsgRead(cid, mid);
+            switch (command){
+                case "creat_group_icon":
+                    isHaveCreatGroupIcon = false;
+                    createGroupIcon(null);
+                    break;
+                case "refresh_session_list":
+                    getChannelList();
+                    break;
+                case "sort_session_list":
+                    sortChannelList();
+                    break;
+                case "sync_all_base_data_success":
+                    sortChannelList();
+                    createGroupIcon(null);
+                    break;
+                case "set_all_message_read":
+                    setAllChannelMsgRead();
+                    break;
+                case "websocket_status":
+                    String socketStatus = intent.getExtras().getString("status");
+                    showSocketStatusInTitle(socketStatus);
+                    break;
+                case "set_channel_message_read":
+                    String cid = intent.getExtras().getString("cid");
+                    String mid = intent.getExtras().getString("mid");
+                    setChannelMsgRead(cid, mid);
+                    break;
+                   default:
+                       break;
             }
-
         }
 
     }
@@ -998,7 +1004,7 @@ public class MessageFragment extends Fragment{
             titleText.setText(R.string.socket_connecting);
         } else if (socketStatus.equals(Socket.EVENT_CONNECT)) {
             //当断开以后连接成功(非第一次连接上)后重新拉取一遍消息
-            if (!isFirstConnectWebsockt){
+            if (!isFirstConnectWebsockt) {
                 getChannelList();
             }
             isFirstConnectWebsockt = false;
@@ -1043,7 +1049,7 @@ public class MessageFragment extends Fragment{
                 break;
             }
         }
-        refreshIndexNotify();
+        updateMessageUnReadCount();
         if (adapter != null) {
             adapter.notifyDataSetChanged();
         }
@@ -1103,6 +1109,9 @@ public class MessageFragment extends Fragment{
     public void onDestroy() {
         // TODO Auto-generated method stub
         super.onDestroy();
+        if (handler != null) {
+            handler = null;
+        }
         if (cacheChannelTask != null && !cacheChannelTask.isCancelled() && cacheChannelTask.getStatus() == AsyncTask.Status.RUNNING) {
             cacheChannelTask.cancel(true);
             cacheChannelTask = null;
@@ -1118,10 +1127,6 @@ public class MessageFragment extends Fragment{
         if (messageFragmentReceiver != null) {
             LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(messageFragmentReceiver);
             messageFragmentReceiver = null;
-        }
-
-        if (handler != null) {
-            handler = null;
         }
         EventBus.getDefault().unregister(this);
     }
@@ -1139,7 +1144,7 @@ public class MessageFragment extends Fragment{
                 JSONArray peopleArray = searchResultObj.getJSONArray("people");
 
                 if (peopleArray.length() > 0
-                        && NetUtils.isNetworkConnected(getActivity())) {
+                        && NetUtils.isNetworkConnected(MyApplication.getInstance())) {
                     creatGroupChannel(peopleArray);
                 }
             } catch (JSONException e) {
@@ -1199,9 +1204,9 @@ public class MessageFragment extends Fragment{
      * 获取消息会话列表
      */
     private void getChannelList() {
-        if (NetUtils.isNetworkConnected(getActivity(),false)) {
+        if (NetUtils.isNetworkConnected(MyApplication.getInstance(), true)) {
             apiService.getChannelList();
-        }else {
+        } else {
             swipeRefreshLayout.setRefreshing(false);
         }
     }
@@ -1209,8 +1214,8 @@ public class MessageFragment extends Fragment{
     /**
      * 获取频道消息
      */
-    private void getChannelMsg(){
-        if (NetUtils.isNetworkConnected(getActivity(),false)) {
+    private void getChannelMsg() {
+        if (NetUtils.isNetworkConnected(MyApplication.getInstance(), false)) {
             apiService.getNewMsgs();
         }
     }
@@ -1222,7 +1227,7 @@ public class MessageFragment extends Fragment{
      * @param channelList
      */
     public void getChannelInfoResult(List<Channel> channelList) {
-        if (NetUtils.isNetworkConnected(getActivity(),false)) {
+        if (NetUtils.isNetworkConnected(MyApplication.getInstance(), false)) {
             ArrayList<String> cidList = new ArrayList<>();
             for (int i = 0; i < channelList.size(); i++) {
                 Channel channel = channelList.get(i);

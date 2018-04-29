@@ -135,7 +135,7 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
     /**
      * 弹出文件操作框
      *
-     * @param title
+     * @param volumeFile
      */
     protected void showFileOperationDlg(final VolumeFile volumeFile) {
         boolean isVolumeFileWriteable = VolumeFilePrivilegeUtils.getVolumeFileWriteable(getApplicationContext(), volumeFile);
@@ -147,7 +147,8 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
                 .addItem(getString(R.string.rename), isVolumeFileWriteable)
                 .addItem(getString(R.string.move_to), isVolumeFileWriteable)
                 .addItem(getString(R.string.copy))
-                // .addItem("分享", !isVolumeFileDirectory)
+                .addItem(getString(R.string.volume_file_permission_manager),isVolumeFileWriteable)
+               // .addItem("分享", !isVolumeFileDirectory)
                 .setOnSheetItemClickListener(new ActionSheetDialog.ActionListSheetBuilder.OnSheetItemClickListener() {
                     @Override
                     public void onClick(ActionSheetDialog dialog, View itemView, int position) {
@@ -171,6 +172,9 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
                                 copyVolumeFileList.add(volumeFile);
                                 copyFile(copyVolumeFileList);
                                 break;
+                            case 5:
+                                startVolumeFilePermissionManager(volumeFile);
+                                break;
                             default:
                                 break;
                         }
@@ -179,6 +183,16 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
                 })
                 .build()
                 .show();
+    }
+
+    /**
+     * 打开权限管理
+     */
+    private void startVolumeFilePermissionManager(VolumeFile volumeFile) {
+        Bundle bundle = new Bundle();
+        bundle.putString("volume",volumeFile.getVolume());
+        bundle.putString("currentDirAbsolutePath",currentDirAbsolutePath+volumeFile.getName());
+        IntentUtils.startActivity(VolumeFileBaseActivity.this,VolumeFilePermissionManagerActivity.class,bundle);
     }
 
 

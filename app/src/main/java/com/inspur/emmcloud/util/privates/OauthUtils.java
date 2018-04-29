@@ -9,6 +9,9 @@ import com.inspur.emmcloud.interf.OauthCallBack;
 import com.inspur.emmcloud.ui.login.LoginActivity;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
+import com.inspur.emmcloud.util.privates.cache.AppExceptionCacheUtils;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,9 +37,9 @@ public class OauthUtils {
 
     public void refreshToken(OauthCallBack callBack, long requestTime) {
         //当请求时间小于新token的获取时间时，代表token已经更新，重新执行该请求
-        if (requestTime < tokenGetTime){
+        if (requestTime < tokenGetTime) {
             callBack.reExecute();
-        }else {
+        } else {
             callBackList.add(callBack);
             // 防止多次刷新token
             if (!isTokenRefreshing) {
@@ -67,21 +70,40 @@ public class OauthUtils {
             MyApplication.getInstance().startWebSocket();
             tokenGetTime = System.currentTimeMillis();
             isTokenRefreshing = false;
-            for (OauthCallBack oauthCallBack : callBackList){
+            for (OauthCallBack oauthCallBack : callBackList) {
                 oauthCallBack.reExecute();
             }
             callBackList.clear();
         }
 
+        /**
+         * 将刷新token失败的异常进行记录
+         *
+         * @param error
+         * @param errorCode
+         */
+        private void saveRefreshTokenException(String error, int errorCode) {
+            JSONObject object = new JSONObject();
+            try {
+                object.put("error", error);
+                object.put("AT", MyApplication.getInstance().getAccessToken());
+                object.put("RT", MyApplication.getInstance().getRefreshToken());
+                AppExceptionCacheUtils.saveAppException(MyApplication.getInstance(), 6, "刷新token失败", object.toString(), errorCode);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
         @Override
         public void returnOauthSigninFail(String error, int errorCode) {
             // TODO Auto-generated method stub
+            saveRefreshTokenException(error, errorCode);
             //当errorCode为400时代表refreshToken也失效，需要重新登录
-            if (errorCode != 400){
-                for (OauthCallBack oauthCallBack : callBackList){
+            if (errorCode != 400) {
+                for (OauthCallBack oauthCallBack : callBackList) {
                     oauthCallBack.executeFailCallback();
                 }
-            }else if(!(MyApplication.getInstance().getActivityLifecycleCallbacks().getCurrentActivity() instanceof LoginActivity)){
+            } else if (!(MyApplication.getInstance().getActivityLifecycleCallbacks().getCurrentActivity() instanceof LoginActivity)) {
                 ToastUtils.show(MyApplication.getInstance(), R.string.authorization_expired);
                 MyApplication.getInstance().signout();
             }
