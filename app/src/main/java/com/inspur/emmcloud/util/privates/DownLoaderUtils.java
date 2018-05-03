@@ -1,5 +1,7 @@
 package com.inspur.emmcloud.util.privates;
 
+import com.inspur.emmcloud.MyApplication;
+
 import org.xutils.common.Callback.Cancelable;
 import org.xutils.common.Callback.ProgressCallback;
 import org.xutils.http.RequestParams;
@@ -36,7 +38,8 @@ public class DownLoaderUtils {
     public void startDownLoad(String source, String target,
                               ProgressCallback<File> progressCallback) {
 
-        RequestParams params = new RequestParams(source);
+//        RequestParams params = new RequestParams(source);
+        RequestParams params = MyApplication.getInstance().getHttpRequestParams(source);
         params.setAutoResume(true);// 断点下载
         params.setSaveFilePath(target);
         params.setCancelFast(true);

@@ -24,6 +24,8 @@ public class MutilClusterUtils {
     private static final String ECM_NEWS = "com.inspur.ecm.news";
     private static final String ECM_CLOUD_DRIVER = "com.inspur.ecm.cloud-drive";
     private static final String ECM_STORAGE_LEGACY = "com.inspur.ecm.storage.legacy";
+    private static final String ECM_OLD = "com.inspur.ecm";
+    private static final String EMM_OLD = "com.inspur.emm";
 
     /**
      * 修改多云基地址，如果没有基地址则取默认
@@ -36,10 +38,12 @@ public class MutilClusterUtils {
             String serviceName = clusterBeanList.get(i).getServiceName();
             LogUtils.YfcDebug("ServiceName:"+serviceName);
             switch (serviceName) {
-                case "com.inspur.ecm":
+                //旧版ecm
+                case ECM_OLD:
                     MyApplication.getInstance().setClusterEcm(clusterBeanList.get(i).getBaseUrl() + "/");
                     break;
-                case "com.inspur.emm":
+                //旧版emm
+                case EMM_OLD:
                     MyApplication.getInstance().setClusterEmm(clusterBeanList.get(i).getBaseUrl() + "/");
                     break;
                 //聊天相关
