@@ -12,21 +12,22 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.api.APICallback;
 import com.inspur.emmcloud.api.APIInterface;
 import com.inspur.emmcloud.api.APIUri;
-import com.inspur.emmcloud.bean.mine.GetBindingDeviceResult;
-import com.inspur.emmcloud.bean.mine.GetFaceSettingResult;
-import com.inspur.emmcloud.bean.system.GetBoolenResult;
-import com.inspur.emmcloud.bean.mine.GetDeviceLogResult;
-import com.inspur.emmcloud.bean.mine.GetLanguageResult;
+import com.inspur.emmcloud.api.CloudHttpMethod;
+import com.inspur.emmcloud.api.HttpUtils;
 import com.inspur.emmcloud.bean.login.GetMDMStateResult;
+import com.inspur.emmcloud.bean.mine.GetBindingDeviceResult;
+import com.inspur.emmcloud.bean.mine.GetDeviceLogResult;
+import com.inspur.emmcloud.bean.mine.GetFaceSettingResult;
+import com.inspur.emmcloud.bean.mine.GetLanguageResult;
 import com.inspur.emmcloud.bean.mine.GetUploadMyHeadResult;
 import com.inspur.emmcloud.bean.mine.UserProfileInfoBean;
+import com.inspur.emmcloud.bean.system.GetBoolenResult;
 import com.inspur.emmcloud.interf.OauthCallBack;
+import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.OauthUtils;
-import com.inspur.emmcloud.util.common.PreferencesUtils;
 
 import org.xutils.http.RequestParams;
-import org.xutils.x;
 
 import java.io.File;
 
@@ -60,7 +61,7 @@ public class MineAPIService {
         File file = new File(filePath);
         params.setMultipart(true);// 有上传文件时使用multipart表单, 否则上传原始文件流.
         params.addBodyParameter("head", file);
-        x.http().post(params, new APICallback(context, completeUrl) {
+        HttpUtils.request(context, CloudHttpMethod.POST,params, new APICallback(context, completeUrl) {
 
             @Override
             public void callbackTokenExpire(long requestTime) {
@@ -108,7 +109,7 @@ public class MineAPIService {
                 .getHttpRequestParams(completeUrl);
         params.addParameter("key", key);
         params.addParameter("value", value);
-        x.http().post(params, new APICallback(context, completeUrl) {
+        HttpUtils.request(context,CloudHttpMethod.POST,params, new APICallback(context, completeUrl) {
 
             @Override
             public void callbackTokenExpire(long requestTime) {
@@ -172,7 +173,7 @@ public class MineAPIService {
         params.addParameter("Email", "");
         params.addParameter("Telephone", "");
         params.addParameter("UUID", UUID);
-        x.http().post(params, new APICallback(context, completeUrl) {
+        HttpUtils.request(context,CloudHttpMethod.POST,params, new APICallback(context, completeUrl) {
 
             @Override
             public void callbackTokenExpire(long requestTime) {
@@ -202,7 +203,7 @@ public class MineAPIService {
         final String completeUrl = APIUri.getLangUrl();
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
-        x.http().get(params, new APICallback(context, completeUrl) {
+        HttpUtils.request(context,CloudHttpMethod.GET,params, new APICallback(context, completeUrl) {
 
             @Override
             public void callbackTokenExpire(long requestTime) {
@@ -242,7 +243,7 @@ public class MineAPIService {
         final String completeUrl = APIUri.getUserProfileUrl();
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
-        x.http().get(params, new APICallback(context, completeUrl) {
+        HttpUtils.request(context,CloudHttpMethod.GET,params, new APICallback(context, completeUrl) {
             @Override
             public void callbackSuccess(String arg0) {
                 apiInterface.returnUserProfileSuccess(new UserProfileInfoBean(arg0));
@@ -281,7 +282,7 @@ public class MineAPIService {
         final String completeUrl = APIUri.getBindingDevicesUrl();
         RequestParams params =
                 ((MyApplication) context.getApplicationContext()).getHttpRequestParams(completeUrl);
-        x.http().get(params, new APICallback(context, completeUrl) {
+        HttpUtils.request(context,CloudHttpMethod.GET,params, new APICallback(context, completeUrl) {
 
             @Override
             public void callbackTokenExpire(long requestTime) {
@@ -325,7 +326,7 @@ public class MineAPIService {
         RequestParams params =
                 ((MyApplication) context.getApplicationContext()).getHttpRequestParams(completeUrl);
         params.addParameter("udid", udid);
-        x.http().post(params, new APICallback(context, completeUrl) {
+        HttpUtils.request(context,CloudHttpMethod.POST,params, new APICallback(context, completeUrl) {
 
             @Override
             public void callbackTokenExpire(long requestTime) {
@@ -370,7 +371,7 @@ public class MineAPIService {
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
         params.addParameter("udid", udid);
-        x.http().post(params, new APICallback(context, completeUrl) {
+        HttpUtils.request(context,CloudHttpMethod.POST,params, new APICallback(context, completeUrl) {
             @Override
             public void callbackSuccess(String arg0) {
                 apiInterface.returnUnBindDeviceSuccess();
@@ -408,7 +409,7 @@ public class MineAPIService {
         final String completeUrl = APIUri.getMDMStateUrl();
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
-        x.http().get(params, new APICallback(context, completeUrl) {
+        HttpUtils.request(context,CloudHttpMethod.GET,params, new APICallback(context, completeUrl) {
             @Override
             public void callbackSuccess(String arg0) {
                 apiInterface.returnMDMStateSuccess(new GetMDMStateResult(arg0));
@@ -449,7 +450,7 @@ public class MineAPIService {
                 .getHttpRequestParams(completeUrl);
         params.addParameter("face",bitmapBase64);
         params.setAsJsonContent(true);
-        x.http().post(params, new APICallback(context,completeUrl) {
+        HttpUtils.request(context,CloudHttpMethod.POST,params, new APICallback(context,completeUrl) {
             @Override
             public void callbackSuccess(String arg0) {
              apiInterface.returnFaceSettingSuccess(new GetFaceSettingResult(arg0));
@@ -489,7 +490,7 @@ public class MineAPIService {
                 .getHttpRequestParams(completeUrl);
         params.addParameter("face",bitmapBase64);
         params.setAsJsonContent(true);
-        x.http().post(params, new APICallback(context,completeUrl) {
+        HttpUtils.request(context,CloudHttpMethod.POST,params, new APICallback(context,completeUrl) {
             @Override
             public void callbackSuccess(String arg0) {
                 apiInterface.returnFaceVerifySuccess(new GetFaceSettingResult(arg0));
