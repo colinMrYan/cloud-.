@@ -56,20 +56,20 @@ public class GroupAlbumActivity extends BaseActivity {
                 int width = view.getWidth();
                 int height = view.getHeight();
                 Bundle bundle = new Bundle();
-                bundle.putInt(ImagePagerActivity.PHOTO_SELECT_X_TAG, location[0]);
-                bundle.putInt(ImagePagerActivity.PHOTO_SELECT_Y_TAG, location[1]);
-                bundle.putInt(ImagePagerActivity.PHOTO_SELECT_W_TAG, width);
-                bundle.putInt(ImagePagerActivity.PHOTO_SELECT_H_TAG, height);
+                bundle.putInt(ImagePagerV0Activity.PHOTO_SELECT_X_TAG, location[0]);
+                bundle.putInt(ImagePagerV0Activity.PHOTO_SELECT_Y_TAG, location[1]);
+                bundle.putInt(ImagePagerV0Activity.PHOTO_SELECT_W_TAG, width);
+                bundle.putInt(ImagePagerV0Activity.PHOTO_SELECT_H_TAG, height);
                 bundle.putInt("image_index", position);
                 bundle.putStringArrayList("image_urls", imgUrlList);
                 if (isMessageV0){
-                    bundle.putSerializable(ImagePagerActivity.EXTRA_IMAGE_MSG_LIST, (Serializable) imgTypeMsgList);
-                    bundle.putSerializable(ImagePagerActivity.EXTRA_CURRENT_IMAGE_MSG, imgTypeMsgList.get(position));
-                    IntentUtils.startActivity(GroupAlbumActivity.this,ImagePagerActivity.class,bundle);
+                    bundle.putSerializable(ImagePagerV0Activity.EXTRA_IMAGE_MSG_LIST, (Serializable) imgTypeMsgList);
+                    bundle.putSerializable(ImagePagerV0Activity.EXTRA_CURRENT_IMAGE_MSG, imgTypeMsgList.get(position));
+                    IntentUtils.startActivity(GroupAlbumActivity.this,ImagePagerV0Activity.class,bundle);
                 }else {
-                    bundle.putSerializable(ImagePagerActivity.EXTRA_IMAGE_MSG_LIST, (Serializable) imgTypeMessageList);
-                    bundle.putSerializable(ImagePagerActivity.EXTRA_CURRENT_IMAGE_MSG, imgTypeMessageList.get(position));
-                    IntentUtils.startActivity(GroupAlbumActivity.this,ChatImagePagerActivity.class,bundle);
+                    bundle.putSerializable(ImagePagerV0Activity.EXTRA_IMAGE_MSG_LIST, (Serializable) imgTypeMessageList);
+                    bundle.putSerializable(ImagePagerV0Activity.EXTRA_CURRENT_IMAGE_MSG, imgTypeMessageList.get(position));
+                    IntentUtils.startActivity(GroupAlbumActivity.this,ImagePagerActivity.class,bundle);
                 }
 
             }

@@ -251,27 +251,38 @@ public class CommunicationFragment extends Fragment {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveWSMessage(EventMessage eventMessage) {
         if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE)){
-            String content = eventMessage.getContent();
-            JSONObject contentObj = JSONUtils.getJSONObject(content);
-            Message receivedWSMessage = new Message(contentObj);
-            Channel receiveMessageChannel = ChannelCacheUtils.getChannel(
-                    getActivity(), receivedWSMessage.getChannel());
-            if (receiveMessageChannel == null) {
-                getChannelList();
-            } else {
-                cacheReceiveMessage(receivedWSMessage);
-                sortChannelList();
+            if(eventMessage.getStatus() == 200){
+                String content = eventMessage.getContent();
+                JSONObject contentObj = JSONUtils.getJSONObject(content);
+                Message receivedWSMessage = new Message(contentObj);
+                Channel receiveMessageChannel = ChannelCacheUtils.getChannel(
+                        getActivity(), receivedWSMessage.getChannel());
+                if (receiveMessageChannel == null) {
+                    getChannelList();
+                } else {
+                    cacheReceiveMessage(receivedWSMessage);
+                    sortChannelList();
+                }
+            }else {
+                WebServiceMiddleUtils.hand(getActivity(), eventMessage.getContent(), eventMessage.getStatus());
             }
+
         }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReiceveWSOfflineMessage(EventMessage eventMessage){
-        if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE)){
-            String content = eventMessage.getContent();
-            GetNewMessagesResult getNewMessagesResult = new GetNewMessagesResult(content);
-            cacheMsgAsyncTask = new CacheNewMsgTask();
-            cacheMsgAsyncTask.execute(getNewMessagesResult);
+        if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_GET_OFFLINE_WS_MESSAGE)){
+            if(eventMessage.getStatus() == 200){
+                String content = eventMessage.getContent();
+                GetNewMessagesResult getNewMessagesResult = new GetNewMessagesResult(content);
+                cacheMsgAsyncTask = new CacheNewMsgTask();
+                cacheMsgAsyncTask.execute(getNewMessagesResult);
+            }else {
+                WebServiceMiddleUtils.hand(getActivity(), eventMessage.getContent(), eventMessage.getStatus());
+            }
+            sortChannelList();
+
         }
     }
 
@@ -584,6 +595,7 @@ public class CommunicationFragment extends Fragment {
 
         @Override
         protected Void doInBackground(GetNewMessagesResult... params) {
+            LogUtils.jasonDebug("CacheNewMsgTask-------------");
             try {
                 GetNewMessagesResult getNewMessagesResult = params[0];
                 List<Channel> channelList = ChannelCacheUtils

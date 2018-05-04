@@ -280,6 +280,7 @@ public class WSAPIService {
             JSONObject queryObj = new JSONObject();
             queryObj.put("before",mid);
             queryObj.put("limit",15);
+            actionObj.put("query",queryObj);
             object.put("action", actionObj);
             JSONObject headerObj = new JSONObject();
             headerObj.put("enterprise", MyApplication.getInstance().getCurrentEnterprise().getId());

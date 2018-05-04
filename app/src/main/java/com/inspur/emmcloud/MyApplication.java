@@ -93,7 +93,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
     private String tanent;
     private String clusterEcm = Constant.DEFAULT_CLUSTER_ECM;//多云ecm服务
     private String clusterEmm = Constant.DEFAULT_CLUSTER_EMM;//多云emm服务
-    private boolean isMessageV0 =true;
+    private boolean isMessageV0 =false;
 
     public void onCreate() {
         super.onCreate();

@@ -14,11 +14,13 @@ public class WSPushContent {
     private String method;
     private String path;
     private String action;
+    private int status;
     public WSPushContent(String content){
         body = JSONUtils.getString(content,"body","");
         JSONObject headerObj = JSONUtils.getJSONObject(content,"header",new JSONObject());
         tracer = JSONUtils.getString(headerObj,"tracer","");
         String action = JSONUtils.getString(content,"action","");
+        status = JSONUtils.getInt(action,"status",200);
         JSONObject actionObj = JSONUtils.getJSONObject(content,"action",new JSONObject());
         method = JSONUtils.getString(actionObj,"method","");
         path = JSONUtils.getString(actionObj,"path","");
@@ -62,5 +64,13 @@ public class WSPushContent {
 
     public void setAction(String action) {
         this.action = action;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
     }
 }

@@ -354,7 +354,7 @@ public class ChannelV0Activity extends BaseActivity {
                         groupNews.setUrl(linkUrl);
                         groupNews.setPoster(linkPoster);
                         bundle.putSerializable("groupNews", groupNews);
-                        IntentUtils.startActivity(ChannelV0Activity.this,
+                        IntentUtils.startActivity(ChannelV0Activity.this, 
                                 NewsWebDetailActivity.class, bundle);
                         break;
                     default:
@@ -384,7 +384,7 @@ public class ChannelV0Activity extends BaseActivity {
     private void registeMsgReceiver() {
         // TODO Auto-generated method stub
         if (msgResvier == null) {
-            msgResvier = new MsgReceiver(ChannelV0Activity.this, handler);
+            msgResvier = new MsgReceiver(handler);
             IntentFilter filter = new IntentFilter();
             filter.addAction("com.inspur.msg");
             LocalBroadcastManager.getInstance(this).registerReceiver(msgResvier, filter);

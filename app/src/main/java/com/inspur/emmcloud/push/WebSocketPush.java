@@ -8,8 +8,11 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.bean.chat.WSPushContent;
 import com.inspur.emmcloud.bean.system.EventMessage;
+import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
+import com.inspur.emmcloud.util.common.StringUtils;
+import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.PushInfoUtils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -76,21 +79,34 @@ public class WebSocketPush {
 
 	private void WebSocketConnect(String chatClientId) {
 			String url = APIUri.getWebsocketConnectUrl();
-			String path = "/chat/socket/handshake";
+			String path = MyApplication.getInstance().isMessageV0()?"/"+MyApplication.getInstance().getCurrentEnterprise().getCode()+"/socket/handshake":
+					"/chat/socket/handshake";
 			sendWebSocketStatusBroadcaset("socket_connecting");
 			IO.Options opts = new IO.Options();
 			opts.reconnectionAttempts = 4; // 设置websocket重连次数
 			opts.forceNew = true;
 			Map<String, String> query = new HashMap<String, String>();
-			query.put("client", chatClientId);
-			// opts.transports = new String[] { Polling.NAME };
+			if (MyApplication.getInstance().isMessageV0()){
+				String uuid = AppUtils.getMyUUID(MyApplication.getInstance());
+				String deviceName = AppUtils.getDeviceName(MyApplication.getInstance());
+				String pushId = AppUtils.getPushId(MyApplication.getInstance());
+				query.put("device.id", uuid);
+				query.put("device.name", deviceName);
+				query.put("device.push", pushId);
+			}else {
+				query.put("client", chatClientId);
+			}
 			opts.path = path;
 			LogUtils.debug(TAG, "query.toString()=" + ParseQS.encode(query));
 			opts.query = ParseQS.encode(query);
 			try {
 				webSocketSignout();
-				Manager manager = new Manager(new URI(url),opts);
-				mSocket = manager.socket("/api/v1");
+				if (MyApplication.getInstance().isMessageV0()){
+					mSocket = IO.socket(url, opts);
+				}else {
+					Manager manager = new Manager(new URI(url),opts);
+					mSocket = manager.socket("/api/v1");
+				}
 				mSocket.io().on(Manager.EVENT_TRANSPORT, new Emitter.Listener() {
 					@Override
 					public void call(Object... args) {
@@ -157,9 +173,21 @@ public class WebSocketPush {
 				mSocket.emit("state", "SIGNOUT");
 			}
 			mSocket.disconnect();
+			removeListeners();
 			mSocket.close();
 			mSocket = null;
+			if(tracerMap != null){
+				tracerMap.clear();
+			}
+
 		}
+	}
+	private void removeListeners(){
+		mSocket.off("message");
+		mSocket.off("com.inspur.ecm.chat");
+		mSocket.off(Socket.EVENT_CONNECT_ERROR);
+		mSocket.off(Socket.EVENT_CONNECT);
+		mSocket.off(Socket.EVENT_DISCONNECT);
 	}
 
 	private void addListeners() {
@@ -187,33 +215,17 @@ public class WebSocketPush {
 		});
 
 
-//		mSocket.on("message", new Emitter.Listener() {
-//
-//			@Override
-//			public void call(Object... arg0) {
-//				// TODO Auto-generated method stub
-//				LogUtils.debug(TAG, "message:" + arg0[0].toString());
-//				String content = arg0[0].toString();
-//				Intent intent = new Intent("com.inspur.msg_1.0");
-//				intent.putExtra("content", content);
-//				context.sendBroadcast(intent);
-//			}
-//		});
-
-		mSocket.on("debug", new Emitter.Listener() {
+		mSocket.on("message", new Emitter.Listener() {
 
 			@Override
 			public void call(Object... arg0) {
 				// TODO Auto-generated method stub
-				LogUtils.debug(TAG, "debug:" + arg0[0].toString());
-			}
-		});
-		mSocket.on("command", new Emitter.Listener() {
+				LogUtils.debug(TAG, "message:" + arg0[0].toString());
 
-			@Override
-			public void call(Object... arg0) {
-				// TODO Auto-generated method stub
-				LogUtils.debug(TAG, "command" + arg0[0].toString());
+				String content = arg0[0].toString();
+				Intent intent = new Intent("com.inspur.msg");
+				intent.putExtra("push", content);
+				LocalBroadcastManager.getInstance(MyApplication.getInstance()).sendBroadcast(intent);
 			}
 		});
 
@@ -224,17 +236,26 @@ public class WebSocketPush {
 				// TODO Auto-generated method stub
 				LogUtils.debug(TAG,"arg0[0].toString()="+arg0[0].toString());
 				WSPushContent wsPushContent = new WSPushContent(arg0[0].toString());
-				String tracer = wsPushContent.getTracer();
-				String body = wsPushContent.getBody();
-				EventMessage eventMessage = tracerMap.get(tracer);
-				if (eventMessage != null){
-					tracerMap.remove(tracer);
-					eventMessage.setContent(body);
-					EventBus.getDefault().post(eventMessage);
+				String path = wsPushContent.getPath();
+				//客户端主动请求
+				if (StringUtils.isBlank(path)){
+					String tracer = wsPushContent.getTracer();
+					EventMessage eventMessage = tracerMap.get(tracer);
+					if (eventMessage != null){
+						tracerMap.remove(tracer);
+						String body = wsPushContent.getBody();
+						eventMessage.setContent(body);
+						eventMessage.setStatus(wsPushContent.getStatus());
+						EventBus.getDefault().post(eventMessage);
+					}
+				}else {
+					if (path.equals("/channel/message") && wsPushContent.getMethod().equals("post")){
+						EventMessage eventMessagea = new EventMessage(Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE,wsPushContent.getBody());
+						EventBus.getDefault().post(eventMessagea);
+					}
 				}
 			}
 		});
-
 		mSocket.on(Socket.EVENT_DISCONNECT, new Emitter.Listener() {
 
 			@Override
@@ -251,8 +272,13 @@ public class WebSocketPush {
 	public void sendWSMessage(EventMessage eventMessage,Object content,String tracer){
 		if (isSocketConnect()){
 			LogUtils.debug(TAG,"eventMessage.getTag()="+eventMessage.getTag());
+			LogUtils.debug(TAG,"eventMessage.content="+content);
 			mSocket.emit("com.inspur.ecm.chat",content);
 			tracerMap.put(tracer, eventMessage);
+		}else {
+			eventMessage.setContent("time out");
+			eventMessage.setStatus(-1);
+			EventBus.getDefault().post(eventMessage);
 		}
 	}
 
@@ -264,6 +290,5 @@ public class WebSocketPush {
             LocalBroadcastManager.getInstance(MyApplication.getInstance()).sendBroadcast(intent);
         }
     }
-
 
 }

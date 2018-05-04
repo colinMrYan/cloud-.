@@ -735,11 +735,16 @@ public class NewsWebDetailActivity extends BaseActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveWSMessage(EventMessage eventMessage) {
         if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE)) {
-            if (fakeMessageId != null && String.valueOf(eventMessage.getExtra()).equals(fakeMessageId)) {
-                Toast.makeText(NewsWebDetailActivity.this,
-                        getString(R.string.news_share_success), Toast.LENGTH_SHORT)
-                        .show();
+            if (eventMessage.getStatus() == 200){
+                if (fakeMessageId != null && String.valueOf(eventMessage.getExtra()).equals(fakeMessageId)) {
+                    Toast.makeText(NewsWebDetailActivity.this,
+                            getString(R.string.news_share_success), Toast.LENGTH_SHORT)
+                            .show();
+                }
+            }else {
+                showShareFailToast();
             }
+
         }
 
     }

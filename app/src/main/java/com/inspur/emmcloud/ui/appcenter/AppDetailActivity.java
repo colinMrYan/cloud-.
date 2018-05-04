@@ -19,7 +19,7 @@ import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
 import com.inspur.emmcloud.bean.appcenter.App;
 import com.inspur.emmcloud.bean.appcenter.GetAddAppResult;
-import com.inspur.emmcloud.ui.chat.ImagePagerActivity;
+import com.inspur.emmcloud.ui.chat.ImagePagerV0Activity;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.AppCenterNativeAppUtils;
@@ -73,9 +73,9 @@ public class AppDetailActivity extends BaseActivity {
             @Override
             public void onAppDetailImageItemClick(View view, int position) {
                 Intent intent = new Intent();
-                intent.setClass(getApplicationContext(), ImagePagerActivity.class);
-                intent.putExtra(ImagePagerActivity.EXTRA_IMAGE_INDEX, position);
-                intent.putExtra(ImagePagerActivity.EXTRA_IMAGE_URLS, (ArrayList<String>) app.getLegendList());
+                intent.setClass(getApplicationContext(), ImagePagerV0Activity.class);
+                intent.putExtra(ImagePagerV0Activity.EXTRA_IMAGE_INDEX, position);
+                intent.putExtra(ImagePagerV0Activity.EXTRA_IMAGE_URLS, (ArrayList<String>) app.getLegendList());
                 startActivity(intent);
             }
         });

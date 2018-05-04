@@ -166,8 +166,6 @@ public class ChannelActivity extends BaseActivity {
                 finishActivity();
             }
         });
-
-
     }
 
 
@@ -447,34 +445,38 @@ public class ChannelActivity extends BaseActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveWSMessage(EventMessage eventMessage) {
         if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE)) {
-            String content = eventMessage.getContent();
-            JSONObject contentobj = JSONUtils.getJSONObject(content);
-            Message receivedWSMessage = new Message(contentobj);
-            if (cid.equals(receivedWSMessage.getChannel())) {
-                MessageReadCreationDateCacheUtils.saveMessageReadCreationDate(MyApplication.getInstance(), cid, receivedWSMessage.getCreationDate());
-                int size = UIMessageList.size();
-                int index = -1;
-                if (size > 0) {
-                    for (int i = size - 1; i >= 0; i--) {
-                        UIMessage UIMessage = UIMessageList.get(i);
-                        if (UIMessage.getMessage().getId().equals(String.valueOf(eventMessage.getExtra()))) {
-                            index = i;
-                            break;
+            LogUtils.jasonDebug("00000000000000");
+            if (eventMessage.getStatus() == 200){
+                LogUtils.jasonDebug("11111111111111111111");
+                String content = eventMessage.getContent();
+                JSONObject contentobj = JSONUtils.getJSONObject(content);
+                Message receivedWSMessage = new Message(contentobj);
+                if (cid.equals(receivedWSMessage.getChannel())) {
+                    MessageReadCreationDateCacheUtils.saveMessageReadCreationDate(MyApplication.getInstance(), cid, receivedWSMessage.getCreationDate());
+                    int size = UIMessageList.size();
+                    int index = -1;
+                    if (size > 0) {
+                        for (int i = size - 1; i >= 0; i--) {
+                            UIMessage UIMessage = UIMessageList.get(i);
+                            if (UIMessage.getMessage().getId().equals(String.valueOf(eventMessage.getExtra()))) {
+                                index = i;
+                                break;
+                            }
                         }
-                    }
 
+                    }
+                    if (index == -1) {
+                        UIMessageList.add(new UIMessage(receivedWSMessage));
+                        adapter.setMessageList(UIMessageList);
+                        adapter.notifyItemInserted(UIMessageList.size() - 1);
+                    } else {
+                        UIMessageList.remove(index);
+                        UIMessageList.add(index, new UIMessage(receivedWSMessage));
+                        adapter.setMessageList(UIMessageList);
+                        adapter.notifyItemChanged(index);
+                    }
+                    msgListView.MoveToPosition(UIMessageList.size() - 1);
                 }
-                if (index == -1) {
-                    UIMessageList.add(new UIMessage(receivedWSMessage));
-                    adapter.setMessageList(UIMessageList);
-                    adapter.notifyItemInserted(UIMessageList.size() - 1);
-                } else {
-                    UIMessageList.remove(index);
-                    UIMessageList.add(index, new UIMessage(receivedWSMessage));
-                    adapter.setMessageList(UIMessageList);
-                    adapter.notifyItemChanged(index);
-                }
-                msgListView.MoveToPosition(UIMessageList.size() - 1);
             }
         }
 
@@ -485,42 +487,56 @@ public class ChannelActivity extends BaseActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onGetMessageById(EventMessage eventMessage) {
         if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_GET_MESSAGE_BY_ID)) {
-            String content = eventMessage.getContent();
-            JSONObject contentobj = JSONUtils.getJSONObject(content);
-            Message message = new Message(contentobj);
-            MessageCacheUtil.saveMessage(MyApplication.getInstance(), message);
-            adapter.setMessageList(UIMessageList);
-            adapter.notifyDataSetChanged();
+            if(eventMessage.getStatus() == 200){
+                String content = eventMessage.getContent();
+                JSONObject contentobj = JSONUtils.getJSONObject(content);
+                Message message = new Message(contentobj);
+                MessageCacheUtil.saveMessage(MyApplication.getInstance(), message);
+                adapter.setMessageList(UIMessageList);
+                adapter.notifyDataSetChanged();
+            }
+
         }
 
     }
 
     //接收到websocket发过来的消息
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onGetHistoryMessageBy(EventMessage eventMessage) {
+    public void onReceiveHistoryMessage(EventMessage eventMessage) {
         if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_GET_HISTORY_MESSAGE)) {
-            String content = eventMessage.getContent();
-            GetNewMessagesResult getNewMessagesResult = new GetNewMessagesResult(content);
-            final List<Message> historyMessageList = getNewMessagesResult
-                    .getNewMessageList(cid);
-            if (adapter != null) {
-                swipeRefreshLayout.setRefreshing(false);
-                if (historyMessageList.size() > 0) {
-                    MessageCacheUtil.saveMessageList(MyApplication.getInstance(), historyMessageList, UIMessageList.get(0).getCreationDate());
-                    List<UIMessage> historyUIMessageList = UIMessage.MessageList2UIMessageList(historyMessageList);
-                    UIMessageList.addAll(0, historyUIMessageList);
-                    adapter.setMessageList(UIMessageList);
-                    adapter.notifyItemRangeInserted(0, historyMessageList.size());
-                    msgListView.MoveToPosition(historyMessageList.size() - 1);
+            if(eventMessage.getStatus() == 200){
+                String content = eventMessage.getContent();
+                GetNewMessagesResult getNewMessagesResult = new GetNewMessagesResult(content);
+                final List<Message> historyMessageList = getNewMessagesResult
+                        .getNewMessageList(cid);
+                if (adapter != null) {
+                    swipeRefreshLayout.setRefreshing(false);
+                    if (historyMessageList.size() > 0) {
+                        MessageCacheUtil.saveMessageList(MyApplication.getInstance(), historyMessageList, UIMessageList.get(0).getCreationDate());
+                        List<UIMessage> historyUIMessageList = UIMessage.MessageList2UIMessageList(historyMessageList);
+                        UIMessageList.addAll(0, historyUIMessageList);
+                        adapter.setMessageList(UIMessageList);
+                        adapter.notifyItemRangeInserted(0, historyMessageList.size());
+                        msgListView.MoveToPosition(historyMessageList.size() - 1);
+                    }
+                } else {
+                    if (historyMessageList.size() > 0) {
+                        MessageCacheUtil.saveMessageList(MyApplication.getInstance(), historyMessageList, null);
+                        MessageReadCreationDateCacheUtils.saveMessageReadCreationDate(MyApplication.getInstance(), cid, historyMessageList.get(historyMessageList.size() - 1).getCreationDate());
+                    }
+                    initViews();
+                    setChannelMsgRead();
                 }
-            } else {
-                if (historyMessageList.size() > 0) {
-                    MessageCacheUtil.saveMessageList(MyApplication.getInstance(), historyMessageList, null);
-                    MessageReadCreationDateCacheUtils.saveMessageReadCreationDate(MyApplication.getInstance(), cid, historyMessageList.get(historyMessageList.size() - 1).getCreationDate());
+            }else {
+                LoadingDialog.dimissDlg(loadingDlg);
+                if (swipeRefreshLayout.isRefreshing()) {
+                    swipeRefreshLayout.setRefreshing(false);
+                    WebServiceMiddleUtils.hand(ChannelActivity.this, eventMessage.getContent(), eventMessage.getStatus());
+                } else {
+                    initViews();
                 }
-                initViews();
-                setChannelMsgRead();
             }
+
         }
 
     }

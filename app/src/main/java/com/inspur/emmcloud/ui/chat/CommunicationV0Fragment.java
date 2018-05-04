@@ -647,7 +647,7 @@ public class CommunicationV0Fragment extends Fragment {
     private void registerMsgReceiver() {
         // TODO Auto-generated method stub
         if (msgReceiver == null) {
-            msgReceiver = new MsgReceiver(getActivity(), handler);
+            msgReceiver = new MsgReceiver(handler);
             IntentFilter filter = new IntentFilter();
             filter.addAction("com.inspur.msg");
             LocalBroadcastManager.getInstance(getActivity()).registerReceiver(msgReceiver, filter);

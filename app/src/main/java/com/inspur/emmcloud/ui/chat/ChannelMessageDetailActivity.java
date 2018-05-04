@@ -38,6 +38,7 @@ import com.inspur.emmcloud.util.privates.CommunicationUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.TransHtmlToTextUtils;
+import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.util.privates.cache.ChannelCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
@@ -147,20 +148,6 @@ public class ChannelMessageDetailActivity extends BaseActivity implements
         }
     }
 
-    //接收到websocket发过来的消息
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onGetMessageById(EventMessage eventMessage) {
-        if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_GET_MESSAGE_BY_ID)) {
-            String content = eventMessage.getContent();
-            JSONObject contentobj = JSONUtils.getJSONObject(content);
-            Message message = new Message(contentobj);
-            if (message.getId().equals(mid)) {
-                handMsgData();
-            }
-        }
-
-    }
-
     /**
      * 处理数据
      */
@@ -235,12 +222,12 @@ public class ChannelMessageDetailActivity extends BaseActivity implements
         ArrayList<String> urlList = new ArrayList<String>();
         urlList.add(url);
         Intent intent = new Intent(getApplicationContext(),
-                ImagePagerActivity.class);
-        intent.putExtra(ImagePagerActivity.PHOTO_SELECT_X_TAG, location[0]);
-        intent.putExtra(ImagePagerActivity.PHOTO_SELECT_Y_TAG, location[1]);
-        intent.putExtra(ImagePagerActivity.PHOTO_SELECT_W_TAG, width);
-        intent.putExtra(ImagePagerActivity.PHOTO_SELECT_H_TAG, height);
-        intent.putExtra(ImagePagerActivity.EXTRA_IMAGE_URLS, urlList);
+                ImagePagerV0Activity.class);
+        intent.putExtra(ImagePagerV0Activity.PHOTO_SELECT_X_TAG, location[0]);
+        intent.putExtra(ImagePagerV0Activity.PHOTO_SELECT_Y_TAG, location[1]);
+        intent.putExtra(ImagePagerV0Activity.PHOTO_SELECT_W_TAG, width);
+        intent.putExtra(ImagePagerV0Activity.PHOTO_SELECT_H_TAG, height);
+        intent.putExtra(ImagePagerV0Activity.EXTRA_IMAGE_URLS, urlList);
         startActivity(intent);
     }
 
@@ -404,23 +391,6 @@ public class ChannelMessageDetailActivity extends BaseActivity implements
     }
 
 
-//    //接收到websocket发过来的消息
-//    @Subscribe(threadMode = ThreadMode.MAIN)
-//    public void onReceiveWSMessage(EventMessage eventMessage) {
-//        if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE)){
-//            String content = eventMessage.getContent();
-//            JSONObject contentObj = JSONUtils.getJSONObject(content);
-//            Message receivedWSMessage = new Message(contentObj);
-//            if (receivedWSMessage.getType().equals("comment/text-plain")&& receivedWSMessage.getChannel().equals(message.getChannel())){
-//                MsgContentComment msgContentComment = message.getMsgContentComment();
-//                if (msgContentComment.getMessage().equals(mid)){
-//
-//                }
-//            }
-//        }
-//    }
-
-
     /**
      * 获取消息的评论
      */
@@ -447,4 +417,22 @@ public class ChannelMessageDetailActivity extends BaseActivity implements
         }
     }
 
+    //接收到websocket发过来的消息
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onGetMessageById(EventMessage eventMessage) {
+        if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_GET_MESSAGE_BY_ID)) {
+            if(eventMessage.getStatus() == 200){
+                String content = eventMessage.getContent();
+                JSONObject contentobj = JSONUtils.getJSONObject(content);
+                Message message = new Message(contentobj);
+                if (message.getId().equals(mid)) {
+                    handMsgData();
+                }
+            }else {
+                WebServiceMiddleUtils.hand(MyApplication.getInstance(), eventMessage.getContent(), eventMessage.getStatus());
+            }
+
+        }
+
+    }
 }

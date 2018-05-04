@@ -87,14 +87,14 @@ public class DisplayResImageMsg {
                 int width = view.getWidth();
                 int height = view.getHeight();
                 Intent intent = new Intent(context,
-                        ImagePagerActivity.class);
+                        ImagePagerV0Activity.class);
                 List<Msg> imgTypeMsgList = MsgCacheUtil.getImgTypeMsgList(context, msg.getCid(), false);
-                intent.putExtra(ImagePagerActivity.EXTRA_IMAGE_MSG_LIST, (Serializable) imgTypeMsgList);
-                intent.putExtra(ImagePagerActivity.EXTRA_CURRENT_IMAGE_MSG, msg);
-                intent.putExtra(ImagePagerActivity.PHOTO_SELECT_X_TAG, location[0]);
-                intent.putExtra(ImagePagerActivity.PHOTO_SELECT_Y_TAG, location[1]);
-                intent.putExtra(ImagePagerActivity.PHOTO_SELECT_W_TAG, width);
-                intent.putExtra(ImagePagerActivity.PHOTO_SELECT_H_TAG, height);
+                intent.putExtra(ImagePagerV0Activity.EXTRA_IMAGE_MSG_LIST, (Serializable) imgTypeMsgList);
+                intent.putExtra(ImagePagerV0Activity.EXTRA_CURRENT_IMAGE_MSG, msg);
+                intent.putExtra(ImagePagerV0Activity.PHOTO_SELECT_X_TAG, location[0]);
+                intent.putExtra(ImagePagerV0Activity.PHOTO_SELECT_Y_TAG, location[1]);
+                intent.putExtra(ImagePagerV0Activity.PHOTO_SELECT_W_TAG, width);
+                intent.putExtra(ImagePagerV0Activity.PHOTO_SELECT_H_TAG, height);
                 context.startActivity(intent);
             }
         });

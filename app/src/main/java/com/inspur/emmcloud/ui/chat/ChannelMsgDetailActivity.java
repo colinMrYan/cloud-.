@@ -238,12 +238,12 @@ public class ChannelMsgDetailActivity extends BaseActivity implements
         ArrayList<String> urlList = new ArrayList<String>();
         urlList.add(url);
         Intent intent = new Intent(getApplicationContext(),
-                ImagePagerActivity.class);
-        intent.putExtra(ImagePagerActivity.PHOTO_SELECT_X_TAG, location[0]);
-        intent.putExtra(ImagePagerActivity.PHOTO_SELECT_Y_TAG, location[1]);
-        intent.putExtra(ImagePagerActivity.PHOTO_SELECT_W_TAG, width);
-        intent.putExtra(ImagePagerActivity.PHOTO_SELECT_H_TAG, height);
-        intent.putExtra(ImagePagerActivity.EXTRA_IMAGE_URLS, urlList);
+                ImagePagerV0Activity.class);
+        intent.putExtra(ImagePagerV0Activity.PHOTO_SELECT_X_TAG, location[0]);
+        intent.putExtra(ImagePagerV0Activity.PHOTO_SELECT_Y_TAG, location[1]);
+        intent.putExtra(ImagePagerV0Activity.PHOTO_SELECT_W_TAG, width);
+        intent.putExtra(ImagePagerV0Activity.PHOTO_SELECT_H_TAG, height);
+        intent.putExtra(ImagePagerV0Activity.EXTRA_IMAGE_URLS, urlList);
         startActivity(intent);
     }
 

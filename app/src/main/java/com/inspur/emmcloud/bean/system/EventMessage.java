@@ -7,6 +7,7 @@ package com.inspur.emmcloud.bean.system;
 public class EventMessage {
     private String tag="";
     private String content="";
+    private int status = 200;
     private Object extra="";
 
     public EventMessage(String tag, String content) {
@@ -46,5 +47,13 @@ public class EventMessage {
 
     public void setExtra(Object extra) {
         this.extra = extra;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
     }
 }
