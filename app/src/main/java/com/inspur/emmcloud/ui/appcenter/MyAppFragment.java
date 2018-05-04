@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.database.DataSetObserver;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -113,6 +114,7 @@ public class MyAppFragment extends Fragment {
     private RecyclerView recommendAppWidgetListView = null;
     private RecommendAppWidgetListAdapter recommendAppWidgetListAdapter = null;
     private int appListSizeExceptCommonlyUse = 0;
+    private DataSetObserver dataSetObserver;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -184,6 +186,12 @@ public class MyAppFragment extends Fragment {
     private void initViews() {
         apiService = new MyAppAPIService(getActivity());
         apiService.setAPIInterface(new WebService());
+        dataSetObserver = new DataSetObserver() {
+            @Override
+            public void onChanged() {
+                updateAppListAdapterSize();
+            }
+        };
         initPullRefreshLayout();
         appListView = (ListView) rootView
                 .findViewById(R.id.my_app_list);
@@ -298,8 +306,22 @@ public class MyAppFragment extends Fragment {
             appListAdapter.setAppAdapterList(appGroupList);
         }else{
             appListAdapter = new AppListAdapter(appGroupList);
+            appListAdapter.registerDataSetObserver(dataSetObserver);
             appListView.setAdapter(appListAdapter);
             appListAdapter.notifyDataSetChanged();
+        }
+    }
+
+    /**
+     *  当Adapter的大小发生改变时调用此方法
+     */
+    private void updateAppListAdapterSize() {
+        if(appListAdapter != null){
+            if(appListAdapter.getCount() == 0){
+
+            }else{
+
+            }
         }
     }
 
@@ -714,6 +736,10 @@ public class MyAppFragment extends Fragment {
                 && myAppSaveTask.getStatus() == AsyncTask.Status.RUNNING) {
             myAppSaveTask.cancel(true);
             myAppSaveTask = null;
+        }
+        if(appListAdapter != null){
+            appListAdapter.unregisterDataSetObserver(dataSetObserver);
+            dataSetObserver = null;
         }
         EventBus.getDefault().unregister(this);
     }

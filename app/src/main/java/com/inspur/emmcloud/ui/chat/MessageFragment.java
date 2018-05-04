@@ -35,6 +35,7 @@ import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.bean.chat.Channel;
 import com.inspur.emmcloud.bean.chat.ChannelGroup;
 import com.inspur.emmcloud.bean.chat.ChannelOperationInfo;
+import com.inspur.emmcloud.bean.chat.EventMessageUnReadCount;
 import com.inspur.emmcloud.bean.chat.GetChannelListResult;
 import com.inspur.emmcloud.bean.chat.GetNewMsgsResult;
 import com.inspur.emmcloud.bean.chat.MatheSet;
@@ -267,7 +268,7 @@ public class MessageFragment extends Fragment {
                             R.string.not_support_open_channel);
                 }
                 setChannelAllMsgRead(channel);
-                refreshIndexNotify();
+                updateMessageUnReadCount();
             }
 
         });
@@ -663,7 +664,7 @@ public class MessageFragment extends Fragment {
             adapter.setDataList(displayChannelList);
             adapter.notifyDataSetChanged();
         }
-        refreshIndexNotify();
+        updateMessageUnReadCount();
 
     }
 
@@ -739,14 +740,14 @@ public class MessageFragment extends Fragment {
     /**
      * 设置消息tab页面的小红点（未读消息提醒）的显示
      */
-    private void refreshIndexNotify() {
+    private void updateMessageUnReadCount() {
         int unReadCount = 0;
         if (displayChannelList != null) {
             for (int i = 0; i < displayChannelList.size(); i++) {
                 unReadCount += displayChannelList.get(i).getUnReadCount();
             }
         }
-        IndexActivity.showNotifyIcon(unReadCount);
+        EventBus.getDefault().post(new EventMessageUnReadCount(unReadCount));
     }
 
     static class ViewHolder {
@@ -1045,7 +1046,7 @@ public class MessageFragment extends Fragment {
                 break;
             }
         }
-        refreshIndexNotify();
+        updateMessageUnReadCount();
         if (adapter != null) {
             adapter.notifyDataSetChanged();
         }
@@ -1105,6 +1106,9 @@ public class MessageFragment extends Fragment {
     public void onDestroy() {
         // TODO Auto-generated method stub
         super.onDestroy();
+        if (handler != null) {
+            handler = null;
+        }
         if (cacheChannelTask != null && !cacheChannelTask.isCancelled() && cacheChannelTask.getStatus() == AsyncTask.Status.RUNNING) {
             cacheChannelTask.cancel(true);
             cacheChannelTask = null;
@@ -1120,9 +1124,6 @@ public class MessageFragment extends Fragment {
         if (messageFragmentReceiver != null) {
             LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(messageFragmentReceiver);
             messageFragmentReceiver = null;
-        }
-        if (handler != null) {
-            handler = null;
         }
         EventBus.getDefault().unregister(this);
     }
