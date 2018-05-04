@@ -130,7 +130,7 @@ public class MutilClusterUtils {
         if(type.equals(ECM_CHAT)){
             Uri clusterBeanUri = Uri.parse(clusterBean.getBaseUrl());
             suitableUrl = clusterBeanUri.getScheme() + "://" + clusterBeanUri.getHost()
-                    +(StringUtils.isBlank(clusterBeanUri.getPort()+"")?"":(":"+clusterBeanUri.getPort()));
+                    +((clusterBeanUri.getPort() == -1)?"":(":"+clusterBeanUri.getPort()));
             MyApplication.getInstance().setSocketPath(clusterBeanUri.getPath());
         }else{
             suitableUrl = clusterBean.getBaseUrl();
