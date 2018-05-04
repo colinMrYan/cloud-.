@@ -224,8 +224,6 @@ public class CommunicationV0Fragment extends Fragment {
                 .setOnClickListener(onViewClickListener);
         (rootView.findViewById(R.id.contact_img))
                 .setOnClickListener(onViewClickListener);
-        (rootView.findViewById(R.id.find_friends_btn))
-                .setOnClickListener(onViewClickListener);
         titleText = (TextView) rootView.findViewById(R.id.header_text);
         initPullRefreshLayout();
         initListView();
@@ -316,7 +314,6 @@ public class CommunicationV0Fragment extends Fragment {
                     showPopupWindow(rootView.findViewById(R.id.more_function_list_img));
                     break;
                 case R.id.contact_img:
-                case R.id.find_friends_btn:
                     Bundle bundle = new Bundle();
                     bundle.putInt("select_content", 4);
                     bundle.putBoolean("isMulti_select", false);
@@ -659,7 +656,7 @@ public class CommunicationV0Fragment extends Fragment {
      */
     private void displayData() {
         (rootView
-                .findViewById(R.id.no_chat_layout)).setVisibility((displayChannelList.size() == 0) ? View.VISIBLE : View.GONE);
+                .findViewById(R.id.rl_no_chat)).setVisibility((displayChannelList.size() == 0) ? View.VISIBLE : View.GONE);
         if (adapter == null) {
             adapter = new Adapter();
             adapter.setDataList(displayChannelList);

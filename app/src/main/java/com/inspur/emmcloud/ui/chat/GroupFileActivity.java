@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.BaseActivity;
@@ -28,16 +29,26 @@ import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
 import com.inspur.emmcloud.util.privates.cache.MsgCacheUtil;
 import com.inspur.emmcloud.widget.HorizontalProgressBarWithNumber;
 
+import org.xutils.view.annotation.ContentView;
+import org.xutils.view.annotation.ViewInject;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+@ContentView(R.layout.activity_group_file)
 public class GroupFileActivity extends BaseActivity {
 
+    @ViewInject(R.id.lv_file)
     private ListView fileListView;
+
+    @ViewInject(R.id.rl_no_channel_file)
+    private RelativeLayout noChannelFileLayout;
+
     private String cid;
     private List<GroupFileInfo> fileInfoList = new ArrayList<GroupFileInfo>();
     private boolean isMessageV0 = true;
+    private List<GroupFileInfo> fileInfoList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +58,7 @@ public class GroupFileActivity extends BaseActivity {
         isMessageV0 = MyApplication.getInstance().isMessageV0();
         cid = getIntent().getExtras().getString("cid");
         getFileMsgList();
-        fileListView = (ListView) findViewById(R.id.file_list);
+        noChannelFileLayout.setVisibility(fileInfoList.size() == 0 ? View.VISIBLE:View.GONE);
         fileListView.setAdapter(new Adapter());
     }
 

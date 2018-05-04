@@ -9,6 +9,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
@@ -21,15 +22,25 @@ import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
 import com.inspur.emmcloud.util.privates.cache.MsgCacheUtil;
 
+import org.xutils.view.annotation.ContentView;
+import org.xutils.view.annotation.ViewInject;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+
+@ContentView(R.layout.activity_group_album)
 public class GroupAlbumActivity extends BaseActivity {
 
+    @ViewInject(R.id.gv_album)
     private GridView albumGrid;
+
+    @ViewInject(R.id.rl_no_channel_album)
+    private RelativeLayout noChannelAlbumLayout;
+
     private String cid;
-    private ArrayList<String> imgUrlList = new ArrayList<String>();
+    private ArrayList<String> imgUrlList = new ArrayList<>();
     private List<Msg> imgTypeMsgList;
     private List<Message> imgTypeMessageList;
     private boolean isMessageV0 = true;
@@ -38,11 +49,10 @@ public class GroupAlbumActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_group_album);
         isMessageV0 = MyApplication.getInstance().isMessageV0();
         cid = getIntent().getExtras().getString("cid");
         getImgMsgList();
-        albumGrid = (GridView) findViewById(R.id.album_grid);
+        noChannelAlbumLayout.setVisibility(imgUrlList.size() == 0 ? View.VISIBLE:View.GONE);
         albumGrid.setAdapter(new Adapter());
         albumGrid.setOnItemClickListener(new OnItemClickListener() {
 
