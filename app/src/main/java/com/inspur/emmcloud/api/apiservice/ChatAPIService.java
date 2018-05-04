@@ -14,6 +14,8 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.api.APICallback;
 import com.inspur.emmcloud.api.APIInterface;
 import com.inspur.emmcloud.api.APIUri;
+import com.inspur.emmcloud.api.CloudHttpMethod;
+import com.inspur.emmcloud.api.HttpUtils;
 import com.inspur.emmcloud.bean.chat.ChannelGroup;
 import com.inspur.emmcloud.bean.chat.GetAddMembersSuccessResult;
 import com.inspur.emmcloud.bean.chat.GetChannelInfoResult;
@@ -36,9 +38,7 @@ import com.inspur.emmcloud.util.privates.OauthUtils;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.xutils.http.HttpMethod;
 import org.xutils.http.RequestParams;
-import org.xutils.x;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -66,7 +66,7 @@ public class ChatAPIService {
 		final String completeUrl = APIUri.getHttpApiUrl("channel/session");
 		RequestParams params = ((MyApplication) context.getApplicationContext())
 				.getHttpRequestParams(completeUrl);
-		x.http().get(params, new APICallback(context, completeUrl) {
+		HttpUtils.request(context, CloudHttpMethod.GET,params,new APICallback(context, completeUrl) {
 
 			@Override
 			public void callbackTokenExpire(long requestTime) {
@@ -120,7 +120,7 @@ public class ChatAPIService {
 			params.addParameter("cid", cid);
 		}
 
-		x.http().get(params, new APICallback(context, completeUrl) {
+		HttpUtils.request(context,CloudHttpMethod.GET,params,new APICallback(context, completeUrl) {
 
 			@Override
 			public void callbackTokenExpire(long requestTime) {
@@ -152,7 +152,6 @@ public class ChatAPIService {
 				apiInterface.returnNewMsgsFail(error, responseCode);
 			}
 		});
-
 	}
 
 	/**
@@ -173,7 +172,7 @@ public class ChatAPIService {
 				+ "/comment");
 		RequestParams params = ((MyApplication) context.getApplicationContext())
 				.getHttpRequestParams(completeUrl);
-		x.http().get(params, new APICallback(context, completeUrl) {
+		HttpUtils.request(context,CloudHttpMethod.GET,params,new APICallback(context, completeUrl) {
 
 			@Override
 			public void callbackTokenExpire(long requestTime) {
@@ -217,7 +216,7 @@ public class ChatAPIService {
 		final String completeUrl = APIUri.getHttpApiUrl("channel/" + cid);
 		RequestParams params = ((MyApplication) context.getApplicationContext())
 				.getHttpRequestParams(completeUrl);
-		x.http().get(params, new APICallback(context, completeUrl) {
+		HttpUtils.request(context,CloudHttpMethod.GET,params,new APICallback(context, completeUrl) {
 
 			@Override
 			public void callbackTokenExpire(long requestTime) {
@@ -302,8 +301,7 @@ public class ChatAPIService {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
-		x.http().post(params, new APICallback(context, completeUrl) {
+		HttpUtils.request(context,CloudHttpMethod.POST,params,new APICallback(context, completeUrl) {
 
 			@Override
 			public void callbackTokenExpire(long requestTime) {
@@ -336,7 +334,6 @@ public class ChatAPIService {
 				apiInterface.returnSendMsgFail(error, fakeMessageId, responseCode);
 			}
 		});
-
 	}
 
 	/**
@@ -348,7 +345,7 @@ public class ChatAPIService {
 		final String completeUrl = APIUri.getHttpApiUrl("message/" + mid);
 		RequestParams params = ((MyApplication) context.getApplicationContext())
 				.getHttpRequestParams(completeUrl);
-		x.http().get(params, new APICallback(context, completeUrl) {
+		HttpUtils.request(context,CloudHttpMethod.GET,params, new APICallback(context, completeUrl) {
 
 			@Override
 			public void callbackTokenExpire(long requestTime) {
@@ -399,7 +396,7 @@ public class ChatAPIService {
 		params.setMultipart(true);// 有上传文件时使用multipart表单, 否则上传原始文件流.
 		params.addBodyParameter("file1", file);
 		final Bitmap bitmap = BitmapFactory.decodeFile(filePath);
-		x.http().post(params, new APICallback(context, completeUrl) {
+		HttpUtils.request(context,CloudHttpMethod.POST,params, new APICallback(context, completeUrl) {
 
 			@Override
 			public void callbackTokenExpire(long requestTime) {
@@ -462,7 +459,7 @@ public class ChatAPIService {
 				.getHttpApiUrl("channel/group?limit=-1");
 		RequestParams params = ((MyApplication) context.getApplicationContext())
 				.getHttpRequestParams(completeUrl);
-		x.http().get(params, new APICallback(context, completeUrl) {
+		HttpUtils.request(context,CloudHttpMethod.GET,params, new APICallback(context, completeUrl) {
 
 			@Override
 			public void callbackTokenExpire(long requestTime) {
@@ -516,7 +513,7 @@ public class ChatAPIService {
 			params.addParameter("cids", cidArray);
 		}
 
-		x.http().get(params, new APICallback(context, completeUrl) {
+		HttpUtils.request(context,CloudHttpMethod.GET,params, new APICallback(context, completeUrl) {
 
 			@Override
 			public void callbackTokenExpire(long requestTime) {
@@ -550,7 +547,6 @@ public class ChatAPIService {
 				apiInterface.returnSearchChannelGroupFail(error, responseCode);
 			}
 		});
-
 	}
 
 	/**
@@ -564,7 +560,7 @@ public class ChatAPIService {
 				.getHttpRequestParams(completeUrl);
 		params.addParameter("mate", uid);
 		params.addParameter("type", "DIRECT");
-		x.http().post(params, new APICallback(context, completeUrl) {
+		HttpUtils.request(context,CloudHttpMethod.POST,params, new APICallback(context, completeUrl) {
 
 			@Override
 			public void callbackTokenExpire(long requestTime) {
@@ -618,7 +614,7 @@ public class ChatAPIService {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		x.http().request(HttpMethod.PUT, params, new APICallback(context, completeUrl) {
+		HttpUtils.request(context,CloudHttpMethod.PUT,params, new APICallback(context, completeUrl) {
 
 			@Override
 			public void callbackTokenExpire(long requestTime) {
@@ -670,7 +666,7 @@ public class ChatAPIService {
 		final String completeUrl = url;
 		RequestParams params = ((MyApplication) context.getApplicationContext())
 				.getHttpRequestParams(completeUrl);
-		x.http().request(HttpMethod.PUT, params, new APICallback(context, completeUrl) {
+		HttpUtils.request(context, CloudHttpMethod.PUT,params,new APICallback(context, completeUrl) {
 
 			@Override
 			public void callbackTokenExpire(long requestTime) {
@@ -722,7 +718,7 @@ public class ChatAPIService {
 		final String completeUrl = url;
 		RequestParams params = ((MyApplication) context.getApplicationContext())
 				.getHttpRequestParams(completeUrl);
-		x.http().request(HttpMethod.DELETE, params, new APICallback(context, completeUrl) {
+		HttpUtils.request(context,CloudHttpMethod.DELETE,params,new APICallback(context, completeUrl) {
 
 			@Override
 			public void callbackTokenExpire(long requestTime) {
@@ -769,7 +765,7 @@ public class ChatAPIService {
 				+ "&dnd=" + nointerruption;
 		RequestParams params = ((MyApplication) context.getApplicationContext())
 				.getHttpRequestParams(completeUrl);
-		x.http().request(HttpMethod.PUT, params, new APICallback(context, completeUrl) {
+		HttpUtils.request(context,CloudHttpMethod.PUT,params,new APICallback(context, completeUrl) {
 
 			@Override
 			public void callbackTokenExpire(long requestTime) {
@@ -824,7 +820,7 @@ public class ChatAPIService {
 			e.printStackTrace();
 		}
 
-		x.http().post(params, new APICallback(context, completeUrl) {
+		HttpUtils.request(context,CloudHttpMethod.POST,params,new APICallback(context, completeUrl) {
 
 			@Override
 			public void callbackTokenExpire(long requestTime) {
@@ -864,7 +860,7 @@ public class ChatAPIService {
 				+ "/comment/count");
 		RequestParams params = ((MyApplication) context.getApplicationContext())
 				.getHttpRequestParams(completeUrl);
-		x.http().get(params, new APICallback(context, completeUrl) {
+		HttpUtils.request(context,CloudHttpMethod.GET,params, new APICallback(context, completeUrl) {
 
 			@Override
 			public void callbackTokenExpire(long requestTime) {
@@ -908,7 +904,7 @@ public class ChatAPIService {
 				.getHttpRequestParams(completeUrl);
 		params.setHeader("Content-Type", "url-encoded-form");
 		params.addQueryStringParameter("comment", instruction);
-		x.http().post(params, new APICallback(context, completeUrl) {
+		HttpUtils.request(context,CloudHttpMethod.POST,params,new APICallback(context, completeUrl) {
 			@Override
 			public void callbackSuccess(String arg0) {
 				apiInterface.returnNewsInstructionSuccess(new GetNewsInstructionResult(arg0));
@@ -954,15 +950,15 @@ public class ChatAPIService {
 		params.addParameter("deviceName",deviceName);
 		params.addParameter("notificationProvider",pushProvider);
 		params.addParameter("notificationTracer",pushTracer);
-		x.http().post(params, new APICallback(context,url) {
-            @Override
-            public void callbackSuccess(String arg0) {
-            }
+		HttpUtils.request(context,CloudHttpMethod.POST,params, new APICallback(context,url) {
+			@Override
+			public void callbackSuccess(String arg0) {
+			}
 
-            @Override
-            public void callbackFail(String error, int responseCode) {
+			@Override
+			public void callbackFail(String error, int responseCode) {
 
-            }
+			}
 
 			@Override
 			public void callbackTokenExpire(long requestTime) {
@@ -990,7 +986,7 @@ public class ChatAPIService {
 	 */
 	public void openActionBackgroudUrl(final String url){
 		RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
-		x.http().get(params, new APICallback(context,url) {
+		HttpUtils.request(context,CloudHttpMethod.GET,params, new APICallback(context,url) {
 			@Override
 			public void callbackSuccess(String arg0) {
 				apiInterface.returnOpenActionBackgroudUrlSuccess();

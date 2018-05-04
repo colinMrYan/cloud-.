@@ -14,6 +14,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
+import com.inspur.emmcloud.bean.system.ChangeTabBean;
 import com.inspur.emmcloud.bean.work.CalendarEvent;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.ui.appcenter.ReactNativeAppActivity;
@@ -42,6 +43,7 @@ import com.inspur.emmcloud.util.privates.AppId2AppAndOpenAppUtils;
 import com.inspur.emmcloud.util.privates.WebAppUtils;
 import com.inspur.imp.api.ImpActivity;
 
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONObject;
 
 import java.io.Serializable;
@@ -136,14 +138,14 @@ public class SchemeHandleActivity extends Activity {
                 @Override
                 public void run() {
                     String action = "";
-                    if(getIntent() != null){
+                    if (getIntent() != null) {
                         action = getIntent().getAction();
                     }
-                    if(!StringUtils.isBlank(action) && (Intent.ACTION_SEND.equals(action) || Intent.ACTION_SEND_MULTIPLE.equals(action))){
+                    if (!StringUtils.isBlank(action) && (Intent.ACTION_SEND.equals(action) || Intent.ACTION_SEND_MULTIPLE.equals(action))) {
                         handleShareIntent();
-                    }else{
+                    } else {
                         Uri uri = getIntent().getData();
-                        if(uri == null){
+                        if (uri == null) {
                             finish();
                             return;
                         }
@@ -208,6 +210,9 @@ public class SchemeHandleActivity extends Activity {
                                     startActivity(intent);
                                 }
                                 finish();
+                                break;
+                            case "ecc-app-change-tab":
+                                EventBus.getDefault().post(new ChangeTabBean("application"));
                                 break;
                             default:
                                 finish();

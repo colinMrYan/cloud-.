@@ -166,7 +166,7 @@
     <string name="begin_cannot_later_than_end">Start date can not be later than the end of time</string>
     <string name="no_this_knowledge">No this knowledge</string>
     <string name="comment">Comment</string>
-    <string name="find_your_friends">Find your friends</string>
+    <string name="no_chat_content">No chat content</string>
     <string name="not_support_upload">Does not support file upload without suffix </string>
     <string name="new_function">New</string>
     <string name="app_update_function">This feature is not supported by the current version, please upgrade to the latest version</string>
@@ -279,6 +279,8 @@
     <string name="meeting_refused">Reject</string>
     <string name="meeting_cancel_confirm">Cancel Confirmation</string>
     <string name="meeting_cancel_reject">Cancel Rejection</string>
+    <string name="no_channel_album">No channel picture </string>
+    <string name="no_channel_file">No channel file </string>
 
     <!-- 工作页面部分 -->
     <string name="work">Work</string>
@@ -349,6 +351,7 @@
     <string name="app_classification">Classification</string>
     <string name="app_create_shortcut_no_more_remind">No more reminders</string>
     <string name="app_commonly_use_app">Do you want to add mobile registration to desktop shortcuts, one click sign in? </string>
+    <string name="no_app">No app currently added</string>
 
     <!--云盘 -->
     <string name="volume_my_file">My Files</string>
@@ -772,6 +775,7 @@
     <string name="mession_delete_the_tag">Delete Tag</string>
     <string name="mession_manage_tag">Tag</string>
     <string name="add_mession">Add task</string>
+    <string name="no_work_content">No job content</string>
 
     <!-- ListView自定义控件部分 -->
     <string name="xlistview_header_last_time">Last Update Time:</string>

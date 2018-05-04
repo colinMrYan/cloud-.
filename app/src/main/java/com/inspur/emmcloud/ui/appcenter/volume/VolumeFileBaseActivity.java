@@ -74,7 +74,7 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
     @ViewInject(R.id.header_operation_layout)
     protected RelativeLayout headerOperationLayout;
 
-    @ViewInject(R.id.file_list)
+    @ViewInject(R.id.lv_file)
     protected RecyclerView fileRecycleView;
 
     @ViewInject(R.id.refresh_layout)

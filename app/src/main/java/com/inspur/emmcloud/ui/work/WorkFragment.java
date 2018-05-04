@@ -123,7 +123,7 @@ public class WorkFragment extends Fragment {
         rootView = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_work, null);
         apiService = new WorkAPIService(getActivity());
         apiService.setAPIInterface(new WebService());
-        initWorkSettingData();
+        initWorkSetting();
         initViews();
         getWorkData();
         registerWorkNotifyReceiver();
@@ -143,7 +143,7 @@ public class WorkFragment extends Fragment {
      */
     private void refreshWorkLayout() {
         setHeadLayout();
-        initWorkSettingData();
+        initWorkSetting();
         adapter.notifyDataSetChanged();
         getWorkData();
     }
@@ -151,7 +151,7 @@ public class WorkFragment extends Fragment {
     /***
      * 初始化工作页面ui配置
      */
-    private void initWorkSettingData() {
+    private void initWorkSetting() {
         isWorkPortletConfigUploadSuccess = PreferencesUtils.getBoolean(getActivity(),Constant.PREF_WORK_PORTLET_CONFIG_UPLOAD,true);
         String WorkPortletConfigJson = AppConfigCacheUtils.getAppConfigValue(getActivity(),"WorkPortlet",null);
         List<WorkSetting> allWorkSettingList = WorkSettingCacheUtils.getAllWorkSettingList(getActivity());
@@ -182,6 +182,9 @@ public class WorkFragment extends Fragment {
         if (WorkPortletConfigJson == null || WorkPortletConfigJson.equals("null")){
             uploadWorkPortletConfig();
         }
+        //判断此页面如果没有内容则显示空白页
+        boolean isHaveContent = isContainWork(TYPE_MEETING) || isContainWork(TYPE_APPROVAL)  || isContainWork(TYPE_CALENDAR) || isContainWork(TYPE_TASK);
+        rootView.findViewById(R.id.rl_no_work_content).setVisibility(isHaveContent?View.GONE:View.VISIBLE);
     }
 
     /**

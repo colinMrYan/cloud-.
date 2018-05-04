@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.BaseActivity;
@@ -23,24 +24,32 @@ import com.inspur.emmcloud.util.privates.cache.MsgCacheUtil;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.widget.HorizontalProgressBarWithNumber;
 
+import org.xutils.view.annotation.ContentView;
+import org.xutils.view.annotation.ViewInject;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+@ContentView(R.layout.activity_group_file)
 public class GroupFileActivity extends BaseActivity {
 
+    @ViewInject(R.id.lv_file)
     private ListView fileListView;
+
+    @ViewInject(R.id.rl_no_channel_file)
+    private RelativeLayout noChannelFileLayout;
+
     private String cid;
-    private List<GroupFileInfo> fileInfoList = new ArrayList<GroupFileInfo>();
+    private List<GroupFileInfo> fileInfoList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_group_file);
         cid = getIntent().getExtras().getString("cid");
         getFileMsgList();
-        fileListView = (ListView) findViewById(R.id.file_list);
+        noChannelFileLayout.setVisibility(fileInfoList.size() == 0 ? View.VISIBLE:View.GONE);
         fileListView.setAdapter(new Adapter());
     }
 
@@ -51,12 +60,10 @@ public class GroupFileActivity extends BaseActivity {
         // TODO Auto-generated method stub
         List<Msg> fileTypeMsgList = MsgCacheUtil.getFileTypeMsgList(
                 GroupFileActivity.this, cid);
-        for (int i = 0; i < fileTypeMsgList.size(); i++) {
-            GroupFileInfo groupFileInfo = new GroupFileInfo(
-                    fileTypeMsgList.get(i));
+        for (Msg msg :fileTypeMsgList){
+            GroupFileInfo groupFileInfo = new GroupFileInfo(msg);
             fileInfoList.add(groupFileInfo);
         }
-
     }
 
     public void onClick(View v) {
