@@ -106,7 +106,6 @@ public class MutilClusterUtils {
             if(suitableUrlIndex != -1){
                 ClusterBean clusterBean = clusterBeanListNew.get(suitableUrlIndex);
                 suitableUrl = getDivisionUrlByType(clusterBean,type);
-                MyApplication.getInstance().setClusterVersion(clusterBean.getServiceVersion());
             }
         }else{
             Enterprise enterpriseOld = getOldEnterprise();
@@ -132,6 +131,7 @@ public class MutilClusterUtils {
             suitableUrl = clusterBeanUri.getScheme() + "://" + clusterBeanUri.getHost()
                     +((clusterBeanUri.getPort() == -1)?"":(":"+clusterBeanUri.getPort()));
             MyApplication.getInstance().setSocketPath(clusterBeanUri.getPath());
+            MyApplication.getInstance().setClusterChatVersion(clusterBean.getServiceVersion());
         }else{
             suitableUrl = clusterBean.getBaseUrl();
         }

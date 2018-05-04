@@ -100,7 +100,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
     private String clusterCloudDrive = "";
     private String clusterStorageLegacy = "";
     private String socketPath = "";
-    private String clusterVersion = "";
+    private String clusterChatVersion = "";//仅标识chat的version
     private String clusterChatSocket = "";
     private String clusterEmm = Constant.DEFAULT_CLUSTER_EMM;//多云emm服务
 
@@ -543,12 +543,12 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         this.socketPath = socketPath;
     }
 
-    public String getClusterVersion() {
-        return clusterVersion;
+    public String getClusterChatVersion() {
+        return clusterChatVersion;
     }
 
-    public void setClusterVersion(String clusterVersion) {
-        this.clusterVersion = clusterVersion;
+    public void setClusterChatVersion(String clusterChatVersion) {
+        this.clusterChatVersion = clusterChatVersion;
     }
 
     public String getClusterChatSocket() {
@@ -565,7 +565,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
      * @return
      */
     public String getNameSpace(){
-        if(getClusterVersion().toLowerCase().startsWith("v1")){
+        if(getClusterChatVersion().toLowerCase().startsWith("v1")){
             return "/api/v1";
         }
         return "/";
