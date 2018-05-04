@@ -43,7 +43,7 @@ public class FindAPIService {
 	 * 获取行程信息
 	 */
 	public void getTripInfo(final String  tripId) {
-		final String completeUrl = APIUri.getHttpApiUrl("trip/simple/detail?trip_ticket=")+tripId;
+		final String completeUrl = APIUri.getTripInfoUrl()+tripId;
 		RequestParams params = ((MyApplication)context.getApplicationContext()).getHttpRequestParams(completeUrl);
 		HttpUtils.request(context, CloudHttpMethod.GET,params, new APICallback(context,completeUrl) {
 			@Override
@@ -78,7 +78,7 @@ public class FindAPIService {
 	}
 
 	/**
-	 * 删除行程
+	 * 删除行程，180504已废弃？
 	 * 
 	 * @param tripId
 	 */
@@ -131,7 +131,7 @@ public class FindAPIService {
 	 */
 	public void uploadTrainTicket(final String ticketInfos) {
 		final String completeUrl = APIUri
-				.getHttpApiUrl("trip/simple/upload");
+				.getUpdateTripInfoUrl();
 		RequestParams params = ((MyApplication)context.getApplicationContext()).getHttpRequestParams(completeUrl);
 		params.setBodyContent(ticketInfos);
 		params.setAsJsonContent(true);
@@ -174,7 +174,7 @@ public class FindAPIService {
 	 */
 	public void updateTrainTicket(final String ticketInfos) {
 		final String completeUrl = APIUri
-				.getHttpApiUrl("trip/simple/upload");
+				.getUpdateTripInfoUrl();
 		RequestParams params = ((MyApplication)context.getApplicationContext()).getHttpRequestParams(completeUrl);
 		params.setBodyContent(ticketInfos);
 		params.setAsJsonContent(true);

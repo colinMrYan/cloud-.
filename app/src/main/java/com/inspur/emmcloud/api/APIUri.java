@@ -19,14 +19,14 @@ import com.inspur.emmcloud.util.privates.cache.RobotCacheUtils;
  */
 public class APIUri {
 
-    /**
-     * 获取到租户级的URL
-     *
-     * @return
-     */
-    private static String getEcmTanentUrl() {
-        return MyApplication.getInstance().getClusterEcm() + MyApplication.getInstance().getTanent();
-    }
+//    /**
+//     * 获取到租户级的URL
+//     *
+//     * @return
+//     */
+//    private static String getEcmTanentUrl() {
+//        return MyApplication.getInstance().getClusterEcm() + MyApplication.getInstance().getTanent();
+//    }
 
     /**
      * EMM服务
@@ -261,6 +261,16 @@ public class APIUri {
         return headImgUrl;
     }
 
+    /**
+     * 统一接口
+     *
+     * @param uri
+     * @return
+     */
+    public static String getHttpApiUrl(String uri) {
+        return getECMChatUrl() + "/" + uri;
+    }
+
 
     /**
      * 个人信息头像显示图片
@@ -360,7 +370,7 @@ public class APIUri {
      * @return
      */
     public static String getWebsocketConnectUrl() {
-        return getECMChatUrl();
+        return MyApplication.getInstance().getClusterChatSocket();
     }
 
     /**************************************************应用和应用中心********************************************************************/
@@ -907,12 +917,12 @@ public class APIUri {
 
     /*************************************************发现*********************************************************/
     /**
-     * 通过车站名获取到达城市
+     * 通过车站名获取到达城市,改造多云写死地址
      *
      * @return
      */
     public static String getTripArriveCityUrl() {
-        return getECMScheduleUrl() + "/trip/simple/city";
+        return "https://ecm.inspur.com/trip/simple/city";
     }
 
     /**
@@ -921,17 +931,19 @@ public class APIUri {
      * @return
      */
     public static String getKnowledgeTipsUrl() {
-        return getEcmTanentUrl() + "/tips";
+        return "";
     }
 
     /**
-     * 卡包
-     *
-     * @param uri
+     * 更新行程信息接口
      * @return
      */
-    public static String getHttpApiUrl(String uri) {
-        return getECMChatUrl() + "/" + uri;
+    public static String getUpdateTripInfoUrl(){
+        return "https://ecm.inspur.com/trip/simple/upload";
+    }
+
+    public static String getTripInfoUrl(){
+        return "https://ecm.inspur.com/trip/simple/detail?trip_ticket=";
     }
 
     /**
@@ -940,7 +952,7 @@ public class APIUri {
      * @return
      */
     public static String getLangUrl() {
-        return getEcmTanentUrl() + "/settings/lang";
+        return getECMDistribution() + "/settings/lang";
     }
 
 

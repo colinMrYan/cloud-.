@@ -104,6 +104,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
     private String clusterStorageLegacy = "";
     private String socketPath = "";
     private String clusterVersion = "";
+    private String clusterChatSocket = "";
     private String clusterEmm = Constant.DEFAULT_CLUSTER_EMM;//多云emm服务
 
     public void onCreate() {
@@ -551,6 +552,26 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
 
     public void setClusterVersion(String clusterVersion) {
         this.clusterVersion = clusterVersion;
+    }
+
+    public String getClusterChatSocket() {
+        return clusterChatSocket;
+    }
+
+    public void setClusterChatSocket(String clusterChatSocket) {
+        this.clusterChatSocket = clusterChatSocket;
+    }
+
+    /**
+     * namespace
+     * v1版及v1.x版返回/api/v1
+     * @return
+     */
+    public String getNameSpace(){
+        if(getClusterVersion().toLowerCase().startsWith("v1")){
+            return "/api/v1";
+        }
+        return "/";
     }
 
     /*****************************通讯录头像缓存********************************************/

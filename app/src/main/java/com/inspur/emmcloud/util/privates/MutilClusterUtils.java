@@ -7,7 +7,6 @@ import com.inspur.emmcloud.bean.login.ClusterBean;
 import com.inspur.emmcloud.bean.mine.Enterprise;
 import com.inspur.emmcloud.bean.mine.GetMyInfoResult;
 import com.inspur.emmcloud.config.Constant;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 
@@ -24,7 +23,7 @@ public class MutilClusterUtils {
     private static final String ECM_NEWS = "com.inspur.ecm.news";
     private static final String ECM_CLOUD_DRIVER = "com.inspur.ecm.cloud-drive";
     private static final String ECM_STORAGE_LEGACY = "com.inspur.ecm.storage.legacy";
-    private static final String ECM_OLD = "com.inspur.ecm";
+//    private static final String ECM_OLD = "com.inspur.ecm";
     private static final String EMM_OLD = "com.inspur.emm";
 
     /**
@@ -36,19 +35,19 @@ public class MutilClusterUtils {
         List<ClusterBean> clusterBeanList = enterprise.getClusterBeanList();
         for (int i = 0; i < clusterBeanList.size(); i++) {
             String serviceName = clusterBeanList.get(i).getServiceName();
-            LogUtils.YfcDebug("ServiceName:"+serviceName);
             switch (serviceName) {
-                //旧版ecm
-                case ECM_OLD:
-                    MyApplication.getInstance().setClusterEcm(clusterBeanList.get(i).getBaseUrl() + "/");
-                    break;
+//                //旧版ecm
+//                case ECM_OLD:
+//                    MyApplication.getInstance().setClusterEcm(clusterBeanList.get(i).getBaseUrl() + "/");
+//                    break;
                 //旧版emm
                 case EMM_OLD:
                     MyApplication.getInstance().setClusterEmm(clusterBeanList.get(i).getBaseUrl() + "/");
                     break;
                 //聊天相关
                 case ECM_CHAT:
-                    MyApplication.getInstance().setClusterChat(getSuitableUrl(clusterBeanList.get(i).getBaseUrl(),enterprise,serviceName));
+                    MyApplication.getInstance().setClusterChatSocket(getSuitableUrl(clusterBeanList.get(i).getBaseUrl(),enterprise,serviceName));
+                    MyApplication.getInstance().setClusterChat(clusterBeanList.get(i).getBaseUrl());
                     break;
                 //会议，日历，任务相关
                 case ECM_SCHEDULE:
@@ -141,7 +140,8 @@ public class MutilClusterUtils {
         String suitableUrl = "";
         if(type.equals(ECM_CHAT)){
             Uri clusterBeanUri = Uri.parse(clusterBean.getBaseUrl());
-            suitableUrl = clusterBeanUri.getScheme() + "://" + clusterBeanUri.getHost();
+            suitableUrl = clusterBeanUri.getScheme() + "://" + clusterBeanUri.getHost()
+                    +(StringUtils.isBlank(clusterBeanUri.getPort()+"")?"":(":"+clusterBeanUri.getPort()));
             MyApplication.getInstance().setSocketPath(clusterBeanUri.getPath());
         }else{
             suitableUrl = clusterBean.getBaseUrl();
