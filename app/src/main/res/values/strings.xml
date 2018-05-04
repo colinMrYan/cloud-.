@@ -981,4 +981,6 @@
 
     <string name="cluster_default">默认</string>
     <string name="current_system">当前系统</string>
+
+    <string name="cluster_no_permission">当前功能缺少有效的授权信息。</string>
 </resources>

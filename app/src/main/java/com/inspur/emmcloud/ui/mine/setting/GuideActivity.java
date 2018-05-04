@@ -18,7 +18,6 @@ import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.ui.login.LoginActivity;
 import com.inspur.emmcloud.util.common.IntentUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StateBarUtils;
@@ -43,20 +42,13 @@ public class GuideActivity extends BaseActivity {
     private ViewPager viewPager;
     private List<View> guideViewList = new ArrayList<>();
     private LoadingDialog loadingDialog;
-    private boolean needGetMyProfile = false;
+//    private boolean needGetMyProfile = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
         StateBarUtils.changeStateBarColor(this, R.color.white);
-        String accessToken = PreferencesUtils.getString(
-                GuideActivity.this, "accessToken", "");
-        needGetMyProfile = !StringUtils.isBlank(accessToken) && AppUtils.isAppHasUpgraded(this);
-        // 存入当前版本号,方便判断新功能介绍显示的时机
-        String appVersion = AppUtils.getVersion(GuideActivity.this);
-        PreferencesUtils.putString(getApplicationContext(), "previousVersion",
-                appVersion);
         initView();
     }
 
@@ -89,7 +81,9 @@ public class GuideActivity extends BaseActivity {
                             // 将首次进入应用的标志位置为false
                             PreferencesUtils.putBoolean(getApplicationContext(),
                                     "isFirst", false);
-                            if(needGetMyProfile){
+                            String accessToken = PreferencesUtils.getString(
+                                    GuideActivity.this, "accessToken", "");
+                            if(!StringUtils.isBlank(accessToken) && AppUtils.isAppHasUpgraded(GuideActivity.this)){
                                 getUserProfile();
                             }else{
                                 startSuitableActivity();
@@ -108,6 +102,10 @@ public class GuideActivity extends BaseActivity {
      * 打开应该打开的Activity
      */
     private void startSuitableActivity() {
+        // 存入当前版本号,方便判断新功能介绍显示的时机
+        String appVersion = AppUtils.getVersion(GuideActivity.this);
+        PreferencesUtils.putString(getApplicationContext(), "previousVersion",
+                appVersion);
         String accessToken = PreferencesUtils.getString(
                 GuideActivity.this, "accessToken", "");
         IntentUtils.startActivity(GuideActivity.this, (!StringUtils.isBlank(accessToken)) ?
