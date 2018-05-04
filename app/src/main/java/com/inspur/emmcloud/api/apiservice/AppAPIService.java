@@ -65,7 +65,7 @@ public class AppAPIService {
             params.addParameter("clientType", "android");
         }
 
-        APICallback apiCallback = new APICallback(context, completeUrl) {
+        HttpUtils.request(context,CloudHttpMethod.POST,params,new APICallback(context, completeUrl) {
             @Override
             public void callbackTokenExpire(long requestTime) {
                 // TODO Auto-generated method stub
@@ -83,8 +83,7 @@ public class AppAPIService {
                 // TODO Auto-generated method stub
                 apiInterface.returnUpgradeFail(error, isManualCheck, responseCode);
             }
-        };
-        HttpUtils.request(context,CloudHttpMethod.POST,params,apiCallback);
+        });
     }
 
     /**
@@ -99,7 +98,7 @@ public class AppAPIService {
                 .getHttpRequestParams(completeUrl);
         params.addParameter("deviceId", deviceId);
         params.addParameter("deviceName", deviceName);
-        APICallback apiCallback = new APICallback(context, completeUrl) {
+        HttpUtils.request(context,CloudHttpMethod.POST,params,new APICallback(context, completeUrl) {
             @Override
             public void callbackSuccess(String arg0) {
                 apiInterface.returnGetClientIdResultSuccess(new GetClientIdRsult(arg0));
@@ -125,8 +124,7 @@ public class AppAPIService {
                             }
                         }, requestTime);
             }
-        };
-        HttpUtils.request(context,CloudHttpMethod.POST,params,apiCallback);
+        });
     }
 
 
@@ -141,7 +139,7 @@ public class AppAPIService {
                 + "&clientId=" + clientId;
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
-        APICallback apiCallback =  new APICallback(context, completeUrl) {
+        HttpUtils.request(context,CloudHttpMethod.GET,params,new APICallback(context, completeUrl) {
             @Override
             public void callbackSuccess(String arg0) {
                 apiInterface.returnReactNativeUpdateSuccess(new ReactNativeUpdateBean(arg0));
@@ -168,8 +166,7 @@ public class AppAPIService {
                             }
                         }, requestTime);
             }
-        };
-        HttpUtils.request(context,CloudHttpMethod.GET,params,apiCallback);
+        });
     }
 
 
@@ -185,7 +182,7 @@ public class AppAPIService {
                 + "&clientId=" + clientId;
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
-        APICallback apiCallback = new APICallback(context, completeUrl) {
+        HttpUtils.request(context,CloudHttpMethod.PUT,params,new APICallback(context, completeUrl) {
             @Override
             public void callbackSuccess(String arg0) {
             }
@@ -210,8 +207,7 @@ public class AppAPIService {
                 OauthUtils.getInstance().refreshToken(
                         oauthCallBack, requestTime);
             }
-        };
-        HttpUtils.request(context,CloudHttpMethod.PUT,params,apiCallback);
+        });
     }
 
 
@@ -226,7 +222,7 @@ public class AppAPIService {
                 .getHttpRequestParams(completeUrl);
         params.setAsJsonContent(true);
         params.setBodyContent(exception.toString());
-        APICallback apiCallback = new APICallback(context, completeUrl) {
+        HttpUtils.request(context,CloudHttpMethod.POST,params,new APICallback(context, completeUrl) {
 
             @Override
             public void callbackTokenExpire(long requestTime) {
@@ -246,8 +242,7 @@ public class AppAPIService {
                 // TODO Auto-generated method stub
                 apiInterface.returnUploadExceptionFail(error, responseCode);
             }
-        };
-        HttpUtils.request(context,CloudHttpMethod.POST,params,apiCallback);
+        });
     }
 
 
@@ -300,7 +295,7 @@ public class AppAPIService {
         RequestParams params = new RequestParams(completeUrl);
         params.setBodyContent(collectInfo);
         params.setAsJsonContent(true);
-        APICallback apiCallback = new APICallback(context, completeUrl) {
+        HttpUtils.request(context,CloudHttpMethod.POST,params,new APICallback(context, completeUrl) {
             @Override
             public void callbackSuccess(String arg0) {
                 apiInterface.returnUploadCollectSuccess();
@@ -315,9 +310,7 @@ public class AppAPIService {
             public void callbackTokenExpire(long requestTime) {
                 callbackFail("", -1);
             }
-        };
-        HttpUtils.request(context,CloudHttpMethod.POST,params,apiCallback);
-
+        });
     }
 
     /**
@@ -330,7 +323,7 @@ public class AppAPIService {
         RequestParams params = new RequestParams(completeUrl);
         params.addQueryStringParameter("userName", userName);
         params.addQueryStringParameter("userPass", password);
-        APICallback apiCallback = new APICallback(context, completeUrl) {
+        HttpUtils.request(context,CloudHttpMethod.GET,params,new APICallback(context, completeUrl) {
             @Override
             public void callbackSuccess(String arg0) {
                 if (arg0.equals("登录成功")) {
@@ -350,8 +343,7 @@ public class AppAPIService {
             public void callbackTokenExpire(long requestTime) {
                 apiInterface.returnVeriryApprovalPasswordFail("", -1);
             }
-        };
-        HttpUtils.request(context,CloudHttpMethod.GET,params,apiCallback);
+        });
     }
 
     /**
@@ -364,7 +356,7 @@ public class AppAPIService {
         params.addParameter("udid", AppUtils.getMyUUID(context));
         String refreshToken = PreferencesUtils.getString(context, "refreshToken", "");
         params.addParameter("refresh_token", refreshToken);
-        APICallback apiCallback = new APICallback(context, completeUrl) {
+        HttpUtils.request(context,CloudHttpMethod.POST,params,new APICallback(context, completeUrl) {
             @Override
             public void callbackSuccess(String arg0) {
             }
@@ -389,8 +381,7 @@ public class AppAPIService {
                 OauthUtils.getInstance().refreshToken(
                         oauthCallBack, requestTime);
             }
-        };
-        HttpUtils.request(context,CloudHttpMethod.POST,params,apiCallback);
+        });
     }
 
     /**
@@ -404,7 +395,7 @@ public class AppAPIService {
         final String completeUrl = APIUri.getSplashPageUrl() + "?version=" + versionCode + "&clientId=" + clientId;
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
-        APICallback apiCallback = new APICallback(context, completeUrl) {
+        HttpUtils.request(context,CloudHttpMethod.GET,params, new APICallback(context, completeUrl) {
             @Override
             public void callbackSuccess(String arg0) {
                 apiInterface.returnSplashPageInfoSuccess(new SplashPageBean(arg0));
@@ -432,8 +423,7 @@ public class AppAPIService {
                         oauthCallBack, requestTime);
             }
 
-        };
-        HttpUtils.request(context,CloudHttpMethod.GET,params,apiCallback);
+        });
     }
 
     /**
@@ -446,7 +436,7 @@ public class AppAPIService {
         final String completeUrl = url;
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
-        APICallback apiCallback = new APICallback(context, completeUrl) {
+        HttpUtils.request(context,CloudHttpMethod.POST,params,new APICallback(context, completeUrl) {
             @Override
             public void callbackSuccess(String arg0) {
                 apiInterface.returnLoginDesktopCloudPlusSuccess(new LoginDesktopCloudPlusBean());
@@ -473,8 +463,7 @@ public class AppAPIService {
                 OauthUtils.getInstance().refreshToken(
                         oauthCallBack, requestTime);
             }
-        };
-        HttpUtils.request(context,CloudHttpMethod.POST,params,apiCallback);
+        });
     }
 
     /**
@@ -495,7 +484,7 @@ public class AppAPIService {
         params.addBodyParameter("tenant_id", tenantId);
         params.addBodyParameter("mdm_user_auth_type", "IDMUser");
         params.addBodyParameter("user_code", userCode);
-        APICallback apiCallback = new APICallback(context, completeUrl) {
+        HttpUtils.request(context,CloudHttpMethod.POST,params,new APICallback(context, completeUrl) {
             @Override
             public void callbackSuccess(String arg0) {
                 apiInterface.returnDeviceCheckSuccess(new GetDeviceCheckResult(
@@ -511,8 +500,7 @@ public class AppAPIService {
             public void callbackTokenExpire(long requestTime) {
                 apiInterface.returnDeviceCheckFail("", -1);
             }
-        };
-        HttpUtils.request(context,CloudHttpMethod.POST,params,apiCallback);
+        });
     }
 
     /**
@@ -521,7 +509,7 @@ public class AppAPIService {
     public void getAppConfig() {
         final String url = APIUri.getAppConfigUrl();
         RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
-        APICallback apiCallback = new APICallback(context, url) {
+        HttpUtils.request(context,CloudHttpMethod.GET,params,new APICallback(context, url) {
             @Override
             public void callbackSuccess(String arg0) {
                 apiInterface.returnAppConfigSuccess(new GetAppConfigResult(arg0));
@@ -548,8 +536,7 @@ public class AppAPIService {
                 OauthUtils.getInstance().refreshToken(
                         oauthCallBack, requestTime);
             }
-        };
-        HttpUtils.request(context,CloudHttpMethod.GET,params,apiCallback);
+        });
     }
 
     /**
@@ -561,7 +548,7 @@ public class AppAPIService {
         final String url = APIUri.saveAppConfigUrl("WebAutoRotate");
         RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
         params.setBodyContent(isWebAutoRotate + "");
-        APICallback apiCallback = new APICallback(context, url) {
+        HttpUtils.request(context,CloudHttpMethod.POST,params,new APICallback(context, url) {
             @Override
             public void callbackSuccess(String arg0) {
                 apiInterface.returnSaveWebAutoRotateConfigSuccess(isWebAutoRotate);
@@ -588,8 +575,7 @@ public class AppAPIService {
                 OauthUtils.getInstance().refreshToken(
                         oauthCallBack, requestTime);
             }
-        };
-        HttpUtils.request(context,CloudHttpMethod.POST,params,apiCallback);
+        });
     }
 
     /**
@@ -602,7 +588,7 @@ public class AppAPIService {
         RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
         params.setBodyContent(positionJson);
         params.setAsJsonContent(true);
-        APICallback apiCallback = new APICallback(context, url) {
+        HttpUtils.request(context,CloudHttpMethod.POST,params,new APICallback(context, url) {
             @Override
             public void callbackSuccess(String arg0) {
                 apiInterface.returnUploadPositionSuccess();
@@ -629,7 +615,6 @@ public class AppAPIService {
                 OauthUtils.getInstance().refreshToken(
                         oauthCallBack, requestTime);
             }
-        };
-        HttpUtils.request(context,CloudHttpMethod.POST,params,apiCallback);
+        });
     }
 }

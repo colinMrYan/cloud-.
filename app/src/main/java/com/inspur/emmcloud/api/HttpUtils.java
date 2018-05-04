@@ -2,7 +2,7 @@ package com.inspur.emmcloud.api;
 
 import android.content.Context;
 
-import com.inspur.emmcloud.util.common.LogUtils;
+import com.inspur.emmcloud.MyApplication;
 
 import org.xutils.http.HttpMethod;
 import org.xutils.http.RequestParams;
@@ -61,7 +61,7 @@ public class HttpUtils {
         if(isValidUrl(params)){
             x.http().request(httpMethod,params,callback);
         }else{
-            LogUtils.YfcDebug("不是一个有效的地址");
+            MyApplication.getInstance().signout();
         }
     }
 
