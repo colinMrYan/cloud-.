@@ -12,6 +12,8 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.api.APICallback;
 import com.inspur.emmcloud.api.APIInterface;
 import com.inspur.emmcloud.api.APIUri;
+import com.inspur.emmcloud.api.CloudHttpMethod;
+import com.inspur.emmcloud.api.HttpUtils;
 import com.inspur.emmcloud.bean.appcenter.GetClientIdRsult;
 import com.inspur.emmcloud.bean.appcenter.ReactNativeUpdateBean;
 import com.inspur.emmcloud.bean.login.GetDeviceCheckResult;
@@ -21,15 +23,12 @@ import com.inspur.emmcloud.bean.system.GetAppTabAutoResult;
 import com.inspur.emmcloud.bean.system.GetUpgradeResult;
 import com.inspur.emmcloud.bean.system.SplashPageBean;
 import com.inspur.emmcloud.interf.OauthCallBack;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.OauthUtils;
 
 import org.json.JSONObject;
-import org.xutils.http.HttpMethod;
 import org.xutils.http.RequestParams;
-import org.xutils.x;
 
 
 /**
@@ -66,8 +65,7 @@ public class AppAPIService {
             params.addParameter("clientType", "android");
         }
 
-        x.http().post(params, new APICallback(context, completeUrl) {
-
+        HttpUtils.request(context,CloudHttpMethod.POST,params,new APICallback(context, completeUrl) {
             @Override
             public void callbackTokenExpire(long requestTime) {
                 // TODO Auto-generated method stub
@@ -86,7 +84,6 @@ public class AppAPIService {
                 apiInterface.returnUpgradeFail(error, isManualCheck, responseCode);
             }
         });
-
     }
 
     /**
@@ -101,7 +98,7 @@ public class AppAPIService {
                 .getHttpRequestParams(completeUrl);
         params.addParameter("deviceId", deviceId);
         params.addParameter("deviceName", deviceName);
-        x.http().post(params, new APICallback(context, completeUrl) {
+        HttpUtils.request(context,CloudHttpMethod.POST,params,new APICallback(context, completeUrl) {
             @Override
             public void callbackSuccess(String arg0) {
                 apiInterface.returnGetClientIdResultSuccess(new GetClientIdRsult(arg0));
@@ -142,7 +139,7 @@ public class AppAPIService {
                 + "&clientId=" + clientId;
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
-        x.http().get(params, new APICallback(context, completeUrl) {
+        HttpUtils.request(context,CloudHttpMethod.GET,params,new APICallback(context, completeUrl) {
             @Override
             public void callbackSuccess(String arg0) {
                 apiInterface.returnReactNativeUpdateSuccess(new ReactNativeUpdateBean(arg0));
@@ -185,10 +182,9 @@ public class AppAPIService {
                 + "&clientId=" + clientId;
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
-        x.http().request(HttpMethod.PUT, params, new APICallback(context, completeUrl) {
+        HttpUtils.request(context,CloudHttpMethod.PUT,params,new APICallback(context, completeUrl) {
             @Override
             public void callbackSuccess(String arg0) {
-                LogUtils.YfcDebug("回写日志成功返回结果：" + arg0);
             }
 
             @Override
@@ -226,7 +222,7 @@ public class AppAPIService {
                 .getHttpRequestParams(completeUrl);
         params.setAsJsonContent(true);
         params.setBodyContent(exception.toString());
-        x.http().post(params, new APICallback(context, completeUrl) {
+        HttpUtils.request(context,CloudHttpMethod.POST,params,new APICallback(context, completeUrl) {
 
             @Override
             public void callbackTokenExpire(long requestTime) {
@@ -257,7 +253,7 @@ public class AppAPIService {
         final String completeUrl = APIUri.getAppNewTabs() + "?version=" + version + "&clientId=" + clientId;
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
-        x.http().request(HttpMethod.GET, params, new APICallback(context, completeUrl) {
+        HttpUtils.request(context,CloudHttpMethod.GET,params,new APICallback(context, completeUrl) {
             @Override
             public void callbackTokenExpire(long requestTime) {
                 OauthCallBack oauthCallBack = new OauthCallBack() {
@@ -298,7 +294,7 @@ public class AppAPIService {
         RequestParams params = new RequestParams(completeUrl);
         params.setBodyContent(collectInfo);
         params.setAsJsonContent(true);
-        x.http().request(HttpMethod.POST, params, new APICallback(context, completeUrl) {
+        HttpUtils.request(context,CloudHttpMethod.POST,params,new APICallback(context, completeUrl) {
             @Override
             public void callbackSuccess(String arg0) {
                 apiInterface.returnUploadCollectSuccess();
@@ -314,7 +310,6 @@ public class AppAPIService {
                 callbackFail("", -1);
             }
         });
-
     }
 
     /**
@@ -327,7 +322,7 @@ public class AppAPIService {
         RequestParams params = new RequestParams(completeUrl);
         params.addQueryStringParameter("userName", userName);
         params.addQueryStringParameter("userPass", password);
-        x.http().request(HttpMethod.GET, params, new APICallback(context, completeUrl) {
+        HttpUtils.request(context,CloudHttpMethod.GET,params,new APICallback(context, completeUrl) {
             @Override
             public void callbackSuccess(String arg0) {
                 if (arg0.equals("登录成功")) {
@@ -348,7 +343,6 @@ public class AppAPIService {
                 apiInterface.returnVeriryApprovalPasswordFail("", -1);
             }
         });
-
     }
 
     /**
@@ -361,7 +355,7 @@ public class AppAPIService {
         params.addParameter("udid", AppUtils.getMyUUID(context));
         String refreshToken = PreferencesUtils.getString(context, "refreshToken", "");
         params.addParameter("refresh_token", refreshToken);
-        x.http().post(params, new APICallback(context, completeUrl) {
+        HttpUtils.request(context,CloudHttpMethod.POST,params,new APICallback(context, completeUrl) {
             @Override
             public void callbackSuccess(String arg0) {
             }
@@ -400,7 +394,7 @@ public class AppAPIService {
         final String completeUrl = APIUri.getSplashPageUrl() + "?version=" + versionCode + "&clientId=" + clientId;
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
-        x.http().get(params, new APICallback(context, completeUrl) {
+        HttpUtils.request(context,CloudHttpMethod.GET,params, new APICallback(context, completeUrl) {
             @Override
             public void callbackSuccess(String arg0) {
                 apiInterface.returnSplashPageInfoSuccess(new SplashPageBean(arg0));
@@ -441,7 +435,7 @@ public class AppAPIService {
         final String completeUrl = url;
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
-        x.http().post(params, new APICallback(context, completeUrl) {
+        HttpUtils.request(context,CloudHttpMethod.POST,params,new APICallback(context, completeUrl) {
             @Override
             public void callbackSuccess(String arg0) {
                 apiInterface.returnLoginDesktopCloudPlusSuccess(new LoginDesktopCloudPlusBean());
@@ -489,7 +483,7 @@ public class AppAPIService {
         params.addBodyParameter("tenant_id", tenantId);
         params.addBodyParameter("mdm_user_auth_type", "IDMUser");
         params.addBodyParameter("user_code", userCode);
-        x.http().post(params, new APICallback(context, completeUrl) {
+        HttpUtils.request(context,CloudHttpMethod.POST,params,new APICallback(context, completeUrl) {
             @Override
             public void callbackSuccess(String arg0) {
                 apiInterface.returnDeviceCheckSuccess(new GetDeviceCheckResult(
@@ -506,8 +500,6 @@ public class AppAPIService {
                 apiInterface.returnDeviceCheckFail("", -1);
             }
         });
-
-
     }
 
     /**
@@ -516,7 +508,7 @@ public class AppAPIService {
     public void getAppConfig() {
         final String url = APIUri.getAppConfigUrl();
         RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
-        x.http().get(params, new APICallback(context, url) {
+        HttpUtils.request(context,CloudHttpMethod.GET,params,new APICallback(context, url) {
             @Override
             public void callbackSuccess(String arg0) {
                 apiInterface.returnAppConfigSuccess(new GetAppConfigResult(arg0));
@@ -555,7 +547,7 @@ public class AppAPIService {
         final String url = APIUri.saveAppConfigUrl("WebAutoRotate");
         RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
         params.setBodyContent(isWebAutoRotate + "");
-        x.http().post(params, new APICallback(context, url) {
+        HttpUtils.request(context,CloudHttpMethod.POST,params,new APICallback(context, url) {
             @Override
             public void callbackSuccess(String arg0) {
                 apiInterface.returnSaveWebAutoRotateConfigSuccess(isWebAutoRotate);
@@ -595,7 +587,7 @@ public class AppAPIService {
         RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
         params.setBodyContent(positionJson);
         params.setAsJsonContent(true);
-        x.http().post(params, new APICallback(context, url) {
+        HttpUtils.request(context,CloudHttpMethod.POST,params,new APICallback(context, url) {
             @Override
             public void callbackSuccess(String arg0) {
                 apiInterface.returnUploadPositionSuccess();

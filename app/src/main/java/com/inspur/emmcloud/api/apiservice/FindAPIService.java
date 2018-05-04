@@ -13,6 +13,8 @@ import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.api.APICallback;
 import com.inspur.emmcloud.api.APIInterface;
 import com.inspur.emmcloud.api.APIUri;
+import com.inspur.emmcloud.api.CloudHttpMethod;
+import com.inspur.emmcloud.api.HttpUtils;
 import com.inspur.emmcloud.bean.find.GetKnowledgeInfo;
 import com.inspur.emmcloud.bean.find.GetTripArriveCity;
 import com.inspur.emmcloud.bean.find.Trip;
@@ -20,9 +22,7 @@ import com.inspur.emmcloud.interf.OauthCallBack;
 import com.inspur.emmcloud.util.privates.OauthUtils;
 
 import org.json.JSONArray;
-import org.xutils.http.HttpMethod;
 import org.xutils.http.RequestParams;
-import org.xutils.x;
 
 /**
  * com.inspur.emmcloud.api.apiservice.FindAPIService
@@ -45,7 +45,7 @@ public class FindAPIService {
 	public void getTripInfo(final String  tripId) {
 		final String completeUrl = APIUri.getHttpApiUrl("trip/simple/detail?trip_ticket=")+tripId;
 		RequestParams params = ((MyApplication)context.getApplicationContext()).getHttpRequestParams(completeUrl);
-		x.http().get(params, new APICallback(context,completeUrl) {
+		HttpUtils.request(context, CloudHttpMethod.GET,params, new APICallback(context,completeUrl) {
 			@Override
 			public void callbackTokenExpire(long requestTime) {
 				OauthCallBack oauthCallBack = new OauthCallBack() {
@@ -90,7 +90,7 @@ public class FindAPIService {
 		array.put(tripId);
 		params.setBodyContent(array.toString());
 		params.setAsJsonContent(true);
-		x.http().request(HttpMethod.PUT, params, new APICallback(context,completeUrl) {
+		HttpUtils.request(context,CloudHttpMethod.PUT, params, new APICallback(context,completeUrl) {
 			@Override
 			public void callbackTokenExpire(long requestTime) {
 				OauthCallBack oauthCallBack = new OauthCallBack() {
@@ -135,8 +135,7 @@ public class FindAPIService {
 		RequestParams params = ((MyApplication)context.getApplicationContext()).getHttpRequestParams(completeUrl);
 		params.setBodyContent(ticketInfos);
 		params.setAsJsonContent(true);
-		x.http().post(params, new APICallback(context,completeUrl) {
-
+		HttpUtils.request(context, CloudHttpMethod.POST,params, new APICallback(context,completeUrl) {
 			@Override
 			public void callbackTokenExpire(long requestTime) {
 				OauthCallBack oauthCallBack = new OauthCallBack() {
@@ -179,7 +178,7 @@ public class FindAPIService {
 		RequestParams params = ((MyApplication)context.getApplicationContext()).getHttpRequestParams(completeUrl);
 		params.setBodyContent(ticketInfos);
 		params.setAsJsonContent(true);
-		x.http().request(HttpMethod.PUT, params, new APICallback(context,completeUrl) {
+		HttpUtils.request(context,CloudHttpMethod.PUT, params, new APICallback(context,completeUrl) {
 
 			@Override
 			public void callbackTokenExpire(long requestTime) {
@@ -222,7 +221,7 @@ public class FindAPIService {
 		completeUrl = APIUri.getTripArriveCityUrl() + "?";
 		RequestParams params = ((MyApplication)context.getApplicationContext()).getHttpRequestParams(completeUrl);
 		params.addParameter("station", station);
-		x.http().get(params, new APICallback(context,completeUrl) {
+		HttpUtils.request(context, CloudHttpMethod.GET,params, new APICallback(context,completeUrl) {
 
 			@Override
 			public void callbackTokenExpire(long requestTime) {
@@ -262,7 +261,7 @@ public class FindAPIService {
 	public void getKnowledgeList() {
 		final String completeUrl = APIUri.getKnowledgeTipsUrl();
 		RequestParams params = ((MyApplication)context.getApplicationContext()).getHttpRequestParams(completeUrl);
-		x.http().get(params, new APICallback(context,completeUrl) {
+		HttpUtils.request(context,CloudHttpMethod.GET,params, new APICallback(context,completeUrl) {
 
 			@Override
 			public void callbackTokenExpire(long requestTime) {

@@ -14,6 +14,8 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APICallback;
 import com.inspur.emmcloud.api.APIInterface;
 import com.inspur.emmcloud.api.APIUri;
+import com.inspur.emmcloud.api.CloudHttpMethod;
+import com.inspur.emmcloud.api.HttpUtils;
 import com.inspur.emmcloud.bean.appcenter.GetRegisterCheckResult;
 import com.inspur.emmcloud.bean.login.GetLoginResult;
 import com.inspur.emmcloud.bean.login.GetUpdatePwdBySMSCodeBean;
@@ -23,9 +25,7 @@ import com.inspur.emmcloud.interf.OauthCallBack;
 import com.inspur.emmcloud.util.privates.OauthUtils;
 
 import org.json.JSONObject;
-import org.xutils.http.HttpMethod;
 import org.xutils.http.RequestParams;
-import org.xutils.x;
 
 /**
  * com.inspur.emmcloud.api.apiservice.LoginAPIService create at 2016年11月8日
@@ -58,7 +58,7 @@ public class LoginAPIService {
 		params.addParameter("client_id", "com.inspur.ecm.client.android");
 		params.addParameter("client_secret",
 				"6b3c48dc-2e56-440c-84fb-f35be37480e8");
-		x.http().post(params, new APICallback(context,completeUrl) {
+		HttpUtils.request(context, CloudHttpMethod.POST,params, new APICallback(context,completeUrl) {
 
 			@Override
 			public void callbackSuccess(String arg0) {
@@ -93,7 +93,7 @@ public class LoginAPIService {
 				"6b3c48dc-2e56-440c-84fb-f35be37480e8");
 		params.addParameter("refresh_token", refreshToken);
 		params.addParameter("grant_type", "refresh_token");
-		x.http().post(params, new APICallback(context,completeUrl) {
+		HttpUtils.request(context,CloudHttpMethod.POST,params, new APICallback(context,completeUrl) {
 
 			@Override
 			public void callbackSuccess(String arg0) {
@@ -126,7 +126,7 @@ public class LoginAPIService {
 		String completeUrl = APIUri.getReqLoginSMSUrl(mobile);
 		RequestParams params = ((MyApplication) context.getApplicationContext())
 				.getHttpRequestParams(completeUrl);
-		x.http().get(params, new APICallback(context,completeUrl) {
+		HttpUtils.request(context,CloudHttpMethod.GET,params, new APICallback(context,completeUrl) {
 
 			@Override
 			public void callbackTokenExpire(long requestTime) {
@@ -165,7 +165,7 @@ public class LoginAPIService {
 				.getHttpRequestParams(completeUrl);
 		params.addParameter("mobile", mobile);
 		params.addParameter("sms", sms);
-		x.http().post(params, new APICallback(context,completeUrl) {
+		HttpUtils.request(context,CloudHttpMethod.POST,params, new APICallback(context,completeUrl) {
 
 			@Override
 			public void callbackTokenExpire(long requestTime) {
@@ -198,7 +198,7 @@ public class LoginAPIService {
 		final String completeUrl = APIUri.getMyInfoUrl();
 		RequestParams params = ((MyApplication) context.getApplicationContext())
 				.getHttpRequestParams(completeUrl);
-		x.http().get(params, new APICallback(context,completeUrl) {
+		HttpUtils.request(context,CloudHttpMethod.GET,params, new APICallback(context,completeUrl) {
 
 			@Override
 			public void callbackTokenExpire(long requestTime) {
@@ -245,7 +245,7 @@ public class LoginAPIService {
 		params.addQueryStringParameter("new", newpsd);
 		params.setAsJsonContent(true);
 		params.addHeader("Content-Type", "application/json");
-		x.http().request(HttpMethod.PUT, params, new APICallback(context,completeUrl) {
+		HttpUtils.request(context,CloudHttpMethod.PUT, params, new APICallback(context,completeUrl) {
 
 			@Override
 			public void callbackTokenExpire(long requestTime) {
@@ -291,7 +291,7 @@ public class LoginAPIService {
 		params.addQueryStringParameter("new", newPwd);
 		params.setAsJsonContent(true);
 		params.addHeader("Content-Type", "application/json");
-		x.http().request(HttpMethod.PUT, params, new APICallback(context,completeUrl) {
+		HttpUtils.request(context,CloudHttpMethod.PUT, params, new APICallback(context,completeUrl) {
 
 			@Override
 			public void callbackTokenExpire(long requestTime) {
@@ -334,7 +334,7 @@ public class LoginAPIService {
 		}
 		params.setBodyContent(object.toString());
 		params.setAsJsonContent(true);
-		x.http().post(params, new APICallback(context,completeUrl) {
+		HttpUtils.request(context,CloudHttpMethod.POST,params, new APICallback(context,completeUrl) {
 			@Override
 			public void callbackSuccess(String arg0) {
 				apiInterface.returnFaceLoginGSSuccess();
