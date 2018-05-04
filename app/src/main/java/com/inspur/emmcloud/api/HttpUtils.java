@@ -1,11 +1,9 @@
 package com.inspur.emmcloud.api;
 
 import android.content.Context;
+import android.content.Intent;
 
-import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.widget.dialogs.MyQMUIDialog;
-import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
-import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
+import com.inspur.emmcloud.ui.mine.setting.NoPermissionDialogActivity;
 
 import org.xutils.http.HttpMethod;
 import org.xutils.http.RequestParams;
@@ -64,15 +62,9 @@ public class HttpUtils {
         if(isValidUrl(params)){
             x.http().request(httpMethod,params,callback);
         }else{
-            new MyQMUIDialog.MessageDialogBuilder(context)
-                    .setMessage(context.getString(R.string.cluster_no_permission))
-                    .addAction(R.string.ok, new QMUIDialogAction.ActionListener() {
-                        @Override
-                        public void onClick(QMUIDialog dialog, int index) {
-                            dialog.dismiss();
-                        }
-                    })
-                    .show();
+            Intent intent = new Intent();
+            intent.setClass(context, NoPermissionDialogActivity.class);
+            context.startActivity(intent);
         }
     }
 

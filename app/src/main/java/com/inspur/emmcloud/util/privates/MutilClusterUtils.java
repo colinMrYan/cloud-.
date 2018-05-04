@@ -34,7 +34,7 @@ public class MutilClusterUtils {
         List<ClusterBean> clusterBeanList = enterprise.getClusterBeanList();
         for (int i = 0; i < clusterBeanList.size(); i++) {
             String serviceName = clusterBeanList.get(i).getServiceName();
-            String serviceUrl = getDifferentUrlByType(clusterBeanList.get(i), serviceName);
+            String serviceUrl = getUrlByType(clusterBeanList.get(i), serviceName);
             switch (serviceName) {
                 //旧版emm
                 case EMM_OLD:
@@ -71,7 +71,7 @@ public class MutilClusterUtils {
     /**
      * 返回合适的Url
      */
-    private static String getDifferentUrlByType(ClusterBean clusterBeanNew, String serviceName) {
+    private static String getUrlByType(ClusterBean clusterBeanNew, String serviceName) {
         String differentUrlByType = clusterBeanNew.getBaseUrl();
         ClusterBean clusterBean = clusterBeanNew;
         if (StringUtils.isBlank(differentUrlByType)) {
@@ -103,7 +103,7 @@ public class MutilClusterUtils {
      */
     private static Enterprise getOldEnterprise() {
         String myInfo = PreferencesUtils.getString(MyApplication.getInstance().getApplicationContext(),
-                Constant.MY_INFO_OLD, "");
+                Constant.PREF_MY_INFO_OLD, "");
         if (!StringUtils.isBlank(myInfo)) {
             GetMyInfoResult getMyInfoResult = new GetMyInfoResult(myInfo);
             String currentEnterpriseId = PreferencesByUsersUtils.getString(MyApplication.getInstance().getApplicationContext(), "current_enterprise_id");

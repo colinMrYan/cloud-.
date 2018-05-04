@@ -133,6 +133,14 @@
             android:launchMode="singleTask"
             android:resizeableActivity="true"
             android:screenOrientation="portrait"></activity>
+        <activity android:name=".ui.mine.setting.NoPermissionDialogActivity"
+            android:resizeableActivity="true"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/dialog_activity"
+            android:stateNotNeeded="true"
+            android:supportsRtl="true"
+            />
         <activity
             android:name=".ui.mine.setting.SwitchEnterpriseActivity"
             android:launchMode="singleTask"

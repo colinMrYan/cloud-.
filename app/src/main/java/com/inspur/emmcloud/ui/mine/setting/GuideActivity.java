@@ -86,7 +86,7 @@ public class GuideActivity extends BaseActivity {
                             if(!StringUtils.isBlank(accessToken) && AppUtils.isAppHasUpgraded(GuideActivity.this)){
                                 getUserProfile();
                             }else{
-                                startSuitableActivity();
+                                startIntentActivity();
                             }
                         }
                     }
@@ -101,7 +101,7 @@ public class GuideActivity extends BaseActivity {
     /**
      * 打开应该打开的Activity
      */
-    private void startSuitableActivity() {
+    private void startIntentActivity() {
         // 存入当前版本号,方便判断新功能介绍显示的时机
         String appVersion = AppUtils.getVersion(GuideActivity.this);
         PreferencesUtils.putString(getApplicationContext(), "previousVersion",
@@ -116,7 +116,7 @@ public class GuideActivity extends BaseActivity {
      * 获取用户的个人信息
      */
     private void getUserProfile() {
-        if (NetUtils.isNetworkConnected(GuideActivity.this, false)) {
+        if (NetUtils.isNetworkConnected(GuideActivity.this, true)) {
             loadingDialog.show();
             LoginAPIService apiServices = new LoginAPIService(GuideActivity.this);
             apiServices.setAPIInterface(new WebService());
@@ -131,14 +131,14 @@ public class GuideActivity extends BaseActivity {
             LoadingDialog.dimissDlg(loadingDialog);
             saveNewProfileAndOldProfile(getMyInfoResult.getResponse());
             MyApplication.getInstance().initTanent();
-            startSuitableActivity();
+            startIntentActivity();
 
         }
 
         @Override
         public void returnMyInfoFail(String error, int errorCode) {
             LoadingDialog.dimissDlg(loadingDialog);
-            startSuitableActivity();
+            startIntentActivity();
         }
     }
 
@@ -148,7 +148,7 @@ public class GuideActivity extends BaseActivity {
      */
     private void saveNewProfileAndOldProfile(String response) {
         //存储上一个版本，不再有本地默认版本
-        PreferencesUtils.putString(GuideActivity.this, Constant.MY_INFO_OLD,PreferencesUtils.getString(GuideActivity.this,"",""));
+        PreferencesUtils.putString(GuideActivity.this, Constant.PREF_MY_INFO_OLD,PreferencesUtils.getString(GuideActivity.this,"",""));
         PreferencesUtils.putString(GuideActivity.this, "myInfo", response);
     }
 }
