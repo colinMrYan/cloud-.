@@ -253,7 +253,7 @@ public class AppAPIService {
         final String completeUrl = APIUri.getAppNewTabs() + "?version=" + version + "&clientId=" + clientId;
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
-        APICallback apiCallback = new APICallback(context, completeUrl) {
+        HttpUtils.request(context,CloudHttpMethod.GET,params,new APICallback(context, completeUrl) {
             @Override
             public void callbackTokenExpire(long requestTime) {
                 OauthCallBack oauthCallBack = new OauthCallBack() {
@@ -280,8 +280,7 @@ public class AppAPIService {
             public void callbackFail(String error, int responseCode) {
                 apiInterface.returnAppTabAutoFail(error, responseCode);
             }
-        };
-        HttpUtils.request(context,CloudHttpMethod.GET,params,apiCallback);
+        });
     }
 
 
