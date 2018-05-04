@@ -23,7 +23,6 @@ public class MutilClusterUtils {
     private static final String ECM_NEWS = "com.inspur.ecm.news";
     private static final String ECM_CLOUD_DRIVER = "com.inspur.ecm.cloud-drive";
     private static final String ECM_STORAGE_LEGACY = "com.inspur.ecm.storage.legacy";
-//    private static final String ECM_OLD = "com.inspur.ecm";
     private static final String EMM_OLD = "com.inspur.emm";
 
     /**
@@ -36,10 +35,6 @@ public class MutilClusterUtils {
         for (int i = 0; i < clusterBeanList.size(); i++) {
             String serviceName = clusterBeanList.get(i).getServiceName();
             switch (serviceName) {
-//                //旧版ecm
-//                case ECM_OLD:
-//                    MyApplication.getInstance().setClusterEcm(clusterBeanList.get(i).getBaseUrl() + "/");
-//                    break;
                 //旧版emm
                 case EMM_OLD:
                     MyApplication.getInstance().setClusterEmm(clusterBeanList.get(i).getBaseUrl() + "/");
@@ -73,13 +68,7 @@ public class MutilClusterUtils {
         }
     }
 
-    /**
-     * 把baseurl初始化为默认值，防止切企业时ecm和emm有一个没有改变影响切完企业后的地址
-     */
-    private static void initClusterBaseUrl() {
-        MyApplication.getInstance().setClusterEcm(Constant.DEFAULT_CLUSTER_ECM);
-        MyApplication.getInstance().setClusterEmm(Constant.DEFAULT_CLUSTER_EMM);
-    }
+
 
     /**
      * 查找上一版的

@@ -54,7 +54,6 @@ import com.nostra13.universalimageloader.cache.memory.impl.UsingFreqLimitedMemor
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
-import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
 import com.nostra13.universalimageloader.utils.L;
 import com.oblador.vectoricons.VectorIconsPackage;
 
@@ -62,8 +61,6 @@ import org.xutils.http.RequestParams;
 import org.xutils.x;
 
 import java.io.File;
-import java.io.IOException;
-import java.net.HttpURLConnection;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -741,8 +738,6 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
                 Environment.MEDIA_MOUNTED)) {
             config = new ImageLoaderConfiguration.Builder(
                     getApplicationContext())
-                    .imageDownloader(
-                            new CustomImageDownloader(getApplicationContext()))
                     .memoryCacheExtraOptions(1200, 1200)
                     .threadPoolSize(6)
                     .threadPriority(Thread.NORM_PRIORITY - 1)
@@ -762,8 +757,6 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
             }
             config = new ImageLoaderConfiguration.Builder(
                     getApplicationContext())
-                    .imageDownloader(
-                            new CustomImageDownloader(getApplicationContext()))
                     .memoryCacheExtraOptions(1200, 1200)
                     .threadPoolSize(6)
                     .threadPriority(Thread.NORM_PRIORITY - 1)
@@ -781,26 +774,6 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         L.disableLogging(); // 关闭imageloader的疯狂的log
         ImageLoader.getInstance().init(config);
 
-    }
-
-    public class CustomImageDownloader extends BaseImageDownloader {// universal
-        // image
-        // loader获取图片时,若需要cookie，
-        // 需在application中进行配置添加此类。
-        public CustomImageDownloader(Context context) {
-            super(context);
-        }
-
-        @Override
-        protected HttpURLConnection createConnection(String url, Object extra)
-                throws IOException {
-            // Super...
-            HttpURLConnection connection = super.createConnection(url, extra);
-            // connection.setRequestProperty("Authorization", getToken());
-            connection.setRequestProperty("Connection", "keep-Alive");
-            connection.setRequestProperty("User-Agent", "jsgdMobile");
-            return connection;
-        }
     }
 
 

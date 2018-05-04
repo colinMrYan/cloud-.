@@ -134,7 +134,6 @@ public class GuideActivity extends BaseActivity {
             saveNewProfileAndOldProfile(getMyInfoResult.getResponse());
             MyApplication.getInstance().initTanent();
             startSuitableActivity();
-            LogUtils.YfcDebug("返回成功"+getMyInfoResult.getResponse());
 
         }
 

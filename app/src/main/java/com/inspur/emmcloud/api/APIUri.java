@@ -288,7 +288,7 @@ public class APIUri {
      * @return
      */
     public static String getRobotIconUrl(String iconUrl) {
-        return MyApplication.getInstance().getClusterStorageLegacy() + "/avatar/stream/"
+        return getStorageLegacy() + "/avatar/stream/"
                 + iconUrl;
     }
 
@@ -324,7 +324,7 @@ public class APIUri {
      * @return
      */
     public static String getResUrl(String url) {
-        return MyApplication.getInstance().getClusterStorageLegacy()  + "/res/" + url;
+        return getStorageLegacy()  + "/res/" + url;
     }
 
     /**
@@ -501,7 +501,7 @@ public class APIUri {
      * @return
      */
     public static String getClientId() {
-        return MyApplication.getInstance().getClusterDistribution() + "/client/registry";
+        return getECMDistribution() + "/client/registry";
     }
 
     /**
@@ -548,7 +548,7 @@ public class APIUri {
      * @return
      */
     public static String getGroupNewsUrl(String url) {
-        return MyApplication.getInstance().getClusterNews() + url;
+        return getECMNews() + url;
     }
 
     /**
@@ -708,7 +708,7 @@ public class APIUri {
      * @return
      */
     private static String getMeetingBaseUrl() {
-        return MyApplication.getInstance().getClusterSchedule()  + "/meeting/";
+        return getECMScheduleUrl()  + "/meeting/";
     }
 
     /**
@@ -828,7 +828,7 @@ public class APIUri {
      * @return
      */
     private static String getToDoBaseUrl() {
-        return MyApplication.getInstance().getClusterSchedule() + MyApplication.getInstance().getTanent() + "/todo/";
+        return getECMScheduleUrl() + MyApplication.getInstance().getTanent() + "/todo/";
     }
 
     /**
