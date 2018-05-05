@@ -30,6 +30,7 @@ public class NoPermissionDialogActivity extends Activity{
                 finish();
             }
         });
+
         dialog.show();
     }
 
