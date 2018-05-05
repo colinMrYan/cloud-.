@@ -1,8 +1,9 @@
 package com.inspur.emmcloud.api;
 
 import android.content.Context;
+import android.content.Intent;
 
-import com.inspur.emmcloud.MyApplication;
+import com.inspur.emmcloud.ui.mine.setting.NoPermissionDialogActivity;
 
 import org.xutils.http.HttpMethod;
 import org.xutils.http.RequestParams;
@@ -16,37 +17,37 @@ public class HttpUtils {
     public static void request(Context context,CloudHttpMethod cloudHttpMethod, RequestParams params,  APICallback callback){
         switch (cloudHttpMethod){
             case GET:
-                distributeRequest(HttpMethod.GET,params,callback);
+                distributeRequest(context,HttpMethod.GET,params,callback);
                 break;
             case POST:
-                distributeRequest(HttpMethod.POST,params,callback);
+                distributeRequest(context,HttpMethod.POST,params,callback);
                 break;
             case PUT:
-                distributeRequest(HttpMethod.PUT,params,callback);
+                distributeRequest(context,HttpMethod.PUT,params,callback);
                 break;
             case PATCH:
-                distributeRequest(HttpMethod.PATCH,params,callback);
+                distributeRequest(context,HttpMethod.PATCH,params,callback);
                 break;
             case HEAD:
-                distributeRequest(HttpMethod.HEAD,params,callback);
+                distributeRequest(context,HttpMethod.HEAD,params,callback);
                 break;
             case MOVE:
-                distributeRequest(HttpMethod.MOVE,params,callback);
+                distributeRequest(context,HttpMethod.MOVE,params,callback);
                 break;
             case COPY:
-                distributeRequest(HttpMethod.COPY,params,callback);
+                distributeRequest(context,HttpMethod.COPY,params,callback);
                 break;
             case DELETE:
-                distributeRequest(HttpMethod.DELETE,params,callback);
+                distributeRequest(context,HttpMethod.DELETE,params,callback);
                 break;
             case OPTIONS:
-                distributeRequest(HttpMethod.OPTIONS,params,callback);
+                distributeRequest(context,HttpMethod.OPTIONS,params,callback);
                 break;
             case TRACE:
-                distributeRequest(HttpMethod.TRACE,params,callback);
+                distributeRequest(context,HttpMethod.TRACE,params,callback);
                 break;
             case CONNECT:
-                distributeRequest(HttpMethod.CONNECT,params,callback);
+                distributeRequest(context,HttpMethod.CONNECT,params,callback);
                 break;
         }
     }
@@ -57,11 +58,13 @@ public class HttpUtils {
      * @param params
      * @param callback
      */
-    private static void distributeRequest(HttpMethod httpMethod, RequestParams params,  APICallback callback) {
+    private static void distributeRequest(Context context,HttpMethod httpMethod, RequestParams params,  APICallback callback) {
         if(isValidUrl(params)){
             x.http().request(httpMethod,params,callback);
         }else{
-            MyApplication.getInstance().signout();
+            Intent intent = new Intent();
+            intent.setClass(context, NoPermissionDialogActivity.class);
+            context.startActivity(intent);
         }
     }
 

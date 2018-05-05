@@ -93,6 +93,15 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
     private boolean isOpenNotification = false;
     private String tanent;
     private String clusterEcm = Constant.DEFAULT_CLUSTER_ECM;//多云ecm服务
+    private String clusterChat = "";
+    private String clusterSchedule = "";
+    private String clusterDistribution = "";
+    private String clusterNews = "";
+    private String clusterCloudDrive = "";
+    private String clusterStorageLegacy = "";
+    private String socketPath = "";
+    private String clusterChatVersion = "";//仅标识chat的version
+    private String clusterChatSocket = "";
     private String clusterEmm = Constant.DEFAULT_CLUSTER_EMM;//多云emm服务
     private boolean isMessageV0 =false;
 
@@ -410,7 +419,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
             if (currentEnterprise == null) {
                 currentEnterprise = getMyInfoResult.getDefaultEnterprise();
             }
-            MutilClusterUtils.changeClusterBaseUrl(currentEnterprise);
+            MutilClusterUtils.setClusterBaseUrl(currentEnterprise);
             String enterpriseCode = currentEnterprise.getCode();
             tanent = enterpriseCode;
         }
@@ -452,12 +461,100 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         this.clusterEmm = clusterEmm;
     }
 
+    /**
+     * 沟通相关
+     * @return
+     */
+    public String getClusterChat() {
+        return clusterChat;
+    }
+
+    public void setClusterChat(String clusterChat) {
+        this.clusterChat = clusterChat;
+    }
+
+    public String getClusterSchedule() {
+        return clusterSchedule;
+    }
+
+    public void setClusterSchedule(String clusterSchedule) {
+        this.clusterSchedule = clusterSchedule;
+    }
+
+    public String getClusterDistribution() {
+        return clusterDistribution;
+    }
+
+    public void setClusterDistribution(String clusterDistribution) {
+        this.clusterDistribution = clusterDistribution;
+    }
+
+    public String getClusterNews() {
+        return clusterNews;
+    }
+
+    public void setClusterNews(String clusterNews) {
+        this.clusterNews = clusterNews;
+    }
+
+    public String getClusterCloudDrive() {
+        return clusterCloudDrive;
+    }
+
+    public void setClusterCloudDrive(String clusterCloudDrive) {
+        this.clusterCloudDrive = clusterCloudDrive;
+    }
+
+    public String getClusterStorageLegacy() {
+        return clusterStorageLegacy;
+    }
+
+    public void setClusterStorageLegacy(String clusterStorageLegacy) {
+        this.clusterStorageLegacy = clusterStorageLegacy;
+    }
+
     public String getTanent() {
         return tanent;
     }
 
     public Enterprise getCurrentEnterprise() {
         return currentEnterprise;
+    }
+
+    public String getSocketPath() {
+        return socketPath;
+    }
+
+    public void setSocketPath(String socketPath) {
+        this.socketPath = socketPath;
+    }
+
+    public String getClusterChatVersion() {
+        return clusterChatVersion;
+    }
+
+    public void setClusterChatVersion(String clusterChatVersion) {
+        this.clusterChatVersion = clusterChatVersion;
+    }
+
+    public String getClusterChatSocket() {
+        return clusterChatSocket;
+    }
+
+    public void setClusterChatSocket(String clusterChatSocket) {
+        this.clusterChatSocket = clusterChatSocket;
+    }
+
+    /**
+     * namespace
+     * v1版及v1.x版返回/api/v1
+     * @return
+     */
+    public String getNameSpace(){
+        if(getClusterChatVersion().toLowerCase().startsWith("v1")){
+            return "/api/v1";
+        }
+        return "/";
     }
 
     /*****************************通讯录头像缓存********************************************/

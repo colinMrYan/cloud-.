@@ -10,12 +10,16 @@ import org.json.JSONObject;
 
 public class ClusterBean {
     private String clusterId = "";
-    private String serviceName = "";
+    private String serviceName = "";//作为ID使用，服务端不确定，客户端无法解析
     private String baseUrl = "";
+    private String serviceVersion = "";
+
+    public ClusterBean(){}
     public ClusterBean(JSONObject clusterObj){
         clusterId = JSONUtils.getString(clusterObj,"cluster_id","");
         serviceName = JSONUtils.getString(clusterObj,"service_name","");
         baseUrl = JSONUtils.getString(clusterObj,"base_url","");
+        serviceVersion = JSONUtils.getString(clusterObj,"service_version","");
     }
 
     public String getClusterId() {
@@ -40,5 +44,32 @@ public class ClusterBean {
 
     public void setBaseUrl(String baseUrl) {
         this.baseUrl = baseUrl;
+    }
+
+    public String getServiceVersion() {
+        return serviceVersion;
+    }
+
+    public void setServiceVersion(String serviceVersion) {
+        this.serviceVersion = serviceVersion;
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if(this == other){
+            return true;
+        }
+        if(other == null){
+            return false;
+        }
+        if(!(other instanceof ClusterBean)){
+            return false;
+        }
+        ClusterBean clusterBean = (ClusterBean) other;
+        //此处从==判断是否相等  改为equals
+        if(!(getServiceName().equals(clusterBean.getServiceName()))){
+            return false;
+        }
+        return true;
     }
 }

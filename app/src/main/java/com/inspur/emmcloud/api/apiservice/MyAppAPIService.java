@@ -200,7 +200,7 @@ public class MyAppAPIService {
      */
     public void getNewsTitles() {
 
-        final String completeUrl = APIUri.getHttpApiUrl("api/v0/content/news/section");
+        final String completeUrl = APIUri.getHttpApiUrl("/content/news/section");
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
         HttpUtils.request(context,CloudHttpMethod.GET,params, new APICallback(context, completeUrl) {
@@ -248,7 +248,7 @@ public class MyAppAPIService {
      */
     public void getGroupNewsDetail(final String ncid, final int page) {
 
-        final String completeUrl = APIUri.getHttpApiUrl("/api/v0/content/news/section/" + ncid + "/post?page=" + page + "&limit=20");
+        final String completeUrl = APIUri.getHttpApiUrl("/content/news/section/" + ncid + "/post?page=" + page + "&limit=20");
         RequestParams params = ((MyApplication) context.getApplicationContext())
                 .getHttpRequestParams(completeUrl);
         HttpUtils.request(context,CloudHttpMethod.GET,params, new APICallback(context, completeUrl) {

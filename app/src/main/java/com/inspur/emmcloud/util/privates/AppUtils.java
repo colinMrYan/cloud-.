@@ -158,8 +158,7 @@ public class AppUtils {
     /**
      * 判断应用是否进行了版本升级
      *
-     * @param savedVersion
-     * @param currentVersion
+     * @param context
      * @return
      */
     public static boolean isAppHasUpgraded(Context context) {
