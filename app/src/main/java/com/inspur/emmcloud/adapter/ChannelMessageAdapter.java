@@ -47,13 +47,11 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
     private MyItemClickListener mItemClickListener;
     private String channelType;
     private ECMChatInputMenu chatInputMenu;
-    private ChatAPIService apiService;
 
     public ChannelMessageAdapter(Activity context, ChatAPIService apiService, String channelType, ECMChatInputMenu chatInputMenu) {
         this.context = context;
         this.channelType = channelType;
         this.chatInputMenu = chatInputMenu;
-        this.apiService = apiService;
     }
 
     public void setMessageList(List<UIMessage> UImessageList) {
@@ -70,12 +68,12 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        final UIMessage UImessage = UIMessageList.get(position);
-        showCardLayout(holder, UImessage);
-        showUserName(holder, UImessage);
-        showMsgSendTime(holder, UImessage, position);
-        showUserPhoto(holder, UImessage);
-        showRefreshingImg(holder, UImessage);
+        final UIMessage uimessage = UIMessageList.get(position);
+        showCardLayout(holder, uimessage);
+        showUserName(holder, uimessage);
+        showMsgSendTime(holder, uimessage, position);
+        showUserPhoto(holder, uimessage);
+        showRefreshingImg(holder, uimessage);
     }
 
     /**
@@ -175,9 +173,9 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
      * @param holder
      * @param msg
      */
-    private void showCardLayout(ViewHolder holder, final UIMessage UIMessage) {
+    private void showCardLayout(ViewHolder holder, final UIMessage uiMessage) {
         // TODO Auto-generated method stub
-        Message message = UIMessage.getMessage();
+        Message message = uiMessage.getMessage();
         holder.cardLayout.removeAllViewsInLayout();
         holder.cardLayout.removeAllViews();
         boolean isMyMsg = message.getFromUser().equals(
@@ -198,7 +196,7 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
                 break;
             case "file/regular-file":
                 cardContentView = DisplayRegularFileMsg.getView(context,
-                        message);
+                        message,uiMessage.getSendStatus());
                 break;
             case "attachment/card":
                 cardContentView = DisplayAttachmentCardMsg.getView(context,
@@ -208,7 +206,7 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
                 cardContentView = DisplayExtendedActionsMsg.getInstance(context).getView(message);
                 break;
             case "media/image":
-                cardContentView = DisplayMediaImageMsg.getView(context,UIMessage);
+                cardContentView = DisplayMediaImageMsg.getView(context,uiMessage);
                 break;
             case "comment/text-plain":
                 cardContentView = DisplayCommentTextPlainMsg.getView(context,message);

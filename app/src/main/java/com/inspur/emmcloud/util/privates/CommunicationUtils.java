@@ -94,6 +94,8 @@ public class CommunicationUtils {
         }
         message.setContent(msgContentComment.toString());
         return message;
+
+
     }
 
     public static Message combinLocalExtendedLinksMessage(String cid,String poster,String title,String subTitle,String url){

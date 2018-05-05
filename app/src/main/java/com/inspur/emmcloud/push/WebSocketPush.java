@@ -11,7 +11,6 @@ import com.inspur.emmcloud.bean.system.EventMessage;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
-import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.PushInfoUtils;
 
@@ -238,7 +237,7 @@ public class WebSocketPush {
 				WSPushContent wsPushContent = new WSPushContent(arg0[0].toString());
 				String path = wsPushContent.getPath();
 				//客户端主动请求
-				if (StringUtils.isBlank(path)){
+			//	if (StringUtils.isBlank(path)){
 					String tracer = wsPushContent.getTracer();
 					EventMessage eventMessage = tracerMap.get(tracer);
 					if (eventMessage != null){
@@ -248,7 +247,8 @@ public class WebSocketPush {
 						eventMessage.setStatus(wsPushContent.getStatus());
 						EventBus.getDefault().post(eventMessage);
 					}
-				}else {
+		//		}
+				else {
 					if (path.equals("/channel/message") && wsPushContent.getMethod().equals("post")){
 						EventMessage eventMessagea = new EventMessage(Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE,wsPushContent.getBody());
 						EventBus.getDefault().post(eventMessagea);

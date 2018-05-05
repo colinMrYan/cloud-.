@@ -446,7 +446,7 @@ public class ChannelActivity extends BaseActivity {
     public void onReceiveWSMessage(EventMessage eventMessage) {
         if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE)) {
             LogUtils.jasonDebug("00000000000000");
-            if (eventMessage.getStatus() == 200){
+            if (eventMessage.getStatus() == 200) {
                 LogUtils.jasonDebug("11111111111111111111");
                 String content = eventMessage.getContent();
                 JSONObject contentobj = JSONUtils.getJSONObject(content);
@@ -477,6 +477,8 @@ public class ChannelActivity extends BaseActivity {
                     }
                     msgListView.MoveToPosition(UIMessageList.size() - 1);
                 }
+            }else {
+                setMessageSendFailStatus(String.valueOf(eventMessage.getExtra()));
             }
         }
 
@@ -487,7 +489,7 @@ public class ChannelActivity extends BaseActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onGetMessageById(EventMessage eventMessage) {
         if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_GET_MESSAGE_BY_ID)) {
-            if(eventMessage.getStatus() == 200){
+            if (eventMessage.getStatus() == 200) {
                 String content = eventMessage.getContent();
                 JSONObject contentobj = JSONUtils.getJSONObject(content);
                 Message message = new Message(contentobj);
@@ -504,7 +506,7 @@ public class ChannelActivity extends BaseActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveHistoryMessage(EventMessage eventMessage) {
         if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_GET_HISTORY_MESSAGE)) {
-            if(eventMessage.getStatus() == 200){
+            if (eventMessage.getStatus() == 200) {
                 String content = eventMessage.getContent();
                 GetNewMessagesResult getNewMessagesResult = new GetNewMessagesResult(content);
                 final List<Message> historyMessageList = getNewMessagesResult
@@ -518,6 +520,7 @@ public class ChannelActivity extends BaseActivity {
                         adapter.setMessageList(UIMessageList);
                         adapter.notifyItemRangeInserted(0, historyMessageList.size());
                         msgListView.MoveToPosition(historyMessageList.size() - 1);
+                        LogUtils.jasonDebug("historyMessageList.size()=" + historyMessageList.size());
                     }
                 } else {
                     if (historyMessageList.size() > 0) {
@@ -527,18 +530,18 @@ public class ChannelActivity extends BaseActivity {
                     initViews();
                     setChannelMsgRead();
                 }
-            }else {
+            } else {
                 LoadingDialog.dimissDlg(loadingDlg);
                 if (swipeRefreshLayout.isRefreshing()) {
                     swipeRefreshLayout.setRefreshing(false);
-                    WebServiceMiddleUtils.hand(ChannelActivity.this, eventMessage.getContent(), eventMessage.getStatus());
-                } else {
+                }
+                if (adapter == null) {
                     initViews();
                 }
+                WebServiceMiddleUtils.hand(ChannelActivity.this, eventMessage.getContent(), eventMessage.getStatus());
             }
 
         }
-
     }
 
     /**
@@ -726,7 +729,7 @@ public class ChannelActivity extends BaseActivity {
      */
     private void getNewMsgOfChannel() {
         if (NetUtils.isNetworkConnected(this, false)) {
-            WSAPIService.getInstance().getHistoryMessage(cid,"");
+            WSAPIService.getInstance().getHistoryMessage(cid, "");
         }
     }
 

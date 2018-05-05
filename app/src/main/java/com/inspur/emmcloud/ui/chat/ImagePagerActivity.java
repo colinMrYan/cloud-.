@@ -38,8 +38,6 @@ import com.inspur.emmcloud.widget.SoftKeyboardStateHelper;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -146,10 +144,9 @@ public class ImagePagerActivity extends BaseFragmentActivity {
                 bundle.putString("mid", imgTypeMessageList.get(pagerPosition).getId());
                 bundle.putString("cid", imgTypeMessageList.get(pagerPosition).getChannel());
                 bundle.putString("from", "imagePager");
-                Intent intent = new Intent(ImagePagerActivity.this, ChannelMsgDetailActivity.class);
+                Intent intent = new Intent(ImagePagerActivity.this, ChannelMessageDetailActivity.class);
                 intent.putExtras(bundle);
                 startActivityForResult(intent, CHECK_IMG_COMMENT);
-
                 break;
             case R.id.write_comment_layout:
                 showCommentInputDlg();
@@ -285,7 +282,7 @@ public class ImagePagerActivity extends BaseFragmentActivity {
             cid = currentMsg.getChannel();
             imgTypeMessageList = (List<Message>) getIntent().getSerializableExtra(EXTRA_IMAGE_MSG_LIST);
             for(Message message:imgTypeMessageList){
-                String url = APIUri.getPreviewUrl(message.getMsgContentMediaImage().getRawMedia());
+                String url = APIUri.getChatFileResouceUrl(message.getChannel(),message.getMsgContentMediaImage().getRawMedia());
                 urlList.add(url);
             }
             pageStartPosition = imgTypeMessageList.indexOf(currentMsg);
@@ -299,26 +296,6 @@ public class ImagePagerActivity extends BaseFragmentActivity {
         locationH = getIntent().getIntExtra(PHOTO_SELECT_H_TAG, 0);
     }
 
-
-    /**
-     * 拼接评论发送的内容
-     *
-     * @param content
-     * @return
-     */
-    public String getConbineCommentSendText(String content, List<String> mentionsUidList, List<String> urlList) {
-        JSONObject richTextObj = new JSONObject();
-        JSONArray mentionArray = JSONUtils.toJSONArray(mentionsUidList);
-        JSONArray urlArray = JSONUtils.toJSONArray(urlList);
-        try {
-            richTextObj.put("source", content);
-            richTextObj.put("mentions", mentionArray);
-            richTextObj.put("urlList", urlArray);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return richTextObj.toString();
-    }
 
 
     public void setPhotoTap() {

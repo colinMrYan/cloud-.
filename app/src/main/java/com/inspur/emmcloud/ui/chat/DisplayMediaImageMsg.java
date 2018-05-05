@@ -49,8 +49,7 @@ public class DisplayMediaImageMsg {
         String imageUri = msgContentMediaImage.getRawMedia();
 
         if (!imageUri.startsWith("content:") && !imageUri.startsWith("file:")) {
-            imageUri = APIUri.getPreviewUrl(imageUri);
-
+            imageUri = APIUri.getChatFileResouceUrl(UIMessage.getMessage().getChannel(),imageUri);
         }
         DisplayImageOptions options = new DisplayImageOptions.Builder()
                 .showImageForEmptyUri(R.drawable.default_image)
@@ -92,12 +91,12 @@ public class DisplayMediaImageMsg {
                 Intent intent = new Intent(context,
                         ImagePagerActivity.class);
                 List<Message> imgTypeMsgList = MessageCacheUtil.getImgTypeMessageList(context, message.getChannel(), false);
-                intent.putExtra(ImagePagerV0Activity.EXTRA_IMAGE_MSG_LIST, (Serializable) imgTypeMsgList);
-                intent.putExtra(ImagePagerV0Activity.EXTRA_CURRENT_IMAGE_MSG, message);
-                intent.putExtra(ImagePagerV0Activity.PHOTO_SELECT_X_TAG, location[0]);
-                intent.putExtra(ImagePagerV0Activity.PHOTO_SELECT_Y_TAG, location[1]);
-                intent.putExtra(ImagePagerV0Activity.PHOTO_SELECT_W_TAG, width);
-                intent.putExtra(ImagePagerV0Activity.PHOTO_SELECT_H_TAG, height);
+                intent.putExtra(ImagePagerActivity.EXTRA_IMAGE_MSG_LIST, (Serializable) imgTypeMsgList);
+                intent.putExtra(ImagePagerActivity.EXTRA_CURRENT_IMAGE_MSG, message);
+                intent.putExtra(ImagePagerActivity.PHOTO_SELECT_X_TAG, location[0]);
+                intent.putExtra(ImagePagerActivity.PHOTO_SELECT_Y_TAG, location[1]);
+                intent.putExtra(ImagePagerActivity.PHOTO_SELECT_W_TAG, width);
+                intent.putExtra(ImagePagerActivity.PHOTO_SELECT_H_TAG, height);
                 context.startActivity(intent);
             }
         });

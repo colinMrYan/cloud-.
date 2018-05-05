@@ -164,7 +164,7 @@ public class ChannelMessageDetailActivity extends BaseActivity implements
         disPlayCommonInfo();
         View msgDisplayView = null;
         if (!message.getType().equals("media/image")) {
-            msgDisplayView = DisplayRegularFileMsg.getView(MyApplication.getInstance(), message);
+            msgDisplayView = DisplayRegularFileMsg.getView(MyApplication.getInstance(), message,1);
         } else {
             msgDisplayView = inflater.inflate(R.layout.msg_common_detail, null);
             msgContentImg = (ImageView) msgDisplayView
@@ -175,11 +175,10 @@ public class ChannelMessageDetailActivity extends BaseActivity implements
                     .findViewById(R.id.comment_filesize_text);
             String fileName;
             String fileSize;
-            //if (message.getType().equals("media/image")){
             MsgContentMediaImage msgContentMediaImage = message.getMsgContentMediaImage();
             fileName = msgContentMediaImage.getName();
             fileSize = FileUtils.formatFileSize(msgContentMediaImage.getRawSize());
-            final String imgPath = APIUri.getPreviewUrl(msgContentMediaImage.getRawMedia());
+            final String imgPath = APIUri.getChatFileResouceUrl(message.getChannel(),msgContentMediaImage.getRawMedia());
             ImageDisplayUtils.getInstance().displayImage(msgContentImg,
                     imgPath, R.drawable.icon_photo_default);
             msgContentImg.setOnClickListener(new OnClickListener() {
@@ -190,12 +189,6 @@ public class ChannelMessageDetailActivity extends BaseActivity implements
             });
             fileNameText.setText(fileName);
             fileSizeText.setText(fileSize);
-//            }else {
-//                MsgContentRegularFile msgContentRegularFile = message.getMsgContentAttachmentFile();
-//                fileName = msgContentRegularFile.getName();
-//                fileSize = FileUtils.formatFileSize(msgContentRegularFile.getSize());
-//                ImageDisplayUtils.getInstance().displayImage(msgContentImg, "drawable://" + FileUtils.getRegularFileIconResId(fileName));
-//            }
         }
         msgDisplayView.setLayoutParams(new LayoutParams(
                 LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
@@ -207,27 +200,22 @@ public class ChannelMessageDetailActivity extends BaseActivity implements
      *
      * @param path
      */
-    protected void displayZoomImage(View view, String path) {
+    protected void displayZoomImage(View view, String url) {
 
         int[] location = new int[2];
         view.getLocationOnScreen(location);
         view.invalidate();
         int width = view.getWidth();
         int height = view.getHeight();
-        String url = path;
-        if (!path.startsWith("file:") && !path.startsWith("content:")
-                && !path.startsWith("drawable")) {
-            url = APIUri.getPreviewUrl(path);
-        }
-        ArrayList<String> urlList = new ArrayList<String>();
+        ArrayList<String> urlList = new ArrayList<>();
         urlList.add(url);
         Intent intent = new Intent(getApplicationContext(),
-                ImagePagerV0Activity.class);
-        intent.putExtra(ImagePagerV0Activity.PHOTO_SELECT_X_TAG, location[0]);
-        intent.putExtra(ImagePagerV0Activity.PHOTO_SELECT_Y_TAG, location[1]);
-        intent.putExtra(ImagePagerV0Activity.PHOTO_SELECT_W_TAG, width);
-        intent.putExtra(ImagePagerV0Activity.PHOTO_SELECT_H_TAG, height);
-        intent.putExtra(ImagePagerV0Activity.EXTRA_IMAGE_URLS, urlList);
+                ImagePagerActivity.class);
+        intent.putExtra(ImagePagerActivity.PHOTO_SELECT_X_TAG, location[0]);
+        intent.putExtra(ImagePagerActivity.PHOTO_SELECT_Y_TAG, location[1]);
+        intent.putExtra(ImagePagerActivity.PHOTO_SELECT_W_TAG, width);
+        intent.putExtra(ImagePagerActivity.PHOTO_SELECT_H_TAG, height);
+        intent.putExtra(ImagePagerActivity.EXTRA_IMAGE_URLS, urlList);
         startActivity(intent);
     }
 

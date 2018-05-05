@@ -305,6 +305,16 @@ public class APIUri {
     }
 
     /**
+     * 获取V1版消息中聊天资源文件地址
+     * @param cid
+     * @param path
+     * @return
+     */
+    public static String getChatFileResouceUrl(String cid,String path){
+        return getECMBaseUrl() +"chat/api/v1/channel/"+cid+"/file/request?path="+path;
+    }
+
+    /**
      * 消息免打扰
      *
      * @return

@@ -102,7 +102,7 @@ public class GroupAlbumActivity extends BaseActivity {
         }else {
             imgTypeMessageList = MessageCacheUtil.getImgTypeMessageList(MyApplication.getInstance(), cid);
             for (Message message:imgTypeMessageList) {
-                String url = APIUri.getPreviewUrl(message.getMsgContentMediaImage().getRawMedia());
+                String url = APIUri.getChatFileResouceUrl(message.getChannel(),message.getMsgContentMediaImage().getRawMedia());
                 imgUrlList.add(url);
             }
 
@@ -148,7 +148,7 @@ public class GroupAlbumActivity extends BaseActivity {
             } else {
                 holder = (ViewHolder) convertView.getTag();
             }
-            ImageDisplayUtils.getInstance().displayImage(holder.albumImg, imgUrlList.get(position), R.drawable.icon_photo_default);
+            ImageDisplayUtils.getInstance().displayImage(holder.albumImg, imgUrlList.get(position), R.drawable.default_image);
             return convertView;
         }
 

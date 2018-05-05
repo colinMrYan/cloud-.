@@ -46,6 +46,7 @@ import com.inspur.emmcloud.util.privates.HuaWeiPushMangerUtils;
 import com.inspur.emmcloud.util.privates.MutilClusterUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUsersUtils;
 import com.inspur.emmcloud.util.privates.cache.DbCacheUtils;
+import com.inspur.emmcloud.widget.CustomImageDownloader;
 import com.inspur.imp.api.Res;
 import com.inspur.reactnative.AuthorizationManagerPackage;
 import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiskCache;
@@ -619,44 +620,30 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
      **/
     private void initImageLoader() {
         // TODO Auto-generated method stub
-        ImageLoaderConfiguration config = null;
-        if (!Environment.getExternalStorageState().equals(
+        ImageLoaderConfiguration.Builder builder = new ImageLoaderConfiguration.Builder(
+                getInstance())
+                .memoryCacheExtraOptions(1200, 1200)
+                .imageDownloader(
+                        new CustomImageDownloader(getApplicationContext()))
+                .threadPoolSize(6)
+                .threadPriority(Thread.NORM_PRIORITY - 1)
+                .denyCacheImageMultipleSizesInMemory()
+                .memoryCache(
+                        new UsingFreqLimitedMemoryCache(3 * 1024 * 1024))
+                .diskCacheSize(50 * 1024 * 1024)
+                // You can pass your own memory cache implementation
+                .tasksProcessingOrder(QueueProcessingType.LIFO)
+                .diskCacheFileNameGenerator(new HashCodeFileNameGenerator());
+        if (Environment.getExternalStorageState().equals(
                 Environment.MEDIA_MOUNTED)) {
-            config = new ImageLoaderConfiguration.Builder(
-                    getInstance())
-                    .memoryCacheExtraOptions(1200, 1200)
-                    .threadPoolSize(6)
-                    .threadPriority(Thread.NORM_PRIORITY - 1)
-                    .denyCacheImageMultipleSizesInMemory()
-                    .memoryCache(
-                            new UsingFreqLimitedMemoryCache(3 * 1024 * 1024))
-                    .diskCacheSize(50 * 1024 * 1024)
-                    // You can pass your own memory cache implementation
-                    .tasksProcessingOrder(QueueProcessingType.LIFO)
-                    // You can pass your own disc cache implementation
-                    .diskCacheFileNameGenerator(new HashCodeFileNameGenerator())
-                    .build();
-        } else {
             File cacheDir = new File(MyAppConfig.LOCAL_CACHE_PATH);
             if (!cacheDir.exists()) {
                 cacheDir.mkdirs();
             }
-            config = new ImageLoaderConfiguration.Builder(
-                    getInstance())
-                    .memoryCacheExtraOptions(1200, 1200)
-                    .threadPoolSize(6)
-                    .threadPriority(Thread.NORM_PRIORITY - 1)
-                    .denyCacheImageMultipleSizesInMemory()
-                    .memoryCache(
-                            new UsingFreqLimitedMemoryCache(3 * 1024 * 1024))
-                    .diskCacheSize(50 * 1024 * 1024)
-                    // You can pass your own memory cache implementation
-                    .tasksProcessingOrder(QueueProcessingType.LIFO)
-                    .diskCache(new UnlimitedDiskCache(cacheDir))
-                    // You can pass your own disc cache implementation
-                    .diskCacheFileNameGenerator(new HashCodeFileNameGenerator())
-                    .build();
+            builder = builder.diskCache(new UnlimitedDiskCache(cacheDir));
         }
+
+        ImageLoaderConfiguration config = builder.build();
         L.disableLogging(); // 关闭imageloader的疯狂的log
         ImageLoader.getInstance().init(config);
 
