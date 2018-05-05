@@ -936,4 +936,5 @@
     <string name="volume_read_write_permission">Have upload / view permissions</string>
     <string name="volume_read_permission">Have view permissions</string>
 
+    <string name="cluster_no_permission">The current function lacks effective authorization information.</string>
 </resources>
