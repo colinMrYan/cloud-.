@@ -469,7 +469,7 @@ public class ContactSearchActivity extends BaseActivity {
             intent.setClass(getApplicationContext(), UserInfoActivity.class);
             startActivity(intent);
         } else {
-            intent.setClass(getApplicationContext(), MyApplication.getInstance().isMessageV0()? ChannelV0Activity.class:ChannelActivity.class);
+            intent.setClass(getApplicationContext(), MyApplication.getInstance().isChatVersionV0()? ChannelV0Activity.class:ChannelActivity.class);
             intent.putExtra("title", searchModel.getName());
             intent.putExtra("cid", searchModel.getId());
             intent.putExtra("channelType", searchModel.getType());

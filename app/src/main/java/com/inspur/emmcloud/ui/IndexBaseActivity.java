@@ -103,7 +103,7 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
                     TabBean tabBean = null;
                     switch (appTabList.get(i).getTabId()) {
                         case "communicate":
-                            if (MyApplication.getInstance().isMessageV0()){
+                            if (MyApplication.getInstance().isChatVersionV0()){
                                 tabBean = new TabBean(getString(R.string.communicate), R.drawable.selector_tab_message_btn + "", CommunicationV0Fragment.class);
                             }else {
                                 tabBean = new TabBean(getString(R.string.communicate), R.drawable.selector_tab_message_btn + "", CommunicationFragment.class);

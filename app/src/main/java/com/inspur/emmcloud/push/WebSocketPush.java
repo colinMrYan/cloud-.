@@ -78,14 +78,14 @@ public class WebSocketPush {
 
 	private void WebSocketConnect(String chatClientId) {
 			String url = APIUri.getWebsocketConnectUrl();
-			String path = MyApplication.getInstance().isMessageV0()?"/"+MyApplication.getInstance().getCurrentEnterprise().getCode()+"/socket/handshake":
+			String path = MyApplication.getInstance().isChatVersionV0()?"/"+MyApplication.getInstance().getCurrentEnterprise().getCode()+"/socket/handshake":
 					"/chat/socket/handshake";
 			sendWebSocketStatusBroadcaset("socket_connecting");
 			IO.Options opts = new IO.Options();
 			opts.reconnectionAttempts = 4; // 设置websocket重连次数
 			opts.forceNew = true;
 			Map<String, String> query = new HashMap<String, String>();
-			if (MyApplication.getInstance().isMessageV0()){
+			if (MyApplication.getInstance().isChatVersionV0()){
 				String uuid = AppUtils.getMyUUID(MyApplication.getInstance());
 				String deviceName = AppUtils.getDeviceName(MyApplication.getInstance());
 				String pushId = AppUtils.getPushId(MyApplication.getInstance());
@@ -100,12 +100,12 @@ public class WebSocketPush {
 			opts.query = ParseQS.encode(query);
 			try {
 				webSocketSignout();
-				if (MyApplication.getInstance().isMessageV0()){
-					mSocket = IO.socket(url, opts);
-				}else {
+//				if (MyApplication.getInstance().isChatVersionV0()){
+//					mSocket = IO.socket(url, opts);
+//				}else {
 					Manager manager = new Manager(new URI(url),opts);
-					mSocket = manager.socket("/api/v1");
-				}
+					mSocket = manager.socket(MyApplication.getInstance().getChatSpcketNameSpace());
+//				}
 				mSocket.io().on(Manager.EVENT_TRANSPORT, new Emitter.Listener() {
 					@Override
 					public void call(Object... args) {

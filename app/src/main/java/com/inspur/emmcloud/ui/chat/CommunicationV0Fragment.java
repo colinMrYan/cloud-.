@@ -51,6 +51,7 @@ import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.util.common.IntentUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
@@ -166,6 +167,7 @@ public class CommunicationV0Fragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
+        LogUtils.jasonDebug("0000000000000000000000000000000");
         super.onCreate(savedInstanceState);
         initView();
         registerMessageFragmentReceiver();

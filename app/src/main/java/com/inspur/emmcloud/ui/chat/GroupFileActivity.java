@@ -51,14 +51,12 @@ public class GroupFileActivity extends BaseActivity {
     private RelativeLayout noChannelFileLayout;
 
     private String cid;
-    private boolean isMessageV0 = true;
     private List<GroupFileInfo> fileInfoList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
-        isMessageV0 = MyApplication.getInstance().isMessageV0();
         cid = getIntent().getExtras().getString("cid");
         getFileMsgList();
         noChannelFileLayout.setVisibility(fileInfoList.size() == 0 ? View.VISIBLE:View.GONE);
@@ -70,7 +68,7 @@ public class GroupFileActivity extends BaseActivity {
      */
     private void getFileMsgList() {
         // TODO Auto-generated method stub
-        if (isMessageV0) {
+        if (MyApplication.getInstance().isChatVersionV0()) {
             List<Msg> fileTypeMsgList = MsgCacheUtil.getFileTypeMsgList(
                     GroupFileActivity.this, cid);
             for (Msg msg : fileTypeMsgList) {
@@ -210,7 +208,7 @@ public class GroupFileActivity extends BaseActivity {
                     FileUtils.openFile(getApplicationContext(), fileDownloadPath);
                 } else {
                     RequestParams params = MyApplication.getInstance().getHttpRequestParams(fileUrl);
-                    if (isMessageV0){
+                    if (MyApplication.getInstance().isChatVersionV0()){
                         params.setAutoResume(true);// 断点下载
                         params.setSaveFilePath(fileDownloadPath);
                         params.setCancelFast(true);

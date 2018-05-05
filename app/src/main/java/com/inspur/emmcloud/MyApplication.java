@@ -103,7 +103,6 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
     private String clusterChatVersion = "";//仅标识chat的version
     private String clusterChatSocket = "";
     private String clusterEmm = Constant.DEFAULT_CLUSTER_EMM;//多云emm服务
-    private boolean isMessageV0 =false;
 
     public void onCreate() {
         super.onCreate();
@@ -151,13 +150,6 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         SpeechUtility.createUtility(this, SpeechConstant.APPID + "=5a6001bf");
     }
 
-    public boolean isMessageV0() {
-        return isMessageV0;
-    }
-
-    public void setMessageV0(boolean messageV0) {
-        isMessageV0 = messageV0;
-    }
 
     /**
      * 单例获取application实例
@@ -545,12 +537,16 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         this.clusterChatSocket = clusterChatSocket;
     }
 
+    public boolean isChatVersionV0(){
+        return clusterChatVersion.equals("v0");
+    }
+
     /**
      * namespace
      * v1版及v1.x版返回/api/v1
      * @return
      */
-    public String getNameSpace(){
+    public String getChatSpcketNameSpace(){
         if(getClusterChatVersion().toLowerCase().startsWith("v1")){
             return "/api/v1";
         }
