@@ -56,7 +56,6 @@ public class CaptureActivity extends Activity implements Callback {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);//没有标题
 		this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);//设置全屏
 		setContentView(Res.getLayoutID("plugin_barcode_capture"));
-		this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);//设置全屏
 		CameraManager.init(this);
 		btn_torch = (Button)findViewById(Res.getWidgetID("btn_torch"));
 		viewfinderView = (ViewfinderView) findViewById(Res.getWidgetID("viewfinder_view"));
