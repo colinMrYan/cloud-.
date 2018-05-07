@@ -32,6 +32,7 @@ public class MutilClusterUtils {
      */
     public static void setClusterBaseUrl(Enterprise enterprise) {
         List<ClusterBean> clusterBeanList = enterprise.getClusterBeanList();
+        initClusters();
         for (int i = 0; i < clusterBeanList.size(); i++) {
             String serviceName = clusterBeanList.get(i).getServiceName();
             String serviceUrl = getUrlByType(clusterBeanList.get(i), serviceName);
@@ -69,6 +70,20 @@ public class MutilClusterUtils {
     }
 
     /**
+     * 重新初始化路由
+     */
+    private static void initClusters() {
+        MyApplication.getInstance().setClusterEmm("");
+        MyApplication.getInstance().setClusterChat("");
+        MyApplication.getInstance().setClusterSchedule("");
+        MyApplication.getInstance().setClusterDistribution("");
+        MyApplication.getInstance().setClusterNews("");
+        MyApplication.getInstance().setClusterCloudDrive("");
+        MyApplication.getInstance().setClusterStorageLegacy("");
+    }
+
+
+    /**
      * 返回合适的Url
      */
     private static String getUrlByType(ClusterBean clusterBeanNew, String serviceName) {
@@ -76,13 +91,15 @@ public class MutilClusterUtils {
         ClusterBean clusterBean = clusterBeanNew;
         if (StringUtils.isBlank(differentUrlByType)) {
             Enterprise enterpriseOld = getOldEnterprise();
-            List<ClusterBean> clusterBeanListOld = enterpriseOld.getClusterBeanList();
-            ClusterBean clusterBeanIndex = new ClusterBean();
-            clusterBeanIndex.setServiceName(serviceName);
-            int clusterIndex = clusterBeanListOld.indexOf(clusterBeanIndex);
-            if (clusterIndex != -1) {
-                clusterBean = clusterBeanListOld.get(clusterIndex);
-                differentUrlByType = clusterBean.getBaseUrl();
+            if(isSameEnterprise(enterpriseOld)){
+                List<ClusterBean> clusterBeanListOld = enterpriseOld.getClusterBeanList();
+                ClusterBean clusterBeanIndex = new ClusterBean();
+                clusterBeanIndex.setServiceName(serviceName);
+                int clusterIndex = clusterBeanListOld.indexOf(clusterBeanIndex);
+                if (clusterIndex != -1) {
+                    clusterBean = clusterBeanListOld.get(clusterIndex);
+                    differentUrlByType = clusterBean.getBaseUrl();
+                }
             }
         }
         if (serviceName.equals(ECM_CHAT)) {
@@ -118,5 +135,14 @@ public class MutilClusterUtils {
             }
         }
         return new Enterprise();
+    }
+
+    /**
+     * 判断是不是同一个企业下，同一个企业下的才退化
+     * @param enterprise
+     * @return
+     */
+    private static boolean isSameEnterprise(Enterprise enterprise){
+        return enterprise.getId().equals(MyApplication.getInstance().getCurrentEnterprise().getId());
     }
 }
