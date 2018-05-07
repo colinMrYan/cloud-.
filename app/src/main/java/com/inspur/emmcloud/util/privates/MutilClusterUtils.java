@@ -91,7 +91,7 @@ public class MutilClusterUtils {
         ClusterBean clusterBean = clusterBeanNew;
         if (StringUtils.isBlank(differentUrlByType)) {
             Enterprise enterpriseOld = getOldEnterprise();
-            if(isSameEnterprise(enterpriseOld)){
+            if(enterpriseOld != null){
                 List<ClusterBean> clusterBeanListOld = enterpriseOld.getClusterBeanList();
                 ClusterBean clusterBeanIndex = new ClusterBean();
                 clusterBeanIndex.setServiceName(serviceName);
@@ -134,15 +134,7 @@ public class MutilClusterUtils {
                 }
             }
         }
-        return new Enterprise();
+        return null;
     }
 
-    /**
-     * 判断是不是同一个企业下，同一个企业下的才退化
-     * @param enterprise
-     * @return
-     */
-    private static boolean isSameEnterprise(Enterprise enterprise){
-        return enterprise.getId().equals(MyApplication.getInstance().getCurrentEnterprise().getId());
-    }
 }
