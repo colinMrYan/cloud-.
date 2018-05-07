@@ -62,6 +62,7 @@ public class HttpUtils {
         if(isValidUrl(params)){
             x.http().request(httpMethod,params,callback);
         }else{
+            callback.callbackFail("",-1);
             Intent intent = new Intent();
             intent.setClass(context, NoPermissionDialogActivity.class);
             context.startActivity(intent);

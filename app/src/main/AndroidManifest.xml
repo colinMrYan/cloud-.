@@ -135,7 +135,7 @@
             android:screenOrientation="portrait"></activity>
         <activity android:name=".ui.mine.setting.NoPermissionDialogActivity"
             android:resizeableActivity="true"
-            android:launchMode="singleTask"
+            android:launchMode="singleInstance"
             android:screenOrientation="portrait"
             android:theme="@style/dialog_activity"
             android:stateNotNeeded="true"

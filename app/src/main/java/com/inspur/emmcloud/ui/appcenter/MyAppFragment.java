@@ -39,6 +39,7 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.adapter.DragAdapter;
 import com.inspur.emmcloud.adapter.RecommendAppWidgetListAdapter;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
+import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
 import com.inspur.emmcloud.bean.appcenter.App;
 import com.inspur.emmcloud.bean.appcenter.AppBadgeBean;
@@ -123,6 +124,8 @@ public class MyAppFragment extends Fragment {
         initViews();
         registerReceiver();
         EventBus.getDefault().register(this);
+        ChatAPIService chatAPIService = new ChatAPIService(getActivity());
+        chatAPIService.getContactOrgPart();
     }
 
     @Override
