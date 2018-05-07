@@ -277,7 +277,6 @@ public class IndexActivity extends IndexBaseActivity {
         }
     }
 
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -346,7 +345,7 @@ public class IndexActivity extends IndexBaseActivity {
             String contackLastUpdateTime = ContactCacheUtils
                     .getLastUpdateTime(IndexActivity.this);
             apiService.getAllContact(contackLastUpdateTime);
-        } else if (isHasCacheContact) {
+        } else if (isHasCacheContact && handler != null) {
             handler.sendEmptyMessage(SYNC_ALL_BASE_DATA_SUCCESS);
         }
     }
@@ -409,7 +408,9 @@ public class IndexActivity extends IndexBaseActivity {
         public void returnSearchChannelGroupFail(String error, int errorCode) {
             super.returnSearchChannelGroupFail(error, errorCode);
             // 无论成功或者失败都返回成功都能进入应用
-            handler.sendEmptyMessage(SYNC_ALL_BASE_DATA_SUCCESS);
+            if (handler != null) {
+                handler.sendEmptyMessage(SYNC_ALL_BASE_DATA_SUCCESS);
+            }
         }
 
 

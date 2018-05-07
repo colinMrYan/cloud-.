@@ -113,7 +113,7 @@ public class ChannelActivity extends BaseActivity {
     private String robotUid = "BOT6006";
     private String cid;
     private Channel channel;
-    private List<UIMessage> UIMessageList = new ArrayList<>();
+    private List<UIMessage> uiMessageList = new ArrayList<>();
     private ChannelMessageAdapter adapter;
     private Handler handler;
     private ChatAPIService apiService;
@@ -187,14 +187,14 @@ public class ChannelActivity extends BaseActivity {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                if (UIMessageList.size() > 0 && MessageCacheUtil.isDataInLocal(ChannelActivity.this, cid, UIMessageList
+                if (uiMessageList.size() > 0 && MessageCacheUtil.isDataInLocal(ChannelActivity.this, cid, uiMessageList
                         .get(0).getCreationDate(), 15)) {
                     List<Message> historyMsgList = MessageCacheUtil.getHistoryMessageList(
-                            MyApplication.getInstance(), cid, UIMessageList.get(0).getCreationDate(),
+                            MyApplication.getInstance(), cid, uiMessageList.get(0).getCreationDate(),
                             15);
-                    UIMessageList.addAll(0, UIMessage.MessageList2UIMessageList(historyMsgList));
+                    uiMessageList.addAll(0, UIMessage.MessageList2UIMessageList(historyMsgList));
                     swipeRefreshLayout.setRefreshing(false);
-                    adapter.setMessageList(UIMessageList);
+                    adapter.setMessageList(uiMessageList);
                     adapter.notifyItemRangeInserted(0, historyMsgList.size());
                     msgListView.MoveToPosition(historyMsgList.size() - 1);
                 } else {
@@ -285,14 +285,14 @@ public class ChannelActivity extends BaseActivity {
      */
     private void initMsgListView() {
         final List<Message> cacheMessageList = MessageCacheUtil.getHistoryMessageList(MyApplication.getInstance(), cid, null, 15);
-        UIMessageList = UIMessage.MessageList2UIMessageList(cacheMessageList);
+        uiMessageList = UIMessage.MessageList2UIMessageList(cacheMessageList);
         adapter = new ChannelMessageAdapter(ChannelActivity.this, apiService, channel.getType(), chatInputMenu);
         adapter.setItemClickListener(new ChannelMessageAdapter.MyItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                Message message = UIMessageList.get(position).getMessage();
+                Message message = uiMessageList.get(position).getMessage();
                 //当消息处于发送中状态时无法点击
-                if (UIMessageList.get(position).getSendStatus() != 1) {
+                if (uiMessageList.get(position).getSendStatus() != 1) {
                     return;
                 }
                 String msgType = message.getType();
@@ -324,11 +324,11 @@ public class ChannelActivity extends BaseActivity {
                 }
             }
         });
-        adapter.setMessageList(UIMessageList);
+        adapter.setMessageList(uiMessageList);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         msgListView.setLayoutManager(linearLayoutManager);
         msgListView.setAdapter(adapter);
-        msgListView.MoveToPosition(UIMessageList.size() - 1);
+        msgListView.MoveToPosition(uiMessageList.size() - 1);
         msgListView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -453,11 +453,11 @@ public class ChannelActivity extends BaseActivity {
                 Message receivedWSMessage = new Message(contentobj);
                 if (cid.equals(receivedWSMessage.getChannel())) {
                     MessageReadCreationDateCacheUtils.saveMessageReadCreationDate(MyApplication.getInstance(), cid, receivedWSMessage.getCreationDate());
-                    int size = UIMessageList.size();
+                    int size = uiMessageList.size();
                     int index = -1;
                     if (size > 0) {
                         for (int i = size - 1; i >= 0; i--) {
-                            UIMessage UIMessage = UIMessageList.get(i);
+                            UIMessage UIMessage = uiMessageList.get(i);
                             if (UIMessage.getMessage().getId().equals(String.valueOf(eventMessage.getExtra()))) {
                                 index = i;
                                 break;
@@ -466,16 +466,16 @@ public class ChannelActivity extends BaseActivity {
 
                     }
                     if (index == -1) {
-                        UIMessageList.add(new UIMessage(receivedWSMessage));
-                        adapter.setMessageList(UIMessageList);
-                        adapter.notifyItemInserted(UIMessageList.size() - 1);
+                        uiMessageList.add(new UIMessage(receivedWSMessage));
+                        adapter.setMessageList(uiMessageList);
+                        adapter.notifyItemInserted(uiMessageList.size() - 1);
                     } else {
-                        UIMessageList.remove(index);
-                        UIMessageList.add(index, new UIMessage(receivedWSMessage));
-                        adapter.setMessageList(UIMessageList);
+                        uiMessageList.remove(index);
+                        uiMessageList.add(index, new UIMessage(receivedWSMessage));
+                        adapter.setMessageList(uiMessageList);
                         adapter.notifyItemChanged(index);
                     }
-                    msgListView.MoveToPosition(UIMessageList.size() - 1);
+                    msgListView.MoveToPosition(uiMessageList.size() - 1);
                 }
             }else {
                 setMessageSendFailStatus(String.valueOf(eventMessage.getExtra()));
@@ -494,7 +494,7 @@ public class ChannelActivity extends BaseActivity {
                 JSONObject contentobj = JSONUtils.getJSONObject(content);
                 Message message = new Message(contentobj);
                 MessageCacheUtil.saveMessage(MyApplication.getInstance(), message);
-                adapter.setMessageList(UIMessageList);
+                adapter.setMessageList(uiMessageList);
                 adapter.notifyDataSetChanged();
             }
 
@@ -514,13 +514,12 @@ public class ChannelActivity extends BaseActivity {
                 if (adapter != null) {
                     swipeRefreshLayout.setRefreshing(false);
                     if (historyMessageList.size() > 0) {
-                        MessageCacheUtil.saveMessageList(MyApplication.getInstance(), historyMessageList, UIMessageList.get(0).getCreationDate());
+                        MessageCacheUtil.saveMessageList(MyApplication.getInstance(), historyMessageList, uiMessageList.get(0).getCreationDate());
                         List<UIMessage> historyUIMessageList = UIMessage.MessageList2UIMessageList(historyMessageList);
-                        UIMessageList.addAll(0, historyUIMessageList);
-                        adapter.setMessageList(UIMessageList);
+                        uiMessageList.addAll(0, historyUIMessageList);
+                        adapter.setMessageList(uiMessageList);
                         adapter.notifyItemRangeInserted(0, historyMessageList.size());
                         msgListView.MoveToPosition(historyMessageList.size() - 1);
-                        LogUtils.jasonDebug("historyMessageList.size()=" + historyMessageList.size());
                     }
                 } else {
                     if (historyMessageList.size() > 0) {
@@ -541,6 +540,29 @@ public class ChannelActivity extends BaseActivity {
                 WebServiceMiddleUtils.hand(ChannelActivity.this, eventMessage.getContent(), eventMessage.getStatus());
             }
 
+        }
+    }
+
+
+    //接收到离线消息
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onReiceveWSOfflineMessage(EventMessage eventMessage){
+        if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_GET_OFFLINE_WS_MESSAGE)){
+            if(eventMessage.getStatus() == 200){
+                String content = eventMessage.getContent();
+                GetNewMessagesResult getNewMessagesResult = new GetNewMessagesResult(content);
+                List<Message>offlineMessageList = getNewMessagesResult.getNewMessageList(cid);
+                if (offlineMessageList.size()>0){
+                    int currentPostion = uiMessageList.size()-1;
+                    List<UIMessage> offlineUIMessageList = UIMessage.MessageList2UIMessageList(offlineMessageList);
+                    uiMessageList.addAll(uiMessageList.size(), offlineUIMessageList);
+                    adapter.setMessageList(uiMessageList);
+                    adapter.notifyItemRangeInserted(uiMessageList.size(), offlineUIMessageList.size());
+                    msgListView.MoveToPosition(currentPostion);
+
+                }
+
+            }
         }
     }
 
@@ -626,10 +648,10 @@ public class ChannelActivity extends BaseActivity {
             UIMessage UIMessage = new UIMessage(message);
             //本地添加的消息设置为正在发送状态
             UIMessage.setSendStatus(status);
-            UIMessageList.add(UIMessage);
-            adapter.setMessageList(UIMessageList);
-            adapter.notifyItemInserted(UIMessageList.size() - 1);
-            msgListView.MoveToPosition(UIMessageList.size() - 1);
+            uiMessageList.add(UIMessage);
+            adapter.setMessageList(uiMessageList);
+            adapter.notifyItemInserted(uiMessageList.size() - 1);
+            msgListView.MoveToPosition(uiMessageList.size() - 1);
         }
     }
 
@@ -641,10 +663,10 @@ public class ChannelActivity extends BaseActivity {
     private void setMessageSendFailStatus(String fakeMessageId) {
         //消息发送失败处理
         UIMessage fakeUIMessage = new UIMessage(fakeMessageId);
-        int fakeUIMessageIndex = UIMessageList.indexOf(fakeUIMessage);
+        int fakeUIMessageIndex = uiMessageList.indexOf(fakeUIMessage);
         if (fakeUIMessageIndex != -1) {
-            UIMessageList.get(fakeUIMessageIndex).setSendStatus(2);
-            adapter.setMessageList(UIMessageList);
+            uiMessageList.get(fakeUIMessageIndex).setSendStatus(2);
+            adapter.setMessageList(uiMessageList);
             adapter.notifyDataSetChanged();
         }
     }
@@ -654,12 +676,12 @@ public class ChannelActivity extends BaseActivity {
      * 通知message页将本频道消息置为已读
      */
     private void setChannelMsgRead() {
-        if (UIMessageList.size() > 0) {
-            MessageReadCreationDateCacheUtils.saveMessageReadCreationDate(MyApplication.getInstance(), cid, UIMessageList.get(UIMessageList.size() - 1).getCreationDate());
+        if (uiMessageList.size() > 0) {
+            MessageReadCreationDateCacheUtils.saveMessageReadCreationDate(MyApplication.getInstance(), cid, uiMessageList.get(uiMessageList.size() - 1).getCreationDate());
             Intent intent = new Intent("message_notify");
             intent.putExtra("command", "set_channel_message_read");
             intent.putExtra("cid", cid);
-            intent.putExtra("messageCreationDate", UIMessageList.get(UIMessageList.size() - 1).getCreationDate());
+            intent.putExtra("messageCreationDate", uiMessageList.get(uiMessageList.size() - 1).getCreationDate());
             LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
         }
     }
@@ -715,7 +737,7 @@ public class ChannelActivity extends BaseActivity {
     private void getNewsMsg() {
         swipeRefreshLayout.setRefreshing(false);
         if (NetUtils.isNetworkConnected(ChannelActivity.this)) {
-            String newMessageId = UIMessageList.size() > 0 ? UIMessageList.get(0).getMessage().getId() : "";
+            String newMessageId = uiMessageList.size() > 0 ? uiMessageList.get(0).getMessage().getId() : "";
             WSAPIService.getInstance().getHistoryMessage(cid, newMessageId);
         } else {
             swipeRefreshLayout.setRefreshing(false);
@@ -768,10 +790,10 @@ public class ChannelActivity extends BaseActivity {
             if (swipeRefreshLayout.isRefreshing()) {
                 swipeRefreshLayout.setRefreshing(false);
                 if (historyMessageList.size() > 0) {
-                    MessageCacheUtil.saveMessageList(MyApplication.getInstance(), historyMessageList, UIMessageList.get(0).getCreationDate());
+                    MessageCacheUtil.saveMessageList(MyApplication.getInstance(), historyMessageList, uiMessageList.get(0).getCreationDate());
                     List<UIMessage> historyUIMessageList = UIMessage.MessageList2UIMessageList(historyMessageList);
-                    UIMessageList.addAll(0, historyUIMessageList);
-                    adapter.setMessageList(UIMessageList);
+                    uiMessageList.addAll(0, historyUIMessageList);
+                    adapter.setMessageList(uiMessageList);
                     adapter.notifyItemRangeInserted(0, historyMessageList.size());
                     msgListView.MoveToPosition(historyMessageList.size() - 1);
                 }
@@ -803,7 +825,7 @@ public class ChannelActivity extends BaseActivity {
 //            Msg msg = getMsgResult.getMsg();
 //            if (msg != null && ChannelActivity.this != null) {
 //                MsgCacheUtil.saveMsg(ChannelActivity.this, msg);
-//                adapter.setMsgList(UIMessageList);
+//                adapter.setMsgList(uiMessageList);
 //                adapter.notifyDataSetChanged();
 //            }
 //        }
