@@ -570,6 +570,21 @@ public class TimeUtils {
         return time;
     }
 
+    public static String timeLong2YMDString(Context context, long timeLong){
+        String time = "";
+        try {
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTimeInMillis(timeLong);
+            time = calendar2FormatString(context, calendar,
+                    FORMAT_YEAR_MONTH_DAY);
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        return time;
+    }
+
     /**
      * calendar转为特定格式字符串
      *

@@ -20,6 +20,7 @@ import android.provider.MediaStore;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
+import android.view.WindowManager;
 
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.config.Constant;
@@ -663,5 +664,17 @@ public class AppUtils {
             return true;
         }
         return false;
+    }
+
+
+    /**
+     * 设置添加屏幕的背景透明度
+     * @param activity
+     * @param bgAlpha
+     */
+    public static void setWindowBackgroundAlpha(Activity activity,float bgAlpha) {
+        WindowManager.LayoutParams lp =activity.getWindow().getAttributes();
+        lp.alpha = bgAlpha; //0.0-1.0
+        activity.getWindow().setAttributes(lp);
     }
 }

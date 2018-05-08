@@ -16,15 +16,14 @@ public class DownLoaderUtils {
 
     Cancelable cancelable;
 
-
-    public void startDownLoad(String source, String targetDirPath, String targetName,
+    /**
+     * 下载
+     * @param params
+     * @param progressCallback
+     */
+    public void startDownLoad(RequestParams params,
                               ProgressCallback<File> progressCallback) {
-        File dir = new File(targetDirPath);
-        if (!dir.exists()) {
-            dir.mkdirs();
-        }
-        String target = targetDirPath+targetName;
-        startDownLoad(source,target,progressCallback);
+        cancelable = x.http().get(params, progressCallback);
 
     }
 

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.inspur.emmcloud.ui.mine.setting.NoPermissionDialogActivity;
+import com.inspur.emmcloud.util.privates.AppUtils;
 
 import org.xutils.http.HttpMethod;
 import org.xutils.http.RequestParams;
@@ -62,10 +63,14 @@ public class HttpUtils {
         if(isValidUrl(params)){
             x.http().request(httpMethod,params,callback);
         }else{
-            callback.callbackFail("",-1);
-            Intent intent = new Intent();
-            intent.setClass(context, NoPermissionDialogActivity.class);
-            context.startActivity(intent);
+            callback.callbackFail("", -1);
+            if (AppUtils.isAppOnForeground(context)){
+                Intent intent = new Intent();
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.setClass(context, NoPermissionDialogActivity.class);
+                context.startActivity(intent);
+            }
+
         }
     }
 

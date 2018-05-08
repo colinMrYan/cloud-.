@@ -914,7 +914,8 @@ public class FileUtils {
          * 获取文件标识图片
          * @param fileName
          */
-    public static int getIconResIdRobot(String fileName) {
+    public static int getRegularFileIconResId(String fileName) {
+        fileName = fileName.toLowerCase();
         int imageIconId = R.drawable.ic_volume_file_typ_unknown;
         if (fileName.endsWith("doc") || fileName.endsWith("docx")) {
             imageIconId = R.drawable.ic_volume_file_typ_word;

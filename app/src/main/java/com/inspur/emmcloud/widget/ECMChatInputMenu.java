@@ -44,6 +44,7 @@ import org.xutils.x;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -57,6 +58,7 @@ public class ECMChatInputMenu extends LinearLayout {
     private static final int CAMERA_RESULT = 3;
     private static final int CHOOSE_FILE = 4;
     private static final int MENTIONS_RESULT = 5;
+    private static final long MENTIONS_BASE_TIME= 1515513600000L;
 
     @ViewInject(R.id.input_edit)
     private ChatInputEdit inputEdit;
@@ -88,6 +90,7 @@ public class ECMChatInputMenu extends LinearLayout {
     private String cid = "";
     private String inputs;
     private boolean isSpecialUser = false; //小智机器人进行特殊处理
+    private boolean isMessageV0 = true;
 
     public ECMChatInputMenu(Context context) {
         this(context, null);
@@ -161,6 +164,13 @@ public class ECMChatInputMenu extends LinearLayout {
     }
 
     /**
+     * 设置是否是V0版本消息
+     * @param isMessageV0
+     */
+    public void setIsMessageV0(boolean isMessageV0){
+        this.isMessageV0 = isMessageV0;
+    }
+    /**
      * 设置是否区分对待
      *
      * @param isSpecialUser
@@ -178,7 +188,13 @@ public class ECMChatInputMenu extends LinearLayout {
      */
     public void addMentions(String uid, String name, boolean isInputKeyWord) {
         if (uid != null && name != null) {
-            inputEdit.insertSpecialStr(isInputKeyWord, new InsertModel("@", uid, name, "#99CCFF"));
+            InsertModel insertModel;
+            if (isMessageV0){
+                insertModel= new InsertModel("@", uid, name);
+            }else {
+                insertModel = new InsertModel("@", (System.currentTimeMillis()-MENTIONS_BASE_TIME)+"", name,uid);
+            }
+            inputEdit.insertSpecialStr(isInputKeyWord, insertModel);
         }
     }
 
@@ -318,7 +334,7 @@ public class ECMChatInputMenu extends LinearLayout {
                 if (!StringUtils.isBlank(results)) {
                     if (isSpecialUser) {
                         inputEdit.clearInsertModelList();
-                        chatInputMenuListener.onSendMsg(results, null, null);
+                        chatInputMenuListener.onSendMsg(results, null, null,null);
                     } else {
                         int index = inputEdit.getSelectionStart();
                         Editable editable = inputEdit.getText();
@@ -369,10 +385,16 @@ public class ECMChatInputMenu extends LinearLayout {
                 break;
             case R.id.send_msg_btn:
                 if (NetUtils.isNetworkConnected(getContext())) {
-                    List<String> urlList = getContentUrlList(inputEdit.getText().toString());
-                    String content = inputEdit.getRichContent(true);
+                    List<String> urlList= null;
+                    String content = inputEdit.getRichContent(isMessageV0);
+                    Map<String,String> mentionsMap = null;
+                    if (isMessageV0){
+                        urlList = getContentUrlList(inputEdit.getText().toString());
+                    }else {
+                        mentionsMap = inputEdit.getMentionsMap();
+                    }
+                    chatInputMenuListener.onSendMsg(content, getContentMentionUidList(), urlList,mentionsMap);
                     inputEdit.clearInsertModelList();
-                    chatInputMenuListener.onSendMsg(content, getContentMentionUidList(), urlList);
                     inputEdit.setText("");
                 }
                 break;
@@ -560,7 +582,7 @@ public class ECMChatInputMenu extends LinearLayout {
 
 
     public interface ChatInputMenuListener {
-        void onSendMsg(String content, List<String> mentionsUidList, List<String> urlList);
+        void onSendMsg(String content, List<String> mentionsUidList, List<String> urlList, Map<String,String> mentionsMap);
     }
 
 

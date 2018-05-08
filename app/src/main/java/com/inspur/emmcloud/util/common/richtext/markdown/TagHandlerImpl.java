@@ -572,8 +572,8 @@ public class TagHandlerImpl implements TagHandler {
 //        Matcher matcher = obtain(Tag.CODE, builder);
 //        if (matcher.find()) {
 //            String content = matcher.group(3);
-//            builder.delete(matcher.start(1), matcher.end(1));
-//            builder.insert(matcher.start(1), styleBuilder.code(content));
+//            builder.delete(matcher.init(1), matcher.end(1));
+//            builder.insert(matcher.init(1), styleBuilder.code(content));
 //            code(line);
 //            return true;
 //        }
@@ -586,9 +586,9 @@ public class TagHandlerImpl implements TagHandler {
 //        SpannableStringBuilder builder = (SpannableStringBuilder) line.getStyle();
 //        Matcher matcher = obtain(Tag.EMAIL, builder);
 //        if (matcher.find()) {
-//            SpannableStringBuilder sb = (SpannableStringBuilder) builder.subSequence(matcher.start(2), matcher.end(2));
-//            builder.delete(matcher.start(1), matcher.end(1));
-//            builder.insert(matcher.start(1), styleBuilder.email(sb));
+//            SpannableStringBuilder sb = (SpannableStringBuilder) builder.subSequence(matcher.init(2), matcher.end(2));
+//            builder.delete(matcher.init(1), matcher.end(1));
+//            builder.insert(matcher.init(1), styleBuilder.email(sb));
 //            email(line);
 //            return true;
 //        }
@@ -623,8 +623,8 @@ public class TagHandlerImpl implements TagHandler {
         boolean m = false;
 //        while (matcher.find()) {
 //            String content = matcher.group();
-//            builder.delete(matcher.start(), matcher.end());
-//            builder.insert(matcher.start(), styleBuilder.link(content, content, ""));
+//            builder.delete(matcher.init(), matcher.end());
+//            builder.insert(matcher.init(), styleBuilder.link(content, content, ""));
 //            m = true;
 //        }
         return m;
@@ -691,8 +691,8 @@ public class TagHandlerImpl implements TagHandler {
 //            String title = matcher.group(2);
 //            String link = matcher.group(3);
 //            String hint = matcher.group(6);
-//            builder.delete(matcher.start(1), matcher.end(1));
-//            builder.insert(matcher.start(1), styleBuilder.image(title, link, hint));
+//            builder.delete(matcher.init(1), matcher.end(1));
+//            builder.insert(matcher.init(1), styleBuilder.image(title, link, hint));
 //            image(line);
 //            return true;
 //        }
@@ -710,8 +710,8 @@ public class TagHandlerImpl implements TagHandler {
 //            String id = matcher.group(3);
 //            Pair<String, String> image = idImageUrl.get(id);
 //            if (image != null) {
-//                builder.delete(matcher.start(1), matcher.end(1));
-//                builder.insert(matcher.start(1), styleBuilder.image(title, image.first, image.second));
+//                builder.delete(matcher.init(1), matcher.end(1));
+//                builder.insert(matcher.init(1), styleBuilder.image(title, image.first, image.second));
 //            } else {
 //                return false;
 //            }

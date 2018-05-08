@@ -128,7 +128,7 @@ public class ContactAPIService {
 	 * @param id
 	 */
 	public void getRobotInfoById(final String id){
-		final String completeUrl = APIUri.getBotInfoById()+"/"+id;
+		final String completeUrl = APIUri.getBotInfoById()+id;
 		RequestParams params = ((MyApplication)context.getApplicationContext()).getHttpRequestParams(completeUrl);
 		HttpUtils.request(context,CloudHttpMethod.GET,params, new APICallback(context,completeUrl) {
 

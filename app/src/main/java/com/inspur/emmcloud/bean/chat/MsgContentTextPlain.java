@@ -13,17 +13,18 @@ import java.util.Map;
 
 public class MsgContentTextPlain {
     private String text;
-    private Map<String,String> mentionsMap = new HashMap<>();
-    public MsgContentTextPlain(String Json){
+    private Map<String, String> mentionsMap = new HashMap<>();
+
+    public MsgContentTextPlain(String Json) {
         JSONObject object = JSONUtils.getJSONObject(Json);
-        text = JSONUtils.getString(object,"text","");
-        JSONObject mentionObj = JSONUtils.getJSONObject(object,"metions",null);
-        if (mentionObj != null){
-            mentionsMap = JSONUtils.parseKeyAndValueToMap(object);
+        text = JSONUtils.getString(object, "text", "");
+        JSONObject mentionObj = JSONUtils.getJSONObject(object, "mentions", null);
+        if (mentionObj != null) {
+            mentionsMap = JSONUtils.parseKeyAndValueToMap(mentionObj);
         }
     }
 
-    public MsgContentTextPlain(){
+    public MsgContentTextPlain() {
 
     }
 
@@ -43,17 +44,17 @@ public class MsgContentTextPlain {
         this.mentionsMap = mentionsMap;
     }
 
-    public String toString(){
+    public String toString() {
         JSONObject obj = new JSONObject();
         try {
-            obj.put("text",text);
-            if (mentionsMap.size()>0){
+            obj.put("text", text);
+            if (mentionsMap.size() > 0) {
                 JSONObject mentionObj = JSONUtils.map2Json(mentionsMap);
-                obj.put("metions",mentionObj);
+                obj.put("mentions", mentionObj);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        return  obj.toString();
+        return obj.toString();
     }
 }

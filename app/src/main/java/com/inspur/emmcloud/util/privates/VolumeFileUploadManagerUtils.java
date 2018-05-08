@@ -94,15 +94,17 @@ public class VolumeFileUploadManagerUtils {
      * @param mockVolumeFile
      */
     public void removeVolumeFileUploadService(VolumeFile mockVolumeFile){
-        for (int i = 0; i< volumeFileUploadInfoList.size(); i++){
-            VolumeFileUploadInfo volumeFileUploadInfo = volumeFileUploadInfoList.get(i);
-            if (volumeFileUploadInfo.getVolumeFile() == mockVolumeFile){
-                VolumeFileUploadService volumeFileUploadService = volumeFileUploadInfo.getVolumeFileUploadService();
-                if (volumeFileUploadService != null){
-                    volumeFileUploadService.onDestory();
+        if (mockVolumeFile != null){
+            for (int i = 0; i< volumeFileUploadInfoList.size(); i++){
+                VolumeFileUploadInfo volumeFileUploadInfo = volumeFileUploadInfoList.get(i);
+                if (volumeFileUploadInfo.getVolumeFile() == mockVolumeFile){
+                    VolumeFileUploadService volumeFileUploadService = volumeFileUploadInfo.getVolumeFileUploadService();
+                    if (volumeFileUploadService != null){
+                        volumeFileUploadService.onDestory();
+                    }
+                    volumeFileUploadInfoList.remove(i);
+                    break;
                 }
-                volumeFileUploadInfoList.remove(i);
-                break;
             }
         }
     }

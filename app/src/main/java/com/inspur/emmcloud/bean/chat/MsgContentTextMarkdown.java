@@ -18,7 +18,7 @@ public class MsgContentTextMarkdown{
     public MsgContentTextMarkdown(String content){
         JSONObject object = JSONUtils.getJSONObject(content);
         text = JSONUtils.getString(object,"text","");
-        JSONObject mentionObj = JSONUtils.getJSONObject(object,"metions",null);
+        JSONObject mentionObj = JSONUtils.getJSONObject(object,"mentions",null);
         if (mentionObj != null){
             mentionsMap = JSONUtils.parseKeyAndValueToMap(object);
         }

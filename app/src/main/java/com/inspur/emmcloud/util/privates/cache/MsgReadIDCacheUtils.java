@@ -18,9 +18,11 @@ public class MsgReadIDCacheUtils {
 	 * @param cid
 	 * @param msgID
 	 */
-	public static void saveReadedMsg(Context context, String cid, String msgID) {
+	public static void saveReadedMsg(Context context, String cid, String mid) {
 		try {
-            DbCacheUtils.getDb(context).saveOrUpdate(new MsgReadId(cid, msgID));
+			if (mid != null){
+				DbCacheUtils.getDb(context).saveOrUpdate(new MsgReadId(cid, mid));
+			}
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();

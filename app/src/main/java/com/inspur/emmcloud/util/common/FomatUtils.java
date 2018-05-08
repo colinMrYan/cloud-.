@@ -11,20 +11,20 @@ public class FomatUtils {
         return m.matches();
     }
 
-    /**
-     * 验证文件名是否合法
-     *
-     * @param fileName
-     * @return
-     */
-    public static boolean isValidFileName(String fileName) {
-        Matcher matcher = Pattern.compile(
-                "[\\\\/:*?\"<>|]").matcher(
-                fileName);
+	/**
+	 * 验证文件名是否合法
+	 * @param fileName
+	 * @return
+	 */
+	public static boolean isValidFileName(String fileName){
+		Matcher matcher = Pattern.compile(
+				"[\\\\/:*?\"<>|]" ).matcher(
+				fileName );
 
-        while (matcher.find()) {
-            return false;
-        }
-        return true;
-    }
+		while ( matcher.find() )
+		{
+			return false;
+		}
+		return true;
+	}
 }

@@ -9,6 +9,7 @@ import android.os.Message;
 import android.view.View;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
+import android.webkit.ValueCallback;
 import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
@@ -123,10 +124,23 @@ public class ImpWebViewClient extends WebViewClient {
         }
         webview.setVisibility(View.VISIBLE);
         //为了获取网页的html内容
-        view.loadUrl("javascript:window.getContent.onGetHtmlContent("
-                + "document.getElementsByTagName('html')[0].innerHTML" + ");");
-        //view.loadUrl("javascript:window.onhashchange = function() { getTitle.onHashChangeEvent(); };");
-        webview.loadUrl(F_UEX_SCRIPT_SELF_FINISH);
+        String  script = "javascript:window.getContent.onGetHtmlContent("
+                + "document.getElementsByTagName('html')[0].innerHTML" + ");";
+        if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.KITKAT){
+            view.evaluateJavascript(script, new ValueCallback<String>() {
+                @Override
+                public void onReceiveValue(String value) {
+                }
+            });
+            view.evaluateJavascript(F_UEX_SCRIPT_SELF_FINISH, new ValueCallback<String>() {
+                @Override
+                public void onReceiveValue(String value) {
+                }
+            });
+        }else {
+            view.loadUrl(script);
+            webview.loadUrl(F_UEX_SCRIPT_SELF_FINISH);
+        }
         String c = CookieManager.getInstance().getCookie(url);
         PreferencesUtils.putString(view.getContext(), "web_cookie", c);
         CookieSyncManager.getInstance().sync();

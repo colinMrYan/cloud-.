@@ -34,7 +34,6 @@ import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.ClientIDUtils;
 import com.inspur.emmcloud.util.privates.MyAppWidgetUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
-import com.inspur.emmcloud.util.privates.PushInfoUtils;
 import com.inspur.emmcloud.util.privates.ReactNativeUtils;
 import com.inspur.emmcloud.util.privates.SplashPageUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
@@ -59,11 +58,11 @@ import java.util.List;
 public class IndexActivity extends IndexBaseActivity {
     private static final int SYNC_ALL_BASE_DATA_SUCCESS = 0;
     private static final int RELOAD_WEB = 3;
+    @ViewInject(R.id.preload_webview)
+    private WebView webView;
     private WeakHandler handler;
     private boolean isHasCacheContact = false;
     private LoadingDialog loadingDlg;
-    @ViewInject(R.id.preload_webview)
-    private WebView webView;
     private ContactCacheTask contactCacheTask;
 
     @Override
@@ -74,7 +73,6 @@ public class IndexActivity extends IndexBaseActivity {
         getInitData();
         startService();
         EventBus.getDefault().register(this);
-        new PushInfoUtils(this).upload();//上传推送信息
     }
 
     /**
@@ -83,7 +81,6 @@ public class IndexActivity extends IndexBaseActivity {
     private void initAppEnvironment() {
         MyApplication.getInstance().setIndexActvityRunning(true);
         MyApplication.getInstance().restartAllDb();
-        MyApplication.getInstance().closeWebSocket();
         MyApplication.getInstance().clearUserPhotoMap();
         MyApplication.getInstance().startPush();
     }
@@ -233,7 +230,7 @@ public class IndexActivity extends IndexBaseActivity {
                         MyApplication.getInstance()
                                 .setIsContactReady(true);
                         notifySyncAllBaseDataSuccess();
-                        MyApplication.getInstance().startWebSocket();// 启动webSocket推送
+                        MyApplication.getInstance().startWebSocket(true);// 启动webSocket推送
                         deleteIllegalUser();
                         break;
                     case RELOAD_WEB:
@@ -279,7 +276,6 @@ public class IndexActivity extends IndexBaseActivity {
             e.printStackTrace();
         }
     }
-
 
     @Override
     protected void onDestroy() {
@@ -349,7 +345,7 @@ public class IndexActivity extends IndexBaseActivity {
             String contackLastUpdateTime = ContactCacheUtils
                     .getLastUpdateTime(IndexActivity.this);
             apiService.getAllContact(contackLastUpdateTime);
-        } else if (isHasCacheContact) {
+        } else if (isHasCacheContact && handler != null) {
             handler.sendEmptyMessage(SYNC_ALL_BASE_DATA_SUCCESS);
         }
     }
@@ -412,7 +408,9 @@ public class IndexActivity extends IndexBaseActivity {
         public void returnSearchChannelGroupFail(String error, int errorCode) {
             super.returnSearchChannelGroupFail(error, errorCode);
             // 无论成功或者失败都返回成功都能进入应用
-            handler.sendEmptyMessage(SYNC_ALL_BASE_DATA_SUCCESS);
+            if (handler != null) {
+                handler.sendEmptyMessage(SYNC_ALL_BASE_DATA_SUCCESS);
+            }
         }
 
 

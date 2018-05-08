@@ -138,8 +138,6 @@
             android:launchMode="singleInstance"
             android:screenOrientation="portrait"
             android:theme="@style/dialog_activity"
-            android:stateNotNeeded="true"
-            android:supportsRtl="true"
             />
         <activity
             android:name=".ui.mine.setting.SwitchEnterpriseActivity"
@@ -360,7 +358,7 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|stateHidden"></activity>
         <activity
-            android:name=".ui.chat.ChannelRobotActivity"
+            android:name=".ui.chat.ChannelV0Activity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
             android:screenOrientation="portrait"
@@ -378,6 +376,12 @@
             android:windowSoftInputMode="adjustPan|stateHidden"></activity>
         <activity
             android:name=".ui.chat.ChannelMsgDetailActivity"
+            android:launchMode="singleTask"
+            android:resizeableActivity="true"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize|stateHidden"></activity>
+        <activity
+            android:name=".ui.chat.ChannelMessageDetailActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
             android:screenOrientation="portrait"
@@ -522,11 +526,18 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" />
         <activity
+            android:name=".ui.chat.ImagePagerV0Activity"
+            android:resizeableActivity="true"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
             android:name=".ui.chat.ImagePagerActivity"
             android:resizeableActivity="true"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen"
             android:windowSoftInputMode="adjustPan" />
+
         <activity
             android:name=".ui.chat.MembersActivity"
             android:resizeableActivity="true"

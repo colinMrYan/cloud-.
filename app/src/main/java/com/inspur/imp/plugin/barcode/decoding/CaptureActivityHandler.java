@@ -91,7 +91,7 @@ public final class CaptureActivityHandler extends Handler {
 //			BarCodeService.barcodeService.jsCallback(functName, str_result.toString());
 //			activity.finish();
 		} else if (Res.getWidgetID("decode_failed") == message.what) {
-			// We're decoding as fast as possible, so when one decode fails, start another.
+			// We're decoding as fast as possible, so when one decode fails, init another.
 	        state = State.PREVIEW;
 	        CameraManager.get().requestPreviewFrame(decodeThread.getHandler(), Res.getWidgetID("decode"));
 		} else if (Res.getWidgetID("return_scan_result") == message.what) {

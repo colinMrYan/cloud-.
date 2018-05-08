@@ -51,6 +51,7 @@ import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.util.common.IntentUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
@@ -99,11 +100,11 @@ import io.socket.client.Socket;
 import static android.app.Activity.RESULT_OK;
 
 /**
- * 消息页面 com.inspur.emmcloud.ui.MessageFragment
+ * 消息页面 com.inspur.emmcloud.ui.CommunicationV0Fragment
  *
  * @author Jason Chen; create at 2016年8月23日 下午2:59:39
  */
-public class MessageFragment extends Fragment {
+public class CommunicationV0Fragment extends Fragment {
 
     private static final int RECEIVE_MSG = 1;
     private static final int CREAT_CHANNEL_GROUP = 1;
@@ -126,19 +127,6 @@ public class MessageFragment extends Fragment {
     private CacheChannelTask cacheChannelTask;
     private boolean isFirstConnectWebsockt = true;//判断是否第一次连上websockt
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        if (rootView == null) {
-            rootView = inflater.inflate(R.layout.fragment_message, container,
-                    false);
-        }
-        ViewGroup parent = (ViewGroup) rootView.getParent();
-        if (parent != null) {
-            parent.removeView(rootView);
-        }
-        return rootView;
-    }
 
     /**
      * 记录用户点击的频道
@@ -163,8 +151,23 @@ public class MessageFragment extends Fragment {
     }
 
     @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        if (rootView == null) {
+            rootView = inflater.inflate(R.layout.fragment_message, container,
+                    false);
+        }
+        ViewGroup parent = (ViewGroup) rootView.getParent();
+        if (parent != null) {
+            parent.removeView(rootView);
+        }
+        return rootView;
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
+        LogUtils.jasonDebug("0000000000000000000000000000000");
         super.onCreate(savedInstanceState);
         initView();
         registerMessageFragmentReceiver();
@@ -262,7 +265,7 @@ public class MessageFragment extends Fragment {
                 bundle.putString("channelType", channelType);
                 if (channelType.equals("GROUP") || channelType.equals("DIRECT") || channelType.equals("SERVICE")) {
                     IntentUtils.startActivity(getActivity(),
-                            ChannelActivity.class, bundle);
+                            ChannelV0Activity.class, bundle);
                 } else {
                     ToastUtils.show(getActivity(),
                             R.string.not_support_open_channel);
@@ -381,7 +384,7 @@ public class MessageFragment extends Fragment {
             public void onClick(View v) {
                 Intent intent = new Intent();
                 intent.setClass(getActivity(), CaptureActivity.class);
-                intent.putExtra("from", "MessageFragment");
+                intent.putExtra("from", "CommunicationFragment");
                 startActivityForResult(intent, SCAN_LOGIN_QRCODE_RESULT);
                 popupWindow.dismiss();
             }
@@ -597,6 +600,7 @@ public class MessageFragment extends Fragment {
                         displayChannelList.addAll(channelList);
                         displayData();// 展示数据
                         registerMsgReceiver();// 注册接收消息的广播
+                        MyApplication.getInstance().startWebSocket(false);
                         break;
                     default:
                         break;
@@ -643,7 +647,7 @@ public class MessageFragment extends Fragment {
     private void registerMsgReceiver() {
         // TODO Auto-generated method stub
         if (msgReceiver == null) {
-            msgReceiver = new MsgReceiver(getActivity(), handler);
+            msgReceiver = new MsgReceiver(handler);
             IntentFilter filter = new IntentFilter();
             filter.addAction("com.inspur.msg");
             LocalBroadcastManager.getInstance(getActivity()).registerReceiver(msgReceiver, filter);
@@ -1182,7 +1186,7 @@ public class MessageFragment extends Fragment {
                         bundle.putString("channelType", channelGroup.getType());
                         bundle.putString("title", channelGroup.getChannelName());
                         IntentUtils.startActivity(getActivity(),
-                                ChannelActivity.class, bundle);
+                                ChannelV0Activity.class, bundle);
                         ChannelGroupCacheUtils.saveChannelGroup(getActivity(),
                                 channelGroup);
                         getChannelList();

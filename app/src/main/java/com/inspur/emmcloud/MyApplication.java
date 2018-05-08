@@ -46,6 +46,7 @@ import com.inspur.emmcloud.util.privates.HuaWeiPushMangerUtils;
 import com.inspur.emmcloud.util.privates.MutilClusterUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUsersUtils;
 import com.inspur.emmcloud.util.privates.cache.DbCacheUtils;
+import com.inspur.emmcloud.widget.CustomImageDownloader;
 import com.inspur.imp.api.Res;
 import com.inspur.reactnative.AuthorizationManagerPackage;
 import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiskCache;
@@ -81,7 +82,6 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
     private List<Activity> activityList = new LinkedList<Activity>();
     private boolean isIndexActivityRunning = false;
     private boolean isActive = false;
-    private WebSocketPush webSocketPush;
     private static boolean isContactReady = false;
     private String uid;
     private String accessToken;
@@ -123,7 +123,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         // TODO Auto-generated method stub
         instance = this;
         CrashHandler crashHandler = CrashHandler.getInstance();
-        crashHandler.init(getApplicationContext());
+        crashHandler.init(getInstance());
         x.Ext.init(MyApplication.this);
         x.Ext.setDebug(LogUtils.isDebug);
         SoLoader.init(this, false);//ReactNative相关初始化
@@ -141,14 +141,15 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         };
         PreferencesUtils.putString(this, "pushFlag", "");
         isActive = false;
-        isContactReady = PreferencesUtils.getBoolean(getApplicationContext(),
+        isContactReady = PreferencesUtils.getBoolean(getInstance(),
                 "isContactReady", false);
-        uid = PreferencesUtils.getString(getApplicationContext(), "userID");
-        accessToken = PreferencesUtils.getString(getApplicationContext(), "accessToken", "");
-        refreshToken = PreferencesUtils.getString(getApplicationContext(), "refreshToken", "");
+        uid = PreferencesUtils.getString(getInstance(), "userID");
+        accessToken = PreferencesUtils.getString(getInstance(), "accessToken", "");
+        refreshToken = PreferencesUtils.getString(getInstance(), "refreshToken", "");
         //科大讯飞语音SDK初始化
         SpeechUtility.createUtility(this, SpeechConstant.APPID + "=5a6001bf");
     }
+
 
     /**
      * 单例获取application实例
@@ -166,10 +167,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
      */
     public void signout() {
         // TODO Auto-generated method stub
-        if (getWebSocketPush() != null) {
-            getWebSocketPush()
-                    .webSocketSignout();
-        }
+        WebSocketPush.getInstance().webSocketSignout();
         //清除日历提醒极光推送本地通知
         CalEventNotificationUtils.cancelAllCalEventNotification(this);
         stopPush();
@@ -185,7 +183,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.setClass(this, LoginActivity.class);
         startActivity(intent);
-        ECMShortcutBadgeNumberManagerUtils.setDesktopBadgeNumber(getApplicationContext(), 0);
+        ECMShortcutBadgeNumberManagerUtils.setDesktopBadgeNumber(getInstance(), 0);
     }
 /****************************通知相关（极光和华为推送）******************************************/
     /**
@@ -232,7 +230,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
             JPushInterface.stopPush(this);
         }
         //清除日历提醒极光推送本地通知
-        CalEventNotificationUtils.cancelAllCalEventNotification(getApplicationContext());
+        CalEventNotificationUtils.cancelAllCalEventNotification(getInstance());
     }
 
 
@@ -246,7 +244,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
             CookieManager.getInstance().flush();
         } else {
             CookieSyncManager cookieSyncMngr =
-                    CookieSyncManager.createInstance(getApplicationContext());
+                    CookieSyncManager.createInstance(getInstance());
             CookieManager.getInstance().removeSessionCookie();
         }
     }
@@ -257,7 +255,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
             CookieManager.getInstance().flush();
         } else {
             CookieSyncManager cookieSyncMngr =
-                    CookieSyncManager.createInstance(getApplicationContext());
+                    CookieSyncManager.createInstance(getInstance());
             CookieManager.getInstance().removeAllCookie();
         }
     }
@@ -287,9 +285,9 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
                 "Android/" + AppUtils.getReleaseVersion() + "("
                         + AppUtils.GetChangShang() + " " + AppUtils.GetModel()
                         + ") " + "CloudPlus_Phone/"
-                        + AppUtils.getVersion(getApplicationContext()));
+                        + AppUtils.getVersion(getInstance()));
         params.addHeader("X-Device-ID",
-                AppUtils.getMyUUID(getApplicationContext()));
+                AppUtils.getMyUUID(getInstance()));
         params.addHeader("Accept", "application/json");
         if (getToken() != null) {
             params.addHeader("Authorization", getToken());
@@ -298,7 +296,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
             params.addHeader("X-ECC-Current-Enterprise", currentEnterprise.getId());
         }
         String languageJson = PreferencesUtils.getString(
-                getApplicationContext(), MyApplication.getInstance().getTanent() + "appLanguageObj");
+                getInstance(), MyApplication.getInstance().getTanent() + "appLanguageObj");
         if (languageJson != null) {
             Language language = new Language(languageJson);
             params.addHeader("Accept-Language", language.getIana());
@@ -310,7 +308,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
 
     public void setIsContactReady(boolean isContactReady) {
         this.isContactReady = isContactReady;
-        PreferencesUtils.putBoolean(getApplicationContext(), "isContactReady",
+        PreferencesUtils.putBoolean(getInstance(), "isContactReady",
                 isContactReady);
     }
 
@@ -325,14 +323,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
      */
     public void setIsActive(boolean isActive) {
         this.isActive = isActive;
-        if (webSocketPush != null) {
-            if (isActive) {
-                webSocketPush.sendActivedMsg();
-
-            } else {
-                webSocketPush.sendFrozenMsg();
-            }
-        }
+        WebSocketPush.getInstance().sendAppStatus(isActive);
         clearNotification();
     }
 
@@ -374,6 +365,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
     public void restartAllDb() {
         // TODO Auto-generated method stub
         DbCacheUtils.closeDb(getInstance());
+        DbCacheUtils.closeDb(getInstance());
         DbCacheUtils.initDb(getInstance());
     }
 
@@ -381,7 +373,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
      * 删除此用户在此实例的所有db
      */
     public void deleteAllDb() {
-        DbCacheUtils.deleteDb(getApplicationContext());
+        DbCacheUtils.deleteDb(getInstance());
     }
 
     /******************************Websocket********************************************/
@@ -389,25 +381,12 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
     /**
      * 开启websocket推送
      */
-    public void startWebSocket() {
-        webSocketPush = WebSocketPush.getInstance(getApplicationContext());
-        if (isHaveLogin() && !webSocketPush.isSocketConnect()) {
-            webSocketPush.start();
+    public void startWebSocket(boolean isForceNew) {
+        if (isHaveLogin()) {
+            WebSocketPush.getInstance().init(isForceNew);
         }
     }
 
-    /**
-     * 关闭websocket推送
-     */
-    public void closeWebSocket() {
-        if (webSocketPush != null) {
-            webSocketPush.webSocketSignout();
-        }
-    }
-
-    public WebSocketPush getWebSocketPush() {
-        return webSocketPush;
-    }
 
     /******************************租户信息*******************************************/
 
@@ -415,11 +394,10 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         // TODO Auto-generated method stub
         // UriUtils.res = "res_dev";
         currentEnterprise = null;
-        String myInfo = PreferencesUtils.getString(getApplicationContext(),
-                "myInfo");
+        String myInfo = PreferencesUtils.getString(getInstance(),"myInfo");
         if (!StringUtils.isBlank(myInfo)) {
             GetMyInfoResult getMyInfoResult = new GetMyInfoResult(myInfo);
-            String currentEnterpriseId = PreferencesByUsersUtils.getString(getApplicationContext(), "current_enterprise_id");
+            String currentEnterpriseId = PreferencesByUsersUtils.getString(getInstance(), "current_enterprise_id");
             if (!StringUtils.isBlank(currentEnterpriseId)) {
                 List<Enterprise> enterpriseList = getMyInfoResult.getEnterpriseList();
                 for (int i = 0; i < enterpriseList.size(); i++) {
@@ -559,12 +537,16 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
         this.clusterChatSocket = clusterChatSocket;
     }
 
+    public boolean isChatVersionV0(){
+        return clusterChatVersion.equals("v0");
+    }
+
     /**
      * namespace
      * v1版及v1.x版返回/api/v1
      * @return
      */
-    public String getNameSpace(){
+    public String getChatSpcketNameSpace(){
         if(getClusterChatVersion().toLowerCase().startsWith("v1")){
             return "/api/v1";
         }
@@ -636,9 +618,9 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
     public boolean isHaveLogin() {
         String accessToken = PreferencesUtils.getString(this,
                 "accessToken", "");
-        String myInfo = PreferencesUtils.getString(getApplicationContext(),
+        String myInfo = PreferencesUtils.getString(getInstance(),
                 "myInfo", "");
-        boolean isMDMStatusPass = PreferencesUtils.getBoolean(getApplicationContext(), "isMDMStatusPass", true);
+        boolean isMDMStatusPass = PreferencesUtils.getBoolean(getInstance(), "isMDMStatusPass", true);
         return (!StringUtils.isBlank(accessToken) && !StringUtils.isBlank(myInfo) && isMDMStatusPass);
     }
 
@@ -657,18 +639,16 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
     public void setAppLanguageAndFontScale() {
 
         String languageJson = PreferencesUtils
-                .getString(getApplicationContext(), MyApplication.getInstance().getTanent()
+                .getString(getInstance(), MyApplication.getInstance().getTanent()
                         + "appLanguageObj");
         Configuration config = getResources().getConfiguration();
         if (languageJson != null) {
             String language = PreferencesUtils.getString(
-                    getApplicationContext(), MyApplication.getInstance().getTanent() + "language");
-            LogUtils.jasonDebug("language=" + language);
-            LogUtils.jasonDebug("appLanguageObj=" + languageJson);
+                    getInstance(), MyApplication.getInstance().getTanent() + "language");
             // 当系统语言选择为跟随系统的时候，要检查当前系统的语言是不是在commonList中，重新赋值
             if (language.equals("followSys")) {
                 String commonLanguageListJson = PreferencesUtils.getString(
-                        getApplicationContext(), MyApplication.getInstance().getTanent()
+                        getInstance(), MyApplication.getInstance().getTanent()
                                 + "commonLanguageList");
                 if (commonLanguageListJson != null) {
                     List<Language> commonLanguageList = (List) JSON
@@ -680,7 +660,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
                         if (commonLanguage.getIso().contains(
                                 Resources.getSystem().getConfiguration().locale.getCountry())) {
                             PreferencesUtils.putString(
-                                    getApplicationContext(),
+                                    getInstance(),
                                     MyApplication.getInstance().getTanent() + "appLanguageObj",
                                     commonLanguage.toString());
                             languageJson = commonLanguage.toString();
@@ -689,7 +669,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
                         }
                     }
                     if (!isContainDefault) {
-                        PreferencesUtils.putString(getApplicationContext(),
+                        PreferencesUtils.putString(getInstance(),
                                 MyApplication.getInstance().getTanent() + "appLanguageObj",
                                 commonLanguageList.get(0).toString());
                         languageJson = commonLanguageList.get(0).toString();
@@ -733,44 +713,30 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
      **/
     private void initImageLoader() {
         // TODO Auto-generated method stub
-        ImageLoaderConfiguration config = null;
-        if (!Environment.getExternalStorageState().equals(
+        ImageLoaderConfiguration.Builder builder = new ImageLoaderConfiguration.Builder(
+                getInstance())
+                .memoryCacheExtraOptions(1200, 1200)
+                .imageDownloader(
+                        new CustomImageDownloader(getApplicationContext()))
+                .threadPoolSize(6)
+                .threadPriority(Thread.NORM_PRIORITY - 1)
+                .denyCacheImageMultipleSizesInMemory()
+                .memoryCache(
+                        new UsingFreqLimitedMemoryCache(3 * 1024 * 1024))
+                .diskCacheSize(50 * 1024 * 1024)
+                // You can pass your own memory cache implementation
+                .tasksProcessingOrder(QueueProcessingType.LIFO)
+                .diskCacheFileNameGenerator(new HashCodeFileNameGenerator());
+        if (Environment.getExternalStorageState().equals(
                 Environment.MEDIA_MOUNTED)) {
-            config = new ImageLoaderConfiguration.Builder(
-                    getApplicationContext())
-                    .memoryCacheExtraOptions(1200, 1200)
-                    .threadPoolSize(6)
-                    .threadPriority(Thread.NORM_PRIORITY - 1)
-                    .denyCacheImageMultipleSizesInMemory()
-                    .memoryCache(
-                            new UsingFreqLimitedMemoryCache(3 * 1024 * 1024))
-                    .diskCacheSize(50 * 1024 * 1024)
-                    // You can pass your own memory cache implementation
-                    .tasksProcessingOrder(QueueProcessingType.LIFO)
-                    // You can pass your own disc cache implementation
-                    .diskCacheFileNameGenerator(new HashCodeFileNameGenerator())
-                    .build();
-        } else {
             File cacheDir = new File(MyAppConfig.LOCAL_CACHE_PATH);
             if (!cacheDir.exists()) {
                 cacheDir.mkdirs();
             }
-            config = new ImageLoaderConfiguration.Builder(
-                    getApplicationContext())
-                    .memoryCacheExtraOptions(1200, 1200)
-                    .threadPoolSize(6)
-                    .threadPriority(Thread.NORM_PRIORITY - 1)
-                    .denyCacheImageMultipleSizesInMemory()
-                    .memoryCache(
-                            new UsingFreqLimitedMemoryCache(3 * 1024 * 1024))
-                    .diskCacheSize(50 * 1024 * 1024)
-                    // You can pass your own memory cache implementation
-                    .tasksProcessingOrder(QueueProcessingType.LIFO)
-                    .diskCache(new UnlimitedDiskCache(cacheDir))
-                    // You can pass your own disc cache implementation
-                    .diskCacheFileNameGenerator(new HashCodeFileNameGenerator())
-                    .build();
+            builder = builder.diskCache(new UnlimitedDiskCache(cacheDir));
         }
+
+        ImageLoaderConfiguration config = builder.build();
         L.disableLogging(); // 关闭imageloader的疯狂的log
         ImageLoader.getInstance().init(config);
 
@@ -867,12 +833,13 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
 
     /**
      * 清除目标之外的Activity
+     *
      * @param targetActivity
      */
-    public void closeOtherActivity(Activity targetActivity){
+    public void closeOtherActivity(Activity targetActivity) {
         try {
             for (Activity activity : activityList) {
-                if (activity != targetActivity){
+                if (activity != targetActivity) {
                     activity.finish();
                 }
             }

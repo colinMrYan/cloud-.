@@ -16,6 +16,7 @@ import com.inspur.emmcloud.api.APIInterface;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.api.CloudHttpMethod;
 import com.inspur.emmcloud.api.HttpUtils;
+import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeFileUploadTokenResult;
 import com.inspur.emmcloud.bean.chat.ChannelGroup;
 import com.inspur.emmcloud.bean.chat.GetAddMembersSuccessResult;
 import com.inspur.emmcloud.bean.chat.GetChannelInfoResult;
@@ -29,24 +30,20 @@ import com.inspur.emmcloud.bean.chat.GetNewMsgsResult;
 import com.inspur.emmcloud.bean.chat.GetNewsImgResult;
 import com.inspur.emmcloud.bean.chat.GetNewsInstructionResult;
 import com.inspur.emmcloud.bean.chat.GetSendMsgResult;
+import com.inspur.emmcloud.bean.chat.GetUploadPushInfoResult;
 import com.inspur.emmcloud.bean.contact.GetSearchChannelGroupResult;
-import com.inspur.emmcloud.bean.contact.OrgsInfo;
 import com.inspur.emmcloud.bean.system.GetBoolenResult;
 import com.inspur.emmcloud.interf.OauthCallBack;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.OauthUtils;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
-import org.xutils.x;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * com.inspur.emmcloud.api.apiservice.ChatAPIService create at 2016年11月8日
@@ -958,11 +955,12 @@ public class ChatAPIService {
 		HttpUtils.request(context,CloudHttpMethod.POST,params, new APICallback(context,url) {
 			@Override
 			public void callbackSuccess(String arg0) {
+				apiInterface.returnUploadPushInfoResultSuccess(new GetUploadPushInfoResult(arg0));
 			}
 
 			@Override
 			public void callbackFail(String error, int responseCode) {
-
+				apiInterface.returnUploadPushInfoResultFail(error,responseCode);
 			}
 
 			@Override
@@ -1022,38 +1020,44 @@ public class ChatAPIService {
 	}
 
 
-	public void getContactOrgPart(){
-		String url = "http://10.24.51.1:8080/api/sys/v4.0/contacts/orgs";
+	/**
+	 * 获取聊天文件上传Token
+	 * @param fileName
+	 * @param cid
+	 */
+	public void getFileUploadToken(final String fileName, final String cid) {
+		final String url = APIUri.getUploadFileTokenUrl(cid);
 		RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
-		x.http().post(params, new Callback.CommonCallback<byte[]>() {
+		params.addParameter("name", fileName);
+		HttpUtils.request(context,CloudHttpMethod.POST,params, new APICallback(context, url) {
 			@Override
-			public void onSuccess(byte[] bytes) {
-				LogUtils.jasonDebug("onSuccess-----------------------------");
-				try {
-					List<OrgsInfo.org> orgsList = OrgsInfo.orgs.parseFrom(bytes).getOrgsList();
-					LogUtils.jasonDebug(orgsList.get(0).getId());
-					LogUtils.jasonDebug(orgsList.get(0).getName());
-					LogUtils.jasonDebug(orgsList.get(0).getPinyin());
-				}catch (Exception e){
-					e.printStackTrace();
-				}
-
+			public void callbackSuccess(String arg0) {
+				apiInterface.returnChatFileUploadTokenSuccess(new GetVolumeFileUploadTokenResult(arg0));
 			}
 
 			@Override
-			public void onError(Throwable throwable, boolean b) {
-				LogUtils.jasonDebug("onError-----------------------------");
+			public void callbackFail(String error, int responseCode) {
+				apiInterface.returnChatFileUploadTokenFail(error, responseCode);
 			}
 
 			@Override
-			public void onCancelled(CancelledException e) {
+			public void callbackTokenExpire(long requestTime) {
+				OauthCallBack oauthCallBack = new OauthCallBack() {
+					@Override
+					public void reExecute() {
+						getFileUploadToken(fileName, cid);
+					}
 
+					@Override
+					public void executeFailCallback() {
+						callbackFail("", -1);
+					}
+				};
+				OauthUtils.getInstance().refreshToken(
+						oauthCallBack, requestTime);
 			}
 
-			@Override
-			public void onFinished() {
-
-			}
 		});
 	}
+
 }

@@ -45,7 +45,6 @@ public class ChannelGroupIconUtils {
     private List<Channel> channelTypeGroupList = new ArrayList<>();
     private Context context;
     private Handler handler;
-    private NetThread netThread;
     private static ChannelGroupIconUtils mInstance;
 
     public static ChannelGroupIconUtils getInstance() {
