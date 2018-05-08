@@ -41,6 +41,7 @@ public class VolumeFile implements Serializable{
     private int ownerPrivilege = 0;
     private int othersPrivilege = 0;
     private String owner="";
+    private String path="";
 
     public VolumeFile(){}
 
@@ -65,6 +66,7 @@ public class VolumeFile implements Serializable{
         this.owner = JSONUtils.getString(object, "owner", "");
         String groupPrivilegeJson = JSONUtils.getString(object, "groups", "");
         groupPrivilegeMap = com.alibaba.fastjson.JSONObject.parseObject(groupPrivilegeJson, new TypeReference<Map<String, Integer>>() {});
+        path = JSONUtils.getString(object, "path", "");
     }
 
     public String getType() {
@@ -137,6 +139,14 @@ public class VolumeFile implements Serializable{
 
     public void setSize(long size) {
         this.size = size;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
     }
 
     public Map<String, Integer> getGroupPrivilegeMap() {

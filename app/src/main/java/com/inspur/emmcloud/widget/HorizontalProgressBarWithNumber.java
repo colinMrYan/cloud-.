@@ -231,10 +231,10 @@ public class HorizontalProgressBarWithNumber extends ProgressBar
  		// draw unreached bar 
 // 		if (!noNeedBg) 
 // 		{ 
-// 			float start = progressPosX + mTextOffset / 2 + textWidth; 
+// 			float init = progressPosX + mTextOffset / 2 + textWidth;
 // 			mPaint.setColor(mUnReachedBarColor); 
 // 			mPaint.setStrokeWidth(mUnReachedProgressBarHeight); 
-// 			canvas.drawLine(start, 0, mRealWidth, 0, mPaint); 
+// 			canvas.drawLine(init, 0, mRealWidth, 0, mPaint);
 // 		} 
  
 

@@ -157,13 +157,15 @@ public class UpgradeUtils extends APIInterfaceInstance {
         upgradeUrl = getUpgradeResult.getUpgradeUrl();
         switch (upgradeCode) {
             case 0: // 无须升级
-                handler.sendEmptyMessage(NO_NEED_UPGRADE);
+                if (handler != null){
+                    handler.sendEmptyMessage(NO_NEED_UPGRADE);
+                }
                 break;
             case 1: // 可选升级
                 long appNotUpdateTime = PreferencesUtils.getLong(context, "appNotUpdateTime");
                 if (isManualCheck || System.currentTimeMillis() - appNotUpdateTime > notUpdateInterval) {
                     showSelectUpgradeDlg();
-                } else {
+                } else if (handler != null){
                     handler.sendEmptyMessage(NO_NEED_UPGRADE);
                 }
 

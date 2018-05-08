@@ -103,21 +103,6 @@ public class WorkFragment extends Fragment {
     private boolean isWorkPortletConfigUploadSuccess = true;  //flag:判断是否上传配置信息成功
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        if (rootView == null) {
-            rootView = inflater.inflate(R.layout.fragment_work, container,
-                    false);
-        }
-        ViewGroup parent = (ViewGroup) rootView.getParent();
-        if (parent != null) {
-            parent.removeView(rootView);
-        }
-        return rootView;
-    }
-
-
-    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         rootView = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_work, null);
@@ -136,6 +121,20 @@ public class WorkFragment extends Fragment {
         if (!isWorkPortletConfigUploadSuccess){
             uploadWorkPortletConfig();
         }
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        if (rootView == null) {
+            rootView = inflater.inflate(R.layout.fragment_work, container,
+                    false);
+        }
+        ViewGroup parent = (ViewGroup) rootView.getParent();
+        if (parent != null) {
+            parent.removeView(rootView);
+        }
+        return rootView;
     }
 
     /**

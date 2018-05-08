@@ -26,7 +26,9 @@ import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.util.common.DensityUtil;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -293,8 +295,24 @@ public class ChatInputEdit extends AppCompatEditText {
         setText(spannableStringBuilder);
         setSelection(index + insertContent.length() + 1);
     }
+    public Map<String, String> getMentionsMap(){
+        Map<String,String> mentionsMap = new HashMap<>();
+        try {
+            if (insertModelList.size()>0){
+                for (InsertModel insertModel:insertModelList){
+                    if (insertModel.getInsertRule().equals("@")){
+                        mentionsMap.put(insertModel.getInsertId(),insertModel.getInsertContentId());
+                    }
+                }
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return mentionsMap;
 
-    public String getRichContent(boolean isConvertUrl) {
+    }
+
+    public String getRichContent(boolean isIdentifyUrl) {
         SpannableStringBuilder spannableStringBuilder = (SpannableStringBuilder) getText();
         MyBackgroundColorSpan[] mSpans = getText().getSpans(0, spannableStringBuilder.length(), MyBackgroundColorSpan.class);
         for (int i = 0; i < mSpans.length; i++) {
@@ -303,15 +321,20 @@ public class ChatInputEdit extends AppCompatEditText {
             int spanEndPos = spannableStringBuilder.getSpanEnd(span);
             String keyword = spannableStringBuilder.subSequence(spanStartPos, spanEndPos).toString();
             if (keyword.startsWith("@")) {
-                InsertModel insertModel = getMentionInsertMention(keyword);
+                InsertModel insertModel = getInsertModel(span.getId());
                 if (insertModel != null) {
-                    spannableStringBuilder.replace(spanStartPos, spanEndPos, "[" + insertModel.getInsertContent() + "]" + getMentionProtoUtils(insertModel.getInsertId()));
+                    if (isIdentifyUrl){
+                        spannableStringBuilder.replace(spanStartPos, spanEndPos, "[" + insertModel.getInsertContent() + "]" + getMentionProtoUtils(insertModel.getInsertId()));
+                    }else {
+                        spannableStringBuilder.replace(spanStartPos+1, spanEndPos,insertModel.getInsertId()+" ");
+                    }
+
                 }
 
             }
         }
         String content = spannableStringBuilder.toString();
-        if (isConvertUrl) {
+        if (isIdentifyUrl) {
             Pattern pattern = Pattern.compile(Constant.PATTERN_URL);
             Matcher matcher = pattern.matcher(content);
             int offset = 0;
@@ -355,17 +378,10 @@ public class ChatInputEdit extends AppCompatEditText {
      * @param keyword
      * @return
      */
-    private InsertModel getMentionInsertMention(String keyword) {
-        for (int i = 0; i < insertModelList.size(); i++) {
-            InsertModel inertModel = insertModelList.get(i);
-            if (inertModel.getInsertRule().equals("@")) {
-                String insertContent = inertModel.getInsertContent();
-                if (insertContent.equals(keyword)) {
-                    return inertModel;
-                }
-
-            }
-
+    private InsertModel getInsertModel(String insertId) {
+        int index = insertModelList.indexOf(new InsertModel(insertId));
+        if (index != -1){
+            return  insertModelList.get(index);
         }
         return null;
     }

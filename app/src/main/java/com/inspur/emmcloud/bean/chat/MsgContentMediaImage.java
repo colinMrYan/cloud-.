@@ -23,6 +23,10 @@ public class MsgContentMediaImage {
     private long rawSize;
     private String rawMedia;
 
+    public MsgContentMediaImage(){
+
+    }
+
     public MsgContentMediaImage(String content) {
         JSONObject obj = JSONUtils.getJSONObject(content);
         name = JSONUtils.getString(obj, "name", "");
@@ -145,5 +149,32 @@ public class MsgContentMediaImage {
 
     public void setRawMedia(String rawMedia) {
         this.rawMedia = rawMedia;
+    }
+    public String toString() {
+        JSONObject obj = new JSONObject();
+        try {
+            JSONObject thumbnailObj = new JSONObject();
+            thumbnailObj.put("width",getThumbnailWidth());
+            thumbnailObj.put("height",getThumbnailHeight());
+            thumbnailObj.put("size",getThumbnailSize());
+            thumbnailObj.put("media",getThumbnailMedia());
+            JSONObject previewObj = new JSONObject();
+            previewObj.put("width",getPreviewWidth());
+            previewObj.put("height",getPreviewHeight());
+            previewObj.put("size",getPreviewSize());
+            previewObj.put("media",getPreviewMedia());
+            JSONObject rawObj = new JSONObject();
+            rawObj.put("width",getRawWidth());
+            rawObj.put("height",getRawHeight());
+            rawObj.put("size",getRawSize());
+            rawObj.put("media",getRawMedia());
+            obj.put("name", getName());
+            obj.put("thumbnail", thumbnailObj);
+            obj.put("preview", previewObj);
+            obj.put("raw", rawObj);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return obj.toString();
     }
 }

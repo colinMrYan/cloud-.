@@ -838,7 +838,7 @@ public class MyAppFragment extends Fragment {
      * @return
      */
     private boolean getNeedCommonlyUseApp() {
-        String userId = ((MyApplication) getActivity().getApplication()).getUid();
+        String userId =MyApplication.getInstance().getUid();
         isNeedCommonlyUseApp = PreferencesUtils.getBoolean(getActivity(), MyApplication.getInstance().getTanent()
                 + userId + "needCommonlyUseApp", true);
         return isNeedCommonlyUseApp;

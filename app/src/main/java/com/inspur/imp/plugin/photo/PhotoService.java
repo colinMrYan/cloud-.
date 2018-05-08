@@ -8,7 +8,6 @@ import android.widget.Toast;
 
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.util.common.LogUtils;
-import com.inspur.emmcloud.util.privates.DataCleanManager;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.cache.AppExceptionCacheUtils;
 import com.inspur.imp.api.Res;
@@ -176,7 +175,6 @@ public class PhotoService extends ImpPlugin {
                 this.failPicture(Res.getString("cancel_camera"));
                 saveNetException("PhotoService.camera","system_camera_error");
             }
-            clearImgCache();
         } else if (requestCode == RESULT_GELLERY) {
             LogUtils.jasonDebug("RESULT_GELLERY-===================");
             if (resultCode == ImagePicker.RESULT_CODE_ITEMS) {
@@ -219,15 +217,7 @@ public class PhotoService extends ImpPlugin {
             } else {
                 this.failPicture(Res.getString("cancel_select"));
             }
-            clearImgCache();
         }
-    }
-
-    /**
-     * 清除生成的图片cache
-     */
-    private void clearImgCache() {
-        DataCleanManager.cleanCustomCache(MyAppConfig.LOCAL_IMG_CREATE_PATH);
     }
 
     /**

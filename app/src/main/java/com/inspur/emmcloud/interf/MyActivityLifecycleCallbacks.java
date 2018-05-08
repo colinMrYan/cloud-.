@@ -126,7 +126,7 @@ public class MyActivityLifecycleCallbacks implements Application.ActivityLifecyc
      */
     private void startUploadPVCollectService(Context context) {
         // TODO Auto-generated method stub
-        if (!AppUtils.isServiceWork(context, "com.inspur.emmcloud.service.CollectService") && (!DbCacheUtils.isDbNull())) {
+        if (!AppUtils.isServiceWork(context, PVCollectService.class.getName()) && (!DbCacheUtils.isDbNull())) {
             Intent intent = new Intent();
             intent.setClass(context, PVCollectService.class);
             context.startService(intent);
@@ -139,7 +139,7 @@ public class MyActivityLifecycleCallbacks implements Application.ActivityLifecyc
      */
     private void startSyncCommonAppService(Context context) {
         // TODO Auto-generated method stub
-        if (!AppUtils.isServiceWork(context, "com.inspur.emmcloud.service.SyncCommonAppService") && (!DbCacheUtils.isDbNull())) {
+        if (!AppUtils.isServiceWork(context, SyncCommonAppService.class.getName()) && (!DbCacheUtils.isDbNull())) {
             Intent intent = new Intent();
             intent.setClass(context, SyncCommonAppService.class);
             context.startService(intent);

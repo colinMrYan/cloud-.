@@ -2,6 +2,7 @@ package com.inspur.emmcloud.widget.spans;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.text.TextPaint;
 import android.text.style.ClickableSpan;
 import android.view.View;
@@ -18,18 +19,26 @@ public class URLClickableSpan extends ClickableSpan {
      * 打开uri
      */
     private String openUri;
-    public URLClickableSpan(String openUrl){
+
+    public URLClickableSpan(String openUrl) {
         this.openUri = openUrl;
     }
+
     public void onClick(View view) {
         //Do something with URL here.
         Context context = view.getContext();
-//        Uri uri = Uri.parse(openUri);
-//        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-//        intent.setClass(context, AppWebOpenActivity.class);
-//        intent.putExtra("url",openUri);
-//        context.startActivity(intent);
-        UriUtils.openUrl((Activity) context,openUri);
+        if (openUri.startsWith("http")) {
+            UriUtils.openUrl((Activity) context, openUri);
+        } else {
+            try {
+                Intent intent = Intent.parseUri(openUri, Intent.URI_INTENT_SCHEME);
+                intent.setComponent(null);
+                context.startActivity(intent);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
     }
 
     @Override

@@ -28,27 +28,26 @@ public class DisplayTxtPlainMsg {
      *
      * @param context
      * @param convertView
-     * @param msg
+     * @param message
      */
     public static View getView(final Context context,
-                               Message msg) {
+                               Message message) {
         View cardContentView = LayoutInflater.from(context).inflate(
                 R.layout.chat_msg_card_child_text_rich_view, null);
-        final boolean isMyMsg = msg.getFromUser().equals(
-                ((MyApplication) context.getApplicationContext()).getUid());
+        final boolean isMyMsg = message.getFromUser().equals(
+                MyApplication.getInstance().getUid());
         final TextView richText = (TextView) cardContentView
                 .findViewById(R.id.content_text);
         richText.setTextColor(context.getResources().getColor(
                 isMyMsg ? R.color.white : R.color.black));
         (cardContentView.findViewById(R.id.card_layout)).setBackgroundResource(isMyMsg ? R.drawable.ic_chat_msg_img_cover_arrow_right : R.drawable.ic_chat_msg_img_cover_arrow_left);
-        String text = msg.getMsgContentTextPlain().getText();
+        String text = message.getMsgContentTextPlain().getText();
         richText.setMovementMethod(LinkMovementClickMethod.getInstance());
-        SpannableString spannableString = ChatMsgContentUtils.mentionsAndUrl2Span(context, text, msg.getMsgContentTextPlain().getMentionsMap());
-        richText.setText(spannableString);
+        SpannableString spannableString = ChatMsgContentUtils.mentionsAndUrl2Span(context, text, message.getMsgContentTextPlain().getMentionsMap());
+        richText.setText(spannableString.toString());
         TransHtmlToTextUtils.stripUnderlines(
-                richText,
-                context.getResources().getColor(R.color.header_bg));
-
+                richText,context.getResources().getColor(isMyMsg ? R.color.hightlight_in_blue_bg
+                        : R.color.header_bg));
         richText.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {

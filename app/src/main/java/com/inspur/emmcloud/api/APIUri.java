@@ -156,7 +156,7 @@ public class APIUri {
      * @return
      */
     public static String getUploadPushInfoUrl() {
-        return getECMChatUrl() + "/message/api/v1/client";
+        return getECMChatUrl() + "/client-registry/api/v1/client";
     }
 
     /************************************************************************登录*****************************************************************/
@@ -371,6 +371,26 @@ public class APIUri {
      */
     public static String getWebsocketConnectUrl() {
         return MyApplication.getInstance().getClusterChatSocket();
+    }
+
+
+    /**
+     * 获取聊天上传文件token url
+     * @param cid
+     * @return
+     */
+    public static String getUploadFileTokenUrl(String cid){
+        return getECMChatUrl() +"chat/api/v1/channel/"+cid+"/file/request";
+    }
+
+    /**
+     * 获取V1版消息中聊天资源文件地址
+     * @param cid
+     * @param path
+     * @return
+     */
+    public static String getChatFileResouceUrl(String cid,String path){
+        return getECMChatUrl() +"chat/api/v1/channel/"+cid+"/file/request?path="+path;
     }
 
     /**************************************************应用和应用中心********************************************************************/

@@ -16,6 +16,7 @@ import com.inspur.emmcloud.api.APIInterface;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.api.CloudHttpMethod;
 import com.inspur.emmcloud.api.HttpUtils;
+import com.inspur.emmcloud.bean.appcenter.volume.GetVolumeFileUploadTokenResult;
 import com.inspur.emmcloud.bean.chat.ChannelGroup;
 import com.inspur.emmcloud.bean.chat.GetAddMembersSuccessResult;
 import com.inspur.emmcloud.bean.chat.GetChannelInfoResult;
@@ -29,6 +30,7 @@ import com.inspur.emmcloud.bean.chat.GetNewMsgsResult;
 import com.inspur.emmcloud.bean.chat.GetNewsImgResult;
 import com.inspur.emmcloud.bean.chat.GetNewsInstructionResult;
 import com.inspur.emmcloud.bean.chat.GetSendMsgResult;
+import com.inspur.emmcloud.bean.chat.GetUploadPushInfoResult;
 import com.inspur.emmcloud.bean.contact.GetSearchChannelGroupResult;
 import com.inspur.emmcloud.bean.system.GetBoolenResult;
 import com.inspur.emmcloud.interf.OauthCallBack;
@@ -953,11 +955,12 @@ public class ChatAPIService {
 		HttpUtils.request(context,CloudHttpMethod.POST,params, new APICallback(context,url) {
 			@Override
 			public void callbackSuccess(String arg0) {
+				apiInterface.returnUploadPushInfoResultSuccess(new GetUploadPushInfoResult(arg0));
 			}
 
 			@Override
 			public void callbackFail(String error, int responseCode) {
-
+				apiInterface.returnUploadPushInfoResultFail(error,responseCode);
 			}
 
 			@Override
@@ -1013,6 +1016,47 @@ public class ChatAPIService {
 				OauthUtils.getInstance().refreshToken(
 						oauthCallBack, requestTime);
 			}
+		});
+	}
+
+
+	/**
+	 * 获取聊天文件上传Token
+	 * @param fileName
+	 * @param cid
+	 */
+	public void getFileUploadToken(final String fileName, final String cid) {
+		final String url = APIUri.getUploadFileTokenUrl(cid);
+		RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
+		params.addParameter("name", fileName);
+		HttpUtils.request(context,CloudHttpMethod.POST,params, new APICallback(context, url) {
+			@Override
+			public void callbackSuccess(String arg0) {
+				apiInterface.returnChatFileUploadTokenSuccess(new GetVolumeFileUploadTokenResult(arg0));
+			}
+
+			@Override
+			public void callbackFail(String error, int responseCode) {
+				apiInterface.returnChatFileUploadTokenFail(error, responseCode);
+			}
+
+			@Override
+			public void callbackTokenExpire(long requestTime) {
+				OauthCallBack oauthCallBack = new OauthCallBack() {
+					@Override
+					public void reExecute() {
+						getFileUploadToken(fileName, cid);
+					}
+
+					@Override
+					public void executeFailCallback() {
+						callbackFail("", -1);
+					}
+				};
+				OauthUtils.getInstance().refreshToken(
+						oauthCallBack, requestTime);
+			}
+
 		});
 	}
 

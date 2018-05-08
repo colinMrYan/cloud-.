@@ -20,7 +20,6 @@ import com.inspur.emmcloud.util.common.ImageUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
-import com.inspur.emmcloud.util.privates.DataCleanManager;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.cache.AppExceptionCacheUtils;
 import com.inspur.imp.api.Res;
@@ -111,8 +110,6 @@ public class CameraService extends ImpPlugin {
         if ("getPicture".equals(action)) {
             getPicture(paramsObject);
         }
-        //每次使用之前先将原来的生成的图片清除掉
-        DataCleanManager.cleanCustomCache(MyAppConfig.LOCAL_IMG_CREATE_PATH);
     }
 
     /**
@@ -815,7 +812,10 @@ public class CameraService extends ImpPlugin {
 
             // 将选中的大图和小图地址传回前端
             this.jsCallback(successCb, jsonArray.toString());
+            LogUtils.jasonDebug("jsonArray.toString()="+jsonArray.toString().length()/1024.0/1024);
+            //FileUtils.writeFile(MyAppConfig.LOCAL_CACHE_PATH+"log.txt",jsonArray.toString());
         } catch (Exception e) {
+            e.printStackTrace();
             this.failPicture(Res.getString("image_error"));
         }
     }

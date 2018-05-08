@@ -17,6 +17,7 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.bean.mine.Enterprise;
 import com.inspur.emmcloud.bean.mine.GetMyInfoResult;
 import com.inspur.emmcloud.config.Constant;
+import com.inspur.emmcloud.push.WebSocketPush;
 import com.inspur.emmcloud.util.privates.PreferencesByUsersUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
@@ -100,10 +101,7 @@ public class SwitchEnterpriseActivity extends BaseActivity {
      * @param enterprise
      */
     private void switchToEnterprise(Enterprise enterprise) {
-        if (((MyApplication) getApplicationContext()).getWebSocketPush() != null) {
-            ((MyApplication) getApplicationContext()).getWebSocketPush()
-                    .webSocketSignout();
-        }
+        WebSocketPush.getInstance().webSocketSignout();
         PreferencesByUsersUtils.putString(getApplicationContext(), "current_enterprise_id", enterprise.getId());
         ((MyApplication) getApplicationContext()).initTanent();
         ((MyApplication) getApplicationContext()).stopPush();

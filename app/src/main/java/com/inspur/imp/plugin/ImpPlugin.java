@@ -2,6 +2,8 @@ package com.inspur.imp.plugin;
 
 import android.app.Activity;
 import android.content.Context;
+import android.os.Build;
+import android.webkit.ValueCallback;
 
 import com.inspur.imp.engine.webview.ImpWebView;
 
@@ -63,7 +65,16 @@ public abstract class ImpPlugin implements IPlugin {
      */
     @Override
     public void jsCallback(String functionName) {
-        this.webview.loadUrl("javascript: " + functionName + "()");
+        String script = "javascript: " + functionName + "()";
+        if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.KITKAT){
+            this.webview.evaluateJavascript(script, new ValueCallback<String>() {
+                @Override
+                public void onReceiveValue(String value) {
+                }
+            });
+        }else {
+            this.webview.loadUrl(script);
+        }
 
     }
 
@@ -75,8 +86,17 @@ public abstract class ImpPlugin implements IPlugin {
      */
     @Override
     public void jsCallback(String functionName, String params) {
-        this.webview.loadUrl("javascript: " + functionName + "('" + params
-                + "')");
+        String script = "javascript: " + functionName + "('" + params + "')";
+        if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.KITKAT){
+            this.webview.evaluateJavascript(script, new ValueCallback<String>() {
+                @Override
+                public void onReceiveValue(String value) {
+                }
+            });
+        }else {
+            this.webview.loadUrl(script);
+        }
+
     }
 
     /**
@@ -91,8 +111,18 @@ public abstract class ImpPlugin implements IPlugin {
         for (int i = 0; i < params.length; i++) {
             jsonArray.put(params[i]);
         }
-        this.webview.loadUrl("javascript: " + functionName + "("
-                + jsonArray.toString() + ")");
+
+        String script ="javascript: " + functionName + "("
+                + jsonArray.toString() + ")";
+        if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.KITKAT){
+            this.webview.evaluateJavascript(script, new ValueCallback<String>() {
+                @Override
+                public void onReceiveValue(String value) {
+                }
+            });
+        }else {
+            this.webview.loadUrl(script);
+        }
     }
 
     @Override

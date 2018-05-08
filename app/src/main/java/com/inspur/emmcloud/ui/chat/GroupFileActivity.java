@@ -12,18 +12,28 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.BaseActivity;
+import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIDownloadCallBack;
+import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.bean.chat.GroupFileInfo;
+import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.Msg;
+import com.inspur.emmcloud.bean.chat.MsgContentRegularFile;
 import com.inspur.emmcloud.config.MyAppConfig;
-import com.inspur.emmcloud.util.privates.DownLoaderUtils;
 import com.inspur.emmcloud.util.common.FileUtils;
-import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
-import com.inspur.emmcloud.util.privates.cache.MsgCacheUtil;
 import com.inspur.emmcloud.util.common.ToastUtils;
+import com.inspur.emmcloud.util.privates.DownLoaderUtils;
+import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
+import com.inspur.emmcloud.util.privates.cache.ContactCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
+import com.inspur.emmcloud.util.privates.cache.MsgCacheUtil;
 import com.inspur.emmcloud.widget.HorizontalProgressBarWithNumber;
 
+import org.xutils.http.HttpMethod;
+import org.xutils.http.RequestParams;
+import org.xutils.http.app.RedirectHandler;
+import org.xutils.http.request.UriRequest;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
 
@@ -58,12 +68,25 @@ public class GroupFileActivity extends BaseActivity {
      */
     private void getFileMsgList() {
         // TODO Auto-generated method stub
-        List<Msg> fileTypeMsgList = MsgCacheUtil.getFileTypeMsgList(
-                GroupFileActivity.this, cid);
-        for (Msg msg :fileTypeMsgList){
-            GroupFileInfo groupFileInfo = new GroupFileInfo(msg);
-            fileInfoList.add(groupFileInfo);
+        if (MyApplication.getInstance().isChatVersionV0()) {
+            List<Msg> fileTypeMsgList = MsgCacheUtil.getFileTypeMsgList(
+                    GroupFileActivity.this, cid);
+            for (Msg msg : fileTypeMsgList) {
+                GroupFileInfo groupFileInfo = new GroupFileInfo(
+                        msg);
+                fileInfoList.add(groupFileInfo);
+            }
+
+        } else {
+            List<Message> fileTypeMessageList = MessageCacheUtil.getFileTypeMsgList(MyApplication.getInstance(), cid);
+            for (Message message : fileTypeMessageList) {
+                MsgContentRegularFile msgContentRegularFile = message.getMsgContentAttachmentFile();
+                String url = APIUri.getChatFileResouceUrl(message.getChannel(),msgContentRegularFile.getMedia());
+                GroupFileInfo groupFileInfo = new GroupFileInfo(url, msgContentRegularFile.getName(), msgContentRegularFile.getSize() + "", message.getCreationDate(), ContactCacheUtils.getUserName(MyApplication.getInstance(), message.getFromUser()));
+                fileInfoList.add(groupFileInfo);
+            }
         }
+
     }
 
     public void onClick(View v) {
@@ -93,9 +116,8 @@ public class GroupFileActivity extends BaseActivity {
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             // TODO Auto-generated method stub
-            LayoutInflater vi = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
-            convertView = vi.inflate(R.layout.group_file_item_view, null);
-            displayFiles(convertView, vi, position);
+            convertView = LayoutInflater.from(GroupFileActivity.this).inflate(R.layout.group_file_item_view, null);
+            displayFiles(convertView, position);
             return convertView;
         }
 
@@ -104,7 +126,7 @@ public class GroupFileActivity extends BaseActivity {
     /**
      * 展示文件卡片
      **/
-    public void displayFiles(View convertView, LayoutInflater vi, int position) {
+    public void displayFiles(View convertView, int position) {
         // TODO Auto-generated method stub
         ImageView fileImg = (ImageView) convertView
                 .findViewById(R.id.file_img);
@@ -131,8 +153,8 @@ public class GroupFileActivity extends BaseActivity {
             public void onClick(View v) {
                 // TODO Auto-generated method stub
                 // 当文件正在下载中 点击不响应
-                final String fileLocalPath = MyAppConfig.LOCAL_DOWNLOAD_PATH + fileName;
-                progressBar.setTag(fileLocalPath);
+                final String fileDownloadPath = MyAppConfig.LOCAL_DOWNLOAD_PATH + fileName;
+                progressBar.setTag(fileDownloadPath);
                 // 当文件正在下载中 点击不响应
                 if ((0 < progressBar.getProgress())
                         && (progressBar.getProgress() < 100)) {
@@ -144,7 +166,7 @@ public class GroupFileActivity extends BaseActivity {
                     @Override
                     public void callbackStart() {
                         if ((progressBar.getTag() != null)
-                                && (progressBar.getTag() == fileLocalPath)) {
+                                && (progressBar.getTag() == fileDownloadPath)) {
 
                             progressBar.setVisibility(View.VISIBLE);
                         } else {
@@ -182,11 +204,29 @@ public class GroupFileActivity extends BaseActivity {
 
                     }
                 };
-                if (FileUtils.isFileExist(fileLocalPath)) {
-                    FileUtils.openFile(getApplicationContext(), fileLocalPath);
+                if (FileUtils.isFileExist(fileDownloadPath)) {
+                    FileUtils.openFile(getApplicationContext(), fileDownloadPath);
                 } else {
-                    new DownLoaderUtils().startDownLoad(fileUrl, fileLocalPath,
-                            progressCallback);
+                    RequestParams params = MyApplication.getInstance().getHttpRequestParams(fileUrl);
+                    if (MyApplication.getInstance().isChatVersionV0()){
+                        params.setAutoResume(true);// 断点下载
+                        params.setSaveFilePath(fileDownloadPath);
+                        params.setCancelFast(true);
+                    }else {
+                        params.setRedirectHandler(new RedirectHandler() {
+                            @Override
+                            public RequestParams getRedirectParams(UriRequest uriRequest) throws Throwable {
+                                String locationUrl = uriRequest.getResponseHeader("Location");
+                                RequestParams params = new RequestParams(locationUrl);
+                                params.setAutoResume(true);// 断点下载
+                                params.setSaveFilePath(fileDownloadPath);
+                                params.setCancelFast(true);
+                                params.setMethod(HttpMethod.GET);
+                                return params;
+                            }
+                        });
+                    }
+                    new DownLoaderUtils().startDownLoad(params,progressCallback);
                 }
             }
         });
