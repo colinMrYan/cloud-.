@@ -111,6 +111,15 @@ public class AppCacheUtils {
 		return commonlyUseAppList;
 	}
 
+	public static List<AppCommonlyUse> getUploadCommonlyUseAppList(Context context){
+		List<AppCommonlyUse> uploadCommonlyUseAppList = null;
+		try {
+			List<AppCommonlyUse> orderCommonlyUseAppList = DbCacheUtils.getDb(context).selector(AppCommonlyUse.class).orderBy("weight",true).limit(8).findAll();
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+	}
+
 	/**
 	 * 获取遍历缓存列表后的AppCommonLyUse
 	 * @param context
@@ -145,4 +154,5 @@ public class AppCacheUtils {
 		return appList;
 	}
 
+	public
 }
