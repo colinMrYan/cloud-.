@@ -166,7 +166,7 @@ abstract class AbstractImageLoader<T> implements ImageLoader {
             drawableWrapper.setBorderHolder(holder.getBorderHolder());
         }
         drawableWrapper.calculate();
-        // start gif play
+        // init gif play
         if (imageWrapper.isGif() && this.holder.isAutoPlay()) {
             imageWrapper.getAsGif().start(textView);
         }

@@ -18,7 +18,7 @@ import com.inspur.emmcloud.bean.contact.Contact;
 import com.inspur.emmcloud.bean.chat.GetChannelInfoResult;
 import com.inspur.emmcloud.bean.chat.GetCreateSingleChannelResult;
 import com.inspur.emmcloud.ui.chat.ChannelActivity;
-import com.inspur.emmcloud.ui.chat.ImagePagerActivity;
+import com.inspur.emmcloud.ui.chat.ImagePagerV0Activity;
 import com.inspur.emmcloud.util.privates.ChatCreateUtils;
 import com.inspur.emmcloud.util.privates.ChatCreateUtils.OnCreateDirectChannelListener;
 import com.inspur.emmcloud.util.privates.cache.ContactCacheUtils;
@@ -209,7 +209,7 @@ public class UserInfoActivity extends BaseActivity {
                 break;
             case R.id.photo_img:
                 Intent intent = new Intent(UserInfoActivity.this,
-                        ImagePagerActivity.class);
+                        ImagePagerV0Activity.class);
                 ArrayList<String> urls = new ArrayList<String>();
                 urls.add(APIUri.getChannelImgUrl(UserInfoActivity.this, contact.getInspurID()));
                 intent.putExtra("image_index", 0);

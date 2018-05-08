@@ -1,57 +1,41 @@
 package com.inspur.emmcloud.bean.chat;
 
 import com.inspur.emmcloud.util.common.JSONUtils;
+import com.inspur.emmcloud.util.privates.TimeUtils;
 
 import org.json.JSONObject;
+import org.xutils.db.annotation.Column;
+import org.xutils.db.annotation.Table;
 
 import java.io.Serializable;
 
+@Table(name = "Message",onCreated = "CREATE INDEX messageindex ON Message(channel)")
 public class Message implements Serializable {
     private static final String TAG = "Msg";
-    // @Column(name = "id", isId = true)
+    @Column(name = "id", isId = true)
     private String id;
-    //@Column(name = "message")
+    @Column(name = "message")
     private String message;
-    // @Column(name = "type")
+    @Column(name = "type")
     private String type;
-    // @Column(name = "from")
+    @Column(name = "from")
     private String from;
-    // @Column(name = "to")
+    @Column(name = "to")
     private String to;
-    // @Column(name = "channel")
+    @Column(name = "channel")
     private String channel;
-    // @Column(name = "state")
+    @Column(name = "state")
     private String state;
-    // @Column(name = "content")
+    @Column(name = "content")
     private String content;
-    // @Column(name="creationDate")
-    private String creationDate;
-    //@Column(name="tracer")
-    private String tracer;
+    @Column(name = "creationDate")
+    private Long creationDate;
 
     private int sendStatus = 1;//0 发送中  1发送成功  2发送失败
-    private String tmpId = "";
 
     public Message() {
 
     }
-
-//    public Message(JSONObject obj, boolean isOldMsgType){
-//        id = JSONUtils.getString(obj, "mid", "0");
-//        JSONObject bodyObj = JSONUtils.getJSONObject(obj,"body",new JSONObject());
-//        String source = JSONUtils.getString(bodyObj,"source","");
-//        JSONObject sourceObj = JSONUtils.getJSONObject(source);
-//        message = JSONUtils.getString(sourceObj, "message", "");
-//        from = JSONUtils.getString(sourceObj, "from", "");
-//        type = JSONUtils.getString(sourceObj, "type", "");
-//        state = JSONUtils.getString(sourceObj, "state", "");
-//        content = JSONUtils.getString(sourceObj, "content", "");
-//
-//        channel = JSONUtils.getString(obj, "to", "");
-//
-//       creationDate = JSONUtils.getString(obj,"timestamp","");
-//
-//    }
 
     public Message(Msg msg) {
         id = msg.getMid();
@@ -63,11 +47,8 @@ public class Message implements Serializable {
         type = JSONUtils.getString(dataObj, "type", "");
         state = JSONUtils.getString(dataObj, "state", "");
         content = JSONUtils.getString(dataObj, "content", "");
-
         channel = msg.getCid();
-
-        creationDate = msg.getTime();
-
+        creationDate = TimeUtils.UTCString2Long(msg.getTime());
     }
 
     public static boolean isMessage(Msg msg) {
@@ -83,8 +64,8 @@ public class Message implements Serializable {
         channel = JSONUtils.getString(obj, "channel", "");
         state = JSONUtils.getString(obj, "state", "");
         content = JSONUtils.getString(obj, "content", "");
-        creationDate = JSONUtils.getString(obj, "creationDate", "");
-        tracer = JSONUtils.getString(obj, "tracer", "");
+        String UTCTime = JSONUtils.getString(obj, "creationDate", "");
+        creationDate = TimeUtils.UTCString2Long(UTCTime);
     }
 
     public MsgContentExtendedActions getMsgContentExtendedActions() {
@@ -99,13 +80,17 @@ public class Message implements Serializable {
         return new MsgContentComment(content);
     }
 
-    public MsgContentAttachmentFile getMsgContentAttachmentFile() {
-        return new MsgContentAttachmentFile(content);
+    public MsgContentRegularFile getMsgContentAttachmentFile() {
+        return new MsgContentRegularFile(content);
     }
 
 
     public MsgContentMediaImage getMsgContentMediaImage() {
         return new MsgContentMediaImage(content);
+    }
+
+    public MsgContentExtendedLinks getMsgContentExtendedLinks(){
+        return  new MsgContentExtendedLinks(content);
     }
 
     public MsgContentTextMarkdown getMsgContentTextMarkdown() {
@@ -188,27 +173,16 @@ public class Message implements Serializable {
         this.sendStatus = sendStatus;
     }
 
-    public String getTmpId() {
-        return tmpId;
-    }
-
     public String getFromUser() {
         return JSONUtils.getString(from, "user", "");
     }
 
-    public String getTracer() {
-        return tracer;
-    }
 
-    public void setTracer(String tracer) {
-        this.tracer = tracer;
-    }
-
-    public String getCreationDate() {
+    public Long getCreationDate() {
         return creationDate;
     }
 
-    public void setCreationDate(String creationDate) {
+    public void setCreationDate(Long creationDate) {
         this.creationDate = creationDate;
     }
 

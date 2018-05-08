@@ -6,24 +6,31 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIDownloadCallBack;
-import com.inspur.emmcloud.bean.chat.MsgContentAttachmentFile;
+import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.bean.chat.Message;
+import com.inspur.emmcloud.bean.chat.MsgContentRegularFile;
 import com.inspur.emmcloud.config.MyAppConfig;
 import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.DownLoaderUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 
+import org.xutils.http.HttpMethod;
+import org.xutils.http.RequestParams;
+import org.xutils.http.app.RedirectHandler;
+import org.xutils.http.request.UriRequest;
+
 import java.io.File;
 
 /**
- * DisplayAttachmentFileMsg
+ * DisplayRegularFileMsg
  *
  * @author Fortune Yu 展示文件卡片 2016-08-19
  */
-public class DisplayAttachmentFileMsg {
+public class DisplayRegularFileMsg {
     /**
      * 文件卡片
      *
@@ -32,7 +39,7 @@ public class DisplayAttachmentFileMsg {
      * @param msg
      */
     public static View getView(final Context context,
-                               final Message msg) {
+                               final Message message,final int sendStauts) {
         View convertView = LayoutInflater.from(context).inflate(
                 R.layout.chat_msg_card_child_attachment_file_view, null);
         TextView fileNameText = (TextView) convertView
@@ -40,16 +47,19 @@ public class DisplayAttachmentFileMsg {
         TextView fileSizeText = (TextView) convertView
                 .findViewById(R.id.file_size_text);
         ImageView img = (ImageView)convertView.findViewById(R.id.file_icon_img);
-        final MsgContentAttachmentFile msgContentFile = msg.getMsgContentAttachmentFile();
-        ImageDisplayUtils.getInstance().displayImage(img, "drawable://" + FileUtils.getIconResIdRobot(msgContentFile.getCategory()));
+        final MsgContentRegularFile msgContentFile = message.getMsgContentAttachmentFile();
+        ImageDisplayUtils.getInstance().displayImage(img, "drawable://" + FileUtils.getRegularFileIconResId(msgContentFile.getName()));
         fileNameText.setText(msgContentFile.getName());
         fileSizeText.setText(FileUtils.formatFileSize(msgContentFile.getSize()));
-        final String downloadUri = "https://emm.inspur.com/api/bot/v6.0/getfile/"+msgContentFile.getMedia();
-        final String fileDownloadPath = MyAppConfig.LOCAL_DOWNLOAD_PATH + msgContentFile.getName();
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                APIDownloadCallBack progressCallback = new APIDownloadCallBack(context, downloadUri) {
+                if (sendStauts != 1){
+                    return;
+                }
+                final String source = APIUri.getChatFileResouceUrl(message.getChannel(),msgContentFile.getMedia());
+                final String fileDownloadPath = MyAppConfig.LOCAL_DOWNLOAD_PATH + msgContentFile.getName();
+                APIDownloadCallBack progressCallback = new APIDownloadCallBack(context, source) {
                     @Override
                     public void callbackStart() {
                     }
@@ -78,12 +88,24 @@ public class DisplayAttachmentFileMsg {
                     }
 
                 };
-                DownLoaderUtils downLoaderUtils = new DownLoaderUtils();
                 if (FileUtils.isFileExist(fileDownloadPath)) {
                     FileUtils.openFile(context, fileDownloadPath);
                 } else {
-                    downLoaderUtils.startDownLoad(downloadUri, fileDownloadPath,
-                            progressCallback);
+                    RequestParams params = MyApplication.getInstance().getHttpRequestParams(source);
+                    params.setRedirectHandler(new RedirectHandler() {
+                        @Override
+                        public RequestParams getRedirectParams(UriRequest uriRequest) throws Throwable {
+                            String locationUrl = uriRequest.getResponseHeader("Location");
+                            RequestParams params = new RequestParams(locationUrl);
+                            params.setAutoResume(true);// 断点下载
+                            params.setSaveFilePath(fileDownloadPath);
+                            params.setCancelFast(true);
+                            params.setMethod(HttpMethod.GET);
+                            return params;
+                        }
+                    });
+                    new DownLoaderUtils().startDownLoad(params,progressCallback);
+
                 }
             }
         });

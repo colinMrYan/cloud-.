@@ -40,6 +40,7 @@ import com.inspur.emmcloud.bean.chat.GetFileUploadResult;
 import com.inspur.emmcloud.bean.chat.GetMsgCommentCountResult;
 import com.inspur.emmcloud.bean.chat.GetMsgCommentResult;
 import com.inspur.emmcloud.bean.chat.GetMsgResult;
+import com.inspur.emmcloud.bean.chat.GetNewMessagesResult;
 import com.inspur.emmcloud.bean.chat.GetNewMsgsResult;
 import com.inspur.emmcloud.bean.chat.GetNewsImgResult;
 import com.inspur.emmcloud.bean.chat.GetNewsInstructionResult;
@@ -163,9 +164,9 @@ public interface APIInterface {
     void returnChannelListFail(String error, int errorCode);
 
     void returnNewMsgsSuccess(GetNewMsgsResult getNewMsgsResult);
-
+    void returnNewMessagesSuccess(GetNewMessagesResult getNewMessagesResult);
     void returnNewMsgsFail(String error, int errorCode);
-
+    void returnNewMessagesFail(String error, int errorCode);
 
     void returnMsgCommentSuccess(GetMsgCommentResult getMsgCommentResult, String mid);
 
@@ -560,6 +561,10 @@ public interface APIInterface {
     void returnVolumeFileUploadTokenSuccess(GetVolumeFileUploadTokenResult getVolumeFileUploadTokenResult, String fileLocalPath, VolumeFile mockVolumeFile);
 
     void returnVolumeFileUploadTokenFail(VolumeFile mockVolumeFile, String error, int errorCode, String filePath);
+    void returnChatFileUploadTokenSuccess(GetVolumeFileUploadTokenResult getVolumeFileUploadTokenResult);
+
+    void returnChatFileUploadTokenFail(String error, int errorCode);
+
 
     void returnCreateForderSuccess(VolumeFile volumeFile);
 

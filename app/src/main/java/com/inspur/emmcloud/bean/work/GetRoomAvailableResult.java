@@ -139,8 +139,8 @@ public class GetRoomAvailableResult {
 				if(obj.has("duration")){
 					this.duration = obj.getString("duration");
 				}
-				if(obj.has("start")){
-					this.start = obj.getString("start");
+				if(obj.has("init")){
+					this.start = obj.getString("init");
 				}
 				if(obj.has("end")){
 					this.end = obj.getString("end");

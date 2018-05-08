@@ -158,7 +158,7 @@ package com.inspur.emmcloud.widget.mentionview;//package com.inspur.emmcloud.wid
 //        // Initialise the textfilter (listens for the splitchars)
 //        setFilters(new InputFilter[]{new InputFilter() {
 //            @Override
-//            public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
+//            public CharSequence filter(CharSequence source, int init, int end, Spanned dest, int dstart, int dend) {
 //                // Token limit check
 //                if (tokenLimit != -1 && objects.size() == tokenLimit) {
 //                    return "";
@@ -210,17 +210,17 @@ package com.inspur.emmcloud.widget.mentionview;//package com.inspur.emmcloud.wid
 //    }
 //
 //    @Override
-//    protected void performFiltering(@NonNull CharSequence text, int start, int end,
+//    protected void performFiltering(@NonNull CharSequence text, int init, int end,
 //                                    int keyCode) {
-//        if (start < prefix.length()) {
-//            start = prefix.length();
+//        if (init < prefix.length()) {
+//            init = prefix.length();
 //        }
 //        Filter filter = getFilter();
 //        if (filter != null) {
 //            if (hintVisible) {
 //                filter.filter("");
 //            } else {
-//                filter.filter(text.subSequence(start, end), this);
+//                filter.filter(text.subSequence(init, end), this);
 //            }
 //        }
 //    }
@@ -406,11 +406,11 @@ package com.inspur.emmcloud.widget.mentionview;//package com.inspur.emmcloud.wid
 //    }
 //
 //    private int getCorrectedTokenBeginning(int end) {
-//        int start = tokenizer.findTokenStart(getText(), end);
-//        if (start < prefix.length()) {
-//            start = prefix.length();
+//        int init = tokenizer.findTokenStart(getText(), end);
+//        if (init < prefix.length()) {
+//            init = prefix.length();
 //        }
-//        return start;
+//        return init;
 //    }
 //
 //    protected String currentCompletionText() {
@@ -418,10 +418,10 @@ package com.inspur.emmcloud.widget.mentionview;//package com.inspur.emmcloud.wid
 //
 //        Editable editable = getText();
 //        int end = getCorrectedTokenEnd();
-//        int start = getCorrectedTokenBeginning(end);
+//        int init = getCorrectedTokenBeginning(end);
 //
 //        //Some keyboards add extra spaces when doing corrections, so
-//        return TextUtils.substring(editable, start, end);
+//        return TextUtils.substring(editable, init, end);
 //    }
 //
 //    protected float maxTextWidth() {
@@ -462,10 +462,10 @@ package com.inspur.emmcloud.widget.mentionview;//package com.inspur.emmcloud.wid
 //        }
 //
 //        int end = getCorrectedTokenEnd();
-//        int start = getCorrectedTokenBeginning(end);
+//        int init = getCorrectedTokenBeginning(end);
 //
 //        //Don't allow 0 length entries to filter
-//        return end - start >= Math.max(getThreshold(), 1);
+//        return end - init >= Math.max(getThreshold(), 1);
 //    }
 //
 //    @Override
@@ -802,25 +802,25 @@ package com.inspur.emmcloud.widget.mentionview;//package com.inspur.emmcloud.wid
 //        Editable editable = getText();
 //        int cursorPosition = getSelectionEnd();
 //        int end = cursorPosition;
-//        int start = cursorPosition;
+//        int init = cursorPosition;
 //        if (!hintVisible) {
 //            //If you force the drop down to show when the hint is visible, you can run a completion
 //            //on the hint. If the hint includes commas, this truncates and inserts the hint in the field
 //            end = getCorrectedTokenEnd();
-//            start = getCorrectedTokenBeginning(end);
+//            init = getCorrectedTokenBeginning(end);
 //        }
 //
-//        String original = TextUtils.substring(editable, start, end);
+//        String original = TextUtils.substring(editable, init, end);
 //
 //        if (editable != null) {
 //            if (tokenSpan == null) {
-//                editable.replace(start, end, "");
+//                editable.replace(init, end, "");
 //            } else if (!allowDuplicates && objects.contains(tokenSpan.getToken())) {
-//                editable.replace(start, end, "");
+//                editable.replace(init, end, "");
 //            } else {
-//                QwertyKeyListener.markAsReplaced(editable, start, end, original);
-//                editable.replace(start, end, ssb);
-//                editable.setSpan(tokenSpan, start, start + ssb.length() - 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+//                QwertyKeyListener.markAsReplaced(editable, init, end, original);
+//                editable.replace(init, end, ssb);
+//                editable.setSpan(tokenSpan, init, init + ssb.length() - 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 //            }
 //        }
 //    }
@@ -1153,7 +1153,7 @@ package com.inspur.emmcloud.widget.mentionview;//package com.inspur.emmcloud.wid
 //
 //        @SuppressWarnings("unchecked cast")
 //        @Override
-//        public void onSpanAdded(Spannable text, Object what, int start, int end) {
+//        public void onSpanAdded(Spannable text, Object what, int init, int end) {
 //            if (what instanceof TokenImageSpan && !savingState && !focusChanging) {
 //                TokenImageSpan token = (TokenImageSpan) what;
 //                objects.add(token.getToken());
@@ -1165,7 +1165,7 @@ package com.inspur.emmcloud.widget.mentionview;//package com.inspur.emmcloud.wid
 //
 //        @SuppressWarnings("unchecked cast")
 //        @Override
-//        public void onSpanRemoved(Spannable text, Object what, int start, int end) {
+//        public void onSpanRemoved(Spannable text, Object what, int init, int end) {
 //            if (what instanceof TokenImageSpan && !savingState && !focusChanging) {
 //                TokenImageSpan token = (TokenImageSpan) what;
 //                if (objects.contains(token.getToken())) {
@@ -1194,24 +1194,24 @@ package com.inspur.emmcloud.widget.mentionview;//package com.inspur.emmcloud.wid
 //        }
 //
 //        @Override
-//        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+//        public void beforeTextChanged(CharSequence s, int init, int count, int after) {
 //            // count > 0 means something will be deleted
 //            if (count > 0 && getText() != null) {
 //                Editable text = getText();
-//                int end = start + count;
+//                int end = init + count;
 //
-//                //If we're deleting a space, we want spans from 1 character before this start
-//                if (text.charAt(start) == ' ') {
-//                    start -= 1;
+//                //If we're deleting a space, we want spans from 1 character before this init
+//                if (text.charAt(init) == ' ') {
+//                    init -= 1;
 //                }
 //
-//                TokenImageSpan[] spans = text.getSpans(start, end, TokenImageSpan.class);
+//                TokenImageSpan[] spans = text.getSpans(init, end, TokenImageSpan.class);
 //
 //                //NOTE: I'm not completely sure this won't cause problems if we get stuck in a text changed loop
 //                //but it appears to work fine. Spans will stop getting removed if this breaks.
 //                spansToRemove = new ArrayList<TokenImageSpan>();
 //                for (TokenImageSpan token : spans) {
-//                    if (text.getSpanStart(token) < end && start < text.getSpanEnd(token)) {
+//                    if (text.getSpanStart(token) < end && init < text.getSpanEnd(token)) {
 //                        spansToRemove.add(token);
 //                    }
 //                }
@@ -1245,7 +1245,7 @@ package com.inspur.emmcloud.widget.mentionview;//package com.inspur.emmcloud.wid
 //        }
 //
 //        @Override
-//        public void onTextChanged(CharSequence s, int start, int before, int count) {
+//        public void onTextChanged(CharSequence s, int init, int before, int count) {
 //        }
 //    }
 //

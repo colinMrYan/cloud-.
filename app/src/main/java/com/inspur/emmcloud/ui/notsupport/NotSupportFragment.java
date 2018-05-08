@@ -44,11 +44,21 @@ public class NotSupportFragment extends Fragment {
         unknownFuctionText = (TextView) rootView.findViewById(R.id.app_unknow_text);
         unknownFuctionText.setText(getClickableSpan());
         unknownFuctionText.setMovementMethod(LinkMovementMethod.getInstance());//必须设置否则无效
-
-
     }
 
-
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        if (rootView == null) {
+            rootView = inflater.inflate(R.layout.fragment_unknown, container,
+                    false);
+        }
+        ViewGroup parent = (ViewGroup) rootView.getParent();
+        if (parent != null) {
+            parent.removeView(rootView);
+        }
+        return rootView;
+    }
     private Handler handler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
@@ -66,20 +76,6 @@ public class NotSupportFragment extends Fragment {
             }
         }
     };
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        if (rootView == null) {
-            rootView = inflater.inflate(R.layout.fragment_unknown, container,
-                    false);
-        }
-        ViewGroup parent = (ViewGroup) rootView.getParent();
-        if (parent != null) {
-            parent.removeView(rootView);
-        }
-        return rootView;
-    }
 
     /**
      * 获取spanSgtring

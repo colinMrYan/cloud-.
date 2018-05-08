@@ -1,17 +1,22 @@
 package com.inspur.emmcloud.push;
 
-import android.content.Context;
 import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.api.APIUri;
+import com.inspur.emmcloud.bean.chat.WSPushContent;
+import com.inspur.emmcloud.bean.system.EventMessage;
+import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.util.common.LogUtils;
-import com.inspur.emmcloud.util.common.StringUtils;
+import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
+import com.inspur.emmcloud.util.privates.PushInfoUtils;
 
-import java.net.URISyntaxException;
+import org.greenrobot.eventbus.EventBus;
+
+import java.net.URI;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -27,204 +32,230 @@ import io.socket.parseqs.ParseQS;
 public class WebSocketPush {
 
 	private static final String TAG = "WebSocketPush";
-	 private static WebSocketPush webSocketPush=null;
-	private  Socket mSocket = null;
-	private Context context;
-	private boolean isWebsocketConnnecting =false;
+	private static WebSocketPush webSocketPush=null;
+	private Socket mSocket = null;
+	private Map<String,EventMessage> tracerMap = new HashMap<>();
 
-	public WebSocketPush(Context context) {
-		this.context = context;
+	public WebSocketPush() {
+		tracerMap = new HashMap<>();
 	}
 
-	public static WebSocketPush getInstance(Context context){
+	public static WebSocketPush getInstance(){
 		if (webSocketPush == null) {
 			synchronized (WebSocketPush.class) {
 				if (webSocketPush == null) {
-					webSocketPush = new WebSocketPush(context);
+					webSocketPush = new WebSocketPush();
 				}
 			}
 		}
 		return webSocketPush;
 	}
-	
+
 	/**
 	 * 开始WebSocket推送
 	 */
-	public void start() {
+	public void init(boolean isForceNew) {
 		// TODO Auto-generated method stub
-		String pushId = AppUtils.getPushId(context);
-		if(((MyApplication)context.getApplicationContext()).isHaveLogin() && !StringUtils.isBlank(pushId)){
-			String url = APIUri.getWebsocketConnectUrl();
-			String enterpriseCode = ((MyApplication)context.getApplicationContext()).getCurrentEnterprise().getCode();
-			String path = "/"+enterpriseCode+"/socket/handshake";
-			WebSocketConnect(url, path,pushId);
-		}else {
-			sendWebSocketStatusBroadcaset(Socket.EVENT_DISCONNECT);
+		if (isForceNew || !isSocketConnect()){
+			if (NetUtils.isNetworkConnected(MyApplication.getInstance(), false)){
+				new PushInfoUtils(MyApplication.getInstance(), new PushInfoUtils.OnGetChatClientIdListener() {
+					@Override
+					public void getChatClientIdSuccess(String chatClientId) {
+						WebSocketConnect(chatClientId);
+					}
+
+					@Override
+					public void getChatClientIdFail() {
+						sendWebSocketStatusBroadcaset(Socket.EVENT_DISCONNECT);
+					}
+				}).getChatClientId(isForceNew);
+			}else {
+				sendWebSocketStatusBroadcaset(Socket.EVENT_DISCONNECT);
+			}
 		}
 	}
 
 
-	public void WebSocketConnect(String url, String path,String pushId) {
-			if (!isSocketConnect() && !isWebsocketConnnecting){
-				isWebsocketConnnecting = true;
-				sendWebSocketStatusBroadcaset("socket_connecting");
-				String uuid = AppUtils.getMyUUID(context);
-				String deviceName = AppUtils.getDeviceName(context);
-				IO.Options opts = new IO.Options();
-				opts.reconnectionAttempts = 4; // 设置websocket重连次数
-				opts.forceNew = true;
-				Map<String, String> query = new HashMap<String, String>();
+	private void WebSocketConnect(String chatClientId) {
+			String url = APIUri.getWebsocketConnectUrl();
+			String path = MyApplication.getInstance().isChatVersionV0()?"/"+MyApplication.getInstance().getCurrentEnterprise().getCode()+"/socket/handshake":
+					"/chat/socket/handshake";
+			sendWebSocketStatusBroadcaset("socket_connecting");
+			IO.Options opts = new IO.Options();
+			opts.reconnectionAttempts = 4; // 设置websocket重连次数
+			opts.forceNew = true;
+			Map<String, String> query = new HashMap<String, String>();
+			if (MyApplication.getInstance().isChatVersionV0()){
+				String uuid = AppUtils.getMyUUID(MyApplication.getInstance());
+				String deviceName = AppUtils.getDeviceName(MyApplication.getInstance());
+				String pushId = AppUtils.getPushId(MyApplication.getInstance());
 				query.put("device.id", uuid);
 				query.put("device.name", deviceName);
 				query.put("device.push", pushId);
-				// opts.transports = new String[] { Polling.NAME };
-				opts.path = path;
-				LogUtils.debug(TAG, "query.toString()=" + ParseQS.encode(query));
-				opts.query = ParseQS.encode(query);
-				try {
-					closeSocket();
-					mSocket = IO.socket(url, opts);
-					mSocket.io().on(Manager.EVENT_TRANSPORT, new Emitter.Listener() {
-						@Override
-						public void call(Object... args) {
-
-							Transport transport = (Transport) args[0];
-							transport.on(Transport.EVENT_REQUEST_HEADERS,
-									new Emitter.Listener() {
-										@Override
-										public void call(Object... args) {
-											@SuppressWarnings("unchecked")
-											Map<String, List<String>> headers = (Map<String, List<String>>) args[0];
-											headers.put("Authorization", Arrays.asList(((MyApplication)context.getApplicationContext()).getToken()));
-										}
-									}).on(Transport.EVENT_RESPONSE_HEADERS,
-									new Emitter.Listener() {
-										@Override
-										public void call(Object... args) {
-										}
-									});
-						}
-					});
-
-					connectWebSocket();
-				} catch (URISyntaxException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-					sendWebSocketStatusBroadcaset(Socket.EVENT_CONNECT_ERROR);
-					Log.d(TAG, "e=" + e.toString());
-					if (mSocket != null) {
-						mSocket.disconnect();
-						mSocket.off();
-						mSocket.close();
-						mSocket = null;
-					}
-				}
-				isWebsocketConnnecting = false;
+			}else {
+				query.put("client", chatClientId);
 			}
+			opts.path = path;
+			LogUtils.debug(TAG, "query.toString()=" + ParseQS.encode(query));
+			opts.query = ParseQS.encode(query);
+			try {
+				webSocketSignout();
+//				if (MyApplication.getInstance().isChatVersionV0()){
+//					mSocket = IO.socket(url, opts);
+//				}else {
+					Manager manager = new Manager(new URI(url),opts);
+					mSocket = manager.socket(MyApplication.getInstance().getChatSpcketNameSpace());
+//				}
+				mSocket.io().on(Manager.EVENT_TRANSPORT, new Emitter.Listener() {
+					@Override
+					public void call(Object... args) {
 
-
+						Transport transport = (Transport) args[0];
+						transport.on(Transport.EVENT_REQUEST_HEADERS,
+								new Emitter.Listener() {
+									@Override
+									public void call(Object... args) {
+										@SuppressWarnings("unchecked")
+										Map<String, List<String>> headers = (Map<String, List<String>>) args[0];
+										headers.put("Authorization", Arrays.asList(MyApplication.getInstance().getToken()));
+									}
+								}).on(Transport.EVENT_RESPONSE_HEADERS,
+								new Emitter.Listener() {
+									@Override
+									public void call(Object... args) {
+									}
+								});
+					}
+				});
+				addListeners();
+				mSocket.open();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				sendWebSocketStatusBroadcaset(Socket.EVENT_CONNECT_ERROR);
+				Log.d(TAG, "e=" + e.toString());
+				if (mSocket != null) {
+					mSocket.disconnect();
+					mSocket.off();
+					mSocket.close();
+					mSocket = null;
+				}
+			}
 	}
 
 
 	/**
 	 * 判断websocket是否已连接
-	 * 
+	 *
 	 * @return
 	 */
-	public boolean isSocketConnect() {
+	private boolean isSocketConnect() {
 		if (mSocket != null) {
 			return mSocket.connected();
 		}
 		return false;
 
 	}
-	
 
-	public void sendActivedMsg() {
-		if (mSocket != null && isSocketConnect()) {
-			LogUtils.debug(TAG,"sendActivedMsg----");
-			mSocket.emit("state", "ACTIVED");
-		}else {
-			start();
+	public void sendAppStatus(boolean isActive){
+		if (isSocketConnect()){
+			String appStatus = isActive?"ACTIVED":"FROZEN";
+			LogUtils.debug(TAG,  "发送App状态："+appStatus);
+			mSocket.emit("state", appStatus);
 		}
 	}
 
-	public void sendFrozenMsg() {
-		if (mSocket != null) {
-			LogUtils.debug(TAG,"sendFrozenMsg----");
-			mSocket.emit("state", "FROZEN");
-	}
-	}
-	
 	public void webSocketSignout(){
 		if (mSocket != null) {
-			LogUtils.debug(TAG,"webSocketSignout----");
-			mSocket.emit("state", "SIGNOUT");
-			closeSocket();
+			if (isSocketConnect()) {
+				LogUtils.debug(TAG,  "注销");
+				mSocket.emit("state", "SIGNOUT");
+			}
+			mSocket.disconnect();
+			removeListeners();
+			mSocket.close();
+			mSocket = null;
+			if(tracerMap != null){
+				tracerMap.clear();
+			}
+
 		}
 	}
+	private void removeListeners(){
+		mSocket.off("message");
+		mSocket.off("com.inspur.ecm.chat");
+		mSocket.off(Socket.EVENT_CONNECT_ERROR);
+		mSocket.off(Socket.EVENT_CONNECT);
+		mSocket.off(Socket.EVENT_DISCONNECT);
+	}
 
-    private void addListeners() {
+	private void addListeners() {
 
-        mSocket.on(Socket.EVENT_CONNECT_ERROR, new Emitter.Listener() {
-
-            @Override
-            public void call(Object... arg0) {
-                // TODO Auto-generated method stub
-                LogUtils.debug(TAG, "连接失败");
-                sendWebSocketStatusBroadcaset(Socket.EVENT_CONNECT_ERROR);
-
-            }
-        });
-        mSocket.on(Socket.EVENT_CONNECT, new Emitter.Listener() {
-
-            @Override
-            public void call(Object... arg0) {
-                // TODO Auto-generated method stub
-                LogUtils.debug(TAG, "连接成功");
-                sendWebSocketStatusBroadcaset(Socket.EVENT_CONNECT);
-                if (((MyApplication) context.getApplicationContext())
-                        .getIsActive()) { // 当第一次连接成功后发送消息
-                    sendActivedMsg();
-                } else {
-                    sendFrozenMsg();
-                }
-
-            }
-        });
-
-
-        mSocket.on("message", new Emitter.Listener() {
-
-            @Override
-            public void call(Object... arg0) {
-                // TODO Auto-generated method stub
-                LogUtils.debug(TAG, "message:" + arg0[0].toString());
-
-                String content = arg0[0].toString();
-                Intent intent = new Intent("com.inspur.msg");
-                intent.putExtra("push", content);
-                LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
-            }
-        });
-
-		mSocket.on("debug", new Emitter.Listener() {
+		mSocket.on(Socket.EVENT_CONNECT_ERROR, new Emitter.Listener() {
 
 			@Override
 			public void call(Object... arg0) {
 				// TODO Auto-generated method stub
-				LogUtils.debug(TAG, "debug:" + arg0[0].toString());
+				LogUtils.debug(TAG, "连接失败");
+				sendWebSocketStatusBroadcaset(Socket.EVENT_CONNECT_ERROR);
+
 			}
 		});
-		mSocket.on("command", new Emitter.Listener() {
+		mSocket.on(Socket.EVENT_CONNECT, new Emitter.Listener() {
 
 			@Override
 			public void call(Object... arg0) {
 				// TODO Auto-generated method stub
-				LogUtils.debug(TAG, "command" + arg0[0].toString());
+				LogUtils.debug(TAG, "连接成功");
+				sendWebSocketStatusBroadcaset(Socket.EVENT_CONNECT);
+				// 当第一次连接成功后发送App目前的状态消息
+				sendAppStatus(MyApplication.getInstance().getIsActive());
 			}
 		});
 
+
+		mSocket.on("message", new Emitter.Listener() {
+
+			@Override
+			public void call(Object... arg0) {
+				// TODO Auto-generated method stub
+				LogUtils.debug(TAG, "message:" + arg0[0].toString());
+
+				String content = arg0[0].toString();
+				Intent intent = new Intent("com.inspur.msg");
+				intent.putExtra("push", content);
+				LocalBroadcastManager.getInstance(MyApplication.getInstance()).sendBroadcast(intent);
+			}
+		});
+
+		mSocket.on("com.inspur.ecm.chat", new Emitter.Listener() {
+
+			@Override
+			public void call(Object... arg0) {
+				// TODO Auto-generated method stub
+				LogUtils.debug(TAG,"arg0[0].toString()="+arg0[0].toString());
+				WSPushContent wsPushContent = new WSPushContent(arg0[0].toString());
+				String path = wsPushContent.getPath();
+				//客户端主动请求
+			//	if (StringUtils.isBlank(path)){
+					String tracer = wsPushContent.getTracer();
+					EventMessage eventMessage = tracerMap.get(tracer);
+					if (eventMessage != null){
+						tracerMap.remove(tracer);
+						String body = wsPushContent.getBody();
+						eventMessage.setContent(body);
+						eventMessage.setStatus(wsPushContent.getStatus());
+						EventBus.getDefault().post(eventMessage);
+					}
+		//		}
+				else {
+					if (path.equals("/channel/message") && wsPushContent.getMethod().equals("post")){
+						EventMessage eventMessagea = new EventMessage(Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE,wsPushContent.getBody());
+						EventBus.getDefault().post(eventMessagea);
+					}
+				}
+			}
+		});
 		mSocket.on(Socket.EVENT_DISCONNECT, new Emitter.Listener() {
 
 			@Override
@@ -232,40 +263,32 @@ public class WebSocketPush {
 				// TODO Auto-generated method stub
 				sendWebSocketStatusBroadcaset(Socket.EVENT_DISCONNECT);
 				LogUtils.debug(TAG, "断开连接");
+				LogUtils.debug(TAG,  arg0[0].toString());
 			}
 		});
+
 	}
 
-	public void connectWebSocket() {
-		addListeners();
-		mSocket.open();
-		LogUtils.debug(TAG, "mSocket.open");
-		// mSocket.connect();
-	}
-	
-	public void reConnectWebSocket() {
-		// mSocket.connect();
-		mSocket.connect();
-	}
-
-	public void closeSocket() {
-		if (mSocket != null) {
-			Log.d(TAG, "closeSocket------");
-			mSocket.disconnect();
-			mSocket.close();
-			mSocket = null;
+	public void sendWSMessage(EventMessage eventMessage,Object content,String tracer){
+		if (isSocketConnect()){
+			LogUtils.debug(TAG,"eventMessage.getTag()="+eventMessage.getTag());
+			LogUtils.debug(TAG,"eventMessage.content="+content);
+			mSocket.emit("com.inspur.ecm.chat",content);
+			tracerMap.put(tracer, eventMessage);
+		}else {
+			eventMessage.setContent("time out");
+			eventMessage.setStatus(-1);
+			EventBus.getDefault().post(eventMessage);
 		}
 	}
 
-    private void sendWebSocketStatusBroadcaset(String event) {
-        if (((MyApplication) context.getApplicationContext())
-                .isIndexActivityRunning()) {
+	private void sendWebSocketStatusBroadcaset(String event) {
+        if (MyApplication.getInstance().isIndexActivityRunning()) {
             Intent intent = new Intent("message_notify");
             intent.putExtra("status", event);
             intent.putExtra("command", "websocket_status");
-            LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+            LocalBroadcastManager.getInstance(MyApplication.getInstance()).sendBroadcast(intent);
         }
     }
-
 
 }

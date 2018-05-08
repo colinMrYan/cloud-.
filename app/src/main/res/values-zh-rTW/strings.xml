@@ -225,6 +225,7 @@
     <string name="comment_type">   的圖片</string>
     <string name="comment_filetype">   的文件</string>
     <string name="comment_news_type">   的新聞</string>
+    <string name="comment_other_type">   的消息</string>
     <string name="published_in">發於</string>
     <string name="all_channel_mem">全部頻道成員</string>
     <string name="message_text">消息：</string>
@@ -234,7 +235,8 @@
     <string name="send_a_picture">[圖片]</string>
     <string name="send_a_comment">[評論]</string>
     <string name="send_a_file">[文件]</string>
-    <string name="share_a_link">[新聞連結]</string>
+    <string name="send_a_link">[連結]</string>
+    <string name="send_a_contact_card">[名片]</string>
     <string name="send_a_meeting_invitation">[會議邀請]</string>
     <string name="cancel_a_meeting">[會議取消通知]</string>
     <string name="send_a_meeting_request">[會議審批]</string>

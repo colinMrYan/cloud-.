@@ -1,6 +1,5 @@
 package com.inspur.emmcloud.bean.chat;
 
-import com.inspur.emmcloud.bean.chat.Msg;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -9,7 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GetNewMsgsResult {
-	private static final String TAG = "GetNewMsgsResult";
 	private JSONObject msgsJsonObj;
 
 	public GetNewMsgsResult(String response) {
@@ -19,10 +17,6 @@ public class GetNewMsgsResult {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	}
-
-	public JSONObject getMsgsJsonObj() {
-		return msgsJsonObj;
 	}
 
 	public List<Msg> getNewMsgList(String cid) {

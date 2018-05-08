@@ -8,17 +8,21 @@ import org.json.JSONObject;
  * Created by chenmch on 2018/2/6.
  */
 
-public class MsgContentAttachmentFile {
+public class MsgContentRegularFile {
     private String category;
     private String name;
     private long size;
     private String media;
-    public MsgContentAttachmentFile(String content) {
+    public MsgContentRegularFile(String content) {
         JSONObject object = JSONUtils.getJSONObject(content);
         category = JSONUtils.getString(object,"category","");
         name = JSONUtils.getString(object,"name","");
         media = JSONUtils.getString(object,"media","");
         size = JSONUtils.getLong(object,"size",0);
+    }
+
+    public MsgContentRegularFile(){
+
     }
 
     public String getCategory() {
@@ -51,5 +55,17 @@ public class MsgContentAttachmentFile {
 
     public void setMedia(String media) {
         this.media = media;
+    }
+    public String toString() {
+        JSONObject obj = new JSONObject();
+        try {
+            obj.put("category", category);
+            obj.put("name", name);
+            obj.put("size", size);
+            obj.put("media", media);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return obj.toString();
     }
 }

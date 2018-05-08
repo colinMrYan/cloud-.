@@ -11,7 +11,6 @@ import com.inspur.emmcloud.bean.chat.MsgContentAttachmentCard;
 import com.inspur.emmcloud.bean.chat.MsgContentTextPlain;
 import com.inspur.emmcloud.bean.chat.Phone;
 import com.inspur.emmcloud.bean.contact.Contact;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.privates.cache.RobotCacheUtils;
 
@@ -76,7 +75,7 @@ public class ConbineMsg {
 		msgRobot.setFrom(fromObj.toString());
 		msgRobot.setTo("");
 		msgRobot.setState("");
-		msgRobot.setCreationDate(TimeUtils.getCurrentUTCTimeString());
+		msgRobot.setCreationDate(System.currentTimeMillis());
 		MsgContentTextPlain msgContentTextPlain = new MsgContentTextPlain();
 		msgContentTextPlain.setText(text);
 		msgRobot.setContent(msgContentTextPlain.toString());
@@ -88,9 +87,8 @@ public class ConbineMsg {
 		msgRobot.setChannel(cid);
 		msgRobot.setMessage("1.0");
 		msgRobot.setId(fakeMessageId);
-		msgRobot.setCreationDate(TimeUtils.getCurrentUTCTimeString());
+		msgRobot.setCreationDate(System.currentTimeMillis());
 		msgRobot.setType("attachment/card");
-		msgRobot.setCreationDate(TimeUtils.getCurrentUTCTimeString());
 		JSONObject fromObj = new JSONObject();
 		try {
 			fromObj.put("user",from);
@@ -107,7 +105,6 @@ public class ConbineMsg {
 		msgContentAttachmentCard.setLastName("");
 		msgContentAttachmentCard.setOrganization(contact.getOrgName());
 		msgContentAttachmentCard.setTitle("");
-		LogUtils.jasonDebug("contact.getInspurID()="+contact.getInspurID());
 		msgContentAttachmentCard.setUid(contact.getInspurID());
 		Email email = new Email("工作",contact.getEmail());
 		List<Email> emailList = new ArrayList<>();

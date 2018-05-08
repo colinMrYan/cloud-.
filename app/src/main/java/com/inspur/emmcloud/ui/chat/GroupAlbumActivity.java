@@ -1,6 +1,5 @@
 package com.inspur.emmcloud.ui.chat;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,10 +12,14 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.inspur.emmcloud.BaseActivity;
+import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIUri;
+import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.Msg;
+import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
+import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
 import com.inspur.emmcloud.util.privates.cache.MsgCacheUtil;
 
 import org.xutils.view.annotation.ContentView;
@@ -37,8 +40,9 @@ public class GroupAlbumActivity extends BaseActivity {
     private RelativeLayout noChannelAlbumLayout;
 
     private String cid;
-    private ArrayList<String> imgUrlList = new ArrayList<String>();
+    private ArrayList<String> imgUrlList = new ArrayList<>();
     private List<Msg> imgTypeMsgList;
+    private List<Message> imgTypeMessageList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,17 +63,23 @@ public class GroupAlbumActivity extends BaseActivity {
                 view.invalidate();
                 int width = view.getWidth();
                 int height = view.getHeight();
-                Intent intent = new Intent(GroupAlbumActivity.this,
-                        ImagePagerActivity.class);
-                intent.putExtra(ImagePagerActivity.EXTRA_IMAGE_MSG_LIST, (Serializable) imgTypeMsgList);
-                intent.putExtra(ImagePagerActivity.EXTRA_CURRENT_IMAGE_MSG, imgTypeMsgList.get(position));
-                intent.putExtra(ImagePagerActivity.PHOTO_SELECT_X_TAG, location[0]);
-                intent.putExtra(ImagePagerActivity.PHOTO_SELECT_Y_TAG, location[1]);
-                intent.putExtra(ImagePagerActivity.PHOTO_SELECT_W_TAG, width);
-                intent.putExtra(ImagePagerActivity.PHOTO_SELECT_H_TAG, height);
-                intent.putExtra("image_index", position);
-                intent.putStringArrayListExtra("image_urls", imgUrlList);
-                startActivity(intent);
+                Bundle bundle = new Bundle();
+                bundle.putInt(ImagePagerV0Activity.PHOTO_SELECT_X_TAG, location[0]);
+                bundle.putInt(ImagePagerV0Activity.PHOTO_SELECT_Y_TAG, location[1]);
+                bundle.putInt(ImagePagerV0Activity.PHOTO_SELECT_W_TAG, width);
+                bundle.putInt(ImagePagerV0Activity.PHOTO_SELECT_H_TAG, height);
+                bundle.putInt("image_index", position);
+                bundle.putStringArrayList("image_urls", imgUrlList);
+                if (MyApplication.getInstance().isChatVersionV0()){
+                    bundle.putSerializable(ImagePagerV0Activity.EXTRA_IMAGE_MSG_LIST, (Serializable) imgTypeMsgList);
+                    bundle.putSerializable(ImagePagerV0Activity.EXTRA_CURRENT_IMAGE_MSG, imgTypeMsgList.get(position));
+                    IntentUtils.startActivity(GroupAlbumActivity.this,ImagePagerV0Activity.class,bundle);
+                }else {
+                    bundle.putSerializable(ImagePagerV0Activity.EXTRA_IMAGE_MSG_LIST, (Serializable) imgTypeMessageList);
+                    bundle.putSerializable(ImagePagerV0Activity.EXTRA_CURRENT_IMAGE_MSG, imgTypeMessageList.get(position));
+                    IntentUtils.startActivity(GroupAlbumActivity.this,ImagePagerActivity.class,bundle);
+                }
+
             }
         });
 
@@ -80,10 +90,20 @@ public class GroupAlbumActivity extends BaseActivity {
      */
     private void getImgMsgList() {
         // TODO Auto-generated method stub
-        imgTypeMsgList = MsgCacheUtil.getImgTypeMsgList(GroupAlbumActivity.this, cid);
-        for (Msg msg :imgTypeMsgList){
-            String url = APIUri.getPreviewUrl(msg.getImgTypeMsgImg());
-            imgUrlList.add(url);
+        if (MyApplication.getInstance().isChatVersionV0()){
+            imgTypeMsgList = MsgCacheUtil.getImgTypeMsgList(MyApplication.getInstance(), cid);
+            for (Msg msg :imgTypeMsgList){
+                String url = APIUri.getPreviewUrl(msg.getImgTypeMsgImg());
+                imgUrlList.add(url);
+            }
+
+        }else {
+            imgTypeMessageList = MessageCacheUtil.getImgTypeMessageList(MyApplication.getInstance(), cid);
+            for (Message message:imgTypeMessageList) {
+                String url = APIUri.getChatFileResouceUrl(message.getChannel(),message.getMsgContentMediaImage().getRawMedia());
+                imgUrlList.add(url);
+            }
+
         }
     }
 
@@ -126,7 +146,7 @@ public class GroupAlbumActivity extends BaseActivity {
             } else {
                 holder = (ViewHolder) convertView.getTag();
             }
-            ImageDisplayUtils.getInstance().displayImage(holder.albumImg, imgUrlList.get(position), R.drawable.icon_photo_default);
+            ImageDisplayUtils.getInstance().displayImage(holder.albumImg, imgUrlList.get(position), R.drawable.default_image);
             return convertView;
         }
 

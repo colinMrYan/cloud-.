@@ -15,14 +15,14 @@ import java.util.Date;
  * "number":"G203", "orderID":"EB88381008", "seatnumber":"10车01F号",
  * "sendDate":"2016-04-14T07:53:54Z", "source":"email",
  * "sourceuid":"4d40846e-12cc-4664-9b12-c2c7a74a4175", "sourceuname":"部凡",
- * "start":"2016-03-17T19:00:00Z", "tid":1,
+ * "init":"2016-03-17T19:00:00Z", "tid":1,
  * "uid":"4d40846e-12cc-4664-9b12-c2c7a74a4175", "uname":"部凡", "way":"TRAIN"},
  * {"cost":184.5,"destination":"济南西","from":"北京南","level":"二等座","number":"G203",
  * "orderID"
  * :"EB88381008","seatnumber":"12车01A号","sendDate":"2016-04-14T07:53:54Z"
  * ,"source"
  * :"email","sourceuid":"4d40846e-12cc-4664-9b12-c2c7a74a4175","sourceuname"
- * :"李斌","start":"2016-03-17T19:00:00Z","tid":2,"way":"TRAIN"}]
+ * :"李斌","init":"2016-03-17T19:00:00Z","tid":2,"way":"TRAIN"}]
  * 
  * @author Administrator
  *
@@ -103,8 +103,8 @@ public class Trip implements Serializable {
 			if (obj.has("way")) {
 				this.way = obj.getString("way");
 			}
-			if (obj.has("start")) {
-				String startStr = obj.getString("start");
+			if (obj.has("init")) {
+				String startStr = obj.getString("init");
 				this.start = TimeUtils.UTCString2LocalDate(startStr);
 			}
 			if (obj.has("end")) {
@@ -176,8 +176,8 @@ public class Trip implements Serializable {
 			if (obj.has("way")) {
 				this.way = obj.getString("way");
 			}
-			if (obj.has("start")) {
-				String startStr = obj.getString("start");
+			if (obj.has("init")) {
+				String startStr = obj.getString("init");
 				this.start = TimeUtils.UTCString2LocalDate(startStr);
 			}
 			if (obj.has("end")) {

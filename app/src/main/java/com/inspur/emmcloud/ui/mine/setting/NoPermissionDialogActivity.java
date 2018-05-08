@@ -14,15 +14,14 @@ import com.inspur.emmcloud.widget.dialogs.MyDialog;
  * Created by yufuchang on 2018/5/4.
  */
 
-public class NoPermissionDialogActivity extends Activity{
-    private Dialog dialog;
+public class NoPermissionDialogActivity extends Activity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        dialog = new MyDialog(this,
+        final Dialog dialog = new MyDialog(this,
                 R.layout.dialog_one_button);
         dialog.setCanceledOnTouchOutside(false);
-        ((TextView)dialog.findViewById(R.id.show_text)).setText(R.string.cluster_no_permission);
+        ((TextView) dialog.findViewById(R.id.show_text)).setText(R.string.cluster_no_permission);
         dialog.findViewById(R.id.ok_btn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

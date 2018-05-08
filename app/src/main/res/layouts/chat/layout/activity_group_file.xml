@@ -43,7 +43,7 @@
     </RelativeLayout>
 
     <RelativeLayout
-        android:id="@+id/header_image_layout"
+        android:id="@+id/content_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/header_layout"
@@ -52,7 +52,7 @@
         <ListView
             android:id="@+id/lv_file"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:dividerHeight="0.5dp"
             android:divider="@null"
             >

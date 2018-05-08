@@ -16,7 +16,8 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.ui.chat.ImagePagerActivity;
+import com.inspur.emmcloud.bean.system.EventMessage;
+import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.InputMethodUtils;
@@ -26,6 +27,8 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -33,7 +36,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 import uk.co.senab.photoview.PhotoViewAttacher;
-import uk.co.senab.photoview.PhotoViewAttacher.OnPhotoTapListener;
 
 import static android.R.attr.path;
 
@@ -109,18 +111,17 @@ public class ImageDetailFragment extends Fragment {
 			}
 		});
 		mAttacher = new PhotoViewAttacher(mImageView);
-		mAttacher.setOnPhotoTapListener(new OnPhotoTapListener() {
-
+		mAttacher.setOnPhotoTapListener(new PhotoViewAttacher.OnPhotoTapListener() {
 			@Override
-			public void onPhotoTap(View arg0, float arg1, float arg2) {
-				((ImagePagerActivity)getActivity()).onPhotoTap();
+			public void onPhotoTap(View view, float x, float y) {
+				EventMessage eventMessage = new EventMessage(Constant.EVENTBUS_TAG_ON_PHOTO_TAB);
+				EventBus.getDefault().post(eventMessage);
 			}
 
 			@Override
 			public void onOutsidePhotoTap() {
-				if (getActivity() != null){
-					((ImagePagerActivity)getActivity()).onPhotoTap();
-				}
+				EventMessage eventMessage = new EventMessage(Constant.EVENTBUS_TAG_ON_PHOTO_TAB);
+				EventBus.getDefault().post(eventMessage);
 			}
 		});
 		mAttacher.setOnSingleFlingListener(new PhotoViewAttacher.OnSingleFlingListener() {

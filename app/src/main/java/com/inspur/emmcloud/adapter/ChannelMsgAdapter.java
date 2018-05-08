@@ -21,7 +21,7 @@ import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.Msg;
 import com.inspur.emmcloud.ui.chat.ChannelMsgDetailActivity;
 import com.inspur.emmcloud.ui.chat.DisplayAttachmentCardMsg;
-import com.inspur.emmcloud.ui.chat.DisplayAttachmentFileMsg;
+import com.inspur.emmcloud.ui.chat.DisplayRegularFileMsg;
 import com.inspur.emmcloud.ui.chat.DisplayExtendedActionsMsg;
 import com.inspur.emmcloud.ui.chat.DisplayResFileMsg;
 import com.inspur.emmcloud.ui.chat.DisplayResImageMsg;
@@ -247,8 +247,8 @@ public class ChannelMsgAdapter extends RecyclerView.Adapter<ChannelMsgAdapter.Vi
                         message);
                 break;
             case "attachment/file":
-                cardContentView = DisplayAttachmentFileMsg.getView(context,
-                        message);
+                cardContentView = DisplayRegularFileMsg.getView(context,
+                        message,1);
                 break;
             case "attachment/card":
                 cardContentView = DisplayAttachmentCardMsg.getView(context,
@@ -259,7 +259,7 @@ public class ChannelMsgAdapter extends RecyclerView.Adapter<ChannelMsgAdapter.Vi
                 break;
             default:
                 cardContentView = DisplayResUnknownMsg.getView(context,
-                        msg);
+                        isMyMsg);
                 break;
         }
 

@@ -30,11 +30,15 @@ import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
+import com.inspur.emmcloud.api.apiservice.WSAPIService;
 import com.inspur.emmcloud.bean.appcenter.news.GroupNews;
 import com.inspur.emmcloud.bean.appcenter.news.NewsIntrcutionUpdateEvent;
 import com.inspur.emmcloud.bean.chat.GetCreateSingleChannelResult;
 import com.inspur.emmcloud.bean.chat.GetNewsInstructionResult;
 import com.inspur.emmcloud.bean.chat.GetSendMsgResult;
+import com.inspur.emmcloud.bean.chat.Message;
+import com.inspur.emmcloud.bean.system.EventMessage;
+import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.config.MyAppWebConfig;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.util.common.DensityUtil;
@@ -45,6 +49,7 @@ import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.ChatCreateUtils;
 import com.inspur.emmcloud.util.privates.ChatCreateUtils.OnCreateDirectChannelListener;
+import com.inspur.emmcloud.util.privates.CommunicationUtils;
 import com.inspur.emmcloud.util.privates.PreferencesByUserAndTanentUtils;
 import com.inspur.emmcloud.util.privates.TimeUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
@@ -54,6 +59,8 @@ import com.inspur.emmcloud.widget.SwitchView;
 import com.inspur.imp.plugin.PluginMgr;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -72,7 +79,8 @@ public class NewsWebDetailActivity extends BaseActivity {
     private String instruction = "";
     private String originalEditorComment = "";
     private GroupNews groupNews;
-    Dialog intrcutionDialog;
+    private Dialog intrcutionDialog;
+    private String fakeMessageId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +88,7 @@ public class NewsWebDetailActivity extends BaseActivity {
         setContentView(R.layout.activity_newsweb_detail);
         initData();
         initViews();
+        EventBus.getDefault().register(this);
     }
 
     /**
@@ -650,19 +659,22 @@ public class NewsWebDetailActivity extends BaseActivity {
      */
     private void sendMsg(String cid) {
         if (NetUtils.isNetworkConnected(getApplicationContext())) {
-            ChatAPIService apiService = new ChatAPIService(
-                    NewsWebDetailActivity.this);
-            apiService.setAPIInterface(new WebService());
-            JSONObject jsonObject = new JSONObject();
-            try {
-                jsonObject.put("url", url);
-                jsonObject.put("poster", groupNews.getPoster());
-                jsonObject.put("digest", groupNews.getSummary());
-                jsonObject.put("title", groupNews.getTitle());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            apiService.sendMsg(cid, jsonObject.toString(), "res_link", System.currentTimeMillis() + "");
+            Message message = CommunicationUtils.combinLocalExtendedLinksMessage(cid,groupNews.getPoster(),groupNews.getTitle(),groupNews.getSummary(),url);
+            fakeMessageId = message.getId();
+            WSAPIService.getInstance().sendChatExtendedLinksMsg(cid,message);
+//            ChatAPIService apiService = new ChatAPIService(
+//                    NewsWebDetailActivity.this);
+//            apiService.setAPIInterface(new WebService());
+//            JSONObject jsonObject = new JSONObject();
+//            try {
+//                jsonObject.put("url", url);
+//                jsonObject.put("poster", groupNews.getPoster());
+//                jsonObject.put("digest", groupNews.getSummary());
+//                jsonObject.put("title", groupNews.getTitle());
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//            apiService.sendMsg(cid, jsonObject.toString(), "res_link", System.currentTimeMillis() + "");
         }
 
     }
@@ -710,6 +722,7 @@ public class NewsWebDetailActivity extends BaseActivity {
             webView.removeAllViews();
             webView.destroy();
         }
+        EventBus.getDefault().unregister(this);
     }
 
     @Override
@@ -717,6 +730,23 @@ public class NewsWebDetailActivity extends BaseActivity {
         ViewGroup view = (ViewGroup) getWindow().getDecorView();
         view.removeAllViews();
         super.finish();
+    }
+    //接收到websocket发过来的消息
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onReceiveWSMessage(EventMessage eventMessage) {
+        if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE)) {
+            if (eventMessage.getStatus() == 200){
+                if (fakeMessageId != null && String.valueOf(eventMessage.getExtra()).equals(fakeMessageId)) {
+                    Toast.makeText(NewsWebDetailActivity.this,
+                            getString(R.string.news_share_success), Toast.LENGTH_SHORT)
+                            .show();
+                }
+            }else {
+                showShareFailToast();
+            }
+
+        }
+
     }
 
     class WebService extends APIInterfaceInstance {

@@ -31,6 +31,7 @@ import org.xutils.x;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -53,6 +54,7 @@ public class ECMChatInputMenuImgComment extends LinearLayout {
     private boolean canMentions = false;
     private ChatInputMenuListener chatInputMenuListener;
     private String cid = "";
+    private boolean isMessageV0 = true;
 
     public ECMChatInputMenuImgComment(Context context) {
         this(context, null);
@@ -94,6 +96,13 @@ public class ECMChatInputMenuImgComment extends LinearLayout {
                 }
             }
         });
+    }
+    /**
+     * 设置是否是V0版本消息
+     * @param isMessageV0
+     */
+    public void setIsMessageV0(boolean isMessageV0){
+        this.isMessageV0 = isMessageV0;
     }
 
     public ChatInputEdit getChatInputEdit(){
@@ -168,7 +177,7 @@ public class ECMChatInputMenuImgComment extends LinearLayout {
      */
     public void addMentions(String uid, String name, boolean isInputKeyWord) {
         if (uid != null && name != null) {
-            inputEdit.insertSpecialStr(isInputKeyWord, new InsertModel("@", uid, name, "#99CCFF"));
+            inputEdit.insertSpecialStr(isInputKeyWord, new InsertModel("@", uid, name));
         }
     }
 
@@ -177,9 +186,16 @@ public class ECMChatInputMenuImgComment extends LinearLayout {
         switch (view.getId()) {
             case R.id.send_msg_btn:
                 if (NetUtils.isNetworkConnected(getContext())) {
-                    List<String> urlList = getContentUrlList(inputEdit.getText().toString());
-                    String content = inputEdit.getRichContent(true);
-                    chatInputMenuListener.onSendMsg(content, getContentMentionUidList(), urlList);
+                    List<String> urlList= null;
+                    String content = inputEdit.getRichContent(isMessageV0);
+                    Map<String,String> mentionsMap = null;
+                    if (isMessageV0){
+                        urlList = getContentUrlList(inputEdit.getText().toString());
+                    }else {
+                        mentionsMap = inputEdit.getMentionsMap();
+                    }
+                    chatInputMenuListener.onSendMsg(content, getContentMentionUidList(), urlList,mentionsMap);
+
                     inputEdit.setText("");
                 }
                 break;
@@ -223,7 +239,7 @@ public class ECMChatInputMenuImgComment extends LinearLayout {
 
 
     public interface ChatInputMenuListener {
-        void onSendMsg(String content, List<String> mentionsUidList, List<String> urlList);
+        void onSendMsg(String content, List<String> mentionsUidList, List<String> urlList, Map<String,String> mentionsMap);
     }
 
 

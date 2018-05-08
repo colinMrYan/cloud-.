@@ -18,46 +18,48 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.BaseActivity;
+import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.adapter.ChannelMsgAdapter;
+import com.inspur.emmcloud.adapter.ChannelMessageAdapter;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
-import com.inspur.emmcloud.bean.appcenter.news.GroupNews;
+import com.inspur.emmcloud.api.apiservice.WSAPIService;
+import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
 import com.inspur.emmcloud.bean.chat.Channel;
 import com.inspur.emmcloud.bean.chat.GetFileUploadResult;
-import com.inspur.emmcloud.bean.chat.GetMsgResult;
-import com.inspur.emmcloud.bean.chat.GetNewMsgsResult;
+import com.inspur.emmcloud.bean.chat.GetNewMessagesResult;
 import com.inspur.emmcloud.bean.chat.GetNewsImgResult;
-import com.inspur.emmcloud.bean.chat.GetSendMsgResult;
 import com.inspur.emmcloud.bean.chat.Message;
-import com.inspur.emmcloud.bean.chat.Msg;
-import com.inspur.emmcloud.bean.chat.Robot;
+import com.inspur.emmcloud.bean.chat.UIMessage;
 import com.inspur.emmcloud.bean.contact.Contact;
+import com.inspur.emmcloud.bean.system.EventMessage;
 import com.inspur.emmcloud.bean.system.PVCollectModel;
-import com.inspur.emmcloud.broadcastreceiver.MsgReceiver;
+import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.config.MyAppConfig;
-import com.inspur.emmcloud.ui.appcenter.groupnews.NewsWebDetailActivity;
+import com.inspur.emmcloud.interf.ProgressCallback;
 import com.inspur.emmcloud.ui.contact.RobotInfoActivity;
 import com.inspur.emmcloud.ui.contact.UserInfoActivity;
+import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.InputMethodUtils;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
-import com.inspur.emmcloud.util.privates.AppUtils;
+import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.ChannelInfoUtils;
-import com.inspur.emmcloud.util.privates.ConbineMsg;
+import com.inspur.emmcloud.util.privates.CommunicationUtils;
 import com.inspur.emmcloud.util.privates.DirectChannelUtils;
+import com.inspur.emmcloud.util.privates.GetPathFromUri4kitkat;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
-import com.inspur.emmcloud.util.privates.MsgRecourceUploadUtils;
+import com.inspur.emmcloud.util.privates.MessageRecourceUploadUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactCacheUtils;
-import com.inspur.emmcloud.util.privates.cache.MsgCacheUtil;
-import com.inspur.emmcloud.util.privates.cache.MsgReadIDCacheUtils;
+import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
+import com.inspur.emmcloud.util.privates.cache.MessageReadCreationDateCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.PVCollectModelCacheUtils;
-import com.inspur.emmcloud.util.privates.cache.RobotCacheUtils;
 import com.inspur.emmcloud.widget.ECMChatInputMenu;
 import com.inspur.emmcloud.widget.ECMChatInputMenu.ChatInputMenuListener;
 import com.inspur.emmcloud.widget.LoadingDialog;
@@ -66,8 +68,9 @@ import com.inspur.imp.plugin.camera.editimage.EditImageActivity;
 import com.inspur.imp.plugin.camera.imagepicker.ImagePicker;
 import com.inspur.imp.plugin.camera.imagepicker.bean.ImageItem;
 
-import org.json.JSONArray;
-import org.json.JSONException;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONObject;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
@@ -75,6 +78,7 @@ import org.xutils.view.annotation.ViewInject;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import static android.R.attr.path;
 
@@ -106,13 +110,12 @@ public class ChannelActivity extends BaseActivity {
     private ImageView robotPhotoImg;
 
     private LoadingDialog loadingDlg;
-    private String robotUid ="BOT6006";
+    private String robotUid = "BOT6006";
     private String cid;
     private Channel channel;
-    private List<Msg> msgList;
-    private ChannelMsgAdapter adapter;
+    private List<UIMessage> uiMessageList = new ArrayList<>();
+    private ChannelMessageAdapter adapter;
     private Handler handler;
-    private MsgReceiver msgResvier;
     private ChatAPIService apiService;
     private boolean isSpecialUser = false; //小智机器人进行特殊处理
     private BroadcastReceiver sendActionMsgReceiver;
@@ -121,10 +124,13 @@ public class ChannelActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
         init();
         registeRefreshNameReceiver();
         registeSendActionMsgReceiver();
         recordUserClickChannel();
+        WSAPIService.getInstance().getMessageById("a3ad6065-c1fe-4e1c-93c5-ee9579a4c820");
+
     }
 
     // Activity在SingleTask的启动模式下多次打开传递Intent无效，用此方法解决
@@ -160,8 +166,6 @@ public class ChannelActivity extends BaseActivity {
                 finishActivity();
             }
         });
-
-
     }
 
 
@@ -173,8 +177,6 @@ public class ChannelActivity extends BaseActivity {
         initChatInputMenu();
         setChannelTitle();
         initMsgListView();
-        handMessage();
-        registeMsgReceiver();
     }
 
     /**
@@ -185,14 +187,14 @@ public class ChannelActivity extends BaseActivity {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                if (msgList.size() > 0 && MsgCacheUtil.isDataInLocal(ChannelActivity.this, cid, msgList
-                        .get(0).getMid(), 15)) {
-                    List<Msg> historyMsgList = MsgCacheUtil.getHistoryMsgList(
-                            ChannelActivity.this, cid, msgList.get(0).getMid(),
+                if (uiMessageList.size() > 0 && MessageCacheUtil.isDataInLocal(ChannelActivity.this, cid, uiMessageList
+                        .get(0).getCreationDate(), 15)) {
+                    List<Message> historyMsgList = MessageCacheUtil.getHistoryMessageList(
+                            MyApplication.getInstance(), cid, uiMessageList.get(0).getCreationDate(),
                             15);
-                    msgList.addAll(0, historyMsgList);
+                    uiMessageList.addAll(0, UIMessage.MessageList2UIMessageList(historyMsgList));
                     swipeRefreshLayout.setRefreshing(false);
-                    adapter.setMsgList(msgList);
+                    adapter.setMessageList(uiMessageList);
                     adapter.notifyItemRangeInserted(0, historyMsgList.size());
                     msgListView.MoveToPosition(historyMsgList.size() - 1);
                 } else {
@@ -210,31 +212,13 @@ public class ChannelActivity extends BaseActivity {
         if (isSpecialUser) {
             robotPhotoImg.setVisibility(View.VISIBLE);
             headerText.setVisibility(View.GONE);
-            Robot robot = DirectChannelUtils.getRobotInfo(getApplicationContext(),
-                    channel.getTitle());
-            String robotPhotoUrl = APIUri.getRobotIconUrl(RobotCacheUtils
-                    .getRobotById(getApplicationContext(), robot.getId())
-                    .getAvatar());
-
-            ImageDisplayUtils.getInstance().displayImage(robotPhotoImg, robotPhotoUrl, R.drawable.ic_robot_new);
+            String uid = DirectChannelUtils.getDirctChannelOtherUid(MyApplication.getInstance(), channel.getTitle());
+            String iconUrl = APIUri.getUserIconUrl(MyApplication.getInstance(), uid);
+            ImageDisplayUtils.getInstance().displayImage(robotPhotoImg, iconUrl, R.drawable.ic_robot_new);
         } else {
             robotPhotoImg.setVisibility(View.GONE);
             headerText.setVisibility(View.VISIBLE);
-            String title;
-            switch (channel.getType()) {
-                case "DIRECT":
-                    title = DirectChannelUtils.getDirectChannelTitle(
-                            getApplicationContext(), channel.getTitle());
-                    break;
-                case "SERVICE":
-                    title = DirectChannelUtils.getRobotInfo(getApplicationContext(),
-                            channel.getTitle()).getName();
-                    break;
-                default:
-                    title = channel.getTitle();
-                    break;
-            }
-            headerText.setText(title);
+            headerText.setText(CommunicationUtils.getChannelDisplayTitle(channel));
         }
     }
 
@@ -243,6 +227,7 @@ public class ChannelActivity extends BaseActivity {
      */
     private void initChatInputMenu() {
         chatInputMenu.setSpecialUser(isSpecialUser);
+        chatInputMenu.setIsMessageV0(false);
         chatInputMenu.setOtherLayoutView(swipeRefreshLayout);
         if (channel.getType().equals("GROUP")) {
             chatInputMenu.setCanMentions(true, cid);
@@ -252,9 +237,9 @@ public class ChannelActivity extends BaseActivity {
         chatInputMenu.setChatInputMenuListener(new ChatInputMenuListener() {
 
             @Override
-            public void onSendMsg(String content, List<String> mentionsUidList, List<String> urlList) {
+            public void onSendMsg(String content, List<String> mentionsUidList, List<String> urlList, Map<String, String> mentionsMap) {
                 // TODO Auto-generated method stub
-                sendTextMessage(content, mentionsUidList, urlList,false);
+                sendTextMessage(content, false, mentionsMap);
             }
         });
         chatInputMenu.setInputLayout(isSpecialUser ? "1" : channel.getInputs());
@@ -284,7 +269,7 @@ public class ChannelActivity extends BaseActivity {
                 public void onReceive(Context context, Intent intent) {
                     String content = intent.getStringExtra("content");
                     if (!StringUtils.isBlank(content)) {
-                        sendTextMessage(content, null, null,true);
+                        sendTextMessage(content, true, null);
                     }
                 }
             };
@@ -299,26 +284,20 @@ public class ChannelActivity extends BaseActivity {
      * 初始化消息列表UI
      */
     private void initMsgListView() {
-        msgList = MsgCacheUtil.getHistoryMsgList(getApplicationContext(),
-                cid, "", 15);
-        adapter = new ChannelMsgAdapter(ChannelActivity.this, apiService, channel.getType(), chatInputMenu);
-        adapter.setItemClickListener(new ChannelMsgAdapter.MyItemClickListener() {
+        final List<Message> cacheMessageList = MessageCacheUtil.getHistoryMessageList(MyApplication.getInstance(), cid, null, 15);
+        uiMessageList = UIMessage.MessageList2UIMessageList(cacheMessageList);
+        adapter = new ChannelMessageAdapter(ChannelActivity.this, apiService, channel.getType(), chatInputMenu);
+        adapter.setItemClickListener(new ChannelMessageAdapter.MyItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                Msg msg = msgList.get(position);
+                Message message = uiMessageList.get(position).getMessage();
                 //当消息处于发送中状态时无法点击
-                if (msg.getSendStatus() != 1) {
+                if (uiMessageList.get(position).getSendStatus() != 1) {
                     return;
                 }
-                String msgType = msg.getType();
-                Message message = null;
-                if (Message.isMessage(msg)) {
-                    message = new Message(msg);
-                    msgType = message.getType();
-                }
-
-                String mid = "";
+                String msgType = message.getType();
                 Bundle bundle = new Bundle();
+                LogUtils.jasonDebug("msgType=" + msgType);
                 switch (msgType) {
                     case "attachment/card":
                         String uid = message.getMsgContentAttachmentCard().getUid();
@@ -326,46 +305,30 @@ public class ChannelActivity extends BaseActivity {
                         IntentUtils.startActivity(ChannelActivity.this,
                                 UserInfoActivity.class, bundle);
                         break;
-                    case "res_file":
-                        mid = msg.getMid();
-                        bundle.putString("mid", mid);
-                        bundle.putString("cid", msg.getCid());
+                    case "file/regular-file":
+                    case "media/image":
+                        bundle.putString("mid", message.getId());
+                        bundle.putString("cid", message.getChannel());
                         IntentUtils.startActivity(ChannelActivity.this,
-                                ChannelMsgDetailActivity.class, bundle);
+                                ChannelMessageDetailActivity.class, bundle);
                         break;
-                    case "comment":
-                    case "txt_comment":
-                        mid = msg.getCommentMid();
+                    case "comment/text-plain":
+                        String mid = message.getMsgContentComment().getMessage();
                         bundle.putString("mid", mid);
-                        bundle.putString("cid", msg.getCid());
+                        bundle.putString("cid", message.getChannel());
                         IntentUtils.startActivity(ChannelActivity.this,
-                                ChannelMsgDetailActivity.class, bundle);
-                        break;
-                    case "res_link":
-                        String msgBody = msg.getBody();
-                        String linkTitle = JSONUtils.getString(msgBody, "title", "");
-                        String linkDigest = JSONUtils.getString(msgBody, "digest", "");
-                        String linkUrl = JSONUtils.getString(msgBody, "url", "");
-                        String linkPoster = JSONUtils.getString(msgBody, "poster", "");
-                        GroupNews groupNews = new GroupNews();
-                        groupNews.setTitle(linkTitle);
-                        groupNews.setDigest(linkDigest);
-                        groupNews.setUrl(linkUrl);
-                        groupNews.setPoster(linkPoster);
-                        bundle.putSerializable("groupNews", groupNews);
-                        IntentUtils.startActivity(ChannelActivity.this,
-                                NewsWebDetailActivity.class, bundle);
+                                ChannelMessageDetailActivity.class, bundle);
                         break;
                     default:
                         break;
                 }
             }
         });
-        adapter.setMsgList(msgList);
+        adapter.setMessageList(uiMessageList);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         msgListView.setLayoutManager(linearLayoutManager);
         msgListView.setAdapter(adapter);
-        msgListView.MoveToPosition(msgList.size() - 1);
+        msgListView.MoveToPosition(uiMessageList.size() - 1);
         msgListView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -377,19 +340,6 @@ public class ChannelActivity extends BaseActivity {
     }
 
 
-    /**
-     * 注册消息接收广播,传入一个Handler用于接收到消息后把消息发回到主线程
-     */
-    private void registeMsgReceiver() {
-        // TODO Auto-generated method stub
-        if (msgResvier == null) {
-            msgResvier = new MsgReceiver(ChannelActivity.this, handler);
-            IntentFilter filter = new IntentFilter();
-            filter.addAction("com.inspur.msg");
-            LocalBroadcastManager.getInstance(this).registerReceiver(msgResvier, filter);
-        }
-    }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode,
                                     final Intent data) {
@@ -397,10 +347,15 @@ public class ChannelActivity extends BaseActivity {
         if (resultCode == RESULT_OK) {
             // 文件管理器返回
             if (requestCode == CHOOSE_FILE
-                    && NetUtils.isNetworkConnected(getApplicationContext())) {
-                Msg localMsg = MsgRecourceUploadUtils.uploadResFile(
-                        ChannelActivity.this, data, apiService);
-                addLocalMessage(localMsg);
+                    && NetUtils.isNetworkConnected(MyApplication.getInstance())) {
+                String filePath = GetPathFromUri4kitkat.getPath(MyApplication.getInstance(), data.getData());
+                File file = new File(filePath);
+                if (StringUtils.isBlank(FileUtils.getSuffix(file))) {
+                    ToastUtils.show(MyApplication.getInstance(),
+                            getString(R.string.not_support_upload));
+                } else {
+                    uploadResFileAndSendMessage(filePath, true);
+                }
                 //拍照返回
             } else if (requestCode == CAMERA_RESULT
                     && NetUtils.isNetworkConnected(getApplicationContext())) {
@@ -409,10 +364,8 @@ public class ChannelActivity extends BaseActivity {
                 EditImageActivity.start(ChannelActivity.this, cameraImgPath, MyAppConfig.LOCAL_IMG_CREATE_PATH);
                 //拍照后图片编辑返回
             } else if (requestCode == EditImageActivity.ACTION_REQUEST_EDITIMAGE) {
-                String imgPath = data.getExtras().getString("save_file_path");
-                Msg localMsg = MsgRecourceUploadUtils.uploadResImg(
-                        ChannelActivity.this, imgPath, apiService);
-                addLocalMessage(localMsg);
+                String filePath = data.getExtras().getString("save_file_path");
+                uploadResFileAndSendMessage(filePath, false);
             } else if (requestCode == MENTIONS_RESULT) {
                 // @返回
                 String result = data.getStringExtra("searchResult");
@@ -428,12 +381,45 @@ public class ChannelActivity extends BaseActivity {
                     ArrayList<ImageItem> imageItemList = (ArrayList<ImageItem>) data
                             .getSerializableExtra(ImagePicker.EXTRA_RESULT_ITEMS);
                     for (int i = 0; i < imageItemList.size(); i++) {
-                        Msg localMsg = MsgRecourceUploadUtils.uploadResImg(
-                                ChannelActivity.this, imageItemList.get(i).path, apiService);
-                        addLocalMessage(localMsg);
+                        String filePath = imageItemList.get(i).path;
+                        uploadResFileAndSendMessage(filePath, false);
                     }
                 }
         }
+    }
+
+    private void uploadResFileAndSendMessage(String filePath, boolean isRegularFile) {
+        File file = new File(filePath);
+        if (!file.exists()) {
+            ToastUtils.show(MyApplication.getInstance(), R.string.file_not_exist);
+            return;
+        }
+        Message localMessage = null;
+        if (isRegularFile) {
+            localMessage = CommunicationUtils.combinLocalRegularFileMessage(cid, filePath);
+        } else {
+            localMessage = CommunicationUtils.combinLocalMediaImageMessage(cid, filePath);
+        }
+        final String fakeMessageId = localMessage.getId();
+        MessageRecourceUploadUtils messageRecourceUploadUtils = new MessageRecourceUploadUtils(MyApplication.getInstance(), cid);
+        messageRecourceUploadUtils.setProgressCallback(new ProgressCallback() {
+            @Override
+            public void onSuccess(VolumeFile volumeFile) {
+
+            }
+
+            @Override
+            public void onLoading(int progress) {
+
+            }
+
+            @Override
+            public void onFail() {
+                setMessageSendFailStatus(fakeMessageId);
+            }
+        });
+        messageRecourceUploadUtils.uploadResFile(file, localMessage, isRegularFile);
+        addLocalMessage(localMessage, 0);
     }
 
     /**
@@ -455,90 +441,130 @@ public class ChannelActivity extends BaseActivity {
         }
     }
 
-    /**
-     * 处理子线程返回消息
-     */
-    private void handMessage() {
-        // TODO Auto-generated method stub
-        handler = new Handler() {
-            @Override
-            public void handleMessage(android.os.Message msg) {
-                switch (msg.what) {
-                    case HAND_CALLBACK_MESSAGE: // 接收推送的消息·
-                        if (msg.arg1 == 0) {
-                            Msg pushMsg = new Msg((JSONObject) msg.obj);
-                            if (cid.equals(pushMsg.getCid())) {
-                                MsgReadIDCacheUtils.saveReadedMsg(ChannelActivity.this,
-                                        pushMsg.getCid(), pushMsg.getMid());
-                                if (!msgList.contains(pushMsg) && !pushMsg.getTmpId().equals(AppUtils.getMyUUID(getApplicationContext()))) {
-                                    msgList.add(pushMsg);
-                                    adapter.setMsgList(msgList);
-                                    adapter.notifyItemInserted(msgList.size() - 1);
-                                    msgListView.MoveToPosition(msgList.size() - 1);
-                                }
+    //接收到websocket发过来的消息
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onReceiveWSMessage(EventMessage eventMessage) {
+        if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE)) {
+            LogUtils.jasonDebug("00000000000000");
+            if (eventMessage.getStatus() == 200) {
+                LogUtils.jasonDebug("11111111111111111111");
+                String content = eventMessage.getContent();
+                JSONObject contentobj = JSONUtils.getJSONObject(content);
+                Message receivedWSMessage = new Message(contentobj);
+                if (cid.equals(receivedWSMessage.getChannel())) {
+                    MessageReadCreationDateCacheUtils.saveMessageReadCreationDate(MyApplication.getInstance(), cid, receivedWSMessage.getCreationDate());
+                    int size = uiMessageList.size();
+                    int index = -1;
+                    if (size > 0) {
+                        for (int i = size - 1; i >= 0; i--) {
+                            UIMessage UIMessage = uiMessageList.get(i);
+                            if (UIMessage.getMessage().getId().equals(String.valueOf(eventMessage.getExtra()))) {
+                                index = i;
+                                break;
                             }
                         }
-                        break;
 
-                    default:
-                        break;
+                    }
+                    if (index == -1) {
+                        uiMessageList.add(new UIMessage(receivedWSMessage));
+                        adapter.setMessageList(uiMessageList);
+                        adapter.notifyItemInserted(uiMessageList.size() - 1);
+                    } else {
+                        uiMessageList.remove(index);
+                        uiMessageList.add(index, new UIMessage(receivedWSMessage));
+                        adapter.setMessageList(uiMessageList);
+                        adapter.notifyItemChanged(index);
+                    }
+                    msgListView.MoveToPosition(uiMessageList.size() - 1);
+                }
+            }else {
+                setMessageSendFailStatus(String.valueOf(eventMessage.getExtra()));
+            }
+        }
+
+    }
+
+
+    //接收到websocket发过来的消息
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onGetMessageById(EventMessage eventMessage) {
+        if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_GET_MESSAGE_BY_ID)) {
+            if (eventMessage.getStatus() == 200) {
+                String content = eventMessage.getContent();
+                JSONObject contentobj = JSONUtils.getJSONObject(content);
+                Message message = new Message(contentobj);
+                MessageCacheUtil.saveMessage(MyApplication.getInstance(), message);
+                adapter.setMessageList(uiMessageList);
+                adapter.notifyDataSetChanged();
+            }
+
+        }
+
+    }
+
+    //接收到websocket发过来的消息
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onReceiveHistoryMessage(EventMessage eventMessage) {
+        if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_GET_HISTORY_MESSAGE)) {
+            if (eventMessage.getStatus() == 200) {
+                String content = eventMessage.getContent();
+                GetNewMessagesResult getNewMessagesResult = new GetNewMessagesResult(content);
+                final List<Message> historyMessageList = getNewMessagesResult
+                        .getNewMessageList(cid);
+                if (adapter != null) {
+                    swipeRefreshLayout.setRefreshing(false);
+                    if (historyMessageList.size() > 0) {
+                        MessageCacheUtil.saveMessageList(MyApplication.getInstance(), historyMessageList, uiMessageList.get(0).getCreationDate());
+                        List<UIMessage> historyUIMessageList = UIMessage.MessageList2UIMessageList(historyMessageList);
+                        uiMessageList.addAll(0, historyUIMessageList);
+                        adapter.setMessageList(uiMessageList);
+                        adapter.notifyItemRangeInserted(0, historyMessageList.size());
+                        msgListView.MoveToPosition(historyMessageList.size() - 1);
+                    }
+                } else {
+                    if (historyMessageList.size() > 0) {
+                        MessageCacheUtil.saveMessageList(MyApplication.getInstance(), historyMessageList, null);
+                        MessageReadCreationDateCacheUtils.saveMessageReadCreationDate(MyApplication.getInstance(), cid, historyMessageList.get(historyMessageList.size() - 1).getCreationDate());
+                    }
+                    initViews();
+                    setChannelMsgRead();
+                }
+            } else {
+                LoadingDialog.dimissDlg(loadingDlg);
+                if (swipeRefreshLayout.isRefreshing()) {
+                    swipeRefreshLayout.setRefreshing(false);
+                }
+                if (adapter == null) {
+                    initViews();
+                }
+                WebServiceMiddleUtils.hand(ChannelActivity.this, eventMessage.getContent(), eventMessage.getStatus());
+            }
+
+        }
+    }
+
+
+    //接收到离线消息
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onReiceveWSOfflineMessage(EventMessage eventMessage){
+        if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_GET_OFFLINE_WS_MESSAGE)){
+            if(eventMessage.getStatus() == 200){
+                String content = eventMessage.getContent();
+                GetNewMessagesResult getNewMessagesResult = new GetNewMessagesResult(content);
+                List<Message>offlineMessageList = getNewMessagesResult.getNewMessageList(cid);
+                if (offlineMessageList.size()>0){
+                    int currentPostion = uiMessageList.size()-1;
+                    List<UIMessage> offlineUIMessageList = UIMessage.MessageList2UIMessageList(offlineMessageList);
+                    uiMessageList.addAll(uiMessageList.size(), offlineUIMessageList);
+                    adapter.setMessageList(uiMessageList);
+                    adapter.notifyItemRangeInserted(uiMessageList.size(), offlineUIMessageList.size());
+                    msgListView.MoveToPosition(currentPostion);
+
                 }
 
             }
-
-        };
-    }
-
-    /**
-     * 消息发送成功处理：当推送消息是自己的消息时修改消息id
-     *
-     * @param fakeMessageId
-     * @param realMsg
-     */
-    private void setMsgSendSuccess(String fakeMessageId, Msg realMsg) {
-        if (StringUtils.isBlank(fakeMessageId)) {
-            return;
-        }
-        Msg fakeMsg = new Msg();
-        fakeMsg.setMid(fakeMessageId);
-        int fakeMsgIndex = msgList.indexOf(fakeMsg);
-        boolean isContainRealMsg = msgList.contains(realMsg);
-        if (fakeMsgIndex != -1) {
-            msgList.remove(fakeMsgIndex);
-            if (isContainRealMsg) {
-                adapter.setMsgList(msgList);
-                adapter.notifyItemRemoved(fakeMsgIndex);
-            } else {
-                msgList.add(fakeMsgIndex, realMsg);
-                adapter.setMsgList(msgList);
-                adapter.notifyItemChanged(fakeMsgIndex);
-            }
-        } else if (!isContainRealMsg) {
-            msgList.add(realMsg);
-            adapter.setMsgList(msgList);
-            adapter.notifyItemInserted(msgList.size() - 1);
-        }
-
-
-    }
-
-    /**
-     * 消息发送失败处理
-     *
-     * @param fakeMessageId
-     */
-    private void setMsgSendFail(String fakeMessageId) {
-        //消息发送失败处理
-        Msg fakeMsg = new Msg();
-        fakeMsg.setMid(fakeMessageId);
-        int fakeMsgIndex = msgList.indexOf(fakeMsg);
-        if (fakeMsgIndex != -1) {
-            msgList.get(fakeMsgIndex).setSendStatus(2);
-            adapter.setMsgList(msgList);
-            adapter.notifyDataSetChanged();
         }
     }
-
 
     /**
      * 控件点击事件
@@ -594,57 +620,22 @@ public class ChannelActivity extends BaseActivity {
     /**
      * 点击发送按钮后发送消息的逻辑
      */
-    private void sendTextMessage(String content, List<String> mentionsUidList, List<String> urlList,boolean isActionMsg) {
-        String fakeMessageId = System.currentTimeMillis() + "";
+    private void sendTextMessage(String content, boolean isActionMsg, Map<String, String> mentionsMap) {
+        Message localMessage = CommunicationUtils.combinLocalTextPlainMessage(content, cid, mentionsMap);
         //当在机器人频道时输入小于4个汉字时先进行通讯录查找，查找到返回通讯路卡片
         if (isSpecialUser && !isActionMsg && content.length() < 4 && StringUtils.isChinese(content)) {
             Contact contact = ContactCacheUtils.getContactByUserName(getApplicationContext(), content);
             if (contact != null) {
-                JSONObject sourceObj = new JSONObject();
-                try {
-                    sourceObj.put("source", content);
-                }catch (Exception e){
-                    e.printStackTrace();
-                }
-
-                Msg localMsg = ConbineMsg.conbineMsg(ChannelActivity.this,
-                        sourceObj.toString(), "", "txt_rich", fakeMessageId);
-                addLocalMessage(localMsg, 1);
-                Message conbineReplyMessage = ConbineMsg.conbineReplyAttachmentCardMsg(contact, cid, robotUid, fakeMessageId);
-                Msg replyLocalMsg = ConbineMsg.conbineRobotMsg(ChannelActivity.this,
-                        conbineReplyMessage.Message2MsgBody(),robotUid, "txt_rich", fakeMessageId);
-                addLocalMessage(replyLocalMsg, 1);
+                addLocalMessage(localMessage, 1);
+                Message replyLocalMessage = CommunicationUtils.combinLocalReplyAttachmentCardMessage(contact, cid, robotUid);
+                addLocalMessage(replyLocalMessage, 1);
                 return;
             }
         }
-
-
-        JSONObject richTextObj = new JSONObject();
-        JSONArray mentionArray = JSONUtils.toJSONArray(mentionsUidList);
-        JSONArray urlArray = JSONUtils.toJSONArray(urlList);
-        try {
-            richTextObj.put("source", content);
-            richTextObj.put("mentions", mentionArray);
-            richTextObj.put("urls", urlArray);
-            richTextObj.put("tmpId", AppUtils.getMyUUID(ChannelActivity.this));
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        Msg localMsg = ConbineMsg.conbineMsg(ChannelActivity.this,
-                richTextObj.toString(), "", "txt_rich", fakeMessageId);
-        addLocalMessage(localMsg);
-        sendMsg(richTextObj.toString(), "txt_rich", fakeMessageId);
-
+        addLocalMessage(localMessage, 0);
+        WSAPIService.getInstance().sendChatTextPlainMsg(content, cid, mentionsMap, localMessage.getId());
     }
 
-    /**
-     * 消息发送完成后在本地添加一条消息
-     *
-     * @param msg
-     */
-    private void addLocalMessage(Msg msg) {
-        addLocalMessage(msg, 0);
-    }
 
     /**
      * 消息发送完成后在本地添加一条消息
@@ -652,14 +643,31 @@ public class ChannelActivity extends BaseActivity {
      * @param msg
      * @param status
      */
-    private void addLocalMessage(Msg msg, int status) {
-        if (msg != null) {
+    private void addLocalMessage(Message message, int status) {
+        if (message != null) {
+            UIMessage UIMessage = new UIMessage(message);
             //本地添加的消息设置为正在发送状态
-            msg.setSendStatus(status);
-            msgList.add(msg);
-            adapter.setMsgList(msgList);
-            adapter.notifyItemInserted(msgList.size() - 1);
-            msgListView.MoveToPosition(msgList.size() - 1);
+            UIMessage.setSendStatus(status);
+            uiMessageList.add(UIMessage);
+            adapter.setMessageList(uiMessageList);
+            adapter.notifyItemInserted(uiMessageList.size() - 1);
+            msgListView.MoveToPosition(uiMessageList.size() - 1);
+        }
+    }
+
+    /**
+     * 消息发送失败处理
+     *
+     * @param fakeMessageId
+     */
+    private void setMessageSendFailStatus(String fakeMessageId) {
+        //消息发送失败处理
+        UIMessage fakeUIMessage = new UIMessage(fakeMessageId);
+        int fakeUIMessageIndex = uiMessageList.indexOf(fakeUIMessage);
+        if (fakeUIMessageIndex != -1) {
+            uiMessageList.get(fakeUIMessageIndex).setSendStatus(2);
+            adapter.setMessageList(uiMessageList);
+            adapter.notifyDataSetChanged();
         }
     }
 
@@ -668,13 +676,12 @@ public class ChannelActivity extends BaseActivity {
      * 通知message页将本频道消息置为已读
      */
     private void setChannelMsgRead() {
-        if (msgList != null && msgList.size() > 0) {
-            MsgReadIDCacheUtils.saveReadedMsg(this, cid,
-                    msgList.get(msgList.size() - 1).getMid());
+        if (uiMessageList.size() > 0) {
+            MessageReadCreationDateCacheUtils.saveMessageReadCreationDate(MyApplication.getInstance(), cid, uiMessageList.get(uiMessageList.size() - 1).getCreationDate());
             Intent intent = new Intent("message_notify");
             intent.putExtra("command", "set_channel_message_read");
             intent.putExtra("cid", cid);
-            intent.putExtra("mid", msgList.get(msgList.size() - 1).getMid());
+            intent.putExtra("messageCreationDate", uiMessageList.get(uiMessageList.size() - 1).getCreationDate());
             LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
         }
     }
@@ -711,10 +718,6 @@ public class ChannelActivity extends BaseActivity {
         if (handler != null) {
             handler = null;
         }
-        if (msgResvier != null) {
-            LocalBroadcastManager.getInstance(this).unregisterReceiver(msgResvier);
-            msgResvier = null;
-        }
         if (sendActionMsgReceiver != null) {
             LocalBroadcastManager.getInstance(this).unregisterReceiver(sendActionMsgReceiver);
             sendActionMsgReceiver = null;
@@ -724,19 +727,7 @@ public class ChannelActivity extends BaseActivity {
             refreshNameReceiver = null;
         }
         chatInputMenu.releaseVoliceInput();
-    }
-
-    /**
-     * 发送消息
-     *
-     * @param content
-     * @param type
-     * @param fakeMessageId
-     */
-    protected void sendMsg(String content, String type, String fakeMessageId) {
-        if (NetUtils.isNetworkConnected(getApplicationContext())) {
-            apiService.sendMsg(cid, content, type, fakeMessageId);
-        }
+        EventBus.getDefault().unregister(this);
     }
 
 
@@ -744,9 +735,10 @@ public class ChannelActivity extends BaseActivity {
      * 获取新消息
      */
     private void getNewsMsg() {
+        swipeRefreshLayout.setRefreshing(false);
         if (NetUtils.isNetworkConnected(ChannelActivity.this)) {
-            String newMsgMid = msgList.size() > 0 ? msgList.get(0).getMid() : "";
-            apiService.getNewMsgs(cid, newMsgMid, 15);
+            String newMessageId = uiMessageList.size() > 0 ? uiMessageList.get(0).getMessage().getId() : "";
+            WSAPIService.getInstance().getHistoryMessage(cid, newMessageId);
         } else {
             swipeRefreshLayout.setRefreshing(false);
         }
@@ -759,34 +751,23 @@ public class ChannelActivity extends BaseActivity {
      */
     private void getNewMsgOfChannel() {
         if (NetUtils.isNetworkConnected(this, false)) {
-            loadingDlg.show();
-            apiService.getNewMsgs(cid, "", 15);
+            WSAPIService.getInstance().getHistoryMessage(cid, "");
         }
     }
 
 
     private class WebService extends APIInterfaceInstance {
-        @Override
-        public void returnSendMsgSuccess(GetSendMsgResult getSendMsgResult,
-                                         String fakeMessageId) {
-            setMsgSendSuccess(fakeMessageId, getSendMsgResult.getMsg());
-        }
-
-        @Override
-        public void returnSendMsgFail(String error, String fakeMessageId, int errorCode) {
-            setMsgSendFail(fakeMessageId);
-        }
 
         @Override
         public void returnUploadResImgSuccess(
                 GetNewsImgResult getNewsImgResult, String fakeMessageId) {
             String newsImgBody = getNewsImgResult.getImgMsgBody();
-            sendMsg(newsImgBody, "res_image", fakeMessageId);
+            //sendMsg(newsImgBody, "res_image", fakeMessageId);
         }
 
         @Override
         public void returnUploadResImgFail(String error, int errorCode, String fakeMessageId) {
-            setMsgSendFail(fakeMessageId);
+            setMessageSendFailStatus(fakeMessageId);
         }
 
 
@@ -794,36 +775,33 @@ public class ChannelActivity extends BaseActivity {
         public void returnUpLoadResFileSuccess(
                 GetFileUploadResult getFileUploadResult, String fakeMessageId) {
             String fileMsgBody = getFileUploadResult.getFileMsgBody();
-            sendMsg(fileMsgBody, "res_file", fakeMessageId);
+            //sendMsg(fileMsgBody, "res_file", fakeMessageId);
         }
 
         @Override
         public void returnUpLoadResFileFail(String error, int errorCode, String fakeMessageId) {
-            setMsgSendFail(fakeMessageId);
+            setMessageSendFailStatus(fakeMessageId);
         }
 
         @Override
-        public void returnNewMsgsSuccess(GetNewMsgsResult getNewMsgsResult) {
+        public void returnNewMessagesSuccess(GetNewMessagesResult getNewMessagesResult) {
+            final List<Message> historyMessageList = getNewMessagesResult
+                    .getNewMessageList(cid);
             if (swipeRefreshLayout.isRefreshing()) {
                 swipeRefreshLayout.setRefreshing(false);
-                final List<Msg> historyMsgList = getNewMsgsResult
-                        .getNewMsgList(cid);
-                if (historyMsgList.size() > 1) {
-                    MsgCacheUtil.saveMsgList(ChannelActivity.this, historyMsgList,
-                            msgList.get(0).getMid());
-                    msgList.addAll(0, historyMsgList);
-                    adapter.setMsgList(msgList);
-                    adapter.notifyItemRangeInserted(0, historyMsgList.size());
-                    msgListView.MoveToPosition(historyMsgList.size() - 1);
+                if (historyMessageList.size() > 0) {
+                    MessageCacheUtil.saveMessageList(MyApplication.getInstance(), historyMessageList, uiMessageList.get(0).getCreationDate());
+                    List<UIMessage> historyUIMessageList = UIMessage.MessageList2UIMessageList(historyMessageList);
+                    uiMessageList.addAll(0, historyUIMessageList);
+                    adapter.setMessageList(uiMessageList);
+                    adapter.notifyItemRangeInserted(0, historyMessageList.size());
+                    msgListView.MoveToPosition(historyMessageList.size() - 1);
                 }
             } else {
                 LoadingDialog.dimissDlg(loadingDlg);
-                List<Msg> msgList = getNewMsgsResult.getNewMsgList(cid);
-                if (msgList.size() > 0) {
-                    MsgCacheUtil.saveMsgList(ChannelActivity.this, msgList, "");
-                    String lastMsgMid = msgList.get(msgList.size() - 1).getMid();
-                    MsgReadIDCacheUtils.saveReadedMsg(ChannelActivity.this, cid,
-                            lastMsgMid);
+                if (historyMessageList.size() > 0) {
+                    MessageCacheUtil.saveMessageList(MyApplication.getInstance(), historyMessageList, null);
+                    MessageReadCreationDateCacheUtils.saveMessageReadCreationDate(MyApplication.getInstance(), cid, historyMessageList.get(historyMessageList.size() - 1).getCreationDate());
                 }
                 initViews();
                 setChannelMsgRead();
@@ -832,7 +810,7 @@ public class ChannelActivity extends BaseActivity {
         }
 
         @Override
-        public void returnNewMsgsFail(String error, int errorCode) {
+        public void returnNewMessagesFail(String error, int errorCode) {
             LoadingDialog.dimissDlg(loadingDlg);
             if (swipeRefreshLayout.isRefreshing()) {
                 swipeRefreshLayout.setRefreshing(false);
@@ -842,20 +820,20 @@ public class ChannelActivity extends BaseActivity {
             }
         }
 
-        @Override
-        public void returnMsgSuccess(GetMsgResult getMsgResult) {
-            Msg msg = getMsgResult.getMsg();
-            if (msg != null && ChannelActivity.this != null) {
-                MsgCacheUtil.saveMsg(ChannelActivity.this, msg);
-                adapter.setMsgList(msgList);
-                adapter.notifyDataSetChanged();
-            }
-        }
-
-        @Override
-        public void returnMsgFail(String error, int errorCode) {
-            WebServiceMiddleUtils.hand(ChannelActivity.this, error, errorCode);
-        }
+//        @Override
+//        public void returnMsgSuccess(GetMsgResult getMsgResult) {
+//            Msg msg = getMsgResult.getMsg();
+//            if (msg != null && ChannelActivity.this != null) {
+//                MsgCacheUtil.saveMsg(ChannelActivity.this, msg);
+//                adapter.setMsgList(uiMessageList);
+//                adapter.notifyDataSetChanged();
+//            }
+//        }
+//
+//        @Override
+//        public void returnMsgFail(String error, int errorCode) {
+//            WebServiceMiddleUtils.hand(ChannelActivity.this, error, errorCode);
+//        }
 
     }
 

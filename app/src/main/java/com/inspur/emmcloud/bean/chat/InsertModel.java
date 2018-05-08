@@ -10,26 +10,31 @@ public class InsertModel {
     private String insertId="";
     private String insertContent="";
     private String insertColor="#99CCFF";
-    private String type="";
-    private String icon="";
+    private String insertContentId="";
 
     public InsertModel(String insertId){
         this.insertId = insertId;
     }
 
-    public InsertModel(String insertRule, String insertId, String insertContent, String insertColor) {
+    public InsertModel(String insertRule, String insertId, String insertContent) {
         this.insertRule = insertRule;
         this.insertContent = insertContent;
-        this.insertColor = insertColor;
         this.insertId = insertId;
     }
 
-    public InsertModel(String insertRule, String insertId, String insertContent,String type,String icon) {
+    public InsertModel(String insertRule, String insertId, String insertContent,String insertContentId) {
         this.insertRule = insertRule;
         this.insertContent = insertContent;
         this.insertId = insertId;
-        this.type = type;
-        this.icon = icon;
+        this.insertContentId = insertContentId;
+    }
+
+    public String getInsertContentId() {
+        return insertContentId;
+    }
+
+    public void setInsertContentId(String insertContentId) {
+        this.insertContentId = insertContentId;
     }
 
     public String getInsertRule() {
@@ -64,21 +69,6 @@ public class InsertModel {
         this.insertId = insertId;
     }
 
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public String getIcon() {
-        return icon;
-    }
-
-    public void setIcon(String icon) {
-        this.icon = icon;
-    }
 
 
 

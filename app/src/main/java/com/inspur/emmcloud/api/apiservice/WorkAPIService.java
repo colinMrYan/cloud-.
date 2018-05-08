@@ -160,9 +160,9 @@ public class WorkAPIService {
                                     final List<String> commonOfficeIdList, final boolean isFilte) {
         String baseUrl = APIUri.getMeetingRoomsUrl() + "?";
         if (isFilte) {
-            baseUrl = baseUrl + "start=" + start + "&end=" + end;
+            baseUrl = baseUrl + "init=" + start + "&end=" + end;
         } else {
-            baseUrl = baseUrl + "start=" + "&end=";
+            baseUrl = baseUrl + "init=" + "&end=";
         }
         baseUrl = baseUrl + "&isIdle=" + isFilte;
         for (int j = 0; j < commonOfficeIdList.size(); j++) {
