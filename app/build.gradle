@@ -126,13 +126,13 @@ android {
                             'src/main/res'//根目录
 
                     ]
-            proto {
-                srcDir 'src/main/proto'
-                include '**/*.proto'
-            }
-            java {
-                srcDir 'src/main/java'
-            }
+//            proto {
+//                srcDir 'src/main/proto'
+//                include '**/*.proto'
+//            }
+//            java {
+//                srcDir 'src/main/java'
+//            }
         }
 
     }
@@ -234,16 +234,15 @@ dependencies {
     compile files('libs/aliyun-oss-sdk-android-2.0.1.1.jar')
     compile files('libs/Msc.jar')
     compile files('libs/Sunflower.jar')
-    compile 'com.google.protobuf:protobuf-java:3.1.0'
-    compile 'com.google.protobuf:protoc:3.1.0'
+    compile 'com.google.protobuf:protobuf-java:3.5.1'
+//    compile 'com.google.protobuf:protoc:3.5.1'
 }
 repositories { flatDir { dirs 'aars' } }
 
 protobuf {
-    protoc {
-        artifact = 'com.google.protobuf:protoc:3.1.0'
-    }
-
+//    protoc {
+//        artifact = 'com.google.protobuf:protoc:3.5.1'
+//    }
     generateProtoTasks {
         all().each { task ->
             task.builtins {
@@ -258,5 +257,5 @@ protobuf {
         }
     }
 
-    generatedFilesBaseDir = "$projectDir/src/generated"
+  //  generatedFilesBaseDir = "$projectDir/src/generated"
 }
