@@ -32,18 +32,23 @@ import com.inspur.emmcloud.bean.chat.GetNewsInstructionResult;
 import com.inspur.emmcloud.bean.chat.GetSendMsgResult;
 import com.inspur.emmcloud.bean.chat.GetUploadPushInfoResult;
 import com.inspur.emmcloud.bean.contact.GetSearchChannelGroupResult;
+import com.inspur.emmcloud.bean.contact.OrgsInfo;
 import com.inspur.emmcloud.bean.system.GetBoolenResult;
 import com.inspur.emmcloud.interf.OauthCallBack;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.OauthUtils;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
+import org.xutils.x;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * com.inspur.emmcloud.api.apiservice.ChatAPIService create at 2016年11月8日
@@ -1057,6 +1062,44 @@ public class ChatAPIService {
 						oauthCallBack, requestTime);
 			}
 
+		});
+	}
+
+
+	public void getContactOrgPart(){
+		String url = "http://10.24.51.1:8080/api/sys/v4.0/contacts/orgs";
+		RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
+		x.http().post(params, new Callback.CommonCallback<byte[]>() {
+			@Override
+			public void onSuccess(byte[] bytes) {
+				LogUtils.jasonDebug("onSuccess-----------------------------");
+				try {
+					List<OrgsInfo.org> orgsList = OrgsInfo.orgs.parseFrom(bytes).getOrgsList();
+					LogUtils.jasonDebug(orgsList.get(0).getId());
+					LogUtils.jasonDebug(orgsList.get(0).getName());
+					LogUtils.jasonDebug(orgsList.get(0).getPinyin());
+				}catch (Exception e){
+					e.printStackTrace();
+				}
+				byte[] btte = null;
+				String s = new String(btte);
+
+			}
+
+			@Override
+			public void onError(Throwable throwable, boolean b) {
+				LogUtils.jasonDebug("onError-----------------------------");
+			}
+
+			@Override
+			public void onCancelled(CancelledException e) {
+
+			}
+
+			@Override
+			public void onFinished() {
+
+			}
 		});
 	}
 
