@@ -828,7 +828,7 @@ public class APIUri {
      * @return
      */
     private static String getToDoBaseUrl() {
-        return getECMScheduleUrl() + MyApplication.getInstance().getTanent() + "/todo/";
+        return getECMScheduleUrl() +  "/todo/";
     }
 
     /**
