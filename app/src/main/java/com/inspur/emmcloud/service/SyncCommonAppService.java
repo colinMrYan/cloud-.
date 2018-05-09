@@ -33,7 +33,7 @@ public class SyncCommonAppService extends Service {
     }
 
     private void syncCommonApp(){
-        if (!NetUtils.isNetworkConnected(getApplicationContext(),false) && StringUtils.isBlank(MyApplication.getInstance().getAccessToken())){
+        if (!NetUtils.isNetworkConnected(getApplicationContext(),false) || StringUtils.isBlank(MyApplication.getInstance().getAccessToken())){
             stopSelf();
         }
 

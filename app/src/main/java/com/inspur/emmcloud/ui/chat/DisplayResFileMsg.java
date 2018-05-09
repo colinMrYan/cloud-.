@@ -115,7 +115,7 @@ public class DisplayResFileMsg {
 
                             @Override
                             public void callbackError(Throwable arg0, boolean arg1) {
-                                fileProgressBar.setVisibility(View.GONE);
+                                fileProgressBar.setVisibility(View.INVISIBLE);
                                 ToastUtils.show(context, context
                                         .getString(R.string.download_fail));
                             }
