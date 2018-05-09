@@ -84,8 +84,10 @@ public class ChannelGroupIconUtils {
         List<ChannelGroup> currentChannelGroupList = new ArrayList<ChannelGroup>();
         for (int i = 0; i < channelTypeGroupList.size(); i++) {
             Channel channel = channelTypeGroupList.get(i);
-            ChannelGroup channelGroup = new ChannelGroup(channel);
-            currentChannelGroupList.add(channelGroup);
+            if (channel.getType().equals("GROUP")){
+                ChannelGroup channelGroup = new ChannelGroup(channel);
+                currentChannelGroupList.add(channelGroup);
+            }
         }
         List<ChannelGroup> cacheChannelGroupList = ChannelGroupCacheUtils
                 .getAllChannelGroupList(context);
