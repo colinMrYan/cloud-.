@@ -104,7 +104,7 @@ public class WebSocketPush {
 //					mSocket = IO.socket(url, opts);
 //				}else {
 					Manager manager = new Manager(new URI(url),opts);
-					mSocket = manager.socket(MyApplication.getInstance().getChatSpcketNameSpace());
+					mSocket = manager.socket(MyApplication.getInstance().getChatSocketNameSpace());
 //				}
 				mSocket.io().on(Manager.EVENT_TRANSPORT, new Emitter.Listener() {
 					@Override
