@@ -555,7 +555,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
      * v1版及v1.x版返回/api/v1
      * @return
      */
-    public String getChatSpcketNameSpace(){
+    public String getChatSocketNameSpace(){
         if(getClusterChatVersion().toLowerCase().startsWith("v1")){
             return "/api/v1";
         }
