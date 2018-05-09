@@ -156,7 +156,7 @@ public class APIUri {
      * @return
      */
     public static String getUploadPushInfoUrl() {
-        return getECMChatUrl() + "/client-registry/api/v1/client";
+        return MyApplication.getInstance().getClusterClientRegistry() + "/client";
     }
 
     /************************************************************************登录*****************************************************************/
