@@ -838,7 +838,7 @@ public class APIUri {
      * @return
      */
     public static String getCalendarUrl() {
-        return getECMScheduleUrl() ;
+        return getECMScheduleUrl() + (MyApplication.getInstance().getClusterScheduleVersion().toLowerCase().equals("v0")?"/api/v0":"");
     }
 
     /*******************任务*****************************/
@@ -848,7 +848,7 @@ public class APIUri {
      * @return
      */
     private static String getToDoBaseUrl() {
-        return getECMScheduleUrl() +  "/todo/";
+        return getECMScheduleUrl() + (MyApplication.getInstance().getClusterScheduleVersion().toLowerCase().equals("v0")?"/api/v0":"") + "/todo/";
     }
 
     /**

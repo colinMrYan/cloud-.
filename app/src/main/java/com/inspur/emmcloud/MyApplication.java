@@ -104,6 +104,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
     private String clusterChatSocket = "";
     private String clusterEmm = Constant.DEFAULT_CLUSTER_EMM;//多云emm服务
     private String clusterClientRegistry = "";
+    private String clusterScheduleVersion = "";//仅标识Schedule
 
     public void onCreate() {
         super.onCreate();
@@ -544,6 +545,14 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
 
     public void setClusterClientRegistry(String clusterClientRegistry) {
         this.clusterClientRegistry = clusterClientRegistry;
+    }
+
+    public String getClusterScheduleVersion() {
+        return clusterScheduleVersion;
+    }
+
+    public void setClusterScheduleVersion(String clusterScheduleVersion) {
+        this.clusterScheduleVersion = clusterScheduleVersion;
     }
 
     public boolean isChatVersionV0(){
