@@ -85,11 +85,11 @@ public class APIUri {
     }
 
     public static String getUrlBaseVolume() {
-        return getCloudDriver() + "cloud-drive/api/v1/volume";
+        return getCloudDriver() + "/cloud-drive/api/v1/volume";
     }
 
     public static String getUrlBaseGroup() {
-        return getCloudDriver() + "cloud-drive/api/v1/group";
+        return getCloudDriver() + "/cloud-drive/api/v1/group";
     }
     /***************************************************************系统*******************************************************************/
     /**
@@ -380,7 +380,7 @@ public class APIUri {
      * @return
      */
     public static String getUploadFileTokenUrl(String cid){
-        return getECMChatUrl() +"chat/api/v1/channel/"+cid+"/file/request";
+        return getECMChatUrl() +"/chat/api/v1/channel/"+cid+"/file/request";
     }
 
     /**
@@ -390,7 +390,7 @@ public class APIUri {
      * @return
      */
     public static String getChatFileResouceUrl(String cid,String path){
-        return getECMChatUrl() +"chat/api/v1/channel/"+cid+"/file/request?path="+path;
+        return getECMChatUrl() +"/chat/api/v1/channel/"+cid+"/file/request?path="+path;
     }
 
     /**************************************************应用和应用中心********************************************************************/
@@ -568,7 +568,7 @@ public class APIUri {
      * @return
      */
     public static String getGroupNewsUrl(String url) {
-        return getECMNews() + url;
+        return getECMNews() +"/" + url;
     }
 
     /**
@@ -838,7 +838,7 @@ public class APIUri {
      * @return
      */
     public static String getCalendarUrl() {
-        return getECMScheduleUrl() ;
+        return getECMScheduleUrl() + (MyApplication.getInstance().getClusterScheduleVersion().toLowerCase().equals("v0")?"/api/v0":"");
     }
 
     /*******************任务*****************************/
@@ -848,7 +848,7 @@ public class APIUri {
      * @return
      */
     private static String getToDoBaseUrl() {
-        return getECMScheduleUrl() +  "/todo/";
+        return getECMScheduleUrl() + (MyApplication.getInstance().getClusterScheduleVersion().toLowerCase().equals("v0")?"/api/v0":"") + "/todo/";
     }
 
     /**

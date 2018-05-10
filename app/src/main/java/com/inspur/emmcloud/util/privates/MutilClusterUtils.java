@@ -116,6 +116,9 @@ public class MutilClusterUtils {
             MyApplication.getInstance().setClusterChatVersion(clusterBean.getServiceVersion());
             MyApplication.getInstance().setClusterChatSocket(chatUrl);
         }
+        if(serviceName.equals(ECM_SCHEDULE)){
+            MyApplication.getInstance().setClusterScheduleVersion(clusterBean.getServiceVersion());
+        }
         return differentUrlByType;
     }
 
