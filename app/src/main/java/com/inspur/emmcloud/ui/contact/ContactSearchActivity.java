@@ -1410,7 +1410,8 @@ public class ContactSearchActivity extends BaseActivity {
             bundle.putString("cid", searchModel.getId());
             bundle.putString("channelType", searchModel.getType());
             IntentUtils.startActivity(ContactSearchActivity.this,
-                    ChannelActivity.class, bundle);
+                    MyApplication.getInstance().isChatVersionV0()?
+                            ChannelV0Activity.class:ChannelActivity.class, bundle);
 
         }
     }
@@ -1440,8 +1441,8 @@ public class ContactSearchActivity extends BaseActivity {
                                     getCreateSingleChannelResult
                                             .getName(getApplicationContext()));
                             IntentUtils.startActivity(
-                                    ContactSearchActivity.this,
-                                    ChannelActivity.class, bundle);
+                                    ContactSearchActivity.this,MyApplication.getInstance().isChatVersionV0()?
+                                            ChannelV0Activity.class:ChannelActivity.class, bundle);
                         }
 
                         @Override
