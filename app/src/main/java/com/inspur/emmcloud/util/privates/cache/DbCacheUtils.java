@@ -164,6 +164,13 @@ public class DbCacheUtils {
         return db;
     }
 
+    public static DbManager getDb() {
+        if (db == null) {
+            initDb(MyApplication.getInstance());
+        }
+        return db;
+    }
+
     /**
      * 删除数据库
      * @param context

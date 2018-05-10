@@ -53,6 +53,7 @@ import com.inspur.emmcloud.bean.chat.TransparentBean;
 import com.inspur.emmcloud.bean.system.PVCollectModel;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.interf.OnRecommendAppWidgetItemClickListener;
+import com.inspur.emmcloud.ui.TestActivity;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
@@ -1031,8 +1032,9 @@ public class MyAppFragment extends Fragment {
     class OnAppCenterClickListener implements OnClickListener {
         @Override
         public void onClick(View v) {
-            IntentUtils.startActivity(getActivity(), AppCenterActivity.class);
-            recordUserClickAppCenter();
+//            IntentUtils.startActivity(getActivity(), AppCenterActivity.class);
+//            recordUserClickAppCenter();
+            IntentUtils.startActivity(getActivity(), TestActivity.class);
         }
     }
 

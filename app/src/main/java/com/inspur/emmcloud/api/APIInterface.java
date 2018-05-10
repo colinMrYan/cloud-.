@@ -659,4 +659,8 @@ public interface APIInterface {
     void returnFaceLoginGSSuccess();
 
     void returnFaceLoginGSFail(String error, int errorCode);
+
+    void returnContactUserSuccess(byte[] bytes);
+    void returnContactUserSuccess(String result);
+    void returnContactUserFail(String error, int errorCode);
 }

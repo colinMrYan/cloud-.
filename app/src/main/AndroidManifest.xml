@@ -129,6 +129,11 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustNothing"></activity>
         <activity
+            android:name=".ui.TestActivity"
+            android:resizeableActivity="true"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustNothing"></activity>
+        <activity
             android:name=".ui.mine.setting.GuideActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"

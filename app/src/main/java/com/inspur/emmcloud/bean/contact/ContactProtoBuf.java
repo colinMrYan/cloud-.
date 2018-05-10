@@ -3,11 +3,8 @@
 
 package com.inspur.emmcloud.bean.contact;
 
-import org.xutils.db.annotation.Column;
-import org.xutils.db.annotation.Table;
-
-public final class OrgsInfo {
-  private OrgsInfo() {}
+public final class ContactProtoBuf {
+  private ContactProtoBuf() {}
   public static void registerAllExtensions(
       com.google.protobuf.ExtensionRegistryLite registry) {
   }
@@ -79,7 +76,6 @@ public final class OrgsInfo {
   /**
    * Protobuf type {@code com.inspur.emmcloud.bean.contact.org}
    */
-  @Table(name="org")
   public  static final class org extends
       com.google.protobuf.GeneratedMessageV3 implements
       // @@protoc_insertion_point(message_implements:com.inspur.emmcloud.bean.contact.org)
@@ -178,18 +174,17 @@ public final class OrgsInfo {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return OrgsInfo.internal_static_com_inspur_emmcloud_bean_contact_org_descriptor;
+      return ContactProtoBuf.internal_static_com_inspur_emmcloud_bean_contact_org_descriptor;
     }
 
     protected FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return OrgsInfo.internal_static_com_inspur_emmcloud_bean_contact_org_fieldAccessorTable
+      return ContactProtoBuf.internal_static_com_inspur_emmcloud_bean_contact_org_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
               org.class, Builder.class);
     }
 
     public static final int ID_FIELD_NUMBER = 1;
-    @Column(name = "id", isId = true)
     private volatile Object id_;
     /**
      * <code>string id = 1;</code>
@@ -199,7 +194,7 @@ public final class OrgsInfo {
       if (ref instanceof String) {
         return (String) ref;
       } else {
-        com.google.protobuf.ByteString bs = 
+        com.google.protobuf.ByteString bs =
             (com.google.protobuf.ByteString) ref;
         String s = bs.toStringUtf8();
         id_ = s;
@@ -213,7 +208,7 @@ public final class OrgsInfo {
         getIdBytes() {
       Object ref = id_;
       if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
+        com.google.protobuf.ByteString b =
             com.google.protobuf.ByteString.copyFromUtf8(
                 (String) ref);
         id_ = b;
@@ -224,7 +219,6 @@ public final class OrgsInfo {
     }
 
     public static final int NAME_FIELD_NUMBER = 2;
-    @Column(name = "name")
     private volatile Object name_;
     /**
      * <code>string name = 2;</code>
@@ -234,7 +228,7 @@ public final class OrgsInfo {
       if (ref instanceof String) {
         return (String) ref;
       } else {
-        com.google.protobuf.ByteString bs = 
+        com.google.protobuf.ByteString bs =
             (com.google.protobuf.ByteString) ref;
         String s = bs.toStringUtf8();
         name_ = s;
@@ -248,7 +242,7 @@ public final class OrgsInfo {
         getNameBytes() {
       Object ref = name_;
       if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
+        com.google.protobuf.ByteString b =
             com.google.protobuf.ByteString.copyFromUtf8(
                 (String) ref);
         name_ = b;
@@ -259,7 +253,6 @@ public final class OrgsInfo {
     }
 
     public static final int NAME_GLOBAL_FIELD_NUMBER = 3;
-    @Column(name = "nameGlobal")
     private volatile Object nameGlobal_;
     /**
      * <code>string name_global = 3;</code>
@@ -269,7 +262,7 @@ public final class OrgsInfo {
       if (ref instanceof String) {
         return (String) ref;
       } else {
-        com.google.protobuf.ByteString bs = 
+        com.google.protobuf.ByteString bs =
             (com.google.protobuf.ByteString) ref;
         String s = bs.toStringUtf8();
         nameGlobal_ = s;
@@ -283,7 +276,7 @@ public final class OrgsInfo {
         getNameGlobalBytes() {
       Object ref = nameGlobal_;
       if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
+        com.google.protobuf.ByteString b =
             com.google.protobuf.ByteString.copyFromUtf8(
                 (String) ref);
         nameGlobal_ = b;
@@ -294,7 +287,6 @@ public final class OrgsInfo {
     }
 
     public static final int PINYIN_FIELD_NUMBER = 4;
-    @Column(name = "pinyin")
     private volatile Object pinyin_;
     /**
      * <code>string pinyin = 4;</code>
@@ -304,7 +296,7 @@ public final class OrgsInfo {
       if (ref instanceof String) {
         return (String) ref;
       } else {
-        com.google.protobuf.ByteString bs = 
+        com.google.protobuf.ByteString bs =
             (com.google.protobuf.ByteString) ref;
         String s = bs.toStringUtf8();
         pinyin_ = s;
@@ -318,7 +310,7 @@ public final class OrgsInfo {
         getPinyinBytes() {
       Object ref = pinyin_;
       if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
+        com.google.protobuf.ByteString b =
             com.google.protobuf.ByteString.copyFromUtf8(
                 (String) ref);
         pinyin_ = b;
@@ -329,7 +321,6 @@ public final class OrgsInfo {
     }
 
     public static final int PARENT_ID_FIELD_NUMBER = 5;
-    @Column(name = "parentId")
     private volatile Object parentId_;
     /**
      * <code>string parent_id = 5;</code>
@@ -339,7 +330,7 @@ public final class OrgsInfo {
       if (ref instanceof String) {
         return (String) ref;
       } else {
-        com.google.protobuf.ByteString bs = 
+        com.google.protobuf.ByteString bs =
             (com.google.protobuf.ByteString) ref;
         String s = bs.toStringUtf8();
         parentId_ = s;
@@ -353,7 +344,7 @@ public final class OrgsInfo {
         getParentIdBytes() {
       Object ref = parentId_;
       if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
+        com.google.protobuf.ByteString b =
             com.google.protobuf.ByteString.copyFromUtf8(
                 (String) ref);
         parentId_ = b;
@@ -364,7 +355,6 @@ public final class OrgsInfo {
     }
 
     public static final int SORT_ORDER_FIELD_NUMBER = 6;
-    @Column(name = "sortOrder")
     private int sortOrder_;
     /**
      * <code>int32 sort_order = 6;</code>
@@ -583,17 +573,17 @@ public final class OrgsInfo {
         orgOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return OrgsInfo.internal_static_com_inspur_emmcloud_bean_contact_org_descriptor;
+        return ContactProtoBuf.internal_static_com_inspur_emmcloud_bean_contact_org_descriptor;
       }
 
       protected FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return OrgsInfo.internal_static_com_inspur_emmcloud_bean_contact_org_fieldAccessorTable
+        return ContactProtoBuf.internal_static_com_inspur_emmcloud_bean_contact_org_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
                 org.class, Builder.class);
       }
 
-      // Construct using com.inspur.emmcloud.bean.contact.OrgsInfo.org.newBuilder()
+      // Construct using com.inspur.emmcloud.bean.contact.ContactProtoBuf.org.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -627,7 +617,7 @@ public final class OrgsInfo {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return OrgsInfo.internal_static_com_inspur_emmcloud_bean_contact_org_descriptor;
+        return ContactProtoBuf.internal_static_com_inspur_emmcloud_bean_contact_org_descriptor;
       }
 
       public org getDefaultInstanceForType() {
@@ -764,7 +754,7 @@ public final class OrgsInfo {
           getIdBytes() {
         Object ref = id_;
         if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString b =
               com.google.protobuf.ByteString.copyFromUtf8(
                   (String) ref);
           id_ = b;
@@ -781,7 +771,7 @@ public final class OrgsInfo {
         if (value == null) {
     throw new NullPointerException();
   }
-  
+
         id_ = value;
         onChanged();
         return this;
@@ -790,7 +780,7 @@ public final class OrgsInfo {
        * <code>string id = 1;</code>
        */
       public Builder clearId() {
-        
+
         id_ = getDefaultInstance().getId();
         onChanged();
         return this;
@@ -804,7 +794,7 @@ public final class OrgsInfo {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
-        
+
         id_ = value;
         onChanged();
         return this;
@@ -833,7 +823,7 @@ public final class OrgsInfo {
           getNameBytes() {
         Object ref = name_;
         if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString b =
               com.google.protobuf.ByteString.copyFromUtf8(
                   (String) ref);
           name_ = b;
@@ -850,7 +840,7 @@ public final class OrgsInfo {
         if (value == null) {
     throw new NullPointerException();
   }
-  
+
         name_ = value;
         onChanged();
         return this;
@@ -859,7 +849,7 @@ public final class OrgsInfo {
        * <code>string name = 2;</code>
        */
       public Builder clearName() {
-        
+
         name_ = getDefaultInstance().getName();
         onChanged();
         return this;
@@ -873,7 +863,7 @@ public final class OrgsInfo {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
-        
+
         name_ = value;
         onChanged();
         return this;
@@ -902,7 +892,7 @@ public final class OrgsInfo {
           getNameGlobalBytes() {
         Object ref = nameGlobal_;
         if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString b =
               com.google.protobuf.ByteString.copyFromUtf8(
                   (String) ref);
           nameGlobal_ = b;
@@ -919,7 +909,7 @@ public final class OrgsInfo {
         if (value == null) {
     throw new NullPointerException();
   }
-  
+
         nameGlobal_ = value;
         onChanged();
         return this;
@@ -928,7 +918,7 @@ public final class OrgsInfo {
        * <code>string name_global = 3;</code>
        */
       public Builder clearNameGlobal() {
-        
+
         nameGlobal_ = getDefaultInstance().getNameGlobal();
         onChanged();
         return this;
@@ -942,7 +932,7 @@ public final class OrgsInfo {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
-        
+
         nameGlobal_ = value;
         onChanged();
         return this;
@@ -971,7 +961,7 @@ public final class OrgsInfo {
           getPinyinBytes() {
         Object ref = pinyin_;
         if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString b =
               com.google.protobuf.ByteString.copyFromUtf8(
                   (String) ref);
           pinyin_ = b;
@@ -988,7 +978,7 @@ public final class OrgsInfo {
         if (value == null) {
     throw new NullPointerException();
   }
-  
+
         pinyin_ = value;
         onChanged();
         return this;
@@ -997,7 +987,7 @@ public final class OrgsInfo {
        * <code>string pinyin = 4;</code>
        */
       public Builder clearPinyin() {
-        
+
         pinyin_ = getDefaultInstance().getPinyin();
         onChanged();
         return this;
@@ -1011,7 +1001,7 @@ public final class OrgsInfo {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
-        
+
         pinyin_ = value;
         onChanged();
         return this;
@@ -1040,7 +1030,7 @@ public final class OrgsInfo {
           getParentIdBytes() {
         Object ref = parentId_;
         if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString b =
               com.google.protobuf.ByteString.copyFromUtf8(
                   (String) ref);
           parentId_ = b;
@@ -1057,7 +1047,7 @@ public final class OrgsInfo {
         if (value == null) {
     throw new NullPointerException();
   }
-  
+
         parentId_ = value;
         onChanged();
         return this;
@@ -1066,7 +1056,7 @@ public final class OrgsInfo {
        * <code>string parent_id = 5;</code>
        */
       public Builder clearParentId() {
-        
+
         parentId_ = getDefaultInstance().getParentId();
         onChanged();
         return this;
@@ -1080,7 +1070,7 @@ public final class OrgsInfo {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
-        
+
         parentId_ = value;
         onChanged();
         return this;
@@ -1097,7 +1087,7 @@ public final class OrgsInfo {
        * <code>int32 sort_order = 6;</code>
        */
       public Builder setSortOrder(int value) {
-        
+
         sortOrder_ = value;
         onChanged();
         return this;
@@ -1106,7 +1096,7 @@ public final class OrgsInfo {
        * <code>int32 sort_order = 6;</code>
        */
       public Builder clearSortOrder() {
-        
+
         sortOrder_ = 0;
         onChanged();
         return this;
@@ -1365,12 +1355,12 @@ public final class OrgsInfo {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return OrgsInfo.internal_static_com_inspur_emmcloud_bean_contact_user_descriptor;
+      return ContactProtoBuf.internal_static_com_inspur_emmcloud_bean_contact_user_descriptor;
     }
 
     protected FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return OrgsInfo.internal_static_com_inspur_emmcloud_bean_contact_user_fieldAccessorTable
+      return ContactProtoBuf.internal_static_com_inspur_emmcloud_bean_contact_user_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
               user.class, Builder.class);
     }
@@ -1385,7 +1375,7 @@ public final class OrgsInfo {
       if (ref instanceof String) {
         return (String) ref;
       } else {
-        com.google.protobuf.ByteString bs = 
+        com.google.protobuf.ByteString bs =
             (com.google.protobuf.ByteString) ref;
         String s = bs.toStringUtf8();
         id_ = s;
@@ -1399,7 +1389,7 @@ public final class OrgsInfo {
         getIdBytes() {
       Object ref = id_;
       if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
+        com.google.protobuf.ByteString b =
             com.google.protobuf.ByteString.copyFromUtf8(
                 (String) ref);
         id_ = b;
@@ -1419,7 +1409,7 @@ public final class OrgsInfo {
       if (ref instanceof String) {
         return (String) ref;
       } else {
-        com.google.protobuf.ByteString bs = 
+        com.google.protobuf.ByteString bs =
             (com.google.protobuf.ByteString) ref;
         String s = bs.toStringUtf8();
         realName_ = s;
@@ -1433,7 +1423,7 @@ public final class OrgsInfo {
         getRealNameBytes() {
       Object ref = realName_;
       if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
+        com.google.protobuf.ByteString b =
             com.google.protobuf.ByteString.copyFromUtf8(
                 (String) ref);
         realName_ = b;
@@ -1453,7 +1443,7 @@ public final class OrgsInfo {
       if (ref instanceof String) {
         return (String) ref;
       } else {
-        com.google.protobuf.ByteString bs = 
+        com.google.protobuf.ByteString bs =
             (com.google.protobuf.ByteString) ref;
         String s = bs.toStringUtf8();
         nameGlobal_ = s;
@@ -1467,7 +1457,7 @@ public final class OrgsInfo {
         getNameGlobalBytes() {
       Object ref = nameGlobal_;
       if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
+        com.google.protobuf.ByteString b =
             com.google.protobuf.ByteString.copyFromUtf8(
                 (String) ref);
         nameGlobal_ = b;
@@ -1487,7 +1477,7 @@ public final class OrgsInfo {
       if (ref instanceof String) {
         return (String) ref;
       } else {
-        com.google.protobuf.ByteString bs = 
+        com.google.protobuf.ByteString bs =
             (com.google.protobuf.ByteString) ref;
         String s = bs.toStringUtf8();
         pinyin_ = s;
@@ -1501,7 +1491,7 @@ public final class OrgsInfo {
         getPinyinBytes() {
       Object ref = pinyin_;
       if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
+        com.google.protobuf.ByteString b =
             com.google.protobuf.ByteString.copyFromUtf8(
                 (String) ref);
         pinyin_ = b;
@@ -1521,7 +1511,7 @@ public final class OrgsInfo {
       if (ref instanceof String) {
         return (String) ref;
       } else {
-        com.google.protobuf.ByteString bs = 
+        com.google.protobuf.ByteString bs =
             (com.google.protobuf.ByteString) ref;
         String s = bs.toStringUtf8();
         mobile_ = s;
@@ -1535,7 +1525,7 @@ public final class OrgsInfo {
         getMobileBytes() {
       Object ref = mobile_;
       if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
+        com.google.protobuf.ByteString b =
             com.google.protobuf.ByteString.copyFromUtf8(
                 (String) ref);
         mobile_ = b;
@@ -1555,7 +1545,7 @@ public final class OrgsInfo {
       if (ref instanceof String) {
         return (String) ref;
       } else {
-        com.google.protobuf.ByteString bs = 
+        com.google.protobuf.ByteString bs =
             (com.google.protobuf.ByteString) ref;
         String s = bs.toStringUtf8();
         email_ = s;
@@ -1569,7 +1559,7 @@ public final class OrgsInfo {
         getEmailBytes() {
       Object ref = email_;
       if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
+        com.google.protobuf.ByteString b =
             com.google.protobuf.ByteString.copyFromUtf8(
                 (String) ref);
         email_ = b;
@@ -1589,7 +1579,7 @@ public final class OrgsInfo {
       if (ref instanceof String) {
         return (String) ref;
       } else {
-        com.google.protobuf.ByteString bs = 
+        com.google.protobuf.ByteString bs =
             (com.google.protobuf.ByteString) ref;
         String s = bs.toStringUtf8();
         parentId_ = s;
@@ -1603,7 +1593,7 @@ public final class OrgsInfo {
         getParentIdBytes() {
       Object ref = parentId_;
       if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
+        com.google.protobuf.ByteString b =
             com.google.protobuf.ByteString.copyFromUtf8(
                 (String) ref);
         parentId_ = b;
@@ -1872,17 +1862,17 @@ public final class OrgsInfo {
         userOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return OrgsInfo.internal_static_com_inspur_emmcloud_bean_contact_user_descriptor;
+        return ContactProtoBuf.internal_static_com_inspur_emmcloud_bean_contact_user_descriptor;
       }
 
       protected FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return OrgsInfo.internal_static_com_inspur_emmcloud_bean_contact_user_fieldAccessorTable
+        return ContactProtoBuf.internal_static_com_inspur_emmcloud_bean_contact_user_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
                 user.class, Builder.class);
       }
 
-      // Construct using com.inspur.emmcloud.bean.contact.OrgsInfo.user.newBuilder()
+      // Construct using com.inspur.emmcloud.bean.contact.ContactProtoBuf.user.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -1922,7 +1912,7 @@ public final class OrgsInfo {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return OrgsInfo.internal_static_com_inspur_emmcloud_bean_contact_user_descriptor;
+        return ContactProtoBuf.internal_static_com_inspur_emmcloud_bean_contact_user_descriptor;
       }
 
       public user getDefaultInstanceForType() {
@@ -2073,7 +2063,7 @@ public final class OrgsInfo {
           getIdBytes() {
         Object ref = id_;
         if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString b =
               com.google.protobuf.ByteString.copyFromUtf8(
                   (String) ref);
           id_ = b;
@@ -2090,7 +2080,7 @@ public final class OrgsInfo {
         if (value == null) {
     throw new NullPointerException();
   }
-  
+
         id_ = value;
         onChanged();
         return this;
@@ -2099,7 +2089,7 @@ public final class OrgsInfo {
        * <code>string id = 1;</code>
        */
       public Builder clearId() {
-        
+
         id_ = getDefaultInstance().getId();
         onChanged();
         return this;
@@ -2113,7 +2103,7 @@ public final class OrgsInfo {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
-        
+
         id_ = value;
         onChanged();
         return this;
@@ -2142,7 +2132,7 @@ public final class OrgsInfo {
           getRealNameBytes() {
         Object ref = realName_;
         if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString b =
               com.google.protobuf.ByteString.copyFromUtf8(
                   (String) ref);
           realName_ = b;
@@ -2159,7 +2149,7 @@ public final class OrgsInfo {
         if (value == null) {
     throw new NullPointerException();
   }
-  
+
         realName_ = value;
         onChanged();
         return this;
@@ -2168,7 +2158,7 @@ public final class OrgsInfo {
        * <code>string real_name = 2;</code>
        */
       public Builder clearRealName() {
-        
+
         realName_ = getDefaultInstance().getRealName();
         onChanged();
         return this;
@@ -2182,7 +2172,7 @@ public final class OrgsInfo {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
-        
+
         realName_ = value;
         onChanged();
         return this;
@@ -2211,7 +2201,7 @@ public final class OrgsInfo {
           getNameGlobalBytes() {
         Object ref = nameGlobal_;
         if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString b =
               com.google.protobuf.ByteString.copyFromUtf8(
                   (String) ref);
           nameGlobal_ = b;
@@ -2228,7 +2218,7 @@ public final class OrgsInfo {
         if (value == null) {
     throw new NullPointerException();
   }
-  
+
         nameGlobal_ = value;
         onChanged();
         return this;
@@ -2237,7 +2227,7 @@ public final class OrgsInfo {
        * <code>string name_global = 3;</code>
        */
       public Builder clearNameGlobal() {
-        
+
         nameGlobal_ = getDefaultInstance().getNameGlobal();
         onChanged();
         return this;
@@ -2251,7 +2241,7 @@ public final class OrgsInfo {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
-        
+
         nameGlobal_ = value;
         onChanged();
         return this;
@@ -2280,7 +2270,7 @@ public final class OrgsInfo {
           getPinyinBytes() {
         Object ref = pinyin_;
         if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString b =
               com.google.protobuf.ByteString.copyFromUtf8(
                   (String) ref);
           pinyin_ = b;
@@ -2297,7 +2287,7 @@ public final class OrgsInfo {
         if (value == null) {
     throw new NullPointerException();
   }
-  
+
         pinyin_ = value;
         onChanged();
         return this;
@@ -2306,7 +2296,7 @@ public final class OrgsInfo {
        * <code>string pinyin = 4;</code>
        */
       public Builder clearPinyin() {
-        
+
         pinyin_ = getDefaultInstance().getPinyin();
         onChanged();
         return this;
@@ -2320,7 +2310,7 @@ public final class OrgsInfo {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
-        
+
         pinyin_ = value;
         onChanged();
         return this;
@@ -2349,7 +2339,7 @@ public final class OrgsInfo {
           getMobileBytes() {
         Object ref = mobile_;
         if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString b =
               com.google.protobuf.ByteString.copyFromUtf8(
                   (String) ref);
           mobile_ = b;
@@ -2366,7 +2356,7 @@ public final class OrgsInfo {
         if (value == null) {
     throw new NullPointerException();
   }
-  
+
         mobile_ = value;
         onChanged();
         return this;
@@ -2375,7 +2365,7 @@ public final class OrgsInfo {
        * <code>string mobile = 5;</code>
        */
       public Builder clearMobile() {
-        
+
         mobile_ = getDefaultInstance().getMobile();
         onChanged();
         return this;
@@ -2389,7 +2379,7 @@ public final class OrgsInfo {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
-        
+
         mobile_ = value;
         onChanged();
         return this;
@@ -2418,7 +2408,7 @@ public final class OrgsInfo {
           getEmailBytes() {
         Object ref = email_;
         if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString b =
               com.google.protobuf.ByteString.copyFromUtf8(
                   (String) ref);
           email_ = b;
@@ -2435,7 +2425,7 @@ public final class OrgsInfo {
         if (value == null) {
     throw new NullPointerException();
   }
-  
+
         email_ = value;
         onChanged();
         return this;
@@ -2444,7 +2434,7 @@ public final class OrgsInfo {
        * <code>string email = 6;</code>
        */
       public Builder clearEmail() {
-        
+
         email_ = getDefaultInstance().getEmail();
         onChanged();
         return this;
@@ -2458,7 +2448,7 @@ public final class OrgsInfo {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
-        
+
         email_ = value;
         onChanged();
         return this;
@@ -2487,7 +2477,7 @@ public final class OrgsInfo {
           getParentIdBytes() {
         Object ref = parentId_;
         if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString b =
               com.google.protobuf.ByteString.copyFromUtf8(
                   (String) ref);
           parentId_ = b;
@@ -2504,7 +2494,7 @@ public final class OrgsInfo {
         if (value == null) {
     throw new NullPointerException();
   }
-  
+
         parentId_ = value;
         onChanged();
         return this;
@@ -2513,7 +2503,7 @@ public final class OrgsInfo {
        * <code>string parent_id = 7;</code>
        */
       public Builder clearParentId() {
-        
+
         parentId_ = getDefaultInstance().getParentId();
         onChanged();
         return this;
@@ -2527,7 +2517,7 @@ public final class OrgsInfo {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
-        
+
         parentId_ = value;
         onChanged();
         return this;
@@ -2544,7 +2534,7 @@ public final class OrgsInfo {
        * <code>int32 has_head = 8;</code>
        */
       public Builder setHasHead(int value) {
-        
+
         hasHead_ = value;
         onChanged();
         return this;
@@ -2553,7 +2543,7 @@ public final class OrgsInfo {
        * <code>int32 has_head = 8;</code>
        */
       public Builder clearHasHead() {
-        
+
         hasHead_ = 0;
         onChanged();
         return this;
@@ -2570,7 +2560,7 @@ public final class OrgsInfo {
        * <code>int32 sort_order = 9;</code>
        */
       public Builder setSortOrder(int value) {
-        
+
         sortOrder_ = value;
         onChanged();
         return this;
@@ -2579,7 +2569,7 @@ public final class OrgsInfo {
        * <code>int32 sort_order = 9;</code>
        */
       public Builder clearSortOrder() {
-        
+
         sortOrder_ = 0;
         onChanged();
         return this;
@@ -2762,12 +2752,12 @@ public final class OrgsInfo {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return OrgsInfo.internal_static_com_inspur_emmcloud_bean_contact_orgs_descriptor;
+      return ContactProtoBuf.internal_static_com_inspur_emmcloud_bean_contact_orgs_descriptor;
     }
 
     protected FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return OrgsInfo.internal_static_com_inspur_emmcloud_bean_contact_orgs_fieldAccessorTable
+      return ContactProtoBuf.internal_static_com_inspur_emmcloud_bean_contact_orgs_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
               orgs.class, Builder.class);
     }
@@ -2827,7 +2817,7 @@ public final class OrgsInfo {
       if (ref instanceof String) {
         return (String) ref;
       } else {
-        com.google.protobuf.ByteString bs = 
+        com.google.protobuf.ByteString bs =
             (com.google.protobuf.ByteString) ref;
         String s = bs.toStringUtf8();
         rootID_ = s;
@@ -2841,7 +2831,7 @@ public final class OrgsInfo {
         getRootIDBytes() {
       Object ref = rootID_;
       if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
+        com.google.protobuf.ByteString b =
             com.google.protobuf.ByteString.copyFromUtf8(
                 (String) ref);
         rootID_ = b;
@@ -3034,17 +3024,17 @@ public final class OrgsInfo {
         orgsOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return OrgsInfo.internal_static_com_inspur_emmcloud_bean_contact_orgs_descriptor;
+        return ContactProtoBuf.internal_static_com_inspur_emmcloud_bean_contact_orgs_descriptor;
       }
 
       protected FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return OrgsInfo.internal_static_com_inspur_emmcloud_bean_contact_orgs_fieldAccessorTable
+        return ContactProtoBuf.internal_static_com_inspur_emmcloud_bean_contact_orgs_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
                 orgs.class, Builder.class);
       }
 
-      // Construct using com.inspur.emmcloud.bean.contact.OrgsInfo.orgs.newBuilder()
+      // Construct using com.inspur.emmcloud.bean.contact.ContactProtoBuf.orgs.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -3077,7 +3067,7 @@ public final class OrgsInfo {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return OrgsInfo.internal_static_com_inspur_emmcloud_bean_contact_orgs_descriptor;
+        return ContactProtoBuf.internal_static_com_inspur_emmcloud_bean_contact_orgs_descriptor;
       }
 
       public orgs getDefaultInstanceForType() {
@@ -3170,7 +3160,7 @@ public final class OrgsInfo {
               orgsBuilder_ = null;
               orgs_ = other.orgs_;
               bitField0_ = (bitField0_ & ~0x00000002);
-              orgsBuilder_ = 
+              orgsBuilder_ =
                 com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
                    getOrgsFieldBuilder() : null;
             } else {
@@ -3221,7 +3211,7 @@ public final class OrgsInfo {
        * <code>int32 lastQueryTime = 1;</code>
        */
       public Builder setLastQueryTime(int value) {
-        
+
         lastQueryTime_ = value;
         onChanged();
         return this;
@@ -3230,7 +3220,7 @@ public final class OrgsInfo {
        * <code>int32 lastQueryTime = 1;</code>
        */
       public Builder clearLastQueryTime() {
-        
+
         lastQueryTime_ = 0;
         onChanged();
         return this;
@@ -3499,7 +3489,7 @@ public final class OrgsInfo {
           getRootIDBytes() {
         Object ref = rootID_;
         if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString b =
               com.google.protobuf.ByteString.copyFromUtf8(
                   (String) ref);
           rootID_ = b;
@@ -3516,7 +3506,7 @@ public final class OrgsInfo {
         if (value == null) {
     throw new NullPointerException();
   }
-  
+
         rootID_ = value;
         onChanged();
         return this;
@@ -3525,7 +3515,7 @@ public final class OrgsInfo {
        * <code>string rootID = 3;</code>
        */
       public Builder clearRootID() {
-        
+
         rootID_ = getDefaultInstance().getRootID();
         onChanged();
         return this;
@@ -3539,7 +3529,7 @@ public final class OrgsInfo {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
-        
+
         rootID_ = value;
         onChanged();
         return this;
@@ -3705,12 +3695,12 @@ public final class OrgsInfo {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return OrgsInfo.internal_static_com_inspur_emmcloud_bean_contact_users_descriptor;
+      return ContactProtoBuf.internal_static_com_inspur_emmcloud_bean_contact_users_descriptor;
     }
 
     protected FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return OrgsInfo.internal_static_com_inspur_emmcloud_bean_contact_users_fieldAccessorTable
+      return ContactProtoBuf.internal_static_com_inspur_emmcloud_bean_contact_users_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
               users.class, Builder.class);
     }
@@ -3933,17 +3923,17 @@ public final class OrgsInfo {
         usersOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return OrgsInfo.internal_static_com_inspur_emmcloud_bean_contact_users_descriptor;
+        return ContactProtoBuf.internal_static_com_inspur_emmcloud_bean_contact_users_descriptor;
       }
 
       protected FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return OrgsInfo.internal_static_com_inspur_emmcloud_bean_contact_users_fieldAccessorTable
+        return ContactProtoBuf.internal_static_com_inspur_emmcloud_bean_contact_users_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
                 users.class, Builder.class);
       }
 
-      // Construct using com.inspur.emmcloud.bean.contact.OrgsInfo.users.newBuilder()
+      // Construct using com.inspur.emmcloud.bean.contact.ContactProtoBuf.users.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -3974,7 +3964,7 @@ public final class OrgsInfo {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return OrgsInfo.internal_static_com_inspur_emmcloud_bean_contact_users_descriptor;
+        return ContactProtoBuf.internal_static_com_inspur_emmcloud_bean_contact_users_descriptor;
       }
 
       public users getDefaultInstanceForType() {
@@ -4066,7 +4056,7 @@ public final class OrgsInfo {
               usersBuilder_ = null;
               users_ = other.users_;
               bitField0_ = (bitField0_ & ~0x00000002);
-              usersBuilder_ = 
+              usersBuilder_ =
                 com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
                    getUsersFieldBuilder() : null;
             } else {
@@ -4113,7 +4103,7 @@ public final class OrgsInfo {
        * <code>int32 lastQueryTime = 1;</code>
        */
       public Builder setLastQueryTime(int value) {
-        
+
         lastQueryTime_ = value;
         onChanged();
         return this;
@@ -4122,7 +4112,7 @@ public final class OrgsInfo {
        * <code>int32 lastQueryTime = 1;</code>
        */
       public Builder clearLastQueryTime() {
-        
+
         lastQueryTime_ = 0;
         onChanged();
         return this;
@@ -4418,22 +4408,22 @@ public final class OrgsInfo {
 
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_com_inspur_emmcloud_bean_contact_org_descriptor;
-  private static final 
+  private static final
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_com_inspur_emmcloud_bean_contact_org_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_com_inspur_emmcloud_bean_contact_user_descriptor;
-  private static final 
+  private static final
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_com_inspur_emmcloud_bean_contact_user_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_com_inspur_emmcloud_bean_contact_orgs_descriptor;
-  private static final 
+  private static final
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_com_inspur_emmcloud_bean_contact_orgs_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_com_inspur_emmcloud_bean_contact_users_descriptor;
-  private static final 
+  private static final
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_com_inspur_emmcloud_bean_contact_users_fieldAccessorTable;
 
@@ -4457,9 +4447,9 @@ public final class OrgsInfo {
       "rgs\030\002 \003(\0132%.com.inspur.emmcloud.bean.con" +
       "tact.org\022\016\n\006rootID\030\003 \001(\t\"U\n\005users\022\025\n\rlas" +
       "tQueryTime\030\001 \001(\005\0225\n\005users\030\002 \003(\0132&.com.in" +
-      "spur.emmcloud.bean.contact.userB,\n com.i" +
-      "nspur.emmcloud.bean.contactB\010OrgsInfob\006p" +
-      "roto3"
+      "spur.emmcloud.bean.contact.userB3\n com.i" +
+      "nspur.emmcloud.bean.contactB\017ContactProt" +
+      "oBufb\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {

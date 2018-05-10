@@ -1648,4 +1648,19 @@ public class APIInterfaceInstance implements APIInterface {
     public void returnChatFileUploadTokenFail(String error, int errorCode) {
 
     }
+
+    @Override
+    public void returnContactUserSuccess(byte[] bytes) {
+
+    }
+
+    @Override
+    public void returnContactUserFail(String error, int errorCode) {
+
+    }
+
+    @Override
+    public void returnContactUserSuccess(String result) {
+
+    }
 }
