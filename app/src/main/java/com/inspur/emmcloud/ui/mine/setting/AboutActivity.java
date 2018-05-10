@@ -52,8 +52,15 @@ public class AboutActivity extends BaseActivity {
 				new ActionSheetDialog.ActionListSheetBuilder(AboutActivity.this)
 						.setTitle(getString(R.string.current_system)+"-->"+ (StringUtils.isBlank(enterpriseName)?getString(R.string.cluster_default):enterpriseName))
 						.addItem("idm-->"+ MyApplication.getInstance().getCloudId())
-						.addItem("ecm-->"+ MyApplication.getInstance().getClusterEcm())
+//						.addItem("ecm-->"+ MyApplication.getInstance().getClusterEcm())
 						.addItem("emm-->"+ MyApplication.getInstance().getClusterEmm())
+						.addItem("ecm.chat-->"+MyApplication.getInstance().getClusterChat())
+						.addItem("ecm.schedule-->"+MyApplication.getInstance().getClusterSchedule())
+						.addItem("ecm.distribution-->"+MyApplication.getInstance().getClusterDistribution())
+						.addItem("ecm.news-->"+MyApplication.getInstance().getClusterNews())
+						.addItem("ecm.cloud-drive-->"+MyApplication.getInstance().getClusterCloudDrive())
+						.addItem("ecm.storage.legacy-->"+MyApplication.getInstance().getClusterStorageLegacy())
+						.addItem("ecm.client-registry-->"+MyApplication.getInstance().getClusterClientRegistry())
 						.build()
 						.show();
 				return false;
