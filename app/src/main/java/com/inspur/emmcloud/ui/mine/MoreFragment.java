@@ -18,6 +18,7 @@ import com.inspur.emmcloud.bean.chat.Channel;
 import com.inspur.emmcloud.bean.system.PVCollectModel;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.ui.chat.ChannelActivity;
+import com.inspur.emmcloud.ui.chat.ChannelV0Activity;
 import com.inspur.emmcloud.ui.mine.feedback.FeedBackActivity;
 import com.inspur.emmcloud.ui.mine.myinfo.MyInfoActivity;
 import com.inspur.emmcloud.ui.mine.setting.AboutActivity;
@@ -158,7 +159,8 @@ public class MoreFragment extends Fragment {
                     bundle.putString("cid", customerChannel.getCid());
                     //为区分来自云+客服添加一个from值，在ChannelActivity里使用
                     bundle.putString("from", "customer");
-                    IntentUtils.startActivity(getActivity(), ChannelActivity.class, bundle);
+                    IntentUtils.startActivity(getActivity(), MyApplication.getInstance().isChatVersionV0()?
+                            ChannelV0Activity.class:ChannelActivity.class, bundle);
                     recordUserClick("customservice");
                     break;
                 default:
