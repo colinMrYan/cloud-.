@@ -23,6 +23,7 @@ import com.inspur.emmcloud.interf.OauthCallBack;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.OauthUtils;
+import com.inspur.emmcloud.util.privates.cache.DbCacheUtils;
 
 import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
@@ -175,10 +176,15 @@ public class ContactAPIService {
 			public void onSuccess(byte[] bytes) {
 				LogUtils.jasonDebug("onSuccess-----------------------------");
 				try {
+					LogUtils.jasonDebug("result="+new String(bytes));
 					List<OrgsInfo.org> orgsList = OrgsInfo.orgs.parseFrom(bytes).getOrgsList();
 					LogUtils.jasonDebug(orgsList.get(0).getId());
 					LogUtils.jasonDebug(orgsList.get(0).getName());
-					LogUtils.jasonDebug(orgsList.get(0).getPinyin());
+					//LogUtils.jasonDebug(orgsList.get(0).getPinyin());
+					DbCacheUtils.getDb(context).saveOrUpdate(orgsList);
+					List<OrgsInfo.org> orgsList1 = DbCacheUtils.getDb(context).findAll(OrgsInfo.org.class);
+					LogUtils.jasonDebug("orgsList1=="+orgsList1.get(0).getName());
+
 				}catch (Exception e){
 					e.printStackTrace();
 				}

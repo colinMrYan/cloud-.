@@ -3,6 +3,9 @@
 
 package com.inspur.emmcloud.bean.contact;
 
+import org.xutils.db.annotation.Column;
+import org.xutils.db.annotation.Table;
+
 public final class OrgsInfo {
   private OrgsInfo() {}
   public static void registerAllExtensions(
@@ -76,6 +79,7 @@ public final class OrgsInfo {
   /**
    * Protobuf type {@code com.inspur.emmcloud.bean.contact.org}
    */
+  @Table(name="org")
   public  static final class org extends
       com.google.protobuf.GeneratedMessageV3 implements
       // @@protoc_insertion_point(message_implements:com.inspur.emmcloud.bean.contact.org)
@@ -185,6 +189,7 @@ public final class OrgsInfo {
     }
 
     public static final int ID_FIELD_NUMBER = 1;
+    @Column(name = "id", isId = true)
     private volatile Object id_;
     /**
      * <code>string id = 1;</code>
@@ -219,6 +224,7 @@ public final class OrgsInfo {
     }
 
     public static final int NAME_FIELD_NUMBER = 2;
+    @Column(name = "name")
     private volatile Object name_;
     /**
      * <code>string name = 2;</code>
@@ -253,6 +259,7 @@ public final class OrgsInfo {
     }
 
     public static final int NAME_GLOBAL_FIELD_NUMBER = 3;
+    @Column(name = "nameGlobal")
     private volatile Object nameGlobal_;
     /**
      * <code>string name_global = 3;</code>
@@ -287,6 +294,7 @@ public final class OrgsInfo {
     }
 
     public static final int PINYIN_FIELD_NUMBER = 4;
+    @Column(name = "pinyin")
     private volatile Object pinyin_;
     /**
      * <code>string pinyin = 4;</code>
@@ -321,6 +329,7 @@ public final class OrgsInfo {
     }
 
     public static final int PARENT_ID_FIELD_NUMBER = 5;
+    @Column(name = "parentId")
     private volatile Object parentId_;
     /**
      * <code>string parent_id = 5;</code>
@@ -355,6 +364,7 @@ public final class OrgsInfo {
     }
 
     public static final int SORT_ORDER_FIELD_NUMBER = 6;
+    @Column(name = "sortOrder")
     private int sortOrder_;
     /**
      * <code>int32 sort_order = 6;</code>
