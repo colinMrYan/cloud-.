@@ -7,7 +7,7 @@ public class CommentBodyBean {
 	private String type = "";
 	private String key = "";
 	private String name = "";
-	private String size = "";
+	private String size = "0";
 	public CommentBodyBean(String response){
 		try {
 			JSONObject jsonObject = new JSONObject(response);

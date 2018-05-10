@@ -24,6 +24,7 @@ public class MutilClusterUtils {
     private static final String ECM_CLOUD_DRIVER = "com.inspur.ecm.cloud-drive";
     private static final String ECM_STORAGE_LEGACY = "com.inspur.ecm.storage.legacy";
     private static final String EMM_OLD = "com.inspur.emm";
+    private static final String ECM_CLIENT_REGISTRY = "com.inspur.ecm.client-registry";
 
     /**
      * 修改多云基地址，如果没有基地址则取默认
@@ -65,6 +66,10 @@ public class MutilClusterUtils {
                 case ECM_STORAGE_LEGACY:
                     MyApplication.getInstance().setClusterStorageLegacy(serviceUrl);
                     break;
+                //消息服务的client注册
+                case ECM_CLIENT_REGISTRY:
+                    MyApplication.getInstance().setClusterClientRegistry(serviceUrl);
+                    break;
             }
         }
     }
@@ -80,6 +85,7 @@ public class MutilClusterUtils {
         MyApplication.getInstance().setClusterNews("");
         MyApplication.getInstance().setClusterCloudDrive("");
         MyApplication.getInstance().setClusterStorageLegacy("");
+        MyApplication.getInstance().setClusterClientRegistry("");
     }
 
 
@@ -109,6 +115,9 @@ public class MutilClusterUtils {
             MyApplication.getInstance().setSocketPath(clusterBeanUri.getPath());
             MyApplication.getInstance().setClusterChatVersion(clusterBean.getServiceVersion());
             MyApplication.getInstance().setClusterChatSocket(chatUrl);
+        }
+        if(serviceName.equals(ECM_SCHEDULE)){
+            MyApplication.getInstance().setClusterScheduleVersion(clusterBean.getServiceVersion());
         }
         return differentUrlByType;
     }
