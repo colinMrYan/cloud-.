@@ -129,8 +129,6 @@ public class ChannelActivity extends BaseActivity {
         registeRefreshNameReceiver();
         registeSendActionMsgReceiver();
         recordUserClickChannel();
-        WSAPIService.getInstance().getMessageById("a3ad6065-c1fe-4e1c-93c5-ee9579a4c820");
-
     }
 
     // Activity在SingleTask的启动模式下多次打开传递Intent无效，用此方法解决
@@ -188,10 +186,10 @@ public class ChannelActivity extends BaseActivity {
             @Override
             public void onRefresh() {
                 if (uiMessageList.size() > 0 && MessageCacheUtil.isDataInLocal(ChannelActivity.this, cid, uiMessageList
-                        .get(0).getCreationDate(), 15)) {
+                        .get(0).getCreationDate(), 20)) {
                     List<Message> historyMsgList = MessageCacheUtil.getHistoryMessageList(
                             MyApplication.getInstance(), cid, uiMessageList.get(0).getCreationDate(),
-                            15);
+                            20);
                     uiMessageList.addAll(0, UIMessage.MessageList2UIMessageList(historyMsgList));
                     swipeRefreshLayout.setRefreshing(false);
                     adapter.setMessageList(uiMessageList);
@@ -284,7 +282,7 @@ public class ChannelActivity extends BaseActivity {
      * 初始化消息列表UI
      */
     private void initMsgListView() {
-        final List<Message> cacheMessageList = MessageCacheUtil.getHistoryMessageList(MyApplication.getInstance(), cid, null, 15);
+        final List<Message> cacheMessageList = MessageCacheUtil.getHistoryMessageList(MyApplication.getInstance(), cid, null, 20);
         uiMessageList = UIMessage.MessageList2UIMessageList(cacheMessageList);
         adapter = new ChannelMessageAdapter(ChannelActivity.this, apiService, channel.getType(), chatInputMenu);
         adapter.setItemClickListener(new ChannelMessageAdapter.MyItemClickListener() {

@@ -380,19 +380,68 @@ public class APIUri {
      * @return
      */
     public static String getUploadFileTokenUrl(String cid){
-        return getECMChatUrl() +"chat/api/v1/channel/"+cid+"/file/request";
+        return getECMChatUrl() +"/api/v1/channel/"+cid+"/file/request";
     }
 
     /**
-     * 获取V1版消息中聊天资源文件地址
+     * 获取V1版消息中聊天下载资源文件地址
      * @param cid
      * @param path
      * @return
      */
     public static String getChatFileResouceUrl(String cid,String path){
-        return getECMChatUrl() +"chat/api/v1/channel/"+cid+"/file/request?path="+path;
+        return getECMChatUrl() +"/api/v1/channel/"+cid+"/file/request?path="+path;
     }
 
+    /**
+     * 获取session列表url
+     * @return
+     */
+    public static String getChannelListUrl(){
+        return getECMChatUrl() + "/channel/session";
+    }
+
+    /**
+     * 获取频道信息url
+     * @param cid
+     * @return
+     */
+    public static String getChannelInfoUrl(String cid){
+        return getECMChatUrl() + "/channel/" + cid;
+    }
+
+    /**
+     * 获取所有群组类型频道列表url
+     * @return
+     */
+    public static String getAllGroupChannelListUrl(){
+        return getECMChatUrl() + "/channel/group?limit=-1";
+    }
+
+    /**
+     * 获取所有群组频道信息
+     * @return
+     */
+    public static String getChannelGroupInfoList(){
+        return getECMChatUrl()+"/channel?limit=1000";
+    }
+
+    /**
+     * 获取创建聊天url
+     * @return
+     */
+    public static String getCreateChannelUrl(){
+        return getECMChatUrl() + "/channel";
+    }
+
+    /**
+     * 获取更新群组名称url
+     * @param cid
+     * @return
+     */
+    public static String getUpdateChannelGroupNameUrl(String cid){
+        return  getECMChatUrl()+"/channel?cid="+cid;
+    }
     /**************************************************应用和应用中心********************************************************************/
 
 

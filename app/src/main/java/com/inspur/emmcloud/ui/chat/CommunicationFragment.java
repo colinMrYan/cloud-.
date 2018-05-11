@@ -246,45 +246,6 @@ public class CommunicationFragment extends Fragment {
         }
     }
 
-    //接收到websocket发过来的消息
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onReceiveWSMessage(EventMessage eventMessage) {
-        if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE)){
-            if(eventMessage.getStatus() == 200){
-                String content = eventMessage.getContent();
-                JSONObject contentObj = JSONUtils.getJSONObject(content);
-                Message receivedWSMessage = new Message(contentObj);
-                Channel receiveMessageChannel = ChannelCacheUtils.getChannel(
-                        getActivity(), receivedWSMessage.getChannel());
-                if (receiveMessageChannel == null) {
-                    getChannelList();
-                } else {
-                    cacheReceiveMessage(receivedWSMessage);
-                    sortChannelList();
-                }
-            }else {
-                WebServiceMiddleUtils.hand(getActivity(), eventMessage.getContent(), eventMessage.getStatus());
-            }
-
-        }
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onReiceveWSOfflineMessage(EventMessage eventMessage){
-        if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_GET_OFFLINE_WS_MESSAGE)){
-            if(eventMessage.getStatus() == 200){
-                String content = eventMessage.getContent();
-                GetNewMessagesResult getNewMessagesResult = new GetNewMessagesResult(content);
-                cacheMsgAsyncTask = new CacheNewMsgTask();
-                cacheMsgAsyncTask.execute(getNewMessagesResult);
-            }else {
-                WebServiceMiddleUtils.hand(getActivity(), eventMessage.getContent(), eventMessage.getStatus());
-            }
-            sortChannelList();
-
-        }
-    }
-
     /**
      * 记录用户点击的频道
      */
@@ -566,8 +527,8 @@ public class CommunicationFragment extends Fragment {
         @Override
         protected void onPostExecute(List<Channel> addchannelList) {
             createGroupIcon(isHaveCreatGroupIcon?addchannelList:allchannelList);
+            getChannelRecentMessage();
             getChannelInfoResult(allchannelList);
-            WSAPIService.getInstance().getOfflineMessage();
         }
 
         @Override
@@ -747,7 +708,7 @@ public class CommunicationFragment extends Fragment {
             if (!isFirstConnectWebsockt) {
                 getChannelList();
             }else {
-                WSAPIService.getInstance().getOfflineMessage();
+                getOfflineMessage();
             }
             isFirstConnectWebsockt = false;
             String appTabs = PreferencesByUserAndTanentUtils.getString(getActivity(), "app_tabbar_info_current", "");
@@ -918,6 +879,61 @@ public class CommunicationFragment extends Fragment {
     }
 
 
+
+    //接收到websocket发过来的消息
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onReceiveWSMessage(EventMessage eventMessage) {
+        if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE)){
+            if(eventMessage.getStatus() == 200){
+                String content = eventMessage.getContent();
+                JSONObject contentObj = JSONUtils.getJSONObject(content);
+                Message receivedWSMessage = new Message(contentObj);
+                Channel receiveMessageChannel = ChannelCacheUtils.getChannel(
+                        getActivity(), receivedWSMessage.getChannel());
+                if (receiveMessageChannel == null) {
+                    getChannelList();
+                } else {
+                    cacheReceiveMessage(receivedWSMessage);
+                    sortChannelList();
+                }
+            }else {
+                WebServiceMiddleUtils.hand(getActivity(), eventMessage.getContent(), eventMessage.getStatus());
+            }
+
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onReiceveWSOfflineMessage(EventMessage eventMessage){
+        if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_GET_OFFLINE_WS_MESSAGE)){
+            if(eventMessage.getStatus() == 200){
+                String content = eventMessage.getContent();
+                GetNewMessagesResult getNewMessagesResult = new GetNewMessagesResult(content);
+                cacheMsgAsyncTask = new CacheNewMsgTask();
+                cacheMsgAsyncTask.execute(getNewMessagesResult);
+            }
+
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onReceiveWSRecentMessage(EventMessage eventMessage){
+        if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_GET_CHANNEL_RECENT_MESSAGE)){
+            LogUtils.jasonDebug("eventMessage.getStatus()="+eventMessage.getStatus());
+            LogUtils.jasonDebug("eventMessage.getContent()="+eventMessage.getContent());
+            if(eventMessage.getStatus() == 200){
+                String content = eventMessage.getContent();
+                GetNewMessagesResult getNewMessagesResult = new GetNewMessagesResult(content);
+                cacheMsgAsyncTask = new CacheNewMsgTask();
+                cacheMsgAsyncTask.execute(getNewMessagesResult);
+            }else {
+                WebServiceMiddleUtils.hand(getActivity(), eventMessage.getContent(), eventMessage.getStatus());
+            }
+        }
+    }
+
+
+
     /**
      * 获取消息会话列表
      */
@@ -929,6 +945,19 @@ public class CommunicationFragment extends Fragment {
         }
     }
 
+    /**
+     * 获取离线消息
+     */
+    public void getOfflineMessage(){
+        WSAPIService.getInstance().getOfflineMessage();
+    }
+
+    /**
+     * 获取每个频道最近的20条消息
+     */
+    public void getChannelRecentMessage(){
+        WSAPIService.getInstance().getChannelRecentMessage();
+    }
 
 
     /**
