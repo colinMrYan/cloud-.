@@ -212,6 +212,25 @@ public class WSAPIService {
         }
     }
 
+    public void getChannelRecentMessage(){
+        try {
+            String tracer = CommunicationUtils.getTracer();
+            JSONObject object = new JSONObject();
+            JSONObject actionObj = new JSONObject();
+            actionObj.put("method", "get");
+            actionObj.put("path", "/channel/message");
+            object.put("action", actionObj);
+            JSONObject headerObj = new JSONObject();
+            headerObj.put("enterprise", MyApplication.getInstance().getCurrentEnterprise().getId());
+            headerObj.put("tracer", tracer);
+            object.put("headers", headerObj);
+            EventMessage eventMessage = new EventMessage(Constant.EVENTBUS_TAG_GET_CHANNEL_RECENT_MESSAGE);
+            WebSocketPush.getInstance().sendWSMessage(eventMessage, object,tracer);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public void getMessageById(String mid) {
         try {
             String tracer = CommunicationUtils.getTracer();

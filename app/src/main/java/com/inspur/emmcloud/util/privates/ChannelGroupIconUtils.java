@@ -163,53 +163,6 @@ public class ChannelGroupIconUtils {
         }
     }
 
-    class NetThread implements Runnable {
-        @Override
-        public void run() {
-            synchronized (this) {
-                File dir = new File(MyAppConfig.LOCAL_CACHE_PHOTO_PATH);
-                if (!dir.exists()) {
-                    dir.mkdirs();
-                }
-                DisplayImageOptions options = new DisplayImageOptions.Builder()
-                        // 设置图片的解码类型
-                        .bitmapConfig(Bitmap.Config.RGB_565)
-                        .cacheInMemory(true)
-                        .cacheOnDisk(true)
-                        .build();
-                boolean isCreateNewGroupIcon = false;
-                for (int i = 0; i < channelTypeGroupList.size(); i++) {
-                    Channel channel = channelTypeGroupList.get(i);
-                    isCreateNewGroupIcon = true;
-                    List<String> memberUidList = ChannelGroupCacheUtils.getMemberUidList(context, channel.getCid(), 4);
-                    List<Bitmap> bitmapList = new ArrayList<Bitmap>();
-                    for (int j = 0; j < memberUidList.size(); j++) {
-                        String pid = memberUidList.get(j);
-                        Bitmap bitmap = null;
-                        if (!StringUtils.isBlank(pid) && !pid.equals("null")) {
-                            bitmap = ImageLoader.getInstance().loadImageSync(APIUri.getChannelImgUrl(context, pid), options);
-                        }
-                        if (bitmap == null) {
-                            bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.icon_person_default);
-                        }
-                        bitmapList.add(bitmap);
-                    }
-                    Bitmap combineBitmap = createGroupFace(context, bitmapList);
-
-                    if (combineBitmap != null) {
-                        saveBitmap(channel.getCid(), combineBitmap);
-                    }
-                }
-                if (handler != null) {
-                    Message msg = new Message();
-                    msg.what = RERESH_GROUP_ICON;
-                    msg.obj = isCreateNewGroupIcon;
-                    handler.sendMessage(msg);
-                }
-            }
-        }
-    }
-
     public static Bitmap createGroupFace(Context context,
                                          List<Bitmap> bitmapList) {
         if (bitmapList == null || bitmapList.size() == 0) {

@@ -32,6 +32,7 @@ public class Constant {
     public static final String PREF_CURRENT_ENTERPRISE_ID = "current_enterprise_id";
     public static final String PREF_DELETE_ILLEGAL_USER = "has_delete_illegal_user";
     public static final String PREF_MY_INFO_OLD = "my_info_old";
+    public static final String PREF_ENTER_APP_TIME = "enter_app_time";
 
     public static final String ACTION_MEETING = "com.inspur.meeting";
     public static final String ACTION_TASK = "com.inspur.task";
@@ -45,6 +46,7 @@ public class Constant {
 
     public static final String EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE = "tag_reveive_single_ws_message";
     public static final String EVENTBUS_TAG_GET_OFFLINE_WS_MESSAGE = "tag_get_offline_ws_message";
+    public static final String EVENTBUS_TAG_GET_CHANNEL_RECENT_MESSAGE = "tag_get_channel_recent_message";
     public static final String EVENTBUS_TAG_GET_MESSAGE_BY_ID = "tag_get_message_by_id";
     public static final String EVENTBUS_TAG_GET_MESSAGE_COMMENT = "tag_get_message_comment";
     public static final String EVENTBUS_TAG_GET_HISTORY_MESSAGE = "tag_get_history_message";
