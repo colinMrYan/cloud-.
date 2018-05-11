@@ -275,11 +275,10 @@ public class APIUri {
 
     /**
      * 返回忽略v0,v1版本的地址
-     * @param functionMoudle
      * @return
      */
-    public static String getIngnoreVersionChatBaseUrl(String functionMoudle){
-        return isV0VersionChat()?getECMChatUrl():(getWebsocketConnectUrl()+"/"+MyApplication.getInstance().getTanent())+functionMoudle;
+    public static String getECMChatChannelUrl(){
+        return isV0VersionChat()?getECMChatUrl():(getWebsocketConnectUrl()+"/"+MyApplication.getInstance().getTanent());
     }
 
     /**
