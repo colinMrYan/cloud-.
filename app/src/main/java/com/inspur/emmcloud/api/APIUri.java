@@ -360,7 +360,7 @@ public class APIUri {
      * @return
      */
     public static String getAddGroupMembersUrl(String cid) {
-        return getECMChatUrl() + "/channel/group/" + cid + "/users?";
+        return getECMChatChannelUrl() + "/channel/group/" + cid + "/users?";
     }
 
     /**
@@ -369,7 +369,7 @@ public class APIUri {
      * @return
      */
     public static String getNointerRuptionUrl() {
-        return getECMChatUrl() + "/session/dnd";
+        return getECMChatChannelUrl() + "/session/dnd";
     }
 
     /**
@@ -424,7 +424,7 @@ public class APIUri {
      * @return
      */
     public static String getChannelListUrl(){
-        return getECMChatUrl() + "/channel/session";
+        return getECMChatChannelUrl() + "/channel/session";
     }
 
     /**
@@ -433,7 +433,7 @@ public class APIUri {
      * @return
      */
     public static String getChannelInfoUrl(String cid){
-        return getECMChatUrl() + "/channel/" + cid;
+        return getECMChatChannelUrl() + "/channel/" + cid;
     }
 
     /**
@@ -441,7 +441,7 @@ public class APIUri {
      * @return
      */
     public static String getAllGroupChannelListUrl(){
-        return getECMChatUrl() + "/channel/group?limit=-1";
+        return getECMChatChannelUrl() + "/channel/group?limit=-1";
     }
 
     /**
@@ -449,7 +449,7 @@ public class APIUri {
      * @return
      */
     public static String getChannelGroupInfoList(){
-        return getECMChatUrl()+"/channel?limit=1000";
+        return getECMChatChannelUrl()+"/channel?limit=1000";
     }
 
     /**
@@ -457,7 +457,7 @@ public class APIUri {
      * @return
      */
     public static String getCreateChannelUrl(){
-        return getECMChatUrl() + "/channel";
+        return getECMChatChannelUrl() + "/channel";
     }
 
     /**
@@ -466,7 +466,7 @@ public class APIUri {
      * @return
      */
     public static String getUpdateChannelGroupNameUrl(String cid){
-        return  getECMChatUrl()+"/channel?cid="+cid;
+        return  getECMChatChannelUrl()+"/channel?cid="+cid;
     }
     /**************************************************应用和应用中心********************************************************************/
 
