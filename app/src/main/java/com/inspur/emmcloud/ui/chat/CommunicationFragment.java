@@ -52,6 +52,7 @@ import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
+import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.AppTitleUtils;
@@ -118,6 +119,7 @@ public class CommunicationFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
+        LogUtils.jasonDebug("==============================================================");
         super.onCreate(savedInstanceState);
         EventBus.getDefault().register(this);
         initView();
@@ -527,7 +529,7 @@ public class CommunicationFragment extends Fragment {
         @Override
         protected void onPostExecute(List<Channel> addchannelList) {
             createGroupIcon(isHaveCreatGroupIcon?addchannelList:allchannelList);
-            getChannelRecentMessage();
+            getMessage();
             getChannelInfoResult(allchannelList);
         }
 
@@ -708,7 +710,7 @@ public class CommunicationFragment extends Fragment {
             if (!isFirstConnectWebsockt) {
                 getChannelList();
             }else {
-                getOfflineMessage();
+                getMessage();
             }
             isFirstConnectWebsockt = false;
             String appTabs = PreferencesByUserAndTanentUtils.getString(getActivity(), "app_tabbar_info_current", "");
@@ -919,8 +921,6 @@ public class CommunicationFragment extends Fragment {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveWSRecentMessage(EventMessage eventMessage){
         if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_GET_CHANNEL_RECENT_MESSAGE)){
-            LogUtils.jasonDebug("eventMessage.getStatus()="+eventMessage.getStatus());
-            LogUtils.jasonDebug("eventMessage.getContent()="+eventMessage.getContent());
             if(eventMessage.getStatus() == 200){
                 String content = eventMessage.getContent();
                 GetNewMessagesResult getNewMessagesResult = new GetNewMessagesResult(content);
@@ -945,20 +945,19 @@ public class CommunicationFragment extends Fragment {
         }
     }
 
-    /**
-     * 获取离线消息
-     */
-    public void getOfflineMessage(){
-        WSAPIService.getInstance().getOfflineMessage();
-    }
+    public void getMessage(){
+        if (NetUtils.isNetworkConnected(MyApplication.getInstance())){
+            long enterAppTime = PreferencesUtils.getLong(MyApplication.getInstance(),Constant.PREF_ENTER_APP_TIME,System.currentTimeMillis());
+            if (MessageCacheUtil.isHistoryMessageCache(MyApplication.getInstance(),enterAppTime)){
+                //获取离线消息
+                WSAPIService.getInstance().getOfflineMessage();
+            }else{
+                //获取每个频道最近的20条消息
+                WSAPIService.getInstance().getChannelRecentMessage();
+            }
+        }
 
-    /**
-     * 获取每个频道最近的20条消息
-     */
-    public void getChannelRecentMessage(){
-        WSAPIService.getInstance().getChannelRecentMessage();
     }
-
 
     /**
      * 根据cid数组获取Channel信息
