@@ -5,6 +5,7 @@ import android.content.Context;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.bean.contact.Contact;
+import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactCacheUtils;
@@ -85,11 +86,11 @@ public class APIUri {
     }
 
     public static String getUrlBaseVolume() {
-        return getCloudDriver() + "cloud-drive/api/v1/volume";
+        return getCloudDriver() + "/cloud-drive/api/v1/volume";
     }
 
     public static String getUrlBaseGroup() {
-        return getCloudDriver() + "cloud-drive/api/v1/group";
+        return getCloudDriver() + "/cloud-drive/api/v1/group";
     }
     /***************************************************************系统*******************************************************************/
     /**
@@ -269,6 +270,31 @@ public class APIUri {
      */
     public static String getHttpApiUrl(String uri) {
         return getECMChatUrl() + "/" + uri;
+    }
+
+
+    /**
+     * 返回忽略v0,v1版本的地址
+     * @return
+     */
+    public static String getECMChatChannelUrl(){
+        return isV0VersionChat()?getECMChatUrl():(getWebsocketConnectUrl()+"/"+MyApplication.getInstance().getTanent());
+    }
+
+    /**
+     * 判断是v0版本
+     * @return
+     */
+    public static boolean isV0VersionChat(){
+        return MyApplication.getInstance().getClusterChatVersion().toLowerCase().contains(Constant.SERVICE_VERSION_CHAT_V0);
+    }
+
+    /**
+     * 判断是v1.x版本
+     * @return
+     */
+    public static boolean isV1xVersionChat(){
+        return MyApplication.getInstance().getClusterChatVersion().toLowerCase().contains(Constant.SERVICE_VERSION_CHAT_V1);
     }
 
 
@@ -617,7 +643,7 @@ public class APIUri {
      * @return
      */
     public static String getGroupNewsUrl(String url) {
-        return getECMNews() + url;
+        return getECMNews() +"/" + url;
     }
 
     /**
@@ -887,7 +913,7 @@ public class APIUri {
      * @return
      */
     public static String getCalendarUrl() {
-        return getECMScheduleUrl() ;
+        return getECMScheduleUrl() + (MyApplication.getInstance().getClusterScheduleVersion().toLowerCase().equals("v0")?"/api/v0":"");
     }
 
     /*******************任务*****************************/
@@ -897,7 +923,7 @@ public class APIUri {
      * @return
      */
     private static String getToDoBaseUrl() {
-        return getECMScheduleUrl() +  "/todo/";
+        return getECMScheduleUrl() + (MyApplication.getInstance().getClusterScheduleVersion().toLowerCase().equals("v0")?"/api/v0":"") + "/todo/";
     }
 
     /**

@@ -52,4 +52,7 @@ public class Constant {
     public static final String EVENTBUS_TAG_GET_MESSAGE_COMMENT_COUNT = "tag_get_message_comment_count";
     public static final String EVENTBUS_TAG_ON_PHOTO_TAB = "tag_on_photo_tab";
 
+    public static final String SERVICE_VERSION_CHAT_V0 = "v0";
+    public static final String SERVICE_VERSION_CHAT_V1 = "v1";
+
 }
