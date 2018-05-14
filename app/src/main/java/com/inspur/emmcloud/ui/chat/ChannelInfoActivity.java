@@ -332,9 +332,9 @@ public class ChannelInfoActivity extends BaseActivity {
             // TODO Auto-generated method stub
             String myUid = ((MyApplication) getApplicationContext()).getUid();
             if (owner.equals(myUid)) {
-                return memberList.size() > 9 ? 10 : memberList.size() + 2;
+                return memberList.size() > 8 ? 10 : memberList.size() + 2;
             } else {
-                return memberList.size() > 8 ? 10 : memberList.size() + 1;
+                return memberList.size() > 9 ? 10 : memberList.size() + 1;
             }
         }
 
@@ -387,14 +387,11 @@ public class ChannelInfoActivity extends BaseActivity {
                     userPhotoUrl = APIUri.getRobotIconUrl(RobotCacheUtils
                             .getRobotById(ChannelInfoActivity.this, uid)
                             .getAvatar());
-                } else {
-                    userPhotoUrl = APIUri.getChannelImgUrl(ChannelInfoActivity.this, uid);
-                }
-                if (uid.startsWith("BOT")) {
                     userName = RobotCacheUtils
                             .getRobotById(ChannelInfoActivity.this, uid)
                             .getName();
                 } else {
+                    userPhotoUrl = APIUri.getChannelImgUrl(ChannelInfoActivity.this, uid);
                     userName = ContactCacheUtils.getUserName(
                             ChannelInfoActivity.this, uid);
                 }

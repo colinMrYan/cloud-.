@@ -44,7 +44,7 @@ public class DisplayTxtPlainMsg {
         String text = message.getMsgContentTextPlain().getText();
         richText.setMovementMethod(LinkMovementClickMethod.getInstance());
         SpannableString spannableString = ChatMsgContentUtils.mentionsAndUrl2Span(context, text, message.getMsgContentTextPlain().getMentionsMap());
-        richText.setText(spannableString.toString());
+        richText.setText(spannableString);
         TransHtmlToTextUtils.stripUnderlines(
                 richText,context.getResources().getColor(isMyMsg ? R.color.hightlight_in_blue_bg
                         : R.color.header_bg));
