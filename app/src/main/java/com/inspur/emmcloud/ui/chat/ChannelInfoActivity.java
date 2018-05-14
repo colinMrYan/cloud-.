@@ -332,9 +332,9 @@ public class ChannelInfoActivity extends BaseActivity {
             // TODO Auto-generated method stub
             String myUid = ((MyApplication) getApplicationContext()).getUid();
             if (owner.equals(myUid)) {
-                return memberList.size() > 9 ? 10 : memberList.size() + 2;
+                return memberList.size() > 8 ? 10 : memberList.size() + 2;
             } else {
-                return memberList.size() > 8 ? 10 : memberList.size() + 1;
+                return memberList.size() > 9 ? 10 : memberList.size() + 1;
             }
         }
 
