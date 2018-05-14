@@ -387,14 +387,11 @@ public class ChannelInfoActivity extends BaseActivity {
                     userPhotoUrl = APIUri.getRobotIconUrl(RobotCacheUtils
                             .getRobotById(ChannelInfoActivity.this, uid)
                             .getAvatar());
-                } else {
-                    userPhotoUrl = APIUri.getChannelImgUrl(ChannelInfoActivity.this, uid);
-                }
-                if (uid.startsWith("BOT")) {
                     userName = RobotCacheUtils
                             .getRobotById(ChannelInfoActivity.this, uid)
                             .getName();
                 } else {
+                    userPhotoUrl = APIUri.getChannelImgUrl(ChannelInfoActivity.this, uid);
                     userName = ContactCacheUtils.getUserName(
                             ChannelInfoActivity.this, uid);
                 }
