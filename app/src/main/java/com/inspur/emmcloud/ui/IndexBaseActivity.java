@@ -27,6 +27,7 @@ import com.inspur.emmcloud.bean.system.AppTabDataBean;
 import com.inspur.emmcloud.bean.system.ChangeTabBean;
 import com.inspur.emmcloud.bean.system.GetAppTabAutoResult;
 import com.inspur.emmcloud.bean.system.PVCollectModel;
+import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.interf.OnTabReselectListener;
 import com.inspur.emmcloud.ui.appcenter.MyAppFragment;
 import com.inspur.emmcloud.ui.chat.CommunicationFragment;
@@ -37,6 +38,7 @@ import com.inspur.emmcloud.ui.notsupport.NotSupportFragment;
 import com.inspur.emmcloud.ui.work.TabBean;
 import com.inspur.emmcloud.ui.work.WorkFragment;
 import com.inspur.emmcloud.util.common.LogUtils;
+import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StateBarUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
@@ -77,6 +79,7 @@ public class IndexBaseActivity extends BaseFragmentActivity implements
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         StateBarUtils.changeStateBarColor(this);
+        PreferencesUtils.putLong(this, Constant.PREF_ENTER_APP_TIME,System.currentTimeMillis());
         x.view().inject(this);
         mTabHost.setup(this, getSupportFragmentManager(), R.id.realtabcontent);
         initTabs();
