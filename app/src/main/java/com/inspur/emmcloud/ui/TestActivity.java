@@ -30,12 +30,12 @@ public class TestActivity extends Activity {
         a = System.currentTimeMillis();
         contactAPIService = new ContactAPIService(this);
         contactAPIService.setAPIInterface(new WebService());
-        contactAPIService.getContactUsers();
+        contactAPIService.getContactUserList();
     }
 
     public class WebService extends APIInterfaceInstance{
         @Override
-        public void returnContactUserSuccess(byte[] bytes) {
+        public void returnContactUserListSuccess(byte[] bytes) {
             long b = System.currentTimeMillis();
             LogUtils.jasonDebug("get----time000000000="+(b-a)/1000.0);
             try {
@@ -54,8 +54,8 @@ public class TestActivity extends Activity {
         }
 
         @Override
-        public void returnContactUserFail(String error, int errorCode) {
-            super.returnContactUserFail(error, errorCode);
+        public void returnContactUserListFail(String error, int errorCode) {
+            super.returnContactUserListFail(error, errorCode);
         }
 
         @Override

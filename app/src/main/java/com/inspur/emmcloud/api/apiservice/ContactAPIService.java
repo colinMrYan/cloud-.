@@ -164,18 +164,45 @@ public class ContactAPIService {
 		});
 	}
 
-	public void getContactUsers(){
+	public void getContactUserList(){
 		String url = "https://emm.inspuronline.com/api/sys/v4.0/contacts/users";
-		RequestParams params = ((MyApplication) context.getApplicationContext()).getHttpRequestParams(url);
+		RequestParams params = MyApplication.getInstance().getHttpRequestParams(url);
 		x.http().post(params, new Callback.CommonCallback<byte[]>() {
 			@Override
 			public void onSuccess(byte[] bytes) {
-				apiInterface.returnContactUserSuccess(bytes);
+				apiInterface.returnContactUserListSuccess(bytes);
 			}
 
 			@Override
 			public void onError(Throwable throwable, boolean b) {
-				apiInterface.returnContactUserFail("",-1);
+				apiInterface.returnContactUserListFail("",-1);
+				LogUtils.jasonDebug("onError-----------------------------");
+			}
+
+			@Override
+			public void onCancelled(CancelledException e) {
+
+			}
+
+			@Override
+			public void onFinished() {
+
+			}
+		});
+	}
+
+	public void getContactOrgList(){
+		String url = "https://emm.inspuronline.com/api/sys/v4.0/contacts/orgs";
+		RequestParams params =  MyApplication.getInstance().getHttpRequestParams(url);
+		x.http().post(params, new Callback.CommonCallback<byte[]>() {
+			@Override
+			public void onSuccess(byte[] bytes) {
+				apiInterface.returnContactOrgListSuccess(bytes);
+			}
+
+			@Override
+			public void onError(Throwable throwable, boolean b) {
+				apiInterface.returnContactOrgListFail("",-1);
 				LogUtils.jasonDebug("onError-----------------------------");
 			}
 
@@ -192,38 +219,5 @@ public class ContactAPIService {
 	}
 
 
-	public void getContactUsersJson(){
-		final String url = "https://emm.inspuronline.com/api/sys/v3.0/contacts/users";
-		RequestParams params = ((MyApplication)context.getApplicationContext()).getHttpRequestParams(url);
-		HttpUtils.request(context,CloudHttpMethod.GET,params, new APICallback(context,url) {
-
-			@Override
-			public void callbackTokenExpire(long requestTime) {
-				OauthCallBack oauthCallBack = new OauthCallBack() {
-					@Override
-					public void reExecute() {
-						getContactUsersJson();
-					}
-
-					@Override
-					public void executeFailCallback() {
-						callbackFail("", -1);
-					}
-				};
-				OauthUtils.getInstance().refreshToken(
-						oauthCallBack, requestTime);
-			}
-
-			@Override
-			public void callbackSuccess(String arg0) {
-				apiInterface.returnContactUserSuccess(arg0);
-			}
-
-			@Override
-			public void callbackFail(String error, int responseCode) {
-				apiInterface.returnRobotByIdFail(error,responseCode);
-			}
-		});
-	}
 
 }
