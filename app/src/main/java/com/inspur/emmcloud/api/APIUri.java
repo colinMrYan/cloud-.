@@ -378,7 +378,7 @@ public class APIUri {
      * @return
      */
     public static String getAllBotInfo() {
-        return getECMChatUrl() + "/registry/bot";
+        return MyApplication.getInstance().getClusterBot();
     }
 
     /**
@@ -387,7 +387,7 @@ public class APIUri {
      * @return
      */
     public static String getBotInfoById() {
-        return getECMChatUrl() + "/registry/bot/";
+        return MyApplication.getInstance().getClusterBot();
     }
 
     /**
