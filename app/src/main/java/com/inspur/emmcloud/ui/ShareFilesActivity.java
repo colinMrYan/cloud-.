@@ -63,7 +63,7 @@ public class ShareFilesActivity extends BaseActivity {
         }
 //        initSharingMode();
         if(isFileUriList(uriList) && uriList.size() > 1){
-            ToastUtils.show(ShareFilesActivity.this,"不能上传多个文件");
+            ToastUtils.show(ShareFilesActivity.this,"多文件分享仅支持照片格式");
             startIndexActivity();
         }else if(isImageUriList(uriList) && uriList.size() > 5){
             ToastUtils.show(ShareFilesActivity.this,"不能上传多于5个图片");
@@ -98,10 +98,8 @@ public class ShareFilesActivity extends BaseActivity {
     }
 
     private void initViews() {
-//        ImageDisplayUtils.getInstance().displayImage(imageView, TabAndAppExistUtils.getVolumeImgUrl(ShareFilesActivity.this,
-//                "9eb097d0-d994-11e7-a6dd-8f4ea6776516"), R.drawable.ic_app_default);
-        ImageDisplayUtils.getInstance().displayImage(volumeShareIcon,
-                "https://emm.inspur.com/img/file/9c7c8950-f1c8-11e7-b508-fb1cf490df1e", R.drawable.ic_app_default);
+        ImageDisplayUtils.getInstance().displayImage(imageView, TabAndAppExistUtils.getVolumeImgUrl(ShareFilesActivity.this,
+                "9eb097d0-d994-11e7-a6dd-8f4ea6776516"), R.drawable.ic_app_default);
         int uriListSize = uriList.size();
         switch (uriListSize) {
             case 0:
@@ -135,7 +133,7 @@ public class ShareFilesActivity extends BaseActivity {
 
                 break;
             case R.id.rl_volume_share:
-
+                startVolumeShareActivity(uriList);
                 break;
         }
     }
@@ -200,10 +198,6 @@ public class ShareFilesActivity extends BaseActivity {
             LogUtils.YfcDebug("分享的文件路径：" + uriList.get(i));
         }
         this.uriList.addAll(uriList);
-//        LogUtils.YfcDebug("分享文件的列表长度："+uriList.size());
-//        if (uriList.size() > 0) {
-//            startVolumeShareActivity(uriList);
-//        }
     }
 
     /**
