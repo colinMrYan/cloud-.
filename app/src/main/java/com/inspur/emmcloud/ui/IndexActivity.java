@@ -75,6 +75,11 @@ public class IndexActivity extends IndexBaseActivity {
         EventBus.getDefault().register(this);
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+    }
+
     /**
      * 初始化app的运行环境
      */

@@ -263,4 +263,21 @@ public class MessageCacheUtil {
 
     }
 
+    /**
+     * 判断本地有没有缓存消息历史记录
+     * @param context
+     * @param enterAppTime
+     * @return
+     */
+    public static boolean isHistoryMessageCache(Context context,long enterAppTime){
+        try {
+            Long count = DbCacheUtils.getDb(context).selector(Message.class)
+                    .where("creationDate", "<", enterAppTime).count();
+            return count>0;
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return false;
+    }
+
 }
