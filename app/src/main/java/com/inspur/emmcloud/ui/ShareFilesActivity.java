@@ -20,7 +20,10 @@ import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
+import com.inspur.emmcloud.util.common.ToastUtils;
+import com.inspur.emmcloud.util.privates.GetPathFromUri4kitkat;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
+import com.inspur.emmcloud.util.privates.TabAndAppExistUtils;
 import com.inspur.emmcloud.widget.ECMSpaceItemDecoration;
 
 import org.xutils.view.annotation.ContentView;
@@ -34,7 +37,7 @@ import java.util.List;
  * Created by yufuchang on 2018/5/12.
  */
 @ContentView(R.layout.activity_share_files)
-public class ShareFilesActivity extends BaseActivity{
+public class ShareFilesActivity extends BaseActivity {
 
     @ViewInject(R.id.rv_file_list)
     private RecyclerView recyclerView;
@@ -44,42 +47,108 @@ public class ShareFilesActivity extends BaseActivity{
     private RelativeLayout channelRelativeLayout;
     @ViewInject(R.id.rl_volume_share)
     private RelativeLayout volumeRelativeLayout;
-    private List<Uri> uriArrayList = new ArrayList<>();
+    @ViewInject(R.id.view_line_volume)
+    private View viewLineVolume;
+    @ViewInject(R.id.img_volume_share_icon)
+    private ImageView volumeShareIcon;
+    private List<Uri> uriList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if(isLogin()){
+        if (isLogin()) {
             handleShareIntent();
-        }else {
+        } else {
             MyApplication.getInstance().signout();
         }
-        initViews();
+//        initSharingMode();
+        if(isFileUriList(uriList) && uriList.size() > 1){
+            ToastUtils.show(ShareFilesActivity.this,"不能上传多个文件");
+            startIndexActivity();
+        }else if(isImageUriList(uriList) && uriList.size() > 5){
+            ToastUtils.show(ShareFilesActivity.this,"不能上传多于5个图片");
+            startIndexActivity();
+        }else{
+            initViews();
+        }
+    }
+
+    /**
+     * 启动index
+     */
+    private void startIndexActivity() {
+        Intent intent = new Intent();
+        intent.setClass(ShareFilesActivity.this,IndexActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
+    /**
+     * 分享方式
+     */
+    private void initSharingMode() {
+        boolean isCommunicateExist = TabAndAppExistUtils.isTabExist(ShareFilesActivity.this,"communicate");
+        boolean isVolumeAppExist = TabAndAppExistUtils.isAppExist(ShareFilesActivity.this,"9eb097d0-d994-11e7-a6dd-8f4ea6776516");
+        channelRelativeLayout.setVisibility(isCommunicateExist?View.VISIBLE:View.GONE);
+        volumeRelativeLayout.setVisibility(isVolumeAppExist?View.VISIBLE:View.GONE);
+        viewLineVolume.setVisibility((isCommunicateExist&&isVolumeAppExist)?View.VISIBLE:View.GONE);
+        if(!(isCommunicateExist || isVolumeAppExist)){
+            ToastUtils.show(ShareFilesActivity.this,"没有分享方式");
+        }
     }
 
     private void initViews() {
-        recyclerView.addItemDecoration(new ECMSpaceItemDecoration(DensityUtil.dip2px(ShareFilesActivity.this, 11)));
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(ShareFilesActivity.this, 5);
-        recyclerView.setLayoutManager(gridLayoutManager);
-        recyclerView.setAdapter(new ShareFilesAdapter());
+//        ImageDisplayUtils.getInstance().displayImage(imageView, TabAndAppExistUtils.getVolumeImgUrl(ShareFilesActivity.this,
+//                "9eb097d0-d994-11e7-a6dd-8f4ea6776516"), R.drawable.ic_app_default);
+        ImageDisplayUtils.getInstance().displayImage(volumeShareIcon,
+                "https://emm.inspur.com/img/file/9c7c8950-f1c8-11e7-b508-fb1cf490df1e", R.drawable.ic_app_default);
+        int uriListSize = uriList.size();
+        switch (uriListSize) {
+            case 0:
+                finish();
+                break;
+            case 1:
+                imageView.setVisibility(View.VISIBLE);
+                if(isFileUriList(uriList)){
+                    String filePath = GetPathFromUri4kitkat.getPathByUri(ShareFilesActivity.this,uriList.get(0));
+                    ImageDisplayUtils.getInstance().displayImage(imageView, "drawable://" + FileUtils.getRegularFileIconResId(filePath));
+                }else{
+                    ImageDisplayUtils.getInstance().displayImage(imageView, uriList.get(0).toString(), R.drawable.ic_app_default);
+                }
+                break;
+            default:
+                recyclerView.addItemDecoration(new ECMSpaceItemDecoration(DensityUtil.dip2px(ShareFilesActivity.this, 11)));
+                GridLayoutManager gridLayoutManager = new GridLayoutManager(ShareFilesActivity.this, 3);
+                recyclerView.setLayoutManager(gridLayoutManager);
+                recyclerView.setAdapter(new ShareFilesAdapter());
+                break;
+        }
+
     }
 
-    public void onClick(View view){
-        switch (view.getId()){
+    public void onClick(View view) {
+        switch (view.getId()) {
             case R.id.back_layout:
                 finish();
+                break;
+            case R.id.rl_channel_share:
+
+                break;
+            case R.id.rl_volume_share:
+
                 break;
         }
     }
 
     /**
      * 判断是ImageUri
+     *
      * @param uriList
      * @return
      */
-    private boolean isImageUriList(List<Uri> uriList){
+    private boolean isImageUriList(List<Uri> uriList) {
         for (int i = 0; i < uriList.size(); i++) {
-            if(!uriList.get(i).toString().contains("images")){
+            if (!uriList.get(i).toString().contains("images")) {
                 return false;
             }
         }
@@ -88,12 +157,13 @@ public class ShareFilesActivity extends BaseActivity{
 
     /**
      * 判断是FileUri
+     *
      * @param uriList
      * @return
      */
-    private boolean isFileUriList(List<Uri> uriList){
+    private boolean isFileUriList(List<Uri> uriList) {
         for (int i = 0; i < uriList.size(); i++) {
-            if(!uriList.get(i).toString().contains("file")){
+            if (!uriList.get(i).toString().contains("file")) {
                 return false;
             }
         }
@@ -102,9 +172,10 @@ public class ShareFilesActivity extends BaseActivity{
 
     /**
      * 检查是否已经在登录状态
+     *
      * @return
      */
-    private boolean isLogin(){
+    private boolean isLogin() {
         String accessToken = PreferencesUtils.getString(
                 ShareFilesActivity.this, "accessToken", "");
         return !StringUtils.isBlank(accessToken);
@@ -125,10 +196,10 @@ public class ShareFilesActivity extends BaseActivity{
             List<Uri> fileUriList = FileUtils.getShareFileUriList(getIntent());
             uriList.addAll(fileUriList);
         }
-        for (int i = 0; i < uriList.size() ; i++) {
-            LogUtils.YfcDebug("分享的文件路径："+uriList.get(i));
+        for (int i = 0; i < uriList.size(); i++) {
+            LogUtils.YfcDebug("分享的文件路径：" + uriList.get(i));
         }
-        uriArrayList.addAll(uriList);
+        this.uriList.addAll(uriList);
 //        LogUtils.YfcDebug("分享文件的列表长度："+uriList.size());
 //        if (uriList.size() > 0) {
 //            startVolumeShareActivity(uriList);
@@ -146,15 +217,16 @@ public class ShareFilesActivity extends BaseActivity{
         finish();
     }
 
-    class ShareFilesAdapter extends RecyclerView.Adapter<FileHolder>{
+    class ShareFilesAdapter extends RecyclerView.Adapter<FileHolder> {
         LayoutInflater inflater;
-        public ShareFilesAdapter(){
+
+        public ShareFilesAdapter() {
             inflater = LayoutInflater.from(ShareFilesActivity.this);
         }
 
         @Override
         public FileHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View view = inflater.inflate(R.layout.app_center_recommand_app_item, null);
+            View view = inflater.inflate(R.layout.share_file_item, null);
             FileHolder holder = new FileHolder(view);
             holder.imageView = (ImageView) view.findViewById(R.id.img_share_file);
             return holder;
@@ -162,17 +234,18 @@ public class ShareFilesActivity extends BaseActivity{
 
         @Override
         public void onBindViewHolder(FileHolder holder, int position) {
-            ImageDisplayUtils.getInstance().displayImage(holder.imageView, uriArrayList.get(position).toString(), R.drawable.ic_app_default);
+            ImageDisplayUtils.getInstance().displayImage(holder.imageView, uriList.get(position).toString(), R.drawable.ic_app_default);
         }
 
         @Override
         public int getItemCount() {
-            return uriArrayList.size();
+            return uriList.size();
         }
     }
 
-    class FileHolder extends RecyclerView.ViewHolder{
+    class FileHolder extends RecyclerView.ViewHolder {
         private ImageView imageView;
+
         public FileHolder(View itemView) {
             super(itemView);
         }
