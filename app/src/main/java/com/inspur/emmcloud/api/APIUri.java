@@ -29,6 +29,10 @@ public class APIUri {
 //        return MyApplication.getInstance().getClusterEcm() + MyApplication.getInstance().getTanent();
 //    }
 
+    public static String getEcmUrl(){
+        return MyApplication.getInstance().getClusterEcm();
+    };
+
     /**
      * EMM服务
      * @return
@@ -920,7 +924,7 @@ public class APIUri {
      * @return
      */
     public static String getCreateTaskUrl() {
-        return getECMScheduleUrl() + "/todo";
+        return getToDoBaseUrl();
     }
 
     /**
@@ -998,7 +1002,7 @@ public class APIUri {
      * @return
      */
     public static String getLangUrl() {
-        return getECMDistribution() + "/settings/lang";
+        return getEcmUrl() +"/"+ MyApplication.getInstance().getTanent() + "/settings/lang";
     }
 
 

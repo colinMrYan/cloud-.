@@ -92,7 +92,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
     private MyActivityLifecycleCallbacks myActivityLifecycleCallbacks;
     private boolean isOpenNotification = false;
     private String tanent;
-    private String clusterEcm = Constant.DEFAULT_CLUSTER_ECM;//多云ecm服务
+    private String clusterEcm = "";//多云ecm服务
     private String clusterChat = "";
     private String clusterSchedule = "";
     private String clusterDistribution = "";
