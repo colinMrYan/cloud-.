@@ -871,7 +871,7 @@ public class CommunicationV0Fragment extends Fragment {
             // TODO Auto-generated method stub
             int unReadCount = channel.getUnReadCount();
             holder.channelTimeText.setText(TimeUtils.getDisplayTime(
-                    getActivity(), channel.getLastUpdate()));
+                    getActivity(), channel.getMsgLastUpdate()));
             holder.channelContentText.setText(channel
                     .getNewMsgContent());
             TransHtmlToTextUtils.stripUnderlines(holder.channelContentText,
