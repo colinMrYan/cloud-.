@@ -73,6 +73,7 @@ import org.xutils.view.annotation.ViewInject;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -564,13 +565,21 @@ public class ChannelActivity extends BaseActivity {
                 GetNewMessagesResult getNewMessagesResult = new GetNewMessagesResult(content);
                 List<Message> offlineMessageList = getNewMessagesResult.getNewMessageList(cid);
                 if (offlineMessageList.size() > 0) {
+                    Iterator<Message> it = offlineMessageList.iterator();
+                    //去重
+                    while (it.hasNext()) {
+                        Message offlineMessage = it.next();
+                        UIMessage uiMessage = new UIMessage(offlineMessage.getId());
+                        if (uiMessageList.contains(uiMessage)){
+                            it.remove();
+                        }
+                    }
                     int currentPostion = uiMessageList.size() - 1;
                     List<UIMessage> offlineUIMessageList = UIMessage.MessageList2UIMessageList(offlineMessageList);
                     uiMessageList.addAll(uiMessageList.size(), offlineUIMessageList);
                     adapter.setMessageList(uiMessageList);
                     adapter.notifyItemRangeInserted(uiMessageList.size(), offlineUIMessageList.size());
                     msgListView.MoveToPosition(currentPostion);
-
                 }
 
             }
