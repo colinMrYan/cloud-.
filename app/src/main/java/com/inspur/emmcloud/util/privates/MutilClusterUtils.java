@@ -25,6 +25,8 @@ public class MutilClusterUtils {
     private static final String ECM_STORAGE_LEGACY = "com.inspur.ecm.storage.legacy";
     private static final String EMM_OLD = "com.inspur.emm";
     private static final String ECM_CLIENT_REGISTRY = "com.inspur.ecm.client-registry";
+    private static final String ECM_BOT = "com.inspur.ecm.bot";
+    private static final String ECM_OLD = "com.inspur.ecm";
 
     /**
      * 修改多云基地址，如果没有基地址则取默认
@@ -38,6 +40,10 @@ public class MutilClusterUtils {
             String serviceName = clusterBeanList.get(i).getServiceName();
             String serviceUrl = getUrlByType(clusterBeanList.get(i), serviceName);
             switch (serviceName) {
+                //旧版ecm
+                case ECM_OLD:
+                    MyApplication.getInstance().setClusterEcm(serviceUrl);
+                    break;
                 //旧版emm
                 case EMM_OLD:
                     MyApplication.getInstance().setClusterEmm(clusterBeanList.get(i).getBaseUrl() + "/");
@@ -70,6 +76,10 @@ public class MutilClusterUtils {
                 case ECM_CLIENT_REGISTRY:
                     MyApplication.getInstance().setClusterClientRegistry(serviceUrl);
                     break;
+                //机器人
+                case ECM_BOT:
+                    MyApplication.getInstance().setClusterBot(serviceUrl);
+                    break;
             }
         }
     }
@@ -86,6 +96,8 @@ public class MutilClusterUtils {
         MyApplication.getInstance().setClusterCloudDrive("");
         MyApplication.getInstance().setClusterStorageLegacy("");
         MyApplication.getInstance().setClusterClientRegistry("");
+        MyApplication.getInstance().setClusterBot("");
+        MyApplication.getInstance().setClusterEcm("");
     }
 
 

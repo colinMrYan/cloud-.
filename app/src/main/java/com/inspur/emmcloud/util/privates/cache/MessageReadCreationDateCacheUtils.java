@@ -3,7 +3,6 @@ package com.inspur.emmcloud.util.privates.cache;
 import android.content.Context;
 
 import com.inspur.emmcloud.bean.chat.MessageReadCreationDate;
-import com.inspur.emmcloud.util.common.LogUtils;
 
 /**
  * 标记消息已读、未读的工具类
@@ -66,7 +65,6 @@ public class MessageReadCreationDateCacheUtils {
 			if (messageReadCreationDate != null) {
 				targetMessageReadCreationDate = messageReadCreationDate.getMessageReadCreationDate();
 			}
-			LogUtils.jasonDebug("targetMessageReadCreationDate="+targetMessageReadCreationDate);
 			return MessageCacheUtil.getNewerMessageCount(context,cid,targetMessageReadCreationDate);
 		} catch (Exception e) {
 			// TODO: handle exception

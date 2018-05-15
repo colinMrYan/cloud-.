@@ -138,7 +138,7 @@ public class ChannelAdapter extends BaseAdapter {
         // TODO Auto-generated method stub
         int unReadCount = channel.getUnReadCount();
         holder.channelTimeText.setText(TimeUtils.getDisplayTime(
-                context, channel.getLastUpdate()));
+                context, channel.getMsgLastUpdate()));
         holder.channelContentText.setText(channel
                 .getNewMsgContent());
         TransHtmlToTextUtils.stripUnderlines(holder.channelContentText,

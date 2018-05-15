@@ -92,7 +92,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
     private MyActivityLifecycleCallbacks myActivityLifecycleCallbacks;
     private boolean isOpenNotification = false;
     private String tanent;
-    private String clusterEcm = Constant.DEFAULT_CLUSTER_ECM;//多云ecm服务
+    private String clusterEcm = "";//多云ecm服务
     private String clusterChat = "";
     private String clusterSchedule = "";
     private String clusterDistribution = "";
@@ -105,6 +105,7 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
     private String clusterEmm = Constant.DEFAULT_CLUSTER_EMM;//多云emm服务
     private String clusterClientRegistry = "";
     private String clusterScheduleVersion = "";//仅标识Schedule
+    private String clusterBot = "";
 
     public void onCreate() {
         super.onCreate();
@@ -553,6 +554,14 @@ public class MyApplication extends MultiDexApplication implements ReactApplicati
 
     public void setClusterScheduleVersion(String clusterScheduleVersion) {
         this.clusterScheduleVersion = clusterScheduleVersion;
+    }
+
+    public String getClusterBot() {
+        return clusterBot;
+    }
+
+    public void setClusterBot(String clusterBot) {
+        this.clusterBot = clusterBot;
     }
 
     public boolean isChatVersionV0(){
