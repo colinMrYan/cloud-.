@@ -83,9 +83,6 @@ public class VolumeFileBaseActivity extends BaseActivity implements SwipeRefresh
     @ViewInject(R.id.data_blank_layout)
     protected LinearLayout dataBlankLayout;
 
-    @ViewInject(R.id.no_file_text)
-    protected TextView noFileText;
-
     protected LoadingDialog loadingDlg;
     protected VolumeFileAdapter adapter;
     protected List<VolumeFile> volumeFileList = new ArrayList<>();//云盘列表

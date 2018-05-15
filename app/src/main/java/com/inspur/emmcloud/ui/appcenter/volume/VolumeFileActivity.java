@@ -86,11 +86,13 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
     private PopupWindow sortOperationPop;
     private String cameraPicFileName;
     private BroadcastReceiver broadcastReceiver;
+    private boolean isOpenFromParentDirectory = false;//是否从父级目录打开，如果是的话关闭时直接finish，否则需要打开父级页面
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.isShowFileUploading = true;
+        isOpenFromParentDirectory = getIntent().getBooleanExtra("isOpenFromParentDirectory",false);
         setListIemClick();
         registerReceiver();
         handleFileShareToVolume();
@@ -124,6 +126,7 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
                             bundle.putSerializable("volume", volume);
                             bundle.putSerializable("currentDirAbsolutePath", currentDirAbsolutePath + volumeFile.getName() + "/");
                             bundle.putSerializable("title", volumeFile.getName());
+                            bundle.putBoolean("isOpenFromParentDirectory",true);
                             IntentUtils.startActivity(VolumeFileActivity.this, VolumeFileActivity.class, bundle);
                         } else {
                             downloadOrOpenVolumeFile(volumeFile);
