@@ -1,21 +1,18 @@
 package com.inspur.emmcloud.util.privates;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
-import android.os.Build;
 
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.bean.chat.Msg;
 import com.inspur.emmcloud.config.MyAppConfig;
-import com.inspur.imp.util.compressor.Compressor;
+import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
-import com.inspur.emmcloud.util.common.FileUtils;
+import com.inspur.imp.util.compressor.Compressor;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -80,20 +77,9 @@ public class MsgRecourceUploadUtils {
 	}
 
 
-	public static Msg uploadResFile(Context context, Intent data,
+	public static Msg uploadResFile(Context context, String filePath,
 									ChatAPIService apiService) {
 		// TODO Auto-generated method stub
-		Uri uri = data.getData();
-		boolean isAboveKitKat = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
-		String filePath = null;
-		if (isAboveKitKat) {
-			// 获取4.4及以上版本的文件路径
-			filePath = GetPathFromUri4kitkat.getPath(context, uri);
-		} else {
-			// 低版本兼容方法
-			filePath = GetPathFromUri4kitkat.getRealPathFromURI(context, uri);
-		}
-
 		File tempFile = new File(filePath);
 		String fileMime = FileUtils.getMimeType(tempFile);
 		String fileName = tempFile.getName();

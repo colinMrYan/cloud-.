@@ -15,7 +15,6 @@ import android.widget.TextView;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.api.apiservice.ChatAPIService;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.UIMessage;
 import com.inspur.emmcloud.ui.chat.DisplayAttachmentCardMsg;
@@ -48,7 +47,7 @@ public class ChannelMessageAdapter extends RecyclerView.Adapter<ChannelMessageAd
     private String channelType;
     private ECMChatInputMenu chatInputMenu;
 
-    public ChannelMessageAdapter(Activity context, ChatAPIService apiService, String channelType, ECMChatInputMenu chatInputMenu) {
+    public ChannelMessageAdapter(Activity context, String channelType, ECMChatInputMenu chatInputMenu) {
         this.context = context;
         this.channelType = channelType;
         this.chatInputMenu = chatInputMenu;
