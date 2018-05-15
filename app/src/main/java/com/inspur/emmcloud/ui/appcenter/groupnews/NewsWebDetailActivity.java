@@ -26,6 +26,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.inspur.emmcloud.BaseActivity;
+import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.APIUri;
@@ -43,6 +44,7 @@ import com.inspur.emmcloud.config.MyAppWebConfig;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.HtmlRegexpUtil;
+import com.inspur.emmcloud.util.common.JSONUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StateBarUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
@@ -125,7 +127,7 @@ public class NewsWebDetailActivity extends BaseActivity {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                PluginMgr pluginMgr = new PluginMgr(NewsWebDetailActivity.this,null);
+                PluginMgr pluginMgr = new PluginMgr(NewsWebDetailActivity.this, null);
                 pluginMgr.execute("FileTransferService", "download", object.toString());
                 pluginMgr.onDestroy();
             }
@@ -605,29 +607,21 @@ public class NewsWebDetailActivity extends BaseActivity {
         if (requestCode == SHARE_SEARCH_RUEST_CODE && resultCode == RESULT_OK
                 && NetUtils.isNetworkConnected(getApplicationContext())) {
             String result = data.getStringExtra("searchResult");
-            try {
-                JSONObject jsonObject = new JSONObject(result);
-                if (jsonObject.has("people")) {
-                    JSONArray peopleArray = jsonObject.getJSONArray("people");
-                    if (peopleArray.length() > 0) {
-                        JSONObject peopleObj = peopleArray.getJSONObject(0);
-                        String uid = peopleObj.getString("pid");
-                        createDirectChannel(uid);
-                    }
+            JSONObject jsonObject = JSONUtils.getJSONObject(result);
+            if (jsonObject.has("people")) {
+                JSONArray peopleArray = JSONUtils.getJSONArray(jsonObject,"people",new JSONArray());
+                if (peopleArray.length() > 0) {
+                    JSONObject peopleObj = JSONUtils.getJSONObject(peopleArray,0,new JSONObject());
+                    String uid = JSONUtils.getString(peopleObj,"pid","");
+                    createDirectChannel(uid);
                 }
-
-                if (jsonObject.has("channelGroup")) {
-                    JSONArray channelGroupArray = jsonObject
-                            .getJSONArray("channelGroup");
-                    if (channelGroupArray.length() > 0) {
-                        JSONObject cidObj = channelGroupArray.getJSONObject(0);
-                        String cid = cidObj.getString("cid");
-                        sendMsg(cid);
-                    }
+            }else if (jsonObject.has("channelGroup")){
+                JSONArray channelGroupArray = JSONUtils.getJSONArray(jsonObject,"channelGroup",new JSONArray());
+                if (channelGroupArray.length() > 0) {
+                    JSONObject cidObj = JSONUtils.getJSONObject(channelGroupArray,0,new JSONObject());
+                    String cid = JSONUtils.getString(cidObj,"cid","");
+                    sendMsg(cid);
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
-                showShareFailToast();
             }
         }
     }
@@ -659,22 +653,26 @@ public class NewsWebDetailActivity extends BaseActivity {
      */
     private void sendMsg(String cid) {
         if (NetUtils.isNetworkConnected(getApplicationContext())) {
-            Message message = CommunicationUtils.combinLocalExtendedLinksMessage(cid,groupNews.getPoster(),groupNews.getTitle(),groupNews.getSummary(),url);
-            fakeMessageId = message.getId();
-            WSAPIService.getInstance().sendChatExtendedLinksMsg(cid,message);
-//            ChatAPIService apiService = new ChatAPIService(
-//                    NewsWebDetailActivity.this);
-//            apiService.setAPIInterface(new WebService());
-//            JSONObject jsonObject = new JSONObject();
-//            try {
-//                jsonObject.put("url", url);
-//                jsonObject.put("poster", groupNews.getPoster());
-//                jsonObject.put("digest", groupNews.getSummary());
-//                jsonObject.put("title", groupNews.getTitle());
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//            apiService.sendMsg(cid, jsonObject.toString(), "res_link", System.currentTimeMillis() + "");
+            if (MyApplication.getInstance().isChatVersionV0()) {
+                ChatAPIService apiService = new ChatAPIService(
+                        NewsWebDetailActivity.this);
+                apiService.setAPIInterface(new WebService());
+                JSONObject jsonObject = new JSONObject();
+                try {
+                    jsonObject.put("url", url);
+                    jsonObject.put("poster", groupNews.getPoster());
+                    jsonObject.put("digest", groupNews.getSummary());
+                    jsonObject.put("title", groupNews.getTitle());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                apiService.sendMsg(cid, jsonObject.toString(), "res_link", System.currentTimeMillis() + "");
+            } else {
+                Message message = CommunicationUtils.combinLocalExtendedLinksMessage(cid, groupNews.getPoster(), groupNews.getTitle(), groupNews.getSummary(), url);
+                fakeMessageId = message.getId();
+                WSAPIService.getInstance().sendChatExtendedLinksMsg(cid, message);
+            }
+
         }
 
     }
@@ -731,17 +729,18 @@ public class NewsWebDetailActivity extends BaseActivity {
         view.removeAllViews();
         super.finish();
     }
+
     //接收到websocket发过来的消息
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveWSMessage(EventMessage eventMessage) {
         if (eventMessage.getTag().equals(Constant.EVENTBUS_TAG_RECERIVER_SINGLE_WS_MESSAGE)) {
-            if (eventMessage.getStatus() == 200){
+            if (eventMessage.getStatus() == 200) {
                 if (fakeMessageId != null && String.valueOf(eventMessage.getExtra()).equals(fakeMessageId)) {
                     Toast.makeText(NewsWebDetailActivity.this,
                             getString(R.string.news_share_success), Toast.LENGTH_SHORT)
                             .show();
                 }
-            }else {
+            } else {
                 showShareFailToast();
             }
 

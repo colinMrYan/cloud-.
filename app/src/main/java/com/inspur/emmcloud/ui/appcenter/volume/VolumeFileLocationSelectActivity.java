@@ -61,8 +61,6 @@ public class VolumeFileLocationSelectActivity extends VolumeFileBaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //设置此界面只显示文件夹
-        this.fileFilterType = VolumeFile.FILE_TYPE_DIRECTORY;
         isFunctionCopy = getIntent().getBooleanExtra("isFunctionCopy", true);
         initViews();
 
@@ -71,7 +69,6 @@ public class VolumeFileLocationSelectActivity extends VolumeFileBaseActivity {
     private void initViews() {
         apiService = new MyAppAPIService(this);
         apiService.setAPIInterface(new WebService());
-        noFileText.setText(R.string.no_directory);
         locationSelectToText.setText(isFunctionCopy ? R.string.copy_to_current_directory : R.string.move_to_current_directory);
         headerOperationLayout.setVisibility(View.GONE);
         locationSelectCancelText.setVisibility(View.VISIBLE);
@@ -80,13 +77,15 @@ public class VolumeFileLocationSelectActivity extends VolumeFileBaseActivity {
         adapter.setItemClickListener(new VolumeFileAdapter.MyItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                Intent intent = new Intent(getApplicationContext(), VolumeFileLocationSelectActivity.class);
                 VolumeFile volumeFile = volumeFileList.get(position);
-                Bundle bundle = getIntent().getExtras();
-                bundle.putString("currentDirAbsolutePath", currentDirAbsolutePath + volumeFile.getName() + "/");
-                bundle.putString("title",volumeFile.getName() );
-                intent.putExtras(bundle);
-                startActivityForResult(intent, isFunctionCopy?REQUEST_COPY_FILE:REQUEST_MOVE_FILE);
+                if (volumeFile.getType().equals(VolumeFile.FILE_TYPE_DIRECTORY)){
+                    Intent intent = new Intent(getApplicationContext(), VolumeFileLocationSelectActivity.class);
+                    Bundle bundle = getIntent().getExtras();
+                    bundle.putString("currentDirAbsolutePath", currentDirAbsolutePath + volumeFile.getName() + "/");
+                    bundle.putString("title",volumeFile.getName() );
+                    intent.putExtras(bundle);
+                    startActivityForResult(intent, isFunctionCopy?REQUEST_COPY_FILE:REQUEST_MOVE_FILE);
+                }
             }
 
             @Override
