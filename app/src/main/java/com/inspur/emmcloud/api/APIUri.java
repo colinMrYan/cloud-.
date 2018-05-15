@@ -86,7 +86,7 @@ public class APIUri {
     }
 
     public static String getUrlBaseVolume() {
-        return "https://ecm.inspur.com" + "/cloud-drive/api/v1/volume";
+        return getCloudDriver() + "/cloud-drive/api/v1/volume";
     }
 
     public static String getUrlBaseGroup() {
