@@ -241,6 +241,15 @@
             android:launchMode="singleTask"
             android:resizeableActivity="true"
             android:screenOrientation="portrait">
+
+        </activity>
+
+        <activity
+            android:name=".ui.SchemeHandleActivity"
+            android:launchMode="singleTask"
+            android:resizeableActivity="true"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar">
             <intent-filter>
                 <action android:name="android.intent.action.SEND_MULTIPLE" />
 
@@ -256,15 +265,6 @@
 
                 <data android:mimeType="*/*" />
             </intent-filter>
-        </activity>
-
-        <activity
-            android:name=".ui.SchemeHandleActivity"
-            android:launchMode="singleTask"
-            android:resizeableActivity="true"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar">
-
 
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />

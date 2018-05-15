@@ -86,11 +86,11 @@ public class APIUri {
     }
 
     public static String getUrlBaseVolume() {
-        return getCloudDriver() + "/cloud-drive/api/v1/volume";
+        return getCloudDriver() + "/volume";
     }
 
     public static String getUrlBaseGroup() {
-        return getCloudDriver() + "/cloud-drive/api/v1/group";
+        return getCloudDriver() + "/group";
     }
     /***************************************************************系统*******************************************************************/
     /**

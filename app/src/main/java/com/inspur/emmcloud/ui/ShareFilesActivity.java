@@ -183,21 +183,21 @@ public class ShareFilesActivity extends BaseActivity {
      * 处理带分享功能的Action
      */
     private void handleShareIntent() {
-        String action = getIntent().getAction();
-        List<Uri> uriList = new ArrayList<>();
-        if (Intent.ACTION_SEND.equals(action)) {
-            Uri uri = FileUtils.getShareFileUri(getIntent());
-            if (uri != null) {
-                uriList.add(uri);
-            }
-        } else if (Intent.ACTION_SEND_MULTIPLE.equals(action)) {
-            List<Uri> fileUriList = FileUtils.getShareFileUriList(getIntent());
-            uriList.addAll(fileUriList);
-        }
-        for (int i = 0; i < uriList.size(); i++) {
-            LogUtils.YfcDebug("分享的文件路径：" + uriList.get(i));
-        }
-        this.uriList.addAll(uriList);
+//        String action = getIntent().getAction();
+//        List<Uri> uriList = new ArrayList<>();
+//        if (Intent.ACTION_SEND.equals(action)) {
+//            Uri uri = FileUtils.getShareFileUri(getIntent());
+//            if (uri != null) {
+//                uriList.add(uri);
+//            }
+//        } else if (Intent.ACTION_SEND_MULTIPLE.equals(action)) {
+//            List<Uri> fileUriList = FileUtils.getShareFileUriList(getIntent());
+//            uriList.addAll(fileUriList);
+//        }
+//        for (int i = 0; i < uriList.size(); i++) {
+//            LogUtils.YfcDebug("分享的文件路径：" + uriList.get(i));
+//        }
+        this.uriList.addAll((List<Uri>) getIntent().getSerializableExtra("fileShareUriList"));
     }
 
     /**

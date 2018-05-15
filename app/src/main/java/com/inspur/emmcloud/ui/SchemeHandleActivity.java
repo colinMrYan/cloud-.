@@ -19,7 +19,6 @@ import com.inspur.emmcloud.bean.work.CalendarEvent;
 import com.inspur.emmcloud.config.Constant;
 import com.inspur.emmcloud.ui.appcenter.ReactNativeAppActivity;
 import com.inspur.emmcloud.ui.appcenter.groupnews.GroupNewsActivity;
-import com.inspur.emmcloud.ui.appcenter.volume.VolumeHomePageActivity;
 import com.inspur.emmcloud.ui.chat.ChannelActivity;
 import com.inspur.emmcloud.ui.chat.ChannelV0Activity;
 import com.inspur.emmcloud.ui.contact.RobotInfoActivity;
@@ -259,7 +258,7 @@ public class SchemeHandleActivity extends Activity {
      */
     private void startVolumeShareActivity(List<Uri> uriList) {
         Intent intent = new Intent();
-        intent.setClass(SchemeHandleActivity.this, VolumeHomePageActivity.class);
+        intent.setClass(SchemeHandleActivity.this, ShareFilesActivity.class);
         intent.putExtra("fileShareUriList", (Serializable) uriList);
         startActivity(intent);
         finish();
