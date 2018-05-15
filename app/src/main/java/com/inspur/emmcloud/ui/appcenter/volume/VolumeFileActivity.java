@@ -92,23 +92,23 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.isShowFileUploading = true;
-        isOpenFromParentDirectory = getIntent().getBooleanExtra("isOpenFromParentDirectory",false);
+        isOpenFromParentDirectory = getIntent().getBooleanExtra("isOpenFromParentDirectory", false);
         setListIemClick();
         registerReceiver();
         handleFileShareToVolume();
     }
 
     /**
-     *  处理文件分享
+     * 处理文件分享
      */
     private void handleFileShareToVolume() {
         List<Uri> shareUriList = new ArrayList<>();
-        List<Uri> fileShareUriList = (List<Uri>)getIntent().getSerializableExtra("fileShareUriList");
-        if(fileShareUriList != null){
+        List<Uri> fileShareUriList = (List<Uri>) getIntent().getSerializableExtra("fileShareUriList");
+        if (fileShareUriList != null) {
             shareUriList.addAll(fileShareUriList);
         }
-        if(NetUtils.isNetworkConnected(this)){
-            for(int i = 0; i < shareUriList.size(); i++){
+        if (NetUtils.isNetworkConnected(this)) {
+            for (int i = 0; i < shareUriList.size(); i++) {
                 uploadFile(GetPathFromUri4kitkat.getPathByUri(getApplicationContext(), shareUriList.get(i)));
             }
         }
@@ -126,14 +126,14 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
                             bundle.putSerializable("volume", volume);
                             bundle.putSerializable("currentDirAbsolutePath", currentDirAbsolutePath + volumeFile.getName() + "/");
                             bundle.putSerializable("title", volumeFile.getName());
-                            bundle.putBoolean("isOpenFromParentDirectory",true);
+                            bundle.putBoolean("isOpenFromParentDirectory", true);
                             IntentUtils.startActivity(VolumeFileActivity.this, VolumeFileActivity.class, bundle);
                         } else {
                             downloadOrOpenVolumeFile(volumeFile);
                         }
                     } else {
                         adapter.setVolumeFileSelect(position);
-                        batchOprationHeaderText.setText(getString(R.string.has_selected,adapter.getSelectVolumeFileList().size()));
+                        batchOprationHeaderText.setText(getString(R.string.has_selected, adapter.getSelectVolumeFileList().size()));
                         setBatchOprationLayoutByPrivilege();
                     }
                 }
@@ -184,7 +184,7 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
     protected void initDataBlankLayoutStatus() {
         super.initDataBlankLayoutStatus();
         operationLayout.setVisibility((volumeFileList.size() == 0) ? View.GONE : View.VISIBLE);
-        if (adapter.getMultiselect()){
+        if (adapter.getMultiselect()) {
             setMutiSelect(false);
         }
     }
@@ -193,7 +193,7 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.back_layout:
-                finish();
+                onBackPressed();
                 break;
             case R.id.new_forder_img:
                 showCreateFolderDlg();
@@ -332,13 +332,16 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
                 sortTypeShowTxt = getString(R.string.sort_by_name_dasc);
                 break;
             case SORT_BY_TIME_UP:
-                sortTypeShowTxt = getString(R.string.sort_by_time_asc);;
+                sortTypeShowTxt = getString(R.string.sort_by_time_asc);
+                ;
                 break;
             case SORT_BY_TIME_DOWN:
-                sortTypeShowTxt = getString(R.string.sort_by_time_dasc);;
+                sortTypeShowTxt = getString(R.string.sort_by_time_dasc);
+                ;
                 break;
             default:
-                sortTypeShowTxt = getString(R.string.sort_by_name_asc);;
+                sortTypeShowTxt = getString(R.string.sort_by_name_asc);
+                ;
                 break;
         }
         operationSortText.setText(sortTypeShowTxt);
@@ -451,22 +454,25 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
      */
     @Override
     protected void setCurrentDirectoryLayoutByPrivilege() {
-        boolean isCurrentDirectoryWriteable = VolumeFilePrivilegeUtils.getVolumeFileWriteable(getApplicationContext(),getVolumeFileListResult);
+        boolean isCurrentDirectoryWriteable = VolumeFilePrivilegeUtils.getVolumeFileWriteable(getApplicationContext(), getVolumeFileListResult);
         headerOperationLayout.setVisibility(isCurrentDirectoryWriteable ? View.VISIBLE : View.GONE);
     }
 
-    private void setBatchOprationLayoutByPrivilege(){
+    private void setBatchOprationLayoutByPrivilege() {
         List<VolumeFile> selectVolumeFileList = adapter.getSelectVolumeFileList();
-        if (selectVolumeFileList.size()>0){
+        if (selectVolumeFileList.size() > 0) {
             batchOperationBarLayout.setVisibility(View.VISIBLE);
-            boolean isFileListWriteable = VolumeFilePrivilegeUtils.getVolumeFileListWriteable(getApplicationContext(),selectVolumeFileList);
-            batchOperationDeleteText.setVisibility(isFileListWriteable?View.VISIBLE:View.GONE);
-            batchOperationMoveText.setVisibility(isFileListWriteable?View.VISIBLE:View.GONE);
-        }else {
+            boolean isFileListWriteable = VolumeFilePrivilegeUtils.getVolumeFileListWriteable(getApplicationContext(), selectVolumeFileList);
+            batchOperationDeleteText.setVisibility(isFileListWriteable ? View.VISIBLE : View.GONE);
+            batchOperationMoveText.setVisibility(isFileListWriteable ? View.VISIBLE : View.GONE);
+        } else {
             batchOperationBarLayout.setVisibility(View.GONE);
         }
 
-    };
+    }
+
+    ;
+
     /**
      * 设置是否是多选状态
      *
@@ -474,8 +480,8 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
      */
     private void setMutiSelect(boolean isMutiselect) {
         getBatchOprationSelectAllText.setText(R.string.select_all);
-        batchOprationHeaderText.setText(getString(R.string.has_selected,0));
-        if (!isMutiselect){
+        batchOprationHeaderText.setText(getString(R.string.has_selected, 0));
+        if (!isMutiselect) {
             batchOperationBarLayout.setVisibility(View.GONE);
         }
         batchOprationHeaderLayout.setVisibility(isMutiselect ? View.VISIBLE : View.GONE);
@@ -486,7 +492,7 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
     private void setselectAll(boolean isSelectAll) {
         getBatchOprationSelectAllText.setText(isSelectAll ? R.string.select_nothing : R.string.select_all);
         adapter.setSelectAll(isSelectAll);
-        batchOprationHeaderText.setText(getString(R.string.has_selected,adapter.getSelectVolumeFileList().size()));
+        batchOprationHeaderText.setText(getString(R.string.has_selected, adapter.getSelectVolumeFileList().size()));
     }
 
 
@@ -501,7 +507,7 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
                 uploadFile(filePath);
             } else if (requestCode == REQUEST_OPEN_CEMERA //拍照返回
                     && NetUtils.isNetworkConnected(getApplicationContext())) {
-                LogUtils.jasonDebug("cameraPicFileName="+cameraPicFileName);
+                LogUtils.jasonDebug("cameraPicFileName=" + cameraPicFileName);
                 String filePath = Environment.getExternalStorageDirectory() + "/DCIM/" + cameraPicFileName;
                 uploadFile(filePath);
             } else if (requestCode == REQUEST_SHOW_FILE_FILTER) {  //移动文件
@@ -565,6 +571,25 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
         return volumeFile;
     }
 
+    @Override
+    public void onBackPressed() {
+        // super.onBackPressed();
+        if (isOpenFromParentDirectory || currentDirAbsolutePath.equals("/")) {
+            finish();
+        } else {
+            //当从外部分享完成后进入到相应界面，返回时按目录结构逐级回退
+            String[] forders = currentDirAbsolutePath.split("/");
+            String parentForderName=forders[forders.length-1];
+            String parentDirAbsolutePath = currentDirAbsolutePath.substring(0,currentDirAbsolutePath.length()-1-parentForderName.length());
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("volume", volume);
+            bundle.putSerializable("currentDirAbsolutePath", parentDirAbsolutePath);
+            bundle.putSerializable("title", parentForderName);
+            bundle.putBoolean("isOpenFromParentDirectory", true);
+            IntentUtils.startActivity(VolumeFileActivity.this, VolumeFileActivity.class, bundle);
+        }
+
+    }
 
     @Override
     protected void onDestroy() {
