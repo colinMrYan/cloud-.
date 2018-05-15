@@ -321,6 +321,24 @@ public class IndexActivity extends IndexBaseActivity {
         }
     }
 
+    class ContactOrgCacheTask extends AsyncTask<byte[], Void, Void> {
+        @Override
+        protected Void doInBackground(byte[]... params) {
+            try {
+                List<ContactProtoBuf.org> orgList = ContactProtoBuf.orgs.parseFrom(params[0]).getOrgsList();
+
+
+
+                List<ContactUser> contactUserList = ContactUser.protoBufUserList2ContactUserList(userList);
+                LogUtils.jasonDebug("contactUserList="+contactUserList.size());
+                ContactUserCacheUtils.saveContactUserList(contactUserList);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+            return null;
+        }
+    }
+
 
     /**
      * 获取所有的群组信息
