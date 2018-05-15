@@ -10,14 +10,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
+import com.inspur.emmcloud.ui.appcenter.groupnews.NewsWebDetailActivity;
 import com.inspur.emmcloud.ui.appcenter.volume.VolumeHomePageActivity;
+import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.FileUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
+import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
@@ -26,6 +29,8 @@ import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.TabAndAppExistUtils;
 import com.inspur.emmcloud.widget.ECMSpaceItemDecoration;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
 
@@ -39,6 +44,7 @@ import java.util.List;
 @ContentView(R.layout.activity_share_files)
 public class ShareFilesActivity extends BaseActivity {
 
+    private final static int SHARE_IMAGE_OR_FILES = 0;
     @ViewInject(R.id.rv_file_list)
     private RecyclerView recyclerView;
     @ViewInject(R.id.img_file_icon)
@@ -57,16 +63,17 @@ public class ShareFilesActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (isLogin()) {
-            handleShareIntent();
+//            handleShareIntent();
+            this.uriList.addAll((List<Uri>) getIntent().getSerializableExtra("fileShareUriList"));
         } else {
             MyApplication.getInstance().signout();
         }
 //        initSharingMode();
         if(isFileUriList(uriList) && uriList.size() > 1){
-            ToastUtils.show(ShareFilesActivity.this,"多文件分享仅支持照片格式");
+            ToastUtils.show(ShareFilesActivity.this,getString(R.string.share_mutil_only_support_image));
             startIndexActivity();
         }else if(isImageUriList(uriList) && uriList.size() > 5){
-            ToastUtils.show(ShareFilesActivity.this,"不能上传多于5个图片");
+            ToastUtils.show(ShareFilesActivity.this,getString(R.string.share_no_more_than_five));
             startIndexActivity();
         }else{
             initViews();
@@ -93,7 +100,7 @@ public class ShareFilesActivity extends BaseActivity {
         volumeRelativeLayout.setVisibility(isVolumeAppExist?View.VISIBLE:View.GONE);
         viewLineVolume.setVisibility((isCommunicateExist&&isVolumeAppExist)?View.VISIBLE:View.GONE);
         if(!(isCommunicateExist || isVolumeAppExist)){
-            ToastUtils.show(ShareFilesActivity.this,"没有分享方式");
+            ToastUtils.show(ShareFilesActivity.this,getString(R.string.share_no_share_way));
         }
     }
 
@@ -210,6 +217,55 @@ public class ShareFilesActivity extends BaseActivity {
         startActivity(intent);
         finish();
     }
+
+    /**
+     * 给朋友分享图片或文件
+     */
+    private void shareNewsToFrinds() {
+        Intent intent = new Intent();
+        intent.putExtra("select_content", 0);
+        intent.putExtra("isMulti_select", false);
+        intent.putExtra("isContainMe", true);
+        intent.putExtra("title", getString(R.string.news_share));
+        intent.setClass(getApplicationContext(),
+                ContactSearchActivity.class);
+        startActivityForResult(intent, SHARE_IMAGE_OR_FILES);
+        dialog.dismiss();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == SHARE_IMAGE_OR_FILES && resultCode == RESULT_OK
+                && NetUtils.isNetworkConnected(getApplicationContext())) {
+            String result = data.getStringExtra("searchResult");
+            try {
+                JSONObject jsonObject = new JSONObject(result);
+                if (jsonObject.has("people")) {
+                    JSONArray peopleArray = jsonObject.getJSONArray("people");
+                    if (peopleArray.length() > 0) {
+                        JSONObject peopleObj = peopleArray.getJSONObject(0);
+                        String uid = peopleObj.getString("pid");
+                        createDirectChannel(uid);
+                    }
+                }
+
+                if (jsonObject.has("channelGroup")) {
+                    JSONArray channelGroupArray = jsonObject
+                            .getJSONArray("channelGroup");
+                    if (channelGroupArray.length() > 0) {
+                        JSONObject cidObj = channelGroupArray.getJSONObject(0);
+                        String cid = cidObj.getString("cid");
+                        sendMsg(cid);
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                ToastUtils.show(ShareFilesActivity.this,getString(R.string.news_share_fail));
+            }
+        }
+    }
+
 
     class ShareFilesAdapter extends RecyclerView.Adapter<FileHolder> {
         LayoutInflater inflater;
