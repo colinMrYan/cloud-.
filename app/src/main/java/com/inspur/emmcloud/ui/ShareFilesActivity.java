@@ -59,8 +59,6 @@ public class ShareFilesActivity extends BaseActivity {
     private RelativeLayout volumeRelativeLayout;
     @ViewInject(R.id.view_line_volume)
     private View viewLineVolume;
-    @ViewInject(R.id.img_volume_share_icon)
-    private ImageView volumeShareIcon;
     private List<Uri> uriList = new ArrayList<>();
 
     @Override
@@ -71,7 +69,7 @@ public class ShareFilesActivity extends BaseActivity {
         } else {
             MyApplication.getInstance().signout();
         }
-//        initSharingMode();
+        initSharingMode();
         if(isFileUriList(uriList) && uriList.size() > 1){
             ToastUtils.show(ShareFilesActivity.this,getString(R.string.share_mutil_only_support_image));
             startIndexActivity();
