@@ -10,20 +10,24 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import com.inspur.emmcloud.BaseActivity;
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.ui.appcenter.groupnews.NewsWebDetailActivity;
+import com.inspur.emmcloud.api.APIUri;
+import com.inspur.emmcloud.bean.chat.GetCreateSingleChannelResult;
 import com.inspur.emmcloud.ui.appcenter.volume.VolumeHomePageActivity;
+import com.inspur.emmcloud.ui.chat.ChannelActivity;
+import com.inspur.emmcloud.ui.chat.ChannelV0Activity;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.FileUtils;
+import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.PreferencesUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
+import com.inspur.emmcloud.util.privates.ChatCreateUtils;
 import com.inspur.emmcloud.util.privates.GetPathFromUri4kitkat;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.TabAndAppExistUtils;
@@ -63,7 +67,6 @@ public class ShareFilesActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (isLogin()) {
-//            handleShareIntent();
             this.uriList.addAll((List<Uri>) getIntent().getSerializableExtra("fileShareUriList"));
         } else {
             MyApplication.getInstance().signout();
@@ -137,7 +140,7 @@ public class ShareFilesActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.rl_channel_share:
-
+                shareFilesToFriends();
                 break;
             case R.id.rl_volume_share:
                 startVolumeShareActivity(uriList);
@@ -187,27 +190,6 @@ public class ShareFilesActivity extends BaseActivity {
     }
 
     /**
-     * 处理带分享功能的Action
-     */
-    private void handleShareIntent() {
-//        String action = getIntent().getAction();
-//        List<Uri> uriList = new ArrayList<>();
-//        if (Intent.ACTION_SEND.equals(action)) {
-//            Uri uri = FileUtils.getShareFileUri(getIntent());
-//            if (uri != null) {
-//                uriList.add(uri);
-//            }
-//        } else if (Intent.ACTION_SEND_MULTIPLE.equals(action)) {
-//            List<Uri> fileUriList = FileUtils.getShareFileUriList(getIntent());
-//            uriList.addAll(fileUriList);
-//        }
-//        for (int i = 0; i < uriList.size(); i++) {
-//            LogUtils.YfcDebug("分享的文件路径：" + uriList.get(i));
-//        }
-        this.uriList.addAll((List<Uri>) getIntent().getSerializableExtra("fileShareUriList"));
-    }
-
-    /**
      * @param uriList
      */
     private void startVolumeShareActivity(List<Uri> uriList) {
@@ -221,7 +203,7 @@ public class ShareFilesActivity extends BaseActivity {
     /**
      * 给朋友分享图片或文件
      */
-    private void shareNewsToFrinds() {
+    private void shareFilesToFriends() {
         Intent intent = new Intent();
         intent.putExtra("select_content", 0);
         intent.putExtra("isMulti_select", false);
@@ -230,7 +212,6 @@ public class ShareFilesActivity extends BaseActivity {
         intent.setClass(getApplicationContext(),
                 ContactSearchActivity.class);
         startActivityForResult(intent, SHARE_IMAGE_OR_FILES);
-        dialog.dismiss();
     }
 
     @Override
@@ -256,7 +237,7 @@ public class ShareFilesActivity extends BaseActivity {
                     if (channelGroupArray.length() > 0) {
                         JSONObject cidObj = channelGroupArray.getJSONObject(0);
                         String cid = cidObj.getString("cid");
-                        sendMsg(cid);
+                        startChannelActivity(cid);
                     }
                 }
             } catch (Exception e) {
@@ -264,6 +245,51 @@ public class ShareFilesActivity extends BaseActivity {
                 ToastUtils.show(ShareFilesActivity.this,getString(R.string.news_share_fail));
             }
         }
+    }
+
+    /**
+     * 打开channel
+     */
+    private void startChannelActivity(String cid){
+            Bundle bundle = new Bundle();
+            bundle.putString("cid",cid);
+            bundle.putString("share_type",isImageUriList(uriList)?"image":"file");
+            bundle.putSerializable("share_paths", (Serializable) createFileList(uriList));
+            IntentUtils.startActivity(ShareFilesActivity.this,APIUri.isV0VersionChat()?
+                    ChannelV0Activity.class: ChannelActivity.class,bundle,true);
+    }
+
+    /**
+     * 转成pathList
+     * @param uriList
+     * @return
+     */
+    private List<String> createFileList(List<Uri> uriList){
+        ArrayList<String> pathList = new ArrayList<>();
+        for (int i = 0; i < uriList.size(); i++) {
+            pathList.add(GetPathFromUri4kitkat.getPathByUri(ShareFilesActivity.this,uriList.get(i)));
+        }
+        return pathList;
+    }
+
+    /**
+     * 创建单聊
+     *
+     * @param uid
+     */
+    private void createDirectChannel(String uid) {
+        new ChatCreateUtils().createDirectChannel(ShareFilesActivity.this, uid,
+                new ChatCreateUtils.OnCreateDirectChannelListener() {
+                    @Override
+                    public void createDirectChannelSuccess(GetCreateSingleChannelResult getCreateSingleChannelResult) {
+                        startChannelActivity(getCreateSingleChannelResult.getCid());
+                    }
+
+                    @Override
+                    public void createDirectChannelFail() {
+                        ToastUtils.show(ShareFilesActivity.this,getString(R.string.news_share_fail));
+                    }
+                });
     }
 
 
