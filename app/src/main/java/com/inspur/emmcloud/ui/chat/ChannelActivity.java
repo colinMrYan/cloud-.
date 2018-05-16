@@ -51,6 +51,7 @@ import com.inspur.emmcloud.util.privates.DirectChannelUtils;
 import com.inspur.emmcloud.util.privates.GetPathFromUri4kitkat;
 import com.inspur.emmcloud.util.privates.ImageDisplayUtils;
 import com.inspur.emmcloud.util.privates.MessageRecourceUploadUtils;
+import com.inspur.emmcloud.util.privates.UriUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.util.privates.cache.ContactCacheUtils;
 import com.inspur.emmcloud.util.privates.cache.MessageCacheUtil;
@@ -311,6 +312,10 @@ public class ChannelActivity extends BaseActivity {
                         bundle.putString("cid", message.getChannel());
                         IntentUtils.startActivity(ChannelActivity.this,
                                 ChannelMessageDetailActivity.class, bundle);
+                        break;
+                    case "extended/links":
+                        String url = message.getMsgContentExtendedLinks().getUrl();
+                        UriUtils.openUrl(ChannelActivity.this, url);
                         break;
                     default:
                         break;
