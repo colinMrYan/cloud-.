@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.inspur.emmcloud.MyApplication;
@@ -51,33 +52,57 @@ public class DisplayRegularFileMsg {
         ImageDisplayUtils.getInstance().displayImage(img, "drawable://" + FileUtils.getRegularFileIconResId(msgContentFile.getName()));
         fileNameText.setText(msgContentFile.getName());
         fileSizeText.setText(FileUtils.formatFileSize(msgContentFile.getSize()));
+        final String fileDownloadPath = MyAppConfig.LOCAL_DOWNLOAD_PATH + msgContentFile.getName();
+        final ProgressBar fileProgressBar = (ProgressBar) convertView
+                .findViewById(R.id.pb_download);
+        fileProgressBar.setTag(fileDownloadPath);
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (sendStauts != 1){
                     return;
                 }
+                if (fileProgressBar.getVisibility() == View.VISIBLE) {
+                    return;
+                }
                 final String source = APIUri.getChatFileResouceUrl(message.getChannel(),msgContentFile.getMedia());
-                final String fileDownloadPath = MyAppConfig.LOCAL_DOWNLOAD_PATH + msgContentFile.getName();
+
                 APIDownloadCallBack progressCallback = new APIDownloadCallBack(context, source) {
                     @Override
                     public void callbackStart() {
+                        if ((fileProgressBar.getTag() != null)
+                                && (fileProgressBar.getTag() == fileDownloadPath)) {
+                            fileProgressBar.setVisibility(View.VISIBLE);
+                        } else {
+                            fileProgressBar
+                                    .setVisibility(View.INVISIBLE);
+                        }
                     }
 
                     @Override
                     public void callbackLoading(long total, long current, boolean isUploading) {
+                        if (total == 0) {
+                            total = 1;
+                        }
+                        int progress = (int) ((current * 100) / total);
+                        if (!(fileProgressBar.getVisibility() == View.INVISIBLE)) {
+                            fileProgressBar.setVisibility(View.VISIBLE);
+                        }
+                        fileProgressBar.setProgress(progress);
+                        fileProgressBar.refreshDrawableState();
                     }
 
                     @Override
                     public void callbackSuccess(File file) {
+                        fileProgressBar.setVisibility(View.INVISIBLE);
                         ToastUtils.show(
                                 context,
-                                context.getString(R.string.download_success));
-                        FileUtils.openFile(context, fileDownloadPath);
+                                context.getString(R.string.chat_file_download_success));
                     }
 
                     @Override
                     public void callbackError(Throwable arg0, boolean arg1) {
+                        fileProgressBar.setVisibility(View.INVISIBLE);
                         ToastUtils.show(context, context
                                 .getString(R.string.download_fail));
                     }

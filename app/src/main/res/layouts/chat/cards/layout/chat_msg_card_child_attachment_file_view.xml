@@ -5,7 +5,6 @@
     android:layout_height="wrap_content"
     android:background="#ffffff"
     android:paddingTop="11dp"
-    android:paddingBottom="11dp"
     android:paddingLeft="17dp"
     android:paddingRight="17dp">
 
@@ -13,13 +12,11 @@
         android:id="@+id/file_icon_img"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:layout_centerVertical="true"
         android:scaleType="fitXY" />
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
         android:layout_marginLeft="10dp"
         android:layout_toRightOf="@id/file_icon_img">
 
@@ -41,4 +38,16 @@
             android:textColor="#666666"
             android:textSize="15sp" />
     </RelativeLayout>
+
+    <ProgressBar
+        android:id="@+id/pb_download"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_below="@id/file_icon_img"
+        android:visibility="invisible"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="4dp"
+        android:progressDrawable="@drawable/bg_volume_file_download_progressbar"
+        android:max="100"
+        android:layout_width="match_parent"
+        android:layout_height="4dp" />
 </RelativeLayout>
