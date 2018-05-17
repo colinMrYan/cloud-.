@@ -35,12 +35,12 @@ import com.inspur.emmcloud.ui.work.calendar.CalEventAddActivity;
 import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StateBarUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.AppId2AppAndOpenAppUtils;
+import com.inspur.emmcloud.util.privates.GetPathFromUri4kitkat;
 import com.inspur.emmcloud.util.privates.WebAppUtils;
 import com.inspur.imp.api.ImpActivity;
 
@@ -186,10 +186,10 @@ public class SchemeHandleActivity extends Activity {
                             case "ecc-channel":
                                 bundle.putString("cid", host);
                                 bundle.putBoolean("get_new_msg", true);
-                                if (MyApplication.getInstance().isChatVersionV0()){
+                                if (MyApplication.getInstance().isChatVersionV0()) {
                                     IntentUtils.startActivity(SchemeHandleActivity.this,
                                             ChannelV0Activity.class, bundle, true);
-                                }else {
+                                } else {
                                     IntentUtils.startActivity(SchemeHandleActivity.this,
                                             ChannelActivity.class, bundle, true);
                                 }
@@ -238,31 +238,28 @@ public class SchemeHandleActivity extends Activity {
      * 处理带分享功能的Action
      */
     private void handleShareIntent() {
-            String action = getIntent().getAction();
-//            LogUtils.jasonDebug("data："+getIntent().getData().toString());
-        LogUtils.jasonDebug("data："+getIntent().toString());
-        LogUtils.jasonDebug("data："+getIntent().getType());
-        LogUtils.jasonDebug("data："+getIntent().getData());
-            List<Uri> uriList = new ArrayList<>();
-            LogUtils.jasonDebug("uri==========="+getIntent().getDataString());
-            if (Intent.ACTION_SEND.equals(action)) {
-                Uri uri = FileUtils.getShareFileUri(getIntent());
-                if (uri != null) {
-                    uriList.add(uri);
-                }
-            } else if (Intent.ACTION_SEND_MULTIPLE.equals(action)) {
-                List<Uri> fileUriList = FileUtils.getShareFileUriList(getIntent());
-                uriList.addAll(fileUriList);
+        String action = getIntent().getAction();
+        List<String> uriList = new ArrayList<>();
+        if (Intent.ACTION_SEND.equals(action)) {
+            Uri uri = FileUtils.getShareFileUri(getIntent());
+            if (uri != null) {
+                uriList.add(GetPathFromUri4kitkat.getPathByUri(MyApplication.getInstance(), uri));
             }
-            if (uriList.size() > 0) {
-                startVolumeShareActivity(uriList);
+        } else if (Intent.ACTION_SEND_MULTIPLE.equals(action)) {
+            List<Uri> fileUriList = FileUtils.getShareFileUriList(getIntent());
+            for (int i = 0; i < fileUriList.size(); i++) {
+                uriList.add(GetPathFromUri4kitkat.getPathByUri(MyApplication.getInstance(), fileUriList.get(i)));
             }
+        }
+        if (uriList.size() > 0) {
+            startVolumeShareActivity(uriList);
+        }
     }
 
     /**
      * @param uriList
      */
-    private void startVolumeShareActivity(List<Uri> uriList) {
+    private void startVolumeShareActivity(List<String> uriList) {
         Intent intent = new Intent();
         intent.setClass(SchemeHandleActivity.this, ShareFilesActivity.class);
         intent.putExtra("fileShareUriList", (Serializable) uriList);

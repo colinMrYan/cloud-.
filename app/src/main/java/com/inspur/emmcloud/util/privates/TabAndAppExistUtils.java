@@ -39,17 +39,18 @@ public class TabAndAppExistUtils {
     /**
      * 判断某个app是否存在，通过appId判断
      * @param context
-     * @param appId
+     * @param scheme
      * @return
      */
-    public static boolean isAppExist(Context context,String appId){
-        App app = new App();
-        app.setAppID(appId);
+    public static boolean isAppExist(Context context,String scheme){
         List<AppGroupBean> appGroupList = MyAppCacheUtils.getMyAppList(context);
         for (int i = 0; i < appGroupList.size(); i++) {
             AppGroupBean appGroupBean = appGroupList.get(i);
-            if(appGroupBean.getAppItemList().indexOf(app) != -1){
-                return true;
+            List<App> appList = appGroupBean.getAppItemList();
+            for (int j = 0; j < appList.size(); j++) {
+                if(appList.get(j).getUri().contains(scheme)){
+                    return true;
+                }
             }
         }
         return false;

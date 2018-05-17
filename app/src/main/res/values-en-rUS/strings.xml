@@ -945,4 +945,5 @@
     <string name="share_no_share_way">There is no way to share it</string>
     <string name="share_to_channel">Send to the channel</string>
     <string name="share_upload_volume">Upload to the cloud volume</string>
+    <string name="share_no_suffix">Do not support a file sharing the name without suffix</string>
 </resources>

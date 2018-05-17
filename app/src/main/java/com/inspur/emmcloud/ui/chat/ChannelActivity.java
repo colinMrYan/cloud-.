@@ -367,7 +367,6 @@ public class ChannelActivity extends BaseActivity {
             // 文件管理器返回
             if (requestCode == CHOOSE_FILE
                     && NetUtils.isNetworkConnected(MyApplication.getInstance())) {
-                LogUtils.jasonDebug("data========"+data.getDataString());
                 String filePath = GetPathFromUri4kitkat.getPathByUri(MyApplication.getInstance(), data.getData());
                 File file = new File(filePath);
                 if (StringUtils.isBlank(FileUtils.getSuffix(file))) {

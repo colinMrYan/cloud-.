@@ -946,4 +946,5 @@
     <string name="share_no_share_way">沒有能够分享的管道</string>
     <string name="share_to_channel">發送到頻道</string>
     <string name="share_upload_volume">上傳到雲盤</string>
+    <string name="share_no_suffix">不支持分享無后綴名的檔案</string>
 </resources>

@@ -17,7 +17,6 @@ import com.inspur.emmcloud.util.common.LogUtils;
 public class GetPathFromUri4kitkat {
 
     public static String getPathByUri(final Context context,  Uri uri) {
-        LogUtils.jasonDebug("uri============="+uri.toString());
         uri = getMiUiUri(context,uri);
         boolean isAboveKitKat = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
         String filePath = null;
@@ -28,13 +27,12 @@ public class GetPathFromUri4kitkat {
             // 低版本兼容方法
             filePath = GetPathFromUri4kitkat.getRealPathFromURI(context, uri);
         }
-        LogUtils.jasonDebug("filePath============="+filePath);
         return filePath;
     }
 
     /**
      * 解决小米手机上获取图片路径为null的情况
-     * @param intent
+     * @param uriInput
      * @return
      */
     public static Uri getMiUiUri(Context context,Uri uriInput) {
