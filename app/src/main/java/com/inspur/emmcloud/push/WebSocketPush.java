@@ -146,7 +146,7 @@ public class WebSocketPush {
 	 *
 	 * @return
 	 */
-	private boolean isSocketConnect() {
+	public boolean isSocketConnect() {
 		if (mSocket != null) {
 			return mSocket.connected();
 		}
