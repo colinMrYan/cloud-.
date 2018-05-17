@@ -8,7 +8,6 @@ import android.widget.TextView;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.bean.chat.Message;
 import com.inspur.emmcloud.bean.chat.MsgContentExtendedLinks;
 import com.inspur.emmcloud.util.common.DensityUtil;
@@ -33,7 +32,7 @@ public class DisplayExtendedLinksMsg {
                                Message message) {
         View cardContentView = LayoutInflater.from(context).inflate(
                 R.layout.chat_msg_card_child_res_link_view, null);
-        boolean isMyMsg =message.getFromUser().equals(
+        boolean isMyMsg = message.getFromUser().equals(
                 MyApplication.getInstance().getUid());
         MsgContentExtendedLinks msgContentExtendedLinks = message.getMsgContentExtendedLinks();
         String title = msgContentExtendedLinks.getTitle();
@@ -49,20 +48,18 @@ public class DisplayExtendedLinksMsg {
         ImageView linkImageview = (ImageView) cardContentView
                 .findViewById(R.id.news_card_content_img);
         if (!StringUtils.isBlank(poster)) {
-            ImageDisplayUtils.getInstance().displayImage(linkImageview, APIUri.getPreviewUrl(poster), R.drawable.icon_photo_default);
+            ImageDisplayUtils.getInstance().displayImage(linkImageview, poster, R.drawable.icon_photo_default);
         } else {
             linkImageview.setVisibility(View.GONE);
         }
-        if (context instanceof ChannelActivity) {
-            int normalPadding = DensityUtil.dip2px(context, 10);
-            int arrowPadding = DensityUtil.dip2px(context, 8);
-            if (isMyMsg) {
-                (cardContentView.findViewById(R.id.text_layout)).setPadding(normalPadding, normalPadding, normalPadding
-                        + arrowPadding, normalPadding);
-            } else {
-                (cardContentView.findViewById(R.id.text_layout)).setPadding(normalPadding + arrowPadding, normalPadding,
-                        normalPadding, normalPadding);
-            }
+        int normalPadding = DensityUtil.dip2px(context, 10);
+        int arrowPadding = DensityUtil.dip2px(context, 8);
+        if (isMyMsg) {
+            (cardContentView.findViewById(R.id.text_layout)).setPadding(normalPadding, normalPadding, normalPadding
+                    + arrowPadding, normalPadding);
+        } else {
+            (cardContentView.findViewById(R.id.text_layout)).setPadding(normalPadding + arrowPadding, normalPadding,
+                    normalPadding, normalPadding);
         }
         return cardContentView;
     }
