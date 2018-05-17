@@ -1,6 +1,7 @@
 package com.inspur.emmcloud.util.privates;
 
 import android.annotation.SuppressLint;
+import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.Context;
 import android.database.Cursor;
@@ -9,10 +10,15 @@ import android.os.Build;
 import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
+import android.text.TextUtils;
+
+import com.inspur.emmcloud.util.common.LogUtils;
 
 public class GetPathFromUri4kitkat {
 
-    public static String getPathByUri(final Context context, final Uri uri) {
+    public static String getPathByUri(final Context context,  Uri uri) {
+        LogUtils.jasonDebug("uri============="+uri.toString());
+        uri = getMiUiUri(context,uri);
         boolean isAboveKitKat = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
         String filePath = null;
         if (isAboveKitKat) {
@@ -22,21 +28,61 @@ public class GetPathFromUri4kitkat {
             // 低版本兼容方法
             filePath = GetPathFromUri4kitkat.getRealPathFromURI(context, uri);
         }
+        LogUtils.jasonDebug("filePath============="+filePath);
         return filePath;
+    }
+
+    /**
+     * 解决小米手机上获取图片路径为null的情况
+     * @param intent
+     * @return
+     */
+    public static Uri getMiUiUri(Context context,Uri uriInput) {
+        Uri uri = uriInput;
+        if (uri.getScheme().contains("content") ) {
+            String path = uri.getEncodedPath();
+            if (path != null) {
+                path = Uri.decode(path);
+                ContentResolver cr = context.getContentResolver();
+                StringBuffer buff = new StringBuffer();
+                buff.append("(").append(MediaStore.Images.ImageColumns.DATA).append("=")
+                        .append("'" + path + "'").append(")");
+                Cursor cur = cr.query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                        new String[] { MediaStore.Images.ImageColumns._ID },
+                        buff.toString(), null, null);
+                int index = 0;
+                for (cur.moveToFirst(); !cur.isAfterLast(); cur.moveToNext()) {
+                    index = cur.getColumnIndex(MediaStore.Images.ImageColumns._ID);
+                    // set _id value
+                    index = cur.getInt(index);
+                }
+                if (index == 0) {
+                    // do nothing
+                } else {
+                    Uri uri_temp = Uri.parse("content://media/external/images/media/" + index);
+                    if (uri_temp != null) {
+                        uri = uri_temp;
+                    }
+                }
+            }
+        }
+        return uri;
     }
 
     /**
      * 专为Android4.4设计的从Uri获取文件绝对路径，以前的方法已不好使
      */
     @SuppressLint("NewApi")
-    public static String getPath(final Context context, final Uri uri) {
+    private static String getPath(final Context context, final Uri uri) {
 
         final boolean isKitKat = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
 
         // DocumentProvider
         if (isKitKat && DocumentsContract.isDocumentUri(context, uri)) {
+            LogUtils.jasonDebug("============================0");
             // ExternalStorageProvider
             if (isExternalStorageDocument(uri)) {
+                LogUtils.jasonDebug("============================1");
                 final String docId = DocumentsContract.getDocumentId(uri);
                 final String[] split = docId.split(":");
                 final String type = split[0];
@@ -50,7 +96,7 @@ public class GetPathFromUri4kitkat {
             }
             // DownloadsProvider
             else if (isDownloadsDocument(uri)) {
-
+                LogUtils.jasonDebug("============================2");
                 final String id = DocumentsContract.getDocumentId(uri);
                 final Uri contentUri = ContentUris.withAppendedId(
                         Uri.parse("content://downloads/public_downloads"),
@@ -60,6 +106,7 @@ public class GetPathFromUri4kitkat {
             }
             // MediaProvider
             else if (isMediaDocument(uri)) {
+                LogUtils.jasonDebug("============================3");
                 final String docId = DocumentsContract.getDocumentId(uri);
                 final String[] split = docId.split(":");
                 final String type = split[0];
@@ -79,19 +126,33 @@ public class GetPathFromUri4kitkat {
                 return getDataColumn(context, contentUri, selection,
                         selectionArgs);
             } else if (isSamsungDocument(uri)) {
+                LogUtils.jasonDebug("============================4");
                 return getSamsungDataColumn(context, uri, null, null);
             }
         }
         // MediaStore (and general)
         else if ("content".equalsIgnoreCase(uri.getScheme())) {
+            LogUtils.jasonDebug("============================5");
+            if (isGooglePhotosUri(uri))
+                return uri.getLastPathSegment();
             return getDataColumn(context, uri, null, null);
         }
         // File
         else if ("file".equalsIgnoreCase(uri.getScheme())) {
+            LogUtils.jasonDebug("============================6");
             return uri.getPath();
         }
 
         return null;
+    }
+
+    /**
+     * @param uri
+     *            The Uri to check.
+     * @return Whether the Uri authority is Google Photos.
+     */
+    public static boolean isGooglePhotosUri(Uri uri) {
+        return "com.google.android.apps.photos.content".equals(uri.getAuthority());
     }
 
     /**
@@ -106,24 +167,30 @@ public class GetPathFromUri4kitkat {
      */
     public static String getDataColumn(Context context, Uri uri,
                                        String selection, String[] selectionArgs) {
-
         Cursor cursor = null;
-        final String column = "_data";
+        final String column = MediaStore.Images.Media.DATA;
         final String[] projection = {column};
-
-        try {
-            cursor = context.getContentResolver().query(uri, projection,
-                    selection, selectionArgs, null);
-            if (cursor != null && cursor.moveToFirst()) {
-                final int column_index = cursor.getColumnIndexOrThrow(column);
-                return cursor.getString(column_index);
+        LogUtils.jasonDebug("uri.getAuthority()="+uri.getAuthority());
+        LogUtils.jasonDebug("pah=================="+uri.getPath());
+        if (!TextUtils.isEmpty(uri.getAuthority())) {
+            try {
+                cursor = context.getContentResolver().query(uri, projection,
+                        selection, selectionArgs, null);
+                if (cursor != null && cursor.moveToFirst()) {
+                    final int column_index = cursor.getColumnIndexOrThrow(column);
+                    return cursor.getString(column_index);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                if (cursor != null)
+                    cursor.close();
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            if (cursor != null)
-                cursor.close();
+        }else {
+            LogUtils.jasonDebug("00000000000000000000000000000");
+            return  uri.getPath();
         }
+
         return null;
     }
 
@@ -183,7 +250,7 @@ public class GetPathFromUri4kitkat {
     }
 
     //获取低版本文件路径的兼容方法
-    public static String getRealPathFromURI(Context context, Uri contentUri) {
+    private static String getRealPathFromURI(Context context, Uri contentUri) {
         String res = null;
         String[] proj = {MediaStore.Images.Media.DATA};
         Cursor cursor = context.getContentResolver().query(contentUri, proj,

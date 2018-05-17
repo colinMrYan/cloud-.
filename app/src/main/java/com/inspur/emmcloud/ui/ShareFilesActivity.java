@@ -12,20 +12,14 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.inspur.emmcloud.BaseActivity;
-import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.R;
-import com.inspur.emmcloud.api.APIUri;
 import com.inspur.emmcloud.bean.chat.GetCreateSingleChannelResult;
 import com.inspur.emmcloud.ui.appcenter.volume.VolumeHomePageActivity;
-import com.inspur.emmcloud.ui.chat.ChannelActivity;
-import com.inspur.emmcloud.ui.chat.ChannelV0Activity;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.FileUtils;
-import com.inspur.emmcloud.util.common.IntentUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
-import com.inspur.emmcloud.util.common.PreferencesUtils;
-import com.inspur.emmcloud.util.common.StringUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.ChatCreateUtils;
 import com.inspur.emmcloud.util.privates.GetPathFromUri4kitkat;
@@ -64,32 +58,19 @@ public class ShareFilesActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (isLogin()) {
-            this.uriList.addAll((List<Uri>) getIntent().getSerializableExtra("fileShareUriList"));
-        } else {
-            MyApplication.getInstance().signout();
-        }
+        this.uriList.addAll((List<Uri>) getIntent().getSerializableExtra("fileShareUriList"));
         initSharingMode();
         if(isFileUriList(uriList) && uriList.size() > 1){
             ToastUtils.show(ShareFilesActivity.this,getString(R.string.share_mutil_only_support_image));
-            startIndexActivity();
+            finish();
         }else if(isImageUriList(uriList) && uriList.size() > 5){
             ToastUtils.show(ShareFilesActivity.this,getString(R.string.share_no_more_than_five));
-            startIndexActivity();
+            finish();
         }else{
             initViews();
         }
     }
 
-    /**
-     * 启动index
-     */
-    private void startIndexActivity() {
-        Intent intent = new Intent();
-        intent.setClass(ShareFilesActivity.this,IndexActivity.class);
-        startActivity(intent);
-        finish();
-    }
 
     /**
      * 分享方式
@@ -154,6 +135,7 @@ public class ShareFilesActivity extends BaseActivity {
      */
     private boolean isImageUriList(List<Uri> uriList) {
         for (int i = 0; i < uriList.size(); i++) {
+            LogUtils.jasonDebug("图片uri地址："+uriList.get(i));
             if (!uriList.get(i).toString().contains("images")) {
                 return false;
             }
@@ -169,6 +151,12 @@ public class ShareFilesActivity extends BaseActivity {
      */
     private boolean isFileUriList(List<Uri> uriList) {
         for (int i = 0; i < uriList.size(); i++) {
+//            LogUtils.jasonDebug("图片uri地址："+uriList.get(i));
+//            LogUtils.jasonDebug("图片uri结尾信息："+uriList.get(i).getLastPathSegment());
+//            LogUtils.jasonDebug("图片uri的UserInfo："+uriList.get(i).getUserInfo());
+//            LogUtils.jasonDebug("图片uri的Scheme："+uriList.get(i).getScheme());
+//            LogUtils.jasonDebug("图片uri的Query："+uriList.get(i).getQuery());
+//            LogUtils.jasonDebug("图片uri的Host："+uriList.get(i).getHost());
             if (!uriList.get(i).toString().contains("file")) {
                 return false;
             }
@@ -176,16 +164,6 @@ public class ShareFilesActivity extends BaseActivity {
         return true;
     }
 
-    /**
-     * 检查是否已经在登录状态
-     *
-     * @return
-     */
-    private boolean isLogin() {
-        String accessToken = PreferencesUtils.getString(
-                ShareFilesActivity.this, "accessToken", "");
-        return !StringUtils.isBlank(accessToken);
-    }
 
     /**
      * @param uriList
@@ -253,8 +231,8 @@ public class ShareFilesActivity extends BaseActivity {
             bundle.putString("cid",cid);
             bundle.putString("share_type",isImageUriList(uriList)?"image":"file");
             bundle.putSerializable("share_paths", (Serializable) createFileList(uriList));
-            IntentUtils.startActivity(ShareFilesActivity.this,APIUri.isV0VersionChat()?
-                    ChannelV0Activity.class: ChannelActivity.class,bundle,true);
+//            IntentUtils.startActivity(ShareFilesActivity.this,APIUri.isV0VersionChat()?
+//                    ChannelV0Activity.class: ChannelActivity.class,bundle,true);
     }
 
     /**
@@ -265,6 +243,10 @@ public class ShareFilesActivity extends BaseActivity {
     private List<String> createFileList(List<Uri> uriList){
         ArrayList<String> pathList = new ArrayList<>();
         for (int i = 0; i < uriList.size(); i++) {
+//            LogUtils.jasonDebug("uri转化的path----------:"+GetPathFromUri4kitkat.getPathByUri(ShareFilesActivity.this,uriList.get(i)));
+//           // LogUtils.jasonDebug("uri转化的path=======:"+GetPathFromUri4kitkat.getMiUiUri(ShareFilesActivity.this,uriList.get(i)));
+//            LogUtils.jasonDebug("data:"+uriList.get(i));
+//            LogUtils.jasonDebug("uri转化的path++++++++++:"+GetPathFromUri4kitkat.getPath(ShareFilesActivity.this,uriList.get(i)));
             pathList.add(GetPathFromUri4kitkat.getPathByUri(ShareFilesActivity.this,uriList.get(i)));
         }
         return pathList;

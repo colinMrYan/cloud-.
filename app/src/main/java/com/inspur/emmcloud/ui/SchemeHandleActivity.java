@@ -35,6 +35,7 @@ import com.inspur.emmcloud.ui.work.calendar.CalEventAddActivity;
 import com.inspur.emmcloud.util.common.FileUtils;
 import com.inspur.emmcloud.util.common.IntentUtils;
 import com.inspur.emmcloud.util.common.JSONUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.StateBarUtils;
 import com.inspur.emmcloud.util.common.StringUtils;
@@ -238,7 +239,12 @@ public class SchemeHandleActivity extends Activity {
      */
     private void handleShareIntent() {
             String action = getIntent().getAction();
+//            LogUtils.jasonDebug("data："+getIntent().getData().toString());
+        LogUtils.jasonDebug("data："+getIntent().toString());
+        LogUtils.jasonDebug("data："+getIntent().getType());
+        LogUtils.jasonDebug("data："+getIntent().getData());
             List<Uri> uriList = new ArrayList<>();
+            LogUtils.jasonDebug("uri==========="+getIntent().getDataString());
             if (Intent.ACTION_SEND.equals(action)) {
                 Uri uri = FileUtils.getShareFileUri(getIntent());
                 if (uri != null) {
