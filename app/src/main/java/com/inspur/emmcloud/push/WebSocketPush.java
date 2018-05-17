@@ -6,6 +6,7 @@ import android.util.Log;
 
 import com.inspur.emmcloud.MyApplication;
 import com.inspur.emmcloud.api.APIUri;
+import com.inspur.emmcloud.api.apiservice.WSAPIService;
 import com.inspur.emmcloud.bean.chat.WSPushContent;
 import com.inspur.emmcloud.bean.system.EventMessage;
 import com.inspur.emmcloud.config.Constant;
@@ -82,7 +83,7 @@ public class WebSocketPush {
 					"/chat/socket/handshake";
 			sendWebSocketStatusBroadcaset("socket_connecting");
 			IO.Options opts = new IO.Options();
-			opts.reconnectionAttempts = 4; // 设置websocket重连次数
+			opts.reconnectionAttempts = 5; // 设置websocket重连次数
 			opts.forceNew = true;
 			Map<String, String> query = new HashMap<String, String>();
 			if (MyApplication.getInstance().isChatVersionV0()){
@@ -100,12 +101,8 @@ public class WebSocketPush {
 			opts.query = ParseQS.encode(query);
 			try {
 				webSocketSignout();
-//				if (MyApplication.getInstance().isChatVersionV0()){
-//					mSocket = IO.socket(url, opts);
-//				}else {
-					Manager manager = new Manager(new URI(url),opts);
-					mSocket = manager.socket(MyApplication.getInstance().getChatSocketNameSpace());
-//				}
+				Manager manager = new Manager(new URI(url),opts);
+				mSocket = manager.socket(MyApplication.getInstance().getChatSocketNameSpace());
 				mSocket.io().on(Manager.EVENT_TRANSPORT, new Emitter.Listener() {
 					@Override
 					public void call(Object... args) {
@@ -159,9 +156,15 @@ public class WebSocketPush {
 
 	public void sendAppStatus(boolean isActive){
 		if (isSocketConnect()){
-			String appStatus = isActive?"ACTIVED":"FROZEN";
-			LogUtils.debug(TAG,  "发送App状态："+appStatus);
-			mSocket.emit("state", appStatus);
+			if (MyApplication.getInstance().isChatVersionV0()){
+				String appStatus = isActive?"ACTIVED":"FROZEN";
+				LogUtils.debug(TAG,  "发送App状态："+appStatus);
+				mSocket.emit("state", appStatus);
+			}else {
+				WSAPIService.getInstance().sendAppStatus(isActive?"ACTIVED":"SUSPEND");
+				LogUtils.debug(TAG,  "发送App状态："+(isActive?"ACTIVED":"SUSPEND"));
+			}
+
 		}
 	}
 
@@ -169,7 +172,11 @@ public class WebSocketPush {
 		if (mSocket != null) {
 			if (isSocketConnect()) {
 				LogUtils.debug(TAG,  "注销");
-				mSocket.emit("state", "SIGNOUT");
+				if (MyApplication.getInstance().isChatVersionV0()){
+					mSocket.emit("state", "SIGNOUT");
+				}else {
+					WSAPIService.getInstance().sendAppStatus("REMOVED");
+				}
 			}
 			mSocket.disconnect();
 			removeListeners();
@@ -269,16 +276,22 @@ public class WebSocketPush {
 
 	}
 
-	public void sendWSMessage(EventMessage eventMessage,Object content,String tracer){
+	public void sendEventMessage(EventMessage eventMessage, Object content, String tracer){
 		if (isSocketConnect()){
 			LogUtils.debug(TAG,"eventMessage.getTag()="+eventMessage.getTag());
 			LogUtils.debug(TAG,"eventMessage.content="+content);
-			mSocket.emit("com.inspur.ecm.chat",content);
+			sendContent(content);
 			tracerMap.put(tracer, eventMessage);
 		}else {
 			eventMessage.setContent("time out");
 			eventMessage.setStatus(-1);
 			EventBus.getDefault().post(eventMessage);
+		}
+	}
+
+	public void sendContent(Object content){
+		if (isSocketConnect()){
+			mSocket.emit("com.inspur.ecm.chat",content);
 		}
 	}
 

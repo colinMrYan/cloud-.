@@ -434,7 +434,7 @@ public class ImagePagerV0Activity extends BaseFragmentActivity {
 	private class WebService extends APIInterfaceInstance {
 		@Override
 		public void returnMsgCommentCountSuccess(GetMsgCommentCountResult getMsgCommentCountResult, String mid) {
-			int number = getMsgCommentCountResult.getNumber();
+			int number = getMsgCommentCountResult.getCount();
 			commentCountMap.put(mid, number);
 			String currentMid = imgTypeMsgList.get(pagerPosition).getMid();
 			if (mid.equals(currentMid)) {
