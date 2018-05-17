@@ -614,7 +614,6 @@ public class CommunicationFragment extends Fragment {
                 channel.setIsSetTop(false);
                 int unReadCount = MessageReadCreationDateCacheUtils.getNotReadMessageCount(
                         MyApplication.getInstance(), channel.getCid());
-                LogUtils.jasonDebug("unReadCount="+unReadCount);
                 channel.setUnReadCount(unReadCount);
                 channel.setDisplayTitle(CommunicationUtils.getChannelDisplayTitle(channel));
             }

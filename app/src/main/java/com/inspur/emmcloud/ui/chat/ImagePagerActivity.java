@@ -398,13 +398,13 @@ public class ImagePagerActivity extends BaseFragmentActivity {
             if (eventMessage.getStatus() == 200){
                 String content = eventMessage.getContent();
                 GetMsgCommentCountResult getMsgCommentCountResult = new GetMsgCommentCountResult(content);
-                int count = getMsgCommentCountResult.getCount();
+                int number = getMsgCommentCountResult.getNumber();
                 String mid = String.valueOf(eventMessage.getExtra());
                 if (mid != null) {
-                    commentCountMap.put(mid, count);
+                    commentCountMap.put(mid, number);
                     String currentMid = imgTypeMessageList.get(pagerPosition).getId();
                     if (mid.equals(currentMid)) {
-                        commentCountText.setText(count + "");
+                        commentCountText.setText(number + "");
                     }
                 }
             }
