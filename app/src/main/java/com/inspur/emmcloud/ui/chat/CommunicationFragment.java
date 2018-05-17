@@ -46,6 +46,7 @@ import com.inspur.emmcloud.bean.system.AppTabProperty;
 import com.inspur.emmcloud.bean.system.EventMessage;
 import com.inspur.emmcloud.bean.system.PVCollectModel;
 import com.inspur.emmcloud.config.Constant;
+import com.inspur.emmcloud.push.WebSocketPush;
 import com.inspur.emmcloud.ui.IndexActivity;
 import com.inspur.emmcloud.ui.contact.ContactSearchActivity;
 import com.inspur.emmcloud.util.common.IntentUtils;
@@ -945,7 +946,7 @@ public class CommunicationFragment extends Fragment {
     }
 
     public void getMessage(){
-        if (NetUtils.isNetworkConnected(MyApplication.getInstance())){
+        if (NetUtils.isNetworkConnected(MyApplication.getInstance()) && WebSocketPush.getInstance().isSocketConnect()){
             long enterAppTime = PreferencesUtils.getLong(MyApplication.getInstance(),Constant.PREF_ENTER_APP_TIME,System.currentTimeMillis());
             if (MessageCacheUtil.isHistoryMessageCache(MyApplication.getInstance(),enterAppTime)){
                 //获取离线消息
