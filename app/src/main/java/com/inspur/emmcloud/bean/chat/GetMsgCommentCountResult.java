@@ -7,23 +7,23 @@ import org.json.JSONObject;
  */
 
 public class GetMsgCommentCountResult {
-	private int number = 0;
+	private int count = 0;
 	public GetMsgCommentCountResult(String response ){
 		try {
 			JSONObject obj = new JSONObject(response);
-			if (obj.has("number")){
-				number = obj.getInt("number");
+			if (obj.has("count")){
+				count = obj.getInt("count");
 			}
 		}catch (Exception e){
 			e.printStackTrace();
 		}
 	}
 
-	public int getNumber() {
-		return number;
+	public int getCount() {
+		return count;
 	}
 
-	public void setNumber(int number) {
-		this.number = number;
+	public void setCount(int count) {
+		this.count = count;
 	}
 }
