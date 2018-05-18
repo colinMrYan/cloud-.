@@ -126,6 +126,10 @@ public class GuideActivity extends BaseActivity {
      * 转到LoginActivity
      */
     private void startLoginActivity(){
+        // 存入当前版本号,方便判断新功能介绍显示的时机
+        String appVersion = AppUtils.getVersion(GuideActivity.this);
+        PreferencesUtils.putString(getApplicationContext(), "previousVersion",
+                appVersion);
         IntentUtils.startActivity(GuideActivity.this,LoginActivity.class,true);
     }
 
