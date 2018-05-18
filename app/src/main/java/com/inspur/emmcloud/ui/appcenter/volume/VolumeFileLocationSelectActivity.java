@@ -16,7 +16,6 @@ import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
 import com.inspur.emmcloud.bean.system.ClearShareDataBean;
 import com.inspur.emmcloud.util.common.IntentUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.VolumeFilePrivilegeUtils;
@@ -158,6 +157,7 @@ public class VolumeFileLocationSelectActivity extends VolumeFileBaseActivity {
      */
     private void goUploadPage() {
         if(NetUtils.isNetworkConnected(this)){
+            //发送到ShareVolume页面和VolumeHomePage页面
             EventBus.getDefault().post(new ClearShareDataBean());
             Bundle bundle = new Bundle();
             bundle.putSerializable("volume", volume);
