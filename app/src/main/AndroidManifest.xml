@@ -255,7 +255,7 @@
 
                 <category android:name="android.intent.category.DEFAULT" />
 
-                <data android:mimeType="*/*" />
+                <data android:mimeType="image/*" />
             </intent-filter>
 
             <intent-filter>
@@ -263,7 +263,8 @@
 
                 <category android:name="android.intent.category.DEFAULT" />
 
-                <data android:mimeType="*/*" />
+                <data android:mimeType="image/*" />
+                <data android:mimeType="application/*" />
             </intent-filter>
 
             <intent-filter>
