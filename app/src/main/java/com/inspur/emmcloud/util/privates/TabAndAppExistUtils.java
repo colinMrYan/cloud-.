@@ -48,7 +48,7 @@ public class TabAndAppExistUtils {
             AppGroupBean appGroupBean = appGroupList.get(i);
             List<App> appList = appGroupBean.getAppItemList();
             for (int j = 0; j < appList.size(); j++) {
-                if(appList.get(j).getUri().contains(scheme)){
+                if(appList.get(j).getUri().equals(scheme)){
                     return true;
                 }
             }
@@ -59,18 +59,18 @@ public class TabAndAppExistUtils {
     /**
      *  获取网盘图标图标url
      * @param context
-     * @param appId
+     * @param scheme
      * @return
      */
-    public static String getVolumeImgUrl(Context context,String appId){
-        App app = new App();
-        app.setAppID(appId);
+    public static String getVolumeIconUrl(Context context, String scheme){
         List<AppGroupBean> appGroupList = MyAppCacheUtils.getMyAppList(context);
         for (int i = 0; i < appGroupList.size(); i++) {
             AppGroupBean appGroupBean = appGroupList.get(i);
-            int index = appGroupBean.getAppItemList().indexOf(app);
-            if(index != -1){
-                return appGroupBean.getAppItemList().get(index).getAppIcon();
+            List<App> appList = appGroupBean.getAppItemList();
+            for (int j = 0; j < appList.size(); j++) {
+                if(appList.get(j).getUri().equals(scheme)){
+                    return appList.get(j).getAppIcon();
+                }
             }
         }
         return "";

@@ -96,7 +96,7 @@ public class ShareFilesActivity extends BaseActivity {
     }
 
     private void initViews() {
-        ImageDisplayUtils.getInstance().displayImage(imageView, TabAndAppExistUtils.getVolumeImgUrl(ShareFilesActivity.this,
+        ImageDisplayUtils.getInstance().displayImage(imageView, TabAndAppExistUtils.getVolumeIconUrl(ShareFilesActivity.this,
                 "emm://volume"), R.drawable.ic_app_default);
         int uriListSize = uriList.size();
         switch (uriListSize) {
