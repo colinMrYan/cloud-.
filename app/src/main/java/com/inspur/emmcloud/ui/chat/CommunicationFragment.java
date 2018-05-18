@@ -668,6 +668,7 @@ public class CommunicationFragment extends Fragment {
                     break;
                 case "sync_all_base_data_success":
                     createGroupIcon(null);
+                    sortChannelList();
                     break;
                 case "set_all_message_read":
                     setAllChannelMsgRead();

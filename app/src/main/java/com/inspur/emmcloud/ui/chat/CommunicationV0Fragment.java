@@ -830,18 +830,21 @@ public class CommunicationV0Fragment extends Fragment {
                 if (file.exists()) {
                     iconUrl = "file://" + file.getAbsolutePath();
                     ImageDisplayUtils.getInstance().displayImageNoCache(channelPhotoImg, iconUrl, defaultIcon);
-                    return;
+                }else {
+                    channelPhotoImg.setImageResource(R.drawable.icon_channel_group_default);
                 }
-            } else if (channel.getType().equals("DIRECT")) {
-                defaultIcon = R.drawable.icon_person_default;
-                iconUrl = DirectChannelUtils.getDirectChannelIcon(
-                        getActivity(), channel.getTitle());
-            } else if (channel.getType().equals("SERVICE")) {
-                defaultIcon = R.drawable.icon_person_default;
-                iconUrl = DirectChannelUtils.getRobotIcon(getActivity(), channel.getTitle());
+            } else {
+                if (channel.getType().equals("DIRECT")) {
+                    defaultIcon = R.drawable.icon_person_default;
+                    iconUrl = DirectChannelUtils.getDirectChannelIcon(
+                            getActivity(), channel.getTitle());
+                } else if (channel.getType().equals("SERVICE")) {
+                    defaultIcon = R.drawable.icon_person_default;
+                    iconUrl = DirectChannelUtils.getRobotIcon(getActivity(), channel.getTitle());
+                }
+                ImageDisplayUtils.getInstance().displayImageByTag(
+                        channelPhotoImg, iconUrl, defaultIcon);
             }
-            ImageDisplayUtils.getInstance().displayImageByTag(
-                    channelPhotoImg, iconUrl, defaultIcon);
 
 
         }
@@ -964,6 +967,7 @@ public class CommunicationV0Fragment extends Fragment {
                     break;
                 case "sync_all_base_data_success":
                     createGroupIcon(null);
+                    sortChannelList();
                     break;
                 case "set_all_message_read":
                     setAllChannelMsgRead();

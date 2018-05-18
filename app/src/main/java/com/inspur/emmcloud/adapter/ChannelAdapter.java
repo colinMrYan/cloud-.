@@ -31,8 +31,8 @@ import java.util.List;
 public class ChannelAdapter extends BaseAdapter {
     private Context context;
     private List<Channel> dataList = new ArrayList<>();
-    
-    public ChannelAdapter(Context context){
+
+    public ChannelAdapter(Context context) {
         this.context = context;
     }
 
@@ -63,7 +63,7 @@ public class ChannelAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         // TODO Auto-generated method stub
-       ViewHolder holder;
+        ViewHolder holder;
         if (convertView == null) {
             holder = new ViewHolder();
             convertView = LayoutInflater.from(context).inflate(R.layout.msg_item_view, null);
@@ -112,19 +112,21 @@ public class ChannelAdapter extends BaseAdapter {
             if (file.exists()) {
                 iconUrl = "file://" + file.getAbsolutePath();
                 ImageDisplayUtils.getInstance().displayImageNoCache(channelPhotoImg, iconUrl, defaultIcon);
-                return;
+            }else {
+                channelPhotoImg.setImageResource(R.drawable.icon_channel_group_default);
             }
-        } else if (channel.getType().equals("DIRECT")) {
-            defaultIcon = R.drawable.icon_person_default;
-            iconUrl = DirectChannelUtils.getDirectChannelIcon(
-                    context, channel.getTitle());
-        } else if (channel.getType().equals("SERVICE")) {
-            defaultIcon = R.drawable.icon_person_default;
-            iconUrl = DirectChannelUtils.getRobotIcon(context, channel.getTitle());
+        } else {
+            if (channel.getType().equals("DIRECT")) {
+                defaultIcon = R.drawable.icon_person_default;
+                iconUrl = DirectChannelUtils.getDirectChannelIcon(
+                        context, channel.getTitle());
+            } else if (channel.getType().equals("SERVICE")) {
+                defaultIcon = R.drawable.icon_person_default;
+                iconUrl = DirectChannelUtils.getRobotIcon(context, channel.getTitle());
+            }
+            ImageDisplayUtils.getInstance().displayImageByTag(
+                    channelPhotoImg, iconUrl, defaultIcon);
         }
-        ImageDisplayUtils.getInstance().displayImageByTag(
-                channelPhotoImg, iconUrl, defaultIcon);
-
 
     }
 
@@ -156,7 +158,7 @@ public class ChannelAdapter extends BaseAdapter {
             holder.channelNotReadCountText.setText(unReadCount > 99 ? "99+" : "" + unReadCount);
         }
     }
-    
+
     static class ViewHolder {
         RelativeLayout mainLayout;
         CircleImageView channelPhotoImg;
