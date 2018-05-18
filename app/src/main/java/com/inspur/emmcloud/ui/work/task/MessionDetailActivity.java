@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.content.LocalBroadcastManager;
@@ -808,16 +807,7 @@ public class MessionDetailActivity extends BaseActivity {
         ChatAPIService apiService = new ChatAPIService(MessionDetailActivity.this);
         apiService.setAPIInterface(new WebService());
         Uri uri = data.getData();
-        boolean isKitKat = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
-        String filePath = "";
-        if (isKitKat) {
-            // 获取4.4及以上版本的文件路径
-            filePath = GetPathFromUri4kitkat.getPath(
-                    this, uri);
-        } else {
-            //低版本兼容方法
-            filePath = GetPathFromUri4kitkat.getRealPathFromURI(this, uri);
-        }
+        String filePath = GetPathFromUri4kitkat.getPathByUri(this,uri);
         File tempFile = new File(filePath);
         if (TextUtils.isEmpty(FileUtils.getSuffix(tempFile))) {
             ToastUtils.show(this, getString(R.string.not_support_upload));

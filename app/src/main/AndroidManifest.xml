@@ -237,13 +237,19 @@
             android:resizeableActivity="true"
             android:screenOrientation="portrait"></activity>
 
+        <activity android:name=".ui.ShareFilesActivity"
+            android:launchMode="singleTask"
+            android:resizeableActivity="true"
+            android:screenOrientation="portrait">
+
+        </activity>
+
         <activity
             android:name=".ui.SchemeHandleActivity"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar">
-
             <intent-filter>
                 <action android:name="android.intent.action.SEND_MULTIPLE" />
 

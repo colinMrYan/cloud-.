@@ -1071,4 +1071,21 @@ public class FileUtils {
         File file = new File(filePath);
         return file;
     }
+
+    /**
+     * 判断传入的List下的所有文件是否存在，有一个不存在即返回false
+     * @param filePathList
+     * @return
+     */
+    public static boolean isFileInListExist(List<String> filePathList){
+        if(filePathList == null || filePathList.size() == 0){
+            return false;
+        }
+        for(int i = 0; i < filePathList.size(); i++){
+            if(!isFileExist(filePathList.get(i))){
+                return false;
+            }
+        }
+        return true;
+    }
 }
