@@ -27,7 +27,6 @@ import com.inspur.emmcloud.adapter.VolumeFileFilterPopGridAdapter;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
 import com.inspur.emmcloud.util.common.DensityUtil;
 import com.inspur.emmcloud.util.common.IntentUtils;
-import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.AppUtils;
@@ -498,12 +497,10 @@ public class VolumeFileActivity extends VolumeFileBaseActivity {
         if (resultCode == RESULT_OK) {
             if (requestCode == REQUEST_OPEN_FILE_BROWSER) {  //文件浏览器选择文件返回
                 Uri uri = data.getData();
-                LogUtils.jasonDebug("uri=" + uri.toString());
                 String filePath = GetPathFromUri4kitkat.getPathByUri(getApplicationContext(), uri);
                 uploadFile(filePath);
             } else if (requestCode == REQUEST_OPEN_CEMERA //拍照返回
                     && NetUtils.isNetworkConnected(getApplicationContext())) {
-                LogUtils.jasonDebug("cameraPicFileName=" + cameraPicFileName);
                 String filePath = Environment.getExternalStorageDirectory() + "/DCIM/" + cameraPicFileName;
                 uploadFile(filePath);
             } else if (requestCode == REQUEST_SHOW_FILE_FILTER) {  //移动文件

@@ -352,7 +352,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"
-                android:background="@color/color_list_divider"></View>
+                android:background="@color/color_list_divider"/>
 
             <TextView
                 android:id="@+id/location_select_new_forder_text"

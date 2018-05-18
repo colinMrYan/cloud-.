@@ -14,13 +14,16 @@ import com.inspur.emmcloud.adapter.VolumeFileAdapter;
 import com.inspur.emmcloud.api.APIInterfaceInstance;
 import com.inspur.emmcloud.api.apiservice.MyAppAPIService;
 import com.inspur.emmcloud.bean.appcenter.volume.VolumeFile;
+import com.inspur.emmcloud.bean.system.ClearShareDataBean;
 import com.inspur.emmcloud.util.common.IntentUtils;
+import com.inspur.emmcloud.util.common.LogUtils;
 import com.inspur.emmcloud.util.common.NetUtils;
 import com.inspur.emmcloud.util.common.ToastUtils;
 import com.inspur.emmcloud.util.privates.VolumeFilePrivilegeUtils;
 import com.inspur.emmcloud.util.privates.WebServiceMiddleUtils;
 import com.inspur.emmcloud.widget.LoadingDialog;
 
+import org.greenrobot.eventbus.EventBus;
 import org.xutils.view.annotation.ViewInject;
 
 import java.io.Serializable;
@@ -155,10 +158,11 @@ public class VolumeFileLocationSelectActivity extends VolumeFileBaseActivity {
      */
     private void goUploadPage() {
         if(NetUtils.isNetworkConnected(this)){
+            EventBus.getDefault().post(new ClearShareDataBean());
             Bundle bundle = new Bundle();
             bundle.putSerializable("volume", volume);
             bundle.putSerializable("currentDirAbsolutePath", currentDirAbsolutePath);
-            bundle.putSerializable("title", getString(R.string.volume_upload_file));
+            bundle.putSerializable("title", title);
             bundle.putSerializable("fileShareUriList", (Serializable) shareUriList);
             IntentUtils.startActivity(VolumeFileLocationSelectActivity.this, VolumeFileActivity.class, bundle);
             closeAllThisActivityInstance();
